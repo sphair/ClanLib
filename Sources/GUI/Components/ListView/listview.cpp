@@ -69,7 +69,7 @@ namespace clan
 ListView::ListView(GUIComponent *parent)
 : GUIComponent(parent), impl(new ListView_Impl)
 {
-	set_type_name("listview");
+	set_tag_name(CssStr::ListView::type_name);
 	set_focus_policy(focus_local);
 	impl->listview = this;
 

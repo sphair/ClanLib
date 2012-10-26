@@ -88,7 +88,7 @@ public:
 RadioButton::RadioButton(GUIComponent *parent)
 : GUIComponent(parent), impl(new RadioButton_Impl)
 {
-	set_type_name(CssStr::RadioButton::type_name);
+	set_tag_name(CssStr::RadioButton::type_name);
 	set_focus_policy(focus_group);
 
 	impl->radio = this;

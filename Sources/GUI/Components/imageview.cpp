@@ -77,7 +77,7 @@ public:
 ImageView::ImageView(GUIComponent *parent)
 : GUIComponent(parent), impl(new ImageView_Impl)
 {
-	set_type_name(CssStr::ImageView::type_name);
+	set_tag_name(CssStr::ImageView::type_name);
 	impl->image = this;
 	func_process_message().set(impl.get(), &ImageView_Impl::on_process_message);
 	func_render().set(impl.get(), &ImageView_Impl::on_render);

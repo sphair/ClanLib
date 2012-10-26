@@ -366,12 +366,12 @@ void GUIManager::set_accelerator_table( const AcceleratorTable &table )
 
 CSSLayout GUIManager::create_layout(GUIComponent *component)
 {
-	return impl->layout_manager.create_layout(component->get_type_name());
+	return impl->layout_manager.create_layout(component->get_tag_name());
 }
 
 bool GUIManager::has_layout(GUIComponent *component)
 {
-	return impl->layout_manager.has_layout(component->get_type_name());
+	return impl->layout_manager.has_layout(component->get_tag_name());
 }
 
 /////////////////////////////////////////////////////////////////////////////

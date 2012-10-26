@@ -136,7 +136,7 @@ public:
 Slider::Slider(GUIComponent *parent)
 : GUIComponent(parent), impl(new Slider_Impl)
 {
-	set_type_name(CssStr::Slider::type_name);
+	set_tag_name(CssStr::Slider::type_name);
 	set_focus_policy(focus_local);
 	impl->slider = this;
 	impl->vertical = false;

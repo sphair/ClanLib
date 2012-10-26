@@ -102,7 +102,7 @@ public:
 StatusBar::StatusBar(GUIComponent *parent)
 : GUIComponent(parent), impl(new StatusBar_Impl)
 {
-	set_type_name("statusbar");
+	set_tag_name(CssStr::StatusBar::type_name);
 	impl->statusbar = this;
 
 	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);

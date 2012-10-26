@@ -97,7 +97,7 @@ public:
 ListViewHeader::ListViewHeader(GUIComponent *parent)
 : GUIComponent(parent), impl(new ListViewHeader_Impl)
 {
-	set_type_name(CssStr::ListView::Header::type_name);
+	set_tag_name(CssStr::ListView::Header::type_name);
 	impl->listview_header = this;
 	func_process_message().set(impl.get(), &ListViewHeader_Impl::on_process_message);
 	func_render().set(impl.get(), &ListViewHeader_Impl::on_render);

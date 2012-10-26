@@ -57,7 +57,7 @@ namespace clan
 MenuBar::MenuBar( GUIComponent *parent)
 : GUIComponent(parent), impl(new MenuBar_Impl)
 {
-	set_type_name(CssStr::MenuBar::type_name);
+	set_tag_name(CssStr::MenuBar::type_name);
 	impl->menubar = this;
 	func_process_message().set(impl.get(), &MenuBar_Impl::on_process_message);
 	func_render().set(impl.get(), &MenuBar_Impl::on_render);

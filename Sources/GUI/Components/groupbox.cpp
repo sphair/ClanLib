@@ -58,7 +58,7 @@ public:
 GroupBox::GroupBox(GUIComponent *parent)
 : GUIComponent(parent), impl(new GroupBox_Impl)
 {
-	set_type_name(CssStr::GroupBox::type_name);
+	set_tag_name(CssStr::GroupBox::type_name);
 	impl->groupbox = this;
 	func_process_message().set(impl.get(), &GroupBox_Impl::on_process_message);
 	func_render().set(impl.get(), &GroupBox_Impl::on_render);
