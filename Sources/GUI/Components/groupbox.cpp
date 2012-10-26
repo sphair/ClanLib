@@ -47,7 +47,6 @@ class GroupBox_Impl
 public:
 	void on_process_message(GUIMessage &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed();
 
 	GroupBox *groupbox;
 };
@@ -62,7 +61,6 @@ GroupBox::GroupBox(GUIComponent *parent)
 	impl->groupbox = this;
 	func_process_message().set(impl.get(), &GroupBox_Impl::on_process_message);
 	func_render().set(impl.get(), &GroupBox_Impl::on_render);
-	func_style_changed().set(impl.get(), &GroupBox_Impl::on_style_changed);
 }
 
 GroupBox::~GroupBox()
@@ -90,10 +88,6 @@ GroupBox *GroupBox::get_named_item(GUIComponent *reference_component, const std:
 // GroupBox Implementation:
 
 void GroupBox_Impl::on_process_message(GUIMessage &msg)
-{
-}
-
-void GroupBox_Impl::on_style_changed()
 {
 }
 

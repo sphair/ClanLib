@@ -83,12 +83,7 @@ public:
 	/// \return true = 3state
 	bool is_3state() const;
 
-	const std::string &get_text() const;
-
-	/// \brief Get Preferred size
-	///
-	/// \return preferred_size
-	Size get_preferred_size() const;
+	std::string get_text() const;
 
 /// \}
 /// \name Operations
