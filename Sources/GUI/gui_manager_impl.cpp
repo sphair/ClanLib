@@ -46,7 +46,6 @@
 #include "API/Display/Font/font.h"
 #include "API/Core/Text/string_format.h"
 #include "gui_component_impl.h"
-#include "gui_component_select_node.h"
 
 namespace clan
 {
@@ -255,13 +254,6 @@ void GUIManager_Impl::gain_focus(GUIComponent *component)
 
 		toplevel_window->focused_component = component;
 
-		// The defaulted component (usually a PushButton in dialogs) needs to update its "default" GUIThemePart state depending on 
-		// whether the focused component consumes certain input events.
-		// This should be done before sending the gained_focus message
-		GUIComponent *default_comp = get_default_component(toplevel_window->component);
-		if (default_comp && !default_comp->func_style_changed().is_null())
-			default_comp->func_style_changed().invoke();
-
 		if (toplevel_window->focused_component)
 		{
 			GUIMessage_FocusChange message;
@@ -305,13 +297,6 @@ void GUIManager_Impl::loose_focus(GUIComponent *component)
 		}
 
 		toplevel_window->focused_component = NULL;
-
-		// The defaulted component (usually a PushButton in dialogs) needs to update its "default" GUIThemePart state depending on 
-		// whether the focused component consumes certain input events.
-		// This should be done before sending the gained_focus message
-		GUIComponent *default_comp = get_default_component(toplevel_window->component);
-		if (default_comp && !default_comp->func_style_changed().is_null())
-			default_comp->func_style_changed().invoke();
 	}
 	else
 	{
@@ -550,22 +535,6 @@ GUIComponent *GUIManager_Impl::get_focus_component()
 	}
 
 	return 0;
-}
-
-CSSPropertyList &GUIManager_Impl::get_properties(GUIComponent *component) const
-{
-	std::map< GUIComponent *, CSSPropertyList >::iterator it = properties_cache.find(component);
-	if (it != properties_cache.end())
-		return it->second;
-
-	GUIComponentSelectNode select_node(component);
-	properties_cache[component] = css_document.select(&select_node);
-	return properties_cache[component];
-}
-
-void GUIManager_Impl::reset_properties()
-{
-	properties_cache.clear();
 }
 
 void GUIManager_Impl::register_font(const Font &font, const FontDescription &desc)

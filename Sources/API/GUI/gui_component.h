@@ -41,12 +41,14 @@
 #include "../Core/Signals/callback_v2.h"
 #include "../Core/Signals/callback_v3.h"
 #include "../Core/Signals/callback_2.h"
+#include "../Core/Signals/signal_v1.h"
 #include "../Core/IOData/virtual_directory.h"
 #include "../Display/Window/display_window_description.h"
 #include "../Display/Window/display_window.h"
 #include "../Display/Render/graphic_context.h"
 #include "../Display/Window/input_context.h"
 #include "../Display/2D/canvas.h"
+#include "../CSSLayout/css_property_list.h"
 #include "gui_layout.h"
 #include <vector>
 
@@ -382,8 +384,8 @@ public:
 	/// \brief bool func_visibility_change()
 	Callback_v1<bool> &func_visibility_change();
 
-	/// \brief void func_style_changed()
-	Callback_v0 &func_style_changed();
+	/// \brief void sig_style_changed(const CSSPropertyList &properties)
+	Signal_v1<const CSSPropertyList &> &sig_style_changed();
 
 	/// \brief void func_enablemode_changed()
 	Callback_v0 &func_enablemode_changed();
@@ -442,6 +444,9 @@ public:
 
 	/// \brief Controls the presence of a DOM pseudo class
 	void set_pseudo_class(const std::string &name, bool enable) const;
+
+	/// \brief Re-evaluates which CSS selectors match this component
+	void update_style();
 
 	/// \brief Sets the component as enabled or disabled.
 	void set_enabled(bool enable = true);

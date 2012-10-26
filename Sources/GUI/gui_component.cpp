@@ -55,6 +55,7 @@
 #include "gui_manager_impl.h"
 #include "gui_component_description_impl.h"
 #include "gui_xml_loader_version_1_0.h"
+#include "gui_component_select_node.h"
 #include "API/Display/2D/canvas.h"
 
 namespace clan
@@ -687,9 +688,9 @@ Callback_v1<bool> &GUIComponent::func_visibility_change()
 	return impl->func_visibility_change;
 }
 
-Callback_v0 &GUIComponent::func_style_changed()
+Signal_v1<const CSSPropertyList &> &GUIComponent::sig_style_changed()
 {
-	return impl->func_style_changed;
+	return impl->sig_style_changed;
 }
 
 Callback_v0 &GUIComponent::func_enablemode_changed()
@@ -860,22 +861,26 @@ void GUIComponent::capture_proximity(bool capture)
 void GUIComponent::set_tag_name(const std::string &name)
 {
 	impl->tag_name = name;
-	if (!impl->func_style_changed.is_null())
-		impl->func_style_changed.invoke();
+	update_style();
 }
 	
 void GUIComponent::set_class(const std::string &name)
 {
 	impl->class_string = name;
-	if (!impl->func_style_changed.is_null())
-		impl->func_style_changed.invoke();
+	update_style();
 }
 
 void GUIComponent::set_id(const std::string &name)
 {
 	impl->id = name;
-	if (!impl->func_style_changed.is_null())
-		impl->func_style_changed.invoke();
+	update_style();
+}
+
+void GUIComponent::update_style()
+{
+	GUIComponentSelectNode select_node(this);
+	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
+	impl->sig_style_changed.invoke(properties);
 }
 
 void GUIComponent::set_pseudo_class(const std::string &name, bool enable) const
@@ -1289,7 +1294,7 @@ GUIComponent *GUIComponent::get_previous_component_in_tree()
 void GUIComponent::set_default(bool value)
 {
 	impl->default_handler = value;
-	impl->func_style_changed.invoke();
+	update_style();
 }
 
 void GUIComponent::set_cancel(bool value)
