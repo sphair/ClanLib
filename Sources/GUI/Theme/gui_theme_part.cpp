@@ -50,9 +50,7 @@ GUIThemePart::GUIThemePart()
 {
 }
 
-GUIThemePart::GUIThemePart(
-	GUIComponent *component,
-	const std::string &relative_element_name)
+GUIThemePart::GUIThemePart(GUIComponent *component)
 : impl(new GUIThemePart_Impl(component))
 {
 }

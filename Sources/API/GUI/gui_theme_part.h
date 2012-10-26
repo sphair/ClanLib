@@ -59,11 +59,7 @@ class CL_API_GUI GUIThemePart
 public:
 	/// \brief Constructs a GUI theme part.
 	GUIThemePart();
-
-	GUIThemePart(
-		GUIComponent *component,
-		const std::string &relative_element_name = std::string());
-
+	GUIThemePart(GUIComponent *component);
 	~GUIThemePart();
 
 /// \}
