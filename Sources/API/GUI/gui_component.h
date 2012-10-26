@@ -127,6 +127,9 @@ public:
 	/// \brief Returns whether a DOM pseudo class is present or not.
 	bool get_pseudo_class(const std::string &name) const;
 
+	/// \brief Returns all pseudo classes currently present
+	std::vector<std::string> get_pseudo_classes() const;
+
 	/// \brief Returns true if the component has the focus.
 	bool has_focus() const;
 

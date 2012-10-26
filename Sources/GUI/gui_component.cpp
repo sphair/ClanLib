@@ -172,6 +172,21 @@ std::string GUIComponent::get_class() const
 	return impl->class_string;
 }
 
+bool GUIComponent::get_pseudo_class(const std::string &name) const
+{
+	for (size_t i = 0; i < impl->pseudo_classes.size(); i++)
+	{
+		if (impl->pseudo_classes[i] == name)
+			return true;
+	}
+	return false;
+}
+
+std::vector<std::string> GUIComponent::get_pseudo_classes() const
+{
+	return impl->pseudo_classes;
+}
+
 bool GUIComponent::has_focus() const
 {
 	return impl->gui_manager.lock()->has_focus(this);
