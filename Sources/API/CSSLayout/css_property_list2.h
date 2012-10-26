@@ -33,23 +33,23 @@
 namespace clan
 {
 
-class CSSProperty2;
-class CSSPropertyList2_Impl;
+class CSSProperty;
+class CSSPropertyList_Impl;
 
-class CL_API_CSSLAYOUT CSSPropertyList2
+class CL_API_CSSLAYOUT CSSPropertyList
 {
 public:
-	CSSPropertyList2();
+	CSSPropertyList();
 
 	size_t size() const;
-	CSSProperty2 &at(size_t index);
-	const CSSProperty2 &at(size_t index) const;
-	CSSProperty2 &operator[](size_t index);
-	const CSSProperty2 &operator[](size_t index) const;
-	void push_back(const CSSProperty2 &value);
+	CSSProperty &at(size_t index);
+	const CSSProperty &at(size_t index) const;
+	CSSProperty &operator[](size_t index);
+	const CSSProperty &operator[](size_t index) const;
+	void push_back(const CSSProperty &value);
 
 private:
-	std::shared_ptr<CSSPropertyList2_Impl> impl;
+	std::shared_ptr<CSSPropertyList_Impl> impl;
 };
 
 }

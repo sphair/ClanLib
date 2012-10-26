@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class CL_API_CSSLAYOUT DomSelectNode : public CSSSelectNode2
+class CL_API_CSSLAYOUT DomSelectNode : public CSSSelectNode
 {
 public:
 	DomSelectNode(const DomElement &element);

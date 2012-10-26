@@ -39,7 +39,7 @@ class VirtualDirectory;
 class IODevice;
 class CSSLayout;
 class CSSLayoutElement;
-class CSSDocument2;
+class CSSDocument;
 class GUIThemeLayoutManager_Impl;
 
 class GUIThemeLayoutManager
@@ -48,7 +48,7 @@ class GUIThemeLayoutManager
 /// \{
 public:
 	GUIThemeLayoutManager();
-	GUIThemeLayoutManager(DomDocument &xml_layout, CSSDocument2 &css);
+	GUIThemeLayoutManager(DomDocument &xml_layout, CSSDocument &css);
 	GUIThemeLayoutManager(const std::string &xml_fullname, const std::string &css_fullname);
 	GUIThemeLayoutManager(const std::string &xml_fullname, const std::string &css_fullname, const VirtualDirectory &dir);
 	GUIThemeLayoutManager(IODevice &xml_file, IODevice &css_file);

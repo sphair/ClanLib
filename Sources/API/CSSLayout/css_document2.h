@@ -33,25 +33,25 @@
 namespace clan
 {
 
-class CSSProperty2;
-class CSSSelectNode2;
-class CSSPropertyList2;
-class CSSDocument2_Impl;
+class CSSProperty;
+class CSSSelectNode;
+class CSSPropertyList;
+class CSSDocument_Impl;
 
-class CL_API_CSSLAYOUT CSSDocument2
+class CL_API_CSSLAYOUT CSSDocument
 {
 public:
-	CSSDocument2();
-	~CSSDocument2();
+	CSSDocument();
+	~CSSDocument();
 
 	void add_sheet(const std::string &filename, const std::string &base_uri = std::string());
 	void add_sheet(IODevice &iodevice, const std::string &base_uri = std::string());
-	CSSPropertyList2 select(const DomElement &node, const std::string &pseudo_element = std::string());
-	CSSPropertyList2 select(CSSSelectNode2 *node, const std::string &pseudo_element = std::string());
-	static CSSPropertyList2 get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
+	CSSPropertyList select(const DomElement &node, const std::string &pseudo_element = std::string());
+	CSSPropertyList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
+	static CSSPropertyList get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 private:
-	std::shared_ptr<CSSDocument2_Impl> impl;
+	std::shared_ptr<CSSDocument_Impl> impl;
 };
 
 }

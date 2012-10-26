@@ -33,21 +33,21 @@
 namespace clan
 {
 
-std::vector<CSSRulesetMatch2> CSSDocument2_Impl::select_rulesets(CSSSelectNode2 *node, const std::string &pseudo_element)
+std::vector<CSSRulesetMatch> CSSDocument_Impl::select_rulesets(CSSSelectNode *node, const std::string &pseudo_element)
 {
-	std::vector<CSSRulesetMatch2> matched_rulesets;
+	std::vector<CSSRulesetMatch> matched_rulesets;
 	for (size_t i = 0; i < rulesets.size(); i++)
 	{
-		CSSRuleset2 &cur_ruleset = rulesets[i];
+		CSSRuleset &cur_ruleset = rulesets[i];
 		for (size_t j = 0; j < cur_ruleset.selectors.size(); j++)
 		{
-			const CSSSelectorChain2 &chain = cur_ruleset.selectors[j];
+			const CSSSelectorChain &chain = cur_ruleset.selectors[j];
 			if (equals(chain.pseudo_element, pseudo_element))
 			{
 				bool matches = try_match_chain(chain, node, chain.links.size());
 				if (matches)
 				{
-					matched_rulesets.push_back(CSSRulesetMatch2(&cur_ruleset, j, matched_rulesets.size()));
+					matched_rulesets.push_back(CSSRulesetMatch(&cur_ruleset, j, matched_rulesets.size()));
 					break;
 				}
 			}
@@ -57,13 +57,13 @@ std::vector<CSSRulesetMatch2> CSSDocument2_Impl::select_rulesets(CSSSelectNode2 
 	return matched_rulesets;
 }
 
-bool CSSDocument2_Impl::try_match_chain(const CSSSelectorChain2 &chain, CSSSelectNode2 *node, size_t chain_index)
+bool CSSDocument_Impl::try_match_chain(const CSSSelectorChain &chain, CSSSelectNode *node, size_t chain_index)
 {
 	bool matches = false;
 	if (chain_index > 0)
 	{
-		const CSSSelectorLink2 &link = chain.links[chain_index-1];
-		if (link.type == CSSSelectorLink2::type_child_combinator)
+		const CSSSelectorLink &link = chain.links[chain_index-1];
+		if (link.type == CSSSelectorLink::type_child_combinator)
 		{
 			node->push();
 			if (node->parent())
@@ -72,7 +72,7 @@ bool CSSDocument2_Impl::try_match_chain(const CSSSelectorChain2 &chain, CSSSelec
 			}
 			node->pop();
 		}
-		else if (link.type == CSSSelectorLink2::type_descendant_combinator)
+		else if (link.type == CSSSelectorLink::type_descendant_combinator)
 		{
 			node->push();
 			while (node->parent())
@@ -83,7 +83,7 @@ bool CSSDocument2_Impl::try_match_chain(const CSSSelectorChain2 &chain, CSSSelec
 			}
 			node->pop();
 		}
-		else if (link.type == CSSSelectorLink2::type_next_sibling_combinator)
+		else if (link.type == CSSSelectorLink::type_next_sibling_combinator)
 		{
 			node->push();
 			if (node->prev_sibling())
@@ -107,10 +107,10 @@ bool CSSDocument2_Impl::try_match_chain(const CSSSelectorChain2 &chain, CSSSelec
 	return matches;
 }
 
-bool CSSDocument2_Impl::try_match_link(const CSSSelectorLink2 &link, CSSSelectNode2 *node)
+bool CSSDocument_Impl::try_match_link(const CSSSelectorLink &link, CSSSelectNode *node)
 {
-	if ((link.type == CSSSelectorLink2::type_simple_selector && equals(link.element_name, node->name())) ||
-		link.type == CSSSelectorLink2::type_universal_selector)
+	if ((link.type == CSSSelectorLink::type_simple_selector && equals(link.element_name, node->name())) ||
+		link.type == CSSSelectorLink::type_universal_selector)
 	{
 	}
 	else
@@ -178,16 +178,16 @@ bool CSSDocument2_Impl::try_match_link(const CSSSelectorLink2 &link, CSSSelectNo
 			found = false;
 			switch (link.attribute_selectors[k].type)
 			{
-			case CSSAttributeSelector2::type_set:
+			case CSSAttributeSelector::type_set:
 				found = true;
 				break;
 
-			case CSSAttributeSelector2::type_exact_value:
+			case CSSAttributeSelector::type_exact_value:
 				if (equals(link.attribute_selectors[k].value, value))
 					found = true;
 				break;
 
-			case CSSAttributeSelector2::type_space_separated_value:
+			case CSSAttributeSelector::type_space_separated_value:
 				{
 					std::vector<std::string> values = StringHelp::split_text(value, " ");
 					for (size_t p = 0; p < values.size(); p++)
@@ -201,7 +201,7 @@ bool CSSDocument2_Impl::try_match_link(const CSSSelectorLink2 &link, CSSSelectNo
 				}
 				break;
 
-			case CSSAttributeSelector2::type_hyphen_separated_value:
+			case CSSAttributeSelector::type_hyphen_separated_value:
 				{
 					std::vector<std::string> values = StringHelp::split_text(value, "-");
 					for (size_t p = 0; p < values.size(); p++)
@@ -215,7 +215,7 @@ bool CSSDocument2_Impl::try_match_link(const CSSSelectorLink2 &link, CSSSelectNo
 				}
 				break;
 
-			case CSSAttributeSelector2::type_lang_value:
+			case CSSAttributeSelector::type_lang_value:
 				{
 					std::string::size_type len = link.attribute_selectors[k].value.length();
 					if (equals(link.attribute_selectors[k].value, value) ||
@@ -241,7 +241,7 @@ bool CSSDocument2_Impl::try_match_link(const CSSSelectorLink2 &link, CSSSelectNo
 	return true;
 }
 
-void CSSDocument2_Impl::read_stylesheet(CSSTokenizer &tokenizer, const std::string &new_base_uri)
+void CSSDocument_Impl::read_stylesheet(CSSTokenizer &tokenizer, const std::string &new_base_uri)
 {
 	base_uri = new_base_uri;
 	CSSToken token;
@@ -264,7 +264,7 @@ void CSSDocument2_Impl::read_stylesheet(CSSTokenizer &tokenizer, const std::stri
 	next_origin++;
 }
 
-void CSSDocument2_Impl::read_at_rule(CSSTokenizer &tokenizer, CSSToken &token)
+void CSSDocument_Impl::read_at_rule(CSSTokenizer &tokenizer, CSSToken &token)
 {
 	if (equals(token.value, "-clan-base-uri"))
 	{
@@ -348,7 +348,7 @@ void CSSDocument2_Impl::read_at_rule(CSSTokenizer &tokenizer, CSSToken &token)
 	}
 }
 
-void CSSDocument2_Impl::read_end_of_at_rule(CSSTokenizer &tokenizer, CSSToken &token)
+void CSSDocument_Impl::read_end_of_at_rule(CSSTokenizer &tokenizer, CSSToken &token)
 {
 	// Console::write_line("@%1", token.value);
 	int curly_count = 0;
@@ -377,7 +377,7 @@ void CSSDocument2_Impl::read_end_of_at_rule(CSSTokenizer &tokenizer, CSSToken &t
 }
 
 
-bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &token, CSSSelectorChain2 &out_selector_chain)
+bool CSSDocument_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &token, CSSSelectorChain &out_selector_chain)
 {
 	out_selector_chain.links.clear();
 	while (true)
@@ -395,22 +395,22 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 
 			if (token.type == CSSToken::type_delim && token.value == ">")
 			{
-				CSSSelectorLink2 combinator_link;
-				combinator_link.type = CSSSelectorLink2::type_child_combinator;
+				CSSSelectorLink combinator_link;
+				combinator_link.type = CSSSelectorLink::type_child_combinator;
 				out_selector_chain.links.push_back(combinator_link);
 				whitespace = false;
 			}
 			else if (token.type == CSSToken::type_delim && token.value == "+")
 			{
-				CSSSelectorLink2 combinator_link;
-				combinator_link.type = CSSSelectorLink2::type_next_sibling_combinator;
+				CSSSelectorLink combinator_link;
+				combinator_link.type = CSSSelectorLink::type_next_sibling_combinator;
 				out_selector_chain.links.push_back(combinator_link);
 				whitespace = false;
 			}
 			else if (whitespace)
 			{
-				CSSSelectorLink2 combinator_link;
-				combinator_link.type = CSSSelectorLink2::type_descendant_combinator;
+				CSSSelectorLink combinator_link;
+				combinator_link.type = CSSSelectorLink::type_descendant_combinator;
 				out_selector_chain.links.push_back(combinator_link);
 			}
 			else
@@ -422,18 +422,18 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 				tokenizer.read(token, true);
 		}
 
-		CSSSelectorLink2 selector_link;
+		CSSSelectorLink selector_link;
 		if (token.type == CSSToken::type_ident)
 		{
 			// Simple Selector
-			selector_link.type = CSSSelectorLink2::type_simple_selector;
+			selector_link.type = CSSSelectorLink::type_simple_selector;
 			selector_link.element_name = token.value;
 			tokenizer.read(token, false);
 		}
 		else if (token.type == CSSToken::type_delim && token.value == "*")
 		{
 			// Universal Selector
-			selector_link.type = CSSSelectorLink2::type_universal_selector;
+			selector_link.type = CSSSelectorLink::type_universal_selector;
 			tokenizer.read(token, false);
 		}
 		else if (token.type == CSSToken::type_hash ||
@@ -442,7 +442,7 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 			(token.type == CSSToken::type_delim && token.value == "."))
 		{
 			// Implicit Universal Selector
-			selector_link.type = CSSSelectorLink2::type_universal_selector;
+			selector_link.type = CSSSelectorLink::type_universal_selector;
 		}
 		else
 		{
@@ -496,7 +496,7 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 			}
 			else if (token.type == CSSToken::type_square_bracket_begin)
 			{
-				CSSAttributeSelector2 attribute;
+				CSSAttributeSelector attribute;
 
 				tokenizer.read(token, true);
 				if (token.type == CSSToken::type_ident)
@@ -513,19 +513,19 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 				bool read_value = true;
 				if (token.type == CSSToken::type_includes)
 				{
-					attribute.type = CSSAttributeSelector2::type_space_separated_value;
+					attribute.type = CSSAttributeSelector::type_space_separated_value;
 				}
 				else if (token.type == CSSToken::type_dashmatch)
 				{
-					attribute.type = CSSAttributeSelector2::type_lang_value;
+					attribute.type = CSSAttributeSelector::type_lang_value;
 				}
 				else if (token.type == CSSToken::type_delim && token.value == "=")
 				{
-					attribute.type = CSSAttributeSelector2::type_exact_value;
+					attribute.type = CSSAttributeSelector::type_exact_value;
 				}
 				else if (token.type == CSSToken::type_square_bracket_end)
 				{
-					attribute.type = CSSAttributeSelector2::type_set;
+					attribute.type = CSSAttributeSelector::type_set;
 					read_value = false;
 				}
 				else
@@ -567,12 +567,12 @@ bool CSSDocument2_Impl::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &t
 	return true;
 }
 
-void CSSDocument2_Impl::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
+void CSSDocument_Impl::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 {
-	CSSRuleset2 ruleset(next_origin);
+	CSSRuleset ruleset(next_origin);
 	while (true)
 	{
-		CSSSelectorChain2 selector_chain;
+		CSSSelectorChain selector_chain;
 		if (read_selector_chain(tokenizer, token, selector_chain))
 		{
 			ruleset.selectors.push_back(selector_chain);
@@ -610,7 +610,7 @@ void CSSDocument2_Impl::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 				{
 					tokenizer.read(token, true);
 
-					CSSProperty2 property;
+					CSSProperty property;
 					property.set_name(property_name);
 					bool end_of_scope = read_property_value(tokenizer, token, property, base_uri);
 					if (!property.get_value_tokens().empty())
@@ -642,7 +642,7 @@ void CSSDocument2_Impl::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 	}
 }
 
-bool CSSDocument2_Impl::read_property_value(CSSTokenizer &tokenizer, CSSToken &token, CSSProperty2 &property, std::string base_uri)
+bool CSSDocument_Impl::read_property_value(CSSTokenizer &tokenizer, CSSToken &token, CSSProperty &property, std::string base_uri)
 {
 	property.get_value_tokens().clear();
 	int curly_count = 0;
@@ -707,7 +707,7 @@ bool CSSDocument2_Impl::read_property_value(CSSTokenizer &tokenizer, CSSToken &t
 	return curly_count < 0;
 }
 
-bool CSSDocument2_Impl::read_end_of_statement(CSSTokenizer &tokenizer, CSSToken &token)
+bool CSSDocument_Impl::read_end_of_statement(CSSTokenizer &tokenizer, CSSToken &token)
 {
 	int curly_count = 0;
 	while (true)
@@ -737,7 +737,7 @@ bool CSSDocument2_Impl::read_end_of_statement(CSSTokenizer &tokenizer, CSSToken 
 	return curly_count < 0;
 }
 
-std::string CSSDocument2_Impl::to_string(const CSSToken &token)
+std::string CSSDocument_Impl::to_string(const CSSToken &token)
 {
 	switch (token.type)
 	{
@@ -773,12 +773,12 @@ std::string CSSDocument2_Impl::to_string(const CSSToken &token)
 	}
 }
 
-bool CSSDocument2_Impl::equals(const std::string &s1, const std::string &s2)
+bool CSSDocument_Impl::equals(const std::string &s1, const std::string &s2)
 {
 	return StringHelp::compare(s1, s2, true) == 0;
 }
 
-std::string CSSDocument2_Impl::make_absolute_uri(std::string uri, std::string base_uri)
+std::string CSSDocument_Impl::make_absolute_uri(std::string uri, std::string base_uri)
 {
 	return HTMLUrl(uri, base_uri).to_string();
 }

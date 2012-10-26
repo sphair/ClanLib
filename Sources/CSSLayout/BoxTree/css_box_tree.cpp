@@ -152,7 +152,7 @@ void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElem
 	}
 }
 
-void CSSBoxTree::apply_properties(CSSBoxElement *node, const CSSPropertyList2 &css_properties)
+void CSSBoxTree::apply_properties(CSSBoxElement *node, const CSSPropertyList &css_properties)
 {
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(node->properties, css_properties[i-1]);
@@ -161,7 +161,7 @@ void CSSBoxTree::apply_properties(CSSBoxElement *node, const CSSPropertyList2 &c
 CSSBoxProperties CSSBoxTree::get_css_properties(const DomElement &element, const std::string &pseudo_element)
 {
 	CSSBoxProperties properties;
-	CSSPropertyList2 css_properties = css.select(element, pseudo_element);
+	CSSPropertyList css_properties = css.select(element, pseudo_element);
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(properties, css_properties[i-1]);
 	return properties;

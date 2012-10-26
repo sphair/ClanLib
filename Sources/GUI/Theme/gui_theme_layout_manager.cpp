@@ -50,7 +50,7 @@ class GUIThemeLayoutManager_Impl
 {
 public:
 	DomDocument layout;
-	CSSDocument2 css;
+	CSSDocument css;
 
 	bool has_layout(const std::string &target_component_type);
 
@@ -167,7 +167,7 @@ GUIThemeLayoutManager::GUIThemeLayoutManager(IODevice &xml_file, IODevice &css_f
 	throw Exception("CSS loading not implemented");
 }
 
-GUIThemeLayoutManager::GUIThemeLayoutManager(DomDocument &doc, CSSDocument2 &css)
+GUIThemeLayoutManager::GUIThemeLayoutManager(DomDocument &doc, CSSDocument &css)
 : impl(std::shared_ptr<GUIThemeLayoutManager_Impl>(new GUIThemeLayoutManager_Impl()))
 {
 	impl->layout = doc;

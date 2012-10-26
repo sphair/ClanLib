@@ -34,7 +34,7 @@
 namespace clan
 {
 
-class CSSPropertyList2;
+class CSSPropertyList;
 class Rect;
 
 class CL_API_CSSLAYOUT CSSLayoutElement : public CSSLayoutNode
@@ -48,7 +48,7 @@ public:
 	void set_col_span(int span);
 	void set_row_span(int span);
 
-	void apply_properties(const CSSPropertyList2 &properties);
+	void apply_properties(const CSSPropertyList &properties);
 	void apply_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 	void insert_before(CSSLayoutNode &new_child, CSSLayoutNode &ref_child);

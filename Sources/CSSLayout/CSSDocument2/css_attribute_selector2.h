@@ -31,10 +31,10 @@
 namespace clan
 {
 
-class CSSAttributeSelector2
+class CSSAttributeSelector
 {
 public:
-	CSSAttributeSelector2() : type(type_set) { }
+	CSSAttributeSelector() : type(type_set) { }
 
 	enum Type
 	{

@@ -34,12 +34,12 @@ namespace clan
 {
 
 class CSSToken;
-class CSSProperty2_Impl;
+class CSSProperty_Impl;
 
-class CL_API_CSSLAYOUT CSSProperty2
+class CL_API_CSSLAYOUT CSSProperty
 {
 public:
-	CSSProperty2();
+	CSSProperty();
 
 	void set_name(const std::string &name);
 	const std::string &get_name() const;
@@ -52,7 +52,7 @@ public:
 	void set_important(bool flag);
 
 private:
-	std::shared_ptr<CSSProperty2_Impl> impl;
+	std::shared_ptr<CSSProperty_Impl> impl;
 };
 
 }

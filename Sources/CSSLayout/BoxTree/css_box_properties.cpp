@@ -37,10 +37,10 @@ namespace clan
 
 void CSSBoxProperties::apply_properties(const std::string &style_string, std::map<std::string, CSSBoxProperty *> *out_change_set)
 {
-	apply_properties(CSSDocument2::get_style_properties(style_string), out_change_set);
+	apply_properties(CSSDocument::get_style_properties(style_string), out_change_set);
 }
 
-void CSSBoxProperties::apply_properties(const CSSPropertyList2 &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSBoxProperties::apply_properties(const CSSPropertyList &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set)
 {
 	CSSPropertyParsers property_parsers;
 	for (size_t i = css_properties.size(); i > 0; i--)

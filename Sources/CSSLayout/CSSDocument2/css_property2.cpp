@@ -34,10 +34,10 @@ namespace clan
 
 /////////////////////////////////////////////////////////////////////////////
 
-class CSSProperty2_Impl
+class CSSProperty_Impl
 {
 public:
-	CSSProperty2_Impl() : important(false) { }
+	CSSProperty_Impl() : important(false) { }
 
 	std::string name;
 	std::vector<CSSToken> value_tokens;
@@ -46,42 +46,42 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 
-CSSProperty2::CSSProperty2()
-: impl(new CSSProperty2_Impl())
+CSSProperty::CSSProperty()
+: impl(new CSSProperty_Impl())
 {
 }
 
-void CSSProperty2::set_name(const std::string &name)
+void CSSProperty::set_name(const std::string &name)
 {
 	impl->name = name;
 }
 
-const std::string &CSSProperty2::get_name() const
+const std::string &CSSProperty::get_name() const
 {
 	return impl->name;
 }
 
-std::vector<CSSToken> &CSSProperty2::get_value_tokens()
+std::vector<CSSToken> &CSSProperty::get_value_tokens()
 {
 	return impl->value_tokens;
 }
 
-const std::vector<CSSToken> &CSSProperty2::get_value_tokens() const
+const std::vector<CSSToken> &CSSProperty::get_value_tokens() const
 {
 	return impl->value_tokens;
 }
 
-void CSSProperty2::set_value_tokens(const std::vector<CSSToken> &tokens)
+void CSSProperty::set_value_tokens(const std::vector<CSSToken> &tokens)
 {
 	impl->value_tokens = tokens;
 }
 
-bool CSSProperty2::is_important() const
+bool CSSProperty::is_important() const
 {
 	return impl->important;
 }
 
-void CSSProperty2::set_important(bool flag)
+void CSSProperty::set_important(bool flag)
 {
 	impl->important = flag;
 }
