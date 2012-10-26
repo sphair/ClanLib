@@ -41,8 +41,9 @@
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/gui_theme.h"
-#include "gui_font_cache.h"
+#include "API/CSSLayout/css_property_list.h"
 #include "Theme/gui_theme_layout_manager.h"
+#include "gui_font_cache.h"
 #include <vector>
 #include <map>
 
@@ -154,7 +155,7 @@ public:
 	void set_enabled(GUIComponent *component, bool enable);
 	void dispatch_message(GUIMessage &message);
 
-	std::vector<CSSProperty> &get_properties(GUIComponent *component) const;
+	CSSPropertyList &get_properties(GUIComponent *component) const;
 	void reset_properties();
 
 	void register_font(const Font &font, const FontDescription &desc);
@@ -178,7 +179,7 @@ private:
 	void on_close(GUITopLevelWindow *toplevel_window);
 	void on_destroy(GUITopLevelWindow *toplevel_window);
 	void on_input_received(GUITopLevelWindow *toplevel_window, const InputEvent &input_event);
-	mutable std::map< GUIComponent *, std::vector<CSSProperty> > properties_cache;
+	mutable std::map< GUIComponent *, CSSPropertyList > properties_cache;
 
 	struct NamedFontCacheEntry
 	{

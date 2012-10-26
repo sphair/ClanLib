@@ -46,6 +46,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Core/Text/string_format.h"
 #include "gui_component_impl.h"
+#include "gui_component_select_node.h"
 
 namespace clan
 {
@@ -551,12 +552,14 @@ GUIComponent *GUIManager_Impl::get_focus_component()
 	return 0;
 }
 
-std::vector<CSSProperty> &GUIManager_Impl::get_properties(GUIComponent *component) const
+CSSPropertyList &GUIManager_Impl::get_properties(GUIComponent *component) const
 {
-	std::map< GUIComponent *, std::vector<CSSProperty> >::iterator it = properties_cache.find(component);
+	std::map< GUIComponent *, CSSPropertyList >::iterator it = properties_cache.find(component);
 	if (it != properties_cache.end())
 		return it->second;
-	properties_cache[component] = css_document.select(component);
+
+	GUIComponentSelectNode select_node(component);
+	properties_cache[component] = css_document.select(&select_node);
 	return properties_cache[component];
 }
 
