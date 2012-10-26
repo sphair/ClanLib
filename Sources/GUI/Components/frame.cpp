@@ -79,7 +79,7 @@ public:
 Frame::Frame(GUIComponent *parent)
 : GUIComponent(parent), impl(new Frame_Impl)
 {
-	set_type_name(CssStr::Frame::type_name);
+	set_tag_name(CssStr::Frame::type_name);
 	impl->frame = this;
 	impl->prop_text_color = GUIThemePartProperty(CssStr::text_color, "blue");
 	func_process_message().set(impl.get(), &Frame_Impl::on_process_message);

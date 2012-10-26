@@ -70,8 +70,8 @@ PopupMenuWindow::PopupMenuWindow(const PopupMenu &menu, const Point &screen_posi
 : GUIComponent(owner, create_toplevel_description()),
   menu(menu), selected(-1)
 {
-	set_type_name(CssStr::PopupMenuWindow::type_name);
-	set_class_name(menu.get_class_name());
+	set_tag_name(CssStr::PopupMenuWindow::type_name);
+	set_class(menu.get_class());
 
 	prop_icon_column_width = GUIThemePartProperty("icon-column-width", "30");
 

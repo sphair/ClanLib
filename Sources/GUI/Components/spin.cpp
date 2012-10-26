@@ -119,7 +119,7 @@ public:
 Spin::Spin(GUIComponent *parent)
 : GUIComponent(parent), impl(new Spin_Impl)
 {
-	set_type_name(CssStr::Spin::type_name);
+	set_tag_name(CssStr::Spin::type_name);
 	impl->component = this;
 	set_double_click_enabled(false);
 	func_process_message().set(impl.get(), &Spin_Impl::on_process_message);
@@ -381,7 +381,7 @@ void Spin_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void Spin_Impl::create_components()
 {
 	lineedit = new LineEdit(component);
-	lineedit->set_class_name("spin");
+	lineedit->set_class("spin");
 	lineedit->func_after_edit_changed().set(this, &Spin_Impl::on_lineedit_modified);
 	lineedit->set_numeric_mode(true);
 

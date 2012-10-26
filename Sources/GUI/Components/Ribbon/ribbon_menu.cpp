@@ -39,7 +39,7 @@ namespace clan
 RibbonMenu::RibbonMenu(GUIComponent *owner)
 : GUIComponent(owner, create_toplevel_description()), current_item(-1), running(false)
 {
-	set_type_name("ribbon-menu");
+	set_tag_name("ribbon-menu");
 	func_render().set(this, &RibbonMenu::on_render);
 	func_resized().set(this, &RibbonMenu::on_resized);
 	part_background = GUIThemePart(this);

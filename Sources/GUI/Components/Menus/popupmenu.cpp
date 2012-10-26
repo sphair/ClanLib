@@ -97,7 +97,7 @@ Size PopupMenu::get_preferred_size() const
 	return Size(100,100); // todo
 }
 
-std::string PopupMenu::get_class_name() const
+std::string PopupMenu::get_class() const
 {
 	return impl->class_name;
 }

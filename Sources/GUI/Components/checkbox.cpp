@@ -92,7 +92,7 @@ public:
 CheckBox::CheckBox(GUIComponent *parent)
 : GUIComponent(parent), impl(new CheckBox_Impl)
 {
-	set_type_name(CssStr::CheckBox::type_name);
+	set_tag_name(CssStr::CheckBox::type_name);
 	impl->checkbox = this;
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);

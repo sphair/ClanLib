@@ -69,7 +69,7 @@ LineEdit::LineEdit(GUIComponent *parent)
 : GUIComponent(parent),
   impl(new LineEdit_Impl)
 {
-	set_type_name(CssStr::LineEdit::type_name);
+	set_tag_name(CssStr::LineEdit::type_name);
 	set_focus_policy(focus_local);
 
 	func_render().set(impl.get(), &LineEdit_Impl::on_render);

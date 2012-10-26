@@ -40,7 +40,7 @@ namespace clan
 RibbonPage::RibbonPage(GUIComponent *parent, const std::string &text)
 : GUIComponent(parent), text(text), show_tab(true)
 {
-	set_type_name("ribbon-page");
+	set_tag_name("ribbon-page");
 	func_resized().set(this, &RibbonPage::on_resized);
 }
 

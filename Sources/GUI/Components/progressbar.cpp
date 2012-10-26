@@ -86,7 +86,7 @@ public:
 ProgressBar::ProgressBar(GUIComponent *parent)
 : GUIComponent(parent), impl(new ProgressBar_Impl)
 {
-	set_type_name(CssStr::ProgressBar::type_name);
+	set_tag_name(CssStr::ProgressBar::type_name);
 
 	impl->progressbar = this;
 	impl->part_component = GUIThemePart(this);

@@ -67,7 +67,7 @@ namespace clan
 TextEdit::TextEdit(GUIComponent *parent)
 : GUIComponent(parent), impl(new TextEdit_Impl)
 {
-	set_type_name(CssStr::TextEdit::type_name);
+	set_tag_name(CssStr::TextEdit::type_name);
 	set_focus_policy(focus_local);
 
 	func_render().set(impl.get(), &TextEdit_Impl::on_render);
@@ -82,11 +82,6 @@ TextEdit::TextEdit(GUIComponent *parent)
 	impl->scroll_timer.func_expired().set(impl.get(), &TextEdit_Impl::on_scroll_timer_expired);
 	impl->create_components();
 	impl->create_parts();
-
-	set_type_name("textedit");
-	impl->textedit = this;
-	func_process_message().set(impl.get(), &TextEdit_Impl::on_process_message);
-	func_render().set(impl.get(), &TextEdit_Impl::on_render);
 }
 
 TextEdit::~TextEdit()

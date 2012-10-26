@@ -76,7 +76,7 @@ public:
 ToolTip::ToolTip(GUIManager manager)
 : GUIComponent(&manager, ToolTip_Impl::create_description()), impl(new ToolTip_Impl)
 {
-	set_type_name("tooltip");
+	set_tag_name(CssStr::ToolTip::type_name);
 	impl->tooltip = this;
 	impl->prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 

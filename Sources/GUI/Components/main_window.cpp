@@ -82,7 +82,7 @@ MainWindow::MainWindow(GUIManager *owner, const GUITopLevelDescription &descript
 	func_process_message().set(impl.get(), &MainWindow_Impl::on_process_message);
 	func_render().set(impl.get(), &MainWindow_Impl::on_render);
 
-	set_type_name("mainwindow");
+	set_tag_name("mainwindow");
 	
 	impl->menubar = new MenuBar(this);
 	impl->statusbar = new StatusBar(this);
@@ -99,7 +99,7 @@ MainWindow::MainWindow(GUIManager *owner, const GUITopLevelDescription &descript
 MainWindow::MainWindow(GUIComponent *owner, const GUITopLevelDescription &description)
 : GUIComponent( owner, description), impl(new MainWindow_Impl)
 {
-	set_type_name("mainwindow");
+	set_tag_name("mainwindow");
 
 	impl->window = this;
 	impl->title = description.get_title();

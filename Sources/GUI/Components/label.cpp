@@ -75,7 +75,7 @@ public:
 Label::Label(GUIComponent *parent)
 : GUIComponent(parent), impl(new Label_Impl)
 {
-	set_type_name(CssStr::Label::type_name);
+	set_tag_name(CssStr::Label::type_name);
 	impl->label = this;
 	func_process_message().set(impl.get(), &Label_Impl::on_process_message);
 	func_render().set(impl.get(), &Label_Impl::on_render);

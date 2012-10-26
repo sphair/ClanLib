@@ -67,7 +67,7 @@ GUIComponent::GUIComponent(GUIComponent *parent)
 : impl(GUIComponent_Impl::create_from_parent(parent))
 {
 	impl->component = this;
-	impl->type_name = "component";
+	impl->tag_name = "component";
 	impl->geometry = Rect(0,0,0,0);
 
 	if (impl->parent->impl->last_child)
@@ -90,7 +90,7 @@ GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, 0, description);
-	impl->type_name = "component";
+	impl->tag_name = "component";
 	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
 	request_repaint();
 }
@@ -102,7 +102,7 @@ GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, owner, description);
-	impl->type_name = "component";
+	impl->tag_name = "component";
 	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
 	request_repaint();
 }
@@ -934,7 +934,7 @@ GUIComponent *GUIComponent::get_named_item(const std::string &id)
 	GUIComponent *cur = impl->first_child;
 	while (cur && cur != this)
 	{
-		if (cur->get_id_name() == id)
+		if (cur->get_id() == id)
 			return cur;
 
 		if (cur->impl->first_child)

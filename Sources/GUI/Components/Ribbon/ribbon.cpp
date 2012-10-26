@@ -53,7 +53,7 @@ namespace clan
 Ribbon::Ribbon(GUIComponent *container)
 : GUIComponent(container), menu_button(0), current_page_index(0)
 {
-	set_type_name("ribbon");
+	set_tag_name("ribbon");
 	func_render().set(this, &Ribbon::on_render);
 	func_resized().set(this, &Ribbon::on_resized);
 	func_input_pressed().set(this, &Ribbon::on_input_pressed);
@@ -61,7 +61,7 @@ Ribbon::Ribbon(GUIComponent *container)
 	func_input_pointer_moved().set(this, &Ribbon::on_input_pointer_moved);
 
 	menu_button = new PushButton(this);
-	menu_button->set_class_name("menu");
+	menu_button->set_class("menu");
 	menu_button->set_geometry(Rect(0, 0, menu_button->get_preferred_width(), 1 + menu_button->get_preferred_height()));
 	menu_button->func_clicked().set(this, &Ribbon::on_menu_button_clicked);
 

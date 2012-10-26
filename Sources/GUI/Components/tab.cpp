@@ -78,7 +78,7 @@ public:
 Tab::Tab(GUIComponent *parent)
 : GUIComponent(parent), impl(new Tab_Impl)
 {
-	set_type_name(CssStr::Tab::type_name);
+	set_tag_name(CssStr::Tab::type_name);
 	impl->tab = this;
 	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
 	func_render().set(impl.get(), &Tab_Impl::on_render);
@@ -310,7 +310,7 @@ void Tab_Impl::on_style_changed()
 	part_background = GUIThemePart(tab);
 
 	// Hack to test if child component caches need to be invalidated when GUIComponent::set_*_name is called.
-	tab_header->set_class_name(tab_header->get_class_name());
+	tab_header->set_class(tab_header->get_class());
 }
 
 void Tab_Impl::on_header_page_selected(TabPage *tab_page)

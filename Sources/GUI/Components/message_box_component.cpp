@@ -67,7 +67,7 @@ MessageBoxComponent::MessageBoxComponent(
 	messagebox_buttons(buttons),
 	messagebox_icon(icon)
 {
-	set_type_name(CssStr::MessageBox::type_name);
+	set_tag_name(CssStr::MessageBox::type_name);
 	set_css_class();
 	create_buttons();
 	create_parts();
@@ -296,7 +296,7 @@ void MessageBoxComponent::set_css_class()
 		break;
 	}
 
-	set_class_name(icon_class);
+	set_class(icon_class);
 }
 
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)

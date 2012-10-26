@@ -48,7 +48,7 @@ namespace clan
 ScrollBar::ScrollBar(GUIComponent *parent)
 : GUIComponent(parent), impl(new ScrollBar_Impl)
 {
-	set_type_name(CssStr::ScrollBar::type_name);
+	set_tag_name(CssStr::ScrollBar::type_name);
 	// set_state(CssStr::normal, true);
 
 	impl->scrollbar = this;

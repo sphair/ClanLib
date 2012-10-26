@@ -65,13 +65,13 @@ public:
 
 public:
 	/// \brief Returns the component type name.
-	std::string get_type_name() const;
+	std::string get_tag_name() const;
 
 	/// \brief Returns the component class name.
-	std::string get_class_name() const;
+	std::string get_class() const;
 
 	/// \brief Returns the component ID name.
-	std::string get_id_name() const;
+	std::string get_id() const;
 
 	/// \brief Controls whether a component can be resized.
 	bool get_allow_resize() const;
@@ -82,13 +82,13 @@ public:
 
 public:
 	/// \brief Sets the component type name.
-	void set_type_name(const std::string &name);
+	void set_tag_name(const std::string &name);
 
 	/// \brief Sets the component class name.
-	void set_class_name(const std::string &name);
+	void set_class(const std::string &name);
 
 	/// \brief Sets the component ID name.
-	void set_id_name(const std::string &name);
+	void set_id(const std::string &name);
 
 	/// \brief Controls whether a component can be resized.
 	void set_allow_resize(bool value);

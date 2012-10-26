@@ -292,9 +292,9 @@ void GUIXMLLoaderVersion_1_0::load(DomElement &element, GUIComponent *parent)
 		{
 			if (!e.has_attribute("id"))
 				throw Exception(string_format("GUIXMLLoaderVersion_1_0 need the field id for the component \"%1\"", tag));
-			new_comp->set_id_name(e.get_attribute("id"));
+			new_comp->set_id(e.get_attribute("id"));
 
-			new_comp->set_class_name(e.get_attribute("class"));
+			new_comp->set_class(e.get_attribute("class"));
 			new_comp->set_enabled(e.get_attribute_bool("enabled", true));
 
 			//Position

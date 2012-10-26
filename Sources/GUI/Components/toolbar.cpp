@@ -127,8 +127,8 @@ public:
 ToolBar::ToolBar(GUIComponent *parent)
 : GUIComponent(parent), impl(new ToolBar_Impl)
 {
-	set_type_name("toolbar");
-	set_class_name("horizontal");
+	set_tag_name(CssStr::ToolBar::type_name);
+	set_class("horizontal");
 	impl->toolbar = this;
 	func_process_message().set(impl.get(), &ToolBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolBar_Impl::on_render);
@@ -425,9 +425,9 @@ void ToolBar_Impl::on_resized()
 		if (old_horiz != horizontal)
 		{
 			if (horizontal)
-				toolbar->set_class_name("horizontal");
+				toolbar->set_class("horizontal");
 			else 
-				toolbar->set_class_name("vertical");
+				toolbar->set_class("vertical");
 		}
 
 		need_layout_update = true;

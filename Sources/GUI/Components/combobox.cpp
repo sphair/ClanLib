@@ -112,7 +112,7 @@ public:
 ComboBox::ComboBox(GUIComponent *parent)
 : GUIComponent(parent), impl(new ComboBox_Impl)
 {
-	set_type_name(CssStr::ComboBox::type_name);
+	set_tag_name(CssStr::ComboBox::type_name);
 	set_focus_policy(focus_local);
 	impl->component = this;
 	func_process_message().set(impl.get(), &ComboBox_Impl::on_process_message);

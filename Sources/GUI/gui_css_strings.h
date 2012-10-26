@@ -157,6 +157,11 @@ namespace CssStr
 		const std::string type_name = "scrollbar";
 	}
 
+	namespace StatusBar
+	{
+		const std::string type_name = "statusbar";
+	}
+
 	namespace Spin
 	{
 		const std::string type_name = "spin";
@@ -201,6 +206,11 @@ namespace CssStr
 	{
 		const std::string type_name = "toolbar";
 		const std::string part_item = "item";
+	}
+
+	namespace ToolTip
+	{
+		const std::string type_name = "tooltip";
 	}
 
 	namespace Window

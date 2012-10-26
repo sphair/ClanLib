@@ -57,17 +57,17 @@ GUIComponentDescription::~GUIComponentDescription()
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponentDescription Attributes:
 
-std::string GUIComponentDescription::get_type_name() const
+std::string GUIComponentDescription::get_tag_name() const
 {
 	return impl->type_name;
 }
 	
-std::string GUIComponentDescription::get_class_name() const
+std::string GUIComponentDescription::get_class() const
 {
 	return impl->class_name;
 }
 
-std::string GUIComponentDescription::get_id_name() const
+std::string GUIComponentDescription::get_id() const
 {
 	return impl->id_name;
 }
@@ -80,17 +80,17 @@ bool GUIComponentDescription::get_allow_resize() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponentDescription Operations:
 
-void GUIComponentDescription::set_type_name(const std::string &name)
+void GUIComponentDescription::set_tag_name(const std::string &name)
 {
 	impl->type_name = name;
 }
 	
-void GUIComponentDescription::set_class_name(const std::string &name)
+void GUIComponentDescription::set_class(const std::string &name)
 {
 	impl->class_name = name;
 }
 
-void GUIComponentDescription::set_id_name(const std::string &name)
+void GUIComponentDescription::set_id(const std::string &name)
 {
 	impl->id_name = name;
 }

@@ -83,7 +83,7 @@ public:
 PushButton::PushButton(GUIComponent *parent)
 : GUIComponent(parent), impl(new PushButton_Impl)
 {
-	set_type_name(CssStr::PushButton::type_name);
+	set_tag_name(CssStr::PushButton::type_name);
 	set_blocks_default_action(true);
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);

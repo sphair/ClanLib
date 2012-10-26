@@ -75,7 +75,7 @@ public:
 	/// \brief Get Class name
 	///
 	/// \return class_name
-	std::string get_class_name() const;
+	std::string get_class() const;
 
 	/// \brief Get item
 	///

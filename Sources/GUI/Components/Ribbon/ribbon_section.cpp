@@ -37,7 +37,7 @@ namespace clan
 RibbonSection::RibbonSection(GUIComponent *parent, const std::string &text, int size)
 : GUIComponent(parent), text(text), size(size)
 {
-	set_type_name("ribbon-section");
+	set_tag_name("ribbon-section");
 	func_render().set(this, &RibbonSection::on_render);
 
 	part_section = GUIThemePart(this);

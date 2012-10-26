@@ -121,7 +121,7 @@ Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
 	func_style_changed().set(impl.get(), &Window_Impl::on_style_changed);
 	func_resized().set(impl.get(), &Window_Impl::on_resized);
 
-	set_type_name(CssStr::Window::type_name);
+	set_tag_name(CssStr::Window::type_name);
 
 	impl->create_parts();
 }
@@ -142,7 +142,7 @@ Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
 	func_style_changed().set(impl.get(), &Window_Impl::on_style_changed);
 	func_resized().set(impl.get(), &Window_Impl::on_resized);
 
-	set_type_name(CssStr::Window::type_name);
+	set_tag_name(CssStr::Window::type_name);
 
 	impl->create_parts();
 }
