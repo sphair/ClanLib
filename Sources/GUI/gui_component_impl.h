@@ -34,6 +34,7 @@
 #include "API/GUI/gui_component.h"
 #include "API/CSSLayout/css_layout.h"
 #include "API/CSSLayout/css_layout_element.h"
+#include "API/CSSLayout/css_box_properties.h"
 #include <vector>
 #include <map>
 #include <memory>
@@ -119,6 +120,8 @@ public:
 	CSSLayout css_layout;
 	CSSLayoutElement css_element;
 	bool double_click_enabled;
+
+	CSSBoxProperties css_properties;
 
 /// \}
 /// \name Operations

@@ -35,7 +35,6 @@
 #include "listview_shown_item.h"
 #include "listview_layout.h"
 #include "API/GUI/Components/listview.h"
-#include "API/GUI/gui_theme_part_property.h"
 
 namespace clan
 {

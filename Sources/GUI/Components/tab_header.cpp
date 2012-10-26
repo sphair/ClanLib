@@ -33,7 +33,6 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_theme_part.h"
-#include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab_page.h"
 #include "API/Display/Font/font.h"

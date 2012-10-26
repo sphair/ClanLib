@@ -28,6 +28,8 @@
 
 #pragma once
 
+#include "../Core/Text/string_help.h"
+
 namespace clan
 {
 

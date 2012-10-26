@@ -54,7 +54,7 @@ namespace clan
 // GUIManager_Impl Construction:
 
 GUIManager_Impl::GUIManager_Impl()
-: mouse_capture_component(0), mouse_over_component(0), theme(0), exit_flag(false), exit_code(0), window_manager(NULL)
+: mouse_capture_component(0), mouse_over_component(0), exit_flag(false), exit_code(0), window_manager(NULL)
 {
 	func_focus_lost.set(this, &GUIManager_Impl::on_focus_lost);
 	func_focus_gained.set(this, &GUIManager_Impl::on_focus_gained);

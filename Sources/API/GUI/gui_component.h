@@ -69,7 +69,7 @@ class GUIConsumedKeys;
 class CSSLayout;
 class CSSLayoutElement;
 class GUIComponent_Impl;
-class Canvas;
+class CSSBoxProperties;
 
 typedef DisplayWindowDescription GUITopLevelDescription;
 
@@ -131,6 +131,9 @@ public:
 
 	/// \brief Returns all pseudo classes currently present
 	std::vector<std::string> get_pseudo_classes() const;
+
+	/// \brief Returns the standard W3C CSS properties active for this component
+	const CSSBoxProperties &get_css_properties() const;
 
 	/// \brief Returns true if the component has the focus.
 	bool has_focus() const;

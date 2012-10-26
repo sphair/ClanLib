@@ -35,7 +35,6 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/Components/label.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"

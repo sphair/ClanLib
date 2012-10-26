@@ -32,6 +32,7 @@
 
 #include "API/Core/Signals/callback_1.h"
 #include "API/Core/Signals/callback_v2.h"
+#include "API/Core/Resources/resource_manager.h"
 #include "API/CSSLayout/css_document.h"
 #include "API/CSSLayout/css_property.h"
 #include "API/Core/System/timer.h"
@@ -40,8 +41,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
-#include "API/GUI/gui_theme.h"
-#include "API/CSSLayout/css_property_list.h"
 #include "Theme/gui_theme_layout_manager.h"
 #include "gui_font_cache.h"
 #include <vector>
@@ -51,7 +50,6 @@ namespace clan
 {
 
 class GUIMessage;
-class GUITheme;
 class GUIWindowManager;
 class GUIComponent_Impl;
 class InputEvent;
@@ -127,9 +125,10 @@ public:
 	mutable CSSDocument css_document;
 	GUIThemeLayoutManager layout_manager;
 
+	ResourceManager resources;
+
 	GUIComponent *mouse_capture_component;
 	GUIComponent *mouse_over_component;
-	GUITheme theme;
 	GUIWindowManager window_manager;
 	bool exit_flag;
 	int exit_code;

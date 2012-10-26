@@ -31,9 +31,7 @@
 #pragma once
 
 #include "API/GUI/gui_manager.h"
-#include "API/GUI/gui_theme.h"
 #include "API/GUI/gui_theme_part.h"
-#include "API/GUI/gui_theme_part_property.h"
 #include "API/GUI/gui_component.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Math/rect.h"
@@ -53,111 +51,23 @@ class GUIThemePart_Impl
 public:
 	GUIThemePart_Impl(GUIComponent *component);
 
-	std::string get_property(const GUIThemePart &part, const std::string &name, const std::string &hash, const std::string &default_value) const;
-	std::string get_css_value(const std::string &name, const std::string &hash, const std::string &default_value) const;
-
 	GUIManager get_manager() const;
 
-	void check_content_shrink_box_is_cached(const GUIThemePart &part) const;
-
 	GUIComponent *component;
-	std::string relative_element_name;
-	std::vector<std::string> states;
-	mutable std::string element_name;
-	mutable std::string last_component_element_name;
 
 	mutable bool has_cached_content_box_shrink_rect;
 	mutable Rect cached_content_box_shrink_rect;
 	mutable bool font_loaded;
-
-	GUIThemePartProperty prop_margin_top;
-	GUIThemePartProperty prop_margin_left;
-	GUIThemePartProperty prop_margin_right;
-	GUIThemePartProperty prop_margin_bottom;
-	GUIThemePartProperty prop_border_top;
-	GUIThemePartProperty prop_border_left;
-	GUIThemePartProperty prop_border_right;
-	GUIThemePartProperty prop_border_bottom;
-	GUIThemePartProperty prop_padding_top;
-	GUIThemePartProperty prop_padding_left;
-	GUIThemePartProperty prop_padding_right;
-	GUIThemePartProperty prop_padding_bottom;
-	GUIThemePartProperty prop_minimum_width;
-	GUIThemePartProperty prop_minimum_height;
-	GUIThemePartProperty prop_maximum_width;
-	GUIThemePartProperty prop_maximum_height;
-	GUIThemePartProperty prop_preferred_width;
-	GUIThemePartProperty prop_preferred_height;
-	GUIThemePartProperty prop_font_weight;
-	GUIThemePartProperty prop_font_size;
-	GUIThemePartProperty prop_font_style;
-	GUIThemePartProperty prop_text_decoration;
-	GUIThemePartProperty prop_font_family;
 };
 
 inline GUIThemePart_Impl::GUIThemePart_Impl(GUIComponent *component)
 : component(component), has_cached_content_box_shrink_rect(false), font_loaded(false)
 {
-	prop_margin_top = GUIThemePartProperty("margin-top", "0");
-	prop_margin_left = GUIThemePartProperty("margin-left", "0");
-	prop_margin_right = GUIThemePartProperty("margin-right", "0");
-	prop_margin_bottom = GUIThemePartProperty("margin-bottom", "0");
-	prop_border_top = GUIThemePartProperty("border-top", "0");
-	prop_border_left = GUIThemePartProperty("border-left", "0");
-	prop_border_right = GUIThemePartProperty("border-right", "0");
-	prop_border_bottom = GUIThemePartProperty("border-bottom", "0");
-	prop_padding_top = GUIThemePartProperty("padding-top", "0");
-	prop_padding_left = GUIThemePartProperty("padding-left", "0");
-	prop_padding_right = GUIThemePartProperty("padding-right", "0");
-	prop_padding_bottom = GUIThemePartProperty("padding-bottom", "0");
-	prop_minimum_width = GUIThemePartProperty("minimum-width", "0");
-	prop_minimum_height = GUIThemePartProperty("minimum-height", "0");
-	prop_maximum_width = GUIThemePartProperty("maximum-width", "4026531839");
-	prop_maximum_height = GUIThemePartProperty("maximum-height", "4026531839");
-	prop_preferred_width = GUIThemePartProperty("preferred-width", "0");
-	prop_preferred_height = GUIThemePartProperty("preferred-height", "0");
-	prop_font_weight = GUIThemePartProperty("font-weight", CssStr::normal);
-	prop_font_size = GUIThemePartProperty("font-size", "-11");
-	prop_font_style = GUIThemePartProperty("font-style", CssStr::normal);
-	prop_text_decoration = GUIThemePartProperty("text-decoration", CssStr::normal);
-	prop_font_family = GUIThemePartProperty("font-family", "Tahoma");
-}
-
-inline std::string GUIThemePart_Impl::get_property(const GUIThemePart &part, const std::string &name, const std::string &hash, const std::string &default_value) const
-{
-	std::string css_value = get_css_value(name, hash, default_value);
-
-	// Check if theme wants to override the property:
-	GUITheme theme = component->get_theme();
-	if (!theme.is_null())
-		return theme.get_property(part, name, css_value);
-	else
-		return css_value;
-}
-
-inline std::string GUIThemePart_Impl::get_css_value(const std::string &name, const std::string &hash, const std::string &default_value) const
-{
-	//get_manager().impl->get_properties(component);
-
-	return default_value;
 }
 
 inline GUIManager GUIThemePart_Impl::get_manager() const
 {
 	return component->get_gui_manager();
-}
-
-inline void GUIThemePart_Impl::check_content_shrink_box_is_cached(const GUIThemePart &part) const
-{
-	if (has_cached_content_box_shrink_rect)
-		return;
-
-	GUITheme theme = component->get_theme();
-	if (theme.is_null())
-		throw Exception("GUIThemePart: No theme.");
-
-	has_cached_content_box_shrink_rect = true;
-	cached_content_box_shrink_rect = part.get_content_shrink_box();
 }
 
 }

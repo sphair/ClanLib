@@ -45,8 +45,6 @@ class Font;
 class Canvas;
 
 class GUIComponent;
-class GUIThemePartProperty;
-class GUITheme;
 class GUIThemePart_Impl;
 
 /// \brief GUI theme part description.
@@ -66,18 +64,6 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns the CSS element name for the part in its current states.
-	std::string get_element_name() const;
-
-	/// \brief Returns the setting of a state.
-	bool get_state(const std::string &name) const;
-
-	/// \brief Returns the value of a property.
-	std::string get_property(const GUIThemePartProperty &property) const;
-
-	/// \brief Returns the value of a property as an integer.
-	int get_property_int(const GUIThemePartProperty &property) const;
-
 	/// \brief Get Component
 	///
 	/// \return component
@@ -129,9 +115,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Sets a part state. Returns true if the state was modified, false if it was already in wanted state.
-	bool set_state(const std::string &name, bool flag);
-
 	/// \brief Render box
 	///
 	/// \param canvas = Canvas
@@ -160,8 +143,6 @@ public:
 /// \{
 private:
 	std::shared_ptr<GUIThemePart_Impl> impl;
-
-	friend class GUIThemePartProperty_Impl;
 /// \}
 };
 

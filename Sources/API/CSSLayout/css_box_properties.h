@@ -105,6 +105,7 @@
 #include "PropertyTypes/css_box_width.h"
 #include "PropertyTypes/css_box_word_spacing.h"
 #include "PropertyTypes/css_box_z_index.h"
+#include <map>
 
 namespace clan
 {
