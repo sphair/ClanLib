@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Core/precomp.h"
-#include "API/Core/CSS/css_tokenizer.h"
-#include "API/Core/CSS/css_token.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/css_tokenizer.h"
+#include "API/CSSLayout/css_token.h"
 #include "css_tokenizer_impl.h"
 
 namespace clan
