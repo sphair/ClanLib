@@ -51,14 +51,13 @@ namespace clan
 class GUIThemePart_Impl
 {
 public:
-	GUIThemePart_Impl();
-	void update_element_name() const;
+	GUIThemePart_Impl(GUIComponent *component);
 
 	std::string get_property(const GUIThemePart &part, const std::string &name, const std::string &hash, const std::string &default_value) const;
 	std::string get_css_value(const std::string &name, const std::string &hash, const std::string &default_value) const;
-	inline void check_for_update_element_name() const;
-	std::string get_css_value_slow(const std::string &name, const std::string &default_value) const;
+
 	GUIManager get_manager() const;
+
 	void check_content_shrink_box_is_cached(const GUIThemePart &part) const;
 
 	GUIComponent *component;
@@ -67,20 +66,6 @@ public:
 	mutable std::string element_name;
 	mutable std::string last_component_element_name;
 
-	struct PropertyCacheEntry
-	{
-		PropertyCacheEntry(const std::string &key, const std::string &value)
-			: key(key), value(value)
-		{
-			hash = HashFunctions::sha1(StringHelp::text_to_utf8(key));
-		}
-
-		std::string key;
-		std::string hash;
-		std::string value;
-	};
-
-	mutable std::vector<PropertyCacheEntry> properties_cache;
 	mutable bool has_cached_content_box_shrink_rect;
 	mutable Rect cached_content_box_shrink_rect;
 	mutable bool font_loaded;
@@ -110,8 +95,8 @@ public:
 	GUIThemePartProperty prop_font_family;
 };
 
-inline GUIThemePart_Impl::GUIThemePart_Impl()
-: component(0), has_cached_content_box_shrink_rect(false)
+inline GUIThemePart_Impl::GUIThemePart_Impl(GUIComponent *component)
+: component(component), has_cached_content_box_shrink_rect(false), font_loaded(false)
 {
 	prop_margin_top = GUIThemePartProperty("margin-top", "0");
 	prop_margin_left = GUIThemePartProperty("margin-left", "0");
@@ -138,21 +123,6 @@ inline GUIThemePart_Impl::GUIThemePart_Impl()
 	prop_font_family = GUIThemePartProperty("font-family", "Tahoma");
 }
 
-inline void GUIThemePart_Impl::update_element_name() const
-{
-	properties_cache.clear();
-	element_name.clear();
-	if (!relative_element_name.empty())
-		element_name = component->get_element_name() + " " + relative_element_name;
-	else
-		element_name = component->get_element_name();
-	
-	std::vector<std::string>::size_type index, size;
-	size = states.size();
-	for (index = 0; index < size; index++)
-		element_name += ":" + states[index];
-}
-
 inline std::string GUIThemePart_Impl::get_property(const GUIThemePart &part, const std::string &name, const std::string &hash, const std::string &default_value) const
 {
 	std::string css_value = get_css_value(name, hash, default_value);
@@ -167,47 +137,9 @@ inline std::string GUIThemePart_Impl::get_property(const GUIThemePart &part, con
 
 inline std::string GUIThemePart_Impl::get_css_value(const std::string &name, const std::string &hash, const std::string &default_value) const
 {
-	check_for_update_element_name();
+	//get_manager().impl->get_properties(component);
 
-	for (std::vector<PropertyCacheEntry>::size_type i=0; i < properties_cache.size(); i++)
-	{
-		PropertyCacheEntry &entry = properties_cache[i];
-		if (entry.hash == hash /* && entry.key == name*/)
-			return entry.value;
-	}
-
-	return get_css_value_slow(name, default_value);
-}
-
-inline void GUIThemePart_Impl::check_for_update_element_name() const
-{
-	if (component->get_element_name() != last_component_element_name)
-	{
-		last_component_element_name = component->get_element_name();
-		update_element_name();
-	}
-}
-
-inline std::string GUIThemePart_Impl::get_css_value_slow(const std::string &name, const std::string &default_value) const
-{
-	std::string css_value = default_value;
-
-	std::vector<CSSProperty> &properties = get_manager().impl->get_properties(element_name);
-	for (size_t i = 0; i < properties.size(); i++)
-	{
-		if (properties[i].get_name() == name)
-		{
-			const std::vector<CSSToken> &tokens = properties[i].get_value_tokens();
-			css_value.clear();
-			for (size_t j = 0; j < tokens.size(); j++)
-				css_value += tokens[j].value + tokens[j].dimension;
-			break;
-		}
-	}
-
-	PropertyCacheEntry entry(name, css_value);
-	properties_cache.push_back(entry);
-	return css_value;
+	return default_value;
 }
 
 inline GUIManager GUIThemePart_Impl::get_manager() const
