@@ -556,8 +556,7 @@ std::vector<CSSProperty> &GUIManager_Impl::get_properties(const std::string &ele
 	std::map< std::string, std::vector<CSSProperty> >::iterator it = properties_cache.find(element_name);
 	if (it != properties_cache.end())
 		return it->second;
-	CSSDocument css_document_const_hack = css_document;
-	properties_cache[element_name] = css_document_const_hack.select(element_name);
+	properties_cache[element_name] = css_document.select(element_name);
 	return properties_cache[element_name];
 }
 

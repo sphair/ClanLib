@@ -123,7 +123,7 @@ public:
 	std::vector<GUITopLevelWindow *> root_components;
 	Signal_v1<GUIMessage &> sig_filter_message;
 	Callback_0<int> func_exec_handler;
-	CSSDocument css_document;
+	mutable CSSDocument css_document;
 	GUIThemeLayoutManager layout_manager;
 
 	GUIComponent *mouse_capture_component;
