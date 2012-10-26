@@ -39,6 +39,7 @@
 #include "API/Core/Math/rect.h"
 #include "API/CSSLayout/css_property.h"
 #include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/css_token.h"
 #include "API/Core/Crypto/hash_functions.h"
 #include "../gui_manager_impl.h"
 #include "../gui_css_strings.h"
@@ -196,7 +197,10 @@ inline std::string GUIThemePart_Impl::get_css_value_slow(const std::string &name
 	{
 		if (properties[i].get_name() == name)
 		{
-			css_value = properties[i].get_value();
+			const std::vector<CSSToken> &tokens = properties[i].get_value_tokens();
+			css_value.clear();
+			for (size_t j = 0; j < tokens.size(); j++)
+				css_value += tokens[j].value + tokens[j].dimension;
 			break;
 		}
 	}

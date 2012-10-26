@@ -179,7 +179,7 @@ void GUIManager::add_theme(const std::string &path_to_theme)
 	ResourceManager resources("resources.xml", dir);
 	impl->theme.add_resources(resources);
 
-	impl->css_document.load("theme.css", dir);
+	impl->css_document.add_sheet(dir.open_file_read("theme.css"));
 	impl->reset_properties(); // Clear the properties cache
 }
 
@@ -197,14 +197,14 @@ void GUIManager::set_css_document(CSSDocument css)
 void GUIManager::set_css_document(const std::string &fullname)
 {
 	CSSDocument css;
-	css.load(fullname); 
+	css.add_sheet(fullname); 
 	set_css_document(css);
 }
 
 void GUIManager::set_css_document(const std::string &filename, const VirtualDirectory &directory)
 {
 	CSSDocument css;
-	css.load(filename, directory); 
+	css.add_sheet(directory.open_file_read(filename)); 
 	set_css_document(css);
 }
 
