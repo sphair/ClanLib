@@ -53,12 +53,8 @@ GUIThemePart::GUIThemePart()
 GUIThemePart::GUIThemePart(
 	GUIComponent *component,
 	const std::string &relative_element_name)
-: impl(new GUIThemePart_Impl)
+: impl(new GUIThemePart_Impl(component))
 {
-	impl->component = component;
-	impl->relative_element_name = relative_element_name;
-	impl->font_loaded = false;
-	impl->update_element_name();
 }
 	
 GUIThemePart::~GUIThemePart()
@@ -266,7 +262,6 @@ bool GUIThemePart::set_state(const std::string &name, bool flag)
 			if (impl->states[index] == name)
 				return false;
 		impl->states.push_back(name);
-		impl->update_element_name();
 		return true;
 	}
 	else
@@ -276,7 +271,6 @@ bool GUIThemePart::set_state(const std::string &name, bool flag)
 			if (impl->states[index] == name)
 			{
 				impl->states.erase(impl->states.begin() + index);
-				impl->update_element_name();
 				return true;
 			}
 		}
