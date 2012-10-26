@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "css_property_parsers.h"
 #include "css_property_parser.h"
-#include "API/CSSLayout/css_property2.h"
+#include "API/CSSLayout/css_property.h"
 #include "PropertyParsers/css_parser_background.h"
 #include "PropertyParsers/css_parser_background_attachment.h"
 #include "PropertyParsers/css_parser_background_color.h"

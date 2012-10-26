@@ -32,8 +32,8 @@
 
 #include "API/Core/Signals/callback_1.h"
 #include "API/Core/Signals/callback_v2.h"
-#include "API/Core/CSS/css_document.h"
-#include "API/Core/CSS/css_property.h"
+#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/css_property.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"

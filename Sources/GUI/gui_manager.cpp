@@ -29,7 +29,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/Core/CSS/css_document.h"
+#include "API/CSSLayout/css_document.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/GUI/accelerator_table.h"

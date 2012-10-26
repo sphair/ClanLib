@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/css_box_properties.h"
-#include "API/CSSLayout/css_document2.h"
-#include "API/CSSLayout/css_property_list2.h"
+#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/css_property_list.h"
 #include "css_property_parsers.h"
 
 namespace clan
