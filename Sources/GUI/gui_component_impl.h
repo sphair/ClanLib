@@ -30,6 +30,7 @@
 #pragma once
 
 #include "API/Core/Signals/callback_2.h"
+#include "API/Core/Signals/signal_v1.h"
 #include "API/GUI/gui_component.h"
 #include "API/CSSLayout/css_layout.h"
 #include "API/CSSLayout/css_layout_element.h"
@@ -90,7 +91,7 @@ public:
 	Callback_1<bool, const InputEvent &> func_input_released;
 	Callback_1<bool, const InputEvent &> func_input_doubleclick;
 	Callback_1<bool, const InputEvent &> func_input_pointer_moved;
-	Callback_v0 func_style_changed;
+	Signal_v1<const CSSPropertyList &> sig_style_changed;
 	Callback_v0 func_enablemode_changed;
 	Callback_v0 func_resized;
 	Callback_v1<GUIMessage &> func_filter_message;

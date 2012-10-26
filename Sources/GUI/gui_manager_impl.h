@@ -155,9 +155,6 @@ public:
 	void set_enabled(GUIComponent *component, bool enable);
 	void dispatch_message(GUIMessage &message);
 
-	CSSPropertyList &get_properties(GUIComponent *component) const;
-	void reset_properties();
-
 	void register_font(const Font &font, const FontDescription &desc);
 
 	bool is_constant_repaint_enabled() const;
@@ -179,7 +176,6 @@ private:
 	void on_close(GUITopLevelWindow *toplevel_window);
 	void on_destroy(GUITopLevelWindow *toplevel_window);
 	void on_input_received(GUITopLevelWindow *toplevel_window, const InputEvent &input_event);
-	mutable std::map< GUIComponent *, CSSPropertyList > properties_cache;
 
 	struct NamedFontCacheEntry
 	{
