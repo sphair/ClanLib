@@ -115,17 +115,17 @@ public:
 	/// \brief Returns the position and size of the component window (window frame, borders etc).
 	Rect get_window_geometry() const;
 
-	/// \brief Returns the component type name.
-	std::string get_type_name() const;
+	/// \brief Returns the DOM tag name
+	std::string get_tag_name() const;
 
-	/// \brief Returns the component class name.
-	std::string get_class_name() const;
+	/// \brief Returns the DOM id attribute
+	std::string get_id() const;
 
-	/// \brief Returns the component ID name.
-	std::string get_id_name() const;
+	/// \brief Returns the DOM class attribute
+	std::string get_class() const;
 
-	/// \brief Returns the CSS element name for the component.
-	std::string get_element_name() const;
+	/// \brief Returns whether a DOM pseudo class is present or not.
+	bool get_pseudo_class(const std::string &name) const;
 
 	/// \brief Returns true if the component has the focus.
 	bool has_focus() const;
@@ -428,14 +428,17 @@ public:
 	/// \brief Set component window position and size
 	void set_window_geometry(Rect geometry);
 
-	/// \brief Sets the component type name. (csstype.cssclass#cssid)
-	void set_type_name(const std::string &name); 
+	/// \brief Sets the DOM tag name
+	void set_tag_name(const std::string &name); 
 
-	/// \brief Sets the component class name. (csstype.cssclass#cssid)
-	void set_class_name(const std::string &name);
+	/// \brief Sets the DOM class
+	void set_class(const std::string &name);
 
-	/// \brief Sets the component ID name. (csstype.cssclass#cssid)
-	void set_id_name(const std::string &name);
+	/// \brief Sets the DOM id
+	void set_id(const std::string &name);
+
+	/// \brief Controls the presence of a DOM pseudo class
+	void set_pseudo_class(const std::string &name, bool enable) const;
 
 	/// \brief Sets the component as enabled or disabled.
 	void set_enabled(bool enable = true);
