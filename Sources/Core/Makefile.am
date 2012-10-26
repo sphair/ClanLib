@@ -1,8 +1,8 @@
 AUTOMAKE_OPTIONS = subdir-objects
 
-lib_LTLIBRARIES = libclan24Core.la
+lib_LTLIBRARIES = libclan30Core.la
 
-libclan24Core_la_SOURCES = \
+libclan30Core_la_SOURCES = \
 core_global.cpp \
 core_iostream.cpp \
 CSS/css_document.cpp \
@@ -76,11 +76,11 @@ Math/rect_packer_impl.h \
 Crypto/secret.cpp \
 Crypto/secret_impl.cpp \
 Crypto/sha1.cpp \
-Crypto/sha224.cpp \
+Crypto/sha230.cpp \
 Crypto/sha256.cpp \
 Crypto/sha384.cpp \
 Crypto/sha512.cpp \
-Crypto/sha512_224.cpp \
+Crypto/sha512_230.cpp \
 Crypto/sha512_256.cpp \
 Crypto/aes128_encrypt.cpp \
 Crypto/aes128_encrypt_impl.cpp \
@@ -173,14 +173,14 @@ XML/xpath_evaluator_impl.cpp \
 XML/xpath_object.cpp
 
 if WIN32
-libclan24Core_la_SOURCES += \
+libclan30Core_la_SOURCES += \
 IOData/Win32/directory_scanner_win32.cpp \
 System/Win32/event_provider_win32.cpp \
 System/Win32/init_win32.cpp \
 System/Win32/service_win32.cpp \
 System/Win32/thread_win32.cpp
 else
-libclan24Core_la_SOURCES += \
+libclan30Core_la_SOURCES += \
 IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
 System/Unix/init_linux.cpp \
@@ -189,12 +189,12 @@ System/Unix/thread_unix.cpp
 endif
 
 # FIXME: Hardcoding these here might not be a good idea
-libclan24Core_la_LIBADD = @LIBPTHREAD@
+libclan30Core_la_LIBADD = @LIBPTHREAD@
 
-libclan24Core_la_LDFLAGS = \
+libclan30Core_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCore)
 
-libclan24Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
+libclan30Core_la_CXXFLAGS=$(clanCore_CXXFLAGS) $(extra_CFLAGS_clanCore)
 
 # EOF #

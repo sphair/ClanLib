@@ -1,10 +1,10 @@
-lib_LTLIBRARIES = libclan24Display.la
+lib_LTLIBRARIES = libclan30Display.la
 
 if WIN32
 else
-libclan24Display_la_LIBADD = -lpng -ljpeg
+libclan30Display_la_LIBADD = -lpng -ljpeg
 endif
-libclan24Display_la_SOURCES = \
+libclan30Display_la_SOURCES = \
 	Font/font_vector.cpp \
 	Font/glyph_contour.cpp \
 	Font/glyph_cache.cpp \
@@ -143,14 +143,14 @@ libclan24Display_la_SOURCES = \
 	Collision/collision_outline_generic.h
 
 if WIN32
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	Font/FontEngine/font_engine_win32.cpp \
 	Font/FontEngine/font_engine_win32.h
 endif
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	setup_display.cpp
 if WIN32
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	Win32/display_message_queue_win32.cpp \
 	Win32/cursor_provider_win32.cpp \
 	Win32/input_device_provider_directinput.cpp \
@@ -168,7 +168,7 @@ libclan24Display_la_SOURCES += \
 	Win32/input_device_provider_directinput.h \
 	Win32/win32_window.h
 else
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	X11/clipboard_x11.h \
 	X11/display_message_queue_x11.h \
 	X11/input_device_provider_x11mouse.h \
@@ -183,19 +183,19 @@ libclan24Display_la_SOURCES += \
 	X11/display_message_queue_x11.cpp
 
 if LINUX_JOYSTICK
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	X11/input_device_provider_linuxjoystick.cpp \
 	X11/input_device_provider_linuxjoystick.h
 endif
-libclan24Display_la_SOURCES += \
+libclan30Display_la_SOURCES += \
 	X11/font_config.cpp \
 	X11/font_config.h
 endif
 
-libclan24Display_la_LDFLAGS = \
+libclan30Display_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanDisplay)
 
-libclan24Display_la_CXXFLAGS=$(clanDisplay_CXXFLAGS) $(extra_CFLAGS_clanDisplay)
+libclan30Display_la_CXXFLAGS=$(clanDisplay_CXXFLAGS) $(extra_CFLAGS_clanDisplay)
 # EOF #
 

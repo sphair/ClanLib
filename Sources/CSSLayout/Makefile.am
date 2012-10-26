@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan24CSSLayout.la
+lib_LTLIBRARIES = libclan30CSSLayout.la
 
-libclan24CSSLayout_la_SOURCES = \
+libclan30CSSLayout_la_SOURCES = \
 	css_layout_node.cpp \
 	css_layout_object.cpp \
 	css_layout_text.cpp \
@@ -335,10 +335,10 @@ libclan24CSSLayout_la_SOURCES = \
 	LayoutTree/css_used_values.h \
 	LayoutTree/css_layout_hit_test_result.h
 
-libclan24CSSLayout_la_LDFLAGS = \
+libclan30CSSLayout_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanCSSLayout)
 
-libclan24CSSLayout_la_CXXFLAGS=$(clanCSSLayout_CXXFLAGS) $(extra_CFLAGS_clanCSSLayout)
+libclan30CSSLayout_la_CXXFLAGS=$(clanCSSLayout_CXXFLAGS) $(extra_CFLAGS_clanCSSLayout)
 # EOF #
 

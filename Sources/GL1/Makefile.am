@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan24GL1.la
+lib_LTLIBRARIES = libclan30GL1.la
 
-libclan24GL1_la_SOURCES = \
+libclan30GL1_la_SOURCES = \
 	gl1_frame_buffer_provider.cpp \
 	gl1_graphic_context_provider.cpp \
 	gl1_render_buffer_provider.cpp \
@@ -33,7 +33,7 @@ libclan24GL1_la_SOURCES = \
 	pbuffer.cpp \
 	precomp.h
 if WIN32
-libclan24GL1_la_SOURCES += \
+libclan30GL1_la_SOURCES += \
 	WGL/pbuffer_impl.cpp \
 	WGL/pbuffer_impl.h \
 	WGL/gl1_creation_helper.cpp \
@@ -41,16 +41,16 @@ libclan24GL1_la_SOURCES += \
 	WGL/gl1_window_provider_wgl.cpp \
 	WGL/gl1_window_provider_wgl.h
 else
-libclan24GL1_la_SOURCES += \
+libclan30GL1_la_SOURCES += \
 	GLX/pbuffer_impl.h \
 	GLX/pbuffer_impl.cpp \
 	GLX/gl1_window_provider_glx.cpp \
 	GLX/gl1_window_provider_glx.h
 endif
-libclan24GL1_la_LDFLAGS = \
+libclan30GL1_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGL1)
 
-libclan24GL1_la_CXXFLAGS=$(clanGL1_CXXFLAGS) $(extra_CFLAGS_clanGL1)
+libclan30GL1_la_CXXFLAGS=$(clanGL1_CXXFLAGS) $(extra_CFLAGS_clanGL1)
 
 # EOF #

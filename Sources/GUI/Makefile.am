@@ -1,6 +1,6 @@
-lib_LTLIBRARIES = libclan24GUI.la
+lib_LTLIBRARIES = libclan30GUI.la
 
-libclan24GUI_la_SOURCES = \
+libclan30GUI_la_SOURCES = \
 	precomp.h \
 	WindowManager/gui_window_manager_provider_texture.h \
 	WindowManager/gui_window_manager_provider_system.h \
@@ -124,10 +124,10 @@ libclan24GUI_la_SOURCES = \
 	precomp.cpp \
 	gui_xml_loader_version_1_0.cpp
 
-libclan24GUI_la_LDFLAGS = \
+libclan30GUI_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_clanGUI)
 
-libclan24GUI_la_CXXFLAGS=$(clanGUI_CXXFLAGS) $(extra_CFLAGS_clanGUI)
+libclan30GUI_la_CXXFLAGS=$(clanGUI_CXXFLAGS) $(extra_CFLAGS_clanGUI)
 
 # EOF #
