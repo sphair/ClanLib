@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ListView1", "ListView1-vc2010.vcxproj", "{9C60FB49-EC7C-4E71-9D75-BCC855EDF814}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C60FB49-EC7C-4E71-9D75-BCC855EDF814}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9C60FB49-EC7C-4E71-9D75-BCC855EDF814}.Debug|Win32.Build.0 = Debug|Win32
+		{9C60FB49-EC7C-4E71-9D75-BCC855EDF814}.Release|Win32.ActiveCfg = Release|Win32
+		{9C60FB49-EC7C-4E71-9D75-BCC855EDF814}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

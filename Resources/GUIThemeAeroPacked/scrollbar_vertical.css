@@ -1,0 +1,180 @@
+
+scrollbar 
+{
+	no-draw:true;
+	preferred-width:17;
+}
+
+scrollbar scrolltrack.up
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.up:normal
+{
+	bg-image:ScrollbarVertTrackNormal; 
+}
+
+scrollbar scrolltrack.up:hot
+{
+	bg-image:ScrollbarVertTrackHot; 
+}
+
+scrollbar scrolltrack.up:pressed
+{
+	bg-image:ScrollbarVertTrackPressed; 
+}
+
+scrollbar scrolltrack.up:disabled
+{
+	bg-image:ScrollbarVertTrackDisabled; 
+}
+
+scrollbar scrolltrack.down
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrolltrack.down:normal
+{
+	bg-image:ScrollbarVertTrackNormal; 
+}
+
+scrollbar scrolltrack.down:hot
+{
+	bg-image:ScrollbarVertTrackHot; 
+}
+
+scrollbar scrolltrack.down:pressed
+{
+	bg-image:ScrollbarVertTrackPressed; 
+}
+
+scrollbar scrolltrack.down:disabled
+{
+	bg-image:ScrollbarVertTrackDisabled; 
+}
+
+scrollbar scrollthumb.vertical
+{
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+}
+
+scrollbar scrollthumb.vertical:normal
+{
+	bg-image:ScrollbarVertThumbNormal; 
+}
+
+scrollbar scrollthumb.vertical:hot
+{
+	bg-image:ScrollbarVertThumbHot; 
+}
+
+scrollbar scrollthumb.vertical:pressed
+{
+	bg-image:ScrollbarVertThumbPressed; 
+}
+
+scrollbar scrollthumb.vertical:disabled
+{
+	bg-image:ScrollbarVertThumbDisabled; 
+}
+
+scrollbar scrollthumbgripper.vertical
+{
+	bg-image-sizing:center; 
+}
+
+scrollbar scrollthumbgripper.vertical:normal
+{
+	bg-image:ScrollbarVertThumbGripperNormal; 
+}
+
+scrollbar scrollthumbgripper.vertical:hot
+{
+	bg-image:ScrollbarVertThumbGripperHot; 
+}
+
+scrollbar scrollthumbgripper.vertical:pressed
+{
+	bg-image:ScrollbarVertThumbGripperPressed; 
+}
+
+scrollbar scrollthumbgripper.vertical:disabled
+{
+	bg-image:; 
+}
+
+scrollbar scrollbutton.up
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch;
+}
+
+scrollbar scrollbutton.up:normal
+{
+	bg-image:ScrollbarVertButtonUpNormal;
+}
+
+scrollbar scrollbutton.up:hot
+{
+	bg-image:ScrollbarVertButtonUpHot; 
+}
+
+scrollbar scrollbutton.up:pressed
+{
+	bg-image:ScrollbarVertButtonUpPressed; 
+}
+
+scrollbar scrollbutton.up:disabled
+{
+	bg-image:ScrollbarVertButtonUpDisabled; 
+}
+
+scrollbar scrollbutton.down
+{
+	preferred-width:17;
+	preferred-height:17;
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch;
+}
+
+scrollbar scrollbutton.down:normal
+{
+	bg-image:ScrollbarVertButtonDownNormal; 
+}
+
+scrollbar scrollbutton.down:hot
+{
+	bg-image:ScrollbarVertButtonDownHot; 
+}
+
+scrollbar scrollbutton.down:pressed
+{
+	bg-image:ScrollbarVertButtonDownPressed; 
+}
+
+scrollbar scrollbutton.down:disabled
+{
+	bg-image:ScrollbarVertButtonDownDisabled; 
+}

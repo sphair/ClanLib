@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="CalendarPrevMonth">
+    <image file="Resources\arrow_left.png" />
+  </image>
+  <image name="CalendarPrevMonthHot">
+    <image file="Resources\arrow_left_blue.png" />
+  </image>
+  <image name="CalendarNextMonth">
+    <image file="Resources\arrow_right.png" />
+  </image>
+  <image name="CalendarNextMonthHot">
+    <image file="Resources\arrow_right_blue.png" />
+  </image>
+</resources>

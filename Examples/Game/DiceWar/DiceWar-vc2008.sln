@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Server", "DiceWar-Server-vc2008.vcproj", "{4528B1BE-1B77-4D43-9E56-47946D542FFC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF} = {9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Client", "DiceWar-Client-vc2008.vcproj", "{E40CA023-9C41-441B-8354-7803E63AB758}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF} = {9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Lib", "DiceWar-Lib-vc2008.vcproj", "{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{9AD6A010-498D-4134-9388-078FC432ABED}"
+	ProjectSection(SolutionItems) = preProject
+		events_game.txt = events_game.txt
+		events_lobby.txt = events_lobby.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build system", "Build system", "{EA9E1F66-166B-4EBF-893E-6F2C6D4613E6}"
+	ProjectSection(SolutionItems) = preProject
+		MakeClient = MakeClient
+		Makefile = Makefile
+		MakeServer = MakeServer
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Debug|Win32.Build.0 = Debug|Win32
+		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Release|Win32.ActiveCfg = Release|Win32
+		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Release|Win32.Build.0 = Release|Win32
+		{E40CA023-9C41-441B-8354-7803E63AB758}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E40CA023-9C41-441B-8354-7803E63AB758}.Debug|Win32.Build.0 = Debug|Win32
+		{E40CA023-9C41-441B-8354-7803E63AB758}.Release|Win32.ActiveCfg = Release|Win32
+		{E40CA023-9C41-441B-8354-7803E63AB758}.Release|Win32.Build.0 = Release|Win32
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Debug|Win32.Build.0 = Debug|Win32
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Release|Win32.ActiveCfg = Release|Win32
+		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,58 @@
+window
+{
+	bg-color: #e0dfe3;
+}
+
+button
+{
+	bg-color: #ff00ff;
+	border-top: 1;
+	border-left: 1;
+	border-right: 1;
+	border-bottom: 1;
+	border-color: #aaaaaa;
+}
+
+button:hot
+{
+	bg-color: #ff77ff;
+	border-top: 1;
+	border-left: 1;
+	border-right: 1;
+	border-bottom: 1;
+	border-color: #aaaaaa;
+}
+
+button:pressed
+{
+	bg-color: #ffddff;
+	border-top: 1;
+	border-left: 1;
+	border-right: 1;
+	border-bottom: 1;
+	border-color: #aaaaaa;
+}
+
+progressbar
+{
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	bg-image:ProgressBarHorz; 
+	border-left: 4;
+	border-right: 3;
+	border-top: 3;
+	border-bottom: 3;
+}
+
+progressbar progress
+{
+	bg-image-sizing-left:0; 
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+	bg-image:ProgressBarHorzChunk; 
+}

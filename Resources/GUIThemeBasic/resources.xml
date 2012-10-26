@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="WindowActive"><image file="Images\WindowActive.png" /></image>
+  <image name="WindowBackdrop"><image file="Images\WindowBackdrop.png" /></image>
+  <image name="WindowFrameLeftActive"><image file="Images\WindowFrameLeftActive.png" /></image>
+  <image name="WindowFrameRightActive"><image file="Images\WindowFrameRightActive.png" /></image>
+  <image name="WindowFrameBottomActive"><image file="Images\WindowFrameBottomActive.png" /></image>
+  <image name="ButtonDefaulted"><image file="Images\ButtonDefaulted.png" /></image>
+  <image name="ButtonDisabled"><image file="Images\ButtonDisabled.png" /></image>
+  <image name="ButtonNormal"><image file="Images\ButtonNormal.png" /></image>
+  <image name="ButtonHot"><image file="Images\ButtonHot.png" /></image>
+  <image name="ButtonPressed"><image file="Images\ButtonPressed.png" /></image>
+  <image name="ButtonFocus"><image file="Images\ButtonFocus.png" /></image>
+
+  <image name="FocusDottedLine"><image file="Images\FocusDottedLine.png" /></image>
+  <image name="CheckBoxCheckedNormal"><image file="Images\CheckBoxCheckedNormal.png" /></image>
+  <image name="CheckBoxCheckedHot"><image file="Images\CheckBoxCheckedHot.png" /></image>
+  <image name="CheckBoxCheckedPressed"><image file="Images\CheckBoxCheckedPressed.png" /></image>
+  <image name="CheckBoxCheckedDisabled"><image file="Images\CheckBoxCheckedDisabled.png" /></image>
+  <image name="CheckBoxUncheckedNormal"><image file="Images\CheckBoxUncheckedNormal.png" /></image>
+  <image name="CheckBoxUncheckedHot"><image file="Images\CheckBoxUncheckedHot.png" /></image>
+  <image name="CheckBoxUncheckedPressed"><image file="Images\CheckBoxUncheckedPressed.png" /></image>
+  <image name="CheckBoxUncheckedDisabled"><image file="Images\CheckBoxUncheckedDisabled.png" /></image>
+  <image name="CheckBoxIndeterminatedNormal"><image file="Images\CheckBoxIndeterminatedNormal.png" /></image>
+  <image name="CheckBoxIndeterminatedHot"><image file="Images\CheckBoxIndeterminatedHot.png" /></image>
+  <image name="CheckBoxIndeterminatedPressed"><image file="Images\CheckBoxIndeterminatedPressed.png" /></image>
+  <image name="CheckBoxIndeterminatedDisabled"><image file="Images\CheckBoxIndeterminatedDisabled.png" /></image>
+
+  <image name="RadioButtonCheckedNormal"><image file="Images\RadioButtonCheckedNormal.png" /></image>
+  <image name="RadioButtonCheckedHot"><image file="Images\RadioButtonCheckedHot.png" /></image>
+  <image name="RadioButtonCheckedPressed"><image file="Images\RadioButtonCheckedPressed.png" /></image>
+  <image name="RadioButtonCheckedDisabled"><image file="Images\RadioButtonCheckedDisabled.png" /></image>
+  <image name="RadioButtonUncheckedNormal"><image file="Images\RadioButtonUncheckedNormal.png" /></image>
+  <image name="RadioButtonUncheckedHot"><image file="Images\RadioButtonUncheckedHot.png" /></image>
+  <image name="RadioButtonUncheckedPressed"><image file="Images\RadioButtonUncheckedPressed.png" /></image>
+  <image name="RadioButtonUncheckedDisabled"><image file="Images\RadioButtonUncheckedDisabled.png" /></image>
+
+  <image name="ScrollbarHoriButtonLeftNormal"><image file="Images\ScrollbarHoriButtonLeftNormal.png" /></image>
+  <image name="ScrollbarHoriButtonLeftHot"><image file="Images\ScrollbarHoriButtonLeftHot.png" /></image>
+  <image name="ScrollbarHoriButtonLeftPressed"><image file="Images\ScrollbarHoriButtonLeftPressed.png" /></image>
+  <image name="ScrollbarHoriButtonLeftDisabled"><image file="Images\ScrollbarHoriButtonLeftDisabled.png" /></image>
+  <image name="ScrollbarHoriButtonRightNormal"><image file="Images\ScrollbarHoriButtonRightNormal.png" /></image>
+  <image name="ScrollbarHoriButtonRightHot"><image file="Images\ScrollbarHoriButtonRightHot.png" /></image>
+  <image name="ScrollbarHoriButtonRightPressed"><image file="Images\ScrollbarHoriButtonRightPressed.png" /></image>
+  <image name="ScrollbarHoriButtonRightDisabled"><image file="Images\ScrollbarHoriButtonRightDisabled.png" /></image>
+
+  <image name="ScrollbarVertButtonUpNormal"><image file="Images\ScrollbarVertButtonUpNormal.png" /></image>
+  <image name="ScrollbarVertButtonUpHot"><image file="Images\ScrollbarVertButtonUpHot.png" /></image>
+  <image name="ScrollbarVertButtonUpPressed"><image file="Images\ScrollbarVertButtonUpPressed.png" /></image>
+  <image name="ScrollbarVertButtonUpDisabled"><image file="Images\ScrollbarVertButtonUpDisabled.png" /></image>
+  <image name="ScrollbarVertButtonDownNormal"><image file="Images\ScrollbarVertButtonDownNormal.png" /></image>
+  <image name="ScrollbarVertButtonDownHot"><image file="Images\ScrollbarVertButtonDownHot.png" /></image>
+  <image name="ScrollbarVertButtonDownPressed"><image file="Images\ScrollbarVertButtonDownPressed.png" /></image>
+  <image name="ScrollbarVertButtonDownDisabled"><image file="Images\ScrollbarVertButtonDownDisabled.png" /></image>
+
+  <image name="ScrollbarVertTrackNormal"><image file="Images\ScrollbarVertTrackNormal.png" /></image>
+  <image name="ScrollbarVertTrackPressed"><image file="Images\ScrollbarVertTrackPressed.png" /></image>
+  <image name="ScrollbarVertTrackHot"><image file="Images\ScrollbarVertTrackHot.png" /></image>
+  <image name="ScrollbarVertTrackDisabled"><image file="Images\ScrollbarVertTrackDisabled.png" /></image>
+
+  <image name="ScrollbarHoriTrackNormal"><image file="Images\ScrollbarHoriTrackNormal.png" /></image>
+  <image name="ScrollbarHoriTrackPressed"><image file="Images\ScrollbarHoriTrackPressed.png" /></image>
+  <image name="ScrollbarHoriTrackHot"><image file="Images\ScrollbarHoriTrackHot.png" /></image>
+  <image name="ScrollbarHoriTrackDisabled"><image file="Images\ScrollbarHoriTrackDisabled.png" /></image>
+
+  <image name="ScrollbarVertThumbNormal"><image file="Images\ScrollbarVertThumbNormal.png" /></image>
+  <image name="ScrollbarVertThumbPressed"><image file="Images\ScrollbarVertThumbPressed.png" /></image>
+  <image name="ScrollbarVertThumbHot"><image file="Images\ScrollbarVertThumbHot.png" /></image>
+  <image name="ScrollbarVertThumbDisabled"><image file="Images\ScrollbarVertThumbDisabled.png" /></image>
+
+  <image name="ScrollbarHoriThumbNormal"><image file="Images\ScrollbarHoriThumbNormal.png" /></image>
+  <image name="ScrollbarHoriThumbPressed"><image file="Images\ScrollbarHoriThumbPressed.png" /></image>
+  <image name="ScrollbarHoriThumbHot"><image file="Images\ScrollbarHoriThumbHot.png" /></image>
+  <image name="ScrollbarHoriThumbDisabled"><image file="Images\ScrollbarHoriThumbDisabled.png" /></image>
+
+  <image name="ScrollbarHoriThumbGripperNormal"><image file="Images\ScrollbarHoriThumbGripperNormal.png" /></image>
+  <image name="ScrollbarHoriThumbGripperPressed"><image file="Images\ScrollbarHoriThumbGripperPressed.png" /></image>
+  <image name="ScrollbarHoriThumbGripperHot"><image file="Images\ScrollbarHoriThumbGripperHot.png" /></image>
+  <image name="ScrollbarHoriThumbGripperDisabled"><image file="Images\ScrollbarHoriThumbGripperDisabled.png" /></image>
+
+  <image name="ScrollbarVertThumbGripperNormal"><image file="Images\ScrollbarVertThumbGripperNormal.png" /></image>
+  <image name="ScrollbarVertThumbGripperPressed"><image file="Images\ScrollbarVertThumbGripperPressed.png" /></image>
+  <image name="ScrollbarVertThumbGripperHot"><image file="Images\ScrollbarVertThumbGripperHot.png" /></image>
+  <image name="ScrollbarVertThumbGripperDisabled"><image file="Images\ScrollbarVertThumbGripperDisabled.png" /></image>
+
+  <image name="LineEditNormal"><image file="Images\LineEditNormal.png" /></image>
+  <image name="LineEditHot"><image file="Images\LineEditHot.png" /></image>
+  <image name="LineEditDisabled"><image file="Images\LineEditDisabled.png" /></image>
+
+  <image name="ComboBoxDropDownButtonDisabled"><image file="Images/ComboBoxDropDownButtonDisabled.png" /></image>
+  <image name="ComboBoxDropDownButtonGlyphPressed"><image file="Images/ComboBoxDropDownButtonGlyphPressed.png" /></image>
+  <image name="ComboBoxDropDownButtonGlyphHot"><image file="Images/ComboBoxDropDownButtonGlyphHot.png" /></image>
+  <image name="ComboBoxDropDownButtonGlyphNormal"><image file="Images/ComboBoxDropDownButtonGlyphNormal.png" /></image>
+  <image name="ComboBoxDropDownButtonGlyphDisabled"><image file="Images/ComboBoxDropDownButtonGlyphDisabled.png" /></image>
+  <image name="ComboBoxDropDownButtonPressed"><image file="Images/ComboBoxDropDownButtonPressed.png" /></image>
+  <image name="ComboBoxDropDownButtonHot"><image file="Images/ComboBoxDropDownButtonHot.png" /></image>
+  <image name="ComboBoxDropDownButtonNormal"><image file="Images/ComboBoxDropDownButtonNormal.png" /></image>
+  <image name="GroupBox"><image file="Images/GroupBox.png" /></image>
+  <image name="ListViewColumnHeaderPressed"><image file="Images/ListViewColumnHeaderPressed.png" /></image>
+  <image name="ListViewColumnHeaderHot"><image file="Images/ListViewColumnHeaderHot.png" /></image>
+  <image name="ListViewColumnHeaderNormal"><image file="Images/ListViewColumnHeaderNormal.png" /></image>
+  <image name="MenuBarBackgroundActive"><image file="Images/MenuBarBackgroundActive.png" /></image>
+  <image name="MenuBarItemSelected"><image file="Images/MenuBarItemSelected.png" /></image>
+  <image name="PopupMenu"><image file="Images/PopupMenu.png" /></image>
+  <image name="PopupMenuChecked"><image file="Images/PopupMenuChecked.png" /></image>
+  <image name="PopupMenuCheckedDisabled"><image file="Images/PopupMenuCheckedDisabled.png" /></image>
+  <image name="PopupMenuSelected"><image file="Images/PopupMenuSelected.png" /></image>
+  <image name="PopupMenuSeparator"><image file="Images/PopupMenuSeparator.png" /></image>
+  <image name="PopupMenuSubmenuArrow"><image file="Images/PopupMenuSubmenuArrow.png" /></image>
+
+  <image name="SliderTrack"><image file ="Images\SliderTrack.png"/></image>
+  <image name="SliderHorizontalThumbHot"><image file ="Images\SliderHorizontalThumbHot.png"/></image>
+  <image name="SliderHorizontalThumbNormal"><image file ="Images\SliderHorizontalThumbNormal.png"/></image>
+  <image name="SliderHorizontalThumbDisabled"><image file ="Images\SliderHorizontalThumbDisabled.png"/></image>
+  <image name="SliderVerticalThumbHot"><image file ="Images\SliderVerticalThumbHot.png"/></image>
+  <image name="SliderVerticalThumbNormal"><image file ="Images\SliderVerticalThumbNormal.png"/></image>
+  <image name="SliderVerticalThumbDisabled"><image file ="Images\SliderVerticalThumbDisabled.png"/></image>
+  <image name="SpinArrowDownNormal"><image file ="Images\SpinArrowDownNormal.png"/></image>
+  <image name="SpinArrowDownDisabled"><image file ="Images\SpinArrowDownDisabled.png"/></image>
+  <image name="SpinArrowUpNormal"><image file ="Images\SpinArrowUpNormal.png"/></image>
+  <image name="SpinArrowUpDisabled"><image file ="Images\SpinArrowUpDisabled.png"/></image>
+  <image name="SpinButtonDownDisabled"><image file ="Images\SpinButtonDownDisabled.png"/></image>
+  <image name="SpinButtonUpDisabled"><image file ="Images\SpinButtonUpDisabled.png"/></image>
+  <image name="SpinButtonDownNormal"><image file ="Images\SpinButtonDownNormal.png"/></image>
+  <image name="SpinButtonUpNormal"><image file ="Images\SpinButtonUpNormal.png"/></image>
+  <image name="SpinButtonDownHot"><image file ="Images\SpinButtonDownHot.png"/></image>
+  <image name="SpinButtonUpHot"><image file ="Images\SpinButtonUpHot.png"/></image>
+  <image name="SpinButtonDownPressed"><image file ="Images\SpinButtonDownPressed.png"/></image>
+  <image name="SpinButtonUpPressed"><image file ="Images\SpinButtonUpPressed.png"/></image>
+
+  <image name="TabBorder"><image file="Images\TabBorder.png"/></image>
+  <image name="TabHeaderPageNormal"><image file="Images\TabHeaderPageNormal.png"/></image>
+  <image name="TabHeaderPageHot"><image file="Images\TabHeaderPageHot.png"/></image>
+  <image name="TabHeaderPageSelected"><image file="Images\TabHeaderPageSelected.png"/></image>
+  <image name="TabHeaderBorder"><image file="Images\TabHeaderBorder.png"/></image>
+  <image name="Tooltip"><image file="Images\Tooltip.png"/></image>
+  <image name="WindowCloseButtonActivePressed"><image file="Images\WindowCloseButtonActivePressed.png"/></image>
+  <image name="WindowCloseButtonActiveHot"><image file="Images\WindowCloseButtonActiveHot.png"/></image>
+  <image name="WindowCloseButtonActiveNormal"><image file="Images\WindowCloseButtonActiveNormal.png"/></image>
+  <image name="WindowCloseButtonActiveDisabled"><image file="Images\WindowCloseButtonActiveDisabled.png"/></image>
+
+  <image name="ToolBarButtonHot"><image file="Images\ToolBarButtonHot.png"/></image>
+  <image name="ToolBarButtonNormal"><image file="Images\ToolBarButtonNormal.png"/></image>
+  <image name="ToolBarButtonPressed"><image file="Images\ToolBarButtonPressed.png"/></image>
+
+</resources>
+

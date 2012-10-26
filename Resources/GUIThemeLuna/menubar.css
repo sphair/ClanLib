@@ -1,0 +1,55 @@
+
+menubar
+{
+	preferred-width:100;
+	preferred-height:24;
+	bg-color:transparent;
+	text-color:black;
+	
+	padding-top:2;
+}
+
+menubar item
+{
+    padding-left:8;
+    padding-right:8;
+	preferred-width:50;
+	preferred-height:24;
+	align:center;
+	vertical-align:center;
+}
+
+menubar item:disabled
+{
+	text-color:darkgray;
+}
+
+
+menubar item:selected
+{
+	preferred-width:50;
+	preferred-height:24;
+
+	/*border-top:10;*/
+ 
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:1;
+	bg-image-sizing:stretch; 
+
+	bg-image:MenuBarSelectedItem;
+}
+
+menubar item:hot
+{
+	bg-color:#dee2f4;
+
+	/*margin-top:3;*/
+
+	border-color:#316ac5;	
+	border-left:1;
+	border-right:1;
+	border-top:1;
+	border-bottom:1;
+}

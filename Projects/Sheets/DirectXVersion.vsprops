@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioPropertySheet
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="DirectX Version Defines"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		PreprocessorDefinitions="DIRECTINPUT_VERSION=0x0800"
+	/>
+</VisualStudioPropertySheet>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="myimage">
+    <color red="0.5" green="0.2" blue="0.3" alpha="0.4"/>
+    <scale x="1.5" y="2.0"/>
+    <translation origin="center" x="5" y="4"/>
+    <image-file file="Images/square.png">
+      <grid pos="0,0" size="64,64" />
+    </image-file>
+  </image>
+
+  <sprite name="mysprite">
+    <image-file file="Images/square.png">
+      <grid pos="0,0" size="64,64" />
+    </image-file>
+  </sprite>
+
+  <image name="entire_image">
+    <image-file file="Images/square.png">
+    </image-file>
+  </image>
+
+  <image name="image_top_right">
+    <image-file file="Images/square.png">
+      <grid pos="32,0" size="32,32" />
+    </image-file>
+  </image>
+
+  <image name="image_bottom_right">
+    <image-file file="Images/square.png">
+      <grid pos="32,32" size="32,32" />
+    </image-file>
+  </image>
+
+  <image name="image_black">
+	    <color red="0.0" green="0.0" blue="0.0" alpha="1.0"/>
+    <image-file file="Images/square.png">
+    </image-file>
+  </image>
+
+</resources>

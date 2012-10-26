@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="Background">
+    <image-file file="Aquaburst 1024x768.jpg" />
+  </image>
+  <image name="LoginBackground">
+    <image-file file="login_background.png" />
+  </image>
+</resources>

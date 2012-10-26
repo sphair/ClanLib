@@ -1,0 +1,76 @@
+combobox lineedit
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+	
+	text-color:black;
+	text-color-selected:white;
+}
+
+combobox opener
+{
+	preferred-width:17;
+	preferred-height:21;
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
+}
+
+combobox opener:normal
+{
+	bg-image:ComboBoxDropDownButtonNormal; 
+}
+
+combobox opener:hot
+{
+	bg-image:ComboBoxDropDownButtonHot; 
+}
+
+combobox opener:pressed
+{
+	bg-image:ComboBoxDropDownButtonPressed; 
+}
+
+combobox opener:disabled
+{
+	bg-image:ComboBoxDropDownButtonDisabled; 
+}
+
+combobox opener_glyph
+{
+	bg-image-sizing:center; 
+	align:center;
+	vertical-align:center;
+}
+
+combobox opener_glyph:normal
+{
+	bg-image:ComboBoxDropDownButtonNormalGlyph; 
+}
+
+combobox opener_glyph:hot
+{
+	bg-image:ComboBoxDropDownButtonHotGlyph; 
+}
+
+combobox opener_glyph:pressed
+{
+	bg-image:ComboBoxDropDownButtonPressedGlyph; 
+}
+
+combobox opener_glyph:disabled
+{
+	bg-image:ComboBoxDropDownButtonDisabledGlyph; 
+}

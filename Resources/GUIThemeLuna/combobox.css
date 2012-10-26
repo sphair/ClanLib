@@ -1,0 +1,120 @@
+
+
+
+
+combobox lineedit
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+	
+	text-color:black;
+	text-color-selected:white;
+}
+
+combobox opener
+{
+	preferred-width:13;
+	preferred-height:13;
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
+
+}
+
+combobox opener:normal
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:hot
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:pressed
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+combobox opener:disabled
+{
+	bg-image:ComboBoxDownArrow; 
+}
+
+popupmenu.combobox
+{
+	bg-image:ComboBoxPopupBg;
+
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+
+	border-top:3;
+	border-left:1;
+	border-right:2;
+	border-bottom:3;
+}
+
+popupmenu.combobox row
+{
+	preferred-width:100;
+	preferred-height:18;
+	bg-image:;
+}
+
+popupmenu.combobox row:selected
+{
+	preferred-width:100;
+	preferred-height:18;
+	bg-image:;
+	bg-color:#D3D3D3;
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+	border-color:#4B4B6F;
+}
+
+
+popupmenu.combobox icon
+{
+	preferred-width:16;
+	preferred-height:16;
+	bg-image:;
+}
+
+popupmenu.combobox icon:selected
+{
+	preferred-width:16;
+	preferred-height:16;
+	bg-image:;
+}
+
+popupmenu.combobox label
+{
+	preferred-width:70;
+	preferred-height:18;
+	bg-image:;
+}
+
+popupmenu.combobox label:selected
+{
+	preferred-width:70;
+	preferred-height:18;
+	bg-image:;
+}
+

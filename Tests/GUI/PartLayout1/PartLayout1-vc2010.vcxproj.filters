@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="app.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="layout.css" />
+    <None Include="layout.xml" />
+    <None Include="..\..\..\Resources\GUIThemeAero\window.css">
+      <Filter>Aero</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Aero">
+      <UniqueIdentifier>{ffe6646c-0382-45f8-99d7-16c2c506d113}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

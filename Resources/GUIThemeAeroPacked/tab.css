@@ -1,0 +1,65 @@
+
+tab 
+{
+	bg-image: TabBorder;	
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:3;
+
+	border-left:8;
+	border-right:8;
+	border-top:8;
+	border-bottom:8;
+}
+
+tabheader
+{
+	bg-image: TabHeaderBorder;	
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	first-tab-x-offset: 0;
+	preferred-height:20;
+}
+
+tabheader focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+}
+
+tabheader page
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:1;
+	padding-left:5;
+	padding-right:5;
+	align:center;
+	
+	preferred-width:45;
+	preferred-height:20;
+}
+
+tabheader page:normal
+{
+	bg-image: TabHeaderPageNormal;
+}
+
+tabheader page:hot
+{
+	bg-image: TabHeaderPageHot;
+}
+
+tabheader page:selected
+{
+	bg-image: TabHeaderPageSelected;
+}

@@ -1,0 +1,67 @@
+radiobutton
+{
+	text-color:black;
+	text-gap:3;
+}
+
+radiobutton:disabled
+{
+	text-color:darkgray;
+}
+
+radiobutton checker
+{
+	bg-image-sizing:center;
+	preferred-width:13;
+	preferred-height:13;
+}
+
+radiobutton checker:checked:normal
+{
+	bg-image:RadioButtonCheckedNormal; 
+}
+
+radiobutton checker:checked:hot
+{
+	bg-image:RadioButtonCheckedHot; 
+}
+
+radiobutton checker:checked:pressed
+{
+	bg-image:RadioButtonCheckedPressed; 
+}
+
+radiobutton checker:checked:disabled
+{
+	bg-image:RadioButtonCheckedDisabled; 
+}
+
+radiobutton checker:unchecked:normal
+{
+	bg-image:RadioButtonUncheckedNormal; 
+}
+
+radiobutton checker:unchecked:hot
+{
+	bg-image:RadioButtonUncheckedHot; 
+}
+
+radiobutton checker:unchecked:pressed
+{
+	bg-image:RadioButtonUncheckedPressed; 
+}
+
+radiobutton checker:unchecked:disabled
+{
+	bg-image:RadioButtonUncheckedDisabled; 
+}
+
+radiobutton focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 

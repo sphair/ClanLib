@@ -1,0 +1,108 @@
+
+popupmenu
+{
+	bg-image-sizing-left:32;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenu;
+	padding-top:2;
+	padding-bottom:2;
+	icon-column-width:30;
+}
+
+popupmenu row
+{
+	preferred-width:140;
+	preferred-height:20;
+	padding-left:2;
+	bg-image:;
+}
+
+popupmenu icon
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:;
+}
+
+popupmenu check
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuChecked;
+}
+
+popupmenu check:disabled
+{
+	preferred-width:20;
+	preferred-height:20;
+	bg-image:PopupMenuCheckedDisabled;
+}
+
+popupmenu label
+{
+	preferred-width:70;
+	preferred-height:20;
+	padding-left:2;
+	bg-image:;
+}
+
+popupmenu label:selected
+{
+}
+
+popupmenu label:disabled
+{
+	text-color:darkgray;
+}
+
+popupmenu accel_label
+{
+	padding-left:20;
+	bg-image:;
+}
+
+popupmenu accel_label:disabled
+{
+	padding-left:20;
+	bg-image:;
+	text-color:darkgray;
+}
+
+popupmenu row:selected
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenuSelected;
+}
+
+popupmenu separator
+{
+	preferred-height:2;
+	padding-left:32;
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:1;
+	bg-image-sizing:stretch; 
+	bg-image:PopupMenuSeparator;
+}
+
+popupmenu submenu_arrow
+{
+	preferred-width:24;
+	preferred-height:8;
+	bg-image-sizing:center; 
+	bg-image:PopupMenuSubmenuArrow;
+}
+
+popupmenu joiner
+{
+    no-draw:true;
+}

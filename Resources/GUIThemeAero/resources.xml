@@ -1,0 +1,590 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="ButtonNormal">
+    <image file="Images\button_normal.png" />
+  </image>
+  <image name="ButtonHot">
+    <image file="Images\button_hot.png" />
+  </image>
+  <image name="ButtonPressed">
+    <image file="Images\button_pressed.png" />
+  </image>
+  <image name="ButtonDisabled">
+    <image file="Images\button_disabled.png" />
+  </image>
+  <image name="ButtonDefaulted">
+    <image file="Images\button_defaulted.png" />
+  </image>
+  <image name="ButtonDefaultedAnimating">
+    <image file="Images\button_defaulted_animating.png" />
+  </image>
+  <image name="ButtonFocus">
+    <image file="Images\XP\button_focus.png" />
+  </image>
+
+  <image name="CheckBoxUncheckedNormal">
+    <image file="Images\checkbox_unchecked_normal.png" />
+  </image>
+  <image name="CheckBoxUncheckedHot">
+    <image file="Images\checkbox_unchecked_hot.png" />
+  </image>
+  <image name="CheckBoxUncheckedPressed">
+    <image file="Images\checkbox_unchecked_pressed.png" />
+  </image>
+  <image name="CheckBoxUncheckedDisabled">
+    <image file="Images\checkbox_unchecked_disabled.png" />
+  </image>
+
+  <image name="CheckBoxCheckedNormal">
+    <image file="Images\checkbox_checked_normal.png" />
+  </image>
+  <image name="CheckBoxCheckedHot">
+    <image file="Images\checkbox_checked_hot.png" />
+  </image>
+  <image name="CheckBoxCheckedPressed">
+    <image file="Images\checkbox_checked_pressed.png" />
+  </image>
+  <image name="CheckBoxCheckedDisabled">
+    <image file="Images\checkbox_checked_disabled.png" />
+  </image>
+
+  <image name="CheckBoxIndeterminatedNormal">
+    <image file="Images\checkbox_indeterminated_normal.png" />
+  </image>
+  <image name="CheckBoxIndeterminatedHot">
+    <image file="Images\checkbox_indeterminated_hot.png" />
+  </image>
+  <image name="CheckBoxIndeterminatedPressed">
+    <image file="Images\checkbox_indeterminated_pressed.png" />
+  </image>
+  <image name="CheckBoxIndeterminatedDisabled">
+    <image file="Images\checkbox_indeterminated_disabled.png" />
+  </image>
+
+  <image name="RadioButtonCheckedNormal">
+    <image file="Images\radio_checked_normal.png" />
+  </image>
+  <image name="RadioButtonCheckedHot">
+    <image file="Images\radio_checked_hot.png" />
+  </image>
+  <image name="RadioButtonCheckedPressed">
+    <image file="Images\radio_checked_pressed.png" />
+  </image>
+  <image name="RadioButtonCheckedDisabled">
+    <image file="Images\radio_checked_disabled.png" />
+  </image>
+
+  <image name="RadioButtonUncheckedNormal">
+    <image file="Images\radio_unchecked_normal.png" />
+  </image>
+  <image name="RadioButtonUncheckedHot">
+    <image file="Images\radio_unchecked_hot.png" />
+  </image>
+  <image name="RadioButtonUncheckedPressed">
+    <image file="Images\radio_unchecked_pressed.png" />
+  </image>
+  <image name="RadioButtonUncheckedDisabled">
+    <image file="Images\radio_unchecked_disabled.png" />
+  </image>
+
+  <image name="WindowActive">
+    <image file="Images\window_active.png" />
+  </image>
+  <image name="WindowInactive">
+    <image file="Images\window_inactive.png" />
+  </image>
+  <image name="WindowFrameRightActive">
+    <image file="Images\window_frameright_active.png" />
+  </image>
+  <image name="WindowFrameRightInactive">
+    <image file="Images\window_frameright_inactive.png" />
+  </image>
+  <image name="WindowFrameLeftActive">
+    <image file="Images\window_frameleft_active.png" />
+  </image>
+  <image name="WindowFrameLeftInactive">
+    <image file="Images\window_frameleft_inactive.png" />
+  </image>
+  <image name="WindowFrameBottomActive">
+    <image file="Images\window_framebottom_active.png" />
+  </image>
+  <image name="WindowFrameBottomInactive">
+    <image file="Images\window_framebottom_inactive.png" />
+  </image>
+
+  <image name="WindowCloseButtonActiveNormal">
+    <image file="Images\window_closebutton_active_normal_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonActiveHot">
+    <image file="Images\window_closebutton_active_hot_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonActivePressed">
+    <image file="Images\window_closebutton_active_pressed_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonActiveDisabled">
+    <image file="Images\window_closebutton_active_disabled_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonInactiveNormal">
+    <image file="Images\window_closebutton_inactive_normal_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonInactiveHot">
+    <image file="Images\window_closebutton_inactive_hot_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonInactivePressed">
+    <image file="Images\window_closebutton_inactive_pressed_withglyph.png" />
+  </image>
+  <image name="WindowCloseButtonInactiveDisabled">
+    <image file="Images\window_closebutton_inactive_disabled_withglyph.png" />
+  </image>
+  
+  <image name="ScrollbarVertThumbNormal">
+    <image file="Images\scrollbar_vert_thumb_normal.png" />
+  </image>
+  <image name="ScrollbarVertThumbHot">
+    <image file="Images\scrollbar_vert_thumb_hot.png" />
+  </image>
+  <image name="ScrollbarVertThumbPressed">
+    <image file="Images\scrollbar_vert_thumb_pressed.png" />
+  </image>
+  <image name="ScrollbarVertThumbDisabled">
+    <image file="Images\scrollbar_vert_thumb_disabled.png" />
+  </image>
+
+  <image name="ScrollbarVertThumbGripperNormal">
+    <image file="Images\scrollbar_vert_thumb_gripper_normal.png" />
+  </image>
+  <image name="ScrollbarVertThumbGripperHot">
+    <image file="Images\scrollbar_vert_thumb_gripper_hot.png" />
+  </image>
+  <image name="ScrollbarVertThumbGripperPressed">
+    <image file="Images\scrollbar_vert_thumb_gripper_pressed.png" />
+  </image>
+
+  <image name="ScrollbarVertTrackNormal">
+    <image file="Images\scrollbar_vert_track_normal.png" />
+  </image>
+  <image name="ScrollbarVertTrackHot">
+    <image file="Images\scrollbar_vert_track_hot.png" />
+  </image>
+  <image name="ScrollbarVertTrackPressed">
+    <image file="Images\scrollbar_vert_track_pressed.png" />
+  </image>
+  <image name="ScrollbarVertTrackDisabled">
+    <image file="Images\scrollbar_vert_track_disabled.png" />
+  </image>
+
+  <image name="ScrollbarVertButtonUpNormal">
+    <image file="Images\scrollbar_vert_button_up_normal_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpHot">
+    <image file="Images\scrollbar_vert_button_up_hot_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpPressed">
+    <image file="Images\scrollbar_vert_button_up_pressed_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpDisabled">
+    <image file="Images\scrollbar_vert_button_up_disabled_withglyph.png" />
+  </image>
+  
+  <image name="ScrollbarVertButtonDownNormal">
+    <image file="Images\scrollbar_vert_button_down_normal_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownHot">
+    <image file="Images\scrollbar_vert_button_down_hot_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownPressed">
+    <image file="Images\scrollbar_vert_button_down_pressed_withglyph.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownDisabled">
+    <image file="Images\scrollbar_vert_button_down_disabled_withglyph.png" />
+  </image>
+
+  <image name="ScrollbarHoriButtonLeftNormal">
+    <image file="Images\scrollbar_hori_button_left_normal_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonLeftHot">
+    <image file="Images\scrollbar_hori_button_left_hot_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonLeftPressed">
+    <image file="Images\scrollbar_hori_button_left_pressed_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonLeftDisabled">
+    <image file="Images\scrollbar_hori_button_left_disabled_withglyph.png" />
+  </image>
+  
+  <image name="ScrollbarHoriButtonRightNormal">
+    <image file="Images\scrollbar_hori_button_right_normal_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonRightHot">
+    <image file="Images\scrollbar_hori_button_right_hot_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonRightPressed">
+    <image file="Images\scrollbar_hori_button_right_pressed_withglyph.png" />
+  </image>
+  <image name="ScrollbarHoriButtonRightDisabled">
+    <image file="Images\scrollbar_hori_button_right_disabled_withglyph.png" />
+  </image>
+
+  <image name="ScrollbarHoriThumbNormal">
+    <image file="Images\scrollbar_hori_thumb_normal.png" />
+  </image>
+  <image name="ScrollbarHoriThumbHot">
+    <image file="Images\scrollbar_hori_thumb_hot.png" />
+  </image>
+  <image name="ScrollbarHoriThumbPressed">
+    <image file="Images\scrollbar_hori_thumb_pressed.png" />
+  </image>
+  <image name="ScrollbarHoriThumbDisabled">
+    <image file="Images\scrollbar_hori_thumb_disabled.png" />
+  </image>
+
+  <image name="ScrollbarHoriThumbGripperNormal">
+    <image file="Images\scrollbar_hori_thumb_gripper_normal.png" />
+  </image>
+  <image name="ScrollbarHoriThumbGripperHot">
+    <image file="Images\scrollbar_hori_thumb_gripper_hot.png" />
+  </image>
+  <image name="ScrollbarHoriThumbGripperPressed">
+    <image file="Images\scrollbar_hori_thumb_gripper_pressed.png" />
+  </image>
+
+  <image name="ScrollbarHoriTrackNormal">
+    <image file="Images\scrollbar_hori_track_normal.png" />
+  </image>
+  <image name="ScrollbarHoriTrackHot">
+    <image file="Images\scrollbar_hori_track_hot.png" />
+  </image>
+  <image name="ScrollbarHoriTrackPressed">
+    <image file="Images\scrollbar_hori_track_pressed.png" />
+  </image>
+  <image name="ScrollbarHoriTrackDisabled">
+    <image file="Images\scrollbar_hori_track_disabled.png" />
+  </image>
+
+  <image name="SliderHorizontalTrack">
+    <image file="Images\slider_track.png" />
+  </image>
+
+  <image name="SliderHorizontalThumbNormal">
+    <image file="Images\slider_horizontal_thumb_normal.png" />
+  </image>
+  <image name="SliderHorizontalThumbHot">
+    <image file="Images\slider_horizontal_thumb_hot.png" />
+  </image>
+  <image name="SliderHorizontalThumbPressed">
+    <image file="Images\slider_horizontal_thumb_pressed.png" />
+  </image>
+  <image name="SliderHorizontalThumbDisabled">
+    <image file="Images\slider_horizontal_thumb_disabled.png" />
+  </image>
+
+  <image name="SliderVerticalTrack">
+    <image file="Images\slider_track.png" />
+  </image>
+
+  <image name="SliderVerticalThumbNormal">
+    <image file="Images\slider_vertical_thumb_normal.png" />
+  </image>
+  <image name="SliderVerticalThumbHot">
+    <image file="Images\slider_vertical_thumb_hot.png" />
+  </image>
+  <image name="SliderVerticalThumbPressed">
+    <image file="Images\slider_vertical_thumb_pressed.png" />
+  </image>
+  <image name="SliderVerticalThumbDisabled">
+    <image file="Images\slider_vertical_thumb_disabled.png" />
+  </image>
+
+  <image name="LineEditNormal">
+    <image file="Images\lineedit_normal.png" />
+  </image>
+  <image name="LineEditHot">
+    <image file="Images\lineedit_hot.png" />
+  </image>
+  <image name="LineEditDisabled">
+    <image file="Images\lineedit_disabled.png" />
+  </image>
+
+  <image name="StatusBar">
+    <image file="Images\statusbar.png" />
+  </image>
+  <image name="StatusBarGrip">
+    <image file="Images\statusbar_grip.png" />
+  </image>
+
+  <image name="SpinArrowUpNormal">
+    <image file="Images\spin_button_up_normal_glyph.png" />
+  </image>
+  <image name="SpinArrowUpDisabled">
+    <image file="Images\spin_button_up_disabled_glyph.png" />
+  </image>
+  <image name="SpinArrowDownNormal">
+    <image file="Images\spin_button_down_normal_glyph.png" />
+  </image>
+  <image name="SpinArrowDownDisabled">
+    <image file="Images\spin_button_down_disabled_glyph.png" />
+  </image>
+  <image name="SpinArrowLeftNormal">
+    <image file="Images\spin_button_left_normal_glyph.png" />
+  </image>
+  <image name="SpinArrowLeftDisabled">
+    <image file="Images\spin_button_left_disabled_glyph.png" />
+  </image>
+  <image name="SpinArrowRightNormal">
+    <image file="Images\spin_button_right_normal_glyph.png" />
+  </image>
+  <image name="SpinArrowRightDisabled">
+    <image file="Images\spin_button_right_disabled_glyph.png" />
+  </image>
+
+  <image name="GroupBox">
+    <image file="Images\groupbox.png" />
+  </image>
+
+  <image name="TabBorder">
+    <image file="Images\tab_border.png" />
+  </image>
+  <image name="TabHeaderBorder">
+    <image file="Images\tab_header_border.png" />
+  </image>
+  <image name="TabHeaderPageNormal">
+    <image file="Images\tab_header_page_normal.png" />
+  </image>
+  <image name="TabHeaderPageHot">
+    <image file="Images\tab_header_page_hot.png" />
+  </image>
+  <image name="TabHeaderPageSelected">
+    <image file="Images\tab_header_page_selected.png" />
+  </image>
+
+  <image name="MenuBarBackgroundActive">
+    <image file="Images\menubar_background_active.png" />
+  </image>
+  <image name="MenuBarBackgroundInactive">
+    <image file="Images\menubar_background_inactive.png" />
+  </image>
+  <image name="MenuBarItemHot">
+    <image file="Images\menubar_item_hot.png" />
+  </image>
+  <image name="MenuBarItemSelected">
+    <image file="Images\menubar_item_selected.png" />
+  </image>
+
+  <image name="PopupMenu">
+    <image file="Images\popupmenu.png" />
+  </image>
+  <image name="PopupMenuSelected">
+    <image file="Images\popupmenu_selected.png" />
+  </image>
+  <image name="PopupMenuSeparator">
+    <image file="Images\popupmenu_separator.png" />
+  </image>
+  <image name="PopupMenuSubmenuArrow">
+    <image file="Images\popupmenu_submenu_arrow.png" />
+  </image>
+  <image name="PopupMenuChecked">
+    <image file="Images\popupmenu_checked.png" />
+  </image>
+  <image name="PopupMenuCheckedDisabled">
+    <image file="Images\popupmenu_checked_disabled.png" />
+  </image>
+
+  <image name="ListViewColumnHeaderNormal">
+    <image file="Images\listview_column_header_normal.png" />
+  </image>
+  <image name="ListViewColumnHeaderHot">
+    <image file="Images\listview_column_header_hot.png" />
+  </image>
+  <image name="ListViewColumnHeaderPressed">
+    <image file="Images\listview_column_header_pressed.png" />
+  </image>
+
+  <image name="ToolBarBackground">
+    <image file="Images\toolbar_background.png" />
+  </image>
+
+  <image name="Tooltip">
+    <image file="Images\tooltip.png" />
+  </image>
+
+  <image name="ComboBoxDropDownButtonNormal">
+    <image file="Images\combobox_dropdownbutton_normal.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonHot">
+    <image file="Images\combobox_dropdownbutton_hot.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonPressed">
+    <image file="Images\combobox_dropdownbutton_pressed.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonDisabled">
+    <image file="Images\combobox_dropdownbutton_disabled.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonNormalGlyph">
+    <image file="Images\combobox_dropdownbutton_normal_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonHotGlyph">
+    <image file="Images\combobox_dropdownbutton_hot_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonPressedGlyph">
+    <image file="Images\combobox_dropdownbutton_pressed_glyph.png" />
+  </image>
+  <image name="ComboBoxDropDownButtonDisabledGlyph">
+    <image file="Images\combobox_dropdownbutton_disabled_glyph.png" />
+  </image>
+  
+  <!-- ************************************************************************* -->
+  <!-- *** Components still using old Luna theme - These needs to be updated *** -->
+
+  <image name="ToolBarButtonNormal">
+    <image file="Images\XP\toolbar_button_normal.png" />
+  </image>
+  <image name="ToolBarButtonHot">
+    <image file="Images\XP\toolbar_button_hot.png" />
+  </image>
+  <image name="ToolBarButtonPressed">
+    <image file="Images\XP\toolbar_button_pressed.png" />
+  </image>
+  <image name="ToolBarButtonDisabled">
+    <image file="Images\XP\toolbar_button_disabled.png" />
+  </image>
+  
+  <image name="FocusDottedLine">
+    <image file="Images\XP\focus.png" />
+  </image>
+
+  <image name="ListViewRowOpenerOpen">
+    <image file="Images\XP\listview_row_opener_open.png" />
+  </image>
+  <image name="ListViewRowOpenerClosed">
+    <image file="Images\XP\listview_row_opener_closed.png" />
+  </image>
+  <image name="ListViewBorder">
+    <image file="Images\XP\listview_border.png" />
+  </image>
+  <image name="ListViewHeader">
+    <image file="Images\XP\listview_header.png" />
+  </image>
+  <image name="ListViewSelection">
+    <image file="Images\XP\listview_selection.png" />
+  </image>
+  <image name="ListViewIconSelection">
+    <image file="Images\XP\listview_icon_selection.png" />
+  </image>
+  
+  <image name="ProgressBarHorz">
+    <image file="Images\XP\progressbar_horz.png" />
+  </image>
+  <image name="ProgressBarHorzChunk">
+    <image file="Images\XP\progressbar_horz_chunk2.png" />
+  </image>
+
+  <image name="Frame">
+    <image file="Images\XP\frame.png" />
+  </image>
+  <image name="FrameHeader">
+    <image file="Images\XP\frame_header.png" />
+  </image>
+  <image name="FrameHeaderLeft">
+    <image file="Images\XP\frame_header_left.png" />
+  </image>
+  <image name="FrameHeaderCaption">
+    <image file="Images\XP\frame_header_caption.png" />
+  </image>
+  <image name="FrameHeaderRight">
+    <image file="Images\XP\frame_header_right.png" />
+  </image>
+  
+  <image name="SpinButtonUpNormal">
+    <image file="Images\XP\spin_button_up_normal.png" />
+  </image>
+  <image name="SpinButtonUpHot">
+    <image file="Images\XP\spin_button_up_hot.png" />
+  </image>
+  <image name="SpinButtonUpPressed">
+    <image file="Images\XP\spin_button_up_pressed.png" />
+  </image>
+  <image name="SpinButtonUpDisabled">
+    <image file="Images\XP\spin_button_down_disabled.png" />
+  </image>
+
+  <image name="SpinButtonDownNormal">
+    <image file="Images\XP\spin_button_down_normal.png" />
+  </image>
+  <image name="SpinButtonDownHot">
+    <image file="Images\XP\spin_button_down_hot.png" />
+  </image>
+  <image name="SpinButtonDownPressed">
+    <image file="Images\XP\spin_button_down_pressed.png" />
+  </image>
+  <image name="SpinButtonDownDisabled">
+    <image file="Images\XP\spin_button_down_disabled.png" />
+  </image>
+
+  <image name="ImageNormal">
+    <image file="Images\XP\image_normal.png" />
+  </image>
+  
+  <image name="MessageBox">
+    <image file="Images\messagebox.png" />
+  </image>
+  <image name="MessageBoxIconError">
+    <image file="Images\messagebox_icon_error.png" />
+  </image>
+  <image name="MessageBoxIconWarning">
+    <image file="Images\messagebox_icon_warning.png" />
+  </image>
+  <image name="MessageBoxIconInfo">
+    <image file="Images\messagebox_icon_info.png" />
+  </image>
+  <image name="MessageBoxIconQuestion">
+    <image file="Images\messagebox_icon_question.png" />
+  </image>
+
+  <image name="Ribbon">
+    <image file="Images\Ribbon\background.png" />
+  </image>
+  <image name="RibbonTab">
+    <image file="Images\Ribbon\tab.png" />
+  </image>
+  <image name="RibbonTabBackground">
+    <image file="Images\Ribbon\tab-background.png" />
+  </image>
+  <image name="RibbonSection">
+    <image file="Images\Ribbon\section.png" />
+  </image>
+  <image name="RibbonMenuButton">
+    <image file="Images\Ribbon\menu-button.png" />
+  </image>
+  <image name="RibbonMenuButtonHot">
+    <image file="Images\Ribbon\menu-button-hot.png" />
+  </image>
+  <image name="RibbonMenuBackground">
+    <image file="Images\Ribbon\menu-background.png" />
+  </image>
+  <image name="RibbonMenuItemSelected">
+    <image file="Images\Ribbon\menu-item-selected.png" />
+  </image>
+  <image name="RibbonMenuItemSeparator">
+    <image file="Images\Ribbon\menu-item-separator.png" />
+  </image>
+  <image name="RibbonButtonHot">
+    <image file="Images\Ribbon\button-hot.png" />
+  </image>
+  <image name="RibbonButtonPressed">
+    <image file="Images\Ribbon\button-pressed.png" />
+  </image>
+  <image name="RibbonButtonToggled">
+    <image file="Images\Ribbon\button-toggled.png" />
+  </image>
+  <image name="RibbonDropDownButton">
+    <image file="Images\Ribbon\dropdown-button.png" />
+  </image>
+  <image name="RibbonDropDownButtonHot">
+    <image file="Images\Ribbon\dropdown-button-hot.png" />
+  </image>
+  <image name="RibbonDropDownGlyph">
+    <image file="Images\Ribbon\dropdown-glyph.png" />
+  </image>
+  
+  
+</resources>

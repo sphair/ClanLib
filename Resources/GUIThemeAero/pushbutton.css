@@ -1,0 +1,48 @@
+
+button
+{
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	text-color:black;
+	align:center;
+	vertical-align:center;
+}
+
+button:normal
+{
+	bg-image:ButtonNormal; 
+}
+
+button:defaulted
+{
+	bg-image:ButtonDefaulted; 
+}
+
+button:hot
+{
+	bg-image:ButtonHot; 
+}
+
+button:pressed
+{
+	bg-image:ButtonPressed; 
+}
+
+button:disabled
+{
+	bg-image:ButtonDisabled; 
+	text-color:darkgray;
+}
+
+button focus
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:8;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:repeat;
+	bg-image:ButtonFocus;
+}

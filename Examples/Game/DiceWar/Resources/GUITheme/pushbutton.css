@@ -1,0 +1,55 @@
+
+button
+{
+	bg-image: ButtonNormal; 
+	bg-image-sizing: stretch;
+	bg-image-sizing-left: 4;
+	bg-image-sizing-right: 4;
+	bg-image-sizing-top: 4;
+	bg-image-sizing-bottom: 4;
+
+	text-color: white;
+
+	font-weight: bold;
+	font-size: -21;
+	font-family: VeraBd;
+	
+	align: center;
+	align-vertical: center;
+}
+
+button:hot
+{
+	bg-image: ButtonHot; 
+}
+
+button:pressed
+{
+	bg-image: ButtonPressed; 
+}
+
+button:disabled
+{
+	bg-image: ButtonDisabled; 
+	text-color: black;
+}
+
+button.textonly
+{
+	bg-image:;
+	
+    bg-color:;
+   	text-color: lightgrey;
+
+    font-weight: bold;
+	font-size: -21;
+	font-family: VeraBd;
+	
+	align: center;
+	align-vertical: center;
+}
+
+button.textonly:hot
+{
+   	text-color: white;
+}

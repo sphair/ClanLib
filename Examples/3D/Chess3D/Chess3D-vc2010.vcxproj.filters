@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="3D">
+      <UniqueIdentifier>{c4a1cca0-4694-46cd-8e3a-9c3893bb75a2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\3D\camera.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\3D\lib3ds_help.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\3D\orientation.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\3D\position.cpp">
+      <Filter>3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\chess.cpp" />
+    <ClCompile Include="Sources\model.cpp" />
+    <ClCompile Include="Sources\precomp.cpp" />
+    <ClCompile Include="Sources\program.cpp" />
+    <ClCompile Include="Sources\skybox.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\3D\camera.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\frustrum.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\lib3ds_help.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\light_model.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\orientation.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\plane_equation.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\3D\position.h">
+      <Filter>3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\chess.h" />
+    <ClInclude Include="Sources\model.h" />
+    <ClInclude Include="Sources\precomp.h" />
+    <ClInclude Include="Sources\program.h" />
+    <ClInclude Include="Sources\skybox.h" />
+  </ItemGroup>
+</Project>

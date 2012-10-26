@@ -1,0 +1,13 @@
+[Dirs]
+Input_Lib = E:/ClanLib/lib
+Input_Include = E:/ClanLib/include
+Output_Lib = E:/ClanLib/lib
+Output_Include = E:/ClanLib/include
+
+[Use]
+OpenGL = 1
+Network = 1
+ClanSound = 1
+
+[Others]
+Compiler = 1 ; Visual C++ Toolkit 2003

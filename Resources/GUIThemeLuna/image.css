@@ -1,0 +1,16 @@
+
+image
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	bg-image:ImageNormal;
+
+	border-top:3;
+	border-bottom:3;
+	border-left:3;
+	border-right:3;
+}
+

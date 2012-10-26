@@ -1,0 +1,145 @@
+@import "../../../Resources/GUIThemeLuna/theme.css";
+
+window
+{
+	bg-color:white;
+}
+
+calendar:
+{
+	bg-color:transparent;
+	border-color:transparent;
+	text-color:black;
+	margin-top:0;
+	margin-left:0;
+	margin-right:0;
+	margin-bottom:0;
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+	padding-left:0;
+	padding-right:0;
+	padding-top:0;
+	padding-bottom:0;
+}
+
+calendar day_name
+{
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+	padding-left:3;
+	padding-right:0;
+	padding-top:1;
+	padding-bottom:1;
+	
+	preferred-width:24;
+	preferred-height:16;
+	align:left;
+}
+
+calendar day
+{
+	bg-color:#ffffff;
+	border-color:transparent;
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+	padding-right:3;
+	preferred-width:24;
+	preferred-height:15;
+	align:right;
+}
+
+calendar day:hot
+{
+	bg-color:#ffffff;
+	border-color:#ccddee;
+}
+
+calendar day:today
+{
+	bg-color:#e0f0ff;
+	border-color:transparent;
+}
+
+calendar day:today:hot
+{
+	bg-color:#ffffff;
+	border-color:#ccddee;
+}
+
+
+calendar day:hot:pressed
+{
+	bg-color:#ffffff;
+	border-color:#ccddee;
+}
+
+calendar day:filler
+{
+	text-color:#777777;
+}
+
+calendar day:filler:hot
+{
+	border-color:#eeeeee;
+}
+
+calendar day:selected
+{
+	border-color:#006fff;
+}
+
+calendar day:selected:hot
+{
+//	border-color:#006fff;
+}
+
+calendar prev_month
+{
+	bg-color:transparent;
+	preferred-width:20;
+	margin-left:5;
+	preferred-height:23;
+	bg-image:CalendarPrevMonth;
+	bg-image-sizing:left; 
+	align:center;
+}
+
+calendar prev_month:hot
+{
+	bg-image:CalendarPrevMonthHot;
+}
+
+calendar next_month
+{
+	bg-color:transparent;
+	preferred-width:20;
+	preferred-height:23;
+	bg-image:CalendarNextMonth;
+	margin-right:4;
+	bg-image-sizing:right; 
+	align:center;
+}
+
+calendar next_month:hot
+{
+	bg-image:CalendarNextMonthHot;
+}
+
+calendar month_year
+{
+	bg-color:transparent;
+	text-color:black;
+	border-color:#555555;
+	align:center;
+}
+
+calendar month_year:hot
+{
+	text-color:#006fff;
+}

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sources\precomp.cpp" />
+    <ClCompile Include="Sources\program.cpp" />
+    <ClCompile Include="Sources\module_reader.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\setupmikmod.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\soundprovider_mikmod.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\soundprovider_mikmod_session.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\precomp.h" />
+    <ClInclude Include="Sources\program.h" />
+    <ClInclude Include="Sources\module_reader.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\setupmikmod.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\soundprovider_mikmod.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\soundprovider_mikmod_impl.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\soundprovider_mikmod_session.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Player">
+      <UniqueIdentifier>{5f694377-aa6f-4b9b-9835-2834a163ad06}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

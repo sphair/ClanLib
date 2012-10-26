@@ -1,0 +1,258 @@
+
+listview 
+{
+	bg-image:ListViewBorder; 
+
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+	
+	border-top:1;
+	border-left:1;
+	border-right:1;
+	border-bottom:1;
+}
+
+listview row:details
+{
+	bg-image:; 
+	indent-width:20;
+	bg-color:#eeeeee;
+
+	border-top:0;
+	border-bottom:0;
+}
+
+listview row:alternate
+{
+	bg-image:; 
+	indent-width:20;
+	bg-color:#e2e2e2;
+
+	border-top:0;
+	border-bottom:0;
+}
+
+listview column
+{
+	bg-image:; 
+	bg-color:#f2f2f2;
+}
+
+listview row_opener:open
+{
+	bg-image:ListViewRowOpenerClosed;
+	preferred-height:9;
+	preferred-width:9;
+	offset-y:-2;
+}
+
+listview row_opener:closed
+{
+	bg-image:ListViewRowOpenerOpen;
+	preferred-height:9;
+	preferred-width:9;
+	offset-y:-2;
+}
+
+listview selection
+{
+	selection-margin-left:3;
+	selection-margin-right:4;
+	selection-margin-top:1;
+	selection-margin-bottom:2;
+
+	bg-color:#316ac5;
+	text-color:#f2e3f2;
+}
+
+listview selection:unfocused
+{
+	bg-color:#ece9d8;
+	text-color:black;
+}
+
+listview selection:normal
+{
+    text-decoration:none;
+}
+
+listview selection:hot
+{
+    text-decoration:underline;
+}
+
+listview icon_selection:normal
+{
+	bg-image:ListViewIconSelection;
+
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+
+	border-top:-3;
+	border-left:-3;
+	border-right:-3;
+	border-bottom:-3;
+}
+
+
+listview columns_bg
+{
+	bg-image:;
+	bg-color:white;
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+listview row:icons
+{
+	bg-image:;
+	bg-color:#eeeeee;
+}
+
+listview cell:details:hot
+{
+	text-color:blue;
+	text-decoration:underline;
+}
+
+listview cell:details:normal
+{
+	bg-image:; 
+	bg-color:;
+
+	text-color:black;
+    
+	preferred-width:100;
+	preferred-height:17;
+
+	icon-width: 16;
+	icon-height: 16;
+
+	opener-icon-gap:6;
+	icon-text-gap:5;
+	icon-offset-y:0;
+
+	padding-top:2;
+	padding-left:4;
+	padding-right:0;
+	padding-bottom:0;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:2;
+	line-edit-offset-bottom:2;
+	line-edit-offset-right:14;
+}
+
+listview cell:icons:normal
+{
+   	bg-image:; 
+	bg-color:;
+
+	preferred-width:70;
+	preferred-height:66;
+
+	icon-width: 32;
+	icon-height: 32;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:0;
+	line-edit-offset-bottom:5;
+	line-edit-offset-right:14;
+}
+
+listview cell:thumbnails:normal
+{
+	preferred-width:125;
+	preferred-height:119;
+
+	icon-width: 96;
+	icon-height: 96;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:3;
+
+	line-edit-offset-left:6;
+	line-edit-offset-top:0;
+	line-edit-offset-bottom:5;
+	line-edit-offset-right:14;
+}
+
+
+
+listview_header
+{
+	bg-image:ListViewHeader;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	
+	preferred-height: 20;
+	
+/*	border-top:0;
+	border-left:3;
+	border-right:3;
+	border-bottom:3;
+*/
+}
+
+listview_header columnheader:normal
+{
+	bg-image:ListViewColumnHeaderNormal;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+	
+	border-top:3;
+	border-left:7;
+	border-right:3;
+	border-bottom:3;
+}
+
+listview_header columnheader:hot
+{
+	bg-image:ListViewColumnHeaderHot;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+
+	border-top:3;
+	border-left:7;
+	border-right:3;
+	border-bottom:3;
+}
+
+listview_header columnheader:pressed
+{
+	bg-image:ListViewColumnHeaderPressed;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:14;
+	bg-image-sizing:stretch;
+	
+	border-top:3;
+	border-left:8;
+	border-right:3;
+	border-bottom:3;
+}

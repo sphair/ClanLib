@@ -1,0 +1,469 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2012 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Harry Storbacka
+**    Kenneth Gangstoe
+*/
+
+#include "Display/precomp.h"
+#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/path_help.h"
+#include "API/Display/Render/shader_object.h"
+#include "API/Display/Render/program_object.h"
+#include "API/Display/Render/program_attribute.h"
+#include "API/Display/Render/program_uniform.h"
+#include "API/Display/Render/graphic_context.h"
+#include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "API/Display/TargetProviders/program_object_provider.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Resources/resource.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/XML/dom_element.h"
+
+namespace clan
+{
+
+/////////////////////////////////////////////////////////////////////////////
+// ProgramObject_Impl Class:
+
+class ProgramObject_Impl
+{
+public:
+	ProgramObject_Impl() : provider(0)
+	{
+	}
+
+	~ProgramObject_Impl()
+	{
+		if (provider)
+			delete provider;
+	}
+
+	ProgramObjectProvider *provider;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// ProgramObject Construction:
+
+ProgramObject::ProgramObject()
+{
+}
+
+ProgramObject::ProgramObject(GraphicContext &gc)
+: impl(new ProgramObject_Impl)
+{
+	GraphicContextProvider *gc_provider = gc.get_provider();
+
+	impl->provider = gc_provider->alloc_program_object();
+}
+
+ProgramObject::ProgramObject(GraphicContextProvider *gc_provider)
+: impl(new ProgramObject_Impl)
+{
+	impl->provider = gc_provider->alloc_program_object();
+}
+
+ProgramObject::ProgramObject(ProgramObjectProvider *provider)
+: impl(new ProgramObject_Impl)
+{
+	impl->provider = provider;
+}
+
+ProgramObject ProgramObject::load(
+	GraphicContext &gc,
+	const std::string &resource_id,
+	ResourceManager *resources)
+{
+	ProgramObject program_object(gc);
+
+	Resource resource = resources->get_resource(resource_id);
+
+	DomNode node = resource.get_element().get_first_child();
+
+	while (!node.is_null())
+	{
+		if (node.is_element())
+		{
+			DomElement element = node.to_element();
+			if (element.get_tag_name() == "shader")
+			{
+				ShaderObject shader = ShaderObject::load(gc, element.get_attribute("name"), resources);
+				program_object.attach(shader);
+			}
+			else if (element.get_tag_name() == "bind-attribute")
+			{
+				program_object.bind_attribute_location(
+					StringHelp::text_to_int(element.get_attribute("index")),
+					element.get_attribute("name"));
+			}
+		}
+		node = node.get_next_sibling();
+	}
+	
+	if (!resource.get_element().get_attribute("shader").empty())
+	{
+		ShaderObject shader = ShaderObject::load(gc, resource.get_element().get_attribute("shader"), resources);
+		program_object.attach(shader);
+	}
+	
+	if (resource.get_element().get_attribute("link", "true") == "true")
+		if(!program_object.link())
+			throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const VirtualDirectory &directory)
+{
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, directory);
+	program_object.attach(vertex_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, directory);
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const VirtualDirectory &directory)
+{
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_filename, directory);
+	program_object.attach(vertex_shader);
+
+	ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_filename, directory);
+	program_object.attach(geometry_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_filename, directory);
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname)
+{
+	std::string path_vertex = PathHelp::get_fullpath(vertex_fullname, PathHelp::path_type_file);
+	std::string filename_vertex = PathHelp::get_filename(vertex_fullname, PathHelp::path_type_file);
+	VirtualFileSystem vfs_vertex(path_vertex);
+	std::string path_fragment = PathHelp::get_fullpath(fragment_fullname, PathHelp::path_type_file);
+	std::string filename_fragment = PathHelp::get_filename(fragment_fullname, PathHelp::path_type_file);
+	VirtualFileSystem vfs_fragment(path_fragment);
+
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex.get_root_directory());
+	program_object.attach(vertex_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment.get_root_directory());
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname)
+{
+	std::string path_vertex = PathHelp::get_fullpath(vertex_fullname, PathHelp::path_type_file);
+	std::string filename_vertex = PathHelp::get_filename(vertex_fullname, PathHelp::path_type_file);
+	VirtualFileSystem vfs_vertex(path_vertex);
+	std::string path_geometry = PathHelp::get_fullpath(geometry_fullname, PathHelp::path_type_file);
+	std::string filename_geometry = PathHelp::get_filename(geometry_fullname, PathHelp::path_type_file);
+	VirtualFileSystem vfs_geometry(path_geometry);
+	std::string path_fragment = PathHelp::get_fullpath(fragment_fullname, PathHelp::path_type_file);
+	std::string filename_fragment = PathHelp::get_filename(fragment_fullname, PathHelp::path_type_file);
+	VirtualFileSystem vfs_fragment(path_fragment);
+
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, filename_vertex, vfs_vertex.get_root_directory());
+	program_object.attach(vertex_shader);
+
+	ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, filename_geometry, vfs_geometry.get_root_directory());
+	program_object.attach(geometry_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, filename_fragment, vfs_fragment.get_root_directory());
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file)
+{
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+	program_object.attach(vertex_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
+{
+	ProgramObject program_object(gc);
+
+	ShaderObject vertex_shader = ShaderObject::load_and_compile(gc, shadertype_vertex, vertex_file);
+	program_object.attach(vertex_shader);
+
+	ShaderObject geometry_shader = ShaderObject::load_and_compile(gc, shadertype_geometry, geometry_file);
+	program_object.attach(geometry_shader);
+
+	ShaderObject fragment_shader = ShaderObject::load_and_compile(gc, shadertype_fragment, fragment_file);
+	program_object.attach(fragment_shader);
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const VirtualDirectory &directory)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_filename, fragment_filename, directory);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const VirtualDirectory &directory)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_filename, geometry_filename, fragment_filename, directory);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &fragment_fullname)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_fullname, fragment_fullname);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, const std::string &vertex_fullname, const std::string &geometry_fullname, const std::string &fragment_fullname)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_fullname, geometry_fullname, fragment_fullname);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &fragment_file)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_file, fragment_file);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject ProgramObject::load_and_link(GraphicContext &gc, IODevice &vertex_file, IODevice &geometry_file, IODevice &fragment_file)
+{
+	ProgramObject program_object = ProgramObject::load(gc, vertex_file, geometry_file, fragment_file);
+
+	if(!program_object.link())
+		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+
+	return program_object;
+}
+
+ProgramObject::~ProgramObject()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// ProgramObject Attributes:
+
+void ProgramObject::throw_if_null() const
+{
+	if (!impl)
+		throw Exception("ProgramObject is null");
+}
+
+unsigned int ProgramObject::get_handle() const
+{
+	return impl->provider->get_handle();
+}
+
+ProgramObjectProvider *ProgramObject::get_provider() const
+{
+	if (!impl)
+		return 0;
+	return impl->provider;
+}
+
+std::vector<ShaderObject> ProgramObject::get_shaders() const
+{
+	return impl->provider->get_shaders();
+}
+
+std::string ProgramObject::get_info_log() const
+{
+	return impl->provider->get_info_log();
+}
+
+int ProgramObject::get_attribute_count() const
+{
+	return impl->provider->get_attribute_count();
+}
+
+std::vector<ProgramAttribute> ProgramObject::get_attributes() const
+{
+	return impl->provider->get_attributes();
+}
+
+int ProgramObject::get_attribute_location(const std::string &name) const
+{
+	return impl->provider->get_attribute_location(name);
+}
+
+int ProgramObject::get_uniform_count() const
+{
+	return impl->provider->get_uniform_count();	
+}
+
+std::vector<ProgramUniform> ProgramObject::get_uniforms() const
+{
+	return impl->provider->get_uniforms();
+}
+
+int ProgramObject::get_uniform_location(const std::string &name) const
+{
+	return impl->provider->get_uniform_location(name);
+}
+
+int ProgramObject::get_uniform_buffer_size(const std::string &block_name) const
+{
+	int block_index = impl->provider->get_uniform_buffer_index(block_name);
+	if (block_index == -1)
+		throw Exception("uniform block not found");
+	return impl->provider->get_uniform_buffer_size(block_index);
+}
+
+int ProgramObject::get_uniform_buffer_size(int block_index) const
+{
+	return impl->provider->get_uniform_buffer_size(block_index);
+}
+
+int ProgramObject::get_uniform_buffer_index(const std::string &block_name) const
+{
+	return impl->provider->get_uniform_buffer_index(block_name);
+}
+
+int ProgramObject::get_storage_buffer_index(const std::string &block_name) const
+{
+	return impl->provider->get_storage_buffer_index(block_name);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// ProgramObject Operations:
+
+bool ProgramObject::operator==(const ProgramObject &other) const
+{
+	return impl == other.impl;
+}
+
+void ProgramObject::attach(const ShaderObject &obj)
+{
+	if (obj.is_null())
+	{
+		throw Exception("cannot attach null shader object");
+	}
+
+	impl->provider->attach(obj);
+}
+
+void ProgramObject::detach(const ShaderObject &obj)
+{
+	impl->provider->detach(obj);
+}
+
+void ProgramObject::bind_attribute_location(int index, const std::string &name)
+{
+	impl->provider->bind_attribute_location(index, name);
+}
+
+void ProgramObject::bind_frag_data_location(int color_number, const std::string &name)
+{
+	impl->provider->bind_frag_data_location(color_number, name);
+}
+
+bool ProgramObject::link()
+{
+	impl->provider->link();
+	return impl->provider->get_link_status();
+}
+
+bool ProgramObject::validate()
+{
+	impl->provider->validate();
+	return impl->provider->get_validate_status();
+}
+
+void ProgramObject::set_uniform1i(const std::string &name, int v1)
+{
+	impl->provider->set_uniform1i(get_uniform_location(name), v1);
+}
+
+void ProgramObject::set_uniform1i(int location, int v1)
+{
+	impl->provider->set_uniform1i(location, v1);
+}
+
+void ProgramObject::set_uniform_buffer_index(const std::string &name, int bind_index)
+{
+	impl->provider->set_uniform_buffer_index(get_uniform_buffer_index(name), bind_index);
+}
+
+void ProgramObject::set_uniform_buffer_index(int block_index, int bind_index)
+{
+	impl->provider->set_uniform_buffer_index(block_index, bind_index);
+}
+
+void ProgramObject::set_storage_buffer_index(const std::string &name, int bind_index)
+{
+	impl->provider->set_storage_buffer_index(get_storage_buffer_index(name), bind_index);
+}
+
+void ProgramObject::set_storage_buffer_index(int block_index, int bind_index)
+{
+	impl->provider->set_storage_buffer_index(block_index, bind_index);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// ProgramObject Implementation:
+
+}

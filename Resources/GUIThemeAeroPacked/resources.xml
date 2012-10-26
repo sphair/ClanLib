@@ -1,0 +1,802 @@
+<resources>
+	<image name="ButtonNormal">
+		<image file="texture1.png">
+			<grid pos="1,118" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonHot">
+		<image file="texture1.png">
+			<grid pos="1,95" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonPressed">
+		<image file="texture1.png">
+			<grid pos="1,141" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonDisabled">
+		<image file="texture1.png">
+			<grid pos="1,47" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonDefaulted">
+		<image file="texture1.png">
+			<grid pos="1,1" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonDefaultedAnimating">
+		<image file="texture1.png">
+			<grid pos="1,24" size="20,21"/>
+		</image>
+	</image>
+	<image name="ButtonFocus">
+		<image file="texture1.png">
+			<grid pos="1,70" size="20,23"/>
+		</image>
+	</image>
+	<image name="CheckBoxUncheckedNormal">
+		<image file="texture1.png">
+			<grid pos="23,61" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxUncheckedHot">
+		<image file="texture1.png">
+			<grid pos="23,46" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxUncheckedPressed">
+		<image file="texture1.png">
+			<grid pos="23,76" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxUncheckedDisabled">
+		<image file="texture1.png">
+			<grid pos="23,31" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxCheckedNormal">
+		<image file="texture1.png">
+			<grid pos="1,194" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxCheckedHot">
+		<image file="texture1.png">
+			<grid pos="1,179" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxCheckedPressed">
+		<image file="texture1.png">
+			<grid pos="1,209" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxCheckedDisabled">
+		<image file="texture1.png">
+			<grid pos="1,164" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxIndeterminatedNormal">
+		<image file="texture1.png">
+			<grid pos="23,1" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxIndeterminatedHot">
+		<image file="texture1.png">
+			<grid pos="1,239" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxIndeterminatedPressed">
+		<image file="texture1.png">
+			<grid pos="23,16" size="13,13"/>
+		</image>
+	</image>
+	<image name="CheckBoxIndeterminatedDisabled">
+		<image file="texture1.png">
+			<grid pos="1,224" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonCheckedNormal">
+		<image file="texture1.png">
+			<grid pos="23,230" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonCheckedHot">
+		<image file="texture1.png">
+			<grid pos="23,215" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonCheckedPressed">
+		<image file="texture1.png">
+			<grid pos="78,115" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonCheckedDisabled">
+		<image file="texture1.png">
+			<grid pos="23,200" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonUncheckedNormal">
+		<image file="texture1.png">
+			<grid pos="82,160" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonUncheckedHot">
+		<image file="texture1.png">
+			<grid pos="108,115" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonUncheckedPressed">
+		<image file="texture1.png">
+			<grid pos="97,160" size="13,13"/>
+		</image>
+	</image>
+	<image name="RadioButtonUncheckedDisabled">
+		<image file="texture1.png">
+			<grid pos="93,115" size="13,13"/>
+		</image>
+	</image>
+	<image name="WindowActive">
+		<image file="texture1.png">
+			<grid pos="242,148" size="66,29"/>
+		</image>
+	</image>
+	<image name="WindowInactive">
+		<image file="texture1.png">
+			<grid pos="242,179" size="66,29"/>
+		</image>
+	</image>
+	<image name="WindowFrameRightActive">
+		<image file="texture1.png">
+			<grid pos="346,1" size="8,92"/>
+		</image>
+	</image>
+	<image name="WindowFrameRightInactive">
+		<image file="texture1.png">
+			<grid pos="356,1" size="8,92"/>
+		</image>
+	</image>
+	<image name="WindowFrameLeftActive">
+		<image file="texture1.png">
+			<grid pos="336,1" size="8,92"/>
+		</image>
+	</image>
+	<image name="WindowFrameLeftInactive">
+		<image file="texture1.png">
+			<grid pos="336,95" size="8,92"/>
+		</image>
+	</image>
+	<image name="WindowFrameBottomActive">
+		<image file="texture1.png">
+			<grid pos="154,246" size="16,8"/>
+		</image>
+	</image>
+	<image name="WindowFrameBottomInactive">
+		<image file="texture1.png">
+			<grid pos="16,174" size="5,3"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonActiveNormal">
+		<image file="texture1.png">
+			<grid pos="208,69" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonActiveHot">
+		<image file="texture1.png">
+			<grid pos="208,52" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonActivePressed">
+		<image file="texture1.png">
+			<grid pos="208,86" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonActiveDisabled">
+		<image file="texture1.png">
+			<grid pos="208,35" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonInactiveNormal">
+		<image file="texture1.png">
+			<grid pos="208,137" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonInactiveHot">
+		<image file="texture1.png">
+			<grid pos="208,120" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonInactivePressed">
+		<image file="texture1.png">
+			<grid pos="208,154" size="25,15"/>
+		</image>
+	</image>
+	<image name="WindowCloseButtonInactiveDisabled">
+		<image file="texture1.png">
+			<grid pos="208,103" size="25,15"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbNormal">
+		<image file="texture1.png">
+			<grid pos="154,156" size="17,22"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbHot">
+		<image file="texture1.png">
+			<grid pos="154,132" size="17,22"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbPressed">
+		<image file="texture1.png">
+			<grid pos="154,180" size="17,22"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbDisabled">
+		<image file="texture1.png">
+			<grid pos="154,96" size="17,22"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbGripperNormal">
+		<image file="texture1.png">
+			<grid pos="137,245" size="9,10"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbGripperHot">
+		<image file="texture1.png">
+			<grid pos="126,245" size="9,10"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertThumbGripperPressed">
+		<image file="texture1.png">
+			<grid pos="154,120" size="9,10"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertTrackNormal">
+		<image file="texture1.png">
+			<grid pos="100,154" size="14,1"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertTrackHot">
+		<image file="texture1.png">
+			<grid pos="108,130" size="14,1"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertTrackPressed">
+		<image file="texture1.png">
+			<grid pos="100,157" size="14,1"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertTrackDisabled">
+		<image file="texture1.png">
+			<grid pos="100,85" size="14,1"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonUpNormal">
+		<image file="texture1.png">
+			<grid pos="154,58" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonUpHot">
+		<image file="texture1.png">
+			<grid pos="154,39" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonUpPressed">
+		<image file="texture1.png">
+			<grid pos="154,77" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonUpDisabled">
+		<image file="texture1.png">
+			<grid pos="154,20" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonDownNormal">
+		<image file="texture1.png">
+			<grid pos="126,226" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonDownHot">
+		<image file="texture1.png">
+			<grid pos="126,207" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonDownPressed">
+		<image file="texture1.png">
+			<grid pos="154,1" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarVertButtonDownDisabled">
+		<image file="texture1.png">
+			<grid pos="126,188" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonLeftNormal">
+		<image file="texture1.png">
+			<grid pos="104,215" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonLeftHot">
+		<image file="texture1.png">
+			<grid pos="82,237" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonLeftPressed">
+		<image file="texture1.png">
+			<grid pos="104,234" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonLeftDisabled">
+		<image file="texture1.png">
+			<grid pos="60,237" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonRightNormal">
+		<image file="texture1.png">
+			<grid pos="126,63" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonRightHot">
+		<image file="texture1.png">
+			<grid pos="126,44" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonRightPressed">
+		<image file="texture1.png">
+			<grid pos="126,82" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriButtonRightDisabled">
+		<image file="texture1.png">
+			<grid pos="126,25" size="17,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbNormal">
+		<image file="texture1.png">
+			<grid pos="126,150" size="20,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbHot">
+		<image file="texture1.png">
+			<grid pos="126,131" size="20,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbPressed">
+		<image file="texture1.png">
+			<grid pos="126,169" size="20,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbDisabled">
+		<image file="texture1.png">
+			<grid pos="126,101" size="20,17"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbGripperNormal">
+		<image file="texture1.png">
+			<grid pos="112,160" size="10,9"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbGripperHot">
+		<image file="texture1.png">
+			<grid pos="23,245" size="10,9"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriThumbGripperPressed">
+		<image file="texture1.png">
+			<grid pos="126,120" size="10,9"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriTrackNormal">
+		<image file="texture1.png">
+			<grid pos="16,179" size="1,8"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriTrackHot">
+		<image file="texture1.png">
+			<grid pos="19,164" size="1,8"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriTrackPressed">
+		<image file="texture1.png">
+			<grid pos="19,179" size="1,8"/>
+		</image>
+	</image>
+	<image name="ScrollbarHoriTrackDisabled">
+		<image file="texture1.png">
+			<grid pos="16,164" size="1,8"/>
+		</image>
+	</image>
+	<image name="SliderHorizontalTrack">
+		<image file="texture1.png">
+			<grid pos="16,194" size="5,5"/>
+		</image>
+	</image>
+	<image name="SliderHorizontalThumbNormal">
+		<image file="texture1.png">
+			<grid pos="162,204" size="6,19"/>
+		</image>
+	</image>
+	<image name="SliderHorizontalThumbHot">
+		<image file="texture1.png">
+			<grid pos="154,204" size="6,19"/>
+		</image>
+	</image>
+	<image name="SliderHorizontalThumbPressed">
+		<image file="texture1.png">
+			<grid pos="154,225" size="6,19"/>
+		</image>
+	</image>
+	<image name="SliderHorizontalThumbDisabled">
+		<image file="texture1.png">
+			<grid pos="118,67" size="6,19"/>
+		</image>
+	</image>
+	<image name="SliderVerticalTrack">
+		<image file="texture1.png">
+			<grid pos="16,201" size="5,5"/>
+		</image>
+	</image>
+	<image name="SliderVerticalThumbNormal">
+		<image file="texture1.png">
+			<grid pos="145,63" size="6,11"/>
+		</image>
+	</image>
+	<image name="SliderVerticalThumbHot">
+		<image file="texture1.png">
+			<grid pos="145,44" size="6,11"/>
+		</image>
+	</image>
+	<image name="SliderVerticalThumbPressed">
+		<image file="texture1.png">
+			<grid pos="145,82" size="6,11"/>
+		</image>
+	</image>
+	<image name="SliderVerticalThumbDisabled">
+		<image file="texture1.png">
+			<grid pos="145,25" size="6,11"/>
+		</image>
+	</image>
+	<image name="LineEditNormal">
+		<image file="texture1.png">
+			<grid pos="38,235" size="20,15"/>
+		</image>
+	</image>
+	<image name="LineEditHot">
+		<image file="texture1.png">
+			<grid pos="38,218" size="20,15"/>
+		</image>
+	</image>
+	<image name="LineEditDisabled">
+		<image file="texture1.png">
+			<grid pos="38,201" size="20,15"/>
+		</image>
+	</image>
+	<image name="StatusBar">
+		<image file="texture1.png">
+			<grid pos="162,225" size="8,8"/>
+		</image>
+	</image>
+	<image name="StatusBarGrip">
+		<image file="texture1.png">
+			<grid pos="190,1" size="16,16"/>
+		</image>
+	</image>
+	<image name="SpinArrowUpNormal">
+		<image file="texture1.png">
+			<grid pos="145,234" size="7,6"/>
+		</image>
+	</image>
+	<image name="SpinArrowUpDisabled">
+		<image file="texture1.png">
+			<grid pos="145,226" size="7,6"/>
+		</image>
+	</image>
+	<image name="SpinArrowDownNormal">
+		<image file="texture1.png">
+			<grid pos="138,120" size="7,6"/>
+		</image>
+	</image>
+	<image name="SpinArrowDownDisabled">
+		<image file="texture1.png">
+			<grid pos="112,171" size="7,6"/>
+		</image>
+	</image>
+	<image name="SpinArrowLeftNormal">
+		<image file="texture1.png">
+			<grid pos="145,197" size="6,7"/>
+		</image>
+	</image>
+	<image name="SpinArrowLeftDisabled">
+		<image file="texture1.png">
+			<grid pos="145,188" size="6,7"/>
+		</image>
+	</image>
+	<image name="SpinArrowRightNormal">
+		<image file="texture1.png">
+			<grid pos="145,216" size="6,7"/>
+		</image>
+	</image>
+	<image name="SpinArrowRightDisabled">
+		<image file="texture1.png">
+			<grid pos="145,207" size="6,7"/>
+		</image>
+	</image>
+	<image name="GroupBox">
+		<image file="texture1.png">
+			<grid pos="38,183" size="16,16"/>
+		</image>
+	</image>
+	<image name="TabBorder">
+		<image file="texture1.png">
+			<grid pos="190,19" size="16,16"/>
+		</image>
+	</image>
+	<image name="TabHeaderBorder">
+		<image file="texture1.png">
+			<grid pos="208,1" size="32,32"/>
+		</image>
+	</image>
+	<image name="TabHeaderPageNormal">
+		<image file="texture1.png">
+			<grid pos="190,59" size="16,20"/>
+		</image>
+	</image>
+	<image name="TabHeaderPageHot">
+		<image file="texture1.png">
+			<grid pos="190,37" size="16,20"/>
+		</image>
+	</image>
+	<image name="TabHeaderPageSelected">
+		<image file="texture1.png">
+			<grid pos="190,81" size="16,19"/>
+		</image>
+	</image>
+	<image name="MenuBarBackgroundActive">
+		<image file="texture1.png">
+			<grid pos="60,133" size="18,25"/>
+		</image>
+	</image>
+	<image name="MenuBarBackgroundInactive">
+		<image file="texture1.png">
+			<grid pos="80,133" size="18,25"/>
+		</image>
+	</image>
+	<image name="MenuBarItemHot">
+		<image file="texture1.png">
+			<grid pos="100,133" size="20,19"/>
+		</image>
+	</image>
+	<image name="MenuBarItemSelected">
+		<image file="texture1.png">
+			<grid pos="60,160" size="20,19"/>
+		</image>
+	</image>
+	<image name="PopupMenu">
+		<image file="texture1.png">
+			<grid pos="60,181" size="64,32"/>
+		</image>
+	</image>
+	<image name="PopupMenuSelected">
+		<image file="texture1.png">
+			<grid pos="126,1" size="26,22"/>
+		</image>
+	</image>
+	<image name="PopupMenuSeparator">
+		<image file="texture1.png">
+			<grid pos="38,252" size="16,2"/>
+		</image>
+	</image>
+	<image name="PopupMenuSubmenuArrow">
+		<image file="texture1.png">
+			<grid pos="23,156" size="6,7"/>
+		</image>
+	</image>
+	<image name="PopupMenuChecked">
+		<image file="texture1.png">
+			<grid pos="60,215" size="20,20"/>
+		</image>
+	</image>
+	<image name="PopupMenuCheckedDisabled">
+		<image file="texture1.png">
+			<grid pos="82,215" size="20,20"/>
+		</image>
+	</image>
+	<image name="ListViewColumnHeaderNormal">
+		<image file="texture1.png">
+			<grid pos="80,89" size="18,24"/>
+		</image>
+	</image>
+	<image name="ListViewColumnHeaderHot">
+		<image file="texture1.png">
+			<grid pos="60,89" size="18,24"/>
+		</image>
+	</image>
+	<image name="ListViewColumnHeaderPressed">
+		<image file="texture1.png">
+			<grid pos="100,89" size="18,24"/>
+		</image>
+	</image>
+	<image name="ToolBarBackground">
+		<image file="texture1.png">
+			<grid pos="173,145" size="1,90"/>
+		</image>
+	</image>
+	<image name="Tooltip">
+		<image file="texture1.png">
+			<grid pos="242,1" size="92,145"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonNormal">
+		<image file="texture1.png">
+			<grid pos="38,47" size="20,21"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonHot">
+		<image file="texture1.png">
+			<grid pos="38,24" size="20,21"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonPressed">
+		<image file="texture1.png">
+			<grid pos="38,70" size="20,21"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonDisabled">
+		<image file="texture1.png">
+			<grid pos="38,1" size="20,21"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonNormalGlyph">
+		<image file="texture1.png">
+			<grid pos="23,103" size="7,4"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonHotGlyph">
+		<image file="texture1.png">
+			<grid pos="23,97" size="7,4"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonPressedGlyph">
+		<image file="texture1.png">
+			<grid pos="23,109" size="7,4"/>
+		</image>
+	</image>
+	<image name="ComboBoxDropDownButtonDisabledGlyph">
+		<image file="texture1.png">
+			<grid pos="23,91" size="7,4"/>
+		</image>
+	</image>
+	<image name="ToolBarButtonNormal">
+		<image file="texture1.png">
+			<grid pos="190,138" size="16,16"/>
+		</image>
+	</image>
+	<image name="ToolBarButtonHot">
+		<image file="texture1.png">
+			<grid pos="190,120" size="16,16"/>
+		</image>
+	</image>
+	<image name="ToolBarButtonPressed">
+		<image file="texture1.png">
+			<grid pos="190,156" size="16,16"/>
+		</image>
+	</image>
+	<image name="ToolBarButtonDisabled">
+		<image file="texture1.png">
+			<grid pos="190,102" size="16,16"/>
+		</image>
+	</image>
+	<image name="FocusDottedLine">
+		<image file="texture1.png">
+			<grid pos="23,115" size="13,17"/>
+		</image>
+	</image>
+	<image name="ListViewRowOpenerOpen">
+		<image file="texture1.png">
+			<grid pos="23,145" size="9,9"/>
+		</image>
+	</image>
+	<image name="ListViewRowOpenerClosed">
+		<image file="texture1.png">
+			<grid pos="23,134" size="9,9"/>
+		</image>
+	</image>
+	<image name="ListViewBorder">
+		<image file="texture1.png">
+			<grid pos="60,67" size="20,20"/>
+		</image>
+	</image>
+	<image name="ListViewHeader">
+		<image file="texture1.png">
+			<grid pos="82,67" size="16,20"/>
+		</image>
+	</image>
+	<image name="ListViewSelection">
+		<image file="texture1.png">
+			<grid pos="60,115" size="16,16"/>
+		</image>
+	</image>
+	<image name="ListViewIconSelection">
+		<image file="texture1.png">
+			<grid pos="100,67" size="16,16"/>
+		</image>
+	</image>
+	<image name="ProgressBarHorz">
+		<image file="texture1.png">
+			<grid pos="23,165" size="9,19"/>
+		</image>
+	</image>
+	<image name="ProgressBarHorzChunk">
+		<image file="texture1.png">
+			<grid pos="23,186" size="8,12"/>
+		</image>
+	</image>
+	<image name="Frame">
+		<image file="texture1.png">
+			<grid pos="38,93" size="16,16"/>
+		</image>
+	</image>
+	<image name="FrameHeader">
+		<image file="texture1.png">
+			<grid pos="38,111" size="16,16"/>
+		</image>
+	</image>
+	<image name="FrameHeaderLeft">
+		<image file="texture1.png">
+			<grid pos="38,147" size="16,16"/>
+		</image>
+	</image>
+	<image name="FrameHeaderCaption">
+		<image file="texture1.png">
+			<grid pos="38,129" size="16,16"/>
+		</image>
+	</image>
+	<image name="FrameHeaderRight">
+		<image file="texture1.png">
+			<grid pos="38,165" size="16,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonUpNormal">
+		<image file="texture1.png">
+			<grid pos="173,109" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonUpHot">
+		<image file="texture1.png">
+			<grid pos="173,91" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonUpPressed">
+		<image file="texture1.png">
+			<grid pos="173,127" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonUpDisabled">
+		<image file="texture1.png">
+			<grid pos="173,73" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonDownNormal">
+		<image file="texture1.png">
+			<grid pos="173,37" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonDownHot">
+		<image file="texture1.png">
+			<grid pos="173,19" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonDownPressed">
+		<image file="texture1.png">
+			<grid pos="173,55" size="15,16"/>
+		</image>
+	</image>
+	<image name="SpinButtonDownDisabled">
+		<image file="texture1.png">
+			<grid pos="173,1" size="15,16"/>
+		</image>
+	</image>
+	<image name="ImageNormal">
+		<image file="texture1.png">
+			<grid pos="60,1" size="64,64"/>
+		</image>
+	</image>
+</resources>

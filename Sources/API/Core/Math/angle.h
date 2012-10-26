@@ -1,0 +1,189 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2012 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Harry Storbacka
+*/
+
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
+
+#pragma once
+
+#include "../api_core.h"
+#include <memory>
+
+namespace clan
+{
+
+class Angle_Impl;
+
+
+/// \brief Angle unit
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+enum AngleUnit
+{
+	angle_degrees,
+	angle_radians
+};
+
+/// \brief Euler angle rotation order
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+enum EulerOrder
+{
+	order_XYZ,
+	order_XZY,
+	order_YZX,
+	order_YXZ,
+	order_ZXY,
+	order_ZYX
+};
+
+
+/// \brief Angle class.
+///
+/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
+class CL_API_CORE Angle
+{
+/// \name Construction
+/// \{
+public:
+
+
+	/// \brief Constructs an NULL Angle object.
+	Angle();
+
+	/// \brief Constructs an Angle object.
+	Angle(float value, AngleUnit unit);
+
+	/// \brief From radians
+	///
+	/// \param value = value
+	///
+	/// \return Angle
+	static Angle from_radians(float value);
+
+	/// \brief From degrees
+	///
+	/// \param value = value
+	///
+	/// \return Angle
+	static Angle from_degrees(float value);
+
+/// \}
+/// \name Attributes
+/// \{
+public:
+	/// \brief Returns the angle as degrees.
+	float to_degrees() const;
+
+	/// \brief Returns the angle as radians.
+	float to_radians() const;
+
+/// \}
+/// \name Operations
+/// \{
+public:
+	/// \brief Set the angle value in degrees.
+	void set_degrees(float value_degrees);
+
+	/// \brief Set the angle value in radians.
+	void set_radians(float value_radians);
+
+	/// \brief Converts angle to range [0,360] degrees.
+	///
+	/// \return reference to this object
+	Angle &normalize();
+
+	/// \brief Converts angle to range [-180,180] degrees.
+	///
+	/// \return reference to this object
+	Angle &normalize_180();
+
+/// \}
+/// \name Operators
+/// \{
+public:
+	/// \brief += operator.
+	void operator += (const Angle &angle);
+
+	/// \brief -= operator.
+	void operator -= (const Angle &angle);
+
+	/// \brief *= operator.
+	void operator *= (const Angle &angle);
+
+	/// \brief /= operator.
+	void operator /= (const Angle &angle);
+
+	/// \brief + operator.
+	Angle operator + (const Angle &angle) const;
+
+	/// \brief - operator.
+	Angle operator - (const Angle &angle) const;
+
+	/// \brief * operator.
+	Angle operator * (const Angle &angle) const;
+
+	/// \brief * operator.
+	Angle operator * (float value) const;
+
+	/// \brief / operator.
+	Angle operator / (const Angle &angle) const;
+
+	/// \brief / operator.
+	Angle operator / (float value) const;
+
+	/// \brief < operator.
+	bool operator < (const Angle &angle) const;
+
+	/// \brief < operator.
+	bool operator <= (const Angle &angle) const;
+
+	/// \brief > operator.
+	bool operator > (const Angle &angle) const;
+
+	/// \brief > operator.
+	bool operator >= (const Angle &angle) const;
+
+	/// \brief == operator.
+	bool operator== (const Angle &angle) const;
+
+	/// \brief != operator.
+	bool operator!= (const Angle &angle) const;
+
+/// \}
+/// \name Implementation
+/// \{
+private:
+	float value_rad;
+
+/// \}
+};
+
+}
+
+/// \}

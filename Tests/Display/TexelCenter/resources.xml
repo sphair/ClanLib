@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+
+	<sprite name="sprite_grid_normal">
+		<image file="grid_normal.png">
+		</image>
+	</sprite>
+
+	<sprite name="sprite_grid_outline">
+		<image file="grid_outline.png">
+		</image>
+	</sprite>
+
+	<image name="image_grid_normal">
+		<image file="grid_normal.png">
+		</image>
+	</image>
+
+	<image name="image_grid_outline">
+		<image file="grid_outline.png">
+		</image>
+	</image>
+	<texture name="texture_grid_normal" file="grid_normal.png">
+	</texture>
+
+	<texture name="texture_grid_outline" file="grid_outline.png">
+	</texture>		
+</resources>

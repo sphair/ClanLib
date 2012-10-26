@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="ButtonNormal2">
+    <image file="button_normal.png" />
+  </image>
+  <image name="ButtonHot2">
+    <image file="button_hot.png" />
+  </image>
+  <image name="ButtonPressed2">
+    <image file="button_pressed.png" />
+  </image>
+  <image name="ButtonDisabled2">
+    <image file="button_disabled.png" />
+  </image>
+  <image name="ButtonDefaulted2">
+    <image file="button_defaulted.png" />
+  </image>
+</resources>

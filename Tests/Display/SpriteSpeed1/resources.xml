@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+	<surface name="Background" file="Gfx/background.png"/>
+
+	<sprite name="Explosion1" base_angle="0">
+		<image file="Gfx/explosion_01.png" />
+		<image file="Gfx/explosion_02.png" />
+		<image file="Gfx/explosion_03.png" />
+		<image file="Gfx/explosion_04.png" />
+		<image file="Gfx/explosion_05.png" />
+		<image file="Gfx/explosion_06.png" />
+		<image file="Gfx/explosion_07.png" />
+		<image file="Gfx/explosion_08.png" />
+		<image file="Gfx/explosion_09.png" />
+		<image file="Gfx/explosion_10.png" />
+		<image file="Gfx/explosion_11.png" />
+		<image file="Gfx/explosion_12.png" />
+		<image file="Gfx/explosion_13.png" />
+		<image file="Gfx/explosion_14.png" />
+		<image file="Gfx/explosion_15.png" />
+		<image file="Gfx/explosion_16.png" />
+		<image file="Gfx/explosion_17.png" />
+		<translation origin="center"/>
+		<rotation origin="center"/>
+		<animation loop="yes" speed="50"></animation>
+	</sprite>
+
+  <sprite name="Explosion2" base_angle="0">
+    <image file="Gfx/explosion_01.png" />
+    <image file="Gfx/explosion_02.png" />
+    <image file="Gfx/explosion_03.png" />
+    <image file="Gfx/explosion_04.png" />
+    <image file="Gfx/explosion_05.png" />
+    <image file="Gfx/explosion_06.png" />
+    <image file="Gfx/explosion_07.png" />
+    <image file="Gfx/explosion_08.png" />
+    <image file="Gfx/explosion_09.png" />
+    <image file="Gfx/explosion_10.png" />
+    <image file="Gfx/explosion_11.png" />
+    <image file="Gfx/explosion_12.png" />
+    <image file="Gfx/explosion_13.png" />
+    <image file="Gfx/explosion_14.png" />
+    <image file="Gfx/explosion_15.png" />
+    <image file="Gfx/explosion_16.png" />
+    <image file="Gfx/explosion_17.png" />
+    <translation origin="center"/>
+    <rotation origin="center"/>
+    <animation loop="yes" speed="50"></animation>
+  </sprite>
+</resources>

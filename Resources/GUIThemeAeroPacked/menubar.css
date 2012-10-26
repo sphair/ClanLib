@@ -1,0 +1,50 @@
+
+menubar
+{
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:15;
+	bg-image-sizing:stretch;
+	bg-image:MenuBarBackgroundActive; 
+
+	preferred-width:100;
+	preferred-height:24;
+
+	text-color:black;
+}
+
+menubar item
+{
+    padding-left:8;
+    padding-right:8;
+	align:center;
+	vertical-align:center;
+}
+
+menubar item:disabled
+{
+	text-color:darkgray;
+}
+
+menubar item:selected
+{
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:MenuBarItemSelected;
+}
+
+menubar item:hot
+{
+	/*margin-top:3;*/
+
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:MenuBarItemSelected;
+}

@@ -1,0 +1,10 @@
+<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
+	<label text="Username:" class="" id="label0" anchor_tl="0" anchor_br="0" dist_tl_x="24" dist_tl_y="48" dist_br_x="124" dist_br_y="68" geom="24,48,128,72"/>
+	<label text="Password:" class="" id="label1" anchor_tl="0" anchor_br="0" dist_tl_x="24" dist_tl_y="72" dist_br_x="92" dist_br_y="92" geom="24,72,96,96"/>
+	<button text="Ok" class="" id="button0" anchor_tl="3" anchor_br="3" dist_tl_x="104" dist_tl_y="40" dist_br_x="16" dist_br_y="16" geom="176,104,268,132"/>
+	<button text="Cancel" class="" id="button1" anchor_tl="3" anchor_br="3" dist_tl_x="200" dist_tl_y="40" dist_br_x="112" dist_br_y="16" geom="80,104,172,132"/>
+	<label text="Login Information:" class="" id="label2" anchor_tl="0" anchor_br="0" dist_tl_x="8" dist_tl_y="0" dist_br_x="112" dist_br_y="40" geom="8,0,116,44"/>
+	<lineedit text="" class="" id="lineedit0" anchor_tl="0" anchor_br="1" dist_tl_x="96" dist_tl_y="48" dist_br_x="12" dist_br_y="68" geom="96,48,272,72"/>
+	<lineedit text="" class="" id="lineedit1" anchor_tl="0" anchor_br="1" dist_tl_x="96" dist_tl_y="72" dist_br_x="12" dist_br_y="92" geom="96,72,272,96"/>
+  <dialog width="300" height="140"/>
+</gui>

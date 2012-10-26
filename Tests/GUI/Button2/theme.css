@@ -1,0 +1,109 @@
+window
+{
+	bg-color: #e0dfe3;
+}
+
+groupbox.xp
+{
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	bg-image:GroupBox; 
+}
+
+button.ugly
+{ 
+	border-color: #4752FF; 
+	border-top: 1;
+	border-left: 1;
+	border-right: 1;
+	border-bottom: 1;
+}
+
+button.ugly:normal
+{	
+	bg-color: #D6D7E7; 
+}
+
+button.ugly:normal:flat
+{	
+	bg-color: black; 
+}
+
+button.ugly:hot
+{ 
+	bg-color: DDDFFF; 
+}
+
+button.ugly:pressed
+{ 
+	bg-color: yellow;
+}
+
+button.ugly:disabled
+{ 
+	bg-color: grey;
+	border-color: darkgrey; 
+}
+
+button.xp
+{
+	bg-image-sizing-left:8;
+	bg-image-sizing-right:8;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+}
+
+button.xp:normal
+{
+	bg-image:ButtonNormal; 
+}
+
+button.xp:defaulted
+{
+	bg-image:ButtonDefaulted; 
+}
+
+button.xp:hot
+{
+	bg-image:ButtonHot; 
+}
+
+button.xp:pressed
+{
+	bg-image:ButtonPressed; 
+}
+
+button.xp:disabled
+{
+	bg-image:ButtonDisabled; 
+}
+
+button.possible_css_values
+{
+	margin-top:0;
+	margin-left:0;
+	margin-right:0;
+	margin-bottom:0;
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+	border-color:Aqua;
+	padding-top:0;
+	padding-left:0;
+	padding-right:0;
+	padding-bottom:0;
+	bg-color:Lime;
+	bg-image:resource_sprite_name; 
+	bg-image-sizing:default | stretch | repeat | repeat-x | repeat-y; 
+	bg-image-sizing-top:0;
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-bottom:0;
+	text-color:#000000;
+	text-font:resource_font_name;
+}

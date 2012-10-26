@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <sprite name="ButtonDisabled_SFB">
+    <image file="create_new_normal.png" />
+  </sprite>
+  <sprite name="ButtonHot_SFB">
+    <image file="create_new_hot.png" />
+  </sprite>
+  <sprite name="ButtonNormal_SFB">
+    <image file="create_new_normal.png" />
+  </sprite>
+  <sprite name="ButtonPressed_SFB">
+    <image file="create_new_pressed.png" />
+  </sprite>
+  <sprite name="MainMenuBg">
+    <image file="mainmenu_bg.png" />
+  </sprite>
+</resources>

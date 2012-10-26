@@ -1,0 +1,14 @@
+
+tooltip
+{
+	bg-image: Tooltip;
+	bg-image-sizing-left:4;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:4;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:stretch; 
+	border-left: 5;
+	border-top: 7;
+	border-right: 5;
+	border-bottom: 6;
+}

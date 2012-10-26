@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE Code::Blocks_project_file>
+<Code::Blocks_project_file>
+	<FileVersion major="1" minor="1"/>
+	<Project>
+		<Option makefile="Makefile"/>
+		<Option makefile_is_custom="0"/>

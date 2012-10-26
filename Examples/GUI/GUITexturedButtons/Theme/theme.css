@@ -1,0 +1,37 @@
+
+button.custom
+{
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	text-color:white;
+}
+
+button.custom
+{
+	bg-image:ButtonNormal2; 
+}
+
+button.custom:defaulted
+{
+	bg-image:ButtonDefaulted2; 
+}
+
+button.custom:hot
+{
+	bg-image:ButtonHot2; 
+}
+
+button.custom:pressed
+{
+	bg-image:ButtonPressed2; 
+}
+
+button.custom:disabled
+{
+	bg-image:ButtonDisabled2; 
+	text-color:#444444;
+}
+

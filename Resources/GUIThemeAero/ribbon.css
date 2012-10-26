@@ -1,0 +1,311 @@
+﻿
+dummy
+{
+}
+
+ribbon
+{
+    bg-image:Ribbon;
+    preferred-width: 271;
+    preferred-height: 117;
+    /*preferred-height: 95;*/
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 50;
+    bg-image-sizing-bottom: 8;
+    font-family:tahoma;
+    font-size:11;
+}
+
+ribbon button.menu
+{
+    bg-image:RibbonMenuButton;
+	bg-image-sizing-left:0;
+	bg-image-sizing-right:0;
+	bg-image-sizing-top:0;
+	bg-image-sizing-bottom:0;
+	bg-image-sizing:center;
+	preferred-width: 56;
+	preferred-height: 22;
+    border-left:0;
+    border-right:0;
+    border-top:0;
+    border-bottom:0;
+}
+
+ribbon button.menu:hot
+{
+    bg-image:RibbonMenuButtonHot;
+}
+
+ribbon tab
+{
+    bg-image:;
+    preferred-width: 40;
+    preferred-height: 23;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 8;
+    bg-image-sizing-bottom: 8;
+    font-family:tahoma;
+}
+
+ribbon tab:selected
+{
+    bg-image:RibbonTab;
+}
+
+ribbon tab-background
+{
+    bg-image:RibbonTabBackground;
+    bg-image-sizing-left: 120;
+    bg-image-sizing-right: 120;
+    bg-image-sizing-top: 54;
+    bg-image-sizing-bottom: 8;
+    font-family:tahoma;
+}
+
+ribbon-section
+{
+    bg-image:RibbonSection;
+    preferred-width: 70;
+    preferred-height: 87;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 24;
+    bg-image-sizing-bottom: 16;
+}
+
+ribbon-section button
+{
+    bg-image:;
+    padding-left: 4;
+    padding-right: 4;
+    padding-top: 4;
+    padding-bottom: 4;
+    align: left;
+}
+
+ribbon-section button.big
+{
+    vertical-align:top;
+    align: center;
+}
+
+ribbon-section button:hot
+{
+    bg-image:RibbonButtonHot;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-bottom: 1;
+}
+
+ribbon-section button:pressed
+{
+    bg-image:RibbonButtonPressed;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-bottom: 1;
+}
+
+ribbon-section button:toggled
+{
+    bg-image:RibbonButtonToggled;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-bottom: 1;
+}
+
+ribbon-section button:toggled:hot
+{
+    bg-image:RibbonButtonHot;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-bottom: 1;
+}
+
+ribbon-section button:toggled:pressed:hot
+{
+    bg-image:RibbonButtonPressed;
+    bg-image-sizing-left: 8;
+    bg-image-sizing-right: 8;
+    bg-image-sizing-top: 1;
+    bg-image-sizing-bottom: 1;
+}
+
+ribbon-menu
+{
+    bg-image:RibbonMenuBackground;
+    bg-image-sizing-left: 222;
+    bg-image-sizing-right: 2;
+    bg-image-sizing-top: 27;
+    bg-image-sizing-bottom: 22;
+}
+
+ribbon-menu menu-item
+{
+    preferred-width: 216;
+    preferred-height: 44;
+    font-family: Arial;
+    font-size: -11;
+}
+
+ribbon-menu menu-item:selected
+{
+    bg-image:RibbonMenuItemSelected;
+}
+
+ribbon-menu menu-item:separator
+{
+    bg-image:RibbonMenuItemSeparator;
+    preferred-width: 217;
+    preferred-height: 3;
+}
+
+ribbon-section button.dropdown
+{
+    bg-image-sizing-left: 3;
+    bg-image-sizing-right: 12;
+    bg-image-sizing-top: 3;
+    bg-image-sizing-bottom: 3;
+    bg-image:RibbonDropDownButton;
+    padding-left: 4;
+    padding-right: 12;
+    padding-top: 4;
+    padding-bottom: 4;
+    align: right;
+}
+
+ribbon-section button.dropdown:hot
+{
+    bg-image:RibbonDropDownButtonHot;
+}
+
+ribbon-section button.dropdown:pressed
+{
+    bg-image:RibbonButtonPressed;
+}
+
+ribbon-section button.dropdown:pressed:toggled
+{
+    bg-image:RibbonButtonPressed;
+}
+
+ribbon-section button.dropdown:toggled
+{
+    bg-image:RibbonButtonToggled;
+}
+
+ribbon-section button.dropdown:hot:toggled
+{
+    bg-image:RibbonDropDownButtonHot;
+}
+
+combobox.ribbon
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:3;
+	bg-image-sizing:stretch; 
+    bg-image:ListViewBorder;
+}
+
+combobox lineedit.ribbon
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch; 
+	bg-image:;
+	bg-color:;
+
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+	
+	text-color:black;
+	text-color-selected:white;
+}
+
+combobox lineedit.ribbon:normal
+{
+	bg-image:; 
+}
+
+combobox lineedit.ribbon:hot
+{
+	bg-image:;
+}
+
+combobox lineedit.ribbon:disabled
+{
+	bg-image:; 
+	text-color:gray;
+}
+
+combobox.ribbon opener
+{
+	preferred-width:17;
+	preferred-height:20;
+	bg-image-sizing-left:5;
+	bg-image-sizing-right:5;
+	bg-image-sizing-top:6;
+	bg-image-sizing-bottom:6;
+	bg-image-sizing:default;
+	align:center;
+	vertical-align:center;
+}
+
+combobox.ribbon opener:normal
+{
+	bg-image:; 
+}
+
+combobox.ribbon opener:hot
+{
+	bg-image:ListViewBorder; 
+}
+
+combobox.ribbon opener:pressed
+{
+	bg-image:ListViewBorder; 
+}
+
+combobox.ribbon opener:disabled
+{
+	bg-image:ListViewBorder; 
+}
+
+combobox.ribbon opener_glyph
+{
+	bg-image-sizing:center; 
+	align:center;
+	vertical-align:center;
+}
+
+combobox.ribbon opener_glyph:normal
+{
+	bg-image:RibbonDropDownGlyph;
+}
+
+combobox.ribbon opener_glyph:hot
+{
+	bg-image:RibbonDropDownGlyph; 
+}
+
+combobox.ribbon opener_glyph:pressed
+{
+	bg-image:RibbonDropDownGlyph; 
+}
+
+combobox.ribbon opener_glyph:disabled
+{
+	bg-image:RibbonDropDownGlyph; 
+}

@@ -1,0 +1,15 @@
+<gui xmlns="http://clanlib.org/xmlns/gui-1.0">
+	<label class="" id="label1" text="Hello some text" anchor_tl="0" anchor_br="0" dist_tl_x="40" dist_tl_y="64" dist_br_x="120" dist_br_y="85" geom="40,64,120,85"/>
+	<combobox class="" id="combobox1" anchor_tl="0" anchor_br="0" dist_tl_x="216" dist_tl_y="80" dist_br_x="328" dist_br_y="101" geom="216,80,328,101"/>
+	<radiobutton class="" id="radiobutton1" text="Tralala" group="" anchor_tl="0" anchor_br="0" dist_tl_x="72" dist_tl_y="152" dist_br_x="152" dist_br_y="173" geom="72,152,152,173"/>
+	<checkbox class="" id="checkbox1" text="Checkbox" anchor_tl="0" anchor_br="0" dist_tl_x="192" dist_tl_y="128" dist_br_x="272" dist_br_y="149" geom="192,128,272,149"/>
+	<spin class="" id="spin1" anchor_tl="0" anchor_br="0" dist_tl_x="144" dist_tl_y="216" dist_br_x="224" dist_br_y="237" geom="144,216,224,237"/>
+	<frame class="" id="frame1" text="Frame" anchor_tl="0" anchor_br="0" dist_tl_x="256" dist_tl_y="184" dist_br_x="440" dist_br_y="277" geom="256,184,440,277">
+		<listview class="" id="listview1" anchor_tl="0" anchor_br="0" dist_tl_x="16" dist_tl_y="24" dist_br_x="176" dist_br_y="85" geom="16,24,176,85">
+			<listview_header/>
+		</listview>
+	</frame>
+	<button class="" id="button1" text="OK" anchor_tl="0" anchor_br="0" dist_tl_x="352" dist_tl_y="288" dist_br_x="432" dist_br_y="309" geom="352,288,432,309"/>
+	<slider class="" id="slider1" min="0" max="100" ticks="10" page_step="10" anchor_tl="0" anchor_br="0" dist_tl_x="72" dist_tl_y="272" dist_br_x="152" dist_br_y="293" geom="72,272,152,293"/>
+	<dialog width="456" height="320"/>
+</gui>

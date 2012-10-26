@@ -1,0 +1,239 @@
+
+ClanLib coding style and conventions:
+--------------------------------------
+
+1. All classes have a "CL_" prefix. Eg. CL_Display, CL_SoundBuffer...
+2. All macros have a "cl_" prefix. Eg. cl_assert, cl_info...
+
+3. We do NOT use K&R style C style. We use the special ClanSoft variant of
+the Microsoft style!! Please do NOT use K&R style and not GNU style either.
+Braces should look like this:
+
+int CL_MyClass::my_func(int arg1, int arg2)
+{
+	if (...)
+	{
+		switch (whatever)
+		{
+		case 1:
+			break;
+		
+		case 2:
+			{
+				int i = 5;
+				...
+			}
+			break;
+		}
+	}
+	else
+	{
+	}
+}
+
+Please try to follow this indenting style as closely as you can. If
+you are using Emacs you can set the coding style with:
+
+(c-set-style "linux") or C-c . linux
+
+4. We always use TABS, and NEVER SPACES to do indenting. This is because we
+want people to be able to pick their own tab size. I run with 4, but others
+like 8 and some like 2.
+
+So please don't use spaces. It will have a very bad effect when someone else
+uses another tab size than you. For instance, imagine the following was
+written by someone using tabs, and then you add a section with spaces:
+(all is written here with spaces so people will notice the difference seen
+with other tab sizes than their own)
+
+	void my_func()
+	{
+	    int a,b,c,d;
+	    a = b + c/d;
+	    
+	    // added section with spaces:
+	    d = a;
+	    c = b/d;
+	    // end of space section
+	    
+	    do_something(a,b,c,d);
+	}
+
+So it looks nice to you - but then we watch it with someone that has tab
+size 8:
+
+	void my_func();
+	{
+	        int a,b,c,d;
+	        a = b + c/d;
+	    
+	    // added section with spaces:
+	    d = a;
+	    c = b/d;
+	    // end of space section
+	
+	        do_something(a,b,c,d);
+	}
+
+Not very nice, is it?
+
+Many unix editors use a "smart" indenting algorithm which will mess things
+even more up. They exchange spaces with tabs when reaching a given size
+(normally 8 or 4), but that just isn't very smart. The result is that some
+sections are spaces, and others are tabbed - all messed into one pile of
+junk.
+
+So please verify that your editor does indenting correct. This is
+important.
+
+5. Function names and variables are always in small, and underscore is used
+where other people often use a captial letter.
+Eg. MyVariable -> my_variable.
+
+6. Variable access functions have a set/get prefix.
+Eg. int size()         -> int get_size()
+    void size(int s)   -> void set_size(int s)
+
+7. STL and variable names.
+
+Do NOT use the "using namespace std;" command. Not in API header or in source
+files. You may be the world champion in STL, but for us other mortals its NICE
+to be able to read what is STL and whats not.
+
+Also don't use two letter variable names and avoid to do aggressive shortening
+of common words (ie. cnt, num, refcnt, glph, fnt, idx). Its annoying to read
+if you have to stop up and think for every variable you encounter just to try
+figure out what it stands for. :) Yes we don't all speak english natively.
+
+8. The API documentation
+
+ClanLib uses a reference documentation system called "ReferenceDocs".
+It builds the reference by parsing the API header files using Doxygen to output
+the documentation as xml. Then Utilities/ReferenceDocs creates the html pages in
+the ClanLib documentation style.
+
+ There are the following types of documentation:
+
+1) Short description.
+
+The marker for short description is /// \brief 
+
+The short description is supposed to be "a one sentence description". Example:
+
+	/// \brief Sprite image class.
+	class CL_Sprite
+	{ ...
+
+Short descriptions should not include any further markup tags (bold, italic,
+paragraph, etc etc).
+
+2) Long description.
+
+This follows a short description to provide further information.
+
+The marker for long description is ///
+
+A line just containing "///" must follow the short description.
+
+The long description is also known as the "Detailed description:" part of
+the reference pages. This is where the class/functions purpose and
+functional details are explained. Example:
+
+	/// \brief Sprite image class.
+	///
+	/// CL_Sprite is the image class of ClanLib. A sprite is a series
+	/// of images (each called a frame) that somehow have a connection
+	/// to each others. It could be all the images needed to animate a
+	/// man, or it could be all the different tiles of a tile map.
+	class CL_Sprite
+	{ ...
+
+3) Function groups.
+
+Functions in a class is grouped into different sections. The typical ones
+are Construction, Attributes, Operations and Implementation. These groups
+are marked up like this:
+
+	/// \name Construction
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Attributes
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Operations
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Implementation
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+
+Any functions following such a group markup will belong to that group. The
+group markups are placed at the beginning of the line:
+
+4) Function parameters.
+
+Parameters of a function are desired to have a parameter description. An example:
+
+		/// \brief Draws the sprite onto back buffer
+		///
+		/// The draw function will draw the current frame of the
+		/// sprite at the specified position, using the alignment
+		/// and other attributes specified for the sprite.
+		///
+		/// \param x = x position of where to draw the sprite.
+		/// \param y = y position of where to draw the sprite.
+		/// \param gc = Graphic context used as target. If null, current selected display window will be used.
+		///
+		/// \return The number of pixels written
+		int draw(int x, int y, CL_GraphicContext *gc = 0);
+
+5) Class groups and header file info.
+
+Each header file should contain below the ClanLib SDK license:
+/// \addtogroup {Identifier} {Group} {Section}
+/// \{
+
+/// \}
+
+{Identifier} is used for doxygen to specify the group identifier
+{Group} denotes the ClanLib group (eg clanCore, clanDisplay, clanGUI)
+{Section} denotes the group section (eg "Controls" for GUI)
+
+Each class should contain at the end of the long description:
+/// \xmlonly !group={Group2}/{Section}! !header={header}! \endxmlonly
+
+{Group2} this is the same as {Group} without the "clan" prefix
+{Header} denotes the base header file that includes this class
+
+If the class should not appear in the documentation, use "!hide!"
+
+For Example:
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
+
+/// \brief Interface to drawing graphics.
+///
+/// The long description
+/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
+class CL_API_DISPLAY CL_GraphicContext
+{
+...
+}
+
+/// \}
+
+There is more things than there - but I think this summarizes the most
+important issues. In general, just do like the other source files do.
+

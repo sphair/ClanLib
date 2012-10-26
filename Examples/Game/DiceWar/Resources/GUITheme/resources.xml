@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="ButtonDisabled">
+    <image-file file="button_disabled.png" />
+  </image>
+  <image name="ButtonHot">
+    <image-file file="button_hot.png" />
+  </image>
+  <image name="ButtonNormal">
+    <image-file file="button_normal.png" />
+  </image>
+  <image name="ButtonPressed">
+    <image-file file="button_pressed.png" />
+  </image>
+  <image name="ComponentBackground">
+    <image-file file="component_background.png" />
+  </image>
+  <image name="ScrollbarVertThumbNormal">
+    <image-file file="scrollbar_vert_thumb_normal.png" />
+  </image>
+  <image name="ScrollbarVertThumbDisabled">
+    <image-file file="scrollbar_vert_thumb_disabled.png" />
+  </image>
+  <image name="ScrollbarVertThumbHot">
+    <image-file file="scrollbar_vert_thumb_hot.png" />
+  </image>
+  <image name="ScrollbarVertThumbPressed">
+    <image-file file="scrollbar_vert_thumb_pressed.png" />
+  </image>
+  <image name="ScrollbarVertTrackNormal">
+    <image-file file="scrollbar_vert_track_normal.png" />
+  </image>
+  <image name="ScrollbarVertTrackDisabled">
+    <image-file file="scrollbar_vert_track_disabled.png" />
+  </image>
+  <image name="ScrollbarVertTrackHot">
+    <image-file file="scrollbar_vert_track_hot.png" />
+  </image>
+  <image name="ScrollbarVertTrackPressed">
+    <image-file file="scrollbar_vert_track_pressed.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpNormal">
+    <image-file file="scrollbar_vert_button_up_normal.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpHot">
+    <image-file file="scrollbar_vert_button_up_hot.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpPressed">
+    <image-file file="scrollbar_vert_button_up_pressed.png" />
+  </image>
+  <image name="ScrollbarVertButtonUpDisabled">
+    <image-file file="scrollbar_vert_button_up_disabled.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownNormal">
+    <image-file file="scrollbar_vert_button_down_normal.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownHot">
+    <image-file file="scrollbar_vert_button_down_hot.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownPressed">
+    <image-file file="scrollbar_vert_button_down_pressed.png" />
+  </image>
+  <image name="ScrollbarVertButtonDownDisabled">
+    <image-file file="scrollbar_vert_button_down_disabled.png" />
+  </image>
+  <image name="DialogBackground">
+    <image-file file="dialog_background.png" />
+  </image>
+  <image name="ComboBoxPopupBg">
+<!--    <image-file file="combobox_popup_bg.png" />-->
+    <image-file file="component_background.png" />
+  </image>
+  <image name="ComboBoxDownArrow">
+    <image-file file="combobox_down_arrow.png" />
+  </image>
+  <image name="PopupMenu">
+<!--    <image-file file="popupmenu.png" />-->
+    <image-file file="component_background.png" />
+  </image>
+  <image name="PopupMenuSelected">
+    <image-file file="popupmenu_selected.png" />
+  </image>
+  <image name="PopupMenuSeparator">
+    <image-file file="popupmenu_separator.png" />
+  </image>
+  <image name="PopupMenuSubmenuArrow">
+    <image-file file="submenu_arrow.png" />
+  </image>
+  <image name="PopupMenuJoiner">
+    <image-file file="popupmenu_joiner.png" />
+  </image>
+</resources>

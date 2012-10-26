@@ -1,0 +1,46 @@
+EXAMPLE_BIN=dicewar_client
+
+OBJF = \
+	Sources/Lib/precomp.o \
+	Sources/Lib/map_area.o \
+	Sources/Lib/map.o
+	
+OBJF += \
+	Sources/Client/game_terrain.o \
+	Sources/Client/game_view_chat.o \
+	Sources/Client/lobby_player_collection.o \
+	Sources/Client/game_view_battle.o \
+	Sources/Client/game_view_playerlist.o \
+	Sources/Client/login_events.o \
+	Sources/Client/login_view.o \
+	Sources/Client/game_player_collection.o \
+	Sources/Client/game_player.o \
+	Sources/Client/client_gui.o \
+	Sources/Client/client.o \
+	Sources/Client/game_model.o \
+	Sources/Client/lobby_game.o \
+	Sources/Client/lobby_game_collection.o \
+	Sources/Client/precomp.o \
+	Sources/Client/lobby_view_create_game.o \
+	Sources/Client/game_map.o \
+	Sources/Client/game_view_actionbar.o \
+	Sources/Client/lobby_events.o \
+	Sources/Client/3D/camera.o \
+	Sources/Client/3D/model_assimp.o \
+	Sources/Client/3D/orientation.o \
+	Sources/Client/3D/position.o \
+	Sources/Client/game_events.o \
+	Sources/Client/game_view_end.o \
+	Sources/Client/game_map_selection.o \
+	Sources/Client/lobby_model.o \
+	Sources/Client/game_view.o \
+	Sources/Client/lobby_player.o \
+	Sources/Client/lobby_view.o \
+	Sources/Client/main_client.o
+
+LIBS=clanCore clanNetwork clanDisplay clanGL clanGUI
+EXTRA_LIBS=-lassimp
+
+CXXFLAGS += -I Sources/Client
+
+include ../../Makefile.conf

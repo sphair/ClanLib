@@ -1,0 +1,301 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winresrc.h"
+#ifdef IDC_STATIC
+#undef IDC_STATIC
+#endif
+#define IDC_STATIC      (-1)
+#define AFX_IDS_APP_TITLE               0xE000
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Danish resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DAN)
+#ifdef _WIN32
+LANGUAGE LANG_DANISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winresrc.h""\r\n"
+    "#ifdef IDC_STATIC\r\n"
+    "#undef IDC_STATIC\r\n"
+    "#endif\r\n"
+    "#define IDC_STATIC      (-1)\r\n"
+    "#define AFX_IDS_APP_TITLE               0xE000\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Configure.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "//#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Danish resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Configure.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_WELCOME_PAGE DIALOGEX 0, 0, 317, 193
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "ClanLib Setup Wizard"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    LTEXT           "welcome text string...",IDC_WELCOME_TEXT,120,7,190,178
+END
+
+IDD_SYSTEM_PAGE DIALOGEX 0, 0, 317, 143
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "ClanLib Setup Wizard"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    LTEXT           "Please specify the include and library directories where libs used by ClanLib are installed:\n(jpeg, png, zlib and then possibly any of the add-on libs supported)",IDC_STATIC,8,7,290,19
+    LTEXT           "Include directory:",IDC_STATIC,7,31,147,9
+    EDITTEXT        IDC_INPUT_INCLUDE,7,42,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_INPUT_INCLUDE_BROWSE,273,41,37,15
+    LTEXT           "Library directory:",IDC_STATIC,8,60,147,9
+    EDITTEXT        IDC_INPUT_LIB,7,72,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_INPUT_LIB_BROWSE,273,71,37,15
+END
+
+IDD_FINISHED_PAGE DIALOGEX 0, 0, 317, 193
+STYLE DS_SETFONT | WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "ClanLib Setup Wizard"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    LTEXT           "some finish text...",IDC_FINISHED_TEXT,120,7,190,179
+END
+
+IDD_SYSTEM2_PAGE DIALOGEX 0, 0, 317, 143
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ClanLib Setup Wizard"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    LTEXT           "Please enter where ClanLib should be installed:",IDC_STATIC,7,7,303,11
+    LTEXT           "Include directory:",IDC_STATIC,7,23,147,9
+    EDITTEXT        IDC_OUTPUT_INCLUDE,7,36,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_OUTPUT_INCLUDE_BROWSE,273,35,37,15
+    LTEXT           "Library directory:",IDC_STATIC,7,55,147,9
+    EDITTEXT        IDC_OUTPUT_LIB,7,67,262,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Browse",IDC_OUTPUT_LIB_BROWSE,273,66,37,15
+END
+
+IDD_TARGET_PAGE DIALOGEX 0, 0, 317, 188
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ClanLib Setup Wizard"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    LTEXT           "Select the development environment to generate project files for:",IDC_STATIC,7,7,303,8
+    CONTROL         "Visual C++ .NET 200&8 (9.0)",IDC_RADIO_VC90,"Button",BS_AUTORADIOBUTTON,16,34,105,10
+    CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON,16,48,105,10
+    CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,76,173,10
+    CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,63,225,10
+    CONTROL         "Compile using SSE2 Minimum CPU Architecture",IDC_CHECK_INCLUDE_SSE2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,89,173,10
+    CONTROL         "Compile using SSE2 Intrinsics",IDC_CHECK_INCLUDE_INTRINSICS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,102,173,10
+    CONTROL         "Compile Debug with optimizations",IDC_CHECK_DEBUG_OPTIMIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,115,173,10
+    CONTROL         "Compile Release using Whole Program Optimizations",IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,128,173,10
+END
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_WELCOME_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 272
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 179
+    END
+
+    IDD_SYSTEM_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 310
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 136
+    END
+
+    IDD_FINISHED_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 310
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 186
+    END
+
+    IDD_SYSTEM2_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 310
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 136
+    END
+
+    IDD_TARGET_PAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 310
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 161
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_LOGO1               BITMAP                  "res\\clanlib_logo_ascii.bmp"
+IDB_BANNER              BITMAP                  "res\\clanlib_banner.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "This program is part of the ClanLib SDK."
+            VALUE "FileDescription", "ClanLib Win32 Configure Application"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Configure"
+            VALUE "LegalCopyright", "The ClanLib Team"
+            VALUE "OriginalFilename", "Configure.EXE"
+            VALUE "ProductName", "ClanLib Wizard"
+            VALUE "ProductVersion", "1, 0, 0, 1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_PROPSHT_CAPTION     "Wizard"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "ClanLib Configure"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\Configure.rc2"  // non-Microsoft Visual C++ edited resources
+//#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

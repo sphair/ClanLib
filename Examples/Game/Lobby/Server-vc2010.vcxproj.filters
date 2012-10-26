@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Sources\Server\precomp.cpp" />
+    <ClCompile Include="Sources\Server\main.cpp" />
+    <ClCompile Include="Sources\Server\server.cpp" />
+    <ClCompile Include="Sources\Server\server_game.cpp" />
+    <ClCompile Include="Sources\Server\server_game_player.cpp" />
+    <ClCompile Include="Sources\Server\server_game_player_collection.cpp" />
+    <ClCompile Include="Sources\Server\server_player.cpp" />
+    <ClCompile Include="Sources\Lobby\server_lobby.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_events.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_game.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_game_collection.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_game_player_collection.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_player.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Lobby\server_lobby_player_collection.cpp">
+      <Filter>Lobby</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Server\precomp.h" />
+    <ClInclude Include="Sources\Server\server.h" />
+    <ClInclude Include="Sources\Server\server_game.h" />
+    <ClInclude Include="Sources\Server\server_game_player.h" />
+    <ClInclude Include="Sources\Server\server_game_player_collection.h" />
+    <ClInclude Include="Sources\Server\server_player.h" />
+    <ClInclude Include="Sources\Lobby\server_lobby.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_events.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_game.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_game_collection.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_game_player_collection.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_player.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_player_collection.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_net_events.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Server\my_server_lobby_game.h" />
+    <ClInclude Include="Sources\Lobby\server_lobby_game_information.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Lobby\server_lobby_player_information.h">
+      <Filter>Lobby</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Server\my_server_lobby_player.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Lobby">
+      <UniqueIdentifier>{5a486f2f-fd97-455c-86bc-e5ace99b8415}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

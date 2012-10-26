@@ -1,0 +1,36 @@
+gameview playerlist
+{
+	bg-image: DialogBackground;
+	bg-image-sizing: stretch;
+	bg-image-sizing-left: 8;
+	bg-image-sizing-right: 8;
+	bg-image-sizing-top: 8;
+	bg-image-sizing-bottom: 8;
+
+	text-color: white;
+
+	font-weight: bold;
+	font-size: -21;
+	font-family: VeraBd;
+}
+
+gameview actionbar
+{
+	bg-image: DialogBackground;
+	bg-image-sizing: stretch;
+	bg-image-sizing-left: 8;
+	bg-image-sizing-right: 8;
+	bg-image-sizing-top: 8;
+	bg-image-sizing-bottom: 8;
+}
+
+gameview battle
+{
+	bg-image: DialogBackground;
+	bg-image-sizing: stretch;
+	bg-image-sizing-left: 8;
+	bg-image-sizing-right: 8;
+	bg-image-sizing-top: 8;
+	bg-image-sizing-bottom: 8;
+}
+

@@ -1,0 +1,97 @@
+
+slider
+{
+	text-color:black;
+	preferred-height:22;
+	preferred-width:22;
+}
+
+slider:disabled
+{
+	text-color:darkgray;
+}
+
+slider focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+
+
+slider slidertrack.horizontal
+{
+	preferred-height:4;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:2;    /* why doesn't this work with 1, as uxtheme uses */
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:1;
+	bg-image-sizing:stretch; 
+	bg-image:SliderHorizontalTrack;
+}
+
+slider sliderthumb.horizontal
+{
+	preferred-width:11;
+	preferred-height:17;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:9;
+	bg-image-sizing-bottom:9;
+	bg-image-sizing:stretch; 
+}
+
+slider sliderthumb.horizontal:normal
+{
+	bg-image:SliderHorizontalThumbNormal; 
+}
+
+slider sliderthumb.horizontal:hot
+{
+	bg-image:SliderHorizontalThumbHot;
+}
+
+slider sliderthumb.horizontal:disabled
+{
+	bg-image:SliderHorizontalThumbDisabled;
+}
+
+slider slidertrack.vertical
+{
+	preferred-width:4;
+	bg-image-sizing-left:1;
+	bg-image-sizing-right:1;
+	bg-image-sizing-top:1;
+	bg-image-sizing-bottom:2;   /* why doesn't this work with 1, as uxtheme uses */
+	bg-image-sizing:stretch; 
+	bg-image:SliderVerticalTrack;
+}
+
+slider sliderthumb.vertical
+{
+	preferred-width:17;
+	preferred-height:11;
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:3;
+	bg-image-sizing-top:5;
+	bg-image-sizing-bottom:5;
+	bg-image-sizing:stretch; 
+}
+
+slider sliderthumb.vertical:normal
+{
+	bg-image:SliderVerticalThumbNormal; 
+}
+
+slider sliderthumb.vertical:hot
+{
+	bg-image:SliderVerticalThumbHot;
+}
+
+slider sliderthumb.vertical:disabled
+{
+	bg-image:SliderVerticalThumbDisabled;
+}

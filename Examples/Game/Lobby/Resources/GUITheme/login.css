@@ -1,0 +1,15 @@
+component.desktop
+{
+	bg-image: Background;
+	bg-image-sizing: stretch;
+}
+
+component.login
+{
+	bg-image: LoginBackground;
+	bg-image-sizing: stretch;
+	bg-image-sizing-left:10;
+	bg-image-sizing-right:10;
+	bg-image-sizing-top:10;
+	bg-image-sizing-bottom:10;
+}

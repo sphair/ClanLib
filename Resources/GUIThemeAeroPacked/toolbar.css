@@ -1,0 +1,84 @@
+
+toolbar
+{
+	bg-color:transparent;
+	text-color:black;
+}
+
+toolbar.disabled
+{
+	text-color:darkgray;
+}
+
+toolbar.vertical
+{
+	padding-top:3;
+	padding-bottom:3;
+	layout:center;
+}
+
+toolbar.vertical item
+{
+	preferred-width:40;
+	preferred-height:34;
+	icon-width:32;
+	icon-height:32;
+	text-gap:3;
+	padding-right:4;
+	padding-top:1;
+	padding-bottom:1;
+}
+
+toolbar.horizontal
+{
+	layout:left;
+	padding-left:3;
+}
+
+toolbar.horizontal item
+{
+	preferred-height:34;
+	padding-right:5;
+	padding-left:5;
+	padding-top:1;
+	padding-bottom:1;
+	text-gap:3;
+	icon-width:16;
+	icon-height:16;
+}
+
+toolbar item
+{
+	bg-image-sizing-left:2;
+	bg-image-sizing-right:2;
+	bg-image-sizing-top:2;
+	bg-image-sizing-bottom:2;
+	bg-image-sizing:stretch;
+	text-color:black;
+}
+
+toolbar item:normal
+{
+	bg-image:ToolBarButtonNormal; 
+}
+
+toolbar item:hot
+{
+	bg-image:ToolBarButtonHot; 
+}
+
+toolbar item:pressed
+{
+	bg-image:ToolBarButtonPressed; 
+}
+
+toolbar item:on
+{
+	bg-image:ToolBarButtonPressed; 
+}
+
+toolbar item:disabled
+{
+	bg-image:ToolBarButtonNormal;
+	text-color:darkgray;
+}
