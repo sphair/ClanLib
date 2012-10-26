@@ -33,7 +33,6 @@
 #pragma once
 
 #include "listview_layout.h"
-#include "API/GUI/gui_theme_part_property.h"
 
 namespace clan
 {

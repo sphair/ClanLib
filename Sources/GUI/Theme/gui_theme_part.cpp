@@ -37,8 +37,6 @@
 #include "../gui_font_cache.h"
 #include "../gui_css_strings.h"
 #include "gui_theme_part_impl.h"
-#include "gui_theme_part_property_impl.h"
-#include "API/GUI/gui_theme_part_property.h"
 
 namespace clan
 {
@@ -61,34 +59,6 @@ GUIThemePart::~GUIThemePart()
 
 /////////////////////////////////////////////////////////////////////////////
 // GUIThemePart Attributes:
-
-std::string GUIThemePart::get_element_name() const
-{
-	return impl->element_name;
-}
-
-bool GUIThemePart::get_state(const std::string &name) const
-{
-	std::vector<std::string>::size_type index, size;
-	size = impl->states.size();
-	for (index = 0; index < size; index++)
-	{
-		if (impl->states[index] == name)
-			return true;
-	}
-	return false;
-}
-
-
-std::string GUIThemePart::get_property(const GUIThemePartProperty &property) const
-{
-	return property.impl->get_value(*this);
-}
-
-int GUIThemePart::get_property_int(const GUIThemePartProperty &property) const
-{
-	return StringHelp::text_to_int(property.impl->get_value(*this));
-}
 
 GUIComponent *GUIThemePart::get_component() const
 {
@@ -249,32 +219,6 @@ Size GUIThemePart::get_text_size( Canvas &canvas, const std::string &str ) const
 
 /////////////////////////////////////////////////////////////////////////////
 // GUIThemePart Operations:
-
-bool GUIThemePart::set_state(const std::string &name, bool flag)
-{
-	std::vector<std::string>::size_type index, size;
-	size = impl->states.size();
-	if (flag)
-	{
-		for (index = 0; index < size; index++)
-			if (impl->states[index] == name)
-				return false;
-		impl->states.push_back(name);
-		return true;
-	}
-	else
-	{
-		for (index = 0; index < size; index++)
-		{
-			if (impl->states[index] == name)
-			{
-				impl->states.erase(impl->states.begin() + index);
-				return true;
-			}
-		}
-		return false;
-	}
-}
 
 void GUIThemePart::render_box(Canvas &canvas, const Rect &rect, const Rect &clip_rect)
 {

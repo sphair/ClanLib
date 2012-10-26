@@ -188,6 +188,11 @@ std::vector<std::string> GUIComponent::get_pseudo_classes() const
 	return impl->pseudo_classes;
 }
 
+const CSSBoxProperties &GUIComponent::get_css_properties() const
+{
+	return impl->css_properties;
+}
+
 bool GUIComponent::has_focus() const
 {
 	return impl->gui_manager.lock()->has_focus(this);
@@ -880,6 +885,8 @@ void GUIComponent::update_style()
 {
 	GUIComponentSelectNode select_node(this);
 	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
+	impl->css_properties.apply_properties(properties);
+	impl->css_properties.compute(0, 0); // To do: implement inheritance
 	impl->sig_style_changed.invoke(properties);
 }
 

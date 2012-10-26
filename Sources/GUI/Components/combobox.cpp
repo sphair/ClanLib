@@ -34,7 +34,6 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_window_manager.h"
-#include "API/GUI/gui_theme.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_focus_change.h"

@@ -175,7 +175,7 @@ Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::stri
 {
 	try
 	{
-        ResourceManager resources = gui_manager.lock()->theme.get_resources();
+        ResourceManager resources = gui_manager.lock()->resources;
 		return Image(canvas, url, &resources);
 	}
 	catch (Exception e)
