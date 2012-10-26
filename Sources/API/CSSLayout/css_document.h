@@ -33,6 +33,8 @@
 namespace clan
 {
 
+class IODevice;
+class DomElement;
 class CSSProperty;
 class CSSSelectNode;
 class CSSPropertyList;

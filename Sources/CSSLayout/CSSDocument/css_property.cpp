@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_property2.h"
+#include "API/CSSLayout/css_property.h"
 
 namespace clan
 {

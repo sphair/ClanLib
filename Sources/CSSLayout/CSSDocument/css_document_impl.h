@@ -28,14 +28,14 @@
 
 #pragma once
 
-#include "API/CSSLayout/css_property2.h"
-#include "API/CSSLayout/css_property_list2.h"
-#include "API/CSSLayout/css_select_node2.h"
+#include "API/CSSLayout/css_property.h"
+#include "API/CSSLayout/css_property_list.h"
+#include "API/CSSLayout/css_select_node.h"
 #include "API/CSSLayout/dom_select_node.h"
-#include "css_ruleset2.h"
-#include "css_selector_chain2.h"
-#include "css_selector_link2.h"
-#include "css_ruleset_match2.h"
+#include "css_ruleset.h"
+#include "css_selector_chain.h"
+#include "css_selector_link.h"
+#include "css_ruleset_match.h"
 #include <algorithm>
 
 namespace clan

@@ -37,8 +37,8 @@
 #include "API/CSSLayout/css_layout.h"
 #include "API/CSSLayout/css_layout_element.h"
 #include "API/CSSLayout/css_layout_text.h"
-#include "API/CSSLayout/css_document2.h"
-#include "API/CSSLayout/css_property_list2.h"
+#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/css_property_list.h"
 
 namespace clan
 {

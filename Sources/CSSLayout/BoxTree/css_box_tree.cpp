@@ -32,8 +32,8 @@
 #include "css_box_text.h"
 #include "css_box_node_walker.h"
 #include "css_whitespace_eraser.h"
-#include "API/CSSLayout/css_property2.h"
-#include "API/CSSLayout/css_property_list2.h"
+#include "API/CSSLayout/css_property.h"
+#include "API/CSSLayout/css_property_list.h"
 
 namespace clan
 {

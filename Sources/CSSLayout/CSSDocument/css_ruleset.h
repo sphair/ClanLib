@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "css_selector_chain2.h"
-#include "API/CSSLayout/css_property2.h"
+#include "css_selector_chain.h"
+#include "API/CSSLayout/css_property.h"
 
 namespace clan
 {
