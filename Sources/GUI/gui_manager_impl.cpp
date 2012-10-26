@@ -551,13 +551,13 @@ GUIComponent *GUIManager_Impl::get_focus_component()
 	return 0;
 }
 
-std::vector<CSSProperty> &GUIManager_Impl::get_properties(const std::string &element_name) const
+std::vector<CSSProperty> &GUIManager_Impl::get_properties(GUIComponent *component) const
 {
-	std::map< std::string, std::vector<CSSProperty> >::iterator it = properties_cache.find(element_name);
+	std::map< GUIComponent *, std::vector<CSSProperty> >::iterator it = properties_cache.find(component);
 	if (it != properties_cache.end())
 		return it->second;
-	properties_cache[element_name] = css_document.select(element_name);
-	return properties_cache[element_name];
+	properties_cache[component] = css_document.select(component);
+	return properties_cache[component];
 }
 
 void GUIManager_Impl::reset_properties()

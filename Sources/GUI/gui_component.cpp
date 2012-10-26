@@ -157,40 +157,19 @@ Size GUIComponent::get_size() const
 	return impl->geometry.get_size();
 }
 
-std::string GUIComponent::get_type_name() const
+std::string GUIComponent::get_tag_name() const
 {
-	return impl->type_name;
-}
-	
-std::string GUIComponent::get_class_name() const
-{
-	return impl->class_name;
+	return impl->tag_name;
 }
 
-std::string GUIComponent::get_id_name() const
+std::string GUIComponent::get_id() const
 {
-	return impl->id_name;
+	return impl->id;
 }
 
-std::string GUIComponent::get_element_name() const
+std::string GUIComponent::get_class() const
 {
-	if (!impl->element_name.empty())
-		return impl->element_name;
-
-	std::string element_name = impl->type_name;
-	if (!impl->class_name.empty())
-		element_name += "." + impl->class_name;
-	if (!impl->id_name.empty())
-		element_name += "#" + impl->id_name;
-	if (impl->parent)
-	{
-		std::string path_name = impl->parent->get_element_name();
-		if (!path_name.empty())
-			element_name = path_name + " " + element_name;
-	}
-
-	impl->element_name = element_name;	
-	return impl->element_name;
+	return impl->class_string;
 }
 
 bool GUIComponent::has_focus() const
@@ -863,27 +842,40 @@ void GUIComponent::capture_proximity(bool capture)
 	}
 }
 
-void GUIComponent::set_type_name(const std::string &name)
+void GUIComponent::set_tag_name(const std::string &name)
 {
-	impl->type_name = name;
+	impl->tag_name = name;
 	if (!impl->func_style_changed.is_null())
 		impl->func_style_changed.invoke();
 }
 	
-void GUIComponent::set_class_name(const std::string &name)
+void GUIComponent::set_class(const std::string &name)
 {
-	impl->class_name = name;
-	impl->element_name = std::string(); // force update of cached element name 
+	impl->class_string = name;
 	if (!impl->func_style_changed.is_null())
 		impl->func_style_changed.invoke();
 }
 
-void GUIComponent::set_id_name(const std::string &name)
+void GUIComponent::set_id(const std::string &name)
 {
-	impl->id_name = name;
-	impl->element_name = std::string(); // force update of cached element name 
+	impl->id = name;
 	if (!impl->func_style_changed.is_null())
 		impl->func_style_changed.invoke();
+}
+
+void GUIComponent::set_pseudo_class(const std::string &name, bool enable) const
+{
+	for (size_t i = 0; i < impl->pseudo_classes.size(); i++)
+	{
+		if (impl->pseudo_classes[i] == name)
+		{
+			if (!enable)
+				impl->pseudo_classes.erase(impl->pseudo_classes.begin() + i);
+			return;
+		}
+	}
+	if (enable)
+		impl->pseudo_classes.push_back(name);
 }
 
 void GUIComponent::set_enabled(bool enable)

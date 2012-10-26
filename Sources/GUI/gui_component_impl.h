@@ -96,9 +96,10 @@ public:
 	Callback_v1<GUIMessage &> func_filter_message;
 	Callback_2<GUIComponent*, GUIComponent*, std::string> func_create_custom_component;
 	Callback_v1<bool> func_visibility_change;
-	std::string type_name;
-	std::string class_name;
-	std::string id_name;
+	std::string tag_name;
+	std::string id;
+	std::string class_string;
+	std::vector<std::string> pseudo_classes;
 	bool allow_resize;
 	bool clip_children;
 	Rect clip_children_rect;
