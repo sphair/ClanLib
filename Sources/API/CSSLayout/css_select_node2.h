@@ -33,10 +33,10 @@
 namespace clan
 {
 
-class CL_API_CSSLAYOUT CSSSelectNode2
+class CL_API_CSSLAYOUT CSSSelectNode
 {
 public:
-	virtual ~CSSSelectNode2() { }
+	virtual ~CSSSelectNode() { }
 	virtual bool parent() = 0;
 	virtual bool prev_sibling() = 0;
 	virtual void push() = 0;

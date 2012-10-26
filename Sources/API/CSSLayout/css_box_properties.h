@@ -109,7 +109,7 @@
 namespace clan
 {
 
-class CSSPropertyList2;
+class CSSPropertyList;
 
 class CSSBoxProperties
 {
@@ -229,7 +229,7 @@ public:
 	CSSBoxEmptyCells empty_cells;
 
 	void apply_properties(const std::string &style_string, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
-	void apply_properties(const CSSPropertyList2 &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
+	void apply_properties(const CSSPropertyList &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
 
 	void compute(const CSSBoxProperties *parent, CSSResourceCache *layout);
 };

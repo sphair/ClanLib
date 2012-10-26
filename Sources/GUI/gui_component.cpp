@@ -1322,7 +1322,7 @@ CSSLayoutElement GUIComponent::get_css_element()
 
 void GUIComponent::load_css_layout(const std::string &xml_filename, const std::string &css_filename)
 {
-	CSSDocument2 css_document;
+	CSSDocument css_document;
 	css_document.add_sheet(css_filename);
 
 	File file(xml_filename);

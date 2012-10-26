@@ -37,7 +37,7 @@ namespace clan
 class CSSBoxElement;
 class CSSBoxNode;
 class CSSResourceCache;
-class CSSPropertyList2;
+class CSSPropertyList;
 
 class CSSBoxTree
 {
@@ -49,10 +49,10 @@ public:
 	void set_root_element(CSSBoxElement *new_root_element);
 	void set_html_body_element(CSSBoxElement *new_html_body_element);
 	void prepare(CSSResourceCache *resource_cache);
-	void apply_properties(CSSBoxElement *node, const CSSPropertyList2 &properties);
+	void apply_properties(CSSBoxElement *node, const CSSPropertyList &properties);
 	void set_selection(CSSBoxNode *start, size_t start_text_offset, CSSBoxNode *end, size_t end_text_offset);
 
-	CSSDocument2 css;
+	CSSDocument css;
 	CSSBoxElement *get_root_element() { return root_element; }
 	const CSSBoxElement *get_root_element() const { return root_element; }
 	CSSBoxElement *get_html_body_element() { return html_body_element; }

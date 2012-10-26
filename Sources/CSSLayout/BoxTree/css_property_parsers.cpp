@@ -224,7 +224,7 @@ CSSPropertyParsers::~CSSPropertyParsers()
 		delete parsers[i];
 }
 
-void CSSPropertyParsers::parse(CSSBoxProperties &properties, const CSSProperty2 &property, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSPropertyParsers::parse(CSSBoxProperties &properties, const CSSProperty &property, std::map<std::string, CSSBoxProperty *> *out_change_set)
 {
 	std::string name = StringHelp::text_to_lower(property.get_name());
 	std::map<std::string, CSSPropertyParser *>::iterator it = name_to_parser.find(name);

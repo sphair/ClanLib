@@ -6,10 +6,10 @@
 namespace clan
 {
 
-class CSSSelectorLink2
+class CSSSelectorLink
 {
 public:
-	CSSSelectorLink2() : type(type_simple_selector) { }
+	CSSSelectorLink() : type(type_simple_selector) { }
 
 	enum Type
 	{
@@ -26,7 +26,7 @@ public:
 	std::string element_id;    // E#myid
 	std::vector<std::string> element_classes; // E.myclass.yourclass
 	std::vector<std::string> pseudo_classes; // E:active:visited:first-child
-	std::vector<CSSAttributeSelector2> attribute_selectors; // E[hello="Cleveland"][goodbye="Columbus"]
+	std::vector<CSSAttributeSelector> attribute_selectors; // E[hello="Cleveland"][goodbye="Columbus"]
 };
 
 }
