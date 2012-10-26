@@ -42,6 +42,8 @@
 #include "CSSLayout/css_layout_object.h"
 #include "CSSLayout/css_layout_user_data.h"
 #include "CSSLayout/css_hit_test_result.h"
+#include "CSSLayout/css_tokenizer.h"
+#include "CSSLayout/css_token.h"
 #include "CSSLayout/css_document2.h"
 #include "CSSLayout/css_property2.h"
 #include "CSSLayout/css_property_list2.h"
