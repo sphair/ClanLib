@@ -41,7 +41,7 @@ class CSSBoxElement;
 class CSSBackgroundRenderer
 {
 public:
-	CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, CSSBoxElement *element_node);
+	CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSBoxProperties &computed_properties);
 	void set_border_box(Rect border_box);
 	void set_padding_box(Rect padding_box);
 	void set_content_box(Rect content_box);
@@ -55,7 +55,6 @@ private:
 	Size get_image_size(size_t index, Image &image, Rect origin_box);
 	Rect get_clip_box(size_t index);
 	Rect get_origin_box(size_t index);
-	CSSBoxProperties &computed_properties();
 	CSSBoxBackgroundClip::ClipType get_layer_clip(size_t index);
 	CSSBoxBackgroundOrigin::OriginType get_layer_origin(size_t index);
 	CSSBoxBackgroundSize::Size get_layer_size(size_t index);
@@ -66,7 +65,7 @@ private:
 
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resource_cache;
-	CSSBoxElement *element_node;
+	const CSSBoxProperties &computed_properties;
 	Rect border_box;
 	Rect padding_box;
 	Rect content_box;

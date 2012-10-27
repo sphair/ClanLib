@@ -1186,7 +1186,7 @@ void CSSLayoutTreeNode::render_background(CSSLayoutGraphics *graphics, CSSResour
 		box.translate(formatting_context->get_parent()->get_x(), formatting_context->get_parent()->get_y());
 	box.translate(used_to_actual(relative_x), used_to_actual(relative_y));
 
-	CSSBackgroundRenderer renderer(graphics, resource_cache, element_node);
+	CSSBackgroundRenderer renderer(graphics, resource_cache, element_node->computed_properties);
 	renderer.set_is_root(root);
 	renderer.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong except for the root
 	renderer.set_content_box(box);
@@ -1202,7 +1202,7 @@ void CSSLayoutTreeNode::render_border(CSSLayoutGraphics *graphics, CSSResourceCa
 	Rect border_box = get_border_box();
 	border_box.translate(relative_x, relative_y);
 
-	CSSBorderRenderer renderer(graphics, resource_cache, element_node);
+	CSSBorderRenderer renderer(graphics, resource_cache, element_node->computed_properties);
 	renderer.set_border_values(border.left, border.top, border.right, border.bottom);
 	renderer.set_border_box(border_box);
 	renderer.render();
