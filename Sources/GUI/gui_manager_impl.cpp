@@ -40,9 +40,10 @@
 #include "API/GUI/gui_window_manager.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/input_context.h"
+#include "API/Display/Render/graphic_context.h"
+#include "API/Display/2D/image.h"
 #include "API/Display/Font/font.h"
 #include "API/Core/Text/string_format.h"
 #include "gui_component_impl.h"
@@ -71,6 +72,8 @@ GUIManager_Impl::GUIManager_Impl()
 	wm_site.func_close = &func_close;
 	wm_site.func_destroy = &func_destroy;
 	wm_site.func_input_received = &func_input_received;
+
+	resource_cache.cb_get_image.set(this, &GUIManager_Impl::on_resource_cache_get_image);
 }
 
 GUIManager_Impl::~GUIManager_Impl()
@@ -732,7 +735,11 @@ void GUIManager_Impl::on_input_received(
 		if (!message.is_consumed())
 			process_standard_gui_keys(message);
 	}
+}
 
+Image GUIManager_Impl::on_resource_cache_get_image(Canvas &canvas, const std::string &url)
+{
+	return Image(canvas, url, &resources);
 }
 
 GUIComponent *GUIManager_Impl::get_cancel_component(GUIComponent *comp)
@@ -848,7 +855,6 @@ void GUIManager_Impl::process_standard_gui_keys(GUIMessage &message)
 		}
 	}
 }
-
 
 GUITopLevelWindow_Alive::GUITopLevelWindow_Alive(GUITopLevelWindow *window)
 {
