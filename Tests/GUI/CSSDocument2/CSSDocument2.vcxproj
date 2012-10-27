@@ -75,7 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources.xml" />
-    <None Include="style.css" />
+    <None Include="theme.css" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
