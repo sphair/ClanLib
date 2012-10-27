@@ -740,9 +740,9 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	}
 	else
 	{
-		GUIThemePart part(this);
-		Rect geometry = get_size();
-		part.render_box(canvas, RectPS(0, 0, geometry.get_width(), geometry.get_height()), clip_rect);
+		//GUIThemePart part(this);
+		//Rect geometry = get_size();
+		//part.render_box(canvas, RectPS(0, 0, geometry.get_width(), geometry.get_height()), clip_rect);
 	}
 
 	if (include_children)
