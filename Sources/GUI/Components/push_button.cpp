@@ -39,6 +39,8 @@
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/Components/push_button.h"
+#include "API/GUI/Components/label.h"
+#include "API/GUI/Components/imageview.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/image.h"
@@ -57,21 +59,16 @@ namespace clan
 class PushButton_Impl
 {
 public:
-	PushButton_Impl() : toggle_mode(false), flat_mode(false), icon_position(PushButton::icon_left) {}
-	void on_render(Canvas &canvas, const Rect &update_rect);
+	PushButton_Impl() : toggle_mode(false), icon_position(PushButton::icon_left) {}
 	void on_process_message(GUIMessage &msg);
-	void on_style_changed();
-	void on_enablemode_changed();
-	void create_parts();
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
 
 	PushButton *button;
+	Label *label;
+	ImageView *icon;
 	Callback_v0 func_clicked;
-	std::string text;
-	Image icon;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
-	bool flat_mode;
 	GUIThemePart part;
 	GUIThemePart part_focus;
 };
@@ -88,12 +85,16 @@ PushButton::PushButton(GUIComponent *parent)
 	set_double_click_enabled(false);
 
 	func_process_message().set(impl.get(), &PushButton_Impl::on_process_message);
-	func_render().set(impl.get(), &PushButton_Impl::on_render);
-	func_style_changed().set(impl.get(), &PushButton_Impl::on_style_changed);
-	func_enablemode_changed().set(impl.get(), &PushButton_Impl::on_enablemode_changed);
 
 	impl->button = this;
-	impl->create_parts();
+	impl->label = new Label(this);
+	impl->icon = new ImageView(this);
+
+	set_pseudo_class(CssStr::normal, true);
+	set_pseudo_class(CssStr::hot, false);
+	set_pseudo_class(CssStr::pressed, false);
+	set_pseudo_class(CssStr::defaulted, is_default());
+	set_pseudo_class(CssStr::disabled, !is_enabled());
 }
 
 PushButton::~PushButton()
@@ -117,7 +118,7 @@ PushButton *PushButton::get_named_item(GUIComponent *reference_component, const 
 
 bool PushButton::is_pushed() const
 {
-	return impl->part.get_state(CssStr::pressed);
+	return get_pseudo_class(CssStr::pressed);
 }
 
 bool PushButton::is_toggle() const
@@ -125,14 +126,9 @@ bool PushButton::is_toggle() const
 	return impl->toggle_mode;
 }
 
-bool PushButton::is_flat() const
-{
-	return impl->flat_mode;
-}
-
 Image PushButton::get_icon() const
 {
-	return impl->icon;
+	return impl->icon->get_image();
 }
 
 PushButton::IconPosition PushButton::get_icon_position() const
@@ -140,9 +136,9 @@ PushButton::IconPosition PushButton::get_icon_position() const
 	return impl->icon_position;
 }
 
-const std::string &PushButton::get_text() const
+std::string PushButton::get_text() const
 {
-	return impl->text;
+	return impl->label->get_text();
 }
 
 Size PushButton::get_preferred_size() const
@@ -155,35 +151,18 @@ Size PushButton::get_preferred_size() const
 
 void PushButton::set_pushed(bool enable)
 {
-	if (impl->part.set_state(CssStr::pressed, enable) || 
-		impl->part.set_state(CssStr::toggled, enable))
-	{
-		request_repaint();
-	}
+	set_pseudo_class(CssStr::pressed, enable);
+	set_pseudo_class(CssStr::toggled, enable);
 }
 
 void PushButton::set_toggle(bool enable)
 {
-	if (impl->toggle_mode != enable)
-	{
-		impl->toggle_mode = enable;
-		request_repaint();
-	}
-}
-
-void PushButton::set_flat(bool enable)
-{
-	if (impl->flat_mode != enable)
-	{
-		impl->flat_mode = enable;
-		request_repaint();
-	}
+	impl->toggle_mode = enable;
 }
 
 void PushButton::set_icon(const Image &icon)
 {
-	impl->icon = icon;
-	request_repaint();
+	impl->icon->set_image(icon);
 }
 
 void PushButton::set_icon_position(IconPosition pos)
@@ -191,14 +170,12 @@ void PushButton::set_icon_position(IconPosition pos)
 	if (impl->icon_position != pos)
 	{
 		impl->icon_position = pos;
-		request_repaint();
 	}
 }
 
 void PushButton::set_text(const std::string &text)
 {
-	impl->text = text;
-	request_repaint();
+	impl->label->set_text(text);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -212,31 +189,7 @@ Callback_v0 &PushButton::func_clicked()
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Implementation:
 
-void PushButton_Impl::create_parts()
-{
-	part = GUIThemePart(button);
-	part.set_state(CssStr::normal, true);
-	part.set_state(CssStr::hot, false);
-	part.set_state(CssStr::pressed, false);
-	part.set_state(CssStr::defaulted, button->is_default());
-	part.set_state(CssStr::disabled, !button->is_enabled());
-	part.set_state(CssStr::flat, button->is_flat());
-
-	part_focus = GUIThemePart(button, "focus");
-}
-
-void PushButton_Impl::on_style_changed()
-{
-	create_parts();
-	update_default_state(false);
-}
-
-void PushButton_Impl::on_enablemode_changed()
-{
-	create_parts();
-	button->request_repaint();
-}
-
+/*
 void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = button->get_size();
@@ -326,7 +279,7 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		part.render_text(canvas, text, content_rect, update_rect);
 	}
 }
-
+*/
 void PushButton_Impl::on_process_message(GUIMessage &msg)
 {
 	if (!button->is_enabled())
@@ -342,16 +295,14 @@ void PushButton_Impl::on_process_message(GUIMessage &msg)
 			if( e.type == InputEvent::pressed &&
 				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) )
 			{
-				part.set_state(CssStr::pressed, true);
-				button->request_repaint();
+				button->set_pseudo_class(CssStr::pressed, true);
 				msg.set_consumed();
 			}
 			else if( e.type == InputEvent::released &&
 				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) )
 			{
-				part.set_state(CssStr::pressed, false);
-				part.set_state(CssStr::toggled, !part.get_state("toggled"));
-				button->request_repaint();
+				button->set_pseudo_class(CssStr::pressed, false);
+				button->set_pseudo_class(CssStr::toggled, !button->get_pseudo_class("toggled"));
 				msg.set_consumed();
 				
 				if (!func_clicked.is_null())
@@ -363,16 +314,14 @@ void PushButton_Impl::on_process_message(GUIMessage &msg)
 			if (e.type == InputEvent::pressed && 
 				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter))
 			{
-				part.set_state(CssStr::pressed, true);
-				button->request_repaint();
+				button->set_pseudo_class(CssStr::pressed, true);
 				msg.set_consumed();
 			}
 			else if( e.type == InputEvent::released &&
 				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) &&
-				part.get_state(CssStr::pressed) )
+				button->get_pseudo_class(CssStr::pressed) )
 			{
-				part.set_state(CssStr::pressed, false);
-				button->request_repaint();
+				button->set_pseudo_class(CssStr::pressed, false);
 				msg.set_consumed();
 				
 				if (!func_clicked.is_null())
@@ -395,17 +344,15 @@ void PushButton_Impl::on_process_message(GUIMessage &msg)
 		GUIMessage_Pointer pointer = msg;
 		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
 		{
-			part.set_state(CssStr::hot, true);
-			button->request_repaint();
+			button->set_pseudo_class(CssStr::hot, true);
 			msg.set_consumed();
 		}
 		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
 		{
-			part.set_state(CssStr::hot, false);
+			button->set_pseudo_class(CssStr::hot, false);
 
 			if (!toggle_mode)
-				part.set_state(CssStr::pressed, false);
-			button->request_repaint();
+				button->set_pseudo_class(CssStr::pressed, false);
 			msg.set_consumed();
 		}
 	}
@@ -414,18 +361,16 @@ void PushButton_Impl::on_process_message(GUIMessage &msg)
 		GUIMessage_FocusChange focus_msg = msg;
 		if (focus_msg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
 		{
-			part.set_state(CssStr::focused, true);
+			button->set_pseudo_class(CssStr::focused, true);
 			if (!toggle_mode)
 				update_default_state(true);
-			button->request_repaint();
 			msg.set_consumed();
 		}
 		else 
 		{
-			part.set_state(CssStr::focused, false);
+			button->set_pseudo_class(CssStr::focused, false);
 			if (!toggle_mode)
 				update_default_state(false);
-			button->request_repaint();
 			msg.set_consumed();
 		}
 	}
@@ -451,8 +396,7 @@ void PushButton_Impl::update_default_state(bool focus_gained)
 		}
 	}
 
-	part.set_state("defaulted", is_default); 
-	button->request_repaint();
+	button->set_pseudo_class("defaulted", is_default); 
 }
 
 }

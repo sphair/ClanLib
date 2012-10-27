@@ -84,11 +84,6 @@ public:
 	/// \return true = toggle
 	bool is_toggle() const;
 
-	/// \brief Is Flat
-	///
-	/// \return true = flat
-	bool is_flat() const;
-
 	/// \brief Get Icon
 	///
 	/// \return icon
@@ -104,7 +99,7 @@ public:
 	/// \return icon_position
 	IconPosition get_icon_position() const;
 
-	const std::string &get_text() const;
+	std::string get_text() const;
 
 	/// \brief Get Preferred size
 	///
@@ -126,11 +121,6 @@ public:
 	///
 	/// \param enable = bool
 	void set_toggle(bool enable);
-
-	/// \brief Set flat
-	///
-	/// \param enable = bool
-	void set_flat(bool enable);
 
 	/// \brief Set icon
 	///
