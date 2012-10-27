@@ -14,5 +14,21 @@ int Program::main(const std::vector<std::string> &args)
 	SetupGL setup_gl;
 	SetupGUI setup_gui;
 
+	GUIManager gui(".");
+
+	GUITopLevelDescription window_desc;
+	window_desc.set_title("GUI Test");
+	window_desc.set_size(Size(1024, 768), false);
+	window_desc.set_allow_resize(true);
+
+	GUIComponent *root = new GUIComponent(&gui, window_desc);
+	GUIComponent *child1 = new GUIComponent(root);
+	GUIComponent *child11 = new GUIComponent(child1);
+	GUIComponent *child2 = new GUIComponent(root);
+	GUIComponent *child22 = new GUIComponent(child2);
+	GUIComponent *child23 = new GUIComponent(child2);
+
+	gui.exec();
+
 	return 0;
 }
