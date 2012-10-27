@@ -134,14 +134,14 @@ bool CSSParserBorderImage::parse_source(CSSBoxBorderImageSource &border_image_so
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
-	if (token.type == CSSToken::type_ident && pos == tokens.size())
+	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "none"))
 			border_image_source.type = CSSBoxBorderImageSource::type_none;
 		else
 			return false;
 	}
-	else if (token.type == CSSToken::type_uri && pos == tokens.size())
+	else if (token.type == CSSToken::type_uri)
 	{
 		border_image_source.type = CSSBoxBorderImageSource::type_image;
 		border_image_source.url = token.value;

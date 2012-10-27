@@ -7,7 +7,10 @@
 root 
 {
     font-size: 12px;
-    background-image: url('res:Frame');
+    background-color: gray;
+    border-style: solid;
+    border-width: 27px;
+    border-image: url('res:Frame') 4 fill;
 }
 
 child
