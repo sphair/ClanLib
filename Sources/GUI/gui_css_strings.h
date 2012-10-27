@@ -62,6 +62,7 @@ namespace CssStr
 		const std::string type_name = "frame";
 		const std::string part_header = "header";
 		const std::string part_header_left = "headerleft";
+		const std::string part_header_icon = "headericon";
 		const std::string part_header_caption = "headercaption";
 		const std::string part_header_right = "headerright";
 		const std::string part_body = "body";
