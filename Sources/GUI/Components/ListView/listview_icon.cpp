@@ -37,6 +37,8 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include <map>
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -214,3 +216,5 @@ void ListViewIcon::set_scalable(bool value)
 // ListViewIcon Implementation:
 
 }
+
+#endif

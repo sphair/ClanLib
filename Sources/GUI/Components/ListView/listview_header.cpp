@@ -49,6 +49,8 @@
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -429,3 +431,5 @@ void ListViewHeader_Impl::on_column_size_changed(ListViewColumnHeader col)
 }
 
 }
+
+#endif

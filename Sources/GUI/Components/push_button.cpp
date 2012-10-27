@@ -50,6 +50,8 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -400,3 +402,5 @@ void PushButton_Impl::update_default_state(bool focus_gained)
 }
 
 }
+
+#endif

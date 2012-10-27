@@ -48,6 +48,8 @@
 #include "API/GUI/Components/listview_selected_item.h"
 #include "API/GUI/Components/listview.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -128,3 +130,5 @@ bool ListViewLayout::is_visible(ListViewItem &item)
 // ListViewLayout Implementation:
 
 }
+
+#endif

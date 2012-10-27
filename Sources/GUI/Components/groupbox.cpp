@@ -36,6 +36,8 @@
 #include "API/GUI/Components/groupbox.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -99,3 +101,5 @@ void GroupBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 }
 
 }
+
+#endif

@@ -47,6 +47,8 @@
 #pragma comment(lib, "dwmapi.lib")
 #endif
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -212,3 +214,5 @@ void Ribbon::on_menu_button_clicked()
 }
 
 }
+
+#endif

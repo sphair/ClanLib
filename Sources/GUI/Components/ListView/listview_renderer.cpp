@@ -49,6 +49,8 @@
 #include "listview_renderer.h"
 #include "listview_impl.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -281,3 +283,5 @@ void ListViewRenderer::set_display_mode(ListViewDisplayMode mode)
 // ListViewRenderer Implementation:
 
 }
+
+#endif

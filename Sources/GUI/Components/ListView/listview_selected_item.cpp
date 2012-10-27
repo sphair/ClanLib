@@ -47,6 +47,8 @@
 #include "listview_item_impl.h"
 #include "API/GUI/Components/listview_selected_item.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -215,3 +217,5 @@ ListViewSelectedItem::ListViewSelectedItem(const std::shared_ptr<ListViewSelecte
 }
 
 }
+
+#endif

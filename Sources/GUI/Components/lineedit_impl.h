@@ -57,7 +57,7 @@ public:
 		cursor_drawing_enabled_when_parent_focused(false),
 		select_all_on_focus_gain(true)
 	{
-		prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
+		//prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	~LineEdit_Impl()
@@ -108,7 +108,7 @@ public:
 	GUIThemePart part_component;
 	GUIThemePart part_selection;
 	GUIThemePart part_cursor;
-	GUIThemePartProperty prop_text_color;
+	//GUIThemePartProperty prop_text_color;
 	Rect content_rect;
 
 	void move(int steps, InputEvent &e);

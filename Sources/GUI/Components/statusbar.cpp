@@ -41,6 +41,8 @@
 #include "API/Core/Text/string_format.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -336,3 +338,5 @@ void StatusBar_Impl::on_style_changed()
 }
 
 }
+
+#endif

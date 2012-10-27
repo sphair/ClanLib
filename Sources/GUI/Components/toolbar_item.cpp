@@ -32,6 +32,8 @@
 #include "API/GUI/Components/toolbar_item.h"
 #include "toolbar_item_impl.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -127,3 +129,5 @@ void ToolBarItem::set_pressed( bool value )
 // ToolBarItem Implementation:
 
 }
+
+#endif

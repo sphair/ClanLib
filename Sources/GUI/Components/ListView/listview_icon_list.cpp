@@ -35,6 +35,8 @@
 #include "API/Display/Window/display_window.h"
 #include <map>
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -146,3 +148,5 @@ void ListViewIconList::set_selected_color_overlay(const Colorf &color)
 // ListViewIconList Implementation:
 
 }
+
+#endif

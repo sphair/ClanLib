@@ -49,6 +49,8 @@
 #include <climits>
 #endif
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -526,3 +528,5 @@ void Spin_Impl::update_lineedit()
 }
 
 }
+
+#endif

@@ -39,6 +39,8 @@
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -271,3 +273,5 @@ Callback_v0 &ScrollBar::func_scroll_end()
 // ScrollBar Implementation:
 
 }
+
+#endif

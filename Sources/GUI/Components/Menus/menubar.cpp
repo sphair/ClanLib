@@ -47,6 +47,8 @@
 #include "popupmenu_impl.h"
 #include "../../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -314,3 +316,5 @@ int MenuBar_Impl::get_selected_item_index()
 }
 
 }
+
+#endif

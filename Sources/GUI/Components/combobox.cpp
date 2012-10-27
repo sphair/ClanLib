@@ -48,6 +48,8 @@
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -485,3 +487,5 @@ void ComboBox_Impl::on_lineedit_message(GUIMessage &msg)
 }
 
 }
+
+#endif

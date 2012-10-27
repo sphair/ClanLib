@@ -41,6 +41,8 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -115,3 +117,5 @@ void Frame::set_header_text(const std::string &text)
 }
 
 }
+
+#endif
