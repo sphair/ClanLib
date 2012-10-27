@@ -56,6 +56,9 @@
 #include "gui_xml_loader_version_1_0.h"
 #include "gui_component_select_node.h"
 #include "API/Display/2D/canvas.h"
+#include "CSSLayout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/LayoutTree/css_layout_graphics.h"
 
 namespace clan
 {
@@ -727,6 +730,16 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 {
 	if (!impl->visible)
 		return;
+
+	Rect viewport = get_top_level_component()->get_size();
+	CSSResourceCache *resource_cache = &impl->gui_manager_impl->resource_cache;
+	CSSLayoutGraphics graphics(canvas, resource_cache, viewport, 0);
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->css_properties);
+	CSSBorderRenderer border(&graphics, resource_cache, impl->css_properties);
+	background.set_border_box(get_size());
+	border.set_border_box(get_size());
+	background.render();
+	border.render();
 
 	if (!impl->css_layout.is_null())
 	{
