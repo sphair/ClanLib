@@ -38,7 +38,6 @@
 #include "API/GUI/Components/toolbar.h"
 #include "API/GUI/Components/toolbar_item.h"
 #include "API/GUI/gui_manager.h"
-#include "API/GUI/gui_theme.h"
 #include "API/Display/2D/sprite.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Window/input_event.h"

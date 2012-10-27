@@ -79,9 +79,6 @@ public:
 	/// \brief Returns true if the window is maximized.
 	bool is_maximized() const;
 
-	/// \brief Returns the preferred size of the window.
-	Size get_preferred_size() const;
-
 	/// \brief Returns the client area geometry. Client area is the content area when titlebar and borders are excluded.
 	Rect get_client_area() const;
 
