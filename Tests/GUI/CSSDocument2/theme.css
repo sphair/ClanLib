@@ -7,10 +7,10 @@
 root 
 {
     font-size: 12px;
-    background-color: gray;
+    background-color: transparent;
     border-style: solid;
     border-width: 27px;
-    border-image: url('res:Frame') 4 fill;
+    border-image: url('res:Ribbon') 50 8 8 8 fill;
 }
 
 child
