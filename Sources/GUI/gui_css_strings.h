@@ -43,6 +43,8 @@ namespace CssStr
 	namespace ComboBox
 	{
 		const std::string type_name = "combobox";
+		const std::string part_opener = "opener";
+		const std::string part_opener_glyph = "opener_glyph";
 	}
 
 	namespace GroupBox
