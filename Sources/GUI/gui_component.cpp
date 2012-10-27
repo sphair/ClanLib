@@ -33,7 +33,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/GUI/gui_theme.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_layout_corners.h"
 #include "API/GUI/gui_window_manager.h"
@@ -110,8 +109,6 @@ GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription descripti
 
 GUIComponent::~GUIComponent()
 {
-	if (!impl->gui_manager_impl->theme.is_null())
-		impl->gui_manager_impl->theme.component_destroyed(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -220,17 +217,12 @@ bool GUIComponent::get_blocks_default_action() const
 
 ResourceManager GUIComponent::get_resources() const
 {
-	return get_gui_manager().get_theme().get_resources();
+	return impl->gui_manager.lock()->resources;
 }
 
 GUIManager GUIComponent::get_gui_manager() const
 {
 	return GUIManager(impl->gui_manager.lock());
-}
-
-GUITheme GUIComponent::get_theme() const
-{
-	return impl->gui_manager.lock()->theme;
 }
 
 const GUIComponent *GUIComponent::get_parent_component() const
@@ -988,6 +980,8 @@ GUIComponent *GUIComponent::get_named_item(const std::string &id)
 
 void GUIComponent::create_components(const DomDocument &gui_xml)
 {
+#ifdef INCLUDE_COMPONENTS
+
 	DomDocument const_hack = gui_xml;
 
 	// Check if loaded document uses namespaces and if its a clanlib resources xml document:
@@ -1005,6 +999,8 @@ void GUIComponent::create_components(const DomDocument &gui_xml)
 	{
 		throw Exception("XML document is not a ClanLib GUI XML document.");
 	}
+
+#endif
 }
 
 void GUIComponent::create_components(const std::string &filename, const VirtualDirectory &dir)

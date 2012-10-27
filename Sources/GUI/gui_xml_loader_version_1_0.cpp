@@ -59,6 +59,8 @@
 #include "gui_xml_loader_version_1_0.h"
 #include "Layout/gui_layout_provider_corners.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -350,3 +352,5 @@ void GUIXMLLoaderVersion_1_0::load(DomElement &element, GUIComponent *parent)
 }
 
 }
+
+#endif
