@@ -44,6 +44,8 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -203,3 +205,5 @@ void ToolTip_Impl::on_filter_message(GUIMessage &message)
 }
 
 }
+
+#endif

@@ -47,6 +47,8 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -588,3 +590,5 @@ int ToolBar_Impl::find_item_at(const Point &pos)
 }
 
 }
+
+#endif

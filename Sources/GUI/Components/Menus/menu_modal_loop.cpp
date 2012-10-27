@@ -43,6 +43,8 @@
 #include "popupmenu_window.h"
 #include "menubar_impl.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -342,3 +344,5 @@ bool MenuModalLoop::is_above_menubar(const Point &mouse_screen_pos)
 }
 
 }
+
+#endif

@@ -45,6 +45,8 @@
 #include "API/Display/Window/keys.h"
 #include "listview_column_header_impl.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -150,3 +152,5 @@ Callback_v1<ListViewColumnHeader> &ListViewColumnHeader::func_size_changed()
 // ListViewColumnHeader Implementation:
 
 }
+
+#endif

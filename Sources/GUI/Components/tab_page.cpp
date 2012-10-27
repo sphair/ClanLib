@@ -38,6 +38,8 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -113,3 +115,5 @@ void TabPage_Impl::on_resized()
 }
 
 }
+
+#endif

@@ -46,6 +46,8 @@
 #include "API/Display/Window/keys.h"
 #include "listview_item_impl.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -409,3 +411,5 @@ ListViewItem_Impl *ListViewItem_Impl::get_root_parent()
 }
 
 }
+
+#endif

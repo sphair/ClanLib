@@ -39,6 +39,8 @@
 #include "listview_layout.h"
 #include "listview_layout_icons.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -295,3 +297,5 @@ Rect ListViewLayoutIcons::get_icon_rect(const Rect &cell_content_rect, ListViewI
 }
 
 }
+
+#endif

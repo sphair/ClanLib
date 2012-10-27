@@ -34,6 +34,8 @@
 #include "popupmenu_window.h"
 #include "menu_modal_loop.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -204,3 +206,5 @@ void PopupMenuItem::set_checked( bool checked )
 // PopupMenuItem Implementation:
 
 }
+
+#endif

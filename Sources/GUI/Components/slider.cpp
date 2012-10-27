@@ -44,6 +44,8 @@
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -651,3 +653,5 @@ void Slider_Impl::on_enablemode_changed()
 }
 
 }
+
+#endif

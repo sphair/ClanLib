@@ -31,6 +31,8 @@
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -53,3 +55,5 @@ void RibbonSection::on_render(Canvas &canvas, const Rect &clip_rect)
 }
 
 }
+
+#endif

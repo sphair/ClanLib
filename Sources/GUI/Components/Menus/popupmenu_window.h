@@ -101,7 +101,7 @@ private:
 	GUIThemePart part_separator;
 	GUIThemePart part_submenu_arrow;
 	GUIThemePart part_menubar_joiner;
-	GUIThemePartProperty prop_icon_column_width;
+	//GUIThemePartProperty prop_icon_column_width;
 };
 
 }

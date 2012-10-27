@@ -57,6 +57,8 @@
 #include "stdlib.h"
 #endif
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -1261,3 +1263,5 @@ Vec2i TextEdit_Impl::get_character_index(Point mouse_wincoords)
 }
 
 }
+
+#endif

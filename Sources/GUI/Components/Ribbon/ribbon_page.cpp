@@ -31,6 +31,8 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -88,3 +90,5 @@ void RibbonPage::on_resized()
 }
 
 }
+
+#endif

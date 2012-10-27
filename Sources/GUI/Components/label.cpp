@@ -44,6 +44,8 @@
 #include "API/Display/2D/canvas.h"
 #include "../gui_css_strings.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -201,3 +203,5 @@ void Label_Impl::on_style_changed()
 }
 
 }
+
+#endif

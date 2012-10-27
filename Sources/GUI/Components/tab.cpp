@@ -42,6 +42,8 @@
 #include <map>
 #include "API/Core/Math/rect.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -352,3 +354,5 @@ void Tab_Impl::on_resized()
 }
 
 }
+
+#endif

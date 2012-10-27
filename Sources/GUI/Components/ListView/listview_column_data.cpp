@@ -43,6 +43,8 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Window/keys.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -102,3 +104,5 @@ void ListViewColumnData::set_column_id(const std::string &column_id)
 // ListViewColumnData Implementation:
 
 }
+
+#endif

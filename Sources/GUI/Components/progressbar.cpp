@@ -39,6 +39,8 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
+#ifdef INCLUDE_COMPONENTS
+
 namespace clan
 {
 
@@ -337,3 +339,5 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 }
 
 }
+
+#endif
