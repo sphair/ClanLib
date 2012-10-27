@@ -15,6 +15,7 @@ int Program::main(const std::vector<std::string> &args)
 	SetupGUI setup_gui;
 
 	GUIManager gui(".");
+	gui.add_resources("../../../Resources/GUIThemeLuna/resources.xml");
 
 	GUITopLevelDescription window_desc;
 	window_desc.set_title("GUI Test");
