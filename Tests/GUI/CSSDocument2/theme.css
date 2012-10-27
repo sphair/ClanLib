@@ -1,2 +1,31 @@
 
-/* CSS styles go here! */
+*
+{
+    font-family: "Batang", Sans-Serif;
+}
+
+root 
+{
+    font-size: 12px;
+}
+
+child
+{
+    background-color: #133337;
+    font-size: 1.1em;
+}
+
+#child11
+{
+    border-width: 1px;
+}
+
+child::hot
+{
+    background-color: red;
+}
+
+child#child22
+{
+    background-color: #ffff00;
+}
