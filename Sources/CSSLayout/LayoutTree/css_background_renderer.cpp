@@ -76,6 +76,10 @@ void CSSBackgroundRenderer::render()
 	for (size_t i = computed_properties.background_image.images.size(); i > 0; i--)
 	{
 		size_t index = i-1;
+
+		if (computed_properties.background_image.images[index].type == CSSBoxBackgroundImage::image_type_none)
+			continue;
+
 		Image &image = graphics->get_image(computed_properties.background_image.images[index].url);
 		if (!image.is_null())
 		{
