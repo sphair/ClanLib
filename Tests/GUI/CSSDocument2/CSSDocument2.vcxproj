@@ -73,6 +73,10 @@
     <ClInclude Include="precomp.h" />
     <ClInclude Include="program.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="resources.xml" />
+    <None Include="style.css" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
