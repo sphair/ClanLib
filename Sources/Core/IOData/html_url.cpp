@@ -109,8 +109,16 @@ HTMLUrl::HTMLUrl(const std::string &url, const HTMLUrl &base)
 	}
 
 	std::string::size_type query_pos = input.find_first_of('?', pos);
-	path = input.substr(pos, query_pos-pos);
-	query = input.substr(query_pos);
+	if (query_pos == std::string::npos)
+	{
+		path = input.substr(pos);
+		query.clear();
+	}
+	else
+	{
+		path = input.substr(pos, query_pos-pos);
+		query = input.substr(query_pos);
+	}
 
 	if (path.substr(0, 1) != "/")
 	{
