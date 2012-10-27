@@ -28,9 +28,13 @@
 
 #pragma once
 
+#include <map>
+
 namespace clan
 {
 
+class Image;
+class Canvas;
 class Font;
 class GraphicContext;
 class CSSBoxElement;

@@ -42,6 +42,7 @@
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
 #include "Theme/gui_theme_layout_manager.h"
+#include "CSSLayout/css_resource_cache.h"
 #include "gui_font_cache.h"
 #include <vector>
 #include <map>
@@ -54,6 +55,7 @@ class GUIWindowManager;
 class GUIComponent_Impl;
 class InputEvent;
 class Font;
+class Image;
 class GUITopLevelWindow_Alive;
 
 class GUITopLevelWindow
@@ -126,6 +128,7 @@ public:
 	GUIThemeLayoutManager layout_manager;
 
 	ResourceManager resources;
+	CSSResourceCache resource_cache;
 
 	GUIComponent *mouse_capture_component;
 	GUIComponent *mouse_over_component;
@@ -175,6 +178,8 @@ private:
 	void on_close(GUITopLevelWindow *toplevel_window);
 	void on_destroy(GUITopLevelWindow *toplevel_window);
 	void on_input_received(GUITopLevelWindow *toplevel_window, const InputEvent &input_event);
+
+	Image on_resource_cache_get_image(Canvas &canvas, const std::string &url);
 
 	struct NamedFontCacheEntry
 	{
