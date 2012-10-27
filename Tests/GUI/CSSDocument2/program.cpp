@@ -22,6 +22,7 @@ int Program::main(const std::vector<std::string> &args)
 	window_desc.set_allow_resize(true);
 
 	GUIComponent *root = new GUIComponent(&gui, window_desc);
+	root->func_close().set(&Program::on_close, root);
 	GUIComponent *child1 = new GUIComponent(root);
 	GUIComponent *child11 = new GUIComponent(child1);
 	GUIComponent *child2 = new GUIComponent(root);
@@ -31,4 +32,10 @@ int Program::main(const std::vector<std::string> &args)
 	gui.exec();
 
 	return 0;
+}
+
+bool Program::on_close(GUIComponent *component)
+{
+	component->exit_with_code(0);
+	return true;
 }
