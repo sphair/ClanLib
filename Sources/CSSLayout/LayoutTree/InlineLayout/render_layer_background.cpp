@@ -72,14 +72,14 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 				cur->closing ? used_to_actual(element->computed_properties.border_width_right.length.value) : 0,
 				used_to_actual(element->computed_properties.border_width_bottom.length.value));
 
-			CSSBackgroundRenderer background(graphics, resources, element);
+			CSSBackgroundRenderer background(graphics, resources, element->computed_properties);
 			background.set_initial_containing_box(Rect(0, 0, used_to_actual(tree_node->containing_width.value), used_to_actual(tree_node->containing_height.value))); // Bug: this is wrong
 			background.set_content_box(content);
 			background.set_padding_box(padding_box);
 			background.set_border_box(border_box);
 			background.render();
 
-			CSSBorderRenderer border(graphics, resources, element);
+			CSSBorderRenderer border(graphics, resources, element->computed_properties);
 			border.set_border_box(border_box);
 			border.set_border_values(
 				cur->opening ? element->computed_properties.border_width_left.length.value : 0,

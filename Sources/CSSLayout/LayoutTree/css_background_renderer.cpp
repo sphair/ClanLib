@@ -35,8 +35,8 @@
 namespace clan
 {
 
-CSSBackgroundRenderer::CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, CSSBoxElement *element_node)
-: graphics(graphics), resource_cache(resource_cache), element_node(element_node), is_root(false)
+CSSBackgroundRenderer::CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSBoxProperties &computed_properties)
+: graphics(graphics), resource_cache(resource_cache), computed_properties(computed_properties), is_root(false)
 {
 }
 
@@ -67,16 +67,16 @@ void CSSBackgroundRenderer::set_is_root(bool new_is_root)
 
 void CSSBackgroundRenderer::render()
 {
-	if (computed_properties().background_color.type == CSSBoxBackgroundColor::type_color && computed_properties().background_color.color.a != 0.0f)
+	if (computed_properties.background_color.type == CSSBoxBackgroundColor::type_color && computed_properties.background_color.color.a != 0.0f)
 	{
-		Rect clip_box = get_clip_box(computed_properties().background_image.images.size()-1);
-		graphics->fill(clip_box, computed_properties().background_color.color);
+		Rect clip_box = get_clip_box(computed_properties.background_image.images.size()-1);
+		graphics->fill(clip_box, computed_properties.background_color.color);
 	}
 
-	for (size_t i = computed_properties().background_image.images.size(); i > 0; i--)
+	for (size_t i = computed_properties.background_image.images.size(); i > 0; i--)
 	{
 		size_t index = i-1;
-		Image &image = graphics->get_image(computed_properties().background_image.images[index].url);
+		Image &image = graphics->get_image(computed_properties.background_image.images[index].url);
 		if (!image.is_null())
 		{
 			Rect clip_box = get_clip_box(index);
@@ -354,51 +354,46 @@ Rect CSSBackgroundRenderer::get_origin_box(size_t index)
 	}
 }
 
-CSSBoxProperties &CSSBackgroundRenderer::computed_properties()
-{
-	return element_node->computed_properties;
-}
-
 CSSBoxBackgroundClip::ClipType CSSBackgroundRenderer::get_layer_clip(size_t index)
 {
-	size_t count = computed_properties().background_clip.values.size();
-	return computed_properties().background_clip.values[index % count];
+	size_t count = computed_properties.background_clip.values.size();
+	return computed_properties.background_clip.values[index % count];
 }
 
 CSSBoxBackgroundOrigin::OriginType CSSBackgroundRenderer::get_layer_origin(size_t index)
 {
-	size_t count = computed_properties().background_origin.values.size();
-	return computed_properties().background_origin.values[index % count];
+	size_t count = computed_properties.background_origin.values.size();
+	return computed_properties.background_origin.values[index % count];
 }
 
 CSSBoxBackgroundSize::Size CSSBackgroundRenderer::get_layer_size(size_t index)
 {
-	size_t count = computed_properties().background_size.values.size();
-	return computed_properties().background_size.values[index % count];
+	size_t count = computed_properties.background_size.values.size();
+	return computed_properties.background_size.values[index % count];
 }
 
 CSSBoxBackgroundPosition::Position CSSBackgroundRenderer::get_layer_position(size_t index)
 {
-	size_t count = computed_properties().background_position.positions.size();
-	return computed_properties().background_position.positions[index % count];
+	size_t count = computed_properties.background_position.positions.size();
+	return computed_properties.background_position.positions[index % count];
 }
 
 CSSBoxBackgroundAttachment::Attachment CSSBackgroundRenderer::get_layer_attachment(size_t index)
 {
-	size_t count = computed_properties().background_attachment.attachments.size();
-	return computed_properties().background_attachment.attachments[index % count];
+	size_t count = computed_properties.background_attachment.attachments.size();
+	return computed_properties.background_attachment.attachments[index % count];
 }
 
 CSSBoxBackgroundRepeat::RepeatStyle CSSBackgroundRenderer::get_layer_repeat_x(size_t index)
 {
-	size_t count = computed_properties().background_repeat.repeat_x.size();
-	return computed_properties().background_repeat.repeat_x[index % count];
+	size_t count = computed_properties.background_repeat.repeat_x.size();
+	return computed_properties.background_repeat.repeat_x[index % count];
 }
 
 CSSBoxBackgroundRepeat::RepeatStyle CSSBackgroundRenderer::get_layer_repeat_y(size_t index)
 {
-	size_t count = computed_properties().background_repeat.repeat_y.size();
-	return computed_properties().background_repeat.repeat_y[index % count];
+	size_t count = computed_properties.background_repeat.repeat_y.size();
+	return computed_properties.background_repeat.repeat_y[index % count];
 }
 
 /*

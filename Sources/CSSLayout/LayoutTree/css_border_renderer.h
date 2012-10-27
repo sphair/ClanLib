@@ -41,7 +41,7 @@ class CSSBoxElement;
 class CSSBorderRenderer
 {
 public:
-	CSSBorderRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, CSSBoxElement *element_node);
+	CSSBorderRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSBoxProperties &computed_properties);
 	void set_border_values(CSSUsedValue border_left, CSSUsedValue border_top, CSSUsedValue border_right, CSSUsedValue border_bottom);
 	void set_border_box(Rect border_box);
 	void render();
@@ -64,7 +64,7 @@ private:
 
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resource_cache;
-	CSSBoxElement *element_node;
+	const CSSBoxProperties &computed_properties;
 	Rect border_box;
 	CSSUsedValue border_left;
 	CSSUsedValue border_top;

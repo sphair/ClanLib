@@ -215,7 +215,7 @@ void CSSTableLayout::render_cell_non_content(CSSLayoutGraphics *graphics, CSSRes
 
 	Rect border_box = get_cell_border_box(row, col);
 
-	CSSBackgroundRenderer background(graphics, resources, cell->get_element_node());
+	CSSBackgroundRenderer background(graphics, resources, cell->get_element_node()->computed_properties);
 	background.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong
 	background.set_content_box(border_box); // Bug: this is wrong
 	background.set_padding_box(border_box); // Bug: this is wrong
@@ -659,14 +659,14 @@ void CSSTableLayout::render_layer_background(CSSLayoutGraphics *graphics, CSSRes
 	Rect content_box = padding_box;
 	content_box.shrink(used_to_actual(padding.left), used_to_actual(padding.top), used_to_actual(padding.right), used_to_actual(padding.bottom));
 
-	CSSBackgroundRenderer background(graphics, resources, element_node);
+	CSSBackgroundRenderer background(graphics, resources, element_node->computed_properties);
 	background.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong
 	background.set_content_box(content_box);
 	background.set_padding_box(padding_box);
 	background.set_border_box(border_box);
 	background.render();
 
-	CSSBorderRenderer border_renderer(graphics, resources, element_node);
+	CSSBorderRenderer border_renderer(graphics, resources, element_node->computed_properties);
 	border_renderer.set_border_values(border.left, border.top, border.right, border.bottom);
 	border_renderer.set_border_box(border_box);
 	border_renderer.render();
