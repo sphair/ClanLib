@@ -298,7 +298,7 @@ int CSSBorderRenderer::get_left_grid(const CSSBoxBorderImageWidth &border_image_
 {
 	if (border_image_width.value_left == CSSBoxBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_left * image_area_width);
-	else if (border_image_width.value_left == CSSBoxBorderImageWidth::value_type_percentage)
+	else if (border_image_width.value_left == CSSBoxBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_left * border_left);
 	else
 		return auto_width;
@@ -308,7 +308,7 @@ int CSSBorderRenderer::get_right_grid(const CSSBoxBorderImageWidth &border_image
 {
 	if (border_image_width.value_right == CSSBoxBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_right * image_area_width);
-	else if (border_image_width.value_right == CSSBoxBorderImageWidth::value_type_percentage)
+	else if (border_image_width.value_right == CSSBoxBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_right * border_right);
 	else
 		return auto_width;
@@ -318,7 +318,7 @@ int CSSBorderRenderer::get_top_grid(const CSSBoxBorderImageWidth &border_image_w
 {
 	if (border_image_width.value_top == CSSBoxBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_top * image_area_height);
-	else if (border_image_width.value_top == CSSBoxBorderImageWidth::value_type_percentage)
+	else if (border_image_width.value_top == CSSBoxBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_top * border_top);
 	else
 		return auto_height;
@@ -328,7 +328,7 @@ int CSSBorderRenderer::get_bottom_grid(const CSSBoxBorderImageWidth &border_imag
 {
 	if (border_image_width.value_bottom == CSSBoxBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_bottom * image_area_height);
-	else if (border_image_width.value_bottom == CSSBoxBorderImageWidth::value_type_percentage)
+	else if (border_image_width.value_bottom == CSSBoxBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_bottom * border_bottom);
 	else
 		return auto_height;

@@ -35,8 +35,8 @@ namespace clan
 
 CSSBoxBorderImageWidth::CSSBoxBorderImageWidth()
 : type(type_values),
-  value_top(value_type_percentage), value_right(value_type_percentage), value_bottom(value_type_percentage), value_left(value_type_percentage),
-  number_top(0.0f), number_right(0.0f), number_bottom(0.0f), number_left(0.0f),
+  value_top(value_type_number), value_right(value_type_number), value_bottom(value_type_number), value_left(value_type_number),
+  number_top(1.0f), number_right(1.0f), number_bottom(1.0f), number_left(1.0f),
   percentage_top(0.0f), percentage_right(0.0f), percentage_bottom(0.0f), percentage_left(0.0f)
 {
 }
