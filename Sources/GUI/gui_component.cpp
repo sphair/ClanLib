@@ -891,18 +891,6 @@ void GUIComponent::set_id(const std::string &name)
 	update_style();
 }
 
-void GUIComponent::update_style()
-{
-	GUIComponentSelectNode select_node(this);
-	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
-	impl->css_properties.apply_properties(properties);
-	if (impl->parent)
-		impl->css_properties.compute(&impl->parent->impl->css_properties, &impl->gui_manager_impl->resource_cache);
-	else
-		impl->css_properties.compute(0, &impl->gui_manager_impl->resource_cache);
-	impl->sig_style_changed.invoke(properties);
-}
-
 void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
 	for (size_t i = 0; i < impl->pseudo_classes.size(); i++)
@@ -924,6 +912,23 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 		update_style();
 		request_repaint();
 	}
+}
+
+void GUIComponent::update_style()
+{
+	GUIComponentSelectNode select_node(this);
+	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
+	impl->css_properties.apply_properties(properties);
+	if (impl->parent)
+		impl->css_properties.compute(&impl->parent->impl->css_properties, &impl->gui_manager_impl->resource_cache);
+	else
+		impl->css_properties.compute(0, &impl->gui_manager_impl->resource_cache);
+	impl->sig_style_changed.invoke(properties);
+}
+
+void GUIComponent::update_layout()
+{
+	get_top_level_component()->impl->layout_content();
 }
 
 void GUIComponent::set_enabled(bool enable)

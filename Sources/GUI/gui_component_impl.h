@@ -48,9 +48,6 @@ class GUILayout;
 
 class GUIComponent_Impl
 {
-/// \name Construction
-/// \{
-
 public:
 	GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &gui_manager_impl, GUIComponent *parent, bool toplevel);
 	~GUIComponent_Impl();
@@ -59,11 +56,6 @@ public:
 	static GUIComponent_Impl *create_from_owner(GUIComponent *owner);
 	static GUIComponent_Impl *create_from_manager(GUIManager *manager);
 
-/// \}
-/// \name Attributes
-/// \{
-
-public:
 	std::weak_ptr<GUIManager_Impl> gui_manager;
 
 	// We keep a second pointer to GUIComponent_Impl because the first one becomes null at shutdown,
@@ -123,22 +115,19 @@ public:
 
 	CSSBoxProperties css_properties;
 
-/// \}
-/// \name Operations
-/// \{
-
-public:
 	void set_geometry(Rect new_geometry, bool client_area);
 	void geometry_updated();
 	void invoke_enablemode_changed();
 
-/// \}
-/// \name Implementation
-/// \{
+	void layout_content();
+	void layout_clan_box();
+	void layout_clan_box_horizontal();
+	void layout_clan_box_vertical();
+	void layout_clan_grid();
+	void layout_clan_stacked();
 
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);
-/// \}
 };
 
 }

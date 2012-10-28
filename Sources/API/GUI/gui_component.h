@@ -451,6 +451,9 @@ public:
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
 
+	/// \brief Re-evaluates the geometry of the component
+	void update_layout();
+
 	/// \brief Sets the component as enabled or disabled.
 	void set_enabled(bool enable = true);
 
