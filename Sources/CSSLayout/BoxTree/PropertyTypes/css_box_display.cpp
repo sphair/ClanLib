@@ -131,6 +131,12 @@ std::string CSSBoxDisplay::to_string() const
 		return "none";
 	case type_inherit:
 		return "inherit";
+	case type_clan_box:
+		return "-clan-box";
+	case type_clan_grid:
+		return "-clan-grid";
+	case type_clan_stacked:
+		return "-clan-stacked";
 	}
 }
 

@@ -51,6 +51,7 @@
 #include "PropertyTypes/css_box_shadow.h"
 #include "PropertyTypes/css_box_bottom.h"
 #include "PropertyTypes/css_box_caption_side.h"
+#include "PropertyTypes/css_box_clan_box_direction.h"
 #include "PropertyTypes/css_box_clear.h"
 #include "PropertyTypes/css_box_clip.h"
 #include "PropertyTypes/css_box_color.h"
@@ -117,6 +118,7 @@ class CSSBoxProperties
 public:
 	CSSBoxDisplay display;
 	CSSBoxWhiteSpace white_space;
+	CSSBoxClanBoxDirection clan_box_direction;
 
 	CSSBoxMarginWidth margin_width_left;
 	CSSBoxMarginWidth margin_width_top;

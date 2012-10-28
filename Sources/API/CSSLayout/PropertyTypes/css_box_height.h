@@ -47,7 +47,8 @@ public:
 		type_percentage,
 		type_auto,
 		type_inherit,
-		type_clan_expanding
+		type_clan_expanding,
+		type_clan_shrink_to_fit
 	};
 	Type type;
 	CSSBoxLength length;

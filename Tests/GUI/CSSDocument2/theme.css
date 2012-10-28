@@ -1,25 +1,48 @@
 
 *
 {
-    font-family: "Batang", Sans-Serif;
+    font-family: "Segoe UI", Sans-Serif;
+    font-size: 12pt;
+    
     background-color: transparent;
+    
+    display: -clan-box;
+    -clan-box-direction: vertical;
 }
 
 .root
 {
-    font-size: 12px;
     background-color: gray;
 }
 
 ribbon
 {
+    -clan-box-direction: vertical;
+    width: -clan-expanding;
+    height: -clan-shrink-to-fit;
+    min-height: 117px;
     border-style: solid;
     border-width: 50px 8px 8px 8px;
     border-image: url('res:Ribbon') 50 8 8 8 fill;
 }
 
+ribbon-header
+{
+    -clan-box-direction: horizontal;
+    width: -clan-expanding;
+    height: 23px;
+/*
+    border-style: solid;
+    border-width: 22px 120px 0px 120px;
+    border-image: url('res:RibbonTabBackground') 22 120 0 120 fill;
+*/
+    background-color: #e1e6f6;
+}
+
 ribbon-menu-button
 {
+    width: 56px;
+    height: 22px;
     border-style: solid;
     border-width: 0px;
     border-image: url('res:RibbonMenuButton') 0 fill;
@@ -32,6 +55,9 @@ ribbon-menu-button:hot
 
 ribbon-tab
 {
+    width: -clan-shrink-to-fit;
+    height: -clan-expanding;
+    min-width: 50px;
 }
 
 ribbon-tab:selected
@@ -41,14 +67,11 @@ ribbon-tab:selected
     border-image: url('res:RibbonTab') 8 fill;
 }
 
-ribbon-tab-background
+ribbon-page
 {
-/*
-    border-style: solid;
-    border-width: 22px 120px 0px 120px;
-    border-image: url('res:RibbonTabBackground') 22 120 0 120 fill;
-*/
-    background-color: #e1e6f6;
+    -clan-box-direction: horizontal;
+    width: -clan-expanding;
+    height: -clan-shrink-to-fit;
 }
 
 ribbon-section
