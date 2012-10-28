@@ -30,7 +30,7 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon->set_tag_name("ribbon");
 
 	GUIComponent *ribbon_header = new GUIComponent(ribbon);
-	ribbon_header->set_tag_name("ribbon-tab-background");
+	ribbon_header->set_tag_name("ribbon-header");
 
 	GUIComponent *ribbon_menu_button = new GUIComponent(ribbon_header);
 	ribbon_menu_button->set_tag_name("ribbon-menu-button");

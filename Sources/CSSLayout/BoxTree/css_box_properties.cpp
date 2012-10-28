@@ -155,6 +155,7 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		border_spacing.compute(&parent->border_spacing, layout, em_size, ex_size);
 		vertical_align.compute(&parent->vertical_align, layout, em_size, ex_size, line_height);
 		visibility.compute(&parent->visibility, layout, em_size, ex_size);
+		clan_box_direction.compute(&parent->clan_box_direction, layout, em_size, ex_size);
 	}
 	else
 	{
@@ -257,6 +258,7 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		border_spacing.compute(0, layout, em_size, ex_size);
 		vertical_align.compute(0, layout, em_size, ex_size, line_height);
 		visibility.compute(0, layout, em_size, ex_size);
+		clan_box_direction.compute(0, layout, em_size, ex_size);
 	}
 }
 

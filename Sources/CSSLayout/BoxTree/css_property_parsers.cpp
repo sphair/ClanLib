@@ -61,6 +61,7 @@
 #include "PropertyParsers/css_parser_shadow.h"
 #include "PropertyParsers/css_parser_bottom.h"
 #include "PropertyParsers/css_parser_caption_side.h"
+#include "PropertyParsers/css_parser_clan_box_direction.h"
 #include "PropertyParsers/css_parser_clear.h"
 #include "PropertyParsers/css_parser_clip.h"
 #include "PropertyParsers/css_parser_color.h"
@@ -216,6 +217,7 @@ CSSPropertyParsers::CSSPropertyParsers()
 	add(new CSSParserWidth());
 	add(new CSSParserWordSpacing());
 	add(new CSSParserZIndex());
+	add(new CSSParserClanBoxDirection());
 }
 
 CSSPropertyParsers::~CSSPropertyParsers()
