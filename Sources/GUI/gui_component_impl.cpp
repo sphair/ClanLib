@@ -37,9 +37,6 @@
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// GUIComponent_Impl Construction:
-
 GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &init_gui_manager, GUIComponent *parent_or_owner, bool toplevel)
 : gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
@@ -105,13 +102,6 @@ GUIComponent_Impl::~GUIComponent_Impl()
 	gui_manager_impl->remove_component(this);
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// GUIComponent_Impl Attributes:
-
-
-/////////////////////////////////////////////////////////////////////////////
-// GUIComponent_Impl Operations:
-
 void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
 {
 	if (parent == 0)
@@ -168,9 +158,6 @@ void GUIComponent_Impl::invoke_enablemode_changed()
 	}
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// GUIComponent_Impl Implementation:
-
 Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::string &url)
 {
 	try
@@ -183,6 +170,208 @@ Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::stri
 		// Hmm what to do about that?
 		return Image();
 	}
+}
+
+void GUIComponent_Impl::layout_content()
+{
+	switch (css_properties.display.type)
+	{
+	case CSSBoxDisplay::type_clan_box:
+		layout_clan_box();
+		break;
+	case CSSBoxDisplay::type_clan_grid:
+		layout_clan_grid();
+		break;
+	case CSSBoxDisplay::type_clan_stacked:
+		layout_clan_stacked();
+		break;
+	default:
+		throw Exception("Unsupported display type for GUI components");
+	}
+
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
+		child->impl->layout_content();
+}
+
+void GUIComponent_Impl::layout_clan_box()
+{
+	// -clan-box layout places child boxes horizontally or vertically one after another
+	// -clan-box-direction controls the layout direction
+	// -clan-shrink-to-fit is the CSS algorithm used by float boxes and tables in auto width modes (find preferred box size, then shrink further if not enough space until the minimum size is reached)
+	// -clan-expanding expands to fit the containing box based on the rules set by the display property
+
+	if (css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_vertical)
+	{
+		layout_clan_box_vertical();
+	}
+	else if (css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_horizontal)
+	{
+		layout_clan_box_horizontal();
+	}
+	else
+	{
+		throw Exception("Unexpected CSS -clan-box-direction computed value");
+	}
+}
+
+void GUIComponent_Impl::layout_clan_box_horizontal()
+{
+	float content_used_width = 0.0f;
+	float expanding_multiplier_sum = 0.0f;
+	std::vector<float> child_used_widths;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
+	{
+		float child_used_width = 0.0f;
+		if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_shrink_to_fit || child->impl->css_properties.width.type == CSSBoxWidth::type_auto)
+		{
+			child_used_width += child->get_width(); // Should be child->get_shrink_to_fit_width()
+		}
+		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
+		{
+			child_used_width += child->get_width(); // Should be child->get_shrink_to_fit_width()
+			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+			expanding_multiplier_sum += child_multiplier;
+		}
+		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_percentage)
+		{
+			child_used_width += geometry.get_width() * child->impl->css_properties.width.percentage / 100.0f;
+		}
+		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_length)
+		{
+			child_used_width += child->impl->css_properties.width.length.value;
+		}
+		else
+		{
+			throw Exception("Unexpected CSS width computed value");
+		}
+
+		content_used_width += child_used_width;
+		child_used_widths.push_back(child_used_width);
+	}
+
+	float child_used_height = geometry.get_height(); // TBD: How should sizes behave in the perpendicular direction?
+
+	// Expand boxes marked with -clan-expanding
+	float expandable_width = geometry.get_width() - content_used_width;
+	if (expandable_width > 0.0f && expanding_multiplier_sum != 0.0f)
+	{
+		int i = 0;
+		for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+		{
+			if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
+			{
+				float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+				child_used_widths[i] += expandable_width * child_multiplier / expanding_multiplier_sum;
+			}
+		}
+	}
+
+	// Set the actual geometry
+	float x = 0.0f;
+	float y = 0.0f;
+	int i = 0;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+	{
+		if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
+		{
+			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+			child_used_widths[i] += expandable_width * child_multiplier / expanding_multiplier_sum;
+		}
+
+		// Used to actual mapping
+		int x1 = (int)x;
+		int y1 = (int)y;
+		int x2 = (int)(x + child_used_widths[i] + 0.5f);
+		int y2 = (int)(y + child_used_height + 0.5f);
+		child->set_geometry(Rect(x1, y1, x2, y2));
+
+		x += child_used_widths[i];
+	}
+}
+
+void GUIComponent_Impl::layout_clan_box_vertical()
+{
+	float content_used_height = 0.0f;
+	float expanding_multiplier_sum = 0.0f;
+	std::vector<float> child_used_heights;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
+	{
+		float child_used_height = 0.0f;
+		if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_shrink_to_fit || child->impl->css_properties.height.type == CSSBoxHeight::type_auto)
+		{
+			child_used_height += child->get_height(); // Should be child->get_shrink_to_fit_height()
+		}
+		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
+		{
+			child_used_height += child->get_height(); // Should be child->get_shrink_to_fit_height()
+			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+			expanding_multiplier_sum += child_multiplier;
+		}
+		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_percentage)
+		{
+			child_used_height += geometry.get_height() * child->impl->css_properties.height.percentage / 100.0f;
+		}
+		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_length)
+		{
+			child_used_height += child->impl->css_properties.height.length.value;
+		}
+		else
+		{
+			throw Exception("Unexpected CSS height computed value");
+		}
+
+		content_used_height += child_used_height;
+		child_used_heights.push_back(child_used_height);
+	}
+
+	float child_used_width = geometry.get_height(); // TBD: How should sizes behave in the perpendicular direction?
+
+	// Expand boxes marked with -clan-expanding
+	float expandable_height = geometry.get_height() - content_used_height;
+	if (expandable_height > 0.0f && expanding_multiplier_sum != 0.0f)
+	{
+		int i = 0;
+		for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+		{
+			if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
+			{
+				float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+				child_used_heights[i] += expandable_height * child_multiplier / expanding_multiplier_sum;
+			}
+		}
+	}
+
+	// Set the actual geometry
+	float x = 0.0f;
+	float y = 0.0f;
+	int i = 0;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+	{
+		if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
+		{
+			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
+			child_used_heights[i] += expandable_height * child_multiplier / expanding_multiplier_sum;
+		}
+
+		// Used to actual mapping
+		int x1 = (int)x;
+		int y1 = (int)y;
+		int x2 = (int)(x + child_used_width + 0.5f);
+		int y2 = (int)(y + child_used_heights[i] + 0.5f);
+		child->set_geometry(Rect(x1, y1, x2, y2));
+
+		y += child_used_heights[i];
+	}
+}
+
+void GUIComponent_Impl::layout_clan_grid()
+{
+	throw Exception("-clan-grid layout not implemented yet");
+}
+
+void GUIComponent_Impl::layout_clan_stacked()
+{
+	throw Exception("-clan-stacked layout not implemented yet");
 }
 
 }

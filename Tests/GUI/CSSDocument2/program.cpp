@@ -68,6 +68,8 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon_control_0->set_geometry(Rect(5, 5, 75, 5 + 22));
 	ribbon_control_1->set_geometry(Rect(5, 5, 75, 5 + 22));
 
+	root->update_layout();
+
 	gui.exec();
 
 	return 0;
