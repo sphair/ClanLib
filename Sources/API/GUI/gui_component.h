@@ -446,7 +446,7 @@ public:
 	void set_id(const std::string &name);
 
 	/// \brief Controls the presence of a DOM pseudo class
-	void set_pseudo_class(const std::string &name, bool enable) const;
+	void set_pseudo_class(const std::string &name, bool enable);
 
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();

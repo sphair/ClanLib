@@ -23,23 +23,50 @@ int Program::main(const std::vector<std::string> &args)
 	window_desc.set_allow_resize(true);
 
 	GUIComponent *root = new GUIComponent(&gui, window_desc);
-	root->set_tag_name("root");
+	root->set_class("root");
 	root->func_close().set(&Program::on_close, root);
-	GUIComponent *child1 = new GUIComponent(root);
-	child1->set_tag_name("child");
-	child1->set_id("child1");
-	GUIComponent *child11 = new GUIComponent(child1);
-	child11->set_tag_name("child");
-	child11->set_id("child11");
-	GUIComponent *child2 = new GUIComponent(root);
-	child2->set_tag_name("child");
-	child2->set_id("child2");
-	GUIComponent *child22 = new GUIComponent(child2);
-	child22->set_tag_name("child");
-	child22->set_id("child22");
-	GUIComponent *child23 = new GUIComponent(child2);
-	child23->set_tag_name("child");
-	child23->set_id("child23");
+
+	GUIComponent *ribbon = new GUIComponent(root);
+	ribbon->set_tag_name("ribbon");
+
+	GUIComponent *ribbon_header = new GUIComponent(ribbon);
+	ribbon_header->set_tag_name("ribbon-tab-background");
+
+	GUIComponent *ribbon_menu_button = new GUIComponent(ribbon_header);
+	ribbon_menu_button->set_tag_name("ribbon-menu-button");
+
+	GUIComponent *ribbon_page_tab_0 = new GUIComponent(ribbon_header);
+	ribbon_page_tab_0->set_tag_name("ribbon-tab");
+	ribbon_page_tab_0->set_pseudo_class("selected", true);
+
+	GUIComponent *ribbon_page_area = new GUIComponent(ribbon);
+	ribbon_page_area->set_tag_name("ribbon-page");
+
+	GUIComponent *ribbon_section_0 = new GUIComponent(ribbon_page_area);
+	ribbon_section_0->set_tag_name("ribbon-section");
+
+	GUIComponent *ribbon_section_1 = new GUIComponent(ribbon_page_area);
+	ribbon_section_1->set_tag_name("ribbon-section");
+
+	GUIComponent *ribbon_control_0 = new GUIComponent(ribbon_section_0);
+	ribbon_control_0->set_tag_name("button");
+
+	GUIComponent *ribbon_control_1 = new GUIComponent(ribbon_section_0);
+	ribbon_control_1->set_tag_name("button");
+	ribbon_control_1->set_class("big");
+
+	ribbon->set_geometry(Rect(0, 0, root->get_width(), 117));
+	ribbon_header->set_geometry(Rect(0, 0, root->get_width(), 22));
+	ribbon_page_area->set_geometry(Rect(0, 23, root->get_width(), 117 - 23));
+
+	ribbon_menu_button->set_geometry(Rect(0, 0, 56, 22));
+	ribbon_page_tab_0->set_geometry(Rect(56, 0, 56+56, 23));
+
+	ribbon_section_0->set_geometry(Rect(0, 5, 110, 117 - 23));
+	ribbon_section_1->set_geometry(Rect(110, 5, 210, 117 - 23));
+
+	ribbon_control_0->set_geometry(Rect(5, 5, 75, 5 + 22));
+	ribbon_control_1->set_geometry(Rect(5, 5, 75, 5 + 22));
 
 	gui.exec();
 
