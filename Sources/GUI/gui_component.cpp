@@ -900,19 +900,27 @@ void GUIComponent::update_style()
 	impl->sig_style_changed.invoke(properties);
 }
 
-void GUIComponent::set_pseudo_class(const std::string &name, bool enable) const
+void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
 	for (size_t i = 0; i < impl->pseudo_classes.size(); i++)
 	{
 		if (impl->pseudo_classes[i] == name)
 		{
 			if (!enable)
+			{
 				impl->pseudo_classes.erase(impl->pseudo_classes.begin() + i);
+				update_style();
+				request_repaint();
+			}
 			return;
 		}
 	}
 	if (enable)
+	{
 		impl->pseudo_classes.push_back(name);
+		update_style();
+		request_repaint();
+	}
 }
 
 void GUIComponent::set_enabled(bool enable)
