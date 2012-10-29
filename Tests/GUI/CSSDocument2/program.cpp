@@ -55,8 +55,6 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon_control_1->set_tag_name("button");
 	ribbon_control_1->set_class("big");
 
-//	ribbon->set_geometry(Rect(0, 0, root->get_width(), 117));
-
 	root->update_layout();
 
 	gui.exec();
