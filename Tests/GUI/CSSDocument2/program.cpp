@@ -55,18 +55,7 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon_control_1->set_tag_name("button");
 	ribbon_control_1->set_class("big");
 
-	ribbon->set_geometry(Rect(0, 0, root->get_width(), 117));
-	ribbon_header->set_geometry(Rect(0, 0, root->get_width(), 22));
-	ribbon_page_area->set_geometry(Rect(0, 23, root->get_width(), 117 - 23));
-
-	ribbon_menu_button->set_geometry(Rect(0, 0, 56, 22));
-	ribbon_page_tab_0->set_geometry(Rect(56, 0, 56+56, 23));
-
-	ribbon_section_0->set_geometry(Rect(0, 5, 110, 117 - 23));
-	ribbon_section_1->set_geometry(Rect(110, 5, 210, 117 - 23));
-
-	ribbon_control_0->set_geometry(Rect(5, 5, 75, 5 + 22));
-	ribbon_control_1->set_geometry(Rect(5, 5, 75, 5 + 22));
+//	ribbon->set_geometry(Rect(0, 0, root->get_width(), 117));
 
 	root->update_layout();
 

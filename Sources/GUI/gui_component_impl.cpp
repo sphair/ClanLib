@@ -33,6 +33,7 @@
 #include "API/Display/2D/image.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
+#include "css_clan_box_math.h"
 
 namespace clan
 {
@@ -216,55 +217,52 @@ void GUIComponent_Impl::layout_clan_box()
 
 void GUIComponent_Impl::layout_clan_box_horizontal()
 {
-	float content_used_width = 0.0f;
-	float expanding_multiplier_sum = 0.0f;
-	std::vector<float> child_used_widths;
+	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		float child_used_width = 0.0f;
 		if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_shrink_to_fit || child->impl->css_properties.width.type == CSSBoxWidth::type_auto)
 		{
-			child_used_width += child->get_width(); // Should be child->get_shrink_to_fit_width()
+			box_math.used_min_lengths.push_back(child->get_min_width());
+			box_math.used_lengths.push_back(child->get_preferred_width());
+			box_math.used_max_lengths.push_back(child->get_max_width());
+			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
+			box_math.used_expand_weights.push_back(0.0f); // Should be fetched from a -clan-expand-weight
 		}
 		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
 		{
-			child_used_width += child->get_width(); // Should be child->get_shrink_to_fit_width()
-			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-			expanding_multiplier_sum += child_multiplier;
+			box_math.used_min_lengths.push_back(child->get_min_width());
+			box_math.used_lengths.push_back(child->get_preferred_width());
+			box_math.used_max_lengths.push_back(child->get_max_width());
+			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
+			box_math.used_expand_weights.push_back(1.0f); // Should be fetched from a -clan-expand-weight
 		}
 		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_percentage)
 		{
-			child_used_width += geometry.get_width() * child->impl->css_properties.width.percentage / 100.0f;
+			float child_used_width = geometry.get_width() * child->impl->css_properties.width.percentage / 100.0f;
+			box_math.used_min_lengths.push_back(child->get_min_width());
+			box_math.used_lengths.push_back(child_used_width);
+			box_math.used_max_lengths.push_back(child->get_max_width());
+			box_math.used_shrink_weights.push_back(0.0f);
+			box_math.used_expand_weights.push_back(0.0f);
 		}
 		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_length)
 		{
-			child_used_width += child->impl->css_properties.width.length.value;
+			float child_used_width = child->impl->css_properties.width.length.value;
+			box_math.used_min_lengths.push_back(child->get_min_width());
+			box_math.used_lengths.push_back(child_used_width);
+			box_math.used_max_lengths.push_back(child->get_max_width());
+			box_math.used_shrink_weights.push_back(0.0f);
+			box_math.used_expand_weights.push_back(0.0f);
 		}
 		else
 		{
 			throw Exception("Unexpected CSS width computed value");
 		}
-
-		content_used_width += child_used_width;
-		child_used_widths.push_back(child_used_width);
 	}
+
+	box_math.adjust(geometry.get_width());
 
 	float child_used_height = geometry.get_height(); // TBD: How should sizes behave in the perpendicular direction?
-
-	// Expand boxes marked with -clan-expanding
-	float expandable_width = geometry.get_width() - content_used_width;
-	if (expandable_width > 0.0f && expanding_multiplier_sum != 0.0f)
-	{
-		int i = 0;
-		for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
-		{
-			if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
-			{
-				float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-				child_used_widths[i] += expandable_width * child_multiplier / expanding_multiplier_sum;
-			}
-		}
-	}
 
 	// Set the actual geometry
 	float x = 0.0f;
@@ -272,74 +270,64 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
-		if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
-		{
-			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-			child_used_widths[i] += expandable_width * child_multiplier / expanding_multiplier_sum;
-		}
-
 		// Used to actual mapping
 		int x1 = (int)x;
 		int y1 = (int)y;
-		int x2 = (int)(x + child_used_widths[i] + 0.5f);
+		int x2 = (int)(x + box_math.used_lengths[i] + 0.5f);
 		int y2 = (int)(y + child_used_height + 0.5f);
 		child->set_geometry(Rect(x1, y1, x2, y2));
 
-		x += child_used_widths[i];
+		x += box_math.used_lengths[i];
 	}
 }
 
 void GUIComponent_Impl::layout_clan_box_vertical()
 {
-	float content_used_height = 0.0f;
-	float expanding_multiplier_sum = 0.0f;
-	std::vector<float> child_used_heights;
+	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		float child_used_height = 0.0f;
 		if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_shrink_to_fit || child->impl->css_properties.height.type == CSSBoxHeight::type_auto)
 		{
-			child_used_height += child->get_height(); // Should be child->get_shrink_to_fit_height()
+			box_math.used_min_lengths.push_back(child->get_min_height());
+			box_math.used_lengths.push_back(child->get_preferred_height());
+			box_math.used_max_lengths.push_back(child->get_max_height());
+			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
+			box_math.used_expand_weights.push_back(0.0f); // Should be fetched from a -clan-expand-weight
 		}
 		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
 		{
-			child_used_height += child->get_height(); // Should be child->get_shrink_to_fit_height()
-			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-			expanding_multiplier_sum += child_multiplier;
+			box_math.used_min_lengths.push_back(child->get_min_height());
+			box_math.used_lengths.push_back(child->get_preferred_height());
+			box_math.used_max_lengths.push_back(child->get_max_height());
+			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
+			box_math.used_expand_weights.push_back(1.0f); // Should be fetched from a -clan-expand-weight
 		}
 		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_percentage)
 		{
-			child_used_height += geometry.get_height() * child->impl->css_properties.height.percentage / 100.0f;
+			float child_used_height = geometry.get_height() * child->impl->css_properties.height.percentage / 100.0f;
+			box_math.used_min_lengths.push_back(child->get_min_height());
+			box_math.used_lengths.push_back(child_used_height);
+			box_math.used_max_lengths.push_back(child->get_max_height());
+			box_math.used_shrink_weights.push_back(0.0f);
+			box_math.used_expand_weights.push_back(0.0f);
 		}
 		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_length)
 		{
-			child_used_height += child->impl->css_properties.height.length.value;
+			float child_used_height = child->impl->css_properties.height.length.value;
+			box_math.used_min_lengths.push_back(child->get_min_height());
+			box_math.used_lengths.push_back(child_used_height);
+			box_math.used_max_lengths.push_back(child->get_max_height());
+			box_math.used_shrink_weights.push_back(0.0f);
+			box_math.used_expand_weights.push_back(0.0f);
 		}
 		else
 		{
 			throw Exception("Unexpected CSS height computed value");
 		}
-
-		content_used_height += child_used_height;
-		child_used_heights.push_back(child_used_height);
 	}
 
-	float child_used_width = geometry.get_height(); // TBD: How should sizes behave in the perpendicular direction?
-
-	// Expand boxes marked with -clan-expanding
-	float expandable_height = geometry.get_height() - content_used_height;
-	if (expandable_height > 0.0f && expanding_multiplier_sum != 0.0f)
-	{
-		int i = 0;
-		for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
-		{
-			if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
-			{
-				float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-				child_used_heights[i] += expandable_height * child_multiplier / expanding_multiplier_sum;
-			}
-		}
-	}
+	box_math.adjust(geometry.get_height());
+	float child_used_width = geometry.get_width(); // TBD: How should sizes behave in the perpendicular direction?
 
 	// Set the actual geometry
 	float x = 0.0f;
@@ -347,20 +335,14 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
-		if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
-		{
-			float child_multiplier = 1.0f; // Should be fetched from a -clan-expanding-multiplier property
-			child_used_heights[i] += expandable_height * child_multiplier / expanding_multiplier_sum;
-		}
-
 		// Used to actual mapping
 		int x1 = (int)x;
 		int y1 = (int)y;
 		int x2 = (int)(x + child_used_width + 0.5f);
-		int y2 = (int)(y + child_used_heights[i] + 0.5f);
+		int y2 = (int)(y + box_math.used_lengths[i] + 0.5f);
 		child->set_geometry(Rect(x1, y1, x2, y2));
 
-		y += child_used_heights[i];
+		y += box_math.used_lengths[i];
 	}
 }
 
