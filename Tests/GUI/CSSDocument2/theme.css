@@ -19,7 +19,8 @@ ribbon
 {
     -clan-box-direction: vertical;
     width: -clan-expanding;
-    height: -clan-shrink-to-fit;
+    /*height: -clan-shrink-to-fit;*/
+    height: 117px;
     min-height: 117px;
     border-style: solid;
     border-width: 50px 8px 8px 8px;
@@ -55,8 +56,10 @@ ribbon-menu-button:hot
 
 ribbon-tab
 {
-    width: -clan-shrink-to-fit;
-    height: -clan-expanding;
+    /*width: -clan-shrink-to-fit;
+    height: -clan-expanding;*/
+    width: 56px;
+    height: 23px;
     min-width: 50px;
 }
 
@@ -79,12 +82,17 @@ ribbon-section
     border-style: solid;
     border-width: 24px 8px 16px 8px;
     border-image: url('res:RibbonSection') 24 8 16 8 fill;
+    width: 110px;
+    height: -clan-expanding;
 }
 
 ribbon-section button
 {
     border-style: none;
     border-width: 4px;
+    
+    width: 75px;
+    height: 22px;
 }
 
 ribbon-section button:hot, ribbon-section button:toggled:hot

@@ -284,14 +284,23 @@ public:
 	/// \brief Return the component under 'point', in local viewport coordinates.
 	GUIComponent *get_component_at(const Point &point);
 
-	/// \brief Returns the preferred size of a render box.
-	virtual Size get_preferred_size() const;
+	/// \brief Returns the preferred width
+	float get_preferred_width() const;
 
-	/// \brief Returns the preferred width of a render box.
-	int get_preferred_width() const;
+	/// \brief Returns the preferred height
+	float get_preferred_height() const;
 
-	/// \brief Returns the preferred height of a render box.
-	int get_preferred_height() const;
+	/// \brief Returns the minimum width
+	float get_min_width() const;
+
+	/// \brief Returns the minumum height
+	float get_min_height() const;
+
+	/// \brief Returns the maximum width
+	float get_max_width() const;
+
+	/// \brief Returns the maximum height
+	float get_max_height() const;
 
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	Point window_to_component_coords(const Point &window_point) const;
