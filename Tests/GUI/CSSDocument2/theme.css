@@ -19,8 +19,7 @@ ribbon
 {
     -clan-box-direction: vertical;
     width: -clan-expanding;
-    /*height: -clan-shrink-to-fit;*/
-    height: 117px;
+    height: -clan-shrink-to-fit;
     min-height: 117px;
     border-style: solid;
     border-width: 50px 8px 8px 8px;
