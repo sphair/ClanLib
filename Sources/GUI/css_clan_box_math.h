@@ -30,6 +30,9 @@
 
 #include "API/CSSLayout/css_box_properties.h"
 
+namespace clan
+{
+
 class CSSClanBoxMath
 {
 public:
@@ -41,11 +44,20 @@ public:
 
 	void adjust(float used_content_length)
 	{
+		clamp_lengths();
 		float available_space = find_sum(used_lengths) - used_content_length;
 		if (available_space > 0.0f)
 			expand_lengths(available_space);
 		else if (available_space < -0.0f)
 			shrink_lengths(available_space);
+	}
+
+	void clamp_lengths()
+	{
+		for (size_t i = 0; i < used_lengths.size(); i++)
+		{
+			used_lengths[i] = clamp(used_lengths[i], used_min_lengths[i], used_max_lengths[i]);
+		}
 	}
 
 	void expand_lengths(float available_space)
@@ -110,3 +122,5 @@ public:
 		return sum;
 	}
 };
+
+}
