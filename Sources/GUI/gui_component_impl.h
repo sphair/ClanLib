@@ -128,6 +128,8 @@ public:
 
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);
+
+	void on_process_message(GUIMessage &msg);
 };
 
 }
