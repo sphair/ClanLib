@@ -30,9 +30,11 @@
 #include "GUI/precomp.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component.h"
+#include "API/GUI/gui_message_pointer.h"
 #include "API/Display/2D/image.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
+#include "gui_css_strings.h"
 #include "css_clan_box_math.h"
 
 namespace clan
@@ -59,6 +61,8 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 		css_layout.set_root_element(css_element);
 		css_layout.func_get_image().set(this, &GUIComponent_Impl::on_css_layout_get_image);
 	}
+
+	func_process_message.set(this, &GUIComponent_Impl::on_process_message);
 }
 
 GUIComponent_Impl *GUIComponent_Impl::create_from_parent(GUIComponent *parent)
@@ -328,6 +332,24 @@ void GUIComponent_Impl::layout_clan_grid()
 void GUIComponent_Impl::layout_clan_stacked()
 {
 	throw Exception("-clan-stacked layout not implemented yet");
+}
+
+void GUIComponent_Impl::on_process_message(GUIMessage &msg)
+{
+	if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	{
+		GUIMessage_Pointer pointer = msg;
+		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		{
+			component->set_pseudo_class(CssStr::hot, true);
+			msg.set_consumed();
+		}
+		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		{
+			component->set_pseudo_class(CssStr::hot, false);
+			msg.set_consumed();
+		}
+	}
 }
 
 }
