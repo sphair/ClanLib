@@ -50,10 +50,6 @@ void CSSParserHeight::parse(CSSBoxProperties &properties, const std::string &nam
 			properties.height.type = CSSBoxHeight::type_auto;
 		else if (equals(token.value, "inherit"))
 			properties.height.type = CSSBoxHeight::type_inherit;
-		else if (equals(token.value, "-clan-expanding"))
-			properties.height.type = CSSBoxHeight::type_clan_expanding;
-		else if (equals(token.value, "-clan-shrink-to-fit"))
-			properties.height.type = CSSBoxHeight::type_clan_shrink_to_fit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
