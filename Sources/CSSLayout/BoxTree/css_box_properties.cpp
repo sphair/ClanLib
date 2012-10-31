@@ -156,6 +156,10 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		vertical_align.compute(&parent->vertical_align, layout, em_size, ex_size, line_height);
 		visibility.compute(&parent->visibility, layout, em_size, ex_size);
 		clan_box_direction.compute(&parent->clan_box_direction, layout, em_size, ex_size);
+		clan_box_width_expand_factor.compute(&parent->clan_box_width_expand_factor, layout, em_size, ex_size);
+		clan_box_height_expand_factor.compute(&parent->clan_box_height_expand_factor, layout, em_size, ex_size);
+		clan_box_width_shrink_factor.compute(&parent->clan_box_width_shrink_factor, layout, em_size, ex_size);
+		clan_box_height_shrink_factor.compute(&parent->clan_box_height_shrink_factor, layout, em_size, ex_size);
 	}
 	else
 	{
@@ -259,6 +263,10 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		vertical_align.compute(0, layout, em_size, ex_size, line_height);
 		visibility.compute(0, layout, em_size, ex_size);
 		clan_box_direction.compute(0, layout, em_size, ex_size);
+		clan_box_width_expand_factor.compute(0, layout, em_size, ex_size);
+		clan_box_height_expand_factor.compute(0, layout, em_size, ex_size);
+		clan_box_width_shrink_factor.compute(0, layout, em_size, ex_size);
+		clan_box_height_shrink_factor.compute(0, layout, em_size, ex_size);
 	}
 }
 

@@ -578,8 +578,6 @@ float GUIComponent::get_preferred_width() const
 	switch (impl->css_properties.width.type)
 	{
 	case CSSBoxWidth::type_auto:
-	case CSSBoxWidth::type_clan_expanding:
-	case CSSBoxWidth::type_clan_shrink_to_fit:
 		// To do: determine this based on impl->css_properties.display.type
 		return impl->geometry.get_width();
 	default:
@@ -598,8 +596,6 @@ float GUIComponent::get_preferred_height() const
 	switch (impl->css_properties.height.type)
 	{
 	case CSSBoxHeight::type_auto:
-	case CSSBoxHeight::type_clan_expanding:
-	case CSSBoxHeight::type_clan_shrink_to_fit:
 		// To do: determine this based on impl->css_properties.display.type
 		return impl->geometry.get_height();
 	default:

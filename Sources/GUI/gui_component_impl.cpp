@@ -220,43 +220,30 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_shrink_to_fit || child->impl->css_properties.width.type == CSSBoxWidth::type_auto)
+		box_math.used_min_lengths.push_back(child->get_min_width());
+		box_math.used_lengths.push_back(child->get_preferred_width());
+		box_math.used_max_lengths.push_back(child->get_max_width());
+
+		switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
 		{
-			box_math.used_min_lengths.push_back(child->get_min_width());
-			box_math.used_lengths.push_back(child->get_preferred_width());
-			box_math.used_max_lengths.push_back(child->get_max_width());
-			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
-			box_math.used_expand_weights.push_back(0.0f); // Should be fetched from a -clan-expand-weight
-		}
-		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_clan_expanding)
-		{
-			box_math.used_min_lengths.push_back(child->get_min_width());
-			box_math.used_lengths.push_back(child->get_preferred_width());
-			box_math.used_max_lengths.push_back(child->get_max_width());
-			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
-			box_math.used_expand_weights.push_back(1.0f); // Should be fetched from a -clan-expand-weight
-		}
-		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_percentage)
-		{
-			float child_used_width = geometry.get_width() * child->impl->css_properties.width.percentage / 100.0f;
-			box_math.used_min_lengths.push_back(child->get_min_width());
-			box_math.used_lengths.push_back(child_used_width);
-			box_math.used_max_lengths.push_back(child->get_max_width());
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
 			box_math.used_shrink_weights.push_back(0.0f);
-			box_math.used_expand_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
+			break;
 		}
-		else if (child->impl->css_properties.width.type == CSSBoxWidth::type_length)
+
+		switch (child->impl->css_properties.clan_box_width_expand_factor.type)
 		{
-			float child_used_width = child->impl->css_properties.width.length.value;
-			box_math.used_min_lengths.push_back(child->get_min_width());
-			box_math.used_lengths.push_back(child_used_width);
-			box_math.used_max_lengths.push_back(child->get_max_width());
-			box_math.used_shrink_weights.push_back(0.0f);
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
 			box_math.used_expand_weights.push_back(0.0f);
-		}
-		else
-		{
-			throw Exception("Unexpected CSS width computed value");
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
+			break;
 		}
 	}
 
@@ -286,43 +273,30 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_shrink_to_fit || child->impl->css_properties.height.type == CSSBoxHeight::type_auto)
+		box_math.used_min_lengths.push_back(child->get_min_height());
+		box_math.used_lengths.push_back(child->get_preferred_height());
+		box_math.used_max_lengths.push_back(child->get_max_height());
+
+		switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
 		{
-			box_math.used_min_lengths.push_back(child->get_min_height());
-			box_math.used_lengths.push_back(child->get_preferred_height());
-			box_math.used_max_lengths.push_back(child->get_max_height());
-			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
-			box_math.used_expand_weights.push_back(0.0f); // Should be fetched from a -clan-expand-weight
-		}
-		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_clan_expanding)
-		{
-			box_math.used_min_lengths.push_back(child->get_min_height());
-			box_math.used_lengths.push_back(child->get_preferred_height());
-			box_math.used_max_lengths.push_back(child->get_max_height());
-			box_math.used_shrink_weights.push_back(1.0f); // Should be fetched from a -clan-shrink-weight
-			box_math.used_expand_weights.push_back(1.0f); // Should be fetched from a -clan-expand-weight
-		}
-		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_percentage)
-		{
-			float child_used_height = geometry.get_height() * child->impl->css_properties.height.percentage / 100.0f;
-			box_math.used_min_lengths.push_back(child->get_min_height());
-			box_math.used_lengths.push_back(child_used_height);
-			box_math.used_max_lengths.push_back(child->get_max_height());
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
 			box_math.used_shrink_weights.push_back(0.0f);
-			box_math.used_expand_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
+			break;
 		}
-		else if (child->impl->css_properties.height.type == CSSBoxHeight::type_length)
+
+		switch (child->impl->css_properties.clan_box_height_expand_factor.type)
 		{
-			float child_used_height = child->impl->css_properties.height.length.value;
-			box_math.used_min_lengths.push_back(child->get_min_height());
-			box_math.used_lengths.push_back(child_used_height);
-			box_math.used_max_lengths.push_back(child->get_max_height());
-			box_math.used_shrink_weights.push_back(0.0f);
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
 			box_math.used_expand_weights.push_back(0.0f);
-		}
-		else
-		{
-			throw Exception("Unexpected CSS height computed value");
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
+			break;
 		}
 	}
 

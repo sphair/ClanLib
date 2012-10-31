@@ -50,10 +50,6 @@ void CSSParserWidth::parse(CSSBoxProperties &properties, const std::string &name
 			properties.width.type = CSSBoxWidth::type_auto;
 		else if (equals(token.value, "inherit"))
 			properties.width.type = CSSBoxWidth::type_inherit;
-		else if (equals(token.value, "-clan-expanding"))
-			properties.width.type = CSSBoxWidth::type_clan_expanding;
-		else if (equals(token.value, "-clan-shrink-to-fit"))
-			properties.width.type = CSSBoxWidth::type_clan_shrink_to_fit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{

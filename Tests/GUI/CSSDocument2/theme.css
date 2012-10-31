@@ -18,8 +18,7 @@
 ribbon
 {
     -clan-box-direction: vertical;
-    width: -clan-expanding;
-    height: -clan-shrink-to-fit;
+    -clan-box-height-expand-factor: 1;
     min-height: 117px;
     border-style: solid;
     border-width: 50px 8px 8px 8px;
@@ -29,7 +28,8 @@ ribbon
 ribbon-header
 {
     -clan-box-direction: horizontal;
-    width: -clan-expanding;
+    -clan-box-width-expand-factor: 1;
+   
     height: 23px;
 /*
     border-style: solid;
@@ -58,8 +58,6 @@ ribbon-menu-button:hot
 
 ribbon-tab
 {
-    /*width: -clan-shrink-to-fit;
-    height: -clan-expanding;*/
     width: 56px;
     height: 23px;
     min-width: 50px;
@@ -75,17 +73,19 @@ ribbon-tab:selected
 ribbon-page
 {
     -clan-box-direction: horizontal;
-    width: -clan-expanding;
-    height: 94px;
+    -clan-box-height-shrink-factor: 1;
+    -clan-box-height-expand-factor: 1;
+/*    height: 94px;*/
 }
 
 ribbon-section
 {
+    -clan-box-height-shrink-factor: 1;
+    -clan-box-height-expand-factor: 1;
     border-style: solid;
     border-width: 24px 8px 16px 8px;
     border-image: url('res:RibbonSection') 24 8 16 8 fill;
     width: 110px;
-    height: -clan-expanding;
 }
 
 ribbon-section button

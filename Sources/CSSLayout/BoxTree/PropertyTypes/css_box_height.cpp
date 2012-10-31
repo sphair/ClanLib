@@ -76,8 +76,6 @@ std::string CSSBoxHeight::to_string() const
 		return "auto";
 	case type_inherit:
 		return "inherit";
-	case type_clan_expanding:
-		return "-clan-expanding";
 	}
 }
 
