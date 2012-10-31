@@ -18,8 +18,9 @@
 ribbon
 {
     -clan-box-direction: vertical;
-    -clan-box-height-expand-factor: 1;
-    min-height: 117px;
+    -clan-box-height-shrink-factor: 0;
+    -clan-box-height-expand-factor: 0;
+    height: 117px;
     border-style: solid;
     border-width: 50px 8px 8px 8px;
     border-image: url('res:Ribbon') 50 8 8 8 fill;

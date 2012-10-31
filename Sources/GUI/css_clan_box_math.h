@@ -45,7 +45,7 @@ public:
 	void adjust(float used_content_length)
 	{
 		clamp_lengths();
-		float available_space = find_sum(used_lengths) - used_content_length;
+		float available_space = used_content_length - find_sum(used_lengths);
 		if (available_space > 0.0f)
 			expand_lengths(available_space);
 		else if (available_space < -0.0f)
@@ -73,10 +73,12 @@ public:
 				if (used_lengths[i] + expand_length >= used_max_lengths[i])
 				{
 					expand_length = used_max_lengths[i] - used_lengths[i];
+					used_lengths[i] = used_max_lengths[i];
 				}
 				else
 				{
 					new_weight_sum += used_expand_weights[i];
+					used_lengths[i] += expand_length;
 				}
 				expand_length_sum += expand_length;
 			}
@@ -100,10 +102,12 @@ public:
 				if (used_lengths[i] + shrink_length <= used_min_lengths[i])
 				{
 					shrink_length = used_min_lengths[i] - used_lengths[i];
+					used_lengths[i] = used_min_lengths[i];
 				}
 				else
 				{
 					new_weight_sum += used_shrink_weights[i];
+					used_lengths[i] += shrink_length;
 				}
 				shrink_length_sum += shrink_length;
 			}
