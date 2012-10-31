@@ -25,6 +25,7 @@ int Program::main(const std::vector<std::string> &args)
 	GUIComponent *root = new GUIComponent(&gui, window_desc);
 	root->set_class("root");
 	root->func_close().set(&Program::on_close, root);
+	root->func_resized().set(&Program::on_resized, root);
 
 	GUIComponent *ribbon = new GUIComponent(root);
 	ribbon->set_tag_name("ribbon");
@@ -66,4 +67,9 @@ bool Program::on_close(GUIComponent *component)
 {
 	component->exit_with_code(0);
 	return true;
+}
+
+void Program::on_resized(GUIComponent *component)
+{
+	component->update_layout();
 }
