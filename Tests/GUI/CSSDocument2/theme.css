@@ -96,9 +96,6 @@ ribbon-section button
     
     width: 75px;
     height: 22px;
-    
-    border-style: solid;
-    border-image: url('res:RibbonButtonHot') 1 8 fill;
 }
 
 ribbon-section button:hot, ribbon-section button:toggled:hot
