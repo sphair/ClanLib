@@ -503,6 +503,10 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 
 	Size display_size = get_display_window_size();
 
+	cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
+	cl1PixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
+	cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
+	cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
 	cl1ReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), format, type, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;
