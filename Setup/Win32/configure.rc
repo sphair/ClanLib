@@ -17,13 +17,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Danish resources
+// Danish (Denmark) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DAN)
-#ifdef _WIN32
 LANGUAGE LANG_DANISH, SUBLANG_DEFAULT
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -66,18 +64,16 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Danish resources
+#endif    // Danish (Denmark) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -143,8 +139,8 @@ CAPTION "ClanLib Setup Wizard"
 FONT 8, "Tahoma", 400, 0, 0x0
 BEGIN
     LTEXT           "Select the development environment to generate project files for:",IDC_STATIC,7,7,303,8
-    CONTROL         "Visual C++ .NET 200&8 (9.0)",IDC_RADIO_VC90,"Button",BS_AUTORADIOBUTTON,16,34,105,10
-    CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON,16,48,105,10
+    CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON,16,31,105,10
+    CONTROL         "Visual C++ .NET 20&12 (11.0)",IDC_RADIO_VC110,"Button",BS_AUTORADIOBUTTON,16,45,105,10
     CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,76,173,10
     CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
@@ -159,13 +155,14 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,128,173,10
 END
 
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // DESIGNINFO
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_WELCOME_PAGE, DIALOG
     BEGIN
@@ -262,17 +259,17 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_PROPSHT_CAPTION     "Wizard"
 END
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     AFX_IDS_APP_TITLE       "ClanLib Configure"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

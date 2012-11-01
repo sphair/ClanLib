@@ -145,22 +145,11 @@ BOOL Wizard::finish()
 
 	Workspace workspace = create_workspace();
 
-	if(page_target.target_version == 900)
-	{
-		WorkspaceGenerator_MSVC8 generator8;
-		generator8.set_target_version(page_target.target_version);
-		generator8.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
-		generator8.enable_configurations(page_target.include_mtdll, page_target.include_dll);
-		generator8.write(workspace);
-	}
-	else if(page_target.target_version == 1000)
-	{
-		WorkspaceGenerator_MSVC8 generator10;
-		generator10.set_target_version(page_target.target_version);
-		generator10.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
-		generator10.enable_configurations(page_target.include_mtdll, page_target.include_dll);
-		generator10.write(workspace);
-	}
+	WorkspaceGenerator_MSVC8 generator;
+	generator.set_target_version(page_target.target_version);
+	generator.set_platforms(true, page_target.include_x64, page_target.include_sse2, page_target.include_intrinsics, page_target.enable_debug_optimize, page_target.enable_whole_program_optimize);
+	generator.enable_configurations(page_target.include_mtdll, page_target.include_dll);
+	generator.write(workspace);
 
 	return TRUE;
 }
