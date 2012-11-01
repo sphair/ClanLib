@@ -142,7 +142,7 @@ void RibbonMenu::on_resized()
 	request_repaint();
 }
 
-void RibbonMenu::on_filter_message(GUIMessage &message)
+void RibbonMenu::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
 	if (running)
 	{
@@ -163,7 +163,7 @@ void RibbonMenu::on_filter_message(GUIMessage &message)
 	}
 }
 
-void RibbonMenu::on_filter_input_message(GUIMessage_Input &message)
+void RibbonMenu::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
 {
 	InputEvent e = message.get_event();
 

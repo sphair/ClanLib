@@ -395,20 +395,20 @@ void GUIComponent_Impl::layout_clan_stacked()
 	throw Exception("-clan-stacked layout not implemented yet");
 }
 
-void GUIComponent_Impl::on_process_message(GUIMessage &msg)
+void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			component->set_pseudo_class(CssStr::hot, true);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
-		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 		{
 			component->set_pseudo_class(CssStr::hot, false);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 	}
 }

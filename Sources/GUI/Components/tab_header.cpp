@@ -59,7 +59,7 @@ public:
 		prop_first_tab_x_offset = GUIThemePartProperty(CssStr::first_tab_x_offset, "0");
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_style_changed();
 	void unselect_all();
@@ -214,7 +214,7 @@ Callback_v1<TabPage*> &TabHeader::func_page_selected()
 /////////////////////////////////////////////////////////////////////////////
 // TabHeader Implementation:
 
-void TabHeader_Impl::on_process_message(GUIMessage &msg)
+void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if(component->is_enabled())
 	{

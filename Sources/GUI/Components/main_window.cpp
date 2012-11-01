@@ -50,7 +50,7 @@ namespace clan
 class MainWindow_Impl
 {
 public:
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
@@ -185,7 +185,7 @@ void MainWindow::set_title(const std::string &str)
 /////////////////////////////////////////////////////////////////////////////
 // MainWindow Implementation:
 
-void MainWindow_Impl::on_process_message(GUIMessage &msg)
+void MainWindow_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Close::get_type_name()))
 	{

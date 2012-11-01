@@ -246,9 +246,9 @@ void GUIManager_Impl::gain_focus(GUIComponent *component)
 		{
 			GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
 
-			GUIMessage_FocusChange message;
-			message.set_target(toplevel_window->focused_component);
-			message.set_focus_type(GUIMessage_FocusChange::losing_focus);
+			std::shared_ptr<GUIMessage_FocusChange> message(new GUIMessage_FocusChange());
+			message->target = toplevel_window->focused_component;
+			message->focus_type = GUIMessage_FocusChange::losing_focus;
 			dispatch_message(message);
 
 			if (toplevel_window_alive.is_null())	// Top level window was destroyed
@@ -259,9 +259,9 @@ void GUIManager_Impl::gain_focus(GUIComponent *component)
 
 		if (toplevel_window->focused_component)
 		{
-			GUIMessage_FocusChange message;
-			message.set_target(toplevel_window->focused_component);
-			message.set_focus_type(GUIMessage_FocusChange::gained_focus);
+			std::shared_ptr<GUIMessage_FocusChange> message(new GUIMessage_FocusChange());
+			message->target = toplevel_window->focused_component;
+			message->focus_type = GUIMessage_FocusChange::gained_focus;
 			dispatch_message(message);
 		}
 	}
@@ -290,9 +290,9 @@ void GUIManager_Impl::loose_focus(GUIComponent *component)
 		{
 			GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
 
-			GUIMessage_FocusChange message;
-			message.set_target(toplevel_window->focused_component);
-			message.set_focus_type(GUIMessage_FocusChange::losing_focus);
+			std::shared_ptr<GUIMessage_FocusChange> message(new GUIMessage_FocusChange());
+			message->target = toplevel_window->focused_component;
+			message->focus_type = GUIMessage_FocusChange::losing_focus;
 			dispatch_message(message);
 
 			if (toplevel_window_alive.is_null())	// Top level window was destroyed
@@ -365,25 +365,23 @@ const GUIComponent *GUIManager_Impl::get_owner_component(const GUIComponent *com
 	return 0;
 }
 
-void GUIManager_Impl::deliver_message(GUIMessage &m)
+void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 {
 	sig_filter_message.invoke(m);
 
-	if (!m.is_consumed())
+	if (!m->consumed)
 	{
-		GUIComponent *target = m.get_target();
+		GUIComponent *target = m->target;
 		if (target)
 		{
 			bool double_click_changed_to_single_click = false;
-			if (m.get_type() == GUIMessage_Input::get_type_name() && !target->is_double_click_enabled())
+			std::shared_ptr<GUIMessage_Input> m_input = std::dynamic_pointer_cast<GUIMessage_Input>(m);
+			if (m_input && !target->is_double_click_enabled())
 			{
-				GUIMessage_Input m_input(m);
-				InputEvent input_event = m_input.get_event();
-				if (input_event.type == InputEvent::doubleclick)
+				if (m_input->input_event.type == InputEvent::doubleclick)
 				{
-					input_event.type = InputEvent::pressed;
+					m_input->input_event.type = InputEvent::pressed;
 					double_click_changed_to_single_click = true;
-					m_input.set_event(input_event);
 				}
 			}
 
@@ -392,136 +390,131 @@ void GUIManager_Impl::deliver_message(GUIMessage &m)
 				target->func_filter_message().invoke(m);
 			}
 
-			if (!m.is_consumed())
+			if (!m->consumed)
 			{
 				if (!target->func_process_message().is_null())
 					target->func_process_message().invoke(m);
 			}
 
-			if (!m.is_consumed())
+			if (!m->consumed)
 			{
-				if (m.get_type() == GUIMessage_ActivationChange::get_type_name())
+				std::shared_ptr<GUIMessage_ActivationChange> m_activation = std::dynamic_pointer_cast<GUIMessage_ActivationChange>(m);
+				if (m_activation)
 				{
-					switch (GUIMessage_ActivationChange(m).get_activation_type())
+					switch (m_activation->activation_type)
 					{
 					case GUIMessage_ActivationChange::activation_lost:
 						if (!target->func_deactivated().is_null() && target->func_deactivated().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case GUIMessage_ActivationChange::activation_gained:
 						if (!target->func_activated().is_null() && target->func_activated().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					}
 				}
-				else if (m.get_type() == GUIMessage_Close::get_type_name())
+				else if (std::dynamic_pointer_cast<GUIMessage_Close>(m))
 				{
 					if (!target->func_close().is_null() && target->func_close().invoke())
-						m.set_consumed();
+						m->consumed = true;
 				}
-				else if (m.get_type() == GUIMessage_FocusChange::get_type_name())
+				else if (std::dynamic_pointer_cast<GUIMessage_FocusChange>(m))
 				{
-					switch (GUIMessage_FocusChange(m).get_focus_type())
+					switch (std::dynamic_pointer_cast<GUIMessage_FocusChange>(m)->focus_type)
 					{
 					case GUIMessage_FocusChange::losing_focus:
 						if (!target->func_focus_lost().is_null() && target->func_focus_lost().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case GUIMessage_FocusChange::gained_focus:
 						if (!target->func_focus_gained().is_null() && target->func_focus_gained().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					}
 				}
-				else if (m.get_type() == GUIMessage_Input::get_type_name())
+				else if (std::dynamic_pointer_cast<GUIMessage_Input>(m))
 				{
-					GUIMessage_Input m_input(m);
-					InputEvent e = m_input.get_event();
+					std::shared_ptr<GUIMessage_Input> m_input = std::dynamic_pointer_cast<GUIMessage_Input>(m);
+					InputEvent &e = m_input->input_event;
 
 					if (!target->func_input().is_null() && target->func_input().invoke(e))
-						m.set_consumed();
+						m->consumed = true;
 
 					switch (e.type)
 					{
 					case InputEvent::pressed:
 						if (!target->func_input_pressed().is_null() && target->func_input_pressed().invoke(e))
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case InputEvent::released:
 						if (!target->func_input_released().is_null() && target->func_input_released().invoke(e))
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case InputEvent::doubleclick:
 						if (!target->func_input_doubleclick().is_null() && target->func_input_doubleclick().invoke(e))
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case InputEvent::pointer_moved:
 						if (!target->func_input_pointer_moved().is_null() && target->func_input_pointer_moved().invoke(e))
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					default:
 						break;
 					}
 				}
-				else if (m.get_type() == GUIMessage_Pointer::get_type_name())
+				else if (std::dynamic_pointer_cast<GUIMessage_Pointer>(m))
 				{
-					switch (GUIMessage_Pointer(m).get_pointer_type())
+					switch (std::dynamic_pointer_cast<GUIMessage_Pointer>(m)->pointer_type)
 					{
 					case GUIMessage_Pointer::pointer_enter:
 						if (!target->func_pointer_enter().is_null() && target->func_pointer_enter().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					case GUIMessage_Pointer::pointer_leave:
 						if (!target->func_pointer_exit().is_null() && target->func_pointer_exit().invoke())
-							m.set_consumed();
+							m->consumed = true;
 						break;
 					}
 				}
-				else if (m.get_type() == GUIMessage_Resize::get_type_name())
+				else if (std::dynamic_pointer_cast<GUIMessage_Resize>(m))
 				{
 					// No need to do anything here. Already handled elsewhere.
-					m.set_consumed();
+					m->consumed = true;
 				}
 			}
 
 			if (double_click_changed_to_single_click)
 			{
-				GUIMessage_Input m_input(m);
-				InputEvent input_event = m_input.get_event();
-				input_event.type = InputEvent::doubleclick;
-				m_input.set_event(input_event);
+				m_input->input_event.type = InputEvent::doubleclick;
 			}
 		}
 	}
 }
 
-void GUIManager_Impl::dispatch_message(GUIMessage &message)
+void GUIManager_Impl::dispatch_message(std::shared_ptr<GUIMessage> message)
 {
-	GUIMessage m = message;
-	deliver_message(m);
+	deliver_message(message);
 
-	GUIComponent *message_original_target = m.get_target();
+	GUIComponent *message_original_target = message->target;
 
 	// Unconsumed input message are sent up the component tree until a null parent is encountered or the message gets consumed.
-	if (!m.is_consumed() && m.get_target() && m.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> m_input = std::dynamic_pointer_cast<GUIMessage_Input>(message);
+	if (m_input && !m_input->consumed && m_input->target)
 	{
-		while (m.get_target() && !m.is_consumed())
+		while (m_input->target && !m_input->consumed)
 		{
 			// Translate mouse pos to parent coordinates.
-			GUIMessage_Input input(m);
-			InputEvent event = input.get_event();
-			event.mouse_pos.x += m.get_target()->get_geometry().left;
-			event.mouse_pos.y += m.get_target()->get_geometry().top;
-			input.set_event(event);
+			m_input->input_event.mouse_pos.x += m_input->target->get_geometry().left;
+			m_input->input_event.mouse_pos.y += m_input->target->get_geometry().top;
 
-			m.set_target(m.get_target()->get_parent_component());
-			if (m.get_target())
-				deliver_message(m);
+			m_input->target = m_input->target->get_parent_component();
+			if (m_input->target)
+				deliver_message(message);
 		}
 	}
 
-	if (m.get_target() == 0 && !m.is_consumed())
-		m.set_target(message_original_target);
+	if (!message->target && !message->consumed)
+		message->target = message_original_target;
 }
 
 GUIComponent *GUIManager_Impl::get_focus_component()
@@ -600,9 +593,9 @@ void GUIManager_Impl::on_focus_lost(GUITopLevelWindow *toplevel_window)
 	{
 		GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
 
-		GUIMessage_FocusChange message;
-		message.set_target(toplevel_window->focused_component);
-		message.set_focus_type(GUIMessage_FocusChange::losing_focus);
+		std::shared_ptr<GUIMessage_FocusChange> message(new GUIMessage_FocusChange());
+		message->target = toplevel_window->focused_component;
+		message->focus_type = GUIMessage_FocusChange::losing_focus;
 		dispatch_message(message);
 
 		if (toplevel_window_alive.is_null())	// Top level window was destroyed
@@ -612,9 +605,9 @@ void GUIManager_Impl::on_focus_lost(GUITopLevelWindow *toplevel_window)
 
 	// toplevel_window->focused_component = 0;
 
-	GUIMessage_ActivationChange message;
-	message.set_target(toplevel_window->component);
-	message.set_activation_type(GUIMessage_ActivationChange::activation_lost);
+	std::shared_ptr<GUIMessage_ActivationChange> message(new GUIMessage_ActivationChange());
+	message->target = toplevel_window->component;
+	message->activation_type = GUIMessage_ActivationChange::activation_lost;
 	dispatch_message(message);
 }
 
@@ -627,18 +620,18 @@ void GUIManager_Impl::on_focus_gained(GUITopLevelWindow *toplevel_window)
 	{
 		GUITopLevelWindow_Alive toplevel_window_alive(toplevel_window);
 
-		GUIMessage_FocusChange message;
-		message.set_target(toplevel_window->focused_component);
-		message.set_focus_type(GUIMessage_FocusChange::gained_focus);
+		std::shared_ptr<GUIMessage_FocusChange> message(new GUIMessage_FocusChange());
+		message->target = toplevel_window->focused_component;
+		message->focus_type = GUIMessage_FocusChange::gained_focus;
 		dispatch_message(message);
 
 		if (toplevel_window_alive.is_null())	// Top level window was destroyed
 			return;
 	}
 
-	GUIMessage_ActivationChange message;
-	message.set_target(toplevel_window->component);
-	message.set_activation_type(GUIMessage_ActivationChange::activation_gained);
+	std::shared_ptr<GUIMessage_ActivationChange> message(new GUIMessage_ActivationChange());
+	message->target = toplevel_window->component;
+	message->activation_type = GUIMessage_ActivationChange::activation_gained;
 	dispatch_message(message);
 }
 
@@ -648,9 +641,9 @@ void GUIManager_Impl::on_resize(GUITopLevelWindow *toplevel_window, const Size &
 	component->impl->geometry = component->get_geometry();
 	component->impl->geometry_updated();
 
-	GUIMessage_Resize message;
-	message.set_target(component);
-	message.set_geometry(component->get_geometry());
+	std::shared_ptr<GUIMessage_Resize> message(new GUIMessage_Resize());
+	message->target = component;
+	message->geometry = component->get_geometry();
 	dispatch_message(message);
 }
 
@@ -661,8 +654,8 @@ void GUIManager_Impl::on_paint(GUITopLevelWindow *toplevel_window, const Rect &u
 
 void GUIManager_Impl::on_close(GUITopLevelWindow *toplevel_window)
 {
-	GUIMessage_Close message;
-	message.set_target(toplevel_window->component);
+	std::shared_ptr<GUIMessage_Close> message(new GUIMessage_Close());
+	message->target = toplevel_window->component;
 	dispatch_message(message);
 }
 
@@ -709,30 +702,29 @@ void GUIManager_Impl::on_input_received(
 		{
 			if (mouse_over_component)
 			{
-				GUIMessage_Pointer msg;
-				msg.set_pointer_type(GUIMessage_Pointer::pointer_leave);
-				msg.set_target(mouse_over_component);
+				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
+				msg->pointer_type = GUIMessage_Pointer::pointer_leave;
+				msg->target = mouse_over_component;
 				dispatch_message(msg);
 			}
 			mouse_over_component = target;
 			if (mouse_over_component)
 			{
-				GUIMessage_Pointer msg;
-				msg.set_pointer_type(GUIMessage_Pointer::pointer_enter);
-				msg.set_target(mouse_over_component);
+				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
+				msg->pointer_type = GUIMessage_Pointer::pointer_enter;
+				msg->target = mouse_over_component;
 				dispatch_message(msg);
 			}
 		}
 
-		GUIMessage_Input message;
-		message.set_target(target);
-		message.set_event(local_input_event);
+		std::shared_ptr<GUIMessage> message(new GUIMessage_Input(local_input_event));
+		message->target = target;
 		dispatch_message(message);
 
-		if (!message.is_consumed())
+		if (!message->consumed)
 			accel_table.process_message(message);
 
-		if (!message.is_consumed())
+		if (!message->consumed)
 			process_standard_gui_keys(message);
 	}
 }
@@ -796,17 +788,17 @@ GUIComponent *GUIManager_Impl::get_default_component(GUIComponent *comp)
 	return 0;
 }
 
-void GUIManager_Impl::process_standard_gui_keys(GUIMessage &message)
+void GUIManager_Impl::process_standard_gui_keys(std::shared_ptr<GUIMessage> &message)
 {
-	if (message.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input = std::dynamic_pointer_cast<GUIMessage_Input>(message);
+	if (input)
 	{
-		GUIMessage_Input input = message;
-		InputEvent e = input.get_event();
+		InputEvent e = input->input_event;
 
 		if (e.type == InputEvent::pressed && 
 			(e.id == keycode_tab || e.id == keycode_left || e.id == keycode_right || e.id == keycode_up || e.id == keycode_down))
 		{
-			GUIComponent *focus_comp = input.get_target();
+			GUIComponent *focus_comp = input->target;
 
 			if (e.id == keycode_tab)
 			{
@@ -826,7 +818,7 @@ void GUIManager_Impl::process_standard_gui_keys(GUIMessage &message)
 		}
 		else if ((e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter) && e.type == InputEvent::released)
 		{
-			GUIComponent *comp = input.get_target();
+			GUIComponent *comp = input->target;
 			if (comp)
 			{
 				GUITopLevelWindow *win = get_toplevel_window(comp);
@@ -834,21 +826,21 @@ void GUIManager_Impl::process_standard_gui_keys(GUIMessage &message)
 
 				if (defaulted_component)
 				{
-					input.set_target(defaulted_component);
+					input->target = defaulted_component;
 					dispatch_message(input);
 				}
 			}
 		}
 		else if (e.id == keycode_escape)
 		{
-			GUIComponent *comp = input.get_target();
+			GUIComponent *comp = input->target;
 			if (comp)
 			{
 				GUITopLevelWindow *win = get_toplevel_window(comp);
 				GUIComponent *cancel_comp = get_cancel_component(win->component);
 				if (cancel_comp)
 				{
-					input.set_target(cancel_comp);
+					input->target = cancel_comp;
 					dispatch_message(input);
 				}
 			}

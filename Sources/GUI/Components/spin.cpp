@@ -76,7 +76,7 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
 	void on_style_changed();
@@ -260,7 +260,7 @@ void Spin::set_floating_point_mode(bool use_floating_point)
 /////////////////////////////////////////////////////////////////////////////
 // Spin Implementation:
 
-void Spin_Impl::on_process_message(GUIMessage &msg)
+void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (component->is_enabled())
 	{

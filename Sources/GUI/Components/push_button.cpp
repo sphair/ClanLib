@@ -62,7 +62,7 @@ class PushButton_Impl
 {
 public:
 	PushButton_Impl() : toggle_mode(false), icon_position(PushButton::icon_left) {}
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
 
 	PushButton *button;
@@ -282,7 +282,7 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 }
 */
-void PushButton_Impl::on_process_message(GUIMessage &msg)
+void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!button->is_enabled())
 		return;

@@ -45,51 +45,23 @@ class CL_API_GUI GUIMessage_ActivationChange : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
-	/// \brief Constructs an input GUI message.
-	GUIMessage_ActivationChange();
-
-	/// \brief Constructs a GUIMessage ActivationChange
-	///
-	/// \param message = GUIMessage
-	GUIMessage_ActivationChange(const GUIMessage &message);
-
-	~GUIMessage_ActivationChange();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
 	enum ActivationType
 	{
 		activation_lost,
 		activation_gained
 	};
 
-	/// \brief Retrieves the focus type of this message.
-	ActivationType get_activation_type() const;
-
+	/// \brief Constructs an input GUI message.
+	GUIMessage_ActivationChange() : activation_type(activation_lost) { }
+	GUIMessage_ActivationChange(ActivationType type) : activation_type(type) { }
 /// \}
-/// \name Operations
-/// \{
 
+/// \name Attributes
+/// \{
 public:
-	/// \brief Sets the activation type for this Message.
-	void set_activation_type(ActivationType activation_type);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	/// \brief Retrieves the focus type of this message.
+	ActivationType activation_type;
 /// \}
 };
 

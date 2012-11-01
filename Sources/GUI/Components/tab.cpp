@@ -53,7 +53,7 @@ namespace clan
 class Tab_Impl
 {
 public:
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
@@ -294,7 +294,7 @@ void Tab::set_label_by_id(int id, const std::string &new_label)
 /////////////////////////////////////////////////////////////////////////////
 // Tab Implementation:
 
-void Tab_Impl::on_process_message(GUIMessage &msg)
+void Tab_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 }
 

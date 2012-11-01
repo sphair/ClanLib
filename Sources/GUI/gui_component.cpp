@@ -697,7 +697,7 @@ Callback_v2<Canvas &, const Rect &> &GUIComponent::func_render()
 	return impl->func_render;
 }
 
-Callback_v1<GUIMessage &> &GUIComponent::func_process_message()
+Callback_v1<std::shared_ptr<GUIMessage> &> &GUIComponent::func_process_message()
 {
 	return impl->func_process_message;
 }
@@ -722,7 +722,7 @@ Callback_0<bool> &GUIComponent::func_focus_lost()
 	return impl->func_focus_lost;
 }
 
-Callback_v1<GUIMessage&> &GUIComponent::func_filter_message()
+Callback_v1<std::shared_ptr<GUIMessage> &> &GUIComponent::func_filter_message()
 {
 	return impl->func_filter_message;
 }

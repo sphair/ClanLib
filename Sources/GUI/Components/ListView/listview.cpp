@@ -365,7 +365,7 @@ Callback_v0 &ListView::func_begin_drag()
 /////////////////////////////////////////////////////////////////////////////
 // ListView Implementation:
 
-void ListView_Impl::on_process_message(GUIMessage &msg)
+void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Input::get_type_name()))
 	{
@@ -660,12 +660,12 @@ bool ListView_Impl::on_keyboard_released(InputEvent &event)
 	return event_consumed;
 }
 
-void ListView_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	on_mouse_button_down(input, input_event);
 }
 
-void ListView_Impl::on_mouse_button_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	listview->set_focus();
 
@@ -759,34 +759,34 @@ void ListView_Impl::on_drag_or_edit_timeout()
 	edit_item(si);
 }
 
-void ListView_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	drag_or_edit_started = false;
 	listview->capture_mouse(false);
 }
 
-void ListView_Impl::on_mouse_lbutton_doubleclick(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	if(!selection.get_first().is_null())
 		if (!func_item_doubleclick.is_null())
 			func_item_doubleclick.invoke(selection.get_first().get_item());
 }
 
-void ListView_Impl::on_mouse_rbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	cancel_edit();
 	on_mouse_button_down(input, input_event); 
 }
 
-void ListView_Impl::on_mouse_rbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	drag_or_edit_started = false;
 	if (!func_mouse_right_up.is_null())
 		func_mouse_right_up.invoke(input_event.mouse_pos);
 }
 
-void ListView_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	if (drag_or_edit_started && input_event.mouse_pos.distance(pos_mouse_drag_start) > 5)
 	{

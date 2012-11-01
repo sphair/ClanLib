@@ -59,7 +59,7 @@ public:
 
 	void check_range();
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	
@@ -282,7 +282,7 @@ void ProgressBar_Impl::check_range()
 		position = progress_max;
 }
 
-void ProgressBar_Impl::on_process_message(GUIMessage &msg)
+void ProgressBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 }
 

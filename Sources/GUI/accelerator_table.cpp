@@ -95,21 +95,19 @@ void AcceleratorTable::add_accelerator(const AcceleratorKey &accel)
 	impl->entries.push_back(accel);
 }
 
-void AcceleratorTable::process_message(GUIMessage &msg)
+void AcceleratorTable::process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
 		std::vector<AcceleratorKey>::iterator it;
 		for (it = impl->entries.begin(); it != impl->entries.end(); ++it)
 		{
-			if ((*it).get_id() == e.id && (*it).get_shift() == e.shift && (*it).get_alt() == e.alt && (*it).get_ctrl() == e.ctrl)
+			if ((*it).get_id() == input_msg->input_event.id && (*it).get_shift() == input_msg->input_event.shift && (*it).get_alt() == input_msg->input_event.alt && (*it).get_ctrl() == input_msg->input_event.ctrl)
 			{
-				if (e.type == InputEvent::pressed && !(*it).func_pressed().is_null())
+				if (input_msg->input_event.type == InputEvent::pressed && !(*it).func_pressed().is_null())
 					(*it).func_pressed().invoke(msg, (*it));
-				msg.set_consumed();
+				msg->consumed = true;
 				return;
 			}
 		}

@@ -95,7 +95,7 @@ void MenuModalLoop::end()
 
 }
 
-void MenuModalLoop::on_filter_message(GUIMessage &message)
+void MenuModalLoop::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
 	if (running)
 	{
@@ -116,7 +116,7 @@ void MenuModalLoop::on_filter_message(GUIMessage &message)
 	}
 }
 
-void MenuModalLoop::on_filter_input_message(GUIMessage_Input &message)
+void MenuModalLoop::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
 {
 	InputEvent e = message.get_event();
 

@@ -48,45 +48,17 @@ class CL_API_GUI GUIMessage_Resize : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs an input GUI message.
-	GUIMessage_Resize();
-
-	/// \brief Constructs a GUIMessage Resize
-	///
-	/// \param message = GUIMessage
-	GUIMessage_Resize(const GUIMessage &message);
-
-	~GUIMessage_Resize();
-
+	GUIMessage_Resize() { }
+	GUIMessage_Resize(const Rect &box) : geometry(box) { }
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
-	/// \brief Retrieves the geometry contained in this Message.
-	Rect get_geometry() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Sets the geometry contained in this Message.
-	void set_geometry(const Rect &);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	/// \brief The geometry contained in this message.
+	Rect geometry;
 /// \}
 };
 

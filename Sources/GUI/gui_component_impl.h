@@ -71,7 +71,7 @@ public:
 	GUIComponent::FocusPolicy focus_policy;
 	GUILayout layout;
 	Callback_v2<Canvas &, const Rect &> func_render;
-	Callback_v1<GUIMessage &> func_process_message;
+	Callback_v1<std::shared_ptr<GUIMessage> &> func_process_message;
 	Callback_0<bool> func_close;
 	Callback_0<bool> func_activated;
 	Callback_0<bool> func_deactivated;
@@ -87,7 +87,7 @@ public:
 	Signal_v1<const CSSPropertyList &> sig_style_changed;
 	Callback_v0 func_enablemode_changed;
 	Callback_v0 func_resized;
-	Callback_v1<GUIMessage &> func_filter_message;
+	Callback_v1<std::shared_ptr<GUIMessage> &> func_filter_message;
 	Callback_2<GUIComponent*, GUIComponent*, std::string> func_create_custom_component;
 	Callback_v1<bool> func_visibility_change;
 	std::string tag_name;
@@ -129,7 +129,7 @@ public:
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 };
 
 }

@@ -197,7 +197,7 @@ Callback_v1<RadioButton*> &RadioButton::func_group_selection_changed()
 /////////////////////////////////////////////////////////////////////////////
 // RadioButton Implementation:
 
-void RadioButton_Impl::on_process_message(GUIMessage &msg)
+void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!radio->is_enabled())
 		return;

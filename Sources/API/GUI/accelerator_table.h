@@ -77,7 +77,7 @@ public:
 	void add_accelerator(const AcceleratorKey &accel);
 
 	/// \brief Check if the message is an accelerator key and invoke relevant accelerator callback.
-	void process_message(GUIMessage &msg);
+	void process_message(std::shared_ptr<GUIMessage> &msg);
 
 /// \}
 /// \name Implementation

@@ -34,11 +34,10 @@
 #include "api_gui.h"
 #include <memory>
 #include "gui_message.h"
+#include "../Display/Window/input_event.h"
 
 namespace clan
 {
-
-class InputEvent;
 
 /// \brief GUI input message.
 ///
@@ -47,45 +46,17 @@ class CL_API_GUI GUIMessage_Input : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs an input GUI message.
-	GUIMessage_Input();
-
-	/// \brief Constructs a GUIMessage Input
-	///
-	/// \param message = GUIMessage
-	GUIMessage_Input(const GUIMessage &message);
-
-	~GUIMessage_Input();
-
+	GUIMessage_Input() { }
+	GUIMessage_Input(InputEvent &e) : input_event(e) { }
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
-	/// \brief Retrieves the input event for this message.
-	InputEvent get_event() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Sets the input event.
-	void set_event(const InputEvent &event);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	/// \brief Input event for this message.
+	InputEvent input_event;
 /// \}
 };
 

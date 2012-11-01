@@ -264,7 +264,7 @@ void ToolBar::delete_item(int index)
 ////////////////////////////////////////////////////////////////////////////
 // ToolBar Implementation:
 
-void ToolBar_Impl::on_process_message(GUIMessage &msg)
+void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!toolbar->is_enabled())
 		return;

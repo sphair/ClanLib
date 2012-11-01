@@ -351,8 +351,8 @@ public:
 	/// \brief void func_render(Canvas &canvas, const Rect &clip_rect)
 	Callback_v2<Canvas &, const Rect &> &func_render();
 
-	/// \brief void func_process_message(const GUIMessage &message)
-	Callback_v1<GUIMessage &> &func_process_message();
+	/// \brief void func_process_message(std::shared_ptr<GUIMessage> &message)
+	Callback_v1<std::shared_ptr<GUIMessage> &> &func_process_message();
 
 	/// \brief bool func_close()
 	Callback_0<bool> &func_close();
@@ -376,7 +376,7 @@ public:
 	Callback_0<bool> &func_pointer_exit();
 
 	/// \brief Lets a component filter the messages intended for another component. Consumed messages will not reach the original target component.
-	Callback_v1<GUIMessage&> &func_filter_message();
+	Callback_v1<std::shared_ptr<GUIMessage> &> &func_filter_message();
 
 	/// \brief bool func_input(const InputEvent &input_event)
 	Callback_1<bool, const InputEvent &> &func_input();

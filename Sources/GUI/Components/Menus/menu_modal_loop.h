@@ -59,8 +59,8 @@ public:
 	void end();
 
 private:
-	void on_filter_message(GUIMessage &message);
-	void on_filter_input_message(GUIMessage_Input &message);
+	void on_filter_message(std::shared_ptr<GUIMessage> &message);
+	void on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message);
 
 	void on_popup_mouse_input(PopupMenuWindow *popup, InputEvent e);
 	void on_menubar_mouse_input(InputEvent e);

@@ -56,10 +56,10 @@ class ToolTip_Impl
 {
 public:
 	static GUITopLevelDescription create_description();
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_show_delayed();
-	void on_filter_message(GUIMessage &message);
+	void on_filter_message(std::shared_ptr<GUIMessage> &message);
 
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
@@ -168,7 +168,7 @@ GUITopLevelDescription ToolTip_Impl::create_description()
 	return desc;
 }
 
-void ToolTip_Impl::on_process_message(GUIMessage &msg)
+void ToolTip_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Input::get_type_name()))
 		tooltip->set_visible(false, false);
@@ -194,7 +194,7 @@ void ToolTip_Impl::on_show_delayed()
 	tooltip->set_visible(true, false);
 }
 
-void ToolTip_Impl::on_filter_message(GUIMessage &message)
+void ToolTip_Impl::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
 	if (message.get_type() == GUIMessage_FocusChange::get_type_name() ||
 		message.get_type() == GUIMessage_ActivationChange::get_type_name() ||

@@ -144,8 +144,8 @@ public:
 /// \name Events
 /// \{
 public:
-	/// \brief bool func_filter_message(const GUIMessage &message)
-	Signal_v1<GUIMessage &> &sig_filter_message();
+	/// \brief bool func_filter_message(std::shared_ptr<GUIMessage> &message)
+	Signal_v1<std::shared_ptr<GUIMessage> &> &sig_filter_message();
 
 	/// \brief int func_exec_handler()
 	Callback_0<int> &func_exec_handler();
@@ -197,7 +197,7 @@ public:
 	void process_messages(int timeout);
 
 	/// \brief Sends a GUI message to the message handler target for the message.
-	void dispatch_message(GUIMessage message);
+	void dispatch_message(std::shared_ptr<GUIMessage> message);
 
 	/// \brief Breaks the message loop.
 	void exit_with_code(int exit_code);

@@ -65,8 +65,8 @@ public:
 	{
 	}
 
-	void check_move_window(GUIMessage &msg);
-	void on_process_message(GUIMessage &msg);
+	void check_move_window(std::shared_ptr<GUIMessage> &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	Rect get_client_area() const;
 
@@ -236,7 +236,7 @@ void Window::bring_to_front()
 /////////////////////////////////////////////////////////////////////////////
 // Window Implementation:
 
-void Window_Impl::on_process_message(GUIMessage &msg)
+void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (draw_caption)
 		check_move_window(msg);
@@ -299,7 +299,7 @@ Rect Window_Impl::get_client_area() const
 	return part_client->get_geometry();
 }
 
-void Window_Impl::check_move_window(GUIMessage &msg)
+void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 {
 	if (draggable == false)
 	{

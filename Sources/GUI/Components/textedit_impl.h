@@ -66,7 +66,7 @@ public:
 
 	void layout_lines(Canvas &canvas);
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_style_changed();
 	void on_timer_expired();

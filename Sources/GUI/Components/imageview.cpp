@@ -54,7 +54,7 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	
@@ -152,7 +152,7 @@ void ImageView::set_scale( float x, float y )
 /////////////////////////////////////////////////////////////////////////////
 // ImageView Implementation:
 
-void ImageView_Impl::on_process_message(GUIMessage &msg)
+void ImageView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 }
 
