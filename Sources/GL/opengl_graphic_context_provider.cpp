@@ -547,6 +547,10 @@ PixelBuffer OpenGLGraphicContextProvider::get_pixeldata(const Rect& rect, Textur
 
 	Size display_size = get_display_window_size();
 
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glPixelStorei(GL_PACK_ROW_LENGTH, pbuf.get_pitch() / pbuf.get_bytes_per_pixel());
+	glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 	glReadPixels(rect.left, display_size.height - rect.bottom, rect.get_width(), rect.get_height(), tf.pixel_format, tf.pixel_datatype, pbuf.get_data());
 	pbuf.flip_vertical();
 	return pbuf;
