@@ -122,7 +122,7 @@ public:
 	Font get_registered_font(const FontDescription &desc);
 
 	std::vector<GUITopLevelWindow *> root_components;
-	Signal_v1<GUIMessage &> sig_filter_message;
+	Signal_v1<std::shared_ptr<GUIMessage> &> sig_filter_message;
 	Callback_0<int> func_exec_handler;
 	mutable CSSDocument css_document;
 	GUIThemeLayoutManager layout_manager;
@@ -155,7 +155,7 @@ public:
 	void gain_focus(GUIComponent *component);
 	void loose_focus(GUIComponent *component);
 	void set_enabled(GUIComponent *component, bool enable);
-	void dispatch_message(GUIMessage &message);
+	void dispatch_message(std::shared_ptr<GUIMessage> message);
 
 	void register_font(const Font &font, const FontDescription &desc);
 
@@ -163,13 +163,13 @@ public:
 	bool is_constant_repaint_enabled(GUIComponent *component) const;
 	void invalidate_constant_repaint_components();
 
-	void process_standard_gui_keys(GUIMessage &message);
+	void process_standard_gui_keys(std::shared_ptr<GUIMessage> &message);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
-	void deliver_message(GUIMessage &message);
+	void deliver_message(std::shared_ptr<GUIMessage> &message);
 
 	void on_focus_lost(GUITopLevelWindow *toplevel_window);
 	void on_focus_gained(GUITopLevelWindow *toplevel_window);

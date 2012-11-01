@@ -45,51 +45,23 @@ class CL_API_GUI GUIMessage_Pointer : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
-	/// \brief Constructs an input GUI message.
-	GUIMessage_Pointer();
-
-	/// \brief Constructs a GUIMessage Pointer
-	///
-	/// \param message = GUIMessage
-	GUIMessage_Pointer(const GUIMessage &message);
-
-	~GUIMessage_Pointer();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
 	enum PointerType
 	{
 		pointer_enter,
 		pointer_leave
 	};
 
-	/// \brief Retrieves the pointer type of this message.
-	PointerType get_pointer_type() const;
-
+	/// \brief Constructs an input GUI message.
+	GUIMessage_Pointer() : pointer_type(pointer_enter) { }
+	GUIMessage_Pointer(PointerType type) : pointer_type(type) { }
 /// \}
-/// \name Operations
-/// \{
 
+/// \name Attributes
+/// \{
 public:
-	/// \brief Sets the pointer type for this message.
-	void set_pointer_type(PointerType pointer_type);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	/// \brief Retrieves the pointer type of this message.
+	PointerType pointer_type;
 /// \}
 };
 

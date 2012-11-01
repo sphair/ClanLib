@@ -81,11 +81,11 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_enablemode_changed();
-	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
 	void on_mouse_leave();
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
@@ -306,7 +306,7 @@ Callback_v0 &Slider::func_slider_moved()
 /////////////////////////////////////////////////////////////////////////////
 // Slider Implementation:
 
-void Slider_Impl::on_process_message(GUIMessage &msg)
+void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!slider->is_enabled())
 		return;
@@ -388,7 +388,7 @@ void Slider_Impl::on_process_message(GUIMessage &msg)
 	}
 }
 
-void Slider_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	int original_slider_position = position;
 	Point mouse_pos = input_event.mouse_pos;
@@ -444,7 +444,7 @@ void Slider_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event
 	}
 }
 
-void Slider_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void Slider_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	int original_position = position;
 	Point pos = input_event.mouse_pos;
@@ -489,7 +489,7 @@ void Slider_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &inp
 	}
 }
 
-void Slider_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	if ((mouse_down_mode == mouse_down_thumb_drag) && (mouse_drag_start_value != position))
 		if (!func_slider_moved.is_null())

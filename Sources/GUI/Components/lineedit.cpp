@@ -424,7 +424,7 @@ void LineEdit::set_select_all_on_focus_gain(bool enable)
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Implementation:
 
-void LineEdit_Impl::on_process_message(GUIMessage &msg)
+void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!lineedit->is_enabled())
 		return;

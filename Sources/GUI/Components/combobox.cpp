@@ -63,8 +63,8 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
-	void on_lineedit_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+	void on_lineedit_message(std::shared_ptr<GUIMessage> &msg);
 	void on_lineedit_enter_pressed();
 	void on_btn_arrow_clicked();
 	void on_lineedit_text_edited(InputEvent &event);
@@ -280,7 +280,7 @@ void ComboBox_Impl::on_enablemode_changed()
 	component->request_repaint();
 }
 
-void ComboBox_Impl::on_process_message(GUIMessage &msg)
+void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if(!component->is_enabled())
 		return;
@@ -454,7 +454,7 @@ void ComboBox_Impl::on_popup_item_selected(PopupMenuItem item)
 	}
 }
 
-void ComboBox_Impl::on_lineedit_message(GUIMessage &msg)
+void ComboBox_Impl::on_lineedit_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if(!component->is_enabled())
 		return;

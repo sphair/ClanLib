@@ -59,7 +59,7 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_style_changed();
 	void create_parts();
@@ -150,7 +150,7 @@ void Label::set_alignment(Label::Alignment alignment)
 /////////////////////////////////////////////////////////////////////////////
 // Label Implementation:
 
-void Label_Impl::on_process_message(GUIMessage &msg)
+void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Pointer::get_type_name()))
 	{

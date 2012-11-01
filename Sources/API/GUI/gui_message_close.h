@@ -45,40 +45,9 @@ class CL_API_GUI GUIMessage_Close : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a window close GUI message.
-	GUIMessage_Close();
-
-	/// \brief Constructs a GUIMessage Close
-	///
-	/// \param message = GUIMessage
-	GUIMessage_Close(const GUIMessage &message);
-
-	~GUIMessage_Close();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	GUIMessage_Close() { }
 /// \}
 };
 

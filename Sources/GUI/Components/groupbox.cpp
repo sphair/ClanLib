@@ -89,7 +89,7 @@ GroupBox *GroupBox::get_named_item(GUIComponent *reference_component, const std:
 /////////////////////////////////////////////////////////////////////////////
 // GroupBox Implementation:
 
-void GroupBox_Impl::on_process_message(GUIMessage &msg)
+void GroupBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 }
 

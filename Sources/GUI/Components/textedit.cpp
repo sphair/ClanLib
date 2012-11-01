@@ -386,7 +386,7 @@ void TextEdit::set_select_all_on_focus_gain(bool enable)
 /////////////////////////////////////////////////////////////////////////////
 // TextEdit Implementation:
 
-void TextEdit_Impl::on_process_message(GUIMessage &msg)
+void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!textedit->is_enabled())
 		return;

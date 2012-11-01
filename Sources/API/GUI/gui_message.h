@@ -39,13 +39,6 @@ namespace clan
 {
 
 class GUIComponent;
-class GUIMessage_Impl;
-
-class GUIMessageData
-{
-public:
-	virtual ~GUIMessageData() { }
-};
 
 /// \brief GUI message.
 ///
@@ -54,59 +47,20 @@ class CL_API_GUI GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
 	/// \brief Constructs a GUI message.
-	GUIMessage();
-
-	virtual ~GUIMessage();
-
+	GUIMessage() : consumed(false), target(0) { }
+	virtual ~GUIMessage() { }
 /// \}
+
 /// \name Attributes
 /// \{
-
 public:
-	/// \brief Returns the message type name.
-	std::string get_type() const;
+	/// \brief The target destination of the message.
+	GUIComponent *target;
 
-	/// \brief Returns true if the message matches the type.
-	bool is_type(const std::string &type) const;
-
-	/// \brief Returns the stored data object for a given data name.
-	std::shared_ptr<GUIMessageData> get_data(const std::string &data_name) const;
-
-	/// \brief Returns the target destination of the message.
-	GUIComponent *get_target() const;
-
-	/// \brief Returns true if the message has been consumed by a component.
-	bool is_consumed() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Sets the message type name.
-	void set_type(const std::string &type);
-
-	/// \brief Stores an object in the given data name slot.
-	void set_data(const std::string &data_name, const std::shared_ptr<GUIMessageData> &ptr);
-
-	/// \brief Sets the target destination.
-	void set_target(GUIComponent *target);
-
-	/// \brief Sets this message to be a null message.
-	void set_null();
-
-	/// \brief Sets this message as consumed.
-	void set_consumed();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<GUIMessage_Impl> impl;
+	/// \brief Indicates whether the message has been consumed yet.
+	bool consumed;
 /// \}
 };
 

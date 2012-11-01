@@ -124,7 +124,7 @@ void MenuBar::remove_menu(int index)
 /////////////////////////////////////////////////////////////////////////////
 // MenuBar Implementation:
 
-void MenuBar_Impl::on_process_message(GUIMessage &msg)
+void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Input::get_type_name()))
 	{

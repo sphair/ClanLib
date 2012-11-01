@@ -70,7 +70,7 @@ public:
 /// \{
 
 public:
-	Callback_v2<GUIMessage, AcceleratorKey> &func_pressed();
+	Callback_v2<std::shared_ptr<GUIMessage> &, AcceleratorKey> &func_pressed();
 
 	/// \brief Get Shift
 	///

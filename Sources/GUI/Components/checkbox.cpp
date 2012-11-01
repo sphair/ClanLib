@@ -61,7 +61,7 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_enablemode_changed();
 
 	void update_pseudo_classes(bool checked = false, bool indeterminated = false);
@@ -193,7 +193,7 @@ Callback_v0 &CheckBox::func_state_changed()
 /////////////////////////////////////////////////////////////////////////////
 // CheckBox Implementation:
 
-void CheckBox_Impl::on_process_message(GUIMessage &msg)
+void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!checkbox->is_enabled())
 		return;

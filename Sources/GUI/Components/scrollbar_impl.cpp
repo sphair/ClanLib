@@ -49,7 +49,7 @@ ScrollBar_Impl::ScrollBar_Impl()
 {
 }
 
-void ScrollBar_Impl::on_process_message(GUIMessage &msg)
+void ScrollBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!scrollbar->is_enabled())
 		return;

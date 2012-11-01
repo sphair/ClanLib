@@ -95,7 +95,7 @@ std::string TabPage::get_label() const
 /////////////////////////////////////////////////////////////////////////////
 // TabPage Implementation:
 
-void TabPage_Impl::on_process_message(GUIMessage &msg)
+void TabPage_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 }
 

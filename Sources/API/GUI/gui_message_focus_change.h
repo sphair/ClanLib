@@ -45,51 +45,23 @@ class CL_API_GUI GUIMessage_FocusChange : public GUIMessage
 {
 /// \name Construction
 /// \{
-
 public:
-	/// \brief Constructs an input GUI message.
-	GUIMessage_FocusChange();
-
-	/// \brief Constructs a GUIMessage FocusChange
-	///
-	/// \param message = GUIMessage
-	GUIMessage_FocusChange(const GUIMessage &message);
-
-	~GUIMessage_FocusChange();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-	/// \brief Get Type name
-	///
-	/// \return type_name
-	static std::string get_type_name();
-
 	enum FocusType
 	{
 		losing_focus,
 		gained_focus
 	};
 
-	/// \brief Retrieves the focus type of this message.
-	FocusType get_focus_type() const;
-
+	/// \brief Constructs an focus change GUI message.
+	GUIMessage_FocusChange() : focus_type(losing_focus) { }
+	GUIMessage_FocusChange(FocusType type) : focus_type(type) { }
 /// \}
-/// \name Operations
-/// \{
 
+/// \name Attributes
+/// \{
 public:
-	/// \brief Sets the focus type for this Message.
-	void set_focus_type(FocusType focus_type);
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
+	/// \brief The focus type of this message.
+	FocusType focus_type;
 /// \}
 };
 

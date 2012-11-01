@@ -66,13 +66,13 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void update_geometry(const Rect &content_rect);
 	void create_parts();
-	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
 	void on_mouse_leave();
 	void on_mouse_enter();
 	void on_column_size_changed(ListViewColumnHeader col);
@@ -240,7 +240,7 @@ void ListViewHeader::update_geometry(const Rect &parent_content_rect)
 	impl->update_geometry(parent_content_rect);
 }
 
-void ListViewHeader_Impl::on_process_message(GUIMessage &msg)
+void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (msg.is_type(GUIMessage_Input::get_type_name()))
 	{
@@ -263,7 +263,7 @@ void ListViewHeader_Impl::on_process_message(GUIMessage &msg)
 	}
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 
@@ -280,7 +280,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEv
 	listview_header->capture_mouse(true);
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
@@ -295,7 +295,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEven
 }
 
 
-void ListViewHeader_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	bool current_rect_set = false;

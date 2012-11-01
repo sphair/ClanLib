@@ -146,7 +146,7 @@ std::string GUIManager::get_clipboard_text() const
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Events:
 
-Signal_v1<GUIMessage &> &GUIManager::sig_filter_message()
+Signal_v1<std::shared_ptr<GUIMessage> &> &GUIManager::sig_filter_message()
 {
 	return impl->sig_filter_message;
 }
@@ -293,7 +293,7 @@ void GUIManager::clear_exit_flag()
 	impl->exit_flag = false;
 }
 
-void GUIManager::dispatch_message(GUIMessage message)
+void GUIManager::dispatch_message(std::shared_ptr<GUIMessage> message)
 {
 	impl->dispatch_message(message);
 }
