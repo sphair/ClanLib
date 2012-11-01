@@ -265,13 +265,13 @@ PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 	if (supported)
 	{
 		PixelBuffer buffer(width, height, texture_format);
-		glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
+		cl1GetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
 		return buffer;
 	}
 	else
 	{
 		PixelBuffer buffer(width, height, tf_rgba8);
-		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
+		cl1GetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 		return buffer.to_format(texture_format);
 	}
 }
