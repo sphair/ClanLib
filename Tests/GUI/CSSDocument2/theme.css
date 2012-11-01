@@ -119,3 +119,34 @@ ribbon-section button:toggled
     border-style: solid;
     border-image: url('res:RibbonButtonToggled') 1 8 fill;
 }
+
+.test1
+{
+    background-color: #aa0000;
+    width: 100px;
+    height: 100px;
+}
+.test1:hot
+{
+    background-color: #ff0000;
+}
+.test2
+{
+    background-color: #00aa00;
+    width: 80px;
+    height: 80px;
+}
+.test2:hot
+{
+    background-color: #00ff00;
+}
+.test3
+{
+    background-color: #0000aa;
+    width: 50px;
+    height: 50px;
+}
+.test3:hot
+{
+    background-color: #0000ff;
+}
