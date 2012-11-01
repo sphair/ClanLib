@@ -18,6 +18,8 @@
 ribbon
 {
     -clan-box-direction: vertical;
+    -clan-box-width-shrink-factor: 1;
+    -clan-box-width-expand-factor: 1;
     -clan-box-height-shrink-factor: 0;
     -clan-box-height-expand-factor: 0;
     height: 117px;
@@ -74,6 +76,8 @@ ribbon-tab:selected
 ribbon-page
 {
     -clan-box-direction: horizontal;
+    -clan-box-width-shrink-factor: 1;
+    -clan-box-width-expand-factor: 1;
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
 /*    height: 94px;*/
