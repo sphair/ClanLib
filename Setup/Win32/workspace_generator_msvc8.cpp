@@ -105,28 +105,20 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 	
 	std::string sln_filename;
 	std::string vcproj_filename;
-	if(target_version == 900)
-	{
-		sln_filename = "ClanLib.sln";
-		vcproj_filename = ".vcproj";
-	}
-	else
-	{
-		sln_filename = "ClanLib.sln";
-		vcproj_filename = ".vcxproj";
-	}
+	sln_filename = "ClanLib.sln";
+	vcproj_filename = ".vcxproj";
 
 	OutputWriter writer(sln_filename);
 
-	if(target_version == 900)
+	if(target_version == 1000)
 	{
-		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 10.00");
-		writer.write_line(0, "# Visual Studio 2008");
+		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
+		writer.write_line(0, "# Visual C++ Express 2010");
 	}
 	else
 	{
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
-		writer.write_line(0, "# Visual C++ Express 2010");
+		writer.write_line(0, "# Visual C++ Express 2012");
 	}
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
@@ -209,15 +201,7 @@ void WorkspaceGenerator_MSVC8::write_property_sheet(const Workspace &workspace)
 	propertysheet.input_include_dir_vs100 = workspace.input_include_dir;
 	propertysheet.input_lib_dir_vs100 = workspace.input_lib_dir;
 
-	std::string propertysheet_filename;
-	if(target_version == 900)
-	{
-		propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.vsprops";
-	}
-	else
-	{
-		propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.props";
-	}
+	std::string propertysheet_filename = "Projects\\Sheets\\ExternalDirectories.props";
 
 	OutputWriter writer(propertysheet_filename.c_str());
 	propertysheet.write(writer, 0);
@@ -309,26 +293,13 @@ void WorkspaceGenerator_MSVC8::write_project(const Workspace &workspace, const P
 
 	generate_source_files(vc80proj, project);
 
-	std::string vcproj_filename;
-	if(target_version == 900)
-	{
-		vcproj_filename = ".vcproj";
-	}
-	else
-	{
-		vcproj_filename = ".vcxproj";
-	}
-
-	std::string project_filename = "Projects\\" + project.libname + vcproj_filename;
+	std::string project_filename = "Projects\\" + project.libname + ".vcxproj";
 	OutputWriter writer(project_filename.c_str());
 	vc80proj.write(writer, 0);
 
-	if(target_version >= 1000)
-	{
-		std::string filters_filename = "Projects\\" + project.libname + ".vcxproj.filters";
-		OutputWriter writer_filters(filters_filename.c_str());
-		vc80proj.write_filters(writer_filters, 0);	}
-
+	std::string filters_filename = "Projects\\" + project.libname + ".vcxproj.filters";
+	OutputWriter writer_filters(filters_filename.c_str());
+	vc80proj.write_filters(writer_filters, 0);
 
 	write_install_batch_file(workspace, project);
 }
@@ -1117,40 +1088,22 @@ MSVC8_PropertySheet::~MSVC8_PropertySheet()
 
 void MSVC8_PropertySheet::write(OutputWriter &output, int indent)
 {
-	std::vector<MSVC8_Tool *>::size_type index;
-
-	if(target_version == 900)
-	{
-		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
-		output.write_line(indent, "<VisualStudioPropertySheet");
-		output.write_line(indent+1, "ProjectType=\"Visual C++\"");
-		output.write_line(indent+1, "Version=\"8.00\"");
-		output.write_line(indent+1, "Name=\""+ name +"\"");
-		output.write_line(indent+1, ">");
-		for (index = 0; index < tools.size(); index++)
-			tools[index]->write(output, indent+1);
-		output.write_line(indent, "</VisualStudioPropertySheet>");
-	}
-	else
-	{
-		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
-		output.write_line(indent, "  <PropertyGroup>");
-		output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
-		output.write_line(indent, "    <_PropertySheetDisplayName>External Directories</_PropertySheetDisplayName>");
-		output.write_line(indent, "  </PropertyGroup>");
-		output.write_line(indent, "  <ItemDefinitionGroup>");
-		output.write_line(indent, "    <ClCompile>");
-		output.write_line(indent, "      <AdditionalIncludeDirectories>" + input_include_dir_vs100 + ";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>");
-		output.write_line(indent, "    </ClCompile>");
-		output.write_line(indent, "    <Lib>");
-		output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
-		output.write_line(indent, "    <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>");	// Can the set when the "whole program optimisation" is disabled?
-		output.write_line(indent, "    </Lib>");
-		output.write_line(indent, "  </ItemDefinitionGroup>");
-		output.write_line(indent, "</Project>");
-	}
-
+	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+	output.write_line(indent, "  <PropertyGroup>");
+	output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
+	output.write_line(indent, "    <_PropertySheetDisplayName>External Directories</_PropertySheetDisplayName>");
+	output.write_line(indent, "  </PropertyGroup>");
+	output.write_line(indent, "  <ItemDefinitionGroup>");
+	output.write_line(indent, "    <ClCompile>");
+	output.write_line(indent, "      <AdditionalIncludeDirectories>" + input_include_dir_vs100 + ";%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>");
+	output.write_line(indent, "    </ClCompile>");
+	output.write_line(indent, "    <Lib>");
+	output.write_line(indent, "      <AdditionalLibraryDirectories>" + input_lib_dir_vs100 + "\\$(Platform)$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>");
+	output.write_line(indent, "    <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>");	// Can the set when the "whole program optimisation" is disabled?
+	output.write_line(indent, "    </Lib>");
+	output.write_line(indent, "  </ItemDefinitionGroup>");
+	output.write_line(indent, "</Project>");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1179,127 +1132,98 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 	std::vector<std::string>::size_type index;
 	std::vector<std::string>::size_type index2;
 
-	if(target_version == 900)
-	{
-		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"Windows-1252\"?>");
-		output.write_line(indent, "<VisualStudioProject");
-		output.write_line(indent+1, "ProjectType=\"Visual C++\"");
-
-		output.write_line(indent+1, "Version=\"9,00\"");
-
-		output.write_line(indent+1, "Name=\"" + name + "\"");
-		output.write_line(indent+1, "ProjectGUID=\"" + project_guid + "\"");
-		output.write_line(indent+1, ">");
-		output.write_line(indent+1, "<Platforms>");
-		for (index = 0; index < platforms.size(); index++)
-			output.write_line(indent+2, "<Platform Name=\"" + platforms[index] + "\" />");
-		output.write_line(indent+1, "</Platforms>");
-		output.write_line(indent+1, "<ToolFiles />");
-		output.write_line(indent+1, "<Configurations>");
-		for (index = 0; index < configurations.size(); index++)
-			configurations[index]->write(output, indent+2);
-		output.write_line(indent+1, "</Configurations>");
-		output.write_line(indent+1, "<References />");
-		output.write_line(indent+1, "<Files>");
-		for (index = 0; index < files.size(); index++)
-			files[index]->write(output, indent+2);
-		output.write_line(indent+1, "</Files>");
-		output.write_line(indent+1, "<Globals />");
-		output.write_line(indent, "</VisualStudioProject>");
-	}
-	else
-	{
-		output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
-  		output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
+	output.write_line(indent, "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+	output.write_line(indent, "<Project DefaultTargets=\"Build\" ToolsVersion=\"4.0\" xmlns=\"http://schemas.microsoft.com/developer/msbuild/2003\">");
+  	output.write_line(indent, "<ItemGroup Label=\"ProjectConfigurations\">");
 		
-		for (index = 0; index < configurations.size(); index++)
-		{
-  			output.write_line(indent, "    <ProjectConfiguration Include=\"" + configurations[index]->name + "\">");
-			output.write_line(indent, "      <Configuration>" + configurations[index]->name_without_platform + "</Configuration>");
-			output.write_line(indent, "      <Platform>" + configurations[index]->name_without_config + "</Platform>");
-  			output.write_line(indent, "    </ProjectConfiguration>");
-		}
-
-  		output.write_line(indent, "  </ItemGroup>");
-  		output.write_line(indent, "  <PropertyGroup Label=\"Globals\">");
-  		output.write_line(indent, "    <ProjectName>" + name + "</ProjectName>");
-  		output.write_line(indent, "    <ProjectGuid>" + project_guid + "</ProjectGuid>");
-  		output.write_line(indent, "  </PropertyGroup>");
-
-  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />");
-
-		for (index = 0; index < configurations.size(); index++)
-		{
-	  		output.write_line(indent, "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"Configuration\">");
-			output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
-			output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
-			output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
-			output.write_line(indent, "  </PropertyGroup>");
-		}
-
-  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.props\" />");
-  		output.write_line(indent, "  <ImportGroup Label=\"ExtensionSettings\">");
-  		output.write_line(indent, "  </ImportGroup>");
-
-		for (index = 0; index < configurations.size(); index++)
-		{
-	 		output.write_line(indent, "  <ImportGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"PropertySheets\">");
-			output.write_line(indent, "    <Import Project=\"$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />");
-
-			for (index2 = 0; index2 < configurations[index]->inherited_property_sheets_vs100.size(); index2++)
-			{	
-				output.write_line(indent, "    <Import Project=\"" + configurations[index]->inherited_property_sheets_vs100[index2] + "\" />");
-			}
-			output.write_line(indent, "  </ImportGroup>");
-		}
-
-  		output.write_line(indent, "    <PropertyGroup Label=\"UserMacros\" />");
-
-		for (index = 0; index < configurations.size(); index++)
-		{
-	  		output.write_line(indent, "  <PropertyGroup>");
-			output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
-			output.write_line(indent, "    <TargetName Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">" + configurations[index]->target_name_vs100 + "</TargetName>");
-			output.write_line(indent, "  </PropertyGroup>");
-		}
-
-		for (index = 0; index < configurations.size(); index++)
-		{
-			output.write_line(indent, "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
-
-			MSVC8_VCCLCompilerTool *tool_compiler = configurations[index]->tool_compiler_vs100;
-			if (tool_compiler)
-			{
-				if (tool_compiler->use_precompiled_header.get() == "2")
-				{
-  					output.write_line(indent, "    <ClCompile>");
-  					output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
-					output.write_line(indent, "      <PrecompiledHeaderFile>" + tool_compiler->precompiled_header_through.get() + "</PrecompiledHeaderFile>");
-  					output.write_line(indent, "    </ClCompile>");
-				}
-
-			}
-
-  			output.write_line(indent, "    <Lib>");
-  			output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + ".lib</OutputFile>");
-  			output.write_line(indent, "    </Lib>");
-  			output.write_line(indent, "    <PostBuildEvent>");
-  			output.write_line(indent, "      <Message>Installing library and API headers...</Message>");
-  			output.write_line(indent, "      <Command>call install_clan" + name + ".bat \"$(TargetPath)\" \"$(TargetDir)$(TargetName).pdb\" \"$(TargetName).pdb\" \"$(Platform)\"</Command>");
-  			output.write_line(indent, "    </PostBuildEvent>");
-  			output.write_line(indent, "  </ItemDefinitionGroup>");
-		}
-
-		for (index = 0; index < files.size(); index++)
-			files[index]->write_vs100(output, indent+1, configurations);
-
-  		output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.targets\" />");
-  		output.write_line(indent, "  <ImportGroup Label=\"ExtensionTargets\">");
-  		output.write_line(indent, "  </ImportGroup>");
-  		output.write_line(indent, "</Project>");
-
+	for (index = 0; index < configurations.size(); index++)
+	{
+  		output.write_line(indent, "    <ProjectConfiguration Include=\"" + configurations[index]->name + "\">");
+		output.write_line(indent, "      <Configuration>" + configurations[index]->name_without_platform + "</Configuration>");
+		output.write_line(indent, "      <Platform>" + configurations[index]->name_without_config + "</Platform>");
+  		output.write_line(indent, "    </ProjectConfiguration>");
 	}
+
+  	output.write_line(indent, "  </ItemGroup>");
+  	output.write_line(indent, "  <PropertyGroup Label=\"Globals\">");
+  	output.write_line(indent, "    <ProjectName>" + name + "</ProjectName>");
+  	output.write_line(indent, "    <ProjectGuid>" + project_guid + "</ProjectGuid>");
+  	output.write_line(indent, "  </PropertyGroup>");
+
+  	output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.Default.props\" />");
+
+	for (index = 0; index < configurations.size(); index++)
+	{
+	  	output.write_line(indent, "  <PropertyGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"Configuration\">");
+		output.write_line(indent, "    <ConfigurationType>StaticLibrary</ConfigurationType>");
+		output.write_line(indent, "    <UseOfMfc>false</UseOfMfc>");
+		output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
+		if(target_version == 1000)
+			output.write_line(indent, "    <PlatformToolset>v100</PlatformToolset>");
+		else
+			output.write_line(indent, "    <PlatformToolset>v110</PlatformToolset>");
+		output.write_line(indent, "  </PropertyGroup>");
+	}
+
+  	output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.props\" />");
+  	output.write_line(indent, "  <ImportGroup Label=\"ExtensionSettings\">");
+  	output.write_line(indent, "  </ImportGroup>");
+
+	for (index = 0; index < configurations.size(); index++)
+	{
+	 	output.write_line(indent, "  <ImportGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\" Label=\"PropertySheets\">");
+		output.write_line(indent, "    <Import Project=\"$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\" Condition=\"exists('$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props')\" Label=\"LocalAppDataPlatform\" />");
+
+		for (index2 = 0; index2 < configurations[index]->inherited_property_sheets_vs100.size(); index2++)
+		{	
+			output.write_line(indent, "    <Import Project=\"" + configurations[index]->inherited_property_sheets_vs100[index2] + "\" />");
+		}
+		output.write_line(indent, "  </ImportGroup>");
+	}
+
+  	output.write_line(indent, "    <PropertyGroup Label=\"UserMacros\" />");
+
+	for (index = 0; index < configurations.size(); index++)
+	{
+	  	output.write_line(indent, "  <PropertyGroup>");
+		output.write_line(indent, "    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>");
+		output.write_line(indent, "    <TargetName Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">" + configurations[index]->target_name_vs100 + "</TargetName>");
+		output.write_line(indent, "  </PropertyGroup>");
+	}
+
+	for (index = 0; index < configurations.size(); index++)
+	{
+		output.write_line(indent, "  <ItemDefinitionGroup Condition=\"'$(Configuration)|$(Platform)'=='" + configurations[index]->name + "'\">");
+
+		MSVC8_VCCLCompilerTool *tool_compiler = configurations[index]->tool_compiler_vs100;
+		if (tool_compiler)
+		{
+			if (tool_compiler->use_precompiled_header.get() == "2")
+			{
+  				output.write_line(indent, "    <ClCompile>");
+  				output.write_line(indent, "      <PrecompiledHeader>Use</PrecompiledHeader>");
+				output.write_line(indent, "      <PrecompiledHeaderFile>" + tool_compiler->precompiled_header_through.get() + "</PrecompiledHeaderFile>");
+  				output.write_line(indent, "    </ClCompile>");
+			}
+		}
+
+  		output.write_line(indent, "    <Lib>");
+  		output.write_line(indent, "      <OutputFile>$(OutDir)" + configurations[index]->target_name_vs100 + ".lib</OutputFile>");
+  		output.write_line(indent, "    </Lib>");
+  		output.write_line(indent, "    <PostBuildEvent>");
+  		output.write_line(indent, "      <Message>Installing library and API headers...</Message>");
+  		output.write_line(indent, "      <Command>call install_clan" + name + ".bat \"$(TargetPath)\" \"$(TargetDir)$(TargetName).pdb\" \"$(TargetName).pdb\" \"$(Platform)\"</Command>");
+  		output.write_line(indent, "    </PostBuildEvent>");
+  		output.write_line(indent, "  </ItemDefinitionGroup>");
+	}
+
+	for (index = 0; index < files.size(); index++)
+		files[index]->write_vs100(output, indent+1, configurations);
+
+  	output.write_line(indent, "  <Import Project=\"$(VCTargetsPath)\\Microsoft.Cpp.targets\" />");
+  	output.write_line(indent, "  <ImportGroup Label=\"ExtensionTargets\">");
+  	output.write_line(indent, "  </ImportGroup>");
+  	output.write_line(indent, "</Project>");
 }
 
 void MSVC8_Project::write_filters(OutputWriter &output, int indent) const
