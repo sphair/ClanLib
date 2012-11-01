@@ -29,6 +29,7 @@
 #pragma once
 
 #include "api_csslayout.h"
+#include <memory>
 
 namespace clan
 {
