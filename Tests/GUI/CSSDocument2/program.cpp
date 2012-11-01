@@ -56,6 +56,13 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon_control_1->set_tag_name("button");
 	ribbon_control_1->set_class("big");
 
+	GUIComponent *testHot1 = new GUIComponent(root);
+	testHot1->set_class("test1");
+	GUIComponent *testHot2 = new GUIComponent(testHot1);
+	testHot2->set_class("test2");
+	GUIComponent *testHot3 = new GUIComponent(testHot2);
+	testHot3->set_class("test3");
+
 	root->update_layout();
 
 	gui.exec();
