@@ -253,7 +253,6 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 
 	box_math.adjust(geometry.get_width());
 
-	float child_used_height = geometry.get_height(); // TBD: How should sizes behave in the perpendicular direction?
 
 	// Set the actual geometry
 	float x = 0.0f;
@@ -261,6 +260,37 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
+		CSSClanBoxMath perpendicular_math;
+
+		perpendicular_math.used_min_lengths.push_back(child->get_min_height());
+		perpendicular_math.used_lengths.push_back(child->get_preferred_height());
+		perpendicular_math.used_max_lengths.push_back(child->get_max_height());
+
+		switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			perpendicular_math.used_shrink_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
+			break;
+		}
+
+		switch (child->impl->css_properties.clan_box_height_expand_factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			perpendicular_math.used_expand_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
+			break;
+		}
+
+		perpendicular_math.adjust(geometry.get_height());
+		float child_used_height = perpendicular_math.used_lengths[0];
+
 		// Used to actual mapping
 		int x1 = (int)x;
 		int y1 = (int)y;
@@ -313,6 +343,37 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
+		CSSClanBoxMath perpendicular_math;
+
+		perpendicular_math.used_min_lengths.push_back(child->get_min_width());
+		perpendicular_math.used_lengths.push_back(child->get_preferred_width());
+		perpendicular_math.used_max_lengths.push_back(child->get_max_width());
+
+		switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			perpendicular_math.used_shrink_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
+			break;
+		}
+
+		switch (child->impl->css_properties.clan_box_width_expand_factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			perpendicular_math.used_expand_weights.push_back(0.0f);
+			break;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
+			break;
+		}
+
+		perpendicular_math.adjust(geometry.get_width());
+		float child_used_width = perpendicular_math.used_lengths[0];
+
 		// Used to actual mapping
 		int x1 = (int)x;
 		int y1 = (int)y;
