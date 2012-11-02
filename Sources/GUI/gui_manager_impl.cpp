@@ -55,7 +55,7 @@ namespace clan
 // GUIManager_Impl Construction:
 
 GUIManager_Impl::GUIManager_Impl()
-: mouse_capture_component(0), mouse_over_component(0), exit_flag(false), exit_code(0), window_manager(NULL)
+: mouse_capture_component(0), exit_flag(false), exit_code(0), window_manager(NULL)
 {
 	func_focus_lost.set(this, &GUIManager_Impl::on_focus_lost);
 	func_focus_gained.set(this, &GUIManager_Impl::on_focus_gained);
@@ -176,9 +176,6 @@ void GUIManager_Impl::remove_component(GUIComponent_Impl *component_impl)
 		window_manager.capture_mouse(get_toplevel_window(mouse_capture_component), false);
 		mouse_capture_component = 0;
 	}
-
-	if (mouse_over_component && mouse_over_component->impl.get() == component_impl)
-		mouse_over_component = 0;
 
 	std::vector<GUITopLevelWindow>::size_type index, size;
 
@@ -678,9 +675,25 @@ void GUIManager_Impl::on_input_received(
 		if (input_event.type == InputEvent::proximity_change && toplevel_window->proximity_component)
 			target = toplevel_window->proximity_component;
 
+		if (input_event.type == InputEvent::pointer_moved)
+		{
+			if (target)
+			{
+				Point point = target->window_to_component_coords(input_event.mouse_pos);
+				process_pointer_moved_at(target, point, true);
+			}
+			else
+			{
+				Point point = toplevel_window->component->window_to_component_coords(input_event.mouse_pos);
+				process_pointer_moved_at(toplevel_window->component, point, false);
+			}
+		}
+
 		if (target == 0)
-			target = toplevel_window->component->get_component_at(
-				toplevel_window->component->window_to_component_coords(input_event.mouse_pos));
+		{
+			target = toplevel_window->component->get_component_at(toplevel_window->component->window_to_component_coords(input_event.mouse_pos));
+		}
+
 	}
 	else
 	{
@@ -690,32 +703,63 @@ void GUIManager_Impl::on_input_received(
 			target = toplevel_window->component; // All keyboard messages are redirected to the toplevel component if no component is focused.
 	}
 
+	dispatch_message_to_component(target, input_event);
+
+}
+
+void GUIManager_Impl::process_pointer_moved_at(GUIComponent *this_component, const Point &point, bool force_pointer_enter)
+{
+	if (this_component->is_visible())
+	{
+		Rect parent_rect = this_component->get_size();
+		if( force_pointer_enter || parent_rect.contains(point) )  
+		{
+			if (!this_component->impl->pointer_inside_component)
+			{
+				this_component->impl->pointer_inside_component = true;
+				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
+				msg->pointer_type = GUIMessage_Pointer::pointer_enter;
+				msg->target = this_component;
+				dispatch_message(msg);
+			}
+		}
+		else
+		{
+			if (this_component->impl->pointer_inside_component)
+			{
+				this_component->impl->pointer_inside_component = false;
+				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
+				msg->pointer_type = GUIMessage_Pointer::pointer_leave;
+				msg->target = this_component;
+				dispatch_message(msg);
+			}
+		}
+
+		std::vector<GUIComponent *> children = this_component->get_child_components();
+		std::size_t pos, size = children.size();
+
+		for( pos=size; pos>0; pos-- )
+		{
+			GUIComponent *child = children[pos-1];
+			if(child->is_visible())
+			{
+				Point P = point;
+				P.x -= child->get_geometry().left;
+				P.y -= child->get_geometry().top;
+				process_pointer_moved_at(child, P, false);
+			}
+		}
+
+	}
+}
+
+void GUIManager_Impl::dispatch_message_to_component(GUIComponent *target, const InputEvent &input_event)
+{
 	if (target)
 	{
 		// Localize mouse position:
 		InputEvent local_input_event = input_event;
 		local_input_event.mouse_pos = target->window_to_component_coords(input_event.mouse_pos);
-
-		// For pointer movements we may need to generate enter and leave messages:
-		if (local_input_event.type == InputEvent::pointer_moved &&
-			target != mouse_over_component)
-		{
-			if (mouse_over_component)
-			{
-				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
-				msg->pointer_type = GUIMessage_Pointer::pointer_leave;
-				msg->target = mouse_over_component;
-				dispatch_message(msg);
-			}
-			mouse_over_component = target;
-			if (mouse_over_component)
-			{
-				std::shared_ptr<GUIMessage_Pointer> msg(new GUIMessage_Pointer());
-				msg->pointer_type = GUIMessage_Pointer::pointer_enter;
-				msg->target = mouse_over_component;
-				dispatch_message(msg);
-			}
-		}
 
 		std::shared_ptr<GUIMessage> message(new GUIMessage_Input(local_input_event));
 		message->target = target;

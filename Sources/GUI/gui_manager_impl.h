@@ -131,7 +131,6 @@ public:
 	CSSResourceCache resource_cache;
 
 	GUIComponent *mouse_capture_component;
-	GUIComponent *mouse_over_component;
 	GUIWindowManager window_manager;
 	bool exit_flag;
 	int exit_code;
@@ -170,6 +169,8 @@ public:
 /// \{
 private:
 	void deliver_message(std::shared_ptr<GUIMessage> &message);
+	void dispatch_message_to_component(GUIComponent *target, const InputEvent &input_event);
+	void process_pointer_moved_at(GUIComponent *this_component, const Point &point, bool force_pointer_enter);
 
 	void on_focus_lost(GUITopLevelWindow *toplevel_window);
 	void on_focus_gained(GUITopLevelWindow *toplevel_window);
