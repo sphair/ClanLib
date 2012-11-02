@@ -126,6 +126,8 @@ public:
 	void layout_clan_box_vertical();
 	void layout_clan_grid();
 	void layout_clan_stacked();
+	float get_css_relative_x(float containing_width);
+	float get_css_relative_y(float containing_height);
 
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);
