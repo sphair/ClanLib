@@ -224,30 +224,33 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		box_math.used_min_lengths.push_back(child->get_min_width());
-		box_math.used_lengths.push_back(child->get_preferred_width());
-		box_math.used_max_lengths.push_back(child->get_max_width());
-
-		switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			box_math.used_shrink_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
-			break;
-		}
+			box_math.used_min_lengths.push_back(child->get_min_width());
+			box_math.used_lengths.push_back(child->get_preferred_width());
+			box_math.used_max_lengths.push_back(child->get_max_width());
 
-		switch (child->impl->css_properties.clan_box_width_expand_factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			box_math.used_expand_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
-			break;
+			switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				box_math.used_shrink_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
+				break;
+			}
+
+			switch (child->impl->css_properties.clan_box_width_expand_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				box_math.used_expand_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
+				break;
+			}
 		}
 	}
 
@@ -260,45 +263,51 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
-		CSSClanBoxMath perpendicular_math;
-
-		perpendicular_math.used_min_lengths.push_back(child->get_min_height());
-		perpendicular_math.used_lengths.push_back(child->get_preferred_height());
-		perpendicular_math.used_max_lengths.push_back(child->get_max_height());
-
-		switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			perpendicular_math.used_shrink_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
-			break;
+			CSSClanBoxMath perpendicular_math;
+
+			perpendicular_math.used_min_lengths.push_back(child->get_min_height());
+			perpendicular_math.used_lengths.push_back(child->get_preferred_height());
+			perpendicular_math.used_max_lengths.push_back(child->get_max_height());
+
+			switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_shrink_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
+				break;
+			}
+
+			switch (child->impl->css_properties.clan_box_height_expand_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_expand_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
+				break;
+			}
+
+			perpendicular_math.adjust(geometry.get_height());
+			float child_used_height = perpendicular_math.used_lengths[0];
+
+			float used_offset_x = child->impl->get_css_relative_x(geometry.get_width());
+			float used_offset_y = child->impl->get_css_relative_y(geometry.get_height());
+
+			// Used to actual mapping
+			int x1 = (int)(x + used_offset_x);
+			int y1 = (int)(y + used_offset_y);
+			int x2 = (int)(x + used_offset_x + box_math.used_lengths[i] + 0.5f);
+			int y2 = (int)(y + used_offset_y + child_used_height + 0.5f);
+			child->set_geometry(Rect(x1, y1, x2, y2));
+
+			x += box_math.used_lengths[i];
 		}
-
-		switch (child->impl->css_properties.clan_box_height_expand_factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			perpendicular_math.used_expand_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
-			break;
-		}
-
-		perpendicular_math.adjust(geometry.get_height());
-		float child_used_height = perpendicular_math.used_lengths[0];
-
-		// Used to actual mapping
-		int x1 = (int)x;
-		int y1 = (int)y;
-		int x2 = (int)(x + box_math.used_lengths[i] + 0.5f);
-		int y2 = (int)(y + child_used_height + 0.5f);
-		child->set_geometry(Rect(x1, y1, x2, y2));
-
-		x += box_math.used_lengths[i];
 	}
 }
 
@@ -307,30 +316,33 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
-		box_math.used_min_lengths.push_back(child->get_min_height());
-		box_math.used_lengths.push_back(child->get_preferred_height());
-		box_math.used_max_lengths.push_back(child->get_max_height());
-
-		switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			box_math.used_shrink_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
-			break;
-		}
+			box_math.used_min_lengths.push_back(child->get_min_height());
+			box_math.used_lengths.push_back(child->get_preferred_height());
+			box_math.used_max_lengths.push_back(child->get_max_height());
 
-		switch (child->impl->css_properties.clan_box_height_expand_factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			box_math.used_expand_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
-			break;
+			switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				box_math.used_shrink_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
+				break;
+			}
+
+			switch (child->impl->css_properties.clan_box_height_expand_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				box_math.used_expand_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
+				break;
+			}
 		}
 	}
 
@@ -343,45 +355,51 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
-		CSSClanBoxMath perpendicular_math;
-
-		perpendicular_math.used_min_lengths.push_back(child->get_min_width());
-		perpendicular_math.used_lengths.push_back(child->get_preferred_width());
-		perpendicular_math.used_max_lengths.push_back(child->get_max_width());
-
-		switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			perpendicular_math.used_shrink_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
-			break;
+			CSSClanBoxMath perpendicular_math;
+
+			perpendicular_math.used_min_lengths.push_back(child->get_min_width());
+			perpendicular_math.used_lengths.push_back(child->get_preferred_width());
+			perpendicular_math.used_max_lengths.push_back(child->get_max_width());
+
+			switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_shrink_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
+				break;
+			}
+
+			switch (child->impl->css_properties.clan_box_width_expand_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_expand_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
+				break;
+			}
+
+			perpendicular_math.adjust(geometry.get_width());
+			float child_used_width = perpendicular_math.used_lengths[0];
+
+			float used_offset_x = child->impl->get_css_relative_x(geometry.get_width());
+			float used_offset_y = child->impl->get_css_relative_y(geometry.get_height());
+
+			// Used to actual mapping
+			int x1 = (int)(x + used_offset_x);
+			int y1 = (int)(y + used_offset_y);
+			int x2 = (int)(x + used_offset_x + child_used_width + 0.5f);
+			int y2 = (int)(y + used_offset_y + box_math.used_lengths[i] + 0.5f);
+			child->set_geometry(Rect(x1, y1, x2, y2));
+
+			y += box_math.used_lengths[i];
 		}
-
-		switch (child->impl->css_properties.clan_box_width_expand_factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			perpendicular_math.used_expand_weights.push_back(0.0f);
-			break;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
-			break;
-		}
-
-		perpendicular_math.adjust(geometry.get_width());
-		float child_used_width = perpendicular_math.used_lengths[0];
-
-		// Used to actual mapping
-		int x1 = (int)x;
-		int y1 = (int)y;
-		int x2 = (int)(x + child_used_width + 0.5f);
-		int y2 = (int)(y + box_math.used_lengths[i] + 0.5f);
-		child->set_geometry(Rect(x1, y1, x2, y2));
-
-		y += box_math.used_lengths[i];
 	}
 }
 
@@ -393,6 +411,40 @@ void GUIComponent_Impl::layout_clan_grid()
 void GUIComponent_Impl::layout_clan_stacked()
 {
 	throw Exception("-clan-stacked layout not implemented yet");
+}
+
+float GUIComponent_Impl::get_css_relative_x(float containing_width)
+{
+	if (css_properties.position.type == CSSBoxPosition::type_relative)
+	{
+		if (css_properties.left.type == CSSBoxLeft::type_length)
+			return css_properties.left.length.value;
+		else if (css_properties.left.type == CSSBoxLeft::type_percentage)
+			return css_properties.left.percentage / 100.0f * containing_width;
+		else
+			return 0.0f;
+	}
+	else
+	{
+		return 0.0f;
+	}
+}
+
+float GUIComponent_Impl::get_css_relative_y(float containing_height)
+{
+	if (css_properties.position.type == CSSBoxPosition::type_relative)
+	{
+		if (css_properties.top.type == CSSBoxTop::type_length)
+			return css_properties.top.length.value;
+		else if (css_properties.top.type == CSSBoxTop::type_percentage)
+			return css_properties.top.percentage / 100.0f * containing_height;
+		else
+			return 0.0f;
+	}
+	else
+	{
+		return 0.0f;
+	}
 }
 
 void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
