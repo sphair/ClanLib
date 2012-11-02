@@ -1000,6 +1000,7 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 
 void GUIComponent::update_style()
 {
+	impl->css_properties = CSSBoxProperties();
 	GUIComponentSelectNode select_node(this);
 	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
 	impl->css_properties.apply_properties(properties);
