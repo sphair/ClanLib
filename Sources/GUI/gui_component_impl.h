@@ -108,6 +108,7 @@ public:
 	bool constant_repaint;
 	bool blocks_default_action_when_focused;
 	bool is_selected_in_group;
+	bool pointer_inside_component;
 	std::string group_name;
 	CSSLayout css_layout;
 	CSSLayoutElement css_element;
