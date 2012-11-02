@@ -196,6 +196,82 @@ void GUIComponent_Impl::layout_content()
 
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 		child->impl->layout_content();
+
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
+		child->impl->layout_absolute_or_fixed();
+}
+
+void GUIComponent_Impl::layout_absolute_or_fixed()
+{
+	if (css_properties.position.type == CSSBoxPosition::type_absolute || css_properties.position.type == CSSBoxPosition::type_fixed)
+	{
+		float containing_width = parent->get_width();
+		float containing_height = parent->get_height();
+
+		float left = 0.0f;
+		if (css_properties.left.type == CSSBoxLeft::type_length)
+			left = css_properties.left.length.value;
+		else if (css_properties.left.type == CSSBoxLeft::type_percentage)
+			left = css_properties.left.percentage * containing_width / 100.0f;
+
+		float right = 0.0f;
+		if (css_properties.right.type == CSSBoxRight::type_length)
+			right = css_properties.right.length.value;
+		else if (css_properties.right.type == CSSBoxRight::type_percentage)
+			right = css_properties.right.percentage * containing_width / 100.0f;
+
+		// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
+/*
+		if (css_properties.left.type == CSSBoxLeft::type_auto &&
+			css_properties.right.type == CSSBoxRight::type_auto &&
+			css_properties.width.type == CSSBoxWidth::type_auto)
+		{
+		}
+		else if (css_properties.left.type == CSSBoxLeft::type_auto &&
+			css_properties.width.type == CSSBoxWidth::type_auto &&
+			css_properties.right.type != CSSBoxRight::type_auto) // rule #1
+		{
+			left = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - right;
+		}
+		else if (css_properties.left.type == CSSBoxLeft::type_auto &&
+			css_properties.right.type == CSSBoxRight::type_auto &&
+			css_properties.width.type != CSSBoxWidth::type_auto) // rule #2
+		{
+			if (css_properties.direction.type == CSSBoxDirection::type_ltr)
+			{
+				CSSActualValue offset_x = static_position_parent ? static_position_parent->formatting_context->get_x() : 0;
+				left = offset_x + static_position.left - containing_block.left;
+				right = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - left;
+			}
+			else
+			{
+				CSSActualValue offset_x = static_position_parent ? static_position_parent->formatting_context->get_x() : 0;
+				right = offset_x + static_position.right - containing_block.left;
+				left = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - right;
+			}
+		}
+		else if (css_properties.width.type == CSSBoxWidth::type_auto &&
+			css_properties.right.type == CSSBoxRight::type_auto &&
+			css_properties.left.type != CSSBoxLeft::type_auto) // rule #3
+		{
+			right = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - left;
+		}
+		else if (css_properties.left.type == CSSBoxLeft::type_auto &&
+			css_properties.width.type != CSSBoxWidth::type_auto &&
+			css_properties.right.type != CSSBoxRight::type_auto) // rule #4
+		{
+			left = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - right;
+		}
+		else if (css_properties.right.type == CSSBoxRight::type_auto &&
+			css_properties.left.type != CSSBoxLeft::type_auto &&
+			css_properties.width.type != CSSBoxWidth::type_auto) // rule #6
+		{
+			right = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - width.value - left;
+		}
+*/
+
+		layout_content();
+	}
 }
 
 void GUIComponent_Impl::layout_clan_box()
