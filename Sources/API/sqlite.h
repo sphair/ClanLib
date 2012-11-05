@@ -48,24 +48,24 @@
 	#if !defined(_DEBUG)
 		#if defined(DLL)
 			#pragma comment(lib, "clanSqlite-dll.lib")
-			#pragma comment(lib, "sqlite-dll.lib")
+			//#pragma comment(lib, "sqlite-dll.lib")
 #elif defined(_DLL)
 			#pragma comment(lib, "clanSqlite-static-mtdll.lib")
-			#pragma comment(lib, "sqlite-static-mtdll.lib")
+			//#pragma comment(lib, "sqlite-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "clanSqlite-static-mt.lib")
-			#pragma comment(lib, "sqlite-static-mt.lib")
+			//#pragma comment(lib, "sqlite-static-mt.lib")
 		#endif
 	#else
 		#if defined(DLL)
 			#pragma comment(lib, "clanSqlite-dll-debug.lib")
-			#pragma comment(lib, "sqlite-dll-debug.lib")
+			//#pragma comment(lib, "sqlite-dll-debug.lib")
 		#elif defined(_DLL)
 			#pragma comment(lib, "clanSqlite-static-mtdll-debug.lib")
-			#pragma comment(lib, "sqlite-static-mtdll-debug.lib")
+			//#pragma comment(lib, "sqlite-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "clanSqlite-static-mt-debug.lib")
-			#pragma comment(lib, "sqlite-static-mt-debug.lib")
+			//#pragma comment(lib, "sqlite-static-mt-debug.lib")
 		#endif
 	#endif
 #endif

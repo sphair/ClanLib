@@ -34,7 +34,6 @@
 #include "API/Core/System/system.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Database/db_command_provider.h"
-#include "sqlite3.h"
 
 namespace clan
 {

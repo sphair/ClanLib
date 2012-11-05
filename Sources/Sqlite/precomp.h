@@ -34,7 +34,12 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#include <sqlite3.h>
+#endif
+
+#ifdef WIN32
+#include "Amalgamation/sqlite3.h"
+#else
+#include "sqlite3.h"
 #endif
 
 #include "API/Core/System/exception.h"

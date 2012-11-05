@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "sqlite3.h"
 #include "API/Database/db_transaction.h"
 #include "API/Database/db_transaction_provider.h"
 

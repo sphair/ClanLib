@@ -32,8 +32,6 @@
 
 #pragma once
 
-
-#include "sqlite3.h"
 #include "API/Database/db_reader_provider.h"
 
 namespace clan
