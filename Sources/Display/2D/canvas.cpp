@@ -439,10 +439,7 @@ void Canvas::gradient_circle(const Pointf &center, const Pointf &centergradient,
 	float offset_x = 0;
 	float offset_y = 0;
 
-	if(radius < 4)
-		radius = 4;
-
-	float rotationcount = (radius - 3);
+	float rotationcount = max(5, (radius - 3));
 	float halfpi = 1.5707963267948966192313216916398f;
 	float turn = halfpi / rotationcount;
 
