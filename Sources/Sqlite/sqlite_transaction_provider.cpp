@@ -32,7 +32,6 @@
 #include "API/Database/db_command_provider.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
-#include "sqlite3.h"
 #include <memory>
 
 namespace clan
