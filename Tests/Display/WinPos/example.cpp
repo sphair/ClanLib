@@ -41,15 +41,15 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_mouse_down(const InputEvent &key, const InputState &state);
-	void on_mouse_up(const InputEvent &key, const InputState &state);
-	void on_mouse_move(const InputEvent &key, const InputState &state, DisplayWindow *window);
+	void on_mouse_down(const InputEvent &key);
+	void on_mouse_up(const InputEvent &key);
+	void on_mouse_move(const InputEvent &key, DisplayWindow *window);
 	void on_window_close(DisplayWindow *window);
 	void on_window_moved(DisplayWindow *window);
 	void on_window_resize(int xpos, int ypos);
 	void on_lost_focus();
-	void on_input_up(const InputEvent &key, const InputState &state);
-	void draw_window_info(GraphicContext &gc, Font &font, int ypos, DisplayWindowDescription &desc, DisplayWindow &window);
+	void on_input_up(const InputEvent &key);
+	void draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDescription &desc, DisplayWindow &window);
 	void update_window_relative_positions();
 private:
 
@@ -103,12 +103,12 @@ int App::start(const std::vector<std::string> &args)
 
 	try
 	{
+
 		DisplayWindowDescription desc_window_main;
 		desc_window_main.set_title("Main Window");
 		desc_window_main.set_allow_resize(true);
 		desc_window_main.show_caption(true);
 		desc_window_main.set_position(Rect(256, 128, Size(512, 128)), true);
-
 
 		DisplayWindow window_main(desc_window_main);
 		std::vector<Slot> slots;
@@ -171,7 +171,6 @@ int App::start(const std::vector<std::string> &args)
 		window_4_ptr = &window_4;
 		window_5_ptr = &window_5;
 
-
 		Font font(window_main.get_gc(), "tahoma", 16);
 
 		// Run until someone presses escape
@@ -179,37 +178,36 @@ int App::start(const std::vector<std::string> &args)
 		{
 			mouse_move_event_triggered = false;
 			//
-			GraphicContext gc = window_2.get_gc();
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(gc, 8, 16, "Owned by Main Window");
-			draw_window_info(gc, font, 16, desc_window_2, window_2);
+			Canvas canvas(window_2);
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			font.draw_text(canvas, 8, 16, "Owned by Main Window");
+			draw_window_info(canvas, font, 16, desc_window_2, window_2);
 			window_2.flip(0);
-
 			//
-			gc = window_3.get_gc();
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(gc, 8, 16, "Owned by Window 2");
-			draw_window_info(gc, font, 16, desc_window_3, window_3);
+			canvas = Canvas(window_3);
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			font.draw_text(canvas, 8, 16, "Owned by Window 2");
+			draw_window_info(canvas, font, 16, desc_window_3, window_3);
 			window_3.flip(0);
 
 			//
-			gc = window_4.get_gc();
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(gc, 8, 16, "Owned by Window 3");
-			draw_window_info(gc, font, 16, desc_window_4, window_4);
+			canvas = Canvas(window_4);
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			font.draw_text(canvas, 8, 16, "Owned by Window 3");
+			draw_window_info(canvas, font, 16, desc_window_4, window_4);
 			window_4.flip(0);
 
 			//
-			gc = window_5.get_gc();
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			draw_window_info(gc, font, 16, desc_window_5, window_5);
+			canvas = Canvas(window_5);
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			draw_window_info(canvas, font, 16, desc_window_5, window_5);
 			window_5.flip(0);
 
 			//
-			gc = window_main.get_gc();
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(gc, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
-			draw_window_info(gc, font, 16, desc_window_main, window_main);
+			canvas = Canvas(window_main);
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			font.draw_text(canvas, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
+			draw_window_info(canvas, font, 16, desc_window_main, window_main);
 			window_main.flip(1);
 
 			// This call processes user input and other events
@@ -229,7 +227,7 @@ int App::start(const std::vector<std::string> &args)
 	return 0;
 }
 
-void App::draw_window_info(GraphicContext &gc, Font &font, int ypos, DisplayWindowDescription &desc, DisplayWindow &window)
+void App::draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDescription &desc, DisplayWindow &window)
 {
 	const int ygap = 16;
 	ypos += ygap;
@@ -237,42 +235,41 @@ void App::draw_window_info(GraphicContext &gc, Font &font, int ypos, DisplayWind
 	rect = desc.get_position();
 	if (desc.get_position_client_area())
 	{
-		font.draw_text(gc, 8, ypos, string_format("Initial (Client Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
+		font.draw_text(canvas, 8, ypos, string_format("Initial (Client Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
 	}
 	else
 	{
-		font.draw_text(gc, 8, ypos, string_format("Initial (Window Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
+		font.draw_text(canvas, 8, ypos, string_format("Initial (Window Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
 	}
 
 	ypos += ygap;
 	rect = window.get_viewport();
-	font.draw_text(gc, 8, ypos, string_format("Viewport (Client Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
+	font.draw_text(canvas, 8, ypos, string_format("Viewport (Client Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
 	ypos += ygap;
 	rect = window.get_geometry();
-	font.draw_text(gc, 8, ypos, string_format("Geometry (Window Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
+	font.draw_text(canvas, 8, ypos, string_format("Geometry (Window Area): x=%1, y=%2, width=%3, height=%4", rect.left, rect.top, rect.get_width(), rect.get_height()));
 	ypos += ygap;
 
 	InputDevice &mouse = window.get_ic().get_mouse();
 	Point pos = mouse.get_position();
-	font.draw_text(gc, 8, ypos, string_format("Mouse (Client Area): x=%1, y=%2", pos.x, pos.y));
+	font.draw_text(canvas, 8, ypos, string_format("Mouse (Client Area): x=%1, y=%2", pos.x, pos.y));
 	ypos += ygap;
 	pos = window.client_to_screen(pos);
-	font.draw_text(gc, 8, ypos, string_format("Mouse (Screen Area): x=%1, y=%2", pos.x, pos.y));
+	font.draw_text(canvas, 8, ypos, string_format("Mouse (Screen Area): x=%1, y=%2", pos.x, pos.y));
 	ypos += ygap;
 
-	Draw::gradient_fill(gc, Rectf(0, ypos, gc.get_width(), gc.get_height()), Gradient(Colorf::blue, Colorf::white));
-	Draw::fill(gc, 0, ypos, 2, gc.get_height(), Colorf::green);
-	Draw::fill(gc, gc.get_width()-2, ypos, gc.get_width(), gc.get_height(), Colorf::green);
-
+	canvas.gradient_fill(Rectf(0, ypos, canvas.get_width(), canvas.get_height()), Gradient(Colorf::blue, Colorf::white));
+	canvas.fill(0, ypos, 2, canvas.get_height(), Colorf::green);
+	canvas.fill(canvas.get_width()-2, ypos, canvas.get_width(), canvas.get_height(), Colorf::green);
 }
 
-void App::on_mouse_down(const InputEvent &key, const InputState &state)
+void App::on_mouse_down(const InputEvent &key)
 {
 	last_mouse_pos = key.mouse_pos;
 	drag_start = true;
 }
 
-void App::on_mouse_up(const InputEvent &key, const InputState &state)
+void App::on_mouse_up(const InputEvent &key)
 {
 	drag_start = false;
 }
@@ -282,7 +279,7 @@ void App::on_lost_focus()
 	drag_start = false;
 }
 
-void App::on_mouse_move(const InputEvent &key, const InputState &state, DisplayWindow *window)
+void App::on_mouse_move(const InputEvent &key, DisplayWindow *window)
 {
 	if (mouse_move_event_triggered)
 	{
@@ -339,9 +336,9 @@ void App::on_window_close(DisplayWindow *window)
 	quit = true;
 }
 
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
