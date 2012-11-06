@@ -11,7 +11,7 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, const InputState &state);
+	void on_input_up(const InputEvent &key);
 	void on_window_close();
 
 private:
@@ -72,7 +72,8 @@ int App::start(const std::vector<std::string> &args)
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 		// Get the graphic context
-		GraphicContext gc = window.get_gc();
+		Canvas canvas(window);
+		GraphicContext &gc = canvas.get_gc();
 
 		ResourceManager resources("resources.xml");
 
@@ -92,8 +93,8 @@ int App::start(const std::vector<std::string> &args)
 		{
 			gc.clear(Colorf(0.0f,0.0f,0.2f));
 
-			small_font.draw_text(gc, 420, 180, "Window Speed Test");
-			small_font.draw_text(gc, 420, 200, string_format("num windows: %1", num_windows_created));
+			small_font.draw_text(canvas, 420, 180, "Window Speed Test");
+			small_font.draw_text(canvas, 420, 200, string_format("num windows: %1", num_windows_created));
 
 /*			DisplayWindow window2(desc2);
 			window2 = DisplayWindow();*/
@@ -106,7 +107,7 @@ int App::start(const std::vector<std::string> &args)
 			num_windows_created++;
 
 			float wps = 1000 * (num_windows_created/float(System::get_time()-start_time));
-			small_font.draw_text(gc, 420, 220, string_format("windows per second: %1", wps));
+			small_font.draw_text(canvas, 420, 220, string_format("windows per second: %1", wps));
 
 			window.flip(1);
 			KeepAlive::process();
@@ -138,9 +139,9 @@ int App::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}

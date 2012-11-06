@@ -54,7 +54,7 @@ public:
 
 			GraphicContext &gc = window.get_gc();
 
-			while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+			while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 			{
 				gc.clear(Colorf::gray70);
 
