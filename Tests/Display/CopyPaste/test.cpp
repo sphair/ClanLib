@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**	  Arkadiusz Kalinowski
 */
 
 #include "test.h"
@@ -36,7 +37,12 @@ public:
 	{
 		SetupCore setup_core;
 		SetupDisplay setup_display;
+
+#ifdef USE_D3D
+		SetupD3D setup_d3d;
+#else
 		SetupGL setup_gl;
+#endif
 
 		// Start the Application
 		TestApp app;
@@ -50,20 +56,39 @@ Application app(&Program::main);
 
 int TestApp::main(const std::vector<std::string> &args)
 {
+	quit = false;
+
 	// Create a console window for text-output if not available
-	ConsoleWindow console("Console");
+	ConsoleWindow console("Console", 80, 200);
 
 	try
 	{
+
+#ifdef USE_D3D
 		DisplayWindowDescription desc;
-		desc.set_size(Size(800,600), true);
+#else
+		OpenGLWindowDescription desc;
+#endif
 		desc.set_title("Image clipboard test");
+		desc.set_size(Size(800,600), true);
 		DisplayWindow window(desc);
+
+		// Connect the Window close event
+		Slot slot_quit = window.sig_window_close().connect(this, &TestApp::on_window_close);
+
+		// Connect a keyboard handler to on_key_up()
+		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &TestApp::on_input_up);
 		
+		//Create the Canvas
+		Canvas canvas(window);
+
+		//Set the reference to GraphicContext
+		GraphicContext &gc = canvas.get_gc();
+
 		PixelBuffer to_clipboard = ImageProviderFactory::load("copy.png");
 		window.set_clipboard_image(to_clipboard);
 
-/*		while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+		/*		while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
 		{
 			window.get_gc().clear(Colorf::gray70);
 			window.flip();
@@ -83,8 +108,7 @@ int TestApp::main(const std::vector<std::string> &args)
 		file.write(mem_data.get_data(), mem_data.get_size());
 */	
 
-	
- 		PixelBuffer from_clipboard;
+		PixelBuffer from_clipboard;
 		if (window.is_clipboard_image_available())
 		{
 			from_clipboard = window.get_clipboard_image();
@@ -93,23 +117,32 @@ int TestApp::main(const std::vector<std::string> &args)
 
 		if (!from_clipboard.is_null())
 		{
-			Texture tex(window.get_gc(), from_clipboard.get_size());
-			tex.set_image(from_clipboard);
-			tex.set_min_filter(cl_filter_nearest);
-			tex.set_mag_filter(cl_filter_nearest);
+			Texture2D texture_image(gc,
+									from_clipboard.get_width(),
+									from_clipboard.get_height(),
+									from_clipboard.get_format());
+			texture_image.set_image(gc,from_clipboard);
+			texture_image.set_min_filter(filter_linear);
+			texture_image.set_mag_filter(filter_linear);
 
-			while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+			Image image(gc,texture_image,texture_image.get_size());
+
+			while (!quit)
 			{
-				window.get_gc().clear(Colorf::gray30);
+				canvas.clear(Colorf(0.0f,0.0f,0.2f));
 
-				if (!from_clipboard.is_null())
-				{
-					Draw::texture(window.get_gc(), Rect(0,0,tex.get_width(), tex.get_height()));
-				}
+				canvas.set_map_mode(MapMode(map_2d_upper_left));
 
-				window.flip();
+				image.draw(canvas,0,0);
+
+				canvas.flush(); //Is this intended to be needed?
+
+				// Flip the display, showing on the screen what we have drawed
+				// since last call to flip()
+				window.flip(1);
+				
+				// This call processes user input and other events
 				KeepAlive::process();
-				System::sleep(50);
 			}
 		}
 	}
@@ -123,6 +156,19 @@ int TestApp::main(const std::vector<std::string> &args)
 	}
 
 	return 0;
+}
+
+void TestApp::on_input_up(const InputEvent &key)
+{
+	if(key.id == keycode_escape)
+	{
+		quit = true;
+	}
+}
+
+void TestApp::on_window_close()
+{
+	quit = true;
 }
 
 
