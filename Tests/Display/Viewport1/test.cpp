@@ -16,25 +16,27 @@ public:
 			SetupGL setup_gl;
 
 			DisplayWindow window("Viewport Grid Test", 640, 480, false, true);
-			GraphicContext gc = window.get_gc();
+
+			Canvas canvas(window);
+			GraphicContext &gc = canvas.get_gc();
 			
-			gc.enable_blending(true);
+			canvas.set_map_mode(map_2d_upper_left);
 
-			gc.set_map_mode(cl_map_2d_upper_left);
-
-			while(!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+			while(!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 			{
-				gc.clear(Colorf::white);
+				canvas.clear(Colorf::white);
+
 				Rect viewport = window.get_viewport();
 				for (int y = viewport.top; y < viewport.bottom; y+=2)
 				{
-					Draw::line(gc, viewport.left, y, viewport.right, y, Colorf::black);
+					canvas.line(viewport.left, y, viewport.right, y, Colorf::black);
 				}
 				for (int x = viewport.left; x < viewport.right; x+=2)
 				{
-					Draw::line(gc, x, viewport.top, x, viewport.bottom, Colorf::black);
+					canvas.line(x, viewport.top, x, viewport.bottom, Colorf::black);
 				}
 
+				canvas.flush();
 				window.flip(1);
 				KeepAlive::process();
 
