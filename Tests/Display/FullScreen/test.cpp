@@ -60,9 +60,9 @@ int TestApp::main(const std::vector<std::string> &args)
 		desc.set_title("Fullscreen test");
 		DisplayWindow window(desc);
 		
-		while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+		while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 		{
-			if (window.get_ic().get_keyboard().get_keycode(KEY_F11))
+			if (window.get_ic().get_keyboard().get_keycode(keycode_f11))
 			{
 				desc.set_fullscreen(!desc.is_fullscreen());
 				window = DisplayWindow(desc);
