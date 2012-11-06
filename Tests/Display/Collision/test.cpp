@@ -61,9 +61,9 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, const InputState &state);
+	void on_input_up(const InputEvent &key);
 	void on_window_close();
-	void draw_point_normal(GraphicContext &gc, const Pointf &point, const Pointf &normal, const Colorf &color);
+	void draw_point_normal(Canvas &canvas, const Pointf &point, const Pointf &normal, const Colorf &color);
 private:
 	bool quit;
 };
@@ -102,7 +102,8 @@ int App::start(const std::vector<std::string> &args)
 		Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-		GraphicContext gc = window.get_gc();
+		Canvas canvas(window);
+		GraphicContext &gc = canvas.get_gc();
 
 		Font font(gc, "Tahoma", 16);
 
@@ -119,10 +120,10 @@ int App::start(const std::vector<std::string> &args)
 			file2 = args[2];
 		}
 
-		int tri_x_pos = 0;
-		int tri_y_pos = 0;
-		int other_x_pos = window.get_geometry().get_width()/2;
-		int other_y_pos = window.get_geometry().get_height()/2;
+		double tri_x_pos = 0;
+		double tri_y_pos = 0;
+		double other_x_pos = window.get_geometry().get_width()/2;
+		double other_y_pos = window.get_geometry().get_height()/2;
 
 		// draw_limit = 0;
 
@@ -200,124 +201,124 @@ int App::start(const std::vector<std::string> &args)
 		// Loop until the user hits escape:
 		while (!quit)
 		{
-			gc.clear(Colorf::ghostwhite);
+			canvas.clear(Colorf::ghostwhite);
 
-			if (keyboard.get_keycode(KEY_SHIFT))
+			if (keyboard.get_keycode(keycode_shift))
 			{
 				// Control Other
-				if( keyboard.get_keycode(KEY_RIGHT) )
-					other_x_pos+=1;
-				if( keyboard.get_keycode(KEY_LEFT) )
-					other_x_pos-=1;
+				if( keyboard.get_keycode(keycode_right) )
+					other_x_pos+=0.25;
+				if( keyboard.get_keycode(keycode_left) )
+					other_x_pos-=0.25;
 
-				if( keyboard.get_keycode(KEY_UP) )
-					other_y_pos-=1;
-				if( keyboard.get_keycode(KEY_DOWN) )
-					other_y_pos+=1;
+				if( keyboard.get_keycode(keycode_up) )
+					other_y_pos-=0.25;
+				if( keyboard.get_keycode(keycode_down) )
+					other_y_pos+=0.25;
 			}
 			else
 			{
 				// Control Triangle
-				if( keyboard.get_keycode(KEY_RIGHT) )
-					tri_x_pos+=1;
-				if( keyboard.get_keycode(KEY_LEFT) )
-					tri_x_pos-=1;
+				if( keyboard.get_keycode(keycode_right) )
+					tri_x_pos+=0.25;
+				if( keyboard.get_keycode(keycode_left) )
+					tri_x_pos-=0.25;
 
-				if( keyboard.get_keycode(KEY_UP) )
-					tri_y_pos-=1;
-				if( keyboard.get_keycode(KEY_DOWN) )
-					tri_y_pos+=1;
+				if( keyboard.get_keycode(keycode_up) )
+					tri_y_pos-=0.25;
+				if( keyboard.get_keycode(keycode_down) )
+					tri_y_pos+=0.25;
 			}
 
-			if( keyboard.get_keycode(KEY_E) )
+			if( keyboard.get_keycode(keycode_e) )
 			{
-				surface.rotate(Angle(0.1f, cl_degrees));
-				co1.rotate(Angle(0.1f, cl_degrees));
+				surface.rotate(Angle(0.1f, angle_degrees));
+				co1.rotate(Angle(0.1f, angle_degrees));
 			}
-			if( keyboard.get_keycode(KEY_R) )
+			if( keyboard.get_keycode(keycode_r) )
 			{
-				co2.rotate(Angle(0.1f, cl_degrees));
-				surface2.rotate(Angle(0.1f, cl_degrees));
+				co2.rotate(Angle(0.1f, angle_degrees));
+				surface2.rotate(Angle(0.1f, angle_degrees));
 			}
-			if( keyboard.get_keycode(KEY_1) )
+			if( keyboard.get_keycode(keycode_1) )
 			{
 				co2.set_scale(1.0f, 1.0f);
 				surface2.set_scale(1.0f, 1.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_2) )
+			if( keyboard.get_keycode(keycode_2) )
 			{
 				co2.set_scale(2.0f, 2.0f);
 				surface2.set_scale(2.0f, 2.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_3) )
+			if( keyboard.get_keycode(keycode_3) )
 			{
 				co2.set_scale(3.0f, 3.0f);
 				surface2.set_scale(3.0f, 3.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_4) )
+			if( keyboard.get_keycode(keycode_4) )
 			{
 				co2.set_scale(4.0f, 4.0f);
 				surface2.set_scale(4.0f, 4.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_5) )
+			if( keyboard.get_keycode(keycode_5) )
 			{
 				co2.set_scale(5.0f, 5.0f);
 				surface2.set_scale(5.0f, 5.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_6) )
+			if( keyboard.get_keycode(keycode_6) )
 			{
 				co2.set_scale(6.0f, 6.0f);
 				surface2.set_scale(6.0f, 6.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_7) )
+			if( keyboard.get_keycode(keycode_7) )
 			{
 				co2.set_scale(7.0f, 7.0f);
 				surface2.set_scale(7.0f, 7.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_8) )
+			if( keyboard.get_keycode(keycode_8) )
 			{
 				co2.set_scale(8.0f, 8.0f);
 				surface2.set_scale(8.0f, 8.0f);
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_I) )
+			if( keyboard.get_keycode(keycode_i) )
 			{
 				draw_sub_on_co1 = !draw_sub_on_co1;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_O) )
+			if( keyboard.get_keycode(keycode_o) )
 			{
 				draw_sub_on_co2 = !draw_sub_on_co2;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_T) )
+			if( keyboard.get_keycode(keycode_t) )
 			{
 				draw_min_on_co1 = !draw_min_on_co1;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_Y) )
+			if( keyboard.get_keycode(keycode_y) )
 			{
 				draw_min_on_co2 = !draw_min_on_co2;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_D) )
+			if( keyboard.get_keycode(keycode_d) )
 			{
 				draw_deep_point = !draw_deep_point;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_S) )
+			if( keyboard.get_keycode(keycode_s) )
 			{
 				draw_surfaces = !draw_surfaces;
 				System::sleep(100);
 			}
-			if( keyboard.get_keycode(KEY_X) )
+			if( keyboard.get_keycode(keycode_x) )
 			{
 				// Load, ensuring recreated
 				co1 = CollisionOutline();
@@ -338,33 +339,33 @@ int App::start(const std::vector<std::string> &args)
 				System::sleep(100);
 			}
 
-			if( keyboard.get_keycode(KEY_SUBTRACT) )
+			if( keyboard.get_keycode(keycode_subtract) )
 			{
 				sub_circle_multiplier -= 0.2f;
 				co1.calculate_sub_circles(sub_circle_multiplier);
 				co2.calculate_sub_circles(sub_circle_multiplier);
 				System::sleep(50);
 			}
-			if( keyboard.get_keycode(KEY_ADD) )
+			if( keyboard.get_keycode(keycode_add) )
 			{
 				sub_circle_multiplier += 0.2f;
 				co1.calculate_sub_circles(sub_circle_multiplier);
 				co2.calculate_sub_circles(sub_circle_multiplier);
 				System::sleep(50);
 			}
-			if( keyboard.get_keycode(KEY_G) )
+			if( keyboard.get_keycode(keycode_g) )
 			{
 				co1.calculate_smallest_enclosing_discs();
 				co2.calculate_smallest_enclosing_discs();
 				System::sleep(50);
 			}
-			if( keyboard.get_keycode(KEY_C) )
+			if( keyboard.get_keycode(keycode_c) )
 			{
 				co1.calculate_convex_hulls();
 				co2.calculate_convex_hulls();
 				System::sleep(200);
 			}
-			if( keyboard.get_keycode(KEY_H) )
+			if( keyboard.get_keycode(keycode_h) )
 			{
 				print_usage();
 				System::sleep(200);
@@ -374,29 +375,28 @@ int App::start(const std::vector<std::string> &args)
 			// surfaces
 			if(draw_surfaces)
 			{
-				surface.draw(gc, (float)tri_x_pos, (float)tri_y_pos);
-				surface2.draw(gc, (float)other_x_pos, (float)other_y_pos);
+				surface.draw(canvas, (float)tri_x_pos, (float)tri_y_pos);
+				surface2.draw(canvas, (float)other_x_pos, (float)other_y_pos);
 			}
 
 			// -----------------------------------
 			// co1
 			co1.set_translation((float)tri_x_pos, (float)tri_y_pos);
-			co1.draw(0.0, 0.0, Colorf::limegreen, gc);
+			co1.draw(0.0, 0.0, Colorf::limegreen, canvas);
 			if(draw_sub_on_co1)
-				co1.draw_sub_circles(0.0, 0.0, Colorf::blue, gc);
+				co1.draw_sub_circles(0.0, 0.0, Colorf::blue, canvas);
 
 			// -----------------------------------
 			// co2 
 			co2.set_translation((float)other_x_pos, (float)other_y_pos);
-			co2.draw(0.0, 0.0, Colorf::red, gc );
+			co2.draw(0.0, 0.0, Colorf::red, canvas );
 			if(draw_sub_on_co2)
-				co2.draw_sub_circles(0.0, 0.0, Colorf::blue, gc);
-
+				co2.draw_sub_circles(0.0, 0.0, Colorf::blue, canvas);
 			if(draw_min_on_co1)
-				Draw::circle(gc, co1.get_minimum_enclosing_disc().position, co1.get_minimum_enclosing_disc().radius, Colorf(0.4f, 0.0f, 0.0f, 0.5f));
+				canvas.circle(co1.get_minimum_enclosing_disc().position, co1.get_minimum_enclosing_disc().radius, Colorf(0.4f, 0.0f, 0.0f, 0.5f));
 
 			if(draw_min_on_co2)
-				Draw::circle(gc, co2.get_minimum_enclosing_disc().position, co2.get_minimum_enclosing_disc().radius, Colorf(0.0f, 0.4f, 0.0f, 0.5f));
+				canvas.circle(co2.get_minimum_enclosing_disc().position, co2.get_minimum_enclosing_disc().radius, Colorf(0.0f, 0.4f, 0.0f, 0.5f));
 
 			int font_ypos = 20;
 
@@ -404,7 +404,8 @@ int App::start(const std::vector<std::string> &args)
 			// collision testing
 			if( co2.collide(co1) )
 			{
-				Draw::fill(gc, gc.get_size(), Colorf(Color(55,40,250,20)));
+				canvas.fill(canvas.get_size(), Colorf(Color(55,40,250,20)));
+
 				const std::vector<CollidingContours> &colpointinfo = co2.get_collision_info();
 				for(unsigned int c = 0; c < colpointinfo.size(); c++)
 				{
@@ -413,7 +414,7 @@ int App::start(const std::vector<std::string> &args)
 					for(unsigned int p = 0; p < colpointinfo[c].points.size(); p++)
 					{
 						const CollisionPoint &collision_point = colpointinfo[c].points[p];
-						draw_point_normal(gc, collision_point.point, collision_point.normal, collision_point.is_entry ? Colorf::green : Colorf::red);
+						draw_point_normal(canvas, collision_point.point, collision_point.normal, collision_point.is_entry ? Colorf::green : Colorf::red);
 	
 						// Draw information
 						std::string output(string_format("Collision(%1). Point Number (%2). ", c, p));
@@ -429,15 +430,15 @@ int App::start(const std::vector<std::string> &args)
 
 						output = output + string_format("Contour1(%1,%2), Contour2(%3,%4).", collision_point.contour1_line_start, collision_point.contour1_line_end, collision_point.contour2_line_start, collision_point.contour2_line_end);
 
-						font.draw_text(gc, 0, font_ypos, output, Colorf(0.0f, 0.0f, 0.0f, 0.5f));
+						font.draw_text(canvas, 0, font_ypos, output, Colorf(0.0f, 0.0f, 0.0f, 0.5f));
 						font_ypos += 20;
 					}
 					// Paint the pen-depth and normal from the deepest points
 					{
 						if (draw_deep_point)
 						{
-							draw_point_normal(gc, colpointinfo[c].contour1_deep_point, colpointinfo[c].penetration_normal, Colorf::blue);
-							draw_point_normal(gc, colpointinfo[c].contour2_deep_point, colpointinfo[c].penetration_normal, Colorf::blue);
+							draw_point_normal(canvas, colpointinfo[c].contour1_deep_point, colpointinfo[c].penetration_normal, Colorf::blue);
+							draw_point_normal(canvas, colpointinfo[c].contour2_deep_point, colpointinfo[c].penetration_normal, Colorf::blue);
 						}
 
 						// Draw information
@@ -455,7 +456,7 @@ int App::start(const std::vector<std::string> &args)
 						output = output + string_format("PenDepth(%1). ", colpointinfo[c].penetration_depth);
 						output = output + string_format("DeepPoint1(%1,%2). ", colpointinfo[c].contour1_deep_point.x, colpointinfo[c].contour1_deep_point.y);
 						output = output + string_format("DeepPoint2(%1,%2). ", colpointinfo[c].contour2_deep_point.x, colpointinfo[c].contour2_deep_point.y);
-						font.draw_text(gc, 0, font_ypos, output, Colorf(0.0f, 0.0f, 0.0f, 0.5f));
+						font.draw_text(canvas, 0, font_ypos, output, Colorf(0.0f, 0.0f, 0.0f, 0.5f));
 						font_ypos += 20;
 
 					}
@@ -495,9 +496,9 @@ int App::start(const std::vector<std::string> &args)
 	return 0;
 }
 
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -508,11 +509,12 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::draw_point_normal(GraphicContext &gc, const Pointf &point, const Pointf &normal, const Colorf &color)
+void App::draw_point_normal(Canvas &canvas, const Pointf &point, const Pointf &normal, const Colorf &color)
 {
 	Pointf p1 = point;
 	Pointf p2 = p1 + Pointf(normal.x * 20.0f, normal.y * 20.0f);
-	Draw::line(gc, 
+	
+	canvas.line(
 			int(p1.x+0.5f), int(p1.y+0.5f),
 			int(p2.x+0.5f), int(p2.y+0.5f),
 			color);
