@@ -39,7 +39,7 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, const InputState &state);
+	void on_input_up(const InputEvent &key);
 	void on_window_close();
 
 private:
@@ -91,20 +91,23 @@ int App::start(const std::vector<std::string> &args)
 		// Connect a keyboard handler to on_key_up()
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-		// Get the graphic context
-		GraphicContext gc = window.get_gc();
+		// Create the canvas and get the graphic context
+		Canvas canvas(window);
+		GraphicContext &gc = canvas.get_gc();
 
 		Font font = Font(gc, "Tahoma", 20);
 
-		PixelBuffer pacman("pacman.png");
+		PixelBuffer pacman = ImageProviderFactory::load("pacman.png");
 
 		SpriteDescription description;
 		Size size(22, 22);
 
 		for (int frame_cnt=0; frame_cnt < 6; frame_cnt++)
 		{
-			PixelBuffer frame(size.width, size.height, cl_rgba8);
-			pacman.convert(frame, size, Rect((frame_cnt * 28) + 4, 4, size));
+			PixelBuffer frame(size.width, size.height, tf_rgba8);
+
+			frame.set_subimage(pacman,Point(0,0),Rect((frame_cnt * 28) + 4, 4, size));
+
 			description.add_frame(frame);
 			description.set_frame_delay(frame_cnt, 0.1);
 		}
@@ -116,10 +119,11 @@ int App::start(const std::vector<std::string> &args)
 		// Run until someone presses escape
 		while (!quit)
 		{
-			gc.clear(Colorf(0.0f,0.0f,0.5f));
+			canvas.clear(Colorf(0.0f,0.0f,0.5f));
 
-			font.draw_text(gc, 32, 32, "Observe the animated cursor");
+			font.draw_text(canvas, 32, 32, "Observe the animated cursor");
 
+			canvas.flush();
 			// Flip the display, showing on the screen what we have drawed
 			// since last call to flip()
 			window.flip(1);
@@ -156,9 +160,9 @@ int App::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
