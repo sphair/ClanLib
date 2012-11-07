@@ -29,6 +29,7 @@
 	
 #include "Display/precomp.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Font/font_manager.h"
 #include "API/Core/Text/string_help.h"
 #include "font_description_impl.h"
 
@@ -129,6 +130,10 @@ FontDescription::Charset FontDescription::get_charset() const
 	return impl->charset;
 }
 
+FontManager FontDescription::get_manager() const
+{
+	return impl->font_manager;
+}
 
 bool FontDescription::operator==(const FontDescription &other) const
 {
@@ -239,6 +244,11 @@ void FontDescription::set_subpixel(bool setting)
 void FontDescription::set_charset(Charset new_charset)
 {
 	impl->charset = new_charset;
+}
+
+void FontDescription::set_manager(FontManager &font_manager)
+{
+	impl->font_manager = font_manager;
 }
 
 /////////////////////////////////////////////////////////////////////////////
