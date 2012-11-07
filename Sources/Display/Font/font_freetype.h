@@ -31,8 +31,7 @@
 
 #pragma once
 
-#include "../api_display.h"
-#include "font.h"
+#include "API/Display/Font/font.h"
 
 namespace clan
 {
