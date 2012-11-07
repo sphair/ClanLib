@@ -15,6 +15,8 @@ libclan30Display_la_SOURCES = \
 	Font/X11/font_engine_freetype.cpp \
 	Font/font_description.cpp \
 	Font/font_system.cpp \
+	Font/font_manager.cpp \
+	Font/font_manager_impl.cpp \
 	Font/X11/font_provider_freetype.cpp \
 	Font/font_provider_system.cpp \
 	Font/font_provider_sprite.cpp \

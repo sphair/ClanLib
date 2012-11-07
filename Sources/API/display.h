@@ -67,6 +67,7 @@
 #include "Display/Font/font.h"
 #include "Display/Font/font_description.h"
 #include "Display/Font/font_system.h"
+#include "Display/Font/font_manager.h"
 #include "Display/Font/font_sprite.h"
 #include "Display/Font/font_metrics.h"
 #include "Display/Font/font_vector.h"
