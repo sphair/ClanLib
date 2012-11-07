@@ -18,7 +18,6 @@ libclan30Display_la_SOURCES = \
 	Font/font_provider_freetype.cpp \
 	Font/font_provider_system.cpp \
 	Font/font_provider_sprite.cpp \
-	Font/font_freetype.cpp \
 	Font/font_metrics.cpp \
 	Font/font_metrics_impl.cpp \
 	screen_info.cpp \
