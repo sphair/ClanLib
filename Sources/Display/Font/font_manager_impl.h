@@ -30,11 +30,12 @@
 #pragma once
 
 #include "API/Display/api_display.h"
+#include <map>
 
 namespace clan
 {
 
-class Canvas;
+class FontDescription;
 
 /// \brief Input events interface.
 class CL_API_DISPLAY FontManager_Impl
@@ -43,7 +44,7 @@ class CL_API_DISPLAY FontManager_Impl
 /// \{
 
 public:
-	FontManager_Impl(Canvas &canvas);
+	FontManager_Impl();
 
 	~FontManager_Impl();
 
@@ -59,11 +60,14 @@ public:
 /// \{
 
 public:
+	void register_font(const std::string &font_filename, const std::string &font_typeface);
+	FontDescription get_registered_font(const FontDescription &desc);
 
 
 /// \}
 /// \name Implementation
 /// \{
+	std::map<std::string /*font_typeface*/, std::string /*font_filename*/ > font_register_cache;
 
 private:
 /// \}

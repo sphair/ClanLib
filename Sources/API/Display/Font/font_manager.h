@@ -39,6 +39,7 @@ namespace clan
 {
 
 class FontManager_Impl;
+class FontDescription;
 
 class Canvas;
 
@@ -51,10 +52,7 @@ class CL_API_DISPLAY FontManager
 /// \{
 
 public:
-	/// \brief Constructs a null instance.
 	FontManager();
-
-	FontManager(Canvas &canvas);
 
 	~FontManager();
 
@@ -63,17 +61,22 @@ public:
 /// \{
 
 public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+
+	/// \brief Registers a font for lookup when creating fonts.
+	void register_font(const std::string &font_filename, const std::string &font_typeface);
+
+	/// \brief Get the registered font or the best font match if not found
+	//
+	/// \param desc = Description
+	///
+	/// \return Updated description
+	FontDescription get_registered_font(const FontDescription &desc);
 
 /// \}
 /// \name Implementation

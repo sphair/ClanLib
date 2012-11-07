@@ -183,9 +183,6 @@ public:
 	/// \brief Set the font metrics for the bitmap font. This is done automatically if the font is loaded from the system font
 	void set_font_metrics(const FontMetrics &metrics);
 
-	/// \brief Registers a font for lookup when creating fonts.
-	static void register_font(const std::string &font_filename, const std::string &font_typeface);
-
 /// \}
 /// \name Implementation
 /// \{

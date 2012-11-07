@@ -29,6 +29,12 @@
 
 #include "Display/precomp.h"
 #include "font_manager_impl.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Display/Font/font_description.h"
+
+#ifndef WIN32
+#include "../X11/font_config.h"
+#endif
 
 namespace clan
 {
@@ -36,7 +42,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Construction:
 
-FontManager_Impl::FontManager_Impl(Canvas &canvas)
+FontManager_Impl::FontManager_Impl()
 {
 }
 
@@ -50,6 +56,54 @@ FontManager_Impl::~FontManager_Impl()
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Operations:
+
+void FontManager_Impl::register_font(const std::string &font_filename, const std::string &font_typeface)
+{
+#ifdef WIN32
+	// TODO: Should this be in here?
+	int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(font_filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+	if(fonts_added == 0)
+		throw Exception("Unable to register font " + font_filename);
+#endif
+	std::map<std::string, std::string >::iterator find_it;
+	find_it = font_register_cache.find(font_typeface);
+	if (find_it == font_register_cache.end())	// Ensure not already registered
+	{
+		font_register_cache[font_typeface] = font_filename;
+	}
+
+}
+
+FontDescription FontManager_Impl::get_registered_font(const FontDescription &desc)
+{
+	int average_width = desc.get_average_width();
+	int height = desc.get_height();
+
+	FontDescription new_desc;
+	new_desc.clone(desc);
+	new_desc.set_average_width(average_width);
+	new_desc.set_height(height);
+
+	// Check for a registered font
+	std::map<std::string, std::string >::iterator find_it;
+	find_it = font_register_cache.find(desc.get_typeface_name());
+	if (find_it != font_register_cache.end())	// Found the registered font
+	{
+		new_desc.set_typeface_name(find_it->second);
+	}
+	else
+	{
+#ifndef WIN32
+#if !defined(__APPLE__)
+        // Obtain the best matching font file from fontconfig.
+		FontConfig &fc = FontConfig::instance();
+		std::string font_file_path = fc.match_font(new_desc);
+		new_desc.set_typeface_name(font_file_path);
+#endif
+#endif
+	}
+	return new_desc;
+}
 
 
 /////////////////////////////////////////////////////////////////////////////
