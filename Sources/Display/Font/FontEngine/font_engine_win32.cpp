@@ -33,6 +33,8 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
+#include "../glyph_outline.h"
+#include "API/Core/Math/bezier_curve.h"
 
 namespace clan
 {
@@ -401,6 +403,138 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 	};
 	return charset;
 
+}
+
+GlyphOutline *FontEngine_Win32::load_glyph_outline(int glyph)
+{
+	GLYPHMETRICS glyph_metrics = { 0 };
+	MAT2 matrix = { 0 };
+	matrix.eM11.value = 1;
+	matrix.eM22.value = 1;
+
+	HDC dc = GetDC(0);
+	HGDIOBJ old_font = SelectObject(dc, handle);
+
+	wchar_t text[2];
+	text[0] = glyph;
+	text[1] = 0;
+	WORD indices[2] = {0};
+	GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
+	glyph = indices[0];
+	int format = GGO_NATIVE | GGO_UNHINTED | GGO_GLYPH_INDEX;
+
+	DataBuffer glyph_buffer;
+	bool result = false;
+	DWORD result_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, 0, 0, &matrix);
+	if (result_size != 0 && result_size != GDI_ERROR)
+	{
+		DataBuffer buffer(result_size);
+		result_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+		if (result_size != 0 && result_size != GDI_ERROR)
+		{
+			glyph_buffer = buffer;
+			result = true;
+		}
+	}
+
+	SelectObject(dc, old_font);
+	ReleaseDC(0, dc);
+
+	if (glyph_buffer.is_null())
+		throw Exception("error loading glyph");
+
+	TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *) glyph_buffer.get_data();
+	char *data_end = (char *) polygon_header;
+	data_end += glyph_buffer.get_size();
+
+	GlyphOutline *outline = new GlyphOutline;		// TODO This should be a shared pointer
+
+	while( (char *) (polygon_header+1) <= data_end)
+	{
+		if (polygon_header->dwType != TT_POLYGON_TYPE)
+			throw Exception("invalid polygon type");
+
+		BezierCurve bezier_curve;
+		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
+		Pointf initial_point = previous_point;
+		bezier_curve.add_control_point( previous_point );
+
+		GlyphContour *contour = new GlyphContour;	//TODO - Shared Pointer
+
+		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
+		if (curve_bytes < 0)
+			throw Exception("invalid structure 1");
+
+		TTPOLYCURVE *poly_curve = (TTPOLYCURVE *) (polygon_header + 1);
+
+		// Update for next iteration (perfomed now for extra validation)
+		polygon_header = (TTPOLYGONHEADER *) ( (char *) (polygon_header+1) + curve_bytes );
+		if ( (char *) (polygon_header) > data_end)	// Ensure no overflow
+			throw Exception("invalid structure 2");
+
+		Pointf this_point;
+		Pointf next_point;
+
+		while(curve_bytes > 0)
+		{
+			int set_size = sizeof(TTPOLYCURVE) + sizeof(POINTFX) * (poly_curve->cpfx-1);
+			curve_bytes -= set_size;
+			TTPOLYCURVE *next_poly_curve = (TTPOLYCURVE *) ( (char *) (poly_curve) + set_size);
+			if ( next_poly_curve < poly_curve || ( (char *) poly_curve > data_end ) )
+				throw Exception("invalid structure 2");
+	
+			if (poly_curve->wType == TT_PRIM_LINE)
+			{
+				Pointf first_point = previous_point;
+				for (int i = 0; i < poly_curve->cpfx; i++)
+				{
+					next_point = PointFXtoPoint(poly_curve->apfx[i]);
+					contour->add_line_to(next_point);
+				}
+				previous_point = next_point;
+			}
+			else if (poly_curve->wType == TT_PRIM_QSPLINE)
+			{
+				for (int i = 0; i < poly_curve->cpfx; )
+				{
+					this_point = PointFXtoPoint(poly_curve->apfx[i++]);
+	
+					if (i == poly_curve->cpfx - 1)
+					{
+						next_point = PointFXtoPoint(poly_curve->apfx[i++]);
+					}
+					else
+					{
+						next_point = PointFXtoPoint(poly_curve->apfx[i]);
+						next_point = Pointf((this_point.x + next_point.x) / 2.0f, (this_point.y + next_point.y) / 2.0f);
+					}
+
+					// conversion of a quadratic to a cubic
+
+					// Cubic P1 in terms of Quadratic P0 and P1
+					bezier_curve.add_control_point(previous_point.x + 2.0f * (this_point.x - previous_point.x) / 3.0f,  previous_point.y + 2.0f * (this_point.y - previous_point.y) / 3.0f);
+
+					// Cubic P2 in terms of Qudartic P1 and P2
+					bezier_curve.add_control_point(this_point.x + (next_point.x - this_point.x) / 3.0f,  this_point.y + (next_point.y - this_point.y) / 3.0f);
+
+					// Cubic P3 is the on curve end point
+					bezier_curve.add_control_point( next_point );
+
+					previous_point = next_point;
+				}
+			}
+			else
+				throw Exception("unsupported curve type");
+
+			poly_curve = next_poly_curve;
+		}
+		// TODO: Do we need to close the curve?
+		contour->add_curve(bezier_curve);
+		outline->add_contour(contour);
+	}
+
+	outline->advance_x = 0;	// HACK HACK HACK - This should not be here
+	return outline;
 }
 
 }

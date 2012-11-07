@@ -445,4 +445,10 @@ Font_Sprite_Glyph *FontProvider_Sprite::get_glyph(unsigned int glyph)
 	return NULL;
 }
 
+GlyphOutline *FontProvider_Sprite::load_glyph_outline(int c)
+{
+	throw Exception("Implement Me");
+}
+
+
 }

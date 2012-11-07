@@ -46,7 +46,7 @@ class GlyphPrimitivesArray;
 class GlyphPrimitivesArrayOutline;
 class GlyphOutline;
 
-class FontEngine_Freetype;
+class FontEngine;
 
 class FontProvider_Vector : public FontProvider
 {
@@ -125,7 +125,7 @@ private:
 
 	FontMetrics metrics;
 
-	FontEngine_Freetype *font_engine;
+	FontEngine *font_engine;
 
 	int size_height;
 
