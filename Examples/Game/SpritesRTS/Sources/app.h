@@ -28,10 +28,10 @@
 
 #pragma once
 
-class Application
+class App
 {
 public:
-	Application() {};
+	App() {};
 
 	virtual int main(const std::vector<std::string> &args);
 };

@@ -25,8 +25,8 @@
 **
 **    Mark Page
 */
-
 #include "precomp.h"
+
 #include "program.h"
 #include "app.h"
 
@@ -72,7 +72,7 @@ int Program::main(const std::vector<std::string> &args)
 		SetupSound setup_sound;
 
 		// Start the Application
-		Application app;
+		App app;
 		int retval = app.main(args);
 		return retval;
 	}

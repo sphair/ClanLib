@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpritesRTS", "SpritesRTS-vc2008.vcproj", "{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpritesRTS", "SpritesRTS-vc2012.vcxproj", "{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

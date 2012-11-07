@@ -30,9 +30,6 @@
 
 #include "gameobject.h"
 
-class Sprite;
-class SoundBuffer;
-
 class Missile : public GameObject
 {
 // Construction

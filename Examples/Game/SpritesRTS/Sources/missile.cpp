@@ -25,7 +25,6 @@
 **
 **    
 */
-
 #include "precomp.h"
 
 #include "missile.h"
@@ -72,8 +71,8 @@ void Missile::setPos(int x, int y)
 void Missile::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(Angle(angle, cl_degrees));
-	collisionMissile->set_angle(Angle(angle, cl_degrees));
+	sprite->set_angle(Angle(angle, angle_degrees));
+	collisionMissile->set_angle(Angle(angle, angle_degrees));
 }
 
 void Missile::setSpeed(float newSpeed)
@@ -93,8 +92,8 @@ void Missile::draw()
 {
 	if(!hidden)
 	{
-		GraphicContext gc = world->get_gc();
-		sprite->draw(gc, posX, posY);
+		Canvas canvas = world->get_canvas();
+		sprite->draw(canvas, posX, posY);
 	}
 }
 
@@ -118,7 +117,7 @@ bool Missile::update(int timeElapsed_ms)
 			sound->play();
 
 			sprite = spriteExplosion;
-			sprite->set_angle(Angle(0, cl_degrees));
+			sprite->set_angle(Angle(0, angle_degrees));
 			sprite->set_alpha(0.85f);
 
 			exploding = true;

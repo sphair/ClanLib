@@ -25,7 +25,6 @@
 **
 **    
 */
-
 #include "precomp.h"
 
 #include "world.h"
@@ -36,14 +35,15 @@ World::World(DisplayWindow &display_window) : window(display_window), quit(false
 {
 	Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
 
-	gc = window.get_gc();
+	canvas = Canvas(window);
+	gc = canvas.get_gc();
 
 	BlendStateDescription blend_desc;
 	blendstate_default = BlendState(gc, blend_desc);
-	blend_desc.set_blend_function(cl_blend_zero, cl_blend_one_minus_src_alpha, cl_blend_zero, cl_blend_one_minus_src_alpha);
+	blend_desc.set_blend_function(blend_zero, blend_one_minus_src_alpha, blend_zero, blend_one_minus_src_alpha);
 	blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha = BlendState(gc, blend_desc);
 
-	blend_desc.set_blend_function(cl_blend_src_alpha, cl_blend_one_minus_src_alpha, cl_blend_src_alpha, cl_blend_one_minus_src_alpha);
+	blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_src_alpha, blend_one_minus_src_alpha);
 	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = BlendState(gc, blend_desc);
 
 	// Setup resources
@@ -122,7 +122,7 @@ bool World::hitCheck(CollisionOutline *outline, GameObject *other)
 void World::onKeyDown(const InputEvent &key)
 {
 	// Fire missile on space
-	if(key.id == KEY_SPACE)
+	if(key.id == keycode_space)
 	{
 		std::list<TankVehicle *>::iterator it;
 		for(it = tanks.begin(); it != tanks.end(); ++it)
@@ -133,7 +133,7 @@ void World::onKeyDown(const InputEvent &key)
 void World::onMouseDown(const InputEvent &key)
 {
 	// Start dragging on left click
-	if(key.id == MOUSE_LEFT)
+	if(key.id == mouse_left)
 	{
 		dragArea.left = key.mouse_pos.x;
 		dragArea.top = key.mouse_pos.y;
@@ -142,7 +142,7 @@ void World::onMouseDown(const InputEvent &key)
 	}
 
 	// Right click = move or fire
-	if(key.id == MOUSE_RIGHT)
+	if(key.id == mouse_right)
 	{
 		std::list<TankVehicle *>::iterator it;
 		for(it = tanks.begin(); it != tanks.end(); ++it)
@@ -189,7 +189,7 @@ void World::onMouseDown(const InputEvent &key)
 
 void World::onMouseUp(const InputEvent &key)
 {
-	if(key.id == MOUSE_LEFT)
+	if(key.id == mouse_left)
 	{
 		// Set end of drag area
 		dragArea.right = key.mouse_pos.x;
@@ -240,7 +240,7 @@ void World::onMouseMove(const InputEvent &key)
 
 void World::run()
 {
-	while(!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+	while(!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 	{
 		if (quit)
 			break;
@@ -291,7 +291,7 @@ void World::draw()
 {
 	// Draw background 
 	Rect window_rect = window.get_viewport();
-	background.draw(gc, window_rect);
+	background.draw(canvas, window_rect);
 
 	// Draw all gameobjects
 	std::list<GameObject *>::iterator it;
@@ -303,17 +303,16 @@ void World::draw()
 	{
 		float s = (sinf(System::get_time() / 200.0f) + 3.0f) / 4.0f;
 
-		
-		Draw::box(gc,
-			Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
-			Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
-		Draw::box(gc,
-			Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
-			Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
-		Draw::box(gc,
-			Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
-			Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+		canvas.box(Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
+				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+		canvas.box(Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
+				   Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
+		canvas.box(Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
+				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+
 	}
+
+	canvas.flush();
 }
 
 void World::on_window_close()
