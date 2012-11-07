@@ -39,23 +39,33 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &original_desc)
 : handle(0)
 {
+	FontDescription registered_desc = original_desc.get_manager().get_registered_font(original_desc);
+	std::string filename = registered_desc.get_filename();
+	if (filename.size())
+	{
+		int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+		if(fonts_added == 0)
+			throw Exception("Unable to register font " + filename);
+
+	}
+
 	handle = CreateFont(
-		desc.get_height(), desc.get_average_width(),
-		(int) (desc.get_escapement() * 10 + 0.5),
-		(int) (desc.get_orientation() * 10 + 0.5),
-		desc.get_weight(),
-		desc.get_italic() ? TRUE : FALSE,
+		registered_desc.get_height(), registered_desc.get_average_width(),
+		(int) (registered_desc.get_escapement() * 10 + 0.5),
+		(int) (registered_desc.get_orientation() * 10 + 0.5),
+		registered_desc.get_weight(),
+		registered_desc.get_italic() ? TRUE : FALSE,
 		FALSE,
 		FALSE,
-		decode_charset(desc.get_charset()),
+		decode_charset(registered_desc.get_charset()),
 		OUT_DEFAULT_PRECIS,
 		CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY,
-		(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
-		StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
+		(registered_desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
+		StringHelp::utf8_to_ucs2(registered_desc.get_typeface_name()).c_str());
 	if (handle == 0)
 		throw Exception("CreateFont failed");
 
