@@ -5,12 +5,6 @@ lib_LTLIBRARIES = libclan30Core.la
 libclan30Core_la_SOURCES = \
 core_global.cpp \
 core_iostream.cpp \
-CSS/css_document.cpp \
-CSS/css_document_impl.cpp \
-CSS/css_property.cpp \
-CSS/css_selector.cpp \
-CSS/css_tokenizer.cpp \
-CSS/css_tokenizer_impl.cpp \
 IOData/access_control_list.cpp \
 IOData/directory.cpp \
 IOData/directory_scanner.cpp \
@@ -76,11 +70,11 @@ Math/rect_packer_impl.h \
 Crypto/secret.cpp \
 Crypto/secret_impl.cpp \
 Crypto/sha1.cpp \
-Crypto/sha230.cpp \
+Crypto/sha224.cpp \
 Crypto/sha256.cpp \
 Crypto/sha384.cpp \
 Crypto/sha512.cpp \
-Crypto/sha512_230.cpp \
+Crypto/sha512_224.cpp \
 Crypto/sha512_256.cpp \
 Crypto/aes128_encrypt.cpp \
 Crypto/aes128_encrypt_impl.cpp \

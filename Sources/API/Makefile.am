@@ -158,10 +158,6 @@ clanCore_includes = \
 	core.h \
 	Core/api_core.h \
 	Core/core_iostream.h \
-	Core/CSS/css_document.h \
-	Core/CSS/css_property.h \
-	Core/CSS/css_tokenizer.h \
-	Core/CSS/css_token.h \
 	Core/IOData/access_control_list.h \
 	Core/IOData/cl_endian.h \
 	Core/IOData/directory.h \
