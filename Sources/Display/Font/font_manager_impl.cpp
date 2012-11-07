@@ -28,9 +28,10 @@
 */
 
 #include "Display/precomp.h"
-#include "font_manager_impl.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Font/font.h"
+#include "font_manager_impl.h"
 
 #ifndef WIN32
 #include "../X11/font_config.h"
@@ -53,6 +54,20 @@ FontManager_Impl::~FontManager_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Attributes:
 
+Font FontManager_Impl::get_font(const FontDescription &desc) const
+{
+	if (desc.is_null())
+		return Font();
+
+	std::vector<FontCacheEntry>::const_iterator it;
+	for (it = font_cache.begin(); it != font_cache.end(); ++it)
+	{
+		if ((*it).desc == desc)
+			return (*it).font;
+	}
+	return Font();
+
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Operations:
@@ -99,6 +114,14 @@ FontDescription FontManager_Impl::get_registered_font(const FontDescription &des
 	return new_desc;
 }
 
+
+void FontManager_Impl::set_font(Font &font, const FontDescription &desc)
+{
+	FontCacheEntry font_entry;
+	font_entry.desc = desc;
+	font_entry.font = font;
+	font_cache.push_back(font_entry);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Implementation:

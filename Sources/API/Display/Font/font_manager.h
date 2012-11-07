@@ -42,6 +42,7 @@ class FontManager_Impl;
 class FontDescription;
 
 class Canvas;
+class Font;
 
 /// \brief Font manager class.
 ///
@@ -61,6 +62,8 @@ public:
 /// \{
 
 public:
+	/// Check returned font with font.is_null()
+	Font get_font(const FontDescription &desc) const;
 
 /// \}
 /// \name Operations
@@ -77,6 +80,8 @@ public:
 	///
 	/// \return Updated description
 	FontDescription get_registered_font(const FontDescription &desc);
+
+	void set_font(Font &font, const FontDescription &desc);
 
 /// \}
 /// \name Implementation

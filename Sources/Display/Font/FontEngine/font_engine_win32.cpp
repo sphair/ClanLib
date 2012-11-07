@@ -42,16 +42,19 @@ namespace clan
 FontEngine_Win32::FontEngine_Win32(const FontDescription &original_desc)
 : handle(0)
 {
-	FontDescription registered_desc = original_desc.get_manager().get_registered_font(original_desc);
-	std::string filename = registered_desc.get_filename();
-	if (filename.size())
-	{
-		int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
-		if(fonts_added == 0)
-			throw Exception("Unable to register font " + filename);
+	//FIXME
 
-	}
+	//FontDescription registered_desc = original_desc.get_manager().get_registered_font(original_desc);
+	//std::string filename = registered_desc.get_filename();
+	//if (filename.size())
+	//{
+	//	int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+	//	if(fonts_added == 0)
+	//		throw Exception("Unable to register font " + filename);
+	//}
 
+	FontDescription registered_desc = original_desc;
+	
 	handle = CreateFont(
 		registered_desc.get_height(), registered_desc.get_average_width(),
 		(int) (registered_desc.get_escapement() * 10 + 0.5),
