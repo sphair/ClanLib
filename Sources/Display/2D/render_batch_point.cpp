@@ -96,8 +96,8 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<PointVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec2f*)offsetof(PointVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)offsetof(PointVertex, color));
+			prim_array.set_attributes(0, gpu_vertices, (Vec2f*)cl_offsetof(PointVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(PointVertex, color));
 		}
 
 		if (vertices)
