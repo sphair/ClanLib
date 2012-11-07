@@ -40,7 +40,6 @@ namespace clan
 
 class DisplayWindow;
 class FontDescription_Impl;
-class FontManager;
 
 /// \brief Font description class.
 ///
@@ -142,9 +141,6 @@ public:
 	/// \brief Returns true if the font is identical
 	bool operator==(const FontDescription &other) const;
 
-	/// \brief Gets the font manager
-	FontManager get_manager() const;
-
 /// \}
 /// \name Operations
 /// \{
@@ -199,9 +195,6 @@ public:
 	///
 	/// \param new_charset = The charset. charset_default = Use operating systems default
 	void set_charset(Charset new_charset);
-
-	/// \brief Sets the new font manager
-	void set_manager(FontManager &font_manager);
 
 /// \}
 /// \name Implementation

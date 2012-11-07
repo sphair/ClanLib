@@ -66,13 +66,22 @@ Font::Font()
 Font::Font( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager)
 : impl(new Font_Impl)
 {
-	Font_System new_font(context, typeface_name, height, font_manager);
-	*this = new_font;
+	FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_height(height);
+	*this = Font(context, desc, font_manager);
 }
 
-Font::Font( GraphicContext &context,const FontDescription &desc)
+Font::Font( GraphicContext &context,const FontDescription &desc, FontManager font_manager)
 : impl(new Font_Impl)
 {
+	Font cached_font = font_manager.get_font(desc);
+	if (!cached_font.is_null())
+	{
+		*this = cached_font;
+		return;
+	}
+
 	Font_System new_font(context, desc);
 	*this = new_font;
 }

@@ -29,6 +29,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Font/font_manager.h"
+#include "API/Display/Font/font.h"
 #include "font_manager_impl.h"
 #include "API/Display/Font/font_description.h"
 
@@ -51,6 +52,11 @@ FontManager::~FontManager()
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Attributes:
 
+Font FontManager::get_font(const FontDescription &desc) const
+{
+	return impl->get_font(desc);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Operations:
 
@@ -64,6 +70,10 @@ FontDescription FontManager::get_registered_font(const FontDescription &desc)
 	return impl->get_registered_font(desc);
 }
 
+void FontManager::set_font(Font &font, const FontDescription &desc)
+{
+	impl->set_font(font, desc);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Implementation:

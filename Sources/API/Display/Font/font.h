@@ -63,7 +63,7 @@ public:
 	Font( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager = FontManager());
 
 	// \brief Constructs standard font - Currently this defaults to Font_System
-	Font( GraphicContext &context, const FontDescription &desc);
+	Font( GraphicContext &context, const FontDescription &desc, FontManager font_manager = FontManager());
 
 	/// \brief Constructs a Font
 	///

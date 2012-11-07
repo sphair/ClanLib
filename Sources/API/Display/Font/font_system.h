@@ -133,8 +133,7 @@ public:
 	/// \param context = Graphic Context
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	/// \param font_manager = The font manager
-	Font_System( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager = FontManager());
+	Font_System( GraphicContext &context, const std::string &typeface_name, int height);
 
 	/// \brief Constructs a Font System
 	///

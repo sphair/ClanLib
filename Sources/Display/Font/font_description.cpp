@@ -135,14 +135,10 @@ FontDescription::Charset FontDescription::get_charset() const
 	return impl->charset;
 }
 
-FontManager FontDescription::get_manager() const
-{
-	return impl->font_manager;
-}
-
 bool FontDescription::operator==(const FontDescription &other) const
 {
 	return impl->typeface_name == other.impl->typeface_name && 
+			impl->filename == other.impl->filename && 
 			impl->anti_alias == other.impl->anti_alias && 
 			impl->subpixel == other.impl->subpixel && 
 			impl->height == other.impl->height && 
@@ -184,7 +180,6 @@ void FontDescription::clone(const FontDescription &copy)
 		impl->anti_alias = copy.impl->anti_alias;
 		impl->subpixel = copy.impl->subpixel;
 		impl->charset = copy.impl->charset;
-		impl->font_manager = copy.impl->font_manager;
 	}
 }
 
@@ -258,12 +253,6 @@ void FontDescription::set_charset(Charset new_charset)
 {
 	impl->charset = new_charset;
 }
-
-void FontDescription::set_manager(FontManager &font_manager)
-{
-	impl->font_manager = font_manager;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // FontDescription implementation:
 

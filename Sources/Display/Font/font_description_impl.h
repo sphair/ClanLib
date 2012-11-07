@@ -76,7 +76,6 @@ public:
 	bool anti_alias;
 	bool subpixel;
 	FontDescription::Charset charset;
-	FontManager font_manager;
 
 /// \}
 };
