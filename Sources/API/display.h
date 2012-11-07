@@ -69,7 +69,6 @@
 #include "Display/Font/font_system.h"
 #include "Display/Font/font_sprite.h"
 #include "Display/Font/font_metrics.h"
-#include "Display/Font/font_freetype.h"
 #include "Display/Font/font_vector.h"
 #include "Display/Image/pixel_buffer.h"
 #include "Display/Image/pixel_buffer_lock.h"

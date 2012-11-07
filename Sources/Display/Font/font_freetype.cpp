@@ -28,7 +28,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/2D/subtexture.h"
-#include "API/Display/Font/font_freetype.h"
+#include "font_freetype.h"
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_freetype.h"
