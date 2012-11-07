@@ -12,10 +12,10 @@ libclan30Display_la_SOURCES = \
 	Font/font_sprite.cpp \
 	Font/glyph_outline.cpp \
 	Font/font_provider_vector.cpp \
-	Font/FontEngine/font_engine_freetype.cpp \
+	Font/X11/font_engine_freetype.cpp \
 	Font/font_description.cpp \
 	Font/font_system.cpp \
-	Font/font_provider_freetype.cpp \
+	Font/X11/font_provider_freetype.cpp \
 	Font/font_provider_system.cpp \
 	Font/font_provider_sprite.cpp \
 	Font/font_metrics.cpp \
@@ -102,9 +102,9 @@ libclan30Display_la_SOURCES = \
 	Font/glyph_outline.h \
 	Font/font_provider_vector.h \
 	Font/glyph_cache.h \
-	Font/font_provider_freetype.h \
+	Font/X11/font_provider_freetype.h \
 	Font/FontEngine/font_engine.h \
-	Font/FontEngine/font_engine_freetype.h \
+	Font/X11/font_engine_freetype.h \
 	Font/font_provider_sprite.h \
 	Font/font_provider_system.h \
 	Font/glyph_contour.h \

@@ -49,7 +49,7 @@ public:
 	FontMetrics get_metrics();
 	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-
+	GlyphOutline *load_glyph_outline(int c);
 private:
 	FontPixelBuffer get_font_glyph_lcd(int glyph);
 	FontPixelBuffer get_empty_font_glyph(int glyph);

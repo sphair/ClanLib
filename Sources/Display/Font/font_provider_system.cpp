@@ -30,10 +30,9 @@
 #include "Display/precomp.h"
 #include "font_provider_system.h"
 
-#ifdef USE_MS_FONT_RENDERER
+#ifdef WIN32
 #include "FontEngine/font_engine_win32.h"
-#endif
-#ifdef __APPLE__
+#elif defined(__APPLE__)
 #include "FontEngine/font_engine_cocoa.h"
 #else
 #include "FontEngine/font_engine_freetype.h"
@@ -157,43 +156,8 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
 		glyph_cache.anti_alias = desc.get_anti_alias();
 	}
 
-#ifdef USE_MS_FONT_RENDERER
-
+#ifdef WIN32
 	font_engine = new FontEngine_Win32(desc);
-	glyph_cache.font_metrics = font_engine->get_metrics();
-
-#elif defined(WIN32)
-
-	HFONT handle = CreateFont(
-		desc.get_height(), desc.get_average_width(),
-		(int) (desc.get_escapement() * 10 + 0.5),
-		(int) (desc.get_orientation() * 10 + 0.5),
-		desc.get_weight(),
-		desc.get_italic() ? TRUE : FALSE,
-		desc.get_underline() ? TRUE : FALSE,
-		desc.get_strikeout() ? TRUE : FALSE,
-		DEFAULT_CHARSET,
-		OUT_DEFAULT_PRECIS,
-		CLIP_DEFAULT_PRECIS,
-		DEFAULT_QUALITY,
-		(desc.get_fixed_pitch() ? FIXED_CL_PITCH : DEFAULT_CL_PITCH) | FF_DONTCARE,
-		StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
-	if (handle == 0)
-		throw Exception("CreateFont failed");
-
-	HDC dc = GetDC(0);
-	HGDIOBJ old_font = SelectObject(dc, handle);
-	DWORD font_file_size = GetFontData(dc, 0, 0, 0, 0);
-	DataBuffer font_file(font_file_size);
-	DWORD result = GetFontData(dc, 0, 0, font_file.get_data(), font_file.get_size());
-	SelectObject(dc, old_font);
-	ReleaseDC(0, dc);
-	DeleteObject(handle);
-	if (result == GDI_ERROR)
-		throw Exception("GetFontData failed");
-
-	IODevice_Memory font_iodevice(font_file);
-	font_engine = new FontEngine_Freetype(font_iodevice, desc.get_height(), desc.get_average_width());
 	glyph_cache.font_metrics = font_engine->get_metrics();
     
 #elif defined(__APPLE__)

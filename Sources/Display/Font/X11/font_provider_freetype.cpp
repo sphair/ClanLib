@@ -29,7 +29,7 @@
 
 #include "Display/precomp.h"
 #include "font_provider_freetype.h"
-#include "FontEngine/font_engine_freetype.h"
+#include "font_engine_freetype.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/virtual_file_system.h"

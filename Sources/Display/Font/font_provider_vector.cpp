@@ -31,7 +31,13 @@
 #include "Display/precomp.h"
 #include "font_provider_vector.h"
 
+#ifdef __APPLE__
+#include "FontEngine/font_engine_cocoa.h"
+#elif defined(WIN32)
+#include "FontEngine/font_engine_win32.h"
+#else
 #include "FontEngine/font_engine_freetype.h"
+#endif
 
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/virtual_directory.h"
@@ -86,7 +92,14 @@ void FontProvider_Vector::load_font(const FontDescription &desc, IODevice &io_de
 
 	size_height = height;
 
+#ifdef WIN32
+	font_engine = new FontEngine_Win32(desc);
+#elif defined(__APPLE__)
+	font_engine = new FontEngine_Cocoa(desc);
+	glyph_cache.font_metrics = font_engine->get_metrics();
+#else
 	font_engine = new FontEngine_Freetype(io_dev, height, average_width);
+#endif
 
 	metrics = font_engine->get_metrics();
 }
@@ -211,9 +224,7 @@ void FontProvider_Vector::get_glyphs(
 
 		if( i < text.length() )
 		{
-			// PERFORMANCE TODO: Cache advance_x and kerning.
-			out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
-			out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
+			out_interspacing_x[i] = char_cache[text[i]]->advance_x;	// hack hack HACK .. THIS is soo wrong!
 		}
 	}
 }

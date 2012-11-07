@@ -37,10 +37,6 @@
 #include <map>
 #include "glyph_cache.h"
 
-#ifdef WIN32
-#define USE_MS_FONT_RENDERER
-#endif
-
 namespace clan
 {
 

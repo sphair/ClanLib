@@ -67,6 +67,7 @@ public:
 
 	std::vector<std::vector<Pointf> > joined_outlines; // for debugging triangulator hole support - don't remove!
 
+	int advance_x;	// HACK HACK HACK - Get by the FontEngines for Font_Vector
 
 /// \}
 /// \name Operations

@@ -159,24 +159,19 @@
 	#if !defined(_DEBUG)
 		#if defined(DLL)
 			#pragma comment(lib, "clanDisplay-dll.lib")
-			#pragma comment(lib, "freetype-dll.lib")
 		#elif defined(_DLL)
 			#pragma comment(lib, "clanDisplay-static-mtdll.lib")
-			#pragma comment(lib, "freetype-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "clanDisplay-static-mt.lib")
-			#pragma comment(lib, "freetype-static-mt.lib")
 		#endif
 	#else
 		#if defined(DLL)
 			#pragma comment(lib, "clanDisplay-dll-debug.lib")
-			#pragma comment(lib, "freetype-dll-debug.lib")
 		#elif defined(_DLL)
 			#pragma comment(lib, "clanDisplay-static-mtdll-debug.lib")
-			#pragma comment(lib, "freetype-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "clanDisplay-static-mt-debug.lib")
-			#pragma comment(lib, "freetype-static-mt-debug.lib")
+
 		#endif
 	#endif
 	#pragma comment(lib, "winmm.lib")
