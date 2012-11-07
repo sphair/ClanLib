@@ -63,14 +63,10 @@ Font::Font()
 {
 }
 
-Font::Font( GraphicContext &context, const std::string &typeface_name, int height)
+Font::Font( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager)
 : impl(new Font_Impl)
 {
-	FontDescription desc;
-	desc.set_typeface_name(typeface_name);
-	desc.set_height(height);
-
-	Font_System new_font(context, typeface_name, height);
+	Font_System new_font(context, typeface_name, height, font_manager);
 	*this = new_font;
 }
 

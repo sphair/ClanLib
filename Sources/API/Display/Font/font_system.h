@@ -36,6 +36,7 @@
 
 #include "../2D/subtexture.h"
 #include "../Render/texture.h"
+#include "font_manager.h"
 
 namespace clan
 {
@@ -132,7 +133,8 @@ public:
 	/// \param context = Graphic Context
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	Font_System( GraphicContext &context, const std::string &typeface_name, int height);
+	/// \param font_manager = The font manager
+	Font_System( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager = FontManager());
 
 	/// \brief Constructs a Font System
 	///

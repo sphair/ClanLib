@@ -44,11 +44,12 @@ Font_System::Font_System()
 }
 
 Font_System::Font_System(
-	GraphicContext &context, const std::string &typeface_name, int height) : Font( new FontProvider_System())
+	GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager) : Font( new FontProvider_System())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
+	desc.set_manager(font_manager);
 	load_font(context, desc);
 }
 
