@@ -269,10 +269,10 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec3f*)offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)offsetof(SpriteVertex, color));
-			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)offsetof(SpriteVertex, texcoord));
-			prim_array.set_attributes(3, gpu_vertices, (Vec1f*)offsetof(SpriteVertex, texindex));
+			prim_array.set_attributes(0, gpu_vertices, (Vec3f*)cl_offsetof(SpriteVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, color));
+			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, texcoord));
+			prim_array.set_attributes(3, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, texindex));
 
 			BlendStateDescription blend_desc;
 			blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);

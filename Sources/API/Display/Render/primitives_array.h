@@ -50,7 +50,7 @@ class GraphicContext;
 class PrimitivesArray_Impl;
 class PrimitivesArrayProvider;
 
-//(Disabled - Convert to inline function, if required) #define cl_offsetof(s,m) (&(((s *)0)->m))
+#define cl_offsetof(s,m) (&(((s *)0)->m))
 
 /// \brief Primitives array description.
 ///
