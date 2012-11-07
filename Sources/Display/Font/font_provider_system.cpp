@@ -158,28 +158,8 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
-
-	FontDescription new_desc = get_registered_font(desc);
-
-	std::string font_file_path = new_desc.get_typeface_name();
-
-	// Try opening the font file.
-	IODevice io_dev;
-	try
-	{
-		io_dev = File(font_file_path, File::open_existing, File::access_read);
-	}
-	catch(Exception error)
-	{
-		throw Exception(string_format("Cannot open font file: \"%1\"", font_file_path));
-	}
-
-	float size_height =  new_desc.get_height();
-
-	// Load font from the opened file.
 	font_engine = new FontEngine_Freetype(io_dev, size_height, new_desc.get_average_width());
 	glyph_cache.font_metrics = font_engine->get_metrics();
-
 
 #endif
 }
