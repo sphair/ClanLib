@@ -66,19 +66,22 @@ Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl(window.get_gc()))
 
 Canvas::Canvas(GraphicContext &context, FrameBuffer &framebuffer)
 {
-	*this = Canvas(context.create(framebuffer));
+	GraphicContext new_context = context.create(framebuffer);
+	*this = Canvas(new_context);
 }
 
 Canvas Canvas::create(FrameBuffer &framebuffer)
 {
 	flush();
-	return Canvas(get_gc().create(framebuffer));
+	GraphicContext new_context = get_gc().create(framebuffer);
+	return Canvas(new_context);
 }
 
 Canvas Canvas::create()
 {
 	flush();
-	return Canvas(get_gc().create());
+	GraphicContext new_context = get_gc().create();
+	return Canvas(new_context);
 }
 
 Canvas::~Canvas()
