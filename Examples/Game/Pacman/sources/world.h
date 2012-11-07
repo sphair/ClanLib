@@ -56,8 +56,8 @@ public:
 	
 	Map *map;
 
-	Canvas &canvas;
-	GraphicContext &gc;
+	Canvas canvas;
+	GraphicContext gc;
 
 	std::list<GameObject*> objects;
 

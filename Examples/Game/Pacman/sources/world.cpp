@@ -39,13 +39,13 @@
 // World construction:
 
 World::World(ResourceManager *resources, DisplayWindow &window) :
-	canvas(*(new Canvas(window))),
-	gc(canvas.get_gc()),
 	resources(resources), 
 	map(0), 
 	player(0), 
 	score(0)
 {
+	canvas = Canvas(window);
+	gc = canvas.get_gc();
 
 	// Load all resources in the game section now. This isn't a
 	// requirement, but prevents game from loading them when object is
