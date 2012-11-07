@@ -100,6 +100,9 @@ public:
 	/// \brief Returns the typeface name
 	const std::string &get_typeface_name() const;
 
+	/// \brief Returns the filename of the font (empty if none given)
+	const std::string &get_filename() const;
+
 	/// \brief Returns the font height
 	int get_height() const;
 
@@ -155,6 +158,9 @@ public:
 
 	/// \brief Sets the typeface name
 	void set_typeface_name(const std::string &name);
+
+	/// \brief Sets the filename of the font (when required)
+	void set_filename(const std::string &filename);
 
 	/// \brief Sets the font height
 	void set_height(int value);

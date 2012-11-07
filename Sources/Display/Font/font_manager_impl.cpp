@@ -59,12 +59,6 @@ FontManager_Impl::~FontManager_Impl()
 
 void FontManager_Impl::register_font(const std::string &font_filename, const std::string &font_typeface)
 {
-#ifdef WIN32
-	// TODO: Should this be in here?
-	int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(font_filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
-	if(fonts_added == 0)
-		throw Exception("Unable to register font " + font_filename);
-#endif
 	std::map<std::string, std::string >::iterator find_it;
 	find_it = font_register_cache.find(font_typeface);
 	if (find_it == font_register_cache.end())	// Ensure not already registered
@@ -89,7 +83,7 @@ FontDescription FontManager_Impl::get_registered_font(const FontDescription &des
 	find_it = font_register_cache.find(desc.get_typeface_name());
 	if (find_it != font_register_cache.end())	// Found the registered font
 	{
-		new_desc.set_typeface_name(find_it->second);
+		new_desc.set_filename(find_it->second);
 	}
 	else
 	{
@@ -98,7 +92,7 @@ FontDescription FontManager_Impl::get_registered_font(const FontDescription &des
         // Obtain the best matching font file from fontconfig.
 		FontConfig &fc = FontConfig::instance();
 		std::string font_file_path = fc.match_font(new_desc);
-		new_desc.set_typeface_name(font_file_path);
+		new_desc.set_filename(font_file_path);
 #endif
 #endif
 	}

@@ -69,6 +69,11 @@ const std::string &FontDescription::get_typeface_name() const
 	return impl->typeface_name;
 }
 
+const std::string &FontDescription::get_filename() const
+{
+	return impl->filename;
+}
+
 int FontDescription::get_height() const
 {
 	return impl->height;
@@ -166,6 +171,7 @@ void FontDescription::clone(const FontDescription &copy)
 	if (this != &copy)
 	{
 		impl->typeface_name = copy.impl->typeface_name;
+		impl->filename = copy.impl->filename;
 		impl->height = copy.impl->height;
 		impl->average_width = copy.impl->average_width;
 		impl->escapement = copy.impl->escapement;
@@ -178,12 +184,19 @@ void FontDescription::clone(const FontDescription &copy)
 		impl->anti_alias = copy.impl->anti_alias;
 		impl->subpixel = copy.impl->subpixel;
 		impl->charset = copy.impl->charset;
+		impl->font_manager = copy.impl->font_manager;
 	}
 }
+
 
 void FontDescription::set_typeface_name(const std::string &name)
 {
 	impl->typeface_name = name;
+}
+
+void FontDescription::set_filename(const std::string &name)
+{
+	impl->filename = name;
 }
 
 void FontDescription::set_height(int value)

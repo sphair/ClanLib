@@ -158,7 +158,7 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
-	font_engine = new FontEngine_Freetype(io_dev, size_height, new_desc.get_average_width());
+	font_engine = new FontEngine_Freetype(desc);
 	glyph_cache.font_metrics = font_engine->get_metrics();
 
 #endif
