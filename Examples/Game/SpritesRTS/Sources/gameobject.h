@@ -29,7 +29,6 @@
 #pragma once
 
 class World;
-class CollisionOutline;
 
 class GameObject
 {

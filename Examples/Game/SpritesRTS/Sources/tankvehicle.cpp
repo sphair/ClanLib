@@ -25,7 +25,6 @@
 **
 **    
 */
-
 #include "precomp.h"
 
 #include "tankvehicle.h"
@@ -140,7 +139,7 @@ void TankVehicle::setTargetPos(int x, int y)
 void TankVehicle::setAngle(float angle)
 {
 	bodyAngle = angle;
-	collisionBody->set_angle(Angle(angle, cl_degrees));
+	collisionBody->set_angle(Angle(angle, angle_degrees));
 }
 
 void TankVehicle::setTurretAngle(float angle)
@@ -316,12 +315,12 @@ bool TankVehicle::update(int timeElapsed_ms)
 		}
 	}
 	
-	spriteBody->set_angle(Angle(bodyAngle, cl_degrees));
-	spriteSelected->set_angle(Angle(bodyAngle, cl_degrees));
-	spriteTurret->set_angle(Angle(turretAngle, cl_degrees));
-	spriteTurretGunFlash->set_angle(Angle(turretAngle, cl_degrees));
+	spriteBody->set_angle(Angle(bodyAngle, angle_degrees));
+	spriteSelected->set_angle(Angle(bodyAngle, angle_degrees));
+	spriteTurret->set_angle(Angle(turretAngle, angle_degrees));
+	spriteTurretGunFlash->set_angle(Angle(turretAngle, angle_degrees));
 	
-	collisionBody->set_angle(Angle(bodyAngle, cl_degrees));
+	collisionBody->set_angle(Angle(bodyAngle, angle_degrees));
 	
 	if( !reverse )
 	{
@@ -340,38 +339,38 @@ bool TankVehicle::update(int timeElapsed_ms)
 
 void TankVehicle::draw()
 {
-	GraphicContext gc = world->get_gc();
+	Canvas canvas = world->get_canvas();
 
 	// Draw selection	
 	if(selected)
-		spriteSelected->draw(gc, posX, posY);
+		spriteSelected->draw(canvas, posX, posY);
 
 	// Draw tankbody shadow
-	gc.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
+	canvas.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
 	spriteBody->set_alpha(0.5f);
-	spriteBody->draw(gc, posX + 5, posY + 5);
+	spriteBody->draw(canvas, posX + 5, posY + 5);
 
 	// Draw tankbody
-	gc.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
+	canvas.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
 	spriteBody->set_alpha(1.0f);
-	spriteBody->draw(gc, posX, posY);
+	spriteBody->draw(canvas, posX, posY);
 	
 	// Draw tankturret shadow
-	gc.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
+	canvas.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
 	spriteTurret->set_alpha(0.5f);
-	spriteTurret->draw(gc, posX + 5, posY + 5);
+	spriteTurret->draw(canvas, posX + 5, posY + 5);
 
 	// Draw tankturret
-	gc.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
+	canvas.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
 	spriteTurret->set_alpha(1.0f);
-	spriteTurret->draw(gc, posX, posY);
+	spriteTurret->draw(canvas, posX, posY);
 
-	gc.set_blend_state(world->blendstate_default);
+	canvas.set_blend_state(world->blendstate_default);
 
 	// Draw gunflash
 	if(spriteTurret == spriteTurretShooting)
-		spriteTurretGunFlash->draw(gc, posX, posY);
+		spriteTurretGunFlash->draw(canvas, posX, posY);
 	
 	// Draw glow
-	spriteRedGlow->draw(gc, posX, posY);
+	spriteRedGlow->draw(canvas, posX, posY);
 }

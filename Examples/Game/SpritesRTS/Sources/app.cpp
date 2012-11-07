@@ -25,12 +25,12 @@
 **
 **    
 */
-
 #include "precomp.h"
+
 #include "app.h"
 #include "world.h"
 
-int Application::main(const std::vector<std::string> &args)
+int App::main(const std::vector<std::string> &args)
 {
 	// Create a window
 	DisplayWindowDescription desc;

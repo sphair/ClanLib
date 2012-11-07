@@ -30,9 +30,6 @@
 
 #include "gameobject.h"
 
-class Sprite;
-class SoundBuffer;
-
 class Building : public GameObject
 {
 // Enums

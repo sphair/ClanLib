@@ -25,8 +25,8 @@
 **
 **    
 */
-
 #include "precomp.h"
+
 #include "building.h"
 #include "world.h"
 
@@ -63,15 +63,16 @@ void Building::setPos(int x, int y)
 void Building::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(Angle(angle, cl_degrees));
-	collisionBuilding->set_angle(Angle(angle, cl_degrees));
+	sprite->set_angle(Angle(angle, angle_degrees));
+	collisionBuilding->set_angle(Angle(angle, angle_degrees));
 }
 
 void Building::draw()
 {
 	
-	GraphicContext gc = world->get_gc();
-	sprite->draw(gc, posX, posY);
+	Canvas canvas = world->get_canvas();
+	sprite->draw(canvas, posX, posY);
+
 }
 
 bool Building::update(int timeElapsed_ms)

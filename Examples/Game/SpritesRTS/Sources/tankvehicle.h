@@ -27,11 +27,8 @@
 */
 
 #pragma once
-
 #include "gameobject.h"
 
-class Sprite;
-class SoundBuffer;
 class World;
 
 class TankVehicle : public GameObject

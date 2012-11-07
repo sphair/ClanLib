@@ -28,12 +28,9 @@
 
 #pragma once
 
-#include <ClanLib/core.h>
 #include <list>
-using namespace clan;
 
 class Surface;
-class InputEvent;
 class GameObject;
 class TankVehicle;
 
@@ -49,6 +46,7 @@ public:
 	ResourceManager resources;
 	
 	GraphicContext get_gc() { return gc; }
+	Canvas get_canvas() { return canvas; }
 
 // Operations:
 public:
@@ -92,6 +90,7 @@ private:
 
 	DisplayWindow window;
 	GraphicContext gc;
+	Canvas canvas;
 
 	bool quit;
 public:
