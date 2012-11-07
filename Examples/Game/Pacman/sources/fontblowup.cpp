@@ -32,7 +32,7 @@
 
 #include <stdlib.h>
 
-FontBlowUp::FontBlowUp(GraphicContext &gc, const char *_text, int x, int y, Font _font, Colorf _color)
+FontBlowUp::FontBlowUp(Canvas &canvas, const char *_text, int x, int y, Font _font, Colorf _color)
 {
 	text = _text;
 	initial_x = x;
@@ -41,7 +41,7 @@ FontBlowUp::FontBlowUp(GraphicContext &gc, const char *_text, int x, int y, Font
 	font = _font;
 	color = _color;
 
-	create_letters(gc);
+	create_letters(canvas);
 }
 
 FontBlowUp::~FontBlowUp()
@@ -54,8 +54,10 @@ FontBlowUp::~FontBlowUp()
 	delete[] letters_delta_z;
 }
 
-void FontBlowUp::create_letters(GraphicContext &gc)
+void FontBlowUp::create_letters(Canvas &canvas)
 {
+	GraphicContext &gc = canvas.get_gc();
+
 	const char *letters = text.data();
 	int num = text.length();
 
@@ -87,7 +89,7 @@ void FontBlowUp::create_letters(GraphicContext &gc)
 	}
 }
 
-bool FontBlowUp::show(GraphicContext &gc, float time_elapsed)
+bool FontBlowUp::show(Canvas &canvas, float time_elapsed)
 {
 	bool still_visible = false;
 
@@ -102,7 +104,7 @@ bool FontBlowUp::show(GraphicContext &gc, float time_elapsed)
 	for (int i=0; i<num; i++)
 	{
 		output[0] = letters[i];
-		font.draw_text(gc,
+		font.draw_text(canvas,
 			(int) letters_x[i],
 			(int) letters_y[i],
 //			letters_z[i],
@@ -116,7 +118,7 @@ bool FontBlowUp::show(GraphicContext &gc, float time_elapsed)
 
 		letters_delta_y[i] += time_elapsed*20;
 
-		if (letters_y[i] < gc.get_height()) still_visible = true;
+		if (letters_y[i] < canvas.get_height()) still_visible = true;
 	}
 
 	return still_visible;

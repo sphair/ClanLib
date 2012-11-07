@@ -34,7 +34,7 @@
 #pragma once
 #endif
 
-class Application
+class App
 {
 //!Operations:
 public:

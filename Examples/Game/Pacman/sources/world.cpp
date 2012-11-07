@@ -39,9 +39,13 @@
 // World construction:
 
 World::World(ResourceManager *resources, DisplayWindow &window) :
-	resources(resources), map(0), player(0), score(0)
+	canvas(*(new Canvas(window))),
+	gc(canvas.get_gc()),
+	resources(resources), 
+	map(0), 
+	player(0), 
+	score(0)
 {
-	gc = window.get_gc();
 
 	// Load all resources in the game section now. This isn't a
 	// requirement, but prevents game from loading them when object is
@@ -79,8 +83,6 @@ World::~World()
 void World::run(DisplayWindow &window)
 {
 	game_display_window = window;
-
-	gc = window.get_gc();
 
 	quit = false;
 	Slot slot_key_down = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::on_key_down);
@@ -160,8 +162,8 @@ void World::run(DisplayWindow &window)
 			}
 		}
 		
-		gc.clear();
-		map->draw(center_x, center_y, gc);
+		canvas.clear();
+		map->draw(center_x, center_y, canvas);
 
 		std::list<GameObject*>::iterator it;
 		for (
@@ -170,10 +172,10 @@ void World::run(DisplayWindow &window)
 			it++)
 		{
 			GameObject *cur = *it;
-			cur->show(center_x, center_y, gc);
+			cur->show(center_x, center_y, canvas);
 		}
 
-		gc.flush_batcher();
+			canvas.flush();
 
 		float time_elapsed2 = time_elapsed;
 		while (time_elapsed2 > 0)
@@ -203,30 +205,30 @@ void World::run(DisplayWindow &window)
 			std::string text2 = "Press space to restart";
 			Size size1 = fnt_clansoft.get_text_size(gc, text1);
 			Size size2 = fnt_clansoft.get_text_size(gc, text2);
-			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size1.width/2, gc.get_width()/2 - size1.height, text1, Colorf::firebrick);
-			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size2.width/2, gc.get_height()*3/4 - size2.height, text2, Colorf::lightgrey);
+			fnt_clansoft.draw_text(canvas, gc.get_width()/2 - size1.width/2, gc.get_width()/2 - size1.height, text1, Colorf::firebrick);
+			fnt_clansoft.draw_text(canvas, gc.get_width()/2 - size2.width/2, gc.get_height()*3/4 - size2.height, text2, Colorf::lightgrey);
 		}
 		
 		if ((System::get_time()-start_time) <= 3000) // 3 sec
 		{
 			std::string text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(gc, text1);
-			fnt_clansoft.draw_text(gc, gc.get_width()/2 - size1.width/2, gc.get_height() - 20 - size1.height, text1, Colorf::lightgoldenrodyellow);
+			fnt_clansoft.draw_text(canvas, gc.get_width()/2 - size1.width/2, gc.get_height() - 20 - size1.height, text1, Colorf::lightgoldenrodyellow);
 		}
 		else if (welcome_shown == false && blowups.size() < 10)
 		{
 			char *text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(gc, text1);
-			blowups.push_back(new FontBlowUp(gc, text1, gc.get_width()/2, gc.get_height() - 20 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
+			blowups.push_back(new FontBlowUp(canvas, text1, gc.get_width()/2, gc.get_height() - 20 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
 			welcome_shown = true;
 		}
 
 		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
-		fnt_clansoft.draw_text(gc, 20, 52, fps);
+		fnt_clansoft.draw_text(canvas, 20, 52, fps);
 
 		std::string text2 = string_format("%1 bonus bananas", score);
 		Size size2 = fnt_clansoft.get_text_size(gc, text2);
-		fnt_clansoft.draw_text(gc, gc.get_width() - 20 - size2.width, 52, text2);
+		fnt_clansoft.draw_text(canvas, gc.get_width() - 20 - size2.width, 52, text2);
 
 		{ // vc++ needs this scope to ensure for() is scoped...
 			for (
@@ -234,7 +236,7 @@ void World::run(DisplayWindow &window)
 				it != blowups.end();
 				)
 			{
-				if ((*it)->show(gc, time_elapsed) == false)
+				if ((*it)->show(canvas, time_elapsed) == false)
 				{
 					delete *it;
 					it = blowups.erase(it);
@@ -246,6 +248,7 @@ void World::run(DisplayWindow &window)
 			}
 		}
 
+		canvas.flush();
 		window.flip(0);
 		frameratecounter.frame_shown();
 
@@ -263,9 +266,9 @@ void World::run(DisplayWindow &window)
 
 void World::on_key_down(const InputEvent &key)
 {
-	if (key.id == KEY_ESCAPE) quit = true;
+	if (key.id == keycode_escape) quit = true;
 
-	if (key.id == KEY_SPACE && player == NULL)
+	if (key.id == keycode_space && player == NULL)
 	{
 		player = new GameObject_Pacman(map->get_width()/2, map->get_height()/2, this);
 		player->AttachKeyboard(game_display_window);
@@ -273,8 +276,8 @@ void World::on_key_down(const InputEvent &key)
 
 		if (blowups.size() < 10)
 		{
-			blowups.push_back(new FontBlowUp(gc, "YOU ARE DEAD", 320, 320, fnt_clansoft, Colorf::firebrick));
-			blowups.push_back(new FontBlowUp(gc, "Press space to restart", 320, 360, fnt_clansoft, Colorf::lightgrey));
+			blowups.push_back(new FontBlowUp(canvas, "YOU ARE DEAD", 320, 320, fnt_clansoft, Colorf::firebrick));
+			blowups.push_back(new FontBlowUp(canvas, "Press space to restart", 320, 360, fnt_clansoft, Colorf::lightgrey));
 		}
 	}
 }

@@ -69,7 +69,7 @@ int Program::main(const std::vector<std::string> &args)
 //		SetupMikMod setup_mikmod;
 
 		// Start the Application
-		Application app;
+		App app;
 		int retval = app.main(args);
 		return retval;
 	}

@@ -44,15 +44,15 @@ public:
 //!Attributes:
 public:
 	//: Returns x position of the object.
-	virtual float get_x() = 0;
+	virtual float get_x()=0;
 
 	//: Returns y position of the object.
-	virtual float get_y() = 0;
+	virtual float get_y()=0;
 
 //!Operations:
 public:
 	//: Draw object on graphic context, where map is at (view_x, view_y).
-	virtual void show(int view_x, int view_y, GraphicContext &gc) = 0;
+	virtual void show(int view_x, int view_y, Canvas &canvas)=0;
 
 	//: Moves the object around.
 	virtual bool turn(float time_elapsed) = 0;

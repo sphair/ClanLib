@@ -46,7 +46,7 @@ public:
 //!Operations:
 public:
 	//: Draw ghost on graphic context.
-	virtual void show(int view_x, int view_y, GraphicContext &gc);
+	virtual void show(int view_x, int view_y, Canvas &canvas);
 
 	//: Move ghost.
 	virtual bool turn(float time_elapsed);

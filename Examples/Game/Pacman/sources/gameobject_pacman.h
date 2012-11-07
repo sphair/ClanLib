@@ -50,8 +50,8 @@ public:
 
 //!Operations:
 public:
-	//: Draw pacman onto graphic context.
-	virtual void show(int view_x, int view_y, GraphicContext &gc);
+	//: Draw pacman onto Canvas.
+	virtual void show(int view_x, int view_y, Canvas &canvas);
 
 	//: Move pacman.
 	virtual bool turn(float time_elapsed);
