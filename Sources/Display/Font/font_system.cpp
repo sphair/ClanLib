@@ -109,11 +109,6 @@ void Font_System::set_font_metrics(const FontMetrics &metrics)
 	get_provider()->set_font_metrics(metrics);
 }
 
-void Font_System::register_font(const std::string &font_filename, const std::string &font_typeface)
-{
-	FontProvider_System::register_font(font_filename, font_typeface);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Font_System Implementation:
 

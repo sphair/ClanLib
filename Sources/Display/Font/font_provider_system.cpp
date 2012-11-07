@@ -58,16 +58,8 @@
 #include "../2D/render_batch_triangle.h"
 #include "../Render/graphic_context_impl.h"
 
-#ifndef WIN32
-#include "../X11/font_config.h"
-#endif
-
 namespace clan
 {
-
-#ifndef WIN32
-std::map<std::string, std::string > FontProvider_System::font_register_cache;
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_System Construction:
@@ -192,55 +184,7 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
 #endif
 }
 
-void FontProvider_System::register_font(const std::string &font_filename, const std::string &font_typeface)
-{
-#ifdef WIN32
-	int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(font_filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
-	if(fonts_added == 0)
-		throw Exception("Unable to register font " + font_filename);
-#else
-	std::map<std::string, std::string >::iterator find_it;
-	find_it = font_register_cache.find(font_typeface);
-	if (find_it == font_register_cache.end())	// Ensure not already registered
-	{
-		font_register_cache[font_typeface] = font_filename;
-	}
-#endif
-}
-
-
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_System Implementation:
-
-#ifndef WIN32
-FontDescription FontProvider_System::get_registered_font(const FontDescription &desc)
-{
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	FontDescription new_desc;
-	new_desc.clone(desc);
-	new_desc.set_average_width(average_width);
-	new_desc.set_height(height);
-
-	// Check for a registered font
-	std::map<std::string, std::string >::iterator find_it;
-	find_it = font_register_cache.find(desc.get_typeface_name());
-	if (find_it != font_register_cache.end())	// Found the registered font
-	{
-		new_desc.set_typeface_name(find_it->second);
-	}
-	else
-	{
-#if !defined(__APPLE__)
-        // Obtain the best matching font file from fontconfig.
-		FontConfig &fc = FontConfig::instance();
-		std::string font_file_path = fc.match_font(new_desc);
-		new_desc.set_typeface_name(font_file_path);
-#endif
-	}
-	return new_desc;
-}
-#endif
 
 }

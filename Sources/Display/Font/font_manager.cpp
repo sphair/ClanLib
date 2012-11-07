@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Display/Font/font_manager.h"
 #include "font_manager_impl.h"
+#include "API/Display/Font/font_description.h"
 
 namespace clan
 {
@@ -37,12 +38,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Construction:
 
-FontManager::FontManager()
-{
-
-}
-
-FontManager::FontManager(Canvas &canvas ) : impl( new FontManager_Impl(	canvas ) )
+FontManager::FontManager() : impl( new FontManager_Impl() )
 {
 
 }
@@ -55,14 +51,19 @@ FontManager::~FontManager()
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Attributes:
 
-void FontManager::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("FontManager is null");
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Operations:
+
+void FontManager::register_font(const std::string &font_filename, const std::string &font_typeface)
+{
+	impl->register_font(font_filename, font_typeface);
+}
+
+FontDescription FontManager::get_registered_font(const FontDescription &desc)
+{
+	return impl->get_registered_font(desc);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Implementation:

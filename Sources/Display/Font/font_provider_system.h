@@ -89,28 +89,13 @@ public:
 	/// \brief Free the system font when it is no longer required
 	void free_font();
 
-	static void register_font(const std::string &font_filename, const std::string &font_typeface);
-
 /// \}
 /// \name Implementation
 /// \{
 private:
-#ifndef WIN32
-	/// \brief Get the registered font or the best font match if not found
-	///
-	/// Input font sizes are win32 font sizes, and are transformed to freetype font sizes
-	//
-	/// \param desc = Description
-	///
-	/// \return Updated description
-	FontDescription get_registered_font(const FontDescription &desc);
-#endif
 
 	FontEngine *font_engine;
 
-#ifndef WIN32
-	static std::map<std::string /*font_typeface*/, std::string /*font_filename*/ > font_register_cache;
-#endif
 	GlyphCache glyph_cache;
 /// \}
 };
