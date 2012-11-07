@@ -257,7 +257,7 @@ void Map::eat_trail(int x, int y)
 	set_tile_type(x, y, tile_empty);
 }
 
-void Map::draw(int center_x, int center_y, GraphicContext &gc)
+void Map::draw(int center_x, int center_y, Canvas &canvas)
 {
 	static int start_time = -1;
 	if (start_time == -1) start_time = System::get_time();
@@ -278,7 +278,7 @@ void Map::draw(int center_x, int center_y, GraphicContext &gc)
 			if (frame == 2) frame = powerup_spr + 1; // powerup blinking.
 
 			tile_images.set_frame(frame);
-			tile_images.draw(gc, scr_x, scr_y);
+			tile_images.draw(canvas, scr_x, scr_y);
 		}
 	}
 }

@@ -31,7 +31,7 @@
 #include "application.h"
 #include "world.h"
 
-int Application::main(const std::vector<std::string> &args)
+int App::main(const std::vector<std::string> &args)
 {
 	//ConsoleWindow console("Debug console window", 80, 25);
 

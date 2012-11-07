@@ -70,7 +70,7 @@ protected:
 
 	//: Moves the object.
 	bool move(float time_elapsed);
-	
+
 	//: Called when object reaches destination.
 	virtual bool event_reached_dest()=0;
 

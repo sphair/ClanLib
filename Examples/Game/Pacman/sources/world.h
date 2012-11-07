@@ -43,6 +43,7 @@ class FontBlowUp;
 
 class World
 {
+
 //!Construction:
 public:
 	World(ResourceManager *resources, DisplayWindow &window);
@@ -54,7 +55,9 @@ public:
 	ResourceManager *resources;
 	
 	Map *map;
-	GraphicContext gc;
+
+	Canvas &canvas;
+	GraphicContext &gc;
 
 	std::list<GameObject*> objects;
 

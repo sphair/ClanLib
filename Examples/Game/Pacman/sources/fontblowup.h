@@ -54,13 +54,13 @@ protected:
 	float *letters_delta_y;
 	float *letters_delta_z;
 
-	void create_letters(GraphicContext &gc);
+	void create_letters(Canvas &canvas);
 
 public:
-	FontBlowUp(GraphicContext &gc, const char *text, int x, int y, Font font, Colorf color);
+	FontBlowUp(Canvas &canvas, const char *text, int x, int y, Font font, Colorf color);
 	virtual ~FontBlowUp();
 
-	bool show(GraphicContext &gc, float time_elapsed);
+	bool show(Canvas &canvas, float time_elapsed);
 };
 
 #endif

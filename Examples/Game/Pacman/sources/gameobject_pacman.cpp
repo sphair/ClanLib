@@ -64,14 +64,14 @@ GameObject_Pacman::GameObject_Pacman(int x, int y, World *world) :
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Pacman operations:
 
-void GameObject_Pacman::show(int view_x, int view_y, GraphicContext &gc)
+void GameObject_Pacman::show(int view_x, int view_y, Canvas &canvas)
 {
 	int width = world->map->get_tile_width() - 6;
 	int height = world->map->get_tile_height() - 6;
 	int anim_length = spr_pacman.get_frame_count() / 4;
 
 	spr_pacman.set_frame(anim_pos+anim_length*move_dir);
-	spr_pacman.draw(gc,
+	spr_pacman.draw(canvas,
 		(int) (x*width)-view_x,
 		(int) (y*height)-view_y);
 }
@@ -217,7 +217,7 @@ void GameObject_Pacman::on_key_down(const InputEvent &key)
 	switch (move_dir)
 	{
 	case 0:
-		if (key.id == KEY_RIGHT)
+		if (key.id == keycode_right)
 		{
 			move_dir = 1;
 			wanted_dir = -1;
@@ -226,7 +226,7 @@ void GameObject_Pacman::on_key_down(const InputEvent &key)
 		break;
 
 	case 1:
-		if (key.id == KEY_LEFT)
+		if (key.id == keycode_left)
 		{
 			move_dir = 0;
 			wanted_dir = -1;
@@ -235,7 +235,7 @@ void GameObject_Pacman::on_key_down(const InputEvent &key)
 		break;
 
 	case 2:
-		if (key.id == KEY_DOWN)
+		if (key.id == keycode_down)
 		{
 			move_dir = 3;
 			wanted_dir = -1;
@@ -244,7 +244,7 @@ void GameObject_Pacman::on_key_down(const InputEvent &key)
 		break;
 
 	case 3:
-		if (key.id == KEY_UP)
+		if (key.id == keycode_up)
 		{
 			move_dir = 2;
 			wanted_dir = -1;
@@ -255,18 +255,18 @@ void GameObject_Pacman::on_key_down(const InputEvent &key)
 
 	if (move_dir < 2)
 	{
-		if (key.id == KEY_UP)
+		if (key.id == keycode_up)
 			wanted_dir = 2;
 
-		if (key.id == KEY_DOWN)
+		if (key.id == keycode_down)
 			wanted_dir = 3;
 	}
 	else
 	{
-		if (key.id == KEY_LEFT)
+		if (key.id == keycode_left)
 			wanted_dir = 0;
 
-		if (key.id == KEY_RIGHT)
+		if (key.id == keycode_right)
 			wanted_dir = 1;
 	}
 }

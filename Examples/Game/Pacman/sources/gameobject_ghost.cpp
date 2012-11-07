@@ -61,7 +61,7 @@ GameObject_Ghost::GameObject_Ghost(int x, int y, World *world) :
 /////////////////////////////////////////////////////////////////////////////
 // GameObject_Ghost operations:
 
-void GameObject_Ghost::show(int center_x, int center_y, GraphicContext &gc)
+void GameObject_Ghost::show(int center_x, int center_y, Canvas &canvas)
 {
 	int width = world->map->get_tile_width()-6;
 	int height = world->map->get_tile_height()-6;
@@ -70,7 +70,7 @@ void GameObject_Ghost::show(int center_x, int center_y, GraphicContext &gc)
 	{
 		spr_ghost.set_frame(anim_pos);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(gc, 
+		spr_ghost.draw(canvas, 
 			(int) (x*width)-center_x,
 			(int) (y*height)-center_y);
 
@@ -82,7 +82,7 @@ void GameObject_Ghost::show(int center_x, int center_y, GraphicContext &gc)
 	{
 		spr_ghost.set_frame(anim_pos + 6);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(gc,
+		spr_ghost.draw(canvas,
 			(int) (x*width)-center_x,
 			(int) (y*height)-center_y);
 	}
@@ -90,7 +90,7 @@ void GameObject_Ghost::show(int center_x, int center_y, GraphicContext &gc)
 	{
 		spr_ghost.set_frame(anim_pos);
 		spr_ghost.set_alpha(0.5f);
-		spr_ghost.draw(gc,
+		spr_ghost.draw(canvas,
 			(int) (x*width)-center_x,
 			(int) (y*height)-center_y);
 	}

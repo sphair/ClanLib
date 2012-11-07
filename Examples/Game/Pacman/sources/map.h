@@ -92,8 +92,8 @@ public:
 	//: Eat the trail at position (x,y), if there's one.
 	void eat_trail(int x, int y);
 	
-	//: Draw the map on graphic context, looking from (view_x, view_y).
-	void draw(int view_x, int view_y, GraphicContext &gc);
+	//: Draw the map on Canvas, looking from (view_x, view_y).
+	void draw(int view_x, int view_y, Canvas &canvas);
 
 //!Implementation:
 private:
