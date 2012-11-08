@@ -111,16 +111,6 @@ int Font_Vector::get_glyph_count(const std::string &text)
 	return get_provider()->get_glyph_count(text);
 }
 
-GlyphPrimitivesArrayOutline Font_Vector::get_glyph_outline(int glyph)
-{
-	return get_provider()->get_glyph_outline(glyph);
-}
-
-GlyphPrimitivesArray Font_Vector::get_glyph_triangles(int glyph)
-{
-	return get_provider()->get_glyph_triangles(glyph);
-}
-
 void Font_Vector::get_glyphs(
 	const std::string &text,
 	int *out_glyphs,

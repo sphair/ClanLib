@@ -46,6 +46,58 @@ class GlyphPrimitivesArray;
 class GlyphPrimitivesArrayOutline;
 class Canvas;
 
+class GlyphPrimitivesArray
+{
+//! Construction:
+public:
+
+	/// \brief Constructs a GlyphPrimitivesArray
+	///
+	/// \param num_triangles = value
+	GlyphPrimitivesArray(int num_triangles)
+	{
+		int size = num_triangles*3;
+		vertex.resize(size);
+	}
+
+	~GlyphPrimitivesArray()
+	{
+	}
+
+	std::vector<Vec2f> vertex;
+};
+
+class GlyphPrimitivesArrayOutline
+{
+//! Construction:
+public:
+
+	/// \brief Constructs a GlyphPrimitivesArrayOutline
+	///
+	/// \param num_lines = value
+	GlyphPrimitivesArrayOutline(int num_lines)
+	{
+		vertex.resize(1);
+		vertex[0].resize(num_lines+1);
+	}
+	
+//! Operations:
+public:
+
+	/// \brief New subarray
+	///
+	/// \param num_lines = value
+	void new_subarray(int num_lines)
+	{
+		std::vector<std::vector<Vec2f> >::size_type size = vertex.size();
+		vertex.resize(size+1);
+
+		vertex[size].resize(num_lines+1);
+	}
+
+	std::vector< std::vector<Vec2f> > vertex;
+};
+
 class GlyphOutline
 {
 /// \name Construction

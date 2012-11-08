@@ -176,24 +176,6 @@ int FontProvider_Vector::get_glyph_count(const std::string &text)
 	return (int) text.length();
 }
 
-GlyphPrimitivesArrayOutline FontProvider_Vector::get_glyph_outline(int glyph)
-{
-	std::map<int, std::shared_ptr<GlyphOutline> >::iterator it = char_cache.find(glyph);
-	if (it != char_cache.end())
-		return it->second->get_outline();
-	else
-		return GlyphPrimitivesArrayOutline(0);
-}
-
-GlyphPrimitivesArray FontProvider_Vector::get_glyph_triangles(int glyph)
-{
-	std::map<int, std::shared_ptr<GlyphOutline> >::iterator it = char_cache.find(glyph);
-	if (it != char_cache.end())
-		return it->second->get_triarray();
-	else
-		return GlyphPrimitivesArray(0);
-}
-
 void FontProvider_Vector::get_glyphs(
 	const std::string &text,
 	int *out_glyphs,
