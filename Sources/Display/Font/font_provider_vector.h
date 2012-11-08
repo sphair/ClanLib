@@ -81,8 +81,6 @@ public:
 	/// \brief Calculate size of text string.
 	virtual Size get_text_size(GraphicContext &gc, const std::string &text);
 
-	int get_glyph_count(const std::string &text);
-
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable);
 
@@ -102,8 +100,6 @@ public:
 		float *interspacing_x = 0,
 		float *interspacing_y = 0,
 		const Colorf &color = Colorf::white);
-
-	Sizef get_glyphs_size(int *glyphs, int length);
 
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 

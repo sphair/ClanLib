@@ -90,24 +90,6 @@ public:
 	/// \brief Retrieves the font provider.
 	FontProvider_Vector *get_provider() const;
 
-	/// \brief Returns the amount of glyphs used by text.
-	int get_glyph_count(const std::string &text);
-
-	/// \brief Find glyph indexes and inter-spacing (x,y) values for text.
-	void get_glyphs(
-		const std::string &text,
-		int *out_glyphs,
-		float *out_interspacing_x,
-		float *out_interspacing_y);
-
-	/// \brief Get glyphs size
-	///
-	/// \param glyphs = value
-	/// \param length = value
-	///
-	/// \return Sizef
-	Sizef get_glyphs_size(int *glyphs, int length);
-
 /// \}
 /// \name Operations
 /// \{
