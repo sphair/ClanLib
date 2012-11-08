@@ -171,11 +171,6 @@ Size FontProvider_Vector::get_text_size(GraphicContext &gc, const std::string &t
 	return Size(max_x, offset_y);
 }
 
-int FontProvider_Vector::get_glyph_count(const std::string &text)
-{
-	return (int) text.length();
-}
-
 void FontProvider_Vector::get_glyphs(
 	const std::string &text,
 	int *out_glyphs,
@@ -254,12 +249,6 @@ void FontProvider_Vector::draw_glyphs(
 		}
 	}
 }
-
-Sizef FontProvider_Vector::get_glyphs_size(int *glyphs, int length)
-{
-	return Sizef();
-}
-
 
 void FontProvider_Vector::set_filled(bool enable)
 {

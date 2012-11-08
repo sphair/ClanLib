@@ -106,29 +106,9 @@ FontProvider_Vector *Font_Vector::get_provider() const
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Operations:
 
-int Font_Vector::get_glyph_count(const std::string &text)
-{
-	return get_provider()->get_glyph_count(text);
-}
-
-void Font_Vector::get_glyphs(
-	const std::string &text,
-	int *out_glyphs,
-	float *out_interspacing_x,
-	float *out_interspacing_y)
-{
-	get_provider()->get_glyphs(text, out_glyphs, out_interspacing_x, out_interspacing_y);
-}
-
 void Font_Vector::set_filled(bool enable)
 {
 	get_provider()->set_filled(enable);
-}
-
-
-Sizef Font_Vector::get_glyphs_size(int *glyphs, int length)
-{
-	return get_provider()->get_glyphs_size(glyphs,length);
 }
 
 /////////////////////////////////////////////////////////////////////////////
