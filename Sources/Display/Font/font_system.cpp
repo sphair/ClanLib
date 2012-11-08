@@ -58,11 +58,21 @@ Font_System::Font_System(Canvas &canvas, const FontDescription &desc) : Font( ne
 	Font cached_font = canvas.get_font_manager().get_font(desc);
 	if (!cached_font.is_null())
 	{
-		impl = cached_font.impl;
+		*this = Font_System(cached_font);
 		return;
 	}
 
 	load_font(canvas, desc);
+
+	canvas.get_font_manager().set_font(*this, desc);
+}
+
+Font_System::Font_System( const Font &font) : Font(font)
+{
+	if (!get_provider())
+	{
+		throw Exception("Font is not of type Font_System");
+	}
 }
 
 Font_System::~Font_System()

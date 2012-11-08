@@ -140,6 +140,9 @@ public:
 	/// \param desc = Font Description
 	Font_System( Canvas &canvas, const FontDescription &desc);
 
+	/// \brief Constructs a Font System from a Font, ensuring the correct type
+	explicit Font_System( const Font &font);
+
 	~Font_System();
 
 /// \}
