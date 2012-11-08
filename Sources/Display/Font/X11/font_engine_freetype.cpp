@@ -250,7 +250,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c)
 	{
 //		cl_write_console_line(string_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
 		
-		GlyphContour *contour = new GlyphContour; // deleted by GlyphOutline
+		std::shared_ptr<GlyphContour> contour(new GlyphContour);
 		
 		// debug: dump contents of points array to terminal
 //		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
