@@ -822,11 +822,7 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	CSSBorderRenderer border(&graphics, resource_cache, impl->css_properties);
 	background.set_border_box(get_size());
 	border.set_border_box(get_size());
-	border.set_border_values(
-		impl->css_properties.border_width_left.length.value,
-		impl->css_properties.border_width_top.length.value,
-		impl->css_properties.border_width_right.length.value,
-		impl->css_properties.border_width_bottom.length.value);
+	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	background.render();
 	border.render();
 

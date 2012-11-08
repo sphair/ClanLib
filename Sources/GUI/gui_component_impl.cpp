@@ -179,6 +179,17 @@ Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::stri
 
 void GUIComponent_Impl::layout_content()
 {
+	// Root component needs to calculate its own used values
+	if (!parent)
+	{
+		CSSClanBoxUsedValues initial_containing_box;
+		initial_containing_box.width = geometry.get_width();
+		initial_containing_box.height = geometry.get_height();
+
+		CSSClanBoxInitialUsedValues::visit(css_used_values, css_properties, initial_containing_box);
+		CSSClanBoxApplyMinMaxConstraints::visit(css_used_values, css_properties, initial_containing_box);
+	}
+
 	switch (css_properties.display.type)
 	{
 	case CSSBoxDisplay::type_clan_box:
@@ -230,8 +241,6 @@ void GUIComponent_Impl::layout_clan_box()
 {
 	// -clan-box layout places child boxes horizontally or vertically one after another
 	// -clan-box-direction controls the layout direction
-	// -clan-shrink-to-fit is the CSS algorithm used by float boxes and tables in auto width modes (find preferred box size, then shrink further if not enough space until the minimum size is reached)
-	// -clan-expanding expands to fit the containing box based on the rules set by the display property
 
 	if (css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_vertical)
 	{
@@ -254,14 +263,17 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-			float margin_left = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_left, geometry.get_width(), false);
-			float margin_right = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_right, geometry.get_width(), false);
-			float border_left = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_left);
-			float border_right = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_right);
-			float padding_left = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_left, geometry.get_width(), false);
-			float padding_right = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_right, geometry.get_width(), false);
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
 
-			float used_noncontent_width = margin_left + border_left + padding_left + padding_right + border_right + margin_right;
+			CSSUsedValue used_noncontent_width = 
+				child_used_values.margin.left +
+				child_used_values.border.left +
+				child_used_values.padding.left +
+				child_used_values.padding.right +
+				child_used_values.border.right +
+				child_used_values.margin.right;
 
 			box_math.used_min_lengths.push_back(used_noncontent_width + child->get_min_width());
 			box_math.used_lengths.push_back(used_noncontent_width + child->get_preferred_width());
@@ -291,33 +303,33 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 		}
 	}
 
-	box_math.adjust(geometry.get_width());
-
+	box_math.adjust(css_used_values.width);
 
 	// Set the actual geometry
-	float x = 0.0f;
-	float y = 0.0f;
+	CSSUsedValue x = 0.0f;
+	CSSUsedValue y = 0.0f;
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-			float margin_left = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_left, geometry.get_width(), false);
-			float margin_right = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_right, geometry.get_width(), false);
-			float border_left = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_left);
-			float border_right = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_right);
-			float padding_left = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_left, geometry.get_width(), false);
-			float padding_right = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_right, geometry.get_width(), false);
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-			float margin_top = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_top, geometry.get_height(), false);
-			float margin_bottom = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_bottom, geometry.get_height(), false);
-			float border_top = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_top);
-			float border_bottom = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_bottom);
-			float padding_top = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_top, geometry.get_height(), false);
-			float padding_bottom = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_bottom, geometry.get_height(), false);
+			CSSUsedValue used_noncontent_width = 
+				child_used_values.margin.left +
+				child_used_values.border.left +
+				child_used_values.padding.left +
+				child_used_values.padding.right +
+				child_used_values.border.right +
+				child_used_values.margin.right;
 
-			float used_noncontent_width = margin_left + border_left + padding_left + padding_right + border_right + margin_right;
-			float used_noncontent_height = margin_top + border_top + padding_top + padding_bottom + border_bottom + margin_bottom;
+			CSSUsedValue used_noncontent_height = 
+				child_used_values.margin.top +
+				child_used_values.border.top +
+				child_used_values.padding.top +
+				child_used_values.padding.bottom +
+				child_used_values.border.bottom +
+				child_used_values.margin.bottom;
 
 			CSSClanBoxMath perpendicular_math;
 
@@ -347,17 +359,17 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 				break;
 			}
 
-			perpendicular_math.adjust(geometry.get_height());
-			float child_used_height = perpendicular_math.used_lengths[0];
+			perpendicular_math.adjust(css_used_values.height);
+			CSSUsedValue child_used_height = perpendicular_math.used_lengths[0];
 
-			float used_offset_x = margin_left + border_left + padding_left + child->impl->get_css_relative_x(geometry.get_width());
-			float used_offset_y = margin_top + border_top + padding_top + child->impl->get_css_relative_y(geometry.get_height());
+			CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child->impl->get_css_relative_x(css_used_values.width);
+			CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child->impl->get_css_relative_y(css_used_values.height);
 
 			// Used to actual mapping
-			int x1 = (int)(x + used_offset_x);
-			int y1 = (int)(y + used_offset_y);
-			int x2 = (int)(x + used_offset_x + box_math.used_lengths[i] - used_noncontent_width + 0.5f);
-			int y2 = (int)(y + used_offset_y + child_used_height - used_noncontent_height + 0.5f);
+			CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
+			CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
+			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + box_math.used_lengths[i] - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
+			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
 			x += box_math.used_lengths[i];
@@ -372,14 +384,17 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-			float margin_top = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_top, geometry.get_height(), false);
-			float margin_bottom = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_bottom, geometry.get_height(), false);
-			float border_top = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_top);
-			float border_bottom = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_bottom);
-			float padding_top = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_top, geometry.get_height(), false);
-			float padding_bottom = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_bottom, geometry.get_height(), false);
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
 
-			float used_noncontent_height = margin_top + border_top + padding_top + padding_bottom + border_bottom + margin_bottom;
+			CSSUsedValue used_noncontent_height = 
+				child_used_values.margin.top +
+				child_used_values.border.top +
+				child_used_values.padding.top +
+				child_used_values.padding.bottom +
+				child_used_values.border.bottom +
+				child_used_values.margin.bottom;
 
 			box_math.used_min_lengths.push_back(used_noncontent_height + child->get_min_height());
 			box_math.used_lengths.push_back(used_noncontent_height + child->get_preferred_height());
@@ -409,33 +424,33 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 		}
 	}
 
-	box_math.adjust(geometry.get_height());
-	float child_used_width = geometry.get_width(); // TBD: How should sizes behave in the perpendicular direction?
+	box_math.adjust(css_used_values.height);
 
 	// Set the actual geometry
-	float x = 0.0f;
-	float y = 0.0f;
+	CSSUsedValue x = 0.0f;
+	CSSUsedValue y = 0.0f;
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
-			float margin_left = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_left, geometry.get_width(), false);
-			float margin_right = CSSClanBoxUsedValueSizes::get_css_margin_width(child->get_css_properties().margin_width_right, geometry.get_width(), false);
-			float border_left = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_left);
-			float border_right = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_right);
-			float padding_left = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_left, geometry.get_width(), false);
-			float padding_right = CSSClanBoxUsedValueSizes::get_css_padding_width(child->get_css_properties().padding_width_right, geometry.get_width(), false);
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-			float margin_top = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_top, geometry.get_height(), false);
-			float margin_bottom = CSSClanBoxUsedValueSizes::get_css_margin_height(child->get_css_properties().margin_width_bottom, geometry.get_height(), false);
-			float border_top = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_top);
-			float border_bottom = CSSClanBoxUsedValueSizes::get_css_border_width(child->get_css_properties().border_width_bottom);
-			float padding_top = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_top, geometry.get_height(), false);
-			float padding_bottom = CSSClanBoxUsedValueSizes::get_css_padding_height(child->get_css_properties().padding_width_bottom, geometry.get_height(), false);
+			CSSUsedValue used_noncontent_width = 
+				child_used_values.margin.left +
+				child_used_values.border.left +
+				child_used_values.padding.left +
+				child_used_values.padding.right +
+				child_used_values.border.right +
+				child_used_values.margin.right;
 
-			float used_noncontent_width = margin_left + border_left + padding_left + padding_right + border_right + margin_right;
-			float used_noncontent_height = margin_top + border_top + padding_top + padding_bottom + border_bottom + margin_bottom;
+			CSSUsedValue used_noncontent_height = 
+				child_used_values.margin.top +
+				child_used_values.border.top +
+				child_used_values.padding.top +
+				child_used_values.padding.bottom +
+				child_used_values.border.bottom +
+				child_used_values.margin.bottom;
 
 			CSSClanBoxMath perpendicular_math;
 
@@ -465,17 +480,17 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 				break;
 			}
 
-			perpendicular_math.adjust(geometry.get_width());
-			float child_used_width = perpendicular_math.used_lengths[0];
+			perpendicular_math.adjust(css_used_values.width);
+			CSSUsedValue child_used_width = perpendicular_math.used_lengths[0];
 
-			float used_offset_x = margin_left + border_left + padding_left + child->impl->get_css_relative_x(geometry.get_width());
-			float used_offset_y = margin_top + border_top + padding_top + child->impl->get_css_relative_y(geometry.get_height());
+			CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child->impl->get_css_relative_x(css_used_values.width);
+			CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child->impl->get_css_relative_y(css_used_values.height);
 
 			// Used to actual mapping
-			int x1 = (int)(x + used_offset_x);
-			int y1 = (int)(y + used_offset_y);
-			int x2 = (int)(x + used_offset_x + child_used_width - used_noncontent_width + 0.5f);
-			int y2 = (int)(y + used_offset_y + box_math.used_lengths[i] - used_noncontent_height + 0.5f);
+			CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
+			CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
+			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
+			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
 			y += box_math.used_lengths[i];
