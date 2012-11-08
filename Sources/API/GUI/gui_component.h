@@ -284,23 +284,22 @@ public:
 	/// \brief Return the component under 'point', in local viewport coordinates.
 	GUIComponent *get_component_at(const Point &point);
 
-	/// \brief Returns the preferred width
-	float get_preferred_width() const;
+	/// \brief Returns the preferred content width
+	///
+	/// Override this function if the component has non-css content.
+	virtual float get_preferred_content_width() const;
 
-	/// \brief Returns the preferred height
-	float get_preferred_height() const;
+	/// \brief Returns the minimum preferred content width
+	///
+	/// Override this function if the component has non-css content that shouldn't
+	/// shrink beyond a certain minimum size (such as the longest single word in
+	/// a word-wrapping label).
+	virtual float get_min_preferred_content_width() const;
 
-	/// \brief Returns the minimum width
-	float get_min_width() const;
-
-	/// \brief Returns the minumum height
-	float get_min_height() const;
-
-	/// \brief Returns the maximum width
-	float get_max_width() const;
-
-	/// \brief Returns the maximum height
-	float get_max_height() const;
+	/// \brief Returns the preferred content height for the specified content width
+	///
+	/// Override this function if the component has non-css content.
+	virtual float get_preferred_content_height(float width) const;
 
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	Point window_to_component_coords(const Point &window_point) const;

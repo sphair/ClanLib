@@ -258,13 +258,29 @@ void GUIComponent_Impl::layout_clan_box()
 
 void GUIComponent_Impl::layout_clan_box_horizontal()
 {
+	// Calculate min/preferred/max widths of all child boxes
 	CSSClanBoxMath box_math;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+			// Start with top-down calculated values
 			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+
+			// If the width of the box cannot be determined from CSS, then ask the component:
+			if (child_used_values.width_undetermined)
+			{
+				child_used_values.width = child->get_preferred_content_width();
+				child_used_values.width_undetermined = false;
+			}
+
+			// Boxes should not shrink to less than the minimum shrink-to-fit size.
+			// TBD: this rule only applies to shrink-to-fit boxes (i.e. floats with auto width) in normal CSS
+			child_used_values.min_width = std::max(child_used_values.min_width, child->get_min_preferred_content_width());
+
+			// Make sure width is within the min/max values:
 			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
 
 			CSSUsedValue used_noncontent_width = 
@@ -275,9 +291,9 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 				child_used_values.border.right +
 				child_used_values.margin.right;
 
-			box_math.used_min_lengths.push_back(used_noncontent_width + child->get_min_width());
-			box_math.used_lengths.push_back(used_noncontent_width + child->get_preferred_width());
-			box_math.used_max_lengths.push_back(used_noncontent_width + child->get_max_width());
+			box_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
+			box_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
+			box_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
 			switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
 			{
@@ -303,11 +319,10 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 		}
 	}
 
+	// Adjust the widths of the boxes
 	box_math.adjust(css_used_values.width);
 
-	// Set the actual geometry
-	CSSUsedValue x = 0.0f;
-	CSSUsedValue y = 0.0f;
+	// Save adjusted width values and calculate the resulting box heights
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
@@ -315,13 +330,18 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 		{
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-			CSSUsedValue used_noncontent_width = 
-				child_used_values.margin.left +
-				child_used_values.border.left +
-				child_used_values.padding.left +
-				child_used_values.padding.right +
-				child_used_values.border.right +
-				child_used_values.margin.right;
+			// Save the result of the horizontal adjustment
+			child_used_values.width = box_math.used_lengths[i];
+
+			// If the height of the box could not be determined from CSS, then ask the component:
+			if (child_used_values.height_undetermined)
+			{
+				child_used_values.height = child->get_preferred_content_height(child_used_values.width);
+				child_used_values.height_undetermined = false;
+			}
+
+			// Make sure height is within the min/max values:
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
 
 			CSSUsedValue used_noncontent_height = 
 				child_used_values.margin.top +
@@ -331,11 +351,12 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 				child_used_values.border.bottom +
 				child_used_values.margin.bottom;
 
+			// Adjust height of box based on the shrink/expand factors
 			CSSClanBoxMath perpendicular_math;
 
-			perpendicular_math.used_min_lengths.push_back(used_noncontent_height + child->get_min_height());
-			perpendicular_math.used_lengths.push_back(used_noncontent_height + child->get_preferred_height());
-			perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child->get_max_height());
+			perpendicular_math.used_min_lengths.push_back(used_noncontent_height + child_used_values.min_height);
+			perpendicular_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
+			perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
 			switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
 			{
@@ -360,7 +381,21 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			}
 
 			perpendicular_math.adjust(css_used_values.height);
-			CSSUsedValue child_used_height = perpendicular_math.used_lengths[0];
+
+			// Save the result of the vertical adjustment
+			child_used_values.height = box_math.used_lengths[i];
+		}
+	}
+
+	// Set the actual geometry
+	CSSUsedValue x = 0.0f;
+	CSSUsedValue y = 0.0f;
+	i = 0;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+	{
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		{
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 			CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child->impl->get_css_relative_x(css_used_values.width);
 			CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child->impl->get_css_relative_y(css_used_values.height);
@@ -368,8 +403,8 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			// Used to actual mapping
 			CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
 			CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + box_math.used_lengths[i] - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
-			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
+			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
+			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
 			x += box_math.used_lengths[i];
@@ -385,8 +420,77 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+			// Start with top-down calculated values
 			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+
+			// If the width of the box cannot be determined from CSS, then ask the component:
+			if (child_used_values.width_undetermined)
+			{
+				child_used_values.width = child->get_preferred_content_width();
+				child_used_values.width_undetermined = false;
+			}
+
+			// Boxes should not shrink to less than the minimum shrink-to-fit size.
+			// TBD: this rule only applies to shrink-to-fit boxes (i.e. floats with auto width) in normal CSS
+			child_used_values.min_width = std::max(child_used_values.min_width, child->get_min_preferred_content_width());
+
+			// Make sure width is within the min/max values:
 			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+
+			CSSUsedValue used_noncontent_width = 
+				child_used_values.margin.left +
+				child_used_values.border.left +
+				child_used_values.padding.left +
+				child_used_values.padding.right +
+				child_used_values.border.right +
+				child_used_values.margin.right;
+
+			// Adjust width of box based on the shrink/expand factors
+			CSSClanBoxMath perpendicular_math;
+
+			perpendicular_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
+			perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
+			perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_height);
+
+			switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_shrink_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
+				break;
+			}
+
+			switch (child->impl->css_properties.clan_box_width_expand_factor.type)
+			{
+			default:
+			case CSSBoxClanBoxSizingFactor::type_auto:
+				perpendicular_math.used_expand_weights.push_back(0.0f);
+				break;
+			case CSSBoxClanBoxSizingFactor::type_number:
+				perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
+				break;
+			}
+
+			perpendicular_math.adjust(css_used_values.width);
+
+			// Save the result of the horizontal adjustment
+			child_used_values.width = perpendicular_math.used_lengths[0];
+
+			// If the height of the box could not be determined from CSS, then ask the component:
+			if (child_used_values.height_undetermined)
+			{
+				child_used_values.height = child->get_preferred_content_height(child_used_values.width);
+				child_used_values.height_undetermined = false;
+			}
+
+			// Make sure height is within the min/max values:
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+
+			// Set up vertical box adjustment math:
 
 			CSSUsedValue used_noncontent_height = 
 				child_used_values.margin.top +
@@ -396,9 +500,9 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 				child_used_values.border.bottom +
 				child_used_values.margin.bottom;
 
-			box_math.used_min_lengths.push_back(used_noncontent_height + child->get_min_height());
-			box_math.used_lengths.push_back(used_noncontent_height + child->get_preferred_height());
-			box_math.used_max_lengths.push_back(used_noncontent_height + child->get_max_height());
+			box_math.used_min_lengths.push_back(used_noncontent_height + child_used_values.min_height);
+			box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
+			box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
 			switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
 			{
@@ -424,64 +528,29 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 		}
 	}
 
+	// Adjust the heights of the boxes
 	box_math.adjust(css_used_values.height);
 
-	// Set the actual geometry
-	CSSUsedValue x = 0.0f;
-	CSSUsedValue y = 0.0f;
+	// Save adjusted height values
 	int i = 0;
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+			child_used_values.height = box_math.used_lengths[i];
+		}
+	}
 
-			CSSUsedValue used_noncontent_width = 
-				child_used_values.margin.left +
-				child_used_values.border.left +
-				child_used_values.padding.left +
-				child_used_values.padding.right +
-				child_used_values.border.right +
-				child_used_values.margin.right;
-
-			CSSUsedValue used_noncontent_height = 
-				child_used_values.margin.top +
-				child_used_values.border.top +
-				child_used_values.padding.top +
-				child_used_values.padding.bottom +
-				child_used_values.border.bottom +
-				child_used_values.margin.bottom;
-
-			CSSClanBoxMath perpendicular_math;
-
-			perpendicular_math.used_min_lengths.push_back(used_noncontent_width + child->get_min_width());
-			perpendicular_math.used_lengths.push_back(used_noncontent_width + child->get_preferred_width());
-			perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child->get_max_width());
-
-			switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
-			{
-			default:
-			case CSSBoxClanBoxSizingFactor::type_auto:
-				perpendicular_math.used_shrink_weights.push_back(0.0f);
-				break;
-			case CSSBoxClanBoxSizingFactor::type_number:
-				perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
-				break;
-			}
-
-			switch (child->impl->css_properties.clan_box_width_expand_factor.type)
-			{
-			default:
-			case CSSBoxClanBoxSizingFactor::type_auto:
-				perpendicular_math.used_expand_weights.push_back(0.0f);
-				break;
-			case CSSBoxClanBoxSizingFactor::type_number:
-				perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
-				break;
-			}
-
-			perpendicular_math.adjust(css_used_values.width);
-			CSSUsedValue child_used_width = perpendicular_math.used_lengths[0];
+	// Set the actual geometry
+	CSSUsedValue x = 0.0f;
+	CSSUsedValue y = 0.0f;
+	i = 0;
+	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling(), i++)
+	{
+		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		{
+			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 			CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child->impl->get_css_relative_x(css_used_values.width);
 			CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child->impl->get_css_relative_y(css_used_values.height);
@@ -489,8 +558,8 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			// Used to actual mapping
 			CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
 			CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
-			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
+			CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
+			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
 			y += box_math.used_lengths[i];

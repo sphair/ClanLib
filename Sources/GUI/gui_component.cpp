@@ -573,104 +573,19 @@ bool GUIComponent::get_clip_children() const
 	return impl->clip_children;
 }
 
-float GUIComponent::get_preferred_width() const
+float GUIComponent::get_preferred_content_width() const
 {
-	switch (impl->css_properties.width.type)
-	{
-	case CSSBoxWidth::type_auto:
-		// To do: determine this based on impl->css_properties.display.type
-		return impl->geometry.get_width();
-	default:
-	case CSSBoxWidth::type_length:
-		return impl->css_properties.width.length.value;
-	case CSSBoxWidth::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.width.percentage * get_parent_component()->get_width() / 100.0f;
-		else
-			return 0.0f;
-	}
+	return 0.0f;
 }
 
-float GUIComponent::get_preferred_height() const
+float GUIComponent::get_min_preferred_content_width() const
 {
-	switch (impl->css_properties.height.type)
-	{
-	case CSSBoxHeight::type_auto:
-		// To do: determine this based on impl->css_properties.display.type
-		return impl->geometry.get_height();
-	default:
-	case CSSBoxHeight::type_length:
-		return impl->css_properties.height.length.value;
-	case CSSBoxHeight::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.height.percentage * get_parent_component()->get_height() / 100.0f;
-		else
-			return 0.0f;
-	}
+	return 0.0f;
 }
 
-float GUIComponent::get_min_width() const
+float GUIComponent::get_preferred_content_height(float content_width) const
 {
-	switch (impl->css_properties.min_width.type)
-	{
-	default:
-	case CSSBoxMinWidth::type_length:
-		return impl->css_properties.min_width.length.value;
-	case CSSBoxMinWidth::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.min_width.percentage * get_parent_component()->get_width() / 100.0f;
-		else
-			return 0.0f;
-	}
-}
-
-float GUIComponent::get_min_height() const
-{
-	switch (impl->css_properties.min_height.type)
-	{
-	default:
-	case CSSBoxMinHeight::type_length:
-		return impl->css_properties.min_height.length.value;
-	case CSSBoxMinHeight::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.min_height.percentage * get_parent_component()->get_height() / 100.0f;
-		else
-			return 0.0f;
-	}
-}
-
-float GUIComponent::get_max_width() const
-{
-	switch (impl->css_properties.max_width.type)
-	{
-	default:
-	case CSSBoxMaxWidth::type_none:
-		return 1e6f;
-	case CSSBoxMaxWidth::type_length:
-		return impl->css_properties.max_width.length.value;
-	case CSSBoxMaxWidth::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.max_width.percentage * get_parent_component()->get_width() / 100.0f;
-		else
-			return 0.0f;
-	}
-}
-
-float GUIComponent::get_max_height() const
-{
-	switch (impl->css_properties.max_height.type)
-	{
-	default:
-	case CSSBoxMaxHeight::type_none:
-		return 1e6f;
-	case CSSBoxMaxHeight::type_length:
-		return impl->css_properties.max_height.length.value;
-	case CSSBoxMaxHeight::type_percentage:
-		if (get_parent_component())
-			return impl->css_properties.max_height.percentage * get_parent_component()->get_height() / 100.0f;
-		else
-			return 0.0f;
-	}
+	return 0.0f;
 }
 
 GUILayout GUIComponent::get_layout() const
