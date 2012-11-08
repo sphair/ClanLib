@@ -10,15 +10,12 @@ clanGL_includes = \
 clanGL1_includes = \
 	gl1.h \
 	GL1/api_gl1.h \
-	GL1/opengl1_defines.h \
 	GL1/graphic_context_gl1.h \
 	GL1/light_model.h \
 	GL1/light_source.h \
 	GL1/material.h \
-	GL1/opengl1.h \
 	GL1/opengl1_target.h \
 	GL1/opengl1_window_description.h \
-	GL1/opengl1_wrap.h \
 	GL1/setup_gl1.h \
 	GL1/texture_unit.h
 

@@ -38,8 +38,8 @@
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/GL1/opengl1.h"
-#include "API/GL1/opengl1_wrap.h"
+#include "GL1/opengl1.h"
+#include "GL1/opengl1_wrap.h"
 #include "API/GL1/opengl1_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
@@ -385,7 +385,8 @@ GLXContext GL1WindowProvider_GLX::get_share_context()
 {
 	GLXContext shared_context = NULL;
 
-	GraphicContextProvider* gc_providers = SharedGCData::get_provider();
+	std::unique_ptr<MutexSection> mutex_section;
+	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
 		GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
@@ -462,7 +463,7 @@ void GL1WindowProvider_GLX::update(const Rect &_rect)
 	cl1Viewport(0, 0, width, height);
 	cl1MatrixMode(GL_PROJECTION);
 	cl1LoadIdentity();
-	cl1MultMatrixf(Mat4f::ortho_2d(0.0, width, 0.0, height));
+	cl1MultMatrixf(Mat4f::ortho_2d(0.0, width, 0.0, height, handed_right, clip_negative_positive_w));
 	cl1MatrixMode(GL_MODELVIEW);
 	cl1LoadIdentity();
 

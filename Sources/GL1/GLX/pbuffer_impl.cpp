@@ -27,8 +27,8 @@
 */
 
 #include "GL1/precomp.h"
-#include "API/GL1/opengl1_wrap.h"
-#include "API/GL1/opengl1.h"
+#include "GL1/opengl1_wrap.h"
+#include "GL1/opengl1.h"
 #include "pbuffer_impl.h"
 #include "../gl1_graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"

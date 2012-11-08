@@ -30,7 +30,7 @@
 
 #include "../pbuffer.h"
 #include "API/Core/System/disposable_object.h"
-#include "API/GL1/opengl1_wrap.h"
+#include "GL1/opengl1_wrap.h"
 #include "API/Core/System/disposable_object.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
@@ -84,7 +84,7 @@ public:
 	std::string get_title() const {return std::string();}
 	Size get_minimum_size(bool client_area) const  {return Size();}
 	Size get_maximum_size(bool client_area) const {return Size();}
-	Display *get_display() const { return disp; }
+	::Display *get_display() const { return disp; }
 	Window get_window() const { throw Exception("Not implemented"); }
 	GraphicContext& get_gc() { throw Exception("Not implemented"); }
 	InputContext get_ic() { throw Exception("Not implemented"); }
