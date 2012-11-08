@@ -34,7 +34,6 @@
 #include "API/Core/Text/console_logger.h"
 #include "../gui_component_impl.h"
 #include "../gui_manager_impl.h"
-#include "../gui_font_cache.h"
 #include "../gui_css_strings.h"
 #include "gui_theme_part_impl.h"
 

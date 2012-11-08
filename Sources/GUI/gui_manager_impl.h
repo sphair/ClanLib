@@ -43,7 +43,6 @@
 #include "API/GUI/gui_window_manager.h"
 #include "Theme/gui_theme_layout_manager.h"
 #include "CSSLayout/css_resource_cache.h"
-#include "gui_font_cache.h"
 #include <vector>
 #include <map>
 
@@ -143,7 +142,6 @@ public:
 	Callback_v1<GUITopLevelWindow *> func_close;
 	Callback_v1<GUITopLevelWindow *> func_destroy;
 	Callback_v2<GUITopLevelWindow *, const InputEvent &> func_input_received;
-	GUIFontCache font_cache;
 
 /// \}
 /// \name Operations

@@ -8,7 +8,6 @@ libclan30GUI_la_SOURCES = \
 	gui_component_description_impl.h \
 	gui_component_impl.h \
 	Layout/gui_layout_provider_corners.h \
-	gui_font_cache.h \
 	gui_manager_impl.h \
 	Theme/gui_theme_part_impl.h \
 	Theme/gui_theme_provider_default.h \
@@ -60,7 +59,6 @@ libclan30GUI_la_SOURCES = \
 	Theme/gui_theme_layout_manager.cpp \
 	Theme/gui_theme_part_property_impl.cpp \
 	Theme/gui_theme_part.cpp \
-	gui_font_cache.cpp \
 	accelerator_table.cpp \
 	Message/gui_message_resize.cpp \
 	Message/gui_message_close.cpp \
