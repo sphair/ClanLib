@@ -70,7 +70,6 @@ ribbon-page
     -clan-box-width-expand-factor: 1;
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
-/*    height: 94px;*/
 }
 
 ribbon-section
@@ -78,7 +77,7 @@ ribbon-section
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
-    width: 110px;
+    min-width: 40px;
 }
 
 ribbon-section button
