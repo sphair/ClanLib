@@ -46,64 +46,68 @@
 
 #include <GL/glx.h>
 
+namespace clan
+{
+
+
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
 
 class PBuffer_GL1;
-class CL_GL1WindowProvider_GLX;
-class CL_GL1GraphicContextProvider;
+class GL1WindowProvider_GLX;
+class GL1GraphicContextProvider;
 
 class OpenGLWindowProvider_GLX;
 
 #define GL_USE_DLOPEN		// Using dlopen for linux by default
 
-class CL_GL1_GLXFunctions
+class GL1_GLXFunctions
 {
 public:
-	typedef XVisualInfo* (CL_GL1FUNC *ptr_glXChooseVisual)(Display *dpy, int screen, int *attrib_list);
-	typedef void (CL_GL1FUNC *ptr_glXCopyContext)(Display *dpy, GLXContext src, GLXContext dst, unsigned long mask);
-	typedef GLXContext (CL_GL1FUNC *ptr_glXCreateContext)(Display *dpy, XVisualInfo *vis, GLXContext share_list, Bool direct);
-	typedef GLXPixmap (CL_GL1FUNC *ptr_glXCreateGLXPixmap)(Display *dpy, XVisualInfo *vis, Pixmap pixmap);
-	typedef void (CL_GL1FUNC *ptr_glXDestroyContext)(Display *dpy, GLXContext ctx);
-	typedef void (CL_GL1FUNC *ptr_glXDestroyGLXPixmap)(Display *dpy, GLXPixmap pix);
-	typedef int (CL_GL1FUNC *ptr_glXGetConfig)(Display *dpy, XVisualInfo *vis, int attrib, int *value);
-	typedef GLXContext (CL_GL1FUNC *ptr_glXGetCurrentContext)(void);
-	typedef GLXDrawable (CL_GL1FUNC *ptr_glXGetCurrentDrawable)(void);
-	typedef Bool (CL_GL1FUNC *ptr_glXIsDirect)(Display *dpy, GLXContext ctx);
-	typedef Bool (CL_GL1FUNC *ptr_glXMakeCurrent)(Display *dpy, GLXDrawable drawable, GLXContext ctx);
-	typedef Bool (CL_GL1FUNC *ptr_glXQueryExtension)(Display *dpy, int *error_base, int *event_base);
-	typedef Bool (CL_GL1FUNC *ptr_glXQueryVersion)(Display *dpy, int *major, int *minor);
-	typedef void (CL_GL1FUNC *ptr_glXSwapBuffers)(Display *dpy, GLXDrawable drawable);
-	typedef void (CL_GL1FUNC *ptr_glXUseXFont)(Font font, int first, int count, int list_base);
-	typedef void (CL_GL1FUNC *ptr_glXWaitGL)(void);
-	typedef void (CL_GL1FUNC *ptr_glXWaitX)(void);
-	typedef const char *(CL_GL1FUNC *ptr_glXGetClientString)(Display *dpy, int name);
-	typedef const char *(CL_GL1FUNC *ptr_glXQueryServerString)(Display *dpy, int screen, int name);
-	typedef const char *(CL_GL1FUNC *ptr_glXQueryExtensionsString)(Display *dpy, int screen);
-	typedef Display *(CL_GL1FUNC *ptr_glXGetCurrentDisplay)(void);
-	typedef GLXFBConfig *(CL_GL1FUNC *ptr_glXChooseFBConfig)(Display *dpy, int screen, const int *attrib_list, int *nelements);
-	typedef GLXContext (CL_GL1FUNC *ptr_glXCreateNewContext)(Display *dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
-	typedef GLXPbuffer (CL_GL1FUNC *ptr_glXCreatePbuffer)(Display *dpy, GLXFBConfig config, const int *attrib_list);
-	typedef GLXPixmap (CL_GL1FUNC *ptr_glXCreatePixmap)(Display *dpy, GLXFBConfig config, Pixmap pixmap, const int *attrib_list);
-	typedef GLXWindow (CL_GL1FUNC *ptr_glXCreateWindow)(Display *dpy, GLXFBConfig config, Window win, const int *attrib_list);
-	typedef void (CL_GL1FUNC *ptr_glXDestroyPbuffer)(Display *dpy, GLXPbuffer pbuf);
-	typedef void (CL_GL1FUNC *ptr_glXDestroyPixmap)(Display *dpy, GLXPixmap pixmap);
-	typedef void (CL_GL1FUNC *ptr_glXDestroyWindow)(Display *dpy, GLXWindow win);
-	typedef GLXDrawable (CL_GL1FUNC *ptr_glXGetCurrentReadDrawable)(void);
-	typedef int (CL_GL1FUNC *ptr_glXGetFBConfigAttrib)(Display *dpy, GLXFBConfig config, int attribute, int *value);
-	typedef GLXFBConfig *(CL_GL1FUNC *ptr_glXGetFBConfigs)(Display *dpy, int screen, int *nelements);
-	typedef void (CL_GL1FUNC *ptr_glXGetSelectedEvent)(Display *dpy, GLXDrawable draw, unsigned long *event_mask);
-	typedef XVisualInfo *(CL_GL1FUNC *ptr_glXGetVisualFromFBConfig)(Display *dpy, GLXFBConfig config);
-	typedef Bool (CL_GL1FUNC *ptr_glXMakeContextCurrent)(Display *display, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
-	typedef int (CL_GL1FUNC *ptr_glXQueryContext)(Display *dpy, GLXContext ctx, int attribute, int *value);
-	typedef void (CL_GL1FUNC *ptr_glXQueryDrawable)(Display *dpy, GLXDrawable draw, int attribute, unsigned int *value);
-	typedef void (CL_GL1FUNC *ptr_glXSelectEvent)(Display *dpy, GLXDrawable draw, unsigned long event_mask);
+	typedef XVisualInfo* (GL1FUNC *ptr_glXChooseVisual)(::Display *dpy, int screen, int *attrib_list);
+	typedef void (GL1FUNC *ptr_glXCopyContext)(::Display *dpy, GLXContext src, GLXContext dst, unsigned long mask);
+	typedef GLXContext (GL1FUNC *ptr_glXCreateContext)(::Display *dpy, XVisualInfo *vis, GLXContext share_list, Bool direct);
+	typedef GLXPixmap (GL1FUNC *ptr_glXCreateGLXPixmap)(::Display *dpy, XVisualInfo *vis, Pixmap pixmap);
+	typedef void (GL1FUNC *ptr_glXDestroyContext)(::Display *dpy, GLXContext ctx);
+	typedef void (GL1FUNC *ptr_glXDestroyGLXPixmap)(::Display *dpy, GLXPixmap pix);
+	typedef int (GL1FUNC *ptr_glXGetConfig)(::Display *dpy, XVisualInfo *vis, int attrib, int *value);
+	typedef GLXContext (GL1FUNC *ptr_glXGetCurrentContext)(void);
+	typedef GLXDrawable (GL1FUNC *ptr_glXGetCurrentDrawable)(void);
+	typedef Bool (GL1FUNC *ptr_glXIsDirect)(::Display *dpy, GLXContext ctx);
+	typedef Bool (GL1FUNC *ptr_glXMakeCurrent)(::Display *dpy, GLXDrawable drawable, GLXContext ctx);
+	typedef Bool (GL1FUNC *ptr_glXQueryExtension)(::Display *dpy, int *error_base, int *event_base);
+	typedef Bool (GL1FUNC *ptr_glXQueryVersion)(::Display *dpy, int *major, int *minor);
+	typedef void (GL1FUNC *ptr_glXSwapBuffers)(::Display *dpy, GLXDrawable drawable);
+	typedef void (GL1FUNC *ptr_glXUseXFont)(Font font, int first, int count, int list_base);
+	typedef void (GL1FUNC *ptr_glXWaitGL)(void);
+	typedef void (GL1FUNC *ptr_glXWaitX)(void);
+	typedef const char *(GL1FUNC *ptr_glXGetClientString)(::Display *dpy, int name);
+	typedef const char *(GL1FUNC *ptr_glXQueryServerString)(::Display *dpy, int screen, int name);
+	typedef const char *(GL1FUNC *ptr_glXQueryExtensionsString)(::Display *dpy, int screen);
+	typedef ::Display *(GL1FUNC *ptr_glXGetCurrentDisplay)(void);
+	typedef GLXFBConfig *(GL1FUNC *ptr_glXChooseFBConfig)(::Display *dpy, int screen, const int *attrib_list, int *nelements);
+	typedef GLXContext (GL1FUNC *ptr_glXCreateNewContext)(::Display *dpy, GLXFBConfig config, int render_type, GLXContext share_list, Bool direct);
+	typedef GLXPbuffer (GL1FUNC *ptr_glXCreatePbuffer)(::Display *dpy, GLXFBConfig config, const int *attrib_list);
+	typedef GLXPixmap (GL1FUNC *ptr_glXCreatePixmap)(::Display *dpy, GLXFBConfig config, Pixmap pixmap, const int *attrib_list);
+	typedef GLXWindow (GL1FUNC *ptr_glXCreateWindow)(::Display *dpy, GLXFBConfig config, Window win, const int *attrib_list);
+	typedef void (GL1FUNC *ptr_glXDestroyPbuffer)(::Display *dpy, GLXPbuffer pbuf);
+	typedef void (GL1FUNC *ptr_glXDestroyPixmap)(::Display *dpy, GLXPixmap pixmap);
+	typedef void (GL1FUNC *ptr_glXDestroyWindow)(::Display *dpy, GLXWindow win);
+	typedef GLXDrawable (GL1FUNC *ptr_glXGetCurrentReadDrawable)(void);
+	typedef int (GL1FUNC *ptr_glXGetFBConfigAttrib)(::Display *dpy, GLXFBConfig config, int attribute, int *value);
+	typedef GLXFBConfig *(GL1FUNC *ptr_glXGetFBConfigs)(::Display *dpy, int screen, int *nelements);
+	typedef void (GL1FUNC *ptr_glXGetSelectedEvent)(::Display *dpy, GLXDrawable draw, unsigned long *event_mask);
+	typedef XVisualInfo *(GL1FUNC *ptr_glXGetVisualFromFBConfig)(::Display *dpy, GLXFBConfig config);
+	typedef Bool (GL1FUNC *ptr_glXMakeContextCurrent)(::Display *display, GLXDrawable draw, GLXDrawable read, GLXContext ctx);
+	typedef int (GL1FUNC *ptr_glXQueryContext)(::Display *dpy, GLXContext ctx, int attribute, int *value);
+	typedef void (GL1FUNC *ptr_glXQueryDrawable)(::Display *dpy, GLXDrawable draw, int attribute, unsigned int *value);
+	typedef void (GL1FUNC *ptr_glXSelectEvent)(::Display *dpy, GLXDrawable draw, unsigned long event_mask);
 
-	typedef __GLXextFuncPtr (CL_GL1FUNC *ptr_glXGetProcAddress) (const GLubyte *);
-	typedef void (*(CL_GL1FUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
+	typedef __GLXextFuncPtr (GL1FUNC *ptr_glXGetProcAddress) (const GLubyte *);
+	typedef void (*(GL1FUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
 
 	typedef GLXPbuffer (*ptr_glXCreatePbufferSGIX)(
-		Display *dpy,
+		::Display *dpy,
 		GLXFBConfig config,
 		unsigned int width,
 		unsigned int height,
@@ -158,15 +162,15 @@ public:
 	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
 };
 
-class CL_GL1WindowProvider_GLX : public DisplayWindowProvider
+class GL1WindowProvider_GLX : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_GL1WindowProvider_GLX();
+	GL1WindowProvider_GLX();
 
-	~CL_GL1WindowProvider_GLX();
+	~GL1WindowProvider_GLX();
 
 
 /// \}
@@ -201,10 +205,10 @@ public:
 	PixelBuffer get_clipboard_image() const { return x11_window.get_clipboard_image(); }
 
 	/// \brief Returns the X11 display handle.
-	Display *get_display() const { return x11_window.get_display(); }
+	::Display *get_display() const { return x11_window.get_display(); }
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() const { return x11_window.get_window(); }
+	::Window get_window() const { return x11_window.get_window(); }
 
 	/// \brief Returns the GLX rendering context for this window.
 	GLXContext get_opengl_context() { return opengl_context; }
@@ -215,14 +219,14 @@ public:
 
 	GraphicContext gc;
 
-	CL_GL1_GLXFunctions glx;
+	GL1_GLXFunctions glx;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	CL_GL1ProcAddress *get_proc_address(const std::string& function_name) const;
+	GL1ProcAddress *get_proc_address(const std::string& function_name) const;
 
 	void make_current() const;
 	void destroy() { delete this; }
@@ -289,7 +293,7 @@ public:
 
 	void request_repaint(const Rect &rect) { x11_window.request_repaint(rect); }
 
-	PBuffer_GL1 create_pbuffer(CL_GL1GraphicContextProvider *gc_provider, Size size);
+	PBuffer_GL1 create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size);
 
 	GLXContext get_share_context();
 
@@ -308,7 +312,7 @@ private:
 
 	void setup_extension_pointers();
 
-	CL_X11Window x11_window;
+	X11Window x11_window;
 
 	/// \brief GLX rendering context handle.
 	GLXContext opengl_context;
@@ -330,4 +334,5 @@ private:
 };
 
 
+}
 

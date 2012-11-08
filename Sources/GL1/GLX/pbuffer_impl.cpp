@@ -34,7 +34,10 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "gl1_window_provider_glx.h"
 
-PBuffer_GL1_Impl::PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
+namespace clan
+{
+
+PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
 , pbuffer(0), pbuffer_context(0), disp(0), pbuffer_gc_provider(0), glx(NULL)
 {
 	gc_provider->add_disposable(this);
@@ -55,7 +58,7 @@ void PBuffer_GL1_Impl::on_dispose()
 	gc_provider->remove_disposable(this);
 }
 
-CL_GL1ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
+GL1ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
 {
 	if (glx->glXGetProcAddressARB)
 		return glx->glXGetProcAddressARB((GLubyte*)function_name.c_str());
@@ -76,7 +79,7 @@ void PBuffer_GL1_Impl::reset()
 		pbuffer_gc = GraphicContext();
 		pbuffer_gc_provider = NULL;
 	}
-	CL_GL1::set_active(gc_provider);
+	GL1::set_active(gc_provider);
 
 	if (glx)
 	{
@@ -100,19 +103,19 @@ void PBuffer_GL1_Impl::reset()
 }
 
 static bool cl1_ctxErrorOccurred = false;
-static int cl1_ctxErrorHandler( Display *dpy, XErrorEvent *ev )
+static int cl1_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
 {
     cl1_ctxErrorOccurred = true;
     return 0;
 }
 
-void PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, Size &size)
+void PBuffer_GL1_Impl::create(GL1WindowProvider_GLX &window_provider, Size &size)
 {
 	reset();
 
 	glx = &window_provider.glx;	// FIXME: What a hack!
 
-	CL_GL1::set_active(gc_provider);
+	GL1::set_active(gc_provider);
 
 	disp = window_provider.get_display();
 	if (disp == NULL)
@@ -187,7 +190,7 @@ void PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, Size &s
 			};
 
 		cl1_ctxErrorOccurred = false;
-		int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&cl1_ctxErrorHandler);
+		int (*oldHandler)(::Display*, XErrorEvent*) = XSetErrorHandler(&cl1_ctxErrorHandler);
 
 		pbuffer = glx->glXCreatePbufferSGIX(disp, fbconfig[0], size.width, size.height, pbufAttrib2);
 
@@ -223,12 +226,14 @@ void PBuffer_GL1_Impl::create(CL_GL1WindowProvider_GLX &window_provider, Size &s
 	XFree(fbconfig);
 	XFree(visinfo);
 
-	pbuffer_gc_provider = new CL_GL1GraphicContextProvider(this);
+	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
 	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
 }
 
 void PBuffer_GL1_Impl::set_active() const
 {
-	CL_GL1::set_active(pbuffer_gc_provider);
+	GL1::set_active(pbuffer_gc_provider);
+}
+
 }
 

@@ -22,7 +22,6 @@ libclan30GL_la_SOURCES = \
 	opengl_graphic_context.cpp \
 	opengl_shader_object_provider.cpp \
 	opengl_program_object_provider.cpp \
-	opengl_program_uniform_block_provider.cpp \
 	opengl_frame_buffer_provider.cpp \
 	opengl_render_buffer_provider.cpp \
 	opengl_frame_buffer_provider.h \

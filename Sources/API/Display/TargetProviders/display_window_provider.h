@@ -166,10 +166,10 @@ public:
 	// nothing
 #else
 	/// \brief Returns the X11 display handle.
-	virtual Display *get_display() const = 0;
+	virtual ::Display *get_display() const = 0;
 
 	/// \brief Handle to X11 window handle.
-	virtual Window get_window() const = 0;
+	virtual ::Window get_window() const = 0;
 #endif
 
 	/// \brief Returns true if text is available in the clipboard.

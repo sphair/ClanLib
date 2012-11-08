@@ -102,12 +102,12 @@ HWND DisplayWindow::get_hwnd() const
 #elif defined(__APPLE__)
 	// nothing
 #else
-Display *DisplayWindow::get_display() const
+::Display *DisplayWindow::get_display() const
 {
 	return impl->provider->get_display();
 }
 
-Window DisplayWindow::get_window() const
+::Window DisplayWindow::get_window() const
 {
 	return impl->provider->get_window();
 }
