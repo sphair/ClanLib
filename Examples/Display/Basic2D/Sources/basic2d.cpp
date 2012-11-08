@@ -41,16 +41,15 @@ int Basic2D::start(const std::vector<std::string> &args)
 	desc.set_size(Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	DisplayWindow window(desc);
+	Canvas canvas(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Basic2D::on_window_close);
+	Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &Basic2D::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Basic2D::on_input_up);
+	Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Basic2D::on_input_up);
 
 	// Get the graphic context
-	Canvas canvas(window);
 
 	// Load a sprite from a png-file
 	Image spr_logo(canvas, "Resources/logo.png");
@@ -118,8 +117,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 		canvas.pop_cliprect();
 
-		canvas.flush();
-		window.flip(1);
+		canvas.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process(0);
