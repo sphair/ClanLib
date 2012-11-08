@@ -36,7 +36,8 @@
 #elif defined(WIN32)
 #include "FontEngine/font_engine_win32.h"
 #else
-#include "FontEngine/font_engine_freetype.h"
+#include "X11/font_engine_freetype.h"
+#include "../Display/X11/font_config.h"
 #endif
 
 #include "API/Core/IOData/file.h"
@@ -75,7 +76,7 @@ void FontProvider_Vector::load_font(const FontDescription &desc)
 	glyph_cache.font_metrics = font_engine->get_metrics();
 #else
 
-	std::string font_file_path = desc.get_file_name();
+	std::string font_file_path = desc.get_filename();
 	if (font_file_path.empty())
 	{
 	    // Obtain the best matching font file from fontconfig.
@@ -88,7 +89,14 @@ void FontProvider_Vector::load_font(const FontDescription &desc)
 	VirtualFileSystem vfs(path);
 	IODevice io_dev = vfs.get_root_directory().open_file_read(filename);
 
-	font_engine = new FontEngine_Freetype(io_dev);
+	int average_width = desc.get_average_width();
+	int height = desc.get_height();
+
+	// Ensure width and height are positive
+	if (average_width < 0) average_width =-average_width;
+	if (height < 0) height =-height;
+
+	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
 #endif
 
 	metrics = font_engine->get_metrics();
