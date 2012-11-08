@@ -77,6 +77,8 @@ public:
 	bool subpixel;
 	FontDescription::Charset charset;
 
+	bool is_match(const FontDescription_Impl *other) const;
+
 /// \}
 };
 
