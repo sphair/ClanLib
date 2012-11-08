@@ -57,6 +57,7 @@ class Quadf;
 class Trianglef;
 class Triangle;
 class DisplayWindow;
+class DisplayWindowDescription;
 class FontManager;
 
 /// \brief Mapping modes.
@@ -89,6 +90,9 @@ public:
 
 	/// \brief Constructs a Canvas (based on a specific GraphicContext held in the DisplayWindow)
 	explicit Canvas(DisplayWindow &window);
+
+	/// \brief Constructs a Canvas (based on a DisplayWindow description)
+	explicit Canvas(DisplayWindowDescription &desc);
 
 	~Canvas();
 
@@ -135,6 +139,11 @@ public:
 
 	/// \brief Get the font manager
 	FontManager get_font_manager() const;
+
+	/// \brief Get the display window attached to this canvas
+	///
+	/// Returns an empty object if no display window exists
+	DisplayWindow get_window() const;
 
 /// \}
 /// \name Operations
@@ -410,6 +419,37 @@ public:
 
 	/// \brief Set a new font manager
 	void set_font_manager(FontManager &font_manager);
+
+
+	/// \brief Flip back buffer to front, making changes visible on screen.
+	///
+	/// This function calls flush()
+	///
+	/// <p>The parameter interval specifies the minimum number of video frames
+	/// that are displayed before a buffer swap will occur.</p>
+	/// <p>If interval is set to a value of 0, buffer swaps are not synchronized
+	/// to a video frame. </p>
+	/// <p>If interval is set to a value of -1 (the default), then it will use
+	/// the buffer swap used for previous flip. If its the first flip, it will
+	/// use the system default.</p>
+	///
+	/// \param interval = See note
+	void flip(DisplayWindow &window, int interval = -1);
+
+	/// \brief Flip back buffer to front, making changes visible on screen.
+	///
+	/// This function calls flush()
+	///
+	/// <p>The parameter interval specifies the minimum number of video frames
+	/// that are displayed before a buffer swap will occur.</p>
+	/// <p>If interval is set to a value of 0, buffer swaps are not synchronized
+	/// to a video frame. </p>
+	/// <p>If interval is set to a value of -1 (the default), then it will use
+	/// the buffer swap used for previous flip. If its the first flip, it will
+	/// use the system default.</p>
+	///
+	/// \param interval = See note
+	void flip(int interval = -1);
 
 /// \}
 /// \name Events

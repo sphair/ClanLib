@@ -60,8 +60,15 @@ Canvas::Canvas(GraphicContext &context) : impl(new Canvas_Impl(context))
 
 Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl(window.get_gc()))
 {
+	impl->display_window = window;
 	set_map_mode(map_2d_upper_left);
 
+}
+
+Canvas::Canvas(DisplayWindowDescription &desc)
+{
+	DisplayWindow window(desc);
+	*this = Canvas(window);
 }
 
 Canvas::Canvas(GraphicContext &context, FrameBuffer &framebuffer)
@@ -81,7 +88,11 @@ Canvas Canvas::create()
 {
 	flush();
 	GraphicContext new_context = get_gc().create();
-	return Canvas(new_context);
+	Canvas new_canvas = Canvas(new_context);
+
+	new_canvas.impl->display_window = impl->display_window;
+
+	return new_canvas;
 }
 
 Canvas::~Canvas()
@@ -137,6 +148,10 @@ PixelBuffer Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
 	return get_gc().get_pixeldata(texture_format, clamp);
 }
 
+DisplayWindow Canvas::get_window() const
+{
+	return impl->display_window;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Canvas Operations:
@@ -555,6 +570,21 @@ void Canvas::ellipse_gradient(const Pointf &center, float radius_x, float radius
 void Canvas::set_font_manager(FontManager &font_manager)
 {
 	impl->font_manager = font_manager;
+}
+
+void Canvas::flip(DisplayWindow &window, int interval)
+{
+	window.throw_if_null();
+	flush();
+	window.flip(interval);
+}
+
+void Canvas::flip(int interval)
+{
+	if (impl->display_window.is_null())
+		throw Exception("The display window is not known to this canvas");
+	flush();
+	impl->display_window.flip(interval);
 }
 
 /////////////////////////////////////////////////////////////////////////////
