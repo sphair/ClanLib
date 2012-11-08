@@ -136,8 +136,9 @@ private:
 /// \}
 };
 
-#endif
 
 }
+
+#endif
 
 /// \}
