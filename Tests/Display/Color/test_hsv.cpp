@@ -35,7 +35,7 @@ void TestApp::test_hsv()
 {
 	Console::write_line(" Header: color_hsv.h");
 	Console::write_line("  Class: ColorHSVi");
-
+	
 	Console::write_line("   Function: ColorHSVi()");
 	{
 		ColorHSVi hsv;
@@ -44,7 +44,7 @@ void TestApp::test_hsv()
 		if (hsv.v !=0) fail();
 		if (hsv.a !=0) fail();
 	}
-
+	
 	Console::write_line("   Function: ColorHSVi(int h, int s, int v, int a)");
 	{
 		ColorHSVi hsv(1,2,3,4);
@@ -53,7 +53,7 @@ void TestApp::test_hsv()
 		if (hsv.v != 3) fail();
 		if (hsv.a != 4) fail();
 	}
-
+	
 	Console::write_line("   Function: ColorHSVi(const ColorHSVi &copy)");
 	{
 		ColorHSVi hsv(1,2,3,4);
@@ -63,6 +63,7 @@ void TestApp::test_hsv()
 		if (hsv_copy.v != 3) fail();
 		if (hsv_copy.a != 4) fail();
 	}
+	
 	Console::write_line("   Function: ColorHSVi(const Color &color)");
 	{
 		Color color(255, 0, 0, 64);
@@ -72,7 +73,9 @@ void TestApp::test_hsv()
 		if (hsv.v != 255) fail();
 		if (hsv.a != 64) fail();
 	}
-
+	
+	
+	
 	{
 		Color color(128, 255, 128, 64);
 		ColorHSVi hsv(color);
@@ -81,7 +84,7 @@ void TestApp::test_hsv()
 		if (hsv.v != 255) fail();
 		if (hsv.a != 64) fail();
 	}
-
+	
 	{
 		Colorf colorf(0.5f, 1.0f, 0.5f, 1.0f);
 		ColorHSVi hsv(colorf);
@@ -130,7 +133,9 @@ void TestApp::test_hsv()
 		if (alpha != 90) fail();
 
 	}
+	
 
+	
 	Console::write_line("  Class: ColorHSVf");
 
 	Console::write_line("   Function: ColorHSVf()");
@@ -197,7 +202,7 @@ void TestApp::test_hsv()
 		if (hsv.v != 0.5f) fail();
 		if (hsv.a != 0.3f) fail();
 	}
-
+	
 	{
 		Colorf color(0.2f, 0.4f, 0.7f, 0.3f);
 		ColorHSVf hsv(color);
@@ -211,7 +216,7 @@ void TestApp::test_hsv()
 		if (color.a < 0.2999f) fail();
 		if (color.a > 0.3001f) fail();
 	}
-
+	
 	Console::write_line("  Class: ColorHSVd");
 
 
