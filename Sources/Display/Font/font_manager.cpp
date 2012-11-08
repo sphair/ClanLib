@@ -75,6 +75,11 @@ void FontManager::set_font(Font &font, const FontDescription &desc)
 	impl->set_font(font, desc);
 }
 
+void FontManager::flush_cache()
+{
+	impl->flush_cache();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Implementation:
 

@@ -59,6 +59,9 @@ public:
 	int reference_count;
 	static Mutex cl_sharedgc_mutex;
 	static SharedGCData *cl_sharedgc;
+
+	FontManager font_manager;
+
 private:
 
 	struct SharedTextureMap
@@ -75,6 +78,7 @@ private:
 
 	std::vector<GraphicContextProvider*> graphic_context_providers;
 	std::vector<DisposableObject*> disposable_objects;
+
 };
 
 }

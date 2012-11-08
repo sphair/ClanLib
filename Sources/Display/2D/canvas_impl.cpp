@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "canvas_impl.h"
 #include "API/Display/Render/render_batcher.h"
+#include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 
 namespace clan
@@ -38,6 +39,8 @@ namespace clan
 Canvas_Impl::Canvas_Impl(GraphicContext &gc)
 	: gc(gc), active_batcher(0), canvas_map_mode(map_user_projection)
 {
+	font_manager = SharedGCData::get_font_manager();
+
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
 	canvas_modelviews.push_back(Mat4f::identity());
 

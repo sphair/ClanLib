@@ -97,6 +97,11 @@ void Canvas::throw_if_null() const
 		throw Exception("Canvas is null");
 }
 
+FontManager Canvas::get_font_manager() const
+{
+	return impl->font_manager;
+}
+
 GraphicContext &Canvas::get_gc() const
 {
 	return impl->get_gc();
@@ -545,6 +550,11 @@ void Canvas::ellipse_gradient(const Pointf &center, float radius_x, float radius
 	mult_scale(radius_x/max_radius, radius_y/max_radius);
 	gradient_circle( Pointf(0,0), max_radius, gradient);
 	pop_modelview();
+}
+
+void Canvas::set_font_manager(FontManager &font_manager)
+{
+	impl->font_manager = font_manager;
 }
 
 /////////////////////////////////////////////////////////////////////////////

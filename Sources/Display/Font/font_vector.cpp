@@ -48,7 +48,7 @@ Font_Vector::Font_Vector()
 {
 }
 
-Font_Vector::Font_Vector( const std::string &typeface_name, int height) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height) : Font( new FontProvider_Vector())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -56,7 +56,7 @@ Font_Vector::Font_Vector( const std::string &typeface_name, int height) : Font( 
 	get_provider()->load_font(desc);
 }
 
-Font_Vector::Font_Vector( const std::string &typeface_name, int height, IODevice &file) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, IODevice &file) : Font( new FontProvider_Vector())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -64,7 +64,7 @@ Font_Vector::Font_Vector( const std::string &typeface_name, int height, IODevice
 	get_provider()->load_font(desc, file);
 }
 
-Font_Vector::Font_Vector( const std::string &typeface_name, int height, const VirtualDirectory &directory) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const VirtualDirectory &directory) : Font( new FontProvider_Vector())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -72,17 +72,17 @@ Font_Vector::Font_Vector( const std::string &typeface_name, int height, const Vi
 	get_provider()->load_font(desc, directory);
 }
 
-Font_Vector::Font_Vector( const FontDescription &desc) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_Vector())
 {
 	get_provider()->load_font(desc);
 }
 
-Font_Vector::Font_Vector( const FontDescription &desc, IODevice &file) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, IODevice &file) : Font( new FontProvider_Vector())
 {
 	get_provider()->load_font(desc, file);
 }
 
-Font_Vector::Font_Vector( const FontDescription &desc, const VirtualDirectory &directory) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const VirtualDirectory &directory) : Font( new FontProvider_Vector())
 {
 	get_provider()->load_font(desc, directory);
 }

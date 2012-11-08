@@ -57,6 +57,7 @@ class Quadf;
 class Trianglef;
 class Triangle;
 class DisplayWindow;
+class FontManager;
 
 /// \brief Mapping modes.
 ///
@@ -131,6 +132,9 @@ public:
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
+
+	/// \brief Get the font manager
+	FontManager get_font_manager() const;
 
 /// \}
 /// \name Operations
@@ -403,6 +407,9 @@ public:
 
 	/// \brief Draw a gradient filled ellipse.
 	void ellipse_gradient(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
+
+	/// \brief Set a new font manager
+	void set_font_manager(FontManager &font_manager);
 
 /// \}
 /// \name Events

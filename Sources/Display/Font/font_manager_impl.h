@@ -61,8 +61,9 @@ public:
 /// \{
 
 public:
-	/// Check returned font with font.is_null()
 	Font get_font(const FontDescription &desc) const;
+
+	void flush_cache();
 
 /// \}
 /// \name Operations

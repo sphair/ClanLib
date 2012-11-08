@@ -32,6 +32,8 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_sprite.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_manager.h"
 
 namespace clan
 {
@@ -43,7 +45,7 @@ Font_Sprite::Font_Sprite()
 {
 }
 
-Font_Sprite::Font_Sprite( GraphicContext &gc, const std::string &resource_id, ResourceManager *resources ) : Font(new FontProvider_Sprite(gc, resource_id, resources))
+Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources ) : Font(new FontProvider_Sprite(canvas, resource_id, resources))
 {
 }
 

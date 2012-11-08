@@ -32,6 +32,8 @@
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_system.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_manager.h"
 
 namespace clan
 {
@@ -43,19 +45,24 @@ Font_System::Font_System()
 {
 }
 
-Font_System::Font_System(
-	GraphicContext &context, const std::string &typeface_name, int height) : Font( new FontProvider_System())
+Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, int height) : Font( new FontProvider_System())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font_System(context, desc);
+	*this = Font_System(canvas, desc);
 }
 
-Font_System::Font_System(
-	GraphicContext &context, const FontDescription &desc) : Font( new FontProvider_System())
+Font_System::Font_System(Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_System())
 {
-	load_font(context, desc);
+	Font cached_font = canvas.get_font_manager().get_font(desc);
+	if (!cached_font.is_null())
+	{
+		impl = cached_font.impl;
+		return;
+	}
+
+	load_font(canvas, desc);
 }
 
 Font_System::~Font_System()

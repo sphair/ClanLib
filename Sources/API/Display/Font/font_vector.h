@@ -117,40 +117,46 @@ public:
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	Font_Vector( const std::string &typeface_name, int height);
+	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height);
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
 	/// \param file = IODevice
-	Font_Vector( const std::string &typeface_name, int height, IODevice &file);
+	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, IODevice &file);
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
 	/// \param directory = Virtual Directory
-	Font_Vector( const std::string &typeface_name, int height, const VirtualDirectory &directory);
+	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const VirtualDirectory &directory);
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	Font_Vector( const FontDescription &desc);
+	Font_Vector( Canvas &canvas, const FontDescription &desc);
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param desc = Font Description
 	/// \param file = IODevice
-	Font_Vector( const FontDescription &desc, IODevice &file);
+	Font_Vector( Canvas &canvas, const FontDescription &desc, IODevice &file);
 
 	/// \brief Constructs a Font Vector
 	///
+	/// \param canvas = Canvas
 	/// \param desc = Font Description
 	/// \param directory = Virtual Directory
-	Font_Vector( const FontDescription &desc, const VirtualDirectory &directory);
+	Font_Vector( Canvas &canvas, const FontDescription &desc, const VirtualDirectory &directory);
 
 	~Font_Vector();
 

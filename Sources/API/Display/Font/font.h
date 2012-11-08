@@ -36,7 +36,6 @@
 #include "../Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
 #include "font_description.h"
-#include "font_manager.h"
 
 namespace clan
 {
@@ -59,11 +58,11 @@ public:
 
 	/// \brief Constructs standard font - Currently this defaults to Font_System
 	///
-	/// \param font_manager = The font manager
-	Font( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager = FontManager());
+	/// \param canvas = Canvas
+	Font( Canvas &canvas, const std::string &typeface_name, int height);
 
 	// \brief Constructs standard font - Currently this defaults to Font_System
-	Font( GraphicContext &context, const FontDescription &desc, FontManager font_manager = FontManager());
+	Font( Canvas &canvas, const FontDescription &desc);
 
 	/// \brief Constructs a Font
 	///
@@ -201,6 +200,7 @@ public:
 
 private:
 	std::shared_ptr<Font_Impl> impl;
+	friend class Font_System;
 /// \}
 };
 
