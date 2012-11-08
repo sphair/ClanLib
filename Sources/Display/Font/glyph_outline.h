@@ -75,7 +75,7 @@ public:
 
 public:
 
-	void add_contour(GlyphContour *);
+	void add_contour(std::shared_ptr<GlyphContour>);
 
 	void triangulate();
 
@@ -90,7 +90,7 @@ private:
 
 	void generate_contour_prim_array();
 
-	std::vector<GlyphContour*> contours;
+	std::vector< std::shared_ptr<GlyphContour> > contours;
 
 	GlyphPrimitivesArray *prim_array;
 

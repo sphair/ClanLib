@@ -66,7 +66,7 @@ GlyphPrimitivesArrayOutline &GlyphOutline::get_outline()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Operations:
 
-void GlyphOutline::add_contour(GlyphContour *contour)
+void GlyphOutline::add_contour(std::shared_ptr<GlyphContour> contour)
 {
 	contours.push_back(contour);
 }
@@ -84,7 +84,7 @@ void GlyphOutline::triangulate()
 	// sort contour vector so that it has the ordering:
 	// outline_1, ouline_1_hole_1, ouline_1_hole_2, outline_2, ouline_2_hole_1 etc.
 
-	std::vector<GlyphContour*> sorted_contours;
+	std::vector< std::shared_ptr<GlyphContour> > sorted_contours;
 
 	int outline_count = 0;
 
@@ -200,10 +200,6 @@ void GlyphOutline::triangulate()
 	}
 
 	// We got the primitive arrays now so get rid of the contours.
-	for( std::vector<GlyphContour*>::iterator it = contours.begin(); it != contours.end(); ++it )
-	{
-		delete (*it);
-	}
 	contours.clear();
 }
 
@@ -221,7 +217,7 @@ void GlyphOutline::generate_contour_prim_array()
 	int size = contours.front()->get_contour_points().size();
 	prim_array_outline = new GlyphPrimitivesArrayOutline(size);
 	
-	std::vector<GlyphContour*>::iterator it;
+	std::vector< std::shared_ptr<GlyphContour> >::iterator it;
 
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{

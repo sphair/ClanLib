@@ -472,7 +472,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 		Pointf initial_point = previous_point;
 		bezier_curve.add_control_point( previous_point );
 
-		GlyphContour *contour = new GlyphContour;	//TODO - Shared Pointer
+		std::shared_ptr<GlyphContour> contour(new GlyphContour);
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)
