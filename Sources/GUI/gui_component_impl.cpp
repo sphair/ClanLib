@@ -344,7 +344,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 			// Save the result of the horizontal adjustment
-			child_used_values.width = box_math.used_lengths[i];
+			child_used_values.width = box_math.used_lengths[i] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
 
 			// If the height of the box could not be determined from CSS, then ask the component:
 			if (child_used_values.height_undetermined)
@@ -396,7 +396,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			perpendicular_math.adjust(css_used_values.height);
 
 			// Save the result of the vertical adjustment
-			child_used_values.height = box_math.used_lengths[i];
+			child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
 		}
 	}
 
@@ -491,7 +491,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			perpendicular_math.adjust(css_used_values.width);
 
 			// Save the result of the horizontal adjustment
-			child_used_values.width = perpendicular_math.used_lengths[0];
+			child_used_values.width = perpendicular_math.used_lengths[0] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
 
 			// If the height of the box could not be determined from CSS, then ask the component:
 			if (child_used_values.height_undetermined)
@@ -551,7 +551,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 		{
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-			child_used_values.height = box_math.used_lengths[i];
+			child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
 		}
 	}
 
