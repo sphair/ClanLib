@@ -39,14 +39,12 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Construction:
 
-GlyphOutline::GlyphOutline() : prim_array(0), prim_array_outline(0)
+GlyphOutline::GlyphOutline()
 {
 }
 
 GlyphOutline::~GlyphOutline()
 {
-	delete prim_array;
-	delete prim_array_outline;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -171,7 +169,7 @@ void GlyphOutline::triangulate()
 		total_triangle_count += earclip_results[i].get_triangles().size();	
 	}
 
-	prim_array = new GlyphPrimitivesArray(total_triangle_count);
+	prim_array = std::unique_ptr<GlyphPrimitivesArray>(new GlyphPrimitivesArray(total_triangle_count));
 	int index = 0;
 
 	for( i=0; i<earclip_results.size(); i++ )
@@ -210,12 +208,12 @@ void GlyphOutline::generate_contour_prim_array()
 {
 	if( contours.empty() )
 	{
-		prim_array_outline = new GlyphPrimitivesArrayOutline(0);
+		prim_array_outline = std::unique_ptr<GlyphPrimitivesArrayOutline> (new GlyphPrimitivesArrayOutline(0));
 		return;
 	}
 	
 	int size = contours.front()->get_contour_points().size();
-	prim_array_outline = new GlyphPrimitivesArrayOutline(size);
+	prim_array_outline = std::unique_ptr<GlyphPrimitivesArrayOutline> (new GlyphPrimitivesArrayOutline(size));
 	
 	std::vector< std::shared_ptr<GlyphContour> >::iterator it;
 
