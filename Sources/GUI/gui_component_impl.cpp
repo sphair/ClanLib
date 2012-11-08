@@ -407,7 +407,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
-			x += box_math.used_lengths[i];
+			x += child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child_used_values.width + child_used_values.padding.right + child_used_values.border.right + child_used_values.margin.right;
 		}
 	}
 }
@@ -562,7 +562,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
 			child->set_geometry(Rect(x1, y1, x2, y2));
 
-			y += box_math.used_lengths[i];
+			y += child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child_used_values.height + child_used_values.padding.bottom + child_used_values.border.bottom + child_used_values.margin.bottom;
 		}
 	}
 }
