@@ -137,22 +137,20 @@ if test "$WIN32" = "yes"; then
 		extra_CFLAGS_clanApp="-mwindows"
 		extra_LIBS_clanApp="-gdi32 -luser32 -lkernel32 -lmsvcrt"
 		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -limagehlp -lmingwex"
-		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -ljpeg -lpng -lfreetype"
+		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -lfreetype"
 		extra_LIBS_clanGL="-lopengl32"
 		extra_LIBS_clanGL1="-lopengl32"
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
 		extra_LIBS_clanSqlite="-lsqlite3"
-		extra_LIBS_clanVorbis="-lvorbis -logg"
 		extra_LIBS_clanNetwork="-lws2_32"
 		;;
 	*)
 	extra_CFLAGS_clanApp="-mwindows"
 	extra_LIBS_clanCore="-lz"
-	extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32 -ljpeg -lpng"
+	extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32"
 	extra_LIBS_clanGL="-lopengl32"
 	extra_LIBS_clanGL1="-lopengl32"
 	extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
-	extra_LIBS_clanVorbis="-lvorbis -logg"
 	extra_LIBS_clanNetwork="-lws2_32"
 	extra_LIBS_clanSqlite="-lsqlite3"
 	;;
@@ -329,8 +327,6 @@ echo ""
 if test "$enable_clanDisplay" != "no"; then
 	echo "Checking for clanDisplay stuff"
 	echo "=============================="
-	CLANLIB_CHECK_LIB(png,  [`cat $srcdir/Setup/Tests/png.cpp`],  clanDisplay, [ *** Cannot find png (See http://www.libpng.org ) (Try libpng12-dev or better) ], [-lz -lpng])
-	CLANLIB_CHECK_LIB(jpeg, [`cat $srcdir/Setup/Tests/jpeg.cpp`], clanDisplay, [ *** Cannot find jpeg (See http://www.ijg.org ) (Try libjpeg62-dev or better) ], [ -ljpeg])
 	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
 
 	dnl  Optional linux/joystick.h
