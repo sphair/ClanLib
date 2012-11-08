@@ -30,7 +30,7 @@
 
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/2D/texture_group.h"
-#include "glyph_cache.h"
+#include "../glyph_cache.h"
 
 namespace clan
 {

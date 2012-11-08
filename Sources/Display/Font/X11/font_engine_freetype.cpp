@@ -29,12 +29,12 @@
 */
 
 #include "Display/precomp.h"
-#include "font_engine_freetype.h"
 #include "API/Display/Font/font_metrics.h"
 #include "../glyph_outline.h"
 #include "API/Core/Math/bezier_curve.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
+#include "font_engine_freetype.h"
 
 namespace clan
 {
@@ -82,14 +82,9 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev) : face(0)
+FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, int height) : face(0)
 {
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
 
-	// Ensure width and height are positive
-	if (average_width < 0) average_width =-average_width;
-	if (height < 0) height =-height;
 
 	data_buffer = DataBuffer(io_dev.get_size());
 	io_dev.read(data_buffer.get_data(), data_buffer.get_size());

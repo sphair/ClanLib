@@ -66,7 +66,7 @@ class FontEngine_Freetype : public FontEngine
 /// \name Construction
 /// \{
 public:
-	FontEngine_Freetype(IODevice &io_dev);
+	FontEngine_Freetype(IODevice &io_dev, int average_width, int height);
 	~FontEngine_Freetype();
 
 /// \}
