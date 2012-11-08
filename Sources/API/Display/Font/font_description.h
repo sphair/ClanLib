@@ -154,6 +154,9 @@ public:
 	/// Strikeouts are not equal\n
 	bool is_match(const FontDescription &other) const;
 
+	/// \brief Returns true if this font should be cached
+	bool get_cached() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -208,6 +211,9 @@ public:
 	///
 	/// \param new_charset = The charset. charset_default = Use operating systems default
 	void set_charset(Charset new_charset);
+
+	/// \brief Sets if this font should be cached (defaults to true)
+	void set_cached(bool setting = true);
 
 /// \}
 /// \name Implementation

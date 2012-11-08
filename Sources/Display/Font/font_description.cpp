@@ -124,6 +124,11 @@ bool FontDescription::get_anti_alias() const
 	return impl->anti_alias;
 }
 
+bool FontDescription::get_cached() const
+{
+	return impl->cached;
+}
+
 
 bool FontDescription::get_subpixel() const
 {
@@ -203,6 +208,7 @@ void FontDescription::clone(const FontDescription &copy)
 		impl->anti_alias = copy.impl->anti_alias;
 		impl->subpixel = copy.impl->subpixel;
 		impl->charset = copy.impl->charset;
+		impl->cached = copy.impl->cached;
 	}
 }
 
@@ -276,6 +282,12 @@ void FontDescription::set_charset(Charset new_charset)
 {
 	impl->charset = new_charset;
 }
+
+void FontDescription::set_cached(bool setting)
+{
+	impl->cached = setting;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontDescription implementation:
 
