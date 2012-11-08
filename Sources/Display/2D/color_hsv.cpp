@@ -118,7 +118,7 @@ ColorHSVx<float, Colorf>::ColorHSVx(const Colorf &color)
 template<>
 ColorHSVx<int, Color>::ColorHSVx(const Colorf &color)
 {
-	ColorHSVx<float, Color> color_hsv_f(color);
+	ColorHSVx<float, Colorf> color_hsv_f(color);
 	h = (int) color_hsv_f.h + 0.5f;
 	s = (int) ((255.0f * color_hsv_f.s) + 0.5f);
 	v = (int) ((255.0f * color_hsv_f.v) + 0.5f);
@@ -236,5 +236,4 @@ ColorHSVx<int, Color>::operator Color()
 // Explicit instantiate the versions we use:
 template class ColorHSVx<int, Color>;
 template class ColorHSVx<float, Colorf>;
-
 }
