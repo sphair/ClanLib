@@ -43,7 +43,7 @@ typedef int CSSActualValue;
 class CSSClanBoxUsedValues
 {
 public:
-	CSSClanBoxUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(0.0f), min_height(0.0f), max_height(0.0f) { }
+	CSSClanBoxUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(1e5f), min_height(0.0f), max_height(1e5f) { }
 
 	struct LTRB
 	{
