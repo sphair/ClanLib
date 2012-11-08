@@ -31,9 +31,12 @@
 
 #include "pixel_converter_impl.h"
 
-#if !defined(__APPLE__) || defined(__SSE4_1__)
+#if defined(__SSE4_1__)
 #include <smmintrin.h>
+#else
+#include <emmintrin.h>
 #endif
+
 
 namespace clan
 {
@@ -114,7 +117,7 @@ public:
 	}
 };
 
-#if !defined(__APPLE__) || defined(__SSE4_1__)
+#if defined(__SSE4_1__)
     
 class PixelWriterSSE4_rgba16 : public PixelWriter // _mm_packus_epi32 requires SSE4
 {
@@ -149,3 +152,4 @@ public:
 #endif
     
 }
+
