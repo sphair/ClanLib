@@ -39,6 +39,7 @@
 #include <map>
 #include <memory>
 #include "API/Core/Math/rect.h"
+#include "css_clan_box_used_values.h"
 
 namespace clan
 {
@@ -115,6 +116,7 @@ public:
 	bool double_click_enabled;
 
 	CSSBoxProperties css_properties;
+	CSSClanBoxUsedValues css_used_values;
 
 	void set_geometry(Rect new_geometry, bool client_area);
 	void geometry_updated();
