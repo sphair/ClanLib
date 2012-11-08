@@ -49,7 +49,11 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Sprite Construction:
 
-FontProvider_Sprite::FontProvider_Sprite( GraphicContext &gc, const std::string &resource_id, ResourceManager *resources )
+FontProvider_Sprite::FontProvider_Sprite()
+{
+}
+
+void FontProvider_Sprite::load_font(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources )
 {
 
 	Resource resource = resources->get_resource(resource_id);

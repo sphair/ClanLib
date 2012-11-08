@@ -60,6 +60,9 @@ public:
 	/// \param resources = Resource Manager
 	Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources );
 
+	/// \brief Constructs a Font Sprite from a Font, ensuring the correct type
+	explicit Font_Sprite( const Font &font);
+
 	~Font_Sprite();
 
 /// \}

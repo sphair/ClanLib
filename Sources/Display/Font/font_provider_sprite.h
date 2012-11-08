@@ -61,7 +61,7 @@ class FontProvider_Sprite : public FontProvider, private FontEngine
 
 public:
 
-	FontProvider_Sprite(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources);
+	FontProvider_Sprite();
 	virtual ~FontProvider_Sprite();
 
 
@@ -90,6 +90,7 @@ public:
 /// \{
 
 public:
+	void load_font(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources);
 
 	/// \brief Print text on gc.
 	virtual void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);

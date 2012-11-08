@@ -45,8 +45,31 @@ Font_Sprite::Font_Sprite()
 {
 }
 
-Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources ) : Font(new FontProvider_Sprite(canvas, resource_id, resources))
+Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources ) : Font(new FontProvider_Sprite())
 {
+	FontDescription desc;
+	desc.set_typeface_name(resource_id);
+
+	Font cached_font = canvas.get_font_manager().get_font(desc);
+	if (!cached_font.is_null())
+	{
+		*this = Font_Sprite(cached_font);
+		return;
+	}
+
+	get_provider()->load_font(canvas, resource_id, resources);
+
+	canvas.get_font_manager().set_font(*this, desc);
+
+
+}
+
+Font_Sprite::Font_Sprite( const Font &font) : Font(font)
+{
+	if (!get_provider())
+	{
+		throw Exception("Font is not of type Font_Sprite");
+	}
 }
 
 Font_Sprite::~Font_Sprite()
