@@ -96,7 +96,7 @@ public:
 /// \{
 
 public:
-	GlyphOutline *load_glyph_outline(int glyph_index);
+	std::shared_ptr<GlyphOutline> load_glyph_outline(int glyph_index);
 
 /// \}
 /// \name Implementation

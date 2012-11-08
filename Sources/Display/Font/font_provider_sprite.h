@@ -106,7 +106,7 @@ public:
 
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
-	GlyphOutline *load_glyph_outline(int c);
+	std::shared_ptr<GlyphOutline> load_glyph_outline(int c);
 
 /// \}
 /// \name Implementation

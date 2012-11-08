@@ -57,7 +57,7 @@ public:
 	/// \param glyph The glyph
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 
-	GlyphOutline *load_glyph_outline(int c);
+	std::shared_ptr<GlyphOutline> load_glyph_outline(int c);
 
 private:
 	inline Pointf PointFXtoPoint(POINTFX &fx)

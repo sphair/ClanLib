@@ -156,7 +156,7 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
 	return font_buffer;
 }
 
-GlyphOutline *FontEngine_Cocoa::load_glyph_outline(int c)
+std::shared_ptr<GlyphOutline> FontEngine_Cocoa::load_glyph_outline(int glyph)
 {
 	throw Exception("Implement Me");
 }
