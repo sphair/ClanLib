@@ -50,6 +50,10 @@
 #include <CoreFoundation/CoreFoundation.h>
 #endif
 
+#ifdef EXTERN___PROGNAME
+		extern const char *__progname;
+#endif
+
 namespace clan
 {
 
@@ -120,7 +124,6 @@ std::string System::get_exe_path()
 	if (lstat(PROC_EXE_PATH, &sb) < 0)
 	{
 #ifdef EXTERN___PROGNAME
-		extern const char *__progname;
 		char *pathenv, *name, *end;
 		char fname[PATH_MAX];
 		char cwd[PATH_MAX];
