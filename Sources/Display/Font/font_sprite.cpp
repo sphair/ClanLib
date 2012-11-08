@@ -60,8 +60,6 @@ Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, Resour
 	get_provider()->load_font(canvas, resource_id, resources);
 
 	canvas.get_font_manager().set_font(*this, desc);
-
-
 }
 
 Font_Sprite::Font_Sprite( const Font &font) : Font(font)

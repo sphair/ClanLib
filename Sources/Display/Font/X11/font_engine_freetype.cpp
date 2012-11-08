@@ -82,32 +82,14 @@ FontEngine_Freetype_Library &FontEngine_Freetype_Library::instance()
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Construction:
 
-FontEngine_Freetype::FontEngine_Freetype(const FontDescription &desc) : face(0)
+FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev) : face(0)
 {
-	FontDescription new_desc = desc.get_manager(get_registered_font(desc));
+	int average_width = desc.get_average_width();
+	int height = desc.get_height();
 
-	std::string font_file_path = new_desc.get_typeface_name();
-
-	// Try opening the font file.
-	IODevice io_dev;
-	try
-	{
-		io_dev = File(font_file_path, File::open_existing, File::access_read);
-	}
-	catch(Exception error)
-	{
-		throw Exception(string_format("Cannot open font file: \"%1\"", font_file_path));
-	}
-
-	float height =  new_desc.get_height();
-
-	// Load font from the opened file.
-	float average_width = desc.get_average_width();
-
-	if (average_width<0.0)
-	{
-		throw Exception("Freetype error: average_width is invalid");
-	}
+	// Ensure width and height are positive
+	if (average_width < 0) average_width =-average_width;
+	if (height < 0) height =-height;
 
 	data_buffer = DataBuffer(io_dev.get_size());
 	io_dev.read(data_buffer.get_data(), data_buffer.get_size());

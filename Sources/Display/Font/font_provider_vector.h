@@ -112,8 +112,6 @@ public:
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
 	void load_font(const FontDescription &desc);
-	void load_font(const FontDescription &desc, IODevice &file);
-	void load_font(const FontDescription &desc, const VirtualDirectory &directory);
 
 /// \}
 /// \name Implementation

@@ -68,37 +68,27 @@ FontProvider_Vector::FontProvider_Vector() : font_engine(NULL), is_filled(true)
 
 void FontProvider_Vector::load_font(const FontDescription &desc)
 {
-	std::string path = PathHelp::get_fullpath(desc.get_typeface_name(), PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(desc.get_typeface_name(), PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	IODevice file = vfs.get_root_directory().open_file_read(filename);
-	load_font(desc, file);
-}
-
-void FontProvider_Vector::load_font(const FontDescription &desc, const VirtualDirectory &directory)
-{
-	IODevice file = directory.open_file_read(desc.get_typeface_name());
-	load_font(desc, file);
-}
-
-void FontProvider_Vector::load_font(const FontDescription &desc, IODevice &io_dev)
-{
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	// Ensure width and height are positive
-	if (average_width < 0) average_width =-average_width;
-	if (height < 0) height =-height;
-
-	size_height = height;
-
 #ifdef WIN32
 	font_engine = new FontEngine_Win32(desc);
 #elif defined(__APPLE__)
 	font_engine = new FontEngine_Cocoa(desc);
 	glyph_cache.font_metrics = font_engine->get_metrics();
 #else
-	font_engine = new FontEngine_Freetype(io_dev, height, average_width);
+
+	std::string font_file_path = desc.get_file_name();
+	if (font_file_path.empty())
+	{
+	    // Obtain the best matching font file from fontconfig.
+		FontConfig &fc = FontConfig::instance();
+		font_file_path = fc.match_font(desc);
+	}
+
+	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
+	std::string filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+	VirtualFileSystem vfs(path);
+	IODevice io_dev = vfs.get_root_directory().open_file_read(filename);
+
+	font_engine = new FontEngine_Freetype(io_dev);
 #endif
 
 	metrics = font_engine->get_metrics();
