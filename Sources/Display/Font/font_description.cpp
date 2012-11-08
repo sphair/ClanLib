@@ -153,6 +153,29 @@ bool FontDescription::operator==(const FontDescription &other) const
 			impl->charset == other.impl->charset;
 }
 
+bool FontDescription::is_match(const FontDescription &other) const
+{
+	return impl->is_match(other.impl.get());
+}
+
+bool FontDescription_Impl::is_match(const FontDescription_Impl *other) const
+{
+	// Test for equality when variables are set.
+
+	if (!filename.empty() && !other->filename.empty())
+		if (filename != other->filename) return false;
+	if (!typeface_name.empty() && !other->typeface_name.empty())
+		if (typeface_name != other->typeface_name) return false;
+	if (height && other->height)
+		if (height != other->height) return false;
+	if (weight && other->weight)
+		if (weight != other->weight) return false;
+
+	return italic == other->italic && 
+			underline == other->underline && 
+			strikeout == other->strikeout;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontDescription operations:
 

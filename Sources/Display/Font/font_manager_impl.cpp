@@ -58,7 +58,7 @@ Font FontManager_Impl::get_font(const FontDescription &desc) const
 	std::vector<FontCacheEntry>::const_iterator it;
 	for (it = font_cache.begin(); it != font_cache.end(); ++it)
 	{
-		if ((*it).desc == desc)
+		if ((*it).desc.is_match(desc))
 			return (*it).font;
 	}
 	return Font();
