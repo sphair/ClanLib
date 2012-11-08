@@ -119,7 +119,7 @@ public:
 
 private:
 
-	std::map<int, GlyphOutline*> char_cache;
+	std::map<int, std::shared_ptr<GlyphOutline> > char_cache;
 
 	FontMetrics metrics;
 

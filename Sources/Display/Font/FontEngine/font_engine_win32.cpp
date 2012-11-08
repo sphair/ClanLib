@@ -418,7 +418,7 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-GlyphOutline *FontEngine_Win32::load_glyph_outline(int glyph)
+std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 {
 	GLYPHMETRICS glyph_metrics = { 0 };
 	MAT2 matrix = { 0 };
@@ -460,7 +460,7 @@ GlyphOutline *FontEngine_Win32::load_glyph_outline(int glyph)
 	char *data_end = (char *) polygon_header;
 	data_end += glyph_buffer.get_size();
 
-	GlyphOutline *outline = new GlyphOutline;		// TODO This should be a shared pointer
+	std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
 
 	while( (char *) (polygon_header+1) <= data_end)
 	{
