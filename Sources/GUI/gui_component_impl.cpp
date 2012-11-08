@@ -396,7 +396,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			perpendicular_math.adjust(css_used_values.height);
 
 			// Save the result of the vertical adjustment
-			child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
+			child_used_values.height = perpendicular_math.used_lengths[0] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
 		}
 	}
 
