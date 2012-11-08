@@ -379,11 +379,9 @@ clanDisplay_includes = \
 	Display/2D/sprite_description.h \
 	Display/2D/image.h \
 	Display/2D/color_hsv.h \
-	Display/2D/color_hsl2.h \
 	Display/2D/gradient.h \
 	Display/2D/color_hsl.h \
 	Display/2D/sprite.h \
-	Display/2D/color_hsv2.h \
 	Display/2D/span_layout.h \
 	Display/2D/color.h \
 	Display/2D/rounded_rect.h \

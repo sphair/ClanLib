@@ -30,7 +30,6 @@
 #include "API/Core/Math/cl_math.h"
 #include "API/Display/2D/color_hsl.h"
 #include "API/Display/2D/color.h"
-#include "API/Display/2D/color_hsl2.h"
 
 namespace clan
 {
