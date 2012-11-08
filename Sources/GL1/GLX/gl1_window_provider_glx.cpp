@@ -61,10 +61,13 @@
 #define GL_LOAD_GLFUNC(x) &x
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CL_GL1WindowProvider_GLX Construction:
+namespace clan
+{
 
-CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
+/////////////////////////////////////////////////////////////////////////////
+// GL1WindowProvider_GLX Construction:
+
+GL1WindowProvider_GLX::GL1WindowProvider_GLX()
 : x11_window(),
  opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1)
 #ifdef GL_USE_DLOPEN
@@ -81,47 +84,47 @@ CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
 		throw Exception(string_format("Cannot open opengl library: %1", GL_OPENGL_LIBRARY));
 	}
 #endif
-	glx.glXChooseVisual = (CL_GL1_GLXFunctions::ptr_glXChooseVisual) GL_LOAD_GLFUNC(glXChooseVisual);
-	glx.glXCopyContext = (CL_GL1_GLXFunctions::ptr_glXCopyContext) GL_LOAD_GLFUNC(glXCopyContext);
-	glx.glXCreateContext = (CL_GL1_GLXFunctions::ptr_glXCreateContext) GL_LOAD_GLFUNC(glXCreateContext);
-	glx.glXCreateGLXPixmap = (CL_GL1_GLXFunctions::ptr_glXCreateGLXPixmap) GL_LOAD_GLFUNC(glXCreateGLXPixmap);
-	glx.glXDestroyContext = (CL_GL1_GLXFunctions::ptr_glXDestroyContext) GL_LOAD_GLFUNC(glXDestroyContext);
-	glx.glXDestroyGLXPixmap = (CL_GL1_GLXFunctions::ptr_glXDestroyGLXPixmap) GL_LOAD_GLFUNC(glXDestroyGLXPixmap);
-	glx.glXGetConfig = (CL_GL1_GLXFunctions::ptr_glXGetConfig) GL_LOAD_GLFUNC(glXGetConfig);
-	glx.glXGetCurrentContext = (CL_GL1_GLXFunctions::ptr_glXGetCurrentContext) GL_LOAD_GLFUNC(glXGetCurrentContext);
-	glx.glXGetCurrentDrawable = (CL_GL1_GLXFunctions::ptr_glXGetCurrentDrawable) GL_LOAD_GLFUNC(glXGetCurrentDrawable);
-	glx.glXIsDirect = (CL_GL1_GLXFunctions::ptr_glXIsDirect) GL_LOAD_GLFUNC(glXIsDirect);
-	glx.glXMakeCurrent = (CL_GL1_GLXFunctions::ptr_glXMakeCurrent) GL_LOAD_GLFUNC(glXMakeCurrent);
-	glx.glXQueryExtension = (CL_GL1_GLXFunctions::ptr_glXQueryExtension) GL_LOAD_GLFUNC(glXQueryExtension);
-	glx.glXQueryVersion = (CL_GL1_GLXFunctions::ptr_glXQueryVersion) GL_LOAD_GLFUNC(glXQueryVersion);
-	glx.glXSwapBuffers = (CL_GL1_GLXFunctions::ptr_glXSwapBuffers) GL_LOAD_GLFUNC(glXSwapBuffers);
-	glx.glXUseXFont = (CL_GL1_GLXFunctions::ptr_glXUseXFont) GL_LOAD_GLFUNC(glXUseXFont);
-	glx.glXWaitGL = (CL_GL1_GLXFunctions::ptr_glXWaitGL) GL_LOAD_GLFUNC(glXWaitGL);
-	glx.glXWaitX = (CL_GL1_GLXFunctions::ptr_glXWaitX) GL_LOAD_GLFUNC(glXWaitX);
-	glx.glXGetClientString = (CL_GL1_GLXFunctions::ptr_glXGetClientString) GL_LOAD_GLFUNC(glXGetClientString);
-	glx.glXQueryServerString = (CL_GL1_GLXFunctions::ptr_glXQueryServerString) GL_LOAD_GLFUNC(glXQueryServerString);
-	glx.glXQueryExtensionsString = (CL_GL1_GLXFunctions::ptr_glXQueryExtensionsString) GL_LOAD_GLFUNC(glXQueryExtensionsString);
-	glx.glXGetCurrentDisplay = (CL_GL1_GLXFunctions::ptr_glXGetCurrentDisplay) GL_LOAD_GLFUNC(glXGetCurrentDisplay);
-	glx.glXChooseFBConfig = (CL_GL1_GLXFunctions::ptr_glXChooseFBConfig) GL_LOAD_GLFUNC(glXChooseFBConfig);
-	glx.glXCreateNewContext = (CL_GL1_GLXFunctions::ptr_glXCreateNewContext) GL_LOAD_GLFUNC(glXCreateNewContext);
-	glx.glXCreatePbuffer = (CL_GL1_GLXFunctions::ptr_glXCreatePbuffer) GL_LOAD_GLFUNC(glXCreatePbuffer);
-	glx.glXCreatePixmap = (CL_GL1_GLXFunctions::ptr_glXCreatePixmap) GL_LOAD_GLFUNC(glXCreatePixmap);
-	glx.glXCreateWindow = (CL_GL1_GLXFunctions::ptr_glXCreateWindow) GL_LOAD_GLFUNC(glXCreateWindow);
-	glx.glXDestroyPbuffer = (CL_GL1_GLXFunctions::ptr_glXDestroyPbuffer) GL_LOAD_GLFUNC(glXDestroyPbuffer);
-	glx.glXDestroyPixmap = (CL_GL1_GLXFunctions::ptr_glXDestroyPixmap) GL_LOAD_GLFUNC(glXDestroyPixmap);
-	glx.glXDestroyWindow = (CL_GL1_GLXFunctions::ptr_glXDestroyWindow) GL_LOAD_GLFUNC(glXDestroyWindow);
-	glx.glXGetCurrentReadDrawable = (CL_GL1_GLXFunctions::ptr_glXGetCurrentReadDrawable) GL_LOAD_GLFUNC(glXGetCurrentReadDrawable);
-	glx.glXGetFBConfigAttrib = (CL_GL1_GLXFunctions::ptr_glXGetFBConfigAttrib) GL_LOAD_GLFUNC(glXGetFBConfigAttrib);
-	glx.glXGetFBConfigs = (CL_GL1_GLXFunctions::ptr_glXGetFBConfigs) GL_LOAD_GLFUNC(glXGetFBConfigs);
-	glx.glXGetSelectedEvent = (CL_GL1_GLXFunctions::ptr_glXGetSelectedEvent) GL_LOAD_GLFUNC(glXGetSelectedEvent);
-	glx.glXGetVisualFromFBConfig = (CL_GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) GL_LOAD_GLFUNC(glXGetVisualFromFBConfig);
-	glx.glXMakeContextCurrent = (CL_GL1_GLXFunctions::ptr_glXMakeContextCurrent) GL_LOAD_GLFUNC(glXMakeContextCurrent);
-	glx.glXQueryContext = (CL_GL1_GLXFunctions::ptr_glXQueryContext) GL_LOAD_GLFUNC(glXQueryContext);
-	glx.glXQueryDrawable = (CL_GL1_GLXFunctions::ptr_glXQueryDrawable) GL_LOAD_GLFUNC(glXQueryDrawable);
-	glx.glXSelectEvent = (CL_GL1_GLXFunctions::ptr_glXSelectEvent) GL_LOAD_GLFUNC(glXSelectEvent);
+	glx.glXChooseVisual = (GL1_GLXFunctions::ptr_glXChooseVisual) GL_LOAD_GLFUNC(glXChooseVisual);
+	glx.glXCopyContext = (GL1_GLXFunctions::ptr_glXCopyContext) GL_LOAD_GLFUNC(glXCopyContext);
+	glx.glXCreateContext = (GL1_GLXFunctions::ptr_glXCreateContext) GL_LOAD_GLFUNC(glXCreateContext);
+	glx.glXCreateGLXPixmap = (GL1_GLXFunctions::ptr_glXCreateGLXPixmap) GL_LOAD_GLFUNC(glXCreateGLXPixmap);
+	glx.glXDestroyContext = (GL1_GLXFunctions::ptr_glXDestroyContext) GL_LOAD_GLFUNC(glXDestroyContext);
+	glx.glXDestroyGLXPixmap = (GL1_GLXFunctions::ptr_glXDestroyGLXPixmap) GL_LOAD_GLFUNC(glXDestroyGLXPixmap);
+	glx.glXGetConfig = (GL1_GLXFunctions::ptr_glXGetConfig) GL_LOAD_GLFUNC(glXGetConfig);
+	glx.glXGetCurrentContext = (GL1_GLXFunctions::ptr_glXGetCurrentContext) GL_LOAD_GLFUNC(glXGetCurrentContext);
+	glx.glXGetCurrentDrawable = (GL1_GLXFunctions::ptr_glXGetCurrentDrawable) GL_LOAD_GLFUNC(glXGetCurrentDrawable);
+	glx.glXIsDirect = (GL1_GLXFunctions::ptr_glXIsDirect) GL_LOAD_GLFUNC(glXIsDirect);
+	glx.glXMakeCurrent = (GL1_GLXFunctions::ptr_glXMakeCurrent) GL_LOAD_GLFUNC(glXMakeCurrent);
+	glx.glXQueryExtension = (GL1_GLXFunctions::ptr_glXQueryExtension) GL_LOAD_GLFUNC(glXQueryExtension);
+	glx.glXQueryVersion = (GL1_GLXFunctions::ptr_glXQueryVersion) GL_LOAD_GLFUNC(glXQueryVersion);
+	glx.glXSwapBuffers = (GL1_GLXFunctions::ptr_glXSwapBuffers) GL_LOAD_GLFUNC(glXSwapBuffers);
+	glx.glXUseXFont = (GL1_GLXFunctions::ptr_glXUseXFont) GL_LOAD_GLFUNC(glXUseXFont);
+	glx.glXWaitGL = (GL1_GLXFunctions::ptr_glXWaitGL) GL_LOAD_GLFUNC(glXWaitGL);
+	glx.glXWaitX = (GL1_GLXFunctions::ptr_glXWaitX) GL_LOAD_GLFUNC(glXWaitX);
+	glx.glXGetClientString = (GL1_GLXFunctions::ptr_glXGetClientString) GL_LOAD_GLFUNC(glXGetClientString);
+	glx.glXQueryServerString = (GL1_GLXFunctions::ptr_glXQueryServerString) GL_LOAD_GLFUNC(glXQueryServerString);
+	glx.glXQueryExtensionsString = (GL1_GLXFunctions::ptr_glXQueryExtensionsString) GL_LOAD_GLFUNC(glXQueryExtensionsString);
+	glx.glXGetCurrentDisplay = (GL1_GLXFunctions::ptr_glXGetCurrentDisplay) GL_LOAD_GLFUNC(glXGetCurrentDisplay);
+	glx.glXChooseFBConfig = (GL1_GLXFunctions::ptr_glXChooseFBConfig) GL_LOAD_GLFUNC(glXChooseFBConfig);
+	glx.glXCreateNewContext = (GL1_GLXFunctions::ptr_glXCreateNewContext) GL_LOAD_GLFUNC(glXCreateNewContext);
+	glx.glXCreatePbuffer = (GL1_GLXFunctions::ptr_glXCreatePbuffer) GL_LOAD_GLFUNC(glXCreatePbuffer);
+	glx.glXCreatePixmap = (GL1_GLXFunctions::ptr_glXCreatePixmap) GL_LOAD_GLFUNC(glXCreatePixmap);
+	glx.glXCreateWindow = (GL1_GLXFunctions::ptr_glXCreateWindow) GL_LOAD_GLFUNC(glXCreateWindow);
+	glx.glXDestroyPbuffer = (GL1_GLXFunctions::ptr_glXDestroyPbuffer) GL_LOAD_GLFUNC(glXDestroyPbuffer);
+	glx.glXDestroyPixmap = (GL1_GLXFunctions::ptr_glXDestroyPixmap) GL_LOAD_GLFUNC(glXDestroyPixmap);
+	glx.glXDestroyWindow = (GL1_GLXFunctions::ptr_glXDestroyWindow) GL_LOAD_GLFUNC(glXDestroyWindow);
+	glx.glXGetCurrentReadDrawable = (GL1_GLXFunctions::ptr_glXGetCurrentReadDrawable) GL_LOAD_GLFUNC(glXGetCurrentReadDrawable);
+	glx.glXGetFBConfigAttrib = (GL1_GLXFunctions::ptr_glXGetFBConfigAttrib) GL_LOAD_GLFUNC(glXGetFBConfigAttrib);
+	glx.glXGetFBConfigs = (GL1_GLXFunctions::ptr_glXGetFBConfigs) GL_LOAD_GLFUNC(glXGetFBConfigs);
+	glx.glXGetSelectedEvent = (GL1_GLXFunctions::ptr_glXGetSelectedEvent) GL_LOAD_GLFUNC(glXGetSelectedEvent);
+	glx.glXGetVisualFromFBConfig = (GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) GL_LOAD_GLFUNC(glXGetVisualFromFBConfig);
+	glx.glXMakeContextCurrent = (GL1_GLXFunctions::ptr_glXMakeContextCurrent) GL_LOAD_GLFUNC(glXMakeContextCurrent);
+	glx.glXQueryContext = (GL1_GLXFunctions::ptr_glXQueryContext) GL_LOAD_GLFUNC(glXQueryContext);
+	glx.glXQueryDrawable = (GL1_GLXFunctions::ptr_glXQueryDrawable) GL_LOAD_GLFUNC(glXQueryDrawable);
+	glx.glXSelectEvent = (GL1_GLXFunctions::ptr_glXSelectEvent) GL_LOAD_GLFUNC(glXSelectEvent);
 
-	glx.glXGetProcAddressARB = (CL_GL1_GLXFunctions::ptr_glXGetProcAddressARB) GL_LOAD_GLFUNC(glXGetProcAddressARB);
-	glx.glXGetProcAddress = (CL_GL1_GLXFunctions::ptr_glXGetProcAddress) GL_LOAD_GLFUNC(glXGetProcAddress);
+	glx.glXGetProcAddressARB = (GL1_GLXFunctions::ptr_glXGetProcAddressARB) GL_LOAD_GLFUNC(glXGetProcAddressARB);
+	glx.glXGetProcAddress = (GL1_GLXFunctions::ptr_glXGetProcAddress) GL_LOAD_GLFUNC(glXGetProcAddress);
 
 	glx.glXCreatePbufferSGIX = NULL;	// Setup later
 	glx.glXDestroyPbufferSGIX = NULL;	// Setup later
@@ -145,10 +148,10 @@ CL_GL1WindowProvider_GLX::CL_GL1WindowProvider_GLX()
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
-	x11_window.func_on_resized().set(this, &CL_GL1WindowProvider_GLX::on_window_resized);
+	x11_window.func_on_resized().set(this, &GL1WindowProvider_GLX::on_window_resized);
 }
 
-CL_GL1WindowProvider_GLX::~CL_GL1WindowProvider_GLX()
+GL1WindowProvider_GLX::~GL1WindowProvider_GLX()
 {
 
 	if (opengl_visual_info)
@@ -161,17 +164,17 @@ CL_GL1WindowProvider_GLX::~CL_GL1WindowProvider_GLX()
 	{
 		if (!gc.is_null())
 		{
-			CL_GL1GraphicContextProvider *gl_provider = dynamic_cast<CL_GL1GraphicContextProvider*>(gc.get_provider());
+			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
 			if (gl_provider)
 				gl_provider->dispose();
 		}
 
 		// Delete the context
 
-		Display *disp = x11_window.get_display();
+		::Display *disp = x11_window.get_display();
 		if (glx.glXGetCurrentContext() == opengl_context)
 		{
-			CL_GL1::set_active(NULL);
+			GL1::set_active(NULL);
 		}
 
 		if (disp)
@@ -184,13 +187,13 @@ CL_GL1WindowProvider_GLX::~CL_GL1WindowProvider_GLX()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GL1WindowProvider_GLX Attributes:
+// GL1WindowProvider_GLX Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GL1WindowProvider_GLX Operations:
+// GL1WindowProvider_GLX Operations:
 
-CL_GL1ProcAddress *CL_GL1WindowProvider_GLX::get_proc_address(const std::string& function_name) const
+GL1ProcAddress *GL1WindowProvider_GLX::get_proc_address(const std::string& function_name) const
 {
 	if (glx.glXGetProcAddressARB)
 		return glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
@@ -199,7 +202,7 @@ CL_GL1ProcAddress *CL_GL1WindowProvider_GLX::get_proc_address(const std::string&
 	return NULL;
 }
 
-void CL_GL1WindowProvider_GLX::make_current() const
+void GL1WindowProvider_GLX::make_current() const
 {
 	// *** Note, If glxMakeCurrent crashes KDE when using a nvidia graphics card, then
 	// update the driver from nvidia.com ***
@@ -207,12 +210,12 @@ void CL_GL1WindowProvider_GLX::make_current() const
 
 }
 
-void CL_GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 	bool create_provider_flag = false;
 
-	Display *disp = x11_window.get_display();
+	::Display *disp = x11_window.get_display();
 
 	if (!opengl_context)
 	{
@@ -242,7 +245,7 @@ void CL_GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 		int gl_attribs[32];
 		int i = 0;
 
-		CL_GL1WindowDescription gl_desc(desc);
+		GL1WindowDescription gl_desc(desc);
 		// Note: gl_attribs[32] !!!!
 		gl_attribs[i++] = GLX_RGBA;
 		if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
@@ -286,7 +289,7 @@ void CL_GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 
 	if (create_provider_flag)
 	{
-		gc = GraphicContext(new CL_GL1GraphicContextProvider(this));
+		gc = GraphicContext(new GL1GraphicContextProvider(this));
 	}
 
 	setup_extension_pointers();
@@ -304,13 +307,13 @@ void CL_GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 	}
 }
 
-void CL_GL1WindowProvider_GLX::on_window_resized()
+void GL1WindowProvider_GLX::on_window_resized()
 {
 	if (gc.get_provider())
-		((CL_GL1GraphicContextProvider *) gc.get_provider())->on_window_resized();
+		((GL1GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-bool CL_GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
+bool GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 {
 	const char *ext_string = glx.glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
 	if (ext_string)
@@ -345,10 +348,10 @@ bool CL_GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-void CL_GL1WindowProvider_GLX::setup_extension_pointers()
+void GL1WindowProvider_GLX::setup_extension_pointers()
 {
-	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) CL_GL1::get_proc_address("glXSwapIntervalSGI");
-	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) CL_GL1::get_proc_address("glXSwapIntervalMESA");
+	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) GL1::get_proc_address("glXSwapIntervalSGI");
+	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) GL1::get_proc_address("glXSwapIntervalMESA");
 
 	// See - http://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL ,get_proc_address() may return an invalid extension address
 	if ( !is_glx_extension_supported("GLX_SGI_swap_control") )
@@ -362,10 +365,10 @@ void CL_GL1WindowProvider_GLX::setup_extension_pointers()
 	}
 
 
-	glx.glXCreatePbufferSGIX = (CL_GL1_GLXFunctions::ptr_glXCreatePbufferSGIX) CL_GL1::get_proc_address("glXCreateGLXPbufferSGIX");
-	glx.glXDestroyPbufferSGIX = (CL_GL1_GLXFunctions::ptr_glXDestroyPbuffer) CL_GL1::get_proc_address("glXDestroyGLXPbufferSGIX");
-	glx.glXChooseFBConfigSGIX = (CL_GL1_GLXFunctions::ptr_glXChooseFBConfig) CL_GL1::get_proc_address("glXChooseFBConfigSGIX");
-	glx.glXGetVisualFromFBConfigSGIX = (CL_GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) CL_GL1::get_proc_address("glXGetVisualFromFBConfigSGIX");
+	glx.glXCreatePbufferSGIX = (GL1_GLXFunctions::ptr_glXCreatePbufferSGIX) GL1::get_proc_address("glXCreateGLXPbufferSGIX");
+	glx.glXDestroyPbufferSGIX = (GL1_GLXFunctions::ptr_glXDestroyPbuffer) GL1::get_proc_address("glXDestroyGLXPbufferSGIX");
+	glx.glXChooseFBConfigSGIX = (GL1_GLXFunctions::ptr_glXChooseFBConfig) GL1::get_proc_address("glXChooseFBConfigSGIX");
+	glx.glXGetVisualFromFBConfigSGIX = (GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) GL1::get_proc_address("glXGetVisualFromFBConfigSGIX");
 	if ( !is_glx_extension_supported("GLX_SGIX_pbuffer") )
 	{
 		glx.glXCreatePbufferSGIX = NULL;
@@ -378,18 +381,18 @@ void CL_GL1WindowProvider_GLX::setup_extension_pointers()
 	}
 }
 
-GLXContext CL_GL1WindowProvider_GLX::get_share_context()
+GLXContext GL1WindowProvider_GLX::get_share_context()
 {
 	GLXContext shared_context = NULL;
 
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider();
 	if (gc_providers)
 	{
-		CL_GL1GraphicContextProvider *gl_provider = dynamic_cast<CL_GL1GraphicContextProvider*>(gc_providers);
+		GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
-			const CL_GL1WindowProvider_GLX *render_window_glx = dynamic_cast<const CL_GL1WindowProvider_GLX*>(rwp);
+			const GL1WindowProvider_GLX *render_window_glx = dynamic_cast<const GL1WindowProvider_GLX*>(rwp);
 			if (render_window_glx)
 				shared_context = render_window_glx->opengl_context;
 		}
@@ -397,7 +400,7 @@ GLXContext CL_GL1WindowProvider_GLX::get_share_context()
 	return shared_context;
 }
 
-GLXContext CL_GL1WindowProvider_GLX::create_context()
+GLXContext GL1WindowProvider_GLX::create_context()
 {
 	GLXContext shared_context = get_share_context();
 
@@ -409,10 +412,10 @@ GLXContext CL_GL1WindowProvider_GLX::create_context()
 	return context;
 }
 
-void CL_GL1WindowProvider_GLX::flip(int interval)
+void GL1WindowProvider_GLX::flip(int interval)
 {
 	GraphicContext gc = get_gc();
-	CL_GL1::set_active(gc);
+	GL1::set_active(gc);
 
 	if (interval != -1 && interval != swap_interval)
 	{
@@ -430,7 +433,7 @@ void CL_GL1WindowProvider_GLX::flip(int interval)
 	glx.glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
 }
 
-void CL_GL1WindowProvider_GLX::update(const Rect &_rect)
+void GL1WindowProvider_GLX::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -447,7 +450,7 @@ void CL_GL1WindowProvider_GLX::update(const Rect &_rect)
 	if (rect.right <= rect.left || rect.bottom <= rect.top)
 		return;
 
-	CL_GL1::set_active(gc);
+	GL1::set_active(gc);
 
 	GLint old_viewport[4], old_matrix_mode;
 	GLdouble old_matrix_projection[16], old_matrix_modelview[16];
@@ -491,17 +494,17 @@ void CL_GL1WindowProvider_GLX::update(const Rect &_rect)
 }
 
 
-CursorProvider *CL_GL1WindowProvider_GLX::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *GL1WindowProvider_GLX::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
 {
 	return new CursorProvider_X11(sprite_description, hotspot);
 }
 
-void CL_GL1WindowProvider_GLX::set_cursor(CursorProvider *cursor)
+void GL1WindowProvider_GLX::set_cursor(CursorProvider *cursor)
 {
 	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
 }
 
-PBuffer_GL1 CL_GL1WindowProvider_GLX::create_pbuffer(CL_GL1GraphicContextProvider *gc_provider, Size size)
+PBuffer_GL1 GL1WindowProvider_GLX::create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size)
 {
 	PBuffer_GL1 pbuffer(gc_provider);
 
@@ -510,17 +513,18 @@ PBuffer_GL1 CL_GL1WindowProvider_GLX::create_pbuffer(CL_GL1GraphicContextProvide
 	return pbuffer;
 }
 
-void CL_GL1WindowProvider_GLX::set_large_icon(const PixelBuffer &image)
+void GL1WindowProvider_GLX::set_large_icon(const PixelBuffer &image)
 {
 	x11_window.set_large_icon(image);
 }
 
-void CL_GL1WindowProvider_GLX::set_small_icon(const PixelBuffer &image)
+void GL1WindowProvider_GLX::set_small_icon(const PixelBuffer &image)
 {
 	x11_window.set_small_icon(image);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GL1WindowProvider_GLX Implementation:
+// GL1WindowProvider_GLX Implementation:
 
+}
 

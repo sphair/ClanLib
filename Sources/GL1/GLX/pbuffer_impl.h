@@ -46,9 +46,13 @@
 
 #include <GL/glx.h>
 
-class CL_GL1GraphicContextProvider;
-class CL_GL1WindowProvider_GLX;
-class CL_GL1_GLXFunctions;
+namespace clan
+{
+
+
+class GL1GraphicContextProvider;
+class GL1WindowProvider_GLX;
+class GL1_GLXFunctions;
 class PBuffer_GL1_Impl;
 
 class PBuffer_GL1_Impl : public DisposableObject, public DisplayWindowProvider
@@ -57,7 +61,7 @@ class PBuffer_GL1_Impl : public DisposableObject, public DisplayWindowProvider
 /// \{
 
 public:
-	PBuffer_GL1_Impl(CL_GL1GraphicContextProvider *gc_provider);
+	PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider);
 
 	~PBuffer_GL1_Impl();
 
@@ -67,7 +71,7 @@ public:
 /// \{
 
 public:
-	CL_GL1_GLXFunctions *glx;
+	GL1_GLXFunctions *glx;
 
 	// Stubs
 	Rect get_geometry() const {return Rect();}
@@ -94,10 +98,10 @@ public:
 /// \{
 
 public:
-	CL_GL1ProcAddress *get_proc_address(const std::string& function_name) const;
+	GL1ProcAddress *get_proc_address(const std::string& function_name) const;
 
 	void make_current() const;
-	void create(CL_GL1WindowProvider_GLX &window_provider, Size &size);
+	void create(GL1WindowProvider_GLX &window_provider, Size &size);
 	void set_active() const;
 
 	// Stubs
@@ -140,16 +144,18 @@ private:
 	void on_dispose();
 	void reset();
 
-	CL_GL1GraphicContextProvider *gc_provider;
+	GL1GraphicContextProvider *gc_provider;
 
 	GLXPbuffer pbuffer;
-	Display *disp;
+	::Display *disp;
 	GLXContext pbuffer_context;
 
-	CL_GL1GraphicContextProvider *pbuffer_gc_provider;
+	GL1GraphicContextProvider *pbuffer_gc_provider;
 	GraphicContext pbuffer_gc;
 
 
 /// \}
 };
+
+}
 

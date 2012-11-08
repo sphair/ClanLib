@@ -241,10 +241,10 @@ public:
 	// nothing
 #else
 	/// \brief Returns the X11 display handle.
-	Display *get_display() const;
+	::Display *get_display() const;
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() const;
+	::Window get_window() const;
 #endif
 
 /// \}
