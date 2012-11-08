@@ -415,101 +415,104 @@ clanDisplay_includes = \
 	Display/Window/cursor.h
 
 clanCSSLayout_includes = \
-	csslayout.h \
-	CSSLayout/css_property_list2.h \
 	CSSLayout/css_layout_user_data.h \
-	CSSLayout/css_box_length.h \
-	CSSLayout/css_replaced_component.h \
-	CSSLayout/css_layout_node.h \
-	CSSLayout/api_csslayout.h \
-	CSSLayout/css_select_node2.h \
-	CSSLayout/css_document2.h \
-	CSSLayout/dom_select_node.h \
-	CSSLayout/css_layout_text.h \
-	CSSLayout/css_layout_object.h \
-	CSSLayout/css_property2.h \
-	CSSLayout/css_box_properties.h \
-	CSSLayout/css_hit_test_result.h \
-	CSSLayout/css_box_property.h \
-	CSSLayout/css_layout_element.h \
+	CSSLayout/css_tokenizer.h \
 	CSSLayout/css_layout.h \
-	CSSLayout/PropertyTypes/css_box_counter_reset.h \
-	CSSLayout/PropertyTypes/css_box_empty_cells.h \
-	CSSLayout/PropertyTypes/css_box_text_transform.h \
-	CSSLayout/PropertyTypes/css_box_border_image_width.h \
-	CSSLayout/PropertyTypes/css_box_bottom.h \
-	CSSLayout/PropertyTypes/css_box_white_space.h \
-	CSSLayout/PropertyTypes/css_box_border_radius.h \
-	CSSLayout/PropertyTypes/css_box_line_height.h \
-	CSSLayout/PropertyTypes/css_box_content.h \
-	CSSLayout/PropertyTypes/css_box_background_repeat.h \
-	CSSLayout/PropertyTypes/css_box_table_layout.h \
-	CSSLayout/PropertyTypes/css_box_background_image.h \
-	CSSLayout/PropertyTypes/css_box_font_size.h \
-	CSSLayout/PropertyTypes/css_box_height.h \
-	CSSLayout/PropertyTypes/css_box_clear.h \
-	CSSLayout/PropertyTypes/css_box_display.h \
-	CSSLayout/PropertyTypes/css_box_border_width.h \
-	CSSLayout/PropertyTypes/css_box_background_attachment.h \
-	CSSLayout/PropertyTypes/css_box_word_spacing.h \
-	CSSLayout/PropertyTypes/css_box_page_break_before.h \
+	CSSLayout/css_token.h \
 	CSSLayout/PropertyTypes/css_box_cursor.h \
+	CSSLayout/PropertyTypes/css_box_visibility.h \
+	CSSLayout/PropertyTypes/css_box_bottom.h \
+	CSSLayout/PropertyTypes/css_box_top.h \
+	CSSLayout/PropertyTypes/css_box_margin_width.h \
+	CSSLayout/PropertyTypes/css_box_background_image.h \
+	CSSLayout/PropertyTypes/css_box_counter_reset.h \
+	CSSLayout/PropertyTypes/css_box_outline_width.h \
+	CSSLayout/PropertyTypes/css_box_list_style_type.h \
+	CSSLayout/PropertyTypes/css_box_border_radius.h \
+	CSSLayout/PropertyTypes/css_box_clip.h \
+	CSSLayout/PropertyTypes/css_box_font_style.h \
+	CSSLayout/PropertyTypes/css_box_outline_color.h \
+	CSSLayout/PropertyTypes/css_box_content.h \
+	CSSLayout/PropertyTypes/css_box_font_weight.h \
+	CSSLayout/PropertyTypes/css_box_min_width.h \
+	CSSLayout/PropertyTypes/css_box_height.h \
+	CSSLayout/PropertyTypes/css_box_right.h \
+	CSSLayout/PropertyTypes/css_box_page_break_inside.h \
+	CSSLayout/PropertyTypes/css_box_background_repeat.h \
+	CSSLayout/PropertyTypes/css_box_border_image_slice.h \
+	CSSLayout/PropertyTypes/css_box_text_transform.h \
+	CSSLayout/PropertyTypes/css_box_text_indent.h \
+	CSSLayout/PropertyTypes/css_box_counter_increment.h \
+	CSSLayout/PropertyTypes/css_box_letter_spacing.h \
+	CSSLayout/PropertyTypes/css_box_unicode_bidi.h \
+	CSSLayout/PropertyTypes/css_box_border_image_source.h \
+	CSSLayout/PropertyTypes/css_box_page_break_after.h \
+	CSSLayout/PropertyTypes/css_box_border_image_width.h \
 	CSSLayout/PropertyTypes/css_box_z_index.h \
-	CSSLayout/PropertyTypes/css_box_max_width.h \
+	CSSLayout/PropertyTypes/css_box_border_color.h \
+	CSSLayout/PropertyTypes/css_box_background_position.h \
+	CSSLayout/PropertyTypes/css_box_vertical_align.h \
+	CSSLayout/PropertyTypes/css_box_width.h \
+	CSSLayout/PropertyTypes/css_box_list_style_image.h \
+	CSSLayout/PropertyTypes/css_box_text_align.h \
+	CSSLayout/PropertyTypes/css_box_background_size.h \
+	CSSLayout/PropertyTypes/css_box_decoration_break.h \
+	CSSLayout/PropertyTypes/css_box_font_family.h \
 	CSSLayout/PropertyTypes/css_box_background_clip.h \
-	CSSLayout/PropertyTypes/css_box_overflow.h \
+	CSSLayout/PropertyTypes/css_box_orphans.h \
+	CSSLayout/PropertyTypes/css_box_max_width.h \
+	CSSLayout/PropertyTypes/css_box_clear.h \
+	CSSLayout/PropertyTypes/css_box_table_layout.h \
+	CSSLayout/PropertyTypes/css_box_border_image_repeat.h \
+	CSSLayout/PropertyTypes/css_box_padding_width.h \
+	CSSLayout/PropertyTypes/css_box_outline_style.h \
+	CSSLayout/PropertyTypes/css_box_word_spacing.h \
+	CSSLayout/PropertyTypes/css_box_clan_box_direction.h \
+	CSSLayout/PropertyTypes/css_box_clan_box_sizing_factor.h \
+	CSSLayout/PropertyTypes/css_box_quotes.h \
+	CSSLayout/PropertyTypes/css_box_list_style_position.h \
+	CSSLayout/PropertyTypes/css_box_color.h \
+	CSSLayout/PropertyTypes/css_box_background_attachment.h \
+	CSSLayout/PropertyTypes/css_box_white_space.h \
+	CSSLayout/PropertyTypes/css_box_line_height.h \
+	CSSLayout/PropertyTypes/css_box_widows.h \
 	CSSLayout/PropertyTypes/css_box_direction.h \
 	CSSLayout/PropertyTypes/css_box_caption_side.h \
-	CSSLayout/PropertyTypes/css_box_padding_width.h \
-	CSSLayout/PropertyTypes/css_box_border_image_source.h \
-	CSSLayout/PropertyTypes/css_box_list_style_image.h \
-	CSSLayout/PropertyTypes/css_box_page_break_inside.h \
+	CSSLayout/PropertyTypes/css_box_empty_cells.h \
+	CSSLayout/PropertyTypes/css_box_left.h \
+	CSSLayout/PropertyTypes/css_box_min_height.h \
+	CSSLayout/PropertyTypes/css_box_font_size.h \
+	CSSLayout/PropertyTypes/css_box_border_style.h \
+	CSSLayout/PropertyTypes/css_box_max_height.h \
+	CSSLayout/PropertyTypes/css_box_background_color.h \
+	CSSLayout/PropertyTypes/css_box_text_decoration.h \
 	CSSLayout/PropertyTypes/css_box_font_variant.h \
-	CSSLayout/PropertyTypes/css_box_position.h \
-	CSSLayout/PropertyTypes/css_box_margin_width.h \
-	CSSLayout/PropertyTypes/css_box_min_width.h \
-	CSSLayout/PropertyTypes/css_box_letter_spacing.h \
+	CSSLayout/PropertyTypes/css_box_shadow.h \
+	CSSLayout/PropertyTypes/css_box_overflow.h \
+	CSSLayout/PropertyTypes/css_box_border_width.h \
 	CSSLayout/PropertyTypes/css_box_background_origin.h \
 	CSSLayout/PropertyTypes/css_box_border_image_outset.h \
-	CSSLayout/PropertyTypes/css_box_font_style.h \
-	CSSLayout/PropertyTypes/css_box_font_weight.h \
-	CSSLayout/PropertyTypes/css_box_counter_increment.h \
-	CSSLayout/PropertyTypes/css_box_color.h \
-	CSSLayout/PropertyTypes/css_box_outline_style.h \
-	CSSLayout/PropertyTypes/css_box_page_break_after.h \
-	CSSLayout/PropertyTypes/css_box_text_decoration.h \
-	CSSLayout/PropertyTypes/css_box_min_height.h \
-	CSSLayout/PropertyTypes/css_box_background_color.h \
-	CSSLayout/PropertyTypes/css_box_list_style_type.h \
-	CSSLayout/PropertyTypes/css_box_text_indent.h \
-	CSSLayout/PropertyTypes/css_box_max_height.h \
-	CSSLayout/PropertyTypes/css_box_vertical_align.h \
-	CSSLayout/PropertyTypes/css_box_list_style_position.h \
-	CSSLayout/PropertyTypes/css_box_right.h \
-	CSSLayout/PropertyTypes/css_box_widows.h \
-	CSSLayout/PropertyTypes/css_box_unicode_bidi.h \
-	CSSLayout/PropertyTypes/css_box_font_family.h \
-	CSSLayout/PropertyTypes/css_box_shadow.h \
-	CSSLayout/PropertyTypes/css_box_decoration_break.h \
-	CSSLayout/PropertyTypes/css_box_border_color.h \
-	CSSLayout/PropertyTypes/css_box_orphans.h \
-	CSSLayout/PropertyTypes/css_box_left.h \
-	CSSLayout/PropertyTypes/css_box_outline_color.h \
-	CSSLayout/PropertyTypes/css_box_clip.h \
-	CSSLayout/PropertyTypes/css_box_float.h \
-	CSSLayout/PropertyTypes/css_box_width.h \
-	CSSLayout/PropertyTypes/css_box_border_image_repeat.h \
-	CSSLayout/PropertyTypes/css_box_top.h \
-	CSSLayout/PropertyTypes/css_box_quotes.h \
 	CSSLayout/PropertyTypes/css_box_border_collapse.h \
-	CSSLayout/PropertyTypes/css_box_background_size.h \
-	CSSLayout/PropertyTypes/css_box_border_style.h \
-	CSSLayout/PropertyTypes/css_box_text_align.h \
-	CSSLayout/PropertyTypes/css_box_border_image_slice.h \
-	CSSLayout/PropertyTypes/css_box_background_position.h \
 	CSSLayout/PropertyTypes/css_box_border_spacing.h \
-	CSSLayout/PropertyTypes/css_box_visibility.h \
-	CSSLayout/PropertyTypes/css_box_outline_width.h
+	CSSLayout/PropertyTypes/css_box_float.h \
+	CSSLayout/PropertyTypes/css_box_display.h \
+	CSSLayout/PropertyTypes/css_box_position.h \
+	CSSLayout/PropertyTypes/css_box_page_break_before.h \
+	CSSLayout/css_hit_test_result.h \
+	CSSLayout/css_replaced_component.h \
+	CSSLayout/css_box_properties.h \
+	CSSLayout/css_box_length.h \
+	CSSLayout/css_property.h \
+	CSSLayout/css_document.h \
+	CSSLayout/css_layout_node.h \
+	CSSLayout/css_select_node.h \
+	CSSLayout/css_layout_object.h \
+	CSSLayout/dom_select_node.h \
+	CSSLayout/api_csslayout.h \
+	CSSLayout/css_layout_text.h \
+	CSSLayout/css_property_list.h \
+	CSSLayout/css_layout_element.h \
+	CSSLayout/css_box_property.h
 
 clanVorbis_includes = \
 	vorbis.h \
