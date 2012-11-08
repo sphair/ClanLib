@@ -83,10 +83,6 @@ public:
 
 	int get_glyph_count(const std::string &text);
 
-	GlyphPrimitivesArrayOutline get_glyph_outline(int glyph);
-
-	GlyphPrimitivesArray get_glyph_triangles(int glyph);
-
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable);
 

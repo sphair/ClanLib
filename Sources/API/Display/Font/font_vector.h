@@ -41,67 +41,7 @@ namespace clan
 class Font_Vector_Impl;
 class FontMetrics;
 class VirtualDirectory;
-class GlyphPrimitivesArrayOutline;
-class GlyphPrimitivesArray;
 class FontProvider_Vector;
-
-/// \brief Glyph Primitives Array
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-class GlyphPrimitivesArray
-{
-//! Construction:
-public:
-
-	/// \brief Constructs a GlyphPrimitivesArray
-	///
-	/// \param num_triangles = value
-	GlyphPrimitivesArray(int num_triangles)
-	{
-		int size = num_triangles*3;
-		vertex.resize(size);
-	}
-
-	~GlyphPrimitivesArray()
-	{
-	}
-
-	std::vector<Vec2f> vertex;
-};
-
-/// \brief Glyph Primitives Array Outline
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-class GlyphPrimitivesArrayOutline
-{
-//! Construction:
-public:
-
-	/// \brief Constructs a GlyphPrimitivesArrayOutline
-	///
-	/// \param num_lines = value
-	GlyphPrimitivesArrayOutline(int num_lines)
-	{
-		vertex.resize(1);
-		vertex[0].resize(num_lines+1);
-	}
-	
-//! Operations:
-public:
-
-	/// \brief New subarray
-	///
-	/// \param num_lines = value
-	void new_subarray(int num_lines)
-	{
-		std::vector<std::vector<Vec2f> >::size_type size = vertex.size();
-		vertex.resize(size+1);
-
-		vertex[size].resize(num_lines+1);
-	}
-
-	std::vector< std::vector<Vec2f> > vertex;
-};
 
 /// \brief Vector font drawing class.
 ///
@@ -152,12 +92,6 @@ public:
 
 	/// \brief Returns the amount of glyphs used by text.
 	int get_glyph_count(const std::string &text);
-
-	/// \brief Gets the glyph outline for a glyph.
-	GlyphPrimitivesArrayOutline get_glyph_outline(int glyph);
-
-	/// \brief Gets the glyph triangles for a glyph.
-	GlyphPrimitivesArray get_glyph_triangles(int glyph);
 
 	/// \brief Find glyph indexes and inter-spacing (x,y) values for text.
 	void get_glyphs(
