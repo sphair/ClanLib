@@ -158,7 +158,21 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
-	font_engine = new FontEngine_Freetype(desc);
+	std::string font_file_path = desc.get_file_name();
+	if (font_file_path.empty())
+	{
+	    // Obtain the best matching font file from fontconfig.
+		FontConfig &fc = FontConfig::instance();
+		font_file_path = fc.match_font(desc);
+	}
+
+	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
+	std::string filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+	VirtualFileSystem vfs(path);
+	IODevice io_dev = vfs.get_root_directory().open_file_read(filename);
+
+	font_engine = new FontEngine_Freetype(io_dev);
+
 	glyph_cache.font_metrics = font_engine->get_metrics();
 
 #endif
