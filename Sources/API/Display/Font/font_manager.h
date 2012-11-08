@@ -62,6 +62,8 @@ public:
 /// \{
 
 public:
+	/// \brief Get a font from the cache.
+	///
 	/// Check returned font with font.is_null()
 	Font get_font(const FontDescription &desc) const;
 
@@ -81,7 +83,11 @@ public:
 	/// \return Updated description
 	FontDescription get_registered_font(const FontDescription &desc);
 
+	/// \brief Add a font to the cache
 	void set_font(Font &font, const FontDescription &desc);
+
+	/// \bright Remove all fonts from the cache
+	void flush_cache();
 
 /// \}
 /// \name Implementation

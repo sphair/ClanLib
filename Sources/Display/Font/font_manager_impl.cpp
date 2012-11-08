@@ -123,6 +123,11 @@ void FontManager_Impl::set_font(Font &font, const FontDescription &desc)
 	font_cache.push_back(font_entry);
 }
 
+void FontManager_Impl::flush_cache()
+{
+	font_cache.clear();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Implementation:
 

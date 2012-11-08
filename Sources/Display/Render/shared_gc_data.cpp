@@ -32,6 +32,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/disposable_object.h"
 #include "API/Display/Render/shared_gc_data.h"
+#include "API/Display/Font/font_manager.h"
 #include <algorithm>
 #include "shared_gc_data_impl.h"
 
@@ -167,6 +168,13 @@ void SharedGCData::remove_disposable(DisposableObject *disposable)
 	{
 		SharedGCData_Impl::cl_sharedgc->impl->remove_disposable(disposable);
 	}
+}
+
+FontManager SharedGCData::get_font_manager()
+{
+	if (!SharedGCData_Impl::cl_sharedgc)
+		throw Exception("Attempted to use an invalid SharedGCData");
+	return SharedGCData_Impl::cl_sharedgc->impl->font_manager;
 }
 
 }

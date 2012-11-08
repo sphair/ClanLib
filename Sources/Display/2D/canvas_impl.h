@@ -34,6 +34,7 @@
 #include "Display/2D/render_batch_line.h"
 #include "Display/2D/render_batch_point.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_manager.h"
 
 namespace clan
 {
@@ -76,6 +77,7 @@ public:
 	void update_viewport_size();
 
 	std::vector<Rect> cliprects;
+	FontManager font_manager;
 
 private:
 	void calculate_map_mode_matrices();
@@ -101,6 +103,7 @@ private:
 
 	Mat4f user_projection;
 	ClipZRange gc_clip_z_range;
+
 };
 
 }

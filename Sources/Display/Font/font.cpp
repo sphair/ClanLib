@@ -63,26 +63,19 @@ Font::Font()
 {
 }
 
-Font::Font( GraphicContext &context, const std::string &typeface_name, int height, FontManager font_manager)
+Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 : impl(new Font_Impl)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font(context, desc, font_manager);
+	*this = Font(canvas, desc);
 }
 
-Font::Font( GraphicContext &context,const FontDescription &desc, FontManager font_manager)
+Font::Font( Canvas &canvas, const FontDescription &desc)
 : impl(new Font_Impl)
 {
-	Font cached_font = font_manager.get_font(desc);
-	if (!cached_font.is_null())
-	{
-		*this = cached_font;
-		return;
-	}
-
-	Font_System new_font(context, desc);
+	Font_System new_font(canvas, desc);
 	*this = new_font;
 }
 

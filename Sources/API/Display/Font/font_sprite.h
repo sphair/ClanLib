@@ -55,10 +55,10 @@ public:
 
 	/// \brief Constructs a Font Sprite
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Font_Sprite( GraphicContext &gc, const std::string &resource_id, ResourceManager *resources );
+	Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources );
 
 	~Font_Sprite();
 
