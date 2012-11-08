@@ -280,7 +280,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 			// Start with top-down calculated values
-			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxInitialUsedValues::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			// If the width of the box cannot be determined from CSS, then ask the component:
 			if (child_used_values.width_undetermined)
@@ -294,7 +294,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			child_used_values.min_width = std::max(child_used_values.min_width, child->get_min_preferred_content_width());
 
 			// Make sure width is within the min/max values:
-			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			CSSUsedValue used_noncontent_width = 
 				child_used_values.margin.left +
@@ -354,7 +354,7 @@ void GUIComponent_Impl::layout_clan_box_horizontal()
 			}
 
 			// Make sure height is within the min/max values:
-			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			CSSUsedValue used_noncontent_height = 
 				child_used_values.margin.top +
@@ -435,7 +435,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 			// Start with top-down calculated values
-			CSSClanBoxInitialUsedValues::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxInitialUsedValues::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			// If the width of the box cannot be determined from CSS, then ask the component:
 			if (child_used_values.width_undetermined)
@@ -449,7 +449,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			child_used_values.min_width = std::max(child_used_values.min_width, child->get_min_preferred_content_width());
 
 			// Make sure width is within the min/max values:
-			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			CSSUsedValue used_noncontent_width = 
 				child_used_values.margin.left +
@@ -501,7 +501,7 @@ void GUIComponent_Impl::layout_clan_box_vertical()
 			}
 
 			// Make sure height is within the min/max values:
-			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, css_properties, css_used_values);
+			CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, css_used_values);
 
 			// Set up vertical box adjustment math:
 
