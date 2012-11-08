@@ -33,10 +33,6 @@
 #include "API/Display/Font/font.h"
 #include "font_manager_impl.h"
 
-#ifndef WIN32
-#include "../X11/font_config.h"
-#endif
-
 namespace clan
 {
 
@@ -71,49 +67,6 @@ Font FontManager_Impl::get_font(const FontDescription &desc) const
 
 /////////////////////////////////////////////////////////////////////////////
 // FontManager_Impl Operations:
-
-void FontManager_Impl::register_font(const std::string &font_filename, const std::string &font_typeface)
-{
-	std::map<std::string, std::string >::iterator find_it;
-	find_it = font_register_cache.find(font_typeface);
-	if (find_it == font_register_cache.end())	// Ensure not already registered
-	{
-		font_register_cache[font_typeface] = font_filename;
-	}
-
-}
-
-FontDescription FontManager_Impl::get_registered_font(const FontDescription &desc)
-{
-	int average_width = desc.get_average_width();
-	int height = desc.get_height();
-
-	FontDescription new_desc;
-	new_desc.clone(desc);
-	new_desc.set_average_width(average_width);
-	new_desc.set_height(height);
-
-	// Check for a registered font
-	std::map<std::string, std::string >::iterator find_it;
-	find_it = font_register_cache.find(desc.get_typeface_name());
-	if (find_it != font_register_cache.end())	// Found the registered font
-	{
-		new_desc.set_filename(find_it->second);
-	}
-	else
-	{
-#ifndef WIN32
-#if !defined(__APPLE__)
-        // Obtain the best matching font file from fontconfig.
-		FontConfig &fc = FontConfig::instance();
-		std::string font_file_path = fc.match_font(new_desc);
-		new_desc.set_filename(font_file_path);
-#endif
-#endif
-	}
-	return new_desc;
-}
-
 
 void FontManager_Impl::set_font(Font &font, const FontDescription &desc)
 {

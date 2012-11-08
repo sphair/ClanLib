@@ -70,16 +70,12 @@ public:
 /// \{
 
 public:
-	void register_font(const std::string &font_filename, const std::string &font_typeface);
-	FontDescription get_registered_font(const FontDescription &desc);
 
 	void set_font(Font &font, const FontDescription &desc);
 
 /// \}
 /// \name Implementation
 /// \{
-	std::map<std::string /*font_typeface*/, std::string /*font_filename*/ > font_register_cache;
-
 	std::vector<FontCacheEntry> font_cache;
 
 private:

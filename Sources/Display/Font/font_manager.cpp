@@ -60,16 +60,6 @@ Font FontManager::get_font(const FontDescription &desc) const
 /////////////////////////////////////////////////////////////////////////////
 // FontManager Operations:
 
-void FontManager::register_font(const std::string &font_filename, const std::string &font_typeface)
-{
-	impl->register_font(font_filename, font_typeface);
-}
-
-FontDescription FontManager::get_registered_font(const FontDescription &desc)
-{
-	return impl->get_registered_font(desc);
-}
-
 void FontManager::set_font(Font &font, const FontDescription &desc)
 {
 	impl->set_font(font, desc);

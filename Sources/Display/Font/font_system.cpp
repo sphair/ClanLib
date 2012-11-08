@@ -53,6 +53,15 @@ Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, int h
 	*this = Font_System(canvas, desc);
 }
 
+Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height) : Font( new FontProvider_System())
+{
+	FontDescription desc;
+	desc.set_typeface_name(typeface_name);
+	desc.set_filename(file_name);
+	desc.set_height(height);
+	*this = Font_System(canvas, desc);
+}
+
 Font_System::Font_System(Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_System())
 {
 	Font cached_font = canvas.get_font_manager().get_font(desc);

@@ -73,16 +73,6 @@ public:
 
 public:
 
-	/// \brief Registers a font for lookup when creating fonts.
-	void register_font(const std::string &font_filename, const std::string &font_typeface);
-
-	/// \brief Get the registered font or the best font match if not found
-	//
-	/// \param desc = Description
-	///
-	/// \return Updated description
-	FontDescription get_registered_font(const FontDescription &desc);
-
 	/// \brief Add a font to the cache
 	void set_font(Font &font, const FontDescription &desc);
 

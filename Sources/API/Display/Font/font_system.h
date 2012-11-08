@@ -137,6 +137,14 @@ public:
 	/// \brief Constructs a Font System
 	///
 	/// \param canvas = Canvas
+	/// \param typeface_name = String Ref
+	/// \param file_name = String Ref
+	/// \param height = value
+	Font_System( Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height);
+
+	/// \brief Constructs a Font System
+	///
+	/// \param canvas = Canvas
 	/// \param desc = Font Description
 	Font_System( Canvas &canvas, const FontDescription &desc);
 
