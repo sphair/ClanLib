@@ -188,6 +188,19 @@ void GUIComponent_Impl::layout_content()
 
 		CSSClanBoxInitialUsedValues::visit(css_used_values, css_properties, initial_containing_box);
 		CSSClanBoxApplyMinMaxConstraints::visit(css_used_values, css_properties, initial_containing_box);
+
+		if (css_used_values.width_undetermined)
+		{
+			css_used_values.width = initial_containing_box.width - css_used_values.margin.left - css_used_values.margin.right - css_used_values.border.left - css_used_values.border.right - css_used_values.padding.right - css_used_values.padding.right;
+			css_used_values.width_undetermined = false;
+		}
+
+		// TBD: this isn't the default in normal CSS
+		if (css_used_values.height_undetermined)
+		{
+			css_used_values.height = initial_containing_box.height - css_used_values.margin.top - css_used_values.margin.top - css_used_values.border.top - css_used_values.border.bottom - css_used_values.padding.bottom - css_used_values.padding.bottom;
+			css_used_values.height_undetermined = false;
+		}
 	}
 
 	switch (css_properties.display.type)
