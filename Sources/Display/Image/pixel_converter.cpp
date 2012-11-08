@@ -373,7 +373,7 @@ std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat fo
 	case tf_rgba12:
 		break;
 	case tf_rgba16:
-#if !defined(__APPLE__) || defined(__SSE4_1__)
+#if defined(__SSE4_1__)
 		if (sse4)
 			return std::unique_ptr<PixelWriter>(new PixelWriterSSE4_rgba16());
 		else
