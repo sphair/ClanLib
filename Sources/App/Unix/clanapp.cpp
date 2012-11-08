@@ -31,12 +31,10 @@
 #include "API/Core/System/setup_core.h"
 #include "API/App/clanapp.h"
 
-namespace clan
-{
 
 int main(int argc, char **argv)
 {
-	if (Application::main == 0)
+	if (clan::Application::main == 0)
 	{
 		std::cout << "ClanLib: No global Application instance!" << std::endl;
 		return 255;
@@ -45,11 +43,10 @@ int main(int argc, char **argv)
 	std::vector<std::string> args;
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
-	int retval = Application::main(args);
+	int retval = clan::Application::main(args);
 
 	return retval;
 }
 
-Application::MainFunction *Application::main = 0;
+clan::Application::MainFunction *clan::Application::main = 0;
 
-}
