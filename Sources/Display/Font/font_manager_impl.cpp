@@ -52,7 +52,7 @@ FontManager_Impl::~FontManager_Impl()
 
 Font FontManager_Impl::get_font(const FontDescription &desc) const
 {
-	if (desc.is_null())
+	if (desc.is_null() || !desc.get_cached())
 		return Font();
 
 	std::vector<FontCacheEntry>::const_iterator it;
@@ -70,10 +70,13 @@ Font FontManager_Impl::get_font(const FontDescription &desc) const
 
 void FontManager_Impl::set_font(Font &font, const FontDescription &desc)
 {
-	FontCacheEntry font_entry;
-	font_entry.desc = desc;
-	font_entry.font = font;
-	font_cache.push_back(font_entry);
+	if (desc.get_cached())	// Only cache if requested to do so (which is the default)
+	{
+		FontCacheEntry font_entry;
+		font_entry.desc = desc;
+		font_entry.font = font;
+		font_cache.push_back(font_entry);
+	}
 }
 
 void FontManager_Impl::flush_cache()
