@@ -69,12 +69,13 @@ public:
 /// \{
 
 public:
-	operator ColorType();
 
 /// \}
 /// \name Operators
 /// \{
 public:
+	operator ColorType();
+
 	/// \brief = operator.
 	ColorHSVx<Type, ColorType> &operator = (const ColorHSVx<Type, ColorType>& copy) { h = copy.h; s = copy.s; v=copy.v; a=copy.a; return *this; }
 
