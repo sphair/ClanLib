@@ -59,14 +59,9 @@ std::vector<Contour> OutlineProviderBitmap::get_contours()
 	return impl->contours;
 }
 
-int OutlineProviderBitmap::get_width()
+Size OutlineProviderBitmap::get_size()
 {
-	return impl->width;
-}
-
-int OutlineProviderBitmap::get_height()
-{
-	return impl->height;
+	return Size(impl->width, impl->height);
 }
 
 }

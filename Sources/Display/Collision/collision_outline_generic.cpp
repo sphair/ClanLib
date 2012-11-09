@@ -70,15 +70,12 @@ CollisionOutline_Impl::CollisionOutline_Impl()
 	collision_info_normals(false),
 	collision_info_meta(false),
 	collision_info_pen_depth(false),
-	collision_info_collect(false),
-	provider(NULL)
+	collision_info_collect(false)
 {
 	return;
 }
 
-CollisionOutline_Impl::CollisionOutline_Impl(
-	OutlineProvider *new_provider,
-	OutlineAccuracy accuracy )
+CollisionOutline_Impl::CollisionOutline_Impl(const std::vector<Contour> &new_contours, const Size &new_base_size, OutlineAccuracy accuracy )
 :
 	do_inside_test(false),
 	width(0), height(0),
@@ -94,16 +91,12 @@ CollisionOutline_Impl::CollisionOutline_Impl(
 	collision_info_normals(false),
 	collision_info_meta(false),
 	collision_info_pen_depth(false),
-	collision_info_collect(false),
-	provider(new_provider)
+	collision_info_collect(false)
 {
-	contours = provider->get_contours();
-	width = provider->get_width();
-	height = provider->get_height();
+	contours = new_contours;
+	width = new_base_size.width;
+	height = new_base_size.height;
 	//minimum_enclosing_disc set by calculate_radius()
-
-	delete provider;
-	provider = NULL;
 
 	int check_distance = 3;
 
@@ -133,8 +126,6 @@ CollisionOutline_Impl::CollisionOutline_Impl(
 
 CollisionOutline_Impl::~CollisionOutline_Impl()
 {
-	if (provider)
-		delete provider;
 }
 
 /////////////////////////////////////////////////////////////////////////////

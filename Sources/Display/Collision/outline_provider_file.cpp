@@ -75,14 +75,10 @@ std::vector<Contour> OutlineProviderFile::get_contours()
 	return impl->contours;
 }
 
-int OutlineProviderFile::get_width()
+Size OutlineProviderFile::get_size()
 {
-	return impl->width;
+	return Size(impl->width, impl->height);
 }
 
-int OutlineProviderFile::get_height()
-{
-	return impl->height;
-}
 
 }

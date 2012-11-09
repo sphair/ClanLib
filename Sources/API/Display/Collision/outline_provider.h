@@ -37,6 +37,7 @@
 
 namespace clan
 {
+class Size;
 
 /// \brief Collision detection contour.
 ///
@@ -60,11 +61,9 @@ class OutlineProvider
 	/// \brief return the countours that make up the outline
 	virtual std::vector<Contour> get_contours()=0;
 
-	/// \brief return the width of the image used as basis for outline creation, or -1 when loading a precompiled outline.
-	virtual int get_width()=0;
+	/// \brief return the size of the image used as basis for outline creation, or -1 when loading a precompiled outline.
+	virtual Size get_size()=0;
 
-	/// \brief return the height of the image used as basis for outline creation, or -1 when loading a precompiled outline.
-	virtual int get_height()=0;
 /// \}
 /// \name Operations
 /// \{

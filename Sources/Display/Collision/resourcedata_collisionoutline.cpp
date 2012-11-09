@@ -68,14 +68,14 @@ ResourceData_CollisionOutline::ResourceData_CollisionOutline(Resource &resource)
 
 	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
-		outline = new CollisionOutline_Impl(
-			new OutlineProviderFile(filename, resource.get_manager().get_directory(resource)), accuracy_raw);
+		OutlineProviderFile outline_provider(filename, resource.get_manager().get_directory(resource));
+		outline = new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
 	else
 	{
 		PixelBuffer pbuf = ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), "");
-		outline = new CollisionOutline_Impl(
-			new OutlineProviderBitmap(pbuf, alpha_limit), accuracy );
+		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
+		outline = new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
 	}
 
 	CollisionOutline *collision_outline_tmp = 

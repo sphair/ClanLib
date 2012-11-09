@@ -68,11 +68,8 @@ class CL_API_DISPLAY OutlineProviderBitmap : public OutlineProvider
 	/// \brief return the countours that make up the outline
 	virtual std::vector<Contour> get_contours();
 
-	/// \brief return the width of the image used as basis for outline creation.
-	virtual int get_width();
-
-	/// \brief return the height of the image used as basis for outline creation.
-	virtual int get_height();
+	/// \brief return the size of the image used as basis for outline creation.
+	virtual Size get_size();
 /// \}
 /// \name Operations
 /// \{
