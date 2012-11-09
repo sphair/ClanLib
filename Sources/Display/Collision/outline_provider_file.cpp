@@ -43,24 +43,8 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OutlineProviderFile Construction:
 
-OutlineProviderFile::OutlineProviderFile(IODevice &file)
+OutlineProviderFile::OutlineProviderFile(IODevice &file) : impl(new OutlineProviderFile_Impl( file ))
 {
-	impl = std::shared_ptr<OutlineProviderFile_Impl> (new OutlineProviderFile_Impl( file ));
-}
-
-OutlineProviderFile::OutlineProviderFile(const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	IODevice file = vfs.get_root_directory().open_file_read(filename);
-	impl = std::shared_ptr<OutlineProviderFile_Impl> (new OutlineProviderFile_Impl( file ));
-}
-
-OutlineProviderFile::OutlineProviderFile(const std::string &filename, const VirtualDirectory &directory)
-{
-	IODevice file = directory.open_file_read(filename);
-	impl = std::shared_ptr<OutlineProviderFile_Impl> (new OutlineProviderFile_Impl( file ));
 }
 
 OutlineProviderFile::~OutlineProviderFile()

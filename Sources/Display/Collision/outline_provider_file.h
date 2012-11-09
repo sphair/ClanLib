@@ -57,16 +57,6 @@ class OutlineProviderFile
 	/// \param file = file to load.
 	OutlineProviderFile(IODevice &file);
 
-	/// \brief Constructs a OutlineProviderFile
-	///
-	/// \param fullname = String Ref
-	OutlineProviderFile(const std::string &fullname);
-
-	/// \brief Constructs a OutlineProviderFile
-	///
-	/// \param filename = String Ref
-	/// \param directory = Virtual Directory
-	OutlineProviderFile(const std::string &filename, const VirtualDirectory &directory);
 	~OutlineProviderFile();
 
 /// \}
