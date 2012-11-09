@@ -162,9 +162,9 @@ public:
 	/// \brief Construct a collision outline.
 	///
 	/// \param contours = The contours
-	/// \param width = The width
-	/// \param height = The height
-	CollisionOutline(std::vector<Contour> contours, int width, int height);
+	/// \param size = The size
+	/// \param accuracy = Outline Accuracy
+	CollisionOutline(const std::vector<Contour> &contours, Size &size, OutlineAccuracy accuracy);
 
 	~CollisionOutline();
 
@@ -220,21 +220,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Load the outline from file replacing the current data.
-	///
-	/// Loads precompiled outlines
-	void load(const std::string &fullname);
-
-	/// \brief Load
-	///
-	/// \param filename = The filename
-	/// \param directory = Virtual Directory
-	void load(const std::string &filename, const VirtualDirectory &directory);
-
-	/// \brief Load
-	///
-	/// \param file = The file
-	void load(IODevice &file);
 
 	/// \brief Makes a copy of the current collision outline.
 	CollisionOutline clone() const;

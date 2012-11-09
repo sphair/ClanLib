@@ -64,30 +64,18 @@ ResourceData_CollisionOutline::ResourceData_CollisionOutline(Resource &resource)
     else
 		accuracy = accuracy_raw;
 
-	CollisionOutline_Impl *outline;
-
 	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
 		IODevice file = resource.get_manager().get_directory(resource).open_file_read(filename);
 		OutlineProviderFile outline_provider(file);
-		outline = new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
+		collision_outline = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
 	else
 	{
 		PixelBuffer pbuf = ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), "");
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
-		outline = new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
+		collision_outline = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy);
 	}
-
-	CollisionOutline *collision_outline_tmp = 
-		new CollisionOutline(outline->contours, outline->width, outline->height);
-	collision_outline = *collision_outline_tmp;
-
-	delete collision_outline_tmp;
-
-	collision_outline.calculate_radius();
-	
-	delete outline;
 }
 
 ResourceData_CollisionOutline::~ResourceData_CollisionOutline()
