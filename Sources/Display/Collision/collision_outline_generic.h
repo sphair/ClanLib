@@ -49,7 +49,7 @@ class CollisionOutline_Impl
 
 public:
 	CollisionOutline_Impl();
-	CollisionOutline_Impl( OutlineProvider *provider, OutlineAccuracy accuracy );
+	CollisionOutline_Impl(const std::vector<Contour> &new_contours, const Size &new_base_size, OutlineAccuracy accuracy );
 
 	~CollisionOutline_Impl();
 
@@ -115,7 +115,6 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-	OutlineProvider *provider;
 
 /// \}
 };

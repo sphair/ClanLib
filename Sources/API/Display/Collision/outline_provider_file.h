@@ -78,10 +78,7 @@ class CL_API_DISPLAY OutlineProviderFile : public OutlineProvider
 	virtual std::vector<Contour> get_contours();
 
 	/// \brief Not used for file provider. Returns -1.
-	virtual int get_width();
-
-	/// \brief Not used for file provider. Returns -1.
-	virtual int get_height();
+	virtual Size get_size();
 
 /// \}
 /// \name Operations

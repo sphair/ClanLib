@@ -96,7 +96,8 @@ CollisionOutline::CollisionOutline(
 {
 	if( file_extension == "out" )
 	{
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( new OutlineProviderFile(file), accuracy_raw ));
+		OutlineProviderFile outline_provider(file);
+		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw ));
 		impl = new_impl;
 	}
 	else
@@ -106,12 +107,14 @@ CollisionOutline::CollisionOutline(
 	
 		if( pbuf.get_format() == tf_rgba8 )
 		{
-			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( new OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy));
+			OutlineProviderBitmap outline_provider(pbuf, alpha_limit, get_insides);
+			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy));
 			impl = new_impl;
 		}
 		else
 		{
-			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( new OutlineProviderBitmap(pbuf, alpha_limit, get_insides), accuracy_raw));
+			OutlineProviderBitmap outline_provider(pbuf, alpha_limit, get_insides);
+			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw));
 			impl = new_impl;
 		}
 	}
@@ -144,12 +147,14 @@ CollisionOutline::CollisionOutline(
 {
 	if( pbuf.get_format() == tf_rgba8 )
 	{
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( new OutlineProviderBitmap(pbuf, alpha_limit), accuracy));
+		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
+		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy));
 		impl = new_impl;
 	}
 	else
 	{
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( new OutlineProviderBitmap(pbuf, alpha_limit), accuracy_raw));
+		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
+		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw));
 		impl = new_impl;
 	}
 	
@@ -267,8 +272,9 @@ void CollisionOutline::load(IODevice &file)
 	std::shared_ptr<OutlineProviderFile> provider(new OutlineProviderFile(file));
 
 	impl->contours = provider->get_contours();
-	impl->width = provider->get_width();
-	impl->height = provider->get_height();
+	Size size = provider->get_size();
+	impl->width = size.width;
+	impl->height = size.height;
 
 	provider = std::shared_ptr<OutlineProviderFile>();
 
