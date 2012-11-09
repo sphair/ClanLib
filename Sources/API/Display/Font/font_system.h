@@ -49,7 +49,7 @@ class FontProvider_System;
 /// \brief Bitmap Font Position class.
 ///
 /// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-typedef struct _Font_System_Position
+struct Font_System_Position
 {
 	/// \brief The glyph (0 denotes end of list)
 	unsigned int glyph;
@@ -77,7 +77,7 @@ typedef struct _Font_System_Position
 
 	/// \brief Y Increment when drawing
 	int y_increment;
-} Font_System_Position;
+};
 
 /// \brief Font texture format (holds a pixel buffer containing a glyph)
 ///
@@ -115,7 +115,7 @@ public:
 
 /// \}
 
-/// \brief Bitmap Font class.
+/// \brief System Font class.
 ///
 /// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Font_System : public Font
@@ -124,7 +124,7 @@ class CL_API_DISPLAY Font_System : public Font
 /// \{
 
 public:
-	/// \brief Constructs a Texture bitmap font.
+	/// \brief Constructs a null System font.
 	Font_System();
 
 	/// \brief Constructs a Font System
