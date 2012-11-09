@@ -26,6 +26,7 @@
 **    Harry Storbacka
 **    Magnus Norddahl
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 /// \addtogroup clanDisplay_Collision clanDisplay Collision
@@ -34,23 +35,13 @@
 #pragma once
 
 #include "../api_display.h"
-#include <vector>
-#include "outline_circle.h"
 
 namespace clan
 {
 
-class Contour_Impl
-{
-public:
-	Contour_Impl() : is_inside_contour(false) {};
-
-	std::vector<Pointf> points;
-
-	bool is_inside_contour;
-
-	std::vector<OutlineCircle> sub_circles;
-};
+class Contour_Impl;
+class OutlineCircle;
+class Pointf;
 
 /// \brief Collision detection contour.
 ///
@@ -62,55 +53,48 @@ class Contour
 /// \{
 public:
 	/// \brief Construct a contour
-	Contour() : impl(new Contour_Impl()) {};
-	~Contour() {};
+	Contour();
+	~Contour();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
 	// Points forming the countour.
-	std::vector<Pointf> &get_points() { return impl->points; }
-	const std::vector<Pointf> &get_points() const { return impl->points; }
+	std::vector<Pointf> &get_points();
+	const std::vector<Pointf> &get_points() const;
 
 	// boolean specifying if this contour is inside-out (the inside of a hollow polygon)
 	// if that is the case, then the collision-test will skip the inside_contour-test (because you can
 	// be inside this one, without causing a collision)
-	bool is_inside_contour() const { return impl->is_inside_contour; }
+	bool is_inside_contour() const;
 
 	/// \brief Set inside contour
 	///
 	/// \param is_inside = bool
-	void set_inside_contour(bool is_inside) { impl->is_inside_contour = is_inside; }
+	void set_inside_contour(bool is_inside);
 
 	// Circles encapsulating a part of the outline.
 	// If two circles arent intersecting, none of the lines inside them
 	// collide either.
-	std::vector<OutlineCircle> &get_sub_circles() { return impl->sub_circles; }
-	const std::vector<OutlineCircle> &get_sub_circles() const { return impl->sub_circles; }
+	std::vector<OutlineCircle> &get_sub_circles();
+	const std::vector<OutlineCircle> &get_sub_circles() const;
 /// \}
 
 /// \name Operators
 /// \{
 public:
 	/// \brief Equality operator
-	bool operator==(const Contour &other) const { return impl==other.impl; }
+	bool operator==(const Contour &other) const;
 
 	/// \brief Inequality operator
-	bool operator!=(const Contour &other) const { return impl!=other.impl; }
+	bool operator!=(const Contour &other) const;
 
 	/// \brief Less than operator
-	bool operator<(const Contour &other) const { return impl < other.impl; }
+	bool operator<(const Contour &other) const;
 
 	/// \brief Makes a copy of the contour
-	Contour clone()
-	{
-		Contour copy;
-		copy.impl->points = impl->points;
-		copy.impl->is_inside_contour = impl->is_inside_contour;
-		copy.impl->sub_circles = impl->sub_circles;
-		return copy;
-	}
+	Contour clone();
 /// \}
 	
 /// \name Implementation
