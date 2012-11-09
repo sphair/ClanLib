@@ -97,15 +97,12 @@ int App::start(const std::vector<std::string> &args)
 		DisplayWindowDescription desc;
 		desc.set_title("ClanLib Collision Test");
 		desc.set_size(Size(950, 700), true);
-		DisplayWindow window(desc);
+		Canvas canvas(desc);
 
-		Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+		Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &App::on_window_close);
+		Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
-		Canvas canvas(window);
-		GraphicContext &gc = canvas.get_gc();
-
-		Font font(gc, "Tahoma", 16);
+		Font font(canvas, "Tahoma", 16);
 
 //////////////////////////////////////////////////////////////////////////
 		std::string file1("images/triangle.png");
@@ -122,8 +119,8 @@ int App::start(const std::vector<std::string> &args)
 
 		double tri_x_pos = 0;
 		double tri_y_pos = 0;
-		double other_x_pos = window.get_geometry().get_width()/2;
-		double other_y_pos = window.get_geometry().get_height()/2;
+		double other_x_pos = canvas.get_width()/2;
+		double other_y_pos = canvas.get_height()/2;
 
 		// draw_limit = 0;
 
@@ -138,8 +135,8 @@ int App::start(const std::vector<std::string> &args)
 		////////////////////////////////////////////
 		// load resources:
 
-		Sprite surface(gc, file1);
-		Sprite surface2(gc, file2);
+		Sprite surface(canvas, file1);
+		Sprite surface2(canvas, file2);
 
 		surface.set_rotation_hotspot(origin_center);
 		surface.set_alignment(origin_center);
@@ -196,7 +193,7 @@ int App::start(const std::vector<std::string> &args)
 
 		print_usage();
 
-		InputDevice keyboard = window.get_ic().get_keyboard();
+		InputDevice keyboard = canvas.get_window().get_ic().get_keyboard();
 
 		// Loop until the user hits escape:
 		while (!quit)
@@ -464,7 +461,7 @@ int App::start(const std::vector<std::string> &args)
 			}
 
 			// Update keyboard input and handle system events:
-			window.flip(1);
+			canvas.flip(1);
 			KeepAlive::process();
 		}
 
