@@ -40,19 +40,19 @@ Teapot::Teapot()
 	float_ypos = 0.0f;
 }
 
-void Teapot::create(GraphicContext &gc, ResourceManager &resources)
+void Teapot::create(Canvas &canvas, ResourceManager &resources)
 {
-	teapot_sprites = Sprite(gc, "teapot", &resources);
+	teapot_sprites = Sprite(canvas, "teapot", &resources);
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
-	teapot_collisions = CollidableSprite::create_collision_outlines(gc, "teapot", &resources, 128, accuracy_high);
+	teapot_collisions = CollidableSprite::create_collision_outlines(canvas, "teapot", &resources, 128, accuracy_high);
 }
 
-void Teapot::draw_collision_outline(GraphicContext &gc)
+void Teapot::draw_collision_outline(Canvas &canvas)
 {
-	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, gc.get_height()/2, Colorf::limegreen, gc);
-//	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, 0, Colorf::limegreen, gc);
+	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, canvas.get_height()/2, Colorf::limegreen, canvas);
+//	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, 0, Colorf::limegreen, canvas);
 
 }
 
@@ -75,7 +75,7 @@ void Teapot::clone(const Teapot &source)
 }
 
 
-void Teapot::update(GraphicContext &gc, int elapsed_ms, std::vector<Teapot> &teapot_list)
+void Teapot::update(Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list)
 {
 	previous_teapot_animation_frame = teapot_sprites.get_current_frame();
 	teapot_sprites.update(elapsed_ms);
@@ -90,7 +90,7 @@ void Teapot::update(GraphicContext &gc, int elapsed_ms, std::vector<Teapot> &tea
 
 	int last_xpos = dest_xpos;
 	int last_ypos = dest_ypos;
-	move(gc, elapsed_ms);
+	move(canvas, elapsed_ms);
 
 
 	// If the object is inside another object, ignore collision detection
@@ -241,7 +241,7 @@ bool Teapot::is_collision(int xpos, int ypos, const std::vector<Teapot> &teapot_
 	return false;
 }
 
-void Teapot::move(GraphicContext &gc, int elapsed_ms)
+void Teapot::move(Canvas &canvas, int elapsed_ms)
 {
 	float_xpos += x_delta * (float) elapsed_ms;
 	float_ypos += y_delta * (float) elapsed_ms;
@@ -265,8 +265,8 @@ void Teapot::move(GraphicContext &gc, int elapsed_ms)
 		float_ypos = (float) dest_ypos;
 	}
 
-	int limit_x = gc.get_width() - teapot_sprites.get_width();
-	int limit_y = gc.get_height()/2 - teapot_sprites.get_height();
+	int limit_x = canvas.get_width() - teapot_sprites.get_width();
+	int limit_y = canvas.get_height()/2 - teapot_sprites.get_height();
 
 	if (dest_xpos >= limit_x)
 	{
@@ -286,9 +286,9 @@ void Teapot::move(GraphicContext &gc, int elapsed_ms)
 
 }
 
-void Teapot::draw_teapot(GraphicContext &gc)
+void Teapot::draw_teapot(Canvas &canvas)
 {
-	teapot_sprites.draw(gc, dest_xpos, dest_ypos);
+	teapot_sprites.draw(canvas, dest_xpos, dest_ypos);
 }
 
 void Teapot::set_frame(int frame_number)

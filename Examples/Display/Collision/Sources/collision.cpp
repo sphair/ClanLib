@@ -43,30 +43,29 @@ int Collision::start(const std::vector<std::string> &args)
 	desc.set_size(Size(1000, 700), true);
 	desc.set_allow_resize(true);
 
-	DisplayWindow window(desc);
+	Canvas canvas(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Collision::on_window_close);
+	Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &Collision::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Collision::on_input_up);
+	Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
 
 	// Get the graphic context
-	GraphicContext gc = window.get_gc();
 
 	ResourceManager resources = ResourceManager("Resources/resources.xml");
 	
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
-	gc.clear(Colorf(0.0f,0.0f,0.2f));
-	font.draw_text(gc, 32, 32, "Calculating Collision Outlines");
-	font.draw_text(gc, 32, 64, "Note, collision outlines can be saved to disk for faster loading times");
-	window.flip();
+	canvas.clear(Colorf(0.0f,0.0f,0.2f));
+	font.draw_text(canvas, 32, 32, "Calculating Collision Outlines");
+	font.draw_text(canvas, 32, 64, "Note, collision outlines can be saved to disk for faster loading times");
+	canvas.flip();
 
 	int num_teapots = 8;
 
 	Teapot base_teapot;
-	base_teapot.create(gc, resources);
+	base_teapot.create(canvas, resources);
 
 	std::vector<Teapot> teapot_list;
 	teapot_list.resize(num_teapots);
@@ -75,8 +74,8 @@ int Collision::start(const std::vector<std::string> &args)
 	{
 		teapot_list[cnt].clone(base_teapot);
 
-		int xpos = (rand() & 0xffff) % gc.get_width();
-		int ypos = (rand() & 0xffff) % (gc.get_height()/2);
+		int xpos = (rand() & 0xffff) % canvas.get_width();
+		int ypos = (rand() & 0xffff) % (canvas.get_height()/2);
 		teapot_list[cnt].set_position(xpos, ypos);
 
 		int x_delta = (rand() & 0xffff);
@@ -110,24 +109,24 @@ int Collision::start(const std::vector<std::string> &args)
 		int time_elapsed = current_time - last_time;
 		last_time = current_time;
 
-		gc.clear(Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(Colorf(0.0f,0.0f,0.2f));
 
-		font.draw_text(gc, 16, 32, "Sprite Image");
-		font.draw_text(gc, 16, gc.get_height()/2 + 32, "Collision Outline");
+		font.draw_text(canvas, 16, 32, "Sprite Image");
+		font.draw_text(canvas, 16, canvas.get_height()/2 + 32, "Collision Outline");
 
 		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
-		font.draw_text(gc, gc.get_width() - 100, 32, fps);
+		font.draw_text(canvas, canvas.get_width() - 100, 32, fps);
 
 		for (int cnt=0; cnt<num_teapots; cnt++)
 		{
-			teapot_list[cnt].update(gc, time_elapsed, teapot_list);
-			teapot_list[cnt].draw_collision_outline(gc);
-			teapot_list[cnt].draw_teapot(gc);
+			teapot_list[cnt].update(canvas, time_elapsed, teapot_list);
+			teapot_list[cnt].draw_collision_outline(canvas);
+			teapot_list[cnt].draw_teapot(canvas);
 		}
 
-		Draw::line(gc, 0, gc.get_height()/2, gc.get_width(), gc.get_height()/2, Colorf::white);
+		canvas.line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, Colorf::white);
 		
-		window.flip(0);
+		canvas.flip(0);
 		frameratecounter.frame_shown();
 
 		KeepAlive::process(0);
@@ -139,7 +138,7 @@ int Collision::start(const std::vector<std::string> &args)
 // A key was pressed
 void Collision::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}

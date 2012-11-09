@@ -33,18 +33,18 @@ class Teapot
 {
 public:
 	Teapot();
-	void create(GraphicContext &gc, ResourceManager &resources);
+	void create(Canvas &canvas, ResourceManager &resources);
 	void clone(const Teapot &source);
-	void draw_collision_outline(GraphicContext &gc);
-	void update(GraphicContext &gc, int elapsed_ms, std::vector<Teapot> &teapot_list);
-	void draw_teapot(GraphicContext &gc);
+	void draw_collision_outline(Canvas &canvas);
+	void update(Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list);
+	void draw_teapot(Canvas &canvas);
 	void set_position(int xpos, int ypos);
 	void set_scale(float x_scale, float y_scale);
 	void set_movement_delta(Vec2f &normal, float new_speed);
 	void set_frame(int frame_number);
 	void set_color(const Colorf &color);
 private:
-	void move(GraphicContext &gc, int elapsed_ms);
+	void move(Canvas &canvas, int elapsed_ms);
 	bool is_collision(int xpos, int ypos, const std::vector<Teapot> &teapot_list, int &collided_teapot_offset);
 	bool check_hit_other_object(int previous_xpos, int previous_ypos, int xpos, int ypos, std::vector<Teapot> &teapot_list);
 
