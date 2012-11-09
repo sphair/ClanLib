@@ -68,7 +68,8 @@ ResourceData_CollisionOutline::ResourceData_CollisionOutline(Resource &resource)
 
 	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
-		OutlineProviderFile outline_provider(filename, resource.get_manager().get_directory(resource));
+		IODevice file = resource.get_manager().get_directory(resource).open_file_read(filename);
+		OutlineProviderFile outline_provider(file);
 		outline = new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
 	else

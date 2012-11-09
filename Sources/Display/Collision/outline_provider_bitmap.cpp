@@ -42,9 +42,8 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OutlineProviderBitmap construction:
 
-OutlineProviderBitmap::OutlineProviderBitmap(const PixelBuffer &pbuf, int alpha_limit, bool get_insides)
+OutlineProviderBitmap::OutlineProviderBitmap(const PixelBuffer &pbuf, int alpha_limit, bool get_insides) : impl(new OutlineProviderBitmap_Impl( pbuf, alpha_limit, get_insides))
 {
-	impl = std::shared_ptr<OutlineProviderBitmap_Impl> (new OutlineProviderBitmap_Impl( pbuf, alpha_limit, get_insides));
 }
 
 OutlineProviderBitmap::~OutlineProviderBitmap()
