@@ -71,6 +71,7 @@ libclan30Display_la_SOURCES = \
 	setup_display.cpp \
 	Collision/outline_provider_bitmap.cpp \
 	Collision/collision_outline.cpp \
+	Collision/contour.cpp \
 	Collision/outline_provider_bitmap_generic.cpp \
 	Collision/outline_provider_file.cpp \
 	Collision/outline_provider_file_generic.cpp \
