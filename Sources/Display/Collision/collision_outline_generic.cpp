@@ -35,7 +35,6 @@
 #include "Display/precomp.h"
 #include "collision_outline_generic.h"
 #include "API/Display/Collision/collision_outline.h"
-#include "API/Display/Collision/outline_provider.h"
 #include "API/Display/Collision/outline_accuracy.h"
 #include "API/Display/Collision/outline_math.h"
 #include "API/Core/IOData/file.h"

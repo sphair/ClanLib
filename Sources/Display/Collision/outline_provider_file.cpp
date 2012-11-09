@@ -33,7 +33,7 @@
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Display/Collision/outline_provider_file.h"
+#include "outline_provider_file.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "outline_provider_file_generic.h"
 

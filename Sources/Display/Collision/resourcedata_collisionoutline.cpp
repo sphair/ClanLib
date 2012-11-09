@@ -35,8 +35,8 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Collision/outline_provider_file.h"
-#include "API/Display/Collision/outline_provider_bitmap.h"
+#include "outline_provider_file.h"
+#include "outline_provider_bitmap.h"
 #include "collision_outline_generic.h"
 #include "resourcedata_collisionoutline.h"
 

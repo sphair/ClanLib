@@ -32,26 +32,42 @@
 
 #pragma once
 
-#include "../api_display.h"
-#include "contour.h"
+#include "API/Core/IOData/virtual_directory.h"
 
 namespace clan
 {
+
+class OutlineProviderFile_Impl;
+class InputSourceProvider;
+class Contour;
 class Size;
 
-/// \brief Collision detection contour.
+/// \brief File outline provider is used to load precompiled outlines.
 ///
-/// <p>Abstract Base class for outline providers. Don't use this!</p>
+/// <p>A OutlineProviderFile is used to load precompiled outlines.</p> 
 /// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
-class OutlineProvider
+class OutlineProviderFile
 {
 /// \name Construction
 /// \{
 
  public:
 	/// \brief Construct a outline provider
-	OutlineProvider() {};
-	virtual ~OutlineProvider() {};
+	///
+	/// \param file = file to load.
+	OutlineProviderFile(IODevice &file);
+
+	/// \brief Constructs a OutlineProviderFile
+	///
+	/// \param fullname = String Ref
+	OutlineProviderFile(const std::string &fullname);
+
+	/// \brief Constructs a OutlineProviderFile
+	///
+	/// \param filename = String Ref
+	/// \param directory = Virtual Directory
+	OutlineProviderFile(const std::string &filename, const VirtualDirectory &directory);
+	~OutlineProviderFile();
 
 /// \}
 /// \name Attributes
@@ -59,10 +75,10 @@ class OutlineProvider
 
  public:
 	/// \brief return the countours that make up the outline
-	virtual std::vector<Contour> get_contours()=0;
+	std::vector<Contour> get_contours();
 
-	/// \brief return the size of the image used as basis for outline creation, or -1 when loading a precompiled outline.
-	virtual Size get_size()=0;
+	/// \brief Not used for file provider. Returns -1.
+	Size get_size();
 
 /// \}
 /// \name Operations
@@ -71,7 +87,12 @@ class OutlineProvider
 public:
 
 /// \}
+/// \name Implementation
+/// \{
 
+ private:
+	std::shared_ptr<OutlineProviderFile_Impl> impl;
+/// \}
 };
 
 }

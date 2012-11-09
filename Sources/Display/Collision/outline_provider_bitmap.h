@@ -32,42 +32,33 @@
 
 #pragma once
 
-#include "../api_display.h"
-#include "outline_provider.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "API/Display/Collision/outline_accuracy.h"
+#include <vector>
 
 namespace clan
 {
 
-class OutlineProviderFile_Impl;
-class InputSourceProvider;
+class OutlineProviderBitmap_Impl;
+class Contour;
+class Size;
 
-/// \brief File outline provider is used to load precompiled outlines.
+/// \brief Bitmap outline provider.
 ///
-/// <p>A OutlineProviderFile is used to load precompiled outlines.</p> 
+///  <p>A OutlineProviderBitmap is used to find outlines based on the alpha channel of images.</p> 
 /// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
-class CL_API_DISPLAY OutlineProviderFile : public OutlineProvider
+class OutlineProviderBitmap
 {
 /// \name Construction
 /// \{
 
  public:
-	/// \brief Construct a outline provider
+	/// \brief Construct a contour
 	///
-	/// \param file = file to load.
-	OutlineProviderFile(IODevice &file);
-
-	/// \brief Constructs a OutlineProviderFile
-	///
-	/// \param fullname = String Ref
-	OutlineProviderFile(const std::string &fullname);
-
-	/// \brief Constructs a OutlineProviderFile
-	///
-	/// \param filename = String Ref
-	/// \param directory = Virtual Directory
-	OutlineProviderFile(const std::string &filename, const VirtualDirectory &directory);
-	~OutlineProviderFile();
+	/// \param pbuf  PixelBuffer containing image data.
+	/// \param alpha_limit  Minimum alpha value for a colliding pixel
+	/// \param get_insides Get Insides
+	OutlineProviderBitmap(const PixelBuffer &pbuf, int alpha_limit=128, bool get_insides=true);
+	~OutlineProviderBitmap();
 
 /// \}
 /// \name Attributes
@@ -75,11 +66,10 @@ class CL_API_DISPLAY OutlineProviderFile : public OutlineProvider
 
  public:
 	/// \brief return the countours that make up the outline
-	virtual std::vector<Contour> get_contours();
+	std::vector<Contour> get_contours();
 
-	/// \brief Not used for file provider. Returns -1.
-	virtual Size get_size();
-
+	/// \brief return the size of the image used as basis for outline creation.
+	Size get_size();
 /// \}
 /// \name Operations
 /// \{
@@ -91,7 +81,7 @@ public:
 /// \{
 
  private:
-	std::shared_ptr<OutlineProviderFile_Impl> impl;
+ 	std::shared_ptr<OutlineProviderBitmap_Impl> impl;
 /// \}
 };
 

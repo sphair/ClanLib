@@ -405,11 +405,8 @@ clanDisplay_includes = \
 	Display/TargetProviders/graphic_context_provider.h \
 	Display/Collision/outline_math.h \
 	Display/Collision/collision_outline.h \
-	Display/Collision/outline_provider_bitmap.h \
 	Display/Collision/contour.h \
 	Display/Collision/outline_accuracy.h \
-	Display/Collision/outline_provider_file.h \
-	Display/Collision/outline_provider.h \
 	Display/Collision/outline_circle.h \
 	Display/display_target.h \
 	Display/api_display.h \
