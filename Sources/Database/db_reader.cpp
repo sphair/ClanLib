@@ -92,9 +92,24 @@ bool DBReader::get_column_bool(int index) const
 	return impl->provider->get_column_bool(index);
 }
 
+char DBReader::get_column_char(int index) const
+{
+	return impl->provider->get_column_char(index);
+}
+
+unsigned char DBReader::get_column_uchar(int index) const
+{
+	return impl->provider->get_column_uchar(index);
+}
+
 int DBReader::get_column_int(int index) const
 {
 	return impl->provider->get_column_int(index);
+}
+
+unsigned int DBReader::get_column_uint(int index) const
+{
+	return impl->provider->get_column_uint(index);
 }
 
 double DBReader::get_column_double(int index) const
@@ -122,9 +137,24 @@ bool DBReader::get_column_bool(const std::string &column_name) const
 	return impl->provider->get_column_bool(get_name_index(column_name));
 }
 
+char DBReader::get_column_char(const std::string &column_name) const
+{
+	return impl->provider->get_column_char(get_name_index(column_name));
+}
+
+unsigned char DBReader::get_column_uchar(const std::string &column_name) const
+{
+	return impl->provider->get_column_uchar(get_name_index(column_name));
+}
+
 int DBReader::get_column_int(const std::string &column_name) const
 {
 	return impl->provider->get_column_int(get_name_index(column_name));
+}
+
+unsigned int DBReader::get_column_uint(const std::string &column_name) const
+{
+	return impl->provider->get_column_uint(get_name_index(column_name));
 }
 
 double DBReader::get_column_double(const std::string &column_name) const

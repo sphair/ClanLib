@@ -95,9 +95,24 @@ bool SqliteReaderProvider::get_column_bool(int index) const
 	return sqlite3_column_int(vm, index) != 0;
 }
 
+char SqliteReaderProvider::get_column_char(int index) const
+{
+	return static_cast<char>(sqlite3_column_int(vm, index));
+}
+
+unsigned char SqliteReaderProvider::get_column_uchar(int index) const
+{
+	return static_cast<unsigned char>(sqlite3_column_int(vm, index));
+}
+
 int SqliteReaderProvider::get_column_int(int index) const
 {
 	return sqlite3_column_int(vm, index);
+}
+
+unsigned int SqliteReaderProvider::get_column_uint(int index) const
+{
+	return static_cast<unsigned int>(sqlite3_column_int(vm, index));
 }
 
 double SqliteReaderProvider::get_column_double(int index) const

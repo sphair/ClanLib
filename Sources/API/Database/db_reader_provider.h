@@ -68,8 +68,17 @@ public:
 	/// \brief Retrieves the value of the specified column as a boolean
 	virtual bool get_column_bool(int index) const = 0;
 	
+	/// \brief Retrieves the value of the specified column as a char
+	virtual char get_column_char(int index) const = 0;
+	
+	/// \brief Retrieves the value of the specified column as an unsigned char
+	virtual unsigned char get_column_uchar(int index) const = 0;
+	
 	/// \brief Retrieves the value of the specified column as an integer
 	virtual int get_column_int(int index) const = 0;
+	
+	/// \brief Retrieves the value of the specified column as an unsigned integer
+	virtual unsigned int get_column_uint(int index) const = 0;
 	
 	/// \brief Retrieves the value of the specified column as a double
 	virtual double get_column_double(int index) const = 0;
