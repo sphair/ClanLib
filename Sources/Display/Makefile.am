@@ -66,7 +66,6 @@ libclan30Display_la_SOURCES = \
 	2D/canvas_impl.cpp \
 	2D/image.cpp \
 	2D/color.cpp \
-	2D/collidable_sprite.cpp \
 	2D/rounded_rect.cpp \
 	2D/span_layout.cpp \
 	setup_display.cpp \

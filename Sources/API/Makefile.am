@@ -372,7 +372,6 @@ clanDisplay_includes = \
 	Display/Render/blend_state_description.h \
 	Display/Render/texture_cube.h \
 	Display/Render/texture.h \
-	Display/2D/collidable_sprite.h \
 	Display/2D/canvas.h \
 	Display/2D/texture_group.h \
 	Display/2D/subtexture.h \

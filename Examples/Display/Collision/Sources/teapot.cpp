@@ -46,7 +46,7 @@ void Teapot::create(Canvas &canvas, ResourceManager &resources)
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
-	teapot_collisions = CollidableSprite::create_collision_outlines(canvas, "teapot", &resources, 128, accuracy_high);
+	teapot_collisions = Sprite::create_collision_outlines(canvas, "teapot", &resources, 128, accuracy_high);
 }
 
 void Teapot::draw_collision_outline(Canvas &canvas)

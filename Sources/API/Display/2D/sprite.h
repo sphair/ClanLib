@@ -194,6 +194,26 @@ public:
 
 	/// \brief Returns true if animation has looped in the last update cycle
 	bool is_looping() const;
+
+
+	/// \brief Create the collision outlines from the sprites resource
+	///
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	static std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium);
+
+	/// \brief Create the collision outlines from the sprites resource
+	///
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	static CollisionOutline create_collision_outline(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium);
+
 /// \}
 
 /// \name Operators
