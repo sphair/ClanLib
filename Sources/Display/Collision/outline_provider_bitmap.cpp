@@ -31,7 +31,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/Collision/outline_provider_bitmap.h"
+#include "outline_provider_bitmap.h"
 #include "API/Display/Collision/outline_accuracy.h"
 #include "outline_provider_bitmap_generic.h"
 #include "API/Display/Collision/outline_circle.h"
