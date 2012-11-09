@@ -154,8 +154,8 @@ int App::start(const std::vector<std::string> &args)
 		CollisionOutline co2(file2, vdir, 128, accuracy_medium, true);
 
 		// Save now before alignment and positions have been applied
-		co1.save("collision_1_test_outline_file");
-		co2.save("collision_2_test_outline_file");
+		co1.save("collision_1_test_outline_file.out");
+		co2.save("collision_2_test_outline_file.out");
 
 		// print some info about the outlines:
 		unsigned int size = co1.get_contours().size();
@@ -318,10 +318,8 @@ int App::start(const std::vector<std::string> &args)
 			if( keyboard.get_keycode(keycode_x) )
 			{
 				// Load, ensuring recreated
-				co1 = CollisionOutline();
-				co1.load("collision_1_test_outline_file");
-				co2 = CollisionOutline();
-				co2.load("collision_2_test_outline_file");
+				co1 = CollisionOutline("collision_1_test_outline_file.out");
+				co2 = CollisionOutline("collision_2_test_outline_file.out");
 		
 				// Reset the options
 				co1.set_alignment(origin_center);

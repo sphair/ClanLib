@@ -63,12 +63,9 @@ CollisionOutline::CollisionOutline()
 {
 }
 
-CollisionOutline::CollisionOutline(std::vector<Contour> contours, int width, int height)
- : impl(new CollisionOutline_Impl())
+CollisionOutline::CollisionOutline(const std::vector<Contour> &contours, Size &size, OutlineAccuracy accuracy)
+ : impl(new CollisionOutline_Impl(contours, size, accuracy))
 {
-	impl->contours = contours;
-	impl->width = width;
-	impl->height = height;
 }
 
 CollisionOutline::CollisionOutline(const std::string &fullname, int alpha_limit, OutlineAccuracy accuracy, bool get_insides)
@@ -97,8 +94,7 @@ CollisionOutline::CollisionOutline(
 	if( file_extension == "out" )
 	{
 		OutlineProviderFile outline_provider(file);
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw ));
-		impl = new_impl;
+		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw );
 	}
 	else
 	{
@@ -108,14 +104,12 @@ CollisionOutline::CollisionOutline(
 		if( pbuf.get_format() == tf_rgba8 )
 		{
 			OutlineProviderBitmap outline_provider(pbuf, alpha_limit, get_insides);
-			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl(outline_provider.get_contours(), outline_provider.get_size(), accuracy));
-			impl = new_impl;
+			*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
 		}
 		else
 		{
 			OutlineProviderBitmap outline_provider(pbuf, alpha_limit, get_insides);
-			std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw));
-			impl = new_impl;
+			*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw );
 		}
 	}
 
@@ -136,7 +130,7 @@ CollisionOutline::CollisionOutline(
 		data = std::shared_ptr<ResourceData_CollisionOutline>(new ResourceData_CollisionOutline(resource));
 		resource.set_data("collisionoutline", data);
 	}
-	impl = data->collision_outline.impl;
+	*this = data->collision_outline;
 }
 
 CollisionOutline::CollisionOutline(
@@ -148,14 +142,12 @@ CollisionOutline::CollisionOutline(
 	if( pbuf.get_format() == tf_rgba8 )
 	{
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy));
-		impl = new_impl;
+		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy );
 	}
 	else
 	{
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
-		std::shared_ptr<CollisionOutline_Impl> new_impl(new CollisionOutline_Impl( outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw));
-		impl = new_impl;
+		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw );
 	}
 	
 	set_rotation_hotspot(origin_center);
@@ -252,35 +244,6 @@ void CollisionOutline::get_collision_info_state(bool &points, bool &normals, boo
 
 /////////////////////////////////////////////////////////////////////////////
 // CollisionOutline Operations:
-
-void CollisionOutline::load(const std::string &fullname)
-{
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	load(filename, vfs.get_root_directory());
-}
-
-void CollisionOutline::load(const std::string &filename, const VirtualDirectory &directory)
-{
-	IODevice file = directory.open_file_read(filename);
-	load(file);
-}
-
-void CollisionOutline::load(IODevice &file)
-{
-	std::shared_ptr<OutlineProviderFile> provider(new OutlineProviderFile(file));
-
-	impl->contours = provider->get_contours();
-	Size size = provider->get_size();
-	impl->width = size.width;
-	impl->height = size.height;
-
-	provider = std::shared_ptr<OutlineProviderFile>();
-
-	impl->calculate_radius();
-	impl->calculate_sub_circles();
-}
 
 CollisionOutline CollisionOutline::clone() const
 {
