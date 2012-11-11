@@ -396,4 +396,41 @@ public:
 	}
 };
 
+class CSSClanBoxAbsoluteOrFixedVisitor : public CSSClanBoxVisitor
+{
+public:
+	void node(GUIComponent_Impl *node)
+	{
+		if (node->css_properties.position.type == CSSBoxPosition::type_absolute || node->css_properties.position.type == CSSBoxPosition::type_fixed)
+		{
+			float containing_width = node->parent->get_width();
+			float containing_height = node->parent->get_height();
+
+			float left = 0.0f;
+			if (node->css_properties.left.type == CSSBoxLeft::type_length)
+				left = node->css_properties.left.length.value;
+			else if (node->css_properties.left.type == CSSBoxLeft::type_percentage)
+				left = node->css_properties.left.percentage * containing_width / 100.0f;
+
+			float right = 0.0f;
+			if (node->css_properties.right.type == CSSBoxRight::type_length)
+				right = node->css_properties.right.length.value;
+			else if (node->css_properties.right.type == CSSBoxRight::type_percentage)
+				right = node->css_properties.right.percentage * containing_width / 100.0f;
+
+			// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
+/*
+			CSSClanBoxInitialUsedValuesVisitor initial_visitor;
+			node->visit_css(&initial_visitor);
+
+			CSSClanBoxLayoutVisitor layout_visitor;
+			node->visit_css(&layout_visitor);
+
+			CSSClanBoxAbsoluteOrFixedVisitor absolute_visitor;
+			node->visit_css(&absolute_visitor);
+*/
+		}
+	}
+};
+
 }
