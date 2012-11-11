@@ -185,10 +185,9 @@ void GUIComponent_Impl::layout_content()
 
 	CSSClanBoxLayoutVisitor layout_visitor;
 	visit_css(&layout_visitor);
-/*
-	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
-		child->impl->layout_absolute_or_fixed();
-*/
+
+	CSSClanBoxAbsoluteOrFixedVisitor absolute_visitor;
+	visit_css(&absolute_visitor);
 }
 
 void GUIComponent_Impl::visit_css(CSSClanBoxVisitor *visitor)
@@ -198,32 +197,6 @@ void GUIComponent_Impl::visit_css(CSSClanBoxVisitor *visitor)
 		child->impl->visit_css(visitor);
 }
 
-/*
-void GUIComponent_Impl::layout_absolute_or_fixed()
-{
-	if (css_properties.position.type == CSSBoxPosition::type_absolute || css_properties.position.type == CSSBoxPosition::type_fixed)
-	{
-		float containing_width = parent->get_width();
-		float containing_height = parent->get_height();
-
-		float left = 0.0f;
-		if (css_properties.left.type == CSSBoxLeft::type_length)
-			left = css_properties.left.length.value;
-		else if (css_properties.left.type == CSSBoxLeft::type_percentage)
-			left = css_properties.left.percentage * containing_width / 100.0f;
-
-		float right = 0.0f;
-		if (css_properties.right.type == CSSBoxRight::type_length)
-			right = css_properties.right.length.value;
-		else if (css_properties.right.type == CSSBoxRight::type_percentage)
-			right = css_properties.right.percentage * containing_width / 100.0f;
-
-		// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
-
-		layout_content();
-	}
-}
-*/
 void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
