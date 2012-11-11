@@ -46,6 +46,7 @@ namespace clan
 
 class GUIManager_Impl;
 class GUILayout;
+class CSSClanBoxVisitor;
 
 class GUIComponent_Impl
 {
@@ -123,14 +124,8 @@ public:
 	void invoke_enablemode_changed();
 
 	void layout_content();
-	void layout_clan_box();
-	void layout_clan_box_horizontal();
-	void layout_clan_box_vertical();
-	void layout_clan_grid();
-	void layout_clan_stacked();
-	void layout_absolute_or_fixed();
-	float get_css_relative_x(float containing_width);
-	float get_css_relative_y(float containing_height);
+
+	void visit_css(CSSClanBoxVisitor *visitor);
 
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);

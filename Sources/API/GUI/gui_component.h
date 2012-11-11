@@ -289,13 +289,6 @@ public:
 	/// Override this function if the component has non-css content.
 	virtual float get_preferred_content_width() const;
 
-	/// \brief Returns the minimum preferred content width
-	///
-	/// Override this function if the component has non-css content that shouldn't
-	/// shrink beyond a certain minimum size (such as the longest single word in
-	/// a word-wrapping label).
-	virtual float get_min_preferred_content_width() const;
-
 	/// \brief Returns the preferred content height for the specified content width
 	///
 	/// Override this function if the component has non-css content.
@@ -581,9 +574,10 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-private:
+public:
 	std::shared_ptr<GUIComponent_Impl> impl;
 
+private:
 	/// \brief Constructs a GUIComponent
 	///
 	/// \param other = GUIComponent
