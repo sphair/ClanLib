@@ -91,11 +91,13 @@ public:
 	void find_preferred_width(GUIComponent_Impl *node)
 	{
 		node->css_used_values.width = node->component->get_preferred_content_width();
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
 	void find_preferred_height(GUIComponent_Impl *node)
 	{
 		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
 	void layout_clan_box_horizontal(GUIComponent_Impl *node)
@@ -108,17 +110,11 @@ public:
 			{
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-				// Start with top-down calculated values
-				CSSClanBoxInitialUsedValues::visit(child_used_values, child->impl->css_properties, node->css_used_values);
-
 				// If the width of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.width_undetermined)
 				{
 					find_preferred_width(child->impl.get());
 				}
-
-				// Make sure width is within the min/max values:
-				CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, node->css_used_values);
 
 				CSSUsedValue used_noncontent_width = 
 					child_used_values.margin.left +
@@ -175,9 +171,6 @@ public:
 				{
 					find_preferred_height(child->impl.get());
 				}
-
-				// Make sure height is within the min/max values:
-				CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, node->css_used_values);
 
 				CSSUsedValue used_noncontent_height = 
 					child_used_values.margin.top +
@@ -257,17 +250,11 @@ public:
 			{
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-				// Start with top-down calculated values
-				CSSClanBoxInitialUsedValues::visit(child_used_values, child->impl->css_properties, node->css_used_values);
-
 				// If the width of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.width_undetermined)
 				{
 					find_preferred_width(child->impl.get());
 				}
-
-				// Make sure width is within the min/max values:
-				CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, node->css_used_values);
 
 				CSSUsedValue used_noncontent_width = 
 					child_used_values.margin.left +
@@ -316,9 +303,6 @@ public:
 				{
 					find_preferred_height(child->impl.get());
 				}
-
-				// Make sure height is within the min/max values:
-				CSSClanBoxApplyMinMaxConstraints::visit(child_used_values, child->impl->css_properties, node->css_used_values);
 
 				// Set up vertical box adjustment math:
 
