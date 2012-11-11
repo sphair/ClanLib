@@ -48,7 +48,7 @@ public:
 	}
 };
 
-class CSSClanBoxLayoutVisitor : public CSSClanBoxVisitor
+class CSSClanBoxDisplayVisitor : public CSSClanBoxVisitor
 {
 public:
 	void node(GUIComponent_Impl *node)
@@ -88,15 +88,64 @@ public:
 		}
 	}
 
+	virtual void layout_clan_box_horizontal(GUIComponent_Impl *node) = 0;
+	virtual void layout_clan_box_vertical(GUIComponent_Impl *node) = 0;
+
+	void layout_clan_grid(GUIComponent_Impl *node)
+	{
+		throw Exception("-clan-grid layout not implemented yet");
+	}
+
+	void layout_clan_stacked(GUIComponent_Impl *node)
+	{
+		throw Exception("-clan-stacked layout not implemented yet");
+	}
+};
+
+class CSSClanBoxPreferredWidthVisitor : public CSSClanBoxDisplayVisitor
+{
+public:
+	void layout_clan_box_horizontal(GUIComponent_Impl *node)
+	{
+	}
+
+	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	{
+	}
+};
+
+class CSSClanBoxPreferredHeightVisitor : public CSSClanBoxDisplayVisitor
+{
+public:
+	void layout_clan_box_horizontal(GUIComponent_Impl *node)
+	{
+	}
+
+	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	{
+	}
+};
+
+class CSSClanBoxLayoutVisitor : public CSSClanBoxDisplayVisitor
+{
+public:
 	void find_preferred_width(GUIComponent_Impl *node)
 	{
 		node->css_used_values.width = node->component->get_preferred_content_width();
+
+		CSSClanBoxPreferredWidthVisitor preferred_visitor;
+		node->visit_css(&preferred_visitor);
+
 		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
 	void find_preferred_height(GUIComponent_Impl *node)
 	{
 		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
+
+		CSSClanBoxPreferredHeightVisitor preferred_visitor;
+		node->visit_css(&preferred_visitor);
+
 		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
@@ -116,39 +165,14 @@ public:
 					find_preferred_width(child->impl.get());
 				}
 
-				CSSUsedValue used_noncontent_width = 
-					child_used_values.margin.left +
-					child_used_values.border.left +
-					child_used_values.padding.left +
-					child_used_values.padding.right +
-					child_used_values.border.right +
-					child_used_values.margin.right;
+				CSSUsedValue used_noncontent_width = get_used_noncontent_width(child_used_values);
 
 				box_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
 				box_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 				box_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-				switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					box_math.used_shrink_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
-					break;
-				}
-
-				switch (child->impl->css_properties.clan_box_width_expand_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					box_math.used_expand_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
-					break;
-				}
+				box_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_shrink_factor));
+				box_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_expand_factor));
 			}
 		}
 
@@ -172,13 +196,7 @@ public:
 					find_preferred_height(child->impl.get());
 				}
 
-				CSSUsedValue used_noncontent_height = 
-					child_used_values.margin.top +
-					child_used_values.border.top +
-					child_used_values.padding.top +
-					child_used_values.padding.bottom +
-					child_used_values.border.bottom +
-					child_used_values.margin.bottom;
+				CSSUsedValue used_noncontent_height = get_used_noncontent_height(child_used_values);
 
 				// Adjust height of box based on the shrink/expand factors
 				CSSClanBoxMath perpendicular_math;
@@ -187,27 +205,8 @@ public:
 				perpendicular_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 				perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-				switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					perpendicular_math.used_shrink_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
-					break;
-				}
-
-				switch (child->impl->css_properties.clan_box_height_expand_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					perpendicular_math.used_expand_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
-					break;
-				}
+				perpendicular_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_shrink_factor));
+				perpendicular_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_expand_factor));
 
 				perpendicular_math.adjust(node->css_used_values.height);
 
@@ -216,10 +215,83 @@ public:
 			}
 		}
 
+		set_horizontal_geometry(node);
+	}
+
+	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	{
+		CSSClanBoxMath box_math;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+				// If the width of the box cannot be determined from CSS, then ask the component:
+				if (child_used_values.width_undetermined)
+				{
+					find_preferred_width(child->impl.get());
+				}
+
+				CSSUsedValue used_noncontent_width = get_used_noncontent_width(child_used_values);
+
+				// Adjust width of box based on the shrink/expand factors
+				CSSClanBoxMath perpendicular_math;
+
+				perpendicular_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
+				perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
+				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_height);
+
+				perpendicular_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_shrink_factor));
+				perpendicular_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_expand_factor));
+
+				perpendicular_math.adjust(node->css_used_values.width);
+
+				// Save the result of the horizontal adjustment
+				child_used_values.width = perpendicular_math.used_lengths[0] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
+
+				// If the height of the box could not be determined from CSS, then ask the component:
+				if (child_used_values.height_undetermined)
+				{
+					find_preferred_height(child->impl.get());
+				}
+
+				// Set up vertical box adjustment math:
+
+				CSSUsedValue used_noncontent_height = get_used_noncontent_height(child_used_values);
+
+				box_math.used_min_lengths.push_back(used_noncontent_height + child_used_values.min_height);
+				box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
+				box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
+
+				box_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_shrink_factor));
+				box_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_expand_factor));
+			}
+		}
+
+		// Adjust the heights of the boxes
+		box_math.adjust(node->css_used_values.height);
+
+		// Save adjusted height values
+		int i = 0;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+				child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
+			}
+		}
+
+		set_vertical_geometry(node);
+	}
+
+	void set_horizontal_geometry(GUIComponent_Impl *node)
+	{
 		// Set the actual geometry
 		CSSUsedValue x = 0.0f;
 		CSSUsedValue y = 0.0f;
-		i = 0;
+		int i = 0;
 		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
@@ -241,125 +313,11 @@ public:
 		}
 	}
 
-	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	void set_vertical_geometry(GUIComponent_Impl *node)
 	{
-		CSSClanBoxMath box_math;
-		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
-		{
-			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
-			{
-				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-
-				// If the width of the box cannot be determined from CSS, then ask the component:
-				if (child_used_values.width_undetermined)
-				{
-					find_preferred_width(child->impl.get());
-				}
-
-				CSSUsedValue used_noncontent_width = 
-					child_used_values.margin.left +
-					child_used_values.border.left +
-					child_used_values.padding.left +
-					child_used_values.padding.right +
-					child_used_values.border.right +
-					child_used_values.margin.right;
-
-				// Adjust width of box based on the shrink/expand factors
-				CSSClanBoxMath perpendicular_math;
-
-				perpendicular_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
-				perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
-				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_height);
-
-				switch (child->impl->css_properties.clan_box_width_shrink_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					perpendicular_math.used_shrink_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					perpendicular_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_width_shrink_factor.number);
-					break;
-				}
-
-				switch (child->impl->css_properties.clan_box_width_expand_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					perpendicular_math.used_expand_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					perpendicular_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_width_expand_factor.number);
-					break;
-				}
-
-				perpendicular_math.adjust(node->css_used_values.width);
-
-				// Save the result of the horizontal adjustment
-				child_used_values.width = perpendicular_math.used_lengths[0] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
-
-				// If the height of the box could not be determined from CSS, then ask the component:
-				if (child_used_values.height_undetermined)
-				{
-					find_preferred_height(child->impl.get());
-				}
-
-				// Set up vertical box adjustment math:
-
-				CSSUsedValue used_noncontent_height = 
-					child_used_values.margin.top +
-					child_used_values.border.top +
-					child_used_values.padding.top +
-					child_used_values.padding.bottom +
-					child_used_values.border.bottom +
-					child_used_values.margin.bottom;
-
-				box_math.used_min_lengths.push_back(used_noncontent_height + child_used_values.min_height);
-				box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
-				box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
-
-				switch (child->impl->css_properties.clan_box_height_shrink_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					box_math.used_shrink_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					box_math.used_shrink_weights.push_back(child->impl->css_properties.clan_box_height_shrink_factor.number);
-					break;
-				}
-
-				switch (child->impl->css_properties.clan_box_height_expand_factor.type)
-				{
-				default:
-				case CSSBoxClanBoxSizingFactor::type_auto:
-					box_math.used_expand_weights.push_back(0.0f);
-					break;
-				case CSSBoxClanBoxSizingFactor::type_number:
-					box_math.used_expand_weights.push_back(child->impl->css_properties.clan_box_height_expand_factor.number);
-					break;
-				}
-			}
-		}
-
-		// Adjust the heights of the boxes
-		box_math.adjust(node->css_used_values.height);
-
-		// Save adjusted height values
-		int i = 0;
-		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
-		{
-			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
-			{
-				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-				child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
-			}
-		}
-
-		// Set the actual geometry
 		CSSUsedValue x = 0.0f;
 		CSSUsedValue y = 0.0f;
-		i = 0;
+		int i = 0;
 		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
@@ -381,14 +339,26 @@ public:
 		}
 	}
 
-	void layout_clan_grid(GUIComponent_Impl *node)
+	CSSUsedValue get_used_noncontent_width(const CSSClanBoxUsedValues &values)
 	{
-		throw Exception("-clan-grid layout not implemented yet");
+		return values.margin.left + values.border.left + values.padding.left + values.padding.right + values.border.right + values.margin.right;
 	}
 
-	void layout_clan_stacked(GUIComponent_Impl *node)
+	CSSUsedValue get_used_noncontent_height(const CSSClanBoxUsedValues &values)
 	{
-		throw Exception("-clan-stacked layout not implemented yet");
+		return values.margin.top + values.border.top + values.padding.top + values.padding.bottom + values.border.bottom + values.margin.bottom;
+	}
+
+	CSSUsedValue get_factor(const CSSBoxClanBoxSizingFactor &factor)
+	{
+		switch (factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			return 0.0f;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			return factor.number;
+		}
 	}
 
 	float get_css_relative_x(GUIComponent_Impl *node, float containing_width)
