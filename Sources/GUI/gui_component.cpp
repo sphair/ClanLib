@@ -578,11 +578,6 @@ float GUIComponent::get_preferred_content_width() const
 	return 0.0f;
 }
 
-float GUIComponent::get_min_preferred_content_width() const
-{
-	return 0.0f;
-}
-
 float GUIComponent::get_preferred_content_height(float content_width) const
 {
 	return 0.0f;
