@@ -236,6 +236,7 @@ public:
 			}
 		}
 
+		node->css_used_values.height = std::max(node->css_used_values.height, preferred_height);
 		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
