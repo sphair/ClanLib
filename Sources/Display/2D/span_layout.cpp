@@ -47,6 +47,12 @@ void SpanLayout::clear()
 	impl->clear();
 }
 
+template<typename T>
+void SpanLayout::add_component(T *component, int baseline_offset, int id)
+{
+	add_component_helper(new SpanComponentBinder<T>(component), baseline_offset, id);
+}
+
 void SpanLayout::add_text(const std::string &text, const Font &font, const Colorf &color, int id)
 {
 	impl->add_text(text, font, color, id);

@@ -59,61 +59,6 @@ enum SpanAlign
 	span_justify
 };
 
-/// \brief Span component class
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
-class SpanComponent
-{
-public:
-	virtual ~SpanComponent() { }
-
-	/// \brief Get Size
-	///
-	/// \return size
-	virtual Size get_size() const = 0;
-
-	/// \brief Set geometry
-	///
-	/// \param geometry = Rect
-	virtual void set_geometry(const Rect &geometry) = 0;
-};
-
-/// \brief Span Component Binder (templated class)
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
-template<typename T>
-class SpanComponentBinder : public SpanComponent
-{
-public:
-
-	/// \brief Constructs a SpanComponentBinder
-	///
-	/// \param component = T
-	SpanComponentBinder(T *component)
-	: component(component)
-	{
-	}
-
-	/// \brief Get Size
-	///
-	/// \return size
-	Size get_size() const
-	{
-		return component->get_size();
-	}
-
-	/// \brief Set geometry
-	///
-	/// \param geometry = Rect
-	void set_geometry(const Rect &geometry)
-	{
-		component->set_geometry(geometry);
-	}
-
-private:
-	T *component;
-};
-
 /// \brief Span layout class
 ///
 /// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
@@ -172,10 +117,7 @@ public:
 	/// \param component = T
 	/// \param baseline_offset = value
 	/// \param id = value
-	void add_component(T *component, int baseline_offset = 0, int id = -1)
-	{
-		add_component_helper(new SpanComponentBinder<T>(component), baseline_offset, id);
-	}
+	void add_component(T *component, int baseline_offset = 0, int id = -1);
 
 	/// \brief Layout
 	///
