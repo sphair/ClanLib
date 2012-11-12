@@ -157,6 +157,16 @@ imageview
     margin: 0px;
 }
 
+imageview.odd 
+{
+    background-color: #ffffc0;
+}
+
+imageview.error 
+{
+    background: red;
+}
+
 imageview.fixedwidth
 {
     width: 100px;
@@ -172,6 +182,4 @@ imageview.fixedheight
     height: 100px;
 }
 
-.error {
-    background: red;
-}
+

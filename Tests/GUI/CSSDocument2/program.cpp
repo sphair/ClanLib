@@ -76,11 +76,15 @@ int Program::main(const std::vector<std::string> &args)
 
 	ImageView *image_view_fixedwidth = new ImageView(imagecontainer);
 	image_view_fixedwidth->set_image(image);
-	image_view_fixedwidth->set_class("fixedwidth");
+	image_view_fixedwidth->set_class("fixedwidth odd");
 
 	ImageView *image_view_fixedheight = new ImageView(imagecontainer);
 	image_view_fixedheight->set_image(image);
 	image_view_fixedheight->set_class("fixedheight");
+
+	ImageView *image_view_fixedwidth_fixedheight = new ImageView(imagecontainer);
+	image_view_fixedwidth_fixedheight->set_image(image);
+	image_view_fixedwidth_fixedheight->set_class("fixedwidth fixedheight odd");
 
 	ImageView *image_view_fixedwidth_autoheight = new ImageView(imagecontainer);
 	image_view_fixedwidth_autoheight->set_image(image);
@@ -89,7 +93,7 @@ int Program::main(const std::vector<std::string> &args)
 	ImageView *image_view_double = new ImageView(imagecontainer);
 	image_view_double->set_image(image);
 	image_view_double->set_scale(2.0f, 2.0f);
-	image_view_double->set_class("error");
+	image_view_double->set_class("error odd");
 
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);
@@ -98,7 +102,12 @@ int Program::main(const std::vector<std::string> &args)
 	ImageView *image_view_fixedwidth_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_scaletofit->set_image(image);
 	image_view_fixedwidth_scaletofit->set_scale_to_fit();
-	image_view_fixedwidth_scaletofit->set_class("fixedwidth");
+	image_view_fixedwidth_scaletofit->set_class("fixedwidth odd");
+
+	ImageView *image_view_fixedwidth_fixedheight_scaletofit = new ImageView(imagecontainer);
+	image_view_fixedwidth_fixedheight_scaletofit->set_image(image);
+	image_view_fixedwidth_fixedheight_scaletofit->set_scale_to_fit();
+	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight");
 
 	root->update_layout();
 
