@@ -89,10 +89,15 @@ public:
 	/// \return text
 	std::string get_text() const;
 
-	/// \brief Get Preferred size
+	/// \brief Returns the preferred content width
 	///
-	/// \return preferred_size
-	Size get_preferred_size() const;
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_width() const;
+
+	/// \brief Returns the preferred content height for the specified content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_height(float width) const;
 
 /// \}
 /// \name Operations
