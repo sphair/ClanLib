@@ -99,7 +99,7 @@ public:
 	void set_image(const PixelBuffer &image);
 
 	/// \brief Set scale to fit
-	void set_scale_to_fit();
+	void set_scale_to_fit(bool enable);
 
 	/// \brief Set scale
 	///
