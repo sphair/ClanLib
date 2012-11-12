@@ -143,7 +143,7 @@ imageview
     background-color: #ffff80;
 }
 
-imageview .fixed
+imageview.fixed
 {
     width: 100px;
 }
