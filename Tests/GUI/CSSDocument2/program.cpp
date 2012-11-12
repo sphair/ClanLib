@@ -71,7 +71,6 @@ int Program::main(const std::vector<std::string> &args)
 	// Preferred size
 	ImageView *image_view = new ImageView(root);
 	image_view->set_image(image);
-	image_view->set_class("normal");
 
 	// Larger fixed width than preferred content
 	ImageView *image_view2 = new ImageView(root);
