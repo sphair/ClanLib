@@ -138,9 +138,18 @@ ribbon-section button:toggled
     background-color: #0000ff;
 }
 
+.imagecontainer
+{
+    -clan-box-direction: horizontal;
+    width: 500px;
+    height: 150px;
+    background: green;
+}
+
 imageview
 {
     background-color: #ffff80;
+    margin: 2px;
 }
 
 imageview.fixed
