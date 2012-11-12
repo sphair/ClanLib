@@ -107,6 +107,16 @@ public:
 	/// \param y = value
 	void set_scale(float x, float y);
 
+	/// \brief Returns the preferred content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_width() const;
+
+	/// \brief Returns the preferred content height for the specified content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_height(float width) const;
+
 /// \}
 /// \name Implementation
 /// \{
