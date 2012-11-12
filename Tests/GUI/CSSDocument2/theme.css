@@ -152,7 +152,17 @@ imageview
     margin: 2px;
 }
 
-imageview.fixed
+imageview.fixedwidth
 {
     width: 100px;
+}
+
+imageview.autoheight
+{
+    height: auto;
+}
+
+imageview.fixedheight 
+{
+    height: 100px;
 }

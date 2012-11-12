@@ -71,30 +71,33 @@ int Program::main(const std::vector<std::string> &args)
 	GUIComponent *imagecontainer = new GUIComponent(root);
 	imagecontainer->set_class("imagecontainer");
 
-	// Preferred size
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
 
-	// Larger fixed width than preferred content
-	ImageView *image_view2 = new ImageView(imagecontainer);
-	image_view2->set_image(image);
-	image_view2->set_class("fixed");
-   
-	// 2x scale in preferred size
-	ImageView *image_view3 = new ImageView(imagecontainer);
-	image_view3->set_image(image);
-	image_view3->set_scale(2.0f, 2.0f);
+	ImageView *image_view_fixedwidth = new ImageView(imagecontainer);
+	image_view_fixedwidth->set_image(image);
+	image_view_fixedwidth->set_class("fixedwidth");
 
-	// Scale to fit in preferred size
-	ImageView *image_view4 = new ImageView(imagecontainer);
-	image_view4->set_image(image);
-	image_view4->set_scale_to_fit();
+	ImageView *image_view_fixedheight = new ImageView(imagecontainer);
+	image_view_fixedheight->set_image(image);
+	image_view_fixedheight->set_class("fixedheight");
 
-	// Scale to fit in larger fixed width than preferred content
-	ImageView *image_view5 = new ImageView(imagecontainer);
-	image_view5->set_image(image);
-	image_view5->set_scale_to_fit();
-	image_view5->set_class("fixed");
+	ImageView *image_view_fixedwidth_autoheight = new ImageView(imagecontainer);
+	image_view_fixedwidth_autoheight->set_image(image);
+	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight");
+
+	ImageView *image_view_double = new ImageView(imagecontainer);
+	image_view_double->set_image(image);
+	image_view_double->set_scale(2.0f, 2.0f);
+
+	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
+	image_view_scaletofit->set_image(image);
+	image_view_scaletofit->set_scale_to_fit();
+
+	ImageView *image_view_fixedwidth_scaletofit = new ImageView(imagecontainer);
+	image_view_fixedwidth_scaletofit->set_image(image);
+	image_view_fixedwidth_scaletofit->set_scale_to_fit();
+	image_view_fixedwidth_scaletofit->set_class("fixedwidth");
 
 	root->update_layout();
 
