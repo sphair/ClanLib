@@ -35,6 +35,7 @@
 #pragma once
 
 #include "../api_display.h"
+#include <memory>
 
 namespace clan
 {
