@@ -44,6 +44,10 @@
 #include "API/Display/2D/canvas.h"
 #include "../gui_css_strings.h"
 
+// ***********************
+// ******* FIX FIXME's !!!
+// ***********************
+
 #ifdef INCLUDE_COMPONENTS
 
 namespace clan
@@ -80,8 +84,7 @@ Label::Label(GUIComponent *parent)
 	impl->label = this;
 	func_process_message().set(impl.get(), &Label_Impl::on_process_message);
 	func_render().set(impl.get(), &Label_Impl::on_render);
-	func_style_changed().set(impl.get(), &Label_Impl::on_style_changed);
-	// todo: disabled
+	//FIXME: func_style_changed().set(impl.get(), &Label_Impl::on_style_changed);
 
 	impl->create_parts();
 }
@@ -121,8 +124,10 @@ Size Label::get_preferred_size() const
 void Label::set_text(const std::string &text)
 {
 	impl->span = SpanLayout();
-	GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
-	Colorf text_color = impl->part_component.get_property(prop_text_color);
+	//FIXME: GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
+	//FIXME: Colorf text_color = impl->part_component.get_property(prop_text_color);
+	Colorf text_color = Colorf::blueviolet;
+
 	Font font = impl->part_component.get_font();
 	impl->span.add_text(text, font, text_color);
 	request_repaint();
@@ -152,18 +157,18 @@ void Label::set_alignment(Label::Alignment alignment)
 
 void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
-			part_component.set_state(CssStr::hot, true);
+			//FIXME: part_component.set_state(CssStr::hot, true);
 			label->request_repaint();
 		}
 		else
 		{
-			part_component.set_state(CssStr::hot, false);
-			part_component.set_state(CssStr::pressed, false);
+			//FIXME: part_component.set_state(CssStr::hot, false);
+			//FIXME: part_component.set_state(CssStr::pressed, false);
 			label->request_repaint();
 		}
 	}
@@ -192,9 +197,9 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void Label_Impl::create_parts()
 {
 	part_component = GUIThemePart(label);
-	part_component.set_state(CssStr::hot, false);
-	part_component.set_state(CssStr::normal, true);
-	part_component.set_state(CssStr::disabled, false);
+	//FIXME: part_component.set_state(CssStr::hot, false);
+	//FIXME: part_component.set_state(CssStr::normal, true);
+	//FIXME: part_component.set_state(CssStr::disabled, false);
 }
 
 void Label_Impl::on_style_changed()
