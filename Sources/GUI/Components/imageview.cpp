@@ -168,13 +168,27 @@ float ImageView::get_preferred_content_height(float width)
 {
 	if (!impl->sprite.is_null())
 	{
-		float scale = width / impl->sprite.get_width();
-		return scale * impl->sprite.get_height();
+		if (impl->scale_to_fit)
+		{
+			float scale = width / impl->sprite.get_width();
+			return scale * impl->sprite.get_height();
+		}
+		else
+		{
+			return impl->sprite.get_height();
+		}
 	}
 	else if (!impl->image.is_null())
 	{
-		float scale = width / impl->image.get_width();
-		return scale * impl->image.get_height();
+		if (impl->scale_to_fit)
+		{
+			float scale = width / impl->image.get_width();
+			return scale * impl->image.get_height();
+		}
+		else
+		{
+			return impl->image.get_height();
+		}
 	}
 	else
 	{
