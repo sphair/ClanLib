@@ -141,5 +141,9 @@ ribbon-section button:toggled
 imageview
 {
     background-color: #ffff80;
-    width: 200px;
+}
+
+imageview .fixed
+{
+    width: 100px;
 }
