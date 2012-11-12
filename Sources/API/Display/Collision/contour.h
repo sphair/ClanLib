@@ -36,6 +36,7 @@
 
 #include "../api_display.h"
 #include <memory>
+#include <vector>
 
 namespace clan
 {
