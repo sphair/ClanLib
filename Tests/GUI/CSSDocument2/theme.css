@@ -53,9 +53,9 @@ ribbon-menu-button:hot
 
 ribbon-tab
 {
-    width: 56px;
     height: 23px;
     min-width: 50px;
+    -clan-box-direction: horizontal;
 }
 
 ribbon-tab:selected
@@ -138,7 +138,7 @@ ribbon-section button:toggled
     background-color: #0000ff;
 }
 
-label
+label.imagelabel
 {
     background: #ffff80;
     -clan-box-width-shrink-factor: 1;

@@ -40,6 +40,9 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon_page_tab_0->set_tag_name("ribbon-tab");
 	ribbon_page_tab_0->set_pseudo_class("selected", true);
 
+	Label *ribbon_page_tab_0_label = new Label(ribbon_page_tab_0);
+	ribbon_page_tab_0_label->set_text("Home");
+
 	GUIComponent *ribbon_page_area = new GUIComponent(ribbon);
 	ribbon_page_area->set_tag_name("ribbon-page");
 
@@ -81,7 +84,8 @@ void Program::create_imageview_test(GUIComponent *root)
 
 	Label *label1 = new Label(imagecontainer);
 	//label1->set_text("Once upon a time there was a label in a test program that had to include a lot of text so we could see it word wrap!\nBut we need a font.draw_text(Rect target_rect, alignment) for it to work correctly");
-	label1->set_text("Normal labels should probably use elipsis text clipping");
+	label1->set_text("Labels should probably use elipsis text clipping");
+	label1->set_class("imagelabel");
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
