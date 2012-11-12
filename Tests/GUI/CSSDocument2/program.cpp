@@ -67,6 +67,9 @@ int Program::main(const std::vector<std::string> &args)
 	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
 	image_view->set_image(image);
 
+   
+	Label *label1 = new Label(root);
+	label1->set_text("Hello World");
 
 	root->update_layout();
 
