@@ -73,22 +73,27 @@ int Program::main(const std::vector<std::string> &args)
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
+	image_view->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedwidth = new ImageView(imagecontainer);
 	image_view_fixedwidth->set_image(image);
 	image_view_fixedwidth->set_class("fixedwidth odd");
+	image_view_fixedwidth->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedheight = new ImageView(imagecontainer);
 	image_view_fixedheight->set_image(image);
 	image_view_fixedheight->set_class("fixedheight");
+	image_view_fixedheight->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedwidth_fixedheight = new ImageView(imagecontainer);
 	image_view_fixedwidth_fixedheight->set_image(image);
 	image_view_fixedwidth_fixedheight->set_class("fixedwidth fixedheight odd");
+	image_view_fixedwidth_fixedheight->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedwidth_autoheight = new ImageView(imagecontainer);
 	image_view_fixedwidth_autoheight->set_image(image);
-	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight error");
+	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight");
+	image_view_fixedwidth_autoheight->set_scale_to_fit(false);
 
 	ImageView *image_view_double = new ImageView(imagecontainer);
 	image_view_double->set_image(image);
@@ -97,16 +102,16 @@ int Program::main(const std::vector<std::string> &args)
 
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);
-	image_view_scaletofit->set_scale_to_fit();
+	image_view_scaletofit->set_scale_to_fit(true);
 
 	ImageView *image_view_fixedwidth_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_scaletofit->set_image(image);
-	image_view_fixedwidth_scaletofit->set_scale_to_fit();
+	image_view_fixedwidth_scaletofit->set_scale_to_fit(true);
 	image_view_fixedwidth_scaletofit->set_class("fixedwidth odd");
 
 	ImageView *image_view_fixedwidth_fixedheight_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_fixedheight_scaletofit->set_image(image);
-	image_view_fixedwidth_fixedheight_scaletofit->set_scale_to_fit();
+	image_view_fixedwidth_fixedheight_scaletofit->set_scale_to_fit(true);
 	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight");
 
 	root->update_layout();
