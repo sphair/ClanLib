@@ -110,11 +110,6 @@ public:
 	/// \param text = String Ref
 	void set_text(const std::string &text);
 
-	/// \brief Set span
-	///
-	/// \param layout = Span Layout
-	void set_span(const SpanLayout &layout);
-
 	/// \brief Set alignment
 	///
 	/// \param alignment = Alignment
