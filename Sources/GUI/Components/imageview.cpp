@@ -49,7 +49,7 @@ namespace clan
 class ImageView_Impl
 {
 public:
-	ImageView_Impl() : scale_to_fit(false), scale_x(1.0), scale_y(1.0)
+	ImageView_Impl() : scale_to_fit(true), scale_x(1.0), scale_y(1.0)
 	{
 	}
 
@@ -134,13 +134,13 @@ void ImageView::set_image(const PixelBuffer &image)
 	request_repaint();
 }
 
-void ImageView::set_scale_to_fit()
+void ImageView::set_scale_to_fit(bool enable)
 {
-	impl->scale_to_fit = true;
+	impl->scale_to_fit = enable;
 	request_repaint();
 }
 
-void ImageView::set_scale( float x, float y )
+void ImageView::set_scale(float x, float y)
 {
 	impl->scale_x = x;
 	impl->scale_y = y;
