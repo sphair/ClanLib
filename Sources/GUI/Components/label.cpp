@@ -48,8 +48,6 @@
 // ******* FIX FIXME's !!!
 // ***********************
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -70,7 +68,7 @@ public:
 
 	Label *label;
 	SpanLayout span;
-	GUIThemePart part_component;
+	//FIXME: GUIThemePart part_component;
 	Label::Alignment alignment;
 };
 
@@ -115,7 +113,8 @@ std::string Label::get_text() const
 
 Size Label::get_preferred_size() const
 {
-	return impl->part_component.get_preferred_size();
+	//FIXME: return impl->part_component.get_preferred_size();
+	return Size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -126,10 +125,8 @@ void Label::set_text(const std::string &text)
 	impl->span = SpanLayout();
 	//FIXME: GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
 	//FIXME: Colorf text_color = impl->part_component.get_property(prop_text_color);
-	Colorf text_color = Colorf::blueviolet;
-
-	Font font = impl->part_component.get_font();
-	impl->span.add_text(text, font, text_color);
+	//FIXME: Font font = impl->part_component.get_font();
+	//FIXME: impl->span.add_text(text, font, text_color);
 	request_repaint();
 }
 
@@ -177,8 +174,8 @@ void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = label->get_geometry();
-	part_component.render_box(canvas, rect.get_size(), update_rect);
-	Rect content_rect = part_component.get_content_box(rect.get_size());
+	//FIXME: part_component.render_box(canvas, rect.get_size(), update_rect);
+	//FIXME: Rect content_rect = part_component.get_content_box(rect.get_size());
 	switch (alignment)
 	{
 	case Label::align_left: span.set_align(span_left); break;
@@ -188,15 +185,15 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	default: break;
 	}
 
-	span.layout(canvas, content_rect.get_width());
-	span.set_position(Point(content_rect.left, content_rect.top));
+	//FIXME: span.layout(canvas, content_rect.get_width());
+	//FIXME: span.set_position(Point(content_rect.left, content_rect.top));
 	span.draw_layout(canvas);
 	span.set_component_geometry();
 }
 
 void Label_Impl::create_parts()
 {
-	part_component = GUIThemePart(label);
+	//FIXME: part_component = GUIThemePart(label);
 	//FIXME: part_component.set_state(CssStr::hot, false);
 	//FIXME: part_component.set_state(CssStr::normal, true);
 	//FIXME: part_component.set_state(CssStr::disabled, false);
@@ -208,5 +205,3 @@ void Label_Impl::on_style_changed()
 }
 
 }
-
-#endif
