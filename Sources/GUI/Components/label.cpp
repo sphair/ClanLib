@@ -65,7 +65,7 @@ public:
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	Label *label;
-	SpanLayout span;
+	std::string text;
 	Label::Alignment alignment;
 
 	Font font;	//FIXME: This shouldn't be here
@@ -107,20 +107,19 @@ Label *Label::get_named_item(GUIComponent *reference_component, const std::strin
 
 std::string Label::get_text() const
 {
-	return impl->span.get_combined_text();
+	return impl->text;
 }
 
 float Label::get_preferred_content_width()
 {
 	Canvas canvas = get_canvas();
-	return impl->span.find_preferred_size(canvas).width;
+	return impl->font.get_text_size(canvas, impl->text).width;
 }
 
 float Label::get_preferred_content_height(float width)
 {
 	Canvas canvas = get_canvas();
-	impl->span.layout(canvas, width);
-	return impl->span.get_size().height;
+	return impl->font.get_text_size(canvas, impl->text).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -128,19 +127,7 @@ float Label::get_preferred_content_height(float width)
 
 void Label::set_text(const std::string &text)
 {
-	impl->span = SpanLayout();
-	//FIXME: GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
-	//FIXME: Colorf text_color = impl->part_component.get_property(prop_text_color);
-	Colorf text_color = Colorf::aquamarine;
-
-	//FIXME: Font font = impl->part_component.get_font();
-	impl->span.add_text(text, impl->font, text_color);
-	request_repaint();
-}
-
-void Label::set_span(const SpanLayout &layout)
-{
-	impl->span = layout;
+	impl->text = text;
 	request_repaint();
 }
 
@@ -181,21 +168,23 @@ void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = label->get_geometry();
+	//Rect rect = label->get_geometry();
 	Rect content_rect = label->get_content_box();
-	switch (alignment)
-	{
-	case Label::align_left: span.set_align(span_left); break;
-	case Label::align_center: span.set_align(span_center); break;
-	case Label::align_right: span.set_align(span_right); break;
-	case Label::align_justify: span.set_align(span_justify); break;
-	default: break;
-	}
+	//switch (alignment)
+	//{
+	//case Label::align_left: span.set_align(span_left); break;
+	//case Label::align_center: span.set_align(span_center); break;
+	//case Label::align_right: span.set_align(span_right); break;
+	//case Label::align_justify: span.set_align(span_justify); break;
+	//default: break;
+	//}
 
-	span.layout(canvas, content_rect.get_width());
-	span.set_position(Point(content_rect.left, content_rect.top));
-	span.draw_layout(canvas);
-	span.set_component_geometry();
+	font.draw_text(canvas, 0, 0, text);
+
+	//span.layout(canvas, content_rect.get_width());
+	//span.set_position(Point(content_rect.left, content_rect.top));
+	//span.draw_layout(canvas);
+	//span.set_component_geometry();
 }
 
 }
