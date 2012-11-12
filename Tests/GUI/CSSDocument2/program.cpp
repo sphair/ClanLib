@@ -69,7 +69,7 @@ int Program::main(const std::vector<std::string> &args)
 	imagecontainer->set_class("imagecontainer");
 
 	Label *label1 = new Label(imagecontainer);
-	label1->set_text("Hello World");
+	label1->set_text("Once upon a time there was a label in a test program that had to include a lot of text so we could see it word wrap!");
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
