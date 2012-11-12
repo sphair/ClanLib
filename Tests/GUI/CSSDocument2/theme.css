@@ -154,7 +154,7 @@ label
 imageview
 {
     background-color: #ffff80;
-    margin: 2px;
+    margin: 0px;
 }
 
 imageview.fixedwidth
