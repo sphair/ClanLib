@@ -159,13 +159,13 @@ void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	{
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
-			//FIXME: part_component.set_state(CssStr::hot, true);
+			//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
 			label->request_repaint();
 		}
 		else
 		{
-			//FIXME: part_component.set_state(CssStr::hot, false);
-			//FIXME: part_component.set_state(CssStr::pressed, false);
+			//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
+			//FIXME: part_component.set_pseudo_class(CssStr::pressed, false);
 			label->request_repaint();
 		}
 	}
@@ -194,9 +194,9 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void Label_Impl::create_parts()
 {
 	//FIXME: part_component = GUIThemePart(label);
-	//FIXME: part_component.set_state(CssStr::hot, false);
-	//FIXME: part_component.set_state(CssStr::normal, true);
-	//FIXME: part_component.set_state(CssStr::disabled, false);
+	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, true);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, false);
 }
 
 void Label_Impl::on_style_changed()

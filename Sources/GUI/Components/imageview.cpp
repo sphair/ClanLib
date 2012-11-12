@@ -208,7 +208,7 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			//FIXME: pos.y -= sprite.get_height()/2;
 
 			//FIXME: image_view->push_cliprect(canvas, content);
-			//FIXME: sprite.draw(canvas, (float)pos.x, (float)pos.y);
+			//FIXME: image.draw(canvas, (float)pos.x, (float)pos.y);
 			//FIXME: image_view->pop_cliprect(canvas);
 		}
 	}
