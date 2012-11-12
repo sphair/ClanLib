@@ -339,6 +339,9 @@ public:
 	/// \brief Gets the css element for this component
 	CSSLayoutElement get_css_element();
 
+	/// \brief Gets the font
+	Font get_font();
+
 /// \}
 /// \name Events
 /// \{
