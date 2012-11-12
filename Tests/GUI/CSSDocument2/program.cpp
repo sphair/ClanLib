@@ -84,11 +84,12 @@ int Program::main(const std::vector<std::string> &args)
 
 	ImageView *image_view_fixedwidth_autoheight = new ImageView(imagecontainer);
 	image_view_fixedwidth_autoheight->set_image(image);
-	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight");
+	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight error");
 
 	ImageView *image_view_double = new ImageView(imagecontainer);
 	image_view_double->set_image(image);
 	image_view_double->set_scale(2.0f, 2.0f);
+	image_view_double->set_class("error");
 
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);

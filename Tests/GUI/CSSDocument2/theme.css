@@ -171,3 +171,7 @@ imageview.fixedheight
 {
     height: 100px;
 }
+
+.error {
+    background: red;
+}
