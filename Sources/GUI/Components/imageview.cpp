@@ -148,7 +148,7 @@ void ImageView::set_scale( float x, float y )
 	request_repaint();
 }
 
-float ImageView::get_preferred_content_width() const
+float ImageView::get_preferred_content_width()
 {
 	if (!impl->sprite.is_null())
 	{
@@ -164,7 +164,7 @@ float ImageView::get_preferred_content_width() const
 	}
 }
 
-float ImageView::get_preferred_content_height(float width) const
+float ImageView::get_preferred_content_height(float width)
 {
 	if (!impl->sprite.is_null())
 	{
