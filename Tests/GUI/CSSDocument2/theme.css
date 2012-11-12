@@ -150,7 +150,8 @@ label
 .imagecontainer
 {
     -clan-box-direction: horizontal;
-    width: 100%;
+    -clan-box-width-shrink-factor: 1;
+    -clan-box-width-expand-factor: 0;
     height: 220px;
     background: green;
 }
