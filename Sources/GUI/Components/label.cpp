@@ -40,6 +40,7 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"
@@ -166,11 +167,10 @@ void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	//Rect rect = label->get_geometry();
-	//Rect content_rect = label->get_content_box();
+	Rectf content_box = label->get_content_box();
 	
 	//FIXME: Use alignment
-	//switch (alignment)
+	//switch (label->get_css_properties().text_alignment)
 	//{
 	//case Label::align_left: span.set_align(span_left); break;
 	//case Label::align_center: span.set_align(span_center); break;
@@ -179,7 +179,8 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	//default: break;
 	//}
 
-	label->get_font().draw_text(canvas, 0, 0, text);
+	FontMetrics metrics = label->get_font().get_font_metrics();
+	label->get_font().draw_text_ellipsis(canvas, 0.0f, metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
 }
 
 }
