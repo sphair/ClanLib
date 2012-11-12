@@ -191,26 +191,23 @@ void ImageView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = image_view->get_content_box();
-	//FIXME: part_component.render_box(canvas, rect, update_rect);
-
-	//FIXME: Rect content = part_component.get_content_box(rect);
+	Rect content = image_view->get_content_box();
 	if (!sprite.is_null())
 	{
 		if (scale_to_fit)
 		{
-			//FIXME: sprite.draw(canvas, content);
+			sprite.draw(canvas, content);
 		}
 		else
 		{
 			sprite.set_scale(scale_x, scale_y);
-			//FIXME: Point pos = content.get_center();
-			//FIXME: pos.x -= sprite.get_width()/2;
-			//FIXME: pos.y -= sprite.get_height()/2;
+			Point pos = content.get_center();
+			pos.x -= sprite.get_width()/2;
+			pos.y -= sprite.get_height()/2;
 
-			//FIXME: image_view->push_cliprect(canvas, content);
-			//FIXME: sprite.draw(canvas, (float)pos.x, (float)pos.y);
-			//FIXME: image_view->pop_cliprect(canvas);
+			image_view->push_cliprect(canvas, content);
+			sprite.draw(canvas, (float)pos.x, (float)pos.y);
+			image_view->pop_cliprect(canvas);
 		}
 	}
 
@@ -218,18 +215,18 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		if (scale_to_fit)
 		{
-			//FIXME: image.draw(canvas, content);
+			image.draw(canvas, content);
 		}
 		else
 		{
 			image.set_scale(scale_x, scale_y);
-			//FIXME: Point pos = content.get_center();
-			//FIXME: pos.x -= image.get_width()/2;
-			//FIXME: pos.y -= image.get_height()/2;
+			Point pos = content.get_center();
+			pos.x -= image.get_width()/2;
+			pos.y -= image.get_height()/2;
 
-			//FIXME: image_view->push_cliprect(canvas, content);
-			//FIXME: image.draw(canvas, (float)pos.x, (float)pos.y);
-			//FIXME: image_view->pop_cliprect(canvas);
+			image_view->push_cliprect(canvas, content);
+			image.draw(canvas, (float)pos.x, (float)pos.y);
+			image_view->pop_cliprect(canvas);
 		}
 	}
 
