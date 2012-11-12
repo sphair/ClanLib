@@ -141,6 +141,22 @@ NetGameEventValue NetGameNetworkData::decode_value(unsigned char type, const uns
 			}
 			return value;
 		}
+	case 9: // uchar
+		{
+			if (pos + 1 > length)
+				throw Exception("Invalid network data");
+			unsigned char v = *reinterpret_cast<const unsigned char*>(d + pos);
+			pos += 1;
+			return NetGameEventValue(v);
+		}
+	case 10: // char
+		{
+			if (pos + 1 > length)
+				throw Exception("Invalid network data");
+			char v = *reinterpret_cast<const char*>(d + pos);
+			pos += 1;
+			return NetGameEventValue(v);
+		}
 	default:
 		throw Exception("Invalid network data");
 	}
@@ -211,6 +227,14 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 			l++;
 			return l;
 		}
+	case NetGameEventValue::ucharacter:
+		*d = 9;
+		*reinterpret_cast<unsigned char*>(d + 1) = value.to_ucharacter();
+		return 2;
+	case NetGameEventValue::character:
+		*d = 10;
+		*reinterpret_cast<char*>(d + 1) = value.to_character();
+		return 2;
 	default:
 		throw Exception("Unknown game event value type");
 	}
@@ -223,6 +247,9 @@ unsigned int NetGameNetworkData::get_encoded_length(const NetGameEventValue &val
 	case NetGameEventValue::null:
 	case NetGameEventValue::boolean:
 		return 1;
+	case NetGameEventValue::character:
+	case NetGameEventValue::ucharacter:
+		return 2;
 	case NetGameEventValue::uinteger:
 	case NetGameEventValue::integer:
 	case NetGameEventValue::number:

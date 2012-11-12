@@ -123,6 +123,10 @@ std::string NetGameEvent::to_string(const NetGameEventValue &v) const
 		return StringHelp::int_to_text(v.to_integer());
 	case NetGameEventValue::uinteger:
 		return StringHelp::uint_to_text(v.to_uinteger());
+	case NetGameEventValue::character:
+		return StringHelp::int_to_text(static_cast<int>(v.to_character()));
+	case NetGameEventValue::ucharacter:
+		return StringHelp::uint_to_text(static_cast<unsigned int>(v.to_ucharacter()));
 	case NetGameEventValue::string:
 		return "\"" + v.to_string() + "\"";
 	case NetGameEventValue::boolean:
