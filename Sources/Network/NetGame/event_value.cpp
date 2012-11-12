@@ -48,6 +48,16 @@ NetGameEventValue::NetGameEventValue(unsigned int value)
 {
 }
 
+NetGameEventValue::NetGameEventValue(char value)
+: type(character), value_char(value)
+{
+}
+
+NetGameEventValue::NetGameEventValue(unsigned char value)
+: type(ucharacter), value_uchar(value)
+{
+}
+
 NetGameEventValue::NetGameEventValue(float value)
 : type(number), value_float(value)
 {
@@ -97,6 +107,16 @@ bool NetGameEventValue::is_uinteger() const
 bool NetGameEventValue::is_integer() const
 {
 	return type == integer;
+}
+
+bool NetGameEventValue::is_ucharacter() const
+{
+	return type == ucharacter;
+}
+
+bool NetGameEventValue::is_character() const
+{
+	return type == character;
 }
 
 bool NetGameEventValue::is_number() const
@@ -163,6 +183,22 @@ int NetGameEventValue::to_integer() const
 		return value_int;
 	else
 		throw Exception("NetGameEventValue is not an integer");
+}
+
+unsigned int NetGameEventValue::to_ucharacter() const
+{
+	if (is_ucharacter())
+		return value_uchar;
+	else
+		throw Exception("NetGameEventValue is not an unsigned character");
+}
+
+int NetGameEventValue::to_character() const
+{
+	if (is_character())
+		return value_char;
+	else
+		throw Exception("NetGameEventValue is not a character");
 }
 
 float NetGameEventValue::to_number() const
