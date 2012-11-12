@@ -24,6 +24,9 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Kenneth Gangstoe
+**    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanGUI_Components clanGUI Components
@@ -49,7 +52,6 @@ class CL_API_GUI ImageView : public GUIComponent
 /// \name Construction
 /// \{
 public:
-
 	/// \brief Constructs a ImageView
 	///
 	/// \param parent = GUIComponent
@@ -82,7 +84,6 @@ public:
 /// \name Operations
 /// \{
 public:
-
 	/// \brief Set sprite
 	///
 	/// \param image = Sprite
