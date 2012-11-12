@@ -42,6 +42,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
+#include "API/CSSLayout/css_box_properties.h"
 #include "../gui_css_strings.h"
 
 // ***********************
@@ -68,8 +69,6 @@ public:
 	std::string text;
 	Label::Alignment alignment;
 
-	Font font;	//FIXME: This shouldn't be here
-
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -82,8 +81,6 @@ Label::Label(GUIComponent *parent)
 	impl->label = this;
 	func_process_message().set(impl.get(), &Label_Impl::on_process_message);
 	func_render().set(impl.get(), &Label_Impl::on_render);
-
-	impl->font = Font(get_canvas(), "tahoma", 32);	//FIXME:  This shouldn't be here
 }
 
 Label::~Label()
@@ -113,13 +110,14 @@ std::string Label::get_text() const
 float Label::get_preferred_content_width()
 {
 	Canvas canvas = get_canvas();
-	return impl->font.get_text_size(canvas, impl->text).width;
+
+	return get_font().get_text_size(canvas, impl->text).width;
 }
 
 float Label::get_preferred_content_height(float width)
 {
 	Canvas canvas = get_canvas();
-	return impl->font.get_text_size(canvas, impl->text).height;
+	return get_font().get_text_size(canvas, impl->text).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -169,7 +167,9 @@ void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	//Rect rect = label->get_geometry();
-	Rect content_rect = label->get_content_box();
+	//Rect content_rect = label->get_content_box();
+	
+	//FIXME: Use alignment
 	//switch (alignment)
 	//{
 	//case Label::align_left: span.set_align(span_left); break;
@@ -179,12 +179,7 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	//default: break;
 	//}
 
-	font.draw_text(canvas, 0, 0, text);
-
-	//span.layout(canvas, content_rect.get_width());
-	//span.set_position(Point(content_rect.left, content_rect.top));
-	//span.draw_layout(canvas);
-	//span.set_component_geometry();
+	label->get_font().draw_text(canvas, 0, 0, text);
 }
 
 }

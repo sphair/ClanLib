@@ -727,6 +727,83 @@ bool GUIComponent::is_double_click_enabled() const
 	return impl->double_click_enabled;
 }
 
+Font GUIComponent::get_font()
+{
+	const CSSBoxProperties &properties = get_css_properties();
+
+	int font_size = used_to_actual(properties.font_size.length.value);
+	std::string font_name;
+	for (size_t i = 0; i < properties.font_family.names.size(); i++)
+	{
+		bool matched = false;
+		std::string search_name;
+		switch (properties.font_family.names[i].type)
+		{
+		case CSSBoxFontFamilyName::type_family_name:
+			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
+			//FIXME: See CSSResourceCache, creating font_families list
+			//if (font_families.find(search_name) != font_families.end())
+			//{
+			//	font_name = properties.font_family.names[i].name;
+			//	matched = true;
+			//}
+			break;
+		default:
+		case CSSBoxFontFamilyName::type_serif:
+		case CSSBoxFontFamilyName::type_cursive:
+		case CSSBoxFontFamilyName::type_fantasy:
+			font_name = "Times New Roman"; // Ugliest font on the planet.
+			matched = true;
+			break;
+		case CSSBoxFontFamilyName::type_sans_serif:
+			font_name = "Arial";
+			matched = true;
+			break;
+		case CSSBoxFontFamilyName::type_monospace:
+			font_name = "Courier New";
+			matched = true;
+			break;
+		}
+		if (matched)
+			break;
+	}
+	if (font_name.empty())
+		font_name = "Times New Roman";
+
+	int font_weight = 400;
+	switch (properties.font_weight.type)
+	{
+	case CSSBoxFontWeight::type_100: font_weight = 100; break;
+	case CSSBoxFontWeight::type_200: font_weight = 200; break;
+	case CSSBoxFontWeight::type_300: font_weight = 300; break;
+	case CSSBoxFontWeight::type_400: font_weight = 400; break;
+	case CSSBoxFontWeight::type_500: font_weight = 500; break;
+	case CSSBoxFontWeight::type_600: font_weight = 600; break;
+	case CSSBoxFontWeight::type_700: font_weight = 700; break;
+	case CSSBoxFontWeight::type_800: font_weight = 800; break;
+	case CSSBoxFontWeight::type_900: font_weight = 900; break;
+	case CSSBoxFontWeight::type_normal: font_weight = 400; break;
+	case CSSBoxFontWeight::type_bold: font_weight = 700; break;
+	case CSSBoxFontWeight::type_bolder: font_weight = 900; break;
+	case CSSBoxFontWeight::type_lighter: font_weight = 300; break;
+	}
+	bool italic = false;
+	switch (properties.font_style.type)
+	{
+	case CSSBoxFontStyle::type_normal: italic = false; break;
+	case CSSBoxFontStyle::type_italic: italic = true; break;
+	case CSSBoxFontStyle::type_oblique: italic = true; break;
+	}
+
+	FontDescription font_desc;
+	font_desc.set_typeface_name(font_name);
+	font_desc.set_height(-font_size);
+	font_desc.set_weight(font_weight);
+	font_desc.set_italic(italic);
+	return Font(get_canvas(), font_desc);
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Operations:
 
