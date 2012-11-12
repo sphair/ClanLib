@@ -138,6 +138,11 @@ ribbon-section button:toggled
     background-color: #0000ff;
 }
 
+label
+{
+    background: #ffff80;
+}
+
 .imagecontainer
 {
     -clan-box-direction: horizontal;
