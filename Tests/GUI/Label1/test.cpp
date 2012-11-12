@@ -23,10 +23,10 @@ public:
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);
 
-			GUIThemeDefault theme;
-			theme.set_resources(resources);
+			//GUIThemeDefault theme;
+			//theme.set_resources(resources);
 
-			gui.set_theme(theme);
+			//gui.set_theme(theme);
 			gui.set_css_document("theme.css");
 
 			DisplayWindowDescription win_desc;
@@ -38,9 +38,9 @@ public:
    
 			Label label1(&root);
 			label1.set_geometry(Rect(20, 20, 200, 40));
-			label1.set_class_name("yellow");
+			//label1.set_class_name("yellow");
 			label1.set_text("Yellow label ÅÄygj");
-
+/*
 			Label label2(&root);
 			label2.set_geometry(Rect(20, 60, 300, 100));
 
@@ -60,7 +60,7 @@ public:
 
 			label2.set_span(span);
 			label2.set_alignment(Label::align_right);
-
+*/
 			gui.exec();
 		}
 		catch (Exception e)

@@ -63,6 +63,11 @@ int Program::main(const std::vector<std::string> &args)
 	GUIComponent *testHot3 = new GUIComponent(testHot2);
 	testHot3->set_class("test3");
 
+	ImageView *image_view = new ImageView(root);
+	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
+	image_view->set_image(image);
+
+
 	root->update_layout();
 
 	gui.exec();
