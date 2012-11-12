@@ -50,7 +50,9 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
+// ***********************
+// ******* FIX FIXME's !!!
+// ***********************
 
 namespace clan
 {
@@ -71,8 +73,8 @@ public:
 	Callback_v0 func_clicked;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
-	GUIThemePart part;
-	GUIThemePart part_focus;
+	//FIXME: GUIThemePart part;
+	//FIXME: GUIThemePart part_focus;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -145,7 +147,8 @@ std::string PushButton::get_text() const
 
 Size PushButton::get_preferred_size() const
 {
-	return impl->part.get_preferred_size();
+	//FIXME: return impl->part.get_preferred_size();
+	return Size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -287,25 +290,23 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!button->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
 		if (toggle_mode)
 		{
-			if( e.type == InputEvent::pressed &&
-				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) )
+			if( input_msg->input_event.type == InputEvent::pressed &&
+				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
 			{
 				button->set_pseudo_class(CssStr::pressed, true);
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if( e.type == InputEvent::released &&
-				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) )
+			else if( input_msg->input_event.type == InputEvent::released &&
+				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
 			{
 				button->set_pseudo_class(CssStr::pressed, false);
 				button->set_pseudo_class(CssStr::toggled, !button->get_pseudo_class("toggled"));
-				msg.set_consumed();
+				input_msg->consumed = true;
 				
 				if (!func_clicked.is_null())
 					func_clicked.invoke();
@@ -313,67 +314,67 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 		else
 		{
-			if (e.type == InputEvent::pressed && 
-				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter))
+			if (input_msg->input_event.type == InputEvent::pressed && 
+				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter))
 			{
 				button->set_pseudo_class(CssStr::pressed, true);
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if( e.type == InputEvent::released &&
-				(e.id == mouse_left || e.id == keycode_return || e.id == keycode_space || e.id == keycode_numpad_enter) &&
+			else if( input_msg->input_event.type == InputEvent::released &&
+				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) &&
 				button->get_pseudo_class(CssStr::pressed) )
 			{
 				button->set_pseudo_class(CssStr::pressed, false);
-				msg.set_consumed();
+				input_msg->consumed = true;
 				
 				if (!func_clicked.is_null())
 					func_clicked.invoke();
 			}
 		}
-		if (e.type == InputEvent::pressed && (e.id == keycode_left || e.id == keycode_up))
+		if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))
 		{
 			button->focus_previous();
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && (e.id == keycode_right || e.id == keycode_down))
+		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_right || input_msg->input_event.id == keycode_down))
 		{
 			button->focus_next();
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			button->set_pseudo_class(CssStr::hot, true);
-			msg.set_consumed();
+			pointer->consumed = true;
 		}
-		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 		{
 			button->set_pseudo_class(CssStr::hot, false);
 
 			if (!toggle_mode)
 				button->set_pseudo_class(CssStr::pressed, false);
-			msg.set_consumed();
+			pointer->consumed = true;
 		}
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange focus_msg = msg;
-		if (focus_msg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			button->set_pseudo_class(CssStr::focused, true);
 			if (!toggle_mode)
 				update_default_state(true);
-			msg.set_consumed();
+			focus_change_msg->consumed = true;
 		}
 		else 
 		{
 			button->set_pseudo_class(CssStr::focused, false);
 			if (!toggle_mode)
 				update_default_state(false);
-			msg.set_consumed();
+			focus_change_msg->consumed = true;
 		}
 	}
 }
@@ -402,5 +403,3 @@ void PushButton_Impl::update_default_state(bool focus_gained)
 }
 
 }
-
-#endif

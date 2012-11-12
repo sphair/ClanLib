@@ -68,20 +68,30 @@ public:
 	/// If it was not found, an exception is thrown.
 	static ImageView *get_named_item(GUIComponent *reference_component, const std::string &id);
 
+	/// \brief Get Sprite
+	///
+	/// \return sprite
+	Sprite get_sprite() const;
+
 	/// \brief Get Image
 	///
 	/// \return image
-	Sprite get_image() const;
+	Image get_image() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
 
+	/// \brief Set sprite
+	///
+	/// \param image = Sprite
+	void set_sprite(const Sprite &image);
+
 	/// \brief Set image
 	///
 	/// \param image = Sprite
-	void set_image(const Sprite &image);
+	void set_image(const Image &image);
 
 	/// \brief Set image
 	///

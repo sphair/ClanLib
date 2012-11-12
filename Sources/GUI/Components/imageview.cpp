@@ -36,10 +36,13 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/sprite_description.h"
 #include "API/Display/2D/sprite.h"
+#include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
+// ***********************
+// ******* FIX FIXME's !!!
+// ***********************
 
 namespace clan
 {
@@ -62,11 +65,12 @@ public:
 
 	void create_parts();
 
-	ImageView *image;
+	ImageView *image_view;
 
-	GUIThemePart part_component;
+	//FIXME: GUIThemePart part_component;
 
 	Sprite sprite;
+	Image image;
 
 	bool scale_to_fit;
 	float scale_x;
@@ -80,10 +84,10 @@ ImageView::ImageView(GUIComponent *parent)
 : GUIComponent(parent), impl(new ImageView_Impl)
 {
 	set_tag_name(CssStr::ImageView::type_name);
-	impl->image = this;
+	impl->image_view = this;
 	func_process_message().set(impl.get(), &ImageView_Impl::on_process_message);
 	func_render().set(impl.get(), &ImageView_Impl::on_render);
-	func_style_changed().set(impl.get(), &ImageView_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &ImageView_Impl::on_style_changed);
 
 	impl->create_parts();
 }
@@ -107,7 +111,12 @@ ImageView *ImageView::get_named_item(GUIComponent *reference_component, const st
 	return object;
 }
 
-Sprite ImageView::get_image() const
+Image ImageView::get_image() const
+{
+	return impl->image;
+}
+
+Sprite ImageView::get_sprite() const
 {
 	return impl->sprite;
 }
@@ -115,9 +124,15 @@ Sprite ImageView::get_image() const
 /////////////////////////////////////////////////////////////////////////////
 // ImageView Operations:
 
-void ImageView::set_image(const Sprite &image)
+void ImageView::set_sprite(const Sprite &image)
 {
 	impl->sprite = image;
+	request_repaint();
+}
+
+void ImageView::set_image(const Image &image)
+{
+	impl->image = image;
 	request_repaint();
 }
 
@@ -125,13 +140,11 @@ void ImageView::set_image(const PixelBuffer &image)
 {
 	if (image.is_null())
 	{
-		impl->sprite = Sprite();
+		impl->image = Image();
 		return;
 	}
 
-	SpriteDescription sd;
-	sd.add_frame(image);
-	impl->sprite = Sprite(get_canvas(), sd);
+	impl->image = Image(get_canvas(), image, image.get_size());
 	request_repaint();
 }
 
@@ -158,33 +171,53 @@ void ImageView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect(Point(0,0), image->get_geometry().get_size());
-	part_component.render_box(canvas, rect, update_rect);
+	Rect rect(Point(0,0), image_view->get_geometry().get_size());
+	//FIXME: part_component.render_box(canvas, rect, update_rect);
 
-	Rect content = part_component.get_content_box(rect);
+	//FIXME: Rect content = part_component.get_content_box(rect);
 	if (!sprite.is_null())
 	{
 		if (scale_to_fit)
 		{
-			sprite.draw(canvas, content);
+			//FIXME: sprite.draw(canvas, content);
 		}
 		else
 		{
 			sprite.set_scale(scale_x, scale_y);
-			Point pos = content.get_center();
-			pos.x -= sprite.get_width()/2;
-			pos.y -= sprite.get_height()/2;
+			//FIXME: Point pos = content.get_center();
+			//FIXME: pos.x -= sprite.get_width()/2;
+			//FIXME: pos.y -= sprite.get_height()/2;
 
-			image->push_cliprect(canvas, content);
-			sprite.draw(canvas, (float)pos.x, (float)pos.y);
-			image->pop_cliprect(canvas);
+			//FIXME: image_view->push_cliprect(canvas, content);
+			//FIXME: sprite.draw(canvas, (float)pos.x, (float)pos.y);
+			//FIXME: image_view->pop_cliprect(canvas);
 		}
 	}
+
+	if (!image.is_null())
+	{
+		if (scale_to_fit)
+		{
+			//FIXME: image.draw(canvas, content);
+		}
+		else
+		{
+			image.set_scale(scale_x, scale_y);
+			//FIXME: Point pos = content.get_center();
+			//FIXME: pos.x -= sprite.get_width()/2;
+			//FIXME: pos.y -= sprite.get_height()/2;
+
+			//FIXME: image_view->push_cliprect(canvas, content);
+			//FIXME: sprite.draw(canvas, (float)pos.x, (float)pos.y);
+			//FIXME: image_view->pop_cliprect(canvas);
+		}
+	}
+
 }
 
 void ImageView_Impl::create_parts()
 {
-	part_component = GUIThemePart(image);
+	//FIXME: part_component = GUIThemePart(image);
 }
 
 void ImageView_Impl::on_style_changed()
@@ -194,4 +227,3 @@ void ImageView_Impl::on_style_changed()
 
 }
 
-#endif
