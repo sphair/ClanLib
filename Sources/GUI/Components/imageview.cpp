@@ -204,8 +204,8 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			image.set_scale(scale_x, scale_y);
 			//FIXME: Point pos = content.get_center();
-			//FIXME: pos.x -= sprite.get_width()/2;
-			//FIXME: pos.y -= sprite.get_height()/2;
+			//FIXME: pos.x -= image.get_width()/2;
+			//FIXME: pos.y -= image.get_height()/2;
 
 			//FIXME: image_view->push_cliprect(canvas, content);
 			//FIXME: image.draw(canvas, (float)pos.x, (float)pos.y);
