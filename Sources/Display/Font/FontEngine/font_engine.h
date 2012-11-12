@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include <memory>
+
 namespace clan
 {
 
