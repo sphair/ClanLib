@@ -583,12 +583,12 @@ bool GUIComponent::get_clip_children() const
 	return impl->clip_children;
 }
 
-float GUIComponent::get_preferred_content_width() const
+float GUIComponent::get_preferred_content_width()
 {
 	return 0.0f;
 }
 
-float GUIComponent::get_preferred_content_height(float content_width) const
+float GUIComponent::get_preferred_content_height(float content_width)
 {
 	return 0.0f;
 }

@@ -290,12 +290,12 @@ public:
 	/// \brief Returns the preferred content width
 	///
 	/// Override this function if the component has non-css content.
-	virtual float get_preferred_content_width() const;
+	virtual float get_preferred_content_width();
 
 	/// \brief Returns the preferred content height for the specified content width
 	///
 	/// Override this function if the component has non-css content.
-	virtual float get_preferred_content_height(float width) const;
+	virtual float get_preferred_content_height(float width);
 
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	Point window_to_component_coords(const Point &window_point) const;

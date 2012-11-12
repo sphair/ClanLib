@@ -110,16 +110,17 @@ std::string Label::get_text() const
 	return impl->span.get_combined_text();
 }
 
-float Label::get_preferred_content_width() const
+float Label::get_preferred_content_width()
 {
-	//return impl->span.get_size().width;
-	return 100.0f;
+	Canvas canvas = get_canvas();
+	return impl->span.find_preferred_size(canvas).width;
 }
 
-float Label::get_preferred_content_height(float width) const
+float Label::get_preferred_content_height(float width)
 {
-	//return impl->span.get_size().height;
-	return 100.0f;
+	Canvas canvas = get_canvas();
+	impl->span.layout(canvas, width);
+	return impl->span.get_size().height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
