@@ -320,7 +320,7 @@ public:
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
 				// Save the result of the horizontal adjustment
-				child_used_values.width = box_math.used_lengths[i] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
+				child_used_values.width = box_math.used_lengths[i] - get_used_noncontent_width(child_used_values);
 
 				// If the height of the box could not be determined from CSS, then ask the component:
 				if (child_used_values.height_undetermined)
@@ -343,7 +343,7 @@ public:
 				perpendicular_math.adjust(node->css_used_values.height);
 
 				// Save the result of the vertical adjustment
-				child_used_values.height = perpendicular_math.used_lengths[0] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
+				child_used_values.height = perpendicular_math.used_lengths[0] - used_noncontent_height;
 			}
 		}
 
@@ -380,7 +380,7 @@ public:
 				perpendicular_math.adjust(node->css_used_values.width);
 
 				// Save the result of the horizontal adjustment
-				child_used_values.width = perpendicular_math.used_lengths[0] - child_used_values.margin.left - child_used_values.border.left - child_used_values.padding.left - child_used_values.margin.right - child_used_values.border.right - child_used_values.padding.right;
+				child_used_values.width = perpendicular_math.used_lengths[0] - used_noncontent_width;
 
 				// If the height of the box could not be determined from CSS, then ask the component:
 				if (child_used_values.height_undetermined)
@@ -411,7 +411,7 @@ public:
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-				child_used_values.height = box_math.used_lengths[i] - child_used_values.margin.top - child_used_values.border.top - child_used_values.padding.top - child_used_values.margin.bottom - child_used_values.border.bottom - child_used_values.padding.bottom;
+				child_used_values.height = box_math.used_lengths[i] - get_used_noncontent_height(child_used_values);
 			}
 		}
 
@@ -430,17 +430,17 @@ public:
 			{
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-				CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + get_css_relative_x(child->impl.get(), node->css_used_values.width);
-				CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + get_css_relative_y(child->impl.get(), node->css_used_values.height);
+				CSSUsedValue used_offset_x = get_css_relative_x(child->impl.get(), node->css_used_values.width);
+				CSSUsedValue used_offset_y = get_css_relative_y(child->impl.get(), node->css_used_values.height);
 
 				// Used to actual mapping
 				CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
 				CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
-				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
+				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right + 0.5f);
+				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom + 0.5f);
 				child->set_geometry(Rect(x1, y1, x2, y2));
 
-				x += child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + child_used_values.width + child_used_values.padding.right + child_used_values.border.right + child_used_values.margin.right;
+				x += get_used_noncontent_width(child_used_values) + child_used_values.width;
 			}
 		}
 	}
@@ -462,11 +462,11 @@ public:
 				// Used to actual mapping
 				CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
 				CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width - child_used_values.margin.left - child_used_values.margin.right + 0.5f);
-				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height - child_used_values.margin.top - child_used_values.margin.bottom + 0.5f);
+				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right + 0.5f);
+				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom + 0.5f);
 				child->set_geometry(Rect(x1, y1, x2, y2));
 
-				y += child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child_used_values.height + child_used_values.padding.bottom + child_used_values.border.bottom + child_used_values.margin.bottom;
+				y += get_used_noncontent_height(child_used_values) + child_used_values.height;
 			}
 		}
 	}
