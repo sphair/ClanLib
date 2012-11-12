@@ -36,8 +36,6 @@
 #include "API/GUI/Components/groupbox.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -47,7 +45,7 @@ namespace clan
 class GroupBox_Impl
 {
 public:
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	GroupBox *groupbox;
@@ -101,5 +99,3 @@ void GroupBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 }
 
 }
-
-#endif

@@ -367,7 +367,7 @@ Callback_v0 &ListView::func_begin_drag()
 
 void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	{
 		GUIMessage_Input input = msg;
 		InputEvent input_event = input.get_event();
@@ -426,7 +426,7 @@ void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				msg.set_consumed();
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	{
 		GUIMessage_Pointer pointer = msg;
 		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
@@ -434,7 +434,7 @@ void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
 			on_mouse_enter();
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	x std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	{
 		GUIMessage_FocusChange fc = msg;
 		if (fc.get_focus_type() == GUIMessage_FocusChange::gained_focus)
@@ -826,13 +826,13 @@ void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, Inpu
 
 void ListView_Impl::on_mouse_enter()
 {
-	part_component.set_state(CssStr::hot, true);
+	part_component.set_pseudo_class(CssStr::hot, true);
 	listview->request_repaint();
 }
 
 void ListView_Impl::on_mouse_leave()
 {
-	part_component.set_state(CssStr::hot, false);
+	part_component.set_pseudo_class(CssStr::hot, false);
 	listview->request_repaint();
 }
 

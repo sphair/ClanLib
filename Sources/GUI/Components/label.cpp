@@ -46,10 +46,6 @@
 #include "API/CSSLayout/css_box_properties.h"
 #include "../gui_css_strings.h"
 
-// ***********************
-// ******* FIX FIXME's !!!
-// ***********************
-
 namespace clan
 {
 

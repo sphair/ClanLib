@@ -50,10 +50,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-// ***********************
-// ******* FIX FIXME's !!!
-// ***********************
-
 namespace clan
 {
 
@@ -193,7 +189,6 @@ Callback_v0 &PushButton::func_clicked()
 
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Implementation:
-
 /*
 void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
@@ -285,6 +280,7 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 }
 */
+
 void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!button->is_enabled())

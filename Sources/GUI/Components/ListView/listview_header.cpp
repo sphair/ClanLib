@@ -242,7 +242,7 @@ void ListViewHeader::update_geometry(const Rect &parent_content_rect)
 
 void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	{
 		GUIMessage_Input input = msg;
 		InputEvent input_event = input.get_event();
@@ -253,7 +253,7 @@ void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
 			on_mouse_lbutton_up(input, input_event);
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	{
 		GUIMessage_Pointer pointer = msg;
 		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
@@ -271,8 +271,8 @@ void ListViewHeader_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input
 	while (!col.is_null())
 	{
 		bool inside = col.impl->rect.contains(pos);
-		col.impl->part.set_state(CssStr::pressed, inside);
-		col.impl->part.set_state(CssStr::normal, !inside);
+		col.impl->part.set_pseudo_class(CssStr::pressed, inside);
+		col.impl->part.set_pseudo_class(CssStr::normal, !inside);
 		col = col.get_next_sibling();
 	}
 
@@ -285,8 +285,8 @@ void ListViewHeader_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> 
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{
-		col.impl->part.set_state(CssStr::pressed, false);
-		col.impl->part.set_state(CssStr::normal, true);
+		col.impl->part.set_pseudo_class(CssStr::pressed, false);
+		col.impl->part.set_pseudo_class(CssStr::normal, true);
 		col = col.get_next_sibling();
 	}
 
@@ -306,8 +306,8 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input
 		while (!col.is_null())
 		{
 			bool inside = col.impl->rect.contains(pos);
-			col.impl->part.set_state(CssStr::hot, inside);
-			col.impl->part.set_state(CssStr::normal, !inside);
+			col.impl->part.set_pseudo_class(CssStr::hot, inside);
+			col.impl->part.set_pseudo_class(CssStr::normal, !inside);
 			if (inside)
 			{
 				current_rect_set = true;
@@ -327,12 +327,12 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input
 
 void ListViewHeader_Impl::on_mouse_leave()
 {
-	part_component.set_state(CssStr::hot, false);
+	part_component.set_pseudo_class(CssStr::hot, false);
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{
-		col.impl->part.set_state(CssStr::hot, false);
-		col.impl->part.set_state(CssStr::normal, true);
+		col.impl->part.set_pseudo_class(CssStr::hot, false);
+		col.impl->part.set_pseudo_class(CssStr::normal, true);
 		col = col.get_next_sibling();
 	}
 
@@ -341,7 +341,7 @@ void ListViewHeader_Impl::on_mouse_leave()
 
 void ListViewHeader_Impl::on_mouse_enter()
 {
-	part_component.set_state(CssStr::hot, true);
+	part_component.set_pseudo_class(CssStr::hot, true);
 }
 
 void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
@@ -414,7 +414,7 @@ ListViewColumnHeader ListViewHeader_Impl::create_column(const std::string &colum
 {
 	std::shared_ptr<ListViewColumnHeader_Impl> col_impl(new ListViewColumnHeader_Impl());
 	col_impl->part = GUIThemePart(listview_header, "columnheader");
-	col_impl->part.set_state(CssStr::normal, true);
+	col_impl->part.set_pseudo_class(CssStr::normal, true);
 	ListViewColumnHeader new_column = ListViewColumnHeader(col_impl);
 	new_column.set_caption(caption);
 	new_column.set_column_id(column_id);

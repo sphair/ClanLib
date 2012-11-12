@@ -227,15 +227,15 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 		}
 		else
 		{
-			part_item_row.set_state(CssStr::selected, is_selected);
-			part_item_icon.set_state(CssStr::selected, is_selected);
-			part_item_label.set_state(CssStr::selected, is_selected);
+			part_item_row.set_pseudo_class(CssStr::selected, is_selected);
+			part_item_icon.set_pseudo_class(CssStr::selected, is_selected);
+			part_item_label.set_pseudo_class(CssStr::selected, is_selected);
 
-			part_item_row.set_state(CssStr::disabled, item.is_disabled());
-			part_item_icon.set_state(CssStr::disabled, item.is_disabled());
-			part_item_check.set_state(CssStr::disabled, item.is_disabled());
-			part_item_label.set_state(CssStr::disabled, item.is_disabled());
-			part_item_accel_label.set_state(CssStr::disabled, item.is_disabled());
+			part_item_row.set_pseudo_class(CssStr::disabled, item.is_disabled());
+			part_item_icon.set_pseudo_class(CssStr::disabled, item.is_disabled());
+			part_item_check.set_pseudo_class(CssStr::disabled, item.is_disabled());
+			part_item_label.set_pseudo_class(CssStr::disabled, item.is_disabled());
+			part_item_accel_label.set_pseudo_class(CssStr::disabled, item.is_disabled());
 
 			row_height = part_item_row.get_preferred_height();
 
@@ -329,9 +329,9 @@ Size PopupMenuWindow::calc_desired_size()
 		PopupMenuItem item = menu.get_item_at(index);
 		bool is_selected = (index == selected);
 
-		part_item_row.set_state(CssStr::selected, is_selected);
-		part_item_icon.set_state(CssStr::selected, is_selected);
-		part_item_label.set_state(CssStr::selected, is_selected);
+		part_item_row.set_pseudo_class(CssStr::selected, is_selected);
+		part_item_icon.set_pseudo_class(CssStr::selected, is_selected);
+		part_item_label.set_pseudo_class(CssStr::selected, is_selected);
 
 		int row_height = 0;
 		if (item.is_separator())

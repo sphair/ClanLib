@@ -48,8 +48,6 @@
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -97,9 +95,10 @@ public:
 	int minimum_width;
 	Rect opener_rect;
 
-	class NoLoopHack : public GUIMessageData
-	{
-	};
+	//FIXME
+	//class NoLoopHack : public GUIMessageData
+	//{
+	//};
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -285,17 +284,15 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if(!component->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::pressed)
+		if (input_msg->input_event.type == InputEvent::pressed)
 		{
-			if (e.id == mouse_left)
+			if (input_msg->input_event.id == mouse_left)
 			{
-				bool in_rect = Rect(component->get_size()).contains(e.mouse_pos);
-				bool in_opener_rect = opener_rect.contains(e.mouse_pos);
+				bool in_rect = Rect(component->get_size()).contains(input_msg->input_event.mouse_pos);
+				bool in_opener_rect = opener_rect.contains(input_msg->input_event.mouse_pos);
 
 				if (in_opener_rect)
 				{
@@ -310,9 +307,9 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 
 				component->request_repaint();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			if (e.id == keycode_down && popup_menu.get_item_count() > 0)
+			if (input_msg->input_event.id == keycode_down && popup_menu.get_item_count() > 0)
 			{
 				int old_selected_item = selected_item;
 				selected_item++;
@@ -323,9 +320,9 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					component->set_selected_item(selected_item);
 					func_item_selected.invoke(selected_item);
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.id == keycode_up && popup_menu.get_item_count() > 0)
+			else if (input_msg->input_event.id == keycode_up && popup_menu.get_item_count() > 0)
 			{
 				int old_selected_item = selected_item;
 				selected_item--;
@@ -336,47 +333,50 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					component->set_selected_item(selected_item);
 					func_item_selected.invoke(selected_item);
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter)
+			else if (input_msg->input_event.id == keycode_enter || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_numpad_enter)
 			{
 				if (!func_enter_pressed.is_null())
 					func_enter_pressed.invoke();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (editable && 
-				!msg.is_consumed() &&
-				e.id != keycode_tab && 
-				e.id != keycode_enter && 
-				e.id != keycode_numpad_enter &&
-				e.id != keycode_escape &&
-				!msg.get_data("No Loop Hack"))
-			{
-				GUIMessage_Input input_msg;
-				input_msg.set_target(lineedit);
-				input_msg.set_event(e);
-				input_msg.set_data("No Loop Hack", std::shared_ptr<NoLoopHack>(new NoLoopHack()));
-				component->get_gui_manager().dispatch_message(input_msg);
-				msg.set_consumed();
-			}
+
+			// FIXME
+			//else if (editable && 
+			//	!input_msg->consumed &&
+			//	input_msg->input_event.id != keycode_tab && 
+			//	input_msg->input_event.id != keycode_enter && 
+			//	input_msg->input_event.id != keycode_numpad_enter &&
+			//	input_msg->input_event.id != keycode_escape &&
+			//	!msg.get_data("No Loop Hack"))
+			//{
+				//GUIMessage_Input input_msgx;
+				//input_msgx.set_target(lineedit);
+				//input_msgx.set_event(e);
+				//input_msgx.set_data("No Loop Hack", std::shared_ptr<NoLoopHack>(new NoLoopHack()));
+				//component->get_gui_manager().dispatch_message(input_msgx);
+
+			//	input_msg->consumed = true;
+			//}
 		}
-		else if (e.type == InputEvent::released)
+		else if (input_msg->input_event.type == InputEvent::released)
 		{
 			component->set_pseudo_class(CssStr::pressed, false);
 			part_opener->set_pseudo_class(CssStr::pressed, false);
 			part_opener_glyph->set_pseudo_class(CssStr::pressed, false);
 		}
-		else if (e.type == InputEvent::pointer_moved)
+		else if (input_msg->input_event.type == InputEvent::pointer_moved)
 		{
-			bool in_opener_rect = opener_rect.contains(e.mouse_pos);
+			bool in_opener_rect = opener_rect.contains(input_msg->input_event.mouse_pos);
 			part_opener->set_pseudo_class(CssStr::hot, in_opener_rect);
 			part_opener_glyph->set_pseudo_class(CssStr::hot, in_opener_rect);
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			component->set_pseudo_class(CssStr::hot, true);
 			component->request_repaint();
@@ -389,21 +389,21 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			component->request_repaint();
 		}
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange fmsg(msg);
 
-		if (fmsg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			lineedit->select_all();
 			lineedit->set_cursor_drawing_enabled(editable);
 		}
-		else if (fmsg.get_focus_type() == GUIMessage_FocusChange::losing_focus)
+		else if (focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus)
 		{
 			lineedit->clear_selection();
 
-			fmsg.set_target(lineedit);
-			component->get_gui_manager().dispatch_message(fmsg);
+			focus_change_msg->target = lineedit;
+			component->get_gui_manager().dispatch_message(focus_change_msg);
 		}
 	}
 }
@@ -459,16 +459,14 @@ void ComboBox_Impl::on_lineedit_message(std::shared_ptr<GUIMessage> &msg)
 	if(!component->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::pressed)
+		if (input_msg->input_event.type == InputEvent::pressed)
 		{
-			if (e.id == mouse_left)
+			if (input_msg->input_event.id == mouse_left)
 			{
-				bool in_rect = Rect(component->get_size()).contains(e.mouse_pos);
+				bool in_rect = Rect(component->get_size()).contains(input_msg->input_event.mouse_pos);
 				if (in_rect)
 				{
 					lineedit->set_pseudo_class(CssStr::pressed, true);
@@ -480,12 +478,10 @@ void ComboBox_Impl::on_lineedit_message(std::shared_ptr<GUIMessage> &msg)
 					component->request_repaint();
 				}
 
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
 		}
 	}
 }
 
 }
-
-#endif

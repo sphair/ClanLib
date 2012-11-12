@@ -155,7 +155,7 @@ public:
 	/// \brief On process message
 	///
 	/// \param msg = GUIMessage
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	/// \brief When true, the whole row is drawn selected, as opposed to only the first column.
 	void set_select_whole_row(bool value);

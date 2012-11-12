@@ -151,7 +151,7 @@ void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 			std::string &custom_state = pages[page_index]->tab_css_custom_state;
 			if (!custom_state.empty())
 				part_tab.set_state(custom_state, true);
-			part_tab.set_state(CssStr::selected, page_index == current_page_index);
+			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
 			part_tab.render_box(canvas, current_tab, clip_rect);
 			font_tab.draw_text(canvas, current_tab.left+current_tab.get_width()/2-size_tab_text.width/2, current_tab.bottom-7, pages[page_index]->text, Colorf::black);
 

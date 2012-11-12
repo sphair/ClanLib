@@ -49,8 +49,6 @@
 #include <climits>
 #endif
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -264,19 +262,17 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (component->is_enabled())
 	{
-		if (msg.is_type(GUIMessage_Input::get_type_name()))
+		std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+		if (input_msg)
 		{
-			GUIMessage_Input input_msg = msg;
-			InputEvent e = input_msg.get_event();
-
-			if (e.type == InputEvent::pressed && e.id == mouse_left)
+			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 			{
-				bool down_pressed = button_down_rect.contains(e.mouse_pos);
-				bool up_pressed = button_up_rect.contains(e.mouse_pos);
-				part_button_down.set_state(CssStr::pressed, down_pressed);
-				part_button_up.set_state(CssStr::pressed, up_pressed);
-				part_arrow_down.set_state(CssStr::pressed, down_pressed);
-				part_arrow_up.set_state(CssStr::pressed, up_pressed);
+				bool down_pressed = button_down_rect.contains(input_msg->input_event.mouse_pos);
+				bool up_pressed = button_up_rect.contains(input_msg->input_event.mouse_pos);
+				//FIXME: part_button_down.set_pseudo_class(CssStr::pressed, down_pressed);
+				//FIXME: part_button_up.set_pseudo_class(CssStr::pressed, up_pressed);
+				//FIXME: part_arrow_down.set_pseudo_class(CssStr::pressed, down_pressed);
+				//FIXME: part_arrow_up.set_pseudo_class(CssStr::pressed, up_pressed);
 
 				if (up_pressed || down_pressed)
 				{
@@ -289,79 +285,78 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						func_value_changed.invoke();
 					component->request_repaint();
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::released && e.id == mouse_left)
+			else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 			{
-				part_button_down.set_state(CssStr::pressed, false);
-				part_button_up.set_state(CssStr::pressed, false);
-				part_arrow_down.set_state(CssStr::pressed, false);
-				part_arrow_up.set_state(CssStr::pressed, false);
-				part_component.set_state(CssStr::pressed, false);
+				//FIXME: part_button_down.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_button_up.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_arrow_down.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_arrow_up.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_component.set_pseudo_class(CssStr::pressed, false);
 				component->request_repaint();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pressed && e.id == keycode_up)
+			else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == keycode_up)
 			{
 				increment_value();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pressed && e.id == keycode_down)
+			else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == keycode_down)
 			{
 				decrement_value();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pointer_moved)
+			else if (input_msg->input_event.type == InputEvent::pointer_moved)
 			{
-				bool new_hot_state_arrow_down = button_down_rect.contains(e.mouse_pos);
-				bool new_hot_state_arrow_up = button_up_rect.contains(e.mouse_pos);
+				bool new_hot_state_arrow_down = button_down_rect.contains(input_msg->input_event.mouse_pos);
+				bool new_hot_state_arrow_up = button_up_rect.contains(input_msg->input_event.mouse_pos);
 
-				if (part_arrow_down.get_state(CssStr::hot) != new_hot_state_arrow_down)
-				{
-					part_button_down.set_state(CssStr::hot, new_hot_state_arrow_down);
-					part_arrow_down.set_state(CssStr::hot, new_hot_state_arrow_down);
-					component->request_repaint();
-				}
-				if (part_arrow_up.get_state(CssStr::hot) != new_hot_state_arrow_up)
-				{
-					part_button_up.set_state(CssStr::hot, new_hot_state_arrow_up);
-					part_arrow_up.set_state(CssStr::hot, new_hot_state_arrow_up);
-					component->request_repaint();
-				}
-				msg.set_consumed();
+				//FIXME: if (part_arrow_down.get_state(CssStr::hot) != new_hot_state_arrow_down)
+				//FIXME: {
+				//FIXME: 	part_button_down.set_pseudo_class(CssStr::hot, new_hot_state_arrow_down);
+				//FIXME: 	part_arrow_down.set_pseudo_class(CssStr::hot, new_hot_state_arrow_down);
+				//FIXME: 	component->request_repaint();
+				//FIXME: }
+				//FIXME: if (part_arrow_up.get_state(CssStr::hot) != new_hot_state_arrow_up)
+				//FIXME: {
+				//FIXME: 	part_button_up.set_pseudo_class(CssStr::hot, new_hot_state_arrow_up);
+				//FIXME: 	part_arrow_up.set_pseudo_class(CssStr::hot, new_hot_state_arrow_up);
+				//FIXME: 	component->request_repaint();
+				//FIXME: }
+				input_msg->consumed = true;
 			}
 		}
-		else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+		std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+		if (pointer)
 		{
-			GUIMessage_Pointer pointer = msg;
-			if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+			if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			{
-				part_component.set_state(CssStr::hot, true);
+				//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
 				component->request_repaint();
 			}
-			else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+			else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			{
-				part_component.set_state(CssStr::hot, false);
+				//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
 
-				part_button_up.set_state(CssStr::pressed, false);
-				part_button_down.set_state(CssStr::pressed, false);
-				part_arrow_up.set_state(CssStr::pressed, false);
-				part_arrow_down.set_state(CssStr::pressed, false);
+				//FIXME: part_button_up.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_button_down.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_arrow_up.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: part_arrow_down.set_pseudo_class(CssStr::pressed, false);
 
-				part_button_up.set_state(CssStr::hot, false);
-				part_button_down.set_state(CssStr::hot, false);
-				part_arrow_up.set_state(CssStr::hot, false);
-				part_arrow_down.set_state(CssStr::hot, false);
+				//FIXME: part_button_up.set_pseudo_class(CssStr::hot, false);
+				//FIXME: part_button_down.set_pseudo_class(CssStr::hot, false);
+				//FIXME: part_arrow_up.set_pseudo_class(CssStr::hot, false);
+				//FIXME: part_arrow_down.set_pseudo_class(CssStr::hot, false);
 
 				component->request_repaint();
 			}
-			msg.set_consumed();
+			pointer->consumed = true;
 		}
-		else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+		std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+		if (focus_change_msg)
 		{
-			GUIMessage_FocusChange fmsg(msg);
-
-			if (fmsg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+			if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 			{
 				// Give focus to lineedit
 				lineedit->set_focus();
@@ -388,24 +383,24 @@ void Spin_Impl::create_components()
 	lineedit->set_numeric_mode(true);
 
 	part_component = GUIThemePart(component);
-	part_button_down = GUIThemePart(component, CssStr::Spin::part_button_down);
-	part_button_up = GUIThemePart(component, CssStr::Spin::part_button_up);
-	part_arrow_down = GUIThemePart(component, CssStr::Spin::part_arrow_down);
-	part_arrow_up = GUIThemePart(component, CssStr::Spin::part_arrow_up);
+	//FIXME: part_button_down = GUIThemePart(component, CssStr::Spin::part_button_down);
+	//FIXME: part_button_up = GUIThemePart(component, CssStr::Spin::part_button_up);
+	//FIXME: part_arrow_down = GUIThemePart(component, CssStr::Spin::part_arrow_down);
+	//FIXME: part_arrow_up = GUIThemePart(component, CssStr::Spin::part_arrow_up);
 
 	bool enabled = component->is_enabled();
 
-	part_component.set_state(CssStr::normal, enabled);
-	part_button_up.set_state(CssStr::normal, enabled);
-	part_button_down.set_state(CssStr::normal, enabled);
-	part_arrow_up.set_state(CssStr::normal, enabled);
-	part_arrow_down.set_state(CssStr::normal, enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_button_up.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_button_down.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_arrow_up.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_arrow_down.set_pseudo_class(CssStr::normal, enabled);
 
-	part_component.set_state(CssStr::disabled, !enabled);
-	part_button_up.set_state(CssStr::disabled, !enabled);
-	part_button_down.set_state(CssStr::disabled, !enabled);
-	part_arrow_up.set_state(CssStr::disabled, !enabled);
-	part_arrow_down.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_button_up.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_button_down.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_arrow_up.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_arrow_down.set_pseudo_class(CssStr::disabled, !enabled);
 }
 
 
@@ -480,17 +475,17 @@ void Spin_Impl::on_enablemode_changed()
 {
 	bool enabled = component->is_enabled();
 
-	part_component.set_state(CssStr::normal, enabled);
-	part_button_up.set_state(CssStr::normal, enabled);
-	part_button_down.set_state(CssStr::normal, enabled);
-	part_arrow_up.set_state(CssStr::normal, enabled);
-	part_arrow_down.set_state(CssStr::normal, enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_button_up.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_button_down.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_arrow_up.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_arrow_down.set_pseudo_class(CssStr::normal, enabled);
 
-	part_component.set_state(CssStr::disabled, !enabled);
-	part_button_up.set_state(CssStr::disabled, !enabled);
-	part_button_down.set_state(CssStr::disabled, !enabled);
-	part_arrow_up.set_state(CssStr::disabled, !enabled);
-	part_arrow_down.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_button_up.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_button_down.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_arrow_up.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_arrow_down.set_pseudo_class(CssStr::disabled, !enabled);
 
 	lineedit->set_enabled(enabled);
 
@@ -529,4 +524,3 @@ void Spin_Impl::update_lineedit()
 
 }
 
-#endif

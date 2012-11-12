@@ -43,8 +43,6 @@
 #include "API/Display/2D/canvas.h"
 #include "tab_header.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -56,7 +54,7 @@ class TabHeader_Impl
 public:
 	TabHeader_Impl() : first_tab_x_offset(0), selected_page(-1)
 	{
-		prop_first_tab_x_offset = GUIThemePartProperty(CssStr::first_tab_x_offset, "0");
+		//FIXME: prop_first_tab_x_offset = GUIThemePartProperty(CssStr::first_tab_x_offset, "0");
 	}
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
@@ -76,7 +74,7 @@ public:
 	void update_handle_rects();
 
 	GUIThemePart part_background;
-	GUIThemePartProperty prop_first_tab_x_offset;
+	//FIXME: GUIThemePartProperty prop_first_tab_x_offset;
 	GUIThemePart part_focus;
 	std::vector<Handle> tabs;
 	Callback_v1<TabPage*> func_page_selected;
@@ -97,7 +95,7 @@ TabHeader::TabHeader(GUIComponent *parent)
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabHeader_Impl::on_process_message);
 	func_render().set(impl.get(), &TabHeader_Impl::on_render);
-	func_style_changed().set(impl.get(), &TabHeader_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &TabHeader_Impl::on_style_changed);
 	// todo: enablemode, resize
 
 	impl->on_style_changed();
@@ -125,15 +123,15 @@ Size TabHeader::get_preferred_size() const
 
 void TabHeader::add_page(TabPage *tab_page, const std::string &label)
 {
-	TabHeader_Impl::Handle handle;
-	handle.part = GUIThemePart(this, CssStr::Tab::Header::part_page);
-	handle.tab_page = tab_page;
-	handle.label = label;
+	//FIXME: TabHeader_Impl::Handle handle;
+	//FIXME: handle.part = GUIThemePart(this, CssStr::Tab::Header::part_page);
+	//FIXME: handle.tab_page = tab_page;
+	//FIXME: handle.label = label;
 
-	handle.part.set_state(CssStr::normal, true);
-	handle.part.set_state(CssStr::hot, false);
-	handle.part.set_state(CssStr::selected, false);
-	impl->tabs.push_back(handle);
+	//FIXME: handle.part.set_pseudo_class(CssStr::normal, true);
+	//FIXME: handle.part.set_pseudo_class(CssStr::hot, false);
+	//FIXME: handle.part.set_pseudo_class(CssStr::selected, false);
+	//FIXME: impl->tabs.push_back(handle);
 
 	impl->update_handle_rects();
 
@@ -218,13 +216,12 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if(component->is_enabled())
 	{
-		if (msg.is_type(GUIMessage_Input::get_type_name()))
+		std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+		if (input_msg)
 		{
-			GUIMessage_Input input_msg = msg;
-			InputEvent e = input_msg.get_event();
-			Point pos = e.mouse_pos;
+			Point pos = input_msg->input_event.mouse_pos;
 
-			if (e.type == InputEvent::pressed && e.id == mouse_left)
+			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 			{
 				std::vector<Handle>::iterator it;
 				for (it = tabs.begin(); it != tabs.end(); ++it)
@@ -233,17 +230,17 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					if (inside)
 					{
 						unselect_all();
-						(*it).part.set_state(CssStr::selected, true);
-						(*it).part.set_state(CssStr::normal, false);
+						//FIXME: (*it).part.set_pseudo_class(CssStr::selected, true);
+						//FIXME: (*it).part.set_pseudo_class(CssStr::normal, false);
 
 						component->request_repaint();
 						if (!func_page_selected.is_null())
 							func_page_selected.invoke((*it).tab_page);
 					}
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pointer_moved)
+			else if (input_msg->input_event.type == InputEvent::pointer_moved)
 			{
 				std::vector<Handle>::iterator it;
 				for (it = tabs.begin(); it != tabs.end(); ++it)
@@ -251,23 +248,23 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					bool inside = (*it).rect.contains(pos);
 					if (inside)
 					{
-						if ((*it).part.get_state(CssStr::selected))
-							return;
-						(*it).part.set_state(CssStr::hot, true);
-						(*it).part.set_state(CssStr::normal, false);
+						//FIXME: if ((*it).part.get_state(CssStr::selected))
+						//FIXME: 	return;
+						//FIXME: (*it).part.set_pseudo_class(CssStr::hot, true);
+						//FIXME: (*it).part.set_pseudo_class(CssStr::normal, false);
 						component->request_repaint();
-						msg.set_consumed();
+						input_msg->consumed = true;
 					}
-					else if ((*it).part.get_state(CssStr::hot))
-					{
-						(*it).part.set_state(CssStr::hot, false);
-						(*it).part.set_state(CssStr::normal, true);						
-						component->request_repaint();
-						msg.set_consumed();
-					}
+					//FIXME: else if ((*it).part.get_state(CssStr::hot))
+					//FIXME: {
+					//FIXME: 	(*it).part.set_pseudo_class(CssStr::hot, false);
+					//FIXME: 	(*it).part.set_pseudo_class(CssStr::normal, true);						
+					//FIXME: 	component->request_repaint();
+					//FIXME: 	input_msg->consumed = true;
+					//FIXME: }
 				}
 			}
-			else if (e.type == InputEvent::pressed && e.id == keycode_left)
+			else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == keycode_left)
 			{
 				int next_page = selected_page - 1;
 				if (next_page < 0)
@@ -280,9 +277,9 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					func_page_selected.invoke(tabs[next_page].tab_page);
 
 				component->select_page(next_page);
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pressed && e.id == keycode_right)
+			else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == keycode_right)
 			{
 				int next_page = selected_page + 1;
 				if (next_page >= tabs.size())
@@ -295,42 +292,42 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					func_page_selected.invoke(tabs[next_page].tab_page);
 
 				component->request_repaint();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			else if (e.type == InputEvent::pressed && (e.id == keycode_up || e.id == keycode_down))
+			else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_up || input_msg->input_event.id == keycode_down))
 			{
 				// block focus switching with up/down when in tab header.
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
 		}
-		else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+		std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+		if (pointer)
 		{
-			GUIMessage_Pointer pointer = msg;
-			if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+			if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			{
 				std::vector<Handle>::iterator it;
 				for (it = tabs.begin(); it != tabs.end(); ++it)
 				{
-					(*it).part.set_state(CssStr::hot, false);
-					(*it).part.set_state(CssStr::normal, true);
+					//FIXME: (*it).part.set_pseudo_class(CssStr::hot, false);
+					//FIXME: (*it).part.set_pseudo_class(CssStr::normal, true);
 				}
 				component->request_repaint();
 			}
 		}
-		else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+		std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+		if (focus_change_msg)
 		{
-			GUIMessage_FocusChange focus_msg = msg;
-			if (focus_msg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+			if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 			{
-				part_background.set_state(CssStr::focused, true);
+				//FIXME: part_background.set_pseudo_class(CssStr::focused, true);
 				component->request_repaint();
 			}
 			else 
 			{
-				part_background.set_state(CssStr::focused, false);
+				//FIXME: part_background.set_pseudo_class(CssStr::focused, false);
 				component->request_repaint();
 			}
-			msg.set_consumed();
+			focus_change_msg->consumed = true;
 		}
 	}
 }
@@ -363,9 +360,9 @@ void TabHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void TabHeader_Impl::on_style_changed()
 {
 	part_background = GUIThemePart(component);
-	part_focus = GUIThemePart(component, CssStr::Tab::Header::part_focus);
+	//FIXME: part_focus = GUIThemePart(component, CssStr::Tab::Header::part_focus);
 
-	first_tab_x_offset = part_background.get_property_int(prop_first_tab_x_offset);
+	//FIXME: first_tab_x_offset = part_background.get_property_int(prop_first_tab_x_offset);
 }
 
 void TabHeader_Impl::unselect_all()
@@ -373,9 +370,9 @@ void TabHeader_Impl::unselect_all()
 	std::vector<Handle>::iterator it;
 	for (it = tabs.begin(); it != tabs.end(); ++it)
 	{
-		(*it).part.set_state(CssStr::selected, false);
-		(*it).part.set_state(CssStr::normal, true);
-		(*it).part.set_state(CssStr::hot, false);
+		//FIXME: (*it).part.set_pseudo_class(CssStr::selected, false);
+		//FIXME: (*it).part.set_pseudo_class(CssStr::normal, true);
+		//FIXME: (*it).part.set_pseudo_class(CssStr::hot, false);
 	}
 }
 
@@ -387,12 +384,11 @@ void TabHeader_Impl::select_page(int index)
 	for (i = 0; i < tabs.size(); ++i)
 	{
 		Handle &handle = tabs[i];
-		handle.part.set_state(CssStr::normal, i != index);
-		handle.part.set_state(CssStr::hot, false);
-		handle.part.set_state(CssStr::selected, i == index);
+		//FIXME: handle.part.set_pseudo_class(CssStr::normal, i != index);
+		//FIXME: handle.part.set_pseudo_class(CssStr::hot, false);
+		//FIXME: handle.part.set_pseudo_class(CssStr::selected, i == index);
 	}
 }
 
 }
 
-#endif

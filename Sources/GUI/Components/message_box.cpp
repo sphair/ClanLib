@@ -32,8 +32,6 @@
 #include "API/Display/screen_info.h"
 #include "message_box_component.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -118,5 +116,3 @@ MessageBoxResult message_box(
 }
 
 }
-
-#endif

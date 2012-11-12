@@ -44,8 +44,6 @@
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -311,26 +309,25 @@ void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!slider->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input = msg;
-		InputEvent e = input.get_event();
-		if (e.type == InputEvent::pointer_moved)
+		if (input_msg->input_event.type == InputEvent::pointer_moved)
 		{
-			on_mouse_move(input, e);
-			msg.set_consumed();
+			on_mouse_move(input_msg, input_msg->input_event);
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && e.id == mouse_left)
+		else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 		{
-			on_mouse_lbutton_down(input, e);
-			msg.set_consumed();
+			on_mouse_lbutton_down(input_msg, input_msg->input_event);
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::released && e.id == mouse_left)
+		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
-			on_mouse_lbutton_up(input, e);
-			msg.set_consumed();
+			on_mouse_lbutton_up(input_msg, input_msg->input_event);
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && (e.id == keycode_left || e.id == keycode_up))
+		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))
 		{
 			int old_position = position;
 			slider->set_position(position - page_step);
@@ -345,9 +342,9 @@ void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					func_slider_moved.invoke();
 			}
 
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && (e.id == keycode_right || e.id == keycode_down))
+		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_right || input_msg->input_event.id == keycode_down))
 		{
 			int old_position = position;
 			slider->set_position(position + page_step);
@@ -362,29 +359,29 @@ void Slider_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					func_slider_moved.invoke();
 			}
 
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			on_mouse_leave();
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange focus_msg = msg;
-		if (focus_msg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
-			part_component.set_state(CssStr::focused, true);
+			//FIXME: part_component.set_pseudo_class(CssStr::focused, true);
 			slider->request_repaint();
 		}
 		else 
 		{
-			part_component.set_state(CssStr::focused, false);
+			//FIXME: part_component.set_pseudo_class(CssStr::focused, false);
 			slider->request_repaint();
 		}
-		msg.set_consumed();
+		focus_change_msg->consumed = true;
 	}
 }
 
@@ -392,17 +389,17 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 {
 	int original_slider_position = position;
 	Point mouse_pos = input_event.mouse_pos;
-	part_component.set_state(CssStr::hot, true);
-	part_track.set_state(CssStr::hot, true);
-	part_component.set_state(CssStr::normal, false);
-	part_track.set_state(CssStr::normal, false);
-	part_focus.set_state(CssStr::focused, false);
+	//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
+	//FIXME: part_track.set_pseudo_class(CssStr::hot, true);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, false);
+	//FIXME: part_track.set_pseudo_class(CssStr::normal, false);
+	//FIXME: part_focus.set_pseudo_class(CssStr::focused, false);
 
 	if (mouse_down_mode != mouse_down_thumb_drag)
 	{
 		bool thumb_hot = rect_thumb.contains(mouse_pos);
-		part_thumb.set_state(CssStr::hot, thumb_hot );
-		part_thumb.set_state(CssStr::normal, !thumb_hot);
+		//FIXME: part_thumb.set_pseudo_class(CssStr::hot, thumb_hot );
+		//FIXME: part_thumb.set_pseudo_class(CssStr::normal, !thumb_hot);
 	}
 	slider->request_repaint();
 
@@ -503,10 +500,10 @@ void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, 
 
 void Slider_Impl::on_mouse_leave()
 {
-	part_component.set_state(CssStr::hot, false);
-	part_thumb.set_state(CssStr::hot, false);
-	part_component.set_state(CssStr::normal, true);
-	part_thumb.set_state(CssStr::normal, true);
+	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::hot, false);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, true);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, true);
 	slider->request_repaint();
 }
 
@@ -530,20 +527,20 @@ void Slider_Impl::create_parts()
 {
 	bool vertical = slider->is_vertical();
 	part_component = GUIThemePart(slider);
-	part_track = GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
-	part_thumb = GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
-	part_focus = GUIThemePart(slider, CssStr::Slider::part_focus);
+	//FIXME: part_track = GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
+	//FIXME: part_thumb = GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
+	//FIXME: part_focus = GUIThemePart(slider, CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();
 
-	part_component.set_state(CssStr::normal, enabled);
-	part_track.set_state(CssStr::normal, enabled);
-	part_thumb.set_state(CssStr::normal, enabled);
-	part_focus.set_state(CssStr::normal, true);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_track.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_focus.set_pseudo_class(CssStr::normal, true);
 
-	part_component.set_state(CssStr::disabled, !enabled);
-	part_track.set_state(CssStr::disabled, !enabled);
-	part_thumb.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_track.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::disabled, !enabled);
 
 }
 
@@ -642,16 +639,14 @@ void Slider_Impl::on_enablemode_changed()
 {
 	bool enabled = slider->is_enabled();
 
-	part_component.set_state(CssStr::normal, enabled);
-	part_track.set_state(CssStr::normal, enabled);
-	part_thumb.set_state(CssStr::normal, enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_track.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, enabled);
 
-	part_component.set_state(CssStr::disabled, !enabled);
-	part_track.set_state(CssStr::disabled, !enabled);
-	part_thumb.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_track.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: part_thumb.set_pseudo_class(CssStr::disabled, !enabled);
 	slider->request_repaint();
 }
 
 }
-
-#endif

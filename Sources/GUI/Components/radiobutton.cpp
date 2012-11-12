@@ -46,8 +46,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -61,7 +59,7 @@ public:
 	{
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_enablemode_changed();
 	void create_parts();
 
@@ -202,17 +200,15 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!radio->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::pressed && e.id == mouse_left)
+		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 		{
 			radio->set_pseudo_class(CssStr::pressed, true);
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::released && e.id == mouse_left)
+		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
 			if ((radio->get_pseudo_class(CssStr::checked) == false))
 			{
@@ -232,9 +228,9 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 
 			radio->set_focus(true);
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && (e.id == keycode_left || e.id == keycode_up))
+		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))
 		{
 			std::vector<GUIComponent*> group = radio->get_parent_component()->get_child_component_group(radio->get_component_group_name());
 
@@ -270,9 +266,9 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					comp = comp->get_previous_sibling();
 			}
 
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
-		else if (e.type == InputEvent::pressed && (e.id == keycode_right || e.id == keycode_down))
+		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_right || input_msg->input_event.id == keycode_down))
 		{
 			std::vector<GUIComponent*> group = radio->get_parent_component()->get_child_component_group(radio->get_component_group_name());
 
@@ -307,14 +303,14 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				else
 					comp = comp->get_next_sibling();
 			}
-			msg.set_consumed();
+			input_msg->consumed = true;
 		}
 
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			radio->set_pseudo_class(CssStr::hot, true);
 		}
@@ -323,10 +319,10 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			radio->set_pseudo_class(CssStr::hot, false);
 		}
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange focus_msg = msg;
-		if (focus_msg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			radio->set_pseudo_class(CssStr::focused, true);
 			if (!radio->is_selected())
@@ -343,7 +339,7 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			radio->set_pseudo_class(CssStr::focused, false);
 		}
-		msg.set_consumed();
+		focus_change_msg->consumed = true;
 	}
 }
 
@@ -388,4 +384,3 @@ void RadioButton_Impl::on_enablemode_changed()
 
 }
 
-#endif

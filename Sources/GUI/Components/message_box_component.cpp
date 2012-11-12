@@ -44,8 +44,6 @@
 #include "../gui_css_strings.h"
 #include "message_box_component.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -97,11 +95,11 @@ Size MessageBoxComponent::layout_content()
 		min_size = Size(300,80);
 	}
 
-	GUIThemePartProperty prop_buttons_area_height(CssStr::MessageBox::button_area_height, "40");
-	int button_area_height = part_component.get_property_int(prop_buttons_area_height);
+	//FIXME: GUIThemePartProperty prop_buttons_area_height(CssStr::MessageBox::button_area_height, "40");
+	//FIXME: int button_area_height = part_component.get_property_int(prop_buttons_area_height);
 
-	GUIThemePartProperty prop_icon_margin_right("icon_text_gap", "7");
-	int icon_margin_right = part_component.get_property_int(prop_icon_margin_right);
+	//FIXME: GUIThemePartProperty prop_icon_margin_right("icon_text_gap", "7");
+	//FIXME: int icon_margin_right = part_component.get_property_int(prop_icon_margin_right);
 
 	rect_icon = part_icon.get_render_box(icon_size).get_size();
 	rect_icon.translate(border_space.left, 0);
@@ -109,23 +107,23 @@ Size MessageBoxComponent::layout_content()
 
 	Size text_size = part_component.get_text_size(get_canvas(), detail_text);
 	rect_text = part_component.get_render_box(text_size);
-	rect_text.left = rect_icon.right + icon_margin_right;
+	//FIXME: rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
 
 	size.width = border_space.left;
 	size.width += rect_icon.get_width();
-	size.width += icon_margin_right;
+	//FIXME: size.width += icon_margin_right;
 	size.width += text_size.width;
 	size.width += border_space.right;
 
 	size.height = border_space.top;
 	size.height += max(icon_size.height, text_size.height);
 	size.height += border_space.bottom;
-	size.height += button_area_height;
+	//FIXME: size.height += button_area_height;
 
 	int detail_area_height = 0;
 	detail_area_height = border_space.top + max(text_size.height, icon_size.height) + border_space.bottom;
-	detail_area_height = max(detail_area_height, min_size.height - button_area_height);
+	//FIXME: detail_area_height = max(detail_area_height, min_size.height - button_area_height);
 
 	// Center the text & icon in the detail-area
 	rect_text.top = detail_area_height/2 - text_size.height/2;
@@ -275,7 +273,7 @@ void MessageBoxComponent::create_buttons()
 
 void MessageBoxComponent::set_css_class()
 {
-	ResourceManager res = get_theme().get_resources();
+	//FIXME: ResourceManager res = get_theme().get_resources();
 	Canvas canvas = get_canvas();
 
 	std::string icon_class = "";
@@ -309,7 +307,7 @@ void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 void MessageBoxComponent::create_parts()
 {
 	part_component = GUIThemePart(this);
-	part_icon = GUIThemePart(this, CssStr::MessageBox::part_icon);
+	//FIXME: part_icon = GUIThemePart(this, CssStr::MessageBox::part_icon);
 
 }
 
@@ -326,5 +324,3 @@ bool MessageBoxComponent::on_window_close(Window *window)
 }
 
 }
-
-#endif

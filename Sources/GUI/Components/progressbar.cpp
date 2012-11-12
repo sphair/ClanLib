@@ -39,8 +39,6 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -76,8 +74,8 @@ public:
 	int marquee_box_width, marquee_position, marquee_step_size;
 	
 	GUIThemePart part_component;
-	GUIThemePart part_progress;
-	GUIThemePart part_chunk;
+	//FIXME: GUIThemePart part_progress;
+	//FIXME: GUIThemePart part_chunk;
 
 	Timer marquee_timer;
 };
@@ -92,10 +90,10 @@ ProgressBar::ProgressBar(GUIComponent *parent)
 
 	impl->progressbar = this;
 	impl->part_component = GUIThemePart(this);
-	impl->part_progress = GUIThemePart(this, "progress");
-	impl->part_chunk = GUIThemePart(this, "chunk");
+	//FIXME: impl->part_progress = GUIThemePart(this, "progress");
+	//FIXME: impl->part_chunk = GUIThemePart(this, "chunk");
 
-	impl->part_component.set_state(CssStr::normal, true);
+	//FIXME: impl->part_component.set_pseudo_class(CssStr::normal, true);
 
 	func_process_message().set(impl.get(), &ProgressBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ProgressBar_Impl::on_render);
@@ -314,7 +312,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 				progress_rect.right -= (progress_rect.right - content_box.right);
 			}
 			
-			part_progress.render_box(canvas, progress_rect, update_rect);
+			//FIXME: part_progress.render_box(canvas, progress_rect, update_rect);
 		}
 	}
 	else
@@ -333,11 +331,9 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_rect.bottom = content_box.bottom;
 			progress_rect.right = content_box.left + (position - progress_min) * content_box.get_width() / (progress_max - progress_min);
 
-			part_progress.render_box(canvas, progress_rect, update_rect);
+			//FIXME: part_progress.render_box(canvas, progress_rect, update_rect);
 		}
 	}
 }
 
 }
-
-#endif
