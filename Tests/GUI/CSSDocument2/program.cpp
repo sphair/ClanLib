@@ -62,7 +62,18 @@ int Program::main(const std::vector<std::string> &args)
 	testHot2->set_class("test2");
 	GUIComponent *testHot3 = new GUIComponent(testHot2);
 	testHot3->set_class("test3");
-	
+
+	create_imageview_test(root);
+
+	root->update_layout();
+
+	gui.exec();
+
+	return 0;
+}
+
+void Program::create_imageview_test(GUIComponent *root)
+{
 	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
 
 	GUIComponent *imagecontainer = new GUIComponent(root);
@@ -90,35 +101,24 @@ int Program::main(const std::vector<std::string> &args)
 	image_view_fixedwidth_fixedheight->set_class("fixedwidth fixedheight odd");
 	image_view_fixedwidth_fixedheight->set_scale_to_fit(false);
 
-	ImageView *image_view_fixedwidth_autoheight = new ImageView(imagecontainer);
-	image_view_fixedwidth_autoheight->set_image(image);
-	image_view_fixedwidth_autoheight->set_class("fixedwidth autoheight");
-	image_view_fixedwidth_autoheight->set_scale_to_fit(false);
-
 	ImageView *image_view_double = new ImageView(imagecontainer);
 	image_view_double->set_image(image);
 	image_view_double->set_scale(2.0f, 2.0f);
-	image_view_double->set_class("odd");
 
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);
 	image_view_scaletofit->set_scale_to_fit(true);
+	image_view_scaletofit->set_class("odd");
 
 	ImageView *image_view_fixedwidth_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_scaletofit->set_image(image);
 	image_view_fixedwidth_scaletofit->set_scale_to_fit(true);
-	image_view_fixedwidth_scaletofit->set_class("fixedwidth odd");
+	image_view_fixedwidth_scaletofit->set_class("fixedwidth");
 
 	ImageView *image_view_fixedwidth_fixedheight_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_fixedheight_scaletofit->set_image(image);
 	image_view_fixedwidth_fixedheight_scaletofit->set_scale_to_fit(true);
-	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight");
-
-	root->update_layout();
-
-	gui.exec();
-
-	return 0;
+	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight odd");
 }
 
 bool Program::on_close(GUIComponent *component)
