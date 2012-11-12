@@ -79,6 +79,7 @@ clanGUI_includes = \
 	GUI/Components/toolbar_item.h \
 	GUI/Components/progressbar.h \
 	GUI/Components/toolbar.h \
+	GUI/Components/span_component.h \
 	GUI/Components/spin.h \
 	GUI/Components/scrollbar.h \
 	GUI/Components/tab_page.h \
