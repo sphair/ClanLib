@@ -144,6 +144,7 @@ label
     -clan-box-width-shrink-factor: 1;
     -clan-box-width-expand-factor: 1;
     min-width: 130px;
+    max-height: 220px;
 }
 
 .imagecontainer
