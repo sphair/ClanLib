@@ -100,6 +100,62 @@ public:
 	{
 		throw Exception("-clan-stacked layout not implemented yet");
 	}
+
+	CSSUsedValue get_used_noncontent_width(const CSSClanBoxUsedValues &values)
+	{
+		return values.margin.left + values.border.left + values.padding.left + values.padding.right + values.border.right + values.margin.right;
+	}
+
+	CSSUsedValue get_used_noncontent_height(const CSSClanBoxUsedValues &values)
+	{
+		return values.margin.top + values.border.top + values.padding.top + values.padding.bottom + values.border.bottom + values.margin.bottom;
+	}
+
+	CSSUsedValue get_factor(const CSSBoxClanBoxSizingFactor &factor)
+	{
+		switch (factor.type)
+		{
+		default:
+		case CSSBoxClanBoxSizingFactor::type_auto:
+			return 0.0f;
+		case CSSBoxClanBoxSizingFactor::type_number:
+			return factor.number;
+		}
+	}
+
+	float get_css_relative_x(GUIComponent_Impl *node, float containing_width)
+	{
+		if (node->css_properties.position.type == CSSBoxPosition::type_relative)
+		{
+			if (node->css_properties.left.type == CSSBoxLeft::type_length)
+				return node->css_properties.left.length.value;
+			else if (node->css_properties.left.type == CSSBoxLeft::type_percentage)
+				return node->css_properties.left.percentage / 100.0f * containing_width;
+			else
+				return 0.0f;
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
+
+	float get_css_relative_y(GUIComponent_Impl *node, float containing_height)
+	{
+		if (node->css_properties.position.type == CSSBoxPosition::type_relative)
+		{
+			if (node->css_properties.top.type == CSSBoxTop::type_length)
+				return node->css_properties.top.length.value;
+			else if (node->css_properties.top.type == CSSBoxTop::type_percentage)
+				return node->css_properties.top.percentage / 100.0f * containing_height;
+			else
+				return 0.0f;
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
 };
 
 class CSSClanBoxPreferredWidthVisitor : public CSSClanBoxDisplayVisitor
@@ -107,10 +163,52 @@ class CSSClanBoxPreferredWidthVisitor : public CSSClanBoxDisplayVisitor
 public:
 	void layout_clan_box_horizontal(GUIComponent_Impl *node)
 	{
+		node->css_used_values.width = node->component->get_preferred_content_width();
+
+		CSSUsedValue preferred_width = 0.0f;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+				// If the width of the box cannot be determined from CSS, then ask the component:
+				if (child_used_values.width_undetermined)
+				{
+					CSSClanBoxDisplayVisitor::node(child->impl.get());
+				}
+
+				preferred_width += get_used_noncontent_width(child_used_values) + child_used_values.width;
+			}
+		}
+
+		node->css_used_values.width = std::max(node->css_used_values.width, preferred_width);
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
 	void layout_clan_box_vertical(GUIComponent_Impl *node)
 	{
+		node->css_used_values.width = node->component->get_preferred_content_width();
+
+		CSSUsedValue preferred_width = 0.0f;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+				// If the width of the box cannot be determined from CSS, then ask the component:
+				if (child_used_values.width_undetermined)
+				{
+					CSSClanBoxDisplayVisitor::node(child->impl.get());
+				}
+
+				preferred_width = std::max(preferred_width, get_used_noncontent_width(child_used_values) + child_used_values.width);
+			}
+		}
+
+		node->css_used_values.width = std::max(node->css_used_values.width, preferred_width);
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 };
 
@@ -119,10 +217,51 @@ class CSSClanBoxPreferredHeightVisitor : public CSSClanBoxDisplayVisitor
 public:
 	void layout_clan_box_horizontal(GUIComponent_Impl *node)
 	{
+		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
+
+		CSSUsedValue preferred_height = 0.0f;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+				// If the height of the box cannot be determined from CSS, then ask the component:
+				if (child_used_values.height_undetermined)
+				{
+					CSSClanBoxDisplayVisitor::node(child->impl.get());
+				}
+
+				preferred_height = std::max(preferred_height, get_used_noncontent_height(child_used_values) + child_used_values.height);
+			}
+		}
+
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
 	void layout_clan_box_vertical(GUIComponent_Impl *node)
 	{
+		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
+
+		CSSUsedValue preferred_height = 0.0f;
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
+		{
+			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+			{
+				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+				// If the height of the box cannot be determined from CSS, then ask the component:
+				if (child_used_values.height_undetermined)
+				{
+					CSSClanBoxDisplayVisitor::node(child->impl.get());
+				}
+
+				preferred_height += get_used_noncontent_height(child_used_values) + child_used_values.height;
+			}
+		}
+
+		node->css_used_values.height = std::max(node->css_used_values.height, preferred_height);
+		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 };
 
@@ -131,22 +270,14 @@ class CSSClanBoxLayoutVisitor : public CSSClanBoxDisplayVisitor
 public:
 	void find_preferred_width(GUIComponent_Impl *node)
 	{
-		node->css_used_values.width = node->component->get_preferred_content_width();
-
 		CSSClanBoxPreferredWidthVisitor preferred_visitor;
-		node->visit_css(&preferred_visitor);
-
-		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
+		preferred_visitor.node(node);
 	}
 
 	void find_preferred_height(GUIComponent_Impl *node)
 	{
-		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
-
 		CSSClanBoxPreferredHeightVisitor preferred_visitor;
-		node->visit_css(&preferred_visitor);
-
-		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
+		preferred_visitor.node(node);
 	}
 
 	void layout_clan_box_horizontal(GUIComponent_Impl *node)
@@ -336,62 +467,6 @@ public:
 
 				y += child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + child_used_values.height + child_used_values.padding.bottom + child_used_values.border.bottom + child_used_values.margin.bottom;
 			}
-		}
-	}
-
-	CSSUsedValue get_used_noncontent_width(const CSSClanBoxUsedValues &values)
-	{
-		return values.margin.left + values.border.left + values.padding.left + values.padding.right + values.border.right + values.margin.right;
-	}
-
-	CSSUsedValue get_used_noncontent_height(const CSSClanBoxUsedValues &values)
-	{
-		return values.margin.top + values.border.top + values.padding.top + values.padding.bottom + values.border.bottom + values.margin.bottom;
-	}
-
-	CSSUsedValue get_factor(const CSSBoxClanBoxSizingFactor &factor)
-	{
-		switch (factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			return 0.0f;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			return factor.number;
-		}
-	}
-
-	float get_css_relative_x(GUIComponent_Impl *node, float containing_width)
-	{
-		if (node->css_properties.position.type == CSSBoxPosition::type_relative)
-		{
-			if (node->css_properties.left.type == CSSBoxLeft::type_length)
-				return node->css_properties.left.length.value;
-			else if (node->css_properties.left.type == CSSBoxLeft::type_percentage)
-				return node->css_properties.left.percentage / 100.0f * containing_width;
-			else
-				return 0.0f;
-		}
-		else
-		{
-			return 0.0f;
-		}
-	}
-
-	float get_css_relative_y(GUIComponent_Impl *node, float containing_height)
-	{
-		if (node->css_properties.position.type == CSSBoxPosition::type_relative)
-		{
-			if (node->css_properties.top.type == CSSBoxTop::type_length)
-				return node->css_properties.top.length.value;
-			else if (node->css_properties.top.type == CSSBoxTop::type_percentage)
-				return node->css_properties.top.percentage / 100.0f * containing_height;
-			else
-				return 0.0f;
-		}
-		else
-		{
-			return 0.0f;
 		}
 	}
 };
