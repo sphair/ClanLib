@@ -166,11 +166,6 @@ imageview.odd
     background-color: #ffffc0;
 }
 
-imageview.error 
-{
-    background: red;
-}
-
 imageview.fixedwidth
 {
     width: 100px;

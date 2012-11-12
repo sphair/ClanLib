@@ -216,8 +216,8 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			sprite.set_scale(scale_x, scale_y);
 			Point pos = content.get_center();
-			pos.x -= sprite.get_width()/2;
-			pos.y -= sprite.get_height()/2;
+			pos.x -= sprite.get_width()/2 * scale_x;
+			pos.y -= sprite.get_height()/2 * scale_y;
 
 			image_view->push_cliprect(canvas, content);
 			sprite.draw(canvas, (float)pos.x, (float)pos.y);
@@ -235,8 +235,8 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			image.set_scale(scale_x, scale_y);
 			Point pos = content.get_center();
-			pos.x -= image.get_width()/2;
-			pos.y -= image.get_height()/2;
+			pos.x -= image.get_width()/2 * scale_x;
+			pos.y -= image.get_height()/2 * scale_y;
 
 			image_view->push_cliprect(canvas, content);
 			image.draw(canvas, (float)pos.x, (float)pos.y);

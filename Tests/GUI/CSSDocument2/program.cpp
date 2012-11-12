@@ -98,7 +98,7 @@ int Program::main(const std::vector<std::string> &args)
 	ImageView *image_view_double = new ImageView(imagecontainer);
 	image_view_double->set_image(image);
 	image_view_double->set_scale(2.0f, 2.0f);
-	image_view_double->set_class("error odd");
+	image_view_double->set_class("odd");
 
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);
