@@ -150,34 +150,36 @@ void ImageView::set_scale( float x, float y )
 
 float ImageView::get_preferred_content_width() const
 {
-	// FIXME - This should scale.
-	Size image_size;
 	if (!impl->sprite.is_null())
 	{
-		image_size = impl->sprite.get_size(); 
+		return impl->sprite.get_width();
 	}
-	if (!impl->image.is_null())
+	else if (!impl->image.is_null())
 	{
-		image_size = impl->image.get_size(); 
+		return impl->image.get_width();
 	}
-
-	return (float) image_size.width;
+	else
+	{
+		return 0.0f;
+	}
 }
 
 float ImageView::get_preferred_content_height(float width) const
 {
-	Size image_size;
-	// FIXME - This should scale.
 	if (!impl->sprite.is_null())
 	{
-		image_size = impl->sprite.get_size(); 
+		float scale = width / impl->sprite.get_width();
+		return scale * impl->sprite.get_height();
 	}
-	if (!impl->image.is_null())
+	else if (!impl->image.is_null())
 	{
-		image_size = impl->image.get_size(); 
+		float scale = width / impl->image.get_width();
+		return scale * impl->image.get_height();
 	}
-
-	return (float) image_size.height;
+	else
+	{
+		return 0.0f;
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////
