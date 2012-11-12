@@ -65,11 +65,11 @@ int Program::main(const std::vector<std::string> &args)
 	
 	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
 
-	Label *label1 = new Label(root);
-	label1->set_text("Hello World");
-
 	GUIComponent *imagecontainer = new GUIComponent(root);
 	imagecontainer->set_class("imagecontainer");
+
+	Label *label1 = new Label(imagecontainer);
+	label1->set_text("Hello World");
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
