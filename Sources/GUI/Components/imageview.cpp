@@ -24,6 +24,9 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Kenneth Gangstoe
+**    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
@@ -243,9 +246,7 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			image_view->pop_cliprect(canvas);
 		}
 	}
-
 }
-
 
 }
 
