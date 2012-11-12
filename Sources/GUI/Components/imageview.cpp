@@ -152,11 +152,11 @@ float ImageView::get_preferred_content_width()
 {
 	if (!impl->sprite.is_null())
 	{
-		return impl->sprite.get_width();
+		return impl->sprite.get_width() * impl->scale_x;
 	}
 	else if (!impl->image.is_null())
 	{
-		return impl->image.get_width();
+		return impl->image.get_width() * impl->scale_x;
 	}
 	else
 	{
@@ -170,24 +170,24 @@ float ImageView::get_preferred_content_height(float width)
 	{
 		if (impl->scale_to_fit)
 		{
-			float scale = width / impl->sprite.get_width();
-			return scale * impl->sprite.get_height();
+			float scale = width / (impl->sprite.get_width() * impl->scale_x);
+			return scale * impl->sprite.get_height() * impl->scale_y;
 		}
 		else
 		{
-			return impl->sprite.get_height();
+			return impl->sprite.get_height() * impl->scale_y;
 		}
 	}
 	else if (!impl->image.is_null())
 	{
 		if (impl->scale_to_fit)
 		{
-			float scale = width / impl->image.get_width();
-			return scale * impl->image.get_height();
+			float scale = width / (impl->image.get_width() * impl->scale_x);
+			return scale * impl->image.get_height() * impl->scale_y;
 		}
 		else
 		{
-			return impl->image.get_height();
+			return impl->image.get_height() * impl->scale_y;
 		}
 	}
 	else
