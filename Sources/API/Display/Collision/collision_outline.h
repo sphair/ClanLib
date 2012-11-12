@@ -164,7 +164,7 @@ public:
 	/// \param contours = The contours
 	/// \param size = The size
 	/// \param accuracy = Outline Accuracy
-	CollisionOutline(const std::vector<Contour> &contours, Size &size, OutlineAccuracy accuracy);
+	CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy);
 
 	~CollisionOutline();
 

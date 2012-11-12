@@ -63,7 +63,7 @@ CollisionOutline::CollisionOutline()
 {
 }
 
-CollisionOutline::CollisionOutline(const std::vector<Contour> &contours, Size &size, OutlineAccuracy accuracy)
+CollisionOutline::CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy)
  : impl(new CollisionOutline_Impl(contours, size, accuracy))
 {
 }
