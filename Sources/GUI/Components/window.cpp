@@ -50,8 +50,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -241,55 +239,56 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (draw_caption)
 		check_move_window(msg);
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::pressed && e.id == mouse_left)
+		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 		{
-			if (part_buttonclose->get_geometry().contains(e.mouse_pos))
+			if (part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos))
 				part_buttonclose->set_pseudo_class(CssStr::pressed, true);
 		}
-		else if (e.type == InputEvent::released && e.id == mouse_left)
+		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
 			if(draw_caption)
 			{
 				part_buttonclose->set_pseudo_class(CssStr::pressed, false);
-				if (part_buttonclose->get_geometry().contains(e.mouse_pos))
+				if (part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos))
 				{
 					if (!window->func_close().is_null() && window->func_close().invoke())
-						msg.set_consumed();
+						input_msg->consumed = true;
 				}
 			}
 		}
-		else if (e.type == InputEvent::pointer_moved)
+		else if (input_msg->input_event.type == InputEvent::pointer_moved)
 		{
 			if(draw_caption)
 			{
-				part_buttonclose->set_pseudo_class(CssStr::hot, part_buttonclose->get_geometry().contains(e.mouse_pos));
+				part_buttonclose->set_pseudo_class(CssStr::hot, part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos));
 			}
 		}
 	}
-	else if (msg.is_type(GUIMessage_Close::get_type_name()))
+
+	std::shared_ptr<GUIMessage_Close> close_msg = std::dynamic_pointer_cast<GUIMessage_Close>(msg);
+	if (close_msg)
 	{
 		if (!window->func_close().is_null() && window->func_close().invoke())
-			msg.set_consumed();
+			close_msg->consumed = true;
 	}
-	else if (msg.is_type(GUIMessage_ActivationChange::get_type_name()))
+
+	std::shared_ptr<GUIMessage_ActivationChange> activation_change_msg = std::dynamic_pointer_cast<GUIMessage_ActivationChange>(msg);
+	if (activation_change_msg)
 	{
-		GUIMessage_ActivationChange ac(msg);
-		if (ac.get_activation_type() == GUIMessage_ActivationChange::activation_gained)
+		if (activation_change_msg->activation_type == GUIMessage_ActivationChange::activation_gained)
 		{
 			window->GUIComponent::impl->activated = true;
 			if (!window->func_activated().is_null() && window->func_activated().invoke())
-				msg.set_consumed();
+				activation_change_msg->consumed = true;
 		}
-		else if (ac.get_activation_type() == GUIMessage_ActivationChange::activation_lost)
+		else if (activation_change_msg->activation_type == GUIMessage_ActivationChange::activation_lost)
 		{
 			window->GUIComponent::impl->activated = false;
 			if (!window->func_deactivated().is_null() && window->func_deactivated().invoke())
-				msg.set_consumed();
+				activation_change_msg->consumed = true;
 		}
 	}
 }
@@ -307,22 +306,20 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 		return;
 	}
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::pressed && e.id == mouse_left)
+		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 		{
 			window->bring_to_front();
-			if (part_caption->get_geometry().contains(e.mouse_pos))
+			if (part_caption->get_geometry().contains(input_msg->input_event.mouse_pos))
 			{
 				drag_start = true;
 				window->capture_mouse(true);
-				last_mouse_pos = e.mouse_pos;
+				last_mouse_pos = input_msg->input_event.mouse_pos;
 			}
 		}
-		else if (e.type == InputEvent::released && e.id == mouse_left)
+		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
 			if(drag_start)
 			{
@@ -330,7 +327,7 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 				window->capture_mouse(false);
 			}
 		}
-		else if (e.type == InputEvent::pointer_moved && drag_start == true)
+		else if (input_msg->input_event.type == InputEvent::pointer_moved && drag_start == true)
 		{
 			const GUIComponent *root_component = window->get_top_level_component();
 
@@ -343,15 +340,15 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 				if (cur->component == root_component)
 				{
 					Rect geometry = window->get_window_geometry();
-					geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
-					//last_mouse_pos = e.mouse_pos;
+					geometry.translate(input_msg->input_event.mouse_pos.x - last_mouse_pos.x, input_msg->input_event.mouse_pos.y - last_mouse_pos.y);
 					window->set_window_geometry(geometry);
 				}
 			}
 		}
 	}
-}
 
 }
 
-#endif
+}
+
+
