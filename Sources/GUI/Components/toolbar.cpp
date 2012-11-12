@@ -47,8 +47,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -68,14 +66,14 @@ public:
 	: toolbar(0), need_layout_update(true), horizontal(false), single_select_mode(false), index_hot_item(-1), index_pressed_item(-1),
 	  mouse_mode(mouse_mode_normal), size_icon(16,16), next_id(1)
 	{
-		prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
-		prop_icon_width = GUIThemePartProperty(CssStr::icon_width);
-		prop_icon_height = GUIThemePartProperty(CssStr::icon_height);
-		prop_layout = GUIThemePartProperty(CssStr::layout, "left");
-		prop_text_gap = GUIThemePartProperty(CssStr::text_gap, "3");
+//FIXME: 		prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
+//FIXME: 		prop_icon_width = GUIThemePartProperty(CssStr::icon_width);
+//FIXME: 		prop_icon_height = GUIThemePartProperty(CssStr::icon_height);
+//FIXME: 		prop_layout = GUIThemePartProperty(CssStr::layout, "left");
+//FIXME: 		prop_text_gap = GUIThemePartProperty(CssStr::text_gap, "3");
 	}
 
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
 	void create_parts();
@@ -91,11 +89,11 @@ public:
 	GUIThemePart part_item_pressed;
 	GUIThemePart part_item_hot;
 	GUIThemePart part_item_on;
-	GUIThemePartProperty prop_text_color;
-	GUIThemePartProperty prop_icon_width;
-	GUIThemePartProperty prop_icon_height;
-	GUIThemePartProperty prop_layout;
-	GUIThemePartProperty prop_text_gap;
+//FIXME: 	GUIThemePartProperty prop_text_color;
+//FIXME: 	GUIThemePartProperty prop_icon_width;
+//FIXME: 	GUIThemePartProperty prop_icon_height;
+//FIXME: 	GUIThemePartProperty prop_layout;
+//FIXME: 	GUIThemePartProperty prop_text_gap;
 
 	bool need_layout_update;
 	bool horizontal;
@@ -133,7 +131,7 @@ ToolBar::ToolBar(GUIComponent *parent)
 	func_process_message().set(impl.get(), &ToolBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolBar_Impl::on_render);
 	func_resized().set(impl.get(), &ToolBar_Impl::on_resized);
-	func_style_changed().set(impl.get(), &ToolBar_Impl::create_parts);
+//FIXME: 	func_style_changed().set(impl.get(), &ToolBar_Impl::create_parts);
 	impl->create_parts();
 }
 
@@ -269,20 +267,18 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!toolbar->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.type == InputEvent::released && e.id == mouse_right)
+		if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_right)
 		{
-			int index = find_item_at(e.mouse_pos);
+			int index = find_item_at(input_msg->input_event.mouse_pos);
 			if (!func_mouse_right_up.is_null())
-				func_mouse_right_up.invoke(e.mouse_pos, index);
+				func_mouse_right_up.invoke(input_msg->input_event.mouse_pos, index);
 		}
 		else if (mouse_mode == mouse_mode_normal)
 		{
-			int index = find_item_at(e.mouse_pos);
+			int index = find_item_at(input_msg->input_event.mouse_pos);
 			if (index == -1)
 			{
 				if (index_hot_item != -1)
@@ -293,7 +289,7 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				return;
 			}
 
-			if (e.type == InputEvent::pressed && e.id == mouse_left)
+			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 			{
 				index_hot_item = -1;
 				index_pressed_item = index;
@@ -309,12 +305,12 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 		else if (mouse_mode == mouse_mode_pressed)
 		{
-			if (e.type == InputEvent::released && e.id == mouse_left)
+			if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 			{
 				toolbar->capture_mouse(false);
 				mouse_mode = mouse_mode_normal;
 
-				int index = find_item_at(e.mouse_pos);
+				int index = find_item_at(input_msg->input_event.mouse_pos);
 				bool perform_click = (index == index_pressed_item);
 				bool pressed_state = items[index_pressed_item].is_pressed();
 
@@ -346,10 +342,10 @@ void ToolBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 		{
 			if (index_hot_item != -1)
 			{
@@ -418,17 +414,17 @@ void ToolBar_Impl::on_resized()
 
 	if ( (rect_width > 0) && (rect_height > 0) )	// Only update if the geometry is valid
 	{
-		bool old_horiz = part_component.get_state("horizontal");
+		//FIXME: bool old_horiz = part_component.get_state("horizontal");
 
 		horizontal = (rect_width >= rect_height);
 
-		if (old_horiz != horizontal)
-		{
-			if (horizontal)
-				toolbar->set_class("horizontal");
-			else 
-				toolbar->set_class("vertical");
-		}
+		//FIXME: if (old_horiz != horizontal)
+		//FIXME: {
+		//FIXME: 	if (horizontal)
+		//FIXME: 		toolbar->set_class("horizontal");
+		//FIXME: 	else 
+		//FIXME: 		toolbar->set_class("vertical");
+		//FIXME: }
 
 		need_layout_update = true;
 	}
@@ -457,27 +453,27 @@ void ToolBar_Impl::unselect_all(ToolBarItem_Impl *ignore)
 void ToolBar_Impl::create_parts()
 {
 	part_component = GUIThemePart(toolbar);
-	part_component.set_state(CssStr::horizontal, true);
-	part_item_normal = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_normal.set_state(CssStr::normal, true);
-	part_item_disabled = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_disabled.set_state(CssStr::disabled, true);
-	part_item_pressed = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_pressed.set_state(CssStr::pressed, true);
-	part_item_hot = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_hot.set_state(CssStr::hot, true);
-	part_item_on = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_on.set_state(CssStr::on, true);
+	//FIXME: part_component.set_pseudo_class(CssStr::horizontal, true);
+	//FIXME: part_item_normal = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
+	//FIXME: part_item_normal.set_pseudo_class(CssStr::normal, true);
+	//FIXME: part_item_disabled = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
+	//FIXME: part_item_disabled.set_pseudo_class(CssStr::disabled, true);
+	//FIXME: part_item_pressed = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
+	//FIXME: part_item_pressed.set_pseudo_class(CssStr::pressed, true);
+	//FIXME: part_item_hot = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
+	//FIXME: part_item_hot.set_pseudo_class(CssStr::hot, true);
+	//FIXME: part_item_on = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
+	//FIXME: part_item_on.set_pseudo_class(CssStr::on, true);
 
 	font = part_component.get_font();
-	text_color = part_component.get_property(prop_text_color);
-	size_icon.width = part_item_normal.get_property_int(prop_icon_width);
-	size_icon.height = part_item_normal.get_property_int(prop_icon_height);
-	std::string str_alignment = part_component.get_property(prop_layout);
-	if (str_alignment == "center")
-		layout = layout_center;
-	else
-		layout = layout_left;
+	//FIXME: text_color = part_component.get_property(prop_text_color);
+	//FIXME: size_icon.width = part_item_normal.get_property_int(prop_icon_width);
+	//FIXME: size_icon.height = part_item_normal.get_property_int(prop_icon_height);
+	//FIXME: std::string str_alignment = part_component.get_property(prop_layout);
+	//FIXME: if (str_alignment == "center")
+	//FIXME: 	layout = layout_center;
+	//FIXME: else
+	//FIXME: 	layout = layout_left;
 
 	need_layout_update = true;
 }
@@ -492,7 +488,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	Rect component_content = part_component.get_content_box(rect);
 
 	Rect item_content = part_item_normal.get_content_box(component_content);
-	int original_text_gap = part_item_normal.get_property_int(prop_text_gap);
+	//FIXME: int original_text_gap = part_item_normal.get_property_int(prop_text_gap);
 
 	if (horizontal)
 	{
@@ -507,20 +503,20 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 			ToolBarItem &item = items[index];
 			item_content.left = x;
 			Size text_size = font.get_text_size(canvas, item.impl->text);
-			int text_gap = original_text_gap;
-			if (text_size.width == 0)
-				text_gap = 0;
+			//FIXME: int text_gap = original_text_gap;
+			//FIXME: if (text_size.width == 0)
+			//FIXME: 	text_gap = 0;
 
 			if (layout == layout_left)
 			{
 				item.impl->icon_pos = Rect(Point(0, center_y-size_icon.height/2-item_content.top), size_icon);
-				item_content.right = item_content.left + item.impl->icon_pos.get_width() + text_gap + text_size.width;
-				item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(canvas, font, item_content).baseline-item_content.top);
+				//FIXME: item_content.right = item_content.left + item.impl->icon_pos.get_width() + text_gap + text_size.width;
+				//FIXME: item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(canvas, font, item_content).baseline-item_content.top);
 			}
 			else if (layout == layout_center)
 			{
 				item.impl->icon_pos = Rect(Point(item_size/2-size_icon.width/2, 0), size_icon);
-				item.impl->text_pos = Point(item_size/2-text_size.width/2, item.impl->icon_pos.bottom + text_gap + text_size.height);
+				//FIXME: item.impl->text_pos = Point(item_size/2-text_size.width/2, item.impl->icon_pos.bottom + text_gap + text_size.height);
 				item_content.right = item_content.left + item_size;
 			}
 
@@ -547,21 +543,21 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 			item_content.top = y;
 			Size text_size = font.get_text_size(canvas, item.impl->text);
 
-			int text_gap = original_text_gap;
-			if (text_size.width == 0)
-				text_gap = 0;
+			//FIXME: int text_gap = original_text_gap;
+			//FIXME: if (text_size.width == 0)
+			//FIXME: 	text_gap = 0;
 
 			if (layout == layout_left)
 			{
 				item.impl->icon_pos = Rect(Point(0,0), size_icon);
-				item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, size_item/2+text_size.height/2);
+				//FIXME: item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, size_item/2+text_size.height/2);
 				item_content.bottom = item_content.top + size_item;
 			}
 			else if (layout == layout_center)
 			{
 				item.impl->icon_pos = Rect(Point(center_x-size_icon.width/2, 0), size_icon);
-				item.impl->text_pos = Point(center_x-text_size.width/2, item.impl->icon_pos.bottom + text_gap + text_size.height);
-				item_content.bottom = item_content.top + item.impl->icon_pos.get_height() + text_gap + text_size.height;
+				//FIXME: item.impl->text_pos = Point(center_x-text_size.width/2, item.impl->icon_pos.bottom + text_gap + text_size.height);
+				//FIXME: item_content.bottom = item_content.top + item.impl->icon_pos.get_height() + text_gap + text_size.height;
 			}
 
 			Rect item_render = part_item_normal.get_render_box(item_content);
@@ -590,5 +586,3 @@ int ToolBar_Impl::find_item_at(const Point &pos)
 }
 
 }
-
-#endif

@@ -41,8 +41,6 @@
 #include "API/Core/Text/string_format.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -72,7 +70,7 @@ class StatusBar_Impl
 public:
 	StatusBar_Impl() : show_size_grip(true)
 	{
-		prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
+		//FIXME: prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	bool on_input_doubleclick(const InputEvent &input_event);
@@ -92,7 +90,7 @@ public:
 	GUIThemePart part_status_text;
 	GUIThemePart part_status_part;
 	GUIThemePart part_size_grip;
-	GUIThemePartProperty prop_text_color;
+	//FIXME: GUIThemePartProperty prop_text_color;
 	std::vector<StatusBar_Part> statusbar_parts;
 	bool show_size_grip;
 };
@@ -108,7 +106,7 @@ StatusBar::StatusBar(GUIComponent *parent)
 
 	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);
 	func_render().set(impl.get(), &StatusBar_Impl::on_render);
-	func_style_changed().set(impl.get(), &StatusBar_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &StatusBar_Impl::on_style_changed);
 	func_input_doubleclick().set(impl.get(), &StatusBar_Impl::on_input_doubleclick);
 
 	impl->create_parts();
@@ -325,11 +323,11 @@ void StatusBar_Impl::throw_if_part_exists(int id) const
 void StatusBar_Impl::create_parts()
 {
 	part_component = GUIThemePart(statusbar);
-	part_status_text = GUIThemePart(statusbar, "statustext");
-	part_status_part = GUIThemePart(statusbar, "statuspart");
-	part_size_grip = GUIThemePart(statusbar, "sizegrip");
-	font = part_component.get_font();
-	text_color = part_component.get_property(prop_text_color);
+	//FIXME: part_status_text = GUIThemePart(statusbar, "statustext");
+	//FIXME: part_status_part = GUIThemePart(statusbar, "statuspart");
+	//FIXME: part_size_grip = GUIThemePart(statusbar, "sizegrip");
+	//FIXME: font = part_component.get_font();
+	//FIXME: text_color = part_component.get_property(prop_text_color);
 }
 
 void StatusBar_Impl::on_style_changed()
@@ -338,5 +336,3 @@ void StatusBar_Impl::on_style_changed()
 }
 
 }
-
-#endif

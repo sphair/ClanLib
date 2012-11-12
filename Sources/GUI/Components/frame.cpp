@@ -38,10 +38,9 @@
 #include "API/GUI/Components/imageview.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/sprite.h"
+#include "API/Display/2D/image.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -98,7 +97,7 @@ Frame *Frame::get_named_item(GUIComponent *reference_component, const std::strin
 
 Sprite Frame::get_header_icon() const
 {
-	return impl->part_header_icon->get_image();
+	return impl->part_header_icon->get_sprite();
 }
 
 std::string Frame::get_header_text() const
@@ -108,7 +107,7 @@ std::string Frame::get_header_text() const
 
 void Frame::set_header_icon(const Sprite &icon)
 {
-	impl->part_header_icon->set_image(icon);
+	impl->part_header_icon->set_sprite(icon);
 }
 
 void Frame::set_header_text(const std::string &text)
@@ -117,5 +116,3 @@ void Frame::set_header_text(const std::string &text)
 }
 
 }
-
-#endif

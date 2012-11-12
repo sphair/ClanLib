@@ -42,8 +42,6 @@
 #include <map>
 #include "API/Core/Math/rect.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -84,7 +82,7 @@ Tab::Tab(GUIComponent *parent)
 	impl->tab = this;
 	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
 	func_render().set(impl.get(), &Tab_Impl::on_render);
-	func_style_changed().set(impl.get(), &Tab_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &Tab_Impl::on_style_changed);
 	func_resized().set(impl.get(), &Tab_Impl::on_resized);
 
 	impl->tab_header = new TabHeader(this);
@@ -355,4 +353,3 @@ void Tab_Impl::on_resized()
 
 }
 
-#endif

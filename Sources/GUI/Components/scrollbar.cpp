@@ -39,8 +39,6 @@
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -51,7 +49,7 @@ ScrollBar::ScrollBar(GUIComponent *parent)
 : GUIComponent(parent), impl(new ScrollBar_Impl)
 {
 	set_tag_name(CssStr::ScrollBar::type_name);
-	// set_state(CssStr::normal, true);
+	// set_pseudo_class(CssStr::normal, true);
 
 	impl->scrollbar = this;
 
@@ -273,5 +271,3 @@ Callback_v0 &ScrollBar::func_scroll_end()
 // ScrollBar Implementation:
 
 }
-
-#endif

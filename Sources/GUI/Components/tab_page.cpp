@@ -38,8 +38,6 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -53,7 +51,7 @@ TabPage::TabPage(GUIComponent *parent)
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabPage_Impl::on_process_message);
 	func_render().set(impl.get(), &TabPage_Impl::on_render);
-	func_style_changed().set(impl.get(), &TabPage_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &TabPage_Impl::on_style_changed);
 	func_resized().set(impl.get(), &TabPage_Impl::on_resized);
 
 	impl->on_style_changed();
@@ -115,5 +113,3 @@ void TabPage_Impl::on_resized()
 }
 
 }
-
-#endif

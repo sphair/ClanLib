@@ -170,8 +170,8 @@ void ListViewLayoutIcons::create_parts()
 	part_cell = GUIThemePart(listview, "cell");
 
 	part_cell.set_state("icons", true);
-	part_cell.set_state(CssStr::normal, true);
-	part_row.set_state(CssStr::normal, true);
+	part_cell.set_pseudo_class(CssStr::normal, true);
+	part_row.set_pseudo_class(CssStr::normal, true);
 
 	size_icon.width = part_cell.get_property_int(prop_icon_width);
 	size_icon.height = part_cell.get_property_int(prop_icon_height);

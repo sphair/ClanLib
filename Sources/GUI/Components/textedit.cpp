@@ -57,8 +57,6 @@
 #include "stdlib.h"
 #endif
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -73,7 +71,7 @@ TextEdit::TextEdit(GUIComponent *parent)
 
 	func_render().set(impl.get(), &TextEdit_Impl::on_render);
 	func_process_message().set(impl.get(), &TextEdit_Impl::on_process_message);
-	func_style_changed().set(impl.get(), &TextEdit_Impl::on_style_changed);
+	//FIXME: func_style_changed().set(impl.get(), &TextEdit_Impl::on_style_changed);
 	func_resized().set(impl.get(), &TextEdit_Impl::on_resized);
 	func_enablemode_changed().set(impl.get(), &TextEdit_Impl::on_enable_changed);
 
@@ -391,15 +389,13 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!textedit->is_enabled())
 		return;
 
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
-
-		if (e.device.get_type() == InputDevice::keyboard)
+		if (input_msg->input_event.device.get_type() == InputDevice::keyboard)
 		{
-			if (e.type == InputEvent::pressed &&
-				(e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter))
+			if (input_msg->input_event.type == InputEvent::pressed &&
+				(input_msg->input_event.id == keycode_enter || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_numpad_enter))
 			{
 				if (!func_enter_pressed.is_null())
 				{
@@ -411,14 +407,14 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					insert_text(cursor_pos, "\n");
 					textedit->set_cursor_pos(textedit->get_cursor_pos() + 1);
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 				return;
 			}
 
 			if (!func_before_edit_changed.is_null())
 			{
-				func_before_edit_changed.invoke(e);
-				if (e.type == InputEvent::no_key)
+				func_before_edit_changed.invoke(input_msg->input_event);
+				if (input_msg->input_event.type == InputEvent::no_key)
 				{
 					// If the 'func_before_edit_changed' callback sets e.type to 'no_key',
 					// the input event is to be ignored.
@@ -432,33 +428,33 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				timer.start(500); // don't blink cursor when moving or typing.
 			}
 
-			if (e.type == InputEvent::pressed) // || e.repeat_count > 1) 
+			if (input_msg->input_event.type == InputEvent::pressed) // || e.repeat_count > 1) 
 			{
-				if (e.id == keycode_enter || e.id == keycode_escape || e.id == keycode_tab || e.id == keycode_numpad_enter)
+				if (input_msg->input_event.id == keycode_enter || input_msg->input_event.id == keycode_escape || input_msg->input_event.id == keycode_tab || input_msg->input_event.id == keycode_numpad_enter)
 				{
 					// Do not consume these.
 					return;
 				}
-				else if (e.id == keycode_a && e.ctrl)
+				else if (input_msg->input_event.id == keycode_a && input_msg->input_event.ctrl)
 				{
 					// select all
 					textedit->select_all();
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_c && e.ctrl)
+				else if (input_msg->input_event.id == keycode_c && input_msg->input_event.ctrl)
 				{
 					std::string str = textedit->get_selection();
 					textedit->get_gui_manager().set_clipboard_text(str);
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
 				else if (readonly)
 				{
 					// Do not consume messages on read only component (only allow CTRL-A and CTRL-C)
 					return;
 				}
-				else if (e.id == keycode_up)
+				else if (input_msg->input_event.id == keycode_up)
 				{
-					if (e.shift && selection_length == 0)
+					if (input_msg->input_event.shift && selection_length == 0)
 						selection_start = cursor_pos;
 
 					if (cursor_pos.y > 0)
@@ -467,7 +463,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						cursor_pos.x = min(lines[cursor_pos.y].text.size(), cursor_pos.x);
 					}
 
-					if (e.shift)
+					if (input_msg->input_event.shift)
 					{
 						selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 					}
@@ -481,11 +477,11 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					textedit->request_repaint();
 					undo_info.first_text_insert = true;
 
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_down)
+				else if (input_msg->input_event.id == keycode_down)
 				{
-					if (e.shift && selection_length == 0)
+					if (input_msg->input_event.shift && selection_length == 0)
 						selection_start = cursor_pos;
 
 					if (cursor_pos.y < lines.size() - 1)
@@ -494,7 +490,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						cursor_pos.x = min(lines[cursor_pos.y].text.size(), cursor_pos.x);
 					}
 
-					if (e.shift)
+					if (input_msg->input_event.shift)
 					{
 						selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 					}
@@ -509,64 +505,64 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					textedit->request_repaint();
 					undo_info.first_text_insert = true;
 
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_left)
+				else if (input_msg->input_event.id == keycode_left)
 				{
-					move(-1, e);
-					msg.set_consumed();
+					move(-1, input_msg->input_event);
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_right)
+				else if (input_msg->input_event.id == keycode_right)
 				{
-					move(1, e);
-					msg.set_consumed();
+					move(1, input_msg->input_event);
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_backspace)
+				else if (input_msg->input_event.id == keycode_backspace)
 				{
 					backspace();
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_delete)
+				else if (input_msg->input_event.id == keycode_delete)
 				{
 					del();
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_home)
+				else if (input_msg->input_event.id == keycode_home)
 				{
-					if (e.ctrl)
+					if (input_msg->input_event.ctrl)
 						cursor_pos = Vec2i(0, 0);
 					else
 						cursor_pos.x = 0;
-					if (e.shift)
+					if (input_msg->input_event.shift)
 						selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 					else
 						textedit->clear_selection();
 					textedit->request_repaint();
-					msg.set_consumed();
+					input_msg->consumed = true;
 					move_vertical_scroll();
 				}
-				else if (e.id == keycode_end)
+				else if (input_msg->input_event.id == keycode_end)
 				{
-					if (e.ctrl)
+					if (input_msg->input_event.ctrl)
 						cursor_pos = Vec2i(lines.back().text.length(), lines.size() - 1);
 					else
 						cursor_pos.x = lines[cursor_pos.y].text.size();
 
-					if (e.shift)
+					if (input_msg->input_event.shift)
 						selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 					else
 						textedit->clear_selection();
 					textedit->request_repaint();
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_x && e.ctrl)
+				else if (input_msg->input_event.id == keycode_x && input_msg->input_event.ctrl)
 				{
 					std::string str = textedit->get_selection();
 					textedit->delete_selected_text();
 					textedit->get_gui_manager().set_clipboard_text(str);
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_v && e.ctrl)
+				else if (input_msg->input_event.id == keycode_v && input_msg->input_event.ctrl)
 				{
 					std::string str = textedit->get_gui_manager().get_clipboard_text();
 					std::string::const_iterator end_str = std::remove(str.begin(), str.end(), '\r');
@@ -587,70 +583,70 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						}
 					}
 					move_vertical_scroll();
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (e.id == keycode_shift)
+				else if (input_msg->input_event.id == keycode_shift)
 				{
 					if (selection_length == 0)
 						selection_start = cursor_pos;
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
-				else if (!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32) && (!e.alt && !e.ctrl) || (e.ctrl && e.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
+				else if (!input_msg->input_event.str.empty() && !(input_msg->input_event.str[0] >= 0 && input_msg->input_event.str[0] < 32) && (!input_msg->input_event.alt && !input_msg->input_event.ctrl) || (input_msg->input_event.ctrl && input_msg->input_event.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
 				{
 					textedit->delete_selected_text();
 					textedit->clear_selection();
 					if (input_mask.empty())
 					{
 						// not in any special mode, just insert the string.
-						insert_text(cursor_pos, e.str);
-						cursor_pos.x += e.str.size();
+						insert_text(cursor_pos, input_msg->input_event.str);
+						cursor_pos.x += input_msg->input_event.str.size();
 					}
 					else
 					{
-						if (input_mask_accepts_input(cursor_pos, e.str))
+						if (input_mask_accepts_input(cursor_pos, input_msg->input_event.str))
 						{
-							insert_text(cursor_pos, e.str);
-							cursor_pos.x += e.str.size();
+							insert_text(cursor_pos, input_msg->input_event.str);
+							cursor_pos.x += input_msg->input_event.str.size();
 						}
 					}
-					msg.set_consumed();
+					input_msg->consumed = true;
 				}
 			}
-			else if (e.type == InputEvent::released) 
+			else if (input_msg->input_event.type == InputEvent::released) 
 			{
 				// undo
-				if (e.ctrl && e.id == keycode_z) 
+				if (input_msg->input_event.ctrl && input_msg->input_event.id == keycode_z) 
 				{
 					if (!readonly)
 					{
 						std::string tmp = undo_info.undo_text;
 						undo_info.undo_text = textedit->get_text();
 						textedit->set_text(tmp);
-						msg.set_consumed();
+						input_msg->consumed = true;
 					}
 				}
 			}
 
-			if (e.type == InputEvent::pressed && !func_after_edit_changed.is_null())
+			if (input_msg->input_event.type == InputEvent::pressed && !func_after_edit_changed.is_null())
 			{
-				func_after_edit_changed.invoke(e);
+				func_after_edit_changed.invoke(input_msg->input_event);
 			}
 
 		}
-		else if (e.device.get_type() == InputDevice::pointer)
+		else if (input_msg->input_event.device.get_type() == InputDevice::pointer)
 		{
-			if (e.type == InputEvent::pressed && e.id == mouse_left)
+			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 			{
 				textedit->capture_mouse(true);
 				mouse_selecting = true;
-				cursor_pos = get_character_index(e.mouse_pos);
+				cursor_pos = get_character_index(input_msg->input_event.mouse_pos);
 				selection_start = cursor_pos;
 				selection_length = 0;
 
 				textedit->request_repaint();
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			if (mouse_selecting && e.type == InputEvent::released && e.id == mouse_left)
+			if (mouse_selecting && input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 			{
 				if (ignore_mouse_events) // This prevents text selection from changing from what was set when focus was gained.
 				{
@@ -663,19 +659,19 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					scroll_timer.stop();
 					textedit->capture_mouse(false);
 					mouse_selecting = false;
-					Vec2i sel_end = get_character_index(e.mouse_pos);
+					Vec2i sel_end = get_character_index(input_msg->input_event.mouse_pos);
 					selection_length = to_offset(sel_end) - to_offset(selection_start);
 					cursor_pos = sel_end;
 					textedit->set_focus();
 					textedit->request_repaint();
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
-			if (e.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
+			if (input_msg->input_event.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
 			{
-				if (e.mouse_pos.x < content_rect.left || e.mouse_pos.x > content_rect.right)
+				if (input_msg->input_event.mouse_pos.x < content_rect.left || input_msg->input_event.mouse_pos.x > content_rect.right)
 				{
-					if (e.mouse_pos.x < content_rect.left)
+					if (input_msg->input_event.mouse_pos.x < content_rect.left)
 						mouse_moves_left = true;
 					else 
 						mouse_moves_left = false;
@@ -686,19 +682,19 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				else
 				{
 					scroll_timer.stop();
-					cursor_pos = get_character_index(e.mouse_pos);
+					cursor_pos = get_character_index(input_msg->input_event.mouse_pos);
 					selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 					textedit->request_repaint();
 				}
-				msg.set_consumed();
+				input_msg->consumed = true;
 			}
 		}
 	}
-	else if (msg.is_type(GUIMessage_FocusChange::get_type_name()))
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange fmsg(msg);
 
-		if (fmsg.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			if (textedit->get_focus_policy() == GUIComponent::focus_parent)
 			{
@@ -713,7 +709,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (select_all_on_focus_gain)
 				textedit->select_all();
 			ignore_mouse_events = true;
-			part_selection.set_state(CssStr::unfocused, false);
+			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, false);
 			cursor_pos.y = lines.size() - 1;
 			cursor_pos.x = lines[cursor_pos.y].text.length();
 
@@ -722,11 +718,11 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (!func_focus_gained.is_null())
 				func_focus_gained.invoke();
 		}
-		else if (fmsg.get_focus_type() == GUIMessage_FocusChange::losing_focus)
+		else if (focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus)
 		{
 			timer.stop();
 			textedit->clear_selection();
-			part_selection.set_state(CssStr::unfocused, true);
+			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, true);
 
 			textedit->request_repaint();
 
@@ -734,10 +730,10 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				func_focus_lost.invoke();
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer_msg(msg);
-		if (pointer_msg.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			textedit->set_cursor(cursor_ibeam);
 		}
@@ -756,22 +752,22 @@ void TextEdit_Impl::on_style_changed()
 void TextEdit_Impl::create_parts()
 {
 	part_component = GUIThemePart(textedit);
-	part_selection = GUIThemePart(textedit, CssStr::TextEdit::part_selection);
-	part_cursor = GUIThemePart(textedit, CssStr::TextEdit::part_cursor);
+	//FIXME: part_selection = GUIThemePart(textedit, CssStr::TextEdit::part_selection);
+	//FIXME: part_cursor = GUIThemePart(textedit, CssStr::TextEdit::part_cursor);
 
 	bool enabled = textedit->is_enabled();
 
-	part_component.set_state(CssStr::hot, false);
-	part_component.set_state(CssStr::normal, enabled);
-	part_component.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
+	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
 
-	text_color = part_component.get_property(prop_text_color);
+	//FIXME: text_color = part_component.get_property(prop_text_color);
 
-	part_cursor.set_state(CssStr::normal, enabled);
-	part_cursor.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_cursor.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_cursor.set_pseudo_class(CssStr::disabled, !enabled);
 
-	part_selection.set_state(CssStr::normal, enabled);
-	part_selection.set_state(CssStr::disabled, !enabled);
+	//FIXME: part_selection.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: part_selection.set_pseudo_class(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
 }
@@ -1084,14 +1080,14 @@ void TextEdit_Impl::on_resized()
 
 void TextEdit_Impl::on_scroll_timer_expired()
 {
-	GUIMessage_Input msg;
-	InputEvent event;
-	msg.set_event(event);
+//FIXME: 	GUIMessage_Input msg;
+//FIXME: 	InputEvent event;
+//FIXME: 	msg.set_event(event);
 
-	if (mouse_moves_left)
-		move(-1,event);
-	else
-		move(1, event);
+//FIXME: 	if (mouse_moves_left)
+//FIXME: 		move(-1,event);
+//FIXME: 	else
+//FIXME: 		move(1, event);
 }
 
 void TextEdit_Impl::on_enable_changed()
@@ -1263,5 +1259,3 @@ Vec2i TextEdit_Impl::get_character_index(Point mouse_wincoords)
 }
 
 }
-
-#endif

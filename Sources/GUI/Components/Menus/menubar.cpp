@@ -126,7 +126,7 @@ void MenuBar::remove_menu(int index)
 
 void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	{
 		GUIMessage_Input input_msg = msg;
 		InputEvent e = input_msg.get_event();
@@ -173,7 +173,7 @@ void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 		}
 	}
-	else if (msg.is_type(GUIMessage_Pointer::get_type_name()))
+	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	{
 		GUIMessage_Pointer pmsg(msg);
 		if (pmsg.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
@@ -195,8 +195,8 @@ void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		TopMenu &topmenu = menus[index];
 
-		part_item.set_state(CssStr::selected, index == selected_index);
-		part_item.set_state(CssStr::hot, (index != selected_index) && (index == hot_index));
+		part_item.set_pseudo_class(CssStr::selected, index == selected_index);
+		part_item.set_pseudo_class(CssStr::hot, (index != selected_index) && (index == hot_index));
 
 		Rect item_rect = get_menu_item_rect(index);
 		Rect item_content = part_item.get_content_box(item_rect);

@@ -118,10 +118,10 @@ void ListViewRenderer::render(
 		ListViewColumnHeader col = header->get_first_column();
 		int i=0;
 
-		part_cell.set_state(CssStr::hot, si.mouse_over);
-		part_cell.set_state(CssStr::normal, !si.mouse_over);
-		part_selection.set_state(CssStr::hot, si.mouse_over);
-		part_selection.set_state(CssStr::normal, !si.mouse_over);
+		part_cell.set_pseudo_class(CssStr::hot, si.mouse_over);
+		part_cell.set_pseudo_class(CssStr::normal, !si.mouse_over);
+		part_selection.set_pseudo_class(CssStr::hot, si.mouse_over);
+		part_selection.set_pseudo_class(CssStr::normal, !si.mouse_over);
 
 		while (!col.is_null())
 		{
@@ -169,7 +169,7 @@ void ListViewRenderer::render(
 
 				if (si.item.is_selected())
 				{
-					part_selection.set_state(CssStr::unfocused, !listview->has_focus());
+					part_selection.set_pseudo_class(CssStr::unfocused, !listview->has_focus());
 
 					Rect selection_rect = si.rect_text[i];
 
@@ -198,8 +198,8 @@ void ListViewRenderer::render(
 
 					if (i == 0)
 					{
-						part_cell.set_state(CssStr::hot, false); // only the first column gets a hot state. Might want to change this at some point?
-						part_cell.set_state(CssStr::normal, true);
+						part_cell.set_pseudo_class(CssStr::hot, false); // only the first column gets a hot state. Might want to change this at some point?
+						part_cell.set_pseudo_class(CssStr::normal, true);
 					}
 				}
 			}
@@ -244,15 +244,15 @@ void ListViewRenderer::create_parts()
 	selection_margin.top = part_selection.get_property_int(prop_selection_margin_top);
 	selection_margin.bottom = part_selection.get_property_int(prop_selection_margin_bottom);
 
-	part_opener_closed.set_state(CssStr::closed, true);
-	part_opener_open.set_state(CssStr::open, true);
-	part_row_alternate.set_state(CssStr::alternate, true);
+	part_opener_closed.set_pseudo_class(CssStr::closed, true);
+	part_opener_open.set_pseudo_class(CssStr::open, true);
+	part_row_alternate.set_pseudo_class(CssStr::alternate, true);
 
-	part_cell.set_state(CssStr::normal, true);
-	part_row.set_state(CssStr::normal, true);
-	part_row_alternate.set_state(CssStr::normal, true);
-	part_column.set_state(CssStr::normal, true);
-	part_icon_selection.set_state(CssStr::normal, true);
+	part_cell.set_pseudo_class(CssStr::normal, true);
+	part_row.set_pseudo_class(CssStr::normal, true);
+	part_row_alternate.set_pseudo_class(CssStr::normal, true);
+	part_column.set_pseudo_class(CssStr::normal, true);
+	part_icon_selection.set_pseudo_class(CssStr::normal, true);
 
 	color_icon = part_cell.get_property(prop_icon_color);
 	color_icon_selected = part_cell.get_property(prop_icon_color_selected);
@@ -273,8 +273,8 @@ void ListViewRenderer::set_icon_list(ListViewIconList ilist)
 void ListViewRenderer::set_display_mode(ListViewDisplayMode mode)
 {
 	display_mode = mode;
-	part_cell.set_state(CssStr::details, mode == listview_mode_details);
-	part_cell.set_state(CssStr::icons, mode == listview_mode_icons);
+	part_cell.set_pseudo_class(CssStr::details, mode == listview_mode_details);
+	part_cell.set_pseudo_class(CssStr::icons, mode == listview_mode_icons);
 
 	height_row = part_cell.get_preferred_height();
 }

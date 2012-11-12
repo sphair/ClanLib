@@ -44,8 +44,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -67,7 +65,7 @@ public:
 	Font font;
 	Colorf text_color;
 	GUIThemePart part_component;
-	GUIThemePartProperty prop_text_color;
+	//FIXME: GUIThemePartProperty prop_text_color;
 	Slot slot_filter_message;
 };
 
@@ -79,14 +77,14 @@ ToolTip::ToolTip(GUIManager manager)
 {
 	set_tag_name(CssStr::ToolTip::type_name);
 	impl->tooltip = this;
-	impl->prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
+	//FIXME: impl->prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 
 	func_process_message().set(impl.get(), &ToolTip_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
 
 	impl->part_component = GUIThemePart(this);
 	impl->font = impl->part_component.get_font();
-	impl->text_color = impl->part_component.get_property(impl->prop_text_color);
+	//FIXME: impl->text_color = impl->part_component.get_property(impl->prop_text_color);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
 	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
@@ -170,7 +168,8 @@ GUITopLevelDescription ToolTip_Impl::create_description()
 
 void ToolTip_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 		tooltip->set_visible(false, false);
 }
 
@@ -196,14 +195,14 @@ void ToolTip_Impl::on_show_delayed()
 
 void ToolTip_Impl::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
-	if (message.get_type() == GUIMessage_FocusChange::get_type_name() ||
-		message.get_type() == GUIMessage_ActivationChange::get_type_name() ||
-		message.get_type() == GUIMessage_Pointer::get_type_name())
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(message);
+	std::shared_ptr<GUIMessage_ActivationChange> activation_change_msg = std::dynamic_pointer_cast<GUIMessage_ActivationChange>(message);
+	std::shared_ptr<GUIMessage_Pointer> pointer_msg = std::dynamic_pointer_cast<GUIMessage_Pointer>(message);
+
+	if (focus_change_msg || activation_change_msg || pointer_msg)
 	{
 		tooltip->hide();
 	}
 }
 
 }
-
-#endif

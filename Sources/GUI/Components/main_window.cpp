@@ -39,8 +39,6 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Window/display_window.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -89,13 +87,13 @@ MainWindow::MainWindow(GUIManager *owner, const GUITopLevelDescription &descript
 	impl->menubar = new MenuBar(this);
 	impl->statusbar = new StatusBar(this);
 
-	int menubar_height = impl->menubar->get_preferred_height();
-	int statusbar_height = impl->statusbar->get_preferred_height();
-	Rect g = get_geometry();
-	Rect menubar_rect(0, 0, g.get_width(), menubar_height);
-	Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());
-	impl->menubar->set_geometry(menubar_rect);
-	impl->statusbar->set_geometry(statusbar_rect);
+	//FIXME: int menubar_height = impl->menubar->get_preferred_height();
+	//FIXME: int statusbar_height = impl->statusbar->get_preferred_height();
+	//FIXME: Rect g = get_geometry();
+	//FIXME: Rect menubar_rect(0, 0, g.get_width(), menubar_height);
+	//FIXME: Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());
+	//FIXME: impl->menubar->set_geometry(menubar_rect);
+	//FIXME: impl->statusbar->set_geometry(statusbar_rect);
 }
 
 MainWindow::MainWindow(GUIComponent *owner, const GUITopLevelDescription &description)
@@ -113,13 +111,13 @@ MainWindow::MainWindow(GUIComponent *owner, const GUITopLevelDescription &descri
 	impl->menubar = new MenuBar(this);
 	impl->statusbar = new StatusBar(this);
 
-	int menubar_height = impl->menubar->get_preferred_height();
-	int statusbar_height = impl->statusbar->get_preferred_height();
-	Rect g = get_geometry();
-	Rect menubar_rect(0, 0, g.get_width(), menubar_height);
-	Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());
-	impl->menubar->set_geometry(menubar_rect);
-	impl->statusbar->set_geometry(statusbar_rect);
+	//FIXME: int menubar_height = impl->menubar->get_preferred_height();
+	//FIXME: int statusbar_height = impl->statusbar->get_preferred_height();
+	//FIXME: Rect g = get_geometry();
+	//FIXME: Rect menubar_rect(0, 0, g.get_width(), menubar_height);
+	//FIXME: Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());
+	//FIXME: impl->menubar->set_geometry(menubar_rect);
+	//FIXME: impl->statusbar->set_geometry(statusbar_rect);
 }
 
 MainWindow::~MainWindow()
@@ -187,7 +185,9 @@ void MainWindow::set_title(const std::string &str)
 
 void MainWindow_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Close::get_type_name()))
+	std::shared_ptr<GUIMessage_Close> close_msg = std::dynamic_pointer_cast<GUIMessage_Close>(msg);
+
+	if (close_msg)
 	{
 		if (!func_close.is_null())
 			func_close.invoke();
@@ -201,5 +201,3 @@ void MainWindow_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 }
 
 }
-
-#endif

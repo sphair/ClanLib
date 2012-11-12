@@ -264,7 +264,7 @@ void ListViewLayoutDetails::create_parts()
 
 	indent_width = part_row.get_property_int(prop_indent_width);
 
-	part_cell.set_state(CssStr::normal, true);
+	part_cell.set_pseudo_class(CssStr::normal, true);
 	size_cell = part_cell.get_preferred_size();
 	height_row = size_cell.height;
 
