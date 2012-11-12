@@ -130,6 +130,16 @@ Rect GUIComponent::get_geometry() const
 	}
 }
 
+Rect GUIComponent::get_content_box() const
+{
+	Rect box = Rect(Point(), impl->geometry.get_size());
+	box.left += impl->css_used_values.border.left + impl->css_used_values.padding.left;
+	box.right -= impl->css_used_values.border.right + impl->css_used_values.padding.right;
+	box.top += impl->css_used_values.border.top + impl->css_used_values.padding.top;
+	box.bottom -= impl->css_used_values.border.bottom + impl->css_used_values.padding.bottom;
+	return box;
+}
+
 Rect GUIComponent::get_window_geometry() const
 {
 	if (impl->parent == 0)

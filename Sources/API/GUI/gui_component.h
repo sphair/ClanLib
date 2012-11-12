@@ -105,6 +105,9 @@ public:
 	/// \brief Returns the position and size of the drawable area of the component.
 	Rect get_geometry() const;
 
+	/// \brief Returns the content box area relative to the component geometry.
+	Rect get_content_box() const;
+
 	/// \brief Returns the width of the drawable area of the component.
 	int get_width() const;
 

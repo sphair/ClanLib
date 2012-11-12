@@ -167,7 +167,7 @@ void ImageView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect(Point(0,0), image_view->get_geometry().get_size());
+	Rect rect = image_view->get_content_box();
 	//FIXME: part_component.render_box(canvas, rect, update_rect);
 
 	//FIXME: Rect content = part_component.get_content_box(rect);
