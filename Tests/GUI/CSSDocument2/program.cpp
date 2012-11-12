@@ -80,7 +80,7 @@ void Program::create_imageview_test(GUIComponent *root)
 	imagecontainer->set_class("imagecontainer");
 
 	Label *label1 = new Label(imagecontainer);
-	label1->set_text("Once upon a time there was a label in a test program that had to include a lot of text so we could see it word wrap!");
+	label1->set_text("Once upon a time there was a label in a test program that had to include a lot of text so we could see it word wrap!\nBut we need a font.draw_text(Rect target_rect, alignment) for it to work correctly");
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
