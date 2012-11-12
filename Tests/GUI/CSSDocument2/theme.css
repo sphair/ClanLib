@@ -141,13 +141,15 @@ ribbon-section button:toggled
 label
 {
     background: #ffff80;
+    -clan-box-width-shrink-factor: 1;
+    -clan-box-width-expand-factor: 1;
 }
 
 .imagecontainer
 {
     -clan-box-direction: horizontal;
-    width: 800px;
-    height: 150px;
+    width: 100%;
+    height: 220px;
     background: green;
 }
 
