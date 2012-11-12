@@ -40,10 +40,6 @@
 #include "API/Display/2D/canvas.h"
 #include "../gui_css_strings.h"
 
-// ***********************
-// ******* FIX FIXME's !!!
-// ***********************
-
 namespace clan
 {
 
@@ -58,16 +54,9 @@ public:
 	}
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	
-	void on_style_changed();
-
-	void create_parts();
 
 	ImageView *image_view;
-
-	//FIXME: GUIThemePart part_component;
 
 	Sprite sprite;
 	Image image;
@@ -87,9 +76,6 @@ ImageView::ImageView(GUIComponent *parent)
 	impl->image_view = this;
 	func_process_message().set(impl.get(), &ImageView_Impl::on_process_message);
 	func_render().set(impl.get(), &ImageView_Impl::on_render);
-	//FIXME: func_style_changed().set(impl.get(), &ImageView_Impl::on_style_changed);
-
-	impl->create_parts();
 }
 
 ImageView::~ImageView()
@@ -162,6 +148,16 @@ void ImageView::set_scale( float x, float y )
 	request_repaint();
 }
 
+float ImageView::get_preferred_content_width() const
+{
+	return 0.0f; // FIXME
+}
+
+float ImageView::get_preferred_content_height(float width) const
+{
+	return 0.0f; // FIXME
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // ImageView Implementation:
 
@@ -215,15 +211,6 @@ void ImageView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 }
 
-void ImageView_Impl::create_parts()
-{
-	//FIXME: part_component = GUIThemePart(image);
-}
-
-void ImageView_Impl::on_style_changed()
-{
-	create_parts();
-}
 
 }
 
