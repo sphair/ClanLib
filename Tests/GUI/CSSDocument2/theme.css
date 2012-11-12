@@ -54,7 +54,7 @@ ribbon-menu-button:hot
 ribbon-tab
 {
     height: 23px;
-    min-width: 50px;
+    min-width: 30px;
     -clan-box-direction: horizontal;
 }
 
