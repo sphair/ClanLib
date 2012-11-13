@@ -138,22 +138,6 @@ std::string PushButton::get_text() const
 	return impl->label->get_text();
 }
 
-Size PushButton::get_preferred_size()
-{
-	int width = get_preferred_content_width();
-	return Size(width, get_preferred_content_height(width));
-}
-
-float PushButton::get_preferred_content_width()
-{
-	return impl->label->get_preferred_content_width();
-}
-
-float PushButton::get_preferred_content_height(float width)
-{
-	return impl->label->get_preferred_content_height(width);
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Operations:
 
