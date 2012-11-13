@@ -104,7 +104,17 @@ public:
 	/// \brief Get Preferred size
 	///
 	/// \return preferred_size
-	Size get_preferred_size() const;
+	Size get_preferred_size();
+
+	/// \brief Returns the preferred content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_width();
+
+	/// \brief Returns the preferred content height for the specified content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_height(float width);
 
 /// \}
 /// \name Operations

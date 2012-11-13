@@ -38,4 +38,5 @@
       <component class="test3"/>
     </component>
   </component>
+  <pushbutton>PushButton</pushbutton>
 </root>
