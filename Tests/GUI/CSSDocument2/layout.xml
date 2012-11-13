@@ -33,4 +33,9 @@
       </ribbon-section>
     </ribbon-page>
   </ribbon>
+  <component class="test1">
+    <component class="test2">
+      <component class="test3"/>
+    </component>
+  </component>
 </root>

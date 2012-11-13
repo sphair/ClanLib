@@ -34,13 +34,6 @@ int Program::main(const std::vector<std::string> &args)
 		create_component(xml_child, root);
 	}
 
-	GUIComponent *testHot1 = new GUIComponent(root);
-	testHot1->set_class("test1");
-	GUIComponent *testHot2 = new GUIComponent(testHot1);
-	testHot2->set_class("test2");
-	GUIComponent *testHot3 = new GUIComponent(testHot2);
-	testHot3->set_class("test3");
-
 	create_imageview_test(root);
 
 	root->update_layout();
