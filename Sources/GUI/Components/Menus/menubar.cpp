@@ -63,7 +63,7 @@ MenuBar::MenuBar( GUIComponent *parent)
 	func_process_message().set(impl.get(), &MenuBar_Impl::on_process_message);
 	func_render().set(impl.get(), &MenuBar_Impl::on_render);
 	func_resized().set(impl.get(), &MenuBar_Impl::on_resized);
-	func_style_changed().set(impl.get(), &MenuBar_Impl::on_style_changed);
+	sig_style_changed().set(impl.get(), &MenuBar_Impl::on_style_changed);
 
 	impl->create_parts();
 }

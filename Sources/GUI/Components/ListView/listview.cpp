@@ -84,7 +84,7 @@ ListView::ListView(GUIComponent *parent)
 	func_process_message().set(impl.get(), &ListView_Impl::on_process_message);
 	func_render().set(impl.get(), &ListView_Impl::on_render);
 	func_resized().set(impl.get(), &ListView_Impl::on_resized);
-	func_style_changed().set(impl.get(), &ListView_Impl::on_style_changed);
+	sig_style_changed().set(impl.get(), &ListView_Impl::on_style_changed);
 
 	impl->document_item.impl->func_item_added.set(impl.get(), &ListView_Impl::on_item_added);
 	impl->document_item.impl->func_item_modified.set(impl.get(), &ListView_Impl::on_item_modified);

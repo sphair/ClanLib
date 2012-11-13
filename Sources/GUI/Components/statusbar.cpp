@@ -106,7 +106,7 @@ StatusBar::StatusBar(GUIComponent *parent)
 
 	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);
 	func_render().set(impl.get(), &StatusBar_Impl::on_render);
-	//FIXME: func_style_changed().set(impl.get(), &StatusBar_Impl::on_style_changed);
+	//FIXME: sig_style_changed().set(impl.get(), &StatusBar_Impl::on_style_changed);
 	func_input_doubleclick().set(impl.get(), &StatusBar_Impl::on_input_doubleclick);
 
 	impl->create_parts();

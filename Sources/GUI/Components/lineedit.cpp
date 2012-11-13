@@ -73,7 +73,7 @@ LineEdit::LineEdit(GUIComponent *parent)
 
 	func_render().set(impl.get(), &LineEdit_Impl::on_render);
 	func_process_message().set(impl.get(), &LineEdit_Impl::on_process_message);
-	//FIXME: func_style_changed().set(impl.get(), &LineEdit_Impl::on_style_changed);
+	//FIXME: sig_style_changed().set(impl.get(), &LineEdit_Impl::on_style_changed);
 	func_resized().set(impl.get(), &LineEdit_Impl::on_resized);
 	func_enablemode_changed().set(impl.get(), &LineEdit_Impl::on_enable_changed);
 
