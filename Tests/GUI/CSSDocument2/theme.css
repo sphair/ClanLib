@@ -223,7 +223,6 @@ imageview.fixedheight
 button
 {
     -clan-box-direction: horizontal;
-    -clan-box-width-shrink-factor: 1;
     border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
     padding: 5px;
 }
@@ -259,4 +258,6 @@ button imageview
 
 button label
 {
+    -clan-box-width-shrink-factor: 1;
+    -clan-box-width-expand-factor: 1;
 }
