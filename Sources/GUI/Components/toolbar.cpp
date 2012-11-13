@@ -131,7 +131,7 @@ ToolBar::ToolBar(GUIComponent *parent)
 	func_process_message().set(impl.get(), &ToolBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolBar_Impl::on_render);
 	func_resized().set(impl.get(), &ToolBar_Impl::on_resized);
-//FIXME: 	func_style_changed().set(impl.get(), &ToolBar_Impl::create_parts);
+//FIXME: 	sig_style_changed().set(impl.get(), &ToolBar_Impl::create_parts);
 	impl->create_parts();
 }
 

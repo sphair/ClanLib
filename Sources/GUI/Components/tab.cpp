@@ -82,7 +82,7 @@ Tab::Tab(GUIComponent *parent)
 	impl->tab = this;
 	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
 	func_render().set(impl.get(), &Tab_Impl::on_render);
-	//FIXME: func_style_changed().set(impl.get(), &Tab_Impl::on_style_changed);
+	//FIXME: sig_style_changed().set(impl.get(), &Tab_Impl::on_style_changed);
 	func_resized().set(impl.get(), &Tab_Impl::on_resized);
 
 	impl->tab_header = new TabHeader(this);

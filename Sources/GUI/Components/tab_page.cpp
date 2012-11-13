@@ -51,7 +51,7 @@ TabPage::TabPage(GUIComponent *parent)
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabPage_Impl::on_process_message);
 	func_render().set(impl.get(), &TabPage_Impl::on_render);
-	//FIXME: func_style_changed().set(impl.get(), &TabPage_Impl::on_style_changed);
+	//FIXME: sig_style_changed().set(impl.get(), &TabPage_Impl::on_style_changed);
 	func_resized().set(impl.get(), &TabPage_Impl::on_resized);
 
 	impl->on_style_changed();
