@@ -80,7 +80,7 @@ ribbon-section
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
-    border-width: 8px;
+    padding: 4px 8px;
     min-width: 40px;
 }
 
