@@ -185,7 +185,7 @@ imageview.fixedheight
     height: 100px;
 }
 
-imageview:hot 
+.imagecontainer :hot 
 {
     background-color: #ffffff;
 }
