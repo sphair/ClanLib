@@ -45,4 +45,5 @@
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
     <text>Need alignment!</text>
   </pushbutton>
+  <checkbox>CheckBox</checkbox>
 </root>

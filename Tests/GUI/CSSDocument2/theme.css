@@ -276,3 +276,95 @@ button:pressed label
     left: 1px;
     top: 1px;
 }
+
+
+
+checkbox
+{
+	text-gap:3;
+	padding-top:1;
+	padding-bottom:4;
+	text-color:black;
+}
+
+checkbox:disabled
+{
+	text-color:darkgray;
+}
+
+checkbox focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	border-image: url('res:FocusDottedLine') 6 6 5 5 fill / 6px 6px 5px 5px; 
+} 
+
+checkbox checker
+{
+	bg-image-sizing:center;
+	preferred-width:13;
+	preferred-height:13;
+}
+
+checkbox checker:checked:normal
+{
+	border-image: url('res:CheckBoxCheckedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:checked:hot
+{
+	border-image: url('res:CheckBoxCheckedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:checked:pressed
+{
+	border-image: url('res:CheckBoxCheckedPressed') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:checked:disabled
+{
+	border-image: url('res:CheckBoxCheckedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:unchecked:normal
+{
+	border-image: url('res:CheckBoxUncheckedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:unchecked:pressed
+{
+	border-image: url('res:CheckBoxUncheckedPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+checkbox checker:unchecked:disabled
+{
+	border-image: url('res:CheckBoxUncheckedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:unchecked:hot
+{
+	border-image: url('res:CheckBoxUncheckedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:indeterminated:normal
+{
+	border-image: url('res:CheckBoxIndeterminatedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:indeterminated:pressed
+{
+	border-image: url('res:CheckBoxIndeterminatedPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+checkbox checker:indeterminated:disabled
+{
+	border-image: url('res:CheckBoxIndeterminatedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}
+
+checkbox checker:indeterminated:hot
+{
+	border-image: url('res:CheckBoxIndeterminatedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+}

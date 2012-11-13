@@ -44,6 +44,7 @@
 #include "API/Display/Font/font.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
+#include "API/GUI/Components/imageview.h"
 
 namespace clan
 {
@@ -74,7 +75,7 @@ public:
 	bool three_state;
 
 	Label *part_label;
-	GUIComponent *part_checker;
+	ImageView *part_checker;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -87,8 +88,7 @@ CheckBox::CheckBox(GUIComponent *parent)
 	impl->checkbox = this;
 
 	impl->part_label = new Label(this);
-	impl->part_checker = new GUIComponent(this);
-	impl->part_checker->set_tag_name(CssStr::CheckBox::part_checker);
+	impl->part_checker = new ImageView(this);
 
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);
@@ -301,12 +301,10 @@ void CheckBox_Impl::update_pseudo_classes(bool checked, bool indeterminated)
 	checkbox->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
 	checkbox->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 
-	checkbox->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
 	checkbox->set_pseudo_class(CssStr::pressed, false);
 	checkbox->set_pseudo_class(CssStr::indeterminated, indeterminated);
 	checkbox->set_pseudo_class(CssStr::checked, indeterminated ? false : checked);
 	checkbox->set_pseudo_class(CssStr::unchecked, indeterminated ? false : !checked);
-	checkbox->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 }
 
 void CheckBox_Impl::on_enablemode_changed()
