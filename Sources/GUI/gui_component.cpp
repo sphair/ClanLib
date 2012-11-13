@@ -815,12 +815,21 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	Rect viewport = get_top_level_component()->get_size();
 	CSSResourceCache *resource_cache = &impl->gui_manager_impl->resource_cache;
 	CSSLayoutGraphics graphics(canvas, resource_cache, viewport, 0);
+
+	Rect border_box = get_size();
+	Rect padding_box = Rect(border_box).shrink(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
+	Rect content_box = Rect(padding_box).shrink(impl->css_used_values.padding.left, impl->css_used_values.padding.top, impl->css_used_values.padding.right, impl->css_used_values.padding.bottom);
+
 	CSSBackgroundRenderer background(&graphics, resource_cache, impl->css_properties);
-	CSSBorderRenderer border(&graphics, resource_cache, impl->css_properties);
-	background.set_border_box(get_size());
-	border.set_border_box(get_size());
-	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
+	background.set_border_box(border_box);
+	background.set_padding_box(padding_box);
+	background.set_content_box(content_box);
+	background.set_initial_containing_box(content_box); // Bug: this is wrong. Should be fetched from root component
 	background.render();
+
+	CSSBorderRenderer border(&graphics, resource_cache, impl->css_properties);
+	border.set_border_box(border_box);
+	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	border.render();
 
 	if (!impl->css_layout.is_null())
