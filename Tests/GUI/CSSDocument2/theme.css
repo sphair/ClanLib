@@ -53,9 +53,12 @@ ribbon-menu-button:hot
 
 ribbon-tab
 {
-    height: 23px;
+    height: 19px;
     min-width: 30px;
     -clan-box-direction: horizontal;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 4px;
 }
 
 ribbon-tab:selected
@@ -77,6 +80,7 @@ ribbon-section
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
+    border-width: 8px;
     min-width: 40px;
 }
 
