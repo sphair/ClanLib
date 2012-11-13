@@ -144,8 +144,10 @@ label.imagelabel
     -clan-box-width-shrink-factor: 1;
     -clan-box-width-expand-factor: 1;
     min-width: 130px;
-    max-height: 220px;
-    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
 }
 
 .imagecontainer
