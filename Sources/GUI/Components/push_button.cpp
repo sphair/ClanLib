@@ -180,97 +180,6 @@ Callback_v0 &PushButton::func_clicked()
 
 /////////////////////////////////////////////////////////////////////////////
 // PushButton Implementation:
-/*
-void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
-{
-	Rect rect = button->get_size();
-	part.render_box(canvas, rect, update_rect);
-
-	if (button->has_focus())
-	{
-		part_focus.render_box(canvas, rect, update_rect);
-	}
-
-	Rect content_rect = part.get_content_box(rect);
-
-	if (!icon.is_null())
-	{
-		Font font = part.get_font();
-
-		GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
-		GUIThemePartProperty prop_align(CssStr::align, CssStr::left);
-		GUIThemePartProperty prop_vertical_align(CssStr::vertical_align, CssStr::center);
-
-		std::string h_align = part.get_property(prop_align); // left|center|right|justify
-		std::string v_align = part.get_property(prop_vertical_align); // top|center|bottom
-
-		Size icon_size = icon.get_size();
-		Point center = content_rect.get_center();
-
-		FontMetrics metrics = font.get_font_metrics();
-		Colorf text_color = part.get_property(prop_text_color);
-
-		SpanLayout layout;
-		if (icon_position == PushButton::icon_top)
-		{
-			layout.add_image(icon, 0);
-			if (!text.empty())
-				layout.add_text("\n", font, text_color);
-		}
-		else if (icon_position == PushButton::icon_left)
-		{
-			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
-			if (!text.empty())
-				layout.add_text(" ", font, text_color);
-		}
-
-		layout.add_text(text, font, text_color);
-
-		if (icon_position == PushButton::icon_bottom)
-		{
-			if (!text.empty())
-				layout.add_text("\n", font, text_color);
-			layout.add_image(icon, 0);
-		}
-		else if (icon_position == PushButton::icon_right)
-		{
-			if (!text.empty())
-				layout.add_text(" ", font, text_color);
-			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
-		}
-
-		if (h_align == CssStr::left)
-			layout.set_align(span_left);
-		else if (h_align == CssStr::center)
-			layout.set_align(span_center);
-		else if (h_align == CssStr::right)
-			layout.set_align(span_right);
-		else if (h_align == CssStr::justify)
-			layout.set_align(span_justify);
-
-		layout.layout(canvas, content_rect.get_width()); // To do: also add support for SpanLayout::layout(canvas, width, height) so we can clip vertically
-
-		if (v_align == CssStr::top)
-		{
-			layout.set_position(Point(content_rect.left, content_rect.top));
-		}
-		else if (v_align == CssStr::center)
-		{
-			layout.set_position(Point(content_rect.left, part.get_vertical_text_align(canvas, font, content_rect).baseline - layout.get_first_baseline_offset() - (layout.get_last_baseline_offset()-layout.get_first_baseline_offset()) / 2));
-		}
-		else if (v_align == CssStr::bottom)
-		{
-			layout.set_position(Point(content_rect.left, content_rect.bottom));
-		}
-
-		layout.draw_layout_ellipsis(canvas, content_rect);
-	}
-	else
-	{
-		part.render_text(canvas, text, content_rect, update_rect);
-	}
-}
-*/
 
 void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
@@ -329,23 +238,7 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			input_msg->consumed = true;
 		}
 	}
-	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-	if (pointer)
-	{
-		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
-		{
-			button->set_pseudo_class(CssStr::hot, true);
-			pointer->consumed = true;
-		}
-		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
-		{
-			button->set_pseudo_class(CssStr::hot, false);
 
-			if (!toggle_mode)
-				button->set_pseudo_class(CssStr::pressed, false);
-			pointer->consumed = true;
-		}
-	}
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 	{
