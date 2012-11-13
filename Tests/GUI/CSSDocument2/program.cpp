@@ -74,18 +74,24 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
 
-		component->set_text(xml_element.get_text());
-	}
-	else if (xml_element.get_tag_name() == "pushbutton_image")
-	{
-		PushButton *component = new PushButton(parent);
-		component->set_class(xml_element.get_attribute("class"));
-		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
-		for (size_t i = 0; i < pseudo_classes.size(); i++)
-			component->set_pseudo_class(pseudo_classes[i], true);
+		try
+		{
+			std::string text = xml_element.select_string("text/text()");
+			component->set_text(text);
+		}
+		catch (Exception &)
+		{
+		}
 
-		Image image(parent->get_canvas(), xml_element.get_text());
-		component->set_icon(image);
+		try
+		{
+			std::string image_src = xml_element.select_string("icon/text()");
+			Image image(parent->get_canvas(), image_src);
+			component->set_icon(image);
+		}
+		catch (Exception &)
+		{
+		}
 	}
 	else
 	{

@@ -87,8 +87,8 @@ PushButton::PushButton(GUIComponent *parent)
 	func_process_message().set(impl.get(), &PushButton_Impl::on_process_message);
 
 	impl->button = this;
-	impl->label = new Label(this);
 	impl->icon = new ImageView(this);
+	impl->label = new Label(this);
 
 	set_pseudo_class(CssStr::defaulted, is_default());
 	set_pseudo_class(CssStr::disabled, !is_enabled());
