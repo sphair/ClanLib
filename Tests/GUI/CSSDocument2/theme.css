@@ -219,3 +219,44 @@ imageview.fixedheight
 {
     background-color: #ffffff;
 }
+
+button
+{
+    -clan-box-direction: horizontal;
+    -clan-box-width-shrink-factor: 1;
+    border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
+    padding: 5px;
+}
+
+button:defaulted
+{
+    border-image: url('res:ButtonDefaulted') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+button:hot
+{
+    border-image: url('res:ButtonHot') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+button:pressed
+{
+    border-image: url('res:ButtonPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+button:disabled
+{
+    border-image: url('res:ButtonDisabled') 6 6 5 5 fill / 6px 6px 5px 5px;
+}
+
+button:focus
+{
+    border-image: url('res:ButtonFocus') 8 9 8 8 fill / 8px 9px 8px 8px;
+}
+
+button imageview
+{
+}
+
+button label
+{
+}
