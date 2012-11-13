@@ -1,17 +1,15 @@
 
 *
 {
-    font-family: "Segoe UI", Sans-Serif;
-    font-size: 11pt;
-    
-    background-color: transparent;
-    
     display: -clan-box;
     -clan-box-direction: vertical;
 }
 
 .root
 {
+    font-family: "Segoe UI", Sans-Serif;
+    font-size: 11pt;
+    
     background-color: gray;
 }
 
@@ -24,6 +22,7 @@ ribbon
     -clan-box-height-expand-factor: 0;
     height: 117px;
     border-image: url('res:Ribbon') 50 8 8 8 fill / 50px 8px 8px 8px;
+    font-size: 9pt;
 }
 
 ribbon-header
@@ -77,6 +76,7 @@ ribbon-page
 
 ribbon-section
 {
+    -clan-box-direction: horizontal;
     -clan-box-height-shrink-factor: 1;
     -clan-box-height-expand-factor: 1;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
@@ -84,13 +84,35 @@ ribbon-section
     min-width: 40px;
 }
 
+ribbon-section-group
+{
+    -clan-box-direction: vertical;
+    -clan-box-height-shrink-factor: 1;
+    -clan-box-height-expand-factor: 1;
+}
+
 ribbon-section button
 {
-    border-style: none;
-    border-width: 4px;
-    
-    width: 75px;
-    height: 22px;
+    padding: 4px;
+    min-width: 10px;
+    -clan-box-direction: horizontal;
+}
+
+ribbon-section button imageview
+{
+    width: 16px;
+    height: 16px;
+}
+
+ribbon-section button.big
+{
+    -clan-box-direction: vertical;
+}
+
+ribbon-section button.big imageview
+{
+    width: 32px;
+    height: 32px;
 }
 
 ribbon-section button:hot, ribbon-section button:toggled:hot
@@ -162,7 +184,7 @@ label.imagelabel
     background: green;
 }
 
-imageview
+.imagecontainer imageview
 {
     background-color: #ffff80;
     border-width: 1px;
