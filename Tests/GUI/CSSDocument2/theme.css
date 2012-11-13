@@ -91,12 +91,13 @@ ribbon-section-group
     -clan-box-height-expand-factor: 1;
 }
 
-ribbon-section button
+ribbon-section button, ribbon-section button:defaulted, ribbon-section button:pressed, ribbon-section button:disabled
 {
     padding: 4px;
     min-width: 10px;
     -clan-box-direction: horizontal;
     -clan-box-width-expand-factor: 1;
+    border-image: none;
 }
 
 ribbon-section button imageview
