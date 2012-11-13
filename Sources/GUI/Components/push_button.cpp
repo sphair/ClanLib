@@ -90,9 +90,6 @@ PushButton::PushButton(GUIComponent *parent)
 	impl->label = new Label(this);
 	impl->icon = new ImageView(this);
 
-	set_pseudo_class(CssStr::normal, true);
-	set_pseudo_class(CssStr::hot, false);
-	set_pseudo_class(CssStr::pressed, false);
 	set_pseudo_class(CssStr::defaulted, is_default());
 	set_pseudo_class(CssStr::disabled, !is_enabled());
 }
@@ -141,10 +138,20 @@ std::string PushButton::get_text() const
 	return impl->label->get_text();
 }
 
-Size PushButton::get_preferred_size() const
+Size PushButton::get_preferred_size()
 {
-	//FIXME: return impl->part.get_preferred_size();
-	return Size();
+	int width = get_preferred_content_width();
+	return Size(width, get_preferred_content_height(width));
+}
+
+float PushButton::get_preferred_content_width()
+{
+	return impl->label->get_preferred_content_width();
+}
+
+float PushButton::get_preferred_content_height(float width)
+{
+	return impl->label->get_preferred_content_height(width);
 }
 
 /////////////////////////////////////////////////////////////////////////////
