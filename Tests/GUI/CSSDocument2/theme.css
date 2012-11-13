@@ -257,8 +257,22 @@ button imageview
 {
 }
 
+button:pressed imageview
+{
+    position: relative;
+    left: 1px;
+    top: 1px;
+}
+
 button label
 {
     -clan-box-width-shrink-factor: 1;
     -clan-box-width-expand-factor: 1;
+}
+
+button:pressed label
+{
+    position: relative;
+    left: 1px;
+    top: 1px;
 }
