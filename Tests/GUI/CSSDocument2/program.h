@@ -9,5 +9,6 @@ public:
 	static void on_resized(clan::GUIComponent *component);
 
 private:
+	static void create_component(clan::DomElement xml_element, clan::GUIComponent *parent);
 	static void create_imageview_test(clan::GUIComponent *root);
 };

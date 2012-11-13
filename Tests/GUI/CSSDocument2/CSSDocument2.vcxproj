@@ -74,6 +74,7 @@
     <ClInclude Include="program.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="layout.xml" />
     <None Include="resources.xml" />
     <None Include="theme.css" />
   </ItemGroup>

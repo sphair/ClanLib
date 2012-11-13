@@ -27,72 +27,12 @@ int Program::main(const std::vector<std::string> &args)
 	root->func_close().set(&Program::on_close, root);
 	root->func_resized().set(&Program::on_resized, root);
 
-	GUIComponent *ribbon = new GUIComponent(root);
-	ribbon->set_tag_name("ribbon");
+	DomDocument xml(File("layout.xml"), false); // Braindead constructors on DomDocument..
 
-	GUIComponent *ribbon_header = new GUIComponent(ribbon);
-	ribbon_header->set_tag_name("ribbon-header");
-
-	GUIComponent *ribbon_menu_button = new GUIComponent(ribbon_header);
-	ribbon_menu_button->set_tag_name("ribbon-menu-button");
-
-	GUIComponent *ribbon_page_tab_0 = new GUIComponent(ribbon_header);
-	ribbon_page_tab_0->set_tag_name("ribbon-tab");
-	ribbon_page_tab_0->set_pseudo_class("selected", true);
-
-	Label *ribbon_page_tab_0_label = new Label(ribbon_page_tab_0);
-	ribbon_page_tab_0_label->set_text("Home");
-
-	GUIComponent *ribbon_page_tab_1 = new GUIComponent(ribbon_header);
-	ribbon_page_tab_1->set_tag_name("ribbon-tab");
-
-	Label *ribbon_page_tab_1_label = new Label(ribbon_page_tab_1);
-	ribbon_page_tab_1_label->set_text("View");
-
-	GUIComponent *ribbon_page_area = new GUIComponent(ribbon);
-	ribbon_page_area->set_tag_name("ribbon-page");
-
-	GUIComponent *ribbon_section_0 = new GUIComponent(ribbon_page_area);
-	ribbon_section_0->set_tag_name("ribbon-section");
-
-	GUIComponent *ribbon_section_1 = new GUIComponent(ribbon_page_area);
-	ribbon_section_1->set_tag_name("ribbon-section");
-
-	Image icon(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
-
-	GUIComponent *ribbon_section_group_1 = new GUIComponent(ribbon_section_0);
-	ribbon_section_group_1->set_tag_name("ribbon-section-group");
-
-	GUIComponent *ribbon_section_group_0 = new GUIComponent(ribbon_section_0);
-	ribbon_section_group_0->set_tag_name("ribbon-section-group");
-
-	GUIComponent *ribbon_control_0 = new GUIComponent(ribbon_section_group_0);
-	ribbon_control_0->set_tag_name("button");
-
-	ImageView *ribbon_control_0_icon = new ImageView(ribbon_control_0);
-	ribbon_control_0_icon->set_image(icon);
-
-	Label *ribbon_control_0_label = new Label(ribbon_control_0);
-	ribbon_control_0_label->set_text("Copy");
-
-	GUIComponent *ribbon_control_2 = new GUIComponent(ribbon_section_group_0);
-	ribbon_control_2->set_tag_name("button");
-
-	ImageView *ribbon_control_2_icon = new ImageView(ribbon_control_2);
-	ribbon_control_2_icon->set_image(icon);
-
-	Label *ribbon_control_2_label = new Label(ribbon_control_2);
-	ribbon_control_2_label->set_text("Cut");
-
-	GUIComponent *ribbon_control_1 = new GUIComponent(ribbon_section_group_1);
-	ribbon_control_1->set_tag_name("button");
-	ribbon_control_1->set_class("big");
-
-	ImageView *ribbon_control_1_icon = new ImageView(ribbon_control_1);
-	ribbon_control_1_icon->set_image(icon);
-
-	Label *ribbon_control_1_label = new Label(ribbon_control_1);
-	ribbon_control_1_label->set_text("Paste");
+	for (DomElement xml_child = xml.get_document_element().get_first_child_element(); xml_child.is_element(); xml_child = xml_child.get_next_sibling_element())
+	{
+		create_component(xml_child, root);
+	}
 
 	GUIComponent *testHot1 = new GUIComponent(root);
 	testHot1->set_class("test1");
@@ -108,6 +48,45 @@ int Program::main(const std::vector<std::string> &args)
 	gui.exec();
 
 	return 0;
+}
+
+void Program::create_component(DomElement xml_element, GUIComponent *parent)
+{
+	if (xml_element.get_tag_name() == "label")
+	{
+		Label *component = new Label(parent);
+		component->set_class(xml_element.get_attribute("class"));
+		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
+		for (size_t i = 0; i < pseudo_classes.size(); i++)
+			component->set_pseudo_class(pseudo_classes[i], true);
+
+		component->set_text(xml_element.get_text());
+	}
+	else if (xml_element.get_tag_name() == "imageview")
+	{
+		ImageView *component = new ImageView(parent);
+		component->set_class(xml_element.get_attribute("class"));
+		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
+		for (size_t i = 0; i < pseudo_classes.size(); i++)
+			component->set_pseudo_class(pseudo_classes[i], true);
+
+		Image image(parent->get_canvas(), xml_element.get_text());
+		component->set_image(image);
+	}
+	else
+	{
+		GUIComponent *component = new GUIComponent(parent);
+		component->set_tag_name(xml_element.get_tag_name());
+		component->set_class(xml_element.get_attribute("class"));
+		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
+		for (size_t i = 0; i < pseudo_classes.size(); i++)
+			component->set_pseudo_class(pseudo_classes[i], true);
+
+		for (DomElement xml_child = xml_element.get_first_child_element(); xml_child.is_element(); xml_child = xml_child.get_next_sibling_element())
+		{
+			create_component(xml_child, component);
+		}
+	}
 }
 
 void Program::create_imageview_test(GUIComponent *root)
