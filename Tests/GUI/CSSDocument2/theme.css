@@ -96,6 +96,7 @@ ribbon-section button
     padding: 4px;
     min-width: 10px;
     -clan-box-direction: horizontal;
+    -clan-box-width-expand-factor: 1;
 }
 
 ribbon-section button imageview
@@ -107,6 +108,7 @@ ribbon-section button imageview
 ribbon-section button.big
 {
     -clan-box-direction: vertical;
+    -clan-box-width-expand-factor: 0;
 }
 
 ribbon-section button.big imageview
