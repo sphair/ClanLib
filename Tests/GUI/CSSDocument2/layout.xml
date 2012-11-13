@@ -13,10 +13,10 @@
     <ribbon-page>
       <ribbon-section>
         <ribbon-section-group>
-          <button class="big">
-            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
-            <label>Paste</label>
-          </button>
+          <pushbutton class="big">
+            <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
+            <text>Paste</text>
+          </pushbutton>
         </ribbon-section-group>
         <ribbon-section-group>
           <pushbutton>
