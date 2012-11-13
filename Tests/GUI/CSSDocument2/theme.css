@@ -159,7 +159,10 @@ label.imagelabel
 imageview
 {
     background-color: #ffff80;
-    margin: 5px;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
 }
 
 imageview.odd 

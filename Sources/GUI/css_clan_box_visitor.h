@@ -34,14 +34,14 @@ public:
 
 			if (node->css_used_values.width_undetermined)
 			{
-				node->css_used_values.width = initial_containing_box.width - node->css_used_values.margin.left - node->css_used_values.margin.right - node->css_used_values.border.left - node->css_used_values.border.right - node->css_used_values.padding.right - node->css_used_values.padding.right;
+				node->css_used_values.width = initial_containing_box.width - node->css_used_values.margin.left - node->css_used_values.margin.right - node->css_used_values.border.left - node->css_used_values.border.right - node->css_used_values.padding.left - node->css_used_values.padding.right;
 				node->css_used_values.width_undetermined = false;
 			}
 
 			// TBD: this isn't the default in normal CSS
 			if (node->css_used_values.height_undetermined)
 			{
-				node->css_used_values.height = initial_containing_box.height - node->css_used_values.margin.top - node->css_used_values.margin.top - node->css_used_values.border.top - node->css_used_values.border.bottom - node->css_used_values.padding.bottom - node->css_used_values.padding.bottom;
+				node->css_used_values.height = initial_containing_box.height - node->css_used_values.margin.top - node->css_used_values.margin.top - node->css_used_values.border.top - node->css_used_values.border.bottom - node->css_used_values.padding.top - node->css_used_values.padding.bottom;
 				node->css_used_values.height_undetermined = false;
 			}
 		}
@@ -420,26 +420,15 @@ public:
 
 	void set_horizontal_geometry(GUIComponent_Impl *node)
 	{
-		// Set the actual geometry
 		CSSUsedValue x = 0.0f;
 		CSSUsedValue y = 0.0f;
-		int i = 0;
-		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
+				set_child_geometry(node, child, x, y);
+
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-
-				CSSUsedValue used_offset_x = get_css_relative_x(child->impl.get(), node->css_used_values.width);
-				CSSUsedValue used_offset_y = get_css_relative_y(child->impl.get(), node->css_used_values.height);
-
-				// Used to actual mapping
-				CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
-				CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right + 0.5f);
-				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom + 0.5f);
-				child->set_geometry(Rect(x1, y1, x2, y2));
-
 				x += get_used_noncontent_width(child_used_values) + child_used_values.width;
 			}
 		}
@@ -449,26 +438,33 @@ public:
 	{
 		CSSUsedValue x = 0.0f;
 		CSSUsedValue y = 0.0f;
-		int i = 0;
-		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
+				set_child_geometry(node, child, x, y);
+
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
-
-				CSSUsedValue used_offset_x = child_used_values.margin.left + child_used_values.border.left + child_used_values.padding.left + get_css_relative_x(child->impl.get(), node->css_used_values.width);
-				CSSUsedValue used_offset_y = child_used_values.margin.top + child_used_values.border.top + child_used_values.padding.top + get_css_relative_y(child->impl.get(), node->css_used_values.height);
-
-				// Used to actual mapping
-				CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
-				CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-				CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right + 0.5f);
-				CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom + 0.5f);
-				child->set_geometry(Rect(x1, y1, x2, y2));
-
 				y += get_used_noncontent_height(child_used_values) + child_used_values.height;
 			}
 		}
+	}
+
+	void set_child_geometry(GUIComponent_Impl *node, GUIComponent *child, CSSUsedValue x, CSSUsedValue y)
+	{
+		CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
+
+		CSSUsedValue used_offset_x = get_css_relative_x(child->impl.get(), node->css_used_values.width);
+		CSSUsedValue used_offset_y = get_css_relative_y(child->impl.get(), node->css_used_values.height);
+
+		CSSUsedValue used_border_box_width = child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right;
+		CSSUsedValue used_border_box_height = child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom;
+
+		CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
+		CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
+		CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + used_border_box_width + 0.5f);
+		CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + used_border_box_height + 0.5f);
+		child->set_geometry(Rect(x1, y1, x2, y2));
 	}
 };
 
