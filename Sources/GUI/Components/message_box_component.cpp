@@ -141,11 +141,7 @@ Size MessageBoxComponent::layout_content()
 	{
 		case mb_buttons_ok:
 		{
-			Size button_size = button_ok->get_preferred_size();
-			if (button_size == Size(0,0))
-			{
-				button_size = Size(66,21);
-			}
+			Size button_size = Size(66,21);
 
 			Rect R;
 			R.left = final_size.width - border_space.right - button_size.width;
@@ -157,11 +153,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no:
 		{
-			Size button_size = button_yes->get_preferred_size();
-			if (button_size == Size(0,0))
-			{
-				button_size = Size(66,21);
-			}
+			Size button_size = Size(66,21);
 
 			Rect yes;
 			yes.left = final_size.width - border_space.right - button_size.width;
@@ -177,11 +169,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no_cancel:
 		{
-			Size button_size = button_yes->get_preferred_size();
-			if (button_size == Size(0,0))
-			{
-				button_size = Size(66,21);
-			}
+			Size button_size = Size(66,21);
 
 			Rect yes;
 			yes.left = final_size.width - border_space.right - button_size.width;
@@ -201,11 +189,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_ok_cancel:
 		{
-			Size button_size = button_ok->get_preferred_size();
-			if (button_size == Size(0,0))
-			{
-				button_size = Size(66,21);
-			}
+			Size button_size = Size(66,21);
 
 			Rect ok;
 			ok.left = final_size.width - border_space.right - button_size.width;
