@@ -454,16 +454,19 @@ public:
 	{
 		CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 
-		CSSUsedValue used_offset_x = get_css_relative_x(child->impl.get(), node->css_used_values.width);
-		CSSUsedValue used_offset_y = get_css_relative_y(child->impl.get(), node->css_used_values.height);
+		x += get_css_relative_x(child->impl.get(), node->css_used_values.width);
+		y += get_css_relative_y(child->impl.get(), node->css_used_values.height);
+
+		x += child_used_values.margin.left;
+		y += child_used_values.margin.top;
 
 		CSSUsedValue used_border_box_width = child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right;
 		CSSUsedValue used_border_box_height = child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom;
 
-		CSSActualValue x1 = (CSSActualValue)(x + used_offset_x + child_used_values.margin.left);
-		CSSActualValue y1 = (CSSActualValue)(y + used_offset_y + child_used_values.margin.top);
-		CSSActualValue x2 = (CSSActualValue)(x + used_offset_x + used_border_box_width + 0.5f);
-		CSSActualValue y2 = (CSSActualValue)(y + used_offset_y + used_border_box_height + 0.5f);
+		CSSActualValue x1 = (CSSActualValue)(x);
+		CSSActualValue y1 = (CSSActualValue)(y);
+		CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
+		CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
 		child->set_geometry(Rect(x1, y1, x2, y2));
 	}
 };
