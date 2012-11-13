@@ -19,14 +19,14 @@
           </button>
         </ribbon-section-group>
         <ribbon-section-group>
-          <button>
-            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
-            <label>Copy</label>
-          </button>
-          <button>
-            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
-            <label>Cut</label>
-          </button>
+          <pushbutton>
+            <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
+            <text>Copy</text>
+          </pushbutton>
+          <pushbutton>
+            <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
+            <text>Cut</text>
+          </pushbutton>
         </ribbon-section-group>
       </ribbon-section>
       <ribbon-section>
@@ -38,6 +38,10 @@
       <component class="test3"/>
     </component>
   </component>
-  <pushbutton>PushButton</pushbutton>
-  <pushbutton_image>../../../Examples/GUI/CommonCode/Resources/tux.png</pushbutton_image>
+  <pushbutton>
+    <text>PushButton</text>
+  </pushbutton>
+  <pushbutton>
+    <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
+  </pushbutton>
 </root>
