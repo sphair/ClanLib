@@ -176,7 +176,7 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	//}
 
 	FontMetrics metrics = label->get_font().get_font_metrics();
-	label->get_font().draw_text_ellipsis(canvas, 0.0f, metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
+	label->get_font().draw_text_ellipsis(canvas, content_box.left, content_box.top + metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
 }
 
 }
