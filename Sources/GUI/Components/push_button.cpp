@@ -61,6 +61,8 @@ class PushButton_Impl
 public:
 	PushButton_Impl() : toggle_mode(false), icon_position(PushButton::icon_left) {}
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+	void on_input_message(std::shared_ptr<GUIMessage_Input> msg);
+	void on_focus_message(std::shared_ptr<GUIMessage_FocusChange> msg);
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
 
 	PushButton *button;
@@ -186,74 +188,80 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
-	{
-		if (toggle_mode)
-		{
-			if( input_msg->input_event.type == InputEvent::pressed &&
-				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
-			{
-				button->set_pseudo_class(CssStr::pressed, true);
-				input_msg->consumed = true;
-			}
-			else if( input_msg->input_event.type == InputEvent::released &&
-				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
-			{
-				button->set_pseudo_class(CssStr::pressed, false);
-				button->set_pseudo_class(CssStr::toggled, !button->get_pseudo_class("toggled"));
-				input_msg->consumed = true;
-				
-				if (!func_clicked.is_null())
-					func_clicked.invoke();
-			}
-		}
-		else
-		{
-			if (input_msg->input_event.type == InputEvent::pressed && 
-				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter))
-			{
-				button->set_pseudo_class(CssStr::pressed, true);
-				input_msg->consumed = true;
-			}
-			else if( input_msg->input_event.type == InputEvent::released &&
-				(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) &&
-				button->get_pseudo_class(CssStr::pressed) )
-			{
-				button->set_pseudo_class(CssStr::pressed, false);
-				input_msg->consumed = true;
-				
-				if (!func_clicked.is_null())
-					func_clicked.invoke();
-			}
-		}
-		if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))
-		{
-			button->focus_previous();
-			input_msg->consumed = true;
-		}
-		else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_right || input_msg->input_event.id == keycode_down))
-		{
-			button->focus_next();
-			input_msg->consumed = true;
-		}
-	}
+		on_input_message(input_msg);
 
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
+		on_focus_message(focus_change_msg);
+}
+
+void PushButton_Impl::on_input_message(std::shared_ptr<GUIMessage_Input> input_msg)
+{
+	if (toggle_mode)
 	{
-		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
+		if( input_msg->input_event.type == InputEvent::pressed &&
+			(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
 		{
-			button->set_pseudo_class(CssStr::focused, true);
-			if (!toggle_mode)
-				update_default_state(true);
-			focus_change_msg->consumed = true;
+			button->set_pseudo_class(CssStr::pressed, true);
+			input_msg->consumed = true;
 		}
-		else 
+		else if( input_msg->input_event.type == InputEvent::released &&
+			(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) )
 		{
-			button->set_pseudo_class(CssStr::focused, false);
-			if (!toggle_mode)
-				update_default_state(false);
-			focus_change_msg->consumed = true;
+			button->set_pseudo_class(CssStr::pressed, false);
+			button->set_pseudo_class(CssStr::toggled, !button->get_pseudo_class("toggled"));
+			input_msg->consumed = true;
+				
+			if (!func_clicked.is_null())
+				func_clicked.invoke();
 		}
+	}
+	else
+	{
+		if (input_msg->input_event.type == InputEvent::pressed && 
+			(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter))
+		{
+			button->set_pseudo_class(CssStr::pressed, true);
+			input_msg->consumed = true;
+		}
+		else if( input_msg->input_event.type == InputEvent::released &&
+			(input_msg->input_event.id == mouse_left || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_space || input_msg->input_event.id == keycode_numpad_enter) &&
+			button->get_pseudo_class(CssStr::pressed) )
+		{
+			button->set_pseudo_class(CssStr::pressed, false);
+			input_msg->consumed = true;
+				
+			if (!func_clicked.is_null())
+				func_clicked.invoke();
+		}
+	}
+	if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_left || input_msg->input_event.id == keycode_up))
+	{
+		button->focus_previous();
+		input_msg->consumed = true;
+	}
+	else if (input_msg->input_event.type == InputEvent::pressed && (input_msg->input_event.id == keycode_right || input_msg->input_event.id == keycode_down))
+	{
+		button->focus_next();
+		input_msg->consumed = true;
+	}
+}
+
+void PushButton_Impl::on_focus_message(std::shared_ptr<GUIMessage_FocusChange> focus_change_msg)
+{
+	if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
+	{
+		button->set_pseudo_class(CssStr::focused, true);
+		if (!toggle_mode)
+			update_default_state(true);
+		focus_change_msg->consumed = true;
+	}
+	else 
+	{
+		button->set_pseudo_class(CssStr::focused, false);
+		if (!toggle_mode)
+			update_default_state(false);
+		focus_change_msg->consumed = true;
 	}
 }
 
