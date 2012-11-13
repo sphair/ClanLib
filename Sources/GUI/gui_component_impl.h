@@ -127,10 +127,11 @@ public:
 
 	void visit_css(CSSClanBoxVisitor *visitor);
 
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+
 private:
 	Image on_css_layout_get_image(Canvas &canvas, const std::string &url);
 
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 };
 
 }

@@ -62,8 +62,6 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 		css_layout.set_root_element(css_element);
 		css_layout.func_get_image().set(this, &GUIComponent_Impl::on_css_layout_get_image);
 	}
-
-	func_process_message.set(this, &GUIComponent_Impl::on_process_message);
 }
 
 GUIComponent_Impl *GUIComponent_Impl::create_from_parent(GUIComponent *parent)

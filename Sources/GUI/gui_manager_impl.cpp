@@ -387,6 +387,11 @@ void GUIManager_Impl::deliver_message(std::shared_ptr<GUIMessage> &m)
 				target->func_filter_message().invoke(m);
 			}
 
+			// Since we use a callback on func_process_message, we just call process_message directly on guicomponent here 
+			// in case the specific components themselves want to use func_process_message.
+			// If process_message later is changed into a signal, this should be removed, and a normal signal slot should be used in guicomponent.
+			target->impl->on_process_message(m);
+
 			if (!m->consumed)
 			{
 				if (!target->func_process_message().is_null())
