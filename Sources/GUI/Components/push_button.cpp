@@ -69,8 +69,6 @@ public:
 	Callback_v0 func_clicked;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
-	//FIXME: GUIThemePart part;
-	//FIXME: GUIThemePart part_focus;
 };
 
 /////////////////////////////////////////////////////////////////////////////
