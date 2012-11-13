@@ -59,7 +59,6 @@ public:
 	{
 	}
 
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	Label *label;
@@ -76,7 +75,6 @@ Label::Label(GUIComponent *parent)
 {
 	set_tag_name(CssStr::Label::type_name);
 	impl->label = this;
-	func_process_message().set(impl.get(), &Label_Impl::on_process_message);
 	func_render().set(impl.get(), &Label_Impl::on_render);
 }
 
@@ -141,25 +139,6 @@ void Label::set_alignment(Label::Alignment alignment)
 
 /////////////////////////////////////////////////////////////////////////////
 // Label Implementation:
-
-void Label_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
-{
-	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-	if (pointer)
-	{
-		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
-		{
-			//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
-			label->request_repaint();
-		}
-		else
-		{
-			//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
-			//FIXME: part_component.set_pseudo_class(CssStr::pressed, false);
-			label->request_repaint();
-		}
-	}
-}
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
