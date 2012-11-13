@@ -43,5 +43,6 @@
   </pushbutton>
   <pushbutton>
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
+    <text>Need alignment!</text>
   </pushbutton>
 </root>
