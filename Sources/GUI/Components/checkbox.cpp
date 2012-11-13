@@ -75,7 +75,7 @@ public:
 	bool three_state;
 
 	Label *part_label;
-	ImageView *part_checker;
+	GUIComponent *part_checker;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -88,7 +88,8 @@ CheckBox::CheckBox(GUIComponent *parent)
 	impl->checkbox = this;
 
 	impl->part_label = new Label(this);
-	impl->part_checker = new ImageView(this);
+	impl->part_checker = new GUIComponent(this);
+	impl->part_checker->set_tag_name(CssStr::CheckBox::part_checker);
 
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);

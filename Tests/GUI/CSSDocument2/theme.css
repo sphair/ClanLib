@@ -281,90 +281,84 @@ button:pressed label
 
 checkbox
 {
-	text-gap:3;
-	padding-top:1;
-	padding-bottom:4;
-	text-color:black;
+	padding-top:1px;
+	padding-bottom:4px;
+	-clan-box-direction: horizontal;
 }
 
 checkbox:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
-
-checkbox focus
+/*
+checkbox:focus
 {
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:4;
-	bg-image-sizing:repeat;
-	border-image: url('res:FocusDottedLine') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:FocusDottedLine') 3 4 3 4 fill / 3px 4px 3px 4px repeat; 
 } 
-
+*/
 checkbox checker
 {
-	bg-image-sizing:center;
-	preferred-width:13;
-	preferred-height:13;
+    margin-left: 3px;
+	width: 13px;
+	height: 13px;
 }
 
-checkbox checker:checked:normal
+checkbox:checked:normal checker
 {
-	border-image: url('res:CheckBoxCheckedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxCheckedNormal') 0 fill / 0px;
 }
 
-checkbox checker:checked:hot
+checkbox:checked:hot checker
 {
-	border-image: url('res:CheckBoxCheckedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxCheckedHot') 0 fill / 0px;
 }
 
-checkbox checker:checked:pressed
+checkbox:checked:pressed checker
 {
-	border-image: url('res:CheckBoxCheckedPressed') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxCheckedPressed') 0 fill / 0px;
 }
 
-checkbox checker:checked:disabled
+checkbox:checked:disabled checker
 {
-	border-image: url('res:CheckBoxCheckedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxCheckedDisabled') 0 fill / 0px;
 }
 
-checkbox checker:unchecked:normal
+checkbox:unchecked:normal checker
 {
-	border-image: url('res:CheckBoxUncheckedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxUncheckedNormal') 0 fill / 0px;
 }
 
-checkbox checker:unchecked:pressed
+checkbox:unchecked:pressed checker
 {
-	border-image: url('res:CheckBoxUncheckedPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
+	border-image: url('res:CheckBoxUncheckedPressed') 0 fill / 0px;
 }
 
-checkbox checker:unchecked:disabled
+checkbox:unchecked:disabled checker
 {
-	border-image: url('res:CheckBoxUncheckedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxUncheckedDisabled') 0 fill / 0px;
 }
 
-checkbox checker:unchecked:hot
+checkbox:unchecked:hot checker
 {
-	border-image: url('res:CheckBoxUncheckedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxUncheckedHot') 0 fill / 0px;
 }
 
-checkbox checker:indeterminated:normal
+checkbox:indeterminated:normal checker
 {
-	border-image: url('res:CheckBoxIndeterminatedNormal') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxIndeterminatedNormal') 0 fill / 0px;
 }
 
-checkbox checker:indeterminated:pressed
+checkbox:indeterminated:pressed checker
 {
-	border-image: url('res:CheckBoxIndeterminatedPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
+	border-image: url('res:CheckBoxIndeterminatedPressed') 0 fill / 0px;
 }
 
-checkbox checker:indeterminated:disabled
+checkbox:indeterminated:disabled checker
 {
-	border-image: url('res:CheckBoxIndeterminatedDisabled') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxIndeterminatedDisabled') 0 fill / 0px;
 }
 
-checkbox checker:indeterminated:hot
+checkbox:indeterminated:hot checker
 {
-	border-image: url('res:CheckBoxIndeterminatedHot') 6 6 5 5 fill / 6px 6px 5px 5px; 
+	border-image: url('res:CheckBoxIndeterminatedHot') 0 fill / 0px;
 }
