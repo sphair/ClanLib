@@ -43,6 +43,12 @@ int Program::main(const std::vector<std::string> &args)
 	Label *ribbon_page_tab_0_label = new Label(ribbon_page_tab_0);
 	ribbon_page_tab_0_label->set_text("Home");
 
+	GUIComponent *ribbon_page_tab_1 = new GUIComponent(ribbon_header);
+	ribbon_page_tab_1->set_tag_name("ribbon-tab");
+
+	Label *ribbon_page_tab_1_label = new Label(ribbon_page_tab_1);
+	ribbon_page_tab_1_label->set_text("View");
+
 	GUIComponent *ribbon_page_area = new GUIComponent(ribbon);
 	ribbon_page_area->set_tag_name("ribbon-page");
 
@@ -52,12 +58,41 @@ int Program::main(const std::vector<std::string> &args)
 	GUIComponent *ribbon_section_1 = new GUIComponent(ribbon_page_area);
 	ribbon_section_1->set_tag_name("ribbon-section");
 
-	GUIComponent *ribbon_control_0 = new GUIComponent(ribbon_section_0);
+	Image icon(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
+
+	GUIComponent *ribbon_section_group_1 = new GUIComponent(ribbon_section_0);
+	ribbon_section_group_1->set_tag_name("ribbon-section-group");
+
+	GUIComponent *ribbon_section_group_0 = new GUIComponent(ribbon_section_0);
+	ribbon_section_group_0->set_tag_name("ribbon-section-group");
+
+	GUIComponent *ribbon_control_0 = new GUIComponent(ribbon_section_group_0);
 	ribbon_control_0->set_tag_name("button");
 
-	GUIComponent *ribbon_control_1 = new GUIComponent(ribbon_section_0);
+	ImageView *ribbon_control_0_icon = new ImageView(ribbon_control_0);
+	ribbon_control_0_icon->set_image(icon);
+
+	Label *ribbon_control_0_label = new Label(ribbon_control_0);
+	ribbon_control_0_label->set_text("Copy");
+
+	GUIComponent *ribbon_control_2 = new GUIComponent(ribbon_section_group_0);
+	ribbon_control_2->set_tag_name("button");
+
+	ImageView *ribbon_control_2_icon = new ImageView(ribbon_control_2);
+	ribbon_control_2_icon->set_image(icon);
+
+	Label *ribbon_control_2_label = new Label(ribbon_control_2);
+	ribbon_control_2_label->set_text("Cut");
+
+	GUIComponent *ribbon_control_1 = new GUIComponent(ribbon_section_group_1);
 	ribbon_control_1->set_tag_name("button");
 	ribbon_control_1->set_class("big");
+
+	ImageView *ribbon_control_1_icon = new ImageView(ribbon_control_1);
+	ribbon_control_1_icon->set_image(icon);
+
+	Label *ribbon_control_1_label = new Label(ribbon_control_1);
+	ribbon_control_1_label->set_text("Paste");
 
 	GUIComponent *testHot1 = new GUIComponent(root);
 	testHot1->set_class("test1");
