@@ -420,8 +420,8 @@ public:
 
 	void set_horizontal_geometry(GUIComponent_Impl *node)
 	{
-		CSSUsedValue x = 0.0f;
-		CSSUsedValue y = 0.0f;
+		CSSUsedValue x = node->css_used_values.border.left + node->css_used_values.padding.left;
+		CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
 		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
@@ -436,8 +436,8 @@ public:
 
 	void set_vertical_geometry(GUIComponent_Impl *node)
 	{
-		CSSUsedValue x = 0.0f;
-		CSSUsedValue y = 0.0f;
+		CSSUsedValue x = node->css_used_values.border.left + node->css_used_values.padding.left;
+		CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
 		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
