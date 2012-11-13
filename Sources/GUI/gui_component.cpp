@@ -305,7 +305,6 @@ GUIComponent *GUIComponent::get_group_selected_component()
 	return 0;
 }
 
-
 const GUIComponent *GUIComponent::get_first_child() const
 {
 	return impl->first_child;
@@ -408,7 +407,6 @@ InputContext GUIComponent::get_ic()
 	}
 	return dummy_ic;
 }
-
 
 bool GUIComponent::is_enabled() const
 {
@@ -1063,7 +1061,6 @@ void GUIComponent::set_focus_policy(FocusPolicy policy)
 	impl->focus_policy = policy;
 }
 
-
 void GUIComponent::set_component_group_name(const std::string &str)
 {
 	impl->group_name = str;
@@ -1413,7 +1410,6 @@ GUIComponent *GUIComponent::get_previous_component_in_tree()
 	}
 	return last;
 }
-
 
 void GUIComponent::set_default(bool value)
 {
