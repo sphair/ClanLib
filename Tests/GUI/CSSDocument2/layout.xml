@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <ribbon>
+    <ribbon-header>
+      <ribbon-menu-button />
+      <ribbon-tab pseudo-class="selected">
+        <label>Home</label>
+      </ribbon-tab>
+      <ribbon-tab>
+        <label>View</label>
+      </ribbon-tab>
+    </ribbon-header>
+    <ribbon-page>
+      <ribbon-section>
+        <ribbon-section-group>
+          <button class="big">
+            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
+            <label>Paste</label>
+          </button>
+        </ribbon-section-group>
+        <ribbon-section-group>
+          <button>
+            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
+            <label>Copy</label>
+          </button>
+          <button>
+            <imageview>../../../Examples/GUI/CommonCode/Resources/tux.png</imageview>
+            <label>Cut</label>
+          </button>
+        </ribbon-section-group>
+      </ribbon-section>
+      <ribbon-section>
+      </ribbon-section>
+    </ribbon-page>
+  </ribbon>
+</root>
