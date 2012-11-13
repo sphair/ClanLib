@@ -39,4 +39,5 @@
     </component>
   </component>
   <pushbutton>PushButton</pushbutton>
+  <pushbutton_image>../../../Examples/GUI/CommonCode/Resources/tux.png</pushbutton_image>
 </root>
