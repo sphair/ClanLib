@@ -372,7 +372,7 @@ public:
 
 				perpendicular_math.used_min_lengths.push_back(used_noncontent_width + child_used_values.min_width);
 				perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
-				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_height);
+				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
 				perpendicular_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_shrink_factor));
 				perpendicular_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_expand_factor));
