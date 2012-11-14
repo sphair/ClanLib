@@ -73,9 +73,8 @@ public:
 
 	int marquee_box_width, marquee_position, marquee_step_size;
 	
-	GUIThemePart part_component;
-	//FIXME: GUIThemePart part_progress;
-	//FIXME: GUIThemePart part_chunk;
+	GUIComponent *part_progress;
+	GUIComponent *part_chunk;
 
 	Timer marquee_timer;
 };
@@ -89,11 +88,12 @@ ProgressBar::ProgressBar(GUIComponent *parent)
 	set_tag_name(CssStr::ProgressBar::type_name);
 
 	impl->progressbar = this;
-	impl->part_component = GUIThemePart(this);
-	//FIXME: impl->part_progress = GUIThemePart(this, "progress");
-	//FIXME: impl->part_chunk = GUIThemePart(this, "chunk");
+	impl->part_progress = new GUIComponent(this);
+	impl->part_chunk = new GUIComponent(this);
+	impl->part_progress->set_tag_name("progress");
+	impl->part_chunk->set_tag_name("chunk");
 
-	//FIXME: impl->part_component.set_pseudo_class(CssStr::normal, true);
+	set_pseudo_class(CssStr::normal, true);
 
 	func_process_message().set(impl.get(), &ProgressBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ProgressBar_Impl::on_render);
@@ -287,13 +287,13 @@ void ProgressBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = progressbar->get_size();
-	part_component.render_box(canvas, rect, update_rect);
+	//FIXME: progressbar->render_box(canvas, rect, update_rect);
 
 	if (marquee_mode)
 	{
 		if (rect.get_width() > 0)
 		{
-			Rect content_box = part_component.get_content_box(rect);
+			Rect content_box = progressbar->get_content_box();
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left + marquee_position;
@@ -323,7 +323,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_min != progress_max &&
 			rect.get_width() > 0)
 		{
-			Rect content_box = part_component.get_content_box(rect);
+			Rect content_box = progressbar->get_content_box();
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left;
