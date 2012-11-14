@@ -326,7 +326,7 @@ Rect Tab_Impl::get_client_rect()
 void Tab_Impl::on_resized()
 {
 	Rect header_rect = tab->get_geometry().get_size();
-	header_rect.bottom = tab_header->get_preferred_height();
+	header_rect.bottom = 32; //FIXME: tab_header->get_preferred_height();
 
 	tab_header->set_geometry(header_rect);
 

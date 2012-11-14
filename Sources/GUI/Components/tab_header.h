@@ -56,10 +56,6 @@ public:
 /// \{
 
 public:
-	int get_preferred_height() const;
-
-	virtual Size get_preferred_size() const;
-
 
 /// \}
 /// \name Operations

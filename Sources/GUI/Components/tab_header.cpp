@@ -73,9 +73,6 @@ public:
 
 	void update_handle_rects();
 
-	GUIThemePart part_background;
-	//FIXME: GUIThemePartProperty prop_first_tab_x_offset;
-	GUIThemePart part_focus;
 	std::vector<Handle> tabs;
 	Callback_v1<TabPage*> func_page_selected;
 	TabHeader *component;
@@ -107,16 +104,6 @@ TabHeader::~TabHeader()
 
 /////////////////////////////////////////////////////////////////////////////
 // TabHeader Attributes:
-
-int TabHeader::get_preferred_height() const
-{
-	return impl->part_background.get_preferred_height();
-}
-
-Size TabHeader::get_preferred_size() const
-{
-	return impl->part_background.get_preferred_size();
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // TabHeader Operations:
@@ -300,20 +287,7 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				input_msg->consumed = true;
 			}
 		}
-		std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-		if (pointer)
-		{
-			if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
-			{
-				std::vector<Handle>::iterator it;
-				for (it = tabs.begin(); it != tabs.end(); ++it)
-				{
-					//FIXME: (*it).part.set_pseudo_class(CssStr::hot, false);
-					//FIXME: (*it).part.set_pseudo_class(CssStr::normal, true);
-				}
-				component->request_repaint();
-			}
-		}
+
 		std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 		if (focus_change_msg)
 		{
@@ -335,7 +309,7 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void TabHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = component->get_geometry();
-	part_background.render_box(canvas, rect, update_rect);
+	//FIXME: part_background.render_box(canvas, rect, update_rect);
 
 	std::vector<Handle>::size_type i;
 	for (i = 0; i < tabs.size(); i++)
@@ -352,14 +326,13 @@ void TabHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			Rect focus_rect = handle.rect;
 			focus_rect.shrink(2,2,2,2);
-			part_focus.render_box(canvas, focus_rect, update_rect);
+			//FIXME: part_focus.render_box(canvas, focus_rect, update_rect);
 		}
 	}
 }
 
 void TabHeader_Impl::on_style_changed()
 {
-	part_background = GUIThemePart(component);
 	//FIXME: part_focus = GUIThemePart(component, CssStr::Tab::Header::part_focus);
 
 	//FIXME: first_tab_x_offset = part_background.get_property_int(prop_first_tab_x_offset);
