@@ -90,11 +90,10 @@ public:
 	Spin *component;
 	LineEdit *lineedit;
 	
-	GUIThemePart part_component;
-	GUIThemePart part_button_up;
-	GUIThemePart part_button_down;
-	GUIThemePart part_arrow_up;
-	GUIThemePart part_arrow_down;
+	GUIComponent *part_button_up;
+	GUIComponent *part_button_down;
+	GUIComponent *part_arrow_up;
+	GUIComponent *part_arrow_down;
 
 	Rect button_up_rect;
 	Rect button_down_rect;
@@ -293,7 +292,7 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				//FIXME: part_button_up.set_pseudo_class(CssStr::pressed, false);
 				//FIXME: part_arrow_down.set_pseudo_class(CssStr::pressed, false);
 				//FIXME: part_arrow_up.set_pseudo_class(CssStr::pressed, false);
-				//FIXME: part_component.set_pseudo_class(CssStr::pressed, false);
+				//FIXME: component->set_pseudo_class(CssStr::pressed, false);
 				component->request_repaint();
 				input_msg->consumed = true;
 			}
@@ -332,12 +331,12 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			{
-				//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
+				//FIXME: component->set_pseudo_class(CssStr::hot, true);
 				component->request_repaint();
 			}
 			else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			{
-				//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
+				//FIXME: component->set_pseudo_class(CssStr::hot, false);
 
 				//FIXME: part_button_up.set_pseudo_class(CssStr::pressed, false);
 				//FIXME: part_button_down.set_pseudo_class(CssStr::pressed, false);
@@ -367,12 +366,6 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void Spin_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = component->get_geometry().get_size();
-	part_component.render_box(canvas, rect, update_rect);
-	part_button_up.render_box(canvas, button_up_rect, update_rect);
-	part_button_down.render_box(canvas, button_down_rect, update_rect);
-	part_arrow_up.render_box(canvas, button_up_rect, update_rect);
-	part_arrow_down.render_box(canvas, button_down_rect, update_rect);
 }
 
 void Spin_Impl::create_components()
@@ -382,33 +375,38 @@ void Spin_Impl::create_components()
 	lineedit->func_after_edit_changed().set(this, &Spin_Impl::on_lineedit_modified);
 	lineedit->set_numeric_mode(true);
 
-	part_component = GUIThemePart(component);
-	//FIXME: part_button_down = GUIThemePart(component, CssStr::Spin::part_button_down);
-	//FIXME: part_button_up = GUIThemePart(component, CssStr::Spin::part_button_up);
-	//FIXME: part_arrow_down = GUIThemePart(component, CssStr::Spin::part_arrow_down);
-	//FIXME: part_arrow_up = GUIThemePart(component, CssStr::Spin::part_arrow_up);
+	part_button_down = new GUIComponent(component);
+	part_button_up = new GUIComponent(component);
+	part_arrow_down = new GUIComponent(component);
+	part_arrow_up = new GUIComponent(component);
+
+	part_button_down->set_tag_name(CssStr::Spin::part_button_down);
+	part_button_up->set_tag_name(CssStr::Spin::part_button_up);
+	part_arrow_down->set_tag_name(CssStr::Spin::part_arrow_down);
+	part_arrow_up->set_tag_name(CssStr::Spin::part_arrow_up);
 
 	bool enabled = component->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_button_up.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_button_down.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_arrow_up.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_arrow_down.set_pseudo_class(CssStr::normal, enabled);
+	component->set_pseudo_class(CssStr::normal, enabled);
+	part_button_up->set_pseudo_class(CssStr::normal, enabled);
+	part_button_down->set_pseudo_class(CssStr::normal, enabled);
+	part_arrow_up->set_pseudo_class(CssStr::normal, enabled);
+	part_arrow_down->set_pseudo_class(CssStr::normal, enabled);
 
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_button_up.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_button_down.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_arrow_up.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_arrow_down.set_pseudo_class(CssStr::disabled, !enabled);
+	component->set_pseudo_class(CssStr::disabled, !enabled);
+	part_button_up->set_pseudo_class(CssStr::disabled, !enabled);
+	part_button_down->set_pseudo_class(CssStr::disabled, !enabled);
+	part_arrow_up->set_pseudo_class(CssStr::disabled, !enabled);
+	part_arrow_down->set_pseudo_class(CssStr::disabled, !enabled);
 }
 
 
 void Spin_Impl::on_resized()
 {
 	Rect rect = component->get_geometry().get_size();
-	Rect content_rect = part_component.get_content_box(rect);
-	Rect lineedit_rect(content_rect.left, content_rect.top, content_rect.right-part_button_down.get_preferred_width(), content_rect.bottom);
+	Rect content_rect = component->get_content_box();
+	//FIXME: Rect lineedit_rect(content_rect.left, content_rect.top, content_rect.right-part_button_down->get_preferred_width(), content_rect.bottom);
+	Rect lineedit_rect(content_rect.left, content_rect.top, 64, content_rect.bottom);
 	lineedit->set_geometry(lineedit_rect);
 
 	if (floating_point_mode)
@@ -416,8 +414,10 @@ void Spin_Impl::on_resized()
 	else
 		lineedit->set_text(value_i);
 
-	button_up_rect = Rect(content_rect.right-part_button_up.get_preferred_width(), content_rect.top, content_rect.right, content_rect.get_center().y);
-	button_down_rect = Rect(content_rect.right-part_button_up.get_preferred_width(), button_up_rect.bottom, content_rect.right, content_rect.bottom);
+	//FIXME: button_up_rect = Rect(content_rect.right-part_button_up->get_preferred_width(), content_rect.top, content_rect.right, content_rect.get_center().y);
+	button_up_rect = Rect(64, content_rect.top, content_rect.right, content_rect.get_center().y);
+	//FIXME: button_down_rect = Rect(content_rect.right-part_button_up->get_preferred_width(), button_up_rect.bottom, content_rect.right, content_rect.bottom);
+	button_down_rect = Rect(64, button_up_rect.bottom, content_rect.right, content_rect.bottom);
 }
 
 void Spin_Impl::on_style_changed()
@@ -475,13 +475,13 @@ void Spin_Impl::on_enablemode_changed()
 {
 	bool enabled = component->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
+	//FIXME: component->set_pseudo_class(CssStr::normal, enabled);
 	//FIXME: part_button_up.set_pseudo_class(CssStr::normal, enabled);
 	//FIXME: part_button_down.set_pseudo_class(CssStr::normal, enabled);
 	//FIXME: part_arrow_up.set_pseudo_class(CssStr::normal, enabled);
 	//FIXME: part_arrow_down.set_pseudo_class(CssStr::normal, enabled);
 
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//FIXME: component->set_pseudo_class(CssStr::disabled, !enabled);
 	//FIXME: part_button_up.set_pseudo_class(CssStr::disabled, !enabled);
 	//FIXME: part_button_down.set_pseudo_class(CssStr::disabled, !enabled);
 	//FIXME: part_arrow_up.set_pseudo_class(CssStr::disabled, !enabled);
