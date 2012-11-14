@@ -34,7 +34,6 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
-#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -153,9 +152,9 @@ public:
 	PopupMenu context_menu;
 	PopupMenu item_context_menu;
 
-	GUIThemePart part_mouse_selection;
-	GUIThemePart part_columns_bg;
-	GUIThemePart part_component;
+	//FIXME: GUIThemePart part_mouse_selection;
+	//FIXME: GUIThemePart part_columns_bg;
+	//FIXME: GUIThemePart part_component;
 
 	Rect rect_content;
 	Rect rect_columns;

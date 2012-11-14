@@ -29,7 +29,6 @@
 #pragma once
 
 #include "API/GUI/gui_component.h"
-#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/Components/message_box.h"
 
 namespace clan

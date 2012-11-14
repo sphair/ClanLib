@@ -33,7 +33,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component_description.h"
-#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_layout_corners.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/CSSLayout/css_document.h"

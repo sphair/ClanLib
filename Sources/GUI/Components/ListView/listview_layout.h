@@ -141,9 +141,9 @@ public:
 public:
 	ListView *listview;
 	Canvas canvas;
-	GUIThemePart part_cell;
-	GUIThemePart part_row;
-	GUIThemePart part_opener;
+	//FIXME: GUIThemePart part_cell;
+	//FIXME: GUIThemePart part_row;
+	//FIXME: GUIThemePart part_opener;
 	ListViewHeader *header;
 	ListViewItem root_item;
 	Rect rect_view;

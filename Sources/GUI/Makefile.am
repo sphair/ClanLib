@@ -69,7 +69,6 @@ libclan30GUI_la_SOURCES = \
 	Layout/gui_layout_provider_corners.cpp \
 	Layout/gui_layout_corners.cpp \
 	gui_component_select_node.cpp \
-	Theme/gui_theme_part.cpp \
 	Theme/gui_theme_layout_manager.cpp \
 	gui_manager_impl.cpp \
 	gui_manager.cpp \

@@ -241,8 +241,6 @@ private:
 	std::shared_ptr<GUIManager_Impl> impl;
 
 	friend class GUIComponent_Impl;
-	friend class GUIThemePart;
-	friend class GUIThemePart_Impl;
 /// \}
 };
 
