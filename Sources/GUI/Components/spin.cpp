@@ -475,17 +475,17 @@ void Spin_Impl::on_enablemode_changed()
 {
 	bool enabled = component->is_enabled();
 
-	//FIXME: component->set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_button_up.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_button_down.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_arrow_up.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_arrow_down.set_pseudo_class(CssStr::normal, enabled);
+	component->set_pseudo_class(CssStr::normal, enabled);
+	part_button_up->set_pseudo_class(CssStr::normal, enabled);
+	part_button_down->set_pseudo_class(CssStr::normal, enabled);
+	part_arrow_up->set_pseudo_class(CssStr::normal, enabled);
+	part_arrow_down->set_pseudo_class(CssStr::normal, enabled);
 
-	//FIXME: component->set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_button_up.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_button_down.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_arrow_up.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_arrow_down.set_pseudo_class(CssStr::disabled, !enabled);
+	component->set_pseudo_class(CssStr::disabled, !enabled);
+	part_button_up->set_pseudo_class(CssStr::disabled, !enabled);
+	part_button_down->set_pseudo_class(CssStr::disabled, !enabled);
+	part_arrow_up->set_pseudo_class(CssStr::disabled, !enabled);
+	part_arrow_down->set_pseudo_class(CssStr::disabled, !enabled);
 
 	lineedit->set_enabled(enabled);
 
