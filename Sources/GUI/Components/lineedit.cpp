@@ -1201,7 +1201,7 @@ void LineEdit_Impl::on_resized()
 	update_text_clipping();
 }
 
-GUIThemePart::VerticalTextPosition LineEdit_Impl::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+LineEdit_Impl::VerticalTextPosition LineEdit_Impl::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
 {
 	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
 
@@ -1210,7 +1210,7 @@ GUIThemePart::VerticalTextPosition LineEdit_Impl::get_vertical_text_align(Canvas
 	float content_height = content_rect.get_height();
 	float baseline = (content_height + align_height) / 2.0f;
 
-	GUIThemePart::VerticalTextPosition result;
+	VerticalTextPosition result;
 	result.baseline = baseline + content_rect.top;
 	result.top = result.baseline - metrics.get_ascent();
 	result.bottom = result.baseline + metrics.get_descent();

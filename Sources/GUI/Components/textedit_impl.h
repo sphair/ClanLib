@@ -64,6 +64,13 @@ public:
 		scroll_timer.stop();
 	}
 
+	struct VerticalTextPosition
+	{
+		float top;
+		float baseline;
+		float bottom;
+	};
+
 	void layout_lines(Canvas &canvas);
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
@@ -79,7 +86,7 @@ public:
 	void update_vertical_scroll();
 	void move_vertical_scroll();
 	int  get_total_line_height();
-	GUIThemePart::VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 	Callback_v1<InputEvent &> func_before_edit_changed;
 	Callback_v1<InputEvent &> func_after_edit_changed;
@@ -138,7 +145,7 @@ public:
 	std::string::size_type to_offset(Vec2i pos) const;
 	Vec2i from_offset(std::string::size_type offset) const;
 
-	GUIThemePart::VerticalTextPosition vertical_text_align;
+	VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;
