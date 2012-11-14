@@ -79,6 +79,7 @@ public:
 	void update_vertical_scroll();
 	void move_vertical_scroll();
 	int  get_total_line_height();
+	GUIThemePart::VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 	Callback_v1<InputEvent &> func_before_edit_changed;
 	Callback_v1<InputEvent &> func_after_edit_changed;
@@ -115,11 +116,8 @@ public:
 
 	static std::string break_characters;
 
-	GUIThemePart part_component;
-	GUIThemePart part_selection;
-	GUIThemePart part_cursor;
-	//GUIThemePartProperty prop_text_color;
-	Rect content_rect;
+	GUIComponent *part_selection;
+	GUIComponent *part_cursor;
 
 	void move(int steps, InputEvent &e);
 	void insert_text(Vec2i pos, const std::string &str);
