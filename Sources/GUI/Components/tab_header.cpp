@@ -67,7 +67,7 @@ public:
 	{
 		TabPage *tab_page;
 		std::string label;
-		GUIThemePart part;
+		//FIXME: GUIThemePart part;
 		Rect rect;
 	};
 
@@ -137,7 +137,7 @@ void TabHeader_Impl::update_handle_rects()
 		int tab_width = 32;	//FIXME: tabs[i].part.get_preferred_width();
 
 		// Apply padding-left, padding-right css values:
-		Rect render_rect = tabs[i].part.get_render_box(tabs[i].part.get_text_size(canvas, tabs[i].label));
+		Rect render_rect = Size(32, 32); //FIXME: tabs[i].part.get_render_box(tabs[i].part.get_text_size(canvas, tabs[i].label));
 
 		if (render_rect.get_width() > tab_width)
 		{
@@ -315,12 +315,12 @@ void TabHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	for (i = 0; i < tabs.size(); i++)
 	{
 		Handle &handle = tabs[i];
-		handle.part.render_box(canvas, handle.rect, update_rect);
+		//FIXME: handle.part.render_box(canvas, handle.rect, update_rect);
 
-		Rect rect_handle_content = handle.part.get_content_box(handle.rect);
+		Rect rect_handle_content = Size(32, 32); //FIXME: handle.part.get_content_box(handle.rect);
 
-		Size text_size = handle.part.get_text_size(canvas, handle.label);
-		handle.part.render_text(canvas, handle.label, rect_handle_content, update_rect);
+		//FIXME: Size text_size = handle.part.get_text_size(canvas, handle.label);
+		//FIXME: handle.part.render_text(canvas, handle.label, rect_handle_content, update_rect);
 
 		if (component->has_focus() && i == selected_page)
 		{
