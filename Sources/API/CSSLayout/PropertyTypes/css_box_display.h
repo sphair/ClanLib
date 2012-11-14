@@ -62,7 +62,8 @@ public:
 		type_table_caption,
 		type_none,
 		type_inherit,
-		type_clan_box,
+		type_flex,
+		type_inline_flex,
 		type_clan_grid,
 		type_clan_stacked
 	};

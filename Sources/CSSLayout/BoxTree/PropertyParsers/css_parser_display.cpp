@@ -80,8 +80,10 @@ void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &na
 			properties.display.type = CSSBoxDisplay::type_none;
 		else if (equals(token.value, "inherit"))
 			properties.display.type = CSSBoxDisplay::type_inherit;
-		else if (equals(token.value, "-clan-box"))
-			properties.display.type = CSSBoxDisplay::type_clan_box;
+		else if (equals(token.value, "flex"))
+			properties.display.type = CSSBoxDisplay::type_flex;
+		else if (equals(token.value, "inline-flex"))
+			properties.display.type = CSSBoxDisplay::type_inline_flex;
 		else if (equals(token.value, "-clan-grid"))
 			properties.display.type = CSSBoxDisplay::type_clan_grid;
 		else if (equals(token.value, "-clan-stacked"))
