@@ -829,11 +829,8 @@ void LineEdit_Impl::create_parts()
 
 	bool enabled = lineedit->is_enabled();
 
-	//part_component->set_pseudo_class(CssStr::hot, false);
 	lineedit->set_pseudo_class(CssStr::normal, enabled);
 	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
-
-	//FIXME: text_color = part_component->get_property(prop_text_color);
 
 	part_cursor->set_pseudo_class(CssStr::normal, enabled);
 	part_cursor->set_pseudo_class(CssStr::disabled, !enabled);
