@@ -65,7 +65,6 @@ public:
 	Font font;
 	Colorf text_color;
 	GUIThemePart part_component;
-	//FIXME: GUIThemePartProperty prop_text_color;
 	Slot slot_filter_message;
 };
 
@@ -77,14 +76,12 @@ ToolTip::ToolTip(GUIManager manager)
 {
 	set_tag_name(CssStr::ToolTip::type_name);
 	impl->tooltip = this;
-	//FIXME: impl->prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 
 	func_process_message().set(impl.get(), &ToolTip_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
 
 	impl->part_component = GUIThemePart(this);
 	impl->font = impl->part_component.get_font();
-	//FIXME: impl->text_color = impl->part_component.get_property(impl->prop_text_color);
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
 	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
