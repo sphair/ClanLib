@@ -17,7 +17,9 @@
 
 ribbon
 {
+    align-self: stretch;
     flex-direction: column;
+    align-items: stretch;
     height: 117px;
     border-image: url('res:Ribbon') 50 8 8 8 fill / 50px 8px 8px 8px;
     font-size: 9pt;
@@ -64,7 +66,9 @@ ribbon-tab:selected
 
 ribbon-page
 {
+    flex-grow: 1;
     flex-direction: row;
+    align-items: stretch;
 }
 
 ribbon-section
@@ -156,6 +160,7 @@ ribbon-section button:toggled
 
 label.imagelabel
 {
+    flex-shrink: 1;
     background: #ffff80;
     min-width: 130px;
     border-width: 1px;
@@ -166,6 +171,7 @@ label.imagelabel
 
 .imagecontainer
 {
+    align-self: stretch;
     flex-direction: row;
     background: green;
 }
@@ -249,6 +255,7 @@ button:pressed imageview
 
 button label
 {
+    align-self: center;
 }
 
 button:pressed label
