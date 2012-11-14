@@ -430,33 +430,24 @@ radiobutton:unchecked:disabled checker
 
 lineedit
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
-	bg-image-sizing:stretch; 
-	
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
-
+    -clan-box-direction: horizontal;
+    padding: 25px;
 	text-color:black;
 }
 
 lineedit:normal
 {
-	border-image: url('res:LineEditNormal') 0 fill / 0px; 
+	border-image: url('res:LineEditNormal') 2 2 2 2 fill / 2px 2px 2px 2px; 
 }
 
 lineedit:hot
 {
-	border-image: url('res:LineEditHot') 0 fill / 0px;
+	border-image: url('res:LineEditHot') 2 2 2 2 fill / 2px 2px 2px 2px; 
 }
 
 lineedit:disabled
 {
-	border-image: url('res:LineEditDisabled') 0 fill / 0px; 
+	border-image: url('res:LineEditDisabled') 2 2 2 2 fill / 2px 2px 2px 2px; 
 	text-color:gray;
 }
 
@@ -464,50 +455,34 @@ lineedit cursor
 {
 	preferred-width:1;
 
-	bg-color: black;
+	background-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
-	bg-image:;
-	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
 }
 
 lineedit:blink_on cursor
 {
-	bg-color: black;
+	background-color: black;
 }
 
 lineedit:blink_off cursor
 {
-	bg-color: white;
+	background-color: white;
 }
 
 lineedit selection
 {
     text-color: white;
-	expand-top:-2;
-	expand-bottom:-1;
-	bg-image:;
-	bg-color: #316ac5;
-
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	background-color: #316ac5;
 }
 
 lineedit:disabled selection
 {
-	bg-image:;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 lineedit:unfocused selection
 {
-	bg-image:;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
