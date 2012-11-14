@@ -163,7 +163,7 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		flex_basis.compute(&parent->flex_basis, layout, em_size, ex_size);
 		justify_content.compute(&parent->justify_content, layout, em_size, ex_size);
 		align_items.compute(&parent->align_items, layout, em_size, ex_size);
-		align_self.compute(&parent->align_self, layout, em_size, ex_size);
+		align_self.compute(&parent->align_self, layout, em_size, ex_size, &parent->align_items);
 		align_content.compute(&parent->align_content, layout, em_size, ex_size);
 	}
 	else
@@ -275,7 +275,7 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		flex_basis.compute(0, layout, em_size, ex_size);
 		justify_content.compute(0, layout, em_size, ex_size);
 		align_items.compute(0, layout, em_size, ex_size);
-		align_self.compute(0, layout, em_size, ex_size);
+		align_self.compute(0, layout, em_size, ex_size, 0);
 		align_content.compute(0, layout, em_size, ex_size);
 	}
 }

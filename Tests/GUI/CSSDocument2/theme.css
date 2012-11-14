@@ -11,14 +11,13 @@
     font-size: 11pt;
     
     background-color: gray;
+
+    align-items: flex-start;
 }
 
 ribbon
 {
     flex-direction: column;
-    flex-grow: 0;
-    flex-shrink: 0;
-    align-self: stretch;
     height: 117px;
     border-image: url('res:Ribbon') 50 8 8 8 fill / 50px 8px 8px 8px;
     font-size: 9pt;
@@ -27,7 +26,6 @@ ribbon
 ribbon-header
 {
     flex-direction: row;
-    align-self: stretch;
    
     height: 23px;
 
@@ -67,15 +65,11 @@ ribbon-tab:selected
 ribbon-page
 {
     flex-direction: row;
-    align-self: stretch;
-    flex-shrink: 1;
-    flex-grow: 1;
 }
 
 ribbon-section
 {
     flex-direction: row;
-    align-self: stretch;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
     padding: 4px 8px;
     min-width: 40px;
@@ -84,15 +78,13 @@ ribbon-section
 ribbon-section-group
 {
     flex-direction: column;
-    align-self: stretch;
 }
 
 ribbon-section button, ribbon-section button:defaulted, ribbon-section button:pressed, ribbon-section button:disabled
 {
     padding: 4px;
     min-width: 10px;
-    flex-direction: column;
-    align-self: stretch;
+    flex-direction: row;
     border-image: none;
 }
 
@@ -165,8 +157,6 @@ ribbon-section button:toggled
 label.imagelabel
 {
     background: #ffff80;
-    flex-shrink: 1;
-    flex-grow: 1;
     min-width: 130px;
     border-width: 1px;
     border-style: solid;
@@ -177,7 +167,6 @@ label.imagelabel
 .imagecontainer
 {
     flex-direction: row;
-    flex-shrink: 1;
     background: green;
 }
 
@@ -260,8 +249,6 @@ button:pressed imageview
 
 button label
 {
-    flex-shrink: 1;
-    flex-grow: 1;
 }
 
 button:pressed label
