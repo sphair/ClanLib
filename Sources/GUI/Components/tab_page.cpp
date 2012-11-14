@@ -99,13 +99,10 @@ void TabPage_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void TabPage_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = component->get_size();
-	part_background.render_box(canvas, rect, update_rect);
 }
 
 void TabPage_Impl::on_style_changed()
 {
-	part_background = GUIThemePart(component);
 }
 
 void TabPage_Impl::on_resized()

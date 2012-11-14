@@ -54,8 +54,6 @@ public:
 
 	void on_resized();
 
-	GUIThemePart part_background;
-
 	TabPage *component;
 
 	int id;
