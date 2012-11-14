@@ -65,8 +65,6 @@ public:
 	Callback_v1<Rect&> func_resize;
 
 	std::string title;
-
-	GUIThemePart part_component;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -77,7 +75,6 @@ MainWindow::MainWindow(GUIManager *owner, const GUITopLevelDescription &descript
 {
 	impl->window = this;
 	impl->title = description.get_title();
-	impl->part_component = GUIThemePart(this);
 
 	func_process_message().set(impl.get(), &MainWindow_Impl::on_process_message);
 	func_render().set(impl.get(), &MainWindow_Impl::on_render);
@@ -103,7 +100,6 @@ MainWindow::MainWindow(GUIComponent *owner, const GUITopLevelDescription &descri
 
 	impl->window = this;
 	impl->title = description.get_title();
-	impl->part_component = GUIThemePart(this);
 
 	func_process_message().set(impl.get(), &MainWindow_Impl::on_process_message);
 	func_render().set(impl.get(), &MainWindow_Impl::on_render);
@@ -196,8 +192,6 @@ void MainWindow_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void MainWindow_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = window->get_geometry();
-	part_component.render_box(canvas, rect, update_rect);
 }
 
 }
