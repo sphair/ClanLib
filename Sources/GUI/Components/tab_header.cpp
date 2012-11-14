@@ -134,7 +134,7 @@ void TabHeader_Impl::update_handle_rects()
 	std::vector<Handle>::size_type i;
 	for (i = 0; i < tabs.size(); ++i)
 	{
-		int tab_width = tabs[i].part.get_preferred_width();
+		int tab_width = 32;	//FIXME: tabs[i].part.get_preferred_width();
 
 		// Apply padding-left, padding-right css values:
 		Rect render_rect = tabs[i].part.get_render_box(tabs[i].part.get_text_size(canvas, tabs[i].label));
@@ -146,7 +146,7 @@ void TabHeader_Impl::update_handle_rects()
 
 		tabs[i].rect = Rect(
 			last_tab_end_x, 0,
-			last_tab_end_x + tab_width, tabs[i].part.get_preferred_height());
+			last_tab_end_x + tab_width, 32);	//FIXME: tabs[i].part.get_preferred_height());
 
 		last_tab_end_x += tab_width;
 	}

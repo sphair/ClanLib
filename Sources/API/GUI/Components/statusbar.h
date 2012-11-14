@@ -71,11 +71,6 @@ public:
 	/// If it was not found, an exception is thrown.
 	static StatusBar *get_named_item(GUIComponent *reference_component, const std::string &id);
 
-	/// \brief Get Preferred size
-	///
-	/// \return preferred_size
-	Size get_preferred_size() const;
-
 	/// \brief Func part double clicked
 	///
 	/// \param id = value
