@@ -67,8 +67,6 @@ public:
 
 	std::vector<TabPage*> pages;
 
-	GUIThemePart part_background;
-
 	TabHeader *tab_header;
 };
 
@@ -126,11 +124,6 @@ TabPage *Tab::get_page_by_id(int id) const
 	}
 		
 	return 0;
-}
-
-Size Tab::get_preferred_size() const
-{
-	return impl->part_background.get_preferred_size();
 }
 
 int Tab::get_current_page_index() const
@@ -298,17 +291,10 @@ void Tab_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void Tab_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rect rect = tab->get_geometry().get_size();
-	rect.top = tab_header->get_geometry().bottom;
-
-	part_background.render_box(canvas, rect, update_rect);
-
 }
 
 void Tab_Impl::on_style_changed()
 {
-	part_background = GUIThemePart(tab);
-
 	// Hack to test if child component caches need to be invalidated when GUIComponent::set_*_name is called.
 	tab_header->set_class(tab_header->get_class());
 }
@@ -332,7 +318,8 @@ Rect Tab_Impl::get_client_rect()
 	Rect hr = tab_header->get_geometry();
 	Rect g = tab->get_geometry().get_size();
 	g.top = hr.bottom;
-	Rect content = part_background.get_content_box(g);
+	//FIXME: Rect content = part_background.get_content_box(g);
+	Rect content = tab->get_content_box();
 	return content;
 }
 

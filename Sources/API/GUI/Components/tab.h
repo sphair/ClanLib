@@ -96,11 +96,6 @@ public:
 	/// \return current_page_id
 	int get_current_page_id() const;
 
-	/// \brief Get Preferred size
-	///
-	/// \return preferred_size
-	Size get_preferred_size() const;
-
 	/// \brief returns the number of pages in the tab.
 	int get_page_count() const;
 
