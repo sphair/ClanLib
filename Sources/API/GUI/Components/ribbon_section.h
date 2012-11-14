@@ -30,7 +30,6 @@
 #pragma once
 
 #include "../gui_component.h"
-#include "../gui_theme_part.h"
 #include "../../Display/Font/font.h"
 
 namespace clan
@@ -47,7 +46,7 @@ private:
 	Font font;
 	std::string text;
 	int size;
-	GUIThemePart part_section;
+	//FIXME: GUIThemePart part_section;
 
 	friend class RibbonPage;
 };

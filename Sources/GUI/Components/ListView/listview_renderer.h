@@ -103,15 +103,15 @@ public:
 
 private:
 	ListView *listview;
-	GUIThemePart part_cell;
-	GUIThemePart part_row;
-	GUIThemePart part_row_alternate;
-	GUIThemePart part_column;
-	GUIThemePart part_columns_bg;
-	GUIThemePart part_selection;
-	GUIThemePart part_opener_open;
-	GUIThemePart part_opener_closed;
-	GUIThemePart part_icon_selection;
+	//FIXME: GUIThemePart part_cell;
+	//FIXME: GUIThemePart part_row;
+	//FIXME: GUIThemePart part_row_alternate;
+	//FIXME: GUIThemePart part_column;
+	//FIXME: GUIThemePart part_columns_bg;
+	//FIXME: GUIThemePart part_selection;
+	//FIXME: GUIThemePart part_opener_open;
+	//FIXME: GUIThemePart part_opener_closed;
+	//FIXME: GUIThemePart part_icon_selection;
 	//GUIThemePartProperty prop_icon_color;
 	//GUIThemePartProperty prop_icon_color_selected;
 	//GUIThemePartProperty prop_icon_color_overlay;

@@ -68,8 +68,8 @@ public:
 	void clear_selection();
 
 	MenuBar *menubar;
-	GUIThemePart part_component;
-	GUIThemePart part_item;
+	//FIXME: GUIThemePart part_component;
+	//FIXME: GUIThemePart part_item;
 
 	std::vector<TopMenu> menus;
 	int selected_index;

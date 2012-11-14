@@ -32,7 +32,6 @@
 
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
-#include "API/GUI/gui_theme_part.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Render/graphic_context.h"

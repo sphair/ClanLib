@@ -39,7 +39,6 @@
 namespace clan
 {
 
-class GUIThemePart;
 class Canvas;
 class ResourceManager;
 class GUIComponent;

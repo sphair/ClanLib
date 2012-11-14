@@ -31,7 +31,6 @@
 
 #include "../../Display/2D/image.h"
 #include "../gui_component.h"
-#include "../gui_theme_part.h"
 #include "../gui_message_input.h"
 
 namespace clan
@@ -69,10 +68,10 @@ private:
 	int current_item;
 	std::vector<RibbonMenuItem> items;
 	std::vector<Rect> item_boxes;
-	GUIThemePart part_background;
-	GUIThemePart part_menu_item;
-	GUIThemePart part_menu_item_selected;
-	GUIThemePart part_menu_item_separator;
+	//FIXME: GUIThemePart part_background;
+	//FIXME: GUIThemePart part_menu_item;
+	//FIXME: GUIThemePart part_menu_item_selected;
+	//FIXME: GUIThemePart part_menu_item_separator;
 
 	bool running;
 	Slot slot_filter;

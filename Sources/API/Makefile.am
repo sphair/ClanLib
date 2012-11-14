@@ -117,7 +117,6 @@ clanGUI_includes = \
 	GUI/gui_message_focus_change.h \
 	GUI/gui_window_manager_system.h \
 	GUI/gui_message_pointer.h \
-	GUI/gui_theme_part.h \
 	GUI/gui_window_manager.h \
 	GUI/accelerator_key.h \
 	GUI/gui_manager.h \
