@@ -63,8 +63,7 @@ private:
 	void on_render(Canvas &canvas, const Rect &dirty_rect);
 
 	std::string detail_text;
-	GUIThemePart part_component;
-	GUIThemePart part_icon;
+	GUIComponent *part_icon;
 	GUIComponent *component;
 	PushButton *button_ok;
 	PushButton *button_cancel;

@@ -86,27 +86,27 @@ MessageBoxComponent::~MessageBoxComponent()
 Size MessageBoxComponent::layout_content()
 {
 	Size size(0,0);
-	Size icon_size = part_icon.get_preferred_size();
-	Rect border_space = part_component.get_content_shrink_box();
+	Size icon_size = Size(32, 32);	//FIXME: part_icon->get_preferred_size();
+	Rect border_space = Size(32, 32);	//FIXME: component->get_content_shrink_box();
 
-	Size min_size = part_component.get_preferred_size();
+	Size min_size = Size(32, 32);	//FIXME: component->get_preferred_size();
 	if (min_size == Size(0,0))
 	{
 		min_size = Size(300,80);
 	}
 
 	//FIXME: GUIThemePartProperty prop_buttons_area_height(CssStr::MessageBox::button_area_height, "40");
-	//FIXME: int button_area_height = part_component.get_property_int(prop_buttons_area_height);
+	//FIXME: int button_area_height = component->get_property_int(prop_buttons_area_height);
 
 	//FIXME: GUIThemePartProperty prop_icon_margin_right("icon_text_gap", "7");
-	//FIXME: int icon_margin_right = part_component.get_property_int(prop_icon_margin_right);
+	//FIXME: int icon_margin_right = component->get_property_int(prop_icon_margin_right);
 
-	rect_icon = part_icon.get_render_box(icon_size).get_size();
+	//FIXME: rect_icon = part_icon->get_render_box(icon_size).get_size();
 	rect_icon.translate(border_space.left, 0);
 
 
-	Size text_size = part_component.get_text_size(get_canvas(), detail_text);
-	rect_text = part_component.get_render_box(text_size);
+	Size text_size = component->get_font().get_text_size(get_canvas(), detail_text);
+	//FIXME: rect_text = component->get_render_box(text_size);
 	//FIXME: rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
 
@@ -283,15 +283,12 @@ void MessageBoxComponent::set_css_class()
 
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
-	part_component.render_box(canvas, get_size(), dirty_rect);
-	part_icon.render_box(canvas, rect_icon, dirty_rect);
-	part_component.render_text(canvas, detail_text, rect_text, dirty_rect);
 }
 
 void MessageBoxComponent::create_parts()
 {
-	part_component = GUIThemePart(this);
-	//FIXME: part_icon = GUIThemePart(this, CssStr::MessageBox::part_icon);
+	part_icon = new GUIComponent(this);
+	part_icon->set_tag_name(CssStr::MessageBox::part_icon);
 
 }
 
