@@ -100,10 +100,10 @@ public:
 	Size get_preferred_size() const;
 
 	/// \brief Returns the preferred width of a render box.
-	int get_preferred_width() const;
+	//int get_preferred_width() const;
 
 	/// \brief Returns the preferred height of a render box.
-	int get_preferred_height() const;
+	//int get_preferred_height() const;
 
 	/// \brief Returns the part font.
 	Font get_font() const;
