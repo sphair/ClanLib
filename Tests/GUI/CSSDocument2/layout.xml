@@ -45,5 +45,13 @@
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
     <text>Need alignment!</text>
   </pushbutton>
-  <checkbox>CheckBox</checkbox>
+  <checkbox>Check</checkbox>
+  <radiobutton>
+    <group>Main Group</group>
+    <text>A</text>
+  </radiobutton>
+  <radiobutton>
+    <group>Main Group</group>
+    <text>B</text>
+  </radiobutton>
 </root>
