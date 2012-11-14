@@ -115,10 +115,9 @@ public:
 
 	Rect rect_thumb, rect_track, rect_track_decrement, rect_track_increment;
 
-	GUIThemePart part_component;
-	GUIThemePart part_track;
-	GUIThemePart part_thumb;
-	GUIThemePart part_focus;
+	GUIComponent *part_track;
+	GUIComponent *part_thumb;
+	GUIComponent *part_focus;
 
 	int thumb_start_position;
 
@@ -205,11 +204,6 @@ int Slider::get_page_step() const
 bool Slider::get_lock_to_ticks() const
 {
 	return impl->lock_to_ticks;
-}
-
-Size Slider::get_preferred_size() const
-{
-	return impl->part_component.get_preferred_size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -390,9 +384,9 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 	int original_slider_position = position;
 	Point mouse_pos = input_event.mouse_pos;
 	//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
-	//FIXME: part_track.set_pseudo_class(CssStr::hot, true);
+	//FIXME: part_track->set_pseudo_class(CssStr::hot, true);
 	//FIXME: part_component.set_pseudo_class(CssStr::normal, false);
-	//FIXME: part_track.set_pseudo_class(CssStr::normal, false);
+	//FIXME: part_track->set_pseudo_class(CssStr::normal, false);
 	//FIXME: part_focus.set_pseudo_class(CssStr::focused, false);
 
 	if (mouse_down_mode != mouse_down_thumb_drag)
@@ -500,47 +494,37 @@ void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, 
 
 void Slider_Impl::on_mouse_leave()
 {
-	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::hot, false);
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, true);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, true);
+	slider->set_pseudo_class(CssStr::normal, true);
+	part_thumb->set_pseudo_class(CssStr::normal, true);
 	slider->request_repaint();
 }
 
 void Slider_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	update_part_positions();
-	
-	Rect rect = slider->get_geometry();
-	part_component.render_box(canvas, rect, update_rect);
-	part_track.render_box(canvas, rect_track, update_rect);
-	part_thumb.render_box(canvas, rect_thumb, update_rect);
-	
-	if (slider->has_focus())
-	{
-		Rect content_rect = part_component.get_content_box(rect.get_size());
-		part_focus.render_box(canvas, content_rect, update_rect);
-	}
 }
 
 void Slider_Impl::create_parts()
 {
 	bool vertical = slider->is_vertical();
-	part_component = GUIThemePart(slider);
-	//FIXME: part_track = GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
-	//FIXME: part_thumb = GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
-	//FIXME: part_focus = GUIThemePart(slider, CssStr::Slider::part_focus);
+	part_track = new GUIComponent(slider);
+	part_thumb = new GUIComponent(slider);
+	part_focus = new GUIComponent(slider);
+
+	part_track->set_tag_name(vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
+	part_thumb->set_tag_name(vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
+	part_focus->set_tag_name(CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_track.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_focus.set_pseudo_class(CssStr::normal, true);
+	slider->set_pseudo_class(CssStr::normal, enabled);
+	part_track->set_pseudo_class(CssStr::normal, enabled);
+	part_thumb->set_pseudo_class(CssStr::normal, enabled);
+	part_focus->set_pseudo_class(CssStr::normal, true);
 
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_track.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::disabled, !enabled);
+	slider->set_pseudo_class(CssStr::disabled, !enabled);
+	part_track->set_pseudo_class(CssStr::disabled, !enabled);
+	part_thumb->set_pseudo_class(CssStr::disabled, !enabled);
 
 }
 
@@ -560,8 +544,8 @@ void Slider_Impl::update_part_positions()
 	bool vertical = slider->is_vertical();
 
 	Rect rect(slider->get_geometry().get_size());
-	Rect content_rect = part_component.get_content_box(rect);
-	Size thumb_size = part_thumb.get_preferred_size();
+	Rect content_rect = slider->get_content_box();
+	Size thumb_size = Size(16, 16);	//FIXME - Was - part_thumb->get_preferred_size();
 
 	if (vertical)
 	{
@@ -569,8 +553,10 @@ void Slider_Impl::update_part_positions()
 		slider_track_height = height - thumb_size.height / 2 - 1;
 
 		// track rect (for drawing the visuals)
-		rect_track.left = content_rect.get_center().x - part_track.get_preferred_width()/2;
-		rect_track.right = rect_track.left + part_track.get_preferred_width();
+		//FIXME: rect_track.left = content_rect.get_center().x - part_track->get_preferred_width()/2;
+		rect_track.left = content_rect.get_center().x - 16/2;
+		//FIXME: rect_track.right = rect_track.left + part_track->get_preferred_width();
+		rect_track.right = rect_track.left + 16;
 		rect_track.top = content_rect.top;
 		rect_track.bottom = content_rect.bottom;
 
@@ -604,8 +590,10 @@ void Slider_Impl::update_part_positions()
 		// track rect (for drawing the visuals)
 		rect_track.left = content_rect.left;
 		rect_track.right = rect_track.left + width;
-		rect_track.top = content_rect.get_height()/2 - part_track.get_preferred_height()/2;
-		rect_track.bottom = rect_track.top + part_track.get_preferred_height();
+		//FIXME: rect_track.top = content_rect.get_height()/2 - part_track->get_preferred_height()/2;
+		rect_track.top = content_rect.get_height()/2 - 16/2;
+		//FIXME: rect_track.bottom = rect_track.top + part_track->get_preferred_height();
+		rect_track.bottom = rect_track.top + 16;
 
 		// thumb rect
 		int thumb_x = int((float(offset_position)/float(slider_max-slider_min)) * slider_track_width);
@@ -639,13 +627,13 @@ void Slider_Impl::on_enablemode_changed()
 {
 	bool enabled = slider->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_track.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::normal, enabled);
+	slider->set_pseudo_class(CssStr::normal, enabled);
+	part_track->set_pseudo_class(CssStr::normal, enabled);
+	part_thumb->set_pseudo_class(CssStr::normal, enabled);
 
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_track.set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_thumb.set_pseudo_class(CssStr::disabled, !enabled);
+	slider->set_pseudo_class(CssStr::disabled, !enabled);
+	part_track->set_pseudo_class(CssStr::disabled, !enabled);
+	part_thumb->set_pseudo_class(CssStr::disabled, !enabled);
 	slider->request_repaint();
 }
 

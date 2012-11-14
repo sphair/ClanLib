@@ -109,11 +109,6 @@ public:
 	/// \return lock_to_ticks
 	bool get_lock_to_ticks() const;
 
-	/// \brief Get Preferred size
-	///
-	/// \return preferred_size
-	Size get_preferred_size() const;
-
 /// \}
 /// \name Operations
 /// \{
