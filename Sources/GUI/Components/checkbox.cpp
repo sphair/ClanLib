@@ -268,20 +268,20 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			input_msg->consumed = true;
 		}
 	}
-	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-	if (pointer)
-	{
-		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
-		{
-			checkbox->set_pseudo_class(CssStr::hot, true);
-		}
-		else
-		{
-			checkbox->set_pseudo_class(CssStr::hot, false);
-			checkbox->set_pseudo_class(CssStr::pressed, false);
-		}
-		pointer->consumed = true;
-	}
+	//std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	//if (pointer)
+	//{
+	//	if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
+	//	{
+	//		checkbox->set_pseudo_class(CssStr::hot, true);
+	//	}
+	//	else
+	//	{
+	//		checkbox->set_pseudo_class(CssStr::hot, false);
+	//		checkbox->set_pseudo_class(CssStr::pressed, false);
+	//	}
+	//	pointer->consumed = true;
+	//}
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 	{
@@ -298,7 +298,7 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void CheckBox_Impl::update_pseudo_classes(bool checked, bool indeterminated)
 {
-	checkbox->set_pseudo_class(CssStr::hot, false);
+	//checkbox->set_pseudo_class(CssStr::hot, false);
 	checkbox->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
 	checkbox->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 

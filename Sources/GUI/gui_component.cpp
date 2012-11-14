@@ -1000,15 +1000,16 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 
 void GUIComponent::update_style()
 {
-	impl->css_properties = CSSBoxProperties();
-	GUIComponentSelectNode select_node(this);
-	CSSPropertyList properties = get_gui_manager().get_css_document().select(&select_node);
-	impl->css_properties.apply_properties(properties);
-	if (impl->parent)
-		impl->css_properties.compute(&impl->parent->impl->css_properties, &impl->gui_manager_impl->resource_cache);
-	else
-		impl->css_properties.compute(0, &impl->gui_manager_impl->resource_cache);
-	impl->sig_style_changed.invoke(properties);
+	impl->update_style();
+
+	// rombust - Is this code here required?
+
+	GUIComponent *cur_child = impl->first_child;
+	while (cur_child)
+	{
+		cur_child->impl->update_style();
+		cur_child = cur_child->get_next_sibling();
+	}
 }
 
 void GUIComponent::update_layout()
