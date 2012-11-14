@@ -182,11 +182,6 @@ Size LineEdit::get_text_size(const std::string &str)
 	return text_size;
 }
 
-//Size LineEdit::get_preferred_size() const
-//{
-//	return impl->part_component->get_preferred_size();
-//}
-
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Operations:
 
@@ -769,7 +764,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
-			//FIXME: part_selection->set_pseudo_class(CssStr::unfocused, false);
+			part_selection->set_pseudo_class(CssStr::unfocused, false);
 			cursor_pos = text.length();
 
 			lineedit->request_repaint();
@@ -781,7 +776,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			timer.stop();
 			set_text_selection(0, 0);
-			//FIXME: part_selection->set_pseudo_class(CssStr::unfocused, true);
+			part_selection->set_pseudo_class(CssStr::unfocused, true);
 
 			lineedit->request_repaint();
 
