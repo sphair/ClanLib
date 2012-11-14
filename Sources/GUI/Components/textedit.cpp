@@ -182,9 +182,20 @@ int TextEdit::get_cursor_line_number() const
 	return impl->cursor_pos.y;
 }
 
-Size TextEdit::get_preferred_size() const
+float TextEdit::get_preferred_content_width()
 {
-	return impl->part_component.get_preferred_size();
+	Canvas canvas = get_canvas();
+	//FIXME!
+	//return get_font().get_text_size(canvas, impl->text).width;
+	return 100.0f;
+}
+
+float TextEdit::get_preferred_content_height(float width)
+{
+	Canvas canvas = get_canvas();
+	//FIXME!
+	//return get_font().get_text_size(canvas, impl->text).height;
+	return 100.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -669,6 +680,8 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 			if (input_msg->input_event.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
 			{
+				Rect content_rect = textedit->get_content_box();
+
 				if (input_msg->input_event.mouse_pos.x < content_rect.left || input_msg->input_event.mouse_pos.x > content_rect.right)
 				{
 					if (input_msg->input_event.mouse_pos.x < content_rect.left)
@@ -751,30 +764,28 @@ void TextEdit_Impl::on_style_changed()
 
 void TextEdit_Impl::create_parts()
 {
-	part_component = GUIThemePart(textedit);
-	//FIXME: part_selection = GUIThemePart(textedit, CssStr::TextEdit::part_selection);
-	//FIXME: part_cursor = GUIThemePart(textedit, CssStr::TextEdit::part_cursor);
+	part_selection = new GUIComponent(textedit);
+	part_cursor = new GUIComponent(textedit);
+	part_selection->set_tag_name(CssStr::TextEdit::part_selection);
+	part_cursor->set_tag_name(CssStr::TextEdit::part_cursor);
 
 	bool enabled = textedit->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	textedit->set_pseudo_class(CssStr::normal, enabled);
+	textedit->set_pseudo_class(CssStr::disabled, !enabled);
 
-	//FIXME: text_color = part_component.get_property(prop_text_color);
+	part_cursor->set_pseudo_class(CssStr::normal, enabled);
+	part_cursor->set_pseudo_class(CssStr::disabled, !enabled);
 
-	//FIXME: part_cursor.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_cursor.set_pseudo_class(CssStr::disabled, !enabled);
-
-	//FIXME: part_selection.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_selection.set_pseudo_class(CssStr::disabled, !enabled);
+	part_selection->set_pseudo_class(CssStr::normal, enabled);
+	part_selection->set_pseudo_class(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
 }
 
 void TextEdit_Impl::create_components()
 {
-        vert_scrollbar = new ScrollBar(textedit);
+	vert_scrollbar = new ScrollBar(textedit);
 	vert_scrollbar->func_scroll().set(this, &TextEdit_Impl::on_vertical_scroll);
 	vert_scrollbar->set_visible(false);
 	vert_scrollbar->set_vertical();
@@ -787,6 +798,8 @@ void TextEdit_Impl::on_vertical_scroll()
 
 void TextEdit_Impl::update_vertical_scroll()
 {
+	Rect content_rect = textedit->get_content_box();
+
        	Rect rect(
 		content_rect.get_width()-vert_scrollbar->get_preferred_width(),
 		content_rect.top, 
@@ -810,6 +823,7 @@ void TextEdit_Impl::update_vertical_scroll()
 
 void TextEdit_Impl::move_vertical_scroll()
 {
+	Rect content_rect = textedit->get_content_box();
 	int total_height = get_total_line_height();
 	int height_per_line = max(1,total_height / max(1,lines.size()));
 	int lines_fit = content_rect.get_height() / height_per_line;
@@ -1067,17 +1081,32 @@ void TextEdit_Impl::on_timer_expired()
 
 void TextEdit_Impl::on_resized()
 {
-	content_rect = part_component.get_content_box(textedit->get_size());
+	Rect content_rect = textedit->get_content_box();
 
 	Canvas &canvas = textedit->get_canvas();
-	Font font = part_component.get_font();
+	Font font = textedit->get_font();
 
-	vertical_text_align = part_component.get_vertical_text_align(canvas, font, content_rect);
+	vertical_text_align = get_vertical_text_align(canvas, font, content_rect);
 
 	clip_start_offset = 0;
 	update_vertical_scroll();
 }
 
+GUIThemePart::VerticalTextPosition TextEdit_Impl::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+{
+	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
+
+	FontMetrics metrics = font.get_font_metrics();
+	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
+	float content_height = content_rect.get_height();
+	float baseline = (content_height + align_height) / 2.0f;
+
+	GUIThemePart::VerticalTextPosition result;
+	result.baseline = baseline + content_rect.top;
+	result.top = result.baseline - metrics.get_ascent();
+	result.bottom = result.baseline + metrics.get_descent();
+	return result;
+}
 void TextEdit_Impl::on_scroll_timer_expired()
 {
 //FIXME: 	GUIMessage_Input msg;
@@ -1151,19 +1180,21 @@ int TextEdit::get_total_height()
 	impl->layout_lines(canvas);
 	if (!impl->lines.empty())
 	{
-		return impl->lines.back().box.bottom + impl->part_component.get_content_shrink_box().bottom;
+		//FIXME: return impl->lines.back().box.bottom + get_content_shrink_box().bottom;
+		return 50.0f;
 	}
 	else
 	{
-		return impl->part_component.get_render_box(Rect(0,0,0,0)).get_height();
+		//FIXME: return get_render_box(Rect(0,0,0,0)).get_height();
+		return 50.0f;
 	}
 }
 
 void TextEdit_Impl::layout_lines(Canvas &canvas)
 {
 	Rect g = textedit->get_size();
-	Rect content_box = part_component.get_content_box(g);
-	Font font = part_component.get_font();
+	Rect content_box = textedit->get_content_box();
+	Font font = textedit->get_font();
 
 	Vec2i sel_start;
 	Vec2i sel_end;
@@ -1225,9 +1256,9 @@ void TextEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	layout_lines(canvas);
 	Rect g = textedit->get_size();
-	Rect content_box = part_component.get_content_box(g);
+	Rect content_box = textedit->get_content_box();
 
-	part_component.render_box(canvas, g, update_rect);
+	//FIXME: textedit->render_box(canvas, g, update_rect);
 	textedit->set_cliprect(canvas, content_box);
 	for (size_t i = vert_scrollbar->get_position(); i < lines.size(); i++)
 		lines[i].layout.draw_layout(canvas);
