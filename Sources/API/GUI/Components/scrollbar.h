@@ -104,17 +104,6 @@ public:
 	/// \return position
 	int get_position() const;
 
-	/// \brief Get Preferred size
-	///
-	/// \return preferred_size
-	virtual Size get_preferred_size() const;
-
-	/// \brief Returns the preferred width of the scrollbar.
-	int get_preferred_width() const;
-
-	/// \brief Returns the preferred height of the scrollbar.
-	int get_preferred_height() const;
-
 /// \}
 /// \name Operations
 /// \{

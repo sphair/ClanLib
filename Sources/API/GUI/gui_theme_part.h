@@ -136,7 +136,7 @@ public:
 	};
 
 	/// \brief Calculates the vertical text position for the current font
-	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
+	//VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 /// \}
 /// \name Implementation

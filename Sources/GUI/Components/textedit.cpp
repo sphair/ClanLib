@@ -801,7 +801,7 @@ void TextEdit_Impl::update_vertical_scroll()
 	Rect content_rect = textedit->get_content_box();
 
        	Rect rect(
-		content_rect.get_width()-vert_scrollbar->get_preferred_width(),
+		32, //FIXME: content_rect.get_width()-vert_scrollbar->get_preferred_width(),
 		content_rect.top, 
 		content_rect.get_width(),
 		content_rect.get_height());
