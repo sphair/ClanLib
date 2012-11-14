@@ -36,6 +36,8 @@
 #include "../gui_component.h"
 #include "../../Core/Signals/callback_v0.h"
 
+#ifdef THE_TOOLBAR_IS_TOO_HARD_TO_FIX_AT_THE_MOMENT
+
 namespace clan
 {
 
@@ -178,3 +180,5 @@ private:
 }
 
 /// \}
+
+#endif

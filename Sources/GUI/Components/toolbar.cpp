@@ -47,6 +47,8 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
+#ifdef THE_TOOLBAR_IS_TOO_HARD_TO_FIX_AT_THE_MOMENT
+
 namespace clan
 {
 
@@ -586,3 +588,4 @@ int ToolBar_Impl::find_item_at(const Point &pos)
 }
 
 }
+#endif
