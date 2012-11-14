@@ -55,8 +55,8 @@ public:
 	{
 		switch (node->css_properties.display.type)
 		{
-		case CSSBoxDisplay::type_clan_box:
-			layout_clan_box(node);
+		case CSSBoxDisplay::type_flex:
+			layout_flex(node);
 			break;
 		case CSSBoxDisplay::type_clan_grid:
 			layout_clan_grid(node);
@@ -69,18 +69,18 @@ public:
 		}
 	}
 
-	void layout_clan_box(GUIComponent_Impl *node)
+	void layout_flex(GUIComponent_Impl *node)
 	{
 		// -clan-box layout places child boxes horizontally or vertically one after another
 		// -clan-box-direction controls the layout direction
 
 		if (node->css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_vertical)
 		{
-			layout_clan_box_vertical(node);
+			layout_flex_vertical(node);
 		}
 		else if (node->css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_horizontal)
 		{
-			layout_clan_box_horizontal(node);
+			layout_flex_horizontal(node);
 		}
 		else
 		{
@@ -88,8 +88,8 @@ public:
 		}
 	}
 
-	virtual void layout_clan_box_horizontal(GUIComponent_Impl *node) = 0;
-	virtual void layout_clan_box_vertical(GUIComponent_Impl *node) = 0;
+	virtual void layout_flex_horizontal(GUIComponent_Impl *node) = 0;
+	virtual void layout_flex_vertical(GUIComponent_Impl *node) = 0;
 
 	void layout_clan_grid(GUIComponent_Impl *node)
 	{
@@ -161,7 +161,7 @@ public:
 class CSSClanBoxPreferredWidthVisitor : public CSSClanBoxDisplayVisitor
 {
 public:
-	void layout_clan_box_horizontal(GUIComponent_Impl *node)
+	void layout_flex_horizontal(GUIComponent_Impl *node)
 	{
 		node->css_used_values.width = node->component->get_preferred_content_width();
 
@@ -186,7 +186,7 @@ public:
 		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
-	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	void layout_flex_vertical(GUIComponent_Impl *node)
 	{
 		node->css_used_values.width = node->component->get_preferred_content_width();
 
@@ -215,7 +215,7 @@ public:
 class CSSClanBoxPreferredHeightVisitor : public CSSClanBoxDisplayVisitor
 {
 public:
-	void layout_clan_box_horizontal(GUIComponent_Impl *node)
+	void layout_flex_horizontal(GUIComponent_Impl *node)
 	{
 		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
 
@@ -240,7 +240,7 @@ public:
 		CSSClanBoxApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 	}
 
-	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	void layout_flex_vertical(GUIComponent_Impl *node)
 	{
 		node->css_used_values.height = node->component->get_preferred_content_height(node->css_used_values.width);
 
@@ -281,7 +281,7 @@ public:
 		preferred_visitor.node(node);
 	}
 
-	void layout_clan_box_horizontal(GUIComponent_Impl *node)
+	void layout_flex_horizontal(GUIComponent_Impl *node)
 	{
 		// Calculate min/preferred/max widths of all child boxes
 		CSSClanBoxMath box_math;
@@ -350,7 +350,7 @@ public:
 		set_horizontal_geometry(node);
 	}
 
-	void layout_clan_box_vertical(GUIComponent_Impl *node)
+	void layout_flex_vertical(GUIComponent_Impl *node)
 	{
 		CSSClanBoxMath box_math;
 		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
