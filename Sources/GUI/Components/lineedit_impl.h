@@ -105,10 +105,9 @@ public:
 
 	static std::string break_characters;
 
-	GUIThemePart part_component;
-	GUIThemePart part_selection;
-	GUIThemePart part_cursor;
-	//GUIThemePartProperty prop_text_color;
+	GUIComponent *part_component;
+	GUIComponent *part_selection;
+	GUIComponent *part_cursor;
 	Rect content_rect;
 
 	void move(int steps, InputEvent &e);
