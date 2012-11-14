@@ -354,6 +354,20 @@ void LineEdit::resize_to_fit(int max_width)
 	request_repaint();
 }
 
+float LineEdit::get_preferred_content_width()
+{
+	Canvas canvas = get_canvas();
+	//FIXME!
+	return get_font().get_text_size(canvas, impl->text).width;
+}
+
+float LineEdit::get_preferred_content_height(float width)
+{
+	Canvas canvas = get_canvas();
+	//FIXME!
+	return get_font().get_text_size(canvas, impl->text).height;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Events:
 
