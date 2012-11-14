@@ -28,16 +28,25 @@
 
 #pragma once
 
-#include "../css_property_parser.h"
+#include "../css_box_property.h"
 
 namespace clan
 {
 
-class CSSParserClanBoxSizingFactor : public CSSPropertyParser
+class CSSBoxFlexGrow : public CSSBoxProperty
 {
 public:
-	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set);
+	CSSBoxFlexGrow();
+	void compute(const CSSBoxFlexGrow *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	std::string to_string() const;
+
+	enum Type
+	{
+		type_number,
+		type_inherit
+	};
+	Type type;
+	float number;
 };
 
 }

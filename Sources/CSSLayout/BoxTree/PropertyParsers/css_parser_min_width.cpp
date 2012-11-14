@@ -48,6 +48,8 @@ void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &n
 	{
 		if (equals(token.value, "inherit"))
 			properties.min_width.type = CSSBoxMinWidth::type_inherit;
+		else if (equals(token.value, "auto"))
+			properties.min_width.type = CSSBoxMinWidth::type_auto;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{

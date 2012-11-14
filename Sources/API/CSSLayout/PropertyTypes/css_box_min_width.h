@@ -43,6 +43,7 @@ public:
 
 	enum Type
 	{
+		type_auto,
 		type_length,
 		type_percentage,
 		type_inherit

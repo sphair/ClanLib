@@ -28,6 +28,9 @@
 
 #pragma once
 
+#include "PropertyTypes/css_box_align_content.h"
+#include "PropertyTypes/css_box_align_items.h"
+#include "PropertyTypes/css_box_align_self.h"
 #include "PropertyTypes/css_box_background_attachment.h"
 #include "PropertyTypes/css_box_background_color.h"
 #include "PropertyTypes/css_box_background_image.h"
@@ -51,8 +54,11 @@
 #include "PropertyTypes/css_box_shadow.h"
 #include "PropertyTypes/css_box_bottom.h"
 #include "PropertyTypes/css_box_caption_side.h"
-#include "PropertyTypes/css_box_clan_box_direction.h"
-#include "PropertyTypes/css_box_clan_box_sizing_factor.h"
+#include "PropertyTypes/css_box_flex_basis.h"
+#include "PropertyTypes/css_box_flex_direction.h"
+#include "PropertyTypes/css_box_flex_wrap.h"
+#include "PropertyTypes/css_box_flex_grow.h"
+#include "PropertyTypes/css_box_flex_shrink.h"
 #include "PropertyTypes/css_box_clear.h"
 #include "PropertyTypes/css_box_clip.h"
 #include "PropertyTypes/css_box_color.h"
@@ -60,6 +66,7 @@
 #include "PropertyTypes/css_box_counter_reset.h"
 #include "PropertyTypes/css_box_content.h"
 #include "PropertyTypes/css_box_cursor.h"
+#include "PropertyTypes/css_box_order.h"
 #include "PropertyTypes/css_box_direction.h"
 #include "PropertyTypes/css_box_display.h"
 #include "PropertyTypes/css_box_empty_cells.h"
@@ -70,6 +77,7 @@
 #include "PropertyTypes/css_box_font_variant.h"
 #include "PropertyTypes/css_box_font_weight.h"
 #include "PropertyTypes/css_box_height.h"
+#include "PropertyTypes/css_box_justify_content.h"
 #include "PropertyTypes/css_box_left.h"
 #include "PropertyTypes/css_box_letter_spacing.h"
 #include "PropertyTypes/css_box_line_height.h"
@@ -120,11 +128,18 @@ public:
 	CSSBoxDisplay display;
 	CSSBoxWhiteSpace white_space;
 
-	CSSBoxClanBoxDirection clan_box_direction;
-	CSSBoxClanBoxSizingFactor clan_box_width_expand_factor;
-	CSSBoxClanBoxSizingFactor clan_box_height_expand_factor;
-	CSSBoxClanBoxSizingFactor clan_box_width_shrink_factor;
-	CSSBoxClanBoxSizingFactor clan_box_height_shrink_factor;
+	CSSBoxFlexDirection flex_direction;
+	CSSBoxFlexWrap flex_wrap;
+	CSSBoxOrder order;
+
+	CSSBoxFlexGrow flex_grow;
+	CSSBoxFlexShrink flex_shrink;
+	CSSBoxFlexBasis flex_basis;
+
+	CSSBoxJustifyContent justify_content;
+	CSSBoxAlignItems align_items;
+	CSSBoxAlignSelf align_self;
+	CSSBoxAlignContent align_content;
 
 	CSSBoxMarginWidth margin_width_left;
 	CSSBoxMarginWidth margin_width_top;

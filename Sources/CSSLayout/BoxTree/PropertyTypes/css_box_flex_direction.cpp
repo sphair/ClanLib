@@ -26,18 +26,44 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../css_property_parser.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/PropertyTypes/css_box_flex_direction.h"
 
 namespace clan
 {
 
-class CSSParserClanBoxDirection : public CSSPropertyParser
+CSSBoxFlexDirection::CSSBoxFlexDirection()
+: type(type_row)
 {
-public:
-	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set);
-};
+}
+
+void CSSBoxFlexDirection::compute(const CSSBoxFlexDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
+{
+	if (type == type_inherit)
+	{
+		if (parent)
+			type = parent->type;
+		else
+			type = type_row;
+	}
+}
+
+std::string CSSBoxFlexDirection::to_string() const
+{
+	switch (type)
+	{
+	default:
+	case type_row:
+		return "row";
+	case type_row_reverse:
+		return "row-reverse";
+	case type_column:
+		return "column";
+	case type_column_reverse:
+		return "column-reverse";
+	case type_inherit:
+		return "inherit";
+	}
+}
 
 }

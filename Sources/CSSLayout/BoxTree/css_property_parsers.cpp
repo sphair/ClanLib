@@ -30,6 +30,9 @@
 #include "css_property_parsers.h"
 #include "css_property_parser.h"
 #include "API/CSSLayout/css_property.h"
+#include "PropertyParsers/css_parser_align_content.h"
+#include "PropertyParsers/css_parser_align_items.h"
+#include "PropertyParsers/css_parser_align_self.h"
 #include "PropertyParsers/css_parser_background.h"
 #include "PropertyParsers/css_parser_background_attachment.h"
 #include "PropertyParsers/css_parser_background_color.h"
@@ -61,8 +64,13 @@
 #include "PropertyParsers/css_parser_shadow.h"
 #include "PropertyParsers/css_parser_bottom.h"
 #include "PropertyParsers/css_parser_caption_side.h"
-#include "PropertyParsers/css_parser_clan_box_direction.h"
-#include "PropertyParsers/css_parser_clan_box_sizing_factor.h"
+#include "PropertyParsers/css_parser_flex.h"
+#include "PropertyParsers/css_parser_flex_basis.h"
+#include "PropertyParsers/css_parser_flex_direction.h"
+#include "PropertyParsers/css_parser_flex_flow.h"
+#include "PropertyParsers/css_parser_flex_shrink.h"
+#include "PropertyParsers/css_parser_flex_grow.h"
+#include "PropertyParsers/css_parser_flex_wrap.h"
 #include "PropertyParsers/css_parser_clear.h"
 #include "PropertyParsers/css_parser_clip.h"
 #include "PropertyParsers/css_parser_color.h"
@@ -81,6 +89,7 @@
 #include "PropertyParsers/css_parser_font_variant.h"
 #include "PropertyParsers/css_parser_font_weight.h"
 #include "PropertyParsers/css_parser_height.h"
+#include "PropertyParsers/css_parser_justify_content.h"
 #include "PropertyParsers/css_parser_left.h"
 #include "PropertyParsers/css_parser_letter_spacing.h"
 #include "PropertyParsers/css_parser_line_height.h"
@@ -94,6 +103,7 @@
 #include "PropertyParsers/css_parser_max_width.h"
 #include "PropertyParsers/css_parser_min_height.h"
 #include "PropertyParsers/css_parser_min_width.h"
+#include "PropertyParsers/css_parser_order.h"
 #include "PropertyParsers/css_parser_orphans.h"
 #include "PropertyParsers/css_parser_outline.h"
 #include "PropertyParsers/css_parser_outline_color.h"
@@ -218,8 +228,18 @@ CSSPropertyParsers::CSSPropertyParsers()
 	add(new CSSParserWidth());
 	add(new CSSParserWordSpacing());
 	add(new CSSParserZIndex());
-	add(new CSSParserClanBoxDirection());
-	add(new CSSParserClanBoxSizingFactor());
+	add(new CSSParserFlexDirection());
+	add(new CSSParserFlexWrap());
+	add(new CSSParserFlexFlow());
+	add(new CSSParserOrder());
+	add(new CSSParserFlex());
+	add(new CSSParserFlexGrow());
+	add(new CSSParserFlexShrink());
+	add(new CSSParserFlexBasis());
+	add(new CSSParserJustifyContent());
+	add(new CSSParserAlignItems());
+	add(new CSSParserAlignSelf());
+	add(new CSSParserAlignContent());
 }
 
 CSSPropertyParsers::~CSSPropertyParsers()

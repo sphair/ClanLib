@@ -34,7 +34,7 @@ namespace clan
 {
 
 CSSBoxMinWidth::CSSBoxMinWidth()
-: type(type_length), length(0, CSSBoxLength::type_px), percentage(0.0f)
+: type(type_auto), length(0, CSSBoxLength::type_px), percentage(0.0f)
 {
 }
 
@@ -50,8 +50,7 @@ void CSSBoxMinWidth::compute(const CSSBoxMinWidth *parent, CSSResourceCache *lay
 		}
 		else
 		{
-			type = type_length;
-			length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			type = type_auto;
 		}
 	}
 
@@ -64,6 +63,8 @@ std::string CSSBoxMinWidth::to_string() const
 	switch (type)
 	{
 	default:
+	case type_auto:
+		return "auto";
 	case type_length:
 		return length.to_string();
 	case type_percentage:

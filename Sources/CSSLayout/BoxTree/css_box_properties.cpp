@@ -155,11 +155,16 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		border_spacing.compute(&parent->border_spacing, layout, em_size, ex_size);
 		vertical_align.compute(&parent->vertical_align, layout, em_size, ex_size, line_height);
 		visibility.compute(&parent->visibility, layout, em_size, ex_size);
-		clan_box_direction.compute(&parent->clan_box_direction, layout, em_size, ex_size);
-		clan_box_width_expand_factor.compute(&parent->clan_box_width_expand_factor, layout, em_size, ex_size);
-		clan_box_height_expand_factor.compute(&parent->clan_box_height_expand_factor, layout, em_size, ex_size);
-		clan_box_width_shrink_factor.compute(&parent->clan_box_width_shrink_factor, layout, em_size, ex_size);
-		clan_box_height_shrink_factor.compute(&parent->clan_box_height_shrink_factor, layout, em_size, ex_size);
+		flex_direction.compute(&parent->flex_direction, layout, em_size, ex_size);
+		flex_wrap.compute(&parent->flex_wrap, layout, em_size, ex_size);
+		order.compute(&parent->order, layout, em_size, ex_size);
+		flex_grow.compute(&parent->flex_grow, layout, em_size, ex_size);
+		flex_shrink.compute(&parent->flex_shrink, layout, em_size, ex_size);
+		flex_basis.compute(&parent->flex_basis, layout, em_size, ex_size);
+		justify_content.compute(&parent->justify_content, layout, em_size, ex_size);
+		align_items.compute(&parent->align_items, layout, em_size, ex_size);
+		align_self.compute(&parent->align_self, layout, em_size, ex_size);
+		align_content.compute(&parent->align_content, layout, em_size, ex_size);
 	}
 	else
 	{
@@ -262,11 +267,16 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		border_spacing.compute(0, layout, em_size, ex_size);
 		vertical_align.compute(0, layout, em_size, ex_size, line_height);
 		visibility.compute(0, layout, em_size, ex_size);
-		clan_box_direction.compute(0, layout, em_size, ex_size);
-		clan_box_width_expand_factor.compute(0, layout, em_size, ex_size);
-		clan_box_height_expand_factor.compute(0, layout, em_size, ex_size);
-		clan_box_width_shrink_factor.compute(0, layout, em_size, ex_size);
-		clan_box_height_shrink_factor.compute(0, layout, em_size, ex_size);
+		flex_direction.compute(0, layout, em_size, ex_size);
+		flex_wrap.compute(0, layout, em_size, ex_size);
+		order.compute(0, layout, em_size, ex_size);
+		flex_grow.compute(0, layout, em_size, ex_size);
+		flex_shrink.compute(0, layout, em_size, ex_size);
+		flex_basis.compute(0, layout, em_size, ex_size);
+		justify_content.compute(0, layout, em_size, ex_size);
+		align_items.compute(0, layout, em_size, ex_size);
+		align_self.compute(0, layout, em_size, ex_size);
+		align_content.compute(0, layout, em_size, ex_size);
 	}
 }
 

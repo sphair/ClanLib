@@ -74,11 +74,11 @@ public:
 		// -clan-box layout places child boxes horizontally or vertically one after another
 		// -clan-box-direction controls the layout direction
 
-		if (node->css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_vertical)
+		if (node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_column || node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_column_reverse)
 		{
 			layout_flex_vertical(node);
 		}
-		else if (node->css_properties.clan_box_direction.type == CSSBoxClanBoxDirection::type_horizontal)
+		else if (node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_row || node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_row_reverse)
 		{
 			layout_flex_horizontal(node);
 		}
@@ -109,18 +109,6 @@ public:
 	CSSUsedValue get_used_noncontent_height(const CSSClanBoxUsedValues &values)
 	{
 		return values.margin.top + values.border.top + values.padding.top + values.padding.bottom + values.border.bottom + values.margin.bottom;
-	}
-
-	CSSUsedValue get_factor(const CSSBoxClanBoxSizingFactor &factor)
-	{
-		switch (factor.type)
-		{
-		default:
-		case CSSBoxClanBoxSizingFactor::type_auto:
-			return 0.0f;
-		case CSSBoxClanBoxSizingFactor::type_number:
-			return factor.number;
-		}
 	}
 
 	float get_css_relative_x(GUIComponent_Impl *node, float containing_width)
@@ -303,8 +291,8 @@ public:
 				box_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 				box_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-				box_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_shrink_factor));
-				box_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_expand_factor));
+				box_math.used_shrink_weights.push_back(child->impl->css_properties.flex_shrink.number);
+				box_math.used_expand_weights.push_back(child->impl->css_properties.flex_grow.number);
 			}
 		}
 
@@ -337,8 +325,17 @@ public:
 				perpendicular_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 				perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-				perpendicular_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_shrink_factor));
-				perpendicular_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_expand_factor));
+				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch ||
+					(child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_auto && node->css_properties.align_items.type == CSSBoxAlignItems::type_stretch))
+				{
+					perpendicular_math.used_shrink_weights.push_back(1.0f);
+					perpendicular_math.used_expand_weights.push_back(1.0f);
+				}
+				else
+				{
+					perpendicular_math.used_shrink_weights.push_back(0.0f);
+					perpendicular_math.used_expand_weights.push_back(0.0f);
+				}
 
 				perpendicular_math.adjust(node->css_used_values.height);
 
@@ -374,8 +371,17 @@ public:
 				perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-				perpendicular_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_shrink_factor));
-				perpendicular_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_width_expand_factor));
+				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch ||
+					(child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_auto && node->css_properties.align_items.type == CSSBoxAlignItems::type_stretch))
+				{
+					perpendicular_math.used_shrink_weights.push_back(1.0f);
+					perpendicular_math.used_expand_weights.push_back(1.0f);
+				}
+				else
+				{
+					perpendicular_math.used_shrink_weights.push_back(0.0f);
+					perpendicular_math.used_expand_weights.push_back(0.0f);
+				}
 
 				perpendicular_math.adjust(node->css_used_values.width);
 
@@ -396,8 +402,8 @@ public:
 				box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 				box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-				box_math.used_shrink_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_shrink_factor));
-				box_math.used_expand_weights.push_back(get_factor(child->impl->css_properties.clan_box_height_expand_factor));
+				box_math.used_shrink_weights.push_back(child->impl->css_properties.flex_shrink.number);
+				box_math.used_expand_weights.push_back(child->impl->css_properties.flex_grow.number);
 			}
 		}
 
