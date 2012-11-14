@@ -122,7 +122,9 @@ void CSSReplacedLayout::calculate_top_down_widths(LayoutStrategy strategy)
 		else if (element_node->computed_properties.max_width.type == CSSBoxMaxWidth::type_percentage && !containing_width.expanding)
 			width.value = min(width.value, element_node->computed_properties.max_width.percentage * containing_width.value / 100.0f);
 
-		if (element_node->computed_properties.min_width.type == CSSBoxMinWidth::type_length)
+		if (element_node->computed_properties.min_width.type == CSSBoxMinWidth::type_auto)
+			width.value = max(width.value, 0.0f);
+		else if (element_node->computed_properties.min_width.type == CSSBoxMinWidth::type_length)
 			width.value = max(width.value, element_node->computed_properties.min_width.length.value);
 		else if (element_node->computed_properties.min_width.type == CSSBoxMinWidth::type_percentage && !containing_width.expanding)
 			width.value = max(width.value, element_node->computed_properties.min_width.percentage * containing_width.value / 100.0f);
@@ -212,7 +214,11 @@ void CSSReplacedLayout::calculate_top_down_heights()
 			height.value = min(height.value, element_node->computed_properties.max_height.percentage * containing_height.value / 100.0f);
 		}
 
-		if (element_node->computed_properties.min_height.type == CSSBoxMinHeight::type_length)
+		if (element_node->computed_properties.min_height.type == CSSBoxMinHeight::type_auto)
+		{
+			height.value = max(height.value, 0.0f);
+		}
+		else if (element_node->computed_properties.min_height.type == CSSBoxMinHeight::type_length)
 		{
 			height.value = max(height.value, element_node->computed_properties.min_height.length.value);
 		}

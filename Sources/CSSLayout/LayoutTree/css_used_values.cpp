@@ -197,7 +197,11 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 			width = min(width, properties.max_width.percentage * containing.width / 100.0f);
 		}
 
-		if (properties.min_width.type == CSSBoxMinWidth::type_length)
+		if (properties.min_width.type == CSSBoxMinWidth::type_auto)
+		{
+			width = max(width, 0.0f);
+		}
+		else if (properties.min_width.type == CSSBoxMinWidth::type_length)
 		{
 			width = max(width, properties.min_width.length.value);
 		}
@@ -374,7 +378,11 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 			height = min(height, properties.max_height.percentage * containing.height / 100.0f);
 		}
 
-		if (properties.min_height.type == CSSBoxMinHeight::type_length)
+		if (properties.min_height.type == CSSBoxMinHeight::type_auto)
+		{
+			height = max(height, 0.0f);
+		}
+		else if (properties.min_height.type == CSSBoxMinHeight::type_length)
 		{
 			height = max(height, properties.min_height.length.value);
 		}

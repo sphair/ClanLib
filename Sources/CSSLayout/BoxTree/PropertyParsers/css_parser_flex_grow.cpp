@@ -27,35 +27,37 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_parser_clan_box_direction.h"
+#include "css_parser_flex_grow.h"
 #include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
 
-std::vector<std::string> CSSParserClanBoxDirection::get_names()
+std::vector<std::string> CSSParserFlexGrow::get_names()
 {
 	std::vector<std::string> names;
-	names.push_back("-clan-box-direction");
+	names.push_back("flex-grow");
 	return names;
 }
 
-void CSSParserClanBoxDirection::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFlexGrow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
-		if (equals(token.value, "vertical"))
-			properties.clan_box_direction.type = CSSBoxClanBoxDirection::type_vertical;
-		else if (equals(token.value, "horizontal"))
-			properties.clan_box_direction.type = CSSBoxClanBoxDirection::type_horizontal;
-		else if (equals(token.value, "inherit"))
-			properties.clan_box_direction.type = CSSBoxClanBoxDirection::type_inherit;
+		if (equals(token.value, "inherit"))
+			properties.flex_grow.type = CSSBoxFlexGrow::type_inherit;
 	}
+	else if (token.type == CSSToken::type_number && pos == tokens.size())
+	{
+		properties.flex_grow.type = CSSBoxFlexGrow::type_number;
+		properties.flex_grow.number = StringHelp::text_to_float(token.value);
+	}
+
 	if (out_change_set)
 	{
-		(*out_change_set)["-clan-box-direction"] = &properties.direction;
+		(*out_change_set)[name] = &properties.flex_grow;
 	}
 }
 

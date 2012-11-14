@@ -26,40 +26,29 @@
 **    Magnus Norddahl
 */
 
-#include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_clan_box_direction.h"
+#pragma once
+
+#include "../css_box_property.h"
 
 namespace clan
 {
 
-CSSBoxClanBoxDirection::CSSBoxClanBoxDirection()
-: type(type_inherit)
+class CSSBoxFlexDirection : public CSSBoxProperty
 {
-}
+public:
+	CSSBoxFlexDirection();
+	void compute(const CSSBoxFlexDirection *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	std::string to_string() const;
 
-void CSSBoxClanBoxDirection::compute(const CSSBoxClanBoxDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
-{
-	if (type == type_inherit)
+	enum Type
 	{
-		if (parent)
-			type = parent->type;
-		else
-			type = type_vertical;
-	}
-}
-
-std::string CSSBoxClanBoxDirection::to_string() const
-{
-	switch (type)
-	{
-	default:
-	case type_vertical:
-		return "vertical";
-	case type_horizontal:
-		return "horizontal";
-	case type_inherit:
-		return "inherit";
-	}
-}
+		type_row,
+		type_row_reverse,
+		type_column,
+		type_column_reverse,
+		type_inherit
+	};
+	Type type;
+};
 
 }

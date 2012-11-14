@@ -27,47 +27,39 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "css_parser_min_height.h"
+#include "css_parser_flex_direction.h"
 #include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
 
-std::vector<std::string> CSSParserMinHeight::get_names()
+std::vector<std::string> CSSParserFlexDirection::get_names()
 {
 	std::vector<std::string> names;
-	names.push_back("min-height");
+	names.push_back("flex-direction");
 	return names;
 }
 
-void CSSParserMinHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFlexDirection::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
-		if (equals(token.value, "inherit"))
-			properties.min_height.type = CSSBoxMinHeight::type_inherit;
-		else if (equals(token.value, "auto"))
-			properties.min_height.type = CSSBoxMinHeight::type_auto;
-	}
-	else if (is_length(token) && pos == tokens.size())
-	{
-		CSSBoxLength length;
-		if (parse_length(token, length))
-		{
-			properties.min_height.type = CSSBoxMinHeight::type_length;
-			properties.min_height.length = length;
-		}
-	}
-	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
-	{
-		properties.min_height.type = CSSBoxMinHeight::type_percentage;
-		properties.min_height.percentage = StringHelp::text_to_float(token.value);
+		if (equals(token.value, "row"))
+			properties.flex_direction.type = CSSBoxFlexDirection::type_row;
+		else if (equals(token.value, "row-reverse"))
+			properties.flex_direction.type = CSSBoxFlexDirection::type_row_reverse;
+		else if (equals(token.value, "column"))
+			properties.flex_direction.type = CSSBoxFlexDirection::type_column;
+		else if (equals(token.value, "column-reverse"))
+			properties.flex_direction.type = CSSBoxFlexDirection::type_column_reverse;
+		else if (equals(token.value, "inherit"))
+			properties.flex_direction.type = CSSBoxFlexDirection::type_inherit;
 	}
 	if (out_change_set)
 	{
-		(*out_change_set)["min-height"] = &properties.min_height;
+		(*out_change_set)["flex-direction"] = &properties.flex_direction;
 	}
 }
 

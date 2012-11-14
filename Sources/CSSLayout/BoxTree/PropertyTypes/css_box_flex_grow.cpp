@@ -27,34 +27,37 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_clan_box_sizing_factor.h"
+#include "API/CSSLayout/PropertyTypes/css_box_flex_grow.h"
 
 namespace clan
 {
 
-CSSBoxClanBoxSizingFactor::CSSBoxClanBoxSizingFactor()
-: type(type_inherit), number(0.0f)
+CSSBoxFlexGrow::CSSBoxFlexGrow()
+: type(type_number), number(0.0f)
 {
 }
 
-void CSSBoxClanBoxSizingFactor::compute(const CSSBoxClanBoxSizingFactor *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSBoxFlexGrow::compute(const CSSBoxFlexGrow *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
 		if (parent)
+		{
 			type = parent->type;
+		}
 		else
-			type = type_auto;
+		{
+			type = type_number;
+			number = 0.0f;
+		}
 	}
 }
 
-std::string CSSBoxClanBoxSizingFactor::to_string() const
+std::string CSSBoxFlexGrow::to_string() const
 {
 	switch (type)
 	{
 	default:
-	case type_auto:
-		return "auto";
 	case type_number:
 		return StringHelp::float_to_text(number);
 	case type_inherit:

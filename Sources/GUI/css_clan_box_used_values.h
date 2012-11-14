@@ -206,6 +206,7 @@ private:
 		{
 		case CSSBoxMinWidth::type_length: return min_width.length.value;
 		case CSSBoxMinWidth::type_percentage: return containing_width_undetermined ? 0.0f : min_width.percentage * containing_used_width / 100.0f;
+		case CSSBoxMinWidth::type_auto:
 		default: return 0.0f;
 		}
 	}
@@ -227,6 +228,7 @@ private:
 		{
 		case CSSBoxMinHeight::type_length: return min_height.length.value;
 		case CSSBoxMinHeight::type_percentage: return containing_height_expanding ? 0.0f : min_height.percentage * containing_used_height / 100.0f;
+		case CSSBoxMinHeight::type_auto:
 		default: return 0.0f;
 		}
 	}
