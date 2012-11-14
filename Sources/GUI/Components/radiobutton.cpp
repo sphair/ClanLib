@@ -91,7 +91,7 @@ RadioButton::RadioButton(GUIComponent *parent)
 	impl->part_checker = new GUIComponent(this);
 	impl->part_checker->set_tag_name(CssStr::RadioButton::part_checker);
 
-	set_pseudo_class(CssStr::hot, false);
+	//set_pseudo_class(CssStr::hot, false);
 	set_pseudo_class(CssStr::normal, true);
 	set_pseudo_class(CssStr::pressed, false);
 	set_pseudo_class(CssStr::checked, false);
@@ -307,18 +307,7 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 
 	}
-	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-	if (pointer)
-	{
-		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
-		{
-			radio->set_pseudo_class(CssStr::hot, true);
-		}
-		else
-		{
-			radio->set_pseudo_class(CssStr::hot, false);
-		}
-	}
+
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 	{
