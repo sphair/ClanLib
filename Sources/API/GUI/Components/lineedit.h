@@ -144,7 +144,7 @@ public:
 	/// \brief Get Preferred size
 	///
 	/// \return preferred_size
-	virtual Size get_preferred_size() const;
+	//virtual Size get_preferred_size() const;
 
 	/// \brief Returns the size (pixels) of the text in the lineedit, or of the string given as parameter.
 	Size get_text_size();

@@ -171,21 +171,21 @@ int LineEdit::get_cursor_pos() const
 
 Size LineEdit::get_text_size()
 {
-	Font font = impl->part_component.get_font();
+	Font font = impl->part_component->get_font();
 	return impl->get_visual_text_size(get_canvas(), font);
 }
 
 Size LineEdit::get_text_size(const std::string &str)
 {
-	Font font = impl->part_component.get_font();
+	Font font = impl->part_component->get_font();
 	Size text_size = font.get_text_size(get_canvas(), str);
 	return text_size;
 }
 
-Size LineEdit::get_preferred_size() const
-{
-	return impl->part_component.get_preferred_size();
-}
+//Size LineEdit::get_preferred_size() const
+//{
+//	return impl->part_component->get_preferred_size();
+//}
 
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Operations:
@@ -342,15 +342,15 @@ void LineEdit::set_cursor_pos(int pos)
 void LineEdit::resize_to_fit(int max_width)
 {
 	Canvas &canvas = get_canvas();
-	Font font = impl->part_component.get_font();
+	Font font = impl->part_component->get_font();
 
 	Rect g = get_geometry();
-	Rect rect_content = impl->part_component.get_content_box(g);
-	Size text_size = impl->get_visual_text_size(canvas, font);
-	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
+	//FIXME: Rect rect_content = impl->part_component->get_content_box(g);
+	//FIXME: Size text_size = impl->get_visual_text_size(canvas, font);
+	//FIXME: rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
-	g.set_size(impl->part_component.get_render_box(rect_content).get_size());
-	set_geometry(g);
+	//FIXME: g.set_size(impl->part_component->get_render_box(rect_content).get_size());
+	//FIXME: set_geometry(g);
 
 	impl->clip_start_offset = 0;
 
@@ -769,7 +769,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
-			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, false);
+			//FIXME: part_selection->set_pseudo_class(CssStr::unfocused, false);
 			cursor_pos = text.length();
 
 			lineedit->request_repaint();
@@ -781,7 +781,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			timer.stop();
 			set_text_selection(0, 0);
-			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, true);
+			//FIXME: part_selection->set_pseudo_class(CssStr::unfocused, true);
 
 			lineedit->request_repaint();
 
@@ -810,23 +810,25 @@ void LineEdit_Impl::on_style_changed()
 
 void LineEdit_Impl::create_parts()
 {
-	part_component = GUIThemePart(lineedit);
-	//FIXME: part_selection = GUIThemePart(lineedit, CssStr::LineEdit::part_selection);
-	//FIXME: part_cursor = GUIThemePart(lineedit, CssStr::LineEdit::part_cursor);
+	part_component = new GUIComponent(lineedit);
+	part_selection = new GUIComponent(lineedit);
+	part_cursor = new GUIComponent(lineedit);
+	part_selection->set_tag_name(CssStr::LineEdit::part_selection);
+	part_cursor->set_tag_name(CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();
 
-	//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
-	//FIXME: part_component.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_component.set_pseudo_class(CssStr::disabled, !enabled);
+	//part_component->set_pseudo_class(CssStr::hot, false);
+	part_component->set_pseudo_class(CssStr::normal, enabled);
+	part_component->set_pseudo_class(CssStr::disabled, !enabled);
 
-	//FIXME: text_color = part_component.get_property(prop_text_color);
+	//FIXME: text_color = part_component->get_property(prop_text_color);
 
-	//FIXME: part_cursor.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_cursor.set_pseudo_class(CssStr::disabled, !enabled);
+	part_cursor->set_pseudo_class(CssStr::normal, enabled);
+	part_cursor->set_pseudo_class(CssStr::disabled, !enabled);
 
-	//FIXME: part_selection.set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_selection.set_pseudo_class(CssStr::disabled, !enabled);
+	part_selection->set_pseudo_class(CssStr::normal, enabled);
+	part_selection->set_pseudo_class(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
 }
@@ -975,7 +977,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	}
 
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component.get_font();
+	Font font = part_component->get_font();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
@@ -1026,7 +1028,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 void LineEdit_Impl::update_text_clipping()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component.get_font();
+	Font font = part_component->get_font();
 
 	Size text_size = get_visual_text_size(canvas, font, clip_start_offset, text.size() - clip_start_offset);
 
@@ -1081,7 +1083,7 @@ void LineEdit_Impl::update_text_clipping()
 Rect LineEdit_Impl::get_cursor_rect()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component.get_font();
+	Font font = part_component->get_font();
 
 	Rect cursor_rect;
 
@@ -1100,7 +1102,8 @@ Rect LineEdit_Impl::get_cursor_rect()
 	Size text_size_before_cursor = font.get_text_size(canvas, clipped_text);
 
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
-	cursor_rect.right = cursor_rect.left + part_cursor.get_preferred_width();
+	//FIXME: cursor_rect.right = cursor_rect.left + part_cursor->get_preferred_width();
+	cursor_rect.right = cursor_rect.left + 64;	//BUG FIXME -  REPLACED WITH THIS!!!!!
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
@@ -1113,13 +1116,13 @@ Rect LineEdit_Impl::get_selection_rect()
 	Canvas &canvas = lineedit->get_canvas();
 
 	// text before selection:
-	Font font = part_component.get_font();
+	Font font = part_component->get_font();
 
 	std::string txt_before = get_visible_text_before_selection();
 	Size text_size_before_selection = font.get_text_size(canvas, txt_before);
 
 	// selection text:
-	font = part_selection.get_font();
+	font = part_selection->get_font();
 	std::string txt_selected = get_visible_selected_text();
 	Size text_size_selection = font.get_text_size(canvas, txt_selected);
 
@@ -1174,12 +1177,12 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	content_rect = part_component.get_content_box(lineedit->get_size());
+	//FIXME: content_rect = part_component->get_content_box(lineedit->get_size());
 
-	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component.get_font();
+	//FIXME: Canvas &canvas = lineedit->get_canvas();
+	//FIXME: Font font = part_component->get_font();
 
-	vertical_text_align = part_component.get_vertical_text_align(canvas, font, content_rect);
+	//FIXME: vertical_text_align = part_component->get_vertical_text_align(canvas, font, content_rect);
 
 	clip_start_offset = 0;
 	cursor_pos = 0;
@@ -1288,10 +1291,11 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
+/* FIXME
 	Rect g = lineedit->get_size();
-	part_component.render_box(canvas, g, update_rect);
+	part_component->render_box(canvas, g, update_rect);
 
-	Font font = part_component.get_font();
+	Font font = part_component->get_font();
 
 	std::string txt_before = get_visible_text_before_selection();
 	std::string txt_selected = get_visible_selected_text();
@@ -1315,19 +1319,19 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Rect text_rect = content_rect;
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_component.render_text(canvas, txt_before, text_rect, update_rect);
+		part_component->render_text(canvas, txt_before, text_rect, update_rect);
 	}
 	if (!txt_selected.empty())
 	{
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
-		part_selection.render_box(canvas, selection_rect, update_rect);
+		part_selection->render_box(canvas, selection_rect, update_rect);
 
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_selection.render_text(canvas, txt_selected, text_rect, update_rect);
+		part_selection->render_text(canvas, txt_selected, text_rect, update_rect);
 	}
 	if (!txt_after.empty())
 	{
@@ -1335,7 +1339,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_component.render_text(canvas, txt_after, text_rect, update_rect);
+		part_component->render_text(canvas, txt_after, text_rect, update_rect);
 	}
 
 	// draw cursor
@@ -1344,9 +1348,10 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (cursor_blink_visible)
 		{
 			Rect cursor_rect = get_cursor_rect();
-			part_cursor.render_box(canvas, cursor_rect, update_rect);
+			part_cursor->render_box(canvas, cursor_rect, update_rect);
 		}
 	}
+*/
 }
 
 void LineEdit_Impl::on_scroll_timer_expired()
