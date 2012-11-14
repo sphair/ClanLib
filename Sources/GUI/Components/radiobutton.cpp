@@ -67,7 +67,6 @@ public:
 	Callback_v0 func_selected;
 	Callback_v0 func_unselected;
 	Callback_v1<RadioButton*> func_group_selection_changed;
-	std::string text;
 	int id;
 
 	Label *part_label;
@@ -124,7 +123,7 @@ RadioButton *RadioButton::get_named_item(GUIComponent *reference_component, cons
 
 std::string RadioButton::get_text() const
 {
-	return impl->text;
+	return impl->part_label->get_text();
 }
 
 int RadioButton::get_id() const
@@ -147,7 +146,7 @@ bool RadioButton::is_selected() const
 
 void RadioButton::set_text(const std::string &text)
 {
-	impl->text = text;
+	impl->part_label->set_text(text);
 }
 
 void RadioButton::set_id(int id)
