@@ -43,10 +43,7 @@
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
 #include "../gui_css_strings.h"
-
-// ***********************
-// ******* FIX FIXME's !!!
-// ***********************
+#include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
@@ -61,15 +58,11 @@ public:
 	{
 	}
 
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	SpanComponent *label;
 	SpanLayout span;
 	SpanComponent::Alignment alignment;
-
-	Font font;	//FIXME: This shouldn't be here
-
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -80,10 +73,7 @@ SpanComponent::SpanComponent(GUIComponent *parent)
 {
 	set_tag_name(CssStr::SpanComponent::type_name);
 	impl->label = this;
-	func_process_message().set(impl.get(), &SpanComponent_Impl::on_process_message);
 	func_render().set(impl.get(), &SpanComponent_Impl::on_render);
-
-	impl->font = Font(get_canvas(), "tahoma", 32);	//FIXME:  This shouldn't be here
 }
 
 SpanComponent::~SpanComponent()
@@ -129,12 +119,9 @@ float SpanComponent::get_preferred_content_height(float width)
 void SpanComponent::set_text(const std::string &text)
 {
 	impl->span = SpanLayout();
-	//FIXME: GUIThemePartProperty prop_text_color(CssStr::text_color, "black");
-	//FIXME: Colorf text_color = impl->part_component.get_property(prop_text_color);
-	Colorf text_color = Colorf::aquamarine;
-
-	//FIXME: Font font = impl->part_component.get_font();
-	impl->span.add_text(text, impl->font, text_color);
+	Colorf text_color = get_css_properties().color.color;
+	Font font = get_font();
+	impl->span.add_text(text, font, text_color);
 	request_repaint();
 }
 
@@ -159,25 +146,6 @@ void SpanComponent::set_alignment(SpanComponent::Alignment alignment)
 
 /////////////////////////////////////////////////////////////////////////////
 // SpanComponent Implementation:
-
-void SpanComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
-{
-	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
-	if (pointer)
-	{
-		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
-		{
-			//FIXME: part_component.set_pseudo_class(CssStr::hot, true);
-			label->request_repaint();
-		}
-		else
-		{
-			//FIXME: part_component.set_pseudo_class(CssStr::hot, false);
-			//FIXME: part_component.set_pseudo_class(CssStr::pressed, false);
-			label->request_repaint();
-		}
-	}
-}
 
 void SpanComponent_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
