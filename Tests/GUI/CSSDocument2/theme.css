@@ -387,42 +387,42 @@ radiobutton focus
 } 
 */
 
-radiobutton checker:checked:normal
+radiobutton:checked:normal checker
 {
 	border-image: url('res:RadioButtonCheckedNormal') 0 fill / 0px; 
 }
 
-radiobutton checker:checked:hot
+radiobutton:checked:hot checker
 {
 	border-image: url('res:RadioButtonCheckedHot') 0 fill / 0px; 
 }
 
-radiobutton checker:checked:pressed
+radiobutton:checked:pressed checker
 {
 	border-image: url('res:RadioButtonCheckedPressed') 0 fill / 0px; 
 }
 
-radiobutton checker:checked:disabled
+radiobutton:checked:disabled checker
 {
 	border-image: url('res:RadioButtonCheckedDisabled') 0 fill / 0px; 
 }
 
-radiobutton checker:unchecked:normal
+radiobutton:unchecked:normal checker
 {
 	border-image: url('res:RadioButtonUncheckedNormal') 0 fill / 0px; 
 }
 
-radiobutton checker:unchecked:hot
+radiobutton:unchecked:hot checker
 {
 	border-image: url('res:RadioButtonUncheckedHot') 0 fill / 0px; 
 }
 
-radiobutton checker:unchecked:pressed
+radiobutton:unchecked:pressed checker
 {
 	border-image: url('res:RadioButtonUncheckedPressed') 0 fill / 0px; 
 }
 
-radiobutton checker:unchecked:disabled
+radiobutton:unchecked:disabled checker
 {
 	border-image: url('res:RadioButtonUncheckedDisabled') 0 fill / 0px; 
 }
