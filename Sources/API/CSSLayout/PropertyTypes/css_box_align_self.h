@@ -33,11 +33,13 @@
 namespace clan
 {
 
+class CSSBoxAlignItems;
+
 class CSSBoxAlignSelf : public CSSBoxProperty
 {
 public:
 	CSSBoxAlignSelf();
-	void compute(const CSSBoxAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	void compute(const CSSBoxAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxAlignItems *parent_align_items);
 	std::string to_string() const;
 
 	enum Type

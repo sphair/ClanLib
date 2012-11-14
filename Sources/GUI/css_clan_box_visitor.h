@@ -325,8 +325,7 @@ public:
 				perpendicular_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 				perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch ||
-					(child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_auto && node->css_properties.align_items.type == CSSBoxAlignItems::type_stretch))
+				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch)
 				{
 					perpendicular_math.used_shrink_weights.push_back(1.0f);
 					perpendicular_math.used_expand_weights.push_back(1.0f);
@@ -371,8 +370,7 @@ public:
 				perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 				perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch ||
-					(child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_auto && node->css_properties.align_items.type == CSSBoxAlignItems::type_stretch))
+				if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch)
 				{
 					perpendicular_math.used_shrink_weights.push_back(1.0f);
 					perpendicular_math.used_expand_weights.push_back(1.0f);

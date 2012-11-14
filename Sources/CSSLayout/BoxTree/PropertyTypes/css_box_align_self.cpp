@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyTypes/css_box_align_self.h"
+#include "API/CSSLayout/PropertyTypes/css_box_align_items.h"
 
 namespace clan
 {
@@ -37,7 +38,7 @@ CSSBoxAlignSelf::CSSBoxAlignSelf()
 {
 }
 
-void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxAlignItems *parent_align_items)
 {
 	if (type == type_inherit)
 	{
@@ -49,10 +50,32 @@ void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *l
 
 	if (type == type_auto)
 	{
-		if (parent)
-			type = parent->type;
+		if (parent_align_items)
+		{
+			switch (parent_align_items->type)
+			{
+			default:
+			case CSSBoxAlignItems::type_flex_start:
+				type = CSSBoxAlignSelf::type_flex_start;
+				break;
+			case CSSBoxAlignItems::type_flex_end:
+				type = CSSBoxAlignSelf::type_flex_end;
+				break;
+			case CSSBoxAlignItems::type_center:
+				type = CSSBoxAlignSelf::type_center;
+				break;
+			case CSSBoxAlignItems::type_baseline:
+				type = CSSBoxAlignSelf::type_baseline;
+				break;
+			case CSSBoxAlignItems::type_stretch:
+				type = CSSBoxAlignSelf::type_stretch;
+				break;
+			}
+		}
 		else
+		{
 			type = type_stretch;
+		}
 	}
 }
 
