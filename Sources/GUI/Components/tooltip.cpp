@@ -62,9 +62,7 @@ public:
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
 	std::string text;
-	Font font;
 	Colorf text_color;
-	GUIThemePart part_component;
 	Slot slot_filter_message;
 };
 
@@ -79,9 +77,6 @@ ToolTip::ToolTip(GUIManager manager)
 
 	func_process_message().set(impl.get(), &ToolTip_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolTip_Impl::on_render);
-
-	impl->part_component = GUIThemePart(this);
-	impl->font = impl->part_component.get_font();
 
 	impl->timer_show_delayed.func_expired().set(impl.get(), &ToolTip_Impl::on_show_delayed);
 	impl->slot_filter_message = get_gui_manager().sig_filter_message().connect(impl.get(), &ToolTip_Impl::on_filter_message);
@@ -120,10 +115,11 @@ void ToolTip::set_text(const std::string &text)
 	Point top_left = get_geometry().get_top_left();
 
 	Canvas &canvas = get_canvas();
-	Size text_size = impl->font.get_text_size(canvas, impl->text);
+	Size text_size = get_font().get_text_size(canvas, impl->text);
 	Rect rect(Point(0,0), text_size);
-	Rect client_rect = impl->part_component.get_render_box(rect);
-	set_geometry(Rect(top_left, client_rect.get_size()));
+	//FIXME: Rect client_rect = impl->part_component.get_render_box(rect);
+	//FIXME: set_geometry(Rect(top_left, client_rect.get_size()));
+	set_geometry(text_size);
 }
 
 void ToolTip::show(const Point &position)
@@ -173,9 +169,12 @@ void ToolTip_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ToolTip_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = tooltip->get_geometry();
-	part_component.render_box(canvas, rect.get_size(), update_rect);
+	//FIXME: part_component.render_box(canvas, rect.get_size(), update_rect);
 
-	Rect content_rect = part_component.get_content_box(rect.get_size());
+	//FIXME: Rect content_rect = part_component.get_content_box(rect.get_size());
+	Rect content_rect = tooltip->get_content_box();
+
+	Font font = tooltip->get_font();
 
 	Size text_size = font.get_text_size(canvas, text);
 	font.draw_text(canvas,
