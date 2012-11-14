@@ -741,6 +741,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 			if (input_msg->input_event.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
 			{
+				Rect content_rect = lineedit->get_content_box();
 				if (input_msg->input_event.mouse_pos.x < content_rect.left || input_msg->input_event.mouse_pos.x > content_rect.right)
 				{
 					if (input_msg->input_event.mouse_pos.x < content_rect.left)
@@ -990,6 +991,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	Font font = lineedit->get_font();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
+	Rect content_rect = lineedit->get_content_box();
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
 
 	int seek_start = clip_start_offset;
@@ -1046,6 +1048,7 @@ void LineEdit_Impl::update_text_clipping()
 		clip_start_offset = cursor_pos;
 
 	Rect cursor_rect = get_cursor_rect();
+	Rect content_rect = lineedit->get_content_box();
 
 	UTF8_Reader utf8_reader(text.data(), text.length());
 	while (cursor_rect.right > content_rect.right)
@@ -1111,9 +1114,10 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 	Size text_size_before_cursor = font.get_text_size(canvas, clipped_text);
 
+	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
 	//FIXME: cursor_rect.right = cursor_rect.left + part_cursor->get_preferred_width();
-	cursor_rect.right = cursor_rect.left + 64;	//BUG FIXME -  REPLACED WITH THIS!!!!!
+	cursor_rect.right = cursor_rect.left + 256;	//BUG FIXME -  REPLACED WITH THIS!!!!!
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
@@ -1136,6 +1140,7 @@ Rect LineEdit_Impl::get_selection_rect()
 	std::string txt_selected = get_visible_selected_text();
 	Size text_size_selection = font.get_text_size(canvas, txt_selected);
 
+	Rect content_rect = lineedit->get_content_box();
 	Rect selection_rect;
 	selection_rect.left = content_rect.left + text_size_before_selection.width;
 	selection_rect.right = selection_rect.left + text_size_selection.width;
@@ -1187,9 +1192,7 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	
-	//FIXME - Was - content_rect = lineedit->get_content_box(lineedit->get_size());
-	content_rect = lineedit->get_content_box();
+	Rect content_rect = lineedit->get_content_box();
 
 	Canvas &canvas = lineedit->get_canvas();
 	Font font = lineedit->get_font();
@@ -1319,6 +1322,8 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
+	//FIXME ******** THIS LINE SHOULD NOT BE HERE!!!! ~********
+	clip_start_offset = 0;
 
 	Rect g = lineedit->get_size();
 	Font font = lineedit->get_font();
@@ -1339,6 +1344,8 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	Size size_before = font.get_text_size(canvas, txt_before);
 	Size size_selected = font.get_text_size(canvas, txt_selected);
+
+	Rect content_rect = lineedit->get_content_box();
 
 	// Draw text before selection
 	if (!txt_before.empty())

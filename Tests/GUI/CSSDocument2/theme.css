@@ -431,7 +431,7 @@ radiobutton:unchecked:disabled checker
 lineedit
 {
     -clan-box-direction: horizontal;
-    padding: 25px;
+    padding: 3px;
 	text-color:black;
 }
 

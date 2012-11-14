@@ -108,7 +108,6 @@ public:
 	//GUIComponent *part_component;
 	GUIComponent *part_selection;
 	GUIComponent *part_cursor;
-	Rect content_rect;
 
 	void move(int steps, InputEvent &e);
 	bool insert_text(int pos, const std::string &str);
