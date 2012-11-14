@@ -93,13 +93,12 @@ public:
 	Rect rect_track_increment;
 	Rect rect_button_increment;
 
-	GUIThemePart part_component;
-	GUIThemePart part_button_decrement;
-	GUIThemePart part_button_increment;
-	GUIThemePart part_track_decrement;
-	GUIThemePart part_track_increment;
-	GUIThemePart part_thumb;
-	GUIThemePart part_thumb_gripper;
+	GUIComponent *part_button_decrement;
+	GUIComponent *part_button_increment;
+	GUIComponent *part_track_decrement;
+	GUIComponent *part_track_increment;
+	GUIComponent *part_thumb;
+	GUIComponent *part_thumb_gripper;
 
 	ScrollBar *scrollbar;
 

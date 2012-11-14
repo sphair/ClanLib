@@ -120,17 +120,17 @@ int ScrollBar::get_position() const
 
 Size ScrollBar::get_preferred_size() const
 {
-	return impl->part_component.get_preferred_size();
+	return get_preferred_size();
 }
 
 int ScrollBar::get_preferred_width() const
 {
-	return impl->part_component.get_preferred_width();
+	return get_preferred_width();
 }
 
 int ScrollBar::get_preferred_height() const
 {
-	return impl->part_component.get_preferred_height();
+	return get_preferred_height();
 }
 
 /////////////////////////////////////////////////////////////////////////////
