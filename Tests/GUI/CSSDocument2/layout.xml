@@ -54,4 +54,5 @@
     <group>Main Group</group>
     <text>B</text>
   </radiobutton>
+  <lineedit>LineEdit</lineedit>
 </root>
