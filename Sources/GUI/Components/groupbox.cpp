@@ -93,9 +93,7 @@ void GroupBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void GroupBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	GUIThemePart part_component(groupbox);
-	Rect rect(0, 0, groupbox->get_geometry().get_size());
-	part_component.render_box(canvas, rect, update_rect);
+
 }
 
 }
