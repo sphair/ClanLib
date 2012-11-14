@@ -118,21 +118,6 @@ int ScrollBar::get_position() const
 	return impl->position;
 }
 
-Size ScrollBar::get_preferred_size() const
-{
-	return get_preferred_size();
-}
-
-int ScrollBar::get_preferred_width() const
-{
-	return get_preferred_width();
-}
-
-int ScrollBar::get_preferred_height() const
-{
-	return get_preferred_height();
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // ScrollBar Operations:
 
