@@ -2,7 +2,7 @@
 *
 {
     display: flex;
-    -clan-box-direction: vertical;
+    flex-direction: column;
 }
 
 .root
@@ -15,11 +15,10 @@
 
 ribbon
 {
-    -clan-box-direction: vertical;
-    -clan-box-width-shrink-factor: 1;
-    -clan-box-width-expand-factor: 1;
-    -clan-box-height-shrink-factor: 0;
-    -clan-box-height-expand-factor: 0;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+    align-self: stretch;
     height: 117px;
     border-image: url('res:Ribbon') 50 8 8 8 fill / 50px 8px 8px 8px;
     font-size: 9pt;
@@ -27,8 +26,8 @@ ribbon
 
 ribbon-header
 {
-    -clan-box-direction: horizontal;
-    -clan-box-width-expand-factor: 1;
+    flex-direction: row;
+    align-self: stretch;
    
     height: 23px;
 
@@ -54,7 +53,7 @@ ribbon-tab
 {
     height: 19px;
     min-width: 30px;
-    -clan-box-direction: horizontal;
+    flex-direction: row;
     padding-left: 8px;
     padding-right: 8px;
     padding-top: 4px;
@@ -67,18 +66,16 @@ ribbon-tab:selected
 
 ribbon-page
 {
-    -clan-box-direction: horizontal;
-    -clan-box-width-shrink-factor: 1;
-    -clan-box-width-expand-factor: 1;
-    -clan-box-height-shrink-factor: 1;
-    -clan-box-height-expand-factor: 1;
+    flex-direction: row;
+    align-self: stretch;
+    flex-shrink: 1;
+    flex-grow: 1;
 }
 
 ribbon-section
 {
-    -clan-box-direction: horizontal;
-    -clan-box-height-shrink-factor: 1;
-    -clan-box-height-expand-factor: 1;
+    flex-direction: row;
+    align-self: stretch;
     border-image: url('res:RibbonSection') 24 8 16 8 fill / 24px 8px 16px 8px;
     padding: 4px 8px;
     min-width: 40px;
@@ -86,17 +83,16 @@ ribbon-section
 
 ribbon-section-group
 {
-    -clan-box-direction: vertical;
-    -clan-box-height-shrink-factor: 1;
-    -clan-box-height-expand-factor: 1;
+    flex-direction: column;
+    align-self: stretch;
 }
 
 ribbon-section button, ribbon-section button:defaulted, ribbon-section button:pressed, ribbon-section button:disabled
 {
     padding: 4px;
     min-width: 10px;
-    -clan-box-direction: horizontal;
-    -clan-box-width-expand-factor: 1;
+    flex-direction: column;
+    align-self: stretch;
     border-image: none;
 }
 
@@ -108,8 +104,7 @@ ribbon-section button imageview
 
 ribbon-section button.big
 {
-    -clan-box-direction: vertical;
-    -clan-box-width-expand-factor: 0;
+    flex-direction: column;
 }
 
 ribbon-section button.big imageview
@@ -170,8 +165,8 @@ ribbon-section button:toggled
 label.imagelabel
 {
     background: #ffff80;
-    -clan-box-width-shrink-factor: 1;
-    -clan-box-width-expand-factor: 1;
+    flex-shrink: 1;
+    flex-grow: 1;
     min-width: 130px;
     border-width: 1px;
     border-style: solid;
@@ -181,9 +176,8 @@ label.imagelabel
 
 .imagecontainer
 {
-    -clan-box-direction: horizontal;
-    -clan-box-width-shrink-factor: 1;
-    -clan-box-width-expand-factor: 0;
+    flex-direction: row;
+    flex-shrink: 1;
     background: green;
 }
 
@@ -223,7 +217,7 @@ imageview.fixedheight
 
 button
 {
-    -clan-box-direction: horizontal;
+    flex-direction: row;
     border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
     padding: 5px;
 }
@@ -266,8 +260,8 @@ button:pressed imageview
 
 button label
 {
-    -clan-box-width-shrink-factor: 1;
-    -clan-box-width-expand-factor: 1;
+    flex-shrink: 1;
+    flex-grow: 1;
 }
 
 button:pressed label
@@ -283,7 +277,7 @@ checkbox
 {
 	padding-top:1px;
 	padding-bottom:4px;
-	-clan-box-direction: horizontal;
+	flex-direction: row;
 }
 
 checkbox:disabled
@@ -365,7 +359,7 @@ checkbox:indeterminated:hot checker
 
 radiobutton
 {
-	-clan-box-direction: horizontal;
+	flex-direction: row;
 }
 
 radiobutton:disabled
@@ -430,7 +424,7 @@ radiobutton:unchecked:disabled checker
 
 lineedit
 {
-    -clan-box-direction: horizontal;
+    flex-direction: row;
     padding: 3px;
 	text-color:black;
 }
