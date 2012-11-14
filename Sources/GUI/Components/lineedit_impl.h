@@ -105,7 +105,7 @@ public:
 
 	static std::string break_characters;
 
-	GUIComponent *part_component;
+	//GUIComponent *part_component;
 	GUIComponent *part_selection;
 	GUIComponent *part_cursor;
 	Rect content_rect;
@@ -129,6 +129,7 @@ public:
 	void set_selection_start(int start);
 	void set_selection_length(int length);
 	void set_text_selection(int start, int length);
+	GUIThemePart::VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 	GUIThemePart::VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;

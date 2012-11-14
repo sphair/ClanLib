@@ -51,6 +51,7 @@
 #include "../gui_css_strings.h"
 #include "lineedit_impl.h"
 #include "API/Display/2D/canvas.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 #ifndef WIN32
 #include "stdlib.h"
@@ -171,13 +172,13 @@ int LineEdit::get_cursor_pos() const
 
 Size LineEdit::get_text_size()
 {
-	Font font = impl->part_component->get_font();
+	Font font = get_font();
 	return impl->get_visual_text_size(get_canvas(), font);
 }
 
 Size LineEdit::get_text_size(const std::string &str)
 {
-	Font font = impl->part_component->get_font();
+	Font font = get_font();
 	Size text_size = font.get_text_size(get_canvas(), str);
 	return text_size;
 }
@@ -337,12 +338,13 @@ void LineEdit::set_cursor_pos(int pos)
 void LineEdit::resize_to_fit(int max_width)
 {
 	Canvas &canvas = get_canvas();
-	Font font = impl->part_component->get_font();
+	Font font = get_font();
 
 	Rect g = get_geometry();
-	//FIXME: Rect rect_content = impl->part_component->get_content_box(g);
-	//FIXME: Size text_size = impl->get_visual_text_size(canvas, font);
-	//FIXME: rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
+	//FIXME: Was - Rect rect_content = get_content_box(g);
+	Rect rect_content = get_content_box();
+	Size text_size = impl->get_visual_text_size(canvas, font);
+	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
 	//FIXME: g.set_size(impl->part_component->get_render_box(rect_content).get_size());
 	//FIXME: set_geometry(g);
@@ -805,7 +807,6 @@ void LineEdit_Impl::on_style_changed()
 
 void LineEdit_Impl::create_parts()
 {
-	part_component = new GUIComponent(lineedit);
 	part_selection = new GUIComponent(lineedit);
 	part_cursor = new GUIComponent(lineedit);
 	part_selection->set_tag_name(CssStr::LineEdit::part_selection);
@@ -814,8 +815,8 @@ void LineEdit_Impl::create_parts()
 	bool enabled = lineedit->is_enabled();
 
 	//part_component->set_pseudo_class(CssStr::hot, false);
-	part_component->set_pseudo_class(CssStr::normal, enabled);
-	part_component->set_pseudo_class(CssStr::disabled, !enabled);
+	lineedit->set_pseudo_class(CssStr::normal, enabled);
+	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
 
 	//FIXME: text_color = part_component->get_property(prop_text_color);
 
@@ -972,7 +973,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	}
 
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component->get_font();
+	Font font = lineedit->get_font();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
@@ -1023,7 +1024,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 void LineEdit_Impl::update_text_clipping()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component->get_font();
+	Font font = lineedit->get_font();
 
 	Size text_size = get_visual_text_size(canvas, font, clip_start_offset, text.size() - clip_start_offset);
 
@@ -1078,7 +1079,7 @@ void LineEdit_Impl::update_text_clipping()
 Rect LineEdit_Impl::get_cursor_rect()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = part_component->get_font();
+	Font font = lineedit->get_font();
 
 	Rect cursor_rect;
 
@@ -1111,7 +1112,7 @@ Rect LineEdit_Impl::get_selection_rect()
 	Canvas &canvas = lineedit->get_canvas();
 
 	// text before selection:
-	Font font = part_component->get_font();
+	Font font = lineedit->get_font();
 
 	std::string txt_before = get_visible_text_before_selection();
 	Size text_size_before_selection = font.get_text_size(canvas, txt_before);
@@ -1172,16 +1173,34 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	//FIXME: content_rect = part_component->get_content_box(lineedit->get_size());
+	
+	//FIXME - Was - content_rect = lineedit->get_content_box(lineedit->get_size());
+	content_rect = lineedit->get_content_box();
 
-	//FIXME: Canvas &canvas = lineedit->get_canvas();
-	//FIXME: Font font = part_component->get_font();
+	Canvas &canvas = lineedit->get_canvas();
+	Font font = lineedit->get_font();
 
-	//FIXME: vertical_text_align = part_component->get_vertical_text_align(canvas, font, content_rect);
+	vertical_text_align = get_vertical_text_align(canvas, font, content_rect);
 
 	clip_start_offset = 0;
 	cursor_pos = 0;
 	update_text_clipping();
+}
+
+GUIThemePart::VerticalTextPosition LineEdit_Impl::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+{
+	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
+
+	FontMetrics metrics = font.get_font_metrics();
+	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
+	float content_height = content_rect.get_height();
+	float baseline = (content_height + align_height) / 2.0f;
+
+	GUIThemePart::VerticalTextPosition result;
+	result.baseline = baseline + content_rect.top;
+	result.top = result.baseline - metrics.get_ascent();
+	result.bottom = result.baseline + metrics.get_descent();
+	return result;
 }
 
 std::string LineEdit_Impl::get_visible_text_before_selection()
@@ -1286,11 +1305,10 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-/* FIXME
-	Rect g = lineedit->get_size();
-	part_component->render_box(canvas, g, update_rect);
 
-	Font font = part_component->get_font();
+	Rect g = lineedit->get_size();
+	Font font = lineedit->get_font();
+	FontMetrics metrics = font.get_font_metrics();
 
 	std::string txt_before = get_visible_text_before_selection();
 	std::string txt_selected = get_visible_selected_text();
@@ -1314,19 +1332,20 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Rect text_rect = content_rect;
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_component->render_text(canvas, txt_before, text_rect, update_rect);
+		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_before, lineedit->get_css_properties().color.color);
+
 	}
 	if (!txt_selected.empty())
 	{
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
-		part_selection->render_box(canvas, selection_rect, update_rect);
 
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_selection->render_text(canvas, txt_selected, text_rect, update_rect);
+		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_selected, lineedit->get_css_properties().color.color);
+
 	}
 	if (!txt_after.empty())
 	{
@@ -1334,7 +1353,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_component->render_text(canvas, txt_after, text_rect, update_rect);
+		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
 	}
 
 	// draw cursor
@@ -1343,10 +1362,10 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (cursor_blink_visible)
 		{
 			Rect cursor_rect = get_cursor_rect();
-			part_cursor->render_box(canvas, cursor_rect, update_rect);
+			//FIXME: part_cursor->render_box(canvas, cursor_rect, update_rect);
 		}
 	}
-*/
+
 }
 
 void LineEdit_Impl::on_scroll_timer_expired()
