@@ -362,3 +362,67 @@ checkbox:indeterminated:hot checker
 {
 	border-image: url('res:CheckBoxIndeterminatedHot') 0 fill / 0px;
 }
+
+radiobutton
+{
+	-clan-box-direction: horizontal;
+}
+
+radiobutton:disabled
+{
+	color:darkgray;
+}
+
+radiobutton checker
+{
+    margin-left: 3px;
+	width: 13px;
+	height: 13px;
+}
+
+/*
+radiobutton focus
+{
+	border-image: url('res:FocusDottedLine') 3 4 3 4 fill / 3px 4px 3px 4px repeat; 
+} 
+*/
+
+radiobutton checker:checked:normal
+{
+	border-image: url('res:RadioButtonCheckedNormal') 0 fill / 0px; 
+}
+
+radiobutton checker:checked:hot
+{
+	border-image: url('res:RadioButtonCheckedHot') 0 fill / 0px; 
+}
+
+radiobutton checker:checked:pressed
+{
+	border-image: url('res:RadioButtonCheckedPressed') 0 fill / 0px; 
+}
+
+radiobutton checker:checked:disabled
+{
+	border-image: url('res:RadioButtonCheckedDisabled') 0 fill / 0px; 
+}
+
+radiobutton checker:unchecked:normal
+{
+	border-image: url('res:RadioButtonUncheckedNormal') 0 fill / 0px; 
+}
+
+radiobutton checker:unchecked:hot
+{
+	border-image: url('res:RadioButtonUncheckedHot') 0 fill / 0px; 
+}
+
+radiobutton checker:unchecked:pressed
+{
+	border-image: url('res:RadioButtonUncheckedPressed') 0 fill / 0px; 
+}
+
+radiobutton checker:unchecked:disabled
+{
+	border-image: url('res:RadioButtonUncheckedDisabled') 0 fill / 0px; 
+}
