@@ -1113,7 +1113,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
 	//FIXME: cursor_rect.right = cursor_rect.left + part_cursor->get_preferred_width();
-	cursor_rect.right = cursor_rect.left + 256;	//BUG FIXME -  REPLACED WITH THIS!!!!!
+	cursor_rect.right = cursor_rect.left + 4;	//BUG FIXME -  REPLACED WITH THIS!!!!!
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
@@ -1376,11 +1376,18 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	// draw cursor
 	if (lineedit->has_focus() || (lineedit->get_focus_policy() == GUIComponent::focus_parent && cursor_drawing_enabled_when_parent_focused))
 	{
+		// FIXME: This code should not be here
 		if (cursor_blink_visible)
 		{
 			Rect cursor_rect = get_cursor_rect();
-			//FIXME: part_cursor->render_box(canvas, cursor_rect, update_rect);
+			part_cursor->set_geometry(cursor_rect);
+			part_cursor->set_enabled(true);
 		}
+		else
+		{
+			part_cursor->set_enabled(false);
+		}
+
 	}
 
 }
