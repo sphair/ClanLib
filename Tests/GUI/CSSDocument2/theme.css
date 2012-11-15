@@ -420,6 +420,7 @@ lineedit
 {
     flex-direction: row;
     padding: 3px;
+	font:32px arial,sans-serif;
 	text-color:black;
 }
 
