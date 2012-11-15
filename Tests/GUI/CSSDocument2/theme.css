@@ -111,20 +111,17 @@ ribbon-section button.big imageview
 
 ribbon-section button:hot, ribbon-section button:toggled:hot
 {
-    border-style: solid;
-    border-image: url('res:RibbonButtonHot') 1 8 fill;
+    border-image: url('res:RibbonButtonHot') 1 8 fill / 1px 8px;
 }
 
 ribbon-section button:pressed, ribbon-section button:toggled:pressed:hot
 {
-    border-style: solid;
-    border-image: url('res:RibbonButtonPressed') 1 8 fill;
+    border-image: url('res:RibbonButtonPressed') 1 8 fill / 1px 8px;
 }
 
 ribbon-section button:toggled
 {
-    border-style: solid;
-    border-image: url('res:RibbonButtonToggled') 1 8 fill;
+    border-image: url('res:RibbonButtonToggled') 1 8 fill / 1px 8px;
 }
 
 .test1
