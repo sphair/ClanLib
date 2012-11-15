@@ -997,14 +997,9 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 
 void GUIComponent::update_style()
 {
-	GUIComponent *comp = get_top_level_component();
-	if (comp->impl->css_properties.display.type != CSSBoxDisplay::type_inline)
-	{
-		impl->update_style();
-		comp->impl->layout_content();
-		request_repaint();
-	}
-
+	impl->update_style();
+	get_top_level_component()->impl->layout_content();
+	request_repaint();
 }
 
 void GUIComponent::update_layout()
