@@ -816,14 +816,13 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void LineEdit_Impl::on_style_changed()
 {
-	create_parts();
 }
 
 void LineEdit_Impl::create_parts()
 {
 	part_selection = new GUIComponent(lineedit);
-	part_cursor = new GUIComponent(lineedit);
 	part_selection->set_tag_name(CssStr::LineEdit::part_selection);
+	part_cursor = new GUIComponent(lineedit);
 	part_cursor->set_tag_name(CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();
@@ -834,8 +833,8 @@ void LineEdit_Impl::create_parts()
 	part_cursor->set_pseudo_class(CssStr::normal, enabled);
 	part_cursor->set_pseudo_class(CssStr::disabled, !enabled);
 
-	part_selection->set_pseudo_class(CssStr::normal, enabled);
-	part_selection->set_pseudo_class(CssStr::disabled, !enabled);
+	//part_selection->set_pseudo_class(CssStr::normal, enabled);
+	//part_selection->set_pseudo_class(CssStr::disabled, !enabled);
 
 	on_resized();	//TODO: Is this required?
 }
@@ -1406,8 +1405,6 @@ void LineEdit_Impl::on_scroll_timer_expired()
 
 void LineEdit_Impl::on_enable_changed()
 {
-	create_parts();
-
 	bool enabled = lineedit->is_enabled();
 
 	if (!enabled)
