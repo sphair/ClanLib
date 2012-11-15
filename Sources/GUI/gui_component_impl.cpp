@@ -225,6 +225,13 @@ void GUIComponent_Impl::update_style()
 	else
 		css_properties.compute(0, &gui_manager_impl->resource_cache);
 	sig_style_changed.invoke(properties);
+
+	GUIComponent *cur_child = first_child;
+	while (cur_child)
+	{
+		cur_child->impl->update_style();
+		cur_child = cur_child->get_next_sibling();
+	}
 }
 
 
