@@ -984,7 +984,6 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 			{
 				impl->pseudo_classes.erase(impl->pseudo_classes.begin() + i);
 				update_style();
-				request_repaint();
 			}
 			return;
 		}
@@ -993,27 +992,19 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 	{
 		impl->pseudo_classes.push_back(name);
 		update_style();
-		request_repaint();
 	}
 }
 
 void GUIComponent::update_style()
 {
-	impl->update_style();
-
-	// rombust - Is this code here required?
-
-	GUIComponent *cur_child = impl->first_child;
-	while (cur_child)
-	{
-		cur_child->impl->update_style();
-		cur_child = cur_child->get_next_sibling();
-	}
+	update_layout();
 }
 
 void GUIComponent::update_layout()
 {
+	get_top_level_component()->impl->update_style();
 	get_top_level_component()->impl->layout_content();
+	request_repaint();
 }
 
 void GUIComponent::set_enabled(bool enable)
