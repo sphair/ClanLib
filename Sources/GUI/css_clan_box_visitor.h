@@ -422,6 +422,54 @@ public:
 		set_vertical_geometry(node);
 	}
 
+	CSSUsedValue align_vertical(GUIComponent_Impl *node, GUIComponent *child)
+	{
+		if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
+		{
+			return 0.0f;
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
+		{
+			return node->css_used_values.height - child->impl->css_used_values.height - get_used_noncontent_height(child->impl->css_used_values);
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_center)
+		{
+			return (node->css_used_values.height - child->impl->css_used_values.height - get_used_noncontent_height(child->impl->css_used_values)) * 0.5f;
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_baseline)
+		{
+			return 0.0f; // To do: implement this
+		}
+		else // type_stretch
+		{
+			return 0.0f;
+		}
+	}
+
+	CSSUsedValue align_horizontal(GUIComponent_Impl *node, GUIComponent *child)
+	{
+		if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
+		{
+			return 0.0f;
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
+		{
+			return node->css_used_values.width - child->impl->css_used_values.width - get_used_noncontent_width(child->impl->css_used_values);
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_center)
+		{
+			return (node->css_used_values.width - child->impl->css_used_values.width - get_used_noncontent_width(child->impl->css_used_values)) * 0.5f;
+		}
+		else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_baseline)
+		{
+			return 0.0f; // To do: implement this
+		}
+		else // type_stretch
+		{
+			return 0.0f;
+		}
+	}
+
 	void set_horizontal_geometry(GUIComponent_Impl *node)
 	{
 		CSSUsedValue x = node->css_used_values.border.left + node->css_used_values.padding.left;
@@ -430,7 +478,7 @@ public:
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
-				set_child_geometry(node, child, x, y);
+				set_child_geometry(node, child, x, y + align_vertical(node, child));
 
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 				x += get_used_noncontent_width(child_used_values) + child_used_values.width;
@@ -446,7 +494,7 @@ public:
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
-				set_child_geometry(node, child, x, y);
+				set_child_geometry(node, child, x + align_horizontal(node, child), y);
 
 				CSSClanBoxUsedValues &child_used_values = child->impl->css_used_values;
 				y += get_used_noncontent_height(child_used_values) + child_used_values.height;
