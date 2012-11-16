@@ -69,9 +69,8 @@ public:
 // ToolTip Construction:
 
 ToolTip::ToolTip(GUIManager manager)
-: GUIComponent(&manager, ToolTip_Impl::create_description()), impl(new ToolTip_Impl)
+: GUIComponent(&manager, ToolTip_Impl::create_description(), CssStr::ToolTip::type_name), impl(new ToolTip_Impl)
 {
-	set_tag_name(CssStr::ToolTip::type_name);
 	impl->tooltip = this;
 
 	func_process_message().set(impl.get(), &ToolTip_Impl::on_process_message);

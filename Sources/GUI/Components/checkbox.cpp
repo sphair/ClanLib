@@ -81,14 +81,12 @@ public:
 // CheckBox Construction:
 
 CheckBox::CheckBox(GUIComponent *parent)
-: GUIComponent(parent), impl(new CheckBox_Impl)
+: GUIComponent(parent, CssStr::CheckBox::type_name), impl(new CheckBox_Impl)
 {
-	set_tag_name(CssStr::CheckBox::type_name);
 	impl->checkbox = this;
 
 	impl->part_label = new Label(this);
-	impl->part_checker = new GUIComponent(this);
-	impl->part_checker->set_tag_name(CssStr::CheckBox::part_checker);
+	impl->part_checker = new GUIComponent(this, CssStr::CheckBox::part_checker);
 
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);

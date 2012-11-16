@@ -115,9 +115,8 @@ public:
 // Spin Construction:
 
 Spin::Spin(GUIComponent *parent)
-: GUIComponent(parent), impl(new Spin_Impl)
+: GUIComponent(parent, CssStr::Spin::type_name), impl(new Spin_Impl)
 {
-	set_tag_name(CssStr::Spin::type_name);
 	impl->component = this;
 	set_double_click_enabled(false);
 	func_process_message().set(impl.get(), &Spin_Impl::on_process_message);
@@ -374,15 +373,10 @@ void Spin_Impl::create_components()
 	lineedit->func_after_edit_changed().set(this, &Spin_Impl::on_lineedit_modified);
 	lineedit->set_numeric_mode(true);
 
-	part_button_down = new GUIComponent(component);
-	part_button_up = new GUIComponent(component);
-	part_arrow_down = new GUIComponent(component);
-	part_arrow_up = new GUIComponent(component);
-
-	part_button_down->set_tag_name(CssStr::Spin::part_button_down);
-	part_button_up->set_tag_name(CssStr::Spin::part_button_up);
-	part_arrow_down->set_tag_name(CssStr::Spin::part_arrow_down);
-	part_arrow_up->set_tag_name(CssStr::Spin::part_arrow_up);
+	part_button_down = new GUIComponent(component, CssStr::Spin::part_button_down);
+	part_button_up = new GUIComponent(component, CssStr::Spin::part_button_up);
+	part_arrow_down = new GUIComponent(component, CssStr::Spin::part_arrow_down);
+	part_arrow_up = new GUIComponent(component, CssStr::Spin::part_arrow_up);
 
 	bool enabled = component->is_enabled();
 

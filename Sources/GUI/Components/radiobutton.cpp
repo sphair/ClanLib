@@ -79,15 +79,13 @@ public:
 // RadioButton Construction:
 
 RadioButton::RadioButton(GUIComponent *parent)
-: GUIComponent(parent), impl(new RadioButton_Impl)
+: GUIComponent(parent, CssStr::RadioButton::type_name), impl(new RadioButton_Impl)
 {
-	set_tag_name(CssStr::RadioButton::type_name);
 	set_focus_policy(focus_group);
 
 	impl->radio = this;
 	impl->part_label = new Label(this);
-	impl->part_checker = new GUIComponent(this);
-	impl->part_checker->set_tag_name(CssStr::RadioButton::part_checker);
+	impl->part_checker = new GUIComponent(this, CssStr::RadioButton::part_checker);
 
 	//set_pseudo_class(CssStr::hot, false);
 	set_pseudo_class(CssStr::normal, true);

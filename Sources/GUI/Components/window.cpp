@@ -77,7 +77,6 @@ public:
 	bool draggable;
 
 	Label *part_caption;
-	GUIComponent *part_client;
 	GUIComponent *part_frameleft;
 	GUIComponent *part_frameright;
 	GUIComponent *part_framebottom;
@@ -88,7 +87,7 @@ public:
 // Window Construction:
 
 Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
-: GUIComponent(owner, description), impl(new Window_Impl)
+: GUIComponent(owner, description, CssStr::Window::type_name), impl(new Window_Impl)
 {
 	impl->window = this;
 
@@ -99,27 +98,19 @@ Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
 
 	func_process_message().set(impl.get(), &Window_Impl::on_process_message);
 
-	set_tag_name(CssStr::Window::type_name);
-
 	impl->part_caption = new Label(this);
-	impl->part_caption->set_tag_name(CssStr::Window::part_caption);
 	impl->part_caption->set_text(description.get_title());
-	impl->part_client = new GUIComponent(this);
-	impl->part_frameleft = new GUIComponent(this);
-	impl->part_frameleft->set_tag_name(CssStr::Window::part_frameleft);
-	impl->part_frameright = new GUIComponent(this);
-	impl->part_frameright->set_tag_name(CssStr::Window::part_frameright);
-	impl->part_framebottom = new GUIComponent(this);
-	impl->part_framebottom->set_tag_name(CssStr::Window::part_framebottom);
-	impl->part_buttonclose = new GUIComponent(impl->part_caption);
-	impl->part_buttonclose->set_tag_name(CssStr::Window::part_buttonclose);
+	impl->part_frameleft = new GUIComponent(this, CssStr::Window::part_frameleft);
+	impl->part_frameright = new GUIComponent(this, CssStr::Window::part_frameright);
+	impl->part_framebottom = new GUIComponent(this, CssStr::Window::part_framebottom);
+	impl->part_buttonclose = new GUIComponent(impl->part_caption, CssStr::Window::part_buttonclose);
 
 	if (!impl->draw_caption)
 		impl->part_caption->set_visible(false);
 }
 
 Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
-: GUIComponent(manager, description), impl(new Window_Impl)
+: GUIComponent(manager, description, CssStr::Window::type_name), impl(new Window_Impl)
 {
 	impl->window = this;
 
@@ -130,20 +121,13 @@ Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
 
 	func_process_message().set(impl.get(), &Window_Impl::on_process_message);
 
-	set_tag_name(CssStr::Window::type_name);
-
 	impl->part_caption = new Label(this);
 	impl->part_caption->set_tag_name(CssStr::Window::part_caption);
 	impl->part_caption->set_text(description.get_title());
-	impl->part_client = new GUIComponent(this);
-	impl->part_frameleft = new GUIComponent(this);
-	impl->part_frameleft->set_tag_name(CssStr::Window::part_frameleft);
-	impl->part_frameright = new GUIComponent(this);
-	impl->part_frameright->set_tag_name(CssStr::Window::part_frameright);
-	impl->part_framebottom = new GUIComponent(this);
-	impl->part_framebottom->set_tag_name(CssStr::Window::part_framebottom);
-	impl->part_buttonclose = new GUIComponent(impl->part_caption);
-	impl->part_buttonclose->set_tag_name(CssStr::Window::part_buttonclose);
+	impl->part_frameleft = new GUIComponent(this, CssStr::Window::part_frameleft);
+	impl->part_frameright = new GUIComponent(this, CssStr::Window::part_frameright);
+	impl->part_framebottom = new GUIComponent(this, CssStr::Window::part_framebottom);
+	impl->part_buttonclose = new GUIComponent(impl->part_caption, CssStr::Window::part_buttonclose);
 
 	if (!impl->draw_caption)
 		impl->part_caption->set_visible(false);
@@ -294,7 +278,7 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 Rect Window_Impl::get_client_area() const
 {
-	return part_client->get_geometry();
+	return window->get_geometry();
 }
 
 void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)

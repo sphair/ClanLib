@@ -132,9 +132,8 @@ public:
 // Slider Construction:
 
 Slider::Slider(GUIComponent *parent)
-: GUIComponent(parent), impl(new Slider_Impl)
+: GUIComponent(parent, CssStr::Slider::type_name), impl(new Slider_Impl)
 {
-	set_tag_name(CssStr::Slider::type_name);
 	set_focus_policy(focus_local);
 	impl->slider = this;
 	impl->vertical = false;
@@ -506,13 +505,9 @@ void Slider_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void Slider_Impl::create_parts()
 {
 	bool vertical = slider->is_vertical();
-	part_track = new GUIComponent(slider);
-	part_thumb = new GUIComponent(slider);
-	part_focus = new GUIComponent(slider);
-
-	part_track->set_tag_name(vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
-	part_thumb->set_tag_name(vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
-	part_focus->set_tag_name(CssStr::Slider::part_focus);
+	part_track = new GUIComponent(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
+	part_thumb = new GUIComponent(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
+	part_focus = new GUIComponent(slider, CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();
 

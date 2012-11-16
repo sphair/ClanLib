@@ -22,7 +22,7 @@ int Program::main(const std::vector<std::string> &args)
 	window_desc.set_size(Size(1024, 768), false);
 	window_desc.set_allow_resize(true);
 
-	GUIComponent *root = new GUIComponent(&gui, window_desc);
+	GUIComponent *root = new GUIComponent(&gui, window_desc, "component");
 	root->set_class("root");
 	root->func_close().set(&Program::on_close, root);
 	root->func_resized().set(&Program::on_resized, root);
@@ -139,8 +139,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	}	
 	else
 	{
-		GUIComponent *component = new GUIComponent(parent);
-		component->set_tag_name(xml_element.get_tag_name());
+		GUIComponent *component = new GUIComponent(parent, xml_element.get_tag_name());
 		component->set_class(xml_element.get_attribute("class"));
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
@@ -157,7 +156,7 @@ void Program::create_imageview_test(GUIComponent *root)
 {
 	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
 
-	GUIComponent *imagecontainer = new GUIComponent(root);
+	GUIComponent *imagecontainer = new GUIComponent(root, "component");
 	imagecontainer->set_class("imagecontainer");
 
 	Label *label1 = new Label(imagecontainer);

@@ -104,9 +104,8 @@ public:
 // ComboBox Construction:
 
 ComboBox::ComboBox(GUIComponent *parent)
-: GUIComponent(parent), impl(new ComboBox_Impl)
+: GUIComponent(parent, CssStr::ComboBox::type_name), impl(new ComboBox_Impl)
 {
-	set_tag_name(CssStr::ComboBox::type_name);
 	set_focus_policy(focus_local);
 	impl->component = this;
 	func_process_message().set(impl.get(), &ComboBox_Impl::on_process_message);
@@ -120,11 +119,8 @@ ComboBox::ComboBox(GUIComponent *parent)
 	impl->lineedit->func_enter_pressed().set(impl.get(), &ComboBox_Impl::on_lineedit_enter_pressed);
 	impl->lineedit->func_filter_message().set(impl.get(), &ComboBox_Impl::on_lineedit_message);
 
-	impl->part_opener = new GUIComponent(this);
-	impl->part_opener->set_tag_name(CssStr::ComboBox::part_opener);
-
-	impl->part_opener_glyph = new GUIComponent(this);
-	impl->part_opener_glyph->set_tag_name(CssStr::ComboBox::part_opener_glyph);
+	impl->part_opener = new GUIComponent(this, CssStr::ComboBox::part_opener);
+	impl->part_opener_glyph = new GUIComponent(this, CssStr::ComboBox::part_opener_glyph);
 
 	set_pseudo_class(CssStr::normal, true);
 	set_pseudo_class(CssStr::hot, false);

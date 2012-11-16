@@ -95,9 +95,8 @@ public:
 // StatusBar Construction:
 
 StatusBar::StatusBar(GUIComponent *parent)
-: GUIComponent(parent), impl(new StatusBar_Impl)
+: GUIComponent(parent, CssStr::StatusBar::type_name), impl(new StatusBar_Impl)
 {
-	set_tag_name(CssStr::StatusBar::type_name);
 	impl->statusbar = this;
 
 	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);
@@ -313,13 +312,9 @@ void StatusBar_Impl::throw_if_part_exists(int id) const
 
 void StatusBar_Impl::create_parts()
 {
-	part_status_text = new GUIComponent(statusbar);
-	part_status_part = new GUIComponent(statusbar);
-	part_size_grip = new GUIComponent(statusbar);
-
-	part_status_text->set_tag_name("statustext");
-	part_status_part->set_tag_name("statuspart");
-	part_size_grip->set_tag_name("sizegrip");
+	part_status_text = new GUIComponent(statusbar, "statustext");
+	part_status_part = new GUIComponent(statusbar, "statuspart");
+	part_size_grip = new GUIComponent(statusbar, "sizegrip");
 }
 
 void StatusBar_Impl::on_style_changed()

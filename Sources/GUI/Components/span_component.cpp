@@ -68,9 +68,8 @@ public:
 // SpanComponent Construction:
 
 SpanComponent::SpanComponent(GUIComponent *parent)
-: GUIComponent(parent), impl(new SpanComponent_Impl)
+: GUIComponent(parent, CssStr::SpanComponent::type_name), impl(new SpanComponent_Impl)
 {
-	set_tag_name(CssStr::SpanComponent::type_name);
 	impl->label = this;
 	func_render().set(impl.get(), &SpanComponent_Impl::on_render);
 }
