@@ -55,7 +55,7 @@ MessageBoxComponent::MessageBoxComponent(
 	MessageBoxButtons buttons,
 	MessageBoxIcon icon) 
 :	
-	GUIComponent(parent),
+	GUIComponent(parent, CssStr::MessageBox::type_name),
 	button_ok(0),
 	button_yes(0),
 	button_no(0),
@@ -64,7 +64,6 @@ MessageBoxComponent::MessageBoxComponent(
 	messagebox_buttons(buttons),
 	messagebox_icon(icon)
 {
-	set_tag_name(CssStr::MessageBox::type_name);
 	set_css_class();
 	create_buttons();
 	create_parts();
@@ -286,9 +285,7 @@ void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 
 void MessageBoxComponent::create_parts()
 {
-	part_icon = new GUIComponent(this);
-	part_icon->set_tag_name(CssStr::MessageBox::part_icon);
-
+	part_icon = new GUIComponent(this, CssStr::MessageBox::part_icon);
 }
 
 void MessageBoxComponent::on_button_clicked(MessageBoxResult result)

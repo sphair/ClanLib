@@ -70,9 +70,8 @@ public:
 // Label Construction:
 
 Label::Label(GUIComponent *parent)
-: GUIComponent(parent), impl(new Label_Impl)
+: GUIComponent(parent, CssStr::Label::type_name), impl(new Label_Impl)
 {
-	set_tag_name(CssStr::Label::type_name);
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
 }

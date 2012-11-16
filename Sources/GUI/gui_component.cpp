@@ -65,11 +65,11 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Construction:
 
-GUIComponent::GUIComponent(GUIComponent *parent)
+GUIComponent::GUIComponent(GUIComponent *parent, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_parent(parent))
 {
 	impl->component = this;
-	impl->tag_name = "component";
+	impl->tag_name = tag_name;
 	impl->geometry = Rect(0,0,0,0);
 
 	if (impl->parent->impl->last_child)
@@ -83,29 +83,35 @@ GUIComponent::GUIComponent(GUIComponent *parent)
 		impl->parent->impl->first_child = this;
 		impl->parent->impl->last_child = this;
 	}
+	impl->update_style();
+
 }
 
-GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription description)
+GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription description, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_manager(manager))
 {
 	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, 0, description);
-	impl->tag_name = "component";
+	impl->tag_name = tag_name;
 	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
+	impl->update_style();
+
 	request_repaint();
 }
 
-GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription description)
+GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription description, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_owner(owner))
 {
 	impl->component = this;
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, owner, description);
-	impl->tag_name = "component";
+	impl->tag_name = tag_name;
 	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
+	impl->update_style();
+
 	request_repaint();
 }
 

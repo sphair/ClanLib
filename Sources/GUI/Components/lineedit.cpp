@@ -65,10 +65,9 @@ const std::string LineEdit_Impl::numeric_mode_characters = "0123456789";
 // LineEdit Construction:
 
 LineEdit::LineEdit(GUIComponent *parent)
-: GUIComponent(parent),
+: GUIComponent(parent, CssStr::LineEdit::type_name),
   impl(new LineEdit_Impl)
 {
-	set_tag_name(CssStr::LineEdit::type_name);
 	set_focus_policy(focus_local);
 
 	func_render().set(impl.get(), &LineEdit_Impl::on_render);
@@ -820,10 +819,8 @@ void LineEdit_Impl::on_style_changed()
 
 void LineEdit_Impl::create_parts()
 {
-	part_selection = new GUIComponent(lineedit);
-	part_selection->set_tag_name(CssStr::LineEdit::part_selection);
-	part_cursor = new GUIComponent(lineedit);
-	part_cursor->set_tag_name(CssStr::LineEdit::part_cursor);
+	part_selection = new GUIComponent(lineedit, CssStr::LineEdit::part_selection);
+	part_cursor = new GUIComponent(lineedit, CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();
 

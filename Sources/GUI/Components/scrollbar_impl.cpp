@@ -278,19 +278,12 @@ void ScrollBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void ScrollBar_Impl::create_parts()
 {
-	part_button_decrement = new GUIComponent(scrollbar);
-	part_button_increment = new GUIComponent(scrollbar);
-	part_track_decrement = new GUIComponent(scrollbar);
-	part_track_increment = new GUIComponent(scrollbar);
-	part_thumb = new GUIComponent(scrollbar);
-	part_thumb_gripper = new GUIComponent(scrollbar);
-
-	part_button_decrement->set_tag_name(vertical ? "scrollbutton.up" : "scrollbutton.left");
-	part_button_increment->set_tag_name(vertical ? "scrollbutton.down" : "scrollbutton.right");
-	part_track_decrement->set_tag_name(vertical ? "scrolltrack.up" : "scrolltrack.left");
-	part_track_increment->set_tag_name(vertical ? "scrolltrack.down" : "scrolltrack.right");
-	part_thumb->set_tag_name(vertical ? "scrollthumb.vertical" : "scrollthumb.horizontal");
-	part_thumb_gripper->set_tag_name(vertical ? "scrollthumbgripper.vertical" : "scrollthumbgripper.horizontal");
+	part_button_decrement = new GUIComponent(scrollbar, vertical ? "scrollbutton.up" : "scrollbutton.left");
+	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton.down" : "scrollbutton.right");
+	part_track_decrement = new GUIComponent(scrollbar, vertical ? "scrolltrack.up" : "scrolltrack.left");
+	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack.down" : "scrolltrack.right");
+	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb.vertical" : "scrollthumb.horizontal");
+	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper.vertical" : "scrollthumbgripper.horizontal");
 
 	scrollbar->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_button_decrement->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());

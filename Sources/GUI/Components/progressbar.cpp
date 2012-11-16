@@ -82,15 +82,11 @@ public:
 // ProgressBar Construction:
 
 ProgressBar::ProgressBar(GUIComponent *parent)
-: GUIComponent(parent), impl(new ProgressBar_Impl)
+: GUIComponent(parent, CssStr::ProgressBar::type_name), impl(new ProgressBar_Impl)
 {
-	set_tag_name(CssStr::ProgressBar::type_name);
-
 	impl->progressbar = this;
-	impl->part_progress = new GUIComponent(this);
-	impl->part_chunk = new GUIComponent(this);
-	impl->part_progress->set_tag_name("progress");
-	impl->part_chunk->set_tag_name("chunk");
+	impl->part_progress = new GUIComponent(this, "progress");
+	impl->part_chunk = new GUIComponent(this, "chunk");
 
 	set_pseudo_class(CssStr::normal, true);
 

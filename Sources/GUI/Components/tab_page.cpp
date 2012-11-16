@@ -44,9 +44,8 @@ namespace clan
 // TabPage Construction:
 
 TabPage::TabPage(GUIComponent *parent)
-: GUIComponent(parent), impl(new TabPage_Impl)
+: GUIComponent(parent, CssStr::TabPage::type_name), impl(new TabPage_Impl)
 {
-	set_tag_name(CssStr::TabPage::type_name);
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabPage_Impl::on_process_message);
 	func_render().set(impl.get(), &TabPage_Impl::on_render);

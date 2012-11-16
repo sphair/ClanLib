@@ -73,9 +73,8 @@ public:
 // Tab Construction:
 
 Tab::Tab(GUIComponent *parent)
-: GUIComponent(parent), impl(new Tab_Impl)
+: GUIComponent(parent, CssStr::Tab::type_name), impl(new Tab_Impl)
 {
-	set_tag_name(CssStr::Tab::type_name);
 	impl->tab = this;
 	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
 	func_render().set(impl.get(), &Tab_Impl::on_render);

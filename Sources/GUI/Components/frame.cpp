@@ -58,24 +58,16 @@ public:
 };
 
 Frame::Frame(GUIComponent *parent)
-: GUIComponent(parent), impl(new Frame_Impl)
+: GUIComponent(parent, CssStr::Frame::type_name), impl(new Frame_Impl)
 {
-	set_tag_name(CssStr::Frame::type_name);
 	impl->frame = this;
 
-	impl->part_header = new GUIComponent(this);
-	impl->part_header_left = new GUIComponent(impl->part_header);
+	impl->part_header = new GUIComponent(this, CssStr::Frame::part_header);
+	impl->part_header_left = new GUIComponent(impl->part_header, CssStr::Frame::part_header_left);
 	impl->part_header_icon = new ImageView(impl->part_header);
 	impl->part_header_caption = new Label(impl->part_header);
-	impl->part_header_right = new GUIComponent(impl->part_header);
-	impl->part_body = new GUIComponent(this);
-
-	impl->part_header->set_tag_name(CssStr::Frame::part_header);
-	impl->part_header_left->set_tag_name(CssStr::Frame::part_header_left);
-	impl->part_header_icon->set_tag_name(CssStr::Frame::part_header_icon);
-	impl->part_header_caption->set_tag_name(CssStr::Frame::part_header_caption);
-	impl->part_header_right->set_tag_name(CssStr::Frame::part_header_right);
-	impl->part_body->set_tag_name(CssStr::Frame::part_body);
+	impl->part_header_right = new GUIComponent(impl->part_header, CssStr::Frame::part_header_right);
+	impl->part_body = new GUIComponent(this, CssStr::Frame::part_body);
 }
 
 Frame::~Frame()

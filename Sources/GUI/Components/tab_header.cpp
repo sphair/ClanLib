@@ -84,9 +84,8 @@ public:
 // TabHeader Construction:
 
 TabHeader::TabHeader(GUIComponent *parent)
-: GUIComponent(parent), impl(new TabHeader_Impl)
+: GUIComponent(parent, CssStr::Tab::Header::type_name), impl(new TabHeader_Impl)
 {
-	set_tag_name(CssStr::Tab::Header::type_name);
 	set_focus_policy(focus_local);
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabHeader_Impl::on_process_message);

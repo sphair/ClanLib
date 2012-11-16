@@ -63,9 +63,8 @@ namespace clan
 // TextEdit Construction:
 
 TextEdit::TextEdit(GUIComponent *parent)
-: GUIComponent(parent), impl(new TextEdit_Impl)
+: GUIComponent(parent, CssStr::TextEdit::type_name), impl(new TextEdit_Impl)
 {
-	set_tag_name(CssStr::TextEdit::type_name);
 	set_focus_policy(focus_local);
 
 	func_render().set(impl.get(), &TextEdit_Impl::on_render);
@@ -763,10 +762,8 @@ void TextEdit_Impl::on_style_changed()
 
 void TextEdit_Impl::create_parts()
 {
-	part_selection = new GUIComponent(textedit);
-	part_cursor = new GUIComponent(textedit);
-	part_selection->set_tag_name(CssStr::TextEdit::part_selection);
-	part_cursor->set_tag_name(CssStr::TextEdit::part_cursor);
+	part_selection = new GUIComponent(textedit, CssStr::TextEdit::part_selection);
+	part_cursor = new GUIComponent(textedit, CssStr::TextEdit::part_cursor);
 
 	bool enabled = textedit->is_enabled();
 
