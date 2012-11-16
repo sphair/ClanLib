@@ -154,15 +154,10 @@ clanCore_includes = \
 	core.h \
 	Core/Signals/callback_1.h \
 	Core/Signals/callback_v2.h \
-	Core/Signals/virtual_function_1.h \
-	Core/Signals/virtual_function_v5.h \
 	Core/Signals/callback_v6.h \
 	Core/Signals/callback_3.h \
-	Core/Signals/virtual_function_0.h \
-	Core/Signals/virtual_function_v2.h \
 	Core/Signals/signal_v6.h \
 	Core/Signals/signal_v5.h \
-	Core/Signals/virtual_function_v6.h \
 	Core/Signals/signal_v4.h \
 	Core/Signals/signal_v0.h \
 	Core/Signals/callback_2.h \
@@ -172,24 +167,15 @@ clanCore_includes = \
 	Core/Signals/callback_v5.h \
 	Core/Signals/callback_v4.h \
 	Core/Signals/callback_v0.h \
-	Core/Signals/virtual_function_2.h \
 	Core/Signals/callback_v3.h \
-	Core/Signals/virtual_function_v4.h \
-	Core/Signals/virtual_function_5.h \
 	Core/Signals/signal_v3.h \
 	Core/Signals/signal_v2.h \
-	Core/Signals/virtual_function_3.h \
 	Core/Signals/slot.h \
-	Core/Signals/virtual_function_v0.h \
 	Core/Signals/callback_6.h \
 	Core/Signals/signals_impl.h \
 	Core/Signals/slot_container.h \
 	Core/Signals/callback_5.h \
 	Core/Signals/callback_4.h \
-	Core/Signals/virtual_function_v3.h \
-	Core/Signals/virtual_function_4.h \
-	Core/Signals/virtual_function_v1.h \
-	Core/Signals/virtual_function_6.h \
 	Core/Math/rect.h \
 	Core/Math/ear_clip_result.h \
 	Core/Math/line_segment.h \
