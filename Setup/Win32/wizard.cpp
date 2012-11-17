@@ -290,6 +290,14 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
+	Project clanPhysics(
+		"Physics",
+		"clanPhysics",
+		"physics.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug);
+
 	// Add projects to workspace:
 	workspace.projects.push_back(clanCore);
 	workspace.projects.push_back(clanDatabase);
@@ -311,6 +319,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanVorbis);
 
 	workspace.projects.push_back(clanCompute);
+	workspace.projects.push_back(clanPhysics);
 
 	return workspace;
 }
