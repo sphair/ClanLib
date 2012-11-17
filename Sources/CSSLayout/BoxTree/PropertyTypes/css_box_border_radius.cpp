@@ -34,7 +34,7 @@ namespace clan
 {
 
 CSSBoxBorderRadius::CSSBoxBorderRadius()
-: type(type_inherit), value_type1(value_type_length), percentage1(0.0f), value_type2(value_type_length), percentage2(0.0f)
+: type(type_two_values), value_type1(value_type_length), percentage1(0.0f), value_type2(value_type_length), percentage2(0.0f)
 {
 }
 
