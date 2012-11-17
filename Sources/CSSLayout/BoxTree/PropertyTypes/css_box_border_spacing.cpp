@@ -34,7 +34,7 @@ namespace clan
 {
 
 CSSBoxBorderSpacing::CSSBoxBorderSpacing()
-: type(type_inherit)
+: type(type_two_lengths), length1(0.0f, CSSBoxLength::type_px), length2(0.0f, CSSBoxLength::type_px)
 {
 }
 
