@@ -62,6 +62,10 @@ Signal_v1<float> &PhysicWorld::sig_world_step()
 	return impl->sig_world_step;
 }
 
+int PhysicWorld::get_physic_scale() const
+{
+	return (int)impl->physic_scale;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 

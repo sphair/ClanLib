@@ -33,7 +33,6 @@
 #include "../Box2D/Box2D.h"
 #include "API/Physics/World/physic_world.h"
 #include "API/Physics/World/physic_world_description.h"
-#include "API/Physics/physics.h"
 
 namespace clan
 {

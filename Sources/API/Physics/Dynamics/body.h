@@ -74,7 +74,7 @@ public:
 	/// \brief get the position of the body.
 	Vec2f get_position() const;
 
-	/// \brief get angle of the body
+	/// \brief get the angle of the body
 	Angle get_angle() const;
 
 
@@ -83,7 +83,14 @@ public:
 /// \{
 public:
 
+	/// \brief add a fixture to the body.
 	void add_fixture(const FixtureDescription &fixture);
+
+	/// \brief set the position of the body.
+	void set_position(const Vec2f &pos);
+
+	/// \brief set the angle of the body
+	void set_angle(const Angle &angle);
 
 /// \}
 /// \name Implementation

@@ -29,7 +29,6 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/physics.h"
 
 namespace clan
 {

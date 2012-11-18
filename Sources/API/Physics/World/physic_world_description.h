@@ -32,10 +32,8 @@
 #pragma once
 
 #include "../api_physics.h"
+#include "../../Core/Math/vec2.h"
 #include <memory>
-#ifdef WIN32
-#include <windows.h>
-#endif
 
 namespace clan
 {
@@ -76,6 +74,21 @@ public:
 
 	/// \brief Returns if bodies are allowed to sleep when they come to rest.
 	bool is_sleep_enabled() const;
+
+	/// \brief Returns the world gravity
+	Vec2f get_gravity() const;
+
+	/// \brief Returns the tick timestep.
+	float get_timestep() const;
+
+	/// \brief Returns the amount of velocity iterations on every world tick.
+	int get_velocity_iterations() const;
+
+	/// \brief Returns the amount of position iterations on every world tick.
+	int get_position_iterations() const;
+
+	/// \brief Return the amount of pixels for 1 meter in the Physic World.
+	int get_physic_scale() const;
 
 	/// \brief Returns the object stored in the given data name.
 	std::shared_ptr<PhysicWorldDescriptionData> get_data(const std::string &data_name) const;

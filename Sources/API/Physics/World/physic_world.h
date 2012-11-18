@@ -98,6 +98,8 @@ public:
 	/// \brief Returns the amount of position iterations on every world tick.
 	int get_position_iterations() const;
 
+	/// \brief Return the amount of pixels for 1 meter in the Physic World.
+	int get_physic_scale() const;
 
 /// \}
 /// \name Operations
@@ -123,6 +125,8 @@ private:
 	
 /// \}
 
+	friend class Body;
+	friend class Fixture;
 	friend class Body_Impl;
 	friend class Fixture_Impl;
 };
