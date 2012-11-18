@@ -31,7 +31,7 @@
 #include "../Box2D/Box2D.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/body_description.h"
-#include "API/Physics/physics.h"
+#include "API/Physics/World/physic_world.h"
 #include <memory>
 namespace clan
 {
@@ -57,7 +57,8 @@ public:
 //																						___________________
 //																						A T T R I B U T E S
 public:
-	b2Body *body;	//Should this be a plain pointer?
+	PhysicWorld *owner;
+	b2Body *body;
 	bool body_occupied;
 
 };

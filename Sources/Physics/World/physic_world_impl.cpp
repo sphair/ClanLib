@@ -46,7 +46,7 @@ PhysicWorld_Impl::PhysicWorld_Impl()
 	position_iterations (3),
 	physic_scale		(100)
 {	
-	world.Step(timestep,velocity_iterations,position_iterations); //Doing so inits the world and allows adding bodies to it.
+	//world.Step(timestep,velocity_iterations,position_iterations); //Doing so inits the world and allows adding bodies to it.
 }
 
 //																											___________________																											
@@ -73,6 +73,9 @@ void PhysicWorld_Impl::step(float timestep, int velocity_iterations, int positio
 
 b2Body *PhysicWorld_Impl::create_body(const b2BodyDef &description)
 {
+	//b2BodyDef def = description;
+	//def.position = (1.0f/physic_scale) * def.position; //change to a better physic_scale handling
+
 	return world.CreateBody(&description);
 }
 //																											___________________																											

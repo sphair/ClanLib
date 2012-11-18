@@ -51,6 +51,7 @@ Body::Body(PhysicWorld &pw, const BodyDescription &description)
 	if(!pw.is_null())
 	{
 		impl->create_body(pw,description);
+		impl->owner = &pw;
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicWorld object");
@@ -70,6 +71,8 @@ void Body::throw_if_null() const
 
 Vec2f Body::get_position() const
 {
+	//float scale = impl->owner->impl->physic_scale; //change to a better physic scaling.
+
 	b2Vec2 vec = impl->body->GetPosition();
 	return Vec2f(vec.x, vec.y);
 }
@@ -87,7 +90,18 @@ Angle Body::get_angle() const
 void Body::add_fixture(const FixtureDescription &description)
 {
  	impl->body->CreateFixture(&description.impl->fixtureDef); //Return a fixture object here.
+}
 
+void Body::set_position(const Vec2f &pos)
+{
+	//float scale = impl->owner->impl->physic_scale; //change to a better physic scaling.
+	impl->body->SetTransform(b2Vec2(pos.x, pos.y), impl->body->GetAngle());
+
+}
+
+void Body::set_angle(const Angle &angle)
+{
+	impl->body->SetTransform(impl->body->GetPosition(), angle.to_radians());
 }
 
 }

@@ -64,6 +64,7 @@ public:
 	BodyDescription();
 
 	/// \brief Constructs a BodyDescription
+	///
 	/// \param copy = Body Description
 	BodyDescription(const BodyDescription &copy);
 
@@ -128,6 +129,7 @@ private:
 
 	std::shared_ptr<BodyDescription_Impl> impl;
 /// \}
+	friend class Body;
 	friend class Body_Impl;
 };
 

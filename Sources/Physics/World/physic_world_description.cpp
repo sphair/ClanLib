@@ -33,8 +33,8 @@
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// PhysicWorldDescription construction:
+//																											_______________________																											
+//																											C O N S T R U C T O R S
 
 PhysicWorldDescription::PhysicWorldDescription() 
 : impl(new PhysicWorldDescription_Impl)
@@ -49,8 +49,34 @@ PhysicWorldDescription::~PhysicWorldDescription()
 {
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// PhysicWorldDescription attributes:
+//																											___________________																											
+//																											A T T R I B U T E S
+
+
+Vec2f PhysicWorldDescription::get_gravity() const
+{
+	return Vec2f(impl->gravity.x,impl->gravity.y);
+}
+
+float PhysicWorldDescription::get_timestep() const
+{
+	return impl->timestep;
+}
+
+int PhysicWorldDescription::get_velocity_iterations() const
+{
+	return impl->velocity_iterations;
+}
+
+int PhysicWorldDescription::get_position_iterations() const
+{
+	return impl->position_iterations;
+}
+
+int PhysicWorldDescription::get_physic_scale() const
+{
+	return impl->physic_scale;
+}
 
 std::shared_ptr<PhysicWorldDescriptionData> PhysicWorldDescription::get_data(const std::string &name) const
 {
@@ -62,8 +88,8 @@ std::shared_ptr<PhysicWorldDescriptionData> PhysicWorldDescription::get_data(con
 		return std::shared_ptr<PhysicWorldDescriptionData>();
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// PhysicWorldDescription operations:
+//																											___________________																											
+//																											O P E R A T I O N S
 
 PhysicWorldDescription &PhysicWorldDescription::operator =(const PhysicWorldDescription &copy)
 {
@@ -134,8 +160,5 @@ void PhysicWorldDescription::set_physic_scale(int pixels)
 		impl->physic_scale = 100.0f;
 	}
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// PhysicWorldDescription implementation:
 
 }
