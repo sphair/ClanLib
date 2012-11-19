@@ -36,6 +36,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 
 	int window_x_size = 640;
 	int window_y_size = 480;
+
 	// Set the window
 	DisplayWindowDescription desc;
 	desc.set_title("ClanLib BasicPhysics Example");
@@ -56,14 +57,14 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 
 	//Setup ground body
 	BodyDescription ground_desc;
-	ground_desc.set_position(Vec2f(window_x_size/2.0f,window_y_size));
+	ground_desc.set_position(Vec2f(window_x_size/2.0f, (float)window_y_size));
 	ground_desc.set_type(body_static);
 
 	Body ground(phys_world,ground_desc);
 
 	//Setup ground fixture
 	PolygonShape ground_shape;
-	ground_shape.SetAsBox(window_x_size,20.0f,Vec2f(0.0f,0.0f),Angle(0,angle_degrees));
+	ground_shape.SetAsBox((float)window_x_size, 20.0f, Vec2f(0.0f, 0.0f), Angle(0, angle_degrees));
 
 	FixtureDescription fixture_desc;
 	fixture_desc.set_shape(ground_shape);
@@ -118,7 +119,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 		last_time = current_time;
 
 		canvas.clear();
-		canvas.fill(0.0f,window_y_size,window_x_size,window_y_size-20,Colorf::crimson);
+		canvas.fill(0.0f, (float)canvas.get_height(), (float)canvas.get_width(), canvas.get_height() - 20.0f, Colorf::crimson);
 
 		phys_world.step();
 		Vec2f pos = box.get_position();

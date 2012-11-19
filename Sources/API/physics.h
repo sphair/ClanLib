@@ -35,7 +35,7 @@
 #pragma managed(push, off)
 #endif
 
-#include "Physics/physics.h"
+#include "Physics/api_physics.h"
 #include "Physics/World/physic_world.h"
 #include "Physics/World/physic_world_description.h"
 #include "Physics/Dynamics/body.h"
