@@ -110,6 +110,8 @@ public:
 	/// \param text = String Ref
 	void set_text(const std::string &text);
 
+	void set_text_color(const Colorf color);
+
 	/// \brief Set alignment
 	///
 	/// \param alignment = Alignment
