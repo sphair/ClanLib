@@ -36,6 +36,10 @@ int Program::main(const std::vector<std::string> &args)
 
 	create_imageview_test(root);
 
+	Label *label_component = new Label(root);
+	label_component->set_text("This label should be red");
+	label_component->set_text_color(Colorf::red);
+
 	root->update_layout();
 
 	gui.exec();

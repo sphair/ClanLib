@@ -54,15 +54,20 @@ namespace clan
 class Label_Impl
 {
 public:
-	Label_Impl() : alignment(Label::align_left)
+	Label_Impl() : alignment(Label::align_left), is_user_color(false)
 	{
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_style_changed(const CSSPropertyList &props);
 
 	Label *label;
 	std::string text;
 	Label::Alignment alignment;
+	Slot slot;
+
+	Colorf user_color;
+	bool is_user_color;
 
 };
 
@@ -74,6 +79,8 @@ Label::Label(GUIComponent *parent)
 {
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
+	impl->slot = sig_style_changed().connect(impl.get(), &Label_Impl::on_style_changed);
+
 }
 
 Label::~Label()
@@ -122,6 +129,14 @@ void Label::set_text(const std::string &text)
 	request_repaint();
 }
 
+void Label::set_text_color(const Colorf color)
+{
+	impl->user_color = color;
+	impl->is_user_color = true;
+	update_style();
+}
+
+
 Label::Alignment Label::get_alignment() const
 {
 	return impl->alignment;
@@ -155,5 +170,13 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	FontMetrics metrics = label->get_font().get_font_metrics();
 	label->get_font().draw_text_ellipsis(canvas, content_box.left, content_box.top + metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
 }
+
+void Label_Impl::on_style_changed(const CSSPropertyList &props)
+{
+	if (is_user_color)
+	{
+		label->get_css_properties().color.color = user_color;
+	}
+}	
 
 }

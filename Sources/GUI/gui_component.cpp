@@ -208,6 +208,11 @@ const CSSBoxProperties &GUIComponent::get_css_properties() const
 	return impl->css_properties;
 }
 
+CSSBoxProperties &GUIComponent::get_css_properties()
+{
+	return impl->css_properties;
+}
+
 bool GUIComponent::has_focus() const
 {
 	return impl->gui_manager.lock()->has_focus(this);
@@ -1010,7 +1015,6 @@ void GUIComponent::update_style()
 
 void GUIComponent::update_layout()
 {
-	get_top_level_component()->impl->update_style();
 	get_top_level_component()->impl->layout_content();
 	request_repaint();
 }

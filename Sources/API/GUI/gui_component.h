@@ -138,6 +138,9 @@ public:
 	/// \brief Returns the standard W3C CSS properties active for this component
 	const CSSBoxProperties &get_css_properties() const;
 
+	/// \brief Returns the standard W3C CSS properties active for this component
+	CSSBoxProperties &get_css_properties();
+
 	/// \brief Returns true if the component has the focus.
 	bool has_focus() const;
 
