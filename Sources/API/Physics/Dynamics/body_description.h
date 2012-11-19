@@ -41,6 +41,7 @@ namespace clan
 class BodyDescription_Impl;
 class Pointf;
 class Angle;
+class PhysicWorld;
 
 /// \brief Body types.
 	enum BodyType
@@ -62,6 +63,11 @@ public:
 
 	/// \brief Constructs a null instance.
 	BodyDescription();
+
+	/// \brief Constructs a BodyDescription
+	///
+	/// \param pw   = Physic World
+	BodyDescription(const PhysicWorld &pw);
 
 	/// \brief Constructs a BodyDescription
 	///

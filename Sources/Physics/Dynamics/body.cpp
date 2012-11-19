@@ -45,13 +45,12 @@ Body::Body()
 {
 }
 
-Body::Body(PhysicWorld &pw, const BodyDescription &description)
-: impl(new Body_Impl())
+Body::Body(const BodyDescription &description)
+: impl(new Body_Impl(*description.impl->owner))
 {
-	if(!pw.is_null())
+	if(impl->owner)
 	{
-		impl->create_body(pw,description);
-		impl->owner = &pw;
+		impl->create_body(description);
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicWorld object");
@@ -71,37 +70,64 @@ void Body::throw_if_null() const
 
 Vec2f Body::get_position() const
 {
-	//float scale = impl->owner->impl->physic_scale; //change to a better physic scaling.
-
+	float scale = impl->owner->physic_scale;
 	b2Vec2 vec = impl->body->GetPosition();
-	return Vec2f(vec.x, vec.y);
+
+	return Vec2f(vec.x*scale, vec.y*scale);
 }
 
 Angle Body::get_angle() const
 {
 	float angle = impl->body->GetAngle();
 	impl->body->GetAngle();
+
 	return Angle(angle,angle_radians);
 }
 
-//																											___________________																											
-//																											O P E R A T I O N S
-
-void Body::add_fixture(const FixtureDescription &description)
+Vec2f Body::get_linear_velocity() const
 {
- 	impl->body->CreateFixture(&description.impl->fixtureDef); //Return a fixture object here.
+	float scale = impl->owner->physic_scale;
+	b2Vec2 vec = impl->body->GetLinearVelocity();
+
+	return Vec2f(vec.x*scale, vec.y*scale);
 }
 
+Angle Body::get_angular_velocity() const
+{
+	float velocity = impl->body->GetAngularVelocity();
+
+	return Angle(velocity,angle_radians);
+}
+//																											___________________																											
+//																											O P E R A T I O N S
+/*
+Fixture Body::create_fixture(const FixtureDescription &description)
+{
+	Fixture fixture(*this,description);
+ 	
+	return fixture;
+}
+*/
 void Body::set_position(const Vec2f &pos)
 {
-	//float scale = impl->owner->impl->physic_scale; //change to a better physic scaling.
+	float scale = impl->owner->physic_scale;
 	impl->body->SetTransform(b2Vec2(pos.x, pos.y), impl->body->GetAngle());
-
 }
 
 void Body::set_angle(const Angle &angle)
 {
 	impl->body->SetTransform(impl->body->GetPosition(), angle.to_radians());
+}
+
+void Body::set_linear_velocity(const Vec2f &velocity)
+{
+	float scale = impl->owner->physic_scale;
+	impl->body->SetLinearVelocity(b2Vec2(velocity.x/scale, velocity.y/scale));
+}
+
+void Body::set_angular_velocity(const Angle &velocity)
+{
+	impl->body->SetAngularVelocity(velocity.to_radians());
 }
 
 }

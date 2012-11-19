@@ -80,6 +80,9 @@ public:
 	/// \brief Signal emitted when world's step is called.
 	Signal_v1<float> &sig_world_step();
 
+	/// \brief Signal emitted when world's destroyed.
+	Signal_v0 &sig_world_destroyed();
+
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }
 
@@ -125,7 +128,10 @@ private:
 	
 /// \}
 
+	friend class PolygonShape;
+	friend class BodyDescription;
 	friend class Body;
+	friend class FixtureDescription;
 	friend class Fixture;
 	friend class Body_Impl;
 	friend class Fixture_Impl;

@@ -39,8 +39,9 @@ class FixtureDescription_Impl
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	FixtureDescription_Impl()
-	: fixtureDef()
+	FixtureDescription_Impl(PhysicWorld_Impl &pw_impl)
+	: fixtureDef(),
+	  owner(&pw_impl)
 	{
 	}
 
@@ -57,6 +58,7 @@ public:
 //																						___________________
 //																						A T T R I B U T E S
 public:
+	PhysicWorld_Impl *owner;
 	b2FixtureDef fixtureDef;
 
 };

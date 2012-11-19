@@ -54,7 +54,8 @@ void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &descript
 		fixture_occupied = true;
 	}
 		
-	fixture = body.impl->create_fixture(description.impl->fixtureDef);
+	fixture = body.impl->body->CreateFixture(&description.impl->fixtureDef);
+	owner = body.impl->owner;
 }
 
 

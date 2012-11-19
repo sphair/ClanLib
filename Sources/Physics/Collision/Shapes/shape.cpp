@@ -33,16 +33,6 @@
 namespace clan
 {
 
-Shape_Impl::Shape_Impl()
-{
-
-}
-
-Shape_Impl::~Shape_Impl()
-{
-
-}
-
 Shape::Shape()
 : shape_impl(new Shape_Impl)
 {

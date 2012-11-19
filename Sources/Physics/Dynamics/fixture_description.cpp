@@ -38,8 +38,13 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 FixtureDescription::FixtureDescription()
-: impl(new FixtureDescription_Impl)
 {
+}
+
+FixtureDescription::FixtureDescription(const PhysicWorld &pw)
+: impl(new FixtureDescription_Impl(*pw.impl))
+{
+
 }
 
 FixtureDescription::FixtureDescription(const FixtureDescription &copy)
@@ -61,7 +66,6 @@ void FixtureDescription::throw_if_null() const
 
 //																											___________________																											
 //																											O P E R A T I O N S
-
 
 void FixtureDescription::set_shape(const Shape &shape)
 {

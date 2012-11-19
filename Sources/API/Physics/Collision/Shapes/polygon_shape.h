@@ -39,6 +39,7 @@
 namespace clan
 {
 
+class PhysicWorld;
 class PolygonShape_Impl;
 class Angle;
 /// \brief Polygon Shape class.
@@ -53,12 +54,23 @@ public:
 	/// \brief Constructs a null instance.
 	PolygonShape();
 
+	/// \brief Constructs a null instance.
+	/// 
+	/// \param pw = Physic World.
+	PolygonShape(const PhysicWorld &pw);
+
 	~PolygonShape();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
 /// \}
 /// \name Operations
@@ -69,8 +81,8 @@ public:
 	//int32 	GetChildCount () const
 	//void 	Set (const b2Vec2 *vertices, int32 vertexCount)
 
-	void 	SetAsBox (float width, float height);
-	void 	SetAsBox (float width, float height, const Vec2f &center, Angle &angle);
+	void 	set_as_box (float width, float height);
+	void 	set_as_box (float width, float height, const Vec2f &center, Angle &angle);
 	//bool 	TestPoint (const b2Transform &transform, const b2Vec2 &p) const
 	//bool 	RayCast (b2RayCastOutput *output, const b2RayCastInput &input, const b2Transform &transform, int32 childIndex) const
 	//void 	ComputeAABB (b2AABB *aabb, const b2Transform &transform, int32 childIndex) const

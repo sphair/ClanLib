@@ -47,6 +47,7 @@ PhysicWorld::PhysicWorld(const PhysicWorldDescription &description)
 
 PhysicWorld::~PhysicWorld()
 {
+	impl->sig_world_destroyed.invoke();
 }
 
 //																											___________________																											
@@ -57,15 +58,24 @@ void PhysicWorld::throw_if_null() const
 		throw Exception("PhysicWorld is null");
 }
 
+int PhysicWorld::get_physic_scale() const
+{
+	return (int)impl->physic_scale;
+}
+
+//																											_____________																							
+//																											S I G N A L S
+
 Signal_v1<float> &PhysicWorld::sig_world_step()
 {
 	return impl->sig_world_step;
 }
 
-int PhysicWorld::get_physic_scale() const
+Signal_v0 &PhysicWorld::sig_world_destroyed()
 {
-	return (int)impl->physic_scale;
+	return impl->sig_world_destroyed;
 }
+
 //																											___________________																											
 //																											O P E R A T I O N S
 

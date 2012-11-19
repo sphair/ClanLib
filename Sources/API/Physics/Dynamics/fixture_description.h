@@ -44,10 +44,16 @@ class CL_API_PHYSICS FixtureDescription
 /// \name Construction
 /// \{
 public:
+	/// \brief Constructs a null instance.
 	FixtureDescription();
 
-	FixtureDescription(const FixtureDescription &copy);
+	/// \brief Constructs a Fixture Description
+	///
+	/// \param pw = Physic World
+	FixtureDescription(const PhysicWorld &pw);
 
+	FixtureDescription(const FixtureDescription &copy);
+	
 	virtual ~FixtureDescription();
 
 /// \}

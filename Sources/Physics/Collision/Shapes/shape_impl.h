@@ -40,8 +40,8 @@ public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	Shape_Impl();
-	~Shape_Impl();
+	Shape_Impl() {};
+	virtual ~Shape_Impl() { return; }
 
 	b2Shape *get_shape();
 

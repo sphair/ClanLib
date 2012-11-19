@@ -29,7 +29,9 @@
 #include "Physics/precomp.h"
 #include "../Box2D/Box2D.h"
 #include "body_description_impl.h"
+#include "../World/physic_world_impl.h"
 #include "API/Physics/Dynamics/body_description.h"
+#include "API/Physics/World/physic_world.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/angle.h"
 
@@ -37,9 +39,15 @@ namespace clan
 {
 //																											_______________________																											
 //																											C O N S T R U C T O R S
+
 BodyDescription::BodyDescription()
-: impl(new BodyDescription_Impl)
 {
+
+}
+BodyDescription::BodyDescription(const PhysicWorld &pw)
+: impl(new BodyDescription_Impl(*pw.impl))
+{
+
 }
 
 BodyDescription::BodyDescription(const BodyDescription &copy)
@@ -90,11 +98,13 @@ void BodyDescription::set_type(const BodyType type)
 
 void BodyDescription::set_position(const Vec2f &position)
 {
-	impl->bodyDef.position = b2Vec2(position.x, position.y);
+	float scale = impl->owner->physic_scale;
+	impl->bodyDef.position = b2Vec2(position.x/scale, position.y/scale);
 }
 void BodyDescription::set_position(const Pointf &position)
 {
-	impl->bodyDef.position = b2Vec2(position.x, position.y);
+	float scale = impl->owner->physic_scale;
+	impl->bodyDef.position = b2Vec2(position.x/scale, position.y/scale);
 }
 
 void BodyDescription::set_angle(const Angle &angle)
@@ -104,7 +114,8 @@ void BodyDescription::set_angle(const Angle &angle)
 
 void BodyDescription::set_linear_velocity(const Vec2f &velocity)
 {
-	impl->bodyDef.linearVelocity = b2Vec2(velocity.x, velocity.y);
+	float scale = impl->owner->physic_scale;
+	impl->bodyDef.linearVelocity = b2Vec2(velocity.x/scale, velocity.y/scale);
 }
 
 void BodyDescription::set_angular_velocity(const Angle &velocity)
