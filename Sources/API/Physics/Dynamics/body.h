@@ -26,15 +26,15 @@
 **    Arkadiusz Kalinowski
 */
 
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
+/// \{
+
 #pragma once
 
 #include "../api_physics.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
 
-
-/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
-/// \{
 namespace clan
 {
 
@@ -54,9 +54,8 @@ public:
 
 	/// \brief Constructs a World
 	///
-	/// \param pw = Physic World
 	/// \param description = Body Description
-	Body(PhysicWorld &pw, const BodyDescription &description);
+	Body(const BodyDescription &description);
 
 	~Body();
 
@@ -71,11 +70,17 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief get the position of the body.
+	/// \brief Get the position of the body.
 	Vec2f get_position() const;
 
-	/// \brief get the angle of the body
+	/// \brief Get the angle of the body
 	Angle get_angle() const;
+
+	/// \brief Return the linear velocity of the body.
+	Vec2f get_linear_velocity() const;
+
+	/// \brief Return the angular velocity of the body.
+	Angle get_angular_velocity() const;
 
 
 /// \}
@@ -84,13 +89,19 @@ public:
 public:
 
 	/// \brief add a fixture to the body.
-	void add_fixture(const FixtureDescription &fixture);
+	//Fixture create_fixture(const FixtureDescription &fixture);
 
 	/// \brief set the position of the body.
 	void set_position(const Vec2f &pos);
 
 	/// \brief set the angle of the body
 	void set_angle(const Angle &angle);
+
+	/// \brief set the linear velocity of the body.
+	void set_linear_velocity(const Vec2f &velocity);
+
+	/// \brief set the angular velocity of the body.
+	void set_angular_velocity(const Angle &velocity);
 
 /// \}
 /// \name Implementation

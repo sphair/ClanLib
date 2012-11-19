@@ -35,13 +35,15 @@
 namespace clan
 {
 
-Body_Impl::Body_Impl()
+Body_Impl::Body_Impl(PhysicWorld_Impl &pw_impl)
+:	body(NULL),
+	body_occupied(false),
+	owner(&pw_impl)
 {
-	body = NULL;
-	body_occupied = false;
+
 }
 
-void Body_Impl::create_body(PhysicWorld &pw, const BodyDescription &description)
+void Body_Impl::create_body(const BodyDescription &description)
 {
 	
 	if(body_occupied)	//Add proper handling of physic world in a case of a deletion
@@ -53,13 +55,15 @@ void Body_Impl::create_body(PhysicWorld &pw, const BodyDescription &description)
 		body_occupied = true;
 	}
 
-	body = pw.impl->create_body(description.impl->bodyDef);
+	body = owner->create_body(description.impl->bodyDef);
 		
 }
 
+/*
 b2Fixture *Body_Impl::create_fixture(b2FixtureDef &description) // obsolete
 {
 	return body->CreateFixture(&description);
 }
+*/
 
 }

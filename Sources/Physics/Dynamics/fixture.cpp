@@ -31,7 +31,7 @@
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
 //#include "API/Physics/World/physic_world.h"
-//#include "../World/physic_world_impl.h"
+#include "../World/physic_world_impl.h"
 
 namespace clan
 {
@@ -65,10 +65,23 @@ void Fixture::throw_if_null() const
 		throw Exception("Fixture is null");
 }
 
-
+bool Fixture::is_sensor() const
+{
+	return impl->fixture->IsSensor();
+}
 
 //																											___________________																											
 //																											O P E R A T I O N S
 
+void Fixture::set_as_sensor(const bool value)
+{
+	impl->fixture->SetSensor(value);
+}
+
+bool Fixture::test_point(const Vec2f &p) const
+{
+	float scale = impl->owner->physic_scale;
+	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
+}
 
 }

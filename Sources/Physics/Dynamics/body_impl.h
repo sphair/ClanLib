@@ -41,13 +41,14 @@ class Body_Impl
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Body_Impl();
+	Body_Impl(PhysicWorld_Impl &pw_impl);
 
 	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); }
 //																						___________________
 //																						O P E R A T I O N S
-	void create_body(PhysicWorld &pw, const BodyDescription &description);
-	b2Fixture *create_fixture(b2FixtureDef &description); //obsolete
+	void create_body(const BodyDescription &description);
+
+	//b2Fixture *create_fixture(b2FixtureDef &description); //obsolete
 //																						_____________
 //																						S I G N A L S
 
@@ -57,7 +58,7 @@ public:
 //																						___________________
 //																						A T T R I B U T E S
 public:
-	PhysicWorld *owner;
+	PhysicWorld_Impl *owner;
 	b2Body *body;
 	bool body_occupied;
 

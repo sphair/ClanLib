@@ -63,7 +63,7 @@ public:
 //																						_____________
 //																						S I G N A L S
 	Signal_v1<float> sig_world_step;
-
+	Signal_v0 sig_world_destroyed;
 //																						___________________
 //																						A T T R I B U T E S
 /// \}

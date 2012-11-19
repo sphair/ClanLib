@@ -30,6 +30,7 @@
 
 #include "../api_physics.h"
 #include "../World/physic_world.h"
+#include "../../Core/Math/vec2.h"
 #include <memory>
 
 /// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
@@ -56,7 +57,6 @@ public:
 	/// \param description = Fixture Description
 	Fixture(Body &body, const FixtureDescription &description);
 
-
 	~Fixture();
 
 /// \}
@@ -70,12 +70,20 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
+	/// \brief Check if Fixture is a sensor.
+	bool is_sensor() const;
+
 
 /// \}
 /// \name Operations
 /// \{
 public:
 
+	/// \brief Set the fixture as a sensor.
+	void set_as_sensor (const bool value = true);
+
+	/// \brief Checks given point for collision with the fixture.
+	bool test_point (const Vec2f &p) const;
 
 /// \}
 /// \name Implementation

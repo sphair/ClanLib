@@ -34,12 +34,19 @@
 namespace clan
 {
 
+class PhysicWorld_Impl;
+
 class PolygonShape_Impl
 {
 public:
-	PolygonShape_Impl();
-	virtual ~PolygonShape_Impl();
+	PolygonShape_Impl(PhysicWorld_Impl &pw_impl)
+	:	owner(&pw_impl)	
+	{
+			
+	}
+	virtual ~PolygonShape_Impl() { return; }
 
+	PhysicWorld_Impl *owner;
 	b2PolygonShape shape;
 };
 

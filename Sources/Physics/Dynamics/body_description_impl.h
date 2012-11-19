@@ -33,13 +33,16 @@
 namespace clan
 {
 
+class PhysicWorld_Impl;
+
 class BodyDescription_Impl
 {
 /// \name Construction
 /// \{
 public:
-	BodyDescription_Impl()
-	: bodyDef()
+	BodyDescription_Impl(PhysicWorld_Impl &pw_impl)
+	:	bodyDef(),
+		owner(&pw_impl)
 	{
 	}
 	
@@ -49,7 +52,10 @@ public:
 /// \name Attributes
 /// \{
 public:
+	PhysicWorld_Impl *owner;
 	b2BodyDef bodyDef;
+
+/// \}
 
 };
 

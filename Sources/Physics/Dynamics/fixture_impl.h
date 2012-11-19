@@ -33,8 +33,9 @@
 namespace clan
 {
 
-	class Body;
-	class FixtureDescription;
+class Body;
+class FixtureDescription;
+class PhysicWorld_Impl;
 
 class Fixture_Impl
 {
@@ -61,7 +62,8 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 public:
-	b2Fixture *fixture;	//Should this be a plain pointer?
+	PhysicWorld_Impl *owner;
+	b2Fixture *fixture;
 	bool fixture_occupied;
 
 };
