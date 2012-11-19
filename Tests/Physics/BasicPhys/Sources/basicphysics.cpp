@@ -32,64 +32,21 @@
 // The start of the Application
 int BasicPhysics::start(const std::vector<std::string> &args)
 {
+	//Remove the need to send physic world to every object. Instead send just the description.
+
+	//Fix having two fixtures working weirdly.
 	quit = false;
 
 	int window_x_size = 640;
 	int window_y_size = 480;
-
 	// Set the window
 	DisplayWindowDescription desc;
 	desc.set_title("ClanLib BasicPhysics Example");
 	desc.set_size(Size(window_x_size, window_y_size), true);
-	desc.set_allow_resize(true);
+	desc.set_allow_resize(false);
 
 	DisplayWindow window(desc);
 	
-	//Setup physic world
-	PhysicWorldDescription phys_desc;
-	phys_desc.set_gravity(0.0f,20.0f);
-	phys_desc.set_sleep(true);
-	phys_desc.set_timestep(1.0f/60.0f);
-	phys_desc.set_velocity_iterations(8);
-	phys_desc.set_position_iterations(3);
-
-	PhysicWorld phys_world(phys_desc);
-
-	//Setup ground body
-	BodyDescription ground_desc;
-	ground_desc.set_position(Vec2f(window_x_size/2.0f, (float)window_y_size));
-	ground_desc.set_type(body_static);
-
-	Body ground(phys_world,ground_desc);
-
-	//Setup ground fixture
-	PolygonShape ground_shape;
-	ground_shape.SetAsBox((float)window_x_size, 20.0f, Vec2f(0.0f, 0.0f), Angle(0, angle_degrees));
-
-	FixtureDescription fixture_desc;
-	fixture_desc.set_shape(ground_shape);
-	
-	ground.add_fixture(fixture_desc);
-
-	//Setup box body
-	BodyDescription box_desc;
-	box_desc.set_position(Vec2f(50.0f,100.0f));
-	box_desc.set_type(body_dynamic);
-	box_desc.set_linear_velocity(Vec2f(20.0f,0.0f));
-
-	//Setup box fixture
-	PolygonShape box_shape;
-	box_shape.SetAsBox(5.0f,5.0f,Vec2f(0.0f,0.0f),Angle(0,angle_degrees));
-
-	FixtureDescription fixture_desc2;
-	fixture_desc2.set_shape(ground_shape);
-	fixture_desc2.set_restitution(0.5f);
-	fixture_desc2.set_friction(0.0f);
-
-	Body box(phys_world,box_desc);
-
-	box.add_fixture(fixture_desc2);
-
 	// Connect the Window close event
 	Slot slot_quit = window.sig_window_close().connect(this, &BasicPhysics::on_window_close);
 
@@ -100,16 +57,66 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 
 	// Load a sprite from a png-file
-	Image spr_logo(canvas, "tux_small.png");
+	Sprite spr_logo(canvas, "tux_small.png");
 	spr_logo.set_alignment(origin_center);
+
+	//Setup physic world
+	PhysicWorldDescription phys_desc;
+	phys_desc.set_gravity(0.0f,10.0f);
+	phys_desc.set_sleep(true);
+	phys_desc.set_physic_scale(100);
+	phys_desc.set_timestep(1.0f/60.0f);
+	phys_desc.set_velocity_iterations(8);
+	phys_desc.set_position_iterations(3);
+
+	PhysicWorld phys_world(phys_desc);
+
+	//Setup ground body
+	BodyDescription ground_desc(phys_world);
+	ground_desc.set_position(Vec2f((float)window_x_size/2.0f,(float)window_y_size));
+	ground_desc.set_type(body_static);
+
+	Body ground(ground_desc);
+
+	//Setup ground fixture
+	PolygonShape ground_shape(phys_world);
+	ground_shape.set_as_box((float)window_x_size,20.0f);
+
+	FixtureDescription fixture_desc(phys_world);
+	fixture_desc.set_shape(ground_shape);
+	
+	Fixture ground_fixture(ground, fixture_desc);
+
+	//Setup box body
+	BodyDescription box_desc(phys_world);
+	box_desc.set_position(Vec2f(50.0f,100.0f));
+	box_desc.set_type(body_dynamic);
+	box_desc.set_linear_velocity(Vec2f(100.0f,0.0f));
+	//box_desc.set_angular_velocity(Angle(90,angle_degrees));
+	Body box(box_desc);
+
+	box_desc.set_position(Vec2f((float)window_x_size-50.0f,100.0f));
+	box_desc.set_linear_velocity(Vec2f(-80.0f,0.0f));
+	//Body box2(phys_world,box_desc);
+
+	//Setup box fixture
+	PolygonShape box_shape(phys_world);
+	box_shape.set_as_box((float)spr_logo.get_width(), (float)spr_logo.get_height());
+
+	FixtureDescription fixture_desc2(phys_world);
+	fixture_desc2.set_shape(ground_shape);
+	fixture_desc2.set_restitution(0.6f);
+	fixture_desc2.set_friction(0.0f);
+
+	Fixture box_fixture(box, fixture_desc2);
+	//Fixture box_fixture2(box2, fixture_desc2);
 
 	Vec2f ground_pos = ground.get_position();
 
-	float sin_count = 0.0f;
-	float ypos = 0.0f;
-	float ydir = 0.3f;
-
 	unsigned int last_time = System::get_time();
+
+	Vec2f pos;
+	Angle angle;
 
 	// Run until someone presses escape
 	while (!quit)
@@ -122,9 +129,19 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 		canvas.fill(0.0f, (float)canvas.get_height(), (float)canvas.get_width(), canvas.get_height() - 20.0f, Colorf::crimson);
 
 		phys_world.step();
-		Vec2f pos = box.get_position();
+		pos = box.get_position();
+		angle = box.get_angle();
 		
+		spr_logo.set_scale(1.0f,1.0f);
+		spr_logo.set_angle(angle);
 		spr_logo.draw(canvas,pos.x,pos.y);
+
+		//pos = box2.get_position();
+		//angle = box2.get_angle();
+
+		//spr_logo.set_scale(-1.0f,1.0f);
+		//spr_logo.set_angle(angle);
+		//spr_logo.draw(canvas,pos.x,pos.y);
 
 		canvas.flush();
 		window.flip(1);
@@ -132,7 +149,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 		// This call processes user input and other events
 		KeepAlive::process(0);
 
-		System::sleep(6);
+		System::sleep(10);
 	}
 
 	return 0;
