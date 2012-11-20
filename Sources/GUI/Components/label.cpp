@@ -131,9 +131,9 @@ void Label::set_text_color(const Colorf color)
 {
 	impl->user_color = color;
 	impl->is_user_color = true;
-	update_style();
+	impl->on_default_properties(get_css_properties());
+	request_repaint();
 }
-
 
 Label::Alignment Label::get_alignment() const
 {
