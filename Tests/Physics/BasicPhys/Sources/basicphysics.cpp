@@ -80,7 +80,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 
 	//Setup ground fixture
 	PolygonShape ground_shape(phys_world);
-	ground_shape.set_as_box((float)window_x_size,20.0f);
+	ground_shape.set_as_box((float)window_x_size/2,20.0f);
 
 	FixtureDescription fixture_desc(phys_world);
 	fixture_desc.set_shape(ground_shape);
@@ -92,24 +92,24 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 	box_desc.set_position(Vec2f(50.0f,100.0f));
 	box_desc.set_type(body_dynamic);
 	box_desc.set_linear_velocity(Vec2f(100.0f,0.0f));
-	//box_desc.set_angular_velocity(Angle(90,angle_degrees));
 	Body box(box_desc);
 
+	box_desc.set_angular_velocity(Angle(-120,angle_degrees));
 	box_desc.set_position(Vec2f((float)window_x_size-50.0f,100.0f));
 	box_desc.set_linear_velocity(Vec2f(-80.0f,0.0f));
-	//Body box2(phys_world,box_desc);
+	Body box2(box_desc);
 
 	//Setup box fixture
 	PolygonShape box_shape(phys_world);
-	box_shape.set_as_box((float)spr_logo.get_width(), (float)spr_logo.get_height());
+	box_shape.set_as_box((float)spr_logo.get_width()/2, (float)spr_logo.get_height()/2);
 
 	FixtureDescription fixture_desc2(phys_world);
-	fixture_desc2.set_shape(ground_shape);
+	fixture_desc2.set_shape(box_shape);
 	fixture_desc2.set_restitution(0.6f);
-	fixture_desc2.set_friction(0.0f);
+	fixture_desc2.set_friction(0.0005f);
 
 	Fixture box_fixture(box, fixture_desc2);
-	//Fixture box_fixture2(box2, fixture_desc2);
+	Fixture box_fixture2(box2, fixture_desc2);
 
 	Vec2f ground_pos = ground.get_position();
 
@@ -117,6 +117,12 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 
 	Vec2f pos;
 	Angle angle;
+
+	//Setup debug draw.
+	PhysicDebugDraw debug_draw(phys_world);
+	debug_draw.set_flags(f_shape|f_aabb);
+
+	GraphicContext gc = canvas.get_gc();
 
 	// Run until someone presses escape
 	while (!quit)
@@ -127,6 +133,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 
 		canvas.clear();
 		canvas.fill(0.0f, (float)canvas.get_height(), (float)canvas.get_width(), canvas.get_height() - 20.0f, Colorf::crimson);
+		
 
 		phys_world.step();
 		pos = box.get_position();
@@ -135,14 +142,16 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 		spr_logo.set_scale(1.0f,1.0f);
 		spr_logo.set_angle(angle);
 		spr_logo.draw(canvas,pos.x,pos.y);
+		
 
-		//pos = box2.get_position();
-		//angle = box2.get_angle();
+		pos = box2.get_position();
+		angle = box2.get_angle();
 
-		//spr_logo.set_scale(-1.0f,1.0f);
-		//spr_logo.set_angle(angle);
-		//spr_logo.draw(canvas,pos.x,pos.y);
-
+		spr_logo.set_scale(-1.0f,1.0f);
+		spr_logo.set_angle(angle);
+		spr_logo.draw(canvas,pos.x,pos.y);
+		debug_draw.draw(canvas);
+		
 		canvas.flush();
 		window.flip(1);
 
