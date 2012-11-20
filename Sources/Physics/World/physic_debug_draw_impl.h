@@ -31,15 +31,15 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/World/physic_world_description.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Physics/World/physic_debug_draw.h"
 
 namespace clan
 {
-	class BodyDescription;
 
-class PhysicWorld_Impl
+class Canvas;
+class PhysicWorld_Impl;
+
+class PhysicDebugDraw_Impl : public b2Draw
 {
 public:
 
@@ -47,38 +47,46 @@ public:
 //																						C O N S T R U C T O R S
 /// \name Construction
 /// \{
-	PhysicWorld_Impl();
+	PhysicDebugDraw_Impl(PhysicWorld_Impl &pw_impl);
 
-	virtual ~PhysicWorld_Impl() { return; }
+	virtual ~PhysicDebugDraw_Impl() { return; }
 //																						___________________
 //																						O P E R A T I O N S
 /// \name Operations
 /// \{
-	void create(const PhysicWorldDescription &description);
-	void step();
-	void step(float timestep, int velocity_iterations, int position_iterations);
 
-	b2Body		*create_body(const b2BodyDef &description);
-	b2Joint		*create_joint(const b2JointDef &description);
+	void DrawPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+
+	void DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount, const b2Color& color);
+
+	void DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color);
+
+	void DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color);
+
+	void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color);
+
+	void DrawTransform(const b2Transform& xf);
+
+    void DrawPoint(const b2Vec2& p, float32 size, const b2Color& color);
+
+    void DrawString(int x, int y, const char* string, ...); 
+
+    void DrawAABB(b2AABB* aabb, const b2Color& color);
 
 //																						_____________
 //																						S I G N A L S
-	Signal_v1<float> sig_world_step;
-	Signal_v0 sig_world_destroyed;
+	
+
 //																						___________________
 //																						A T T R I B U T E S
 /// \}
 /// \name Attributes
 /// \{
 public:
-	b2World world;
-	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
-	float timestep;
-	int velocity_iterations;
-	int position_iterations;
-	std::string name;
+	PhysicWorld_Impl *owner;
+	float physic_scale;
+	Canvas *used_canvas;
 /// \}
-
 };
 
 }

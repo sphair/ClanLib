@@ -28,6 +28,8 @@
 
 #include "Physics/precomp.h"
 #include "physic_world_impl.h"
+#include "API/Physics/World/physic_world.h"
+
 namespace clan
 {
 
