@@ -173,7 +173,7 @@ void Label_Impl::on_default_properties(CSSBoxProperties &properties)
 {
 	if (is_user_color)
 	{
-		properties.color.color = Colorf::red;
+		properties.color.color = user_color;
 		properties.color.type = CSSBoxColor::type_color;
 	}
 }	
