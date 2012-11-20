@@ -59,12 +59,11 @@ public:
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed(const CSSPropertyList &props);
+	void on_default_properties(CSSBoxProperties &properties);
 
 	Label *label;
 	std::string text;
 	Label::Alignment alignment;
-	Slot slot;
 
 	Colorf user_color;
 	bool is_user_color;
@@ -79,8 +78,7 @@ Label::Label(GUIComponent *parent)
 {
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
-	impl->slot = sig_style_changed().connect(impl.get(), &Label_Impl::on_style_changed);
-
+	func_default_properties().set(impl.get(), &Label_Impl::on_default_properties);
 }
 
 Label::~Label()
@@ -171,11 +169,12 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	label->get_font().draw_text_ellipsis(canvas, content_box.left, content_box.top + metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
 }
 
-void Label_Impl::on_style_changed(const CSSPropertyList &props)
+void Label_Impl::on_default_properties(CSSBoxProperties &properties)
 {
 	if (is_user_color)
 	{
-		label->get_css_properties().color.color = user_color;
+		properties.color.color = Colorf::red;
+		properties.color.type = CSSBoxColor::type_color;
 	}
 }	
 
