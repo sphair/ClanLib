@@ -36,10 +36,6 @@
 #include "../api_physics.h"
 #include "../../Core/Signals/signal_v0.h"
 #include "../../Core/Signals/signal_v1.h"
-#include "../../Core/Signals/signal_v2.h"
-#include "../../Core/Signals/callback_v1.h"
-#include "../../Core/Signals/callback_0.h"
-#include "../../Core/Signals/callback_4.h"
 #include <memory>
 
 #if !defined(WIN32) && !defined(__APPLE__)
@@ -128,13 +124,13 @@ private:
 	
 /// \}
 
+	friend class PhysicDebugDraw;
 	friend class PolygonShape;
 	friend class BodyDescription;
 	friend class Body;
 	friend class FixtureDescription;
 	friend class Fixture;
-	friend class Body_Impl;
-	friend class Fixture_Impl;
+
 };
 
 }

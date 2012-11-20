@@ -27,57 +27,61 @@
 */
 
 #include "Physics/precomp.h"
-#include "physic_world_description_impl.h"
+#include "physic_debug_draw_impl.h"
 #include "physic_world_impl.h"
-#include "API/Physics/Dynamics/body_description.h"
-
+#include "API/Physics/World/physic_debug_draw.h"
+#include "API/Physics/World/physic_world.h"
 
 namespace clan
 {
 
 //																											_______________________																											
 //																											C O N S T R U C T O R S
+PhysicDebugDraw::PhysicDebugDraw()
+{
 
-PhysicWorld_Impl::PhysicWorld_Impl()
-:	name				("Unnamed Clanlib Physic World"),
-	world				(b2Vec2(0.0f,10.0f)),
-	timestep			(1.0f/60.0f),
-	velocity_iterations	(8),
-	position_iterations (3),
-	physic_scale		(100)
-{	
 }
+
+PhysicDebugDraw::PhysicDebugDraw(const PhysicWorld &pw)
+: impl(new PhysicDebugDraw_Impl(*pw.impl))
+{
+	
+}
+
+PhysicDebugDraw::~PhysicDebugDraw()
+{
+}
+
+//																											___________________																											
+//																											A T T R I B U T E S
+void PhysicDebugDraw::throw_if_null() const
+{
+	if (!impl)
+		throw Exception("PhysicDebugDraw is null");
+}
+
+unsigned int PhysicDebugDraw::get_flags() const
+{
+	return impl->GetFlags();
+}
+
+//																											_____________																							
+//																											S I G N A L S
+
+
 
 //																											___________________																											
 //																											O P E R A T I O N S
 
-void PhysicWorld_Impl::create(const PhysicWorldDescription &description)
+void PhysicDebugDraw::draw(Canvas &canvas)
 {
-	PhysicWorldDescription_Impl &desc_impl = *description.impl;
-	name = desc_impl.name;
-	world.SetAllowSleeping(desc_impl.sleep_enabled);
-	world.SetGravity(desc_impl.gravity);
-
-}
-void PhysicWorld_Impl::step()
-{
-	world.Step(timestep,velocity_iterations,position_iterations);
-	sig_world_step.invoke(timestep);
-}
-void PhysicWorld_Impl::step(float timestep, int velocity_iterations, int position_iterations)
-{
-	world.Step(timestep,velocity_iterations,position_iterations);
-	sig_world_step.invoke(timestep);
+	impl->used_canvas = &canvas;
+	impl->owner->world.DrawDebugData();
 }
 
-b2Body *PhysicWorld_Impl::create_body(const b2BodyDef &description)
+void PhysicDebugDraw::set_flags(unsigned int flags)
 {
-	//b2BodyDef def = description;
-	//def.position = (1.0f/physic_scale) * def.position; //change to a better physic_scale handling
-
-	return world.CreateBody(&description);
+	impl->SetFlags(flags);
 }
-//																											___________________																											
-//																											A T T R I B U T E S
 
 }
