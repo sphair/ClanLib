@@ -164,6 +164,9 @@ public:
 	bool select_all_on_focus_gain;
 
 	static const std::string numeric_mode_characters;
+
+	static const int cursor_blink_rate = 500;
+
 };
 
 }
