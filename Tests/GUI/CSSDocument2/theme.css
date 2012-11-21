@@ -443,16 +443,6 @@ lineedit cursor
 	background-color: black;
 }
 
-lineedit:blink_on cursor
-{
-	background-color: black;
-}
-
-lineedit:blink_off cursor
-{
-	background-color: white;
-}
-
 lineedit selection
 {
     text-color: white;

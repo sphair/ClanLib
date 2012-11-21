@@ -835,12 +835,6 @@ void LineEdit_Impl::create_parts()
 
 	lineedit->set_pseudo_class(CssStr::normal, enabled);
 	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
-
-	part_cursor->set_pseudo_class(CssStr::normal, enabled);
-	part_cursor->set_pseudo_class(CssStr::disabled, !enabled);
-
-	//part_selection->set_pseudo_class(CssStr::normal, enabled);
-	//part_selection->set_pseudo_class(CssStr::disabled, !enabled);
 }
 
 void LineEdit_Impl::move(int steps, bool ctrl_pressed, bool shift_pressed)
