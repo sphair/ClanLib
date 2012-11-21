@@ -92,9 +92,6 @@ void TestApp::test_timer(void)
 		}
 
 		KeepAlive::process();
-		
-		// Note - Use the following function if the display windows exist
-		//KeepAlive::process();
 	}
 
 	if (g_TimerValue1 != 1) fail();
@@ -103,6 +100,32 @@ void TestApp::test_timer(void)
 	if (g_TimerValue4 != 2) fail();
 	if (g_TimerValue5 != 1) fail();
 	if (g_TimerValue6 != 1) fail();
+
+	Console::write_line("   Function: start() Test adjusting timer after started");
+
+	start_time = System::get_time();
+	g_TimerValue1 = 0;
+	timer_1.start(3000, false);
+	while(true)
+	{
+		unsigned int time_now = System::get_time();
+		int time_diff = time_now - start_time;
+		if (time_diff >= 1600) break;
+
+		// Reset timer after 500ms
+		if (time_diff >= 500)
+		{
+				if (!stopped_flag)
+				{
+						timer_1.start(100, false);
+						stopped_flag = true;
+				}
+		}
+
+		KeepAlive::process();
+	}
+	if (g_TimerValue1 != 1) fail();
+
 }
 
 void TestApp::funx_timer_1()
