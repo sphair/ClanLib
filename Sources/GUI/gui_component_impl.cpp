@@ -180,20 +180,20 @@ Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::stri
 void GUIComponent_Impl::layout_content()
 {
 	CSSClanBoxInitialUsedValuesVisitor initial_visitor;
-	visit_css(&initial_visitor);
+	visit_css(&initial_visitor, true);
 
 	CSSClanBoxLayoutVisitor layout_visitor;
-	visit_css(&layout_visitor);
+	visit_css(&layout_visitor, true);
 
 	CSSClanBoxAbsoluteOrFixedVisitor absolute_visitor;
-	visit_css(&absolute_visitor);
+	visit_css(&absolute_visitor, true);
 }
 
-void GUIComponent_Impl::visit_css(CSSClanBoxVisitor *visitor)
+void GUIComponent_Impl::visit_css(CSSClanBoxVisitor *visitor, bool base_visitor)
 {
-	visitor->node(this);
+	visitor->node(this, base_visitor);
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
-		child->impl->visit_css(visitor);
+		child->impl->visit_css(visitor, false);
 }
 
 void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)

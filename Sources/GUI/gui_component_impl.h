@@ -126,7 +126,7 @@ public:
 
 	void layout_content();
 
-	void visit_css(CSSClanBoxVisitor *visitor);
+	void visit_css(CSSClanBoxVisitor *visitor, bool base_visitor);
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void update_style();
