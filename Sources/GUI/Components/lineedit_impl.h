@@ -165,7 +165,7 @@ public:
 
 	static const std::string numeric_mode_characters;
 
-	static const int cursor_blink_rate = 500;
+	static const int cursor_blink_rate = 200;
 
 };
 
