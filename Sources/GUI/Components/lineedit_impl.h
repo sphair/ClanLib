@@ -75,7 +75,6 @@ public:
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed();
 	void on_timer_expired();
 	void on_resized();
 	void on_scroll_timer_expired();
@@ -112,11 +111,10 @@ public:
 
 	static std::string break_characters;
 
-	//GUIComponent *part_component;
 	GUIComponent *part_selection;
 	GUIComponent *part_cursor;
 
-	void move(int steps, InputEvent &e);
+	void move(int steps, bool ctrl_pressed, bool shift_pressed);
 	bool insert_text(int pos, const std::string &str);
 	void backspace();
 	void del();
