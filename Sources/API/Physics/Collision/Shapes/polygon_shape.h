@@ -44,7 +44,7 @@ class PolygonShape_Impl;
 class Angle;
 /// \brief Polygon Shape class.
 ///
-/// \xmlonly !group=Physic/Collision/Shapes! !header=polygon_shape.h! \endxmlonly
+/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PolygonShape : public Shape
 {
 /// \name Construction

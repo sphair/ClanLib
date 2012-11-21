@@ -65,7 +65,7 @@ enum DebugFlags
    
 /// \brief PhysicDebugDraw class.
 ///
-/// \xmlonly !group=Physic/World! !header=physic_debug_draw.h! \endxmlonly
+/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicDebugDraw
 {
 /// \name Construction

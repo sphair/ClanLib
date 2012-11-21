@@ -38,7 +38,7 @@ class Shape;
 
 /// \brief FixtureDescription class
 ///
-/// \xmlonly !group=Physics/Dynamics! !header=fixture_description.h! \endxmlonly
+/// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS FixtureDescription
 {
 /// \name Construction

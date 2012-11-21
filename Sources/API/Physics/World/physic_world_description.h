@@ -52,7 +52,7 @@ public:
 /// \brief Physic world description class.
 ///
 /// This class allows you to setup a more advanced description when creating a physic world.
-/// \xmlonly !group=Physic/World! !header=physic.h! \endxmlonly
+/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicWorldDescription
 {
 /// \name Construction

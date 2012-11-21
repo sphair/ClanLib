@@ -52,7 +52,7 @@ class PhysicWorld;
 	};
 /// \brief BodyDescription class
 ///
-/// \xmlonly !group=Physics/Dynamics! !header=body_description.h! \endxmlonly
+/// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS BodyDescription
 {
 public:
