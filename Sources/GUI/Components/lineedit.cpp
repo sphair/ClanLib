@@ -1329,9 +1329,6 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	//FIXME ******** THIS LINE SHOULD NOT BE HERE!!!! ~********
-	clip_start_offset = 0;
-
 	Rect g = lineedit->get_size();
 	Font font = lineedit->get_font();
 	FontMetrics metrics = font.get_font_metrics();
