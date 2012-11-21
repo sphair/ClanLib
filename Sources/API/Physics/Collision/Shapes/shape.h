@@ -49,7 +49,7 @@ enum ShapeType
 
 /// \brief Shape class.
 ///
-/// \xmlonly !group=Physic/Collision/Shapes! !header=shape.h! \endxmlonly
+/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS Shape
 {
 

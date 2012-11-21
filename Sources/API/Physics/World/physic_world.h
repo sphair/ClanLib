@@ -51,7 +51,7 @@ class PhysicWorld_Impl;
 
 /// \brief Top-level world class.
 ///
-/// \xmlonly !group=Physic/World! !header=physic.h! \endxmlonly
+/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicWorld
 {
 /// \name Construction
