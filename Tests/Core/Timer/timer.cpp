@@ -103,6 +103,7 @@ void TestApp::test_timer(void)
 
 	Console::write_line("   Function: start() Test adjusting timer after started");
 
+	stopped_flag = false;
 	start_time = System::get_time();
 	g_TimerValue1 = 0;
 	timer_1.start(3000, false);
