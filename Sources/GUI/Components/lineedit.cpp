@@ -716,6 +716,13 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				{
 					lineedit->set_focus();
 				}
+
+				if (!readonly)
+				{
+					cursor_blink_visible = false;	// Always show the cursor when mouse pressed
+					timer.start(0);
+				}
+
 				lineedit->request_repaint();
 				input_msg->consumed = true;
 			}
