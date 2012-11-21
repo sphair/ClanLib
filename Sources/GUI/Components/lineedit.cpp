@@ -420,7 +420,10 @@ void LineEdit::set_cursor_drawing_enabled(bool enable)
 	impl->cursor_drawing_enabled_when_parent_focused = enable;
 
 	if (!impl->readonly)
-		impl->timer.start(impl->cursor_blink_rate);
+	{
+		impl->cursor_blink_visible = false;
+		impl->timer.start(0);
+	}
 }
 
 void LineEdit::set_select_all_on_focus_gain(bool enable)
@@ -464,8 +467,8 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			if (!readonly)	// Do not flash cursor when readonly
 			{
-				cursor_blink_visible = true;
-				timer.start(cursor_blink_rate); // don't blink cursor when moving or typing.
+				cursor_blink_visible = false;
+				timer.start(0); // don't blink cursor when moving or typing.
 			}
 
 			if (input_msg->input_event.type == InputEvent::pressed) // || input_msg->input_event.repeat_count > 1) 
@@ -772,12 +775,18 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			{
 				lineedit->get_parent_component()->set_focus();
 				if (!readonly)
-					timer.start(cursor_blink_rate);
+				{
+					cursor_blink_visible = false;
+					timer.start(0);
+				}
 				return;
 			}
 
 			if (!readonly)
-				timer.start(cursor_blink_rate);
+			{
+				cursor_blink_visible = false;
+				timer.start(0);
+			}
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
@@ -1176,16 +1185,15 @@ void LineEdit_Impl::on_timer_expired()
 	timer.start(cursor_blink_rate);
 
 	cursor_blink_visible = !cursor_blink_visible;
-
 	if (cursor_blink_visible)
 	{
 		Rect cursor_rect = get_cursor_rect();
 		part_cursor->set_geometry(cursor_rect);
-		part_cursor->set_enabled(true);
+		part_cursor->set_visible(true);
 	}
 	else
 	{
-		part_cursor->set_enabled(false);
+		part_cursor->set_visible(false);
 	}
 
 	lineedit->request_repaint();
@@ -1398,7 +1406,7 @@ void LineEdit_Impl::on_enable_changed()
 	if (!enabled)
 	{
 		cursor_blink_visible = false;
-		part_cursor->set_enabled(false);
+		part_cursor->set_visible(false);
 
 		timer.stop();
 	}
