@@ -439,12 +439,8 @@ lineedit:disabled
 
 lineedit cursor
 {
-	preferred-width:1;
-
+    width: 2px;
 	background-color: black;
-
-	blink-time-on:1000;
-	blink-time-off:1000;
 }
 
 lineedit:blink_on cursor

@@ -1115,8 +1115,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
-	//FIXME: cursor_rect.right = cursor_rect.left + part_cursor->get_preferred_width();
-	cursor_rect.right = cursor_rect.left + 4;	//BUG FIXME -  REPLACED WITH THIS!!!!!
+	cursor_rect.right = cursor_rect.left + part_cursor->get_content_box().get_width();
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
