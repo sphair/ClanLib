@@ -72,7 +72,6 @@ LineEdit::LineEdit(GUIComponent *parent)
 
 	func_render().set(impl.get(), &LineEdit_Impl::on_render);
 	func_process_message().set(impl.get(), &LineEdit_Impl::on_process_message);
-	//FIXME: sig_style_changed().set(impl.get(), &LineEdit_Impl::on_style_changed);
 	func_resized().set(impl.get(), &LineEdit_Impl::on_resized);
 	func_enablemode_changed().set(impl.get(), &LineEdit_Impl::on_enable_changed);
 
@@ -503,12 +502,12 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 				else if (input_msg->input_event.id == keycode_left)
 				{
-					move(-1, input_msg->input_event);
+					move(-1, input_msg->input_event.ctrl, input_msg->input_event.shift);
 					input_msg->consumed = true;
 				}
 				else if (input_msg->input_event.id == keycode_right)
 				{
-					move(1, input_msg->input_event);
+					move(1, input_msg->input_event.ctrl, input_msg->input_event.shift);
 					input_msg->consumed = true;
 				}
 				else if (input_msg->input_event.id == keycode_backspace)
@@ -705,17 +704,13 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
 			{
-				if (lineedit->has_focus())
-				{
-					lineedit->capture_mouse(true);
-					mouse_selecting = true;
-					cursor_pos = get_character_index(input_msg->input_event.mouse_pos.x);
-					set_text_selection(cursor_pos, 0);
-				}
-				else
-				{
+				if (!lineedit->has_focus())
 					lineedit->set_focus();
-				}
+
+				lineedit->capture_mouse(true);
+				mouse_selecting = true;
+				cursor_pos = get_character_index(input_msg->input_event.mouse_pos.x);
+				set_text_selection(cursor_pos, 0);
 
 				if (!readonly)
 				{
@@ -831,10 +826,6 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	}
 }
 
-void LineEdit_Impl::on_style_changed()
-{
-}
-
 void LineEdit_Impl::create_parts()
 {
 	part_selection = new GUIComponent(lineedit, CssStr::LineEdit::part_selection);
@@ -852,13 +843,13 @@ void LineEdit_Impl::create_parts()
 	//part_selection->set_pseudo_class(CssStr::disabled, !enabled);
 }
 
-void LineEdit_Impl::move(int steps, InputEvent &e)
+void LineEdit_Impl::move(int steps, bool ctrl_pressed, bool shift_pressed)
 {
-	if (e.shift && selection_length == 0)
+	if (shift_pressed && selection_length == 0)
 		set_selection_start(cursor_pos);
 
 	// Jump over words if control is pressed.
-	if (e.ctrl)
+	if (ctrl_pressed)
 	{
 		if (steps < 0)
 			steps = find_previous_break_character(cursor_pos-1) - cursor_pos;
@@ -891,7 +882,7 @@ void LineEdit_Impl::move(int steps, InputEvent &e)
 
 	
 	// Clear the selection if a cursor key is pressed but shift isn't down. 
-	if (e.shift)
+	if (shift_pressed)
 		set_selection_length(cursor_pos - selection_start);
 	else
 		set_text_selection(-1, 0);
@@ -1396,14 +1387,10 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void LineEdit_Impl::on_scroll_timer_expired()
 {
-	//FIXME: GUIMessage_Input msg;
-	//FIXME: InputEvent event;
-	//FIXME: msg.set_event(event);
-
-	//FIXME: if (mouse_moves_left)
-	//FIXME: 	move(-1,event);
-	//FIXME: else
-	//FIXME: 	move(1, event);
+	if (mouse_moves_left)
+		move(-1, false, false);
+	 else
+	 	move(1, false, false);
 }
 
 void LineEdit_Impl::on_enable_changed()
