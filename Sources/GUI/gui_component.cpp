@@ -1014,13 +1014,14 @@ void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 void GUIComponent::update_style()
 {
 	impl->update_style();
-	get_top_level_component()->impl->layout_content();
-	request_repaint();
+	update_layout();
 }
 
 void GUIComponent::update_layout()
 {
-	get_top_level_component()->impl->layout_content();
+	impl->layout_content();
+	// ** Use this instead if impl->layout_content() "base visitor" flag to visit_css() does not work as expected **
+	//  get_top_level_component()->impl->layout_content();
 	request_repaint();
 }
 

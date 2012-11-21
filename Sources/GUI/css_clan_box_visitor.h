@@ -11,15 +11,15 @@ class GUIComponent_Impl;
 class CSSClanBoxVisitor
 {
 public:
-	virtual void node(GUIComponent_Impl *node) = 0;
+	virtual void node(GUIComponent_Impl *node, bool base_visitor) = 0;
 };
 
 class CSSClanBoxInitialUsedValuesVisitor : public CSSClanBoxVisitor
 {
 public:
-	void node(GUIComponent_Impl *node)
+	void node(GUIComponent_Impl *node, bool base_visitor)
 	{
-		if (node->parent)
+		if ( (node->parent) && (base_visitor==false) )
 		{
 			CSSClanBoxInitialUsedValues::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
 		}
@@ -51,7 +51,7 @@ public:
 class CSSClanBoxDisplayVisitor : public CSSClanBoxVisitor
 {
 public:
-	void node(GUIComponent_Impl *node)
+	void node(GUIComponent_Impl *node, bool base_visitor)
 	{
 		switch (node->css_properties.display.type)
 		{
@@ -163,7 +163,7 @@ public:
 				// If the width of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.width_undetermined)
 				{
-					CSSClanBoxDisplayVisitor::node(child->impl.get());
+					CSSClanBoxDisplayVisitor::node(child->impl.get(), false);
 				}
 
 				preferred_width += get_used_noncontent_width(child_used_values) + child_used_values.width;
@@ -188,7 +188,7 @@ public:
 				// If the width of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.width_undetermined)
 				{
-					CSSClanBoxDisplayVisitor::node(child->impl.get());
+					CSSClanBoxDisplayVisitor::node(child->impl.get(), false);
 				}
 
 				preferred_width = std::max(preferred_width, get_used_noncontent_width(child_used_values) + child_used_values.width);
@@ -217,7 +217,7 @@ public:
 				// If the height of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.height_undetermined)
 				{
-					CSSClanBoxDisplayVisitor::node(child->impl.get());
+					CSSClanBoxDisplayVisitor::node(child->impl.get(), false);
 				}
 
 				preferred_height = std::max(preferred_height, get_used_noncontent_height(child_used_values) + child_used_values.height);
@@ -242,7 +242,7 @@ public:
 				// If the height of the box cannot be determined from CSS, then ask the component:
 				if (child_used_values.height_undetermined)
 				{
-					CSSClanBoxDisplayVisitor::node(child->impl.get());
+					CSSClanBoxDisplayVisitor::node(child->impl.get(), false);
 				}
 
 				preferred_height += get_used_noncontent_height(child_used_values) + child_used_values.height;
@@ -260,13 +260,13 @@ public:
 	void find_preferred_width(GUIComponent_Impl *node)
 	{
 		CSSClanBoxPreferredWidthVisitor preferred_visitor;
-		preferred_visitor.node(node);
+		preferred_visitor.node(node, false);
 	}
 
 	void find_preferred_height(GUIComponent_Impl *node)
 	{
 		CSSClanBoxPreferredHeightVisitor preferred_visitor;
-		preferred_visitor.node(node);
+		preferred_visitor.node(node, false);
 	}
 
 	void layout_flex_horizontal(GUIComponent_Impl *node)
@@ -526,7 +526,7 @@ public:
 class CSSClanBoxAbsoluteOrFixedVisitor : public CSSClanBoxVisitor
 {
 public:
-	void node(GUIComponent_Impl *node)
+	void node(GUIComponent_Impl *node, bool base_visitor)
 	{
 		if (node->css_properties.position.type == CSSBoxPosition::type_absolute || node->css_properties.position.type == CSSBoxPosition::type_fixed)
 		{
