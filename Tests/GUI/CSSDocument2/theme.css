@@ -446,15 +446,18 @@ lineedit cursor
 lineedit selection
 {
     text-color: white;
-	background-color: #316ac5;
+	color: #316ac5;
+    background-color: #cdcdcd;
 }
 
 lineedit:disabled selection
 {
-	background-color: #7a96df;
+	color: #7a96df;
+    background-color: #cdcdcd;
 }
 
 lineedit:unfocused selection
 {
-	background-color: #7a96df;
+	color: #7a96df;
+    background-color: #cdcdcd;
 }
