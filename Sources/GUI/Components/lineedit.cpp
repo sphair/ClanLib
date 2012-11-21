@@ -1323,8 +1323,10 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect g = lineedit->get_size();
-	Font font = lineedit->get_font();
-	FontMetrics metrics = font.get_font_metrics();
+	Font lineedit_font = lineedit->get_font();
+	Font selection_font = part_selection->get_font();
+	FontMetrics lineedit_metrics = lineedit_font.get_font_metrics();
+	FontMetrics selection_metrics = selection_font.get_font_metrics();
 
 	std::string txt_before = get_visible_text_before_selection();
 	std::string txt_selected = get_visible_selected_text();
@@ -1339,8 +1341,8 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			txt_after = create_password(StringHelp::utf8_length(txt_after));
 	}
 
-	Size size_before = font.get_text_size(canvas, txt_before);
-	Size size_selected = font.get_text_size(canvas, txt_selected);
+	Size size_before = lineedit_font.get_text_size(canvas, txt_before);
+	Size size_selected = selection_font.get_text_size(canvas, txt_selected);
 
 	Rect content_rect = lineedit->get_content_box();
 
@@ -1350,7 +1352,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Rect text_rect = content_rect;
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_before, lineedit->get_css_properties().color.color);
+		lineedit_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + lineedit_metrics.get_ascent()), update_rect, txt_before, lineedit->get_css_properties().color.color);
 
 	}
 	if (!txt_selected.empty())
@@ -1362,7 +1364,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_selected, lineedit->get_css_properties().color.color);
+		selection_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + selection_metrics.get_ascent()), update_rect, txt_selected, part_selection->get_css_properties().color.color);
 
 	}
 	if (!txt_after.empty())
@@ -1371,7 +1373,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
+		lineedit_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + lineedit_metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
 	}
 }
 
