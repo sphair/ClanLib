@@ -716,6 +716,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				lineedit->request_repaint();
 				input_msg->consumed = true;
 			}
+
 			if (mouse_selecting && input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 			{
 				if (ignore_mouse_events) // This prevents text selection from changing from what was set when focus was gained.
@@ -761,6 +762,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 		}
 	}
+
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 	{
@@ -832,8 +834,6 @@ void LineEdit_Impl::create_parts()
 
 	//part_selection->set_pseudo_class(CssStr::normal, enabled);
 	//part_selection->set_pseudo_class(CssStr::disabled, !enabled);
-
-	on_resized();	//TODO: Is this required?
 }
 
 void LineEdit_Impl::move(int steps, InputEvent &e)
@@ -1176,6 +1176,18 @@ void LineEdit_Impl::on_timer_expired()
 	timer.start(cursor_blink_rate);
 
 	cursor_blink_visible = !cursor_blink_visible;
+
+	if (cursor_blink_visible)
+	{
+		Rect cursor_rect = get_cursor_rect();
+		part_cursor->set_geometry(cursor_rect);
+		part_cursor->set_enabled(true);
+	}
+	else
+	{
+		part_cursor->set_enabled(false);
+	}
+
 	lineedit->request_repaint();
 }
 
@@ -1365,24 +1377,6 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.bottom = g.bottom;
 		font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
 	}
-
-	// draw cursor
-	if (lineedit->has_focus() || (lineedit->get_focus_policy() == GUIComponent::focus_parent && cursor_drawing_enabled_when_parent_focused))
-	{
-		// FIXME: This code should not be here
-		if (cursor_blink_visible)
-		{
-			Rect cursor_rect = get_cursor_rect();
-			part_cursor->set_geometry(cursor_rect);
-			part_cursor->set_enabled(true);
-		}
-		else
-		{
-			part_cursor->set_enabled(false);
-		}
-
-	}
-
 }
 
 void LineEdit_Impl::on_scroll_timer_expired()
@@ -1404,6 +1398,8 @@ void LineEdit_Impl::on_enable_changed()
 	if (!enabled)
 	{
 		cursor_blink_visible = false;
+		part_cursor->set_enabled(false);
+
 		timer.stop();
 	}
 	lineedit->request_repaint();
