@@ -37,6 +37,7 @@
     <component class="test2">
       <component class="test3"/>
     </component>
+    <component class="test4"/>
   </component>
   <pushbutton>
     <text>PushButton</text>

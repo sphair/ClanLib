@@ -138,7 +138,7 @@ ribbon-section button:toggled
 {
     background-color: #00aa00;
     width: 80px;
-    height: 80px;
+    height: 40px;
 }
 .test2:hot
 {
@@ -147,12 +147,23 @@ ribbon-section button:toggled
 .test3
 {
     background-color: #0000aa;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 20px;
 }
 .test3:hot
 {
     background-color: #0000ff;
+}
+
+.test4
+{
+    background-color: #aaaaaa;
+    width: 60px;
+    height: 40px;
+}
+.test4:hot
+{
+    background-color: #ffffff;
 }
 
 label.imagelabel
