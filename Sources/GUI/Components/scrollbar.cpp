@@ -117,12 +117,12 @@ int ScrollBar::get_position() const
 
 float ScrollBar::get_preferred_content_width()
 {
-	return 256.0f;
+	return 0.0f;
 }
 
 float ScrollBar::get_preferred_content_height(float width)
 {
-	return 32.0f;
+	return 0.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////
