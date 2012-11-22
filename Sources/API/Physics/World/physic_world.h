@@ -51,6 +51,8 @@ class PhysicWorld_Impl;
 
 /// \brief Top-level world class.
 ///
+/// The world class manages all physics entities, dynamic simulation, and asynchronous queries.
+/// The world also contains efficient memory management facilities. 
 /// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicWorld
 {
@@ -126,6 +128,7 @@ private:
 
 	friend class PhysicDebugDraw;
 	friend class PolygonShape;
+	friend class ChainShape;
 	friend class BodyDescription;
 	friend class Body;
 	friend class FixtureDescription;

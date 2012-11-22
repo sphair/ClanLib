@@ -40,29 +40,31 @@ namespace clan
 {
 
 class PhysicWorld;
-class PolygonShape_Impl;
+class ChainShape_Impl;
 class Angle;
 /// \brief Polygon Shape class.
 ///
-/// A convex polygon. It is assumed that the interior of the polygon is to the left of each edge.
-/// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
-/// In most cases you should not need many vertices for a convex polygon. 
+/// A chain shape is a free form sequence of line segments. The chain has two-sided collision,
+/// so you can use inside and outside collision. Therefore, you may use any winding order.
+/// Since there may be many vertices, they are allocated using b2Alloc.
+/// Connectivity information is used to create smooth collisions.
+/// WARNING: The chain will not collide properly if there are self-intersections. 
 /// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PolygonShape : public Shape
+class CL_API_PHYSICS ChainShape : public Shape
 {
 /// \name Construction
 /// \{
 public:
 
 	/// \brief Constructs a null instance.
-	PolygonShape();
+	ChainShape();
 
 	/// \brief Constructs a null instance.
 	/// 
 	/// \param pw = Physic World.
-	PolygonShape(const PhysicWorld &pw);
+	ChainShape(const PhysicWorld &pw);
 
-	~PolygonShape();
+	~ChainShape();
 
 /// \}
 /// \name Attributes
@@ -79,27 +81,39 @@ public:
 /// \name Operations
 /// \{
 public:
-	//Add us
+
+	//add us
+	/// \brief Create a loop. This automatically adjusts connectivity. 
+	///
+	/// \param vertices	= an array of vertices, these are copied
+	/// \param count = the vertex count 
+	void	create_loop (const Vec2f *vertices,const int count);
+
+	/// \brief Create a chain with isolated end vertices. 
+	///
+	/// \param vertices	= an array of vertices, these are copied
+	/// \param count = the vertex count 
+	void 	create_chain (const Vec2f *vertices,const int count);
+
+	/// \brief Establish connectivity to a vertex that precedes the first vertex. Don't call this for loops. 
+	void 	set_prev_vertex (const Vec2f &prev_vertex);
+
+	/// \brief Establish connectivity to a vertex that follows the last vertex. Don't call this for loops. 
+	void 	set_next_vertex (const Vec2f &next_vertex);
 	//b2Shape * 	Clone (b2BlockAllocator *allocator) const
 	//int32 	GetChildCount () const
-	//void 	Set (const b2Vec2 *vertices, int32 vertexCount)
-
-	void 	set_as_box (float width, float height);
-	void 	set_as_box (float width, float height, const Vec2f &center, Angle &angle);
+	//void 	GetChildEdge (b2EdgeShape *edge, int32 index) const
 	//bool 	TestPoint (const b2Transform &transform, const b2Vec2 &p) const
 	//bool 	RayCast (b2RayCastOutput *output, const b2RayCastInput &input, const b2Transform &transform, int32 childIndex) const
 	//void 	ComputeAABB (b2AABB *aabb, const b2Transform &transform, int32 childIndex) const
-	//void 	ComputeMass (b2MassData *massData, float32 density) const
-	//int32 	GetVertexCount () const
-	//const b2Vec2 & 	GetVertex (int32 index) const
-	//Add us
-
+	//void 	ComputeMass (b2MassData *massData, float32 density) const 
+	//add us
 /// \}
 /// \name Implementation
 /// \{
 private:
 
-	std::shared_ptr<PolygonShape_Impl> impl;
+	std::shared_ptr<ChainShape_Impl> impl;
 
 /// \}
 	friend class FixtureDescription;
