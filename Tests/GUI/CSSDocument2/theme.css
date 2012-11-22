@@ -132,7 +132,7 @@ ribbon-section button:toggled
 }
 .test1:hot
 {
-    background-color: #ff0000;
+    background-color: #ff2222;
 }
 .test2
 {
@@ -142,7 +142,7 @@ ribbon-section button:toggled
 }
 .test2:hot
 {
-    background-color: #00ff00;
+    background-color: #22ff22;
 }
 .test3
 {
@@ -152,7 +152,7 @@ ribbon-section button:toggled
 }
 .test3:hot
 {
-    background-color: #0000ff;
+    background-color: #2222ff;
 }
 
 .test4
