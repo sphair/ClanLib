@@ -65,6 +65,12 @@ void PolygonShape::throw_if_null() const
 
 //																											___________________																											
 //																											O P E R A T I O N S
+PolygonShape &PolygonShape::operator =(const PolygonShape &copy)
+{
+	impl = copy.impl;
+	return *this;
+}
+
 void 	PolygonShape::set_as_box (float width, float height)
 {
 	float scale = impl->owner->physic_scale;

@@ -42,7 +42,7 @@ namespace clan
 class PhysicWorld;
 class ChainShape_Impl;
 class Angle;
-/// \brief Polygon Shape class.
+/// \brief Chain Shape class.
 ///
 /// A chain shape is a free form sequence of line segments. The chain has two-sided collision,
 /// so you can use inside and outside collision. Therefore, you may use any winding order.
@@ -59,7 +59,7 @@ public:
 	/// \brief Constructs a null instance.
 	ChainShape();
 
-	/// \brief Constructs a null instance.
+	/// \brief Constructs a Chain Shape.
 	/// 
 	/// \param pw = Physic World.
 	ChainShape(const PhysicWorld &pw);
@@ -81,6 +81,9 @@ public:
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Copy assignment operator.
+	ChainShape &operator =(const ChainShape &copy);
 
 	//add us
 	/// \brief Create a loop. This automatically adjusts connectivity. 

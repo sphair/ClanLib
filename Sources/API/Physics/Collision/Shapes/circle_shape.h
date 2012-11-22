@@ -33,36 +33,34 @@
 #pragma once
 
 #include "../../api_physics.h"
-#include "../../../Core/Math/vec2.h" // Should this be included here instead of beeing in polygon_shape.cpp ? 
+#include "../../../Core/Math/vec2.h" // Should this be included here instead of beeing in Circle_shape.cpp ? 
 #include "../../Collision/Shapes/shape.h"
 
 namespace clan
 {
 
 class PhysicWorld;
-class PolygonShape_Impl;
+class CircleShape_Impl;
 class Angle;
-/// \brief Polygon Shape class.
+/// \brief Circle Shape class.
 ///
-/// A convex polygon. It is assumed that the interior of the polygon is to the left of each edge.
-/// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
-/// In most cases you should not need many vertices for a convex polygon. 
+/// A circle shape.
 /// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PolygonShape : public Shape
+class CL_API_PHYSICS CircleShape : public Shape
 {
 /// \name Construction
 /// \{
 public:
 
 	/// \brief Constructs a null instance.
-	PolygonShape();
+	CircleShape();
 
-	/// \brief Constructs a Polygon Shape.
+	/// \brief Constructs a Circle Shape.
 	/// 
 	/// \param pw = Physic World.
-	PolygonShape(const PhysicWorld &pw);
+	CircleShape(const PhysicWorld &pw);
 
-	~PolygonShape();
+	~CircleShape();
 
 /// \}
 /// \name Attributes
@@ -81,20 +79,25 @@ public:
 public:
 
 	/// \brief Copy assignment operator.
-	PolygonShape &operator =(const PolygonShape &copy);
+	CircleShape &operator =(const CircleShape &copy);
 
 	//Add us
+	void set_radius(float radius);
 	//b2Shape * 	Clone (b2BlockAllocator *allocator) const
+ 	//Implement b2Shape.
 	//int32 	GetChildCount () const
-	//void 	Set (const b2Vec2 *vertices, int32 vertexCount)
-
-	void 	set_as_box (float width, float height);
-	void 	set_as_box (float width, float height, const Vec2f &center, Angle &angle);
 	//bool 	TestPoint (const b2Transform &transform, const b2Vec2 &p) const
+ 
 	//bool 	RayCast (b2RayCastOutput *output, const b2RayCastInput &input, const b2Transform &transform, int32 childIndex) const
+
 	//void 	ComputeAABB (b2AABB *aabb, const b2Transform &transform, int32 childIndex) const
 	//void 	ComputeMass (b2MassData *massData, float32 density) const
+	//int32 	GetSupport (const b2Vec2 &d) const
+
+	//const b2Vec2 & 	GetSupportVertex (const b2Vec2 &d) const
+
 	//int32 	GetVertexCount () const
+
 	//const b2Vec2 & 	GetVertex (int32 index) const
 	//Add us
 
@@ -103,7 +106,7 @@ public:
 /// \{
 private:
 
-	std::shared_ptr<PolygonShape_Impl> impl;
+	std::shared_ptr<CircleShape_Impl> impl;
 
 /// \}
 	friend class FixtureDescription;

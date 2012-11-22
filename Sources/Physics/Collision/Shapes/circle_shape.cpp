@@ -28,8 +28,8 @@
 
 #include "Physics/precomp.h"
 #include "shape_impl.h"
-#include "chain_shape_impl.h"
-#include "API/Physics/Collision/Shapes/chain_shape.h"
+#include "circle_shape_impl.h"
+#include "API/Physics/Collision/Shapes/Circle_shape.h"
 #include "API/Physics/World/physic_world.h"
 #include "../../World/physic_world_impl.h"
 #include "API/Core/Math/angle.h"
@@ -38,74 +38,44 @@ namespace clan
 {
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-ChainShape::ChainShape()
+CircleShape::CircleShape()
 {
 	
 }
 
-ChainShape::ChainShape(const PhysicWorld &pw)
-: impl(new ChainShape_Impl(*pw.impl))
+CircleShape::CircleShape(const PhysicWorld &pw)
+: impl(new CircleShape_Impl(*pw.impl))
 {
-	shape_impl->shape_type = shape_chain;
+	shape_impl->shape_type = shape_circle;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
 
-ChainShape::~ChainShape()
+CircleShape::~CircleShape()
 {
 
 }
 
 //																											___________________																											
 //																											A T T R I B U T E S
-void ChainShape::throw_if_null() const
+void CircleShape::throw_if_null() const
 {
 	if (!impl)
-		throw Exception("ChainShape is null");
+		throw Exception("CircleShape is null");
 }
 
 //																											___________________																											
 //																											O P E R A T I O N S
-ChainShape &ChainShape::operator =(const ChainShape &copy)
+
+CircleShape &CircleShape::operator =(const CircleShape &copy)
 {
 	impl = copy.impl;
 	return *this;
 }
 
-void 	ChainShape::create_loop (const Vec2f *vertices,const int count)
+void CircleShape::set_radius(float radius)
 {
-	b2Vec2 *b2_vertices = new b2Vec2[count]; // delete id 1
-	float scale = impl->owner->physic_scale;
-
-	for(int i=0; i<count; i++)
-	{
-		b2_vertices[i].x = vertices[i].x * scale;
-		b2_vertices[i].y = vertices[i].y * scale;
-	}
-	
-	impl->shape.CreateLoop(b2_vertices,count);
+	impl->shape.m_radius = radius;
 }
 
-void 	ChainShape::create_chain (const Vec2f *vertices,const int count)
-{
-	b2Vec2 *b2_vertices = new b2Vec2[count]; // delete id 2
-	float scale = impl->owner->physic_scale;
-
-	for(int i=0; i<count; i++)
-	{
-		b2_vertices[i].x = vertices[i].x * scale;
-		b2_vertices[i].y = vertices[i].y * scale;
-	}
-
-	impl->shape.CreateChain(b2_vertices,count);
-}
-
-void ChainShape::set_prev_vertex (const Vec2f &prev_vertex)
-{
-	impl->shape.SetPrevVertex(b2Vec2(prev_vertex.x, prev_vertex.y));
-}
-void ChainShape::set_next_vertex (const Vec2f &next_vertex)
-{
-	impl->shape.SetNextVertex(b2Vec2(next_vertex.x, next_vertex.y));
-}
 
 }
