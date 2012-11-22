@@ -40,30 +40,28 @@ namespace clan
 {
 
 class PhysicWorld;
-class PolygonShape_Impl;
-class Angle;
+class EdgeShape_Impl;
 
-/// \brief Polygon Shape class.
+/// \brief Edge Shape class.
 ///
-/// A convex polygon. It is assumed that the interior of the polygon is to the left of each edge.
-/// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
-/// In most cases you should not need many vertices for a convex polygon. 
+/// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes.
+/// The connectivity information is used to ensure correct contact normals. 
 /// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PolygonShape : public Shape
+class CL_API_PHYSICS EdgeShape : public Shape
 {
 /// \name Construction
 /// \{
 public:
 
 	/// \brief Constructs a null instance.
-	PolygonShape();
+	EdgeShape();
 
-	/// \brief Constructs a Polygon Shape.
+	/// \brief Constructs an Edge Shape.
 	/// 
 	/// \param pw = Physic World.
-	PolygonShape(const PhysicWorld &pw);
+	EdgeShape(const PhysicWorld &pw);
 
-	~PolygonShape();
+	~EdgeShape();
 
 /// \}
 /// \name Attributes
@@ -82,21 +80,19 @@ public:
 public:
 
 	/// \brief Copy assignment operator.
-	PolygonShape &operator =(const PolygonShape &copy);
+	EdgeShape &operator =(const EdgeShape &copy);
 
 	//Add us
+
+	/// \brief Set this as an isolated edge. 
+	void set (const Vec2f &v1, const Vec2f &v2);
+
 	//b2Shape * 	Clone (b2BlockAllocator *allocator) const
 	//int32 	GetChildCount () const
-	//void 	Set (const b2Vec2 *vertices, int32 vertexCount)
-
-	void 	set_as_box (float width, float height);
-	void 	set_as_box (float width, float height, const Vec2f &center, Angle &angle);
 	//bool 	TestPoint (const b2Transform &transform, const b2Vec2 &p) const
 	//bool 	RayCast (b2RayCastOutput *output, const b2RayCastInput &input, const b2Transform &transform, int32 childIndex) const
 	//void 	ComputeAABB (b2AABB *aabb, const b2Transform &transform, int32 childIndex) const
-	//void 	ComputeMass (b2MassData *massData, float32 density) const
-	//int32 	GetVertexCount () const
-	//const b2Vec2 & 	GetVertex (int32 index) const
+	//void 	ComputeMass (b2MassData *massData, float32 density) const 
 	//Add us
 
 /// \}
@@ -104,7 +100,7 @@ public:
 /// \{
 private:
 
-	std::shared_ptr<PolygonShape_Impl> impl;
+	std::shared_ptr<EdgeShape_Impl> impl;
 
 /// \}
 	friend class FixtureDescription;
