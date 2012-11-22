@@ -33,7 +33,7 @@
 #pragma once
 
 #include "../../api_physics.h"
-#include "../../../Core/Math/vec2.h" // Should this be included here instead of beeing in polygon_shape.cpp ? 
+#include "../../../Core/Math/vec2.h"
 #include "../../Collision/Shapes/shape.h"
 
 namespace clan
@@ -41,7 +41,7 @@ namespace clan
 
 class PhysicWorld;
 class ChainShape_Impl;
-class Angle;
+
 /// \brief Chain Shape class.
 ///
 /// A chain shape is a free form sequence of line segments. The chain has two-sided collision,
