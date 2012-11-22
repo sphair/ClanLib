@@ -48,8 +48,6 @@ namespace clan
 ScrollBar::ScrollBar(GUIComponent *parent)
 : GUIComponent(parent, CssStr::ScrollBar::type_name), impl(new ScrollBar_Impl)
 {
-	// set_pseudo_class(CssStr::normal, true);
-
 	impl->scrollbar = this;
 
 	impl->create_parts();
@@ -115,6 +113,16 @@ int ScrollBar::get_page_step() const
 int ScrollBar::get_position() const
 {
 	return impl->position;
+}
+
+float ScrollBar::get_preferred_content_width()
+{
+	return 256.0f;
+}
+
+float ScrollBar::get_preferred_content_height(float width)
+{
+	return 32.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////
