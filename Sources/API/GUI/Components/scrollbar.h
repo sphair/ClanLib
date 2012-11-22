@@ -155,6 +155,16 @@ public:
 	/// \param pos = value
 	void set_position(int pos);
 
+		/// \brief Returns the preferred content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_width();
+
+	/// \brief Returns the preferred content height for the specified content width
+	///
+	/// Override this function if the component has non-css content.
+	float get_preferred_content_height(float width);
+
 /// \}
 /// \name Events
 /// \{
