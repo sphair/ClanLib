@@ -46,6 +46,7 @@
 #include "Physics/Collision/Shapes/shape.h"
 #include "Physics/Collision/Shapes/polygon_shape.h"
 #include "Physics/Collision/Shapes/chain_shape.h"
+#include "Physics/Collision/Shapes/circle_shape.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

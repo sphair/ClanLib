@@ -129,6 +129,7 @@ private:
 	friend class PhysicDebugDraw;
 	friend class PolygonShape;
 	friend class ChainShape;
+	friend class CircleShape;
 	friend class BodyDescription;
 	friend class Body;
 	friend class FixtureDescription;
