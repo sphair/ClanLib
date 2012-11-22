@@ -52,6 +52,10 @@ void ScrollBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (!scrollbar->is_enabled())
 		return;
 
+
+	//FIXME: Disable for process_messages, until the graphic works
+	return;
+
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
 	{
