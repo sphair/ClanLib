@@ -46,24 +46,26 @@ class ScrollBar_Impl
 public:
 	ScrollBar_Impl();
 
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_leave();
-	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_part_button_decrement(std::shared_ptr<GUIMessage> &msg);
+	void on_part_track_decrement(std::shared_ptr<GUIMessage> &msg);
+	void on_part_thumb(std::shared_ptr<GUIMessage> &msg);
+	void on_part_track_increment(std::shared_ptr<GUIMessage> &msg);
+	void on_part_button_increment(std::shared_ptr<GUIMessage> &msg);
+
 	void on_enablemode_changed();
 	void on_timer_expired();
-	void on_resized();
 
 	void create_parts();
-	bool update_part_positions();
 	int calculate_thumb_size(int track_size);
 	int calculate_thumb_position(int thumb_size, int track_size);
 	Rect create_rect(const Rect content_rect, int start, int end);
 
 private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
+	void mouse_pressed();
+	void mouse_released();
+	void mouse_moved(const Point &pos);
+	void update_part_positions();
 
 public:
 	bool vertical;
@@ -85,12 +87,6 @@ public:
 
 	Timer mouse_down_timer;
 	int last_step_size;
-
-	Rect rect_button_decrement;
-	Rect rect_track_decrement;
-	Rect rect_thumb;
-	Rect rect_track_increment;
-	Rect rect_button_increment;
 
 	GUIComponent *part_button_decrement;
 	GUIComponent *part_button_increment;
