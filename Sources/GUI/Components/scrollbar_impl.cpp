@@ -283,11 +283,11 @@ void ScrollBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void ScrollBar_Impl::create_parts()
 {
 	part_button_decrement = new GUIComponent(scrollbar, vertical ? "scrollbutton_up" : "scrollbutton_left");
-	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton_down" : "scrollbutton_right");
 	part_track_decrement = new GUIComponent(scrollbar, vertical ? "scrolltrack_up" : "scrolltrack_left");
-	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack_down" : "scrolltrack_right");
 	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
 	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
+	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack_down" : "scrolltrack_right");
+	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton_down" : "scrollbutton_right");
 
 	scrollbar->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_button_decrement->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
