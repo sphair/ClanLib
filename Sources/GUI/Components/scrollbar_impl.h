@@ -63,7 +63,6 @@ public:
 
 private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
-	void mouse_pressed();
 	void mouse_released();
 	void mouse_moved(const Point &pos);
 
