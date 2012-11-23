@@ -224,7 +224,7 @@ void ScrollBar_Impl::on_part_button_increment(std::shared_ptr<GUIMessage> &msg)
 			if (last_position != position)
 				invoke_scroll_event(&func_scroll_line_increment);
 
-			mouse_pressed();
+			//mouse_pressed();	<--- this locks mouse events why?
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
