@@ -334,6 +334,14 @@ void ScrollBar_Impl::create_parts()
 	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
 	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
 
+	part_button_decrement->set_double_click_enabled(false);
+	part_track_decrement->set_double_click_enabled(false);
+	part_track_increment->set_double_click_enabled(false);
+	part_button_increment->set_double_click_enabled(false);
+	part_thumb->set_double_click_enabled(false);
+	part_thumb_gripper->set_double_click_enabled(false);
+
+
 	on_enablemode_changed();
 
 	part_button_decrement->func_process_message().set(this, &ScrollBar_Impl::on_part_button_decrement);
