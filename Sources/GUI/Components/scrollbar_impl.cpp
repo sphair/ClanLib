@@ -99,6 +99,7 @@ void ScrollBar_Impl::on_part_track_decrement(std::shared_ptr<GUIMessage> &msg)
 			mouse_down_mode = mouse_down_track_decr;
 			func_scroll_on_mouse_down = &func_scroll_page_decrement;
 			part_track_decrement->set_pseudo_class(CssStr::pressed, true);
+			part_track_increment->set_pseudo_class(CssStr::pressed, true);
 
 			int last_position = position;
 
@@ -116,6 +117,7 @@ void ScrollBar_Impl::on_part_track_decrement(std::shared_ptr<GUIMessage> &msg)
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
+			part_track_increment->set_pseudo_class(CssStr::pressed, false);
 			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
@@ -143,7 +145,7 @@ void ScrollBar_Impl::on_part_thumb(std::shared_ptr<GUIMessage> &msg)
 			part_thumb->set_pseudo_class(CssStr::pressed, true);
 			part_thumb_gripper->set_pseudo_class(CssStr::pressed, true);
 
-			update_part_positions();
+			// mouse_pressed();	// DISABLED - THIS DOES NOT WORK
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
@@ -171,6 +173,7 @@ void ScrollBar_Impl::on_part_track_increment(std::shared_ptr<GUIMessage> &msg)
 			mouse_down_mode = mouse_down_track_incr;
 			func_scroll_on_mouse_down = &func_scroll_page_increment;
 			part_track_increment->set_pseudo_class(CssStr::pressed, true);
+			part_track_decrement->set_pseudo_class(CssStr::pressed, true);
 
 			int last_position = position;
 
@@ -184,12 +187,13 @@ void ScrollBar_Impl::on_part_track_increment(std::shared_ptr<GUIMessage> &msg)
 			if (last_position != position)
 				invoke_scroll_event(&func_scroll_page_increment);
 
-			mouse_pressed();
+			update_part_positions();
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
 			part_track_increment->set_pseudo_class(CssStr::pressed, false);
+			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
 		else if (input_msg->input_event.type == InputEvent::pointer_moved)
@@ -303,19 +307,17 @@ void ScrollBar_Impl::mouse_released()
 
 void ScrollBar_Impl::update_part_positions()
 {
-	// FIXME - Use calculate_thumb_size()
-
 	Rect rect_part_track_decrement = part_track_decrement->get_geometry();
 	Rect rect_part_thumb = part_thumb->get_geometry();
 	Rect rect_part_track_increment = part_track_increment->get_geometry();
 	Rect rect_part_button_decrement = part_button_decrement->get_geometry();
 
-	int track_size = rect_part_track_decrement.get_width() + rect_part_thumb.get_width() + rect_part_track_increment.get_width();
-	int thumb_size = rect_part_thumb.get_width();
+	int track_size = rect_part_track_decrement.get_width() + rect_part_track_increment.get_width();
+	int thumb_size = calculate_thumb_size(track_size);
 
 	int position = calculate_thumb_position(thumb_size, track_size);
 	Rect new_rect;
-	new_rect.left = rect_part_button_decrement.right + 1;
+	new_rect.left = rect_part_button_decrement.right + 1 + position;
 	new_rect.right = new_rect.left + rect_part_thumb.get_width();
 	new_rect.top = rect_part_thumb.top;
 	new_rect.bottom = rect_part_thumb.bottom;
@@ -327,10 +329,10 @@ void ScrollBar_Impl::create_parts()
 {
 	part_button_decrement = new GUIComponent(scrollbar, vertical ? "scrollbutton_up" : "scrollbutton_left");
 	part_track_decrement = new GUIComponent(scrollbar, vertical ? "scrolltrack_up" : "scrolltrack_left");
-	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
-	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
 	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack_down" : "scrolltrack_right");
 	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton_down" : "scrollbutton_right");
+	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
+	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
 
 	on_enablemode_changed();
 

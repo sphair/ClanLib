@@ -59,13 +59,13 @@ public:
 	int calculate_thumb_size(int track_size);
 	int calculate_thumb_position(int thumb_size, int track_size);
 	Rect create_rect(const Rect content_rect, int start, int end);
+	void update_part_positions();
 
 private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
 	void mouse_pressed();
 	void mouse_released();
 	void mouse_moved(const Point &pos);
-	void update_part_positions();
 
 public:
 	bool vertical;
