@@ -481,159 +481,159 @@ scrollbar
 	preferred-height:17;
 }
 
-scrollbar scrolltrack_left
+scrolltrack_left
 {
 	width: 160px;
 	height: 16px;
 }
 
-scrollbar:normal scrolltrack_left
+scrolltrack_left:normal
 {
 	border-image: url('res:ScrollbarHoriTrackNormal') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
 
-scrollbar:hot scrolltrack_left
+scrolltrack_left:hot
 {
 	border-image: url('res:ScrollbarHoriTrackHot') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar:pressed scrolltrack_left
+scrolltrack_left:pressed
 {  
 	border-image: url('res:ScrollbarHoriTrackPressed') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar:disabled scrolltrack_left
+scrolltrack_left:disabled
 {
 	border-image: url('res:ScrollbarHoriTrackDisabled') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar scrolltrack_right
+scrolltrack_right
 {
 	width: 160px;
 	height: 16px;
 
 }
 
-scrollbar:normal scrolltrack_right
+scrolltrack_right:normal
 {
 	border-image: url('res:ScrollbarHoriTrackNormal') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar:hot scrolltrack_right
+scrolltrack_right:hot
 {
 	border-image: url('res:ScrollbarHoriTrackHot') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar:pressed scrolltrack_right
+scrolltrack_right:pressed
 {
 	border-image: url('res:ScrollbarHoriTrackPressed') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar:disabled scrolltrack_right
+scrolltrack_right:disabled
 {
 	border-image: url('res:ScrollbarHoriTrackDisabled') 0 0 4 3 fill / 0px 0px 4px 3px; 
 }
 
-scrollbar scrollthumb_horizontal
+scrollthumb_horizontal
 {
 	width: 16px;
 	height: 16px;
 }
 
-scrollbar:normal scrollthumb_horizontal
+scrollthumb_horizontal:normal
 {
 	border-image: url('res:ScrollbarHoriThumbNormal') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:hot scrollthumb_horizontal
+scrollthumb_horizontal:hot
 {
 	border-image: url('res:ScrollbarHoriThumbHot') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:pressed scrollthumb_horizontal
+scrollthumb_horizontal:pressed
 {
 	border-image: url('res:ScrollbarHoriThumbPressed') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:disabled scrollthumb_horizontal
+scrollthumb_horizontal:disabled
 {
 	border-image: url('res:ScrollbarHoriThumbDisabled') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar scrollthumbgripper_horizontal
+scrollthumbgripper_horizontal
 {
 	bg-image-sizing:center; 
 }
 
-scrollbar:normal scrollthumbgripper_horizontal
+scrollthumbgripper_horizontal:normal
 {
 	border-image: url('res:ScrollbarHoriThumbGripperNormal') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:hot scrollthumbgripper_horizontal
+scrollthumbgripper_horizontal:hot
 {
 	border-image: url('res:ScrollbarHoriThumbGripperHot') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:pressed scrollthumbgripper_horizontal
+scrollthumbgripper_horizontal:pressed
 {
 	border-image: url('res:ScrollbarHoriThumbGripperPressed') 5 5 5 5 fill / 5px 5px 5px 5px; 
 }
 
-scrollbar:disabled scrollthumbgripper_horizontal
+scrollthumbgripper_horizontal:disabled
 {
 	border-image:;
 }
 
-scrollbar scrollbutton_left
+scrollbutton_left
 {
 	width: 17px;
 	height: 17px;
 }
 
-scrollbar:normal scrollbutton_left
+scrollbutton_left:normal
 {
 	border-image: url('res:ScrollbarHoriButtonLeftNormal') 3 3 3 3 fill / 3px 3px 3px 3px;
 }
 
-scrollbar:hot scrollbutton_left
+scrollbutton_left:hot
 {
 	border-image: url('res:ScrollbarHoriButtonLeftHot') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar:pressed scrollbutton_left
+scrollbutton_left:pressed
 {
 	border-image: url('res:ScrollbarHoriButtonLeftPressed') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar:disabled scrollbutton_left
+scrollbutton_left:disabled
 {
 	border-image: url('res:ScrollbarHoriButtonLeftDisabled') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar scrollbutton_right
+scrollbutton_right
 {
 	width: 17px;
 	height: 17px;
 }
 
-scrollbar:normal scrollbutton_right
+scrollbutton_right:normal
 {
 	border-image: url('res:ScrollbarHoriButtonRightNormal') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar:hot scrollbutton_right
+scrollbutton_right:hot
 {
 	border-image: url('res:ScrollbarHoriButtonRightHot') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar:pressed scrollbutton_right
+scrollbutton_right:pressed
 {
 	border-image: url('res:ScrollbarHoriButtonRightPressed') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
-scrollbar:disabled scrollbutton_right
+scrollbutton_right:disabled
 {
 	border-image: url('res:ScrollbarHoriButtonRightDisabled') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
