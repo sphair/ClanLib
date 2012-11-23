@@ -184,7 +184,7 @@ void ScrollBar_Impl::on_part_track_increment(std::shared_ptr<GUIMessage> &msg)
 			if (last_position != position)
 				invoke_scroll_event(&func_scroll_page_increment);
 
-			update_part_positions();
+			mouse_pressed();
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
@@ -224,7 +224,7 @@ void ScrollBar_Impl::on_part_button_increment(std::shared_ptr<GUIMessage> &msg)
 			if (last_position != position)
 				invoke_scroll_event(&func_scroll_line_increment);
 
-			//mouse_pressed();	<--- this locks mouse events why?
+			update_part_positions();
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
@@ -308,13 +308,14 @@ void ScrollBar_Impl::update_part_positions()
 	Rect rect_part_track_decrement = part_track_decrement->get_geometry();
 	Rect rect_part_thumb = part_thumb->get_geometry();
 	Rect rect_part_track_increment = part_track_increment->get_geometry();
+	Rect rect_part_button_decrement = part_button_decrement->get_geometry();
 
 	int track_size = rect_part_track_decrement.get_width() + rect_part_thumb.get_width() + rect_part_track_increment.get_width();
 	int thumb_size = rect_part_thumb.get_width();
 
 	int position = calculate_thumb_position(thumb_size, track_size);
 	Rect new_rect;
-	new_rect.left = rect_part_track_decrement.right + 1;
+	new_rect.left = rect_part_button_decrement.right + 1;
 	new_rect.right = new_rect.left + rect_part_thumb.get_width();
 	new_rect.top = rect_part_thumb.top;
 	new_rect.bottom = rect_part_thumb.bottom;
