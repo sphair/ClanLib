@@ -145,7 +145,9 @@ void ScrollBar_Impl::on_part_thumb(std::shared_ptr<GUIMessage> &msg)
 			part_thumb->set_pseudo_class(CssStr::pressed, true);
 			part_thumb_gripper->set_pseudo_class(CssStr::pressed, true);
 
-			// mouse_pressed();	// DISABLED - THIS DOES NOT WORK
+			mouse_down_timer.start(100,false);
+			update_part_positions();
+			part_thumb->capture_mouse(true);
 
 		}
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
@@ -290,19 +292,11 @@ void ScrollBar_Impl::mouse_moved(const Point &pos)
 
 }
 
-
-void ScrollBar_Impl::mouse_pressed()
-{
-	mouse_down_timer.start(100,false);
-	update_part_positions();
-	scrollbar->capture_mouse(true);
-}
-
 void ScrollBar_Impl::mouse_released()
 {
 	mouse_down_mode = mouse_down_none;
 	mouse_down_timer.stop();
-	scrollbar->capture_mouse(false);
+	part_thumb->capture_mouse(false);
 }
 
 void ScrollBar_Impl::update_part_positions()
