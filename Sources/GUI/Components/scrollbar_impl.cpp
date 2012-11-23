@@ -318,7 +318,7 @@ void ScrollBar_Impl::update_part_positions()
 	int position = calculate_thumb_position(thumb_size, track_size);
 	Rect new_rect;
 	new_rect.left = rect_part_button_decrement.right + 1 + position;
-	new_rect.right = new_rect.left + rect_part_thumb.get_width();
+	new_rect.right = new_rect.left + thumb_size;
 	new_rect.top = rect_part_thumb.top;
 	new_rect.bottom = rect_part_thumb.bottom;
 	part_thumb->set_geometry( new_rect );
