@@ -163,6 +163,7 @@ void ScrollBar::set_ranges(int scroll_min, int scroll_max, int line_step, int pa
 		impl->position = impl->scroll_max-1;
 	if (impl->position < impl->scroll_min)
 		impl->position = impl->scroll_min;
+	impl->update_part_positions();
 }
 
 void ScrollBar::calculate_ranges(int view_size, int total_size)
