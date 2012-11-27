@@ -73,7 +73,6 @@ void FontProvider_Vector::load_font(const FontDescription &desc)
 	font_engine = new FontEngine_Win32(desc);
 #elif defined(__APPLE__)
 	font_engine = new FontEngine_Cocoa(desc);
-	glyph_cache.font_metrics = font_engine->get_metrics();
 #else
 
 	std::string font_file_path = desc.get_filename();
