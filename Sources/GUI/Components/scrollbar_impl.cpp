@@ -81,8 +81,6 @@ void ScrollBar_Impl::on_part_button_decrement(std::shared_ptr<GUIMessage> &msg)
 			part_button_decrement->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
-			mouse_moved(input_msg->input_event.mouse_pos);
 	}
 }
 
@@ -121,9 +119,6 @@ void ScrollBar_Impl::on_part_track_decrement(std::shared_ptr<GUIMessage> &msg)
 			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
-			mouse_moved(input_msg->input_event.mouse_pos);
-
 	}
 }
 
@@ -198,8 +193,6 @@ void ScrollBar_Impl::on_part_track_increment(std::shared_ptr<GUIMessage> &msg)
 			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
-			mouse_moved(input_msg->input_event.mouse_pos);
 
 	}
 }
@@ -238,8 +231,6 @@ void ScrollBar_Impl::on_part_button_increment(std::shared_ptr<GUIMessage> &msg)
 			part_button_increment->set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
-			mouse_moved(input_msg->input_event.mouse_pos);
 
 	}
 }
