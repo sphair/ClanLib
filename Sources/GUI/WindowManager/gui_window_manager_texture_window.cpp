@@ -31,6 +31,7 @@
 #include "API/GUI/gui_window_manager_texture_window.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/2D/subtexture.h"
+#include "API/Display/2D/image.h"
 #include "API/Core/Math/rect.h"
 #include "../gui_manager_impl.h"
 

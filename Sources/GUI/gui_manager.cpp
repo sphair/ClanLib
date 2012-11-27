@@ -167,7 +167,8 @@ void GUIManager::add_theme(const std::string &path_to_theme)
 	impl->resources = ResourceManager("resources.xml", dir);
 
 	std::string base_uri;
-	impl->css_document.add_sheet(dir.open_file_read("theme.css"), base_uri);
+    IODevice file = dir.open_file_read("theme.css");
+	impl->css_document.add_sheet(file, base_uri);
 }
 
 void GUIManager::set_css_document(CSSDocument css)
@@ -187,7 +188,8 @@ void GUIManager::set_css_document(const std::string &filename, const VirtualDire
 {
 	CSSDocument css;
 	std::string base_uri;
-	css.add_sheet(directory.open_file_read(filename), base_uri); 
+    IODevice file = directory.open_file_read(filename);
+	css.add_sheet(file, base_uri);
 	set_css_document(css);
 }
 

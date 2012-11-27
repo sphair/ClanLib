@@ -29,6 +29,8 @@
 #pragma once
 
 #include <map>
+#include "API/Display/Font/font.h"
+#include "API/Display/2D/image.h"
 
 namespace clan
 {
