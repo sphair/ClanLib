@@ -124,16 +124,16 @@ void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
 	if ((geometry.get_width() != new_geometry.get_width()) || (geometry.get_height() != new_geometry.get_height()) )
 	{
 		geometry = new_geometry;
-		geometry_updated();
+		geometry_updated(true);
 	}
 	else
 	{
 		geometry = new_geometry;
-		component->request_repaint();
+		geometry_updated(false);
 	}
 }
 
-void GUIComponent_Impl::geometry_updated()
+void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 {
 	if (!layout.is_null())
 		layout.set_geometry(geometry.get_size());
@@ -144,8 +144,11 @@ void GUIComponent_Impl::geometry_updated()
 		css_layout.layout(canvas, geometry.get_size());
 	}
 
-	if (!func_resized.is_null())
-		func_resized.invoke();
+	if (geometry_was_resized)
+	{
+		if (!func_resized.is_null())
+			func_resized.invoke();
+	}
 
 	component->request_repaint();
 }

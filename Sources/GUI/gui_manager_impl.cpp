@@ -641,7 +641,7 @@ void GUIManager_Impl::on_resize(GUITopLevelWindow *toplevel_window, const Size &
 {
 	GUIComponent *component = toplevel_window->component;
 	component->impl->geometry = component->get_geometry();
-	component->impl->geometry_updated();
+	component->impl->geometry_updated(true);
 
 	std::shared_ptr<GUIMessage_Resize> message(new GUIMessage_Resize());
 	message->target = component;
