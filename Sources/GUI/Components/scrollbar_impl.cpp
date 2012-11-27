@@ -317,6 +317,16 @@ void ScrollBar_Impl::update_part_positions()
 	new_rect.bottom = rect_part_thumb.bottom;
 	part_thumb->set_geometry( new_rect );
 
+	int thumb_middle = new_rect.get_center().x;
+
+	new_rect = rect_part_track_decrement;
+	new_rect.right = thumb_middle - 1; 
+	part_track_decrement->set_geometry( new_rect );
+
+	new_rect = rect_part_track_increment;
+	new_rect.left = thumb_middle;
+	part_track_increment->set_geometry( new_rect );
+
 }
 
 void ScrollBar_Impl::create_parts()
