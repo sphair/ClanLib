@@ -121,7 +121,7 @@ public:
 	CSSClanBoxUsedValues css_used_values;
 
 	void set_geometry(Rect new_geometry, bool client_area);
-	void geometry_updated();
+	void geometry_updated(bool geometry_was_resized);
 	void invoke_enablemode_changed();
 
 	void layout_content();
