@@ -675,6 +675,11 @@ Callback_v1<CSSBoxProperties &> &GUIComponent::func_default_properties()
 	return impl->func_default_properties;
 }
 
+Callback_v1<CSSPropertyList &> &GUIComponent::func_css_property_list()
+{
+	return impl->func_css_property_list;
+}
+
 Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
 {
 	return impl->func_input;

@@ -35,6 +35,8 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Render/graphic_context.h"
+#include "API/CSSLayout/css_property.h"
+#include "API/CSSLayout/css_token.h"
 
 namespace clan
 {
@@ -65,6 +67,7 @@ private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
 	void mouse_released();
 	void mouse_moved(const Point &pos);
+	void on_css_property_list(CSSPropertyList &properties);
 
 public:
 	bool vertical;
@@ -107,6 +110,9 @@ public:
 	Callback_v0 func_scroll_thumb_track;
 	Callback_v0 func_scroll_end;
 	Callback_v0 *func_scroll_on_mouse_down;
+
+	CSSToken token_width;
+	CSSToken token_left;
 
 };
 

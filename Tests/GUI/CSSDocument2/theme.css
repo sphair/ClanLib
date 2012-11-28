@@ -537,7 +537,13 @@ scrolltrack_right:disabled
 
 scrollthumb_horizontal
 {
+
+	position: relative;
+
+/* This is set in Scrollbar_Impl
+ 	left: -100px;
 	width: 16px;
+*/
 	height: 16px;
 }
 

@@ -227,18 +227,9 @@ void GUIComponent_Impl::update_style()
 	GUIComponentSelectNode select_node(component);
 	CSSPropertyList properties = component->get_gui_manager().get_css_document().select(&select_node);
 
-	/* Add (disabled) proof of concept code, to demonstrate how to inject CSS into the CSSPropertyList
-	CSSProperty prop_color;
-	prop_color.set_name("color");
-	std::vector<CSSToken> tokens;
-	CSSToken token;
-	token.type = CSSToken::type_hash;
-	token.value = "ff00ff";
-	tokens.push_back(token);
-	prop_color.set_value_tokens(tokens);
-	prop_color.set_important(true);
-	properties.push_back(prop_color);
-	*/
+	// See "void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)" for an example of how this is used
+	if (!func_css_property_list.is_null())
+		func_css_property_list.invoke(properties);
 
 	css_properties.apply_properties(properties);
 	if (parent)
@@ -254,6 +245,5 @@ void GUIComponent_Impl::update_style()
 		cur_child = cur_child->get_next_sibling();
 	}
 }
-
 
 }
