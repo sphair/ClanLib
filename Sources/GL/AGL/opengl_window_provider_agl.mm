@@ -43,6 +43,9 @@
 #include "../opengl_graphic_context_provider.h"
 #include "../opengl_target_provider.h"
 
+namespace clan
+{
+
 void cl_agl_make_none_current()
 {
     [EAGLContext setCurrentContext:nil];    
@@ -344,4 +347,5 @@ void OpenGLWindowProvider_AGL::set_small_icon(const PixelBuffer &image)
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider_AGL Implementation:
 
+}
 
