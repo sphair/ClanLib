@@ -62,17 +62,16 @@
 // and although we could switch to newer more 'safe' versions, this may break
 // compilation in earlier versions of Visual Studio. -- mbn 13. sep 2006
 
-
-#ifndef WIN32
-#ifndef HAVE_WCSCASECMP
-int	cl_wcscasecmp(const wchar_t *, const wchar_t *);
-#define wcscasecmp cl_wcscasecmp
-#endif
-#endif
-
 namespace clan
 {
 
+#ifndef WIN32
+#ifndef HAVE_WCSCASECMP
+    int	cl_wcscasecmp(const wchar_t *, const wchar_t *);
+#define wcscasecmp cl_wcscasecmp
+#endif
+#endif
+    
 /////////////////////////////////////////////////////////////////////////////
 // StringHelp Operations:
 
