@@ -301,7 +301,7 @@ public:
 
 		// Save adjusted width values and calculate the resulting box heights
 		int i = 0;
-		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
+		for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 		{
 			if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
 			{
@@ -309,6 +309,7 @@ public:
 
 				// Save the result of the horizontal adjustment
 				child_used_values.width = box_math.used_lengths[i] - get_used_noncontent_width(child_used_values);
+				i++;
 
 				// If the height of the box could not be determined from CSS, then ask the component:
 				if (child_used_values.height_undetermined)
@@ -340,6 +341,7 @@ public:
 
 				// Save the result of the vertical adjustment
 				child_used_values.height = perpendicular_math.used_lengths[0] - used_noncontent_height;
+
 			}
 		}
 
