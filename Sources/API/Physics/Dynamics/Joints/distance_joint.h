@@ -26,61 +26,64 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Collision clanPhysics Collision
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
 /// \{
 
 
 #pragma once
 
 #include "../../api_physics.h"
+#include "joint.h"
+#include <memory>
 
 namespace clan
 {
 
-	class Shape_Impl;
-/// \brief Shape types.
-enum ShapeType
-{
-	shape_circle	= 0,
-	shape_edge		= 1,
-	shape_polygon	= 2,
-	shape_chain		= 3
-};
+	class DistanceJointDescription;
+	class DistanceJoint_Impl;
 
-/// \brief Shape class.
+/// \brief DistanceJoint class.
 ///
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS Shape
+/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
+class CL_API_PHYSICS DistanceJoint : public Joint
 {
 
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a Shape object.
-	Shape();
+	/// \brief Constructs a null instance.
+	DistanceJoint();
 
-	virtual ~Shape();
+	/// \brief Constructs a DistanceJoint object.
+	///
+	/// \param description = a DistanceJoint Description object.
+	DistanceJoint(const DistanceJointDescription &description);
+
+	virtual ~DistanceJoint();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
 
-	ShapeType get_shape_type () const;
-
 	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !shape_impl; }
+	bool is_null() const { return !impl; }
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
+
+	/// \brief Short-cut function to determine if either body is inactive. 
+	bool is_active() const;
+
 /// \}
 /// \name Operations
 /// \{
 
-	Shape &Shape::operator =(const Shape &copy);
+	DistanceJoint &DistanceJoint::operator =(const DistanceJoint &copy);
+
 	//Add us
-	// 	Clone the concrete shape
-	//virtual Shape	*Clone () const = 0;
+	// 	Clone the concrete DistanceJoint
+	//virtual DistanceJoint	*Clone () const = 0;
 
 	//virtual int 	GetChildCount () const = 0;
 	//virtual bool 	TestPoint (const Vec2f &transformation, const Vec2f &point) const = 0;
@@ -96,10 +99,10 @@ public:
 /// \{
 protected:
 
-	std::shared_ptr<Shape_Impl> shape_impl;
+	std::shared_ptr<DistanceJoint_Impl> impl;
 
 /// \}
-	friend class FixtureDescription;
+
 };
 
 }

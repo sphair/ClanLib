@@ -26,61 +26,56 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Collision clanPhysics Collision
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
 /// \{
-
 
 #pragma once
 
-#include "../../api_physics.h"
+#include "API/Physics/api_physics.h"
+#include "../../Box2D/Box2D.h"
+#include <memory>
 
 namespace clan
 {
 
-	class Shape_Impl;
-/// \brief Shape types.
-enum ShapeType
-{
-	shape_circle	= 0,
-	shape_edge		= 1,
-	shape_polygon	= 2,
-	shape_chain		= 3
-};
-
-/// \brief Shape class.
+class JointDescription_Impl;
+/// \brief JointDescription class.
 ///
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS Shape
+/// \xmlonly !group=Physic/Dynamics/JointDescriptions! !header=physics.h! \endxmlonly
+class CL_API_PHYSICS JointDescription
 {
 
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a Shape object.
-	Shape();
+	/// \brief Constructs a JointDescription object.
+	JointDescription();
 
-	virtual ~Shape();
+	virtual ~JointDescription();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
 
-	ShapeType get_shape_type () const;
-
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !shape_impl; }
-
-	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
+	//Add me
+	//b2JointType 	type
+	//void * 	userData
+	//b2Body * 	bodyA
+	//b2Body * 	bodyB
+	//bool 	collideConnected 
+	//Add me
+
 /// \}
 /// \name Operations
 /// \{
 
-	Shape &Shape::operator =(const Shape &copy);
+	JointDescription &JointDescription::operator =(const JointDescription &copy);
+
 	//Add us
-	// 	Clone the concrete shape
-	//virtual Shape	*Clone () const = 0;
+	// 	Clone the concrete JointDescription
+	//virtual JointDescription	*Clone () const = 0;
 
 	//virtual int 	GetChildCount () const = 0;
 	//virtual bool 	TestPoint (const Vec2f &transformation, const Vec2f &point) const = 0;
@@ -96,10 +91,23 @@ public:
 /// \{
 protected:
 
-	std::shared_ptr<Shape_Impl> shape_impl;
+	std::shared_ptr<JointDescription_Impl> impl;
 
 /// \}
-	friend class FixtureDescription;
+
+};
+
+class JointDescription_Impl
+{
+public:
+/// \brief Constructs a null instance.
+JointDescription_Impl();
+
+virtual ~JointDescription_Impl() { return; }
+
+
+b2JointDef joint_def;
+
 };
 
 }
