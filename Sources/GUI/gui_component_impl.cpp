@@ -38,6 +38,7 @@
 #include "css_clan_box_math.h"
 #include "css_clan_box_visitor.h"
 #include "gui_component_select_node.h"
+#include "API/CSSLayout/css_token.h"
 
 namespace clan
 {
@@ -225,6 +226,20 @@ void GUIComponent_Impl::update_style()
 
 	GUIComponentSelectNode select_node(component);
 	CSSPropertyList properties = component->get_gui_manager().get_css_document().select(&select_node);
+
+	/* Add (disabled) proof of concept code, to demonstrate how to inject CSS into the CSSPropertyList
+	CSSProperty prop_color;
+	prop_color.set_name("color");
+	std::vector<CSSToken> tokens;
+	CSSToken token;
+	token.type = CSSToken::type_hash;
+	token.value = "ff00ff";
+	tokens.push_back(token);
+	prop_color.set_value_tokens(tokens);
+	prop_color.set_important(true);
+	properties.push_back(prop_color);
+	*/
+
 	css_properties.apply_properties(properties);
 	if (parent)
 		css_properties.compute(&parent->impl->css_properties, &gui_manager_impl->resource_cache);
