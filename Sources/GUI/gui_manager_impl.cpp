@@ -716,8 +716,8 @@ void GUIManager_Impl::process_pointer_moved_at(GUIComponent *this_component, con
 {
 	if (this_component->is_visible())
 	{
-		Rect parent_rect = this_component->get_size();
-		if( force_pointer_enter || parent_rect.contains(point) )  
+		Size component_size = this_component->get_size();
+		if( force_pointer_enter || ( (point.x < component_size.width) && (point.y < component_size.height) && (point.x >=0) && (point.y >= 0) ) )
 		{
 			if (!this_component->impl->pointer_inside_component)
 			{
