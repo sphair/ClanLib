@@ -111,6 +111,8 @@ private:
 	std::shared_ptr<Body_Impl> impl;
 /// \}
 	friend class Fixture_Impl;
+
+	friend class DistanceJointDescription;
 };
 
 }
