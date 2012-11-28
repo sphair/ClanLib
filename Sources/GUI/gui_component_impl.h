@@ -82,6 +82,8 @@ public:
 	Callback_0<bool> func_pointer_enter;
 	Callback_0<bool> func_pointer_exit;
 	Callback_v1<CSSBoxProperties &> func_default_properties;
+	Callback_v1<CSSPropertyList &> func_css_property_list;
+	
 	Callback_1<bool, const InputEvent &> func_input;
 	Callback_1<bool, const InputEvent &> func_input_pressed;
 	Callback_1<bool, const InputEvent &> func_input_released;

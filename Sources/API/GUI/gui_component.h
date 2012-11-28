@@ -380,6 +380,7 @@ public:
 	Callback_v1<std::shared_ptr<GUIMessage> &> &func_filter_message();
 
 	Callback_v1<CSSBoxProperties &> &func_default_properties();
+	Callback_v1<CSSPropertyList &> &func_css_property_list();
 
 	/// \brief bool func_input(const InputEvent &input_event)
 	Callback_1<bool, const InputEvent &> &func_input();

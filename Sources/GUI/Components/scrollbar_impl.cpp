@@ -33,9 +33,9 @@
 #include "API/Display/Window/keys.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/Components/scrollbar.h"
+#include "API/Core/Text/string_help.h"
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
-
 namespace clan
 {
 
@@ -308,6 +308,14 @@ void ScrollBar_Impl::update_part_positions()
 	new_rect.bottom = rect_part_thumb.bottom;
 	part_thumb->set_geometry( new_rect );
 
+	token_width.type = CSSToken::type_dimension;
+	token_width.value = StringHelp::int_to_text(thumb_size);
+	token_width.dimension = "px";
+
+	token_left.type = CSSToken::type_dimension;
+	token_left.value = StringHelp::int_to_text( position + 1 - (part_button_increment->get_geometry().get_width() + track_size) );
+	token_left.dimension = "px";
+
 	int thumb_middle = new_rect.get_center().x;
 
 	new_rect = rect_part_track_decrement;
@@ -347,7 +355,28 @@ void ScrollBar_Impl::create_parts()
 
 	scrollbar->func_enablemode_changed().set(this, &ScrollBar_Impl::on_enablemode_changed);
 
+	part_thumb->func_css_property_list().set(this, &ScrollBar_Impl::on_css_property_list);
+
 	mouse_down_timer.func_expired().set(this, &ScrollBar_Impl::on_timer_expired);
+
+}
+
+void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)
+{
+	CSSProperty prop_width;
+	prop_width.set_name("width");
+	std::vector<CSSToken> tokens_width;
+	tokens_width.push_back(token_width);
+	prop_width.set_value_tokens(tokens_width);
+
+	CSSProperty prop_left;
+	prop_left.set_name("left");
+	std::vector<CSSToken> tokens_left;
+	tokens_left.push_back(token_left);
+	prop_left.set_value_tokens(tokens_left);
+
+	properties.push_back(prop_width);
+	properties.push_back(prop_left);
 
 }
 
