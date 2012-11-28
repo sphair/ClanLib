@@ -166,6 +166,20 @@ ribbon-section button:toggled
     background-color: #ffffff;
 }
 
+.position_test
+{
+    background-color: #ffaa22;
+    position: relative;
+    left: 150px;
+    top: -60px;
+    width: 60px;
+    height: 40px;
+}
+.position_test:hot
+{
+    background-color: #ffffff;
+}
+
 label.imagelabel
 {
     flex-shrink: 1;

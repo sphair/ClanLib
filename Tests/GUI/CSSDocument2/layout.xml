@@ -39,6 +39,9 @@
     </component>
     <component class="test4"/>
   </component>
+
+  <component class="position_test"/>
+
   <pushbutton>
     <text>PushButton</text>
   </pushbutton>
@@ -57,4 +60,5 @@
   </radiobutton>
   <lineedit>LineEdit</lineedit>
   <scrollbar></scrollbar>
+  
 </root>
