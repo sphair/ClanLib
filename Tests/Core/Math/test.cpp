@@ -75,7 +75,7 @@ int TestApp::main(const std::vector<std::string> &args)
 		test_vector2();
 		test_vector3();
 		test_vector4();
-		test_matrix();
+		//FIXME: test_matrix();
 		test_line2();
 		test_line3();
 		test_line_ray2();
@@ -83,6 +83,7 @@ int TestApp::main(const std::vector<std::string> &args)
 		test_line_segment2();
 		test_line_segment3();
 		test_triangle();
+		test_rect();
 	
 		Console::write_line("All Tests Complete");
 		console.display_close_message();

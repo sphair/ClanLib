@@ -136,6 +136,7 @@
     <ClCompile Include="test_line_segment.cpp" />
     <ClCompile Include="test_matrix.cpp" />
     <ClCompile Include="test_quaternion.cpp" />
+    <ClCompile Include="test_rect.cpp" />
     <ClCompile Include="test_triangle.cpp" />
     <ClCompile Include="test_vector.cpp" />
   </ItemGroup>
