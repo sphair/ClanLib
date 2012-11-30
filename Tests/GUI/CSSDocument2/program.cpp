@@ -55,7 +55,7 @@ int Program::main(const std::vector<std::string> &args)
 	root->update_layout();
 
 #ifdef SHOW_FPS
-	gui_fps(window, wm);
+	gui_fps(window, wm, root);
 #else
 	gui.exec();
 #endif
@@ -63,7 +63,7 @@ int Program::main(const std::vector<std::string> &args)
 	return 0;
 }
 
-void Program::gui_fps(DisplayWindow &window, GUIWindowManagerTexture &wm)
+void Program::gui_fps(DisplayWindow &window, GUIWindowManagerTexture &wm, GUIComponent *root)
 {
 	Canvas canvas(window);
 	Font font(canvas, "Tahoma", 24);
@@ -94,6 +94,10 @@ void Program::gui_fps(DisplayWindow &window, GUIWindowManagerTexture &wm)
 			total_time -= 1000;
 			fps_count = 0;
 		}
+
+		//root->request_repaint();	// 145 FPS (from 512fps)
+		//root->update_style();		// 5 FPS (from 512fps)
+		//root->update_layout();		// 54 FPS (from 512fps)
 
 		KeepAlive::process();
 		canvas.flip(0);
