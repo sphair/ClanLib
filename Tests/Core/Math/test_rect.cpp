@@ -119,6 +119,38 @@ void TestApp::test_rect(void)
 		fail();
 	if (!base_rect.is_overlapped(test_rect)) 
 		fail();
+
+	
+	test_rect = base_rect;
+	if (!test_rect.is_inside(base_rect)) 
+		fail();
+	if (!base_rect.is_inside(test_rect)) 
+		fail();
+
+	test_rect = base_rect;
+	test_rect.translate(Point(1, 0));
+	if (test_rect.is_inside(base_rect)) 
+		fail();
+	if (base_rect.is_inside(test_rect)) 
+		fail();
+	test_rect = base_rect;
+	test_rect.translate(Point(-1, 0));
+	if (test_rect.is_inside(base_rect)) 
+		fail();
+	if (base_rect.is_inside(test_rect)) 
+		fail();
+	test_rect = base_rect;
+	test_rect.translate(Point(0, 1));
+	if (test_rect.is_inside(base_rect)) 
+		fail();
+	if (base_rect.is_inside(test_rect)) 
+		fail();
+	test_rect = base_rect;
+	test_rect.translate(Point(0, -1));
+	if (test_rect.is_inside(base_rect)) 
+		fail();
+	if (base_rect.is_inside(test_rect)) 
+		fail();
 }
 
 
