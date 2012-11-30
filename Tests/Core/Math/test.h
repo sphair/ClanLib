@@ -92,6 +92,7 @@ private:
 	void test_matrix_mat2();
 	void test_matrix_mat3();
 	void test_matrix_mat4();
+	void test_rect();
 
 	void fail(void);
 

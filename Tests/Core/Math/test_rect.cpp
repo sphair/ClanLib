@@ -29,52 +29,15 @@
 
 #include "test.h"
 
-void TestApp::test_quaternion_f()
+void TestApp::test_rect(void)
 {
-	Console::write_line(" Header: quaternion.h");
-	Console::write_line("  Class: Quaternionf");
+	Console::write_line(" Header: rect.h");
+	Console::write_line("  Class: Rect");
 
+	Console::write_line("   Function: ()");
 	{
-		Quaternionf q(0.0f, 0.0f, 0.0f, angle_degrees, order_XYZ);
-		check_float(q.i, 0.0f);
-		check_float(q.j, 0.0f);
-		check_float(q.k, 0.0f);
-
-		check_float(q.w, 1.0f);
 
 	}
 }
 
-void TestApp::test_quaternion_d()
-{
-	Console::write_line(" Header: quaternion.h");
-	Console::write_line("  Class: Quaterniond");
 
-	{
-		Quaterniond q(0.0, 0.0, 0.0, angle_degrees, order_XYZ);
-		check_double(q.i, 0.0);
-		check_double(q.j, 0.0);
-		check_double(q.k, 0.0);
-
-		check_double(q.w, 1.0);
-
-	}
-}
-
-void TestApp::check_float(float value, float target)
-{
-	const float tiny = 0.0001f;
-	if ((value < (target - tiny)))
-		fail();
-	if ((value > (target + tiny)))
-		fail();
-}
-
-void TestApp::check_double(double value, double target)
-{
-	const double tiny = 0.0001;
-	if ((value < (target - tiny)))
-		fail();
-	if ((value > (target + tiny)))
-		fail();
-}
