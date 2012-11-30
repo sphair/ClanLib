@@ -221,8 +221,6 @@ void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void GUIComponent_Impl::update_style()
 {
 	css_properties = CSSBoxProperties();
-	if (!func_default_properties.is_null())
-		func_default_properties.invoke(css_properties);
 
 	GUIComponentSelectNode select_node(component);
 	CSSPropertyList properties = component->get_gui_manager().get_css_document().select(&select_node);
@@ -232,6 +230,10 @@ void GUIComponent_Impl::update_style()
 		func_css_property_list.invoke(properties);
 
 	css_properties.apply_properties(properties);
+
+	if (!func_default_properties.is_null())
+		func_default_properties.invoke(css_properties);
+
 	if (parent)
 		css_properties.compute(&parent->impl->css_properties, &gui_manager_impl->resource_cache);
 	else
