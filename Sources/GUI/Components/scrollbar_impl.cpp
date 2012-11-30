@@ -36,6 +36,8 @@
 #include "API/Core/Text/string_help.h"
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
+#include "API/CSSLayout/css_box_properties.h"
+
 namespace clan
 {
 
@@ -43,7 +45,7 @@ ScrollBar_Impl::ScrollBar_Impl()
 : vertical(false), scroll_min(0), scroll_max(1), line_step(1),
   page_step(10), position(0), mouse_down_mode(mouse_down_none),
   thumb_start_position(0), thumb_start_pixel_position(0),
-  func_scroll_on_mouse_down(0)
+  func_scroll_on_mouse_down(0),  thumb_left(256), thumb_size(256)
 {
 }
 
@@ -298,7 +300,7 @@ void ScrollBar_Impl::update_part_positions()
 	Rect rect_part_button_decrement = part_button_decrement->get_geometry();
 
 	int track_size = rect_part_track_decrement.get_width() + rect_part_track_increment.get_width();
-	int thumb_size = calculate_thumb_size(track_size);
+	thumb_size = calculate_thumb_size(track_size);
 
 	int position = calculate_thumb_position(thumb_size, track_size);
 	Rect new_rect;
@@ -313,7 +315,8 @@ void ScrollBar_Impl::update_part_positions()
 	token_width.dimension = "px";
 
 	token_left.type = CSSToken::type_dimension;
-	token_left.value = StringHelp::int_to_text( position + 1 - (part_button_increment->get_geometry().get_width() + track_size) );
+	thumb_left = position + 1 - (part_button_increment->get_geometry().get_width() + track_size);
+	token_left.value = StringHelp::int_to_text( thumb_left );
 	token_left.dimension = "px";
 
 	int thumb_middle = new_rect.get_center().x;
@@ -356,6 +359,7 @@ void ScrollBar_Impl::create_parts()
 	scrollbar->func_enablemode_changed().set(this, &ScrollBar_Impl::on_enablemode_changed);
 
 	part_thumb->func_css_property_list().set(this, &ScrollBar_Impl::on_css_property_list);
+	part_thumb->func_default_properties().set(this, &ScrollBar_Impl::on_default_properties);
 
 	mouse_down_timer.func_expired().set(this, &ScrollBar_Impl::on_timer_expired);
 
@@ -363,22 +367,33 @@ void ScrollBar_Impl::create_parts()
 
 void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)
 {
-	CSSProperty prop_width;
-	prop_width.set_name("width");
-	std::vector<CSSToken> tokens_width;
-	tokens_width.push_back(token_width);
-	prop_width.set_value_tokens(tokens_width);
+	//CSSProperty prop_width;
+	//prop_width.set_name("width");
+	//std::vector<CSSToken> tokens_width;
+	//tokens_width.push_back(token_width);
+	//prop_width.set_value_tokens(tokens_width);
+	//properties.push_back(prop_width);
 
 	CSSProperty prop_left;
 	prop_left.set_name("left");
 	std::vector<CSSToken> tokens_left;
 	tokens_left.push_back(token_left);
 	prop_left.set_value_tokens(tokens_left);
-
-	properties.push_back(prop_width);
 	properties.push_back(prop_left);
 
 }
+
+void ScrollBar_Impl::on_default_properties(CSSBoxProperties &properties)
+{
+	properties.width.type = CSSBoxWidth::type_length;
+	properties.width.length.value = thumb_size;
+	properties.width.length.type = CSSBoxLength::type_px;
+
+	//properties.left.type = CSSBoxLeft::type_length;
+	//properties.left.length.value = thumb_left;
+	//properties.left.length.type = CSSBoxLength::type_px;
+}	
+
 
 int ScrollBar_Impl::calculate_thumb_size(int track_size)
 {
