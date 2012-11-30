@@ -84,9 +84,41 @@ void TestApp::test_rect(void)
 	if (base_rect.contains(Point(base_rect.left, base_rect.bottom + 1)))
 		fail();
 
-	Rect test_rect = base_rect;
+	Rect test_rect;
 	
+	test_rect = base_rect;
+	if (!test_rect.is_overlapped(base_rect)) 
+		fail();
+	if (!base_rect.is_overlapped(test_rect)) 
+		fail();
 
+	test_rect = base_rect;
+	test_rect.translate(Point(test_rect.get_width(), 0));
+	if (test_rect.is_overlapped(base_rect)) 
+		fail();
+	if (base_rect.is_overlapped(test_rect)) 
+		fail();
+
+	test_rect = base_rect;
+	test_rect.translate(Point(test_rect.get_width() - 1, 0));
+	if (!test_rect.is_overlapped(base_rect)) 
+		fail();
+	if (!base_rect.is_overlapped(test_rect)) 
+		fail();
+
+	test_rect = base_rect;
+	test_rect.translate(Point(0, test_rect.get_height()));
+	if (test_rect.is_overlapped(base_rect)) 
+		fail();
+	if (base_rect.is_overlapped(test_rect)) 
+		fail();
+
+	test_rect = base_rect;
+	test_rect.translate(Point(0, test_rect.get_height() - 1));
+	if (!test_rect.is_overlapped(base_rect)) 
+		fail();
+	if (!base_rect.is_overlapped(test_rect)) 
+		fail();
 }
 
 
