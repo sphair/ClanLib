@@ -11,4 +11,6 @@ public:
 private:
 	static void create_component(clan::DomElement xml_element, clan::GUIComponent *parent);
 	static void create_imageview_test(clan::GUIComponent *root);
+
+	static void gui_fps(clan::DisplayWindow &window, clan::GUIWindowManagerTexture &wm);
 };
