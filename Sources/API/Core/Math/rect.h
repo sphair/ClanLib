@@ -116,16 +116,16 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief X1-coordinate.
+	/// \brief X1-coordinate (left point inside the rectangle)
 	Type left;
 
-	/// \brief Y1-coordinate.
+	/// \brief Y1-coordinate (top point inside the rectangle)
 	Type top;
 
-	/// \brief X2-coordinate.
+	/// \brief X2-coordinate (point outside the rectangle)
 	Type right;
 
-	/// \brief Y2-coordinate.
+	/// \brief Y2-coordinate (point outside the rectange)
 	Type bottom;
 
 	/// \brief Returns the width of the rectangle.
@@ -140,29 +140,29 @@ public:
 	/// \brief Returns true if the rectangle contains the point.
 	bool contains(const Vec2<Type> &p) const
 	{
-		return ((p.x >= left && p.x <= right) || (p.x <= left && p.x >= right))
-		    && ((p.y >= top && p.y <= bottom) || (p.y <= top && p.y >= bottom));
+		return (p.x >= left && p.x < right)
+		    && (p.y >= top && p.y < bottom);
 	}
 
-	/// \brief Returns the top-left point of the rectangle
+	/// \brief Returns the top-left point inside the rectangle
 	Pointx<Type> get_top_left() const
 	{
 		return Pointx<Type>(left, top);
 	}
 
-	/// \brief Returns the top-right point of the rectangle
+	/// \brief Returns the top-right point outside the rectangle
 	Pointx<Type> get_top_right() const
 	{
 		return Pointx<Type>(right, top);
 	}
 
-	/// \brief Returns the bottom-right point of the rectangle
+	/// \brief Returns the bottom-right point outside the rectangle
 	Pointx<Type> get_bottom_right() const
 	{
 		return Pointx<Type>(right, bottom);
 	}
 
-	/// \brief Returns the bottom-left point of the rectangle
+	/// \brief Returns the bottom-left point outside the rectangle
 	Pointx<Type> get_bottom_left() const
 	{
 		return Pointx<Type>(left, bottom);
@@ -214,36 +214,6 @@ public:
 	{
 		left = p.x;
 		top = p.y;
-		return *this;
-	}
-
-	/// \brief Sets the top-right point of the rectangle.
-	///
-	/// \return reference to this object
-	Rectx<Type> &set_top_right(const Vec2<Type>& p)
-	{
-		right = p.x;
-		top = p.y;
-		return *this;
-	}
-
-	/// \brief Sets the bottom-right point of the rectangle.
-	///
-	/// \return reference to this object
-	Rectx<Type> &set_bottom_right(const Vec2<Type>& p)
-	{
-		right = p.x;
-		bottom = p.y;
-		return *this;
-	}
-
-	/// \brief Sets the bottom-left point of the rectangle.
-	///
-	/// \return reference to this object
-	Rectx<Type> &set_bottom_left(const Vec2<Type>& p)
-	{
-		left = p.x;
-		bottom = p.y;
 		return *this;
 	}
 
@@ -394,24 +364,20 @@ public:
 		return *this;
 	}
 
-	/// \brief Normalize rectangle. Ensures that left is less than right and top is less than bottom.
+	/// \brief Normalize rectangle.
+	///
+	/// Sets the width to 0 if found a negative width
+	/// Sets the height to 0 if found a negative height
 	///
 	/// \return reference to this object
 	Rectx<Type> &normalize()
 	{
 		if (left > right)
-		{
-			Type temp = right;
 			right = left;
-			left = temp;
-		}
 
 		if (top > bottom)
-		{
-			Type temp = bottom;
 			bottom = top;
-			top = temp;
-		}
+
 		return *this;
 	}
 
