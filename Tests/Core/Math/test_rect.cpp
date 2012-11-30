@@ -34,10 +34,59 @@ void TestApp::test_rect(void)
 	Console::write_line(" Header: rect.h");
 	Console::write_line("  Class: Rect");
 
-	Console::write_line("   Function: ()");
-	{
+//XXXXXXXXXX
+//XX####XXX
+//XX####XXX
+//XX####XXX
+//XXXXXXXXXX
 
-	}
+	Rect base_rect(2, 1, 6, 4);
+	if (base_rect.get_width() != 4)
+		fail();
+	if (base_rect.get_height() != 3)
+		fail();
+
+	if (base_rect.left != 2)
+		fail();
+
+	if (base_rect.top != 1)
+		fail();
+
+	if (base_rect.contains(Point(base_rect.left - 1, base_rect.top)))
+		fail();
+	if (!base_rect.contains(Point(base_rect.left, base_rect.top)))
+		fail();
+	if (!base_rect.contains(Point(base_rect.left + 1, base_rect.top)))
+		fail();
+	if (base_rect.contains(Point(base_rect.left, base_rect.top-1)))
+		fail();
+	if (!base_rect.contains(Point(base_rect.left, base_rect.top+1)))
+		fail();
+
+	if (!base_rect.contains(Point(base_rect.right - 1, base_rect.top)))
+		fail();
+	if (base_rect.contains(Point(base_rect.right, base_rect.top)))
+		fail();
+	if (base_rect.contains(Point(base_rect.right + 1, base_rect.top)))
+		fail();
+
+	if (!base_rect.contains(Point(base_rect.right - 1, base_rect.bottom - 1)))
+		fail();
+	if (base_rect.contains(Point(base_rect.right - 1, base_rect.bottom)))
+		fail();
+	if (base_rect.contains(Point(base_rect.right - 1, base_rect.bottom + 1)))
+		fail();
+
+	if (!base_rect.contains(Point(base_rect.left, base_rect.bottom - 1)))
+		fail();
+	if (base_rect.contains(Point(base_rect.left, base_rect.bottom)))
+		fail();
+	if (base_rect.contains(Point(base_rect.left, base_rect.bottom + 1)))
+		fail();
+
+	Rect test_rect = base_rect;
+	
+
 }
 
 
