@@ -374,12 +374,12 @@ void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)
 	//prop_width.set_value_tokens(tokens_width);
 	//properties.push_back(prop_width);
 
-	CSSProperty prop_left;
-	prop_left.set_name("left");
-	std::vector<CSSToken> tokens_left;
-	tokens_left.push_back(token_left);
-	prop_left.set_value_tokens(tokens_left);
-	properties.push_back(prop_left);
+	//CSSProperty prop_left;
+	//prop_left.set_name("left");
+	//std::vector<CSSToken> tokens_left;
+	//tokens_left.push_back(token_left);
+	//prop_left.set_value_tokens(tokens_left);
+	//properties.push_back(prop_left);
 
 }
 
@@ -389,9 +389,9 @@ void ScrollBar_Impl::on_default_properties(CSSBoxProperties &properties)
 	properties.width.length.value = thumb_size;
 	properties.width.length.type = CSSBoxLength::type_px;
 
-	//properties.left.type = CSSBoxLeft::type_length;
-	//properties.left.length.value = thumb_left;
-	//properties.left.length.type = CSSBoxLength::type_px;
+	properties.left.type = CSSBoxLeft::type_length;
+	properties.left.length.value = thumb_left;
+	properties.left.length.type = CSSBoxLength::type_px;
 }	
 
 
