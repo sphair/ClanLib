@@ -68,8 +68,12 @@ private:
 	void mouse_released();
 	void mouse_moved(const Point &pos);
 	void on_css_property_list(CSSPropertyList &properties);
+	void on_default_properties(CSSBoxProperties &properties);
 
 public:
+	int thumb_left;
+	int thumb_size;
+
 	bool vertical;
 	int scroll_min, scroll_max, line_step, page_step, position;
 
