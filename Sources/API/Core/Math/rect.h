@@ -304,6 +304,15 @@ public:
 		return *this;
 	};
 
+	/// \brief Translate the rect
+	///
+	/// \return reference to this object
+	Rectx<Type> &translate(const Sizex<Type> &p)
+	{
+		left += p.width; top += p.height; right += p.width; bottom += p.height;
+		return *this;
+	};
+
 	/// \brief Translate the rect by another rect (only uses the left and top coords).
 	///
 	/// \return reference to this object
