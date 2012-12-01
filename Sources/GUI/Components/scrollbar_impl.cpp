@@ -358,32 +358,13 @@ void ScrollBar_Impl::create_parts()
 
 	scrollbar->func_enablemode_changed().set(this, &ScrollBar_Impl::on_enablemode_changed);
 
-	part_thumb->func_css_property_list().set(this, &ScrollBar_Impl::on_css_property_list);
-	part_thumb->func_default_properties().set(this, &ScrollBar_Impl::on_default_properties);
+	part_thumb->func_apply_properties().set(this, &ScrollBar_Impl::on_apply_properties);
 
 	mouse_down_timer.func_expired().set(this, &ScrollBar_Impl::on_timer_expired);
 
 }
 
-void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)
-{
-	//CSSProperty prop_width;
-	//prop_width.set_name("width");
-	//std::vector<CSSToken> tokens_width;
-	//tokens_width.push_back(token_width);
-	//prop_width.set_value_tokens(tokens_width);
-	//properties.push_back(prop_width);
-
-	//CSSProperty prop_left;
-	//prop_left.set_name("left");
-	//std::vector<CSSToken> tokens_left;
-	//tokens_left.push_back(token_left);
-	//prop_left.set_value_tokens(tokens_left);
-	//properties.push_back(prop_left);
-
-}
-
-void ScrollBar_Impl::on_default_properties(CSSBoxProperties &properties)
+void ScrollBar_Impl::on_apply_properties(CSSBoxProperties &properties)
 {
 	properties.width.type = CSSBoxWidth::type_length;
 	properties.width.length.value = thumb_size;
@@ -393,7 +374,6 @@ void ScrollBar_Impl::on_default_properties(CSSBoxProperties &properties)
 	properties.left.length.value = thumb_left;
 	properties.left.length.type = CSSBoxLength::type_px;
 }	
-
 
 int ScrollBar_Impl::calculate_thumb_size(int track_size)
 {

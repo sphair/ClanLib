@@ -67,8 +67,7 @@ private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
 	void mouse_released();
 	void mouse_moved(const Point &pos);
-	void on_css_property_list(CSSPropertyList &properties);
-	void on_default_properties(CSSBoxProperties &properties);
+	void on_apply_properties(CSSBoxProperties &properties);
 
 public:
 	int thumb_left;

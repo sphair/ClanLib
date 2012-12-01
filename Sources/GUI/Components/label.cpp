@@ -59,7 +59,7 @@ public:
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_default_properties(CSSBoxProperties &properties);
+	void on_apply_properties(CSSBoxProperties &properties);
 
 	Label *label;
 	std::string text;
@@ -78,7 +78,7 @@ Label::Label(GUIComponent *parent)
 {
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
-	func_default_properties().set(impl.get(), &Label_Impl::on_default_properties);
+	func_apply_properties().set(impl.get(), &Label_Impl::on_apply_properties);
 }
 
 Label::~Label()
@@ -131,7 +131,7 @@ void Label::set_text_color(const Colorf color)
 {
 	impl->user_color = color;
 	impl->is_user_color = true;
-	impl->on_default_properties(get_css_properties());
+	impl->on_apply_properties(get_css_properties()); // FIXME: this is a hack that only works for simple non-inherited values
 	request_repaint();
 }
 
@@ -169,7 +169,7 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	label->get_font().draw_text_ellipsis(canvas, content_box.left, content_box.top + metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
 }
 
-void Label_Impl::on_default_properties(CSSBoxProperties &properties)
+void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
 {
 	if (is_user_color)
 	{

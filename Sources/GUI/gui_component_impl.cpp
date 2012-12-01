@@ -193,22 +193,18 @@ void GUIComponent_Impl::update_style()
 	css_properties = CSSBoxProperties();
 
 	GUIComponentSelectNode select_node(component);
-	CSSPropertyList properties = component->get_gui_manager().get_css_document().select(&select_node);
+	CSSPropertyList sheet_properties = component->get_gui_manager().get_css_document().select(&select_node);
+	css_properties.apply_properties(sheet_properties);
 
-	// See "void ScrollBar_Impl::on_css_property_list(CSSPropertyList &properties)" for an example of how this is used
-	if (!func_css_property_list.is_null())
-		func_css_property_list.invoke(properties);
-
-	css_properties.apply_properties(properties);
-
-	if (!func_default_properties.is_null())
-		func_default_properties.invoke(css_properties);
+	if (!func_apply_properties.is_null())
+		func_apply_properties.invoke(css_properties);
 
 	if (parent)
 		css_properties.compute(&parent->impl->css_properties, &gui_manager_impl->resource_cache);
 	else
 		css_properties.compute(0, &gui_manager_impl->resource_cache);
-	sig_style_changed.invoke(properties);
+
+	sig_style_changed.invoke();
 
 	GUIComponent *cur_child = first_child;
 	while (cur_child)
