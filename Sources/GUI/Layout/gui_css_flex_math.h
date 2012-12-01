@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class CSSClanBoxMath
+class GUICSSFlexMath
 {
 public:
 	std::vector<float> used_min_lengths;

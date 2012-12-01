@@ -32,13 +32,13 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/Display/2D/image.h"
+#include "API/CSSLayout/css_token.h"
+#include "Layout/gui_css_box_visitor.h"
+#include "Layout/gui_layout_content.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
 #include "gui_css_strings.h"
-#include "css_clan_box_math.h"
-#include "css_clan_box_visitor.h"
 #include "gui_component_select_node.h"
-#include "API/CSSLayout/css_token.h"
 
 namespace clan
 {
@@ -56,13 +56,6 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 		parent = parent_or_owner;
 		//css_element = parent->get_top_level_component()->impl->css_layout.create_element("component");
 		//parent->impl->css_element.append_child(css_element);
-	}
-	else
-	{
-		css_element = css_layout.create_element("component");
-		css_element.apply_properties("display: block");
-		css_layout.set_root_element(css_element);
-		css_layout.func_get_image().set(this, &GUIComponent_Impl::on_css_layout_get_image);
 	}
 }
 
@@ -139,12 +132,6 @@ void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 	if (!layout.is_null())
 		layout.set_geometry(geometry.get_size());
 
-	if (!css_layout.is_null())
-	{
-		Canvas canvas = component->get_canvas();
-		css_layout.layout(canvas, geometry.get_size());
-	}
-
 	if (geometry_was_resized)
 	{
 		if (!func_resized.is_null())
@@ -167,37 +154,20 @@ void GUIComponent_Impl::invoke_enablemode_changed()
 	}
 }
 
-Image GUIComponent_Impl::on_css_layout_get_image(Canvas &canvas, const std::string &url)
-{
-	try
-	{
-        ResourceManager resources = gui_manager.lock()->resources;
-		return Image(canvas, url, &resources);
-	}
-	catch (Exception e)
-	{
-		// Hmm what to do about that?
-		return Image();
-	}
-}
-
 void GUIComponent_Impl::layout_content()
 {
-	CSSClanBoxInitialUsedValuesVisitor initial_visitor;
-	visit_css(&initial_visitor, true);
-
-	CSSClanBoxLayoutVisitor layout_visitor;
-	visit_css(&layout_visitor, true);
-
-	CSSClanBoxAbsoluteOrFixedVisitor absolute_visitor;
-	visit_css(&absolute_visitor, true);
+	GUILayoutContent visitor;
+	visitor.node(this);
 }
 
-void GUIComponent_Impl::visit_css(CSSClanBoxVisitor *visitor, bool base_visitor)
+void GUIComponent_Impl::visit_children(GUICSSBoxVisitor *visitor, bool recursive)
 {
-	visitor->node(this, base_visitor);
 	for (GUIComponent *child = first_child; child != 0; child = child->get_next_sibling())
-		child->impl->visit_css(visitor, false);
+	{
+		visitor->node(child->impl.get());
+		if (recursive)
+			child->impl->visit_children(visitor, true);
+	}
 }
 
 void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)

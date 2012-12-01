@@ -208,11 +208,6 @@ void GUIManager::add_resources(const std::string &filename, const VirtualDirecto
 	impl->resources.add_resources(ResourceManager(filename, directory));
 }
 
-void GUIManager::initialize_layout_manager(const std::string &xml_fullname, const std::string &css_fullname)
-{
-	impl->layout_manager = GUIThemeLayoutManager(xml_fullname, css_fullname);
-}
-
 void GUIManager::set_window_manager(GUIWindowManager &window_manager)
 {
 	impl->window_manager = window_manager;
@@ -349,16 +344,6 @@ void GUIManager::set_accelerator_table( const AcceleratorTable &table )
 	impl->accel_table = table;
 }
 
-CSSLayout GUIManager::create_layout(GUIComponent *component)
-{
-	return impl->layout_manager.create_layout(component->get_tag_name());
-}
-
-bool GUIManager::has_layout(GUIComponent *component)
-{
-	return impl->layout_manager.has_layout(component->get_tag_name());
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Implementation:
 
@@ -371,9 +356,6 @@ void GUIManager::initialize(GUIWindowManager &window_manager, const std::string 
 
 	set_window_manager(window_manager);
 	set_css_document("theme.css", dir);
-
-	if(FileHelp::file_exists(path_to_theme + "\\layout.xml") && FileHelp::file_exists(path_to_theme + "\\layout.css"))
-		initialize_layout_manager(path_to_theme + "\\layout.xml", path_to_theme + "\\layout.css");
 }
 
 }

@@ -850,12 +850,6 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	border.render();
 
-	if (!impl->css_layout.is_null())
-	{
-		impl->css_layout.layout(canvas, get_size());
-		impl->css_layout.render(canvas, this);
-	}
-
 	if (impl->func_render.is_null() == false)
 	{
 		impl->func_render.invoke(canvas, clip_rect);
@@ -1454,78 +1448,6 @@ void GUIComponent::set_constant_repaint(bool enable)
 void GUIComponent::set_selected_in_component_group(bool selected)
 {
 	impl->is_selected_in_group = selected;
-}
-
-CSSLayout GUIComponent::get_css_layout()
-{
-	return get_top_level_component()->impl->css_layout;
-}
-
-CSSLayoutElement GUIComponent::get_css_element()
-{
-	return impl->css_element;
-}
-
-void GUIComponent::load_css_layout(const std::string &xml_filename, const std::string &css_filename)
-{
-	CSSDocument css_document;
-	css_document.add_sheet(css_filename);
-
-	File file(xml_filename);
-	DomDocument dom(file, false);
-	DomNode cur = dom.get_document_element().get_first_child();
-	std::vector<CSSLayoutElement> element_stack;
-
-	{
-		DomSelectNode select_node(dom.get_document_element());
-		impl->css_element.apply_properties(css_document.select(&select_node));
-		impl->css_element.apply_properties(dom.get_document_element().get_attribute("style"));
-		impl->css_element.set_col_span(dom.get_document_element().get_attribute_int("colspan", 1));
-		impl->css_element.set_row_span(dom.get_document_element().get_attribute_int("rowspan", 1));
-	}
-
-	element_stack.push_back(impl->css_element);
-	while (!cur.is_null())
-	{
-		CSSLayoutElement child_css_element;
-		if (cur.is_element())
-		{
-			DomElement cur_element = cur.to_element();
-			DomSelectNode select_node(cur_element);
-			child_css_element = element_stack.back().create_element(cur_element.get_tag_name());
-			child_css_element.apply_properties(css_document.select(&select_node));
-			child_css_element.apply_properties(cur_element.get_attribute("style"));
-			child_css_element.set_col_span(cur_element.get_attribute_int("colspan", 1));
-			child_css_element.set_row_span(cur_element.get_attribute_int("rowspan", 1));
-		}
-		else if (cur.is_text())
-		{
-			DomText cur_text = cur.to_text();
-			element_stack.back().create_text(cur_text.get_node_value());
-		}
-
-		DomNode next = cur.get_first_child();
-		if (next.is_null())
-		{
-			next = cur.get_next_sibling();
-			if (next.is_null())
-			{
-				next = cur.get_parent_node();
-				while (!next.is_null() && next.get_next_sibling().is_null())
-					next = next.get_parent_node();
-				if (!next.is_null())
-					next = next.get_next_sibling();
-			}
-		}
-		else
-		{
-			element_stack.push_back(child_css_element);
-		}
-		cur = next;
-	}
-
-	Canvas canvas = get_canvas();
-	impl->css_layout.layout(canvas, get_size());
 }
 
 /////////////////////////////////////////////////////////////////////////////

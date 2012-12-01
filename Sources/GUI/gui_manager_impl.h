@@ -41,7 +41,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
-#include "Theme/gui_theme_layout_manager.h"
 #include "CSSLayout/css_resource_cache.h"
 #include <vector>
 #include <map>
@@ -124,7 +123,6 @@ public:
 	Signal_v1<std::shared_ptr<GUIMessage> &> sig_filter_message;
 	Callback_0<int> func_exec_handler;
 	mutable CSSDocument css_document;
-	GUIThemeLayoutManager layout_manager;
 
 	ResourceManager resources;
 	CSSResourceCache resource_cache;
