@@ -40,10 +40,10 @@ typedef float CSSUsedValue;
 typedef int CSSActualValue;
 
 // \brief Used values used in box size calculations
-class CSSClanBoxUsedValues
+class GUICSSUsedValues
 {
 public:
-	CSSClanBoxUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(1e5f), min_height(0.0f), max_height(1e5f) { }
+	GUICSSUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(1e5f), min_height(0.0f), max_height(1e5f), left(0.0f), top(0.0f) { }
 
 	struct LTRB
 	{
@@ -66,13 +66,16 @@ public:
 
 	CSSUsedValue min_height;
 	CSSUsedValue max_height;
+
+	CSSUsedValue left;
+	CSSUsedValue top;
 };
 
 // \brief Calculates box used values without applying any constraints or auto rules
-class CSSClanBoxInitialUsedValues
+class GUICSSInitialUsedValues
 {
 public:
-	static void visit(CSSClanBoxUsedValues &values, const CSSBoxProperties &properties, CSSClanBoxUsedValues &containing_box)
+	static void visit(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
 	{
 		values.margin.left = get_css_margin_width(properties.margin_width_left, containing_box.width, containing_box.width_undetermined);
 		values.margin.right = get_css_margin_width(properties.margin_width_right, containing_box.width, containing_box.width_undetermined);
@@ -99,7 +102,7 @@ public:
 	}
 
 private:
-	static void get_css_width(CSSClanBoxUsedValues &values, const CSSBoxProperties &properties, CSSClanBoxUsedValues &containing_box)
+	static void get_css_width(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
 	{
 		switch (properties.width.type)
 		{
@@ -126,7 +129,7 @@ private:
 		}
 	}
 
-	static void get_css_height(CSSClanBoxUsedValues &values, const CSSBoxProperties &properties, CSSClanBoxUsedValues &containing_box)
+	static void get_css_height(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
 	{
 		switch (properties.height.type)
 		{
@@ -246,10 +249,10 @@ private:
 };
 
 // \brief Apply min/max constraints on box
-class CSSClanBoxApplyMinMaxConstraints
+class GUICSSApplyMinMaxConstraints
 {
 public:
-	static void visit(CSSClanBoxUsedValues &values, const CSSBoxProperties &properties, CSSClanBoxUsedValues &containing_box)
+	static void visit(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
 	{
 		values.width = std::min(values.width, values.max_width);
 		values.width = std::max(values.width, values.min_width);

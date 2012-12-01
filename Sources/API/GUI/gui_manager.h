@@ -182,9 +182,6 @@ public:
 	/// \brief Adds additional resources to the GUI resource manager
 	void add_resources(const std::string &filename, const VirtualDirectory &directory);
 
-	/// \brief Load layout.
-	void initialize_layout_manager(const std::string &xml_fullname, const std::string &css_fullname);
-
 	/// \brief Sets the windows manager.
 	void set_window_manager(GUIWindowManager &window_manager);
 
@@ -225,12 +222,6 @@ public:
 
 	/// \brief Set the accelerator table.
 	void set_accelerator_table(const AcceleratorTable &table);
-
-	/// \brief Creates a css layout for a given component.
-	CSSLayout create_layout(GUIComponent *component);
-
-	/// \brief Checks if a component type has layout information available.
-	bool has_layout(GUIComponent *component);
 
 /// \}
 /// \name Implementation

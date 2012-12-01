@@ -66,8 +66,6 @@ class GUITopLevelWindow;
 class GUITheme;
 class ResourceManager;
 class GUIConsumedKeys;
-class CSSLayout;
-class CSSLayoutElement;
 class GUIComponent_Impl;
 class CSSBoxProperties;
 
@@ -336,12 +334,6 @@ public:
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	bool get_constant_repaint() const;
 
-	/// \brief Gets the css layout
-	CSSLayout get_css_layout();
-
-	/// \brief Gets the css element for this component
-	CSSLayoutElement get_css_element();
-
 	/// \brief Gets the font
 	Font get_font();
 
@@ -579,9 +571,6 @@ public:
 
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
-
-	/// \brief Loads a layout from file.
-	void load_css_layout(const std::string &xml_filename, const std::string &css_filename);
 
 /// \}
 /// \name Implementation
