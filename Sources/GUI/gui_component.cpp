@@ -670,14 +670,9 @@ Callback_0<bool> &GUIComponent::func_pointer_exit()
 	return impl->func_pointer_exit;
 }
 
-Callback_v1<CSSBoxProperties &> &GUIComponent::func_default_properties()
+Callback_v1<CSSBoxProperties &> &GUIComponent::func_apply_properties()
 {
-	return impl->func_default_properties;
-}
-
-Callback_v1<CSSPropertyList &> &GUIComponent::func_css_property_list()
-{
-	return impl->func_css_property_list;
+	return impl->func_apply_properties;
 }
 
 Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
@@ -710,7 +705,7 @@ Callback_v1<bool> &GUIComponent::func_visibility_change()
 	return impl->func_visibility_change;
 }
 
-Signal_v1<const CSSPropertyList &> &GUIComponent::sig_style_changed()
+Signal_v0 &GUIComponent::sig_style_changed()
 {
 	return impl->sig_style_changed;
 }
