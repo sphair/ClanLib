@@ -28,25 +28,25 @@
 
 #include "GUI/precomp.h"
 #include "gui_component_select_node.h"
-#include "API/GUI/gui_component.h"
+#include "API/GUI/gui_element.h"
 #include "API/Core/Text/string_help.h"
 
 namespace clan
 {
 
-GUIComponentSelectNode::GUIComponentSelectNode(const GUIComponent *element)
+GUIComponentSelectNode::GUIComponentSelectNode(const GUIElement *element)
 : dom_element(element), pos(element)
 {
 }
 
-GUIComponentSelectNode::GUIComponentSelectNode(const GUIComponent *element, const std::string &pseudo_tag_name)
+GUIComponentSelectNode::GUIComponentSelectNode(const GUIElement *element, const std::string &pseudo_tag_name)
 : dom_element(element), pos(element), pseudo_tag_name(pseudo_tag_name)
 {
 }
 
 bool GUIComponentSelectNode::parent()
 {
-	const GUIComponent *parent_node = pos->get_parent_component();
+	const GUIElement *parent_node = pos->get_parent_component();
 	if (parent_node)
 	{
 		pos = parent_node;
@@ -60,7 +60,7 @@ bool GUIComponentSelectNode::parent()
 
 bool GUIComponentSelectNode::prev_sibling()
 {
-	const GUIComponent *prev_node = pos->get_previous_sibling();
+	const GUIElement *prev_node = pos->get_previous_sibling();
 	if (prev_node)
 	{
 		pos = prev_node;
@@ -112,7 +112,7 @@ std::string GUIComponentSelectNode::get_attribute_value(const std::string &name,
 int GUIComponentSelectNode::child_index()
 {
 	int index = 0;
-	const GUIComponent *cur = pos;
+	const GUIElement *cur = pos;
 	while (cur)
 	{
 		index++;

@@ -45,6 +45,7 @@ namespace clan
 class GUIManager_Impl;
 class GUILayout;
 class GUICSSBoxVisitor;
+class GUIElement;
 
 class GUIComponent_Impl
 {
@@ -92,10 +93,6 @@ public:
 	Callback_v1<std::shared_ptr<GUIMessage> &> func_filter_message;
 	Callback_2<GUIComponent*, GUIComponent*, std::string> func_create_custom_component;
 	Callback_v1<bool> func_visibility_change;
-	std::string tag_name;
-	std::string id;
-	std::string class_string;
-	std::vector<std::string> pseudo_classes;
 	bool allow_resize;
 	bool clip_children;
 	Rect clip_children_rect;
@@ -114,16 +111,15 @@ public:
 	std::string group_name;
 	bool double_click_enabled;
 
-	CSSBoxProperties css_properties;
+	std::unique_ptr<GUIElement> element;
 	GUICSSUsedValues css_used_values;
 
 	void set_geometry(Rect new_geometry, bool client_area);
 	void geometry_updated(bool geometry_was_resized);
 	void invoke_enablemode_changed();
 
-	void layout_content();
-
 	void visit_children(GUICSSBoxVisitor *visitor, bool recursive);
+	void layout_content();
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void update_style();

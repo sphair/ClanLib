@@ -28,25 +28,27 @@
 
 #include "GUI/precomp.h"
 #include "gui_set_initial_used_values.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
 
 void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 {
+	const CSSBoxProperties &properties = node->element->get_css_properties();
 	if (node->parent)
 	{
-		if (node->css_properties.position.type == CSSBoxPosition::type_absolute || node->css_properties.position.type == CSSBoxPosition::type_fixed)
+		if (properties.position.type == CSSBoxPosition::type_absolute || properties.position.type == CSSBoxPosition::type_fixed)
 		{
 			// To do: find nearest ancestor with 'position:relative'
 			GUICSSUsedValues containing_box = node->parent->impl->css_used_values;
 			containing_box.width_undetermined = false;
 			containing_box.height_undetermined = false;
-			GUICSSInitialUsedValues::visit(node->css_used_values, node->css_properties, containing_box);
+			GUICSSInitialUsedValues::visit(node->css_used_values, properties, containing_box);
 		}
 		else
 		{
-			GUICSSInitialUsedValues::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
+			GUICSSInitialUsedValues::visit(node->css_used_values, properties, node->parent->impl->css_used_values);
 		}
 	}
 	else
@@ -55,8 +57,8 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 		initial_containing_box.width = node->geometry.get_width();
 		initial_containing_box.height = node->geometry.get_height();
 
-		GUICSSInitialUsedValues::visit(node->css_used_values, node->css_properties, initial_containing_box);
-		GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, initial_containing_box);
+		GUICSSInitialUsedValues::visit(node->css_used_values, properties, initial_containing_box);
+		GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties, initial_containing_box);
 
 		if (node->css_used_values.width_undetermined)
 		{

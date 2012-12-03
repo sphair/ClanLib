@@ -28,6 +28,7 @@
 
 #include "GUI/precomp.h"
 #include "gui_find_preferred_height.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
@@ -54,7 +55,7 @@ void GUIFindPreferredHeight::flex_horizontal_node(GUIComponent_Impl *node)
 	}
 
 	node->css_used_values.height = std::max(node->css_used_values.height, preferred_height);
-	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
+	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element->get_css_properties(), node->parent->impl->css_used_values);
 }
 
 void GUIFindPreferredHeight::flex_vertical_node(GUIComponent_Impl *node)
@@ -79,7 +80,7 @@ void GUIFindPreferredHeight::flex_vertical_node(GUIComponent_Impl *node)
 	}
 
 	node->css_used_values.height = std::max(node->css_used_values.height, preferred_height);
-	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->css_properties, node->parent->impl->css_used_values);
+	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element->get_css_properties(), node->parent->impl->css_used_values);
 }
 
 }

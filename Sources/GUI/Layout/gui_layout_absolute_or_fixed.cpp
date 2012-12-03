@@ -30,6 +30,7 @@
 #include "gui_layout_absolute_or_fixed.h"
 #include "gui_set_initial_used_values.h"
 #include "gui_layout_content.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
@@ -38,7 +39,8 @@ namespace clan
 // and the entire layout for the absolute/fixed component needs to be calculated now.
 void GUILayoutAbsoluteOrFixed::node(GUIComponent_Impl *node)
 {
-	if (node->css_properties.position.type == CSSBoxPosition::type_absolute || node->css_properties.position.type == CSSBoxPosition::type_fixed)
+	const CSSBoxProperties &properties = node->element->get_css_properties();
+	if (properties.position.type == CSSBoxPosition::type_absolute || properties.position.type == CSSBoxPosition::type_fixed)
 	{
 		// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
 /*

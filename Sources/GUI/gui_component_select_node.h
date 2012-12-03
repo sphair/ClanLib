@@ -33,13 +33,13 @@
 namespace clan
 {
 
-class GUIComponent;
+class GUIElement;
 
 class GUIComponentSelectNode : public CSSSelectNode
 {
 public:
-	GUIComponentSelectNode(const GUIComponent *element);
-	GUIComponentSelectNode(const GUIComponent *element, const std::string &pseudo_tag_name);
+	GUIComponentSelectNode(const GUIElement *element);
+	GUIComponentSelectNode(const GUIElement *element, const std::string &pseudo_tag_name);
 	bool parent();
 	bool prev_sibling();
 	void push();
@@ -55,10 +55,10 @@ public:
 
 private:
 	std::string pseudo_tag_name;
-	const GUIComponent *dom_element;
-	const GUIComponent *pos;
+	const GUIElement *dom_element;
+	const GUIElement *pos;
 	bool is_modified;
-	std::vector<const GUIComponent *> saved_elements;
+	std::vector<const GUIElement *> saved_elements;
 };
 
 }

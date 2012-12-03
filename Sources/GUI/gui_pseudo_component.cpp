@@ -71,6 +71,8 @@ CSSBoxProperties &GUIPseudoComponent::get_css_properties()
 
 void GUIPseudoComponent::update_style()
 {
+	// FIXME
+	/*
 	impl->css_properties = CSSBoxProperties();
 
 	GUIComponentSelectNode select_node(impl->component, impl->pseudo_tag_name);
@@ -81,6 +83,8 @@ void GUIPseudoComponent::update_style()
 		impl->css_properties.compute(&impl->component->get_parent_component()->get_css_properties(), &impl->component->impl->gui_manager_impl->resource_cache);
 	else
 		impl->css_properties.compute(0, &impl->component->impl->gui_manager_impl->resource_cache);
+
+		*/
 }
 
 }

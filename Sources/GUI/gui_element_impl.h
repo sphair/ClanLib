@@ -30,19 +30,38 @@
 #pragma once
 
 #include "API/CSSLayout/css_box_properties.h"
-
+#include "Layout/gui_css_used_values.h"
 namespace clan
 {
 
-class GUIComponent;
+class GUIElement;
+class GUICSSBoxVisitor;
+class CSSDocument;
+class CSSResourceCache;
 
 class GUIElement_Impl
 {
 public:
-	GUIElement_Impl();
+	GUIElement_Impl(GUIElement *component, GUIElement *parent);
 	~GUIElement_Impl();
 
+	void update_style(CSSResourceCache *resource_cache, CSSDocument &document);
+
+	GUIElement *component;
+	GUIElement *parent;
+	GUIElement *prev_sibling;
+	GUIElement *next_sibling;
+	GUIElement *first_child;
+	GUIElement *last_child;
+
+	CSSBoxProperties css_properties;
+
+	std::string tag_name;
+	std::string id;
+	std::string class_string;
+	std::vector<std::string> pseudo_classes;
 
 };
+
 
 }

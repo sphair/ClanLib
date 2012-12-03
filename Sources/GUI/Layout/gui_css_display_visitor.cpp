@@ -28,13 +28,15 @@
 
 #include "GUI/precomp.h"
 #include "gui_css_display_visitor.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
 
 void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 {
-	switch (node->css_properties.display.type)
+	const CSSBoxProperties &properties = node->element->get_css_properties();
+	switch (properties.display.type)
 	{
 	case CSSBoxDisplay::type_flex:
 		flex_node(node);
@@ -52,11 +54,12 @@ void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 
 void GUICSSDisplayVisitor::flex_node(GUIComponent_Impl *node)
 {
-	if (node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_column || node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_column_reverse)
+	const CSSBoxProperties &properties = node->element->get_css_properties();
+	if (properties.flex_direction.type == CSSBoxFlexDirection::type_column || properties.flex_direction.type == CSSBoxFlexDirection::type_column_reverse)
 	{
 		flex_vertical_node(node);
 	}
-	else if (node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_row || node->css_properties.flex_direction.type == CSSBoxFlexDirection::type_row_reverse)
+	else if (properties.flex_direction.type == CSSBoxFlexDirection::type_row || properties.flex_direction.type == CSSBoxFlexDirection::type_row_reverse)
 	{
 		flex_horizontal_node(node);
 	}
@@ -88,12 +91,13 @@ CSSUsedValue GUICSSDisplayVisitor::get_used_noncontent_height(const GUICSSUsedVa
 
 float GUICSSDisplayVisitor::get_css_relative_x(GUIComponent_Impl *node, float containing_width)
 {
-	if (node->css_properties.position.type == CSSBoxPosition::type_relative)
+	const CSSBoxProperties &properties = node->element->get_css_properties();
+	if (properties.position.type == CSSBoxPosition::type_relative)
 	{
-		if (node->css_properties.left.type == CSSBoxLeft::type_length)
-			return node->css_properties.left.length.value;
-		else if (node->css_properties.left.type == CSSBoxLeft::type_percentage)
-			return node->css_properties.left.percentage / 100.0f * containing_width;
+		if (properties.left.type == CSSBoxLeft::type_length)
+			return properties.left.length.value;
+		else if (properties.left.type == CSSBoxLeft::type_percentage)
+			return properties.left.percentage / 100.0f * containing_width;
 		else
 			return 0.0f;
 	}
@@ -105,12 +109,13 @@ float GUICSSDisplayVisitor::get_css_relative_x(GUIComponent_Impl *node, float co
 
 float GUICSSDisplayVisitor::get_css_relative_y(GUIComponent_Impl *node, float containing_height)
 {
-	if (node->css_properties.position.type == CSSBoxPosition::type_relative)
+	const CSSBoxProperties &properties = node->element->get_css_properties();
+	if (properties.position.type == CSSBoxPosition::type_relative)
 	{
-		if (node->css_properties.top.type == CSSBoxTop::type_length)
-			return node->css_properties.top.length.value;
-		else if (node->css_properties.top.type == CSSBoxTop::type_percentage)
-			return node->css_properties.top.percentage / 100.0f * containing_height;
+		if (properties.top.type == CSSBoxTop::type_length)
+			return properties.top.length.value;
+		else if (properties.top.type == CSSBoxTop::type_percentage)
+			return properties.top.percentage / 100.0f * containing_height;
 		else
 			return 0.0f;
 	}
