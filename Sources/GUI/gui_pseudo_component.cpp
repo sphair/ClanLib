@@ -38,9 +38,25 @@
 namespace clan
 {
 
+GUIPseudoComponent::GUIPseudoComponent()
+{
+}
+
 GUIPseudoComponent::GUIPseudoComponent(GUIComponent *parent, const std::string &pseudo_tag_name)
 : impl(new GUIPseudoComponent_Impl(parent, pseudo_tag_name))
 {
+}
+
+void GUIPseudoComponent::throw_if_null() const
+{
+	if (!impl)
+		throw Exception("GUIPseudoComponent is null");
+}
+
+
+Font GUIPseudoComponent::get_font()
+{
+	return impl->component->get_font(get_css_properties());
 }
 
 const CSSBoxProperties &GUIPseudoComponent::get_css_properties() const

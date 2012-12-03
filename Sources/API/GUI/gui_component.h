@@ -337,6 +337,8 @@ public:
 	/// \brief Gets the font
 	Font get_font();
 
+	/// \brief Gets the font
+	Font get_font(const CSSBoxProperties &properties);
 /// \}
 /// \name Events
 /// \{

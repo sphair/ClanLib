@@ -792,7 +792,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
-			part_selection->set_pseudo_class(CssStr::unfocused, false);
+			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, false);
 			cursor_pos = text.length();
 
 			lineedit->request_repaint();
@@ -804,7 +804,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			timer.stop();
 			set_text_selection(0, 0);
-			part_selection->set_pseudo_class(CssStr::unfocused, true);
+			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, true);
 
 			lineedit->request_repaint();
 
@@ -828,7 +828,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void LineEdit_Impl::create_parts()
 {
-	part_selection = new GUIComponent(lineedit, CssStr::LineEdit::part_selection);
+	part_selection = GUIPseudoComponent(lineedit, CssStr::LineEdit::part_selection);
 	part_cursor = new GUIComponent(lineedit, CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();
@@ -1128,7 +1128,7 @@ Rect LineEdit_Impl::get_selection_rect()
 	Size text_size_before_selection = font.get_text_size(canvas, txt_before);
 
 	// selection text:
-	font = part_selection->get_font();
+	font = part_selection.get_font();
 	std::string txt_selected = get_visible_selected_text();
 	Size text_size_selection = font.get_text_size(canvas, txt_selected);
 
@@ -1324,7 +1324,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect g = lineedit->get_size();
 	Font lineedit_font = lineedit->get_font();
-	Font selection_font = part_selection->get_font();
+	Font selection_font = part_selection.get_font();
 	FontMetrics lineedit_metrics = lineedit_font.get_font_metrics();
 	FontMetrics selection_metrics = selection_font.get_font_metrics();
 
@@ -1360,13 +1360,13 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
 
-		canvas.fill(selection_rect, part_selection->get_css_properties().background_color.color);
+		canvas.fill(selection_rect, part_selection.get_css_properties().background_color.color);
 
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		selection_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + selection_metrics.get_ascent()), update_rect, txt_selected, part_selection->get_css_properties().color.color);
+		selection_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + selection_metrics.get_ascent()), update_rect, txt_selected, part_selection.get_css_properties().color.color);
 
 	}
 	if (!txt_after.empty())

@@ -41,6 +41,7 @@ namespace clan
 class GUIComponent;
 class CSSBoxProperties;
 class GUIPseudoComponent_Impl;
+class Font;
 
 /// \brief A GUI pseudo component represents a pseudo element in CSS.
 ///
@@ -50,6 +51,9 @@ class CL_API_GUI GUIPseudoComponent
 /// \name Construction
 /// \{
 public:
+	/// \brief Constructs a null instance.
+	GUIPseudoComponent();
+
 	/// \brief Creates a GUI component.
 	GUIPseudoComponent(GUIComponent *parent, const std::string &pseudo_tag_name);
 /// \}
@@ -57,11 +61,21 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
 	/// \brief Returns the standard W3C CSS properties active for this component
 	const CSSBoxProperties &get_css_properties() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
 	CSSBoxProperties &get_css_properties();
+
+	/// \brief Gets the font
+	Font get_font();
+
 /// \}
 
 /// \name Operations
