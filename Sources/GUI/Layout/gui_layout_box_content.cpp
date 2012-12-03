@@ -31,6 +31,7 @@
 #include "gui_find_preferred_width.h"
 #include "gui_find_preferred_height.h"
 #include "gui_css_flex_math.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
@@ -69,8 +70,9 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 			box_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 			box_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-			box_math.used_shrink_weights.push_back(child->impl->css_properties.flex_shrink.number);
-			box_math.used_expand_weights.push_back(child->impl->css_properties.flex_grow.number);
+			const CSSBoxProperties &properties = child->get_css_properties();
+			box_math.used_shrink_weights.push_back(properties.flex_shrink.number);
+			box_math.used_expand_weights.push_back(properties.flex_grow.number);
 		}
 	}
 
@@ -104,7 +106,7 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 			perpendicular_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 			perpendicular_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-			if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch)
+			if (child->impl->element->get_css_properties().align_self.type == CSSBoxAlignSelf::type_stretch)
 			{
 				perpendicular_math.used_shrink_weights.push_back(1.0f);
 				perpendicular_math.used_expand_weights.push_back(1.0f);
@@ -150,7 +152,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 			perpendicular_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 			perpendicular_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-			if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_stretch)
+			if (child->impl->element->get_css_properties().align_self.type == CSSBoxAlignSelf::type_stretch)
 			{
 				perpendicular_math.used_shrink_weights.push_back(1.0f);
 				perpendicular_math.used_expand_weights.push_back(1.0f);
@@ -180,8 +182,10 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 			box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 			box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-			box_math.used_shrink_weights.push_back(child->impl->css_properties.flex_shrink.number);
-			box_math.used_expand_weights.push_back(child->impl->css_properties.flex_grow.number);
+			const CSSBoxProperties &properties = child->impl->element->get_css_properties();
+
+			box_math.used_shrink_weights.push_back(properties.flex_shrink.number);
+			box_math.used_expand_weights.push_back(properties.flex_grow.number);
 		}
 	}
 
@@ -204,19 +208,21 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 
 CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUIComponent *child)
 {
-	if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
+	const CSSBoxProperties &properties = child->impl->element->get_css_properties();
+
+	if (properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
 	{
 		return 0.0f;
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
 	{
 		return node->css_used_values.height - child->impl->css_used_values.height - get_used_noncontent_height(child->impl->css_used_values);
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_center)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_center)
 	{
 		return (node->css_used_values.height - child->impl->css_used_values.height - get_used_noncontent_height(child->impl->css_used_values)) * 0.5f;
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_baseline)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_baseline)
 	{
 		return 0.0f; // To do: implement this
 	}
@@ -228,19 +234,20 @@ CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUICom
 
 CSSUsedValue GUILayoutBoxContent::align_horizontal(GUIComponent_Impl *node, GUIComponent *child)
 {
-	if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
+	const CSSBoxProperties &properties = child->impl->element->get_css_properties();
+	if (properties.align_self.type == CSSBoxAlignSelf::type_flex_start)
 	{
 		return 0.0f;
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_flex_end)
 	{
 		return node->css_used_values.width - child->impl->css_used_values.width - get_used_noncontent_width(child->impl->css_used_values);
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_center)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_center)
 	{
 		return (node->css_used_values.width - child->impl->css_used_values.width - get_used_noncontent_width(child->impl->css_used_values)) * 0.5f;
 	}
-	else if (child->impl->css_properties.align_self.type == CSSBoxAlignSelf::type_baseline)
+	else if (properties.align_self.type == CSSBoxAlignSelf::type_baseline)
 	{
 		return 0.0f; // To do: implement this
 	}

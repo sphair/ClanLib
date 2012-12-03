@@ -62,10 +62,10 @@ public:
 	void layout(Canvas &canvas, const Rect &viewport);
 	void render(Canvas &canvas) { render_impl(canvas); }
 
-	template<typename GUIComponent>
-	void render(Canvas &canvas, GUIComponent *component)
+	template<typename GUIElement>
+	void render(Canvas &canvas, GUIElement *component)
 	{
-		render_impl(canvas, std::unique_ptr<ClipWrapper>(new GUIComponentWrapper<GUIComponent>(component)));
+		render_impl(canvas, std::unique_ptr<ClipWrapper>(new GUIElementWrapper<GUIElement>(component)));
 	}
 
 	CSSHitTestResult hit_test(Canvas &canvas, const Point &pos);
@@ -101,18 +101,18 @@ public:
 private:
 	void render_impl(Canvas &canvas, std::unique_ptr<ClipWrapper> wrapper = std::unique_ptr<ClipWrapper>());
 
-	template<typename GUIComponent>
-	class GUIComponentWrapper : public ClipWrapper
+	template<typename GUIElement>
+	class GUIElementWrapper : public ClipWrapper
 	{
 	public:
-		GUIComponentWrapper(GUIComponent *component) : component(component) { }
+		GUIElementWrapper(GUIElement *component) : component(component) { }
 		void set_cliprect(Canvas &canvas, const Rect &rect) { component->set_cliprect(canvas, rect); }
 		void reset_cliprect(Canvas &canvas) { component->reset_cliprect(canvas); }
 		void push_cliprect(Canvas &canvas, const Rect &rect) { component->push_cliprect(canvas, rect); }
 		void pop_cliprect(Canvas &canvas) { component->pop_cliprect(canvas); }
 
 	private:
-		GUIComponent *component;
+		GUIElement *component;
 	};
 
 	CSSLayout(std::shared_ptr<CSSLayout_Impl> impl);

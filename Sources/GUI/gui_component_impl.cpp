@@ -39,6 +39,7 @@
 #include "gui_manager_impl.h"
 #include "gui_css_strings.h"
 #include "gui_component_select_node.h"
+#include "API/GUI/gui_element.h"
 
 namespace clan
 {
@@ -49,6 +50,15 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
   visible(true), activated(false), default_handler(false), cancel_handler(false),
   constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), double_click_enabled(true), pointer_inside_component(false)
 {
+	if (parent_or_owner)
+	{
+		element = std::unique_ptr<GUIElement>(new GUIElement(parent_or_owner->impl->element.get()));
+	}
+	else
+	{
+		element = std::unique_ptr<GUIElement>(new GUIElement(0));
+	}
+
 	gui_manager_impl = gui_manager.lock().get();
 
 	if (!toplevel)
@@ -190,28 +200,8 @@ void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void GUIComponent_Impl::update_style()
 {
-	css_properties = CSSBoxProperties();
-
-	GUIComponentSelectNode select_node(component);
-	CSSPropertyList sheet_properties = component->get_gui_manager().get_css_document().select(&select_node);
-	css_properties.apply_properties(sheet_properties);
-
-	if (!func_apply_properties.is_null())
-		func_apply_properties.invoke(css_properties);
-
-	if (parent)
-		css_properties.compute(&parent->impl->css_properties, &gui_manager_impl->resource_cache);
-	else
-		css_properties.compute(0, &gui_manager_impl->resource_cache);
-
-	sig_style_changed.invoke();
-
-	GUIComponent *cur_child = first_child;
-	while (cur_child)
-	{
-		cur_child->impl->update_style();
-		cur_child = cur_child->get_next_sibling();
-	}
+	CSSDocument document = component->get_gui_manager().get_css_document();
+	element->update_style(&component->impl->gui_manager_impl->resource_cache, document);
 }
 
 }
