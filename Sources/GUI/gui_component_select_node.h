@@ -39,6 +39,7 @@ class GUIComponentSelectNode : public CSSSelectNode
 {
 public:
 	GUIComponentSelectNode(const GUIComponent *element);
+	GUIComponentSelectNode(const GUIComponent *element, const std::string &pseudo_tag_name);
 	bool parent();
 	bool prev_sibling();
 	void push();
@@ -53,6 +54,7 @@ public:
 	int child_index();
 
 private:
+	std::string pseudo_tag_name;
 	const GUIComponent *dom_element;
 	const GUIComponent *pos;
 	bool is_modified;

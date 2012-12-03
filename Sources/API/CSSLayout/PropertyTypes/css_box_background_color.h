@@ -29,6 +29,7 @@
 #pragma once
 
 #include "../css_box_property.h"
+#include "../../Display/2D/color.h"
 
 namespace clan
 {
