@@ -1360,6 +1360,8 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
 
+		canvas.fill(selection_rect, part_selection->get_css_properties().background_color.color);
+
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;

@@ -442,7 +442,7 @@ lineedit
 {
     flex-direction: row;
     padding: 3px;
-	font:32px arial,sans-serif;
+	font:24px arial,sans-serif;
 	text-color:black;
 }
 
@@ -470,21 +470,18 @@ lineedit cursor
 
 lineedit selection
 {
-    text-color: white;
-	color: #316ac5;
-    background-color: #cdcdcd;
+	color: white;
+    background-color: #316ac5;
 }
 
 lineedit:disabled selection
 {
-	color: #7a96df;
-    background-color: #cdcdcd;
+    background-color: #7a96df;
 }
 
 lineedit:unfocused selection
 {
-	color: #7a96df;
-    background-color: #cdcdcd;
+    background-color: #7a96df;
 }
 
 
