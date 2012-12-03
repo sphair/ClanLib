@@ -39,6 +39,11 @@ GUIComponentSelectNode::GUIComponentSelectNode(const GUIComponent *element)
 {
 }
 
+GUIComponentSelectNode::GUIComponentSelectNode(const GUIComponent *element, const std::string &pseudo_tag_name)
+: dom_element(element), pos(element), pseudo_tag_name(pseudo_tag_name)
+{
+}
+
 bool GUIComponentSelectNode::parent()
 {
 	const GUIComponent *parent_node = pos->get_parent_component();
@@ -91,6 +96,8 @@ std::vector<std::string> GUIComponentSelectNode::element_classes()
 std::vector<std::string> GUIComponentSelectNode::pseudo_classes()
 {
 	std::vector<std::string> classes = pos->get_pseudo_classes();
+	if (!pseudo_tag_name.empty())
+		classes.push_back(pseudo_tag_name);
 	if (!pos->get_previous_sibling())
 		classes.push_back("first-child");
 	return classes;

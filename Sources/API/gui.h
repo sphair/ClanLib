@@ -42,6 +42,7 @@
 #include "GUI/accelerator_key.h"
 #include "GUI/gui_component.h"
 #include "GUI/gui_component_description.h"
+#include "GUI/gui_pseudo_component.h"
 #include "GUI/gui_layout.h"
 #include "GUI/gui_layout_corners.h"
 #include "GUI/gui_message.h"
