@@ -347,7 +347,6 @@ void ScrollBar_Impl::create_parts()
 	part_thumb->set_double_click_enabled(false);
 	part_thumb_gripper->set_double_click_enabled(false);
 
-
 	on_enablemode_changed();
 
 	part_button_decrement->func_process_message().set(this, &ScrollBar_Impl::on_part_button_decrement);

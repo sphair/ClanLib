@@ -743,7 +743,11 @@ bool GUIComponent::is_double_click_enabled() const
 Font GUIComponent::get_font()
 {
 	const CSSBoxProperties &properties = get_css_properties();
+	return get_font(properties);
+}
 
+Font GUIComponent::get_font(const CSSBoxProperties &properties)
+{
 	int font_size = used_to_actual(properties.font_size.length.value);
 	std::string font_name;
 	for (size_t i = 0; i < properties.font_family.names.size(); i++)
