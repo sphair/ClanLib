@@ -44,18 +44,18 @@ void Game::run()
 	Slot slot_quit = window.sig_window_close().connect(this, &Game::on_window_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Game::on_input_up);
 
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
 	ResourceManager resources("resources.xml");
 
 	TileMap map;
-	map.load(gc, "tavern", resources);
+	map.load(canvas, "tavern", resources);
 
 	// Run until someone presses escape, or closes the window
 	while (!quit)
 	{
-		int x = window.get_ic().get_mouse().get_x() - gc.get_width();
-		int y = window.get_ic().get_mouse().get_y() - gc.get_height();
+		int x = window.get_ic().get_mouse().get_x() - canvas.get_width();
+		int y = window.get_ic().get_mouse().get_y() - canvas.get_height();
 
 		// ** Enable these 3 lines to display the example magnified **
 		//Mat4f matrix = Mat4f::scale( 2.0f, 2.0f, 1.0f);
@@ -64,9 +64,11 @@ void Game::run()
 
 		map.set_scroll(x, y);
 
-		gc.clear(Colorf::black);
+		canvas.clear(Colorf::black);
 
-		map.draw(gc);
+		map.draw(canvas);
+
+		canvas.flush();
 
 		// Flip the display, showing on the screen what we have drawed since last call to flip()
 		window.flip(1);
@@ -78,7 +80,7 @@ void Game::run()
 
 void Game::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}

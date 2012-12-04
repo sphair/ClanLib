@@ -28,6 +28,8 @@
 
 #pragma once
 
+using namespace clan;
+
 class Game
 {
 public:

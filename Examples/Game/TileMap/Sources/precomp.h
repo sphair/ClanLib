@@ -5,8 +5,8 @@
 #include <ClanLib/display.h>
 
 // Choose the target renderer
-//#define USE_OPENGL_2
-#define USE_OPENGL_1
+#define USE_OPENGL_2
+//define USE_OPENGL_1
 //#define USE_D3D
 
 #ifdef USE_D3D
