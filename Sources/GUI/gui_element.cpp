@@ -94,6 +94,19 @@ void GUIElement::set_parent(GUIElement *new_parent)
 	if (!parent)	// Initial set_parent
 	{
 		parent = new_parent;
+
+		if (parent->last_child)
+		{
+			parent->last_child->next_sibling = this;
+			prev_sibling = parent->last_child;
+			parent->last_child = this;
+		}
+		else
+		{
+			parent->first_child = this;
+			parent->last_child = this;
+		}
+
 		return;
 	}
 
