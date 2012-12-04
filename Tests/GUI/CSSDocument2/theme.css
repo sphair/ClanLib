@@ -655,3 +655,52 @@ scrollbutton_right:disabled
 	border-image: url('res:ScrollbarHoriButtonRightDisabled') 3 3 3 3 fill / 3px 3px 3px 3px; 
 }
 
+slider
+{
+	height:22;
+	width:22;
+}
+
+slider:disabled
+{
+	background-color:darkgray;
+}
+/*
+slider focus
+{
+	bg-image-sizing-left:3;
+	bg-image-sizing-right:4;
+	bg-image-sizing-top:3;
+	bg-image-sizing-bottom:4;
+	bg-image-sizing:repeat;
+	bg-image:FocusDottedLine; 
+} 
+*/
+
+slidertrack_horizontal
+{
+	width:100px;
+	height:4px;
+	border-image: url('res:SliderHorizontalTrack') 1 1 1 1 fill / 1px 1px 1px 1px; 
+}
+
+sliderthumb_horizontal
+{
+ 	width:11px;
+	height:17px;
+}
+
+sliderthumb_horizontal:normal
+{
+	border-image: url('res:SliderHorizontalThumbNormal') 2 3 9 9 fill / 2px 3px 9px 9px; 
+}
+
+sliderthumb_horizontal:hot
+{
+	border-image: url('res:SliderHorizontalThumbHot') 2 3 9 9 fill / 2px 3px 9px 9px; 
+}
+
+sliderthumb_horizontal:disabled
+{
+ 	border-image: url('res:SliderHorizontalThumbDisabled') 2 3 9 9 fill / 2px 3px 9px 9px; 
+}
