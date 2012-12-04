@@ -65,15 +65,15 @@ void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &doc
 	CSSPropertyList sheet_properties = document.select(&select_node);
 	css_properties.apply_properties(sheet_properties);
 
-//FIXME:	if (!func_apply_properties.is_null())
-//FIXME:		func_apply_properties.invoke(css_properties);
+	if (!func_apply_properties.is_null())
+		func_apply_properties.invoke(css_properties);
 
 	if (parent)
 		css_properties.compute(&parent->css_properties, resource_cache);
 	else
 		css_properties.compute(0, resource_cache);
 
-//FIXME:	sig_style_changed.invoke();
+	sig_style_changed.invoke();
 
 	GUIElement *cur_child = first_child;
 	while (cur_child)

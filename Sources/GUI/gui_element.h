@@ -31,6 +31,8 @@
 
 #include <memory>
 #include "API/CSSLayout/css_box_properties.h"
+#include "API/Core/Signals/callback_v1.h"
+#include "API/Core/Signals/signal_v0.h"
 
 namespace clan
 {
@@ -97,6 +99,13 @@ public:
 
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style(CSSResourceCache *resource_cache, CSSDocument &document);
+
+/// \}
+/// \name Signals and callbacks
+/// \{
+public:
+	Signal_v0 sig_style_changed;
+	Callback_v1<CSSBoxProperties &> func_apply_properties;
 
 /// \}
 

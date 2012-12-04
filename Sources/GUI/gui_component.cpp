@@ -665,7 +665,7 @@ Callback_0<bool> &GUIComponent::func_pointer_exit()
 
 Callback_v1<CSSBoxProperties &> &GUIComponent::func_apply_properties()
 {
-	return impl->func_apply_properties;
+	return impl->element.func_apply_properties;
 }
 
 Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
@@ -700,7 +700,7 @@ Callback_v1<bool> &GUIComponent::func_visibility_change()
 
 Signal_v0 &GUIComponent::sig_style_changed()
 {
-	return impl->sig_style_changed;
+	return impl->element.sig_style_changed;
 }
 
 Callback_v0 &GUIComponent::func_enablemode_changed()
