@@ -35,7 +35,7 @@ namespace clan
 
 void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 {
-	const CSSBoxProperties &properties = node->element->get_css_properties();
+	const CSSBoxProperties &properties = node->element.get_css_properties();
 	switch (properties.display.type)
 	{
 	case CSSBoxDisplay::type_flex:
@@ -54,7 +54,7 @@ void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 
 void GUICSSDisplayVisitor::flex_node(GUIComponent_Impl *node)
 {
-	const CSSBoxProperties &properties = node->element->get_css_properties();
+	const CSSBoxProperties &properties = node->element.get_css_properties();
 	if (properties.flex_direction.type == CSSBoxFlexDirection::type_column || properties.flex_direction.type == CSSBoxFlexDirection::type_column_reverse)
 	{
 		flex_vertical_node(node);
@@ -91,7 +91,7 @@ CSSUsedValue GUICSSDisplayVisitor::get_used_noncontent_height(const GUICSSUsedVa
 
 float GUICSSDisplayVisitor::get_css_relative_x(GUIComponent_Impl *node, float containing_width)
 {
-	const CSSBoxProperties &properties = node->element->get_css_properties();
+	const CSSBoxProperties &properties = node->element.get_css_properties();
 	if (properties.position.type == CSSBoxPosition::type_relative)
 	{
 		if (properties.left.type == CSSBoxLeft::type_length)
@@ -109,7 +109,7 @@ float GUICSSDisplayVisitor::get_css_relative_x(GUIComponent_Impl *node, float co
 
 float GUICSSDisplayVisitor::get_css_relative_y(GUIComponent_Impl *node, float containing_height)
 {
-	const CSSBoxProperties &properties = node->element->get_css_properties();
+	const CSSBoxProperties &properties = node->element.get_css_properties();
 	if (properties.position.type == CSSBoxPosition::type_relative)
 	{
 		if (properties.top.type == CSSBoxTop::type_length)

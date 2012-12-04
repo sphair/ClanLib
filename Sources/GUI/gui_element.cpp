@@ -36,7 +36,7 @@
 namespace clan
 {
 
-GUIElement::GUIElement(GUIElement *parent) : parent(parent), prev_sibling(0), next_sibling(0), first_child(0), last_child(0)
+GUIElement::GUIElement() : parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0)
 {
 }
 
@@ -88,6 +88,12 @@ void GUIElement::set_parent(GUIElement *new_parent)
 {
 	if (new_parent == parent)
 	{
+		return;
+	}
+
+	if (!parent)	// Initial set_parent
+	{
+		parent = new_parent;
 		return;
 	}
 

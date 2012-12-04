@@ -39,7 +39,6 @@
 #include "gui_manager_impl.h"
 #include "gui_css_strings.h"
 #include "gui_component_select_node.h"
-#include "gui_element.h"
 
 namespace clan
 {
@@ -51,13 +50,7 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
   constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), double_click_enabled(true), pointer_inside_component(false)
 {
 	if (parent_or_owner)
-	{
-		element = std::unique_ptr<GUIElement>(new GUIElement(parent_or_owner->impl->element.get()));
-	}
-	else
-	{
-		element = std::unique_ptr<GUIElement>(new GUIElement(0));
-	}
+		element.set_parent(&parent_or_owner->impl->element);
 
 	gui_manager_impl = gui_manager.lock().get();
 
@@ -201,7 +194,7 @@ void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void GUIComponent_Impl::update_style()
 {
 	CSSDocument document = component->get_gui_manager().get_css_document();
-	element->update_style(&component->impl->gui_manager_impl->resource_cache, document);
+	element.update_style(&component->impl->gui_manager_impl->resource_cache, document);
 }
 
 }
