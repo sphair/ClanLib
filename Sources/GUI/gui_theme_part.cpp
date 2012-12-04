@@ -130,7 +130,7 @@ void GUIThemePart::update_style()
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
 }
 
-void GUIThemePart::render(Canvas &canvas, const Rect &clip_rect, const Rect &content_rect)
+void GUIThemePart::render_box(Canvas &canvas, const Rect &content_rect, const Rect &clip_rect)
 {
 	Rect viewport = impl->component->get_top_level_component()->get_size();
 	CSSResourceCache *resource_cache = &impl->component->impl->gui_manager_impl->resource_cache;
@@ -153,5 +153,21 @@ void GUIThemePart::render(Canvas &canvas, const Rect &clip_rect, const Rect &con
 	border.render();
 
 }
+
+Size GUIThemePart::get_preferred_size() const
+{
+	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
+}
+
+int GUIThemePart::get_preferred_width() const
+{
+	return impl->element.get_css_properties().width.length.value;
+}
+
+int GUIThemePart::get_preferred_height() const
+{
+	return impl->element.get_css_properties().height.length.value;
+}
+
 
 }

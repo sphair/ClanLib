@@ -1350,7 +1350,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
 
-		part_selection.render(canvas, update_rect, selection_rect);
+		part_selection.render_box(canvas, selection_rect, update_rect);
 		//canvas.fill(selection_rect, part_selection.get_css_properties().background_color.color);
 
 		Rect text_rect = content_rect;
@@ -1370,7 +1370,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 
 	if (cursor_blink_visible)
-		part_cursor.render(canvas, update_rect, get_cursor_rect());
+		part_cursor.render_box(canvas, get_cursor_rect(), update_rect);
 
 
 }
