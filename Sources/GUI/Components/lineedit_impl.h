@@ -51,7 +51,7 @@ public:
 		mouse_selecting(false),
 		selection_start(-1),
 		selection_length(0),
-		cursor_blink_visible(true),
+		cursor_blink_visible(false),
 		clip_start_offset(0),
 		clip_end_offset(0),
 		decimal_char("."),
@@ -114,7 +114,7 @@ public:
 	static std::string break_characters;
 
 	GUIThemePart part_selection;
-	GUIComponent *part_cursor;
+	GUIThemePart part_cursor;
 
 	void move(int steps, bool ctrl_pressed, bool shift_pressed);
 	bool insert_text(int pos, const std::string &str);

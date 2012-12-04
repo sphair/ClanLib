@@ -792,7 +792,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
-			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, false);
+			part_selection.set_pseudo_class(CssStr::unfocused, false);
 			cursor_pos = text.length();
 
 			lineedit->request_repaint();
@@ -804,7 +804,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			timer.stop();
 			set_text_selection(0, 0);
-			//FIXME: part_selection.set_pseudo_class(CssStr::unfocused, true);
+			part_selection.set_pseudo_class(CssStr::unfocused, true);
 
 			lineedit->request_repaint();
 
@@ -829,7 +829,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void LineEdit_Impl::create_parts()
 {
 	part_selection = GUIThemePart(lineedit, CssStr::LineEdit::part_selection);
-	part_cursor = new GUIComponent(lineedit, CssStr::LineEdit::part_cursor);
+	part_cursor = GUIThemePart(lineedit, CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();
 
@@ -1109,7 +1109,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
-	cursor_rect.right = cursor_rect.left + part_cursor->get_content_box().get_width();
+	cursor_rect.right = cursor_rect.left + part_cursor.get_css_properties().width.length.value;
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
@@ -1169,6 +1169,7 @@ void LineEdit_Impl::on_timer_expired()
 {
 	if (lineedit == 0 || lineedit->is_visible() == false)
 	{
+		cursor_blink_visible = false;
 		timer.stop();
 		return;
 	}
@@ -1176,17 +1177,6 @@ void LineEdit_Impl::on_timer_expired()
 	timer.start(cursor_blink_rate);
 
 	cursor_blink_visible = !cursor_blink_visible;
-	if (cursor_blink_visible)
-	{
-		Rect cursor_rect = get_cursor_rect();
-		part_cursor->set_geometry(cursor_rect);
-		part_cursor->set_visible(true);
-	}
-	else
-	{
-		part_cursor->set_visible(false);
-	}
-
 	lineedit->request_repaint();
 }
 
@@ -1378,6 +1368,11 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.bottom = g.bottom;
 		lineedit_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + lineedit_metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
 	}
+
+	if (cursor_blink_visible)
+		part_cursor.render(canvas, update_rect, get_cursor_rect());
+
+
 }
 
 void LineEdit_Impl::on_scroll_timer_expired()
@@ -1395,8 +1390,6 @@ void LineEdit_Impl::on_enable_changed()
 	if (!enabled)
 	{
 		cursor_blink_visible = false;
-		part_cursor->set_visible(false);
-
 		timer.stop();
 	}
 	lineedit->request_repaint();
