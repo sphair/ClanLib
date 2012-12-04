@@ -828,7 +828,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void LineEdit_Impl::create_parts()
 {
-	part_selection = GUIPseudoComponent(lineedit, CssStr::LineEdit::part_selection);
+	part_selection = GUIThemePart(lineedit, CssStr::LineEdit::part_selection);
 	part_cursor = new GUIComponent(lineedit, CssStr::LineEdit::part_cursor);
 
 	bool enabled = lineedit->is_enabled();

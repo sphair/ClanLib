@@ -35,10 +35,10 @@ namespace clan
 
 class GUIComponent;
 
-class GUIPseudoComponent_Impl
+class GUIThemePart_Impl
 {
 public:
-	GUIPseudoComponent_Impl(GUIComponent *component, const std::string &pseudo_tag_name)
+	GUIThemePart_Impl(GUIComponent *component, const std::string &pseudo_tag_name)
 	: component(component), pseudo_tag_name(pseudo_tag_name)
 	{
 	}
