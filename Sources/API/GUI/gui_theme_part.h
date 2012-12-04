@@ -44,6 +44,7 @@ class GUIThemePart_Impl;
 class Font;
 class Canvas;
 class Rect;
+class Size;
 
 /// \brief A GUI theme part represents a pseudo element in CSS.
 ///
@@ -93,13 +94,22 @@ public:
 	/// \brief Returns all pseudo classes currently present
 	std::vector<std::string> get_pseudo_classes() const;
 
+	/// \brief Returns the preferred size of a render box.
+	Size get_preferred_size() const;
+
+	/// \brief Returns the preferred width of a render box.
+	int get_preferred_width() const;
+
+	/// \brief Returns the preferred height of a render box.
+	int get_preferred_height() const;
+
 /// \}
 
 /// \name Operations
 /// \{
 public:
 	/// \brief Renders the component and its children.
-	void render(Canvas &canvas, const Rect &clip_rect, const Rect &content_rect);
+	void render_box(Canvas &canvas, const Rect &content_rect, const Rect &clip_rect);
 
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
