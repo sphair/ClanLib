@@ -56,95 +56,6 @@ GUIElement::~GUIElement()
 		parent->last_child = prev_sibling;
 }
 
-const GUIElement *GUIElement::get_first_child() const
-{
-	return first_child;
-}
-
-GUIElement *GUIElement::get_first_child()
-{
-	return first_child;
-}
-
-const GUIElement *GUIElement::get_last_child() const
-{
-	return last_child;
-}
-
-GUIElement *GUIElement::get_last_child()
-{
-	return last_child;
-}
-
-const GUIElement *GUIElement::get_previous_sibling() const
-{
-	return prev_sibling;
-}
-
-GUIElement *GUIElement::get_previous_sibling()
-{
-	return prev_sibling;
-}
-
-const GUIElement *GUIElement::get_next_sibling() const
-{
-	return next_sibling;
-}
-
-GUIElement *GUIElement::get_next_sibling()
-{
-	return next_sibling;
-}
-
-const CSSBoxProperties &GUIElement::get_css_properties() const
-{
-	return css_properties;
-}
-
-CSSBoxProperties &GUIElement::get_css_properties()
-{
-	return css_properties;
-}
-
-const GUIElement *GUIElement::get_parent_component() const
-{
-	return parent;
-}
-
-std::string GUIElement::get_tag_name() const
-{
-	return tag_name;
-}
-
-std::string GUIElement::get_id() const
-{
-	return id;
-}
-
-std::string GUIElement::get_class() const
-{
-	return class_string;
-}
-
-bool GUIElement::get_pseudo_class(const std::string &name) const
-{
-	for (size_t i = 0; i < pseudo_classes.size(); i++)
-	{
-		if (pseudo_classes[i] == name)
-			return true;
-	}
-	return false;
-}
-
-std::vector<std::string> GUIElement::get_pseudo_classes() const
-{
-	return pseudo_classes;
-}
-
-GUIElement *GUIElement::get_parent_component()
-{
-	return parent;
-}
 
 void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &document)
 {
@@ -218,20 +129,14 @@ void GUIElement::set_parent(GUIElement *new_parent)
 	parent = new_parent;
 }
 
-
-void GUIElement::set_tag_name(const std::string &name)
+bool GUIElement::get_pseudo_class(const std::string &name) const
 {
-	tag_name = name;
-}
-	
-void GUIElement::set_class(const std::string &name)
-{
-	class_string = name;
-}
-
-void GUIElement::set_id(const std::string &name)
-{
-	id = name;
+	for (size_t i = 0; i < pseudo_classes.size(); i++)
+	{
+		if (pseudo_classes[i] == name)
+			return true;
+	}
+	return false;
 }
 
 bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
