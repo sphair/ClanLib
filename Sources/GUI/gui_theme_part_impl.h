@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/CSSLayout/css_box_properties.h"
+#include "gui_element.h"
 
 namespace clan
 {
@@ -38,14 +39,13 @@ class GUIComponent;
 class GUIThemePart_Impl
 {
 public:
-	GUIThemePart_Impl(GUIComponent *component, const std::string &pseudo_tag_name)
-	: component(component), pseudo_tag_name(pseudo_tag_name)
+	GUIThemePart_Impl(GUIComponent *component)
+	: component(component)
 	{
 	}
 
 	GUIComponent *component;
-	std::string pseudo_tag_name;
-	CSSBoxProperties css_properties;
+	GUIElement element;
 };
 
 }
