@@ -37,6 +37,7 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/CSSLayout/css_property.h"
 #include "API/CSSLayout/css_token.h"
+#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -68,7 +69,7 @@ private:
 	void mouse_released();
 	void mouse_moved(const Point &pos);
 	void on_apply_properties(CSSBoxProperties &properties);
-
+	void on_part_thumb_render(Canvas &canvas, const Rect &update_rect);
 public:
 	int thumb_left;
 	int thumb_size;
@@ -98,7 +99,7 @@ public:
 	GUIComponent *part_track_decrement;
 	GUIComponent *part_track_increment;
 	GUIComponent *part_thumb;
-	GUIComponent *part_thumb_gripper;
+	GUIThemePart part_thumb_gripper;
 
 	ScrollBar *scrollbar;
 

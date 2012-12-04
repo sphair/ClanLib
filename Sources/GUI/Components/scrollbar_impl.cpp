@@ -140,7 +140,7 @@ void ScrollBar_Impl::on_part_thumb(std::shared_ptr<GUIMessage> &msg)
 			Rect rect_track_decrement = part_track_decrement->get_geometry();
 			thumb_start_pixel_position = vertical ? (rect_thumb.top-rect_track_decrement.top) : (rect_thumb.left-rect_track_decrement.left);
 			part_thumb->set_pseudo_class(CssStr::pressed, true);
-			part_thumb_gripper->set_pseudo_class(CssStr::pressed, true);
+			part_thumb_gripper.set_pseudo_class(CssStr::pressed, true);
 
 			mouse_down_timer.start(100,false);
 			update_part_positions();
@@ -150,7 +150,7 @@ void ScrollBar_Impl::on_part_thumb(std::shared_ptr<GUIMessage> &msg)
 		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
 		{
 			part_thumb->set_pseudo_class(CssStr::pressed, false);
-			part_thumb_gripper->set_pseudo_class(CssStr::pressed, false);
+			part_thumb_gripper.set_pseudo_class(CssStr::pressed, false);
 			mouse_released();
 		}
 		else if (input_msg->input_event.type == InputEvent::pointer_moved)
@@ -329,6 +329,7 @@ void ScrollBar_Impl::update_part_positions()
 	new_rect.left = thumb_middle;
 	part_track_increment->set_geometry( new_rect );
 
+	scrollbar->request_repaint();
 }
 
 void ScrollBar_Impl::create_parts()
@@ -338,14 +339,13 @@ void ScrollBar_Impl::create_parts()
 	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack_down" : "scrolltrack_right");
 	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton_down" : "scrollbutton_right");
 	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
-	part_thumb_gripper = new GUIComponent(scrollbar, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
+	part_thumb_gripper = GUIThemePart(part_thumb, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
 
 	part_button_decrement->set_double_click_enabled(false);
 	part_track_decrement->set_double_click_enabled(false);
 	part_track_increment->set_double_click_enabled(false);
 	part_button_increment->set_double_click_enabled(false);
 	part_thumb->set_double_click_enabled(false);
-	part_thumb_gripper->set_double_click_enabled(false);
 
 	on_enablemode_changed();
 
@@ -354,6 +354,7 @@ void ScrollBar_Impl::create_parts()
 	part_thumb->func_process_message().set(this, &ScrollBar_Impl::on_part_thumb);
 	part_track_increment->func_process_message().set(this, &ScrollBar_Impl::on_part_track_increment);
 	part_button_increment->func_process_message().set(this, &ScrollBar_Impl::on_part_button_increment);
+	part_thumb->func_render().set(this, &ScrollBar_Impl::on_part_thumb_render);
 
 	scrollbar->func_enablemode_changed().set(this, &ScrollBar_Impl::on_enablemode_changed);
 
@@ -361,6 +362,14 @@ void ScrollBar_Impl::create_parts()
 
 	mouse_down_timer.func_expired().set(this, &ScrollBar_Impl::on_timer_expired);
 
+}
+
+void ScrollBar_Impl::on_part_thumb_render(Canvas &canvas, const Rect &update_rect)
+{
+	Rect thumb_rect = part_thumb->get_geometry();
+	int gripper_width = part_thumb_gripper.get_css_properties().width.length.value;
+	Rect gripper_rect((thumb_rect.get_width() - gripper_width)/2, thumb_rect.top, Size(gripper_width, thumb_rect.get_height())) ;
+	part_thumb_gripper.render(canvas, update_rect, gripper_rect);
 }
 
 void ScrollBar_Impl::on_apply_properties(CSSBoxProperties &properties)
@@ -439,7 +448,7 @@ void ScrollBar_Impl::on_enablemode_changed()
 	part_track_decrement->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_track_increment->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_thumb->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_thumb_gripper->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_thumb_gripper.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 
 	scrollbar->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 	part_button_decrement->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
@@ -447,7 +456,7 @@ void ScrollBar_Impl::on_enablemode_changed()
 	part_track_decrement->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 	part_track_increment->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 	part_thumb->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_thumb_gripper->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_thumb_gripper.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 
 	scrollbar->request_repaint();
 }
