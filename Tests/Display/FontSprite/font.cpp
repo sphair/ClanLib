@@ -11,7 +11,7 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, const InputState &state);
+	void on_input_up(const InputEvent &key);
 	void on_window_close();
 
 private:
@@ -61,26 +61,31 @@ int App::start(const std::vector<std::string> &args)
 		// Connect a keyboard handler to on_key_up()
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
+		// Create the canvas
+		Canvas canvas(window);
+
 		// Get the graphic context
-		GraphicContext gc = window.get_gc();
+		GraphicContext gc = canvas.get_gc();
 
 		// Load some fonts from the resource file
 		ResourceManager resources("font.xml");
-		Font_Sprite font1(gc, "Font1", &resources);
-		Font_Sprite font2(gc, "Font2", &resources);
+		Font_Sprite font1(canvas, "Font1", &resources);
+		Font_Sprite font2(canvas, "Font2", &resources);
 
 		// Run until someone presses escape
 		while (!quit)
 		{
-			gc.set_map_mode(MapMode(cl_map_2d_upper_left));
-			gc.clear(Colorf::red);
+			canvas.set_map_mode(MapMode(map_2d_upper_left));
+			canvas.clear(Colorf::red);
 
-			font1.draw_text(gc, 25, 25, "ClanLib: Phear the Power!");
+			font1.draw_text(canvas, 25, 25, "ClanLib: Phear the Power!");
 			
-			font2.draw_text(gc, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
+			font2.draw_text(canvas, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
 
-			font2.draw_text(gc, 10.0f, 200.0f, 2.0f, 2.0f, "Hello World\nMy Message");
+			font2.draw_text(canvas, 10.0f, 200.0f, 2.0f, 2.0f, "Hello World\nMy Message");
 
+
+			canvas.flush();
 			// Flip the display, showing on the screen what we have drawed
 			// since last call to flip()
 			window.flip(1);
@@ -114,9 +119,9 @@ int App::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}

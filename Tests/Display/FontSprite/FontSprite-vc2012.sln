@@ -1,7 +1,7 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExampleFont", "FontSprite-vc2008.vcproj", "{8779285C-1EA9-43DA-BBAE-AC275A910273}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FontSprite", "FontSprite-vc2012.vcxproj", "{8779285C-1EA9-43DA-BBAE-AC275A910273}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
