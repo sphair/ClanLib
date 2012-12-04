@@ -138,7 +138,6 @@ Slider::Slider(GUIComponent *parent)
 	impl->slider = this;
 	impl->vertical = false;
 	impl->position = 0;
-	func_process_message().set(impl.get(), &Slider_Impl::on_process_message);
 	func_render().set(impl.get(), &Slider_Impl::on_render);
 	func_resized().set(impl.get(), &Slider_Impl::on_resized);
 	func_enablemode_changed().set(impl.get(), &Slider_Impl::on_enablemode_changed);
@@ -428,6 +427,7 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 			if (position < slider_min) position = slider_min;
 			if (position > slider_max) position = slider_max;
 		}
+		update_part_positions();		//FIXME: But this sets all the parts - is that right?
 		slider->request_repaint();
 	}
 
@@ -480,7 +480,9 @@ void Slider_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input
 	}
 
 	slider->request_repaint();
-	slider->capture_mouse(true);
+	update_part_positions();		//FIXME: But this sets all the parts - is that right?
+	part_thumb->capture_mouse(true);	//FIXME: What about the track!
+	//slider->capture_mouse(true);
 
 	if (position != original_position)
 	{
@@ -498,7 +500,9 @@ void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, 
 	mouse_down_mode = mouse_down_none;
 
 	slider->request_repaint();
-	slider->capture_mouse(false);
+	update_part_positions();		//FIXME: But this sets all the parts - is that right?
+	part_thumb->capture_mouse(false);	//FIXME: What about the track!
+	//slider->capture_mouse(false);
 }
 
 void Slider_Impl::on_mouse_leave()
@@ -520,6 +524,9 @@ void Slider_Impl::create_parts()
 	part_track = new GUIComponent(slider, vertical ? CssStr::Slider::part_track_vertical : "slidertrack_horizontal");
 	part_thumb = new GUIComponent(slider, vertical ? CssStr::Slider::part_thumb_vertical : "sliderthumb_horizontal");
 	//FIXME: part_focus = new GUIComponent(slider, CssStr::Slider::part_focus);
+
+	//FIXME: What about the track!
+	part_thumb->func_process_message().set(this, &Slider_Impl::on_process_message);
 
 	bool enabled = slider->is_enabled();
 
@@ -640,11 +647,11 @@ void Slider_Impl::on_enablemode_changed()
 	bool enabled = slider->is_enabled();
 
 	slider->set_pseudo_class(CssStr::normal, enabled);
-	//FIXME: part_track->set_pseudo_class(CssStr::normal, enabled);
+	part_track->set_pseudo_class(CssStr::normal, enabled);
 	part_thumb->set_pseudo_class(CssStr::normal, enabled);
 
 	slider->set_pseudo_class(CssStr::disabled, !enabled);
-	//FIXME: part_track->set_pseudo_class(CssStr::disabled, !enabled);
+	part_track->set_pseudo_class(CssStr::disabled, !enabled);
 	part_thumb->set_pseudo_class(CssStr::disabled, !enabled);
 	slider->request_repaint();
 }
