@@ -35,7 +35,7 @@ namespace clan
 
 void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 {
-	const CSSBoxProperties &properties = node->element->get_css_properties();
+	const CSSBoxProperties &properties = node->element.get_css_properties();
 	if (node->parent)
 	{
 		if (properties.position.type == CSSBoxPosition::type_absolute || properties.position.type == CSSBoxPosition::type_fixed)

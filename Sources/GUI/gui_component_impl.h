@@ -38,6 +38,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include "gui_element.h"
 
 namespace clan
 {
@@ -111,7 +112,7 @@ public:
 	std::string group_name;
 	bool double_click_enabled;
 
-	std::unique_ptr<GUIElement> element;
+	GUIElement element;
 	GUICSSUsedValues css_used_values;
 
 	void set_geometry(Rect new_geometry, bool client_area);

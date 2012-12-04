@@ -173,37 +173,37 @@ Size GUIComponent::get_size() const
 
 std::string GUIComponent::get_tag_name() const
 {
-	return impl->element->get_tag_name();
+	return impl->element.get_tag_name();
 }
 
 std::string GUIComponent::get_id() const
 {
-	return impl->element->get_id();
+	return impl->element.get_id();
 }
 
 std::string GUIComponent::get_class() const
 {
-	return impl->element->get_class();
+	return impl->element.get_class();
 }
 
 bool GUIComponent::get_pseudo_class(const std::string &name) const
 {
-	return impl->element->get_pseudo_class(name);
+	return impl->element.get_pseudo_class(name);
 }
 
 std::vector<std::string> GUIComponent::get_pseudo_classes() const
 {
-	return impl->element->get_pseudo_classes();
+	return impl->element.get_pseudo_classes();
 }
 
 const CSSBoxProperties &GUIComponent::get_css_properties() const
 {
-	return impl->element->get_css_properties();
+	return impl->element.get_css_properties();
 }
 
 CSSBoxProperties &GUIComponent::get_css_properties()
 {
-	return impl->element->get_css_properties();
+	return impl->element.get_css_properties();
 }
 
 bool GUIComponent::has_focus() const
@@ -830,14 +830,14 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	Rect padding_box = Rect(border_box).shrink(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	Rect content_box = Rect(padding_box).shrink(impl->css_used_values.padding.left, impl->css_used_values.padding.top, impl->css_used_values.padding.right, impl->css_used_values.padding.bottom);
 
-	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element->get_css_properties());
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_properties());
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
 	background.set_initial_containing_box(content_box); // Bug: this is wrong. Should be fetched from root component
 	background.render();
 
-	CSSBorderRenderer border(&graphics, resource_cache, impl->element->get_css_properties());
+	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
 	border.set_border_box(border_box);
 	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	border.render();
@@ -965,25 +965,25 @@ void GUIComponent::capture_proximity(bool capture)
 
 void GUIComponent::set_tag_name(const std::string &name)
 {
-	impl->element->set_tag_name(name);
+	impl->element.set_tag_name(name);
 	update_style();
 }
 	
 void GUIComponent::set_class(const std::string &name)
 {
-	impl->element->set_class(name);
+	impl->element.set_class(name);
 	update_style();
 }
 
 void GUIComponent::set_id(const std::string &name)
 {
-	impl->element->set_id(name);
+	impl->element.set_id(name);
 	update_style();
 }
 
 void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
-	if (impl->element->set_pseudo_class(name, enable))
+	if (impl->element.set_pseudo_class(name, enable))
 		update_style();
 }
 

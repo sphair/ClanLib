@@ -46,7 +46,7 @@ class GUIElement
 /// \{
 public:
 	/// \brief Creates a GUI element
-	explicit GUIElement(GUIElement *parent);
+	GUIElement();
 
 	~GUIElement();
 
@@ -102,9 +102,6 @@ public:
 
 /// \name Implementation
 /// \{
-public:
-	CSSBoxProperties css_properties;
-
 private:
 	/// \brief Constructs a GUIElement
 	///
@@ -118,6 +115,8 @@ private:
 	GUIElement *next_sibling;
 	GUIElement *first_child;
 	GUIElement *last_child;
+
+	CSSBoxProperties css_properties;
 
 	std::string tag_name;
 	std::string id;
