@@ -29,8 +29,9 @@
 #include "precomp.h"
 #include "tilemap.h"
 
-void TileMap::load(GraphicContext &gc, const std::string &level, ResourceManager &resources)
+void TileMap::load(Canvas &canvas, const std::string &level, ResourceManager &resources)
 {
+	GraphicContext gc = canvas.get_gc();
 	Resource resource = resources.get_resource(level);
 	
 	if (resource.get_type() != "tilemap")
@@ -74,13 +75,13 @@ void TileMap::load(GraphicContext &gc, const std::string &level, ResourceManager
 	current_map_position_y = 0;
 }
 
-void TileMap::draw(GraphicContext &gc)
+void TileMap::draw(Canvas &canvas)
 {
-	int screen_width = gc.get_width();
-	int screen_height = gc.get_height();
+	int screen_width = canvas.get_width();
+	int screen_height = canvas.get_height();
 
-	int start_tile_x = cl_max(0, current_map_position_x / tile_width); 
-	int start_tile_y = cl_max(0, current_map_position_y / tile_height); 
+	int start_tile_x = max(0, current_map_position_x / tile_width); 
+	int start_tile_y = max(0, current_map_position_y / tile_height); 
 
 	int scrolling_pixel_offset_x = current_map_position_x - start_tile_x * tile_width;
 	int scrolling_pixel_offset_y = current_map_position_y - start_tile_y * tile_height;
@@ -112,7 +113,7 @@ void TileMap::draw(GraphicContext &gc)
 				int tile_position_screen_y = current_tile_y * tile_height - scrolling_pixel_offset_y;
 
 				sprite_tiles.set_frame(sprite_index);
-				sprite_tiles.draw(gc, tile_position_screen_x, tile_position_screen_y); 
+				sprite_tiles.draw(canvas, tile_position_screen_x, tile_position_screen_y); 
 			}
 		}
 	}

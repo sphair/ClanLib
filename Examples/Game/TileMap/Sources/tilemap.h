@@ -28,6 +28,8 @@
 
 #pragma once
 
+using namespace clan;
+
 class TileMapLayer
 {
 public:
@@ -37,9 +39,9 @@ public:
 class TileMap
 {
 public:
-	void load(GraphicContext &gc, const std::string &level, ResourceManager &resources);
+	void load(Canvas &canvas, const std::string &level, ResourceManager &resources);
 
-	void draw(GraphicContext &gc);
+	void draw(Canvas &canvas);
 	void set_scroll(int x, int y);
 
 	Sprite sprite_tiles;
