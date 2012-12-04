@@ -55,81 +55,37 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns the standard W3C CSS properties active for this component
-	const CSSBoxProperties &get_css_properties() const;
-
-	/// \brief Returns the standard W3C CSS properties active for this component
-	CSSBoxProperties &get_css_properties();
-
-	/// \brief Returns the first child component.
-	const GUIElement *get_first_child() const;
-
-	/// \brief Get Last child
-	///
-	/// \return last_child
-	GUIElement *get_last_child();
-
-	/// \brief Get First child
-	///
-	/// \return first_child
-	GUIElement *get_first_child();
-
-	/// \brief Returns the last child component.
-	const GUIElement *get_last_child() const;
-
-	/// \brief Returns the previous sibling component.
-	const GUIElement *get_previous_sibling() const;
-
-	/// \brief Get Previous sibling
-	///
-	/// \return previous_sibling
-	GUIElement *get_previous_sibling();
-
-	/// \brief Returns the next sibling component.
-	const GUIElement *get_next_sibling() const;
-
-	/// \brief Get Next sibling
-	///
-	/// \return next_sibling
-	GUIElement *get_next_sibling();
-
-	/// \brief Returns the parent component.
-	/** <p>Only child components has a parent.</p>*/
-	const GUIElement *get_parent_component() const;
-
-	/// \brief Get Parent component
-	///
-	/// \return parent_component
-	GUIElement *get_parent_component();
-
-	/// \brief Returns the DOM tag name
-	std::string get_tag_name() const;
-
-	/// \brief Returns the DOM id attribute
-	std::string get_id() const;
-
-	/// \brief Returns the DOM class attribute
-	std::string get_class() const;
+	const GUIElement *get_first_child() const { return first_child; }
+	GUIElement *get_first_child() { return first_child; }
+	const GUIElement *get_last_child() const { return last_child; }
+	GUIElement *get_last_child() { return last_child; }
+	const GUIElement *get_previous_sibling() const { return prev_sibling; }
+	GUIElement *get_previous_sibling() { return prev_sibling; }
+	const GUIElement *get_next_sibling() const { return next_sibling; }
+	GUIElement *get_next_sibling() { return next_sibling; }
+	const CSSBoxProperties &get_css_properties() const { return css_properties; }
+	CSSBoxProperties &get_css_properties() { return css_properties; }
+	const GUIElement *get_parent_component() const { return parent; }
+	const std::string &get_tag_name() const { return tag_name; }
+	const std::string &get_id() const { return id;}
+	const std::string &get_class() const { return class_string; }
+	GUIElement *get_parent_component() { return parent; }
 
 	/// \brief Returns whether a DOM pseudo class is present or not.
 	bool get_pseudo_class(const std::string &name) const;
 
 	/// \brief Returns all pseudo classes currently present
-	std::vector<std::string> get_pseudo_classes() const;
+	std::vector<std::string> get_pseudo_classes() const { return pseudo_classes; }
+
 
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	/// \brief Sets the DOM tag name
-	void set_tag_name(const std::string &name); 
-
-	/// \brief Sets the DOM class
-	void set_class(const std::string &name);
-
-	/// \brief Sets the DOM id
-	void set_id(const std::string &name);
+	void set_tag_name(const std::string &name) { tag_name = name; }
+	void set_class(const std::string &name) { class_string = name; }
+	void set_id(const std::string &name) { id = name; }
 
 	/// \brief Controls the presence of a DOM pseudo class
 	///
@@ -147,6 +103,9 @@ public:
 /// \name Implementation
 /// \{
 public:
+	CSSBoxProperties css_properties;
+
+private:
 	/// \brief Constructs a GUIElement
 	///
 	/// \param other = GUIElement
@@ -159,8 +118,6 @@ public:
 	GUIElement *next_sibling;
 	GUIElement *first_child;
 	GUIElement *last_child;
-
-	CSSBoxProperties css_properties;
 
 	std::string tag_name;
 	std::string id;
