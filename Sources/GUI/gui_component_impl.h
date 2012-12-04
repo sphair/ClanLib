@@ -81,14 +81,12 @@ public:
 	Callback_0<bool> func_focus_gained;
 	Callback_0<bool> func_pointer_enter;
 	Callback_0<bool> func_pointer_exit;
-	Callback_v1<CSSBoxProperties &> func_apply_properties;
 	
 	Callback_1<bool, const InputEvent &> func_input;
 	Callback_1<bool, const InputEvent &> func_input_pressed;
 	Callback_1<bool, const InputEvent &> func_input_released;
 	Callback_1<bool, const InputEvent &> func_input_doubleclick;
 	Callback_1<bool, const InputEvent &> func_input_pointer_moved;
-	Signal_v0 sig_style_changed;
 	Callback_v0 func_enablemode_changed;
 	Callback_v0 func_resized;
 	Callback_v1<std::shared_ptr<GUIMessage> &> func_filter_message;
