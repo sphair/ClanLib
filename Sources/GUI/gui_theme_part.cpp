@@ -71,6 +71,55 @@ CSSBoxProperties &GUIThemePart::get_css_properties()
 	return impl->element.get_css_properties();
 }
 
+std::string GUIThemePart::get_tag_name() const
+{
+	return impl->element.get_tag_name();
+}
+
+std::string GUIThemePart::get_id() const
+{
+	return impl->element.get_id();
+}
+
+std::string GUIThemePart::get_class() const
+{
+	return impl->element.get_class();
+}
+
+bool GUIThemePart::get_pseudo_class(const std::string &name) const
+{
+	return impl->element.get_pseudo_class(name);
+}
+
+std::vector<std::string> GUIThemePart::get_pseudo_classes() const
+{
+	return impl->element.get_pseudo_classes();
+}
+
+void GUIThemePart::set_tag_name(const std::string &name)
+{
+	impl->element.set_tag_name(name);
+	update_style();
+}
+	
+void GUIThemePart::set_class(const std::string &name)
+{
+	impl->element.set_class(name);
+	update_style();
+}
+
+void GUIThemePart::set_id(const std::string &name)
+{
+	impl->element.set_id(name);
+	update_style();
+}
+
+void GUIThemePart::set_pseudo_class(const std::string &name, bool enable)
+{
+	if (impl->element.set_pseudo_class(name, enable))
+		update_style();
+}
+
 void GUIThemePart::update_style()
 {
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
