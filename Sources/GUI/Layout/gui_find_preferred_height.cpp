@@ -28,7 +28,7 @@
 
 #include "GUI/precomp.h"
 #include "gui_find_preferred_height.h"
-#include "API/GUI/gui_element.h"
+#include "../gui_element.h"
 
 namespace clan
 {

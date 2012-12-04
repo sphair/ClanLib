@@ -27,12 +27,8 @@
 **    Mark Page
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
-
 #pragma once
 
-#include "api_gui.h"
 #include <memory>
 
 namespace clan
@@ -44,9 +40,7 @@ class CSSDocument;
 class CSSResourceCache;
 
 /// \brief A GUI element
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
-class CL_API_GUI GUIElement
+class GUIElement
 {
 /// \name Construction
 /// \{

@@ -28,7 +28,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/GUI/gui_element.h"
+#include "gui_element.h"
 #include "API/CSSLayout/css_property_list.h"
 #include "gui_element_impl.h"
 #include "Layout/gui_layout_content.h"

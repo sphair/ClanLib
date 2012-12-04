@@ -39,7 +39,7 @@
 #include "gui_manager_impl.h"
 #include "gui_css_strings.h"
 #include "gui_component_select_node.h"
-#include "API/GUI/gui_element.h"
+#include "gui_element.h"
 
 namespace clan
 {

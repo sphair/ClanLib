@@ -28,7 +28,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/GUI/gui_element.h"
+#include "gui_element.h"
 #include "gui_element_impl.h"
 
 namespace clan

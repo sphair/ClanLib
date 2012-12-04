@@ -58,7 +58,7 @@
 #include "CSSLayout/LayoutTree/css_background_renderer.h"
 #include "CSSLayout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/LayoutTree/css_layout_graphics.h"
-#include "API/GUI/gui_element.h"
+#include "gui_element.h"
 
 namespace clan
 {
