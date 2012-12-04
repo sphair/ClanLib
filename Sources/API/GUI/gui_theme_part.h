@@ -76,6 +76,21 @@ public:
 	/// \brief Gets the font
 	Font get_font();
 
+	/// \brief Returns the DOM tag name
+	std::string get_tag_name() const;
+
+	/// \brief Returns the DOM id attribute
+	std::string get_id() const;
+
+	/// \brief Returns the DOM class attribute
+	std::string get_class() const;
+
+	/// \brief Returns whether a DOM pseudo class is present or not.
+	bool get_pseudo_class(const std::string &name) const;
+
+	/// \brief Returns all pseudo classes currently present
+	std::vector<std::string> get_pseudo_classes() const;
+
 /// \}
 
 /// \name Operations
@@ -83,6 +98,18 @@ public:
 public:
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
+
+	/// \brief Sets the DOM tag name
+	void set_tag_name(const std::string &name); 
+
+	/// \brief Sets the DOM class
+	void set_class(const std::string &name);
+
+	/// \brief Sets the DOM id
+	void set_id(const std::string &name);
+
+	/// \brief Controls the presence of a DOM pseudo class
+	void set_pseudo_class(const std::string &name, bool enable);
 
 	// To do: provide access to GUICSSUsedValues data and/or add the box calculation helpers we had on GUIThemePart
 /// \}
