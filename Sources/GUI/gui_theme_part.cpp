@@ -34,6 +34,10 @@
 #include "gui_component_select_node.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
+#include "API/Display/2D/canvas.h"
+#include "CSSLayout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/LayoutTree/css_layout_graphics.h"
 
 namespace clan
 {
@@ -124,6 +128,30 @@ void GUIThemePart::update_style()
 {
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
+}
+
+void GUIThemePart::render(Canvas &canvas, const Rect &clip_rect, const Rect &content_rect)
+{
+	Rect viewport = impl->component->get_top_level_component()->get_size();
+	CSSResourceCache *resource_cache = &impl->component->impl->gui_manager_impl->resource_cache;
+	CSSLayoutGraphics graphics(canvas, resource_cache, viewport, 0);
+
+	Rect border_box = content_rect;//impl->component->get_size();
+	Rect padding_box = Rect(border_box);//.shrink(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
+	Rect content_box = Rect(padding_box);//.shrink(impl->css_used_values.padding.left, impl->css_used_values.padding.top, impl->css_used_values.padding.right, impl->css_used_values.padding.bottom);
+
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_properties());
+	background.set_border_box(border_box);
+	background.set_padding_box(padding_box);
+	background.set_content_box(content_box);
+	background.set_initial_containing_box(content_box);
+	background.render();
+
+	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
+	border.set_border_box(border_box);
+	//border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
+	border.render();
+
 }
 
 }

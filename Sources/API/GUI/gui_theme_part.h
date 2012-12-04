@@ -42,6 +42,8 @@ class GUIComponent;
 class CSSBoxProperties;
 class GUIThemePart_Impl;
 class Font;
+class Canvas;
+class Rect;
 
 /// \brief A GUI theme part represents a pseudo element in CSS.
 ///
@@ -96,6 +98,9 @@ public:
 /// \name Operations
 /// \{
 public:
+	/// \brief Renders the component and its children.
+	void render(Canvas &canvas, const Rect &clip_rect, const Rect &content_rect);
+
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
 
