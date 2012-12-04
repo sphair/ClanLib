@@ -60,7 +60,7 @@ int App::start(const std::vector<std::string> &args)
 	canvas = Canvas(window);
 
 	font = Font(canvas, "tahoma", 16);
-	vector_font = Font_Vector("../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf", 256);
+	vector_font = Font_Vector(canvas, "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf", 256);
 
 	calculate_matrix(canvas);
 
@@ -236,8 +236,8 @@ void App::draw_keyboard_state(Canvas &canvas, int yoffset)
 
 	std::string text(string_format("Keyboard : %1 : %2 is %3", 
 		keyboard.get_name(),
-		keyboard.get_key_name(key_space),
-		keyboard.get_keycode(key_space) ? "Pressed" : "Released"));
+		keyboard.get_key_name(keycode_space),
+		keyboard.get_keycode(keycode_space) ? "Pressed" : "Released"));
 
 	font.draw_text(canvas, 8, yoffset, text);
 }
@@ -273,7 +273,7 @@ void App::draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset)
 		joystick_number,
 		joystick.get_name() ));
 
-	int num_axis = joystick.get_axis_count();
+	int num_axis = joystick.get_axis_ids().size();
 	text = text + string_format("%1 Axis (", 
 		num_axis );
 
@@ -310,7 +310,7 @@ void App::draw_tablet_state(Canvas &canvas, int tablet_number, int yoffset)
 		tablet_number,
 		tablet.get_name() ));
 
-	int num_axis = tablet.get_axis_count();
+	int num_axis = tablet.get_axis_ids().size();
 	text = text + string_format("%1 Axis (", 
 		num_axis );
 
