@@ -58,6 +58,7 @@
     <group>Main Group</group>
     <text>B</text>
   </radiobutton>
+  <slider/>
   <lineedit>LineEdit</lineedit>
   <scrollbar></scrollbar>
   

@@ -211,6 +211,17 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 		component->set_ranges(100, 200, 5, 20);
 
 	}	
+	else if (xml_element.get_tag_name() == "slider")
+	{
+		Slider *component = new Slider(parent);
+		component->set_class(xml_element.get_attribute("class"));
+		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
+		for (size_t i = 0; i < pseudo_classes.size(); i++)
+			component->set_pseudo_class(pseudo_classes[i], true);
+
+		component->set_ranges(100, 200, 5, 20);
+
+	}	
 	else
 	{
 		GUIComponent *component = new GUIComponent(parent, xml_element.get_tag_name());
