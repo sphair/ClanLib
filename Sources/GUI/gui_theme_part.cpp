@@ -27,10 +27,10 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/GUI/gui_pseudo_component.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_manager.h"
 #include "API/CSSLayout/css_property_list.h"
-#include "gui_pseudo_component_impl.h"
+#include "gui_theme_part_impl.h"
 #include "gui_component_select_node.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
@@ -38,38 +38,38 @@
 namespace clan
 {
 
-GUIPseudoComponent::GUIPseudoComponent()
+GUIThemePart::GUIThemePart()
 {
 }
 
-GUIPseudoComponent::GUIPseudoComponent(GUIComponent *parent, const std::string &pseudo_tag_name)
-: impl(new GUIPseudoComponent_Impl(parent, pseudo_tag_name))
+GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &pseudo_tag_name)
+: impl(new GUIThemePart_Impl(parent, pseudo_tag_name))
 {
 }
 
-void GUIPseudoComponent::throw_if_null() const
+void GUIThemePart::throw_if_null() const
 {
 	if (!impl)
-		throw Exception("GUIPseudoComponent is null");
+		throw Exception("GUIThemePart is null");
 }
 
 
-Font GUIPseudoComponent::get_font()
+Font GUIThemePart::get_font()
 {
 	return impl->component->get_font(get_css_properties());
 }
 
-const CSSBoxProperties &GUIPseudoComponent::get_css_properties() const
+const CSSBoxProperties &GUIThemePart::get_css_properties() const
 {
 	return impl->css_properties;
 }
 
-CSSBoxProperties &GUIPseudoComponent::get_css_properties()
+CSSBoxProperties &GUIThemePart::get_css_properties()
 {
 	return impl->css_properties;
 }
 
-void GUIPseudoComponent::update_style()
+void GUIThemePart::update_style()
 {
 	// FIXME
 	/*

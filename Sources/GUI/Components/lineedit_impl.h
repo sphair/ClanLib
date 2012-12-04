@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/GUI/gui_pseudo_component.h"
+#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -113,7 +113,7 @@ public:
 
 	static std::string break_characters;
 
-	GUIPseudoComponent part_selection;
+	GUIThemePart part_selection;
 	GUIComponent *part_cursor;
 
 	void move(int steps, bool ctrl_pressed, bool shift_pressed);

@@ -40,22 +40,22 @@ namespace clan
 
 class GUIComponent;
 class CSSBoxProperties;
-class GUIPseudoComponent_Impl;
+class GUIThemePart_Impl;
 class Font;
 
-/// \brief A GUI pseudo component represents a pseudo element in CSS.
+/// \brief A GUI theme part represents a pseudo element in CSS.
 ///
 /// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
-class CL_API_GUI GUIPseudoComponent
+class CL_API_GUI GUIThemePart
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a null instance.
-	GUIPseudoComponent();
+	GUIThemePart();
 
 	/// \brief Creates a GUI component.
-	GUIPseudoComponent(GUIComponent *parent, const std::string &pseudo_tag_name);
+	GUIThemePart(GUIComponent *parent, const std::string &pseudo_tag_name);
 /// \}
 
 /// \name Attributes
@@ -90,7 +90,7 @@ public:
 /// \name Implementation
 /// \{
 public:
-	std::shared_ptr<GUIPseudoComponent_Impl> impl;
+	std::shared_ptr<GUIThemePart_Impl> impl;
 /// \}
 };
 
