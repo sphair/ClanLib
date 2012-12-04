@@ -30,12 +30,12 @@
 #pragma once
 
 #include <memory>
+#include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
 
 class GUIElement_Impl;
-class CSSBoxProperties;
 class CSSDocument;
 class CSSResourceCache;
 
@@ -47,6 +47,9 @@ class GUIElement
 public:
 	/// \brief Creates a GUI element
 	explicit GUIElement(GUIElement *parent);
+
+	~GUIElement();
+
 /// \}
 
 /// \name Attributes
@@ -151,7 +154,18 @@ public:
 
 	GUIElement &operator =(const GUIElement &other);
 
-	std::shared_ptr<GUIElement_Impl> impl;
+	GUIElement *parent;
+	GUIElement *prev_sibling;
+	GUIElement *next_sibling;
+	GUIElement *first_child;
+	GUIElement *last_child;
+
+	CSSBoxProperties css_properties;
+
+	std::string tag_name;
+	std::string id;
+	std::string class_string;
+	std::vector<std::string> pseudo_classes;
 /// \}
 };
 
