@@ -43,8 +43,10 @@ GUIThemePart::GUIThemePart()
 }
 
 GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &pseudo_tag_name)
-: impl(new GUIThemePart_Impl(parent, pseudo_tag_name))
+: impl(new GUIThemePart_Impl(parent))
 {
+	impl->element.set_parent(&parent->impl->element);
+	impl->element.set_tag_name(pseudo_tag_name);
 }
 
 void GUIThemePart::throw_if_null() const
@@ -61,30 +63,18 @@ Font GUIThemePart::get_font()
 
 const CSSBoxProperties &GUIThemePart::get_css_properties() const
 {
-	return impl->css_properties;
+	return impl->element.get_css_properties();
 }
 
 CSSBoxProperties &GUIThemePart::get_css_properties()
 {
-	return impl->css_properties;
+	return impl->element.get_css_properties();
 }
 
 void GUIThemePart::update_style()
 {
-	// FIXME
-	/*
-	impl->css_properties = CSSBoxProperties();
-
-	GUIComponentSelectNode select_node(impl->component, impl->pseudo_tag_name);
-	CSSPropertyList sheet_properties = impl->component->get_gui_manager().get_css_document().select(&select_node);
-	impl->css_properties.apply_properties(sheet_properties);
-
-	if (impl->component->get_parent_component())
-		impl->css_properties.compute(&impl->component->get_parent_component()->get_css_properties(), &impl->component->impl->gui_manager_impl->resource_cache);
-	else
-		impl->css_properties.compute(0, &impl->component->impl->gui_manager_impl->resource_cache);
-
-		*/
+	CSSDocument document = impl->component->get_gui_manager().get_css_document();
+	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
 }
 
 }
