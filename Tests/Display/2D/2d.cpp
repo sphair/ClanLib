@@ -104,7 +104,7 @@ int App::start(const std::vector<std::string> &args)
 		Sprite sprite(gc, "test", &resources);
 		//sprite.set_linear_filter(true);
 
-		Font small_font = Font(gc, "Tahoma", 12);
+		Font small_font = Font(canvas, "Tahoma", 11);
 
 		float test_base_angle = 0.0f;
 		float test_angle = 0.0f;
