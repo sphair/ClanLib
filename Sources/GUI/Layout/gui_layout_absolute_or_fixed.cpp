@@ -30,7 +30,7 @@
 #include "gui_layout_absolute_or_fixed.h"
 #include "gui_set_initial_used_values.h"
 #include "gui_layout_content.h"
-#include "API/GUI/gui_element.h"
+#include "../gui_element.h"
 
 namespace clan
 {

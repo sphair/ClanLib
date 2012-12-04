@@ -28,7 +28,7 @@
 
 #include "GUI/precomp.h"
 #include "gui_component_select_node.h"
-#include "API/GUI/gui_element.h"
+#include "gui_element.h"
 #include "API/Core/Text/string_help.h"
 
 namespace clan
