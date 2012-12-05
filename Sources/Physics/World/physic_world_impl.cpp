@@ -72,10 +72,12 @@ void PhysicWorld_Impl::step(float timestep, int velocity_iterations, int positio
 
 b2Body *PhysicWorld_Impl::create_body(const b2BodyDef &description)
 {
-	//b2BodyDef def = description;
-	//def.position = (1.0f/physic_scale) * def.position; //change to a better physic_scale handling
-
 	return world.CreateBody(&description);
+}
+
+b2Joint *PhysicWorld_Impl::create_joint(const b2JointDef &description)
+{
+	return world.CreateJoint(&description);
 }
 //																											___________________																											
 //																											A T T R I B U T E S

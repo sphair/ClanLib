@@ -41,11 +41,12 @@ public:
 //																						C O N S T R U C T O R S
 
 	Joint_Impl()
-	: joint(NULL)
+	: joint(NULL),
+	  joint_type(Joint_None)
 	{};
 	virtual ~Joint_Impl() { return; }
 
-	virtual b2Joint *get_Joint();
+	virtual b2Joint *get_Joint() { return joint; }
 
 //																						___________________
 //																						A T T R I B U T E S
