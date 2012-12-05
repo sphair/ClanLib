@@ -264,3 +264,158 @@ button:focus
     border-image: url('res:ButtonFocus') 8 9 8 8 fill / 8px 9px 8px 8px;
 }
 
+
+scrollbar 
+{
+	no-draw:true;
+	preferred-height:17px;
+}
+
+scrollbar scrolltrack.left
+{
+
+}
+
+scrollbar scrolltrack.left:normal
+{
+	border-image: url('res:ScrollbarHoriTrackNormal') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.left:hot
+{
+	border-image: url('res:ScrollbarHoriTrackHot') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.left:pressed
+{  
+	border-image: url('res:ScrollbarHoriTrackPressed') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.left:disabled
+{
+	border-image: url('res:ScrollbarHoriTrackDisabled') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.right
+{
+}
+
+scrollbar scrolltrack.right:normal
+{
+	border-image: url('res:ScrollbarHoriTrackNormal') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.right:hot
+{
+	border-image: url('res:ScrollbarHoriTrackHot') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.right:pressed
+{
+	border-image: url('res:ScrollbarHoriTrackPressed') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrolltrack.right:disabled
+{
+	border-image: url('res:ScrollbarHoriTrackDisabled') 0 0 4 3 fill / 0px 0px 4px 3px;
+}
+
+scrollbar scrollthumb.horizontal
+{
+}
+
+scrollbar scrollthumb.horizontal:normal
+{
+	border-image: url('res:ScrollbarHoriThumbNormal') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumb.horizontal:hot
+{
+	border-image: url('res:crollbarHoriThumbHot') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumb.horizontal:pressed
+{
+	border-image: url('res:ScrollbarHoriThumbPressed') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumb.horizontal:disabled
+{
+	border-image: url('res:ScrollbarHoriThumbDisabled') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumbgripper.horizontal
+{
+}
+
+scrollbar scrollthumbgripper.horizontal:normal
+{
+	border-image: url('res:ScrollbarHoriThumbGripperNormal') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumbgripper.horizontal:hot
+{
+	border-image: url('res:ScrollbarHoriThumbGripperHot') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumbgripper.horizontal:pressed
+{
+	border-image: url('res:ScrollbarHoriThumbGripperPressed') 5 5 5 5 fill / 5px 5px 5px 5px;
+}
+
+scrollbar scrollthumbgripper.horizontal:disabled
+{
+
+}
+
+scrollbar scrollbutton.left
+{
+	preferred-width:17px;
+	preferred-height:17px;
+}
+
+scrollbar scrollbutton.left:normal
+{
+	border-image: url('res:ScrollbarHoriButtonLeftNormal') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.left:hot
+{
+	border-image: url('res:ScrollbarHoriButtonLeftHot') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.left:pressed
+{
+	border-image: url('res:ScrollbarHoriButtonLeftPressed') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.left:disabled
+{
+	border-image: url('res:ScrollbarHoriButtonLeftDisabled') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.right
+{
+	preferred-width:17px;
+	preferred-height:17px;
+}
+
+scrollbar scrollbutton.right:normal
+{
+	border-image: url('res:ScrollbarHoriButtonRightNormal') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.right:hot
+{
+	border-image: url('res:ScrollbarHoriButtonRightHot') 3 3 3 3 fill / 3px 3px 3px 3px; 
+}
+
+scrollbar scrollbutton.right:pressed
+{
+	border-image: url('res:ScrollbarHoriButtonRightPressed') 3 3 3 3 fill / 3px 3px 3px 3px;
+}
+
+scrollbar scrollbutton.right:disabled
+{
+	border-image: url('res:ScrollbarHoriButtonRightDisabled') 3 3 3 3 fill / 3px 3px 3px 3px;
+}

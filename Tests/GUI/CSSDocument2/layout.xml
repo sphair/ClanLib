@@ -51,4 +51,6 @@
     <text>Need alignment!</text>
   </pushbutton>
 
+  <scrollbar></scrollbar>
+  
 </root>
