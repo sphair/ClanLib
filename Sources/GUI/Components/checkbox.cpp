@@ -338,7 +338,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	Rect checker_rect(content_rect.left, ypos, content_rect.left + pref_size.width, ypos + pref_size.height);
 
-	part_checker.render_box(canvas, checker_rect, update_rect);
+	part_checker.render_box(canvas, checker_rect);
 
 	int text_gap = 2; //FIXME: checkbox->get_property_int(prop_text_gap);
 
@@ -355,7 +355,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect focus_rect = RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);
 
 	if (checkbox->has_focus())
-		part_focus.render_box(canvas, focus_rect, update_rect);
+		part_focus.render_box(canvas, focus_rect);
 }
 
 void CheckBox_Impl::create_parts(bool checked, bool indeterminated)

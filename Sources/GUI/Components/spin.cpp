@@ -367,10 +367,10 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void Spin_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = component->get_geometry().get_size();
-	part_button_up.render_box(canvas, button_up_rect, update_rect);
-	part_button_down.render_box(canvas, button_down_rect, update_rect);
-	part_arrow_up.render_box(canvas, button_up_rect, update_rect);
-	part_arrow_down.render_box(canvas, button_down_rect, update_rect);
+	part_button_up.render_box(canvas, button_up_rect);
+	part_button_down.render_box(canvas, button_down_rect);
+	part_arrow_up.render_box(canvas, button_up_rect);
+	part_arrow_down.render_box(canvas, button_down_rect);
 }
 
 void Spin_Impl::create_components()

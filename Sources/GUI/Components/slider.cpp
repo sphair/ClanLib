@@ -517,13 +517,13 @@ void Slider_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	update_part_positions();
 	
 	Rect rect = slider->get_geometry();
-	part_track.render_box(canvas, rect_track, update_rect);
-	part_thumb.render_box(canvas, rect_thumb, update_rect);
+	part_track.render_box(canvas, rect_track);
+	part_thumb.render_box(canvas, rect_thumb);
 	
 	if (slider->has_focus())
 	{
 		Rect content_rect = slider->get_content_box();
-		part_focus.render_box(canvas, content_rect, update_rect);
+		part_focus.render_box(canvas, content_rect);
 	}
 }
 

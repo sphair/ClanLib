@@ -369,7 +369,7 @@ void ScrollBar_Impl::on_part_thumb_render(Canvas &canvas, const Rect &update_rec
 	Rect thumb_rect = part_thumb->get_geometry();
 	int gripper_width = part_thumb_gripper.get_css_properties().width.length.value;
 	Rect gripper_rect((thumb_rect.get_width() - gripper_width)/2, thumb_rect.top, Size(gripper_width, thumb_rect.get_height())) ;
-	part_thumb_gripper.render_box(canvas, gripper_rect, update_rect);
+	part_thumb_gripper.render_box(canvas, gripper_rect);
 }
 
 void ScrollBar_Impl::on_apply_properties(CSSBoxProperties &properties)
