@@ -39,8 +39,6 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Window/display_window.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -186,5 +184,3 @@ void MainWindow_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 }
 
 }
-
-#endif

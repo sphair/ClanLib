@@ -1470,6 +1470,11 @@ Rect GUIComponent::get_render_box(const Rect &content_box_rect) const
 	return box;
 }
 
+int GUIComponent::get_preferred_height() const	//FIXME: Stub
+{
+	return impl->element.get_css_properties().height.length.value;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Implementation:
 
