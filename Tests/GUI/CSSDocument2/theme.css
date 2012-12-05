@@ -264,27 +264,3 @@ button:focus
     border-image: url('res:ButtonFocus') 8 9 8 8 fill / 8px 9px 8px 8px;
 }
 
-button imageview
-{
-}
-
-button:pressed imageview
-{
-    position: relative;
-    left: 1px;
-    top: 1px;
-}
-
-button label
-{
-    align-self: center;
-}
-
-button:pressed label
-{
-    position: relative;
-    left: 1px;
-    top: 1px;
-}
-
-
