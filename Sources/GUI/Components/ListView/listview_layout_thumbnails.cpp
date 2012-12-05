@@ -40,8 +40,6 @@
 #include "listview_layout.h"
 #include "listview_layout_thumbnails.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -327,5 +325,3 @@ void ListViewLayoutThumbnails::update_rows_cols_visible()
 }
 
 }
-
-#endif

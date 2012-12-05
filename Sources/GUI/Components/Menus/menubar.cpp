@@ -47,9 +47,6 @@
 #include "popupmenu_impl.h"
 #include "../../gui_css_strings.h"
 
-#ifdef DISABLE_COMPONENT
-
-
 namespace clan
 {
 
@@ -268,7 +265,7 @@ Point MenuBar_Impl::get_submenu_screen_pos()
 Rect MenuBar_Impl::get_menu_item_rect(int our_index)
 {
 	Rect menubar_rect = menubar->get_size();
-	Rect menubar_content_rect = component->get_content_box(menubar_rect);
+	Rect menubar_content_rect = menubar->get_content_box(menubar_rect);
 
 	int x = menubar_content_rect.left;
 	Canvas &canvas = menubar->get_canvas();
@@ -304,5 +301,3 @@ int MenuBar_Impl::get_selected_item_index()
 }
 
 }
-
-#endif

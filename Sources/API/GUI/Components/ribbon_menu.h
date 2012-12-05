@@ -62,7 +62,7 @@ private:
 	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
 	void on_filter_message(std::shared_ptr<GUIMessage> &message);
-	void on_filter_input_message(GUIMessage_Input &message);
+	void on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message);
 	int update_item_boxes();
 	static GUITopLevelDescription create_toplevel_description();
 

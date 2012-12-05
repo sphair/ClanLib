@@ -46,8 +46,6 @@
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -410,5 +408,3 @@ void PopupMenuWindow::create_parts()
 }
 
 }
-
-#endif

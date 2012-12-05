@@ -60,8 +60,6 @@
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -364,15 +362,15 @@ void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 	{
 		
-		const InputEvent &input_event = input_msg->input_event;
+		InputEvent &input_event = input_msg->input_event;
 
 		if (input_event.type == InputEvent::pointer_moved)
 		{
-			on_mouse_move(input, input_event);
+			on_mouse_move(msg, input_event);
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
 		{
-			on_mouse_lbutton_down(input, input_event);
+			on_mouse_lbutton_down(msg, input_event);
 			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_wheel_up)
@@ -389,22 +387,22 @@ void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
 		{
-			on_mouse_lbutton_up(input, input_event);
+			on_mouse_lbutton_up(msg, input_event);
 			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::doubleclick && input_event.id == mouse_left)
 		{
-			on_mouse_lbutton_doubleclick(input, input_event);
+			on_mouse_lbutton_doubleclick(msg, input_event);
 			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_right)
 		{
-			on_mouse_rbutton_down(input, input_event);
+			on_mouse_rbutton_down(msg, input_event);
 			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_right)
 		{
-			on_mouse_rbutton_up(input, input_event);
+			on_mouse_rbutton_up(msg, input_event);
 			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.device.get_type() == InputDevice::keyboard)
@@ -655,12 +653,12 @@ bool ListView_Impl::on_keyboard_released(InputEvent &event)
 	return event_consumed;
 }
 
-void ListView_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
-	on_mouse_button_down(input, input_event);
+	on_mouse_button_down(msg, input_event);
 }
 
-void ListView_Impl::on_mouse_button_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	listview->set_focus();
 
@@ -754,34 +752,34 @@ void ListView_Impl::on_drag_or_edit_timeout()
 	edit_item(si);
 }
 
-void ListView_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	drag_or_edit_started = false;
 	listview->capture_mouse(false);
 }
 
-void ListView_Impl::on_mouse_lbutton_doubleclick(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	if(!selection.get_first().is_null())
 		if (!func_item_doubleclick.is_null())
 			func_item_doubleclick.invoke(selection.get_first().get_item());
 }
 
-void ListView_Impl::on_mouse_rbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	cancel_edit();
-	on_mouse_button_down(input, input_event); 
+	on_mouse_button_down(msg, input_event); 
 }
 
-void ListView_Impl::on_mouse_rbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	drag_or_edit_started = false;
 	if (!func_mouse_right_up.is_null())
 		func_mouse_right_up.invoke(input_event.mouse_pos);
 }
 
-void ListView_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	if (drag_or_edit_started && input_event.mouse_pos.distance(pos_mouse_drag_start) > 5)
 	{
@@ -847,7 +845,6 @@ void ListView_Impl::on_resized()
 void ListView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = listview->get_geometry();
-	listview->render_box(canvas, rect.get_size(), update_rect);
 	part_columns_bg.render_box(canvas, rect_columns, update_rect);
 
 	listview->push_cliprect(canvas, rect_columns_content);
@@ -883,7 +880,6 @@ void ListView_Impl::create_components()
 
 void ListView_Impl::create_parts()
 {
-	part_component = GUIThemePart(listview);
 	part_mouse_selection = GUIThemePart(listview, "mouse_selection");
 	part_columns_bg = GUIThemePart(listview, "columns_bg");
 
@@ -1130,17 +1126,6 @@ void ListView_Impl::on_after_edit_item(InputEvent &e)
 	lineedit->set_cursor_pos(cursor_pos);
 }
 
-
-void ListView_Impl::on_style_changed()
-{
-	renderer->create_parts();
-	layout->create_parts();
-	layout->invalidate();
-	update_scrollbar();
-	listview->request_repaint();
-	cancel_edit();
-}
-
 void ListView_Impl::cancel_edit()
 {
 	if (!edited_item.is_null())
@@ -1159,5 +1144,3 @@ void ListView_Impl::on_lineedit_focus_lost()
 }
 
 }
-
-#endif

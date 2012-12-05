@@ -89,18 +89,18 @@ public:
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
-	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_doubleclick(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_button_down(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_button_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 
-	void on_mouse_rbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_rbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_rbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_rbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 
 	bool on_keyboard_pressed(InputEvent &event);
 	bool on_keyboard_released(InputEvent &event);
 
-	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 	void on_mouse_enter();
 	void on_mouse_leave();
 

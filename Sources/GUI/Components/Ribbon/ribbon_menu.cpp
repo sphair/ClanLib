@@ -33,8 +33,6 @@
 #include "API/GUI/Components/ribbon_menu.h"
 #include "API/Display/Window/input_event.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -143,31 +141,31 @@ void RibbonMenu::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
 	if (running)
 	{
-		if (message.get_type() == GUIMessage_Input::get_type_name())
+		std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(message);
+		if (input_msg)
 		{
-			GUIMessage_Input input_message(message);
-			on_filter_input_message(input_message);
+			on_filter_input_message(input_msg);
 		}
-		else if (message.get_type() == GUIMessage_FocusChange::get_type_name())
+
+		std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(message);
+		if (focus_change_msg)
 		{
 			// Check we are not losing focus (FIXME: Required for X11 compatibility - this line is not required for win32)
-			if ( ( GUIMessage_FocusChange(message).get_focus_type() == GUIMessage_FocusChange::losing_focus) && (message.get_target() == get_owner_component()) )
+			if ( ( focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus) && (message->target == get_owner_component()) )
 			{
 				end();
-				message.set_consumed();
+				message->consumed = true;
 			}
 		}
 	}
 }
 
-void RibbonMenu::on_filter_input_message(GUIMessage_Input &message)
+void RibbonMenu::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
 {
-	InputEvent e = message.get_event();
-
-	e.mouse_pos = message.get_target()->component_to_screen_coords(e.mouse_pos);
-	if (e.device.get_type() == InputDevice::pointer)
+	message->input_event.mouse_pos = message->target->component_to_screen_coords(message->input_event.mouse_pos);
+	if (message->input_event.device.get_type() == InputDevice::pointer)
 	{
-		Point pos = screen_to_component_coords(e.mouse_pos);
+		Point pos = screen_to_component_coords(message->input_event.mouse_pos);
 		Rect client_box = get_size();
 		if (client_box.contains(pos))
 		{
@@ -186,31 +184,31 @@ void RibbonMenu::on_filter_input_message(GUIMessage_Input &message)
 				request_repaint();
 			}
 
-			if (e.type == InputEvent::released && current_item != -1)
+			if (message->input_event.type == InputEvent::released && current_item != -1)
 			{
 				end();
 				if (!items[current_item].func_clicked.is_null())
 					items[current_item].func_clicked.invoke();
 			}
 
-			message.set_consumed();
+			message->consumed = true;
 		}
 		else
 		{
-			if (e.type == InputEvent::pressed)
+			if (message->input_event.type == InputEvent::pressed)
 			{
 				end();
-				message.set_consumed();
+				message->consumed = true;
 			}
 			else
-				message.set_consumed();
+				message->consumed = true;
 		}
 	}
 	else
 	{
 		// To do: fix this
 		// on_keyboard_input(e);
-		message.set_consumed();
+		message->consumed = true;
 	}
 }
 
@@ -229,5 +227,3 @@ GUITopLevelDescription RibbonMenu::create_toplevel_description()
 }
 
 }
-
-#endif

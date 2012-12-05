@@ -48,7 +48,6 @@
 #include "listview_column_header_impl.h"
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
-#ifdef DISABLE_COMPONENT
 
 namespace clan
 {
@@ -69,9 +68,9 @@ public:
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void update_geometry(const Rect &content_rect);
 	void create_parts();
-	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 	void on_mouse_leave();
 	void on_mouse_enter();
 	void on_column_size_changed(ListViewColumnHeader col);
@@ -243,13 +242,13 @@ void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 	{
 		
-		const InputEvent &input_event = input_msg->input_event;
+		InputEvent &input_event = input_msg->input_event;
 		if (input_event.type == InputEvent::pointer_moved)
-			on_mouse_move(input, input_event);
+			on_mouse_move(msg, input_event);
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
-			on_mouse_lbutton_down(input, input_event);
+			on_mouse_lbutton_down(msg, input_event);
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
-			on_mouse_lbutton_up(input, input_event);
+			on_mouse_lbutton_up(msg, input_event);
 	}
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	if (pointer)
@@ -262,7 +261,7 @@ void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	}
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 
@@ -279,7 +278,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEv
 	listview_header->capture_mouse(true);
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
@@ -294,7 +293,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEven
 }
 
 
-void ListViewHeader_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	bool current_rect_set = false;
@@ -428,5 +427,3 @@ void ListViewHeader_Impl::on_column_size_changed(ListViewColumnHeader col)
 }
 
 }
-
-#endif
