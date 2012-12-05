@@ -85,4 +85,16 @@ bool Fixture::test_point(const Vec2f &p) const
 	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
 }
 
+//																											_____________																										
+//																											S I G N A L S
+
+Signal_v1<Fixture &> &Fixture::sig_collision()
+{
+	return impl->sig_collision;
+}
+Signal_v0 &Fixture::sig_fixture_deletion()
+{
+	return impl->sig_fixture_deletion;
+}
+
 }

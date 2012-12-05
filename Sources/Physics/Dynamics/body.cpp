@@ -34,6 +34,7 @@
 #include "../World/physic_world_impl.h"
 #include "API/Physics/World/physic_world.h"
 #include "API/Physics/Dynamics/fixture_description.h"
+#include "API/Physics/Dynamics/body.h"
 #include "API/Core/Math/angle.h"
 
 
@@ -129,6 +130,19 @@ void Body::set_linear_velocity(const Vec2f &velocity)
 void Body::set_angular_velocity(const Angle &velocity)
 {
 	impl->body->SetAngularVelocity(velocity.to_radians());
+}
+
+
+//																											_____________																										
+//																											S I G N A L S
+
+Signal_v1<Body &> &Body::sig_collision()
+{
+	return impl->sig_collision;
+}
+Signal_v0 &Body::sig_body_deletion()
+{
+	return impl->sig_body_deletion;
 }
 
 }

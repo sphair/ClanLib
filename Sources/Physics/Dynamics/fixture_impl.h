@@ -29,6 +29,8 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
+#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal_v1.h"
 
 namespace clan
 {
@@ -36,6 +38,7 @@ namespace clan
 class Body;
 class FixtureDescription;
 class PhysicWorld_Impl;
+class Fixture;
 
 class Fixture_Impl
 {
@@ -44,7 +47,7 @@ class Fixture_Impl
 public:
 	Fixture_Impl();
 
-	virtual ~Fixture_Impl() { return; }
+	virtual ~Fixture_Impl() { sig_fixture_deletion.invoke(); return; }
 
 //																						___________________
 //																						A T T R I B U T E S
@@ -56,8 +59,8 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	//To add : Body deletion signal.
-	//Maybe fixture attachment signal?
+	Signal_v1<Fixture &> sig_collision;
+	Signal_v0 sig_fixture_deletion;
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
