@@ -454,9 +454,9 @@ void ToolBar_Impl::create_parts()
 	part_item_on = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
 	part_item_on.set_pseudo_class(CssStr::on, true);
 
-	size_icon.width = 32;//FIXME: part_item_normal.get_property_int(prop_icon_width);
-	size_icon.height = 32; //FIXME: part_item_normal.get_property_int(prop_icon_height);
-	std::string str_alignment = "left"; //FIXME: toolbar->get_property(prop_layout);
+	size_icon.width = part_item_normal.get_property_int(CssStr::icon_width, "0");
+	size_icon.height = part_item_normal.get_property_int(CssStr::icon_height, "0");
+	std::string str_alignment = toolbar->get_property(CssStr::layout, "left");
 	if (str_alignment == "center")
 		layout = layout_center;
 	else
@@ -475,7 +475,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	Rect component_content = toolbar->get_content_box(rect);
 
 	Rect item_content = part_item_normal.get_content_box(component_content);
-	int original_text_gap = 2;//FIXME: part_item_normal.get_property_int(prop_text_gap);
+	int original_text_gap = part_item_normal.get_property_int(CssStr::text_gap, "3");
 
 	if (horizontal)
 	{

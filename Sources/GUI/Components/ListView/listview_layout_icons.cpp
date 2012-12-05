@@ -169,8 +169,8 @@ void ListViewLayoutIcons::create_parts()
 	part_cell.set_pseudo_class(CssStr::normal, true);
 	part_row.set_pseudo_class(CssStr::normal, true);
 
-	size_icon.width = 16;//FIXME: part_cell.get_property_int(prop_icon_width);
-	size_icon.height = 16;//FIXME: part_cell.get_property_int(prop_icon_height);
+	size_icon.width = part_cell.get_property_int(CssStr::icon_width, "16");
+	size_icon.height = part_cell.get_property_int(CssStr::icon_height, "16");
 
 	Font font = part_cell.get_font();
 	height_text = font.get_text_size(canvas, "l").height;
@@ -180,10 +180,10 @@ void ListViewLayoutIcons::create_parts()
 	max_rows_visible = rect_view.get_height() / size_cell.width;
 	max_grid_cols_visible = rect_view.get_width() / size_cell.height;
 
-	lineedit_textrect_offset.left = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_left);
-	lineedit_textrect_offset.top = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_top);
-	lineedit_textrect_offset.bottom = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_bottom);
-	lineedit_textrect_offset.right = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_right);
+	lineedit_textrect_offset.left = part_cell.get_property_int(CssStr::lineedit_offset_left, "0");
+	lineedit_textrect_offset.top = part_cell.get_property_int(CssStr::lineedit_offset_top, "0");
+	lineedit_textrect_offset.bottom = part_cell.get_property_int(CssStr::lineedit_offset_bottom, "0");
+	lineedit_textrect_offset.right = part_cell.get_property_int(CssStr::lineedit_offset_right, "0");
 }
 
 Rect ListViewLayoutIcons::get_lineedit_rect(ListViewItem &item, const Size &text_size) const

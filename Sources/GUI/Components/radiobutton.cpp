@@ -356,7 +356,7 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect checker_rect(content_rect.left, ypos, content_rect.left + pref_size.width, ypos + pref_size.height);
 	part_checker.render_box(canvas, checker_rect, update_rect);
 
-	int text_gap = 4; //FIXME: radio->get_property_int(prop_text_gap);
+	int text_gap = radio->get_property_int(CssStr::text_gap, "2");
 
 	Rect text_rect;
 	text_rect.left = checker_rect.right + text_gap;

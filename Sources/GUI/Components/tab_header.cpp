@@ -93,7 +93,7 @@ TabHeader::TabHeader(GUIComponent *parent)
 	// todo: enablemode, resize
 
 	impl->part_focus = GUIThemePart(this, CssStr::Tab::Header::part_focus);
-	impl->first_tab_x_offset = 0; //FIXME: part_background.get_property_int(prop_first_tab_x_offset);
+	impl->first_tab_x_offset = get_property_int(CssStr::first_tab_x_offset, "0");
 
 }
 

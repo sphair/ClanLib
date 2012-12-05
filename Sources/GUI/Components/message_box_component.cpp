@@ -94,9 +94,9 @@ Size MessageBoxComponent::layout_content()
 		min_size = Size(300,80);
 	}
 
-	int button_area_height = 40; //FIXME: component->get_property_int(prop_buttons_area_height);
+	int button_area_height = component->get_property_int(CssStr::MessageBox::button_area_height, "40");
 
-	int icon_margin_right = 7; //FIXME component->get_property_int(prop_icon_margin_right);
+	int icon_margin_right = component->get_property_int("icon_text_gap", "7");
 
 	rect_icon = part_icon.get_render_box(icon_size).get_size();
 	rect_icon.translate(border_space.left, 0);

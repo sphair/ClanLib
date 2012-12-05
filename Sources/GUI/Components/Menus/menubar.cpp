@@ -209,10 +209,10 @@ void MenuBar_Impl::create_parts()
 {
 	part_item = GUIThemePart(menubar, "item");
 
-	item_border_left = 0; //FIXME: part_item.get_property_int(prop_bl);
-	item_padding_left = 0; //FIXME: part_item.get_property_int(prop_pl);
-	item_padding_right = 0; //FIXME: part_item.get_property_int(prop_br);
-	item_border_right = 0; //FIXME: part_item.get_property_int(prop_pr);
+	item_border_left = part_item.get_property_int("border-left", "0");
+	item_padding_left = part_item.get_property_int("padding-left", "0");
+	item_padding_right = part_item.get_property_int("border-right", "0");
+	item_border_right = part_item.get_property_int("padding-right", "0");
 }
 
 void MenuBar_Impl::select_item_at(const Point &mouse_pos)

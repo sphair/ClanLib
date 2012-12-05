@@ -227,10 +227,10 @@ void ListViewRenderer::create_parts()
 
 	part_icon_selection = GUIThemePart(listview, "icon_selection");
 
-	selection_margin.left = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_left);
-	selection_margin.right = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_right);
-	selection_margin.top = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_top);
-	selection_margin.bottom = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_bottom);
+	selection_margin.left = part_selection.get_property_int(CssStr::ListView::part_selection_margin_left, "3");
+	selection_margin.right = part_selection.get_property_int(CssStr::ListView::part_selection_margin_right, "3");
+	selection_margin.top = part_selection.get_property_int(CssStr::ListView::part_selection_margin_top, "3");
+	selection_margin.bottom = part_selection.get_property_int(CssStr::ListView::part_selection_margin_bottom, "3");
 
 	part_opener_closed.set_pseudo_class(CssStr::closed, true);
 	part_opener_open.set_pseudo_class(CssStr::open, true);
@@ -242,10 +242,10 @@ void ListViewRenderer::create_parts()
 	part_column.set_pseudo_class(CssStr::normal, true);
 	part_icon_selection.set_pseudo_class(CssStr::normal, true);
 
-	color_icon = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color);
-	color_icon_selected = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_selected);
-	color_icon_overlay = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_overlay);
-	color_icon_selected_overlay = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_selected_overlay);
+	color_icon = part_cell.get_property(CssStr::icon_color, "white");
+	color_icon_selected = part_cell.get_property(CssStr::icon_color_selected, "white");
+	color_icon_overlay = part_cell.get_property(CssStr::icon_color_overlay, "white");
+	color_icon_selected_overlay = part_cell.get_property(CssStr::icon_color_selected_overlay, "white");
 }
 
 void ListViewRenderer::set_listview_header(ListViewHeader *header)
