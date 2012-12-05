@@ -48,9 +48,9 @@ public:
 	ScrollBar_Impl();
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
+	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 	void on_mouse_leave();
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_enablemode_changed();

@@ -36,8 +36,6 @@
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -58,13 +56,13 @@ void ScrollBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 	{
 		
-		const InputEvent &input_event = input_msg->input_event;
+		InputEvent &input_event = input_msg->input_event;
 		if (input_event.type == InputEvent::pointer_moved)
-			on_mouse_move(input, input_event);
+			on_mouse_move(msg, input_event);
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
-			on_mouse_lbutton_down(input, input_event);
+			on_mouse_lbutton_down(msg, input_event);
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
-			on_mouse_lbutton_up(input, input_event);
+			on_mouse_lbutton_up(msg, input_event);
 	}
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	if (pointer)
@@ -75,7 +73,7 @@ void ScrollBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	}
 }
 
-void ScrollBar_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
+void ScrollBar_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 
@@ -133,10 +131,10 @@ void ScrollBar_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_ev
 	if(should_invalidate)
 		scrollbar->request_repaint();
 
-	input.set_consumed();
+	msg->consumed = true;
 }
 
-void ScrollBar_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
+void ScrollBar_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	mouse_drag_start_pos = pos;
@@ -235,10 +233,10 @@ void ScrollBar_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &
 
 	scrollbar->request_repaint();
 	scrollbar->capture_mouse(true);
-	input.set_consumed();
+	msg->consumed = true;
 }
 
-void ScrollBar_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+void ScrollBar_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event)
 {
 	part_button_decrement.set_pseudo_class(CssStr::pressed, false);
 	part_button_increment.set_pseudo_class(CssStr::pressed, false);
@@ -258,7 +256,7 @@ void ScrollBar_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &in
 
 	scrollbar->request_repaint();
 	scrollbar->capture_mouse(false);
-	input.set_consumed();
+	msg->consumed = true;
 }
 
 void ScrollBar_Impl::on_mouse_leave()
@@ -282,7 +280,6 @@ void ScrollBar_Impl::on_resized()
 void ScrollBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = scrollbar->get_geometry();
-	scrollbar->render_box(canvas, rect.get_size(), update_rect);
 	part_button_decrement.render_box(canvas, rect_button_decrement, update_rect);
 	part_track_decrement.render_box(canvas, rect_track_decrement, update_rect);
 	part_thumb.render_box(canvas, rect_thumb, update_rect);
@@ -445,5 +442,3 @@ void ScrollBar_Impl::invoke_scroll_event(Callback_v0 *event_ptr)
 }
 
 }
-
-#endif
