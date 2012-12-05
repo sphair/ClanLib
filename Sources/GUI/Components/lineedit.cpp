@@ -56,6 +56,8 @@
 #include "stdlib.h"
 #endif
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -1387,3 +1389,5 @@ Size LineEdit_Impl::get_visual_text_size(Canvas &canvas, Font &font) const
 }
 
 }
+
+#endif

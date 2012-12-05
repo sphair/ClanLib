@@ -57,6 +57,8 @@
 #include "stdlib.h"
 #endif
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -1249,3 +1251,5 @@ Vec2i TextEdit_Impl::get_character_index(Point mouse_wincoords)
 }
 
 }
+
+#endif

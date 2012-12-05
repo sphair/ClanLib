@@ -36,6 +36,8 @@
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -443,3 +445,5 @@ void ScrollBar_Impl::invoke_scroll_event(Callback_v0 *event_ptr)
 }
 
 }
+
+#endif

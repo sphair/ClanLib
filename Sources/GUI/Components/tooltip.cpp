@@ -45,6 +45,8 @@
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -196,3 +198,5 @@ void ToolTip_Impl::on_filter_message(std::shared_ptr<GUIMessage> &message)
 }
 
 }
+
+#endif
