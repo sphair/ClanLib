@@ -48,8 +48,6 @@
 #include "API/GUI/Components/listview_selected_item.h"
 #include "API/GUI/Components/listview.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -130,4 +128,4 @@ bool ListViewLayout::is_visible(ListViewItem &item)
 // ListViewLayout Implementation:
 
 }
-#endif
+

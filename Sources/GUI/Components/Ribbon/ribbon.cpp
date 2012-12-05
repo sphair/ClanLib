@@ -47,8 +47,6 @@
 #pragma comment(lib, "dwmapi.lib")
 #endif
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -211,4 +209,4 @@ void Ribbon::on_menu_button_clicked()
 }
 
 }
-#endif
+

@@ -43,8 +43,6 @@
 #include "popupmenu_window.h"
 #include "menubar_impl.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -99,56 +97,57 @@ void MenuModalLoop::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
 	if (running)
 	{
-		if (message.get_type() == GUIMessage_Input::get_type_name())
+		std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(message);
+		if (input_msg)
 		{
-			GUIMessage_Input input_message(message);
-			on_filter_input_message(input_message);
+			on_filter_input_message(input_msg);
 		}
-		else if (message.get_type() == GUIMessage_FocusChange::get_type_name())
+
+		std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(message);
+		if (focus_change_msg)
 		{
 			// Check we are not losing focus (FIXME: Required for X11 compatibility - this line is not required for win32)
-			if ( ( GUIMessage_FocusChange(message).get_focus_type() == GUIMessage_FocusChange::losing_focus) && (message.get_target() == owner) )
+			if ( ( focus_change_msg->focus_type == GUIMessage_FocusChange::losing_focus) && (message->target == owner) )
 			{
 				end();
-				message.set_consumed();
+				message->consumed = true;
 			}
 		}
 	}
 }
 
-void MenuModalLoop::on_filter_input_message(GUIMessage_Input &message)
+void MenuModalLoop::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
 {
-	InputEvent e = message.get_event();
 
-	e.mouse_pos = message.get_target()->component_to_screen_coords(e.mouse_pos);
-	if (e.device.get_type() == InputDevice::pointer)
+	message->input_event.mouse_pos = message->target->component_to_screen_coords(message->input_event.mouse_pos);
+	if (message->input_event.device.get_type() == InputDevice::pointer)
 	{
-		PopupMenuWindow *popup = find_popup_at(e.mouse_pos);
+		PopupMenuWindow *popup = find_popup_at(message->input_event.mouse_pos);
 		if (popup)
 		{
-			on_popup_mouse_input(popup, e);
-			message.set_consumed();
+			on_popup_mouse_input(popup, message->input_event);
+			message->consumed = true;
 		}
-		else if (is_above_menubar(e.mouse_pos))
+		else if (is_above_menubar(message->input_event.mouse_pos))
 		{
-			on_menubar_mouse_input(e);
-			message.set_consumed();
+			on_menubar_mouse_input(message->input_event);
+			message->consumed = true;
 		}
 		else
 		{
-			if (e.type == InputEvent::pressed)
+			if (message->input_event.type == InputEvent::pressed)
 			{
 				end();
-				message.set_consumed();
+				message->consumed = true;
 			}
 			else
-				message.set_consumed();
+				message->consumed = true;
 		}
 	}
 	else
 	{
-		on_keyboard_input(e);
-		message.set_consumed();
+		on_keyboard_input(message->input_event);
+		message->consumed = true;
 	}
 }
 
@@ -344,5 +343,3 @@ bool MenuModalLoop::is_above_menubar(const Point &mouse_screen_pos)
 }
 
 }
-
-#endif

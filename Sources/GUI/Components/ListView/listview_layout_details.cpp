@@ -53,7 +53,6 @@
 #include "listview_layout_details.h"
 #include "listview_shown_item.h"
 
-#ifdef DISABLE_COMPONENT
 
 namespace clan
 {
@@ -440,4 +439,3 @@ Rect ListViewLayoutDetails::get_icon_rect(const Rect &cell_content_rect, ListVie
 }
 
 }
-#endif
