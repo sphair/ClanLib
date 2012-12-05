@@ -40,8 +40,6 @@
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -181,5 +179,3 @@ void Frame_Impl::create_parts()
 }
 
 }
-
-#endif
