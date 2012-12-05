@@ -66,6 +66,8 @@ public:
 	void create_parts();
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
 
+	Size get_size() const;
+
 	PushButton *button;
 	Callback_v0 func_clicked;
 	std::string text;
@@ -135,6 +137,25 @@ PushButton::IconPosition PushButton::get_icon_position() const
 const std::string &PushButton::get_text() const
 {
 	return impl->text;
+}
+
+Size PushButton_Impl::get_size() const
+{
+	Size size_text = button->get_text_size(button->get_canvas(), text);
+	Size size_image;
+	if (!icon.is_null())
+		size_image = icon.get_size();
+	return Size(max(size_text.width, size_image.width), max(size_text.height, size_image.height));
+}
+
+float PushButton::get_preferred_content_width()
+{
+	return impl->get_size().width;
+}
+
+float PushButton::get_preferred_content_height(float width)
+{
+	return impl->get_size().height;
 }
 
 /////////////////////////////////////////////////////////////////////////////

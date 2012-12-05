@@ -1455,9 +1455,11 @@ GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas 
 Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
 {
 	Font font = get_font();
-	//TODO Fixme - As CL_GUIThemeProvider_Default::render_text()
-	font.draw_text(canvas, content_rect.left, content_rect.top, text, impl->element.get_css_properties().color.color);
-	return Rect();
+
+	FontMetrics metrics = font.get_font_metrics();
+	font.draw_text(canvas, (int) content_rect.left, (int) (content_rect.top + metrics.get_ascent()), text, get_css_properties().color.color);
+
+	return Rect();	// Why is this needed?
 }
 
 Rect GUIComponent::get_render_box(const Rect &content_box_rect) const
