@@ -51,6 +51,7 @@ Body::Body(const BodyDescription &description)
 	if(impl->owner)
 	{
 		impl->create_body(description);
+		impl->body->SetUserData(this);
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicWorld object");

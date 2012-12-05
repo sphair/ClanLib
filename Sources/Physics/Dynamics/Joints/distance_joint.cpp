@@ -50,13 +50,13 @@ DistanceJoint::DistanceJoint(const DistanceJointDescription &description)
 {
 	if(impl->owner)
 	{
-		impl->owner->create_joint(description.impl->joint_def);
+		joint_impl->joint_type = Joint_Distance;
+		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
+		joint_impl->joint->SetUserData(this);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicWorld object");
 
-	joint_impl->joint_type = Joint_Distance;
-	joint_impl->joint = dynamic_cast<b2DistanceJoint*>(impl->joint);
 }
 
 DistanceJoint::~DistanceJoint()
@@ -76,7 +76,7 @@ void DistanceJoint::throw_if_null() const
 
 bool DistanceJoint::is_active() const
 {
-	return impl->joint->IsActive();
+	return joint_impl->joint->IsActive();
 }
 
 //																											___________________																											

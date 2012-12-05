@@ -48,6 +48,7 @@ Fixture::Fixture(Body &body, const FixtureDescription &description)
 	if(!body.is_null())
 	{
 		impl->create_fixture(body,description);
+		impl->fixture->SetUserData(this);
 	}
 	else
 	throw Exception("Tried to create a fixture with a null Body object");
