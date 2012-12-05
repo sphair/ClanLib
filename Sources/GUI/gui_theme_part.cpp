@@ -131,15 +131,18 @@ void GUIThemePart::update_style()
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
 }
 
-void GUIThemePart::render_box(Canvas &canvas, const Rect &content_rect, const Rect &clip_rect)
+void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 {
+	GUICSSUsedValues css_used_values;
+	GUICSSInitialUsedValues::visit(css_used_values, impl->element.get_css_properties(), impl->component->impl->css_used_values);
+	GUICSSApplyMinMaxConstraints::visit(css_used_values, impl->element.get_css_properties(), impl->component->impl->css_used_values);
+
 	Rect viewport = impl->component->get_top_level_component()->get_size();
 	CSSResourceCache *resource_cache = &impl->component->impl->gui_manager_impl->resource_cache;
 	CSSLayoutGraphics graphics(canvas, resource_cache, viewport, 0);
 
-	Rect border_box = content_rect;//impl->component->get_size();
-	Rect padding_box = Rect(border_box);//.shrink(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
-	Rect content_box = Rect(padding_box);//.shrink(impl->css_used_values.padding.left, impl->css_used_values.padding.top, impl->css_used_values.padding.right, impl->css_used_values.padding.bottom);
+	Rect padding_box = Rect(border_box).shrink(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
+	Rect content_box = Rect(padding_box).shrink(css_used_values.padding.left, css_used_values.padding.top, css_used_values.padding.right, css_used_values.padding.bottom);
 
 	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_properties());
 	background.set_border_box(border_box);
@@ -150,9 +153,8 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &content_rect, const Re
 
 	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
 	border.set_border_box(border_box);
-	//border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
+	border.set_border_values(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
 	border.render();
-
 }
 
 Size GUIThemePart::get_preferred_size() const

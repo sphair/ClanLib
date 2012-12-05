@@ -112,7 +112,7 @@ public:
 /// \{
 public:
 	/// \brief Renders the component and its children.
-	void render_box(Canvas &canvas, const Rect &content_rect, const Rect &clip_rect);
+	void render_box(Canvas &canvas, const Rect &border_box);
 
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
