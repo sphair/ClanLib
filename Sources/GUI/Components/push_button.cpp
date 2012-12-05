@@ -145,16 +145,8 @@ const std::string &PushButton::get_text() const
 
 Size PushButton_Impl::get_size()
 {
-	// Guess the size if not specified by the css
-	Size size_text = button->get_text_size(button->get_canvas(), text);
-	Size size_image;
-	if (!icon.is_null())
-		size_image = icon.get_size();
-	Size size(max(size_text.width, size_image.width), max(size_text.height, size_image.height));
-
-	layout.layout(button->get_canvas(), size.width);
-	return layout.get_size();
-
+	layout.layout(button->get_canvas(), button->get_window_geometry().get_width());
+	return layout.get_size();;
 }
 
 float PushButton::get_preferred_content_width()
