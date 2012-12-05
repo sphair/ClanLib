@@ -982,10 +982,12 @@ void GUIComponent::set_id(const std::string &name)
 	update_style();
 }
 
-void GUIComponent::set_pseudo_class(const std::string &name, bool enable)
+bool GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
-	if (impl->element.set_pseudo_class(name, enable))
+	bool changed = impl->element.set_pseudo_class(name, enable);
+	if (changed)
 		update_style();
+	return changed;
 }
 
 void GUIComponent::update_style()

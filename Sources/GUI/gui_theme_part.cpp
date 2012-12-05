@@ -119,16 +119,24 @@ void GUIThemePart::set_id(const std::string &name)
 	update_style();
 }
 
-void GUIThemePart::set_pseudo_class(const std::string &name, bool enable)
+bool GUIThemePart::set_pseudo_class(const std::string &name, bool enable)
 {
-	if (impl->element.set_pseudo_class(name, enable))
+	bool changed = impl->element.set_pseudo_class(name, enable);
+	if (changed)
 		update_style();
+	return changed;
 }
 
 void GUIThemePart::update_style()
 {
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
+}
+
+void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box, const Rect &stub)
+{
+	//FIXME: Stub
+	render_box(canvas, border_box);
 }
 
 void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)

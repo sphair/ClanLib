@@ -48,8 +48,6 @@
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -534,5 +532,3 @@ void ComboBox_Impl::on_lineedit_message(std::shared_ptr<GUIMessage> &msg)
 }
 
 }
-
-#endif
