@@ -29,8 +29,6 @@
 
 #pragma once
 
-#include "API/GUI/gui_theme_part.h"
-
 namespace clan
 {
 
@@ -51,7 +49,7 @@ public:
 		mouse_selecting(false),
 		selection_start(-1),
 		selection_length(0),
-		cursor_blink_visible(false),
+		cursor_blink_visible(true),
 		clip_start_offset(0),
 		clip_end_offset(0),
 		decimal_char("."),
@@ -59,7 +57,6 @@ public:
 		cursor_drawing_enabled_when_parent_focused(false),
 		select_all_on_focus_gain(true)
 	{
-		//prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	~LineEdit_Impl()
@@ -67,13 +64,6 @@ public:
 		timer.stop();
 		scroll_timer.stop();
 	}
-
-	struct VerticalTextPosition
-	{
-		float top;
-		float baseline;
-		float bottom;
-	};
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
@@ -113,10 +103,12 @@ public:
 
 	static std::string break_characters;
 
+	
 	GUIThemePart part_selection;
 	GUIThemePart part_cursor;
+	Rect content_rect;
 
-	void move(int steps, bool ctrl_pressed, bool shift_pressed);
+	void move(int steps, const InputEvent &e);
 	bool insert_text(int pos, const std::string &str);
 	void backspace();
 	void del();
@@ -135,9 +127,8 @@ public:
 	void set_selection_start(int start);
 	void set_selection_length(int length);
 	void set_text_selection(int start, int length);
-	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
-	VerticalTextPosition vertical_text_align;
+	GUIThemePart::VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;
@@ -164,9 +155,6 @@ public:
 	bool select_all_on_focus_gain;
 
 	static const std::string numeric_mode_characters;
-
-	static const int cursor_blink_rate = 500;
-
 };
 
 }

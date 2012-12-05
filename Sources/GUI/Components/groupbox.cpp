@@ -31,6 +31,7 @@
 #include "GUI/precomp.h"
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_message.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/groupbox.h"
 #include "../gui_css_strings.h"
@@ -44,8 +45,6 @@ namespace clan
 class GroupBox_Impl
 {
 public:
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	GroupBox *groupbox;
 };
@@ -57,8 +56,6 @@ GroupBox::GroupBox(GUIComponent *parent)
 : GUIComponent(parent, CssStr::GroupBox::type_name), impl(new GroupBox_Impl)
 {
 	impl->groupbox = this;
-	func_process_message().set(impl.get(), &GroupBox_Impl::on_process_message);
-	func_render().set(impl.get(), &GroupBox_Impl::on_render);
 }
 
 GroupBox::~GroupBox()
@@ -85,13 +82,5 @@ GroupBox *GroupBox::get_named_item(GUIComponent *reference_component, const std:
 /////////////////////////////////////////////////////////////////////////////
 // GroupBox Implementation:
 
-void GroupBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
-{
-}
-
-void GroupBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
-{
-
-}
 
 }

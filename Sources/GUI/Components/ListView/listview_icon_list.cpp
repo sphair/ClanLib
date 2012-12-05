@@ -28,13 +28,12 @@
 
 #include "GUI/precomp.h"
 #include "API/GUI/gui_manager.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/listview_icon_list.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Window/display_window.h"
 #include <map>
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -147,5 +146,3 @@ void ListViewIconList::set_selected_color_overlay(const Colorf &color)
 // ListViewIconList Implementation:
 
 }
-
-#endif

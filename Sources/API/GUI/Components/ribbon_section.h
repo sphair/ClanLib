@@ -46,7 +46,6 @@ private:
 	Font font;
 	std::string text;
 	int size;
-	//FIXME: GUIThemePart part_section;
 
 	friend class RibbonPage;
 };

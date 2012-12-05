@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -45,8 +46,6 @@
 #include "API/Display/Window/keys.h"
 #include "listview_item_impl.h"
 #include "API/GUI/Components/listview_selected_item.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -216,5 +215,3 @@ ListViewSelectedItem::ListViewSelectedItem(const std::shared_ptr<ListViewSelecte
 }
 
 }
-
-#endif

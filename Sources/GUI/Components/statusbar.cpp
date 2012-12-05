@@ -31,6 +31,7 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/statusbar.h"
 #include "API/Display/Window/input_event.h"
@@ -39,6 +40,7 @@
 #include "API/Display/2D/image.h"
 #include "API/Core/Text/string_format.h"
 #include "../gui_css_strings.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
@@ -69,7 +71,6 @@ class StatusBar_Impl
 public:
 	StatusBar_Impl() : show_size_grip(true)
 	{
-		//FIXME: prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	bool on_input_doubleclick(const InputEvent &input_event);
@@ -77,16 +78,15 @@ public:
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void position_parts();
 	void create_parts();
-	void on_style_changed();
 	unsigned int find_part(int id) const;
 	void throw_if_part_exists(int id) const;
 
 	std::string status_text;
 	StatusBar *statusbar;
-	Colorf text_color;
-	GUIComponent *part_status_text;
-	GUIComponent *part_status_part;
-	GUIComponent *part_size_grip;
+	
+	GUIThemePart part_status_text;
+	GUIThemePart part_status_part;
+	GUIThemePart part_size_grip;
 	std::vector<StatusBar_Part> statusbar_parts;
 	bool show_size_grip;
 };
@@ -101,7 +101,6 @@ StatusBar::StatusBar(GUIComponent *parent)
 
 	func_resized().set(impl.get(), &StatusBar_Impl::on_resized);
 	func_render().set(impl.get(), &StatusBar_Impl::on_render);
-	//FIXME: sig_style_changed().set(impl.get(), &StatusBar_Impl::on_style_changed);
 	func_input_doubleclick().set(impl.get(), &StatusBar_Impl::on_input_doubleclick);
 
 	impl->create_parts();
@@ -225,32 +224,31 @@ void StatusBar_Impl::on_resized()
 void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect(Point(0,0), statusbar->get_geometry().get_size());
-	//FIXME: statusbar->render_box(canvas, rect, update_rect);
-	Rect content = statusbar->get_content_box();
+	Rect content = statusbar->get_content_box(rect);
 
 	Rect rect_status_text = content;
 
 	if (show_size_grip)
 	{
-		int preferred_width = 32; //FIXME: part_size_grip.get_preferred_width();
+		int preferred_width = part_size_grip.get_preferred_width();
 		Rect rect_sizegrip(content.right - preferred_width, content.top, content.right, content.bottom);
-		//FIXME: part_size_grip.render_box(canvas, rect_sizegrip, update_rect);
+		part_size_grip.render_box(canvas, rect_sizegrip, update_rect);
 		rect_status_text.right = rect_sizegrip.left;
 	}
 
 	if (!statusbar_parts.empty())
 		rect_status_text.right = statusbar_parts[0].position.left;
 
-	//FIXME: part_status_text.render_box(canvas, rect_status_text, update_rect);
-	Rect status_text_content = Size(32, 32); //FIXME part_status_text.get_content_box(rect_status_text);
+	part_status_text.render_box(canvas, rect_status_text, update_rect);
+	Rect status_text_content = part_status_text.get_content_box(rect_status_text);
 
-	statusbar->get_font().draw_text(canvas, status_text_content.left + 4, content.bottom - 6, status_text, text_color);
+	statusbar->get_font().draw_text(canvas, status_text_content.left + 4, content.bottom - 6, status_text, statusbar->get_css_properties().color.color);
 
 	for (unsigned int index = 0; index < statusbar_parts.size(); index++)
 	{
 		StatusBar_Part &statusbar_part = statusbar_parts[index];
-		//FIXME: part_status_part.render_box(canvas, statusbar_part.position, update_rect);
-		Rect part_content = Size(32, 32); //FIXME: part_status_part.get_content_box(statusbar_part.position);
+		part_status_part.render_box(canvas, statusbar_part.position, update_rect);
+		Rect part_content = part_status_part.get_content_box(statusbar_part.position);
 		int icon_width = 0;
 		if (!statusbar_part.icon.is_null())
 		{
@@ -259,7 +257,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		}
 		if (!statusbar_part.text.empty())
 		{
-			statusbar->get_font().draw_text(canvas, part_content.left + 4 + icon_width, part_content.bottom - 6, statusbar_part.text, text_color);
+			statusbar->get_font().draw_text(canvas, part_content.left + 4 + icon_width, part_content.bottom - 6, statusbar_part.text, statusbar->get_css_properties().color.color);
 		}
 	}
 }
@@ -267,12 +265,12 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void StatusBar_Impl::position_parts()
 {
 	Rect rect(Point(0,0), statusbar->get_geometry().get_size());
-	Rect content = statusbar->get_content_box();
+	Rect content = statusbar->get_content_box(rect);
 
 	int xpos = content.right;
 	if (show_size_grip)
 	{
-		int preferred_width = 32; //FIXME part_size_grip.get_preferred_width();
+		int preferred_width = part_size_grip.get_preferred_width();
 		Rect rect_sizegrip(content.right - preferred_width, content.top, content.right, content.bottom);
 		xpos = rect_sizegrip.left;
 	}
@@ -283,9 +281,9 @@ void StatusBar_Impl::position_parts()
 		int left = xpos - statusbar_part.width;
 		int right = xpos;
 		Rect new_position(left, content.top, right, content.bottom);
-		//FIXME: if (statusbar_part.component && statusbar_part.position != new_position)
-		//FIXME:	statusbar_part.component->set_geometry(part_status_part.get_content_box(new_position));
-	
+		if (statusbar_part.component && statusbar_part.position != new_position)
+			statusbar_part.component->set_geometry(part_status_part.get_content_box(new_position));
+
 		statusbar_part.position = new_position;
 		xpos = left;
 	}
@@ -312,14 +310,9 @@ void StatusBar_Impl::throw_if_part_exists(int id) const
 
 void StatusBar_Impl::create_parts()
 {
-	part_status_text = new GUIComponent(statusbar, "statustext");
-	part_status_part = new GUIComponent(statusbar, "statuspart");
-	part_size_grip = new GUIComponent(statusbar, "sizegrip");
-}
-
-void StatusBar_Impl::on_style_changed()
-{
-	create_parts();
+	part_status_text = GUIThemePart(statusbar, "statustext");
+	part_status_part = GUIThemePart(statusbar, "statuspart");
+	part_size_grip = GUIThemePart(statusbar, "sizegrip");
 }
 
 }

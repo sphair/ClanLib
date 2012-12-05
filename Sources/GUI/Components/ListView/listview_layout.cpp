@@ -32,6 +32,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -46,8 +47,6 @@
 #include "API/GUI/Components/listview_header.h"
 #include "API/GUI/Components/listview_selected_item.h"
 #include "API/GUI/Components/listview.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -129,5 +128,3 @@ bool ListViewLayout::is_visible(ListViewItem &item)
 // ListViewLayout Implementation:
 
 }
-
-#endif

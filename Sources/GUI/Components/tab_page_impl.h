@@ -32,6 +32,7 @@
 #include "GUI/precomp.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab_page.h"
 #include "API/Core/XML/dom_element.h"
@@ -48,9 +49,7 @@ public:
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-
-	void on_style_changed();
-
+	
 	void on_resized();
 
 	TabPage *component;

@@ -127,4 +127,3 @@ void ToolBarItem::set_pressed( bool value )
 // ToolBarItem Implementation:
 
 }
-

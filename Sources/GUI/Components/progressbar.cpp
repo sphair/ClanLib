@@ -33,6 +33,7 @@
 #include "API/Core/System/timer.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/progressbar.h"
 #include "../gui_css_strings.h"
@@ -72,8 +73,9 @@ public:
 
 	int marquee_box_width, marquee_position, marquee_step_size;
 	
-	GUIComponent *part_progress;
-	GUIComponent *part_chunk;
+	
+	GUIThemePart part_progress;
+	GUIThemePart part_chunk;
 
 	Timer marquee_timer;
 };
@@ -85,10 +87,10 @@ ProgressBar::ProgressBar(GUIComponent *parent)
 : GUIComponent(parent, CssStr::ProgressBar::type_name), impl(new ProgressBar_Impl)
 {
 	impl->progressbar = this;
-	impl->part_progress = new GUIComponent(this, "progress");
-	impl->part_chunk = new GUIComponent(this, "chunk");
+	impl->part_progress = GUIThemePart(this, "progress");
+	impl->part_chunk = GUIThemePart(this, "chunk");
 
-	set_pseudo_class(CssStr::normal, true);
+	impl->progressbar->set_pseudo_class(CssStr::normal, true);
 
 	func_process_message().set(impl.get(), &ProgressBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ProgressBar_Impl::on_render);
@@ -282,13 +284,13 @@ void ProgressBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = progressbar->get_size();
-	//FIXME: progressbar->render_box(canvas, rect, update_rect);
+	progressbar->render_box(canvas, rect, update_rect);
 
 	if (marquee_mode)
 	{
 		if (rect.get_width() > 0)
 		{
-			Rect content_box = progressbar->get_content_box();
+			Rect content_box = progressbar->get_content_box(rect);
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left + marquee_position;
@@ -307,7 +309,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 				progress_rect.right -= (progress_rect.right - content_box.right);
 			}
 			
-			//FIXME: part_progress.render_box(canvas, progress_rect, update_rect);
+			part_progress.render_box(canvas, progress_rect, update_rect);
 		}
 	}
 	else
@@ -318,7 +320,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_min != progress_max &&
 			rect.get_width() > 0)
 		{
-			Rect content_box = progressbar->get_content_box();
+			Rect content_box = progressbar->get_content_box(rect);
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left;
@@ -326,7 +328,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_rect.bottom = content_box.bottom;
 			progress_rect.right = content_box.left + (position - progress_min) * content_box.get_width() / (progress_max - progress_min);
 
-			//FIXME: part_progress.render_box(canvas, progress_rect, update_rect);
+			part_progress.render_box(canvas, progress_rect, update_rect);
 		}
 	}
 }

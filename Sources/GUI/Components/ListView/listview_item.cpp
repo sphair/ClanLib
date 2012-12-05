@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -44,8 +45,6 @@
 #include "API/Display/2D/sprite.h"
 #include "API/Display/Window/keys.h"
 #include "listview_item_impl.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -410,5 +409,3 @@ ListViewItem_Impl *ListViewItem_Impl::get_root_parent()
 }
 
 }
-
-#endif

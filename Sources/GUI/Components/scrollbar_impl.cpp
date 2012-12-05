@@ -33,10 +33,8 @@
 #include "API/Display/Window/keys.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/Components/scrollbar.h"
-#include "API/Core/Text/string_help.h"
 #include "scrollbar_impl.h"
 #include "../gui_css_strings.h"
-#include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
@@ -45,200 +43,49 @@ ScrollBar_Impl::ScrollBar_Impl()
 : vertical(false), scroll_min(0), scroll_max(1), line_step(1),
   page_step(10), position(0), mouse_down_mode(mouse_down_none),
   thumb_start_position(0), thumb_start_pixel_position(0),
-  func_scroll_on_mouse_down(0),  thumb_left(256), thumb_size(256)
+  func_scroll_on_mouse_down(0)
 {
 }
 
-void ScrollBar_Impl::on_part_button_decrement(std::shared_ptr<GUIMessage> &msg)
+void ScrollBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!scrollbar->is_enabled())
 		return;
+
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
 	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
-		{
-			mouse_drag_start_pos = input_msg->input_event.mouse_pos;;
-			mouse_down_mode = mouse_down_button_decr;
-			func_scroll_on_mouse_down = &func_scroll_line_decrement;
-			part_button_decrement->set_pseudo_class(CssStr::pressed, true);
-
-			int last_position = position;
-
-			position -= line_step;
-			last_step_size = -line_step;
-			if (position >= scroll_max)
-				position = scroll_max-1;
-			if (position < scroll_min)
-				position = scroll_min;
-
-			if (last_position != position)
-				invoke_scroll_event(&func_scroll_line_decrement);
-
-			update_part_positions();
-
-		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
-		{
-			part_button_decrement->set_pseudo_class(CssStr::pressed, false);
-			mouse_released();
-		}
+		
+		const InputEvent &input_event = input_msg->input_event;
+		if (input_event.type == InputEvent::pointer_moved)
+			on_mouse_move(input, input_event);
+		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
+			on_mouse_lbutton_down(input, input_event);
+		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
+			on_mouse_lbutton_up(input, input_event);
 	}
-}
-
-void ScrollBar_Impl::on_part_track_decrement(std::shared_ptr<GUIMessage> &msg)
-{
-	if (!scrollbar->is_enabled())
-		return;
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
-	if (input_msg)
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
-		{
-			mouse_drag_start_pos = input_msg->input_event.mouse_pos;;
-			mouse_down_mode = mouse_down_track_decr;
-			func_scroll_on_mouse_down = &func_scroll_page_decrement;
-			part_track_decrement->set_pseudo_class(CssStr::pressed, true);
-			part_track_increment->set_pseudo_class(CssStr::pressed, true);
-
-			int last_position = position;
-
-			position -= page_step;
-			last_step_size = -page_step;
-			if (position >= scroll_max)
-				position = scroll_max-1;
-			if (position < scroll_min)
-				position = scroll_min;
-
-			if (last_position != position)
-				invoke_scroll_event(&func_scroll_page_decrement);
-
-			update_part_positions();
-		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
-		{
-			part_track_increment->set_pseudo_class(CssStr::pressed, false);
-			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
-			mouse_released();
-		}
+		
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
+			on_mouse_leave();
 	}
 }
 
-void ScrollBar_Impl::on_part_thumb(std::shared_ptr<GUIMessage> &msg)
+void ScrollBar_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
 {
-	if (!scrollbar->is_enabled())
-		return;
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
-	if (input_msg)
-	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
-		{
-			mouse_drag_start_pos = input_msg->input_event.mouse_pos;;
-			mouse_down_mode = mouse_down_thumb_drag;
-			thumb_start_position = position;
-			Rect rect_thumb = part_thumb->get_geometry();
-			Rect rect_track_decrement = part_track_decrement->get_geometry();
-			thumb_start_pixel_position = vertical ? (rect_thumb.top-rect_track_decrement.top) : (rect_thumb.left-rect_track_decrement.left);
-			part_thumb->set_pseudo_class(CssStr::pressed, true);
-			part_thumb_gripper.set_pseudo_class(CssStr::pressed, true);
+	Point pos = input_event.mouse_pos;
 
-			mouse_down_timer.start(100,false);
-			update_part_positions();
-			part_thumb->capture_mouse(true);
+	bool should_invalidate = false;
+	should_invalidate |= scrollbar->set_pseudo_class(CssStr::hot, true);
+	should_invalidate |= part_button_decrement.set_pseudo_class(CssStr::hot, rect_button_decrement.contains(pos));
+	should_invalidate |= part_button_increment.set_pseudo_class(CssStr::hot, rect_button_increment.contains(pos));
+	should_invalidate |= part_track_decrement.set_pseudo_class(CssStr::hot, rect_track_decrement.contains(pos));
+	should_invalidate |= part_track_increment.set_pseudo_class(CssStr::hot, rect_track_increment.contains(pos));
+	should_invalidate |= part_thumb.set_pseudo_class(CssStr::hot, rect_thumb.contains(pos));
+	should_invalidate |= part_thumb_gripper.set_pseudo_class(CssStr::hot, rect_thumb.contains(pos));
 
-		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
-		{
-			part_thumb->set_pseudo_class(CssStr::pressed, false);
-			part_thumb_gripper.set_pseudo_class(CssStr::pressed, false);
-			mouse_released();
-		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
-			mouse_moved(input_msg->input_event.mouse_pos);
-
-	}
-}
-
-void ScrollBar_Impl::on_part_track_increment(std::shared_ptr<GUIMessage> &msg)
-{
-	if (!scrollbar->is_enabled())
-		return;
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
-	if (input_msg)
-	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
-		{
-			mouse_drag_start_pos = input_msg->input_event.mouse_pos;;
-			mouse_down_mode = mouse_down_track_incr;
-			func_scroll_on_mouse_down = &func_scroll_page_increment;
-			part_track_increment->set_pseudo_class(CssStr::pressed, true);
-			part_track_decrement->set_pseudo_class(CssStr::pressed, true);
-
-			int last_position = position;
-
-			position += page_step;
-			last_step_size = page_step;
-			if (position >= scroll_max)
-				position = scroll_max-1;
-			if (position < scroll_min)
-				position = scroll_min;
-
-			if (last_position != position)
-				invoke_scroll_event(&func_scroll_page_increment);
-
-			update_part_positions();
-
-		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
-		{
-			part_track_increment->set_pseudo_class(CssStr::pressed, false);
-			part_track_decrement->set_pseudo_class(CssStr::pressed, false);
-			mouse_released();
-		}
-
-	}
-}
-
-void ScrollBar_Impl::on_part_button_increment(std::shared_ptr<GUIMessage> &msg)
-{
-	if (!scrollbar->is_enabled())
-		return;
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
-	if (input_msg)
-	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
-		{
-			mouse_drag_start_pos = input_msg->input_event.mouse_pos;
-			mouse_down_mode = mouse_down_button_incr;
-			part_button_increment->set_pseudo_class(CssStr::pressed, true);
-			func_scroll_on_mouse_down = &func_scroll_line_increment;
-
-			int last_position = position;
-
-			position += line_step;
-			last_step_size = line_step;
-			if (position >= scroll_max)
-				position = scroll_max-1;
-			if (position < scroll_min)
-				position = scroll_min;
-
-			if (last_position != position)
-				invoke_scroll_event(&func_scroll_line_increment);
-
-			update_part_positions();
-
-		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
-		{
-			part_button_increment->set_pseudo_class(CssStr::pressed, false);
-			mouse_released();
-		}
-
-	}
-}
-
-void ScrollBar_Impl::mouse_moved(const Point &pos)
-{
 	if (mouse_down_mode == mouse_down_thumb_drag)
 	{
 		Rect geom = scrollbar->get_window_geometry();
@@ -253,9 +100,6 @@ void ScrollBar_Impl::mouse_moved(const Point &pos)
 		{
 			int delta = vertical ? (pos.y - mouse_drag_start_pos.y) : (pos.x - mouse_drag_start_pos.x);
 			int position_pixels = thumb_start_pixel_position + delta;
-
-			Rect rect_track_decrement = part_track_decrement->get_geometry();
-			Rect rect_track_increment = part_track_increment->get_geometry();
 
 			int track_height = 0;
 			if (vertical)
@@ -279,109 +123,222 @@ void ScrollBar_Impl::mouse_moved(const Point &pos)
 		{
 			invoke_scroll_event(&func_scroll_thumb_track);
 
-			update_part_positions();
+			if(update_part_positions())
+				should_invalidate = true;
 		}
 	}
 
+	if(should_invalidate)
+		scrollbar->request_repaint();
+
+	input.set_consumed();
 }
 
-void ScrollBar_Impl::mouse_released()
+void ScrollBar_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
 {
+	Point pos = input_event.mouse_pos;
+	mouse_drag_start_pos = pos;
+
+	part_button_decrement.set_pseudo_class(CssStr::pressed, false);
+	part_button_increment.set_pseudo_class(CssStr::pressed, false);
+	part_track_decrement.set_pseudo_class(CssStr::pressed, false);
+	part_track_increment.set_pseudo_class(CssStr::pressed, false);
+	part_thumb.set_pseudo_class(CssStr::pressed, false);
+	part_thumb_gripper.set_pseudo_class(CssStr::pressed, false);
+
+	if (rect_button_decrement.contains(pos))
+	{
+		mouse_down_mode = mouse_down_button_decr;
+		func_scroll_on_mouse_down = &func_scroll_line_decrement;
+		part_button_decrement.set_pseudo_class(CssStr::pressed, true);
+
+		int last_position = position;
+
+		position -= line_step;
+		last_step_size = -line_step;
+		if (position >= scroll_max)
+			position = scroll_max-1;
+		if (position < scroll_min)
+			position = scroll_min;
+
+		if (last_position != position)
+			invoke_scroll_event(&func_scroll_line_decrement);
+	}
+	else if (rect_button_increment.contains(pos))
+	{
+		mouse_down_mode = mouse_down_button_incr;
+		part_button_increment.set_pseudo_class(CssStr::pressed, true);
+		func_scroll_on_mouse_down = &func_scroll_line_increment;
+
+		int last_position = position;
+
+		position += line_step;
+		last_step_size = line_step;
+		if (position >= scroll_max)
+			position = scroll_max-1;
+		if (position < scroll_min)
+			position = scroll_min;
+
+		if (last_position != position)
+			invoke_scroll_event(&func_scroll_line_increment);
+	}
+	else if (rect_thumb.contains(pos))
+	{
+		mouse_down_mode = mouse_down_thumb_drag;
+		thumb_start_position = position;
+		thumb_start_pixel_position = vertical ? (rect_thumb.top-rect_track_decrement.top) : (rect_thumb.left-rect_track_decrement.left);
+		part_thumb.set_pseudo_class(CssStr::pressed, true);
+		part_thumb_gripper.set_pseudo_class(CssStr::pressed, true);
+	}
+	else if (rect_track_decrement.contains(pos))
+	{
+		mouse_down_mode = mouse_down_track_decr;
+		func_scroll_on_mouse_down = &func_scroll_page_decrement;
+		part_track_decrement.set_pseudo_class(CssStr::pressed, true);
+
+		int last_position = position;
+
+		position -= page_step;
+		last_step_size = -page_step;
+		if (position >= scroll_max)
+			position = scroll_max-1;
+		if (position < scroll_min)
+			position = scroll_min;
+
+		if (last_position != position)
+			invoke_scroll_event(&func_scroll_page_decrement);
+	}
+	else if (rect_track_increment.contains(pos))
+	{
+		mouse_down_mode = mouse_down_track_incr;
+		func_scroll_on_mouse_down = &func_scroll_page_increment;
+		part_track_increment.set_pseudo_class(CssStr::pressed, true);
+
+		int last_position = position;
+
+		position += page_step;
+		last_step_size = page_step;
+		if (position >= scroll_max)
+			position = scroll_max-1;
+		if (position < scroll_min)
+			position = scroll_min;
+
+		if (last_position != position)
+			invoke_scroll_event(&func_scroll_page_increment);
+	}
+
+	mouse_down_timer.start(100,false);
+
+	update_part_positions();
+
+	scrollbar->request_repaint();
+	scrollbar->capture_mouse(true);
+	input.set_consumed();
+}
+
+void ScrollBar_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
+{
+	part_button_decrement.set_pseudo_class(CssStr::pressed, false);
+	part_button_increment.set_pseudo_class(CssStr::pressed, false);
+	part_track_decrement.set_pseudo_class(CssStr::pressed, false);
+	part_track_increment.set_pseudo_class(CssStr::pressed, false);
+	part_thumb.set_pseudo_class(CssStr::pressed, false);
+	part_thumb_gripper.set_pseudo_class(CssStr::pressed, false);
+
+	if (mouse_down_mode == mouse_down_thumb_drag)
+	{
+		if (!func_scroll_thumb_release.is_null())
+			func_scroll_thumb_release.invoke();
+	}
+
 	mouse_down_mode = mouse_down_none;
 	mouse_down_timer.stop();
-	part_thumb->capture_mouse(false);
+
+	scrollbar->request_repaint();
+	scrollbar->capture_mouse(false);
+	input.set_consumed();
 }
 
-void ScrollBar_Impl::update_part_positions()
+void ScrollBar_Impl::on_mouse_leave()
 {
-	Rect rect_part_track_decrement = part_track_decrement->get_geometry();
-	Rect rect_part_thumb = part_thumb->get_geometry();
-	Rect rect_part_track_increment = part_track_increment->get_geometry();
-	Rect rect_part_button_decrement = part_button_decrement->get_geometry();
-
-	int track_size = rect_part_track_decrement.get_width() + rect_part_track_increment.get_width();
-	thumb_size = calculate_thumb_size(track_size);
-
-	int position = calculate_thumb_position(thumb_size, track_size);
-	Rect new_rect;
-	new_rect.left = rect_part_button_decrement.right + 1 + position;
-	new_rect.right = new_rect.left + thumb_size;
-	new_rect.top = rect_part_thumb.top;
-	new_rect.bottom = rect_part_thumb.bottom;
-	part_thumb->set_geometry( new_rect );
-
-	token_width.type = CSSToken::type_dimension;
-	token_width.value = StringHelp::int_to_text(thumb_size);
-	token_width.dimension = "px";
-
-	token_left.type = CSSToken::type_dimension;
-	thumb_left = position + 1 - (part_button_increment->get_geometry().get_width() + track_size);
-	token_left.value = StringHelp::int_to_text( thumb_left );
-	token_left.dimension = "px";
-
-	int thumb_middle = new_rect.get_center().x;
-
-	new_rect = rect_part_track_decrement;
-	new_rect.right = thumb_middle - 1; 
-	part_track_decrement->set_geometry( new_rect );
-
-	new_rect = rect_part_track_increment;
-	new_rect.left = thumb_middle;
-	part_track_increment->set_geometry( new_rect );
+	scrollbar->set_pseudo_class(CssStr::hot, false);
+	part_button_decrement.set_pseudo_class(CssStr::hot, false);
+	part_button_increment.set_pseudo_class(CssStr::hot, false);
+	part_track_decrement.set_pseudo_class(CssStr::hot, false);
+	part_track_increment.set_pseudo_class(CssStr::hot, false);
+	part_thumb.set_pseudo_class(CssStr::hot, false);
+	part_thumb_gripper.set_pseudo_class(CssStr::hot, false);
 
 	scrollbar->request_repaint();
 }
 
+void ScrollBar_Impl::on_resized()
+{
+	update_part_positions();
+}
+
+void ScrollBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
+{
+	Rect rect = scrollbar->get_geometry();
+	scrollbar->render_box(canvas, rect.get_size(), update_rect);
+	part_button_decrement.render_box(canvas, rect_button_decrement, update_rect);
+	part_track_decrement.render_box(canvas, rect_track_decrement, update_rect);
+	part_thumb.render_box(canvas, rect_thumb, update_rect);
+	part_thumb_gripper.render_box(canvas, rect_thumb, update_rect);
+	part_track_increment.render_box(canvas, rect_track_increment, update_rect);
+	part_button_increment.render_box(canvas, rect_button_increment, update_rect);
+}
+
 void ScrollBar_Impl::create_parts()
 {
-	part_button_decrement = new GUIComponent(scrollbar, vertical ? "scrollbutton_up" : "scrollbutton_left");
-	part_track_decrement = new GUIComponent(scrollbar, vertical ? "scrolltrack_up" : "scrolltrack_left");
-	part_track_increment = new GUIComponent(scrollbar, vertical ? "scrolltrack_down" : "scrolltrack_right");
-	part_button_increment = new GUIComponent(scrollbar, vertical ? "scrollbutton_down" : "scrollbutton_right");
-	part_thumb = new GUIComponent(scrollbar, vertical ? "scrollthumb_vertical" : "scrollthumb_horizontal");
-	part_thumb_gripper = GUIThemePart(part_thumb, vertical ? "scrollthumbgripper_vertical" : "scrollthumbgripper_horizontal");
+	part_button_decrement = GUIThemePart(scrollbar, vertical ? "scrollbutton.up" : "scrollbutton.left");
+	part_button_increment = GUIThemePart(scrollbar, vertical ? "scrollbutton.down" : "scrollbutton.right");
+	part_track_decrement = GUIThemePart(scrollbar, vertical ? "scrolltrack.up" : "scrolltrack.left");
+	part_track_increment = GUIThemePart(scrollbar, vertical ? "scrolltrack.down" : "scrolltrack.right");
+	part_thumb = GUIThemePart(scrollbar, vertical ? "scrollthumb.vertical" : "scrollthumb.horizontal");
+	part_thumb_gripper = GUIThemePart(scrollbar, vertical ? "scrollthumbgripper.vertical" : "scrollthumbgripper.horizontal");
 
-	part_button_decrement->set_double_click_enabled(false);
-	part_track_decrement->set_double_click_enabled(false);
-	part_track_increment->set_double_click_enabled(false);
-	part_button_increment->set_double_click_enabled(false);
-	part_thumb->set_double_click_enabled(false);
+	scrollbar->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_button_decrement.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_button_increment.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_track_decrement.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_track_increment.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_thumb.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_thumb_gripper.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 
-	on_enablemode_changed();
-
-	part_button_decrement->func_process_message().set(this, &ScrollBar_Impl::on_part_button_decrement);
-	part_track_decrement->func_process_message().set(this, &ScrollBar_Impl::on_part_track_decrement);
-	part_thumb->func_process_message().set(this, &ScrollBar_Impl::on_part_thumb);
-	part_track_increment->func_process_message().set(this, &ScrollBar_Impl::on_part_track_increment);
-	part_button_increment->func_process_message().set(this, &ScrollBar_Impl::on_part_button_increment);
-	part_thumb->func_render().set(this, &ScrollBar_Impl::on_part_thumb_render);
-
-	scrollbar->func_enablemode_changed().set(this, &ScrollBar_Impl::on_enablemode_changed);
-
-	part_thumb->func_apply_properties().set(this, &ScrollBar_Impl::on_apply_properties);
-
-	mouse_down_timer.func_expired().set(this, &ScrollBar_Impl::on_timer_expired);
-
+	scrollbar->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_button_decrement.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_button_increment.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_track_decrement.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_track_increment.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_thumb.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_thumb_gripper.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 }
 
-void ScrollBar_Impl::on_part_thumb_render(Canvas &canvas, const Rect &update_rect)
+// Calculates positions of all parts. Returns true if thumb position was changed compared to previously, false otherwise.
+bool ScrollBar_Impl::update_part_positions()
 {
-	Rect thumb_rect = part_thumb->get_geometry();
-	int gripper_width = part_thumb_gripper.get_css_properties().width.length.value;
-	Rect gripper_rect((thumb_rect.get_width() - gripper_width)/2, thumb_rect.top, Size(gripper_width, thumb_rect.get_height())) ;
-	part_thumb_gripper.render_box(canvas, gripper_rect);
+	Rect rect(Point(0,0), scrollbar->get_geometry().get_size());
+	Rect content_rect = scrollbar->get_content_box(rect);
+
+	int decr_height = part_button_decrement.get_preferred_height();
+	int incr_height = part_button_increment.get_preferred_height();
+	int total_height = vertical ? content_rect.get_height() : content_rect.get_width();
+	int track_height = max(0, total_height - decr_height - incr_height);
+	int thumb_height = calculate_thumb_size(track_height);
+
+	int thumb_offset = decr_height + calculate_thumb_position(thumb_height, track_height);
+
+	Rect previous_rect_thumb = rect_thumb;
+
+	rect_button_decrement = create_rect(content_rect, 0, decr_height);
+	rect_track_decrement = create_rect(content_rect, decr_height, thumb_offset);
+	rect_thumb = create_rect(content_rect, thumb_offset, thumb_offset+thumb_height);
+	rect_track_increment = create_rect(content_rect, thumb_offset+thumb_height, decr_height+track_height);
+	rect_button_increment = create_rect(content_rect, decr_height+track_height, decr_height+track_height+incr_height);
+
+	return (previous_rect_thumb != rect_thumb);
 }
-
-void ScrollBar_Impl::on_apply_properties(CSSBoxProperties &properties)
-{
-	properties.width.type = CSSBoxWidth::type_length;
-	properties.width.length.value = thumb_size;
-	properties.width.length.type = CSSBoxLength::type_px;
-
-	properties.left.type = CSSBoxLeft::type_length;
-	properties.left.length.value = thumb_left;
-	properties.left.length.type = CSSBoxLength::type_px;
-}	
 
 int ScrollBar_Impl::calculate_thumb_size(int track_size)
 {
@@ -437,25 +394,28 @@ void ScrollBar_Impl::on_timer_expired()
 	if (position != last_position)
 	{
 		invoke_scroll_event(func_scroll_on_mouse_down);
+
+		if(update_part_positions())
+			scrollbar->request_repaint();
 	}
 }
 
 void ScrollBar_Impl::on_enablemode_changed()
 {
 	scrollbar->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_button_decrement->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_button_increment->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_track_decrement->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_track_increment->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
-	part_thumb->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_button_decrement.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_button_increment.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_track_decrement.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_track_increment.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
+	part_thumb.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_thumb_gripper.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 
 	scrollbar->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_button_decrement->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_button_increment->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_track_decrement->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_track_increment->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
-	part_thumb->set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_button_decrement.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_button_increment.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_track_decrement.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_track_increment.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
+	part_thumb.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 	part_thumb_gripper.set_pseudo_class(CssStr::normal, scrollbar->is_enabled());
 
 	scrollbar->request_repaint();

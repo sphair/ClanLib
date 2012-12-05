@@ -33,7 +33,7 @@
 #include "../../Core/Signals/callback_v0.h"
 #include "../../Core/Signals/callback_1.h"
 #include "../../Display/Font/font.h"
-
+#include "../gui_theme_part.h"
 namespace clan
 {
 
@@ -83,9 +83,8 @@ private:
 	RibbonMenu *menu;
 	std::vector<RibbonPage *> pages;
 	Font font_tab;
-	//FIXME: GUIThemePart part_background;
-	//FIXME: GUIThemePart part_tab;
-	//FIXME: GUIThemePart part_tab_background;
+	GUIThemePart part_tab;
+	GUIThemePart part_tab_background;
 	unsigned int current_page_index;
 /// \}
 };

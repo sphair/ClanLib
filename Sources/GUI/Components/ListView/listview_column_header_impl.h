@@ -31,6 +31,7 @@
 
 #include "GUI/precomp.h"
 #include "API/GUI/gui_component.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 
@@ -52,6 +53,8 @@ public:
 	ListViewColumnHeader::TextAlignment align;
 
 	Rect rect;
+
+	GUIThemePart part;
 
 	std::shared_ptr<ListViewColumnHeader_Impl> next_sibling;
 

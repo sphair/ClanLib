@@ -29,6 +29,8 @@
 
 #pragma once
 
+
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/Components/popupmenu.h"
@@ -90,16 +92,15 @@ private:
 	Size icon_size;
 	Size check_size;
 
-	//FIXME: GUIThemePart part_component;
-	//FIXME: GUIThemePart part_item_row;
-	//FIXME: GUIThemePart part_item_icon;
-	//FIXME: GUIThemePart part_item_label;
-	//FIXME: GUIThemePart part_item_check;
-	//FIXME: GUIThemePart part_item_accel_label;
-	//FIXME: GUIThemePart part_separator;
-	//FIXME: GUIThemePart part_submenu_arrow;
-	//FIXME: GUIThemePart part_menubar_joiner;
-	//GUIThemePartProperty prop_icon_column_width;
+	
+	GUIThemePart part_item_row;
+	GUIThemePart part_item_icon;
+	GUIThemePart part_item_label;
+	GUIThemePart part_item_check;
+	GUIThemePart part_item_accel_label;
+	GUIThemePart part_separator;
+	GUIThemePart part_submenu_arrow;
+	GUIThemePart part_menubar_joiner;
 };
 
 }

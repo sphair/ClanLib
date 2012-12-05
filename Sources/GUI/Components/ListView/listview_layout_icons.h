@@ -94,8 +94,7 @@ private:
 	int max_grid_cols_visible;
 	int row_draw_y_pos;
 	bool columns_valid;
-	//GUIThemePartProperty prop_icon_width;
-	//GUIThemePartProperty prop_icon_height;
+
 /// \}
 };
 

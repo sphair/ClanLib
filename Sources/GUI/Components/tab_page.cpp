@@ -30,6 +30,7 @@
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab_page.h"
 #include "API/Core/XML/dom_element.h"
@@ -49,10 +50,7 @@ TabPage::TabPage(GUIComponent *parent)
 	impl->component = this;
 	func_process_message().set(impl.get(), &TabPage_Impl::on_process_message);
 	func_render().set(impl.get(), &TabPage_Impl::on_render);
-	//FIXME: sig_style_changed().set(impl.get(), &TabPage_Impl::on_style_changed);
 	func_resized().set(impl.get(), &TabPage_Impl::on_resized);
-
-	impl->on_style_changed();
 }
 
 TabPage::~TabPage()
@@ -96,10 +94,6 @@ void TabPage_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 }
 
 void TabPage_Impl::on_render(Canvas &canvas, const Rect &update_rect)
-{
-}
-
-void TabPage_Impl::on_style_changed()
 {
 }
 

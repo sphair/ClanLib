@@ -35,6 +35,7 @@
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_window_manager.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/menubar.h"
 #include "API/GUI/Components/popupmenu.h"
@@ -46,8 +47,6 @@
 #include "popupmenu_impl.h"
 #include "../../gui_css_strings.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -55,14 +54,12 @@ namespace clan
 // MenuBar Construction:
 
 MenuBar::MenuBar( GUIComponent *parent)
-: GUIComponent(parent), impl(new MenuBar_Impl)
+: GUIComponent(parent, CssStr::MenuBar::type_name), impl(new MenuBar_Impl)
 {
-	set_tag_name(CssStr::MenuBar::type_name);
 	impl->menubar = this;
 	func_process_message().set(impl.get(), &MenuBar_Impl::on_process_message);
 	func_render().set(impl.get(), &MenuBar_Impl::on_render);
 	func_resized().set(impl.get(), &MenuBar_Impl::on_resized);
-	sig_style_changed().set(impl.get(), &MenuBar_Impl::on_style_changed);
 
 	impl->create_parts();
 }
@@ -88,7 +85,7 @@ MenuBar *MenuBar::get_named_item(GUIComponent *reference_component, const std::s
 
 Size MenuBar::get_preferred_size() const
 {
-	return impl->part_component.get_preferred_size();
+	return Size(100, 40);//FIXME: impl->component->get_preferred_size();
 }
 
 PopupMenu MenuBar::get_menu(int index) const
@@ -125,14 +122,15 @@ void MenuBar::remove_menu(int index)
 
 void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
+		
+		const InputEvent &e = input_msg->input_event;
 
 		if (e.type == InputEvent::pressed && e.id == mouse_left)
 		{
-			msg.set_consumed();
+			msg->consumed = true;
 
 			std::vector<TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
@@ -153,7 +151,7 @@ void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 		else if (e.type == InputEvent::pointer_moved )
 		{
-			msg.set_consumed();
+			msg->consumed = true;
 
 			std::vector<TopMenu>::size_type index;
 			for (index = 0; index < menus.size(); index++)
@@ -172,12 +170,12 @@ void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 		}
 	}
-	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pmsg(msg);
-		if (pmsg.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 		{
-			msg.set_consumed();
+			msg->consumed = true;
 			hot_index = -1;
 			menubar->request_repaint();
 		}
@@ -187,7 +185,6 @@ void MenuBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect(Point(0,0), menubar->get_geometry().get_size());
-	part_component.render_box(canvas, rect, update_rect);
 
 	std::vector<TopMenu>::size_type index;
 	for (index = 0; index < menus.size(); index++)
@@ -208,25 +205,14 @@ void MenuBar_Impl::on_resized()
 {
 }
 
-void MenuBar_Impl::on_style_changed()
-{
-	create_parts();
-}	
-
 void MenuBar_Impl::create_parts()
 {
-	part_component = GUIThemePart(menubar);
 	part_item = GUIThemePart(menubar, "item");
 
-	GUIThemePartProperty prop_bl("border-left", "0");
-	GUIThemePartProperty prop_pl("padding-left", "0");
-	GUIThemePartProperty prop_br("border-right", "0");
-	GUIThemePartProperty prop_pr("padding-right", "0");
-
-	item_border_left = part_item.get_property_int(prop_bl);
-	item_padding_left = part_item.get_property_int(prop_pl);
-	item_padding_right = part_item.get_property_int(prop_br);
-	item_border_right = part_item.get_property_int(prop_pr);
+	item_border_left = 0; //FIXME: part_item.get_property_int(prop_bl);
+	item_padding_left = 0; //FIXME: part_item.get_property_int(prop_pl);
+	item_padding_right = 0; //FIXME: part_item.get_property_int(prop_br);
+	item_border_right = 0; //FIXME: part_item.get_property_int(prop_pr);
 }
 
 void MenuBar_Impl::select_item_at(const Point &mouse_pos)
@@ -279,7 +265,7 @@ Point MenuBar_Impl::get_submenu_screen_pos()
 Rect MenuBar_Impl::get_menu_item_rect(int our_index)
 {
 	Rect menubar_rect = menubar->get_size();
-	Rect menubar_content_rect = part_component.get_content_box(menubar_rect);
+	Rect menubar_content_rect = component->get_content_box(menubar_rect);
 
 	int x = menubar_content_rect.left;
 	Canvas &canvas = menubar->get_canvas();
@@ -315,5 +301,3 @@ int MenuBar_Impl::get_selected_item_index()
 }
 
 }
-
-#endif
