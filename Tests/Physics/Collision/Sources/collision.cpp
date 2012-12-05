@@ -42,7 +42,7 @@ int Collision::start(const std::vector<std::string> &args)
 
 	// Set the window
 	DisplayWindowDescription desc;
-	desc.set_title("ClanLib Joints Example");
+	desc.set_title("ClanLib Collision Example");
 	desc.set_size(Size(window_x_size, window_y_size), true);
 	desc.set_allow_resize(false);
 
