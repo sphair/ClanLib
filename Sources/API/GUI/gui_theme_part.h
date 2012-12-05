@@ -106,6 +106,15 @@ public:
 	/// \brief Calculates the text size using the font defined for the current state.
 	Size get_text_size(Canvas &canvas, const std::string &str) const;
 
+	/// \brief Returns the position of the content box for a given render box.
+	Rect get_content_box(const Rect &render_box_rect) const;
+
+	/// \brief Returns the content shrink box of the theme part.
+	Rect get_content_shrink_box() const;
+
+	/// \brief Returns the position and size of a render box for a given content box.
+	Rect get_render_box(const Rect &content_box_rect) const;
+
 /// \}
 
 /// \name Operations

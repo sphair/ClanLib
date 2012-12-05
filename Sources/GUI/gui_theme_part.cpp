@@ -210,4 +210,50 @@ Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const R
 	return Rect();
 }
 
+Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
+{
+	//FIXME: impl->check_content_shrink_box_is_cached(*this);
+	Rect box = render_box_rect;
+	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
+	//FIXME: box.shrink(R.left, R.top, R.right, R.bottom);
+	return box;
+}
+
+Rect GUIThemePart::get_render_box(const Rect &content_box_rect) const
+{
+	//FIXME: impl->check_content_shrink_box_is_cached(*this);
+	Rect box = content_box_rect;
+
+	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
+	//FIXME: box.expand(R.left, R.top, R.right, R.bottom);
+	return box;
+}
+
+Rect GUIThemePart::get_content_shrink_box() const
+{
+	Rect shrink_box(0,0,0,0);
+//FIXME: 
+/*	int margin_top = get_property_int(impl->prop_margin_top);
+	int margin_left = get_property_int(impl->prop_margin_left);
+	int margin_right = get_property_int(impl->prop_margin_right);
+	int margin_bottom = get_property_int(impl->prop_margin_bottom);
+
+	int border_top = get_property_int(impl->prop_border_top);
+	int border_left = get_property_int(impl->prop_border_left);
+	int border_right = get_property_int(impl->prop_border_right);
+	int border_bottom = get_property_int(impl->prop_border_bottom);
+
+	int padding_top = get_property_int(impl->prop_padding_top);
+	int padding_left = get_property_int(impl->prop_padding_left);
+	int padding_right = get_property_int(impl->prop_padding_right);
+	int padding_bottom = get_property_int(impl->prop_padding_bottom);
+
+	shrink_box.left += margin_left+ border_left + padding_left;
+	shrink_box.right += margin_right + border_right + padding_right;
+	shrink_box.top += margin_top + border_top + padding_top;
+	shrink_box.bottom += margin_bottom + border_bottom + padding_bottom;
+*/
+	return shrink_box;
+}
+
 }
