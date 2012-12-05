@@ -65,8 +65,9 @@ public:
 	void on_enablemode_changed();
 	void create_parts();
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
+	void calculate_span_layout();
 
-	Size get_size() const;
+	Size get_size();
 
 	PushButton *button;
 	Callback_v0 func_clicked;
@@ -75,6 +76,9 @@ public:
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
 	GUIThemePart part_focus;
+
+	SpanLayout layout;
+
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -139,13 +143,18 @@ const std::string &PushButton::get_text() const
 	return impl->text;
 }
 
-Size PushButton_Impl::get_size() const
+Size PushButton_Impl::get_size()
 {
+	// Guess the size if not specified by the css
 	Size size_text = button->get_text_size(button->get_canvas(), text);
 	Size size_image;
 	if (!icon.is_null())
 		size_image = icon.get_size();
-	return Size(max(size_text.width, size_image.width), max(size_text.height, size_image.height));
+	Size size(max(size_text.width, size_image.width), max(size_text.height, size_image.height));
+
+	layout.layout(button->get_canvas(), size.width);
+	return layout.get_size();
+
 }
 
 float PushButton::get_preferred_content_width()
@@ -182,6 +191,7 @@ void PushButton::set_toggle(bool enable)
 void PushButton::set_icon(const Image &icon)
 {
 	impl->icon = icon;
+	impl->calculate_span_layout();
 	request_repaint();
 }
 
@@ -190,6 +200,7 @@ void PushButton::set_icon_position(IconPosition pos)
 	if (impl->icon_position != pos)
 	{
 		impl->icon_position = pos;
+		impl->calculate_span_layout();
 		request_repaint();
 	}
 }
@@ -197,6 +208,7 @@ void PushButton::set_icon_position(IconPosition pos)
 void PushButton::set_text(const std::string &text)
 {
 	impl->text = text;
+	impl->calculate_span_layout();
 	request_repaint();
 }
 
@@ -228,6 +240,67 @@ void PushButton_Impl::on_enablemode_changed()
 	button->request_repaint();
 }
 
+void PushButton_Impl::calculate_span_layout()
+{
+	layout = SpanLayout();
+
+	Font font = button->get_font();
+
+	std::string h_align = button->get_property(CssStr::align, CssStr::left); // left|center|right|justify
+	std::string v_align = button->get_property(CssStr::vertical_align, CssStr::center); // top|center|bottom
+
+	Size icon_size;
+	if (!icon.is_null())
+		icon_size = icon.get_size();
+
+	FontMetrics metrics = font.get_font_metrics();
+	Colorf text_color = button->get_property(CssStr::text_color, "black");
+
+	if (icon_position == PushButton::icon_top)
+	{
+		if (!icon.is_null())
+			layout.add_image(icon, 0);
+		if (!text.empty())
+			layout.add_text("\n", font, text_color);
+	}
+	else if (icon_position == PushButton::icon_left)
+	{
+		if (!icon.is_null())
+			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
+
+		if (!text.empty())
+			layout.add_text(" ", font, text_color);
+	}
+
+	layout.add_text(text, font, text_color);
+
+	if (icon_position == PushButton::icon_bottom)
+	{
+		if (!text.empty())
+			layout.add_text("\n", font, text_color);
+		if (!icon.is_null())
+			layout.add_image(icon, 0);
+	}
+	else if (icon_position == PushButton::icon_right)
+	{
+		if (!text.empty())
+			layout.add_text(" ", font, text_color);
+		if (!icon.is_null())
+			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
+	}
+
+	if (h_align == CssStr::left)
+		layout.set_align(span_left);
+	else if (h_align == CssStr::center)
+		layout.set_align(span_center);
+	else if (h_align == CssStr::right)
+		layout.set_align(span_right);
+	else if (h_align == CssStr::justify)
+		layout.set_align(span_justify);
+
+}
+
+
 void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = button->get_size();
@@ -239,78 +312,26 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	Rect content_rect = button->get_content_box(rect);
 
-	if (!icon.is_null())
+	layout.layout(canvas, content_rect.get_width()); // To do: also add support for SpanLayout::layout(canvas, width, height) so we can clip vertically
+
+	std::string h_align = button->get_property(CssStr::align, CssStr::left); // left|center|right|justify
+	std::string v_align = button->get_property(CssStr::vertical_align, CssStr::center); // top|center|bottom
+
+	if (v_align == CssStr::top)
 	{
-		Font font = button->get_font();
-	
-		std::string h_align = button->get_property(CssStr::align, CssStr::left); // left|center|right|justify
-		std::string v_align = button->get_property(CssStr::vertical_align, CssStr::center); // top|center|bottom
-
-		Size icon_size = icon.get_size();
-		Point center = content_rect.get_center();
-
-		FontMetrics metrics = font.get_font_metrics();
-		Colorf text_color = button->get_property(CssStr::text_color, "black");
-
-		SpanLayout layout;
-		if (icon_position == PushButton::icon_top)
-		{
-			layout.add_image(icon, 0);
-			if (!text.empty())
-				layout.add_text("\n", font, text_color);
-		}
-		else if (icon_position == PushButton::icon_left)
-		{
-			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
-			if (!text.empty())
-				layout.add_text(" ", font, text_color);
-		}
-
-		layout.add_text(text, font, text_color);
-
-		if (icon_position == PushButton::icon_bottom)
-		{
-			if (!text.empty())
-				layout.add_text("\n", font, text_color);
-			layout.add_image(icon, 0);
-		}
-		else if (icon_position == PushButton::icon_right)
-		{
-			if (!text.empty())
-				layout.add_text(" ", font, text_color);
-			layout.add_image(icon, metrics.get_height() / 2 - metrics.get_ascent() + icon_size.height / 2);
-		}
-
-		if (h_align == CssStr::left)
-			layout.set_align(span_left);
-		else if (h_align == CssStr::center)
-			layout.set_align(span_center);
-		else if (h_align == CssStr::right)
-			layout.set_align(span_right);
-		else if (h_align == CssStr::justify)
-			layout.set_align(span_justify);
-
-		layout.layout(canvas, content_rect.get_width()); // To do: also add support for SpanLayout::layout(canvas, width, height) so we can clip vertically
-
-		if (v_align == CssStr::top)
-		{
-			layout.set_position(Point(content_rect.left, content_rect.top));
-		}
-		else if (v_align == CssStr::center)
-		{
-			layout.set_position(Point(content_rect.left, button->get_vertical_text_align(canvas, font, content_rect).baseline - layout.get_first_baseline_offset() - (layout.get_last_baseline_offset()-layout.get_first_baseline_offset()) / 2));
-		}
-		else if (v_align == CssStr::bottom)
-		{
-			layout.set_position(Point(content_rect.left, content_rect.bottom));
-		}
-
-		layout.draw_layout_ellipsis(canvas, content_rect);
+		layout.set_position(Point(content_rect.left, content_rect.top));
 	}
-	else
+	else if (v_align == CssStr::center)
 	{
-		button->render_text(canvas, text, content_rect, update_rect);
+		layout.set_position(Point(content_rect.left, button->get_vertical_text_align(canvas, button->get_font(), content_rect).baseline - layout.get_first_baseline_offset() - (layout.get_last_baseline_offset()-layout.get_first_baseline_offset()) / 2));
 	}
+	else if (v_align == CssStr::bottom)
+	{
+		layout.set_position(Point(content_rect.left, content_rect.bottom));
+	}
+
+	layout.draw_layout_ellipsis(canvas, content_rect);
+
 }
 
 void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
