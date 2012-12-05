@@ -48,6 +48,7 @@
 #include "listview_column_header_impl.h"
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
+#ifdef DISABLE_COMPONENT
 
 namespace clan
 {
@@ -427,3 +428,5 @@ void ListViewHeader_Impl::on_column_size_changed(ListViewColumnHeader col)
 }
 
 }
+
+#endif

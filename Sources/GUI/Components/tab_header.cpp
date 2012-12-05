@@ -43,6 +43,8 @@
 #include "API/Display/2D/canvas.h"
 #include "tab_header.h"
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -382,3 +384,5 @@ void TabHeader_Impl::select_page(int index)
 }
 
 }
+
+#endif

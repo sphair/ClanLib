@@ -44,6 +44,8 @@
 #include "../gui_css_strings.h"
 #include "message_box_component.h"
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -319,3 +321,4 @@ bool MessageBoxComponent::on_window_close(Window *window)
 }
 
 }
+#endif

@@ -47,6 +47,9 @@
 #include "popupmenu_impl.h"
 #include "../../gui_css_strings.h"
 
+#ifdef DISABLE_COMPONENT
+
+
 namespace clan
 {
 
@@ -301,3 +304,5 @@ int MenuBar_Impl::get_selected_item_index()
 }
 
 }
+
+#endif

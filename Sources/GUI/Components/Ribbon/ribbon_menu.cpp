@@ -33,6 +33,8 @@
 #include "API/GUI/Components/ribbon_menu.h"
 #include "API/Display/Window/input_event.h"
 
+#ifdef DISABLE_COMPONENT
+
 namespace clan
 {
 
@@ -227,3 +229,5 @@ GUITopLevelDescription RibbonMenu::create_toplevel_description()
 }
 
 }
+
+#endif
