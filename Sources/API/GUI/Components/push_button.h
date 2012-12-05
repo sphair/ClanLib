@@ -99,7 +99,7 @@ public:
 	/// \return icon_position
 	IconPosition get_icon_position() const;
 
-	std::string get_text() const;
+	const std::string &get_text() const;
 
 /// \}
 /// \name Operations
