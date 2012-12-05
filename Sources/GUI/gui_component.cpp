@@ -1459,6 +1459,17 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const R
 	font.draw_text(canvas, content_rect.left, content_rect.top, text, impl->element.get_css_properties().color.color);
 	return Rect();
 }
+
+Rect GUIComponent::get_render_box(const Rect &content_box_rect) const
+{
+	//FIXME: impl->check_content_shrink_box_is_cached(*this);
+	Rect box = content_box_rect;
+
+	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
+	//FIXME: box.expand(R.left, R.top, R.right, R.bottom);
+	return box;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Implementation:
 

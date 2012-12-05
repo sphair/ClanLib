@@ -96,7 +96,6 @@ public:
 	bool readonly;
 	int selection_start;
 	int selection_length;
-	Colorf text_color;
 	std::string input_mask;
 	std::string decimal_char;
 	bool cursor_drawing_enabled_when_parent_focused;
@@ -108,7 +107,7 @@ public:
 	GUIThemePart part_cursor;
 	Rect content_rect;
 
-	void move(int steps, const InputEvent &e);
+	void move(int steps, bool ctrl, bool shift);
 	bool insert_text(int pos, const std::string &str);
 	void backspace();
 	void del();
@@ -128,7 +127,7 @@ public:
 	void set_selection_length(int length);
 	void set_text_selection(int start, int length);
 
-	GUIThemePart::VerticalTextPosition vertical_text_align;
+	GUIComponent::VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;

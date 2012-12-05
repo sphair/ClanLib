@@ -56,8 +56,6 @@
 #include "stdlib.h"
 #endif
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -426,7 +424,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 	{
 		
-		const InputEvent &e = input_msg->input_event;
+		InputEvent &e = input_msg->input_event;
 
 		if (e.device.get_type() == InputDevice::keyboard)
 		{
@@ -488,12 +486,12 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 				else if (e.id == keycode_left)
 				{
-					move(-1, e);
+					move(-1, e.ctrl, e.shift);
 					msg->consumed = true;
 				}
 				else if (e.id == keycode_right)
 				{
-					move(1, e);
+					move(1, e.ctrl, e.shift);
 					msg->consumed = true;
 				}
 				else if (e.id == keycode_backspace)
@@ -813,8 +811,6 @@ void LineEdit_Impl::create_parts()
 	lineedit->set_pseudo_class(CssStr::normal, enabled);
 	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
 
-	text_color = lineedit->get_property(prop_text_color);
-
 	part_cursor.set_pseudo_class(CssStr::normal, enabled);
 	part_cursor.set_pseudo_class(CssStr::disabled, !enabled);
 
@@ -824,13 +820,13 @@ void LineEdit_Impl::create_parts()
 	on_resized();	//TODO: Is this required?
 }
 
-void LineEdit_Impl::move(int steps, const InputEvent &e)
+void LineEdit_Impl::move(int steps, bool ctrl, bool shift)
 {
-	if (e.shift && selection_length == 0)
+	if (shift && selection_length == 0)
 		set_selection_start(cursor_pos);
 
 	// Jump over words if control is pressed.
-	if (e.ctrl)
+	if (ctrl)
 	{
 		if (steps < 0)
 			steps = find_previous_break_character(cursor_pos-1) - cursor_pos;
@@ -863,7 +859,7 @@ void LineEdit_Impl::move(int steps, const InputEvent &e)
 
 	
 	// Clear the selection if a cursor key is pressed but shift isn't down. 
-	if (e.shift)
+	if (shift)
 		set_selection_length(cursor_pos - selection_start);
 	else
 		set_text_selection(-1, 0);
@@ -1282,7 +1278,6 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect g = lineedit->get_size();
-	lineedit->render_box(canvas, g, update_rect);
 
 	Font font = lineedit->get_font();
 
@@ -1344,14 +1339,10 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void LineEdit_Impl::on_scroll_timer_expired()
 {
-	GUIMessage_Input msg;
-	InputEvent event;
-	msg.set_event(event);
-
 	if (mouse_moves_left)
-		move(-1,event);
+		move(-1,false, false);
 	else
-		move(1, event);
+		move(1, false, false);
 }
 
 void LineEdit_Impl::on_enable_changed()
@@ -1389,5 +1380,3 @@ Size LineEdit_Impl::get_visual_text_size(Canvas &canvas, Font &font) const
 }
 
 }
-
-#endif
