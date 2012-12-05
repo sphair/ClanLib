@@ -57,8 +57,6 @@ public:
 	CheckBox_Impl()
 	: three_state(false)
 	{
-		//FIXME: prop_text_gap = GUIThemePartProperty(CssStr::text_gap, "2");
-		//FIXME: prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");
 	}
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
@@ -80,8 +78,6 @@ public:
 
 	GUIThemePart part_checker;
 	GUIThemePart part_focus;
-	//FIXME: GUIThemePartProperty prop_text_gap;
-	//FIXME: GUIThemePartProperty prop_text_color;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -338,7 +334,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	part_checker.render_box(canvas, checker_rect);
 
-	int text_gap = 2; //FIXME: checkbox->get_property_int(prop_text_gap);
+	int text_gap = checkbox->get_property_int(CssStr::text_gap, "2");
 
 	Rect text_rect;
 	text_rect.left = checker_rect.right + text_gap;

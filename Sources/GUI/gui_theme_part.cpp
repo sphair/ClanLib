@@ -256,4 +256,15 @@ Rect GUIThemePart::get_content_shrink_box() const
 	return shrink_box;
 }
 
+
+std::string GUIThemePart::get_property(const std::string &property, const std::string &default_value) const
+{
+	return default_value;	//FIXME:
+}
+
+int GUIThemePart::get_property_int(const std::string &property, const std::string &default_value) const
+{
+	return StringHelp::text_to_int(default_value);	//FIXME:
+}
+
 }
