@@ -111,7 +111,7 @@ Fixture Body::create_fixture(const FixtureDescription &description)
 void Body::set_position(const Vec2f &pos)
 {
 	float scale = impl->owner->physic_scale;
-	impl->body->SetTransform(b2Vec2(pos.x, pos.y), impl->body->GetAngle());
+	impl->body->SetTransform(b2Vec2(pos.x/scale, pos.y/scale), impl->body->GetAngle());
 }
 
 void Body::set_angle(const Angle &angle)

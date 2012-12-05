@@ -55,7 +55,8 @@ enum JointType
 	Joint_Revolute =	6,
 	Joint_Rope =		7,
 	Joint_Weld =		8,
-	Joint_Wheel =		9
+	Joint_Wheel =		9,
+	Joint_None =		1337
 };
 
 /// \brief Joint class.
@@ -94,22 +95,22 @@ public:
 	bool is_active() const;
 
 	/// \brief Get the reaction force on bodyB at the joint anchor in Newtons.
-	virtual Vec2f get_reaction_force (float dt) const =0;
+	virtual Vec2f get_reaction_force (float dt);
  
 	/// \brief Get the reaction torque on bodyB in N*m. 
-	virtual float get_reaction_torque (float dt) const =0;
+	virtual float get_reaction_torque (float dt);
  	
 	/// \brief Return the first body attached to this joint.
-	virtual Body* get_body_a() const =0;
+	virtual Body* get_body_a();
 
 	/// \brief Return the second body attached to this joint.
-	virtual Body* get_body_b() const =0;
+	virtual Body* get_body_b();
 
 	/// \brief Return the anchor point on first body in world coordinates. 
-	virtual Vec2f get_anchor_a() const =0;
+	virtual Vec2f get_anchor_a();
 
 	/// \brief Return the second body attached to this joint.
-	virtual Vec2f get_anchor_b() const =0;
+	virtual Vec2f get_anchor_b();
 
 
 

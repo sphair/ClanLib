@@ -41,7 +41,9 @@ public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	DistanceJoint_Impl() {};
+	DistanceJoint_Impl(PhysicWorld_Impl &pw_impl)
+	: owner(&pw_impl)
+	{};
 	virtual ~DistanceJoint_Impl() { return; }
 
 //																						___________________

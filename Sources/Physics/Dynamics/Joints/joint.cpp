@@ -37,6 +37,7 @@ namespace clan
 //																											C O N S T R U C T O R S
 
 Joint::Joint()
+: joint_impl(new Joint_Impl)
 {
 
 }
@@ -69,6 +70,38 @@ JointType Joint::get_Joint_type () const
 bool Joint::is_active() const
 {
 	return joint_impl->joint->IsActive();
+}
+
+Body *Joint::get_body_a()
+{
+	return static_cast<Body *> (joint_impl->joint->GetBodyA()->GetUserData());
+}
+
+Body *Joint::get_body_b()
+{
+	return static_cast<Body *> (joint_impl->joint->GetBodyB()->GetUserData());
+}
+Vec2f Joint::get_anchor_a()
+{
+	b2Vec2 &vec = joint_impl->joint->GetAnchorA();
+	return Vec2f(vec.x, vec.y);
+}
+
+Vec2f Joint::get_anchor_b()
+{
+	b2Vec2 &vec = joint_impl->joint->GetAnchorB();
+	return Vec2f(vec.x, vec.y);
+}
+
+Vec2f Joint::get_reaction_force (float dt)
+{
+	b2Vec2 &vec = joint_impl->joint->GetReactionForce(dt);
+	return Vec2f(vec.x, vec.y);
+}
+ 
+float Joint::get_reaction_torque (float dt)
+{
+	return joint_impl->joint->GetReactionTorque(dt);
 }
 
 //																											___________________																											

@@ -46,7 +46,7 @@ DistanceJoint::DistanceJoint()
 }
 
 DistanceJoint::DistanceJoint(const DistanceJointDescription &description)
-: impl(new DistanceJoint_Impl)
+: impl(new DistanceJoint_Impl(*description.impl->owner))
 {
 	if(impl->owner)
 	{
