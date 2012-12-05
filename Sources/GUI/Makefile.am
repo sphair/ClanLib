@@ -44,7 +44,7 @@ libclan30GUI_la_SOURCES = \
 	Components/scrollbar.cpp \
 	Components/label.cpp \
 	Components/combobox.cpp \
-	Components/span_component.cpp \
+	Components/label_span.cpp \
 	Components/tab.cpp \
 	Components/Ribbon/ribbon_menu.cpp \
 	Components/Ribbon/ribbon_page.cpp \

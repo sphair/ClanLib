@@ -95,9 +95,9 @@ namespace CssStr
 		const std::string type_name = "label";
 	}
 
-	namespace SpanComponent
+	namespace LabelSpan
 	{
-		const std::string type_name = "spancomponent";
+		const std::string type_name = "label_span";
 	}
 
 	namespace MenuBar
