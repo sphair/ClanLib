@@ -38,6 +38,7 @@ namespace CssStr
 	{
 		const std::string type_name = "checkbox";
 		const std::string part_checker = "checker";
+		const std::string part_focus = "focus";
 	}
 
 	namespace ComboBox

@@ -109,7 +109,7 @@ public:
 	/// \return lock_to_ticks
 	bool get_lock_to_ticks() const;
 
-		/// \brief Returns the preferred content width
+	/// \brief Returns the preferred content width
 	///
 	/// Override this function if the component has non-css content.
 	float get_preferred_content_width();

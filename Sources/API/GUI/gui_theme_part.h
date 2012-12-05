@@ -77,7 +77,7 @@ public:
 	CSSBoxProperties &get_css_properties();
 
 	/// \brief Gets the font
-	Font get_font();
+	Font get_font() const;
 
 	/// \brief Returns the DOM tag name
 	std::string get_tag_name() const;
@@ -103,6 +103,9 @@ public:
 	/// \brief Returns the preferred height of a render box.
 	int get_preferred_height() const;
 
+	/// \brief Calculates the text size using the font defined for the current state.
+	Size get_text_size(Canvas &canvas, const std::string &str) const;
+
 /// \}
 
 /// \name Operations
@@ -126,7 +129,22 @@ public:
 	/// \brief Controls the presence of a DOM pseudo class
 	void set_pseudo_class(const std::string &name, bool enable);
 
-	// To do: provide access to GUICSSUsedValues data and/or add the box calculation helpers we had on GUIThemePart
+	Rect render_text(
+		Canvas &canvas,
+		const std::string &text,
+		const Rect &content_rect, 
+		const Rect &clip_rect);
+
+	struct VerticalTextPosition
+	{
+		float top;
+		float baseline;
+		float bottom;
+	};
+
+	/// \brief Calculates the vertical text position for the current font
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
+
 /// \}
 
 /// \name Implementation

@@ -35,6 +35,7 @@
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_metrics.h"
 #include "CSSLayout/LayoutTree/css_background_renderer.h"
 #include "CSSLayout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/LayoutTree/css_layout_graphics.h"
@@ -60,7 +61,7 @@ void GUIThemePart::throw_if_null() const
 }
 
 
-Font GUIThemePart::get_font()
+Font GUIThemePart::get_font() const
 {
 	return impl->component->get_font(get_css_properties());
 }
@@ -169,5 +170,34 @@ int GUIThemePart::get_preferred_height() const
 	return impl->element.get_css_properties().height.length.value;
 }
 
+Size GUIThemePart::get_text_size( Canvas &canvas, const std::string &str ) const
+{
+	Font font = get_font();
+	return font.get_text_size(canvas, str);
+}
+
+GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+{
+	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
+
+	FontMetrics metrics = font.get_font_metrics();
+	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
+	float content_height = content_rect.get_height();
+	float baseline = (content_height + align_height) / 2.0f;
+
+	VerticalTextPosition result;
+	result.baseline = baseline + content_rect.top;
+	result.top = result.baseline - metrics.get_ascent();
+	result.bottom = result.baseline + metrics.get_descent();
+	return result;
+}
+
+Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
+{
+	Font font = get_font();
+	//TODO Fixme - As CL_GUIThemeProvider_Default::render_text()
+	font.draw_text(canvas, content_rect.left, content_rect.top, text, impl->element.get_css_properties().color.color);
+	return Rect();
+}
 
 }

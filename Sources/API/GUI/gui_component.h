@@ -271,7 +271,7 @@ public:
 	GUIComponent *get_top_level_component();
 
 	/// \brief Return the graphic context for the component.
-	Canvas& get_canvas();
+	Canvas get_canvas() const;
 
 	/// \brief Return the input context for the component.
 	InputContext get_ic();
@@ -335,10 +335,14 @@ public:
 	bool get_constant_repaint() const;
 
 	/// \brief Gets the font
-	Font get_font();
+	Font get_font() const;
 
 	/// \brief Gets the font
-	Font get_font(const CSSBoxProperties &properties);
+	Font get_font(const CSSBoxProperties &properties) const;
+
+	/// \brief Calculates the text size using the font defined for the current state.
+	Size get_text_size(Canvas &canvas, const std::string &str) const;
+
 /// \}
 /// \name Events
 /// \{
@@ -573,6 +577,22 @@ public:
 
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
+
+	Rect render_text(
+		Canvas &canvas,
+		const std::string &text,
+		const Rect &content_rect, 
+		const Rect &clip_rect);
+
+	struct VerticalTextPosition
+	{
+		float top;
+		float baseline;
+		float bottom;
+	};
+
+	/// \brief Calculates the vertical text position for the current font
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 /// \}
 /// \name Implementation
