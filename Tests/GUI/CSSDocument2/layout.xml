@@ -10,6 +10,7 @@
         <label>View</label>
       </ribbon-tab>
     </ribbon-header>
+    <!--
     <ribbon-page>
       <ribbon-section>
         <ribbon-section-group>
@@ -32,6 +33,7 @@
       <ribbon-section>
       </ribbon-section>
     </ribbon-page>
+    -->
   </ribbon>
   <component class="test1">
     <component class="test2">
@@ -49,6 +51,5 @@
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
     <text>Need alignment!</text>
   </pushbutton>
-  <checkbox>Check</checkbox>
-  
+
 </root>
