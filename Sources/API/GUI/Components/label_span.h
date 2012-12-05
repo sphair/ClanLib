@@ -40,24 +40,24 @@ namespace clan
 {
 
 class SpanLayout;
-class SpanComponent_Impl;
+class LabelSpan_Impl;
 
 /// \brief Span Component component.
 ///
 /// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
-class CL_API_GUI SpanComponent : public GUIComponent
+class CL_API_GUI LabelSpan : public GUIComponent
 {
 /// \name Construction
 /// \{
 
 public:
 
-	/// \brief Constructs a SpanComponent
+	/// \brief Constructs a LabelSpan
 	///
 	/// \param parent = GUIComponent
-	SpanComponent(GUIComponent *parent);
+	LabelSpan(GUIComponent *parent);
 
-	virtual ~SpanComponent();
+	virtual ~LabelSpan();
 
 /// \}
 /// \name Attributes
@@ -74,10 +74,10 @@ public:
 
 	using GUIComponent::get_named_item;
 
-	/// \brief Find the child SpanComponent with the specified component ID name.
+	/// \brief Find the child LabelSpan with the specified component ID name.
 	///
 	/// If it was not found, an exception is thrown.
-	static SpanComponent *get_named_item(GUIComponent *reference_component, const std::string &id);
+	static LabelSpan *get_named_item(GUIComponent *reference_component, const std::string &id);
 
 	/// \brief Get Alignment
 	///
@@ -131,7 +131,7 @@ public:
 /// \{
 
 private:
-	std::shared_ptr<SpanComponent_Impl> impl;
+	std::shared_ptr<LabelSpan_Impl> impl;
 /// \}
 };
 
