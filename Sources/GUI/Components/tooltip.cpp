@@ -45,8 +45,6 @@
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -189,14 +187,13 @@ void ToolTip_Impl::on_show_delayed()
 
 void ToolTip_Impl::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
-	if (message.get_type() == GUIMessage_FocusChange::get_type_name() ||
-		message.get_type() == GUIMessage_ActivationChange::get_type_name() ||
-		message.get_type() == GUIMessage_Pointer::get_type_name())
+	if (
+		std::dynamic_pointer_cast<GUIMessage_FocusChange>(message) ||
+		std::dynamic_pointer_cast<GUIMessage_ActivationChange>(message) ||
+		std::dynamic_pointer_cast<GUIMessage_Pointer>(message) )
 	{
 		tooltip->hide();
 	}
 }
 
 }
-
-#endif

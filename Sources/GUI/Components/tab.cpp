@@ -42,8 +42,6 @@
 #include <map>
 #include "API/Core/Math/rect.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -330,5 +328,3 @@ void Tab_Impl::on_resized()
 }
 
 }
-
-#endif

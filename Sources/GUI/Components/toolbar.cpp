@@ -48,8 +48,6 @@
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -353,7 +351,6 @@ void ToolBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	update_layout(canvas);
 
 	Rect rect = toolbar->get_size();
-	toolbar->render_box(canvas, rect, update_rect);
 
 	std::vector<ToolBarItem>::size_type index, size;
 	size = items.size();
@@ -478,7 +475,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	Rect component_content = toolbar->get_content_box(rect);
 
 	Rect item_content = part_item_normal.get_content_box(component_content);
-	int original_text_gap = part_item_normal.get_property_int(prop_text_gap);
+	int original_text_gap = 2;//FIXME: part_item_normal.get_property_int(prop_text_gap);
 
 	if (horizontal)
 	{
@@ -578,5 +575,3 @@ int ToolBar_Impl::find_item_at(const Point &pos)
 }
 
 }
-
-#endif

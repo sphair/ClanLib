@@ -57,8 +57,6 @@
 #include "stdlib.h"
 #endif
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -388,7 +386,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 	{
 		
-		const InputEvent &e = input_msg->input_event;
+		InputEvent &e = input_msg->input_event;
 
 		if (e.device.get_type() == InputDevice::keyboard)
 		{
@@ -507,12 +505,12 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				}
 				else if (e.id == keycode_left)
 				{
-					move(-1, e);
+					move(-1, e.shift, e.ctrl);
 					msg->consumed = true;
 				}
 				else if (e.id == keycode_right)
 				{
-					move(1, e);
+					move(1, e.shift, e.ctrl);
 					msg->consumed = true;
 				}
 				else if (e.id == keycode_backspace)
@@ -826,13 +824,13 @@ int TextEdit_Impl::get_total_line_height()
 	return total;
 }
 
-void TextEdit_Impl::move(int steps, const InputEvent &e)
+void TextEdit_Impl::move(int steps, bool shift, bool ctrl)
 {
-	if (e.shift && selection_length == 0)
+	if (shift && selection_length == 0)
 		selection_start = cursor_pos;
 
 	// Jump over words if control is pressed.
-	if (e.ctrl)
+	if (ctrl)
 	{
 		if (steps < 0 && cursor_pos.x == 0 && cursor_pos.y > 0)
 		{
@@ -881,7 +879,7 @@ void TextEdit_Impl::move(int steps, const InputEvent &e)
 		cursor_pos.x = utf8_reader.get_position();
 	}
 
-	if (e.shift)
+	if (shift)
 	{
 		selection_length = to_offset(cursor_pos) - to_offset(selection_start);
 	}
@@ -1072,14 +1070,10 @@ void TextEdit_Impl::on_resized()
 
 void TextEdit_Impl::on_scroll_timer_expired()
 {
-	GUIMessage_Input msg;
-	InputEvent event;
-	msg.set_event(event);
-
 	if (mouse_moves_left)
-		move(-1,event);
+		move(-1,false, false);
 	else
-		move(1, event);
+		move(1, false, false);
 }
 
 void TextEdit_Impl::on_enable_changed()
@@ -1219,7 +1213,6 @@ void TextEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect g = textedit->get_size();
 	Rect content_box = textedit->get_content_box(g);
 
-	textedit->render_box(canvas, g, update_rect);
 	textedit->set_cliprect(canvas, content_box);
 	for (size_t i = vert_scrollbar->get_position(); i < lines.size(); i++)
 		lines[i].layout.draw_layout(canvas);
@@ -1251,5 +1244,3 @@ Vec2i TextEdit_Impl::get_character_index(Point mouse_wincoords)
 }
 
 }
-
-#endif

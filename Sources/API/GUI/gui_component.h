@@ -355,6 +355,9 @@ public:
 	/// \brief Returns the preferred size of a render box.
 	Size get_preferred_size() const;
 
+	/// \brief Returns the preferred width of a render box.
+	int get_preferred_width() const;
+
 /// \}
 /// \name Events
 /// \{

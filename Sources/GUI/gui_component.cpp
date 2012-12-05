@@ -1508,6 +1508,11 @@ Size GUIComponent::get_preferred_size() const
 	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
 }
 
+int GUIComponent::get_preferred_width() const
+{
+	return impl->element.get_css_properties().width.length.value;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Implementation:
 
