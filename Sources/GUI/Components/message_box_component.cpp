@@ -44,8 +44,6 @@
 #include "../gui_css_strings.h"
 #include "message_box_component.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -297,7 +295,6 @@ void MessageBoxComponent::set_css_class()
 
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
-	component->render_box(canvas, get_size(), dirty_rect);
 	part_icon.render_box(canvas, rect_icon, dirty_rect);
 	component->render_text(canvas, detail_text, rect_text, dirty_rect);
 }
@@ -321,4 +318,3 @@ bool MessageBoxComponent::on_window_close(Window *window)
 }
 
 }
-#endif

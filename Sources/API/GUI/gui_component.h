@@ -348,6 +348,12 @@ public:
 
 	/// \brief Returns the position and size of a render box for a given content box.
 	Rect get_render_box(const Rect &content_box_rect) const;
+	
+	/// \brief Returns the content shrink box of the theme part.
+	Rect get_content_shrink_box() const;
+
+	/// \brief Returns the preferred size of a render box.
+	Size get_preferred_size() const;
 
 /// \}
 /// \name Events
