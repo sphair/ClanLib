@@ -41,6 +41,7 @@ namespace clan
 
 class PhysicWorld;
 class ChainShape_Impl;
+class CollisionOutline;
 
 /// \brief Chain Shape class.
 ///
@@ -92,6 +93,8 @@ public:
 	/// \param count = the vertex count 
 	void	create_loop (const Vec2f *vertices,const int count);
 
+
+	void	create_loop (const CollisionOutline &outline);
 	/// \brief Create a chain with isolated end vertices. 
 	///
 	/// \param vertices	= an array of vertices, these are copied
