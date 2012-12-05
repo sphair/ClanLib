@@ -1513,6 +1513,16 @@ int GUIComponent::get_preferred_width() const
 	return impl->element.get_css_properties().width.length.value;
 }
 
+std::string GUIComponent::get_property(const std::string &property, const std::string &default_value) const
+{
+	return default_value;	//FIXME:
+}
+
+int GUIComponent::get_property_int(const std::string &property, const std::string &default_value) const
+{
+	return StringHelp::text_to_int(default_value);	//FIXME:
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Implementation:
 

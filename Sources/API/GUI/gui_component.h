@@ -358,6 +358,12 @@ public:
 	/// \brief Returns the preferred width of a render box.
 	int get_preferred_width() const;
 
+	/// \brief Returns the value of a property.
+	std::string get_property(const std::string &property, const std::string &default_value) const;
+
+	/// \brief Returns the value of a property as an integer.
+	int get_property_int(const std::string &property, const std::string &default_value) const;
+
 /// \}
 /// \name Events
 /// \{
