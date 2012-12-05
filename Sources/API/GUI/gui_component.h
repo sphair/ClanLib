@@ -299,6 +299,8 @@ public:
 	/// Override this function if the component has non-css content.
 	virtual float get_preferred_content_height(float width);
 
+	int get_preferred_height() const;	//FIXME: Stub
+
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	Point window_to_component_coords(const Point &window_point) const;
 
