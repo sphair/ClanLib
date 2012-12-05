@@ -32,6 +32,8 @@
 #include "../World/physic_world.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
+#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal_v1.h"
 
 /// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
 /// \{
@@ -84,6 +86,20 @@ public:
 
 	/// \brief Checks given point for collision with the fixture.
 	bool test_point (const Vec2f &p) const;
+
+/// \}
+/// \name Signals
+/// \{
+public:
+	/// \brief Signal emitted when a collision with other fixture occurs
+	///
+	/// \return Signal_v1<Fixture &>
+	Signal_v1<Fixture &> &sig_collision();
+
+	/// \brief Signal emitted when the fixture is deleted.
+	///
+	/// \return Signal_v0
+	Signal_v0 &sig_fixture_deletion();
 
 /// \}
 /// \name Implementation

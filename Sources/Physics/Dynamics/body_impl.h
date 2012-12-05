@@ -33,6 +33,9 @@
 #include "API/Physics/Dynamics/body_description.h"
 #include "API/Physics/World/physic_world.h"
 #include <memory>
+#include "API/Core/Signals/signal_v0.h"
+#include "API/Core/Signals/signal_v1.h"
+
 namespace clan
 {
 
@@ -43,7 +46,7 @@ class Body_Impl
 public:
 	Body_Impl(PhysicWorld_Impl &pw_impl);
 
-	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); }
+	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); sig_body_deletion.invoke(); }
 //																						___________________
 //																						O P E R A T I O N S
 	void create_body(const BodyDescription &description);
@@ -52,7 +55,8 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	//Body deletion signal here?
+	Signal_v1 <Body &> sig_collision;
+	Signal_v0 sig_body_deletion;
 	//Maybe fixture attachment signal?
 
 //																						___________________

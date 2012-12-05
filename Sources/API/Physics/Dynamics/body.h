@@ -34,6 +34,8 @@
 #include "../api_physics.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
+#include "../../Core/Signals/signal_v0.h"
+#include "../../Core/Signals/signal_v1.h"
 
 namespace clan
 {
@@ -102,6 +104,20 @@ public:
 
 	/// \brief set the angular velocity of the body.
 	void set_angular_velocity(const Angle &velocity);
+
+/// \}
+/// \name Signals
+/// \{
+public:
+	/// \brief Signal emitted when a collision with other body occurs
+	///
+	/// \return Signal_v1<Body &>
+	Signal_v1<Body &> &sig_collision();
+
+	/// \brief Signal emitted when the body is deleted.
+	///
+	/// \return Signal_v0
+	Signal_v0 &sig_body_deletion();
 
 /// \}
 /// \name Implementation
