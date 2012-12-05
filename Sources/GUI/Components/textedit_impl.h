@@ -117,7 +117,7 @@ public:
 	GUIThemePart part_cursor;
 	Rect content_rect;
 
-	void move(int steps, const InputEvent &e);
+	void move(int steps, bool shift, bool ctrl);
 	void insert_text(Vec2i pos, const std::string &str);
 	void backspace();
 	void del();
@@ -136,7 +136,7 @@ public:
 	std::string::size_type to_offset(Vec2i pos) const;
 	Vec2i from_offset(std::string::size_type offset) const;
 
-	GUIThemePart::VerticalTextPosition vertical_text_align;
+	GUIComponent::VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;

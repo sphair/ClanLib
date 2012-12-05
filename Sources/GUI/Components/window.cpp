@@ -49,8 +49,6 @@
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -428,5 +426,3 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 }
 
 }
-
-#endif

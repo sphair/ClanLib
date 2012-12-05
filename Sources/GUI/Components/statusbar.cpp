@@ -42,8 +42,6 @@
 #include "../gui_css_strings.h"
 #include "API/CSSLayout/css_box_properties.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -318,4 +316,3 @@ void StatusBar_Impl::create_parts()
 }
 
 }
-#endif
