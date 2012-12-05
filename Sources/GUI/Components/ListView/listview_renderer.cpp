@@ -32,6 +32,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -48,8 +49,6 @@
 #include "listview_renderer.h"
 #include "listview_impl.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -60,15 +59,6 @@ ListViewRenderer::ListViewRenderer(ListView *listview)
 : listview(listview), display_mode(listview_mode_details),
   scroll_x(0), scroll_y(0), height_row(0)
 {
-	prop_icon_color = GUIThemePartProperty(CssStr::icon_color, "white");
-	prop_icon_color_selected = GUIThemePartProperty(CssStr::icon_color_selected, "white");
-	prop_icon_color_overlay = GUIThemePartProperty(CssStr::icon_color_overlay, "white");
-	prop_icon_color_selected_overlay = GUIThemePartProperty(CssStr::icon_color_selected_overlay, "white");
-
-	prop_selection_margin_left = GUIThemePartProperty(CssStr::ListView::part_selection_margin_left, "3");
-	prop_selection_margin_right = GUIThemePartProperty(CssStr::ListView::part_selection_margin_right, "3");
-	prop_selection_margin_top = GUIThemePartProperty(CssStr::ListView::part_selection_margin_top, "3");
-	prop_selection_margin_bottom = GUIThemePartProperty(CssStr::ListView::part_selection_margin_bottom, "3");
 }
 
 ListViewRenderer::~ListViewRenderer()
@@ -225,7 +215,6 @@ void ListViewRenderer::set_scroll_offset(const Point &point)
 
 void ListViewRenderer::create_parts()
 {
-	GUIThemePart part_component(listview); // just for font.
 
 	part_row = GUIThemePart(listview, "row");
 	part_row_alternate = GUIThemePart(listview, "row");
@@ -238,10 +227,10 @@ void ListViewRenderer::create_parts()
 
 	part_icon_selection = GUIThemePart(listview, "icon_selection");
 
-	selection_margin.left = part_selection.get_property_int(prop_selection_margin_left);
-	selection_margin.right = part_selection.get_property_int(prop_selection_margin_right);
-	selection_margin.top = part_selection.get_property_int(prop_selection_margin_top);
-	selection_margin.bottom = part_selection.get_property_int(prop_selection_margin_bottom);
+	selection_margin.left = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_left);
+	selection_margin.right = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_right);
+	selection_margin.top = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_top);
+	selection_margin.bottom = 3; //FIXME: part_selection.get_property_int(prop_selection_margin_bottom);
 
 	part_opener_closed.set_pseudo_class(CssStr::closed, true);
 	part_opener_open.set_pseudo_class(CssStr::open, true);
@@ -253,10 +242,10 @@ void ListViewRenderer::create_parts()
 	part_column.set_pseudo_class(CssStr::normal, true);
 	part_icon_selection.set_pseudo_class(CssStr::normal, true);
 
-	color_icon = part_cell.get_property(prop_icon_color);
-	color_icon_selected = part_cell.get_property(prop_icon_color_selected);
-	color_icon_overlay = part_cell.get_property(prop_icon_color_overlay);
-	color_icon_selected_overlay = part_cell.get_property(prop_icon_color_selected_overlay);
+	color_icon = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color);
+	color_icon_selected = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_selected);
+	color_icon_overlay = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_overlay);
+	color_icon_selected_overlay = Colorf::white; //FIXME: part_cell.get_property(prop_icon_color_selected_overlay);
 }
 
 void ListViewRenderer::set_listview_header(ListViewHeader *header)
@@ -282,5 +271,3 @@ void ListViewRenderer::set_display_mode(ListViewDisplayMode mode)
 // ListViewRenderer Implementation:
 
 }
-
-#endif

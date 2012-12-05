@@ -37,6 +37,7 @@
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/lineedit.h"
 #include "API/Core/Math/cl_math.h"
@@ -50,7 +51,6 @@
 #include "../gui_css_strings.h"
 #include "lineedit_impl.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/css_box_properties.h"
 
 #ifndef WIN32
 #include "stdlib.h"
@@ -169,13 +169,13 @@ int LineEdit::get_cursor_pos() const
 
 Size LineEdit::get_text_size()
 {
-	Font font = get_font();
+	Font font = impl->lineedit->get_font();
 	return impl->get_visual_text_size(get_canvas(), font);
 }
 
 Size LineEdit::get_text_size(const std::string &str)
 {
-	Font font = get_font();
+	Font font = impl->lineedit->get_font();
 	Size text_size = font.get_text_size(get_canvas(), str);
 	return text_size;
 }
@@ -335,34 +335,19 @@ void LineEdit::set_cursor_pos(int pos)
 void LineEdit::resize_to_fit(int max_width)
 {
 	Canvas &canvas = get_canvas();
-	Font font = get_font();
+	Font font = impl->lineedit->get_font();
 
 	Rect g = get_geometry();
-	//FIXME: Was - Rect rect_content = get_content_box(g);
-	Rect rect_content = get_content_box();
+	Rect rect_content = impl->lineedit->get_content_box(g);
 	Size text_size = impl->get_visual_text_size(canvas, font);
 	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
-	//FIXME: g.set_size(impl->part_component->get_render_box(rect_content).get_size());
-	//FIXME: set_geometry(g);
+	g.set_size(impl->lineedit->get_render_box(rect_content).get_size());
+	set_geometry(g);
 
 	impl->clip_start_offset = 0;
 
 	request_repaint();
-}
-
-float LineEdit::get_preferred_content_width()
-{
-	Canvas canvas = get_canvas();
-	//FIXME!
-	return get_font().get_text_size(canvas, impl->text).width;
-}
-
-float LineEdit::get_preferred_content_height(float width)
-{
-	Canvas canvas = get_canvas();
-	//FIXME!
-	return get_font().get_text_size(canvas, impl->text).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -419,10 +404,7 @@ void LineEdit::set_cursor_drawing_enabled(bool enable)
 	impl->cursor_drawing_enabled_when_parent_focused = enable;
 
 	if (!impl->readonly)
-	{
-		impl->cursor_blink_visible = false;
-		impl->timer.start(0);
-	}
+		impl->timer.start(500);
 }
 
 void LineEdit::set_select_all_on_focus_gain(bool enable)
@@ -441,22 +423,24 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
 	{
+		
+		const InputEvent &e = input_msg->input_event;
 
-		if (input_msg->input_event.device.get_type() == InputDevice::keyboard)
+		if (e.device.get_type() == InputDevice::keyboard)
 		{
 			if (!func_enter_pressed.is_null() && 
-				input_msg->input_event.type == InputEvent::pressed &&
-				(input_msg->input_event.id == keycode_enter || input_msg->input_event.id == keycode_return || input_msg->input_event.id == keycode_numpad_enter))
+				e.type == InputEvent::pressed &&
+				(e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter))
 			{
 				func_enter_pressed.invoke();
-				input_msg->consumed = true;
+				msg->consumed = true;
 				return;
 			}
 
 			if (!func_before_edit_changed.is_null())
 			{
-				func_before_edit_changed.invoke(input_msg->input_event);
-				if (input_msg->input_event.type == InputEvent::no_key)
+				func_before_edit_changed.invoke(e);
+				if (e.type == InputEvent::no_key)
 				{
 					// If the 'func_before_edit_changed' callback sets e.type to 'no_key',
 					// the input event is to be ignored.
@@ -466,33 +450,33 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 			if (!readonly)	// Do not flash cursor when readonly
 			{
-				cursor_blink_visible = false;
-				timer.start(0); // don't blink cursor when moving or typing.
+				cursor_blink_visible = true;
+				timer.start(500); // don't blink cursor when moving or typing.
 			}
 
-			if (input_msg->input_event.type == InputEvent::pressed) // || input_msg->input_event.repeat_count > 1) 
+			if (e.type == InputEvent::pressed) // || e.repeat_count > 1) 
 			{
-				if (input_msg->input_event.id == keycode_enter || input_msg->input_event.id == keycode_escape || input_msg->input_event.id == keycode_tab || input_msg->input_event.id == keycode_numpad_enter)
+				if (e.id == keycode_enter || e.id == keycode_escape || e.id == keycode_tab || e.id == keycode_numpad_enter)
 				{
 					// Do not consume these.
 					return;
 				}
-				else if (input_msg->input_event.id == keycode_a && input_msg->input_event.ctrl)
+				else if (e.id == keycode_a && e.ctrl)
 				{
 					// select all
 					set_text_selection(0, text.size());
 					cursor_pos = selection_length;
 					update_text_clipping();
 					lineedit->request_repaint();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_c && input_msg->input_event.ctrl)
+				else if (e.id == keycode_c && e.ctrl)
 				{
 					if(!password_mode)	// Do not allow copying the password to clipboard
 					{
 						std::string str = lineedit->get_selection();
 						lineedit->get_gui_manager().set_clipboard_text(str);
-						input_msg->consumed = true;
+						msg->consumed = true;
 					}
 				}
 				else if (readonly)
@@ -500,61 +484,61 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					// Do not consume messages on read only component (only allow CTRL-A and CTRL-C)
 					return;
 				}
-				else if (input_msg->input_event.id == keycode_left)
+				else if (e.id == keycode_left)
 				{
-					move(-1, input_msg->input_event.ctrl, input_msg->input_event.shift);
-					input_msg->consumed = true;
+					move(-1, e);
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_right)
+				else if (e.id == keycode_right)
 				{
-					move(1, input_msg->input_event.ctrl, input_msg->input_event.shift);
-					input_msg->consumed = true;
+					move(1, e);
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_backspace)
+				else if (e.id == keycode_backspace)
 				{
 					backspace();
 					update_text_clipping();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_delete)
+				else if (e.id == keycode_delete)
 				{
 					del();
 					update_text_clipping();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_home)
+				else if (e.id == keycode_home)
 				{
 					set_selection_start(cursor_pos);
 					cursor_pos = 0;
-					if (input_msg->input_event.shift)
+					if (e.shift)
 						set_selection_length(-selection_start);
 					else
 						set_text_selection(0, 0);
 					update_text_clipping();
 					lineedit->request_repaint();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_end)
+				else if (e.id == keycode_end)
 				{
 					set_selection_start(cursor_pos);
 					cursor_pos = text.size();
-					if (input_msg->input_event.shift)
+					if (e.shift)
 						set_selection_length(text.size() - selection_start);
 					else
 						set_text_selection(0, 0);
 					update_text_clipping();
 					lineedit->request_repaint();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_x && input_msg->input_event.ctrl)
+				else if (e.id == keycode_x && e.ctrl)
 				{
 					std::string str = lineedit->get_selection();
 					lineedit->delete_selected_text();
 					lineedit->get_gui_manager().set_clipboard_text(str);
 					update_text_clipping();	
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_v && input_msg->input_event.ctrl)
+				else if (e.id == keycode_v && e.ctrl)
 				{
 					std::string str = lineedit->get_gui_manager().get_clipboard_text();
 					std::string::const_iterator end_str = std::remove(str.begin(), str.end(), '\n');
@@ -624,16 +608,16 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					}
 
 					update_text_clipping();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if (input_msg->input_event.id == keycode_shift)
+				else if (e.id == keycode_shift)
 				{
 					if (selection_start == -1)
 						set_text_selection(cursor_pos, 0);
 
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
-				else if ((!input_msg->input_event.str.empty() && !(input_msg->input_event.str[0] >= 0 && input_msg->input_event.str[0] < 32) && (!input_msg->input_event.alt && !input_msg->input_event.ctrl)) || (input_msg->input_event.ctrl && input_msg->input_event.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
+				else if ((!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32) && (!e.alt && !e.ctrl)) || (e.ctrl && e.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
 				{
 					lineedit->delete_selected_text();
 					if (input_mask.empty())
@@ -641,88 +625,84 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						if (numeric_mode)
 						{
 							// '-' can only be added once, and only as the first character.
-							if (input_msg->input_event.str == "-" && cursor_pos == 0 && text.find("-") == std::string::npos) 
+							if (e.str == "-" && cursor_pos == 0 && text.find("-") == std::string::npos) 
 							{
-								if(insert_text(cursor_pos, input_msg->input_event.str))
-									cursor_pos += input_msg->input_event.str.size();
+								if(insert_text(cursor_pos, e.str))
+									cursor_pos += e.str.size();
 							}
-							else if (numeric_mode_decimals && input_msg->input_event.str == decimal_char && cursor_pos > 0) // add decimal char 
+							else if (numeric_mode_decimals && e.str == decimal_char && cursor_pos > 0) // add decimal char 
 							{
 								if (text.find(decimal_char) == std::string::npos) // allow only one decimal char.
 								{
-									if(insert_text(cursor_pos, input_msg->input_event.str))
-										cursor_pos += input_msg->input_event.str.size();
+									if(insert_text(cursor_pos, e.str))
+										cursor_pos += e.str.size();
 								}
 							}
-							else if (numeric_mode_characters.find(input_msg->input_event.str) != std::string::npos) // 0-9
+							else if (numeric_mode_characters.find(e.str) != std::string::npos) // 0-9
 							{
-								if(insert_text(cursor_pos, input_msg->input_event.str))
-									cursor_pos += input_msg->input_event.str.size();
+								if(insert_text(cursor_pos, e.str))
+									cursor_pos += e.str.size();
 							}
 						}
 						else
 						{
 							// not in any special mode, just insert the string.
-							if(insert_text(cursor_pos, input_msg->input_event.str))
-								cursor_pos += input_msg->input_event.str.size();
+							if(insert_text(cursor_pos, e.str))
+								cursor_pos += e.str.size();
 						}
 					}
 					else
 					{
-						if (input_mask_accepts_input(cursor_pos, input_msg->input_event.str))
+						if (input_mask_accepts_input(cursor_pos, e.str))
 						{
-							if(insert_text(cursor_pos, input_msg->input_event.str))
-								cursor_pos += input_msg->input_event.str.size();
+							if(insert_text(cursor_pos, e.str))
+								cursor_pos += e.str.size();
 						}
 					}
 					update_text_clipping();
-					input_msg->consumed = true;
+					msg->consumed = true;
 				}
 			}
-			else if (input_msg->input_event.type == InputEvent::released) 
+			else if (e.type == InputEvent::released) 
 			{
 				// undo
-				if (input_msg->input_event.ctrl && input_msg->input_event.id == keycode_z) 
+				if (e.ctrl && e.id == keycode_z) 
 				{
 					if (!readonly)
 					{
 						std::string tmp = undo_info.undo_text;
 						undo_info.undo_text = lineedit->get_text();
 						lineedit->set_text(tmp);
-						input_msg->consumed = true;
+						msg->consumed = true;
 					}
 				}
 			}
 
-			if (input_msg->input_event.type == InputEvent::pressed && !func_after_edit_changed.is_null())
+			if (e.type == InputEvent::pressed && !func_after_edit_changed.is_null())
 			{
-				func_after_edit_changed.invoke(input_msg->input_event);
+				func_after_edit_changed.invoke(e);
 			}
 
 		}
-		else if (input_msg->input_event.device.get_type() == InputDevice::pointer)
+		else if (e.device.get_type() == InputDevice::pointer)
 		{
-			if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
+			if (e.type == InputEvent::pressed && e.id == mouse_left)
 			{
-				if (!lineedit->has_focus())
-					lineedit->set_focus();
-
-				lineedit->capture_mouse(true);
-				mouse_selecting = true;
-				cursor_pos = get_character_index(input_msg->input_event.mouse_pos.x);
-				set_text_selection(cursor_pos, 0);
-
-				if (!readonly)
+				if (lineedit->has_focus())
 				{
-					cursor_blink_visible = false;	// Always show the cursor when mouse pressed
-					timer.start(0);
+					lineedit->capture_mouse(true);
+					mouse_selecting = true;
+					cursor_pos = get_character_index(e.mouse_pos.x);
+					set_text_selection(cursor_pos, 0);
 				}
-
+				else
+				{
+					lineedit->set_focus();
+				}
 				lineedit->request_repaint();
-				input_msg->consumed = true;
+				msg->consumed = true;
 			}
-
-			if (mouse_selecting && input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
+			if (mouse_selecting && e.type == InputEvent::released && e.id == mouse_left)
 			{
 				if (ignore_mouse_events) // This prevents text selection from changing from what was set when focus was gained.
 				{
@@ -735,20 +715,19 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					scroll_timer.stop();
 					lineedit->capture_mouse(false);
 					mouse_selecting = false;
-					int sel_end = get_character_index(input_msg->input_event.mouse_pos.x);
+					int sel_end = get_character_index(e.mouse_pos.x);
 					set_selection_length(sel_end - selection_start);
 					cursor_pos = sel_end;
 					lineedit->set_focus();
 					lineedit->request_repaint();
 				}
-				input_msg->consumed = true;
+				msg->consumed = true;
 			}
-			if (input_msg->input_event.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
+			if (e.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
 			{
-				Rect content_rect = lineedit->get_content_box();
-				if (input_msg->input_event.mouse_pos.x < content_rect.left || input_msg->input_event.mouse_pos.x > content_rect.right)
+				if (e.mouse_pos.x < content_rect.left || e.mouse_pos.x > content_rect.right)
 				{
-					if (input_msg->input_event.mouse_pos.x < content_rect.left)
+					if (e.mouse_pos.x < content_rect.left)
 						mouse_moves_left = true;
 					else 
 						mouse_moves_left = false;
@@ -759,15 +738,14 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				else
 				{
 					scroll_timer.stop();
-					cursor_pos = get_character_index(input_msg->input_event.mouse_pos.x);
+					cursor_pos = get_character_index(e.mouse_pos.x);
 					set_selection_length(cursor_pos - selection_start);
 					lineedit->request_repaint();
 				}
-				input_msg->consumed = true;
+				msg->consumed = true;
 			}
 		}
 	}
-
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 	{
@@ -777,18 +755,12 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			{
 				lineedit->get_parent_component()->set_focus();
 				if (!readonly)
-				{
-					cursor_blink_visible = false;
-					timer.start(0);
-				}
+					timer.start(500);
 				return;
 			}
 
 			if (!readonly)
-			{
-				cursor_blink_visible = false;
-				timer.start(0);
-			}
+				timer.start(500);
 			if (select_all_on_focus_gain)
 				lineedit->select_all();
 			ignore_mouse_events = true;
@@ -815,6 +787,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	if (pointer)
 	{
+		
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			lineedit->set_cursor(cursor_ibeam);
@@ -826,6 +799,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	}
 }
 
+
 void LineEdit_Impl::create_parts()
 {
 	part_selection = GUIThemePart(lineedit, CssStr::LineEdit::part_selection);
@@ -833,17 +807,28 @@ void LineEdit_Impl::create_parts()
 
 	bool enabled = lineedit->is_enabled();
 
+	lineedit->set_pseudo_class(CssStr::hot, false);
 	lineedit->set_pseudo_class(CssStr::normal, enabled);
 	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
+
+	text_color = lineedit->get_property(prop_text_color);
+
+	part_cursor.set_pseudo_class(CssStr::normal, enabled);
+	part_cursor.set_pseudo_class(CssStr::disabled, !enabled);
+
+	part_selection.set_pseudo_class(CssStr::normal, enabled);
+	part_selection.set_pseudo_class(CssStr::disabled, !enabled);
+
+	on_resized();	//TODO: Is this required?
 }
 
-void LineEdit_Impl::move(int steps, bool ctrl_pressed, bool shift_pressed)
+void LineEdit_Impl::move(int steps, const InputEvent &e)
 {
-	if (shift_pressed && selection_length == 0)
+	if (e.shift && selection_length == 0)
 		set_selection_start(cursor_pos);
 
 	// Jump over words if control is pressed.
-	if (ctrl_pressed)
+	if (e.ctrl)
 	{
 		if (steps < 0)
 			steps = find_previous_break_character(cursor_pos-1) - cursor_pos;
@@ -876,7 +861,7 @@ void LineEdit_Impl::move(int steps, bool ctrl_pressed, bool shift_pressed)
 
 	
 	// Clear the selection if a cursor key is pressed but shift isn't down. 
-	if (shift_pressed)
+	if (e.shift)
 		set_selection_length(cursor_pos - selection_start);
 	else
 		set_text_selection(-1, 0);
@@ -984,7 +969,6 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	Font font = lineedit->get_font();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
-	Rect content_rect = lineedit->get_content_box();
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
 
 	int seek_start = clip_start_offset;
@@ -1041,7 +1025,6 @@ void LineEdit_Impl::update_text_clipping()
 		clip_start_offset = cursor_pos;
 
 	Rect cursor_rect = get_cursor_rect();
-	Rect content_rect = lineedit->get_content_box();
 
 	UTF8_Reader utf8_reader(text.data(), text.length());
 	while (cursor_rect.right > content_rect.right)
@@ -1107,9 +1090,8 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 	Size text_size_before_cursor = font.get_text_size(canvas, clipped_text);
 
-	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
-	cursor_rect.right = cursor_rect.left + part_cursor.get_css_properties().width.length.value;
+	cursor_rect.right = cursor_rect.left + part_cursor.get_preferred_width();
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
@@ -1132,7 +1114,6 @@ Rect LineEdit_Impl::get_selection_rect()
 	std::string txt_selected = get_visible_selected_text();
 	Size text_size_selection = font.get_text_size(canvas, txt_selected);
 
-	Rect content_rect = lineedit->get_content_box();
 	Rect selection_rect;
 	selection_rect.left = content_rect.left + text_size_before_selection.width;
 	selection_rect.right = selection_rect.left + text_size_selection.width;
@@ -1169,12 +1150,14 @@ void LineEdit_Impl::on_timer_expired()
 {
 	if (lineedit == 0 || lineedit->is_visible() == false)
 	{
-		cursor_blink_visible = false;
 		timer.stop();
 		return;
 	}
 
-	timer.start(cursor_blink_rate);
+	if (cursor_blink_visible)
+		timer.start(500);
+	else
+		timer.start(500);
 
 	cursor_blink_visible = !cursor_blink_visible;
 	lineedit->request_repaint();
@@ -1182,32 +1165,16 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	Rect content_rect = lineedit->get_content_box();
+	content_rect = lineedit->get_content_box(lineedit->get_size());
 
 	Canvas &canvas = lineedit->get_canvas();
 	Font font = lineedit->get_font();
 
-	vertical_text_align = get_vertical_text_align(canvas, font, content_rect);
+	vertical_text_align = lineedit->get_vertical_text_align(canvas, font, content_rect);
 
 	clip_start_offset = 0;
 	cursor_pos = 0;
 	update_text_clipping();
-}
-
-LineEdit_Impl::VerticalTextPosition LineEdit_Impl::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
-{
-	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
-
-	FontMetrics metrics = font.get_font_metrics();
-	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
-	float content_height = content_rect.get_height();
-	float baseline = (content_height + align_height) / 2.0f;
-
-	VerticalTextPosition result;
-	result.baseline = baseline + content_rect.top;
-	result.top = result.baseline - metrics.get_ascent();
-	result.bottom = result.baseline + metrics.get_descent();
-	return result;
 }
 
 std::string LineEdit_Impl::get_visible_text_before_selection()
@@ -1313,10 +1280,9 @@ std::string LineEdit_Impl::get_visible_text_after_selection()
 void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect g = lineedit->get_size();
-	Font lineedit_font = lineedit->get_font();
-	Font selection_font = part_selection.get_font();
-	FontMetrics lineedit_metrics = lineedit_font.get_font_metrics();
-	FontMetrics selection_metrics = selection_font.get_font_metrics();
+	lineedit->render_box(canvas, g, update_rect);
+
+	Font font = lineedit->get_font();
 
 	std::string txt_before = get_visible_text_before_selection();
 	std::string txt_selected = get_visible_selected_text();
@@ -1331,10 +1297,8 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			txt_after = create_password(StringHelp::utf8_length(txt_after));
 	}
 
-	Size size_before = lineedit_font.get_text_size(canvas, txt_before);
-	Size size_selected = selection_font.get_text_size(canvas, txt_selected);
-
-	Rect content_rect = lineedit->get_content_box();
+	Size size_before = font.get_text_size(canvas, txt_before);
+	Size size_selected = font.get_text_size(canvas, txt_selected);
 
 	// Draw text before selection
 	if (!txt_before.empty())
@@ -1342,23 +1306,19 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Rect text_rect = content_rect;
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		lineedit_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + lineedit_metrics.get_ascent()), update_rect, txt_before, lineedit->get_css_properties().color.color);
-
+		lineedit->render_text(canvas, txt_before, text_rect, update_rect);
 	}
 	if (!txt_selected.empty())
 	{
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
-
-		part_selection.render_box(canvas, selection_rect);
-		//canvas.fill(selection_rect, part_selection.get_css_properties().background_color.color);
+		part_selection.render_box(canvas, selection_rect, update_rect);
 
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		selection_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + selection_metrics.get_ascent()), update_rect, txt_selected, part_selection.get_css_properties().color.color);
-
+		part_selection.render_text(canvas, txt_selected, text_rect, update_rect);
 	}
 	if (!txt_after.empty())
 	{
@@ -1366,25 +1326,36 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		lineedit_font.draw_text_ellipsis(canvas, text_rect.left, (int) ( text_rect.top + lineedit_metrics.get_ascent()), update_rect, txt_after, lineedit->get_css_properties().color.color);
+		lineedit->render_text(canvas, txt_after, text_rect, update_rect);
 	}
 
-	if (cursor_blink_visible)
-		part_cursor.render_box(canvas, get_cursor_rect());
-
-
+	// draw cursor
+	if (lineedit->has_focus() || (lineedit->get_focus_policy() == GUIComponent::focus_parent && cursor_drawing_enabled_when_parent_focused))
+	{
+		if (cursor_blink_visible)
+		{
+			Rect cursor_rect = get_cursor_rect();
+			part_cursor.render_box(canvas, cursor_rect, update_rect);
+		}
+	}
 }
 
 void LineEdit_Impl::on_scroll_timer_expired()
 {
+	GUIMessage_Input msg;
+	InputEvent event;
+	msg.set_event(event);
+
 	if (mouse_moves_left)
-		move(-1, false, false);
-	 else
-	 	move(1, false, false);
+		move(-1,event);
+	else
+		move(1, event);
 }
 
 void LineEdit_Impl::on_enable_changed()
 {
+	create_parts();
+
 	bool enabled = lineedit->is_enabled();
 
 	if (!enabled)

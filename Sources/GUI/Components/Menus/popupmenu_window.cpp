@@ -46,8 +46,6 @@
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -69,13 +67,10 @@ GUITopLevelDescription PopupMenuWindow::create_toplevel_description()
 // Construction
 
 PopupMenuWindow::PopupMenuWindow(const PopupMenu &menu, const Point &screen_position, GUIComponent *owner)
-: GUIComponent(owner, create_toplevel_description()),
+: GUIComponent(owner, create_toplevel_description(), CssStr::PopupMenuWindow::type_name),
   menu(menu), selected(-1)
 {
-	set_tag_name(CssStr::PopupMenuWindow::type_name);
 	set_class(menu.get_class());
-
-	prop_icon_column_width = GUIThemePartProperty("icon-column-width", "30");
 
 	create_parts();
 
@@ -105,7 +100,7 @@ int PopupMenuWindow::get_selected_item_index()
 
 Size PopupMenuWindow::get_preferred_size() const
 {
-	return part_component.get_preferred_size();
+	return Size(40, 40); //FIXME: component->get_preferred_size();
 }
 
 Point PopupMenuWindow::get_submenu_screen_position()
@@ -196,7 +191,6 @@ bool PopupMenuWindow::on_close()
 void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = get_geometry().get_size();
-	part_component.render_box(canvas, rect, update_rect);
 
 	if (menu.impl->joiner_width > 0)
 	{
@@ -204,7 +198,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 		part_menubar_joiner.render_box(canvas, joiner_rect, update_rect);
 	}
 
-	Rect client_box = part_component.get_content_box(rect);
+	Rect client_box = get_content_box(rect);
 
 	int offset = 0;
 
@@ -357,7 +351,7 @@ Size PopupMenuWindow::calc_desired_size()
 		size.height += row_height;
 	}
 
-	size = part_component.get_render_box(size).get_size();
+	size = get_render_box(size).get_size();
 
 	if (size.width < menu.get_minimum_width())
 	{
@@ -375,7 +369,7 @@ Rect PopupMenuWindow::get_item_rect(int index)
 
 	PopupMenuItem item = menu.get_item_at(index);
 
-	Rect content_area = part_component.get_content_box(get_geometry().get_size());
+	Rect content_area = get_content_box(get_geometry().get_size());
 	int w = content_area.get_width();
 	int y = content_area.top;
 
@@ -397,7 +391,6 @@ Rect PopupMenuWindow::get_item_rect(int index)
 
 void PopupMenuWindow::create_parts()
 {
-	part_component = GUIThemePart(this);
 	part_item_row = GUIThemePart(this, CssStr::PopupMenuWindow::part_item_row);
 	part_item_icon = GUIThemePart(this, CssStr::PopupMenuWindow::part_item_icon);
 	part_item_label = GUIThemePart(this, CssStr::PopupMenuWindow::part_item_label);
@@ -407,7 +400,7 @@ void PopupMenuWindow::create_parts()
 	part_item_accel_label = GUIThemePart(this, CssStr::PopupMenuWindow::part_item_accel_label);
 	part_menubar_joiner = GUIThemePart(this, CssStr::PopupMenuWindow::part_menubar_joiner);
 
-	icon_column_width = part_component.get_property_int(prop_icon_column_width);
+	icon_column_width = 30;//FIXME: component->get_property_int(prop_icon_column_width);
 	icon_size = part_item_icon.get_preferred_size();
 	check_size = part_item_check.get_preferred_size();
 
@@ -415,5 +408,3 @@ void PopupMenuWindow::create_parts()
 }
 
 }
-
-#endif

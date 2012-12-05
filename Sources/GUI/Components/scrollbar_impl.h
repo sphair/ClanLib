@@ -32,12 +32,10 @@
 
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Core/System/timer.h"
 #include "API/Display/Render/graphic_context.h"
-#include "API/CSSLayout/css_property.h"
-#include "API/CSSLayout/css_token.h"
-#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -49,31 +47,26 @@ class ScrollBar_Impl
 public:
 	ScrollBar_Impl();
 
-	void on_part_button_decrement(std::shared_ptr<GUIMessage> &msg);
-	void on_part_track_decrement(std::shared_ptr<GUIMessage> &msg);
-	void on_part_thumb(std::shared_ptr<GUIMessage> &msg);
-	void on_part_track_increment(std::shared_ptr<GUIMessage> &msg);
-	void on_part_button_increment(std::shared_ptr<GUIMessage> &msg);
-
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_leave();
+	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_enablemode_changed();
 	void on_timer_expired();
+	void on_resized();
 
 	void create_parts();
+	bool update_part_positions();
 	int calculate_thumb_size(int track_size);
 	int calculate_thumb_position(int thumb_size, int track_size);
 	Rect create_rect(const Rect content_rect, int start, int end);
-	void update_part_positions();
 
 private:
 	void invoke_scroll_event(Callback_v0 *event_ptr);
-	void mouse_released();
-	void mouse_moved(const Point &pos);
-	void on_apply_properties(CSSBoxProperties &properties);
-	void on_part_thumb_render(Canvas &canvas, const Rect &update_rect);
-public:
-	int thumb_left;
-	int thumb_size;
 
+public:
 	bool vertical;
 	int scroll_min, scroll_max, line_step, page_step, position;
 
@@ -94,11 +87,18 @@ public:
 	Timer mouse_down_timer;
 	int last_step_size;
 
-	GUIComponent *part_button_decrement;
-	GUIComponent *part_button_increment;
-	GUIComponent *part_track_decrement;
-	GUIComponent *part_track_increment;
-	GUIComponent *part_thumb;
+	Rect rect_button_decrement;
+	Rect rect_track_decrement;
+	Rect rect_thumb;
+	Rect rect_track_increment;
+	Rect rect_button_increment;
+
+	
+	GUIThemePart part_button_decrement;
+	GUIThemePart part_button_increment;
+	GUIThemePart part_track_decrement;
+	GUIThemePart part_track_increment;
+	GUIThemePart part_thumb;
 	GUIThemePart part_thumb_gripper;
 
 	ScrollBar *scrollbar;
@@ -114,9 +114,6 @@ public:
 	Callback_v0 func_scroll_thumb_track;
 	Callback_v0 func_scroll_end;
 	Callback_v0 *func_scroll_on_mouse_down;
-
-	CSSToken token_width;
-	CSSToken token_left;
 
 };
 

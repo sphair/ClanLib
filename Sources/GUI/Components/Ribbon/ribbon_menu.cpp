@@ -33,23 +33,19 @@
 #include "API/GUI/Components/ribbon_menu.h"
 #include "API/Display/Window/input_event.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
 RibbonMenu::RibbonMenu(GUIComponent *owner)
-: GUIComponent(owner, create_toplevel_description()), current_item(-1), running(false)
+: GUIComponent(owner, create_toplevel_description(), "ribbon-menu"), current_item(-1), running(false)
 {
-	set_tag_name("ribbon-menu");
 	func_render().set(this, &RibbonMenu::on_render);
 	func_resized().set(this, &RibbonMenu::on_resized);
-	part_background = GUIThemePart(this);
 	part_menu_item = GUIThemePart(this, "menu-item");
 	part_menu_item_selected = GUIThemePart(this, "menu-item");
-	part_menu_item_selected.set_state("selected", true);
+	part_menu_item_selected.set_pseudo_class("selected", true);
 	part_menu_item_separator = GUIThemePart(this, "menu-item");
-	part_menu_item_separator.set_state("separator", true);
+	part_menu_item_separator.set_pseudo_class("separator", true);
 
 	slot_filter = owner->get_gui_manager().sig_filter_message().connect(this, &RibbonMenu::on_filter_message);
 }
@@ -105,7 +101,6 @@ void RibbonMenu::on_render(Canvas &canvas, const Rect &update_box)
 {
 	update_item_boxes();
 	Rect client_box = get_size();
-	part_background.render_box(canvas, client_box, update_box);
 
 	for (size_t i = 0; i < items.size(); i++)
 	{
@@ -163,7 +158,7 @@ void RibbonMenu::on_filter_message(std::shared_ptr<GUIMessage> &message)
 	}
 }
 
-void RibbonMenu::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
+void RibbonMenu::on_filter_input_message(GUIMessage_Input &message)
 {
 	InputEvent e = message.get_event();
 
@@ -232,5 +227,3 @@ GUITopLevelDescription RibbonMenu::create_toplevel_description()
 }
 
 }
-
-#endif

@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/listview.h"
@@ -37,8 +38,6 @@
 #include "../../gui_css_strings.h"
 #include "listview_layout.h"
 #include "listview_layout_icons.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -51,8 +50,6 @@ ListViewLayoutIcons::ListViewLayoutIcons(ListView *listview)
   max_rows_visible(0), max_grid_cols_visible(0), row_draw_y_pos(0),
   columns_valid(false)
 {
-	prop_icon_width = GUIThemePartProperty(CssStr::icon_width, "16");
-	prop_icon_height = GUIThemePartProperty(CssStr::icon_height, "16");
 }
 
 ListViewLayoutIcons::~ListViewLayoutIcons()
@@ -168,12 +165,12 @@ void ListViewLayoutIcons::create_parts()
 	part_opener = GUIThemePart(listview, "row_opener");
 	part_cell = GUIThemePart(listview, "cell");
 
-	part_cell.set_state("icons", true);
+	part_cell.set_pseudo_class("icons", true);
 	part_cell.set_pseudo_class(CssStr::normal, true);
 	part_row.set_pseudo_class(CssStr::normal, true);
 
-	size_icon.width = part_cell.get_property_int(prop_icon_width);
-	size_icon.height = part_cell.get_property_int(prop_icon_height);
+	size_icon.width = 16;//FIXME: part_cell.get_property_int(prop_icon_width);
+	size_icon.height = 16;//FIXME: part_cell.get_property_int(prop_icon_height);
 
 	Font font = part_cell.get_font();
 	height_text = font.get_text_size(canvas, "l").height;
@@ -183,10 +180,10 @@ void ListViewLayoutIcons::create_parts()
 	max_rows_visible = rect_view.get_height() / size_cell.width;
 	max_grid_cols_visible = rect_view.get_width() / size_cell.height;
 
-	lineedit_textrect_offset.left = part_cell.get_property_int(CssStr::lineedit_offset_left);
-	lineedit_textrect_offset.top = part_cell.get_property_int(CssStr::lineedit_offset_top);
-	lineedit_textrect_offset.bottom = part_cell.get_property_int(CssStr::lineedit_offset_bottom);
-	lineedit_textrect_offset.right = part_cell.get_property_int(CssStr::lineedit_offset_right);
+	lineedit_textrect_offset.left = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_left);
+	lineedit_textrect_offset.top = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_top);
+	lineedit_textrect_offset.bottom = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_bottom);
+	lineedit_textrect_offset.right = 0;//FIXME: part_cell.get_property_int(CssStr::lineedit_offset_right);
 }
 
 Rect ListViewLayoutIcons::get_lineedit_rect(ListViewItem &item, const Size &text_size) const
@@ -296,5 +293,3 @@ Rect ListViewLayoutIcons::get_icon_rect(const Rect &cell_content_rect, ListViewI
 }
 
 }
-
-#endif

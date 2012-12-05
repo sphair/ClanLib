@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -47,8 +48,6 @@
 #include "listview_column_header_impl.h"
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -69,17 +68,16 @@ public:
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void update_geometry(const Rect &content_rect);
 	void create_parts();
-	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
 	void on_mouse_leave();
 	void on_mouse_enter();
 	void on_column_size_changed(ListViewColumnHeader col);
 	ListViewColumnHeader create_column(const std::string &column_id, const std::string &caption);
 
 	ListViewHeader *listview_header;
-	Font font;
-	GUIThemePart part_component;
+	
 	ListViewDisplayMode display_mode;
 	int text_height;
 	bool visible;
@@ -95,9 +93,8 @@ public:
 // ListViewHeader Construction:
 
 ListViewHeader::ListViewHeader(GUIComponent *parent)
-: GUIComponent(parent), impl(new ListViewHeader_Impl)
+: GUIComponent(parent, CssStr::ListView::Header::type_name), impl(new ListViewHeader_Impl)
 {
-	set_tag_name(CssStr::ListView::Header::type_name);
 	impl->listview_header = this;
 	func_process_message().set(impl.get(), &ListViewHeader_Impl::on_process_message);
 	func_render().set(impl.get(), &ListViewHeader_Impl::on_render);
@@ -138,7 +135,7 @@ bool ListViewHeader::get_visible() const
 
 Size ListViewHeader::get_preferred_size() const
 {
-	return impl->part_component.get_preferred_size();
+	return Size(50, 50);	//FIXME: impl->listview_header->get_preferred_size();
 }
 
 
@@ -241,10 +238,11 @@ void ListViewHeader::update_geometry(const Rect &parent_content_rect)
 
 void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input = msg;
-		InputEvent input_event = input.get_event();
+		
+		const InputEvent &input_event = input_msg->input_event;
 		if (input_event.type == InputEvent::pointer_moved)
 			on_mouse_move(input, input_event);
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
@@ -252,17 +250,18 @@ void ListViewHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
 			on_mouse_lbutton_up(input, input_event);
 	}
-	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			on_mouse_leave();
-		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			on_mouse_enter();
 	}
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 
@@ -279,7 +278,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input
 	listview_header->capture_mouse(true);
 }
 
-void ListViewHeader_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
 {
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
@@ -294,7 +293,7 @@ void ListViewHeader_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> 
 }
 
 
-void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListViewHeader_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	bool current_rect_set = false;
@@ -326,7 +325,7 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input
 
 void ListViewHeader_Impl::on_mouse_leave()
 {
-	part_component.set_pseudo_class(CssStr::hot, false);
+	listview_header->set_pseudo_class(CssStr::hot, false);
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{
@@ -340,14 +339,14 @@ void ListViewHeader_Impl::on_mouse_leave()
 
 void ListViewHeader_Impl::on_mouse_enter()
 {
-	part_component.set_pseudo_class(CssStr::hot, true);
+	listview_header->set_pseudo_class(CssStr::hot, true);
 }
 
 void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = listview_header->get_geometry();
-	part_component.render_box(canvas, rect.get_size(), update_rect);
-	
+
+	Font font = listview_header->get_font();
 	// draw listview column headers and backgrounds
 	text_height = font.get_text_size(canvas, "l").height;
 	ListViewColumnHeader col = first_column;
@@ -372,7 +371,7 @@ void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 {
-	int header_height = part_component.get_preferred_height();
+	int header_height = listview_header->get_preferred_height();
 
 	Rect rect_header = Rect(
 		parent_content_rect.left,
@@ -383,7 +382,7 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 
 	listview_header->set_geometry(rect_header);
 
-	Rect content_rect = part_component.get_content_box(listview_header->get_geometry().get_size());
+	Rect content_rect = listview_header->get_content_box(listview_header->get_geometry().get_size());
 
 	int xpos = content_rect.left;
 	ListViewColumnHeader col = first_column;
@@ -405,8 +404,6 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 
 void ListViewHeader_Impl::create_parts()
 {
-	part_component = GUIThemePart(listview_header);
-	font = part_component.get_font();
 }
 
 ListViewColumnHeader ListViewHeader_Impl::create_column(const std::string &column_id, const std::string &caption)
@@ -430,5 +427,3 @@ void ListViewHeader_Impl::on_column_size_changed(ListViewColumnHeader col)
 }
 
 }
-
-#endif

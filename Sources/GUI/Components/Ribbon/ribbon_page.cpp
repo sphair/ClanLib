@@ -31,8 +31,6 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -40,9 +38,8 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(GUIComponent *parent, const std::string &text)
-: GUIComponent(parent), text(text), show_tab(true)
+: GUIComponent(parent, "ribbon-page"), text(text), show_tab(true)
 {
-	set_tag_name("ribbon-page");
 	func_resized().set(this, &RibbonPage::on_resized);
 }
 
@@ -90,5 +87,3 @@ void RibbonPage::on_resized()
 }
 
 }
-
-#endif

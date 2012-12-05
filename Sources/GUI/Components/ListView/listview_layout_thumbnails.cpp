@@ -27,6 +27,7 @@
 */
 
 #include "GUI/precomp.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_manager.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -39,8 +40,6 @@
 #include "listview_layout.h"
 #include "listview_layout_thumbnails.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -51,12 +50,7 @@ ListViewLayoutThumbnails::ListViewLayoutThumbnails(ListView *listview)
 : ListViewLayout(listview), opener_gap(0), icon_gap(0), indent_width(0),
   max_rows_visible(0), max_grid_cols_visible(0), row_draw_y_pos(0)
 {
-	prop_icon_width = GUIThemePartProperty(CssStr::icon_width, "100");
-	prop_icon_height = GUIThemePartProperty(CssStr::icon_height, "100");
-	prop_line_edit_offset_left = GUIThemePartProperty("line-edit-offset-left");
-	prop_line_edit_offset_top = GUIThemePartProperty("line-edit-offset-top");
-	prop_line_edit_offset_bottom = GUIThemePartProperty("line-edit-offset-bottom");
-	prop_line_edit_offset_right = GUIThemePartProperty("line-edit-offset-right");
+
 }
 
 ListViewLayoutThumbnails::~ListViewLayoutThumbnails()
@@ -177,12 +171,12 @@ void ListViewLayoutThumbnails::create_parts()
 	part_opener = GUIThemePart(listview, "row_opener");
 	part_cell = GUIThemePart(listview, "cell");
 
-	part_cell.set_state("thumbnails", true);
+	part_cell.set_pseudo_class("thumbnails", true);
 	part_cell.set_pseudo_class(CssStr::normal, true);
 	part_row.set_pseudo_class(CssStr::normal, true);
 
-	size_icon.width = part_cell.get_property_int(prop_icon_width);
-	size_icon.height = part_cell.get_property_int(prop_icon_height);
+	size_icon.width = 100; //FIXME: part_cell.get_property_int(prop_icon_width);
+	size_icon.height = 100; //FIXME: part_cell.get_property_int(prop_icon_height);
 
 	Font font = part_cell.get_font();
 	height_text = font.get_text_size(canvas, "l").height;
@@ -192,10 +186,10 @@ void ListViewLayoutThumbnails::create_parts()
 
 	update_rows_cols_visible();
 
-	lineedit_textrect_offset.left = part_cell.get_property_int(prop_line_edit_offset_left);
-	lineedit_textrect_offset.top = part_cell.get_property_int(prop_line_edit_offset_top);
-	lineedit_textrect_offset.bottom = part_cell.get_property_int(prop_line_edit_offset_bottom);
-	lineedit_textrect_offset.right = part_cell.get_property_int(prop_line_edit_offset_right);
+	lineedit_textrect_offset.left = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_left);
+	lineedit_textrect_offset.top = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_top);
+	lineedit_textrect_offset.bottom = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_bottom);
+	lineedit_textrect_offset.right = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_right);
 
 	GUIThemePart part_icon_selection(listview, "icon_selection");
 	icon_sel_shrink_box = part_icon_selection.get_content_shrink_box();
@@ -331,5 +325,3 @@ void ListViewLayoutThumbnails::update_rows_cols_visible()
 }
 
 }
-
-#endif

@@ -33,6 +33,7 @@
 #pragma once
 
 #include "listview_layout.h"
+#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -92,18 +93,6 @@ public:
 	int row_draw_y_pos;
 	bool columns_valid;
 
-	//GUIThemePartProperty prop_opener_gap;
-	//GUIThemePartProperty prop_opener_offset_x;
-	//GUIThemePartProperty prop_opener_offset_y;
-	//GUIThemePartProperty prop_icon_text_gap;
-	//GUIThemePartProperty prop_icon_width;
-	//GUIThemePartProperty prop_icon_height;
-	//GUIThemePartProperty prop_icon_offset_y;
-	//GUIThemePartProperty prop_indent_width;
-	//GUIThemePartProperty prop_lineedit_offset_left;
-	//GUIThemePartProperty prop_lineedit_offset_top;
-	//GUIThemePartProperty prop_lineedit_offset_right;
-	//GUIThemePartProperty prop_lineedit_offset_bottom;
 	bool show_detail_icon;
 	bool show_detail_opener;
 /// \}

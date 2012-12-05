@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -43,8 +44,6 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Window/keys.h"
 #include "listview_column_header_impl.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -151,5 +150,3 @@ Callback_v1<ListViewColumnHeader> &ListViewColumnHeader::func_size_changed()
 // ListViewColumnHeader Implementation:
 
 }
-
-#endif

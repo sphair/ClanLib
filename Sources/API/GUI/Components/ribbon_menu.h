@@ -32,6 +32,7 @@
 #include "../../Display/2D/image.h"
 #include "../gui_component.h"
 #include "../gui_message_input.h"
+#include "../gui_theme_part.h"
 
 namespace clan
 {
@@ -60,7 +61,7 @@ private:
 	void end();
 	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
-	void on_filter_message(GUIMessage &message);
+	void on_filter_message(std::shared_ptr<GUIMessage> &message);
 	void on_filter_input_message(GUIMessage_Input &message);
 	int update_item_boxes();
 	static GUITopLevelDescription create_toplevel_description();
@@ -68,10 +69,9 @@ private:
 	int current_item;
 	std::vector<RibbonMenuItem> items;
 	std::vector<Rect> item_boxes;
-	//FIXME: GUIThemePart part_background;
-	//FIXME: GUIThemePart part_menu_item;
-	//FIXME: GUIThemePart part_menu_item_selected;
-	//FIXME: GUIThemePart part_menu_item_separator;
+	GUIThemePart part_menu_item;
+	GUIThemePart part_menu_item_selected;
+	GUIThemePart part_menu_item_separator;
 
 	bool running;
 	Slot slot_filter;

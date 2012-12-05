@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/GUI/gui_component.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/Components/message_box.h"
 
 namespace clan
@@ -62,7 +63,8 @@ private:
 	void on_render(Canvas &canvas, const Rect &dirty_rect);
 
 	std::string detail_text;
-	GUIComponent *part_icon;
+	
+	GUIThemePart part_icon;
 	GUIComponent *component;
 	PushButton *button_ok;
 	PushButton *button_cancel;

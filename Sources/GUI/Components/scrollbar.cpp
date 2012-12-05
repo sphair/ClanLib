@@ -49,7 +49,16 @@ ScrollBar::ScrollBar(GUIComponent *parent)
 : GUIComponent(parent, CssStr::ScrollBar::type_name), impl(new ScrollBar_Impl)
 {
 	impl->scrollbar = this;
+
 	impl->create_parts();
+	impl->update_part_positions();
+
+	func_process_message().set(impl.get(), &ScrollBar_Impl::on_process_message);
+	func_render().set(impl.get(), &ScrollBar_Impl::on_render);
+	func_enablemode_changed().set(impl.get(), &ScrollBar_Impl::on_enablemode_changed);
+	func_resized().set(impl.get(), &ScrollBar_Impl::on_resized);
+
+	impl->mouse_down_timer.func_expired().set(impl.get(), &ScrollBar_Impl::on_timer_expired);
 }
 
 ScrollBar::~ScrollBar()
@@ -106,14 +115,17 @@ int ScrollBar::get_position() const
 	return impl->position;
 }
 
+
 float ScrollBar::get_preferred_content_width()
 {
-	return 0.0f;
+	//FIXME:
+	return 100.0f;
 }
 
 float ScrollBar::get_preferred_content_height(float width)
 {
-	return 0.0f;
+	//FIXME:
+	return 20.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -122,13 +134,17 @@ float ScrollBar::get_preferred_content_height(float width)
 void ScrollBar::set_vertical()
 {
 	impl->vertical = true;
-	//FIXME
+	impl->create_parts();
+	if(impl->update_part_positions())
+		request_repaint();
 }
 
 void ScrollBar::set_horizontal()
 {
 	impl->vertical = false;
-	//FIXME
+	impl->create_parts();
+	if(impl->update_part_positions())
+		request_repaint();
 }
 
 void ScrollBar::set_min(int new_scroll_min)
@@ -163,7 +179,8 @@ void ScrollBar::set_ranges(int scroll_min, int scroll_max, int line_step, int pa
 		impl->position = impl->scroll_max-1;
 	if (impl->position < impl->scroll_min)
 		impl->position = impl->scroll_min;
-	impl->update_part_positions();
+	if(impl->update_part_positions())
+		request_repaint();
 }
 
 void ScrollBar::calculate_ranges(int view_size, int total_size)
@@ -187,6 +204,9 @@ void ScrollBar::set_position(int pos)
 		impl->position = impl->scroll_max-1;
 	if (pos < impl->scroll_min)
 		impl->position = impl->scroll_min;
+
+	if(impl->update_part_positions())
+		request_repaint();
 }
 
 /////////////////////////////////////////////////////////////////////////////

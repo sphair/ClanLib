@@ -54,7 +54,6 @@ public:
 		cursor_drawing_enabled_when_parent_focused(false),
 		select_all_on_focus_gain(false)
 	{
-		//prop_text_color = GUIThemePartProperty(CssStr::text_color, "black");		
 		lines.resize(1);
 	}
 
@@ -64,18 +63,10 @@ public:
 		scroll_timer.stop();
 	}
 
-	struct VerticalTextPosition
-	{
-		float top;
-		float baseline;
-		float bottom;
-	};
-
 	void layout_lines(Canvas &canvas);
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed();
 	void on_timer_expired();
 	void on_resized();
 	void on_scroll_timer_expired();
@@ -86,7 +77,6 @@ public:
 	void update_vertical_scroll();
 	void move_vertical_scroll();
 	int  get_total_line_height();
-	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
 
 	Callback_v1<InputEvent &> func_before_edit_changed;
 	Callback_v1<InputEvent &> func_after_edit_changed;
@@ -117,16 +107,17 @@ public:
 	bool readonly;
 	Vec2i selection_start;
 	int selection_length;
-	Colorf text_color;
 	std::string input_mask;
 	bool cursor_drawing_enabled_when_parent_focused;
 
 	static std::string break_characters;
 
-	GUIComponent *part_selection;
-	GUIComponent *part_cursor;
+	
+	GUIThemePart part_selection;
+	GUIThemePart part_cursor;
+	Rect content_rect;
 
-	void move(int steps, InputEvent &e);
+	void move(int steps, const InputEvent &e);
 	void insert_text(Vec2i pos, const std::string &str);
 	void backspace();
 	void del();
@@ -145,7 +136,7 @@ public:
 	std::string::size_type to_offset(Vec2i pos) const;
 	Vec2i from_offset(std::string::size_type offset) const;
 
-	VerticalTextPosition vertical_text_align;
+	GUIThemePart::VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;

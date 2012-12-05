@@ -31,29 +31,22 @@
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
 RibbonSection::RibbonSection(GUIComponent *parent, const std::string &text, int size)
-: GUIComponent(parent), text(text), size(size)
+: GUIComponent(parent, "ribbon-section"), text(text), size(size)
 {
-	set_tag_name("ribbon-section");
 	func_render().set(this, &RibbonSection::on_render);
 
-	part_section = GUIThemePart(this);
 //	font = Font(get_canvas(), "Segoe UI", -11);
 	font = Font(get_canvas(), "Tahoma", -11);
 }
 
 void RibbonSection::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	part_section.render_box(canvas, get_size(), clip_rect);
 	Size size_section_text = font.get_text_size(canvas, text);
 	font.draw_text(canvas, get_width()/2-size_section_text.width/2, get_height() - 5, text, Colorf::gray40);
 }
 
 }
-
-#endif

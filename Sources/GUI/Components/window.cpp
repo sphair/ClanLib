@@ -33,11 +33,11 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_close.h"
 #include "API/GUI/gui_message_activation_change.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/Components/window.h"
-#include "API/GUI/Components/label.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Window/input_event.h"
@@ -58,29 +58,40 @@ namespace clan
 class Window_Impl
 {
 public:
-	Window_Impl() : draw_caption(false), drag_start(false), draggable(false)
+	Window_Impl() : draw_caption(false), draw_start(false), draggable(false)
 	{
 	}
 
 	void check_move_window(std::shared_ptr<GUIMessage> &msg);
+
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_resized();
+
+	void create_parts();
 
 	Rect get_client_area() const;
 
 	Window *window;
 
+	std::string title;
+
 	bool draw_caption;
 
-	bool drag_start;
+	bool draw_start;
 	Point last_mouse_pos;
 
 	bool draggable;
 
-	Label *part_caption;
-	GUIComponent *part_frameleft;
-	GUIComponent *part_frameright;
-	GUIComponent *part_framebottom;
-	GUIComponent *part_buttonclose;
+	Rect part_buttonclose_rect;
+	Rect part_caption_rect;
+
+	
+	GUIThemePart part_caption;
+	GUIThemePart part_frameleft;
+	GUIThemePart part_frameright;
+	GUIThemePart part_framebottom;
+	GUIThemePart part_buttonclose;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -90,6 +101,7 @@ Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
 : GUIComponent(owner, description, CssStr::Window::type_name), impl(new Window_Impl)
 {
 	impl->window = this;
+	impl->title = description.get_title();
 
 	if (owner->get_gui_manager().get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
 		impl->draw_caption = false;
@@ -97,22 +109,17 @@ Window::Window(GUIComponent *owner, const GUITopLevelDescription &description)
 		impl->draw_caption = description.has_caption();
 
 	func_process_message().set(impl.get(), &Window_Impl::on_process_message);
+	func_render().set(impl.get(), &Window_Impl::on_render);
+	func_resized().set(impl.get(), &Window_Impl::on_resized);
 
-	impl->part_caption = new Label(this);
-	impl->part_caption->set_text(description.get_title());
-	impl->part_frameleft = new GUIComponent(this, CssStr::Window::part_frameleft);
-	impl->part_frameright = new GUIComponent(this, CssStr::Window::part_frameright);
-	impl->part_framebottom = new GUIComponent(this, CssStr::Window::part_framebottom);
-	impl->part_buttonclose = new GUIComponent(impl->part_caption, CssStr::Window::part_buttonclose);
-
-	if (!impl->draw_caption)
-		impl->part_caption->set_visible(false);
+	impl->create_parts();
 }
 
 Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
 : GUIComponent(manager, description, CssStr::Window::type_name), impl(new Window_Impl)
 {
 	impl->window = this;
+	impl->title = description.get_title();
 
 	if (manager->get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
 		impl->draw_caption = false;
@@ -120,17 +127,10 @@ Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
 		impl->draw_caption = description.has_caption();
 
 	func_process_message().set(impl.get(), &Window_Impl::on_process_message);
+	func_render().set(impl.get(), &Window_Impl::on_render);
+	func_resized().set(impl.get(), &Window_Impl::on_resized);
 
-	impl->part_caption = new Label(this);
-	impl->part_caption->set_tag_name(CssStr::Window::part_caption);
-	impl->part_caption->set_text(description.get_title());
-	impl->part_frameleft = new GUIComponent(this, CssStr::Window::part_frameleft);
-	impl->part_frameright = new GUIComponent(this, CssStr::Window::part_frameright);
-	impl->part_framebottom = new GUIComponent(this, CssStr::Window::part_framebottom);
-	impl->part_buttonclose = new GUIComponent(impl->part_caption, CssStr::Window::part_buttonclose);
-
-	if (!impl->draw_caption)
-		impl->part_caption->set_visible(false);
+	impl->create_parts();
 }
 
 Window::~Window()
@@ -142,7 +142,7 @@ Window::~Window()
 
 std::string Window::get_title() const 
 {
-	return impl->part_caption->get_text();
+	return impl->title;
 }
 
 bool Window::get_draggable() const 
@@ -192,7 +192,7 @@ bool Window::is_maximized() const
 
 void Window::set_title(const std::string &str)
 {
-	impl->part_caption->set_text(str);
+	impl->title = str;
 }
 
 void Window::set_draggable(bool enable)
@@ -217,6 +217,33 @@ void Window::bring_to_front()
 /////////////////////////////////////////////////////////////////////////////
 // Window Implementation:
 
+void Window_Impl::create_parts()
+{
+	if (draw_caption)
+	{
+		part_caption = GUIThemePart(window, CssStr::Window::part_caption);
+		part_frameleft = GUIThemePart(window, CssStr::Window::part_frameleft);
+		part_frameright = GUIThemePart(window, CssStr::Window::part_frameright);
+		part_framebottom = GUIThemePart(window, CssStr::Window::part_framebottom);
+		part_buttonclose = GUIThemePart(window, CssStr::Window::part_buttonclose);
+
+		part_buttonclose.set_pseudo_class(CssStr::normal, true);
+
+		Rect rect = window->get_size();
+
+		Size part_buttonclose_size = part_buttonclose.get_preferred_size();
+		int frameright_width = part_frameright.get_preferred_width();
+		int caption_height = part_caption.get_preferred_height();
+
+		part_buttonclose_rect = Rect(rect.right - part_buttonclose_size.width - frameright_width - 2, rect.top + caption_height - part_buttonclose_size.height - 3, rect.right - frameright_width - 2, rect.top + caption_height - 3);
+	}
+}
+
+void Window_Impl::on_resized()
+{
+	create_parts();
+}
+
 void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (draw_caption)
@@ -225,28 +252,38 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
 	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
+		
+		const InputEvent &e = input_msg->input_event;
+
+		if (e.type == InputEvent::pressed && e.id == mouse_left)
 		{
-			if (part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos))
-				part_buttonclose->set_pseudo_class(CssStr::pressed, true);
+			if(part_buttonclose_rect.contains(e.mouse_pos))
+				if(part_buttonclose.set_pseudo_class(CssStr::pressed, true))
+					window->request_repaint();
 		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
+		else if (e.type == InputEvent::released && e.id == mouse_left)
 		{
 			if(draw_caption)
 			{
-				part_buttonclose->set_pseudo_class(CssStr::pressed, false);
-				if (part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos))
+				if(part_buttonclose.set_pseudo_class(CssStr::pressed, false))
 				{
+					window->request_repaint();
 					if (!window->func_close().is_null() && window->func_close().invoke())
-						input_msg->consumed = true;
+						msg->consumed = true;
 				}
 			}
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved)
+		else if (e.type == InputEvent::pointer_moved)
 		{
 			if(draw_caption)
 			{
-				part_buttonclose->set_pseudo_class(CssStr::hot, part_buttonclose->get_geometry().contains(input_msg->input_event.mouse_pos));
+				bool inside = part_buttonclose_rect.contains(e.mouse_pos);
+
+				if (part_buttonclose.get_pseudo_class(CssStr::hot) != inside)
+				{
+					part_buttonclose.set_pseudo_class(CssStr::hot, inside);
+					window->request_repaint();
+				}
 			}
 		}
 	}
@@ -255,9 +292,8 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (close_msg)
 	{
 		if (!window->func_close().is_null() && window->func_close().invoke())
-			close_msg->consumed = true;
+			msg->consumed = true;
 	}
-
 	std::shared_ptr<GUIMessage_ActivationChange> activation_change_msg = std::dynamic_pointer_cast<GUIMessage_ActivationChange>(msg);
 	if (activation_change_msg)
 	{
@@ -265,52 +301,109 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			window->GUIComponent::impl->activated = true;
 			if (!window->func_activated().is_null() && window->func_activated().invoke())
-				activation_change_msg->consumed = true;
+				msg->consumed = true;
 		}
 		else if (activation_change_msg->activation_type == GUIMessage_ActivationChange::activation_lost)
 		{
 			window->GUIComponent::impl->activated = false;
 			if (!window->func_deactivated().is_null() && window->func_deactivated().invoke())
-				activation_change_msg->consumed = true;
+				msg->consumed = true;
 		}
 	}
 }
 
 Rect Window_Impl::get_client_area() const
 {
-	return window->get_geometry();
+	Rect rect = window->get_size();
+
+	if (draw_caption)
+	{
+		int caption_height = part_caption.get_preferred_height();
+		int frameleft_width = part_frameleft.get_preferred_width();
+		int frameright_width = part_frameright.get_preferred_width();
+		int framebottom_height = part_framebottom.get_preferred_height();
+
+		return Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
+	}
+	else
+	{
+		return rect;
+	}
+}
+
+void Window_Impl::on_render(Canvas &canvas, const Rect &update_rect)
+{
+	Rect rect = window->get_size();
+
+	if (draw_caption)
+	{
+		int caption_height = part_caption.get_preferred_height();
+		int frameleft_width = part_frameleft.get_preferred_width();
+		int frameright_width = part_frameright.get_preferred_width();
+		int framebottom_height = part_framebottom.get_preferred_height();
+
+		Rect content_rect = Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
+	
+		Rect caption_rect = Rect(rect.left, rect.top, rect.right, rect.top + caption_height);
+		part_caption.render_box(canvas, caption_rect, update_rect);
+
+		Rect frameleft_rect = Rect(rect.left, rect.top + caption_height, rect.left + frameleft_width, rect.bottom - framebottom_height);
+		part_frameleft.render_box(canvas, frameleft_rect, update_rect);
+
+		Rect frameright_rect = Rect(rect.right - frameright_width, rect.top + caption_height, rect.right, rect.bottom - framebottom_height);
+		part_frameright.render_box(canvas, frameright_rect, update_rect);
+
+		Rect framebottom_rect = Rect(rect.left, rect.bottom - framebottom_height, rect.right, rect.bottom);
+		part_framebottom.render_box(canvas, framebottom_rect, update_rect);
+
+		part_buttonclose.render_box(canvas, part_buttonclose_rect, update_rect);
+
+		Font font = window->get_font();
+		Size text_size = font.get_text_size(canvas, title);
+		font.draw_text(canvas,
+			caption_rect.left + 10,
+			caption_rect.top + caption_rect.get_height()/2 + text_size.height/2 - 2,
+			title,
+			window->get_css_properties().color.color);
+	}
 }
 
 void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 {
 	if (draggable == false)
 	{
-		drag_start = false;
+		draw_start = false;
 		return;
 	}
 
 	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
 	if (input_msg)
 	{
-		if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
+		
+		const InputEvent &e = input_msg->input_event;
+
+		if (e.type == InputEvent::pressed && e.id == mouse_left)
 		{
 			window->bring_to_front();
-			if (part_caption->get_geometry().contains(input_msg->input_event.mouse_pos))
+			Rect rect = window->get_size();
+			int caption_height = part_caption.get_preferred_height();
+			Rect caption_rect = Rect(rect.left, rect.top, rect.right, rect.top + caption_height);
+			if (caption_rect.contains(e.mouse_pos))
 			{
-				drag_start = true;
+				draw_start = true;
 				window->capture_mouse(true);
-				last_mouse_pos = input_msg->input_event.mouse_pos;
+				last_mouse_pos = e.mouse_pos;
 			}
 		}
-		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
+		else if (e.type == InputEvent::released && e.id == mouse_left)
 		{
-			if(drag_start)
+			if(draw_start)
 			{
-				drag_start = false;
+				draw_start = false;
 				window->capture_mouse(false);
 			}
 		}
-		else if (input_msg->input_event.type == InputEvent::pointer_moved && drag_start == true)
+		else if (e.type == InputEvent::pointer_moved && draw_start == true)
 		{
 			const GUIComponent *root_component = window->get_top_level_component();
 
@@ -323,13 +416,13 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 				if (cur->component == root_component)
 				{
 					Rect geometry = window->get_window_geometry();
-					geometry.translate(input_msg->input_event.mouse_pos.x - last_mouse_pos.x, input_msg->input_event.mouse_pos.y - last_mouse_pos.y);
+					geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
+					//last_mouse_pos = e.mouse_pos;
 					window->set_window_geometry(geometry);
 				}
 			}
 		}
 	}
-
 }
 
 }

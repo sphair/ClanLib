@@ -43,8 +43,6 @@
 #include "popupmenu_window.h"
 #include "menubar_impl.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -116,7 +114,7 @@ void MenuModalLoop::on_filter_message(std::shared_ptr<GUIMessage> &message)
 	}
 }
 
-void MenuModalLoop::on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message)
+void MenuModalLoop::on_filter_input_message(GUIMessage_Input &message)
 {
 	InputEvent e = message.get_event();
 
@@ -344,5 +342,3 @@ bool MenuModalLoop::is_above_menubar(const Point &mouse_screen_pos)
 }
 
 }
-
-#endif

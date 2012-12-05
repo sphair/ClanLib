@@ -33,6 +33,7 @@
 #pragma once
 
 #include "API/GUI/gui_component.h"
+#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -97,12 +98,7 @@ private:
 	int max_rows_visible;
 	int max_grid_cols_visible;
 	int row_draw_y_pos;
-	//GUIThemePartProperty prop_icon_width;
-	//GUIThemePartProperty prop_icon_height;
-	//GUIThemePartProperty prop_line_edit_offset_left;
-	//GUIThemePartProperty prop_line_edit_offset_top;
-	//GUIThemePartProperty prop_line_edit_offset_bottom;
-	//GUIThemePartProperty prop_line_edit_offset_right;
+
 /// \}
 };
 

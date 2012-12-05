@@ -31,6 +31,7 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_close.h"
 #include "API/GUI/gui_message_activation_change.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_window_manager.h"
@@ -84,44 +85,42 @@ MessageBoxComponent::~MessageBoxComponent()
 Size MessageBoxComponent::layout_content()
 {
 	Size size(0,0);
-	Size icon_size = Size(32, 32);	//FIXME: part_icon->get_preferred_size();
-	Rect border_space = Size(32, 32);	//FIXME: component->get_content_shrink_box();
+	Size icon_size = part_icon.get_preferred_size();
+	Rect border_space = component->get_content_shrink_box();
 
-	Size min_size = Size(32, 32);	//FIXME: component->get_preferred_size();
+	Size min_size = component->get_preferred_size();
 	if (min_size == Size(0,0))
 	{
 		min_size = Size(300,80);
 	}
 
-	//FIXME: GUIThemePartProperty prop_buttons_area_height(CssStr::MessageBox::button_area_height, "40");
-	//FIXME: int button_area_height = component->get_property_int(prop_buttons_area_height);
+	int button_area_height = 40; //FIXME: component->get_property_int(prop_buttons_area_height);
 
-	//FIXME: GUIThemePartProperty prop_icon_margin_right("icon_text_gap", "7");
-	//FIXME: int icon_margin_right = component->get_property_int(prop_icon_margin_right);
+	int icon_margin_right = 7; //FIXME component->get_property_int(prop_icon_margin_right);
 
-	//FIXME: rect_icon = part_icon->get_render_box(icon_size).get_size();
+	rect_icon = part_icon.get_render_box(icon_size).get_size();
 	rect_icon.translate(border_space.left, 0);
 
 
-	Size text_size = component->get_font().get_text_size(get_canvas(), detail_text);
-	//FIXME: rect_text = component->get_render_box(text_size);
-	//FIXME: rect_text.left = rect_icon.right + icon_margin_right;
+	Size text_size = component->get_text_size(get_canvas(), detail_text);
+	rect_text = component->get_render_box(text_size);
+	rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
 
 	size.width = border_space.left;
 	size.width += rect_icon.get_width();
-	//FIXME: size.width += icon_margin_right;
+	size.width += icon_margin_right;
 	size.width += text_size.width;
 	size.width += border_space.right;
 
 	size.height = border_space.top;
 	size.height += max(icon_size.height, text_size.height);
 	size.height += border_space.bottom;
-	//FIXME: size.height += button_area_height;
+	size.height += button_area_height;
 
 	int detail_area_height = 0;
 	detail_area_height = border_space.top + max(text_size.height, icon_size.height) + border_space.bottom;
-	//FIXME: detail_area_height = max(detail_area_height, min_size.height - button_area_height);
+	detail_area_height = max(detail_area_height, min_size.height - button_area_height);
 
 	// Center the text & icon in the detail-area
 	rect_text.top = detail_area_height/2 - text_size.height/2;
@@ -139,7 +138,11 @@ Size MessageBoxComponent::layout_content()
 	{
 		case mb_buttons_ok:
 		{
-			Size button_size = Size(66,21);
+			Size button_size = button_ok->get_preferred_size();
+			if (button_size == Size(0,0))
+			{
+				button_size = Size(66,21);
+			}
 
 			Rect R;
 			R.left = final_size.width - border_space.right - button_size.width;
@@ -151,7 +154,11 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no:
 		{
-			Size button_size = Size(66,21);
+			Size button_size = button_yes->get_preferred_size();
+			if (button_size == Size(0,0))
+			{
+				button_size = Size(66,21);
+			}
 
 			Rect yes;
 			yes.left = final_size.width - border_space.right - button_size.width;
@@ -167,7 +174,11 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no_cancel:
 		{
-			Size button_size = Size(66,21);
+			Size button_size = button_yes->get_preferred_size();
+			if (button_size == Size(0,0))
+			{
+				button_size = Size(66,21);
+			}
 
 			Rect yes;
 			yes.left = final_size.width - border_space.right - button_size.width;
@@ -187,7 +198,11 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_ok_cancel:
 		{
-			Size button_size = Size(66,21);
+			Size button_size = button_ok->get_preferred_size();
+			if (button_size == Size(0,0))
+			{
+				button_size = Size(66,21);
+			}
 
 			Rect ok;
 			ok.left = final_size.width - border_space.right - button_size.width;
@@ -255,7 +270,6 @@ void MessageBoxComponent::create_buttons()
 
 void MessageBoxComponent::set_css_class()
 {
-	//FIXME: ResourceManager res = get_theme().get_resources();
 	Canvas canvas = get_canvas();
 
 	std::string icon_class = "";
@@ -281,11 +295,15 @@ void MessageBoxComponent::set_css_class()
 
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
+	component->render_box(canvas, get_size(), dirty_rect);
+	part_icon.render_box(canvas, rect_icon, dirty_rect);
+	component->render_text(canvas, detail_text, rect_text, dirty_rect);
 }
 
 void MessageBoxComponent::create_parts()
 {
-	part_icon = new GUIComponent(this, CssStr::MessageBox::part_icon);
+	part_icon = GUIThemePart(this, CssStr::MessageBox::part_icon);
+
 }
 
 void MessageBoxComponent::on_button_clicked(MessageBoxResult result)

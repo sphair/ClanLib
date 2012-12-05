@@ -50,7 +50,6 @@ public:
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
-	void on_style_changed();
 	void create_parts();
 
 	void select_next();
@@ -68,8 +67,8 @@ public:
 	void clear_selection();
 
 	MenuBar *menubar;
-	//FIXME: GUIThemePart part_component;
-	//FIXME: GUIThemePart part_item;
+	
+	GUIThemePart part_item;
 
 	std::vector<TopMenu> menus;
 	int selected_index;

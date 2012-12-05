@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -59,8 +60,6 @@
 #include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -68,9 +67,8 @@ namespace clan
 // ListView Construction:
 
 ListView::ListView(GUIComponent *parent)
-: GUIComponent(parent), impl(new ListView_Impl)
+: GUIComponent(parent, CssStr::ListView::type_name), impl(new ListView_Impl)
 {
-	set_tag_name(CssStr::ListView::type_name);
 	set_focus_policy(focus_local);
 	impl->listview = this;
 
@@ -83,7 +81,6 @@ ListView::ListView(GUIComponent *parent)
 	func_process_message().set(impl.get(), &ListView_Impl::on_process_message);
 	func_render().set(impl.get(), &ListView_Impl::on_render);
 	func_resized().set(impl.get(), &ListView_Impl::on_resized);
-	sig_style_changed().set(impl.get(), &ListView_Impl::on_style_changed);
 
 	impl->document_item.impl->func_item_added.set(impl.get(), &ListView_Impl::on_item_added);
 	impl->document_item.impl->func_item_modified.set(impl.get(), &ListView_Impl::on_item_modified);
@@ -157,11 +154,6 @@ ListViewItem ListView::get_selected_item()
 	}
 
 	return ListViewItem();
-}
-
-Size ListView::get_preferred_size() const
-{
-	return impl->part_component.get_preferred_size();
 }
 
 ListViewDisplayMode ListView::get_display_mode() const
@@ -366,10 +358,11 @@ Callback_v0 &ListView::func_begin_drag()
 
 void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	x std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input = msg;
-		InputEvent input_event = input.get_event();
+		
+		const InputEvent &input_event = input_msg->input_event;
 
 		if (input_event.type == InputEvent::pointer_moved)
 		{
@@ -378,65 +371,66 @@ void ListView_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
 		{
 			on_mouse_lbutton_down(input, input_event);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_wheel_up)
 		{
 			scrollbar->set_position(scrollbar->get_position()-scrollbar->get_line_step());
 			on_scroll();
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_wheel_down)
 		{
 			scrollbar->set_position(scrollbar->get_position() + scrollbar->get_line_step());
 			on_scroll();
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
 		{
 			on_mouse_lbutton_up(input, input_event);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::doubleclick && input_event.id == mouse_left)
 		{
 			on_mouse_lbutton_doubleclick(input, input_event);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_right)
 		{
 			on_mouse_rbutton_down(input, input_event);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_right)
 		{
 			on_mouse_rbutton_up(input, input_event);
-			msg.set_consumed();
+			msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::pressed && input_event.device.get_type() == InputDevice::keyboard)
 		{
 			bool consumed = on_keyboard_pressed(input_event);
 			if (consumed)
-				msg.set_consumed();
+				msg->consumed = true;
 		}
 		else if (input_event.type == InputEvent::released && input_event.device.get_type() == InputDevice::keyboard)
 		{
 			bool consumed = on_keyboard_released(input_event);
 			if (consumed)
-				msg.set_consumed();
+				msg->consumed = true;
 		}
 	}
-	x std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
 	{
-		GUIMessage_Pointer pointer = msg;
-		if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_leave)
+		
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			on_mouse_leave();
-		else if (pointer.get_pointer_type() == GUIMessage_Pointer::pointer_enter)
+		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			on_mouse_enter();
 	}
-	x std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
+	if (focus_change_msg)
 	{
-		GUIMessage_FocusChange fc = msg;
-		if (fc.get_focus_type() == GUIMessage_FocusChange::gained_focus)
+		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			// ..
 		}
@@ -659,12 +653,12 @@ bool ListView_Impl::on_keyboard_released(InputEvent &event)
 	return event_consumed;
 }
 
-void ListView_Impl::on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event)
 {
 	on_mouse_button_down(input, input_event);
 }
 
-void ListView_Impl::on_mouse_button_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_button_down(GUIMessage_Input &input, InputEvent &input_event)
 {
 	listview->set_focus();
 
@@ -758,34 +752,34 @@ void ListView_Impl::on_drag_or_edit_timeout()
 	edit_item(si);
 }
 
-void ListView_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event)
 {
 	Point pos = input_event.mouse_pos;
 	drag_or_edit_started = false;
 	listview->capture_mouse(false);
 }
 
-void ListView_Impl::on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_lbutton_doubleclick(GUIMessage_Input &input, InputEvent &input_event)
 {
 	if(!selection.get_first().is_null())
 		if (!func_item_doubleclick.is_null())
 			func_item_doubleclick.invoke(selection.get_first().get_item());
 }
 
-void ListView_Impl::on_mouse_rbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_down(GUIMessage_Input &input, InputEvent &input_event)
 {
 	cancel_edit();
 	on_mouse_button_down(input, input_event); 
 }
 
-void ListView_Impl::on_mouse_rbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_rbutton_up(GUIMessage_Input &input, InputEvent &input_event)
 {
 	drag_or_edit_started = false;
 	if (!func_mouse_right_up.is_null())
 		func_mouse_right_up.invoke(input_event.mouse_pos);
 }
 
-void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event)
+void ListView_Impl::on_mouse_move(GUIMessage_Input &input, InputEvent &input_event)
 {
 	if (drag_or_edit_started && input_event.mouse_pos.distance(pos_mouse_drag_start) > 5)
 	{
@@ -825,13 +819,13 @@ void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, Inpu
 
 void ListView_Impl::on_mouse_enter()
 {
-	part_component.set_pseudo_class(CssStr::hot, true);
+	listview->set_pseudo_class(CssStr::hot, true);
 	listview->request_repaint();
 }
 
 void ListView_Impl::on_mouse_leave()
 {
-	part_component.set_pseudo_class(CssStr::hot, false);
+	listview->set_pseudo_class(CssStr::hot, false);
 	listview->request_repaint();
 }
 
@@ -851,7 +845,7 @@ void ListView_Impl::on_resized()
 void ListView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = listview->get_geometry();
-	part_component.render_box(canvas, rect.get_size(), update_rect);
+	listview->render_box(canvas, rect.get_size(), update_rect);
 	part_columns_bg.render_box(canvas, rect_columns, update_rect);
 
 	listview->push_cliprect(canvas, rect_columns_content);
@@ -899,7 +893,7 @@ void ListView_Impl::update_part_positions()
 	cancel_edit();
 
 	Rect rect(listview->get_geometry().get_size());
-	rect_content = part_component.get_content_box(rect);
+	rect_content = listview->get_content_box(rect);
 
 	header->update_geometry(rect_content);
 
@@ -1163,5 +1157,3 @@ void ListView_Impl::on_lineedit_focus_lost()
 }
 
 }
-
-#endif

@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -41,8 +42,6 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Window/keys.h"
-
-#ifdef INCLUDE_COMPONENTS
 
 namespace clan
 {
@@ -103,5 +102,3 @@ void ListViewColumnData::set_column_id(const std::string &column_id)
 // ListViewColumnData Implementation:
 
 }
-
-#endif

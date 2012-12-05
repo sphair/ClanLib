@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tooltip.h"
 #include "API/GUI/gui_message_focus_change.h"
@@ -42,6 +43,7 @@
 #include "API/Core/System/timer.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
+#include "API/CSSLayout/css_box_properties.h"
 
 namespace clan
 {
@@ -61,7 +63,7 @@ public:
 	ToolTip *tooltip;
 	Timer timer_show_delayed;
 	std::string text;
-	Colorf text_color;
+
 	Slot slot_filter_message;
 };
 
@@ -115,9 +117,8 @@ void ToolTip::set_text(const std::string &text)
 	Canvas &canvas = get_canvas();
 	Size text_size = get_font().get_text_size(canvas, impl->text);
 	Rect rect(Point(0,0), text_size);
-	//FIXME: Rect client_rect = impl->part_component.get_render_box(rect);
-	//FIXME: set_geometry(Rect(top_left, client_rect.get_size()));
-	set_geometry(text_size);
+	Rect client_rect = impl->tooltip->get_render_box(rect);
+	set_geometry(Rect(top_left, client_rect.get_size()));
 }
 
 void ToolTip::show(const Point &position)
@@ -167,19 +168,16 @@ void ToolTip_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ToolTip_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = tooltip->get_geometry();
-	//FIXME: part_component.render_box(canvas, rect.get_size(), update_rect);
 
-	//FIXME: Rect content_rect = part_component.get_content_box(rect.get_size());
-	Rect content_rect = tooltip->get_content_box();
+	Rect content_rect = tooltip->get_content_box(rect.get_size());
 
 	Font font = tooltip->get_font();
-
 	Size text_size = font.get_text_size(canvas, text);
 	font.draw_text(canvas,
 		content_rect.left,
 		content_rect.top + content_rect.get_height()/2 + text_size.height/2 - 2,
 		text,
-		text_color);
+		tooltip->get_css_properties().color.color);
 }
 
 void ToolTip_Impl::on_show_delayed()
@@ -189,11 +187,9 @@ void ToolTip_Impl::on_show_delayed()
 
 void ToolTip_Impl::on_filter_message(std::shared_ptr<GUIMessage> &message)
 {
-	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(message);
-	std::shared_ptr<GUIMessage_ActivationChange> activation_change_msg = std::dynamic_pointer_cast<GUIMessage_ActivationChange>(message);
-	std::shared_ptr<GUIMessage_Pointer> pointer_msg = std::dynamic_pointer_cast<GUIMessage_Pointer>(message);
-
-	if (focus_change_msg || activation_change_msg || pointer_msg)
+	if (message.get_type() == GUIMessage_FocusChange::get_type_name() ||
+		message.get_type() == GUIMessage_ActivationChange::get_type_name() ||
+		message.get_type() == GUIMessage_Pointer::get_type_name())
 	{
 		tooltip->hide();
 	}

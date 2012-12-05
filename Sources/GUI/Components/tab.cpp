@@ -31,6 +31,7 @@
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab.h"
 #include "API/GUI/Components/tab_page.h"
@@ -54,8 +55,6 @@ public:
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
-	void on_style_changed();
-
 	void on_header_page_selected(TabPage*);
 
 	void on_resized();
@@ -78,14 +77,12 @@ Tab::Tab(GUIComponent *parent)
 	impl->tab = this;
 	func_process_message().set(impl.get(), &Tab_Impl::on_process_message);
 	func_render().set(impl.get(), &Tab_Impl::on_render);
-	//FIXME: sig_style_changed().set(impl.get(), &Tab_Impl::on_style_changed);
 	func_resized().set(impl.get(), &Tab_Impl::on_resized);
 
 	impl->tab_header = new TabHeader(this);
 
 	impl->tab_header->func_page_selected().set(impl.get(), &Tab_Impl::on_header_page_selected);
 
-	impl->on_style_changed();
 }
 
 Tab::~Tab()
@@ -289,12 +286,7 @@ void Tab_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void Tab_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-}
 
-void Tab_Impl::on_style_changed()
-{
-	// Hack to test if child component caches need to be invalidated when GUIComponent::set_*_name is called.
-	tab_header->set_class(tab_header->get_class());
 }
 
 void Tab_Impl::on_header_page_selected(TabPage *tab_page)
@@ -316,15 +308,14 @@ Rect Tab_Impl::get_client_rect()
 	Rect hr = tab_header->get_geometry();
 	Rect g = tab->get_geometry().get_size();
 	g.top = hr.bottom;
-	//FIXME: Rect content = part_background.get_content_box(g);
-	Rect content = tab->get_content_box();
+	Rect content = tab->get_content_box(g);
 	return content;
 }
 
 void Tab_Impl::on_resized()
 {
 	Rect header_rect = tab->get_geometry().get_size();
-	header_rect.bottom = 32; //FIXME: tab_header->get_preferred_height();
+	header_rect.bottom = tab_header->get_preferred_height();
 
 	tab_header->set_geometry(header_rect);
 
@@ -337,4 +328,3 @@ void Tab_Impl::on_resized()
 }
 
 }
-

@@ -34,6 +34,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
+#include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/Core/System/timer.h"
 #include "API/Core/Text/string_format.h"
@@ -88,18 +89,18 @@ public:
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
-	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage_Input > &input, InputEvent &input_event);
-	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_lbutton_doubleclick(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_button_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_lbutton_down(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_up(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_lbutton_doubleclick(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_button_down(GUIMessage_Input &input, InputEvent &input_event);
 
-	void on_mouse_rbutton_down(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
-	void on_mouse_rbutton_up(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_rbutton_down(GUIMessage_Input &input, InputEvent &input_event);
+	void on_mouse_rbutton_up(GUIMessage_Input &input, InputEvent &input_event);
 
 	bool on_keyboard_pressed(InputEvent &event);
 	bool on_keyboard_released(InputEvent &event);
 
-	void on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputEvent &input_event);
+	void on_mouse_move(GUIMessage_Input &input, InputEvent &input_event);
 	void on_mouse_enter();
 	void on_mouse_leave();
 
@@ -112,7 +113,6 @@ public:
 	void on_scroll();
 	void on_before_edit_item(InputEvent &e);
 	void on_after_edit_item(InputEvent &e);
-	void on_style_changed();
 	void on_lineedit_focus_lost();
 	void update_part_positions();
 	void create_components();
@@ -152,9 +152,9 @@ public:
 	PopupMenu context_menu;
 	PopupMenu item_context_menu;
 
-	//FIXME: GUIThemePart part_mouse_selection;
-	//FIXME: GUIThemePart part_columns_bg;
-	//FIXME: GUIThemePart part_component;
+	GUIThemePart part_mouse_selection;
+	GUIThemePart part_columns_bg;
+	
 
 	Rect rect_content;
 	Rect rect_columns;
