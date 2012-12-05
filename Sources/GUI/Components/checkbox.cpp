@@ -63,7 +63,6 @@ public:
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	//FIXME: void on_style_changed();
 	void on_enablemode_changed();
 
 	void create_parts(bool checked = false, bool indeterminated = false);
@@ -97,7 +96,6 @@ CheckBox::CheckBox(GUIComponent *parent)
 
 	func_process_message().set(impl.get(), &CheckBox_Impl::on_process_message);
 	func_render().set(impl.get(), &CheckBox_Impl::on_render);
-	//FIXME: func_style_changed().set(impl.get(), &CheckBox_Impl::on_style_changed);
 	func_enablemode_changed().set(impl.get(), &CheckBox_Impl::on_enablemode_changed);
 
 	impl->create_parts();
@@ -332,7 +330,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect rect = checkbox->get_geometry();
 
 	Size pref_size = part_checker.get_preferred_size();
-	Rect content_rect = checkbox->get_content_box();
+	Rect content_rect = checkbox->get_content_box(rect.get_size());
 
 	int ypos = content_rect.top + content_rect.get_height()/2 - pref_size.height/2;
 
@@ -374,12 +372,6 @@ void CheckBox_Impl::create_parts(bool checked, bool indeterminated)
 	part_checker.set_pseudo_class(CssStr::unchecked, indeterminated ? false : !checked);
 	part_checker.set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 }
-
-//FIXME: void CheckBox_Impl::on_style_changed()
-//FIXME: {
-//FIXME: 	create_parts(checkbox->is_checked(), checkbox->is_indeterminated());
-//FIXME: 	checkbox->request_repaint();
-//FIXME: }
 
 void CheckBox_Impl::on_enablemode_changed()
 {

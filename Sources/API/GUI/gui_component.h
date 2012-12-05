@@ -105,6 +105,7 @@ public:
 
 	/// \brief Returns the content box area relative to the component geometry.
 	Rect get_content_box() const;
+	Rect get_content_box(const Rect &stub) const {return get_content_box(); }	//FIXME - Stub
 
 	/// \brief Returns the width of the drawable area of the component.
 	int get_width() const;
