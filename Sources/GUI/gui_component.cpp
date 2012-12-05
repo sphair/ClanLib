@@ -59,6 +59,7 @@
 #include "CSSLayout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/LayoutTree/css_layout_graphics.h"
 #include "gui_element.h"
+#include "API/Display/Font/font_metrics.h"
 
 namespace clan
 {
@@ -381,7 +382,7 @@ bool GUIComponent::has_child_components() const
 	return (impl->first_child != 0);
 }
 
-Canvas& GUIComponent::get_canvas()
+Canvas GUIComponent::get_canvas() const
 {
 	const GUIComponent *root_component = get_top_level_component();
 
@@ -733,13 +734,13 @@ bool GUIComponent::is_double_click_enabled() const
 	return impl->double_click_enabled;
 }
 
-Font GUIComponent::get_font()
+Font GUIComponent::get_font() const
 {
 	const CSSBoxProperties &properties = get_css_properties();
 	return get_font(properties);
 }
 
-Font GUIComponent::get_font(const CSSBoxProperties &properties)
+Font GUIComponent::get_font(const CSSBoxProperties &properties) const
 {
 	int font_size = used_to_actual(properties.font_size.length.value);
 	std::string font_name;
@@ -1427,6 +1428,35 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 	impl->is_selected_in_group = selected;
 }
 
+Size GUIComponent::get_text_size( Canvas &canvas, const std::string &str ) const
+{
+	Font font = get_font();
+	return font.get_text_size(canvas, str);
+}
+
+GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+{
+	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
+
+	FontMetrics metrics = font.get_font_metrics();
+	float align_height = metrics.get_ascent() - metrics.get_internal_leading();
+	float content_height = content_rect.get_height();
+	float baseline = (content_height + align_height) / 2.0f;
+
+	VerticalTextPosition result;
+	result.baseline = baseline + content_rect.top;
+	result.top = result.baseline - metrics.get_ascent();
+	result.bottom = result.baseline + metrics.get_descent();
+	return result;
+}
+
+Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
+{
+	Font font = get_font();
+	//TODO Fixme - As CL_GUIThemeProvider_Default::render_text()
+	font.draw_text(canvas, content_rect.left, content_rect.top, text, impl->element.get_css_properties().color.color);
+	return Rect();
+}
 /////////////////////////////////////////////////////////////////////////////
 // GUIComponent Implementation:
 
