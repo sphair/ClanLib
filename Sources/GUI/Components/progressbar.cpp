@@ -39,8 +39,6 @@
 #include "../gui_css_strings.h"
 #include "API/Core/Math/rect.h"
 
-#ifdef DISABLE_COMPONENT
-
 namespace clan
 {
 
@@ -286,8 +284,7 @@ void ProgressBar_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = progressbar->get_size();
-	progressbar->render_box(canvas, rect, update_rect);
-
+	
 	if (marquee_mode)
 	{
 		if (rect.get_width() > 0)
@@ -336,4 +333,3 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 }
 
 }
-#endif
