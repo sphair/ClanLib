@@ -55,7 +55,6 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 	PhysicWorld_Impl *owner;
-	b2DistanceJoint *joint;
 };
 
 
