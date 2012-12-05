@@ -400,7 +400,7 @@ void PopupMenuWindow::create_parts()
 	part_item_accel_label = GUIThemePart(this, CssStr::PopupMenuWindow::part_item_accel_label);
 	part_menubar_joiner = GUIThemePart(this, CssStr::PopupMenuWindow::part_menubar_joiner);
 
-	icon_column_width = 30;//FIXME: component->get_property_int(prop_icon_column_width);
+	icon_column_width = get_property_int("icon-column-width", "30");
 	icon_size = part_item_icon.get_preferred_size();
 	check_size = part_item_check.get_preferred_size();
 

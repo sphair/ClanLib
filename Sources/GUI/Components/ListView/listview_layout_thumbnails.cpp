@@ -175,8 +175,8 @@ void ListViewLayoutThumbnails::create_parts()
 	part_cell.set_pseudo_class(CssStr::normal, true);
 	part_row.set_pseudo_class(CssStr::normal, true);
 
-	size_icon.width = 100; //FIXME: part_cell.get_property_int(prop_icon_width);
-	size_icon.height = 100; //FIXME: part_cell.get_property_int(prop_icon_height);
+	size_icon.width = part_cell.get_property_int(CssStr::icon_width, "100");
+	size_icon.height = part_cell.get_property_int(CssStr::icon_height, "100");
 
 	Font font = part_cell.get_font();
 	height_text = font.get_text_size(canvas, "l").height;
@@ -186,10 +186,10 @@ void ListViewLayoutThumbnails::create_parts()
 
 	update_rows_cols_visible();
 
-	lineedit_textrect_offset.left = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_left);
-	lineedit_textrect_offset.top = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_top);
-	lineedit_textrect_offset.bottom = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_bottom);
-	lineedit_textrect_offset.right = 0; //FIXME: part_cell.get_property_int(prop_line_edit_offset_right);
+	lineedit_textrect_offset.left = part_cell.get_property_int("line-edit-offset-left", "0");
+	lineedit_textrect_offset.top = part_cell.get_property_int("line-edit-offset-top", "0");
+	lineedit_textrect_offset.bottom = part_cell.get_property_int("line-edit-offset-bottom", "0");
+	lineedit_textrect_offset.right = part_cell.get_property_int("line-edit-offset-right", "0");
 
 	GUIThemePart part_icon_selection(listview, "icon_selection");
 	icon_sel_shrink_box = part_icon_selection.get_content_shrink_box();

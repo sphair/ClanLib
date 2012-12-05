@@ -234,15 +234,15 @@ void ListViewLayoutDetails::create_parts()
 	part_cell.set_pseudo_class("details", true);
 	part_opener.set_pseudo_class("open", true);
 
-	opener_gap = 6;//FIXME: part_cell.get_property_int(prop_opener_gap);
+	opener_gap = part_cell.get_property_int(CssStr::opener_gap, "6");
 	size_opener = part_opener.get_preferred_size();
-	opener_offset.x = 0;//FIXME: part_opener.get_property_int(prop_opener_offset_x);
-	opener_offset.y = 0;//FIXME: part_opener.get_property_int(prop_opener_offset_y);
+	opener_offset.x = part_opener.get_property_int(CssStr::opener_offset_x, "0");
+	opener_offset.y = part_opener.get_property_int(CssStr::opener_offset_y, "0");
 
-	icon_gap = 6;//FIXME: part_cell.get_property_int(prop_icon_text_gap);
-	size_icon.width = 16;//FIXME: part_cell.get_property_int(prop_icon_width);
-	size_icon.height = 16;//FIXME: part_cell.get_property_int(prop_icon_height);
-	icon_offset_y = 0;//FIXME: part_cell.get_property_int(prop_icon_offset_y);
+	icon_gap = part_cell.get_property_int(CssStr::icon_text_gap, "6");
+	size_icon.width = part_cell.get_property_int(CssStr::icon_width, "16");
+	size_icon.height = part_cell.get_property_int(CssStr::icon_height, "16");
+	icon_offset_y = part_cell.get_property_int(CssStr::icon_offset_y, "0");
 
 	Font font = part_cell.get_font();
 	FontMetrics metrics = font.get_font_metrics();
@@ -250,16 +250,16 @@ void ListViewLayoutDetails::create_parts()
 	height_text = (int)metrics.get_height();
 	descent = (int)metrics.get_descent();
 
-	indent_width = 20;//FIXME: part_row.get_property_int(prop_indent_width);
+	indent_width = part_row.get_property_int(CssStr::indent_width, "20");
 
 	part_cell.set_pseudo_class(CssStr::normal, true);
 	size_cell = part_cell.get_preferred_size();
 	height_row = size_cell.height;
 
-	lineedit_textrect_offset.left = 0;//FIXME: part_cell.get_property_int(prop_lineedit_offset_left);
-	lineedit_textrect_offset.top = 0;//FIXME: part_cell.get_property_int(prop_lineedit_offset_top);
-	lineedit_textrect_offset.bottom = 0;//FIXME: part_cell.get_property_int(prop_lineedit_offset_bottom);
-	lineedit_textrect_offset.right = 0;//FIXME: part_cell.get_property_int(prop_lineedit_offset_right);
+	lineedit_textrect_offset.left = part_cell.get_property_int(CssStr::lineedit_offset_left, "0");
+	lineedit_textrect_offset.top = part_cell.get_property_int(CssStr::lineedit_offset_top, "0");
+	lineedit_textrect_offset.bottom = part_cell.get_property_int(CssStr::lineedit_offset_right, "0");
+	lineedit_textrect_offset.right = part_cell.get_property_int(CssStr::lineedit_offset_bottom, "0");
 }
 
 Rect ListViewLayoutDetails::get_lineedit_rect(ListViewItem &item, const Size &text_size) const
