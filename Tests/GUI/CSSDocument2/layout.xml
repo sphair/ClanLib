@@ -50,7 +50,16 @@
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
     <text>Need alignment!</text>
   </pushbutton>
-
-  <scrollbar></scrollbar>
-  
+  <checkbox>Check</checkbox>
+  <radiobutton>
+    <group>Main Group</group>
+    <text>A</text>
+  </radiobutton>
+  <radiobutton>
+    <group>Main Group</group>
+    <text>B</text>
+  </radiobutton>
+  <slider/>
+  <lineedit>LineEdit</lineedit>
+  <scrollbar></scrollbar> 
 </root>
