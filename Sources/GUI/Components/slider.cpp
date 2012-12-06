@@ -530,8 +530,12 @@ void Slider_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void Slider_Impl::create_parts()
 {
 	bool vertical = slider->is_vertical();
-	part_track = GUIThemePart(slider, vertical ? CssStr::Slider::part_track_vertical : CssStr::Slider::part_track_horizontal);
-	part_thumb = GUIThemePart(slider, vertical ? CssStr::Slider::part_thumb_vertical : CssStr::Slider::part_thumb_horizontal);
+
+	part_track = GUIThemePart(slider,"slidertrack");
+	part_thumb = GUIThemePart(slider,"sliderthumb");
+
+	part_track.set_class(vertical ? "vertical" : "horizontal");
+	part_thumb.set_class(vertical ? "vertical" : "horizontal");
 	part_focus = GUIThemePart(slider, CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();
