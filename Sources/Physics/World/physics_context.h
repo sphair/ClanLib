@@ -1,5 +1,4 @@
 /*
-**  ClanLib SDK
 **  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
@@ -28,46 +27,24 @@
 
 #pragma once
 
-#include "../Box2D/Box2D.h"
-#include "API/Physics/World/physic_world.h"
-#include "API/Physics/World/physic_world_description.h"
-#include <map>
+#include <vector>
+#include <memory>
 
 namespace clan
 {
+	class Body;
+	class Fixture;
 
-class PhysicWorldDescription_Impl
+class PhysicsContext
 {
-/// \name Construction
-/// \{
 public:
-	PhysicWorldDescription_Impl():
-		name("Unnamed Clanlib Physic World"),
-		sleep_enabled(true),
-		timestep(1.0f/60.0f),
-		gravity(b2Vec2(0.0f,10.0f)),
-		velocity_iterations(8),
-		position_iterations(3)
-	{
-	}
 
-	virtual ~PhysicWorldDescription_Impl() { return; }
+	PhysicsContext();
+	~PhysicsContext();
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	std::string name;
-	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
-	bool sleep_enabled;
-	b2Vec2 gravity;
-	float timestep;
-	int velocity_iterations;
-	int position_iterations;
+	std::vector<std::shared_ptr<Body>> bodies;
+	std::vector<std::shared_ptr<Fixture>> fixtures;
 
-	std::map<std::string, std::shared_ptr<PhysicWorldDescriptionData> > data_objects;
-
-/// \}
 };
 
 }

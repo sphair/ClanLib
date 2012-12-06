@@ -24,14 +24,14 @@
 **  File Author(s):
 **
 **    Arkadiusz Kalinowski
-**    Harry Storbacka
-**    Kenneth Gangstoe
 */
 
 #pragma once
 
 #include "../Box2D/Box2D.h"
 #include "API/Physics/World/physic_world_description.h"
+#include "physics_listener.h"
+#include "physics_context.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 
@@ -72,6 +72,10 @@ public:
 /// \{
 public:
 	b2World world;
+	PhysicsListener listener;
+	PhysicsContext pc;
+	//PhysicsQueryAssistant assistant;
+
 	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
 	float timestep;
 	int velocity_iterations;

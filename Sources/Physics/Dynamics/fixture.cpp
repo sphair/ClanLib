@@ -30,8 +30,10 @@
 #include "fixture_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics/Dynamics/fixture_description.h"
 //#include "API/Physics/World/physic_world.h"
 #include "../World/physic_world_impl.h"
+#include "../Dynamics/fixture_description_impl.h"
 
 namespace clan
 {
@@ -43,12 +45,11 @@ Fixture::Fixture()
 }
 
 Fixture::Fixture(Body &body, const FixtureDescription &description)
-: impl(new Fixture_Impl())
+: impl(new Fixture_Impl(*this, *description.impl->owner))
 {
 	if(!body.is_null())
 	{
 		impl->create_fixture(body,description);
-		impl->fixture->SetUserData(this);
 	}
 	else
 	throw Exception("Tried to create a fixture with a null Body object");
@@ -81,17 +82,23 @@ void Fixture::set_as_sensor(const bool value)
 
 bool Fixture::test_point(const Vec2f &p) const
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
 }
 
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Fixture &> &Fixture::sig_collision()
+Signal_v1<Fixture &> &Fixture::sig_begin_collision()
 {
-	return impl->sig_collision;
+	return impl->sig_begin_collision;
 }
+
+Signal_v1<Fixture &> &Fixture::sig_end_collision()
+{
+	return impl->sig_end_collision;
+}
+
 Signal_v0 &Fixture::sig_fixture_deletion()
 {
 	return impl->sig_fixture_deletion;

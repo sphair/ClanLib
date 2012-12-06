@@ -35,14 +35,18 @@
 namespace clan
 {
 
-Body_Impl::Body_Impl(PhysicWorld_Impl &pw_impl)
+//																						_______________________
+//																						C O N S T R U C T O R S
+Body_Impl::Body_Impl(Body &parent, PhysicWorld_Impl &pw_impl)
 :	body(NULL),
 	body_occupied(false),
-	owner(&pw_impl)
+	owner_world(&pw_impl),
+	owner(&parent)
 {
 
 }
-
+//																						___________________
+//																						O P E R A T I O N S
 void Body_Impl::create_body(const BodyDescription &description)
 {
 	
@@ -55,9 +59,24 @@ void Body_Impl::create_body(const BodyDescription &description)
 		body_occupied = true;
 	}
 
-	body = owner->create_body(description.impl->bodyDef);
-		
+	body = owner_world->create_body(description.impl->bodyDef);
+	body->SetUserData(this);
 }
+
+void Body_Impl::on_begin_collision(Body_Impl &body)
+{
+	sig_begin_collision.invoke(*body.owner); //Send the body that this body collided with.
+}
+
+void Body_Impl::on_end_collision(Body_Impl &body)
+{
+	sig_end_collision.invoke(*body.owner); //Send the body that this body collided with.
+}
+//																						_____________
+//																						S I G N A L S
+
+//																						___________________
+//																						A T T R I B U T E S
 
 /*
 b2Fixture *Body_Impl::create_fixture(b2FixtureDef &description) // obsolete
