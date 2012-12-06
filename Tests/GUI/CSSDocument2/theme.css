@@ -427,3 +427,369 @@ scrollbar scrollbutton.right:disabled
 {
 	border-image: url('res:ScrollbarHoriButtonRightDisabled') 3 3 3 3 fill / 3px 3px 3px 3px;
 }
+
+radiobutton
+{
+	width:13px;
+	height:13px;
+	
+	text-color:black;
+	text-gap:3;
+}
+
+radiobutton:disabled
+{
+	text-color:darkgray;
+}
+
+radiobutton checker
+{
+	width:13px;
+	height:13px;
+}
+
+radiobutton checker:checked:normal
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonCheckedNormal');
+}
+
+radiobutton checker:checked:hot
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonCheckedNormal');
+}
+
+radiobutton checker:checked:pressed
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonCheckedNormal');
+}
+
+radiobutton checker:checked:disabled
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonCheckedDisabled');
+}
+
+radiobutton checker:unchecked:normal
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonUncheckedNormal');
+}
+
+radiobutton checker:unchecked:hot
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonUncheckedHot');
+}
+
+radiobutton checker:unchecked:pressed
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonUncheckedPressed');
+}
+
+radiobutton checker:unchecked:disabled
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:RadioButtonUncheckedDisabled');
+}
+
+radiobutton focus
+{
+	bg-image-sizing:repeat;
+	border-image: url('res:FocusDottedLine') 3 4 3 4 fill / 3px 4px 3px 4px;
+} 
+
+
+checkbox
+{
+	width:13px;
+	height:13px;
+	text-gap:3;
+	padding-top:1;
+	padding-bottom:4;
+	text-color:black;
+}
+
+checkbox:disabled
+{
+	text-color:darkgray;
+}
+
+checkbox focus
+{
+	bg-image-sizing:repeat;
+	border-image: url('res:FocusDottedLine') 3 4 3 4 fill / 3px 4px 3px 4px;
+} 
+
+checkbox checker
+{
+	width:13px;
+	height:13px;
+}
+
+checkbox checker:checked:normal
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxCheckedNormal');
+}
+
+checkbox checker:checked:hot
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxCheckedHot');
+}
+
+checkbox checker:checked:pressed
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxCheckedPressed');
+}
+
+checkbox checker:checked:disabled
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxCheckedDisabled');
+}
+
+checkbox checker:unchecked:normal
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxUncheckedNormal');
+}
+
+checkbox checker:unchecked:pressed
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxUncheckedPressed');
+}
+
+checkbox checker:unchecked:disabled
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxUncheckedDisabled');
+}
+
+checkbox checker:unchecked:hot
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxUncheckedHot');
+}
+
+checkbox checker:indeterminated:normal
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxIndeterminatedNormal');
+}
+
+checkbox checker:indeterminated:pressed
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxIndeterminatedPressed');
+}
+
+checkbox checker:indeterminated:disabled
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxIndeterminatedDisabled');
+}
+
+checkbox checker:indeterminated:hot
+{
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:CheckBoxIndeterminatedHot');
+}
+
+
+
+slider
+{
+	text-color:black;
+	height:22px;
+	width:220px;
+}
+
+slider:disabled
+{
+	text-color:darkgray;
+}
+
+slider focus
+{
+	bg-image-sizing:repeat;
+	border-image: url('res:FocusDottedLine') 3 4 3 4 fill / 3px 4px 3px 4px;
+} 
+
+
+slider slidertrack.horizontal
+{
+	height:4px;
+	border-image: url('res:SliderHorizontalTrack') 1 1 1 1 fill / 1px 1px 1px 1px;
+}
+
+slider sliderthumb.horizontal
+{
+	width:11px;
+	height:17px;
+}
+
+slider sliderthumb.horizontal:normal
+{
+	border-image: url('res:SliderHorizontalThumbNormal') 2 3 9 9 fill / 2px 3px 9px 9px;
+}
+
+slider sliderthumb.horizontal:hot
+{
+	border-image: url('res:SliderHorizontalThumbHot') 2 3 9 9 fill / 2px 3px 9px 9px;
+}
+
+slider sliderthumb.horizontal:disabled
+{
+	border-image: url('res:SliderHorizontalThumbDisabled') 2 3 9 9 fill / 2px 3px 9px 9px;
+}
+
+slider slidertrack.vertical
+{
+	width:4px;
+	border-image: url('res:SliderVerticalTrack') 1 1 1 1 fill / 1px 1px 1px 1px;
+}
+
+slider sliderthumb.vertical
+{
+	width:17px;
+	height:11px;
+}
+
+slider sliderthumb.vertical:normal
+{
+	border-image: url('res:SliderVerticalThumbNormal') 2 3 5 5 fill / 2px 3px 5px 5px;
+}
+
+slider sliderthumb.vertical:hot
+{
+	border-image: url('res:SliderVerticalThumbHot') 2 3 5 5 fill / 2px 3px 5px 5px;
+}
+
+slider sliderthumb.vertical:disabled
+{
+	border-image: url('res:SliderVerticalThumbDisabled') 2 3 5 5 fill / 2px 3px 5px 5px;
+}
+
+
+lineedit
+{
+	width:200px;
+	height:32px;
+	border-top:0;
+	border-left:6;
+	border-right:16;
+	border-bottom:0;
+
+	text-color:black;
+}
+
+lineedit:normal
+{
+	border-image: url('res:LineEditNormal') 2 2 2 2 fill / 2px 2px 2px 2px;
+}
+
+lineedit:hot
+{
+	border-image: url('res:LineEditHot') 2 2 2 2 fill / 2px 2px 2px 2px;
+}
+
+lineedit:disabled
+{
+	border-image: url('res:LineEditDisabled') 2 2 2 2 fill / 2px 2px 2px 2px;
+	text-color:gray;
+}
+
+lineedit cursor
+{
+	width:1px;
+
+	background-color: black;
+
+	blink-time-on:1000;
+	blink-time-off:1000;
+	
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit cursor:blink_on
+{
+	background-color: black;
+}
+
+lineedit cursor:blink_off
+{
+	background-color: white;
+}
+
+lineedit selection
+{
+    color: white;
+	expand-top:-2;
+	expand-bottom:-1;
+	background-color: #316ac5;
+
+	border-top:0;
+	border-left:0;
+	border-right:0;
+	border-bottom:0;
+}
+
+lineedit selection:disabled
+{
+	background-color: #7a96df;
+}
+
+lineedit selection:unfocused
+{
+	background-color: #7a96df;
+}
