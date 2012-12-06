@@ -182,14 +182,6 @@ namespace CssStr
 	namespace Slider
 	{
 		const std::string type_name = "slider";
-		const std::string part_track_horizontal = "slidertrack.horizontal";
-		const std::string part_track_vertical = "slidertrack.vertical";
-/*		const std::string part_track_start_vertical = "slidertrack_start.vertical";
-		const std::string part_track_start_horizontal = "slidertrack_start.horizontal";
-		const std::string part_track_end_vertical = "slidertrack_end.vertical";
-		const std::string part_track_end_horizontal = "slidertrack_end.horizontal";
-*/		const std::string part_thumb_vertical = "sliderthumb.vertical";
-		const std::string part_thumb_horizontal = "sliderthumb.horizontal";
 		const std::string part_focus = "focus";
 	}
 
