@@ -267,13 +267,12 @@ button:focus
 
 scrollbar 
 {
-	no-draw:true;
-	preferred-height:17px;
+	width:320px;
+	height:17px;
 }
 
 scrollbar scrolltrack.left
 {
-
 }
 
 scrollbar scrolltrack.left:normal
@@ -331,7 +330,7 @@ scrollbar scrollthumb.horizontal:normal
 
 scrollbar scrollthumb.horizontal:hot
 {
-	border-image: url('res:crollbarHoriThumbHot') 5 5 5 5 fill / 5px 5px 5px 5px;
+	border-image: url('res:ScrollbarHoriThumbHot') 5 5 5 5 fill / 5px 5px 5px 5px;
 }
 
 scrollbar scrollthumb.horizontal:pressed
@@ -370,8 +369,8 @@ scrollbar scrollthumbgripper.horizontal:disabled
 
 scrollbar scrollbutton.left
 {
-	preferred-width:17px;
-	preferred-height:17px;
+	width:17px;
+	height:17px;
 }
 
 scrollbar scrollbutton.left:normal
@@ -396,8 +395,8 @@ scrollbar scrollbutton.left:disabled
 
 scrollbar scrollbutton.right
 {
-	preferred-width:17px;
-	preferred-height:17px;
+	width:17px;
+	height:17px;
 }
 
 scrollbar scrollbutton.right:normal
