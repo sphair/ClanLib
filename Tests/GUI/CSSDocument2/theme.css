@@ -349,17 +349,26 @@ scrollbar scrollthumbgripper.horizontal
 
 scrollbar scrollthumbgripper.horizontal:normal
 {
-	border-image: url('res:ScrollbarHoriThumbGripperNormal') 5 5 5 5 fill / 5px 5px 5px 5px;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:ScrollbarHoriThumbGripperNormal');
 }
 
 scrollbar scrollthumbgripper.horizontal:hot
 {
-	border-image: url('res:ScrollbarHoriThumbGripperHot') 5 5 5 5 fill / 5px 5px 5px 5px;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:ScrollbarHoriThumbGripperHot');
 }
 
 scrollbar scrollthumbgripper.horizontal:pressed
 {
-	border-image: url('res:ScrollbarHoriThumbGripperPressed') 5 5 5 5 fill / 5px 5px 5px 5px;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+	background-image: url('res:ScrollbarHoriThumbGripperPressed');
 }
 
 scrollbar scrollthumbgripper.horizontal:disabled
