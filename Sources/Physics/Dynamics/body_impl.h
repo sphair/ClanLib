@@ -44,25 +44,28 @@ class Body_Impl
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Body_Impl(PhysicWorld_Impl &pw_impl);
+	Body_Impl(Body &parent, PhysicWorld_Impl &pw_impl);
 
 	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); sig_body_deletion.invoke(); }
 //																						___________________
 //																						O P E R A T I O N S
 	void create_body(const BodyDescription &description);
-
+	void on_begin_collision(Body_Impl &body);
+	void on_end_collision(Body_Impl &body);
 	//b2Fixture *create_fixture(b2FixtureDef &description); //obsolete
 //																						_____________
 //																						S I G N A L S
 
-	Signal_v1 <Body &> sig_collision;
+	Signal_v1 <Body &> sig_begin_collision;
+	Signal_v1 <Body &> sig_end_collision;
 	Signal_v0 sig_body_deletion;
 	//Maybe fixture attachment signal?
 
 //																						___________________
 //																						A T T R I B U T E S
 public:
-	PhysicWorld_Impl *owner;
+	PhysicWorld_Impl *owner_world;
+	Body *owner;
 	b2Body *body;
 	bool body_occupied;
 

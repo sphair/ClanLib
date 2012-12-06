@@ -45,7 +45,7 @@ class Fixture_Impl
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Fixture_Impl();
+	Fixture_Impl(Fixture &parent, PhysicWorld_Impl &pw_impl);
 
 	virtual ~Fixture_Impl() { sig_fixture_deletion.invoke(); return; }
 
@@ -55,17 +55,20 @@ public:
 //																						___________________
 //																						O P E R A T I O N S
 	void create_fixture(Body &body, const FixtureDescription &description); //Not used yet
-
+	void on_begin_collision(Fixture_Impl &body);
+	void on_end_collision(Fixture_Impl &body);
 //																						_____________
 //																						S I G N A L S
 
-	Signal_v1<Fixture &> sig_collision;
+	Signal_v1<Fixture &> sig_begin_collision;
+	Signal_v1<Fixture &> sig_end_collision;
 	Signal_v0 sig_fixture_deletion;
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 public:
-	PhysicWorld_Impl *owner;
+	PhysicWorld_Impl *owner_world;
+	Fixture *owner;
 	b2Fixture *fixture;
 	bool fixture_occupied;
 

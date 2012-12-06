@@ -28,46 +28,8 @@
 
 #pragma once
 
-#include "../Box2D/Box2D.h"
-#include "API/Physics/World/physic_world.h"
-#include "API/Physics/World/physic_world_description.h"
-#include <map>
-
 namespace clan
+
 {
-
-class PhysicWorldDescription_Impl
-{
-/// \name Construction
-/// \{
-public:
-	PhysicWorldDescription_Impl():
-		name("Unnamed Clanlib Physic World"),
-		sleep_enabled(true),
-		timestep(1.0f/60.0f),
-		gravity(b2Vec2(0.0f,10.0f)),
-		velocity_iterations(8),
-		position_iterations(3)
-	{
-	}
-
-	virtual ~PhysicWorldDescription_Impl() { return; }
-
-/// \}
-/// \name Attributes
-/// \{
-public:
-	std::string name;
-	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
-	bool sleep_enabled;
-	b2Vec2 gravity;
-	float timestep;
-	int velocity_iterations;
-	int position_iterations;
-
-	std::map<std::string, std::shared_ptr<PhysicWorldDescriptionData> > data_objects;
-
-/// \}
-};
 
 }

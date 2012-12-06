@@ -47,12 +47,11 @@ Body::Body()
 }
 
 Body::Body(const BodyDescription &description)
-: impl(new Body_Impl(*description.impl->owner))
+: impl(new Body_Impl(*this, *description.impl->owner))
 {
 	if(impl->owner)
 	{
 		impl->create_body(description);
-		impl->body->SetUserData(this);
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicWorld object");
@@ -72,7 +71,7 @@ void Body::throw_if_null() const
 
 Vec2f Body::get_position() const
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	b2Vec2 vec = impl->body->GetPosition();
 
 	return Vec2f(vec.x*scale, vec.y*scale);
@@ -88,7 +87,7 @@ Angle Body::get_angle() const
 
 Vec2f Body::get_linear_velocity() const
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	b2Vec2 vec = impl->body->GetLinearVelocity();
 
 	return Vec2f(vec.x*scale, vec.y*scale);
@@ -112,7 +111,7 @@ Fixture Body::create_fixture(const FixtureDescription &description)
 */
 void Body::set_position(const Vec2f &pos)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->body->SetTransform(b2Vec2(pos.x/scale, pos.y/scale), impl->body->GetAngle());
 }
 
@@ -123,7 +122,7 @@ void Body::set_angle(const Angle &angle)
 
 void Body::set_linear_velocity(const Vec2f &velocity)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->body->SetLinearVelocity(b2Vec2(velocity.x/scale, velocity.y/scale));
 }
 
@@ -136,10 +135,16 @@ void Body::set_angular_velocity(const Angle &velocity)
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Body &> &Body::sig_collision()
+Signal_v1<Body &> &Body::sig_begin_collision()
 {
-	return impl->sig_collision;
+	return impl->sig_begin_collision;
 }
+
+Signal_v1<Body &> &Body::sig_end_collision()
+{
+	return impl->sig_end_collision;
+}
+
 Signal_v0 &Body::sig_body_deletion()
 {
 	return impl->sig_body_deletion;

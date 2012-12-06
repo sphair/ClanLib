@@ -94,7 +94,12 @@ public:
 	/// \brief Signal emitted when a collision with other fixture occurs
 	///
 	/// \return Signal_v1<Fixture &>
-	Signal_v1<Fixture &> &sig_collision();
+	Signal_v1<Fixture &> &sig_begin_collision();
+
+	/// \brief Signal emitted when a collision with other fixture ends
+	///
+	/// \return Signal_v1<Fixture &>
+	Signal_v1<Fixture &> &sig_end_collision();
 
 	/// \brief Signal emitted when the fixture is deleted.
 	///

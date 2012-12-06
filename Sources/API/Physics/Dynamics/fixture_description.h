@@ -98,7 +98,8 @@ private:
 
 	std::shared_ptr<FixtureDescription_Impl> impl;
 /// \}
-	friend class Fixture_Impl;
+	friend class Fixture;
+	friend class Fixture_Impl; // Think this over
 	friend class Body;
 };
 

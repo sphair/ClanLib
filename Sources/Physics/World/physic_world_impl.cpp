@@ -46,6 +46,8 @@ PhysicWorld_Impl::PhysicWorld_Impl()
 	position_iterations (3),
 	physic_scale		(100)
 {	
+	//world.SetContactListener(&listener); //Uncomment after finishing physics context.
+	//world.SetContactFilter(&listener); //Uncomment after finishing physics context.
 }
 
 //																											___________________																											

@@ -112,7 +112,12 @@ public:
 	/// \brief Signal emitted when a collision with other body occurs
 	///
 	/// \return Signal_v1<Body &>
-	Signal_v1<Body &> &sig_collision();
+	Signal_v1<Body &> &sig_begin_collision();
+
+	/// \brief Signal emitted when a collision with other body ends
+	///
+	/// \return Signal_v1<Body &>
+	Signal_v1<Body &> &sig_end_collision();
 
 	/// \brief Signal emitted when the body is deleted.
 	///
