@@ -793,3 +793,11 @@ lineedit selection:unfocused
 {
 	background-color: #7a96df;
 }
+
+
+custom
+{
+    flex-direction: row;
+    border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
+    padding: 5px;
+}

@@ -2,12 +2,11 @@
 #include "precomp.h"
 #include "program.h"
 #include <ClanLib/application.h>
-
 using namespace clan;
+#include "custom.h"
+
 
 Application clanapp(&Program::main);
-
-//#define SHOW_FPS
 
 int Program::main(const std::vector<std::string> &args)
 {
@@ -16,17 +15,8 @@ int Program::main(const std::vector<std::string> &args)
 	SetupGL setup_gl;
 	SetupGUI setup_gui;
 
-#ifdef SHOW_FPS
-	DisplayWindowDescription win_desc;
-	win_desc.set_allow_resize(true);
-	win_desc.set_title("GUI Example Application");
-	win_desc.set_size(clan::Size( 1100, 900 ), false);
-	DisplayWindow window = DisplayWindow(win_desc);
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, ".");
-#else
 	GUIManager gui(".");
-#endif
+
 	gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
 
 	GUITopLevelDescription window_desc;
@@ -54,56 +44,9 @@ int Program::main(const std::vector<std::string> &args)
 
 	root->update_layout();
 
-#ifdef SHOW_FPS
-	gui_fps(window, wm, root);
-#else
 	gui.exec();
-#endif
 
 	return 0;
-}
-
-void Program::gui_fps(DisplayWindow &window, GUIWindowManagerTexture &wm, GUIComponent *root)
-{
-	Canvas canvas(window);
-	Font font(canvas, "Tahoma", 24);
-
-	int total_time = 0, fps_count = 0, last_fps= 0;
-	int start_time = 0;
-
-	start_time = clan::System::get_time();
-
-	bool quit = false;
-	while(!quit)
-	{
-		canvas.clear();
-		wm.process();
-		wm.draw_windows(canvas);
-
-		std::string fps = string_format("FPS: %1", last_fps);
-		font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(canvas, canvas.get_width() - 100, 24, fps, Colorf::white);
-
-		fps_count++;
-		int time = clan::System::get_time();
-		total_time += time - start_time;
-		start_time = time;
-		if(total_time >= 1000)
-		{
-			last_fps = fps_count;
-			total_time -= 1000;
-			fps_count = 0;
-		}
-
-		//root->request_repaint();	// 145 FPS (from 512fps)
-		//root->update_style();		// 5 FPS (from 512fps)
-		//root->update_layout();		// 54 FPS (from 512fps)
-
-		KeepAlive::process();
-		canvas.flip(0);
-
-	}
-
 }
 
 void Program::create_component(DomElement xml_element, GUIComponent *parent)
@@ -211,7 +154,14 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 
 		component->set_ranges(100, 200, 5, 20);
 	}
-
+	else if (xml_element.get_tag_name() == "custom")
+	{
+		Custom *component = new Custom(parent);
+		component->set_class(xml_element.get_attribute("class"));
+		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
+		for (size_t i = 0; i < pseudo_classes.size(); i++)
+			component->set_pseudo_class(pseudo_classes[i], true);
+	}
 	else if (xml_element.get_tag_name() == "slider")
 	{
 		Slider *component = new Slider(parent);
