@@ -308,7 +308,7 @@ Rect Tab_Impl::get_client_rect()
 	Rect hr = tab_header->get_geometry();
 	Rect g = tab->get_geometry().get_size();
 	g.top = hr.bottom;
-	Rect content = tab->get_content_box(g);
+	Rect content = tab->get_content_box();
 	return content;
 }
 

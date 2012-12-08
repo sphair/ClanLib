@@ -364,7 +364,7 @@ void ToolBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (index == index_pressed_item || items[index].impl->pressed)
 			part_item = part_item_pressed;
 
-		Rect item_content = part_item.get_content_box(item.impl->position);
+		Rect item_content = part_item.get_content_box();
 		part_item.render_box(canvas, item.impl->position, update_rect);
 
 		Rect icon_pos = item.impl->icon_pos;
@@ -472,9 +472,9 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	need_layout_update = false;
 
 	Rect rect = toolbar->get_size();
-	Rect component_content = toolbar->get_content_box(rect);
+	Rect component_content = toolbar->get_content_box();
 
-	Rect item_content = part_item_normal.get_content_box(component_content);
+	Rect item_content = part_item_normal.get_content_box();
 	int original_text_gap = part_item_normal.get_property_int(CssStr::text_gap, "3");
 
 	if (horizontal)
@@ -508,7 +508,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 				item_content.right = item_content.left + item_size;
 			}
 
-			Rect item_render = part_item_normal.get_render_box(item_content);
+			Rect item_render = part_item_normal.get_render_box();
 			Rect shrink_box = part_item_normal.get_content_shrink_box();
 			item_render.translate(shrink_box.left,0);
 			item.impl->position = item_render;
@@ -549,7 +549,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 				item_content.bottom = item_content.top + item.impl->icon_pos.get_height() + text_gap + text_size.height;
 			}
 
-			Rect item_render = part_item_normal.get_render_box(item_content);
+			Rect item_render = part_item_normal.get_render_box();
 			Rect shrink_box = part_item_normal.get_content_shrink_box();
 			item_render.translate(0, shrink_box.top);
 			item.impl->position = item_render;

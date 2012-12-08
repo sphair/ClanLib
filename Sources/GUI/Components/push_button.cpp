@@ -302,7 +302,7 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		part_focus.render_box(canvas, rect, update_rect);
 	}
 
-	Rect content_rect = button->get_content_box(rect);
+	Rect content_rect = button->get_content_box();
 
 	layout.layout(canvas, content_rect.get_width()); // To do: also add support for SpanLayout::layout(canvas, width, height) so we can clip vertically
 

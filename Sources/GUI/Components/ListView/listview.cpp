@@ -891,7 +891,7 @@ void ListView_Impl::update_part_positions()
 	cancel_edit();
 
 	Rect rect(listview->get_geometry().get_size());
-	rect_content = listview->get_content_box(rect);
+	rect_content = listview->get_content_box();
 
 	header->update_geometry(rect_content);
 
@@ -900,7 +900,7 @@ void ListView_Impl::update_part_positions()
 	rect_columns.right = rect_content.right;
 	rect_columns.bottom = rect_content.bottom;
 
-	rect_columns_content = part_columns_bg.get_content_box(rect_columns);
+	rect_columns_content = part_columns_bg.get_content_box();
 
 	if (layout)
 	{

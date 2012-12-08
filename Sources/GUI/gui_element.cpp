@@ -36,7 +36,7 @@
 namespace clan
 {
 
-GUIElement::GUIElement() : parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0)
+GUIElement::GUIElement() : parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), has_style_updated(true)
 {
 }
 
@@ -74,6 +74,7 @@ void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &doc
 		css_properties.compute(0, resource_cache);
 
 	sig_style_changed.invoke();
+	has_style_updated = true;
 
 	GUIElement *cur_child = first_child;
 	while (cur_child)
@@ -188,6 +189,13 @@ GUIElement::GUIElement(GUIElement &other)
 GUIElement &GUIElement::operator =(const GUIElement &other)
 {
 	throw Exception("GUIElement operator = disallowed");
+}
+
+bool GUIElement::style_updated()
+{
+	bool result = has_style_updated;
+	has_style_updated = false;
+	return result;
 }
 
 

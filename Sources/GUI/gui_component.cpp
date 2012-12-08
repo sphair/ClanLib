@@ -1462,13 +1462,9 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const R
 	return Rect();	// Why is this needed?
 }
 
-Rect GUIComponent::get_render_box(const Rect &content_box_rect) const
+Rect GUIComponent::get_render_box() const
 {
-	//FIXME: impl->check_content_shrink_box_is_cached(*this);
-	Rect box = content_box_rect;
-
-	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
-	//FIXME: box.expand(R.left, R.top, R.right, R.bottom);
+	Rect box = Rect(Point(), impl->geometry.get_size());
 	return box;
 }
 

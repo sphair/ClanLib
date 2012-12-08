@@ -30,6 +30,7 @@
 
 #include "API/CSSLayout/css_box_properties.h"
 #include "gui_element.h"
+#include "Layout/gui_css_used_values.h"
 
 namespace clan
 {
@@ -46,6 +47,12 @@ public:
 
 	GUIComponent *component;
 	GUIElement element;
+
+	GUICSSUsedValues &get_css_used_values();
+private:
+
+	GUICSSUsedValues css_used_values;
+
 };
 
 }

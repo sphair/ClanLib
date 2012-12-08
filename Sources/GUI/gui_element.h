@@ -85,6 +85,10 @@ public:
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Returns true if the style was updated since the last call to this function
+	bool style_updated();
+
 	void set_tag_name(const std::string &name) { tag_name = name; }
 	void set_class(const std::string &name) { class_string = name; }
 	void set_id(const std::string &name) { id = name; }
@@ -131,6 +135,8 @@ private:
 	std::string id;
 	std::string class_string;
 	std::vector<std::string> pseudo_classes;
+
+	bool has_style_updated;
 /// \}
 };
 

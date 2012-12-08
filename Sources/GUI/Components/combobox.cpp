@@ -417,7 +417,7 @@ void ComboBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void ComboBox_Impl::on_resized()
 {
 	Rect g = component->get_size();
-	Rect content_rect = component->get_content_box(g);
+	Rect content_rect = component->get_content_box();
 
 	int opener_width = part_opener.get_preferred_width();
 	opener_rect = Rect(content_rect.right-opener_width, content_rect.top, content_rect.right, content_rect.bottom);

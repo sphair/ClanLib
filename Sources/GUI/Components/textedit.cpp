@@ -1057,7 +1057,7 @@ void TextEdit_Impl::on_timer_expired()
 
 void TextEdit_Impl::on_resized()
 {
-	content_rect = textedit->get_content_box(textedit->get_size());
+	content_rect = textedit->get_content_box();
 
 	Canvas &canvas = textedit->get_canvas();
 	Font font = textedit->get_font();
@@ -1141,14 +1141,14 @@ int TextEdit::get_total_height()
 	}
 	else
 	{
-		return impl->textedit->get_render_box(Rect(0,0,0,0)).get_height();
+		return impl->textedit->get_render_box().get_height();
 	}
 }
 
 void TextEdit_Impl::layout_lines(Canvas &canvas)
 {
 	Rect g = textedit->get_size();
-	Rect content_box = textedit->get_content_box(g);
+	Rect content_box = textedit->get_content_box();
 	Font font = textedit->get_font();
 
 	Vec2i sel_start;
@@ -1211,7 +1211,7 @@ void TextEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	layout_lines(canvas);
 	Rect g = textedit->get_size();
-	Rect content_box = textedit->get_content_box(g);
+	Rect content_box = textedit->get_content_box();
 
 	textedit->set_cliprect(canvas, content_box);
 	for (size_t i = vert_scrollbar->get_position(); i < lines.size(); i++)
