@@ -139,11 +139,19 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box, const Rect
 	render_box(canvas, border_box);
 }
 
+GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values()
+{
+	if (element.style_updated())
+	{
+		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_properties(), component->impl->css_used_values);
+		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_properties(), component->impl->css_used_values);
+	}
+	return css_used_values;
+}
+
 void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 {
-	GUICSSUsedValues css_used_values;
-	GUICSSInitialUsedValues::visit(css_used_values, impl->element.get_css_properties(), impl->component->impl->css_used_values);
-	GUICSSApplyMinMaxConstraints::visit(css_used_values, impl->element.get_css_properties(), impl->component->impl->css_used_values);
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
 
 	Rect viewport = impl->component->get_top_level_component()->get_size();
 	CSSResourceCache *resource_cache = &impl->component->impl->gui_manager_impl->resource_cache;
@@ -212,22 +220,20 @@ Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const R
 	return Rect();	// Why is this needed?
 }
 
-Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
+Rect GUIThemePart::get_content_box() const
 {
-	//FIXME: impl->check_content_shrink_box_is_cached(*this);
-	Rect box = render_box_rect;
-	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
-	//FIXME: box.shrink(R.left, R.top, R.right, R.bottom);
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	Rect box = Rect(Point(), impl->component->impl->geometry.get_size());
+	box.left += css_used_values.border.left + css_used_values.padding.left;
+	box.right -= css_used_values.border.right + css_used_values.padding.right;
+	box.top += css_used_values.border.top + css_used_values.padding.top;
+	box.bottom -= css_used_values.border.bottom + css_used_values.padding.bottom;
 	return box;
 }
 
-Rect GUIThemePart::get_render_box(const Rect &content_box_rect) const
+Rect GUIThemePart::get_render_box() const
 {
-	//FIXME: impl->check_content_shrink_box_is_cached(*this);
-	Rect box = content_box_rect;
-
-	//FIXME: Rect &R = impl->cached_content_box_shrink_rect;
-	//FIXME: box.expand(R.left, R.top, R.right, R.bottom);
+	Rect box = Rect(Point(), impl->component->impl->geometry.get_size());
 	return box;
 }
 

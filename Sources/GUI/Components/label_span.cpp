@@ -160,7 +160,7 @@ void LabelSpan_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void LabelSpan_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = label->get_geometry();
-	Rect content_rect = label->get_content_box(rect.get_size());
+	Rect content_rect = label->get_content_box();
 	switch (alignment)
 	{
 	case LabelSpan::align_left: span.set_align(span_left); break;

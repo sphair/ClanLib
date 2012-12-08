@@ -198,7 +198,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 		part_menubar_joiner.render_box(canvas, joiner_rect, update_rect);
 	}
 
-	Rect client_box = get_content_box(rect);
+	Rect client_box = get_content_box();
 
 	int offset = 0;
 
@@ -213,7 +213,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			row_height = part_separator.get_preferred_height();
 			Rect separator_render_rect(client_box.left, offset, client_box.right, offset+row_height);
-			Rect separator_content_rect = part_separator.get_content_box(separator_render_rect);
+			Rect separator_content_rect = part_separator.get_content_box();
 			separator_content_rect.right -= 4; // This thing is already a hack (render to content to render content as render, wtf? :))
 			separator_content_rect.top += 3; // More hacks..
 			separator_content_rect.bottom += 3; // Something is really wrong about this stuff. But it fixes the visual layout.
@@ -236,7 +236,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			// row rect
 			Rect row_rect(Point(client_box.left, client_box.top + offset), Size(client_box.right, row_height));
 			part_item_row.render_box(canvas, row_rect, update_rect);
-			Rect row_box = part_item_row.get_content_box(row_rect);
+			Rect row_box = part_item_row.get_content_box();
 
 			// icon or check
 			if (item.is_checkable())
@@ -266,10 +266,10 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 			// item text
 			Size text_size = part_item_label.get_text_size(canvas, item.get_text());
-			Size text_full_size = part_item_label.get_render_box(text_size).get_size();
+			Size text_full_size = part_item_label.get_render_box().get_size();
 
 			Rect label_render_rect(row_box.left + icon_column_width, row_box.top, row_box.left + icon_column_width + text_full_size.width, row_box.bottom);
-			Rect label_content_rect = part_item_label.get_content_box(label_render_rect);
+			Rect label_content_rect = part_item_label.get_content_box();
 
 			part_item_label.render_box(canvas, label_render_rect, update_rect);
 			part_item_label.render_text(canvas, item.get_text(), label_content_rect, update_rect);
@@ -286,7 +286,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 					row_box.right,
 					center_y + arrow_height/2);
 
-				Rect arrow_content = part_submenu_arrow.get_content_box(arrow_rect);
+				Rect arrow_content = part_submenu_arrow.get_content_box();
 
 				part_submenu_arrow.render_box(canvas, arrow_content, update_rect);
 			}
@@ -294,7 +294,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			{
 				// accelerator text
 				Size accel_text_size = part_item_accel_label.get_text_size(canvas, item.get_accelerator_text());
-				Size accel_text_full_size = part_item_accel_label.get_render_box(accel_text_size).get_size();
+				Size accel_text_full_size = part_item_accel_label.get_render_box().get_size();
 
 				Rect accel_render_rect(
 					row_box.right-arrow_width-accel_text_full_size.width, 
@@ -302,7 +302,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 					row_box.right-arrow_width, 
 					label_content_rect.bottom);
 
-				Rect accel_content_rect = part_item_accel_label.get_content_box(accel_render_rect);
+				Rect accel_content_rect = part_item_accel_label.get_content_box();
 
 				part_item_accel_label.render_text( canvas, item.get_accelerator_text(), accel_content_rect, update_rect);
 			}
@@ -336,10 +336,10 @@ Size PopupMenuWindow::calc_desired_size()
 		int icon_width = part_item_icon.get_preferred_width();
 
 		Size text_size = part_item_label.get_text_size(canvas, item.get_text());
-		Size text_full_size = part_item_label.get_render_box(text_size).get_size();
+		Size text_full_size = part_item_label.get_render_box().get_size();
 
 		Size accel_text_size = part_item_accel_label.get_text_size(canvas, item.get_accelerator_text());
-		Size accel_text_full_size = part_item_accel_label.get_render_box(accel_text_size).get_size();
+		Size accel_text_full_size = part_item_accel_label.get_render_box().get_size();
 
 		int arrow_width = part_submenu_arrow.get_preferred_width();
 
@@ -351,7 +351,7 @@ Size PopupMenuWindow::calc_desired_size()
 		size.height += row_height;
 	}
 
-	size = get_render_box(size).get_size();
+	size = get_render_box().get_size();
 
 	if (size.width < menu.get_minimum_width())
 	{
@@ -369,7 +369,7 @@ Rect PopupMenuWindow::get_item_rect(int index)
 
 	PopupMenuItem item = menu.get_item_at(index);
 
-	Rect content_area = get_content_box(get_geometry().get_size());
+	Rect content_area = get_content_box();
 	int w = content_area.get_width();
 	int y = content_area.top;
 

@@ -105,7 +105,6 @@ public:
 
 	/// \brief Returns the content box area relative to the component geometry.
 	Rect get_content_box() const;
-	Rect get_content_box(const Rect &stub) const {return get_content_box(); }	//FIXME - Stub
 
 	/// \brief Returns the width of the drawable area of the component.
 	int get_width() const;
@@ -346,8 +345,8 @@ public:
 	/// \brief Calculates the text size using the font defined for the current state.
 	Size get_text_size(Canvas &canvas, const std::string &str) const;
 
-	/// \brief Returns the position and size of a render box for a given content box.
-	Rect get_render_box(const Rect &content_box_rect) const;
+	/// \brief Returns the position and size of a render box
+	Rect get_render_box() const;
 	
 	/// \brief Returns the content shrink box of the theme part.
 	Rect get_content_shrink_box() const;

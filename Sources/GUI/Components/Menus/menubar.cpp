@@ -195,7 +195,7 @@ void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		part_item.set_pseudo_class(CssStr::hot, (index != selected_index) && (index == hot_index));
 
 		Rect item_rect = get_menu_item_rect(index);
-		Rect item_content = part_item.get_content_box(item_rect);
+		Rect item_content = part_item.get_content_box();
 		part_item.render_box(canvas, item_rect, update_rect);
 		part_item.render_text(canvas, topmenu.name, item_content, update_rect);
 	}
@@ -265,7 +265,7 @@ Point MenuBar_Impl::get_submenu_screen_pos()
 Rect MenuBar_Impl::get_menu_item_rect(int our_index)
 {
 	Rect menubar_rect = menubar->get_size();
-	Rect menubar_content_rect = menubar->get_content_box(menubar_rect);
+	Rect menubar_content_rect = menubar->get_content_box();
 
 	int x = menubar_content_rect.left;
 	Canvas &canvas = menubar->get_canvas();

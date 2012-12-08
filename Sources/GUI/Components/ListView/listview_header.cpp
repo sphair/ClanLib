@@ -357,7 +357,7 @@ void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (display_mode != listview_mode_details)
 			crect.right = rect.right;
 		part.render_box(canvas, crect, update_rect);
-		Rect content_rect = part.get_content_box(crect);
+		Rect content_rect = part.get_content_box();
 
 		part.render_text(canvas, col.get_caption(), content_rect, update_rect);
 
@@ -382,7 +382,7 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 
 	listview_header->set_geometry(rect_header);
 
-	Rect content_rect = listview_header->get_content_box(listview_header->get_geometry().get_size());
+	Rect content_rect = listview_header->get_content_box();
 
 	int xpos = content_rect.left;
 	ListViewColumnHeader col = first_column;

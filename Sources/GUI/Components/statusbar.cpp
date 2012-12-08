@@ -224,7 +224,7 @@ void StatusBar_Impl::on_resized()
 void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect(Point(0,0), statusbar->get_geometry().get_size());
-	Rect content = statusbar->get_content_box(rect);
+	Rect content = statusbar->get_content_box();
 
 	Rect rect_status_text = content;
 
@@ -240,7 +240,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		rect_status_text.right = statusbar_parts[0].position.left;
 
 	part_status_text.render_box(canvas, rect_status_text, update_rect);
-	Rect status_text_content = part_status_text.get_content_box(rect_status_text);
+	Rect status_text_content = part_status_text.get_content_box();
 
 	statusbar->get_font().draw_text(canvas, status_text_content.left + 4, content.bottom - 6, status_text, statusbar->get_css_properties().color.color);
 
@@ -248,7 +248,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		StatusBar_Part &statusbar_part = statusbar_parts[index];
 		part_status_part.render_box(canvas, statusbar_part.position, update_rect);
-		Rect part_content = part_status_part.get_content_box(statusbar_part.position);
+		Rect part_content = part_status_part.get_content_box();
 		int icon_width = 0;
 		if (!statusbar_part.icon.is_null())
 		{
@@ -265,7 +265,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 void StatusBar_Impl::position_parts()
 {
 	Rect rect(Point(0,0), statusbar->get_geometry().get_size());
-	Rect content = statusbar->get_content_box(rect);
+	Rect content = statusbar->get_content_box();
 
 	int xpos = content.right;
 	if (show_size_grip)
@@ -282,7 +282,7 @@ void StatusBar_Impl::position_parts()
 		int right = xpos;
 		Rect new_position(left, content.top, right, content.bottom);
 		if (statusbar_part.component && statusbar_part.position != new_position)
-			statusbar_part.component->set_geometry(part_status_part.get_content_box(new_position));
+			statusbar_part.component->set_geometry(part_status_part.get_content_box());
 
 		statusbar_part.position = new_position;
 		xpos = left;

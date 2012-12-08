@@ -325,7 +325,7 @@ void ScrollBar_Impl::create_parts()
 bool ScrollBar_Impl::update_part_positions()
 {
 	Rect rect(Point(0,0), scrollbar->get_geometry().get_size());
-	Rect content_rect = scrollbar->get_content_box(rect);
+	Rect content_rect = scrollbar->get_content_box();
 
 	int decr_height = part_button_decrement.get_preferred_height();
 	int incr_height = part_button_increment.get_preferred_height();

@@ -289,7 +289,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		if (rect.get_width() > 0)
 		{
-			Rect content_box = progressbar->get_content_box(rect);
+			Rect content_box = progressbar->get_content_box();
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left + marquee_position;
@@ -319,7 +319,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_min != progress_max &&
 			rect.get_width() > 0)
 		{
-			Rect content_box = progressbar->get_content_box(rect);
+			Rect content_box = progressbar->get_content_box();
 
 			Rect progress_rect;
 			progress_rect.left = content_box.left;

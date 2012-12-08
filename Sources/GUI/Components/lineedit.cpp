@@ -338,11 +338,11 @@ void LineEdit::resize_to_fit(int max_width)
 	Font font = impl->lineedit->get_font();
 
 	Rect g = get_geometry();
-	Rect rect_content = impl->lineedit->get_content_box(g);
+	Rect rect_content = impl->lineedit->get_content_box();
 	Size text_size = impl->get_visual_text_size(canvas, font);
 	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
-	g.set_size(impl->lineedit->get_render_box(rect_content).get_size());
+	g.set_size(impl->lineedit->get_render_box().get_size());
 	set_geometry(g);
 
 	impl->clip_start_offset = 0;
@@ -1163,7 +1163,7 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	content_rect = lineedit->get_content_box(lineedit->get_size());
+	content_rect = lineedit->get_content_box();
 
 	Canvas &canvas = lineedit->get_canvas();
 	Font font = lineedit->get_font();
