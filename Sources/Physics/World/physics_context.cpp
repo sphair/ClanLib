@@ -69,12 +69,14 @@ int PhysicsContext::max_joints() const
 
 void PhysicsContext::create_in_context(Body &body)
 {
-	impl->create_in_context(body);
+	int id = impl->create_in_context(body);
+	body.set_id(id);
 }
 
 void PhysicsContext::create_in_context(Fixture &fixture)
 {
-	impl->create_in_context(fixture);
+	int id = impl->create_in_context(fixture);
+	fixture.set_id(id);
 }
 
 //void PhysicsContext::create_in_context(Joint &joint); //TODO
