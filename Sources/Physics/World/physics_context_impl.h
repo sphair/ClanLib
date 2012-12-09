@@ -1,5 +1,4 @@
 /*
-**  ClanLib SDK
 **  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
@@ -28,61 +27,54 @@
 
 #pragma once
 
-#include "../Box2D/Box2D.h"
-#include "physics_listener.h"
-#include "API/Physics/World/physic_world_description.h"
-#include "API/Physics/World/physics_context.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include <vector>
+#include <list>
+#include <memory>
 
 namespace clan
 {
-	class BodyDescription;
+	class Body;
+	class Fixture;
+	class Joint;
 	class PhysicWorld;
 
-class PhysicWorld_Impl
+class PhysicsContext_Impl
 {
 public:
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-/// \name Construction
-/// \{
-	PhysicWorld_Impl(PhysicWorld &pw);
+	PhysicsContext_Impl(PhysicWorld &pw);
+	virtual ~PhysicsContext_Impl() { return; }
 
-	virtual ~PhysicWorld_Impl() { return; }
-//																						___________________
-//																						O P E R A T I O N S
-/// \name Operations
-/// \{
-	void create(const PhysicWorldDescription &description);
-	void step();
-	void step(float timestep, int velocity_iterations, int position_iterations);
 
-	b2Body		*create_body(const b2BodyDef &description);
-	b2Joint		*create_joint(const b2JointDef &description);
-
-//																						_____________
-//																						S I G N A L S
-	Signal_v1<float> sig_world_step;
-	Signal_v0 sig_world_destroyed;
 //																						___________________
 //																						A T T R I B U T E S
-/// \}
-/// \name Attributes
-/// \{
-public:
-	b2World world;
-	PhysicsListener listener;
-	PhysicsContext pc;
-	//PhysicsQueryAssistant assistant;
 
-	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
-	float timestep;
-	int velocity_iterations;
-	int position_iterations;
-	std::string name;
-/// \}
+
+//																						___________________
+//																						O P E R A T I O N S
+	void create_in_context(Body &body);
+	void create_in_context(Fixture &fixture);
+	//void create_in_context(Joint &joint); //TODO
+
+	void remove_from_context(Body &body){};
+	void remove_from_context(Fixture &fixture){};
+	//void remove_from_context(Joint &joint){}; //TODO
+
+//																						___________________________
+//																						I M P L E M E N T A T I O N
+	PhysicWorld *owner;
+	const int max_body_amount;
+	const int max_fixture_amount;
+	const int max_joint_amount;
+	std::vector<std::shared_ptr<Body>> bodies;
+	std::vector<std::shared_ptr<Fixture>> fixtures;
+	std::vector<std::shared_ptr<Joint>> joints;
+	std::list<int> free_body_slots;
+	std::list<int> free_fixture_slots;
+	std::list<int> free_joint_slots;
+
 
 };
 

@@ -28,7 +28,6 @@
 
 /// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
 /// \{
-
 #pragma once
 
 #include "../api_physics.h"

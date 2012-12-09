@@ -26,6 +26,8 @@
 **    Arkadiusz Kalinowski
 */
 
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
+/// \{
 #pragma once
 
 #include "../api_physics.h"
@@ -35,8 +37,6 @@
 #include "../../Core/Signals/signal_v0.h"
 #include "../../Core/Signals/signal_v1.h"
 
-/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
-/// \{
 namespace clan
 {
 

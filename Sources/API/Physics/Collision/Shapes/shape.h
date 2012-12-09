@@ -28,8 +28,6 @@
 
 /// \addtogroup clanPhysics_Collision clanPhysics Collision
 /// \{
-
-
 #pragma once
 
 #include "../../api_physics.h"

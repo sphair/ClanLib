@@ -24,8 +24,6 @@
 **  File Author(s):
 **
 **    Arkadiusz Kalinowski
-**    Harry Storbacka
-**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanPhysic_World clanPhysic World
@@ -37,10 +35,6 @@
 #include "../../Core/Signals/signal_v0.h"
 #include "../../Core/Signals/signal_v1.h"
 #include <memory>
-
-#if !defined(WIN32) && !defined(__APPLE__)
-#include <X11/Xlib.h>
-#endif
 
 namespace clan
 {
@@ -126,6 +120,7 @@ private:
 	
 /// \}
 
+	friend class PhysicsContext;
 	friend class DistanceJointDescription;
 
 	friend class PhysicDebugDraw;

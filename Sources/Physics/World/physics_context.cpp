@@ -25,19 +25,42 @@
 **    Arkadiusz Kalinowski
 */
 #include "Physics/precomp.h"
-#include "physics_context.h"
+#include "API/Physics/World/physics_context.h"
+#include "API/Physics/World/physic_world.h"
+#include "physics_context_impl.h"
 
 namespace clan
 {
-
+//																						_______________________
+//																						C O N S T R U C T O R S
 PhysicsContext::PhysicsContext()
-: bodies(200), //Add customising options
-  fixtures(200) //Add customising options
 {
 }
 
-PhysicsContext::~PhysicsContext()
+PhysicsContext::PhysicsContext(PhysicWorld &pw)
+: impl(new PhysicsContext_Impl(pw))
 {
+	
 }
 
+//																						___________________
+//																						A T T R I B U T E S
+
+int PhysicsContext::max_bodies() const
+{
+	return impl->max_body_amount;
+}
+
+int PhysicsContext::max_fixtures() const
+{
+	return impl->max_fixture_amount;
+}
+
+int PhysicsContext::max_joints() const
+{
+	return impl->max_joint_amount;
+}
+
+//																						___________________
+//																						O P E R A T I O N S
 }
