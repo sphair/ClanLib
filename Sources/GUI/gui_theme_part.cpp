@@ -39,6 +39,7 @@
 #include "CSSLayout/LayoutTree/css_background_renderer.h"
 #include "CSSLayout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/LayoutTree/css_layout_graphics.h"
+#include "API/Display/2D/span_layout.h"
 
 namespace clan
 {
@@ -212,12 +213,25 @@ GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas 
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
 {
+	SpanLayout span;
+
 	Font font = get_font();
+	span.add_text(text, font, impl->element.get_css_properties().color.color);
 
-	FontMetrics metrics = font.get_font_metrics();
-	font.draw_text(canvas, (int) content_rect.left, (int) (content_rect.top + metrics.get_ascent()), text, get_css_properties().color.color);
+	switch (impl->element.get_css_properties().text_align.type)
+	{
+		case CSSBoxTextAlign::type_left: span.set_align(span_left); break;
+		case CSSBoxTextAlign::type_center: span.set_align(span_center); break;
+		case CSSBoxTextAlign::type_right: span.set_align(span_right); break;
+		case CSSBoxTextAlign::type_justify: span.set_align(span_justify); break;
+		default: break;
+	}
 
-	return Rect();	// Why is this needed?
+	span.layout(canvas, content_rect.get_width());
+	span.set_position(Point(content_rect.left, content_rect.top));
+	span.draw_layout(canvas);
+
+	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
 Rect GUIThemePart::get_content_box() const
