@@ -69,21 +69,22 @@ PhysicsContext_Impl::PhysicsContext_Impl(PhysicWorld &pw)
 //																						___________________
 //																						O P E R A T I O N S
 
-void PhysicsContext_Impl::create_in_context(Body &body)
+int PhysicsContext_Impl::create_in_context(Body &body)
 {
 	if(free_body_slots.size()>0)
 	{
 		int slot = free_body_slots.front();
 		free_body_slots.pop_front();
-
 		bodies[slot] = std::shared_ptr<Body>(new Body);
 		*bodies[slot] = body;
+
+		return slot;
 	}
 	else
 	throw Exception("Exceded the current maximum bodies amount that is equal "+std::to_string(max_body_amount)+".");
 }
 
-void PhysicsContext_Impl::create_in_context(Fixture &fixture)
+int PhysicsContext_Impl::create_in_context(Fixture &fixture)
 {
 	if(free_fixture_slots.size()>0)
 	{
@@ -92,13 +93,15 @@ void PhysicsContext_Impl::create_in_context(Fixture &fixture)
 
 		fixtures[slot] = std::shared_ptr<Fixture>(new Fixture);
 		*fixtures[slot] = fixture;
+
+		return slot;
 	}
 	else
 	throw Exception("Exceded the current maximum fixtures amount that is equal "+std::to_string(max_fixture_amount)+".");
 
 }
 /*
-void PhysicsContext_Impl::create_in_context(Joint &joint)
+int PhysicsContext_Impl::create_in_context(Joint &joint)
 {
 		if(free_joint_slots.size()>0)
 	{
@@ -113,4 +116,47 @@ void PhysicsContext_Impl::create_in_context(Joint &joint)
 
 }
 */
+
+void PhysicsContext_Impl::remove_from_context(Body &body)
+{
+	int id = body.get_id();
+
+	if(id>=0)
+	{
+		if( (*bodies[id]).get_id() == id)
+		{
+			bodies[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Body from the context. The id of the Body is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Body from the context, but the Body has no ID number"); 
+}
+
+void PhysicsContext_Impl::remove_from_context(Fixture &fixture)
+{
+	int id = fixture.get_id();
+	
+	if(id>=0)
+	{
+		if( (*fixtures[id]).get_id() == id)
+		{
+			fixtures[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Fixture from the context. The id of the Fixture is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Fixture from the context, but the Fixture has no ID number"); 
+}
+
+/*
+void PhysicsContext_Impl::remove_from_context(Joint &joint)
+{
+
+}
+*/
+
+
 }

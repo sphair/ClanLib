@@ -29,6 +29,7 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
+#include <memory>
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 
@@ -40,12 +41,12 @@ class FixtureDescription;
 class PhysicWorld_Impl;
 class Fixture;
 
-class Fixture_Impl
+class Fixture_Impl : public std::enable_shared_from_this<Fixture_Impl>
 {
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Fixture_Impl(Fixture &parent, PhysicWorld_Impl &pw_impl);
+	Fixture_Impl(PhysicWorld_Impl &pw_impl);
 
 	virtual ~Fixture_Impl() { sig_fixture_deletion.invoke(); return; }
 
@@ -60,15 +61,15 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	Signal_v1<Fixture &> sig_begin_collision;
-	Signal_v1<Fixture &> sig_end_collision;
+	Signal_v1<Fixture> sig_begin_collision;
+	Signal_v1<Fixture> sig_end_collision;
 	Signal_v0 sig_fixture_deletion;
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 public:
+	int id;
 	PhysicWorld_Impl *owner_world;
-	Fixture *owner;
 	b2Fixture *fixture;
 	bool fixture_occupied;
 

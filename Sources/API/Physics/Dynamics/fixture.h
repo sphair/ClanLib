@@ -55,11 +55,16 @@ public:
 
 	/// \brief Constructs a World
 	///
+	/// \param pc = Physics Context of the physics world.
 	/// \param body = Body
 	/// \param description = Fixture Description
-	Fixture(Body &body, const FixtureDescription &description);
+	Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &description);
 
 	~Fixture();
+
+private:
+	/// \brief Constructs a Fixture with impl.
+	Fixture(std::shared_ptr<Fixture_Impl> impl);
 
 /// \}
 /// \name Attributes
@@ -75,11 +80,16 @@ public:
 	/// \brief Check if Fixture is a sensor.
 	bool is_sensor() const;
 
+	/// \brief Return the world's id of the fixture.
+	int get_id() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Copy operator.
+	Fixture &Fixture::operator =(const Fixture &copy);
 
 	/// \brief Set the fixture as a sensor.
 	void set_as_sensor (const bool value = true);
@@ -87,19 +97,24 @@ public:
 	/// \brief Checks given point for collision with the fixture.
 	bool test_point (const Vec2f &p) const;
 
+private:
+		
+	/// \brief set the world's id of the fixture.
+	void set_id(int value);
+
 /// \}
 /// \name Signals
 /// \{
 public:
 	/// \brief Signal emitted when a collision with other fixture occurs
 	///
-	/// \return Signal_v1<Fixture &>
-	Signal_v1<Fixture &> &sig_begin_collision();
+	/// \return Signal_v1<Fixture>
+	Signal_v1<Fixture> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other fixture ends
 	///
-	/// \return Signal_v1<Fixture &>
-	Signal_v1<Fixture &> &sig_end_collision();
+	/// \return Signal_v1<Fixture>
+	Signal_v1<Fixture> &sig_end_collision();
 
 	/// \brief Signal emitted when the fixture is deleted.
 	///
@@ -114,6 +129,8 @@ private:
 	std::shared_ptr<Fixture_Impl> impl;
 /// \}
 
+	friend class Fixture_Impl;
+	friend class PhysicsContext;
 };
 
 }

@@ -37,11 +37,11 @@
 namespace clan
 {
 
-Fixture_Impl::Fixture_Impl(Fixture &parent, PhysicWorld_Impl &pw_impl)
+Fixture_Impl::Fixture_Impl(PhysicWorld_Impl &pw_impl)
 : fixture(NULL),
   fixture_occupied(false),
-  owner(&parent),
-  owner_world(&pw_impl)
+  owner_world(&pw_impl),
+  id(-1)
 {
 }
 
@@ -62,12 +62,16 @@ void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &descript
 
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
 {
-	sig_begin_collision.invoke(*fixture.owner); //Send the fixute that this fixture collided with.
+	Fixture collision_fixture(shared_from_this());
+
+	sig_begin_collision.invoke(collision_fixture); //Send the fixute that this fixture collided with.
 }
 
 void Fixture_Impl::on_end_collision(Fixture_Impl &fixture)
 {
-	sig_end_collision.invoke(*fixture.owner); //Send the fixture that this fixture collided with.
+	Fixture collision_fixture(shared_from_this());
+
+	sig_end_collision.invoke(collision_fixture); //Send the fixture that this fixture collided with.
 }
 
 }

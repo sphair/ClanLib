@@ -54,12 +54,12 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
-	void create_in_context(Body &body);
-	void create_in_context(Fixture &fixture);
+	int create_in_context(Body &body);
+	int create_in_context(Fixture &fixture);
 	//void create_in_context(Joint &joint); //TODO
 
-	void remove_from_context(Body &body){};
-	void remove_from_context(Fixture &fixture){};
+	void remove_from_context(Body &body);
+	void remove_from_context(Fixture &fixture);
 	//void remove_from_context(Joint &joint){}; //TODO
 
 //																						___________________________

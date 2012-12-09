@@ -44,12 +44,13 @@ Fixture::Fixture()
 {
 }
 
-Fixture::Fixture(Body &body, const FixtureDescription &description)
-: impl(new Fixture_Impl(*this, *description.impl->owner))
+Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &description)
+: impl(new Fixture_Impl(*description.impl->owner))
 {
 	if(!body.is_null())
 	{
 		impl->create_fixture(body,description);
+		pc.create_in_context(*this);
 	}
 	else
 	throw Exception("Tried to create a fixture with a null Body object");
@@ -72,8 +73,18 @@ bool Fixture::is_sensor() const
 	return impl->fixture->IsSensor();
 }
 
+int Fixture::get_id() const
+{
+	return impl->id;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
+
+Fixture &Fixture::operator =(const Fixture &copy)
+{
+	impl = copy.impl;
+	return *this;
+}
 
 void Fixture::set_as_sensor(const bool value)
 {
@@ -86,15 +97,21 @@ bool Fixture::test_point(const Vec2f &p) const
 	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
 }
 
+void Fixture::set_id(int value)
+{
+	impl->id = value;
+}
+
+
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Fixture &> &Fixture::sig_begin_collision()
+Signal_v1<Fixture> &Fixture::sig_begin_collision()
 {
 	return impl->sig_begin_collision;
 }
 
-Signal_v1<Fixture &> &Fixture::sig_end_collision()
+Signal_v1<Fixture> &Fixture::sig_end_collision()
 {
 	return impl->sig_end_collision;
 }
