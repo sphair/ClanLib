@@ -43,6 +43,7 @@ class PhysicWorld;
 class BodyDescription;
 class Body_Impl;
 class FixtureDescription;
+class PhysicsContext;
 
 /// \brief Body class
 ///
@@ -55,10 +56,16 @@ public:
 
 	/// \brief Constructs a World
 	///
+	/// \param pc = Physics Context
 	/// \param description = Body Description
-	Body(const BodyDescription &description);
+	Body(PhysicsContext &pc, const BodyDescription &description);
 
 	~Body();
+
+private:
+
+	/// \brief Constructs a Body with impl.
+	Body(std::shared_ptr<Body_Impl> impl);
 
 /// \}
 /// \name Attributes
@@ -83,11 +90,16 @@ public:
 	/// \brief Return the angular velocity of the body.
 	Angle get_angular_velocity() const;
 
+	/// \brief Return the world's id of the body.
+	int get_id() const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Copy operator.
+	Body &Body::operator =(const Body &copy);
 
 	/// \brief add a fixture to the body.
 	//Fixture create_fixture(const FixtureDescription &fixture);
@@ -104,19 +116,24 @@ public:
 	/// \brief set the angular velocity of the body.
 	void set_angular_velocity(const Angle &velocity);
 
+private:
+
+	/// \brief set the world's id of the body.
+	void set_id(int value);
+
 /// \}
 /// \name Signals
 /// \{
 public:
 	/// \brief Signal emitted when a collision with other body occurs
 	///
-	/// \return Signal_v1<Body &>
-	Signal_v1<Body &> &sig_begin_collision();
+	/// \return Signal_v1<Body>
+	Signal_v1<Body> &sig_begin_collision();
 
 	/// \brief Signal emitted when a collision with other body ends
 	///
-	/// \return Signal_v1<Body &>
-	Signal_v1<Body &> &sig_end_collision();
+	/// \return Signal_v1<Body>
+	Signal_v1<Body> &sig_end_collision();
 
 	/// \brief Signal emitted when the body is deleted.
 	///
@@ -131,6 +148,8 @@ private:
 	std::shared_ptr<Body_Impl> impl;
 /// \}
 	friend class Fixture_Impl;
+	friend class Body_Impl;
+	friend class PhysicsContext;
 
 	friend class DistanceJointDescription;
 };

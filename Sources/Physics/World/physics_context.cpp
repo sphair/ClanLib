@@ -25,6 +25,9 @@
 **    Arkadiusz Kalinowski
 */
 #include "Physics/precomp.h"
+#include "API/Physics/Dynamics/body.h"
+#include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics/Dynamics/Joints/joint.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Physics/World/physic_world.h"
 #include "physics_context_impl.h"
@@ -63,4 +66,29 @@ int PhysicsContext::max_joints() const
 
 //																						___________________
 //																						O P E R A T I O N S
+
+void PhysicsContext::create_in_context(Body &body)
+{
+	impl->create_in_context(body);
+}
+
+void PhysicsContext::create_in_context(Fixture &fixture)
+{
+	impl->create_in_context(fixture);
+}
+
+//void PhysicsContext::create_in_context(Joint &joint); //TODO
+
+void PhysicsContext::remove_from_context(Body &body)
+{
+	impl->remove_from_context(body);
+}
+
+void PhysicsContext::remove_from_context(Fixture &fixture)
+{
+	impl->remove_from_context(fixture);
+}
+
+//void PhysicsContext::remove_from_context(Joint &joint){}; //TODO
+
 }
