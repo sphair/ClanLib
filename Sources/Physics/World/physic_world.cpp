@@ -36,13 +36,13 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 PhysicWorld::PhysicWorld()
-: impl(new PhysicWorld_Impl())
+: impl(new PhysicWorld_Impl(*this))
 {
 
 }
 
 PhysicWorld::PhysicWorld(const PhysicWorldDescription &description)
-: impl(new PhysicWorld_Impl())
+: impl(new PhysicWorld_Impl(*this))
 {
 	impl->create(description);
 }

@@ -24,8 +24,6 @@
 **  File Author(s):
 **
 **    Arkadiusz Kalinowski
-**    Harry Storbacka
-**    Kenneth Gangstoe
 */
 
 /// \addtogroup clanPhysic_World clanPhysic World

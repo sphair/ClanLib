@@ -1,4 +1,5 @@
 /*
+**  ClanLib SDK
 **  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
@@ -25,26 +26,62 @@
 **    Arkadiusz Kalinowski
 */
 
+/// \addtogroup clanPhysic_World clanPhysic World
+/// \{
+
 #pragma once
 
-#include <vector>
+#include "../api_physics.h"
 #include <memory>
 
 namespace clan
 {
-	class Body;
-	class Fixture;
+	class PhysicWorld;
+	class PhysicsContext_Impl;
 
-class PhysicsContext
+class CL_API_PHYSICS PhysicsContext
 {
+/// \name Construction
+/// \{
 public:
-
+	/// \brief Constructs a null instance.
 	PhysicsContext();
-	~PhysicsContext();
 
-	std::vector<std::shared_ptr<Body>> bodies;
-	std::vector<std::shared_ptr<Fixture>> fixtures;
+	/// \brief Constructs a PhysicsContext.
+	///
+	/// \param pw = Physics World.
+	PhysicsContext(PhysicWorld &pw);
+
+/// \}
+/// \name Attributes
+/// \{
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Returns maximum amount of bodies allowed.
+	int max_bodies() const;
+
+	/// \brief Returns maximum amount of fixtures allowed.
+	int max_fixtures() const;
+
+	/// \brief Returns maximum amount of joints allowed.
+	int max_joints() const;
+/// \}
+/// \name Operations
+/// \{
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+	std::shared_ptr<PhysicsContext_Impl> impl;
+
+/// \}
 
 };
 
 }
+
+/// \}
