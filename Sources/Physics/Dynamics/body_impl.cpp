@@ -37,11 +37,11 @@ namespace clan
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-Body_Impl::Body_Impl(Body &parent, PhysicWorld_Impl &pw_impl)
+Body_Impl::Body_Impl( PhysicWorld_Impl &pw_impl)
 :	body(NULL),
 	body_occupied(false),
 	owner_world(&pw_impl),
-	owner(&parent)
+	id(-1)
 {
 
 }
@@ -65,12 +65,16 @@ void Body_Impl::create_body(const BodyDescription &description)
 
 void Body_Impl::on_begin_collision(Body_Impl &body)
 {
-	sig_begin_collision.invoke(*body.owner); //Send the body that this body collided with.
+	Body collision_body(shared_from_this());
+
+	sig_begin_collision.invoke(collision_body); //Send the body that this body collided with.
 }
 
 void Body_Impl::on_end_collision(Body_Impl &body)
 {
-	sig_end_collision.invoke(*body.owner); //Send the body that this body collided with.
+	Body collision_body(shared_from_this());
+
+	sig_end_collision.invoke(collision_body); //Send the body that this body collided with.
 }
 //																						_____________
 //																						S I G N A L S

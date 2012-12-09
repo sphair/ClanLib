@@ -33,10 +33,10 @@
 #include "fixture_description_impl.h"
 #include "../World/physic_world_impl.h"
 #include "API/Physics/World/physic_world.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Physics/Dynamics/fixture_description.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Core/Math/angle.h"
-
 
 namespace clan
 {
@@ -46,15 +46,21 @@ Body::Body()
 {
 }
 
-Body::Body(const BodyDescription &description)
-: impl(new Body_Impl(*this, *description.impl->owner))
+Body::Body(PhysicsContext &pc, const BodyDescription &description)
+: impl(new Body_Impl( *description.impl->owner))
 {
 	if(impl->owner)
 	{
 		impl->create_body(description);
+		pc.create_in_context(*this);
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicWorld object");
+}
+
+Body::Body(std::shared_ptr<Body_Impl> copy)
+{
+	impl = copy;
 }
 
 Body::~Body()
@@ -99,6 +105,11 @@ Angle Body::get_angular_velocity() const
 
 	return Angle(velocity,angle_radians);
 }
+
+int Body::get_id() const
+{
+	return impl->id;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 /*
@@ -109,6 +120,13 @@ Fixture Body::create_fixture(const FixtureDescription &description)
 	return fixture;
 }
 */
+
+Body &Body::operator =(const Body &copy)
+{
+	impl = copy.impl;
+	return *this;
+}
+
 void Body::set_position(const Vec2f &pos)
 {
 	float scale = impl->owner_world->physic_scale;
@@ -131,16 +149,20 @@ void Body::set_angular_velocity(const Angle &velocity)
 	impl->body->SetAngularVelocity(velocity.to_radians());
 }
 
+void Body::set_id(int value)
+{
+	impl->id = value;
+}
 
 //																											_____________																										
 //																											S I G N A L S
 
-Signal_v1<Body &> &Body::sig_begin_collision()
+Signal_v1<Body> &Body::sig_begin_collision()
 {
 	return impl->sig_begin_collision;
 }
 
-Signal_v1<Body &> &Body::sig_end_collision()
+Signal_v1<Body> &Body::sig_end_collision()
 {
 	return impl->sig_end_collision;
 }

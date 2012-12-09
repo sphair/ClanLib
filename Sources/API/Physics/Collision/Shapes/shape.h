@@ -75,6 +75,7 @@ public:
 /// \name Operations
 /// \{
 
+	/// \brief Copy operator.
 	Shape &Shape::operator =(const Shape &copy);
 	//Add us
 	// 	Clone the concrete shape

@@ -38,6 +38,8 @@ namespace clan
 {
 	class PhysicWorld;
 	class PhysicsContext_Impl;
+	class Body;
+	class Fixture;
 
 class CL_API_PHYSICS PhysicsContext
 {
@@ -70,7 +72,24 @@ public:
 /// \}
 /// \name Operations
 /// \{
+private:
+	/// \brief Add Body to the context.
+	void create_in_context(Body &body);
 
+	/// \brief Add Fixture to the context.
+	void create_in_context(Fixture &fixture);
+
+	/// \brief Add Joint to the context.
+	//void create_in_context(Joint &joint); //TODO
+
+	/// \brief Remove Body from the context.
+	void remove_from_context(Body &body);
+
+	/// \brief Remove Fixture from the context.
+	void remove_from_context(Fixture &fixture);
+
+	/// \brief Remove Joint from the context.
+	//void remove_from_context(Joint &joint){}; //TODO
 /// \}
 /// \name Implementation
 /// \{
@@ -80,6 +99,9 @@ private:
 
 /// \}
 
+	friend class Body;
+	friend class Fixture;
+	friend class Joint;
 };
 
 }

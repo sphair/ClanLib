@@ -39,12 +39,12 @@
 namespace clan
 {
 
-class Body_Impl
+class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 {
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Body_Impl(Body &parent, PhysicWorld_Impl &pw_impl);
+	Body_Impl(PhysicWorld_Impl &pw_impl);
 
 	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); sig_body_deletion.invoke(); }
 //																						___________________
@@ -56,14 +56,15 @@ public:
 //																						_____________
 //																						S I G N A L S
 
-	Signal_v1 <Body &> sig_begin_collision;
-	Signal_v1 <Body &> sig_end_collision;
+	Signal_v1 <Body> sig_begin_collision;
+	Signal_v1 <Body> sig_end_collision;
 	Signal_v0 sig_body_deletion;
 	//Maybe fixture attachment signal?
 
 //																						___________________
 //																						A T T R I B U T E S
 public:
+	int id;
 	PhysicWorld_Impl *owner_world;
 	Body *owner;
 	b2Body *body;
