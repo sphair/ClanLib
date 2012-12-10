@@ -103,7 +103,7 @@ Size MessageBoxComponent::layout_content()
 
 
 	Size text_size = component->get_text_size(get_canvas(), detail_text);
-	rect_text = component->get_render_box();
+	rect_text = component->get_size();
 	rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
 

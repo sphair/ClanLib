@@ -1476,12 +1476,6 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const R
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
-Rect GUIComponent::get_render_box() const
-{
-	Rect box = Rect(Point(), impl->geometry.get_size());
-	return box;
-}
-
 Rect GUIComponent::get_content_shrink_box() const
 {
 	Rect shrink_box;

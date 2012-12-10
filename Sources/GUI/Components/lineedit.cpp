@@ -342,7 +342,7 @@ void LineEdit::resize_to_fit(int max_width)
 	Size text_size = impl->get_visual_text_size(canvas, font);
 	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
-	g.set_size(impl->lineedit->get_render_box().get_size());
+	g.set_size(impl->lineedit->get_size());
 	set_geometry(g);
 
 	impl->clip_start_offset = 0;

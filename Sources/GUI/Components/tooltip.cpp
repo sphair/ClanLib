@@ -117,8 +117,7 @@ void ToolTip::set_text(const std::string &text)
 	Canvas &canvas = get_canvas();
 	Size text_size = get_font().get_text_size(canvas, impl->text);
 	Rect rect(Point(0,0), text_size);
-	Rect client_rect = impl->tooltip->get_render_box();
-	set_geometry(Rect(top_left, client_rect.get_size()));
+	set_geometry(Rect(top_left, impl->tooltip->get_size()));
 }
 
 void ToolTip::show(const Point &position)
