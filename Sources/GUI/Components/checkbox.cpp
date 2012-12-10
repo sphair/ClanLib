@@ -138,12 +138,12 @@ const std::string &CheckBox::get_text() const
 
 float CheckBox::get_preferred_content_width()
 {
-	return 100.0f;
+	return impl->part_checker.get_css_width();
 }
 
 float CheckBox::get_preferred_content_height(float width)
 {
-	return 50.0f;
+	return impl->part_checker.get_css_height();
 }
 
 /////////////////////////////////////////////////////////////////////////////
