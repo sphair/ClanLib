@@ -112,8 +112,8 @@ public:
 	/// \brief Returns the content shrink box of the theme part.
 	Rect get_content_shrink_box() const;
 
-	/// \brief Returns the position and size of a render box for a given content box.
-	Rect get_render_box(const Rect &content_box_rect) const;
+	/// \brief Returns the position and size of a border box for a given content box.
+	Rect get_border_box(const Rect &content_box_rect) const;
 
 	/// \brief Returns the value of a property.
 	std::string get_property(const std::string &property, const std::string &default_value) const;

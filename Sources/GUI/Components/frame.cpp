@@ -144,7 +144,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		content_caption_width += frame->get_text_size(canvas, header_text).width;
 	}
 
-	int caption_width = part_header_caption.get_render_box(Rect(0, 0, content_caption_width, rect_header_content.get_height())).get_width();
+	int caption_width = part_header_caption.get_border_box(Rect(0, 0, content_caption_width, rect_header_content.get_height())).get_width();
 
 	Rect rect_header_left(rect_header_content.left, rect_header_content.top, rect_header_content.left + part_header_left.get_css_width(), rect_header_content.bottom);
 	Rect rect_header_caption(rect_header_left.right, rect_header_content.top, rect_header_left.right + caption_width, rect_header_content.bottom);

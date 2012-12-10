@@ -508,7 +508,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 				item_content.right = item_content.left + item_size;
 			}
 
-			Rect item_render = part_item_normal.get_render_box(item_content);
+			Rect item_render = part_item_normal.get_border_box(item_content);
 			Rect shrink_box = part_item_normal.get_content_shrink_box();
 			item_render.translate(shrink_box.left,0);
 			item.impl->position = item_render;
@@ -549,7 +549,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 				item_content.bottom = item_content.top + item.impl->icon_pos.get_height() + text_gap + text_size.height;
 			}
 
-			Rect item_render = part_item_normal.get_render_box(item_content);
+			Rect item_render = part_item_normal.get_border_box(item_content);
 			Rect shrink_box = part_item_normal.get_content_shrink_box();
 			item_render.translate(0, shrink_box.top);
 			item.impl->position = item_render;

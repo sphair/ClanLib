@@ -239,7 +239,7 @@ Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
 	return box;
 }
 
-Rect GUIThemePart::get_render_box(const Rect &content_box_rect) const
+Rect GUIThemePart::get_border_box(const Rect &content_box_rect) const
 {
 	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
 	Rect box = content_box_rect;
