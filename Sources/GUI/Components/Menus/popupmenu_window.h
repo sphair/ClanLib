@@ -57,7 +57,7 @@ public:
 	// Returns the position of the submenu of the currently selected item.
 	Point get_submenu_screen_position();
 
-	virtual Size get_preferred_size() const;
+	virtual Size get_css_size() const;
 
 // Operations:
 public:

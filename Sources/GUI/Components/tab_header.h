@@ -56,9 +56,9 @@ public:
 /// \{
 
 public:
-	int get_preferred_height() const;
+	int get_css_height() const;
 
-	virtual Size get_preferred_size() const;
+	virtual Size get_css_size() const;
 
 
 /// \}

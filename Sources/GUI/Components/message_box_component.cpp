@@ -85,10 +85,10 @@ MessageBoxComponent::~MessageBoxComponent()
 Size MessageBoxComponent::layout_content()
 {
 	Size size(0,0);
-	Size icon_size = part_icon.get_preferred_size();
+	Size icon_size = part_icon.get_css_size();
 	Rect border_space = component->get_content_shrink_box();
 
-	Size min_size = component->get_preferred_size();
+	Size min_size = component->get_css_size();
 	if (min_size == Size(0,0))
 	{
 		min_size = Size(300,80);
@@ -138,7 +138,7 @@ Size MessageBoxComponent::layout_content()
 	{
 		case mb_buttons_ok:
 		{
-			Size button_size = button_ok->get_preferred_size();
+			Size button_size = button_ok->get_css_size();
 			if (button_size == Size(0,0))
 			{
 				button_size = Size(66,21);
@@ -154,7 +154,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no:
 		{
-			Size button_size = button_yes->get_preferred_size();
+			Size button_size = button_yes->get_css_size();
 			if (button_size == Size(0,0))
 			{
 				button_size = Size(66,21);
@@ -174,7 +174,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_yes_no_cancel:
 		{
-			Size button_size = button_yes->get_preferred_size();
+			Size button_size = button_yes->get_css_size();
 			if (button_size == Size(0,0))
 			{
 				button_size = Size(66,21);
@@ -198,7 +198,7 @@ Size MessageBoxComponent::layout_content()
 		}
 		case mb_buttons_ok_cancel:
 		{
-			Size button_size = button_ok->get_preferred_size();
+			Size button_size = button_ok->get_css_size();
 			if (button_size == Size(0,0))
 			{
 				button_size = Size(66,21);

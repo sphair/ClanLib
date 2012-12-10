@@ -59,7 +59,7 @@ public:
 public:
 	RibbonMenu *get_menu() { return menu; }
 
-	Size get_preferred_size() const;
+	Size get_css_size() const;
 
 /// \}
 /// \name Operations

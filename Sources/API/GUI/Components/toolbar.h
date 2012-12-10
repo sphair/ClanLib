@@ -76,7 +76,7 @@ public:
 	/// \brief Get Preferred size
 	///
 	/// \return preferred_size
-	Size get_preferred_size() const;
+	Size get_css_size() const;
 
 	/// \brief Get item by id
 	///

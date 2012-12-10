@@ -98,9 +98,9 @@ int PopupMenuWindow::get_selected_item_index()
 	return selected;
 }
 
-Size PopupMenuWindow::get_preferred_size() const
+Size PopupMenuWindow::get_css_size() const
 {
-	return Size(40, 40); //FIXME: component->get_preferred_size();
+	return Size(40, 40); //FIXME: component->get_css_size();
 }
 
 Point PopupMenuWindow::get_submenu_screen_position()
@@ -194,7 +194,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 	if (menu.impl->joiner_width > 0)
 	{
-	    Rect joiner_rect(0, 0, menu.impl->joiner_width, part_menubar_joiner.get_preferred_height());
+	    Rect joiner_rect(0, 0, menu.impl->joiner_width, part_menubar_joiner.get_css_height());
 		part_menubar_joiner.render_box(canvas, joiner_rect, update_rect);
 	}
 
@@ -211,7 +211,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 		if (item.is_separator())
 		{
-			row_height = part_separator.get_preferred_height();
+			row_height = part_separator.get_css_height();
 			Rect separator_render_rect(client_box.left, offset, client_box.right, offset+row_height);
 			Rect separator_content_rect = part_separator.get_content_box(separator_render_rect);
 			separator_content_rect.right -= 4; // This thing is already a hack (render to content to render content as render, wtf? :))
@@ -231,7 +231,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			part_item_label.set_pseudo_class(CssStr::disabled, item.is_disabled());
 			part_item_accel_label.set_pseudo_class(CssStr::disabled, item.is_disabled());
 
-			row_height = part_item_row.get_preferred_height();
+			row_height = part_item_row.get_css_height();
 
 			// row rect
 			Rect row_rect(Point(client_box.left, client_box.top + offset), Size(client_box.right, row_height));
@@ -275,8 +275,8 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			part_item_label.render_text(canvas, item.get_text(), label_content_rect, update_rect);
 
 			int center_y = row_box.get_center().y;
-			int arrow_width = part_submenu_arrow.get_preferred_width();
-			int arrow_height = part_submenu_arrow.get_preferred_height();
+			int arrow_width = part_submenu_arrow.get_css_width();
+			int arrow_height = part_submenu_arrow.get_css_height();
 
 			if (item.has_submenu())
 			{
@@ -329,11 +329,11 @@ Size PopupMenuWindow::calc_desired_size()
 
 		int row_height = 0;
 		if (item.is_separator())
-			row_height = part_separator.get_preferred_height();
+			row_height = part_separator.get_css_height();
 		else
-			row_height = part_item_row.get_preferred_height();
+			row_height = part_item_row.get_css_height();
 
-		int icon_width = part_item_icon.get_preferred_width();
+		int icon_width = part_item_icon.get_css_width();
 
 		Size text_size = part_item_label.get_text_size(canvas, item.get_text());
 		Size text_full_size = part_item_label.get_render_box(text_size).get_size();
@@ -341,7 +341,7 @@ Size PopupMenuWindow::calc_desired_size()
 		Size accel_text_size = part_item_accel_label.get_text_size(canvas, item.get_accelerator_text());
 		Size accel_text_full_size = part_item_accel_label.get_render_box(accel_text_size).get_size();
 
-		int arrow_width = part_submenu_arrow.get_preferred_width();
+		int arrow_width = part_submenu_arrow.get_css_width();
 
 		int w = icon_width + text_full_size.width + accel_text_full_size.width + arrow_width;
 
@@ -364,8 +364,8 @@ Size PopupMenuWindow::calc_desired_size()
 Rect PopupMenuWindow::get_item_rect(int index)
 {
 	int count = menu.get_item_count();
-	int row_height = part_item_row.get_preferred_height();
-	int separator_height = part_separator.get_preferred_height();
+	int row_height = part_item_row.get_css_height();
+	int separator_height = part_separator.get_css_height();
 
 	PopupMenuItem item = menu.get_item_at(index);
 
@@ -401,8 +401,8 @@ void PopupMenuWindow::create_parts()
 	part_menubar_joiner = GUIThemePart(this, CssStr::PopupMenuWindow::part_menubar_joiner);
 
 	icon_column_width = get_property_int("icon-column-width", "30");
-	icon_size = part_item_icon.get_preferred_size();
-	check_size = part_item_check.get_preferred_size();
+	icon_size = part_item_icon.get_css_size();
+	check_size = part_item_check.get_css_size();
 
 	func_render().set(this, &PopupMenuWindow::on_render);
 }

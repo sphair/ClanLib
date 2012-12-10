@@ -92,7 +92,7 @@ int PopupMenu::get_item_count() const
 	return (int) impl->items.size();
 }
 
-Size PopupMenu::get_preferred_size() const
+Size PopupMenu::get_css_size() const
 {
 	return Size(100,100); // todo
 }

@@ -325,7 +325,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = checkbox->get_geometry();
 
-	Size pref_size = part_checker.get_preferred_size();
+	Size pref_size = part_checker.get_css_size();
 	Rect content_rect = checkbox->get_content_box();
 
 	int ypos = content_rect.top + content_rect.get_height()/2 - pref_size.height/2;

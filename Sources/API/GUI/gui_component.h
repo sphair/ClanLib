@@ -298,7 +298,7 @@ public:
 	/// Override this function if the component has non-css content.
 	virtual float get_preferred_content_height(float width);
 
-	int get_preferred_height() const;	//FIXME: Stub
+	int get_css_height() const;	//FIXME: Stub
 
 	/// \brief Convert the top-level window client coordinates to component coordinates.
 	Point window_to_component_coords(const Point &window_point) const;
@@ -352,10 +352,10 @@ public:
 	Rect get_content_shrink_box() const;
 
 	/// \brief Returns the preferred size of a render box.
-	Size get_preferred_size() const;
+	Size get_css_size() const;
 
 	/// \brief Returns the preferred width of a render box.
-	int get_preferred_width() const;
+	int get_css_width() const;
 
 	/// \brief Returns the value of a property.
 	std::string get_property(const std::string &property, const std::string &default_value) const;

@@ -327,8 +327,8 @@ bool ScrollBar_Impl::update_part_positions()
 	Rect rect(Point(0,0), scrollbar->get_geometry().get_size());
 	Rect content_rect = scrollbar->get_content_box();
 
-	int decr_height = part_button_decrement.get_preferred_height();
-	int incr_height = part_button_increment.get_preferred_height();
+	int decr_height = part_button_decrement.get_css_height();
+	int incr_height = part_button_increment.get_css_height();
 	int total_height = vertical ? content_rect.get_height() : content_rect.get_width();
 	int track_height = max(0, total_height - decr_height - incr_height);
 	int thumb_height = calculate_thumb_size(track_height);

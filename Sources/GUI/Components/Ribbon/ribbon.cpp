@@ -61,7 +61,7 @@ Ribbon::Ribbon(GUIComponent *container)
 
 	menu_button = new PushButton(this);
 	menu_button->set_class("menu");
-	menu_button->set_geometry(Rect(0, 0, menu_button->get_preferred_width(), 1 + menu_button->get_preferred_height()));
+	menu_button->set_geometry(Rect(0, 0, menu_button->get_css_width(), 1 + menu_button->get_css_height()));
 	menu_button->func_clicked().set(this, &Ribbon::on_menu_button_clicked);
 
 	menu = new RibbonMenu(this);
@@ -82,7 +82,7 @@ Ribbon::Ribbon(GUIComponent *container)
 	DwmEnableBlurBehindWindow(hwnd, &blur_behind);
 
 	MARGINS margins = { 0 };
-	margins.cyTopHeight = part_tab.get_preferred_height();
+	margins.cyTopHeight = part_tab.get_css_height();
 	DwmExtendFrameIntoClientArea(hwnd, &margins);
 #endif
 }
@@ -93,9 +93,9 @@ Ribbon::~Ribbon()
 		delete pages[i];
 }
 
-Size Ribbon::get_preferred_size() const
+Size Ribbon::get_css_size() const
 {
-	return Size(10, 10);//FIXME: part_background.get_preferred_size();
+	return Size(10, 10);//FIXME: part_background.get_css_size();
 }
 
 void Ribbon::add_page(RibbonPage *page)
@@ -108,7 +108,7 @@ void Ribbon::add_page(RibbonPage *page)
 
 void Ribbon::on_resized()
 {
-	int tab_height = part_tab.get_preferred_height();
+	int tab_height = part_tab.get_css_height();
 	Rect page_box = get_size();
 	page_box.top = tab_height;
 	for (size_t i = 0; i < pages.size(); i++)
@@ -134,14 +134,14 @@ void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 
 void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 {
-	int tab_x = menu_button->get_preferred_width() + 2;
+	int tab_x = menu_button->get_css_width() + 2;
 	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 	{
 		if (pages[page_index]->show_tab)
 		{
 			Size size_tab_text = font_tab.get_text_size(canvas, pages[page_index]->text);
 			int tab_width = max(size_tab_text.width, 40)+12;
-			Rect current_tab(Point(tab_x, 0), Size(tab_width+12, part_tab.get_preferred_height()));
+			Rect current_tab(Point(tab_x, 0), Size(tab_width+12, part_tab.get_css_height()));
 
 			std::string &custom_state = pages[page_index]->tab_css_custom_state;
 			if (!custom_state.empty())

@@ -231,9 +231,9 @@ void Window_Impl::create_parts()
 
 		Rect rect = window->get_size();
 
-		Size part_buttonclose_size = part_buttonclose.get_preferred_size();
-		int frameright_width = part_frameright.get_preferred_width();
-		int caption_height = part_caption.get_preferred_height();
+		Size part_buttonclose_size = part_buttonclose.get_css_size();
+		int frameright_width = part_frameright.get_css_width();
+		int caption_height = part_caption.get_css_height();
 
 		part_buttonclose_rect = Rect(rect.right - part_buttonclose_size.width - frameright_width - 2, rect.top + caption_height - part_buttonclose_size.height - 3, rect.right - frameright_width - 2, rect.top + caption_height - 3);
 	}
@@ -318,10 +318,10 @@ Rect Window_Impl::get_client_area() const
 
 	if (draw_caption)
 	{
-		int caption_height = part_caption.get_preferred_height();
-		int frameleft_width = part_frameleft.get_preferred_width();
-		int frameright_width = part_frameright.get_preferred_width();
-		int framebottom_height = part_framebottom.get_preferred_height();
+		int caption_height = part_caption.get_css_height();
+		int frameleft_width = part_frameleft.get_css_width();
+		int frameright_width = part_frameright.get_css_width();
+		int framebottom_height = part_framebottom.get_css_height();
 
 		return Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
 	}
@@ -337,10 +337,10 @@ void Window_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	if (draw_caption)
 	{
-		int caption_height = part_caption.get_preferred_height();
-		int frameleft_width = part_frameleft.get_preferred_width();
-		int frameright_width = part_frameright.get_preferred_width();
-		int framebottom_height = part_framebottom.get_preferred_height();
+		int caption_height = part_caption.get_css_height();
+		int frameleft_width = part_frameleft.get_css_width();
+		int frameright_width = part_frameright.get_css_width();
+		int framebottom_height = part_framebottom.get_css_height();
 
 		Rect content_rect = Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
 	
@@ -386,7 +386,7 @@ void Window_Impl::check_move_window(std::shared_ptr<GUIMessage> &msg)
 		{
 			window->bring_to_front();
 			Rect rect = window->get_size();
-			int caption_height = part_caption.get_preferred_height();
+			int caption_height = part_caption.get_css_height();
 			Rect caption_rect = Rect(rect.left, rect.top, rect.right, rect.top + caption_height);
 			if (caption_rect.contains(e.mouse_pos))
 			{

@@ -264,7 +264,7 @@ void ListViewRenderer::set_display_mode(ListViewDisplayMode mode)
 	part_cell.set_pseudo_class(CssStr::details, mode == listview_mode_details);
 	part_cell.set_pseudo_class(CssStr::icons, mode == listview_mode_icons);
 
-	height_row = part_cell.get_preferred_height();
+	height_row = part_cell.get_css_height();
 }
 
 /////////////////////////////////////////////////////////////////////////////

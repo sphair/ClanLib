@@ -83,9 +83,9 @@ MenuBar *MenuBar::get_named_item(GUIComponent *reference_component, const std::s
 	return object;
 }
 
-Size MenuBar::get_preferred_size() const
+Size MenuBar::get_css_size() const
 {
-	return Size(100, 40);//FIXME: impl->component->get_preferred_size();
+	return Size(100, 40);//FIXME: impl->component->get_css_size();
 }
 
 PopupMenu MenuBar::get_menu(int index) const

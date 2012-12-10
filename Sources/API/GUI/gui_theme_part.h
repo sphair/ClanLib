@@ -94,14 +94,14 @@ public:
 	/// \brief Returns all pseudo classes currently present
 	std::vector<std::string> get_pseudo_classes() const;
 
-	/// \brief Returns the preferred size of a render box.
-	Size get_preferred_size() const;
+	/// \brief Returns the css size of a render box.
+	Size get_css_size() const;
 
-	/// \brief Returns the preferred width of a render box.
-	int get_preferred_width() const;
+	/// \brief Returns the css width of a render box.
+	int get_css_width() const;
 
-	/// \brief Returns the preferred height of a render box.
-	int get_preferred_height() const;
+	/// \brief Returns the css height of a render box.
+	int get_css_height() const;
 
 	/// \brief Calculates the text size using the font defined for the current state.
 	Size get_text_size(Canvas &canvas, const std::string &str) const;

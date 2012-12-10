@@ -181,7 +181,7 @@ void ListViewLayoutThumbnails::create_parts()
 	Font font = part_cell.get_font();
 	height_text = font.get_text_size(canvas, "l").height;
 
-	size_cell = part_cell.get_preferred_size();
+	size_cell = part_cell.get_css_size();
 	height_row = size_cell.height;
 
 	update_rows_cols_visible();

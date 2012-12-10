@@ -129,7 +129,7 @@ public:
 	ListViewItem get_selected_item();
 
 	/// \brief Returns the preferred size of the component, as defined in its CSS file.
-	Size get_preferred_size() const;
+	Size get_css_size() const;
 
 	/// \brief Get Display mode
 	///
