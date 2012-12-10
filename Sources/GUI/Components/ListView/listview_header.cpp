@@ -357,7 +357,7 @@ void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (display_mode != listview_mode_details)
 			crect.right = rect.right;
 		part.render_box(canvas, crect, update_rect);
-		Rect content_rect = part.get_content_box();
+		Rect content_rect = part.get_content_box(crect);
 
 		part.render_text(canvas, col.get_caption(), content_rect, update_rect);
 

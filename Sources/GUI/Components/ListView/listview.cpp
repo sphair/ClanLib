@@ -900,7 +900,7 @@ void ListView_Impl::update_part_positions()
 	rect_columns.right = rect_content.right;
 	rect_columns.bottom = rect_content.bottom;
 
-	rect_columns_content = part_columns_bg.get_content_box();
+	rect_columns_content = part_columns_bg.get_content_box(rect_columns);
 
 	if (layout)
 	{
