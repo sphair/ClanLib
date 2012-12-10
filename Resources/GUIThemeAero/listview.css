@@ -1,12 +1,9 @@
 
 listview 
 {
-	bg-image:ListViewBorder; 
+	border-image-source:url('res:ListViewBorder'); 
 
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:3;
+	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch; 
 	
 	border-top:1;
@@ -17,7 +14,7 @@ listview
 
 listview row:details
 {
-	bg-image:; 
+	border-image-source:none; 
 	indent-width:20;
 	bg-color:#eeeeee;
 
@@ -27,7 +24,7 @@ listview row:details
 
 listview row:alternate
 {
-	bg-image:; 
+	border-image-source:none; 
 	indent-width:20;
 	bg-color:#e2e2e2;
 
@@ -37,23 +34,23 @@ listview row:alternate
 
 listview column
 {
-	bg-image:; 
+	border-image-source:none; 
 	bg-color:#f2f2f2;
 }
 
 listview row_opener:open
 {
-	bg-image:ListViewRowOpenerClosed;
-	preferred-height:9;
-	preferred-width:9;
+	border-image-source:url('res:ListViewRowOpenerClosed');
+	height:9px;
+	width:9px;
 	offset-y:-2;
 }
 
 listview row_opener:closed
 {
-	bg-image:ListViewRowOpenerOpen;
-	preferred-height:9;
-	preferred-width:9;
+	border-image-source:url('res:ListViewRowOpenerOpen');
+	height:9px;
+	width:9px;
 	offset-y:-2;
 }
 
@@ -65,33 +62,30 @@ listview selection
 	selection-margin-bottom:2;
 
 	bg-color:#316ac5;
-	text-color:#f2e3f2;
+	color:#f2e3f2;
 }
 
 listview selection:unfocused
 {
 	bg-color:#ece9d8;
-	text-color:black;
+	color:black;
 }
 
 listview selection:normal
 {
-    text-decoration:none;
+	text-decoration:none;
 }
 
 listview selection:hot
 {
-    text-decoration:underline;
+	text-decoration:underline;
 }
 
 listview icon_selection:normal
 {
-	bg-image:ListViewIconSelection;
+	border-image-source:url('res:ListViewIconSelection');
 
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:4;
+	border-image-slice:3 4 3 4;
 	bg-image-sizing:stretch; 
 
 	border-top:-3;
@@ -103,7 +97,7 @@ listview icon_selection:normal
 
 listview columns_bg
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color:white;
 	border-top:0;
 	border-left:0;
@@ -113,25 +107,25 @@ listview columns_bg
 
 listview row:icons
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color:#eeeeee;
 }
 
 listview cell:details:hot
 {
-	text-color:blue;
+	color:blue;
 	text-decoration:underline;
 }
 
 listview cell:details:normal
 {
-	bg-image:; 
+	border-image-source:none; 
 	bg-color:;
 
-	text-color:black;
-    
-	preferred-width:100;
-	preferred-height:17;
+	color:black;
+	
+	width:100px;
+	height:17px;
 
 	icon-width: 16;
 	icon-height: 16;
@@ -140,10 +134,10 @@ listview cell:details:normal
 	icon-text-gap:5;
 	icon-offset-y:0;
 
-	padding-top:2;
-	padding-left:4;
-	padding-right:0;
-	padding-bottom:0;
+	padding-top:2px;
+	padding-left:4px;
+	padding-right:0px;
+	padding-bottom:0px;
 
 	line-edit-offset-left:6;
 	line-edit-offset-top:2;
@@ -153,11 +147,11 @@ listview cell:details:normal
 
 listview cell:icons:normal
 {
-   	bg-image:; 
+   	border-image-source:none; 
 	bg-color:;
 
-	preferred-width:70;
-	preferred-height:66;
+	width:70px;
+	height:66px;
 
 	icon-width: 32;
 	icon-height: 32;
@@ -175,8 +169,8 @@ listview cell:icons:normal
 
 listview cell:thumbnails:normal
 {
-	preferred-width:125;
-	preferred-height:119;
+	width:125px;
+	height:119px;
 
 	icon-width: 96;
 	icon-height: 96;
@@ -196,14 +190,11 @@ listview cell:thumbnails:normal
 
 listview_header
 {
-	bg-image:ListViewHeader;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	border-image-source:url('res:ListViewHeader');
+	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch;
 	
-	preferred-height: 20;
+	height:20px;
 	
 /*	border-top:0;
 	border-left:3;
@@ -214,11 +205,8 @@ listview_header
 
 listview_header columnheader:normal
 {
-	bg-image:ListViewColumnHeaderNormal;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:14;
+	border-image-source:url('res:ListViewColumnHeaderNormal');
+	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 	
 	border-top:3;
@@ -229,11 +217,8 @@ listview_header columnheader:normal
 
 listview_header columnheader:hot
 {
-	bg-image:ListViewColumnHeaderHot;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:14;
+	border-image-source:url('res:ListViewColumnHeaderHot');
+	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 
 	border-top:3;
@@ -244,11 +229,8 @@ listview_header columnheader:hot
 
 listview_header columnheader:pressed
 {
-	bg-image:ListViewColumnHeaderPressed;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:14;
+	border-image-source:url('res:ListViewColumnHeaderPressed');
+	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 	
 	border-top:3;

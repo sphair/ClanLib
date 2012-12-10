@@ -1,128 +1,119 @@
 
 spin 
 {
-	bg-image:;
-	preferred-width:42;
-	preferred-height:21;
+	border-image-source:none;
+	width:42px;
+	height:21px;
 
-	bg-image-sizing-left:0;
-	bg-image-sizing-right:0;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:0;
+	border-image-slice:0 0 0 0;
 	bg-image-sizing:stretch; 	
 
-	text-color:black;
+	color:black;
 }
 
 spin:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
 
 spin button_up
 {
-	preferred-width:16;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	width:16px;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 	
 }
 
 spin button_up:normal
 {
-	bg-image:SpinButtonUpNormal;
+	border-image-source:url('res:SpinButtonUpNormal');
 }
 
 spin button_up:hot
 {
-	bg-image:SpinButtonUpHot;
+	border-image-source:url('res:SpinButtonUpHot');
 }
 
 spin button_up:pressed
 {
-	bg-image:SpinButtonUpPressed;
+	border-image-source:url('res:SpinButtonUpPressed');
 }
 
 spin button_up:disabled
 {
-	bg-image:SpinButtonUpDisabled;
+	border-image-source:url('res:SpinButtonUpDisabled');
 }
 
 spin arrow_up:normal
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowUpNormal;
+	border-image-source:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:hot
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowUpNormal;
+	border-image-source:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:pressed
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowUpNormal;
+	border-image-source:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:disabled
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowUpDisabled;
+	border-image-source:url('res:SpinArrowUpDisabled');
 }
 
 spin button_down
 {
-	preferred-width:16;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	width:16px;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 	
 }
 
 spin button_down:normal
 {
-	bg-image:SpinButtonDownNormal;
+	border-image-source:url('res:SpinButtonDownNormal');
 }
 
 spin button_down:hot
 {
-	bg-image:SpinButtonDownHot;
+	border-image-source:url('res:SpinButtonDownHot');
 }
 
 spin button_down:pressed
 {
-	bg-image:SpinButtonDownPressed;
+	border-image-source:url('res:SpinButtonDownPressed');
 }
 
 spin button_down:disabled
 {
-	bg-image:SpinButtonDownDisabled;
+	border-image-source:url('res:SpinButtonDownDisabled');
 }
 
 spin arrow_down:normal
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowDownNormal;
+	border-image-source:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:hot
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowDownNormal;
+	border-image-source:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:pressed
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowDownNormal;
+	border-image-source:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:disabled
 {
 	bg-image-sizing:center; 
-	bg-image:SpinArrowDownDisabled;
+	border-image-source:url('res:SpinArrowDownDisabled');
 }

@@ -1,9 +1,6 @@
 combobox lineedit
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 
 	border-top:0;
@@ -11,18 +8,15 @@ combobox lineedit
 	border-right:16;
 	border-bottom:0;
 	
-	text-color:black;
+	color:black;
 	text-color-selected:white;
 }
 
 combobox opener
 {
-	preferred-width:17;
-	preferred-height:21;
-	bg-image-sizing-left:5;
-	bg-image-sizing-right:5;
-	bg-image-sizing-top:6;
-	bg-image-sizing-bottom:6;
+	width:17px;
+	height:21px;
+	border-image-slice:5 5 6 6;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;
@@ -30,22 +24,22 @@ combobox opener
 
 combobox opener:normal
 {
-	bg-image:ComboBoxDropDownButtonNormal; 
+	border-image-source:url('res:ComboBoxDropDownButtonNormal'); 
 }
 
 combobox opener:hot
 {
-	bg-image:ComboBoxDropDownButtonHot; 
+	border-image-source:url('res:ComboBoxDropDownButtonHot'); 
 }
 
 combobox opener:pressed
 {
-	bg-image:ComboBoxDropDownButtonPressed; 
+	border-image-source:url('res:ComboBoxDropDownButtonPressed'); 
 }
 
 combobox opener:disabled
 {
-	bg-image:ComboBoxDropDownButtonDisabled; 
+	border-image-source:url('res:ComboBoxDropDownButtonDisabled'); 
 }
 
 combobox opener_glyph
@@ -57,20 +51,20 @@ combobox opener_glyph
 
 combobox opener_glyph:normal
 {
-	bg-image:ComboBoxDropDownButtonNormalGlyph; 
+	border-image-source:url('res:ComboBoxDropDownButtonNormalGlyph'); 
 }
 
 combobox opener_glyph:hot
 {
-	bg-image:ComboBoxDropDownButtonHotGlyph; 
+	border-image-source:url('res:ComboBoxDropDownButtonHotGlyph'); 
 }
 
 combobox opener_glyph:pressed
 {
-	bg-image:ComboBoxDropDownButtonPressedGlyph; 
+	border-image-source:url('res:ComboBoxDropDownButtonPressedGlyph'); 
 }
 
 combobox opener_glyph:disabled
 {
-	bg-image:ComboBoxDropDownButtonDisabledGlyph; 
+	border-image-source:url('res:ComboBoxDropDownButtonDisabledGlyph'); 
 }

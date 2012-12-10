@@ -1,6 +1,6 @@
 progressbar
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color: #aaaaaa;
 	border-top:1;
 	border-left:1;
@@ -10,11 +10,11 @@ progressbar
 
 progress 
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color: #22dd22;
 	border-top:0;
 	border-left:0;
 	border-right:0;
 	border-bottom:0;
-	preferred-width:17;
+	width:17px;
 }

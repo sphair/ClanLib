@@ -1,48 +1,42 @@
 
 button
 {
-	bg-image-sizing-left:5;
-	bg-image-sizing-right:5;
-	bg-image-sizing-top:6;
-	bg-image-sizing-bottom:6;
+	border-image-slice:5 5 6 6;
 	bg-image-sizing:default;
-	text-color:black;
+	color:black;
 	align:center;
 	vertical-align:center;
 }
 
 button:normal
 {
-	bg-image:ButtonNormal; 
+	border-image-source:url('res:ButtonNormal'); 
 }
 
 button:defaulted
 {
-	bg-image:ButtonDefaulted; 
+	border-image-source:url('res:ButtonDefaulted'); 
 }
 
 button:hot
 {
-	bg-image:ButtonHot; 
+	border-image-source:url('res:ButtonHot'); 
 }
 
 button:pressed
 {
-	bg-image:ButtonPressed; 
+	border-image-source:url('res:ButtonPressed'); 
 }
 
 button:disabled
 {
-	bg-image:ButtonDisabled; 
-	text-color:darkgray;
+	border-image-source:url('res:ButtonDisabled'); 
+	color:darkgray;
 }
 
 button focus
 {
-	bg-image-sizing-left:8;
-	bg-image-sizing-right:8;
-	bg-image-sizing-top:8;
-	bg-image-sizing-bottom:9;
+	border-image-slice:8 8 8 9;
 	bg-image-sizing:repeat;
-	bg-image:ButtonFocus;
+	border-image-source:url('res:ButtonFocus');
 }

@@ -4,10 +4,7 @@
 
 combobox lineedit
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 
 	border-top:0;
@@ -15,18 +12,15 @@ combobox lineedit
 	border-right:16;
 	border-bottom:0;
 	
-	text-color:black;
+	color:black;
 	text-color-selected:white;
 }
 
 combobox opener
 {
-	preferred-width:13;
-	preferred-height:13;
-	bg-image-sizing-left:0;
-	bg-image-sizing-right:0;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:0;
+	width:13px;
+	height:13px;
+	border-image-slice:0 0 0 0;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;
@@ -35,32 +29,29 @@ combobox opener
 
 combobox opener:normal
 {
-	bg-image:ComboBoxDownArrow; 
+	border-image-source:url('res:ComboBoxDownArrow'); 
 }
 
 combobox opener:hot
 {
-	bg-image:ComboBoxDownArrow; 
+	border-image-source:url('res:ComboBoxDownArrow'); 
 }
 
 combobox opener:pressed
 {
-	bg-image:ComboBoxDownArrow; 
+	border-image-source:url('res:ComboBoxDownArrow'); 
 }
 
 combobox opener:disabled
 {
-	bg-image:ComboBoxDownArrow; 
+	border-image-source:url('res:ComboBoxDownArrow'); 
 }
 
 popupmenu.combobox
 {
-	bg-image:ComboBoxPopupBg;
+	border-image-source:url('res:ComboBoxPopupBg');
 
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 
 	border-top:3;
@@ -71,16 +62,16 @@ popupmenu.combobox
 
 popupmenu.combobox row
 {
-	preferred-width:100;
-	preferred-height:18;
-	bg-image:;
+	width:100px;
+	height:18px;
+	border-image-source:none;
 }
 
 popupmenu.combobox row:selected
 {
-	preferred-width:100;
-	preferred-height:18;
-	bg-image:;
+	width:100px;
+	height:18px;
+	border-image-source:none;
 	bg-color:#D3D3D3;
 	border-top:0;
 	border-left:0;
@@ -92,29 +83,29 @@ popupmenu.combobox row:selected
 
 popupmenu.combobox icon
 {
-	preferred-width:16;
-	preferred-height:16;
-	bg-image:;
+	width:16px;
+	height:16px;
+	border-image-source:none;
 }
 
 popupmenu.combobox icon:selected
 {
-	preferred-width:16;
-	preferred-height:16;
-	bg-image:;
+	width:16px;
+	height:16px;
+	border-image-source:none;
 }
 
 popupmenu.combobox label
 {
-	preferred-width:70;
-	preferred-height:18;
-	bg-image:;
+	width:70px;
+	height:18px;
+	border-image-source:none;
 }
 
 popupmenu.combobox label:selected
 {
-	preferred-width:70;
-	preferred-height:18;
-	bg-image:;
+	width:70px;
+	height:18px;
+	border-image-source:none;
 }
 

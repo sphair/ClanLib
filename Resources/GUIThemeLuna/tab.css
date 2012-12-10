@@ -1,11 +1,8 @@
 
 tab 
 {
-	bg-image: TabBorder;	
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:3;
+	border-image-source:url('res:TabBorder');	
+	border-image-slice:1 3 0 3;
 
 	border-left:8;
 	border-right:8;
@@ -15,51 +12,42 @@ tab
 
 tabheader
 {
-	bg-image: TabHeaderBorder;	
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:1;
-	bg-image-sizing-bottom:1;
+	border-image-source:url('res:TabHeaderBorder');	
+	border-image-slice:2 3 1 1;
 	bg-image-sizing:stretch;
 	first-tab-x-offset: 0;
-	preferred-height:20;
+	height:20px;
 }
 
 tabheader focus
 {
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:4;
+	border-image-slice:3 4 3 4;
 	bg-image-sizing:repeat;
-	bg-image:FocusDottedLine; 
+	border-image-source:url('res:FocusDottedLine'); 
 }
 
 tabheader page
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:1;
-	padding-left:5;
-	padding-right:5;
+	border-image-slice:2 2 3 1;
+	padding-left:5px;
+	padding-right:5px;
 	align:center;
 	
-	preferred-width:45;
-	preferred-height:20;
+	width:45px;
+	height:20px;
 }
 
 tabheader page:normal
 {
-	bg-image: TabHeaderPageNormal;
+	border-image-source:url('res:TabHeaderPageNormal');
 }
 
 tabheader page:hot
 {
-	bg-image: TabHeaderPageHot;
+	border-image-source:url('res:TabHeaderPageHot');
 }
 
 tabheader page:selected
 {
-	bg-image: TabHeaderPageSelected;
+	border-image-source:url('res:TabHeaderPageSelected');
 }

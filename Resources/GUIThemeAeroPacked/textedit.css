@@ -1,9 +1,6 @@
 textedit
 {
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 	
 	border-color:gray;
@@ -11,43 +8,43 @@ textedit
 	border-bottom:1;
 	border-right:1;
 	border-top:1;
-    
-    padding-top:3;
-	padding-left:6;
-	padding-right:6;
-	padding-bottom:3;
+	
+	padding-top:3px;
+	padding-left:6px;
+	padding-right:6px;
+	padding-bottom:3px;
 
-	text-color:black;
+	color:black;
 }
 
 textedit:normal
 {
-	bg-image:; 
-    bg-color: white;
+	border-image-source:none; 
+	bg-color: white;
 }
 
 textedit:hot
 {
-	bg-image:;
-    bg-color: white;
+	border-image-source:none;
+	bg-color: white;
 }
 
 textedit:disabled
 {
-	bg-image:; 
-	text-color:gray;
-    border-color:#afafaf;
+	border-image-source:none; 
+	color:gray;
+	border-color:#afafaf;
 }
 
 textedit cursor
 {
-	preferred-width:1;
+	width:1px;
 
 	bg-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
-	bg-image:;
+	border-image-source:none;
 	
 	border-top:0;
 	border-left:0;
@@ -67,10 +64,10 @@ textedit cursor:blink_off
 
 textedit selection
 {
-    text-color: white;
+	color: white;
 	expand-top:-2;
 	expand-bottom:-1;
-	bg-image:;
+	border-image-source:none;
 	bg-color: #316ac5;
 
 	border-top:0;
@@ -81,12 +78,12 @@ textedit selection
 
 textedit selection:disabled
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color: #7a96df;
 }
 
 textedit selection:unfocused
 {
-	bg-image:;
+	border-image-source:none;
 	bg-color: #7a96df;
 }
