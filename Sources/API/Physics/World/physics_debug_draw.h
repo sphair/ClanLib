@@ -26,7 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysic_World clanPhysic World
+/// \addtogroup clanphysics_world clanPhysics World
 /// \{
 
 #pragma once
@@ -38,7 +38,7 @@ namespace clan
 {
 
 class Canvas;
-class PhysicWorld;
+class PhysicsWorld;
 class PhysicDebugDraw_Impl;
 
 /// \brief Physic Debug Draw flags.
@@ -74,8 +74,8 @@ public:
 
 	/// \brief Constructs a debug draw object.
 	///
-	/// \param pw = Physic World.
-	PhysicDebugDraw(const PhysicWorld &pw);
+	/// \param pw = Physics World.
+	PhysicDebugDraw(const PhysicsWorld &pw);
 	
 	~PhysicDebugDraw();
 	

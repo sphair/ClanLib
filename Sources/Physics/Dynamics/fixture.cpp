@@ -31,8 +31,8 @@
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
 #include "API/Physics/Dynamics/fixture_description.h"
-//#include "API/Physics/World/physic_world.h"
-#include "../World/physic_world_impl.h"
+//#include "API/Physics/World/physics_world.h"
+#include "../World/physics_world_impl.h"
 #include "../Dynamics/fixture_description_impl.h"
 
 namespace clan

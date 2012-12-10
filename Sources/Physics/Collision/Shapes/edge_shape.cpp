@@ -30,8 +30,8 @@
 #include "shape_impl.h"
 #include "Edge_shape_impl.h"
 #include "API/Physics/Collision/Shapes/Edge_shape.h"
-#include "API/Physics/World/physic_world.h"
-#include "../../World/physic_world_impl.h"
+#include "API/Physics/World/physics_world.h"
+#include "../../World/physics_world_impl.h"
 #include "API/Core/Math/angle.h"
 
 namespace clan
@@ -43,7 +43,7 @@ EdgeShape::EdgeShape()
 	
 }
 
-EdgeShape::EdgeShape(const PhysicWorld &pw)
+EdgeShape::EdgeShape(const PhysicsWorld &pw)
 : impl(new EdgeShape_Impl(*pw.impl))
 {
 	shape_impl->shape_type = shape_edge;

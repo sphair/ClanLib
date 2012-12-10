@@ -27,8 +27,8 @@
 */
 
 #include "Physics/precomp.h"
-#include "physic_world_description_impl.h"
-#include "physic_world_impl.h"
+#include "physics_world_description_impl.h"
+#include "physics_world_impl.h"
 #include "API/Physics/Dynamics/body_description.h"
 
 
@@ -38,8 +38,8 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 
-PhysicWorld_Impl::PhysicWorld_Impl(PhysicWorld &pw)
-:	name				("Unnamed Clanlib Physic World"),
+PhysicsWorld_Impl::PhysicsWorld_Impl(PhysicsWorld &pw)
+:	name				("Unnamed Clanlib Physics World"),
 	world				(b2Vec2(0.0f,10.0f)),
 	timestep			(1.0f/60.0f),
 	velocity_iterations	(8),
@@ -54,31 +54,31 @@ PhysicWorld_Impl::PhysicWorld_Impl(PhysicWorld &pw)
 //																											___________________																											
 //																											O P E R A T I O N S
 
-void PhysicWorld_Impl::create(const PhysicWorldDescription &description)
+void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 {
-	PhysicWorldDescription_Impl &desc_impl = *description.impl;
+	PhysicsWorldDescription_Impl &desc_impl = *description.impl;
 	name = desc_impl.name;
 	world.SetAllowSleeping(desc_impl.sleep_enabled);
 	world.SetGravity(desc_impl.gravity);
 
 }
-void PhysicWorld_Impl::step()
+void PhysicsWorld_Impl::step()
 {
 	world.Step(timestep,velocity_iterations,position_iterations);
 	sig_world_step.invoke(timestep);
 }
-void PhysicWorld_Impl::step(float timestep, int velocity_iterations, int position_iterations)
+void PhysicsWorld_Impl::step(float timestep, int velocity_iterations, int position_iterations)
 {
 	world.Step(timestep,velocity_iterations,position_iterations);
 	sig_world_step.invoke(timestep);
 }
 
-b2Body *PhysicWorld_Impl::create_body(const b2BodyDef &description)
+b2Body *PhysicsWorld_Impl::create_body(const b2BodyDef &description)
 {
 	return world.CreateBody(&description);
 }
 
-b2Joint *PhysicWorld_Impl::create_joint(const b2JointDef &description)
+b2Joint *PhysicsWorld_Impl::create_joint(const b2JointDef &description)
 {
 	return world.CreateJoint(&description);
 }

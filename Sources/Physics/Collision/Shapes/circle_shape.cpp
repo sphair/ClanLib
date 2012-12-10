@@ -30,8 +30,8 @@
 #include "shape_impl.h"
 #include "circle_shape_impl.h"
 #include "API/Physics/Collision/Shapes/Circle_shape.h"
-#include "API/Physics/World/physic_world.h"
-#include "../../World/physic_world_impl.h"
+#include "API/Physics/World/physics_world.h"
+#include "../../World/physics_world_impl.h"
 #include "API/Core/Math/angle.h"
 
 namespace clan
@@ -43,7 +43,7 @@ CircleShape::CircleShape()
 	
 }
 
-CircleShape::CircleShape(const PhysicWorld &pw)
+CircleShape::CircleShape(const PhysicsWorld &pw)
 : impl(new CircleShape_Impl(*pw.impl))
 {
 	shape_impl->shape_type = shape_circle;

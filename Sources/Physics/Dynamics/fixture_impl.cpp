@@ -30,14 +30,14 @@
 #include "fixture_impl.h"
 #include "fixture_description_impl.h"
 #include "body_impl.h"
-#include "../World/physic_world_impl.h"
+#include "../World/physics_world_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture_description.h"
 
 namespace clan
 {
 
-Fixture_Impl::Fixture_Impl(PhysicWorld_Impl &pw_impl)
+Fixture_Impl::Fixture_Impl(PhysicsWorld_Impl &pw_impl)
 : fixture(NULL),
   fixture_occupied(false),
   owner_world(&pw_impl),

@@ -31,8 +31,8 @@
 #include "body_description_impl.h"
 #include "body_impl.h"
 #include "fixture_description_impl.h"
-#include "../World/physic_world_impl.h"
-#include "API/Physics/World/physic_world.h"
+#include "../World/physics_world_impl.h"
+#include "API/Physics/World/physics_world.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Physics/Dynamics/fixture_description.h"
 #include "API/Physics/Dynamics/body.h"
@@ -55,7 +55,7 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 		pc.create_in_context(*this);
 	}
 	else
-	throw Exception("Tried to create a body with a null PhysicWorld object");
+	throw Exception("Tried to create a body with a null PhysicsWorld object");
 }
 
 Body::Body(std::shared_ptr<Body_Impl> copy)

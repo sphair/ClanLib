@@ -30,14 +30,14 @@
 #include "../Box2D/Box2D.h"
 #include "body_impl.h"
 #include "body_description_impl.h"
-#include "../World/physic_world_impl.h"
+#include "../World/physics_world_impl.h"
 
 namespace clan
 {
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-Body_Impl::Body_Impl( PhysicWorld_Impl &pw_impl)
+Body_Impl::Body_Impl( PhysicsWorld_Impl &pw_impl)
 :	body(NULL),
 	body_occupied(false),
 	owner_world(&pw_impl),
@@ -50,7 +50,7 @@ Body_Impl::Body_Impl( PhysicWorld_Impl &pw_impl)
 void Body_Impl::create_body(const BodyDescription &description)
 {
 	
-	if(body_occupied)	//Add proper handling of physic world in a case of a deletion
+	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
 		body->GetWorld()->DestroyBody(body);
 	}

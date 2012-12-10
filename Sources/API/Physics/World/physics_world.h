@@ -26,7 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysic_World clanPhysic World
+/// \addtogroup clanphysics_world clanPhysics World
 /// \{
 
 #pragma once
@@ -40,29 +40,29 @@ namespace clan
 {
 
 class Physic;
-class PhysicWorldDescription;
-class PhysicWorld_Impl;
+class PhysicsWorldDescription;
+class PhysicsWorld_Impl;
 
 /// \brief Top-level world class.
 ///
 /// The world class manages all physics entities, dynamic simulation, and asynchronous queries.
 /// The world also contains efficient memory management facilities. 
 /// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PhysicWorld
+class CL_API_PHYSICS PhysicsWorld
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a null instance.
-	PhysicWorld();
+	PhysicsWorld();
 
 	/// \brief Constructs a world.
 	///
-	/// \param description = Structure that describes how to create the physic world.
-	PhysicWorld(const PhysicWorldDescription &description);
+	/// \param description = Structure that describes how to create the Physics World.
+	PhysicsWorld(const PhysicsWorldDescription &description);
 	
 
-	~PhysicWorld();
+	~PhysicsWorld();
 	
 /// \}
 /// \name Attributes
@@ -81,7 +81,7 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 	
-	/// \brief Returns the name of the physic world.
+	/// \brief Returns the name of the Physics World.
 	std::string get_name() const;
 
 	/// \brief Returns the timestep for every world step.
@@ -93,7 +93,7 @@ public:
 	/// \brief Returns the amount of position iterations on every world tick.
 	int get_position_iterations() const;
 
-	/// \brief Return the amount of pixels for 1 meter in the Physic World.
+	/// \brief Return the amount of pixels for 1 meter in the Physics World.
 	int get_physic_scale() const;
 
 /// \}
@@ -116,7 +116,7 @@ public:
 /// \{
 
 private:
-	std::shared_ptr<PhysicWorld_Impl> impl;
+	std::shared_ptr<PhysicsWorld_Impl> impl;
 	
 /// \}
 

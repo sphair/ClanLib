@@ -36,7 +36,7 @@ namespace clan
 	class Body;
 	class Fixture;
 	class Joint;
-	class PhysicWorld;
+	class PhysicsWorld;
 
 class PhysicsContext_Impl
 {
@@ -44,7 +44,7 @@ public:
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-	PhysicsContext_Impl(PhysicWorld &pw);
+	PhysicsContext_Impl(PhysicsWorld &pw);
 	virtual ~PhysicsContext_Impl() { return; }
 
 
@@ -64,7 +64,7 @@ public:
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	PhysicWorld *owner;
+	PhysicsWorld *owner;
 	const int max_body_amount;
 	const int max_fixture_amount;
 	const int max_joint_amount;

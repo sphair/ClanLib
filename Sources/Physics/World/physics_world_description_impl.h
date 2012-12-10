@@ -29,20 +29,20 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/World/physic_world.h"
-#include "API/Physics/World/physic_world_description.h"
+#include "API/Physics/World/physics_world.h"
+#include "API/Physics/World/physics_world_description.h"
 #include <map>
 
 namespace clan
 {
 
-class PhysicWorldDescription_Impl
+class PhysicsWorldDescription_Impl
 {
 /// \name Construction
 /// \{
 public:
-	PhysicWorldDescription_Impl():
-		name("Unnamed Clanlib Physic World"),
+	PhysicsWorldDescription_Impl():
+		name("Unnamed Clanlib Physics World"),
 		sleep_enabled(true),
 		timestep(1.0f/60.0f),
 		gravity(b2Vec2(0.0f,10.0f)),
@@ -51,7 +51,7 @@ public:
 	{
 	}
 
-	virtual ~PhysicWorldDescription_Impl() { return; }
+	virtual ~PhysicsWorldDescription_Impl() { return; }
 
 /// \}
 /// \name Attributes
@@ -65,7 +65,7 @@ public:
 	int velocity_iterations;
 	int position_iterations;
 
-	std::map<std::string, std::shared_ptr<PhysicWorldDescriptionData> > data_objects;
+	std::map<std::string, std::shared_ptr<PhysicsWorldDescriptionData> > data_objects;
 
 /// \}
 };

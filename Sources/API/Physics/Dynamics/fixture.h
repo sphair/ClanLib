@@ -31,7 +31,7 @@
 #pragma once
 
 #include "../api_physics.h"
-#include "../World/physic_world.h"
+#include "../World/physics_world.h"
 #include "../../Core/Math/vec2.h"
 #include <memory>
 #include "../../Core/Signals/signal_v0.h"

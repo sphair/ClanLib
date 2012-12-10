@@ -26,7 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysic_World clanPhysic World
+/// \addtogroup clanphysics_world clanPhysics World
 /// \{
 
 #pragma once
@@ -36,7 +36,7 @@
 
 namespace clan
 {
-	class PhysicWorld;
+	class PhysicsWorld;
 	class PhysicsContext_Impl;
 	class Body;
 	class Fixture;
@@ -52,7 +52,7 @@ public:
 	/// \brief Constructs a PhysicsContext.
 	///
 	/// \param pw = Physics World.
-	PhysicsContext(PhysicWorld &pw);
+	PhysicsContext(PhysicsWorld &pw);
 
 /// \}
 /// \name Attributes

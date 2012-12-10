@@ -39,7 +39,7 @@
 namespace clan
 {
 
-class PhysicWorld;
+class PhysicsWorld;
 class PolygonShape_Impl;
 class Angle;
 
@@ -60,8 +60,8 @@ public:
 
 	/// \brief Constructs a Polygon Shape.
 	/// 
-	/// \param pw = Physic World.
-	PolygonShape(const PhysicWorld &pw);
+	/// \param pw = Physics World.
+	PolygonShape(const PhysicsWorld &pw);
 
 	~PolygonShape();
 

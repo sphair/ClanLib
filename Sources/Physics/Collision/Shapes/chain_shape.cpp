@@ -30,8 +30,8 @@
 #include "shape_impl.h"
 #include "chain_shape_impl.h"
 #include "API/Physics/Collision/Shapes/chain_shape.h"
-#include "API/Physics/World/physic_world.h"
-#include "../../World/physic_world_impl.h"
+#include "API/Physics/World/physics_world.h"
+#include "../../World/physics_world_impl.h"
 #include "API/Core/Math/angle.h"
 #include "API/display.h"
 
@@ -44,7 +44,7 @@ ChainShape::ChainShape()
 	
 }
 
-ChainShape::ChainShape(const PhysicWorld &pw)
+ChainShape::ChainShape(const PhysicsWorld &pw)
 : impl(new ChainShape_Impl(*pw.impl))
 {
 	shape_impl->shape_type = shape_chain;

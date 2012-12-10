@@ -38,7 +38,7 @@ namespace clan
 
 class Body;
 class FixtureDescription;
-class PhysicWorld_Impl;
+class PhysicsWorld_Impl;
 class Fixture;
 
 class Fixture_Impl : public std::enable_shared_from_this<Fixture_Impl>
@@ -46,7 +46,7 @@ class Fixture_Impl : public std::enable_shared_from_this<Fixture_Impl>
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Fixture_Impl(PhysicWorld_Impl &pw_impl);
+	Fixture_Impl(PhysicsWorld_Impl &pw_impl);
 
 	virtual ~Fixture_Impl() { sig_fixture_deletion.invoke(); return; }
 
@@ -69,7 +69,7 @@ public:
 //																						I M P L E M E N T A T I O N
 public:
 	int id;
-	PhysicWorld_Impl *owner_world;
+	PhysicsWorld_Impl *owner_world;
 	b2Fixture *fixture;
 	bool fixture_occupied;
 

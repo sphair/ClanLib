@@ -29,7 +29,7 @@
 #include "API/Physics/Dynamics/fixture.h"
 #include "API/Physics/Dynamics/Joints/joint.h"
 #include "API/Physics/World/physics_context.h"
-#include "API/Physics/World/physic_world.h"
+#include "API/Physics/World/physics_world.h"
 #include "physics_context_impl.h"
 
 namespace clan
@@ -40,7 +40,7 @@ PhysicsContext::PhysicsContext()
 {
 }
 
-PhysicsContext::PhysicsContext(PhysicWorld &pw)
+PhysicsContext::PhysicsContext(PhysicsWorld &pw)
 : impl(new PhysicsContext_Impl(pw))
 {
 	
