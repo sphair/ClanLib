@@ -4,10 +4,10 @@ textedit
 	bg-image-sizing:stretch; 
 	
 	border-color:gray;
-	border-left:1;
-	border-bottom:1;
-	border-right:1;
-	border-top:1;
+	border-left:1px;
+	border-bottom:1px;
+	border-right:1px;
+	border-top:1px;
 	
 	padding-top:3px;
 	padding-left:6px;
@@ -20,13 +20,13 @@ textedit
 textedit:normal
 {
 	border-image-source:none; 
-	bg-color: white;
+	background-color: white;
 }
 
 textedit:hot
 {
 	border-image-source:none;
-	bg-color: white;
+	background-color: white;
 }
 
 textedit:disabled
@@ -40,26 +40,26 @@ textedit cursor
 {
 	width:1px;
 
-	bg-color: black;
+	background-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
 	border-image-source:none;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 textedit cursor:blink_on
 {
-	bg-color: black;
+	background-color: black;
 }
 
 textedit cursor:blink_off
 {
-	bg-color: white;
+	background-color: white;
 }
 
 textedit selection
@@ -68,22 +68,22 @@ textedit selection
 	expand-top:-2;
 	expand-bottom:-1;
 	border-image-source:none;
-	bg-color: #316ac5;
+	background-color: #316ac5;
 
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 textedit selection:disabled
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 textedit selection:unfocused
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }

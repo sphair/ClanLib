@@ -21,10 +21,10 @@ ribbon button.menu
 	bg-image-sizing:center;
 	width:56px;
 	height:22px;
-	border-left:0;
-	border-right:0;
-	border-top:0;
-	border-bottom:0;
+	border-left:0px;
+	border-right:0px;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 ribbon button.menu:hot
@@ -181,12 +181,12 @@ combobox lineedit.ribbon
 	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 	border-image-source:none;
-	bg-color:;
+	background-color:;
 
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
+	border-top:0px;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0px;
 	
 	color:black;
 	text-color-selected:white;

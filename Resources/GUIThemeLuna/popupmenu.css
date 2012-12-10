@@ -49,13 +49,13 @@ popupmenu row:selected
 	width:140px;
 	height:20px;
 	border-image-source:none;
-	bg-color:#dee2f4;
-	margin-left:2;
-	margin-right:2;
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;	
+	background-color:#dee2f4;
+	margin-left:2px;
+	margin-right:2px;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;	
 	padding-left:2px;
 	border-color:#316ac5;
 }

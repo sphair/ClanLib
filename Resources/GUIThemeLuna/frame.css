@@ -41,8 +41,8 @@ frame headercaption
 	border-image-slice:4 4 2 13;
 	bg-image-sizing:stretch; 
 	
-	border-left:4;
-	border-right:4;
+	border-left:4px;
+	border-right:4px;
 }
 
 frame body

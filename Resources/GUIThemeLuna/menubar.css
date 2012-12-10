@@ -3,7 +3,7 @@ menubar
 {
 	width:100px;
 	height:24px;
-	bg-color:transparent;
+	background-color:transparent;
 	color:black;
 	
 	padding-top:2px;
@@ -30,7 +30,7 @@ menubar item:selected
 	width:50px;
 	height:24px;
 
-	/*border-top:10;*/
+	/*border-top:10px;*/
  
 	border-image-slice:4 4 5 1;
 	bg-image-sizing:stretch; 
@@ -40,13 +40,13 @@ menubar item:selected
 
 menubar item:hot
 {
-	bg-color:#dee2f4;
+	background-color:#dee2f4;
 
 	/*margin-top:3;*/
 
 	border-color:#316ac5;	
-	border-left:1;
-	border-right:1;
-	border-top:1;
-	border-bottom:1;
+	border-left:1px;
+	border-right:1px;
+	border-top:1px;
+	border-bottom:1px;
 }

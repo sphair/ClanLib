@@ -95,10 +95,10 @@ combobox lineedit
 	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch; 
 
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
+	border-top:0px;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0px;
 	
 	color:black;
 	text-color-selected:white;
@@ -203,8 +203,8 @@ frame headercaption
 	border-image-slice:4 4 2 13;
 	bg-image-sizing:stretch; 
 	
-	border-left:4;
-	border-right:4;
+	border-left:4px;
+	border-right:4px;
 }
 
 frame body
@@ -230,10 +230,10 @@ image
 	bg-image-sizing:stretch; 
 	border-image-source:none;
 
-	border-top:3;
-	border-bottom:3;
-	border-left:3;
-	border-right:3;
+	border-top:3px;
+	border-bottom:3px;
+	border-left:3px;
+	border-right:3px;
 }
 
 
@@ -242,10 +242,10 @@ lineedit
 	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch; 
 	
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
+	border-top:0px;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0px;
 
 	color:black;
 }
@@ -270,26 +270,26 @@ lineedit cursor
 {
 	width:1px;
 
-	bg-color: black;
+	background-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
 	bg-image
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 lineedit cursor:blink_on
 {
-	bg-color: black;
+	background-color: black;
 }
 
 lineedit cursor:blink_off
 {
-	bg-color: white;
+	background-color: white;
 }
 
 lineedit selection
@@ -298,24 +298,24 @@ lineedit selection
 	expand-top:-2;
 	expand-bottom:-1;
 	border-image-source:none;
-	bg-color: #316ac5;
+	background-color: #316ac5;
 
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 lineedit selection:disabled
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 lineedit selection:unfocused
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 textedit
@@ -324,10 +324,10 @@ textedit
 	bg-image-sizing:stretch; 
 	
 	border-color:gray;
-	border-left:1;
-	border-bottom:1;
-	border-right:1;
-	border-top:1;
+	border-left:1px;
+	border-bottom:1px;
+	border-right:1px;
+	border-top:1px;
 	
 	padding-top:3px;
 	padding-left:6px;
@@ -340,13 +340,13 @@ textedit
 textedit:normal
 {
 	border-image-source:none; 
-	bg-color: white;
+	background-color: white;
 }
 
 textedit:hot
 {
 	border-image-source:none;
-	bg-color: white;
+	background-color: white;
 }
 
 textedit:disabled
@@ -360,26 +360,26 @@ textedit cursor
 {
 	width:1px;
 
-	bg-color: black;
+	background-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
 	border-image-source:none;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 textedit cursor:blink_on
 {
-	bg-color: black;
+	background-color: black;
 }
 
 textedit cursor:blink_off
 {
-	bg-color: white;
+	background-color: white;
 }
 
 textedit selection
@@ -388,24 +388,24 @@ textedit selection
 	expand-top:-2;
 	expand-bottom:-1;
 	border-image-source:none;
-	bg-color: #316ac5;
+	background-color: #316ac5;
 
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 textedit selection:disabled
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 textedit selection:unfocused
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 
@@ -416,36 +416,36 @@ listview
 	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch; 
 	
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
 }
 
 listview row:details
 {
 	bg-image 
 	indent-width:20;
-	bg-color:#eeeeee;
+	background-color:#eeeeee;
 
-	border-top:0;
-	border-bottom:0;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 listview row:alternate
 {
 	bg-image 
 	indent-width:20;
-	bg-color:#e2e2e2;
+	background-color:#e2e2e2;
 
-	border-top:0;
-	border-bottom:0;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 listview column
 {
 	bg-image 
-	bg-color:#f2f2f2;
+	background-color:#f2f2f2;
 }
 
 listview row_opener:open
@@ -466,18 +466,18 @@ listview row_opener:closed
 
 listview selection
 {
-	selection-margin-left:3;
-	selection-margin-right:4;
+	selection-margin-left:3px;
+	selection-margin-right:4px;
 	selection-margin-top:1;
 	selection-margin-bottom:2;
 
-	bg-color:#316ac5;
+	background-color:#316ac5;
 	color:#f2e3f2;
 }
 
 listview selection:unfocused
 {
-	bg-color:#ece9d8;
+	background-color:#ece9d8;
 	color:black;
 }
 
@@ -508,17 +508,17 @@ listview icon_selection:normal
 listview columns_bg
 {
 	bg-image
-	bg-color:white;
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	background-color:white;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 listview row:icons
 {
 	bg-image
-	bg-color:#eeeeee;
+	background-color:#eeeeee;
 }
 
 listview cell:details:hot
@@ -530,7 +530,7 @@ listview cell:details:hot
 listview cell:details:normal
 {
 	bg-image 
-	bg-color:;
+	background-color:;
 
 	color:black;
 	
@@ -558,7 +558,7 @@ listview cell:details:normal
 listview cell:icons:normal
 {
    	bg-image 
-	bg-color:;
+	background-color:;
 
 	width:70px;
 	height:66px;
@@ -566,10 +566,10 @@ listview cell:icons:normal
 	icon-width: 32;
 	icon-height: 32;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 
 	line-edit-offset-left:6;
 	line-edit-offset-top:0;
@@ -585,10 +585,10 @@ listview cell:thumbnails:normal
 	icon-width: 96;
 	icon-height: 96;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:3;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:3px;
 
 	line-edit-offset-left:6;
 	line-edit-offset-top:0;
@@ -613,10 +613,10 @@ listview_header columnheader:normal
 	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 	
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 listview_header columnheader:hot
@@ -625,10 +625,10 @@ listview_header columnheader:hot
 	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 listview_header columnheader:pressed
@@ -637,10 +637,10 @@ listview_header columnheader:pressed
 	border-image-slice:2 3 9 14;
 	bg-image-sizing:stretch;
 	
-	border-top:3;
-	border-left:8;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:8px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 menubar
@@ -786,21 +786,21 @@ popupmenu joiner
 progressbar
 {
 	border-image-source:none;
-	bg-color: #aaaaaa;
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
+	background-color: #aaaaaa;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
 }
 
 progress 
 {
 	border-image-source:none;
-	bg-color: #22dd22;
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	background-color: #22dd22;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 	width:17px;
 }
 
@@ -1466,10 +1466,10 @@ tab
 	border-image-source:url('res:TabBorder');	
 	border-image-slice:1 4 1 3;
 
-	border-left:8;
-	border-right:8;
-	border-top:8;
-	border-bottom:8;
+	border-left:8px;
+	border-right:8px;
+	border-top:8px;
+	border-bottom:8px;
 }
 
 tabheader
@@ -1517,7 +1517,7 @@ tabheader page:selected
 
 toolbar
 {
-	bg-color:transparent;
+	background-color:transparent;
 	color:black;
 }
 
@@ -1602,15 +1602,15 @@ tooltip
 	border-image-source:url('res:Tooltip');
 	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
-	border-left: 5;
-	border-top: 7;
-	border-right: 5;
-	border-bottom: 6;
+	border-left: 5px;
+	border-top: 7px;
+	border-right: 5px;
+	border-bottom: 6px;
 }
 
 window
 {
-	bg-color: #d0d0d0;
+	background-color: #d0d0d0;
 	border-image-source:url('res:WindowBackdrop');
 	bg-image-sizing:repear;
  }

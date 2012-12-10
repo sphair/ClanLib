@@ -3,10 +3,10 @@ combobox lineedit
 	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
+	border-top:0px;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0px;
 	
 	color:black;
 	text-color-selected:white;
