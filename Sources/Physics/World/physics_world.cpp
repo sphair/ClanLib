@@ -65,6 +65,11 @@ int PhysicsWorld::get_physic_scale() const
 	return (int)impl->physic_scale;
 }
 
+PhysicsContext &PhysicsWorld::get_pc()
+{
+	return impl->pc;
+}
+
 //																											_____________																							
 //																											S I G N A L S
 

@@ -24,10 +24,12 @@
 **
 **    Arkadiusz Kalinowski
 */
+
 #include "Physics/precomp.h"
 #include "physics_context_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics/Dynamics/Joints/joint.h"
 #include "API/Core/Text/string_format.h"
 #include "physics_world_impl.h"
 
@@ -101,7 +103,6 @@ int PhysicsContext_Impl::create_in_context(Fixture &fixture)
 	throw Exception(string_format("Exceded the current maximum fixtures amount that is equal %1.", max_fixture_amount));
 
 }
-/*
 int PhysicsContext_Impl::create_in_context(Joint &joint)
 {
 		if(free_joint_slots.size()>0)
@@ -109,14 +110,15 @@ int PhysicsContext_Impl::create_in_context(Joint &joint)
 		int slot = free_joint_slots.front();
 		free_joint_slots.pop_front();
 
-		joints[slot] = std::shared_ptr<Joint>(new Joint);
+		joints[slot] = joint.create_null_derived();
 		*joints[slot] = joint;
+
+		return slot;
 	}
 	else
 	throw Exception(string_format("Exceded the current maximum joints amount that is equal %1.", max_joint_amount));
 
 }
-*/
 
 void PhysicsContext_Impl::remove_from_context(Body &body)
 {
@@ -152,12 +154,24 @@ void PhysicsContext_Impl::remove_from_context(Fixture &fixture)
 	throw Exception("Tried to remove a Fixture from the context, but the Fixture has no ID number"); 
 }
 
-/*
+
 void PhysicsContext_Impl::remove_from_context(Joint &joint)
 {
-
+	int id = joint.get_id();
+	
+	if(id>=0)
+	{
+		if( (*joints[id]).get_id() == id)
+		{
+			joints[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Joint from the context. The id of the Joint is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Joint from the context, but the Joint has no ID number"); 
 }
-*/
+
 
 
 }

@@ -40,7 +40,7 @@ namespace clan
 
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-PhysicDebugDraw_Impl::PhysicDebugDraw_Impl(PhysicsWorld_Impl &pw_impl)
+PhysicsDebugDraw_Impl::PhysicsDebugDraw_Impl(PhysicsWorld_Impl &pw_impl)
 : owner(&pw_impl),
   physic_scale(owner->physic_scale)
 {
@@ -59,7 +59,7 @@ PhysicDebugDraw_Impl::PhysicDebugDraw_Impl(PhysicsWorld_Impl &pw_impl)
 //																											___________________																											
 //																											O P E R A T I O N S
 
-void PhysicDebugDraw_Impl::DrawPolygon(const b2Vec2* vertices, int32 k_segments, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawPolygon(const b2Vec2* vertices, int32 k_segments, const b2Color& color)
 {
 	Colorf colorr(color.r,color.g,color.b,1.0f);
 
@@ -75,7 +75,7 @@ void PhysicDebugDraw_Impl::DrawPolygon(const b2Vec2* vertices, int32 k_segments,
 							colorr);
 }
 
-void PhysicDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_segments, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_segments, const b2Color& color)
 {
 	Colorf color1(0.5f*color.r,0.5f*color.g,0.5f*color.b,0.5f);
 	Colorf color2(color.r,color.g,color.b,1.0f);
@@ -104,12 +104,12 @@ void PhysicDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_segm
 							color2);
 }
 
-void PhysicDebugDraw_Impl::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
 	used_canvas->circle(Pointf(center.x*physic_scale, center.y*physic_scale), radius*physic_scale, Colorf(color.r,color.g,color.b,0.5f));
 }
 
-void PhysicDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
 {
 	const int k_segments = 16;
 	const float32 k_increment = 2.0f * b2_pi / (float)k_segments;
@@ -148,7 +148,7 @@ void PhysicDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius,
 
 }
 
-void PhysicDebugDraw_Impl::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
 	used_canvas->line(p1.x*physic_scale,
 					 p1.y*physic_scale,
@@ -157,7 +157,7 @@ void PhysicDebugDraw_Impl::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const
 					 Colorf(color.r,color.g,color.b));
 }
 
-void PhysicDebugDraw_Impl::DrawTransform(const b2Transform& xf)
+void PhysicsDebugDraw_Impl::DrawTransform(const b2Transform& xf)
 {
 	Vec2f p1(xf.p.x,xf.p.y);
 	Vec2f p2;
@@ -179,7 +179,7 @@ void PhysicDebugDraw_Impl::DrawTransform(const b2Transform& xf)
 	
 }
 
-void PhysicDebugDraw_Impl::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
+void PhysicsDebugDraw_Impl::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
 {
 	used_canvas->fill(p.x-size,
 					 p.y-size,
@@ -188,7 +188,7 @@ void PhysicDebugDraw_Impl::DrawPoint(const b2Vec2& p, float32 size, const b2Colo
 					 Colorf(color.r,color.g,color.b));
 }
 
-void PhysicDebugDraw_Impl::DrawString(int x, int y, const char *string, ...)
+void PhysicsDebugDraw_Impl::DrawString(int x, int y, const char *string, ...)
 {
 	/*
 	char buffer[128];
@@ -224,7 +224,7 @@ void PhysicDebugDraw_Impl::DrawString(int x, int y, const char *string, ...)
 	*/
 }
 
-void PhysicDebugDraw_Impl::DrawAABB(b2AABB* aabb, const b2Color& c)
+void PhysicsDebugDraw_Impl::DrawAABB(b2AABB* aabb, const b2Color& c)
 {
 	used_canvas->box(aabb->lowerBound.x*physic_scale,
 					aabb->lowerBound.y*physic_scale,

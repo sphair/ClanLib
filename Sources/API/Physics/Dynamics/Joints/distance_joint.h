@@ -41,6 +41,7 @@ namespace clan
 
 	class DistanceJointDescription;
 	class DistanceJoint_Impl;
+	class PhysicsContext;
 
 /// \brief DistanceJoint class.
 ///
@@ -57,7 +58,7 @@ public:
 	/// \brief Constructs a DistanceJoint object.
 	///
 	/// \param description = a DistanceJoint Description object.
-	DistanceJoint(const DistanceJointDescription &description);
+	DistanceJoint(PhysicsContext &pc, const DistanceJointDescription &description);
 
 	virtual ~DistanceJoint();
 
@@ -78,7 +79,7 @@ public:
 /// \}
 /// \name Operations
 /// \{
-
+public:
 	DistanceJoint &DistanceJoint::operator =(const DistanceJoint &copy);
 
 	//Add us
@@ -92,7 +93,9 @@ public:
 	//virtual void 	ComputeAABB (b2AABB *aabb, const b2Transform &xf, int32 childIndex) const = 0;
 	//virtual void 	ComputeMass (b2MassData *massData, float32 density) const = 0;
 	//Add us
+protected:
 
+	virtual std::shared_ptr<Joint> create_null_derived();
 	
 /// \}
 /// \name Implementation

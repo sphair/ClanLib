@@ -112,14 +112,14 @@ public:
 	/// \brief Return the second body attached to this joint.
 	virtual Vec2f get_anchor_b();
 
-
+	/// \brief Return the world's id of the joint.
+	int get_id() const;
 
 /// \}
 /// \name Operations
 /// \{
-
+public:
 	Joint &Joint::operator =(const Joint &copy);
-
 
 	//Add us
 	// 	Clone the concrete Joint
@@ -132,7 +132,12 @@ public:
 	//virtual void 	ComputeAABB (b2AABB *aabb, const b2Transform &xf, int32 childIndex) const = 0;
 	//virtual void 	ComputeMass (b2MassData *massData, float32 density) const = 0;
 	//Add us
+protected:
 
+	virtual std::shared_ptr<Joint> create_null_derived();
+
+	/// \brief Set the world's id of the joint.
+	void set_id(int value);
 	
 /// \}
 /// \name Implementation
@@ -143,6 +148,8 @@ protected:
 
 /// \}
 
+	friend class PhysicsContext;
+	friend class PhysicsContext_Impl;
 };
 
 }

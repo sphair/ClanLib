@@ -66,7 +66,6 @@ public:
 public:
 	int id;
 	PhysicsWorld_Impl *owner_world;
-	Body *owner;
 	b2Body *body;
 	bool body_occupied;
 

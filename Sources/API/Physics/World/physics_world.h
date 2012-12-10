@@ -42,6 +42,7 @@ namespace clan
 class Physic;
 class PhysicsWorldDescription;
 class PhysicsWorld_Impl;
+class PhysicsContext;
 
 /// \brief Top-level world class.
 ///
@@ -96,6 +97,9 @@ public:
 	/// \brief Return the amount of pixels for 1 meter in the Physics World.
 	int get_physic_scale() const;
 
+	/// \brief Return the Physics Context of the world.
+	PhysicsContext &get_pc();
+
 /// \}
 /// \name Operations
 /// \{
@@ -123,7 +127,7 @@ private:
 	friend class PhysicsContext;
 	friend class DistanceJointDescription;
 
-	friend class PhysicDebugDraw;
+	friend class PhysicsDebugDraw;
 	friend class PolygonShape;
 	friend class ChainShape;
 	friend class CircleShape;
