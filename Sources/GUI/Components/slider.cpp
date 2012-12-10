@@ -568,7 +568,7 @@ void Slider_Impl::update_part_positions()
 
 	Rect rect(slider->get_geometry().get_size());
 	Rect content_rect = slider->get_content_box();
-	Size thumb_size = part_thumb.get_preferred_size();
+	Size thumb_size = part_thumb.get_css_size();
 
 	if (vertical)
 	{
@@ -576,8 +576,8 @@ void Slider_Impl::update_part_positions()
 		slider_track_height = height - thumb_size.height / 2 - 1;
 
 		// track rect (for drawing the visuals)
-		rect_track.left = content_rect.get_center().x - part_track.get_preferred_width()/2;
-		rect_track.right = rect_track.left + part_track.get_preferred_width();
+		rect_track.left = content_rect.get_center().x - part_track.get_css_width()/2;
+		rect_track.right = rect_track.left + part_track.get_css_width();
 		rect_track.top = content_rect.top;
 		rect_track.bottom = content_rect.bottom;
 
@@ -611,8 +611,8 @@ void Slider_Impl::update_part_positions()
 		// track rect (for drawing the visuals)
 		rect_track.left = content_rect.left;
 		rect_track.right = rect_track.left + width;
-		rect_track.top = content_rect.get_height()/2 - part_track.get_preferred_height()/2;
-		rect_track.bottom = rect_track.top + part_track.get_preferred_height();
+		rect_track.top = content_rect.get_height()/2 - part_track.get_css_height()/2;
+		rect_track.bottom = rect_track.top + part_track.get_css_height();
 
 		// thumb rect
 		int thumb_x = int((float(offset_position)/float(slider_max-slider_min)) * slider_track_width);

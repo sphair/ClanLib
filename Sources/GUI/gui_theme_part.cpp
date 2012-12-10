@@ -174,17 +174,17 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 	border.render();
 }
 
-Size GUIThemePart::get_preferred_size() const
+Size GUIThemePart::get_css_size() const
 {
 	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
 }
 
-int GUIThemePart::get_preferred_width() const
+int GUIThemePart::get_css_width() const
 {
 	return impl->element.get_css_properties().width.length.value;
 }
 
-int GUIThemePart::get_preferred_height() const
+int GUIThemePart::get_css_height() const
 {
 	return impl->element.get_css_properties().height.length.value;
 }

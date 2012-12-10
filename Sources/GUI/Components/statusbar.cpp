@@ -230,7 +230,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	if (show_size_grip)
 	{
-		int preferred_width = part_size_grip.get_preferred_width();
+		int preferred_width = part_size_grip.get_css_width();
 		Rect rect_sizegrip(content.right - preferred_width, content.top, content.right, content.bottom);
 		part_size_grip.render_box(canvas, rect_sizegrip, update_rect);
 		rect_status_text.right = rect_sizegrip.left;
@@ -270,7 +270,7 @@ void StatusBar_Impl::position_parts()
 	int xpos = content.right;
 	if (show_size_grip)
 	{
-		int preferred_width = part_size_grip.get_preferred_width();
+		int preferred_width = part_size_grip.get_css_width();
 		Rect rect_sizegrip(content.right - preferred_width, content.top, content.right, content.bottom);
 		xpos = rect_sizegrip.left;
 	}

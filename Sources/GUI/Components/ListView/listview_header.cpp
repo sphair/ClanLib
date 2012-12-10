@@ -133,9 +133,9 @@ bool ListViewHeader::get_visible() const
 	return impl->visible;	
 }
 
-Size ListViewHeader::get_preferred_size() const
+Size ListViewHeader::get_css_size() const
 {
-	return Size(50, 50);	//FIXME: impl->listview_header->get_preferred_size();
+	return Size(50, 50);	//FIXME: impl->listview_header->get_css_size();
 }
 
 
@@ -371,7 +371,7 @@ void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 {
-	int header_height = listview_header->get_preferred_height();
+	int header_height = listview_header->get_css_height();
 
 	Rect rect_header = Rect(
 		parent_content_rect.left,

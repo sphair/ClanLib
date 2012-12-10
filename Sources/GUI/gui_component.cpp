@@ -1482,7 +1482,7 @@ Rect GUIComponent::get_render_box() const
 	return box;
 }
 
-int GUIComponent::get_preferred_height() const	//FIXME: Stub
+int GUIComponent::get_css_height() const	//FIXME: Stub
 {
 	return impl->element.get_css_properties().height.length.value;
 }
@@ -1498,12 +1498,12 @@ Rect GUIComponent::get_content_shrink_box() const
 	return shrink_box;
 }
 
-Size GUIComponent::get_preferred_size() const
+Size GUIComponent::get_css_size() const
 {
 	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
 }
 
-int GUIComponent::get_preferred_width() const
+int GUIComponent::get_css_width() const
 {
 	return impl->element.get_css_properties().width.length.value;
 }

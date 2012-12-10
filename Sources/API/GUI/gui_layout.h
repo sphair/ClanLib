@@ -77,7 +77,7 @@ public:
 	GUILayoutProvider *get_provider() const;
 
 	/// \brief Returns the size of the dialog, as set in the editor.
-	Size get_preferred_size() const;
+	Size get_css_size() const;
 
 /// \}
 /// \name Operations

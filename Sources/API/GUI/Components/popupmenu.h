@@ -104,7 +104,7 @@ public:
 	/// \brief Get Preferred size
 	///
 	/// \return preferred_size
-	virtual Size get_preferred_size() const;
+	virtual Size get_css_size() const;
 
 /// \}
 /// \name Events

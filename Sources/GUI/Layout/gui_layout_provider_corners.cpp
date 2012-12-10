@@ -51,7 +51,7 @@ GUILayoutProvider_Corners::~GUILayoutProvider_Corners()
 /////////////////////////////////////////////////////////////////////////////
 // GUILayoutProvider_Corners Attributes:
 
-Size GUILayoutProvider_Corners::get_preferred_size() const
+Size GUILayoutProvider_Corners::get_css_size() const
 {
 	return preferred_size;
 }

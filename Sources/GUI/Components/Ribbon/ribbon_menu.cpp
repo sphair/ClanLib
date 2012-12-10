@@ -83,13 +83,13 @@ int RibbonMenu::update_item_boxes()
 	{
 		if (items[i].separator)
 		{
-			Rect item_box(1, y, 1 + part_menu_item_separator.get_preferred_width(), y + part_menu_item_separator.get_preferred_height());
+			Rect item_box(1, y, 1 + part_menu_item_separator.get_css_width(), y + part_menu_item_separator.get_css_height());
 			y = item_box.bottom;
 			item_boxes.push_back(item_box);
 		}
 		else
 		{
-			Rect item_box(x, y, x + part_menu_item.get_preferred_width(), y + part_menu_item.get_preferred_height());
+			Rect item_box(x, y, x + part_menu_item.get_css_width(), y + part_menu_item.get_css_height());
 			y = item_box.bottom;
 			item_boxes.push_back(item_box);
 		}

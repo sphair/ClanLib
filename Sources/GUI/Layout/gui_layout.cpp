@@ -85,9 +85,9 @@ GUILayoutProvider *GUILayout::get_provider() const
 	return impl->provider;
 }
 
-Size GUILayout::get_preferred_size() const
+Size GUILayout::get_css_size() const
 {
-	return impl->provider->get_preferred_size();
+	return impl->provider->get_css_size();
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -235,7 +235,7 @@ void ListViewLayoutDetails::create_parts()
 	part_opener.set_pseudo_class("open", true);
 
 	opener_gap = part_cell.get_property_int(CssStr::opener_gap, "6");
-	size_opener = part_opener.get_preferred_size();
+	size_opener = part_opener.get_css_size();
 	opener_offset.x = part_opener.get_property_int(CssStr::opener_offset_x, "0");
 	opener_offset.y = part_opener.get_property_int(CssStr::opener_offset_y, "0");
 
@@ -253,7 +253,7 @@ void ListViewLayoutDetails::create_parts()
 	indent_width = part_row.get_property_int(CssStr::indent_width, "20");
 
 	part_cell.set_pseudo_class(CssStr::normal, true);
-	size_cell = part_cell.get_preferred_size();
+	size_cell = part_cell.get_css_size();
 	height_row = size_cell.height;
 
 	lineedit_textrect_offset.left = part_cell.get_property_int(CssStr::lineedit_offset_left, "0");

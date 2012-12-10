@@ -58,7 +58,7 @@ public:
 
 public:
 	/// \brief Returns the size of the dialog, as set in the editor.
-	virtual Size get_preferred_size() const = 0;
+	virtual Size get_css_size() const = 0;
 
 /// \}
 /// \name Operations

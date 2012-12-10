@@ -405,7 +405,7 @@ void Spin_Impl::on_resized()
 {
 	Rect rect = component->get_geometry().get_size();
 	Rect content_rect = component->get_content_box();
-	Rect lineedit_rect(content_rect.left, content_rect.top, content_rect.right-part_button_down.get_preferred_width(), content_rect.bottom);
+	Rect lineedit_rect(content_rect.left, content_rect.top, content_rect.right-part_button_down.get_css_width(), content_rect.bottom);
 	lineedit->set_geometry(lineedit_rect);
 
 	if (floating_point_mode)
@@ -413,8 +413,8 @@ void Spin_Impl::on_resized()
 	else
 		lineedit->set_text(value_i);
 
-	button_up_rect = Rect(content_rect.right-part_button_up.get_preferred_width(), content_rect.top, content_rect.right, content_rect.get_center().y);
-	button_down_rect = Rect(content_rect.right-part_button_up.get_preferred_width(), button_up_rect.bottom, content_rect.right, content_rect.bottom);
+	button_up_rect = Rect(content_rect.right-part_button_up.get_css_width(), content_rect.top, content_rect.right, content_rect.get_center().y);
+	button_down_rect = Rect(content_rect.right-part_button_up.get_css_width(), button_up_rect.bottom, content_rect.right, content_rect.bottom);
 }
 
 void Spin_Impl::on_style_changed()

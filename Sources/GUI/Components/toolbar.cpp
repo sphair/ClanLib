@@ -140,9 +140,9 @@ ToolBar *ToolBar::get_named_item(GUIComponent *reference_component, const std::s
 	return object;
 }
 
-Size ToolBar::get_preferred_size() const
+Size ToolBar::get_css_size() const
 {
-	return Size(50, 50); //FIXME: impl->toolbar->get_preferred_size();
+	return Size(50, 50); //FIXME: impl->toolbar->get_css_size();
 }
 
 ToolBarItem ToolBar::get_item(int index)
@@ -481,7 +481,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	{
 		int x = component_content.left;
 		int center_y = item_content.get_center().y;
-		int item_size = part_item_normal.get_preferred_width();
+		int item_size = part_item_normal.get_css_width();
 
 		std::vector<ToolBarItem>::size_type index, size;
 		size = items.size();
@@ -520,7 +520,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 	{
 		int y = component_content.top;
 		int center_x = item_content.get_center().x;
-		int size_item = part_item_normal.get_preferred_height();
+		int size_item = part_item_normal.get_css_height();
 
 		std::vector<ToolBarItem>::size_type index, size;
 		size = items.size();

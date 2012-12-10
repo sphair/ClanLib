@@ -1089,7 +1089,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 	Size text_size_before_cursor = font.get_text_size(canvas, clipped_text);
 
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
-	cursor_rect.right = cursor_rect.left + part_cursor.get_preferred_width();
+	cursor_rect.right = cursor_rect.left + part_cursor.get_css_width();
 
 	cursor_rect.top = vertical_text_align.top;
 	cursor_rect.bottom = vertical_text_align.bottom;
