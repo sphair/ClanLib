@@ -356,7 +356,7 @@ void ListViewLayoutDetails::update_shown_items_rows(Font &font, ListViewItem ite
 			rect_cell.right = rect_view.right;
 		si.rect_cell.push_back(rect_cell);
 
-		Rect rect_cell_content = part_cell.get_content_box();
+		Rect rect_cell_content = part_cell.get_content_box(rect_cell);
 		int offset_x = 0; // css
 
 		Size text_size = font.get_text_size(canvas, text);

@@ -112,7 +112,7 @@ void RibbonMenu::on_render(Canvas &canvas, const Rect &update_box)
 		else
 		{
 			Rect item_box = item_boxes[i];
-			Rect item_content_box = part_menu_item.get_content_box();
+			Rect item_content_box = part_menu_item.get_content_box(item_box);
 			item_content_box.left += 7;
 			Point icon_pos(item_content_box.left + 16 - items[i].image.get_width() / 2, item_content_box.top + item_content_box.get_height() / 2 - items[i].image.get_height() / 2);
 			item_content_box.left += 32 + 5;

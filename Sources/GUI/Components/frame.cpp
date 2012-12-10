@@ -134,7 +134,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect content = frame->get_content_box();
 	Rect rect_header(content.left, content.top, content.right, content.top + part_header.get_preferred_height());
 	Rect rect_body(content.left, rect_header.bottom, content.right, content.bottom);
-	Rect rect_header_content = part_header.get_content_box();
+	Rect rect_header_content = part_header.get_content_box(rect_header);
 
 	int content_caption_width = 0;
 	if (!header_icon.is_null())
@@ -144,7 +144,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		content_caption_width += frame->get_text_size(canvas, header_text).width;
 	}
 
-	int caption_width = part_header_caption.get_render_box().get_width();
+	int caption_width = part_header_caption.get_render_box(Rect(0, 0, content_caption_width, rect_header_content.get_height())).get_width();
 
 	Rect rect_header_left(rect_header_content.left, rect_header_content.top, rect_header_content.left + part_header_left.get_preferred_width(), rect_header_content.bottom);
 	Rect rect_header_caption(rect_header_left.right, rect_header_content.top, rect_header_left.right + caption_width, rect_header_content.bottom);
@@ -156,7 +156,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	part_header_caption.render_box(canvas, rect_header_caption, update_rect);
 	part_header_right.render_box(canvas, rect_header_right, update_rect);
 
-	Rect rect_caption_content = part_header_caption.get_content_box();
+	Rect rect_caption_content = part_header_caption.get_content_box(rect_header_caption);
 	int xpos = rect_caption_content.left;
 	if (!header_icon.is_null())
 	{
