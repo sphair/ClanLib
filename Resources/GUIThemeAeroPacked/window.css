@@ -44,25 +44,27 @@ window buttonclose
 {
 	width:25px;
 	height:15px;
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 }
 
 window buttonclose:normal
 {
-	border-image-source:url('res:WindowCloseButtonActiveNormal'); 
+	background-image:url('res:WindowCloseButtonActiveNormal'); 
 }
 
 window buttonclose:hot
 {
-	border-image-source:url('res:WindowCloseButtonActiveHot'); 
+	background-image:url('res:WindowCloseButtonActiveHot'); 
 }
 
 window buttonclose:pressed
 {
-	border-image-source:url('res:WindowCloseButtonActivePressed'); 
+	background-image:url('res:WindowCloseButtonActivePressed'); 
 }
 
 window buttonclose:disabled
 {
-	border-image-source:url('res:WindowCloseButtonActiveDisabled'); 
+	background-image:url('res:WindowCloseButtonActiveDisabled'); 
 }

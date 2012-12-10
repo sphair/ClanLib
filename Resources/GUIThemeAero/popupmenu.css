@@ -92,8 +92,10 @@ popupmenu submenu_arrow
 {
 	width:24px;
 	height:8px;
-	bg-image-sizing:center; 
-	border-image-source:url('res:PopupMenuSubmenuArrow');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:PopupMenuSubmenuArrow');
 }
 
 popupmenu joiner

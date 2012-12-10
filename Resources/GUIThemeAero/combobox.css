@@ -46,27 +46,29 @@ combobox opener:disabled
 
 combobox opener_glyph
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 	align:center;
 	vertical-align:center;
 }
 
 combobox opener_glyph:normal
 {
-	border-image-source:url('res:ComboBoxDropDownButtonNormalGlyph'); 
+	background-image:url('res:ComboBoxDropDownButtonNormalGlyph'); 
 }
 
 combobox opener_glyph:hot
 {
-	border-image-source:url('res:ComboBoxDropDownButtonHotGlyph'); 
+	background-image:url('res:ComboBoxDropDownButtonHotGlyph'); 
 }
 
 combobox opener_glyph:pressed
 {
-	border-image-source:url('res:ComboBoxDropDownButtonPressedGlyph'); 
+	background-image:url('res:ComboBoxDropDownButtonPressedGlyph'); 
 }
 
 combobox opener_glyph:disabled
 {
-	border-image-source:url('res:ComboBoxDropDownButtonDisabledGlyph'); 
+	background-image:url('res:ComboBoxDropDownButtonDisabledGlyph'); 
 }

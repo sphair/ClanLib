@@ -88,27 +88,29 @@ scrollbar scrollthumb.vertical:disabled
 
 scrollbar scrollthumbgripper.vertical
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 }
 
 scrollbar scrollthumbgripper.vertical:normal
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperNormal'); 
+	background-image:url('res:ScrollbarVertThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.vertical:hot
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperHot'); 
+	background-image:url('res:ScrollbarVertThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.vertical:pressed
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperPressed'); 
+	background-image:url('res:ScrollbarVertThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.vertical:disabled
 {
-	border-image-source:none; 
+	background-image:none; 
 }
 
 scrollbar scrollbutton.up

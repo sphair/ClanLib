@@ -866,8 +866,10 @@ popupmenu submenu_arrow
 {
 	width:24px;
 	height:8px;
-	bg-image-sizing:center; 
-	border-image-source:url('res:PopupMenuSubmenuArrow');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:PopupMenuSubmenuArrow');
 }
 
 popupmenu joiner
@@ -959,49 +961,51 @@ radiobutton checker
 {
 	border-image-slice:0 0 0 0 fill;
 	border-image-width:0px 0px 0px 0px;
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:13px;
 	height:13px;
 }
 
 radiobutton checker:checked:normal
 {
-	border-image-source:url('res:RadioButtonCheckedNormal'); 
+	background-image:url('res:RadioButtonCheckedNormal'); 
 }
 
 radiobutton checker:checked:hot
 {
-	border-image-source:url('res:RadioButtonCheckedHot'); 
+	background-image:url('res:RadioButtonCheckedHot'); 
 }
 
 radiobutton checker:checked:pressed
 {
-	border-image-source:url('res:RadioButtonCheckedPressed'); 
+	background-image:url('res:RadioButtonCheckedPressed'); 
 }
 
 radiobutton checker:checked:disabled
 {
-	border-image-source:url('res:RadioButtonCheckedDisabled'); 
+	background-image:url('res:RadioButtonCheckedDisabled'); 
 }
 
 radiobutton checker:unchecked:normal
 {
-	border-image-source:url('res:RadioButtonUncheckedNormal'); 
+	background-image:url('res:RadioButtonUncheckedNormal'); 
 }
 
 radiobutton checker:unchecked:hot
 {
-	border-image-source:url('res:RadioButtonUncheckedHot'); 
+	background-image:url('res:RadioButtonUncheckedHot'); 
 }
 
 radiobutton checker:unchecked:pressed
 {
-	border-image-source:url('res:RadioButtonUncheckedPressed'); 
+	background-image:url('res:RadioButtonUncheckedPressed'); 
 }
 
 radiobutton checker:unchecked:disabled
 {
-	border-image-source:url('res:RadioButtonUncheckedDisabled'); 
+	background-image:url('res:RadioButtonUncheckedDisabled'); 
 }
 
 radiobutton focus
@@ -1104,28 +1108,30 @@ scrollbar scrollthumb.horizontal:disabled
 
 scrollbar scrollthumbgripper.horizontal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:ScrollbarHoriThumbGripperNormal'); 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:ScrollbarHoriThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:normal
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperNormal'); 
+	background-image:url('res:ScrollbarHoriThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:hot
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperHot'); 
+	background-image:url('res:ScrollbarHoriThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:pressed
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperPressed'); 
+	background-image:url('res:ScrollbarHoriThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:disabled
 {
-	border-image-source:none; 
+	background-image:none; 
 }
 
 scrollbar scrollbutton.left
@@ -1280,28 +1286,30 @@ scrollbar scrollthumb.vertical:disabled
 
 scrollbar scrollthumbgripper.vertical
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:ScrollbarVertThumbGripperNormal'); 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:ScrollbarVertThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.vertical:normal
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperNormal'); 
+	background-image:url('res:ScrollbarVertThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.vertical:hot
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperHot'); 
+	background-image:url('res:ScrollbarVertThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.vertical:pressed
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperPressed'); 
+	background-image:url('res:ScrollbarVertThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.vertical:disabled
 {
-	border-image-source:none; 
+	background-image:none; 
 }
 
 scrollbar scrollbutton.up
@@ -1524,26 +1532,34 @@ spin button_up:disabled
 
 spin arrow_up:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpDisabled');
 }
 
 spin button_down
@@ -1576,26 +1592,34 @@ spin button_down:disabled
 
 spin arrow_down:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownDisabled');
 }
 
 statusbar

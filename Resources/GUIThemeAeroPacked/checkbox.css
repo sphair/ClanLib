@@ -22,67 +22,69 @@ checkbox focus
 
 checkbox checker
 {
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:13px;
 	height:13px;
 }
 
 checkbox checker:checked:normal
 {
-	border-image-source:url('res:CheckBoxCheckedNormal'); 
+	background-image:url('res:CheckBoxCheckedNormal'); 
 }
 
 checkbox checker:checked:hot
 {
-	border-image-source:url('res:CheckBoxCheckedHot'); 
+	background-image:url('res:CheckBoxCheckedHot'); 
 }
 
 checkbox checker:checked:pressed
 {
-	border-image-source:url('res:CheckBoxCheckedPressed'); 
+	background-image:url('res:CheckBoxCheckedPressed'); 
 }
 
 checkbox checker:checked:disabled
 {
-	border-image-source:url('res:CheckBoxCheckedDisabled'); 
+	background-image:url('res:CheckBoxCheckedDisabled'); 
 }
 
 checkbox checker:unchecked:normal
 {
-	border-image-source:url('res:CheckBoxUncheckedNormal'); 
+	background-image:url('res:CheckBoxUncheckedNormal'); 
 }
 
 checkbox checker:unchecked:pressed
 {
-	border-image-source:url('res:CheckBoxUncheckedPressed');
+	background-image:url('res:CheckBoxUncheckedPressed');
 }
 
 checkbox checker:unchecked:disabled
 {
-	border-image-source:url('res:CheckBoxUncheckedDisabled'); 
+	background-image:url('res:CheckBoxUncheckedDisabled'); 
 }
 
 checkbox checker:unchecked:hot
 {
-	border-image-source:url('res:CheckBoxUncheckedHot'); 
+	background-image:url('res:CheckBoxUncheckedHot'); 
 }
 
 checkbox checker:indeterminated:normal
 {
-	border-image-source:url('res:CheckBoxIndeterminatedNormal'); 
+	background-image:url('res:CheckBoxIndeterminatedNormal'); 
 }
 
 checkbox checker:indeterminated:pressed
 {
-	border-image-source:url('res:CheckBoxIndeterminatedPressed');
+	background-image:url('res:CheckBoxIndeterminatedPressed');
 }
 
 checkbox checker:indeterminated:disabled
 {
-	border-image-source:url('res:CheckBoxIndeterminatedDisabled'); 
+	background-image:url('res:CheckBoxIndeterminatedDisabled'); 
 }
 
 checkbox checker:indeterminated:hot
 {
-	border-image-source:url('res:CheckBoxIndeterminatedHot'); 
+	background-image:url('res:CheckBoxIndeterminatedHot'); 
 }

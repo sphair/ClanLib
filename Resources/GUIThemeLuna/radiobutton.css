@@ -13,49 +13,51 @@ radiobutton checker
 {
 	border-image-slice:0 0 0 0 fill;
 	border-image-width:0px 0px 0px 0px;
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:13px;
 	height:13px;
 }
 
 radiobutton checker:checked:normal
 {
-	border-image-source:url('res:RadioButtonCheckedNormal'); 
+	background-image:url('res:RadioButtonCheckedNormal'); 
 }
 
 radiobutton checker:checked:hot
 {
-	border-image-source:url('res:RadioButtonCheckedHot'); 
+	background-image:url('res:RadioButtonCheckedHot'); 
 }
 
 radiobutton checker:checked:pressed
 {
-	border-image-source:url('res:RadioButtonCheckedPressed'); 
+	background-image:url('res:RadioButtonCheckedPressed'); 
 }
 
 radiobutton checker:checked:disabled
 {
-	border-image-source:url('res:RadioButtonCheckedDisabled'); 
+	background-image:url('res:RadioButtonCheckedDisabled'); 
 }
 
 radiobutton checker:unchecked:normal
 {
-	border-image-source:url('res:RadioButtonUncheckedNormal'); 
+	background-image:url('res:RadioButtonUncheckedNormal'); 
 }
 
 radiobutton checker:unchecked:hot
 {
-	border-image-source:url('res:RadioButtonUncheckedHot'); 
+	background-image:url('res:RadioButtonUncheckedHot'); 
 }
 
 radiobutton checker:unchecked:pressed
 {
-	border-image-source:url('res:RadioButtonUncheckedPressed'); 
+	background-image:url('res:RadioButtonUncheckedPressed'); 
 }
 
 radiobutton checker:unchecked:disabled
 {
-	border-image-source:url('res:RadioButtonUncheckedDisabled'); 
+	background-image:url('res:RadioButtonUncheckedDisabled'); 
 }
 
 radiobutton focus

@@ -20,7 +20,9 @@ ribbon button.menu
 	border-image-source:url('res:RibbonMenuButton');
 	border-image-slice:0 0 0 0 fill;
 	border-image-width:0px 0px 0px 0px;
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:56px;
 	height:22px;
 	border-left:0px;
@@ -31,7 +33,7 @@ ribbon button.menu
 
 ribbon button.menu:hot
 {
-	border-image-source:url('res:RibbonMenuButtonHot');
+	background-image:url('res:RibbonMenuButtonHot');
 }
 
 ribbon tab
@@ -255,27 +257,29 @@ combobox.ribbon opener:disabled
 
 combobox.ribbon opener_glyph
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 	align:center;
 	vertical-align:center;
 }
 
 combobox.ribbon opener_glyph:normal
 {
-	border-image-source:url('res:RibbonDropDownGlyph');
+	background-image:url('res:RibbonDropDownGlyph');
 }
 
 combobox.ribbon opener_glyph:hot
 {
-	border-image-source:url('res:RibbonDropDownGlyph'); 
+	background-image:url('res:RibbonDropDownGlyph'); 
 }
 
 combobox.ribbon opener_glyph:pressed
 {
-	border-image-source:url('res:RibbonDropDownGlyph'); 
+	background-image:url('res:RibbonDropDownGlyph'); 
 }
 
 combobox.ribbon opener_glyph:disabled
 {
-	border-image-source:url('res:RibbonDropDownGlyph'); 
+	background-image:url('res:RibbonDropDownGlyph'); 
 }
