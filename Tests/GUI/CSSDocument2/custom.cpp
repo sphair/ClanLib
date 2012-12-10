@@ -27,10 +27,13 @@ void Custom::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect content_rect = get_content_box();
 
-	Rect box1_rect(content_rect.left, content_rect.top, Size(box1.get_preferred_width(), 20));
-	Rect box2_rect(box1_rect.right, box1_rect.top, Size(box2.get_preferred_width(), 20));
+	Rect box1_rect(content_rect.left, content_rect.top, Size(box1.get_css_width(), 40));
+	Rect box2_rect(box1_rect.right, box1_rect.top, Size(box2.get_css_width(), 40));
 
 	box1.render_box(canvas, box1_rect);
 	box2.render_box(canvas, box2_rect);
+
+	box1.render_text(canvas, "1", box1_rect);
+	box2.render_text(canvas, "2", box2_rect);
 
 }
