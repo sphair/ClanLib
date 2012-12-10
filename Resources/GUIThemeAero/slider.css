@@ -13,7 +13,7 @@ slider:disabled
 
 slider focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -22,8 +22,8 @@ slider focus
 slider slidertrack.horizontal
 {
 	height:4px;
-	border-image-slice:1 2 1 1;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 2 1 1 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderHorizontalTrack');
 }
 
@@ -31,8 +31,8 @@ slider sliderthumb.horizontal
 {
 	width:11px;
 	height:17px;
-	border-image-slice:2 3 9 9;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 3 9 9 fill;
+	border-image-repeat:stretch; 
 }
 
 slider sliderthumb.horizontal:normal
@@ -53,8 +53,8 @@ slider sliderthumb.horizontal:disabled
 slider slidertrack.vertical
 {
 	width:4px;
-	border-image-slice:1 1 1 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 1 1 2 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderVerticalTrack');
 }
 
@@ -62,8 +62,8 @@ slider sliderthumb.vertical
 {
 	width:17px;
 	height:11px;
-	border-image-slice:2 3 5 5;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 3 5 5 fill;
+	border-image-repeat:stretch; 
 }
 
 slider sliderthumb.vertical:normal

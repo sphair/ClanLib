@@ -8,31 +8,31 @@ window
 window caption
 {
 	border-image-source:url('res:WindowActive');
-	border-image-slice:28 35 9 17;
-	bg-image-sizing:stretch; 
+	border-image-slice:28 35 9 17 fill;
+	border-image-repeat:stretch; 
 	height:30px;
 }
 
 window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
-	border-image-slice:1 2 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 2 0 0 fill;
+	border-image-repeat:stretch; 
 	width:4px;
 }
 
 window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
-	border-image-slice:2 1 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 1 0 0 fill;
+	border-image-repeat:stretch; 
 	width:4px;
 }
 
 window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
-	border-image-slice:5 5 1 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:5 5 1 2 fill;
+	border-image-repeat:stretch; 
 	height:4px;
 }

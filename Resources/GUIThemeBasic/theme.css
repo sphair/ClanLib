@@ -18,7 +18,7 @@ checkbox:disabled
 
 checkbox focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -92,8 +92,8 @@ checkbox checker:indeterminated:hot
 
 combobox lineedit
 {
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch; 
 
 	border-top:0px;
 	border-left:6px;
@@ -108,7 +108,7 @@ combobox opener
 {
 	width:17px;
 	height:21px;
-	border-image-slice:5 5 6 6;
+	border-image-slice:5 5 6 6 fill;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;
@@ -165,8 +165,8 @@ frame
 	width:100px;
 	height:100px;
 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 
 	color:blue;
 }
@@ -176,8 +176,8 @@ frame header
 	height:16px;
 	
 	border-image-source:none; 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headerleft
@@ -186,22 +186,22 @@ frame headerleft
 	height:16px;
 	
 	border-image-source:none;
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headerright
 {
 	border-image-source:none;
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headercaption
 {
 	border-image-source:none;
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 	
 	border-left:4px;
 	border-right:4px;
@@ -211,23 +211,23 @@ frame body
 {
 	border-image-source:none; 
 	
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 }
 groupbox
 {
 	width:100px;
 	height:100px;
 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:GroupBox');
 }
 
 image
 {
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch; 
 	border-image-source:none;
 
 	border-top:3px;
@@ -239,8 +239,8 @@ image
 
 lineedit
 {
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch; 
 	
 	border-top:0px;
 	border-left:6px;
@@ -320,8 +320,8 @@ lineedit selection:unfocused
 
 textedit
 {
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch; 
 	
 	border-color:gray;
 	border-left:1px;
@@ -412,8 +412,8 @@ listview
 {
 	border-image-source:none; 
 
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch; 
 	
 	border-top:1px;
 	border-left:1px;
@@ -494,8 +494,8 @@ listview icon_selection:normal
 {
 	border-image-source:none;
 
-	border-image-slice:3 4 3 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 4 3 4 fill;
+	border-image-repeat:stretch; 
 
 	border-top:-3;
 	border-left:-3;
@@ -600,8 +600,8 @@ listview cell:thumbnails:normal
 listview_header
 {
 	border-image-source:none;
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch;
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch;
 	
 	height:20px;
 }
@@ -609,8 +609,8 @@ listview_header
 listview_header columnheader:normal
 {
 	border-image-source:url('res:ListViewColumnHeaderNormal');
-	border-image-slice:2 3 9 14;
-	bg-image-sizing:stretch;
+	border-image-slice:2 3 9 14 fill;
+	border-image-repeat:stretch;
 	
 	border-top:3px;
 	border-left:7px;
@@ -621,8 +621,8 @@ listview_header columnheader:normal
 listview_header columnheader:hot
 {
 	border-image-source:url('res:ListViewColumnHeaderHot');
-	border-image-slice:2 3 9 14;
-	bg-image-sizing:stretch;
+	border-image-slice:2 3 9 14 fill;
+	border-image-repeat:stretch;
 
 	border-top:3px;
 	border-left:7px;
@@ -633,8 +633,8 @@ listview_header columnheader:hot
 listview_header columnheader:pressed
 {
 	border-image-source:url('res:ListViewColumnHeaderPressed');
-	border-image-slice:2 3 9 14;
-	bg-image-sizing:stretch;
+	border-image-slice:2 3 9 14 fill;
+	border-image-repeat:stretch;
 	
 	border-top:3px;
 	border-left:8px;
@@ -644,8 +644,8 @@ listview_header columnheader:pressed
 
 menubar
 {
-	border-image-slice:1 1 9 15;
-	bg-image-sizing:stretch;
+	border-image-slice:1 1 9 15 fill;
+	border-image-repeat:stretch;
 	border-image-source:url('res:MenuBarBackgroundActive'); 
 
 	width:100px;
@@ -669,8 +669,8 @@ menubar item:disabled
 
 menubar item:selected
 {
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }
 
@@ -678,15 +678,15 @@ menubar item:hot
 {
 	/*margin-top:3;*/
 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }
 
 popupmenu
 {
-	border-image-slice:32 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:32 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
 	padding-bottom:2px;
@@ -754,8 +754,8 @@ popupmenu accel_label:disabled
 
 popupmenu row:selected
 {
-	border-image-slice:8 8 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:8 8 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSelected');
 }
 
@@ -764,8 +764,8 @@ popupmenu separator
 	height:2px;
 	padding-left:32px;
 
-	border-image-slice:4 4 1 1;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 1 1 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }
 
@@ -806,7 +806,7 @@ progress
 
 button
 {
-	border-image-slice:6 6 6 6;
+	border-image-slice:6 6 6 6 fill;
 	bg-image-sizing:default;
 	color:black;
 	align:center;
@@ -841,7 +841,7 @@ button:disabled
 
 button focus
 {
-	border-image-slice:8 8 8 9;
+	border-image-slice:8 8 8 9 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:ButtonFocus'); 
 }
@@ -905,7 +905,7 @@ radiobutton checker:unchecked:disabled
 
 radiobutton focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:none; 
 } 
@@ -918,8 +918,8 @@ scrollbar
 
 scrollbar scrolltrack.left
 {
-	border-image-slice:0 0 4 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:0 0 4 3 fill;
+	border-image-repeat:stretch; 
 }
 
 scrollbar scrolltrack.left:normal
@@ -944,8 +944,8 @@ scrollbar scrolltrack.left:disabled
 
 scrollbar scrolltrack.right
 {
-	border-image-slice:0 0 4 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:0 0 4 3 fill;
+	border-image-repeat:stretch; 
 }
 
 scrollbar scrolltrack.right:normal
@@ -971,8 +971,8 @@ scrollbar scrolltrack.right:disabled
 
 scrollbar scrollthumb.horizontal
 {
-	border-image-slice:5 5 5 5;
-	bg-image-sizing:stretch; 
+	border-image-slice:5 5 5 5 fill;
+	border-image-repeat:stretch; 
 }
 
 scrollbar scrollthumb.horizontal:normal
@@ -1085,8 +1085,8 @@ scrollbar
 
 scrollbar scrolltrack.up
 {
-	border-image-slice:1 1 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 1 0 0 fill;
+	border-image-repeat:stretch; 
 
 }
 
@@ -1112,8 +1112,8 @@ scrollbar scrolltrack.up:disabled
 
 scrollbar scrolltrack.down
 {
-	border-image-slice:1 1 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 1 0 0 fill;
+	border-image-repeat:stretch; 
 }
 
 scrollbar scrolltrack.down:normal
@@ -1138,8 +1138,8 @@ scrollbar scrolltrack.down:disabled
 
 scrollbar scrollthumb.vertical
 {
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch;
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch;
 }
 
 scrollbar scrollthumb.vertical:normal
@@ -1258,7 +1258,7 @@ slider:disabled
 
 slider focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -1267,8 +1267,8 @@ slider focus
 slider slidertrack.horizontal
 {
 	height:4px;
-	border-image-slice:1 2 1 1;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 2 1 1 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderTrack');
 }
 
@@ -1276,8 +1276,8 @@ slider sliderthumb.horizontal
 {
 	width:11px;
 	height:17px;
-	border-image-slice:2 3 9 9;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 3 9 9 fill;
+	border-image-repeat:stretch; 
 }
 
 slider sliderthumb.horizontal:normal
@@ -1298,8 +1298,8 @@ slider sliderthumb.horizontal:disabled
 slider slidertrack.vertical
 {
 	width:4px;
-	border-image-slice:1 1 1 2 ;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 1 1 2  fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderTrack');
 }
 
@@ -1307,8 +1307,8 @@ slider sliderthumb.vertical
 {
 	width:17px;
 	height:11px;
-	border-image-slice:2 3 5 5;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 3 5 5 fill;
+	border-image-repeat:stretch; 
 }
 
 slider sliderthumb.vertical:normal
@@ -1333,8 +1333,8 @@ spin
 	width:42px;
 	height:21px;
 
-	border-image-slice:0 0 0 0;
-	bg-image-sizing:stretch; 	
+	border-image-slice:0 0 0 0 fill;
+	border-image-repeat:stretch; 	
 
 	color:black;
 }
@@ -1347,8 +1347,8 @@ spin:disabled
 spin button_up
 {
 	width:16px;
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 	
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 	
 }
 
 spin button_up:normal
@@ -1398,8 +1398,8 @@ spin arrow_up:disabled
 spin button_down
 {
 	width:16px;
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 	
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 	
 }
 
 spin button_down:normal
@@ -1453,8 +1453,8 @@ statusbar
 	height:23px;
 
 	border-image-source:none; 
-	border-image-slice:1 2 2 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 2 2 2 fill;
+	border-image-repeat:stretch; 
 
 	color:black;
 }
@@ -1463,7 +1463,7 @@ statusbar
 tab 
 {
 	border-image-source:url('res:TabBorder');	
-	border-image-slice:1 4 1 3;
+	border-image-slice:1 4 1 3 fill;
 
 	border-left:8px;
 	border-right:8px;
@@ -1474,22 +1474,22 @@ tab
 tabheader
 {
 	border-image-source:url('res:TabHeaderBorder');	
-	border-image-slice:1 4 1 2;
-	bg-image-sizing:stretch;
+	border-image-slice:1 4 1 2 fill;
+	border-image-repeat:stretch;
 	first-tab-x-offset: 0;
 	height:20px;
 }
 
 tabheader focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 }
 
 tabheader page
 {
-	border-image-slice:2 2 3 1;
+	border-image-slice:2 2 3 1 fill;
 	padding-left:5px;
 	padding-right:5px;
 	align:center;
@@ -1564,8 +1564,8 @@ toolbar.horizontal item
 
 toolbar item
 {
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch;
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch;
 	color:black;
 }
 
@@ -1599,8 +1599,8 @@ toolbar item:disabled
 tooltip
 {
 	border-image-source:url('res:Tooltip');
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-left: 5px;
 	border-top: 7px;
 	border-right: 5px;
@@ -1617,32 +1617,32 @@ window
 window caption
 {
 	border-image-source:url('res:WindowActive');
-	border-image-slice:8 8 6 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:8 8 6 0 fill;
+	border-image-repeat:stretch; 
 	height:22px;
 }
 
 window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
-	border-image-slice:4 0 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 0 0 0 fill;
+	border-image-repeat:stretch; 
 	width:5px;
 }
 
 window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
-	border-image-slice:0 4 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:0 4 0 0 fill;
+	border-image-repeat:stretch; 
 	width:5px;
 }
 
 window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
-	border-image-slice:8 8 0 5;
-	bg-image-sizing:stretch; 
+	border-image-slice:8 8 0 5 fill;
+	border-image-repeat:stretch; 
 	height:5px;
 }
 

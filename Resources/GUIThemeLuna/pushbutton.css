@@ -1,7 +1,7 @@
 
 button
 {
-	border-image-slice:8 8 9 9;
+	border-image-slice:8 8 9 9 fill;
 	bg-image-sizing:default;
 	color:black;
 	align:center;
@@ -20,7 +20,7 @@ button:defaulted
 
 button focus
 {
-	border-image-slice:8 8 8 9;
+	border-image-slice:8 8 8 9 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:ButtonFocus');
 }

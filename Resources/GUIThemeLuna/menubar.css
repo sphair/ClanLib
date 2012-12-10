@@ -32,8 +32,8 @@ menubar item:selected
 
 	/*border-top:10px;*/
  
-	border-image-slice:4 4 5 1;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 5 1 fill;
+	border-image-repeat:stretch; 
 
 	border-image-source:url('res:MenuBarSelectedItem');
 }

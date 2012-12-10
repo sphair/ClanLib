@@ -14,7 +14,7 @@ checkbox:disabled
 
 checkbox checker
 {
-	border-image-slice:3 3 3 3;
+	border-image-slice:3 3 3 3 fill;
 	bg-image-sizing:default;
 	width:13px;
 	height:13px;
@@ -22,7 +22,7 @@ checkbox checker
 
 checkbox focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 

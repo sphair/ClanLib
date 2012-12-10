@@ -1,8 +1,8 @@
 
 popupmenu
 {
-	border-image-slice:32 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:32 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
 	padding-bottom:2px;
@@ -70,8 +70,8 @@ popupmenu accel_label:disabled
 
 popupmenu row:selected
 {
-	border-image-slice:8 8 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:8 8 4 4 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSelected');
 }
 
@@ -80,8 +80,8 @@ popupmenu separator
 	height:2px;
 	padding-left:32px;
 
-	border-image-slice:4 4 1 1;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 1 1 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }
 

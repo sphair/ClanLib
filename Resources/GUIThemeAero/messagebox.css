@@ -2,8 +2,8 @@
 messagebox
 {
 	border-image-source:url('res:MessageBox');
-	border-image-slice:2 2 2 44;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 2 2 44 fill;
+	border-image-repeat:stretch; 
 
 	padding-left:11px;
 	padding-right:11px;

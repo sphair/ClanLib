@@ -2,8 +2,8 @@
 tooltip
 {
 	border-image-source:url('res:Tooltip');
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 	border-left: 5px;
 	border-top: 7px;
 	border-right: 5px;
