@@ -1,16 +1,13 @@
 
 #pragma once
 
-class Custom : public GUIComponent
+class Custom : public clan::GUIComponent
 {
 public:
+	Custom(clan::GUIComponent *parent);
 
-	Custom(GUIComponent *parent);
-
-	virtual ~Custom();
 	float get_preferred_content_width();
 	float get_preferred_content_height(float width);
-	void on_render(Canvas &canvas, const Rect &update_rect);
-
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 };
 
