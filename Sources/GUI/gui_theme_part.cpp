@@ -247,7 +247,12 @@ Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
 
 Rect GUIThemePart::get_render_box(const Rect &content_box_rect) const
 {
-	Rect box = Rect(Point(), impl->component->impl->geometry.get_size());
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	Rect box = content_box_rect;
+	box.left -= css_used_values.border.left + css_used_values.padding.left;
+	box.right += css_used_values.border.right + css_used_values.padding.right;
+	box.top -= css_used_values.border.top + css_used_values.padding.top;
+	box.bottom += css_used_values.border.bottom + css_used_values.padding.bottom;
 	return box;
 }
 
