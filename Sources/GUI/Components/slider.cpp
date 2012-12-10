@@ -213,7 +213,7 @@ float Slider::get_preferred_content_width()
 
 float Slider::get_preferred_content_height(float width)
 {
-	return 50.0f;
+	return 20.0f;
 }
 
 /////////////////////////////////////////////////////////////////////////////
