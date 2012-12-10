@@ -46,7 +46,7 @@ class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 public:
 	Body_Impl(PhysicsWorld_Impl &pw_impl);
 
-	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); sig_body_deletion.invoke(); }
+	~Body_Impl();
 //																						___________________
 //																						O P E R A T I O N S
 	void create_body(const BodyDescription &description);

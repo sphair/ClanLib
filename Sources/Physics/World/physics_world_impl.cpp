@@ -47,10 +47,17 @@ PhysicsWorld_Impl::PhysicsWorld_Impl(PhysicsWorld &pw)
 	physic_scale		(100),
 	pc					(pw)
 {	
-	//world.SetContactListener(&listener); //Uncomment after finishing physics context.
-	//world.SetContactFilter(&listener); //Uncomment after finishing physics context.
+	world.SetContactListener(&listener); //Uncomment after finishing physics context.
+	world.SetContactFilter(&listener); //Uncomment after finishing physics context.
 }
 
+PhysicsWorld_Impl::~PhysicsWorld_Impl() 
+{ 
+	world.SetContactListener(NULL);
+	world.SetContactFilter(NULL);
+
+	return; 
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 
