@@ -1,8 +1,8 @@
 
 lineedit
 {
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch; 
 	
 	border-top:0px;
 	border-left:6px;

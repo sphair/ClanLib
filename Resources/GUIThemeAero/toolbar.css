@@ -49,8 +49,8 @@ toolbar.horizontal item
 
 toolbar item
 {
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch;
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch;
 	color:black;
 }
 

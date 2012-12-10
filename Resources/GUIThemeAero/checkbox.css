@@ -14,7 +14,7 @@ checkbox:disabled
 
 checkbox focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 

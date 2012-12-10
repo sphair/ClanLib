@@ -3,8 +3,8 @@ frame
 	width:100px;
 	height:100px;
 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 
 	color:blue;
 }
@@ -14,8 +14,8 @@ frame header
 	height:16px;
 	
 	border-image-source:url('res:FrameHeader'); 
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headerleft
@@ -24,22 +24,22 @@ frame headerleft
 	height:16px;
 	
 	border-image-source:url('res:FrameHeaderLeft');
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headerright
 {
 	border-image-source:url('res:FrameHeaderRight');
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 }
 
 frame headercaption
 {
 	border-image-source:url('res:FrameHeaderCaption');
-	border-image-slice:4 4 2 13;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 2 13 fill;
+	border-image-repeat:stretch; 
 	
 	border-left:4px;
 	border-right:4px;
@@ -49,6 +49,6 @@ frame body
 {
 	border-image-source:url('res:Frame'); 
 	
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 
 }

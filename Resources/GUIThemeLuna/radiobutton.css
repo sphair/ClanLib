@@ -11,7 +11,7 @@ radiobutton:disabled
 
 radiobutton checker
 {
-	border-image-slice:0 0 0 0;
+	border-image-slice:0 0 0 0 fill;
 	bg-image-sizing:center;
 	width:13px;
 	height:13px;
@@ -59,7 +59,7 @@ radiobutton checker:unchecked:disabled
 
 radiobutton focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 

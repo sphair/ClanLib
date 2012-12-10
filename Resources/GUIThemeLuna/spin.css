@@ -5,8 +5,8 @@ spin
 	width:42px;
 	height:21px;
 
-	border-image-slice:0 0 0 0;
-	bg-image-sizing:stretch; 	
+	border-image-slice:0 0 0 0 fill;
+	border-image-repeat:stretch; 	
 
 	color:black;
 }
@@ -19,8 +19,8 @@ spin:disabled
 spin button_up
 {
 	width:16px;
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 	
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 	
 }
 
 spin button_up:normal
@@ -70,8 +70,8 @@ spin arrow_up:disabled
 spin button_down
 {
 	width:16px;
-	border-image-slice:4 4 4 4;
-	bg-image-sizing:stretch; 	
+	border-image-slice:4 4 4 4 fill;
+	border-image-repeat:stretch; 	
 }
 
 spin button_down:normal

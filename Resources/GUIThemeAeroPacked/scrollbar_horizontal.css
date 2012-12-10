@@ -7,8 +7,8 @@ scrollbar
 
 scrollbar scrolltrack.left
 {
-	border-image-slice:0 0 4 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:0 0 4 3 fill;
+	border-image-repeat:stretch; 
 }
 
 scrollbar scrolltrack.left:normal
@@ -33,8 +33,8 @@ scrollbar scrolltrack.left:disabled
 
 scrollbar scrolltrack.right
 {
-	border-image-slice:0 0 4 3
-	bg-image-sizing:stretch;
+	border-image-slice:0 0 4 3 fill;
+	border-image-repeat:stretch;
 }
 
 scrollbar scrolltrack.right:normal;
@@ -59,8 +59,8 @@ scrollbar scrolltrack.right:disabled
 
 scrollbar scrollthumb.horizontal
 {
-	border-image-slice:5 5 5 5
-	bg-image-sizing:stretch;
+	border-image-slice:5 5 5 5 fill;
+	border-image-repeat:stretch;
 
 }
 
@@ -113,8 +113,8 @@ scrollbar scrollbutton.left
 {
 	width:17px;
 	height:17px;
-	border-image-slice:3 3 3 3
-	bg-image-sizing:stretch;
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch;
 
 }
 
@@ -142,8 +142,8 @@ scrollbar scrollbutton.right
 {
 	width:17px;
 	height:17px;
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch;
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch;
 }
 
 scrollbar scrollbutton.right:normal

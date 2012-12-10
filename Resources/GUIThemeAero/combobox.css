@@ -1,7 +1,7 @@
 combobox lineedit
 {
-	border-image-slice:2 2 2 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 2 2 2 fill;
+	border-image-repeat:stretch; 
 
 	border-top:0px;
 	border-left:6px;
@@ -16,7 +16,7 @@ combobox opener
 {
 	width:17px;
 	height:21px;
-	border-image-slice:5 5 6 6;
+	border-image-slice:5 5 6 6 fill;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;

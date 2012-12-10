@@ -11,7 +11,7 @@ slider:disabled
 
 slider focus
 {
-	border-image-slice:3 4 3 4;
+	border-image-slice:3 4 3 4 fill;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -21,7 +21,7 @@ slider slidertrack.horizontal
 	border-image-source:url('res:SliderTrackNormal');
 	width:22px;
 	height:4px;
-	bg-image-sizing:stretch; 
+	border-image-repeat:stretch; 
 }
 
 slider slidertrack_start.horizontal
@@ -29,7 +29,7 @@ slider slidertrack_start.horizontal
 	border-image-source:url('res:SliderTrackStartNormal');
 	width:4px;
 	height:4px;
-	bg-image-sizing:stretch; 	
+	border-image-repeat:stretch; 	
 	gap-width:5;
 }
 
@@ -38,7 +38,7 @@ slider slidertrack_end.horizontal
 	border-image-source:url('res:SliderTrackEndNormal');
 	width:4px;
 	height:4px;
-	bg-image-sizing:stretch; 
+	border-image-repeat:stretch; 
 	gap-width:8;
 }
 
@@ -68,7 +68,7 @@ slider slidertrack.vertical
 	border-image-source:url('res:SliderVerticalTrackNormal');
 	width:4px;
 	height:4px;
-	bg-image-sizing:stretch; 
+	border-image-repeat:stretch; 
 }
 
 slider slidertrack_start.vertical
@@ -76,7 +76,7 @@ slider slidertrack_start.vertical
 	border-image-source:url('res:SliderVerticalTrackStartNormal');
 	width:4px;
 	height:4px;
-	bg-image-sizing:stretch; 	
+	border-image-repeat:stretch; 	
 	gap-width:5;
 }
 
@@ -85,7 +85,7 @@ slider slidertrack_end.vertical
 	border-image-source:url('res:SliderVerticalTrackEndNormal');
 	width:4px;
 	height:4px;
-	bg-image-sizing:stretch; 
+	border-image-repeat:stretch; 
 	gap-width:8;
 }
 

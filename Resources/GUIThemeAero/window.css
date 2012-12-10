@@ -7,32 +7,32 @@ window
 window caption
 {
 	border-image-source:url('res:WindowActive');
-	border-image-slice:28 35 9 17;
-	bg-image-sizing:stretch; 
+	border-image-slice:28 35 9 17 fill;
+	border-image-repeat:stretch; 
 	height:28px;
 }
 
 window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
-	border-image-slice:2 1 91 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 1 91 0 fill;
+	border-image-repeat:stretch; 
 	width:8px;
 }
 
 window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
-	border-image-slice:1 2 91 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 2 91 0 fill;
+	border-image-repeat:stretch; 
 	width:8px;
 }
 
 window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
-	border-image-slice:2 3 0 2;
-	bg-image-sizing:stretch; 
+	border-image-slice:2 3 0 2 fill;
+	border-image-repeat:stretch; 
 	height:8px;
 }
 

@@ -1,8 +1,8 @@
 
 image
 {
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:ImageNormal');
 
 	border-top:3px;

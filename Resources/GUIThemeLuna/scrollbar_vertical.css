@@ -7,8 +7,8 @@ scrollbar
 
 scrollbar scrolltrack.up
 {
-	border-image-slice:0 0 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:0 0 0 0 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:ScrollbarVertTrackNormal'); 
 }
 
@@ -34,8 +34,8 @@ scrollbar scrolltrack.up:disabled
 
 scrollbar scrolltrack.down
 {
-	border-image-slice:1 1 0 0;
-	bg-image-sizing:stretch; 
+	border-image-slice:1 1 0 0 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:ScrollbarVertTrackNormal'); 
 }
 
@@ -61,8 +61,8 @@ scrollbar scrolltrack.down:disabled
 
 scrollbar scrollthumb.vertical
 {
-	border-image-slice:5 5 5 5;
-	bg-image-sizing:stretch; 
+	border-image-slice:5 5 5 5 fill;
+	border-image-repeat:stretch; 
 	border-image-source:url('res:ScrollbarVertThumbNormal'); 
 }
 
@@ -116,8 +116,8 @@ scrollbar scrollbutton.up
 {
 	width:17px;
 	height:17px;
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch;
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch;
 	border-image-source:url('res:ScrollbarVertButtonUpNormal');
 }
 
@@ -145,8 +145,8 @@ scrollbar scrollbutton.down
 {
 	width:17px;
 	height:17px;
-	border-image-slice:3 3 3 3;
-	bg-image-sizing:stretch;
+	border-image-slice:3 3 3 3 fill;
+	border-image-repeat:stretch;
 	border-image-source:url('res:ScrollbarVertButtonDownNormal'); 
 }
 
