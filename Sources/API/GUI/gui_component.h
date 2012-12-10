@@ -592,11 +592,7 @@ public:
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
 
-	Rect render_text(
-		Canvas &canvas,
-		const std::string &text,
-		const Rect &content_rect, 
-		const Rect &clip_rect);
+	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_rect);
 
 	struct VerticalTextPosition
 	{
