@@ -51,7 +51,6 @@
     <text>Need alignment!</text>
   </pushbutton>
   
-  <!--
   <checkbox>Check</checkbox>
   <radiobutton>
     <group>Main Group</group>
@@ -64,7 +63,6 @@
   <slider/>
   <lineedit>LineEdit</lineedit>
   <scrollbar></scrollbar>
-  -->
   
   <custom/>
 </root>
