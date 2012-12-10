@@ -1,18 +1,13 @@
 
 #include "precomp.h"
+#include "custom.h"
 
 using namespace clan;
-
-#include "custom.h"
 
 Custom::Custom(GUIComponent *parent)
 : GUIComponent(parent, "custom")
 {
 	func_render().set(this, &Custom::on_render);
-}
-
-Custom::~Custom()
-{
 }
 
 float Custom::get_preferred_content_width()
@@ -29,5 +24,4 @@ void Custom::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = get_geometry();
 	canvas.fill(rect, Colorf::red);
-
 }
