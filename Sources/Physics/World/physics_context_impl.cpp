@@ -28,6 +28,7 @@
 #include "physics_context_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
+#include "API/Core/Text/string_format.h"
 #include "physic_world_impl.h"
 
 namespace clan
@@ -81,7 +82,7 @@ int PhysicsContext_Impl::create_in_context(Body &body)
 		return slot;
 	}
 	else
-	throw Exception("Exceded the current maximum bodies amount that is equal "+std::to_string(max_body_amount)+".");
+	throw Exception(string_format("Exceded the current maximum bodies amount that is equal %1.", max_body_amount));
 }
 
 int PhysicsContext_Impl::create_in_context(Fixture &fixture)
@@ -97,7 +98,7 @@ int PhysicsContext_Impl::create_in_context(Fixture &fixture)
 		return slot;
 	}
 	else
-	throw Exception("Exceded the current maximum fixtures amount that is equal "+std::to_string(max_fixture_amount)+".");
+	throw Exception(string_format("Exceded the current maximum fixtures amount that is equal %1.", max_fixture_amount));
 
 }
 /*
@@ -112,7 +113,7 @@ int PhysicsContext_Impl::create_in_context(Joint &joint)
 		*joints[slot] = joint;
 	}
 	else
-	throw Exception("Exceded the current maximum joints amount that is equal "+std::to_string(max_joint_amount)+".");
+	throw Exception(string_format("Exceded the current maximum joints amount that is equal %1.", max_joint_amount));
 
 }
 */
