@@ -62,6 +62,6 @@ radiobutton focus
 {
 	border-image-slice:3 4 3 4 fill;
 	border-image-width:3px 4px 3px 4px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
