@@ -58,15 +58,12 @@ int Joints::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 
 	//Setup physic world
-	PhysicWorldDescription phys_desc;
+	PhysicsWorldDescription phys_desc;
 	phys_desc.set_gravity(0.0f,10.0f);
 	phys_desc.set_sleep(true);
 	phys_desc.set_physic_scale(100);
-	phys_desc.set_timestep(1.0f/60.0f);
-	phys_desc.set_velocity_iterations(8);
-	phys_desc.set_position_iterations(3);
 
-	PhysicWorld phys_world(phys_desc);
+	PhysicsWorld phys_world(phys_desc);
 
 	//Setup ground body
 	Body ground = create_ground_body(phys_world);
@@ -74,7 +71,7 @@ int Joints::start(const std::vector<std::string> &args)
 	unsigned int last_time = System::get_time();
 
 	//Setup debug draw.
-	PhysicDebugDraw debug_draw(phys_world);
+	PhysicsDebugDraw debug_draw(phys_world);
 	debug_draw.set_flags(f_shape|f_aabb|f_joint);
 
 	GraphicContext gc = canvas.get_gc();
@@ -137,13 +134,16 @@ void Joints::on_window_close()
 	quit = true;
 }
 
-Body Joints::create_ground_body(PhysicWorld &phys_world)
+Body Joints::create_ground_body(PhysicsWorld &phys_world)
 {
+	//Get the Physics Context
+	PhysicsContext pc = phys_world.get_pc();
+
 	BodyDescription ground_desc(phys_world);
 	ground_desc.set_position(Vec2f((float)window_x_size/2.0f,(float)window_y_size));
 	ground_desc.set_type(body_static);
 
-	Body ground(ground_desc);
+	Body ground(pc, ground_desc);
 
 	//Setup ground fixture
 	PolygonShape ground_shape(phys_world);
@@ -154,15 +154,18 @@ Body Joints::create_ground_body(PhysicWorld &phys_world)
 	fixture_desc.set_friction(1.0f);
 	fixture_desc.set_density(1000.0f);
 	
-	Fixture ground_fixture(ground, fixture_desc);
+	Fixture ground_fixture(pc, ground, fixture_desc);
 	return ground;
 }
 
-Body Joints::create_box_body(PhysicWorld &phys_world)
+Body Joints::create_box_body(PhysicsWorld &phys_world)
 {
+	//Get the Physics Context
+	PhysicsContext pc = phys_world.get_pc();
+
 	BodyDescription box_desc(phys_world);
 	box_desc.set_type(body_dynamic);
-	Body box(box_desc);
+	Body box(pc, box_desc);
 
 	//Setup box fixture description
 	PolygonShape box_shape(phys_world);
@@ -174,12 +177,15 @@ Body Joints::create_box_body(PhysicWorld &phys_world)
 	fixture_desc2.set_friction(0.001f);
 	fixture_desc2.set_density(50.0f);
 
-	Fixture box_fixture(box,fixture_desc2);
+	Fixture box_fixture(pc, box,fixture_desc2);
 	return box;
 }
 
-std::shared_ptr<Joint> Joints::create_joint(PhysicWorld &phys_world, Body &bodyA, Body &bodyB, int type)
+std::shared_ptr<Joint> Joints::create_joint(PhysicsWorld &phys_world, Body &bodyA, Body &bodyB, int type)
 {
+	//Get the Physics Context
+	PhysicsContext pc = phys_world.get_pc();
+
 	switch(type)
 	{
 	default:
@@ -190,7 +196,7 @@ std::shared_ptr<Joint> Joints::create_joint(PhysicWorld &phys_world, Body &bodyA
 		joint_desc.set_damping_ratio(1.0f);
 		joint_desc.set_length(100.0f);
 
-		std::shared_ptr<Joint> joint( static_cast<Joint *> (new DistanceJoint(joint_desc)));
+		std::shared_ptr<Joint> joint( static_cast<Joint *> (new DistanceJoint(pc, joint_desc)));
 		return joint;
 	}
 }

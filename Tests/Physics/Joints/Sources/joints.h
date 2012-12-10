@@ -37,9 +37,9 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	Body create_ground_body(PhysicWorld &phys_world);
-	Body create_box_body(PhysicWorld &phys_world);
-	std::shared_ptr<Joint> create_joint(PhysicWorld &phys_world, Body &bodyA, Body &bodyB, int type);
+	Body create_ground_body(PhysicsWorld &phys_world);
+	Body create_box_body(PhysicsWorld &phys_world);
+	std::shared_ptr<Joint> create_joint(PhysicsWorld &phys_world, Body &bodyA, Body &bodyB, int type);
 
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
