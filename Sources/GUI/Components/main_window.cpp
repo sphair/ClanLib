@@ -81,8 +81,8 @@ MainWindow::MainWindow(GUIManager *owner, const GUITopLevelDescription &descript
 	impl->menubar = new MenuBar(this);
 	impl->statusbar = new StatusBar(this);
 
-	int menubar_height = impl->menubar->get_css_height();
-	int statusbar_height = impl->statusbar->get_css_height();
+	int menubar_height = impl->menubar->get_content_box().get_height();
+	int statusbar_height = impl->statusbar->get_content_box().get_height();
 	Rect g = get_geometry();
 	Rect menubar_rect(0, 0, g.get_width(), menubar_height);
 	Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());
@@ -101,8 +101,8 @@ MainWindow::MainWindow(GUIComponent *owner, const GUITopLevelDescription &descri
 	impl->menubar = new MenuBar(this);
 	impl->statusbar = new StatusBar(this);
 
-	int menubar_height = impl->menubar->get_css_height();
-	int statusbar_height = impl->statusbar->get_css_height();
+	int menubar_height = impl->menubar->get_content_box().get_height();
+	int statusbar_height = impl->statusbar->get_content_box().get_height();
 	Rect g = get_geometry();
 	Rect menubar_rect(0, 0, g.get_width(), menubar_height);
 	Rect statusbar_rect(0, g.get_height()-statusbar_height, g.get_width(), g.get_height());

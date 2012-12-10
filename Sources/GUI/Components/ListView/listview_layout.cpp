@@ -116,7 +116,7 @@ bool ListViewLayout::is_visible(ListViewItem &item)
 	{
 		if ((*it).item.impl == item.impl)
 		{
-			if ((*it).rect_cell[0].top > header->get_css_height() && (*it).rect_cell[0].bottom < rect_view.bottom)
+			if ((*it).rect_cell[0].top > header->get_content_box().get_height() && (*it).rect_cell[0].bottom < rect_view.bottom)
 				return true;
 		}
 	}

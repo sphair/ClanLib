@@ -61,7 +61,7 @@ Ribbon::Ribbon(GUIComponent *container)
 
 	menu_button = new PushButton(this);
 	menu_button->set_class("menu");
-	menu_button->set_geometry(Rect(0, 0, menu_button->get_css_width(), 1 + menu_button->get_css_height()));
+	menu_button->set_geometry(Rect(0, 0, menu_button->get_content_box().get_width(), 1 + menu_button->get_content_box().get_height()));
 	menu_button->func_clicked().set(this, &Ribbon::on_menu_button_clicked);
 
 	menu = new RibbonMenu(this);
@@ -134,7 +134,7 @@ void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 
 void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 {
-	int tab_x = menu_button->get_css_width() + 2;
+	int tab_x = menu_button->get_content_box().get_width() + 2;
 	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 	{
 		if (pages[page_index]->show_tab)

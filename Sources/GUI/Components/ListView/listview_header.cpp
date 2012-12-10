@@ -371,7 +371,7 @@ void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 {
-	int header_height = listview_header->get_css_height();
+	int header_height = listview_header->get_content_box().get_height();
 
 	Rect rect_header = Rect(
 		parent_content_rect.left,

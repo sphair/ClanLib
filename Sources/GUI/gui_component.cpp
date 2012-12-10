@@ -1482,12 +1482,6 @@ Rect GUIComponent::get_render_box() const
 	return box;
 }
 
-int GUIComponent::get_css_height() const	//FIXME: Stub
-{
-	return impl->element.get_css_properties().height.length.value;
-}
-
-
 Rect GUIComponent::get_content_shrink_box() const
 {
 	Rect shrink_box;
@@ -1496,16 +1490,6 @@ Rect GUIComponent::get_content_shrink_box() const
 	shrink_box.top = impl->css_used_values.border.top + impl->css_used_values.padding.top;
 	shrink_box.bottom = impl->css_used_values.border.bottom + impl->css_used_values.padding.bottom;
 	return shrink_box;
-}
-
-Size GUIComponent::get_css_size() const
-{
-	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
-}
-
-int GUIComponent::get_css_width() const
-{
-	return impl->element.get_css_properties().width.length.value;
 }
 
 std::string GUIComponent::get_property(const std::string &property, const std::string &default_value) const
