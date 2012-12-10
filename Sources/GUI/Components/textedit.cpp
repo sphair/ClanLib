@@ -1141,7 +1141,7 @@ int TextEdit::get_total_height()
 	}
 	else
 	{
-		return impl->textedit->get_render_box().get_height();
+		return impl->textedit->get_height();
 	}
 }
 
