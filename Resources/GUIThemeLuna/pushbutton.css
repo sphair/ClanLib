@@ -23,7 +23,7 @@ button focus
 {
 	border-image-slice:8 8 8 9 fill;
 	border-image-width:8px 8px 8px 9px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:ButtonFocus');
 }
 

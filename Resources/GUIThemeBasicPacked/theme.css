@@ -20,7 +20,7 @@ checkbox focus
 {
 	border-image-slice:3 4 3 4 fill;
 	border-image-width:3px 4px 3px 4px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
 
@@ -870,7 +870,7 @@ button focus
 {
 	border-image-slice:8 8 8 9 fill;
 	border-image-width:8px 8px 8px 9px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:ButtonFocus'); 
 }
 radiobutton
@@ -935,7 +935,7 @@ radiobutton focus
 {
 	border-image-slice:3 4 3 4 fill;
 	border-image-width:3px 4px 3px 4px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:none; 
 } 
 
@@ -1295,7 +1295,7 @@ slider focus
 {
 	border-image-slice:3 4 3 4 fill;
 	border-image-width:3px 4px 3px 4px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
 
@@ -1530,7 +1530,7 @@ tabheader focus
 {
 	border-image-slice:3 4 3 4 fill;
 	border-image-width:3px 4px 3px 4px;
-	bg-image-sizing:repeat;
+	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 }
 
