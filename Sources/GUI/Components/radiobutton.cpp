@@ -134,6 +134,16 @@ bool RadioButton::is_selected() const
 	return impl->part_checker.get_pseudo_class(CssStr::checked);
 }
 
+float RadioButton::get_preferred_content_width()
+{
+	return impl->part_checker.get_css_width();
+}
+
+float RadioButton::get_preferred_content_height(float width)
+{
+	return impl->part_checker.get_css_height();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // RadioButton Operations:
 
