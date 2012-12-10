@@ -280,12 +280,12 @@ void ScrollBar_Impl::on_resized()
 void ScrollBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = scrollbar->get_geometry();
-	part_button_decrement.render_box(canvas, rect_button_decrement, update_rect);
-	part_track_decrement.render_box(canvas, rect_track_decrement, update_rect);
-	part_thumb.render_box(canvas, rect_thumb, update_rect);
-	part_thumb_gripper.render_box(canvas, rect_thumb, update_rect);
-	part_track_increment.render_box(canvas, rect_track_increment, update_rect);
-	part_button_increment.render_box(canvas, rect_button_increment, update_rect);
+	part_button_decrement.render_box(canvas, rect_button_decrement);
+	part_track_decrement.render_box(canvas, rect_track_decrement);
+	part_thumb.render_box(canvas, rect_thumb);
+	part_thumb_gripper.render_box(canvas, rect_thumb);
+	part_track_increment.render_box(canvas, rect_track_increment);
+	part_button_increment.render_box(canvas, rect_button_increment);
 }
 
 void ScrollBar_Impl::create_parts()

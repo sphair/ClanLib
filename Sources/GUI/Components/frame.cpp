@@ -150,11 +150,11 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect rect_header_caption(rect_header_left.right, rect_header_content.top, rect_header_left.right + caption_width, rect_header_content.bottom);
 	Rect rect_header_right(rect_header_caption.right, rect_header_content.top, rect_header_content.right, rect_header_content.bottom);
 
-	part_header.render_box(canvas, rect_header, update_rect);
-	part_body.render_box(canvas, rect_body, update_rect);
-	part_header_left.render_box(canvas, rect_header_left, update_rect);
-	part_header_caption.render_box(canvas, rect_header_caption, update_rect);
-	part_header_right.render_box(canvas, rect_header_right, update_rect);
+	part_header.render_box(canvas, rect_header);
+	part_body.render_box(canvas, rect_body);
+	part_header_left.render_box(canvas, rect_header_left);
+	part_header_caption.render_box(canvas, rect_header_caption);
+	part_header_right.render_box(canvas, rect_header_right);
 
 	Rect rect_caption_content = part_header_caption.get_content_box(rect_header_caption);
 	int xpos = rect_caption_content.left;

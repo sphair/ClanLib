@@ -345,18 +345,18 @@ void Window_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Rect content_rect = Rect(rect.left + frameleft_width, rect.top + caption_height, rect.right - frameright_width, rect.bottom - framebottom_height);
 	
 		Rect caption_rect = Rect(rect.left, rect.top, rect.right, rect.top + caption_height);
-		part_caption.render_box(canvas, caption_rect, update_rect);
+		part_caption.render_box(canvas, caption_rect);
 
 		Rect frameleft_rect = Rect(rect.left, rect.top + caption_height, rect.left + frameleft_width, rect.bottom - framebottom_height);
-		part_frameleft.render_box(canvas, frameleft_rect, update_rect);
+		part_frameleft.render_box(canvas, frameleft_rect);
 
 		Rect frameright_rect = Rect(rect.right - frameright_width, rect.top + caption_height, rect.right, rect.bottom - framebottom_height);
-		part_frameright.render_box(canvas, frameright_rect, update_rect);
+		part_frameright.render_box(canvas, frameright_rect);
 
 		Rect framebottom_rect = Rect(rect.left, rect.bottom - framebottom_height, rect.right, rect.bottom);
-		part_framebottom.render_box(canvas, framebottom_rect, update_rect);
+		part_framebottom.render_box(canvas, framebottom_rect);
 
-		part_buttonclose.render_box(canvas, part_buttonclose_rect, update_rect);
+		part_buttonclose.render_box(canvas, part_buttonclose_rect);
 
 		Font font = window->get_font();
 		Size text_size = font.get_text_size(canvas, title);

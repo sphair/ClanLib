@@ -83,7 +83,7 @@ void ListViewRenderer::render(
 	std::vector<ListViewColumn>::iterator col;
 	for (col = columns.begin(); col != columns.end(); ++col)
 	{
-		part_column.render_box(canvas, (*col).rect, update_rect);
+		part_column.render_box(canvas, (*col).rect);
 	}
 
 	// 2. Draw rows.
@@ -91,9 +91,9 @@ void ListViewRenderer::render(
 	for (row = rows.begin(); row != rows.end(); ++row)
 	{
 		if ((*row).index % 2 == 0)
-			part_row.render_box(canvas, (*row).rect, update_rect);
+			part_row.render_box(canvas, (*row).rect);
 		else
-			part_row_alternate.render_box(canvas, (*row).rect, update_rect);
+			part_row_alternate.render_box(canvas, (*row).rect);
 	}
 
 	// 3. Draw items
@@ -118,16 +118,16 @@ void ListViewRenderer::render(
 			const std::string &text = si.item.get_column(col_id).get_text();
 	
 			if (i < si.rect_cell.size())
-				part_cell.render_box(canvas, si.rect_cell[i], update_rect);
+				part_cell.render_box(canvas, si.rect_cell[i]);
 
 			if (first_column)
 			{
 				if (si.item.has_children())
 				{
 					if (si.item.is_open())
-						part_opener_open.render_box(canvas, si.rect_opener, update_rect);
+						part_opener_open.render_box(canvas, si.rect_opener);
 					else
-						part_opener_closed.render_box(canvas, si.rect_opener, update_rect);
+						part_opener_closed.render_box(canvas, si.rect_opener);
 				}
 
 				if (si.item.get_icon())
@@ -167,11 +167,11 @@ void ListViewRenderer::render(
 					selection_rect.right += selection_margin.right;
 					selection_rect.bottom += selection_margin.bottom;
 
-					part_selection.render_box(canvas, selection_rect, update_rect);
+					part_selection.render_box(canvas, selection_rect);
 
 					if (display_mode == listview_mode_thumbnails)
 					{
-						part_icon_selection.render_box(canvas, si.rect_icon_selection, update_rect);
+						part_icon_selection.render_box(canvas, si.rect_icon_selection);
 					}
 				}
 			}
@@ -181,9 +181,9 @@ void ListViewRenderer::render(
 				if (i < si.rect_text.size())
 				{
 					if (si.item.is_selected() && i == 0)
-						part_selection.render_text(canvas, text, si.rect_text[i], update_rect);
+						part_selection.render_text(canvas, text, si.rect_text[i]);
 					else
-						part_cell.render_text(canvas, text, si.rect_text[i], update_rect);
+						part_cell.render_text(canvas, text, si.rect_text[i]);
 
 					if (i == 0)
 					{

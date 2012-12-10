@@ -845,7 +845,7 @@ void ListView_Impl::on_resized()
 void ListView_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = listview->get_geometry();
-	part_columns_bg.render_box(canvas, rect_columns, update_rect);
+	part_columns_bg.render_box(canvas, rect_columns);
 
 	listview->push_cliprect(canvas, rect_columns_content);
 

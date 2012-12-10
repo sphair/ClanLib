@@ -299,7 +299,7 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	
 	if (button->has_focus())
 	{
-		part_focus.render_box(canvas, rect, update_rect);
+		part_focus.render_box(canvas, rect);
 	}
 
 	Rect content_rect = button->get_content_box();

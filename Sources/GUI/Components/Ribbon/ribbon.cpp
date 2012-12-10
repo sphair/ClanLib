@@ -128,7 +128,7 @@ void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 #endif
 	reset_cliprect(canvas);
 	Size client_size = get_size();
-	part_tab_background.render_box(canvas, client_size, clip_rect);
+	part_tab_background.render_box(canvas, client_size);
 	paint_tabs(canvas, clip_rect);
 }
 
@@ -147,7 +147,7 @@ void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 			if (!custom_state.empty())
 				part_tab.set_pseudo_class(custom_state, true);
 			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
-			part_tab.render_box(canvas, current_tab, clip_rect);
+			part_tab.render_box(canvas, current_tab);
 			font_tab.draw_text(canvas, current_tab.left+current_tab.get_width()/2-size_tab_text.width/2, current_tab.bottom-7, pages[page_index]->text, Colorf::black);
 
 			if (!custom_state.empty())

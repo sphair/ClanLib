@@ -128,8 +128,6 @@ public:
 	/// \brief Renders the component and its children.
 	void render_box(Canvas &canvas, const Rect &border_box);
 
-	void render_box(Canvas &canvas, const Rect &border_box, const Rect &stub);
-
 	/// \brief Re-evaluates which CSS selectors match this component
 	void update_style();
 
@@ -147,11 +145,7 @@ public:
 	/// \return true if changed
 	bool set_pseudo_class(const std::string &name, bool enable);
 
-	Rect render_text(
-		Canvas &canvas,
-		const std::string &text,
-		const Rect &content_rect, 
-		const Rect &clip_rect);
+	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_rect);
 
 	struct VerticalTextPosition
 	{
