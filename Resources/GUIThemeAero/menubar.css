@@ -2,6 +2,7 @@
 menubar
 {
 	border-image-slice:1 1 9 15 fill;
+	border-image-width:1px 1px 9px 15px;
 	border-image-repeat:stretch;
 	border-image-source:url('res:MenuBarBackgroundActive'); 
 
@@ -27,6 +28,7 @@ menubar item:disabled
 menubar item:selected
 {
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }
@@ -36,6 +38,7 @@ menubar item:hot
 	/*margin-top:3;*/
 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }

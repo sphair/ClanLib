@@ -3,6 +3,7 @@ tooltip
 {
 	border-image-source:url('res:Tooltip');
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-left: 5px;
 	border-top: 7px;

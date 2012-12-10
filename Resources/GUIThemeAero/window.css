@@ -8,6 +8,7 @@ window caption
 {
 	border-image-source:url('res:WindowActive');
 	border-image-slice:28 35 9 17 fill;
+	border-image-width:28px 35px 9px 17px;
 	border-image-repeat:stretch; 
 	height:28px;
 }
@@ -16,6 +17,7 @@ window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
 	border-image-slice:2 1 91 0 fill;
+	border-image-width:2px 1px 91px 0px;
 	border-image-repeat:stretch; 
 	width:8px;
 }
@@ -24,6 +26,7 @@ window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
 	border-image-slice:1 2 91 0 fill;
+	border-image-width:1px 2px 91px 0px;
 	border-image-repeat:stretch; 
 	width:8px;
 }
@@ -32,6 +35,7 @@ window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
 	border-image-slice:2 3 0 2 fill;
+	border-image-width:2px 3px 0px 2px;
 	border-image-repeat:stretch; 
 	height:8px;
 }

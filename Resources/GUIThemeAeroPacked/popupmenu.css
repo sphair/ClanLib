@@ -2,6 +2,7 @@
 popupmenu
 {
 	border-image-slice:32 4 4 4 fill;
+	border-image-width:32px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
@@ -71,6 +72,7 @@ popupmenu accel_label:disabled
 popupmenu row:selected
 {
 	border-image-slice:8 8 4 4 fill;
+	border-image-width:8px 8px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSelected');
 }
@@ -81,6 +83,7 @@ popupmenu separator
 	padding-left:32px;
 
 	border-image-slice:4 4 1 1 fill;
+	border-image-width:4px 4px 1px 1px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }

@@ -2,6 +2,7 @@
 image
 {
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:ImageNormal');
 

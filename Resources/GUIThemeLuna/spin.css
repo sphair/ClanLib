@@ -6,6 +6,7 @@ spin
 	height:21px;
 
 	border-image-slice:0 0 0 0 fill;
+	border-image-width:0px 0px 0px 0px;
 	border-image-repeat:stretch; 	
 
 	color:black;
@@ -20,6 +21,7 @@ spin button_up
 {
 	width:16px;
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 	
 }
 
@@ -71,6 +73,7 @@ spin button_down
 {
 	width:16px;
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 	
 }
 

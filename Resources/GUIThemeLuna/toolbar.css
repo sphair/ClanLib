@@ -50,6 +50,7 @@ toolbar.horizontal item
 toolbar item
 {
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch;
 	color:black;
 }

@@ -19,6 +19,7 @@ checkbox:disabled
 checkbox focus
 {
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -93,6 +94,7 @@ checkbox checker:indeterminated:hot
 combobox lineedit
 {
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 
 	border-top:0px;
@@ -109,6 +111,7 @@ combobox opener
 	width:17px;
 	height:21px;
 	border-image-slice:5 5 6 6 fill;
+	border-image-width:5px 5px 6px 6px;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;
@@ -166,6 +169,7 @@ frame
 	height:100px;
 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 
 	color:blue;
@@ -177,6 +181,7 @@ frame header
 	
 	border-image-source:none; 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 }
 
@@ -187,6 +192,7 @@ frame headerleft
 	
 	border-image-source:none;
 	border-image-slice:4 4 2 13 fill;
+	border-image-width:4px 4px 2px 13px;
 	border-image-repeat:stretch; 
 }
 
@@ -194,6 +200,7 @@ frame headerright
 {
 	border-image-source:none;
 	border-image-slice:4 4 2 13 fill;
+	border-image-width:4px 4px 2px 13px;
 	border-image-repeat:stretch; 
 }
 
@@ -201,6 +208,7 @@ frame headercaption
 {
 	border-image-source:none;
 	border-image-slice:4 4 2 13 fill;
+	border-image-width:4px 4px 2px 13px;
 	border-image-repeat:stretch; 
 	
 	border-left:4px;
@@ -212,6 +220,7 @@ frame body
 	border-image-source:none; 
 	
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 }
 groupbox
@@ -220,6 +229,7 @@ groupbox
 	height:100px;
 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:GroupBox');
 }
@@ -227,6 +237,7 @@ groupbox
 image
 {
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	border-image-source:none;
 
@@ -240,6 +251,7 @@ image
 lineedit
 {
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	
 	border-top:0px;
@@ -321,6 +333,7 @@ lineedit selection:unfocused
 textedit
 {
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch; 
 	
 	border-color:gray;
@@ -414,6 +427,7 @@ listview
 	border-image-source:none; 
 
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	
 	border-top:1px;
@@ -496,6 +510,7 @@ listview icon_selection:normal
 	border-image-source:none;
 
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	border-image-repeat:stretch; 
 
 	border-top:-3;
@@ -602,6 +617,7 @@ listview_header
 {
 	border-image-source:none;
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch;
 	
 	height:20px;
@@ -611,6 +627,7 @@ listview_header columnheader:normal
 {
 	border-image-source:url('res:ListViewColumnHeaderNormal');
 	border-image-slice:2 3 9 14 fill;
+	border-image-width:2px 3px 9px 14px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;
@@ -623,6 +640,7 @@ listview_header columnheader:hot
 {
 	border-image-source:url('res:ListViewColumnHeaderHot');
 	border-image-slice:2 3 9 14 fill;
+	border-image-width:2px 3px 9px 14px;
 	border-image-repeat:stretch;
 
 	border-top:3px;
@@ -635,6 +653,7 @@ listview_header columnheader:pressed
 {
 	border-image-source:url('res:ListViewColumnHeaderPressed');
 	border-image-slice:2 3 9 14 fill;
+	border-image-width:2px 3px 9px 14px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;
@@ -646,6 +665,7 @@ listview_header columnheader:pressed
 menubar
 {
 	border-image-slice:1 1 9 15 fill;
+	border-image-width:1px 1px 9px 15px;
 	border-image-repeat:stretch;
 	border-image-source:url('res:MenuBarBackgroundActive'); 
 
@@ -671,6 +691,7 @@ menubar item:disabled
 menubar item:selected
 {
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }
@@ -680,6 +701,7 @@ menubar item:hot
 	/*margin-top:3;*/
 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:MenuBarItemSelected');
 }
@@ -687,6 +709,7 @@ menubar item:hot
 popupmenu
 {
 	border-image-slice:32 4 4 4 fill;
+	border-image-width:32px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
@@ -756,6 +779,7 @@ popupmenu accel_label:disabled
 popupmenu row:selected
 {
 	border-image-slice:8 8 4 4 fill;
+	border-image-width:8px 8px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSelected');
 }
@@ -766,6 +790,7 @@ popupmenu separator
 	padding-left:32px;
 
 	border-image-slice:4 4 1 1 fill;
+	border-image-width:4px 4px 1px 1px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }
@@ -808,6 +833,7 @@ progress
 button
 {
 	border-image-slice:6 6 6 6 fill;
+	border-image-width:6px 6px 6px 6px;
 	bg-image-sizing:default;
 	color:black;
 	align:center;
@@ -843,6 +869,7 @@ button:disabled
 button focus
 {
 	border-image-slice:8 8 8 9 fill;
+	border-image-width:8px 8px 8px 9px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:ButtonFocus'); 
 }
@@ -907,6 +934,7 @@ radiobutton checker:unchecked:disabled
 radiobutton focus
 {
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	bg-image-sizing:repeat;
 	border-image-source:none; 
 } 
@@ -920,6 +948,7 @@ scrollbar
 scrollbar scrolltrack.left
 {
 	border-image-slice:0 0 4 3 fill;
+	border-image-width:0px 0px 4px 3px;
 	border-image-repeat:stretch; 
 }
 
@@ -946,6 +975,7 @@ scrollbar scrolltrack.left:disabled
 scrollbar scrolltrack.right
 {
 	border-image-slice:0 0 4 3 fill;
+	border-image-width:0px 0px 4px 3px;
 	border-image-repeat:stretch; 
 }
 
@@ -973,6 +1003,7 @@ scrollbar scrolltrack.right:disabled
 scrollbar scrollthumb.horizontal
 {
 	border-image-slice:5 5 5 5 fill;
+	border-image-width:5px 5px 5px 5px;
 	border-image-repeat:stretch; 
 }
 
@@ -1087,6 +1118,7 @@ scrollbar
 scrollbar scrolltrack.up
 {
 	border-image-slice:1 1 0 0 fill;
+	border-image-width:1px 1px 0px 0px;
 	border-image-repeat:stretch; 
 
 }
@@ -1114,6 +1146,7 @@ scrollbar scrolltrack.up:disabled
 scrollbar scrolltrack.down
 {
 	border-image-slice:1 1 0 0 fill;
+	border-image-width:1px 1px 0px 0px;
 	border-image-repeat:stretch; 
 }
 
@@ -1140,6 +1173,7 @@ scrollbar scrolltrack.down:disabled
 scrollbar scrollthumb.vertical
 {
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch;
 }
 
@@ -1260,6 +1294,7 @@ slider:disabled
 slider focus
 {
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -1269,6 +1304,7 @@ slider slidertrack.horizontal
 {
 	height:4px;
 	border-image-slice:1 2 1 1 fill;
+	border-image-width:1px 2px 1px 1px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderTrack');
 }
@@ -1278,6 +1314,7 @@ slider sliderthumb.horizontal
 	width:11px;
 	height:17px;
 	border-image-slice:2 3 9 9 fill;
+	border-image-width:2px 3px 9px 9px;
 	border-image-repeat:stretch; 
 }
 
@@ -1300,6 +1337,7 @@ slider slidertrack.vertical
 {
 	width:4px;
 	border-image-slice:1 1 1 2  fill;
+	border-image-width:1px 1px 1px 2px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderTrack');
 }
@@ -1309,6 +1347,7 @@ slider sliderthumb.vertical
 	width:17px;
 	height:11px;
 	border-image-slice:2 3 5 5 fill;
+	border-image-width:2px 3px 5px 5px;
 	border-image-repeat:stretch; 
 }
 
@@ -1335,6 +1374,7 @@ spin
 	height:21px;
 
 	border-image-slice:0 0 0 0 fill;
+	border-image-width:0px 0px 0px 0px;
 	border-image-repeat:stretch; 	
 
 	color:black;
@@ -1349,6 +1389,7 @@ spin button_up
 {
 	width:16px;
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 	
 }
 
@@ -1400,6 +1441,7 @@ spin button_down
 {
 	width:16px;
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 	
 }
 
@@ -1455,6 +1497,7 @@ statusbar
 
 	border-image-source:none; 
 	border-image-slice:1 2 2 2 fill;
+	border-image-width:1px 2px 2px 2px;
 	border-image-repeat:stretch; 
 
 	color:black;
@@ -1465,6 +1508,7 @@ tab
 {
 	border-image-source:url('res:TabBorder');	
 	border-image-slice:1 4 1 3 fill;
+	border-image-width:1px 4px 1px 3px;
 
 	border-left:8px;
 	border-right:8px;
@@ -1476,6 +1520,7 @@ tabheader
 {
 	border-image-source:url('res:TabHeaderBorder');	
 	border-image-slice:1 4 1 2 fill;
+	border-image-width:1px 4px 1px 2px;
 	border-image-repeat:stretch;
 	first-tab-x-offset: 0;
 	height:20px;
@@ -1484,6 +1529,7 @@ tabheader
 tabheader focus
 {
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 }
@@ -1491,6 +1537,7 @@ tabheader focus
 tabheader page
 {
 	border-image-slice:2 2 3 1 fill;
+	border-image-width:2px 2px 3px 1px;
 	padding-left:5px;
 	padding-right:5px;
 	align:center;
@@ -1566,6 +1613,7 @@ toolbar.horizontal item
 toolbar item
 {
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch;
 	color:black;
 }
@@ -1601,6 +1649,7 @@ tooltip
 {
 	border-image-source:url('res:Tooltip');
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-left: 5px;
 	border-top: 7px;
@@ -1619,6 +1668,7 @@ window caption
 {
 	border-image-source:url('res:WindowActive');
 	border-image-slice:8 8 6 0 fill;
+	border-image-width:8px 8px 6px 0px;
 	border-image-repeat:stretch; 
 	height:22px;
 }
@@ -1627,6 +1677,7 @@ window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
 	border-image-slice:4 0 0 0 fill;
+	border-image-width:4px 0px 0px 0px;
 	border-image-repeat:stretch; 
 	width:5px;
 }
@@ -1635,6 +1686,7 @@ window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
 	border-image-slice:0 4 0 0 fill;
+	border-image-width:0px 4px 0px 0px;
 	border-image-repeat:stretch; 
 	width:5px;
 }
@@ -1643,6 +1695,7 @@ window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
 	border-image-slice:8 8 0 5 fill;
+	border-image-width:8px 8px 0px 5px;
 	border-image-repeat:stretch; 
 	height:5px;
 }
