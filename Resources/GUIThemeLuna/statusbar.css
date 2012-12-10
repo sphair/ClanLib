@@ -6,6 +6,7 @@ statusbar
 
 	border-image-source:url('res:StatusBar'); 
 	border-image-slice:50 17 5 9 fill;
+	border-image-width:50px 17px 5px 9px;
 	border-image-repeat:stretch; 
 
 	color:black;

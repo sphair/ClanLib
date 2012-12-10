@@ -5,6 +5,7 @@
 combobox lineedit
 {
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch; 
 
 	border-top:0px;
@@ -21,6 +22,7 @@ combobox opener
 	width:13px;
 	height:13px;
 	border-image-slice:0 0 0 0 fill;
+	border-image-width:0px 0px 0px 0px;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;
@@ -52,6 +54,7 @@ popupmenu.combobox
 	border-image-source:url('res:ComboBoxPopupBg');
 
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch; 
 
 	border-top:3px;

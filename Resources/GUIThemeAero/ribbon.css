@@ -10,6 +10,7 @@ ribbon
 	height:117px;
 	/*height:95px;*/
 	border-image-slice: 8 8 50 8 fill;
+	border-image-width:px 8px 8px 50px;
 	font-family:tahoma;
 	font-size:11;
 }
@@ -18,6 +19,7 @@ ribbon button.menu
 {
 	border-image-source:url('res:RibbonMenuButton');
 	border-image-slice:0 0 0 0 fill;
+	border-image-width:0px 0px 0px 0px;
 	bg-image-sizing:center;
 	width:56px;
 	height:22px;
@@ -38,6 +40,7 @@ ribbon tab
 	width:40px;
 	height:23px;
 	border-image-slice: 8 8 8 8 fill;
+	border-image-width:px 8px 8px 8px;
 	font-family:tahoma;
 }
 
@@ -50,6 +53,7 @@ ribbon tab-background
 {
 	border-image-source:url('res:RibbonTabBackground');
 	border-image-slice: 120 120 54 8 fill;
+	border-image-width:px 120px 120px 54px;
 	font-family:tahoma;
 }
 
@@ -59,6 +63,7 @@ ribbon-section
 	width:70px;
 	height:87px;
 	border-image-slice: 8 8 24 16 fill;
+	border-image-width:px 8px 8px 24px;
 }
 
 ribbon-section button
@@ -81,36 +86,42 @@ ribbon-section button:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
 	border-image-slice: 8 8 1 1 fill;
+	border-image-width:px 8px 8px 1px;
 }
 
 ribbon-section button:pressed
 {
 	border-image-source:url('res:RibbonButtonPressed');
 	border-image-slice: 8 8 1 1 fill;
+	border-image-width:px 8px 8px 1px;
 }
 
 ribbon-section button:toggled
 {
 	border-image-source:url('res:RibbonButtonToggled');
 	border-image-slice: 8 8 1 1 fill;
+	border-image-width:px 8px 8px 1px;
 }
 
 ribbon-section button:toggled:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
 	border-image-slice: 8 8 1 1 fill;
+	border-image-width:px 8px 8px 1px;
 }
 
 ribbon-section button:toggled:pressed:hot
 {
 	border-image-source:url('res:RibbonButtonPressed');
 	border-image-slice: 8 8 1 1 fill;
+	border-image-width:px 8px 8px 1px;
 }
 
 ribbon-menu
 {
 	border-image-source:url('res:RibbonMenuBackground');
 	border-image-slice: 222 2 27 22 fill;
+	border-image-width:px 222px 2px 27px;
 }
 
 ribbon-menu menu-item
@@ -136,6 +147,7 @@ ribbon-menu menu-item:separator
 ribbon-section button.dropdown
 {
 	border-image-slice: 3 12 3 3 fill;
+	border-image-width:px 3px 12px 3px;
 	border-image-source:url('res:RibbonDropDownButton');
 	padding-left: 4;
 	padding-right: 12;
@@ -172,6 +184,7 @@ ribbon-section button.dropdown:hot:toggled
 combobox.ribbon
 {
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:ListViewBorder');
 }
@@ -179,6 +192,7 @@ combobox.ribbon
 combobox lineedit.ribbon
 {
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch; 
 	border-image-source:none;
 	background-color:;
@@ -213,6 +227,7 @@ combobox.ribbon opener
 	width:17px;
 	height:20px;
 	border-image-slice:5 5 6 6 fill;
+	border-image-width:5px 5px 6px 6px;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;

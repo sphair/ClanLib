@@ -4,6 +4,7 @@ listview
 	border-image-source:url('res:ListViewBorder'); 
 
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch; 
 	
 	border-top:1px;
@@ -86,6 +87,7 @@ listview icon_selection:normal
 	border-image-source:url('res:ListViewIconSelection');
 
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	border-image-repeat:stretch; 
 
 	border-top:-3;
@@ -192,6 +194,7 @@ listview_header
 {
 	border-image-source:url('res:ListViewHeader');
 	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch;
 	
 	height:20px;
@@ -208,6 +211,7 @@ listview_header columnheader:normal
 /*	border-image-source:url('res:ListViewBorder'); */
 	border-image-source:url('res:ListViewColumnHeaderNormal');
 	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;
@@ -220,6 +224,7 @@ listview_header columnheader:hot
 {
 	border-image-source:url('res:ListViewColumnHeaderHot');
 	border-image-slice:7 7 4 5 fill;
+	border-image-width:7px 7px 4px 5px;
 	border-image-repeat:stretch;
 
 	border-top:3px;
@@ -232,6 +237,7 @@ listview_header columnheader:pressed
 {
 	border-image-source:url('res:ListViewColumnHeaderPressed');
 	border-image-slice:3 3 0 0 fill;
+	border-image-width:3px 3px 0px 0px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;

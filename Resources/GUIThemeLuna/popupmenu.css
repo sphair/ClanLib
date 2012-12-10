@@ -2,6 +2,7 @@
 popupmenu
 {
 	border-image-slice:32 32 4 4 fill;
+	border-image-width:32px 32px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
@@ -66,6 +67,7 @@ popupmenu separator
 	padding-left:32px;
 
 	border-image-slice:4 4 1 1 fill;
+	border-image-width:4px 4px 1px 1px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }
@@ -80,7 +82,8 @@ popupmenu submenu_arrow
 
 popupmenu joiner
 {
-	border-image-slice:3 3 fill;
+	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
 	height:1px;
 	border-image-repeat:stretch;
 	

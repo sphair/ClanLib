@@ -4,6 +4,7 @@ groupbox
 	height:100px;
 
 	border-image-slice:4 4 4 4 fill;
+	border-image-width:4px 4px 4px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:GroupBox');
 }

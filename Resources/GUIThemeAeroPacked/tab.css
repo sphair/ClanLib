@@ -3,6 +3,7 @@ tab
 {
 	border-image-source:url('res:TabBorder');	
 	border-image-slice:1 4 1 3 fill;
+	border-image-width:1px 4px 1px 3px;
 
 	border-left:8px;
 	border-right:8px;
@@ -14,6 +15,7 @@ tabheader
 {
 	border-image-source:url('res:TabHeaderBorder');	
 	border-image-slice:1 4 1 2 fill;
+	border-image-width:1px 4px 1px 2px;
 	border-image-repeat:stretch;
 	first-tab-x-offset: 0;
 	height:20px;
@@ -22,6 +24,7 @@ tabheader
 tabheader focus
 {
 	border-image-slice:3 4 3 4 fill;
+	border-image-width:3px 4px 3px 4px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 }
@@ -29,6 +32,7 @@ tabheader focus
 tabheader page
 {
 	border-image-slice:2 2 3 1 fill;
+	border-image-width:2px 2px 3px 1px;
 	padding-left:5px;
 	padding-right:5px;
 	align:center;

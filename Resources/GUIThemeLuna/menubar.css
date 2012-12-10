@@ -33,6 +33,7 @@ menubar item:selected
 	/*border-top:10px;*/
  
 	border-image-slice:4 4 5 1 fill;
+	border-image-width:4px 4px 5px 1px;
 	border-image-repeat:stretch; 
 
 	border-image-source:url('res:MenuBarSelectedItem');

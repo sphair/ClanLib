@@ -2,6 +2,7 @@
 button
 {
 	border-image-slice:5 5 6 6 fill;
+	border-image-width:5px 5px 6px 6px;
 	bg-image-sizing:default;
 	color:black;
 	align:center;
@@ -37,6 +38,7 @@ button:disabled
 button focus
 {
 	border-image-slice:8 8 8 9 fill;
+	border-image-width:8px 8px 8px 9px;
 	bg-image-sizing:repeat;
 	border-image-source:url('res:ButtonFocus');
 }
