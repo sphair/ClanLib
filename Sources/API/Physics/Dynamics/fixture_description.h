@@ -49,8 +49,8 @@ public:
 
 	/// \brief Constructs a Fixture Description
 	///
-	/// \param pw = Physic World
-	FixtureDescription(const PhysicWorld &pw);
+	/// \param pw = Physics World
+	FixtureDescription(const PhysicsWorld &pw);
 
 	FixtureDescription(const FixtureDescription &copy);
 	

@@ -32,7 +32,7 @@
 #include <memory>
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/body_description.h"
-#include "API/Physics/World/physic_world.h"
+#include "API/Physics/World/physics_world.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 
@@ -44,7 +44,7 @@ class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Body_Impl(PhysicWorld_Impl &pw_impl);
+	Body_Impl(PhysicsWorld_Impl &pw_impl);
 
 	~Body_Impl() { if(body_occupied) body->GetWorld()->DestroyBody(body); sig_body_deletion.invoke(); }
 //																						___________________
@@ -65,7 +65,7 @@ public:
 //																						A T T R I B U T E S
 public:
 	int id;
-	PhysicWorld_Impl *owner_world;
+	PhysicsWorld_Impl *owner_world;
 	Body *owner;
 	b2Body *body;
 	bool body_occupied;

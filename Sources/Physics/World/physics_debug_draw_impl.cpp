@@ -29,10 +29,10 @@
 
 #include "Physics/precomp.h"
 #include "API/display.h"
-#include "physic_debug_draw_impl.h"
-#include "physic_world_impl.h"
-#include "API/Physics/World/physic_debug_draw.h"
-#include "API/Physics/World/physic_world.h"
+#include "physics_debug_draw_impl.h"
+#include "physics_world_impl.h"
+#include "API/Physics/World/physics_debug_draw.h"
+#include "API/Physics/World/physics_world.h"
 
 
 namespace clan
@@ -40,7 +40,7 @@ namespace clan
 
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-PhysicDebugDraw_Impl::PhysicDebugDraw_Impl(PhysicWorld_Impl &pw_impl)
+PhysicDebugDraw_Impl::PhysicDebugDraw_Impl(PhysicsWorld_Impl &pw_impl)
 : owner(&pw_impl),
   physic_scale(owner->physic_scale)
 {

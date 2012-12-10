@@ -34,19 +34,19 @@
 namespace clan
 {
 
-class PhysicWorld_Impl;
+class PhysicsWorld_Impl;
 
 class ChainShape_Impl
 {
 public:
-	ChainShape_Impl(PhysicWorld_Impl &pw_impl)
+	ChainShape_Impl(PhysicsWorld_Impl &pw_impl)
 	:	owner(&pw_impl)	
 	{
 			
 	}
 	virtual ~ChainShape_Impl() { return; }
 
-	PhysicWorld_Impl *owner;
+	PhysicsWorld_Impl *owner;
 	b2ChainShape shape;
 };
 

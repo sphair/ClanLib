@@ -29,13 +29,13 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/World/physic_debug_draw.h"
+#include "API/Physics/World/physics_debug_draw.h"
 
 namespace clan
 {
 
 class Canvas;
-class PhysicWorld_Impl;
+class PhysicsWorld_Impl;
 
 class PhysicDebugDraw_Impl : public b2Draw
 {
@@ -45,7 +45,7 @@ public:
 //																						C O N S T R U C T O R S
 /// \name Construction
 /// \{
-	PhysicDebugDraw_Impl(PhysicWorld_Impl &pw_impl);
+	PhysicDebugDraw_Impl(PhysicsWorld_Impl &pw_impl);
 
 	virtual ~PhysicDebugDraw_Impl() { return; }
 //																						___________________
@@ -81,7 +81,7 @@ public:
 /// \name Attributes
 /// \{
 public:
-	PhysicWorld_Impl *owner;
+	PhysicsWorld_Impl *owner;
 	float physic_scale;
 	Canvas *used_canvas;
 /// \}

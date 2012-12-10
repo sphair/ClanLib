@@ -31,7 +31,7 @@
 #include "joint_impl.h"
 #include "distance_joint_impl.h"
 #include "distance_joint_description_impl.h"
-#include "../../World/physic_world_impl.h"
+#include "../../World/physics_world_impl.h"
 #include "API/Physics/Dynamics/Joints/distance_joint_description.h"
 #include "API/Physics/Dynamics/Joints/distance_joint.h"
 
@@ -55,7 +55,7 @@ DistanceJoint::DistanceJoint(const DistanceJointDescription &description)
 		joint_impl->joint->SetUserData(this);
 	}
 	else
-	throw Exception("Tried to create a distance joint with a null PhysicWorld object");
+	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");
 
 }
 

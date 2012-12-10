@@ -34,19 +34,19 @@
 namespace clan
 {
 
-class PhysicWorld_Impl;
+class PhysicsWorld_Impl;
 
 class EdgeShape_Impl
 {
 public:
-	EdgeShape_Impl(PhysicWorld_Impl &pw_impl)
+	EdgeShape_Impl(PhysicsWorld_Impl &pw_impl)
 	:	owner(&pw_impl)	
 	{
 			
 	}
 	virtual ~EdgeShape_Impl() { return; }
 
-	PhysicWorld_Impl *owner;
+	PhysicsWorld_Impl *owner;
 	b2EdgeShape shape;
 };
 

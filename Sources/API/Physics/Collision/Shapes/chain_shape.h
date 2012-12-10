@@ -37,7 +37,7 @@
 namespace clan
 {
 
-class PhysicWorld;
+class PhysicsWorld;
 class ChainShape_Impl;
 class CollisionOutline;
 
@@ -60,8 +60,8 @@ public:
 
 	/// \brief Constructs a Chain Shape.
 	/// 
-	/// \param pw = Physic World.
-	ChainShape(const PhysicWorld &pw);
+	/// \param pw = Physics World.
+	ChainShape(const PhysicsWorld &pw);
 
 	~ChainShape();
 

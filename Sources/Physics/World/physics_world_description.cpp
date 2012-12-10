@@ -27,8 +27,8 @@
 */
 	
 #include "Physics/precomp.h"
-#include "API/Physics/World/physic_world_description.h"
-#include "physic_world_description_impl.h"
+#include "API/Physics/World/physics_world_description.h"
+#include "physics_world_description_impl.h"
 
 namespace clan
 {
@@ -36,16 +36,16 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 
-PhysicWorldDescription::PhysicWorldDescription() 
-: impl(new PhysicWorldDescription_Impl)
+PhysicsWorldDescription::PhysicsWorldDescription() 
+: impl(new PhysicsWorldDescription_Impl)
 {
 }
 
-PhysicWorldDescription::PhysicWorldDescription(const PhysicWorldDescription &copy) : impl(copy.impl)
+PhysicsWorldDescription::PhysicsWorldDescription(const PhysicsWorldDescription &copy) : impl(copy.impl)
 {
 }
 
-PhysicWorldDescription::~PhysicWorldDescription()
+PhysicsWorldDescription::~PhysicsWorldDescription()
 {
 }
 
@@ -53,61 +53,61 @@ PhysicWorldDescription::~PhysicWorldDescription()
 //																											A T T R I B U T E S
 
 
-Vec2f PhysicWorldDescription::get_gravity() const
+Vec2f PhysicsWorldDescription::get_gravity() const
 {
 	return Vec2f(impl->gravity.x,impl->gravity.y);
 }
 
-float PhysicWorldDescription::get_timestep() const
+float PhysicsWorldDescription::get_timestep() const
 {
 	return impl->timestep;
 }
 
-int PhysicWorldDescription::get_velocity_iterations() const
+int PhysicsWorldDescription::get_velocity_iterations() const
 {
 	return impl->velocity_iterations;
 }
 
-int PhysicWorldDescription::get_position_iterations() const
+int PhysicsWorldDescription::get_position_iterations() const
 {
 	return impl->position_iterations;
 }
 
-int PhysicWorldDescription::get_physic_scale() const
+int PhysicsWorldDescription::get_physic_scale() const
 {
 	return impl->physic_scale;
 }
 
-std::shared_ptr<PhysicWorldDescriptionData> PhysicWorldDescription::get_data(const std::string &name) const
+std::shared_ptr<PhysicsWorldDescriptionData> PhysicsWorldDescription::get_data(const std::string &name) const
 {
-	std::map<std::string, std::shared_ptr<PhysicWorldDescriptionData> >::const_iterator it;
+	std::map<std::string, std::shared_ptr<PhysicsWorldDescriptionData> >::const_iterator it;
 	it = impl->data_objects.find(name);
 	if (it != impl->data_objects.end())
 		return it->second;
 	else
-		return std::shared_ptr<PhysicWorldDescriptionData>();
+		return std::shared_ptr<PhysicsWorldDescriptionData>();
 }
 
 //																											___________________																											
 //																											O P E R A T I O N S
 
-PhysicWorldDescription &PhysicWorldDescription::operator =(const PhysicWorldDescription &copy)
+PhysicsWorldDescription &PhysicsWorldDescription::operator =(const PhysicsWorldDescription &copy)
 {
 	impl = copy.impl;
 	return *this;
 }
 
-void PhysicWorldDescription::set_sleep(bool value)
+void PhysicsWorldDescription::set_sleep(bool value)
 {
 	impl->sleep_enabled = value;
 }
 
-void PhysicWorldDescription::set_gravity(double xAcceleration, double yAcceleration)
+void PhysicsWorldDescription::set_gravity(double xAcceleration, double yAcceleration)
 {
 	impl->gravity = b2Vec2(xAcceleration, yAcceleration);
 }
 
-void PhysicWorldDescription::set_timestep(float timestep)
+void PhysicsWorldDescription::set_timestep(float timestep)
 {
 	if(timestep>0) //Someone might want to go back in the future
 	{
@@ -120,7 +120,7 @@ void PhysicWorldDescription::set_timestep(float timestep)
 
 }
 
-void PhysicWorldDescription::set_velocity_iterations(int iterations)
+void PhysicsWorldDescription::set_velocity_iterations(int iterations)
 {
 	if(iterations>=0)
 	{
@@ -132,7 +132,7 @@ void PhysicWorldDescription::set_velocity_iterations(int iterations)
 	}
 }
 
-void PhysicWorldDescription::set_position_iterations(int iterations)
+void PhysicsWorldDescription::set_position_iterations(int iterations)
 {
 	if(iterations>=0)
 	{
@@ -144,12 +144,12 @@ void PhysicWorldDescription::set_position_iterations(int iterations)
 	}
 }
 
-void PhysicWorldDescription::set_data(const std::string &name, const std::shared_ptr<PhysicWorldDescriptionData> &ptr)
+void PhysicsWorldDescription::set_data(const std::string &name, const std::shared_ptr<PhysicsWorldDescriptionData> &ptr)
 {
 	impl->data_objects[name] = ptr;
 }
 
-void PhysicWorldDescription::set_physic_scale(int pixels)
+void PhysicsWorldDescription::set_physic_scale(int pixels)
 {
 	if(pixels>0)
 	{

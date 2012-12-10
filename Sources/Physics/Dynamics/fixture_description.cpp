@@ -41,7 +41,7 @@ FixtureDescription::FixtureDescription()
 {
 }
 
-FixtureDescription::FixtureDescription(const PhysicWorld &pw)
+FixtureDescription::FixtureDescription(const PhysicsWorld &pw)
 : impl(new FixtureDescription_Impl(*pw.impl))
 {
 

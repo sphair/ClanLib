@@ -27,40 +27,40 @@
 */
 
 #include "Physics/precomp.h"
-#include "physic_world_impl.h"
-#include "API/Physics/World/physic_world.h"
+#include "physics_world_impl.h"
+#include "API/Physics/World/physics_world.h"
 
 namespace clan
 {
 
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-PhysicWorld::PhysicWorld()
-: impl(new PhysicWorld_Impl(*this))
+PhysicsWorld::PhysicsWorld()
+: impl(new PhysicsWorld_Impl(*this))
 {
 
 }
 
-PhysicWorld::PhysicWorld(const PhysicWorldDescription &description)
-: impl(new PhysicWorld_Impl(*this))
+PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
+: impl(new PhysicsWorld_Impl(*this))
 {
 	impl->create(description);
 }
 
-PhysicWorld::~PhysicWorld()
+PhysicsWorld::~PhysicsWorld()
 {
 	impl->sig_world_destroyed.invoke();
 }
 
 //																											___________________																											
 //																											A T T R I B U T E S
-void PhysicWorld::throw_if_null() const
+void PhysicsWorld::throw_if_null() const
 {
 	if (!impl)
-		throw Exception("PhysicWorld is null");
+		throw Exception("PhysicsWorld is null");
 }
 
-int PhysicWorld::get_physic_scale() const
+int PhysicsWorld::get_physic_scale() const
 {
 	return (int)impl->physic_scale;
 }
@@ -68,12 +68,12 @@ int PhysicWorld::get_physic_scale() const
 //																											_____________																							
 //																											S I G N A L S
 
-Signal_v1<float> &PhysicWorld::sig_world_step()
+Signal_v1<float> &PhysicsWorld::sig_world_step()
 {
 	return impl->sig_world_step;
 }
 
-Signal_v0 &PhysicWorld::sig_world_destroyed()
+Signal_v0 &PhysicsWorld::sig_world_destroyed()
 {
 	return impl->sig_world_destroyed;
 }
@@ -81,12 +81,12 @@ Signal_v0 &PhysicWorld::sig_world_destroyed()
 //																											___________________																											
 //																											O P E R A T I O N S
 
-void PhysicWorld::step()
+void PhysicsWorld::step()
 {
 	impl->step();
 }
 
-void PhysicWorld::step(float timestep, int velocity_iterations, int position_iterations)
+void PhysicsWorld::step(float timestep, int velocity_iterations, int position_iterations)
 {
 	impl->step( timestep, velocity_iterations, position_iterations);
 }

@@ -30,8 +30,8 @@
 #include "shape_impl.h"
 #include "polygon_shape_impl.h"
 #include "API/Physics/Collision/Shapes/polygon_shape.h"
-#include "API/Physics/World/physic_world.h"
-#include "../../World/physic_world_impl.h"
+#include "API/Physics/World/physics_world.h"
+#include "../../World/physics_world_impl.h"
 #include "API/Core/Math/angle.h"
 
 namespace clan
@@ -43,7 +43,7 @@ PolygonShape::PolygonShape()
 	
 }
 
-PolygonShape::PolygonShape(const PhysicWorld &pw)
+PolygonShape::PolygonShape(const PhysicsWorld &pw)
 : impl(new PolygonShape_Impl(*pw.impl))
 {
 	shape_impl->shape_type = shape_polygon;

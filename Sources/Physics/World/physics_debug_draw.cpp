@@ -27,10 +27,10 @@
 */
 
 #include "Physics/precomp.h"
-#include "physic_debug_draw_impl.h"
-#include "physic_world_impl.h"
-#include "API/Physics/World/physic_debug_draw.h"
-#include "API/Physics/World/physic_world.h"
+#include "physics_debug_draw_impl.h"
+#include "physics_world_impl.h"
+#include "API/Physics/World/physics_debug_draw.h"
+#include "API/Physics/World/physics_world.h"
 
 namespace clan
 {
@@ -42,7 +42,7 @@ PhysicDebugDraw::PhysicDebugDraw()
 
 }
 
-PhysicDebugDraw::PhysicDebugDraw(const PhysicWorld &pw)
+PhysicDebugDraw::PhysicDebugDraw(const PhysicsWorld &pw)
 : impl(new PhysicDebugDraw_Impl(*pw.impl))
 {
 	

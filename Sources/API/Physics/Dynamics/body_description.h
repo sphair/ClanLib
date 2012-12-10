@@ -40,7 +40,7 @@ namespace clan
 class BodyDescription_Impl;
 class Pointf;
 class Angle;
-class PhysicWorld;
+class PhysicsWorld;
 
 /// \brief Body types.
 	enum BodyType
@@ -65,8 +65,8 @@ public:
 
 	/// \brief Constructs a BodyDescription
 	///
-	/// \param pw   = Physic World
-	BodyDescription(const PhysicWorld &pw);
+	/// \param pw   = Physics World
+	BodyDescription(const PhysicsWorld &pw);
 
 	/// \brief Constructs a BodyDescription
 	///
@@ -99,10 +99,10 @@ public:
 	void set_position(const Vec2f &position);
 	void set_position(const Pointf &position);
 
-	/// \brief Set the physic world angle of the body.
+	/// \brief Set the Physics World angle of the body.
 	void set_angle(const Angle &angle);
 
-	/// \brief Set the linear velocity of the body's origin in physic world co-ordinates.
+	/// \brief Set the linear velocity of the body's origin in Physics World co-ordinates.
 	void set_linear_velocity(const Vec2f &velocity);
 
 	/// \brief Set the angular velocity of the body

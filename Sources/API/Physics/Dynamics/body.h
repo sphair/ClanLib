@@ -39,7 +39,7 @@
 namespace clan
 {
 
-class PhysicWorld;
+class PhysicsWorld;
 class BodyDescription;
 class Body_Impl;
 class FixtureDescription;

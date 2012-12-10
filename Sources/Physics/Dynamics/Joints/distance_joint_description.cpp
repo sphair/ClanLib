@@ -29,8 +29,8 @@
 #include "Physics/precomp.h"
 #include "distance_joint_description_impl.h"
 #include "../body_impl.h"
-#include "../../World/physic_world_impl.h"
-#include "API/Physics/World/physic_world.h"
+#include "../../World/physics_world_impl.h"
+#include "API/Physics/World/physics_world.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/Joints/distance_joint_description.h"
 
@@ -42,7 +42,7 @@ DistanceJointDescription::DistanceJointDescription()
 {
 }
 
-DistanceJointDescription::DistanceJointDescription(const PhysicWorld &pw)
+DistanceJointDescription::DistanceJointDescription(const PhysicsWorld &pw)
 : impl(new DistanceJointDescription_Impl(*pw.impl))
 {
 

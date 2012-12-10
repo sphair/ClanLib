@@ -37,7 +37,7 @@
 namespace clan
 {
 
-class PhysicWorld;
+class PhysicsWorld;
 class CircleShape_Impl;
 
 /// \brief Circle Shape class.
@@ -55,8 +55,8 @@ public:
 
 	/// \brief Constructs a Circle Shape.
 	/// 
-	/// \param pw = Physic World.
-	CircleShape(const PhysicWorld &pw);
+	/// \param pw = Physics World.
+	CircleShape(const PhysicsWorld &pw);
 
 	~CircleShape();
 

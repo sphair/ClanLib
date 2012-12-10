@@ -29,14 +29,14 @@
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
 #include "API/Core/Text/string_format.h"
-#include "physic_world_impl.h"
+#include "physics_world_impl.h"
 
 namespace clan
 {
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-PhysicsContext_Impl::PhysicsContext_Impl(PhysicWorld &pw)
+PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld &pw)
 : max_body_amount(200), 
   max_fixture_amount(400),
   max_joint_amount(100),

@@ -26,7 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysic_World clanPhysic World
+/// \addtogroup clanphysics_world clanPhysics World
 /// \{
 
 #pragma once
@@ -40,32 +40,32 @@ namespace clan
 
 class Size;
 class Rect;
-class PhysicWorld;
-class PhysicWorldDescription_Impl;
+class PhysicsWorld;
+class PhysicsWorldDescription_Impl;
 
-class PhysicWorldDescriptionData
+class PhysicsWorldDescriptionData
 {
 public:
-	virtual ~PhysicWorldDescriptionData() { }
+	virtual ~PhysicsWorldDescriptionData() { }
 };
 
-/// \brief Physic world description class.
+/// \brief Physics World description class.
 ///
-/// This class allows you to setup a more advanced description when creating a physic world.
+/// This class allows you to setup a more advanced description when creating a Physics World.
 /// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PhysicWorldDescription
+class CL_API_PHYSICS PhysicsWorldDescription
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a world description with default values.
-	PhysicWorldDescription();
+	PhysicsWorldDescription();
 
-	/// \brief Constructs a PhysicWorldDescription
-	/// \param copy = Physic World Description
-	PhysicWorldDescription(const PhysicWorldDescription &copy);
+	/// \brief Constructs a PhysicsWorldDescription
+	/// \param copy = Physics World Description
+	PhysicsWorldDescription(const PhysicsWorldDescription &copy);
 
-	virtual ~PhysicWorldDescription();
+	virtual ~PhysicsWorldDescription();
 
 /// \}
 /// \name Attributes
@@ -87,18 +87,18 @@ public:
 	/// \brief Returns the amount of position iterations on every world tick.
 	int get_position_iterations() const;
 
-	/// \brief Return the amount of pixels for 1 meter in the Physic World.
+	/// \brief Return the amount of pixels for 1 meter in the Physics World.
 	int get_physic_scale() const;
 
 	/// \brief Returns the object stored in the given data name.
-	std::shared_ptr<PhysicWorldDescriptionData> get_data(const std::string &data_name) const;
+	std::shared_ptr<PhysicsWorldDescriptionData> get_data(const std::string &data_name) const;
 
 /// \}
 /// \name Operations
 /// \{
 public:
 	/// \brief Copy assignment operator.
-	PhysicWorldDescription &operator =(const PhysicWorldDescription &copy);
+	PhysicsWorldDescription &operator =(const PhysicsWorldDescription &copy);
 
 	/// \brief toggles whether the bodies are able to sleep when they come to rest.
 	void set_sleep(bool value = true);
@@ -116,9 +116,9 @@ public:
 	void set_position_iterations(int iterations);
 
 	/// \brief Store object in description.
-	void set_data(const std::string &data_name, const std::shared_ptr<PhysicWorldDescriptionData> &ptr);
+	void set_data(const std::string &data_name, const std::shared_ptr<PhysicsWorldDescriptionData> &ptr);
 
-	/// \brief Change the amount of pixels for 1 meter in the Physic World. Simulation works best for objects that are larger than 0.1 meter but smaller than 10 meters.
+	/// \brief Change the amount of pixels for 1 meter in the Physics World. Simulation works best for objects that are larger than 0.1 meter but smaller than 10 meters.
 	void set_physic_scale(int pixels);
 
 
@@ -126,9 +126,9 @@ public:
 /// \name Implementation
 /// \{
 private:
-	std::shared_ptr<PhysicWorldDescription_Impl> impl;
+	std::shared_ptr<PhysicsWorldDescription_Impl> impl;
 /// \}
-	friend class PhysicWorld_Impl;
+	friend class PhysicsWorld_Impl;
 };
 
 }

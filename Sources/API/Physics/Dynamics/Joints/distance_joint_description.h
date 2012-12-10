@@ -39,7 +39,7 @@
 namespace clan
 {
 
-	class PhysicWorld;
+	class PhysicsWorld;
 	class Body;
 	class DistanceJointDescription_Impl;
 
@@ -57,8 +57,8 @@ public:
 
 	/// \brief Constructs a DistanceJointDescription object.
 	///
-	/// \param pw = Physic world.
-	DistanceJointDescription(const PhysicWorld &pw);
+	/// \param pw = Physics World.
+	DistanceJointDescription(const PhysicsWorld &pw);
 
 	virtual ~DistanceJointDescription();
 

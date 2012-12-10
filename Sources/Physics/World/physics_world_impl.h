@@ -30,7 +30,7 @@
 
 #include "../Box2D/Box2D.h"
 #include "physics_listener.h"
-#include "API/Physics/World/physic_world_description.h"
+#include "API/Physics/World/physics_world_description.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
@@ -38,9 +38,9 @@
 namespace clan
 {
 	class BodyDescription;
-	class PhysicWorld;
+	class PhysicsWorld;
 
-class PhysicWorld_Impl
+class PhysicsWorld_Impl
 {
 public:
 
@@ -48,14 +48,14 @@ public:
 //																						C O N S T R U C T O R S
 /// \name Construction
 /// \{
-	PhysicWorld_Impl(PhysicWorld &pw);
+	PhysicsWorld_Impl(PhysicsWorld &pw);
 
-	virtual ~PhysicWorld_Impl() { return; }
+	virtual ~PhysicsWorld_Impl() { return; }
 //																						___________________
 //																						O P E R A T I O N S
 /// \name Operations
 /// \{
-	void create(const PhysicWorldDescription &description);
+	void create(const PhysicsWorldDescription &description);
 	void step();
 	void step(float timestep, int velocity_iterations, int position_iterations);
 
