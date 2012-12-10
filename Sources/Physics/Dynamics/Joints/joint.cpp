@@ -104,6 +104,11 @@ float Joint::get_reaction_torque (float dt)
 	return joint_impl->joint->GetReactionTorque(dt);
 }
 
+int Joint::get_id() const
+{
+	return joint_impl->id;
+}
+
 //																											___________________																											
 //																											O P E R A T I O N S
 
@@ -111,6 +116,18 @@ Joint &Joint::operator =(const Joint &copy)
 {
 	joint_impl = copy.joint_impl;
 	return *this;
+}
+
+void Joint::set_id(int value)
+{
+	joint_impl->id = value;
+}
+
+std::shared_ptr<Joint> Joint::create_null_derived()
+{
+	throw Exception("Tried to create a null derived joint from the base joint object.");
+
+	return NULL;
 }
 
 }

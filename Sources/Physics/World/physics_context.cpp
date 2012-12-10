@@ -24,6 +24,7 @@
 **
 **    Arkadiusz Kalinowski
 */
+
 #include "Physics/precomp.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
@@ -79,7 +80,11 @@ void PhysicsContext::create_in_context(Fixture &fixture)
 	fixture.set_id(id);
 }
 
-//void PhysicsContext::create_in_context(Joint &joint); //TODO
+void PhysicsContext::create_in_context(Joint &joint)
+{
+	int id = impl->create_in_context(joint);
+	joint.set_id(id);
+}
 
 void PhysicsContext::remove_from_context(Body &body)
 {
@@ -91,6 +96,9 @@ void PhysicsContext::remove_from_context(Fixture &fixture)
 	impl->remove_from_context(fixture);
 }
 
-//void PhysicsContext::remove_from_context(Joint &joint){}; //TODO
+void PhysicsContext::remove_from_context(Joint &joint)
+{
+	impl->remove_from_context(joint);
+}
 
 }

@@ -34,6 +34,7 @@
 #include "../../World/physics_world_impl.h"
 #include "API/Physics/Dynamics/Joints/distance_joint_description.h"
 #include "API/Physics/Dynamics/Joints/distance_joint.h"
+#include "API/Physics/World/physics_context.h"
 
 namespace clan
 {
@@ -45,7 +46,7 @@ DistanceJoint::DistanceJoint()
 
 }
 
-DistanceJoint::DistanceJoint(const DistanceJointDescription &description)
+DistanceJoint::DistanceJoint(PhysicsContext &pc, const DistanceJointDescription &description)
 : impl(new DistanceJoint_Impl(*description.impl->owner))
 {
 	if(impl->owner)
@@ -53,6 +54,8 @@ DistanceJoint::DistanceJoint(const DistanceJointDescription &description)
 		joint_impl->joint_type = Joint_Distance;
 		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
 		joint_impl->joint->SetUserData(this);
+
+		pc.create_in_context(*this);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");
@@ -88,4 +91,8 @@ DistanceJoint &DistanceJoint::operator =(const DistanceJoint &copy)
 	return *this;
 }
 
+std::shared_ptr<Joint> DistanceJoint::create_null_derived()
+{
+	return std::shared_ptr<Joint>(new DistanceJoint);
+}
 }

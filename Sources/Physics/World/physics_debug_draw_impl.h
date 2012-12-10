@@ -37,7 +37,7 @@ namespace clan
 class Canvas;
 class PhysicsWorld_Impl;
 
-class PhysicDebugDraw_Impl : public b2Draw
+class PhysicsDebugDraw_Impl : public b2Draw
 {
 public:
 
@@ -45,9 +45,9 @@ public:
 //																						C O N S T R U C T O R S
 /// \name Construction
 /// \{
-	PhysicDebugDraw_Impl(PhysicsWorld_Impl &pw_impl);
+	PhysicsDebugDraw_Impl(PhysicsWorld_Impl &pw_impl);
 
-	virtual ~PhysicDebugDraw_Impl() { return; }
+	virtual ~PhysicsDebugDraw_Impl() { return; }
 //																						___________________
 //																						O P E R A T I O N S
 /// \name Operations

@@ -37,30 +37,30 @@ namespace clan
 
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-PhysicDebugDraw::PhysicDebugDraw()
+PhysicsDebugDraw::PhysicsDebugDraw()
 {
 
 }
 
-PhysicDebugDraw::PhysicDebugDraw(const PhysicsWorld &pw)
-: impl(new PhysicDebugDraw_Impl(*pw.impl))
+PhysicsDebugDraw::PhysicsDebugDraw(const PhysicsWorld &pw)
+: impl(new PhysicsDebugDraw_Impl(*pw.impl))
 {
 	
 }
 
-PhysicDebugDraw::~PhysicDebugDraw()
+PhysicsDebugDraw::~PhysicsDebugDraw()
 {
 }
 
 //																											___________________																											
 //																											A T T R I B U T E S
-void PhysicDebugDraw::throw_if_null() const
+void PhysicsDebugDraw::throw_if_null() const
 {
 	if (!impl)
-		throw Exception("PhysicDebugDraw is null");
+		throw Exception("PhysicsDebugDraw is null");
 }
 
-unsigned int PhysicDebugDraw::get_flags() const
+unsigned int PhysicsDebugDraw::get_flags() const
 {
 	return impl->GetFlags();
 }
@@ -73,13 +73,13 @@ unsigned int PhysicDebugDraw::get_flags() const
 //																											___________________																											
 //																											O P E R A T I O N S
 
-void PhysicDebugDraw::draw(Canvas &canvas)
+void PhysicsDebugDraw::draw(Canvas &canvas)
 {
 	impl->used_canvas = &canvas;
 	impl->owner->world.DrawDebugData();
 }
 
-void PhysicDebugDraw::set_flags(unsigned int flags)
+void PhysicsDebugDraw::set_flags(unsigned int flags)
 {
 	impl->SetFlags(flags);
 }

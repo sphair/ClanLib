@@ -56,11 +56,11 @@ public:
 //																						O P E R A T I O N S
 	int create_in_context(Body &body);
 	int create_in_context(Fixture &fixture);
-	//void create_in_context(Joint &joint); //TODO
+	int create_in_context(Joint &joint);
 
 	void remove_from_context(Body &body);
 	void remove_from_context(Fixture &fixture);
-	//void remove_from_context(Joint &joint){}; //TODO
+	void remove_from_context(Joint &joint);
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N

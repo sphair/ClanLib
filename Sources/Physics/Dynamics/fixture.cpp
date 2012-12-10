@@ -56,6 +56,11 @@ Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &descr
 	throw Exception("Tried to create a fixture with a null Body object");
 }
 
+Fixture::Fixture(std::shared_ptr<Fixture_Impl> copy)
+{
+	impl = copy;
+}
+
 Fixture::~Fixture()
 {
 }

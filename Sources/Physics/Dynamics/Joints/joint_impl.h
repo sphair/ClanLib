@@ -42,7 +42,8 @@ public:
 
 	Joint_Impl()
 	: joint(NULL),
-	  joint_type(Joint_None)
+	  joint_type(Joint_None),
+	  id(-1)
 	{};
 	virtual ~Joint_Impl() { return; }
 
@@ -57,6 +58,7 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 
+	int id;
 	JointType joint_type;
 	b2Joint *joint;
 };

@@ -40,6 +40,7 @@ namespace clan
 	class PhysicsContext_Impl;
 	class Body;
 	class Fixture;
+	class Joint;
 
 class CL_API_PHYSICS PhysicsContext
 {
@@ -80,7 +81,7 @@ private:
 	void create_in_context(Fixture &fixture);
 
 	/// \brief Add Joint to the context.
-	//void create_in_context(Joint &joint); //TODO
+	void create_in_context(Joint &joint);
 
 	/// \brief Remove Body from the context.
 	void remove_from_context(Body &body);
@@ -89,7 +90,7 @@ private:
 	void remove_from_context(Fixture &fixture);
 
 	/// \brief Remove Joint from the context.
-	//void remove_from_context(Joint &joint){}; //TODO
+	void remove_from_context(Joint &joint);
 /// \}
 /// \name Implementation
 /// \{
@@ -102,6 +103,8 @@ private:
 	friend class Body;
 	friend class Fixture;
 	friend class Joint;
+
+	friend class DistanceJoint;
 };
 
 }

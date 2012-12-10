@@ -39,7 +39,7 @@ namespace clan
 
 class Canvas;
 class PhysicsWorld;
-class PhysicDebugDraw_Impl;
+class PhysicsDebugDraw_Impl;
 
 /// \brief Physic Debug Draw flags.
 enum DebugFlags
@@ -61,23 +61,23 @@ enum DebugFlags
 
 };
    
-/// \brief PhysicDebugDraw class.
+/// \brief PhysicsDebugDraw class.
 ///
 /// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS PhysicDebugDraw
+class CL_API_PHYSICS PhysicsDebugDraw
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a null instance.
-	PhysicDebugDraw();
+	PhysicsDebugDraw();
 
 	/// \brief Constructs a debug draw object.
 	///
 	/// \param pw = Physics World.
-	PhysicDebugDraw(const PhysicsWorld &pw);
+	PhysicsDebugDraw(const PhysicsWorld &pw);
 	
-	~PhysicDebugDraw();
+	~PhysicsDebugDraw();
 	
 /// \}
 /// \name Attributes
@@ -109,7 +109,7 @@ public:
 /// \{
 
 private:
-	std::shared_ptr<PhysicDebugDraw_Impl> impl;
+	std::shared_ptr<PhysicsDebugDraw_Impl> impl;
 	
 /// \}
 

@@ -47,9 +47,9 @@ Body::Body()
 }
 
 Body::Body(PhysicsContext &pc, const BodyDescription &description)
-: impl(new Body_Impl( *description.impl->owner))
+: impl(new Body_Impl(*description.impl->owner))
 {
-	if(impl->owner)
+	if(impl->owner_world)
 	{
 		impl->create_body(description);
 		pc.create_in_context(*this);
