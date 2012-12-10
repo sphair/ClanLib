@@ -9,5 +9,9 @@ public:
 	float get_preferred_content_width();
 	float get_preferred_content_height(float width);
 	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+
+	clan::GUIThemePart box1;
+	clan::GUIThemePart box2;
+
 };
 

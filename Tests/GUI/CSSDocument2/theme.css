@@ -798,6 +798,20 @@ lineedit selection:unfocused
 custom
 {
     flex-direction: row;
-    border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
-    padding: 5px;
+ 	background-color: #555555;
+	border-style:solid;
+	border-width:5px;
+	border-color: #ffffff;
+   padding: 5px;
+}
+
+custom box1
+{
+	width: 20px;
+	background-color: #ff0000;
+}
+custom box2
+{
+	width: 20px;
+	background-color: #00ff00;
 }
