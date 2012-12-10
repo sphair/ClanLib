@@ -47,26 +47,34 @@ spin button_up:disabled
 
 spin arrow_up:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpDisabled');
 }
 
 spin button_down
@@ -99,24 +107,32 @@ spin button_down:disabled
 
 spin arrow_down:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownDisabled');
 }

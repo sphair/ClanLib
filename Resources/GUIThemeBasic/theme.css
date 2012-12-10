@@ -26,69 +26,71 @@ checkbox focus
 
 checkbox checker
 {
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:13px;
 	height:13px;
 }
 
 checkbox checker:checked:normal
 {
-	border-image-source:url('res:CheckBoxCheckedNormal'); 
+	background-image:url('res:CheckBoxCheckedNormal'); 
 }
 
 checkbox checker:checked:hot
 {
-	border-image-source:url('res:CheckBoxCheckedHot'); 
+	background-image:url('res:CheckBoxCheckedHot'); 
 }
 
 checkbox checker:checked:pressed
 {
-	border-image-source:url('res:CheckBoxCheckedPressed'); 
+	background-image:url('res:CheckBoxCheckedPressed'); 
 }
 
 checkbox checker:checked:disabled
 {
-	border-image-source:url('res:CheckBoxCheckedDisabled'); 
+	background-image:url('res:CheckBoxCheckedDisabled'); 
 }
 
 checkbox checker:unchecked:normal
 {
-	border-image-source:url('res:CheckBoxUncheckedNormal'); 
+	background-image:url('res:CheckBoxUncheckedNormal'); 
 }
 
 checkbox checker:unchecked:pressed
 {
-	border-image-source:url('res:CheckBoxUncheckedPressed');
+	background-image:url('res:CheckBoxUncheckedPressed');
 }
 
 checkbox checker:unchecked:disabled
 {
-	border-image-source:url('res:CheckBoxUncheckedDisabled'); 
+	background-image:url('res:CheckBoxUncheckedDisabled'); 
 }
 
 checkbox checker:unchecked:hot
 {
-	border-image-source:url('res:CheckBoxUncheckedHot'); 
+	background-image:url('res:CheckBoxUncheckedHot'); 
 }
 
 checkbox checker:indeterminated:normal
 {
-	border-image-source:url('res:CheckBoxIndeterminatedNormal'); 
+	background-image:url('res:CheckBoxIndeterminatedNormal'); 
 }
 
 checkbox checker:indeterminated:pressed
 {
-	border-image-source:url('res:CheckBoxIndeterminatedPressed');
+	background-image:url('res:CheckBoxIndeterminatedPressed');
 }
 
 checkbox checker:indeterminated:disabled
 {
-	border-image-source:url('res:CheckBoxIndeterminatedDisabled'); 
+	background-image:url('res:CheckBoxIndeterminatedDisabled'); 
 }
 
 checkbox checker:indeterminated:hot
 {
-	border-image-source:url('res:CheckBoxIndeterminatedHot'); 
+	background-image:url('res:CheckBoxIndeterminatedHot'); 
 }
 
 combobox lineedit
@@ -139,29 +141,31 @@ combobox opener:disabled
 
 combobox opener_glyph
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 	align:center;
 	vertical-align:center;
 }
 
 combobox opener_glyph:normal
 {
-	border-image-source:url('res:ComboBoxDropDownButtonGlyphNormal'); 
+	background-image:url('res:ComboBoxDropDownButtonGlyphNormal'); 
 }
 
 combobox opener_glyph:hot
 {
-	border-image-source:url('res:ComboBoxDropDownButtonGlyphHot'); 
+	background-image:url('res:ComboBoxDropDownButtonGlyphHot'); 
 }
 
 combobox opener_glyph:pressed
 {
-	border-image-source:url('res:ComboBoxDropDownButtonGlyphPressed'); 
+	background-image:url('res:ComboBoxDropDownButtonGlyphPressed'); 
 }
 
 combobox opener_glyph:disabled
 {
-	border-image-source:url('res:ComboBoxDropDownButtonGlyphDisabled');
+	background-image:url('res:ComboBoxDropDownButtonGlyphDisabled');
 }
 frame
 {
@@ -798,8 +802,10 @@ popupmenu submenu_arrow
 {
 	width:24px;
 	height:8px;
-	bg-image-sizing:center; 
-	border-image-source:url('res:PopupMenuSubmenuArrow');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:PopupMenuSubmenuArrow');
 }
 
 popupmenu joiner
@@ -885,49 +891,51 @@ radiobutton:disabled
 
 radiobutton checker
 {
-	bg-image-sizing:center;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
 	width:13px;
 	height:13px;
 }
 
 radiobutton checker:checked:normal
 {
-	border-image-source:url('res:RadioButtonCheckedNormal'); 
+	background-image:url('res:RadioButtonCheckedNormal'); 
 }
 
 radiobutton checker:checked:hot
 {
-	border-image-source:url('res:RadioButtonCheckedHot'); 
+	background-image:url('res:RadioButtonCheckedHot'); 
 }
 
 radiobutton checker:checked:pressed
 {
-	border-image-source:url('res:RadioButtonCheckedPressed'); 
+	background-image:url('res:RadioButtonCheckedPressed'); 
 }
 
 radiobutton checker:checked:disabled
 {
-	border-image-source:url('res:RadioButtonCheckedDisabled'); 
+	background-image:url('res:RadioButtonCheckedDisabled'); 
 }
 
 radiobutton checker:unchecked:normal
 {
-	border-image-source:url('res:RadioButtonUncheckedNormal'); 
+	background-image:url('res:RadioButtonUncheckedNormal'); 
 }
 
 radiobutton checker:unchecked:hot
 {
-	border-image-source:url('res:RadioButtonUncheckedHot'); 
+	background-image:url('res:RadioButtonUncheckedHot'); 
 }
 
 radiobutton checker:unchecked:pressed
 {
-	border-image-source:url('res:RadioButtonUncheckedPressed'); 
+	background-image:url('res:RadioButtonUncheckedPressed'); 
 }
 
 radiobutton checker:unchecked:disabled
 {
-	border-image-source:url('res:RadioButtonUncheckedDisabled'); 
+	background-image:url('res:RadioButtonUncheckedDisabled'); 
 }
 
 radiobutton focus
@@ -1029,27 +1037,29 @@ scrollbar scrollthumb.horizontal:disabled
 
 scrollbar scrollthumbgripper.horizontal
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 }
 
 scrollbar scrollthumbgripper.horizontal:normal
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperNormal'); 
+	background-image:url('res:ScrollbarHoriThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:hot
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperHot'); 
+	background-image:url('res:ScrollbarHoriThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:pressed
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperPressed'); 
+	background-image:url('res:ScrollbarHoriThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.horizontal:disabled
 {
-	border-image-source:url('res:ScrollbarHoriThumbGripperDisabled'); 
+	background-image:url('res:ScrollbarHoriThumbGripperDisabled'); 
 }
 
 
@@ -1198,27 +1208,29 @@ scrollbar scrollthumb.vertical:disabled
 
 scrollbar scrollthumbgripper.vertical
 {
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 }
 
 scrollbar scrollthumbgripper.vertical:normal
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperNormal'); 
+	background-image:url('res:ScrollbarVertThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.vertical:hot
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperHot'); 
+	background-image:url('res:ScrollbarVertThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.vertical:pressed
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperPressed'); 
+	background-image:url('res:ScrollbarVertThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.vertical:disabled
 {
-	border-image-source:url('res:ScrollbarVertThumbGripperDisabled');
+	background-image:url('res:ScrollbarVertThumbGripperDisabled');
 }
 
 scrollbar scrollbutton.up
@@ -1414,26 +1426,34 @@ spin button_up:disabled
 
 spin arrow_up:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpNormal');
 }
 
 spin arrow_up:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowUpDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowUpDisabled');
 }
 
 spin button_down
@@ -1466,26 +1486,34 @@ spin button_down:disabled
 
 spin arrow_down:normal
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:hot
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:pressed
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownNormal');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownNormal');
 }
 
 spin arrow_down:disabled
 {
-	bg-image-sizing:center; 
-	border-image-source:url('res:SpinArrowDownDisabled');
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
+	background-image:url('res:SpinArrowDownDisabled');
 }
 
 
@@ -1704,26 +1732,28 @@ window buttonclose
 {
 	width:25px;
 	height:15px;
-	bg-image-sizing:center; 
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed; 
 }
 
 window buttonclose:normal
 {
-	border-image-source:url('res:WindowCloseButtonActiveNormal'); 
+	background-image:url('res:WindowCloseButtonActiveNormal'); 
 }
 
 window buttonclose:hot
 {
-	border-image-source:url('res:WindowCloseButtonActiveHot'); 
+	background-image:url('res:WindowCloseButtonActiveHot'); 
 }
 
 window buttonclose:pressed
 {
-	border-image-source:url('res:WindowCloseButtonActivePressed'); 
+	background-image:url('res:WindowCloseButtonActivePressed'); 
 }
 
 window buttonclose:disabled
 {
-	border-image-source:url('res:WindowCloseButtonActiveDisabled'); 
+	background-image:url('res:WindowCloseButtonActiveDisabled'); 
 }
 
