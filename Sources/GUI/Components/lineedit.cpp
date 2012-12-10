@@ -180,6 +180,17 @@ Size LineEdit::get_text_size(const std::string &str)
 	return text_size;
 }
 
+
+float LineEdit::get_preferred_content_width()
+{
+	return 256.0f;
+}
+
+float LineEdit::get_preferred_content_height(float width)
+{
+	return 16.0f;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // LineEdit Operations:
 
