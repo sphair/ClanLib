@@ -1453,7 +1453,7 @@ GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas 
 	return result;
 }
 
-Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
+Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
 	SpanLayout span;
 

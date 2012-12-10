@@ -364,7 +364,7 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	text_rect.top = content_rect.top;
 	text_rect.bottom = content_rect.bottom;
 
-	radio->render_text(canvas, text, text_rect, update_rect);
+	radio->render_text(canvas, text, text_rect);
 
 	if (radio->has_focus())
 	{

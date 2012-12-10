@@ -296,7 +296,7 @@ void MessageBoxComponent::set_css_class()
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
 	part_icon.render_box(canvas, rect_icon);
-	component->render_text(canvas, detail_text, rect_text, dirty_rect);
+	component->render_text(canvas, detail_text, rect_text);
 }
 
 void MessageBoxComponent::create_parts()
