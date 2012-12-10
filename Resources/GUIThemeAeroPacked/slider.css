@@ -1,97 +1,82 @@
 
 slider
 {
-	text-color:black;
-	preferred-height:22;
-	preferred-width:22;
+	color:black;
+	height:22px;
+	width:22px;
 }
 
 slider:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
 
 slider focus
 {
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:4;
+	border-image-slice:3 4 3 4;
 	bg-image-sizing:repeat;
-	bg-image:FocusDottedLine; 
+	border-image-source:url('res:FocusDottedLine'); 
 } 
 
 
 slider slidertrack.horizontal
 {
-	preferred-height:4;
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:2;    /* why doesn't this work with 1, as uxtheme uses */
-	bg-image-sizing-top:1;
-	bg-image-sizing-bottom:1;
+	height:4px;
+	border-image-slice:1 2 1 1;
 	bg-image-sizing:stretch; 
-	bg-image:SliderHorizontalTrack;
+	border-image-source:url('res:SliderHorizontalTrack');
 }
 
 slider sliderthumb.horizontal
 {
-	preferred-width:11;
-	preferred-height:17;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:9;
+	width:11px;
+	height:17px;
+	border-image-slice:2 3 9 9;
 	bg-image-sizing:stretch; 
 }
 
 slider sliderthumb.horizontal:normal
 {
-	bg-image:SliderHorizontalThumbNormal; 
+	border-image-source:url('res:SliderHorizontalThumbNormal'); 
 }
 
 slider sliderthumb.horizontal:hot
 {
-	bg-image:SliderHorizontalThumbHot;
+	border-image-source:url('res:SliderHorizontalThumbHot');
 }
 
 slider sliderthumb.horizontal:disabled
 {
-	bg-image:SliderHorizontalThumbDisabled;
+	border-image-source:url('res:SliderHorizontalThumbDisabled');
 }
 
 slider slidertrack.vertical
 {
-	preferred-width:4;
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:1;
-	bg-image-sizing-bottom:2;   /* why doesn't this work with 1, as uxtheme uses */
+	width:4px;
+	border-image-slice:1 1 1 2;
 	bg-image-sizing:stretch; 
-	bg-image:SliderVerticalTrack;
+	border-image-source:url('res:SliderVerticalTrack');
 }
 
 slider sliderthumb.vertical
 {
-	preferred-width:17;
-	preferred-height:11;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:5;
-	bg-image-sizing-bottom:5;
+	width:17px;
+	height:11px;
+	border-image-slice:2 3 5 5;
 	bg-image-sizing:stretch; 
 }
 
 slider sliderthumb.vertical:normal
 {
-	bg-image:SliderVerticalThumbNormal; 
+	border-image-source:url('res:SliderVerticalThumbNormal'); 
 }
 
 slider sliderthumb.vertical:hot
 {
-	bg-image:SliderVerticalThumbHot;
+	border-image-source:url('res:SliderVerticalThumbHot');
 }
 
 slider sliderthumb.vertical:disabled
 {
-	bg-image:SliderVerticalThumbDisabled;
+	border-image-source:url('res:SliderVerticalThumbDisabled');
 }

@@ -2,89 +2,86 @@
 checkbox
 {
 	text-gap:3;
-	padding-top:1;
-	padding-bottom:4;
-	text-color:black;
+	padding-top:1px;
+	padding-bottom:4px;
+	color:black;
 }
 
 checkbox:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
 
 checkbox focus
 {
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:4;
+	border-image-slice:3 4 3 4;
 	bg-image-sizing:repeat;
-	bg-image:FocusDottedLine; 
+	border-image-source:url('res:FocusDottedLine'); 
 } 
 
 checkbox checker
 {
 	bg-image-sizing:center;
-	preferred-width:13;
-	preferred-height:13;
+	width:13px;
+	height:13px;
 }
 
 checkbox checker:checked:normal
 {
-	bg-image:CheckBoxCheckedNormal; 
+	border-image-source:url('res:CheckBoxCheckedNormal'); 
 }
 
 checkbox checker:checked:hot
 {
-	bg-image:CheckBoxCheckedHot; 
+	border-image-source:url('res:CheckBoxCheckedHot'); 
 }
 
 checkbox checker:checked:pressed
 {
-	bg-image:CheckBoxCheckedPressed; 
+	border-image-source:url('res:CheckBoxCheckedPressed'); 
 }
 
 checkbox checker:checked:disabled
 {
-	bg-image:CheckBoxCheckedDisabled; 
+	border-image-source:url('res:CheckBoxCheckedDisabled'); 
 }
 
 checkbox checker:unchecked:normal
 {
-	bg-image:CheckBoxUncheckedNormal; 
+	border-image-source:url('res:CheckBoxUncheckedNormal'); 
 }
 
 checkbox checker:unchecked:pressed
 {
-	bg-image:CheckBoxUncheckedPressed;
+	border-image-source:url('res:CheckBoxUncheckedPressed');
 }
 
 checkbox checker:unchecked:disabled
 {
-	bg-image:CheckBoxUncheckedDisabled; 
+	border-image-source:url('res:CheckBoxUncheckedDisabled'); 
 }
 
 checkbox checker:unchecked:hot
 {
-	bg-image:CheckBoxUncheckedHot; 
+	border-image-source:url('res:CheckBoxUncheckedHot'); 
 }
 
 checkbox checker:indeterminated:normal
 {
-	bg-image:CheckBoxIndeterminatedNormal; 
+	border-image-source:url('res:CheckBoxIndeterminatedNormal'); 
 }
 
 checkbox checker:indeterminated:pressed
 {
-	bg-image:CheckBoxIndeterminatedPressed;
+	border-image-source:url('res:CheckBoxIndeterminatedPressed');
 }
 
 checkbox checker:indeterminated:disabled
 {
-	bg-image:CheckBoxIndeterminatedDisabled; 
+	border-image-source:url('res:CheckBoxIndeterminatedDisabled'); 
 }
 
 checkbox checker:indeterminated:hot
 {
-	bg-image:CheckBoxIndeterminatedHot; 
+	border-image-source:url('res:CheckBoxIndeterminatedHot'); 
 }

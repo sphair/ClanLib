@@ -1,50 +1,41 @@
 
 menubar
 {
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:15;
+	border-image-slice:1 1 9 15;
 	bg-image-sizing:stretch;
-	bg-image:MenuBarBackgroundActive; 
+	border-image-source:url('res:MenuBarBackgroundActive'); 
 
-	preferred-width:100;
-	preferred-height:24;
+	width:100px;
+	height:24px;
 
-	text-color:black;
+	color:black;
 }
 
 menubar item
 {
-    padding-left:8;
-    padding-right:8;
+	padding-left:8px;
+	padding-right:8px;
 	align:center;
 	vertical-align:center;
 }
 
 menubar item:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
 
 menubar item:selected
 {
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
-	bg-image:MenuBarItemSelected;
+	border-image-source:url('res:MenuBarItemSelected');
 }
 
 menubar item:hot
 {
 	/*margin-top:3;*/
 
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
-	bg-image:MenuBarItemSelected;
+	border-image-source:url('res:MenuBarItemSelected');
 }

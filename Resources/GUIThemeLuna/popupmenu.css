@@ -1,35 +1,32 @@
 
 popupmenu
 {
-	bg-image-sizing-left:32;
-	bg-image-sizing-right:32;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-slice:32 32 4 4;
 	bg-image-sizing:stretch; 
-	bg-image:PopupMenu;
-	padding-top:2;
-	padding-bottom:2;
+	border-image-source:url('res:PopupMenu');
+	padding-top:2px;
+	padding-bottom:2px;
 }
 
 popupmenu row
 {
-	preferred-width:140;
-	preferred-height:20;
-	bg-image:;
+	width:140px;
+	height:20px;
+	border-image-source:none;
 }
 
 popupmenu icon
 {
-	preferred-width:30;
-	bg-image:;
+	width:30px;
+	border-image-source:none;
 }
 
 popupmenu label
 {
-	preferred-width:70;
-	preferred-height:20;
-	padding-left:2;
-	bg-image:;
+	width:70px;
+	height:20px;
+	padding-left:2px;
+	border-image-source:none;
 }
 
 popupmenu label:selected
@@ -38,20 +35,20 @@ popupmenu label:selected
 
 popupmenu label:disabled
 {
-    text-color:gray;    
+	color:gray;	
 }
 
 popupmenu accel_label
 {
-	padding-left:20;
-	bg-image:;
+	padding-left:20px;
+	border-image-source:none;
 }
 
 popupmenu row:selected
 {
-	preferred-width:140;
-	preferred-height:20;
-	bg-image:;
+	width:140px;
+	height:20px;
+	border-image-source:none;
 	bg-color:#dee2f4;
 	margin-left:2;
 	margin-right:2;
@@ -59,36 +56,33 @@ popupmenu row:selected
 	border-left:1;
 	border-right:1;
 	border-bottom:1;	
-	padding-left:2;
+	padding-left:2px;
 	border-color:#316ac5;
 }
 
 popupmenu separator
 {
-	preferred-height:2;
-	padding-left:32;
+	height:2px;
+	padding-left:32px;
 
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:1;
-	bg-image-sizing-bottom:1;
+	border-image-slice:4 4 1 1;
 	bg-image-sizing:stretch; 
-	bg-image:PopupMenuSeparator;
+	border-image-source:url('res:PopupMenuSeparator');
 }
 
 popupmenu submenu_arrow
 {
-	preferred-width:24;
-	preferred-height:8;
+	width:24px;
+	height:8px;
 	bg-image-sizing:center; 
-	bg-image:PopupMenuSubmenuArrow;
+	border-image-source:url('res:PopupMenuSubmenuArrow');
 }
 
 popupmenu joiner
 {
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
-	preferred-height:1;
-	bg-image-sizing:stretch; 
-	bg-image:PopupMenuJoiner;
+	border-image-slice:3 3
+	height:1px;
+	bg-image-sizing:stretch;
+	
+	border-image-source:url('res:PopupMenuJoiner');
 }

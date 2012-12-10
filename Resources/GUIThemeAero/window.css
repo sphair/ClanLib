@@ -6,71 +6,59 @@ window
 
 window caption
 {
-	bg-image: WindowActive;
-	bg-image-sizing-left:28;
-	bg-image-sizing-right:35;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:17;
+	border-image-source:url('res:WindowActive');
+	border-image-slice:28 35 9 17;
 	bg-image-sizing:stretch; 
-	preferred-height:28;
+	height:28px;
 }
 
 window frameleft
 {
-	bg-image: WindowFrameLeftActive;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:91;
-	bg-image-sizing-bottom:0;
+	border-image-source:url('res:WindowFrameLeftActive');
+	border-image-slice:2 1 91 0;
 	bg-image-sizing:stretch; 
-	preferred-width:8;
+	width:8px;
 }
 
 window frameright
 {
-	bg-image: WindowFrameRightActive;
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:91;
-	bg-image-sizing-bottom:0;
+	border-image-source:url('res:WindowFrameRightActive');
+	border-image-slice:1 2 91 0;
 	bg-image-sizing:stretch; 
-	preferred-width:8;
+	width:8px;
 }
 
 window framebottom
 {
-	bg-image: WindowFrameBottomActive;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;    /* why doesn't this work with 2, as uxtheme uses */
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:2;
+	border-image-source:url('res:WindowFrameBottomActive');
+	border-image-slice:2 3 0 2;
 	bg-image-sizing:stretch; 
-	preferred-height:8;
+	height:8px;
 }
 
 window buttonclose
 {
-	preferred-width:25;
-	preferred-height:15;
+	width:25px;
+	height:15px;
 	bg-image-sizing:center; 
 }
 
 window buttonclose:normal
 {
-	bg-image:WindowCloseButtonActiveNormal; 
+	border-image-source:url('res:WindowCloseButtonActiveNormal'); 
 }
 
 window buttonclose:hot
 {
-	bg-image:WindowCloseButtonActiveHot; 
+	border-image-source:url('res:WindowCloseButtonActiveHot'); 
 }
 
 window buttonclose:pressed
 {
-	bg-image:WindowCloseButtonActivePressed; 
+	border-image-source:url('res:WindowCloseButtonActivePressed'); 
 }
 
 window buttonclose:disabled
 {
-	bg-image:WindowCloseButtonActiveDisabled; 
+	border-image-source:url('res:WindowCloseButtonActiveDisabled'); 
 }

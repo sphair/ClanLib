@@ -1,59 +1,44 @@
 frame
 {
-	preferred-width:100;
-	preferred-height:100;
+	width:100px;
+	height:100px;
 
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
 
-	text-color:blue;
+	color:blue;
 }
 
 frame header
 {
-	preferred-height:16;
+	height:16px;
 	
-	bg-image:FrameHeader; 
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-source:url('res:FrameHeader'); 
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
 }
 
 frame headerleft
 {
-	preferred-width:10;
-	preferred-height:16;
+	width:10px;
+	height:16px;
 	
-	bg-image:FrameHeaderLeft;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:13;
+	border-image-source:url('res:FrameHeaderLeft');
+	border-image-slice:4 4 2 13;
 	bg-image-sizing:stretch; 
 }
 
 frame headerright
 {
-	bg-image:FrameHeaderRight;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:13;
+	border-image-source:url('res:FrameHeaderRight');
+	border-image-slice:4 4 2 13;
 	bg-image-sizing:stretch; 
 }
 
 frame headercaption
 {
-	bg-image:FrameHeaderCaption;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:13;
+	border-image-source:url('res:FrameHeaderCaption');
+	border-image-slice:4 4 2 13;
 	bg-image-sizing:stretch; 
 	
 	border-left:4;
@@ -62,11 +47,8 @@ frame headercaption
 
 frame body
 {
-	bg-image:Frame; 
+	border-image-source:url('res:Frame'); 
 	
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:4;
-	bg-image-sizing-bottom:4;
+	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
 }

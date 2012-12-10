@@ -1,44 +1,41 @@
 
 menubar
 {
-	preferred-width:100;
-	preferred-height:24;
+	width:100px;
+	height:24px;
 	bg-color:transparent;
-	text-color:black;
+	color:black;
 	
-	padding-top:2;
+	padding-top:2px;
 }
 
 menubar item
 {
-    padding-left:8;
-    padding-right:8;
-	preferred-width:50;
-	preferred-height:24;
+	padding-left:8px;
+	padding-right:8px;
+	width:50px;
+	height:24px;
 	align:center;
 	vertical-align:center;
 }
 
 menubar item:disabled
 {
-	text-color:darkgray;
+	color:darkgray;
 }
 
 
 menubar item:selected
 {
-	preferred-width:50;
-	preferred-height:24;
+	width:50px;
+	height:24px;
 
 	/*border-top:10;*/
  
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:5;
-	bg-image-sizing-bottom:1;
+	border-image-slice:4 4 5 1;
 	bg-image-sizing:stretch; 
 
-	bg-image:MenuBarSelectedItem;
+	border-image-source:url('res:MenuBarSelectedItem');
 }
 
 menubar item:hot

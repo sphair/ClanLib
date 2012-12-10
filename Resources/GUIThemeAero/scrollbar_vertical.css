@@ -2,94 +2,85 @@
 scrollbar 
 {
 	no-draw:true;
-	preferred-width:17;
+	width:17px;
 }
 
 scrollbar scrolltrack.up
 {
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:0;
+	border-image-slice:1 1 0 0;
 	bg-image-sizing:stretch; 
 }
 
 scrollbar scrolltrack.up:normal
 {
-	bg-image:ScrollbarVertTrackNormal; 
+	border-image-source:url('res:ScrollbarVertTrackNormal'); 
 }
 
 scrollbar scrolltrack.up:hot
 {
-	bg-image:ScrollbarVertTrackHot; 
+	border-image-source:url('res:ScrollbarVertTrackHot'); 
 }
 
 scrollbar scrolltrack.up:pressed
 {
-	bg-image:ScrollbarVertTrackPressed; 
+	border-image-source:url('res:ScrollbarVertTrackPressed'); 
 }
 
 scrollbar scrolltrack.up:disabled
 {
-	bg-image:ScrollbarVertTrackDisabled; 
+	border-image-source:url('res:ScrollbarVertTrackDisabled'); 
 }
 
 scrollbar scrolltrack.down
 {
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:0;
+	border-image-slice:1 1 0 0;
 	bg-image-sizing:stretch; 
 }
 
 scrollbar scrolltrack.down:normal
 {
-	bg-image:ScrollbarVertTrackNormal; 
+	border-image-source:url('res:ScrollbarVertTrackNormal'); 
 }
 
 scrollbar scrolltrack.down:hot
 {
-	bg-image:ScrollbarVertTrackHot; 
+	border-image-source:url('res:ScrollbarVertTrackHot'); 
 }
 
 scrollbar scrolltrack.down:pressed
 {
-	bg-image:ScrollbarVertTrackPressed; 
+	border-image-source:url('res:ScrollbarVertTrackPressed'); 
 }
 
 scrollbar scrolltrack.down:disabled
 {
-	bg-image:ScrollbarVertTrackDisabled; 
+	border-image-source:url('res:ScrollbarVertTrackDisabled'); 
 }
 
 scrollbar scrollthumb.vertical
 {
-	bg-image-sizing-left:5;
-	bg-image-sizing-right:5;
-	bg-image-sizing-top:5;
-	bg-image-sizing-bottom:5;
+	border-image-slice:5 5 5 5;
 	bg-image-sizing:stretch; 
 }
 
 scrollbar scrollthumb.vertical:normal
 {
-	bg-image:ScrollbarVertThumbNormal; 
+	border-image-source:url('res:ScrollbarVertThumbNormal'); 
 }
 
 scrollbar scrollthumb.vertical:hot
 {
-	bg-image:ScrollbarVertThumbHot; 
+	border-image-source:url('res:ScrollbarVertThumbHot'); 
 }
 
 scrollbar scrollthumb.vertical:pressed
 {
-	bg-image:ScrollbarVertThumbPressed; 
+	border-image-source:url('res:ScrollbarVertThumbPressed'); 
 }
 
 scrollbar scrollthumb.vertical:disabled
 {
-	bg-image:ScrollbarVertThumbDisabled; 
+	border-image-source:url('res:ScrollbarVertThumbDisabled'); 
 }
 
 scrollbar scrollthumbgripper.vertical
@@ -99,82 +90,76 @@ scrollbar scrollthumbgripper.vertical
 
 scrollbar scrollthumbgripper.vertical:normal
 {
-	bg-image:ScrollbarVertThumbGripperNormal; 
+	border-image-source:url('res:ScrollbarVertThumbGripperNormal'); 
 }
 
 scrollbar scrollthumbgripper.vertical:hot
 {
-	bg-image:ScrollbarVertThumbGripperHot; 
+	border-image-source:url('res:ScrollbarVertThumbGripperHot'); 
 }
 
 scrollbar scrollthumbgripper.vertical:pressed
 {
-	bg-image:ScrollbarVertThumbGripperPressed; 
+	border-image-source:url('res:ScrollbarVertThumbGripperPressed'); 
 }
 
 scrollbar scrollthumbgripper.vertical:disabled
 {
-	bg-image:; 
+	border-image-source:none; 
 }
 
 scrollbar scrollbutton.up
 {
-	preferred-width:17;
-	preferred-height:17;
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:3;
+	width:17px;
+	height:17px;
+	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch;
 }
 
 scrollbar scrollbutton.up:normal
 {
-	bg-image:ScrollbarVertButtonUpNormal;
+	border-image-source:url('res:ScrollbarVertButtonUpNormal');
 }
 
 scrollbar scrollbutton.up:hot
 {
-	bg-image:ScrollbarVertButtonUpHot; 
+	border-image-source:url('res:ScrollbarVertButtonUpHot'); 
 }
 
 scrollbar scrollbutton.up:pressed
 {
-	bg-image:ScrollbarVertButtonUpPressed; 
+	border-image-source:url('res:ScrollbarVertButtonUpPressed'); 
 }
 
 scrollbar scrollbutton.up:disabled
 {
-	bg-image:ScrollbarVertButtonUpDisabled; 
+	border-image-source:url('res:ScrollbarVertButtonUpDisabled'); 
 }
 
 scrollbar scrollbutton.down
 {
-	preferred-width:17;
-	preferred-height:17;
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:3;
+	width:17px;
+	height:17px;
+	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch;
 }
 
 scrollbar scrollbutton.down:normal
 {
-	bg-image:ScrollbarVertButtonDownNormal; 
+	border-image-source:url('res:ScrollbarVertButtonDownNormal'); 
 }
 
 scrollbar scrollbutton.down:hot
 {
-	bg-image:ScrollbarVertButtonDownHot; 
+	border-image-source:url('res:ScrollbarVertButtonDownHot'); 
 }
 
 scrollbar scrollbutton.down:pressed
 {
-	bg-image:ScrollbarVertButtonDownPressed; 
+	border-image-source:url('res:ScrollbarVertButtonDownPressed'); 
 }
 
 scrollbar scrollbutton.down:disabled
 {
-	bg-image:ScrollbarVertButtonDownDisabled; 
+	border-image-source:url('res:ScrollbarVertButtonDownDisabled'); 
 }
