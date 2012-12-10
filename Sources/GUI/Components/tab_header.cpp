@@ -340,18 +340,18 @@ void TabHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	for (i = 0; i < tabs.size(); i++)
 	{
 		Handle &handle = tabs[i];
-		handle.part.render_box(canvas, handle.rect, update_rect);
+		handle.part.render_box(canvas, handle.rect);
 
 		Rect rect_handle_content = handle.part.get_content_box(handle.rect);
 
 		Size text_size = handle.part.get_text_size(canvas, handle.label);
-		handle.part.render_text(canvas, handle.label, rect_handle_content, update_rect);
+		handle.part.render_text(canvas, handle.label, rect_handle_content);
 
 		if (component->has_focus() && i == selected_page)
 		{
 			Rect focus_rect = handle.rect;
 			focus_rect.shrink(2,2,2,2);
-			part_focus.render_box(canvas, focus_rect, update_rect);
+			part_focus.render_box(canvas, focus_rect);
 		}
 	}
 }

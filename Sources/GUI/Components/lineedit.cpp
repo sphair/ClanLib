@@ -1309,13 +1309,13 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		// Draw selection box.
 		Rect selection_rect = get_selection_rect();
-		part_selection.render_box(canvas, selection_rect, update_rect);
+		part_selection.render_box(canvas, selection_rect);
 
 		Rect text_rect = content_rect;
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_selection.render_text(canvas, txt_selected, text_rect, update_rect);
+		part_selection.render_text(canvas, txt_selected, text_rect);
 	}
 	if (!txt_after.empty())
 	{
@@ -1332,7 +1332,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		if (cursor_blink_visible)
 		{
 			Rect cursor_rect = get_cursor_rect();
-			part_cursor.render_box(canvas, cursor_rect, update_rect);
+			part_cursor.render_box(canvas, cursor_rect);
 		}
 	}
 }

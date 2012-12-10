@@ -195,7 +195,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 	if (menu.impl->joiner_width > 0)
 	{
 	    Rect joiner_rect(0, 0, menu.impl->joiner_width, part_menubar_joiner.get_css_height());
-		part_menubar_joiner.render_box(canvas, joiner_rect, update_rect);
+		part_menubar_joiner.render_box(canvas, joiner_rect);
 	}
 
 	Rect client_box = get_content_box();
@@ -217,7 +217,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			separator_content_rect.right -= 4; // This thing is already a hack (render to content to render content as render, wtf? :))
 			separator_content_rect.top += 3; // More hacks..
 			separator_content_rect.bottom += 3; // Something is really wrong about this stuff. But it fixes the visual layout.
-			part_separator.render_box(canvas, separator_content_rect, update_rect);
+			part_separator.render_box(canvas, separator_content_rect);
 		}
 		else
 		{
@@ -235,7 +235,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 			// row rect
 			Rect row_rect(Point(client_box.left, client_box.top + offset), Size(client_box.right, row_height));
-			part_item_row.render_box(canvas, row_rect, update_rect);
+			part_item_row.render_box(canvas, row_rect);
 			Rect row_box = part_item_row.get_content_box(row_rect);
 
 			// icon or check
@@ -244,7 +244,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 				if (item.is_checked())
 				{
 					Rect rect(Point(row_box.left, (row_box.top + row_box.bottom)/2 - check_size.height/2), check_size);
-					part_item_check.render_box(canvas, rect, update_rect);
+					part_item_check.render_box(canvas, rect);
 				}
 			}
 			else
@@ -271,8 +271,8 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			Rect label_render_rect(row_box.left + icon_column_width, row_box.top, row_box.left + icon_column_width + text_full_size.width, row_box.bottom);
 			Rect label_content_rect = part_item_label.get_content_box(label_render_rect);
 
-			part_item_label.render_box(canvas, label_render_rect, update_rect);
-			part_item_label.render_text(canvas, item.get_text(), label_content_rect, update_rect);
+			part_item_label.render_box(canvas, label_render_rect);
+			part_item_label.render_text(canvas, item.get_text(), label_content_rect);
 
 			int center_y = row_box.get_center().y;
 			int arrow_width = part_submenu_arrow.get_css_width();
@@ -288,7 +288,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 				Rect arrow_content = part_submenu_arrow.get_content_box(arrow_rect);
 
-				part_submenu_arrow.render_box(canvas, arrow_content, update_rect);
+				part_submenu_arrow.render_box(canvas, arrow_content);
 			}
 			else if (!item.get_accelerator_text().empty())
 			{
@@ -304,7 +304,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 				Rect accel_content_rect = part_item_accel_label.get_content_box(accel_render_rect);
 
-				part_item_accel_label.render_text( canvas, item.get_accelerator_text(), accel_content_rect, update_rect);
+				part_item_accel_label.render_text( canvas, item.get_accelerator_text(), accel_content_rect);
 			}
 		}
 

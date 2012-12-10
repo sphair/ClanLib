@@ -354,7 +354,7 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect content_rect = radio->get_content_box();
 	int ypos = content_rect.top + content_rect.get_height()/2 - pref_size.height/2;
 	Rect checker_rect(content_rect.left, ypos, content_rect.left + pref_size.width, ypos + pref_size.height);
-	part_checker.render_box(canvas, checker_rect, update_rect);
+	part_checker.render_box(canvas, checker_rect);
 
 	int text_gap = radio->get_property_int(CssStr::text_gap, "2");
 
@@ -371,7 +371,7 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		Size text_size = radio->get_text_size(canvas, text);
 		int focus_left = checker_rect.right + text_gap - 2; // todo: remove magic number hacks
 		Rect focus_rect = RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);
-		part_focus.render_box(canvas, focus_rect, update_rect);
+		part_focus.render_box(canvas, focus_rect);
 	}
 }
 

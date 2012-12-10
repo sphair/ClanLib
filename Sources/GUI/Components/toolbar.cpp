@@ -365,7 +365,7 @@ void ToolBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			part_item = part_item_pressed;
 
 		Rect item_content = part_item.get_content_box(item.impl->position);
-		part_item.render_box(canvas, item.impl->position, update_rect);
+		part_item.render_box(canvas, item.impl->position);
 
 		Rect icon_pos = item.impl->icon_pos;
 		icon_pos.translate(item_content.left, item_content.top);

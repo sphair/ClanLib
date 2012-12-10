@@ -232,14 +232,14 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	{
 		int preferred_width = part_size_grip.get_css_width();
 		Rect rect_sizegrip(content.right - preferred_width, content.top, content.right, content.bottom);
-		part_size_grip.render_box(canvas, rect_sizegrip, update_rect);
+		part_size_grip.render_box(canvas, rect_sizegrip);
 		rect_status_text.right = rect_sizegrip.left;
 	}
 
 	if (!statusbar_parts.empty())
 		rect_status_text.right = statusbar_parts[0].position.left;
 
-	part_status_text.render_box(canvas, rect_status_text, update_rect);
+	part_status_text.render_box(canvas, rect_status_text);
 	Rect status_text_content = part_status_text.get_content_box(rect_status_text);
 
 	statusbar->get_font().draw_text(canvas, status_text_content.left + 4, content.bottom - 6, status_text, statusbar->get_css_properties().color.color);
@@ -247,7 +247,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	for (unsigned int index = 0; index < statusbar_parts.size(); index++)
 	{
 		StatusBar_Part &statusbar_part = statusbar_parts[index];
-		part_status_part.render_box(canvas, statusbar_part.position, update_rect);
+		part_status_part.render_box(canvas, statusbar_part.position);
 		Rect part_content = part_status_part.get_content_box(statusbar_part.position);
 		int icon_width = 0;
 		if (!statusbar_part.icon.is_null())

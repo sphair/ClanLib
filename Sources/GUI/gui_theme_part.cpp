@@ -134,12 +134,6 @@ void GUIThemePart::update_style()
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
 }
 
-void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box, const Rect &stub)
-{
-	//FIXME: Stub
-	render_box(canvas, border_box);
-}
-
 GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values()
 {
 	if (element.style_updated())
@@ -211,7 +205,7 @@ GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas 
 	return result;
 }
 
-Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect, const Rect &clip_rect )
+Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
 	SpanLayout span;
 

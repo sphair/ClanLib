@@ -410,8 +410,8 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 void ComboBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect rect = component->get_size();
-	part_opener.render_box(canvas, opener_rect, update_rect);
-	part_opener_glyph.render_box(canvas, opener_rect, update_rect);
+	part_opener.render_box(canvas, opener_rect);
+	part_opener_glyph.render_box(canvas, opener_rect);
 }
 
 void ComboBox_Impl::on_resized()

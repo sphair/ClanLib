@@ -107,7 +107,7 @@ void RibbonMenu::on_render(Canvas &canvas, const Rect &update_box)
 		if (items[i].separator)
 		{
 			Rect item_box = item_boxes[i];
-			part_menu_item_separator.render_box(canvas, item_box, update_box);
+			part_menu_item_separator.render_box(canvas, item_box);
 		}
 		else
 		{
@@ -118,15 +118,15 @@ void RibbonMenu::on_render(Canvas &canvas, const Rect &update_box)
 			item_content_box.left += 32 + 5;
 			if (current_item == (int)i)
 			{
-				part_menu_item_selected.render_box(canvas, item_box, update_box);
+				part_menu_item_selected.render_box(canvas, item_box);
 				items[i].image.draw(canvas, icon_pos.x, icon_pos.y);
-				part_menu_item_selected.render_text(canvas, items[i].text, item_content_box, update_box);
+				part_menu_item_selected.render_text(canvas, items[i].text, item_content_box);
 			}
 			else
 			{
-				part_menu_item.render_box(canvas, item_box, update_box);
+				part_menu_item.render_box(canvas, item_box);
 				items[i].image.draw(canvas, icon_pos.x, icon_pos.y);
-				part_menu_item.render_text(canvas, items[i].text, item_content_box, update_box);
+				part_menu_item.render_text(canvas, items[i].text, item_content_box);
 			}
 		}
 	}

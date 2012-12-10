@@ -196,8 +196,8 @@ void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 		Rect item_rect = get_menu_item_rect(index);
 		Rect item_content = part_item.get_content_box(item_rect);
-		part_item.render_box(canvas, item_rect, update_rect);
-		part_item.render_text(canvas, topmenu.name, item_content, update_rect);
+		part_item.render_box(canvas, item_rect);
+		part_item.render_text(canvas, topmenu.name, item_content);
 	}
 }
 

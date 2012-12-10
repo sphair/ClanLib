@@ -308,7 +308,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 				progress_rect.right -= (progress_rect.right - content_box.right);
 			}
 			
-			part_progress.render_box(canvas, progress_rect, update_rect);
+			part_progress.render_box(canvas, progress_rect);
 		}
 	}
 	else
@@ -327,7 +327,7 @@ void ProgressBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			progress_rect.bottom = content_box.bottom;
 			progress_rect.right = content_box.left + (position - progress_min) * content_box.get_width() / (progress_max - progress_min);
 
-			part_progress.render_box(canvas, progress_rect, update_rect);
+			part_progress.render_box(canvas, progress_rect);
 		}
 	}
 }
