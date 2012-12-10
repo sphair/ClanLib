@@ -4,10 +4,10 @@ tab
 	border-image-source:url('res:TabBorder');	
 	border-image-slice:1 4 1 3;
 
-	border-left:8;
-	border-right:8;
-	border-top:8;
-	border-bottom:8;
+	border-left:8px;
+	border-right:8px;
+	border-top:8px;
+	border-bottom:8px;
 }
 
 tabheader

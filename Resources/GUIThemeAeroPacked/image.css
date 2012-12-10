@@ -5,9 +5,9 @@ image
 	bg-image-sizing:stretch; 
 	border-image-source:url('res:ImageNormal');
 
-	border-top:3;
-	border-bottom:3;
-	border-left:3;
-	border-right:3;
+	border-top:3px;
+	border-bottom:3px;
+	border-left:3px;
+	border-right:3px;
 }
 

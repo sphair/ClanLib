@@ -6,36 +6,36 @@ listview
 	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch; 
 	
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
 }
 
 listview row:details
 {
 	border-image-source:none; 
 	indent-width:20;
-	bg-color:#eeeeee;
+	background-color:#eeeeee;
 
-	border-top:0;
-	border-bottom:0;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 listview row:alternate
 {
 	border-image-source:none; 
 	indent-width:20;
-	bg-color:#e2e2e2;
+	background-color:#e2e2e2;
 
-	border-top:0;
-	border-bottom:0;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 listview column
 {
 	border-image-source:none; 
-	bg-color:#f2f2f2;
+	background-color:#f2f2f2;
 }
 
 listview row_opener:open
@@ -56,18 +56,18 @@ listview row_opener:closed
 
 listview selection
 {
-	selection-margin-left:3;
-	selection-margin-right:4;
+	selection-margin-left:3px;
+	selection-margin-right:4px;
 	selection-margin-top:1;
 	selection-margin-bottom:2;
 
-	bg-color:#316ac5;
+	background-color:#316ac5;
 	color:#f2e3f2;
 }
 
 listview selection:unfocused
 {
-	bg-color:#ece9d8;
+	background-color:#ece9d8;
 	color:black;
 }
 
@@ -98,17 +98,17 @@ listview icon_selection:normal
 listview columns_bg
 {
 	border-image-source:none;
-	bg-color:white;
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	background-color:white;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 listview row:icons
 {
 	border-image-source:none;
-	bg-color:#eeeeee;
+	background-color:#eeeeee;
 }
 
 listview cell:details:hot
@@ -120,7 +120,7 @@ listview cell:details:hot
 listview cell:details:normal
 {
 	border-image-source:none; 
-	bg-color:;
+	background-color:;
 
 	color:black;
 	
@@ -148,7 +148,7 @@ listview cell:details:normal
 listview cell:icons:normal
 {
    	border-image-source:none; 
-	bg-color:;
+	background-color:;
 
 	width:70px;
 	height:66px;
@@ -156,10 +156,10 @@ listview cell:icons:normal
 	icon-width: 32;
 	icon-height: 32;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 
 	line-edit-offset-left:6;
 	line-edit-offset-top:0;
@@ -175,10 +175,10 @@ listview cell:thumbnails:normal
 	icon-width: 96;
 	icon-height: 96;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:3;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:3px;
 
 	line-edit-offset-left:6;
 	line-edit-offset-top:0;
@@ -196,10 +196,10 @@ listview_header
 	
 	height:20px;
 	
-/*	border-top:0;
-	border-left:3;
-	border-right:3;
-	border-bottom:3;
+/*	border-top:0px;
+	border-left:3px;
+	border-right:3px;
+	border-bottom:3px;
 */
 }
 
@@ -210,10 +210,10 @@ listview_header columnheader:normal
 	border-image-slice:3 3 3 3;
 	bg-image-sizing:stretch;
 	
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 listview_header columnheader:hot
@@ -222,10 +222,10 @@ listview_header columnheader:hot
 	border-image-slice:7 7 4 5;
 	bg-image-sizing:stretch;
 
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 listview_header columnheader:pressed
@@ -234,8 +234,8 @@ listview_header columnheader:pressed
 	border-image-slice:3 3 0 0;
 	bg-image-sizing:stretch;
 	
-	border-top:3;
-	border-left:8;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:8px;
+	border-right:3px;
+	border-bottom:3px;
 }

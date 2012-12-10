@@ -4,8 +4,8 @@ tooltip
 	border-image-source:url('res:Tooltip');
 	border-image-slice:4 4 4 4;
 	bg-image-sizing:stretch; 
-	border-left: 5;
-	border-top: 7;
-	border-right: 5;
-	border-bottom: 6;
+	border-left: 5px;
+	border-top: 7px;
+	border-right: 5px;
+	border-bottom: 6px;
 }

@@ -4,10 +4,10 @@ lineedit
 	border-image-slice:2 2 2 2;
 	bg-image-sizing:stretch; 
 	
-	border-top:0;
-	border-left:6;
-	border-right:16;
-	border-bottom:0;
+	border-top:0px;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0px;
 
 	color:black;
 }
@@ -32,26 +32,26 @@ lineedit cursor
 {
 	width:1px;
 
-	bg-color: black;
+	background-color: black;
 
 	blink-time-on:1000;
 	blink-time-off:1000;
 	border-image-source:none;
 	
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 lineedit cursor:blink_on
 {
-	bg-color: black;
+	background-color: black;
 }
 
 lineedit cursor:blink_off
 {
-	bg-color: white;
+	background-color: white;
 }
 
 lineedit selection
@@ -60,22 +60,22 @@ lineedit selection
 	expand-top:-2;
 	expand-bottom:-1;
 	border-image-source:none;
-	bg-color: #316ac5;
+	background-color: #316ac5;
 
-	border-top:0;
-	border-left:0;
-	border-right:0;
-	border-bottom:0;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 lineedit selection:disabled
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
 
 lineedit selection:unfocused
 {
 	border-image-source:none;
-	bg-color: #7a96df;
+	background-color: #7a96df;
 }
