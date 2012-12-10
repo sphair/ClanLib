@@ -778,7 +778,7 @@ void TextEdit_Impl::on_vertical_scroll()
 void TextEdit_Impl::update_vertical_scroll()
 {
        	Rect rect(
-		content_rect.get_width()-vert_scrollbar->get_css_width(),
+		content_rect.get_width()-vert_scrollbar->get_content_box().get_width(),
 		content_rect.top, 
 		content_rect.get_width(),
 		content_rect.get_height());

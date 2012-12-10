@@ -928,7 +928,7 @@ void ListView_Impl::update_scrollbar()
 	}
 
 	Rect rect(
-		rect_content.get_width()-scrollbar->get_css_width(),
+		rect_content.get_width()-scrollbar->get_content_box().get_width(),
 		rect_content.top, 
 		rect_content.get_width(),
 		rect_content.get_height());
