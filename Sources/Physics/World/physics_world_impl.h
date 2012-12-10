@@ -50,7 +50,7 @@ public:
 /// \{
 	PhysicsWorld_Impl(PhysicsWorld &pw);
 
-	virtual ~PhysicsWorld_Impl() { return; }
+	virtual ~PhysicsWorld_Impl();
 //																						___________________
 //																						O P E R A T I O N S
 /// \name Operations

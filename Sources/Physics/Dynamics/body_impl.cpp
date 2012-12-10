@@ -45,6 +45,15 @@ Body_Impl::Body_Impl( PhysicsWorld_Impl &pw_impl)
 {
 
 }
+
+Body_Impl::~Body_Impl() 
+{ 
+	if(body_occupied) 
+	{
+		body->GetWorld()->DestroyBody(body); 
+	}
+	sig_body_deletion.invoke(); 
+}
 //																						___________________
 //																						O P E R A T I O N S
 void Body_Impl::create_body(const BodyDescription &description)
