@@ -3,25 +3,26 @@
 #include "gif_provider.h"
 #include "giflib/gif_lib.h"
 
-CL_PixelBuffer GIFProvider::load(CL_IODevice &device)
+using namespace clan;
+
+PixelBuffer GIFProvider::load(IODevice &device)
 {
 	int result;
 	GifFileType *handle = DGifOpen(&device, &GIFProvider::on_read_input);
 	if (handle == 0)
-		throw CL_Exception("DGifOpen failed");
+		throw Exception("DGifOpen failed");
 
 	result = DGifSlurp(handle);
 	if (result == GIF_ERROR)
 	{
 		DGifCloseFile(handle);
-		throw CL_Exception("DGifSlurp failed");
+		throw Exception("DGifSlurp failed");
 	}
 
 	int width = handle->SWidth;
 	int height = handle->SHeight;
 
-	CL_PixelBuffer buffer(width, height, cl_argb8);
-	buffer.lock(cl_access_read_write);
+	PixelBuffer buffer(width, height, tf_bgra8);
 	unsigned int *pixels = reinterpret_cast<unsigned int *>(buffer.get_data());
 
 	if (handle->SBackGroundColor == 255) // transparent
@@ -106,14 +107,13 @@ CL_PixelBuffer GIFProvider::load(CL_IODevice &device)
 		}
 	}
 
-	buffer.unlock();
 	DGifCloseFile(handle);
 	return buffer;
 }
 
 int GIFProvider::on_read_input(GifFileType *filetype, GifByteType *buffer, int length)
 {
-	CL_IODevice *iodevice = reinterpret_cast<CL_IODevice *>(filetype->UserData);
+	IODevice *iodevice = reinterpret_cast<IODevice *>(filetype->UserData);
 	return iodevice->read(buffer, length, false);
 }
 

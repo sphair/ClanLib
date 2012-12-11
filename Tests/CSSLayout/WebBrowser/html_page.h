@@ -6,23 +6,23 @@
 class HTMLPage
 {
 public:
-	void load(const CL_String &page_url, const CL_String &refererer_url = CL_String());
-	CL_Image load_image(CL_GraphicContext &gc, const CL_String &image_url);
+	void load(const std::string &page_url, const std::string &refererer_url = std::string());
+	clan::Image load_image(clan::GraphicContext &gc, const std::string &image_url);
 
-	CL_HTMLUrl pageurl;
-	CL_String webpage;
-	CL_String pagecss;
+	clan::HTMLUrl pageurl;
+	std::string webpage;
+	std::string pagecss;
 
 	struct CSSFile
 	{
-		CL_String css;
-		CL_String base_uri;
+		std::string css;
+		std::string base_uri;
 	};
 	std::vector<CSSFile> css_files;
 
 private:
-	CL_String load_css(const CL_String &csstext, const CL_String &base_url);
-	CL_String download_url(const CL_String &page_url, const CL_String &refererer_url);
+	std::string load_css(const std::string &csstext, const std::string &base_url);
+	std::string download_url(const std::string &page_url, const std::string &refererer_url);
 
 	FileCache file_cache;
 };

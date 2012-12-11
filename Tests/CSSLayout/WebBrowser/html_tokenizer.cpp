@@ -3,12 +3,14 @@
 #include "html_tokenizer.h"
 #include "html_token.h"
 
+using namespace clan;
+
 HTMLTokenizer::HTMLTokenizer()
 : pos(0), before_first_tag(true)
 {
 }
 
-void HTMLTokenizer::append(const CL_String &new_data)
+void HTMLTokenizer::append(const std::string &new_data)
 {
 	if (pos == data.size())
 	{
@@ -121,7 +123,7 @@ bool HTMLTokenizer::is_string_escape(size_t p)
 	return p+1 < data.size() && data[p] == '\\' && (data[p+1] == '\'' || data[p+1] == '"');
 }
 
-size_t HTMLTokenizer::read_name(size_t p, CL_String &out_string)
+size_t HTMLTokenizer::read_name(size_t p, std::string &out_string)
 {
 	if (is_tag_name(p))
 	{
@@ -131,7 +133,7 @@ size_t HTMLTokenizer::read_name(size_t p, CL_String &out_string)
 			if (!is_tag_name_continued(p2))
 				break;
 		}
-		out_string = CL_StringHelp::text_to_lower(data.substr(p, p2-p));
+		out_string = StringHelp::text_to_lower(data.substr(p, p2-p));
 		return p2;
 	}
 	else
@@ -146,7 +148,7 @@ size_t HTMLTokenizer::read_whitespace(size_t p)
 	return p;
 }
 
-size_t HTMLTokenizer::read_string(size_t p, CL_String &out_string)
+size_t HTMLTokenizer::read_string(size_t p, std::string &out_string)
 {
 	out_string.clear();
 	if (is_single_quote(p))
@@ -265,7 +267,7 @@ size_t HTMLTokenizer::read_script_value(size_t p, size_t pvalue, HTMLToken &toke
 	{
 		if (is_end_tag_begin(i))
 		{
-			CL_String name;
+			std::string name;
 			size_t p2 = read_name(i+2, name);
 			size_t p3 = read_whitespace(p2);
 			if (compare(name, "script") && is_tag_end(p3))
@@ -287,7 +289,7 @@ size_t HTMLTokenizer::read_style_value(size_t p, size_t pvalue, HTMLToken &token
 	{
 		if (is_end_tag_begin(i))
 		{
-			CL_String name;
+			std::string name;
 			size_t p2 = read_name(i+2, name);
 			size_t p3 = read_whitespace(p2);
 			if (compare(name, "style") && is_tag_end(p3))
@@ -303,9 +305,9 @@ size_t HTMLTokenizer::read_style_value(size_t p, size_t pvalue, HTMLToken &token
 	return p;
 }
 
-bool HTMLTokenizer::compare(const CL_String &a, const CL_String &b)
+bool HTMLTokenizer::compare(const std::string &a, const std::string &b)
 {
-	return CL_StringHelp::compare(a, b, true) == 0;
+	return StringHelp::compare(a, b, true) == 0;
 }
 
 size_t HTMLTokenizer::read_comment(size_t p, HTMLToken &out_token)
@@ -621,7 +623,7 @@ HTMLTokenizer::HTMLEscape HTMLTokenizer::escapes[] =
 	0, 0
 };
 
-void HTMLTokenizer::unescape(CL_String &text)
+void HTMLTokenizer::unescape(std::string &text)
 {
 	for (size_t i = 0; i < text.length(); i++)
 	{
@@ -632,11 +634,11 @@ void HTMLTokenizer::unescape(CL_String &text)
 			for (j = i; j < length && text[j] != ';'; j++);
 			if (j < length)
 				j++;
-			CL_StringRef escape = text.substr(i, j-i);
+			std::string escape = text.substr(i, j-i);
 			if (escape.size() > 3 && escape[1] == '#')
 			{
-				unsigned int v = CL_StringHelp::text_to_uint(escape.substr(2, escape.length()-3));
-				text = text.substr(0, i) + CL_StringHelp::wchar_to_utf8(v) + text.substr(j);
+				unsigned int v = StringHelp::text_to_uint(escape.substr(2, escape.length()-3));
+				text = text.substr(0, i) + StringHelp::wchar_to_utf8(v) + text.substr(j);
 			}
 			else
 			{
@@ -644,7 +646,7 @@ void HTMLTokenizer::unescape(CL_String &text)
 				{
 					if (escape == escapes[k].name)
 					{
-						text = text.substr(0, i) + CL_StringHelp::wchar_to_utf8(escapes[k].cdata) + text.substr(j);
+						text = text.substr(0, i) + StringHelp::wchar_to_utf8(escapes[k].cdata) + text.substr(j);
 						break;
 					}
 				}

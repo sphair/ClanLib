@@ -3,23 +3,25 @@
 #include "css_browser.h"
 #include "css_view.h"
 
-CSSBrowser::CSSBrowser(CL_GUIManager *gui)
-: CL_Window(gui, get_window_description()), label(0), combobox(0), view(0)
+using namespace clan;
+
+CSSBrowser::CSSBrowser(GUIManager *gui)
+: Window(gui, get_window_description()), label(0), combobox(0), view(0)
 {
 	view = new CSSView(this);
 	func_close().set(this, &CSSBrowser::on_close);
 	func_resized().set(this, &CSSBrowser::on_resized);
-	label = new CL_Label(this);
-	combobox = new CL_ComboBox(this);
+	label = new Label(this);
+	combobox = new ComboBox(this);
 	combobox->func_item_selected().set(this, &CSSBrowser::on_combobox_item_selected);
 	combobox->func_enter_pressed().set(this, &CSSBrowser::on_combobox_enter_pressed);
-	CL_PopupMenu popup;
+	PopupMenu popup;
 	popup.insert_item("http://clanlib.org/wiki/Main_Page");
 	popup.insert_item("http://clanlib.org/wiki/MainDocs:Index");
 	popup.insert_item("http://www.rtsoft.com/forums/forumdisplay.php?13-Official-ClanLib-Game-SDK-Forums");
 	popup.insert_item("http://www.csszengarden.com/");
 	//for (int i = 130; i < 214; i++)
-	//	popup.insert_item(cl_format("http://www.csszengarden.com/?cssfile=/%1/%2.css&page=0", i, i));
+	//	popup.insert_item(string_format("http://www.csszengarden.com/?cssfile=/%1/%2.css&page=0", i, i));
 	popup.insert_item("http://www.csszengarden.com/?cssfile=/105/105.css&page=0");
 	popup.insert_item("http://www.csszengarden.com/?cssfile=/109/109.css&page=0");
 	popup.insert_item("http://www.csszengarden.com/?cssfile=/110/110.css&page=0");
@@ -57,14 +59,14 @@ CSSBrowser::CSSBrowser(CL_GUIManager *gui)
 	combobox->set_editable(true);
 	combobox->set_popup_menu(popup);
 	label->set_text("Address:");
-	load_css_layout("Resources/Theme/css_browser.xml", "Resources/Theme/css_browser.css");
+	//load_css_layout("Resources/Theme/css_browser.xml", "Resources/Theme/css_browser.css");
 	on_resized();
 }
 
-CL_GUITopLevelDescription CSSBrowser::get_window_description()
+GUITopLevelDescription CSSBrowser::get_window_description()
 {
-	CL_GUITopLevelDescription desc;
-	desc.set_size(CL_Size(1280, 865), false);
+	GUITopLevelDescription desc;
+	desc.set_size(Size(1280, 865), false);
 	desc.set_title("Carambola Browser");
 	desc.set_allow_resize(true);
 	return desc;
@@ -78,9 +80,11 @@ bool CSSBrowser::on_close()
 
 void CSSBrowser::on_resized()
 {
+/*
 	label->set_geometry(get_css_layout().find_element("label").get_content_box());
 	combobox->set_geometry(get_css_layout().find_element("combobox").get_content_box());
 	view->set_geometry(get_css_layout().find_element("view").get_content_box());
+*/
 }
 
 void CSSBrowser::on_combobox_item_selected(int index)

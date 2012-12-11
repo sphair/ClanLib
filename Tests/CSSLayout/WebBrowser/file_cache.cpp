@@ -3,33 +3,35 @@
 #include "file_cache.h"
 #include <ClanLib/sqlite.h>
 
+using namespace clan;
+
 FileCache::FileCache()
 {
 	db = create_db_connection();
 	init_database();
 }
 
-CL_DataBuffer FileCache::get_file(const CL_String &url, CL_String &out_content_type)
+DataBuffer FileCache::get_file(const std::string &url, std::string &out_content_type)
 {
-	CL_DBCommand cmd = db.create_command("SELECT Data, ContentType FROM File WHERE Url=?1 LIMIT 1;");
+	DBCommand cmd = db.create_command("SELECT Data, ContentType FROM File WHERE Url=?1 LIMIT 1;");
 	cmd.set_input_parameter_string(1, url);
-	CL_DBReader reader = db.execute_reader(cmd);
+	DBReader reader = db.execute_reader(cmd);
 	if (reader.retrieve_row())
 	{
-		CL_DataBuffer buffer = reader.get_column_binary(0);
+		DataBuffer buffer = reader.get_column_binary(0);
 		out_content_type = reader.get_column_string(1);
 		reader.close();
 		return buffer;
 	}
 	else
 	{
-		return CL_DataBuffer();
+		return DataBuffer();
 	}
 }
 
-void FileCache::set_file(const CL_String &url, const CL_DataBuffer &buffer, const CL_String &content_type)
+void FileCache::set_file(const std::string &url, const DataBuffer &buffer, const std::string &content_type)
 {
-	CL_DBCommand cmd = db.create_command("INSERT INTO File(Url, Data, ContentType) VALUES(?1, ?2, ?3);");
+	DBCommand cmd = db.create_command("INSERT INTO File(Url, Data, ContentType) VALUES(?1, ?2, ?3);");
 	cmd.set_input_parameter_string(1, url);
 	cmd.set_input_parameter_binary(2, buffer);
 	cmd.set_input_parameter_string(3, content_type);
@@ -38,7 +40,7 @@ void FileCache::set_file(const CL_String &url, const CL_DataBuffer &buffer, cons
 
 void FileCache::init_database()
 {
-	CL_String version_string;
+	std::string version_string;
 	int version_major = 0, version_minor = 0;
 	int servicepack_major = 0, servicepack_minor = 0;
 	bool exists = check_database_exists(
@@ -65,8 +67,8 @@ void FileCache::init_database()
 }
 
 bool FileCache::check_database_exists(
-	CL_DBConnection db,
-	CL_String &version_string,
+	DBConnection db,
+	std::string &version_string,
 	int &version_major,
 	int &version_minor,
 	int &servicepack_major,
@@ -74,16 +76,16 @@ bool FileCache::check_database_exists(
 {
 	try
 	{
-		CL_DBCommand query = db.create_command(
+		DBCommand query = db.create_command(
 			"SELECT "
-			"	VersionString,"
+			"	Versionstd::string,"
 			"	VersionMajor,"
 			"	VersionMinor,"
 			"	ServicePackMajor,"
 			"	ServicePackMinor "
 			"FROM VersionInfo "
 			"WHERE Application = 'CarambolaBrowser';");
-		CL_DBReader reader = db.execute_reader(query);
+		DBReader reader = db.execute_reader(query);
 		if (reader.retrieve_row())
 		{
 			version_string = reader.get_column_string(0);
@@ -97,19 +99,19 @@ bool FileCache::check_database_exists(
 		reader.close();
 		return false;
 	}
-	catch (CL_Exception e)
+	catch (Exception e)
 	{
 		return false;
 	}
 }
 
-void FileCache::create_tables(CL_DBConnection db)
+void FileCache::create_tables(DBConnection db)
 {
-	CL_DBCommand query = db.create_command(
+	DBCommand query = db.create_command(
 		"CREATE TABLE VersionInfo("
 		"	VersionInfoId INTEGER PRIMARY KEY,"
 		"	Application STRING,"
-		"	VersionString STRING,"
+		"	Versionstd::string STRING,"
 		"	VersionMajor INTEGER,"
 		"	VersionMinor INTEGER,"
 		"	ServicePackMajor INTEGER,"
@@ -127,7 +129,7 @@ void FileCache::create_tables(CL_DBConnection db)
 	query = db.create_command(
 		"INSERT INTO VersionInfo("
 		"	Application,"
-		"	VersionString,"
+		"	Versionstd::string,"
 		"	VersionMajor,"
 		"	VersionMinor,"
 		"	ServicePackMajor,"
@@ -143,17 +145,17 @@ void FileCache::create_tables(CL_DBConnection db)
 }
 
 void FileCache::upgrade_tables(
-	CL_DBConnection db,
-	CL_String &version_string,
+	DBConnection db,
+	std::string &version_string,
 	int &version_major,
 	int &version_minor,
 	int &servicepack_major,
 	int &servicepack_minor)
 {
-	throw CL_Exception(cl_format("Database is version %1, unable to upgrade", version_string));
+	throw Exception(string_format("Database is version %1, unable to upgrade", version_string));
 }
 
-CL_DBConnection FileCache::create_db_connection()
+DBConnection FileCache::create_db_connection()
 {
-	return CL_SqliteConnection("file_cache.db");
+	return SqliteConnection("file_cache.db");
 }

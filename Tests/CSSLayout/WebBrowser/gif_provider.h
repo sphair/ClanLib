@@ -6,7 +6,7 @@
 class GIFProvider
 {
 public:
-	static CL_PixelBuffer load(CL_IODevice &device);
+	static clan::PixelBuffer load(clan::IODevice &device);
 
 private:
 	static int on_read_input(GifFileType *filetype, GifByteType *buffer, int length);
