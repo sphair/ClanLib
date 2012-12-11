@@ -40,7 +40,7 @@ void CSSView::navigate(const std::string &page_url, const std::string &refererer
 void CSSView::on_resized()
 {
 	client_box = get_size();
-	scrollbar_box = Rect(client_box.right-scrollbar->get_preferred_width(), client_box.top, client_box.right, client_box.bottom);
+	scrollbar_box = Rect(client_box.right-scrollbar->get_width(), client_box.top, client_box.right, client_box.bottom);
 	view_box = Rect(client_box.left, client_box.top, scrollbar_box.left, client_box.bottom);
 	scrollbar->set_geometry(scrollbar_box);
 	request_repaint();
@@ -112,7 +112,7 @@ void CSSView::load_html()
 	std::string html_filename = "htmlpage.html";
 	HTMLUrl document_url = page.pageurl;
 
-	css_document.add_sheet("Resources/default.css", "file:Resources");
+	css_document.add_default_html_sheet();
 	for (size_t i = 0; i < page.css_files.size(); i++)
 	{
 		IODevice_Memory device;
