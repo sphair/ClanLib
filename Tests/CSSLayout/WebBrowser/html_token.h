@@ -4,8 +4,8 @@
 class HTMLAttribute
 {
 public:
-	CL_String name;
-	CL_String value;
+	std::string name;
+	std::string value;
 };
 
 class HTMLToken
@@ -27,7 +27,7 @@ public:
 	HTMLToken() : type(type_null) { }
 	
 	Type type;
-	CL_String name;
-	CL_String value;
+	std::string name;
+	std::string value;
 	std::vector<HTMLAttribute> attributes;
 };
