@@ -17,16 +17,16 @@ int Program::main(const std::vector<std::string> &args)
 	SetupD3D setup_d3d;
 	SetupGUI setup_gui;
 	
-	GUIManager gui("Resources/GUIThemeAero");
-	gui.add_resources("Resources/Theme/resources.xml");
-	try
+	GUIManager gui("../../../Resources/GUIThemeAero");
+	//gui.add_resources("Resources/Theme/resources.xml");
+	//try
 	{
 		CSSBrowser browser(&gui);
 		return gui.exec();
 	}
-	catch (Exception &e)
+	/*catch (Exception &e)
 	{
 		message_box(&gui, "Unhandled Exception", e.get_message_and_stack_trace(), mb_buttons_ok, mb_icon_error);
 		return 0;
-	}
+	}*/
 }

@@ -78,7 +78,7 @@ bool FileCache::check_database_exists(
 	{
 		DBCommand query = db.create_command(
 			"SELECT "
-			"	Versionstd::string,"
+			"	VersionString,"
 			"	VersionMajor,"
 			"	VersionMinor,"
 			"	ServicePackMajor,"
@@ -111,7 +111,7 @@ void FileCache::create_tables(DBConnection db)
 		"CREATE TABLE VersionInfo("
 		"	VersionInfoId INTEGER PRIMARY KEY,"
 		"	Application STRING,"
-		"	Versionstd::string STRING,"
+		"	VersionString STRING,"
 		"	VersionMajor INTEGER,"
 		"	VersionMinor INTEGER,"
 		"	ServicePackMajor INTEGER,"
@@ -129,7 +129,7 @@ void FileCache::create_tables(DBConnection db)
 	query = db.create_command(
 		"INSERT INTO VersionInfo("
 		"	Application,"
-		"	Versionstd::string,"
+		"	VersionString,"
 		"	VersionMajor,"
 		"	VersionMinor,"
 		"	ServicePackMajor,"
