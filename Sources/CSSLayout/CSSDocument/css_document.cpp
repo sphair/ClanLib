@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/css_document.h"
+#include "API/Core/IOData/path_help.h"
 #include "css_document_impl.h"
 
 namespace clan
@@ -42,10 +43,27 @@ CSSDocument::~CSSDocument()
 {
 }
 
-void CSSDocument::add_sheet(const std::string &filename, const std::string &base_uri)
+void CSSDocument::add_sheet(const std::string &filename, const VirtualDirectory &dir)
 {
-	File file(filename, File::open_existing, File::access_read);
-	add_sheet(file, base_uri);
+	// Load the css document:
+	IODevice file = dir.open_file_read(filename);
+	DataBuffer file_data(file.get_size());
+	file.read(file_data.get_data(), file_data.get_size());
+	std::string css_text(file_data.get_data(), file_data.get_size());
+
+	// Find the base URI for this css document:
+	std::string base_uri = PathHelp::combine(dir.get_path(), PathHelp::get_fullpath(filename));
+
+	// Find import directives and load those first:
+	std::vector<std::string> import_urls = CSSTokenizer(css_text).read_import_urls();
+	for (size_t i = 0; i < import_urls.size(); i++)
+	{
+		add_sheet(PathHelp::combine(base_uri, import_urls[i]), dir);
+	}
+
+	// Add the css sheet:
+	CSSTokenizer tokenizer(css_text);
+	impl->read_stylesheet(tokenizer, base_uri);
 }
 
 void CSSDocument::add_sheet(IODevice &iodevice, const std::string &base_uri)
