@@ -78,12 +78,6 @@ int App::start(const std::vector<std::string> &args)
 	button_class_system.set_text("Class: System");
 	offset_y += gap;
 
-	PushButton button_class_freetype(&gui_window);
-	button_class_freetype.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_freetype.func_clicked().set(this, &App::on_button_clicked_class_freetype, &button_class_freetype);
-	button_class_freetype.set_text("Class: Freetype");
-	offset_y += gap;
-
 	PushButton button_class_vector(&gui_window);
 	button_class_vector.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
 	button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
@@ -248,14 +242,11 @@ void App::select_font()
 {
 	switch (selected_fontclass)
 	{
-		case font_freetype:
-			selected_font = Font_Freetype(font_desc);
-			break;
 		case font_system:
 			selected_font = Font_System(canvas, font_desc);
 			break;
 		case font_vector:
-			selected_font = Font_Vector(font_desc);
+			selected_font = Font_Vector(canvas, font_desc);
 			break;
 		case font_sprite:
 			selected_font = Font_Sprite(canvas, "ClanFont", &app_resources);
