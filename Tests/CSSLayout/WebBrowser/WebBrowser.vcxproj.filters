@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="giflib">
+      <UniqueIdentifier>{cec4899f-ac1e-459e-89d2-f10b67223aeb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="giflib\COPYING">
+      <Filter>giflib</Filter>
+    </None>
+    <None Include="giflib\README">
+      <Filter>giflib</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="giflib\dev2gif.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\dgif_lib.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\egif_lib.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\getarg.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\gif_err.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\gif_font.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\gif_hash.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\gifalloc.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\qprintf.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="giflib\quantize.c">
+      <Filter>giflib</Filter>
+    </ClCompile>
+    <ClCompile Include="css_browser.cpp" />
+    <ClCompile Include="css_view.cpp" />
+    <ClCompile Include="file_cache.cpp" />
+    <ClCompile Include="gif_provider.cpp" />
+    <ClCompile Include="html_page.cpp" />
+    <ClCompile Include="html_tokenizer.cpp" />
+    <ClCompile Include="precomp.cpp" />
+    <ClCompile Include="program.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="giflib\getarg.h">
+      <Filter>giflib</Filter>
+    </ClInclude>
+    <ClInclude Include="giflib\gif_hash.h">
+      <Filter>giflib</Filter>
+    </ClInclude>
+    <ClInclude Include="giflib\gif_lib.h">
+      <Filter>giflib</Filter>
+    </ClInclude>
+    <ClInclude Include="giflib\gif_lib_private.h">
+      <Filter>giflib</Filter>
+    </ClInclude>
+    <ClInclude Include="css_browser.h" />
+    <ClInclude Include="css_view.h" />
+    <ClInclude Include="file_cache.h" />
+    <ClInclude Include="gif_provider.h" />
+    <ClInclude Include="html_page.h" />
+    <ClInclude Include="html_token.h" />
+    <ClInclude Include="html_tokenizer.h" />
+    <ClInclude Include="precomp.h" />
+    <ClInclude Include="program.h" />
+  </ItemGroup>
+</Project>
