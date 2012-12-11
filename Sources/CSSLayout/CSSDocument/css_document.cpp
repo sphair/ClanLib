@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/css_document.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/IOData/iodevice_memory.h"
 #include "css_document_impl.h"
 
 namespace clan
@@ -41,6 +42,14 @@ CSSDocument::CSSDocument()
 
 CSSDocument::~CSSDocument()
 {
+}
+
+void CSSDocument::add_default_html_sheet()
+{
+	std::string css_text = get_default_html_sheet();
+	DataBuffer buffer(css_text.data(), css_text.length());
+	IODevice_Memory iodevice(buffer);
+	add_sheet(iodevice, "file:");
 }
 
 void CSSDocument::add_sheet(const std::string &filename, const VirtualDirectory &dir)
@@ -141,6 +150,89 @@ CSSPropertyList CSSDocument::get_style_properties(const std::string &style_strin
 		properties.push_back(property_list[i - 1]);
 
 	return properties;
+}
+
+std::string CSSDocument::get_default_html_sheet()
+{
+	return
+		"html, address,\n"
+		"blockquote,\n"
+		"body, dd, div,\n"
+		"dl, dt, fieldset, form,\n"
+		"frame, frameset,\n"
+		"h1, h2, h3, h4,\n"
+		"h5, h6, noframes,\n"
+		"ol, p, ul, center,\n"
+		"dir, hr, menu, pre   { display: block }\n"
+		"li              { display: list-item }\n"
+		"head            { display: none }\n"
+		"table           { display: table }\n"
+		"tr              { display: table-row }\n"
+		"thead           { display: table-header-group }\n"
+		"tbody           { display: table-row-group }\n"
+		"tfoot           { display: table-footer-group }\n"
+		"col             { display: table-column }\n"
+		"colgroup        { display: table-column-group }\n"
+		"td, th          { display: table-cell }\n"
+		"caption         { display: table-caption }\n"
+		"th              { font-weight: bolder; text-align: center }\n"
+		"caption         { text-align: center }\n"
+		"body            { margin: 8px }\n"
+		"h1              { font-size: 2em; margin: .67em 0 }\n"
+		"h2              { font-size: 1.5em; margin: .75em 0 }\n"
+		"h3              { font-size: 1.17em; margin: .83em 0 }\n"
+		"h4, p,\n"
+		"blockquote, ul,\n"
+		"fieldset, form,\n"
+		"ol, dl, dir,\n"
+		"menu            { margin: 1.12em 0 }\n"
+		"h5              { font-size: .83em; margin: 1.5em 0 }\n"
+		"h6              { font-size: .75em; margin: 1.67em 0 }\n"
+		"h1, h2, h3, h4,\n"
+		"h5, h6, b,\n"
+		"strong          { font-weight: bolder }\n"
+		"blockquote      { margin-left: 40px; margin-right: 40px }\n"
+		"i, cite, em,\n"
+		"var, address    { font-style: italic }\n"
+		"pre, tt, code,\n"
+		"kbd, samp       { font-family: monospace }\n"
+		"pre             { white-space: pre }\n"
+		"button, textarea,\n"
+		"input, select   { display: inline-block }\n"
+		"big             { font-size: 1.17em }\n"
+		"small, sub, sup { font-size: .83em }\n"
+		"sub             { vertical-align: sub }\n"
+		"sup             { vertical-align: super }\n"
+		"table           { border-spacing: 2px; }\n"
+		"thead, tbody,\n"
+		"tfoot           { vertical-align: middle }\n"
+		"td, th, tr      { vertical-align: inherit }\n"
+		"s, strike, del  { text-decoration: line-through }\n"
+		"hr              { border: 1px inset }\n"
+		"ol, ul, dir,\n"
+		"menu, dd        { margin-left: 40px }\n"
+		"ol              { list-style-type: decimal }\n"
+		"ol ul, ul ol,\n"
+		"ul ul, ol ol    { margin-top: 0; margin-bottom: 0 }\n"
+		"u, ins          { text-decoration: underline }\n"
+		"br:before       { content: \"\\A\"; white-space: pre-line }\n"
+		"center          { text-align: center }\n"
+		":link, :visited { text-decoration: underline }\n"
+		":focus          { outline: thin dotted invert }\n"
+		"\n"
+		"/* Begin bidirectionality settings (do not change) */\n"
+		"BDO[DIR=\"ltr\"]  { direction: ltr; unicode-bidi: bidi-override }\n"
+		"BDO[DIR=\"rtl\"]  { direction: rtl; unicode-bidi: bidi-override }\n"
+		"\n"
+		"*[DIR=\"ltr\"]    { direction: ltr; unicode-bidi: embed }\n"
+		"*[DIR=\"rtl\"]    { direction: rtl; unicode-bidi: embed }\n"
+		"\n"
+		"@media print {\n"
+		"  h1            { page-break-before: always }\n"
+		"  h1, h2, h3,\n"
+		"  h4, h5, h6    { page-break-after: avoid }\n"
+		"  ul, ol, dl    { page-break-before: avoid }\n"
+		"}\n";
 }
 
 }

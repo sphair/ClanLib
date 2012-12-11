@@ -48,11 +48,15 @@ public:
 	CSSDocument();
 	~CSSDocument();
 
-	void add_sheet(const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
+	static std::string get_default_html_sheet();
 
+	void add_default_html_sheet();
+	void add_sheet(const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
 	void add_sheet(IODevice &iodevice, const std::string &base_uri);
+
 	CSSPropertyList select(const DomElement &node, const std::string &pseudo_element = std::string());
 	CSSPropertyList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
+
 	static CSSPropertyList get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 private:
