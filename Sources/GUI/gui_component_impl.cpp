@@ -197,4 +197,22 @@ void GUIComponent_Impl::update_style()
 	element.update_style(&component->impl->gui_manager_impl->resource_cache, document);
 }
 
+CSSToken GUIComponent_Impl::next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace)
+{
+	CSSToken token;
+	do
+	{
+		if (pos != tokens.size())
+		{
+			token = tokens[pos];
+			pos++;
+		}
+		else
+		{
+			token = CSSToken();
+		}
+	} while (token.type == CSSToken::type_whitespace);
+	return token;
+}
+
 }

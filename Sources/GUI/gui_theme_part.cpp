@@ -41,6 +41,10 @@
 #include "CSSLayout/LayoutTree/css_layout_graphics.h"
 #include "API/Display/2D/span_layout.h"
 
+#include "CSSLayout/BoxTree/css_property_parser.h"
+#include "CSSLayout/BoxTree/css_property_parsers.h"
+#include "API/CSSLayout/css_token.h"
+
 namespace clan
 {
 
@@ -261,15 +265,29 @@ Rect GUIThemePart::get_content_shrink_box() const
 	return shrink_box;
 }
 
-
 std::string GUIThemePart::get_property(const std::string &property, const std::string &default_value) const
 {
-	return default_value;	//FIXME:
+	CSSDocument document = impl->component->get_gui_manager().get_css_document();
+	GUIComponentSelectNode select_node(&impl->element);
+	CSSPropertyList sheet_properties = document.select(&select_node);
+
+	CSSPropertyParsers property_parsers;
+	for (size_t i = sheet_properties.size(); i > 0; i--)
+	{
+		if (property == StringHelp::text_to_lower(sheet_properties[i-1].get_name()))
+		{
+			size_t pos = 0;
+			CSSToken token = GUIComponent_Impl::next_token(pos, sheet_properties[i-1].get_value_tokens(), true);
+			return token.value;
+		}
+	}
+
+	return default_value;
 }
 
 int GUIThemePart::get_property_int(const std::string &property, const std::string &default_value) const
 {
-	return StringHelp::text_to_int(default_value);	//FIXME:
+	return StringHelp::text_to_int(get_property(property, default_value));
 }
 
 }
