@@ -61,7 +61,7 @@ void CSSDocument::add_sheet(const std::string &filename, const VirtualDirectory 
 	std::string css_text(file_data.get_data(), file_data.get_size());
 
 	// Find the base URI for this css document:
-	std::string base_uri = PathHelp::combine(dir.get_path(), PathHelp::get_fullpath(filename));
+	std::string base_uri = PathHelp::get_fullpath(filename);
 
 	// Find import directives and load those first:
 	std::vector<std::string> import_urls = CSSTokenizer(css_text).read_import_urls();

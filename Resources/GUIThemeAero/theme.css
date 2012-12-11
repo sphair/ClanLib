@@ -24,3 +24,8 @@
 @import "tooltip.css";
 @import "messagebox.css";
 @import "ribbon.css";
+
+*
+{
+	display:flex;
+}
