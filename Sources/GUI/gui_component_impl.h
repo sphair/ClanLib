@@ -47,6 +47,7 @@ class GUIManager_Impl;
 class GUILayout;
 class GUICSSBoxVisitor;
 class GUIElement;
+class CSSToken;
 
 class GUIComponent_Impl
 {
@@ -122,6 +123,8 @@ public:
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void update_style();
+
+	static CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);
 };
 
 }
