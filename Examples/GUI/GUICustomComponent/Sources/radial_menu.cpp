@@ -29,12 +29,9 @@
 #include "radial_menu.h"
 
 RadialMenu::RadialMenu(GUIComponent *parent)
-: GUIComponent(parent)
+: GUIComponent(parent, "radialmenu")
 {
-	set_type_name("radialmenu");
-
 	func_render().set(this, &RadialMenu::on_render);
-	func_style_changed().set(this, &RadialMenu::on_style_changed);
 	func_resized().set(this, &RadialMenu::on_resized);
 	func_process_message().set(this, &RadialMenu::on_process_message);
 
@@ -50,10 +47,6 @@ RadialMenu::~RadialMenu()
 	items.clear();
 }
 
-Size RadialMenu::get_preferred_size() const
-{
-	return part_component.get_preferred_size();
-}
 
 std::string RadialMenu::get_item(int index) const
 {
@@ -87,12 +80,12 @@ void RadialMenu::add_item(const std::string &text)
 	request_repaint();
 }
 
-void RadialMenu::on_process_message(GUIMessage &msg)
+void RadialMenu::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input = msg;
-		InputEvent input_event = input.get_event();
+		InputEvent &input_event = input_msg->input_event;
 		if (input_event.type == InputEvent::pointer_moved)
 			on_mouse_move(input_event);
 		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
@@ -140,8 +133,6 @@ void RadialMenu::on_render(Canvas &canvas, const Rect &update_rect)
 	if(selected_index != -1)
 		image_pointer.draw(canvas, (float)center_x, (float)center_y);
 
-	part_component.render_box(canvas, get_geometry().get_size(), update_rect);
-
 	GraphicContext &gc = canvas.get_gc();
 
 	Angle text_angle = Angle::from_degrees(90);
@@ -170,11 +161,6 @@ void RadialMenu::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 }
 
-void RadialMenu::on_style_changed()
-{
-	create_parts();
-}
-
 void RadialMenu::on_resized()
 {
 	Rect rect = get_geometry();
@@ -187,24 +173,19 @@ void RadialMenu::create_parts()
 	Canvas canvas = get_canvas();
 	ResourceManager resources = get_resources();
 
-	part_component = GUIThemePart(this);
 	GUIThemePart part_selected_item(this, "selected");
 
-	GUIThemePartProperty prop_text_color("text-color");
-	GUIThemePartProperty prop_pointer_image("pointer-image");
-	GUIThemePartProperty prop_text_distance("text-distance");
-
-	normal_text_color = part_component.get_property(prop_text_color);
-	normal_font = part_component.get_font();
-	normal_text_distance = StringHelp::text_to_float(part_component.get_property(prop_text_distance));
+	normal_text_color = get_property("text-color", "");
+	normal_font = get_font();
+	normal_text_distance = StringHelp::text_to_float(get_property("text-distance", ""));
 	normal_font_height = normal_font.get_font_metrics().get_height();
 
-	selected_text_color = part_selected_item.get_property(prop_text_color);
+	selected_text_color = part_selected_item.get_property("text-color", "");
 	selected_font = part_selected_item.get_font();
-	selected_text_distance = StringHelp::text_to_float(part_selected_item.get_property(prop_text_distance));
+	selected_text_distance = StringHelp::text_to_float(part_selected_item.get_property("text-distance", ""));
 	selected_font_height = selected_font.get_font_metrics().get_height();
 
-	std::string pointer_image_name = part_component.get_property(prop_pointer_image);
+	std::string pointer_image_name = get_property("pointer-image", "");
 	image_pointer = Sprite(canvas, pointer_image_name, &resources);
 	image_pointer.set_alignment(origin_center);
 }
