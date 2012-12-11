@@ -1,9 +1,12 @@
 radialmenu
 {
-    bg-image: RadialMenuBackground;
-    bg-image-sizing: center;
-    
-    pointer-image: RadialMenuPointer;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+
+	background-image:url('res:RadialMenuBackground'); 
+	
+	pointer-image: RadialMenuPointer;
 
 	font-weight: normal;
 	font-size: -14;
