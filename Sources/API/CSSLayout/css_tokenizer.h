@@ -58,6 +58,9 @@ public:
 public:
 	/// \brief Reads the next CSS token
 	void read(CSSToken &out_token, bool eat_whitespace, bool eat_comments = true);
+
+	/// \brief Reads all import directives specified in this document
+	std::vector<std::string> read_import_urls();
 /// \}
 
 /// \name Implementation
