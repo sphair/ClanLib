@@ -38,9 +38,8 @@ private:
 	GUITopLevelDescription get_toplevel_description(const Rect &position);
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed();
 	void on_resized();
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_mouse_move(InputEvent &input_event);
 	void on_mouse_lbutton_down(InputEvent &input_event);
 	void on_mouse_lbutton_up(InputEvent &input_event);
@@ -48,8 +47,6 @@ private:
 	int start_x;
 	int start_y;
 	int offset_x;
-
-	GUIThemePart part_component;
 
 	int selected_index;
 	int clicked_index;

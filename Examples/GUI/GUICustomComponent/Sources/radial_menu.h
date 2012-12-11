@@ -40,7 +40,6 @@ public:
 
 // Attributes
 public:
-	Size get_preferred_size() const;
 
 	std::string get_item(int index) const;
 
@@ -67,13 +66,10 @@ private:
 	void create_parts();
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_style_changed();
 	void on_resized();
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_mouse_move(InputEvent &input_event);
 	void on_mouse_lbutton_up(InputEvent &input_event);
-
-	GUIThemePart part_component;
 
 	Sprite image_pointer;
 

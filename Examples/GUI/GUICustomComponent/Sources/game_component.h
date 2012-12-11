@@ -40,7 +40,7 @@ public:
 
 private:
 	void on_render(Canvas &canvas, const Rect &cliprect);
-	void on_message(GUIMessage &message);
+	void on_message(std::shared_ptr<GUIMessage> &msg);
 
 	void show_radial_menu(Point &position);
 	void on_radial_menu_itemselected(int selectedIndex);

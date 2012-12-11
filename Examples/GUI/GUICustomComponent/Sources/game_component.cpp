@@ -30,7 +30,7 @@
 #include "radial_menu.h"
 
 GameComponent::GameComponent(const Rect &position, GUIManager* gui_manager)
-: GUIComponent(gui_manager, GUITopLevelDescription(position, false)),
+: GUIComponent(gui_manager, GUITopLevelDescription(position, false), "game_component"),
   radial_menu(0)
 {
 	set_constant_repaint(true);
@@ -57,12 +57,12 @@ void GameComponent::on_render(Canvas &canvas, const Rect &clip_rect)
 	font.draw_text(canvas, 0, 24, selected_text);
 }
 
-void GameComponent::on_message(GUIMessage &message)
+void GameComponent::on_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (message.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input msg_input = message;
-		InputEvent e = msg_input.get_event();
+		InputEvent &e = input_msg->input_event;
 		if (e.type == InputEvent::pressed)
 		{
 			if(e.id == keycode_escape)

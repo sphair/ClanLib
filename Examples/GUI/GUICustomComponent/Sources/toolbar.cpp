@@ -29,12 +29,9 @@
 #include "toolbar.h"
 
 Toolbar::Toolbar(const Rect &position, GUIComponent* owner)
-: GUIComponent(owner, get_toplevel_description(position)), selected_index(-1), clicked_index(-1)
+: GUIComponent(owner, get_toplevel_description(position), "toolbar"), selected_index(-1), clicked_index(-1)
 {
-	set_type_name("toolbar");
-
 	func_render().set(this, &Toolbar::on_render);
-	func_style_changed().set(this, &Toolbar::on_style_changed);
 	func_process_message().set(this, &Toolbar::on_process_message);
 
 	create_parts();
@@ -52,23 +49,17 @@ GUITopLevelDescription Toolbar::get_toplevel_description(const Rect &position)
 	return desc;
 }
 
-Size Toolbar::get_preferred_size() const
+void Toolbar::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	return part_component.get_preferred_size();
-}
-
-void Toolbar::on_process_message(GUIMessage &msg)
-{
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
 	{
-		GUIMessage_Input input = msg;
-		InputEvent input_event = input.get_event();
-		if (input_event.type == InputEvent::pointer_moved)
-			on_mouse_move(input_event);
-		else if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
-			on_mouse_lbutton_down(input_event);
-		else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
-			on_mouse_lbutton_up(input_event);
+		if (input_msg->input_event.type == InputEvent::pointer_moved)
+			on_mouse_move(input_msg->input_event);
+		else if (input_msg->input_event.type == InputEvent::pressed && input_msg->input_event.id == mouse_left)
+			on_mouse_lbutton_down(input_msg->input_event);
+		else if (input_msg->input_event.type == InputEvent::released && input_msg->input_event.id == mouse_left)
+			on_mouse_lbutton_up(input_msg->input_event);
 	}
 }
 
@@ -112,8 +103,6 @@ void Toolbar::on_mouse_lbutton_up(InputEvent &input_event)
 
 void Toolbar::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	part_component.render_box(canvas, get_geometry().get_size(), update_rect);
-
 	int pos_x = start_x;
 	int pos_y = start_y;
 
@@ -130,21 +119,11 @@ void Toolbar::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 }
 
-void Toolbar::on_style_changed()
-{
-	create_parts();
-}
-
 void Toolbar::create_parts()
 {
-	part_component = GUIThemePart(this);
-
-	GUIThemePartProperty prop_start_x("start-x");
-	start_x = StringHelp::text_to_int(part_component.get_property(prop_start_x));
-	GUIThemePartProperty prop_start_y("start-y");
-	start_y = StringHelp::text_to_int(part_component.get_property(prop_start_y));
-	GUIThemePartProperty prop_offset_x("offset-x");
-	offset_x = StringHelp::text_to_int(part_component.get_property(prop_offset_x));
+	start_x = StringHelp::text_to_int(get_property("start-x", ""));
+	start_y = StringHelp::text_to_int(get_property("start-y", ""));
+	offset_x = StringHelp::text_to_int(get_property("offset-x", ""));
 }
 
 void Toolbar::add_item(Sprite icon, Sprite icon_selected, Sprite icon_clicked)
