@@ -77,22 +77,33 @@ void CSSTokenizer::read(CSSToken &token, bool eat_whitespace, bool eat_comments)
 std::vector<std::string> CSSTokenizer::read_import_urls()
 {
 	std::vector<std::string> import_urls;
-	CSSToken css_token;
+	CSSToken token;
 	while (true)
 	{
-		read(css_token, true);
-		if (css_token.type != CSSToken::type_atkeyword || css_token.value != "import")
+		read(token, true);
+		if (token.type != CSSToken::type_atkeyword || token.value != "import")
 			break;
 
-		read(css_token, true);
-		if (css_token.type != CSSToken::type_string)
-			break;
+		std::string import_url;
 
-		std::string import_url = css_token.value;
-
-		read(css_token, true);
-		if (css_token.type != CSSToken::type_semi_colon)
+		read(token, true);
+		if (token.type == CSSToken::type_string || token.type == CSSToken::type_uri)
+		{
+			import_url = token.value;
+		}
+		else
+		{
 			break;
+		}
+
+		read(token, true);
+		if (token.type != CSSToken::type_semi_colon)
+		{
+			// Skip media extensions imports
+			while (token.type != CSSToken::type_semi_colon && token.type != CSSToken::type_null)
+				read(token, true);
+			continue;
+		}
 
 		import_urls.push_back(import_url);
 	}
