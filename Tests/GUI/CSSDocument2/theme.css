@@ -1,28 +1,3 @@
-@import url('../../../Resources/GUIThemeAero/window.css');
-@import url('../../../Resources/GUIThemeAero/checkbox.css');
-@import url('../../../Resources/GUIThemeAero/combobox.css');
-@import url('../../../Resources/GUIThemeAero/pushbutton.css');
-@import url('../../../Resources/GUIThemeAero/listview.css');
-@import url('../../../Resources/GUIThemeAero/lineedit.css');
-@import url('../../../Resources/GUIThemeAero/textedit.css');
-@import url('../../../Resources/GUIThemeAero/radiobutton.css');
-@import url('../../../Resources/GUIThemeAero/slider.css');
-@import url('../../../Resources/GUIThemeAero/label.css');
-@import url('../../../Resources/GUIThemeAero/scrollbar_vertical.css');
-@import url('../../../Resources/GUIThemeAero/scrollbar_horizontal.css');
-@import url('../../../Resources/GUIThemeAero/popupmenu.css');
-@import url('../../../Resources/GUIThemeAero/tab.css');
-@import url('../../../Resources/GUIThemeAero/tabpage.css');
-@import url('../../../Resources/GUIThemeAero/menubar.css');
-@import url('../../../Resources/GUIThemeAero/statusbar.css');
-@import url('../../../Resources/GUIThemeAero/toolbar.css');
-@import url('../../../Resources/GUIThemeAero/frame.css');
-@import url('../../../Resources/GUIThemeAero/spin.css');
-@import url('../../../Resources/GUIThemeAero/image.css');
-@import url('../../../Resources/GUIThemeAero/progressbar.css');
-@import url('../../../Resources/GUIThemeAero/groupbox.css');
-@import url('../../../Resources/GUIThemeAero/tooltip.css');
-
 *
 {
     display: flex;
@@ -283,3 +258,48 @@ custom box2
 	border-color: #00ffff;
 }
 
+
+
+button
+{
+	border-image-slice:5 5 6 6 fill;
+	border-image-width:5px 5px 6px 6px;
+	bg-image-sizing:default;
+	color:black;
+	align:center;
+	vertical-align:center;
+}
+
+button:normal
+{
+	border-image-source:url('res:ButtonNormal'); 
+}
+
+button:defaulted
+{
+	border-image-source:url('res:ButtonDefaulted'); 
+}
+
+button:hot
+{
+	border-image-source:url('res:ButtonHot'); 
+}
+
+button:pressed
+{
+	border-image-source:url('res:ButtonPressed'); 
+}
+
+button:disabled
+{
+	border-image-source:url('res:ButtonDisabled'); 
+	color:darkgray;
+}
+
+button focus
+{
+	border-image-slice:8 8 8 9 fill;
+	border-image-width:8px 8px 8px 9px;
+	border-image-repeat:repeat;
+	border-image-source:url('res:ButtonFocus');
+}

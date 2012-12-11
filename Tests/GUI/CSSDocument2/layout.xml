@@ -42,27 +42,13 @@
 
   <component class="position_test"/>
 
-  <pushbutton>
-    <text>PushButton</text>
-  </pushbutton>
 
   <pushbutton>
     <icon>../../../Examples/GUI/CommonCode/Resources/tux.png</icon>
     <text>Need alignment!</text>
   </pushbutton>
+
   
-  <checkbox>Check</checkbox>
-  <radiobutton>
-    <group>Main Group</group>
-    <text>A</text>
-  </radiobutton>
-  <radiobutton>
-    <group>Main Group</group>
-    <text>B</text>
-  </radiobutton>
-  <slider/>
-  <lineedit>LineEdit</lineedit>
-  <scrollbar></scrollbar>
-  
+ 
   <custom/>
 </root>
