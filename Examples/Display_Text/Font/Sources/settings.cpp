@@ -39,9 +39,6 @@ void App::draw_font_info()
 	offset_y += gap;
 	switch (selected_fontclass)
 	{
-		case font_freetype:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("Freetype (Texture based)", font_desc.get_typeface_name()),  Colorf::white);
-			break;
 		case font_system:
 			small_font.draw_text(canvas, offset_x, offset_y, string_format("System (Texture based)", font_desc.get_typeface_name()),  Colorf::white);
 			break;
@@ -184,15 +181,6 @@ void App::on_lineedit_changed(InputEvent &e)
 {
 	font_text = lineedit_text_ptr->get_text();
 	font_size = selected_font.get_text_size(canvas, font_text);
-}
-
-void App::on_button_clicked_class_freetype(PushButton *button)
-{
-	selected_fontclass = font_freetype;
-	font_desc.set_typeface_name("../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf");
-	button_typeface_sans_ptr->set_enabled(false);
-	button_typeface_tahoma_ptr->set_enabled(false);
-	select_font();
 }
 
 void App::on_button_clicked_class_vector(PushButton *button)

@@ -30,7 +30,6 @@
 
 enum FontClass
 {
-	font_freetype,
 	font_system,
 	font_vector,
 	font_sprite
@@ -43,7 +42,6 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_button_clicked_class_freetype(PushButton *button);
 	void on_button_clicked_class_system(PushButton *button);
 	void on_button_clicked_class_vector(PushButton *button);
 	void on_button_clicked_class_sprite(PushButton *button);
