@@ -1,2 +1,12 @@
 @import "radialmenu.css";
 @import "toolbar.css";
+*
+{
+    display: flex;
+    flex-direction: column;
+}
+
+game_component
+{
+
+}

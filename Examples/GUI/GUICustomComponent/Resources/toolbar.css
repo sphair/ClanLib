@@ -1,8 +1,11 @@
 toolbar
 {
-    bg-image: ToolbarBackground;
-    bg-image-sizing: center;
-    start-x: 6;
-    start-y: 11;
-    offset-x: 44;
+	background-position:center center;
+	background-repeat:no-repeat;
+	background-attachment:fixed;
+
+	background-image:url('res:ToolbarBackground'); 
+	start-x: 6;
+	start-y: 11;
+	offset-x: 44;
 }
