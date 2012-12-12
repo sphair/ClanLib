@@ -100,6 +100,13 @@ public:
 	int get_page_count() const;
 
 /// \}
+/// \name Events
+/// \{
+public:
+	/// \brief void func_page_selected(Page *tab_page)
+	Callback_v1<TabPage*> &func_page_selected();
+
+/// \}
 /// \name Operations
 /// \{
 

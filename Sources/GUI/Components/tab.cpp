@@ -65,6 +65,8 @@ public:
 
 	std::vector<TabPage*> pages;
 
+	Callback_v1<TabPage*> func_page_selected;
+
 	TabHeader *tab_header;
 };
 
@@ -140,6 +142,15 @@ int Tab::get_current_page_id() const
 	if (index != -1)
 		return get_page(index)->get_id();
 	return -1;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Tab Callbacks:
+
+Callback_v1<TabPage*> &Tab::func_page_selected()
+{
+	return impl->func_page_selected;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -299,6 +310,9 @@ void Tab_Impl::on_header_page_selected(TabPage *tab_page)
 		else
 			(*it)->set_visible(true);
 	}
+
+	if (!func_page_selected.is_null())
+		func_page_selected.invoke(tab_page);
 
 	tab->request_repaint();
 }
