@@ -390,7 +390,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 		if (e.device.get_type() == InputDevice::keyboard)
 		{
-			if (e.type == InputEvent::pressed &&
+			if (!readonly && e.type == InputEvent::pressed &&
 				(e.id == keycode_enter || e.id == keycode_return || e.id == keycode_numpad_enter))
 			{
 				if (!func_enter_pressed.is_null())
