@@ -67,7 +67,6 @@ public:
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 	void update_geometry(const Rect &content_rect);
-	void create_parts();
 	void on_mouse_lbutton_down(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 	void on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
 	void on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &input_event);
@@ -100,7 +99,6 @@ ListViewHeader::ListViewHeader(GUIComponent *parent)
 	func_render().set(impl.get(), &ListViewHeader_Impl::on_render);
 	// todo: resize (?)
 	// todo: disabled
-	impl->create_parts();
 }
 
 ListViewHeader::~ListViewHeader()
@@ -400,10 +398,6 @@ void ListViewHeader_Impl::update_geometry(const Rect &parent_content_rect)
 		xpos += col.get_width();
 		col = col.get_next_sibling();
 	}
-}
-
-void ListViewHeader_Impl::create_parts()
-{
 }
 
 ListViewColumnHeader ListViewHeader_Impl::create_column(const std::string &column_id, const std::string &caption)
