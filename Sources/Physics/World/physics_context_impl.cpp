@@ -49,7 +49,7 @@ PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld &pw)
 	if(!pw.is_null())
 	{
 		owner = &pw;
-
+	
 		for(int i=0; i<max_body_amount; i++)
 		{
 			free_body_slots.push_back(i);

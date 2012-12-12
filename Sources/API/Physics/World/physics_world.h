@@ -43,6 +43,7 @@ class Physic;
 class PhysicsWorldDescription;
 class PhysicsWorld_Impl;
 class PhysicsContext;
+class PhysicsQueryAssistant;
 
 /// \brief Top-level world class.
 ///
@@ -100,6 +101,9 @@ public:
 	/// \brief Return the Physics Context of the world.
 	PhysicsContext &get_pc();
 
+	/// \brief Return the Physics Query Assistant of the world.
+	PhysicsQueryAssistant &get_qa();
+
 /// \}
 /// \name Operations
 /// \{
@@ -125,6 +129,7 @@ private:
 /// \}
 
 	friend class PhysicsContext;
+	friend class PhysicsQueryAssistant;
 	friend class DistanceJointDescription;
 
 	friend class PhysicsDebugDraw;

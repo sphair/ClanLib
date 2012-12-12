@@ -50,6 +50,9 @@ class PhysicsContext;
 /// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS Body
 {
+
+/// \name Construction
+/// \{
 public:
 	/// \brief Constructs a null instance.
 	Body();

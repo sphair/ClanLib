@@ -83,6 +83,9 @@ public:
 	/// \brief Return the world's id of the fixture.
 	int get_id() const;
 
+	/// \brief Return the body that this fixture is owned by.
+	Body &get_owner_body() const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -130,6 +133,7 @@ private:
 /// \}
 
 	friend class Fixture_Impl;
+	friend class PhysicsQueryAssistant_Impl;
 	friend class PhysicsContext;
 };
 

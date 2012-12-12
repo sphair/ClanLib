@@ -89,16 +89,4 @@ bool PhysicsListener::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	return true;
 }
 
-bool PhysicsListener::ReportFixture(b2Fixture *fixture)
-{
-	//TODO
-	return true;
-}
-/*
-float32 PhysicsListener::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
-{
-	//TODO
-}
-*/
-
 }
