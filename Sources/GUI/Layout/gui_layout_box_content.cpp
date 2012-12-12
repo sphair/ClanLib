@@ -296,17 +296,11 @@ void GUILayoutBoxContent::set_child_geometry(GUIComponent_Impl *node, GUICompone
 	x += get_css_relative_x(child->impl.get(), node->css_used_values.width);
 	y += get_css_relative_y(child->impl.get(), node->css_used_values.height);
 
-	x += child_used_values.margin.left;
-	y += child_used_values.margin.top;
+	child_used_values.left = x;
+	child_used_values.top = y;
 
-	CSSUsedValue used_border_box_width = child_used_values.width + child_used_values.padding.left + child_used_values.padding.right + child_used_values.border.left + child_used_values.border.right;
-	CSSUsedValue used_border_box_height = child_used_values.height + child_used_values.padding.top + child_used_values.padding.bottom + child_used_values.border.top + child_used_values.border.bottom;
-
-	CSSActualValue x1 = (CSSActualValue)(x);
-	CSSActualValue y1 = (CSSActualValue)(y);
-	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
-	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
-	child->set_geometry(Rect(x1, y1, x2, y2));
+	//FIXME: geometry_updated(true); is not called
+	//child->set_geometry(Rect(x1, y1, x2, y2));
 }
 
 }

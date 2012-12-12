@@ -100,7 +100,6 @@ public:
 	bool visible;
 	bool activated;
 	bool click_through;
-	Rect geometry;
 	mutable std::string element_name;
 	bool default_handler;
 	bool cancel_handler;
@@ -114,7 +113,9 @@ public:
 	GUIElement element;
 	GUICSSUsedValues css_used_values;
 
+	Rect get_geometry() const;
 	void set_geometry(Rect new_geometry, bool client_area);
+	void set_css_geometry(const Rect &new_geometry);
 	void geometry_updated(bool geometry_was_resized);
 	void invoke_enablemode_changed();
 

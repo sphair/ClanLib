@@ -75,7 +75,6 @@ GUIComponent::GUIComponent(GUIComponent *parent, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_parent(parent))
 {
 	impl->component = this;
-	impl->geometry = Rect(0,0,0,0);
 
 	if (impl->parent->impl->last_child)
 	{
@@ -99,7 +98,7 @@ GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, 0, description);
-	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
+	impl->set_css_geometry(impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true));
 	set_tag_name(tag_name);
 
 	request_repaint();
@@ -112,7 +111,7 @@ GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, owner, description);
-	impl->geometry = impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
+	impl->set_css_geometry(impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true));
 	set_tag_name(tag_name);
 
 	request_repaint();
@@ -134,13 +133,13 @@ Rect GUIComponent::get_geometry() const
 	}
 	else
 	{
-		return impl->geometry;
+		return impl->get_geometry();
 	}
 }
 
 Rect GUIComponent::get_content_box() const
 {
-	Rect box = Rect(Point(), impl->geometry.get_size());
+	Rect box = Rect(Point(), impl->get_geometry().get_size());
 	box.left += impl->css_used_values.border.left + impl->css_used_values.padding.left;
 	box.right -= impl->css_used_values.border.right + impl->css_used_values.padding.right;
 	box.top += impl->css_used_values.border.top + impl->css_used_values.padding.top;
@@ -157,23 +156,23 @@ Rect GUIComponent::get_window_geometry() const
 	}
 	else
 	{
-		return impl->geometry;
+		return impl->get_geometry();
 	}
 }
 
 int GUIComponent::get_width() const
 {
-	return impl->geometry.get_width();
+	return impl->get_geometry().get_width();
 }
 
 int GUIComponent::get_height() const
 {
-	return impl->geometry.get_height();
+	return impl->get_geometry().get_height();
 }
 
 Size GUIComponent::get_size() const
 {
-	return impl->geometry.get_size();
+	return impl->get_geometry().get_size();
 }
 
 std::string GUIComponent::get_tag_name() const
@@ -1002,10 +1001,20 @@ void GUIComponent::update_style()
 
 void GUIComponent::update_layout()
 {
-	impl->layout_content();
+	if (impl->parent)
+	{
+		impl->parent->impl->layout_content();
+		impl->parent->request_repaint();
+	}
+	else
+	{
+		impl->layout_content();
+		request_repaint();
+	}
+
 	// ** Use this instead if impl->layout_content() "base visitor" flag to visit_css() does not work as expected **
 	//  get_top_level_component()->impl->layout_content();
-	request_repaint();
+	//   get_top_level_component()->request_repaint();
 }
 
 void GUIComponent::set_enabled(bool enable)

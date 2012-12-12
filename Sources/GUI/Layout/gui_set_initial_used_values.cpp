@@ -54,8 +54,8 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 	else
 	{
 		GUICSSUsedValues initial_containing_box;
-		initial_containing_box.width = node->geometry.get_width();
-		initial_containing_box.height = node->geometry.get_height();
+		initial_containing_box.width = node->get_geometry().get_width();
+		initial_containing_box.height = node->get_geometry().get_height();
 
 		GUICSSInitialUsedValues::visit(node->css_used_values, properties, initial_containing_box);
 		GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties, initial_containing_box);

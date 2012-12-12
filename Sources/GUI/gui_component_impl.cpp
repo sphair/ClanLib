@@ -104,6 +104,30 @@ GUIComponent_Impl::~GUIComponent_Impl()
 	gui_manager_impl->remove_component(this);
 }
 
+Rect GUIComponent_Impl::get_geometry() const
+{
+	CSSUsedValue x = css_used_values.left + css_used_values.margin.left;
+	CSSUsedValue y = css_used_values.top + css_used_values.margin.top;
+
+	CSSUsedValue used_border_box_width = css_used_values.width + css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right;
+	CSSUsedValue used_border_box_height = css_used_values.height + css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom;
+
+	CSSActualValue x1 = (CSSActualValue)(x);
+	CSSActualValue y1 = (CSSActualValue)(y);
+	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
+	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
+	return Rect(x1, y1, x2, y2);
+}
+
+void GUIComponent_Impl::set_css_geometry(const Rect &new_geometry)
+{
+	// Set new geometry
+	css_used_values.left = new_geometry.left;
+	css_used_values.top = new_geometry.top;
+	css_used_values.width = new_geometry.get_width() - (css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right);
+	css_used_values.height = new_geometry.get_height() - (css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom);
+}
+
 void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
 {
 	if (parent == 0)
@@ -113,19 +137,21 @@ void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
 		new_geometry = gui_manager.lock()->window_manager.get_geometry(handle, true);
 	}
 
+	Rect old_geometry = get_geometry();
+
 	// repaint parent at old geometry
 	if (component->get_parent_component())
-		component->get_parent_component()->request_repaint(geometry);
+		component->get_parent_component()->request_repaint(old_geometry);
+
+	set_css_geometry(new_geometry);
 
 	// Check for resize
-	if ((geometry.get_width() != new_geometry.get_width()) || (geometry.get_height() != new_geometry.get_height()) )
+	if ((old_geometry.get_width() != new_geometry.get_width()) || (old_geometry.get_height() != new_geometry.get_height()) )
 	{
-		geometry = new_geometry;
 		geometry_updated(true);
 	}
 	else
 	{
-		geometry = new_geometry;
 		geometry_updated(false);
 	}
 }
@@ -133,7 +159,7 @@ void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
 void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 {
 	if (!layout.is_null())
-		layout.set_geometry(geometry.get_size());
+		layout.set_geometry(get_geometry().get_size());
 
 	if (geometry_was_resized)
 	{
