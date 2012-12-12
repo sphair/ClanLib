@@ -49,7 +49,6 @@ namespace clan
 class Frame_Impl
 {
 public:
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	void create_parts();
@@ -73,7 +72,6 @@ Frame::Frame(GUIComponent *parent)
 : GUIComponent(parent, CssStr::Frame::type_name), impl(new Frame_Impl)
 {
 	impl->frame = this;
-	func_process_message().set(impl.get(), &Frame_Impl::on_process_message);
 	func_render().set(impl.get(), &Frame_Impl::on_render);
 
 	impl->create_parts();
@@ -123,10 +121,6 @@ void Frame::set_header_text(const std::string &text)
 
 /////////////////////////////////////////////////////////////////////////////
 // Frame Implementation:
-
-void Frame_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
-{
-}
 
 void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {

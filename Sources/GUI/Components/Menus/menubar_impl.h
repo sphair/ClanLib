@@ -49,7 +49,6 @@ public:
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_resized();
 	void create_parts();
 
 	void select_next();

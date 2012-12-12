@@ -59,8 +59,7 @@ MenuBar::MenuBar( GUIComponent *parent)
 	impl->menubar = this;
 	func_process_message().set(impl.get(), &MenuBar_Impl::on_process_message);
 	func_render().set(impl.get(), &MenuBar_Impl::on_render);
-	func_resized().set(impl.get(), &MenuBar_Impl::on_resized);
-
+	
 	impl->create_parts();
 }
 
@@ -199,10 +198,6 @@ void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		part_item.render_box(canvas, item_rect);
 		part_item.render_text(canvas, topmenu.name, item_content);
 	}
-}
-
-void MenuBar_Impl::on_resized()
-{
 }
 
 void MenuBar_Impl::create_parts()
