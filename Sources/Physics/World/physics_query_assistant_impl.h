@@ -29,62 +29,41 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "physics_listener.h"
-#include "API/Physics/World/physics_world_description.h"
-#include "API/Physics/World/physics_context.h"
-#include "API/Physics/World/physics_query_assistant.h"
-#include "API/Core/Signals/signal_v0.h"
-#include "API/Core/Signals/signal_v1.h"
+#include "API/Physics/World/raycast_result.h"
 
 namespace clan
 {
-	class BodyDescription;
 	class PhysicsWorld;
 
-class PhysicsWorld_Impl
+	enum RaycastType
+	{
+		raycast_first,
+		raycast_any,
+		raycast_all
+	};
+
+class PhysicsQueryAssistant_Impl : public b2QueryCallback, public b2RayCastCallback
 {
 public:
-
 //																						_______________________
 //																						C O N S T R U C T O R S
-/// \name Construction
-/// \{
-	PhysicsWorld_Impl(PhysicsWorld &pw);
 
-	virtual ~PhysicsWorld_Impl();
+	PhysicsQueryAssistant_Impl(PhysicsWorld &pw);
+
+	~PhysicsQueryAssistant_Impl() { return; }
+
 //																						___________________
 //																						O P E R A T I O N S
-/// \name Operations
-/// \{
-	void create(const PhysicsWorldDescription &description);
-	void step();
-	void step(float timestep, int velocity_iterations, int position_iterations);
-
-	b2Body		*create_body(const b2BodyDef &description);
-	b2Joint		*create_joint(const b2JointDef &description);
-
-//																						_____________
-//																						S I G N A L S
-	Signal_v1<float> sig_world_step;
-	Signal_v0 sig_world_destroyed;
-//																						___________________
-//																						A T T R I B U T E S
-/// \}
-/// \name Attributes
-/// \{
-public:
-	b2World world;
-	PhysicsListener listener;
-	PhysicsContext pc;
-	PhysicsQueryAssistant assistant;
-
-	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
-	float timestep;
-	int velocity_iterations;
-	int position_iterations;
-	std::string name;
-/// \}
-
+	virtual bool ReportFixture(b2Fixture* fixture);
+	virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction);
+//																						___________________________
+//																						I M P L E M E N T A T I O N
+	
+	PhysicsWorld *owner_world;
+	RaycastType raycast_type;
+	int raycast_result_amount;
+	const int max_raycasted_objects;
+	std::vector<RaycastResult> raycasted_objects;
 };
 
 }

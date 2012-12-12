@@ -40,6 +40,8 @@
 #include "Physics/World/physics_world_description.h"
 #include "Physics/World/physics_debug_draw.h"
 #include "Physics/World/physics_context.h"
+#include "Physics/World/physics_query_assistant.h"
+#include "Physics/World/raycast_result.h"
 #include "Physics/Dynamics/body.h"
 #include "Physics/Dynamics/body_description.h"
 #include "Physics/Dynamics/fixture.h"

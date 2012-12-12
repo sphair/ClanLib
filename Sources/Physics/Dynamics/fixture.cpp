@@ -82,6 +82,11 @@ int Fixture::get_id() const
 {
 	return impl->id;
 }
+
+Body &Fixture::get_owner_body() const
+{
+	return *static_cast<Body *> (impl->fixture->GetBody()->GetUserData());
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 

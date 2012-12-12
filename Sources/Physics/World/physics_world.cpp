@@ -70,6 +70,11 @@ PhysicsContext &PhysicsWorld::get_pc()
 	return impl->pc;
 }
 
+PhysicsQueryAssistant &PhysicsWorld::get_qa()
+{
+	return impl->assistant;
+}
+
 //																											_____________																							
 //																											S I G N A L S
 

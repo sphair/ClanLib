@@ -32,12 +32,12 @@
 #include <memory>
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/body_description.h"
-#include "API/Physics/World/physics_world.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 
 namespace clan
 {
+	class PhysicsWorld_Impl;
 
 class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 {
@@ -61,8 +61,8 @@ public:
 	Signal_v0 sig_body_deletion;
 	//Maybe fixture attachment signal?
 
-//																						___________________
-//																						A T T R I B U T E S
+//																						___________________________
+//																						I M P L E M E N T A T I O N
 public:
 	int id;
 	PhysicsWorld_Impl *owner_world;

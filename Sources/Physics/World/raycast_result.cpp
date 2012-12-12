@@ -26,26 +26,54 @@
 **    Arkadiusz Kalinowski
 */
 
-#pragma once
-
-#include "../Box2D/Box2D.h"
+#include "Physics/precomp.h"
+#include "raycast_result_impl.h"
+#include "API/Physics/World/raycast_result.h"
 
 namespace clan
 {
 
-class PhysicsListener : public b2ContactListener, public b2ContactFilter
+
+RaycastResult::RaycastResult()
 {
-public:
 
-	PhysicsListener();
-	virtual ~PhysicsListener(){};
+}
 
-	virtual void BeginContact(b2Contact* contact);
-	virtual void EndContact(b2Contact* contact);
-	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
-	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB);
+RaycastResult::RaycastResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction)
+: impl(new RaycastResult_Impl)
+{
+	impl->fixture = fixture;
+	impl->point = point;
+	impl->normal = normal;
+	impl->fraction = fraction;
 
-};
+}
+RaycastResult::~RaycastResult()
+{
+
+}
+
+void RaycastResult::throw_if_null() const
+{
+		if (!impl)
+		throw Exception("RaycastResult is null");
+}
+
+Fixture &RaycastResult::get_fixture() const
+{
+	return impl->fixture;
+}
+
+Body &RaycastResult::get_body() const
+{
+	return impl->fixture.get_owner_body();
+}
+
+RaycastResult &RaycastResult::operator =(const RaycastResult &copy)
+{
+	impl = copy.impl;
+	return *this;
+}
+
 
 }

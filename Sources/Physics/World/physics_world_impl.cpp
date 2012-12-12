@@ -45,7 +45,8 @@ PhysicsWorld_Impl::PhysicsWorld_Impl(PhysicsWorld &pw)
 	velocity_iterations	(8),
 	position_iterations (3),
 	physic_scale		(100),
-	pc					(pw)
+	pc					(pw),
+	assistant			(pw)
 {	
 	world.SetContactListener(&listener); //Uncomment after finishing physics context.
 	world.SetContactFilter(&listener); //Uncomment after finishing physics context.

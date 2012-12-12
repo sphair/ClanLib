@@ -28,8 +28,36 @@
 
 #pragma once
 
-namespace clan
+#include "API/Physics/Dynamics/fixture.h"
+#include "API/Core/Math/point.h"
+#include "API/Core/Math/vec2.h"
 
+namespace clan
 {
+	
+class RaycastResult_Impl
+{
+public:
+//																						_______________________
+//																						C O N S T R U C T O R S
+
+	RaycastResult_Impl()
+	{};
+
+	~RaycastResult_Impl() { return; }
+
+//																						___________________
+//																						O P E R A T I O N S
+
+//																						___________________________
+//																						I M P L E M E N T A T I O N
+	Fixture fixture;
+	Pointf point;
+	Vec2f normal;
+	float fraction;
+
+
+
+};
 
 }
