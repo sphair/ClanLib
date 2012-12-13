@@ -110,12 +110,21 @@ public:
 	std::string group_name;
 	bool double_click_enabled;
 
+	Rect geometry;
+	bool use_auto_geometry;
+
+	void set_window_geometry(Rect geometry, bool client_area);
+	void set_auto_geometry(Rect geometry);
+	void set_manual_geometry(Rect geometry);
+	void reset_geometry();
+	void window_resized();
+
 	GUIElement element;
 	GUICSSUsedValues css_used_values;
 
-	Rect get_geometry() const;
-	void set_geometry(Rect new_geometry, bool client_area);
-	void set_css_geometry(const Rect &new_geometry);
+
+
+
 	void geometry_updated(bool geometry_was_resized);
 	void invoke_enablemode_changed();
 

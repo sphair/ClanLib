@@ -100,8 +100,13 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns the position and size of the drawable area of the component.
+	/// \brief Returns the position and size of the drawable area of the component relative to its parent component.
+	///
+	/// If there is no parent component this function returns the position relative to the window viewport (its client area).
 	Rect get_geometry() const;
+
+	/// \brief Returns the position and size of the viewport of the component window in screen coordinates.
+	Rect get_viewport() const;
 
 	/// \brief Returns the content box area relative to the component geometry.
 	Rect get_content_box() const;
@@ -450,11 +455,14 @@ public:
 	    exit with the given exit code.</p>*/
 	void exit_with_code(int exit_code);
 
-	/// \brief Set component position and size.
+	/// \brief Set manual component position and size.
 	void set_geometry(Rect geometry);
 
+	/// \brief Reset back to automatic layout
+	void reset_geometry();
+
 	/// \brief Set component window position and size
-	void set_window_geometry(Rect geometry);
+	void set_window_geometry(Rect geometry, bool client_area = false);
 
 	/// \brief Sets the DOM tag name
 	void set_tag_name(const std::string &name); 
