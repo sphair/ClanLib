@@ -100,7 +100,7 @@ Label *Label::get_named_item(GUIComponent *reference_component, const std::strin
 	return object;
 }
 
-std::string Label::get_text() const
+const std::string &Label::get_text() const
 {
 	return impl->text;
 }

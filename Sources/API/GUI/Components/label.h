@@ -87,7 +87,7 @@ public:
 	/// \brief Get Text
 	///
 	/// \return text
-	std::string get_text() const;
+	const std::string &get_text() const;
 
 	/// \brief Returns the preferred content width
 	///
