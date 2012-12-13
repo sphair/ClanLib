@@ -122,8 +122,8 @@ Rect GUIComponent_Impl::get_geometry() const
 void GUIComponent_Impl::set_css_geometry(const Rect &new_geometry)
 {
 	// Set new geometry
-	css_used_values.left = new_geometry.left;
-	css_used_values.top = new_geometry.top;
+	css_used_values.left = new_geometry.left - css_used_values.margin.left;
+	css_used_values.top = new_geometry.top - css_used_values.margin.top;
 	css_used_values.width = new_geometry.get_width() - (css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right);
 	css_used_values.height = new_geometry.get_height() - (css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom);
 }
