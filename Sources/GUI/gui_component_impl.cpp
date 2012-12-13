@@ -106,17 +106,25 @@ GUIComponent_Impl::~GUIComponent_Impl()
 
 Rect GUIComponent_Impl::get_geometry() const
 {
-	CSSUsedValue x = css_used_values.left + css_used_values.margin.left;
-	CSSUsedValue y = css_used_values.top + css_used_values.margin.top;
+	if (parent == 0)
+	{
+		return gui_manager.lock()->window_manager.get_geometry(
+			gui_manager.lock()->get_toplevel_window(component), true);
+	}
+	else
+	{
+		CSSUsedValue x = css_used_values.left + css_used_values.margin.left;
+		CSSUsedValue y = css_used_values.top + css_used_values.margin.top;
 
-	CSSUsedValue used_border_box_width = css_used_values.width + css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right;
-	CSSUsedValue used_border_box_height = css_used_values.height + css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom;
+		CSSUsedValue used_border_box_width = css_used_values.width + css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right;
+		CSSUsedValue used_border_box_height = css_used_values.height + css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom;
 
-	CSSActualValue x1 = (CSSActualValue)(x);
-	CSSActualValue y1 = (CSSActualValue)(y);
-	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
-	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
-	return Rect(x1, y1, x2, y2);
+		CSSActualValue x1 = (CSSActualValue)(x);
+		CSSActualValue y1 = (CSSActualValue)(y);
+		CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
+		CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
+		return Rect(x1, y1, x2, y2);
+	}
 }
 
 void GUIComponent_Impl::set_css_geometry(const Rect &new_geometry)
