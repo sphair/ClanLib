@@ -1378,16 +1378,15 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 	impl->is_selected_in_group = selected;
 }
 
-Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
+Rect GUIComponent::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
-	return span.get_size();
+	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
-Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str ) const
+Rect GUIComponent::get_render_text_box( Canvas &canvas, const std::string &str ) const
 {
-	Font font = get_font();
-	return font.get_text_size(canvas, str);
+	return GUIComponent_Impl::get_text_box(canvas, impl->element, str);
 }
 
 GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
@@ -1406,28 +1405,19 @@ GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas 
 	return result;
 }
 
-Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
+Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
-void GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
+Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
 {
-	Font font = get_font();
-
 	Rect content_box = get_content_box();
-
-	//FIXME: Use alignment
-
-	FontMetrics metrics = font.get_font_metrics();
-	font.draw_text_ellipsis(canvas, xpos, ypos + (int) metrics.get_ascent(), content_box, text, impl->element.get_css_properties().color.color);
-}
-
-void GUIComponent::render_text( Canvas &canvas, const std::string &text, const Point &point )
-{
-	render_text(canvas, text, point.x, point.y);
+	content_box.left += xpos;
+	content_box.top += ypos;
+	return GUIComponent_Impl::render_text(canvas, impl->element, text, content_box );
 }
 
 Rect GUIComponent::get_content_shrink_box() const

@@ -1311,10 +1311,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	// Draw text before selection
 	if (!txt_before.empty())
 	{
-		Rect text_rect = content_rect;
-		text_rect.top = g.top;
-		text_rect.bottom = g.bottom;
-		lineedit->render_text(canvas, txt_before, text_rect);
+		lineedit->render_text(canvas, txt_before, 0, 0);
 	}
 	if (!txt_selected.empty())
 	{
@@ -1334,7 +1331,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		lineedit->render_text(canvas, txt_after, text_rect);
+		lineedit->render_text(canvas, txt_after, size_before.width + size_selected.width, 0);
 	}
 
 	// draw cursor

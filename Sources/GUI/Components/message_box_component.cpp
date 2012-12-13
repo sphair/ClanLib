@@ -102,7 +102,7 @@ Size MessageBoxComponent::layout_content()
 	rect_icon.translate(border_space.left, 0);
 
 
-	Size text_size = component->get_render_text_size(get_canvas(), detail_text, component->get_window_geometry());
+	Size text_size = component->get_render_text_box(get_canvas(), detail_text).get_size();
 	rect_text = component->get_size();
 	rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;
@@ -296,7 +296,7 @@ void MessageBoxComponent::set_css_class()
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)
 {
 	part_icon.render_box(canvas, rect_icon);
-	component->render_text(canvas, detail_text, rect_text);
+	component->render_text(canvas, detail_text);
 }
 
 void MessageBoxComponent::create_parts()

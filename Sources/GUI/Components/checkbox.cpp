@@ -336,13 +336,7 @@ void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	int text_gap = checkbox->get_property_int(CssStr::text_gap, "2");
 
-	Rect text_rect;
-	text_rect.left = checker_rect.right + text_gap;
-	text_rect.right = content_rect.right;
-	text_rect.top = content_rect.top;
-	text_rect.bottom = content_rect.bottom;
-
-	Size text_size = checkbox->render_text(canvas, text, text_rect).get_size();
+	Size text_size = checkbox->render_text(canvas, text, text_gap, 0).get_size();
 
 	int focus_left = checker_rect.right + text_gap - 2; // todo: remove magic number hacks
 	Rect focus_rect = RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);

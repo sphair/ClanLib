@@ -343,10 +343,10 @@ public:
 	Font get_font() const;
 
 	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
-	Size get_render_text_size(Canvas &canvas, const std::string &str) const;
+	Rect get_render_text_box(Canvas &canvas, const std::string &str) const;
 
-	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
-	Size get_render_text_size(Canvas &canvas, const std::string &str, const Rect &content_rect) const;
+	/// \brief Calculates the text size using the font defined for the current state for use with render_text_span().
+	Rect get_render_text_span_box(Canvas &canvas, const std::string &str, const Rect &content_rect) const;
 	
 	/// \brief Returns the content shrink box of the theme part.
 	Rect get_content_shrink_box() const;
@@ -597,9 +597,8 @@ public:
 	/// \brief Enabled whether the GUI will constantly repaint this component when there are no other messages to process
 	void set_constant_repaint(bool enable);
 
-	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_rect);
-	void render_text(Canvas &canvas, const std::string &text, int xpos, int ypos);
-	void render_text(Canvas &canvas, const std::string &text, const Point &point);
+	Rect render_text_span(Canvas &canvas, const std::string &text, const Rect &content_rect);
+	Rect render_text(Canvas &canvas, const std::string &text, int xpos = 0, int ypos = 0);
 
 	struct VerticalTextPosition
 	{

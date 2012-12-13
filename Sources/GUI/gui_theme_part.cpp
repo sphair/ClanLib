@@ -189,16 +189,16 @@ int GUIThemePart::get_css_height() const
 	return impl->element.get_css_properties().height.length.value;
 }
 
-Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
+Rect GUIThemePart::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
-	return span.get_size();
+	return Rect(content_rect.left, content_rect.top, span.get_size());
+
 }
 
-Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str ) const
+Rect GUIThemePart::get_render_text_box( Canvas &canvas, const std::string &str ) const
 {
-	Font font = get_font();
-	return font.get_text_size(canvas, str);
+	return GUIComponent_Impl::get_text_box(canvas, impl->element, str);
 }
 
 GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
@@ -217,28 +217,18 @@ GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas 
 	return result;
 }
 
-Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
+Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
-void GUIThemePart::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos, const Rect &content_box )
+Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box )
 {
-	Font font = get_font();
-
-	//FIXME: Use alignment
-
-	FontMetrics metrics = font.get_font_metrics();
-	font.draw_text_ellipsis(canvas, xpos, ypos + (int) metrics.get_ascent(), content_box, text, impl->element.get_css_properties().color.color);
-
+	return GUIComponent_Impl::render_text(canvas, impl->element, text, content_box);
 }
 
-void GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Point &point, const Rect &content_box )
-{
-	render_text(canvas, text, point.x, point.y, content_box);
-}
 
 Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
 {

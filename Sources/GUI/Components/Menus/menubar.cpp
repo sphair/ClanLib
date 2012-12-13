@@ -271,7 +271,7 @@ Rect MenuBar_Impl::get_menu_item_rect(int our_index)
 
 		Rect item_rect = menubar_content_rect;
 		item_rect.left = x;
-		int text_width = part_item.get_render_text_size(canvas, topmenu.name, menubar_content_rect).width;
+		int text_width = part_item.get_render_text_box(canvas, topmenu.name).get_width();
 		item_rect.right = x + item_border_left + item_padding_left + text_width + item_padding_right + item_border_right;
 
 		if (index == our_index)
