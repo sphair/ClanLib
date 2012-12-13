@@ -48,6 +48,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
+#include "API/GUI/gui_theme_part.h"
 
 namespace clan
 {
@@ -63,6 +64,7 @@ public:
 	void on_input_message(std::shared_ptr<GUIMessage_Input> msg);
 	void on_focus_message(std::shared_ptr<GUIMessage_FocusChange> msg);
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
+	void on_render(Canvas &canvas, const Rect &update_rect);
 
 	PushButton *button;
 	Label *label;
@@ -70,6 +72,7 @@ public:
 	Callback_v0 func_clicked;
 	PushButton::IconPosition icon_position;
 	bool toggle_mode;
+	GUIThemePart part_focus;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -83,6 +86,7 @@ PushButton::PushButton(GUIComponent *parent)
 	set_double_click_enabled(false);
 
 	func_process_message().set(impl.get(), &PushButton_Impl::on_process_message);
+	func_render().set(impl.get(), &PushButton_Impl::on_render);
 
 	impl->button = this;
 	impl->icon = new ImageView(this);
@@ -90,6 +94,7 @@ PushButton::PushButton(GUIComponent *parent)
 
 	set_pseudo_class(CssStr::defaulted, is_default());
 	set_pseudo_class(CssStr::disabled, !is_enabled());
+	impl->part_focus = GUIThemePart(this, "focus");
 }
 
 PushButton::~PushButton()
@@ -295,5 +300,16 @@ void PushButton_Impl::update_default_state(bool focus_gained)
 
 	button->set_pseudo_class("defaulted", is_default); 
 }
+
+void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
+{
+	if (button->has_focus())
+	{
+		Rect rect = button->get_size();
+		part_focus.render_box(canvas, rect);
+	}
+
+}
+
 
 }
