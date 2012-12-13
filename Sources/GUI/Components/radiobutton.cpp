@@ -368,13 +368,7 @@ void RadioButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	int text_gap = radio->get_property_int(CssStr::text_gap, "2");
 
-	Rect text_rect;
-	text_rect.left = checker_rect.right + text_gap;
-	text_rect.right = content_rect.right;
-	text_rect.top = content_rect.top;
-	text_rect.bottom = content_rect.bottom;
-
-	Size text_size = radio->render_text(canvas, text, text_rect).get_size();
+	Size text_size = radio->render_text(canvas, text, text_gap, 0).get_size();
 
 	if (radio->has_focus())
 	{

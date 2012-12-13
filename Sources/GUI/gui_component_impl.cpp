@@ -41,6 +41,7 @@
 #include "gui_component_select_node.h"
 #include "API/Display/2D/span_layout.h"
 #include "../CSSLayout/LayoutTree/css_used_value.h"
+#include "API/Display/Font/font_metrics.h"
 
 namespace clan
 {
@@ -380,5 +381,39 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 	return Font(canvas, font_desc);
 
 }
+
+Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
+{
+	CSSBoxProperties &properties = element.get_css_properties();
+
+	Font font = GUIComponent_Impl::get_font(canvas, properties);
+
+	Size text_size = font.get_text_size(canvas, text);
+
+	//FIXME: Use alignment
+
+	FontMetrics metrics = font.get_font_metrics();
+	int ascender = metrics.get_ascent();
+	font.draw_text_ellipsis(canvas, content_box.left, content_box.top + ascender, content_box, text, properties.color.color);
+
+	return Rect(content_box.left, content_box.top, text_size);
+}
+
+Rect GUIComponent_Impl::get_text_box( Canvas &canvas, GUIElement &element, const std::string &text )
+{
+	CSSBoxProperties &properties = element.get_css_properties();
+
+	Font font = GUIComponent_Impl::get_font(canvas, properties);
+
+	Size text_size = font.get_text_size(canvas, text);
+
+	//FIXME: Use alignment
+
+	FontMetrics metrics = font.get_font_metrics();
+	int ascender = metrics.get_ascent();
+
+	return Rect(0, -ascender, text_size);
+}
+
 
 }
