@@ -835,42 +835,61 @@ progress
 	width:17px;
 }
 
-
 button
 {
-	border-image-slice:6 6 6 6 fill;
-	border-image-width:6px 6px 6px 6px;
-	bg-image-sizing:default;
-	color:black;
-	align:center;
-	vertical-align:center;
-}
-
-button:normal
-{
-	border-image-source:url('res:ButtonNormal'); 
+    flex-direction: row;
+    border-image: url('res:ButtonNormal') 6 6 5 5 fill / 6px 6px 5px 5px;
+    padding: 5px;
 }
 
 button:defaulted
 {
-	border-image-source:url('res:ButtonDefaulted'); 
+    border-image: url('res:ButtonDefaulted') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
 
 button:hot
 {
-	border-image-source:url('res:ButtonHot'); 
+    border-image: url('res:ButtonHot') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
 
 button:pressed
 {
-	border-image-source:url('res:ButtonPressed'); 
+    border-image: url('res:ButtonPressed') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
 
 button:disabled
 {
-	border-image-source:url('res:ButtonDisabled'); 
-	color:darkgray;
+    border-image: url('res:ButtonDisabled') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
+
+button:focus
+{
+    border-image: url('res:ButtonFocus') 8 9 8 8 fill / 8px 9px 8px 8px;
+}
+
+button imageview
+{
+}
+
+button:pressed imageview
+{
+    position: relative;
+    left: 1px;
+    top: 1px;
+}
+
+button label
+{
+    align-self: center;
+}
+
+button:pressed label
+{
+    position: relative;
+    left: 1px;
+    top: 1px;
+}
+
 
 button focus
 {
