@@ -148,7 +148,7 @@ float PushButton::get_preferred_content_width()
 
 float PushButton::get_preferred_content_height(float width)
 {
-	return max(impl->label->get_preferred_content_height(width), impl->icon->get_preferred_content_height(width));
+	return max(impl->label->get_preferred_content_height(impl->label->get_preferred_content_width()), impl->icon->get_preferred_content_height(impl->icon->get_preferred_content_width()));
 }
 
 /////////////////////////////////////////////////////////////////////////////
