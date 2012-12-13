@@ -1416,7 +1416,13 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const R
 void GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
 {
 	Font font = get_font();
-	font.draw_text(canvas, xpos, ypos, text, impl->element.get_css_properties().color.color);
+
+	Rect content_box = get_content_box();
+
+	//FIXME: Use alignment
+
+	FontMetrics metrics = font.get_font_metrics();
+	font.draw_text_ellipsis(canvas, xpos, ypos + (int) metrics.get_ascent(), content_box, text, impl->element.get_css_properties().color.color);
 }
 
 void GUIComponent::render_text( Canvas &canvas, const std::string &text, const Point &point )
