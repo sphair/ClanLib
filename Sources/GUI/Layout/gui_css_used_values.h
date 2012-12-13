@@ -43,7 +43,7 @@ typedef int CSSActualValue;
 class GUICSSUsedValues
 {
 public:
-	GUICSSUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(1e5f), min_height(0.0f), max_height(1e5f), left(0.0f), top(0.0f) { }
+	GUICSSUsedValues() : width(0.0f), height(0.0f), width_undetermined(false), height_undetermined(false), min_width(0.0f), max_width(1e5f), min_height(0.0f), max_height(1e5f)/*, left(0.0f), top(0.0f)*/ { }
 
 	struct LTRB
 	{
@@ -67,8 +67,8 @@ public:
 	CSSUsedValue min_height;
 	CSSUsedValue max_height;
 
-	CSSUsedValue left;
-	CSSUsedValue top;
+//	CSSUsedValue left;
+//	CSSUsedValue top;
 };
 
 // \brief Calculates box used values without applying any constraints or auto rules

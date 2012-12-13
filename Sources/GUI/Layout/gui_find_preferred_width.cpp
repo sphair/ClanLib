@@ -40,7 +40,7 @@ void GUIFindPreferredWidth::flex_horizontal_node(GUIComponent_Impl *node)
 	CSSUsedValue preferred_width = 0.0f;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
@@ -65,7 +65,7 @@ void GUIFindPreferredWidth::flex_vertical_node(GUIComponent_Impl *node)
 	CSSUsedValue preferred_width = 0.0f;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
