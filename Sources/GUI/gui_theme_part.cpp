@@ -193,12 +193,17 @@ Rect GUIThemePart::get_render_text_span_box( Canvas &canvas, const std::string &
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
 	return Rect(content_rect.left, content_rect.top, span.get_size());
-
 }
 
-Rect GUIThemePart::get_render_text_box( Canvas &canvas, const std::string &str ) const
+Rect GUIThemePart::get_render_text_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	return GUIComponent_Impl::get_text_box(canvas, impl->element, str);
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, content_rect);
+}
+
+Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str ) const
+{
+	// Note, the content box is not important here. But let us create one so "justify" alignment might report sane values
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, impl->component->get_content_box()).get_size();
 }
 
 GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)

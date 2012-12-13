@@ -1386,7 +1386,12 @@ Rect GUIComponent::get_render_text_span_box( Canvas &canvas, const std::string &
 
 Rect GUIComponent::get_render_text_box( Canvas &canvas, const std::string &str ) const
 {
-	return GUIComponent_Impl::get_text_box(canvas, impl->element, str);
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box());
+}
+
+Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str ) const
+{
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box()).get_size();
 }
 
 GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)

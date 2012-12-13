@@ -342,8 +342,11 @@ public:
 	/// \brief Gets the font
 	Font get_font() const;
 
-	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
+	/// \brief Calculates the text box using the font defined for the current state for use with render_text().
 	Rect get_render_text_box(Canvas &canvas, const std::string &str) const;
+
+	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
+	Size get_render_text_size(Canvas &canvas, const std::string &str) const;
 
 	/// \brief Calculates the text size using the font defined for the current state for use with render_text_span().
 	Rect get_render_text_span_box(Canvas &canvas, const std::string &str, const Rect &content_rect) const;

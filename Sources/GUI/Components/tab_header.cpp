@@ -146,7 +146,7 @@ void TabHeader_Impl::update_handle_rects()
 		int tab_width = tabs[i].part.get_css_width();
 
 		// Apply padding-left, padding-right css values:
-		Rect render_rect = tabs[i].part.get_border_box(tabs[i].part.get_render_text_box(canvas, tabs[i].label).get_size());
+		Rect render_rect = tabs[i].part.get_border_box(tabs[i].part.get_render_text_size(canvas, tabs[i].label));
 
 		if (render_rect.get_width() > tab_width)
 		{

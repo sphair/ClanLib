@@ -382,7 +382,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 
 }
 
-Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
+Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box, bool calculate_text_rect_only )
 {
 	CSSBoxProperties &properties = element.get_css_properties();
 
@@ -390,30 +390,30 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const 
 
 	Size text_size = font.get_text_size(canvas, text);
 
-	//FIXME: Use alignment
+	int offset_x = 0;
+	int offset_y = 0;
+
+	switch (properties.text_align.type)
+	{
+		case CSSBoxTextAlign::type_left: break;
+		case CSSBoxTextAlign::type_center: offset_x = (content_box.get_width() - text_size.width) / 2; break;
+		case CSSBoxTextAlign::type_right: offset_x = (content_box.get_width() - text_size.width); break;
+		case CSSBoxTextAlign::type_justify: break;
+		default: break;
+	}
+
 
 	FontMetrics metrics = font.get_font_metrics();
 	int ascender = metrics.get_ascent();
-	font.draw_text_ellipsis(canvas, content_box.left, content_box.top + ascender, content_box, text, properties.color.color);
+	if (!calculate_text_rect_only)
+		font.draw_text_ellipsis(canvas, content_box.left + offset_x, content_box.top + ascender, content_box, text, properties.color.color);
 
-	return Rect(content_box.left, content_box.top, text_size);
+	return Rect(content_box.left + offset_x, content_box.top, text_size);
 }
 
-Rect GUIComponent_Impl::get_text_box( Canvas &canvas, GUIElement &element, const std::string &text )
+Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
 {
-	CSSBoxProperties &properties = element.get_css_properties();
-
-	Font font = GUIComponent_Impl::get_font(canvas, properties);
-
-	Size text_size = font.get_text_size(canvas, text);
-
-	//FIXME: Use alignment
-
-	FontMetrics metrics = font.get_font_metrics();
-	int ascender = metrics.get_ascent();
-
-	return Rect(0, -ascender, text_size);
+	return render_text(canvas, element, text, content_box, true);
 }
-
 
 }
