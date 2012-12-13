@@ -47,8 +47,8 @@ void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 	case CSSBoxDisplay::type_clan_stacked:
 		clan_stacked_node(node);
 		break;
-	default:
-		throw Exception("Unsupported display type for GUI components");
+	//default:
+	//	throw Exception("Unsupported display type for GUI components");
 	}
 }
 
