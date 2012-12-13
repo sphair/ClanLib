@@ -108,14 +108,13 @@ const std::string &Label::get_text() const
 float Label::get_preferred_content_width()
 {
 	Canvas canvas = get_canvas();
-
-	return get_font().get_text_size(canvas, impl->text).width;
+	return get_text_size(canvas, impl->text).width;
 }
 
 float Label::get_preferred_content_height(float width)
 {
 	Canvas canvas = get_canvas();
-	return get_font().get_text_size(canvas, impl->text).height;
+	return get_text_size(canvas, impl->text).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -153,20 +152,7 @@ void Label::set_alignment(Label::Alignment alignment)
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Rectf content_box = label->get_content_box();
-	
-	//FIXME: Use alignment
-	//switch (label->get_css_properties().text_alignment)
-	//{
-	//case Label::align_left: span.set_align(span_left); break;
-	//case Label::align_center: span.set_align(span_center); break;
-	//case Label::align_right: span.set_align(span_right); break;
-	//case Label::align_justify: span.set_align(span_justify); break;
-	//default: break;
-	//}
-
-	FontMetrics metrics = label->get_font().get_font_metrics();
-	label->get_font().draw_text_ellipsis(canvas, content_box.left, content_box.top + metrics.get_ascent(), content_box, text, label->get_css_properties().color.color);
+	label->render_text(canvas, text, label->get_content_box());
 }
 
 void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
