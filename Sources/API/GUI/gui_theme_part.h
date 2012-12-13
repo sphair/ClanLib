@@ -103,8 +103,8 @@ public:
 	/// \brief Returns the css height of a render box.
 	int get_css_height() const;
 
-	/// \brief Calculates the text size using the font defined for the current state.
-	Size get_text_size(Canvas &canvas, const std::string &str) const;
+	/// \brief Calculates the text size using the font defined for the current state for use with render_text()
+	Size get_render_text_size(Canvas &canvas, const std::string &str, const Rect &content_rect) const;
 
 	/// \brief Returns the position of the content box for a given render box.
 	Rect get_content_box(const Rect &render_box_rect) const;

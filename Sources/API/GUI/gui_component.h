@@ -342,11 +342,8 @@ public:
 	/// \brief Gets the font
 	Font get_font() const;
 
-	/// \brief Gets the font
-	Font get_font(const CSSBoxProperties &properties) const;
-
-	/// \brief Calculates the text size using the font defined for the current state.
-	Size get_text_size(Canvas &canvas, const std::string &str) const;
+	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
+	Size get_render_text_size(Canvas &canvas, const std::string &str, const Rect &content_rect) const;
 	
 	/// \brief Returns the content shrink box of the theme part.
 	Rect get_content_shrink_box() const;

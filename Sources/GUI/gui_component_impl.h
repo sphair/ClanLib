@@ -48,6 +48,7 @@ class GUILayout;
 class GUICSSBoxVisitor;
 class GUIElement;
 class CSSToken;
+class SpanLayout;
 
 class GUIComponent_Impl
 {
@@ -133,6 +134,9 @@ public:
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void update_style();
+
+	static SpanLayout create_span_layout( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_rect );
+	static Font get_font(Canvas &canvas, const CSSBoxProperties &properties);
 
 	static CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);
 };

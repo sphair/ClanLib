@@ -135,7 +135,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		content_caption_width = header_icon.get_width() + 4;
 	if (!header_text.empty())
 	{
-		content_caption_width += frame->get_text_size(canvas, header_text).width;
+		content_caption_width += frame->get_render_text_size(canvas, header_text, content).width;
 	}
 
 	int caption_width = part_header_caption.get_border_box(Rect(0, 0, content_caption_width, rect_header_content.get_height())).get_width();
