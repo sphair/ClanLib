@@ -47,8 +47,7 @@ void GUILayoutContent::node(GUIComponent_Impl *node)
 	node->visit_children(&initial_visitor, true);
 
 	GUILayoutBoxContent layout_visitor;
-	if (node->parent == 0)
-		layout_visitor.node(node);
+	layout_visitor.node(node);
 	node->visit_children(&layout_visitor, true);
 
 	GUILayoutAbsoluteOrFixed absolute_visitor;
