@@ -47,7 +47,7 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 : gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
   visible(true), activated(false), default_handler(false), cancel_handler(false),
-  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), double_click_enabled(true), pointer_inside_component(false)
+  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), use_auto_geometry(true), double_click_enabled(true), pointer_inside_component(false)
 {
 	if (parent_or_owner)
 		element.set_parent(&parent_or_owner->impl->element);
@@ -57,8 +57,6 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 	if (!toplevel)
 	{
 		parent = parent_or_owner;
-		//css_element = parent->get_top_level_component()->impl->css_layout.create_element("component");
-		//parent->impl->css_element.append_child(css_element);
 	}
 }
 
@@ -104,27 +102,94 @@ GUIComponent_Impl::~GUIComponent_Impl()
 	gui_manager_impl->remove_component(this);
 }
 
-Rect GUIComponent_Impl::get_geometry() const
+void GUIComponent_Impl::set_window_geometry(Rect box, bool client_area)
 {
 	if (parent == 0)
 	{
-		return gui_manager.lock()->window_manager.get_geometry(
-			gui_manager.lock()->get_toplevel_window(component), true);
+		GUITopLevelWindow *handle = gui_manager.lock()->get_toplevel_window(component);
+		Rect old_viewport = gui_manager.lock()->window_manager.get_geometry(handle, true);
+
+		gui_manager.lock()->window_manager.set_geometry(handle, box, client_area);
+
+		Rect new_viewport = gui_manager.lock()->window_manager.get_geometry(handle, true);
+		if (old_viewport.get_size() != new_viewport.get_size())
+		{
+			window_resized();
+		}
+	}
+}
+
+void GUIComponent_Impl::window_resized()
+{
+	GUITopLevelWindow *handle = gui_manager.lock()->get_toplevel_window(component);
+	Rect new_viewport = gui_manager.lock()->window_manager.get_geometry(handle, true);
+
+	if (use_auto_geometry)
+	{
+		component->update_layout();
 	}
 	else
 	{
-		CSSUsedValue x = css_used_values.left + css_used_values.margin.left;
-		CSSUsedValue y = css_used_values.top + css_used_values.margin.top;
-
-		CSSUsedValue used_border_box_width = css_used_values.width + css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right;
-		CSSUsedValue used_border_box_height = css_used_values.height + css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom;
-
-		CSSActualValue x1 = (CSSActualValue)(x);
-		CSSActualValue y1 = (CSSActualValue)(y);
-		CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
-		CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
-		return Rect(x1, y1, x2, y2);
+		set_manual_geometry(Rect(Point(), new_viewport.get_size()));
 	}
+}
+
+void GUIComponent_Impl::set_auto_geometry(Rect new_geometry)
+{
+	if (use_auto_geometry && geometry != new_geometry)
+	{
+		bool resized = geometry.get_size() != new_geometry.get_size();
+
+		if (component->get_parent_component())
+			component->get_parent_component()->request_repaint(geometry);
+
+		geometry = new_geometry;
+		geometry_updated(resized);
+	}
+}
+
+void GUIComponent_Impl::set_manual_geometry(Rect new_geometry)
+{
+	if (use_auto_geometry || geometry != new_geometry)
+	{
+		use_auto_geometry = false;
+
+		bool resized = geometry.get_size() != new_geometry.get_size();
+
+		if (component->get_parent_component())
+			component->get_parent_component()->request_repaint(geometry);
+
+		geometry = new_geometry;
+		geometry_updated(resized);
+
+		component->update_layout();
+	}
+}
+
+void GUIComponent_Impl::reset_geometry()
+{
+	if (!use_auto_geometry)
+	{
+		use_auto_geometry = true;
+
+		component->update_layout();
+	}
+}
+
+/*
+Rect GUIComponent_Impl::get_geometry() const
+{
+	CSSUsedValue x = css_used_values.left + css_used_values.margin.left;
+	CSSUsedValue y = css_used_values.top + css_used_values.margin.top;
+
+	CSSUsedValue used_border_box_width = css_used_values.width + css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right;
+	CSSUsedValue used_border_box_height = css_used_values.height + css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom;
+
+	CSSActualValue x1 = (CSSActualValue)(x);
+	CSSActualValue y1 = (CSSActualValue)(y);
+	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
+	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
+	return Rect(x1, y1, x2, y2);
 }
 
 void GUIComponent_Impl::set_css_geometry(const Rect &new_geometry)
@@ -135,39 +200,12 @@ void GUIComponent_Impl::set_css_geometry(const Rect &new_geometry)
 	css_used_values.width = new_geometry.get_width() - (css_used_values.padding.left + css_used_values.padding.right + css_used_values.border.left + css_used_values.border.right);
 	css_used_values.height = new_geometry.get_height() - (css_used_values.padding.top + css_used_values.padding.bottom + css_used_values.border.top + css_used_values.border.bottom);
 }
-
-void GUIComponent_Impl::set_geometry(Rect new_geometry, bool client_area)
-{
-	if (parent == 0)
-	{
-		GUITopLevelWindow *handle = gui_manager.lock()->get_toplevel_window(component);
-		gui_manager.lock()->window_manager.set_geometry(handle, new_geometry, client_area);
-		new_geometry = gui_manager.lock()->window_manager.get_geometry(handle, true);
-	}
-
-	Rect old_geometry = get_geometry();
-
-	// repaint parent at old geometry
-	if (component->get_parent_component())
-		component->get_parent_component()->request_repaint(old_geometry);
-
-	set_css_geometry(new_geometry);
-
-	// Check for resize
-	if ((old_geometry.get_width() != new_geometry.get_width()) || (old_geometry.get_height() != new_geometry.get_height()) )
-	{
-		geometry_updated(true);
-	}
-	else
-	{
-		geometry_updated(false);
-	}
-}
+*/
 
 void GUIComponent_Impl::geometry_updated(bool geometry_was_resized)
 {
 	if (!layout.is_null())
-		layout.set_geometry(get_geometry().get_size());
+		layout.set_geometry(geometry.get_size());
 
 	if (geometry_was_resized)
 	{

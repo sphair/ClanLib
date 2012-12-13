@@ -640,8 +640,7 @@ void GUIManager_Impl::on_focus_gained(GUITopLevelWindow *toplevel_window)
 void GUIManager_Impl::on_resize(GUITopLevelWindow *toplevel_window, const Size &new_size)
 {
 	GUIComponent *component = toplevel_window->component;
-	component->impl->set_css_geometry(component->get_geometry());
-	component->impl->geometry_updated(true);
+	component->impl->window_resized();
 
 	std::shared_ptr<GUIMessage_Resize> message(new GUIMessage_Resize());
 	message->target = component;

@@ -98,7 +98,7 @@ GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, 0, description);
-	impl->set_css_geometry(impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true));
+	impl->window_resized();
 	set_tag_name(tag_name);
 
 	request_repaint();
@@ -111,7 +111,7 @@ GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription descripti
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, owner, description);
-	impl->set_css_geometry(impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true));
+	impl->window_resized();
 	set_tag_name(tag_name);
 
 	request_repaint();
@@ -126,12 +126,24 @@ GUIComponent::~GUIComponent()
 
 Rect GUIComponent::get_geometry() const
 {
-	return impl->get_geometry();
+	return impl->geometry;
+}
+
+Rect GUIComponent::get_viewport() const
+{
+	if (impl->parent)
+	{
+		return get_top_level_component()->get_viewport();
+	}
+	else
+	{
+		return impl->gui_manager.lock()->window_manager.get_geometry(impl->gui_manager.lock()->get_toplevel_window(this), true);
+	}
 }
 
 Rect GUIComponent::get_content_box() const
 {
-	Rect box = Rect(Point(), impl->get_geometry().get_size());
+	Rect box = Rect(Point(), impl->geometry.get_size());
 	box.left += impl->css_used_values.border.left + impl->css_used_values.padding.left;
 	box.right -= impl->css_used_values.border.right + impl->css_used_values.padding.right;
 	box.top += impl->css_used_values.border.top + impl->css_used_values.padding.top;
@@ -148,23 +160,23 @@ Rect GUIComponent::get_window_geometry() const
 	}
 	else
 	{
-		return impl->get_geometry();
+		throw Exception("Component is not a top-level component");
 	}
 }
 
 int GUIComponent::get_width() const
 {
-	return impl->get_geometry().get_width();
+	return impl->geometry.get_width();
 }
 
 int GUIComponent::get_height() const
 {
-	return impl->get_geometry().get_height();
+	return impl->geometry.get_height();
 }
 
 Size GUIComponent::get_size() const
 {
-	return impl->get_geometry().get_size();
+	return impl->geometry.get_size();
 }
 
 std::string GUIComponent::get_tag_name() const
@@ -926,12 +938,17 @@ void GUIComponent::exit_with_code(int exit_code)
 
 void GUIComponent::set_geometry(Rect geometry)
 {
-	impl->set_geometry(geometry, true);
+	impl->set_manual_geometry(geometry);
 }
 
-void GUIComponent::set_window_geometry(Rect geometry)
+void GUIComponent::reset_geometry()
 {
-	impl->set_geometry(geometry, false);
+	impl->reset_geometry();
+}
+
+void GUIComponent::set_window_geometry(Rect geometry, bool client_area)
+{
+	impl->set_window_geometry(geometry, client_area);
 }
 
 void GUIComponent::capture_mouse(bool capture)
