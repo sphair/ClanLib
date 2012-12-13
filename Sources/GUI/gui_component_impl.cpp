@@ -125,15 +125,8 @@ void GUIComponent_Impl::window_resized()
 {
 	GUITopLevelWindow *handle = gui_manager.lock()->get_toplevel_window(component);
 	Rect new_viewport = gui_manager.lock()->window_manager.get_geometry(handle, true);
-
-	if (use_auto_geometry)
-	{
-		component->update_layout();
-	}
-	else
-	{
-		set_manual_geometry(Rect(Point(), new_viewport.get_size()));
-	}
+	geometry = Rect(Point(), new_viewport.get_size());
+	geometry_updated(true);
 }
 
 void GUIComponent_Impl::set_auto_geometry(Rect new_geometry)
