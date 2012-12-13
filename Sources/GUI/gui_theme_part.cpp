@@ -68,7 +68,9 @@ void GUIThemePart::throw_if_null() const
 
 Font GUIThemePart::get_font() const
 {
-	return impl->component->get_font(get_css_properties());
+	const CSSBoxProperties &properties = get_css_properties();
+	Canvas canvas = impl->component->get_canvas();
+	return GUIComponent_Impl::get_font(canvas, properties);
 }
 
 const CSSBoxProperties &GUIThemePart::get_css_properties() const
@@ -187,10 +189,10 @@ int GUIThemePart::get_css_height() const
 	return impl->element.get_css_properties().height.length.value;
 }
 
-Size GUIThemePart::get_text_size( Canvas &canvas, const std::string &str ) const
+Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = get_font();
-	return font.get_text_size(canvas, str);
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
+	return span.get_size();
 }
 
 GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
@@ -211,24 +213,8 @@ GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas 
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	SpanLayout span;
-
-	Font font = get_font();
-	span.add_text(text, font, impl->element.get_css_properties().color.color);
-
-	switch (impl->element.get_css_properties().text_align.type)
-	{
-		case CSSBoxTextAlign::type_left: span.set_align(span_left); break;
-		case CSSBoxTextAlign::type_center: span.set_align(span_center); break;
-		case CSSBoxTextAlign::type_right: span.set_align(span_right); break;
-		case CSSBoxTextAlign::type_justify: span.set_align(span_justify); break;
-		default: break;
-	}
-
-	span.layout(canvas, content_rect.get_width());
-	span.set_position(Point(content_rect.left, content_rect.top));
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
-
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 

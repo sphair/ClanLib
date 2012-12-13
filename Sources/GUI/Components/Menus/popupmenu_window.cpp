@@ -265,7 +265,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			}
 
 			// item text
-			Size text_size = part_item_label.get_text_size(canvas, item.get_text());
+			Size text_size = part_item_label.get_render_text_size(canvas, item.get_text(), client_box);
 			Size text_full_size = part_item_label.get_border_box(text_size).get_size();
 
 			Rect label_render_rect(row_box.left + icon_column_width, row_box.top, row_box.left + icon_column_width + text_full_size.width, row_box.bottom);
@@ -293,7 +293,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 			else if (!item.get_accelerator_text().empty())
 			{
 				// accelerator text
-				Size accel_text_size = part_item_accel_label.get_text_size(canvas, item.get_accelerator_text());
+				Size accel_text_size = part_item_accel_label.get_render_text_size(canvas, item.get_accelerator_text(), client_box);
 				Size accel_text_full_size = part_item_accel_label.get_border_box(accel_text_size).get_size();
 
 				Rect accel_render_rect(
@@ -335,10 +335,10 @@ Size PopupMenuWindow::calc_desired_size()
 
 		int icon_width = part_item_icon.get_css_width();
 
-		Size text_size = part_item_label.get_text_size(canvas, item.get_text());
+		Size text_size = part_item_label.get_render_text_size(canvas, item.get_text(), get_window_geometry());
 		Size text_full_size = part_item_label.get_border_box(text_size).get_size();
 
-		Size accel_text_size = part_item_accel_label.get_text_size(canvas, item.get_accelerator_text());
+		Size accel_text_size = part_item_accel_label.get_render_text_size(canvas, item.get_accelerator_text(), get_window_geometry());
 		Size accel_text_full_size = part_item_accel_label.get_border_box(accel_text_size).get_size();
 
 		int arrow_width = part_submenu_arrow.get_css_width();

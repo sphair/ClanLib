@@ -744,82 +744,8 @@ bool GUIComponent::is_double_click_enabled() const
 Font GUIComponent::get_font() const
 {
 	const CSSBoxProperties &properties = get_css_properties();
-	return get_font(properties);
-}
-
-Font GUIComponent::get_font(const CSSBoxProperties &properties) const
-{
-	int font_size = used_to_actual(properties.font_size.length.value);
-	std::string font_name;
-	for (size_t i = 0; i < properties.font_family.names.size(); i++)
-	{
-		bool matched = false;
-		std::string search_name;
-		switch (properties.font_family.names[i].type)
-		{
-		case CSSBoxFontFamilyName::type_family_name:
-			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
-			//FIXME: See CSSResourceCache, creating font_families list
-			//if (font_families.find(search_name) != font_families.end())
-			//{
-			//	font_name = properties.font_family.names[i].name;
-			//	matched = true;
-			//}
-			break;
-		default:
-		case CSSBoxFontFamilyName::type_serif:
-		case CSSBoxFontFamilyName::type_cursive:
-		case CSSBoxFontFamilyName::type_fantasy:
-			font_name = "Times New Roman"; // Ugliest font on the planet.
-			matched = true;
-			break;
-		case CSSBoxFontFamilyName::type_sans_serif:
-			font_name = "Arial";
-			matched = true;
-			break;
-		case CSSBoxFontFamilyName::type_monospace:
-			font_name = "Courier New";
-			matched = true;
-			break;
-		}
-		if (matched)
-			break;
-	}
-	if (font_name.empty())
-		font_name = "Times New Roman";
-
-	int font_weight = 400;
-	switch (properties.font_weight.type)
-	{
-	case CSSBoxFontWeight::type_100: font_weight = 100; break;
-	case CSSBoxFontWeight::type_200: font_weight = 200; break;
-	case CSSBoxFontWeight::type_300: font_weight = 300; break;
-	case CSSBoxFontWeight::type_400: font_weight = 400; break;
-	case CSSBoxFontWeight::type_500: font_weight = 500; break;
-	case CSSBoxFontWeight::type_600: font_weight = 600; break;
-	case CSSBoxFontWeight::type_700: font_weight = 700; break;
-	case CSSBoxFontWeight::type_800: font_weight = 800; break;
-	case CSSBoxFontWeight::type_900: font_weight = 900; break;
-	case CSSBoxFontWeight::type_normal: font_weight = 400; break;
-	case CSSBoxFontWeight::type_bold: font_weight = 700; break;
-	case CSSBoxFontWeight::type_bolder: font_weight = 900; break;
-	case CSSBoxFontWeight::type_lighter: font_weight = 300; break;
-	}
-	bool italic = false;
-	switch (properties.font_style.type)
-	{
-	case CSSBoxFontStyle::type_normal: italic = false; break;
-	case CSSBoxFontStyle::type_italic: italic = true; break;
-	case CSSBoxFontStyle::type_oblique: italic = true; break;
-	}
-
-	FontDescription font_desc;
-	font_desc.set_typeface_name(font_name);
-	font_desc.set_height(-font_size);
-	font_desc.set_weight(font_weight);
-	font_desc.set_italic(italic);
-	return Font(get_canvas(), font_desc);
-
+	Canvas canvas = get_canvas();
+	return GUIComponent_Impl::get_font(canvas, properties);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1452,10 +1378,10 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 	impl->is_selected_in_group = selected;
 }
 
-Size GUIComponent::get_text_size( Canvas &canvas, const std::string &str ) const
+Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = get_font();
-	return font.get_text_size(canvas, str);
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
+	return span.get_size();
 }
 
 GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
@@ -1476,24 +1402,8 @@ GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas 
 
 Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	SpanLayout span;
-
-	Font font = get_font();
-	span.add_text(text, font, impl->element.get_css_properties().color.color);
-
-	switch (impl->element.get_css_properties().text_align.type)
-	{
-		case CSSBoxTextAlign::type_left: span.set_align(span_left); break;
-		case CSSBoxTextAlign::type_center: span.set_align(span_center); break;
-		case CSSBoxTextAlign::type_right: span.set_align(span_right); break;
-		case CSSBoxTextAlign::type_justify: span.set_align(span_justify); break;
-		default: break;
-	}
-
-	span.layout(canvas, content_rect.get_width());
-	span.set_position(Point(content_rect.left, content_rect.top));
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
-
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
