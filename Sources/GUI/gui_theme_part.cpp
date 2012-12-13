@@ -195,6 +195,12 @@ Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str,
 	return span.get_size();
 }
 
+Size GUIThemePart::get_render_text_size( Canvas &canvas, const std::string &str ) const
+{
+	Font font = get_font();
+	return font.get_text_size(canvas, str);
+}
+
 GUIThemePart::VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
 {
 	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
@@ -216,6 +222,17 @@ Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const R
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
 	return Rect(content_rect.left, content_rect.top, span.get_size());
+}
+
+void GUIThemePart::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
+{
+	Font font = get_font();
+	font.draw_text(canvas, xpos, ypos, text, impl->element.get_css_properties().color.color);
+}
+
+void GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Point &point )
+{
+	render_text(canvas, text, point.x, point.y);
 }
 
 Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const

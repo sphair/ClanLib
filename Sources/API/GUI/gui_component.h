@@ -343,6 +343,9 @@ public:
 	Font get_font() const;
 
 	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
+	Size get_render_text_size(Canvas &canvas, const std::string &str) const;
+
+	/// \brief Calculates the text size using the font defined for the current state for use with render_text().
 	Size get_render_text_size(Canvas &canvas, const std::string &str, const Rect &content_rect) const;
 	
 	/// \brief Returns the content shrink box of the theme part.
@@ -595,6 +598,8 @@ public:
 	void set_constant_repaint(bool enable);
 
 	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_rect);
+	void render_text(Canvas &canvas, const std::string &text, int xpos, int ypos);
+	void render_text(Canvas &canvas, const std::string &text, const Point &point);
 
 	struct VerticalTextPosition
 	{

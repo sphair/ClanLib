@@ -108,13 +108,13 @@ const std::string &Label::get_text() const
 float Label::get_preferred_content_width()
 {
 	Canvas canvas = get_canvas();
-	return get_render_text_size(canvas, impl->text, Rect(0, 0, 9999999, 999999)).width;
+	return get_render_text_size(canvas, impl->text).width;
 }
 
 float Label::get_preferred_content_height(float width)
 {
 	Canvas canvas = get_canvas();
-	return get_render_text_size(canvas, impl->text, Rect(0, 0, 9999999, 999999)).height;
+	return get_render_text_size(canvas, impl->text).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ void Label::set_alignment(Label::Alignment alignment)
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	label->render_text(canvas, text, label->get_content_box());
+	label->render_text(canvas, text, 0, 0);
 }
 
 void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
