@@ -126,15 +126,7 @@ GUIComponent::~GUIComponent()
 
 Rect GUIComponent::get_geometry() const
 {
-	if (impl->parent == 0)
-	{
-		return impl->gui_manager.lock()->window_manager.get_geometry(
-			impl->gui_manager.lock()->get_toplevel_window(this), true);
-	}
-	else
-	{
-		return impl->get_geometry();
-	}
+	return impl->get_geometry();
 }
 
 Rect GUIComponent::get_content_box() const
