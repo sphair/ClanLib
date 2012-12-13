@@ -36,25 +36,13 @@
 namespace clan
 {
 
-void GUILayoutBoxContent::find_preferred_width(GUIComponent_Impl *node)
-{
-	GUIFindPreferredWidth preferred_visitor;
-	preferred_visitor.node(node);
-}
-
-void GUILayoutBoxContent::find_preferred_height(GUIComponent_Impl *node)
-{
-	GUIFindPreferredHeight preferred_visitor;
-	preferred_visitor.node(node);
-}
-
 void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 {
 	// Calculate min/preferred/max widths of all child boxes
 	GUICSSFlexMath box_math;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
@@ -83,7 +71,7 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 	int i = 0;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
@@ -133,7 +121,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 	GUICSSFlexMath box_math;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
@@ -196,7 +184,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 	int i = 0;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 			child_used_values.height = box_math.used_lengths[i] - get_used_noncontent_height(child_used_values);
@@ -263,7 +251,7 @@ void GUILayoutBoxContent::set_horizontal_geometry(GUIComponent_Impl *node)
 	CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			set_child_geometry(node, child, x, y + align_vertical(node, child));
 
@@ -279,7 +267,7 @@ void GUILayoutBoxContent::set_vertical_geometry(GUIComponent_Impl *node)
 	CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
-		if (child->get_css_properties().position.type != CSSBoxPosition::type_absolute && child->get_css_properties().position.type != CSSBoxPosition::type_fixed)
+		if (is_normal_flow(child->impl.get()))
 		{
 			set_child_geometry(node, child, x + align_horizontal(node, child), y);
 
@@ -307,6 +295,18 @@ void GUILayoutBoxContent::set_child_geometry(GUIComponent_Impl *node, GUICompone
 	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
 	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
 	child->impl->set_auto_geometry(Rect(x1, y1, x2, y2));
+}
+
+void GUILayoutBoxContent::find_preferred_width(GUIComponent_Impl *node)
+{
+	GUIFindPreferredWidth preferred_visitor;
+	preferred_visitor.node(node);
+}
+
+void GUILayoutBoxContent::find_preferred_height(GUIComponent_Impl *node)
+{
+	GUIFindPreferredHeight preferred_visitor;
+	preferred_visitor.node(node);
 }
 
 }

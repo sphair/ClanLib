@@ -125,4 +125,12 @@ float GUICSSDisplayVisitor::get_css_relative_y(GUIComponent_Impl *node, float co
 	}
 }
 
+bool GUICSSDisplayVisitor::is_normal_flow(GUIComponent_Impl *node)
+{
+	return
+		node->element.get_css_properties().position.type != CSSBoxPosition::type_absolute &&
+		node->element.get_css_properties().position.type != CSSBoxPosition::type_fixed &&
+		node->use_auto_geometry;
+}
+
 }

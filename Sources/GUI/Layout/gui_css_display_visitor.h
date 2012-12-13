@@ -52,6 +52,8 @@ protected:
 
 	float get_css_relative_x(GUIComponent_Impl *node, float containing_width);
 	float get_css_relative_y(GUIComponent_Impl *node, float containing_height);
+
+	static bool is_normal_flow(GUIComponent_Impl *node);
 };
 
 }
