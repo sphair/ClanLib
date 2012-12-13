@@ -386,6 +386,17 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const 
 {
 	CSSBoxProperties &properties = element.get_css_properties();
 
+	// Use SpanLayout if justified
+	if (properties.text_align.type == CSSBoxTextAlign::type_justify)
+	{
+		SpanLayout span = create_span_layout(canvas, element, text, content_box);
+		if (!calculate_text_rect_only)
+			span.draw_layout(canvas);
+
+		return Rect(content_box.left, content_box.top, span.get_size());
+	}
+
+
 	Font font = GUIComponent_Impl::get_font(canvas, properties);
 
 	Size text_size = font.get_text_size(canvas, text);
