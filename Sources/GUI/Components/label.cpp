@@ -108,13 +108,13 @@ const std::string &Label::get_text() const
 float Label::get_preferred_content_width()
 {
 	Canvas canvas = get_canvas();
-	return get_render_text_size(canvas, impl->text, get_window_geometry()).width;
+	return get_render_text_size(canvas, impl->text, Rect(0, 0, 9999999, 999999)).width;
 }
 
 float Label::get_preferred_content_height(float width)
 {
 	Canvas canvas = get_canvas();
-	return get_render_text_size(canvas, impl->text, get_window_geometry()).height;
+	return get_render_text_size(canvas, impl->text, Rect(0, 0, 9999999, 999999)).height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
