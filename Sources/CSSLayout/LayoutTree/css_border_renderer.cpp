@@ -261,12 +261,36 @@ void CSSBorderRenderer::render()
 
 void CSSBorderRenderer::draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
 {
-	// To do: Support other repeat types than stretch
-	//
-	// CSSBoxBorderImageRepeat::RepeatType repeat_x = computed_properties.border_image_repeat.repeat_x;
-	// CSSBoxBorderImageRepeat::RepeatType repeat_y = computed_properties.border_image_repeat.repeat_y;
+	CSSBoxBorderImageRepeat::RepeatType repeat_x = computed_properties.border_image_repeat.repeat_x;
+	CSSBoxBorderImageRepeat::RepeatType repeat_y = computed_properties.border_image_repeat.repeat_y;
 
-	graphics->draw_image(image, Rect(x, y, x + w, y + h), Rect(sx, sy, sx + sw, sy + sh));
+	if ( (   (repeat_x == CSSBoxBorderImageRepeat::repeat_type_repeat) || (repeat_x == CSSBoxBorderImageRepeat::repeat_type_stretch) ) 
+		&& ( (repeat_y == CSSBoxBorderImageRepeat::repeat_type_stretch) || (repeat_y == CSSBoxBorderImageRepeat::repeat_type_repeat) ) )
+	{
+		int image_width = w;
+		int image_height = h;
+		if (repeat_x == CSSBoxBorderImageRepeat::repeat_type_repeat)
+			image_width = sw;
+		if (repeat_y == CSSBoxBorderImageRepeat::repeat_type_repeat)
+			image_height = sh;
+
+		// This is wrong.  It is only a temporary hack so the focus almost works for clanGUI
+		// See specification http://www.w3.org/TR/css3-background/#the-border-image-repeat
+
+		for (int dy = y; dy < (h+y); dy+=image_height)
+		{
+			for (int dx = x; dx < (w+x); dx+=image_width)
+			{
+				graphics->draw_image(image, Rect(dx, dy, dx + image_width, dy + image_height), Rect(sx, sy, sx + sw, sy + sh));
+			}
+		}
+	}
+	else
+	{
+		graphics->draw_image(image, Rect(x, y, x + w, y + h), Rect(sx, sy, sx + sw, sy + sh));
+		// Support me
+	}
+
 }
 
 Rect CSSBorderRenderer::get_border_image_area() const
