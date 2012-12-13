@@ -150,8 +150,8 @@ public:
 	bool set_pseudo_class(const std::string &name, bool enable);
 
 	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_rect);
-	void render_text(Canvas &canvas, const std::string &text, int xpos, int ypos);
-	void render_text(Canvas &canvas, const std::string &text, const Point &point);
+	void render_text(Canvas &canvas, const std::string &text, int xpos, int ypos, const Rect &content_box);
+	void render_text(Canvas &canvas, const std::string &text, const Point &point, const Rect &content_box);
 
 	struct VerticalTextPosition
 	{

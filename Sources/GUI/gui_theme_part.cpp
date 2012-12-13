@@ -224,15 +224,20 @@ Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const R
 	return Rect(content_rect.left, content_rect.top, span.get_size());
 }
 
-void GUIThemePart::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
+void GUIThemePart::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos, const Rect &content_box )
 {
 	Font font = get_font();
-	font.draw_text(canvas, xpos, ypos, text, impl->element.get_css_properties().color.color);
+
+	//FIXME: Use alignment
+
+	FontMetrics metrics = font.get_font_metrics();
+	font.draw_text_ellipsis(canvas, xpos, ypos + (int) metrics.get_ascent(), content_box, text, impl->element.get_css_properties().color.color);
+
 }
 
-void GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Point &point )
+void GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Point &point, const Rect &content_box )
 {
-	render_text(canvas, text, point.x, point.y);
+	render_text(canvas, text, point.x, point.y, content_box);
 }
 
 Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
