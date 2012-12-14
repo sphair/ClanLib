@@ -135,6 +135,11 @@ public:
 	/// \return size
 	Size get_size() const;
 
+	/// \brief Get Rect
+	///
+	/// \return rect
+	Rect get_rect() const;
+
 	/// \brief Get Rect By Id
 	///
 	/// \return rect

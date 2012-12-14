@@ -267,6 +267,7 @@ custom box3
 	width: 300px;
 	height: 100px;
 	background-color: #ff0000;
+	text-align: right;
 	border-style:solid;
 	border-width:10px;
 	border-color: #00ffff;

@@ -112,7 +112,7 @@ public:
 	void draw_layout(Canvas &canvas);
 	void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
 	void set_position(const Point &pos) { position = pos; }
-	Size get_size() const;
+	Rect get_rect() const;
 	std::vector<Rect> get_rect_by_id(int id) const;
 	void set_align(SpanAlign align);
 
