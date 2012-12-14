@@ -88,7 +88,7 @@ void ScrollBar_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent 
 
 	if (mouse_down_mode == mouse_down_thumb_drag)
 	{
-		Rect geom = scrollbar->get_window_geometry();
+		Rect geom = scrollbar->get_geometry();
 
 		int last_position = position;
 
