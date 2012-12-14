@@ -12,7 +12,7 @@ ribbon
 	border-image-slice: 8 8 50 8 fill;
 	border-image-width:px 8px 8px 50px;
 	font-family:tahoma;
-	font-size:11pt;
+	font-size:11px;
 }
 
 ribbon button.menu
@@ -131,7 +131,7 @@ ribbon-menu menu-item
 	width:216px;
 	height:44px;
 	font-family: Arial;
-	font-size:11pt;
+	font-size:11px;
 }
 
 ribbon-menu menu-item:selected
