@@ -95,7 +95,12 @@ void SpanLayout::set_position(const Point &pos)
 
 Size SpanLayout::get_size() const
 {
-	return impl->get_size();
+	return impl->get_rect().get_size();
+}
+
+Rect SpanLayout::get_rect() const
+{
+	return impl->get_rect();
 }
 
 std::vector<Rect> SpanLayout::get_rect_by_id(int id) const

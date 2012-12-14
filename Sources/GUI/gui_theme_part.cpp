@@ -192,7 +192,7 @@ int GUIThemePart::get_css_height() const
 Rect GUIThemePart::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
-	return Rect(content_rect.left, content_rect.top, span.get_size());
+	return span.get_rect();
 }
 
 Rect GUIThemePart::get_render_text_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
@@ -226,7 +226,7 @@ Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, co
 {
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
 	span.draw_layout(canvas);
-	return Rect(content_rect.left, content_rect.top, span.get_size());
+	return span.get_rect();
 }
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box )

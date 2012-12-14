@@ -38,7 +38,8 @@ void Custom::on_render(Canvas &canvas, const Rect &update_rect)
 
 	static char message_1[] = "gratulerer med dagen";
 	static char message_2[] = "rød grønn blå";
-	static char message_3[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet orci et eros lobortis accumsan id sed nulla. Curabitur bibendum lobortis ante ac fringilla";
+	//static char message_3[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sit amet orci et eros lobortis accumsan id sed nulla. Curabitur bibendum lobortis ante ac fringilla";
+	static char message_3[] = "Lorem           ";
 
 	Rect box1_content_box = box1.get_content_box(box1_rect);
 	Rect box2_content_box = box2.get_content_box(box2_rect);
@@ -47,7 +48,7 @@ void Custom::on_render(Canvas &canvas, const Rect &update_rect)
 	// Note, get_render_text_size() exists, just does not require a content box for the theme part
 	Rect text1_rect = box1.get_render_text_box(canvas, message_1, box1_content_box);
 	Rect text2_rect = box2.get_render_text_box(canvas, message_2, box2_content_box);
-	Rect text3_rect = box2.get_render_text_span_box(canvas, message_3, box3_content_box);
+	Rect text3_rect = box3.get_render_text_span_box(canvas, message_3, box3_content_box);
 
 	canvas.fill(text1_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
 	canvas.fill(text2_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));

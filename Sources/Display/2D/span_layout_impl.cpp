@@ -291,25 +291,36 @@ SpanLayout::HitTestResult SpanLayout_Impl::hit_test(GraphicContext &gc, const Po
 	return result;
 }
 
-Size SpanLayout_Impl::get_size() const
+Rect SpanLayout_Impl::get_rect() const
 {
-	Size size(0,0);
-	int x = 0;
-	int y = 0;
+	int x = position.x;
+	int y = position.y;
+
+	const int max_value = 0x70000000;
+	Rect rect(max_value, max_value, -max_value, -max_value);
+
 	for (std::vector<Line>::size_type line_index = 0; line_index < lines.size(); line_index++)
 	{
 		const Line &line = lines[line_index];
 		for (std::vector<LineSegment>::size_type segment_index = 0; segment_index < line.segments.size(); segment_index++)
 		{
 			const LineSegment &segment = line.segments[segment_index];
-			Rect area(Point(x + segment.x_position, y - line.height), Size(segment.width, line.height));
-			size.width = max(size.width, area.right);
-			size.height = max(size.height, area.bottom);
+			Rect area(Point(x + segment.x_position, y), Size(segment.width, line.height));
+
+			rect.left = min(rect.left, area.left);
+			rect.right = max(rect.right, area.right);
+			rect.top = min(rect.top, area.top);
+			rect.bottom = max(rect.bottom, area.bottom);
 		}
 		y += line.height;
 	}
-	size.height = max(size.height, y);
-	return size;
+	if (rect.left > rect.right)
+		rect.left = rect.right = position.x;
+
+	if (rect.top > rect.bottom)
+		rect.top = rect.bottom = position.y;
+
+	return rect;
 }
 
 void SpanLayout_Impl::add_text(const std::string &more_text, const Font &font, const Colorf &color, int id)
@@ -801,7 +812,7 @@ void SpanLayout_Impl::align_justify(int max_width)
 Size SpanLayout_Impl::find_preferred_size(GraphicContext &gc)
 {
 	layout_lines(gc, 0x70000000); // Feed it with a very long length so it ends up on one line
-	return get_size();
+	return get_rect().get_size();
 }
 
 void SpanLayout_Impl::set_selection_range(std::string::size_type start, std::string::size_type end)
