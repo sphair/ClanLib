@@ -243,7 +243,7 @@ std::string InputDevice::keyid_to_string(int keycode) const
 		case keycode_lmenu: return "lmenu";
 		case keycode_rmenu: return "rmenu";
 		default:
-			return string_format("keycode_%1", keycode);
+			return string_format("key_%1", keycode);
 		}
 	}
 	else
@@ -259,7 +259,7 @@ int InputDevice::string_to_keyid(const std::string &str) const
 		if (impl->provider->supports_keyid_mapping())
 			return impl->provider->string_to_keyid(str);
 
-		if (str.substr(0, 4) == "keycode_")
+		if (str.substr(0, 4) == "key_")
 		{
 			return StringHelp::text_to_int(str.substr(4));
 		}
