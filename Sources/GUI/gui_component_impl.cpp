@@ -322,8 +322,8 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 			//FIXME: See CSSResourceCache, creating font_families list
 			//if (font_families.find(search_name) != font_families.end())
 			//{
-			//	font_name = properties.font_family.names[i].name;
-			//	matched = true;
+				font_name = properties.font_family.names[i].name;
+				matched = true;
 			//}
 			break;
 		default:
