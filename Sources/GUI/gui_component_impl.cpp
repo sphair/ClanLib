@@ -243,6 +243,9 @@ void GUIComponent_Impl::visit_children(GUICSSBoxVisitor *visitor, bool recursive
 
 void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
+	if (!enabled)
+		return;
+
 	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
 	if (pointer)
 	{
