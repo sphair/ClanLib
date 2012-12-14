@@ -12,6 +12,7 @@ public:
 
 	clan::GUIThemePart box1;
 	clan::GUIThemePart box2;
+	clan::GUIThemePart box3;
 
 };
 
