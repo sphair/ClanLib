@@ -266,11 +266,11 @@ custom box3
 {
 	width: 300px;
 	height: 100px;
-	background-color: #ff0000;
-	text-align: right;
+	background-color: #4444ff;
+	text-align: justify;
 	border-style:solid;
 	border-width:10px;
-	border-color: #00ffff;
+	border-color: #5588ff;
 }
 
 

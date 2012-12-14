@@ -700,6 +700,11 @@ void SpanLayout_Impl::next_line(CurrentLine &current_line)
 				current_line.cur_line.width = segment.x_position + segment.width;
 				break;
 			}
+			else
+			{
+				// We remove the width so that get_rect() reports the correct sizes
+				segment.width = 0;
+			}
 		}
 		else
 		{
