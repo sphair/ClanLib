@@ -61,6 +61,7 @@ class PushButton_Impl
 public:
 	PushButton_Impl() : toggle_mode(false), icon_position(PushButton::icon_left) {}
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
+	void on_enablemode_changed();
 	void on_input_message(std::shared_ptr<GUIMessage_Input> msg);
 	void on_focus_message(std::shared_ptr<GUIMessage_FocusChange> msg);
 	void update_default_state(bool button_focused); // take the state from the message as the focused component hasn't been updated yet at this stage. 
@@ -87,6 +88,7 @@ PushButton::PushButton(GUIComponent *parent)
 
 	func_process_message().set(impl.get(), &PushButton_Impl::on_process_message);
 	func_render().set(impl.get(), &PushButton_Impl::on_render);
+	func_enablemode_changed().set(impl.get(), &PushButton_Impl::on_enablemode_changed);
 
 	impl->button = this;
 	impl->icon = new ImageView(this);
@@ -210,6 +212,9 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 
 void PushButton_Impl::on_input_message(std::shared_ptr<GUIMessage_Input> input_msg)
 {
+	if (!button->is_enabled())
+		return;
+
 	if (toggle_mode)
 	{
 		if( input_msg->input_event.type == InputEvent::pressed &&
@@ -311,5 +316,9 @@ void PushButton_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 }
 
+void PushButton_Impl::on_enablemode_changed()
+{
+	button->set_pseudo_class(CssStr::disabled, !button->is_enabled());
+}
 
 }
