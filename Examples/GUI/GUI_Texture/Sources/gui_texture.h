@@ -55,8 +55,7 @@ public:
 	Theme::gui_theme get_theme() const { return window_theme->get_theme(); }
 
 private:
-	clan::ResourceManager resources_gui;
-	clan::GUIThemeDefault theme;
+	clan::GUIManager gui_manager;
 	GUI *gui;
 	clan::DisplayWindow *window_ptr;
 	clan::GUIWindowManagerTexture wm;

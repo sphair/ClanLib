@@ -129,40 +129,20 @@ void GUI::run_manager(clan::Canvas &canvas)
 const char *GUI::get_theme_location()
 {
 	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/theme.css";
+		return "../../../Resources/GUIThemeAero";
 
 	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/theme.css";
+		return "../../../Resources/GUIThemeAeroPacked";
 
 	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/theme.css";
+		return "../../../Resources/GUIThemeBasic";
 
 	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/theme.css";
+		return "../../../Resources/GUIThemeBasicPacked";
 
 	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/theme.css";
+		return "../../../Resources/GUIThemeLunaPacked";
 
-	return "../../../Resources/GUIThemeLuna/theme.css";
-}
-
-const char *GUI::get_resources_location()
-{
-	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/resources.xml";
-
-	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/resources.xml";
-
-	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/resources.xml";
-
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/resources.xml";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/resources.xml";
-
-	return "../../../Resources/GUIThemeLuna/resources.xml";
+	return "../../../Resources/GUIThemeLuna";
 }
 

@@ -33,38 +33,34 @@
 
 GUI_Texture::GUI_Texture(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_window()), wm(*window_ptr)
 {
-	clan::GUIManager *gui_manager = &gui->get_gui_manager();
 
-	gui_manager->set_window_manager(wm);
+	gui_manager = clan::GUIManager(wm, gui->get_theme_location());
 
 	// Use a texture group to store all the gui textures
 	clan::Canvas canvas = gui->get_canvas();
 	clan::TextureGroup texture_group(clan::Size(1024, 1024));
 	wm.set_texture_group(texture_group);	// Note: This line is optional
 
-	resources_gui = clan::ResourceManager(gui->get_resources_location());
+	//gui_manager->set_resources(resources_gui); 
 
-	theme.set_resources(resources_gui);
-	gui_manager->set_theme(theme); 
-
-	gui_manager->set_css_document(gui->get_theme_location());
+	//gui_manager->set_css_document(gui->get_theme_location());
 
 	// Since this example rebuilds the gui when the theme changes, we have to manually delete the components
 	// (We could have instead recreated the clan::GUIManager, so it's destructor deletes them)
 
-	pushbutton.reset(new PushButton(gui->get_gui_manager(), gui->get_resources_internal()));
-	lineedit.reset(new LineEdit(gui->get_gui_manager()));
-	checkbox.reset(new CheckBox(gui->get_gui_manager()));
-	slider.reset(new Slider(gui->get_gui_manager()));
-	radiobutton.reset(new RadioButton(gui->get_gui_manager()));
-	scrollbar.reset(new ScrollBar(gui->get_gui_manager()));
-	progressbar.reset(new ProgressBar(gui->get_gui_manager()));
-	tabpage.reset(new TabPage(gui->get_gui_manager()));
-	menubar.reset(new MenuBar(gui->get_gui_manager(), gui->get_resources_internal()));
-	spin.reset(new Spin(gui->get_gui_manager()));
-	combobox.reset(new ComboBox(gui->get_gui_manager()));
-	listview.reset(new ListView(gui->get_gui_manager()));
-	window_theme.reset(new Theme(gui->get_gui_manager(), gui->get_theme()));
+	pushbutton.reset(new PushButton(gui_manager, gui->get_resources_internal()));
+	lineedit.reset(new LineEdit(gui_manager));
+	checkbox.reset(new CheckBox(gui_manager));
+	slider.reset(new Slider(gui_manager));
+	radiobutton.reset(new RadioButton(gui_manager));
+	scrollbar.reset(new ScrollBar(gui_manager));
+	progressbar.reset(new ProgressBar(gui_manager));
+	tabpage.reset(new TabPage(gui_manager));
+	menubar.reset(new MenuBar(gui_manager,  gui->get_resources_internal()));
+	spin.reset(new Spin(gui_manager));
+	combobox.reset(new ComboBox(gui_manager));
+	listview.reset(new ListView(gui_manager));
+	window_theme.reset(new Theme(gui_manager,  gui->get_theme()));
 }
 
 GUI_Texture::~GUI_Texture()

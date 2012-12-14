@@ -45,13 +45,11 @@ public:
 
 	clan::Canvas &get_canvas(){return canvas;}
 	App *get_app() { return app; }
-	clan::GUIManager &get_gui_manager() { return gui_manager; }
 	clan::ResourceManager &get_resources_internal() { return resources_internal; }
 
 	Theme::gui_theme get_theme() {return current_theme;}
 
 	const char *get_theme_location();
-	const char *get_resources_location();
 
 private:
 	void gui_repaint();
@@ -62,7 +60,6 @@ private:
 private:
 	clan::Canvas canvas;
 
-	clan::GUIManager gui_manager;
 	clan::ResourceManager resources_internal;
 	App *app;
 	clan::Font fps_font;

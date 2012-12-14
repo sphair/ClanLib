@@ -45,14 +45,12 @@ private:
 	void on_unchecked_icon(clan::CheckBox *checkbox);
 	void on_checked_toggle(clan::CheckBox *checkbox);
 	void on_unchecked_toggle(clan::CheckBox *checkbox);
-	void on_checked_flat(clan::CheckBox *checkbox);
 	void on_unchecked_flat(clan::CheckBox *checkbox);
 
 private:
 	clan::PushButton *pushbutton1;
 	clan::CheckBox *checkbox_disable;
 	clan::CheckBox *checkbox_icon;
-	clan::CheckBox *checkbox_flat;
 	clan::CheckBox *checkbox_toggle;
 
 	clan::Image test_image;

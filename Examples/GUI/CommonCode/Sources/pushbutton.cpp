@@ -42,7 +42,6 @@ PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &applica
 	pushbutton1 = new clan::PushButton(this);
 	pushbutton1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 40)));
 	pushbutton1->set_text("Push Button");
-	pushbutton1->set_flat(false);
 	pushbutton1->func_clicked().set(this, &PushButton::on_clicked, pushbutton1);
 
 	int label_xpos = client_area.left + 31;
@@ -50,13 +49,6 @@ PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &applica
 	clan::Size label_size(50, 15);
 	const int gap = 16;
 
-	checkbox_flat = new clan::CheckBox(this);
-	checkbox_flat->set_geometry(clan::Rect(client_area.left + 11, yoffset, clan::Size(100, 15)));
-	checkbox_flat->func_checked().set(this, &PushButton::on_checked_flat, checkbox_flat);
-	checkbox_flat->func_unchecked().set(this, &PushButton::on_unchecked_flat, checkbox_flat);
-	checkbox_flat->set_text("Flat");
-
-	yoffset+=gap;
 	checkbox_icon = new clan::CheckBox(this);
 	checkbox_icon->set_geometry(clan::Rect(client_area.left + 11, yoffset, clan::Size(100, 15)));
 	checkbox_icon->func_checked().set(this, &PushButton::on_checked_icon, checkbox_icon);
@@ -124,13 +116,4 @@ void PushButton::on_unchecked_toggle(clan::CheckBox *checkbox)
 	pushbutton1->set_toggle(false);
 }
 
-void PushButton::on_checked_flat(clan::CheckBox *checkbox)
-{
-	pushbutton1->set_flat(false);
-}
-
-void PushButton::on_unchecked_flat(clan::CheckBox *checkbox)
-{
-	pushbutton1->set_flat(true);
-}
 

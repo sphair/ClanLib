@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "info.h"
 
-Info::Info(clan::GUIComponent *parent): clan::GUIComponent(parent)
+Info::Info(clan::GUIComponent *parent): clan::GUIComponent(parent, "Info")
 {
 	activated_time = 0;
 	activated_flag = false;

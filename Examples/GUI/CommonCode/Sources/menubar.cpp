@@ -105,7 +105,7 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 	yoffset += gap;
 
 	statusbar1 = new clan::StatusBar(this);
-	int statusbar_height = statusbar1->get_preferred_height();
+	int statusbar_height = statusbar1->get_height();
 	clan::Rect statusbar_rect(0, client_area.get_height() - statusbar_height, clan::Size(client_area.get_width(), statusbar_height));
 	statusbar_rect.translate(client_area.left, client_area.top);
 	statusbar1->set_geometry(statusbar_rect);
@@ -118,12 +118,12 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 	statusbar1->add_part(0, 48, pushbutton1);
 	statusbar1->func_part_double_clicked(0).set(this, &MenuBar::on_part_double_clicked_0, statusbar1);
 
-	component1 = new clan::GUIComponent(statusbar1);
+	component1 = new clan::GUIComponent(statusbar1, "A");
 	statusbar1->add_part(1, 48, component1);
 	statusbar1->set_part_text(1, "ClanTest");
 	statusbar1->func_part_double_clicked(1).set(this, &MenuBar::on_part_double_clicked_1, statusbar1);
 
-	clan::GUIComponent *component2 = (new clan::GUIComponent(statusbar1));
+	clan::GUIComponent *component2 = (new clan::GUIComponent(statusbar1, "B"));
 	statusbar1->add_part(2, 48, component2);
 	statusbar1->set_part_text(2, tux_head, "");
 	statusbar1->func_part_double_clicked(2).set(this, &MenuBar::on_part_double_clicked_2, statusbar1);
