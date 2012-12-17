@@ -32,9 +32,9 @@
 Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme(default_theme),
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	groupbox = new clan::GroupBox(this);
 	groupbox->set_geometry(clan::Rect(client_area.left + 5, client_area.top + 5, client_area.right - 5, client_area.bottom - 5));

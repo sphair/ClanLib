@@ -63,7 +63,7 @@ int App::start(const std::vector<std::string> &args)
 	GUITopLevelDescription gui_desc;
 	gui_desc.set_title("Options");
 	gui_desc.set_position(Rect(10, 10, 250, 400), false);
-	Window gui_window(&gui, gui_desc);
+	GUIComponent gui_window(&gui, gui_desc);
 	gui_window_ptr = &gui_window;
 
 	int offset_x = 10;

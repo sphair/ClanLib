@@ -32,9 +32,9 @@
 ComboBox::ComboBox(clan::GUIManager &manager) :
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	menu.insert_item("Item A");
 	menu.insert_item("Item B");

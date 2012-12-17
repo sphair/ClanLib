@@ -32,9 +32,9 @@
 RadioButton::RadioButton(clan::GUIManager &manager) : 
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Radio Button", clan::Rect(256 + 256 + 24, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	radiobutton_g1b1 = new clan::RadioButton(this);
 	radiobutton_g1b1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 0 , clan::Size(64, 32)));

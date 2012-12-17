@@ -32,9 +32,9 @@
 TabPage::TabPage(clan::GUIManager &manager) :
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	tab = new clan::Tab(this);
 	tab->set_geometry(clan::Rect(client_area.left + 16, client_area.top + 10, clan::Size(220, 110)));
