@@ -1380,7 +1380,8 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 
 Rect GUIComponent::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, str, content_rect);
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, str, content_rect);
 	return span.get_rect();
 }
 
@@ -1394,8 +1395,11 @@ Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str 
 	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box()).get_size();
 }
 
-GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect)
+VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas)
 {
+	Font &font = get_font();
+	const Rect content_rect = get_content_box();
+
 	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
 
 	FontMetrics metrics = font.get_font_metrics();
@@ -1412,17 +1416,27 @@ GUIComponent::VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas 
 
 Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, text, content_rect);
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, text, content_rect);
 	span.draw_layout(canvas);
 	return span.get_rect();
 }
 
-Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpos, int ypos )
+Rect GUIComponent::render_text( Canvas &canvas, const std::string &text )
+{
+	Rect content_box = get_content_box();
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	int baseline = content_box.top + font.get_font_metrics().get_ascent();
+	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
+}
+
+Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpos, int baseline )
 {
 	Rect content_box = get_content_box();
 	content_box.left += xpos;
-	content_box.top += ypos;
-	return GUIComponent_Impl::render_text(canvas, impl->element, text, content_box );
+	content_box.top += baseline;
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
 }
 
 Rect GUIComponent::get_content_shrink_box() const

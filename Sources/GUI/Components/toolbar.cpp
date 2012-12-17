@@ -499,7 +499,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 			{
 				item.impl->icon_pos = Rect(Point(0, center_y-size_icon.height/2-item_content.top), size_icon);
 				item_content.right = item_content.left + item.impl->icon_pos.get_width() + text_gap + text_size.width;
-				item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(canvas, font, item_content).baseline-item_content.top);
+				item.impl->text_pos = Point(item.impl->icon_pos.right + text_gap, part_item_normal.get_vertical_text_align(canvas, item_content).baseline-item_content.top);
 			}
 			else if (layout == layout_center)
 			{

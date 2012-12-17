@@ -127,7 +127,7 @@ public:
 	void set_selection_length(int length);
 	void set_text_selection(int start, int length);
 
-	GUIComponent::VerticalTextPosition vertical_text_align;
+	VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;

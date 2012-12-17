@@ -35,6 +35,8 @@
 #include "api_gui.h"
 #include <memory>
 
+#include "gui_component.h"
+
 namespace clan
 {
 
@@ -154,16 +156,10 @@ public:
 
 	Rect render_text_span(Canvas &canvas, const std::string &text, const Rect &content_rect);
 	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_box);
-
-	struct VerticalTextPosition
-	{
-		float top;
-		float baseline;
-		float bottom;
-	};
+	Rect render_text(Canvas &canvas, const std::string &text, const Rect &content_box, int baseline);
 
 	/// \brief Calculates the vertical text position for the current font
-	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas, const Rect &content_rect);
 
 /// \}
 

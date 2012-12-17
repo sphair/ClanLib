@@ -1174,12 +1174,9 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	content_rect = lineedit->get_content_box();
-
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = lineedit->get_font();
 
-	vertical_text_align = lineedit->get_vertical_text_align(canvas, font, content_rect);
+	vertical_text_align = lineedit->get_vertical_text_align(canvas);
 
 	clip_start_offset = 0;
 	cursor_pos = 0;
@@ -1311,6 +1308,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	// Draw text before selection
 	if (!txt_before.empty())
 	{
+		VerticalTextPosition vtp = lineedit->get_vertical_text_align(canvas);
 		lineedit->render_text(canvas, txt_before, 0, 0);
 	}
 	if (!txt_selected.empty())
