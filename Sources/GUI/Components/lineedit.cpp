@@ -169,26 +169,22 @@ int LineEdit::get_cursor_pos() const
 
 Size LineEdit::get_text_size()
 {
-	Font font = impl->lineedit->get_font();
-	return impl->get_visual_text_size(get_canvas(), font);
+	return impl->get_visual_text_size(get_canvas());
 }
 
 Size LineEdit::get_text_size(const std::string &str)
 {
-	Font font = impl->lineedit->get_font();
-	Size text_size = font.get_text_size(get_canvas(), str);
-	return text_size;
+	return get_render_text_size(get_canvas(), str);;
 }
-
 
 float LineEdit::get_preferred_content_width()
 {
-	return 256.0f;
+	return get_text_size().width;
 }
 
 float LineEdit::get_preferred_content_height(float width)
 {
-	return 16.0f;
+	return get_text_size().height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -346,11 +342,10 @@ void LineEdit::set_cursor_pos(int pos)
 void LineEdit::resize_to_fit(int max_width)
 {
 	Canvas &canvas = get_canvas();
-	Font font = impl->lineedit->get_font();
 
 	Rect g = get_geometry();
 	Rect rect_content = impl->lineedit->get_content_box();
-	Size text_size = impl->get_visual_text_size(canvas, font);
+	Size text_size = impl->get_visual_text_size(canvas);
 	rect_content.set_size(Size(text_size.width+1, rect_content.get_height()));
 
 	g.set_size(impl->lineedit->get_size());
@@ -975,7 +970,6 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	}
 
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = lineedit->get_font();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
@@ -992,7 +986,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 		seek_center = utf8_reader.get_position();
 
-		Size text_size = get_visual_text_size(canvas, font, clip_start_offset, seek_center - clip_start_offset);
+		Size text_size = get_visual_text_size(canvas, clip_start_offset, seek_center - clip_start_offset);
 
 		if (text_size.width > mouse_x)
 			seek_end = seek_center;
@@ -1013,7 +1007,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	{
 		seek_center = utf8_reader.get_position();
 
-		Size text_size = get_visual_text_size(canvas, font, clip_start_offset, seek_center - clip_start_offset);
+		Size text_size = get_visual_text_size(canvas, clip_start_offset, seek_center - clip_start_offset);
 		if (text_size.width > mouse_x || utf8_reader.is_end())
 			break;
 
@@ -1026,9 +1020,8 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 void LineEdit_Impl::update_text_clipping()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = lineedit->get_font();
 
-	Size text_size = get_visual_text_size(canvas, font, clip_start_offset, text.size() - clip_start_offset);
+	Size text_size = get_visual_text_size(canvas, clip_start_offset, text.size() - clip_start_offset);
 
 	if (cursor_pos < clip_start_offset)
 		clip_start_offset = cursor_pos;
@@ -1063,7 +1056,7 @@ void LineEdit_Impl::update_text_clipping()
 		if (midpoint == search_lower || midpoint == search_upper)
 			break;
 
-		Size midpoint_size = get_visual_text_size(canvas, font, clip_start_offset, midpoint-clip_start_offset);
+		Size midpoint_size = get_visual_text_size(canvas, clip_start_offset, midpoint-clip_start_offset);
 
 		if (content_rect.right < midpoint_size.width)
 			search_upper = midpoint;
@@ -1081,7 +1074,6 @@ void LineEdit_Impl::update_text_clipping()
 Rect LineEdit_Impl::get_cursor_rect()
 {
 	Canvas &canvas = lineedit->get_canvas();
-	Font font = lineedit->get_font();
 
 	Rect cursor_rect;
 
@@ -1097,7 +1089,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 		clipped_text = create_password(StringHelp::utf8_length(clipped_text));
 	}
 
-	Size text_size_before_cursor = font.get_text_size(canvas, clipped_text);
+	Size text_size_before_cursor = lineedit->get_render_text_size(canvas, clipped_text);
 
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
 	cursor_rect.right = cursor_rect.left + part_cursor.get_css_width();
@@ -1113,15 +1105,13 @@ Rect LineEdit_Impl::get_selection_rect()
 	Canvas &canvas = lineedit->get_canvas();
 
 	// text before selection:
-	Font font = lineedit->get_font();
 
 	std::string txt_before = get_visible_text_before_selection();
-	Size text_size_before_selection = font.get_text_size(canvas, txt_before);
+	Size text_size_before_selection = lineedit->get_render_text_size(canvas, txt_before);
 
 	// selection text:
-	font = part_selection.get_font();
 	std::string txt_selected = get_visible_selected_text();
-	Size text_size_selection = font.get_text_size(canvas, txt_selected);
+	Size text_size_selection = part_selection.get_render_text_size(canvas, txt_selected);
 
 	Rect selection_rect;
 	selection_rect.left = content_rect.left + text_size_before_selection.width;
@@ -1287,8 +1277,6 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	Rect g = lineedit->get_size();
 
-	Font font = lineedit->get_font();
-
 	std::string txt_before = get_visible_text_before_selection();
 	std::string txt_selected = get_visible_selected_text();
 	std::string txt_after = get_visible_text_after_selection();
@@ -1302,8 +1290,8 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			txt_after = create_password(StringHelp::utf8_length(txt_after));
 	}
 
-	Size size_before = font.get_text_size(canvas, txt_before);
-	Size size_selected = font.get_text_size(canvas, txt_selected);
+	Size size_before = lineedit->get_render_text_size(canvas, txt_before);
+	Size size_selected = part_selection.get_render_text_size(canvas, txt_selected);
 
 	// Draw text before selection
 	if (!txt_before.empty())
@@ -1374,14 +1362,14 @@ std::string LineEdit_Impl::create_password(std::string::size_type num_letters) c
 	return std::string(num_letters, '*');
 }
 
-Size LineEdit_Impl::get_visual_text_size(Canvas &canvas, Font &font, int pos, int npos) const
+Size LineEdit_Impl::get_visual_text_size(Canvas &canvas, int pos, int npos) const
 {
-	return password_mode ? font.get_text_size(canvas, create_password(StringHelp::utf8_length(text.substr(pos, npos)))) : font.get_text_size(canvas, text.substr(pos, npos));
+	return password_mode ? lineedit->get_render_text_size(canvas, create_password(StringHelp::utf8_length(text.substr(pos, npos)))) : lineedit->get_render_text_size(canvas, text.substr(pos, npos));
 }
 
-Size LineEdit_Impl::get_visual_text_size(Canvas &canvas, Font &font) const
+Size LineEdit_Impl::get_visual_text_size(Canvas &canvas) const
 {
-	return password_mode ? font.get_text_size(canvas, create_password(StringHelp::utf8_length(text))) : font.get_text_size(canvas, text);
+	return password_mode ? lineedit->get_render_text_size(canvas, create_password(StringHelp::utf8_length(text))) : lineedit->get_render_text_size(canvas, text);
 }
 
 }
