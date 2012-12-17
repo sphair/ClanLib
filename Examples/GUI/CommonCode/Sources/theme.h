@@ -28,7 +28,7 @@
 
 #pragma once
 
-class Theme : public clan::Window
+class Theme : public clan::GUIComponent
 {
 public:
 	enum gui_theme

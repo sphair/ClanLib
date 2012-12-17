@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class TabPage : public clan::Window
+class TabPage : public clan::GUIComponent
 {
 public:
 	TabPage(clan::GUIManager &manager);

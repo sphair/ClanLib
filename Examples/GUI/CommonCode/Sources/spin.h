@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class Spin : public clan::Window
+class Spin : public clan::GUIComponent
 {
 public:
 	Spin(clan::GUIManager &manager);

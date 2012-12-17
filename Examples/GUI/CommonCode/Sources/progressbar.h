@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class ProgressBar : public clan::Window
+class ProgressBar : public clan::GUIComponent
 {
 public:
 	ProgressBar(clan::GUIManager &manager);

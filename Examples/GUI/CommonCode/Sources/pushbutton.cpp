@@ -30,7 +30,7 @@
 #include "pushbutton.h"
 
 PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources) : 
-	clan::Window(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false))
 {
 	clan::Canvas canvas = get_canvas();
 	test_image = clan::Image(canvas, "tux", &application_resources);

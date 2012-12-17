@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class MenuBar : public clan::Window
+class MenuBar : public clan::GUIComponent
 {
 public:
 	MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources);
