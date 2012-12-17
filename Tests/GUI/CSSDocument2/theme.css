@@ -337,3 +337,51 @@ button focus
 	border-image-repeat:repeat;
 	border-image-source:url('res:ButtonFocus');
 }
+
+.label_container
+{
+    background-color: #aaaaaa;
+    height: 60px;
+    flex-direction: row;
+
+}
+
+label.aligned_label_middle
+{
+    background: #ffff80;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
+	vertical-align: middle;
+}
+
+label.aligned_label_top
+{
+    background: #ff80ff;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
+	vertical-align: top;
+}
+
+label.aligned_label_bottom
+{
+    background: #8080ff;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
+	vertical-align: bottom;
+}
+
+label.aligned_label_baseline
+{
+    background: #80ffff;
+    border-width: 1px;
+    border-style: solid;
+    padding: 5px;
+    margin: 2px;
+	vertical-align: baseline;
+}

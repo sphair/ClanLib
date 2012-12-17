@@ -48,7 +48,12 @@
     <text>Need alignment!</text>
   </pushbutton>
 
+  <component class="label_container">
+    <label class="aligned_label_middle">middle</label>
+    <label class="aligned_label_top">top</label>
+    <label class="aligned_label_bottom">bottom</label>
+    <label class="aligned_label_baseline">baseline</label>
+  </component>
   
- 
   <custom/>
 </root>
