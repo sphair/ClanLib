@@ -32,9 +32,9 @@
 Slider::Slider(clan::GUIManager &manager) : 
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	slider_vertical = new clan::Slider(this);
 	slider_vertical->set_geometry(clan::Rect(client_area.left + 1, client_area.top + 10, clan::Size(17, 200)));

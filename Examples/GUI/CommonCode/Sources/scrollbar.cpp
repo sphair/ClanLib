@@ -32,9 +32,9 @@
 ScrollBar::ScrollBar(clan::GUIManager &manager) : 
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	scrollbar_vertical = new clan::ScrollBar(this);
 	scrollbar_vertical->set_geometry(clan::Rect(client_area.left + 1, client_area.top + 10, clan::Size(17, 200)));

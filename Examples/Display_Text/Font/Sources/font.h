@@ -71,7 +71,7 @@ private:
 private:
 	bool quit;
 	Canvas canvas;
-	Window *gui_window_ptr;
+	GUIComponent *gui_window_ptr;
 	GUIWindowManagerTexture *wm_ptr;
 	LineEdit *lineedit_text_ptr;
 	PushButton *button_typeface_tahoma_ptr;

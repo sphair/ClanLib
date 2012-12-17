@@ -37,9 +37,9 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 	clan::Canvas canvas = get_canvas();
 	tux_head = clan::Image(canvas, "tux_head", &application_resources);
 
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	menubar1 = new clan::MenuBar(this);
 	menubar1->set_geometry(clan::Rect(client_area.left, client_area.top, client_area.right, client_area.top + 25));

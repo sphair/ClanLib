@@ -35,9 +35,9 @@ PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &applica
 	clan::Canvas canvas = get_canvas();
 	test_image = clan::Image(canvas, "tux", &application_resources);
 
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	pushbutton1 = new clan::PushButton(this);
 	pushbutton1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 40)));

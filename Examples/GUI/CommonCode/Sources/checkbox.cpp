@@ -32,9 +32,9 @@
 CheckBox::CheckBox(clan::GUIManager &manager) : 
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	checkbox1 = new clan::CheckBox(this);
 	checkbox1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(100, 15)));

@@ -32,9 +32,9 @@
 ListView::ListView(clan::GUIManager &manager) :
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	clan::Canvas canvas = get_canvas();
 	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"))

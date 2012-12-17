@@ -32,9 +32,9 @@
 ProgressBar::ProgressBar(clan::GUIManager &manager) :
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
-	set_draggable(true);
 
-	clan::Rect client_area = get_client_area();
+
+	clan::Rect client_area = get_content_box();
 
 	progressbar1 = new clan::ProgressBar(this);
 	progressbar1->set_geometry(clan::Rect(client_area.left + 5, client_area.top + 5, clan::Size(128, 32)));
