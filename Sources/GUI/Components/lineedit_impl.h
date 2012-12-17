@@ -118,8 +118,8 @@ public:
 	std::string get_visible_text_after_selection();
 	std::string get_visible_selected_text();
 	std::string create_password(std::string::size_type num_letters) const;
-	Size get_visual_text_size(Canvas &canvas, Font &font, int pos, int npos) const;
-	Size get_visual_text_size(Canvas &canvas, Font &font) const;
+	Size get_visual_text_size(Canvas &canvas, int pos, int npos) const;
+	Size get_visual_text_size(Canvas &canvas) const;
 	Rect get_cursor_rect();
 	Rect get_selection_rect();
 	bool input_mask_accepts_input(int cursor_pos, const std::string &str);
