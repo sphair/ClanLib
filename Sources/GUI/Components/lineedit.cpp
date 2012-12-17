@@ -1308,8 +1308,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	// Draw text before selection
 	if (!txt_before.empty())
 	{
-		VerticalTextPosition vtp = lineedit->get_vertical_text_align(canvas);
-		lineedit->render_text(canvas, txt_before, 0, 0);
+		lineedit->render_text(canvas, txt_before, 0, lineedit->get_vertical_text_align(canvas).baseline);
 	}
 	if (!txt_selected.empty())
 	{
@@ -1329,7 +1328,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width + size_selected.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		lineedit->render_text(canvas, txt_after, size_before.width + size_selected.width, 0);
+		lineedit->render_text(canvas, txt_after, size_before.width + size_selected.width, lineedit->get_vertical_text_align(canvas).baseline);
 	}
 
 	// draw cursor
