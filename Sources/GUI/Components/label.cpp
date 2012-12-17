@@ -152,7 +152,7 @@ void Label::set_alignment(Label::Alignment alignment)
 
 void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	label->render_text(canvas, text);
+	label->render_text(canvas, text, 0, label->get_vertical_text_align(canvas).baseline);
 }
 
 void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
