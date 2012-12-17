@@ -211,7 +211,7 @@ void App::render(DisplayWindow &window)
 
 	canvas.set_map_mode(MapMode(map_2d_upper_left));
 
-	canvas.clear(Colorf(0.0f,0.0f,0.2f));
+	canvas.clear(Colorf(0.4f,0.4f,0.8f, 1.0f));
 
 	std::vector<GUIWindowManagerTextureWindow> windows = wm_ptr->get_windows();
 	std::vector<GUIWindowManagerTextureWindow>::size_type index, size;
