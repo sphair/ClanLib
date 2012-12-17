@@ -101,11 +101,9 @@ public:
 	bool cursor_drawing_enabled_when_parent_focused;
 
 	static std::string break_characters;
-
 	
 	GUIThemePart part_selection;
 	GUIThemePart part_cursor;
-	Rect content_rect;
 
 	void move(int steps, bool ctrl, bool shift);
 	bool insert_text(int pos, const std::string &str);
