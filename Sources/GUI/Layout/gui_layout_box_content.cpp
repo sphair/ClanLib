@@ -182,12 +182,13 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 
 	// Save adjusted height values
 	int i = 0;
-	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling(), i++)
+	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
 	{
 		if (is_normal_flow(child->impl.get()))
 		{
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 			child_used_values.height = box_math.used_lengths[i] - get_used_noncontent_height(child_used_values);
+			i++;
 		}
 	}
 
