@@ -36,7 +36,6 @@
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/Components/push_button.h"
-#include "API/GUI/Components/window.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
@@ -310,7 +309,7 @@ void MessageBoxComponent::on_button_clicked(MessageBoxResult result)
 	get_parent_component()->exit_with_code(result);		
 }
 
-bool MessageBoxComponent::on_window_close(Window *window)
+bool MessageBoxComponent::on_window_close(GUIComponent *window)
 {
 	window->exit_with_code(mb_result_cancel);
 

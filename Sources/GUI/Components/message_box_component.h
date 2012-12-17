@@ -56,7 +56,7 @@ public:
 public:
 	Size layout_content();
 
-	bool on_window_close(Window *window);
+	bool on_window_close(GUIComponent *window);
 
 // Implementation
 private:
