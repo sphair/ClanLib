@@ -1308,7 +1308,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		text_rect.left += (size_before.width);
 		text_rect.top = g.top;
 		text_rect.bottom = g.bottom;
-		part_selection.render_text(canvas, txt_selected, text_rect);
+		part_selection.render_text(canvas, txt_selected, text_rect, part_selection.get_vertical_text_align(canvas, text_rect).baseline);
 	}
 	if (!txt_after.empty())
 	{
