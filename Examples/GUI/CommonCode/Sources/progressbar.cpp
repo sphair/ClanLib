@@ -30,7 +30,7 @@
 #include "progressbar.h"
 
 ProgressBar::ProgressBar(clan::GUIManager &manager) :
-	clan::Window(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 	set_draggable(true);
 

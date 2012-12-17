@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class RadioButton : public clan::Window
+class RadioButton : public clan::GUIComponent
 {
 public:
 	RadioButton(clan::GUIManager &manager);

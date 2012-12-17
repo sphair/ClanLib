@@ -30,7 +30,7 @@
 #include "lineedit.h"
 
 LineEdit::LineEdit(clan::GUIManager &manager) :
-	clan::Window(&manager, clan::GUITopLevelDescription("Line Edit", clan::Rect(512 + 24, 8, clan::Size(256, 256)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Line Edit", clan::Rect(512 + 24, 8, clan::Size(256, 256)), false))
 {
 	set_draggable(true);
 

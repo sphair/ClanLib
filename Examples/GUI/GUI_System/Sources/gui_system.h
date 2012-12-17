@@ -53,7 +53,7 @@ public:
 	bool run();
 
 private:
-	bool on_close(clan::Window *win);
+	bool on_close(clan::GUIComponent *win);
 
 private:
 	clan::ResourceManager resources_gui;

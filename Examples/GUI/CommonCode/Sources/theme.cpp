@@ -30,7 +30,7 @@
 #include "theme.h"
 
 Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme(default_theme),
-	clan::Window(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
 	set_draggable(true);
 

@@ -30,7 +30,7 @@
 #include "tabpage.h"
 
 TabPage::TabPage(clan::GUIManager &manager) :
-	clan::Window(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 	set_draggable(true);
 

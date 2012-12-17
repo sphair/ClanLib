@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class ComboBox : public clan::Window
+class ComboBox : public clan::GUIComponent
 {
 public:
 	ComboBox(clan::GUIManager &manager);

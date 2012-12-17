@@ -30,7 +30,7 @@
 #include "GUI.h"
 
 Panel3D::Panel3D(GUI *gui) : 
-	clan::Window(&gui->get_gui_manager(), clan::GUITopLevelDescription("3D Controls", clan::Rect(256*2, 256, clan::Size(320, 448)), false)),
+	clan::GUIComponent(&gui->get_gui_manager(), clan::GUITopLevelDescription("3D Controls", clan::Rect(256*2, 256, clan::Size(320, 448)), false)),
 	gui(gui)
 {
 	set_draggable(true);

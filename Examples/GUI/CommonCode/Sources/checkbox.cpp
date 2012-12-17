@@ -30,7 +30,7 @@
 #include "checkbox.h"
 
 CheckBox::CheckBox(clan::GUIManager &manager) : 
-	clan::Window(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false))
 {
 	set_draggable(true);
 

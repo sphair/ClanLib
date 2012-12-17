@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class CheckBox : public clan::Window
+class CheckBox : public clan::GUIComponent
 {
 public:
 	CheckBox(clan::GUIManager &manager);

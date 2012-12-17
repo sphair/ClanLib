@@ -65,7 +65,7 @@ private:
 	float get_zpos_at_position(float xpos, float ypos);
 	bool run3d();
 	void setup_shader();
-	bool on_close(clan::Window *win);
+	bool on_close(clan::GUIComponent *win);
 
 private:
 	clan::ResourceManager resources_gui;

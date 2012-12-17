@@ -30,7 +30,7 @@
 #include "menubar.h"
 
 MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources) :
-	clan::Window(&manager, clan::GUITopLevelDescription("Menu Bar & Status Bar", clan::Rect(512 + 24, 256 + 16, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Menu Bar & Status Bar", clan::Rect(512 + 24, 256 + 16, clan::Size(256, 180)), false))
 {
 	tux_image = clan::ImageProviderFactory::load("../CommonCode/Resources/tux.png");
 

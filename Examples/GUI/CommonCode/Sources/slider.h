@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class Slider : public clan::Window
+class Slider : public clan::GUIComponent
 {
 public:
 	Slider(clan::GUIManager &manager);

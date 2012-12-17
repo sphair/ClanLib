@@ -31,7 +31,7 @@
 #include "info.h"
 
 
-class LineEdit : public clan::Window
+class LineEdit : public clan::GUIComponent
 {
 public:
 	LineEdit(clan::GUIManager &manager);

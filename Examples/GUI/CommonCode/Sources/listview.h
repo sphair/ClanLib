@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class ListView : public clan::Window
+class ListView : public clan::GUIComponent
 {
 public:
 	ListView(clan::GUIManager &manager);

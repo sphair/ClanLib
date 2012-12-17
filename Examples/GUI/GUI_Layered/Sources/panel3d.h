@@ -32,7 +32,7 @@
 
 class GUI;
 
-class Panel3D : public clan::Window
+class Panel3D : public clan::GUIComponent
 {
 public:
 	Panel3D(GUI *gui);

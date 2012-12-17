@@ -30,7 +30,7 @@
 #include "scrollbar.h"
 
 ScrollBar::ScrollBar(clan::GUIManager &manager) : 
-	clan::Window(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false))
 {
 	set_draggable(true);
 

@@ -30,7 +30,7 @@
 
 #include "info.h"
 
-class ScrollBar : public clan::Window
+class ScrollBar : public clan::GUIComponent
 {
 public:
 	ScrollBar(clan::GUIManager &manager);
