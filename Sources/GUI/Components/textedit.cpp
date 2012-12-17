@@ -1057,12 +1057,9 @@ void TextEdit_Impl::on_timer_expired()
 
 void TextEdit_Impl::on_resized()
 {
-	content_rect = textedit->get_content_box();
-
 	Canvas &canvas = textedit->get_canvas();
-	Font font = textedit->get_font();
 
-	vertical_text_align = textedit->get_vertical_text_align(canvas, font, content_rect);
+	vertical_text_align = textedit->get_vertical_text_align(canvas);
 
 	clip_start_offset = 0;
 	update_vertical_scroll();

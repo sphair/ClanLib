@@ -136,7 +136,7 @@ public:
 	std::string::size_type to_offset(Vec2i pos) const;
 	Vec2i from_offset(std::string::size_type offset) const;
 
-	GUIComponent::VerticalTextPosition vertical_text_align;
+	VerticalTextPosition vertical_text_align;
 	Timer scroll_timer;
 
 	bool mouse_moves_left;

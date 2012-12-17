@@ -286,13 +286,12 @@ CSSToken GUIComponent_Impl::next_token(size_t &pos, const std::vector<CSSToken> 
 	return token;
 }
 
-SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_rect )
+SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_rect )
 {
 	SpanLayout span;
 
 	CSSBoxProperties &properties = element.get_css_properties();
 
-	Font font = GUIComponent_Impl::get_font(canvas, properties);
 	span.add_text(text, font, properties.color.color);
 
 	switch (properties.text_align.type)
@@ -385,22 +384,9 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 
 }
 
-Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box, bool calculate_text_rect_only )
+Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only )
 {
 	CSSBoxProperties &properties = element.get_css_properties();
-
-	// Use SpanLayout if justified
-	if (properties.text_align.type == CSSBoxTextAlign::type_justify)
-	{
-		SpanLayout span = create_span_layout(canvas, element, text, content_box);
-		if (!calculate_text_rect_only)
-			span.draw_layout(canvas);
-
-		return Rect(content_box.left, content_box.top, span.get_size());
-	}
-
-
-	Font font = GUIComponent_Impl::get_font(canvas, properties);
 
 	Size text_size = font.get_text_size(canvas, text);
 
@@ -412,22 +398,21 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, const 
 		case CSSBoxTextAlign::type_left: break;
 		case CSSBoxTextAlign::type_center: offset_x = (content_box.get_width() - text_size.width) / 2; break;
 		case CSSBoxTextAlign::type_right: offset_x = (content_box.get_width() - text_size.width); break;
-		case CSSBoxTextAlign::type_justify: break;
+		case CSSBoxTextAlign::type_justify: break;		// Single line text is not justified
 		default: break;
 	}
 
-
-	FontMetrics metrics = font.get_font_metrics();
-	int ascender = metrics.get_ascent();
 	if (!calculate_text_rect_only)
-		font.draw_text_ellipsis(canvas, content_box.left + offset_x, content_box.top + ascender, content_box, text, properties.color.color);
+		font.draw_text_ellipsis(canvas, content_box.left + offset_x, baseline, content_box, text, properties.color.color);
 
 	return Rect(content_box.left + offset_x, content_box.top, text_size);
 }
 
 Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
 {
-	return render_text(canvas, element, text, content_box, true);
+	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_properties());
+	int baseline = content_box.top + font.get_font_metrics().get_ascent();
+	return render_text(canvas, element, font, text, content_box, baseline, true);
 }
 
 }

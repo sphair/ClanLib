@@ -71,6 +71,13 @@ class CSSBoxProperties;
 
 typedef DisplayWindowDescription GUITopLevelDescription;
 
+struct VerticalTextPosition
+{
+	float top;
+	float baseline;
+	float bottom;
+};
+
 /// \brief GUI base component class.
 ///
 /// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
@@ -601,17 +608,11 @@ public:
 	void set_constant_repaint(bool enable);
 
 	Rect render_text_span(Canvas &canvas, const std::string &text, const Rect &content_rect);
-	Rect render_text(Canvas &canvas, const std::string &text, int xpos = 0, int ypos = 0);
-
-	struct VerticalTextPosition
-	{
-		float top;
-		float baseline;
-		float bottom;
-	};
+	Rect render_text(Canvas &canvas, const std::string &text);
+	Rect render_text(Canvas &canvas, const std::string &text, int xpos, int baseline);
 
 	/// \brief Calculates the vertical text position for the current font
-	VerticalTextPosition get_vertical_text_align(Canvas &canvas, Font &font, const Rect &content_rect);
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas);
 
 /// \}
 /// \name Implementation
