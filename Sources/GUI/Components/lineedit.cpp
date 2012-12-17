@@ -179,12 +179,12 @@ Size LineEdit::get_text_size(const std::string &str)
 
 float LineEdit::get_preferred_content_width()
 {
-	return 200.0f;//get_text_size().width;
+	return get_text_size().width;
 }
 
 float LineEdit::get_preferred_content_height(float width)
 {
-	return 200.0f;//get_text_size().height;
+	return get_text_size().height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
