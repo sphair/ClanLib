@@ -87,19 +87,19 @@ class CL_API_GUI GUIComponent
 /// \{
 public:
 	/// \brief Creates a GUI component.
-	GUIComponent(GUIComponent *parent, const std::string &tag_name);
+	GUIComponent(GUIComponent *parent, const std::string &tag_name = "component");
 
 	/// \brief Constructs a GUIComponent
 	///
 	/// \param manager = GUIManager
 	/// \param description = GUITop Level Description
-	GUIComponent(GUIManager *manager, GUITopLevelDescription description, const std::string &tag_name);
+	GUIComponent(GUIManager *manager, GUITopLevelDescription description, const std::string &tag_name = "component");
 
 	/// \brief Constructs a GUIComponent
 	///
 	/// \param owner = GUIComponent
 	/// \param description = GUITop Level Description
-	GUIComponent(GUIComponent *owner, GUITopLevelDescription description, const std::string &tag_name);
+	GUIComponent(GUIComponent *owner, GUITopLevelDescription description, const std::string &tag_name = "component");
 
 	virtual ~GUIComponent();
 
