@@ -179,12 +179,12 @@ Size LineEdit::get_text_size(const std::string &str)
 
 float LineEdit::get_preferred_content_width()
 {
-	return get_text_size().width;
+	return 200.0f;//get_text_size().width;
 }
 
 float LineEdit::get_preferred_content_height(float width)
 {
-	return get_text_size().height;
+	return 200.0f;//get_text_size().height;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -731,6 +731,7 @@ void LineEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 			}
 			if (e.type == InputEvent::pointer_moved && mouse_selecting && !ignore_mouse_events)
 			{
+				Rect content_rect = lineedit->get_content_box();
 				if (e.mouse_pos.x < content_rect.left || e.mouse_pos.x > content_rect.right)
 				{
 					if (e.mouse_pos.x < content_rect.left)
@@ -972,6 +973,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 	Canvas &canvas = lineedit->get_canvas();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
+	Rect content_rect = lineedit->get_content_box();
 	int mouse_x = mouse_x_wincoords - content_rect.left ;
 
 	int seek_start = clip_start_offset;
@@ -1029,6 +1031,7 @@ void LineEdit_Impl::update_text_clipping()
 	Rect cursor_rect = get_cursor_rect();
 
 	UTF8_Reader utf8_reader(text.data(), text.length());
+	Rect content_rect = lineedit->get_content_box();
 	while (cursor_rect.right > content_rect.right)
 	{
 		utf8_reader.set_position(clip_start_offset);
@@ -1091,6 +1094,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 	Size text_size_before_cursor = lineedit->get_render_text_size(canvas, clipped_text);
 
+	Rect content_rect = lineedit->get_content_box();
 	cursor_rect.left = content_rect.left + text_size_before_cursor.width;
 	cursor_rect.right = cursor_rect.left + part_cursor.get_css_width();
 
@@ -1114,6 +1118,7 @@ Rect LineEdit_Impl::get_selection_rect()
 	Size text_size_selection = part_selection.get_render_text_size(canvas, txt_selected);
 
 	Rect selection_rect;
+	Rect content_rect = lineedit->get_content_box();
 	selection_rect.left = content_rect.left + text_size_before_selection.width;
 	selection_rect.right = selection_rect.left + text_size_selection.width;
 	selection_rect.top = vertical_text_align.top;
@@ -1292,6 +1297,7 @@ void LineEdit_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	Size size_before = lineedit->get_render_text_size(canvas, txt_before);
 	Size size_selected = part_selection.get_render_text_size(canvas, txt_selected);
+	Rect content_rect = lineedit->get_content_box();
 
 	// Draw text before selection
 	if (!txt_before.empty())
