@@ -780,7 +780,12 @@ bool CSSDocument_Impl::equals(const std::string &s1, const std::string &s2)
 
 std::string CSSDocument_Impl::make_absolute_uri(std::string uri, std::string base_uri)
 {
-	return HTMLUrl(uri, base_uri).to_string();
+	// Hack for avoiding base paths added to resource schemes.
+	HTMLUrl url(uri, base_uri);
+	if (url.scheme == "res")
+		return HTMLUrl(uri).to_string();
+	else
+		return HTMLUrl(uri, base_uri).to_string();
 }
 
 }
