@@ -1397,7 +1397,7 @@ Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str 
 
 VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas)
 {
-	Font &font = get_font();
+	Font font = get_font();
 	const Rect content_rect = get_content_box();
 
 	// See diagram in: Documentation\Overview\fonts.html (Font Metrics)
