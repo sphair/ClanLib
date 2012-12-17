@@ -54,7 +54,6 @@
 #include "API/GUI/Components/spin.h"
 #include "API/GUI/Components/scrollbar.h"
 #include "API/GUI/Components/imageview.h"
-#include "API/GUI/Components/window.h"
 
 #include "gui_xml_loader_version_1_0.h"
 #include "Layout/gui_layout_provider_corners.h"

@@ -54,7 +54,7 @@ MessageBoxResult message_box_impl(
 	desc.set_position(Rect(100,100,200,200), false);
 	desc.set_visible(false);
 
-	Window window(owner, desc);
+	GUIComponent window(owner, desc, "window");
 	MessageBoxComponent mb(&window, detail_text, buttons, icon);
 	Size content_size = mb.layout_content();
 
@@ -67,7 +67,7 @@ MessageBoxResult message_box_impl(
 	Point decorations_top_left = cont_tl - win_tl;
 
 	Point win_br = window.get_window_geometry().get_bottom_right();
-	Rect client = window.get_client_area();
+	Rect client = window.get_content_box();
 	Point cont_br =  disp_win.client_to_screen(client.get_bottom_right());
 	Point decorations_bottom_right = win_br - cont_br;
 
