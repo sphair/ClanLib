@@ -35,7 +35,6 @@
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab_page.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_help.h"

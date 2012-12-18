@@ -36,7 +36,6 @@
 #include "API/GUI/Components/statusbar.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/2D/image.h"
 #include "API/Core/Text/string_format.h"
 #include "../gui_css_strings.h"
@@ -242,7 +241,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	part_status_text.render_box(canvas, rect_status_text);
 	Rect status_text_content = part_status_text.get_content_box(rect_status_text);
 
-	statusbar->get_font().draw_text(canvas, status_text_content.left + 4, content.bottom - 6, status_text, statusbar->get_css_properties().color.color);
+	statusbar->render_text(canvas, status_text, status_text_content.left + 4, content.bottom - 6);
 
 	for (unsigned int index = 0; index < statusbar_parts.size(); index++)
 	{
@@ -257,7 +256,7 @@ void StatusBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		}
 		if (!statusbar_part.text.empty())
 		{
-			statusbar->get_font().draw_text(canvas, part_content.left + 4 + icon_width, part_content.bottom - 6, statusbar_part.text, statusbar->get_css_properties().color.color);
+			statusbar->render_text(canvas, statusbar_part.text, part_content.left + 4 + icon_width, part_content.bottom - 6);
 		}
 	}
 }

@@ -35,7 +35,6 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/imageview.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/2D/sprite_description.h"
 #include "API/Display/2D/sprite.h"
 #include "API/Display/2D/image.h"

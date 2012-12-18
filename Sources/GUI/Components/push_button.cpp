@@ -44,8 +44,6 @@
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/span_layout.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 #include "API/GUI/gui_theme_part.h"

@@ -127,8 +127,8 @@ public:
 	std::string get_visible_text_before_selection();
 	std::string get_visible_text_after_selection();
 	std::string get_visible_selected_text();
-	Size get_visual_text_size(Canvas &canvas, Font &font, int pos, int npos) const;
-	Size get_visual_text_size(Canvas &canvas, Font &font) const;
+	Size get_visual_text_size(Canvas &canvas, int pos, int npos) const;
+	Size get_visual_text_size(Canvas &canvas) const;
 	Rect get_cursor_rect();
 	Rect get_selection_rect();
 	bool input_mask_accepts_input(Vec2i cursor_pos, const std::string &str);

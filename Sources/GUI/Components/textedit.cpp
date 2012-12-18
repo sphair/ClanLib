@@ -45,9 +45,8 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/span_layout.h"
+#include "API/Display/Font/font.h"
 #include "API/Display/Window/display_window.h"
 #include "../gui_css_strings.h"
 #include "textedit_impl.h"
@@ -1146,7 +1145,6 @@ void TextEdit_Impl::layout_lines(Canvas &canvas)
 {
 	Rect g = textedit->get_size();
 	Rect content_box = textedit->get_content_box();
-	Font font = textedit->get_font();
 
 	Vec2i sel_start;
 	Vec2i sel_end;
@@ -1169,9 +1167,9 @@ void TextEdit_Impl::layout_lines(Canvas &canvas)
 		{
 			line.layout.clear();
 			if (!line.text.empty())
-				line.layout.add_text(line.text, font, Colorf::black);
+				line.layout.add_text(line.text, textedit->get_font(), Colorf::black);
 			else
-				line.layout.add_text(StringHelp::wchar_to_utf8(0xa0), font, Colorf::black); // Draw one NBSP character to get the correct height
+				line.layout.add_text(StringHelp::wchar_to_utf8(0xa0),  textedit->get_font(), Colorf::black); // Draw one NBSP character to get the correct height
 			line.layout.layout(canvas, content_box.get_width());
 			line.box = Rect(draw_pos, line.layout.get_size());
 			line.invalidated = false;
