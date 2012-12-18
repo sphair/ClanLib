@@ -39,7 +39,6 @@
 #include "API/GUI/gui_message_focus_change.h"
 #include "API/GUI/gui_message_activation_change.h"
 #include "API/GUI/gui_message_pointer.h"
-#include "API/Display/Font/font.h"
 #include "API/Core/System/timer.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
@@ -115,7 +114,7 @@ void ToolTip::set_text(const std::string &text)
 	Point top_left = get_geometry().get_top_left();
 
 	Canvas &canvas = get_canvas();
-	Size text_size = get_font().get_text_size(canvas, impl->text);
+	Size text_size = get_render_text_size(canvas, impl->text);
 	Rect rect(Point(0,0), text_size);
 	set_geometry(Rect(top_left, impl->tooltip->get_size()));
 }
@@ -170,13 +169,8 @@ void ToolTip_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 	Rect content_rect = tooltip->get_content_box();
 
-	Font font = tooltip->get_font();
-	Size text_size = font.get_text_size(canvas, text);
-	font.draw_text(canvas,
-		content_rect.left,
-		content_rect.top + content_rect.get_height()/2 + text_size.height/2 - 2,
-		text,
-		tooltip->get_css_properties().color.color);
+	Size text_size = tooltip->get_render_text_size(canvas, text);
+	tooltip->render_text(canvas, text, 	content_rect.left, content_rect.top + content_rect.get_height()/2 + text_size.height/2 - 2 + tooltip->get_vertical_text_align(canvas).baseline);
 }
 
 void ToolTip_Impl::on_show_delayed()

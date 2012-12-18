@@ -34,7 +34,6 @@
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/frame.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/2D/sprite.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
@@ -159,7 +158,7 @@ void Frame_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	}
 	if (!header_text.empty())
 	{
-		frame->get_font().draw_text(canvas, xpos, rect_caption_content.bottom - 6, header_text, frame->get_css_properties().color.color);
+		frame->render_text(canvas, header_text, xpos, rect_caption_content.bottom - 6);
 	}
 }
 

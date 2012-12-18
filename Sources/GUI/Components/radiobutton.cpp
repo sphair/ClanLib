@@ -41,7 +41,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
 #include "../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
 

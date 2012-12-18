@@ -38,8 +38,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/css_box_properties.h"

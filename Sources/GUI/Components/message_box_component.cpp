@@ -37,8 +37,6 @@
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/Components/push_button.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/sprite.h"
 #include "../gui_css_strings.h"
 #include "message_box_component.h"

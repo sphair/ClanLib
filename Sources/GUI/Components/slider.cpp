@@ -39,7 +39,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/GUI/Components/slider.h"
 #include "API/Display/Window/input_event.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Window/keys.h"
 #include "../gui_css_strings.h"
 #include "API/GUI/gui_theme_part.h"

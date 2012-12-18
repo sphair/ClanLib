@@ -45,8 +45,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_metrics.h"
 #include "API/Display/Window/display_window.h"
 #include "../gui_css_strings.h"
 #include "lineedit_impl.h"

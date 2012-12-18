@@ -39,7 +39,6 @@
 #include "API/GUI/Components/toolbar_item.h"
 #include "API/GUI/gui_manager.h"
 #include "API/Display/2D/sprite.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
 #include "API/Core/Text/string_help.h"
@@ -383,12 +382,7 @@ void ToolBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 
 		toolbar->push_cliprect(canvas, item_content);
 
-		Font font = toolbar->get_font();
-		font.draw_text(canvas,
-			item_content.left + item.impl->text_pos.x + pressed_offset.x,
-			item_content.top + item.impl->text_pos.y + pressed_offset.y,
-			item.impl->text,
-			toolbar->get_css_properties().color.color);
+		toolbar->render_text(canvas, item.impl->text, item_content.left + item.impl->text_pos.x + pressed_offset.x, item_content.top + item.impl->text_pos.y + pressed_offset.y + toolbar->get_vertical_text_align(canvas).baseline);
 
 		toolbar->pop_cliprect(canvas);
 	}
@@ -489,8 +483,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 		{
 			ToolBarItem &item = items[index];
 			item_content.left = x;
-			Font font = toolbar->get_font();
-			Size text_size = font.get_text_size(canvas, item.impl->text);
+			Size text_size = toolbar->get_render_text_size(canvas, item.impl->text);
 			int text_gap = original_text_gap;
 			if (text_size.width == 0)
 				text_gap = 0;
@@ -529,8 +522,7 @@ void ToolBar_Impl::update_layout(Canvas &canvas)
 			ToolBarItem &item = items[index];
 
 			item_content.top = y;
-			Font font = toolbar->get_font();
-			Size text_size = font.get_text_size(canvas, item.impl->text);
+			Size text_size = toolbar->get_render_text_size(canvas, item.impl->text);
 
 			int text_gap = original_text_gap;
 			if (text_size.width == 0)
