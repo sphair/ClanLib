@@ -93,7 +93,7 @@ Ribbon::~Ribbon()
 
 Size Ribbon::get_css_size() const
 {
-	return Size(10, 10);//FIXME: part_background.get_css_size();
+	return get_size();
 }
 
 void Ribbon::add_page(RibbonPage *page)
