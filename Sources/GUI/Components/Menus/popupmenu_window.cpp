@@ -350,8 +350,6 @@ Size PopupMenuWindow::calc_desired_size()
 		size.height += row_height;
 	}
 
-	size = get_size();
-
 	if (size.width < menu.get_minimum_width())
 	{
 		size.width = menu.get_minimum_width();
