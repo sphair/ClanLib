@@ -34,7 +34,6 @@
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/Components/popupmenu.h"
-#include "API/Display/Font/font.h"
 
 namespace clan
 {
