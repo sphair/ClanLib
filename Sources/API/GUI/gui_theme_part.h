@@ -61,7 +61,7 @@ public:
 	GUIThemePart();
 
 	/// \brief Creates a GUI component.
-	GUIThemePart(GUIComponent *parent, const std::string &pseudo_tag_name);
+	GUIThemePart(GUIComponent *parent, const std::string &tag_name);
 /// \}
 
 /// \name Attributes
