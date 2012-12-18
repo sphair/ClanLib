@@ -90,7 +90,7 @@ scrollbar scrollthumbgripper.horizontal
 {
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed; 
+	background-attachment:scroll; 
 }
 
 scrollbar scrollthumbgripper.horizontal:normal
