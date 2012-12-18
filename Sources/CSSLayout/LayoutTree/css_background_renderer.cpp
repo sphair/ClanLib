@@ -87,7 +87,7 @@ void CSSBackgroundRenderer::render()
 			Rect origin_box = get_origin_box(index);
 			Size image_size = get_image_size(index, image, origin_box);
 
-			graphics->push_cliprect(clip_box);
+			//FIXME: graphics->push_cliprect(clip_box);
 
 			CSSBoxBackgroundRepeat::RepeatStyle repeat_x = get_layer_repeat_x(index);
 			CSSBoxBackgroundRepeat::RepeatStyle repeat_y = get_layer_repeat_y(index);
@@ -142,7 +142,7 @@ void CSSBackgroundRenderer::render()
 					break;
 			}
 
-			graphics->pop_cliprect();
+			//FIXME: graphics->pop_cliprect();
 		}
 	}
 }
