@@ -63,7 +63,7 @@ int App::start(const std::vector<std::string> &args)
 	GUITopLevelDescription gui_desc;
 	gui_desc.set_title("Options");
 	gui_desc.set_position(Rect(10, 10, 250, 400), false);
-	GUIComponent gui_window(&gui, gui_desc);
+	GUIComponent gui_window(&gui, gui_desc, "window");
 	gui_window_ptr = &gui_window;
 
 	int offset_x = 10;
@@ -211,7 +211,7 @@ void App::render(DisplayWindow &window)
 
 	canvas.set_map_mode(MapMode(map_2d_upper_left));
 
-	canvas.clear(Colorf(0.4f,0.4f,0.8f, 1.0f));
+	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
 
 	std::vector<GUIWindowManagerTextureWindow> windows = wm_ptr->get_windows();
 	std::vector<GUIWindowManagerTextureWindow>::size_type index, size;
