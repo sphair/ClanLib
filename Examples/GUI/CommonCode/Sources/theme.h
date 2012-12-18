@@ -35,8 +35,6 @@ public:
 	{
 		theme_aero,
 		theme_aero_packed,
-		theme_luna,
-		theme_luna_packed,
 		theme_basic,
 		theme_basic_packed
 	};
@@ -55,8 +53,6 @@ private:
 
 	clan::RadioButton *radiobutton_aero;
 	clan::RadioButton *radiobutton_aero_packed;
-	clan::RadioButton *radiobutton_luna;
-	clan::RadioButton *radiobutton_luna_packed;
 	clan::RadioButton *radiobutton_basic;
 	clan::RadioButton *radiobutton_basic_packed;
 

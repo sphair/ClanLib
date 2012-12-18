@@ -68,7 +68,7 @@ void Info::draw(clan::Canvas &canvas)
 
 	clan::FontDescription desc;
 	desc.set_typeface_name("Tahoma");
-	desc.set_height(16);
+	desc.set_height(14);
 	clan::Font font = get_gui_manager().get_registered_font(desc);
 	if (font.is_null())
 	{

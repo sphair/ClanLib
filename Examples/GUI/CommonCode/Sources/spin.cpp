@@ -30,7 +30,7 @@
 #include "spin.h"
 
 Spin::Spin(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Spin", clan::Rect(256*3 + 32, 256 + 16, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Spin", clan::Rect(256*3 + 32, 256 + 16, clan::Size(256, 180)), false), "window")
 {
 
 

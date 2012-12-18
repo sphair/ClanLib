@@ -140,9 +140,6 @@ const char *GUI::get_theme_location()
 	if (current_theme == Theme::theme_basic_packed)
 		return "../../../Resources/GUIThemeBasicPacked";
 
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked";
-
-	return "../../../Resources/GUIThemeLuna";
+	return "../../../Resources/GUIThemeAero";
 }
 
