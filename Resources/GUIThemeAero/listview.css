@@ -86,8 +86,8 @@ listview icon_selection:normal
 {
 	border-image-source:url('res:ListViewIconSelection');
 
-	border-image-slice:3 4 3 4 fill;
-	border-image-width:3px 4px 3px 4px;
+	border-image-slice:3 4 4 3 fill;
+	border-image-width:3px 4px 4px 3px;
 	border-image-repeat:stretch; 
 
 	border-top:-3;
@@ -209,8 +209,8 @@ listview_header
 listview_header columnheader:normal
 {
 	border-image-source:url('res:ListViewColumnHeaderNormal');
-	border-image-slice:2 3 9 14 fill;
-	border-image-width:2px 3px 9px 14px;
+	border-image-slice:9 3 14 2 fill;
+	border-image-width:9px 3px 14px 2px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;
@@ -222,8 +222,8 @@ listview_header columnheader:normal
 listview_header columnheader:hot
 {
 	border-image-source:url('res:ListViewColumnHeaderHot');
-	border-image-slice:2 3 9 14 fill;
-	border-image-width:2px 3px 9px 14px;
+	border-image-slice:9 3 14 2 fill;
+	border-image-width:9px 3px 14px 2px;
 	border-image-repeat:stretch;
 
 	border-top:3px;
@@ -235,8 +235,8 @@ listview_header columnheader:hot
 listview_header columnheader:pressed
 {
 	border-image-source:url('res:ListViewColumnHeaderPressed');
-	border-image-slice:2 3 9 14 fill;
-	border-image-width:2px 3px 9px 14px;
+	border-image-slice:9 3 14 2 fill;
+	border-image-width:9px 3px 14px 2px;
 	border-image-repeat:stretch;
 	
 	border-top:3px;

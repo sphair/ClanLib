@@ -60,8 +60,8 @@ radiobutton checker:unchecked:disabled
 
 radiobutton focus
 {
-	border-image-slice:3 4 3 4 fill;
-	border-image-width:3px 4px 3px 4px;
+	border-image-slice:3 4 4 3 fill;
+	border-image-width:3px 4px 4px 3px;
 	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 

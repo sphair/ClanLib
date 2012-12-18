@@ -9,8 +9,8 @@ ribbon
 	width:271px;
 	height:117px;
 	/*height:95px;*/
-	border-image-slice: 8 8 50 8 fill;
-	border-image-width:px 8px 8px 50px;
+	border-image-slice:8 8 50  8 fill;
+	border-image-width:8px 8px 50px px;
 	font-family:tahoma;
 	font-size:11px;
 }
@@ -41,8 +41,8 @@ ribbon tab
 	border-image-source:none;
 	width:40px;
 	height:23px;
-	border-image-slice: 8 8 8 8 fill;
-	border-image-width:px 8px 8px 8px;
+	border-image-slice:8 8 8  8 fill;
+	border-image-width:8px 8px 8px px;
 	font-family:tahoma;
 }
 
@@ -54,8 +54,8 @@ ribbon tab:selected
 ribbon tab-background
 {
 	border-image-source:url('res:RibbonTabBackground');
-	border-image-slice: 120 120 54 8 fill;
-	border-image-width:px 120px 120px 54px;
+	border-image-slice:120 120 54  8 fill;
+	border-image-width:120px 120px 54px px;
 	font-family:tahoma;
 }
 
@@ -64,8 +64,8 @@ ribbon-section
 	border-image-source:url('res:RibbonSection');
 	width:70px;
 	height:87px;
-	border-image-slice: 8 8 24 16 fill;
-	border-image-width:px 8px 8px 24px;
+	border-image-slice:8 8 24  16 fill;
+	border-image-width:8px 8px 24px px;
 }
 
 ribbon-section button
@@ -87,43 +87,43 @@ ribbon-section button.big
 ribbon-section button:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
-	border-image-slice: 8 8 1 1 fill;
-	border-image-width:px 8px 8px 1px;
+	border-image-slice:8 8 1  1 fill;
+	border-image-width:8px 8px 1px px;
 }
 
 ribbon-section button:pressed
 {
 	border-image-source:url('res:RibbonButtonPressed');
-	border-image-slice: 8 8 1 1 fill;
-	border-image-width:px 8px 8px 1px;
+	border-image-slice:8 8 1  1 fill;
+	border-image-width:8px 8px 1px px;
 }
 
 ribbon-section button:toggled
 {
 	border-image-source:url('res:RibbonButtonToggled');
-	border-image-slice: 8 8 1 1 fill;
-	border-image-width:px 8px 8px 1px;
+	border-image-slice:8 8 1  1 fill;
+	border-image-width:8px 8px 1px px;
 }
 
 ribbon-section button:toggled:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
-	border-image-slice: 8 8 1 1 fill;
-	border-image-width:px 8px 8px 1px;
+	border-image-slice:8 8 1  1 fill;
+	border-image-width:8px 8px 1px px;
 }
 
 ribbon-section button:toggled:pressed:hot
 {
 	border-image-source:url('res:RibbonButtonPressed');
-	border-image-slice: 8 8 1 1 fill;
-	border-image-width:px 8px 8px 1px;
+	border-image-slice:8 8 1  1 fill;
+	border-image-width:8px 8px 1px px;
 }
 
 ribbon-menu
 {
 	border-image-source:url('res:RibbonMenuBackground');
-	border-image-slice: 222 2 27 22 fill;
-	border-image-width:px 222px 2px 27px;
+	border-image-slice:2 222 27  22 fill;
+	border-image-width:2px 222px 27px px;
 }
 
 ribbon-menu menu-item
@@ -148,8 +148,8 @@ ribbon-menu menu-item:separator
 
 ribbon-section button.dropdown
 {
-	border-image-slice: 3 12 3 3 fill;
-	border-image-width:px 3px 12px 3px;
+	border-image-slice:12 3 3  3 fill;
+	border-image-width:12px 3px 3px px;
 	border-image-source:url('res:RibbonDropDownButton');
 	padding-left: 4;
 	padding-right: 12;
@@ -228,8 +228,8 @@ combobox.ribbon opener
 {
 	width:17px;
 	height:20px;
-	border-image-slice:5 5 6 6 fill;
-	border-image-width:5px 5px 6px 6px;
+	border-image-slice:6 5 6 5 fill;
+	border-image-width:6px 5px 6px 5px;
 	bg-image-sizing:default;
 	align:center;
 	vertical-align:center;

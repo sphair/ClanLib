@@ -13,8 +13,8 @@ slider:disabled
 
 slider focus
 {
-	border-image-slice:3 4 3 4 fill;
-	border-image-width:3px 4px 3px 4px;
+	border-image-slice:3 4 4 3 fill;
+	border-image-width:3px 4px 4px 3px;
 	border-image-repeat:repeat;
 	border-image-source:url('res:FocusDottedLine'); 
 } 
@@ -33,8 +33,8 @@ slider sliderthumb.horizontal
 {
 	width:11px;
 	height:17px;
-	border-image-slice:2 3 9 9 fill;
-	border-image-width:2px 3px 9px 9px;
+	border-image-slice:9 3 9 2 fill;
+	border-image-width:9px 3px 9px 2px;
 	border-image-repeat:stretch; 
 }
 
@@ -56,8 +56,8 @@ slider sliderthumb.horizontal:disabled
 slider slidertrack.vertical
 {
 	width:4px;
-	border-image-slice:1 1 1 2 fill;
-	border-image-width:1px 1px 1px 2px;
+	border-image-slice:1 1 2 1 fill;
+	border-image-width:1px 1px 2px 1px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:SliderVerticalTrack');
 }
@@ -66,8 +66,8 @@ slider sliderthumb.vertical
 {
 	width:17px;
 	height:11px;
-	border-image-slice:2 3 5 5 fill;
-	border-image-width:2px 3px 5px 5px;
+	border-image-slice:5 3 5 2 fill;
+	border-image-width:5px 3px 5px 2px;
 	border-image-repeat:stretch; 
 }
 

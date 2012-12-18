@@ -5,8 +5,8 @@ statusbar
 	height:23px;
 
 	border-image-source:url('res:StatusBar'); 
-	border-image-slice:1 2 2 2 fill;
-	border-image-width:1px 2px 2px 2px;
+	border-image-slice:2 2 2 1 fill;
+	border-image-width:2px 2px 2px 1px;
 	border-image-repeat:stretch; 
 
 	color:black;

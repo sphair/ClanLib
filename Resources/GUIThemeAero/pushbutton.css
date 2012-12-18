@@ -55,8 +55,8 @@ button:pressed label
 
 button focus
 {
-	border-image-slice:8 8 8 9 fill;
-	border-image-width:8px 8px 8px 9px;
+	border-image-slice:8 8 9 8 fill;
+	border-image-width:8px 8px 9px 8px;
 	border-image-repeat:repeat;
 	border-image-source:url('res:ButtonFocus');
 }

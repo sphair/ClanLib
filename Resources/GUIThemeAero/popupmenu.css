@@ -1,8 +1,8 @@
 
 popupmenu
 {
-	border-image-slice:32 4 4 4 fill;
-	border-image-width:32px 4px 4px 4px;
+	border-image-slice:4 4 4 32 fill;
+	border-image-width:4px 4px 4px 32px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenu');
 	padding-top:2px;
@@ -71,8 +71,8 @@ popupmenu accel_label:disabled
 
 popupmenu row:selected
 {
-	border-image-slice:8 8 4 4 fill;
-	border-image-width:8px 8px 4px 4px;
+	border-image-slice:4 8 4 8 fill;
+	border-image-width:4px 8px 4px 8px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSelected');
 }
@@ -82,8 +82,8 @@ popupmenu separator
 	height:2px;
 	padding-left:32px;
 
-	border-image-slice:4 4 1 1 fill;
-	border-image-width:4px 4px 1px 1px;
+	border-image-slice:1 4 1 4 fill;
+	border-image-width:1px 4px 1px 4px;
 	border-image-repeat:stretch; 
 	border-image-source:url('res:PopupMenuSeparator');
 }
