@@ -52,11 +52,11 @@ GUIThemePart::GUIThemePart()
 {
 }
 
-GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &pseudo_tag_name)
+GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &tag_name)
 : impl(new GUIThemePart_Impl(parent))
 {
 	impl->element.set_parent(&parent->impl->element);
-	set_tag_name(pseudo_tag_name);
+	set_tag_name(tag_name);
 }
 
 void GUIThemePart::throw_if_null() const
