@@ -40,7 +40,6 @@
 #include "API/GUI/Components/menubar.h"
 #include "API/GUI/Components/popupmenu.h"
 #include "API/Display/Window/keys.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Window/input_event.h"
 #include "menu_modal_loop.h"
 #include "menubar_impl.h"
