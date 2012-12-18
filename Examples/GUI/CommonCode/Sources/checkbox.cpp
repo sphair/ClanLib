@@ -30,10 +30,8 @@
 #include "checkbox.h"
 
 CheckBox::CheckBox(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false), "window")
 {
-
-
 	clan::Rect client_area = get_content_box();
 
 	checkbox1 = new clan::CheckBox(this);

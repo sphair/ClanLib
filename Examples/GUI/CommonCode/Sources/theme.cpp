@@ -30,7 +30,7 @@
 #include "theme.h"
 
 Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme(default_theme),
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false), "window")
 {
 
 
@@ -39,12 +39,12 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	groupbox = new clan::GroupBox(this);
 	groupbox->set_geometry(clan::Rect(client_area.left + 5, client_area.top + 5, client_area.right - 5, client_area.bottom - 5));
 
-	int xoffset = client_area.left + 150;
+	int xoffset = client_area.left + 100;
 	int yoffset = client_area.top + 4;
 	int ygap = 20;
 
 	radiobutton_aero = new clan::RadioButton(this);
-	radiobutton_aero->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
+	radiobutton_aero->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(96, 24)));
 	radiobutton_aero->set_text("Aero");
 	radiobutton_aero->set_selected(default_theme == theme_aero);
 	radiobutton_aero->set_group_name("Theme");
@@ -52,31 +52,15 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	yoffset += ygap;
 
 	radiobutton_aero_packed = new clan::RadioButton(this);
-	radiobutton_aero_packed->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
+	radiobutton_aero_packed->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(96, 24)));
 	radiobutton_aero_packed->set_text("Aero Packed");
 	radiobutton_aero_packed->set_selected(default_theme == theme_aero_packed);
 	radiobutton_aero_packed->set_group_name("Theme");
 	radiobutton_aero_packed->func_selected().set(this, &Theme::on_theme_selected, radiobutton_aero_packed);
 	yoffset += ygap;
 
-	radiobutton_luna = new clan::RadioButton(this);
-	radiobutton_luna->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
-	radiobutton_luna->set_text("Luna");
-	radiobutton_luna->set_selected(default_theme == theme_luna);
-	radiobutton_luna->set_group_name("Theme");
-	radiobutton_luna->func_selected().set(this, &Theme::on_theme_selected, radiobutton_luna);
-	yoffset += ygap;
-
-	radiobutton_luna_packed = new clan::RadioButton(this);
-	radiobutton_luna_packed->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
-	radiobutton_luna_packed->set_text("Luna Packed");
-	radiobutton_luna_packed->set_selected(default_theme == theme_luna_packed);
-	radiobutton_luna_packed->set_group_name("Theme");
-	radiobutton_luna_packed->func_selected().set(this, &Theme::on_theme_selected, radiobutton_luna_packed);
-	yoffset += ygap;
-
 	radiobutton_basic = new clan::RadioButton(this);
-	radiobutton_basic->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
+	radiobutton_basic->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(96, 24)));
 	radiobutton_basic->set_text("Basic");
 	radiobutton_basic->set_selected(default_theme == theme_basic);
 	radiobutton_basic->set_group_name("Theme");
@@ -84,7 +68,7 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	yoffset += ygap;
 
 	radiobutton_basic_packed = new clan::RadioButton(this);
-	radiobutton_basic_packed->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(64, 24)));
+	radiobutton_basic_packed->set_geometry(clan::Rect(xoffset, yoffset , clan::Size(96, 24)));
 	radiobutton_basic_packed->set_text("Basic Packed");
 	radiobutton_basic_packed->set_selected(default_theme == theme_basic_packed);
 	radiobutton_basic_packed->set_group_name("Theme");
@@ -95,8 +79,6 @@ Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme
 	{
 		radiobutton_aero->set_enabled(false);
 		radiobutton_aero_packed->set_enabled(false);
-		radiobutton_luna->set_enabled(false);
-		radiobutton_luna_packed->set_enabled(false);
 		radiobutton_basic->set_selected(true);
 
 	}
@@ -115,12 +97,6 @@ void Theme::on_theme_selected(clan::RadioButton *radiobutton)
 
 	if (radiobutton == radiobutton_aero_packed)
 		current_theme = theme_aero_packed;
-
-	if (radiobutton == radiobutton_luna)
-		current_theme = theme_luna;
-
-	if (radiobutton == radiobutton_luna_packed)
-		current_theme = theme_luna_packed;
 
 	if (radiobutton == radiobutton_basic)
 		current_theme = theme_basic;

@@ -30,7 +30,7 @@
 #include "radiobutton.h"
 
 RadioButton::RadioButton(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Radio Button", clan::Rect(256 + 256 + 24, 256 + 180 + 24, clan::Size(256, 180)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Radio Button", clan::Rect(256 + 256 + 24, 256 + 180 + 24, clan::Size(256, 180)), false), "window")
 {
 
 

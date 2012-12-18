@@ -30,7 +30,7 @@
 #include "slider.h"
 
 Slider::Slider(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false), "window")
 {
 
 

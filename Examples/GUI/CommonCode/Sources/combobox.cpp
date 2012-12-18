@@ -30,7 +30,7 @@
 #include "combobox.h"
 
 ComboBox::ComboBox(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false), "window")
 {
 
 

@@ -30,7 +30,7 @@
 #include "listview.h"
 
 ListView::ListView(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false))
+	clan::GUIComponent(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false), "window")
 {
 
 
