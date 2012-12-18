@@ -46,7 +46,7 @@ window buttonclose
 	height:15px;
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed; 
+	background-attachment:scroll; 
 }
 
 window buttonclose:normal

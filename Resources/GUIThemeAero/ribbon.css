@@ -22,7 +22,7 @@ ribbon button.menu
 	border-image-width:0px 0px 0px 0px;
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed;
+	background-attachment:scroll;
 	width:56px;
 	height:22px;
 	border-left:0px;
@@ -259,7 +259,7 @@ combobox.ribbon opener_glyph
 {
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed; 
+	background-attachment:scroll; 
 	align:center;
 	vertical-align:center;
 }

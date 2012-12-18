@@ -48,7 +48,7 @@ combobox opener_glyph
 {
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed; 
+	background-attachment:scroll; 
 	align:center;
 	vertical-align:center;
 }
