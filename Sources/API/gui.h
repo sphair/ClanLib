@@ -78,7 +78,6 @@
 #include "GUI/Components/radiobutton.h"
 #include "GUI/Components/savefiledialog.h"
 #include "GUI/Components/scrollbar.h"
-#include "GUI/Components/label_span.h"
 #include "GUI/Components/spin.h"
 #include "GUI/Components/statusbar.h"
 #include "GUI/Components/tab.h"
