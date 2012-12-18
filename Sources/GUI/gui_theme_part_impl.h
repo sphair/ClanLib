@@ -48,7 +48,8 @@ public:
 	GUIComponent *component;
 	GUIElement element;
 
-	GUICSSUsedValues &get_css_used_values();
+	GUICSSUsedValues &get_css_used_values(const Rect &border_box);
+	Rect last_calculated_border_box;
 private:
 
 	GUICSSUsedValues css_used_values;
