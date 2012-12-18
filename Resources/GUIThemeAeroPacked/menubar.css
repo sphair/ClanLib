@@ -1,8 +1,8 @@
 
 menubar
 {
-	border-image-slice:1 1 9 15 fill;
-	border-image-width:1px 1px 9px 15px;
+	border-image-slice:9 1 15 1 fill;
+	border-image-width:9px 1px 15px 1px;
 	border-image-repeat:stretch;
 	border-image-source:url('res:MenuBarBackgroundActive'); 
 

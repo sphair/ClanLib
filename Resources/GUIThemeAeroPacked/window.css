@@ -7,8 +7,8 @@ window
 window caption
 {
 	border-image-source:url('res:WindowActive');
-	border-image-slice:28 35 9 17 fill;
-	border-image-width:28px 35px 9px 17px;
+	border-image-slice:9 35 17 28 fill;
+	border-image-width:9px 35px 17px 28px;
 	border-image-repeat:stretch; 
 	height:28px;
 }
@@ -16,8 +16,8 @@ window caption
 window frameleft
 {
 	border-image-source:url('res:WindowFrameLeftActive');
-	border-image-slice:2 1 91 0 fill;
-	border-image-width:2px 1px 91px 0px;
+	border-image-slice:91 1 0 2 fill;
+	border-image-width:91px 1px 0px 2px;
 	border-image-repeat:stretch; 
 	width:8px;
 }
@@ -25,8 +25,8 @@ window frameleft
 window frameright
 {
 	border-image-source:url('res:WindowFrameRightActive');
-	border-image-slice:1 2 91 0 fill;
-	border-image-width:1px 2px 91px 0px;
+	border-image-slice:91 2 0 1 fill;
+	border-image-width:91px 2px 0px 1px;
 	border-image-repeat:stretch; 
 	width:8px;
 }
@@ -34,8 +34,8 @@ window frameright
 window framebottom
 {
 	border-image-source:url('res:WindowFrameBottomActive');
-	border-image-slice:2 3 0 2 fill;
-	border-image-width:2px 3px 0px 2px;
+	border-image-slice:0 3 2 2 fill;
+	border-image-width:0px 3px 2px 2px;
 	border-image-repeat:stretch; 
 	height:8px;
 }

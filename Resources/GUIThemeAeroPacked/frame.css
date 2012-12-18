@@ -26,24 +26,24 @@ frame headerleft
 	height:16px;
 	
 	border-image-source:url('res:FrameHeaderLeft');
-	border-image-slice:4 4 2 13 fill;
-	border-image-width:4px 4px 2px 13px;
+	border-image-slice:2 4 13 4 fill;
+	border-image-width:2px 4px 13px 4px;
 	border-image-repeat:stretch; 
 }
 
 frame headerright
 {
 	border-image-source:url('res:FrameHeaderRight');
-	border-image-slice:4 4 2 13 fill;
-	border-image-width:4px 4px 2px 13px;
+	border-image-slice:2 4 13 4 fill;
+	border-image-width:2px 4px 13px 4px;
 	border-image-repeat:stretch; 
 }
 
 frame headercaption
 {
 	border-image-source:url('res:FrameHeaderCaption');
-	border-image-slice:4 4 2 13 fill;
-	border-image-width:4px 4px 2px 13px;
+	border-image-slice:2 4 13 4 fill;
+	border-image-width:2px 4px 13px 4px;
 	border-image-repeat:stretch; 
 	
 	border-left:4px;
