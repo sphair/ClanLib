@@ -141,7 +141,7 @@ ToolBar *ToolBar::get_named_item(GUIComponent *reference_component, const std::s
 
 Size ToolBar::get_css_size() const
 {
-	return Size(50, 50); //FIXME: impl->toolbar->get_css_size();
+	return get_size();
 }
 
 ToolBarItem ToolBar::get_item(int index)

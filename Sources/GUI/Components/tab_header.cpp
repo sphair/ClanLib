@@ -105,12 +105,12 @@ TabHeader::~TabHeader()
 
 int TabHeader::get_css_height() const
 {
-	return 100; //FIXME: impl->part_background.get_css_height();
+	return get_height();
 }
 
 Size TabHeader::get_css_size() const
 {
-	return Size(100, 20); //FIXME: impl->part_background.get_css_size();
+	return get_size();
 }
 
 /////////////////////////////////////////////////////////////////////////////

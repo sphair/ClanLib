@@ -99,7 +99,7 @@ int PopupMenuWindow::get_selected_item_index()
 
 Size PopupMenuWindow::get_css_size() const
 {
-	return Size(40, 40); //FIXME: component->get_css_size();
+	return get_size();
 }
 
 Point PopupMenuWindow::get_submenu_screen_position()
