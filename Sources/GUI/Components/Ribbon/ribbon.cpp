@@ -68,8 +68,6 @@ Ribbon::Ribbon(GUIComponent *container)
 
 	part_tab = GUIThemePart(this, "tab");
 	part_tab_background = GUIThemePart(this, "tab-background");
-//	font_tab = Font(get_canvas(), "Segoe UI", -11);
-	font_tab = Font(get_canvas(), "Tahoma", -11);
 
 #ifdef GLASS_EFFECT
 	// To do: only blur the right area instead of everything.
@@ -139,7 +137,7 @@ void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 	{
 		if (pages[page_index]->show_tab)
 		{
-			Size size_tab_text = font_tab.get_text_size(canvas, pages[page_index]->text);
+			Size size_tab_text = part_tab.get_render_text_size(canvas, pages[page_index]->text);
 			int tab_width = max(size_tab_text.width, 40)+12;
 			Rect current_tab(Point(tab_x, 0), Size(tab_width+12, part_tab.get_css_height()));
 
@@ -148,7 +146,7 @@ void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 				part_tab.set_pseudo_class(custom_state, true);
 			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
 			part_tab.render_box(canvas, current_tab);
-			font_tab.draw_text(canvas, current_tab.left+current_tab.get_width()/2-size_tab_text.width/2, current_tab.bottom-7, pages[page_index]->text, Colorf::black);
+			part_tab.render_text(canvas, pages[page_index]->text, Rect(current_tab.left+current_tab.get_width()/2-size_tab_text.width/2, current_tab.bottom-7, current_tab.get_size() ));
 
 			if (!custom_state.empty())
 				part_tab.set_pseudo_class(custom_state, false);

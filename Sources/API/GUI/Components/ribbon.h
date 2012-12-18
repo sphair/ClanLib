@@ -32,7 +32,6 @@
 #include "../gui_component.h"
 #include "../../Core/Signals/callback_v0.h"
 #include "../../Core/Signals/callback_1.h"
-#include "../../Display/Font/font.h"
 #include "../gui_theme_part.h"
 namespace clan
 {
@@ -82,7 +81,6 @@ private:
 	PushButton *menu_button;
 	RibbonMenu *menu;
 	std::vector<RibbonPage *> pages;
-	Font font_tab;
 	GUIThemePart part_tab;
 	GUIThemePart part_tab_background;
 	unsigned int current_page_index;

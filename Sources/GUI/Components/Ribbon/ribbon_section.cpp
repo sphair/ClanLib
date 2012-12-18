@@ -38,15 +38,12 @@ RibbonSection::RibbonSection(GUIComponent *parent, const std::string &text, int 
 : GUIComponent(parent, "ribbon-section"), text(text), size(size)
 {
 	func_render().set(this, &RibbonSection::on_render);
-
-//	font = Font(get_canvas(), "Segoe UI", -11);
-	font = Font(get_canvas(), "Tahoma", -11);
 }
 
 void RibbonSection::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	Size size_section_text = font.get_text_size(canvas, text);
-	font.draw_text(canvas, get_width()/2-size_section_text.width/2, get_height() - 5, text, Colorf::gray40);
+	Size size_section_text = get_render_text_size(canvas, text);
+	render_text(canvas, text, get_width()/2-size_section_text.width/2, get_height() - 5);
 }
 
 }

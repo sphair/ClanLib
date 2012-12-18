@@ -30,7 +30,6 @@
 #pragma once
 
 #include "../gui_component.h"
-#include "../../Display/Font/font.h"
 
 namespace clan
 {
@@ -43,7 +42,6 @@ public:
 private:
 	void on_render(Canvas &canvas, const Rect &clip_rect);
 
-	Font font;
 	std::string text;
 	int size;
 
