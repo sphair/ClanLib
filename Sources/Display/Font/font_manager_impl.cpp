@@ -73,7 +73,9 @@ void FontManager_Impl::set_font(Font &font, const FontDescription &desc)
 	if (desc.get_cached())	// Only cache if requested to do so (which is the default)
 	{
 		FontCacheEntry font_entry;
-		font_entry.desc = desc;
+		FontDescription clone;
+		clone.clone(desc);
+		font_entry.desc = clone;
 		font_entry.font = font;
 		font_cache.push_back(font_entry);
 	}
