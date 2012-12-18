@@ -768,7 +768,7 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
-	background.set_initial_containing_box(content_box); // Bug: this is wrong. Should be fetched from root component
+	background.set_initial_containing_box(get_top_level_component()->get_viewport());
 	background.render();
 
 	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
