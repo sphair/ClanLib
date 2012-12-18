@@ -140,19 +140,23 @@ void GUIThemePart::update_style()
 	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
 }
 
-GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values()
+GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values(const Rect &border_box)
 {
-	if (element.style_updated())
+	if ( element.style_updated() || (last_calculated_border_box != border_box ) )
 	{
-		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_properties(), component->impl->css_used_values);
-		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_properties(), component->impl->css_used_values);
+		last_calculated_border_box = border_box;
+		GUICSSUsedValues parent_used_values = component->impl->css_used_values;
+		parent_used_values.width = border_box.get_width();
+		parent_used_values.height = border_box.get_height();
+		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_properties(), parent_used_values);
+		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_properties(), parent_used_values);
 	}
 	return css_used_values;
 }
 
 void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 {
-	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values(border_box);
 
 	Rect viewport = impl->component->get_top_level_component()->get_size();
 	CSSResourceCache *resource_cache = &impl->component->impl->gui_manager_impl->resource_cache;
@@ -165,7 +169,7 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
-	background.set_initial_containing_box(content_box);
+	background.set_initial_containing_box(impl->component->get_top_level_component()->get_viewport());
 	background.render();
 
 	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
@@ -248,7 +252,7 @@ Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const R
 
 Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
 {
-	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values(render_box_rect);
 	Rect box = render_box_rect;
 	box.left += css_used_values.border.left + css_used_values.padding.left;
 	box.right -= css_used_values.border.right + css_used_values.padding.right;
@@ -259,7 +263,7 @@ Rect GUIThemePart::get_content_box(const Rect &render_box_rect) const
 
 Rect GUIThemePart::get_border_box(const Rect &content_box_rect) const
 {
-	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values(content_box_rect);
 	Rect box = content_box_rect;
 	box.left -= css_used_values.border.left + css_used_values.padding.left;
 	box.right += css_used_values.border.right + css_used_values.padding.right;
@@ -271,7 +275,7 @@ Rect GUIThemePart::get_border_box(const Rect &content_box_rect) const
 Rect GUIThemePart::get_content_shrink_box() const
 {
 	Rect shrink_box;
-	GUICSSUsedValues &css_used_values = impl->get_css_used_values();
+	GUICSSUsedValues &css_used_values = impl->get_css_used_values(impl->last_calculated_border_box);
 	shrink_box.left = css_used_values.border.left + css_used_values.padding.left;
 	shrink_box.right = css_used_values.border.right + css_used_values.padding.right;
 	shrink_box.top = css_used_values.border.top + css_used_values.padding.top;
