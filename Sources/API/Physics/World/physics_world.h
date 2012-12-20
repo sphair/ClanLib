@@ -131,6 +131,7 @@ private:
 	friend class PhysicsContext;
 	friend class PhysicsQueryAssistant;
 	friend class DistanceJointDescription;
+	friend class RevoluteJointDescription;
 
 	friend class PhysicsDebugDraw;
 	friend class PolygonShape;
