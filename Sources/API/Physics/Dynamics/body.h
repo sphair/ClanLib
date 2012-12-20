@@ -155,6 +155,7 @@ private:
 	friend class PhysicsContext;
 
 	friend class DistanceJointDescription;
+	friend class RevoluteJointDescription;
 };
 
 }
