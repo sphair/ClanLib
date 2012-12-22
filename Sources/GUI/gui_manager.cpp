@@ -165,7 +165,7 @@ void GUIManager::add_theme(const std::string &path_to_theme)
 	VirtualDirectory dir = vfs.get_root_directory();
 
 	impl->resources = ResourceManager("resources.xml", dir);
-	impl->css_document.add_sheet("theme.css", dir);
+	impl->css_document.add_sheet(author_sheet_origin, "theme.css", dir);
 }
 
 void GUIManager::set_css_document(CSSDocument css)
@@ -176,14 +176,14 @@ void GUIManager::set_css_document(CSSDocument css)
 void GUIManager::set_css_document(const std::string &fullname)
 {
 	CSSDocument css;
-	css.add_sheet(fullname);
+	css.add_sheet(author_sheet_origin, fullname);
 	set_css_document(css);
 }
 
 void GUIManager::set_css_document(const std::string &filename, const VirtualDirectory &directory)
 {
 	CSSDocument css;
-	css.add_sheet(filename, directory);
+	css.add_sheet(author_sheet_origin, filename, directory);
 	set_css_document(css);
 }
 

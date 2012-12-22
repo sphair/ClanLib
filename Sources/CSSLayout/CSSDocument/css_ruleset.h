@@ -7,13 +7,15 @@
 namespace clan
 {
 
+class CSSDocumentSheet;
+
 class CSSRuleset
 {
 public:
-	CSSRuleset(int origin) : origin(origin) { }
+	CSSRuleset(CSSDocumentSheet *sheet) : sheet(sheet) { }
 	std::vector<CSSSelectorChain> selectors;
 	std::vector<CSSProperty> properties;
-	int origin;
+	CSSDocumentSheet *sheet;
 };
 
 }

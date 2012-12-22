@@ -31,6 +31,8 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "css_document_impl.h"
+#include "css_document_sheet.h"
+#include "css_ruleset_match.h"
 
 namespace clan
 {
@@ -49,10 +51,10 @@ void CSSDocument::add_default_html_sheet()
 	std::string css_text = get_default_html_sheet();
 	DataBuffer buffer(css_text.data(), css_text.length());
 	IODevice_Memory iodevice(buffer);
-	add_sheet(iodevice, "file:");
+	add_sheet(author_sheet_origin, iodevice, "file:");
 }
 
-void CSSDocument::add_sheet(const std::string &filename, const VirtualDirectory &dir)
+void CSSDocument::add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir)
 {
 	// Load the css document:
 	IODevice file = dir.open_file_read(filename);
@@ -67,18 +69,18 @@ void CSSDocument::add_sheet(const std::string &filename, const VirtualDirectory 
 	std::vector<std::string> import_urls = CSSTokenizer(css_text).read_import_urls();
 	for (size_t i = 0; i < import_urls.size(); i++)
 	{
-		add_sheet(PathHelp::combine(base_uri, import_urls[i]), dir);
+		add_sheet(origin, PathHelp::combine(base_uri, import_urls[i]), dir);
 	}
 
 	// Add the css sheet:
 	CSSTokenizer tokenizer(css_text);
-	impl->read_stylesheet(tokenizer, base_uri);
+	impl->sheets.push_back(std::shared_ptr<CSSDocumentSheet>(new CSSDocumentSheet(origin, tokenizer, base_uri)));
 }
 
-void CSSDocument::add_sheet(IODevice &iodevice, const std::string &base_uri)
+void CSSDocument::add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std::string &base_uri)
 {
 	CSSTokenizer tokenizer(iodevice);
-	impl->read_stylesheet(tokenizer, base_uri);
+	impl->sheets.push_back(std::shared_ptr<CSSDocumentSheet>(new CSSDocumentSheet(origin, tokenizer, base_uri)));
 }
 
 CSSPropertyList CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
@@ -89,6 +91,12 @@ CSSPropertyList CSSDocument::select(const DomElement &node, const std::string &p
 
 CSSPropertyList CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
 {
+	// CSS2.1: 6.4.1 Cascading order
+
+	// Bug: This code does not currently favor user important declarations over author important declarations.
+	//      Since I've never heard about a person setting his own user style sheet I don't really care much tbh.
+	//      If you're the one guy in the world actually doing this, feel free to refactor the code!
+
 	std::vector<CSSRulesetMatch> rulesets = impl->select_rulesets(node, pseudo_element);
 	CSSPropertyList properties;
 	for (size_t i = rulesets.size(); i > 0; i--)
@@ -128,13 +136,13 @@ CSSPropertyList CSSDocument::get_style_properties(const std::string &style_strin
 
 				CSSProperty property;
 				property.set_name(property_name);
-				CSSDocument_Impl::read_property_value(tokenizer, token, property, base_uri);
+				CSSDocumentSheet::read_property_value(tokenizer, token, property, base_uri);
 				if (!property.get_value_tokens().empty())
 					property_list.push_back(property);
 			}
 			else
 			{
-				bool end_of_scope = CSSDocument_Impl::read_end_of_statement(tokenizer, token);
+				bool end_of_scope = CSSDocumentSheet::read_end_of_statement(tokenizer, token);
 				if (end_of_scope)
 					break;
 			}
