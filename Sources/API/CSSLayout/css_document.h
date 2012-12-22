@@ -42,6 +42,13 @@ class CSSSelectNode;
 class CSSPropertyList;
 class CSSDocument_Impl;
 
+enum CSSSheetOrigin
+{
+	user_agent_sheet_origin = 0,
+	user_sheet_origin = 1,
+	author_sheet_origin = 2
+};
+
 class CL_API_CSSLAYOUT CSSDocument
 {
 public:
@@ -51,8 +58,8 @@ public:
 	static std::string get_default_html_sheet();
 
 	void add_default_html_sheet();
-	void add_sheet(const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
-	void add_sheet(IODevice &iodevice, const std::string &base_uri);
+	void add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
+	void add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std::string &base_uri);
 
 	CSSPropertyList select(const DomElement &node, const std::string &pseudo_element = std::string());
 	CSSPropertyList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());

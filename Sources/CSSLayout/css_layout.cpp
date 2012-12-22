@@ -144,8 +144,8 @@ void CSSLayout::load_xml(const std::string &filename, const std::string &style_s
 	impl->clear();
 	File file(filename, File::open_existing, File::access_read);
 	DomDocument doc(file, false);
-	impl->box_tree.css.add_sheet("default.css");
-	impl->box_tree.css.add_sheet(style_sheet);
+	impl->box_tree.css.add_sheet(author_sheet_origin, "default.css");
+	impl->box_tree.css.add_sheet(author_sheet_origin, style_sheet);
 	impl->box_tree.create(doc.get_document_element());
 }
 

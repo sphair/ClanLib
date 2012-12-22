@@ -2,6 +2,7 @@
 #pragma once
 
 #include "css_ruleset.h"
+#include "css_document_sheet.h"
 
 namespace clan
 {
@@ -21,7 +22,7 @@ public:
 
 	bool operator <(const CSSRulesetMatch &other) const
 	{
-		if (ruleset->origin == other.ruleset->origin)
+		if (ruleset->sheet->origin == other.ruleset->sheet->origin)
 		{
 			if (specificity == other.specificity)
 				return document_order < other.document_order;
@@ -30,7 +31,7 @@ public:
 		}
 		else
 		{
-			return ruleset->origin < other.ruleset->origin;
+			return ruleset->sheet->origin < other.ruleset->sheet->origin;
 		}
 	}
 };
