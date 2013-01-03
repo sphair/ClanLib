@@ -1021,11 +1021,11 @@ void Win32Window::received_joystick_input(UINT msg, WPARAM wparam, LPARAM lparam
 	{
 		HRAWINPUT handle = (HRAWINPUT)lparam;
 		UINT size = 0;
-		BOOL result = GetRawInputData(handle, RID_INPUT, 0, &size, sizeof(RAWINPUTHEADER));
-		if (result)
+		GetRawInputData(handle, RID_INPUT, 0, &size, sizeof(RAWINPUTHEADER));
+		if (size > 0)
 		{
 			DataBuffer buffer(size);
-			result = GetRawInputData(handle, RID_INPUT, buffer.get_data(), &size, sizeof(RAWINPUTHEADER));
+			BOOL result = GetRawInputData(handle, RID_INPUT, buffer.get_data(), &size, sizeof(RAWINPUTHEADER));
 			if (result)
 			{
 				RAWINPUT *rawinput = (RAWINPUT*)buffer.get_data();
