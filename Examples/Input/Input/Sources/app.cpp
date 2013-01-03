@@ -273,7 +273,8 @@ void App::draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset)
 		joystick_number,
 		joystick.get_name() ));
 
-	int num_axis = joystick.get_axis_ids().size();
+	std::vector<int> axis_ids = joystick.get_axis_ids();
+	int num_axis = axis_ids.size();
 	text = text + string_format("%1 Axis (", 
 		num_axis );
 
@@ -288,7 +289,7 @@ void App::draw_joystick_state(Canvas &canvas, int joystick_number, int yoffset)
 
 		text = text + string_format("%1 %2", 
 			axis_count ? ", " : "",
-			joystick.get_axis(axis_count) );
+			joystick.get_axis(axis_ids[axis_count]) );
 	}
 
 	int num_buttons = joystick.get_button_count();
