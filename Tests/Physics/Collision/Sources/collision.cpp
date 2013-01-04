@@ -58,7 +58,7 @@ int Collision::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 
 	//Setup physic world
-	PhysicWorldDescription phys_desc;
+	PhysicsWorldDescription phys_desc;
 	phys_desc.set_gravity(0.0f,10.0f);
 	phys_desc.set_sleep(true);
 	phys_desc.set_physic_scale(100);
@@ -66,7 +66,7 @@ int Collision::start(const std::vector<std::string> &args)
 	phys_desc.set_velocity_iterations(8);
 	phys_desc.set_position_iterations(3);
 
-	PhysicWorld phys_world(phys_desc);
+	PhysicsWorld phys_world(phys_desc);
 
 	//Setup ground body
 	Body ground = create_ground_body(phys_world);
@@ -78,7 +78,7 @@ int Collision::start(const std::vector<std::string> &args)
 	outline_body.set_position(Vec2f(200.0f,200.0f));
 
 	//Setup debug draw.
-	PhysicDebugDraw debug_draw(phys_world);
+	PhysicsDebugDraw debug_draw(phys_world);
 	debug_draw.set_flags(f_shape);
 
 	GraphicContext gc = canvas.get_gc();
@@ -122,13 +122,14 @@ void Collision::on_window_close()
 	quit = true;
 }
 
-Body Collision::create_ground_body(PhysicWorld &phys_world)
+Body Collision::create_ground_body(PhysicsWorld &phys_world)
 {
+	PhysicsContext pc = phys_world.get_pc();
 	BodyDescription ground_desc(phys_world);
 	ground_desc.set_position(Vec2f((float)window_x_size/2.0f,(float)window_y_size));
 	ground_desc.set_type(body_static);
 
-	Body ground(ground_desc);
+	Body ground(pc, ground_desc);
 
 	//Setup ground fixture
 	PolygonShape ground_shape(phys_world);
@@ -138,16 +139,18 @@ Body Collision::create_ground_body(PhysicWorld &phys_world)
 	fixture_desc.set_shape(ground_shape);
 	fixture_desc.set_friction(1.0f);
 	fixture_desc.set_density(1000.0f);
-	
-	Fixture ground_fixture(ground, fixture_desc);
+
+	Fixture ground_fixture(pc, ground, fixture_desc);
 	return ground;
 }
 
-Body Collision::create_outline_body(PhysicWorld &phys_world)
+Body Collision::create_outline_body(PhysicsWorld &phys_world)
 {
+	PhysicsContext pc = phys_world.get_pc();
+
 	BodyDescription box_desc(phys_world);
 	box_desc.set_type(body_dynamic);
-	Body box(box_desc);
+	Body box(pc, box_desc);
 
 	//Setup box fixture description.
 	//
@@ -165,7 +168,7 @@ Body Collision::create_outline_body(PhysicWorld &phys_world)
 	fixture_desc2.set_friction(0.001f);
 	fixture_desc2.set_density(50.0f);
 
-	Fixture box_fixture(box,fixture_desc2);
+	Fixture box_fixture(pc, box,fixture_desc2);
 	return box;
 }
 
