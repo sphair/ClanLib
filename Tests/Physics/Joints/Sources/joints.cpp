@@ -77,7 +77,7 @@ int Joints::start(const std::vector<std::string> &args)
 	GraphicContext gc = canvas.get_gc();
 	//Setup joints
 
-	const int number_of_joints = 1;
+	const int number_of_joints = 2;
 	std::vector<Body> bodies_A(number_of_joints);
 	std::vector<Body> bodies_B(number_of_joints);
 	std::vector<std::shared_ptr<Joint>> Joints(number_of_joints);
@@ -86,10 +86,10 @@ int Joints::start(const std::vector<std::string> &args)
 	for(int i=0; i<number_of_joints; i++)
 	{
 		bodies_A[i] = create_box_body(phys_world);
-		bodies_A[i].set_position(Vec2f(80.0f+20.0f*i,40.0f));
+		bodies_A[i].set_position(Vec2f(80.0f+80.0f*i,280.0f));
 
 		bodies_B[i] = create_box_body(phys_world);
-		bodies_B[i].set_position(Vec2f(80.0f+20.0f*i,120.0f));
+		bodies_B[i].set_position(Vec2f(80.0f+80.0f*i,440.0f));
 
 		Joints[i] = create_joint(phys_world, bodies_A[i], bodies_B[i], i);
 	}
@@ -109,7 +109,6 @@ int Joints::start(const std::vector<std::string> &args)
 		canvas.flush();
 		window.flip(1);
 
-		
 		// This call processes user input and other events
 		KeepAlive::process(0);
 
@@ -190,13 +189,26 @@ std::shared_ptr<Joint> Joints::create_joint(PhysicsWorld &phys_world, Body &body
 	{
 	default:
 	case 0: // Distance joint
-		DistanceJointDescription joint_desc(phys_world);
+		{
+			DistanceJointDescription joint_desc(phys_world);
 
-		joint_desc.set_bodies(bodyA, bodyB, bodyA.get_position(), bodyB.get_position());
-		joint_desc.set_damping_ratio(1.0f);
-		joint_desc.set_length(100.0f);
+			joint_desc.set_bodies(bodyA, bodyB, bodyA.get_position(), bodyB.get_position());
+			joint_desc.set_damping_ratio(1.0f);
+			joint_desc.set_length(100.0f);
 
-		std::shared_ptr<Joint> joint( static_cast<Joint *> (new DistanceJoint(pc, joint_desc)));
-		return joint;
+			std::shared_ptr<Joint> joint( static_cast<Joint *> (new DistanceJoint(pc, joint_desc)));
+			return joint;
+		}
+	case 1: // Revolute joint
+		{
+			RevoluteJointDescription joint_desc(phys_world);
+			joint_desc.set_bodies(bodyA, bodyB, bodyA.get_position());
+			joint_desc.set_as_motor();
+			joint_desc.set_motor_speed(Angle(60,angle_degrees));
+			joint_desc.set_max_motor_torque(1000);
+		
+			std::shared_ptr<Joint> joint( static_cast<Joint *> (new RevoluteJoint(pc, joint_desc)));
+			return joint;
+		}
 	}
 }
