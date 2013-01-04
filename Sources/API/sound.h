@@ -26,8 +26,7 @@
 **    Magnus Norddahl
 */
 
-/// \brief <p>Sound support. If you want sound in your application, you defiantly
-/// \brief want to link to this library.</p>
+/// \brief <p>Sound support.</p>
 //! Global=Sound
 
 #pragma once
@@ -56,7 +55,6 @@
 
 #include "Sound/SoundProviders/soundprovider_wave.h"
 #include "Sound/SoundProviders/soundprovider_raw.h"
-#include "Sound/SoundProviders/soundprovider_recorder.h"
 #include "Sound/SoundProviders/soundfilter_provider.h"
 
 #include "Sound/SoundFilters/echofilter.h"
@@ -88,7 +86,5 @@
 			#pragma comment(lib, "clanSound-static-mt-debug.lib")
 		#endif
 	#endif
-	#pragma comment(lib, "dsound.lib")
-	#pragma comment(lib, "dxguid.lib")
 	#pragma comment(lib, "winmm.lib")
 #endif

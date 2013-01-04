@@ -35,7 +35,7 @@
 #include "soundoutput_impl.h"
 
 #ifdef WIN32
-#include "Win32/soundoutput_directsound.h"
+#include "Win32/soundoutput_win32.h"
 #else
 #ifdef __APPLE__
 #include "MacOSX/soundoutput_macosx.h"
@@ -69,7 +69,7 @@ SoundOutput::SoundOutput(int mixing_frequency, int latency)
 SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 {
 #ifdef WIN32
-	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_DirectSound(desc.get_mixing_frequency(), desc.get_mixing_latency()));
+	std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_Win32(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 	impl = soundoutput_impl;
 #else
 #ifdef __APPLE__
