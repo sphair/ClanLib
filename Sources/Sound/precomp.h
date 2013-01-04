@@ -33,7 +33,6 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
-#include <dsound.h>
 #endif
 
 #include "API/Core/System/exception.h"
