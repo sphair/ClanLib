@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_flex_basis.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_basis.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxFlexBasis::CSSBoxFlexBasis()
+CSSValueFlexBasis::CSSValueFlexBasis()
 : type(type_auto), percentage(0.0f)
 {
 }
 
-void CSSBoxFlexBasis::compute(const CSSBoxFlexBasis *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFlexBasis::compute(const CSSValueFlexBasis *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,7 +58,7 @@ void CSSBoxFlexBasis::compute(const CSSBoxFlexBasis *parent, CSSResourceCache *l
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxFlexBasis::to_string() const
+std::string CSSValueFlexBasis::to_string() const
 {
 	switch (type)
 	{

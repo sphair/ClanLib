@@ -30,7 +30,7 @@
 
 #include "BoxTree/css_box_tree.h"
 #include "LayoutTree/css_layout_tree.h"
-#include "css_resource_cache.h"
+#include "CSSLayout/css_resource_cache.h"
 #include "API/Core/System/disposable_object.h"
 
 namespace clan

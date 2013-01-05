@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_text_indent.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_text_indent.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxTextIndent::CSSBoxTextIndent()
+CSSValueTextIndent::CSSValueTextIndent()
 : type(type_inherit), percentage(0.0f)
 {
 }
 
-void CSSBoxTextIndent::compute(const CSSBoxTextIndent *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueTextIndent::compute(const CSSValueTextIndent *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -51,7 +51,7 @@ void CSSBoxTextIndent::compute(const CSSBoxTextIndent *parent, CSSResourceCache 
 		else
 		{
 			type = type_length;
-			length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			length = CSSLength(0.0f, CSSLength::type_px);
 		}
 	}
 
@@ -59,7 +59,7 @@ void CSSBoxTextIndent::compute(const CSSBoxTextIndent *parent, CSSResourceCache 
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxTextIndent::to_string() const
+std::string CSSValueTextIndent::to_string() const
 {
 	switch (type)
 	{

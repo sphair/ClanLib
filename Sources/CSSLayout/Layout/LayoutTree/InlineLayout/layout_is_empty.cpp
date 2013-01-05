@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "layout_is_empty.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 
 namespace clan
 {

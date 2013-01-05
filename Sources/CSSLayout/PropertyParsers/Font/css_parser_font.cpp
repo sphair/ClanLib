@@ -40,21 +40,21 @@ std::vector<std::string> CSSParserFont::get_names()
 	return names;
 }
 
-void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxFontStyle style;
-	CSSBoxFontVariant variant;
-	CSSBoxFontWeight weight;
-	CSSBoxFontSize size;
-	CSSBoxLineHeight line_height;
-	CSSBoxFontFamily family;
-	style.type = CSSBoxFontStyle::type_normal;
-	variant.type = CSSBoxFontVariant::type_normal;
-	weight.type = CSSBoxFontWeight::type_normal;
-	size.type = CSSBoxFontSize::type_medium;
-	line_height.type = CSSBoxLineHeight::type_normal;
-	family.type = CSSBoxFontFamily::type_names;
-	family.names.push_back(CSSBoxFontFamilyName());
+	CSSValueFontStyle style;
+	CSSValueFontVariant variant;
+	CSSValueFontWeight weight;
+	CSSValueFontSize size;
+	CSSValueLineHeight line_height;
+	CSSValueFontFamily family;
+	style.type = CSSValueFontStyle::type_normal;
+	variant.type = CSSValueFontVariant::type_normal;
+	weight.type = CSSValueFontWeight::type_normal;
+	size.type = CSSValueFontSize::type_medium;
+	line_height.type = CSSValueLineHeight::type_normal;
+	family.type = CSSValueFontFamily::type_names;
+	family.names.push_back(CSSValueFontFamilyName());
 
 	bool font_style_set = false;
 	bool font_variant_set = false;
@@ -85,12 +85,12 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 			}
 			else if (equals(token.value, "inherit") && tokens.size() == 1)
 			{
-				properties.font_style.type = CSSBoxFontStyle::type_inherit;
-				properties.font_variant.type = CSSBoxFontVariant::type_inherit;
-				properties.font_weight.type = CSSBoxFontWeight::type_inherit;
-				properties.font_size.type = CSSBoxFontSize::type_inherit;
-				properties.line_height.type = CSSBoxLineHeight::type_inherit;
-				properties.font_family.type = CSSBoxFontFamily::type_inherit;
+				properties.font_style.type = CSSValueFontStyle::type_inherit;
+				properties.font_variant.type = CSSValueFontVariant::type_inherit;
+				properties.font_weight.type = CSSValueFontWeight::type_inherit;
+				properties.font_size.type = CSSValueFontSize::type_inherit;
+				properties.line_height.type = CSSValueLineHeight::type_inherit;
+				properties.font_family.type = CSSValueFontFamily::type_inherit;
 				return;
 			}
 			else if (equals(token.value, "normal")) // font-style or font-weight or font-variant
@@ -108,77 +108,77 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 			else if (equals(token.value, "italic") && !font_style_set) // font-style
 			{
 				font_style_set = true;
-				style.type = CSSBoxFontStyle::type_italic;
+				style.type = CSSValueFontStyle::type_italic;
 			}
 			else if (equals(token.value, "oblique") && !font_style_set) // font-style
 			{
 				font_style_set = true;
-				style.type = CSSBoxFontStyle::type_oblique;
+				style.type = CSSValueFontStyle::type_oblique;
 			}
 			else if (equals(token.value, "small-caps") && !font_variant_set) // font-variant
 			{
 				font_style_set = true;
-				variant.type = CSSBoxFontVariant::type_small_caps;
+				variant.type = CSSValueFontVariant::type_small_caps;
 			}
 			else if (equals(token.value, "bold") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_bold;
+				weight.type = CSSValueFontWeight::type_bold;
 			}
 			else if (equals(token.value, "bolder") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_bolder;
+				weight.type = CSSValueFontWeight::type_bolder;
 			}
 			else if (equals(token.value, "lighter") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_lighter;
+				weight.type = CSSValueFontWeight::type_lighter;
 			}
 			else if (token.value == "100" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_100;
+				weight.type = CSSValueFontWeight::type_100;
 			}
 			else if (token.value == "200" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_200;
+				weight.type = CSSValueFontWeight::type_200;
 			}
 			else if (token.value == "300" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_300;
+				weight.type = CSSValueFontWeight::type_300;
 			}
 			else if (token.value == "400" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_400;
+				weight.type = CSSValueFontWeight::type_400;
 			}
 			else if (token.value == "500" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_500;
+				weight.type = CSSValueFontWeight::type_500;
 			}
 			else if (token.value == "600" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_600;
+				weight.type = CSSValueFontWeight::type_600;
 			}
 			else if (token.value == "700" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_700;
+				weight.type = CSSValueFontWeight::type_700;
 			}
 			else if (token.value == "800" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_800;
+				weight.type = CSSValueFontWeight::type_800;
 			}
 			else if (token.value == "900" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSBoxFontWeight::type_900;
+				weight.type = CSSValueFontWeight::type_900;
 			}
 			else
 			{
@@ -200,25 +200,25 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "xx-small"))
-			size.type = CSSBoxFontSize::type_xx_small;
+			size.type = CSSValueFontSize::type_xx_small;
 		else if (equals(token.value, "x-small"))
-			size.type = CSSBoxFontSize::type_x_small;
+			size.type = CSSValueFontSize::type_x_small;
 		else if (equals(token.value, "small"))
-			size.type = CSSBoxFontSize::type_small;
+			size.type = CSSValueFontSize::type_small;
 		else if (equals(token.value, "medium"))
-			size.type = CSSBoxFontSize::type_medium;
+			size.type = CSSValueFontSize::type_medium;
 		else if (equals(token.value, "large"))
-			size.type = CSSBoxFontSize::type_large;
+			size.type = CSSValueFontSize::type_large;
 		else if (equals(token.value, "x-large"))
-			size.type = CSSBoxFontSize::type_x_large;
+			size.type = CSSValueFontSize::type_x_large;
 		else if (equals(token.value, "xx-large"))
-			size.type = CSSBoxFontSize::type_xx_large;
+			size.type = CSSValueFontSize::type_xx_large;
 		else if (equals(token.value, "smaller"))
-			size.type = CSSBoxFontSize::type_smaller;
+			size.type = CSSValueFontSize::type_smaller;
 		else if (equals(token.value, "larger"))
-			size.type = CSSBoxFontSize::type_larger;
+			size.type = CSSValueFontSize::type_larger;
 		else if (equals(token.value, "inherit"))
-			size.type = CSSBoxFontSize::type_inherit;
+			size.type = CSSValueFontSize::type_inherit;
 		else
 		{
 			debug_parse_error(propname, tokens);
@@ -227,10 +227,10 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	}
 	else if (is_length(token))
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			size.type = CSSBoxFontSize::type_length;
+			size.type = CSSValueFontSize::type_length;
 			size.length = length;
 		}
 		else
@@ -241,7 +241,7 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	}
 	else if (token.type == CSSToken::type_percentage)
 	{
-		size.type = CSSBoxFontSize::type_percentage;
+		size.type = CSSValueFontSize::type_percentage;
 		size.percentage = StringHelp::text_to_float(token.value);
 	}
 	else
@@ -258,9 +258,9 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		if (token.type == CSSToken::type_ident)
 		{
 			if (equals(token.value, "normal"))
-				line_height.type = CSSBoxLineHeight::type_normal;
+				line_height.type = CSSValueLineHeight::type_normal;
 			else if (equals(token.value, "inherit"))
-				line_height.type = CSSBoxLineHeight::type_inherit;
+				line_height.type = CSSValueLineHeight::type_inherit;
 			else
 			{
 				debug_parse_error(propname, tokens);
@@ -269,15 +269,15 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 		else if (token.type == CSSToken::type_number)
 		{
-			line_height.type = CSSBoxLineHeight::type_number;
+			line_height.type = CSSValueLineHeight::type_number;
 			line_height.number = StringHelp::text_to_float(token.value);
 		}
 		else if (is_length(token))
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				line_height.type = CSSBoxLineHeight::type_length;
+				line_height.type = CSSValueLineHeight::type_length;
 				line_height.length = length;
 			}
 			else
@@ -288,7 +288,7 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			line_height.type = CSSBoxLineHeight::type_percentage;
+			line_height.type = CSSValueLineHeight::type_percentage;
 			line_height.percentage = StringHelp::text_to_float(token.value);
 		}
 		else
@@ -305,26 +305,26 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	{
 		if (token.type == CSSToken::type_ident)
 		{
-			CSSBoxFontFamilyName name;
+			CSSValueFontFamilyName name;
 			if (equals(token.value, "serif"))
 			{
-				name.type = CSSBoxFontFamilyName::type_serif;
+				name.type = CSSValueFontFamilyName::type_serif;
 			}
 			else if (equals(token.value, "sans-serif"))
 			{
-				name.type = CSSBoxFontFamilyName::type_sans_serif;
+				name.type = CSSValueFontFamilyName::type_sans_serif;
 			}
 			else if (equals(token.value, "cursive"))
 			{
-				name.type = CSSBoxFontFamilyName::type_cursive;
+				name.type = CSSValueFontFamilyName::type_cursive;
 			}
 			else if (equals(token.value, "fantasy"))
 			{
-				name.type = CSSBoxFontFamilyName::type_fantasy;
+				name.type = CSSValueFontFamilyName::type_fantasy;
 			}
 			else if (equals(token.value, "monospace"))
 			{
-				name.type = CSSBoxFontFamilyName::type_monospace;
+				name.type = CSSValueFontFamilyName::type_monospace;
 			}
 			else if (equals(token.value, "default"))
 			{
@@ -338,10 +338,10 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 			}
 			else
 			{
-				name.type = CSSBoxFontFamilyName::type_family_name;
+				name.type = CSSValueFontFamilyName::type_family_name;
 			}
 
-			if (name.type == CSSBoxFontFamilyName::type_family_name)
+			if (name.type == CSSValueFontFamilyName::type_family_name)
 			{
 				name.name = token.value;
 				while (pos != tokens.size())
@@ -382,8 +382,8 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 		else if (token.type == CSSToken::type_string)
 		{
-			CSSBoxFontFamilyName name;
-			name.type = CSSBoxFontFamilyName::type_family_name;
+			CSSValueFontFamilyName name;
+			name.type = CSSValueFontFamilyName::type_family_name;
 			name.name = token.value;
 			family.names.push_back(name);
 

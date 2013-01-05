@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_repeat.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_repeat.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundRepeat::CSSBoxBackgroundRepeat()
+CSSValueBackgroundRepeat::CSSValueBackgroundRepeat()
 : type(type_repeat_style)
 {
 	repeat_x.push_back(style_repeat);
 	repeat_y.push_back(style_repeat);
 }
 
-void CSSBoxBackgroundRepeat::compute(const CSSBoxBackgroundRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundRepeat::compute(const CSSValueBackgroundRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -60,7 +60,7 @@ void CSSBoxBackgroundRepeat::compute(const CSSBoxBackgroundRepeat *parent, CSSRe
 	}
 }
 
-std::string CSSBoxBackgroundRepeat::to_string() const
+std::string CSSValueBackgroundRepeat::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_radius.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_radius.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBorderRadius::CSSBoxBorderRadius()
+CSSValueBorderRadius::CSSValueBorderRadius()
 : type(type_two_values), value_type1(value_type_length), percentage1(0.0f), value_type2(value_type_length), percentage2(0.0f)
 {
 }
 
-void CSSBoxBorderRadius::compute(const CSSBoxBorderRadius *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderRadius::compute(const CSSValueBorderRadius *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -53,8 +53,8 @@ void CSSBoxBorderRadius::compute(const CSSBoxBorderRadius *parent, CSSResourceCa
 			type = type_two_values;
 			value_type1 = value_type_length;
 			value_type2 = value_type_length;
-			length1 = CSSBoxLength(0.0f, CSSBoxLength::type_px);
-			length2 = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			length1 = CSSLength(0.0f, CSSLength::type_px);
+			length2 = CSSLength(0.0f, CSSLength::type_px);
 		}
 	}
 
@@ -70,7 +70,7 @@ void CSSBoxBorderRadius::compute(const CSSBoxBorderRadius *parent, CSSResourceCa
 	length2 = layout->compute_length(length2, em_size, ex_size);
 }
 
-std::string CSSBoxBorderRadius::to_string() const
+std::string CSSValueBorderRadius::to_string() const
 {
 	switch (type)
 	{

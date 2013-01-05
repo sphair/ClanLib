@@ -28,13 +28,13 @@
 
 #pragma once
 
-#include "api_csslayout.h"
+#include "../api_csslayout.h"
 #include "css_layout_node.h"
 
 namespace clan
 {
 
-class CSSPropertyList;
+class CSSPropertyValueList;
 class Rect;
 
 class CL_API_CSSLAYOUT CSSLayoutElement : public CSSLayoutNode
@@ -48,7 +48,7 @@ public:
 	void set_col_span(int span);
 	void set_row_span(int span);
 
-	void apply_properties(const CSSPropertyList &properties);
+	void apply_properties(const CSSPropertyValueList &properties);
 	void apply_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 	void insert_before(CSSLayoutNode &new_child, CSSLayoutNode &ref_child);

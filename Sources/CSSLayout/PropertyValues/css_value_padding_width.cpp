@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_padding_width.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_padding_width.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxPaddingWidth::CSSBoxPaddingWidth()
-: type(type_length), length(0, CSSBoxLength::type_px), percentage(0.0f)
+CSSValuePaddingWidth::CSSValuePaddingWidth()
+: type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
 {
 }
 
-void CSSBoxPaddingWidth::compute(const CSSBoxPaddingWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValuePaddingWidth::compute(const CSSValuePaddingWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -51,7 +51,7 @@ void CSSBoxPaddingWidth::compute(const CSSBoxPaddingWidth *parent, CSSResourceCa
 		else
 		{
 			type = type_length;
-			length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			length = CSSLength(0.0f, CSSLength::type_px);
 		}
 	}
 
@@ -59,7 +59,7 @@ void CSSBoxPaddingWidth::compute(const CSSBoxPaddingWidth *parent, CSSResourceCa
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxPaddingWidth::to_string() const
+std::string CSSValuePaddingWidth::to_string() const
 {
 	switch (type)
 	{

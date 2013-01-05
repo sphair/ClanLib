@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_align_self.h"
-#include "API/CSSLayout/PropertyTypes/css_box_align_items.h"
+#include "API/CSSLayout/PropertyValues/css_value_align_self.h"
+#include "API/CSSLayout/PropertyValues/css_value_align_items.h"
 
 namespace clan
 {
 
-CSSBoxAlignSelf::CSSBoxAlignSelf()
+CSSValueAlignSelf::CSSValueAlignSelf()
 : type(type_auto)
 {
 }
 
-void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxAlignItems *parent_align_items)
+void CSSValueAlignSelf::compute(const CSSValueAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueAlignItems *parent_align_items)
 {
 	if (type == type_inherit)
 	{
@@ -55,20 +55,20 @@ void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *l
 			switch (parent_align_items->type)
 			{
 			default:
-			case CSSBoxAlignItems::type_flex_start:
-				type = CSSBoxAlignSelf::type_flex_start;
+			case CSSValueAlignItems::type_flex_start:
+				type = CSSValueAlignSelf::type_flex_start;
 				break;
-			case CSSBoxAlignItems::type_flex_end:
-				type = CSSBoxAlignSelf::type_flex_end;
+			case CSSValueAlignItems::type_flex_end:
+				type = CSSValueAlignSelf::type_flex_end;
 				break;
-			case CSSBoxAlignItems::type_center:
-				type = CSSBoxAlignSelf::type_center;
+			case CSSValueAlignItems::type_center:
+				type = CSSValueAlignSelf::type_center;
 				break;
-			case CSSBoxAlignItems::type_baseline:
-				type = CSSBoxAlignSelf::type_baseline;
+			case CSSValueAlignItems::type_baseline:
+				type = CSSValueAlignSelf::type_baseline;
 				break;
-			case CSSBoxAlignItems::type_stretch:
-				type = CSSBoxAlignSelf::type_stretch;
+			case CSSValueAlignItems::type_stretch:
+				type = CSSValueAlignSelf::type_stretch;
 				break;
 			}
 		}
@@ -79,7 +79,7 @@ void CSSBoxAlignSelf::compute(const CSSBoxAlignSelf *parent, CSSResourceCache *l
 	}
 }
 
-std::string CSSBoxAlignSelf::to_string() const
+std::string CSSValueAlignSelf::to_string() const
 {
 	switch (type)
 	{

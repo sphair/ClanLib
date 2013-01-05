@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxBorderCollapse : public CSSBoxProperty
+class CSSValueBorderCollapse : public CSSPropertyValue
 {
 public:
-	CSSBoxBorderCollapse();
-	void compute(const CSSBoxBorderCollapse *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueBorderCollapse();
+	void compute(const CSSValueBorderCollapse *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

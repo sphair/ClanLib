@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "get_width.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 
 namespace clan
 {

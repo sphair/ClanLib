@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_counter_increment.h"
+#include "API/CSSLayout/PropertyValues/css_value_counter_increment.h"
 
 namespace clan
 {
 
-CSSBoxCounterIncrement::CSSBoxCounterIncrement()
+CSSValueCounterIncrement::CSSValueCounterIncrement()
 : type(type_none)
 {
 }
 
-void CSSBoxCounterIncrement::compute(const CSSBoxCounterIncrement *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueCounterIncrement::compute(const CSSValueCounterIncrement *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxCounterIncrement::compute(const CSSBoxCounterIncrement *parent, CSSRe
 	}
 }
 
-std::string CSSBoxCounterIncrement::to_string() const
+std::string CSSValueCounterIncrement::to_string() const
 {
 	switch (type)
 	{

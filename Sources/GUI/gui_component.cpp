@@ -35,7 +35,7 @@
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_layout_corners.h"
 #include "API/GUI/gui_window_manager.h"
-#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/XML/dom_text.h"
@@ -43,27 +43,23 @@
 #include "API/Core/IOData/iodevice.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
-#include "API/CSSLayout/css_layout.h"
-#include "API/CSSLayout/css_layout_element.h"
-#include "API/CSSLayout/css_layout_text.h"
-#include "API/CSSLayout/css_document.h"
-#include "API/CSSLayout/dom_select_node.h"
-#include "API/CSSLayout/css_property_list.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/2D/span_layout.h"
+#include "API/Display/Font/font_metrics.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
+#include "CSSLayout/Layout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/PropertyParsers/css_property_parser.h"
+#include "CSSLayout/PropertyParsers/css_property_parsers.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
 #include "gui_component_description_impl.h"
 #include "gui_xml_loader_version_1_0.h"
 #include "gui_component_select_node.h"
-#include "API/Display/2D/canvas.h"
-#include "CSSLayout/LayoutTree/css_background_renderer.h"
-#include "CSSLayout/LayoutTree/css_border_renderer.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
 #include "gui_element.h"
-#include "API/Display/Font/font_metrics.h"
-#include "API/Display/2D/span_layout.h"
-#include "CSSLayout/BoxTree/css_property_parser.h"
-#include "CSSLayout/BoxTree/css_property_parsers.h"
-#include "API/CSSLayout/css_token.h"
 
 namespace clan
 {
@@ -1453,7 +1449,7 @@ std::string GUIComponent::get_property(const std::string &property, const std::s
 {
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
-	CSSPropertyList sheet_properties = document.select(&select_node);
+	CSSPropertyValueList sheet_properties = document.select(&select_node);
 
 	CSSPropertyParsers property_parsers;
 	for (size_t i = sheet_properties.size(); i > 0; i--)

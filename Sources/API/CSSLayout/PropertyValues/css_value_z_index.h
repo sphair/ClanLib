@@ -28,17 +28,17 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxZIndex : public CSSBoxProperty
+class CSSValueZIndex : public CSSPropertyValue
 {
 public:
-	CSSBoxZIndex();
-	void compute(const CSSBoxZIndex *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueZIndex();
+	void compute(const CSSValueZIndex *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

@@ -28,17 +28,17 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxWidth : public CSSBoxProperty
+class CSSValueWidth : public CSSPropertyValue
 {
 public:
-	CSSBoxWidth();
-	void compute(const CSSBoxWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_width_auto);
+	CSSValueWidth();
+	void compute(const CSSValueWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_width_auto);
 	std::string to_string() const;
 
 	enum Type
@@ -49,7 +49,7 @@ public:
 		type_inherit
 	};
 	Type type;
-	CSSBoxLength length;
+	CSSLength length;
 	float percentage;
 };
 

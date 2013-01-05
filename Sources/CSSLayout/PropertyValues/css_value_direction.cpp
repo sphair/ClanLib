@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_direction.h"
+#include "API/CSSLayout/PropertyValues/css_value_direction.h"
 
 namespace clan
 {
 
-CSSBoxDirection::CSSBoxDirection()
+CSSValueDirection::CSSValueDirection()
 : type(type_inherit)
 {
 }
 
-void CSSBoxDirection::compute(const CSSBoxDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueDirection::compute(const CSSValueDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxDirection::compute(const CSSBoxDirection *parent, CSSResourceCache *l
 	}
 }
 
-std::string CSSBoxDirection::to_string() const
+std::string CSSValueDirection::to_string() const
 {
 	switch (type)
 	{

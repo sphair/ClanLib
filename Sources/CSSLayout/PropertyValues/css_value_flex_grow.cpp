@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_flex_grow.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_grow.h"
 
 namespace clan
 {
 
-CSSBoxFlexGrow::CSSBoxFlexGrow()
+CSSValueFlexGrow::CSSValueFlexGrow()
 : type(type_number), number(0.0f)
 {
 }
 
-void CSSBoxFlexGrow::compute(const CSSBoxFlexGrow *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFlexGrow::compute(const CSSValueFlexGrow *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -53,7 +53,7 @@ void CSSBoxFlexGrow::compute(const CSSBoxFlexGrow *parent, CSSResourceCache *lay
 	}
 }
 
-std::string CSSBoxFlexGrow::to_string() const
+std::string CSSValueFlexGrow::to_string() const
 {
 	switch (type)
 	{

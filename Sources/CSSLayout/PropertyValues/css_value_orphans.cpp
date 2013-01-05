@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_orphans.h"
+#include "API/CSSLayout/PropertyValues/css_value_orphans.h"
 
 namespace clan
 {
 
-CSSBoxOrphans::CSSBoxOrphans()
+CSSValueOrphans::CSSValueOrphans()
 : type(type_inherit), value(0)
 {
 }
 
-void CSSBoxOrphans::compute(const CSSBoxOrphans *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueOrphans::compute(const CSSValueOrphans *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -54,7 +54,7 @@ void CSSBoxOrphans::compute(const CSSBoxOrphans *parent, CSSResourceCache *layou
 	}
 }
 
-std::string CSSBoxOrphans::to_string() const
+std::string CSSValueOrphans::to_string() const
 {
 	switch (type)
 	{

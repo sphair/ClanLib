@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "word_count.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 
 namespace clan
 {

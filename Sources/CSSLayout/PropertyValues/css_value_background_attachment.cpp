@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_attachment.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_attachment.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundAttachment::CSSBoxBackgroundAttachment()
+CSSValueBackgroundAttachment::CSSValueBackgroundAttachment()
 : type(type_attachments)
 {
 	attachments.push_back(attachment_scroll);
 }
 
-void CSSBoxBackgroundAttachment::compute(const CSSBoxBackgroundAttachment *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundAttachment::compute(const CSSValueBackgroundAttachment *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxBackgroundAttachment::compute(const CSSBoxBackgroundAttachment *paren
 	}
 }
 
-std::string CSSBoxBackgroundAttachment::to_string() const
+std::string CSSValueBackgroundAttachment::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

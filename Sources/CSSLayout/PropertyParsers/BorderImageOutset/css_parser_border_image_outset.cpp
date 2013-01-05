@@ -40,32 +40,32 @@ std::vector<std::string> CSSParserBorderImageOutset::get_names()
 	return names;
 }
 
-void CSSParserBorderImageOutset::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderImageOutset::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.border_image_outset.type = CSSBoxBorderImageOutset::type_inherit;
+		properties.border_image_outset.type = CSSValueBorderImageOutset::type_inherit;
 	}
 	else
 	{
 		int num_lengths;
-		CSSBoxBorderImageOutset::ValueType value_types[4];
-		CSSBoxLength lengths[4];
+		CSSValueBorderImageOutset::ValueType value_types[4];
+		CSSLength lengths[4];
 		float numbers[4] = { 0, 0, 0, 0 };
 		for (num_lengths = 0; num_lengths < 4; num_lengths++)
 		{
 			if (is_length(token))
 			{
-				value_types[num_lengths] = CSSBoxBorderImageOutset::value_type_length;
+				value_types[num_lengths] = CSSValueBorderImageOutset::value_type_length;
 				if (!parse_length(token, lengths[num_lengths]))
 					return;
 			}
 			else if (token.type == CSSToken::type_number)
 			{
-				value_types[num_lengths] = CSSBoxBorderImageOutset::value_type_number;
+				value_types[num_lengths] = CSSValueBorderImageOutset::value_type_number;
 				numbers[num_lengths] = StringHelp::text_to_float(token.value);
 			}
 			else
@@ -78,7 +78,7 @@ void CSSParserBorderImageOutset::parse(CSSBoxProperties &properties, const std::
 		if (num_lengths < 1 || pos != tokens.size())
 			return;
 
-		properties.border_image_outset.type = CSSBoxBorderImageOutset::type_values;
+		properties.border_image_outset.type = CSSValueBorderImageOutset::type_values;
 		if (num_lengths == 1)
 		{
 			for (int i = 1; i < 4; i++)

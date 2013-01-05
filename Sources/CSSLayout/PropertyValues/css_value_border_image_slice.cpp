@@ -27,12 +27,12 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_image_slice.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_slice.h"
 
 namespace clan
 {
 
-CSSBoxBorderImageSlice::CSSBoxBorderImageSlice()
+CSSValueBorderImageSlice::CSSValueBorderImageSlice()
 : type(type_values),
   value_top(value_type_percentage), value_right(value_type_percentage), value_bottom(value_type_percentage), value_left(value_type_percentage),
   number_top(0.0f), number_right(0.0f), number_bottom(0.0f), number_left(0.0f),
@@ -41,7 +41,7 @@ CSSBoxBorderImageSlice::CSSBoxBorderImageSlice()
 {
 }
 
-void CSSBoxBorderImageSlice::compute(const CSSBoxBorderImageSlice *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderImageSlice::compute(const CSSValueBorderImageSlice *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -82,7 +82,7 @@ void CSSBoxBorderImageSlice::compute(const CSSBoxBorderImageSlice *parent, CSSRe
 	}
 }
 
-std::string CSSBoxBorderImageSlice::to_string() const
+std::string CSSValueBorderImageSlice::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

@@ -49,18 +49,18 @@ public:
 private:
 	void draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh);
 	Rect get_border_image_area() const;
-	int get_left_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_width, int auto_width) const;
-	int get_right_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_width, int auto_width) const;
-	int get_top_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_height, int auto_height) const;
-	int get_bottom_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_height, int auto_height) const;
-	int get_left_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_width) const;
-	int get_right_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_width) const;
-	int get_top_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_height) const;
-	int get_bottom_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_height) const;
-	CSSUsedValue get_horizontal_radius(const CSSBoxBorderRadius &border_radius) const;
-	CSSUsedValue get_vertical_radius(const CSSBoxBorderRadius &border_radius) const;
-	Colorf get_light_color(const CSSBoxBorderColor &border_color) const;
-	Colorf get_dark_color(const CSSBoxBorderColor &border_color) const;
+	int get_left_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_width, int auto_width) const;
+	int get_right_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_width, int auto_width) const;
+	int get_top_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_height, int auto_height) const;
+	int get_bottom_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_height, int auto_height) const;
+	int get_left_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_width) const;
+	int get_right_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_width) const;
+	int get_top_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_height) const;
+	int get_bottom_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_height) const;
+	CSSUsedValue get_horizontal_radius(const CSSValueBorderRadius &border_radius) const;
+	CSSUsedValue get_vertical_radius(const CSSValueBorderRadius &border_radius) const;
+	Colorf get_light_color(const CSSValueBorderColor &border_color) const;
+	Colorf get_dark_color(const CSSValueBorderColor &border_color) const;
 
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resource_cache;

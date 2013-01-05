@@ -40,16 +40,16 @@ std::vector<std::string> CSSParserBorderImageRepeat::get_names()
 	return names;
 }
 
-void CSSParserBorderImageRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderImageRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderImageRepeat border_image_repeat;
-	border_image_repeat.type = CSSBoxBorderImageRepeat::type_values;
+	CSSValueBorderImageRepeat border_image_repeat;
+	border_image_repeat.type = CSSValueBorderImageRepeat::type_values;
 
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.border_image_repeat.type = CSSBoxBorderImageRepeat::type_inherit;
+		properties.border_image_repeat.type = CSSValueBorderImageRepeat::type_inherit;
 		if (out_change_set)
 		{
 			(*out_change_set)["border-image-repeat"] = &properties.border_image_repeat;
@@ -58,15 +58,15 @@ void CSSParserBorderImageRepeat::parse(CSSBoxProperties &properties, const std::
 	}
 	else if (token.type == CSSToken::type_ident && equals(token.value, "stretch"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_stretch;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_stretch;
 	}
 	else if (token.type == CSSToken::type_ident && equals(token.value, "repeat"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_repeat;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_repeat;
 	}
 	else if (token.type == CSSToken::type_ident && equals(token.value, "round"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_round;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_round;
 	}
 	else
 	{
@@ -83,15 +83,15 @@ void CSSParserBorderImageRepeat::parse(CSSBoxProperties &properties, const std::
 		token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "stretch"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_stretch;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_stretch;
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "repeat"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_repeat;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_repeat;
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "round"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_round;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_round;
 		}
 		else
 		{

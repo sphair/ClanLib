@@ -27,11 +27,11 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_layout.h"
-#include "API/CSSLayout/css_layout_text.h"
-#include "API/CSSLayout/css_layout_element.h"
-#include "API/CSSLayout/css_layout_object.h"
-#include "API/CSSLayout/css_hit_test_result.h"
+#include "API/CSSLayout/Layout/css_layout.h"
+#include "API/CSSLayout/Layout/css_layout_text.h"
+#include "API/CSSLayout/Layout/css_layout_element.h"
+#include "API/CSSLayout/Layout/css_layout_object.h"
+#include "API/CSSLayout/Layout/css_hit_test_result.h"
 #include "BoxTree/css_box_element.h"
 #include "BoxTree/css_box_text.h"
 #include "BoxTree/css_box_object.h"

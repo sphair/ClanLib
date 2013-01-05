@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_page_break_before.h"
+#include "API/CSSLayout/PropertyValues/css_value_page_break_before.h"
 
 namespace clan
 {
 
-CSSBoxPageBreakBefore::CSSBoxPageBreakBefore()
+CSSValuePageBreakBefore::CSSValuePageBreakBefore()
 : type(type_auto)
 {
 }
 
-void CSSBoxPageBreakBefore::compute(const CSSBoxPageBreakBefore *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValuePageBreakBefore::compute(const CSSValuePageBreakBefore *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxPageBreakBefore::compute(const CSSBoxPageBreakBefore *parent, CSSReso
 	}
 }
 
-std::string CSSBoxPageBreakBefore::to_string() const
+std::string CSSValuePageBreakBefore::to_string() const
 {
 	switch (type)
 	{

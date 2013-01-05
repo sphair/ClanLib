@@ -40,18 +40,18 @@ std::vector<std::string> CSSParserPageBreakInside::get_names()
 	return names;
 }
 
-void CSSParserPageBreakInside::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserPageBreakInside::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.page_break_inside.type = CSSBoxPageBreakInside::type_auto;
+			properties.page_break_inside.type = CSSValuePageBreakInside::type_auto;
 		else if (equals(token.value, "avoid"))
-			properties.page_break_inside.type = CSSBoxPageBreakInside::type_avoid;
+			properties.page_break_inside.type = CSSValuePageBreakInside::type_avoid;
 		else if (equals(token.value, "inherit"))
-			properties.page_break_inside.type = CSSBoxPageBreakInside::type_inherit;
+			properties.page_break_inside.type = CSSValuePageBreakInside::type_inherit;
 	}
 	if (out_change_set)
 	{

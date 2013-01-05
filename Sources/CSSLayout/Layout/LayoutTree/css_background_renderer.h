@@ -55,13 +55,13 @@ private:
 	Size get_image_size(size_t index, Image &image, Rect origin_box);
 	Rect get_clip_box(size_t index);
 	Rect get_origin_box(size_t index);
-	CSSBoxBackgroundClip::ClipType get_layer_clip(size_t index);
-	CSSBoxBackgroundOrigin::OriginType get_layer_origin(size_t index);
-	CSSBoxBackgroundSize::Size get_layer_size(size_t index);
-	CSSBoxBackgroundPosition::Position get_layer_position(size_t index);
-	CSSBoxBackgroundAttachment::Attachment get_layer_attachment(size_t index);
-	CSSBoxBackgroundRepeat::RepeatStyle get_layer_repeat_x(size_t index);
-	CSSBoxBackgroundRepeat::RepeatStyle get_layer_repeat_y(size_t index);
+	CSSValueBackgroundClip::ClipType get_layer_clip(size_t index);
+	CSSValueBackgroundOrigin::OriginType get_layer_origin(size_t index);
+	CSSValueBackgroundSize::Size get_layer_size(size_t index);
+	CSSValueBackgroundPosition::Position get_layer_position(size_t index);
+	CSSValueBackgroundAttachment::Attachment get_layer_attachment(size_t index);
+	CSSValueBackgroundRepeat::RepeatStyle get_layer_repeat_x(size_t index);
+	CSSValueBackgroundRepeat::RepeatStyle get_layer_repeat_y(size_t index);
 
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resource_cache;

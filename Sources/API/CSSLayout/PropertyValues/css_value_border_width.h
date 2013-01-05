@@ -28,19 +28,19 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxBorderStyle;
+class CSSValueBorderStyle;
 
-class CSSBoxBorderWidth : public CSSBoxProperty
+class CSSValueBorderWidth : public CSSPropertyValue
 {
 public:
-	CSSBoxBorderWidth();
-	void compute(const CSSBoxBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxBorderStyle &style);
+	CSSValueBorderWidth();
+	void compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style);
 	std::string to_string() const;
 
 	enum Type
@@ -51,7 +51,7 @@ public:
 		type_length,
 		type_inherit
 	} type;
-	CSSBoxLength length;
+	CSSLength length;
 };
 
 }

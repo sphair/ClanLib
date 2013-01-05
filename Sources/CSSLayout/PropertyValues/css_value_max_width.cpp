@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_max_width.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_max_width.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxMaxWidth::CSSBoxMaxWidth()
+CSSValueMaxWidth::CSSValueMaxWidth()
 : type(type_none), percentage(0.0f)
 {
 }
 
-void CSSBoxMaxWidth::compute(const CSSBoxMaxWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueMaxWidth::compute(const CSSValueMaxWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,7 +58,7 @@ void CSSBoxMaxWidth::compute(const CSSBoxMaxWidth *parent, CSSResourceCache *lay
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxMaxWidth::to_string() const
+std::string CSSValueMaxWidth::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_font_style.h"
+#include "API/CSSLayout/PropertyValues/css_value_font_style.h"
 
 namespace clan
 {
 
-CSSBoxFontStyle::CSSBoxFontStyle()
+CSSValueFontStyle::CSSValueFontStyle()
 : type(type_inherit)
 {
 }
 
-void CSSBoxFontStyle::compute(const CSSBoxFontStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFontStyle::compute(const CSSValueFontStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxFontStyle::compute(const CSSBoxFontStyle *parent, CSSResourceCache *l
 	}
 }
 
-std::string CSSBoxFontStyle::to_string() const
+std::string CSSValueFontStyle::to_string() const
 {
 	switch (type)
 	{

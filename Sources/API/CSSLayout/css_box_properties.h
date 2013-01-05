@@ -28,232 +28,232 @@
 
 #pragma once
 
-#include "PropertyTypes/css_box_align_content.h"
-#include "PropertyTypes/css_box_align_items.h"
-#include "PropertyTypes/css_box_align_self.h"
-#include "PropertyTypes/css_box_background_attachment.h"
-#include "PropertyTypes/css_box_background_color.h"
-#include "PropertyTypes/css_box_background_image.h"
-#include "PropertyTypes/css_box_background_position.h"
-#include "PropertyTypes/css_box_background_repeat.h"
-#include "PropertyTypes/css_box_background_origin.h"
-#include "PropertyTypes/css_box_background_clip.h"
-#include "PropertyTypes/css_box_background_size.h"
-#include "PropertyTypes/css_box_border_collapse.h"
-#include "PropertyTypes/css_box_border_color.h"
-#include "PropertyTypes/css_box_border_spacing.h"
-#include "PropertyTypes/css_box_border_style.h"
-#include "PropertyTypes/css_box_border_width.h"
-#include "PropertyTypes/css_box_border_radius.h"
-#include "PropertyTypes/css_box_border_image_source.h"
-#include "PropertyTypes/css_box_border_image_slice.h"
-#include "PropertyTypes/css_box_border_image_width.h"
-#include "PropertyTypes/css_box_border_image_outset.h"
-#include "PropertyTypes/css_box_border_image_repeat.h"
-#include "PropertyTypes/css_box_decoration_break.h"
-#include "PropertyTypes/css_box_shadow.h"
-#include "PropertyTypes/css_box_bottom.h"
-#include "PropertyTypes/css_box_caption_side.h"
-#include "PropertyTypes/css_box_flex_basis.h"
-#include "PropertyTypes/css_box_flex_direction.h"
-#include "PropertyTypes/css_box_flex_wrap.h"
-#include "PropertyTypes/css_box_flex_grow.h"
-#include "PropertyTypes/css_box_flex_shrink.h"
-#include "PropertyTypes/css_box_clear.h"
-#include "PropertyTypes/css_box_clip.h"
-#include "PropertyTypes/css_box_color.h"
-#include "PropertyTypes/css_box_counter_increment.h"
-#include "PropertyTypes/css_box_counter_reset.h"
-#include "PropertyTypes/css_box_content.h"
-#include "PropertyTypes/css_box_cursor.h"
-#include "PropertyTypes/css_box_order.h"
-#include "PropertyTypes/css_box_direction.h"
-#include "PropertyTypes/css_box_display.h"
-#include "PropertyTypes/css_box_empty_cells.h"
-#include "PropertyTypes/css_box_float.h"
-#include "PropertyTypes/css_box_font_family.h"
-#include "PropertyTypes/css_box_font_size.h"
-#include "PropertyTypes/css_box_font_style.h"
-#include "PropertyTypes/css_box_font_variant.h"
-#include "PropertyTypes/css_box_font_weight.h"
-#include "PropertyTypes/css_box_height.h"
-#include "PropertyTypes/css_box_justify_content.h"
-#include "PropertyTypes/css_box_left.h"
-#include "PropertyTypes/css_box_letter_spacing.h"
-#include "PropertyTypes/css_box_line_height.h"
-#include "PropertyTypes/css_box_list_style_image.h"
-#include "PropertyTypes/css_box_list_style_position.h"
-#include "PropertyTypes/css_box_list_style_type.h"
-#include "PropertyTypes/css_box_margin_width.h"
-#include "PropertyTypes/css_box_max_height.h"
-#include "PropertyTypes/css_box_max_width.h"
-#include "PropertyTypes/css_box_min_height.h"
-#include "PropertyTypes/css_box_min_width.h"
-#include "PropertyTypes/css_box_orphans.h"
-#include "PropertyTypes/css_box_outline_color.h"
-#include "PropertyTypes/css_box_outline_style.h"
-#include "PropertyTypes/css_box_outline_width.h"
-#include "PropertyTypes/css_box_overflow.h"
-#include "PropertyTypes/css_box_padding_width.h"
-#include "PropertyTypes/css_box_page_break_after.h"
-#include "PropertyTypes/css_box_page_break_before.h"
-#include "PropertyTypes/css_box_page_break_inside.h"
-#include "PropertyTypes/css_box_position.h"
-#include "PropertyTypes/css_box_quotes.h"
-#include "PropertyTypes/css_box_right.h"
-#include "PropertyTypes/css_box_table_layout.h"
-#include "PropertyTypes/css_box_text_align.h"
-#include "PropertyTypes/css_box_text_decoration.h"
-#include "PropertyTypes/css_box_text_indent.h"
-#include "PropertyTypes/css_box_text_transform.h"
-#include "PropertyTypes/css_box_top.h"
-#include "PropertyTypes/css_box_unicode_bidi.h"
-#include "PropertyTypes/css_box_vertical_align.h"
-#include "PropertyTypes/css_box_visibility.h"
-#include "PropertyTypes/css_box_white_space.h"
-#include "PropertyTypes/css_box_widows.h"
-#include "PropertyTypes/css_box_width.h"
-#include "PropertyTypes/css_box_word_spacing.h"
-#include "PropertyTypes/css_box_z_index.h"
+#include "PropertyValues/css_value_align_content.h"
+#include "PropertyValues/css_value_align_items.h"
+#include "PropertyValues/css_value_align_self.h"
+#include "PropertyValues/css_value_background_attachment.h"
+#include "PropertyValues/css_value_background_color.h"
+#include "PropertyValues/css_value_background_image.h"
+#include "PropertyValues/css_value_background_position.h"
+#include "PropertyValues/css_value_background_repeat.h"
+#include "PropertyValues/css_value_background_origin.h"
+#include "PropertyValues/css_value_background_clip.h"
+#include "PropertyValues/css_value_background_size.h"
+#include "PropertyValues/css_value_border_collapse.h"
+#include "PropertyValues/css_value_border_color.h"
+#include "PropertyValues/css_value_border_spacing.h"
+#include "PropertyValues/css_value_border_style.h"
+#include "PropertyValues/css_value_border_width.h"
+#include "PropertyValues/css_value_border_radius.h"
+#include "PropertyValues/css_value_border_image_source.h"
+#include "PropertyValues/css_value_border_image_slice.h"
+#include "PropertyValues/css_value_border_image_width.h"
+#include "PropertyValues/css_value_border_image_outset.h"
+#include "PropertyValues/css_value_border_image_repeat.h"
+#include "PropertyValues/css_value_decoration_break.h"
+#include "PropertyValues/css_value_shadow.h"
+#include "PropertyValues/css_value_bottom.h"
+#include "PropertyValues/css_value_caption_side.h"
+#include "PropertyValues/css_value_flex_basis.h"
+#include "PropertyValues/css_value_flex_direction.h"
+#include "PropertyValues/css_value_flex_wrap.h"
+#include "PropertyValues/css_value_flex_grow.h"
+#include "PropertyValues/css_value_flex_shrink.h"
+#include "PropertyValues/css_value_clear.h"
+#include "PropertyValues/css_value_clip.h"
+#include "PropertyValues/css_value_color.h"
+#include "PropertyValues/css_value_counter_increment.h"
+#include "PropertyValues/css_value_counter_reset.h"
+#include "PropertyValues/css_value_content.h"
+#include "PropertyValues/css_value_cursor.h"
+#include "PropertyValues/css_value_order.h"
+#include "PropertyValues/css_value_direction.h"
+#include "PropertyValues/css_value_display.h"
+#include "PropertyValues/css_value_empty_cells.h"
+#include "PropertyValues/css_value_float.h"
+#include "PropertyValues/css_value_font_family.h"
+#include "PropertyValues/css_value_font_size.h"
+#include "PropertyValues/css_value_font_style.h"
+#include "PropertyValues/css_value_font_variant.h"
+#include "PropertyValues/css_value_font_weight.h"
+#include "PropertyValues/css_value_height.h"
+#include "PropertyValues/css_value_justify_content.h"
+#include "PropertyValues/css_value_left.h"
+#include "PropertyValues/css_value_letter_spacing.h"
+#include "PropertyValues/css_value_line_height.h"
+#include "PropertyValues/css_value_list_style_image.h"
+#include "PropertyValues/css_value_list_style_position.h"
+#include "PropertyValues/css_value_list_style_type.h"
+#include "PropertyValues/css_value_margin_width.h"
+#include "PropertyValues/css_value_max_height.h"
+#include "PropertyValues/css_value_max_width.h"
+#include "PropertyValues/css_value_min_height.h"
+#include "PropertyValues/css_value_min_width.h"
+#include "PropertyValues/css_value_orphans.h"
+#include "PropertyValues/css_value_outline_color.h"
+#include "PropertyValues/css_value_outline_style.h"
+#include "PropertyValues/css_value_outline_width.h"
+#include "PropertyValues/css_value_overflow.h"
+#include "PropertyValues/css_value_padding_width.h"
+#include "PropertyValues/css_value_page_break_after.h"
+#include "PropertyValues/css_value_page_break_before.h"
+#include "PropertyValues/css_value_page_break_inside.h"
+#include "PropertyValues/css_value_position.h"
+#include "PropertyValues/css_value_quotes.h"
+#include "PropertyValues/css_value_right.h"
+#include "PropertyValues/css_value_table_layout.h"
+#include "PropertyValues/css_value_text_align.h"
+#include "PropertyValues/css_value_text_decoration.h"
+#include "PropertyValues/css_value_text_indent.h"
+#include "PropertyValues/css_value_text_transform.h"
+#include "PropertyValues/css_value_top.h"
+#include "PropertyValues/css_value_unicode_bidi.h"
+#include "PropertyValues/css_value_vertical_align.h"
+#include "PropertyValues/css_value_visibility.h"
+#include "PropertyValues/css_value_white_space.h"
+#include "PropertyValues/css_value_widows.h"
+#include "PropertyValues/css_value_width.h"
+#include "PropertyValues/css_value_word_spacing.h"
+#include "PropertyValues/css_value_z_index.h"
 #include <map>
 
 namespace clan
 {
 
-class CSSPropertyList;
+class CSSPropertyValueList;
 
 class CSSBoxProperties
 {
 public:
-	CSSBoxDisplay display;
-	CSSBoxWhiteSpace white_space;
+	CSSValueDisplay display;
+	CSSValueWhiteSpace white_space;
 
-	CSSBoxFlexDirection flex_direction;
-	CSSBoxFlexWrap flex_wrap;
-	CSSBoxOrder order;
+	CSSValueFlexDirection flex_direction;
+	CSSValueFlexWrap flex_wrap;
+	CSSValueOrder order;
 
-	CSSBoxFlexGrow flex_grow;
-	CSSBoxFlexShrink flex_shrink;
-	CSSBoxFlexBasis flex_basis;
+	CSSValueFlexGrow flex_grow;
+	CSSValueFlexShrink flex_shrink;
+	CSSValueFlexBasis flex_basis;
 
-	CSSBoxJustifyContent justify_content;
-	CSSBoxAlignItems align_items;
-	CSSBoxAlignSelf align_self;
-	CSSBoxAlignContent align_content;
+	CSSValueJustifyContent justify_content;
+	CSSValueAlignItems align_items;
+	CSSValueAlignSelf align_self;
+	CSSValueAlignContent align_content;
 
-	CSSBoxMarginWidth margin_width_left;
-	CSSBoxMarginWidth margin_width_top;
-	CSSBoxMarginWidth margin_width_right;
-	CSSBoxMarginWidth margin_width_bottom;
+	CSSValueMarginWidth margin_width_left;
+	CSSValueMarginWidth margin_width_top;
+	CSSValueMarginWidth margin_width_right;
+	CSSValueMarginWidth margin_width_bottom;
 
-	CSSBoxBorderColor border_color_left;
-	CSSBoxBorderColor border_color_top;
-	CSSBoxBorderColor border_color_right;
-	CSSBoxBorderColor border_color_bottom;
+	CSSValueBorderColor border_color_left;
+	CSSValueBorderColor border_color_top;
+	CSSValueBorderColor border_color_right;
+	CSSValueBorderColor border_color_bottom;
 
-	CSSBoxBorderStyle border_style_left;
-	CSSBoxBorderStyle border_style_top;
-	CSSBoxBorderStyle border_style_right;
-	CSSBoxBorderStyle border_style_bottom;
+	CSSValueBorderStyle border_style_left;
+	CSSValueBorderStyle border_style_top;
+	CSSValueBorderStyle border_style_right;
+	CSSValueBorderStyle border_style_bottom;
 
-	CSSBoxBorderWidth border_width_left;
-	CSSBoxBorderWidth border_width_top;
-	CSSBoxBorderWidth border_width_right;
-	CSSBoxBorderWidth border_width_bottom;
+	CSSValueBorderWidth border_width_left;
+	CSSValueBorderWidth border_width_top;
+	CSSValueBorderWidth border_width_right;
+	CSSValueBorderWidth border_width_bottom;
 
-	CSSBoxBorderRadius border_radius_top_right;
-	CSSBoxBorderRadius border_radius_bottom_right;
-	CSSBoxBorderRadius border_radius_bottom_left;
-	CSSBoxBorderRadius border_radius_top_left;
+	CSSValueBorderRadius border_radius_top_right;
+	CSSValueBorderRadius border_radius_bottom_right;
+	CSSValueBorderRadius border_radius_bottom_left;
+	CSSValueBorderRadius border_radius_top_left;
 
-	CSSBoxBorderImageSource border_image_source;
-	CSSBoxBorderImageSlice border_image_slice;
-	CSSBoxBorderImageWidth border_image_width;
-	CSSBoxBorderImageOutset border_image_outset;
-	CSSBoxBorderImageRepeat border_image_repeat;
+	CSSValueBorderImageSource border_image_source;
+	CSSValueBorderImageSlice border_image_slice;
+	CSSValueBorderImageWidth border_image_width;
+	CSSValueBorderImageOutset border_image_outset;
+	CSSValueBorderImageRepeat border_image_repeat;
 
-	CSSBoxDecorationBreak decoration_break;
-	CSSBoxShadow shadow;
+	CSSValueDecorationBreak decoration_break;
+	CSSValueShadow shadow;
 
-	CSSBoxBackgroundAttachment background_attachment;
-	CSSBoxBackgroundColor background_color;
-	CSSBoxBackgroundImage background_image;
-	CSSBoxBackgroundPosition background_position;
-	CSSBoxBackgroundRepeat background_repeat;
-	CSSBoxBackgroundOrigin background_origin;
-	CSSBoxBackgroundClip background_clip;
-	CSSBoxBackgroundSize background_size;
+	CSSValueBackgroundAttachment background_attachment;
+	CSSValueBackgroundColor background_color;
+	CSSValueBackgroundImage background_image;
+	CSSValueBackgroundPosition background_position;
+	CSSValueBackgroundRepeat background_repeat;
+	CSSValueBackgroundOrigin background_origin;
+	CSSValueBackgroundClip background_clip;
+	CSSValueBackgroundSize background_size;
 
-	CSSBoxPaddingWidth padding_width_left;
-	CSSBoxPaddingWidth padding_width_top;
-	CSSBoxPaddingWidth padding_width_right;
-	CSSBoxPaddingWidth padding_width_bottom;
+	CSSValuePaddingWidth padding_width_left;
+	CSSValuePaddingWidth padding_width_top;
+	CSSValuePaddingWidth padding_width_right;
+	CSSValuePaddingWidth padding_width_bottom;
 
-	CSSBoxWidth width;
-	CSSBoxHeight height;
-	CSSBoxMaxWidth max_width;
-	CSSBoxMaxHeight max_height;
-	CSSBoxMinWidth min_width;
-	CSSBoxMinHeight min_height;
+	CSSValueWidth width;
+	CSSValueHeight height;
+	CSSValueMaxWidth max_width;
+	CSSValueMaxHeight max_height;
+	CSSValueMinWidth min_width;
+	CSSValueMinHeight min_height;
 
-	CSSBoxPosition position;
-	CSSBoxZIndex z_index;
-	CSSBoxLeft left;
-	CSSBoxTop top;
-	CSSBoxRight right;
-	CSSBoxBottom bottom;
-	CSSBoxFloat float_box;
-	CSSBoxClear clear;
-	CSSBoxClip clip;
-	CSSBoxOverflow overflow;
-	CSSBoxVisibility visibility;
+	CSSValuePosition position;
+	CSSValueZIndex z_index;
+	CSSValueLeft left;
+	CSSValueTop top;
+	CSSValueRight right;
+	CSSValueBottom bottom;
+	CSSValueFloat float_box;
+	CSSValueClear clear;
+	CSSValueClip clip;
+	CSSValueOverflow overflow;
+	CSSValueVisibility visibility;
 
-	CSSBoxCounterIncrement counter_increment;
-	CSSBoxCounterReset counter_reset;
+	CSSValueCounterIncrement counter_increment;
+	CSSValueCounterReset counter_reset;
 
-	CSSBoxCursor cursor;
-	CSSBoxOutlineColor outline_color;
-	CSSBoxOutlineStyle outline_style;
-	CSSBoxOutlineWidth outline_width;
+	CSSValueCursor cursor;
+	CSSValueOutlineColor outline_color;
+	CSSValueOutlineStyle outline_style;
+	CSSValueOutlineWidth outline_width;
 
-	CSSBoxContent content;
+	CSSValueContent content;
 
-	CSSBoxColor color;
-	CSSBoxTextDecoration text_decoration;
-	CSSBoxTextIndent text_indent;
-	CSSBoxTextTransform text_transform;
-	CSSBoxTextAlign text_align;
-	CSSBoxFontFamily font_family;
-	CSSBoxFontSize font_size;
-	CSSBoxFontStyle font_style;
-	CSSBoxFontVariant font_variant;
-	CSSBoxFontWeight font_weight;
-	CSSBoxLetterSpacing letter_spacing;
-	CSSBoxWordSpacing word_spacing;
-	CSSBoxLineHeight line_height;
-	CSSBoxQuotes quotes;
-	CSSBoxDirection direction;
-	CSSBoxUnicodeBidi unicode_bidi;
+	CSSValueColor color;
+	CSSValueTextDecoration text_decoration;
+	CSSValueTextIndent text_indent;
+	CSSValueTextTransform text_transform;
+	CSSValueTextAlign text_align;
+	CSSValueFontFamily font_family;
+	CSSValueFontSize font_size;
+	CSSValueFontStyle font_style;
+	CSSValueFontVariant font_variant;
+	CSSValueFontWeight font_weight;
+	CSSValueLetterSpacing letter_spacing;
+	CSSValueWordSpacing word_spacing;
+	CSSValueLineHeight line_height;
+	CSSValueQuotes quotes;
+	CSSValueDirection direction;
+	CSSValueUnicodeBidi unicode_bidi;
 
-	CSSBoxOrphans orphans;
-	CSSBoxWidows widows;
-	CSSBoxPageBreakBefore page_break_before;
-	CSSBoxPageBreakAfter page_break_after;
-	CSSBoxPageBreakInside page_break_inside;
+	CSSValueOrphans orphans;
+	CSSValueWidows widows;
+	CSSValuePageBreakBefore page_break_before;
+	CSSValuePageBreakAfter page_break_after;
+	CSSValuePageBreakInside page_break_inside;
 
-	CSSBoxListStyleType list_style_type;
-	CSSBoxListStylePosition list_style_position;
-	CSSBoxListStyleImage list_style_image;
+	CSSValueListStyleType list_style_type;
+	CSSValueListStylePosition list_style_position;
+	CSSValueListStyleImage list_style_image;
 
-	CSSBoxTableLayout table_layout;
-	CSSBoxCaptionSide caption_side;
-	CSSBoxBorderCollapse border_collapse;
-	CSSBoxBorderSpacing border_spacing;
-	CSSBoxVerticalAlign vertical_align;
-	CSSBoxEmptyCells empty_cells;
+	CSSValueTableLayout table_layout;
+	CSSValueCaptionSide caption_side;
+	CSSValueBorderCollapse border_collapse;
+	CSSValueBorderSpacing border_spacing;
+	CSSValueVerticalAlign vertical_align;
+	CSSValueEmptyCells empty_cells;
 
-	void apply_properties(const std::string &style_string, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
-	void apply_properties(const CSSPropertyList &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
+	void apply_properties(const std::string &style_string, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
+	void apply_properties(const CSSPropertyValueList &css_properties, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
 
 	void compute(const CSSBoxProperties *parent, CSSResourceCache *layout);
 };

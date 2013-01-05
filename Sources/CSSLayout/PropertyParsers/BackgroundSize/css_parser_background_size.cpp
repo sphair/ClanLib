@@ -40,41 +40,41 @@ std::vector<std::string> CSSParserBackgroundSize::get_names()
 	return names;
 }
 
-void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_size.type = CSSBoxBackgroundSize::type_inherit;
+		properties.background_size.type = CSSValueBackgroundSize::type_inherit;
 	}
 	else
 	{
-		CSSBoxBackgroundSize background_size;
-		background_size.type = CSSBoxBackgroundSize::type_value;
+		CSSValueBackgroundSize background_size;
+		background_size.type = CSSValueBackgroundSize::type_value;
 		background_size.values.clear();
 		while (true)
 		{
-			CSSBoxBackgroundSize::Size size;
+			CSSValueBackgroundSize::Size size;
 
 			bool single_value = false;
 			if (token.type == CSSToken::type_ident)
 			{
 				if (equals(token.value, "contain"))
 				{
-					size.type = CSSBoxBackgroundSize::size_contain;
+					size.type = CSSValueBackgroundSize::size_contain;
 					single_value = true;
 				}
 				else if (equals(token.value, "cover"))
 				{
-					size.type = CSSBoxBackgroundSize::size_cover;
+					size.type = CSSValueBackgroundSize::size_cover;
 					single_value = true;
 				}
 				else if (equals(token.value, "auto"))
 				{
-					size.type = CSSBoxBackgroundSize::size_values;
-					size.value_x = CSSBoxBackgroundSize::value_type_auto;
+					size.type = CSSValueBackgroundSize::size_values;
+					size.value_x = CSSValueBackgroundSize::value_type_auto;
 				}
 				else
 				{
@@ -83,10 +83,10 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 			}
 			else if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
-					size.value_x = CSSBoxBackgroundSize::value_type_length;
+					size.value_x = CSSValueBackgroundSize::value_type_length;
 					size.length_x = length;
 				}
 				else
@@ -96,7 +96,7 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 			}
 			else if (token.type == CSSToken::type_percentage)
 			{
-				size.value_x = CSSBoxBackgroundSize::value_type_percentage;
+				size.value_x = CSSValueBackgroundSize::value_type_percentage;
 				size.percentage_x = StringHelp::text_to_float(token.value);
 			}
 			else
@@ -119,14 +119,14 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 				}
 				else if (token.type == CSSToken::type_ident && equals(token.value, "auto"))
 				{
-					size.value_y = CSSBoxBackgroundSize::value_type_auto;
+					size.value_y = CSSValueBackgroundSize::value_type_auto;
 				}
 				else if (is_length(token))
 				{
-					CSSBoxLength length;
+					CSSLength length;
 					if (parse_length(token, length))
 					{
-						size.value_y = CSSBoxBackgroundSize::value_type_length;
+						size.value_y = CSSValueBackgroundSize::value_type_length;
 						size.length_y = length;
 					}
 					else
@@ -136,7 +136,7 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 				}
 				else if (token.type == CSSToken::type_percentage)
 				{
-					size.value_y = CSSBoxBackgroundSize::value_type_percentage;
+					size.value_y = CSSValueBackgroundSize::value_type_percentage;
 					size.percentage_y = StringHelp::text_to_float(token.value);
 				}
 				else

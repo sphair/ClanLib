@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_color.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_color.h"
 
 namespace clan
 {
 
-CSSBoxBorderColor::CSSBoxBorderColor()
+CSSValueBorderColor::CSSValueBorderColor()
 : type(type_get_from_color_property)
 {
 }
 
-void CSSBoxBorderColor::compute(const CSSBoxBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color)
+void CSSValueBorderColor::compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color)
 {
 	if (type == type_inherit)
 	{
@@ -59,7 +59,7 @@ void CSSBoxBorderColor::compute(const CSSBoxBorderColor *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxBorderColor::to_string() const
+std::string CSSValueBorderColor::to_string() const
 {
 	switch (type)
 	{

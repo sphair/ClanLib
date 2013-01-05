@@ -27,8 +27,8 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_tokenizer.h"
-#include "API/CSSLayout/css_token.h"
+#include "API/CSSLayout/CSSTokenizer/css_tokenizer.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "css_tokenizer_impl.h"
 
 namespace clan

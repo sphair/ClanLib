@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_vertical_align.h"
-#include "API/CSSLayout/PropertyTypes/css_box_line_height.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_vertical_align.h"
+#include "API/CSSLayout/PropertyValues/css_value_line_height.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxVerticalAlign::CSSBoxVerticalAlign()
+CSSValueVerticalAlign::CSSValueVerticalAlign()
 : type(type_baseline), percentage(0.0f)
 {
 }
 
-void CSSBoxVerticalAlign::compute(const CSSBoxVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxLineHeight &line_height)
+void CSSValueVerticalAlign::compute(const CSSValueVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &line_height)
 {
 	if (type == type_inherit)
 	{
@@ -57,20 +57,20 @@ void CSSBoxVerticalAlign::compute(const CSSBoxVerticalAlign *parent, CSSResource
 
 	if (type == type_percentage)
 	{
-		if (line_height.type == CSSBoxLineHeight::type_number)
+		if (line_height.type == CSSValueLineHeight::type_number)
 		{
 			type = type_length;
-			length = CSSBoxLength(percentage * line_height.number / 100.0f, CSSBoxLength::type_em);
+			length = CSSLength(percentage * line_height.number / 100.0f, CSSLength::type_em);
 		}
-		else if (line_height.type == CSSBoxLineHeight::type_length)
+		else if (line_height.type == CSSValueLineHeight::type_length)
 		{
 			type = type_length;
-			length = CSSBoxLength(percentage * line_height.length.value / 100.0f, line_height.length.type);
+			length = CSSLength(percentage * line_height.length.value / 100.0f, line_height.length.type);
 		}
-		else if (line_height.type == CSSBoxLineHeight::type_normal)
+		else if (line_height.type == CSSValueLineHeight::type_normal)
 		{
 			type = type_length;
-			length = CSSBoxLength(percentage/100.0f, CSSBoxLength::type_em);
+			length = CSSLength(percentage/100.0f, CSSLength::type_em);
 		}
 	}
 
@@ -78,7 +78,7 @@ void CSSBoxVerticalAlign::compute(const CSSBoxVerticalAlign *parent, CSSResource
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxVerticalAlign::to_string() const
+std::string CSSValueVerticalAlign::to_string() const
 {
 	switch (type)
 	{

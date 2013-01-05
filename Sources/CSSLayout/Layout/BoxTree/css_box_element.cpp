@@ -55,18 +55,18 @@ bool CSSBoxElement::is_block_level() const
 {
 	switch (computed_properties.display.type)
 	{
-	case CSSBoxDisplay::type_block:
-	case CSSBoxDisplay::type_run_in:
-	case CSSBoxDisplay::type_list_item:
-	case CSSBoxDisplay::type_table:
-	case CSSBoxDisplay::type_table_row_group:
-	case CSSBoxDisplay::type_table_header_group:
-	case CSSBoxDisplay::type_table_footer_group:
-	case CSSBoxDisplay::type_table_row:
-	case CSSBoxDisplay::type_table_column_group:
-	case CSSBoxDisplay::type_table_column:
-	case CSSBoxDisplay::type_table_cell:
-	case CSSBoxDisplay::type_table_caption:
+	case CSSValueDisplay::type_block:
+	case CSSValueDisplay::type_run_in:
+	case CSSValueDisplay::type_list_item:
+	case CSSValueDisplay::type_table:
+	case CSSValueDisplay::type_table_row_group:
+	case CSSValueDisplay::type_table_header_group:
+	case CSSValueDisplay::type_table_footer_group:
+	case CSSValueDisplay::type_table_row:
+	case CSSValueDisplay::type_table_column_group:
+	case CSSValueDisplay::type_table_column:
+	case CSSValueDisplay::type_table_cell:
+	case CSSValueDisplay::type_table_caption:
 		return true;
 	default:
 		return false;
@@ -77,8 +77,8 @@ bool CSSBoxElement::is_inline_block_level() const
 {
 	switch (computed_properties.display.type)
 	{
-	case CSSBoxDisplay::type_inline_block:
-	case CSSBoxDisplay::type_inline_table:
+	case CSSValueDisplay::type_inline_block:
+	case CSSValueDisplay::type_inline_table:
 		return true;
 	default:
 		return false;
@@ -87,14 +87,14 @@ bool CSSBoxElement::is_inline_block_level() const
 
 bool CSSBoxElement::is_shrink_to_fit() const
 {
-	if (computed_properties.display.type == CSSBoxDisplay::type_inline_block ||
-		computed_properties.display.type == CSSBoxDisplay::type_inline_table ||
-		computed_properties.display.type == CSSBoxDisplay::type_table ||
-		/*computed_properties.display.type == CSSBoxDisplay::type_table_cell ||*/
-		computed_properties.float_box.type != CSSBoxFloat::type_none ||
+	if (computed_properties.display.type == CSSValueDisplay::type_inline_block ||
+		computed_properties.display.type == CSSValueDisplay::type_inline_table ||
+		computed_properties.display.type == CSSValueDisplay::type_table ||
+		/*computed_properties.display.type == CSSValueDisplay::type_table_cell ||*/
+		computed_properties.float_box.type != CSSValueFloat::type_none ||
 		is_absolute() || is_fixed())
 	{
-		return computed_properties.width.type == CSSBoxWidth::type_auto;
+		return computed_properties.width.type == CSSValueWidth::type_auto;
 	}
 	else
 	{
@@ -104,77 +104,77 @@ bool CSSBoxElement::is_shrink_to_fit() const
 
 bool CSSBoxElement::is_float() const
 {
-	return computed_properties.float_box.type != CSSBoxFloat::type_none;
+	return computed_properties.float_box.type != CSSValueFloat::type_none;
 }
 
 bool CSSBoxElement::is_table() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table;
+	return computed_properties.display.type == CSSValueDisplay::type_table;
 }
 
 bool CSSBoxElement::is_inline_table() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_inline_table;
+	return computed_properties.display.type == CSSValueDisplay::type_inline_table;
 }
 
 bool CSSBoxElement::is_table_row() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_row;
+	return computed_properties.display.type == CSSValueDisplay::type_table_row;
 }
 
 bool CSSBoxElement::is_table_cell() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_cell;
+	return computed_properties.display.type == CSSValueDisplay::type_table_cell;
 }
 
 bool CSSBoxElement::is_table_row_group() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_row_group;
+	return computed_properties.display.type == CSSValueDisplay::type_table_row_group;
 }
 
 bool CSSBoxElement::is_table_header_group() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_header_group;
+	return computed_properties.display.type == CSSValueDisplay::type_table_header_group;
 }
 
 bool CSSBoxElement::is_table_footer_group() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_footer_group;
+	return computed_properties.display.type == CSSValueDisplay::type_table_footer_group;
 }
 
 bool CSSBoxElement::is_table_column() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_column;
+	return computed_properties.display.type == CSSValueDisplay::type_table_column;
 }
 
 bool CSSBoxElement::is_table_column_group() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_column_group;
+	return computed_properties.display.type == CSSValueDisplay::type_table_column_group;
 }
 
 bool CSSBoxElement::is_table_caption() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_table_caption;
+	return computed_properties.display.type == CSSValueDisplay::type_table_caption;
 }
 
 bool CSSBoxElement::is_absolute() const
 {
-	return computed_properties.position.type == CSSBoxPosition::type_absolute;
+	return computed_properties.position.type == CSSValuePosition::type_absolute;
 }
 
 bool CSSBoxElement::is_fixed() const
 {
-	return computed_properties.position.type == CSSBoxPosition::type_fixed;
+	return computed_properties.position.type == CSSValuePosition::type_fixed;
 }
 
 bool CSSBoxElement::is_display_none() const
 {
-	return computed_properties.display.type == CSSBoxDisplay::type_none;
+	return computed_properties.display.type == CSSValueDisplay::type_none;
 }
 
 bool CSSBoxElement::is_overflow_visible() const
 {
-	return computed_properties.overflow.type == CSSBoxOverflow::type_visible;
+	return computed_properties.overflow.type == CSSValueOverflow::type_visible;
 }
 
 }

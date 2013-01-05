@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_min_width.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_min_width.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxMinWidth::CSSBoxMinWidth()
-: type(type_auto), length(0, CSSBoxLength::type_px), percentage(0.0f)
+CSSValueMinWidth::CSSValueMinWidth()
+: type(type_auto), length(0, CSSLength::type_px), percentage(0.0f)
 {
 }
 
-void CSSBoxMinWidth::compute(const CSSBoxMinWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueMinWidth::compute(const CSSValueMinWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,7 +58,7 @@ void CSSBoxMinWidth::compute(const CSSBoxMinWidth *parent, CSSResourceCache *lay
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxMinWidth::to_string() const
+std::string CSSValueMinWidth::to_string() const
 {
 	switch (type)
 	{

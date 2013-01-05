@@ -40,19 +40,19 @@ std::vector<std::string> CSSParserBackgroundRepeat::get_names()
 	return names;
 }
 
-void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_repeat.type = CSSBoxBackgroundRepeat::type_inherit;
+		properties.background_repeat.type = CSSValueBackgroundRepeat::type_inherit;
 	}
 	else
 	{
-		CSSBoxBackgroundRepeat background_repeat;
-		background_repeat.type = CSSBoxBackgroundRepeat::type_repeat_style;
+		CSSValueBackgroundRepeat background_repeat;
+		background_repeat.type = CSSValueBackgroundRepeat::type_repeat_style;
 		background_repeat.repeat_x.clear();
 		background_repeat.repeat_y.clear();
 		while (true)
@@ -60,36 +60,36 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 			if (token.type != CSSToken::type_ident)
 				return;
 
-			CSSBoxBackgroundRepeat::RepeatStyle repeat_x, repeat_y;
+			CSSValueBackgroundRepeat::RepeatStyle repeat_x, repeat_y;
 			bool single_style = false;
 
 			if (equals(token.value, "repeat"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_repeat;
+				repeat_x = CSSValueBackgroundRepeat::style_repeat;
 			}
 			else if (equals(token.value, "repeat-x"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_repeat;
-				repeat_y = CSSBoxBackgroundRepeat::style_no_repeat;
+				repeat_x = CSSValueBackgroundRepeat::style_repeat;
+				repeat_y = CSSValueBackgroundRepeat::style_no_repeat;
 				single_style = true;
 			}
 			else if (equals(token.value, "repeat-y"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_no_repeat;
-				repeat_y = CSSBoxBackgroundRepeat::style_repeat;
+				repeat_x = CSSValueBackgroundRepeat::style_no_repeat;
+				repeat_y = CSSValueBackgroundRepeat::style_repeat;
 				single_style = true;
 			}
 			else if (equals(token.value, "no-repeat"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_no_repeat;
+				repeat_x = CSSValueBackgroundRepeat::style_no_repeat;
 			}
 			else if (equals(token.value, "space"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_space;
+				repeat_x = CSSValueBackgroundRepeat::style_space;
 			}
 			else if (equals(token.value, "round"))
 			{
-				repeat_x = CSSBoxBackgroundRepeat::style_round;
+				repeat_x = CSSValueBackgroundRepeat::style_round;
 			}
 			else
 			{
@@ -117,19 +117,19 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 			{
 				if (equals(token.value, "repeat"))
 				{
-					repeat_y = CSSBoxBackgroundRepeat::style_repeat;
+					repeat_y = CSSValueBackgroundRepeat::style_repeat;
 				}
 				else if (equals(token.value, "no-repeat"))
 				{
-					repeat_y = CSSBoxBackgroundRepeat::style_no_repeat;
+					repeat_y = CSSValueBackgroundRepeat::style_no_repeat;
 				}
 				else if (equals(token.value, "space"))
 				{
-					repeat_y = CSSBoxBackgroundRepeat::style_space;
+					repeat_y = CSSValueBackgroundRepeat::style_space;
 				}
 				else if (equals(token.value, "round"))
 				{
-					repeat_y = CSSBoxBackgroundRepeat::style_round;
+					repeat_y = CSSValueBackgroundRepeat::style_round;
 				}
 				else
 				{

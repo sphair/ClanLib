@@ -40,54 +40,54 @@ std::vector<std::string> CSSParserDisplay::get_names()
 	return names;
 }
 
-void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inline"))
-			properties.display.type = CSSBoxDisplay::type_inline;
+			properties.display.type = CSSValueDisplay::type_inline;
 		else if (equals(token.value, "block"))
-			properties.display.type = CSSBoxDisplay::type_block;
+			properties.display.type = CSSValueDisplay::type_block;
 		else if (equals(token.value, "list-item"))
-			properties.display.type = CSSBoxDisplay::type_list_item;
+			properties.display.type = CSSValueDisplay::type_list_item;
 		else if (equals(token.value, "run-in"))
-			properties.display.type = CSSBoxDisplay::type_run_in;
+			properties.display.type = CSSValueDisplay::type_run_in;
 		else if (equals(token.value, "inline-block"))
-			properties.display.type = CSSBoxDisplay::type_inline_block;
+			properties.display.type = CSSValueDisplay::type_inline_block;
 		else if (equals(token.value, "table"))
-			properties.display.type = CSSBoxDisplay::type_table;
+			properties.display.type = CSSValueDisplay::type_table;
 		else if (equals(token.value, "inline-table"))
-			properties.display.type = CSSBoxDisplay::type_inline_table;
+			properties.display.type = CSSValueDisplay::type_inline_table;
 		else if (equals(token.value, "table-row-group"))
-			properties.display.type = CSSBoxDisplay::type_table_row_group;
+			properties.display.type = CSSValueDisplay::type_table_row_group;
 		else if (equals(token.value, "table-header-group"))
-			properties.display.type = CSSBoxDisplay::type_table_header_group;
+			properties.display.type = CSSValueDisplay::type_table_header_group;
 		else if (equals(token.value, "table-footer-group"))
-			properties.display.type = CSSBoxDisplay::type_table_footer_group;
+			properties.display.type = CSSValueDisplay::type_table_footer_group;
 		else if (equals(token.value, "table-row"))
-			properties.display.type = CSSBoxDisplay::type_table_row;
+			properties.display.type = CSSValueDisplay::type_table_row;
 		else if (equals(token.value, "table-column-group"))
-			properties.display.type = CSSBoxDisplay::type_table_column_group;
+			properties.display.type = CSSValueDisplay::type_table_column_group;
 		else if (equals(token.value, "table-column"))
-			properties.display.type = CSSBoxDisplay::type_table_column;
+			properties.display.type = CSSValueDisplay::type_table_column;
 		else if (equals(token.value, "table-cell"))
-			properties.display.type = CSSBoxDisplay::type_table_cell;
+			properties.display.type = CSSValueDisplay::type_table_cell;
 		else if (equals(token.value, "table-caption"))
-			properties.display.type = CSSBoxDisplay::type_table_caption;
+			properties.display.type = CSSValueDisplay::type_table_caption;
 		else if (equals(token.value, "none"))
-			properties.display.type = CSSBoxDisplay::type_none;
+			properties.display.type = CSSValueDisplay::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.display.type = CSSBoxDisplay::type_inherit;
+			properties.display.type = CSSValueDisplay::type_inherit;
 		else if (equals(token.value, "flex"))
-			properties.display.type = CSSBoxDisplay::type_flex;
+			properties.display.type = CSSValueDisplay::type_flex;
 		else if (equals(token.value, "inline-flex"))
-			properties.display.type = CSSBoxDisplay::type_inline_flex;
+			properties.display.type = CSSValueDisplay::type_inline_flex;
 		else if (equals(token.value, "-clan-grid"))
-			properties.display.type = CSSBoxDisplay::type_clan_grid;
+			properties.display.type = CSSValueDisplay::type_clan_grid;
 		else if (equals(token.value, "-clan-stacked"))
-			properties.display.type = CSSBoxDisplay::type_clan_stacked;
+			properties.display.type = CSSValueDisplay::type_clan_stacked;
 	}
 	if (out_change_set)
 	{

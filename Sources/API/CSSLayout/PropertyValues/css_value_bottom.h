@@ -28,22 +28,22 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxTop;
-class CSSBoxPosition;
+class CSSValueTop;
+class CSSValuePosition;
 
-class CSSBoxBottom : public CSSBoxProperty
+class CSSValueBottom : public CSSPropertyValue
 {
 public:
-	CSSBoxBottom();
+	CSSValueBottom();
 	std::string to_string() const;
 
-	static void compute(CSSBoxTop &top, CSSBoxBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxPosition &position);
+	static void compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position);
 
 	enum Type
 	{
@@ -53,7 +53,7 @@ public:
 		type_inherit
 	};
 	Type type;
-	CSSBoxLength length;
+	CSSLength length;
 	float percentage;
 };
 

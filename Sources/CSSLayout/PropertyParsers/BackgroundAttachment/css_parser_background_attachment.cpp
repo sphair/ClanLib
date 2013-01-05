@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserBackgroundAttachment::get_names()
 	return names;
 }
 
-void CSSParserBackgroundAttachment::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundAttachment::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSBoxBackgroundAttachment attachment;
+	CSSValueBackgroundAttachment attachment;
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		attachment.type = CSSBoxBackgroundAttachment::type_inherit;
+		attachment.type = CSSValueBackgroundAttachment::type_inherit;
 	}
 	else
 	{
-		attachment.type = CSSBoxBackgroundAttachment::type_attachments;
+		attachment.type = CSSValueBackgroundAttachment::type_attachments;
 		attachment.attachments.clear();
 		while (true)
 		{
@@ -61,9 +61,9 @@ void CSSParserBackgroundAttachment::parse(CSSBoxProperties &properties, const st
 				return;
 
 			if (equals(token.value, "scroll"))
-				attachment.attachments.push_back(CSSBoxBackgroundAttachment::attachment_scroll);
+				attachment.attachments.push_back(CSSValueBackgroundAttachment::attachment_scroll);
 			else if (equals(token.value, "fixed"))
-				attachment.attachments.push_back(CSSBoxBackgroundAttachment::attachment_fixed);
+				attachment.attachments.push_back(CSSValueBackgroundAttachment::attachment_fixed);
 			else
 				return;
 

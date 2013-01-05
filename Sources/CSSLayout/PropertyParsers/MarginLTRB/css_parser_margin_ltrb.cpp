@@ -43,9 +43,9 @@ std::vector<std::string> CSSParserMarginLTRB::get_names()
 	return names;
 }
 
-void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxMarginWidth *width = 0;
+	CSSValueMarginWidth *width = 0;
 	if (equals(name, "margin-top"))
 		width = &properties.margin_width_top;
 	else if (equals(name, "margin-right"))
@@ -62,22 +62,22 @@ void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string 
 		if (token.type == CSSToken::type_ident && pos == tokens.size())
 		{
 			if (equals(token.value, "auto"))
-				width->type = CSSBoxMarginWidth::type_auto;
+				width->type = CSSValueMarginWidth::type_auto;
 			else if (equals(token.value, "inherit"))
-				width->type = CSSBoxMarginWidth::type_inherit;
+				width->type = CSSValueMarginWidth::type_inherit;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				width->type = CSSBoxMarginWidth::type_length;
+				width->type = CSSValueMarginWidth::type_length;
 				width->length = length;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			width->type = CSSBoxMarginWidth::type_percentage;
+			width->type = CSSValueMarginWidth::type_percentage;
 			width->percentage = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -85,17 +85,17 @@ void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string 
 			token = next_token(pos, tokens);
 			if (is_length(token) && pos == tokens.size())
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
 					length.value = -length.value;
-					width->type = CSSBoxMarginWidth::type_length;
+					width->type = CSSValueMarginWidth::type_length;
 					width->length = length;
 				}
 			}
 			else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 			{
-				width->type = CSSBoxMarginWidth::type_percentage;
+				width->type = CSSValueMarginWidth::type_percentage;
 				width->percentage = -StringHelp::text_to_float(token.value);
 			}
 		}

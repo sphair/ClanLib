@@ -40,18 +40,18 @@ std::vector<std::string> CSSParserFontVariant::get_names()
 	return names;
 }
 
-void CSSParserFontVariant::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFontVariant::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.font_variant.type = CSSBoxFontVariant::type_normal;
+			properties.font_variant.type = CSSValueFontVariant::type_normal;
 		else if (equals(token.value, "small-caps"))
-			properties.font_variant.type = CSSBoxFontVariant::type_small_caps;
+			properties.font_variant.type = CSSValueFontVariant::type_small_caps;
 		else if (equals(token.value, "inherit"))
-			properties.font_variant.type = CSSBoxFontVariant::type_inherit;
+			properties.font_variant.type = CSSValueFontVariant::type_inherit;
 	}
 	if (out_change_set)
 	{

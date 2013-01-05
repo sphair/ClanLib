@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_collapse.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_collapse.h"
 
 namespace clan
 {
 
-CSSBoxBorderCollapse::CSSBoxBorderCollapse()
+CSSValueBorderCollapse::CSSValueBorderCollapse()
 : type(type_inherit)
 {
 }
 
-void CSSBoxBorderCollapse::compute(const CSSBoxBorderCollapse *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderCollapse::compute(const CSSValueBorderCollapse *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxBorderCollapse::compute(const CSSBoxBorderCollapse *parent, CSSResour
 	}
 }
 
-std::string CSSBoxBorderCollapse::to_string() const
+std::string CSSValueBorderCollapse::to_string() const
 {
 	switch (type)
 	{

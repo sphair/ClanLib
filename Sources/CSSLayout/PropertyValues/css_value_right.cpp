@@ -27,22 +27,22 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_right.h"
-#include "API/CSSLayout/PropertyTypes/css_box_left.h"
+#include "API/CSSLayout/PropertyValues/css_value_right.h"
+#include "API/CSSLayout/PropertyValues/css_value_left.h"
 #include "API/CSSLayout/css_box_properties.h"
-#include "../../css_resource_cache.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxRight::CSSBoxRight()
+CSSValueRight::CSSValueRight()
 : type(type_auto)
 {
 }
 
-void CSSBoxRight::compute(CSSBoxLeft &left, CSSBoxRight &right, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxPosition &position, bool is_containing_block_ltr)
+void CSSValueRight::compute(CSSValueLeft &left, CSSValueRight &right, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr)
 {
-	if (left.type == CSSBoxLeft::type_inherit)
+	if (left.type == CSSValueLeft::type_inherit)
 	{
 		if (parent)
 		{
@@ -52,7 +52,7 @@ void CSSBoxRight::compute(CSSBoxLeft &left, CSSBoxRight &right, const CSSBoxProp
 		}
 		else
 		{
-			left.type = CSSBoxLeft::type_auto;
+			left.type = CSSValueLeft::type_auto;
 		}
 	}
 
@@ -70,35 +70,35 @@ void CSSBoxRight::compute(CSSBoxLeft &left, CSSBoxRight &right, const CSSBoxProp
 		}
 	}
 
-	if (left.type == CSSBoxLeft::type_length)
+	if (left.type == CSSValueLeft::type_length)
 		left.length = layout->compute_length(left.length, em_size, ex_size);
 
 	if (right.type == type_length)
 		right.length = layout->compute_length(right.length, em_size, ex_size);
 
-	if (position.type == CSSBoxPosition::type_static)
+	if (position.type == CSSValuePosition::type_static)
 	{
-		left.type = CSSBoxLeft::type_auto;
+		left.type = CSSValueLeft::type_auto;
 		right.type = type_auto;
 	}
-	else if (position.type == CSSBoxPosition::type_relative)
+	else if (position.type == CSSValuePosition::type_relative)
 	{
-		if (left.type == CSSBoxLeft::type_auto && right.type == type_auto)
+		if (left.type == CSSValueLeft::type_auto && right.type == type_auto)
 		{
-			left.type = CSSBoxLeft::type_length;
+			left.type = CSSValueLeft::type_length;
 			right.type = type_length;
-			left.length = CSSBoxLength(0.0f, CSSBoxLength::type_computed_px);
-			right.length = CSSBoxLength(0.0f, CSSBoxLength::type_computed_px);
+			left.length = CSSLength(0.0f, CSSLength::type_computed_px);
+			right.length = CSSLength(0.0f, CSSLength::type_computed_px);
 		}
-		else if ((is_containing_block_ltr && left.type != CSSBoxLeft::type_auto) || right.type == type_auto)
+		else if ((is_containing_block_ltr && left.type != CSSValueLeft::type_auto) || right.type == type_auto)
 		{
-			if (left.type == CSSBoxLeft::type_length)
+			if (left.type == CSSValueLeft::type_length)
 			{
 				right.type = type_length;
 				right.length = left.length;
 				right.length.value = -right.length.value;
 			}
-			else if (left.type == CSSBoxLeft::type_percentage)
+			else if (left.type == CSSValueLeft::type_percentage)
 			{
 				right.type = type_percentage;
 				right.percentage = -left.percentage;
@@ -108,20 +108,20 @@ void CSSBoxRight::compute(CSSBoxLeft &left, CSSBoxRight &right, const CSSBoxProp
 		{
 			if (right.type == type_length)
 			{
-				left.type = CSSBoxLeft::type_length;
+				left.type = CSSValueLeft::type_length;
 				left.length = right.length;
 				left.length.value = -left.length.value;
 			}
 			else if (right.type == type_percentage)
 			{
-				left.type = CSSBoxLeft::type_percentage;
+				left.type = CSSValueLeft::type_percentage;
 				left.percentage = -right.percentage;
 			}
 		}
 	}
 }
 
-std::string CSSBoxRight::to_string() const
+std::string CSSValueRight::to_string() const
 {
 	switch (type)
 	{

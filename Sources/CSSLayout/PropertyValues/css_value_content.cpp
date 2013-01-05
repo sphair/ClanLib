@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_content.h"
+#include "API/CSSLayout/PropertyValues/css_value_content.h"
 
 namespace clan
 {
 
-CSSBoxContent::CSSBoxContent()
+CSSValueContent::CSSValueContent()
 : type(type_normal)
 {
 }
 
-void CSSBoxContent::compute(const CSSBoxContent *parent, CSSResourceCache *layout, float em_size, float ex_size, bool before_or_after_pseudo_element)
+void CSSValueContent::compute(const CSSValueContent *parent, CSSResourceCache *layout, float em_size, float ex_size, bool before_or_after_pseudo_element)
 {
 	if (type == type_inherit)
 	{
@@ -66,7 +66,7 @@ void CSSBoxContent::compute(const CSSBoxContent *parent, CSSResourceCache *layou
 */
 }
 
-std::string CSSBoxContent::to_string() const
+std::string CSSValueContent::to_string() const
 {
 	switch (type)
 	{

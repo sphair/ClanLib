@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_letter_spacing.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_letter_spacing.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxLetterSpacing::CSSBoxLetterSpacing()
+CSSValueLetterSpacing::CSSValueLetterSpacing()
 : type(type_inherit)
 {
 }
 
-void CSSBoxLetterSpacing::compute(const CSSBoxLetterSpacing *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueLetterSpacing::compute(const CSSValueLetterSpacing *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -57,7 +57,7 @@ void CSSBoxLetterSpacing::compute(const CSSBoxLetterSpacing *parent, CSSResource
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxLetterSpacing::to_string() const
+std::string CSSValueLetterSpacing::to_string() const
 {
 	switch (type)
 	{

@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_width.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_width.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxWidth::CSSBoxWidth()
+CSSValueWidth::CSSValueWidth()
 : type(type_auto), percentage(0.0f)
 {
 }
 
-void CSSBoxWidth::compute(const CSSBoxWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_width_auto)
+void CSSValueWidth::compute(const CSSValueWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_width_auto)
 {
 	if (type == type_inherit)
 	{
@@ -63,7 +63,7 @@ void CSSBoxWidth::compute(const CSSBoxWidth *parent, CSSResourceCache *layout, f
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxWidth::to_string() const
+std::string CSSValueWidth::to_string() const
 {
 	switch (type)
 	{

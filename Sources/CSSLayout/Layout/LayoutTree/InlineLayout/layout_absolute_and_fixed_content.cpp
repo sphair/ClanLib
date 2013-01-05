@@ -41,8 +41,8 @@ bool CSSInlineLayoutLayoutAbsoluteAndFixedContent::node(CSSInlineGeneratedBox *c
 {
 	if (cur->layout_node)
 	{
-		if (cur->layout_node->get_element_node()->computed_properties.position.type == CSSBoxPosition::type_absolute ||
-			cur->layout_node->get_element_node()->computed_properties.position.type == CSSBoxPosition::type_fixed)
+		if (cur->layout_node->get_element_node()->computed_properties.position.type == CSSValuePosition::type_absolute ||
+			cur->layout_node->get_element_node()->computed_properties.position.type == CSSValuePosition::type_fixed)
 		{
 			cur->layout_node->relative_x = cur->relative_x;
 			cur->layout_node->relative_y = cur->relative_y;

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_top.h"
+#include "API/CSSLayout/PropertyValues/css_value_top.h"
 
 namespace clan
 {
 
-CSSBoxTop::CSSBoxTop()
+CSSValueTop::CSSValueTop()
 : type(type_auto), percentage(0.0f)
 {
 }
 
-std::string CSSBoxTop::to_string() const
+std::string CSSValueTop::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_unicode_bidi.h"
+#include "API/CSSLayout/PropertyValues/css_value_unicode_bidi.h"
 
 namespace clan
 {
 
-CSSBoxUnicodeBidi::CSSBoxUnicodeBidi()
+CSSValueUnicodeBidi::CSSValueUnicodeBidi()
 : type(type_normal)
 {
 }
 
-void CSSBoxUnicodeBidi::compute(const CSSBoxUnicodeBidi *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueUnicodeBidi::compute(const CSSValueUnicodeBidi *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxUnicodeBidi::compute(const CSSBoxUnicodeBidi *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxUnicodeBidi::to_string() const
+std::string CSSValueUnicodeBidi::to_string() const
 {
 	switch (type)
 	{

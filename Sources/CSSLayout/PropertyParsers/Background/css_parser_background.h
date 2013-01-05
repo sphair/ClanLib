@@ -38,16 +38,16 @@ class CSSParserBackground : public CSSPropertyParser
 {
 public:
 	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set);
+	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set);
 
 private:
-	bool parse_bgcolor(CSSBoxBackgroundColor &bgcolor, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_image(CSSBoxBackgroundImage::Image &layer_image, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_repeat(CSSBoxBackgroundRepeat::RepeatStyle &layer_repeat_x, CSSBoxBackgroundRepeat::RepeatStyle &layer_repeat_y, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_attachment(CSSBoxBackgroundAttachment::Attachment &layer_attachment, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_position(CSSBoxBackgroundPosition::Position &layer_position, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_size(CSSBoxBackgroundSize::Size &layer_size, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_boxes(CSSBoxBackgroundOrigin::OriginType &layer_origin, CSSBoxBackgroundClip::ClipType &layer_clip, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_bgcolor(CSSValueBackgroundColor &bgcolor, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_image(CSSValueBackgroundImage::Image &layer_image, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_repeat(CSSValueBackgroundRepeat::RepeatStyle &layer_repeat_x, CSSValueBackgroundRepeat::RepeatStyle &layer_repeat_y, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_attachment(CSSValueBackgroundAttachment::Attachment &layer_attachment, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_position(CSSValueBackgroundPosition::Position &layer_position, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_size(CSSValueBackgroundSize::Size &layer_size, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_boxes(CSSValueBackgroundOrigin::OriginType &layer_origin, CSSValueBackgroundClip::ClipType &layer_clip, size_t &parse_pos, const std::vector<CSSToken> &tokens);
 };
 
 }

@@ -40,18 +40,18 @@ std::vector<std::string> CSSParserBackground::get_names()
 	return names;
 }
 
-void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	if (tokens.size() == 1 && tokens[0].type == CSSToken::type_ident && equals(tokens[0].value, "inherit"))
 	{
-		properties.background_color.type = CSSBoxBackgroundColor::type_inherit;
-		properties.background_image.type = CSSBoxBackgroundImage::type_inherit;
-		properties.background_repeat.type = CSSBoxBackgroundRepeat::type_inherit;
-		properties.background_attachment.type = CSSBoxBackgroundAttachment::type_inherit;
-		properties.background_position.type = CSSBoxBackgroundPosition::type_inherit;
-		properties.background_origin.type = CSSBoxBackgroundOrigin::type_inherit;
-		properties.background_clip.type = CSSBoxBackgroundClip::type_inherit;
-		properties.background_size.type = CSSBoxBackgroundSize::type_inherit;
+		properties.background_color.type = CSSValueBackgroundColor::type_inherit;
+		properties.background_image.type = CSSValueBackgroundImage::type_inherit;
+		properties.background_repeat.type = CSSValueBackgroundRepeat::type_inherit;
+		properties.background_attachment.type = CSSValueBackgroundAttachment::type_inherit;
+		properties.background_position.type = CSSValueBackgroundPosition::type_inherit;
+		properties.background_origin.type = CSSValueBackgroundOrigin::type_inherit;
+		properties.background_clip.type = CSSValueBackgroundClip::type_inherit;
+		properties.background_size.type = CSSValueBackgroundSize::type_inherit;
 
 		if (out_change_set)
 		{
@@ -67,14 +67,14 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 		return;
 	}
 
-	CSSBoxBackgroundColor bgcolor;
-	CSSBoxBackgroundImage bgimage;
-	CSSBoxBackgroundRepeat bgrepeat;
-	CSSBoxBackgroundAttachment bgattachment;
-	CSSBoxBackgroundPosition bgposition;
-	CSSBoxBackgroundOrigin bgorigin;
-	CSSBoxBackgroundClip bgclip;
-	CSSBoxBackgroundSize bgsize;
+	CSSValueBackgroundColor bgcolor;
+	CSSValueBackgroundImage bgimage;
+	CSSValueBackgroundRepeat bgrepeat;
+	CSSValueBackgroundAttachment bgattachment;
+	CSSValueBackgroundPosition bgposition;
+	CSSValueBackgroundOrigin bgorigin;
+	CSSValueBackgroundClip bgclip;
+	CSSValueBackgroundSize bgsize;
 
 	bgimage.images.clear();
 	bgrepeat.repeat_x.clear();
@@ -95,14 +95,14 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 		bool position_specified = false;
 		bool boxes_specified = false;
 
-		CSSBoxBackgroundImage::Image layer_image(CSSBoxBackgroundImage::image_type_none);
-		CSSBoxBackgroundRepeat::RepeatStyle layer_repeat_x = CSSBoxBackgroundRepeat::style_repeat;
-		CSSBoxBackgroundRepeat::RepeatStyle layer_repeat_y = CSSBoxBackgroundRepeat::style_repeat;
-		CSSBoxBackgroundAttachment::Attachment layer_attachment = CSSBoxBackgroundAttachment::attachment_scroll;
-		CSSBoxBackgroundPosition::Position layer_position;
-		CSSBoxBackgroundOrigin::OriginType layer_origin = CSSBoxBackgroundOrigin::origin_padding_box;
-		CSSBoxBackgroundClip::ClipType layer_clip = CSSBoxBackgroundClip::clip_border_box;
-		CSSBoxBackgroundSize::Size layer_size;
+		CSSValueBackgroundImage::Image layer_image(CSSValueBackgroundImage::image_type_none);
+		CSSValueBackgroundRepeat::RepeatStyle layer_repeat_x = CSSValueBackgroundRepeat::style_repeat;
+		CSSValueBackgroundRepeat::RepeatStyle layer_repeat_y = CSSValueBackgroundRepeat::style_repeat;
+		CSSValueBackgroundAttachment::Attachment layer_attachment = CSSValueBackgroundAttachment::attachment_scroll;
+		CSSValueBackgroundPosition::Position layer_position;
+		CSSValueBackgroundOrigin::OriginType layer_origin = CSSValueBackgroundOrigin::origin_padding_box;
+		CSSValueBackgroundClip::ClipType layer_clip = CSSValueBackgroundClip::clip_border_box;
+		CSSValueBackgroundSize::Size layer_size;
 
 		while (true) // for each declaration in layer
 		{
@@ -184,13 +184,13 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 	}
 }
 
-bool CSSParserBackground::parse_bgcolor(CSSBoxBackgroundColor &bgcolor, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_bgcolor(CSSValueBackgroundColor &bgcolor, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	Colorf color;
 	if (parse_color(tokens, pos, color))
 	{
-		bgcolor.type = CSSBoxBackgroundColor::type_color;
+		bgcolor.type = CSSValueBackgroundColor::type_color;
 		bgcolor.color = color;
 		parse_pos = pos;
 		return true;
@@ -198,19 +198,19 @@ bool CSSParserBackground::parse_bgcolor(CSSBoxBackgroundColor &bgcolor, size_t &
 	return false;
 }
 
-bool CSSParserBackground::parse_image(CSSBoxBackgroundImage::Image &layer_image, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_image(CSSValueBackgroundImage::Image &layer_image, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && equals(token.value, "none"))
 	{
-		layer_image = CSSBoxBackgroundImage::Image(CSSBoxBackgroundImage::image_type_none);
+		layer_image = CSSValueBackgroundImage::Image(CSSValueBackgroundImage::image_type_none);
 		parse_pos = pos;
 		return true;
 	}
 	else if (token.type == CSSToken::type_uri)
 	{
-		layer_image.type = CSSBoxBackgroundImage::image_type_uri;
+		layer_image.type = CSSValueBackgroundImage::image_type_uri;
 		layer_image.url = token.value;
 		parse_pos = pos;
 		return true;
@@ -218,7 +218,7 @@ bool CSSParserBackground::parse_image(CSSBoxBackgroundImage::Image &layer_image,
 	return false;
 }
 
-bool CSSParserBackground::parse_repeat(CSSBoxBackgroundRepeat::RepeatStyle &layer_repeat_x, CSSBoxBackgroundRepeat::RepeatStyle &layer_repeat_y, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_repeat(CSSValueBackgroundRepeat::RepeatStyle &layer_repeat_x, CSSValueBackgroundRepeat::RepeatStyle &layer_repeat_y, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -226,36 +226,36 @@ bool CSSParserBackground::parse_repeat(CSSBoxBackgroundRepeat::RepeatStyle &laye
 	if (token.type != CSSToken::type_ident)
 		return false;
 
-	CSSBoxBackgroundRepeat::RepeatStyle repeat_x, repeat_y;
+	CSSValueBackgroundRepeat::RepeatStyle repeat_x, repeat_y;
 	bool single_style = false;
 
 	if (equals(token.value, "repeat"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_repeat;
+		repeat_x = CSSValueBackgroundRepeat::style_repeat;
 	}
 	else if (equals(token.value, "repeat-x"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_repeat;
-		repeat_y = CSSBoxBackgroundRepeat::style_no_repeat;
+		repeat_x = CSSValueBackgroundRepeat::style_repeat;
+		repeat_y = CSSValueBackgroundRepeat::style_no_repeat;
 		single_style = true;
 	}
 	else if (equals(token.value, "repeat-y"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_no_repeat;
-		repeat_y = CSSBoxBackgroundRepeat::style_repeat;
+		repeat_x = CSSValueBackgroundRepeat::style_no_repeat;
+		repeat_y = CSSValueBackgroundRepeat::style_repeat;
 		single_style = true;
 	}
 	else if (equals(token.value, "no-repeat"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_no_repeat;
+		repeat_x = CSSValueBackgroundRepeat::style_no_repeat;
 	}
 	else if (equals(token.value, "space"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_space;
+		repeat_x = CSSValueBackgroundRepeat::style_space;
 	}
 	else if (equals(token.value, "round"))
 	{
-		repeat_x = CSSBoxBackgroundRepeat::style_round;
+		repeat_x = CSSValueBackgroundRepeat::style_round;
 	}
 	else
 	{
@@ -281,22 +281,22 @@ bool CSSParserBackground::parse_repeat(CSSBoxBackgroundRepeat::RepeatStyle &laye
 	{
 		if (equals(token.value, "repeat"))
 		{
-			repeat_y = CSSBoxBackgroundRepeat::style_repeat;
+			repeat_y = CSSValueBackgroundRepeat::style_repeat;
 			parse_pos = pos;
 		}
 		else if (equals(token.value, "no-repeat"))
 		{
-			repeat_y = CSSBoxBackgroundRepeat::style_no_repeat;
+			repeat_y = CSSValueBackgroundRepeat::style_no_repeat;
 			parse_pos = pos;
 		}
 		else if (equals(token.value, "space"))
 		{
-			repeat_y = CSSBoxBackgroundRepeat::style_space;
+			repeat_y = CSSValueBackgroundRepeat::style_space;
 			parse_pos = pos;
 		}
 		else if (equals(token.value, "round"))
 		{
-			repeat_y = CSSBoxBackgroundRepeat::style_round;
+			repeat_y = CSSValueBackgroundRepeat::style_round;
 			parse_pos = pos;
 		}
 	}
@@ -306,7 +306,7 @@ bool CSSParserBackground::parse_repeat(CSSBoxBackgroundRepeat::RepeatStyle &laye
 	return true;
 }
 
-bool CSSParserBackground::parse_attachment(CSSBoxBackgroundAttachment::Attachment &layer_attachment, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_attachment(CSSValueBackgroundAttachment::Attachment &layer_attachment, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -314,9 +314,9 @@ bool CSSParserBackground::parse_attachment(CSSBoxBackgroundAttachment::Attachmen
 		return false;
 
 	if (equals(token.value, "scroll"))
-		layer_attachment = CSSBoxBackgroundAttachment::attachment_scroll;
+		layer_attachment = CSSValueBackgroundAttachment::attachment_scroll;
 	else if (equals(token.value, "fixed"))
-		layer_attachment = CSSBoxBackgroundAttachment::attachment_fixed;
+		layer_attachment = CSSValueBackgroundAttachment::attachment_fixed;
 	else
 		return false;
 
@@ -324,13 +324,13 @@ bool CSSParserBackground::parse_attachment(CSSBoxBackgroundAttachment::Attachmen
 	return true;
 }
 
-bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &layer_position, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_position(CSSValueBackgroundPosition::Position &layer_position, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t last_pos = parse_pos;
 	size_t pos = last_pos;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSBoxBackgroundPosition::Position bg_pos;
+	CSSValueBackgroundPosition::Position bg_pos;
 	bool x_specified = false;
 	bool y_specified = false;
 	bool center_specified = false;
@@ -340,48 +340,48 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 		{
 			if (!y_specified && equals(token.value, "top"))
 			{
-				bg_pos.type_y = CSSBoxBackgroundPosition::type2_top;
+				bg_pos.type_y = CSSValueBackgroundPosition::type2_top;
 				y_specified = true;
 
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 			}
 			else if (!y_specified && equals(token.value, "bottom"))
 			{
-				bg_pos.type_y = CSSBoxBackgroundPosition::type2_bottom;
+				bg_pos.type_y = CSSValueBackgroundPosition::type2_bottom;
 				y_specified = true;
 
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 			}
 			else if (!x_specified && equals(token.value, "left"))
 			{
-				bg_pos.type_x = CSSBoxBackgroundPosition::type1_left;
+				bg_pos.type_x = CSSValueBackgroundPosition::type1_left;
 				x_specified = true;
 
 				if (center_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 					y_specified = true;
 					center_specified = false;
 				}
 			}
 			else if (!x_specified && equals(token.value, "right"))
 			{
-				bg_pos.type_x = CSSBoxBackgroundPosition::type1_right;
+				bg_pos.type_x = CSSValueBackgroundPosition::type1_right;
 				x_specified = true;
 
 				if (center_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 					y_specified = true;
 					center_specified = false;
 				}
@@ -390,19 +390,19 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 			{
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (x_specified && !y_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 					y_specified = true;
 				}
 				else if (y_specified && !x_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 				}
 				else if (!x_specified && !y_specified)
@@ -421,25 +421,25 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 		}
 		else if (is_length(token))
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (!x_specified && !y_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_length;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_length;
 					bg_pos.length_x = length;
 					x_specified = true;
 				}
 				else if (x_specified && !y_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_length;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_length;
 					bg_pos.length_y = length;
 					y_specified = true;
 				}
@@ -457,20 +457,20 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 		{
 			if (center_specified)
 			{
-				bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+				bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 				x_specified = true;
 				center_specified = false;
 			}
 
 			if (!x_specified && !y_specified)
 			{
-				bg_pos.type_x = CSSBoxBackgroundPosition::type1_percentage;
+				bg_pos.type_x = CSSValueBackgroundPosition::type1_percentage;
 				bg_pos.percentage_x = StringHelp::text_to_float(token.value);
 				x_specified = true;
 			}
 			else if (x_specified && !y_specified)
 			{
-				bg_pos.type_y = CSSBoxBackgroundPosition::type2_percentage;
+				bg_pos.type_y = CSSValueBackgroundPosition::type2_percentage;
 				bg_pos.percentage_y = StringHelp::text_to_float(token.value);
 				y_specified = true;
 			}
@@ -484,26 +484,26 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 			token = next_token(pos, tokens);
 			if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
 					length.value = -length.value;
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_length;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_length;
 						bg_pos.length_x = length;
 						x_specified = true;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_length;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_length;
 						bg_pos.length_y = length;
 						y_specified = true;
 					}
@@ -521,21 +521,21 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 			{
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (!x_specified && !y_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_percentage;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_percentage;
 					bg_pos.percentage_x = -StringHelp::text_to_float(token.value);
 					x_specified = true;
 					parse_pos = pos;
 				}
 				else if (x_specified && !y_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_percentage;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_percentage;
 					bg_pos.percentage_y = -StringHelp::text_to_float(token.value);
 					y_specified = true;
 					parse_pos = pos;
@@ -560,16 +560,16 @@ bool CSSParserBackground::parse_position(CSSBoxBackgroundPosition::Position &lay
 	}
 
 	if (!x_specified)
-		bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+		bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 	else if (!y_specified)
-		bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+		bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 
 	parse_pos = last_pos;
 	layer_position = bg_pos;
 	return true;
 }
 
-bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_size(CSSValueBackgroundSize::Size &layer_size, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -578,24 +578,24 @@ bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, siz
 
 	token = next_token(pos, tokens);
 
-	CSSBoxBackgroundSize::Size size;
+	CSSValueBackgroundSize::Size size;
 	bool single_value = false;
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "contain"))
 		{
-			size.type = CSSBoxBackgroundSize::size_contain;
+			size.type = CSSValueBackgroundSize::size_contain;
 			single_value = true;
 		}
 		else if (equals(token.value, "cover"))
 		{
-			size.type = CSSBoxBackgroundSize::size_cover;
+			size.type = CSSValueBackgroundSize::size_cover;
 			single_value = true;
 		}
 		else if (equals(token.value, "auto"))
 		{
-			size.type = CSSBoxBackgroundSize::size_values;
-			size.value_x = CSSBoxBackgroundSize::value_type_auto;
+			size.type = CSSValueBackgroundSize::size_values;
+			size.value_x = CSSValueBackgroundSize::value_type_auto;
 		}
 		else
 		{
@@ -604,10 +604,10 @@ bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, siz
 	}
 	else if (is_length(token))
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			size.value_x = CSSBoxBackgroundSize::value_type_length;
+			size.value_x = CSSValueBackgroundSize::value_type_length;
 			size.length_x = length;
 		}
 		else
@@ -617,7 +617,7 @@ bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, siz
 	}
 	else if (token.type == CSSToken::type_percentage)
 	{
-		size.value_x = CSSBoxBackgroundSize::value_type_percentage;
+		size.value_x = CSSValueBackgroundSize::value_type_percentage;
 		size.percentage_x = StringHelp::text_to_float(token.value);
 	}
 	else
@@ -635,22 +635,22 @@ bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, siz
 	token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && equals(token.value, "auto"))
 	{
-		size.value_y = CSSBoxBackgroundSize::value_type_auto;
+		size.value_y = CSSValueBackgroundSize::value_type_auto;
 		parse_pos = pos;
 	}
 	else if (is_length(token))
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			size.value_y = CSSBoxBackgroundSize::value_type_length;
+			size.value_y = CSSValueBackgroundSize::value_type_length;
 			size.length_y = length;
 			parse_pos = pos;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage)
 	{
-		size.value_y = CSSBoxBackgroundSize::value_type_percentage;
+		size.value_y = CSSValueBackgroundSize::value_type_percentage;
 		size.percentage_y = StringHelp::text_to_float(token.value);
 		parse_pos = pos;
 	}
@@ -659,7 +659,7 @@ bool CSSParserBackground::parse_size(CSSBoxBackgroundSize::Size &layer_size, siz
 	return true;
 }
 
-bool CSSParserBackground::parse_boxes(CSSBoxBackgroundOrigin::OriginType &layer_origin, CSSBoxBackgroundClip::ClipType &layer_clip, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBackground::parse_boxes(CSSValueBackgroundOrigin::OriginType &layer_origin, CSSValueBackgroundClip::ClipType &layer_clip, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -668,18 +668,18 @@ bool CSSParserBackground::parse_boxes(CSSBoxBackgroundOrigin::OriginType &layer_
 
 	if (equals(token.value, "border-box"))
 	{
-		layer_origin = CSSBoxBackgroundOrigin::origin_border_box;
-		layer_clip = CSSBoxBackgroundClip::clip_border_box;
+		layer_origin = CSSValueBackgroundOrigin::origin_border_box;
+		layer_clip = CSSValueBackgroundClip::clip_border_box;
 	}
 	else if (equals(token.value, "padding-box"))
 	{
-		layer_origin = CSSBoxBackgroundOrigin::origin_padding_box;
-		layer_clip = CSSBoxBackgroundClip::clip_padding_box;
+		layer_origin = CSSValueBackgroundOrigin::origin_padding_box;
+		layer_clip = CSSValueBackgroundClip::clip_padding_box;
 	}
 	else if (equals(token.value, "content-box"))
 	{
-		layer_origin = CSSBoxBackgroundOrigin::origin_content_box;
-		layer_clip = CSSBoxBackgroundClip::clip_content_box;
+		layer_origin = CSSValueBackgroundOrigin::origin_content_box;
+		layer_clip = CSSValueBackgroundClip::clip_content_box;
 	}
 	else
 	{
@@ -693,17 +693,17 @@ bool CSSParserBackground::parse_boxes(CSSBoxBackgroundOrigin::OriginType &layer_
 	{
 		if (equals(token.value, "border-box"))
 		{
-			layer_clip = CSSBoxBackgroundClip::clip_border_box;
+			layer_clip = CSSValueBackgroundClip::clip_border_box;
 			parse_pos = pos;
 		}
 		else if (equals(token.value, "padding-box"))
 		{
-			layer_clip = CSSBoxBackgroundClip::clip_padding_box;
+			layer_clip = CSSValueBackgroundClip::clip_padding_box;
 			parse_pos = pos;
 		}
 		else if (equals(token.value, "content-box"))
 		{
-			layer_clip = CSSBoxBackgroundClip::clip_content_box;
+			layer_clip = CSSValueBackgroundClip::clip_content_box;
 			parse_pos = pos;
 		}
 	}

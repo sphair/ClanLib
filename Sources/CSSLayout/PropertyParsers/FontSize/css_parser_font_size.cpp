@@ -40,45 +40,45 @@ std::vector<std::string> CSSParserFontSize::get_names()
 	return names;
 }
 
-void CSSParserFontSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFontSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "xx-small"))
-			properties.font_size.type = CSSBoxFontSize::type_xx_small;
+			properties.font_size.type = CSSValueFontSize::type_xx_small;
 		else if (equals(token.value, "x-small"))
-			properties.font_size.type = CSSBoxFontSize::type_x_small;
+			properties.font_size.type = CSSValueFontSize::type_x_small;
 		else if (equals(token.value, "small"))
-			properties.font_size.type = CSSBoxFontSize::type_small;
+			properties.font_size.type = CSSValueFontSize::type_small;
 		else if (equals(token.value, "medium"))
-			properties.font_size.type = CSSBoxFontSize::type_medium;
+			properties.font_size.type = CSSValueFontSize::type_medium;
 		else if (equals(token.value, "large"))
-			properties.font_size.type = CSSBoxFontSize::type_large;
+			properties.font_size.type = CSSValueFontSize::type_large;
 		else if (equals(token.value, "x-large"))
-			properties.font_size.type = CSSBoxFontSize::type_x_large;
+			properties.font_size.type = CSSValueFontSize::type_x_large;
 		else if (equals(token.value, "xx-large"))
-			properties.font_size.type = CSSBoxFontSize::type_xx_large;
+			properties.font_size.type = CSSValueFontSize::type_xx_large;
 		else if (equals(token.value, "smaller"))
-			properties.font_size.type = CSSBoxFontSize::type_smaller;
+			properties.font_size.type = CSSValueFontSize::type_smaller;
 		else if (equals(token.value, "larger"))
-			properties.font_size.type = CSSBoxFontSize::type_larger;
+			properties.font_size.type = CSSValueFontSize::type_larger;
 		else if (equals(token.value, "inherit"))
-			properties.font_size.type = CSSBoxFontSize::type_inherit;
+			properties.font_size.type = CSSValueFontSize::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.font_size.type = CSSBoxFontSize::type_length;
+			properties.font_size.type = CSSValueFontSize::type_length;
 			properties.font_size.length = length;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.font_size.type = CSSBoxFontSize::type_percentage;
+		properties.font_size.type = CSSValueFontSize::type_percentage;
 		properties.font_size.percentage = StringHelp::text_to_float(token.value);
 	}
 	if (out_change_set)

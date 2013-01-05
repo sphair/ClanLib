@@ -43,9 +43,9 @@ std::vector<std::string> CSSParserBorderLTRBStyle::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderLTRBStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderStyle *style = 0;
+	CSSValueBorderStyle *style = 0;
 	if (equals(name, "border-top-style"))
 		style = &properties.border_style_top;
 	else if (equals(name, "border-right-style"))
@@ -62,27 +62,27 @@ void CSSParserBorderLTRBStyle::parse(CSSBoxProperties &properties, const std::st
 		if (token.type == CSSToken::type_ident && pos == tokens.size())
 		{
 			if (equals(token.value, "none"))
-				style->type = CSSBoxBorderStyle::type_none;
+				style->type = CSSValueBorderStyle::type_none;
 			else if (equals(token.value, "hidden"))
-				style->type = CSSBoxBorderStyle::type_hidden;
+				style->type = CSSValueBorderStyle::type_hidden;
 			else if (equals(token.value, "dotted"))
-				style->type = CSSBoxBorderStyle::type_dotted;
+				style->type = CSSValueBorderStyle::type_dotted;
 			else if (equals(token.value, "dashed"))
-				style->type = CSSBoxBorderStyle::type_dashed;
+				style->type = CSSValueBorderStyle::type_dashed;
 			else if (equals(token.value, "solid"))
-				style->type = CSSBoxBorderStyle::type_solid;
+				style->type = CSSValueBorderStyle::type_solid;
 			else if (equals(token.value, "double"))
-				style->type = CSSBoxBorderStyle::type_double;
+				style->type = CSSValueBorderStyle::type_double;
 			else if (equals(token.value, "groove"))
-				style->type = CSSBoxBorderStyle::type_groove;
+				style->type = CSSValueBorderStyle::type_groove;
 			else if (equals(token.value, "ridge"))
-				style->type = CSSBoxBorderStyle::type_ridge;
+				style->type = CSSValueBorderStyle::type_ridge;
 			else if (equals(token.value, "inset"))
-				style->type = CSSBoxBorderStyle::type_inset;
+				style->type = CSSValueBorderStyle::type_inset;
 			else if (equals(token.value, "outset"))
-				style->type = CSSBoxBorderStyle::type_outset;
+				style->type = CSSValueBorderStyle::type_outset;
 			else if (equals(token.value, "inherit"))
-				style->type = CSSBoxBorderStyle::type_inherit;
+				style->type = CSSValueBorderStyle::type_inherit;
 		}
 
 		if (out_change_set)

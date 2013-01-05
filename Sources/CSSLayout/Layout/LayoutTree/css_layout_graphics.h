@@ -31,7 +31,7 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/css_layout.h"
+#include "API/CSSLayout/Layout/css_layout.h"
 
 namespace clan
 {

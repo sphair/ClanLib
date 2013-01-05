@@ -27,11 +27,11 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_layout_element.h"
-#include "API/CSSLayout/css_layout_text.h"
-#include "API/CSSLayout/css_layout_object.h"
-#include "API/CSSLayout/css_layout.h"
-#include "API/CSSLayout/css_property_list.h"
+#include "API/CSSLayout/Layout/css_layout_element.h"
+#include "API/CSSLayout/Layout/css_layout_text.h"
+#include "API/CSSLayout/Layout/css_layout_object.h"
+#include "API/CSSLayout/Layout/css_layout.h"
+#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
 #include "css_layout_node_impl.h"
 #include "BoxTree/css_box_element.h"
 #include "BoxTree/css_box_text.h"
@@ -70,7 +70,7 @@ void CSSLayoutElement::set_row_span(int span)
 		static_cast<CSSBoxElement*>(impl->box_node)->row_span = span;
 }
 
-void CSSLayoutElement::apply_properties(const CSSPropertyList &properties)
+void CSSLayoutElement::apply_properties(const CSSPropertyValueList &properties)
 {
 	if (!is_null())
 	{
@@ -78,7 +78,7 @@ void CSSLayoutElement::apply_properties(const CSSPropertyList &properties)
 
 		// Temp hack to support before and after pseudo elements.
 		// To do: Make a better more official way to create pseudo elements.
-		if (static_cast<CSSBoxElement*>(impl->box_node)->properties.content.type == CSSBoxContent::type_string)
+		if (static_cast<CSSBoxElement*>(impl->box_node)->properties.content.type == CSSValueContent::type_string)
 		{
 			CSSBoxText *box_text = new CSSBoxText();
 			box_text->set_text(static_cast<CSSBoxElement*>(impl->box_node)->properties.content.str);

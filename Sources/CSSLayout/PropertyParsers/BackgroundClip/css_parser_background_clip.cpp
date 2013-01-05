@@ -40,19 +40,19 @@ std::vector<std::string> CSSParserBackgroundClip::get_names()
 	return names;
 }
 
-void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_clip.type = CSSBoxBackgroundClip::type_inherit;
+		properties.background_clip.type = CSSValueBackgroundClip::type_inherit;
 	}
 	else
 	{
-		CSSBoxBackgroundClip background_clip;
-		background_clip.type = CSSBoxBackgroundClip::type_value;
+		CSSValueBackgroundClip background_clip;
+		background_clip.type = CSSValueBackgroundClip::type_value;
 		background_clip.values.clear();
 		while (true)
 		{
@@ -61,15 +61,15 @@ void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::str
 
 			if (equals(token.value, "border-box"))
 			{
-				background_clip.values.push_back(CSSBoxBackgroundClip::clip_border_box);
+				background_clip.values.push_back(CSSValueBackgroundClip::clip_border_box);
 			}
 			else if (equals(token.value, "padding-box"))
 			{
-				background_clip.values.push_back(CSSBoxBackgroundClip::clip_padding_box);
+				background_clip.values.push_back(CSSValueBackgroundClip::clip_padding_box);
 			}
 			else if (equals(token.value, "content-box"))
 			{
-				background_clip.values.push_back(CSSBoxBackgroundClip::clip_content_box);
+				background_clip.values.push_back(CSSValueBackgroundClip::clip_content_box);
 			}
 			else
 			{

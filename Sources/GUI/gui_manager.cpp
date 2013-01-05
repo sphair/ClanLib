@@ -29,7 +29,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/GUI/accelerator_table.h"
@@ -44,7 +44,6 @@
 #include "API/Core/System/event.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/IOData/file_help.h"
-#include "API/CSSLayout/css_layout.h"
 #include "gui_manager_impl.h"
 
 namespace clan

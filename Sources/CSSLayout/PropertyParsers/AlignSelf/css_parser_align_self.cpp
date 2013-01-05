@@ -40,26 +40,26 @@ std::vector<std::string> CSSParserAlignSelf::get_names()
 	return names;
 }
 
-void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.align_self.type = CSSBoxAlignSelf::type_auto;
+			properties.align_self.type = CSSValueAlignSelf::type_auto;
 		else if (equals(token.value, "flex-start"))
-			properties.align_self.type = CSSBoxAlignSelf::type_flex_start;
+			properties.align_self.type = CSSValueAlignSelf::type_flex_start;
 		else if (equals(token.value, "flex-end"))
-			properties.align_self.type = CSSBoxAlignSelf::type_flex_end;
+			properties.align_self.type = CSSValueAlignSelf::type_flex_end;
 		else if (equals(token.value, "center"))
-			properties.align_self.type = CSSBoxAlignSelf::type_center;
+			properties.align_self.type = CSSValueAlignSelf::type_center;
 		else if (equals(token.value, "baseline"))
-			properties.align_self.type = CSSBoxAlignSelf::type_baseline;
+			properties.align_self.type = CSSValueAlignSelf::type_baseline;
 		else if (equals(token.value, "stretch"))
-			properties.align_self.type = CSSBoxAlignSelf::type_stretch;
+			properties.align_self.type = CSSValueAlignSelf::type_stretch;
 		else if (equals(token.value, "inherit"))
-			properties.align_self.type = CSSBoxAlignSelf::type_inherit;
+			properties.align_self.type = CSSValueAlignSelf::type_inherit;
 	}
 	if (out_change_set)
 	{

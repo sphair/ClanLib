@@ -106,15 +106,15 @@ private:
 	{
 		switch (properties.width.type)
 		{
-		case CSSBoxWidth::type_auto:
+		case CSSValueWidth::type_auto:
 			values.width = 0.0f;
 			values.width_undetermined = true;
 			break;
-		case CSSBoxWidth::type_length:
+		case CSSValueWidth::type_length:
 			values.width = properties.width.length.value;
 			values.width_undetermined = false;
 			break;
-		case CSSBoxWidth::type_percentage:
+		case CSSValueWidth::type_percentage:
 			if (containing_box.width_undetermined)
 			{
 				values.width = 0.0f;
@@ -133,15 +133,15 @@ private:
 	{
 		switch (properties.height.type)
 		{
-		case CSSBoxHeight::type_auto:
+		case CSSValueHeight::type_auto:
 			values.height = 0.0f;
 			values.height_undetermined = true;
 			break;
-		case CSSBoxHeight::type_length:
+		case CSSValueHeight::type_length:
 			values.height = properties.height.length.value;
 			values.height_undetermined = false;
 			break;
-		case CSSBoxHeight::type_percentage:
+		case CSSValueHeight::type_percentage:
 			if (containing_box.height_undetermined)
 			{
 				values.height = 0.0f;
@@ -156,93 +156,93 @@ private:
 		}
 	}
 
-	static CSSUsedValue get_css_margin_width(const CSSBoxMarginWidth &margin_width, float containing_used_width, bool containing_width_undetermined)
+	static CSSUsedValue get_css_margin_width(const CSSValueMarginWidth &margin_width, float containing_used_width, bool containing_width_undetermined)
 	{
 		switch (margin_width.type)
 		{
-		case CSSBoxMarginWidth::type_auto: return 0.0f;
-		case CSSBoxMarginWidth::type_length: return margin_width.length.value;
-		case CSSBoxMarginWidth::type_percentage: return containing_width_undetermined ? 0.0f : margin_width.percentage * containing_used_width / 100.0f;
+		case CSSValueMarginWidth::type_auto: return 0.0f;
+		case CSSValueMarginWidth::type_length: return margin_width.length.value;
+		case CSSValueMarginWidth::type_percentage: return containing_width_undetermined ? 0.0f : margin_width.percentage * containing_used_width / 100.0f;
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_padding_width(const CSSBoxPaddingWidth &padding_width, float containing_used_width, bool containing_width_undetermined)
+	static CSSUsedValue get_css_padding_width(const CSSValuePaddingWidth &padding_width, float containing_used_width, bool containing_width_undetermined)
 	{
 		switch (padding_width.type)
 		{
-		case CSSBoxPaddingWidth::type_length: return padding_width.length.value;
-		case CSSBoxPaddingWidth::type_percentage: return containing_width_undetermined ? 0.0f : padding_width.percentage * containing_used_width / 100.0f;
+		case CSSValuePaddingWidth::type_length: return padding_width.length.value;
+		case CSSValuePaddingWidth::type_percentage: return containing_width_undetermined ? 0.0f : padding_width.percentage * containing_used_width / 100.0f;
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_margin_height(const CSSBoxMarginWidth &margin_width, float containing_used_height, bool containing_height_undetermined)
+	static CSSUsedValue get_css_margin_height(const CSSValueMarginWidth &margin_width, float containing_used_height, bool containing_height_undetermined)
 	{
 		switch (margin_width.type)
 		{
-		case CSSBoxMarginWidth::type_auto: return 0.0f;
-		case CSSBoxMarginWidth::type_length: return margin_width.length.value;
-		case CSSBoxMarginWidth::type_percentage: return containing_height_undetermined ? 0.0f : margin_width.percentage * containing_used_height / 100.0f;
+		case CSSValueMarginWidth::type_auto: return 0.0f;
+		case CSSValueMarginWidth::type_length: return margin_width.length.value;
+		case CSSValueMarginWidth::type_percentage: return containing_height_undetermined ? 0.0f : margin_width.percentage * containing_used_height / 100.0f;
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_padding_height(const CSSBoxPaddingWidth &padding_width, float containing_used_height, bool containing_height_undetermined)
+	static CSSUsedValue get_css_padding_height(const CSSValuePaddingWidth &padding_width, float containing_used_height, bool containing_height_undetermined)
 	{
 		switch (padding_width.type)
 		{
-		case CSSBoxPaddingWidth::type_length: return padding_width.length.value;
-		case CSSBoxPaddingWidth::type_percentage: return containing_height_undetermined ? 0.0f : padding_width.percentage * containing_used_height / 100.0f;
+		case CSSValuePaddingWidth::type_length: return padding_width.length.value;
+		case CSSValuePaddingWidth::type_percentage: return containing_height_undetermined ? 0.0f : padding_width.percentage * containing_used_height / 100.0f;
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_border_size(const CSSBoxBorderWidth &border_width)
+	static CSSUsedValue get_css_border_size(const CSSValueBorderWidth &border_width)
 	{
 		return border_width.length.value;
 	}
 
-	static CSSUsedValue get_css_min_width(const CSSBoxMinWidth &min_width, float containing_used_width, bool containing_width_undetermined)
+	static CSSUsedValue get_css_min_width(const CSSValueMinWidth &min_width, float containing_used_width, bool containing_width_undetermined)
 	{
 		switch (min_width.type)
 		{
-		case CSSBoxMinWidth::type_length: return min_width.length.value;
-		case CSSBoxMinWidth::type_percentage: return containing_width_undetermined ? 0.0f : min_width.percentage * containing_used_width / 100.0f;
-		case CSSBoxMinWidth::type_auto:
+		case CSSValueMinWidth::type_length: return min_width.length.value;
+		case CSSValueMinWidth::type_percentage: return containing_width_undetermined ? 0.0f : min_width.percentage * containing_used_width / 100.0f;
+		case CSSValueMinWidth::type_auto:
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_max_width(const CSSBoxMaxWidth &max_width, float containing_used_width, bool containing_width_undetermined)
+	static CSSUsedValue get_css_max_width(const CSSValueMaxWidth &max_width, float containing_used_width, bool containing_width_undetermined)
 	{
 		switch (max_width.type)
 		{
-		case CSSBoxMaxWidth::type_none: return 1e5f;
-		case CSSBoxMaxWidth::type_length: return max_width.length.value;
-		case CSSBoxMaxWidth::type_percentage: return containing_width_undetermined ? 1e5f : max_width.percentage * containing_used_width / 100.0f;
+		case CSSValueMaxWidth::type_none: return 1e5f;
+		case CSSValueMaxWidth::type_length: return max_width.length.value;
+		case CSSValueMaxWidth::type_percentage: return containing_width_undetermined ? 1e5f : max_width.percentage * containing_used_width / 100.0f;
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_min_height(const CSSBoxMinHeight &min_height, float containing_used_height, bool containing_height_expanding)
+	static CSSUsedValue get_css_min_height(const CSSValueMinHeight &min_height, float containing_used_height, bool containing_height_expanding)
 	{
 		switch (min_height.type)
 		{
-		case CSSBoxMinHeight::type_length: return min_height.length.value;
-		case CSSBoxMinHeight::type_percentage: return containing_height_expanding ? 0.0f : min_height.percentage * containing_used_height / 100.0f;
-		case CSSBoxMinHeight::type_auto:
+		case CSSValueMinHeight::type_length: return min_height.length.value;
+		case CSSValueMinHeight::type_percentage: return containing_height_expanding ? 0.0f : min_height.percentage * containing_used_height / 100.0f;
+		case CSSValueMinHeight::type_auto:
 		default: return 0.0f;
 		}
 	}
 
-	static CSSUsedValue get_css_max_height(const CSSBoxMaxHeight &max_height, float containing_used_height, bool containing_height_expanding)
+	static CSSUsedValue get_css_max_height(const CSSValueMaxHeight &max_height, float containing_used_height, bool containing_height_expanding)
 	{
 		switch (max_height.type)
 		{
-		case CSSBoxMaxHeight::type_none: return 1e5f;
-		case CSSBoxMaxHeight::type_length: return max_height.length.value;
-		case CSSBoxMaxHeight::type_percentage: return containing_height_expanding ? 1e5f : max_height.percentage * containing_used_height / 100.0f;
+		case CSSValueMaxHeight::type_none: return 1e5f;
+		case CSSValueMaxHeight::type_length: return max_height.length.value;
+		case CSSValueMaxHeight::type_percentage: return containing_height_expanding ? 1e5f : max_height.percentage * containing_used_height / 100.0f;
 		default: return 0.0f;
 		}
 	}
@@ -284,42 +284,42 @@ public:
 		padding.right = get_css_padding_width(properties.padding_width_right, containing_width);
 
 		CSSUsedValue left = 0.0f;
-		if (properties.left.type == CSSBoxLeft::type_length)
+		if (properties.left.type == CSSValueLeft::type_length)
 			left = properties.left.length.value;
-		else if (properties.left.type == CSSBoxLeft::type_percentage)
+		else if (properties.left.type == CSSValueLeft::type_percentage)
 			left = properties.left.percentage * containing_width.value / 100.0f;
 
 		CSSUsedValue right = 0.0f;
-		if (properties.right.type == CSSBoxRight::type_length)
+		if (properties.right.type == CSSValueRight::type_length)
 			right = properties.right.length.value;
-		else if (properties.right.type == CSSBoxRight::type_percentage)
+		else if (properties.right.type == CSSValueRight::type_percentage)
 			right = properties.right.percentage * containing_width.value / 100.0f;
 
 		width = 0.0f;
 		width_undetermined = false;
-		if (properties.width.type == CSSBoxWidth::type_length)
+		if (properties.width.type == CSSValueWidth::type_length)
 			width = properties.width.length.value;
 		else
 			width = properties.width.percentage * containing_width.value / 100.0f;
 
-		if (properties.left.type == CSSBoxLeft::type_auto &&
-			properties.right.type == CSSBoxRight::type_auto &&
-			properties.width.type == CSSBoxWidth::type_auto)
+		if (properties.left.type == CSSValueLeft::type_auto &&
+			properties.right.type == CSSValueRight::type_auto &&
+			properties.width.type == CSSValueWidth::type_auto)
 		{
 			width = 0.0f;
 			width_undetermined = true;
 		}
-		else if (properties.left.type != CSSBoxLeft::type_auto &&
-			properties.right.type != CSSBoxRight::type_auto &&
-			properties.width.type != CSSBoxWidth::type_auto)
+		else if (properties.left.type != CSSValueLeft::type_auto &&
+			properties.right.type != CSSValueRight::type_auto &&
+			properties.width.type != CSSValueWidth::type_auto)
 		{
-			if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto &&
-				properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+			if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto &&
+				properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				CSSUsedValue space_left = containing_width.value - border.left - border.right - padding.left - padding.right - width - left - right;
 				if (space_left < 0.0f)
 				{
-					if (properties.direction.type == CSSBoxDirection::type_ltr)
+					if (properties.direction.type == CSSValueDirection::type_ltr)
 					{
 						margin.left = 0.0f;
 						margin.right = space_left;
@@ -336,32 +336,32 @@ public:
 					margin.right = margin.left;
 				}
 			}
-			else if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.left = containing_width.value - border.left - border.right - padding.left - padding.right - width - margin.right - left - right;
 			}
-			else if (properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.right = containing_width.value - border.left - border.right - padding.left - padding.right - width - margin.left - left - right;
 			}
 		}
-		else if (properties.left.type == CSSBoxLeft::type_auto &&
-			properties.width.type == CSSBoxWidth::type_auto &&
-			properties.right.type != CSSBoxRight::type_auto) // rule #1
+		else if (properties.left.type == CSSValueLeft::type_auto &&
+			properties.width.type == CSSValueWidth::type_auto &&
+			properties.right.type != CSSValueRight::type_auto) // rule #1
 		{
 			width = 0.0f;
 			width_undetermined = true;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto &&
-			properties.right.type == CSSBoxRight::type_auto &&
-			properties.left.type != CSSBoxLeft::type_auto) // rule #3
+		else if (properties.width.type == CSSValueWidth::type_auto &&
+			properties.right.type == CSSValueRight::type_auto &&
+			properties.left.type != CSSValueLeft::type_auto) // rule #3
 		{
 			width = 0.0f;
 			width_undetermined = true;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto &&
-			properties.left.type != CSSBoxLeft::type_auto &&
-			properties.right.type != CSSBoxRight::type_auto) // rule #5
+		else if (properties.width.type == CSSValueWidth::type_auto &&
+			properties.left.type != CSSValueLeft::type_auto &&
+			properties.right.type != CSSValueRight::type_auto) // rule #5
 		{
 			width = containing_width.value - border.left - border.right - padding.left - padding.right - margin.left - margin.right - left - right;
 		}
@@ -380,14 +380,14 @@ public:
 
 		css_max_width.expanding = true;
 		css_max_width.value = 0.0f;
-		if (properties.max_width.type != CSSBoxMaxWidth::type_none)
+		if (properties.max_width.type != CSSValueMaxWidth::type_none)
 		{
-			if (properties.max_width.type == CSSBoxMaxWidth::type_length)
+			if (properties.max_width.type == CSSValueMaxWidth::type_length)
 			{
 				css_max_width.value = properties.max_width.length.value;
 				css_max_width.expanding = false;
 			}
-			else if (properties.max_width.type == CSSBoxMaxWidth::type_percentage && !containing_width.expanding)
+			else if (properties.max_width.type == CSSValueMaxWidth::type_percentage && !containing_width.expanding)
 			{
 				css_max_width.value = properties.max_width.percentage * containing_width.value / 100.0f;
 				css_max_width.expanding = false;
@@ -404,16 +404,16 @@ public:
 	void apply_absolute_widths_constraint(const CSSBoxProperties &properties, CSSUsedValue constraint_width, CSSUsedValue left, CSSUsedValue right, CSSUsedValue containing_width)
 	{
 		width = constraint_width;
-		if (properties.left.type != CSSBoxLeft::type_auto &&
-			properties.right.type != CSSBoxRight::type_auto)
+		if (properties.left.type != CSSValueLeft::type_auto &&
+			properties.right.type != CSSValueRight::type_auto)
 		{
-			if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto &&
-				properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+			if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto &&
+				properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				CSSUsedValue space_left = containing_width - border.left - border.right - padding.left - padding.right - width - left - right;
 				if (space_left < 0.0f)
 				{
-					if (properties.direction.type == CSSBoxDirection::type_ltr)
+					if (properties.direction.type == CSSValueDirection::type_ltr)
 					{
 						margin.left = 0.0f;
 						margin.right = space_left;
@@ -430,11 +430,11 @@ public:
 					margin.right = margin.left;
 				}
 			}
-			else if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.left = containing_width - border.left - border.right - padding.left - padding.right - width - margin.right - left - right;
 			}
-			else if (properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.right = containing_width - border.left - border.right - padding.left - padding.right - width - margin.left - left - right;
 			}
@@ -451,37 +451,37 @@ public:
 		padding.bottom = get_css_padding_height(properties.padding_width_bottom, containing_height);
 
 		CSSUsedValue top = 0.0f;
-		if (properties.top.type == CSSBoxTop::type_length)
+		if (properties.top.type == CSSValueTop::type_length)
 			top = properties.top.length.value;
-		else if (properties.top.type == CSSBoxTop::type_percentage)
+		else if (properties.top.type == CSSValueTop::type_percentage)
 			top = properties.top.percentage * containing_height.value / 100.0f;
 
 		CSSUsedValue bottom = 0.0f;
-		if (properties.bottom.type == CSSBoxBottom::type_length)
+		if (properties.bottom.type == CSSValueBottom::type_length)
 			bottom = properties.bottom.length.value;
-		else if (properties.bottom.type == CSSBoxBottom::type_percentage)
+		else if (properties.bottom.type == CSSValueBottom::type_percentage)
 			bottom = properties.bottom.percentage * containing_height.value / 100.0f;
 
 		height = 0.0f;
 		height_undetermined = false;
-		if (properties.height.type == CSSBoxHeight::type_length)
+		if (properties.height.type == CSSValueHeight::type_length)
 			height = properties.height.length.value;
 		else
 			height = properties.height.percentage * containing_height.value / 100.0f;
 
-		if (properties.top.type == CSSBoxTop::type_auto &&
-			properties.bottom.type == CSSBoxBottom::type_auto &&
-			properties.height.type == CSSBoxHeight::type_auto)
+		if (properties.top.type == CSSValueTop::type_auto &&
+			properties.bottom.type == CSSValueBottom::type_auto &&
+			properties.height.type == CSSValueHeight::type_auto)
 		{
 			height = 0.0f;
 			height_undetermined = true;
 		}
-		else if (properties.top.type != CSSBoxTop::type_auto &&
-			properties.bottom.type != CSSBoxBottom::type_auto &&
-			properties.height.type != CSSBoxHeight::type_auto)
+		else if (properties.top.type != CSSValueTop::type_auto &&
+			properties.bottom.type != CSSValueBottom::type_auto &&
+			properties.height.type != CSSValueHeight::type_auto)
 		{
-			if (properties.margin_width_top.type == CSSBoxMarginWidth::type_auto &&
-				properties.margin_width_bottom.type == CSSBoxMarginWidth::type_auto)
+			if (properties.margin_width_top.type == CSSValueMarginWidth::type_auto &&
+				properties.margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 			{
 				CSSUsedValue space_left = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - top - bottom;
 				if (space_left < 0.0f)
@@ -495,32 +495,32 @@ public:
 					margin.bottom = margin.top;
 				}
 			}
-			else if (properties.margin_width_top.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_top.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.top = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - margin.bottom - top - bottom;
 			}
-			else if (properties.margin_width_bottom.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.bottom = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - margin.top - top - bottom;
 			}
 		}
-		else if (properties.top.type == CSSBoxTop::type_auto &&
-			properties.height.type == CSSBoxHeight::type_auto &&
-			properties.bottom.type != CSSBoxBottom::type_auto) // rule #1
+		else if (properties.top.type == CSSValueTop::type_auto &&
+			properties.height.type == CSSValueHeight::type_auto &&
+			properties.bottom.type != CSSValueBottom::type_auto) // rule #1
 		{
 			height = 0.0f;
 			height_undetermined = true;
 		}
-		else if (properties.height.type == CSSBoxHeight::type_auto &&
-			properties.bottom.type == CSSBoxBottom::type_auto &&
-			properties.top.type != CSSBoxTop::type_auto) // rule #3
+		else if (properties.height.type == CSSValueHeight::type_auto &&
+			properties.bottom.type == CSSValueBottom::type_auto &&
+			properties.top.type != CSSValueTop::type_auto) // rule #3
 		{
 			height = 0.0f;
 			height_undetermined = true;
 		}
-		else if (properties.height.type == CSSBoxHeight::type_auto &&
-			properties.top.type != CSSBoxTop::type_auto &&
-			properties.bottom.type != CSSBoxBottom::type_auto) // rule #5
+		else if (properties.height.type == CSSValueHeight::type_auto &&
+			properties.top.type != CSSValueTop::type_auto &&
+			properties.bottom.type != CSSValueBottom::type_auto) // rule #5
 		{
 			height = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - margin.top - margin.bottom - top - bottom;
 		}
@@ -535,11 +535,11 @@ public:
 	void apply_absolute_heights_constraint(const CSSBoxProperties &properties, CSSUsedValue constraint_height, CSSUsedValue top, CSSUsedValue bottom)
 	{
 		height = constraint_height;
-		if (properties.top.type != CSSBoxTop::type_auto &&
-			properties.bottom.type != CSSBoxBottom::type_auto)
+		if (properties.top.type != CSSValueTop::type_auto &&
+			properties.bottom.type != CSSValueBottom::type_auto)
 		{
-			if (properties.margin_width_top.type == CSSBoxMarginWidth::type_auto &&
-				properties.margin_width_bottom.type == CSSBoxMarginWidth::type_auto)
+			if (properties.margin_width_top.type == CSSValueMarginWidth::type_auto &&
+				properties.margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 			{
 				CSSUsedValue space_left = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - top - bottom;
 				if (space_left < 0.0f)
@@ -553,11 +553,11 @@ public:
 					margin.bottom = margin.top;
 				}
 			}
-			else if (properties.margin_width_top.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_top.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.top = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - margin.bottom - top - bottom;
 			}
-			else if (properties.margin_width_bottom.type == CSSBoxMarginWidth::type_auto)
+			else if (properties.margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.bottom = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height - margin.top - top - bottom;
 			}
@@ -566,8 +566,8 @@ public:
 
 	void calculate_static_widths(const CSSBoxProperties &properties, LayoutStrategy strategy)
 	{
-		bool is_table_cell = properties.display.type == CSSBoxDisplay::type_table_cell;
-		bool is_float = properties.float_box.type != CSSBoxFloat::type_none;
+		bool is_table_cell = properties.display.type == CSSValueDisplay::type_table_cell;
+		bool is_float = properties.float_box.type != CSSValueFloat::type_none;
 		//bool is_overflow_visible = (element_node->get_parent() == 0) || element_node->is_overflow_visible();
 
 		margin.left = get_css_margin_width(properties.margin_width_left, containing_width);
@@ -577,12 +577,12 @@ public:
 		padding.left = get_css_padding_width(properties.padding_width_left, containing_width);
 		padding.right = get_css_padding_width(properties.padding_width_right, containing_width);
 
-		if (properties.width.type == CSSBoxWidth::type_length)
+		if (properties.width.type == CSSValueWidth::type_length)
 		{
 			width = properties.width.length.value;
 			width_undetermined = false;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_percentage)
+		else if (properties.width.type == CSSValueWidth::type_percentage)
 		{
 			if (containing_width.expanding)
 			{
@@ -595,7 +595,7 @@ public:
 				width_undetermined = false;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto)
 		{
 			if (containing_width.expanding || is_table_cell || is_float) // || !is_overflow_visible
 			{
@@ -639,23 +639,23 @@ public:
 
 			if (!containing_width.expanding && !is_float)
 			{
-				if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto && properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+				if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto && properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 				{
 					margin.left = max(0.0f, (containing_width.value-border.left-border.right-padding.left-padding.right-width)/2.0f);
 					margin.right = max(0.0f, containing_width.value-border.left-border.right-padding.left-padding.right-width-margin.left);
 				}
-				else if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto)
+				else if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto)
 				{
 					margin.left = max(0.0f, containing_width.value-margin.right-border.left-border.right-padding.left-padding.right-width);
 				}
-				else if (properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+				else if (properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 				{
 					margin.right = max(0.0f, containing_width.value-margin.left-border.left-border.right-padding.left-padding.right-width);
 				}
 
 				if (margin.left + border.left + width + border.right + padding.right + margin.right > containing_width.value)
 				{
-					if (properties.direction.type == CSSBoxDirection::type_ltr)
+					if (properties.direction.type == CSSValueDirection::type_ltr)
 						margin.right = max(0.0f, containing_width.value-margin.left-border.left-border.right-padding.left-padding.right-width);
 					else
 						margin.left = max(0.0f, containing_width.value-margin.right-border.left-border.right-padding.left-padding.right-width);
@@ -673,12 +673,12 @@ public:
 		padding.top = get_css_padding_height(properties.padding_width_top, containing_height);
 		padding.bottom = get_css_padding_height(properties.padding_width_bottom, containing_height);
 
-		if (properties.height.type == CSSBoxHeight::type_length)
+		if (properties.height.type == CSSValueHeight::type_length)
 		{
 			height = properties.height.length.value;
 			height_undetermined = false;
 		}
-		else if (properties.height.type == CSSBoxHeight::type_percentage)
+		else if (properties.height.type == CSSValueHeight::type_percentage)
 		{
 			if (containing_height.use_content)
 			{
@@ -691,7 +691,7 @@ public:
 				height_undetermined = false;
 			}
 		}
-		else if (properties.height.type == CSSBoxHeight::type_auto)
+		else if (properties.height.type == CSSValueHeight::type_auto)
 		{
 			height = 0.0f;
 			height_undetermined = true;

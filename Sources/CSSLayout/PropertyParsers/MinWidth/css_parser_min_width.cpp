@@ -40,29 +40,29 @@ std::vector<std::string> CSSParserMinWidth::get_names()
 	return names;
 }
 
-void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inherit"))
-			properties.min_width.type = CSSBoxMinWidth::type_inherit;
+			properties.min_width.type = CSSValueMinWidth::type_inherit;
 		else if (equals(token.value, "auto"))
-			properties.min_width.type = CSSBoxMinWidth::type_auto;
+			properties.min_width.type = CSSValueMinWidth::type_auto;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.min_width.type = CSSBoxMinWidth::type_length;
+			properties.min_width.type = CSSValueMinWidth::type_length;
 			properties.min_width.length = length;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.min_width.type = CSSBoxMinWidth::type_percentage;
+		properties.min_width.type = CSSValueMinWidth::type_percentage;
 		properties.min_width.percentage = StringHelp::text_to_float(token.value);
 	}
 	if (out_change_set)

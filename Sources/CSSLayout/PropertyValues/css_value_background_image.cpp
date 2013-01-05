@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_image.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_image.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundImage::CSSBoxBackgroundImage()
+CSSValueBackgroundImage::CSSValueBackgroundImage()
 : type(type_images)
 {
 	images.push_back(Image(image_type_none));
 }
 
-void CSSBoxBackgroundImage::compute(const CSSBoxBackgroundImage *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundImage::compute(const CSSValueBackgroundImage *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxBackgroundImage::compute(const CSSBoxBackgroundImage *parent, CSSReso
 	}
 }
 
-std::string CSSBoxBackgroundImage::to_string() const
+std::string CSSValueBackgroundImage::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

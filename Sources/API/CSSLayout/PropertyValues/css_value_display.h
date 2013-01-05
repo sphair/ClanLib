@@ -28,19 +28,19 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxFloat;
-class CSSBoxPosition;
+class CSSValueFloat;
+class CSSValuePosition;
 
-class CSSBoxDisplay : public CSSBoxProperty
+class CSSValueDisplay : public CSSPropertyValue
 {
 public:
-	CSSBoxDisplay();
-	void compute(const CSSBoxDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxPosition &position, CSSBoxFloat &float_box);
+	CSSValueDisplay();
+	void compute(const CSSValueDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, CSSValueFloat &float_box);
 	std::string to_string() const;
 
 	enum Type

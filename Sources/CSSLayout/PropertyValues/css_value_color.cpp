@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_color.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_color.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxColor::CSSBoxColor()
+CSSValueColor::CSSValueColor()
 : type(type_inherit)
 {
 }
 
-void CSSBoxColor::compute(const CSSBoxColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueColor::compute(const CSSValueColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxColor::compute(const CSSBoxColor *parent, CSSResourceCache *layout, f
 	}
 }
 
-std::string CSSBoxColor::to_string() const
+std::string CSSValueColor::to_string() const
 {
 	switch (type)
 	{

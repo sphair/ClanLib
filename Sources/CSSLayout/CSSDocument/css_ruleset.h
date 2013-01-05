@@ -2,7 +2,7 @@
 #pragma once
 
 #include "css_selector_chain.h"
-#include "API/CSSLayout/css_property.h"
+#include "API/CSSLayout/CSSDocument/css_property.h"
 
 namespace clan
 {

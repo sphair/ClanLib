@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "align_line.h"
 #include "word_count.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 
 namespace clan
 {
@@ -42,15 +42,15 @@ CSSInlineLayoutAlignLine::CSSInlineLayoutAlignLine(CSSInlineLayout *layout, CSSI
 	offset_x = 0;
 	word_count = 0;
 	word_index = 0;
-	if (layout->get_element_node()->computed_properties.text_align.type == CSSBoxTextAlign::type_right)
+	if (layout->get_element_node()->computed_properties.text_align.type == CSSValueTextAlign::type_right)
 	{
 		offset_x = extra_total;
 	}
-	else if (layout->get_element_node()->computed_properties.text_align.type == CSSBoxTextAlign::type_center)
+	else if (layout->get_element_node()->computed_properties.text_align.type == CSSValueTextAlign::type_center)
 	{
 		offset_x = extra_total / 2;
 	}
-	else if (layout->get_element_node()->computed_properties.text_align.type == CSSBoxTextAlign::type_justify && !last_line)
+	else if (layout->get_element_node()->computed_properties.text_align.type == CSSValueTextAlign::type_justify && !last_line)
 	{
 		word_count = find_word_count(line);
 	}

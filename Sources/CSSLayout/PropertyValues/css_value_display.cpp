@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_display.h"
-#include "API/CSSLayout/PropertyTypes/css_box_position.h"
-#include "API/CSSLayout/PropertyTypes/css_box_float.h"
+#include "API/CSSLayout/PropertyValues/css_value_display.h"
+#include "API/CSSLayout/PropertyValues/css_value_position.h"
+#include "API/CSSLayout/PropertyValues/css_value_float.h"
 
 namespace clan
 {
 
-CSSBoxDisplay::CSSBoxDisplay()
+CSSValueDisplay::CSSValueDisplay()
 : type(type_inline)
 {
 }
 
-void CSSBoxDisplay::compute(const CSSBoxDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxPosition &position, CSSBoxFloat &float_box)
+void CSSValueDisplay::compute(const CSSValueDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, CSSValueFloat &float_box)
 {
 	if (type == type_inherit)
 	{
@@ -51,12 +51,12 @@ void CSSBoxDisplay::compute(const CSSBoxDisplay *parent, CSSResourceCache *layou
 
 	if (type != type_none)
 	{
-		if (position.type == CSSBoxPosition::type_absolute || position.type == CSSBoxPosition::type_fixed)
+		if (position.type == CSSValuePosition::type_absolute || position.type == CSSValuePosition::type_fixed)
 		{
 			apply_table_9_7();
-			float_box.type = CSSBoxFloat::type_none;
+			float_box.type = CSSValueFloat::type_none;
 		}
-		else if (float_box.type != CSSBoxFloat::type_none)
+		else if (float_box.type != CSSValueFloat::type_none)
 		{
 			apply_table_9_7();
 		}
@@ -67,7 +67,7 @@ void CSSBoxDisplay::compute(const CSSBoxDisplay *parent, CSSResourceCache *layou
 	}
 }
 
-void CSSBoxDisplay::apply_table_9_7()
+void CSSValueDisplay::apply_table_9_7()
 {
 	switch (type)
 	{
@@ -92,7 +92,7 @@ void CSSBoxDisplay::apply_table_9_7()
 	}
 }
 
-std::string CSSBoxDisplay::to_string() const
+std::string CSSValueDisplay::to_string() const
 {
 	switch (type)
 	{

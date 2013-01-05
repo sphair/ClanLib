@@ -27,20 +27,20 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_image_outset.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_outset.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBorderImageOutset::CSSBoxBorderImageOutset()
+CSSValueBorderImageOutset::CSSValueBorderImageOutset()
 : type(type_values),
   value_top(value_type_number), value_right(value_type_number), value_bottom(value_type_number), value_left(value_type_number),
   number_top(0.0f), number_right(0.0f), number_bottom(0.0f), number_left(0.0f)
 {
 }
 
-void CSSBoxBorderImageOutset::compute(const CSSBoxBorderImageOutset *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderImageOutset::compute(const CSSValueBorderImageOutset *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -67,10 +67,10 @@ void CSSBoxBorderImageOutset::compute(const CSSBoxBorderImageOutset *parent, CSS
 			value_right = value_type_number;
 			value_bottom = value_type_number;
 			value_left = value_type_number;
-			length_top = CSSBoxLength();
-			length_right = CSSBoxLength();
-			length_bottom = CSSBoxLength();
-			length_left = CSSBoxLength();
+			length_top = CSSLength();
+			length_right = CSSLength();
+			length_bottom = CSSLength();
+			length_left = CSSLength();
 			number_top = 0.0f;
 			number_right = 0.0f;
 			number_bottom = 0.0f;
@@ -88,7 +88,7 @@ void CSSBoxBorderImageOutset::compute(const CSSBoxBorderImageOutset *parent, CSS
 		length_left = layout->compute_length(length_left, em_size, ex_size);
 }
 
-std::string CSSBoxBorderImageOutset::to_string() const
+std::string CSSValueBorderImageOutset::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserListStyleImage::get_names()
 	return names;
 }
 
-void CSSParserListStyleImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserListStyleImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.list_style_image.type = CSSBoxListStyleImage::type_none;
+			properties.list_style_image.type = CSSValueListStyleImage::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.list_style_image.type = CSSBoxListStyleImage::type_inherit;
+			properties.list_style_image.type = CSSValueListStyleImage::type_inherit;
 	}
 	else if (token.type == CSSToken::type_uri && pos == tokens.size())
 	{
-		properties.list_style_image.type = CSSBoxListStyleImage::type_uri;
+		properties.list_style_image.type = CSSValueListStyleImage::type_uri;
 		properties.list_style_image.url = token.value;
 	}
 	if (out_change_set)

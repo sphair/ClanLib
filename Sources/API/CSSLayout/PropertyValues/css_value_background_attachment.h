@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxBackgroundAttachment : public CSSBoxProperty
+class CSSValueBackgroundAttachment : public CSSPropertyValue
 {
 public:
-	CSSBoxBackgroundAttachment();
-	void compute(const CSSBoxBackgroundAttachment *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueBackgroundAttachment();
+	void compute(const CSSValueBackgroundAttachment *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

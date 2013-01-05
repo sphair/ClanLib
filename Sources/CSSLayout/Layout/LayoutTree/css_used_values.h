@@ -55,8 +55,8 @@ public:
 #include "css_containing_block.h"
 
 class CSSBoxProperties;
-class CSSBoxMarginWidth;
-class CSSBoxPaddingWidth;
+class CSSValueMarginWidth;
+class CSSValuePaddingWidth;
 
 class CSSUsedValues
 {
@@ -115,8 +115,8 @@ private:
 	static bool is_floating(const CSSBoxProperties &properties);
 	static bool is_inline_block(const CSSBoxProperties &properties);
 	static bool is_absolute(const CSSBoxProperties &properties);
-	CSSUsedValue get_margin_width(const CSSBoxMarginWidth &margin_width);
-	CSSUsedValue get_padding_width(const CSSBoxPaddingWidth &padding_width);
+	CSSUsedValue get_margin_width(const CSSValueMarginWidth &margin_width);
+	CSSUsedValue get_padding_width(const CSSValuePaddingWidth &padding_width);
 };
 */
 

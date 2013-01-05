@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_left.h"
+#include "API/CSSLayout/PropertyValues/css_value_left.h"
 
 namespace clan
 {
 
-CSSBoxLeft::CSSBoxLeft()
+CSSValueLeft::CSSValueLeft()
 : type(type_auto)
 {
 }
 
-std::string CSSBoxLeft::to_string() const
+std::string CSSValueLeft::to_string() const
 {
 	switch (type)
 	{

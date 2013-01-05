@@ -40,10 +40,10 @@ std::vector<std::string> CSSParserFontFamily::get_names()
 	return names;
 }
 
-void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxFontFamily family;
-	family.type = CSSBoxFontFamily::type_names;
+	CSSValueFontFamily family;
+	family.type = CSSValueFontFamily::type_names;
 
 	size_t pos = 0;
 	CSSToken token;
@@ -51,7 +51,7 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 
 	if (equals(token.value, "inherit") && tokens.size() == 1)
 	{
-		properties.font_family.type = CSSBoxFontFamily::type_inherit;
+		properties.font_family.type = CSSValueFontFamily::type_inherit;
 		return;
 	}
 
@@ -63,26 +63,26 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 			return;
 		}
 
-		CSSBoxFontFamilyName name;
+		CSSValueFontFamilyName name;
 		if (equals(token.value, "serif"))
 		{
-			name.type = CSSBoxFontFamilyName::type_serif;
+			name.type = CSSValueFontFamilyName::type_serif;
 		}
 		else if (equals(token.value, "sans-serif"))
 		{
-			name.type = CSSBoxFontFamilyName::type_sans_serif;
+			name.type = CSSValueFontFamilyName::type_sans_serif;
 		}
 		else if (equals(token.value, "cursive"))
 		{
-			name.type = CSSBoxFontFamilyName::type_cursive;
+			name.type = CSSValueFontFamilyName::type_cursive;
 		}
 		else if (equals(token.value, "fantasy"))
 		{
-			name.type = CSSBoxFontFamilyName::type_fantasy;
+			name.type = CSSValueFontFamilyName::type_fantasy;
 		}
 		else if (equals(token.value, "monospace"))
 		{
-			name.type = CSSBoxFontFamilyName::type_monospace;
+			name.type = CSSValueFontFamilyName::type_monospace;
 		}
 		else if (equals(token.value, "default"))
 		{
@@ -96,10 +96,10 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 		}
 		else
 		{
-			name.type = CSSBoxFontFamilyName::type_family_name;
+			name.type = CSSValueFontFamilyName::type_family_name;
 		}
 
-		if (name.type == CSSBoxFontFamilyName::type_family_name)
+		if (name.type == CSSValueFontFamilyName::type_family_name)
 		{
 			name.name = token.value;
 			while (pos != tokens.size())

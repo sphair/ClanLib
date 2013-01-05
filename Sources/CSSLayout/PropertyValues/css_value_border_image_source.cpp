@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_image_source.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_source.h"
 
 namespace clan
 {
 
-CSSBoxBorderImageSource::CSSBoxBorderImageSource()
+CSSValueBorderImageSource::CSSValueBorderImageSource()
 : type(type_none)
 {
 }
 
-void CSSBoxBorderImageSource::compute(const CSSBoxBorderImageSource *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderImageSource::compute(const CSSValueBorderImageSource *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -54,7 +54,7 @@ void CSSBoxBorderImageSource::compute(const CSSBoxBorderImageSource *parent, CSS
 	}
 }
 
-std::string CSSBoxBorderImageSource::to_string() const
+std::string CSSValueBorderImageSource::to_string() const
 {
 	switch (type)
 	{

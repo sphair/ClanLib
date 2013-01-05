@@ -40,7 +40,7 @@ namespace clan
 void GUILayoutAbsoluteOrFixed::node(GUIComponent_Impl *node)
 {
 	const CSSBoxProperties &properties = node->element.get_css_properties();
-	if (properties.position.type == CSSBoxPosition::type_absolute || properties.position.type == CSSBoxPosition::type_fixed)
+	if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
 	{
 		// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
 /*

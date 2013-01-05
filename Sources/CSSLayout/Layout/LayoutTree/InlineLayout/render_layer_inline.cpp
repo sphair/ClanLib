@@ -28,10 +28,10 @@
 
 #include "CSSLayout/precomp.h"
 #include "render_layer_inline.h"
-#include "CSSLayout/LayoutTree/css_stacking_context.h"
-#include "CSSLayout/LayoutTree/css_block_formatting_context.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_stacking_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_block_formatting_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 
 namespace clan
 {
@@ -48,7 +48,7 @@ bool CSSInlineLayoutRenderLayerInline::node(CSSInlineGeneratedBox *cur)
 	if (text)
 	{
 		const CSSBoxProperties &properties = text->get_properties();
-		if (properties.visibility.type == CSSBoxVisibility::type_visible)
+		if (properties.visibility.type == CSSValueVisibility::type_visible)
 		{
 			Font font = graphics->get_font(properties);
 			FontMetrics metrics = graphics->get_font_metrics(font);
@@ -61,7 +61,7 @@ bool CSSInlineLayoutRenderLayerInline::node(CSSInlineGeneratedBox *cur)
 	{
 		CSSLayoutTreeNode *object_node = cur->layout_node;
 		bool is_same_stacking_context = (stacking_context == object_node->get_stacking_context());
-		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSBoxPosition::type_static);
+		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context && !is_positioned)
 			object_node->render_layer_inline(graphics, resources);
 	}

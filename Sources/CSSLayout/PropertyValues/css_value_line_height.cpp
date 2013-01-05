@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_line_height.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_line_height.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxLineHeight::CSSBoxLineHeight()
+CSSValueLineHeight::CSSValueLineHeight()
 : type(type_inherit)
 {
 }
 
-void CSSBoxLineHeight::compute(const CSSBoxLineHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueLineHeight::compute(const CSSValueLineHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,14 +58,14 @@ void CSSBoxLineHeight::compute(const CSSBoxLineHeight *parent, CSSResourceCache 
 	if (type == type_percentage)
 	{
 		type = type_length;
-		length = CSSBoxLength(percentage / 100.0f, CSSBoxLength::type_em);
+		length = CSSLength(percentage / 100.0f, CSSLength::type_em);
 	}
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxLineHeight::to_string() const
+std::string CSSValueLineHeight::to_string() const
 {
 	switch (type)
 	{

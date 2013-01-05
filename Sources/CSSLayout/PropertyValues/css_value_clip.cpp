@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_clip.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_clip.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxClip::CSSBoxClip()
+CSSValueClip::CSSValueClip()
 : type(type_auto), left_auto(false), top_auto(false), right_auto(false), bottom_auto(false)
 {
 }
 
-void CSSBoxClip::compute(const CSSBoxClip *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueClip::compute(const CSSValueClip *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -77,7 +77,7 @@ void CSSBoxClip::compute(const CSSBoxClip *parent, CSSResourceCache *layout, flo
 	}
 }
 
-std::string CSSBoxClip::to_string() const
+std::string CSSValueClip::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_font_weight.h"
+#include "API/CSSLayout/PropertyValues/css_value_font_weight.h"
 
 namespace clan
 {
 
-CSSBoxFontWeight::CSSBoxFontWeight()
+CSSValueFontWeight::CSSValueFontWeight()
 : type(type_inherit)
 {
 }
 
-void CSSBoxFontWeight::compute(const CSSBoxFontWeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFontWeight::compute(const CSSValueFontWeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -50,7 +50,7 @@ void CSSBoxFontWeight::compute(const CSSBoxFontWeight *parent, CSSResourceCache 
 	// CSS 2.1 does not specify how the computed value of font-weight is represented internally or externally. 
 }
 
-std::string CSSBoxFontWeight::to_string() const
+std::string CSSValueFontWeight::to_string() const
 {
 	switch (type)
 	{

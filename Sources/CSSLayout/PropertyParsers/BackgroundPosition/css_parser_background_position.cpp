@@ -40,14 +40,14 @@ std::vector<std::string> CSSParserBackgroundPosition::get_names()
 	return names;
 }
 
-void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 	{
-		properties.background_position.type = CSSBoxBackgroundPosition::type_inherit;
+		properties.background_position.type = CSSValueBackgroundPosition::type_inherit;
 		if (out_change_set)
 		{
 			(*out_change_set)["background-position"] = &properties.background_position;
@@ -55,13 +55,13 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 		return;
 	}
 
-	CSSBoxBackgroundPosition position;
-	position.type = CSSBoxBackgroundPosition::type_value;
+	CSSValueBackgroundPosition position;
+	position.type = CSSValueBackgroundPosition::type_value;
 	position.positions.clear();
 	bool done = false;
 	while (!done)
 	{
-		CSSBoxBackgroundPosition::Position bg_pos;
+		CSSValueBackgroundPosition::Position bg_pos;
 		bool x_specified = false;
 		bool y_specified = false;
 		bool center_specified = false;
@@ -72,48 +72,48 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 			{
 				if (!y_specified && equals(token.value, "top"))
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_top;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_top;
 					y_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!y_specified && equals(token.value, "bottom"))
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_bottom;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_bottom;
 					y_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!x_specified && equals(token.value, "left"))
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_left;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_left;
 					x_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 						y_specified = true;
 						center_specified = false;
 					}
 				}
 				else if (!x_specified && equals(token.value, "right"))
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_right;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_right;
 					x_specified = true;
 
 					if (center_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 						y_specified = true;
 						center_specified = false;
 					}
@@ -122,19 +122,19 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 				{
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (x_specified && !y_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 						y_specified = true;
 					}
 					else if (y_specified && !x_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 					}
 					else if (!x_specified && !y_specified)
@@ -150,25 +150,25 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 			}
 			else if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_length;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_length;
 						bg_pos.length_x = length;
 						x_specified = true;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_length;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_length;
 						bg_pos.length_y = length;
 						y_specified = true;
 					}
@@ -188,20 +188,20 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 			{
 				if (center_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 					x_specified = true;
 					center_specified = false;
 				}
 
 				if (!x_specified && !y_specified)
 				{
-					bg_pos.type_x = CSSBoxBackgroundPosition::type1_percentage;
+					bg_pos.type_x = CSSValueBackgroundPosition::type1_percentage;
 					bg_pos.percentage_x = StringHelp::text_to_float(token.value);
 					x_specified = true;
 				}
 				else if (x_specified && !y_specified)
 				{
-					bg_pos.type_y = CSSBoxBackgroundPosition::type2_percentage;
+					bg_pos.type_y = CSSValueBackgroundPosition::type2_percentage;
 					bg_pos.percentage_y = StringHelp::text_to_float(token.value);
 					y_specified = true;
 				}
@@ -216,26 +216,26 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 				token = next_token(pos, tokens);
 				if (is_length(token))
 				{
-					CSSBoxLength length;
+					CSSLength length;
 					if (parse_length(token, length))
 					{
 						length.value = -length.value;
 						if (center_specified)
 						{
-							bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+							bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 							x_specified = true;
 							center_specified = false;
 						}
 
 						if (!x_specified && !y_specified)
 						{
-							bg_pos.type_x = CSSBoxBackgroundPosition::type1_length;
+							bg_pos.type_x = CSSValueBackgroundPosition::type1_length;
 							bg_pos.length_x = length;
 							x_specified = true;
 						}
 						else if (x_specified && !y_specified)
 						{
-							bg_pos.type_y = CSSBoxBackgroundPosition::type2_length;
+							bg_pos.type_y = CSSValueBackgroundPosition::type2_length;
 							bg_pos.length_y = length;
 							y_specified = true;
 						}
@@ -255,20 +255,20 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 				{
 					if (center_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 						x_specified = true;
 						center_specified = false;
 					}
 
 					if (!x_specified && !y_specified)
 					{
-						bg_pos.type_x = CSSBoxBackgroundPosition::type1_percentage;
+						bg_pos.type_x = CSSValueBackgroundPosition::type1_percentage;
 						bg_pos.percentage_x = -StringHelp::text_to_float(token.value);
 						x_specified = true;
 					}
 					else if (x_specified && !y_specified)
 					{
-						bg_pos.type_y = CSSBoxBackgroundPosition::type2_percentage;
+						bg_pos.type_y = CSSValueBackgroundPosition::type2_percentage;
 						bg_pos.percentage_y = -StringHelp::text_to_float(token.value);
 						y_specified = true;
 					}
@@ -304,9 +304,9 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 		}
 
 		if (!x_specified)
-			bg_pos.type_x = CSSBoxBackgroundPosition::type1_center;
+			bg_pos.type_x = CSSValueBackgroundPosition::type1_center;
 		else if (!y_specified)
-			bg_pos.type_y = CSSBoxBackgroundPosition::type2_center;
+			bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 
 		position.positions.push_back(bg_pos);
 	}

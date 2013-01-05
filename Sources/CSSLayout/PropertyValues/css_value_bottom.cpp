@@ -27,21 +27,21 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_bottom.h"
+#include "API/CSSLayout/PropertyValues/css_value_bottom.h"
 #include "API/CSSLayout/css_box_properties.h"
-#include "../../css_resource_cache.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBottom::CSSBoxBottom()
+CSSValueBottom::CSSValueBottom()
 : type(type_auto), percentage(0.0f)
 {
 }
 
-void CSSBoxBottom::compute(CSSBoxTop &top, CSSBoxBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxPosition &position)
+void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position)
 {
-	if (top.type == CSSBoxTop::type_inherit)
+	if (top.type == CSSValueTop::type_inherit)
 	{
 		if (parent)
 		{
@@ -51,7 +51,7 @@ void CSSBoxBottom::compute(CSSBoxTop &top, CSSBoxBottom &bottom, const CSSBoxPro
 		}
 		else
 		{
-			top.type = CSSBoxTop::type_auto;
+			top.type = CSSValueTop::type_auto;
 		}
 	}
 
@@ -69,34 +69,34 @@ void CSSBoxBottom::compute(CSSBoxTop &top, CSSBoxBottom &bottom, const CSSBoxPro
 		}
 	}
 
-	if (top.type == CSSBoxTop::type_length)
+	if (top.type == CSSValueTop::type_length)
 		top.length = layout->compute_length(top.length, em_size, ex_size);
 	if (bottom.type == type_length)
 		bottom.length = layout->compute_length(bottom.length, em_size, ex_size);
 
-	if (position.type == CSSBoxPosition::type_static)
+	if (position.type == CSSValuePosition::type_static)
 	{
-		top.type = CSSBoxTop::type_auto;
+		top.type = CSSValueTop::type_auto;
 		bottom.type = type_auto;
 	}
-	else if (position.type == CSSBoxPosition::type_relative)
+	else if (position.type == CSSValuePosition::type_relative)
 	{
-		if (top.type == CSSBoxTop::type_auto && bottom.type == type_auto)
+		if (top.type == CSSValueTop::type_auto && bottom.type == type_auto)
 		{
-			top.type = CSSBoxTop::type_length;
+			top.type = CSSValueTop::type_length;
 			bottom.type = type_length;
-			top.length = CSSBoxLength(0.0f, CSSBoxLength::type_computed_px);
-			bottom.length = CSSBoxLength(0.0f, CSSBoxLength::type_computed_px);
+			top.length = CSSLength(0.0f, CSSLength::type_computed_px);
+			bottom.length = CSSLength(0.0f, CSSLength::type_computed_px);
 		}
-		else if (top.type != CSSBoxTop::type_auto)
+		else if (top.type != CSSValueTop::type_auto)
 		{
-			if (top.type == CSSBoxTop::type_length)
+			if (top.type == CSSValueTop::type_length)
 			{
 				bottom.type = type_length;
 				bottom.length = top.length;
 				bottom.length.value = -bottom.length.value;
 			}
-			else if (top.type == CSSBoxTop::type_percentage)
+			else if (top.type == CSSValueTop::type_percentage)
 			{
 				bottom.type = type_percentage;
 				bottom.percentage = -top.percentage;
@@ -106,20 +106,20 @@ void CSSBoxBottom::compute(CSSBoxTop &top, CSSBoxBottom &bottom, const CSSBoxPro
 		{
 			if (bottom.type == type_length)
 			{
-				top.type = CSSBoxTop::type_length;
+				top.type = CSSValueTop::type_length;
 				top.length = bottom.length;
 				top.length.value = -top.length.value;
 			}
 			else if (bottom.type == type_percentage)
 			{
-				top.type = CSSBoxTop::type_percentage;
+				top.type = CSSValueTop::type_percentage;
 				top.percentage = -bottom.percentage;
 			}
 		}
 	}
 }
 
-std::string CSSBoxBottom::to_string() const
+std::string CSSValueBottom::to_string() const
 {
 	switch (type)
 	{

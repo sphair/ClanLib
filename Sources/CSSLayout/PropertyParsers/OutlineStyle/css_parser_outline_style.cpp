@@ -40,34 +40,34 @@ std::vector<std::string> CSSParserOutlineStyle::get_names()
 	return names;
 }
 
-void CSSParserOutlineStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserOutlineStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_none;
+			properties.outline_style.type = CSSValueOutlineStyle::type_none;
 		else if (equals(token.value, "hidden"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_hidden;
+			properties.outline_style.type = CSSValueOutlineStyle::type_hidden;
 		else if (equals(token.value, "dotted"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_dotted;
+			properties.outline_style.type = CSSValueOutlineStyle::type_dotted;
 		else if (equals(token.value, "dashed"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_dashed;
+			properties.outline_style.type = CSSValueOutlineStyle::type_dashed;
 		else if (equals(token.value, "solid"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_solid;
+			properties.outline_style.type = CSSValueOutlineStyle::type_solid;
 		else if (equals(token.value, "double"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_double;
+			properties.outline_style.type = CSSValueOutlineStyle::type_double;
 		else if (equals(token.value, "groove"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_groove;
+			properties.outline_style.type = CSSValueOutlineStyle::type_groove;
 		else if (equals(token.value, "ridge"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_ridge;
+			properties.outline_style.type = CSSValueOutlineStyle::type_ridge;
 		else if (equals(token.value, "inset"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_inset;
+			properties.outline_style.type = CSSValueOutlineStyle::type_inset;
 		else if (equals(token.value, "outset"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_outset;
+			properties.outline_style.type = CSSValueOutlineStyle::type_outset;
 		else if (equals(token.value, "inherit"))
-			properties.outline_style.type = CSSBoxOutlineStyle::type_inherit;
+			properties.outline_style.type = CSSValueOutlineStyle::type_inherit;
 	}
 	if (out_change_set)
 	{

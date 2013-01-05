@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "api_csslayout.h"
+#include "../api_csslayout.h"
 #include "css_layout_node.h"
-#include "../Core/Math/rect.h"
+#include "../../Core/Math/rect.h"
 
 namespace clan
 {

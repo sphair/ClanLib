@@ -158,7 +158,7 @@ void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
 	if (is_user_color)
 	{
 		properties.color.color = user_color;
-		properties.color.type = CSSBoxColor::type_color;
+		properties.color.type = CSSValueColor::type_color;
 	}
 }	
 

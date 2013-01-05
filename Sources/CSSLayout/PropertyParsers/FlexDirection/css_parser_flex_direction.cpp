@@ -40,22 +40,22 @@ std::vector<std::string> CSSParserFlexDirection::get_names()
 	return names;
 }
 
-void CSSParserFlexDirection::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFlexDirection::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "row"))
-			properties.flex_direction.type = CSSBoxFlexDirection::type_row;
+			properties.flex_direction.type = CSSValueFlexDirection::type_row;
 		else if (equals(token.value, "row-reverse"))
-			properties.flex_direction.type = CSSBoxFlexDirection::type_row_reverse;
+			properties.flex_direction.type = CSSValueFlexDirection::type_row_reverse;
 		else if (equals(token.value, "column"))
-			properties.flex_direction.type = CSSBoxFlexDirection::type_column;
+			properties.flex_direction.type = CSSValueFlexDirection::type_column;
 		else if (equals(token.value, "column-reverse"))
-			properties.flex_direction.type = CSSBoxFlexDirection::type_column_reverse;
+			properties.flex_direction.type = CSSValueFlexDirection::type_column_reverse;
 		else if (equals(token.value, "inherit"))
-			properties.flex_direction.type = CSSBoxFlexDirection::type_inherit;
+			properties.flex_direction.type = CSSValueFlexDirection::type_inherit;
 	}
 	if (out_change_set)
 	{

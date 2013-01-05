@@ -44,8 +44,8 @@ void CSSWhitespaceEraser::remove_whitespace(CSSBoxElement *root_element)
 		if (child_text)
 		{
 			const CSSBoxProperties &text_properties = child_text->get_properties();
-			if (text_properties.white_space.type != CSSBoxWhiteSpace::type_pre &&
-				text_properties.white_space.type != CSSBoxWhiteSpace::type_pre_wrap)
+			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
+				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{
 				size_t pos = 0;
 				while (true)
@@ -53,7 +53,7 @@ void CSSWhitespaceEraser::remove_whitespace(CSSBoxElement *root_element)
 					pos = child_text->processed_text.find('\n', pos);
 					if (pos == std::string::npos)
 						break;
-					if (text_properties.white_space.type != CSSBoxWhiteSpace::type_pre_line)
+					if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre_line)
 					{
 						// linefeed characters are transformed for rendering purpose into one of the
 						// following characters: a space character, a zero width space character (U+200B),
@@ -111,8 +111,8 @@ size_t CSSWhitespaceEraser::erase_space_before(CSSBoxText *text, size_t pos)
 		if (cur_text)
 		{
 			const CSSBoxProperties &text_properties = cur_text->get_properties();
-			if (text_properties.white_space.type != CSSBoxWhiteSpace::type_pre &&
-				text_properties.white_space.type != CSSBoxWhiteSpace::type_pre_wrap)
+			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
+				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{
 				if (pos > cur_text->processed_text.size())
 					pos = cur_text->processed_text.size();
@@ -148,8 +148,8 @@ void CSSWhitespaceEraser::erase_space_after(CSSBoxText *text, size_t pos)
 		if (cur_text)
 		{
 			const CSSBoxProperties &text_properties = cur_text->get_properties();
-			if (text_properties.white_space.type != CSSBoxWhiteSpace::type_pre &&
-				text_properties.white_space.type != CSSBoxWhiteSpace::type_pre_wrap)
+			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
+				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{
 				for (size_t i = pos; i < cur_text->processed_text.size(); i++)
 				{
@@ -171,7 +171,7 @@ void CSSWhitespaceEraser::erase_space_after(CSSBoxText *text, size_t pos)
 
 CSSBoxNode *CSSWhitespaceEraser::get_prev(CSSBoxNode *cur)
 {
-	// to do: avoid CSSBoxDisplay::type_none
+	// to do: avoid CSSValueDisplay::type_none
 	CSSBoxNode *prev = cur->get_prev_sibling();
 	if (prev)
 	{
@@ -193,7 +193,7 @@ CSSBoxNode *CSSWhitespaceEraser::get_prev(CSSBoxNode *cur)
 
 CSSBoxNode *CSSWhitespaceEraser::get_next(CSSBoxNode *cur)
 {
-	// to do: avoid CSSBoxDisplay::type_none
+	// to do: avoid CSSValueDisplay::type_none
 	CSSBoxNode *next = 0;
 	next = cur->get_first_child();
 	if (!next)

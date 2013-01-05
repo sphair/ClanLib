@@ -35,11 +35,11 @@ namespace clan
 {
 
 class CSSLayout_Impl;
-class CSSBoxDisplay;
-class CSSBoxColor;
-class CSSBoxFontSize;
-class CSSBoxFloat;
-class CSSBoxWidth;
+class CSSValueDisplay;
+class CSSValueColor;
+class CSSValueFontSize;
+class CSSValueFloat;
+class CSSValueWidth;
 
 class CSSLayoutNode_Impl : public DisposableObject
 {
@@ -51,11 +51,11 @@ public:
 
 	static std::string print_node(CSSBoxNode *node, int indent = 0);
 	static std::string escape_text(std::string text);
-	static std::string to_string(const CSSBoxDisplay &display);
-	static std::string to_string(const CSSBoxColor &color);
-	static std::string to_string(const CSSBoxFontSize &font_size);
-	static std::string to_string(const CSSBoxFloat &float_box);
-	static std::string to_string(const CSSBoxWidth &width);
+	static std::string to_string(const CSSValueDisplay &display);
+	static std::string to_string(const CSSValueColor &color);
+	static std::string to_string(const CSSValueFontSize &font_size);
+	static std::string to_string(const CSSValueFloat &float_box);
+	static std::string to_string(const CSSValueWidth &width);
 
 	CSSBoxNode *box_node;
 	std::weak_ptr<CSSLayout_Impl> layout_impl;

@@ -41,7 +41,7 @@ CSSLayoutMargin::CSSLayoutMargin()
 CSSLayoutMargin CSSLayoutMargin::create_top_margin(CSSLayoutNode *node)
 {
 	CSSLayoutMargin margin;
-	margin.clearance = (node->get_element_node()->computed_properties.clear.type != CSSBoxClear::type_none);
+	margin.clearance = (node->get_element_node()->computed_properties.clear.type != CSSValueClear::type_none);
 	margin.first_type = margin_top;
 	margin.first_node = node;
 	margin.last_type = margin_top;

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_counter_reset.h"
+#include "API/CSSLayout/PropertyValues/css_value_counter_reset.h"
 
 namespace clan
 {
 
-CSSBoxCounterReset::CSSBoxCounterReset()
+CSSValueCounterReset::CSSValueCounterReset()
 : type(type_none)
 {
 }
 
-void CSSBoxCounterReset::compute(const CSSBoxCounterReset *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueCounterReset::compute(const CSSValueCounterReset *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxCounterReset::compute(const CSSBoxCounterReset *parent, CSSResourceCa
 	}
 }
 
-std::string CSSBoxCounterReset::to_string() const
+std::string CSSValueCounterReset::to_string() const
 {
 	switch (type)
 	{

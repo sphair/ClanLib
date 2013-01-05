@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_caption_side.h"
+#include "API/CSSLayout/PropertyValues/css_value_caption_side.h"
 
 namespace clan
 {
 
-CSSBoxCaptionSide::CSSBoxCaptionSide()
+CSSValueCaptionSide::CSSValueCaptionSide()
 : type(type_inherit)
 {
 }
 
-void CSSBoxCaptionSide::compute(const CSSBoxCaptionSide *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueCaptionSide::compute(const CSSValueCaptionSide *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxCaptionSide::compute(const CSSBoxCaptionSide *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxCaptionSide::to_string() const
+std::string CSSValueCaptionSide::to_string() const
 {
 	switch (type)
 	{

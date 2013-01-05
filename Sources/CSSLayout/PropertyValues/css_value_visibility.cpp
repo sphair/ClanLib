@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_visibility.h"
+#include "API/CSSLayout/PropertyValues/css_value_visibility.h"
 
 namespace clan
 {
 
-CSSBoxVisibility::CSSBoxVisibility()
+CSSValueVisibility::CSSValueVisibility()
 : type(type_inherit)
 {
 }
 
-void CSSBoxVisibility::compute(const CSSBoxVisibility *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueVisibility::compute(const CSSValueVisibility *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxVisibility::compute(const CSSBoxVisibility *parent, CSSResourceCache 
 	}
 }
 
-std::string CSSBoxVisibility::to_string() const
+std::string CSSValueVisibility::to_string() const
 {
 	switch (type)
 	{

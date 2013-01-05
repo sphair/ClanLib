@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_justify_content.h"
+#include "API/CSSLayout/PropertyValues/css_value_justify_content.h"
 
 namespace clan
 {
 
-CSSBoxJustifyContent::CSSBoxJustifyContent()
+CSSValueJustifyContent::CSSValueJustifyContent()
 : type(type_flex_start)
 {
 }
 
-void CSSBoxJustifyContent::compute(const CSSBoxJustifyContent *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueJustifyContent::compute(const CSSValueJustifyContent *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxJustifyContent::compute(const CSSBoxJustifyContent *parent, CSSResour
 	}
 }
 
-std::string CSSBoxJustifyContent::to_string() const
+std::string CSSValueJustifyContent::to_string() const
 {
 	switch (type)
 	{

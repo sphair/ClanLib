@@ -27,10 +27,10 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_layout_node.h"
-#include "API/CSSLayout/css_layout_text.h"
-#include "API/CSSLayout/css_layout_element.h"
-#include "API/CSSLayout/css_layout_object.h"
+#include "API/CSSLayout/Layout/css_layout_node.h"
+#include "API/CSSLayout/Layout/css_layout_text.h"
+#include "API/CSSLayout/Layout/css_layout_element.h"
+#include "API/CSSLayout/Layout/css_layout_object.h"
 #include "BoxTree/css_box_text.h"
 #include "BoxTree/css_box_element.h"
 #include "BoxTree/css_box_object.h"
@@ -263,82 +263,82 @@ std::string CSSLayoutNode_Impl::escape_text(std::string text)
 	return text;
 }
 
-std::string CSSLayoutNode_Impl::to_string(const CSSBoxDisplay &display)
+std::string CSSLayoutNode_Impl::to_string(const CSSValueDisplay &display)
 {
 	switch (display.type)
 	{
 	default: return "unknown";
-	case CSSBoxDisplay::type_inline: return "inline";
-	case CSSBoxDisplay::type_block: return "block";
-	case CSSBoxDisplay::type_list_item: return "list-item";
-	case CSSBoxDisplay::type_run_in: return "run-in";
-	case CSSBoxDisplay::type_inline_block: return "inline-block";
-	case CSSBoxDisplay::type_table: return "table";
-	case CSSBoxDisplay::type_inline_table: return "inline-table";
-	case CSSBoxDisplay::type_table_row_group: return "table-row-group";
-	case CSSBoxDisplay::type_table_header_group: return "table-header-group";
-	case CSSBoxDisplay::type_table_footer_group: return "table-footer-group";
-	case CSSBoxDisplay::type_table_row: return "table-row";
-	case CSSBoxDisplay::type_table_column_group: return "table-column-group";
-	case CSSBoxDisplay::type_table_column: return "table-column";
-	case CSSBoxDisplay::type_table_cell: return "table-cell";
-	case CSSBoxDisplay::type_table_caption: return "table-caption";
-	case CSSBoxDisplay::type_none: return "none";
-	case CSSBoxDisplay::type_inherit: return "inherit";
+	case CSSValueDisplay::type_inline: return "inline";
+	case CSSValueDisplay::type_block: return "block";
+	case CSSValueDisplay::type_list_item: return "list-item";
+	case CSSValueDisplay::type_run_in: return "run-in";
+	case CSSValueDisplay::type_inline_block: return "inline-block";
+	case CSSValueDisplay::type_table: return "table";
+	case CSSValueDisplay::type_inline_table: return "inline-table";
+	case CSSValueDisplay::type_table_row_group: return "table-row-group";
+	case CSSValueDisplay::type_table_header_group: return "table-header-group";
+	case CSSValueDisplay::type_table_footer_group: return "table-footer-group";
+	case CSSValueDisplay::type_table_row: return "table-row";
+	case CSSValueDisplay::type_table_column_group: return "table-column-group";
+	case CSSValueDisplay::type_table_column: return "table-column";
+	case CSSValueDisplay::type_table_cell: return "table-cell";
+	case CSSValueDisplay::type_table_caption: return "table-caption";
+	case CSSValueDisplay::type_none: return "none";
+	case CSSValueDisplay::type_inherit: return "inherit";
 	}
 }
 
-std::string CSSLayoutNode_Impl::to_string(const CSSBoxColor &color)
+std::string CSSLayoutNode_Impl::to_string(const CSSValueColor &color)
 {
 	switch (color.type)
 	{
 	default: return "unknown";
-	case CSSBoxColor::type_color: return string_format("rgb(%1,%2,%3)", (int)(color.color.r*255.0f), (int)(color.color.g*255.0f), (int)(color.color.b*255.0f));
-	case CSSBoxColor::type_inherit: return "inherit";
+	case CSSValueColor::type_color: return string_format("rgb(%1,%2,%3)", (int)(color.color.r*255.0f), (int)(color.color.g*255.0f), (int)(color.color.b*255.0f));
+	case CSSValueColor::type_inherit: return "inherit";
 	}
 }
 
-std::string CSSLayoutNode_Impl::to_string(const CSSBoxFontSize &font_size)
+std::string CSSLayoutNode_Impl::to_string(const CSSValueFontSize &font_size)
 {
 	switch (font_size.type)
 	{
 	default: return "unknown";
-	case CSSBoxFontSize::type_xx_small: return "xx-small";
-	case CSSBoxFontSize::type_x_small: return "x-small";
-	case CSSBoxFontSize::type_small: return "small";
-	case CSSBoxFontSize::type_medium: return "medium";
-	case CSSBoxFontSize::type_large: return "large";
-	case CSSBoxFontSize::type_x_large: return "x-large";
-	case CSSBoxFontSize::type_xx_large: return "xx-large";
-	case CSSBoxFontSize::type_larger: return "larger";
-	case CSSBoxFontSize::type_smaller: return "smaller";
-	case CSSBoxFontSize::type_length: return string_format("%1", font_size.length.value);
-	case CSSBoxFontSize::type_percentage: return string_format("%1%%", font_size.percentage);
-	case CSSBoxFontSize::type_inherit: return "inherit";
+	case CSSValueFontSize::type_xx_small: return "xx-small";
+	case CSSValueFontSize::type_x_small: return "x-small";
+	case CSSValueFontSize::type_small: return "small";
+	case CSSValueFontSize::type_medium: return "medium";
+	case CSSValueFontSize::type_large: return "large";
+	case CSSValueFontSize::type_x_large: return "x-large";
+	case CSSValueFontSize::type_xx_large: return "xx-large";
+	case CSSValueFontSize::type_larger: return "larger";
+	case CSSValueFontSize::type_smaller: return "smaller";
+	case CSSValueFontSize::type_length: return string_format("%1", font_size.length.value);
+	case CSSValueFontSize::type_percentage: return string_format("%1%%", font_size.percentage);
+	case CSSValueFontSize::type_inherit: return "inherit";
 	}
 }
 
-std::string CSSLayoutNode_Impl::to_string(const CSSBoxFloat &float_box)
+std::string CSSLayoutNode_Impl::to_string(const CSSValueFloat &float_box)
 {
 	switch (float_box.type)
 	{
 	default: return "unknown";
-	case CSSBoxFloat::type_none: return "none";
-	case CSSBoxFloat::type_left: return "left";
-	case CSSBoxFloat::type_right: return "right";
-	case CSSBoxFloat::type_inherit: return "inherit";
+	case CSSValueFloat::type_none: return "none";
+	case CSSValueFloat::type_left: return "left";
+	case CSSValueFloat::type_right: return "right";
+	case CSSValueFloat::type_inherit: return "inherit";
 	}
 }
 
-std::string CSSLayoutNode_Impl::to_string(const CSSBoxWidth &width)
+std::string CSSLayoutNode_Impl::to_string(const CSSValueWidth &width)
 {
 	switch (width.type)
 	{
 	default: return "unknown";
-	case CSSBoxWidth::type_auto: return "auto";
-	case CSSBoxWidth::type_length: return "length";
-	case CSSBoxWidth::type_percentage: return "percentage";
-	case CSSBoxWidth::type_inherit: return "inherit";
+	case CSSValueWidth::type_auto: return "auto";
+	case CSSValueWidth::type_length: return "length";
+	case CSSValueWidth::type_percentage: return "percentage";
+	case CSSValueWidth::type_inherit: return "inherit";
 	}
 }
 

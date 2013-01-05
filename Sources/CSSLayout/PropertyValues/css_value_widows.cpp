@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_widows.h"
+#include "API/CSSLayout/PropertyValues/css_value_widows.h"
 
 namespace clan
 {
 
-CSSBoxWidows::CSSBoxWidows()
+CSSValueWidows::CSSValueWidows()
 : type(type_inherit), value(0)
 {
 }
 
-void CSSBoxWidows::compute(const CSSBoxWidows *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueWidows::compute(const CSSValueWidows *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -54,7 +54,7 @@ void CSSBoxWidows::compute(const CSSBoxWidows *parent, CSSResourceCache *layout,
 	}
 }
 
-std::string CSSBoxWidows::to_string() const
+std::string CSSValueWidows::to_string() const
 {
 	switch (type)
 	{

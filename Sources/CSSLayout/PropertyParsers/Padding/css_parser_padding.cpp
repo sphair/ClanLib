@@ -40,9 +40,9 @@ std::vector<std::string> CSSParserPadding::get_names()
 	return names;
 }
 
-void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxPaddingWidth padding_widths[4];
+	CSSValuePaddingWidth padding_widths[4];
 	int count;
 	size_t pos = 0;
 	for (count = 0; count < 4; count++)
@@ -50,18 +50,18 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 		CSSToken token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
-			properties.padding_width_left.type = CSSBoxPaddingWidth::type_inherit;
-			properties.padding_width_top.type = CSSBoxPaddingWidth::type_inherit;
-			properties.padding_width_right.type = CSSBoxPaddingWidth::type_inherit;
-			properties.padding_width_bottom.type = CSSBoxPaddingWidth::type_inherit;
+			properties.padding_width_left.type = CSSValuePaddingWidth::type_inherit;
+			properties.padding_width_top.type = CSSValuePaddingWidth::type_inherit;
+			properties.padding_width_right.type = CSSValuePaddingWidth::type_inherit;
+			properties.padding_width_bottom.type = CSSValuePaddingWidth::type_inherit;
 			return;
 		}
 		else if (is_length(token))
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				padding_widths[count].type = CSSBoxPaddingWidth::type_length;
+				padding_widths[count].type = CSSValuePaddingWidth::type_length;
 				padding_widths[count].length = length;
 			}
 			else
@@ -72,7 +72,7 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			padding_widths[count].type = CSSBoxPaddingWidth::type_percentage;
+			padding_widths[count].type = CSSValuePaddingWidth::type_percentage;
 			padding_widths[count].percentage = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -80,11 +80,11 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 			token = next_token(pos, tokens);
 			if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
 					length.value = -length.value;
-					padding_widths[count].type = CSSBoxPaddingWidth::type_length;
+					padding_widths[count].type = CSSValuePaddingWidth::type_length;
 					padding_widths[count].length = length;
 				}
 				else
@@ -95,7 +95,7 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 			}
 			else if (token.type == CSSToken::type_percentage)
 			{
-				padding_widths[count].type = CSSBoxPaddingWidth::type_percentage;
+				padding_widths[count].type = CSSValuePaddingWidth::type_percentage;
 				padding_widths[count].percentage = -StringHelp::text_to_float(token.value);
 			}
 			else

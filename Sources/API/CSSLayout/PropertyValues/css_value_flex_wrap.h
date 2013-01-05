@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxFlexWrap : public CSSBoxProperty
+class CSSValueFlexWrap : public CSSPropertyValue
 {
 public:
-	CSSBoxFlexWrap();
-	void compute(const CSSBoxFlexWrap *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueFlexWrap();
+	void compute(const CSSValueFlexWrap *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

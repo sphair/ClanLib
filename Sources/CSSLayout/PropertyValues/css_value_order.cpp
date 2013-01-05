@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_order.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_order.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxOrder::CSSBoxOrder()
+CSSValueOrder::CSSValueOrder()
 : type(type_integer), value(0)
 {
 }
 
-void CSSBoxOrder::compute(const CSSBoxOrder *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueOrder::compute(const CSSValueOrder *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxOrder::compute(const CSSBoxOrder *parent, CSSResourceCache *layout, f
 	}
 }
 
-std::string CSSBoxOrder::to_string() const
+std::string CSSValueOrder::to_string() const
 {
 	switch (type)
 	{

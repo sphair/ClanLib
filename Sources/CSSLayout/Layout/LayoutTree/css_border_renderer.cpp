@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "css_border_renderer.h"
 #include "css_layout_graphics.h"
-#include "../css_resource_cache.h"
+#include "../../css_resource_cache.h"
 #include "../BoxTree/css_box_element.h"
 
 namespace clan
@@ -55,7 +55,7 @@ void CSSBorderRenderer::set_border_box(Rect new_border_box)
 
 void CSSBorderRenderer::render()
 {
-	if (computed_properties.border_image_source.type == CSSBoxBorderImageSource::type_image)
+	if (computed_properties.border_image_source.type == CSSValueBorderImageSource::type_image)
 	{
 		Image &image = graphics->get_image(computed_properties.border_image_source.url);
 		if (!image.is_null())
@@ -113,146 +113,146 @@ void CSSBorderRenderer::render()
 		Point center_bottom_left(border_box.left + used_to_actual(outer_radius_bottom_left_x), border_box.bottom - used_to_actual(outer_radius_bottom_left_y));
 		Point center_bottom_right(border_box.right - used_to_actual(outer_radius_bottom_right_x), border_box.bottom - used_to_actual(outer_radius_bottom_right_y));
 
-		if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_solid)
+		if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_solid)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top), computed_properties.border_color_top.color);
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_dotted)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_dotted)
 		{
 			graphics->dot_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top), computed_properties.border_color_top.color);
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_dashed)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_dashed)
 		{
 			graphics->dash_horizontal(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top), computed_properties.border_color_top.color);
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_double)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_double)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top/3), computed_properties.border_color_top.color);
 			graphics->fill(Rect(center_top_left.x, border_box.top+border_top*2/3, center_top_right.x, border_box.top+border_top), computed_properties.border_color_top.color);
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_groove)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_groove)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top/2), get_dark_color(computed_properties.border_color_top));
 			graphics->fill(Rect(center_top_left.x, border_box.top+border_top/2, center_top_right.x, border_box.top+border_top), get_light_color(computed_properties.border_color_top));
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_ridge)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_ridge)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top/2), get_light_color(computed_properties.border_color_top));
 			graphics->fill(Rect(center_top_left.x, border_box.top+border_top/2, center_top_right.x, border_box.top+border_top), get_dark_color(computed_properties.border_color_top));
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_inset)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_inset)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top), get_dark_color(computed_properties.border_color_top));
 		}
-		else if (computed_properties.border_style_top.type == CSSBoxBorderStyle::type_outset)
+		else if (computed_properties.border_style_top.type == CSSValueBorderStyle::type_outset)
 		{
 			graphics->fill(Rect(center_top_left.x, border_box.top, center_top_right.x, border_box.top+border_top), get_light_color(computed_properties.border_color_top));
 		}
 
-		if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_solid)
+		if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_solid)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom), computed_properties.border_color_bottom.color);
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_dotted)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_dotted)
 		{
 			graphics->dot_horizontal(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom), computed_properties.border_color_bottom.color);
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_dashed)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_dashed)
 		{
 			graphics->dash_horizontal(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom), computed_properties.border_color_bottom.color);
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_double)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_double)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom-border_bottom*2/3), computed_properties.border_color_bottom.color);
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom*1/3, center_bottom_right.x, border_box.bottom), computed_properties.border_color_bottom.color);
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_groove)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_groove)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom-border_bottom/2), get_dark_color(computed_properties.border_color_bottom));
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom/2, center_bottom_right.x, border_box.bottom), get_light_color(computed_properties.border_color_bottom));
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_ridge)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_ridge)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom-border_bottom/2), get_light_color(computed_properties.border_color_bottom));
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom/2, center_bottom_right.x, border_box.bottom), get_dark_color(computed_properties.border_color_bottom));
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_inset)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_inset)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom), get_light_color(computed_properties.border_color_bottom));
 		}
-		else if (computed_properties.border_style_bottom.type == CSSBoxBorderStyle::type_outset)
+		else if (computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_outset)
 		{
 			graphics->fill(Rect(center_bottom_left.x, border_box.bottom-border_bottom, center_bottom_right.x, border_box.bottom), get_dark_color(computed_properties.border_color_bottom));
 		}
 
-		if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_solid)
+		if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_solid)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left, center_bottom_left.y), computed_properties.border_color_left.color);
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_dotted)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_dotted)
 		{
 			graphics->dot_vertical(Rect(border_box.left, center_top_left.y, border_box.left+border_left, center_bottom_left.y), computed_properties.border_color_left.color);
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_dashed)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_dashed)
 		{
 			graphics->dash_vertical(Rect(border_box.left, center_top_left.y, border_box.left+border_left, center_bottom_left.y), computed_properties.border_color_left.color);
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_double)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_double)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left/3, center_bottom_left.y), computed_properties.border_color_left.color);
 			graphics->fill(Rect(border_box.left+border_left*2/3, center_top_left.y, border_box.left+border_left, center_bottom_left.y), computed_properties.border_color_left.color);
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_groove)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_groove)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left/2, center_bottom_left.y), get_dark_color(computed_properties.border_color_left));
 			graphics->fill(Rect(border_box.left+border_left/2, center_top_left.y, border_box.left+border_left, center_bottom_left.y), get_light_color(computed_properties.border_color_left));
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_ridge)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_ridge)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left/2, center_bottom_left.y), get_light_color(computed_properties.border_color_left));
 			graphics->fill(Rect(border_box.left+border_left/2, center_top_left.y, border_box.left+border_left, center_bottom_left.y), get_dark_color(computed_properties.border_color_left));
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_inset)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_inset)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left, center_bottom_left.y), get_dark_color(computed_properties.border_color_left));
 		}
-		else if (computed_properties.border_style_left.type == CSSBoxBorderStyle::type_outset)
+		else if (computed_properties.border_style_left.type == CSSValueBorderStyle::type_outset)
 		{
 			graphics->fill(Rect(border_box.left, center_top_left.y, border_box.left+border_left, center_bottom_left.y), get_light_color(computed_properties.border_color_left));
 		}
 
-		if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_solid)
+		if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_solid)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right, center_bottom_right.y), computed_properties.border_color_right.color);
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_dotted)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_dotted)
 		{
 			graphics->dot_vertical(Rect(border_box.right-border_right, center_top_right.y, border_box.right, center_bottom_right.y), computed_properties.border_color_right.color);
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_dashed)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_dashed)
 		{
 			graphics->dash_vertical(Rect(border_box.right-border_right, center_top_right.y, border_box.right, center_bottom_right.y), computed_properties.border_color_right.color);
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_double)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_double)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right-border_right*2/3, center_bottom_right.y), computed_properties.border_color_right.color);
 			graphics->fill(Rect(border_box.right-border_right/3, center_top_right.y, border_box.right, center_bottom_right.y), computed_properties.border_color_right.color);
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_groove)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_groove)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right-border_right/2, center_bottom_right.y), get_dark_color(computed_properties.border_color_right));
 			graphics->fill(Rect(border_box.right-border_right/2, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(computed_properties.border_color_right));
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_ridge)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_ridge)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right-border_right/2, center_bottom_right.y), get_light_color(computed_properties.border_color_right));
 			graphics->fill(Rect(border_box.right-border_right/2, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(computed_properties.border_color_right));
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_inset)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_inset)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_light_color(computed_properties.border_color_right));
 		}
-		else if (computed_properties.border_style_right.type == CSSBoxBorderStyle::type_outset)
+		else if (computed_properties.border_style_right.type == CSSValueBorderStyle::type_outset)
 		{
 			graphics->fill(Rect(border_box.right-border_right, center_top_right.y, border_box.right, center_bottom_right.y), get_dark_color(computed_properties.border_color_right));
 		}
@@ -261,17 +261,17 @@ void CSSBorderRenderer::render()
 
 void CSSBorderRenderer::draw_area(Image &image, int x, int y, int w, int h, int sx, int sy, int sw, int sh)
 {
-	CSSBoxBorderImageRepeat::RepeatType repeat_x = computed_properties.border_image_repeat.repeat_x;
-	CSSBoxBorderImageRepeat::RepeatType repeat_y = computed_properties.border_image_repeat.repeat_y;
+	CSSValueBorderImageRepeat::RepeatType repeat_x = computed_properties.border_image_repeat.repeat_x;
+	CSSValueBorderImageRepeat::RepeatType repeat_y = computed_properties.border_image_repeat.repeat_y;
 
-	if ( (   (repeat_x == CSSBoxBorderImageRepeat::repeat_type_repeat) || (repeat_x == CSSBoxBorderImageRepeat::repeat_type_stretch) ) 
-		&& ( (repeat_y == CSSBoxBorderImageRepeat::repeat_type_stretch) || (repeat_y == CSSBoxBorderImageRepeat::repeat_type_repeat) ) )
+	if ( (   (repeat_x == CSSValueBorderImageRepeat::repeat_type_repeat) || (repeat_x == CSSValueBorderImageRepeat::repeat_type_stretch) ) 
+		&& ( (repeat_y == CSSValueBorderImageRepeat::repeat_type_stretch) || (repeat_y == CSSValueBorderImageRepeat::repeat_type_repeat) ) )
 	{
 		int image_width = w;
 		int image_height = h;
-		if (repeat_x == CSSBoxBorderImageRepeat::repeat_type_repeat)
+		if (repeat_x == CSSValueBorderImageRepeat::repeat_type_repeat)
 			image_width = sw;
-		if (repeat_y == CSSBoxBorderImageRepeat::repeat_type_repeat)
+		if (repeat_y == CSSValueBorderImageRepeat::repeat_type_repeat)
 			image_height = sh;
 
 		// This is wrong.  It is only a temporary hack so the focus almost works for clanGUI
@@ -297,130 +297,130 @@ Rect CSSBorderRenderer::get_border_image_area() const
 {
 	Rect box = border_box;
 
-	if (computed_properties.border_image_outset.value_left == CSSBoxBorderImageOutset::value_type_length)
+	if (computed_properties.border_image_outset.value_left == CSSValueBorderImageOutset::value_type_length)
 		box.left -= used_to_actual(computed_properties.border_image_outset.length_left.value);
-	else if (computed_properties.border_image_outset.value_left == CSSBoxBorderImageOutset::value_type_number)
+	else if (computed_properties.border_image_outset.value_left == CSSValueBorderImageOutset::value_type_number)
 		box.left -= used_to_actual(computed_properties.border_image_outset.number_left);
 
-	if (computed_properties.border_image_outset.value_right == CSSBoxBorderImageOutset::value_type_length)
+	if (computed_properties.border_image_outset.value_right == CSSValueBorderImageOutset::value_type_length)
 		box.right += used_to_actual(computed_properties.border_image_outset.length_right.value);
-	else if (computed_properties.border_image_outset.value_right == CSSBoxBorderImageOutset::value_type_number)
+	else if (computed_properties.border_image_outset.value_right == CSSValueBorderImageOutset::value_type_number)
 		box.right += used_to_actual(computed_properties.border_image_outset.number_right);
 
-	if (computed_properties.border_image_outset.value_top == CSSBoxBorderImageOutset::value_type_length)
+	if (computed_properties.border_image_outset.value_top == CSSValueBorderImageOutset::value_type_length)
 		box.top -= used_to_actual(computed_properties.border_image_outset.length_top.value);
-	else if (computed_properties.border_image_outset.value_top == CSSBoxBorderImageOutset::value_type_number)
+	else if (computed_properties.border_image_outset.value_top == CSSValueBorderImageOutset::value_type_number)
 		box.top -= used_to_actual(computed_properties.border_image_outset.number_top);
 
-	if (computed_properties.border_image_outset.value_bottom == CSSBoxBorderImageOutset::value_type_length)
+	if (computed_properties.border_image_outset.value_bottom == CSSValueBorderImageOutset::value_type_length)
 		box.bottom += used_to_actual(computed_properties.border_image_outset.length_bottom.value);
-	else if (computed_properties.border_image_outset.value_bottom == CSSBoxBorderImageOutset::value_type_number)
+	else if (computed_properties.border_image_outset.value_bottom == CSSValueBorderImageOutset::value_type_number)
 		box.bottom += used_to_actual(computed_properties.border_image_outset.number_bottom);
 
 	return box;
 }
 
-int CSSBorderRenderer::get_left_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_width, int auto_width) const
+int CSSBorderRenderer::get_left_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_width, int auto_width) const
 {
-	if (border_image_width.value_left == CSSBoxBorderImageWidth::value_type_percentage)
+	if (border_image_width.value_left == CSSValueBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_left * image_area_width);
-	else if (border_image_width.value_left == CSSBoxBorderImageWidth::value_type_number)
+	else if (border_image_width.value_left == CSSValueBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_left * border_left);
 	else
 		return auto_width;
 }
 
-int CSSBorderRenderer::get_right_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_width, int auto_width) const
+int CSSBorderRenderer::get_right_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_width, int auto_width) const
 {
-	if (border_image_width.value_right == CSSBoxBorderImageWidth::value_type_percentage)
+	if (border_image_width.value_right == CSSValueBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_right * image_area_width);
-	else if (border_image_width.value_right == CSSBoxBorderImageWidth::value_type_number)
+	else if (border_image_width.value_right == CSSValueBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_right * border_right);
 	else
 		return auto_width;
 }
 
-int CSSBorderRenderer::get_top_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_height, int auto_height) const
+int CSSBorderRenderer::get_top_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_height, int auto_height) const
 {
-	if (border_image_width.value_top == CSSBoxBorderImageWidth::value_type_percentage)
+	if (border_image_width.value_top == CSSValueBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_top * image_area_height);
-	else if (border_image_width.value_top == CSSBoxBorderImageWidth::value_type_number)
+	else if (border_image_width.value_top == CSSValueBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_top * border_top);
 	else
 		return auto_height;
 }
 
-int CSSBorderRenderer::get_bottom_grid(const CSSBoxBorderImageWidth &border_image_width, int image_area_height, int auto_height) const
+int CSSBorderRenderer::get_bottom_grid(const CSSValueBorderImageWidth &border_image_width, int image_area_height, int auto_height) const
 {
-	if (border_image_width.value_bottom == CSSBoxBorderImageWidth::value_type_percentage)
+	if (border_image_width.value_bottom == CSSValueBorderImageWidth::value_type_percentage)
 		return used_to_actual(border_image_width.percentage_bottom * image_area_height);
-	else if (border_image_width.value_bottom == CSSBoxBorderImageWidth::value_type_number)
+	else if (border_image_width.value_bottom == CSSValueBorderImageWidth::value_type_number)
 		return used_to_actual(border_image_width.number_bottom * border_bottom);
 	else
 		return auto_height;
 }
 
-int CSSBorderRenderer::get_left_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_width) const
+int CSSBorderRenderer::get_left_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_width) const
 {
 	int v = 0;
-	if (border_image_slice.value_left == CSSBoxBorderImageSlice::value_type_percentage)
+	if (border_image_slice.value_left == CSSValueBorderImageSlice::value_type_percentage)
 		v = used_to_actual(border_image_slice.percentage_left * image_width);
 	else
 		v = used_to_actual(border_image_slice.number_left);
 	return max(0, min(image_width, v));
 }
 
-int CSSBorderRenderer::get_right_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_width) const
+int CSSBorderRenderer::get_right_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_width) const
 {
 	int v = 0;
-	if (border_image_slice.value_right == CSSBoxBorderImageSlice::value_type_percentage)
+	if (border_image_slice.value_right == CSSValueBorderImageSlice::value_type_percentage)
 		v = used_to_actual(border_image_slice.percentage_right * image_width);
 	else
 		v = used_to_actual(border_image_slice.number_right);
 	return max(0, min(image_width, v));
 }
 
-int CSSBorderRenderer::get_top_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_height) const
+int CSSBorderRenderer::get_top_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_height) const
 {
 	int v = 0;
-	if (border_image_slice.value_top == CSSBoxBorderImageSlice::value_type_percentage)
+	if (border_image_slice.value_top == CSSValueBorderImageSlice::value_type_percentage)
 		v = used_to_actual(border_image_slice.percentage_top * image_height);
 	else
 		v = used_to_actual(border_image_slice.number_top);
 	return max(0, min(image_height, v));
 }
 
-int CSSBorderRenderer::get_bottom_slice_value(const CSSBoxBorderImageSlice &border_image_slice, int image_height) const
+int CSSBorderRenderer::get_bottom_slice_value(const CSSValueBorderImageSlice &border_image_slice, int image_height) const
 {
 	int v = 0;
-	if (border_image_slice.value_bottom == CSSBoxBorderImageSlice::value_type_percentage)
+	if (border_image_slice.value_bottom == CSSValueBorderImageSlice::value_type_percentage)
 		v = used_to_actual(border_image_slice.percentage_bottom * image_height);
 	else
 		v = used_to_actual(border_image_slice.number_bottom);
 	return max(0, min(image_height, v));
 }
 
-CSSUsedValue CSSBorderRenderer::get_horizontal_radius(const CSSBoxBorderRadius &border_radius) const
+CSSUsedValue CSSBorderRenderer::get_horizontal_radius(const CSSValueBorderRadius &border_radius) const
 {
-	if (border_radius.value_type1 == CSSBoxBorderRadius::value_type_length)
+	if (border_radius.value_type1 == CSSValueBorderRadius::value_type_length)
 		return border_radius.length1.value;
-	else if (border_radius.value_type1 == CSSBoxBorderRadius::value_type_percentage)
+	else if (border_radius.value_type1 == CSSValueBorderRadius::value_type_percentage)
 		return border_radius.percentage1 * border_box.get_width() / 100.0f;
 	else
 		return 0.0f;
 }
 
-CSSUsedValue CSSBorderRenderer::get_vertical_radius(const CSSBoxBorderRadius &border_radius) const
+CSSUsedValue CSSBorderRenderer::get_vertical_radius(const CSSValueBorderRadius &border_radius) const
 {
-	if (border_radius.value_type2 == CSSBoxBorderRadius::value_type_length)
+	if (border_radius.value_type2 == CSSValueBorderRadius::value_type_length)
 		return border_radius.length2.value;
-	else if (border_radius.value_type2 == CSSBoxBorderRadius::value_type_percentage)
+	else if (border_radius.value_type2 == CSSValueBorderRadius::value_type_percentage)
 		return border_radius.percentage2 * border_box.get_height() / 100.0f;
 	else
 		return 0.0f;
 }
 
-Colorf CSSBorderRenderer::get_light_color(const CSSBoxBorderColor &border_color) const
+Colorf CSSBorderRenderer::get_light_color(const CSSValueBorderColor &border_color) const
 {
 	Colorf light = border_color.color;
 	light.r = min(1.0f, light.r * 1.2f);
@@ -429,7 +429,7 @@ Colorf CSSBorderRenderer::get_light_color(const CSSBoxBorderColor &border_color)
 	return light;
 }
 
-Colorf CSSBorderRenderer::get_dark_color(const CSSBoxBorderColor &border_color) const
+Colorf CSSBorderRenderer::get_dark_color(const CSSValueBorderColor &border_color) const
 {
 	Colorf dark = border_color.color;
 	dark.r *= 0.8f;

@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_color.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_color.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundColor::CSSBoxBackgroundColor()
+CSSValueBackgroundColor::CSSValueBackgroundColor()
 : type(type_color)
 {
 	color = Colorf::transparent;
 }
 
-void CSSBoxBackgroundColor::compute(const CSSBoxBackgroundColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundColor::compute(const CSSValueBackgroundColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxBackgroundColor::compute(const CSSBoxBackgroundColor *parent, CSSReso
 	}
 }
 
-std::string CSSBoxBackgroundColor::to_string() const
+std::string CSSValueBackgroundColor::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

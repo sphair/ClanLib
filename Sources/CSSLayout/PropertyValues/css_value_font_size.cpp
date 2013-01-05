@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_font_size.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_font_size.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxFontSize::CSSBoxFontSize()
+CSSValueFontSize::CSSValueFontSize()
 : type(type_inherit), percentage(0.0f)
 {
 }
 
-void CSSBoxFontSize::compute(const CSSBoxFontSize *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFontSize::compute(const CSSValueFontSize *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -99,14 +99,14 @@ void CSSBoxFontSize::compute(const CSSBoxFontSize *parent, CSSResourceCache *lay
 	if (type == type_percentage)
 	{
 		type = type_length;
-		length = CSSBoxLength(percentage / 100.0f, CSSBoxLength::type_em);
+		length = CSSLength(percentage / 100.0f, CSSLength::type_em);
 	}
 
 	if (type == type_length)
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxFontSize::to_string() const
+std::string CSSValueFontSize::to_string() const
 {
 	switch (type)
 	{

@@ -28,13 +28,13 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_inline_layout.h"
-#include "CSSLayout/LayoutTree/css_layout_cursor.h"
-#include "CSSLayout/LayoutTree/css_stacking_context.h"
-#include "CSSLayout/LayoutTree/css_block_formatting_context.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
-#include "CSSLayout/LayoutTree/css_background_renderer.h"
-#include "CSSLayout/LayoutTree/css_border_renderer.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_cursor.h"
+#include "CSSLayout/Layout/LayoutTree/css_stacking_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_block_formatting_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 #include "CSSLayout/css_resource_cache.h"
 #include "API/CSSLayout/css_box_properties.h"
 #include "add_content_margin_top.h"
@@ -186,8 +186,8 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 		{
 			CSSLayoutTreeNode *layout_node = line_start_pos.box->layout_node;
 
-			if (layout_node->get_element_node()->computed_properties.position.type != CSSBoxPosition::type_absolute &&
-				layout_node->get_element_node()->computed_properties.position.type != CSSBoxPosition::type_fixed)
+			if (layout_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_absolute &&
+				layout_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_fixed)
 			{
 				generate_block_line(line_start_pos);
 				layout_block_line(lines.back(), graphics, cursor, strategy);
@@ -261,11 +261,11 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 					CSSActualValue text_indent = 0;
 					if (lines.empty())
 					{
-						if (element_node->computed_properties.text_indent.type == CSSBoxTextIndent::type_length)
+						if (element_node->computed_properties.text_indent.type == CSSValueTextIndent::type_length)
 						{
 							text_indent = used_to_actual(element_node->computed_properties.text_indent.length.value);
 						}
-						else if (element_node->computed_properties.text_indent.type == CSSBoxTextIndent::type_percentage)
+						else if (element_node->computed_properties.text_indent.type == CSSValueTextIndent::type_percentage)
 						{
 							text_indent = used_to_actual(width.value * element_node->computed_properties.text_indent.percentage / 100.0f);
 						}
@@ -344,7 +344,7 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 
 void CSSInlineLayout::layout_absolute_and_fixed_content(CSSLayoutGraphics *graphics, CSSResourceCache *resources, Rect containing_block, const Size &viewport_size)
 {
-	if (get_element_node()->computed_properties.position.type != CSSBoxPosition::type_static)
+	if (get_element_node()->computed_properties.position.type != CSSValuePosition::type_static)
 	{
 		Rect rect = get_padding_box();
 		containing_block = rect;
@@ -515,12 +515,12 @@ void CSSInlineLayout::layout_line(CSSInlineGeneratedBox *line, Rect &line_box, C
 	switch (get_element_node()->computed_properties.line_height.type)
 	{
 	default:
-	case CSSBoxLineHeight::type_normal:
+	case CSSValueLineHeight::type_normal:
 		break;
-	case CSSBoxLineHeight::type_length:
+	case CSSValueLineHeight::type_length:
 		line->height = max(line->height, used_to_actual(get_element_node()->computed_properties.line_height.length.value));
 		break;
-	case CSSBoxLineHeight::type_number:
+	case CSSValueLineHeight::type_number:
 		line->height = max(line->height, used_to_actual(get_element_node()->computed_properties.line_height.number * get_element_node()->computed_properties.font_size.length.value));
 		break;
 	}
@@ -549,12 +549,12 @@ void CSSInlineLayout::layout_block_line(CSSInlineGeneratedBox *line, CSSLayoutGr
 	else
 	{
 		int box_y = used_to_actual(cursor.y+cursor.get_total_margin());
-		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSBoxClear::type_left || line->layout_node->get_element_node()->computed_properties.clear.type == CSSBoxClear::type_both)
+		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_left || line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
 		{
 			int clear_left = formatting_context->find_left_clearance();
 			box_y = max(box_y, clear_left);
 		}
-		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSBoxClear::type_right || line->layout_node->get_element_node()->computed_properties.clear.type == CSSBoxClear::type_both)
+		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_right || line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
 		{
 			int clear_right = formatting_context->find_right_clearance();
 			box_y = max(box_y, clear_right);
@@ -597,7 +597,7 @@ void CSSInlineLayout::adjust_start_of_line_text_range(CSSBoxText *text, size_t &
 	if (start_of_line && text_start < text_end)
 	{
 		const CSSBoxProperties &properties = text->get_properties();
-		if (properties.white_space.type == CSSBoxWhiteSpace::type_pre || properties.white_space.type == CSSBoxWhiteSpace::type_pre_wrap)
+		if (properties.white_space.type == CSSValueWhiteSpace::type_pre || properties.white_space.type == CSSValueWhiteSpace::type_pre_wrap)
 		{
 			start_of_line = false;
 		}

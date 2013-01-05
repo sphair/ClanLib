@@ -34,10 +34,10 @@ namespace clan
 class CSSResourceCache;
 class CSSBoxProperties;
 
-class CSSBoxProperty
+class CSSPropertyValue
 {
 public:
-	virtual ~CSSBoxProperty() { }
+	virtual ~CSSPropertyValue() { }
 	virtual std::string to_string() const = 0;
 };
 

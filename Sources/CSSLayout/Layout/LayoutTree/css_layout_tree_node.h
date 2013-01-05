@@ -41,8 +41,8 @@ class CSSStackingContext;
 class CSSResourceCache;
 class CSSLayoutCursor;
 class CSSLayoutHitTestResult;
-class CSSBoxMarginWidth;
-class CSSBoxPaddingWidth;
+class CSSValueMarginWidth;
+class CSSValuePaddingWidth;
 class CSSLayoutGraphics;
 
 class CSSLayoutTreeNode
@@ -129,10 +129,10 @@ public:
 	bool is_formatting_context_root() const { return formatting_context_root; }
 	CSSBlockFormattingContext *get_formatting_context() { return formatting_context; }
 
-	static CSSUsedValue get_css_margin_width(const CSSBoxMarginWidth &margin_width, CSSUsedWidth containing_width);
-	static CSSUsedValue get_css_margin_height(const CSSBoxMarginWidth &margin_width, CSSUsedHeight containing_height);
-	static CSSUsedValue get_css_padding_width(const CSSBoxPaddingWidth &padding_width, CSSUsedWidth containing_width);
-	static CSSUsedValue get_css_padding_height(const CSSBoxPaddingWidth &padding_width, CSSUsedHeight containing_height);
+	static CSSUsedValue get_css_margin_width(const CSSValueMarginWidth &margin_width, CSSUsedWidth containing_width);
+	static CSSUsedValue get_css_margin_height(const CSSValueMarginWidth &margin_width, CSSUsedHeight containing_height);
+	static CSSUsedValue get_css_padding_width(const CSSValuePaddingWidth &padding_width, CSSUsedWidth containing_width);
+	static CSSUsedValue get_css_padding_height(const CSSValuePaddingWidth &padding_width, CSSUsedHeight containing_height);
 
 protected:
 	virtual void prepare_children() = 0;

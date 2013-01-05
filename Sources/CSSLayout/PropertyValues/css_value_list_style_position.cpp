@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_list_style_position.h"
+#include "API/CSSLayout/PropertyValues/css_value_list_style_position.h"
 
 namespace clan
 {
 
-CSSBoxListStylePosition::CSSBoxListStylePosition()
+CSSValueListStylePosition::CSSValueListStylePosition()
 : type(type_inherit)
 {
 }
 
-void CSSBoxListStylePosition::compute(const CSSBoxListStylePosition *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueListStylePosition::compute(const CSSValueListStylePosition *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxListStylePosition::compute(const CSSBoxListStylePosition *parent, CSS
 	}
 }
 
-std::string CSSBoxListStylePosition::to_string() const
+std::string CSSValueListStylePosition::to_string() const
 {
 	switch (type)
 	{

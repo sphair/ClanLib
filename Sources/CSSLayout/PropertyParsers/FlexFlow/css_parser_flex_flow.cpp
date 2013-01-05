@@ -40,13 +40,13 @@ std::vector<std::string> CSSParserFlexFlow::get_names()
 	return names;
 }
 
-void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSBoxFlexDirection direction;
-	CSSBoxFlexWrap wrap;
+	CSSValueFlexDirection direction;
+	CSSValueFlexWrap wrap;
 
 	bool direction_specified = false;
 	bool wrap_specified = false;
@@ -71,7 +71,7 @@ void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &n
 	properties.flex_wrap = wrap;
 }
 
-bool CSSParserFlexFlow::parse_direction(CSSBoxFlexDirection &direction, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserFlexFlow::parse_direction(CSSValueFlexDirection &direction, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -79,15 +79,15 @@ bool CSSParserFlexFlow::parse_direction(CSSBoxFlexDirection &direction, size_t &
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "row"))
-			direction.type = CSSBoxFlexDirection::type_row;
+			direction.type = CSSValueFlexDirection::type_row;
 		else if (equals(token.value, "row-reverse"))
-			direction.type = CSSBoxFlexDirection::type_row_reverse;
+			direction.type = CSSValueFlexDirection::type_row_reverse;
 		else if (equals(token.value, "column"))
-			direction.type = CSSBoxFlexDirection::type_column;
+			direction.type = CSSValueFlexDirection::type_column;
 		else if (equals(token.value, "column-reverse"))
-			direction.type = CSSBoxFlexDirection::type_column_reverse;
+			direction.type = CSSValueFlexDirection::type_column_reverse;
 		else if (equals(token.value, "inherit"))
-			direction.type = CSSBoxFlexDirection::type_inherit;
+			direction.type = CSSValueFlexDirection::type_inherit;
 		else
 			return false;
 	}
@@ -100,7 +100,7 @@ bool CSSParserFlexFlow::parse_direction(CSSBoxFlexDirection &direction, size_t &
 	return true;
 }
 
-bool CSSParserFlexFlow::parse_wrap(CSSBoxFlexWrap &wrap, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserFlexFlow::parse_wrap(CSSValueFlexWrap &wrap, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
@@ -108,13 +108,13 @@ bool CSSParserFlexFlow::parse_wrap(CSSBoxFlexWrap &wrap, size_t &parse_pos, cons
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "nowrap"))
-			wrap.type = CSSBoxFlexWrap::type_nowrap;
+			wrap.type = CSSValueFlexWrap::type_nowrap;
 		else if (equals(token.value, "wrap"))
-			wrap.type = CSSBoxFlexWrap::type_wrap;
+			wrap.type = CSSValueFlexWrap::type_wrap;
 		else if (equals(token.value, "wrap-reverse"))
-			wrap.type = CSSBoxFlexWrap::type_wrap_reverse;
+			wrap.type = CSSValueFlexWrap::type_wrap_reverse;
 		else if (equals(token.value, "inherit"))
-			wrap.type = CSSBoxFlexWrap::type_inherit;
+			wrap.type = CSSValueFlexWrap::type_inherit;
 		else
 			return false;
 	}

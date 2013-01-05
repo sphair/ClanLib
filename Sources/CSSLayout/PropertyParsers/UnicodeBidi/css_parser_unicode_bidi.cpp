@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserUnicodeBidi::get_names()
 	return names;
 }
 
-void CSSParserUnicodeBidi::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserUnicodeBidi::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.unicode_bidi.type = CSSBoxUnicodeBidi::type_normal;
+			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_normal;
 		else if (equals(token.value, "embed"))
-			properties.unicode_bidi.type = CSSBoxUnicodeBidi::type_embed;
+			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_embed;
 		else if (equals(token.value, "bidi-override"))
-			properties.unicode_bidi.type = CSSBoxUnicodeBidi::type_bidi_override;
+			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_bidi_override;
 		else if (equals(token.value, "inherit"))
-			properties.unicode_bidi.type = CSSBoxUnicodeBidi::type_inherit;
+			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_inherit;
 	}
 	if (out_change_set)
 	{

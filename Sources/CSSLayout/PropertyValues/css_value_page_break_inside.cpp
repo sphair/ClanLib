@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_page_break_inside.h"
+#include "API/CSSLayout/PropertyValues/css_value_page_break_inside.h"
 
 namespace clan
 {
 
-CSSBoxPageBreakInside::CSSBoxPageBreakInside()
+CSSValuePageBreakInside::CSSValuePageBreakInside()
 : type(type_auto)
 {
 }
 
-void CSSBoxPageBreakInside::compute(const CSSBoxPageBreakInside *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValuePageBreakInside::compute(const CSSValuePageBreakInside *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxPageBreakInside::compute(const CSSBoxPageBreakInside *parent, CSSReso
 	}
 }
 
-std::string CSSBoxPageBreakInside::to_string() const
+std::string CSSValuePageBreakInside::to_string() const
 {
 	switch (type)
 	{
