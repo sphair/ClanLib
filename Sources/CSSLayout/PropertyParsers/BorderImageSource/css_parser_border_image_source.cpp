@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderImageSource::get_names()
 	return names;
 }
 
-void CSSParserBorderImageSource::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderImageSource::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -55,10 +55,6 @@ void CSSParserBorderImageSource::parse(CSSBoxProperties &properties, const std::
 	{
 		properties.border_image_source.type = CSSValueBorderImageSource::type_image;
 		properties.border_image_source.url = token.value;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["border-image-source"] = &properties.border_image_source;
 	}
 }
 

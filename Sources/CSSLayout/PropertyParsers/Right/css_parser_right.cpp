@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserRight::get_names()
 	return names;
 }
 
-void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -83,10 +83,6 @@ void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name
 			properties.right.type = CSSValueRight::type_percentage;
 			properties.right.percentage = -StringHelp::text_to_float(token.value);
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["right"] = &properties.right;
 	}
 }
 

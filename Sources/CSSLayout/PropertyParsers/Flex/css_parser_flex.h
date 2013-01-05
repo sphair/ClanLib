@@ -41,7 +41,7 @@ class CSSParserFlex : public CSSPropertyParser
 {
 public:
 	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set);
+	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens);
 
 private:
 	bool parse_grow_shrink(CSSValueFlexGrow &grow, CSSValueFlexShrink &shrink, size_t &parse_pos, const std::vector<CSSToken> &tokens);

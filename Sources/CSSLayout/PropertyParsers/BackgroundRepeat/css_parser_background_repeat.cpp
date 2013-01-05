@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBackgroundRepeat::get_names()
 	return names;
 }
 
-void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -154,10 +154,6 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 		}
 
 		properties.background_repeat = background_repeat;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["background-repeat"] = &properties.background_repeat;
 	}
 }
 

@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserPaddingLTRB::get_names()
 	return names;
 }
 
-void CSSParserPaddingLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserPaddingLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValuePaddingWidth *width = 0;
 	if (equals(name, "padding-top"))
@@ -96,10 +96,6 @@ void CSSParserPaddingLTRB::parse(CSSBoxProperties &properties, const std::string
 				width->type = CSSValuePaddingWidth::type_percentage;
 				width->percentage = -StringHelp::text_to_float(token.value);
 			}
-		}
-		if (out_change_set)
-		{
-			(*out_change_set)[name] = width;
 		}
 	}
 }

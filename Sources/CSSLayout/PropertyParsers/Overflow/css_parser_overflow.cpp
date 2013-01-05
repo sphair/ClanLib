@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserOverflow::get_names()
 	return names;
 }
 
-void CSSParserOverflow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserOverflow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -56,10 +56,6 @@ void CSSParserOverflow::parse(CSSBoxProperties &properties, const std::string &n
 			properties.overflow.type = CSSValueOverflow::type_auto;
 		else if (equals(token.value, "inherit"))
 			properties.overflow.type = CSSValueOverflow::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["overflow"] = &properties.overflow;
 	}
 }
 

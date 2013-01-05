@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserMarginLTRB::get_names()
 	return names;
 }
 
-void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueMarginWidth *width = 0;
 	if (equals(name, "margin-top"))
@@ -98,10 +98,6 @@ void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string 
 				width->type = CSSValueMarginWidth::type_percentage;
 				width->percentage = -StringHelp::text_to_float(token.value);
 			}
-		}
-		if (out_change_set)
-		{
-			(*out_change_set)[name] = width;
 		}
 	}
 }

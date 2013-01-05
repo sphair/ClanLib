@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserTextDecoration::get_names()
 	return names;
 }
 
-void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -91,10 +91,6 @@ void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::str
 				properties.text_decoration.blink = (blink == 1);
 			}
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["text-decoration"] = &properties.text_decoration;
 	}
 }
 

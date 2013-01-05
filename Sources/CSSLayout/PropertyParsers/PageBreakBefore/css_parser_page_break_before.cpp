@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserPageBreakBefore::get_names()
 	return names;
 }
 
-void CSSParserPageBreakBefore::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserPageBreakBefore::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -58,10 +58,6 @@ void CSSParserPageBreakBefore::parse(CSSBoxProperties &properties, const std::st
 			properties.page_break_before.type = CSSValuePageBreakBefore::type_right;
 		else if (equals(token.value, "inherit"))
 			properties.page_break_before.type = CSSValuePageBreakBefore::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["page-break-before"] = &properties.page_break_before;
 	}
 }
 

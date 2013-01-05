@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserPadding::get_names()
 	return names;
 }
 
-void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValuePaddingWidth padding_widths[4];
 	int count;
@@ -146,13 +146,6 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 		default:
 			break;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["padding-left"] = &properties.padding_width_left;
-		(*out_change_set)["padding-right"] = &properties.padding_width_right;
-		(*out_change_set)["padding-top"] = &properties.padding_width_top;
-		(*out_change_set)["padding-bottom"] = &properties.padding_width_bottom;
 	}
 }
 

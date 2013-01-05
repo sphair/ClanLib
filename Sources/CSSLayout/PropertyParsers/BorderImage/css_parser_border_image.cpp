@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderImage::get_names()
 	return names;
 }
 
-void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	if (tokens.size() == 1 && tokens[0].type == CSSToken::type_ident && equals(tokens[0].value, "inherit"))
 	{
@@ -49,14 +49,6 @@ void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string
 		properties.border_image_width.type = CSSValueBorderImageWidth::type_inherit;
 		properties.border_image_outset.type = CSSValueBorderImageOutset::type_inherit;
 		properties.border_image_repeat.type = CSSValueBorderImageRepeat::type_inherit;
-		if (out_change_set)
-		{
-			(*out_change_set)["border-image-source"] = &properties.border_image_source;
-			(*out_change_set)["border-image-slice"] = &properties.border_image_slice;
-			(*out_change_set)["border-image-width"] = &properties.border_image_width;
-			(*out_change_set)["border-image-outset"] = &properties.border_image_outset;
-			(*out_change_set)["border-image-repeat"] = &properties.border_image_repeat;
-		}
 		return;
 	}
 
@@ -120,14 +112,6 @@ void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string
 	properties.border_image_width = border_image_width;
 	properties.border_image_outset = border_image_outset;
 	properties.border_image_repeat = border_image_repeat;
-	if (out_change_set)
-	{
-		(*out_change_set)["border-image-source"] = &properties.border_image_source;
-		(*out_change_set)["border-image-slice"] = &properties.border_image_slice;
-		(*out_change_set)["border-image-width"] = &properties.border_image_width;
-		(*out_change_set)["border-image-outset"] = &properties.border_image_outset;
-		(*out_change_set)["border-image-repeat"] = &properties.border_image_repeat;
-	}
 }
 
 bool CSSParserBorderImage::parse_source(CSSValueBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens)

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserContent::get_names()
 	return names;
 }
 
-void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -91,10 +91,6 @@ void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &na
 		{
 			//properties.content.type = CSSValueContent::type_attr;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["content"] = &properties.content;
 	}
 }
 

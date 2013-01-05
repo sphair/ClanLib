@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserVisibility::get_names()
 	return names;
 }
 
-void CSSParserVisibility::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserVisibility::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -54,10 +54,6 @@ void CSSParserVisibility::parse(CSSBoxProperties &properties, const std::string 
 			properties.visibility.type = CSSValueVisibility::type_collapse;
 		else if (equals(token.value, "inherit"))
 			properties.visibility.type = CSSValueVisibility::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["visibility"] = &properties.visibility;
 	}
 }
 

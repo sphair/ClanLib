@@ -252,8 +252,8 @@ public:
 	CSSValueVerticalAlign vertical_align;
 	CSSValueEmptyCells empty_cells;
 
-	void apply_properties(const std::string &style_string, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
-	void apply_properties(const CSSPropertyValueList &css_properties, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
+	void apply_properties(const std::string &style_string);
+	void apply_properties(const CSSPropertyValueList &css_properties);
 
 	void compute(const CSSBoxProperties *parent, CSSResourceCache *layout);
 };

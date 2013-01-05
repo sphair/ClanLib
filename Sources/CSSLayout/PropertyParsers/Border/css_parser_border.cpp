@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorder::get_names()
 	return names;
 }
 
-void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderWidth border_width;
 	CSSValueBorderStyle border_style;
@@ -186,23 +186,6 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 	properties.border_color_right = border_color;
 	properties.border_color_top = border_color;
 	properties.border_color_bottom = border_color;
-	if (out_change_set)
-	{
-		(*out_change_set)["border-width-left"] = &properties.border_width_left;
-		(*out_change_set)["border-width-right"] = &properties.border_width_right;
-		(*out_change_set)["border-width-top"] = &properties.border_width_top;
-		(*out_change_set)["border-width-bottom"] = &properties.border_width_bottom;
-
-		(*out_change_set)["border-style-left"] = &properties.border_style_left;
-		(*out_change_set)["border-style-right"] = &properties.border_style_right;
-		(*out_change_set)["border-style-top"] = &properties.border_style_top;
-		(*out_change_set)["border-style-bottom"] = &properties.border_style_bottom;
-
-		(*out_change_set)["border-color-left"] = &properties.border_color_left;
-		(*out_change_set)["border-color-right"] = &properties.border_color_right;
-		(*out_change_set)["border-color-top"] = &properties.border_color_top;
-		(*out_change_set)["border-color-bottom"] = &properties.border_color_bottom;
-	}
 }
 
 }

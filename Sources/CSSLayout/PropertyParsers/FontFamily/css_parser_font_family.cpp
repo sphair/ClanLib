@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFontFamily::get_names()
 	return names;
 }
 
-void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens)
 {
 	CSSValueFontFamily family;
 	family.type = CSSValueFontFamily::type_names;
@@ -140,10 +140,6 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 	}
 
 	properties.font_family = family;
-	if (out_change_set)
-	{
-		(*out_change_set)["font-family"] = &properties.font_family;
-	}
 }
 
 }

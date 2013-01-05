@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserTextIndent::get_names()
 	return names;
 }
 
-void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -80,10 +80,6 @@ void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string 
 			properties.text_indent.type = CSSValueTextIndent::type_percentage;
 			properties.text_indent.percentage = -StringHelp::text_to_float(token.value);
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["text-indent"] = &properties.text_indent;
 	}
 }
 

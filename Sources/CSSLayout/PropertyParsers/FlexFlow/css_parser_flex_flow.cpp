@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFlexFlow::get_names()
 	return names;
 }
 
-void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);

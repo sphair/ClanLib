@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserColor::get_names()
 	return names;
 }
 
-void CSSParserColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	Colorf color;
@@ -59,10 +59,6 @@ void CSSParserColor::parse(CSSBoxProperties &properties, const std::string &name
 				properties.color.type = CSSValueColor::type_inherit;
 			}
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["color"] = &properties.color;
 	}
 }
 

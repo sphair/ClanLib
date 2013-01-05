@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserDisplay::get_names()
 	return names;
 }
 
-void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -88,10 +88,6 @@ void CSSParserDisplay::parse(CSSBoxProperties &properties, const std::string &na
 			properties.display.type = CSSValueDisplay::type_clan_grid;
 		else if (equals(token.value, "-clan-stacked"))
 			properties.display.type = CSSValueDisplay::type_clan_stacked;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["display"] = &properties.bottom;
 	}
 }
 

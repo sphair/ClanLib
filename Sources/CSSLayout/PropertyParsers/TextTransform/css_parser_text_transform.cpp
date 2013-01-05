@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserTextTransform::get_names()
 	return names;
 }
 
-void CSSParserTextTransform::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserTextTransform::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -56,10 +56,6 @@ void CSSParserTextTransform::parse(CSSBoxProperties &properties, const std::stri
 			properties.text_transform.type = CSSValueTextTransform::type_none;
 		else if (equals(token.value, "inherit"))
 			properties.text_transform.type = CSSValueTextTransform::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["text-transform"] = &properties.text_transform;
 	}
 }
 

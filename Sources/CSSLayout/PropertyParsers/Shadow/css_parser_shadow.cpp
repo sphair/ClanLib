@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserShadow::get_names()
 	return names;
 }
 
-void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	size_t last_pos = pos;
@@ -126,10 +126,6 @@ void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &nam
 	}
 
 	properties.shadow = box_shadow;
-	if (out_change_set)
-	{
-		(*out_change_set)["box-shadow"] = &properties.shadow;
-	}
 }
 
 }

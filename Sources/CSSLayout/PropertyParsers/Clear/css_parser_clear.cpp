@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserClear::get_names()
 	return names;
 }
 
-void CSSParserClear::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserClear::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -56,10 +56,6 @@ void CSSParserClear::parse(CSSBoxProperties &properties, const std::string &name
 			properties.clear.type = CSSValueClear::type_both;
 		else if (equals(token.value, "inherit"))
 			properties.clear.type = CSSValueClear::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["clear"] = &properties.clear;
 	}
 }
 

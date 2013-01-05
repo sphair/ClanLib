@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserWhiteSpace::get_names()
 	return names;
 }
 
-void CSSParserWhiteSpace::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserWhiteSpace::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -58,10 +58,6 @@ void CSSParserWhiteSpace::parse(CSSBoxProperties &properties, const std::string 
 			properties.white_space.type = CSSValueWhiteSpace::type_pre_line;
 		else if (equals(token.value, "inherit"))
 			properties.white_space.type = CSSValueWhiteSpace::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["white-space"] = &properties.white_space;
 	}
 }
 

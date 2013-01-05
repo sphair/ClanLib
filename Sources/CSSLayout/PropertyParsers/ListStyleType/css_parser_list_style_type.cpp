@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserListStyleType::get_names()
 	return names;
 }
 
-void CSSParserListStyleType::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserListStyleType::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -78,10 +78,6 @@ void CSSParserListStyleType::parse(CSSBoxProperties &properties, const std::stri
 			properties.list_style_type.type = CSSValueListStyleType::type_none;
 		else if (equals(token.value, "inherit"))
 			properties.list_style_type.type = CSSValueListStyleType::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["list-style-type"] = &properties.list_style_type;
 	}
 }
 

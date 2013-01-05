@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserMargin::get_names()
 	return names;
 }
 
-void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueMarginWidth margin_widths[4];
 	int count;
@@ -155,13 +155,6 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 		default:
 			break;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["margin-left"] = &properties.margin_width_left;
-		(*out_change_set)["margin-right"] = &properties.margin_width_right;
-		(*out_change_set)["margin-top"] = &properties.margin_width_top;
-		(*out_change_set)["margin-bottom"] = &properties.margin_width_bottom;
 	}
 }
 

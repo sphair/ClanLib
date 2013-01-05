@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserWordSpacing::get_names()
 	return names;
 }
 
-void CSSParserWordSpacing::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserWordSpacing::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -73,10 +73,6 @@ void CSSParserWordSpacing::parse(CSSBoxProperties &properties, const std::string
 				properties.word_spacing.length = length;
 			}
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["word-spacing"] = &properties.word_spacing;
 	}
 }
 

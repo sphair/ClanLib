@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserVerticalAlign::get_names()
 	return names;
 }
 
-void CSSParserVerticalAlign::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserVerticalAlign::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -97,10 +97,6 @@ void CSSParserVerticalAlign::parse(CSSBoxProperties &properties, const std::stri
 			properties.vertical_align.type = CSSValueVerticalAlign::type_percentage;
 			properties.vertical_align.percentage = -StringHelp::text_to_float(token.value);
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["vertical-align"] = &properties.vertical_align;
 	}
 }
 

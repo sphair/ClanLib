@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserClip::get_names()
 	return names;
 }
 
-void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -103,10 +103,6 @@ void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name,
 			properties.clip.bottom_auto = rect_auto[2];
 			properties.clip.left_auto = rect_auto[3];
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["clip"] = &properties.clip;
 	}
 }
 

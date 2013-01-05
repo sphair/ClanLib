@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFontSize::get_names()
 	return names;
 }
 
-void CSSParserFontSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFontSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -80,10 +80,6 @@ void CSSParserFontSize::parse(CSSBoxProperties &properties, const std::string &n
 	{
 		properties.font_size.type = CSSValueFontSize::type_percentage;
 		properties.font_size.percentage = StringHelp::text_to_float(token.value);
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["font-size"] = &properties.font_size;
 	}
 }
 

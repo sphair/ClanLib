@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserTableLayout::get_names()
 	return names;
 }
 
-void CSSParserTableLayout::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserTableLayout::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -52,10 +52,6 @@ void CSSParserTableLayout::parse(CSSBoxProperties &properties, const std::string
 			properties.table_layout.type = CSSValueTableLayout::type_fixed;
 		else if (equals(token.value, "inherit"))
 			properties.table_layout.type = CSSValueTableLayout::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["table-layout"] = &properties.table_layout;
 	}
 }
 

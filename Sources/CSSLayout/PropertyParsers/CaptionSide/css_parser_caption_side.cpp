@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserCaptionSide::get_names()
 	return names;
 }
 
-void CSSParserCaptionSide::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserCaptionSide::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -52,10 +52,6 @@ void CSSParserCaptionSide::parse(CSSBoxProperties &properties, const std::string
 			properties.caption_side.type = CSSValueCaptionSide::type_bottom;
 		else if (equals(token.value, "inherit"))
 			properties.caption_side.type = CSSValueCaptionSide::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["caption-side"] = &properties.caption_side;
 	}
 }
 

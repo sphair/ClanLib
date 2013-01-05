@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderImageWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -134,10 +134,6 @@ void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::s
 		properties.border_image_width.percentage_right = percentages[1];
 		properties.border_image_width.percentage_bottom = percentages[2];
 		properties.border_image_width.percentage_left = percentages[3];
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["border-image-width"] = &properties.border_image_width;
 	}
 }
 

@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserBorderLTRBWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderWidth *width = 0;
 	if (equals(name, "border-top-width"))
@@ -78,11 +78,6 @@ void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::st
 				width->type = CSSValueBorderWidth::type_length;
 				width->length = length;
 			}
-		}
-
-		if (out_change_set)
-		{
-			(*out_change_set)[name] = width;
 		}
 	}
 }

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserMaxWidth::get_names()
 	return names;
 }
 
-void CSSParserMaxWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserMaxWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -64,10 +64,6 @@ void CSSParserMaxWidth::parse(CSSBoxProperties &properties, const std::string &n
 	{
 		properties.max_width.type = CSSValueMaxWidth::type_percentage;
 		properties.max_width.percentage = StringHelp::text_to_float(token.value);
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["max-width"] = &properties.max_width;
 	}
 }
 

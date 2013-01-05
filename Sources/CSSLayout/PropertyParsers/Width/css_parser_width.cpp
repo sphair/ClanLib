@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserWidth::get_names()
 	return names;
 }
 
-void CSSParserWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -68,10 +68,6 @@ void CSSParserWidth::parse(CSSBoxProperties &properties, const std::string &name
 			properties.width.type = CSSValueWidth::type_percentage;
 			properties.width.percentage = v;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["width"] = &properties.width;
 	}
 }
 

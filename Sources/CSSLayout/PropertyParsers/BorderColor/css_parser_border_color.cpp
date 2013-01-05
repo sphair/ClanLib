@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderColor::get_names()
 	return names;
 }
 
-void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderColor border_colors[4];
 	int count;
@@ -122,13 +122,6 @@ void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string
 		default:
 			break;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["border-left-color"] = &properties.border_color_left;
-		(*out_change_set)["border-right-color"] = &properties.border_color_right;
-		(*out_change_set)["border-top-color"] = &properties.border_color_top;
-		(*out_change_set)["border-bottom-color"] = &properties.border_color_bottom;
 	}
 }
 

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserOutlineWidth::get_names()
 	return names;
 }
 
-void CSSParserOutlineWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserOutlineWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -63,10 +63,6 @@ void CSSParserOutlineWidth::parse(CSSBoxProperties &properties, const std::strin
 			properties.outline_width.type = CSSValueOutlineWidth::type_length;
 			properties.outline_width.length = length;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["outline-width"] = &properties.outline_width;
 	}
 }
 

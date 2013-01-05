@@ -35,16 +35,16 @@
 namespace clan
 {
 
-void CSSBoxProperties::apply_properties(const std::string &style_string, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSBoxProperties::apply_properties(const std::string &style_string)
 {
-	apply_properties(CSSDocument::get_style_properties(style_string), out_change_set);
+	apply_properties(CSSDocument::get_style_properties(style_string));
 }
 
-void CSSBoxProperties::apply_properties(const CSSPropertyValueList &css_properties, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSBoxProperties::apply_properties(const CSSPropertyValueList &css_properties)
 {
 	CSSPropertyParsers property_parsers;
 	for (size_t i = css_properties.size(); i > 0; i--)
-		property_parsers.parse(*this, css_properties[i-1], out_change_set);
+		property_parsers.parse(*this, css_properties[i-1]);
 }
 
 void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache *layout)
