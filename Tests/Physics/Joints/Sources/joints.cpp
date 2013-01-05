@@ -77,7 +77,7 @@ int Joints::start(const std::vector<std::string> &args)
 	GraphicContext gc = canvas.get_gc();
 	//Setup joints
 
-	const int number_of_joints = 2;
+	const int number_of_joints = 3;
 	std::vector<Body> bodies_A(number_of_joints);
 	std::vector<Body> bodies_B(number_of_joints);
 	std::vector<std::shared_ptr<Joint>> Joints(number_of_joints);
@@ -208,6 +208,20 @@ std::shared_ptr<Joint> Joints::create_joint(PhysicsWorld &phys_world, Body &body
 			joint_desc.set_max_motor_torque(1000);
 		
 			std::shared_ptr<Joint> joint( static_cast<Joint *> (new RevoluteJoint(pc, joint_desc)));
+			return joint;
+		}
+	case 2: // Prismatic joint
+		{
+			PrismaticJointDescription joint_desc(phys_world);
+			joint_desc.set_bodies(bodyA, bodyB, bodyA.get_position(), bodyB.get_position());
+			joint_desc.set_as_motor();
+			joint_desc.enable_limit();
+			joint_desc.set_axis_a(Vec2f(0.0f,1.0f));
+			joint_desc.set_motor_speed(Angle(20,angle_degrees));
+			joint_desc.set_translation_limits(10.0f,100.0f);
+			joint_desc.set_max_motor_force(1000);
+		
+			std::shared_ptr<Joint> joint( static_cast<Joint *> (new PrismaticJoint(pc, joint_desc)));
 			return joint;
 		}
 	}
