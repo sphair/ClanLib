@@ -61,6 +61,7 @@ int Raycasting::start(const std::vector<std::string> &args)
 	phys_desc.set_gravity(0.0f,10.0f);
 	phys_desc.set_sleep(true);
 	phys_desc.set_physic_scale(100);
+	phys_desc.set_timestep(1.0f/200.0f);
 
 	PhysicsWorld phys_world(phys_desc);
 
@@ -84,7 +85,7 @@ int Raycasting::start(const std::vector<std::string> &args)
 
 	//Setup box body
 	BodyDescription box_desc(phys_world);
-	box_desc.set_position(Vec2f(50.0f,100.0f));
+	box_desc.set_position(Vec2f(10.0f,10.0f));
 	box_desc.set_type(body_dynamic);
 	box_desc.set_linear_velocity(Vec2f(100.0f,0.0f));
 	Body box(pc, box_desc);
@@ -122,6 +123,9 @@ int Raycasting::start(const std::vector<std::string> &args)
 	Pointf p1(300,500);
 	Pointf p2(100,100);
 
+	// Set query rect;
+	Rectf rect1(400.0f, 380.0f, Sizef(50.0f,50.0f));
+
 	// Run until someone presses escape
 	while (!quit)
 	{
@@ -131,16 +135,34 @@ int Raycasting::start(const std::vector<std::string> &args)
 
 		canvas.clear();
 		
+		//Raycast
+		
 		font.draw_text(canvas, 10,20, "Raycasting...");
 		
-		canvas.line(p1, p2, Colorf::red);
-
-		qa.RaycastFirst(p1, p2);
-		if(qa.has_raycast_result())
+		qa.raycast_first(p1, p2);
+		if(qa.has_query_result())
 		{
-			font.draw_text(canvas, 10,35, "Found object !");
+			font.draw_text(canvas, 100,20, "Found object !");
 			canvas.line(p1,p2, Colorf::green);
 		}
+		else canvas.line(p1, p2, Colorf::red);
+		
+		//Raycast
+
+		//Query
+		
+		font.draw_text(canvas, 10,35, "Querying...");
+
+		qa.query_any(rect1);
+
+		if(qa.has_query_result())
+		{
+			font.draw_text(canvas, 100,35, "Found object !");
+			canvas.box(rect1, Colorf::green);
+
+		}
+		else canvas.box(rect1, Colorf::red);
+		//Query
 
 		phys_world.step();
 		debug_draw.draw(canvas);
