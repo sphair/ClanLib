@@ -51,6 +51,8 @@
 #include "Physics/Dynamics/Joints/distance_joint.h"
 #include "Physics/Dynamics/Joints/revolute_joint_description.h"
 #include "Physics/Dynamics/Joints/revolute_joint.h"
+#include "Physics/Dynamics/Joints/prismatic_joint_description.h"
+#include "Physics/Dynamics/Joints/prismatic_joint.h"
 #include "Physics/Collision/Shapes/shape.h"
 #include "Physics/Collision/Shapes/polygon_shape.h"
 #include "Physics/Collision/Shapes/chain_shape.h"
