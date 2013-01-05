@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserOutline::get_names()
 	return names;
 }
 
-void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueOutlineWidth outline_width;
 	CSSValueOutlineStyle outline_style;
@@ -173,12 +173,6 @@ void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &na
 	properties.outline_width = outline_width;
 	properties.outline_style = outline_style;
 	properties.outline_color = outline_color;
-	if (out_change_set)
-	{
-		(*out_change_set)["outline-width"] = &properties.outline_width;
-		(*out_change_set)["outline-style"] = &properties.outline_style;
-		(*out_change_set)["outline-color"] = &properties.outline_color;
-	}
 }
 
 }

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserOrder::get_names()
 	return names;
 }
 
-void CSSParserOrder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserOrder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -57,10 +57,6 @@ void CSSParserOrder::parse(CSSBoxProperties &properties, const std::string &name
 			properties.order.type = CSSValueOrder::type_integer;
 			properties.order.value = value;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["order"] = &properties.order;
 	}
 }
 

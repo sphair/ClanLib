@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderCollapse::get_names()
 	return names;
 }
 
-void CSSParserBorderCollapse::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderCollapse::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -52,11 +52,6 @@ void CSSParserBorderCollapse::parse(CSSBoxProperties &properties, const std::str
 			properties.border_collapse.type = CSSValueBorderCollapse::type_separate;
 		else if (equals(token.value, "inherit"))
 			properties.border_collapse.type = CSSValueBorderCollapse::type_inherit;
-	}
-
-	if (out_change_set)
-	{
-		(*out_change_set)["border-collapse"] = &properties.border_collapse;
 	}
 }
 

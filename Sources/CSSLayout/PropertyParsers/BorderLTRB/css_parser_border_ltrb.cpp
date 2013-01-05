@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserBorderLTRB::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderWidth *width_prop = 0;
 	CSSValueBorderStyle *style_prop = 0;
@@ -205,23 +205,6 @@ void CSSParserBorderLTRB::parse(CSSBoxProperties &properties, const std::string 
 	*width_prop = border_width;
 	*style_prop = border_style;
 	*color_prop = border_color;
-	if (out_change_set)
-	{
-		if (width_specified)
-		{
-			(*out_change_set)[name + "-width"] = width_prop;
-		}
-
-		if (style_specified)
-		{
-			(*out_change_set)[name + "-style"] = style_prop;
-		}
-
-		if (color_specified)
-		{
-			(*out_change_set)[name + "-color"] = color_prop;
-		}
-	}
 }
 
 }

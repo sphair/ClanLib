@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserBorderRadiusCorner::get_names()
 	return names;
 }
 
-void CSSParserBorderRadiusCorner::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderRadiusCorner::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderRadius *border_radius = 0;
 	if (equals(name, "border-top-right-radius"))
@@ -113,11 +113,6 @@ void CSSParserBorderRadiusCorner::parse(CSSBoxProperties &properties, const std:
 		else
 		{
 			*border_radius = radius;
-		}
-
-		if (out_change_set)
-		{
-			(*out_change_set)[name] = border_radius;
 		}
 	}
 }

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFlexBasis::get_names()
 	return names;
 }
 
-void CSSParserFlexBasis::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFlexBasis::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -68,10 +68,6 @@ void CSSParserFlexBasis::parse(CSSBoxProperties &properties, const std::string &
 			properties.flex_basis.type = CSSValueFlexBasis::type_percentage;
 			properties.flex_basis.percentage = v;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["flex_basis"] = &properties.flex_basis;
 	}
 }
 

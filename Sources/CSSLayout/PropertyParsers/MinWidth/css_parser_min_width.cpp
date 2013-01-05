@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserMinWidth::get_names()
 	return names;
 }
 
-void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -64,10 +64,6 @@ void CSSParserMinWidth::parse(CSSBoxProperties &properties, const std::string &n
 	{
 		properties.min_width.type = CSSValueMinWidth::type_percentage;
 		properties.min_width.percentage = StringHelp::text_to_float(token.value);
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["min-width"] = &properties.min_width;
 	}
 }
 

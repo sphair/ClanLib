@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBottom::get_names()
 	return names;
 }
 
-void CSSParserBottom::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBottom::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -83,10 +83,6 @@ void CSSParserBottom::parse(CSSBoxProperties &properties, const std::string &nam
 			properties.bottom.type = CSSValueBottom::type_percentage;
 			properties.bottom.percentage = -StringHelp::text_to_float(token.value);
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["bottom"] = &properties.bottom;
 	}
 }
 

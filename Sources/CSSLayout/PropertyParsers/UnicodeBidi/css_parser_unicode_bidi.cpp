@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserUnicodeBidi::get_names()
 	return names;
 }
 
-void CSSParserUnicodeBidi::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserUnicodeBidi::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -54,10 +54,6 @@ void CSSParserUnicodeBidi::parse(CSSBoxProperties &properties, const std::string
 			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_bidi_override;
 		else if (equals(token.value, "inherit"))
 			properties.unicode_bidi.type = CSSValueUnicodeBidi::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["unicode-bidi"] = &properties.unicode_bidi;
 	}
 }
 

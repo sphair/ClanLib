@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBackgroundClip::get_names()
 	return names;
 }
 
-void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -87,11 +87,6 @@ void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::str
 		}
 
 		properties.background_clip = background_clip;
-	}
-
-	if (out_change_set)
-	{
-		(*out_change_set)["background-clip"] = &properties.background_clip;
 	}
 }
 

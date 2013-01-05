@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserJustifyContent::get_names()
 	return names;
 }
 
-void CSSParserJustifyContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserJustifyContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -58,10 +58,6 @@ void CSSParserJustifyContent::parse(CSSBoxProperties &properties, const std::str
 			properties.justify_content.type = CSSValueJustifyContent::type_space_around;
 		else if (equals(token.value, "inherit"))
 			properties.justify_content.type = CSSValueJustifyContent::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["justify-content"] = &properties.direction;
 	}
 }
 

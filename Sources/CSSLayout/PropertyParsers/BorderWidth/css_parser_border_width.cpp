@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderWidth border_widths[4];
 	int count;
@@ -132,13 +132,6 @@ void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string
 		default:
 			break;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["border-left-width"] = &properties.border_width_left;
-		(*out_change_set)["border-right-width"] = &properties.border_width_right;
-		(*out_change_set)["border-top-width"] = &properties.border_width_top;
-		(*out_change_set)["border-bottom-width"] = &properties.border_width_bottom;
 	}
 }
 

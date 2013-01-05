@@ -38,7 +38,7 @@ class CSSParserBorderImage : public CSSPropertyParser
 {
 public:
 	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set);
+	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens);
 	
 private:
 	bool parse_source(CSSValueBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens);

@@ -43,7 +43,7 @@ std::vector<std::string> CSSParserBorderLTRBColor::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	CSSValueBorderColor *border_color = 0;
 	if (equals(name, "border-top-color"))
@@ -75,11 +75,6 @@ void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::st
 				}
 			}
 		}
-	}
-
-	if (out_change_set)
-	{
-		(*out_change_set)[name] = border_color;
 	}
 }
 

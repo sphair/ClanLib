@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFontWeight::get_names()
 	return names;
 }
 
-void CSSParserFontWeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFontWeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -77,10 +77,6 @@ void CSSParserFontWeight::parse(CSSBoxProperties &properties, const std::string 
 			properties.font_weight.type = CSSValueFontWeight::type_800;
 		else if (token.value == "900")
 			properties.font_weight.type = CSSValueFontWeight::type_900;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["font-weight"] = &properties.font_weight;
 	}
 }
 

@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserFlexShrink::get_names()
 	return names;
 }
 
-void CSSParserFlexShrink::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserFlexShrink::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -53,11 +53,6 @@ void CSSParserFlexShrink::parse(CSSBoxProperties &properties, const std::string 
 	{
 		properties.flex_shrink.type = CSSValueFlexShrink::type_number;
 		properties.flex_shrink.number = StringHelp::text_to_float(token.value);
-	}
-
-	if (out_change_set)
-	{
-		(*out_change_set)[name] = &properties.flex_shrink;
 	}
 }
 

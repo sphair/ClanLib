@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserAlignSelf::get_names()
 	return names;
 }
 
-void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -60,10 +60,6 @@ void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &
 			properties.align_self.type = CSSValueAlignSelf::type_stretch;
 		else if (equals(token.value, "inherit"))
 			properties.align_self.type = CSSValueAlignSelf::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["align-self"] = &properties.direction;
 	}
 }
 

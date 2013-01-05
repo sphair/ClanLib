@@ -15,7 +15,7 @@ public:
 	CSSPropertyParsers();
 	~CSSPropertyParsers();
 
-	void parse(CSSBoxProperties &properties, const CSSProperty &property, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
+	void parse(CSSBoxProperties &properties, const CSSProperty &property);
 
 private:
 	void add(CSSPropertyParser *parser);

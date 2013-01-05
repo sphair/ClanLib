@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserAlignItems::get_names()
 	return names;
 }
 
-void CSSParserAlignItems::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserAlignItems::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -58,10 +58,6 @@ void CSSParserAlignItems::parse(CSSBoxProperties &properties, const std::string 
 			properties.align_items.type = CSSValueAlignItems::type_stretch;
 		else if (equals(token.value, "inherit"))
 			properties.align_items.type = CSSValueAlignItems::type_inherit;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["align-items"] = &properties.direction;
 	}
 }
 

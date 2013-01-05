@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserWidows::get_names()
 	return names;
 }
 
-void CSSParserWidows::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserWidows::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -56,10 +56,6 @@ void CSSParserWidows::parse(CSSBoxProperties &properties, const std::string &nam
 			properties.widows.type = CSSValueWidows::type_integer;
 			properties.widows.value = value;
 		}
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["widows"] = &properties.widows;
 	}
 }
 

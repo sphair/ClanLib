@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBackgroundImage::get_names()
 	return names;
 }
 
-void CSSParserBackgroundImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBackgroundImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -79,10 +79,6 @@ void CSSParserBackgroundImage::parse(CSSBoxProperties &properties, const std::st
 	}
 
 	properties.background_image = background_image;
-	if (out_change_set)
-	{
-		(*out_change_set)["background-image"] = &properties.background_image;
-	}
 }
 
 }

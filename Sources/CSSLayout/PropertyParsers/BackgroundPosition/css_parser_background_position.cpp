@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBackgroundPosition::get_names()
 	return names;
 }
 
-void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -48,10 +48,6 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 	{
 		properties.background_position.type = CSSValueBackgroundPosition::type_inherit;
-		if (out_change_set)
-		{
-			(*out_change_set)["background-position"] = &properties.background_position;
-		}
 		return;
 	}
 
@@ -312,10 +308,6 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 	}
 
 	properties.background_position = position;
-	if (out_change_set)
-	{
-		(*out_change_set)["background-position"] = &properties.background_position;
-	}
 }
 
 }

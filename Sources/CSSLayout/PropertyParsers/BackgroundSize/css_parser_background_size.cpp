@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBackgroundSize::get_names()
 	return names;
 }
 
-void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
+void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -162,10 +162,6 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 		}
 
 		properties.background_size = background_size;
-	}
-	if (out_change_set)
-	{
-		(*out_change_set)["background-size"] = &properties.background_size;
 	}
 }
 
