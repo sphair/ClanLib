@@ -26,87 +26,75 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanphysics_world clanPhysics World
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
 /// \{
+
 
 #pragma once
 
-#include "../api_physics.h"
+#include "../../api_physics.h"
+#include "joint.h"
 #include <memory>
 
 namespace clan
 {
-	class PhysicsWorld;
-	class PhysicsContext_Impl;
-	class Body;
-	class Fixture;
-	class Joint;
 
-class CL_API_PHYSICS PhysicsContext
+	class PrismaticJointDescription;
+	class PrismaticJoint_Impl;
+	class PhysicsContext;
+
+/// \brief PrismaticJoint class.
+///
+/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
+class CL_API_PHYSICS PrismaticJoint : public Joint
 {
+
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a null instance.
-	PhysicsContext();
+	PrismaticJoint();
 
-	/// \brief Constructs a PhysicsContext.
+	/// \brief Constructs a PrismaticJoint object.
 	///
-	/// \param pw = Physics World.
-	PhysicsContext(PhysicsWorld &pw);
+	/// \param description = a PrismaticJoint Description object.
+	PrismaticJoint(PhysicsContext &pc, const PrismaticJointDescription &description);
+
+	virtual ~PrismaticJoint();
 
 /// \}
 /// \name Attributes
 /// \{
+public:
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }
 
-	/// \brief Returns maximum amount of bodies allowed.
-	int max_bodies() const;
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
 
-	/// \brief Returns maximum amount of fixtures allowed.
-	int max_fixtures() const;
+	/// \brief Short-cut function to determine if either body is inactive. 
+	bool is_active() const;
 
-	/// \brief Returns maximum amount of joints allowed.
-	int max_joints() const;
 /// \}
 /// \name Operations
 /// \{
-private:
-	/// \brief Add Body to the context.
-	void create_in_context(Body &body);
+public:
+	PrismaticJoint &PrismaticJoint::operator =(const PrismaticJoint &copy);
 
-	/// \brief Add Fixture to the context.
-	void create_in_context(Fixture &fixture);
+protected:
 
-	/// \brief Add Joint to the context.
-	void create_in_context(Joint &joint);
-
-	/// \brief Remove Body from the context.
-	void remove_from_context(Body &body);
-
-	/// \brief Remove Fixture from the context.
-	void remove_from_context(Fixture &fixture);
-
-	/// \brief Remove Joint from the context.
-	void remove_from_context(Joint &joint);
+	virtual std::shared_ptr<Joint> create_null_derived();
+	
 /// \}
 /// \name Implementation
 /// \{
+protected:
 
-private:
-	std::shared_ptr<PhysicsContext_Impl> impl;
+	std::shared_ptr<PrismaticJoint_Impl> impl;
 
 /// \}
 
-	friend class Body;
-	friend class Fixture;
-	friend class Joint;
-
-	friend class DistanceJoint;
-	friend class RevoluteJoint;
-	friend class PrismaticJoint;
 };
 
 }
