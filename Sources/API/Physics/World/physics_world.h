@@ -66,6 +66,11 @@ public:
 
 	~PhysicsWorld();
 	
+private:
+
+	/// \brief Constructs a Physics World with impl.
+	PhysicsWorld(std::shared_ptr<PhysicsWorld_Impl> impl);
+
 /// \}
 /// \name Attributes
 /// \{
@@ -133,6 +138,9 @@ private:
 	friend class DistanceJointDescription;
 	friend class RevoluteJointDescription;
 	friend class PrismaticJointDescription;
+	friend class MouseJointDescription;
+
+	friend class MouseJoint;
 
 	friend class PhysicsDebugDraw;
 	friend class PolygonShape;

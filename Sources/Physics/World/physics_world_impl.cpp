@@ -66,6 +66,11 @@ void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 {
 	PhysicsWorldDescription_Impl &desc_impl = *description.impl;
 	name = desc_impl.name;
+	timestep = desc_impl.timestep;
+	velocity_iterations = desc_impl.velocity_iterations;
+	position_iterations = desc_impl.position_iterations;
+	physic_scale = desc_impl.physic_scale;
+
 	world.SetAllowSleeping(desc_impl.sleep_enabled);
 	world.SetGravity(desc_impl.gravity);
 

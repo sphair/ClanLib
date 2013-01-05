@@ -52,6 +52,10 @@ PhysicsWorld::~PhysicsWorld()
 	impl->sig_world_destroyed.invoke();
 }
 
+PhysicsWorld::PhysicsWorld(std::shared_ptr<PhysicsWorld_Impl> copy)
+{
+	impl = copy;
+}
 //																											___________________																											
 //																											A T T R I B U T E S
 void PhysicsWorld::throw_if_null() const

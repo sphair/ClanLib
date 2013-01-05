@@ -27,49 +27,38 @@
 */
 
 #pragma once
-
-#include "../Box2D/Box2D.h"
-#include "API/Physics/World/query_result.h"
-#include "API/Core/Math/rect.h"
+#include "../../Box2D/Box2D.h"
 
 namespace clan
 {
-	class PhysicsWorld;
 
-	enum QueryType
-	{
-		query_raycast_first,
-		query_raycast_any,
-		query_raycast_all,
-		query_aabb_any,
-		query_aabb_some,
-		query_aabb_all
-	};
+class PhysicsWorld_Impl;
 
-class PhysicsQueryAssistant_Impl : public b2QueryCallback, public b2RayCastCallback
+class MouseJointDescription_Impl
 {
 public:
 //																						_______________________
 //																						C O N S T R U C T O R S
+	
+	MouseJointDescription_Impl(PhysicsWorld_Impl &pw_impl) 
+	: owner(&pw_impl)
+	{};
+	virtual ~MouseJointDescription_Impl() { return; }
 
-	PhysicsQueryAssistant_Impl(PhysicsWorld &pw);
+	b2JointDef *get_Joint();
 
-	~PhysicsQueryAssistant_Impl() { return; }
+//																						___________________
+//																						A T T R I B U T E S
 
 //																						___________________
 //																						O P E R A T I O N S
-	virtual bool ReportFixture(b2Fixture* fixture);
-	virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction);
+
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	
-	PhysicsWorld *owner_world;
-	QueryType query_type;
-	int query_result_amount;
-	int query_result_limit;
 
-	const int max_queried_objects;
-	std::vector<QueryResult> queried_objects;
+	PhysicsWorld_Impl *owner;
+	b2MouseJointDef joint_def;
 };
+
 
 }

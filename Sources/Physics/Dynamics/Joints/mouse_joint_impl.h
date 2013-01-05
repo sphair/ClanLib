@@ -26,54 +26,37 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
-#include "raycast_result_impl.h"
-#include "API/Physics/World/raycast_result.h"
+#pragma once
+#include "../../Box2D/Box2D.h"
+#include <memory>
+#include "API/Physics/Dynamics/Joints/mouse_joint.h"
 
 namespace clan
 {
 
+	class PhysicsWorld_Impl;
 
-RaycastResult::RaycastResult()
+class MouseJoint_Impl
 {
+public:
+//																						_______________________
+//																						C O N S T R U C T O R S
 
-}
+	MouseJoint_Impl(PhysicsWorld_Impl &pw_impl)
+	: owner(&pw_impl)
+	{};
+	virtual ~MouseJoint_Impl() { return; }
 
-RaycastResult::RaycastResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction)
-: impl(new RaycastResult_Impl)
-{
-	impl->fixture = fixture;
-	impl->point = point;
-	impl->normal = normal;
-	impl->fraction = fraction;
+//																						___________________
+//																						A T T R I B U T E S
 
-}
-RaycastResult::~RaycastResult()
-{
+//																						___________________
+//																						O P E R A T I O N S
 
-}
-
-void RaycastResult::throw_if_null() const
-{
-		if (!impl)
-		throw Exception("RaycastResult is null");
-}
-
-Fixture &RaycastResult::get_fixture() const
-{
-	return impl->fixture;
-}
-
-Body &RaycastResult::get_body() const
-{
-	return impl->fixture.get_owner_body();
-}
-
-RaycastResult &RaycastResult::operator =(const RaycastResult &copy)
-{
-	impl = copy.impl;
-	return *this;
-}
+//																						___________________________
+//																						I M P L E M E N T A T I O N
+	PhysicsWorld_Impl *owner;
+};
 
 
 }

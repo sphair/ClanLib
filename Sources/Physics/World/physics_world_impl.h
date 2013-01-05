@@ -29,6 +29,7 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
+#include <memory>
 #include "physics_listener.h"
 #include "API/Physics/World/physics_world_description.h"
 #include "API/Physics/World/physics_context.h"
@@ -41,7 +42,7 @@ namespace clan
 	class BodyDescription;
 	class PhysicsWorld;
 
-class PhysicsWorld_Impl
+class PhysicsWorld_Impl : public std::enable_shared_from_this<PhysicsWorld_Impl>
 {
 public:
 

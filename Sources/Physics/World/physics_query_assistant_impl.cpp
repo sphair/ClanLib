@@ -37,20 +37,45 @@ namespace clan
 {
 PhysicsQueryAssistant_Impl::PhysicsQueryAssistant_Impl(PhysicsWorld &pw)
 : owner_world(&pw),
-  raycast_result_amount(0),
-  max_raycasted_objects(200), //Make it customisable
-  raycasted_objects(max_raycasted_objects)
+  query_result_amount(0),
+  max_queried_objects(200), //Make it customisable
+  queried_objects(max_queried_objects)
 {
 }
 
 bool PhysicsQueryAssistant_Impl::ReportFixture(b2Fixture* fixture)
 {
-	return true;
+	if(query_result_amount >= max_queried_objects) return false;
+
+	Fixture_Impl &fixture_impl = *static_cast<Fixture_Impl *> (fixture->GetUserData());
+	Fixture fixture_result(fixture_impl.shared_from_this());
+	
+	switch(query_type)
+	{
+	case query_aabb_all:
+		queried_objects[query_result_amount] = QueryResult(fixture_result);
+		query_result_amount++;
+		return true;
+
+	case query_aabb_any:
+		queried_objects[0] = QueryResult(fixture_result);
+		query_result_amount++;
+		return false;
+
+	case query_aabb_some:
+		queried_objects[query_result_amount] = QueryResult(fixture_result);
+		query_result_amount++;
+		if(query_result_amount<query_result_limit) return true;
+		else return false;
+
+	default:
+		return false;
+	}
 }
 
 float32 PhysicsQueryAssistant_Impl::ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction)
 {
-	if(raycast_result_amount >= max_raycasted_objects) return 0;
+	if(query_result_amount >= max_queried_objects) return 0;
 
 	Fixture_Impl &fixture_impl = *static_cast<Fixture_Impl *> (fixture->GetUserData());
 	Fixture fixture_result(fixture_impl.shared_from_this());
@@ -58,21 +83,21 @@ float32 PhysicsQueryAssistant_Impl::ReportFixture(b2Fixture* fixture, const b2Ve
 	Pointf pointf(point.x, point.y);
 	Vec2f normal_vec(normal.x, normal.y);
 
-	switch(raycast_type)
+	switch(query_type)
 	{
-	case raycast_all:
-		raycasted_objects[raycast_result_amount] = RaycastResult(fixture_result, pointf, normal_vec, fraction);
-		raycast_result_amount++;
+	case query_raycast_all:
+		queried_objects[query_result_amount] = QueryResult(fixture_result, pointf, normal_vec, fraction);
+		query_result_amount++;
 		return 1;
 
-	case raycast_any:
-		raycasted_objects[raycast_result_amount] = RaycastResult(fixture_result, pointf, normal_vec, fraction);
-		raycast_result_amount++;
+	case query_raycast_any:
+		queried_objects[query_result_amount] = QueryResult(fixture_result, pointf, normal_vec, fraction);
+		query_result_amount++;
 		return 0;
 
-	case raycast_first:
-		raycasted_objects[0] = RaycastResult(fixture_result, pointf, normal_vec, fraction);
-		raycast_result_amount++;
+	case query_raycast_first:
+		queried_objects[0] = QueryResult(fixture_result, pointf, normal_vec, fraction);
+		query_result_amount++;
 		return fraction;
 
 	default:

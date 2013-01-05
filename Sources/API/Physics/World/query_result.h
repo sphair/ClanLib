@@ -39,28 +39,45 @@
 namespace clan
 {
 
-	class RaycastResult_Impl;
+	class QueryResult_Impl;
 	class Fixture;
 	class Body;
 	class Pointf;
 
-/// \brief Raycast Result class.
+/// \brief Query types
+///
+/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
+enum QueryResultType
+{
+	query_raycast,
+	query_aabb
+};
+
 ///
 /// Used by physics query assistant.
 /// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
-class CL_API_PHYSICS RaycastResult
+
+class CL_API_PHYSICS QueryResult
 {
+public:
+
+
+
 /// \name Construction
 /// \{
 public:
 	/// \brief Constructs a null instance.
-	RaycastResult();
+	QueryResult();
 
-	~RaycastResult();
+	~QueryResult();
 
 private:
-	/// \brief Constructs a RaycastResult object.
-	RaycastResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction);
+
+	/// \brief Constructs a QueryResult object.
+	QueryResult(Fixture &fixture);
+
+	/// \brief Constructs a QueryResult object.
+	QueryResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction);
 
 /// \}
 /// \name Attributes
@@ -73,11 +90,14 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief Get the fixture holded by the RaycastResult.
+	/// \brief Get the fixture holded by the QueryResult.
 	Fixture &get_fixture() const;
 
-	/// \brief Get the body holded by the RaycastResult.
+	/// \brief Get the body holded by the QueryResult.
 	Body &get_body() const;
+
+	/// =brief Get the query type of the QueryResult.
+	QueryResultType get_query_type() const;
 
 /// \}
 /// \name Operations
@@ -85,14 +105,14 @@ public:
 public:
 
 	/// \brief Copy operator.
-	RaycastResult &RaycastResult::operator =(const RaycastResult &copy);
+	QueryResult &QueryResult::operator =(const QueryResult &copy);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
 
-	std::shared_ptr<RaycastResult_Impl> impl;
+	std::shared_ptr<QueryResult_Impl> impl;
 /// \}
 
 	friend class PhysicsQueryAssistant_Impl;
