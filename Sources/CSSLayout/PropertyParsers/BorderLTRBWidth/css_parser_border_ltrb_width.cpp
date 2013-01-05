@@ -43,9 +43,9 @@ std::vector<std::string> CSSParserBorderLTRBWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderWidth *width = 0;
+	CSSValueBorderWidth *width = 0;
 	if (equals(name, "border-top-width"))
 		width = &properties.border_width_top;
 	else if (equals(name, "border-right-width"))
@@ -62,20 +62,20 @@ void CSSParserBorderLTRBWidth::parse(CSSBoxProperties &properties, const std::st
 		if (token.type == CSSToken::type_ident && pos == tokens.size())
 		{
 			if (equals(token.value, "thin"))
-				width->type = CSSBoxBorderWidth::type_thin;
+				width->type = CSSValueBorderWidth::type_thin;
 			else if (equals(token.value, "medium"))
-				width->type = CSSBoxBorderWidth::type_medium;
+				width->type = CSSValueBorderWidth::type_medium;
 			else if (equals(token.value, "thick"))
-				width->type = CSSBoxBorderWidth::type_thick;
+				width->type = CSSValueBorderWidth::type_thick;
 			else if (equals(token.value, "inherit"))
-				width->type = CSSBoxBorderWidth::type_inherit;
+				width->type = CSSValueBorderWidth::type_inherit;
 		}
 		else if (is_length(token) && pos == tokens.size())
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				width->type = CSSBoxBorderWidth::type_length;
+				width->type = CSSValueBorderWidth::type_length;
 				width->length = length;
 			}
 		}

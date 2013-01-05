@@ -40,22 +40,22 @@ std::vector<std::string> CSSParserPosition::get_names()
 	return names;
 }
 
-void CSSParserPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "static"))
-			properties.position.type = CSSBoxPosition::type_static;
+			properties.position.type = CSSValuePosition::type_static;
 		else if (equals(token.value, "relative"))
-			properties.position.type = CSSBoxPosition::type_relative;
+			properties.position.type = CSSValuePosition::type_relative;
 		else if (equals(token.value, "absolute"))
-			properties.position.type = CSSBoxPosition::type_absolute;
+			properties.position.type = CSSValuePosition::type_absolute;
 		else if (equals(token.value, "fixed"))
-			properties.position.type = CSSBoxPosition::type_fixed;
+			properties.position.type = CSSValuePosition::type_fixed;
 		else if (equals(token.value, "inherit"))
-			properties.position.type = CSSBoxPosition::type_inherit;
+			properties.position.type = CSSValuePosition::type_inherit;
 	}
 	if (out_change_set)
 	{

@@ -38,7 +38,7 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 	const CSSBoxProperties &properties = node->element.get_css_properties();
 	if (node->parent)
 	{
-		if (properties.position.type == CSSBoxPosition::type_absolute || properties.position.type == CSSBoxPosition::type_fixed)
+		if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
 		{
 			// To do: find nearest ancestor with 'position:relative'
 			GUICSSUsedValues containing_box = node->parent->impl->css_used_values;

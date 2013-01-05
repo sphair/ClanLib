@@ -28,17 +28,17 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxShadow : public CSSBoxProperty
+class CSSValueShadow : public CSSPropertyValue
 {
 public:
-	CSSBoxShadow();
-	void compute(const CSSBoxShadow *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueShadow();
+	void compute(const CSSValueShadow *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type
@@ -52,10 +52,10 @@ public:
 	public:
 		Shadow() : inset(false) { }
 
-		CSSBoxLength horizontal_offset;
-		CSSBoxLength vertical_offset;
-		CSSBoxLength blur_radius;
-		CSSBoxLength spread_distance;
+		CSSLength horizontal_offset;
+		CSSLength vertical_offset;
+		CSSLength blur_radius;
+		CSSLength spread_distance;
 		Colorf color;
 		bool inset;
 	};

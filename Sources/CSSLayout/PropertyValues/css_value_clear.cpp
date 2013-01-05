@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_clear.h"
+#include "API/CSSLayout/PropertyValues/css_value_clear.h"
 
 namespace clan
 {
 
-CSSBoxClear::CSSBoxClear()
+CSSValueClear::CSSValueClear()
 : type(type_none)
 {
 }
 
-void CSSBoxClear::compute(const CSSBoxClear *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueClear::compute(const CSSValueClear *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxClear::compute(const CSSBoxClear *parent, CSSResourceCache *layout, f
 	}
 }
 
-std::string CSSBoxClear::to_string() const
+std::string CSSValueClear::to_string() const
 {
 	switch (type)
 	{

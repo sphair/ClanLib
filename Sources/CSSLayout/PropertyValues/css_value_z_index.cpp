@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_z_index.h"
+#include "API/CSSLayout/PropertyValues/css_value_z_index.h"
 
 namespace clan
 {
 
-CSSBoxZIndex::CSSBoxZIndex()
+CSSValueZIndex::CSSValueZIndex()
 : type(type_auto), value(0)
 {
 }
 
-void CSSBoxZIndex::compute(const CSSBoxZIndex *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueZIndex::compute(const CSSValueZIndex *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -53,7 +53,7 @@ void CSSBoxZIndex::compute(const CSSBoxZIndex *parent, CSSResourceCache *layout,
 	}
 }
 
-std::string CSSBoxZIndex::to_string() const
+std::string CSSValueZIndex::to_string() const
 {
 	switch (type)
 	{

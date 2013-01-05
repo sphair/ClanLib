@@ -28,12 +28,12 @@
 
 #include "CSSLayout/precomp.h"
 #include "render_layer_background.h"
-#include "CSSLayout/LayoutTree/css_stacking_context.h"
-#include "CSSLayout/LayoutTree/css_block_formatting_context.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
-#include "CSSLayout/LayoutTree/css_background_renderer.h"
-#include "CSSLayout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_stacking_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_block_formatting_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
 
 namespace clan
 {
@@ -52,7 +52,7 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 	}
 	else if (element)
 	{
-		if (element->computed_properties.visibility.type == CSSBoxVisibility::type_visible)
+		if (element->computed_properties.visibility.type == CSSValueVisibility::type_visible)
 		{
 			int pos_x = used_to_actual(cur->relative_x) + tree_node->get_formatting_context()->get_x();
 			int pos_y = used_to_actual(cur->relative_y) + tree_node->get_formatting_context()->get_y();

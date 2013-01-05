@@ -40,19 +40,19 @@ std::vector<std::string> CSSParserBackgroundOrigin::get_names()
 	return names;
 }
 
-void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_origin.type = CSSBoxBackgroundOrigin::type_inherit;
+		properties.background_origin.type = CSSValueBackgroundOrigin::type_inherit;
 	}
 	else
 	{
-		CSSBoxBackgroundOrigin background_origin;
-		background_origin.type = CSSBoxBackgroundOrigin::type_value;
+		CSSValueBackgroundOrigin background_origin;
+		background_origin.type = CSSValueBackgroundOrigin::type_value;
 		background_origin.values.clear();
 		while (true)
 		{
@@ -61,15 +61,15 @@ void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::s
 
 			if (equals(token.value, "border-box"))
 			{
-				background_origin.values.push_back(CSSBoxBackgroundOrigin::origin_border_box);
+				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_border_box);
 			}
 			else if (equals(token.value, "padding-box"))
 			{
-				background_origin.values.push_back(CSSBoxBackgroundOrigin::origin_padding_box);
+				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_padding_box);
 			}
 			else if (equals(token.value, "content-box"))
 			{
-				background_origin.values.push_back(CSSBoxBackgroundOrigin::origin_content_box);
+				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_content_box);
 			}
 			else
 			{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_table_layout.h"
+#include "API/CSSLayout/PropertyValues/css_value_table_layout.h"
 
 namespace clan
 {
 
-CSSBoxTableLayout::CSSBoxTableLayout()
+CSSValueTableLayout::CSSValueTableLayout()
 : type(type_auto)
 {
 }
 
-void CSSBoxTableLayout::compute(const CSSBoxTableLayout *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueTableLayout::compute(const CSSValueTableLayout *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxTableLayout::compute(const CSSBoxTableLayout *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxTableLayout::to_string() const
+std::string CSSValueTableLayout::to_string() const
 {
 	switch (type)
 	{

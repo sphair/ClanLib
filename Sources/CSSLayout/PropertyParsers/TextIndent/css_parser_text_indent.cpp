@@ -40,26 +40,26 @@ std::vector<std::string> CSSParserTextIndent::get_names()
 	return names;
 }
 
-void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.text_indent.type = CSSBoxTextIndent::type_inherit;
+		properties.text_indent.type = CSSValueTextIndent::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.text_indent.type = CSSBoxTextIndent::type_length;
+			properties.text_indent.type = CSSValueTextIndent::type_length;
 			properties.text_indent.length = length;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.text_indent.type = CSSBoxTextIndent::type_percentage;
+		properties.text_indent.type = CSSValueTextIndent::type_percentage;
 		properties.text_indent.percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -67,17 +67,17 @@ void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string 
 		token = next_token(pos, tokens);
 		if (is_length(token) && pos == tokens.size())
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.text_indent.type = CSSBoxTextIndent::type_length;
+				properties.text_indent.type = CSSValueTextIndent::type_length;
 				properties.text_indent.length = length;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.text_indent.type = CSSBoxTextIndent::type_percentage;
+			properties.text_indent.type = CSSValueTextIndent::type_percentage;
 			properties.text_indent.percentage = -StringHelp::text_to_float(token.value);
 		}
 	}

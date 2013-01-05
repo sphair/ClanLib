@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_white_space.h"
+#include "API/CSSLayout/PropertyValues/css_value_white_space.h"
 
 namespace clan
 {
 
-CSSBoxWhiteSpace::CSSBoxWhiteSpace()
+CSSValueWhiteSpace::CSSValueWhiteSpace()
 : type(type_inherit)
 {
 }
 
-void CSSBoxWhiteSpace::compute(const CSSBoxWhiteSpace *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueWhiteSpace::compute(const CSSValueWhiteSpace *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxWhiteSpace::compute(const CSSBoxWhiteSpace *parent, CSSResourceCache 
 	}
 }
 
-std::string CSSBoxWhiteSpace::to_string() const
+std::string CSSValueWhiteSpace::to_string() const
 {
 	switch (type)
 	{

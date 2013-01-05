@@ -40,11 +40,11 @@ std::vector<std::string> CSSParserBorder::get_names()
 	return names;
 }
 
-void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderWidth border_width;
-	CSSBoxBorderStyle border_style;
-	CSSBoxBorderColor border_color;
+	CSSValueBorderWidth border_width;
+	CSSValueBorderStyle border_style;
+	CSSValueBorderColor border_color;
 	bool width_specified = false;
 	bool style_specified = false;
 	bool color_specified = false;
@@ -55,7 +55,7 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 		Colorf color;
 		if (!color_specified && parse_color(tokens, pos, color))
 		{
-			border_color.type = CSSBoxBorderColor::type_color;
+			border_color.type = CSSValueBorderColor::type_color;
 			border_color.color = color;
 			color_specified = true;
 		}
@@ -66,83 +66,83 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 			{
 				if (equals(token.value, "inherit") && tokens.size() == 1)
 				{
-					properties.border_width_left.type = CSSBoxBorderWidth::type_inherit;
-					properties.border_width_right.type = CSSBoxBorderWidth::type_inherit;
-					properties.border_width_top.type = CSSBoxBorderWidth::type_inherit;
-					properties.border_width_bottom.type = CSSBoxBorderWidth::type_inherit;
-					properties.border_style_left.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_right.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_top.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_bottom.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_color_left.type = CSSBoxBorderColor::type_inherit;
-					properties.border_color_right.type = CSSBoxBorderColor::type_inherit;
-					properties.border_color_top.type = CSSBoxBorderColor::type_inherit;
-					properties.border_color_bottom.type = CSSBoxBorderColor::type_inherit;
+					properties.border_width_left.type = CSSValueBorderWidth::type_inherit;
+					properties.border_width_right.type = CSSValueBorderWidth::type_inherit;
+					properties.border_width_top.type = CSSValueBorderWidth::type_inherit;
+					properties.border_width_bottom.type = CSSValueBorderWidth::type_inherit;
+					properties.border_style_left.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_right.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_top.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_bottom.type = CSSValueBorderStyle::type_inherit;
+					properties.border_color_left.type = CSSValueBorderColor::type_inherit;
+					properties.border_color_right.type = CSSValueBorderColor::type_inherit;
+					properties.border_color_top.type = CSSValueBorderColor::type_inherit;
+					properties.border_color_bottom.type = CSSValueBorderColor::type_inherit;
 					return;
 				}
 				else if (!width_specified && equals(token.value, "thin"))
 				{
-					border_width.type = CSSBoxBorderWidth::type_thin;
+					border_width.type = CSSValueBorderWidth::type_thin;
 					width_specified = true;
 				}
 				else if (!width_specified && equals(token.value, "medium"))
 				{
-					border_width.type = CSSBoxBorderWidth::type_medium;
+					border_width.type = CSSValueBorderWidth::type_medium;
 					width_specified = true;
 				}
 				else if (!width_specified && equals(token.value, "thick"))
 				{
-					border_width.type = CSSBoxBorderWidth::type_thick;
+					border_width.type = CSSValueBorderWidth::type_thick;
 					width_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "none"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_none;
+					border_style.type = CSSValueBorderStyle::type_none;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "hidden"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_hidden;
+					border_style.type = CSSValueBorderStyle::type_hidden;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "dotted"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_dotted;
+					border_style.type = CSSValueBorderStyle::type_dotted;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "dashed"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_dashed;
+					border_style.type = CSSValueBorderStyle::type_dashed;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "solid"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_solid;
+					border_style.type = CSSValueBorderStyle::type_solid;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "double"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_double;
+					border_style.type = CSSValueBorderStyle::type_double;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "groove"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_groove;
+					border_style.type = CSSValueBorderStyle::type_groove;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "ridge"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_ridge;
+					border_style.type = CSSValueBorderStyle::type_ridge;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "inset"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_inset;
+					border_style.type = CSSValueBorderStyle::type_inset;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "outset"))
 				{
-					border_style.type = CSSBoxBorderStyle::type_outset;
+					border_style.type = CSSValueBorderStyle::type_outset;
 					style_specified = true;
 				}
 				else
@@ -153,10 +153,10 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 			}
 			else if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (!width_specified && parse_length(token, length))
 				{
-					border_width.type = CSSBoxBorderWidth::type_length;
+					border_width.type = CSSValueBorderWidth::type_length;
 					border_width.length = length;
 					width_specified = true;
 				}

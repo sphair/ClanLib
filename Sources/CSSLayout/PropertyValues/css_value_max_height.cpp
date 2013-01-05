@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_max_height.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_max_height.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxMaxHeight::CSSBoxMaxHeight()
+CSSValueMaxHeight::CSSValueMaxHeight()
 : type(type_none), percentage(0.0f)
 {
 }
 
-void CSSBoxMaxHeight::compute(const CSSBoxMaxHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueMaxHeight::compute(const CSSValueMaxHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,7 +58,7 @@ void CSSBoxMaxHeight::compute(const CSSBoxMaxHeight *parent, CSSResourceCache *l
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxMaxHeight::to_string() const
+std::string CSSValueMaxHeight::to_string() const
 {
 	switch (type)
 	{

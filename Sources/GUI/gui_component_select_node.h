@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/CSSLayout/css_select_node.h"
+#include "API/CSSLayout/CSSDocument/css_select_node.h"
 
 namespace clan
 {

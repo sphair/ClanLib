@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_origin.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_origin.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundOrigin::CSSBoxBackgroundOrigin()
+CSSValueBackgroundOrigin::CSSValueBackgroundOrigin()
 : type(type_value)
 {
 	values.push_back(origin_padding_box);
 }
 
-void CSSBoxBackgroundOrigin::compute(const CSSBoxBackgroundOrigin *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundOrigin::compute(const CSSValueBackgroundOrigin *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxBackgroundOrigin::compute(const CSSBoxBackgroundOrigin *parent, CSSRe
 	}
 }
 
-std::string CSSBoxBackgroundOrigin::to_string() const
+std::string CSSValueBackgroundOrigin::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

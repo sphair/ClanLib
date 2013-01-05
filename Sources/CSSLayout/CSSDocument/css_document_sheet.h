@@ -1,11 +1,11 @@
 
 #pragma once
 
-#include "API/CSSLayout/css_document.h"
-#include "API/CSSLayout/css_property.h"
-#include "API/CSSLayout/css_property_list.h"
-#include "API/CSSLayout/css_select_node.h"
-#include "API/CSSLayout/dom_select_node.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_property.h"
+#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_select_node.h"
+#include "API/CSSLayout/CSSDocument/dom_select_node.h"
 #include "css_ruleset.h"
 #include "css_selector_chain.h"
 #include "css_selector_link.h"

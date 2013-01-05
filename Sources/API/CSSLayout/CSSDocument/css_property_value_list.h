@@ -28,18 +28,18 @@
 
 #pragma once
 
-#include "api_csslayout.h"
+#include "../api_csslayout.h"
 
 namespace clan
 {
 
 class CSSProperty;
-class CSSPropertyList_Impl;
+class CSSPropertyValueList_Impl;
 
-class CL_API_CSSLAYOUT CSSPropertyList
+class CL_API_CSSLAYOUT CSSPropertyValueList
 {
 public:
-	CSSPropertyList();
+	CSSPropertyValueList();
 
 	size_t size() const;
 	CSSProperty &at(size_t index);
@@ -49,7 +49,7 @@ public:
 	void push_back(const CSSProperty &value);
 
 private:
-	std::shared_ptr<CSSPropertyList_Impl> impl;
+	std::shared_ptr<CSSPropertyValueList_Impl> impl;
 };
 
 }

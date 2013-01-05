@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserOrphans::get_names()
 	return names;
 }
 
-void CSSParserOrphans::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserOrphans::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.orphans.type = CSSBoxOrphans::type_inherit;
+		properties.orphans.type = CSSValueOrphans::type_inherit;
 	}
 	else if (token.type == CSSToken::type_dimension && pos == tokens.size())
 	{
 		int value = 0;
 		if (parse_integer(token.value, value))
 		{
-			properties.orphans.type = CSSBoxOrphans::type_integer;
+			properties.orphans.type = CSSValueOrphans::type_integer;
 			properties.orphans.value = value;
 		}
 	}

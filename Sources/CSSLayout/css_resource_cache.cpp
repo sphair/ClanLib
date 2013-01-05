@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "css_resource_cache.h"
 #include "API/CSSLayout/css_box_properties.h"
-#include "LayoutTree/css_used_value.h"
+#include "Layout/LayoutTree/css_used_value.h"
 
 namespace clan
 {
@@ -82,7 +82,7 @@ Font &CSSResourceCache::get_font(Canvas &canvas, const CSSBoxProperties &propert
 		std::string search_name;
 		switch (properties.font_family.names[i].type)
 		{
-		case CSSBoxFontFamilyName::type_family_name:
+		case CSSValueFontFamilyName::type_family_name:
 			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
 			if (font_families.find(search_name) != font_families.end())
 			{
@@ -91,17 +91,17 @@ Font &CSSResourceCache::get_font(Canvas &canvas, const CSSBoxProperties &propert
 			}
 			break;
 		default:
-		case CSSBoxFontFamilyName::type_serif:
-		case CSSBoxFontFamilyName::type_cursive:
-		case CSSBoxFontFamilyName::type_fantasy:
+		case CSSValueFontFamilyName::type_serif:
+		case CSSValueFontFamilyName::type_cursive:
+		case CSSValueFontFamilyName::type_fantasy:
 			font_name = "Times New Roman"; // Ugliest font on the planet.
 			matched = true;
 			break;
-		case CSSBoxFontFamilyName::type_sans_serif:
+		case CSSValueFontFamilyName::type_sans_serif:
 			font_name = "Arial";
 			matched = true;
 			break;
-		case CSSBoxFontFamilyName::type_monospace:
+		case CSSValueFontFamilyName::type_monospace:
 			font_name = "Courier New";
 			matched = true;
 			break;
@@ -115,26 +115,26 @@ Font &CSSResourceCache::get_font(Canvas &canvas, const CSSBoxProperties &propert
 	int font_weight = 400;
 	switch (properties.font_weight.type)
 	{
-	case CSSBoxFontWeight::type_100: font_weight = 100; break;
-	case CSSBoxFontWeight::type_200: font_weight = 200; break;
-	case CSSBoxFontWeight::type_300: font_weight = 300; break;
-	case CSSBoxFontWeight::type_400: font_weight = 400; break;
-	case CSSBoxFontWeight::type_500: font_weight = 500; break;
-	case CSSBoxFontWeight::type_600: font_weight = 600; break;
-	case CSSBoxFontWeight::type_700: font_weight = 700; break;
-	case CSSBoxFontWeight::type_800: font_weight = 800; break;
-	case CSSBoxFontWeight::type_900: font_weight = 900; break;
-	case CSSBoxFontWeight::type_normal: font_weight = 400; break;
-	case CSSBoxFontWeight::type_bold: font_weight = 700; break;
-	case CSSBoxFontWeight::type_bolder: font_weight = 900; break;
-	case CSSBoxFontWeight::type_lighter: font_weight = 300; break;
+	case CSSValueFontWeight::type_100: font_weight = 100; break;
+	case CSSValueFontWeight::type_200: font_weight = 200; break;
+	case CSSValueFontWeight::type_300: font_weight = 300; break;
+	case CSSValueFontWeight::type_400: font_weight = 400; break;
+	case CSSValueFontWeight::type_500: font_weight = 500; break;
+	case CSSValueFontWeight::type_600: font_weight = 600; break;
+	case CSSValueFontWeight::type_700: font_weight = 700; break;
+	case CSSValueFontWeight::type_800: font_weight = 800; break;
+	case CSSValueFontWeight::type_900: font_weight = 900; break;
+	case CSSValueFontWeight::type_normal: font_weight = 400; break;
+	case CSSValueFontWeight::type_bold: font_weight = 700; break;
+	case CSSValueFontWeight::type_bolder: font_weight = 900; break;
+	case CSSValueFontWeight::type_lighter: font_weight = 300; break;
 	}
 	bool italic = false;
 	switch (properties.font_style.type)
 	{
-	case CSSBoxFontStyle::type_normal: italic = false; break;
-	case CSSBoxFontStyle::type_italic: italic = true; break;
-	case CSSBoxFontStyle::type_oblique: italic = true; break;
+	case CSSValueFontStyle::type_normal: italic = false; break;
+	case CSSValueFontStyle::type_italic: italic = true; break;
+	case CSSValueFontStyle::type_oblique: italic = true; break;
 	}
 	std::string font_cache_name = string_format("%1+++%2+%3", font_name, font_size, font_weight);
 	if (italic) font_cache_name += "i";
@@ -173,7 +173,7 @@ Image &CSSResourceCache::get_image(Canvas &canvas, const std::string &url)
 	}
 }
 
-CSSBoxLength CSSResourceCache::compute_length(const CSSBoxLength &length, float em_size, float ex_size)
+CSSLength CSSResourceCache::compute_length(const CSSLength &length, float em_size, float ex_size)
 {
 	float px_size = dpi / 96.0f;
 /*
@@ -196,35 +196,35 @@ CSSBoxLength CSSResourceCache::compute_length(const CSSBoxLength &length, float 
 		}
 	}
 */
-	CSSBoxLength new_length;
-	new_length.type = CSSBoxLength::type_computed_px;
+	CSSLength new_length;
+	new_length.type = CSSLength::type_computed_px;
 	switch (length.type)
 	{
-	case CSSBoxLength::type_computed_px:
+	case CSSLength::type_computed_px:
 		new_length.value = length.value;
 		break;
-	case CSSBoxLength::type_mm:
+	case CSSLength::type_mm:
 		new_length.value = length.value * dpi / 25.4f;
 		break;
-	case CSSBoxLength::type_cm:
+	case CSSLength::type_cm:
 		new_length.value = length.value * dpi / 2.54f;
 		break;
-	case CSSBoxLength::type_in:
+	case CSSLength::type_in:
 		new_length.value = length.value * dpi;
 		break;
-	case CSSBoxLength::type_pt:
+	case CSSLength::type_pt:
 		new_length.value = length.value * dpi / 72.0f;
 		break;
-	case CSSBoxLength::type_pc:
+	case CSSLength::type_pc:
 		new_length.value = length.value * dpi * 12.0f / 72.0f;
 		break;
-	case CSSBoxLength::type_em:
+	case CSSLength::type_em:
 		new_length.value = length.value * em_size;
 		break;
-	case CSSBoxLength::type_ex:
+	case CSSLength::type_ex:
 		new_length.value = length.value * ex_size;
 		break;
-	case CSSBoxLength::type_px:
+	case CSSLength::type_px:
 		new_length.value = length.value * px_size;
 		break;
 	default:
@@ -246,20 +246,20 @@ Colorf CSSResourceCache::get_default_color()
 	return Colorf::black;
 }
 
-CSSBoxLength CSSResourceCache::get_font_table_size(int size)
+CSSLength CSSResourceCache::get_font_table_size(int size)
 {
 	// To do: Return 13px for Monospace font type (so defaults match Firefox)
-	return CSSBoxLength(16.0f, CSSBoxLength::type_px);
+	return CSSLength(16.0f, CSSLength::type_px);
 }
 
-CSSBoxLength CSSResourceCache::get_font_table_smaller(float em_size)
+CSSLength CSSResourceCache::get_font_table_smaller(float em_size)
 {
-	return CSSBoxLength(14.0f, CSSBoxLength::type_px);
+	return CSSLength(14.0f, CSSLength::type_px);
 }
 
-CSSBoxLength CSSResourceCache::get_font_table_larger(float em_size)
+CSSLength CSSResourceCache::get_font_table_larger(float em_size)
 {
-	return CSSBoxLength(18.0f, CSSBoxLength::type_px);
+	return CSSLength(18.0f, CSSLength::type_px);
 }
 
 }

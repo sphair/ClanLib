@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserContent::get_names()
 	return names;
 }
 
-void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -48,48 +48,48 @@ void CSSParserContent::parse(CSSBoxProperties &properties, const std::string &na
 	{
 		if (equals(token.value, "none"))
 		{
-			properties.content.type = CSSBoxContent::type_none;
+			properties.content.type = CSSValueContent::type_none;
 		}
 		else if (equals(token.value, "normal"))
 		{
-			properties.content.type = CSSBoxContent::type_normal;
+			properties.content.type = CSSValueContent::type_normal;
 		}
 		else if (equals(token.value, "open-quote"))
 		{
-			properties.content.type = CSSBoxContent::type_open_quote;
+			properties.content.type = CSSValueContent::type_open_quote;
 		}
 		else if (equals(token.value, "close-quote"))
 		{
-			properties.content.type = CSSBoxContent::type_close_quote;
+			properties.content.type = CSSValueContent::type_close_quote;
 		}
 		else if (equals(token.value, "inherit"))
 		{
-			properties.content.type = CSSBoxContent::type_inherit;
+			properties.content.type = CSSValueContent::type_inherit;
 		}
 	}
 	else if (token.type == CSSToken::type_string && pos == tokens.size())
 	{
-		properties.content.type = CSSBoxContent::type_string;
+		properties.content.type = CSSValueContent::type_string;
 		properties.content.str = token.value;
 	}
 	else if (token.type == CSSToken::type_uri && pos == tokens.size())
 	{
-		properties.content.type = CSSBoxContent::type_uri;
+		properties.content.type = CSSValueContent::type_uri;
 		properties.content.str = token.value;
 	}
 	else if (token.type == CSSToken::type_function)
 	{
 		if (equals(token.value, "counter"))
 		{
-			//properties.content.type = CSSBoxContent::type_counter;
+			//properties.content.type = CSSValueContent::type_counter;
 		}
 		else if (equals(token.value, "counters"))
 		{
-			//properties.content.type = CSSBoxContent::type_counters;
+			//properties.content.type = CSSValueContent::type_counters;
 		}
 		else if (equals(token.value, "attr"))
 		{
-			//properties.content.type = CSSBoxContent::type_attr;
+			//properties.content.type = CSSValueContent::type_attr;
 		}
 	}
 	if (out_change_set)

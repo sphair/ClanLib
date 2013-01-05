@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxOutlineColor : public CSSBoxProperty
+class CSSValueOutlineColor : public CSSPropertyValue
 {
 public:
-	CSSBoxOutlineColor();
-	void compute(const CSSBoxOutlineColor *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueOutlineColor();
+	void compute(const CSSValueOutlineColor *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

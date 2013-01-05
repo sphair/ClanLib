@@ -40,29 +40,29 @@ std::vector<std::string> CSSParserRight::get_names()
 	return names;
 }
 
-void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.right.type = CSSBoxRight::type_auto;
+			properties.right.type = CSSValueRight::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.right.type = CSSBoxRight::type_inherit;
+			properties.right.type = CSSValueRight::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.right.type = CSSBoxRight::type_length;
+			properties.right.type = CSSValueRight::type_length;
 			properties.right.length = length;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.right.type = CSSBoxRight::type_percentage;
+		properties.right.type = CSSValueRight::type_percentage;
 		properties.right.percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -70,17 +70,17 @@ void CSSParserRight::parse(CSSBoxProperties &properties, const std::string &name
 		token = next_token(pos, tokens);
 		if (is_length(token) && pos == tokens.size())
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.right.type = CSSBoxRight::type_length;
+				properties.right.type = CSSValueRight::type_length;
 				properties.right.length = length;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.right.type = CSSBoxRight::type_percentage;
+			properties.right.type = CSSValueRight::type_percentage;
 			properties.right.percentage = -StringHelp::text_to_float(token.value);
 		}
 	}

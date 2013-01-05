@@ -40,11 +40,11 @@ std::vector<std::string> CSSParserOutline::get_names()
 	return names;
 }
 
-void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxOutlineWidth outline_width;
-	CSSBoxOutlineStyle outline_style;
-	CSSBoxOutlineColor outline_color;
+	CSSValueOutlineWidth outline_width;
+	CSSValueOutlineStyle outline_style;
+	CSSValueOutlineColor outline_color;
 	bool width_specified = false;
 	bool style_specified = false;
 	bool color_specified = false;
@@ -55,7 +55,7 @@ void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &na
 		Colorf color;
 		if (!color_specified && parse_color(tokens, pos, color))
 		{
-			outline_color.type = CSSBoxOutlineColor::type_color;
+			outline_color.type = CSSValueOutlineColor::type_color;
 			outline_color.color = color;
 			color_specified = true;
 		}
@@ -66,79 +66,79 @@ void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &na
 			{
 				if (equals(token.value, "inherit") && tokens.size() == 1)
 				{
-					properties.outline_width.type = CSSBoxOutlineWidth::type_inherit;
-					properties.outline_style.type = CSSBoxOutlineStyle::type_inherit;
-					properties.outline_color.type = CSSBoxOutlineColor::type_inherit;
+					properties.outline_width.type = CSSValueOutlineWidth::type_inherit;
+					properties.outline_style.type = CSSValueOutlineStyle::type_inherit;
+					properties.outline_color.type = CSSValueOutlineColor::type_inherit;
 					return;
 				}
 				else if (!width_specified && equals(token.value, "thin"))
 				{
-					outline_width.type = CSSBoxOutlineWidth::type_thin;
+					outline_width.type = CSSValueOutlineWidth::type_thin;
 					width_specified = true;
 				}
 				else if (!width_specified && equals(token.value, "medium"))
 				{
-					outline_width.type = CSSBoxOutlineWidth::type_medium;
+					outline_width.type = CSSValueOutlineWidth::type_medium;
 					width_specified = true;
 				}
 				else if (!width_specified && equals(token.value, "thick"))
 				{
-					outline_width.type = CSSBoxOutlineWidth::type_thick;
+					outline_width.type = CSSValueOutlineWidth::type_thick;
 					width_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "none"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_none;
+					outline_style.type = CSSValueOutlineStyle::type_none;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "hidden"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_hidden;
+					outline_style.type = CSSValueOutlineStyle::type_hidden;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "dotted"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_dotted;
+					outline_style.type = CSSValueOutlineStyle::type_dotted;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "dashed"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_dashed;
+					outline_style.type = CSSValueOutlineStyle::type_dashed;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "solid"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_solid;
+					outline_style.type = CSSValueOutlineStyle::type_solid;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "double"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_double;
+					outline_style.type = CSSValueOutlineStyle::type_double;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "groove"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_groove;
+					outline_style.type = CSSValueOutlineStyle::type_groove;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "ridge"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_ridge;
+					outline_style.type = CSSValueOutlineStyle::type_ridge;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "inset"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_inset;
+					outline_style.type = CSSValueOutlineStyle::type_inset;
 					style_specified = true;
 				}
 				else if (!style_specified && equals(token.value, "outset"))
 				{
-					outline_style.type = CSSBoxOutlineStyle::type_outset;
+					outline_style.type = CSSValueOutlineStyle::type_outset;
 					style_specified = true;
 				}
 				else if (!color_specified && equals(token.value, "invert"))
 				{
-					outline_color.type = CSSBoxOutlineColor::type_invert;
+					outline_color.type = CSSValueOutlineColor::type_invert;
 					color_specified = true;
 				}
 				else
@@ -149,10 +149,10 @@ void CSSParserOutline::parse(CSSBoxProperties &properties, const std::string &na
 			}
 			else if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (!width_specified && parse_length(token, length))
 				{
-					outline_width.type = CSSBoxOutlineWidth::type_length;
+					outline_width.type = CSSValueOutlineWidth::type_length;
 					outline_width.length = length;
 					width_specified = true;
 				}

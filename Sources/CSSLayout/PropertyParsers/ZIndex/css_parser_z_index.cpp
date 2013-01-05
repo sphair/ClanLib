@@ -40,23 +40,23 @@ std::vector<std::string> CSSParserZIndex::get_names()
 	return names;
 }
 
-void CSSParserZIndex::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserZIndex::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.z_index.type = CSSBoxZIndex::type_auto;
+			properties.z_index.type = CSSValueZIndex::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.z_index.type = CSSBoxZIndex::type_inherit;
+			properties.z_index.type = CSSValueZIndex::type_inherit;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
 		int value = 0;
 		if (parse_integer(token.value, value))
 		{
-			properties.z_index.type = CSSBoxZIndex::type_integer;
+			properties.z_index.type = CSSValueZIndex::type_integer;
 			properties.z_index.value = value;
 		}
 	}

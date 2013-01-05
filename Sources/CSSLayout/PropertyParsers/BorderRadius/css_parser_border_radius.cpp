@@ -40,15 +40,15 @@ std::vector<std::string> CSSParserBorderRadius::get_names()
 	return names;
 }
 
-void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderRadius radius[4];
+	CSSValueBorderRadius radius[4];
 
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && pos == tokens.size())
 	{
-		radius[0].type = CSSBoxBorderRadius::type_inherit;
+		radius[0].type = CSSValueBorderRadius::type_inherit;
 		properties.border_radius_top_left = radius[0];
 		properties.border_radius_top_right = radius[0];
 		properties.border_radius_bottom_left = radius[0];
@@ -74,13 +74,13 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 				debug_parse_error(name, tokens);
 				return;
 			}
-			radius[i].type = CSSBoxBorderRadius::type_one_value;
-			radius[i].value_type1 = CSSBoxBorderRadius::value_type_length;
+			radius[i].type = CSSValueBorderRadius::type_one_value;
+			radius[i].value_type1 = CSSValueBorderRadius::value_type_length;
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			radius[i].type = CSSBoxBorderRadius::type_one_value;
-			radius[i].value_type1 = CSSBoxBorderRadius::value_type_percentage;
+			radius[i].type = CSSValueBorderRadius::type_one_value;
+			radius[i].value_type1 = CSSValueBorderRadius::value_type_percentage;
 			radius[i].percentage1 = StringHelp::text_to_float(token.value);
 		}
 		else
@@ -105,12 +105,12 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 		{
 			if (is_length(token) && parse_length(token, radius[i].length2))
 			{
-				radius[i].type = CSSBoxBorderRadius::type_two_values;
+				radius[i].type = CSSValueBorderRadius::type_two_values;
 			}
 			else if (token.type == CSSToken::type_percentage)
 			{
-				radius[i].type = CSSBoxBorderRadius::type_two_values;
-				radius[i].value_type2 = CSSBoxBorderRadius::value_type_percentage;
+				radius[i].type = CSSValueBorderRadius::type_two_values;
+				radius[i].value_type2 = CSSValueBorderRadius::value_type_percentage;
 				radius[i].percentage2 = StringHelp::text_to_float(token.value);
 			}
 			else
@@ -138,7 +138,7 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 		{
 			for (int i = num_x_values; i < num_y_values; i++)
 			{
-				radius[i].type = CSSBoxBorderRadius::type_two_values;
+				radius[i].type = CSSValueBorderRadius::type_two_values;
 				radius[i].value_type1 = radius[i].value_type2;
 				radius[i].length1 = radius[i].length2;
 				radius[i].percentage1 = radius[i].percentage2;
@@ -149,7 +149,7 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 		{
 			for (int i = num_y_values; i < num_x_values; i++)
 			{
-				radius[i].type = CSSBoxBorderRadius::type_two_values;
+				radius[i].type = CSSValueBorderRadius::type_two_values;
 				radius[i].value_type2 = radius[i].value_type1;
 				radius[i].length2 = radius[i].length1;
 				radius[i].percentage2 = radius[i].percentage1;

@@ -40,18 +40,18 @@ std::vector<std::string> CSSParserDecorationBreak::get_names()
 	return names;
 }
 
-void CSSParserDecorationBreak::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserDecorationBreak::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "slice"))
-			properties.decoration_break.type = CSSBoxDecorationBreak::type_slice;
+			properties.decoration_break.type = CSSValueDecorationBreak::type_slice;
 		else if (equals(token.value, "clone"))
-			properties.decoration_break.type = CSSBoxDecorationBreak::type_clone;
+			properties.decoration_break.type = CSSValueDecorationBreak::type_clone;
 		else if (equals(token.value, "inherit"))
-			properties.decoration_break.type = CSSBoxDecorationBreak::type_inherit;
+			properties.decoration_break.type = CSSValueDecorationBreak::type_inherit;
 	}
 	if (out_change_set)
 	{

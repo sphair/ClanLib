@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_quotes.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_quotes.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxQuotes::CSSBoxQuotes()
+CSSValueQuotes::CSSValueQuotes()
 : type(type_inherit)
 {
 }
 
-void CSSBoxQuotes::compute(const CSSBoxQuotes *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueQuotes::compute(const CSSValueQuotes *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxQuotes::compute(const CSSBoxQuotes *parent, CSSResourceCache *layout,
 	}
 }
 
-std::string CSSBoxQuotes::to_string() const
+std::string CSSValueQuotes::to_string() const
 {
 	switch (type)
 	{

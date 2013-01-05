@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_outline_style.h"
+#include "API/CSSLayout/PropertyValues/css_value_outline_style.h"
 
 namespace clan
 {
 
-CSSBoxOutlineStyle::CSSBoxOutlineStyle()
+CSSValueOutlineStyle::CSSValueOutlineStyle()
 : type(type_none)
 {
 }
 
-void CSSBoxOutlineStyle::compute(const CSSBoxOutlineStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueOutlineStyle::compute(const CSSValueOutlineStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxOutlineStyle::compute(const CSSBoxOutlineStyle *parent, CSSResourceCa
 	}
 }
 
-std::string CSSBoxOutlineStyle::to_string() const
+std::string CSSValueOutlineStyle::to_string() const
 {
 	switch (type)
 	{

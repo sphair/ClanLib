@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_size.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_size.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundSize::CSSBoxBackgroundSize()
+CSSValueBackgroundSize::CSSValueBackgroundSize()
 : type(type_value)
 {
 	values.push_back(Size());
 }
 
-void CSSBoxBackgroundSize::compute(const CSSBoxBackgroundSize *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundSize::compute(const CSSValueBackgroundSize *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxBackgroundSize::compute(const CSSBoxBackgroundSize *parent, CSSResour
 	}
 }
 
-std::string CSSBoxBackgroundSize::to_string() const
+std::string CSSValueBackgroundSize::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

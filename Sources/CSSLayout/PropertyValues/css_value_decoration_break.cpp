@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_decoration_break.h"
+#include "API/CSSLayout/PropertyValues/css_value_decoration_break.h"
 
 namespace clan
 {
 
-CSSBoxDecorationBreak::CSSBoxDecorationBreak()
+CSSValueDecorationBreak::CSSValueDecorationBreak()
 : type(type_slice)
 {
 }
 
-void CSSBoxDecorationBreak::compute(const CSSBoxDecorationBreak *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueDecorationBreak::compute(const CSSValueDecorationBreak *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -52,7 +52,7 @@ void CSSBoxDecorationBreak::compute(const CSSBoxDecorationBreak *parent, CSSReso
 	}
 }
 
-std::string CSSBoxDecorationBreak::to_string() const
+std::string CSSValueDecorationBreak::to_string() const
 {
 	switch (type)
 	{

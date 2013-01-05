@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "find_content_box.h"
-#include "CSSLayout/LayoutTree/css_block_formatting_context.h"
+#include "CSSLayout/Layout/LayoutTree/css_block_formatting_context.h"
 
 namespace clan
 {

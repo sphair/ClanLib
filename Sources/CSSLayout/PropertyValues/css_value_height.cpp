@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_height.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_height.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxHeight::CSSBoxHeight()
+CSSValueHeight::CSSValueHeight()
 : type(type_auto)
 {
 }
 
-void CSSBoxHeight::compute(const CSSBoxHeight *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_height_auto)
+void CSSValueHeight::compute(const CSSValueHeight *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_height_auto)
 {
 	if (type == type_inherit)
 	{
@@ -63,7 +63,7 @@ void CSSBoxHeight::compute(const CSSBoxHeight *parent, CSSResourceCache *layout,
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxHeight::to_string() const
+std::string CSSValueHeight::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_list_style_image.h"
+#include "API/CSSLayout/PropertyValues/css_value_list_style_image.h"
 
 namespace clan
 {
 
-CSSBoxListStyleImage::CSSBoxListStyleImage()
+CSSValueListStyleImage::CSSValueListStyleImage()
 : type(type_inherit)
 {
 }
 
-void CSSBoxListStyleImage::compute(const CSSBoxListStyleImage *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueListStyleImage::compute(const CSSValueListStyleImage *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxListStyleImage::compute(const CSSBoxListStyleImage *parent, CSSResour
 	// To do: absolute URI
 }
 
-std::string CSSBoxListStyleImage::to_string() const
+std::string CSSValueListStyleImage::to_string() const
 {
 	switch (type)
 	{

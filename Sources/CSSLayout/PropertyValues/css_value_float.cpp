@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_float.h"
+#include "API/CSSLayout/PropertyValues/css_value_float.h"
 
 namespace clan
 {
 
-CSSBoxFloat::CSSBoxFloat()
+CSSValueFloat::CSSValueFloat()
 : type(type_none)
 {
 }
 
-void CSSBoxFloat::compute(const CSSBoxFloat *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFloat::compute(const CSSValueFloat *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxFloat::compute(const CSSBoxFloat *parent, CSSResourceCache *layout, f
 	}
 }
 
-std::string CSSBoxFloat::to_string() const
+std::string CSSValueFloat::to_string() const
 {
 	switch (type)
 	{

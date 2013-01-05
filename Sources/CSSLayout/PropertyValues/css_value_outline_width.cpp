@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_outline_width.h"
-#include "API/CSSLayout/PropertyTypes/css_box_outline_style.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_outline_width.h"
+#include "API/CSSLayout/PropertyValues/css_value_outline_style.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxOutlineWidth::CSSBoxOutlineWidth()
+CSSValueOutlineWidth::CSSValueOutlineWidth()
 : type(type_medium)
 {
 }
 
-void CSSBoxOutlineWidth::compute(const CSSBoxOutlineWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxOutlineStyle &style)
+void CSSValueOutlineWidth::compute(const CSSValueOutlineWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueOutlineStyle &style)
 {
 	if (type == type_inherit)
 	{
@@ -58,26 +58,26 @@ void CSSBoxOutlineWidth::compute(const CSSBoxOutlineWidth *parent, CSSResourceCa
 	{
 	case type_thin:
 		type = type_length;
-		length = CSSBoxLength(1.0f, CSSBoxLength::type_px);
+		length = CSSLength(1.0f, CSSLength::type_px);
 		break;
 
 	case type_medium:
 		type = type_length;
-		length = CSSBoxLength(2.0f, CSSBoxLength::type_px);
+		length = CSSLength(2.0f, CSSLength::type_px);
 		break;
 
 	case type_thick:
 		type = type_length;
-		length = CSSBoxLength(3.0f, CSSBoxLength::type_px);
+		length = CSSLength(3.0f, CSSLength::type_px);
 		break;
 	default:
 		break;
 	}
 
-	if (style.type == CSSBoxOutlineStyle::type_hidden || style.type == CSSBoxOutlineStyle::type_none)
+	if (style.type == CSSValueOutlineStyle::type_hidden || style.type == CSSValueOutlineStyle::type_none)
 	{
 		type = type_length;
-		length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+		length = CSSLength(0.0f, CSSLength::type_px);
 	}
 
 	if (type == type_length)
@@ -86,7 +86,7 @@ void CSSBoxOutlineWidth::compute(const CSSBoxOutlineWidth *parent, CSSResourceCa
 	}
 }
 
-std::string CSSBoxOutlineWidth::to_string() const
+std::string CSSValueOutlineWidth::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_flex_direction.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_direction.h"
 
 namespace clan
 {
 
-CSSBoxFlexDirection::CSSBoxFlexDirection()
+CSSValueFlexDirection::CSSValueFlexDirection()
 : type(type_row)
 {
 }
 
-void CSSBoxFlexDirection::compute(const CSSBoxFlexDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFlexDirection::compute(const CSSValueFlexDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxFlexDirection::compute(const CSSBoxFlexDirection *parent, CSSResource
 	}
 }
 
-std::string CSSBoxFlexDirection::to_string() const
+std::string CSSValueFlexDirection::to_string() const
 {
 	switch (type)
 	{

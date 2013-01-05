@@ -43,7 +43,7 @@ class CSSBoxElement;
 class CSSBoxText;
 class CSSBoxNode;
 class CSSBoxProperties;
-class CSSBoxLength;
+class CSSLength;
 class CSSLayoutTreeNode;
 class CSSInlineLayout;
 class CSSLayoutCursor;
@@ -59,12 +59,12 @@ public:
 
 	Callback_2<Image, Canvas &, const std::string &> cb_get_image;
 
-	CSSBoxLength compute_length(const CSSBoxLength &length, float em_size, float ex_size);
+	CSSLength compute_length(const CSSLength &length, float em_size, float ex_size);
 	std::vector<std::string> get_default_quotes();
 	Colorf get_default_color();
-	CSSBoxLength get_font_table_size(int size);
-	CSSBoxLength get_font_table_smaller(float em_size);
-	CSSBoxLength get_font_table_larger(float em_size);
+	CSSLength get_font_table_size(int size);
+	CSSLength get_font_table_smaller(float em_size);
+	CSSLength get_font_table_larger(float em_size);
 
 	Font &get_font(Canvas &canvas, const CSSBoxProperties &properties);
 	Image &get_image(Canvas &canvas, const std::string &url);

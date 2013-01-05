@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_cursor.h"
+#include "API/CSSLayout/PropertyValues/css_value_cursor.h"
 
 namespace clan
 {
 
-CSSBoxCursor::CSSBoxCursor()
+CSSValueCursor::CSSValueCursor()
 : type(type_inherit)
 {
 }
 
-void CSSBoxCursor::compute(const CSSBoxCursor *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueCursor::compute(const CSSValueCursor *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -55,7 +55,7 @@ void CSSBoxCursor::compute(const CSSBoxCursor *parent, CSSResourceCache *layout,
 	// To do: any relative URLs converted to absolute.
 }
 
-std::string CSSBoxCursor::to_string() const
+std::string CSSValueCursor::to_string() const
 {
 	switch (type)
 	{

@@ -33,20 +33,20 @@ namespace clan
 
 class CSSToken;
 class CSSBoxProperties;
-class CSSBoxLength;
-class CSSBoxProperty;
+class CSSLength;
+class CSSPropertyValue;
 
 class CSSPropertyParser
 {
 public:
 	virtual ~CSSPropertyParser() { }
 	virtual std::vector<std::string> get_names() = 0;
-	virtual void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set) = 0;
+	virtual void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set) = 0;
 
 protected:
 	CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);
 	bool is_length(const CSSToken &token);
-	bool parse_length(const CSSToken &token, CSSBoxLength &out_length);
+	bool parse_length(const CSSToken &token, CSSLength &out_length);
 	bool parse_integer(const std::string &value, int &out_int);
 	bool parse_color(const std::vector<CSSToken> &tokens, size_t &in_out_pos, Colorf &out_color);
 	static bool equals(const std::string &s1, const std::string &s2);

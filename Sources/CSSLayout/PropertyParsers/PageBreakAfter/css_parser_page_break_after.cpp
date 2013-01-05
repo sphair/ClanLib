@@ -40,24 +40,24 @@ std::vector<std::string> CSSParserPageBreakAfter::get_names()
 	return names;
 }
 
-void CSSParserPageBreakAfter::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserPageBreakAfter::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_auto;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_auto;
 		else if (equals(token.value, "always"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_always;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_always;
 		else if (equals(token.value, "avoid"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_avoid;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_avoid;
 		else if (equals(token.value, "left"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_left;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_left;
 		else if (equals(token.value, "right"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_right;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_right;
 		else if (equals(token.value, "inherit"))
-			properties.page_break_after.type = CSSBoxPageBreakAfter::type_inherit;
+			properties.page_break_after.type = CSSValuePageBreakAfter::type_inherit;
 	}
 	if (out_change_set)
 	{

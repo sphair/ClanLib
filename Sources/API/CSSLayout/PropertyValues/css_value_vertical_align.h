@@ -28,19 +28,19 @@
 
 #pragma once
 
-#include "../css_box_property.h"
-#include "../css_box_length.h"
+#include "../CSSDocument/css_property_value.h"
+#include "../CSSDocument/css_length.h"
 
 namespace clan
 {
 
-class CSSBoxLineHeight;
+class CSSValueLineHeight;
 
-class CSSBoxVerticalAlign : public CSSBoxProperty
+class CSSValueVerticalAlign : public CSSPropertyValue
 {
 public:
-	CSSBoxVerticalAlign();
-	void compute(const CSSBoxVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxLineHeight &line_height);
+	CSSValueVerticalAlign();
+	void compute(const CSSValueVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &line_height);
 	std::string to_string() const;
 
 	enum Type
@@ -59,7 +59,7 @@ public:
 	};
 	Type type;
 	float percentage;
-	CSSBoxLength length;
+	CSSLength length;
 };
 
 }

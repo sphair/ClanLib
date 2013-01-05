@@ -30,7 +30,7 @@
 #include "css_stacking_context.h"
 #include "css_layout_tree_node.h"
 #include "../BoxTree/css_box_element.h"
-#include "API/CSSLayout/PropertyTypes/css_box_z_index.h"
+#include "API/CSSLayout/PropertyValues/css_value_z_index.h"
 #include <algorithm>
 
 namespace clan

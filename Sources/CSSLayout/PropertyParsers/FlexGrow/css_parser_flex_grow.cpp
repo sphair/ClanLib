@@ -40,18 +40,18 @@ std::vector<std::string> CSSParserFlexGrow::get_names()
 	return names;
 }
 
-void CSSParserFlexGrow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFlexGrow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inherit"))
-			properties.flex_grow.type = CSSBoxFlexGrow::type_inherit;
+			properties.flex_grow.type = CSSValueFlexGrow::type_inherit;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
-		properties.flex_grow.type = CSSBoxFlexGrow::type_number;
+		properties.flex_grow.type = CSSValueFlexGrow::type_number;
 		properties.flex_grow.number = StringHelp::text_to_float(token.value);
 	}
 

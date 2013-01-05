@@ -28,9 +28,9 @@
 
 #include "CSSLayout/precomp.h"
 #include "get_cursor_box.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
-#include "CSSLayout/LayoutTree/css_block_formatting_context.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/LayoutTree/css_block_formatting_context.h"
 
 namespace clan
 {
@@ -47,7 +47,7 @@ bool CSSInlineLayoutGetCursorBox::node(CSSInlineGeneratedBox *cur)
 	if (text && text == text_node && cur->text_start <= pos && cur->text_end >= pos)
 	{
 		const CSSBoxProperties &properties = text->get_properties();
-		if (properties.visibility.type == CSSBoxVisibility::type_visible)
+		if (properties.visibility.type == CSSValueVisibility::type_visible)
 		{
 			Font font = graphics->get_font(properties);
 			FontMetrics metrics = graphics->get_font_metrics(font);
@@ -62,7 +62,7 @@ bool CSSInlineLayoutGetCursorBox::node(CSSInlineGeneratedBox *cur)
 	{
 		CSSLayoutTreeNode *object_node = cur->layout_node;
 		bool is_same_stacking_context = (stacking_context == object_node->get_stacking_context());
-		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSBoxPosition::type_static);
+		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context && !is_positioned)
 		{
 			if (object_node->get_cursor_box(graphics, resources, text_node, pos, box))

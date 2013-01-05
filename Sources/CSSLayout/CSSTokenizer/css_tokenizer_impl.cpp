@@ -32,7 +32,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/Text/string_help.h"
-#include "API/CSSLayout/css_token.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 
 namespace clan
 {

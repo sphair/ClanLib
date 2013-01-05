@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "CSSLayout/LayoutTree/css_layout_tree_node.h"
-#include "CSSLayout/BoxTree/css_box_element.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_tree_node.h"
+#include "CSSLayout/Layout/BoxTree/css_box_element.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 #include "inline_generated_box.h"
 
 namespace clan

@@ -40,11 +40,11 @@ std::vector<std::string> CSSParserListStyle::get_names()
 	return names;
 }
 
-void CSSParserListStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserListStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxListStyleType list_style_type;
-	CSSBoxListStylePosition list_style_position;
-	CSSBoxListStyleImage list_style_image;
+	CSSValueListStyleType list_style_type;
+	CSSValueListStylePosition list_style_position;
+	CSSValueListStyleImage list_style_image;
 	bool type_specified = false;
 	bool position_specified = false;
 	bool image_specified = false;
@@ -55,93 +55,93 @@ void CSSParserListStyle::parse(CSSBoxProperties &properties, const std::string &
 		CSSToken token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 		{
-			properties.list_style_type.type = CSSBoxListStyleType::type_inherit;
-			properties.list_style_position.type = CSSBoxListStylePosition::type_inherit;
-			properties.list_style_image.type = CSSBoxListStyleImage::type_inherit;
+			properties.list_style_type.type = CSSValueListStyleType::type_inherit;
+			properties.list_style_position.type = CSSValueListStylePosition::type_inherit;
+			properties.list_style_image.type = CSSValueListStyleImage::type_inherit;
 			return;
 		}
 		else if (token.type == CSSToken::type_ident)
 		{
 			if (!type_specified && equals(token.value, "disc"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_disc;
+				list_style_type.type = CSSValueListStyleType::type_disc;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "circle"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_circle;
+				list_style_type.type = CSSValueListStyleType::type_circle;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "square"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_square;
+				list_style_type.type = CSSValueListStyleType::type_square;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "decimal"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_decimal;
+				list_style_type.type = CSSValueListStyleType::type_decimal;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "decimal-leading-zero"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_decimal_leading_zero;
+				list_style_type.type = CSSValueListStyleType::type_decimal_leading_zero;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "lower-roman"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_lower_roman;
+				list_style_type.type = CSSValueListStyleType::type_lower_roman;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "upper-roman"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_upper_roman;
+				list_style_type.type = CSSValueListStyleType::type_upper_roman;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "lower-greek"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_lower_greek;
+				list_style_type.type = CSSValueListStyleType::type_lower_greek;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "lower-latin"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_lower_latin;
+				list_style_type.type = CSSValueListStyleType::type_lower_latin;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "upper-latin"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_upper_latin;
+				list_style_type.type = CSSValueListStyleType::type_upper_latin;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "armenian"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_armenian;
+				list_style_type.type = CSSValueListStyleType::type_armenian;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "georgian"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_georgian;
+				list_style_type.type = CSSValueListStyleType::type_georgian;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "lower-alpha"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_lower_alpha;
+				list_style_type.type = CSSValueListStyleType::type_lower_alpha;
 				type_specified = true;
 			}
 			else if (!type_specified && equals(token.value, "upper-alpha"))
 			{
-				list_style_type.type = CSSBoxListStyleType::type_upper_alpha;
+				list_style_type.type = CSSValueListStyleType::type_upper_alpha;
 				type_specified = true;
 			}
 			else if (equals(token.value, "none"))
 			{
 				if (!type_specified && !image_specified) // This copies Firefox' behavior - unclear in the standard if it is correct or not.
 				{
-					list_style_type.type = CSSBoxListStyleType::type_none;
+					list_style_type.type = CSSValueListStyleType::type_none;
 					type_specified = true;
 				}
 				else if (!image_specified)
 				{
-					list_style_image.type = CSSBoxListStyleImage::type_none;
+					list_style_image.type = CSSValueListStyleImage::type_none;
 					image_specified = true;
 				}
 				else
@@ -152,12 +152,12 @@ void CSSParserListStyle::parse(CSSBoxProperties &properties, const std::string &
 			}
 			else if (!position_specified && equals(token.value, "inside"))
 			{
-				list_style_position.type = CSSBoxListStylePosition::type_inside;
+				list_style_position.type = CSSValueListStylePosition::type_inside;
 				position_specified = true;
 			}
 			else if (!position_specified && equals(token.value, "outside"))
 			{
-				list_style_position.type = CSSBoxListStylePosition::type_outside;
+				list_style_position.type = CSSValueListStylePosition::type_outside;
 				position_specified = true;
 			}
 			else
@@ -168,7 +168,7 @@ void CSSParserListStyle::parse(CSSBoxProperties &properties, const std::string &
 		}
 		else if (!image_specified && token.type == CSSToken::type_uri)
 		{
-			list_style_image.type = CSSBoxListStyleImage::type_uri;
+			list_style_image.type = CSSValueListStyleImage::type_uri;
 			list_style_image.url = token.value;
 			image_specified = true;
 		}

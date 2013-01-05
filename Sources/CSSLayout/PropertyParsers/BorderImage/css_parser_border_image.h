@@ -38,14 +38,14 @@ class CSSParserBorderImage : public CSSPropertyParser
 {
 public:
 	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set);
+	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set);
 	
 private:
-	bool parse_source(CSSBoxBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_slice(CSSBoxBorderImageSlice &border_image_slice, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_width(CSSBoxBorderImageWidth &border_image_width, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_outset(CSSBoxBorderImageOutset &border_image_outset, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_repeat(CSSBoxBorderImageRepeat &border_image_repeat, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_source(CSSValueBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_slice(CSSValueBorderImageSlice &border_image_slice, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_width(CSSValueBorderImageWidth &border_image_width, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_outset(CSSValueBorderImageOutset &border_image_outset, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_repeat(CSSValueBorderImageRepeat &border_image_repeat, size_t &parse_pos, const std::vector<CSSToken> &tokens);
 };
 
 }

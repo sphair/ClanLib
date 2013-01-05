@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_style.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_style.h"
 
 namespace clan
 {
 
-CSSBoxBorderStyle::CSSBoxBorderStyle()
+CSSValueBorderStyle::CSSValueBorderStyle()
 : type(type_none)
 {
 }
 
-void CSSBoxBorderStyle::compute(const CSSBoxBorderStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderStyle::compute(const CSSValueBorderStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxBorderStyle::compute(const CSSBoxBorderStyle *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxBorderStyle::to_string() const
+std::string CSSValueBorderStyle::to_string() const
 {
 	switch (type)
 	{

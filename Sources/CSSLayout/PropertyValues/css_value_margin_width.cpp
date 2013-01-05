@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_margin_width.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_margin_width.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxMarginWidth::CSSBoxMarginWidth()
-: type(type_length), length(0, CSSBoxLength::type_px), percentage(0.0f)
+CSSValueMarginWidth::CSSValueMarginWidth()
+: type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
 {
 }
 
-void CSSBoxMarginWidth::compute(const CSSBoxMarginWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueMarginWidth::compute(const CSSValueMarginWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -51,7 +51,7 @@ void CSSBoxMarginWidth::compute(const CSSBoxMarginWidth *parent, CSSResourceCach
 		else
 		{
 			type = type_length;
-			length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			length = CSSLength(0.0f, CSSLength::type_px);
 		}
 	}
 
@@ -59,7 +59,7 @@ void CSSBoxMarginWidth::compute(const CSSBoxMarginWidth *parent, CSSResourceCach
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxMarginWidth::to_string() const
+std::string CSSValueMarginWidth::to_string() const
 {
 	switch (type)
 	{

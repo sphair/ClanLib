@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxFontFamilyName
+class CSSValueFontFamilyName
 {
 public:
-	CSSBoxFontFamilyName() : type(type_serif) { }
-	CSSBoxFontFamilyName(const std::string &name) : type(type_family_name), name(name) { }
+	CSSValueFontFamilyName() : type(type_serif) { }
+	CSSValueFontFamilyName(const std::string &name) : type(type_family_name), name(name) { }
 
 	enum Type
 	{
@@ -52,11 +52,11 @@ public:
 	std::string name;
 };
 
-class CSSBoxFontFamily : public CSSBoxProperty
+class CSSValueFontFamily : public CSSPropertyValue
 {
 public:
-	CSSBoxFontFamily();
-	void compute(const CSSBoxFontFamily *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueFontFamily();
+	void compute(const CSSValueFontFamily *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type
@@ -65,7 +65,7 @@ public:
 		type_inherit
 	};
 	Type type;
-	std::vector<CSSBoxFontFamilyName> names;
+	std::vector<CSSValueFontFamilyName> names;
 };
 
 }

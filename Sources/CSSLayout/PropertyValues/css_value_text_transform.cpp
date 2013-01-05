@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_text_transform.h"
+#include "API/CSSLayout/PropertyValues/css_value_text_transform.h"
 
 namespace clan
 {
 
-CSSBoxTextTransform::CSSBoxTextTransform()
+CSSValueTextTransform::CSSValueTextTransform()
 : type(type_inherit)
 {
 }
 
-void CSSBoxTextTransform::compute(const CSSBoxTextTransform *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueTextTransform::compute(const CSSValueTextTransform *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxTextTransform::compute(const CSSBoxTextTransform *parent, CSSResource
 	}
 }
 
-std::string CSSBoxTextTransform::to_string() const
+std::string CSSValueTextTransform::to_string() const
 {
 	switch (type)
 	{

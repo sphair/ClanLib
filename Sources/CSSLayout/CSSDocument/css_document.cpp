@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "css_document_impl.h"
@@ -83,13 +83,13 @@ void CSSDocument::add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std
 	impl->sheets.push_back(std::shared_ptr<CSSDocumentSheet>(new CSSDocumentSheet(origin, tokenizer, base_uri)));
 }
 
-CSSPropertyList CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
+CSSPropertyValueList CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
 {
 	DomSelectNode select_node(node);
 	return select(&select_node, pseudo_element);
 }
 
-CSSPropertyList CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
+CSSPropertyValueList CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
 {
 	// CSS2.1: 6.4.1 Cascading order
 
@@ -98,7 +98,7 @@ CSSPropertyList CSSDocument::select(CSSSelectNode *node, const std::string &pseu
 	//      If you're the one guy in the world actually doing this, feel free to refactor the code!
 
 	std::vector<CSSRulesetMatch> rulesets = impl->select_rulesets(node, pseudo_element);
-	CSSPropertyList properties;
+	CSSPropertyValueList properties;
 	for (size_t i = rulesets.size(); i > 0; i--)
 	{
 		for (size_t j = rulesets[i-1].ruleset->properties.size(); j > 0; j--)
@@ -118,7 +118,7 @@ CSSPropertyList CSSDocument::select(CSSSelectNode *node, const std::string &pseu
 	return properties;
 }
 
-CSSPropertyList CSSDocument::get_style_properties(const std::string &style_string, const std::string &base_uri)
+CSSPropertyValueList CSSDocument::get_style_properties(const std::string &style_string, const std::string &base_uri)
 {
 	CSSTokenizer tokenizer(style_string);
 	CSSToken token;
@@ -153,7 +153,7 @@ CSSPropertyList CSSDocument::get_style_properties(const std::string &style_strin
 		}
 	}
 
-	CSSPropertyList properties;
+	CSSPropertyValueList properties;
 	for (size_t i = property_list.size(); i > 0; i--)
 		properties.push_back(property_list[i - 1]);
 

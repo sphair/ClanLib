@@ -40,26 +40,26 @@ std::vector<std::string> CSSParserAlignContent::get_names()
 	return names;
 }
 
-void CSSParserAlignContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserAlignContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "flex-start"))
-			properties.align_content.type = CSSBoxAlignContent::type_flex_start;
+			properties.align_content.type = CSSValueAlignContent::type_flex_start;
 		else if (equals(token.value, "flex-end"))
-			properties.align_content.type = CSSBoxAlignContent::type_flex_end;
+			properties.align_content.type = CSSValueAlignContent::type_flex_end;
 		else if (equals(token.value, "center"))
-			properties.align_content.type = CSSBoxAlignContent::type_center;
+			properties.align_content.type = CSSValueAlignContent::type_center;
 		else if (equals(token.value, "space-between"))
-			properties.align_content.type = CSSBoxAlignContent::type_space_between;
+			properties.align_content.type = CSSValueAlignContent::type_space_between;
 		else if (equals(token.value, "space-around"))
-			properties.align_content.type = CSSBoxAlignContent::type_space_around;
+			properties.align_content.type = CSSValueAlignContent::type_space_around;
 		else if (equals(token.value, "stretch"))
-			properties.align_content.type = CSSBoxAlignContent::type_stretch;
+			properties.align_content.type = CSSValueAlignContent::type_stretch;
 		else if (equals(token.value, "inherit"))
-			properties.align_content.type = CSSBoxAlignContent::type_inherit;
+			properties.align_content.type = CSSValueAlignContent::type_inherit;
 	}
 	if (out_change_set)
 	{

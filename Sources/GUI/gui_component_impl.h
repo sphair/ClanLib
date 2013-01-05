@@ -34,6 +34,7 @@
 #include "API/Core/Math/rect.h"
 #include "API/GUI/gui_component.h"
 #include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "Layout/gui_css_used_values.h"
 #include <vector>
 #include <map>

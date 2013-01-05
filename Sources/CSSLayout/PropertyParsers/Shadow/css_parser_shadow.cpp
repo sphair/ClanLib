@@ -40,25 +40,25 @@ std::vector<std::string> CSSParserShadow::get_names()
 	return names;
 }
 
-void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	size_t last_pos = pos;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSBoxShadow box_shadow;
+	CSSValueShadow box_shadow;
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		box_shadow.type = CSSBoxShadow::type_inherit;
+		box_shadow.type = CSSValueShadow::type_inherit;
 	}
 	else if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "none"))
 	{
-		box_shadow.type = CSSBoxShadow::type_none;
+		box_shadow.type = CSSValueShadow::type_none;
 	}
 	else
 	{
-		box_shadow.type = CSSBoxShadow::type_shadows;
+		box_shadow.type = CSSValueShadow::type_shadows;
 		box_shadow.shadows.clear();
 		while (true)
 		{
@@ -71,7 +71,7 @@ void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &nam
 			}
 
 			int num_lengths;
-			CSSBoxLength lengths[4];
+			CSSLength lengths[4];
 			for (num_lengths = 0; num_lengths < 4 && is_length(token); num_lengths++)
 			{
 				if (!parse_length(token, lengths[num_lengths]))
@@ -89,7 +89,7 @@ void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &nam
 				token = next_token(pos, tokens);
 			}
 
-			CSSBoxShadow::Shadow shadow;
+			CSSValueShadow::Shadow shadow;
 			shadow.inset = inset;
 			shadow.color = color;
 			if (num_lengths == 2)

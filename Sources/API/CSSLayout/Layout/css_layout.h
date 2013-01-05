@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "api_csslayout.h"
-#include "../Core/Signals/callback_2.h"
+#include "../api_csslayout.h"
+#include "../../Core/Signals/callback_2.h"
 #include <memory>
 
 namespace clan

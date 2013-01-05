@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_font_family.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_font_family.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxFontFamily::CSSBoxFontFamily()
+CSSValueFontFamily::CSSValueFontFamily()
 : type(type_inherit)
 {
 }
 
-void CSSBoxFontFamily::compute(const CSSBoxFontFamily *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFontFamily::compute(const CSSValueFontFamily *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -51,12 +51,12 @@ void CSSBoxFontFamily::compute(const CSSBoxFontFamily *parent, CSSResourceCache 
 		{
 			type = type_names;
 			names.clear();
-			names.push_back(CSSBoxFontFamilyName());
+			names.push_back(CSSValueFontFamilyName());
 		}
 	}
 }
 
-std::string CSSBoxFontFamily::to_string() const
+std::string CSSValueFontFamily::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";
@@ -69,22 +69,22 @@ std::string CSSBoxFontFamily::to_string() const
 		switch (names[i].type)
 		{
 		default:
-		case CSSBoxFontFamilyName::type_family_name:
+		case CSSValueFontFamilyName::type_family_name:
 			s += string_format("\"%1\"", names[i].name);
 			break;
-		case CSSBoxFontFamilyName::type_serif:
+		case CSSValueFontFamilyName::type_serif:
 			s += "serif";
 			break;
-		case CSSBoxFontFamilyName::type_sans_serif:
+		case CSSValueFontFamilyName::type_sans_serif:
 			s += "sans-serif";
 			break;
-		case CSSBoxFontFamilyName::type_cursive:
+		case CSSValueFontFamilyName::type_cursive:
 			s += "cursive";
 			break;
-		case CSSBoxFontFamilyName::type_fantasy:
+		case CSSValueFontFamilyName::type_fantasy:
 			s += "fantasy";
 			break;
-		case CSSBoxFontFamilyName::type_monospace:
+		case CSSValueFontFamilyName::type_monospace:
 			s += "monospace";
 			break;
 		}

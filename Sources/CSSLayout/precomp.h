@@ -48,5 +48,5 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/GUI/gui_component.h"
-#include "API/CSSLayout/css_tokenizer.h"
-#include "API/CSSLayout/css_token.h"
+#include "API/CSSLayout/CSSTokenizer/css_tokenizer.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"

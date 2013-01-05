@@ -40,22 +40,22 @@ std::vector<std::string> CSSParserTextTransform::get_names()
 	return names;
 }
 
-void CSSParserTextTransform::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserTextTransform::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "capitalize"))
-			properties.text_transform.type = CSSBoxTextTransform::type_capitalize;
+			properties.text_transform.type = CSSValueTextTransform::type_capitalize;
 		else if (equals(token.value, "uppercase"))
-			properties.text_transform.type = CSSBoxTextTransform::type_uppercase;
+			properties.text_transform.type = CSSValueTextTransform::type_uppercase;
 		else if (equals(token.value, "lowercase"))
-			properties.text_transform.type = CSSBoxTextTransform::type_lowercase;
+			properties.text_transform.type = CSSValueTextTransform::type_lowercase;
 		else if (equals(token.value, "none"))
-			properties.text_transform.type = CSSBoxTextTransform::type_none;
+			properties.text_transform.type = CSSValueTextTransform::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.text_transform.type = CSSBoxTextTransform::type_inherit;
+			properties.text_transform.type = CSSValueTextTransform::type_inherit;
 	}
 	if (out_change_set)
 	{

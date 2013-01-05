@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/dom_select_node.h"
+#include "API/CSSLayout/CSSDocument/dom_select_node.h"
 #include "API/Core/XML/dom_named_node_map.h"
 #include "API/Core/XML/dom_attr.h"
 

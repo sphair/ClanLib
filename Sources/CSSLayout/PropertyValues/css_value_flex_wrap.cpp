@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_flex_wrap.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_wrap.h"
 
 namespace clan
 {
 
-CSSBoxFlexWrap::CSSBoxFlexWrap()
+CSSValueFlexWrap::CSSValueFlexWrap()
 : type(type_nowrap)
 {
 }
 
-void CSSBoxFlexWrap::compute(const CSSBoxFlexWrap *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFlexWrap::compute(const CSSValueFlexWrap *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxFlexWrap::compute(const CSSBoxFlexWrap *parent, CSSResourceCache *lay
 	}
 }
 
-std::string CSSBoxFlexWrap::to_string() const
+std::string CSSValueFlexWrap::to_string() const
 {
 	switch (type)
 	{

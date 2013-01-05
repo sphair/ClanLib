@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_spacing.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_spacing.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBorderSpacing::CSSBoxBorderSpacing()
+CSSValueBorderSpacing::CSSValueBorderSpacing()
 : type(type_inherit)
 {
 }
 
-void CSSBoxBorderSpacing::compute(const CSSBoxBorderSpacing *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderSpacing::compute(const CSSValueBorderSpacing *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -51,8 +51,8 @@ void CSSBoxBorderSpacing::compute(const CSSBoxBorderSpacing *parent, CSSResource
 		else
 		{
 			type = type_two_lengths;
-			length1 = CSSBoxLength(0.0f, CSSBoxLength::type_px);
-			length2 = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			length1 = CSSLength(0.0f, CSSLength::type_px);
+			length2 = CSSLength(0.0f, CSSLength::type_px);
 		}
 	}
 
@@ -66,7 +66,7 @@ void CSSBoxBorderSpacing::compute(const CSSBoxBorderSpacing *parent, CSSResource
 	length2 = layout->compute_length(length2, em_size, ex_size);
 }
 
-std::string CSSBoxBorderSpacing::to_string() const
+std::string CSSValueBorderSpacing::to_string() const
 {
 	switch (type)
 	{

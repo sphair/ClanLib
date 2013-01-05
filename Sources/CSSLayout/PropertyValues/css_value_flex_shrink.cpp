@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_flex_shrink.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_shrink.h"
 
 namespace clan
 {
 
-CSSBoxFlexShrink::CSSBoxFlexShrink()
+CSSValueFlexShrink::CSSValueFlexShrink()
 : type(type_number), number(0.0f)
 {
 }
 
-void CSSBoxFlexShrink::compute(const CSSBoxFlexShrink *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueFlexShrink::compute(const CSSValueFlexShrink *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -53,7 +53,7 @@ void CSSBoxFlexShrink::compute(const CSSBoxFlexShrink *parent, CSSResourceCache 
 	}
 }
 
-std::string CSSBoxFlexShrink::to_string() const
+std::string CSSValueFlexShrink::to_string() const
 {
 	switch (type)
 	{

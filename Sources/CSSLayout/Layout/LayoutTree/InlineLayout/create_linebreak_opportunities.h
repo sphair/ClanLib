@@ -40,7 +40,7 @@ public:
 	bool node(CSSInlineGeneratedBox *cur);
 
 private:
-	bool should_break_at_end_of_spaces(const CSSBoxWhiteSpace &whitespace);
+	bool should_break_at_end_of_spaces(const CSSValueWhiteSpace &whitespace);
 
 	bool prev_space;
 	std::vector<CSSInlineLineBreakOpportunity> &linebreak_opportunities;

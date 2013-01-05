@@ -7,7 +7,7 @@ namespace clan
 class CSSProperty;
 class CSSPropertyParser;
 class CSSBoxProperties;
-class CSSBoxProperty;
+class CSSPropertyValue;
 
 class CSSPropertyParsers
 {
@@ -15,7 +15,7 @@ public:
 	CSSPropertyParsers();
 	~CSSPropertyParsers();
 
-	void parse(CSSBoxProperties &properties, const CSSProperty &property, std::map<std::string, CSSBoxProperty *> *out_change_set = 0);
+	void parse(CSSBoxProperties &properties, const CSSProperty &property, std::map<std::string, CSSPropertyValue *> *out_change_set = 0);
 
 private:
 	void add(CSSPropertyParser *parser);

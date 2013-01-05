@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserFontStyle::get_names()
 	return names;
 }
 
-void CSSParserFontStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFontStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.font_style.type = CSSBoxFontStyle::type_normal;
+			properties.font_style.type = CSSValueFontStyle::type_normal;
 		else if (equals(token.value, "italic"))
-			properties.font_style.type = CSSBoxFontStyle::type_italic;
+			properties.font_style.type = CSSValueFontStyle::type_italic;
 		else if (equals(token.value, "oblique"))
-			properties.font_style.type = CSSBoxFontStyle::type_oblique;
+			properties.font_style.type = CSSValueFontStyle::type_oblique;
 		else if (equals(token.value, "inherit"))
-			properties.font_style.type = CSSBoxFontStyle::type_inherit;
+			properties.font_style.type = CSSValueFontStyle::type_inherit;
 	}
 	if (out_change_set)
 	{

@@ -40,9 +40,9 @@ std::vector<std::string> CSSParserBorderStyle::get_names()
 	return names;
 }
 
-void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderStyle border_styles[4];
+	CSSValueBorderStyle border_styles[4];
 	int count;
 	size_t pos = 0;
 	for (count = 0; count < 4; count++)
@@ -52,52 +52,52 @@ void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string
 		{
 			if (equals(token.value, "none"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_none;
+				border_styles[count].type = CSSValueBorderStyle::type_none;
 			}
 			else if (equals(token.value, "hidden"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_hidden;
+				border_styles[count].type = CSSValueBorderStyle::type_hidden;
 			}
 			else if (equals(token.value, "dotted"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_dotted;
+				border_styles[count].type = CSSValueBorderStyle::type_dotted;
 			}
 			else if (equals(token.value, "dashed"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_dashed;
+				border_styles[count].type = CSSValueBorderStyle::type_dashed;
 			}
 			else if (equals(token.value, "solid"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_solid;
+				border_styles[count].type = CSSValueBorderStyle::type_solid;
 			}
 			else if (equals(token.value, "double"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_double;
+				border_styles[count].type = CSSValueBorderStyle::type_double;
 			}
 			else if (equals(token.value, "groove"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_groove;
+				border_styles[count].type = CSSValueBorderStyle::type_groove;
 			}
 			else if (equals(token.value, "ridge"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_ridge;
+				border_styles[count].type = CSSValueBorderStyle::type_ridge;
 			}
 			else if (equals(token.value, "inset"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_inset;
+				border_styles[count].type = CSSValueBorderStyle::type_inset;
 			}
 			else if (equals(token.value, "outset"))
 			{
-				border_styles[count].type = CSSBoxBorderStyle::type_outset;
+				border_styles[count].type = CSSValueBorderStyle::type_outset;
 			}
 			else if (equals(token.value, "inherit"))
 			{
 				if (count == 0 && pos == tokens.size())
 				{
-					properties.border_style_left.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_top.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_right.type = CSSBoxBorderStyle::type_inherit;
-					properties.border_style_bottom.type = CSSBoxBorderStyle::type_inherit;
+					properties.border_style_left.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_top.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_right.type = CSSValueBorderStyle::type_inherit;
+					properties.border_style_bottom.type = CSSValueBorderStyle::type_inherit;
 				}
 				else
 				{

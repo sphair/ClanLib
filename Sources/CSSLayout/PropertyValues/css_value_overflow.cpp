@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_overflow.h"
+#include "API/CSSLayout/PropertyValues/css_value_overflow.h"
 
 namespace clan
 {
 
-CSSBoxOverflow::CSSBoxOverflow()
+CSSValueOverflow::CSSValueOverflow()
 : type(type_visible)
 {
 }
 
-void CSSBoxOverflow::compute(const CSSBoxOverflow *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueOverflow::compute(const CSSValueOverflow *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxOverflow::compute(const CSSBoxOverflow *parent, CSSResourceCache *lay
 	}
 }
 
-std::string CSSBoxOverflow::to_string() const
+std::string CSSValueOverflow::to_string() const
 {
 	switch (type)
 	{

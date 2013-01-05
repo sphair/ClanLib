@@ -40,43 +40,43 @@ std::vector<std::string> CSSParserBorderImageWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.border_image_width.type = CSSBoxBorderImageWidth::type_inherit;
+		properties.border_image_width.type = CSSValueBorderImageWidth::type_inherit;
 	}
 	else
 	{
 		int num_lengths;
-		CSSBoxBorderImageWidth::ValueType value_types[4];
-		CSSBoxLength lengths[4];
+		CSSValueBorderImageWidth::ValueType value_types[4];
+		CSSLength lengths[4];
 		float percentages[4] = { 0, 0, 0, 0 };
 		float numbers[4] = { 0, 0, 0, 0 };
 		for (num_lengths = 0; num_lengths < 4; num_lengths++)
 		{
 			if (is_length(token))
 			{
-				value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_length;
+				value_types[num_lengths] = CSSValueBorderImageWidth::value_type_length;
 				if (!parse_length(token, lengths[num_lengths]))
 					return;
 			}
 			else if (token.type == CSSToken::type_number)
 			{
-				value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_number;
+				value_types[num_lengths] = CSSValueBorderImageWidth::value_type_number;
 				numbers[num_lengths] = StringHelp::text_to_float(token.value);
 			}
 			else if (token.type == CSSToken::type_percentage)
 			{
-				value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_percentage;
+				value_types[num_lengths] = CSSValueBorderImageWidth::value_type_percentage;
 				percentages[num_lengths] = StringHelp::text_to_float(token.value);
 			}
 			else if (token.type == CSSToken::type_ident && equals(token.value, "auto"))
 			{
-				value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_auto;
+				value_types[num_lengths] = CSSValueBorderImageWidth::value_type_auto;
 			}
 			else
 			{
@@ -88,7 +88,7 @@ void CSSParserBorderImageWidth::parse(CSSBoxProperties &properties, const std::s
 		if (num_lengths < 1 || pos != tokens.size())
 			return;
 
-		properties.border_image_width.type = CSSBoxBorderImageWidth::type_values;
+		properties.border_image_width.type = CSSValueBorderImageWidth::type_values;
 		if (num_lengths == 1)
 		{
 			for (int i = 1; i < 4; i++)

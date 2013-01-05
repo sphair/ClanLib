@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserTextDecoration::get_names()
 	return names;
 }
 
-void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -48,11 +48,11 @@ void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::str
 	{
 		if (equals(token.value, "none"))
 		{
-			properties.text_decoration.type = CSSBoxTextDecoration::type_none;
+			properties.text_decoration.type = CSSValueTextDecoration::type_none;
 		}
 		else if (equals(token.value, "inherit"))
 		{
-			properties.text_decoration.type = CSSBoxTextDecoration::type_inherit;
+			properties.text_decoration.type = CSSValueTextDecoration::type_inherit;
 		}
 		else
 		{
@@ -84,7 +84,7 @@ void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::str
 
 			if (underline < 2 && overline < 2 && line_through < 2 && blink < 2)
 			{
-				properties.text_decoration.type = CSSBoxTextDecoration::type_values;
+				properties.text_decoration.type = CSSValueTextDecoration::type_values;
 				properties.text_decoration.underline = (underline == 1);
 				properties.text_decoration.overline = (overline == 1);
 				properties.text_decoration.line_through = (line_through == 1);

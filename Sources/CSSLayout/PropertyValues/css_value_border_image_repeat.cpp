@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_image_repeat.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_repeat.h"
 
 namespace clan
 {
 
-CSSBoxBorderImageRepeat::CSSBoxBorderImageRepeat()
+CSSValueBorderImageRepeat::CSSValueBorderImageRepeat()
 : type(type_values), repeat_x(repeat_type_stretch), repeat_y(repeat_type_stretch)
 {
 }
 
-void CSSBoxBorderImageRepeat::compute(const CSSBoxBorderImageRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBorderImageRepeat::compute(const CSSValueBorderImageRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxBorderImageRepeat::compute(const CSSBoxBorderImageRepeat *parent, CSS
 	}
 }
 
-std::string CSSBoxBorderImageRepeat::to_string() const
+std::string CSSValueBorderImageRepeat::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_empty_cells.h"
+#include "API/CSSLayout/PropertyValues/css_value_empty_cells.h"
 
 namespace clan
 {
 
-CSSBoxEmptyCells::CSSBoxEmptyCells()
+CSSValueEmptyCells::CSSValueEmptyCells()
 : type(type_inherit)
 {
 }
 
-void CSSBoxEmptyCells::compute(const CSSBoxEmptyCells *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueEmptyCells::compute(const CSSValueEmptyCells *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxEmptyCells::compute(const CSSBoxEmptyCells *parent, CSSResourceCache 
 	}
 }
 
-std::string CSSBoxEmptyCells::to_string() const
+std::string CSSValueEmptyCells::to_string() const
 {
 	switch (type)
 	{

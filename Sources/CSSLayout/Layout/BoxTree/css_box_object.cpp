@@ -27,7 +27,7 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_replaced_component.h"
+#include "API/CSSLayout/Layout/css_replaced_component.h"
 #include "css_box_object.h"
 
 namespace clan

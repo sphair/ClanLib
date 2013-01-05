@@ -32,7 +32,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/Display/2D/image.h"
-#include "API/CSSLayout/css_token.h"
 #include "Layout/gui_css_box_visitor.h"
 #include "Layout/gui_layout_content.h"
 #include "gui_component_impl.h"
@@ -40,7 +39,7 @@
 #include "gui_css_strings.h"
 #include "gui_component_select_node.h"
 #include "API/Display/2D/span_layout.h"
-#include "../CSSLayout/LayoutTree/css_used_value.h"
+#include "../CSSLayout/Layout/LayoutTree/css_used_value.h"
 #include "API/Display/Font/font_metrics.h"
 
 namespace clan
@@ -296,10 +295,10 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 
 	switch (properties.text_align.type)
 	{
-		case CSSBoxTextAlign::type_left: span.set_align(span_left); break;
-		case CSSBoxTextAlign::type_center: span.set_align(span_center); break;
-		case CSSBoxTextAlign::type_right: span.set_align(span_right); break;
-		case CSSBoxTextAlign::type_justify: span.set_align(span_justify); break;
+		case CSSValueTextAlign::type_left: span.set_align(span_left); break;
+		case CSSValueTextAlign::type_center: span.set_align(span_center); break;
+		case CSSValueTextAlign::type_right: span.set_align(span_right); break;
+		case CSSValueTextAlign::type_justify: span.set_align(span_justify); break;
 		default: break;
 	}
 
@@ -319,7 +318,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 		std::string search_name;
 		switch (properties.font_family.names[i].type)
 		{
-		case CSSBoxFontFamilyName::type_family_name:
+		case CSSValueFontFamilyName::type_family_name:
 			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
 			//FIXME: See CSSResourceCache, creating font_families list
 			//if (font_families.find(search_name) != font_families.end())
@@ -329,17 +328,17 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 			//}
 			break;
 		default:
-		case CSSBoxFontFamilyName::type_serif:
-		case CSSBoxFontFamilyName::type_cursive:
-		case CSSBoxFontFamilyName::type_fantasy:
+		case CSSValueFontFamilyName::type_serif:
+		case CSSValueFontFamilyName::type_cursive:
+		case CSSValueFontFamilyName::type_fantasy:
 			font_name = "Times New Roman"; // Ugliest font on the planet.
 			matched = true;
 			break;
-		case CSSBoxFontFamilyName::type_sans_serif:
+		case CSSValueFontFamilyName::type_sans_serif:
 			font_name = "Arial";
 			matched = true;
 			break;
-		case CSSBoxFontFamilyName::type_monospace:
+		case CSSValueFontFamilyName::type_monospace:
 			font_name = "Courier New";
 			matched = true;
 			break;
@@ -353,26 +352,26 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 	int font_weight = 400;
 	switch (properties.font_weight.type)
 	{
-	case CSSBoxFontWeight::type_100: font_weight = 100; break;
-	case CSSBoxFontWeight::type_200: font_weight = 200; break;
-	case CSSBoxFontWeight::type_300: font_weight = 300; break;
-	case CSSBoxFontWeight::type_400: font_weight = 400; break;
-	case CSSBoxFontWeight::type_500: font_weight = 500; break;
-	case CSSBoxFontWeight::type_600: font_weight = 600; break;
-	case CSSBoxFontWeight::type_700: font_weight = 700; break;
-	case CSSBoxFontWeight::type_800: font_weight = 800; break;
-	case CSSBoxFontWeight::type_900: font_weight = 900; break;
-	case CSSBoxFontWeight::type_normal: font_weight = 400; break;
-	case CSSBoxFontWeight::type_bold: font_weight = 700; break;
-	case CSSBoxFontWeight::type_bolder: font_weight = 900; break;
-	case CSSBoxFontWeight::type_lighter: font_weight = 300; break;
+	case CSSValueFontWeight::type_100: font_weight = 100; break;
+	case CSSValueFontWeight::type_200: font_weight = 200; break;
+	case CSSValueFontWeight::type_300: font_weight = 300; break;
+	case CSSValueFontWeight::type_400: font_weight = 400; break;
+	case CSSValueFontWeight::type_500: font_weight = 500; break;
+	case CSSValueFontWeight::type_600: font_weight = 600; break;
+	case CSSValueFontWeight::type_700: font_weight = 700; break;
+	case CSSValueFontWeight::type_800: font_weight = 800; break;
+	case CSSValueFontWeight::type_900: font_weight = 900; break;
+	case CSSValueFontWeight::type_normal: font_weight = 400; break;
+	case CSSValueFontWeight::type_bold: font_weight = 700; break;
+	case CSSValueFontWeight::type_bolder: font_weight = 900; break;
+	case CSSValueFontWeight::type_lighter: font_weight = 300; break;
 	}
 	bool italic = false;
 	switch (properties.font_style.type)
 	{
-	case CSSBoxFontStyle::type_normal: italic = false; break;
-	case CSSBoxFontStyle::type_italic: italic = true; break;
-	case CSSBoxFontStyle::type_oblique: italic = true; break;
+	case CSSValueFontStyle::type_normal: italic = false; break;
+	case CSSValueFontStyle::type_italic: italic = true; break;
+	case CSSValueFontStyle::type_oblique: italic = true; break;
 	}
 
 	FontDescription font_desc;
@@ -395,10 +394,10 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &
 
 	switch (properties.text_align.type)
 	{
-		case CSSBoxTextAlign::type_left: break;
-		case CSSBoxTextAlign::type_center: offset_x = (content_box.get_width() - text_size.width) / 2; break;
-		case CSSBoxTextAlign::type_right: offset_x = (content_box.get_width() - text_size.width); break;
-		case CSSBoxTextAlign::type_justify: break;		// Single line text is not justified
+		case CSSValueTextAlign::type_left: break;
+		case CSSValueTextAlign::type_center: offset_x = (content_box.get_width() - text_size.width) / 2; break;
+		case CSSValueTextAlign::type_right: offset_x = (content_box.get_width() - text_size.width); break;
+		case CSSValueTextAlign::type_justify: break;		// Single line text is not justified
 		default: break;
 	}
 

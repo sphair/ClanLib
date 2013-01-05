@@ -28,12 +28,12 @@
 
 #pragma once
 
-#include "../Core/Text/string_help.h"
+#include "../../Core/Text/string_help.h"
 
 namespace clan
 {
 
-class CSSBoxLength
+class CSSLength
 {
 public:
 	enum Type
@@ -49,12 +49,12 @@ public:
 		type_computed_px
 	};
 
-	CSSBoxLength()
+	CSSLength()
 	: type(type_px), value(0.0f)
 	{
 	}
 
-	CSSBoxLength(float value, Type type)
+	CSSLength(float value, Type type)
 	: type(type), value(value)
 	{
 	}

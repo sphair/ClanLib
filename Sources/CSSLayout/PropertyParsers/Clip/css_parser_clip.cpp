@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserClip::get_names()
 	return names;
 }
 
-void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
@@ -48,16 +48,16 @@ void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name,
 	{
 		if (equals(token.value, "auto"))
 		{
-			properties.clip.type = CSSBoxClip::type_auto;
+			properties.clip.type = CSSValueClip::type_auto;
 		}
 		else if (equals(token.value, "inherit"))
 		{
-			properties.clip.type = CSSBoxClip::type_inherit;
+			properties.clip.type = CSSValueClip::type_inherit;
 		}
 	}
 	else if (token.type == CSSToken::type_function && equals(token.value, "rect"))
 	{
-		CSSBoxLength rect[4];
+		CSSLength rect[4];
 		bool rect_auto[4] = { false, false, false, false };
 		bool comma_separated = false;
 		for (int dir = 0; dir < 4; dir++)
@@ -93,7 +93,7 @@ void CSSParserClip::parse(CSSBoxProperties &properties, const std::string &name,
 		token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_bracket_end && pos == tokens.size())
 		{
-			properties.clip.type = CSSBoxClip::type_rect;
+			properties.clip.type = CSSValueClip::type_rect;
 			properties.clip.top = rect[0];
 			properties.clip.right = rect[1];
 			properties.clip.bottom = rect[2];

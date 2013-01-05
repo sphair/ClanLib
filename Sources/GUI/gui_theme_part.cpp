@@ -29,21 +29,21 @@
 #include "GUI/precomp.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_manager.h"
-#include "API/CSSLayout/css_property_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
 #include "gui_theme_part_impl.h"
 #include "gui_component_select_node.h"
 #include "gui_component_impl.h"
 #include "gui_manager_impl.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_metrics.h"
-#include "CSSLayout/LayoutTree/css_background_renderer.h"
-#include "CSSLayout/LayoutTree/css_border_renderer.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/LayoutTree/css_background_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 #include "API/Display/2D/span_layout.h"
 
-#include "CSSLayout/BoxTree/css_property_parser.h"
-#include "CSSLayout/BoxTree/css_property_parsers.h"
-#include "API/CSSLayout/css_token.h"
+#include "CSSLayout/PropertyParsers/css_property_parser.h"
+#include "CSSLayout/PropertyParsers/css_property_parsers.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 
 namespace clan
 {
@@ -287,7 +287,7 @@ std::string GUIThemePart::get_property(const std::string &property, const std::s
 {
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
-	CSSPropertyList sheet_properties = document.select(&select_node);
+	CSSPropertyValueList sheet_properties = document.select(&select_node);
 
 	CSSPropertyParsers property_parsers;
 	for (size_t i = sheet_properties.size(); i > 0; i--)

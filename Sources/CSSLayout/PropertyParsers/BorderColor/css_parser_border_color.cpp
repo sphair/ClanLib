@@ -40,9 +40,9 @@ std::vector<std::string> CSSParserBorderColor::get_names()
 	return names;
 }
 
-void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderColor border_colors[4];
+	CSSValueBorderColor border_colors[4];
 	int count;
 	size_t pos = 0;
 	for (count = 0; count < 4; count++)
@@ -50,7 +50,7 @@ void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string
 		Colorf color;
 		if (parse_color(tokens, pos, color))
 		{
-			border_colors[count].type = CSSBoxBorderColor::type_color;
+			border_colors[count].type = CSSValueBorderColor::type_color;
 			border_colors[count].color = color;
 		}
 		else
@@ -62,10 +62,10 @@ void CSSParserBorderColor::parse(CSSBoxProperties &properties, const std::string
 				{
 					if (count == 0 && pos == tokens.size())
 					{
-						properties.border_color_left.type = CSSBoxBorderColor::type_inherit;
-						properties.border_color_top.type = CSSBoxBorderColor::type_inherit;
-						properties.border_color_right.type = CSSBoxBorderColor::type_inherit;
-						properties.border_color_bottom.type = CSSBoxBorderColor::type_inherit;
+						properties.border_color_left.type = CSSValueBorderColor::type_inherit;
+						properties.border_color_top.type = CSSValueBorderColor::type_inherit;
+						properties.border_color_right.type = CSSValueBorderColor::type_inherit;
+						properties.border_color_bottom.type = CSSValueBorderColor::type_inherit;
 					}
 					else
 					{

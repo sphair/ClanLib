@@ -40,34 +40,34 @@ std::vector<std::string> CSSParserLineHeight::get_names()
 	return names;
 }
 
-void CSSParserLineHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserLineHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.line_height.type = CSSBoxLineHeight::type_normal;
+			properties.line_height.type = CSSValueLineHeight::type_normal;
 		else if (equals(token.value, "inherit"))
-			properties.line_height.type = CSSBoxLineHeight::type_inherit;
+			properties.line_height.type = CSSValueLineHeight::type_inherit;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
-		properties.line_height.type = CSSBoxLineHeight::type_number;
+		properties.line_height.type = CSSValueLineHeight::type_number;
 		properties.line_height.number = StringHelp::text_to_float(token.value);
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
-		CSSBoxLength length;
+		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.line_height.type = CSSBoxLineHeight::type_length;
+			properties.line_height.type = CSSValueLineHeight::type_length;
 			properties.line_height.length = length;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.line_height.type = CSSBoxLineHeight::type_percentage;
+		properties.line_height.type = CSSValueLineHeight::type_percentage;
 		properties.line_height.percentage = StringHelp::text_to_float(token.value);
 	}
 	if (out_change_set)

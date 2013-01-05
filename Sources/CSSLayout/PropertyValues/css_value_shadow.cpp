@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_shadow.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_shadow.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxShadow::CSSBoxShadow()
+CSSValueShadow::CSSValueShadow()
 : type(type_none)
 {
 }
 
-void CSSBoxShadow::compute(const CSSBoxShadow *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueShadow::compute(const CSSValueShadow *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -63,7 +63,7 @@ void CSSBoxShadow::compute(const CSSBoxShadow *parent, CSSResourceCache *layout,
 	}
 }
 
-std::string CSSBoxShadow::to_string() const
+std::string CSSValueShadow::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

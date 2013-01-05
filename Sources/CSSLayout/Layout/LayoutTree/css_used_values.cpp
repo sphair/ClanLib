@@ -54,15 +54,15 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 
 	if (replaced)
 	{
-		if (properties.width.type == CSSBoxWidth::type_auto && properties.height.type == CSSBoxHeight::type_auto && intrinsic.has_width)
+		if (properties.width.type == CSSValueWidth::type_auto && properties.height.type == CSSValueHeight::type_auto && intrinsic.has_width)
 		{
 			width = intrinsic.width;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto && properties.height.type == CSSBoxHeight::type_auto && intrinsic.has_height && intrinsic.has_ratio)
+		else if (properties.width.type == CSSValueWidth::type_auto && properties.height.type == CSSValueHeight::type_auto && intrinsic.has_height && intrinsic.has_ratio)
 		{
 			width = intrinsic.height / intrinsic.ratio;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto && properties.height.type == CSSBoxHeight::type_auto && intrinsic.has_ratio)
+		else if (properties.width.type == CSSValueWidth::type_auto && properties.height.type == CSSValueHeight::type_auto && intrinsic.has_ratio)
 		{
 			if (containing.undetermined_width)
 			{
@@ -74,11 +74,11 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 				width = containing.width - margin.left - margin.right - border.left - border.right - padding.left - padding.right;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto && intrinsic.has_width)
+		else if (properties.width.type == CSSValueWidth::type_auto && intrinsic.has_width)
 		{
 			width = intrinsic.width;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto)
 		{
 			width = 300; // bug: Should be 300px (css physical length)
 			/*if (width > device.width)
@@ -95,11 +95,11 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 	}
 	else if (is_absolute(properties))
 	{
-		if (properties.width.type == CSSBoxWidth::type_length)
+		if (properties.width.type == CSSValueWidth::type_length)
 		{
 			width = properties.width.length.value;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_percentage)
+		else if (properties.width.type == CSSValueWidth::type_percentage)
 		{
 			if (containing.undetermined_width)
 			{
@@ -111,7 +111,7 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 				width = properties.width.percentage * containing.width / 100.0f;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto && properties.left.type != CSSBoxLeft::type_auto && properties.right.type != CSSBoxRight::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto && properties.left.type != CSSValueLeft::type_auto && properties.right.type != CSSValueRight::type_auto)
 		{
 			if (containing.undetermined_width)
 			{
@@ -124,7 +124,7 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 				width = containing.width - properties.left.length.value - properties.right.length.value - margin.left - margin.right - border.left - border.right - padding.left - padding.right;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto)
 		{
 			width = 0.0f;
 			undetermined_width = true; // shrink-to-fit
@@ -132,11 +132,11 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 	}
 	else if (is_floating(properties) || is_inline_block(properties))
 	{
-		if (properties.width.type == CSSBoxWidth::type_length)
+		if (properties.width.type == CSSValueWidth::type_length)
 		{
 			width = properties.width.length.value;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_percentage)
+		else if (properties.width.type == CSSValueWidth::type_percentage)
 		{
 			if (containing.undetermined_width)
 			{
@@ -148,7 +148,7 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 				width = properties.width.percentage * containing.width / 100.0f;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto)
 		{
 			width = 0.0f;
 			undetermined_width = true; // shrink-to-fit
@@ -156,11 +156,11 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 	}
 	else if (is_block(properties))
 	{
-		if (properties.width.type == CSSBoxWidth::type_length)
+		if (properties.width.type == CSSValueWidth::type_length)
 		{
 			width = properties.width.length.value;
 		}
-		else if (properties.width.type == CSSBoxWidth::type_percentage)
+		else if (properties.width.type == CSSValueWidth::type_percentage)
 		{
 			if (containing.undetermined_width)
 			{
@@ -172,7 +172,7 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 				width = properties.width.percentage * containing.width / 100.0f;
 			}
 		}
-		else if (properties.width.type == CSSBoxWidth::type_auto)
+		else if (properties.width.type == CSSValueWidth::type_auto)
 		{
 			if (containing.undetermined_width)
 			{
@@ -188,24 +188,24 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 
 	if (!undetermined_width)
 	{
-		if (properties.max_width.type == CSSBoxMaxWidth::type_length)
+		if (properties.max_width.type == CSSValueMaxWidth::type_length)
 		{
 			width = min(width, properties.max_width.length.value);
 		}
-		else if (properties.max_width.type == CSSBoxMaxWidth::type_percentage && !containing.undetermined_width)
+		else if (properties.max_width.type == CSSValueMaxWidth::type_percentage && !containing.undetermined_width)
 		{
 			width = min(width, properties.max_width.percentage * containing.width / 100.0f);
 		}
 
-		if (properties.min_width.type == CSSBoxMinWidth::type_auto)
+		if (properties.min_width.type == CSSValueMinWidth::type_auto)
 		{
 			width = max(width, 0.0f);
 		}
-		else if (properties.min_width.type == CSSBoxMinWidth::type_length)
+		else if (properties.min_width.type == CSSValueMinWidth::type_length)
 		{
 			width = max(width, properties.min_width.length.value);
 		}
-		else if (properties.min_width.type == CSSBoxMinWidth::type_percentage && !containing.undetermined_width)
+		else if (properties.min_width.type == CSSValueMinWidth::type_percentage && !containing.undetermined_width)
 		{
 			width = max(width, properties.min_width.percentage * containing.width / 100.0f);
 		}
@@ -236,23 +236,23 @@ void CSSUsedValues::calc_noncontent_width(const CSSBoxProperties &properties)
 	}
 	else if (is_block(properties))
 	{
-		if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto && properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+		if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto && properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.left = max(0.0f, (containing.width-border.left-border.right-padding.left-padding.right-width)/2.0f);
 			margin.right = max(0.0f, containing.width-border.left-border.right-padding.left-padding.right-width-margin.left);
 		}
-		else if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto)
+		else if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.left = max(0.0f, containing.width-margin.right-border.left-border.right-padding.left-padding.right-width);
 		}
-		else if (properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+		else if (properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.right = max(0.0f, containing.width-margin.left-border.left-border.right-padding.left-padding.right-width);
 		}
 
 		if (margin.left + border.left + width + border.right + padding.right + margin.right > containing.width)
 		{
-			if (properties.direction.type == CSSBoxDirection::type_ltr)
+			if (properties.direction.type == CSSValueDirection::type_ltr)
 				margin.right = max(0.0f, containing.width-margin.left-border.left-border.right-padding.left-padding.right-width);
 			else
 				margin.left = max(0.0f, containing.width-margin.right-border.left-border.right-padding.left-padding.right-width);
@@ -264,9 +264,9 @@ void CSSUsedValues::calc_noncontent_width(const CSSBoxProperties &properties)
 	}
 	else if (is_absolute(properties) && replaced)
 	{
-		if (properties.margin_width_left.type == CSSBoxMarginWidth::type_auto)
+		if (properties.margin_width_left.type == CSSValueMarginWidth::type_auto)
 		{
-			if (properties.left.type == CSSBoxLeft::type_auto || properties.right.type == CSSBoxRight::type_auto)
+			if (properties.left.type == CSSValueLeft::type_auto || properties.right.type == CSSValueRight::type_auto)
 			{
 				margin.left = 0;
 			}
@@ -276,9 +276,9 @@ void CSSUsedValues::calc_noncontent_width(const CSSBoxProperties &properties)
 			}
 		}
 
-		if (properties.margin_width_right.type == CSSBoxMarginWidth::type_auto)
+		if (properties.margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
-			if (properties.left.type == CSSBoxLeft::type_auto || properties.right.type == CSSBoxRight::type_auto)
+			if (properties.left.type == CSSValueLeft::type_auto || properties.right.type == CSSValueRight::type_auto)
 			{
 				margin.right = 0;
 			}
@@ -299,11 +299,11 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 	{
 		if (!is_absolute(properties))
 		{
-			if (properties.height.type == CSSBoxHeight::type_length)
+			if (properties.height.type == CSSValueHeight::type_length)
 			{
 				height = properties.height.length.value;
 			}
-			else if (properties.height.type == CSSBoxHeight::type_percentage)
+			else if (properties.height.type == CSSValueHeight::type_percentage)
 			{
 				if (containing.undetermined_height)
 				{
@@ -315,7 +315,7 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 					height = containing.height * properties.height.percentage / 100.0f;
 				}
 			}
-			else if (properties.height.type == CSSBoxHeight::type_auto)
+			else if (properties.height.type == CSSValueHeight::type_auto)
 			{
 				height = 0;
 				undetermined_height = true;
@@ -337,11 +337,11 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 	}
 	else if (is_block(properties))
 	{
-		if (properties.height.type == CSSBoxHeight::type_length)
+		if (properties.height.type == CSSValueHeight::type_length)
 		{
 			height = properties.height.length.value;
 		}
-		else if (properties.height.type == CSSBoxHeight::type_percentage)
+		else if (properties.height.type == CSSValueHeight::type_percentage)
 		{
 			if (containing.undetermined_height)
 			{
@@ -353,7 +353,7 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 				height = containing.height * properties.height.percentage / 100.0f;
 			}
 		}
-		else if (properties.height.type == CSSBoxHeight::type_auto)
+		else if (properties.height.type == CSSValueHeight::type_auto)
 		{
 			height = 0;
 			undetermined_height = true;
@@ -369,24 +369,24 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 
 	if (!undetermined_height)
 	{
-		if (properties.max_height.type == CSSBoxMaxHeight::type_length)
+		if (properties.max_height.type == CSSValueMaxHeight::type_length)
 		{
 			height = min(height, properties.max_height.length.value);
 		}
-		else if (properties.max_height.type == CSSBoxMaxHeight::type_percentage && !containing.undetermined_height)
+		else if (properties.max_height.type == CSSValueMaxHeight::type_percentage && !containing.undetermined_height)
 		{
 			height = min(height, properties.max_height.percentage * containing.height / 100.0f);
 		}
 
-		if (properties.min_height.type == CSSBoxMinHeight::type_auto)
+		if (properties.min_height.type == CSSValueMinHeight::type_auto)
 		{
 			height = max(height, 0.0f);
 		}
-		else if (properties.min_height.type == CSSBoxMinHeight::type_length)
+		else if (properties.min_height.type == CSSValueMinHeight::type_length)
 		{
 			height = max(height, properties.min_height.length.value);
 		}
-		else if (properties.min_height.type == CSSBoxMinHeight::type_percentage && !containing.undetermined_height)
+		else if (properties.min_height.type == CSSValueMinHeight::type_percentage && !containing.undetermined_height)
 		{
 			height = max(height, properties.min_height.percentage * containing.height / 100.0f);
 		}
@@ -424,48 +424,48 @@ void CSSUsedValues::calc_noncontent_height(const CSSBoxProperties &properties)
 	}
 }
 
-CSSUsedValue CSSUsedValues::get_margin_width(const CSSBoxMarginWidth &margin_width)
+CSSUsedValue CSSUsedValues::get_margin_width(const CSSValueMarginWidth &margin_width)
 {
 	switch (margin_width.type)
 	{
-	case CSSBoxMarginWidth::type_auto: return 0.0f;
-	case CSSBoxMarginWidth::type_length: return margin_width.length.value;
-	case CSSBoxMarginWidth::type_percentage: return margin_width.percentage * containing.width / 100.0f;
+	case CSSValueMarginWidth::type_auto: return 0.0f;
+	case CSSValueMarginWidth::type_length: return margin_width.length.value;
+	case CSSValueMarginWidth::type_percentage: return margin_width.percentage * containing.width / 100.0f;
 	default: return 0.0f;
 	}
 }
 
-CSSUsedValue CSSUsedValues::get_padding_width(const CSSBoxPaddingWidth &padding_width)
+CSSUsedValue CSSUsedValues::get_padding_width(const CSSValuePaddingWidth &padding_width)
 {
 	switch (padding_width.type)
 	{
-	case CSSBoxPaddingWidth::type_length: return padding_width.length.value;
-	case CSSBoxPaddingWidth::type_percentage: return padding_width.percentage * containing.width / 100.0f;
+	case CSSValuePaddingWidth::type_length: return padding_width.length.value;
+	case CSSValuePaddingWidth::type_percentage: return padding_width.percentage * containing.width / 100.0f;
 	default: return 0.0f;
 	}
 }
 
 bool CSSUsedValues::is_inline(const CSSBoxProperties &properties)
 {
-	return CSSBoxDisplay::type_inline;
+	return CSSValueDisplay::type_inline;
 }
 
 bool CSSUsedValues::is_block(const CSSBoxProperties &properties)
 {
 	switch (properties.display.type)
 	{
-	case CSSBoxDisplay::type_block:
-	case CSSBoxDisplay::type_run_in:
-	case CSSBoxDisplay::type_list_item:
-	case CSSBoxDisplay::type_table:
-	case CSSBoxDisplay::type_table_row_group:
-	case CSSBoxDisplay::type_table_header_group:
-	case CSSBoxDisplay::type_table_footer_group:
-	case CSSBoxDisplay::type_table_row:
-	case CSSBoxDisplay::type_table_column_group:
-	case CSSBoxDisplay::type_table_column:
-	case CSSBoxDisplay::type_table_cell:
-	case CSSBoxDisplay::type_table_caption:
+	case CSSValueDisplay::type_block:
+	case CSSValueDisplay::type_run_in:
+	case CSSValueDisplay::type_list_item:
+	case CSSValueDisplay::type_table:
+	case CSSValueDisplay::type_table_row_group:
+	case CSSValueDisplay::type_table_header_group:
+	case CSSValueDisplay::type_table_footer_group:
+	case CSSValueDisplay::type_table_row:
+	case CSSValueDisplay::type_table_column_group:
+	case CSSValueDisplay::type_table_column:
+	case CSSValueDisplay::type_table_cell:
+	case CSSValueDisplay::type_table_caption:
 		return true;
 	default:
 		return false;
@@ -474,15 +474,15 @@ bool CSSUsedValues::is_block(const CSSBoxProperties &properties)
 
 bool CSSUsedValues::is_floating(const CSSBoxProperties &properties)
 {
-	return properties.float_box.type != CSSBoxFloat::type_none;
+	return properties.float_box.type != CSSValueFloat::type_none;
 }
 
 bool CSSUsedValues::is_inline_block(const CSSBoxProperties &properties)
 {
 	switch (properties.display.type)
 	{
-	case CSSBoxDisplay::type_inline_block:
-	case CSSBoxDisplay::type_inline_table:
+	case CSSValueDisplay::type_inline_block:
+	case CSSValueDisplay::type_inline_table:
 		return true;
 	default:
 		return false;
@@ -491,7 +491,7 @@ bool CSSUsedValues::is_inline_block(const CSSBoxProperties &properties)
 
 bool CSSUsedValues::is_absolute(const CSSBoxProperties &properties)
 {
-	return properties.position.type == CSSBoxPosition::type_absolute;
+	return properties.position.type == CSSValuePosition::type_absolute;
 }
 #endif
 

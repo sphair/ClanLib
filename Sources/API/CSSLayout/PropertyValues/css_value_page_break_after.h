@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxPageBreakAfter : public CSSBoxProperty
+class CSSValuePageBreakAfter : public CSSPropertyValue
 {
 public:
-	CSSBoxPageBreakAfter();
-	void compute(const CSSBoxPageBreakAfter *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValuePageBreakAfter();
+	void compute(const CSSValuePageBreakAfter *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

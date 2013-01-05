@@ -33,19 +33,19 @@
 namespace clan
 {
 
-class CSSBoxFlexGrow;
-class CSSBoxFlexShrink;
-class CSSBoxFlexBasis;
+class CSSValueFlexGrow;
+class CSSValueFlexShrink;
+class CSSValueFlexBasis;
 
 class CSSParserFlex : public CSSPropertyParser
 {
 public:
 	std::vector<std::string> get_names();
-	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set);
+	void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set);
 
 private:
-	bool parse_grow_shrink(CSSBoxFlexGrow &grow, CSSBoxFlexShrink &shrink, size_t &parse_pos, const std::vector<CSSToken> &tokens);
-	bool parse_basis(CSSBoxFlexBasis &basis, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_grow_shrink(CSSValueFlexGrow &grow, CSSValueFlexShrink &shrink, size_t &parse_pos, const std::vector<CSSToken> &tokens);
+	bool parse_basis(CSSValueFlexBasis &basis, size_t &parse_pos, const std::vector<CSSToken> &tokens);
 };
 
 }

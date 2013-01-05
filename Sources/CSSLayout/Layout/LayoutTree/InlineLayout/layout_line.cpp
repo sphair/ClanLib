@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "layout_line.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
-#include "CSSLayout/LayoutTree/css_layout_graphics.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 
 namespace clan
 {
@@ -59,13 +59,13 @@ bool CSSInlineLayoutLayoutLine::node(CSSInlineGeneratedBox *cur)
 		switch (properties.line_height.type)
 		{
 		default:
-		case CSSBoxLineHeight::type_normal:
+		case CSSValueLineHeight::type_normal:
 			cur->height = cur->ascent + cur->descent;
 			break;
-		case CSSBoxLineHeight::type_length:
+		case CSSValueLineHeight::type_length:
 			cur->height = used_to_actual(properties.line_height.length.value);
 			break;
-		case CSSBoxLineHeight::type_number:
+		case CSSValueLineHeight::type_number:
 			cur->height = used_to_actual(properties.line_height.number * properties.font_size.length.value);
 			break;
 		}
@@ -97,12 +97,12 @@ bool CSSInlineLayoutLayoutLine::node(CSSInlineGeneratedBox *cur)
 			switch (element->computed_properties.line_height.type)
 			{
 			default:
-			case CSSBoxLineHeight::type_normal:
+			case CSSValueLineHeight::type_normal:
 				break;
-			case CSSBoxLineHeight::type_length:
+			case CSSValueLineHeight::type_length:
 				cur->height = used_to_actual(element->computed_properties.line_height.length.value);
 				break;
-			case CSSBoxLineHeight::type_number:
+			case CSSValueLineHeight::type_number:
 				cur->height = used_to_actual(element->computed_properties.line_height.number * element->computed_properties.font_size.length.value);
 				break;
 			}

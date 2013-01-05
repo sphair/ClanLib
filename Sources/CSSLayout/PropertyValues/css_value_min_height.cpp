@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_min_height.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_min_height.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxMinHeight::CSSBoxMinHeight()
-: type(type_auto), length(0, CSSBoxLength::type_px), percentage(0.0f)
+CSSValueMinHeight::CSSValueMinHeight()
+: type(type_auto), length(0, CSSLength::type_px), percentage(0.0f)
 {
 }
 
-void CSSBoxMinHeight::compute(const CSSBoxMinHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueMinHeight::compute(const CSSValueMinHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -58,7 +58,7 @@ void CSSBoxMinHeight::compute(const CSSBoxMinHeight *parent, CSSResourceCache *l
 		length = layout->compute_length(length, em_size, ex_size);
 }
 
-std::string CSSBoxMinHeight::to_string() const
+std::string CSSValueMinHeight::to_string() const
 {
 	switch (type)
 	{

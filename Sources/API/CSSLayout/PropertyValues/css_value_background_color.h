@@ -28,17 +28,17 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 #include "../../Display/2D/color.h"
 
 namespace clan
 {
 
-class CSSBoxBackgroundColor : public CSSBoxProperty
+class CSSValueBackgroundColor : public CSSPropertyValue
 {
 public:
-	CSSBoxBackgroundColor();
-	void compute(const CSSBoxBackgroundColor *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueBackgroundColor();
+	void compute(const CSSValueBackgroundColor *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

@@ -40,9 +40,9 @@ std::vector<std::string> CSSParserBorderWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxBorderWidth border_widths[4];
+	CSSValueBorderWidth border_widths[4];
 	int count;
 	size_t pos = 0;
 	for (count = 0; count < 4; count++)
@@ -52,22 +52,22 @@ void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string
 		{
 			if (equals(token.value, "thin"))
 			{
-				border_widths[count].type = CSSBoxBorderWidth::type_thin;
+				border_widths[count].type = CSSValueBorderWidth::type_thin;
 			}
 			else if (equals(token.value, "medium"))
 			{
-				border_widths[count].type = CSSBoxBorderWidth::type_medium;
+				border_widths[count].type = CSSValueBorderWidth::type_medium;
 			}
 			else if (equals(token.value, "thick"))
 			{
-				border_widths[count].type = CSSBoxBorderWidth::type_thick;
+				border_widths[count].type = CSSValueBorderWidth::type_thick;
 			}
 			else if (equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
-				properties.border_width_left.type = CSSBoxBorderWidth::type_inherit;
-				properties.border_width_top.type = CSSBoxBorderWidth::type_inherit;
-				properties.border_width_right.type = CSSBoxBorderWidth::type_inherit;
-				properties.border_width_bottom.type = CSSBoxBorderWidth::type_inherit;
+				properties.border_width_left.type = CSSValueBorderWidth::type_inherit;
+				properties.border_width_top.type = CSSValueBorderWidth::type_inherit;
+				properties.border_width_right.type = CSSValueBorderWidth::type_inherit;
+				properties.border_width_bottom.type = CSSValueBorderWidth::type_inherit;
 				return;
 			}
 			else
@@ -78,10 +78,10 @@ void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string
 		}
 		else if (is_length(token))
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				border_widths[count].type = CSSBoxBorderWidth::type_length;
+				border_widths[count].type = CSSValueBorderWidth::type_length;
 				border_widths[count].length = length;
 			}
 			else

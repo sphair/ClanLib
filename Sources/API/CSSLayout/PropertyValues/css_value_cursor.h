@@ -28,16 +28,16 @@
 
 #pragma once
 
-#include "../css_box_property.h"
+#include "../CSSDocument/css_property_value.h"
 
 namespace clan
 {
 
-class CSSBoxCursor : public CSSBoxProperty
+class CSSValueCursor : public CSSPropertyValue
 {
 public:
-	CSSBoxCursor();
-	void compute(const CSSBoxCursor *parent, CSSResourceCache *layout, float em_size, float ex_size);
+	CSSValueCursor();
+	void compute(const CSSValueCursor *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 
 	enum Type

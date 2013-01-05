@@ -27,18 +27,18 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_clip.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_clip.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundClip::CSSBoxBackgroundClip()
+CSSValueBackgroundClip::CSSValueBackgroundClip()
 : type(type_value)
 {
 	values.push_back(clip_border_box);
 }
 
-void CSSBoxBackgroundClip::compute(const CSSBoxBackgroundClip *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundClip::compute(const CSSValueBackgroundClip *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxBackgroundClip::compute(const CSSBoxBackgroundClip *parent, CSSResour
 	}
 }
 
-std::string CSSBoxBackgroundClip::to_string() const
+std::string CSSValueBackgroundClip::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

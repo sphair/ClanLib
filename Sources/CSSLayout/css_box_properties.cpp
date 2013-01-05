@@ -28,19 +28,19 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/css_box_properties.h"
-#include "API/CSSLayout/css_document.h"
-#include "API/CSSLayout/css_property_list.h"
-#include "css_property_parsers.h"
+#include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "PropertyParsers/css_property_parsers.h"
 
 namespace clan
 {
 
-void CSSBoxProperties::apply_properties(const std::string &style_string, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSBoxProperties::apply_properties(const std::string &style_string, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	apply_properties(CSSDocument::get_style_properties(style_string), out_change_set);
 }
 
-void CSSBoxProperties::apply_properties(const CSSPropertyList &css_properties, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSBoxProperties::apply_properties(const CSSPropertyValueList &css_properties, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	CSSPropertyParsers property_parsers;
 	for (size_t i = css_properties.size(); i > 0; i--)
@@ -69,8 +69,8 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		position.compute(&parent->position, layout, em_size, ex_size);
 		float_box.compute(&parent->float_box, layout, em_size, ex_size);
 		display.compute(&parent->display, layout, em_size, ex_size, position, float_box);
-		CSSBoxRight::compute(left, right, parent, layout, em_size, ex_size, position, is_containing_block_ltr);
-		CSSBoxBottom::compute(top, bottom, parent, layout, em_size, ex_size, position);
+		CSSValueRight::compute(left, right, parent, layout, em_size, ex_size, position, is_containing_block_ltr);
+		CSSValueBottom::compute(top, bottom, parent, layout, em_size, ex_size, position);
 
 		white_space.compute(&parent->white_space, layout, em_size, ex_size);
 		margin_width_left.compute(&parent->margin_width_left, layout, em_size, ex_size);
@@ -181,8 +181,8 @@ void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache 
 		position.compute(0, layout, em_size, ex_size);
 		float_box.compute(0, layout, em_size, ex_size);
 		display.compute(0, layout, em_size, ex_size, position, float_box);
-		CSSBoxRight::compute(left, right, 0, layout, em_size, ex_size, position, is_containing_block_ltr);
-		CSSBoxBottom::compute(top, bottom, 0, layout, em_size, ex_size, position);
+		CSSValueRight::compute(left, right, 0, layout, em_size, ex_size, position, is_containing_block_ltr);
+		CSSValueBottom::compute(top, bottom, 0, layout, em_size, ex_size, position);
 
 		white_space.compute(0, layout, em_size, ex_size);
 		margin_width_left.compute(0, layout, em_size, ex_size);

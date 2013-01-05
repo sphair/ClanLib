@@ -40,9 +40,9 @@ std::vector<std::string> CSSParserMargin::get_names()
 	return names;
 }
 
-void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
-	CSSBoxMarginWidth margin_widths[4];
+	CSSValueMarginWidth margin_widths[4];
 	int count;
 	size_t pos = 0;
 	for (count = 0; count < 4; count++)
@@ -50,27 +50,27 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 		CSSToken token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "auto"))
 		{
-			margin_widths[count].type = CSSBoxMarginWidth::type_auto;
+			margin_widths[count].type = CSSValueMarginWidth::type_auto;
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
-			properties.margin_width_left.type = CSSBoxMarginWidth::type_inherit;
-			properties.margin_width_top.type = CSSBoxMarginWidth::type_inherit;
-			properties.margin_width_right.type = CSSBoxMarginWidth::type_inherit;
-			properties.margin_width_bottom.type = CSSBoxMarginWidth::type_inherit;
+			properties.margin_width_left.type = CSSValueMarginWidth::type_inherit;
+			properties.margin_width_top.type = CSSValueMarginWidth::type_inherit;
+			properties.margin_width_right.type = CSSValueMarginWidth::type_inherit;
+			properties.margin_width_bottom.type = CSSValueMarginWidth::type_inherit;
 			return;
 		}
 		else if (token.type == CSSToken::type_number && equals(token.value, "0"))
 		{
-			margin_widths[count].type = CSSBoxMarginWidth::type_length;
-			margin_widths[count].length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+			margin_widths[count].type = CSSValueMarginWidth::type_length;
+			margin_widths[count].length = CSSLength(0.0f, CSSLength::type_px);
 		}
 		else if (is_length(token))
 		{
-			CSSBoxLength length;
+			CSSLength length;
 			if (parse_length(token, length))
 			{
-				margin_widths[count].type = CSSBoxMarginWidth::type_length;
+				margin_widths[count].type = CSSValueMarginWidth::type_length;
 				margin_widths[count].length = length;
 			}
 			else
@@ -81,7 +81,7 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			margin_widths[count].type = CSSBoxMarginWidth::type_percentage;
+			margin_widths[count].type = CSSValueMarginWidth::type_percentage;
 			margin_widths[count].percentage = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -89,11 +89,11 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 			token = next_token(pos, tokens);
 			if (is_length(token))
 			{
-				CSSBoxLength length;
+				CSSLength length;
 				if (parse_length(token, length))
 				{
 					length.value = -length.value;
-					margin_widths[count].type = CSSBoxMarginWidth::type_length;
+					margin_widths[count].type = CSSValueMarginWidth::type_length;
 					margin_widths[count].length = length;
 				}
 				else
@@ -104,7 +104,7 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 			}
 			else if (token.type == CSSToken::type_percentage)
 			{
-				margin_widths[count].type = CSSBoxMarginWidth::type_percentage;
+				margin_widths[count].type = CSSValueMarginWidth::type_percentage;
 				margin_widths[count].percentage = -StringHelp::text_to_float(token.value);
 			}
 			else

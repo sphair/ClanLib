@@ -40,20 +40,20 @@ std::vector<std::string> CSSParserFloat::get_names()
 	return names;
 }
 
-void CSSParserFloat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserFloat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "left"))
-			properties.float_box.type = CSSBoxFloat::type_left;
+			properties.float_box.type = CSSValueFloat::type_left;
 		else if (equals(token.value, "right"))
-			properties.float_box.type = CSSBoxFloat::type_right;
+			properties.float_box.type = CSSValueFloat::type_right;
 		else if (equals(token.value, "none"))
-			properties.float_box.type = CSSBoxFloat::type_none;
+			properties.float_box.type = CSSValueFloat::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.float_box.type = CSSBoxFloat::type_inherit;
+			properties.float_box.type = CSSValueFloat::type_inherit;
 	}
 	if (out_change_set)
 	{

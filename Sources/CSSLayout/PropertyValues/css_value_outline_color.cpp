@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_outline_color.h"
+#include "API/CSSLayout/PropertyValues/css_value_outline_color.h"
 
 namespace clan
 {
 
-CSSBoxOutlineColor::CSSBoxOutlineColor()
+CSSValueOutlineColor::CSSValueOutlineColor()
 : type(type_invert)
 {
 }
 
-void CSSBoxOutlineColor::compute(const CSSBoxOutlineColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueOutlineColor::compute(const CSSValueOutlineColor *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -53,7 +53,7 @@ void CSSBoxOutlineColor::compute(const CSSBoxOutlineColor *parent, CSSResourceCa
 	}
 }
 
-std::string CSSBoxOutlineColor::to_string() const
+std::string CSSValueOutlineColor::to_string() const
 {
 	switch (type)
 	{

@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_text_decoration.h"
+#include "API/CSSLayout/PropertyValues/css_value_text_decoration.h"
 
 namespace clan
 {
 
-CSSBoxTextDecoration::CSSBoxTextDecoration()
+CSSValueTextDecoration::CSSValueTextDecoration()
 : type(type_inherit_special), underline(false), overline(false), line_through(false), blink(false)
 {
 }
 
-void CSSBoxTextDecoration::compute(const CSSBoxTextDecoration *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueTextDecoration::compute(const CSSValueTextDecoration *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -56,7 +56,7 @@ void CSSBoxTextDecoration::compute(const CSSBoxTextDecoration *parent, CSSResour
 	}
 }
 
-std::string CSSBoxTextDecoration::to_string() const
+std::string CSSValueTextDecoration::to_string() const
 {
 	switch (type)
 	{

@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_width.h"
-#include "API/CSSLayout/PropertyTypes/css_box_border_style.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_width.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_style.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBorderWidth::CSSBoxBorderWidth()
+CSSValueBorderWidth::CSSValueBorderWidth()
 : type(type_medium)
 {
 }
 
-void CSSBoxBorderWidth::compute(const CSSBoxBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSBoxBorderStyle &style)
+void CSSValueBorderWidth::compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style)
 {
 	if (type == type_inherit)
 	{
@@ -58,26 +58,26 @@ void CSSBoxBorderWidth::compute(const CSSBoxBorderWidth *parent, CSSResourceCach
 	{
 	case type_thin:
 		type = type_length;
-		length = CSSBoxLength(1.0f, CSSBoxLength::type_px);
+		length = CSSLength(1.0f, CSSLength::type_px);
 		break;
 
 	case type_medium:
 		type = type_length;
-		length = CSSBoxLength(2.0f, CSSBoxLength::type_px);
+		length = CSSLength(2.0f, CSSLength::type_px);
 		break;
 
 	case type_thick:
 		type = type_length;
-		length = CSSBoxLength(3.0f, CSSBoxLength::type_px);
+		length = CSSLength(3.0f, CSSLength::type_px);
 		break;
 	default:
 		break;
 	}
 
-	if (style.type == CSSBoxBorderStyle::type_hidden || style.type == CSSBoxBorderStyle::type_none)
+	if (style.type == CSSValueBorderStyle::type_hidden || style.type == CSSValueBorderStyle::type_none)
 	{
 		type = type_length;
-		length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+		length = CSSLength(0.0f, CSSLength::type_px);
 	}
 
 	if (type == type_length)
@@ -86,7 +86,7 @@ void CSSBoxBorderWidth::compute(const CSSBoxBorderWidth *parent, CSSResourceCach
 	}
 }
 
-std::string CSSBoxBorderWidth::to_string() const
+std::string CSSValueBorderWidth::to_string() const
 {
 	switch (type)
 	{

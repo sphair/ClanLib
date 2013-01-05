@@ -27,17 +27,17 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_align_items.h"
+#include "API/CSSLayout/PropertyValues/css_value_align_items.h"
 
 namespace clan
 {
 
-CSSBoxAlignItems::CSSBoxAlignItems()
+CSSValueAlignItems::CSSValueAlignItems()
 : type(type_flex_start)
 {
 }
 
-void CSSBoxAlignItems::compute(const CSSBoxAlignItems *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueAlignItems::compute(const CSSValueAlignItems *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -48,7 +48,7 @@ void CSSBoxAlignItems::compute(const CSSBoxAlignItems *parent, CSSResourceCache 
 	}
 }
 
-std::string CSSBoxAlignItems::to_string() const
+std::string CSSValueAlignItems::to_string() const
 {
 	switch (type)
 	{

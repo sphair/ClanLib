@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_property_parser.h"
-#include "API/CSSLayout/css_box_length.h"
+#include "API/CSSLayout/CSSDocument/css_length.h"
 #include "API/Core/Text/console.h"
 
 namespace clan
@@ -62,48 +62,48 @@ bool CSSPropertyParser::is_length(const CSSToken &token)
 		return false;
 }
 
-bool CSSPropertyParser::parse_length(const CSSToken &token, CSSBoxLength &out_length)
+bool CSSPropertyParser::parse_length(const CSSToken &token, CSSLength &out_length)
 {
 	if (token.type == CSSToken::type_dimension)
 	{
 		if (equals(token.dimension, "px"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_px);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_px);
 			return true;
 		}
 		else if (equals(token.dimension, "em"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_em);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_em);
 			return true;
 		}
 		else if (equals(token.dimension, "pt"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_pt);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_pt);
 			return true;
 		}
 		else if (equals(token.dimension, "mm"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_mm);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_mm);
 			return true;
 		}
 		else if (equals(token.dimension, "cm"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_cm);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_cm);
 			return true;
 		}
 		else if (equals(token.dimension, "in"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_in);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_in);
 			return true;
 		}
 		else if (equals(token.dimension, "pc"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_pc);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_pc);
 			return true;
 		}
 		else if (equals(token.dimension, "ex"))
 		{
-			out_length = CSSBoxLength(StringHelp::text_to_float(token.value), CSSBoxLength::type_ex);
+			out_length = CSSLength(StringHelp::text_to_float(token.value), CSSLength::type_ex);
 			return true;
 		}
 		else
@@ -113,7 +113,7 @@ bool CSSPropertyParser::parse_length(const CSSToken &token, CSSBoxLength &out_le
 	}
 	else if (token.type == CSSToken::type_number && token.value == "0")
 	{
-		out_length = CSSBoxLength(0.0f, CSSBoxLength::type_px);
+		out_length = CSSLength(0.0f, CSSLength::type_px);
 		return true;
 	}
 	else

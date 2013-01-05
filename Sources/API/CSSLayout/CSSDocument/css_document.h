@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "api_csslayout.h"
-#include "../Core/IOData/virtual_directory.h"
+#include "../api_csslayout.h"
+#include "../../Core/IOData/virtual_directory.h"
 #include <memory>
 
 namespace clan
@@ -39,7 +39,7 @@ class IODevice;
 class DomElement;
 class CSSProperty;
 class CSSSelectNode;
-class CSSPropertyList;
+class CSSPropertyValueList;
 class CSSDocument_Impl;
 
 enum CSSSheetOrigin
@@ -61,10 +61,10 @@ public:
 	void add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
 	void add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std::string &base_uri);
 
-	CSSPropertyList select(const DomElement &node, const std::string &pseudo_element = std::string());
-	CSSPropertyList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
+	CSSPropertyValueList select(const DomElement &node, const std::string &pseudo_element = std::string());
+	CSSPropertyValueList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
 
-	static CSSPropertyList get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
+	static CSSPropertyValueList get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 private:
 	std::shared_ptr<CSSDocument_Impl> impl;

@@ -27,19 +27,19 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/PropertyTypes/css_box_background_position.h"
-#include "../../css_resource_cache.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_position.h"
+#include "../css_resource_cache.h"
 
 namespace clan
 {
 
-CSSBoxBackgroundPosition::CSSBoxBackgroundPosition()
+CSSValueBackgroundPosition::CSSValueBackgroundPosition()
 : type(type_value)
 {
 	positions.push_back(Position());
 }
 
-void CSSBoxBackgroundPosition::compute(const CSSBoxBackgroundPosition *parent, CSSResourceCache *layout, float em_size, float ex_size)
+void CSSValueBackgroundPosition::compute(const CSSValueBackgroundPosition *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)
 	{
@@ -104,7 +104,7 @@ void CSSBoxBackgroundPosition::compute(const CSSBoxBackgroundPosition *parent, C
 	}
 }
 
-std::string CSSBoxBackgroundPosition::to_string() const
+std::string CSSValueBackgroundPosition::to_string() const
 {
 	if (type == type_inherit)
 		return "inherit";

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "create_linebreak_opportunities.h"
-#include "CSSLayout/BoxTree/css_box_text.h"
+#include "CSSLayout/Layout/BoxTree/css_box_text.h"
 
 namespace clan
 {
@@ -71,9 +71,9 @@ bool CSSInlineLayoutCreateLinebreakOpportunities::node(CSSInlineGeneratedBox *cu
 	return true;
 }
 
-bool CSSInlineLayoutCreateLinebreakOpportunities::should_break_at_end_of_spaces(const CSSBoxWhiteSpace &whitespace)
+bool CSSInlineLayoutCreateLinebreakOpportunities::should_break_at_end_of_spaces(const CSSValueWhiteSpace &whitespace)
 {
-	return whitespace.type != CSSBoxWhiteSpace::type_pre || whitespace.type == CSSBoxWhiteSpace::type_nowrap;
+	return whitespace.type != CSSValueWhiteSpace::type_pre || whitespace.type == CSSValueWhiteSpace::type_nowrap;
 }
 
 }

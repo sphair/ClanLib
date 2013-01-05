@@ -40,15 +40,15 @@ std::vector<std::string> CSSParserBorderImage::get_names()
 	return names;
 }
 
-void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSBoxProperty *> *out_change_set)
+void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens, std::map<std::string, CSSPropertyValue *> *out_change_set)
 {
 	if (tokens.size() == 1 && tokens[0].type == CSSToken::type_ident && equals(tokens[0].value, "inherit"))
 	{
-		properties.border_image_source.type = CSSBoxBorderImageSource::type_inherit;
-		properties.border_image_slice.type = CSSBoxBorderImageSlice::type_inherit;
-		properties.border_image_width.type = CSSBoxBorderImageWidth::type_inherit;
-		properties.border_image_outset.type = CSSBoxBorderImageOutset::type_inherit;
-		properties.border_image_repeat.type = CSSBoxBorderImageRepeat::type_inherit;
+		properties.border_image_source.type = CSSValueBorderImageSource::type_inherit;
+		properties.border_image_slice.type = CSSValueBorderImageSlice::type_inherit;
+		properties.border_image_width.type = CSSValueBorderImageWidth::type_inherit;
+		properties.border_image_outset.type = CSSValueBorderImageOutset::type_inherit;
+		properties.border_image_repeat.type = CSSValueBorderImageRepeat::type_inherit;
 		if (out_change_set)
 		{
 			(*out_change_set)["border-image-source"] = &properties.border_image_source;
@@ -60,11 +60,11 @@ void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string
 		return;
 	}
 
-	CSSBoxBorderImageSource border_image_source;
-	CSSBoxBorderImageSlice border_image_slice;
-	CSSBoxBorderImageWidth border_image_width;
-	CSSBoxBorderImageOutset border_image_outset;
-	CSSBoxBorderImageRepeat border_image_repeat;
+	CSSValueBorderImageSource border_image_source;
+	CSSValueBorderImageSlice border_image_slice;
+	CSSValueBorderImageWidth border_image_width;
+	CSSValueBorderImageOutset border_image_outset;
+	CSSValueBorderImageRepeat border_image_repeat;
 
 	bool source_specified = false;
 	bool slice_specified = false;
@@ -130,20 +130,20 @@ void CSSParserBorderImage::parse(CSSBoxProperties &properties, const std::string
 	}
 }
 
-bool CSSParserBorderImage::parse_source(CSSBoxBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBorderImage::parse_source(CSSValueBorderImageSource &border_image_source, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "none"))
-			border_image_source.type = CSSBoxBorderImageSource::type_none;
+			border_image_source.type = CSSValueBorderImageSource::type_none;
 		else
 			return false;
 	}
 	else if (token.type == CSSToken::type_uri)
 	{
-		border_image_source.type = CSSBoxBorderImageSource::type_image;
+		border_image_source.type = CSSValueBorderImageSource::type_image;
 		border_image_source.url = token.value;
 	}
 	else
@@ -155,26 +155,26 @@ bool CSSParserBorderImage::parse_source(CSSBoxBorderImageSource &border_image_so
 	return true;
 }
 
-bool CSSParserBorderImage::parse_slice(CSSBoxBorderImageSlice &border_image_slice, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBorderImage::parse_slice(CSSValueBorderImageSlice &border_image_slice, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	size_t last_pos = pos;
 	CSSToken token = next_token(pos, tokens);
 
 	int num_lengths;
-	CSSBoxBorderImageSlice::ValueType value_types[4];
+	CSSValueBorderImageSlice::ValueType value_types[4];
 	float percentages[4] = { 0, 0, 0, 0 };
 	float numbers[4] = { 0, 0, 0, 0 };
 	for (num_lengths = 0; num_lengths < 4; num_lengths++)
 	{
 		if (token.type == CSSToken::type_percentage)
 		{
-			value_types[num_lengths] = CSSBoxBorderImageSlice::value_type_percentage;
+			value_types[num_lengths] = CSSValueBorderImageSlice::value_type_percentage;
 			percentages[num_lengths] = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_number)
 		{
-			value_types[num_lengths] = CSSBoxBorderImageSlice::value_type_number;
+			value_types[num_lengths] = CSSValueBorderImageSlice::value_type_number;
 			numbers[num_lengths] = StringHelp::text_to_float(token.value);
 		}
 		else
@@ -199,7 +199,7 @@ bool CSSParserBorderImage::parse_slice(CSSBoxBorderImageSlice &border_image_slic
 	if (num_lengths < 1)
 		return false;
 
-	border_image_slice.type = CSSBoxBorderImageSlice::type_values;
+	border_image_slice.type = CSSValueBorderImageSlice::type_values;
 	if (num_lengths == 1)
 	{
 		for (int i = 1; i < 4; i++)
@@ -243,38 +243,38 @@ bool CSSParserBorderImage::parse_slice(CSSBoxBorderImageSlice &border_image_slic
 	return true;
 }
 
-bool CSSParserBorderImage::parse_width(CSSBoxBorderImageWidth &border_image_width, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBorderImage::parse_width(CSSValueBorderImageWidth &border_image_width, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	size_t last_pos = pos;
 	CSSToken token = next_token(pos, tokens);
 
 	int num_lengths;
-	CSSBoxBorderImageWidth::ValueType value_types[4];
-	CSSBoxLength lengths[4];
+	CSSValueBorderImageWidth::ValueType value_types[4];
+	CSSLength lengths[4];
 	float percentages[4] = { 0, 0, 0, 0 };
 	float numbers[4] = { 0, 0, 0, 0 };
 	for (num_lengths = 0; num_lengths < 4; num_lengths++)
 	{
 		if (is_length(token))
 		{
-			value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_length;
+			value_types[num_lengths] = CSSValueBorderImageWidth::value_type_length;
 			if (!parse_length(token, lengths[num_lengths]))
 				return false;
 		}
 		else if (token.type == CSSToken::type_number)
 		{
-			value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_number;
+			value_types[num_lengths] = CSSValueBorderImageWidth::value_type_number;
 			numbers[num_lengths] = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_percentage;
+			value_types[num_lengths] = CSSValueBorderImageWidth::value_type_percentage;
 			percentages[num_lengths] = StringHelp::text_to_float(token.value);
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "auto"))
 		{
-			value_types[num_lengths] = CSSBoxBorderImageWidth::value_type_auto;
+			value_types[num_lengths] = CSSValueBorderImageWidth::value_type_auto;
 		}
 		else
 		{
@@ -289,7 +289,7 @@ bool CSSParserBorderImage::parse_width(CSSBoxBorderImageWidth &border_image_widt
 
 	pos = last_pos;
 
-	border_image_width.type = CSSBoxBorderImageWidth::type_values;
+	border_image_width.type = CSSValueBorderImageWidth::type_values;
 	if (num_lengths == 1)
 	{
 		for (int i = 1; i < 4; i++)
@@ -340,27 +340,27 @@ bool CSSParserBorderImage::parse_width(CSSBoxBorderImageWidth &border_image_widt
 	return true;
 }
 
-bool CSSParserBorderImage::parse_outset(CSSBoxBorderImageOutset &border_image_outset, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBorderImage::parse_outset(CSSValueBorderImageOutset &border_image_outset, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	size_t last_pos = pos;
 	CSSToken token = next_token(pos, tokens);
 
 	int num_lengths;
-	CSSBoxBorderImageOutset::ValueType value_types[4];
-	CSSBoxLength lengths[4];
+	CSSValueBorderImageOutset::ValueType value_types[4];
+	CSSLength lengths[4];
 	float numbers[4] = { 0, 0, 0, 0 };
 	for (num_lengths = 0; num_lengths < 4; num_lengths++)
 	{
 		if (is_length(token))
 		{
-			value_types[num_lengths] = CSSBoxBorderImageOutset::value_type_length;
+			value_types[num_lengths] = CSSValueBorderImageOutset::value_type_length;
 			if (!parse_length(token, lengths[num_lengths]))
 				return false;
 		}
 		else if (token.type == CSSToken::type_number)
 		{
-			value_types[num_lengths] = CSSBoxBorderImageOutset::value_type_number;
+			value_types[num_lengths] = CSSValueBorderImageOutset::value_type_number;
 			numbers[num_lengths] = StringHelp::text_to_float(token.value);
 		}
 		else
@@ -376,7 +376,7 @@ bool CSSParserBorderImage::parse_outset(CSSBoxBorderImageOutset &border_image_ou
 
 	pos = last_pos;
 
-	border_image_outset.type = CSSBoxBorderImageOutset::type_values;
+	border_image_outset.type = CSSValueBorderImageOutset::type_values;
 	if (num_lengths == 1)
 	{
 		for (int i = 1; i < 4; i++)
@@ -420,21 +420,21 @@ bool CSSParserBorderImage::parse_outset(CSSBoxBorderImageOutset &border_image_ou
 	return true;
 }
 
-bool CSSParserBorderImage::parse_repeat(CSSBoxBorderImageRepeat &border_image_repeat, size_t &parse_pos, const std::vector<CSSToken> &tokens)
+bool CSSParserBorderImage::parse_repeat(CSSValueBorderImageRepeat &border_image_repeat, size_t &parse_pos, const std::vector<CSSToken> &tokens)
 {
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && equals(token.value, "stretch"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_stretch;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_stretch;
 	}
 	else if (token.type == CSSToken::type_ident && equals(token.value, "repeat"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_repeat;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_repeat;
 	}
 	else if (token.type == CSSToken::type_ident && equals(token.value, "round"))
 	{
-		border_image_repeat.repeat_x = CSSBoxBorderImageRepeat::repeat_type_round;
+		border_image_repeat.repeat_x = CSSValueBorderImageRepeat::repeat_type_round;
 	}
 	else
 	{
@@ -449,17 +449,17 @@ bool CSSParserBorderImage::parse_repeat(CSSBoxBorderImageRepeat &border_image_re
 		token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "stretch"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_stretch;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_stretch;
 			parse_pos = pos;
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "repeat"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_repeat;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_repeat;
 			parse_pos = pos;
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "round"))
 		{
-			border_image_repeat.repeat_y = CSSBoxBorderImageRepeat::repeat_type_round;
+			border_image_repeat.repeat_y = CSSValueBorderImageRepeat::repeat_type_round;
 			parse_pos = pos;
 		}
 	}
