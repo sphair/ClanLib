@@ -28,48 +28,38 @@
 
 #pragma once
 
-#include "../Box2D/Box2D.h"
+#include "API/Physics/Dynamics/fixture.h"
 #include "API/Physics/World/query_result.h"
-#include "API/Core/Math/rect.h"
+#include "API/Core/Math/point.h"
+#include "API/Core/Math/vec2.h"
 
 namespace clan
 {
-	class PhysicsWorld;
-
-	enum QueryType
-	{
-		query_raycast_first,
-		query_raycast_any,
-		query_raycast_all,
-		query_aabb_any,
-		query_aabb_some,
-		query_aabb_all
-	};
-
-class PhysicsQueryAssistant_Impl : public b2QueryCallback, public b2RayCastCallback
+	
+class QueryResult_Impl
 {
 public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	PhysicsQueryAssistant_Impl(PhysicsWorld &pw);
+	QueryResult_Impl()
+	{};
 
-	~PhysicsQueryAssistant_Impl() { return; }
+	~QueryResult_Impl() { return; }
 
 //																						___________________
 //																						O P E R A T I O N S
-	virtual bool ReportFixture(b2Fixture* fixture);
-	virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction);
+
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	
-	PhysicsWorld *owner_world;
-	QueryType query_type;
-	int query_result_amount;
-	int query_result_limit;
+	Fixture fixture;
+	Pointf point;
+	Vec2f normal;
+	float fraction;
+	QueryResultType type;
 
-	const int max_queried_objects;
-	std::vector<QueryResult> queried_objects;
+
+
 };
 
 }

@@ -32,8 +32,9 @@
 #pragma once
 
 #include "../api_physics.h"
-#include "raycast_result.h"
-#include <memory>
+#include "query_result.h"
+#include "../../Core/Math/rect.h"
+
 
 namespace clan
 {
@@ -64,26 +65,53 @@ public:
 	bool is_null() const { return !impl; }
 
 	/// \brief Check if last raycast operation has yeld any results.
-	bool has_raycast_result();
+	bool has_query_result();
 
 	/// \brief Returns the amount of objects found.
-	int get_raycast_result_amount();
+	int get_query_result_amount();
 
 	/// \brief Returns the raycast result.
-	RaycastResult get_raycast_result(int id = 0);
+	QueryResult get_query_result(int id = 0);
+
+	/// \brief An useful method that creates a rect from a given pointf that could be used for querying.
+	Rectf prepare_rect(const Pointf &point, const float range = 0.001f);
+
+	/// \brief An useful method that creates a rect from two given ints that could be used for querying.
+	Rectf prepare_rect(const int x, const int y, const float range = 0.001f);
+
+	/// \brief An useful method that creates a rect from two given floats that could be used for querying.
+	Rectf prepare_rect(const float x, const float y, const float range = 0.001f);
+
 
 /// \}
 /// \name Operations
 /// \{
 
 	/// \brief Raycast to find the first object on a given line segment.
-	void RaycastFirst(Pointf &start, Pointf &end);
+	void raycast_first(const Pointf &start, const Pointf &end);
 
 	/// \brief Raycast to find any object on a given line segment.
-	void RaycastAny(Pointf &start, Pointf &end);
+	void raycast_any(const Pointf &start, const Pointf &end);
 
 	/// \brief Raycast to find all objects on a given line segment.
-	void RaycastAll(Pointf &start, Pointf &end);
+	void raycast_all(const Pointf &start, const Pointf &end);
+
+	/// \brief Query the world for any fixture that potentially overlap the provided rectangle. 
+	void query_any(const Rectf &rect);
+
+	/// \brief Query the world for some fixtures that potentially overlap the provided rectangle. 
+	void query_some(const Rectf &rect, const int amount);
+
+	/// \brief Query the world for all fixtures that potentially overlap the provided rectangle. 
+	void query_all(const Rectf &rect);
+
+protected:
+
+	/// \brief Execute raycasting. 
+	inline void raycast(const Pointf &start, const Pointf &end);
+
+	/// \brief Execute aabb querying.
+	inline void query(const Rectf &rect);
 
 /// \}
 /// \name Implementation

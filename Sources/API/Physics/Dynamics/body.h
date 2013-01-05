@@ -157,6 +157,7 @@ private:
 	friend class DistanceJointDescription;
 	friend class RevoluteJointDescription;
 	friend class PrismaticJointDescription;
+	friend class MouseJointDescription;
 };
 
 }

@@ -26,38 +26,69 @@
 **    Arkadiusz Kalinowski
 */
 
-#pragma once
-
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/vec2.h"
+#include "Physics/precomp.h"
+#include "query_result_impl.h"
+#include "API/Physics/World/query_result.h"
 
 namespace clan
 {
-	
-class RaycastResult_Impl
+
+
+QueryResult::QueryResult()
 {
-public:
-//																						_______________________
-//																						C O N S T R U C T O R S
 
-	RaycastResult_Impl()
-	{};
+}
 
-	~RaycastResult_Impl() { return; }
+QueryResult::QueryResult(Fixture &fixture)
+: impl(new QueryResult_Impl)
+{
+	impl->fixture = fixture;
+	impl->point = Pointf(0.0f, 0.0f);
+	impl->normal = Vec2f(0.0f, 0.0f);
+	impl->fraction = 0.0f;
+	impl->type = query_aabb;
+}
 
-//																						___________________
-//																						O P E R A T I O N S
+QueryResult::QueryResult(Fixture &fixture, Pointf &point, Vec2f &normal, float fraction)
+: impl(new QueryResult_Impl)
+{
+	impl->fixture = fixture;
+	impl->point = point;
+	impl->normal = normal;
+	impl->fraction = fraction;
+	impl->type = query_raycast;
 
-//																						___________________________
-//																						I M P L E M E N T A T I O N
-	Fixture fixture;
-	Pointf point;
-	Vec2f normal;
-	float fraction;
+}
+QueryResult::~QueryResult()
+{
 
+}
 
+void QueryResult::throw_if_null() const
+{
+		if (!impl)
+		throw Exception("QueryResult is null");
+}
 
-};
+Fixture &QueryResult::get_fixture() const
+{
+	return impl->fixture;
+}
+
+Body &QueryResult::get_body() const
+{
+	return impl->fixture.get_owner_body();
+}
+
+QueryResultType QueryResult::get_query_type() const
+{
+	return impl->type;
+}
+QueryResult &QueryResult::operator =(const QueryResult &copy)
+{
+	impl = copy.impl;
+	return *this;
+}
+
 
 }
