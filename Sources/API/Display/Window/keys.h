@@ -35,6 +35,10 @@
 #ifdef WIN32
 #include <windows.h>
 #endif
+
+namespace clan
+{
+
 enum InputCode
 {
 	mouse_left=0,
@@ -479,5 +483,7 @@ enum InputCode
 
 	keycode_unknown=-1
 };
+
+}
 
 /// \}
