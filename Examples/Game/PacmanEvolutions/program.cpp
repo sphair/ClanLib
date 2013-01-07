@@ -35,6 +35,8 @@ int Program::main(const std::vector<std::string> &args)
 		Age2D age_2d(canvas, &game_world);
 		Age3D age_3d(canvas, &game_world);
 
+		//game_world.next_age();
+
 		while (!exit)
 		{
 			game_world.button_left = ic.get_keyboard().get_keycode(clan::keycode_left);
@@ -55,7 +57,7 @@ int Program::main(const std::vector<std::string> &args)
 				age_3d.render(canvas);
 				break;
 			}
-			window.flip();
+			canvas.flip();
 			clan::KeepAlive::process();
 		}
 	}
