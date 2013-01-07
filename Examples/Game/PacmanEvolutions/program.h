@@ -4,5 +4,5 @@
 class Program
 {
 public:
-	static int main(const std::vector<CL_String> &args);
+	static int main(const std::vector<std::string> &args);
 };

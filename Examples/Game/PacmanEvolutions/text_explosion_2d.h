@@ -7,18 +7,18 @@ class TextExplosion2D
 {
 public:
 	TextExplosion2D();
-	void explode(CL_GraphicContext &gc, const CL_String &text, int x, int y, CL_Font font, CL_Colorf color);
-	void render(CL_GraphicContext &gc);
+	void explode(clan::GraphicContext &gc, const std::string &text, int x, int y, clan::Font font, clan::Colorf color);
+	void render(clan::Canvas &canvas);
 
 private:
-	CL_Font font;
+	clan::Font font;
 	int initial_x;
 	int initial_y;
-	CL_String text;
-	CL_Colorf color;
+	std::string text;
+	clan::Colorf color;
 
-	std::vector<CL_Vec3f> letter_positions;
-	std::vector<CL_Vec3f> letter_deltas;
+	std::vector<clan::Vec3f> letter_positions;
+	std::vector<clan::Vec3f> letter_deltas;
 
 	ElapsedTimer timer;
 };

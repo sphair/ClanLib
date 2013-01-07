@@ -17,8 +17,8 @@ public:
 	ElapsedTimer timer;
 	FramerateCounter fps_counter;
 
-	CL_SharedPtr<GameObject_Pacman> player;
-	std::vector<CL_SharedPtr<GameObject_Ghost> > ghosts;
+	std::shared_ptr<GameObject_Pacman> player;
+	std::vector<std::shared_ptr<GameObject_Ghost> > ghosts;
 	Map map;
 	int score;
 
@@ -38,10 +38,10 @@ public:
 	bool button_respawn;
 
 	float total_time_elapsed;
-	CL_String text_fps;
-	CL_String text_score;
-	CL_String text_message_bottom;
-	CL_String text_message_center0;
-	CL_String text_message_center1;
+	std::string text_fps;
+	std::string text_score;
+	std::string text_message_bottom;
+	std::string text_message_center0;
+	std::string text_message_center1;
 	bool blow_up_text;
 };

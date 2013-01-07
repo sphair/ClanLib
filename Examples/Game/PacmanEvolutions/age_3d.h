@@ -6,47 +6,47 @@ class GameWorld;
 class Age3D
 {
 public:
-	Age3D(CL_GraphicContext &gc, GameWorld *game);
-	void render(CL_GraphicContext &gc);
+	Age3D(clan::Canvas &canvas, GameWorld *game);
+	void render(clan::Canvas &canvas);
 
 private:
 	struct WallVertex
 	{
-		CL_Vec3f position;
-		CL_Vec2f texcoord0;
-		CL_Vec3f normal;
+		clan::Vec3f position;
+		clan::Vec2f texcoord0;
+		clan::Vec3f normal;
 	};
 
 	struct Uniforms
 	{
-		CL_Vec4f object_normal_to_eye[3]; // mat3, but with std140 layout it is stored with 3*vec4
-		CL_Mat4f object_to_world;
-		CL_Mat4f world_to_eye;
-		CL_Mat4f eye_to_projection;
+		clan::Vec4f object_normal_to_eye[3]; // mat3, but with std140 layout it is stored with 3*vec4
+		clan::Mat4f object_to_world;
+		clan::Mat4f world_to_eye;
+		clan::Mat4f eye_to_projection;
 	};
 
 	std::vector<WallVertex> create_walls();
-	void write_wall(std::vector<WallVertex> &in_out_vertices, const CL_Vec3f &p1, const CL_Vec3f &p2, const CL_Vec3f &normal);
+	void write_wall(std::vector<WallVertex> &in_out_vertices, const clan::Vec3f &p1, const clan::Vec3f &p2, const clan::Vec3f &normal);
 
-	void create_billboards(CL_GraphicContext &gc);
-	void draw_billboard(CL_GraphicContext &gc, CL_Sprite &sprite, const CL_Mat4f &world_to_projection, float x, float y);
-	CL_Vec2f project(CL_GraphicContext &gc, const CL_Mat4f &world_to_projection, CL_Vec4f position_in_world);
+	void create_billboards(clan::GraphicContext &gc);
+	void draw_billboard(clan::Canvas &canvas, clan::Sprite &sprite, const clan::Mat4f &world_to_projection, float x, float y);
+	clan::Vec2f project(clan::GraphicContext &gc, const clan::Mat4f &world_to_projection, clan::Vec4f position_in_world);
 
 	GameWorld *game;
 	int num_wall_vertices;
-	CL_VertexArrayVector<WallVertex> wall_vertices;
-	CL_PrimitivesArray walls_prim_array;
-	CL_ProgramObject walls_program;
-	CL_UniformVector<Uniforms> uniforms;
-	CL_Texture2D wall_texture;
-	CL_RasterizerState raster_state;
-	CL_DepthStencilState depth_stencil_state;
-	CL_FrameBuffer fb;
-	CL_RenderBuffer depth_buffer;
-	CL_Texture2D final_texture;
+	clan::VertexArrayVector<WallVertex> wall_vertices;
+	clan::PrimitivesArray walls_prim_array;
+	clan::ProgramObject walls_program;
+	clan::UniformVector<Uniforms> uniforms;
+	clan::Texture2D wall_texture;
+	clan::RasterizerState raster_state;
+	clan::DepthStencilState depth_stencil_state;
+	clan::FrameBuffer fb;
+	clan::RenderBuffer depth_buffer;
+	clan::Texture2D final_texture;
 
-	CL_Sprite tiles;
-	CL_Sprite pacman[4]; // left, right, up, down
-	CL_Sprite ghost[2]; // green and red ghost animations
-	CL_Vec2f look_at;
+	clan::Sprite tiles;
+	clan::Sprite pacman[4]; // left, right, up, down
+	clan::Sprite ghost[2]; // green and red ghost animations
+	clan::Vec2f look_at;
 };
