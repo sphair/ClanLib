@@ -6,19 +6,19 @@ class GameWorld;
 class AgeAscii
 {
 public:
-	AgeAscii(CL_GraphicContext &gc, GameWorld *game);
-	void render(CL_GraphicContext &gc);
+	AgeAscii(clan::Canvas &canvas, GameWorld *game);
+	void render(clan::Canvas &canvas);
 
-	void set_character(int x, int y, wchar_t symbol, const CL_Colorf &color);
+	void set_character(int x, int y, wchar_t symbol, const clan::Colorf &color);
 
 private:
 	wchar_t get_tile_character(int tile);
-	CL_Colorf get_tile_color(int tile);
+	clan::Colorf get_tile_color(int tile);
 
 	GameWorld *game;
-	CL_Font font;
-	CL_Vec2f look_at;
+	clan::Font font;
+	clan::Vec2f look_at;
 
 	std::vector<wchar_t> chars;
-	std::vector<CL_Colorf> colors;
+	std::vector<clan::Colorf> colors;
 };

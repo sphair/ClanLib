@@ -8,8 +8,8 @@
 GameObject_Ghost::GameObject_Ghost(int x, int y, GameWorld *world)
 : GameObject_Moving(x, y, world)
 {
-	//sfx_ghost = CL_SoundBuffer("Game/sfx_ghost", world->resources);
-	//sfx_ghost_dead = CL_SoundBuffer("Game/sfx_ghost_dead", world->resources);
+	//sfx_ghost = clan::SoundBuffer("Game/sfx_ghost", world->resources);
+	//sfx_ghost_dead = clan::SoundBuffer("Game/sfx_ghost_dead", world->resources);
 
 	move_dir = rand()%4;
 	red_ghost = false;
@@ -76,7 +76,7 @@ bool GameObject_Ghost::event_reached_dest()
 		if (div < 10 && div > 0.1)
 		{
 			float vol = 1/div;
-			//CL_SoundBuffer_Session ses = sfx_ghost.prepare();
+			//clan::SoundBuffer_Session ses = sfx_ghost.prepare();
 			//ses.set_volume(vol);
 			//ses.play();
 		}
@@ -88,7 +88,7 @@ bool GameObject_Ghost::event_reached_dest()
 		// don't follow trail if player got power up or is dead
 	}
 	
-//	if (follow_trail) CL_Console::write_line("ghost in follow trail mode");
+//	if (follow_trail) clan::Console::write_line("ghost in follow trail mode");
 
 	int dirs_avail = 0;
 	for (int i=0; i<3; i++)

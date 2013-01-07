@@ -20,7 +20,7 @@ bool GameObject_Pacman::turn(float time_elapsed)
 {
 	check_input();
 
-	if (got_powerup && CL_System::get_time() - powerup_starttime>20000)
+	if (got_powerup && clan::System::get_time() - powerup_starttime>20000)
 	{
 		got_powerup = false;
 	}
@@ -55,7 +55,7 @@ bool GameObject_Pacman::event_reached_dest()
 		world->score += 500;
 		world->map.eat_egg(dest_x, dest_y);
 		got_powerup = true;
-		powerup_starttime = CL_System::get_time();
+		powerup_starttime = clan::System::get_time();
 //		sfx_powerup.play();
 
 		world->next_age();

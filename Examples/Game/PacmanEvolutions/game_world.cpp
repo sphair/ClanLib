@@ -7,11 +7,11 @@
 GameWorld::GameWorld()
 : score(0), age(age_ascii), button_left(false), button_right(false), button_up(false), button_down(false), button_respawn(false), total_time_elapsed(0.0f)
 {
-	player = CL_SharedPtr<GameObject_Pacman>(new GameObject_Pacman(map.get_width()/2, map.get_height()/2, this));
-	ghosts.push_back(CL_SharedPtr<GameObject_Ghost>(new GameObject_Ghost(1, 1, this)));
-	ghosts.push_back(CL_SharedPtr<GameObject_Ghost>(new GameObject_Ghost(map.get_width()-2, 1, this)));
-	ghosts.push_back(CL_SharedPtr<GameObject_Ghost>(new GameObject_Ghost(1, map.get_height()-2, this)));
-	ghosts.push_back(CL_SharedPtr<GameObject_Ghost>(new GameObject_Ghost(map.get_width()-2, map.get_height()-2, this)));
+	player = std::shared_ptr<GameObject_Pacman>(new GameObject_Pacman(map.get_width()/2, map.get_height()/2, this));
+	ghosts.push_back(std::shared_ptr<GameObject_Ghost>(new GameObject_Ghost(1, 1, this)));
+	ghosts.push_back(std::shared_ptr<GameObject_Ghost>(new GameObject_Ghost(map.get_width()-2, 1, this)));
+	ghosts.push_back(std::shared_ptr<GameObject_Ghost>(new GameObject_Ghost(1, map.get_height()-2, this)));
+	ghosts.push_back(std::shared_ptr<GameObject_Ghost>(new GameObject_Ghost(map.get_width()-2, map.get_height()-2, this)));
 }
 
 void GameWorld::update()
@@ -36,8 +36,8 @@ void GameWorld::update()
 
 	fps_counter.frame_shown();
 
-	text_score = cl_format("%1 bonus bananas", score);
-	text_fps = cl_format("%1 fps", fps_counter.get_framerate());
+	text_score = clan::string_format("%1 bonus bananas", score);
+	text_fps = clan::string_format("%1 fps", fps_counter.get_framerate());
 
 	if (!player)
 	{
@@ -57,7 +57,7 @@ void GameWorld::update()
 	bool respawn = !player && button_respawn;
 	if (respawn)
 	{
-		player = CL_SharedPtr<GameObject_Pacman>(new GameObject_Pacman(map.get_width()/2, map.get_height()/2, this));
+		player = std::shared_ptr<GameObject_Pacman>(new GameObject_Pacman(map.get_width()/2, map.get_height()/2, this));
 		blow_up_text = true;
 	}
 }

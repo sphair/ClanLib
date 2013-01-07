@@ -13,7 +13,7 @@ Map::~Map()
 
 int Map::get_tile(int x, int y) const
 {
-	return tiles[cl_clamp(x, 0, width-1) + cl_clamp(y, 0, height-1) * width];
+	return tiles[clan::clamp(x, 0, width-1) + clan::clamp(y, 0, height-1) * width];
 }
 
 bool Map::has_wall(int x, int y) const
@@ -49,7 +49,7 @@ void Map::eat_egg(int x, int y)
 	if (has_egg(x, y) || has_evolutionup(x, y) || has_powerup(x, y))
 	{
 		eggs_left--;
-		tiles[cl_clamp(x, 0, width-1) + cl_clamp(y, 0, height-1) * width] = 0;
+		tiles[clan::clamp(x, 0, width-1) + clan::clamp(y, 0, height-1) * width] = 0;
 	}
 }
 

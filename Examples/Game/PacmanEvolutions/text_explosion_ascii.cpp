@@ -8,7 +8,7 @@ TextExplosionAscii::TextExplosionAscii()
 {
 }
 
-void TextExplosionAscii::explode(AgeAscii *console, const CL_String &new_text, int new_x, int new_y, CL_Colorf new_color)
+void TextExplosionAscii::explode(AgeAscii *console, const std::string &new_text, int new_x, int new_y, clan::Colorf new_color)
 {
 	letter_positions.clear();
 	letter_deltas.clear();
@@ -24,9 +24,9 @@ void TextExplosionAscii::explode(AgeAscii *console, const CL_String &new_text, i
 	letter_symbols.resize(text.length());
 	for (size_t i = 0; i < text.length(); i++)
 	{
-		letter_positions[i] = CL_Vec3f((float)x, (float)initial_y, 1.0f);
-		letter_deltas[i] = CL_Vec3f((rand()%2000-1000)/(float) 20, -(rand()%2000)/(float) 20, (rand()%2000-1000)/(float) 2000);
-		letter_symbols[i] = CL_StringHelp::utf8_to_ucs2(text.substr(i, 1))[0];
+		letter_positions[i] = clan::Vec3f((float)x, (float)initial_y, 1.0f);
+		letter_deltas[i] = clan::Vec3f((rand()%2000-1000)/(float) 20, -(rand()%2000)/(float) 20, (rand()%2000-1000)/(float) 2000);
+		letter_symbols[i] = clan::StringHelp::utf8_to_ucs2(text.substr(i, 1))[0];
 		x++;
 	}
 	timer.reset();
