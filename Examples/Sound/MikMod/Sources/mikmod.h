@@ -33,7 +33,7 @@
 class MikMod
 {
 public:
-	int start(const std::vector<CL_String> &args);
+	int start(const std::vector<std::string> &args);
 
 private:
 

@@ -39,17 +39,17 @@
 CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvider_MikMod &source) :
 	source(source), num_samples(0), position(0), stream_eof(false)
 {
-	CL_UniquePtr<CL_IODevice_Memory> input_autoptr(new CL_IODevice_Memory(source.impl->buffer));
-	CL_IODevice_Memory *input = input_autoptr.get();
+	std::auto_ptr<clan::IODevice_Memory> input_autoptr(new clan::IODevice_Memory(source.impl->buffer));
+	clan::IODevice_Memory *input = input_autoptr.get();
 
 	MREADER *reader = new_clanlib_reader((void *) input);
-	if (reader == 0) throw CL_Exception("new_clanlib_reader failed!");
+	if (reader == 0) throw clan::Exception("new_clanlib_reader failed!");
 
 	module = Player_LoadGeneric(reader,CLANLIB_READER_CHANNELS,0);
 	if (module == 0)
 	{
 		delete_clanlib_reader(reader);
-		throw CL_Exception(MikMod_strerror(MikMod_errno));
+		throw clan::Exception(MikMod_strerror(MikMod_errno));
 	}
 
 	module->wrap = false;
@@ -59,7 +59,7 @@ CL_SoundProvider_MikMod_Session::CL_SoundProvider_MikMod_Session(CL_SoundProvide
 	delete_clanlib_reader(reader);
 
 	frequency = md_mixfreq;
-	format = (md_mode & DMODE_16BITS) ? sf_16bit_signed : sf_8bit_unsigned;
+	format = (md_mode & DMODE_16BITS) ? clan::sf_16bit_signed : clan::sf_8bit_unsigned;
 	num_channels = (md_mode&DMODE_STEREO) ? 2 : 1;
 }
 
@@ -131,7 +131,7 @@ int CL_SoundProvider_MikMod_Session::get_data(float **channels, int data_request
 {
 
 	int total_written = 0;
-	int bytes_per_sample = (format == sf_16bit_signed) ? 2 : 1;
+	int bytes_per_sample = (format == clan::sf_16bit_signed) ? 2 : 1;
 	bytes_per_sample *= num_channels;
 
 	while (data_requested > 0)
@@ -140,7 +140,7 @@ int CL_SoundProvider_MikMod_Session::get_data(float **channels, int data_request
 		int written = VC_WriteBytes(buffer, ((data_requested > 16*1024) ? 16*1024 : data_requested) * bytes_per_sample);
 		written /= bytes_per_sample;
 
-		if (format == sf_16bit_signed)
+		if (format == clan::sf_16bit_signed)
 		{
 			short *src = (short *) buffer;
 			if (num_channels == 2)
@@ -148,14 +148,14 @@ int CL_SoundProvider_MikMod_Session::get_data(float **channels, int data_request
 				float *temp_data_ptr[2];
 				temp_data_ptr[0] = channels[0] + total_written;
 				temp_data_ptr[1] = channels[1] + total_written;
-				CL_SoundSSE::unpack_16bit_stereo(src, written*2, temp_data_ptr);
+				clan::SoundSSE::unpack_16bit_stereo(src, written*2, temp_data_ptr);
 			}
 			else
 			{
-				CL_SoundSSE::unpack_16bit_mono(src, written*2, channels[0] + total_written);
+				clan::SoundSSE::unpack_16bit_mono(src, written*2, channels[0] + total_written);
 			}
 		}
-		else if (format == sf_8bit_unsigned)
+		else if (format == clan::sf_8bit_unsigned)
 		{
 			unsigned char *src = (unsigned char *) buffer;
 			if (num_channels == 2)
@@ -164,11 +164,11 @@ int CL_SoundProvider_MikMod_Session::get_data(float **channels, int data_request
 				temp_data_ptr[0] = channels[0] + total_written;
 				temp_data_ptr[1] = channels[1] + total_written;
 
-				CL_SoundSSE::unpack_8bit_stereo(src, written, temp_data_ptr);
+				clan::SoundSSE::unpack_8bit_stereo(src, written, temp_data_ptr);
 			}
 			else
 			{
-				CL_SoundSSE::unpack_8bit_mono(src, written, channels[0] + total_written);
+				clan::SoundSSE::unpack_8bit_mono(src, written, channels[0] + total_written);
 			}
 		}
 

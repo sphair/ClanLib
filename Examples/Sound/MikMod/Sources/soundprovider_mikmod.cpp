@@ -34,30 +34,30 @@
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod construction:
 CL_SoundProvider_MikMod::CL_SoundProvider_MikMod(
-	const CL_String &filename,
-	const CL_VirtualDirectory &directory,
+	const std::string &filename,
+	const clan::VirtualDirectory &directory,
 	bool stream)
 : impl(new CL_SoundProvider_MikMod_Impl)
 {
-	CL_VirtualDirectory new_directory = directory;
-	CL_IODevice input = new_directory.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
+	clan::VirtualDirectory new_directory = directory;
+	clan::IODevice input = new_directory.open_file(filename, clan::File::open_existing, clan::File::access_read, clan::File::share_all);
 	impl->load(input);
 }
 
 CL_SoundProvider_MikMod::CL_SoundProvider_MikMod(
-	const CL_String &fullname, bool stream)
+	const std::string &fullname, bool stream)
 : impl(new CL_SoundProvider_MikMod_Impl)
 {
-	CL_String path = CL_PathHelp::get_fullpath(fullname, CL_PathHelp::path_type_file);
-	CL_String filename = CL_PathHelp::get_filename(fullname, CL_PathHelp::path_type_file);
-	CL_VirtualFileSystem vfs(path);
-	CL_VirtualDirectory dir = vfs.get_root_directory();
-	CL_IODevice input = dir.open_file(filename, CL_File::open_existing, CL_File::access_read, CL_File::share_all);
+	std::string path = clan::PathHelp::get_fullpath(fullname, clan::PathHelp::path_type_file);
+	std::string filename = clan::PathHelp::get_filename(fullname, clan::PathHelp::path_type_file);
+	clan::VirtualFileSystem vfs(path);
+	clan::VirtualDirectory dir = vfs.get_root_directory();
+	clan::IODevice input = dir.open_file(filename, clan::File::open_existing, clan::File::access_read, clan::File::share_all);
 	impl->load(input);
 }
 
 CL_SoundProvider_MikMod::CL_SoundProvider_MikMod(
-	CL_IODevice &file, bool stream)
+	clan::IODevice &file, bool stream)
 : impl(new CL_SoundProvider_MikMod_Impl)
 {
 	impl->load(file);
@@ -70,12 +70,12 @@ CL_SoundProvider_MikMod::~CL_SoundProvider_MikMod()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod operations:
 
-CL_SoundProvider_Session *CL_SoundProvider_MikMod::begin_session()
+clan::SoundProvider_Session *CL_SoundProvider_MikMod::begin_session()
 {
 	return new CL_SoundProvider_MikMod_Session(*this);
 }
 
-void CL_SoundProvider_MikMod::end_session(CL_SoundProvider_Session *session)
+void CL_SoundProvider_MikMod::end_session(clan::SoundProvider_Session *session)
 {
 	delete session;
 }
@@ -83,10 +83,10 @@ void CL_SoundProvider_MikMod::end_session(CL_SoundProvider_Session *session)
 /////////////////////////////////////////////////////////////////////////////
 // CL_SoundProvider_MikMod implementation:
 
-void CL_SoundProvider_MikMod_Impl::load(CL_IODevice &input)
+void CL_SoundProvider_MikMod_Impl::load(clan::IODevice &input)
 {
 	int size = input.get_size();
-	buffer = CL_DataBuffer(size);
+	buffer = clan::DataBuffer(size);
 	int bytes_read = input.read(buffer.get_data(), buffer.get_size());
 	buffer.set_size(bytes_read);
 }

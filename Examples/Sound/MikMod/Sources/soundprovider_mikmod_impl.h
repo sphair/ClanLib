@@ -31,18 +31,18 @@
 
 #include <cstring>
 
-class CL_InputSourceProvider;
-class CL_IODevice;
+class clan::InputSourceProvider;
+class clan::IODevice;
 
 class CL_SoundProvider_MikMod_Impl
 {
 /// \name Attributes
 /// \{
 public:
-	void load(CL_IODevice &input);
+	void load(clan::IODevice &input);
 
 public:
-	CL_DataBuffer buffer;
+	clan::DataBuffer buffer;
 /// \}
 };
 

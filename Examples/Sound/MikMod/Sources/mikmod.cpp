@@ -33,26 +33,26 @@
 #include "setupmikmod.h"
 
 // The start of the Application
-int MikMod::start(const std::vector<CL_String> &args)
+int MikMod::start(const std::vector<std::string> &args)
 {
 	// Initialize mikmod
 	CL_SetupMikMod setup_mikmod;
 
-	CL_SoundOutput sound_output(44100, 192);
+	clan::SoundOutput sound_output(44100, 192);
 
-	CL_SoundBuffer boss = CL_SoundBuffer("Resources/boss.mod");
+	clan::SoundBuffer boss = clan::SoundBuffer("Resources/boss.mod");
 
 
-	CL_SoundBuffer_Session session = boss.prepare();
+	clan::SoundBuffer_Session session = boss.prepare();
 	session.play();
 
-	CL_Console::write_line("Press any key to exit");
+	clan::Console::write_line("Press any key to exit");
 
 	while(session.is_playing())
 	{
 		if (kbhit())
 			break;
-		CL_KeepAlive::process(100);
+		clan::KeepAlive::process(100);
 	}
 
 	return 0;

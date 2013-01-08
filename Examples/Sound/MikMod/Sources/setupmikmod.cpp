@@ -44,7 +44,7 @@ CL_SetupMikMod::~CL_SetupMikMod()
 	CL_SetupMikMod::deinit();
 }
 
-static CL_SoundProviderType *providertype[17] = {0};
+static clan::SoundProviderType *providertype[17] = {0};
 
 static BOOL clanMikMod_IsPresent()
 {
@@ -125,23 +125,23 @@ void CL_SetupMikMod::init(bool register_resources_only)
 	// disable the reverb
 	md_reverb = 0;
 
-	providertype[0] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("mikmod");
-	providertype[1] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("it");
-	providertype[2] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("xm");
-	providertype[3] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("s3m");
-	providertype[4] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("mtm");
-	providertype[5] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("669");
-	providertype[6] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("stm");
-	providertype[7] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("ult");
-	providertype[8] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("far");
-	providertype[9] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("med");
-	providertype[10] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("amf");
-	providertype[11] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("dsm");
-	providertype[12] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("imf");
-	providertype[13] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("gdm");
-	providertype[14] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("stx");
-	providertype[15] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("okt");
-	providertype[16] = new CL_SoundProviderType_Register<CL_SoundProvider_MikMod>("mod");
+	providertype[0] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mikmod");
+	providertype[1] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("it");
+	providertype[2] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("xm");
+	providertype[3] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("s3m");
+	providertype[4] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mtm");
+	providertype[5] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("669");
+	providertype[6] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("stm");
+	providertype[7] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("ult");
+	providertype[8] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("far");
+	providertype[9] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("med");
+	providertype[10] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("amf");
+	providertype[11] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("dsm");
+	providertype[12] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("imf");
+	providertype[13] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("gdm");
+	providertype[14] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("stx");
+	providertype[15] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("okt");
+	providertype[16] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mod");
 
 	/*
 	 * OK, now we kind of ignore the "register_resources_only" 

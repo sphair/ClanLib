@@ -31,31 +31,31 @@
 #include "program.h"
 #include "mikmod.h"
 
-int Program::main(const std::vector<CL_String> &args)
+int Program::main(const std::vector<std::string> &args)
 {
-	CL_ConsoleWindow console("Console", 80, 160);
+	clan::ConsoleWindow console("Console", 80, 160);
 
 	try
 	{
 		// Initialize ClanLib base components
-		CL_SetupCore setup_core;
+		clan::SetupCore setup_core;
 
 		// Initialize the sound system
-		CL_SetupSound setup_sound;
+		clan::SetupSound setup_sound;
 
 		// Start the Application
 		MikMod app;
 		int retval = app.start(args);
 		return retval;
 	}
-	catch(CL_Exception &exception)
+	catch(clan::Exception &exception)
 	{
-		CL_Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;
 	}
 }
 
-// Instantiate CL_ClanApplication, informing it where the Program is located
-CL_ClanApplication app(&Program::main);
+// Instantiate clan::ClanApplication, informing it where the Program is located
+clan::Application app(&Program::main);
