@@ -55,7 +55,7 @@ ModelAssimp::~ModelAssimp()
 /////////////////////////////////////////////////////////////////////////////
 // ModelAssimp Operations:
 
-void ModelAssimp::render(GraphicContext &gc, const LightModel &light_model, const Position &position, const Orientation &orientation)
+void ModelAssimp::render(Canvas &canvas, const LightModel &light_model, const Position &position, const Orientation &orientation)
 {
 	Mat4f modelmatrix = Mat4f::identity();
 	modelmatrix = modelmatrix * position.to_matrix();
@@ -64,8 +64,8 @@ void ModelAssimp::render(GraphicContext &gc, const LightModel &light_model, cons
 
 	modelmatrix = modelmatrix * Mat4f::rotate(Angle(-90.0f, cl_degrees), 1.0f, 0.0f, 0.0f, false);
 	modelmatrix = modelmatrix * Mat4f::scale(scale, scale, scale);
-	gc.push_modelview();
-	gc.mult_modelview(modelmatrix);
+	canvas.push_modelview();
+	canvas.mult_modelview(modelmatrix);
 
 	gc.set_culled(true);
 	gc.set_face_cull_mode(cl_cull_back);
@@ -83,7 +83,7 @@ void ModelAssimp::render(GraphicContext &gc, const LightModel &light_model, cons
 	gc.reset_program_object();
 	gc.reset_polygon_rasterizer();
 
-	gc.pop_modelview();
+	canvas.pop_modelview();
 
 }
 
@@ -184,10 +184,10 @@ void ModelAssimp::load_textures(GraphicContext &gc)
 	for (std::map<std::string, Texture>::iterator itr = textures.begin(); itr != textures.end(); ++itr)
 	{
 		std::string filename = string_format("Resources/%1", PathHelp::get_filename((*itr).first));
-		Texture texture(gc, filename);
+		Texture2D texture(gc, filename);
 		texture.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat);
-		texture.set_min_filter(cl_filter_linear);
-		texture.set_mag_filter(cl_filter_linear);
+		texture.set_min_filter(filter_linear);
+		texture.set_mag_filter(filter_linear);
 		(*itr).second = texture;
 	}
 }

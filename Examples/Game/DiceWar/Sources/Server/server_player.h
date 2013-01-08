@@ -3,8 +3,6 @@
 
 class ServerLobbyPlayer;
 class ServerGamePlayer;
-class NetGameConnection;
-class NetGameEvent;
 
 class ServerPlayer
 {

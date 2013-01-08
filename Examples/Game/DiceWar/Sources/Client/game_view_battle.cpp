@@ -10,9 +10,8 @@
 #include "../Lib/map_area.h"
 
 GameViewBattle::GameViewBattle(GameView *view, Client *client)
-: GUIComponent(view), view(view), client(client)
+: GUIComponent(view, "battle"), view(view), client(client)
 {
-	set_type_name("battle");
 	set_geometry(Rect(view->get_width() - 400, 0, view->get_width(), 300));
 	set_visible(false);
 
@@ -21,13 +20,13 @@ GameViewBattle::GameViewBattle(GameView *view, Client *client)
 
 	timer_hide.func_expired().set(this, &GameViewBattle::on_timer_hide_expired);
 
-	Texture texture_dice(get_gc(), "Resources/dices.png", VirtualDirectory());
+	Texture2D texture_dice(get_canvas(), "Resources/dices.png", VirtualDirectory());
 	SpriteDescription dice_description;
 	dice_description.add_gridclipped_frames(texture_dice, 0, 0, 42, 45, 6, 1);
-	sprite_dices = Sprite(get_gc(), dice_description);
+	sprite_dices = Sprite(get_canvas(), dice_description);
 
-	font_large = Font(get_gc(), "Accidental Presidency", -40);
-	font_small = Font(get_gc(), "Accidental Presidency", -30);
+	font_large = Font(get_canvas(), "Accidental Presidency", -40);
+	font_small = Font(get_canvas(), "Accidental Presidency", -30);
 }
 
 GameViewBattle::~GameViewBattle()
@@ -62,16 +61,13 @@ void GameViewBattle::defense_dice_result(const std::vector<int> &dice_results)
 	defense_results = dice_results;
 }
 
-void GameViewBattle::on_render(GraphicContext &gc, const Rect &clip_rect)
+void GameViewBattle::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	GUIThemePart part(this);
-	part.render_box(gc, get_size(), clip_rect);
-
 	std::string text = string_format("%1 vs %2", player_from->name, player_to->name);
-	Size text_size = font_small.get_text_size(gc, text);
+	Size text_size = font_small.get_text_size(canvas, text);
 	int xpos = (get_width() - text_size.width) / 2;
 	int ypos = get_height() / 2 + 10;
-	font_small.draw_text(gc, xpos, ypos, text);
+	font_small.draw_text(canvas, xpos, ypos, text);
 
 	int attack_strength = 0;
 	int defense_strength = 0;
@@ -83,11 +79,11 @@ void GameViewBattle::on_render(GraphicContext &gc, const Rect &clip_rect)
 		xpos = (get_width() - dice_width) / 2;
 		ypos = 20;
 
-		for(int i = 0; i < cl_min(dice_count, current_dice_index); i++)
+		for(int i = 0; i < clan::min(dice_count, current_dice_index); i++)
 		{
 			attack_strength += attack_results[i];
 			sprite_dices.set_frame(attack_results[i] - 1);
-			sprite_dices.draw(gc, (float)xpos, (float)ypos);
+			sprite_dices.draw(canvas, (float)xpos, (float)ypos);
 
 			xpos += 35;
 		}
@@ -97,27 +93,27 @@ void GameViewBattle::on_render(GraphicContext &gc, const Rect &clip_rect)
 		xpos = (get_width() - dice_width) / 2;
 		ypos = get_height() - 45 - 20;
 
-		for(int i = 0; i < cl_min(dice_count, current_dice_index); i++)
+		for(int i = 0; i < clan::min(dice_count, current_dice_index); i++)
 		{
 			defense_strength += defense_results[i];
 			sprite_dices.set_frame(defense_results[i] - 1);
-			sprite_dices.draw(gc, (float)xpos, (float)ypos);
+			sprite_dices.draw(canvas, (float)xpos, (float)ypos);
 
 			xpos += 35;
 		}
 	}
 
 	text = StringHelp::int_to_text(attack_strength);
-	text_size = font_large.get_text_size(gc, text);
+	text_size = font_large.get_text_size(canvas, text);
 	xpos = (get_width() - text_size.width) / 2;
 	ypos = 109;
-	font_large.draw_text(gc, xpos, ypos, text);
+	font_large.draw_text(canvas, xpos, ypos, text);
 
 	text = StringHelp::int_to_text(defense_strength);
-	text_size = font_large.get_text_size(gc, text);
+	text_size = font_large.get_text_size(canvas, text);
 	xpos = (get_width() - text_size.width) / 2;
 	ypos = get_height() - 80;
-	font_large.draw_text(gc, xpos, ypos, text);
+	font_large.draw_text(canvas, xpos, ypos, text);
 }
 
 void GameViewBattle::on_message(GUIMessage &message)
@@ -128,7 +124,7 @@ void GameViewBattle::on_message(GUIMessage &message)
 		InputEvent e = msg_input.get_event();
 		if (e.type == InputEvent::pressed)
 		{
-			int max_dice = cl_max(attack_results.size(), defense_results.size());
+			int max_dice = clan::max(attack_results.size(), defense_results.size());
 
 			if(current_dice_index < max_dice)
 				current_dice_index = max_dice;
@@ -151,7 +147,7 @@ void GameViewBattle::on_timer_hide_expired()
 	{
 		current_dice_index++;
 
-		int max_dice = cl_max(attack_results.size(), defense_results.size());
+		int max_dice = clan::max(attack_results.size(), defense_results.size());
 		if(current_dice_index > max_dice + 2)
 			close();
 	}

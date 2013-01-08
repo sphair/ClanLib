@@ -33,11 +33,11 @@ GameView::GameView(Client *client)
 	view_gameend.reset(new GameViewEnd(this));
 	view_actionbar.reset(new GameViewActionBar(this));
 
-	sprite_waiting_for_turn = Sprite(get_gc(), "Resources/waiting_for_turn.png");
+	sprite_waiting_for_turn = Sprite(get_canvas(), "Resources/waiting_for_turn.png");
 
-	font_large = Font(get_gc(), "Accidental Presidency", -40);
+	font_large = Font(get_canvas(), "Accidental Presidency", -40);
 
-	GraphicContext gc = get_gc();
+	GraphicContext gc = get_canvas();
 	army_model.reset(new ModelAssimp(gc, "Resources/army_unit.3ds"));
 
 	set_playing_state(false);
@@ -66,7 +66,7 @@ void GameView::load_map()
 
 	std::string path = string_format("Resources/Maps/%1/", map->get_mapname());
 
-	GraphicContext gc = get_gc();
+	GraphicContext gc = get_canvas();
 	terrain.reset(
 		new GameTerrain(
 			gc, 
@@ -257,12 +257,12 @@ void GameView::on_message_mouse_left_pressed()
 	}
 }
 
-void GameView::on_render(GraphicContext &gc, const Rect &clip_rect)
+void GameView::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	render_map(gc);
+	render_map(canvas);
 
 	if(is_active_turn == false)
-		sprite_waiting_for_turn.draw(gc, 0, 0);
+		sprite_waiting_for_turn.draw(canvas, 0, 0);
 }
 
 Mat4f GameView::get_projection()
@@ -295,29 +295,29 @@ int GameView::get_area_id_at_mousepos(GraphicContext &gc, Mat4f &projection, Mat
 	return terrain->get_area(map_pos);
 }
 
-void GameView::render_map(GraphicContext &gc)
+void GameView::render_map(Canvas &canvas)
 {
 	Rect client_area = get_geometry();
 
-	Draw::fill(gc, 0.0f, 0.0f, (float)client_area.right - client_area.left, (float)client_area.bottom - client_area.top, Colorf::black);
+	canvas.fill(0.0f, 0.0f, (float)client_area.right - client_area.left, (float)client_area.bottom - client_area.top, Colorf::black);
 
 	if (!terrain.get())
 	{
-		font_large.draw_text(gc, 300, 200, "Loading Map...");
+		font_large.draw_text(canvas, 300, 200, "Loading Map...");
 		return;
 	}
 
 	Mat4f modelview = get_modelview();
 	Mat4f projection = get_projection();
 
-	gc.set_map_mode(cl_user_projection);
-	gc.set_viewport(client_area);
-	gc.set_projection(projection);
-	gc.set_modelview(modelview);
+	canvas.set_map_mode(map_user_projection);
+	canvas.set_viewport(client_area);
+	canvas.set_projection(projection);
+	canvas.set_modelview(modelview);
 
-	gc.enable_depth_test(true);
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
+	canvas.enable_depth_test(true);
+	canvas.set_depth_compare_function(compare_lequal);
+	canvas.enable_depth_write(true);
 	
 	LightModel light_model;
 	LightSource light0;
@@ -327,11 +327,11 @@ void GameView::render_map(GraphicContext &gc)
 	light_model.scene_ambient = Vec4f(0.4f, 0.4f, 0.4f, 1.0f);
 	light_model.light_sources.push_back(light0);
 
-	gc.clear_depth(1.0f);
+	canvas.clear_depth(1.0f);
 
-	terrain->render(gc, light_model);
+	terrain->render(canvas, light_model);
 
-	render_armies(gc, light_model);
+	render_armies(canvas, light_model);
 
 	if(is_active_turn && !is_in_battle)
 	{
@@ -341,18 +341,18 @@ void GameView::render_map(GraphicContext &gc)
 	if(map_selection->is_modified())
 	{
 		// Update terrain with new colors
-		GraphicContext gc = get_gc();
+		GraphicContext gc = get_canvas();
 		terrain->set_area_colors(gc, map_selection->get_result_colors());
 	}
 
-	gc.reset_buffer_control();
+	canvas.reset_buffer_control();
 
-	gc.set_map_mode(cl_map_2d_upper_left);
-	gc.set_viewport(Rect(0, 0, gc.get_width(), gc.get_height()));
-	gc.set_modelview(Mat4f::identity());
+	canvas.set_map_mode(map_2d_upper_left);
+	canvas.set_viewport(Rect(0, 0, gc.get_width(), gc.get_height()));
+	canvas.set_modelview(Mat4f::identity());
 }
 
-void GameView::render_armies(GraphicContext &gc, const LightModel &light_model)
+void GameView::render_armies(Canvas &canvas, const LightModel &light_model)
 {
 	ClientMap *map = client->get_game_model()->get_map();
 	for(unsigned int i = 0; i < map->areas_size(); ++i)
@@ -361,7 +361,7 @@ void GameView::render_armies(GraphicContext &gc, const LightModel &light_model)
 	}
 }
 
-void GameView::render_army(GraphicContext &gc, const LightModel &light_model, MapArea *area)
+void GameView::render_army(Canvas &canvas, const LightModel &light_model, MapArea *area)
 {
 	Position pos(area->position.x/4 - terrain->get_size().width*2.0f, 15, area->position.y/4 - terrain->get_size().height*2.0f);
 	Orientation orientation = Orientation::look_at(0.0f, -90.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -369,7 +369,7 @@ void GameView::render_army(GraphicContext &gc, const LightModel &light_model, Ma
 
 	if (area->army_strength == 1)
 	{
-		army_model->render(gc, light_model, pos, orientation);
+		army_model->render(canvas, light_model, pos, orientation);
 	}
 	else if (area->army_strength > 1)
 	{
@@ -385,7 +385,7 @@ void GameView::render_army(GraphicContext &gc, const LightModel &light_model, Ma
 			Position pos2 = pos;
 			pos2.set_x(pos.get_x() + x * (6 + area->army_strength));
 			pos2.set_z(pos.get_z() + z * (6 + area->army_strength));
-			army_model->render(gc, light_model, pos2, orientation2);
+			army_model->render(canvas, light_model, pos2, orientation2);
 		}
 	}
 }

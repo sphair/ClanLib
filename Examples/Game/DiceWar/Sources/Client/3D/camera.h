@@ -4,8 +4,6 @@
 #include "orientation.h"
 #include "position.h"
 
-class GraphicContext;
-
 class Camera
 {
 //! Construction:
@@ -46,7 +44,7 @@ public:
 
 	void set_orientation(const Orientation &orientation);
 
-	void setup_gc(GraphicContext &gc, float z_near, float z_far);
+	void setup_canvas(Canvas &canvas, float z_near, float z_far);
 
 //! Implementation:
 private:

@@ -33,7 +33,7 @@ private:
 	void create_frame_create_game();
 	void create_frame_toolbar();
 
-	void on_render(GraphicContext &gc, const Rect &clip_rect);
+	void on_render(Canvas &canvas, const Rect &clip_rect);
 	void on_gui_message(GUIMessage &message);
 	void on_create_game_clicked();
 	void on_join_game_clicked();

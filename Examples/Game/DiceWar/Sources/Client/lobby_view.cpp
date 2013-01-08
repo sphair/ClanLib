@@ -13,7 +13,7 @@ LobbyView::LobbyView(Client *client)
 	func_render().set(this, &LobbyView::on_render);
 	func_process_message().set(this, &LobbyView::on_gui_message);
 
-	sprite_background = Sprite(get_gc(), "Resources/lobby_background1.png");
+	sprite_background = Sprite(get_canvas(), "Resources/lobby_background1.png");
 	
 	create_frame_games();
 	create_frame_create_game();
@@ -113,7 +113,7 @@ void LobbyView::create_frame_toolbar()
 {
 	button_quit = new PushButton(this);
 	button_quit->set_geometry(RectPS(955, 52, 45, 20));
-	button_quit->set_class_name("textonly");
+	button_quit->set_tag_name("textonly");
 	button_quit->set_text("Quit");
 	button_quit->func_clicked().set(this, &LobbyView::on_quit_clicked);
 }
@@ -124,10 +124,10 @@ void LobbyView::on_gui_message(GUIMessage &message)
 		exit_with_code(0);
 }
 
-void LobbyView::on_render(GraphicContext &gc, const Rect &clip_rect)
+void LobbyView::on_render(Canvas &canvas, const Rect &clip_rect)
 {
 	// TODO: Move this to css
-	sprite_background.draw(gc, Rect(0, 0, get_width(), get_height()));
+	sprite_background.draw(canvas, Rect(0, 0, get_width(), get_height()));
 //	gc.clear(Colorf::lightgray);
 }
 

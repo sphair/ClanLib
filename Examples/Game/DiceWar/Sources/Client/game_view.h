@@ -50,15 +50,15 @@ private:
 	bool is_active_turn;
 	bool is_in_battle;
 
-	void on_render(GraphicContext &gc, const Rect &clip_rect);
+	void on_render(Canvas &canvas, const Rect &clip_rect);
 	void on_message(GUIMessage &message);
 
 	void on_message_pointer_moved();
 	void on_message_mouse_left_pressed();
 
-	void render_map(GraphicContext &gc);
-	void render_armies(GraphicContext &gc, const LightModel &light_model);
-	void render_army(GraphicContext &gc, const LightModel &light_model, MapArea *area);
+	void render_map(Canvas &canvas);
+	void render_armies(Canvas &canvas, const LightModel &light_model);
+	void render_army(Canvas &canvas, const LightModel &light_model, MapArea *area);
 
 	Mat4f get_projection();
 	Mat4f get_modelview();

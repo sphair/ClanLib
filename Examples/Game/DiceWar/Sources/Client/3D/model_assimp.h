@@ -21,7 +21,7 @@ public:
 public:
 //! Operations:
 public:
-	void render(GraphicContext &gc, const LightModel &light_model, const Position &position, const Orientation &orientation);
+	void render(Canvas &canvas, const LightModel &light_model, const Position &position, const Orientation &orientation);
 
 //! Implementation:
 private:
