@@ -49,31 +49,18 @@ class ResourceManager;
 class ImageDescriptionFrame
 {
 public:
-	enum FrameType
-	{
-		type_pixelbuffer,
-		type_texture
-	};
 
 public:
 
 	/// \brief Constructs a ImageDescriptionFrame
 	///
-	/// \param pixelbuffer = Pixel Buffer
-	/// \param rect = Rect
-	ImageDescriptionFrame(PixelBuffer pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), type(type_pixelbuffer), delay(1.0) { }
-
-	/// \brief Constructs a ImageDescriptionFrame
-	///
 	/// \param texture = Texture
 	/// \param rect = Rect
-	ImageDescriptionFrame(Texture2D texture, Rect rect) : texture(texture), rect(rect), type(type_texture), delay(1.0) { }
+	ImageDescriptionFrame() { }
+	ImageDescriptionFrame(Texture2D texture, Rect rect) : texture(texture), rect(rect) { }
 
-	PixelBuffer pixelbuffer;
 	Texture2D texture;
 	Rect rect;
-	FrameType type;
-	double delay;
 };
 
 /// \brief This class contains everything to construct a image - its data, default settings etc.
@@ -113,8 +100,8 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns a list over all available frames.
-	const std::vector<ImageDescriptionFrame> &get_frames() const;
+	/// \brief Returns the available frame
+	const ImageDescriptionFrame &get_frame() const;
 
 /// \}
 /// \name Operations
@@ -122,13 +109,6 @@ public:
 public:
 	/// \brief Copy assignment operator.
 	ImageDescription &operator =(const ImageDescription &copy);
-
-	/// \brief Adds a single image.
-	///
-	/// \param pixelbuffer Image source.
-	/// \param filename Filename of image.
-	/// \param vfs Virtual File System to load image from.
-	void add_frame(const PixelBuffer &pixelbuffer);
 
 	/// \brief Add frame
 	///
@@ -138,93 +118,25 @@ public:
 	/// \brief Add frame
 	///
 	/// \param fullname = String Ref
-	void add_frame(const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param file = IODevice
 	/// \param image_type = String
-	void add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Add frames
+	/// \brief Add frame
 	///
 	/// \param texture = Texture
-	/// \param frames = Rect
-	/// \param num_frames = value
-	void add_frames(const Texture2D &texture, Rect *frames, int num_frames);
-
-	/// \brief Adds images formed in a grid.
-	/** <p>This function will cut out a grid of frames from one image.</p>
-	    \param pixelbuffer Image source.
-	    \param texture Image source.
-	    \param xpos, ypos Position of where image grid starts.
-	    \param width, height Size of a frame in the grid.
-	    \param xarray, yarray Number of columns and rows in grid.
-	    \param array_skipframes Number of frames to skip at last gridline.
-	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
-	void add_gridclipped_frames(
-		const PixelBuffer &pixelbuffer,
-		int xpos, int ypos,
-		int width, int height,
-		int xarray = 1, int yarray = 1,
-		int array_skipframes = 0,
-		int xspacing = 0, int yspacing = 0);
-
-	void add_gridclipped_frames(GraphicContext &gc, 
-		const Texture2D &texture,
-		int xpos, int ypos,
-		int width, int height,
-		int xarray = 1, int yarray = 1,
-		int array_skipframes = 0,
-		int xspacing = 0, int yspacing = 0);
-
-	/// \brief Adds images separated with pure alpha (within trans_limit).
-	/** <p>The alpha clipper will cut out frames from an image based on
-	    the transparency in the picture. It first determines the height
-	    of a row by searching for the first line that it considers
-	    completely transparent. Then it finds the width of each frame on
-	    this line by looking for columns that are completely transparency.</p>
-	    \param pixelbuffer Image source.
-	    \param texture Image source.
-	    \param xpos, ypos Upper left position where alpha cutting should begin.
-	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames(
-		const PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
-	void add_alphaclipped_frames(GraphicContext &gc, 
-		const Texture2D &texture,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
-	/// \brief Adds images separated with pure alpha (within trans_limit).
-	/** <p>The alpha clipper will cut out frames from an image based on
-	    the transparency in the picture. It scans the lines horizontally
-	    from top to bottom. As soon as a non-transarent pixel is discovered,
-	    the clipper finds the bounding box for that region and then moves on.</p>
-	    \param pixelbuffer Image source.
-	    \param texture Image source.
-	    \param xpos, ypos Upper left position where alpha cutting should begin.
-	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames_free(
-		const PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
-	void add_alphaclipped_frames_free(GraphicContext &gc, 
-		const Texture2D &texture,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
-	/// \brief Sets the duration this frame is displayed, in seconds.
-	void set_frame_delay(int frame, double delay);
+	/// \param frame = Rect
+	void add_frame(const Texture2D &texture, const Rect &frame);
 
 /// \}
 /// \name Implementation
