@@ -48,12 +48,6 @@ class ResourceManager;
 /// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CursorDescriptionFrame
 {
-public:
-	enum FrameType
-	{
-		type_pixelbuffer,
-		type_texture
-	};
 
 public:
 
@@ -61,19 +55,12 @@ public:
 	///
 	/// \param pixelbuffer = Pixel Buffer
 	/// \param rect = Rect
-	CursorDescriptionFrame(PixelBuffer pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), type(type_pixelbuffer), delay(1.0) { }
-
-	/// \brief Constructs a CursorDescriptionFrame
-	///
-	/// \param texture = Texture
-	/// \param rect = Rect
-	CursorDescriptionFrame(Texture2D texture, Rect rect) : texture(texture), rect(rect), type(type_texture), delay(1.0) { }
+	CursorDescriptionFrame(PixelBuffer pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), delay(1.0) { }
 
 	PixelBuffer pixelbuffer;
-	Texture2D texture;
 	Rect rect;
-	FrameType type;
 	double delay;
+
 };
 
 /// \brief This class contains everything to construct a cursor - its data, default settings etc.
@@ -132,11 +119,6 @@ public:
 
 	/// \brief Add frame
 	///
-	/// \param texture = Texture
-	void add_frame(const Texture2D &texture);
-
-	/// \brief Add frame
-	///
 	/// \param fullname = String Ref
 	void add_frame(const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
 
@@ -152,13 +134,6 @@ public:
 	/// \param dir = Virtual Directory
 	void add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Add frames
-	///
-	/// \param texture = Texture
-	/// \param frames = Rect
-	/// \param num_frames = value
-	void add_frames(const Texture2D &texture, Rect *frames, int num_frames);
-
 	/// \brief Adds images formed in a grid.
 	/** <p>This function will cut out a grid of frames from one image.</p>
 	    \param pixelbuffer Image source.
@@ -170,14 +145,6 @@ public:
 	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
 	void add_gridclipped_frames(
 		const PixelBuffer &pixelbuffer,
-		int xpos, int ypos,
-		int width, int height,
-		int xarray = 1, int yarray = 1,
-		int array_skipframes = 0,
-		int xspacing = 0, int yspacing = 0);
-
-	void add_gridclipped_frames(GraphicContext &gc, 
-		const Texture2D &texture,
 		int xpos, int ypos,
 		int width, int height,
 		int xarray = 1, int yarray = 1,
@@ -199,11 +166,6 @@ public:
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
 
-	void add_alphaclipped_frames(GraphicContext &gc, 
-		const Texture2D &texture,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
 	/// \brief Adds images separated with pure alpha (within trans_limit).
 	/** <p>The alpha clipper will cut out frames from an image based on
 	    the transparency in the picture. It scans the lines horizontally
@@ -215,11 +177,6 @@ public:
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
 	void add_alphaclipped_frames_free(
 		const PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
-	void add_alphaclipped_frames_free(GraphicContext &gc, 
-		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
 

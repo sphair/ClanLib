@@ -96,8 +96,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						Texture2D texture = Texture2D(gc, file_name, virtual_directory, import_desc );
-						add_frame(texture);
+						add_frame(file_name, virtual_directory, import_desc);
 					}
 					catch (const Exception&)
 					{
@@ -115,12 +114,13 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 			{
 				std::string image_name = cur_element.get_attribute("file");
 				VirtualDirectory virtual_directory = resources->get_directory(resource);
-				Texture2D texture = Texture2D(gc, image_name, virtual_directory, import_desc );
+				PixelBuffer pixelbuffer = ImageProviderFactory::load(image_name, virtual_directory);
+				pixelbuffer = import_desc.process(pixelbuffer);
 
 				DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 
 				{
-					add_frame(texture);
+					add_frame(pixelbuffer);
 				}
 				else 
 				{
@@ -179,8 +179,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 								yspacing = StringHelp::text_to_int(image_spacing[1]);
 							}
 
-							add_gridclipped_frames(gc, 
-								texture,
+							add_gridclipped_frames(pixelbuffer,
 								xpos, ypos,
 								width, height,
 								xarray, yarray,
@@ -211,15 +210,13 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 							if (cur_child_elemnt.has_attribute("free"))
 							{
-								add_alphaclipped_frames_free(gc, 
-									texture,
+								add_alphaclipped_frames_free(pixelbuffer,
 									xpos, ypos,
 									trans_limit);
 							}
 							else
 							{
-								add_alphaclipped_frames(gc, 
-									texture,
+								add_alphaclipped_frames(pixelbuffer,
 									xpos, ypos,
 									trans_limit);
 							}
@@ -273,11 +270,6 @@ void CursorDescription::add_frame(const PixelBuffer &pixelbuffer)
 	impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
 }
 
-void CursorDescription::add_frame(const Texture2D &texture)
-{
-	impl->frames.push_back(CursorDescriptionFrame(texture, Rect(0, 0, texture.get_width(), texture.get_height())));
-}
-
 void CursorDescription::add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
 {
 	PixelBuffer image = ImageProviderFactory::load(filename, dir, "");
@@ -299,12 +291,6 @@ void CursorDescription::add_frame(IODevice &file, const std::string &image_type,
 	PixelBuffer image = ImageProviderFactory::load(file, image_type);
 	image = import_desc.process(image);
 	add_frame(image);
-}
-
-void CursorDescription::add_frames(const Texture2D &texture, Rect *frames, int num_frames)
-{
-	for(int i=0; i<num_frames; ++i)
-		impl->frames.push_back(CursorDescriptionFrame(texture, frames[i]));
 }
 
 void CursorDescription::add_gridclipped_frames(
@@ -332,43 +318,6 @@ void CursorDescription::add_gridclipped_frames(
 		}
 		ystart += height + yspace;
 	}
-}
-
-void CursorDescription::add_gridclipped_frames(GraphicContext &gc, 
-	const Texture2D &texture, 
-	int xpos, int ypos, 
-	int width, int height, 
-	int xarray, int yarray, 
-	int array_skipframes, 
-	int xspace, int yspace)
-{
-	int ystart = ypos;
-	for(int y = 0; y < yarray; y++)
-	{
-		int xstart = xpos;
-		for(int x = 0; x < xarray; x++)
-		{
-			if (y == yarray -1 && x >= xarray - array_skipframes)
-				break;
-
-			if(xstart + width > texture.get_width() || ystart + height > texture.get_height())
-				throw Exception("add_gridclipped_frames: Outside texture bounds");
-
-			impl->frames.push_back(CursorDescriptionFrame(texture, Rect(xstart, ystart, xstart + width, ystart + height)));
-			xstart += width + xspace;
-		}
-		ystart += height + yspace;
-	}
-}
-
-void CursorDescription::add_alphaclipped_frames(GraphicContext &gc, 
-	const Texture2D &texture, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer pixelbuffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-
-	add_alphaclipped_frames(pixelbuffer, xpos, ypos, trans_limit);
 }
 
 void CursorDescription::add_alphaclipped_frames(
@@ -452,16 +401,6 @@ void CursorDescription::add_alphaclipped_frames(
 		impl->frames.push_back(
 			CursorDescriptionFrame(pixelbuffer, Rect(begin, cut_top, alpha_width, cut_bottom)));
 	}
-}
-
-void CursorDescription::add_alphaclipped_frames_free(GraphicContext &gc, 
-	const Texture2D &texture, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer pixelbuffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-
-	add_alphaclipped_frames_free(pixelbuffer, xpos, ypos, trans_limit);
 }
 
 void CursorDescription::add_alphaclipped_frames_free(
