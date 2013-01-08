@@ -51,8 +51,8 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SoundOutput_Win32 construction:
 
-SoundOutput_Win32::SoundOutput_Win32(int mixing_frequency, int mixing_latency)
-: SoundOutput_Impl(mixing_frequency, mixing_latency), audio_buffer_ready_event(INVALID_HANDLE_VALUE), is_playing(false), fragment_size(0), wait_timeout(mixing_latency * 2), write_pos(0)
+SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_latency)
+: SoundOutput_Impl(init_mixing_frequency, init_mixing_latency), audio_buffer_ready_event(INVALID_HANDLE_VALUE), is_playing(false), fragment_size(0), wait_timeout(mixing_latency * 2), write_pos(0)
 {
 	try
 	{
@@ -72,21 +72,43 @@ SoundOutput_Win32::SoundOutput_Win32(int mixing_frequency, int mixing_latency)
 		WAVEFORMATEXTENSIBLE wave_format;
 		wave_format.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
 		wave_format.Format.nChannels = 2;
-		wave_format.Format.nSamplesPerSec = mixing_frequency;
 		wave_format.Format.nBlockAlign = 2 * sizeof(float);
-		wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
 		wave_format.Format.wBitsPerSample = 8 * sizeof(float);
 		wave_format.Format.cbSize = 22;
 		wave_format.Samples.wValidBitsPerSample = wave_format.Format.wBitsPerSample;
 		wave_format.dwChannelMask = SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT;
 		wave_format.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
 
-		/* For debugging what mixing format Windows is using.
+		wave_format.Format.nSamplesPerSec = mixing_frequency;
+		wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
+
+		WAVEFORMATEX *closest_match = 0;
+		result = audio_client->IsFormatSupported(AUDCLNT_SHAREMODE_SHARED, (WAVEFORMATEX*)&wave_format, &closest_match);
+		if (FAILED(result))
+			throw Exception("IAudioClient.IsFormatSupported failed");
+
+		// We could not get the exact format we wanted. Try to use the frequency that the closest matching format is using:
+		if (result == S_FALSE)
+		{
+			mixing_frequency = closest_match->nSamplesPerSec;
+			wait_timeout = mixing_latency * 2;
+			wave_format.Format.nSamplesPerSec = mixing_frequency;
+			wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
+		}
+
+		CoTaskMemFree(closest_match);
+		closest_match = 0;
+
+/*
+		// For debugging what mixing format Windows is using.
 		WAVEFORMATEX *device_format = 0; // Note: this points at a WAVEFORMATEXTENSIBLE if cbSize is 22
 		result = audio_client->GetMixFormat(&device_format);
 		if (SUCCEEDED(result))
+		{
 			CoTaskMemFree(device_format);
-		*/
+			device_format = 0;
+		}
+*/
 
 		result = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, mixing_latency * (REFERENCE_TIME)1000, 0, (WAVEFORMATEX*)&wave_format, 0);
 		if (FAILED(result))
