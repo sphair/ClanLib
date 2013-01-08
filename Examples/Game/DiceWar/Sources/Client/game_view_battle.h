@@ -19,7 +19,7 @@ public:
 private:
 	void close();
 
-	void on_render(GraphicContext &gc, const Rect &clip_rect);
+	void on_render(Canvas &canvas, const Rect &clip_rect);
 	void on_message(GUIMessage &message);
 	void on_timer_hide_expired();
 

@@ -4,7 +4,6 @@
 class Server;
 class ServerLobbyGame;
 class ServerLobbyPlayer;
-class NetGameEvent;
 
 class ServerLobbyGamePlayerCollection
 {

@@ -10,7 +10,7 @@ ClientGUI::ClientGUI()
 //	desc.set_multisampling(4);
 	display_window = DisplayWindow(desc);
 
-	Font_System::register_font("Resources\\bitstream_vera_sans\\VeraBd.ttf", "VeraBd");
+	//FIXME: Font_System::register_font("Resources\\bitstream_vera_sans\\VeraBd.ttf", "VeraBd");
 
 	slot_quit = display_window.sig_window_close().connect(this, &ClientGUI::on_window_close);
 

@@ -15,7 +15,7 @@ public:
 		int area_count,
 		float vertical_scale);
 
-	void render(GraphicContext &gc, const LightModel &light_model);
+	void render(Canvas &canvas, const LightModel &light_model);
 	Point from_screen_point(GraphicContext &gc, const Point &screen_point, const Mat4f &projection, const Mat4f &modelview, const Rect &viewport);
 
 	const Size &get_size() const { return size; }
@@ -25,7 +25,7 @@ public:
 	void set_area_colors(GraphicContext &gc, const std::vector<unsigned int> &colors);
 
 private:
-	void render_sprite(GraphicContext &gc, const LightModel &light_model, Rectf dest);
+	void render_sprite(Canvas &canvas, const LightModel &light_model, Rectf dest);
 
 	inline Vec3f calc_normal(int x, int y, unsigned char *data, int width, int height, int pitch);
 	inline Vec3f get_vector(int x, int y, int xx, int yy, unsigned char *data, int width, int height, int pitch);

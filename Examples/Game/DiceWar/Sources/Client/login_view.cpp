@@ -4,10 +4,8 @@
 #include "client.h"
 
 LoginView::LoginView(Client *client)
-: GUIComponent(client->get_gui(), get_toplevel_description()), client(client)
+: GUIComponent(client->get_gui(), get_toplevel_description(), "connectdialog"), client(client)
 {
-	set_class_name("connectdialog");
-
 	label_info = new Label(this);
 	label_info->set_geometry(RectPS(15, 10, 370, 27));
 	label_info->set_text("Please enter connection information:");

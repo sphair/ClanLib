@@ -13,9 +13,9 @@ GameTerrain::GameTerrain(
 	float vertical_scale)
 : num_vertices(0)
 {
-	color_areas = PNGProvider::load(areas_png).to_format(cl_r8);
+	color_areas = PNGProvider::load(areas_png).to_format(tf_r8);
 
-	PixelBuffer pb = PNGProvider::load(heightmap_png).to_format(cl_rgba8);
+	PixelBuffer pb = PNGProvider::load(heightmap_png).to_format(tf_rgba8);
 	int width = pb.get_width()-1;
 	int height = pb.get_height()-1;
 
@@ -172,12 +172,12 @@ GameTerrain::GameTerrain(
 	if (!shader_program.link())
 		throw Exception("Map shader program failed to link: " + shader_program.get_info_log());
 
-	texture_base = Texture(gc, texture_png);
-	texture_base.set_min_filter(cl_filter_linear);
-	texture_base.set_mag_filter(cl_filter_linear);
+	texture_base = Texture2D(gc, texture_png);
+	texture_base.set_min_filter(filter_linear);
+	texture_base.set_mag_filter(filter_linear);
 
 	// Change the values between area colors to avoid GPUs merging them together
-	PixelBuffer image = ImageProviderFactory::load(areas_png).to_format(cl_rgba8);
+	PixelBuffer image = ImageProviderFactory::load(areas_png).to_format(tf_rgba8);
 	unsigned int* image_data = reinterpret_cast<unsigned int*>(image.get_data());
 	int image_total_pixels = image.get_width()*image.get_height();
 	for (int i = 0; i < image_total_pixels; i++)
@@ -185,28 +185,28 @@ GameTerrain::GameTerrain(
 		unsigned int area_color = (image_data[i]>>24)*255/area_count;
 		image_data[i] = (area_color<<24)+(area_color<<16)+(area_color<<8)+area_color;
 	}
-	texture_areas = Texture(gc, image.get_size());
+	texture_areas = Texture2D(gc, image.get_size());
 	texture_areas.set_image(image);
-	texture_areas.set_min_filter(cl_filter_nearest);
-	texture_areas.set_mag_filter(cl_filter_nearest);
+	texture_areas.set_min_filter(filter_nearest);
+	texture_areas.set_mag_filter(filter_nearest);
 
-	texture_borders = Texture(gc, borders_png);
-	texture_borders.set_min_filter(cl_filter_linear);
-	texture_borders.set_mag_filter(cl_filter_linear);
+	texture_borders = Texture2D(gc, borders_png);
+	texture_borders.set_min_filter(filter_linear);
+	texture_borders.set_mag_filter(filter_linear);
 }
 
 void GameTerrain::set_area_colors(GraphicContext &gc, const std::vector<unsigned int> &colors)
 {
-	PixelBuffer buffer_colors(colors.size(), 1, cl_rgba8);
+	PixelBuffer buffer_colors(colors.size(), 1, tf_rgba8);
 	unsigned int *col = reinterpret_cast<unsigned int *>(buffer_colors.get_data());
 	for(unsigned int i=0;i<colors.size();++i)
 		col[i] = colors[i];
 
-	texture_colors = Texture(gc, area_count+1, 1);
+	texture_colors = Texture2D(gc, area_count+1, 1);
 	texture_colors.set_image(buffer_colors);
 	texture_colors.set_wrap_mode(cl_wrap_clamp_to_edge, cl_wrap_clamp_to_edge);
-	texture_colors.set_min_filter(cl_filter_nearest);
-	texture_colors.set_mag_filter(cl_filter_nearest);
+	texture_colors.set_min_filter(filter_nearest);
+	texture_colors.set_mag_filter(filter_nearest);
 }
 
 inline Vec3f GameTerrain::calc_normal(int x, int y, unsigned char *data, int width, int height, int pitch)
@@ -264,17 +264,17 @@ inline Vec3f GameTerrain::get_vector(int x, int y, int xx, int yy, unsigned char
 	return v;
 }
 
-void GameTerrain::render(GraphicContext &gc, const LightModel &light_model)
+void GameTerrain::render(Canvas &canvas, const LightModel &light_model)
 {
 	Rectf rect(0, 0, (float)size.width-1, (float)size.height-1);
-	render_sprite(gc, light_model, rect);
+	render_sprite(canvas, light_model, rect);
 }
 
-void GameTerrain::render_sprite(GraphicContext &gc, const LightModel &light_model, Rectf dest)
+void GameTerrain::render_sprite(Canvas &canvas, const LightModel &light_model, Rectf dest)
 {
-	gc.push_modelview();
-	gc.mult_scale(4.0f, 1.0f, 4.0f);
-	gc.mult_modelview(Mat4f::translate(-size.width/2.0f, 0.0f, -size.height/2.0f));
+	canvas.push_modelview();
+	canvas.mult_scale(4.0f, 1.0f, 4.0f);
+	canvas.mult_modelview(Mat4f::translate(-size.width/2.0f, 0.0f, -size.height/2.0f));
 
 	gc.set_culled(true);
 	gc.set_front_face(cl_face_side_counter_clockwise);
@@ -316,7 +316,7 @@ void GameTerrain::render_sprite(GraphicContext &gc, const LightModel &light_mode
 
 	gc.reset_polygon_rasterizer();
 
-	gc.pop_modelview();
+	canvas.pop_modelview();
 }
 
 Point GameTerrain::from_screen_point(GraphicContext &gc, const Point &screen_point, const Mat4f &projection, const Mat4f &modelview2, const Rect &viewport)

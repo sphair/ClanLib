@@ -7,9 +7,8 @@
 #include "../Lib/net_events_game.h"
 
 GameViewChat::GameViewChat(GameView *view, Client *client)
-: GUIComponent(view), client(client)
+: GUIComponent(view, "chat"), client(client)
 {
-	set_type_name("chat");
 	set_geometry(Rect(0, view->get_height() - 250, 250, view->get_height()));
 
 	listview_chat = new ListView(this);

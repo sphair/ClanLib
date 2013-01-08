@@ -1,7 +1,6 @@
 
 #pragma once
 
-class NetGameEvent;
 class GameEvents;
 class GameView;
 class GameModel;

@@ -73,11 +73,11 @@ void Camera::set_orientation(const Orientation &new_orientation)
 	orientation = new_orientation;
 }
 
-void Camera::setup_gc(GraphicContext &gc, float z_near, float z_far)
+void Camera::setup_canvas(Canvas &canvas, float z_near, float z_far)
 {
-	gc.set_map_mode(cl_user_projection);
-	gc.set_projection(get_projection(z_near, z_far));
-	gc.set_modelview(get_modelview());
+	canvas.set_map_mode(map_user_projection);
+	canvas.set_projection(get_projection(z_near, z_far));
+	canvas.set_modelview(get_modelview());
 }
 
 /////////////////////////////////////////////////////////////////////////////
