@@ -29,14 +29,13 @@
 
 #include "precomp.h"
 #include "mikmod.h"
-
 #include "setupmikmod.h"
 
 // The start of the Application
 int MikMod::start(const std::vector<std::string> &args)
 {
 	// Initialize mikmod
-	CL_SetupMikMod setup_mikmod;
+	SetupMikMod setup_mikmod;
 
 	clan::SoundOutput sound_output(44100, 192);
 

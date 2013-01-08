@@ -1,31 +1,3 @@
-/*
-**  ClanLib SDK
-**  Copyright (c) 1997-2011 The ClanLib Team
-**
-**  This software is provided 'as-is', without any express or implied
-**  warranty.  In no event will the authors be held liable for any damages
-**  arising from the use of this software.
-**
-**  Permission is granted to anyone to use this software for any purpose,
-**  including commercial applications, and to alter it and redistribute it
-**  freely, subject to the following restrictions:
-**
-**  1. The origin of this software must not be misrepresented; you must not
-**     claim that you wrote the original software. If you use this software
-**     in a product, an acknowledgment in the product documentation would be
-**     appreciated but is not required.
-**  2. Altered source versions must be plainly marked as such, and must not be
-**     misrepresented as being the original software.
-**  3. This notice may not be removed or altered from any source distribution.
-**
-**  Note: Some of the libraries ClanLib may link to may have additional
-**  requirements or restrictions.
-**
-**  File Author(s):
-**
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
-*/
 
 #include "precomp.h"
 #include "setupmikmod.h"
@@ -34,14 +6,14 @@
 
 static int ref_count = 0;
 
-CL_SetupMikMod::CL_SetupMikMod(bool register_resources_only)
+SetupMikMod::SetupMikMod(bool register_resources_only)
 {
-	CL_SetupMikMod::init(register_resources_only);
+	SetupMikMod::init(register_resources_only);
 }
 
-CL_SetupMikMod::~CL_SetupMikMod()
+SetupMikMod::~SetupMikMod()
 {
-	CL_SetupMikMod::deinit();
+	SetupMikMod::deinit();
 }
 
 static clan::SoundProviderType *providertype[17] = {0};
@@ -60,7 +32,7 @@ static void clanMikMod_Update()
  * This structure is the ClanLib driver for MikMod. It's a "standard" driver
  * since it re-uses lots of functions from libMikMod, indeed the big
  * ClanLib-specific stuff is the update function, which is mapped to
- * CL_Streamed_MikModSample_Session::clanMikMod_Update
+ * Streamed_MikModSample_Session::clanMikMod_Update
  */
 MDRIVER drv_clanlib = {
 	NULL,
@@ -99,7 +71,7 @@ MDRIVER drv_clanlib = {
 	VC_VoiceRealVolume
 };
 
-void CL_SetupMikMod::init(bool register_resources_only)
+void SetupMikMod::init(bool register_resources_only)
 {
 	ref_count++;
 	if (ref_count > 1) return;
@@ -125,23 +97,23 @@ void CL_SetupMikMod::init(bool register_resources_only)
 	// disable the reverb
 	md_reverb = 0;
 
-	providertype[0] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mikmod");
-	providertype[1] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("it");
-	providertype[2] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("xm");
-	providertype[3] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("s3m");
-	providertype[4] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mtm");
-	providertype[5] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("669");
-	providertype[6] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("stm");
-	providertype[7] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("ult");
-	providertype[8] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("far");
-	providertype[9] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("med");
-	providertype[10] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("amf");
-	providertype[11] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("dsm");
-	providertype[12] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("imf");
-	providertype[13] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("gdm");
-	providertype[14] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("stx");
-	providertype[15] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("okt");
-	providertype[16] = new clan::SoundProviderType_Register<CL_SoundProvider_MikMod>("mod");
+	providertype[0] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("mikmod");
+	providertype[1] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("it");
+	providertype[2] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("xm");
+	providertype[3] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("s3m");
+	providertype[4] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("mtm");
+	providertype[5] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("669");
+	providertype[6] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("stm");
+	providertype[7] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("ult");
+	providertype[8] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("far");
+	providertype[9] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("med");
+	providertype[10] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("amf");
+	providertype[11] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("dsm");
+	providertype[12] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("imf");
+	providertype[13] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("gdm");
+	providertype[14] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("stx");
+	providertype[15] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("okt");
+	providertype[16] = new clan::SoundProviderType_Register<SoundProvider_MikMod>("mod");
 
 	/*
 	 * OK, now we kind of ignore the "register_resources_only" 
@@ -158,7 +130,7 @@ void CL_SetupMikMod::init(bool register_resources_only)
 	// if (register_resources_only) return;
 }
 
-void CL_SetupMikMod::deinit()
+void SetupMikMod::deinit()
 {
 	ref_count--;
 	if (ref_count > 0) return;
