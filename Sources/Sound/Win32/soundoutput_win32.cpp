@@ -81,6 +81,13 @@ SoundOutput_Win32::SoundOutput_Win32(int mixing_frequency, int mixing_latency)
 		wave_format.dwChannelMask = SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT;
 		wave_format.SubFormat = KSDATAFORMAT_SUBTYPE_IEEE_FLOAT;
 
+		/* For debugging what mixing format Windows is using.
+		WAVEFORMATEX *device_format = 0; // Note: this points at a WAVEFORMATEXTENSIBLE if cbSize is 22
+		result = audio_client->GetMixFormat(&device_format);
+		if (SUCCEEDED(result))
+			CoTaskMemFree(device_format);
+		*/
+
 		result = audio_client->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, mixing_latency * (REFERENCE_TIME)1000, 0, (WAVEFORMATEX*)&wave_format, 0);
 		if (FAILED(result))
 			throw Exception("IAudioClient.Initialize failed");
