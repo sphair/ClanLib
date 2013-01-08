@@ -53,7 +53,7 @@ class DisplayWindowDescription;
 class GraphicContext;
 class InputContext;
 class CursorProvider;
-class SpriteDescription;
+class CursorDescription;
 
 /// \brief Display Window site.
 ///
@@ -209,7 +209,7 @@ public:
 	virtual void show_system_cursor() = 0;
 
 	/// \brief Creates a new custom cursor.
-	virtual CursorProvider *create_cursor(const SpriteDescription &sprite_description, const Point &hotspot) = 0;
+	virtual CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot) = 0;
 
 	/// \brief Sets the current cursor icon.
 	virtual void set_cursor(CursorProvider *cursor) = 0;

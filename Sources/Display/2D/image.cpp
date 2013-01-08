@@ -32,7 +32,7 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/subtexture.h"
-#include "API/Display/2D/sprite_description.h"
+#include "API/Display/2D/image_description.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Core/XML/dom_element.h"
@@ -163,10 +163,10 @@ Image::Image(GraphicContext &gc, const std::string &resource_id, ResourceManager
 	if (type != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'image'", resource_id));
 
-	SpriteDescription desc(gc, resource_id, resources, import_desc);
+	ImageDescription desc(gc, resource_id, resources, import_desc);
 	
-	const std::vector<SpriteDescriptionFrame> &frames = desc.get_frames();
-	if(frames[0].type == SpriteDescriptionFrame::type_texture)
+	const std::vector<ImageDescriptionFrame> &frames = desc.get_frames();
+	if(frames[0].type == ImageDescriptionFrame::type_texture)
 	{
 		impl->texture = frames[0].texture;
 		impl->texture_rect = frames[0].rect;

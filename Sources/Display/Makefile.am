@@ -10,6 +10,7 @@ libclan30Display_la_SOURCES = \
 	Window/input_context.cpp \
 	Window/display_window.cpp \
 	Window/cursor.cpp \
+	Window/cursor_description.cpp \
 	Window/input_event.cpp \
 	Window/input_device.cpp \
 	Window/display_window_description.cpp \
@@ -53,6 +54,7 @@ libclan30Display_la_SOURCES = \
 	2D/texture_group.cpp \
 	2D/color_hsv.cpp \
 	2D/sprite_description.cpp \
+	2D/image_description.cpp \
 	2D/render_batch_triangle.cpp \
 	2D/canvas.cpp \
 	2D/render_batch_point.cpp \

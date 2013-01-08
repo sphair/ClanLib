@@ -265,9 +265,9 @@ void GL1WindowProvider_WGL::show_system_cursor()
 	win32_window.show_system_cursor();
 }
 
-CursorProvider *GL1WindowProvider_WGL::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *GL1WindowProvider_WGL::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
-	return new CursorProvider_Win32(sprite_description, hotspot);
+	return new CursorProvider_Win32(cursor_description, hotspot);
 }
 
 void GL1WindowProvider_WGL::set_cursor(CursorProvider *cursor)

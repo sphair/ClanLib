@@ -239,9 +239,9 @@ void D3DDisplayWindowProvider::show_system_cursor()
 	window.show_system_cursor();
 }
 
-CursorProvider *D3DDisplayWindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *D3DDisplayWindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
-	return new CursorProvider_Win32(sprite_description, hotspot);
+	return new CursorProvider_Win32(cursor_description, hotspot);
 }
 
 void D3DDisplayWindowProvider::set_cursor(CursorProvider *cursor)

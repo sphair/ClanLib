@@ -321,6 +321,7 @@ clanDisplay_includes = \
 	Display/Window/keys.h \
 	Display/Window/input_context.h \
 	Display/Window/display_window_description.h \
+	Display/Window/cursor_description.h \
 	Display/display.h \
 	Display/Render/render_buffer.h \
 	Display/Render/element_array_vector.h \
@@ -362,6 +363,7 @@ clanDisplay_includes = \
 	Display/2D/texture_group.h \
 	Display/2D/subtexture.h \
 	Display/2D/sprite_description.h \
+	Display/2D/image_description.h \
 	Display/2D/image.h \
 	Display/2D/color_hsv.h \
 	Display/2D/gradient.h \
