@@ -7,10 +7,9 @@
 SoundProvider_MikMod_Session::SoundProvider_MikMod_Session(SoundProvider_MikMod &source) :
 	source(source), num_samples(0), position(0), stream_eof(false)
 {
-	std::auto_ptr<clan::IODevice_Memory> input_autoptr(new clan::IODevice_Memory(source.impl->buffer));
-	clan::IODevice_Memory *input = input_autoptr.get();
+	std::unique_ptr<clan::IODevice_Memory> input(new clan::IODevice_Memory(source.impl->buffer));
 
-	MREADER *reader = new_clanlib_reader((void *) input);
+	MREADER *reader = new_clanlib_reader(input.get());
 	if (reader == 0) throw clan::Exception("new_clanlib_reader failed!");
 
 	module = Player_LoadGeneric(reader,CLANLIB_READER_CHANNELS,0);
