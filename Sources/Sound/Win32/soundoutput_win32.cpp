@@ -94,10 +94,10 @@ SoundOutput_Win32::SoundOutput_Win32(int init_mixing_frequency, int init_mixing_
 			wait_timeout = mixing_latency * 2;
 			wave_format.Format.nSamplesPerSec = mixing_frequency;
 			wave_format.Format.nAvgBytesPerSec = wave_format.Format.nSamplesPerSec * wave_format.Format.nBlockAlign;
-		}
 
-		CoTaskMemFree(closest_match);
-		closest_match = 0;
+			CoTaskMemFree(closest_match);
+			closest_match = 0;
+		}
 
 /*
 		// For debugging what mixing format Windows is using.
