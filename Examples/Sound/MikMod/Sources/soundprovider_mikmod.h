@@ -34,13 +34,13 @@
 
 #include <string>
 
-class CL_InputSourceProvider;
+class clan::InputSourceProvider;
 class CL_SoundProvider_MikMod_Impl;
 
 /// \brief Module format (.mod, .s3m, .xm, etc) sound provider.
 ///
 /// \xmlonly !group=MikMod/Sound Providers! !header=mikmod.h! \endxmlonly
-class CL_SoundProvider_MikMod : public CL_SoundProvider
+class CL_SoundProvider_MikMod : public clan::SoundProvider
 {
 /// \name Construction
 /// \{
@@ -52,16 +52,16 @@ public:
 	/// \param provider Input source provider used to retrieve module file.
 	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	CL_SoundProvider_MikMod(
-		const CL_String &filename,
-		const CL_VirtualDirectory &provider,
+		const std::string &filename,
+		const clan::VirtualDirectory &provider,
 		bool stream = false);
 
 	CL_SoundProvider_MikMod(
-		const CL_String &fullname,
+		const std::string &fullname,
 		bool stream = false);
 
 	CL_SoundProvider_MikMod(
-		CL_IODevice &file,
+		clan::IODevice &file,
 		bool stream = false);
 
 	virtual ~CL_SoundProvider_MikMod();
@@ -71,21 +71,21 @@ public:
 /// \{
 
 public:
-	/// \brief Called by CL_SoundBuffer when a new session starts.
+	/// \brief Called by clan::SoundBuffer when a new session starts.
 	/** \return The soundbuffer session to be attached to the newly started session.*/
-	virtual CL_SoundProvider_Session *begin_session();
+	virtual clan::SoundProvider_Session *begin_session();
 
-	/// \brief Called by CL_SoundBuffer when a session has finished. After this call,
-	/** <p>CL_SoundBuffer will not access the session anymore. It can safely be deleted
+	/// \brief Called by clan::SoundBuffer when a session has finished. After this call,
+	/** <p>clan::SoundBuffer will not access the session anymore. It can safely be deleted
 	    here (and in most cases should be delete here).</p>*/
-	virtual void end_session(CL_SoundProvider_Session *session);
+	virtual void end_session(clan::SoundProvider_Session *session);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	CL_SharedPtr<CL_SoundProvider_MikMod_Impl> impl;
+	std::shared_ptr<CL_SoundProvider_MikMod_Impl> impl;
 
 	friend class CL_SoundProvider_MikMod_Session;
 /// \}

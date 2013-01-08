@@ -34,9 +34,9 @@
 #include "module_reader.h"
 
 class CL_SoundProvider_MikMod_Impl;
-class CL_IODevice;
+class clan::IODevice;
 
-class CL_SoundProvider_MikMod_Session : public CL_SoundProvider_Session
+class CL_SoundProvider_MikMod_Session : public clan::SoundProvider_Session
 {
 /// \name Construction
 /// \{
@@ -77,7 +77,7 @@ public:
 
 private:
 	CL_SoundProvider_MikMod source;
-	CL_SoundFormat format;
+	clan::SoundFormat format;
 	int num_channels;
 	int num_samples;
 	int position;

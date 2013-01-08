@@ -31,10 +31,10 @@
 
 BOOL clanlib_reader_feof(MREADER* reader)
 // eof function, returns TRUE if we are at the end of the file.
-// Since CL_IODevice does not have a built-in eof function,
+// Since clan::IODevice does not have a built-in eof function,
 // we compare the current position to the size of the file.
 {
-	CL_IODevice_Memory *iptr = (CL_IODevice_Memory *) ((MCLANLIBREADER *)reader)->input;
+	clan::IODevice_Memory *iptr = (clan::IODevice_Memory *) ((MCLANLIBREADER *)reader)->input;
 	return (iptr->get_position() >= iptr->get_size());
 }
 
@@ -43,14 +43,14 @@ BOOL clanlib_reader_read(MREADER* reader,void* ptr,size_t size)
 // Even if the return type is BOOL, the function returns the number
 // of bytes read. MikMod does the same internally.
 {
-	CL_IODevice_Memory *iptr = (CL_IODevice_Memory *) ((MCLANLIBREADER *)reader)->input;
+	clan::IODevice_Memory *iptr = (clan::IODevice_Memory *) ((MCLANLIBREADER *)reader)->input;
 	return (iptr->read(ptr,size));
 }
 
 int clanlib_reader_get(MREADER* reader)
 // get function, returns a single char from the file
 {
-	CL_IODevice_Memory *iptr = (CL_IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
+	clan::IODevice_Memory *iptr = (clan::IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
 	return (iptr->read_int8());
 }
 
@@ -61,23 +61,23 @@ BOOL clanlib_reader_seek(MREADER* reader,long offset,int whence)
 // feature is really slow because files are compressed. This is a 
 // compromise.
 {
-	CL_IODevice::SeekMode cl_whence;
+	clan::IODevice::SeekMode cl_whence;
 
 	switch (whence)
 	{
 	case SEEK_SET:
-		cl_whence=CL_IODevice::seek_set;
+		cl_whence=clan::IODevice::seek_set;
 		break;
 	case SEEK_CUR:
-		cl_whence=CL_IODevice::seek_cur;
+		cl_whence=clan::IODevice::seek_cur;
 		break;
 	case SEEK_END:
-		cl_whence=CL_IODevice::seek_end;
+		cl_whence=clan::IODevice::seek_end;
 		break;
 	default:
-		cl_whence=CL_IODevice::seek_set;
+		cl_whence=clan::IODevice::seek_set;
 	}
-	CL_IODevice_Memory *iptr = (CL_IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
+	clan::IODevice_Memory *iptr = (clan::IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
 	iptr->seek(offset,cl_whence);
 
 	return 0;
@@ -86,7 +86,7 @@ BOOL clanlib_reader_seek(MREADER* reader,long offset,int whence)
 long clanlib_reader_tell(MREADER* reader)
 // tell function, returns the current position in the file.
 {
-	CL_IODevice_Memory *iptr = (CL_IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
+	clan::IODevice_Memory *iptr = (clan::IODevice_Memory *) ((MCLANLIBREADER *) reader)->input;
 	return iptr->get_position();
 }
 

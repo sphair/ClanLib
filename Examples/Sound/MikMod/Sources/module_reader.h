@@ -35,7 +35,7 @@
  * field of MCLANLIBREADER (core) is an MREADER, and this way the MikMod
  * code can access correctly all the fields of the MREADER core struct,
  * while we provide an additionnal pointer (input) to handle the file,
- * which is a CL_IODevice in ClanLib's case.
+ * which is a clan::IODevice in ClanLib's case.
  * This method might look like an ugly hack but MikMod does this internally,
  * with an MFILEREADER struct casted an into a plain MREADER.
  */
