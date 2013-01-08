@@ -812,9 +812,9 @@ void OpenGLWindowProvider_GLX::update(const Rect &_rect)
 }
 
 
-CursorProvider *OpenGLWindowProvider_GLX::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *OpenGLWindowProvider_GLX::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
-	return new CursorProvider_X11(sprite_description, hotspot);
+	return new CursorProvider_X11(cursor_description, hotspot);
 }
 
 void OpenGLWindowProvider_GLX::set_cursor(CursorProvider *cursor)

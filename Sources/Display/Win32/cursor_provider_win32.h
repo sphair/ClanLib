@@ -41,7 +41,7 @@ class PixelBuffer;
 class Point;
 class Rect;
 class DataBuffer;
-class SpriteDescription;
+class CursorDescription;
 
 class CL_API_DISPLAY CursorProvider_Win32 : public CursorProvider
 {
@@ -49,7 +49,7 @@ class CL_API_DISPLAY CursorProvider_Win32 : public CursorProvider
 /// \{
 
 public:
-	CursorProvider_Win32(const SpriteDescription &sprite_description, const Point &hotspot);
+	CursorProvider_Win32(const CursorDescription &cursor_description, const Point &hotspot);
 	~CursorProvider_Win32();
 
 
@@ -72,10 +72,10 @@ public:
 /// \{
 
 private:
-	static HCURSOR create_cursor(const SpriteDescription &sprite_description, const Point &hotspot);
+	static HCURSOR create_cursor(const CursorDescription &cursor_description, const Point &hotspot);
 	static DataBuffer create_ico_file(const PixelBuffer &image);
 	static DataBuffer create_cur_file(const PixelBuffer &image, const Rect &rect, const Point &hotspot);
-	static DataBuffer create_ani_file(const SpriteDescription &sprite_description, const Point &hotspot);
+	static DataBuffer create_ani_file(const CursorDescription &cursor_description, const Point &hotspot);
 	static DataBuffer create_ico_helper(const PixelBuffer &image, const Rect &rect, WORD type, const Point &hotspot);
 	static DataBuffer create_ico_helper(const std::vector<PixelBuffer> &images, const std::vector<Rect> &rect, WORD type, const std::vector<Point> &hotspots);
 	static void set_riff_header(char *data, const char *type, DWORD size);

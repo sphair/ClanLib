@@ -30,7 +30,7 @@
 #include "cursor_provider_x11.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/2D/sprite_description.h"
+#include "API/Display/Window/cursor_description.h"
 #include "x11_window.h"
 
 namespace clan
@@ -39,10 +39,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_X11 Construction:
 
-CursorProvider_X11::CursorProvider_X11(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider_X11::CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot)
 : handle(0)
 {
-	handle = create_cursor(sprite_description, hotspot);
+	handle = create_cursor(cursor_description, hotspot);
 }
 
 CursorProvider_X11::~CursorProvider_X11()
@@ -58,7 +58,7 @@ CursorProvider_X11::~CursorProvider_X11()
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_X11 Implementation:
 
-int CursorProvider_X11::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot) const
+int CursorProvider_X11::create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const
 {
 	// TODO: Implement me :)
 	return 0;

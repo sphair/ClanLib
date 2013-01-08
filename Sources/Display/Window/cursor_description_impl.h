@@ -23,75 +23,33 @@
 **
 **  File Author(s):
 **
+**    Kenneth Gangstoe
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Window clanDisplay Window
-/// \{
-
 #pragma once
 
-#include "../api_display.h"
-#include <memory>
-#include "../display_target.h"
+#include "API/Display/Window/cursor_description.h"
 
 namespace clan
 {
 
-class DisplayWindow;
-class CursorProvider;
-class CursorDescription;
-class Point;
-class Cursor_Impl;
-
-/// \brief Mouse cursor class.
-///
-/// \xmlonly !group=Display/Window! !header=display.h! \endxmlonly
-class CL_API_DISPLAY Cursor
+class CursorDescription_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	/// \brief Constructs a null instance.
-	Cursor();
+	CursorDescription_Impl() { return; }
 
-	/// \brief Constructs a Cursor
-	///
-	/// \param window = Display Window
-	/// \param cursor_description = Sprite Description
-	/// \param hotspot = Point
-	Cursor(const DisplayWindow &window, const CursorDescription &cursor_description, const Point &hotspot);
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
-	/// \brief Returns the cursor provider
-	CursorProvider *get_provider() const;
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-	std::shared_ptr<Cursor_Impl> impl;
+	std::vector<CursorDescriptionFrame> frames;
 /// \}
 };
 
 }
-
-/// \}

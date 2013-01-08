@@ -111,7 +111,7 @@ public:
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) {}
 	//HGLRC get_share_context() {return 0;}
 	void show_system_cursor() {};
-	CursorProvider *create_cursor(const SpriteDescription &sprite_description, const Point &hotspot) {return NULL;}
+	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot) {return NULL;}
 	void set_cursor(CursorProvider *cursor) {}
 	void set_cursor(StandardCursor type) {}
 	void hide_system_cursor() {}

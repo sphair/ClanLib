@@ -31,7 +31,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/2D/sprite_description.h"
+#include "API/Display/Window/cursor_description.h"
 #ifdef __MINGW32__
 #include "API/Display/Window/display_window.h"
 #endif
@@ -43,10 +43,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_Win32 Construction:
 
-CursorProvider_Win32::CursorProvider_Win32(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider_Win32::CursorProvider_Win32(const CursorDescription &cursor_description, const Point &hotspot)
 : handle(0)
 {
-	handle = create_cursor(sprite_description, hotspot);
+	handle = create_cursor(cursor_description, hotspot);
 }
 
 CursorProvider_Win32::~CursorProvider_Win32()
@@ -64,13 +64,13 @@ CursorProvider_Win32::~CursorProvider_Win32()
 /////////////////////////////////////////////////////////////////////////////
 // CursorProvider_Win32 Implementation:
 
-HCURSOR CursorProvider_Win32::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+HCURSOR CursorProvider_Win32::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
-	if (sprite_description.get_frames().empty())
+	if (cursor_description.get_frames().empty())
 		throw Exception("Cannot create cursor with no image frames");
-	DataBuffer ani_file = create_ani_file(sprite_description, hotspot);
-	int desired_width = sprite_description.get_frames().front().rect.get_width();
-	int desired_height = sprite_description.get_frames().front().rect.get_height();
+	DataBuffer ani_file = create_ani_file(cursor_description, hotspot);
+	int desired_width = cursor_description.get_frames().front().rect.get_width();
+	int desired_height = cursor_description.get_frames().front().rect.get_height();
 	HICON icon = CreateIconFromResourceEx((PBYTE) ani_file.get_data(), ani_file.get_size(), FALSE, 0x00030000, desired_width, desired_height, LR_DEFAULTCOLOR);
 	return (HCURSOR) icon;
 }
@@ -149,7 +149,7 @@ DataBuffer CursorProvider_Win32::create_ico_helper(const std::vector<PixelBuffer
 	return device.get_data();
 }
 
-DataBuffer CursorProvider_Win32::create_ani_file(const SpriteDescription &sprite_description, const Point &hotspot)
+DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor_description, const Point &hotspot)
 {
 /*
 	"RIFF" {Length of File}
@@ -172,10 +172,10 @@ DataBuffer CursorProvider_Win32::create_ani_file(const SpriteDescription &sprite
 	std::vector<DWORD> rates;
 	std::vector<DWORD> steps;
 
-	const std::vector<SpriteDescriptionFrame> &frames = sprite_description.get_frames();
-	for (std::vector<SpriteDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
+	const std::vector<CursorDescriptionFrame> &frames = cursor_description.get_frames();
+	for (std::vector<CursorDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 	{
-		if (frames[i].type != SpriteDescriptionFrame::type_pixelbuffer)
+		if (frames[i].type != CursorDescriptionFrame::type_pixelbuffer)
 			throw Exception("Only pixel buffer sprite frames currently supported for cursors");
 
 		DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, hotspot);

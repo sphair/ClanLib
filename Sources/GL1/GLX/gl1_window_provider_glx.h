@@ -238,7 +238,7 @@ public:
 
 	void show_system_cursor() { x11_window.show_system_cursor(); }
 
-	CursorProvider *create_cursor(const SpriteDescription &sprite_description, const Point &hotspot);
+	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot);
 
 	void set_cursor(CursorProvider *cursor);
 
