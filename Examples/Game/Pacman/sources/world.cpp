@@ -52,7 +52,7 @@ World::World(ResourceManager *resources, DisplayWindow &window) :
 	// first time created.
 //FIXME:	resources->load_section("Game");
 
-	fnt_clansoft = Font_Sprite(gc, "Game/fnt_clansoft", resources);
+	fnt_clansoft = Font_Sprite(canvas, "Game/fnt_clansoft", resources);
 	//fnt_clansoft = Font(gc, L"Tahoma", 32);
 
 //	sample = SoundBuffer("resources/ancient.mod");
