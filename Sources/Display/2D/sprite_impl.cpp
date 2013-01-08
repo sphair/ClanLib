@@ -572,7 +572,7 @@ void Sprite_Impl::create_textures(GraphicContext &gc, const SpriteDescription &d
 		{
 			SpriteDescriptionFrame description_frame = (*it_frames);
 			int width = description_frame.rect.get_width();
-			int height = description_frame.rect.get_width();
+			int height = description_frame.rect.get_height();
 
 			if (max_width < width) max_width = width;
 			if (max_height < height) max_height = height;
@@ -618,7 +618,7 @@ void Sprite_Impl::create_textures(GraphicContext &gc, const SpriteDescription &d
 			group_height = 64;
 		else group_height = 32;
 
-		// Only create group if an object will definately fit into it
+		// Only create group if an object will definitely fit into it
 		if ( (group_width >= min_width) && (group_height >= min_height) && (num_objects > 1) )
 		{
 			texture_group = TextureGroup(Size(group_width, group_height));
