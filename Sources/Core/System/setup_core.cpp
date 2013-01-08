@@ -47,10 +47,18 @@ SetupCore::SetupCore()
 		throw Exception("Sorry, ClanLib 2.4 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
 	}
 #endif
+
+#ifdef WIN32
+	::CoInitialize(0);
+#endif
 }
 
 SetupCore::~SetupCore()
 {
+#ifdef WIN32
+	::CoUninitialize();
+#endif
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
