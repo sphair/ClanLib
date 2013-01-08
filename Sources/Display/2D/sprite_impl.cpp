@@ -555,145 +555,16 @@ void Sprite_Impl::create_textures(GraphicContext &gc, const SpriteDescription &d
 	const std::vector<SpriteDescriptionFrame> &description_frames = description.get_frames();
 	std::vector<SpriteDescriptionFrame>::const_iterator it_frames;
 
-	// Calculate estimated texture group size
-	if (texture_group.is_null())
-	{
-		// *** This algorithm may not work! ***
-		int max_width = 1;
-		int max_height = 1;
-		int num_objects = 0;
-		int min_width = 9999999;
-		int min_height = min_width;
-		int total_width = 1;
-
-		const int allowed_pixel_gap = 4;
-
-		for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
-		{
-			SpriteDescriptionFrame description_frame = (*it_frames);
-			int width = description_frame.rect.get_width();
-			int height = description_frame.rect.get_height();
-
-			if (max_width < width) max_width = width;
-			if (max_height < height) max_height = height;
-
-			if (min_width > width) min_width = width;
-			if (min_height > height) min_height = height;
-
-			total_width += width + allowed_pixel_gap;
-
-			num_objects++;
-		}
-
-		int group_width = total_width;
-		int group_height = max_height;
-
-		// Check all will fit into a single line
-		const int max_group_size = 512;
-		if (group_width > max_group_size)
-		{
-			group_width = max_group_size;
-			group_height *= (total_width + max_group_size - 1) / max_group_size;
-		}
-
-		// Ensure power of 2 - width
-		if (group_width > 256)
-			group_width = 512;
-		else if (group_width > 128)
-			group_width = 256;
-		else if (group_width > 64)
-			group_width = 128;
-		else if (group_width > 32)
-			group_width = 64;
-		else group_width = 32;
-
-		// Ensure power of 2 - height
-		if (group_height > 256)
-			group_height = 512;
-		else if (group_height > 128)
-			group_height = 256;
-		else if (group_height > 64)
-			group_height = 128;
-		else if (group_height > 32)
-			group_height = 64;
-		else group_height = 32;
-
-		// Only create group if an object will definitely fit into it
-		if ( (group_width >= min_width) && (group_height >= min_height) && (num_objects > 1) )
-		{
-			texture_group = TextureGroup(Size(group_width, group_height));
-		}
-	}
-
-	int texture_group_width;
-	int texture_group_height;
-
-	if (texture_group.is_null())
-	{
-		texture_group_width = -1;
-		texture_group_height = -1;
-	}
-	else
-	{
-		Size size = texture_group.get_texture_sizes();
-		texture_group_width = size.width;
-		texture_group_height = size.height;
-	}
-
 	for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
 	{
 		SpriteDescriptionFrame description_frame = (*it_frames);
 
-		if(description_frame.type == SpriteDescriptionFrame::type_pixelbuffer)
-		{
-			PixelBuffer image = description_frame.pixelbuffer;
-			if (texture_group_width >0 &&
-				description_frame.rect.get_width() <= texture_group_width &&
-				description_frame.rect.get_height() <= texture_group_height)
-			{
-				Subtexture subtexture = texture_group.add(gc, description_frame.rect.get_size());
-				subtexture.get_texture().set_subimage(gc, subtexture.get_geometry().get_top_left(), image, description_frame.rect);
-				subtexture.get_texture().set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-				subtexture.get_texture().set_min_filter(linear_filter ? filter_linear : filter_nearest);
-
-				SpriteFrame frame;
-				frame.position = subtexture.get_geometry();
-				frame.texture = subtexture.get_texture();
-				frame.delay_ms = 60;
-				frame.offset = Point(0, 0);
-				frames.push_back(frame);
-			}
-			else
-			{
-				int width = description_frame.rect.get_width();
-				int height = description_frame.rect.get_height();
-
-				// Note, forced power of 2 textures have clamping issues
-				int texture_width = width;
-				int texture_height = height;
-
-				Texture2D texture(gc, texture_width, texture_height, image.get_format());
-				texture.set_subimage(gc, Point(0,0), image, description_frame.rect);
-				texture.set_mag_filter(linear_filter ? filter_linear : filter_nearest);
-				texture.set_min_filter(linear_filter ? filter_linear : filter_nearest);
-
-				SpriteFrame frame;
-				frame.position = Rect(0, 0, width, height);
-				frame.texture = texture;
-				frame.delay_ms = 60;
-				frame.offset = Point(0, 0);
-				frames.push_back(frame);
-			}
-		}
-		else if(description_frame.type == SpriteDescriptionFrame::type_texture)
-		{
-			SpriteFrame frame;
-			frame.position = description_frame.rect;
-			frame.texture = description_frame.texture;
-			frame.delay_ms = 60;
-			frame.offset = Point(0, 0);
-			frames.push_back(frame);
-		}
+		SpriteFrame frame;
+		frame.position = description_frame.rect;
+		frame.texture = description_frame.texture;
+		frame.delay_ms = 60;
+		frame.offset = Point(0, 0);
+		frames.push_back(frame);
 	}
 }
 

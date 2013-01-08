@@ -48,31 +48,17 @@ class ResourceManager;
 /// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class SpriteDescriptionFrame
 {
-public:
-	enum FrameType
-	{
-		type_pixelbuffer,
-		type_texture
-	};
 
 public:
-
-	/// \brief Constructs a SpriteDescriptionFrame
-	///
-	/// \param pixelbuffer = Pixel Buffer
-	/// \param rect = Rect
-	SpriteDescriptionFrame(PixelBuffer pixelbuffer, Rect rect) : pixelbuffer(pixelbuffer), rect(rect), type(type_pixelbuffer), delay(1.0) { }
 
 	/// \brief Constructs a SpriteDescriptionFrame
 	///
 	/// \param texture = Texture
 	/// \param rect = Rect
-	SpriteDescriptionFrame(Texture2D texture, Rect rect) : texture(texture), rect(rect), type(type_texture), delay(1.0) { }
+	SpriteDescriptionFrame(Texture2D texture, Rect rect) : texture(texture), rect(rect), delay(1.0) { }
 
-	PixelBuffer pixelbuffer;
 	Texture2D texture;
 	Rect rect;
-	FrameType type;
 	double delay;
 };
 
@@ -123,13 +109,6 @@ public:
 	/// \brief Copy assignment operator.
 	SpriteDescription &operator =(const SpriteDescription &copy);
 
-	/// \brief Adds a single image.
-	///
-	/// \param pixelbuffer Image source.
-	/// \param filename Filename of image.
-	/// \param vfs Virtual File System to load image from.
-	void add_frame(const PixelBuffer &pixelbuffer);
-
 	/// \brief Add frame
 	///
 	/// \param texture = Texture
@@ -138,19 +117,19 @@ public:
 	/// \brief Add frame
 	///
 	/// \param fullname = String Ref
-	void add_frame(const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param file = IODevice
 	/// \param image_type = String
-	void add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frames
 	///
@@ -158,6 +137,12 @@ public:
 	/// \param frames = Rect
 	/// \param num_frames = value
 	void add_frames(const Texture2D &texture, Rect *frames, int num_frames);
+
+	/// \brief Add frame
+	///
+	/// \param texture = Texture
+	/// \param frame = Rect
+	void add_frame(const Texture2D &texture, const Rect &frame);
 
 	/// \brief Adds images formed in a grid.
 	/** <p>This function will cut out a grid of frames from one image.</p>
@@ -168,14 +153,6 @@ public:
 	    \param xarray, yarray Number of columns and rows in grid.
 	    \param array_skipframes Number of frames to skip at last gridline.
 	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
-	void add_gridclipped_frames(
-		const PixelBuffer &pixelbuffer,
-		int xpos, int ypos,
-		int width, int height,
-		int xarray = 1, int yarray = 1,
-		int array_skipframes = 0,
-		int xspacing = 0, int yspacing = 0);
-
 	void add_gridclipped_frames(GraphicContext &gc, 
 		const Texture2D &texture,
 		int xpos, int ypos,
@@ -194,11 +171,6 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames(
-		const PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
 	void add_alphaclipped_frames(GraphicContext &gc, 
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
@@ -213,11 +185,6 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames_free(
-		const PixelBuffer &pixelbuffer,
-		int xpos = 0, int ypos = 0,
-		float trans_limit = 0.05f);
-
 	void add_alphaclipped_frames_free(GraphicContext &gc, 
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,

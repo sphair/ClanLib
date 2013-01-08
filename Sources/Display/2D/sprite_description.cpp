@@ -268,37 +268,25 @@ SpriteDescription &SpriteDescription::operator =(const SpriteDescription &copy)
 	return *this;
 }
 
-void SpriteDescription::add_frame(const PixelBuffer &pixelbuffer)
-{
-	impl->frames.push_back(SpriteDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
-}
-
 void SpriteDescription::add_frame(const Texture2D &texture)
 {
-	impl->frames.push_back(SpriteDescriptionFrame(texture, Rect(0, 0, texture.get_width(), texture.get_height())));
+	impl->frames.push_back(SpriteDescriptionFrame(texture, texture.get_size()));
 }
 
-void SpriteDescription::add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+void SpriteDescription::add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
 {
-	PixelBuffer image = ImageProviderFactory::load(filename, dir, "");
-	image = import_desc.process(image);
-	add_frame(image);
+	add_frame(Texture2D(gc, filename, dir, import_desc));
 }
 
-void SpriteDescription::add_frame(const std::string &fullname, const ImageImportDescription &import_desc)
+void SpriteDescription::add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)
 {
-	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	add_frame(filename, dir, import_desc );
+	add_frame(Texture2D(gc, fullname, import_desc));
 }
 
-void SpriteDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+void SpriteDescription::add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 {
-	PixelBuffer image = ImageProviderFactory::load(file, image_type);
-	image = import_desc.process(image);
-	add_frame(image);
+	add_frame(Texture2D(gc, file, image_type, import_desc));
+
 }
 
 void SpriteDescription::add_frames(const Texture2D &texture, Rect *frames, int num_frames)
@@ -307,31 +295,9 @@ void SpriteDescription::add_frames(const Texture2D &texture, Rect *frames, int n
 		impl->frames.push_back(SpriteDescriptionFrame(texture, frames[i]));
 }
 
-void SpriteDescription::add_gridclipped_frames(
-	const PixelBuffer &pixelbuffer,
-	int xpos, int ypos,
-	int width, int height,
-	int xarray, int yarray,
-	int array_skipframes,
-	int xspace, int yspace)
+void SpriteDescription::add_frame(const Texture2D &texture, const Rect &rect)
 {
-	int ystart = ypos;
-	for(int y = 0; y < yarray; y++)
-	{
-		int xstart = xpos;
-		for(int x = 0; x < xarray; x++)
-		{
-			if (y == yarray -1 && x >= xarray - array_skipframes)
-				break;
-
-			if(xstart + width > pixelbuffer.get_width() || ystart + height > pixelbuffer.get_height())
-				throw Exception("add_gridclipped_frames: Outside pixelbuffer bounds");
-
-			impl->frames.push_back(SpriteDescriptionFrame(pixelbuffer, Rect(xstart, ystart, xstart + width, ystart + height)));
-			xstart += width + xspace;
-		}
-		ystart += height + yspace;
-	}
+	impl->frames.push_back(SpriteDescriptionFrame(texture, rect));
 }
 
 void SpriteDescription::add_gridclipped_frames(GraphicContext &gc, 
@@ -366,17 +332,7 @@ void SpriteDescription::add_alphaclipped_frames(GraphicContext &gc,
 	int xpos, int ypos, 
 	float trans_limit)
 {
-	PixelBuffer pixelbuffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-
-	add_alphaclipped_frames(pixelbuffer, xpos, ypos, trans_limit);
-}
-
-void SpriteDescription::add_alphaclipped_frames(
-	const PixelBuffer &pixelbuffer, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
 
 	int begin = 0;
 	bool prev_trans = true;
@@ -441,7 +397,7 @@ void SpriteDescription::add_alphaclipped_frames(
 		else if (!opaque_row[x] && !prev_trans)
 		{
 			impl->frames.push_back(
-				SpriteDescriptionFrame(pixelbuffer, Rect(begin, cut_top, x+1, cut_bottom)));
+				SpriteDescriptionFrame(texture, Rect(begin, cut_top, x+1, cut_bottom)));
 
 			prev_trans = true;
 		}
@@ -450,7 +406,7 @@ void SpriteDescription::add_alphaclipped_frames(
 	if (!prev_trans)
 	{
 		impl->frames.push_back(
-			SpriteDescriptionFrame(pixelbuffer, Rect(begin, cut_top, alpha_width, cut_bottom)));
+			SpriteDescriptionFrame(texture, Rect(begin, cut_top, alpha_width, cut_bottom)));
 	}
 }
 
@@ -459,17 +415,7 @@ void SpriteDescription::add_alphaclipped_frames_free(GraphicContext &gc,
 	int xpos, int ypos, 
 	float trans_limit)
 {
-	PixelBuffer pixelbuffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-
-	add_alphaclipped_frames_free(pixelbuffer, xpos, ypos, trans_limit);
-}
-
-void SpriteDescription::add_alphaclipped_frames_free(
-	const PixelBuffer &pixelbuffer, 
-	int xpos, int ypos, 
-	float trans_limit)
-{
-	PixelBuffer alpha_buffer = pixelbuffer.to_format(tf_rgba8);
+	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
 
 	int width = alpha_buffer.get_width();
 	int height = alpha_buffer.get_height();
@@ -550,7 +496,7 @@ void SpriteDescription::add_alphaclipped_frames_free(
 				}
 			}
 
-			impl->frames.push_back(SpriteDescriptionFrame(pixelbuffer, Rect(x1, y1, x2, y2)));
+			impl->frames.push_back(SpriteDescriptionFrame(texture, Rect(x1, y1, x2, y2)));
 		}
 	}
 }

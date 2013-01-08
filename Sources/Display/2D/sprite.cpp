@@ -70,7 +70,7 @@ Sprite::Sprite(GraphicContext &gc, const std::string &filename, VirtualDirectory
 : impl(new Sprite_Impl())
 {
 	SpriteDescription desc;
-	desc.add_frame(filename, dir, import_desc );
+	desc.add_frame(gc, filename, dir, import_desc );
 	impl->create_textures(gc, desc);
 
 	restart();
@@ -80,7 +80,7 @@ Sprite::Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type
 : impl(new Sprite_Impl())
 {
 	SpriteDescription desc;
-	desc.add_frame(file, image_type, import_desc );
+	desc.add_frame(gc, file, image_type, import_desc );
 	impl->create_textures(gc, desc);
 	restart();
 }
@@ -294,7 +294,6 @@ void Sprite::clone(const Sprite &source)
 	impl->play_backward = source.impl->play_backward;
 	impl->play_pingpong = source.impl->play_pingpong;
 	impl->show_on_finish = source.impl->show_on_finish;
-	impl->texture_group = source.impl->texture_group;
 	impl->frames = source.impl->frames;
 
 	restart();
@@ -556,19 +555,10 @@ std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &
 	{
 		SpriteDescriptionFrame description_frame = (*it_frames);
 
-		PixelBuffer target;
-
-		if(description_frame.type == SpriteDescriptionFrame::type_pixelbuffer)
-		{
-			target = PixelBuffer(description_frame.rect.get_width(), description_frame.rect.get_height(), tf_rgba8);
-			target.set_subimage(description_frame.pixelbuffer, Point(0, 0), description_frame.rect);
-		}
-		else
-		{
-			target = PixelBuffer(description_frame.rect.get_width(), description_frame.rect.get_height(), tf_rgba8);
-			PixelBuffer pbuff = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-			target.set_subimage(pbuff, Point(0, 0), description_frame.rect);
-		}
+		//FIXME: We do not need to read in the entire texture
+		PixelBuffer target(description_frame.rect.get_width(), description_frame.rect.get_height(), tf_rgba8);
+		PixelBuffer pbuff = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+		target.set_subimage(pbuff, Point(0, 0), description_frame.rect);
 
 		CollisionOutline outline(target, alpha_limit, accuracy);
 		outlines.push_back(outline);

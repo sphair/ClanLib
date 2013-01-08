@@ -146,8 +146,6 @@ public:
 
 	std::vector<SpriteFrame> frames;
 
-	TextureGroup texture_group;
-
 /// \}
 /// \name Operations
 /// \{
