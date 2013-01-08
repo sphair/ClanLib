@@ -175,9 +175,6 @@ DataBuffer CursorProvider_Win32::create_ani_file(const CursorDescription &cursor
 	const std::vector<CursorDescriptionFrame> &frames = cursor_description.get_frames();
 	for (std::vector<CursorDescriptionFrame>::size_type i = 0; i < frames.size(); i++)
 	{
-		if (frames[i].type != CursorDescriptionFrame::type_pixelbuffer)
-			throw Exception("Only pixel buffer sprite frames currently supported for cursors");
-
 		DataBuffer ico_file = create_cur_file(frames[i].pixelbuffer, frames[i].rect, hotspot);
 		ani_frames.icons.push_back(ico_file);
 		DWORD rate = static_cast<DWORD>(frames[i].delay * 60);
