@@ -48,7 +48,7 @@ public:
 /// \{
 
 public:
-	std::vector<ImageDescriptionFrame> frames;
+	ImageDescriptionFrame frame;
 /// \}
 };
 

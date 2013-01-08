@@ -165,16 +165,9 @@ Image::Image(GraphicContext &gc, const std::string &resource_id, ResourceManager
 
 	ImageDescription desc(gc, resource_id, resources, import_desc);
 	
-	const std::vector<ImageDescriptionFrame> &frames = desc.get_frames();
-	if(frames[0].type == ImageDescriptionFrame::type_texture)
-	{
-		impl->texture = frames[0].texture;
-		impl->texture_rect = frames[0].rect;
-	}
-	else
-	{
-		throw Exception("Only Textures supported in Image");
-	}
+	const ImageDescriptionFrame &frame = desc.get_frame();
+	impl->texture = frame.texture;
+	impl->texture_rect = frame.rect;
 
 	// TODO: Create textures
 
