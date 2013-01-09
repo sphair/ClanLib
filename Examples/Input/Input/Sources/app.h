@@ -63,7 +63,6 @@ private:
 	Font font;
 
 	Mat4f projection_matrix;
-	Mat4f modelview_matrix;
 
 	std::list<TextShooter> text_shooter;
 

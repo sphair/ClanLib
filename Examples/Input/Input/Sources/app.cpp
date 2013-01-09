@@ -101,12 +101,10 @@ int App::start(const std::vector<std::string> &args)
 
 		canvas.set_map_mode(map_user_projection);
 		canvas.set_projection(projection_matrix);
-		canvas.set_modelview(modelview_matrix);
 
 		draw_text_shooter(canvas);
 
-		canvas.flush();
-		window.flip(1);
+		canvas.flip(1);
 
 		KeepAlive::process();
 	}
@@ -206,10 +204,7 @@ void App::calculate_matrix(Canvas &canvas)
 		aspect = ( width * lens_aspect) / height;
 
 	fov = (fov * 180.0f) / PI;
-	projection_matrix = Mat4f::perspective( fov, aspect, lens_near, lens_far, handed_right, clip_negative_positive_w);
-
-	modelview_matrix = Mat4f::identity();
-	modelview_matrix.matrix[2 + (4*2)] = -1.0f;
+	projection_matrix = Mat4f::perspective( fov, aspect, lens_near, lens_far, handed_left, clip_negative_positive_w);
 }
 
 void App::draw_text_shooter(Canvas &canvas)
