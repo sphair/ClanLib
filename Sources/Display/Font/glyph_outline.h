@@ -119,7 +119,9 @@ public:
 
 	std::vector<std::vector<Pointf> > joined_outlines; // for debugging triangulator hole support - don't remove!
 
-	int advance_x;	// HACK HACK HACK - Get by the FontEngines for Font_Vector
+	int advance_x;	// HACK - Used by Font_Vector. This is wrong.  See for freetype, it should use...
+				//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
+				//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
 
 /// \}
 /// \name Operations

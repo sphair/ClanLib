@@ -546,7 +546,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 		outline->add_contour(contour);
 	}
 
-	outline->advance_x = 0;	// HACK HACK HACK - This should not be here
+	outline->advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
 	return outline;
 }
 
