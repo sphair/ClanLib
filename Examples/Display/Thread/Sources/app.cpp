@@ -31,48 +31,48 @@
 
 int App::start(const std::vector<std::string> &args)
 {
-	OpenGLWindowDescription description;
+	clan::DisplayWindowDescription description;
 	description.set_title("Thread Example");
-	description.set_size(Size(1024, 768), true);
+	description.set_size(clan::Size(1024, 768), true);
 
-	DisplayWindow window(description);
-	InputDevice keyboard = window.get_ic().get_keyboard();
-	GraphicContext gc = window.get_gc();
+	clan::DisplayWindow window(description);
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::Canvas canvas(window);
 
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
+	clan::Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
 
 	// Load the font
-	Font font(gc, "tahoma", 32);
+	clan::Font font(canvas, "tahoma", 32);
 
 	// Create the initial textures
-	texture_buffers[0] = Texture(gc, texture_size, texture_size);
-	texture_buffers[1] = Texture(gc, texture_size, texture_size);
+	texture_buffers[0] = clan::Texture2D(canvas, texture_size, texture_size);
+	texture_buffers[1] = clan::Texture2D(canvas, texture_size, texture_size);
 
 	// Create the initial pixelbuffers
 #ifdef USE_OPENGL_2
 	// Only clanGL supports OpenGL Pixel Buffer Objects -- The #define is in app.h
-	pixel_buffers[0] = PixelBuffer(gc, texture_size, texture_size, cl_data_to_gpu, cl_rgba8);
-	pixel_buffers[1] = PixelBuffer(gc, texture_size, texture_size, cl_data_to_gpu, cl_rgba8);
+	pixel_buffers[0] = clan::PixelBuffer(canvas, texture_size, texture_size, cl_data_to_gpu, tf_rgba8);
+	pixel_buffers[1] = clan::PixelBuffer(canvas, texture_size, texture_size, cl_data_to_gpu, tf_rgba8);
 #else
 	// app.h contains the display target selection #define's
-	pixel_buffers[0] = PixelBuffer(texture_size, texture_size, cl_rgba8);
-	pixel_buffers[1] = PixelBuffer(texture_size, texture_size, cl_rgba8);
+	pixel_buffers[0] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
+	pixel_buffers[1] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
 #endif
 
 	// Initially clear the textures, so they are filled with a "Calculating..." message
-	FrameBuffer framebuffer(gc);
-	framebuffer.attach_color_buffer(0, texture_buffers[0]);
-	gc.set_frame_buffer(framebuffer);
-	gc.clear();
-	font.draw_text(gc, 32, 96, "Calculating...");
-	gc.flush_batcher();
-	framebuffer.attach_color_buffer(0, texture_buffers[1]);
-	gc.set_frame_buffer(framebuffer);
-	gc.clear();
-	font.draw_text(gc, 32, 96, "Calculating...");
-	gc.reset_frame_buffer();
+	clan::FrameBuffer framebuffer(canvas);
+	framebuffer.attach_color(0, texture_buffers[0]);
+	clan::Canvas canvas_fb( canvas, framebuffer );
+	canvas_fb.clear();
+	font.draw_text(canvas_fb, 32, 96, "Calculating...");
+	canvas_fb.flush();
+	framebuffer.attach_color(0, texture_buffers[1]);
+	canvas_fb = clan::Canvas( canvas, framebuffer );
+	canvas_fb.clear();
+	font.draw_text(canvas_fb, 32, 96, "Calculating...");
+	canvas_fb.flush();
 
 	// Setup the initial texture double buffering variables
 
@@ -89,10 +89,10 @@ int App::start(const std::vector<std::string> &args)
 	quit = false;
 	crashed_flag = false;
 
-	MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
+	clan::MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
 
 	// We require a try block, so the worker thread exits correctly
-	Thread thread;
+	clan::Thread thread;
 	try
 	{
 		thread.start(this, &App::worker_thread);
@@ -100,8 +100,8 @@ int App::start(const std::vector<std::string> &args)
 		// Main loop
 		FramerateCounter framerate_counter;
 		FramerateCounter worker_thread_framerate_counter;
-		unsigned int last_time = System::get_time();
-		unsigned int last_mandelbrot_time = System::get_time();
+		unsigned int last_time = clan::System::get_time();
+		unsigned int last_mandelbrot_time = clan::System::get_time();
 
 		float angle = 0.0f;
 		bool worker_thread_started = false;
@@ -112,7 +112,7 @@ int App::start(const std::vector<std::string> &args)
 			framerate_counter.frame_shown();
 
 			// Calculate timings
-			unsigned int current_time = System::get_time();
+			unsigned int current_time = clan::System::get_time();
 			float time_delta_ms = (float) (current_time - last_time);
 			last_time = current_time;
 
@@ -120,7 +120,7 @@ int App::start(const std::vector<std::string> &args)
 			while(angle > 360.0f)
 				angle-=360.0f;
 
-			gc.clear();
+			canvas.clear();
 			
 			// If the pixel buffer was uploaded on the last frame, double buffer it
 			if (texture_write_active)
@@ -151,7 +151,7 @@ int App::start(const std::vector<std::string> &args)
 
 				worker_thread_mutex_section.unlock();
 
-				texture_write->set_subimage(0, 0, *pixelbuffer_write, pixelbuffer_write->get_size());
+				texture_write->set_subimage(canvas, 0, 0, *pixelbuffer_write, pixelbuffer_write->get_size());
 				texture_write_active = true;
 				// Note the worker thread will start on the other pixelbuffer straight away, in the next "if" statement
 			}
@@ -176,7 +176,7 @@ int App::start(const std::vector<std::string> &args)
 					pixelbuffer_completed = &pixel_buffers[1];
 				}
 
-				pixelbuffer_write->lock(cl_access_write_only);
+				pixelbuffer_write->lock(canvas, clan::access_write_only);
 				dest_pixels = (unsigned char *) pixelbuffer_write->get_data();
 				worker_thread_started = true;
 				worker_thread_complete = false;
@@ -193,39 +193,37 @@ int App::start(const std::vector<std::string> &args)
 			}
 
 			// Draw rotating mandelbrot
-			gc.push_modelview();
-			gc.mult_translate(gc.get_width()/2, gc.get_height()/2);
-			gc.mult_rotate(Angle(angle, cl_degrees));
-			//gc.mult_scale(2.0f, 2.0f);
-			gc.set_texture(0, *texture_completed);
-			Rectf dest_position(-texture_size/2, -texture_size/2, Sizef(texture_size, texture_size));
-			Draw::texture(gc,dest_position, Colorf::white, Rectf(0.0f, 0.0f, 1.0f, 1.0f));
-			gc.reset_texture(0);
+			canvas.push_modelview();
+			canvas.mult_translate(canvas.get_width()/2, canvas.get_height()/2);
+			canvas.mult_rotate(clan::Angle(angle, clan::angle_degrees));
+			//canvas.mult_scale(2.0f, 2.0f);
+			clan::Image image(canvas, *texture_completed, clan::Size(texture_size, texture_size));
+			image.draw( canvas, -texture_size/2, -texture_size/2 );
 
-			gc.pop_modelview();
+			canvas.pop_modelview();
 		
 			// Draw FPS
 			std::string fps;
-			fps = std::string(string_format("Main Loop %1 fps", framerate_counter.get_framerate()));
-			font.draw_text(gc, 16, gc.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 0.0f, 1.0f));
-			fps = std::string(string_format("Worker Thread %1 fps", worker_thread_framerate_counter.get_framerate()));
-			font.draw_text(gc, 16, gc.get_height()-64-2, fps, Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+			fps = std::string(clan::string_format("Main Loop %1 fps", framerate_counter.get_framerate()));
+			font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
+			fps = std::string(clan::string_format("Worker Thread %1 fps", worker_thread_framerate_counter.get_framerate()));
+			font.draw_text(canvas, 16, canvas.get_height()-64-2, fps, clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f));
 
 			// Draw worker thread crashed message
 			if (crashed_flag)
-				font.draw_text(gc, 16, 32, "WORKER THREAD CRASHED");
+				font.draw_text(canvas, 16, 32, "WORKER THREAD CRASHED");
 	
-			window.flip(0);
+			canvas.flip(0);
 
-			KeepAlive::process();
+			clan::KeepAlive::process();
 		}
-		gc.clear();
-		font.draw_text(gc, 32, 32, "Waiting for worker thread to exit");
+		canvas.clear();
+		font.draw_text(canvas, 32, 32, "Waiting for worker thread to exit");
 		window.flip(0);
 		worker_thread_stop_event.set();
 		thread.join();
 	}
-	catch(Exception &exception)
+	catch(clan::Exception &exception)
 	{
 		worker_thread_stop_event.set();
 		thread.join();
@@ -283,9 +281,9 @@ void App::render_mandelbrot(float mandelbrot_scale, unsigned char *dest)
 
 }
 
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -297,12 +295,12 @@ void App::worker_thread()
 	try
 	{
 		
-		MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
+		clan::MutexSection worker_thread_mutex_section(&worker_thread_mutex, false);
 
 		while(true)
 		{
 		
-			int wakeup_reason = Event::wait(worker_thread_activate_event, worker_thread_stop_event);
+			int wakeup_reason = clan::Event::wait(worker_thread_activate_event, worker_thread_stop_event);
 			if (wakeup_reason != 0)	// Stop event called
 				break;
 			worker_thread_activate_event.reset();
@@ -318,7 +316,7 @@ void App::worker_thread()
 			worker_thread_complete = true;
 		}
 	}
-	catch(Exception &)
+	catch(clan::Exception &)
 	{
 		crashed_flag = true;
 	}

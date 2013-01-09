@@ -41,7 +41,7 @@ public:
 	void frame_shown()
 	{
 		frames++;
-		int current_time = System::get_time();
+		int current_time = clan::System::get_time();
 		if (start_time == 0)
 		{
 			start_time = current_time;

@@ -40,7 +40,7 @@ public:
 
 private:
 	void render_mandelbrot(float mandelbrot_scale, unsigned char *dest);
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void worker_thread();
 
 	bool quit;
@@ -48,23 +48,23 @@ private:
 
 	static const int texture_size = 256;
 
-	Texture texture_buffers[2];
-	PixelBuffer pixel_buffers[2];
+	clan::Texture2D texture_buffers[2];
+	clan::PixelBuffer pixel_buffers[2];
 
 	int texture_buffers_offset;
 	int pixel_buffers_offset;
 	volatile bool worker_thread_complete;
 
-	PixelBuffer *pixelbuffer_write;	// Pixelbuffer that is written to
-	PixelBuffer *pixelbuffer_completed;	// Completed pixelbuffer
-	Texture *texture_write;	// Texture that is written to
-	Texture *texture_completed;	// Completed texture
+	clan::PixelBuffer *pixelbuffer_write;	// Pixelbuffer that is written to
+	clan::PixelBuffer *pixelbuffer_completed;	// Completed pixelbuffer
+	clan::Texture2D *texture_write;	// Texture that is written to
+	clan::Texture2D *texture_completed;	// Completed texture
 
-	Event worker_thread_activate_event;
-	Event worker_thread_stop_event;
+	clan::Event worker_thread_activate_event;
+	clan::Event worker_thread_stop_event;
 
 	// Worker thead variables
-	Mutex worker_thread_mutex;
+	clan::Mutex worker_thread_mutex;
 	float scale;
 	unsigned char *dest_pixels;	// Used by the worker thread to contain where to write the pixels to
 };
