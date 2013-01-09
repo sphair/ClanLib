@@ -178,7 +178,7 @@ public:
 	const unsigned short *get_line_uint16(int line) const { return reinterpret_cast<const unsigned short*>(get_line(line)); }
 
 	/// \brief Returns a pointer to the beginning of a specific line as 32 bit data.
-	unsigned int *get_line_uint32(int line) { return reinterpret_cast<unsigned int*>(get_data()); }
+	unsigned int *get_line_uint32(int line) { return reinterpret_cast<unsigned int*>(get_line(line)); }
 	const unsigned int *get_line_uint32(int line) const { return reinterpret_cast<const unsigned int*>(get_line(line)); }
 
 	/// \brief Returns true if format has an alpha channel
