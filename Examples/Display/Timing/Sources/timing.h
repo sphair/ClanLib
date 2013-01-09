@@ -34,7 +34,7 @@ public:
 	float xpos;
 	float ypos;
 	float speed;
-	Colorf color;
+	clan::Colorf color;
 };
 
 // This is the Application class (That is instantiated by the Program Class)
@@ -44,10 +44,10 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void draw_graphics(GraphicContext &gc, float time_delta_ms);
-	void set_stars(GraphicContext &gc, int star_cnt);
+	void draw_graphics(clan::Canvas &canvas, float time_delta_ms);
+	void set_stars(clan::Canvas &canvas, int star_cnt);
 private:
 	bool quit;
 
