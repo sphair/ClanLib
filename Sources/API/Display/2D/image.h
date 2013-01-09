@@ -70,7 +70,7 @@ public:
 	/// \param context = Graphic Context
 	/// \param texture = Texture to get image data from
 	/// \param rect = Position and size in texture to get image data from
-	Image(GraphicContext &context, Texture2D texture, Rect rect);
+	Image(GraphicContext &context, Texture2D texture, const Rect &rect);
 
 	/// \brief Constructs an image from a subtexture.
 	///
