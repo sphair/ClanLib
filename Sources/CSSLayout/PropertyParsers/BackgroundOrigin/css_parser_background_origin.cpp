@@ -40,20 +40,21 @@ std::vector<std::string> CSSParserBackgroundOrigin::get_names()
 	return names;
 }
 
-void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundOrigin::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundOrigin> background_origin(new CSSValueBackgroundOrigin());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_origin.type = CSSValueBackgroundOrigin::type_inherit;
+		background_origin->type = CSSValueBackgroundOrigin::type_inherit;
 	}
 	else
 	{
-		CSSValueBackgroundOrigin background_origin;
-		background_origin.type = CSSValueBackgroundOrigin::type_value;
-		background_origin.values.clear();
+		background_origin->type = CSSValueBackgroundOrigin::type_value;
+		background_origin->values.clear();
 		while (true)
 		{
 			if (token.type != CSSToken::type_ident)
@@ -61,15 +62,15 @@ void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::s
 
 			if (equals(token.value, "border-box"))
 			{
-				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_border_box);
+				background_origin->values.push_back(CSSValueBackgroundOrigin::origin_border_box);
 			}
 			else if (equals(token.value, "padding-box"))
 			{
-				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_padding_box);
+				background_origin->values.push_back(CSSValueBackgroundOrigin::origin_padding_box);
 			}
 			else if (equals(token.value, "content-box"))
 			{
-				background_origin.values.push_back(CSSValueBackgroundOrigin::origin_content_box);
+				background_origin->values.push_back(CSSValueBackgroundOrigin::origin_content_box);
 			}
 			else
 			{
@@ -85,9 +86,9 @@ void CSSParserBackgroundOrigin::parse(CSSBoxProperties &properties, const std::s
 
 			token = next_token(pos, tokens);
 		}
-
-		properties.background_origin = background_origin;
 	}
+
+	inout_values.push_back(std::move(background_origin));
 }
 
 }

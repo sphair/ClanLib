@@ -40,22 +40,32 @@ std::vector<std::string> CSSParserListStyleImage::get_names()
 	return names;
 }
 
-void CSSParserListStyleImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserListStyleImage::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueListStyleImage> list_style_image(new CSSValueListStyleImage());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.list_style_image.type = CSSValueListStyleImage::type_none;
+			list_style_image->type = CSSValueListStyleImage::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.list_style_image.type = CSSValueListStyleImage::type_inherit;
+			list_style_image->type = CSSValueListStyleImage::type_inherit;
+		else
+			return;
 	}
 	else if (token.type == CSSToken::type_uri && pos == tokens.size())
 	{
-		properties.list_style_image.type = CSSValueListStyleImage::type_uri;
-		properties.list_style_image.url = token.value;
+		list_style_image->type = CSSValueListStyleImage::type_uri;
+		list_style_image->url = token.value;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(list_style_image));
 }
 
 }

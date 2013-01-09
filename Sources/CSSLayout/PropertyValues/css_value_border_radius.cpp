@@ -34,7 +34,12 @@ namespace clan
 {
 
 CSSValueBorderRadius::CSSValueBorderRadius()
-: type(type_two_values), value_type1(value_type_length), percentage1(0.0f), value_type2(value_type_length), percentage2(0.0f)
+: value_type(top_left_value), type(type_two_values), value_type1(value_type_length), percentage1(0.0f), value_type2(value_type_length), percentage2(0.0f)
+{
+}
+
+CSSValueBorderRadius::CSSValueBorderRadius(ValueType value_type, const CSSValueBorderRadius &value)
+: value_type(value_type), type(value.type), value_type1(value.value_type1), percentage1(value.percentage1), value_type2(value.value_type2), percentage2(value.percentage2)
 {
 }
 

@@ -43,17 +43,18 @@ std::vector<std::string> CSSParserBorderLTRBStyle::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderLTRBStyle::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueBorderStyle *style = 0;
+	std::unique_ptr<CSSValueBorderStyle> style(new CSSValueBorderStyle());
+
 	if (equals(name, "border-top-style"))
-		style = &properties.border_style_top;
+		style->value_type = CSSValueBorderStyle::top_value;
 	else if (equals(name, "border-right-style"))
-		style = &properties.border_style_right;
+		style->value_type = CSSValueBorderStyle::right_value;
 	else if (equals(name, "border-bottom-style"))
-		style = &properties.border_style_bottom;
+		style->value_type = CSSValueBorderStyle::bottom_value;
 	else if (equals(name, "border-left-style"))
-		style = &properties.border_style_left;
+		style->value_type = CSSValueBorderStyle::left_value;
 
 	if (style)
 	{
@@ -83,6 +84,10 @@ void CSSParserBorderLTRBStyle::parse(CSSBoxProperties &properties, const std::st
 				style->type = CSSValueBorderStyle::type_outset;
 			else if (equals(token.value, "inherit"))
 				style->type = CSSValueBorderStyle::type_inherit;
+			else
+				return;
+
+			inout_values.push_back(std::move(style));
 		}
 	}
 }

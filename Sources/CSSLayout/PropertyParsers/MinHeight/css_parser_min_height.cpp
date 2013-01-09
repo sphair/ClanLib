@@ -40,31 +40,45 @@ std::vector<std::string> CSSParserMinHeight::get_names()
 	return names;
 }
 
-void CSSParserMinHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserMinHeight::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueMinHeight> min_height(new CSSValueMinHeight());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inherit"))
-			properties.min_height.type = CSSValueMinHeight::type_inherit;
+			min_height->type = CSSValueMinHeight::type_inherit;
 		else if (equals(token.value, "auto"))
-			properties.min_height.type = CSSValueMinHeight::type_auto;
+			min_height->type = CSSValueMinHeight::type_auto;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.min_height.type = CSSValueMinHeight::type_length;
-			properties.min_height.length = length;
+			min_height->type = CSSValueMinHeight::type_length;
+			min_height->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.min_height.type = CSSValueMinHeight::type_percentage;
-		properties.min_height.percentage = StringHelp::text_to_float(token.value);
+		min_height->type = CSSValueMinHeight::type_percentage;
+		min_height->percentage = StringHelp::text_to_float(token.value);
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(min_height));
 }
 
 }

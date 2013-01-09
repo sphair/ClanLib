@@ -40,10 +40,10 @@ std::vector<std::string> CSSParserFontFamily::get_names()
 	return names;
 }
 
-void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens)
+void CSSParserFontFamily::parse(const std::string &propname, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueFontFamily family;
-	family.type = CSSValueFontFamily::type_names;
+	std::unique_ptr<CSSValueFontFamily> family(new CSSValueFontFamily());
+	family->type = CSSValueFontFamily::type_names;
 
 	size_t pos = 0;
 	CSSToken token;
@@ -51,7 +51,8 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 
 	if (equals(token.value, "inherit") && tokens.size() == 1)
 	{
-		properties.font_family.type = CSSValueFontFamily::type_inherit;
+		family->type = CSSValueFontFamily::type_inherit;
+		inout_values.push_back(std::move(family));
 		return;
 	}
 
@@ -118,14 +119,14 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 					break;
 				}
 			}
-			family.names.push_back(name);
+			family->names.push_back(name);
 			if (pos == tokens.size())
 				break;
 			token = next_token(pos, tokens);
 		}
 		else
 		{
-			family.names.push_back(name);
+			family->names.push_back(name);
 
 			if (pos == tokens.size())
 				break;
@@ -139,7 +140,7 @@ void CSSParserFontFamily::parse(CSSBoxProperties &properties, const std::string 
 		}
 	}
 
-	properties.font_family = family;
+	inout_values.push_back(std::move(family));
 }
 
 }

@@ -40,31 +40,45 @@ std::vector<std::string> CSSParserMaxHeight::get_names()
 	return names;
 }
 
-void CSSParserMaxHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserMaxHeight::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueMaxHeight> max_height(new CSSValueMaxHeight());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.max_height.type = CSSValueMaxHeight::type_none;
+			max_height->type = CSSValueMaxHeight::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.max_height.type = CSSValueMaxHeight::type_inherit;
+			max_height->type = CSSValueMaxHeight::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.max_height.type = CSSValueMaxHeight::type_length;
-			properties.max_height.length = length;
+			max_height->type = CSSValueMaxHeight::type_length;
+			max_height->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.max_height.type = CSSValueMaxHeight::type_percentage;
-		properties.max_height.percentage = StringHelp::text_to_float(token.value);
+		max_height->type = CSSValueMaxHeight::type_percentage;
+		max_height->percentage = StringHelp::text_to_float(token.value);
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(max_height));
 }
 
 }

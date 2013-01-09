@@ -40,26 +40,40 @@ std::vector<std::string> CSSParserZIndex::get_names()
 	return names;
 }
 
-void CSSParserZIndex::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserZIndex::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueZIndex> z_index(new CSSValueZIndex());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.z_index.type = CSSValueZIndex::type_auto;
+			z_index->type = CSSValueZIndex::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.z_index.type = CSSValueZIndex::type_inherit;
+			z_index->type = CSSValueZIndex::type_inherit;
+		else
+			return;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
 		int value = 0;
 		if (parse_integer(token.value, value))
 		{
-			properties.z_index.type = CSSValueZIndex::type_integer;
-			properties.z_index.value = value;
+			z_index->type = CSSValueZIndex::type_integer;
+			z_index->value = value;
+		}
+		else
+		{
+			return;
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(z_index));
 }
 
 }

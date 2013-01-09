@@ -40,21 +40,21 @@ std::vector<std::string> CSSParserFont::get_names()
 	return names;
 }
 
-void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propname, const std::vector<CSSToken> &tokens)
+void CSSParserFont::parse(const std::string &propname, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueFontStyle style;
-	CSSValueFontVariant variant;
-	CSSValueFontWeight weight;
-	CSSValueFontSize size;
-	CSSValueLineHeight line_height;
-	CSSValueFontFamily family;
-	style.type = CSSValueFontStyle::type_normal;
-	variant.type = CSSValueFontVariant::type_normal;
-	weight.type = CSSValueFontWeight::type_normal;
-	size.type = CSSValueFontSize::type_medium;
-	line_height.type = CSSValueLineHeight::type_normal;
-	family.type = CSSValueFontFamily::type_names;
-	family.names.push_back(CSSValueFontFamilyName());
+	std::unique_ptr<CSSValueFontStyle> style(new CSSValueFontStyle());
+	std::unique_ptr<CSSValueFontVariant> variant(new CSSValueFontVariant());
+	std::unique_ptr<CSSValueFontWeight> weight(new CSSValueFontWeight());
+	std::unique_ptr<CSSValueFontSize> size(new CSSValueFontSize());
+	std::unique_ptr<CSSValueLineHeight> line_height(new CSSValueLineHeight());
+	std::unique_ptr<CSSValueFontFamily> family(new CSSValueFontFamily());
+	style->type = CSSValueFontStyle::type_normal;
+	variant->type = CSSValueFontVariant::type_normal;
+	weight->type = CSSValueFontWeight::type_normal;
+	size->type = CSSValueFontSize::type_medium;
+	line_height->type = CSSValueLineHeight::type_normal;
+	family->type = CSSValueFontFamily::type_names;
+	family->names.push_back(CSSValueFontFamilyName());
 
 	bool font_style_set = false;
 	bool font_variant_set = false;
@@ -75,22 +75,29 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 				equals(token.value, "small-caption") ||
 				equals(token.value, "status-bar")))
 			{
-				properties.font_style = style;
-				properties.font_variant = variant;
-				properties.font_weight = weight;
-				properties.font_size = size;
-				properties.line_height = line_height;
-				properties.font_family = family;
+				inout_values.push_back(std::move(style));
+				inout_values.push_back(std::move(variant));
+				inout_values.push_back(std::move(weight));
+				inout_values.push_back(std::move(size));
+				inout_values.push_back(std::move(line_height));
+				inout_values.push_back(std::move(family));
 				return;
 			}
 			else if (equals(token.value, "inherit") && tokens.size() == 1)
 			{
-				properties.font_style.type = CSSValueFontStyle::type_inherit;
-				properties.font_variant.type = CSSValueFontVariant::type_inherit;
-				properties.font_weight.type = CSSValueFontWeight::type_inherit;
-				properties.font_size.type = CSSValueFontSize::type_inherit;
-				properties.line_height.type = CSSValueLineHeight::type_inherit;
-				properties.font_family.type = CSSValueFontFamily::type_inherit;
+				style->type = CSSValueFontStyle::type_inherit;
+				variant->type = CSSValueFontVariant::type_inherit;
+				weight->type = CSSValueFontWeight::type_inherit;
+				size->type = CSSValueFontSize::type_inherit;
+				line_height->type = CSSValueLineHeight::type_inherit;
+				family->type = CSSValueFontFamily::type_inherit;
+				
+				inout_values.push_back(std::move(style));
+				inout_values.push_back(std::move(variant));
+				inout_values.push_back(std::move(weight));
+				inout_values.push_back(std::move(size));
+				inout_values.push_back(std::move(line_height));
+				inout_values.push_back(std::move(family));
 				return;
 			}
 			else if (equals(token.value, "normal")) // font-style or font-weight or font-variant
@@ -108,77 +115,77 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 			else if (equals(token.value, "italic") && !font_style_set) // font-style
 			{
 				font_style_set = true;
-				style.type = CSSValueFontStyle::type_italic;
+				style->type = CSSValueFontStyle::type_italic;
 			}
 			else if (equals(token.value, "oblique") && !font_style_set) // font-style
 			{
 				font_style_set = true;
-				style.type = CSSValueFontStyle::type_oblique;
+				style->type = CSSValueFontStyle::type_oblique;
 			}
 			else if (equals(token.value, "small-caps") && !font_variant_set) // font-variant
 			{
 				font_style_set = true;
-				variant.type = CSSValueFontVariant::type_small_caps;
+				variant->type = CSSValueFontVariant::type_small_caps;
 			}
 			else if (equals(token.value, "bold") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_bold;
+				weight->type = CSSValueFontWeight::type_bold;
 			}
 			else if (equals(token.value, "bolder") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_bolder;
+				weight->type = CSSValueFontWeight::type_bolder;
 			}
 			else if (equals(token.value, "lighter") && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_lighter;
+				weight->type = CSSValueFontWeight::type_lighter;
 			}
 			else if (token.value == "100" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_100;
+				weight->type = CSSValueFontWeight::type_100;
 			}
 			else if (token.value == "200" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_200;
+				weight->type = CSSValueFontWeight::type_200;
 			}
 			else if (token.value == "300" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_300;
+				weight->type = CSSValueFontWeight::type_300;
 			}
 			else if (token.value == "400" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_400;
+				weight->type = CSSValueFontWeight::type_400;
 			}
 			else if (token.value == "500" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_500;
+				weight->type = CSSValueFontWeight::type_500;
 			}
 			else if (token.value == "600" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_600;
+				weight->type = CSSValueFontWeight::type_600;
 			}
 			else if (token.value == "700" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_700;
+				weight->type = CSSValueFontWeight::type_700;
 			}
 			else if (token.value == "800" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_800;
+				weight->type = CSSValueFontWeight::type_800;
 			}
 			else if (token.value == "900" && !font_weight_set) // font-weight
 			{
 				font_weight_set = true;
-				weight.type = CSSValueFontWeight::type_900;
+				weight->type = CSSValueFontWeight::type_900;
 			}
 			else
 			{
@@ -200,25 +207,25 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	if (token.type == CSSToken::type_ident)
 	{
 		if (equals(token.value, "xx-small"))
-			size.type = CSSValueFontSize::type_xx_small;
+			size->type = CSSValueFontSize::type_xx_small;
 		else if (equals(token.value, "x-small"))
-			size.type = CSSValueFontSize::type_x_small;
+			size->type = CSSValueFontSize::type_x_small;
 		else if (equals(token.value, "small"))
-			size.type = CSSValueFontSize::type_small;
+			size->type = CSSValueFontSize::type_small;
 		else if (equals(token.value, "medium"))
-			size.type = CSSValueFontSize::type_medium;
+			size->type = CSSValueFontSize::type_medium;
 		else if (equals(token.value, "large"))
-			size.type = CSSValueFontSize::type_large;
+			size->type = CSSValueFontSize::type_large;
 		else if (equals(token.value, "x-large"))
-			size.type = CSSValueFontSize::type_x_large;
+			size->type = CSSValueFontSize::type_x_large;
 		else if (equals(token.value, "xx-large"))
-			size.type = CSSValueFontSize::type_xx_large;
+			size->type = CSSValueFontSize::type_xx_large;
 		else if (equals(token.value, "smaller"))
-			size.type = CSSValueFontSize::type_smaller;
+			size->type = CSSValueFontSize::type_smaller;
 		else if (equals(token.value, "larger"))
-			size.type = CSSValueFontSize::type_larger;
+			size->type = CSSValueFontSize::type_larger;
 		else if (equals(token.value, "inherit"))
-			size.type = CSSValueFontSize::type_inherit;
+			size->type = CSSValueFontSize::type_inherit;
 		else
 		{
 			debug_parse_error(propname, tokens);
@@ -230,8 +237,8 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			size.type = CSSValueFontSize::type_length;
-			size.length = length;
+			size->type = CSSValueFontSize::type_length;
+			size->length = length;
 		}
 		else
 		{
@@ -241,8 +248,8 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 	}
 	else if (token.type == CSSToken::type_percentage)
 	{
-		size.type = CSSValueFontSize::type_percentage;
-		size.percentage = StringHelp::text_to_float(token.value);
+		size->type = CSSValueFontSize::type_percentage;
+		size->percentage = StringHelp::text_to_float(token.value);
 	}
 	else
 	{
@@ -258,9 +265,9 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		if (token.type == CSSToken::type_ident)
 		{
 			if (equals(token.value, "normal"))
-				line_height.type = CSSValueLineHeight::type_normal;
+				line_height->type = CSSValueLineHeight::type_normal;
 			else if (equals(token.value, "inherit"))
-				line_height.type = CSSValueLineHeight::type_inherit;
+				line_height->type = CSSValueLineHeight::type_inherit;
 			else
 			{
 				debug_parse_error(propname, tokens);
@@ -269,16 +276,16 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 		else if (token.type == CSSToken::type_number)
 		{
-			line_height.type = CSSValueLineHeight::type_number;
-			line_height.number = StringHelp::text_to_float(token.value);
+			line_height->type = CSSValueLineHeight::type_number;
+			line_height->number = StringHelp::text_to_float(token.value);
 		}
 		else if (is_length(token))
 		{
 			CSSLength length;
 			if (parse_length(token, length))
 			{
-				line_height.type = CSSValueLineHeight::type_length;
-				line_height.length = length;
+				line_height->type = CSSValueLineHeight::type_length;
+				line_height->length = length;
 			}
 			else
 			{
@@ -288,8 +295,8 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			line_height.type = CSSValueLineHeight::type_percentage;
-			line_height.percentage = StringHelp::text_to_float(token.value);
+			line_height->type = CSSValueLineHeight::type_percentage;
+			line_height->percentage = StringHelp::text_to_float(token.value);
 		}
 		else
 		{
@@ -300,7 +307,7 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		token = next_token(pos, tokens);
 	}
 
-	family.names.clear();
+	family->names.clear();
 	while (true)
 	{
 		if (token.type == CSSToken::type_ident)
@@ -360,14 +367,14 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 						break;
 					}
 				}
-				family.names.push_back(name);
+				family->names.push_back(name);
 				if (pos == tokens.size())
 					break;
 				token = next_token(pos, tokens);
 			}
 			else
 			{
-				family.names.push_back(name);
+				family->names.push_back(name);
 
 				if (pos == tokens.size())
 					break;
@@ -385,7 +392,7 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 			CSSValueFontFamilyName name;
 			name.type = CSSValueFontFamilyName::type_family_name;
 			name.name = token.value;
-			family.names.push_back(name);
+			family->names.push_back(name);
 
 			if (pos == tokens.size())
 				break;
@@ -404,12 +411,12 @@ void CSSParserFont::parse(CSSBoxProperties &properties, const std::string &propn
 		}
 	}
 
-	properties.font_style = style;
-	properties.font_variant = variant;
-	properties.font_weight = weight;
-	properties.font_size = size;
-	properties.line_height = line_height;
-	properties.font_family = family;
+	inout_values.push_back(std::move(style));
+	inout_values.push_back(std::move(variant));
+	inout_values.push_back(std::move(weight));
+	inout_values.push_back(std::move(size));
+	inout_values.push_back(std::move(line_height));
+	inout_values.push_back(std::move(family));
 }
 
 }

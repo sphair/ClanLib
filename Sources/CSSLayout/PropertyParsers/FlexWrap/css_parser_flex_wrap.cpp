@@ -40,21 +40,31 @@ std::vector<std::string> CSSParserFlexWrap::get_names()
 	return names;
 }
 
-void CSSParserFlexWrap::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFlexWrap::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFlexWrap> flex_wrap(new CSSValueFlexWrap());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "nowrap"))
-			properties.flex_wrap.type = CSSValueFlexWrap::type_nowrap;
+			flex_wrap->type = CSSValueFlexWrap::type_nowrap;
 		else if (equals(token.value, "wrap"))
-			properties.flex_wrap.type = CSSValueFlexWrap::type_wrap;
+			flex_wrap->type = CSSValueFlexWrap::type_wrap;
 		else if (equals(token.value, "wrap-reverse"))
-			properties.flex_wrap.type = CSSValueFlexWrap::type_wrap_reverse;
+			flex_wrap->type = CSSValueFlexWrap::type_wrap_reverse;
 		else if (equals(token.value, "inherit"))
-			properties.flex_wrap.type = CSSValueFlexWrap::type_inherit;
+			flex_wrap->type = CSSValueFlexWrap::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(flex_wrap));
 }
 
 }

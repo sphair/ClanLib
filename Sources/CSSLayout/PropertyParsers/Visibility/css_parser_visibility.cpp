@@ -40,21 +40,31 @@ std::vector<std::string> CSSParserVisibility::get_names()
 	return names;
 }
 
-void CSSParserVisibility::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserVisibility::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueVisibility> visibility(new CSSValueVisibility());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "visible"))
-			properties.visibility.type = CSSValueVisibility::type_visible;
+			visibility->type = CSSValueVisibility::type_visible;
 		else if (equals(token.value, "hidden"))
-			properties.visibility.type = CSSValueVisibility::type_hidden;
+			visibility->type = CSSValueVisibility::type_hidden;
 		else if (equals(token.value, "collapse"))
-			properties.visibility.type = CSSValueVisibility::type_collapse;
+			visibility->type = CSSValueVisibility::type_collapse;
 		else if (equals(token.value, "inherit"))
-			properties.visibility.type = CSSValueVisibility::type_inherit;
+			visibility->type = CSSValueVisibility::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(visibility));
 }
 
 }

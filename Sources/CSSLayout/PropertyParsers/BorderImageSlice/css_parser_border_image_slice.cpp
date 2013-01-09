@@ -40,14 +40,17 @@ std::vector<std::string> CSSParserBorderImageSlice::get_names()
 	return names;
 }
 
-void CSSParserBorderImageSlice::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderImageSlice::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBorderImageSlice> border_image_slice(new CSSValueBorderImageSlice());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.border_image_slice.type = CSSValueBorderImageSlice::type_inherit;
+		border_image_slice->type = CSSValueBorderImageSlice::type_inherit;
+		inout_values.push_back(std::move(border_image_slice));
 	}
 	else
 	{
@@ -85,7 +88,8 @@ void CSSParserBorderImageSlice::parse(CSSBoxProperties &properties, const std::s
 		if (num_lengths < 1 || pos != tokens.size())
 			return;
 
-		properties.border_image_slice.type = CSSValueBorderImageSlice::type_values;
+		border_image_slice->type = CSSValueBorderImageSlice::type_values;
+
 		if (num_lengths == 1)
 		{
 			for (int i = 1; i < 4; i++)
@@ -111,19 +115,21 @@ void CSSParserBorderImageSlice::parse(CSSBoxProperties &properties, const std::s
 			numbers[3] = numbers[1];
 		}
 
-		properties.border_image_slice.fill_center = fill_center;
-		properties.border_image_slice.value_top = value_types[0];
-		properties.border_image_slice.value_right = value_types[1];
-		properties.border_image_slice.value_bottom = value_types[2];
-		properties.border_image_slice.value_left = value_types[3];
-		properties.border_image_slice.percentage_top = percentages[0];
-		properties.border_image_slice.percentage_right = percentages[1];
-		properties.border_image_slice.percentage_bottom = percentages[2];
-		properties.border_image_slice.percentage_left = percentages[3];
-		properties.border_image_slice.number_top = numbers[0];
-		properties.border_image_slice.number_right = numbers[1];
-		properties.border_image_slice.number_bottom = numbers[2];
-		properties.border_image_slice.number_left = numbers[3];
+		border_image_slice->fill_center = fill_center;
+		border_image_slice->value_top = value_types[0];
+		border_image_slice->value_right = value_types[1];
+		border_image_slice->value_bottom = value_types[2];
+		border_image_slice->value_left = value_types[3];
+		border_image_slice->percentage_top = percentages[0];
+		border_image_slice->percentage_right = percentages[1];
+		border_image_slice->percentage_bottom = percentages[2];
+		border_image_slice->percentage_left = percentages[3];
+		border_image_slice->number_top = numbers[0];
+		border_image_slice->number_right = numbers[1];
+		border_image_slice->number_bottom = numbers[2];
+		border_image_slice->number_left = numbers[3];
+
+		inout_values.push_back(std::move(border_image_slice));
 	}
 }
 

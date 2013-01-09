@@ -34,7 +34,12 @@ namespace clan
 {
 
 CSSValueMarginWidth::CSSValueMarginWidth()
-: type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
+: value_type(left_value), type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
+{
+}
+
+CSSValueMarginWidth::CSSValueMarginWidth(ValueType value_type, const CSSValueMarginWidth &value)
+: value_type(value_type), type(value.type), length(value.length), percentage(value.percentage)
 {
 }
 

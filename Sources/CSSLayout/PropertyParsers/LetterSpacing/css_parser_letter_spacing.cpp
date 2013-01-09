@@ -40,24 +40,32 @@ std::vector<std::string> CSSParserLetterSpacing::get_names()
 	return names;
 }
 
-void CSSParserLetterSpacing::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserLetterSpacing::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueLetterSpacing> letter_spacing(new CSSValueLetterSpacing());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.letter_spacing.type = CSSValueLetterSpacing::type_normal;
+			letter_spacing->type = CSSValueLetterSpacing::type_normal;
 		else if (equals(token.value, "inherit"))
-			properties.letter_spacing.type = CSSValueLetterSpacing::type_inherit;
+			letter_spacing->type = CSSValueLetterSpacing::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.letter_spacing.type = CSSValueLetterSpacing::type_length;
-			properties.letter_spacing.length = length;
+			letter_spacing->type = CSSValueLetterSpacing::type_length;
+			letter_spacing->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
@@ -69,11 +77,25 @@ void CSSParserLetterSpacing::parse(CSSBoxProperties &properties, const std::stri
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.letter_spacing.type = CSSValueLetterSpacing::type_length;
-				properties.letter_spacing.length = length;
+				letter_spacing->type = CSSValueLetterSpacing::type_length;
+				letter_spacing->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
+		else
+		{
+			return;
+		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(letter_spacing));
 }
 
 }

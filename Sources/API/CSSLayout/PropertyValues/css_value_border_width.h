@@ -39,9 +39,20 @@ class CSSValueBorderStyle;
 class CSSValueBorderWidth : public CSSPropertyValue
 {
 public:
+	enum ValueType
+	{
+		left_value,
+		top_value,
+		right_value,
+		bottom_value
+	};
+
 	CSSValueBorderWidth();
+	CSSValueBorderWidth(ValueType value_type, const CSSValueBorderWidth &value);
 	void compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style);
 	std::string to_string() const;
+
+	ValueType value_type;
 
 	enum Type
 	{

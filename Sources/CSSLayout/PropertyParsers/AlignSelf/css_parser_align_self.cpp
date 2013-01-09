@@ -40,26 +40,49 @@ std::vector<std::string> CSSParserAlignSelf::get_names()
 	return names;
 }
 
-void CSSParserAlignSelf::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserAlignSelf::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
+		std::unique_ptr<CSSValueAlignSelf> align_self(new CSSValueAlignSelf());
+
 		if (equals(token.value, "auto"))
-			properties.align_self.type = CSSValueAlignSelf::type_auto;
+		{
+			align_self->type = CSSValueAlignSelf::type_auto;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "flex-start"))
-			properties.align_self.type = CSSValueAlignSelf::type_flex_start;
+		{
+			align_self->type = CSSValueAlignSelf::type_flex_start;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "flex-end"))
-			properties.align_self.type = CSSValueAlignSelf::type_flex_end;
+		{
+			align_self->type = CSSValueAlignSelf::type_flex_end;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "center"))
-			properties.align_self.type = CSSValueAlignSelf::type_center;
+		{
+			align_self->type = CSSValueAlignSelf::type_center;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "baseline"))
-			properties.align_self.type = CSSValueAlignSelf::type_baseline;
+		{
+			align_self->type = CSSValueAlignSelf::type_baseline;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "stretch"))
-			properties.align_self.type = CSSValueAlignSelf::type_stretch;
+		{
+			align_self->type = CSSValueAlignSelf::type_stretch;
+			inout_values.push_back(std::move(align_self));
+		}
 		else if (equals(token.value, "inherit"))
-			properties.align_self.type = CSSValueAlignSelf::type_inherit;
+		{
+			align_self->type = CSSValueAlignSelf::type_inherit;
+			inout_values.push_back(std::move(align_self));
+		}
 	}
 }
 

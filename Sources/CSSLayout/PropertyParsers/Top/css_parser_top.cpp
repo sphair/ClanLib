@@ -40,30 +40,38 @@ std::vector<std::string> CSSParserTop::get_names()
 	return names;
 }
 
-void CSSParserTop::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserTop::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueTop> top(new CSSValueTop());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.top.type = CSSValueTop::type_auto;
+			top->type = CSSValueTop::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.top.type = CSSValueTop::type_inherit;
+			top->type = CSSValueTop::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.top.type = CSSValueTop::type_length;
-			properties.top.length = length;
+			top->type = CSSValueTop::type_length;
+			top->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.top.type = CSSValueTop::type_percentage;
-		properties.top.percentage = StringHelp::text_to_float(token.value);
+		top->type = CSSValueTop::type_percentage;
+		top->percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
 	{
@@ -74,16 +82,26 @@ void CSSParserTop::parse(CSSBoxProperties &properties, const std::string &name, 
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.top.type = CSSValueTop::type_length;
-				properties.top.length = length;
+				top->type = CSSValueTop::type_length;
+				top->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.top.type = CSSValueTop::type_percentage;
-			properties.top.percentage = -StringHelp::text_to_float(token.value);
+			top->type = CSSValueTop::type_percentage;
+			top->percentage = -StringHelp::text_to_float(token.value);
+		}
+		else
+		{
+			return;
 		}
 	}
+
+	inout_values.push_back(std::move(top));
 }
 
 }

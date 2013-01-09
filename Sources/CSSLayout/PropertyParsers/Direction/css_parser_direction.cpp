@@ -40,19 +40,29 @@ std::vector<std::string> CSSParserDirection::get_names()
 	return names;
 }
 
-void CSSParserDirection::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserDirection::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueDirection> direction(new CSSValueDirection());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "ltr"))
-			properties.direction.type = CSSValueDirection::type_ltr;
+			direction->type = CSSValueDirection::type_ltr;
 		else if (equals(token.value, "rtl"))
-			properties.direction.type = CSSValueDirection::type_rtl;
+			direction->type = CSSValueDirection::type_rtl;
 		else if (equals(token.value, "inherit"))
-			properties.direction.type = CSSValueDirection::type_inherit;
+			direction->type = CSSValueDirection::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(direction));
 }
 
 }

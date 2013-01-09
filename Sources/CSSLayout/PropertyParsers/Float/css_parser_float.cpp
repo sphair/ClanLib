@@ -40,21 +40,31 @@ std::vector<std::string> CSSParserFloat::get_names()
 	return names;
 }
 
-void CSSParserFloat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFloat::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFloat> float_box(new CSSValueFloat());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "left"))
-			properties.float_box.type = CSSValueFloat::type_left;
+			float_box->type = CSSValueFloat::type_left;
 		else if (equals(token.value, "right"))
-			properties.float_box.type = CSSValueFloat::type_right;
+			float_box->type = CSSValueFloat::type_right;
 		else if (equals(token.value, "none"))
-			properties.float_box.type = CSSValueFloat::type_none;
+			float_box->type = CSSValueFloat::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.float_box.type = CSSValueFloat::type_inherit;
+			float_box->type = CSSValueFloat::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(float_box));
 }
 
 }

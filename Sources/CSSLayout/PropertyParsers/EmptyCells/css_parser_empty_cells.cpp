@@ -40,19 +40,29 @@ std::vector<std::string> CSSParserEmptyCells::get_names()
 	return names;
 }
 
-void CSSParserEmptyCells::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserEmptyCells::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueEmptyCells> empty_cells(new CSSValueEmptyCells());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "show"))
-			properties.empty_cells.type = CSSValueEmptyCells::type_show;
+			empty_cells->type = CSSValueEmptyCells::type_show;
 		else if (equals(token.value, "hide"))
-			properties.empty_cells.type = CSSValueEmptyCells::type_hide;
+			empty_cells->type = CSSValueEmptyCells::type_hide;
 		else if (equals(token.value, "inherit"))
-			properties.empty_cells.type = CSSValueEmptyCells::type_inherit;
+			empty_cells->type = CSSValueEmptyCells::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(empty_cells));
 }
 
 }

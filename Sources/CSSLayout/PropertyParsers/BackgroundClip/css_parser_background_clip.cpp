@@ -40,20 +40,22 @@ std::vector<std::string> CSSParserBackgroundClip::get_names()
 	return names;
 }
 
-void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundClip::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundClip> background_clip(new CSSValueBackgroundClip());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_clip.type = CSSValueBackgroundClip::type_inherit;
+		background_clip->type = CSSValueBackgroundClip::type_inherit;
+		inout_values.push_back(std::move(background_clip));
 	}
 	else
 	{
-		CSSValueBackgroundClip background_clip;
-		background_clip.type = CSSValueBackgroundClip::type_value;
-		background_clip.values.clear();
+		background_clip->type = CSSValueBackgroundClip::type_value;
+		background_clip->values.clear();
 		while (true)
 		{
 			if (token.type != CSSToken::type_ident)
@@ -61,15 +63,15 @@ void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::str
 
 			if (equals(token.value, "border-box"))
 			{
-				background_clip.values.push_back(CSSValueBackgroundClip::clip_border_box);
+				background_clip->values.push_back(CSSValueBackgroundClip::clip_border_box);
 			}
 			else if (equals(token.value, "padding-box"))
 			{
-				background_clip.values.push_back(CSSValueBackgroundClip::clip_padding_box);
+				background_clip->values.push_back(CSSValueBackgroundClip::clip_padding_box);
 			}
 			else if (equals(token.value, "content-box"))
 			{
-				background_clip.values.push_back(CSSValueBackgroundClip::clip_content_box);
+				background_clip->values.push_back(CSSValueBackgroundClip::clip_content_box);
 			}
 			else
 			{
@@ -86,7 +88,7 @@ void CSSParserBackgroundClip::parse(CSSBoxProperties &properties, const std::str
 			token = next_token(pos, tokens);
 		}
 
-		properties.background_clip = background_clip;
+		inout_values.push_back(std::move(background_clip));
 	}
 }
 

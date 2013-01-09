@@ -37,9 +37,20 @@ namespace clan
 class CSSValueBorderRadius : public CSSPropertyValue
 {
 public:
+	enum ValueType
+	{
+		top_left_value,
+		top_right_value,
+		bottom_left_value,
+		bottom_right_value
+	};
+
 	CSSValueBorderRadius();
+	CSSValueBorderRadius(ValueType value_type, const CSSValueBorderRadius &value);
 	void compute(const CSSValueBorderRadius *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
+
+	ValueType value_type;
 
 	enum Type
 	{
@@ -49,17 +60,17 @@ public:
 	};
 	Type type;
 
-	enum ValueType
+	enum LengthType
 	{
 		value_type_length,
 		value_type_percentage
 	};
 
-	ValueType value_type1;
+	LengthType value_type1;
 	CSSLength length1;
 	float percentage1;
 
-	ValueType value_type2;
+	LengthType value_type2;
 	CSSLength length2;
 	float percentage2;
 };

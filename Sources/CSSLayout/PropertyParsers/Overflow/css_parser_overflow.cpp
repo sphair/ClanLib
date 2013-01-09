@@ -40,23 +40,33 @@ std::vector<std::string> CSSParserOverflow::get_names()
 	return names;
 }
 
-void CSSParserOverflow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserOverflow::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueOverflow> overflow(new CSSValueOverflow());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "visible"))
-			properties.overflow.type = CSSValueOverflow::type_visible;
+			overflow->type = CSSValueOverflow::type_visible;
 		else if (equals(token.value, "hidden"))
-			properties.overflow.type = CSSValueOverflow::type_hidden;
+			overflow->type = CSSValueOverflow::type_hidden;
 		else if (equals(token.value, "scroll"))
-			properties.overflow.type = CSSValueOverflow::type_scroll;
+			overflow->type = CSSValueOverflow::type_scroll;
 		else if (equals(token.value, "auto"))
-			properties.overflow.type = CSSValueOverflow::type_auto;
+			overflow->type = CSSValueOverflow::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.overflow.type = CSSValueOverflow::type_inherit;
+			overflow->type = CSSValueOverflow::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(overflow));
 }
 
 }

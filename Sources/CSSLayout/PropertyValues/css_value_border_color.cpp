@@ -37,6 +37,11 @@ CSSValueBorderColor::CSSValueBorderColor()
 {
 }
 
+CSSValueBorderColor::CSSValueBorderColor(ValueType value_type, const CSSValueBorderColor &value)
+: value_type(value_type), type(value.type), color(value.color)
+{
+}
+
 void CSSValueBorderColor::compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color)
 {
 	if (type == type_inherit)

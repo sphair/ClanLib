@@ -40,18 +40,28 @@ std::vector<std::string> CSSParserBorderCollapse::get_names()
 	return names;
 }
 
-void CSSParserBorderCollapse::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderCollapse::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
+		std::unique_ptr<CSSValueBorderCollapse> border_collapse(new CSSValueBorderCollapse());
 		if (equals(token.value, "collapse"))
-			properties.border_collapse.type = CSSValueBorderCollapse::type_collapse;
+		{
+			border_collapse->type = CSSValueBorderCollapse::type_collapse;
+			inout_values.push_back(std::move(border_collapse));
+		}
 		else if (equals(token.value, "separate"))
-			properties.border_collapse.type = CSSValueBorderCollapse::type_separate;
+		{
+			border_collapse->type = CSSValueBorderCollapse::type_separate;
+			inout_values.push_back(std::move(border_collapse));
+		}
 		else if (equals(token.value, "inherit"))
-			properties.border_collapse.type = CSSValueBorderCollapse::type_inherit;
+		{
+			border_collapse->type = CSSValueBorderCollapse::type_inherit;
+			inout_values.push_back(std::move(border_collapse));
+		}
 	}
 }
 

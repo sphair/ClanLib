@@ -40,44 +40,56 @@ std::vector<std::string> CSSParserFontWeight::get_names()
 	return names;
 }
 
-void CSSParserFontWeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFontWeight::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFontWeight> font_weight(new CSSValueFontWeight());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.font_weight.type = CSSValueFontWeight::type_normal;
+			font_weight->type = CSSValueFontWeight::type_normal;
 		else if (equals(token.value, "bold"))
-			properties.font_weight.type = CSSValueFontWeight::type_bold;
+			font_weight->type = CSSValueFontWeight::type_bold;
 		else if (equals(token.value, "bolder"))
-			properties.font_weight.type = CSSValueFontWeight::type_bolder;
+			font_weight->type = CSSValueFontWeight::type_bolder;
 		else if (equals(token.value, "lighter"))
-			properties.font_weight.type = CSSValueFontWeight::type_lighter;
+			font_weight->type = CSSValueFontWeight::type_lighter;
 		else if (equals(token.value, "inherit"))
-			properties.font_weight.type = CSSValueFontWeight::type_inherit;
+			font_weight->type = CSSValueFontWeight::type_inherit;
+		else
+			return;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
 		if (token.value == "100")
-			properties.font_weight.type = CSSValueFontWeight::type_100;
+			font_weight->type = CSSValueFontWeight::type_100;
 		else if (token.value == "200")
-			properties.font_weight.type = CSSValueFontWeight::type_200;
+			font_weight->type = CSSValueFontWeight::type_200;
 		else if (token.value == "300")
-			properties.font_weight.type = CSSValueFontWeight::type_300;
+			font_weight->type = CSSValueFontWeight::type_300;
 		else if (token.value == "400")
-			properties.font_weight.type = CSSValueFontWeight::type_400;
+			font_weight->type = CSSValueFontWeight::type_400;
 		else if (token.value == "500")
-			properties.font_weight.type = CSSValueFontWeight::type_500;
+			font_weight->type = CSSValueFontWeight::type_500;
 		else if (token.value == "600")
-			properties.font_weight.type = CSSValueFontWeight::type_600;
+			font_weight->type = CSSValueFontWeight::type_600;
 		else if (token.value == "700")
-			properties.font_weight.type = CSSValueFontWeight::type_700;
+			font_weight->type = CSSValueFontWeight::type_700;
 		else if (token.value == "800")
-			properties.font_weight.type = CSSValueFontWeight::type_800;
+			font_weight->type = CSSValueFontWeight::type_800;
 		else if (token.value == "900")
-			properties.font_weight.type = CSSValueFontWeight::type_900;
+			font_weight->type = CSSValueFontWeight::type_900;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(font_weight));
 }
 
 }

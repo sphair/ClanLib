@@ -40,36 +40,50 @@ std::vector<std::string> CSSParserLineHeight::get_names()
 	return names;
 }
 
-void CSSParserLineHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserLineHeight::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueLineHeight> line_height(new CSSValueLineHeight());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.line_height.type = CSSValueLineHeight::type_normal;
+			line_height->type = CSSValueLineHeight::type_normal;
 		else if (equals(token.value, "inherit"))
-			properties.line_height.type = CSSValueLineHeight::type_inherit;
+			line_height->type = CSSValueLineHeight::type_inherit;
+		else
+			return;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
-		properties.line_height.type = CSSValueLineHeight::type_number;
-		properties.line_height.number = StringHelp::text_to_float(token.value);
+		line_height->type = CSSValueLineHeight::type_number;
+		line_height->number = StringHelp::text_to_float(token.value);
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.line_height.type = CSSValueLineHeight::type_length;
-			properties.line_height.length = length;
+			line_height->type = CSSValueLineHeight::type_length;
+			line_height->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.line_height.type = CSSValueLineHeight::type_percentage;
-		properties.line_height.percentage = StringHelp::text_to_float(token.value);
+		line_height->type = CSSValueLineHeight::type_percentage;
+		line_height->percentage = StringHelp::text_to_float(token.value);
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(line_height));
 }
 
 }

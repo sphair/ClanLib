@@ -40,30 +40,44 @@ std::vector<std::string> CSSParserOutlineWidth::get_names()
 	return names;
 }
 
-void CSSParserOutlineWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserOutlineWidth::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueOutlineWidth> outline_width(new CSSValueOutlineWidth());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "thin"))
-			properties.outline_width.type = CSSValueOutlineWidth::type_thin;
+			outline_width->type = CSSValueOutlineWidth::type_thin;
 		else if (equals(token.value, "medium"))
-			properties.outline_width.type = CSSValueOutlineWidth::type_medium;
+			outline_width->type = CSSValueOutlineWidth::type_medium;
 		else if (equals(token.value, "thick"))
-			properties.outline_width.type = CSSValueOutlineWidth::type_thick;
+			outline_width->type = CSSValueOutlineWidth::type_thick;
 		else if (equals(token.value, "inherit"))
-			properties.outline_width.type = CSSValueOutlineWidth::type_inherit;
+			outline_width->type = CSSValueOutlineWidth::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.outline_width.type = CSSValueOutlineWidth::type_length;
-			properties.outline_width.length = length;
+			outline_width->type = CSSValueOutlineWidth::type_length;
+			outline_width->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(outline_width));
 }
 
 }

@@ -40,26 +40,48 @@ std::vector<std::string> CSSParserAlignContent::get_names()
 	return names;
 }
 
-void CSSParserAlignContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserAlignContent::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
+		std::unique_ptr<CSSValueAlignContent> align_content(new CSSValueAlignContent());
 		if (equals(token.value, "flex-start"))
-			properties.align_content.type = CSSValueAlignContent::type_flex_start;
+		{
+			align_content->type = CSSValueAlignContent::type_flex_start;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "flex-end"))
-			properties.align_content.type = CSSValueAlignContent::type_flex_end;
+		{
+			align_content->type = CSSValueAlignContent::type_flex_end;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "center"))
-			properties.align_content.type = CSSValueAlignContent::type_center;
+		{
+			align_content->type = CSSValueAlignContent::type_center;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "space-between"))
-			properties.align_content.type = CSSValueAlignContent::type_space_between;
+		{
+			align_content->type = CSSValueAlignContent::type_space_between;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "space-around"))
-			properties.align_content.type = CSSValueAlignContent::type_space_around;
+		{
+			align_content->type = CSSValueAlignContent::type_space_around;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "stretch"))
-			properties.align_content.type = CSSValueAlignContent::type_stretch;
+		{
+			align_content->type = CSSValueAlignContent::type_stretch;
+			inout_values.push_back(std::move(align_content));
+		}
 		else if (equals(token.value, "inherit"))
-			properties.align_content.type = CSSValueAlignContent::type_inherit;
+		{
+			align_content->type = CSSValueAlignContent::type_inherit;
+			inout_values.push_back(std::move(align_content));
+		}
 	}
 }
 

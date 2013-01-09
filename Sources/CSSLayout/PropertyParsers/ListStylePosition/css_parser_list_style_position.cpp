@@ -40,19 +40,29 @@ std::vector<std::string> CSSParserListStylePosition::get_names()
 	return names;
 }
 
-void CSSParserListStylePosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserListStylePosition::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueListStylePosition> list_style_position(new CSSValueListStylePosition());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inside"))
-			properties.list_style_position.type = CSSValueListStylePosition::type_inside;
+			list_style_position->type = CSSValueListStylePosition::type_inside;
 		else if (equals(token.value, "outside"))
-			properties.list_style_position.type = CSSValueListStylePosition::type_outside;
+			list_style_position->type = CSSValueListStylePosition::type_outside;
 		else if (equals(token.value, "inherit"))
-			properties.list_style_position.type = CSSValueListStylePosition::type_inherit;
+			list_style_position->type = CSSValueListStylePosition::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(list_style_position));
 }
 
 }

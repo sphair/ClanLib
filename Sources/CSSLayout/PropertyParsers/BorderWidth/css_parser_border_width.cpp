@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderWidth::get_names()
 	return names;
 }
 
-void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderWidth::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValueBorderWidth border_widths[4];
 	int count;
@@ -64,10 +64,12 @@ void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string
 			}
 			else if (equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 			{
-				properties.border_width_left.type = CSSValueBorderWidth::type_inherit;
-				properties.border_width_top.type = CSSValueBorderWidth::type_inherit;
-				properties.border_width_right.type = CSSValueBorderWidth::type_inherit;
-				properties.border_width_bottom.type = CSSValueBorderWidth::type_inherit;
+				border_widths[0].type = CSSValueBorderWidth::type_inherit;
+
+				inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_widths[0])));
+				inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_widths[0])));
+				inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_widths[0])));
+				inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_widths[0])));
 				return;
 			}
 			else
@@ -106,28 +108,28 @@ void CSSParserBorderWidth::parse(CSSBoxProperties &properties, const std::string
 		switch (count)
 		{
 		case 1:
-			properties.border_width_left = border_widths[0];
-			properties.border_width_top = border_widths[0];
-			properties.border_width_right = border_widths[0];
-			properties.border_width_bottom = border_widths[0];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_widths[0])));
 			break;
 		case 2:
-			properties.border_width_top = border_widths[0];
-			properties.border_width_bottom = border_widths[0];
-			properties.border_width_left = border_widths[1];
-			properties.border_width_right = border_widths[1];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_widths[1])));
 			break;
 		case 3:
-			properties.border_width_top = border_widths[0];
-			properties.border_width_left = border_widths[1];
-			properties.border_width_right = border_widths[1];
-			properties.border_width_bottom = border_widths[2];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_widths[2])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_widths[1])));
 			break;
 		case 4:
-			properties.border_width_top = border_widths[0];
-			properties.border_width_right = border_widths[1];
-			properties.border_width_bottom = border_widths[2];
-			properties.border_width_left = border_widths[3];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_widths[2])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_widths[3])));
 			break;
 		default:
 			break;

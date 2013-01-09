@@ -40,21 +40,30 @@ std::vector<std::string> CSSParserBorderImageSource::get_names()
 	return names;
 }
 
-void CSSParserBorderImageSource::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderImageSource::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBorderImageSource> border_image_source(new CSSValueBorderImageSource());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.border_image_source.type = CSSValueBorderImageSource::type_none;
+		{
+			border_image_source->type = CSSValueBorderImageSource::type_none;
+			inout_values.push_back(std::move(border_image_source));
+		}
 		else if (equals(token.value, "inherit"))
-			properties.border_image_source.type = CSSValueBorderImageSource::type_inherit;
+		{
+			border_image_source->type = CSSValueBorderImageSource::type_inherit;
+			inout_values.push_back(std::move(border_image_source));
+		}
 	}
 	else if (token.type == CSSToken::type_uri && pos == tokens.size())
 	{
-		properties.border_image_source.type = CSSValueBorderImageSource::type_image;
-		properties.border_image_source.url = token.value;
+		border_image_source->type = CSSValueBorderImageSource::type_image;
+		border_image_source->url = token.value;
+		inout_values.push_back(std::move(border_image_source));
 	}
 }
 

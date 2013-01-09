@@ -40,26 +40,26 @@ std::vector<std::string> CSSParserShadow::get_names()
 	return names;
 }
 
-void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserShadow::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueShadow> box_shadow(new CSSValueShadow());
+
 	size_t pos = 0;
 	size_t last_pos = pos;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSValueShadow box_shadow;
-
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		box_shadow.type = CSSValueShadow::type_inherit;
+		box_shadow->type = CSSValueShadow::type_inherit;
 	}
 	else if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "none"))
 	{
-		box_shadow.type = CSSValueShadow::type_none;
+		box_shadow->type = CSSValueShadow::type_none;
 	}
 	else
 	{
-		box_shadow.type = CSSValueShadow::type_shadows;
-		box_shadow.shadows.clear();
+		box_shadow->type = CSSValueShadow::type_shadows;
+		box_shadow->shadows.clear();
 		while (true)
 		{
 			bool inset = false;
@@ -110,7 +110,7 @@ void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &nam
 				shadow.blur_radius = lengths[2];
 				shadow.spread_distance = lengths[3];
 			}
-			box_shadow.shadows.push_back(shadow);
+			box_shadow->shadows.push_back(shadow);
 
 			if (pos != tokens.size())
 			{
@@ -125,7 +125,7 @@ void CSSParserShadow::parse(CSSBoxProperties &properties, const std::string &nam
 		}
 	}
 
-	properties.shadow = box_shadow;
+	inout_values.push_back(std::move(box_shadow));
 }
 
 }

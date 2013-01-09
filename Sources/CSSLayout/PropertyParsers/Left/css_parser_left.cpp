@@ -40,30 +40,38 @@ std::vector<std::string> CSSParserLeft::get_names()
 	return names;
 }
 
-void CSSParserLeft::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserLeft::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueLeft> left(new CSSValueLeft());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.left.type = CSSValueLeft::type_auto;
+			left->type = CSSValueLeft::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.left.type = CSSValueLeft::type_inherit;
+			left->type = CSSValueLeft::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.left.type = CSSValueLeft::type_length;
-			properties.left.length = length;
+			left->type = CSSValueLeft::type_length;
+			left->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.left.type = CSSValueLeft::type_percentage;
-		properties.left.percentage = StringHelp::text_to_float(token.value);
+		left->type = CSSValueLeft::type_percentage;
+		left->percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
 	{
@@ -74,16 +82,26 @@ void CSSParserLeft::parse(CSSBoxProperties &properties, const std::string &name,
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.left.type = CSSValueLeft::type_length;
-				properties.left.length = length;
+				left->type = CSSValueLeft::type_length;
+				left->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.left.type = CSSValueLeft::type_percentage;
-			properties.left.percentage = -StringHelp::text_to_float(token.value);
+			left->type = CSSValueLeft::type_percentage;
+			left->percentage = -StringHelp::text_to_float(token.value);
+		}
+		else
+		{
+			return;
 		}
 	}
+
+	inout_values.push_back(std::move(left));
 }
 
 }

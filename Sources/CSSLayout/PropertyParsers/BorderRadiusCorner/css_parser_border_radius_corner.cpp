@@ -43,77 +43,72 @@ std::vector<std::string> CSSParserBorderRadiusCorner::get_names()
 	return names;
 }
 
-void CSSParserBorderRadiusCorner::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderRadiusCorner::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueBorderRadius *border_radius = 0;
+	std::unique_ptr<CSSValueBorderRadius> radius(new CSSValueBorderRadius());
 	if (equals(name, "border-top-right-radius"))
-		border_radius = &properties.border_radius_top_right;
+		radius->value_type = CSSValueBorderRadius::top_right_value;
 	else if (equals(name, "border-bottom-right-radius"))
-		border_radius = &properties.border_radius_bottom_right;
+		radius->value_type = CSSValueBorderRadius::bottom_right_value;
 	else if (equals(name, "border-bottom-left-radius"))
-		border_radius = &properties.border_radius_bottom_left;
+		radius->value_type = CSSValueBorderRadius::bottom_left_value;
 	else if (equals(name, "border-top-left-radius"))
-		border_radius = &properties.border_radius_top_left;
+		radius->value_type = CSSValueBorderRadius::top_left_value;
 
-	if (border_radius)
+	size_t pos = 0;
+	CSSToken token = next_token(pos, tokens);
+	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && pos == tokens.size())
 	{
-		CSSValueBorderRadius radius;
-
-		size_t pos = 0;
-		CSSToken token = next_token(pos, tokens);
-		if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && pos == tokens.size())
+		radius->type = CSSValueBorderRadius::type_inherit;
+		inout_values.push_back(std::move(radius));
+		return;
+	}
+	else if (is_length(token))
+	{
+		if (!parse_length(token, radius->length1))
 		{
-			radius.type = CSSValueBorderRadius::type_inherit;
-			*border_radius = radius;
+			debug_parse_error(name, tokens);
 			return;
 		}
-		else if (is_length(token))
+		radius->type = CSSValueBorderRadius::type_one_value;
+		radius->value_type1 = CSSValueBorderRadius::value_type_length;
+	}
+	else if (token.type == CSSToken::type_percentage)
+	{
+		radius->type = CSSValueBorderRadius::type_one_value;
+		radius->value_type1 = CSSValueBorderRadius::value_type_percentage;
+		radius->percentage1 = StringHelp::text_to_float(token.value);
+	}
+	else
+	{
+		debug_parse_error(name, tokens);
+		return;
+	}
+
+	if (pos != tokens.size())
+	{
+		token = next_token(pos, tokens);
+		if (is_length(token) && pos == tokens.size() && parse_length(token, radius->length2))
 		{
-			if (!parse_length(token, radius.length1))
-			{
-				debug_parse_error(name, tokens);
-				return;
-			}
-			radius.type = CSSValueBorderRadius::type_one_value;
-			radius.value_type1 = CSSValueBorderRadius::value_type_length;
+			radius->type = CSSValueBorderRadius::type_two_values;
+			inout_values.push_back(std::move(radius));
 		}
 		else if (token.type == CSSToken::type_percentage)
 		{
-			radius.type = CSSValueBorderRadius::type_one_value;
-			radius.value_type1 = CSSValueBorderRadius::value_type_percentage;
-			radius.percentage1 = StringHelp::text_to_float(token.value);
+			radius->type = CSSValueBorderRadius::type_two_values;
+			radius->value_type2 = CSSValueBorderRadius::value_type_percentage;
+			radius->percentage2 = StringHelp::text_to_float(token.value);
+			inout_values.push_back(std::move(radius));
 		}
 		else
 		{
 			debug_parse_error(name, tokens);
 			return;
 		}
-
-		if (pos != tokens.size())
-		{
-			token = next_token(pos, tokens);
-			if (is_length(token) && pos == tokens.size() && parse_length(token, radius.length2))
-			{
-				radius.type = CSSValueBorderRadius::type_two_values;
-				*border_radius = radius;
-			}
-			else if (token.type == CSSToken::type_percentage)
-			{
-				radius.type = CSSValueBorderRadius::type_two_values;
-				radius.value_type2 = CSSValueBorderRadius::value_type_percentage;
-				radius.percentage2 = StringHelp::text_to_float(token.value);
-				*border_radius = radius;
-			}
-			else
-			{
-				debug_parse_error(name, tokens);
-				return;
-			}
-		}
-		else
-		{
-			*border_radius = radius;
-		}
+	}
+	else
+	{
+		inout_values.push_back(std::move(radius));
 	}
 }
 

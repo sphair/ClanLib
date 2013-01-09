@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderRadius::get_names()
 	return names;
 }
 
-void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderRadius::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValueBorderRadius radius[4];
 
@@ -49,10 +49,10 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && pos == tokens.size())
 	{
 		radius[0].type = CSSValueBorderRadius::type_inherit;
-		properties.border_radius_top_left = radius[0];
-		properties.border_radius_top_right = radius[0];
-		properties.border_radius_bottom_left = radius[0];
-		properties.border_radius_bottom_right = radius[0];
+		inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::top_left_value, radius[0])));
+		inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::top_right_value, radius[0])));
+		inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::bottom_left_value, radius[0])));
+		inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::bottom_right_value, radius[0])));
 		return;
 	}
 
@@ -154,10 +154,10 @@ void CSSParserBorderRadius::parse(CSSBoxProperties &properties, const std::strin
 	for (int i = num_x_values; i < 4; i++)
 		radius[i] = radius[i-1];
 
-	properties.border_radius_top_right = radius[0];
-	properties.border_radius_bottom_right = radius[1];
-	properties.border_radius_bottom_left = radius[2];
-	properties.border_radius_top_left = radius[3];
+	inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::top_right_value, radius[0])));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::bottom_left_value, radius[1])));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::bottom_right_value, radius[2])));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderRadius>(new CSSValueBorderRadius(CSSValueBorderRadius::top_left_value, radius[3])));
 }
 
 }
