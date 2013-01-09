@@ -52,7 +52,7 @@ void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, con
 {
 	if (num_vertices < 2)
 	{
-		throw Exception("Invalid line strip");
+		return;	// Invalid line strip, we ignore this. It could be null call to this function
 	}
 
 	// We convert a line strip to a line
