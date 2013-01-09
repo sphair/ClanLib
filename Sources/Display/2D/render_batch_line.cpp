@@ -40,12 +40,13 @@ RenderBatchLine::RenderBatchLine()
 {
 }
 
-inline Vec3f RenderBatchLine::to_position(float x, float y) const
+inline Vec4f RenderBatchLine::to_position(float x, float y) const
 {
-	return Vec3f(
+	return Vec4f(
 		modelview_projection_matrix.matrix[0*4+0]*x + modelview_projection_matrix.matrix[1*4+0]*y + modelview_projection_matrix.matrix[3*4+0],
 		modelview_projection_matrix.matrix[0*4+1]*x + modelview_projection_matrix.matrix[1*4+1]*y + modelview_projection_matrix.matrix[3*4+1],
-		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2]);
+		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2],
+		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
 
 void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
@@ -60,7 +61,7 @@ void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, con
 	set_batcher_active(canvas, num_vertices * 2);
 	lock_transfer_buffer(canvas);
 
-	Vec3f next_start_position = to_position(line_positions->x, line_positions->y);
+	Vec4f next_start_position = to_position(line_positions->x, line_positions->y);
 
 	for (; num_vertices > 0; num_vertices--)
 	{
@@ -110,7 +111,7 @@ void RenderBatchLine::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<LineVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec2f*)cl_offsetof(LineVertex, position));
+			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(LineVertex, position));
 			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(LineVertex, color));
 		}
 

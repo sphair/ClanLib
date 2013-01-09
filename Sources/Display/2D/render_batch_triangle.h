@@ -56,7 +56,7 @@ public:
 private:
 	struct SpriteVertex
 	{
-		Vec3f position;
+		Vec4f position;
 		Vec2f texcoord;
 		Vec4f color;
 		Vec1f texindex;
@@ -69,7 +69,7 @@ private:
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
 
 	inline void to_sprite_vertex(const Surface_DrawParams1 *params, int index, RenderBatchTriangle::SpriteVertex &v, int texindex) const;
-	inline Vec3f to_position(float x, float y) const;
+	inline Vec4f to_position(float x, float y) const;
 	void lock_transfer_buffer(Canvas &canvas);
 
 	Mat4f modelview_projection_matrix;

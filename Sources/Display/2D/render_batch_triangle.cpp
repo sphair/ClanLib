@@ -170,13 +170,15 @@ void RenderBatchTriangle::fill(Canvas &canvas, float x1, float y1, float x2, flo
 	position += 6;
 }
 
-inline Vec3f RenderBatchTriangle::to_position(float x, float y) const
+inline Vec4f RenderBatchTriangle::to_position(float x, float y) const
 {
-	return Vec3f(
+	return Vec4f(
 		modelview_projection_matrix.matrix[0*4+0]*x + modelview_projection_matrix.matrix[1*4+0]*y + modelview_projection_matrix.matrix[3*4+0],
 		modelview_projection_matrix.matrix[0*4+1]*x + modelview_projection_matrix.matrix[1*4+1]*y + modelview_projection_matrix.matrix[3*4+1],
-		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2]);
+		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2],
+		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
+
 
 int RenderBatchTriangle::set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program, const Colorf &new_constant_color)
 {
@@ -269,7 +271,7 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec3f*)cl_offsetof(SpriteVertex, position));
+			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, position));
 			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, color));
 			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, texcoord));
 			prim_array.set_attributes(3, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, texindex));

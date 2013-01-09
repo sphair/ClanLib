@@ -55,12 +55,13 @@ void RenderBatchPoint::draw_point(Canvas &canvas, Vec2f *line_positions, const V
 
 }
 
-inline Vec3f RenderBatchPoint::to_position(float x, float y) const
+inline Vec4f RenderBatchPoint::to_position(float x, float y) const
 {
-	return Vec3f(
+	return Vec4f(
 		modelview_projection_matrix.matrix[0*4+0]*x + modelview_projection_matrix.matrix[1*4+0]*y + modelview_projection_matrix.matrix[3*4+0],
 		modelview_projection_matrix.matrix[0*4+1]*x + modelview_projection_matrix.matrix[1*4+1]*y + modelview_projection_matrix.matrix[3*4+1],
-		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2]);
+		modelview_projection_matrix.matrix[0*4+2]*x + modelview_projection_matrix.matrix[1*4+2]*y + modelview_projection_matrix.matrix[3*4+2],
+		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
 
 void RenderBatchPoint::set_batcher_active(Canvas &canvas, int num_vertices)
@@ -96,7 +97,7 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<PointVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec2f*)cl_offsetof(PointVertex, position));
+			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(PointVertex, position));
 			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(PointVertex, color));
 		}
 
