@@ -471,11 +471,8 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 		if (polygon_header->dwType != TT_POLYGON_TYPE)
 			throw Exception("invalid polygon type");
 
-		BezierCurve bezier_curve;
 		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
-		Pointf initial_point = previous_point;
-		bezier_curve.add_control_point( previous_point );
-
+		//Pointf initial_point = previous_point;
 		std::shared_ptr<GlyphContour> contour(new GlyphContour);
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
@@ -500,6 +497,8 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 			if ( next_poly_curve < poly_curve || ( (char *) poly_curve > data_end ) )
 				throw Exception("invalid structure 2");
 	
+			contour->add_line_to(previous_point);
+
 			if (poly_curve->wType == TT_PRIM_LINE)
 			{
 				Pointf first_point = previous_point;
@@ -512,6 +511,8 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 			}
 			else if (poly_curve->wType == TT_PRIM_QSPLINE)
 			{
+				BezierCurve bezier_curve;
+	
 				for (int i = 0; i < poly_curve->cpfx; )
 				{
 					this_point = PointFXtoPoint(poly_curve->apfx[i++]);
@@ -531,7 +532,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 					// Cubic P1 in terms of Quadratic P0 and P1
 					bezier_curve.add_control_point(previous_point.x + 2.0f * (this_point.x - previous_point.x) / 3.0f,  previous_point.y + 2.0f * (this_point.y - previous_point.y) / 3.0f);
 
-					// Cubic P2 in terms of Qudartic P1 and P2
+					// Cubic P2 in terms of Quadratic P1 and P2
 					bezier_curve.add_control_point(this_point.x + (next_point.x - this_point.x) / 3.0f,  this_point.y + (next_point.y - this_point.y) / 3.0f);
 
 					// Cubic P3 is the on curve end point
@@ -539,6 +540,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 
 					previous_point = next_point;
 				}
+				contour->add_curve(bezier_curve);
 			}
 			else
 				throw Exception("unsupported curve type");
@@ -546,7 +548,6 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 			poly_curve = next_poly_curve;
 		}
 		// TODO: Do we need to close the curve?
-		contour->add_curve(bezier_curve);
 		outline->add_contour(contour);
 	}
 
