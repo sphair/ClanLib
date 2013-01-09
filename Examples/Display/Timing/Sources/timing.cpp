@@ -35,50 +35,50 @@ int Timing::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set the window
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Timing Example");
-	desc.set_size(Size(800, 600), true);
+	desc.set_size(clan::Size(800, 600), true);
 	desc.set_allow_resize(true);
 
-	DisplayWindow window(desc);
+	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Timing::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &Timing::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Timing::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Timing::on_input_up);
 
 	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas(window);
 
-	set_stars(gc, 100);
+	set_stars(canvas, 100);
 
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
 		// Get the time delta to control movement
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		float time_delta_ms = (float) (current_time - last_time);
 		last_time = current_time;
 
-		gc.clear(Colorf(0.0f,0.0f,0.0f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		draw_graphics(gc, time_delta_ms);
+		draw_graphics(canvas, time_delta_ms);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 
 		// Sleep to give other processes more time
-		current_time = System::get_time();
+		current_time = clan::System::get_time();
 		const int main_loop_rate = 10;	// 10 ms (100 hz)
 		int time_to_sleep_for = main_loop_rate - (current_time - last_time);
 		if (time_to_sleep_for > 0)
 		{
 			// Depending on the application, it may be preferable to use System::sleep() instead
-			System::pause(time_to_sleep_for);
+			clan::System::pause(time_to_sleep_for);
 		}
 
 	}
@@ -87,9 +87,9 @@ int Timing::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void Timing::on_input_up(const InputEvent &key)
+void Timing::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -101,10 +101,10 @@ void Timing::on_window_close()
 	quit = true;
 }
 
-void Timing::draw_graphics(GraphicContext &gc, float time_delta_ms)
+void Timing::draw_graphics(clan::Canvas &canvas, float time_delta_ms)
 {
-	int gc_width = gc.get_width();
-	int gc_height = gc.get_height();
+	int gc_width = canvas.get_width();
+	int gc_height = canvas.get_height();
 
 	std::vector<Star>::size_type max, cnt;
 	max = stars.size();
@@ -116,17 +116,17 @@ void Timing::draw_graphics(GraphicContext &gc, float time_delta_ms)
 			xpos -= (gc_width + 8);
 		stars[cnt].xpos = xpos;
 
-		Draw::circle(gc, xpos, stars[cnt].ypos, 6.0f, stars[cnt].color);
+		canvas.circle(xpos, stars[cnt].ypos, 6.0f, stars[cnt].color);
 	}
 }
 
-void Timing::set_stars(GraphicContext &gc, int star_cnt)
+void Timing::set_stars(clan::Canvas &canvas, int star_cnt)
 {
 	stars.clear();
 	stars.resize(star_cnt);
 	unsigned int random = 1231;
-	int gc_width = gc.get_width();
-	int gc_height = gc.get_height();
+	int gc_width = canvas.get_width();
+	int gc_height = canvas.get_height();
 
 	for (int cnt=0; cnt < star_cnt; cnt++)
 	{
