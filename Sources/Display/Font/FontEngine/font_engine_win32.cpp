@@ -454,7 +454,11 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 	ReleaseDC(0, dc);
 
 	if (glyph_buffer.is_null())
-		throw Exception("error loading glyph");
+	{
+		std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
+		outline->advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
+		return outline;
+	}
 
 	TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *) glyph_buffer.get_data();
 	char *data_end = (char *) polygon_header;
