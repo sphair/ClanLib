@@ -290,9 +290,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c)
 
 	FT_Done_Glyph(glyph);
 
-	outline->advance_x = get_advance_x( c );	// HACK HACK HACK - This is wrong.  See ...
-				//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
-				//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
+	outline->advance_x = get_advance_x( c );	// This should not be here (See comment on GlyphOutline struct)
 
 	return outline;
 }
