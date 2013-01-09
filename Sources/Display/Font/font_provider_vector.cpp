@@ -196,10 +196,8 @@ void FontProvider_Vector::get_glyphs(
 		
 		out_glyphs[i] = text[i];
 
-		if( i < text.length() )
-		{
-			out_interspacing_x[i] = char_cache[text[i]]->advance_x;	// hack hack HACK .. THIS is soo wrong!
-		}
+		out_interspacing_x[i] = char_cache[text[i]]->advance_x;	// hack hack HACK .. THIS is soo wrong!
+
 	}
 }
 

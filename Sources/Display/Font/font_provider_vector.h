@@ -97,8 +97,8 @@ public:
 		int *glyphs,
 		int length,
 		bool filled,
-		float *interspacing_x = 0,
-		float *interspacing_y = 0,
+		float *interspacing_x,
+		float *interspacing_y,
 		const Colorf &color = Colorf::white);
 
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);

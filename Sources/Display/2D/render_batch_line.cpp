@@ -60,18 +60,18 @@ void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, con
 	set_batcher_active(canvas, num_vertices * 2);
 	lock_transfer_buffer(canvas);
 
-	Vec3f next_line = to_position(line_positions->x, line_positions->y);
+	Vec3f next_start_position = to_position(line_positions->x, line_positions->y);
 
 	for (; num_vertices > 0; num_vertices--)
 	{
 		vertices[position].color = line_color;
-		vertices[position].position = next_line;
+		vertices[position].position = next_start_position;
 		line_positions++;
 		position++;
 
 		vertices[position].color = line_color;
-		next_line = to_position(line_positions->x, line_positions->y);
-		vertices[position].position = next_line;
+		next_start_position = to_position(line_positions->x, line_positions->y);
+		vertices[position].position = next_start_position;
 		position++;
 	}
 
