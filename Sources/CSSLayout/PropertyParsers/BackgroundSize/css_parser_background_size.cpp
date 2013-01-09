@@ -40,20 +40,21 @@ std::vector<std::string> CSSParserBackgroundSize::get_names()
 	return names;
 }
 
-void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundSize::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundSize> background_size(new CSSValueBackgroundSize());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_size.type = CSSValueBackgroundSize::type_inherit;
+		background_size->type = CSSValueBackgroundSize::type_inherit;
 	}
 	else
 	{
-		CSSValueBackgroundSize background_size;
-		background_size.type = CSSValueBackgroundSize::type_value;
-		background_size.values.clear();
+		background_size->type = CSSValueBackgroundSize::type_value;
+		background_size->values.clear();
 		while (true)
 		{
 			CSSValueBackgroundSize::Size size;
@@ -106,7 +107,7 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 
 			if (pos == tokens.size())
 			{
-				background_size.values.push_back(size);
+				background_size->values.push_back(size);
 				break;
 			}
 
@@ -146,23 +147,23 @@ void CSSParserBackgroundSize::parse(CSSBoxProperties &properties, const std::str
 
 				if (pos == tokens.size())
 				{
-					background_size.values.push_back(size);
+					background_size->values.push_back(size);
 					break;
 				}
 
 				token = next_token(pos, tokens);
 			}
 
-			background_size.values.push_back(size);
+			background_size->values.push_back(size);
 
 			if (token.type != CSSToken::type_delim || token.value != ",")
 				return;
 
 			token = next_token(pos, tokens);
 		}
-
-		properties.background_size = background_size;
 	}
+
+	inout_values.push_back(std::move(background_size));
 }
 
 }

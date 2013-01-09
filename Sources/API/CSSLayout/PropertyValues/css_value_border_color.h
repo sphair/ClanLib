@@ -36,9 +36,20 @@ namespace clan
 class CSSValueBorderColor : public CSSPropertyValue
 {
 public:
+	enum ValueType
+	{
+		left_value,
+		top_value,
+		right_value,
+		bottom_value
+	};
+
 	CSSValueBorderColor();
+	CSSValueBorderColor(ValueType value_type, const CSSValueBorderColor &value);
 	void compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color);
 	std::string to_string() const;
+
+	ValueType value_type;
 
 	enum Type
 	{

@@ -40,45 +40,55 @@ std::vector<std::string> CSSParserListStyleType::get_names()
 	return names;
 }
 
-void CSSParserListStyleType::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserListStyleType::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueListStyleType> list_style_type(new CSSValueListStyleType());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "disc"))
-			properties.list_style_type.type = CSSValueListStyleType::type_disc;
+			list_style_type->type = CSSValueListStyleType::type_disc;
 		else if (equals(token.value, "circle"))
-			properties.list_style_type.type = CSSValueListStyleType::type_circle;
+			list_style_type->type = CSSValueListStyleType::type_circle;
 		else if (equals(token.value, "square"))
-			properties.list_style_type.type = CSSValueListStyleType::type_square;
+			list_style_type->type = CSSValueListStyleType::type_square;
 		else if (equals(token.value, "decimal"))
-			properties.list_style_type.type = CSSValueListStyleType::type_decimal;
+			list_style_type->type = CSSValueListStyleType::type_decimal;
 		else if (equals(token.value, "decimal-leading-zero"))
-			properties.list_style_type.type = CSSValueListStyleType::type_decimal_leading_zero;
+			list_style_type->type = CSSValueListStyleType::type_decimal_leading_zero;
 		else if (equals(token.value, "lower-roman"))
-			properties.list_style_type.type = CSSValueListStyleType::type_lower_roman;
+			list_style_type->type = CSSValueListStyleType::type_lower_roman;
 		else if (equals(token.value, "upper-roman"))
-			properties.list_style_type.type = CSSValueListStyleType::type_upper_roman;
+			list_style_type->type = CSSValueListStyleType::type_upper_roman;
 		else if (equals(token.value, "lower-greek"))
-			properties.list_style_type.type = CSSValueListStyleType::type_lower_greek;
+			list_style_type->type = CSSValueListStyleType::type_lower_greek;
 		else if (equals(token.value, "lower-latin"))
-			properties.list_style_type.type = CSSValueListStyleType::type_lower_latin;
+			list_style_type->type = CSSValueListStyleType::type_lower_latin;
 		else if (equals(token.value, "upper-latin"))
-			properties.list_style_type.type = CSSValueListStyleType::type_upper_latin;
+			list_style_type->type = CSSValueListStyleType::type_upper_latin;
 		else if (equals(token.value, "armenian"))
-			properties.list_style_type.type = CSSValueListStyleType::type_armenian;
+			list_style_type->type = CSSValueListStyleType::type_armenian;
 		else if (equals(token.value, "georgian"))
-			properties.list_style_type.type = CSSValueListStyleType::type_georgian;
+			list_style_type->type = CSSValueListStyleType::type_georgian;
 		else if (equals(token.value, "lower-alpha"))
-			properties.list_style_type.type = CSSValueListStyleType::type_lower_alpha;
+			list_style_type->type = CSSValueListStyleType::type_lower_alpha;
 		else if (equals(token.value, "upper-alpha"))
-			properties.list_style_type.type = CSSValueListStyleType::type_upper_alpha;
+			list_style_type->type = CSSValueListStyleType::type_upper_alpha;
 		else if (equals(token.value, "none"))
-			properties.list_style_type.type = CSSValueListStyleType::type_none;
+			list_style_type->type = CSSValueListStyleType::type_none;
 		else if (equals(token.value, "inherit"))
-			properties.list_style_type.type = CSSValueListStyleType::type_inherit;
+			list_style_type->type = CSSValueListStyleType::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(list_style_type));
 }
 
 }

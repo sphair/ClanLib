@@ -40,20 +40,22 @@ std::vector<std::string> CSSParserBackgroundPosition::get_names()
 	return names;
 }
 
-void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundPosition::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundPosition> position(new CSSValueBackgroundPosition());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && tokens.size() == 1)
 	{
-		properties.background_position.type = CSSValueBackgroundPosition::type_inherit;
+		position->type = CSSValueBackgroundPosition::type_inherit;
+		inout_values.push_back(std::move(position));
 		return;
 	}
 
-	CSSValueBackgroundPosition position;
-	position.type = CSSValueBackgroundPosition::type_value;
-	position.positions.clear();
+	position->type = CSSValueBackgroundPosition::type_value;
+	position->positions.clear();
 	bool done = false;
 	while (!done)
 	{
@@ -304,10 +306,10 @@ void CSSParserBackgroundPosition::parse(CSSBoxProperties &properties, const std:
 		else if (!y_specified)
 			bg_pos.type_y = CSSValueBackgroundPosition::type2_center;
 
-		position.positions.push_back(bg_pos);
+		position->positions.push_back(bg_pos);
 	}
 
-	properties.background_position = position;
+	inout_values.push_back(std::move(position));
 }
 
 }

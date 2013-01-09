@@ -40,27 +40,33 @@ std::vector<std::string> CSSParserTextIndent::get_names()
 	return names;
 }
 
-void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserTextIndent::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueTextIndent> text_indent(new CSSValueTextIndent());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.text_indent.type = CSSValueTextIndent::type_inherit;
+		text_indent->type = CSSValueTextIndent::type_inherit;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.text_indent.type = CSSValueTextIndent::type_length;
-			properties.text_indent.length = length;
+			text_indent->type = CSSValueTextIndent::type_length;
+			text_indent->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.text_indent.type = CSSValueTextIndent::type_percentage;
-		properties.text_indent.percentage = StringHelp::text_to_float(token.value);
+		text_indent->type = CSSValueTextIndent::type_percentage;
+		text_indent->percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
 	{
@@ -71,16 +77,30 @@ void CSSParserTextIndent::parse(CSSBoxProperties &properties, const std::string 
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.text_indent.type = CSSValueTextIndent::type_length;
-				properties.text_indent.length = length;
+				text_indent->type = CSSValueTextIndent::type_length;
+				text_indent->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.text_indent.type = CSSValueTextIndent::type_percentage;
-			properties.text_indent.percentage = -StringHelp::text_to_float(token.value);
+			text_indent->type = CSSValueTextIndent::type_percentage;
+			text_indent->percentage = -StringHelp::text_to_float(token.value);
+		}
+		else
+		{
+			return;
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(text_indent));
 }
 
 }

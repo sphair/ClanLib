@@ -37,6 +37,11 @@ CSSValueBorderStyle::CSSValueBorderStyle()
 {
 }
 
+CSSValueBorderStyle::CSSValueBorderStyle(ValueType value_type, const CSSValueBorderStyle &value)
+: value_type(value_type), type(value.type)
+{
+}
+
 void CSSValueBorderStyle::compute(const CSSValueBorderStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
 	if (type == type_inherit)

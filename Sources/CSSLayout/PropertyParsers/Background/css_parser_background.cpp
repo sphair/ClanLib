@@ -40,38 +40,47 @@ std::vector<std::string> CSSParserBackground::get_names()
 	return names;
 }
 
-void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackground::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundColor> bgcolor(new CSSValueBackgroundColor());
+	std::unique_ptr<CSSValueBackgroundImage> bgimage(new CSSValueBackgroundImage());
+	std::unique_ptr<CSSValueBackgroundRepeat> bgrepeat(new CSSValueBackgroundRepeat());
+	std::unique_ptr<CSSValueBackgroundAttachment> bgattachment(new CSSValueBackgroundAttachment());
+	std::unique_ptr<CSSValueBackgroundPosition> bgposition(new CSSValueBackgroundPosition());
+	std::unique_ptr<CSSValueBackgroundOrigin> bgorigin(new CSSValueBackgroundOrigin());
+	std::unique_ptr<CSSValueBackgroundClip> bgclip(new CSSValueBackgroundClip());
+	std::unique_ptr<CSSValueBackgroundSize> bgsize(new CSSValueBackgroundSize());
+
 	if (tokens.size() == 1 && tokens[0].type == CSSToken::type_ident && equals(tokens[0].value, "inherit"))
 	{
-		properties.background_color.type = CSSValueBackgroundColor::type_inherit;
-		properties.background_image.type = CSSValueBackgroundImage::type_inherit;
-		properties.background_repeat.type = CSSValueBackgroundRepeat::type_inherit;
-		properties.background_attachment.type = CSSValueBackgroundAttachment::type_inherit;
-		properties.background_position.type = CSSValueBackgroundPosition::type_inherit;
-		properties.background_origin.type = CSSValueBackgroundOrigin::type_inherit;
-		properties.background_clip.type = CSSValueBackgroundClip::type_inherit;
-		properties.background_size.type = CSSValueBackgroundSize::type_inherit;
+		bgcolor->type = CSSValueBackgroundColor::type_inherit;
+		bgimage->type = CSSValueBackgroundImage::type_inherit;
+		bgrepeat->type = CSSValueBackgroundRepeat::type_inherit;
+		bgattachment->type = CSSValueBackgroundAttachment::type_inherit;
+		bgposition->type = CSSValueBackgroundPosition::type_inherit;
+		bgorigin->type = CSSValueBackgroundOrigin::type_inherit;
+		bgclip->type = CSSValueBackgroundClip::type_inherit;
+		bgsize->type = CSSValueBackgroundSize::type_inherit;
+
+		inout_values.push_back(std::move(bgcolor));
+		inout_values.push_back(std::move(bgimage));
+		inout_values.push_back(std::move(bgrepeat));
+		inout_values.push_back(std::move(bgattachment));
+		inout_values.push_back(std::move(bgposition));
+		inout_values.push_back(std::move(bgorigin));
+		inout_values.push_back(std::move(bgclip));
+		inout_values.push_back(std::move(bgsize));
 		return;
 	}
 
-	CSSValueBackgroundColor bgcolor;
-	CSSValueBackgroundImage bgimage;
-	CSSValueBackgroundRepeat bgrepeat;
-	CSSValueBackgroundAttachment bgattachment;
-	CSSValueBackgroundPosition bgposition;
-	CSSValueBackgroundOrigin bgorigin;
-	CSSValueBackgroundClip bgclip;
-	CSSValueBackgroundSize bgsize;
-
-	bgimage.images.clear();
-	bgrepeat.repeat_x.clear();
-	bgrepeat.repeat_y.clear();
-	bgattachment.attachments.clear();
-	bgposition.positions.clear();
-	bgorigin.values.clear();
-	bgclip.values.clear();
-	bgsize.values.clear();
+	bgimage->images.clear();
+	bgrepeat->repeat_x.clear();
+	bgrepeat->repeat_y.clear();
+	bgattachment->attachments.clear();
+	bgposition->positions.clear();
+	bgorigin->values.clear();
+	bgclip->values.clear();
+	bgsize->values.clear();
 
 	size_t pos = 0;
 	while (true) // for each layer
@@ -94,7 +103,7 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 
 		while (true) // for each declaration in layer
 		{
-			if (!color_specified && parse_bgcolor(bgcolor, pos, tokens))
+			if (!color_specified && parse_bgcolor(*bgcolor.get(), pos, tokens))
 			{
 				color_specified = true;
 			}
@@ -133,14 +142,14 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 				break;
 		}
 
-		bgimage.images.push_back(layer_image);
-		bgrepeat.repeat_x.push_back(layer_repeat_x);
-		bgrepeat.repeat_y.push_back(layer_repeat_y);
-		bgattachment.attachments.push_back(layer_attachment);
-		bgposition.positions.push_back(layer_position);
-		bgorigin.values.push_back(layer_origin);
-		bgclip.values.push_back(layer_clip);
-		bgsize.values.push_back(layer_size);
+		bgimage->images.push_back(layer_image);
+		bgrepeat->repeat_x.push_back(layer_repeat_x);
+		bgrepeat->repeat_y.push_back(layer_repeat_y);
+		bgattachment->attachments.push_back(layer_attachment);
+		bgposition->positions.push_back(layer_position);
+		bgorigin->values.push_back(layer_origin);
+		bgclip->values.push_back(layer_clip);
+		bgsize->values.push_back(layer_size);
 
 		if (pos == tokens.size())
 			break;
@@ -150,14 +159,14 @@ void CSSParserBackground::parse(CSSBoxProperties &properties, const std::string 
 			return;
 	}
 
-	properties.background_color = bgcolor;
-	properties.background_image = bgimage;
-	properties.background_repeat = bgrepeat;
-	properties.background_attachment = bgattachment;
-	properties.background_position = bgposition;
-	properties.background_origin = bgorigin;
-	properties.background_clip = bgclip;
-	properties.background_size = bgsize;
+	inout_values.push_back(std::move(bgcolor));
+	inout_values.push_back(std::move(bgimage));
+	inout_values.push_back(std::move(bgrepeat));
+	inout_values.push_back(std::move(bgattachment));
+	inout_values.push_back(std::move(bgposition));
+	inout_values.push_back(std::move(bgorigin));
+	inout_values.push_back(std::move(bgclip));
+	inout_values.push_back(std::move(bgsize));
 }
 
 bool CSSParserBackground::parse_bgcolor(CSSValueBackgroundColor &bgcolor, size_t &parse_pos, const std::vector<CSSToken> &tokens)

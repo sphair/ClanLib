@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserMargin::get_names()
 	return names;
 }
 
-void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserMargin::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValueMarginWidth margin_widths[4];
 	int count;
@@ -54,10 +54,11 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 		}
 		else if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
-			properties.margin_width_left.type = CSSValueMarginWidth::type_inherit;
-			properties.margin_width_top.type = CSSValueMarginWidth::type_inherit;
-			properties.margin_width_right.type = CSSValueMarginWidth::type_inherit;
-			properties.margin_width_bottom.type = CSSValueMarginWidth::type_inherit;
+			margin_widths[0].type = CSSValueMarginWidth::type_inherit;
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::left_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::top_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::right_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::bottom_value, margin_widths[0])));
 			return;
 		}
 		else if (token.type == CSSToken::type_number && equals(token.value, "0"))
@@ -129,28 +130,28 @@ void CSSParserMargin::parse(CSSBoxProperties &properties, const std::string &nam
 		switch (count)
 		{
 		case 1:
-			properties.margin_width_left = margin_widths[0];
-			properties.margin_width_top = margin_widths[0];
-			properties.margin_width_right = margin_widths[0];
-			properties.margin_width_bottom = margin_widths[0];
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::left_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::top_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::right_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::bottom_value, margin_widths[0])));
 			break;
 		case 2:
-			properties.margin_width_top = margin_widths[0];
-			properties.margin_width_bottom = margin_widths[0];
-			properties.margin_width_left = margin_widths[1];
-			properties.margin_width_right = margin_widths[1];
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::top_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::bottom_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::left_value, margin_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::right_value, margin_widths[1])));
 			break;
 		case 3:
-			properties.margin_width_top = margin_widths[0];
-			properties.margin_width_left = margin_widths[1];
-			properties.margin_width_right = margin_widths[1];
-			properties.margin_width_bottom = margin_widths[2];
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::top_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::left_value, margin_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::right_value, margin_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::bottom_value, margin_widths[2])));
 			break;
 		case 4:
-			properties.margin_width_top = margin_widths[0];
-			properties.margin_width_right = margin_widths[1];
-			properties.margin_width_bottom = margin_widths[2];
-			properties.margin_width_left = margin_widths[3];
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::top_value, margin_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::right_value, margin_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::bottom_value, margin_widths[2])));
+			inout_values.push_back(std::unique_ptr<CSSValueMarginWidth>(new CSSValueMarginWidth(CSSValueMarginWidth::left_value, margin_widths[3])));
 			break;
 		default:
 			break;

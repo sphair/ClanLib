@@ -40,24 +40,32 @@ std::vector<std::string> CSSParserFlexBasis::get_names()
 	return names;
 }
 
-void CSSParserFlexBasis::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFlexBasis::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFlexBasis> flex_basis(new CSSValueFlexBasis());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.flex_basis.type = CSSValueFlexBasis::type_auto;
+			flex_basis->type = CSSValueFlexBasis::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.flex_basis.type = CSSValueFlexBasis::type_inherit;
+			flex_basis->type = CSSValueFlexBasis::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length) && length.value >= 0.0f)
 		{
-			properties.flex_basis.type = CSSValueFlexBasis::type_length;
-			properties.flex_basis.length = length;
+			flex_basis->type = CSSValueFlexBasis::type_length;
+			flex_basis->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
@@ -65,10 +73,16 @@ void CSSParserFlexBasis::parse(CSSBoxProperties &properties, const std::string &
 		float v = StringHelp::text_to_float(token.value);
 		if (v >= 0.0f)
 		{
-			properties.flex_basis.type = CSSValueFlexBasis::type_percentage;
-			properties.flex_basis.percentage = v;
+			flex_basis->type = CSSValueFlexBasis::type_percentage;
+			flex_basis->percentage = v;
+		}
+		else
+		{
+			return;
 		}
 	}
+
+	inout_values.push_back(std::move(flex_basis));
 }
 
 }

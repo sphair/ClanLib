@@ -40,24 +40,43 @@ std::vector<std::string> CSSParserAlignItems::get_names()
 	return names;
 }
 
-void CSSParserAlignItems::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserAlignItems::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
+		std::unique_ptr<CSSValueAlignItems> align_items(new CSSValueAlignItems());
 		if (equals(token.value, "flex-start"))
-			properties.align_items.type = CSSValueAlignItems::type_flex_start;
+		{
+			align_items->type = CSSValueAlignItems::type_flex_start;
+			inout_values.push_back(std::move(align_items));
+		}
 		else if (equals(token.value, "flex-end"))
-			properties.align_items.type = CSSValueAlignItems::type_flex_end;
+		{
+			align_items->type = CSSValueAlignItems::type_flex_end;
+			inout_values.push_back(std::move(align_items));
+		}
 		else if (equals(token.value, "center"))
-			properties.align_items.type = CSSValueAlignItems::type_center;
+		{
+			align_items->type = CSSValueAlignItems::type_center;
+			inout_values.push_back(std::move(align_items));
+		}
 		else if (equals(token.value, "baseline"))
-			properties.align_items.type = CSSValueAlignItems::type_baseline;
+		{
+			align_items->type = CSSValueAlignItems::type_baseline;
+			inout_values.push_back(std::move(align_items));
+		}
 		else if (equals(token.value, "stretch"))
-			properties.align_items.type = CSSValueAlignItems::type_stretch;
+		{
+			align_items->type = CSSValueAlignItems::type_stretch;
+			inout_values.push_back(std::move(align_items));
+		}
 		else if (equals(token.value, "inherit"))
-			properties.align_items.type = CSSValueAlignItems::type_inherit;
+		{
+			align_items->type = CSSValueAlignItems::type_inherit;
+			inout_values.push_back(std::move(align_items));
+		}
 	}
 }
 

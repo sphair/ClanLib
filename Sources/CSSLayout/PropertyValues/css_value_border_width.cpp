@@ -35,7 +35,12 @@ namespace clan
 {
 
 CSSValueBorderWidth::CSSValueBorderWidth()
-: type(type_medium)
+: value_type(left_value), type(type_medium)
+{
+}
+
+CSSValueBorderWidth::CSSValueBorderWidth(ValueType value_type, const CSSValueBorderWidth &value)
+: value_type(value_type), type(value.type), length(value.length)
 {
 }
 

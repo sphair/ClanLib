@@ -40,24 +40,32 @@ std::vector<std::string> CSSParserHeight::get_names()
 	return names;
 }
 
-void CSSParserHeight::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserHeight::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueHeight> height(new CSSValueHeight());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.height.type = CSSValueHeight::type_auto;
+			height->type = CSSValueHeight::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.height.type = CSSValueHeight::type_inherit;
+			height->type = CSSValueHeight::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length) && length.value >= 0.0f)
 		{
-			properties.height.type = CSSValueHeight::type_length;
-			properties.height.length = length;
+			height->type = CSSValueHeight::type_length;
+			height->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
@@ -65,10 +73,20 @@ void CSSParserHeight::parse(CSSBoxProperties &properties, const std::string &nam
 		float v = StringHelp::text_to_float(token.value);
 		if (v >= 0.0f)
 		{
-			properties.height.type = CSSValueHeight::type_percentage;
-			properties.height.percentage = v;
+			height->type = CSSValueHeight::type_percentage;
+			height->percentage = v;
+		}
+		else
+		{
+			return;
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(height));
 }
 
 }

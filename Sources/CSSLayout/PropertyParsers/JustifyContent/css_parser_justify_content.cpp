@@ -40,25 +40,35 @@ std::vector<std::string> CSSParserJustifyContent::get_names()
 	return names;
 }
 
-void CSSParserJustifyContent::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserJustifyContent::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueJustifyContent> justify_content(new CSSValueJustifyContent());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "flex-start"))
-			properties.justify_content.type = CSSValueJustifyContent::type_flex_start;
+			justify_content->type = CSSValueJustifyContent::type_flex_start;
 		else if (equals(token.value, "flex-end"))
-			properties.justify_content.type = CSSValueJustifyContent::type_flex_end;
+			justify_content->type = CSSValueJustifyContent::type_flex_end;
 		else if (equals(token.value, "center"))
-			properties.justify_content.type = CSSValueJustifyContent::type_center;
+			justify_content->type = CSSValueJustifyContent::type_center;
 		else if (equals(token.value, "space-between"))
-			properties.justify_content.type = CSSValueJustifyContent::type_space_between;
+			justify_content->type = CSSValueJustifyContent::type_space_between;
 		else if (equals(token.value, "space-around"))
-			properties.justify_content.type = CSSValueJustifyContent::type_space_around;
+			justify_content->type = CSSValueJustifyContent::type_space_around;
 		else if (equals(token.value, "inherit"))
-			properties.justify_content.type = CSSValueJustifyContent::type_inherit;
+			justify_content->type = CSSValueJustifyContent::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(justify_content));
 }
 
 }

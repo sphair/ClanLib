@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserPadding::get_names()
 	return names;
 }
 
-void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserPadding::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValuePaddingWidth padding_widths[4];
 	int count;
@@ -50,10 +50,11 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 		CSSToken token = next_token(pos, tokens);
 		if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && count == 0 && pos == tokens.size())
 		{
-			properties.padding_width_left.type = CSSValuePaddingWidth::type_inherit;
-			properties.padding_width_top.type = CSSValuePaddingWidth::type_inherit;
-			properties.padding_width_right.type = CSSValuePaddingWidth::type_inherit;
-			properties.padding_width_bottom.type = CSSValuePaddingWidth::type_inherit;
+			padding_widths[0].type = CSSValuePaddingWidth::type_inherit;
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::left_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::top_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::right_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::bottom_value, padding_widths[0])));
 			return;
 		}
 		else if (is_length(token))
@@ -120,28 +121,28 @@ void CSSParserPadding::parse(CSSBoxProperties &properties, const std::string &na
 		switch (count)
 		{
 		case 1:
-			properties.padding_width_left = padding_widths[0];
-			properties.padding_width_top = padding_widths[0];
-			properties.padding_width_right = padding_widths[0];
-			properties.padding_width_bottom = padding_widths[0];
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::left_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::top_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::right_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::bottom_value, padding_widths[0])));
 			break;
 		case 2:
-			properties.padding_width_top = padding_widths[0];
-			properties.padding_width_bottom = padding_widths[0];
-			properties.padding_width_left = padding_widths[1];
-			properties.padding_width_right = padding_widths[1];
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::top_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::bottom_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::left_value, padding_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::right_value, padding_widths[1])));
 			break;
 		case 3:
-			properties.padding_width_top = padding_widths[0];
-			properties.padding_width_left = padding_widths[1];
-			properties.padding_width_right = padding_widths[1];
-			properties.padding_width_bottom = padding_widths[2];
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::top_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::left_value, padding_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::right_value, padding_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::bottom_value, padding_widths[2])));
 			break;
 		case 4:
-			properties.padding_width_top = padding_widths[0];
-			properties.padding_width_right = padding_widths[1];
-			properties.padding_width_bottom = padding_widths[2];
-			properties.padding_width_left = padding_widths[3];
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::top_value, padding_widths[0])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::right_value, padding_widths[1])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::bottom_value, padding_widths[2])));
+			inout_values.push_back(std::unique_ptr<CSSValuePaddingWidth>(new CSSValuePaddingWidth(CSSValuePaddingWidth::left_value, padding_widths[3])));
 			break;
 		default:
 			break;

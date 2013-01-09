@@ -39,7 +39,7 @@ std::vector<std::string> CSSParserQuotes::get_names()
 	return names;
 }
 
-void CSSParserQuotes::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserQuotes::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 }
 

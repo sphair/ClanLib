@@ -40,42 +40,50 @@ std::vector<std::string> CSSParserFlex::get_names()
 	return names;
 }
 
-void CSSParserFlex::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFlex::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFlexGrow> flex_grow(new CSSValueFlexGrow());
+	std::unique_ptr<CSSValueFlexShrink> flex_shrink(new CSSValueFlexShrink());
+	std::unique_ptr<CSSValueFlexBasis> flex_basis(new CSSValueFlexBasis());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
 		{
-			properties.flex_grow.type = CSSValueFlexGrow::type_number;
-			properties.flex_grow.number = 0.0f;
-			properties.flex_shrink.type = CSSValueFlexShrink::type_number;
-			properties.flex_shrink.number = 0.0f;
-			properties.flex_basis.type = CSSValueFlexBasis::type_auto;
+			flex_grow->type = CSSValueFlexGrow::type_number;
+			flex_grow->number = 0.0f;
+			flex_shrink->type = CSSValueFlexShrink::type_number;
+			flex_shrink->number = 0.0f;
+			flex_basis->type = CSSValueFlexBasis::type_auto;
+
+			inout_values.push_back(std::move(flex_grow));
+			inout_values.push_back(std::move(flex_shrink));
+			inout_values.push_back(std::move(flex_basis));
+		}
+		else
+		{
+			return;
 		}
 	}
 	else
 	{
-		CSSValueFlexGrow grow;
-		CSSValueFlexShrink shrink;
-		CSSValueFlexBasis basis;
-
-		grow.number = 1.0f;
-		shrink.number = 1.0f;
-		basis.type = CSSValueFlexBasis::type_length;
-		basis.length = CSSLength(0.0f, CSSLength::type_px);
+		flex_grow->number = 1.0f;
+		flex_shrink->number = 1.0f;
+		flex_basis->type = CSSValueFlexBasis::type_length;
+		flex_basis->length = CSSLength(0.0f, CSSLength::type_px);
 
 		bool grow_shrink_specified = false;
 		bool basis_specified = false;
 
 		do
 		{
-			if (!grow_shrink_specified && parse_grow_shrink(grow, shrink, pos, tokens))
+			if (!grow_shrink_specified && parse_grow_shrink(*flex_grow.get(), *flex_shrink.get(), pos, tokens))
 			{
 				grow_shrink_specified = true;
 			}
-			else if (!basis_specified && parse_basis(basis, pos, tokens))
+			else if (!basis_specified && parse_basis(*flex_basis.get(), pos, tokens))
 			{
 				basis_specified = true;
 			}
@@ -85,9 +93,9 @@ void CSSParserFlex::parse(CSSBoxProperties &properties, const std::string &name,
 			}
 		} while (pos != tokens.size());
 
-		properties.flex_grow = grow;
-		properties.flex_shrink = shrink;
-		properties.flex_basis = basis;
+		inout_values.push_back(std::move(flex_grow));
+		inout_values.push_back(std::move(flex_shrink));
+		inout_values.push_back(std::move(flex_basis));
 	}
 }
 

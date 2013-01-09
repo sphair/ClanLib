@@ -40,14 +40,17 @@ std::vector<std::string> CSSParserBackgroundColor::get_names()
 	return names;
 }
 
-void CSSParserBackgroundColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundColor::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundColor> background_color(new CSSValueBackgroundColor());
+
 	size_t pos = 0;
 	Colorf color;
 	if (parse_color(tokens, pos, color) && pos == tokens.size())
 	{
-		properties.background_color.type = CSSValueBackgroundColor::type_color;
-		properties.background_color.color = color;
+		background_color->type = CSSValueBackgroundColor::type_color;
+		background_color->color = color;
+		inout_values.push_back(std::move(background_color));
 	}
 	else
 	{
@@ -56,7 +59,8 @@ void CSSParserBackgroundColor::parse(CSSBoxProperties &properties, const std::st
 		{
 			if (equals(token.value, "inherit"))
 			{
-				properties.background_color.type = CSSValueBackgroundColor::type_inherit;
+				background_color->type = CSSValueBackgroundColor::type_inherit;
+				inout_values.push_back(std::move(background_color));
 			}
 		}
 	}

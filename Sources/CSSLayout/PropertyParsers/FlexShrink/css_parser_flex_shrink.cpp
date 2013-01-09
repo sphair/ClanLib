@@ -40,19 +40,27 @@ std::vector<std::string> CSSParserFlexShrink::get_names()
 	return names;
 }
 
-void CSSParserFlexShrink::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFlexShrink::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueFlexShrink> flex_shrink(new CSSValueFlexShrink());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "inherit"))
-			properties.flex_shrink.type = CSSValueFlexShrink::type_inherit;
+			flex_shrink->type = CSSValueFlexShrink::type_inherit;
+		else
+			return;
 	}
 	else if (token.type == CSSToken::type_number && pos == tokens.size())
 	{
-		properties.flex_shrink.type = CSSValueFlexShrink::type_number;
-		properties.flex_shrink.number = StringHelp::text_to_float(token.value);
+		flex_shrink->type = CSSValueFlexShrink::type_number;
+		flex_shrink->number = StringHelp::text_to_float(token.value);
+	}
+	else
+	{
+		return;
 	}
 }
 

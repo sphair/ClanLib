@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorderStyle::get_names()
 	return names;
 }
 
-void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderStyle::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValueBorderStyle border_styles[4];
 	int count;
@@ -94,10 +94,11 @@ void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string
 			{
 				if (count == 0 && pos == tokens.size())
 				{
-					properties.border_style_left.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_top.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_right.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_bottom.type = CSSValueBorderStyle::type_inherit;
+					border_styles[0].type = CSSValueBorderStyle::type_inherit;
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_styles[0])));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_styles[0])));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_styles[0])));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_styles[0])));
 				}
 				else
 				{
@@ -127,28 +128,28 @@ void CSSParserBorderStyle::parse(CSSBoxProperties &properties, const std::string
 		switch (count)
 		{
 		case 1:
-			properties.border_style_left = border_styles[0];
-			properties.border_style_top = border_styles[0];
-			properties.border_style_right = border_styles[0];
-			properties.border_style_bottom = border_styles[0];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_styles[0])));
 			break;
 		case 2:
-			properties.border_style_top = border_styles[0];
-			properties.border_style_bottom = border_styles[0];
-			properties.border_style_left = border_styles[1];
-			properties.border_style_right = border_styles[1];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_styles[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_styles[1])));
 			break;
 		case 3:
-			properties.border_style_top = border_styles[0];
-			properties.border_style_left = border_styles[1];
-			properties.border_style_right = border_styles[1];
-			properties.border_style_bottom = border_styles[2];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_styles[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_styles[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_styles[2])));
 			break;
 		case 4:
-			properties.border_style_top = border_styles[0];
-			properties.border_style_right = border_styles[1];
-			properties.border_style_bottom = border_styles[2];
-			properties.border_style_left = border_styles[3];
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_styles[0])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_styles[1])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_styles[2])));
+			inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_styles[3])));
 			break;
 		default:
 			break;

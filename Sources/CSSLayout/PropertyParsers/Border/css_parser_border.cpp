@@ -40,7 +40,7 @@ std::vector<std::string> CSSParserBorder::get_names()
 	return names;
 }
 
-void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorder::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	CSSValueBorderWidth border_width;
 	CSSValueBorderStyle border_style;
@@ -66,18 +66,25 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 			{
 				if (equals(token.value, "inherit") && tokens.size() == 1)
 				{
-					properties.border_width_left.type = CSSValueBorderWidth::type_inherit;
-					properties.border_width_right.type = CSSValueBorderWidth::type_inherit;
-					properties.border_width_top.type = CSSValueBorderWidth::type_inherit;
-					properties.border_width_bottom.type = CSSValueBorderWidth::type_inherit;
-					properties.border_style_left.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_right.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_top.type = CSSValueBorderStyle::type_inherit;
-					properties.border_style_bottom.type = CSSValueBorderStyle::type_inherit;
-					properties.border_color_left.type = CSSValueBorderColor::type_inherit;
-					properties.border_color_right.type = CSSValueBorderColor::type_inherit;
-					properties.border_color_top.type = CSSValueBorderColor::type_inherit;
-					properties.border_color_bottom.type = CSSValueBorderColor::type_inherit;
+					border_width.type = CSSValueBorderWidth::type_inherit;
+					border_style.type = CSSValueBorderStyle::type_inherit;
+					border_color.type = CSSValueBorderColor::type_inherit;
+
+					inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_width)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_width)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_width)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_width)));
+
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_style)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_style)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_style)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_style)));
+
+					inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::left_value, border_color)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::right_value, border_color)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::top_value, border_color)));
+					inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::bottom_value, border_color)));
+
 					return;
 				}
 				else if (!width_specified && equals(token.value, "thin"))
@@ -174,18 +181,20 @@ void CSSParserBorder::parse(CSSBoxProperties &properties, const std::string &nam
 		}
 	}
 
-	properties.border_width_left = border_width;
-	properties.border_width_right = border_width;
-	properties.border_width_top = border_width;
-	properties.border_width_bottom = border_width;
-	properties.border_style_left = border_style;
-	properties.border_style_right = border_style;
-	properties.border_style_top = border_style;
-	properties.border_style_bottom = border_style;
-	properties.border_color_left = border_color;
-	properties.border_color_right = border_color;
-	properties.border_color_top = border_color;
-	properties.border_color_bottom = border_color;
+	inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::left_value, border_width)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::right_value, border_width)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::top_value, border_width)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderWidth>(new CSSValueBorderWidth(CSSValueBorderWidth::bottom_value, border_width)));
+
+	inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::left_value, border_style)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::right_value, border_style)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::top_value, border_style)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderStyle>(new CSSValueBorderStyle(CSSValueBorderStyle::bottom_value, border_style)));
+
+	inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::left_value, border_color)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::right_value, border_color)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::top_value, border_color)));
+	inout_values.push_back(std::unique_ptr<CSSValueBorderColor>(new CSSValueBorderColor(CSSValueBorderColor::bottom_value, border_color)));
 }
 
 }

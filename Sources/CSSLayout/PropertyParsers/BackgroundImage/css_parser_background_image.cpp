@@ -40,27 +40,27 @@ std::vector<std::string> CSSParserBackgroundImage::get_names()
 	return names;
 }
 
-void CSSParserBackgroundImage::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundImage::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSValueBackgroundImage background_image;
+	std::unique_ptr<CSSValueBackgroundImage> background_image(new CSSValueBackgroundImage());
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		background_image.type = CSSValueBackgroundImage::type_inherit;
+		background_image->type = CSSValueBackgroundImage::type_inherit;
 	}
 	else
 	{
-		background_image.type = CSSValueBackgroundImage::type_images;
-		background_image.images.clear();
+		background_image->type = CSSValueBackgroundImage::type_images;
+		background_image->images.clear();
 		while (true)
 		{
 			if (token.type == CSSToken::type_ident && equals(token.value, "none"))
-				background_image.images.push_back(CSSValueBackgroundImage::Image(CSSValueBackgroundImage::image_type_none));
+				background_image->images.push_back(CSSValueBackgroundImage::Image(CSSValueBackgroundImage::image_type_none));
 			else if (token.type == CSSToken::type_uri)
-				background_image.images.push_back(CSSValueBackgroundImage::Image(CSSValueBackgroundImage::image_type_uri, token.value));
+				background_image->images.push_back(CSSValueBackgroundImage::Image(CSSValueBackgroundImage::image_type_uri, token.value));
 			else
 				return;
 
@@ -78,7 +78,7 @@ void CSSParserBackgroundImage::parse(CSSBoxProperties &properties, const std::st
 		}
 	}
 
-	properties.background_image = background_image;
+	inout_values.push_back(std::move(background_image));
 }
 
 }

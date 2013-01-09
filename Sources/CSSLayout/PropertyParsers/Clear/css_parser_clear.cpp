@@ -40,23 +40,33 @@ std::vector<std::string> CSSParserClear::get_names()
 	return names;
 }
 
-void CSSParserClear::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserClear::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueClear> clear(new CSSValueClear());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "none"))
-			properties.clear.type = CSSValueClear::type_none;
+			clear->type = CSSValueClear::type_none;
 		else if (equals(token.value, "left"))
-			properties.clear.type = CSSValueClear::type_left;
+			clear->type = CSSValueClear::type_left;
 		else if (equals(token.value, "right"))
-			properties.clear.type = CSSValueClear::type_right;
+			clear->type = CSSValueClear::type_right;
 		else if (equals(token.value, "both"))
-			properties.clear.type = CSSValueClear::type_both;
+			clear->type = CSSValueClear::type_both;
 		else if (equals(token.value, "inherit"))
-			properties.clear.type = CSSValueClear::type_inherit;
+			clear->type = CSSValueClear::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(clear));
 }
 
 }

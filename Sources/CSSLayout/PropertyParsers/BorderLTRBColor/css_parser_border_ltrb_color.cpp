@@ -43,17 +43,17 @@ std::vector<std::string> CSSParserBorderLTRBColor::get_names()
 	return names;
 }
 
-void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderLTRBColor::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueBorderColor *border_color = 0;
+	std::unique_ptr<CSSValueBorderColor> border_color(new CSSValueBorderColor());
 	if (equals(name, "border-top-color"))
-		border_color = &properties.border_color_top;
+		border_color->value_type = CSSValueBorderColor::top_value;
 	else if (equals(name, "border-right-color"))
-		border_color = &properties.border_color_right;
+		border_color->value_type = CSSValueBorderColor::right_value;
 	else if (equals(name, "border-bottom-color"))
-		border_color = &properties.border_color_bottom;
+		border_color->value_type = CSSValueBorderColor::bottom_value;
 	else if (equals(name, "border-left-color"))
-		border_color = &properties.border_color_left;
+		border_color->value_type = CSSValueBorderColor::left_value;
 
 	if (border_color)
 	{
@@ -63,6 +63,7 @@ void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::st
 		{
 			border_color->type = CSSValueBorderColor::type_color;
 			border_color->color = color;
+			inout_values.push_back(std::move(border_color));
 		}
 		else
 		{
@@ -72,6 +73,7 @@ void CSSParserBorderLTRBColor::parse(CSSBoxProperties &properties, const std::st
 				if (equals(token.value, "inherit"))
 				{
 					border_color->type = CSSValueBorderColor::type_inherit;
+					inout_values.push_back(std::move(border_color));
 				}
 			}
 		}

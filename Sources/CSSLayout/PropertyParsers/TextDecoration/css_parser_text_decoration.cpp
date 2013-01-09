@@ -40,19 +40,21 @@ std::vector<std::string> CSSParserTextDecoration::get_names()
 	return names;
 }
 
-void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserTextDecoration::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueTextDecoration> text_decoration(new CSSValueTextDecoration());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
-	if (token.type == CSSToken::type_ident && pos == tokens.size())
+	if (token.type == CSSToken::type_ident)
 	{
-		if (equals(token.value, "none"))
+		if (equals(token.value, "none") && pos == tokens.size())
 		{
-			properties.text_decoration.type = CSSValueTextDecoration::type_none;
+			text_decoration->type = CSSValueTextDecoration::type_none;
 		}
-		else if (equals(token.value, "inherit"))
+		else if (equals(token.value, "inherit") && pos == tokens.size())
 		{
-			properties.text_decoration.type = CSSValueTextDecoration::type_inherit;
+			text_decoration->type = CSSValueTextDecoration::type_inherit;
 		}
 		else
 		{
@@ -84,14 +86,24 @@ void CSSParserTextDecoration::parse(CSSBoxProperties &properties, const std::str
 
 			if (underline < 2 && overline < 2 && line_through < 2 && blink < 2)
 			{
-				properties.text_decoration.type = CSSValueTextDecoration::type_values;
-				properties.text_decoration.underline = (underline == 1);
-				properties.text_decoration.overline = (overline == 1);
-				properties.text_decoration.line_through = (line_through == 1);
-				properties.text_decoration.blink = (blink == 1);
+				text_decoration->type = CSSValueTextDecoration::type_values;
+				text_decoration->underline = (underline == 1);
+				text_decoration->overline = (overline == 1);
+				text_decoration->line_through = (line_through == 1);
+				text_decoration->blink = (blink == 1);
+			}
+			else
+			{
+				return;
 			}
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(text_decoration));
 }
 
 }

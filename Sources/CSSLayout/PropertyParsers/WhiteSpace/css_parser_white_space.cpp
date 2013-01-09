@@ -40,25 +40,35 @@ std::vector<std::string> CSSParserWhiteSpace::get_names()
 	return names;
 }
 
-void CSSParserWhiteSpace::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserWhiteSpace::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueWhiteSpace> white_space(new CSSValueWhiteSpace());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "normal"))
-			properties.white_space.type = CSSValueWhiteSpace::type_normal;
+			white_space->type = CSSValueWhiteSpace::type_normal;
 		else if (equals(token.value, "pre"))
-			properties.white_space.type = CSSValueWhiteSpace::type_pre;
+			white_space->type = CSSValueWhiteSpace::type_pre;
 		else if (equals(token.value, "nowrap"))
-			properties.white_space.type = CSSValueWhiteSpace::type_nowrap;
+			white_space->type = CSSValueWhiteSpace::type_nowrap;
 		else if (equals(token.value, "pre-wrap"))
-			properties.white_space.type = CSSValueWhiteSpace::type_pre_wrap;
+			white_space->type = CSSValueWhiteSpace::type_pre_wrap;
 		else if (equals(token.value, "pre-line"))
-			properties.white_space.type = CSSValueWhiteSpace::type_pre_line;
+			white_space->type = CSSValueWhiteSpace::type_pre_line;
 		else if (equals(token.value, "inherit"))
-			properties.white_space.type = CSSValueWhiteSpace::type_inherit;
+			white_space->type = CSSValueWhiteSpace::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(white_space));
 }
 
 }

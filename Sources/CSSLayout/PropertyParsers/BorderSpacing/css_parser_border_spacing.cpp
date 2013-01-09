@@ -40,15 +40,18 @@ std::vector<std::string> CSSParserBorderSpacing::get_names()
 	return names;
 }
 
-void CSSParserBorderSpacing::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBorderSpacing::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBorderSpacing> border_spacing(new CSSValueBorderSpacing());
+
 	CSSLength length1, length2;
 
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && equals(token.value, "inherit") && pos == tokens.size())
 	{
-		properties.border_spacing.type = CSSValueBorderSpacing::type_inherit;
+		border_spacing->type = CSSValueBorderSpacing::type_inherit;
+		inout_values.push_back(std::move(border_spacing));
 		return;
 	}
 	else if (is_length(token))
@@ -72,16 +75,18 @@ void CSSParserBorderSpacing::parse(CSSBoxProperties &properties, const std::stri
 		{
 			if (parse_length(token, length2))
 			{
-				properties.border_spacing.type = CSSValueBorderSpacing::type_two_lengths;
-				properties.border_spacing.length1 = length1;
-				properties.border_spacing.length2 = length2;
+				border_spacing->type = CSSValueBorderSpacing::type_two_lengths;
+				border_spacing->length1 = length1;
+				border_spacing->length2 = length2;
+				inout_values.push_back(std::move(border_spacing));
 			}
 		}
 	}
 	else
 	{
-		properties.border_spacing.type = CSSValueBorderSpacing::type_one_length;
-		properties.border_spacing.length1 = length1;
+		border_spacing->type = CSSValueBorderSpacing::type_one_length;
+		border_spacing->length1 = length1;
+		inout_values.push_back(std::move(border_spacing));
 	}
 }
 

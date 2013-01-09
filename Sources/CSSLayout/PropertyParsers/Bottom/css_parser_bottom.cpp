@@ -40,30 +40,38 @@ std::vector<std::string> CSSParserBottom::get_names()
 	return names;
 }
 
-void CSSParserBottom::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBottom::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBottom> bottom(new CSSValueBottom());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "auto"))
-			properties.bottom.type = CSSValueBottom::type_auto;
+			bottom->type = CSSValueBottom::type_auto;
 		else if (equals(token.value, "inherit"))
-			properties.bottom.type = CSSValueBottom::type_inherit;
+			bottom->type = CSSValueBottom::type_inherit;
+		else
+			return;
 	}
 	else if (is_length(token) && pos == tokens.size())
 	{
 		CSSLength length;
 		if (parse_length(token, length))
 		{
-			properties.bottom.type = CSSValueBottom::type_length;
-			properties.bottom.length = length;
+			bottom->type = CSSValueBottom::type_length;
+			bottom->length = length;
+		}
+		else
+		{
+			return;
 		}
 	}
 	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 	{
-		properties.bottom.type = CSSValueBottom::type_percentage;
-		properties.bottom.percentage = StringHelp::text_to_float(token.value);
+		bottom->type = CSSValueBottom::type_percentage;
+		bottom->percentage = StringHelp::text_to_float(token.value);
 	}
 	else if (token.type == CSSToken::type_delim && token.value == "-")
 	{
@@ -74,16 +82,26 @@ void CSSParserBottom::parse(CSSBoxProperties &properties, const std::string &nam
 			if (parse_length(token, length))
 			{
 				length.value = -length.value;
-				properties.bottom.type = CSSValueBottom::type_length;
-				properties.bottom.length = length;
+				bottom->type = CSSValueBottom::type_length;
+				bottom->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
-			properties.bottom.type = CSSValueBottom::type_percentage;
-			properties.bottom.percentage = -StringHelp::text_to_float(token.value);
+			bottom->type = CSSValueBottom::type_percentage;
+			bottom->percentage = -StringHelp::text_to_float(token.value);
+		}
+		else
+		{
+			return;
 		}
 	}
+
+	inout_values.push_back(std::move(bottom));
 }
 
 }

@@ -34,7 +34,12 @@ namespace clan
 {
 
 CSSValuePaddingWidth::CSSValuePaddingWidth()
-: type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
+: value_type(left_value), type(type_length), length(0, CSSLength::type_px), percentage(0.0f)
+{
+}
+
+CSSValuePaddingWidth::CSSValuePaddingWidth(ValueType value_type, const CSSValuePaddingWidth &value)
+: value_type(value_type), type(value.type), length(value.length), percentage(value.percentage)
 {
 }
 

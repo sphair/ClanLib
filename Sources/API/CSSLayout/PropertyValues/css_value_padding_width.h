@@ -37,9 +37,20 @@ namespace clan
 class CSSValuePaddingWidth : public CSSPropertyValue
 {
 public:
+	enum ValueType
+	{
+		left_value,
+		top_value,
+		right_value,
+		bottom_value
+	};
+
 	CSSValuePaddingWidth();
+	CSSValuePaddingWidth(ValueType value_type, const CSSValuePaddingWidth &value);
 	void compute(const CSSValuePaddingWidth *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
+
+	ValueType value_type;
 
 	enum Type
 	{

@@ -41,7 +41,7 @@ class CSSPropertyParser
 public:
 	virtual ~CSSPropertyParser() { }
 	virtual std::vector<std::string> get_names() = 0;
-	virtual void parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens) = 0;
+	virtual void parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values) = 0;
 
 protected:
 	CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);

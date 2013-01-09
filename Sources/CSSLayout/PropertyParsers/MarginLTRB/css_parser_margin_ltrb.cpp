@@ -43,63 +43,80 @@ std::vector<std::string> CSSParserMarginLTRB::get_names()
 	return names;
 }
 
-void CSSParserMarginLTRB::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserMarginLTRB::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
-	CSSValueMarginWidth *width = 0;
+	std::unique_ptr<CSSValueMarginWidth> width(new CSSValueMarginWidth());
 	if (equals(name, "margin-top"))
-		width = &properties.margin_width_top;
+		width->value_type = CSSValueMarginWidth::top_value;
 	else if (equals(name, "margin-right"))
-		width = &properties.margin_width_right;
+		width->value_type = CSSValueMarginWidth::right_value;
 	else if (equals(name, "margin-bottom"))
-		width = &properties.margin_width_bottom;
+		width->value_type = CSSValueMarginWidth::bottom_value;
 	else if (equals(name, "margin-left"))
-		width = &properties.margin_width_left;
+		width->value_type = CSSValueMarginWidth::left_value;
 
-	if (width)
+	size_t pos = 0;
+	CSSToken token = next_token(pos, tokens);
+	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
-		size_t pos = 0;
-		CSSToken token = next_token(pos, tokens);
-		if (token.type == CSSToken::type_ident && pos == tokens.size())
+		if (equals(token.value, "auto"))
+			width->type = CSSValueMarginWidth::type_auto;
+		else if (equals(token.value, "inherit"))
+			width->type = CSSValueMarginWidth::type_inherit;
+		else
+			return;
+	}
+	else if (is_length(token) && pos == tokens.size())
+	{
+		CSSLength length;
+		if (parse_length(token, length))
 		{
-			if (equals(token.value, "auto"))
-				width->type = CSSValueMarginWidth::type_auto;
-			else if (equals(token.value, "inherit"))
-				width->type = CSSValueMarginWidth::type_inherit;
+			width->type = CSSValueMarginWidth::type_length;
+			width->length = length;
 		}
-		else if (is_length(token) && pos == tokens.size())
+		else
+		{
+			return;
+		}
+	}
+	else if (token.type == CSSToken::type_percentage && pos == tokens.size())
+	{
+		width->type = CSSValueMarginWidth::type_percentage;
+		width->percentage = StringHelp::text_to_float(token.value);
+	}
+	else if (token.type == CSSToken::type_delim && token.value == "-")
+	{
+		token = next_token(pos, tokens);
+		if (is_length(token) && pos == tokens.size())
 		{
 			CSSLength length;
 			if (parse_length(token, length))
 			{
+				length.value = -length.value;
 				width->type = CSSValueMarginWidth::type_length;
 				width->length = length;
+			}
+			else
+			{
+				return;
 			}
 		}
 		else if (token.type == CSSToken::type_percentage && pos == tokens.size())
 		{
 			width->type = CSSValueMarginWidth::type_percentage;
-			width->percentage = StringHelp::text_to_float(token.value);
+			width->percentage = -StringHelp::text_to_float(token.value);
 		}
-		else if (token.type == CSSToken::type_delim && token.value == "-")
+		else
 		{
-			token = next_token(pos, tokens);
-			if (is_length(token) && pos == tokens.size())
-			{
-				CSSLength length;
-				if (parse_length(token, length))
-				{
-					length.value = -length.value;
-					width->type = CSSValueMarginWidth::type_length;
-					width->length = length;
-				}
-			}
-			else if (token.type == CSSToken::type_percentage && pos == tokens.size())
-			{
-				width->type = CSSValueMarginWidth::type_percentage;
-				width->percentage = -StringHelp::text_to_float(token.value);
-			}
+			return;
 		}
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(width));
 }
 
 }

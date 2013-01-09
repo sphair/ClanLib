@@ -40,23 +40,33 @@ std::vector<std::string> CSSParserTextAlign::get_names()
 	return names;
 }
 
-void CSSParserTextAlign::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserTextAlign::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueTextAlign> text_align(new CSSValueTextAlign());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 	if (token.type == CSSToken::type_ident && pos == tokens.size())
 	{
 		if (equals(token.value, "left"))
-			properties.text_align.type = CSSValueTextAlign::type_left;
+			text_align->type = CSSValueTextAlign::type_left;
 		else if (equals(token.value, "right"))
-			properties.text_align.type = CSSValueTextAlign::type_right;
+			text_align->type = CSSValueTextAlign::type_right;
 		else if (equals(token.value, "center"))
-			properties.text_align.type = CSSValueTextAlign::type_center;
+			text_align->type = CSSValueTextAlign::type_center;
 		else if (equals(token.value, "justify"))
-			properties.text_align.type = CSSValueTextAlign::type_justify;
+			text_align->type = CSSValueTextAlign::type_justify;
 		else if (equals(token.value, "inherit"))
-			properties.text_align.type = CSSValueTextAlign::type_inherit;
+			text_align->type = CSSValueTextAlign::type_inherit;
+		else
+			return;
 	}
+	else
+	{
+		return;
+	}
+
+	inout_values.push_back(std::move(text_align));
 }
 
 }

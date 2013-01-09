@@ -40,14 +40,16 @@ std::vector<std::string> CSSParserOutlineColor::get_names()
 	return names;
 }
 
-void CSSParserOutlineColor::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserOutlineColor::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueOutlineColor> outline_color(new CSSValueOutlineColor());
+
 	size_t pos = 0;
 	Colorf color;
 	if (parse_color(tokens, pos, color) && pos == tokens.size())
 	{
-		properties.outline_color.type = CSSValueOutlineColor::type_color;
-		properties.outline_color.color = color;
+		outline_color->type = CSSValueOutlineColor::type_color;
+		outline_color->color = color;
 	}
 	else
 	{
@@ -56,14 +58,24 @@ void CSSParserOutlineColor::parse(CSSBoxProperties &properties, const std::strin
 		{
 			if (equals(token.value, "invert"))
 			{
-				properties.outline_color.type = CSSValueOutlineColor::type_invert;
+				outline_color->type = CSSValueOutlineColor::type_invert;
 			}
 			else if (equals(token.value, "inherit"))
 			{
-				properties.outline_color.type = CSSValueOutlineColor::type_inherit;
+				outline_color->type = CSSValueOutlineColor::type_inherit;
+			}
+			else
+			{
+				return;
 			}
 		}
+		else
+		{
+			return;
+		}
 	}
+
+	inout_values.push_back(std::move(outline_color));
 }
 
 }

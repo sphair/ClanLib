@@ -2,7 +2,7 @@
 #pragma once
 
 #include "css_selector_chain.h"
-#include "API/CSSLayout/CSSDocument/css_property.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 
 namespace clan
 {
@@ -14,7 +14,7 @@ class CSSRuleset
 public:
 	CSSRuleset(CSSDocumentSheet *sheet) : sheet(sheet) { }
 	std::vector<CSSSelectorChain> selectors;
-	std::vector<CSSProperty> properties;
+	std::vector<std::unique_ptr<CSSPropertyValue> > values;
 	CSSDocumentSheet *sheet;
 };
 

@@ -40,24 +40,24 @@ std::vector<std::string> CSSParserFlexFlow::get_names()
 	return names;
 }
 
-void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserFlexFlow::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
-	CSSValueFlexDirection direction;
-	CSSValueFlexWrap wrap;
+	std::unique_ptr<CSSValueFlexDirection> direction(new CSSValueFlexDirection());
+	std::unique_ptr<CSSValueFlexWrap> wrap(new CSSValueFlexWrap());
 
 	bool direction_specified = false;
 	bool wrap_specified = false;
 
 	do
 	{
-		if (!direction_specified && parse_direction(direction, pos, tokens))
+		if (!direction_specified && parse_direction(*direction.get(), pos, tokens))
 		{
 			direction_specified = true;
 		}
-		else if (!wrap_specified && parse_wrap(wrap, pos, tokens))
+		else if (!wrap_specified && parse_wrap(*wrap.get(), pos, tokens))
 		{
 			wrap_specified = true;
 		}
@@ -67,8 +67,8 @@ void CSSParserFlexFlow::parse(CSSBoxProperties &properties, const std::string &n
 		}
 	} while (pos != tokens.size());
 
-	properties.flex_direction = direction;
-	properties.flex_wrap = wrap;
+	inout_values.push_back(std::move(direction));
+	inout_values.push_back(std::move(wrap));
 }
 
 bool CSSParserFlexFlow::parse_direction(CSSValueFlexDirection &direction, size_t &parse_pos, const std::vector<CSSToken> &tokens)

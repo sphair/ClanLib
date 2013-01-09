@@ -40,21 +40,22 @@ std::vector<std::string> CSSParserBackgroundRepeat::get_names()
 	return names;
 }
 
-void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::string &name, const std::vector<CSSToken> &tokens)
+void CSSParserBackgroundRepeat::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	std::unique_ptr<CSSValueBackgroundRepeat> background_repeat(new CSSValueBackgroundRepeat());
+
 	size_t pos = 0;
 	CSSToken token = next_token(pos, tokens);
 
 	if (token.type == CSSToken::type_ident && pos == tokens.size() && equals(token.value, "inherit"))
 	{
-		properties.background_repeat.type = CSSValueBackgroundRepeat::type_inherit;
+		background_repeat->type = CSSValueBackgroundRepeat::type_inherit;
 	}
 	else
 	{
-		CSSValueBackgroundRepeat background_repeat;
-		background_repeat.type = CSSValueBackgroundRepeat::type_repeat_style;
-		background_repeat.repeat_x.clear();
-		background_repeat.repeat_y.clear();
+		background_repeat->type = CSSValueBackgroundRepeat::type_repeat_style;
+		background_repeat->repeat_x.clear();
+		background_repeat->repeat_y.clear();
 		while (true)
 		{
 			if (token.type != CSSToken::type_ident)
@@ -100,8 +101,8 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 			{
 				if (!single_style)
 					repeat_y = repeat_x;
-				background_repeat.repeat_x.push_back(repeat_x);
-				background_repeat.repeat_y.push_back(repeat_y);
+				background_repeat->repeat_x.push_back(repeat_x);
+				background_repeat->repeat_y.push_back(repeat_y);
 				break;
 			}
 
@@ -110,8 +111,8 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 			{
 				if (!single_style)
 					repeat_y = repeat_x;
-				background_repeat.repeat_x.push_back(repeat_x);
-				background_repeat.repeat_y.push_back(repeat_y);
+				background_repeat->repeat_x.push_back(repeat_x);
+				background_repeat->repeat_y.push_back(repeat_y);
 			}
 			else if (token.type == CSSToken::type_ident && !single_style)
 			{
@@ -136,8 +137,8 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 					return;
 				}
 
-				background_repeat.repeat_x.push_back(repeat_x);
-				background_repeat.repeat_y.push_back(repeat_y);
+				background_repeat->repeat_x.push_back(repeat_x);
+				background_repeat->repeat_y.push_back(repeat_y);
 
 				if (pos == tokens.size())
 					break;
@@ -152,9 +153,9 @@ void CSSParserBackgroundRepeat::parse(CSSBoxProperties &properties, const std::s
 
 			token = next_token(pos, tokens);
 		}
-
-		properties.background_repeat = background_repeat;
 	}
+
+	inout_values.push_back(std::move(background_repeat));
 }
 
 }
