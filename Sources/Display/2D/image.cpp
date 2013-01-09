@@ -122,7 +122,7 @@ Image::Image(GraphicContext &gc, const PixelBuffer &pb, const Rect &rect)
 	impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
 }
 
-Image::Image(GraphicContext &gc, Texture2D texture, Rect rect)
+Image::Image(GraphicContext &gc, Texture2D texture, const Rect &rect)
 : impl(new Image_Impl())
 {
 	impl->texture = texture;
