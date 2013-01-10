@@ -363,6 +363,12 @@ void Canvas::line(const LineSegment2f &line_segment, const Colorf &color)
 	line(line_segment.p.x, line_segment.p.y, line_segment.q.x, line_segment.q.y, color);
 }
 
+void Canvas::lines(Vec2f *positions, int num_vertices, const Colorf &color)
+{
+	RenderBatchLine *batcher = impl->get_line_batcher();
+	batcher->draw_lines(*this, positions, color, num_vertices);
+}
+
 void Canvas::box(float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	Vec2f positions[5] =

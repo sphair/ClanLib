@@ -49,6 +49,27 @@ inline Vec4f RenderBatchLine::to_position(float x, float y) const
 		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
 
+void RenderBatchLine::draw_lines(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+{
+	if (num_vertices < 2)
+	{
+		return;	// Invalid line, we ignore this. It could be null call to this function
+	}
+
+	// We convert a line strip to a line
+	set_batcher_active(canvas, num_vertices);
+	lock_transfer_buffer(canvas);
+
+	for (; num_vertices > 0; num_vertices--)
+	{
+		vertices[position].color = line_color;
+		vertices[position].position = to_position(line_positions->x, line_positions->y);
+		line_positions++;
+		position++;
+	}
+
+}
+
 void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 {
 	if (num_vertices < 2)

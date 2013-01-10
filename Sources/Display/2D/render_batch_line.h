@@ -41,6 +41,7 @@ class RenderBatchLine : public RenderBatcher
 public:
 	RenderBatchLine();
 	void draw_line_strip(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
+	void draw_lines(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
 
 private:
 	struct LineVertex

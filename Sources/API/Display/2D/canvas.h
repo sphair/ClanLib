@@ -299,7 +299,7 @@ public:
 	void point(const Pointf &point, const Colorf &color);
 
 	/// \brief Draw a line.
-	void line(float x1, float y1, float x2, float y2, const Colorf &color);
+	void line(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
 
 	/// \brief Line
 	///
@@ -307,17 +307,20 @@ public:
 	/// \param start = Pointf
 	/// \param end = Pointf
 	/// \param color = Colorf
-	void line(const Pointf &start, const Pointf &end, const Colorf &color);
+	void line(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
 
 	/// \brief Line
 	///
 	/// \param gc = Graphic Context
 	/// \param line_segment = The line
 	/// \param color = Colorf
-	void line(const LineSegment2f &line_segment, const Colorf &color);
+	void line(const LineSegment2f &line_segment, const Colorf &color = Colorf::white);
+
+	/// \brief Lines
+	void lines(Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a box / rectangle.
-	void box(float x1, float y1, float x2, float y2, const Colorf &color);
+	void box(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
 
 	/// \brief Box
 	///
@@ -325,7 +328,7 @@ public:
 	/// \param start = Pointf
 	/// \param end = Pointf
 	/// \param color = Colorf
-	void box(const Pointf &start, const Pointf &end, const Colorf &color);
+	void box(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
 
 	/// \brief Box
 	///
@@ -335,7 +338,7 @@ public:
 	void box(const Rectf &rect, const Colorf &color);
 
 	/// \brief Draw a filled box / rectangle.
-	void fill(float x1, float y1, float x2, float y2, const Colorf &color);
+	void fill(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
 
 	/// \brief Fill
 	///
@@ -343,7 +346,7 @@ public:
 	/// \param start = Pointf
 	/// \param end = Pointf
 	/// \param color = Colorf
-	void fill(const Pointf &start, const Pointf &end, const Colorf &color);
+	void fill(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
 
 	/// \brief Fill
 	///
@@ -378,7 +381,7 @@ public:
 	void gradient_fill(const Rectf &rect, const Gradient &gradient);
 
 	/// \brief Draw a circle.
-	void circle(float center_x, float center_y, float radius, const Colorf &color);
+	void circle(float center_x, float center_y, float radius, const Colorf &color = Colorf::white);
 
 	/// \brief Circle
 	///
@@ -386,7 +389,7 @@ public:
 	/// \param center = Pointf
 	/// \param radius = value
 	/// \param color = Colorf
-	void circle(const Pointf &center, float radius, const Colorf &color);
+	void circle(const Pointf &center, float radius, const Colorf &color = Colorf::white);
 
 	/// \brief Gradient circle
 	///
@@ -406,13 +409,13 @@ public:
 	void gradient_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient);
 
 	/// \brief Draw a triangle.
-	void triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color);
+	void triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a triangle.
-	void triangle(const Trianglef &dest_triangle, const Colorf &color);
+	void triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
-	void ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color);
+	void ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a gradient filled ellipse.
 	void ellipse_gradient(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
