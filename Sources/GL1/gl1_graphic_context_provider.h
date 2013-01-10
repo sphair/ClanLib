@@ -53,10 +53,6 @@ class DisplayWindowProvider;
 class ShaderObjectProvider;
 class FrameBufferProvider;
 class RenderBufferProvider;
-class LightModel_GL1;
-class Material_GL1;
-class LightSource_GL1;
-class TextureUnit_GL1;
 class GL1TextureProvider;
 class GL1SelectedTexture;
 class DisposableObject;
@@ -197,27 +193,6 @@ public:
 	GL1ProcAddress *get_proc_address(const std::string& function_name) const;
 
 	// GL1 Only
-	void push_texture_matrix(int unit_index);
-	void set_texture_matrix(int unit_index, const Mat4f &matrix);
-	void pop_texture_matrix(int unit_index);
-	void set_light_model(const LightModel_GL1 &light_model);
-	void reset_light_model();
-	void set_material(const Material_GL1 &material);
-	void set_front_material(const Material_GL1 &material);
-	void set_back_material(const Material_GL1 &material);
-	void reset_front_material();
-	void reset_back_material();
-	void set_material(GLenum face, const Material_GL1 &material);
-	void reset_material();
-	void set_color_material(ColorMaterial_GL1 color);
-	void set_color_material_front(ColorMaterial_GL1 color);
-	void set_color_material_back(ColorMaterial_GL1 color);
-	void reset_color_material();
-	void set_color_material(GLenum face, ColorMaterial_GL1 color);
-	void set_light(int light_index, const LightSource_GL1 &light);
-	void reset_light(int light_index);
-	void set_texture_unit(int unit_index, const TextureUnit_GL1 &unit);
-
 	void set_active() const;
 
 	void add_disposable(DisposableObject *disposable);
@@ -265,14 +240,6 @@ private:
 	GLenum to_enum(enum VertexAttributeDataType value);
 	GLenum to_enum(enum PrimitivesType value);
 	GLenum to_enum(enum LogicOp op);
-
-	// GL1 Only
-	GLenum to_enum(enum TextureUnitMode value);
-	GLenum to_enum(enum TextureUnitRGBMode value);
-	GLenum to_enum(enum TextureUnitAlphaMode value);
-	GLenum to_enum(enum TextureUnitAlphaOperand value);
-	GLenum to_enum(enum TextureUnitRGBOperand value);
-	GLenum to_enum(enum TextureUnitSource value);
 
 	/// \brief OpenGL render window.
 	const DisplayWindowProvider * const render_window;

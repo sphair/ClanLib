@@ -34,10 +34,6 @@
 #include "api_gl1.h"
 #include <memory>
 #include "../Display/Render/graphic_context.h"
-#include "material.h"
-#include "light_source.h"
-#include "texture_unit.h"
-#include "light_model.h"
 
 namespace clan
 {
@@ -77,11 +73,6 @@ public:
 	/// \return max_texture_coords
 	int get_max_texture_coords();
 
-	/// \brief Get Light count
-	///
-	/// \return light_count
-	int get_light_count();
-
 	/// \brief Get the opengl version
 	///
 	/// \param version_major = On Return: Major
@@ -91,102 +82,6 @@ public:
 
 //!Operations
 public:
-
-	/// \brief Push texture matrix
-	///
-	/// \param unit_index = value
-	void push_texture_matrix(int unit_index);
-
-	/// \brief Set texture matrix
-	///
-	/// \param unit_index = value
-	/// \param matrix = Mat4f
-	void set_texture_matrix(int unit_index, const Mat4f &matrix);
-
-	/// \brief Pop texture matrix
-	///
-	/// \param unit_index = value
-	void pop_texture_matrix(int unit_index);
-
-	/// \brief Set light model
-	///
-	/// \param light_model = Light Model_ GL1
-	void set_light_model(const LightModel_GL1 &light_model);
-
-	/// \brief Reset light model
-	void reset_light_model();
-
-	/// \brief Set material
-	///
-	/// \param material = Material_ GL1
-	void set_material(const Material_GL1 &material);
-
-	/// \brief Set front material
-	///
-	/// \param material = Material_ GL1
-	void set_front_material(const Material_GL1 &material);
-
-	/// \brief Set back material
-	///
-	/// \param material = Material_ GL1
-	void set_back_material(const Material_GL1 &material);
-
-	/// \brief Reset front material
-	void reset_front_material();
-
-	/// \brief Reset back material
-	void reset_back_material();
-
-	/// \brief Set material
-	///
-	/// \param face = GLenum
-	/// \param material = Material_ GL1
-	void set_material(unsigned int face, const Material_GL1 &material);
-
-	/// \brief Reset material
-	void reset_material();
-
-	/// \brief Set color material
-	///
-	/// \param color = Color Material_ GL1
-	void set_color_material(ColorMaterial_GL1 color);
-
-	/// \brief Set color material front
-	///
-	/// \param color = Color Material_ GL1
-	void set_color_material_front(ColorMaterial_GL1 color);
-
-	/// \brief Set color material back
-	///
-	/// \param color = Color Material_ GL1
-	void set_color_material_back(ColorMaterial_GL1 color);
-
-	/// \brief Reset color material
-	void reset_color_material();
-
-	/// \brief Set color material
-	///
-	/// \param face = GLenum
-	/// \param color = Color Material_ GL1
-	void set_color_material(unsigned int face, ColorMaterial_GL1 color);
-
-	/// \brief Set light
-	///
-	/// \param light_index = value
-	/// \param light = Light Source_ GL1
-	void set_light(int light_index, const LightSource_GL1 &light);
-
-	/// \brief Reset light
-	///
-	/// \param light_index = value
-	void reset_light(int light_index);
-
-	/// \brief Set texture unit
-	///
-	/// \param unit_index = value
-	/// \param unit = Texture Unit_ GL1
-	void set_texture_unit(int unit_index, const TextureUnit_GL1 &unit);
-
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context
 	///
 	/// If the FrameBuffer is active, then the OpenGL context will be the OpenGL PBuffer
