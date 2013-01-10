@@ -238,7 +238,7 @@ void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWin
 		if (!opengl_context)
 			opengl_context = helper.create_opengl2_context(share_context);
 
-		gc = GraphicContext(new GL1GraphicContextProvider(this));
+		gc = GraphicContext(new GL1GraphicContextProvider(this, false));
 	}
 
 	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)GL1::get_proc_address("wglSwapIntervalEXT");

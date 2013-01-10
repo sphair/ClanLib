@@ -226,7 +226,7 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider_GLX &window_provider, Size &size
 	XFree(fbconfig);
 	XFree(visinfo);
 
-	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
+	pbuffer_gc_provider = new GL1GraphicContextProvider(this, true);
 	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
 }
 

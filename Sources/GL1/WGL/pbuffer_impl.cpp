@@ -140,7 +140,7 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider_WGL &window_provider, Size &size
 
 	wglShareLists(share_context, pbuffer_context);
 
-	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
+	pbuffer_gc_provider = new GL1GraphicContextProvider(this, true);
 	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
 }
 

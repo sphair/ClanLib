@@ -91,7 +91,7 @@ class GL1GraphicContextProvider : public GraphicContextProvider, public Disposab
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL1GraphicContextProvider(const DisplayWindowProvider * const render_window);
+	GL1GraphicContextProvider(const DisplayWindowProvider * const render_window, bool render_window_is_a_pbuffer);
 	~GL1GraphicContextProvider();
 
 /// \}
