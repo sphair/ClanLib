@@ -51,15 +51,8 @@ int App::start(const std::vector<std::string> &args)
 	texture_buffers[1] = clan::Texture2D(canvas, texture_size, texture_size);
 
 	// Create the initial pixelbuffers
-#ifdef USE_OPENGL_2
-	// Only clanGL supports OpenGL Pixel Buffer Objects -- The #define is in app.h
-	pixel_buffers[0] = clan::PixelBuffer(canvas, texture_size, texture_size, cl_data_to_gpu, tf_rgba8);
-	pixel_buffers[1] = clan::PixelBuffer(canvas, texture_size, texture_size, cl_data_to_gpu, tf_rgba8);
-#else
-	// app.h contains the display target selection #define's
 	pixel_buffers[0] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
 	pixel_buffers[1] = clan::PixelBuffer(texture_size, texture_size, clan::tf_rgba8);
-#endif
 
 	// Initially clear the textures, so they are filled with a "Calculating..." message
 	clan::FrameBuffer framebuffer(canvas);
