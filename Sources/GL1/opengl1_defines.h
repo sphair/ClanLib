@@ -34,12 +34,7 @@
 
 #include "API/Core/System/cl_platform.h"
 
-#ifdef __APPLE__
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
-#else
 #include <GL/gl.h>
-#endif
 
 #ifndef CL_DISPLAYDEFINES_DEFINES
 #define CL_DISPLAYDEFINES_DEFINES
@@ -48,8 +43,6 @@
 
 namespace clan
 {
-
-#ifndef __APPLE__
 // Win32 and linux
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
@@ -69,27 +62,6 @@ typedef void GLvoid;
 typedef char GLchar;
 typedef ptrdiff_t GLintptr;
 typedef ptrdiff_t GLsizeiptr;
-
-#else
-typedef unsigned long GLenum;
-typedef unsigned char GLboolean;
-typedef unsigned long GLbitfield;
-typedef signed char GLbyte;
-typedef short GLshort;
-typedef long GLint;
-typedef long GLsizei;
-typedef unsigned char GLubyte;
-typedef unsigned short GLushort;
-typedef unsigned long GLuint;
-typedef float GLfloat;
-typedef float GLclampf;
-typedef double GLdouble;
-typedef double GLclampd;
-typedef void GLvoid;
-typedef char GLchar;
-typedef ptrdiff_t GLintptr;
-typedef ptrdiff_t GLsizeiptr;
-#endif
 
 /// \brief Display Defines
 ///

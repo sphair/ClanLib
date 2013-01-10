@@ -42,21 +42,11 @@
 #include "gl1_graphic_context_provider.h"
 #include <map>
 
-#ifdef __APPLE__
-#include <AGL/agl.h>
-#include <OpenGLES/ES2/gl.h>
-#else
 #include <GL/gl.h>
-#endif
 
 #ifndef WIN32
-#ifdef __APPLE__
-#include <AGL/agl.h>
-#include <Carbon/Carbon.h>
-#else
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
-#endif
 #endif
 
 namespace clan
@@ -66,24 +56,6 @@ cl_tls_variable GL1Functions *GL1::functions = 0;
 
 void GL1::to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
 {
-#ifdef __APPLE__
-    
-    // OpenGL ES 2 only supports a very limited set of formats
-    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
-    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
-	switch (format)
-	{
-		case tf_rgb8: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
-		case tf_rgb8ui: gl_internal_format = GL_RGB; gl_pixel_format = GL_RGB; break;
-		case tf_rgba8: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
-		case tf_rgba8ui: gl_internal_format = GL_RGBA; gl_pixel_format = GL_RGBA; break;
-		default:
-			throw Exception(string_format("Unsupported TextureFormat (%1)", format));
-    }
-    
-    
-#else
-    
 	switch (format)
 	{
 	// base internal format
@@ -189,41 +161,12 @@ void GL1::to_opengl_textureformat(TextureFormat format, GLint &gl_internal_forma
 		default:
 			throw Exception(string_format("Unsupported TextureFormat (%1)", format));
 	}
-#endif
 }
 
 bool GL1::to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GLenum &type)
 {
 	bool valid = false;
 
-#ifdef __APPLE__
-    
-    // OpenGL ES 2 only supports a very limited set of formats
-    // format: GL_ALPHA, GL_RGB, GL_RGBA, GL_LUMINANCE, GL_LUMINANCE_ALPHA
-    // type: GL_UNSIGNED_BYTE, GL_UNSIGNED_SHORT_5_6_5, GL_UNSIGNED_SHORT_4_4_4_4, GL_UNSIGNED_SHORT_5_5_5_1
-	switch (texture_format)
-	{
-		case cl_abgr8:
-		{
-			valid = true;
-			type = GL_UNSIGNED_BYTE;
-			format = GL_RGBA;
-			break;
-		}
-		case tf_bgr8:
-		{
-			valid = true;
-			type = GL_UNSIGNED_BYTE;
-			format = GL_RGB;
-			break;
-		}
-        default:
-            break;
-    }
-    
-    
-#else
-    
 	//TODO: We should really use Endian::is_system_big()
 
 	//TODO: All the formats in this switch are not supported - Maybe they can be
@@ -490,8 +433,6 @@ bool GL1::to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GL
 		case tf_compressed_srgb_alpha_s3tc_dxt5: break;
 	}
 
-#endif
-
 	return valid;
 }
 
@@ -583,8 +524,6 @@ void GL1::set_active(const GL1GraphicContextProvider * const gc_provider)
 		{
 #		if defined(WIN32)
 			wglMakeCurrent(NULL, NULL);
-#		elif defined(__APPLE__)
-			aglMakeCurrent(AGL_NONE, NULL);
 #		else
 			//Note: glX may not even be available. Also glXGetCurrentDisplay() may fail
 			// Hopefully this will not matter!
@@ -1305,47 +1244,6 @@ GL1Functions *gl1_setup_binds()
 #endif
 
 	// Binds for OpenGL 1.2:
-
-#ifdef __APPLE__
-	functions->drawRangeElements = (GL1Functions::ptr_glDrawRangeElementsEXT) &glDrawRangeElements;
-	functions->texImage3D = (GL1Functions::ptr_glTexImage3DEXT) &glTexImage3D;
-	functions->texSubImage3D = (GL1Functions::ptr_glTexSubImage3DEXT) &glTexSubImage3D;
-	functions->copyTexSubImage3D = (GL1Functions::ptr_glCopyTexSubImage3DEXT) &glCopyTexSubImage3D;
-	functions->colorTable = (GL1Functions::ptr_glColorTableSGI) &glColorTable;
-	functions->copyColorTable = (GL1Functions::ptr_glCopyColorTableSGI) &glCopyColorTable;
-	functions->colorTableParameteriv = (GL1Functions::ptr_glColorTableParameterivSGI) &glColorTableParameteriv;
-	functions->colorTableParameterfv = (GL1Functions::ptr_glColorTableParameterfvSGI) &glColorTableParameterfv;
-	functions->getColorTable = (GL1Functions::ptr_glGetColorTableSGI) &glGetColorTable;
-	functions->getColorTableParameteriv = (GL1Functions::ptr_glGetColorTableParameterivSGI) &glGetColorTableParameteriv;
-	functions->getColorTableParameterfv = (GL1Functions::ptr_glGetColorTableParameterfvSGI) &glGetColorTableParameterfv;
-	functions->colorSubTable = (GL1Functions::ptr_glColorSubTableEXT) &glColorSubTable;
-	functions->copyColorSubTable = (GL1Functions::ptr_glCopyColorSubTableEXT) &glCopyColorSubTable;
-	functions->convolutionFilter1D = (GL1Functions::ptr_glConvolutionFilter1DEXT) &glConvolutionFilter1D;
-	functions->convolutionFilter2D = (GL1Functions::ptr_glConvolutionFilter2DEXT) &glConvolutionFilter2D;
-	functions->copyConvolutionFilter1D = (GL1Functions::ptr_glCopyConvolutionFilter1DEXT) &glCopyConvolutionFilter1D;
-	functions->copyConvolutionFilter2D = (GL1Functions::ptr_glCopyConvolutionFilter2DEXT) &glCopyConvolutionFilter2D;
-	functions->getConvolutionFilter = (GL1Functions::ptr_glGetConvolutionFilterEXT) &glGetConvolutionFilter;
-	functions->separableFilter2D = (GL1Functions::ptr_glSeparableFilter2DEXT) &glSeparableFilter2D;
-	functions->getSeparableFilter = (GL1Functions::ptr_glGetSeparableFilterEXT) &glGetSeparableFilter;
-	functions->convolutionParameteri = (GL1Functions::ptr_glConvolutionParameteriEXT) &glConvolutionParameteri;
-	functions->convolutionParameteriv = (GL1Functions::ptr_glConvolutionParameterivEXT) &glConvolutionParameteriv;
-	functions->convolutionParameterf = (GL1Functions::ptr_glConvolutionParameterfEXT) &glConvolutionParameterf;
-	functions->convolutionParameterfv = (GL1Functions::ptr_glConvolutionParameterfvEXT) &glConvolutionParameterfv;
-	functions->getConvolutionParameteriv = (GL1Functions::ptr_glGetConvolutionParameterivEXT) &glGetConvolutionParameteriv;
-	functions->getConvolutionParameterfv = (GL1Functions::ptr_glGetConvolutionParameterfvEXT) &glGetConvolutionParameterfv;
-	functions->histogram = (GL1Functions::ptr_glHistogramEXT) &glHistogram;
-	functions->resetHistogram = (GL1Functions::ptr_glResetHistogramEXT) &glResetHistogram;
-	functions->getHistogram = (GL1Functions::ptr_glGetHistogramEXT) &glGetHistogram;
-	functions->getHistogramParameteriv = (GL1Functions::ptr_glGetHistogramParameterivEXT) &glGetHistogramParameteriv;
-	functions->getHistogramParameterfv = (GL1Functions::ptr_glGetHistogramParameterfvEXT) &glGetHistogramParameterfv;
-	functions->minmax = (GL1Functions::ptr_glMinmaxEXT) &glMinmax;
-	functions->resetMinmax = (GL1Functions::ptr_glResetMinmaxEXT) &glResetMinmax;
-	functions->getMinmax = (GL1Functions::ptr_glGetMinmaxEXT) &glGetMinmax;
-	functions->getMinmaxParameteriv = (GL1Functions::ptr_glGetMinmaxParameterivEXT) &glGetMinmaxParameteriv;
-	functions->getMinmaxParameterfv = (GL1Functions::ptr_glGetMinmaxParameterfvEXT) &glGetMinmaxParameterfv;
-	functions->blendColor = (GL1Functions::ptr_glBlendColorEXT) &glBlendColor;
-	functions->blendEquation = (GL1Functions::ptr_glBlendEquationEXT) &glBlendEquation;
-#else
 	functions->drawRangeElements = (GL1Functions::ptr_glDrawRangeElementsEXT) GL1::get_proc_address("glDrawRangeElementsEXT");
 	functions->texImage3D = (GL1Functions::ptr_glTexImage3DEXT) GL1::get_proc_address("glTexImage3DEXT");
 	functions->texSubImage3D = (GL1Functions::ptr_glTexSubImage3DEXT) GL1::get_proc_address("glTexSubImage3DEXT");
@@ -1384,46 +1282,8 @@ GL1Functions *gl1_setup_binds()
 	functions->getMinmaxParameterfv = (GL1Functions::ptr_glGetMinmaxParameterfvEXT) GL1::get_proc_address("glGetMinmaxParameterfvEXT");
 	functions->blendColor = (GL1Functions::ptr_glBlendColorEXT) GL1::get_proc_address("glBlendColorEXT");
 	functions->blendEquation = (GL1Functions::ptr_glBlendEquationEXT) GL1::get_proc_address("glBlendEquationEXT");
-#endif
 
 	// Binds for OpenGL 1.2.1:
-
-#ifdef __APPLE__
-	functions->activeTexture = (GL1Functions::ptr_glActiveTextureARB) &glActiveTexture;
-	functions->clientActiveTexture = (GL1Functions::ptr_glClientActiveTextureARB) &glClientActiveTexture;
-	functions->multiTexCoord1d = (GL1Functions::ptr_glMultiTexCoord1dARB) &glMultiTexCoord1d;
-	functions->multiTexCoord1dv = (GL1Functions::ptr_glMultiTexCoord1dvARB) &glMultiTexCoord1dv;
-	functions->multiTexCoord1f = (GL1Functions::ptr_glMultiTexCoord1fARB) &glMultiTexCoord1f;
-	functions->multiTexCoord1fv = (GL1Functions::ptr_glMultiTexCoord1fvARB) &glMultiTexCoord1fv;
-	functions->multiTexCoord1i = (GL1Functions::ptr_glMultiTexCoord1iARB) &glMultiTexCoord1i;
-	functions->multiTexCoord1iv = (GL1Functions::ptr_glMultiTexCoord1ivARB) &glMultiTexCoord1iv;
-	functions->multiTexCoord1s = (GL1Functions::ptr_glMultiTexCoord1sARB) &glMultiTexCoord1s;
-	functions->multiTexCoord1sv = (GL1Functions::ptr_glMultiTexCoord1svARB) &glMultiTexCoord1sv;
-	functions->multiTexCoord2d = (GL1Functions::ptr_glMultiTexCoord2dARB) &glMultiTexCoord2d;
-	functions->multiTexCoord2dv = (GL1Functions::ptr_glMultiTexCoord2dvARB) &glMultiTexCoord2dv;
-	functions->multiTexCoord2f = (GL1Functions::ptr_glMultiTexCoord2fARB) &glMultiTexCoord2f;
-	functions->multiTexCoord2fv = (GL1Functions::ptr_glMultiTexCoord2fvARB) &glMultiTexCoord2fv;
-	functions->multiTexCoord2i = (GL1Functions::ptr_glMultiTexCoord2iARB) &glMultiTexCoord2i;
-	functions->multiTexCoord2iv = (GL1Functions::ptr_glMultiTexCoord2ivARB) &glMultiTexCoord2iv;
-	functions->multiTexCoord2s = (GL1Functions::ptr_glMultiTexCoord2sARB) &glMultiTexCoord2s;
-	functions->multiTexCoord2sv = (GL1Functions::ptr_glMultiTexCoord2svARB) &glMultiTexCoord2sv;
-	functions->multiTexCoord3d = (GL1Functions::ptr_glMultiTexCoord3dARB) &glMultiTexCoord3d;
-	functions->multiTexCoord3dv = (GL1Functions::ptr_glMultiTexCoord3dvARB) &glMultiTexCoord3dv;
-	functions->multiTexCoord3f = (GL1Functions::ptr_glMultiTexCoord3fARB) &glMultiTexCoord3f;
-	functions->multiTexCoord3fv = (GL1Functions::ptr_glMultiTexCoord3fvARB) &glMultiTexCoord3fv;
-	functions->multiTexCoord3i = (GL1Functions::ptr_glMultiTexCoord3iARB) &glMultiTexCoord3i;
-	functions->multiTexCoord3iv = (GL1Functions::ptr_glMultiTexCoord3ivARB) &glMultiTexCoord3iv;
-	functions->multiTexCoord3s = (GL1Functions::ptr_glMultiTexCoord3sARB) &glMultiTexCoord3s;
-	functions->multiTexCoord3sv = (GL1Functions::ptr_glMultiTexCoord3svARB) &glMultiTexCoord3sv;
-	functions->multiTexCoord4d = (GL1Functions::ptr_glMultiTexCoord4dARB) &glMultiTexCoord4d;
-	functions->multiTexCoord4dv = (GL1Functions::ptr_glMultiTexCoord4dvARB) &glMultiTexCoord4dv;
-	functions->multiTexCoord4f = (GL1Functions::ptr_glMultiTexCoord4fARB) &glMultiTexCoord4f;
-	functions->multiTexCoord4fv = (GL1Functions::ptr_glMultiTexCoord4fvARB) &glMultiTexCoord4fv;
-	functions->multiTexCoord4i = (GL1Functions::ptr_glMultiTexCoord4iARB) &glMultiTexCoord4i;
-	functions->multiTexCoord4iv = (GL1Functions::ptr_glMultiTexCoord4ivARB) &glMultiTexCoord4iv;
-	functions->multiTexCoord4s = (GL1Functions::ptr_glMultiTexCoord4sARB) &glMultiTexCoord4s;
-	functions->multiTexCoord4sv = (GL1Functions::ptr_glMultiTexCoord4svARB) &glMultiTexCoord4sv;
-#else
 	functions->activeTexture = (GL1Functions::ptr_glActiveTextureARB) GL1::get_proc_address("glActiveTextureARB");
 	functions->clientActiveTexture = (GL1Functions::ptr_glClientActiveTextureARB) GL1::get_proc_address("glClientActiveTextureARB");
 	functions->multiTexCoord1d = (GL1Functions::ptr_glMultiTexCoord1dARB) GL1::get_proc_address("glMultiTexCoord1dARB");
@@ -1458,24 +1318,8 @@ GL1Functions *gl1_setup_binds()
 	functions->multiTexCoord4iv = (GL1Functions::ptr_glMultiTexCoord4ivARB) GL1::get_proc_address("glMultiTexCoord4ivARB");
 	functions->multiTexCoord4s = (GL1Functions::ptr_glMultiTexCoord4sARB) GL1::get_proc_address("glMultiTexCoord4sARB");
 	functions->multiTexCoord4sv = (GL1Functions::ptr_glMultiTexCoord4svARB) GL1::get_proc_address("glMultiTexCoord4svARB");
-#endif
-
 	// Binds for OpenGL 1.3:
 
-#ifdef __APPLE__
-	functions->compressedTexImage1D = (GL1Functions::ptr_glCompressedTexImage1DARB) &glCompressedTexImage1D;
-	functions->compressedTexImage2D = (GL1Functions::ptr_glCompressedTexImage2DARB) &glCompressedTexImage2D;
-	functions->compressedTexImage3D = (GL1Functions::ptr_glCompressedTexImage3DARB) &glCompressedTexImage3D;
-	functions->compressedTexSubImage1D = (GL1Functions::ptr_glCompressedTexSubImage1DARB) &glCompressedTexSubImage1D;
-	functions->compressedTexSubImage2D = (GL1Functions::ptr_glCompressedTexSubImage2DARB) &glCompressedTexSubImage2D;
-	functions->compressedTexSubImage3D = (GL1Functions::ptr_glCompressedTexSubImage3DARB) &glCompressedTexSubImage3D;
-	functions->getCompressedTexImage = (GL1Functions::ptr_glGetCompressedTexImageARB) &glGetCompressedTexImage;
-	functions->sampleCoverage = (GL1Functions::ptr_glSampleCoverageARB) &glSampleCoverage;
-	functions->glLoadTransposeMatrixd = (GL1Functions::ptr_glLoadTransposeMatrixdARB) &glLoadTransposeMatrixd;
-	functions->glLoadTransposeMatrixf = (GL1Functions::ptr_glLoadTransposeMatrixfARB) &glLoadTransposeMatrixf;
-	functions->glMultTransposeMatrixd = (GL1Functions::ptr_glMultTransposeMatrixdARB) &glMultTransposeMatrixd;
-	functions->glMultTransposeMatrixf = (GL1Functions::ptr_glMultTransposeMatrixfARB) &glMultTransposeMatrixf;
-#else
 	functions->compressedTexImage1D = (GL1Functions::ptr_glCompressedTexImage1DARB) GL1::get_proc_address("glCompressedTexImage1DARB");
 	functions->compressedTexImage2D = (GL1Functions::ptr_glCompressedTexImage2DARB) GL1::get_proc_address("glCompressedTexImage2DARB");
 	functions->compressedTexImage3D = (GL1Functions::ptr_glCompressedTexImage3DARB) GL1::get_proc_address("glCompressedTexImage3DARB");
@@ -1488,7 +1332,6 @@ GL1Functions *gl1_setup_binds()
 	functions->glLoadTransposeMatrixf = (GL1Functions::ptr_glLoadTransposeMatrixfARB) GL1::get_proc_address("glLoadTransposeMatrixfARB");
 	functions->glMultTransposeMatrixd = (GL1Functions::ptr_glMultTransposeMatrixdARB) GL1::get_proc_address("glMultTransposeMatrixdARB");
 	functions->glMultTransposeMatrixf = (GL1Functions::ptr_glMultTransposeMatrixfARB) GL1::get_proc_address("glMultTransposeMatrixfARB");
-#endif
 
 #ifdef WIN32
 	functions->wglCreatePbufferARB = (GL1Functions::ptr_wglCreatePbufferARB) GL1::get_proc_address("wglCreatePbufferARB");
