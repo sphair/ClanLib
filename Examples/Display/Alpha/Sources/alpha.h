@@ -36,12 +36,12 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	Image create_block(Canvas &canvas, const Colorf &colour);
-	void draw_section(Canvas &canvas, Font &font, int yoffset, const Colorf &background, const Colorf &vertex_colour, const Colorf &image_colour);
+	clan::Image create_block(clan::Canvas &canvas, const clan::Colorf &colour);
+	void draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, const clan::Colorf &background, const clan::Colorf &vertex_colour, const clan::Colorf &image_colour);
 private:
 	bool quit;
-	BlendState blend_disabled;
-	BlendState blend_enabled;
+	clan::BlendState blend_disabled;
+	clan::BlendState blend_enabled;
 };
