@@ -48,7 +48,6 @@
 #include "../gl1_target_provider.h"
 #include "gl1_creation_helper.h"
 #include <commctrl.h>
-#include "pbuffer_impl.h"
 
 namespace clan
 {
@@ -238,7 +237,7 @@ void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWin
 		if (!opengl_context)
 			opengl_context = helper.create_opengl2_context(share_context);
 
-		gc = GraphicContext(new GL1GraphicContextProvider(this, false));
+		gc = GraphicContext(new GL1GraphicContextProvider(this));
 	}
 
 	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)GL1::get_proc_address("wglSwapIntervalEXT");
@@ -580,15 +579,6 @@ void GL1WindowProvider_WGL::set_large_icon(const PixelBuffer &image)
 void GL1WindowProvider_WGL::set_small_icon(const PixelBuffer &image)
 {
 	win32_window.set_small_icon(image);
-}
-
-PBuffer_GL1 GL1WindowProvider_WGL::create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size)
-{
-	PBuffer_GL1 pbuffer(gc_provider);
-
-	pbuffer.create(*this, size);
-
-	return pbuffer;
 }
 
 /////////////////////////////////////////////////////////////////////////////

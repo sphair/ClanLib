@@ -53,14 +53,12 @@ class DisplayWindowProvider;
 class ShaderObjectProvider;
 class FrameBufferProvider;
 class RenderBufferProvider;
-class GL1FrameBufferProvider;
 class LightModel_GL1;
 class Material_GL1;
 class LightSource_GL1;
 class TextureUnit_GL1;
 class GL1TextureProvider;
 class GL1SelectedTexture;
-class PBuffer_GL1;
 class DisposableObject;
 class GL1ProgramObjectProvider;
 
@@ -91,7 +89,7 @@ class GL1GraphicContextProvider : public GraphicContextProvider, public Disposab
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL1GraphicContextProvider(const DisplayWindowProvider * const render_window, bool render_window_is_a_pbuffer);
+	GL1GraphicContextProvider(const DisplayWindowProvider * const render_window);
 	~GL1GraphicContextProvider();
 
 /// \}
@@ -220,8 +218,6 @@ public:
 	void reset_light(int light_index);
 	void set_texture_unit(int unit_index, const TextureUnit_GL1 &unit);
 
-	PBuffer_GL1 create_pbuffer(Size size);
-
 	void set_active() const;
 
 	void add_disposable(DisposableObject *disposable);
@@ -280,12 +276,6 @@ private:
 
 	/// \brief OpenGL render window.
 	const DisplayWindowProvider * const render_window;
-
-	/// \brief OpenGL FrameBuffer.
-	/** Can be null if attached to a window instead.*/
-	GL1FrameBufferProvider *framebuffer_provider;
-
-	bool framebuffer_bound;
 
 	bool prim_arrays_set;
 

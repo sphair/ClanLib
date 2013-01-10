@@ -43,7 +43,6 @@ namespace clan
 typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
 class GL1WindowDescription;
-class PBuffer_GL1;
 class GL1WindowProvider_WGL;
 class GL1GraphicContextProvider;
 
@@ -131,8 +130,6 @@ public:
 
 	void set_large_icon(const PixelBuffer &image);
 	void set_small_icon(const PixelBuffer &image);
-
-	PBuffer_GL1 create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size);
 
 /// \}
 /// \name Implementation

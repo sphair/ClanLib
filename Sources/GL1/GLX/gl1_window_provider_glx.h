@@ -53,7 +53,6 @@ namespace clan
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
 
-class PBuffer_GL1;
 class GL1WindowProvider_GLX;
 class GL1GraphicContextProvider;
 
@@ -292,8 +291,6 @@ public:
 	void set_clipboard_image(const PixelBuffer &buf) { x11_window.set_clipboard_image(buf); }
 
 	void request_repaint(const Rect &rect) { x11_window.request_repaint(rect); }
-
-	PBuffer_GL1 create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size);
 
 	GLXContext get_share_context();
 

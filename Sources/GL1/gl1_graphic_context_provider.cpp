@@ -32,7 +32,6 @@
 #include "GL1/precomp.h"
 #include "gl1_graphic_context_provider.h"
 #include "gl1_texture_provider.h"
-#include "gl1_frame_buffer_provider.h"
 #include "gl1_program_object_provider.h"
 #include "gl1_render_buffer_provider.h"
 #include "gl1_primitives_array_provider.h"
@@ -66,9 +65,7 @@
 #include "WGL/gl1_window_provider_wgl.h"
 #else
 #include "GLX/gl1_window_provider_glx.h"
-#include "GLX/pbuffer_impl.h"
 #endif
-#include "pbuffer.h"
 
 namespace clan
 {
@@ -84,9 +81,9 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Construction:
 
-GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider * const render_window, bool render_window_is_a_pbuffer)
+GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider * const render_window)
 : render_window(render_window),
-  framebuffer_bound(false), prim_arrays_set(false), num_set_tex_arrays(0),
+  prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false)
 {
 	check_opengl_version();
@@ -115,8 +112,7 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider
 	// Enable point sprites for legacy opengl
 	cl1Enable(GL_POINT_SPRITE);
 
-	if (!render_window_is_a_pbuffer)		// It is not clear if sharing GC from a pbuffer is valid from the specification. Also this is problematic in obtaining the shared gc context in the main provider. For now, we simply do not allow it.
-		SharedGCData::add_provider(this);
+	SharedGCData::add_provider(this);
 }
 
 GL1GraphicContextProvider::~GL1GraphicContextProvider()
@@ -237,24 +233,6 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-PBuffer_GL1 GL1GraphicContextProvider::create_pbuffer(Size size)
-{
-#ifdef WIN32
-	const GL1WindowProvider_WGL *wptr = dynamic_cast<const GL1WindowProvider_WGL *> (render_window);
-	if (wptr == NULL)
-		throw Exception("Render window type is not known");
-
-	return ((GL1WindowProvider_WGL *) wptr)->create_pbuffer(this, size);
-#else
-	const GL1WindowProvider_GLX *wptr = dynamic_cast<const GL1WindowProvider_GLX *> (render_window);
-	if (wptr == NULL)
-		throw Exception("Render window type is not known");
-
-	return ((GL1WindowProvider_GLX *) wptr)->create_pbuffer(this, size);
-#endif
-
-}
-
 #ifdef __APPLE__
 static CFBundleRef gl1_gBundleRefOpenGL = 0;
 #endif
@@ -303,14 +281,7 @@ GL1ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& f
 
 void GL1GraphicContextProvider::set_active() const
 {
-	if (framebuffer_bound)
-	{
-		framebuffer_provider->set_active();
-	}
-	else
-	{
-		GL1::set_active(this);
-	}
+	GL1::set_active(this);
 }
 
 OcclusionQueryProvider *GL1GraphicContextProvider::alloc_occlusion_query()
@@ -335,7 +306,7 @@ TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions text
 
 FrameBufferProvider *GL1GraphicContextProvider::alloc_frame_buffer()
 {
-	return new GL1FrameBufferProvider(this);
+	throw Exception("FrameBuffer emulation using pbuffers are no longer supported");
 }
 
 RenderBufferProvider *GL1GraphicContextProvider::alloc_render_buffer()
@@ -499,8 +470,7 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 
 	PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
 	set_active();
-	if (!framebuffer_bound)
-		cl1ReadBuffer(GL_BACK);
+	cl1ReadBuffer(GL_BACK);
 
 	Size display_size = get_display_window_size();
 
@@ -701,23 +671,10 @@ bool GL1GraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
 
 void GL1GraphicContextProvider::set_frame_buffer(const FrameBuffer &w_buffer, const FrameBuffer &r_buffer)
 {
-	framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get_provider());
-	framebuffer_provider->set_active();
-	framebuffer_provider->start();
-
-	framebuffer_bound = true;
 }
 
 void GL1GraphicContextProvider::reset_frame_buffer()
 {
-	if (framebuffer_bound)
-	{
-		framebuffer_bound = false;
-
-		framebuffer_provider->set_active();
-		framebuffer_provider->stop();
-		GL1::set_active(this);
-	}
 }
 
 void GL1GraphicContextProvider::set_program_object(StandardProgram standard_program)
