@@ -108,22 +108,25 @@ int App::start(const std::vector<std::string> &args)
 		Slot slot_lost_focus = window.sig_lost_focus().connect(this, &App::on_lost_focus);
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-		// Get the graphic context
-		GraphicContext gc = window.get_gc();
+		Canvas canvas(window);
 
 		// Get the graphics
 		FontDescription font_desc;
 		font_desc.set_typeface_name("tahoma");
-		font_desc.set_height(64);
+		font_desc.set_height(48);
 		font_desc.set_subpixel(false);
-		Font font_large(gc, font_desc);
+		Font font_large(canvas, font_desc);
 
 		font_desc.set_height(30);
-		Font font_small(gc, font_desc);
-		Sprite tux(gc, "round_tux.png");
+		Font font_small(canvas, font_desc);
+		Sprite tux(canvas, "round_tux.png");
 		tux_radius = tux.get_width()/2;
 
-		Image rock(gc, "rock.png");
+		Image rock(canvas, "rock.png");
+
+		BlendStateDescription blend_desc;
+		blend_desc.enable_blending(false);
+		BlendState blend_state_off(canvas, blend_desc);
 
 		float rotation = 0.0f;
 		unsigned int time_last = System::get_time();
@@ -135,9 +138,9 @@ int App::start(const std::vector<std::string> &args)
 			float time_diff = (float) (time_now - time_last);
 			time_last = time_now;
 
-			gc.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
 			rock.set_color(Colorf(1.0f, 1.0f, 1.0f, 0.8f));
-			rock.draw(gc, 0.0f, 0.0f);
+			rock.draw(canvas, 0.0f, 0.0f);
 
 			// Rotate tux
 			rotation += time_diff / 10.0f;
@@ -146,7 +149,7 @@ int App::start(const std::vector<std::string> &args)
 			tux.set_angle(angle);
 
 			// Caculate tux position
-			Pointf circle_center(  (float) (gc.get_width()/2), (float) (gc.get_height()/2) );
+			Pointf circle_center(  (float) (canvas.get_width()/2), (float) (canvas.get_height()/2) );
 			const float radius = 210.0f;
 			int tux_circle = 12;
 			tux_position.x = -(radius - tux_radius - tux_circle)  * cos( angle.to_radians() / 2.0f );
@@ -156,28 +159,28 @@ int App::start(const std::vector<std::string> &args)
 			tux_position.y -= tux.get_height()/2;
 
 			// Give tux circle blue outer outline, because it looks nice
-			Draw::circle(gc, tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+			canvas.circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
 			// Make see through border
-			gc.enable_blending(false);
-			Draw::circle(gc, tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, Colorf(0.0f, 0.0f, 0.0f, 0.0f));
-			gc.enable_blending(true);
+			canvas.set_blend_state(blend_state_off);
+			canvas.circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, Colorf(0.0f, 0.0f, 0.0f, 0.0f));
+			canvas.reset_blend_state();
 
 			// Give tux circle blue outline, to mask the alpha channel
-			Draw::circle(gc, tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+			canvas.circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
 			// Draw tux
-			tux.draw(gc, tux_position.x, tux_position.y);
+			tux.draw(canvas, tux_position.x, tux_position.y);
 
 			// Draw text
-			font_large.draw_text(gc, 10-2, 50-2, "ClanLib Layered Window", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-			font_large.draw_text(gc, 10, 50, "ClanLib Layered Window", Colorf::green);
-			font_small.draw_text(gc, 90-2, 80-2, "Click mouse on the penguin to exit", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-			font_small.draw_text(gc, 90, 80, "Click mouse on the penguin to exit", Colorf::green);
-			font_small.draw_text(gc, 140-2, 110-2, "Drag rock to move window", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
-			font_small.draw_text(gc, 140, 110, "Drag rock to move window", Colorf::green);
+			font_large.draw_text(canvas, 10-2, 50-2, "ClanLib Layered Window", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+			font_large.draw_text(canvas, 10, 50, "ClanLib Layered Window", Colorf::green);
+			font_small.draw_text(canvas, 60-2, 80-2, "Click mouse on the penguin to exit", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+			font_small.draw_text(canvas, 60, 80, "Click mouse on the penguin to exit", Colorf::green);
+			font_small.draw_text(canvas, 110-2, 110-2, "Drag rock to move window", Colorf(0.1f, 0.1f, 0.1f, 1.0f));
+			font_small.draw_text(canvas, 110, 110, "Drag rock to move window", Colorf::green);
 
-			window.flip(1);
+			canvas.flip(1);
 
 			// This call processes user input and other events
 			KeepAlive::process();
@@ -236,7 +239,7 @@ void App::on_window_close(DisplayWindow *window)
 
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
