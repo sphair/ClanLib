@@ -37,49 +37,48 @@ int SineScroll::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set the window
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib SineScroll Example");
-	desc.set_size(Size(800, 700), true);
+	desc.set_size(clan::Size(800, 700), true);
 	desc.set_allow_resize(true);
 
-	DisplayWindow window(desc);
+	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &SineScroll::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &SineScroll::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &SineScroll::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &SineScroll::on_input_up);
 
-	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas(window);
 
-	texture = Texture(gc, "../../Game/DiceWar/Resources/lobby_background2.png");
+	texture = clan::Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
 
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int delta_ms = current_time - last_time;
 		last_time = current_time;
 
-		gc.clear(Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 	
-		draw_demo(gc, delta_ms);
+		draw_demo(canvas, delta_ms);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void SineScroll::on_input_up(const InputEvent &key)
+void SineScroll::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -91,21 +90,21 @@ void SineScroll::on_window_close()
 	quit = true;
 }
 
-void SineScroll::draw_demo(GraphicContext &gc, int delta_ms)
+void SineScroll::draw_demo(clan::Canvas &canvas, int delta_ms)
 {
-	Rectf rect(0.0f, 0.0f, Sizef(300.0f, 300.0f));
-	Rectf texture_unit1_coords(0.0f, 0.0f, 1.0f, 1.0f);
+	clan::Rectf rect(0.0f, 0.0f, clan::Sizef(300.0f, 300.0f));
+	clan::Rectf texture_unit1_coords(0.0f, 0.0f, 1.0f, 1.0f);
 
-	std::vector<Vec2f> dest_position;
-	std::vector<Vec2f> texture_position;
+	std::vector<clan::Vec2f> dest_position;
+	std::vector<clan::Vec2f> texture_position;
 
-	int dest_width = gc.get_width();
+	int dest_width = canvas.get_width();
 	if (dest_width <=0)
 		return;
 
 	int dest_xoffset = 0;
 
-	int gc_height = gc.get_height();
+	int gc_height = canvas.get_height();
 
 	int dest_height = 128;
 	int dest_start_y = (gc_height - dest_height)  / 2;
@@ -122,28 +121,35 @@ void SineScroll::draw_demo(GraphicContext &gc, int delta_ms)
 		delta_ms = 1000;
 
 	sin_offset += ((float) delta_ms / 1000.0f);
-	if (sin_offset > (2.0f * PI))
-		sin_offset -= PI * 2.0f;
+	if (sin_offset > (2.0f * clan::PI))
+		sin_offset -= clan::PI * 2.0f;
 
 	for (int cnt=0; cnt < dest_width; cnt++)
 	{
 		float y_offset = sin_amplitude * sin( sin_offset + (float) cnt / 100.0f ) ;
 
-		dest_position.push_back( Vec2f( cnt, dest_start_y + y_offset ) );
-		dest_position.push_back( Vec2f( cnt, dest_start_y + dest_height + y_offset) );
+		dest_position.push_back( clan::Vec2f( cnt, dest_start_y + y_offset ) );
+		dest_position.push_back( clan::Vec2f( cnt, dest_start_y + dest_height + y_offset) );
 
-		texture_position.push_back( Vec2f( (float) cnt / dest_width, texture_y_start ) );
-		texture_position.push_back( Vec2f( (float) cnt / dest_width, texture_y_end ) );
+		texture_position.push_back( clan::Vec2f( (float) cnt / dest_width, texture_y_start ) );
+		texture_position.push_back( clan::Vec2f( (float) cnt / dest_width, texture_y_end ) );
 
 	}
 
-	gc.set_texture(0, texture);
-	PrimitivesArray prim_array(gc);
+	//Damm, We can not longer use gc.draw_primitives on our standard shaders in client code.
+	//So clan::Canvas is going to require functions like: 
+	//Canvas::draw_triangles(Vec2f *triangle_positions, int num_vertices, const Texture2D &texture,Vec2f *texture_positions,  const Colorf &color);
+	//Canvas::draw_triangles(Vec2f *triangle_positions, int num_vertices,  const Colorf &color);
+	//Canvas::draw_lines(Vec2f *triangle_positions, int num_vertices, const Texture2D &texture,Vec2f *texture_positions,  const Colorf &color);
+	//Canvas::draw_lines(Vec2f *triangle_positions, int num_vertices,  const Colorf &color);
+
+	canvas.flush();
+	canvas.get_gc().set_texture(0, texture);
+	clan::PrimitivesArray prim_array(canvas);
 	prim_array.set_attributes(0, &dest_position[0]);
-	prim_array.set_attribute(1, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+	prim_array.set_attribute(1, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 	prim_array.set_attributes(2, &texture_position[0]);
-	gc.set_program_object(cl_program_single_texture);
-	gc.draw_primitives(cl_lines, dest_position.size(), prim_array);
-	gc.reset_program_object();
-	gc.reset_texture(0);
+	canvas.set_program_object(clan::program_single_texture);
+	canvas.get_gc().draw_primitives(clan::type_lines, dest_position.size(), prim_array);
+	canvas.get_gc().reset_texture(0);
 }
