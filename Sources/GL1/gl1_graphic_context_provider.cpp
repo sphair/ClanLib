@@ -233,45 +233,17 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-#ifdef __APPLE__
-static CFBundleRef gl1_gBundleRefOpenGL = 0;
-#endif
-
 GL1ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& function_name) const
 {
 
 #ifdef WIN32
 	return (void (*)())wglGetProcAddress(function_name.c_str());
 #else
-#ifdef __APPLE__
-	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
-	if (gl1_gBundleRefOpenGL == 0)
-	{
-		gl1_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
-		if (gl1_gBundleRefOpenGL == 0)
-			throw Exception("Unable to find com.apple.opengl bundle");
-	}
-
-	return (GL1ProcAddress *) CFBundleGetFunctionPointerForName(
-		gl1_gBundleRefOpenGL,
-		CFStringCreateWithCStringNoCopy(
-			0,
-			function_name.c_str(),
-			CFStringGetSystemEncoding(),
-			0));
-#else
-	// FIXME: This is very messy
 	const GL1WindowProvider_GLX *wptr = dynamic_cast<const GL1WindowProvider_GLX *> (render_window);
 	if (wptr)
 		return wptr->get_proc_address(function_name);
 
-	const PBuffer_GL1_Impl *pptr = dynamic_cast<const PBuffer_GL1_Impl *> (render_window);
-	if (pptr)
-		return pptr->get_proc_address(function_name);
-
 	return NULL;
-
-#endif
 #endif
 
 }
@@ -662,11 +634,6 @@ void GL1GraphicContextProvider::pop_texture_matrix(int unit_index)
 bool GL1GraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
 {
 	return true;
-	/*GL1FrameBufferProvider *fb_provider = dynamic_cast<GL1FrameBufferProvider *>(fb.get_provider());
-	if (fb_provider)
-		return fb_provider->get_gc_provider() == this;
-	else
-		return false;*/
 }
 
 void GL1GraphicContextProvider::set_frame_buffer(const FrameBuffer &w_buffer, const FrameBuffer &r_buffer)
