@@ -51,10 +51,10 @@ public:
 
 //																						___________________
 //																						A T T R I B U T E S
-
+	int get_id() const {return id;}
 //																						___________________
 //																						O P E R A T I O N S
-
+	void set_id(int value) { id = value;}
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 

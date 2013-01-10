@@ -55,7 +55,7 @@ DistanceJoint::DistanceJoint(PhysicsContext &pc, const DistanceJointDescription 
 		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
 		joint_impl->joint->SetUserData(this);
 
-		pc.create_in_context(*this);
+		pc.create_in_context(joint_impl);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");

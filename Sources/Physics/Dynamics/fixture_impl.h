@@ -52,9 +52,11 @@ public:
 
 //																						___________________
 //																						A T T R I B U T E S
-
+	int get_id() const {return id;}
 //																						___________________
 //																						O P E R A T I O N S
+	void set_id(int value) { id = value;}
+
 	void create_fixture(Body &body, const FixtureDescription &description); //Not used yet
 	void on_begin_collision(Fixture_Impl &body);
 	void on_end_collision(Fixture_Impl &body);

@@ -27,9 +27,10 @@
 
 #include "Physics/precomp.h"
 #include "physics_context_impl.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/Dynamics/Joints/joint.h"
+#include "../Dynamics/body_impl.h"
+#include "../Dynamics/fixture_impl.h"
+#include "../Dynamics/Joints/joint_impl.h"
+#include "API/Physics/World/physics_world.h"
 #include "API/Core/Text/string_format.h"
 #include "physics_world_impl.h"
 
@@ -72,14 +73,13 @@ PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld &pw)
 //																						___________________
 //																						O P E R A T I O N S
 
-int PhysicsContext_Impl::create_in_context(Body &body)
+int PhysicsContext_Impl::create_in_context(std::shared_ptr<Body_Impl> body)
 {
 	if(free_body_slots.size()>0)
 	{
 		int slot = free_body_slots.front();
 		free_body_slots.pop_front();
-		bodies[slot] = std::shared_ptr<Body>(new Body);
-		*bodies[slot] = body;
+		bodies[slot] = body;
 
 		return slot;
 	}
@@ -87,15 +87,14 @@ int PhysicsContext_Impl::create_in_context(Body &body)
 	throw Exception(string_format("Exceded the current maximum bodies amount that is equal %1.", max_body_amount));
 }
 
-int PhysicsContext_Impl::create_in_context(Fixture &fixture)
+int PhysicsContext_Impl::create_in_context(std::shared_ptr<Fixture_Impl> fixture)
 {
 	if(free_fixture_slots.size()>0)
 	{
 		int slot = free_fixture_slots.front();
 		free_fixture_slots.pop_front();
 
-		fixtures[slot] = std::shared_ptr<Fixture>(new Fixture);
-		*fixtures[slot] = fixture;
+		fixtures[slot] = fixture;
 
 		return slot;
 	}
@@ -103,15 +102,14 @@ int PhysicsContext_Impl::create_in_context(Fixture &fixture)
 	throw Exception(string_format("Exceded the current maximum fixtures amount that is equal %1.", max_fixture_amount));
 
 }
-int PhysicsContext_Impl::create_in_context(Joint &joint)
+int PhysicsContext_Impl::create_in_context(std::shared_ptr<Joint_Impl> joint)
 {
 		if(free_joint_slots.size()>0)
 	{
 		int slot = free_joint_slots.front();
 		free_joint_slots.pop_front();
 
-		joints[slot] = joint.create_null_derived();
-		*joints[slot] = joint;
+		joints[slot] = joint;
 
 		return slot;
 	}
@@ -120,13 +118,13 @@ int PhysicsContext_Impl::create_in_context(Joint &joint)
 
 }
 
-void PhysicsContext_Impl::remove_from_context(Body &body)
+void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Body_Impl> body)
 {
-	int id = body.get_id();
+	int id = body->get_id();
 
 	if(id>=0)
 	{
-		if( (*bodies[id]).get_id() == id)
+		if( bodies[id]->get_id() == id)
 		{
 			bodies[id].reset();
 		}
@@ -137,13 +135,13 @@ void PhysicsContext_Impl::remove_from_context(Body &body)
 	throw Exception("Tried to remove a Body from the context, but the Body has no ID number"); 
 }
 
-void PhysicsContext_Impl::remove_from_context(Fixture &fixture)
+void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Fixture_Impl> fixture)
 {
-	int id = fixture.get_id();
+	int id = fixture->get_id();
 	
 	if(id>=0)
 	{
-		if( (*fixtures[id]).get_id() == id)
+		if( fixtures[id]->get_id() == id)
 		{
 			fixtures[id].reset();
 		}
@@ -155,13 +153,13 @@ void PhysicsContext_Impl::remove_from_context(Fixture &fixture)
 }
 
 
-void PhysicsContext_Impl::remove_from_context(Joint &joint)
+void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Joint_Impl> joint)
 {
-	int id = joint.get_id();
+	int id = joint->get_id();
 	
 	if(id>=0)
 	{
-		if( (*joints[id]).get_id() == id)
+		if( joints[id]->get_id() == id)
 		{
 			joints[id].reset();
 		}

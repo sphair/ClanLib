@@ -33,9 +33,9 @@
 
 namespace clan
 {
-	class Body;
-	class Fixture;
-	class Joint;
+	class Body_Impl;
+	class Fixture_Impl;
+	class Joint_Impl;
 	class PhysicsWorld;
 
 class PhysicsContext_Impl
@@ -54,23 +54,24 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
-	int create_in_context(Body &body);
-	int create_in_context(Fixture &fixture);
-	int create_in_context(Joint &joint);
+	int create_in_context(std::shared_ptr<Body_Impl> body);
+	int create_in_context(std::shared_ptr<Fixture_Impl> fixture);
+	int create_in_context(std::shared_ptr<Joint_Impl> joint);
 
-	void remove_from_context(Body &body);
-	void remove_from_context(Fixture &fixture);
-	void remove_from_context(Joint &joint);
+	void remove_from_context(std::shared_ptr<Body_Impl> body);
+	void remove_from_context(std::shared_ptr<Fixture_Impl> fixture);
+	void remove_from_context(std::shared_ptr<Joint_Impl> joint);
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 	PhysicsWorld *owner;
+
 	const int max_body_amount;
 	const int max_fixture_amount;
 	const int max_joint_amount;
-	std::vector<std::shared_ptr<Body>> bodies;
-	std::vector<std::shared_ptr<Fixture>> fixtures;
-	std::vector<std::shared_ptr<Joint>> joints;
+	std::vector<std::shared_ptr<Body_Impl>> bodies;
+	std::vector<std::shared_ptr<Fixture_Impl>> fixtures;
+	std::vector<std::shared_ptr<Joint_Impl>> joints;
 	std::list<int> free_body_slots;
 	std::list<int> free_fixture_slots;
 	std::list<int> free_joint_slots;
