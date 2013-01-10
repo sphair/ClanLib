@@ -302,7 +302,7 @@ void CollisionOutline::draw(
 		{
 			const Pointf &p1 = impl->contours[i].get_points()[s];
 			const Pointf &p2 = impl->contours[i].get_points()[(s+1) % numpoints];
-			canvas.line(x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
+			canvas.draw_line(x + p1.x + 0.5f, y + p1.y + 0.5f, x + p2.x + 0.5f, y + p2.y + 0.5f, color);
 		}
 
 	}
@@ -317,7 +317,7 @@ void CollisionOutline::draw(
 		for(unsigned int s1 = 0; s1 < numpoints; s1++)
 		{
 			const Pointf &p1 = impl->contours[i].get_points()[s1];
-			canvas.point(x + p1.x + 0.5f, y + p1.y + 0.5f, colorinv);
+			canvas.draw_point(x + p1.x + 0.5f, y + p1.y + 0.5f, colorinv);
 		}
 	}
 }
@@ -345,7 +345,7 @@ void CollisionOutline::draw_sub_circles(
 				float offy2 = float(sin(PI * 2.0 * ((e+1) / numsegments))*radius);
 				Pointf p1(x + center.x + offx1, y + center.y + offy1);
 				Pointf p2(x + center.x + offx2, y + center.y + offy2);
-				canvas.line(p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
+				canvas.draw_line(p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
 			}
 		}
 	}
@@ -369,7 +369,7 @@ void CollisionOutline::draw_smallest_enclosing_disc(
 		float offy2 = float(sin(PI * 2.0 * ((e+1) / numsegments))*radius);
 		Pointf p1(x + center.x + offx1, y + center.y + offy1);
 		Pointf p2(x + center.x + offx2, y + center.y + offy2);
-		canvas.line(p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
+		canvas.draw_line(p1.x + 0.5f, p1.y + 0.5f, p2.x + 0.5f, p2.y + 0.5f, color);
 	}
 }
 

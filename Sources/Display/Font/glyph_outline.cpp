@@ -248,12 +248,12 @@ void GlyphOutline::draw_debug_outline(Canvas &canvas)
 
 		for( unsigned int i=1; i<pts.size(); ++i )
 		{
-			canvas.line(pts[i-1].x, -pts[i-1].y, pts[i].x, -pts[i].y, Colorf::seagreen );
-			canvas.point(pts[i].x, -pts[i].y, Colorf::white );
+			canvas.draw_line(pts[i-1].x, -pts[i-1].y, pts[i].x, -pts[i].y, Colorf::seagreen );
+			canvas.draw_point(pts[i].x, -pts[i].y, Colorf::white );
 		}
 
-		canvas.line(pts.back().x, -pts.back().y, pts.front().x, -pts.front().y, Colorf::red );
-		canvas.point(pts.back().x, -pts.back().y, Colorf::white );
+		canvas.draw_line(pts.back().x, -pts.back().y, pts.front().x, -pts.front().y, Colorf::red );
+		canvas.draw_point(pts.back().x, -pts.back().y, Colorf::white );
 	}
 }
 
