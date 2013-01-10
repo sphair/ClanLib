@@ -36,13 +36,12 @@ private:
 	void read_statement(CSSTokenizer &tokenizer, CSSToken &token);
 	void read_end_of_at_rule(CSSTokenizer &tokenizer, CSSToken &token);
 	bool read_selector_chain(CSSTokenizer &tokenizer, CSSToken &token, CSSSelectorChain &out_selector_chain);
-	void parse_property(const CSSProperty &property, CSSRuleset &inout_ruleset);
 	std::string to_string(const CSSToken &token);
 	static bool equals(const std::string &s1, const std::string &s2);
 	static std::string make_absolute_uri(std::string uri, std::string base_uri);
 
 	std::string base_uri;
-	std::vector<CSSRuleset> rulesets;
+	std::vector<std::shared_ptr<CSSRuleset> > rulesets;
 
 	CSSPropertyParsers parsers;
 };

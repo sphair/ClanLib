@@ -45,16 +45,16 @@ std::vector<CSSRulesetMatch> CSSDocumentSheet::select_rulesets(CSSSelectNode *no
 	std::vector<CSSRulesetMatch> matched_rulesets;
 	for (size_t i = 0; i < rulesets.size(); i++)
 	{
-		CSSRuleset &cur_ruleset = rulesets[i];
-		for (size_t j = 0; j < cur_ruleset.selectors.size(); j++)
+		CSSRuleset *cur_ruleset = rulesets[i].get();
+		for (size_t j = 0; j < cur_ruleset->selectors.size(); j++)
 		{
-			const CSSSelectorChain &chain = cur_ruleset.selectors[j];
+			const CSSSelectorChain &chain = cur_ruleset->selectors[j];
 			if (equals(chain.pseudo_element, pseudo_element))
 			{
 				bool matches = try_match_chain(chain, node, chain.links.size());
 				if (matches)
 				{
-					matched_rulesets.push_back(CSSRulesetMatch(&cur_ruleset, j, matched_rulesets.size()));
+					matched_rulesets.push_back(CSSRulesetMatch(cur_ruleset, j, matched_rulesets.size()));
 					break;
 				}
 			}
@@ -574,13 +574,13 @@ bool CSSDocumentSheet::read_selector_chain(CSSTokenizer &tokenizer, CSSToken &to
 
 void CSSDocumentSheet::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 {
-	CSSRuleset ruleset(this);
+	std::shared_ptr<CSSRuleset> ruleset(new CSSRuleset(this));
 	while (true)
 	{
 		CSSSelectorChain selector_chain;
 		if (read_selector_chain(tokenizer, token, selector_chain))
 		{
-			ruleset.selectors.push_back(selector_chain);
+			ruleset->selectors.push_back(selector_chain);
 			if (token.type == CSSToken::type_delim && token.value == ",")
 			{
 				tokenizer.read(token, true);
@@ -619,7 +619,7 @@ void CSSDocumentSheet::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 					property.set_name(property_name);
 					bool end_of_scope = read_property_value(tokenizer, token, property, base_uri);
 					if (!property.get_value_tokens().empty())
-						parse_property(property, ruleset);
+						parsers.parse(property, ruleset->values);
 					if (end_of_scope)
 						break;
 				}
@@ -740,11 +740,6 @@ bool CSSDocumentSheet::read_end_of_statement(CSSTokenizer &tokenizer, CSSToken &
 	}
 
 	return curly_count < 0;
-}
-
-void CSSDocumentSheet::parse_property(const CSSProperty &property, CSSRuleset &inout_ruleset)
-{
-	parsers.parse(property, inout_ruleset.values);
 }
 
 std::string CSSDocumentSheet::to_string(const CSSToken &token)
