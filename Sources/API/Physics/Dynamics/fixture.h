@@ -62,10 +62,6 @@ public:
 
 	~Fixture();
 
-private:
-	/// \brief Constructs a Fixture with impl.
-	Fixture(std::shared_ptr<Fixture_Impl> impl);
-
 /// \}
 /// \name Attributes
 /// \{
@@ -99,11 +95,6 @@ public:
 
 	/// \brief Checks given point for collision with the fixture.
 	bool test_point (const Vec2f &p) const;
-
-private:
-		
-	/// \brief set the world's id of the fixture.
-	void set_id(int value);
 
 /// \}
 /// \name Signals

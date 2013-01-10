@@ -56,11 +56,6 @@ Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &descr
 	throw Exception("Tried to create a fixture with a null Body object");
 }
 
-Fixture::Fixture(std::shared_ptr<Fixture_Impl> copy)
-{
-	impl = copy;
-}
-
 Fixture::~Fixture()
 {
 }
@@ -106,12 +101,6 @@ bool Fixture::test_point(const Vec2f &p) const
 	float scale = impl->owner_world->physic_scale;
 	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
 }
-
-void Fixture::set_id(int value)
-{
-	impl->id = value;
-}
-
 
 //																											_____________																										
 //																											S I G N A L S

@@ -70,14 +70,16 @@ void Fixture_Impl::remove_fixture()
 }
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
 {
-	Fixture collision_fixture(shared_from_this());
+	Fixture collision_fixture;
+	collision_fixture.impl = shared_from_this();
 
 	sig_begin_collision.invoke(collision_fixture); //Send the fixute that this fixture collided with.
 }
 
 void Fixture_Impl::on_end_collision(Fixture_Impl &fixture)
 {
-	Fixture collision_fixture(shared_from_this());
+	Fixture collision_fixture;
+	collision_fixture.impl = shared_from_this();
 
 	sig_end_collision.invoke(collision_fixture); //Send the fixture that this fixture collided with.
 }

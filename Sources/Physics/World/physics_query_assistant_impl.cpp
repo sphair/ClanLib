@@ -48,7 +48,8 @@ bool PhysicsQueryAssistant_Impl::ReportFixture(b2Fixture* fixture)
 	if(query_result_amount >= max_queried_objects) return false;
 
 	Fixture_Impl &fixture_impl = *static_cast<Fixture_Impl *> (fixture->GetUserData());
-	Fixture fixture_result(fixture_impl.shared_from_this());
+	Fixture fixture_result;
+	fixture_result.impl = fixture_impl.shared_from_this();
 	
 	switch(query_type)
 	{
@@ -78,7 +79,8 @@ float32 PhysicsQueryAssistant_Impl::ReportFixture(b2Fixture* fixture, const b2Ve
 	if(query_result_amount >= max_queried_objects) return 0;
 
 	Fixture_Impl &fixture_impl = *static_cast<Fixture_Impl *> (fixture->GetUserData());
-	Fixture fixture_result(fixture_impl.shared_from_this());
+	Fixture fixture_result;
+	fixture_result.impl = fixture_impl.shared_from_this();
 
 	Pointf pointf(point.x, point.y);
 	Vec2f normal_vec(normal.x, normal.y);
