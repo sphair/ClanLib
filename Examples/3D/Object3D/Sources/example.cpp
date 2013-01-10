@@ -50,7 +50,7 @@
 int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
-    GL1WindowDescription desc;
+    OpenGLWindowDescription desc;
 
 	desc.set_title("ClanLib Object 3D Example");
 	desc.set_size(Size(640, 480), true);
@@ -91,23 +91,6 @@ int App::start(const std::vector<std::string> &args)
 	gc.set_depth_compare_function(cl_comparefunc_lequal);
 	gc.enable_depth_write(true);
 	
-#ifdef USE_OPENGL_1
-	// Set the lights
-	LightModel_GL1 light_model;
-	light_model.enable_lighting(true);
-	light_model.set_flat_shading(false);
-	light_model.set_scene_ambient_light(Colorf(0.2f, 0.2f, 0.2f, 1.0f));
-	gc_gl1.set_light_model(light_model);
-
-	LightSource_GL1 light_distant;
-	light_distant.set_spot_cutoff(180.0f);
-	light_distant.set_diffuse_intensity(Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-	light_distant.set_position(Vec4f(0.0f, -2.0f, 30.0f, 0.0f).normalize3());
-	gc_gl1.set_light(0, light_distant);
-
-	cl1Enable(GL_NORMALIZE);
-#endif
-
 #ifdef USE_OPENGL_2
     Shader shader(gc);
 #endif

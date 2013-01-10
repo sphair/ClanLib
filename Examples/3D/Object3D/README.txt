@@ -4,7 +4,7 @@
    Maintainer: Core developers
       Summary: Display 3D objects
 
-This program demonstrates how to create standard 3d objects using ClanLib, using OpenGl 1.x methods (no shaders).
+This program demonstrates how to create standard 3d objects using ClanLib
 
 See the documentation at www.clanlib.org for further information.
 
