@@ -5,5 +5,4 @@
 #include <ClanLib/display.h>
 #include <cmath>
 
-using namespace clan;
 
