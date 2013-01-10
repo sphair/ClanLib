@@ -33,7 +33,7 @@ typedef struct _FontFall
 	std::string text;
 	int xpos;
 	float ypos;
-	Colorf color;
+	clan::Colorf color;
 } FontFall;
 
 class Target
@@ -52,17 +52,13 @@ public:
 
 private:
 	void on_button_clicked(RenderTarget selected_target);
-	bool on_close(Window *win);
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
-	bool get_display_target();
-
-	void run_demo();
+	bool run_demo();
 	FontFall new_fontfall(int window_width);
 
 private:
 	RenderTarget render_target;
-	Window *current_window;
 	bool quit;
 };

@@ -37,15 +37,17 @@ Target::Target()
 
 int Target::start(const std::vector<std::string> &args)
 {
-	SetupGL target_opengl2;
-	SetupGL1 target_opengl1;
-	SetupD3D target_d3d;
+	clan::SetupGL target_opengl2;
+	clan::SetupGL1 target_opengl1;
+	clan::SetupD3D target_d3d;
 
 	// Since OpenGL 1.3 is compatible and fast - Use that as the default
-	target_opengl1.set_current();
+	render_target = opengl1;
 
-	if (get_display_target())
+	do
 	{
+		clan::KeepAlive::process(0);	// <-- This is important, to flush the win32 keyboard queue
+
 		switch (render_target)
 		{
 			case (opengl1):
@@ -60,106 +62,71 @@ int Target::start(const std::vector<std::string> &args)
 				target_d3d.set_current();
 				break;
 		}
-		run_demo();
-	}
+
+	}while (run_demo());
 
 	return 0;
 }
 
-bool Target::get_display_target()
+bool Target::run_demo()
 {
-	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
-		theme = "../../../Resources/GUIThemeBasic";
-	else
-		throw Exception("No themes found");
-
-	GUIManager gui(theme);
-
-	DisplayWindowDescription win_desc;
-	win_desc.set_allow_resize(true);
-	win_desc.set_title("Display Target Application");
-	win_desc.set_position(Rect(200, 200, 540, 440), false);
-	win_desc.set_visible(false);
-	Window window(&gui, win_desc);
-	current_window = &window;
-	window.func_close().set(this, &Target::on_close, &window);
-
-	GUILayoutCorners layout;
-	window.set_layout(layout);
-
-	window.create_components("Resources/layout.xml");
-
-	PushButton *button = PushButton::get_named_item(&window, "button_gl");
-	button->func_clicked().set(this, &Target::on_button_clicked, opengl2);
-
-	button = PushButton::get_named_item(&window, "button_gl1");
-	button->func_clicked().set(this, &Target::on_button_clicked, opengl1);
-
-	button = PushButton::get_named_item(&window, "button_d3d");
-	button->func_clicked().set(this, &Target::on_button_clicked, d3d);
-
-	window.set_visible();
-
-	if (gui.exec())
-	{
-		return false;
-	}
-	return true;
-}
-
-void Target::on_button_clicked(RenderTarget selected_target)
-{
-	render_target = selected_target;
-	current_window->exit_with_code(0);
-}
-
-bool Target::on_close(Window *win)
-{
-	win->exit_with_code(1);
-	return true;
-}
-
-void Target::run_demo()
-{
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("Target Display (with resizable window)");
-	desc.set_size(Size(640, 480), true);
+	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
-	DisplayWindow window(desc);
+	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Target::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &Target::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Target::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Target::on_input_up);
 
-	Canvas canvas(window);
+	clan::Canvas canvas(window);
 
-	Font target_font(canvas, "tahoma", 32);
-	Font fps_font(canvas, "tahoma", 20);
+	clan::Font target_font(canvas, "tahoma", 32);
+	clan::Font fps_font(canvas, "tahoma", 20);
 
 	// Because we are using the alpha channel on fonts, we must disable subpixel rendering
-	FontDescription font_desc;
+	clan::FontDescription font_desc;
 	font_desc.set_typeface_name("tahoma");
 	font_desc.set_height(16);
 	font_desc.set_subpixel(false);
-	Font fall_font(canvas, font_desc);
+	clan::Font fall_font(canvas, font_desc);
 
 	std::vector<FontFall> font_fall;
 
 	FramerateCounter frameratecounter;
 
-	unsigned int time_last = System::get_time();
+	unsigned int time_last = clan::System::get_time();
 	float fontfall_ticker = 0.0f;
 
 	quit = false;
 	// Run until someone presses escape
-	while (!quit)
+	while (true)
 	{
-		unsigned int time_now = System::get_time();
+		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
+		{
+			render_target = opengl1;
+			break;
+		}
+		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
+		{
+			render_target = opengl2;
+			break;
+		}
+		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
+		{
+			render_target = d3d;
+			break;
+		}
+		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
+		{
+			quit = true;
+			break;
+		}
+
+		unsigned int time_now = clan::System::get_time();
 		float time_delta = (float) (time_now - time_last);
 		time_last = time_now;
 
@@ -170,12 +137,12 @@ void Target::run_demo()
 			font_fall.push_back(new_fontfall(canvas.get_width()));
 		}
 
-		canvas.clear(Colorf(0.0f,0.0f,0.0f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
+		std::string fps = clan::string_format("%1 fps", frameratecounter.get_framerate());
 		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 
-		std::string words = string_format("%1 words", (int) font_fall.size());
+		std::string words = clan::string_format("%1 words", (int) font_fall.size());
 		fps_font.draw_text(canvas, 100, 30, words);
 
 		const int font_xpos = 32;
@@ -183,17 +150,18 @@ void Target::run_demo()
 		switch (render_target)
 		{
 			case (opengl1):
-				target_font.draw_text(canvas, font_xpos, font_ypos, "OpenGL 1.3 (clanGL1)");
+				target_font.draw_text(canvas, font_xpos, font_ypos, "1) OpenGL 1.3 (clanGL1)");
 				break;
 
 			case (opengl2):
-				target_font.draw_text(canvas, font_xpos, font_ypos, "OpenGL 3.2 or higher(clanGL)");
+				target_font.draw_text(canvas, font_xpos, font_ypos, "2) OpenGL 3.2 or higher(clanGL)");
 				break;
 
 			case (d3d):
-				target_font.draw_text(canvas, font_xpos, font_ypos, "Direct3D renderer (clanD3D)");
+				target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
 				break;
 		}
+		fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
 
 		float max_height = (float) (canvas.get_height() + 20);
 		float half_height = (float) canvas.get_height() / 2.0f;
@@ -215,12 +183,12 @@ void Target::run_demo()
 			}
 		}
 
-		canvas.flush();
-		window.flip(0);
+		canvas.flip(0);
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
+	return !quit;
 }
 
 FontFall Target::new_fontfall(int window_width)
@@ -249,9 +217,9 @@ FontFall Target::new_fontfall(int window_width)
 }
 
 // A key was pressed
-void Target::on_input_up(const InputEvent &key)
+void Target::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == keycode_escape)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
