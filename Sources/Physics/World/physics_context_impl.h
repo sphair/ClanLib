@@ -54,9 +54,9 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
-	int create_in_context(std::shared_ptr<Body_Impl> body);
-	int create_in_context(std::shared_ptr<Fixture_Impl> fixture);
-	int create_in_context(std::shared_ptr<Joint_Impl> joint);
+	void create_in_context(std::shared_ptr<Body_Impl> body);
+	void create_in_context(std::shared_ptr<Fixture_Impl> fixture);
+	void create_in_context(std::shared_ptr<Joint_Impl> joint);
 
 	void remove_from_context(std::shared_ptr<Body_Impl> body);
 	void remove_from_context(std::shared_ptr<Fixture_Impl> fixture);

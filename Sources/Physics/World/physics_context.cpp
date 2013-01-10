@@ -67,38 +67,4 @@ int PhysicsContext::max_joints() const
 
 //																						___________________
 //																						O P E R A T I O N S
-
-void PhysicsContext::create_in_context(std::shared_ptr<Body_Impl> body)
-{
-	int id = impl->create_in_context(body);
-	body->set_id(id);
-}
-
-void PhysicsContext::create_in_context(std::shared_ptr<Fixture_Impl> fixture)
-{
-	int id = impl->create_in_context(fixture);
-	fixture->set_id(id);
-}
-
-void PhysicsContext::create_in_context(std::shared_ptr<Joint_Impl> joint)
-{
-	int id = impl->create_in_context(joint);
-	joint->set_id(id);
-}
-
-void PhysicsContext::remove_from_context(std::shared_ptr<Body_Impl> body)
-{
-	impl->remove_from_context(body);
-}
-
-void PhysicsContext::remove_from_context(std::shared_ptr<Fixture_Impl> fixture)
-{
-	impl->remove_from_context(fixture);
-}
-
-void PhysicsContext::remove_from_context(std::shared_ptr<Joint_Impl> joint)
-{
-	impl->remove_from_context(joint);
-}
-
 }
