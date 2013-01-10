@@ -38,9 +38,9 @@ namespace clan
 {
 	class PhysicsWorld;
 	class PhysicsContext_Impl;
-	class Body;
-	class Fixture;
-	class Joint;
+	class Body_Impl;
+	class Fixture_Impl;
+	class Joint_Impl;
 
 class CL_API_PHYSICS PhysicsContext
 {
@@ -75,22 +75,22 @@ public:
 /// \{
 private:
 	/// \brief Add Body to the context.
-	void create_in_context(Body &body);
+	void create_in_context(std::shared_ptr<Body_Impl> body);
 
 	/// \brief Add Fixture to the context.
-	void create_in_context(Fixture &fixture);
+	void create_in_context(std::shared_ptr<Fixture_Impl> fixture);
 
 	/// \brief Add Joint to the context.
-	void create_in_context(Joint &joint);
+	void create_in_context(std::shared_ptr<Joint_Impl> joint);
 
 	/// \brief Remove Body from the context.
-	void remove_from_context(Body &body);
+	void remove_from_context(std::shared_ptr<Body_Impl> body);
 
 	/// \brief Remove Fixture from the context.
-	void remove_from_context(Fixture &fixture);
+	void remove_from_context(std::shared_ptr<Fixture_Impl> fixture);
 
 	/// \brief Remove Joint from the context.
-	void remove_from_context(Joint &joint);
+	void remove_from_context(std::shared_ptr<Joint_Impl> joint);
 /// \}
 /// \name Implementation
 /// \{

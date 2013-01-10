@@ -52,7 +52,7 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 	if(impl->owner_world)
 	{
 		impl->create_body(description);
-		pc.create_in_context(*this);
+		pc.create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicsWorld object");

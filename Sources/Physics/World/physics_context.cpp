@@ -26,9 +26,9 @@
 */
 
 #include "Physics/precomp.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/Dynamics/Joints/joint.h"
+#include "../Dynamics/body_impl.h"
+#include "../Dynamics/fixture_impl.h"
+#include "../Dynamics/Joints/joint_impl.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Physics/World/physics_world.h"
 #include "physics_context_impl.h"
@@ -68,35 +68,35 @@ int PhysicsContext::max_joints() const
 //																						___________________
 //																						O P E R A T I O N S
 
-void PhysicsContext::create_in_context(Body &body)
+void PhysicsContext::create_in_context(std::shared_ptr<Body_Impl> body)
 {
 	int id = impl->create_in_context(body);
-	body.set_id(id);
+	body->set_id(id);
 }
 
-void PhysicsContext::create_in_context(Fixture &fixture)
+void PhysicsContext::create_in_context(std::shared_ptr<Fixture_Impl> fixture)
 {
 	int id = impl->create_in_context(fixture);
-	fixture.set_id(id);
+	fixture->set_id(id);
 }
 
-void PhysicsContext::create_in_context(Joint &joint)
+void PhysicsContext::create_in_context(std::shared_ptr<Joint_Impl> joint)
 {
 	int id = impl->create_in_context(joint);
-	joint.set_id(id);
+	joint->set_id(id);
 }
 
-void PhysicsContext::remove_from_context(Body &body)
+void PhysicsContext::remove_from_context(std::shared_ptr<Body_Impl> body)
 {
 	impl->remove_from_context(body);
 }
 
-void PhysicsContext::remove_from_context(Fixture &fixture)
+void PhysicsContext::remove_from_context(std::shared_ptr<Fixture_Impl> fixture)
 {
 	impl->remove_from_context(fixture);
 }
 
-void PhysicsContext::remove_from_context(Joint &joint)
+void PhysicsContext::remove_from_context(std::shared_ptr<Joint_Impl> joint)
 {
 	impl->remove_from_context(joint);
 }

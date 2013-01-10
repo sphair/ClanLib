@@ -50,7 +50,7 @@ Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &descr
 	if(!body.is_null())
 	{
 		impl->create_fixture(body,description);
-		pc.create_in_context(*this);
+		pc.create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a fixture with a null Body object");

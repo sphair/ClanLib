@@ -47,8 +47,15 @@ public:
 	Body_Impl(PhysicsWorld_Impl &pw_impl);
 
 	~Body_Impl();
+
+//																						___________________
+//																						A T T R I B U T E S
+	int get_id() const {return id;}
+
 //																						___________________
 //																						O P E R A T I O N S
+	void set_id(int value) { id = value;}
+
 	void create_body(const BodyDescription &description);
 	void on_begin_collision(Body_Impl &body);
 	void on_end_collision(Body_Impl &body);
