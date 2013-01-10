@@ -59,11 +59,6 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 	throw Exception("Tried to create a body with a null PhysicsWorld object");
 }
 
-Body::Body(std::shared_ptr<Body_Impl> copy)
-{
-	impl = copy;
-}
-
 Body::~Body()
 {
 }
@@ -148,11 +143,6 @@ void Body::set_linear_velocity(const Vec2f &velocity)
 void Body::set_angular_velocity(const Angle &velocity)
 {
 	impl->body->SetAngularVelocity(velocity.to_radians());
-}
-
-void Body::set_id(int value)
-{
-	impl->id = value;
 }
 
 //																											_____________																										

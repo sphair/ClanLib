@@ -78,14 +78,16 @@ void Body_Impl::remove_body()
 
 void Body_Impl::on_begin_collision(Body_Impl &body)
 {
-	Body collision_body(shared_from_this());
+	Body collision_body;
+	collision_body.impl = shared_from_this();
 
 	sig_begin_collision.invoke(collision_body); //Send the body that this body collided with.
 }
 
 void Body_Impl::on_end_collision(Body_Impl &body)
 {
-	Body collision_body(shared_from_this());
+	Body collision_body;
+	collision_body.impl = shared_from_this();
 
 	sig_end_collision.invoke(collision_body); //Send the body that this body collided with.
 }

@@ -65,11 +65,6 @@ public:
 
 	~Body();
 
-private:
-
-	/// \brief Constructs a Body with impl.
-	Body(std::shared_ptr<Body_Impl> impl);
-
 /// \}
 /// \name Attributes
 /// \{
@@ -118,11 +113,6 @@ public:
 
 	/// \brief set the angular velocity of the body.
 	void set_angular_velocity(const Angle &velocity);
-
-private:
-
-	/// \brief set the world's id of the body.
-	void set_id(int value);
 
 /// \}
 /// \name Signals
