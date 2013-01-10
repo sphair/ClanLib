@@ -6,5 +6,3 @@
 #include <ClanLib/network.h>
 #include <cmath>
 
-using namespace clan;
-
