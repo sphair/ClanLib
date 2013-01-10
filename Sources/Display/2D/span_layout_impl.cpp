@@ -118,7 +118,7 @@ void SpanLayout_Impl::draw_layout(Canvas &canvas)
 					{
 						int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, segment.end - segment.start)).width;
 						int cursor_width = 1;
-						canvas.fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+						canvas.draw_fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 					}
 					break;
 				}
@@ -167,13 +167,13 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 		int xx1 = xx0 + segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
 		int sel_width = segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
 
-		canvas.fill(xx0, y + line.ascender-segment.ascender, xx1, y+line.ascender+segment.descender, sel_background);
+		canvas.draw_fill(xx0, y + line.ascender-segment.ascender, xx1, y+line.ascender+segment.descender, sel_background);
 
 		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 		{
 			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
 			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
-			canvas.fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+			canvas.draw_fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
 		if (s1 > 0)
@@ -202,7 +202,7 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 		{
 			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
 			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
-			canvas.fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
+			canvas.draw_fill(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
 		if (is_ellipsis_draw)

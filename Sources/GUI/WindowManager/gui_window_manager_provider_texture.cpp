@@ -280,7 +280,7 @@ void GUIWindowManagerProvider_Texture::clear_frame_buffer(GUITopLevelWindowTextu
 	setup_frame_buffer(toplevel_window);
 	Canvas canvas = canvas_window.create(frame_buffer);
 	canvas.set_blend_state(opaque_blend);
-	canvas.fill(toplevel_window->subtexture.get_geometry(), Colorf::transparent);
+	canvas.draw_fill(toplevel_window->subtexture.get_geometry(), Colorf::transparent);
 }
 
 void GUIWindowManagerProvider_Texture::setup_frame_buffer(GUITopLevelWindowTexture *toplevel_window )
@@ -556,7 +556,7 @@ Canvas GUIWindowManagerProvider_Texture::begin_paint(GUITopLevelWindow *handle, 
 
 	// TODO: Draw::fill() is slightly slower than canvas.clear() - but it works with a cliprect on the D3D target
 	canvas.set_blend_state(opaque_blend);
-	canvas.fill(clip_rect, Colorf::transparent);
+	canvas.draw_fill(clip_rect, Colorf::transparent);
 
 	canvas.set_blend_state(default_blend);
 	canvas.set_cliprect(clip_rect);

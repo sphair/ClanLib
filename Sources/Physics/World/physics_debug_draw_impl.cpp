@@ -66,11 +66,11 @@ void PhysicsDebugDraw_Impl::DrawPolygon(const b2Vec2* vertices, int32 k_segments
 	int i;
 	for(i=0;i<k_segments-1;i++)
 	{
-		used_canvas->line(vertices[i].x*physic_scale,vertices[i].y*physic_scale,
+		used_canvas->draw_line(vertices[i].x*physic_scale,vertices[i].y*physic_scale,
 							vertices[i+1].x*physic_scale,vertices[i+1].y*physic_scale,
 							colorr);
 	}
-		used_canvas->line(vertices[0].x*physic_scale,vertices[0].y*physic_scale,
+		used_canvas->draw_line(vertices[0].x*physic_scale,vertices[0].y*physic_scale,
 							vertices[k_segments-1].x*physic_scale,vertices[k_segments-1].y*physic_scale,
 							colorr);
 }
@@ -83,30 +83,30 @@ void PhysicsDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_seg
 	int i;
 	for(i=0;i<k_segments-3;i++)
 	{
-		used_canvas->triangle(Pointf(vertices[i].x*physic_scale,vertices[i].y*physic_scale),
+		used_canvas->draw_triangle(Pointf(vertices[i].x*physic_scale,vertices[i].y*physic_scale),
 								Pointf(vertices[i+1].x*physic_scale, vertices[i+1].y*physic_scale),
 								Pointf(vertices[i+2].x*physic_scale, vertices[i+2].y*physic_scale),
 								color1);
 	}
-		used_canvas->triangle(Pointf(vertices[0].x*physic_scale,vertices[0].y*physic_scale),
+		used_canvas->draw_triangle(Pointf(vertices[0].x*physic_scale,vertices[0].y*physic_scale),
 								Pointf(vertices[k_segments-2].x*physic_scale, vertices[k_segments-2].y*physic_scale),
 								Pointf(vertices[k_segments-1].x*physic_scale, vertices[k_segments-1].y*physic_scale),
 								color1);
 
 	for(i=0;i<k_segments-1;i++)
 	{
-		used_canvas->line(vertices[i].x*physic_scale,vertices[i].y*physic_scale,
+		used_canvas->draw_line(vertices[i].x*physic_scale,vertices[i].y*physic_scale,
 							vertices[i+1].x*physic_scale,vertices[i+1].y*physic_scale,
 							color2);
 	}
-		used_canvas->line(vertices[0].x*physic_scale,vertices[0].y*physic_scale,
+		used_canvas->draw_line(vertices[0].x*physic_scale,vertices[0].y*physic_scale,
 							vertices[k_segments-1].x*physic_scale,vertices[k_segments-1].y*physic_scale,
 							color2);
 }
 
 void PhysicsDebugDraw_Impl::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
-	used_canvas->circle(Pointf(center.x*physic_scale, center.y*physic_scale), radius*physic_scale, Colorf(color.r,color.g,color.b,0.5f));
+	used_canvas->draw_circle(Pointf(center.x*physic_scale, center.y*physic_scale), radius*physic_scale, Colorf(color.r,color.g,color.b,0.5f));
 }
 
 void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
@@ -124,7 +124,7 @@ void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius
 	Colorf color1(0.5f*color.r,0.5f*color.g,0.5f*color.b,0.5f);
 	Colorf color2(color.r,color.g,color.b,1.0f);
 
-	used_canvas->circle(Pointf(CLcenter.x, CLcenter.y), radiuss, Colorf(color.r,color.g,color.b,0.5f));
+	used_canvas->draw_circle(Pointf(CLcenter.x, CLcenter.y), radiuss, Colorf(color.r,color.g,color.b,0.5f));
 
 	int i;
 	for(i=0;i<k_segments;i++)
@@ -136,11 +136,11 @@ void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius
 
 	for(i=0;i<k_segments;i++)
 	{
-		used_canvas->line(positions[i].x*physic_scale,positions[i].y*physic_scale,
+		used_canvas->draw_line(positions[i].x*physic_scale,positions[i].y*physic_scale,
 							positions[i+1].x*physic_scale,positions[i+1].y*physic_scale,
 							color2);
 	}
-		used_canvas->line(positions[0].x*physic_scale,positions[0].y*physic_scale,
+		used_canvas->draw_line(positions[0].x*physic_scale,positions[0].y*physic_scale,
 							positions[k_segments-1].x*physic_scale,positions[k_segments-1].y*physic_scale,
 							color2);
 
@@ -150,7 +150,7 @@ void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius
 
 void PhysicsDebugDraw_Impl::DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color)
 {
-	used_canvas->line(p1.x*physic_scale,
+	used_canvas->draw_line(p1.x*physic_scale,
 					 p1.y*physic_scale,
 					 p2.x*physic_scale,
 					 p2.y*physic_scale,
@@ -164,14 +164,14 @@ void PhysicsDebugDraw_Impl::DrawTransform(const b2Transform& xf)
 	const float32 k_axisScale = 0.4f;
 	
 	p2 = p1 + Vec2f(xf.q.GetXAxis().x,xf.q.GetXAxis().y) * k_axisScale;
-	used_canvas->line(p1.x*physic_scale,
+	used_canvas->draw_line(p1.x*physic_scale,
 					 p1.y*physic_scale,
 					 p2.x*physic_scale,
 					 p2.y*physic_scale,
 					 Colorf(1.0f,0.0f,0.0f));
 
 	p2 = p1 + Vec2f(xf.q.GetYAxis().x,xf.q.GetYAxis().y) * k_axisScale;
-	used_canvas->line(p1.x*physic_scale,
+	used_canvas->draw_line(p1.x*physic_scale,
 					 p1.y*physic_scale,
 					 p2.x*physic_scale,
 					 p2.y*physic_scale,
@@ -181,7 +181,7 @@ void PhysicsDebugDraw_Impl::DrawTransform(const b2Transform& xf)
 
 void PhysicsDebugDraw_Impl::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
 {
-	used_canvas->fill(p.x-size,
+	used_canvas->draw_fill(p.x-size,
 					 p.y-size,
 					 p.x+size,
 					 p.y+size,
@@ -226,7 +226,7 @@ void PhysicsDebugDraw_Impl::DrawString(int x, int y, const char *string, ...)
 
 void PhysicsDebugDraw_Impl::DrawAABB(b2AABB* aabb, const b2Color& c)
 {
-	used_canvas->box(aabb->lowerBound.x*physic_scale,
+	used_canvas->draw_box(aabb->lowerBound.x*physic_scale,
 					aabb->lowerBound.y*physic_scale,
 					aabb->upperBound.x*physic_scale,
 					aabb->upperBound.y*physic_scale,

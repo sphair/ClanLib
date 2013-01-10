@@ -325,7 +325,7 @@ void Canvas::pop_modelview()
 	impl->pop_modelview();
 }
 
-void Canvas::point(float x1, float y1, const Colorf &color)
+void Canvas::draw_point(float x1, float y1, const Colorf &color)
 {
 	Vec2f positions[1] =
 	{
@@ -336,12 +336,12 @@ void Canvas::point(float x1, float y1, const Colorf &color)
 	batcher->draw_point(*this, positions, color, 1);
 }
 
-void Canvas::point(const Pointf &p, const Colorf &color)
+void Canvas::draw_point(const Pointf &p, const Colorf &color)
 {
-	point(p.x, p.y, color);
+	draw_point(p.x, p.y, color);
 }
 
-void Canvas::line(float x1, float y1, float x2, float y2, const Colorf &color)
+void Canvas::draw_line(float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	Vec2f positions[2] =
 	{
@@ -353,23 +353,23 @@ void Canvas::line(float x1, float y1, float x2, float y2, const Colorf &color)
 	batcher->draw_line_strip(*this, positions, color, 2);
 }
 
-void Canvas::line(const Pointf &start, const Pointf &end, const Colorf &color)
+void Canvas::draw_line(const Pointf &start, const Pointf &end, const Colorf &color)
 {
-	line(start.x, start.y, end.x, end.y, color);
+	draw_line(start.x, start.y, end.x, end.y, color);
 }
 
-void Canvas::line(const LineSegment2f &line_segment, const Colorf &color)
+void Canvas::draw_line(const LineSegment2f &line_segment, const Colorf &color)
 {
-	line(line_segment.p.x, line_segment.p.y, line_segment.q.x, line_segment.q.y, color);
+	draw_line(line_segment.p.x, line_segment.p.y, line_segment.q.x, line_segment.q.y, color);
 }
 
-void Canvas::lines(Vec2f *positions, int num_vertices, const Colorf &color)
+void Canvas::draw_lines(Vec2f *positions, int num_vertices, const Colorf &color)
 {
 	RenderBatchLine *batcher = impl->get_line_batcher();
 	batcher->draw_lines(*this, positions, color, num_vertices);
 }
 
-void Canvas::box(float x1, float y1, float x2, float y2, const Colorf &color)
+void Canvas::draw_box(float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	Vec2f positions[5] =
 	{
@@ -385,33 +385,33 @@ void Canvas::box(float x1, float y1, float x2, float y2, const Colorf &color)
 
 }
 
-void Canvas::box(const Pointf &start, const Pointf &end, const Colorf &color)
+void Canvas::draw_box(const Pointf &start, const Pointf &end, const Colorf &color)
 {
-	box(start.x, start.y, end.x, end.y, color);
+	draw_box(start.x, start.y, end.x, end.y, color);
 }
 
-void Canvas::box(const Rectf &rect, const Colorf &color)
+void Canvas::draw_box(const Rectf &rect, const Colorf &color)
 {
-	box(rect.left, rect.top, rect.right, rect.bottom, color);
+	draw_box(rect.left, rect.top, rect.right, rect.bottom, color);
 }
 
-void Canvas::fill(float x1, float y1, float x2, float y2, const Colorf &color)
+void Canvas::draw_fill(float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
 	batcher->fill(*this, x1, y1, x2, y2, color);
 }
 
-void Canvas::fill(const Pointf &start, const Pointf &end, const Colorf &color)
+void Canvas::draw_fill(const Pointf &start, const Pointf &end, const Colorf &color)
 {
-	fill(start.x, start.y, end.x, end.y, color);
+	draw_fill(start.x, start.y, end.x, end.y, color);
 }
 
-void Canvas::fill(const Rectf &rect, const Colorf &color)
+void Canvas::draw_fill(const Rectf &rect, const Colorf &color)
 {
-	fill(rect.left, rect.top, rect.right, rect.bottom, color);
+	draw_fill(rect.left, rect.top, rect.right, rect.bottom, color);
 }
 
-void Canvas::gradient_fill(float x1, float y1, float x2, float y2, const Gradient &gradient)
+void Canvas::draw_gradient_fill(float x1, float y1, float x2, float y2, const Gradient &gradient)
 {
 	Vec2f positions[6] =
 	{
@@ -438,32 +438,32 @@ void Canvas::gradient_fill(float x1, float y1, float x2, float y2, const Gradien
 
 }
 
-void Canvas::gradient_fill(const Pointf &start, const Pointf &end, const Gradient &gradient)
+void Canvas::draw_gradient_fill(const Pointf &start, const Pointf &end, const Gradient &gradient)
 {
-	gradient_fill(start.x, start.y, end.x, end.y, gradient);
+	draw_gradient_fill(start.x, start.y, end.x, end.y, gradient);
 }
 
-void Canvas::gradient_fill(const Rectf &rect, const Gradient &gradient)
+void Canvas::draw_gradient_fill(const Rectf &rect, const Gradient &gradient)
 {
-	gradient_fill(rect.left, rect.top, rect.right, rect.bottom, gradient);
+	draw_gradient_fill(rect.left, rect.top, rect.right, rect.bottom, gradient);
 }
 
-void Canvas::circle(float center_x, float center_y, float radius, const Colorf &color)
+void Canvas::draw_circle(float center_x, float center_y, float radius, const Colorf &color)
 {
-	gradient_circle(Pointf(center_x, center_y), Pointf(center_x, center_y), radius, Gradient(color, color));
+	draw_gradient_circle(Pointf(center_x, center_y), Pointf(center_x, center_y), radius, Gradient(color, color));
 }
 
-void Canvas::circle(const Pointf &center, float radius, const Colorf &color)
+void Canvas::draw_circle(const Pointf &center, float radius, const Colorf &color)
 {
-	gradient_circle(center, center, radius, Gradient(color, color));
+	draw_gradient_circle(center, center, radius, Gradient(color, color));
 }
 
-void Canvas::gradient_circle(const Pointf &center, float radius, const Gradient &gradient)
+void Canvas::draw_gradient_circle(const Pointf &center, float radius, const Gradient &gradient)
 {
-	gradient_circle(center, center, radius, gradient);
+	draw_gradient_circle(center, center, radius, gradient);
 }
 
-void Canvas::gradient_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient)
+void Canvas::draw_gradient_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient)
 {
 	float offset_x = 0;
 	float offset_y = 0;
@@ -531,7 +531,7 @@ void Canvas::gradient_circle(const Pointf &center, const Pointf &centergradient,
 	}
 }
 
-void Canvas::triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color)
+void Canvas::draw_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color)
 {
 	Vec2f positions[3] =
 	{
@@ -544,12 +544,12 @@ void Canvas::triangle(const Pointf &a, const Pointf &b, const Pointf &c, const C
 	batcher->draw_triangle(*this, positions, color, 3);
 }
 
-void Canvas::triangle(const Trianglef &dest_triangle, const Colorf &color)
+void Canvas::draw_triangle(const Trianglef &dest_triangle, const Colorf &color)
 {
-	triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
+	draw_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
 }
 
-void Canvas::ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color )
+void Canvas::draw_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color )
 {
 	float max_radius = max(radius_x, radius_y);
 	if (max_radius == 0)
@@ -557,11 +557,11 @@ void Canvas::ellipse(const Pointf &center, float radius_x, float radius_y, const
 
 	push_translate(center);
 	mult_scale(radius_x/max_radius, radius_y/max_radius);
-	circle(Pointf(0,0), max_radius, color);
+	draw_circle(Pointf(0,0), max_radius, color);
 	pop_modelview();
 }
 
-void Canvas::ellipse_gradient(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient)
+void Canvas::draw_ellipse_gradient(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient)
 {
 	float max_radius = max(radius_x, radius_y);
 	if (max_radius == 0)
@@ -569,7 +569,7 @@ void Canvas::ellipse_gradient(const Pointf &center, float radius_x, float radius
 
 	push_translate(center);
 	mult_scale(radius_x/max_radius, radius_y/max_radius);
-	gradient_circle( Pointf(0,0), max_radius, gradient);
+	draw_gradient_circle( Pointf(0,0), max_radius, gradient);
 	pop_modelview();
 }
 

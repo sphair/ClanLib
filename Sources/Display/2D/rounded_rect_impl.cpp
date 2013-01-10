@@ -72,7 +72,7 @@ void RoundedRect_Impl::draw(Canvas &canvas, const Pointf &position, const Colorf
 	for( unsigned int i=0; i<outline.size(); i++ )
 	{
 		// todo: add StaticLineStripArray primitives array
-		canvas.line(outline[i], outline[(i+1)%outline.size()], color);
+		canvas.draw_line(outline[i], outline[(i+1)%outline.size()], color);
 	}
 
 	canvas.pop_modelview();
