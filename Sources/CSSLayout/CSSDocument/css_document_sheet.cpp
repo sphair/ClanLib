@@ -619,7 +619,12 @@ void CSSDocumentSheet::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 					property.set_name(property_name);
 					bool end_of_scope = read_property_value(tokenizer, token, property, base_uri);
 					if (!property.get_value_tokens().empty())
-						parsers.parse(property, ruleset->values);
+					{
+						if (property.is_important())
+							parsers.parse(property, ruleset->important_values);
+						else
+							parsers.parse(property, ruleset->values);
+					}
 					if (end_of_scope)
 						break;
 				}

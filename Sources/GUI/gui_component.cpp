@@ -1447,6 +1447,8 @@ Rect GUIComponent::get_content_shrink_box() const
 
 std::string GUIComponent::get_property(const std::string &property, const std::string &default_value) const
 {
+	throw Exception("GUIComponent::get_property is currently under construction");
+/*
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
 	CSSPropertyValueList sheet_properties = document.select(&select_node);
@@ -1463,6 +1465,7 @@ std::string GUIComponent::get_property(const std::string &property, const std::s
 	}
 
 	return default_value;
+*/
 }
 
 int GUIComponent::get_property_int(const std::string &property, const std::string &default_value) const

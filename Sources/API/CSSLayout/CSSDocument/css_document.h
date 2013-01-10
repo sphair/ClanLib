@@ -39,6 +39,7 @@ class IODevice;
 class DomElement;
 class CSSProperty;
 class CSSSelectNode;
+class CSSPropertyValue;
 class CSSPropertyValueList;
 class CSSDocument_Impl;
 
@@ -64,7 +65,7 @@ public:
 	CSSPropertyValueList select(const DomElement &node, const std::string &pseudo_element = std::string());
 	CSSPropertyValueList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
 
-	static CSSPropertyValueList get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
+	static std::vector<std::unique_ptr<CSSPropertyValue> > get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
 
 private:
 	std::shared_ptr<CSSDocument_Impl> impl;
