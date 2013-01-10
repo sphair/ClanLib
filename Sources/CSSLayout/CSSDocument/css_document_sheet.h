@@ -6,6 +6,7 @@
 #include "API/CSSLayout/CSSDocument/css_property_value_list.h"
 #include "API/CSSLayout/CSSDocument/css_select_node.h"
 #include "API/CSSLayout/CSSDocument/dom_select_node.h"
+#include "CSSLayout/PropertyParsers/css_property_parsers.h"
 #include "css_ruleset.h"
 #include "css_selector_chain.h"
 #include "css_selector_link.h"
@@ -35,12 +36,15 @@ private:
 	void read_statement(CSSTokenizer &tokenizer, CSSToken &token);
 	void read_end_of_at_rule(CSSTokenizer &tokenizer, CSSToken &token);
 	bool read_selector_chain(CSSTokenizer &tokenizer, CSSToken &token, CSSSelectorChain &out_selector_chain);
+	void parse_property(const CSSProperty &property, CSSRuleset &inout_ruleset);
 	std::string to_string(const CSSToken &token);
 	static bool equals(const std::string &s1, const std::string &s2);
 	static std::string make_absolute_uri(std::string uri, std::string base_uri);
 
 	std::string base_uri;
 	std::vector<CSSRuleset> rulesets;
+
+	CSSPropertyParsers parsers;
 };
 
 }

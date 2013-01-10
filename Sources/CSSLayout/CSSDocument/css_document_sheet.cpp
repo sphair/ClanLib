@@ -37,6 +37,7 @@ namespace clan
 CSSDocumentSheet::CSSDocumentSheet(CSSSheetOrigin origin, CSSTokenizer &tokenizer, const std::string &base_uri)
 : origin(origin), base_uri(base_uri)
 {
+	read_stylesheet(tokenizer);
 }
 
 std::vector<CSSRulesetMatch> CSSDocumentSheet::select_rulesets(CSSSelectNode *node, const std::string &pseudo_element)
@@ -618,7 +619,7 @@ void CSSDocumentSheet::read_statement(CSSTokenizer &tokenizer, CSSToken &token)
 					property.set_name(property_name);
 					bool end_of_scope = read_property_value(tokenizer, token, property, base_uri);
 					if (!property.get_value_tokens().empty())
-						ruleset.properties.push_back(property);
+						parse_property(property, ruleset);
 					if (end_of_scope)
 						break;
 				}
@@ -739,6 +740,11 @@ bool CSSDocumentSheet::read_end_of_statement(CSSTokenizer &tokenizer, CSSToken &
 	}
 
 	return curly_count < 0;
+}
+
+void CSSDocumentSheet::parse_property(const CSSProperty &property, CSSRuleset &inout_ruleset)
+{
+	parsers.parse(property, inout_ruleset.values);
 }
 
 std::string CSSDocumentSheet::to_string(const CSSToken &token)
