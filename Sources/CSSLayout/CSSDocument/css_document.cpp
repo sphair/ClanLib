@@ -101,28 +101,28 @@ CSSPropertyValueList CSSDocument::select(CSSSelectNode *node, const std::string 
 	CSSPropertyValueList properties;
 	for (size_t i = rulesets.size(); i > 0; i--)
 	{
-		for (size_t j = rulesets[i-1].ruleset->properties.size(); j > 0; j--)
+		for (size_t j = rulesets[i-1].ruleset->important_values.size(); j > 0; j--)
 		{
-			if (rulesets[i-1].ruleset->properties[j-1].is_important())
-				properties.push_back(rulesets[i-1].ruleset->properties[j-1]);
+			properties.push_back(rulesets[i-1].ruleset->important_values[j-1].get());
 		}
 	}
 	for (size_t i = rulesets.size(); i > 0; i--)
 	{
-		for (size_t j = rulesets[i-1].ruleset->properties.size(); j > 0; j--)
+		for (size_t j = rulesets[i-1].ruleset->values.size(); j > 0; j--)
 		{
-			if (!rulesets[i-1].ruleset->properties[j-1].is_important())
-				properties.push_back(rulesets[i-1].ruleset->properties[j-1]);
+			properties.push_back(rulesets[i-1].ruleset->values[j-1].get());
 		}
 	}
 	return properties;
 }
 
-CSSPropertyValueList CSSDocument::get_style_properties(const std::string &style_string, const std::string &base_uri)
+std::vector<std::unique_ptr<CSSPropertyValue> > CSSDocument::get_style_properties(const std::string &style_string, const std::string &base_uri)
 {
+	static CSSPropertyParsers parsers;
+
 	CSSTokenizer tokenizer(style_string);
 	CSSToken token;
-	std::vector<CSSProperty> property_list;
+	std::vector<std::unique_ptr<CSSPropertyValue> > property_list;
 	while (true)
 	{
 		tokenizer.read(token, true);
@@ -138,7 +138,9 @@ CSSPropertyValueList CSSDocument::get_style_properties(const std::string &style_
 				property.set_name(property_name);
 				CSSDocumentSheet::read_property_value(tokenizer, token, property, base_uri);
 				if (!property.get_value_tokens().empty())
-					property_list.push_back(property);
+				{
+					parsers.parse(property, property_list);
+				}
 			}
 			else
 			{
@@ -153,11 +155,9 @@ CSSPropertyValueList CSSDocument::get_style_properties(const std::string &style_
 		}
 	}
 
-	CSSPropertyValueList properties;
-	for (size_t i = property_list.size(); i > 0; i--)
-		properties.push_back(property_list[i - 1]);
+	std::reverse(property_list.begin(), property_list.end());
 
-	return properties;
+	return property_list;
 }
 
 std::string CSSDocument::get_default_html_sheet()

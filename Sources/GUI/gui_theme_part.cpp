@@ -285,6 +285,8 @@ Rect GUIThemePart::get_content_shrink_box() const
 
 std::string GUIThemePart::get_property(const std::string &property, const std::string &default_value) const
 {
+	throw Exception("GUIThemePart::get_property is currently under construction");
+/*
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
 	CSSPropertyValueList sheet_properties = document.select(&select_node);
@@ -301,6 +303,7 @@ std::string GUIThemePart::get_property(const std::string &property, const std::s
 	}
 
 	return default_value;
+*/
 }
 
 int GUIThemePart::get_property_int(const std::string &property, const std::string &default_value) const

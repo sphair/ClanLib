@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class CSSProperty;
+class CSSPropertyValue;
 class CSSPropertyValueList_Impl;
 
 class CL_API_CSSLAYOUT CSSPropertyValueList
@@ -42,11 +42,11 @@ public:
 	CSSPropertyValueList();
 
 	size_t size() const;
-	CSSProperty &at(size_t index);
-	const CSSProperty &at(size_t index) const;
-	CSSProperty &operator[](size_t index);
-	const CSSProperty &operator[](size_t index) const;
-	void push_back(const CSSProperty &value);
+	CSSPropertyValue *at(size_t index);
+	const CSSPropertyValue *at(size_t index) const;
+	CSSPropertyValue *operator[](size_t index);
+	const CSSPropertyValue *operator[](size_t index) const;
+	void push_back(CSSPropertyValue *value);
 
 private:
 	std::shared_ptr<CSSPropertyValueList_Impl> impl;

@@ -38,7 +38,7 @@ namespace clan
 class CSSPropertyValueList_Impl
 {
 public:
-	std::vector<CSSProperty> properties;
+	std::vector<CSSPropertyValue *> values;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,32 +50,32 @@ CSSPropertyValueList::CSSPropertyValueList()
 
 size_t CSSPropertyValueList::size() const
 {
-	return impl->properties.size();
+	return impl->values.size();
 }
 
-CSSProperty &CSSPropertyValueList::at(size_t index)
+CSSPropertyValue *CSSPropertyValueList::at(size_t index)
 {
-	return impl->properties.at(index);
+	return impl->values.at(index);
 }
 
-const CSSProperty &CSSPropertyValueList::at(size_t index) const
+const CSSPropertyValue *CSSPropertyValueList::at(size_t index) const
 {
-	return impl->properties.at(index);
+	return impl->values.at(index);
 }
 
-CSSProperty &CSSPropertyValueList::operator[](size_t index)
+CSSPropertyValue *CSSPropertyValueList::operator[](size_t index)
 {
-	return impl->properties[index];
+	return impl->values[index];
 }
 
-const CSSProperty &CSSPropertyValueList::operator[](size_t index) const
+const CSSPropertyValue *CSSPropertyValueList::operator[](size_t index) const
 {
-	return impl->properties[index];
+	return impl->values[index];
 }
 
-void CSSPropertyValueList::push_back(const CSSProperty &value)
+void CSSPropertyValueList::push_back(CSSPropertyValue *value)
 {
-	impl->properties.push_back(value);
+	impl->values.push_back(value);
 }
 
 }
