@@ -4,11 +4,8 @@ libclan30GL1_la_SOURCES = \
 	setup_gl1.cpp \
 	gl1_transfer_buffer_provider.cpp \
 	gl1_uniform_buffer_provider.cpp \
-	texture_unit.cpp \
-	material.cpp \
 	gl1_target.cpp \
 	gl1_program_object_provider.cpp \
-	light_source.cpp \
 	gl1_vertex_array_buffer_provider.cpp \
 	gl1_texture_provider.cpp \
 	gl1_primitives_array_provider.cpp \
@@ -18,7 +15,6 @@ libclan30GL1_la_SOURCES = \
 	precomp.cpp \
 	gl1_window_description.cpp \
 	gl1_graphic_context_provider.cpp \
-	light_model.cpp \
 	gl1_render_buffer_provider.cpp 
 
 if WIN32
