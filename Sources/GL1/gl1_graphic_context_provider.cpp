@@ -84,7 +84,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Construction:
 
-GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider * const render_window)
+GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider * const render_window, bool render_window_is_a_pbuffer)
 : render_window(render_window),
   framebuffer_bound(false), prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false)
@@ -115,7 +115,8 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider
 	// Enable point sprites for legacy opengl
 	cl1Enable(GL_POINT_SPRITE);
 
-	SharedGCData::add_provider(this);
+	if (!render_window_is_a_pbuffer)		// It is not clear if sharing GC from a pbuffer is valid from the specification. Also this is problematic in obtaining the shared gc context in the main provider. For now, we simply do not allow it.
+		SharedGCData::add_provider(this);
 }
 
 GL1GraphicContextProvider::~GL1GraphicContextProvider()

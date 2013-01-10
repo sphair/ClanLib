@@ -289,7 +289,7 @@ void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWin
 
 	if (create_provider_flag)
 	{
-		gc = GraphicContext(new GL1GraphicContextProvider(this));
+		gc = GraphicContext(new GL1GraphicContextProvider(this, false));
 	}
 
 	setup_extension_pointers();
