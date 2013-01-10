@@ -43,7 +43,7 @@ public:
 	TuxBall(const Sprite &image, const Rect &boundary);
 
 	void move(std::vector<TuxBall> &tuxballs, float time_diff);
-	void draw(GraphicContext &gc);
+	void draw(Canvas &canvas);
 
 private:
 	float xpos;
@@ -140,52 +140,52 @@ int App::start(const std::vector<std::string> &args)
 		Slot slot_mouse_dblclk = (window_center.get_ic().get_mouse()).sig_key_dblclk().connect(this, &App::on_mouse_down);
 		Slot slot_input_up = (window_center.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-		// Get the graphic context
-		GraphicContext gc_center = window_center.get_gc();
-		GraphicContext gc_top = window_top.get_gc();
-		GraphicContext gc_right = window_right.get_gc();
-		GraphicContext gc_bottom = window_bottom.get_gc();
-		GraphicContext gc_left = window_left.get_gc();
+		// Get the canvas
+		Canvas canvas_center(window_center);
+		Canvas canvas_top(window_top);
+		Canvas canvas_right(window_right);
+		Canvas canvas_bottom(window_bottom);
+		Canvas canvas_left(window_left);
 
 		// Get the graphics
 		FontDescription font_desc;
 		font_desc.set_typeface_name("tahoma");
 		font_desc.set_height(24);
-		Font font(gc_center, font_desc);
+		Font font(canvas_center, font_desc);
 
-		Sprite tux(gc_center, "../LayeredWindow/round_tux.png");
-		Image rock(gc_center, "../LayeredWindow/rock.png");
+		Sprite tux(canvas_center, "../LayeredWindow/round_tux.png");
+		Image rock(canvas_center, "../LayeredWindow/rock.png");
 
 		// Translate the window matrix to position the graphics at the correct position
-		gc_center.set_translate(-window_inner_offset, -window_inner_offset);
-		gc_top.set_translate(0.0f, 0.0f);
-		gc_left.set_translate(0, -window_inner_offset);
-		gc_right.set_translate(-entire_window_size.width + window_inner_offset, -window_inner_offset);
-		gc_bottom.set_translate(0, -entire_window_size.height + window_inner_offset);
+		canvas_center.set_translate(-window_inner_offset, -window_inner_offset);
+		canvas_top.set_translate(0.0f, 0.0f);
+		canvas_left.set_translate(0, -window_inner_offset);
+		canvas_right.set_translate(-entire_window_size.width + window_inner_offset, -window_inner_offset);
+		canvas_bottom.set_translate(0, -entire_window_size.height + window_inner_offset);
 
 		// Scale the window matrix, so the rock fills it
 		Mat4f matrix = Mat4f::scale( (float) entire_window_size.width / rock.get_width(), (float) entire_window_size.height / rock.get_height(), 1.0f);
-		gc_top.mult_modelview(matrix);
-		gc_right.mult_modelview(matrix);
-		gc_bottom.mult_modelview(matrix);
-		gc_left.mult_modelview(matrix);
-		gc_center.mult_modelview(matrix);
+		canvas_top.mult_modelview(matrix);
+		canvas_right.mult_modelview(matrix);
+		canvas_bottom.mult_modelview(matrix);
+		canvas_left.mult_modelview(matrix);
+		canvas_center.mult_modelview(matrix);
 
 		// Prepare the static image in the layered window
-		gc_top.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-		gc_right.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-		gc_bottom.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-		gc_left.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-		rock.draw(gc_top, 0.0f, 0.0f);
-		rock.draw(gc_right, 0.0f, 0.0f);
-		rock.draw(gc_bottom, 0.0f, 0.0f);
-		rock.draw(gc_left, 0.0f, 0.0f);
+		canvas_top.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+		canvas_right.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+		canvas_bottom.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+		canvas_left.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+		rock.draw(canvas_top, 0.0f, 0.0f);
+		rock.draw(canvas_right, 0.0f, 0.0f);
+		rock.draw(canvas_bottom, 0.0f, 0.0f);
+		rock.draw(canvas_left, 0.0f, 0.0f);
 
 		// Draw the layered windows
-		window_top.flip();
-		window_right.flip();
-		window_bottom.flip();
-		window_left.flip();
+		canvas_top.flip();
+		canvas_right.flip();
+		canvas_bottom.flip();
+		canvas_left.flip();
 
 		// Setup the demo
 		Rect boundary(120, 120, Size(360, 360));
@@ -210,8 +210,8 @@ int App::start(const std::vector<std::string> &args)
 			float time_diff = (float) (time_now - time_last);
 			time_last = time_now;
 
-			gc_center.clear(Colorf(0.0f,0.0f,0.0f, 1.0f));
-			rock.draw(gc_center, 0.0f, 0.0f);
+			canvas_center.clear(Colorf(0.0f,0.0f,0.0f, 1.0f));
+			rock.draw(canvas_center, 0.0f, 0.0f);
 
 			// Move tux
 			for (int cnt=0; cnt<num_tuxballs; cnt++)
@@ -222,14 +222,14 @@ int App::start(const std::vector<std::string> &args)
 			// Draw tux
 			for (int cnt=0; cnt<num_tuxballs; cnt++)
 			{
-				tuxballs[cnt].draw(gc_center);
+				tuxballs[cnt].draw(canvas_center);
 			}
 
 			std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
-			font.draw_text(gc_center, 150-2, 150-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-			font.draw_text(gc_center, 150, 150, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+			font.draw_text(canvas_center, 150-2, 150-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+			font.draw_text(canvas_center, 150, 150, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-			window_center.flip(0);
+			canvas_center.flip(0);
 
 			// This call processes user input and other events
 			KeepAlive::process();
@@ -260,7 +260,7 @@ void App::on_window_close(DisplayWindow *window)
 
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -314,11 +314,11 @@ void TuxBall::move(std::vector<TuxBall> &tuxballs, float time_diff)
 	}
 }
 
-void TuxBall::draw(GraphicContext &gc)
+void TuxBall::draw(Canvas &canvas)
 {
 	sprite.set_scale(scale, scale);
 	sprite.set_alpha(0.5f);
-	sprite.draw(gc, xpos, ypos);
+	sprite.draw(canvas, xpos, ypos);
 }
 
 
