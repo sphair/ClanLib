@@ -49,8 +49,6 @@ int Basic2D::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Basic2D::on_input_up);
 
-	// Get the graphic context
-
 	// Load a sprite from a png-file
 	clan::Image spr_logo(canvas, "Resources/logo.png");
 
