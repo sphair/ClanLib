@@ -56,7 +56,7 @@ PrismaticJoint::PrismaticJoint(PhysicsContext &pc, const PrismaticJointDescripti
 		impl->joint_type = Joint_Prismatic;
 		impl->create_joint(description.impl->joint_def);
 
-		pc.create_in_context(impl);
+		pc.impl->create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a prismatic joint with a null PhysicsWorld object");

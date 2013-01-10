@@ -38,9 +38,6 @@ namespace clan
 {
 	class PhysicsWorld;
 	class PhysicsContext_Impl;
-	class Body_Impl;
-	class Fixture_Impl;
-	class Joint_Impl;
 
 class CL_API_PHYSICS PhysicsContext
 {
@@ -72,29 +69,6 @@ public:
 	int max_joints() const;
 
 /// \}
-/// \name Operations
-/// \{
-
-private:
-	/// \brief Add Body to the context.
-	void create_in_context(std::shared_ptr<Body_Impl> body);
-
-	/// \brief Add Fixture to the context.
-	void create_in_context(std::shared_ptr<Fixture_Impl> fixture);
-
-	/// \brief Add Joint to the context.
-	void create_in_context(std::shared_ptr<Joint_Impl> joint);
-
-	/// \brief Remove Body from the context.
-	void remove_from_context(std::shared_ptr<Body_Impl> body);
-
-	/// \brief Remove Fixture from the context.
-	void remove_from_context(std::shared_ptr<Fixture_Impl> fixture);
-
-	/// \brief Remove Joint from the context.
-	void remove_from_context(std::shared_ptr<Joint_Impl> joint);
-
-/// \}
 /// \name Implementation
 /// \{
 
@@ -103,6 +77,8 @@ private:
 
 /// \}
 
+
+	friend class PhysicsWorld_Impl;
 	friend class BodyDescription;
 	friend class FixtureDescription;
 
@@ -114,6 +90,7 @@ private:
 	friend class RevoluteJoint;
 	friend class PrismaticJoint;
 	friend class MouseJoint;
+	
 };
 
 }

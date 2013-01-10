@@ -58,7 +58,7 @@ MouseJoint::MouseJoint(PhysicsContext &pc, const MouseJointDescription &descript
 		impl->joint_type = Joint_Mouse;
 		impl->create_joint(description.impl->joint_def);
 
-		pc.create_in_context(impl);
+		pc.impl->create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");

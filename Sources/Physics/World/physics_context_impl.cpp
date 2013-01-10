@@ -72,45 +72,40 @@ PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld_Impl *owner)
 //																						___________________
 //																						O P E R A T I O N S
 
-int PhysicsContext_Impl::create_in_context(std::shared_ptr<Body_Impl> body)
+void PhysicsContext_Impl::create_in_context(std::shared_ptr<Body_Impl> body)
 {
 	if(free_body_slots.size()>0)
 	{
 		int slot = free_body_slots.front();
 		free_body_slots.pop_front();
 		bodies[slot] = body;
-
-		return slot;
+		body->set_id(slot);
 	}
 	else
 	throw Exception(string_format("Exceded the current maximum bodies amount that is equal %1.", max_body_amount));
 }
 
-int PhysicsContext_Impl::create_in_context(std::shared_ptr<Fixture_Impl> fixture)
+void PhysicsContext_Impl::create_in_context(std::shared_ptr<Fixture_Impl> fixture)
 {
 	if(free_fixture_slots.size()>0)
 	{
 		int slot = free_fixture_slots.front();
 		free_fixture_slots.pop_front();
-
 		fixtures[slot] = fixture;
-
-		return slot;
+		fixture->set_id(slot);
 	}
 	else
 	throw Exception(string_format("Exceded the current maximum fixtures amount that is equal %1.", max_fixture_amount));
 
 }
-int PhysicsContext_Impl::create_in_context(std::shared_ptr<Joint_Impl> joint)
+void PhysicsContext_Impl::create_in_context(std::shared_ptr<Joint_Impl> joint)
 {
 		if(free_joint_slots.size()>0)
 	{
 		int slot = free_joint_slots.front();
 		free_joint_slots.pop_front();
-
 		joints[slot] = joint;
-
-		return slot;
+		joint->set_id(slot);
 	}
 	else
 	throw Exception(string_format("Exceded the current maximum joints amount that is equal %1.", max_joint_amount));
