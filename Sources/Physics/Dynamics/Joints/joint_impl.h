@@ -29,10 +29,12 @@
 #pragma once
 #include "../../Box2D/Box2D.h"
 #include "API/Physics/Dynamics/Joints/Joint.h"
+#include "API/Core/Signals/signal_v0.h"
 
 namespace clan
 {
 
+class PhysicsWorld_Impl;
 
 class Joint_Impl
 {
@@ -40,12 +42,8 @@ public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	Joint_Impl()
-	: joint(NULL),
-	  joint_type(Joint_None),
-	  id(-1)
-	{};
-	virtual ~Joint_Impl() { return; }
+	Joint_Impl(PhysicsWorld_Impl *owner);
+	virtual ~Joint_Impl();
 
 	virtual b2Joint *get_Joint() { return joint; }
 
@@ -54,10 +52,22 @@ public:
 	int get_id() const {return id;}
 //																						___________________
 //																						O P E R A T I O N S
+
+	virtual void create_joint(b2JointDef &joint_def);
+	virtual void remove_joint();
 	void set_id(int value) { id = value;}
+
+//																						_____________
+//																						S I G N A L S
+
+	Signal_v0 sig_joint_deletion;
+
+//	
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 
+	PhysicsWorld_Impl *owner_world;
+	bool joint_occupied;
 	int id;
 	JointType joint_type;
 	b2Joint *joint;

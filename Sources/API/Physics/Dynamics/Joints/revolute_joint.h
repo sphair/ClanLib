@@ -82,19 +82,6 @@ public:
 public:
 	RevoluteJoint &RevoluteJoint::operator =(const RevoluteJoint &copy);
 		
-protected:
-
-	virtual std::shared_ptr<Joint> create_null_derived();
-	
-/// \}
-/// \name Implementation
-/// \{
-protected:
-
-	std::shared_ptr<RevoluteJoint_Impl> impl;
-
-/// \}
-
 };
 
 }

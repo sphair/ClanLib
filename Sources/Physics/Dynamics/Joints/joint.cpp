@@ -37,16 +37,10 @@ namespace clan
 //																											C O N S T R U C T O R S
 
 Joint::Joint()
-: joint_impl(new Joint_Impl)
 {
 
 }
 
-Joint::Joint(const JointDescription &description)
-: joint_impl(new Joint_Impl)
-{
-
-}
 Joint::~Joint()
 {
 
@@ -55,58 +49,56 @@ Joint::~Joint()
 //																											___________________																											
 //																											A T T R I B U T E S
 
-
 void Joint::throw_if_null() const
 {
-	if (!joint_impl)
-		throw Exception("Joint is null");
+	throw Exception("Joint is null");
 }
 
 JointType Joint::get_Joint_type () const
 {
-	return joint_impl->joint_type;
+	return Joint_None;
 }
 
 bool Joint::is_active() const
 {
-	return joint_impl->joint->IsActive();
+	return false;
 }
 
 Body *Joint::get_body_a()
 {
-	return static_cast<Body *> (joint_impl->joint->GetBodyA()->GetUserData());
+	return static_cast<Body *> (impl->joint->GetBodyA()->GetUserData());
 }
 
 Body *Joint::get_body_b()
 {
-	return static_cast<Body *> (joint_impl->joint->GetBodyB()->GetUserData());
+	return static_cast<Body *> (impl->joint->GetBodyB()->GetUserData());
 }
 Vec2f Joint::get_anchor_a()
 {
-	b2Vec2 &vec = joint_impl->joint->GetAnchorA();
+	b2Vec2 &vec = impl->joint->GetAnchorA();
 	return Vec2f(vec.x, vec.y);
 }
 
 Vec2f Joint::get_anchor_b()
 {
-	b2Vec2 &vec = joint_impl->joint->GetAnchorB();
+	b2Vec2 &vec = impl->joint->GetAnchorB();
 	return Vec2f(vec.x, vec.y);
 }
 
 Vec2f Joint::get_reaction_force (float dt)
 {
-	b2Vec2 &vec = joint_impl->joint->GetReactionForce(dt);
+	b2Vec2 &vec = impl->joint->GetReactionForce(dt);
 	return Vec2f(vec.x, vec.y);
 }
  
 float Joint::get_reaction_torque (float dt)
 {
-	return joint_impl->joint->GetReactionTorque(dt);
+	return impl->joint->GetReactionTorque(dt);
 }
 
 int Joint::get_id() const
 {
-	return joint_impl->id;
+	return impl->id;
 }
 
 //																											___________________																											
@@ -114,20 +106,8 @@ int Joint::get_id() const
 
 Joint &Joint::operator =(const Joint &copy)
 {
-	joint_impl = copy.joint_impl;
+	impl = copy.impl;
 	return *this;
-}
-
-void Joint::set_id(int value)
-{
-	joint_impl->id = value;
-}
-
-std::shared_ptr<Joint> Joint::create_null_derived()
-{
-	throw Exception("Tried to create a null derived joint from the base joint object.");
-
-	return NULL;
 }
 
 

@@ -70,9 +70,11 @@ public:
 
 	/// \brief Returns maximum amount of joints allowed.
 	int max_joints() const;
+
 /// \}
 /// \name Operations
 /// \{
+
 private:
 	/// \brief Add Body to the context.
 	void create_in_context(std::shared_ptr<Body_Impl> body);
@@ -91,6 +93,7 @@ private:
 
 	/// \brief Remove Joint from the context.
 	void remove_from_context(std::shared_ptr<Joint_Impl> joint);
+
 /// \}
 /// \name Implementation
 /// \{
@@ -99,6 +102,9 @@ private:
 	std::shared_ptr<PhysicsContext_Impl> impl;
 
 /// \}
+
+	friend class BodyDescription;
+	friend class FixtureDescription;
 
 	friend class Body;
 	friend class Fixture;

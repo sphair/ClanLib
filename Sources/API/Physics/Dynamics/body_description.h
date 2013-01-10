@@ -41,6 +41,7 @@ class BodyDescription_Impl;
 class Pointf;
 class Angle;
 class PhysicsWorld;
+class PhysicsContext;
 
 /// \brief Body types.
 	enum BodyType
@@ -67,6 +68,11 @@ public:
 	///
 	/// \param pw   = Physics World
 	BodyDescription(const PhysicsWorld &pw);
+
+	/// \brief Constructs a BodyDescription
+	///
+	/// \param pc   = Physics Context
+	BodyDescription(const PhysicsContext &pc);
 
 	/// \brief Constructs a BodyDescription
 	///

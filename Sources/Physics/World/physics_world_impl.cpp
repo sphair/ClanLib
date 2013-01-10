@@ -38,15 +38,13 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 
-PhysicsWorld_Impl::PhysicsWorld_Impl(PhysicsWorld &pw)
+PhysicsWorld_Impl::PhysicsWorld_Impl()
 :	name				("Unnamed Clanlib Physics World"),
 	world				(b2Vec2(0.0f,10.0f)),
 	timestep			(1.0f/60.0f),
 	velocity_iterations	(8),
 	position_iterations (3),
-	physic_scale		(100),
-	pc					(pw),
-	assistant			(pw)
+	physic_scale		(100)
 {	
 	world.SetContactListener(&listener); //Uncomment after finishing physics context.
 	world.SetContactFilter(&listener); //Uncomment after finishing physics context.

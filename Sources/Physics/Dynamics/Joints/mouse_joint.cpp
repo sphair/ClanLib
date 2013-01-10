@@ -33,6 +33,7 @@
 #include "mouse_joint_description_impl.h"
 #include "../../World/physics_world_impl.h"
 #include "API/Physics/World/physics_world.h"
+#include "../../World/physics_context_impl.h"
 #include "API/Physics/Dynamics/Joints/mouse_joint_description.h"
 #include "API/Physics/Dynamics/Joints/mouse_joint.h"
 #include "API/Physics/World/physics_context.h"
@@ -49,15 +50,15 @@ MouseJoint::MouseJoint()
 }
 
 MouseJoint::MouseJoint(PhysicsContext &pc, const MouseJointDescription &description)
-: impl(new MouseJoint_Impl(*description.impl->owner))
 {
-	if(impl->owner)
-	{
-		joint_impl->joint_type = Joint_Distance;
-		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
-		joint_impl->joint->SetUserData(this);
+	impl = std::shared_ptr<MouseJoint_Impl> (new MouseJoint_Impl(pc.impl->get_owner()));
 
-		pc.create_in_context(joint_impl);
+	if(impl->owner_world)
+	{
+		impl->joint_type = Joint_Mouse;
+		impl->create_joint(description.impl->joint_def);
+
+		pc.create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");
@@ -81,7 +82,7 @@ void MouseJoint::throw_if_null() const
 
 bool MouseJoint::is_active() const
 {
-	return joint_impl->joint->IsActive();
+	return impl->joint->IsActive();
 }
 
 //																											___________________																											
@@ -95,7 +96,7 @@ MouseJoint &MouseJoint::operator =(const MouseJoint &copy)
 
 bool MouseJoint::grab(const Vec2f &target) const
 {
-	PhysicsWorld phys_world(impl->owner->shared_from_this());
+	PhysicsWorld phys_world(impl->owner_world->shared_from_this()); //Change this so it doesn't require private method in the PhysicsWorld.
 	PhysicsQueryAssistant qa = phys_world.get_qa();
 	
 	return false;
@@ -119,10 +120,6 @@ bool MouseJoint::grab(const int x, const int y) const
 void MouseJoint::release()
 {
 
-}
-std::shared_ptr<Joint> MouseJoint::create_null_derived()
-{
-	return std::shared_ptr<Joint>(new MouseJoint);
 }
 
 }

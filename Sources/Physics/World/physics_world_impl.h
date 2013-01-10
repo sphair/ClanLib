@@ -50,7 +50,7 @@ public:
 //																						C O N S T R U C T O R S
 /// \name Construction
 /// \{
-	PhysicsWorld_Impl(PhysicsWorld &pw);
+	PhysicsWorld_Impl();
 
 	virtual ~PhysicsWorld_Impl();
 //																						___________________

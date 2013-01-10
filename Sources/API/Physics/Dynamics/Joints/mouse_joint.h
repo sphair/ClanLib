@@ -101,19 +101,7 @@ public:
 	//virtual void 	ComputeAABB (b2AABB *aabb, const b2Transform &xf, int32 childIndex) const = 0;
 	//virtual void 	ComputeMass (b2MassData *massData, float32 density) const = 0;
 	//Add us
-protected:
-
-	virtual std::shared_ptr<Joint> create_null_derived();
 	
-/// \}
-/// \name Implementation
-/// \{
-protected:
-
-	std::shared_ptr<MouseJoint_Impl> impl;
-
-/// \}
-
 };
 
 }

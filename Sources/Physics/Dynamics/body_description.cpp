@@ -30,6 +30,7 @@
 #include "../Box2D/Box2D.h"
 #include "body_description_impl.h"
 #include "../World/physics_world_impl.h"
+#include "../World/physics_context_impl.h"
 #include "API/Physics/Dynamics/body_description.h"
 #include "API/Physics/World/physics_world.h"
 #include "API/Core/Math/point.h"
@@ -45,7 +46,13 @@ BodyDescription::BodyDescription()
 
 }
 BodyDescription::BodyDescription(const PhysicsWorld &pw)
-: impl(new BodyDescription_Impl(*pw.impl))
+: impl(new BodyDescription_Impl(pw.impl.get()))
+{
+
+}
+
+BodyDescription::BodyDescription(const PhysicsContext &pc)
+: impl(new BodyDescription_Impl(pc.impl->get_owner()))
 {
 
 }
@@ -98,12 +105,12 @@ void BodyDescription::set_type(const BodyType type)
 
 void BodyDescription::set_position(const Vec2f &position)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->bodyDef.position = b2Vec2(position.x/scale, position.y/scale);
 }
 void BodyDescription::set_position(const Pointf &position)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->bodyDef.position = b2Vec2(position.x/scale, position.y/scale);
 }
 
@@ -114,7 +121,7 @@ void BodyDescription::set_angle(const Angle &angle)
 
 void BodyDescription::set_linear_velocity(const Vec2f &velocity)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->bodyDef.linearVelocity = b2Vec2(velocity.x/scale, velocity.y/scale);
 }
 

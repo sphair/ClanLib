@@ -81,20 +81,7 @@ public:
 /// \{
 public:
 	PrismaticJoint &PrismaticJoint::operator =(const PrismaticJoint &copy);
-
-protected:
-
-	virtual std::shared_ptr<Joint> create_null_derived();
 	
-/// \}
-/// \name Implementation
-/// \{
-protected:
-
-	std::shared_ptr<PrismaticJoint_Impl> impl;
-
-/// \}
-
 };
 
 }

@@ -27,70 +27,65 @@
 */
 
 #include "Physics/precomp.h"
-#include "../../Box2D/Box2D.h"
 #include "joint_impl.h"
-#include "revolute_joint_impl.h"
-#include "revolute_joint_description_impl.h"
+#include "joint_description.h"
+#include "API/Physics/Dynamics/Joints/joint.h"
 #include "../../World/physics_world_impl.h"
-#include "../../World/physics_context_impl.h"
-#include "API/Physics/Dynamics/Joints/revolute_joint_description.h"
-#include "API/Physics/Dynamics/Joints/revolute_joint.h"
-#include "API/Physics/World/physics_context.h"
-
 
 namespace clan
 {
-
 //																											_______________________																											
 //																											C O N S T R U C T O R S
-RevoluteJoint::RevoluteJoint()
+
+Joint_Impl::Joint_Impl(PhysicsWorld_Impl *owner)
+: joint(NULL),
+  joint_type(Joint_None),
+  id(-1),
+  joint_occupied(false),
+  owner_world(owner)
 {
 
 }
 
-RevoluteJoint::RevoluteJoint(PhysicsContext &pc, const RevoluteJointDescription &description)
+Joint_Impl::~Joint_Impl()
 {
-	impl = std::shared_ptr<RevoluteJoint_Impl> (new RevoluteJoint_Impl(pc.impl->get_owner()));
-
-	if(impl->owner_world)
-	{
-		impl->joint_type = Joint_Distance;
-		impl->create_joint(description.impl->joint_def);
-
-		pc.create_in_context(impl);
-	}
-	else
-	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");
-
+	remove_joint();
+	return;
 }
 
-RevoluteJoint::~RevoluteJoint()
-{
 
-}
+
 
 //																											___________________																											
 //																											A T T R I B U T E S
 
 
-void RevoluteJoint::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("RevoluteJoint is null");
-}
-
-bool RevoluteJoint::is_active() const
-{
-	return impl->joint->IsActive();
-}
-
 //																											___________________																											
 //																											O P E R A T I O N S
-
-RevoluteJoint &RevoluteJoint::operator =(const RevoluteJoint &copy)
+void Joint_Impl::create_joint(b2JointDef &joint_def)
 {
-	impl = copy.impl;
-	return *this;
+	if(joint_occupied)
+	{
+		owner_world->world.DestroyJoint(joint);
+		sig_joint_deletion.invoke();
+	}
+	else
+	{
+		joint_occupied = true;
+	}
+
+	joint = owner_world->create_joint(joint_def);
+	joint->SetUserData(this);
+
+}
+void  Joint_Impl::remove_joint()
+{
+	if(joint_occupied)
+	{
+		owner_world->world.DestroyJoint(joint);
+		joint_occupied = false;
+		sig_joint_deletion.invoke();
+	}
 }
 
 }

@@ -60,6 +60,14 @@ void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &descript
 	fixture->SetUserData(this);
 }
 
+void Fixture_Impl::remove_fixture()
+{
+	if(fixture_occupied)
+	{
+		fixture->GetBody()->DestroyFixture(fixture);
+		fixture_occupied = false;
+	}
+}
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
 {
 	Fixture collision_fixture(shared_from_this());

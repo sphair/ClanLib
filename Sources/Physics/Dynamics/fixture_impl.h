@@ -58,6 +58,7 @@ public:
 	void set_id(int value) { id = value;}
 
 	void create_fixture(Body &body, const FixtureDescription &description); //Not used yet
+	void remove_fixture();
 	void on_begin_collision(Fixture_Impl &body);
 	void on_end_collision(Fixture_Impl &body);
 //																						_____________

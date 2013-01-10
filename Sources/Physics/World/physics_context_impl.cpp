@@ -39,18 +39,17 @@ namespace clan
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld &pw)
+PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld_Impl *owner)
 : max_body_amount(200), 
   max_fixture_amount(400),
   max_joint_amount(100),
   bodies(max_body_amount), //Add customising options
   fixtures(max_fixture_amount), //Add customising options
-  joints(max_joint_amount) //Add customising options
+  joints(max_joint_amount), //Add customising options
+  owner_world(owner)
 {
-	if(!pw.is_null())
+	if(owner_world)
 	{
-		owner = &pw;
-	
 		for(int i=0; i<max_body_amount; i++)
 		{
 			free_body_slots.push_back(i);

@@ -36,7 +36,7 @@ namespace clan
 	class Body_Impl;
 	class Fixture_Impl;
 	class Joint_Impl;
-	class PhysicsWorld;
+	class PhysicsWorld_Impl;
 
 class PhysicsContext_Impl
 {
@@ -44,13 +44,13 @@ public:
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-	PhysicsContext_Impl(PhysicsWorld &pw);
+	PhysicsContext_Impl(PhysicsWorld_Impl *owner);
 	virtual ~PhysicsContext_Impl() { return; }
 
 
 //																						___________________
 //																						A T T R I B U T E S
-
+	PhysicsWorld_Impl *get_owner(){return owner_world;}
 
 //																						___________________
 //																						O P E R A T I O N S
@@ -64,8 +64,10 @@ public:
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	PhysicsWorld *owner;
+	PhysicsWorld_Impl *owner_world;
 
+	bool has_something_to_delete;
+	
 	const int max_body_amount;
 	const int max_fixture_amount;
 	const int max_joint_amount;
@@ -75,6 +77,7 @@ public:
 	std::list<int> free_body_slots;
 	std::list<int> free_fixture_slots;
 	std::list<int> free_joint_slots;
+
 
 
 };
