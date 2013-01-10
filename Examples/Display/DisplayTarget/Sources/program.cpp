@@ -34,19 +34,18 @@ int Program::main(const std::vector<std::string> &args)
 {
 	try
 	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-		SetupGUI setup_gui;
+		clan::SetupCore setup_core;
+		clan::SetupDisplay setup_display;
 
 		Target app;
 		int retval = app.start(args);
 		return retval;
 	}
-	catch(Exception &exception)
+	catch(clan::Exception &exception)
 	{
 		// Create a console window for text-output if not available
-		ConsoleWindow console("Console", 80, 160);
-		Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+		clan::ConsoleWindow console("Console", 80, 160);
+		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 		console.display_close_message();
 
 		return -1;
@@ -54,4 +53,4 @@ int Program::main(const std::vector<std::string> &args)
 }
 
 // Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
+clan::Application app(&Program::main);
