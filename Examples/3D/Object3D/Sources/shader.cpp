@@ -114,13 +114,13 @@ char Shader::fragment[] =
 
 Shader::Shader(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, cl_shadertype_vertex, vertex);
+	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
 	if(!vertex_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	ShaderObject fragment_shader(gc, cl_shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
 	if(!fragment_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
@@ -130,10 +130,10 @@ Shader::Shader(GraphicContext &gc)
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
 
-	program_object.bind_attribute_location(cl_attrib_position, "InPosition");
-	program_object.bind_attribute_location(cl_attrib_normal, "InNormal");
-	program_object.bind_attribute_location(cl_attrib_color, "InMaterialAmbient");
-	program_object.bind_attribute_location(cl_attrib_texture_position, "InTextureCoords");
+	program_object.bind_attribute_location(attrib_position, "InPosition");
+	program_object.bind_attribute_location(attrib_normal, "InNormal");
+	program_object.bind_attribute_location(attrib_color, "InMaterialAmbient");
+	program_object.bind_attribute_location(attrib_texture_position, "InTextureCoords");
 	if (!program_object.link())
 	{
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
