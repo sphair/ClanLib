@@ -33,16 +33,16 @@
 namespace clan
 {
 
-	class PhysicsWorld_Impl;
+class PhysicsWorld_Impl;
 
-class RevoluteJoint_Impl
+class RevoluteJoint_Impl : public Joint_Impl
 {
 public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	RevoluteJoint_Impl(PhysicsWorld_Impl &pw_impl)
-	: owner(&pw_impl)
+	RevoluteJoint_Impl(PhysicsWorld_Impl *owner_world)
+	:Joint_Impl(owner_world)
 	{};
 	virtual ~RevoluteJoint_Impl() { return; }
 
@@ -54,7 +54,7 @@ public:
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	PhysicsWorld_Impl *owner;
+
 };
 
 

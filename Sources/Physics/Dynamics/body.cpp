@@ -32,6 +32,7 @@
 #include "body_impl.h"
 #include "fixture_description_impl.h"
 #include "../World/physics_world_impl.h"
+#include "../World/physics_context_impl.h"
 #include "API/Physics/World/physics_world.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Physics/Dynamics/fixture_description.h"
@@ -47,12 +48,12 @@ Body::Body()
 }
 
 Body::Body(PhysicsContext &pc, const BodyDescription &description)
-: impl(new Body_Impl(*description.impl->owner))
+: impl(new Body_Impl(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
 		impl->create_body(description);
-		pc.create_in_context(impl);
+		pc.create_in_context(impl); //Should add this to world.
 	}
 	else
 	throw Exception("Tried to create a body with a null PhysicsWorld object");

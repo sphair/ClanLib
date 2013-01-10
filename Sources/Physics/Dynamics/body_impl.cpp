@@ -37,10 +37,10 @@ namespace clan
 
 //																						_______________________
 //																						C O N S T R U C T O R S
-Body_Impl::Body_Impl( PhysicsWorld_Impl &pw_impl)
+Body_Impl::Body_Impl( PhysicsWorld_Impl *owner)
 :	body(NULL),
 	body_occupied(false),
-	owner_world(&pw_impl),
+	owner_world(owner),
 	id(-1)
 {
 
@@ -48,17 +48,12 @@ Body_Impl::Body_Impl( PhysicsWorld_Impl &pw_impl)
 
 Body_Impl::~Body_Impl() 
 { 
-	if(body_occupied) 
-	{
-		body->GetWorld()->DestroyBody(body); 
-	}
-	sig_body_deletion.invoke(); 
+	remove_body();
 }
 //																						___________________
 //																						O P E R A T I O N S
 void Body_Impl::create_body(const BodyDescription &description)
-{
-	
+{	
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
 		body->GetWorld()->DestroyBody(body);
@@ -70,6 +65,15 @@ void Body_Impl::create_body(const BodyDescription &description)
 
 	body = owner_world->create_body(description.impl->bodyDef);
 	body->SetUserData(this);
+}
+void Body_Impl::remove_body()
+{
+	if(body_occupied)
+	{
+		body->GetWorld()->DestroyBody(body);
+		body_occupied = false;
+		sig_body_deletion.invoke(); 
+	}
 }
 
 void Body_Impl::on_begin_collision(Body_Impl &body)

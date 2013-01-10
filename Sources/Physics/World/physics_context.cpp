@@ -42,7 +42,7 @@ PhysicsContext::PhysicsContext()
 }
 
 PhysicsContext::PhysicsContext(PhysicsWorld &pw)
-: impl(new PhysicsContext_Impl(pw))
+: impl(new PhysicsContext_Impl(pw.impl.get()))
 {
 	
 }

@@ -33,16 +33,16 @@
 namespace clan
 {
 
-	class PhysicsWorld_Impl;
+class PhysicsWorld_Impl;
 
-class DistanceJoint_Impl
+class DistanceJoint_Impl : public Joint_Impl
 {
 public:
 //																						_______________________
 //																						C O N S T R U C T O R S
 
-	DistanceJoint_Impl(PhysicsWorld_Impl &pw_impl)
-	: owner(&pw_impl)
+	DistanceJoint_Impl(PhysicsWorld_Impl *owner_world)
+	:Joint_Impl(owner_world)
 	{};
 	virtual ~DistanceJoint_Impl() { return; }
 
@@ -54,7 +54,7 @@ public:
 
 //																						___________________________
 //																						I M P L E M E N T A T I O N
-	PhysicsWorld_Impl *owner;
+
 };
 
 

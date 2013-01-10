@@ -32,6 +32,7 @@
 #include "prismatic_joint_impl.h"
 #include "prismatic_joint_description_impl.h"
 #include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 #include "API/Physics/Dynamics/Joints/prismatic_joint_description.h"
 #include "API/Physics/Dynamics/Joints/prismatic_joint.h"
 #include "API/Physics/World/physics_context.h"
@@ -47,15 +48,15 @@ PrismaticJoint::PrismaticJoint()
 }
 
 PrismaticJoint::PrismaticJoint(PhysicsContext &pc, const PrismaticJointDescription &description)
-: impl(new PrismaticJoint_Impl(*description.impl->owner))
 {
-	if(impl->owner)
-	{
-		joint_impl->joint_type = Joint_Prismatic;
-		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
-		joint_impl->joint->SetUserData(this);
+	impl = std::shared_ptr<PrismaticJoint_Impl> (new PrismaticJoint_Impl(pc.impl->get_owner()));
 
-		pc.create_in_context(joint_impl);
+	if(impl->owner_world)
+	{
+		impl->joint_type = Joint_Prismatic;
+		impl->create_joint(description.impl->joint_def);
+
+		pc.create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a prismatic joint with a null PhysicsWorld object");
@@ -79,7 +80,7 @@ void PrismaticJoint::throw_if_null() const
 
 bool PrismaticJoint::is_active() const
 {
-	return joint_impl->joint->IsActive();
+	return impl->joint->IsActive();
 }
 
 //																											___________________																											
@@ -91,8 +92,5 @@ PrismaticJoint &PrismaticJoint::operator =(const PrismaticJoint &copy)
 	return *this;
 }
 
-std::shared_ptr<Joint> PrismaticJoint::create_null_derived()
-{
-	return std::shared_ptr<Joint>(new PrismaticJoint);
-}
+
 }

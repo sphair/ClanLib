@@ -32,6 +32,7 @@
 #include "distance_joint_impl.h"
 #include "distance_joint_description_impl.h"
 #include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 #include "API/Physics/Dynamics/Joints/distance_joint_description.h"
 #include "API/Physics/Dynamics/Joints/distance_joint.h"
 #include "API/Physics/World/physics_context.h"
@@ -47,15 +48,15 @@ DistanceJoint::DistanceJoint()
 }
 
 DistanceJoint::DistanceJoint(PhysicsContext &pc, const DistanceJointDescription &description)
-: impl(new DistanceJoint_Impl(*description.impl->owner))
 {
-	if(impl->owner)
-	{
-		joint_impl->joint_type = Joint_Distance;
-		joint_impl->joint = impl->owner->create_joint(description.impl->joint_def);
-		joint_impl->joint->SetUserData(this);
+	impl = std::shared_ptr<DistanceJoint_Impl> (new DistanceJoint_Impl(pc.impl->get_owner()));
 
-		pc.create_in_context(joint_impl);
+	if(impl->owner_world)
+	{
+		impl->joint_type = Joint_Distance;
+		impl->create_joint(description.impl->joint_def);
+
+		pc.create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");
@@ -79,7 +80,7 @@ void DistanceJoint::throw_if_null() const
 
 bool DistanceJoint::is_active() const
 {
-	return joint_impl->joint->IsActive();
+	return impl->joint->IsActive();
 }
 
 //																											___________________																											
@@ -91,8 +92,4 @@ DistanceJoint &DistanceJoint::operator =(const DistanceJoint &copy)
 	return *this;
 }
 
-std::shared_ptr<Joint> DistanceJoint::create_null_derived()
-{
-	return std::shared_ptr<Joint>(new DistanceJoint);
-}
 }

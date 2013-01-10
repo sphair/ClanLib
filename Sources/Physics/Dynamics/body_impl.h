@@ -44,7 +44,7 @@ class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Body_Impl(PhysicsWorld_Impl &pw_impl);
+	Body_Impl(PhysicsWorld_Impl *owner);
 
 	~Body_Impl();
 
@@ -57,6 +57,7 @@ public:
 	void set_id(int value) { id = value;}
 
 	void create_body(const BodyDescription &description);
+	void remove_body();
 	void on_begin_collision(Body_Impl &body);
 	void on_end_collision(Body_Impl &body);
 	//b2Fixture *create_fixture(b2FixtureDef &description); //obsolete

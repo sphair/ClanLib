@@ -40,9 +40,9 @@ class BodyDescription_Impl
 /// \name Construction
 /// \{
 public:
-	BodyDescription_Impl(PhysicsWorld_Impl &pw_impl)
+	BodyDescription_Impl(PhysicsWorld_Impl *owner)
 	:	bodyDef(),
-		owner(&pw_impl)
+		owner_world(owner)
 	{
 	}
 	
@@ -52,7 +52,7 @@ public:
 /// \name Attributes
 /// \{
 public:
-	PhysicsWorld_Impl *owner;
+	PhysicsWorld_Impl *owner_world;
 	b2BodyDef bodyDef;
 
 /// \}
