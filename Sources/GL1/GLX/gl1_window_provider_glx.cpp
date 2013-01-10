@@ -48,7 +48,6 @@
 #include "../gl1_graphic_context_provider.h"
 #include "../gl1_target_provider.h"
 #include <cstdio>
-#include "pbuffer_impl.h"
 
 #ifdef GL_USE_DLOPEN
 #define GL_OPENGL_LIBRARY "libGL.so.1"
@@ -289,7 +288,7 @@ void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWin
 
 	if (create_provider_flag)
 	{
-		gc = GraphicContext(new GL1GraphicContextProvider(this, false));
+		gc = GraphicContext(new GL1GraphicContextProvider(this));
 	}
 
 	setup_extension_pointers();
@@ -503,15 +502,6 @@ CursorProvider *GL1WindowProvider_GLX::create_cursor(const CursorDescription &cu
 void GL1WindowProvider_GLX::set_cursor(CursorProvider *cursor)
 {
 	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
-}
-
-PBuffer_GL1 GL1WindowProvider_GLX::create_pbuffer(GL1GraphicContextProvider *gc_provider, Size size)
-{
-	PBuffer_GL1 pbuffer(gc_provider);
-
-	pbuffer.create(*this, size);
-
-	return pbuffer;
 }
 
 void GL1WindowProvider_GLX::set_large_icon(const PixelBuffer &image)
