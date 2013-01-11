@@ -164,6 +164,52 @@ void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Joint_Impl> joint)
 	throw Exception("Tried to remove a Joint from the context, but the Joint has no ID number"); 
 }
 
+void PhysicsContext_Impl::remove_body_from_context(int id)
+{
+	if(id>=0)
+	{
+		if( bodies[id]->get_id() == id)
+		{
+			bodies[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Body from the context. The id of the Body is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Body from the context, but the Body has no ID number"); 
+}
+
+void PhysicsContext_Impl::remove_fixture_from_context(int id)
+{
+	if(id>=0)
+	{
+		if( fixtures[id]->get_id() == id)
+		{
+			fixtures[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Fixture from the context. The id of the Fixture is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Fixture from the context, but the Fixture has no ID number"); 
+}
+
+
+void PhysicsContext_Impl::remove_joint_from_context(int id)
+{
+	if(id>=0)
+	{
+		if( joints[id]->get_id() == id)
+		{
+			joints[id].reset();
+		}
+		else
+		throw Exception("Couldn't delete the Joint from the context. The id of the Joint is different than the one stored in the PhysicsContext."); //TODO: expand this.
+	}
+	else
+	throw Exception("Tried to remove a Joint from the context, but the Joint has no ID number"); 
+}
+
 
 
 }

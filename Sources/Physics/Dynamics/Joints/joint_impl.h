@@ -36,7 +36,7 @@ namespace clan
 
 class PhysicsWorld_Impl;
 
-class Joint_Impl
+class Joint_Impl : public std::enable_shared_from_this<Joint_Impl>
 {
 public:
 //																						_______________________

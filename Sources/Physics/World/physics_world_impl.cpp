@@ -29,7 +29,11 @@
 #include "Physics/precomp.h"
 #include "physics_world_description_impl.h"
 #include "physics_world_impl.h"
+#include "physics_context_impl.h"
 #include "API/Physics/Dynamics/body_description.h"
+#include "../Dynamics/body_impl.h"
+#include "../Dynamics/fixture_impl.h"
+#include "../Dynamics/Joints/joint_impl.h"
 
 
 namespace clan
@@ -122,31 +126,60 @@ void PhysicsWorld_Impl::step(float timestep, int velocity_iterations, int positi
 	sig_world_step.invoke(timestep);
 }
 
-b2Joint *PhysicsWorld_Impl::create_joint(const b2JointDef &description)
+void PhysicsWorld_Impl::create_joint(std::shared_ptr<Joint_Impl> &joint, const b2JointDef &description)
 {
-	return world.CreateJoint(&description);
+	pc.impl->create_in_context(joint);
+	joint->joint = world.CreateJoint(&description);
 }
 
-b2Body *PhysicsWorld_Impl::create_body(const b2BodyDef &description)
+void PhysicsWorld_Impl::create_fixture(std::shared_ptr<Fixture_Impl> &fixture, b2Body *body, const b2FixtureDef &description)
 {
-	return world.CreateBody(&description);
+	pc.impl->create_in_context(fixture);
+	fixture->fixture = body->CreateFixture(&description);
 }
 
-b2Fixture *PhysicsWorld_Impl::create_fixture(b2Body *body, const b2FixtureDef &description)
+void PhysicsWorld_Impl::create_body(std::shared_ptr<Body_Impl> &body, const b2BodyDef &description)
 {
-	return body->CreateFixture(&description);
+	pc.impl->create_in_context(body);
+	body->body = world.CreateBody(&description);
 }
-void PhysicsWorld_Impl::destroy_joint(b2Joint *joint)
+
+void PhysicsWorld_Impl::destroy_joint(std::shared_ptr<Joint_Impl> &joint)
+{
+	joints_for_destroying.push_back(joint->joint);
+	//joint->joint = dummy_joint; //Set dummy joint here.
+	pc.impl->remove_from_context(joint);
+}
+void PhysicsWorld_Impl::destroy_fixture(std::shared_ptr<Fixture_Impl> &fixture)
+{
+	fixtures_for_destroying.push_back(fixture->fixture);
+	fixture->fixture = dummy_fixture;
+	pc.impl->remove_from_context(fixture);
+}
+void PhysicsWorld_Impl::destroy_body(std::shared_ptr<Body_Impl> &body)
+{
+	bodies_for_destroying.push_back(body->body);
+	body->body = dummy_body;
+	pc.impl->remove_from_context(body);
+}
+
+void PhysicsWorld_Impl::safe_destroy_joint(b2Joint *joint, int id)
 {
 	joints_for_destroying.push_back(joint);
+
+	pc.impl->remove_joint_from_context(id);
 }
-void PhysicsWorld_Impl::destroy_fixture(b2Fixture *fixture)
+void PhysicsWorld_Impl::safe_destroy_fixture(b2Fixture *fixture, int id)
 {
 	fixtures_for_destroying.push_back(fixture);
+
+	pc.impl->remove_fixture_from_context(id);
 }
-void PhysicsWorld_Impl::destroy_body(b2Body *body)
+void PhysicsWorld_Impl::safe_destroy_body(b2Body *body, int id)
 {
 	bodies_for_destroying.push_back(body);
+
+	pc.impl->remove_body_from_context(id);
 }
 
 void PhysicsWorld_Impl::remove_joints()

@@ -45,9 +45,7 @@ class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 //																						C O N S T R U C T O R S
 public:
 	Body_Impl(PhysicsWorld_Impl *owner);
-
 	~Body_Impl();
-
 //																						___________________
 //																						A T T R I B U T E S
 	int get_id() const {return id;}

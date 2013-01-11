@@ -49,13 +49,14 @@ Joint_Impl::Joint_Impl(PhysicsWorld_Impl *owner)
 
 Joint_Impl::~Joint_Impl()
 {
-	remove_joint();
+	if(joint_occupied)
+	{
+		sig_joint_deletion.invoke();
+		owner_world->safe_destroy_joint(joint, id);
+	}
+
 	return;
 }
-
-
-
-
 //																											___________________																											
 //																											A T T R I B U T E S
 
@@ -66,7 +67,7 @@ void Joint_Impl::create_joint(b2JointDef &joint_def)
 {
 	if(joint_occupied)
 	{
-		owner_world->world.DestroyJoint(joint);
+		owner_world->destroy_joint(shared_from_this());
 		sig_joint_deletion.invoke();
 	}
 	else
@@ -74,15 +75,15 @@ void Joint_Impl::create_joint(b2JointDef &joint_def)
 		joint_occupied = true;
 	}
 
-	joint = owner_world->create_joint(joint_def);
+	owner_world->create_joint(shared_from_this(), joint_def);
 	joint->SetUserData(this);
-
 }
 void  Joint_Impl::remove_joint()
 {
 	if(joint_occupied)
 	{
-		owner_world->world.DestroyJoint(joint);
+		owner_world->destroy_joint(shared_from_this());
+		//owner_world->world.DestroyJoint(joint);
 		joint_occupied = false;
 		sig_joint_deletion.invoke();
 	}
