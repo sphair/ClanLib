@@ -33,6 +33,7 @@
 #include "Display/2D/render_batch_buffer.h"
 #include "Display/2D/render_batch_triangle.h"
 #include "Display/2D/render_batch_line.h"
+#include "Display/2D/render_batch_line_texture.h"
 #include "Display/2D/render_batch_point.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_manager.h"
@@ -63,6 +64,7 @@ public:
 
 	RenderBatchTriangle *get_triangle_batcher();
 	RenderBatchLine *get_line_batcher();
+	RenderBatchLineTexture *get_line_texture_batcher();
 	RenderBatchPoint *get_point_batcher();
 
 	GraphicContext get_gc() const {return gc;}
@@ -95,6 +97,7 @@ private:
 	RenderBatchBuffer render_batcher_buffer;
 	std::shared_ptr<RenderBatchTriangle> render_batcher_triangle;
 	std::shared_ptr<RenderBatchLine> render_batcher_line;
+	std::shared_ptr<RenderBatchLineTexture> render_batcher_line_texture;
 	std::shared_ptr<RenderBatchPoint> render_batcher_point;
 
 	std::vector<Mat4f> canvas_modelviews;

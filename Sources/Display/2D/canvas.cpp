@@ -369,6 +369,12 @@ void Canvas::draw_lines(Vec2f *positions, int num_vertices, const Colorf &color)
 	batcher->draw_lines(*this, positions, color, num_vertices);
 }
 
+void Canvas::draw_lines(Vec2f *line_positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color)
+{
+	RenderBatchLineTexture *batcher = impl->get_line_texture_batcher();
+	batcher->draw_lines(*this, line_positions, texture_positions, num_vertices, texture, line_color);
+}
+
 void Canvas::draw_box(float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	Vec2f positions[5] =
