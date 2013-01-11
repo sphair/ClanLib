@@ -62,6 +62,8 @@ PhysicsWorld_Impl::PhysicsWorld_Impl()
 
 PhysicsWorld_Impl::~PhysicsWorld_Impl() 
 { 
+	//b2World automaticly deletes all remaining b2Bodies, b2Fixtures and b2Joints.
+
 	world.SetContactListener(NULL);
 	world.SetContactFilter(NULL);
 
@@ -97,6 +99,10 @@ void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 }
 void PhysicsWorld_Impl::step()
 {
+	if(joints_for_destroying.size()>0) remove_joints();
+	if(fixtures_for_destroying.size()>0) remove_fixtures();
+	if(bodies_for_destroying.size()>0) remove_bodies();
+
 	world.Step(timestep,velocity_iterations,position_iterations);
 	listener.emit_collision_signals();
 
@@ -106,10 +112,19 @@ void PhysicsWorld_Impl::step()
 }
 void PhysicsWorld_Impl::step(float timestep, int velocity_iterations, int position_iterations)
 {
+	if(joints_for_destroying.size()>0) remove_joints();
+	if(fixtures_for_destroying.size()>0) remove_fixtures();
+	if(bodies_for_destroying.size()>0) remove_bodies();
+
 	world.Step(timestep,velocity_iterations,position_iterations);
 	listener.emit_collision_signals();
 
 	sig_world_step.invoke(timestep);
+}
+
+b2Joint *PhysicsWorld_Impl::create_joint(const b2JointDef &description)
+{
+	return world.CreateJoint(&description);
 }
 
 b2Body *PhysicsWorld_Impl::create_body(const b2BodyDef &description)
@@ -117,9 +132,54 @@ b2Body *PhysicsWorld_Impl::create_body(const b2BodyDef &description)
 	return world.CreateBody(&description);
 }
 
-b2Joint *PhysicsWorld_Impl::create_joint(const b2JointDef &description)
+b2Fixture *PhysicsWorld_Impl::create_fixture(b2Body *body, const b2FixtureDef &description)
 {
-	return world.CreateJoint(&description);
+	return body->CreateFixture(&description);
+}
+void PhysicsWorld_Impl::destroy_joint(b2Joint *joint)
+{
+	joints_for_destroying.push_back(joint);
+}
+void PhysicsWorld_Impl::destroy_fixture(b2Fixture *fixture)
+{
+	fixtures_for_destroying.push_back(fixture);
+}
+void PhysicsWorld_Impl::destroy_body(b2Body *body)
+{
+	bodies_for_destroying.push_back(body);
+}
+
+void PhysicsWorld_Impl::remove_joints()
+{
+	std::list<b2Joint *>::iterator it;
+	for(it = joints_for_destroying.begin() ; it != joints_for_destroying.end() ;)
+	{
+		world.DestroyJoint(*it);
+
+		it = joints_for_destroying.erase(it);
+	}
+}
+
+void PhysicsWorld_Impl::remove_fixtures()
+{
+	std::list<b2Fixture *>::iterator it;
+	for(it = fixtures_for_destroying.begin() ; it != fixtures_for_destroying.end() ;)
+	{
+		(*it)->GetBody()->DestroyFixture(*it);
+
+		it = fixtures_for_destroying.erase(it);
+	}
+}
+
+void PhysicsWorld_Impl::remove_bodies()
+{
+	std::list<b2Body *>::iterator it;
+	for(it = bodies_for_destroying.begin() ; it != bodies_for_destroying.end() ;)
+	{
+		world.DestroyBody(*it);
+
+		it = bodies_for_destroying.erase(it);
+	}
 }
 
 }
