@@ -151,7 +151,7 @@ void Alpha::draw_section(clan::Canvas &canvas, clan::Font &font, int yoffset, co
 
 	const int outer_area_size = 32;
 	const int outer_xoffset = 8;
-	canvas.fill( outer_xoffset, yoffset, outer_xoffset + outer_area_size, yoffset + outer_area_size, background);
+	canvas.draw_fill( outer_xoffset, yoffset, outer_xoffset + outer_area_size, yoffset + outer_area_size, background);
 
 	canvas.set_blend_state(blend_enabled);
 

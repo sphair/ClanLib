@@ -54,7 +54,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 	FontDescription desc;
 	desc.set_typeface_name("tahoma");
-	desc.set_height(32);
+	desc.set_height(24);
 	desc.set_subpixel(true);
 	Font font(canvas, desc);
 
@@ -104,16 +104,12 @@ int FullScreen::start(const std::vector<std::string> &args)
 		float x = cos(sin_count)*120.0f;
 		float y = sin(sin_count)*120.0f;
 		sin_count += 0.002f * time_delta_ms;
-		canvas.fill(Rectf( 320.0f + x -30.0f, 300.0f + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(0.0f, 1.0f, 0.0, 0.5f));
+		canvas.draw_fill(Rectf( 320.0f + x -30.0f, 300.0f + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(0.0f, 1.0f, 0.0, 0.5f));
 		x = cos(sin_count+3.14159f)*120.0f;
 		y = sin(sin_count+3.14159f)*120.0f;
-		canvas.fill(Rectf( 320.0f + x -30.0f, 300 + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(1.0f, 1.0f, 0.0, 0.5f));
+		canvas.draw_fill(Rectf( 320.0f + x -30.0f, 300 + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
-		canvas.flush();
-
-		// Flip the display, showing on the screen what we have drawed
-		// since last call to flip()
-		window.flip(1);
+		canvas.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process(0);
