@@ -93,10 +93,9 @@ ProgramObject HSV::create_shader_program(GraphicContext &gc)
 {
 	ProgramObject program = ProgramObject::load(gc, "Resources/vertex.glsl", "Resources/fragment.glsl");
 	program.bind_attribute_location(0, "Position");
-	program.bind_attribute_location(1, "HueOffset0");
-	program.bind_attribute_location(2, "TexCoord0");
+	program.bind_attribute_location(1, "TexCoord0");
 
-	program.set_storage_buffer_index("ProgramUniforms", 0);
+	program.set_uniform_buffer_index("ProgramUniforms", 0);
 
 	if (!program.link())
 		throw Exception("Unable to link program");
@@ -142,15 +141,16 @@ void HSV::render_texture(Canvas &canvas, ProgramObject &program, Texture &textur
 	VertexArrayVector<Vec2f> gpu_tex1_coords = VertexArrayVector<Vec2f>(gc, tex1_coords, 6);
 
 	primarray.set_attributes(0, gpu_positions);
-	//FIXME: primarray.set_attribute(1, Vec1f(hue_offset));
-	primarray.set_attributes(2, gpu_tex1_coords);
+	primarray.set_attributes(1, gpu_tex1_coords);
 
 	struct ProgramUniforms
 	{
 		Mat4f cl_ModelViewProjectionMatrix;
+		float HueOffset0;
 	};
 	ProgramUniforms buffer;
 	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	buffer.HueOffset0 = hue_offset;
 	UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
 	gc.set_uniform_buffer(0, uniform_vector);
 
