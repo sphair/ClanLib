@@ -70,15 +70,30 @@ public:
 /// \}
 /// \name Operations
 /// \{
+public:
 	void create(const PhysicsWorldDescription &description);
 	void step();
 	void step(float timestep, int velocity_iterations, int position_iterations);
 
-	b2Body		*create_body(const b2BodyDef &description);
 	b2Joint		*create_joint(const b2JointDef &description);
+	b2Fixture	*create_fixture(b2Body *body, const b2FixtureDef &description);
+	b2Body		*create_body(const b2BodyDef &description);
+
+
+	void destroy_joint(b2Joint *joint);
+	void destroy_fixture(b2Fixture *fixture);
+	void destroy_body(b2Body *body);
+
+
+private:
+
+	void remove_joints();
+	void remove_fixtures();
+	void remove_bodies();
 
 //																						_____________
 //																						S I G N A L S
+public:
 	Signal_v1<float> sig_world_step;
 	Signal_v0 sig_world_destroyed;
 //																						___________________________
@@ -87,6 +102,10 @@ public:
 /// \name Implementation
 /// \{
 public:
+
+	std::list<b2Joint *> joints_for_destroying;
+	std::list<b2Fixture *> fixtures_for_destroying;
+	std::list<b2Body *> bodies_for_destroying;
 
 	b2Body *dummy_body;
 	b2Fixture *dummy_fixture;
