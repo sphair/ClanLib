@@ -41,12 +41,12 @@ int HSV::start(const std::vector<std::string> &args)
 	Slot slot = window.sig_window_close().connect(this, &HSV::on_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &HSV::on_input_up);
 
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 	InputContext ic = window.get_ic();
-	ProgramObject program = create_shader_program(gc);
-	Texture texture = create_texture(gc);
+	ProgramObject program = create_shader_program(canvas);
+	Texture texture = create_texture(canvas);
 
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
 	unsigned int last_time = System::get_time();
 
@@ -57,19 +57,19 @@ int HSV::start(const std::vector<std::string> &args)
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 
-		if (ic.get_keyboard().get_keycode(KEY_LEFT))
+		if (ic.get_keyboard().get_keycode(keycode_left))
 			hue_offset += 0.0005f * time_delta_ms;
-		else if (ic.get_keyboard().get_keycode(KEY_RIGHT))
+		else if (ic.get_keyboard().get_keycode(keycode_right))
 			hue_offset -= 0.0005f * time_delta_ms;
 		if (hue_offset < -1.0f)
 			hue_offset += 1.0f;
 		if (hue_offset > 1.0f)
 			hue_offset -= 1.0f;
 
-		render_texture(gc, program, texture, hue_offset);
+		render_texture(canvas, program, texture, hue_offset);
 
-		font.draw_text(gc, 32, 700, "Use cursor keys left and right");
-		window.flip();
+		font.draw_text(canvas, 32, 700, "Use cursor keys left and right");
+		canvas.flip();
 		KeepAlive::process(10);
 	}
 
@@ -83,7 +83,7 @@ void HSV::on_close()
 
 void HSV::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -100,9 +100,9 @@ ProgramObject HSV::create_shader_program(GraphicContext &gc)
 	return program;
 }
 
-Texture HSV::create_texture(GraphicContext &gc)
+Texture2D HSV::create_texture(Canvas &canvas)
 {
-	return Texture(gc, "../../Game/DiceWar/Resources/lobby_background2.png");
+	return Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
 }
 
 void HSV::render_texture(GraphicContext &gc, ProgramObject &program, Texture &texture, float hue_offset)
@@ -131,13 +131,17 @@ void HSV::render_texture(GraphicContext &gc, ProgramObject &program, Texture &te
 	};
 
 	PrimitivesArray primarray(gc);
-	primarray.set_attributes(0, positions);
-	primarray.set_attribute(1, Vec1f(hue_offset));
-	primarray.set_attributes(2, tex1_coords);
+
+	VertexArrayVector<Vec2f> gpu_positions = VertexArrayVector<Vec2f>(gc, positions, 6);
+	VertexArrayVector<Vec2f> gpu_tex1_coords = VertexArrayVector<Vec2f>(gc, tex1_coords, 6);
+
+	primarray.set_attributes(0, gpu_positions);
+	//FIXME: primarray.set_attribute(1, Vec1f(hue_offset));
+	primarray.set_attributes(2, gpu_tex1_coords);
 
 	gc.set_texture(0, texture);
-	gc.set_program_object(program, cl_program_matrix_modelview_projection);
-	gc.draw_primitives(cl_triangles, 6, primarray);
+	gc.set_program_object(program);
+	gc.draw_primitives(type_triangles, 6, primarray);
 	gc.reset_program_object();
 	gc.reset_texture(0);
 }
