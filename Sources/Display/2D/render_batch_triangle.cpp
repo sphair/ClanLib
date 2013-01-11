@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Display/precomp.h"
@@ -37,8 +38,8 @@ namespace clan
 
 int RenderBatchTriangle::max_textures = 4;	// For use by the GL1 target, so it can reduce the number of textures
 
-RenderBatchTriangle::RenderBatchTriangle()
-: position(0), vertices(0), current_gpu_buffer(0), num_current_textures(0), use_glyph_program(false)
+RenderBatchTriangle::RenderBatchTriangle(RenderBatchBuffer *batch_buffer)
+: position(0), vertices(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer)
 {
 }
 
@@ -254,10 +255,9 @@ void RenderBatchTriangle::lock_transfer_buffer(Canvas &canvas)
 	if (vertices == 0)
 	{
 		GraphicContext &gc = canvas.get_gc();
-		if (transfer_buffers[current_gpu_buffer].is_null())
-			transfer_buffers[current_gpu_buffer] = TransferVector<SpriteVertex>(gc, max_vertices, usage_stream_draw);
-		transfer_buffers[current_gpu_buffer].lock(gc, access_write_discard);
-		vertices = transfer_buffers[current_gpu_buffer].get_data();
+		transfer_buffers = TransferVector<SpriteVertex>(batch_buffer->get_transfer_buffer(gc));
+		transfer_buffers.lock(gc, access_write_discard);
+		vertices = transfer_buffers.get_data();
 	}
 }
 
@@ -284,10 +284,10 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		if (vertices)
 		{
 			vertices = 0;
-			transfer_buffers[current_gpu_buffer].unlock();
+			transfer_buffers.unlock();
 		}
 
-		gpu_vertices.copy_from(gc, transfer_buffers[current_gpu_buffer], 0, 0, position);
+		gpu_vertices.copy_from(gc, transfer_buffers, 0, 0, position);
 
 		for (int i = 0; i < num_current_textures; i++)
 			gc.set_texture(i, current_textures[i]);
@@ -313,9 +313,7 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 			current_textures[i] = Texture2D();
 		num_current_textures = 0;
 
-		current_gpu_buffer++;
-		if (current_gpu_buffer == num_gpu_buffers)
-			current_gpu_buffer = 0;
+		batch_buffer->next_buffer();
 	}
 }
 

@@ -50,7 +50,7 @@ public:
 	{
 	}
 
-	/// \brief Constructs a TransferBuffer
+	/// \brief Constructs a TransferVector
 	///
 	/// \param gc = Graphic Context
 	/// \param size = value
@@ -60,7 +60,7 @@ public:
 	{
 	}
 
-	/// \brief Constructs a TransferBuffer
+	/// \brief Constructs a TransferVector
 	///
 	/// \param gc = Graphic Context
 	/// \param data = void
@@ -75,6 +75,13 @@ public:
 	: TransferBuffer(gc, data.empty() ? (Type*)0 : &data[0], data.size() * sizeof(Type), usage)
 	{
 	}
+
+	/// \brief Constructs a TransferVector from an existing buffer
+	explicit TransferVector(TransferBuffer &transfer_buffer)
+	: TransferBuffer(transfer_buffer)
+	{
+	}
+
 /// \}
 
 /// \name Attributes

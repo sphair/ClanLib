@@ -73,21 +73,21 @@ Canvas_Impl::~Canvas_Impl()
 RenderBatchTriangle *Canvas_Impl::get_triangle_batcher()
 {
 	if (!render_batcher_triangle)
-		render_batcher_triangle = std::shared_ptr<RenderBatchTriangle>(new RenderBatchTriangle());
+		render_batcher_triangle = std::shared_ptr<RenderBatchTriangle>(new RenderBatchTriangle(&render_batcher_buffer));
 	return render_batcher_triangle.get();
 }
 
 RenderBatchLine *Canvas_Impl::get_line_batcher()
 {
 	if (!render_batcher_line)
-		render_batcher_line = std::shared_ptr<RenderBatchLine>(new RenderBatchLine());
+		render_batcher_line = std::shared_ptr<RenderBatchLine>(new RenderBatchLine(&render_batcher_buffer));
 	return render_batcher_line.get();
 }
 
 RenderBatchPoint *Canvas_Impl::get_point_batcher()
 {
 	if (!render_batcher_point)
-		render_batcher_point = std::shared_ptr<RenderBatchPoint>(new RenderBatchPoint());
+		render_batcher_point = std::shared_ptr<RenderBatchPoint>(new RenderBatchPoint(&render_batcher_buffer));
 	return render_batcher_point.get();
 }
 

@@ -56,6 +56,7 @@ libclan30Display_la_SOURCES = \
 	2D/sprite_description.cpp \
 	2D/image_description.cpp \
 	2D/render_batch_triangle.cpp \
+	2D/render_batch_buffer.cpp \
 	2D/canvas.cpp \
 	2D/render_batch_point.cpp \
 	2D/texture_group_impl.cpp \
