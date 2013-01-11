@@ -84,6 +84,13 @@ RenderBatchLine *Canvas_Impl::get_line_batcher()
 	return render_batcher_line.get();
 }
 
+RenderBatchLineTexture *Canvas_Impl::get_line_texture_batcher()
+{
+	if (!render_batcher_line_texture)
+		render_batcher_line_texture = std::shared_ptr<RenderBatchLineTexture>(new RenderBatchLineTexture(&render_batcher_buffer));
+	return render_batcher_line_texture.get();
+}
+
 RenderBatchPoint *Canvas_Impl::get_point_batcher()
 {
 	if (!render_batcher_point)

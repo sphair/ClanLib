@@ -63,6 +63,7 @@ libclan30Display_la_SOURCES = \
 	2D/span_layout_impl.cpp \
 	2D/color_hsl.cpp \
 	2D/render_batch_line.cpp \
+	2D/render_batch_line_texture.cpp \
 	2D/subtexture.cpp \
 	2D/sprite_impl.cpp \
 	2D/sprite.cpp \
