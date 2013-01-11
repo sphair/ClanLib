@@ -40,7 +40,7 @@ private:
 	void on_close();
 	void on_input_up(const InputEvent &key);
 	ProgramObject create_shader_program(GraphicContext &gc);
-	Texture create_texture(GraphicContext &gc);
+	Texture2D create_texture(Canvas &canvas);
 	void render_texture(GraphicContext &gc, ProgramObject &program, Texture &texture, float hue_offset);
 
 	bool quit;
