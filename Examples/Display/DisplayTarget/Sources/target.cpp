@@ -103,7 +103,7 @@ bool Target::run_demo()
 
 	quit = false;
 	// Run until someone presses escape
-	while (true)
+	while (!quit)
 	{
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
 		{
