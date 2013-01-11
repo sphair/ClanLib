@@ -16,25 +16,25 @@ detection for particles.
 #include "usercollision.h"
 #include "framerate_counter.h"
 
-int DemoUserCollision::run(DisplayWindow &window)
+int DemoUserCollision::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - UserCollision ");
 
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoUserCollision::on_window_close);
-	GraphicContext gc = window.get_gc();
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoUserCollision::on_window_close);
+	clan::Canvas canvas(window);
 
-	Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoUserCollision::on_key_up);
+	clan::Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoUserCollision::on_key_up);
 
 	// initialize LinearParticle
-	srand(System::get_time());
+	srand(clan::System::get_time());
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite particle_1_sur(gc, "Resources/sketch.png");
-	particle_1_sur.set_alignment(origin_center);
+	clan::Sprite particle_1_sur(canvas, "Resources/sketch.png");
+	particle_1_sur.set_alignment(clan::origin_center);
 
-	Sprite particle_2_sur(gc, "Resources/explosion.png");
-	particle_2_sur.set_alignment(origin_center);
+	clan::Sprite particle_2_sur(canvas, "Resources/explosion.png");
+	particle_2_sur.set_alignment(clan::origin_center);
 
 	/* If L_INFINITE_LIFE is used, the system will not remove
 	the particle automatically. */
@@ -75,46 +75,46 @@ int DemoUserCollision::run(DisplayWindow &window)
 	exp_emitter  = new L_EffectEmitter(exp_effect);
 
 	circle_pos.set( 320, 100 );
-	Image circle_surface(gc, "Resources/circle.png");
-	circle_surface.set_alignment(origin_center);
+	clan::Image circle_surface(canvas, "Resources/circle.png");
+	circle_surface.set_alignment(clan::origin_center);
 
-	Image cflight_surface(gc, "Resources/cflight.png");
-	cflight_surface.set_color( Color(255,255,255,220) );
-	cflight_surface.set_alignment(origin_center);
+	clan::Image cflight_surface(canvas, "Resources/cflight.png");
+	cflight_surface.set_color( clan::Color(255,255,255,220) );
+	cflight_surface.set_alignment(clan::origin_center);
 
 	quit = false;
 	show_menu = true;
 
-	Font font(gc,  "Arial", 16 );
+	clan::Font font(canvas,  "Arial", 16 );
 	FramerateCounter frameratecounter;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
-	InputDevice &keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
 	while(!quit)
 	{
 		triggered = false;
 
-		gc.clear();
+		canvas.clear();
 
 		L_Vector vel;
-		if( keyboard.get_keycode(KEY_UP) )
+		if( keyboard.get_keycode(clan::keycode_up) )
 			vel.y = -0.2;
 
-		else if( keyboard.get_keycode(KEY_DOWN))
+		else if( keyboard.get_keycode(clan::keycode_down))
 			vel.y  = 0.2;
 
-		if( keyboard.get_keycode(KEY_LEFT))
+		if( keyboard.get_keycode(clan::keycode_left))
 			vel.x = -0.2;
 
-		else if( keyboard.get_keycode(KEY_RIGHT))
+		else if( keyboard.get_keycode(clan::keycode_right))
 			vel.x = 0.2;
 
-		if( keyboard.get_keycode(KEY_Z))
+		if( keyboard.get_keycode(clan::keycode_z))
 			triggered = true;
 
 		shooting_eff->set_velocity(vel);
 
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -127,25 +127,25 @@ int DemoUserCollision::run(DisplayWindow &window)
 		if( time_run > 0 )
 			run_a_step(time_run);
 
-		circle_surface.draw(gc, circle_pos.x, circle_pos.y);
-		L_DrawParticle(gc, shooting_eff);
-		L_DrawParticle(gc, exp_emitter);
-		cflight_surface.draw(gc, shooting_eff->x_pos, shooting_eff->y_pos);
+		circle_surface.draw(canvas, circle_pos.x, circle_pos.y);
+		L_DrawParticle(canvas, shooting_eff);
+		L_DrawParticle(canvas, exp_emitter);
+		cflight_surface.draw(canvas, shooting_eff->x_pos, shooting_eff->y_pos);
 
 		if( show_menu )
 		{
-			frameratecounter.show_fps(gc, font);
+			frameratecounter.show_fps(canvas, font);
 
-			font.draw_text(gc, 10,395,"F1 : hide/show menu");
-			font.draw_text(gc, 10,410,"Space : trigger random sleep");
-			font.draw_text(gc, 10,425,"Z Key : trigger shooting");
-			font.draw_text(gc, 10,440,"Arrow keys : move the shooting source");
+			font.draw_text(canvas, 10,395,"F1 : hide/show menu");
+			font.draw_text(canvas, 10,410,"Space : trigger random sleep");
+			font.draw_text(canvas, 10,425,"Z Key : trigger shooting");
+			font.draw_text(canvas, 10,440,"Arrow keys : move the shooting source");
 		}
 
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 
@@ -161,16 +161,16 @@ int DemoUserCollision::run(DisplayWindow &window)
 	return 0;
 }
 
-void DemoUserCollision::on_key_up(const InputEvent& key, const InputState&)
+void DemoUserCollision::on_key_up(const clan::InputEvent& key)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 }
 
 void DemoUserCollision::on_window_close()

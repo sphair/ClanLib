@@ -35,10 +35,10 @@ class DemoUserCollision
 public:
 	DemoUserCollision(){}
 
-	int run(DisplayWindow &window);
+	int run(clan::DisplayWindow &window);
 
 private:
-	void on_key_up(const InputEvent& key, const InputState&);
+	void on_key_up(const clan::InputEvent& key);
 	void on_window_close();
 	void run_a_step(int time);
 	static void check_collision(L_Particle& particle, const void* user_data);

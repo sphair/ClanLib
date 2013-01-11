@@ -15,20 +15,20 @@ This example demostrates using L_ShootingEffect to make an effect.
 #include "shooting.h"
 #include "framerate_counter.h"
 
-int DemoShooting::run(DisplayWindow &window)
+int DemoShooting::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - Shooting ");
 
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoShooting::on_window_close);
-	GraphicContext gc = window.get_gc();
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoShooting::on_key_up);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoShooting::on_window_close);
+	clan::Canvas canvas(window);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoShooting::on_key_up);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc,"Resources/star.png");
-	surface.set_alignment(origin_center);
+	clan::Sprite surface(canvas,"Resources/star.png");
+	surface.set_alignment(clan::origin_center);
 
 	motion_ctrl.set_1d_acceleration(-0.0003);
 
@@ -53,15 +53,15 @@ int DemoShooting::run(DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	Font font(gc, "Arial", 16 );
+	clan::Font font(canvas, "Arial", 16 );
 	FramerateCounter frameratecounter;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
 	while(!quit)
 	{
-		gc.clear();
+		canvas.clear();
 
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -77,24 +77,24 @@ int DemoShooting::run(DisplayWindow &window)
 			run_a_step(time_run);
 
 
-		L_DrawParticle(gc, effect);
+		L_DrawParticle(canvas, effect);
 
 		if( show_menu )
 		{
-			frameratecounter.show_fps(gc, font);
+			frameratecounter.show_fps(canvas, font);
 
 			sprintf(str,"#Particle : %d", effect->get_particle_num());
-			font.draw_text(gc,10,30,str);
+			font.draw_text(canvas,10,30,str);
 
-			font.draw_text(gc,10,425,"F1 : hide/show menu");
-			font.draw_text(gc,10,440,"Space : trigger random sleep");
+			font.draw_text(canvas,10,425,"F1 : hide/show menu");
+			font.draw_text(canvas,10,440,"Space : trigger random sleep");
 		}
 
 
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	delete effect;
@@ -105,16 +105,16 @@ int DemoShooting::run(DisplayWindow &window)
 	return 0;
 }
 
-void DemoShooting::on_key_up(const InputEvent& key, const InputState &)
+void DemoShooting::on_key_up(const clan::InputEvent& key)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 }
 
 void DemoShooting::on_window_close()
@@ -125,8 +125,8 @@ void DemoShooting::on_window_close()
 void DemoShooting::run_a_step(int time)
 {
 	static double rad = 0.0;
-	static Vec2<float> current_pos(460, 360);
-	static Vec2<float> prev_pos;
+	static clan::Vec2f current_pos(460, 360);
+	static clan::Vec2f prev_pos;
 
 	rad -= 0.002*time;
 

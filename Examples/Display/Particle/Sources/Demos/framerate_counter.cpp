@@ -37,7 +37,7 @@ FramerateCounter::FramerateCounter()
 void FramerateCounter::frame_shown()
 {
 	frames++;
-	int current_time = System::get_time();
+	int current_time = clan::System::get_time();
 	if (start_time == 0)
 	{
 		start_time = current_time;
@@ -55,8 +55,8 @@ void FramerateCounter::frame_shown()
 	}
 }
 
-void FramerateCounter::show_fps(GraphicContext &gc, Font &fps_font)
+void FramerateCounter::show_fps(clan::Canvas &canvas, clan::Font &fps_font)
 {
-	std::string fps = string_format("%1 fps", get_framerate());
-	fps_font.draw_text(gc, gc.get_width() - 100, 30, fps);
+	std::string fps = clan::string_format("%1 fps", get_framerate());
+	fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 }

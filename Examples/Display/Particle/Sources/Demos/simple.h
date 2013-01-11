@@ -33,10 +33,10 @@ class DemoSimple
 public:
 	DemoSimple(){}
 
-	int run(DisplayWindow &window);
+	int run(clan::DisplayWindow &window);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:

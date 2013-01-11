@@ -165,7 +165,7 @@ public:
 
 	void run(int time_elapesed_t);
 
-	void draw(GraphicContext &gc, int x_shift=0, int y_shift=0);
+	void draw(clan::Canvas &canvas, int x_shift=0, int y_shift=0);
 
 	/** Create a clone this particle effect. */
 	virtual L_ParticleEffect* new_clone(void) = 0;

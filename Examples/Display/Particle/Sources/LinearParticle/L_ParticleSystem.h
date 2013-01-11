@@ -29,7 +29,7 @@
 #include "L_EffectEmitter.h"
 
 
-//! LinearParticle System
+//! LinearParticle clan::System
 class L_ParticleSystem
 {
 

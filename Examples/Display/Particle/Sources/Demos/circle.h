@@ -35,11 +35,11 @@ class DemoCircle
 public:
 	DemoCircle(){}
 
-	int run(DisplayWindow &window);
+	int run(clan::DisplayWindow &window);
 
 private:
 	void run_a_step(int time);
-	void on_key_up(const InputEvent &key);
+	void on_key_up(const clan::InputEvent &key);
 	void on_window_close();
 
 private:

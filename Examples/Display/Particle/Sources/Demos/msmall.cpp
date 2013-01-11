@@ -16,19 +16,19 @@ and 1 dimentional acceleration.
 #include "msmall.h"
 #include "framerate_counter.h"
 
-int DemoMSmall::run(DisplayWindow &window)
+int DemoMSmall::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - MSmall ");
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoMSmall::on_window_close);
-	GraphicContext gc = window.get_gc();
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoMSmall::on_key_up);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoMSmall::on_window_close);
+	clan::Canvas canvas(window);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoMSmall::on_key_up);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc, "Resources/small.png");
-	surface.set_alignment(origin_center);
+	clan::Sprite surface(canvas, "Resources/small.png");
+	surface.set_alignment(clan::origin_center);
 
 	motion_ctrl.set_speed_limit(0.1); // set max speed of particle
 	motion_ctrl.set_1d_acceleration(-0.0003); // set deceleration
@@ -52,14 +52,14 @@ int DemoMSmall::run(DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	Font font(gc, "Arial", 16 );
+	clan::Font font(canvas, "Arial", 16 );
 	FramerateCounter frameratecounter;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
-	InputDevice &keyboard = window.get_ic().get_keyboard();
+	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
 	while(!quit)
 	{
-		gc.clear();
+		canvas.clear();
 
 
 		static L_REAL x_pos = 320;
@@ -67,22 +67,22 @@ int DemoMSmall::run(DisplayWindow &window)
 
 		L_REAL x_vel = 0;
 		L_REAL y_vel = 0;
-		if( keyboard.get_keycode(KEY_UP) )
+		if( keyboard.get_keycode(clan::keycode_up) )
 			y_vel = -0.2;
 
-		else if( keyboard.get_keycode(KEY_DOWN))
+		else if( keyboard.get_keycode(clan::keycode_down))
 			y_vel = 0.2;
 
-		if( keyboard.get_keycode(KEY_LEFT))
+		if( keyboard.get_keycode(clan::keycode_left))
 			x_vel = -0.2;
 
-		else if( keyboard.get_keycode(KEY_RIGHT))
+		else if( keyboard.get_keycode(clan::keycode_right))
 			x_vel = 0.2;
 
 		L_Vector vel;
 		vel.set( x_vel, y_vel );
 
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -93,25 +93,25 @@ int DemoMSmall::run(DisplayWindow &window)
 		effect->set_velocity(vel);
 		effect->run(time_run);
 		effect->set_position(x_pos, y_pos);
-		L_DrawParticle(gc, effect);
+		L_DrawParticle(canvas, effect);
 
 		if( show_menu )
 		{
-			frameratecounter.show_fps(gc, font);
+			frameratecounter.show_fps(canvas, font);
 
 			sprintf(str,"#Particle : %d", effect->get_particle_num());
-			font.draw_text(gc,10,30,str);
+			font.draw_text(canvas,10,30,str);
 
-			font.draw_text(gc,10,410,"F1 : hide/show menu");
-			font.draw_text(gc,10,425,"Space : trigger random sleep");
-			font.draw_text(gc,10,440,"Arrow keys : move the effect");
+			font.draw_text(canvas,10,410,"F1 : hide/show menu");
+			font.draw_text(canvas,10,425,"Space : trigger random sleep");
+			font.draw_text(canvas,10,440,"Arrow keys : move the effect");
 		}
 
 
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	delete effect;
@@ -122,16 +122,16 @@ int DemoMSmall::run(DisplayWindow &window)
 	return 0;
 }
 
-void DemoMSmall::on_key_up(const InputEvent& key, const InputState&)
+void DemoMSmall::on_key_up(const clan::InputEvent& key)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 }
 
 void DemoMSmall::on_window_close()

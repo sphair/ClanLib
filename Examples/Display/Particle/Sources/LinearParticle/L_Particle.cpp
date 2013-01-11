@@ -81,7 +81,7 @@ L_Particle::L_Particle(const L_Particle& par)
 }
 
 
-L_Particle::L_Particle(Sprite* surf, int life_t)
+L_Particle::L_Particle(clan::Sprite* surf, int life_t)
 {
    surf->set_linear_filter(true);
 	surface = surf;
@@ -637,11 +637,11 @@ void L_Particle::run(int time_elapesed_t)
 }
 
 
-void L_Particle::draw(GraphicContext &gc, int x_shift, int y_shift)
+void L_Particle::draw(clan::Canvas &canvas, int x_shift, int y_shift)
 {
 
 	surface->set_scale(current_size,current_size);
-	surface->set_angle(Angle(current_radian, cl_radians));
-	surface->set_color( Color(current_color.r,current_color.g,current_color.b,current_color.a) );
-	surface->draw(gc, x_pos+x_shift, y_pos+y_shift);
+	surface->set_angle(clan::Angle(current_radian, clan::angle_radians));
+	surface->set_color( clan::Color(current_color.r,current_color.g,current_color.b,current_color.a) );
+	surface->draw(canvas, x_pos+x_shift, y_pos+y_shift);
 }
