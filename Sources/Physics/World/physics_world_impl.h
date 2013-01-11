@@ -53,8 +53,21 @@ public:
 	PhysicsWorld_Impl();
 
 	virtual ~PhysicsWorld_Impl();
+
+//																						___________________																											
+//																						A T T R I B U T E S
+/// \}
+/// \name Attributes
+/// \{
+
+
+	b2Body *get_dummy_body();
+	b2Fixture *get_dummy_fixture();
+
+
 //																						___________________
 //																						O P E R A T I O N S
+/// \}
 /// \name Operations
 /// \{
 	void create(const PhysicsWorldDescription &description);
@@ -68,12 +81,16 @@ public:
 //																						S I G N A L S
 	Signal_v1<float> sig_world_step;
 	Signal_v0 sig_world_destroyed;
-//																						___________________
-//																						A T T R I B U T E S
+//																						___________________________
+//																						I M P L E M E N T A T I O N
 /// \}
-/// \name Attributes
+/// \name Implementation
 /// \{
 public:
+
+	b2Body *dummy_body;
+	b2Fixture *dummy_fixture;
+
 	b2World world;
 	PhysicsListener listener;
 	PhysicsContext pc;

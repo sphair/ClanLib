@@ -37,12 +37,13 @@
 namespace clan
 {
 
-Fixture_Impl::Fixture_Impl(PhysicsWorld_Impl &pw_impl)
-: fixture(NULL),
+Fixture_Impl::Fixture_Impl(PhysicsWorld_Impl *owner)
+: fixture(owner_world->get_dummy_fixture()),
   fixture_occupied(false),
-  owner_world(&pw_impl),
+  owner_world(owner),
   id(-1)
 {
+
 }
 
 void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &description)
@@ -64,8 +65,12 @@ void Fixture_Impl::remove_fixture()
 {
 	if(fixture_occupied)
 	{
+		sig_fixture_deletion.invoke();
+
 		fixture->GetBody()->DestroyFixture(fixture);
 		fixture_occupied = false;
+
+		fixture = owner_world->get_dummy_fixture();
 	}
 }
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
