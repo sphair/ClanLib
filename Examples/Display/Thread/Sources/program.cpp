@@ -33,10 +33,6 @@
 #include <ClanLib/d3d.h>
 #endif
 
-#ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
-#endif
-
 #ifdef USE_OPENGL_2
 #include <ClanLib/gl.h>
 #endif
@@ -53,10 +49,6 @@ int Program::main(const std::vector<std::string> &args)
 
 		#ifdef USE_D3D
 			clan::SetupD3D setup_d3d;
-		#endif
-
-		#ifdef USE_OPENGL_1
-			clan::SetupGL1 setup_gl1;
 		#endif
 
 		#ifdef USE_OPENGL_2
