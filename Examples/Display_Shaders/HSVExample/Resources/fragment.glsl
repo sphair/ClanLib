@@ -66,11 +66,11 @@ vec3 hsv_to_rgb(vec3 hsv)
     vec3 rgb = vec3(hsv.z,hsv.z,hsv.z);
     if (hsv.y != 0.0)
     {
-        float h = hsv.x * 6;
+        float h = hsv.x * 6.0;
         float i = floor(h);
         float v1 = hsv.z * (1.0 - hsv.y);
         float v2 = hsv.z * (1.0 - hsv.y * (h-i));
-        float v3 = hsv.z * (1.0 - hsv.y * (1-(h-i)));
+        float v3 = hsv.z * (1.0 - hsv.y * (1.0-(h-i)));
         if (i == 0.0)
             rgb = vec3(hsv.z, v3, v1);
         else if (i == 1.0)

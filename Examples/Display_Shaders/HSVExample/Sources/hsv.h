@@ -41,7 +41,7 @@ private:
 	void on_input_up(const InputEvent &key);
 	ProgramObject create_shader_program(GraphicContext &gc);
 	Texture2D create_texture(Canvas &canvas);
-	void render_texture(GraphicContext &gc, ProgramObject &program, Texture &texture, float hue_offset);
+	void render_texture(Canvas &canvas, ProgramObject &program, Texture &texture, float hue_offset);
 
 	bool quit;
 };
