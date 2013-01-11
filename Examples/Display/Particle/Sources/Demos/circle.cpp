@@ -16,19 +16,19 @@ circular light trail.
 #include "circle.h"
 #include "framerate_counter.h"
 
-int DemoCircle::run(DisplayWindow &window)
+int DemoCircle::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - Circle ");
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoCircle::on_window_close);
-	GraphicContext gc = window.get_gc();
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCircle::on_key_up);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoCircle::on_window_close);
+	clan::Canvas canvas(window);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCircle::on_key_up);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc, "Resources/light16p.png");
-	surface.set_alignment(origin_center);
+	clan::Sprite surface(canvas, "Resources/light16p.png");
+	surface.set_alignment(clan::origin_center);
 
 	// create a sample of particle with life of 2000
 	L_Particle particle(&surface,2000);
@@ -49,17 +49,17 @@ int DemoCircle::run(DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	Font font(gc, "tahoma", 16 );
+	clan::Font font(canvas, "tahoma", 16 );
 
 	FramerateCounter frameratecounter;
 
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
 	while(!quit)
 	{
-		gc.clear();
+		canvas.clear();
 
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -75,23 +75,23 @@ int DemoCircle::run(DisplayWindow &window)
 			run_a_step(time_run);
 
 
-		L_DrawParticle(gc, dropper);
+		L_DrawParticle(canvas, dropper);
 
 		if( show_menu )
 		{
 			sprintf(str,"Period (millisecs) : %d",dropping_period);
-			font.draw_text(gc,10,30,str);
+			font.draw_text(canvas,10,30,str);
 
-			font.draw_text(gc,10,410,"F1 : hide/show menu");
-			font.draw_text(gc,10,425,"Space : trigger random sleep");
-			font.draw_text(gc,10,440,"Up/Down : change dropping period");
+			font.draw_text(canvas,10,410,"F1 : hide/show menu");
+			font.draw_text(canvas,10,425,"Space : trigger random sleep");
+			font.draw_text(canvas,10,440,"Up/Down : change dropping period");
 		}
 
-		frameratecounter.show_fps(gc, font);
+		frameratecounter.show_fps(canvas, font);
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	delete dropper;
@@ -103,12 +103,12 @@ int DemoCircle::run(DisplayWindow &window)
  }
 
 // A key was pressed
-void DemoCircle::on_key_up(const InputEvent &key)
+void DemoCircle::on_key_up(const clan::InputEvent &key)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_UP )
+	else if( key.id == clan::keycode_up )
 	{
 		dropping_period++;
 		if( dropping_period > 80 )
@@ -117,7 +117,7 @@ void DemoCircle::on_key_up(const InputEvent &key)
 		dropper->set_period(dropping_period);
 	}
 
-	else if( key.id == KEY_DOWN )
+	else if( key.id == clan::keycode_down )
 	{
 		dropping_period--;
 		if( dropping_period < 5 )
@@ -126,11 +126,11 @@ void DemoCircle::on_key_up(const InputEvent &key)
 		dropper->set_period(dropping_period);
 	}
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 
 }
 
@@ -143,8 +143,8 @@ void DemoCircle::on_window_close()
 void DemoCircle::run_a_step(int time)
 {
 	static double rad = 0.0;
-	static Vec2<float> current_pos(480, 240);
-	static Vec2<float> prev_pos;
+	static clan::Vec2f current_pos(480, 240);
+	static clan::Vec2f prev_pos;
 
 	rad += 0.0026*time;
 

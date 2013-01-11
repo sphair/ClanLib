@@ -55,7 +55,7 @@ public:
 	//get number of particle in this effect manager
 	int get_particle_num(void);
 
-	void draw(GraphicContext &gc, int x_offset=0, int y_offset=0);
+	void draw(clan::Canvas &canvas, int x_offset=0, int y_offset=0);
 
 	void run(int time_elapesed_t, bool trigger_all=true);
 

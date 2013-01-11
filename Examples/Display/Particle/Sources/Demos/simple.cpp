@@ -21,7 +21,7 @@ system which is much more flexible and robust but more complicated.
 #include "../LinearParticle/L_ParticleSystem.h"
 #include "framerate_counter.h"
 
-int DemoSimple::run(DisplayWindow &window)
+int DemoSimple::run(clan::DisplayWindow &window)
 {
 	quit = false;
 
@@ -29,20 +29,20 @@ int DemoSimple::run(DisplayWindow &window)
 	window.set_title("LinearParticle Example - Simple ");
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoSimple::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoSimple::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoSimple::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoSimple::on_input_up);
 
 	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc,"Resources/light16p.png");
-	surface.set_alignment(origin_center);
+	clan::Sprite surface(canvas,"Resources/light16p.png");
+	surface.set_alignment(clan::origin_center);
 
 	// create a sample of particle with life of 5000
 	L_Particle particle(&surface,5000);
@@ -61,14 +61,14 @@ int DemoSimple::run(DisplayWindow &window)
 	float x_vel = 3.0f;
 	float y_vel = 3.0f;
 
-	Font font(gc, "tahoma", 16 );
+	clan::Font font(canvas, "tahoma", 16 );
 
 	FramerateCounter frameratecounter;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		gc.clear();
+		canvas.clear();
 
 		x_pos += x_vel;
 		y_pos += y_vel;
@@ -87,13 +87,13 @@ int DemoSimple::run(DisplayWindow &window)
 		dropper.run(16);
 
 		// draw dropping effect
-		L_DrawParticle(gc,dropper);
+		L_DrawParticle(canvas,dropper);
 
-		frameratecounter.show_fps(gc, font);
+		frameratecounter.show_fps(canvas, font);
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	// deinitialize LinearParticle
@@ -103,9 +103,9 @@ int DemoSimple::run(DisplayWindow &window)
 }
 
 // A key was pressed
-void DemoSimple::on_input_up(const InputEvent &key)
+void DemoSimple::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}

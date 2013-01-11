@@ -35,11 +35,11 @@ class DemoCMotion
 public:
 	DemoCMotion();
 
-	int run(DisplayWindow &window);
+	int run(clan::DisplayWindow &window);
 
 private:
-	void set_style(GraphicContext &gc);
-	void on_key_up(const InputEvent& key, const InputState &, GraphicContext gc);
+	void set_style(clan::Canvas &canvas);
+	void on_key_up(const clan::InputEvent& key, clan::Canvas canvas);
 	void on_window_close();
 	void run_a_step(int time);
 
@@ -48,12 +48,12 @@ private:
 	bool show_menu;
 	bool random_ini_rotation;
 	char current_style;
-	Colorf bg_color;
+	clan::Colorf bg_color;
 
 	L_MotionController motion_ctrl;
 	L_Particle *particle;
 	L_ShootingEffect* effect;
-	Font* font;
-	Colorf fontColor;
+	clan::Font* font;
+	clan::Colorf fontColor;
 	L_BlendingMode blendingMode; 
 };

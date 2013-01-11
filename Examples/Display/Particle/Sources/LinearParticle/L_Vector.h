@@ -41,11 +41,11 @@ public:
 	L_Vector();
 	L_Vector(L_REAL x_in, L_REAL y_in);
 	L_Vector(const L_Vector& vec);
-	L_Vector(const Vec2<float>& vec);
+	L_Vector(const clan::Vec2f& vec);
 
 	void set(L_REAL x_in, L_REAL y_in);
 	void set(const L_Vector& vec);
-	void set(const Vec2<float>& vec);
+	void set(const clan::Vec2f& vec);
 	void set2(L_REAL magnitude, L_REAL radian);
 
 	void set_magnitude(L_REAL magnitude);

@@ -51,13 +51,13 @@ void L_EffectManager::add(L_ParticleEffect* effect_t)
 }
 
 
-void L_EffectManager::draw(GraphicContext &gc, int x_offset, int y_offset)
+void L_EffectManager::draw(clan::Canvas &canvas, int x_offset, int y_offset)
 {
 	std::list<L_ParticleEffect*>::iterator iter = effect_list.begin();
 
 	while( iter != effect_list.end() )
 	{
-		(*iter)->draw(gc, x_offset,y_offset);
+		(*iter)->draw(canvas, x_offset,y_offset);
 		iter++;
 	}
 }

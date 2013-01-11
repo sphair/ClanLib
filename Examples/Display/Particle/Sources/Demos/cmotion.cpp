@@ -20,22 +20,22 @@ DemoCMotion::DemoCMotion() : fontColor(255.0f,255.0f,255.0f), blendingMode(L_ADD
 {
 }
 
-int DemoCMotion::run(DisplayWindow &window)
+int DemoCMotion::run(clan::DisplayWindow &window)
 {
 
 	window.set_title("LinearParticle Example - CMotion ");
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoCMotion::on_window_close);
-	GraphicContext gc = window.get_gc();
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoCMotion::on_window_close);
+	clan::Canvas canvas(window);
 
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCMotion::on_key_up,gc);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoCMotion::on_key_up,canvas);
 
 	// initialize LinearParticle
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc,"Resources/sketch.png");
-	surface.set_alignment(origin_center);
-	font = new Font(gc, "Arial", 16 );
+	clan::Sprite surface(canvas,"Resources/sketch.png");
+	surface.set_alignment(clan::origin_center);
+	font = new clan::Font(canvas, "Arial", 16 );
 
 	motion_ctrl.set_speed_limit(0.65f);
 	motion_ctrl.set_point_acceleration( 320, 240, 0.001f );
@@ -56,7 +56,7 @@ int DemoCMotion::run(DisplayWindow &window)
 	effect->set_speed_distortion(0.06f);
 	effect->initialize();
 
-	bg_color = Colorf(0.0f,0.0f,0.0f);
+	bg_color = clan::Colorf(0.0f,0.0f,0.0f);
 
 
 	char str[32];
@@ -66,16 +66,16 @@ int DemoCMotion::run(DisplayWindow &window)
 
 	random_ini_rotation = false;
 	current_style = 0;
-	set_style(gc);
+	set_style(canvas);
 
 	FramerateCounter frameratecounter;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
 	while(!quit)
 	{
-		gc.clear(bg_color);
+		canvas.clear(bg_color);
 
-		unsigned int current_time = System::get_time();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
@@ -92,28 +92,28 @@ int DemoCMotion::run(DisplayWindow &window)
 
 		
 		if(blendingMode == L_ADDITIVE_BLENDING)
-			L_DrawParticle(gc,effect);
+			L_DrawParticle(canvas,effect);
 		else
-			L_DrawParticleMinusAlpha(gc,effect);
+			L_DrawParticleMinusAlpha(canvas,effect);
 
 		if( show_menu )
 		{
-			frameratecounter.show_fps(gc, *font);
+			frameratecounter.show_fps(canvas, *font);
 
 			sprintf(str,"#Particle : %d", effect->get_particle_num());
-			font->draw_text(gc,10,30,str,fontColor);
+			font->draw_text(canvas,10,30,str,fontColor);
 
-			font->draw_text(gc,10,395,"F1 : hide/show menu",fontColor);
-			font->draw_text(gc,10,410,"Space : trigger random sleep",fontColor);
-			font->draw_text(gc,10,425,"Z key : change style",fontColor);
-			font->draw_text(gc,10,440,"X Key : toggle randomization for initial rotation",fontColor);
+			font->draw_text(canvas,10,395,"F1 : hide/show menu",fontColor);
+			font->draw_text(canvas,10,410,"Space : trigger random sleep",fontColor);
+			font->draw_text(canvas,10,425,"Z key : change style",fontColor);
+			font->draw_text(canvas,10,440,"X Key : toggle randomization for initial rotation",fontColor);
 		}
 
 
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	delete font;
@@ -125,44 +125,44 @@ int DemoCMotion::run(DisplayWindow &window)
 	return 0;
 }
 
-void DemoCMotion::set_style(GraphicContext &gc)
+void DemoCMotion::set_style(clan::Canvas &canvas)
 {
 	if( current_style == 0 )
 	{
-		bg_color = Colorf(0.0f,0.0f,0.0f);
+		bg_color = clan::Colorf(0.0f,0.0f,0.0f);
 
 		particle->set_color(L_Color(255,110,60,255));
 		particle->coloring2(L_Color(255,110,60,255),L_Color(0,200,100,255),0.8);
 		blendingMode = L_ADDITIVE_BLENDING;
 
-		fontColor = Colorf(255.0f,255.0f,255.0f);
+		fontColor = clan::Colorf(255.0f,255.0f,255.0f);
 	}
 
 	else
 	{
-		bg_color = Colorf(255.0f,255.0f,255.0f);
+		bg_color = clan::Colorf(255.0f,255.0f,255.0f);
 
 		particle->set_color(L_Color(100,0,0,0));
 		particle->coloring2(L_Color(100,0,0,0),L_Color(0,0,0,0),0.8);
 		blendingMode = L_NORMAL_BLENDING;
 
-		fontColor = Colorf(0.0f,0.0f,0.0f);
+		fontColor = clan::Colorf(0.0f,0.0f,0.0f);
 	}
 
 }
 
-void DemoCMotion::on_key_up(const InputEvent& key, const InputState &, GraphicContext gc)
+void DemoCMotion::on_key_up(const clan::InputEvent& key, clan::Canvas canvas)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_Z)
+	else if( key.id == clan::keycode_z)
 	{
 		current_style = (current_style+1)%2;
-		set_style(gc);
+		set_style(canvas);
 	}
 
-	else if( key.id == KEY_X)
+	else if( key.id == clan::keycode_x)
 	{
 		random_ini_rotation = !random_ini_rotation;
 		if( random_ini_rotation )
@@ -172,11 +172,11 @@ void DemoCMotion::on_key_up(const InputEvent& key, const InputState &, GraphicCo
 			effect->set_rotation_distortion(0);
 	}
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 }
 
 void DemoCMotion::on_window_close()
@@ -187,8 +187,8 @@ void DemoCMotion::on_window_close()
 void DemoCMotion::run_a_step(int time)
 {
 	static double rad = 0.0;
-	static Vec2<float> current_pos(460, 360);
-	static Vec2<float> prev_pos;
+	static clan::Vec2f current_pos(460, 360);
+	static clan::Vec2f prev_pos;
 
 	rad -= 0.002*time;
 

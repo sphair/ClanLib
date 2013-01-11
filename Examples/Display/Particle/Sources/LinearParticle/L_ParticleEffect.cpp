@@ -395,12 +395,12 @@ void L_ParticleEffect::initialize(void)
 }
 
 
-void L_ParticleEffect::draw(GraphicContext &gc, int x_shift, int y_shift)
+void L_ParticleEffect::draw(clan::Canvas &canvas, int x_shift, int y_shift)
 {
 	std::list<L_Particle*>::iterator iter = particle_list.begin();
 	while( iter != particle_list.end() )
 	{
-		(*iter)->draw(gc, x_shift, y_shift);
+		(*iter)->draw(canvas, x_shift, y_shift);
 		iter++;
 	}
 }

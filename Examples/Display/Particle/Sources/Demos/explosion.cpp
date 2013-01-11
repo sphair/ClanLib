@@ -16,16 +16,16 @@ explosion effects.
 #include "explosion.h"
 #include "framerate_counter.h"
 
-int DemoExplosion::run(DisplayWindow &window)
+int DemoExplosion::run(clan::DisplayWindow &window)
 {
 	window.set_title("LinearParticle Example - Explosion ");
 
-	Slot slot_quit = window.sig_window_close().connect(this, &DemoExplosion::on_window_close);
-	GraphicContext gc = window.get_gc();
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &DemoExplosion::on_window_close);
+	clan::Canvas canvas(window);
 
-	Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoExplosion::on_key_up);
-	Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_down().connect(this, &DemoExplosion::on_mouse_down);
-	Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &DemoExplosion::on_mouse_down);
+	clan::Slot slot_key_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &DemoExplosion::on_key_up);
+	clan::Slot slot_mouse_up = (window.get_ic().get_mouse()).sig_key_down().connect(this, &DemoExplosion::on_mouse_down);
+	clan::Slot slot_mouse_dblclk = (window.get_ic().get_mouse()).sig_key_dblclk().connect(this, &DemoExplosion::on_mouse_down);
 
 	window.hide_cursor();
 
@@ -33,11 +33,11 @@ int DemoExplosion::run(DisplayWindow &window)
 	L_ParticleSystem::init();
 
 	// create surface to be used for particle and set the alignment
-	Sprite surface(gc,"Resources/explosion.png");
-	surface.set_alignment(origin_center);
+	clan::Sprite surface(canvas,"Resources/explosion.png");
+	surface.set_alignment(clan::origin_center);
 
-	Sprite pointer_sur(gc,"Resources/pointer.png");
-	pointer_sur.set_alignment(origin_center);
+	clan::Sprite pointer_sur(canvas,"Resources/pointer.png");
+	pointer_sur.set_alignment(clan::origin_center);
 
 	motion_ctrl.set_1d_acceleration(-0.0004);
 
@@ -64,43 +64,43 @@ int DemoExplosion::run(DisplayWindow &window)
 	quit = false;
 	show_menu = true;
 
-	Font font(gc, "Arial", 16 );
+	clan::Font font(canvas, "Arial", 16 );
 
 	FramerateCounter frameratecounter;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 
-	InputDevice &mouse = window.get_ic().get_mouse();
+	clan::InputDevice &mouse = window.get_ic().get_mouse();
 	while(!quit)
 	{
-		gc.clear();
-		unsigned int current_time = System::get_time();
+		canvas.clear();
+		unsigned int current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 
 		emitter->run(time_run);
-		L_DrawParticle(gc,emitter);
+		L_DrawParticle(canvas,emitter);
 
 		// draw cross pointer
-		pointer_sur.draw(gc, mouse.get_x(), mouse.get_y());
+		pointer_sur.draw(canvas, mouse.get_x(), mouse.get_y());
 
 
 		if( show_menu )
 		{
-			frameratecounter.show_fps(gc, font);
+			frameratecounter.show_fps(canvas, font);
 
 			sprintf(str,"#Particle : %d", emitter->get_particle_num());
-			font.draw_text(gc,10,30,str);
+			font.draw_text(canvas,10,30,str);
 
-			font.draw_text(gc,10,410,"F1 : hide/show menu");
-			font.draw_text(gc,10,425,"Space : trigger random sleep");
-			font.draw_text(gc,10,440,"Left Click : Emit an explosion");
+			font.draw_text(canvas,10,410,"F1 : hide/show menu");
+			font.draw_text(canvas,10,425,"Space : trigger random sleep");
+			font.draw_text(canvas,10,440,"Left Click : Emit an explosion");
 		}
 
 
 		window.flip(0);	// Set to "1" to lock to screen refresh rate
 		frameratecounter.frame_shown();
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	window.show_cursor();
@@ -114,22 +114,22 @@ int DemoExplosion::run(DisplayWindow &window)
 	return 0;
 }
 
-void DemoExplosion::on_key_up(const InputEvent& key, const InputState&)
+void DemoExplosion::on_key_up(const clan::InputEvent& key)
 {
-	if( key.id == KEY_ESCAPE )
+	if( key.id == clan::keycode_escape )
 		quit = true;
 
-	else if( key.id == KEY_F1)
+	else if( key.id == clan::keycode_f1)
 		show_menu = !show_menu;
 
-	else if( key.id == KEY_SPACE)
-		System::sleep(rand()%200+50);
+	else if( key.id == clan::keycode_space)
+		clan::System::sleep(rand()%200+50);
 }
 
-void DemoExplosion::on_mouse_down(const InputEvent& key, const InputState&)
+void DemoExplosion::on_mouse_down(const clan::InputEvent& key)
 {
 	// left mouse click to emit an explosion
-	if( key.id == MOUSE_LEFT )
+	if( key.id == clan::mouse_left )
 		emitter->emit(key.mouse_pos.x, key.mouse_pos.y);
 }
 

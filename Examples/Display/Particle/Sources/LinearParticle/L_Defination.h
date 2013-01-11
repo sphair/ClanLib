@@ -101,36 +101,36 @@ namespace
    {
    protected:
  	   bool is_enable_blending;
-	   Colorf blend_color;
-	   BlendEquation blend_equation_color;
-	   BlendEquation blend_equation_alpha;
-	   BlendFunc blend_function_src;
-	   BlendFunc blend_function_dest;
-	   BlendFunc blend_function_src_alpha;
-	   BlendFunc blend_function_dest_alpha;
+	   clan::Colorf blend_color;
+	   clan::BlendEquation blend_equation_color;
+	   clan::BlendEquation blend_equation_alpha;
+	   clan::BlendFunc blend_function_src;
+	   clan::BlendFunc blend_function_dest;
+	   clan::BlendFunc blend_function_src_alpha;
+	   clan::BlendFunc blend_function_dest_alpha;
 
    public:
       L_Blend()
       {
 			enable_blending(true);
-			set_blend_function(cl_blend_src_alpha, cl_blend_one, cl_blend_src_alpha, cl_blend_one);
+			set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
       }
 
 	/// \brief Enable/Disable blending
 	void enable_blending(bool value) { is_enable_blending = value; }
 
 	/// \brief Set the constant color used in the blend equations
-	void set_blend_color(const Colorf &color) {blend_color = color; }
+	void set_blend_color(const clan::Colorf &color) {blend_color = color; }
 
 	/// \brief Set the constant color used in the blend equations
-	void set_blend_equation(BlendEquation color, BlendEquation alpha)
+	void set_blend_equation(clan::BlendEquation color, clan::BlendEquation alpha)
 	{
 		blend_equation_color = color;
 		blend_equation_alpha = alpha;
 	}
 
 	/// \brief Set the blend functions
-	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
+	void set_blend_function(clan::BlendFunc src, clan::BlendFunc dest, clan::BlendFunc src_alpha, clan::BlendFunc dest_alpha)
 	{
 	   blend_function_src = src;
 	   blend_function_dest = dest;
@@ -138,12 +138,15 @@ namespace
 	   blend_function_dest_alpha = dest_alpha;
 	}
 
-	void set_blend_mode(GraphicContext &gc)
+	void set_blend_mode(clan::Canvas &canvas)
 	{
-		gc.enable_blending(is_enable_blending);
-		gc.set_blend_function(blend_function_src, blend_function_dest, blend_function_src_alpha, blend_function_dest_alpha);
-		gc.set_blend_equation(blend_equation_color, blend_equation_alpha);
-		gc.set_blend_color(blend_color);
+		clan::BlendStateDescription desc;
+		desc.enable_blending(is_enable_blending);
+		desc.set_blend_function(blend_function_src, blend_function_dest, blend_function_src_alpha, blend_function_dest_alpha);
+		desc.set_blend_equation(blend_equation_color, blend_equation_alpha);
+		// FIXME: This is slow on direct3d targets!
+		clan::BlendState blend_state(canvas, desc);
+		canvas.set_blend_state(blend_state, blend_color);
 	}
 
    };
@@ -155,7 +158,7 @@ namespace
       L_BlendMinusAlpha()
       {
 			enable_blending(true);
-			set_blend_function(cl_blend_src_alpha, cl_blend_one_minus_src_alpha, cl_blend_src_alpha, cl_blend_one_minus_src_alpha);
+			set_blend_function(clan::blend_src_alpha, clan::blend_one_minus_src_alpha, clan::blend_src_alpha, clan::blend_one_minus_src_alpha);
       }
    };
 
@@ -165,32 +168,32 @@ namespace
 
 
 template<class T>
-inline void L_DrawParticleBlend(GraphicContext &gc,L_Blend &blend, T *EmitterOrEffectorParticle)	 
+inline void L_DrawParticleBlend(clan::Canvas &canvas,L_Blend &blend, T *EmitterOrEffectorParticle)	 
 {				      
-   blend.set_blend_mode(gc);	 
-   EmitterOrEffectorParticle->draw(gc);		  
-   gc.reset_blend_mode();	      
+   blend.set_blend_mode(canvas);	 
+   EmitterOrEffectorParticle->draw(canvas);		  
+	canvas.reset_blend_state();
 }
 
 
 template<class T>
-inline void L_DrawParticleBlend(GraphicContext &gc,L_Blend &blend, T &EmitterOrEffectorParticle)	 
+inline void L_DrawParticleBlend(clan::Canvas &canvas,L_Blend &blend, T &EmitterOrEffectorParticle)	 
 {				      
-	blend.set_blend_mode(gc);	 
-    EmitterOrEffectorParticle.draw(gc);		  
-   gc.reset_blend_mode();	      
+	blend.set_blend_mode(canvas);	 
+    EmitterOrEffectorParticle.draw(canvas);		  
+	canvas.reset_blend_state();	      
 }
 
 template<class T>
-inline void L_DrawParticle(GraphicContext &gc, T &EmitterOrEffectorParticle)	 
+inline void L_DrawParticle(clan::Canvas &canvas, T &EmitterOrEffectorParticle)	 
 {				      
-   L_DrawParticleBlend(gc, l_blend, EmitterOrEffectorParticle);
+   L_DrawParticleBlend(canvas, l_blend, EmitterOrEffectorParticle);
 }
 
 template<class T>
-inline void L_DrawParticleMinusAlpha(GraphicContext &gc, T &EmitterOrEffectorParticle)	 
+inline void L_DrawParticleMinusAlpha(clan::Canvas &canvas, T &EmitterOrEffectorParticle)	 
 {				      
-   L_DrawParticleBlend(gc, l_blendMinusAlpha, EmitterOrEffectorParticle);
+   L_DrawParticleBlend(canvas, l_blendMinusAlpha, EmitterOrEffectorParticle);
 }
 
 

@@ -48,7 +48,7 @@ L_Vector::L_Vector(const L_Vector &vec)
 }
 
 
-L_Vector::L_Vector(const Vec2<float>& vec)
+L_Vector::L_Vector(const clan::Vec2f& vec)
 {
 	x = vec.x;
 	y = vec.y;
@@ -69,7 +69,7 @@ void L_Vector::set(const L_Vector& vec)
 }
 
 
-void L_Vector::set(const Vec2<float>& vec)
+void L_Vector::set(const clan::Vec2f& vec)
 {
 	x = vec.x;
 	y = vec.y;

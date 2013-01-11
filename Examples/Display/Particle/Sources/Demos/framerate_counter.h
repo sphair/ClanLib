@@ -36,7 +36,7 @@ public:
 	int get_framerate() const { return current_fps; }
 
 	void frame_shown();
-	void show_fps(GraphicContext &gc, Font &fps_font);
+	void show_fps(clan::Canvas &canvas, clan::Font &fps_font);
 
 private:
 	int current_fps;

@@ -31,7 +31,7 @@
 #include "L_MotionController.h"
 
 
-//! Color class
+//! clan::Color class
 class L_Color
 {
 public:
@@ -51,7 +51,7 @@ public:
 		b = color.b;
 	}
 
-	L_Color(const Color& color)
+	L_Color(const clan::Color& color)
 	{
 		a = color.get_alpha();
 		r = color.get_red();
@@ -85,8 +85,8 @@ class L_Particle
 {
 
 private:
-   //GraphicContext gc;
-	Sprite* surface;
+   //GraphicContext canvas;
+	clan::Sprite* surface;
 	L_Vector vec;
 	L_Vector accel_vec_1d_to_2d;
 	L_MotionController* motion_controller;
@@ -156,7 +156,7 @@ public:
 
 	/** Contructor \n
 	life_t : pass L_INFINITE_LIFE to have infinite life particle */
-	L_Particle(Sprite* surface_t, int life_t);
+	L_Particle(clan::Sprite* surface_t, int life_t);
 
 
 	void copy_from(const L_Particle& par);
@@ -276,7 +276,7 @@ public:
 	void run(int time_elapesed_t);
 
 	/** Draw the particle with screen position shift option. */
-	void draw(GraphicContext &gc, int x_shift=0, int y_shift=0);
+	void draw(clan::Canvas &canvas, int x_shift=0, int y_shift=0);
 
 };
 
