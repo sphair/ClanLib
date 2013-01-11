@@ -126,6 +126,7 @@ private:
 	friend class Fixture_Impl;
 	friend class PhysicsQueryAssistant_Impl;
 	friend class PhysicsContext;
+	friend class PhysicsListener;
 };
 
 }

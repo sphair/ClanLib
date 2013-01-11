@@ -103,6 +103,7 @@ void PhysicsWorld::step()
 {
 	//check for objects to delete
 	impl->step();
+	
 }
 
 void PhysicsWorld::step(float timestep, int velocity_iterations, int position_iterations)

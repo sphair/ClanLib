@@ -98,11 +98,17 @@ void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 void PhysicsWorld_Impl::step()
 {
 	world.Step(timestep,velocity_iterations,position_iterations);
+	listener.emit_collision_signals();
+
 	sig_world_step.invoke(timestep);
+
+
 }
 void PhysicsWorld_Impl::step(float timestep, int velocity_iterations, int position_iterations)
 {
 	world.Step(timestep,velocity_iterations,position_iterations);
+	listener.emit_collision_signals();
+
 	sig_world_step.invoke(timestep);
 }
 
