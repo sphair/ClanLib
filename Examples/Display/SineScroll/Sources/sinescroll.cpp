@@ -136,20 +136,6 @@ void SineScroll::draw_demo(clan::Canvas &canvas, int delta_ms)
 
 	}
 
-	//Damm, We can not longer use gc.draw_primitives on our standard shaders in client code.
-	//So clan::Canvas is going to require functions like: 
-	//Canvas::draw_triangles(Vec2f *triangle_positions, int num_vertices, const Texture2D &texture,Vec2f *texture_positions,  const Colorf &color);
-	//Canvas::draw_triangles(Vec2f *triangle_positions, int num_vertices,  const Colorf &color);
-	//Canvas::draw_lines(Vec2f *triangle_positions, int num_vertices, const Texture2D &texture,Vec2f *texture_positions,  const Colorf &color);
-	//Canvas::draw_lines(Vec2f *triangle_positions, int num_vertices,  const Colorf &color);
+	canvas.draw_lines(&dest_position[0], &texture_position[0], dest_position.size(), texture);
 
-	canvas.flush();
-	canvas.get_gc().set_texture(0, texture);
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, &dest_position[0]);
-	prim_array.set_attribute(1, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-	prim_array.set_attributes(2, &texture_position[0]);
-	canvas.set_program_object(clan::program_single_texture);
-	canvas.get_gc().draw_primitives(clan::type_lines, dest_position.size(), prim_array);
-	canvas.get_gc().reset_texture(0);
 }
