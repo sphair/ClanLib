@@ -124,7 +124,7 @@ int Collision::start(const std::vector<std::string> &args)
 			teapot_list[cnt].draw_teapot(canvas);
 		}
 
-		canvas.line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, Colorf::white);
+		canvas.draw_line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, Colorf::white);
 		
 		canvas.flip(0);
 		frameratecounter.frame_shown();
