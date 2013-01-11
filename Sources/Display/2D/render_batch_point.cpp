@@ -35,8 +35,8 @@
 namespace clan
 {
 
-RenderBatchPoint::RenderBatchPoint()
-: current_gpu_buffer(0), position(0), vertices(0)
+RenderBatchPoint::RenderBatchPoint(RenderBatchBuffer *batch_buffer)
+: position(0), vertices(0), batch_buffer(batch_buffer)
 {
 }
 
@@ -80,10 +80,9 @@ void RenderBatchPoint::lock_transfer_buffer(Canvas &canvas)
 	if (vertices == 0)
 	{
 		GraphicContext &gc = canvas.get_gc();
-		if (transfer_buffers[current_gpu_buffer].is_null())
-			transfer_buffers[current_gpu_buffer] = TransferVector<PointVertex>(gc, max_vertices, usage_stream_draw);
-		transfer_buffers[current_gpu_buffer].lock(gc, access_write_discard);
-		vertices = transfer_buffers[current_gpu_buffer].get_data();
+		transfer_buffers = TransferVector<PointVertex>(batch_buffer->get_transfer_buffer(gc));
+		transfer_buffers.lock(gc, access_write_discard);
+		vertices = transfer_buffers.get_data();
 	}
 }
 
@@ -104,10 +103,10 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 		if (vertices)
 		{
 			vertices = 0;
-			transfer_buffers[current_gpu_buffer].unlock();
+			transfer_buffers.unlock();
 		}
 
-		gpu_vertices.copy_from(gc, transfer_buffers[current_gpu_buffer], 0, 0, position);
+		gpu_vertices.copy_from(gc, transfer_buffers, 0, 0, position);
 
 		gc.draw_primitives(type_points, position, prim_array);
 
@@ -115,9 +114,7 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 
 		position = 0;
 
-		current_gpu_buffer++;
-		if (current_gpu_buffer == num_gpu_buffers)
-			current_gpu_buffer = 0;
+		batch_buffer->next_buffer();
 	}
 }
 

@@ -23,48 +23,37 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
-#pragma once
-
-#include "API/Display/Render/render_batcher.h"
-#include "API/Display/Render/texture.h"
-#include "API/Display/Render/graphic_context.h"
-#include "API/Display/Render/blend_state.h"
+#include "Display/precomp.h"
 #include "render_batch_buffer.h"
+#include "sprite_impl.h"
+#include "API/Display/Render/blend_state_description.h"
+#include "API/Display/2D/canvas.h"
 
 namespace clan
 {
-class RenderBatchBuffer;
 
-class RenderBatchPoint : public RenderBatcher
+RenderBatchBuffer::RenderBatchBuffer() : current_gpu_buffer(0)
 {
-public:
-	RenderBatchPoint(RenderBatchBuffer *batch_buffer);
-	void draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices);
+}
 
-private:
-	struct PointVertex
+TransferBuffer RenderBatchBuffer::get_transfer_buffer(GraphicContext &gc)
+{
+	if (transfer_buffers[current_gpu_buffer].is_null())
 	{
-		Vec4f position;
-		Vec4f color;
-	};
+		transfer_buffers[current_gpu_buffer] = TransferBuffer(gc, buffer_size, usage_stream_draw);
+	}
+	return transfer_buffers[current_gpu_buffer];
+}
 
-	inline Vec4f to_position(float x, float y) const;
-	void set_batcher_active(Canvas &canvas, int num_vertices);
-	void flush(GraphicContext &gc);
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
-	void lock_transfer_buffer(Canvas &canvas);
-
-	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(PointVertex) };
-	PointVertex *vertices;
-	RenderBatchBuffer *batch_buffer;
-	TransferVector<PointVertex> transfer_buffers;
-	VertexArrayVector<PointVertex> gpu_vertices;
-	PrimitivesArray prim_array;
-	int position;
-	Mat4f modelview_projection_matrix;
-};
+void RenderBatchBuffer::next_buffer()
+{
+	current_gpu_buffer++;
+	if (current_gpu_buffer == num_gpu_buffers)
+		current_gpu_buffer = 0;
+}
 
 }

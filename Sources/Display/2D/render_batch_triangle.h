@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -33,16 +34,18 @@
 #include "API/Display/Render/blend_state.h"
 #include "API/Display/Render/render_batcher.h"
 #include "API/Display/Render/texture_2d.h"
+#include "render_batch_buffer.h"
 
 namespace clan
 {
 
 struct Surface_DrawParams1;
+class RenderBatchBuffer;
 
 class RenderBatchTriangle : public RenderBatcher
 {
 public:
-	RenderBatchTriangle();
+	RenderBatchTriangle(RenderBatchBuffer *batch_buffer);
 	void draw_sprite(Canvas &canvas, const Surface_DrawParams1 *params, const Texture2D &texture);
 	void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
 	void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
@@ -74,12 +77,14 @@ private:
 
 	Mat4f modelview_projection_matrix;
 	int position;
-	enum { max_vertices = 4096*3*2, num_gpu_buffers = 4 };
+	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(SpriteVertex) };
 	SpriteVertex *vertices;
-	TransferVector<SpriteVertex> transfer_buffers[num_gpu_buffers];
+
+	RenderBatchBuffer *batch_buffer;
+
+	TransferVector<SpriteVertex> transfer_buffers;
 	VertexArrayVector<SpriteVertex> gpu_vertices;
 	PrimitivesArray prim_array;
-	int current_gpu_buffer;
 	Texture2D current_textures[4];
 	int num_current_textures;
 	Sizef tex_sizes[4];

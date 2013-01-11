@@ -23,50 +23,36 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Mark Page
 */
 
 #pragma once
 
-#include "API/Display/Render/render_batcher.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/blend_state.h"
-#include "render_batch_buffer.h"
+#include "API/Display/Render/render_batcher.h"
+#include "API/Display/Render/texture_2d.h"
 
 namespace clan
 {
-class RenderBatchBuffer;
 
-class RenderBatchLine : public RenderBatcher
+class RenderBatchBuffer
 {
 public:
-	RenderBatchLine(RenderBatchBuffer *batch_buffer);
-	void draw_line_strip(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
-	void draw_lines(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
+	RenderBatchBuffer();
+
+	enum { buffer_size = 1024*1024, num_gpu_buffers = 4 };
+
+	TransferBuffer get_transfer_buffer(GraphicContext &gc);
+
+	void next_buffer();
 
 private:
-	struct LineVertex
-	{
-		Vec4f position;
-		Vec4f color;
-	};
 
-	inline Vec4f to_position(float x, float y) const;
-	void set_batcher_active(Canvas &canvas, int num_vertices);
-	void flush(GraphicContext &gc);
-	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
-	void lock_transfer_buffer(Canvas &canvas);
-
-	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(LineVertex) };
-	LineVertex *vertices;
-	RenderBatchBuffer *batch_buffer;
-	TransferVector<LineVertex> transfer_buffers;
-	VertexArrayVector<LineVertex> gpu_vertices;
-	PrimitivesArray prim_array;
-	int position;
-	Mat4f modelview_projection_matrix;
-
+	TransferBuffer transfer_buffers[num_gpu_buffers];
+	int current_gpu_buffer;
 
 };
 

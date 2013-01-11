@@ -30,6 +30,7 @@
 #pragma once
 
 #include "API/Display/Render/graphic_context.h"
+#include "Display/2D/render_batch_buffer.h"
 #include "Display/2D/render_batch_triangle.h"
 #include "Display/2D/render_batch_line.h"
 #include "Display/2D/render_batch_point.h"
@@ -91,6 +92,7 @@ private:
 	GraphicContext gc;
 
 	RenderBatcher *active_batcher;
+	RenderBatchBuffer render_batcher_buffer;
 	std::shared_ptr<RenderBatchTriangle> render_batcher_triangle;
 	std::shared_ptr<RenderBatchLine> render_batcher_line;
 	std::shared_ptr<RenderBatchPoint> render_batcher_point;
