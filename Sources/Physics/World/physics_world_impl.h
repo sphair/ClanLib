@@ -41,6 +41,9 @@ namespace clan
 {
 	class BodyDescription;
 	class PhysicsWorld;
+	class Joint_Impl;
+	class Fixture_Impl;
+	class Body_Impl;
 
 class PhysicsWorld_Impl : public std::enable_shared_from_this<PhysicsWorld_Impl>
 {
@@ -60,10 +63,8 @@ public:
 /// \name Attributes
 /// \{
 
-
 	b2Body *get_dummy_body();
 	b2Fixture *get_dummy_fixture();
-
 
 //																						___________________
 //																						O P E R A T I O N S
@@ -75,15 +76,17 @@ public:
 	void step();
 	void step(float timestep, int velocity_iterations, int position_iterations);
 
-	b2Joint		*create_joint(const b2JointDef &description);
-	b2Fixture	*create_fixture(b2Body *body, const b2FixtureDef &description);
-	b2Body		*create_body(const b2BodyDef &description);
+	void create_joint(std::shared_ptr<Joint_Impl> &joint, const b2JointDef &description);
+	void create_fixture(std::shared_ptr<Fixture_Impl> &fixture, b2Body *body, const b2FixtureDef &description);
+	void create_body(std::shared_ptr<Body_Impl> &body, const b2BodyDef &description);
 
-
-	void destroy_joint(b2Joint *joint);
-	void destroy_fixture(b2Fixture *fixture);
-	void destroy_body(b2Body *body);
-
+	void destroy_joint(std::shared_ptr<Joint_Impl> &joint);
+	void destroy_fixture(std::shared_ptr<Fixture_Impl> &fixture);
+	void destroy_body(std::shared_ptr<Body_Impl> &body);
+	
+	void safe_destroy_joint(b2Joint *joint, int id);
+	void safe_destroy_fixture(b2Fixture *fixture, int id);
+	void safe_destroy_body(b2Body *body, int id);
 
 private:
 

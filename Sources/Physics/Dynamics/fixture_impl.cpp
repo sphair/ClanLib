@@ -46,18 +46,27 @@ Fixture_Impl::Fixture_Impl(PhysicsWorld_Impl *owner)
 
 }
 
+Fixture_Impl::~Fixture_Impl()
+{
+	if(fixture_occupied)
+	{
+		sig_fixture_deletion.invoke(); 
+		owner_world->safe_destroy_fixture(fixture, id);
+	}
+}
 void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &description)
 {
 	if(fixture_occupied)
 	{
-		fixture->GetBody()->DestroyFixture(fixture);
+		owner_world->destroy_fixture(shared_from_this());
+		//fixture->GetBody()->DestroyFixture(fixture);
 	}
 	else
 	{
 		fixture_occupied = true;
 	}
 		
-	fixture = body.impl->body->CreateFixture(&description.impl->fixtureDef);
+	owner_world->create_fixture(shared_from_this(), body.impl->body, description.impl->fixtureDef);
 	fixture->SetUserData(this);
 }
 
@@ -67,10 +76,11 @@ void Fixture_Impl::remove_fixture()
 	{
 		sig_fixture_deletion.invoke();
 
-		fixture->GetBody()->DestroyFixture(fixture);
+		owner_world->destroy_fixture(shared_from_this());
+		//fixture->GetBody()->DestroyFixture(fixture);
 		fixture_occupied = false;
 
-		fixture = owner_world->get_dummy_fixture();
+		//fixture = owner_world->get_dummy_fixture();
 	}
 }
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)

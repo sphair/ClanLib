@@ -56,8 +56,6 @@ RevoluteJoint::RevoluteJoint(PhysicsContext &pc, const RevoluteJointDescription 
 	{
 		impl->joint_type = Joint_Distance;
 		impl->create_joint(description.impl->joint_def);
-
-		pc.impl->create_in_context(impl);
 	}
 	else
 	throw Exception("Tried to create a distance joint with a null PhysicsWorld object");

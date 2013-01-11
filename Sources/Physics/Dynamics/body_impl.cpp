@@ -48,7 +48,11 @@ Body_Impl::Body_Impl( PhysicsWorld_Impl *owner)
 
 Body_Impl::~Body_Impl() 
 { 
-	remove_body();
+	if(body_occupied)
+	{
+		sig_body_deletion.invoke();
+		owner_world->safe_destroy_body(body, id);
+	}
 }
 //																						___________________
 //																						O P E R A T I O N S
@@ -56,14 +60,15 @@ void Body_Impl::create_body(const BodyDescription &description)
 {	
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
-		body->GetWorld()->DestroyBody(body);
+		owner_world->destroy_body(shared_from_this());
+		//body->GetWorld()->DestroyBody(body);
 	}
 	else
 	{
 		body_occupied = true;
 	}
 
-	body = owner_world->create_body(description.impl->bodyDef);
+	owner_world->create_body(shared_from_this(), description.impl->bodyDef);
 	body->SetUserData(this);
 }
 void Body_Impl::remove_body()
@@ -72,9 +77,10 @@ void Body_Impl::remove_body()
 	{
 		sig_body_deletion.invoke();
 
-		body->GetWorld()->DestroyBody(body);
+		owner_world->destroy_body(shared_from_this());
+		//body->GetWorld()->DestroyBody(body);
 		body_occupied = false;
-		body = owner_world->get_dummy_body();
+		//body = owner_world->get_dummy_body();
 		
 	}
 }
