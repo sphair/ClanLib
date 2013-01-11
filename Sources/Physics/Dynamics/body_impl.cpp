@@ -38,7 +38,7 @@ namespace clan
 //																						_______________________
 //																						C O N S T R U C T O R S
 Body_Impl::Body_Impl( PhysicsWorld_Impl *owner)
-:	body(NULL),
+:	body(owner_world->get_dummy_body()),
 	body_occupied(false),
 	owner_world(owner),
 	id(-1)
@@ -70,9 +70,12 @@ void Body_Impl::remove_body()
 {
 	if(body_occupied)
 	{
+		sig_body_deletion.invoke();
+
 		body->GetWorld()->DestroyBody(body);
 		body_occupied = false;
-		sig_body_deletion.invoke(); 
+		body = owner_world->get_dummy_body();
+		
 	}
 }
 

@@ -48,6 +48,16 @@ PhysicsWorld_Impl::PhysicsWorld_Impl()
 {	
 	world.SetContactListener(&listener); //Uncomment after finishing physics context.
 	world.SetContactFilter(&listener); //Uncomment after finishing physics context.
+
+	b2BodyDef body_def;
+	body_def.active = false;
+	dummy_body = world.CreateBody(&body_def);
+
+	b2FixtureDef fixture_def;
+	b2EdgeShape shape;
+	shape.Set(b2Vec2(0.0f, 0.0f), b2Vec2(0.0f, 0.0f));
+	fixture_def.shape = &shape;
+	dummy_fixture = dummy_body->CreateFixture(&fixture_def);
 }
 
 PhysicsWorld_Impl::~PhysicsWorld_Impl() 
@@ -56,6 +66,18 @@ PhysicsWorld_Impl::~PhysicsWorld_Impl()
 	world.SetContactFilter(NULL);
 
 	return; 
+}
+//																											___________________																											
+//																											A T T R I B U T E S
+
+b2Body *PhysicsWorld_Impl::get_dummy_body()
+{
+	return dummy_body;
+}
+
+b2Fixture *PhysicsWorld_Impl::get_dummy_fixture()
+{
+	return dummy_fixture;
 }
 //																											___________________																											
 //																											O P E R A T I O N S
@@ -93,7 +115,5 @@ b2Joint *PhysicsWorld_Impl::create_joint(const b2JointDef &description)
 {
 	return world.CreateJoint(&description);
 }
-//																											___________________																											
-//																											A T T R I B U T E S
 
 }

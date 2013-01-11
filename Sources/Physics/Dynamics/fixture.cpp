@@ -45,7 +45,7 @@ Fixture::Fixture()
 }
 
 Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &description)
-: impl(new Fixture_Impl(*description.impl->owner))
+: impl(new Fixture_Impl(pc.impl->get_owner()))
 {
 	if(!body.is_null())
 	{

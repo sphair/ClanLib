@@ -85,7 +85,6 @@ void PhysicsListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold
 
 bool PhysicsListener::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 {
-	//TODO
 	return true;
 }
 

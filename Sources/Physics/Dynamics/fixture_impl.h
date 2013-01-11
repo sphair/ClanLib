@@ -46,7 +46,7 @@ class Fixture_Impl : public std::enable_shared_from_this<Fixture_Impl>
 //																						_______________________
 //																						C O N S T R U C T O R S
 public:
-	Fixture_Impl(PhysicsWorld_Impl &pw_impl);
+	Fixture_Impl(PhysicsWorld_Impl *owner);
 
 	virtual ~Fixture_Impl() { sig_fixture_deletion.invoke(); return; }
 
