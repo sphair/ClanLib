@@ -95,8 +95,12 @@ ProgramObject HSV::create_shader_program(GraphicContext &gc)
 	program.bind_attribute_location(0, "Position");
 	program.bind_attribute_location(1, "HueOffset0");
 	program.bind_attribute_location(2, "TexCoord0");
+
+	program.set_storage_buffer_index("ProgramUniforms", 0);
+
 	if (!program.link())
 		throw Exception("Unable to link program");
+
 	return program;
 }
 
@@ -141,19 +145,17 @@ void HSV::render_texture(Canvas &canvas, ProgramObject &program, Texture &textur
 	//FIXME: primarray.set_attribute(1, Vec1f(hue_offset));
 	primarray.set_attributes(2, gpu_tex1_coords);
 
-	struct ProgramUniformBuffer
+	struct ProgramUniforms
 	{
 		Mat4f cl_ModelViewProjectionMatrix;
 	};
-
-	ProgramUniformBuffer buffer;
+	ProgramUniforms buffer;
 	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
-
-	UniformVector<ProgramUniformBuffer> uniform_vector(gc, &buffer, 1);
+	UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
+	gc.set_uniform_buffer(0, uniform_vector);
 
 	gc.set_texture(0, texture);
 	gc.set_program_object(program);
-	gc.set_uniform_buffer(0, uniform_vector);
 	gc.draw_primitives(type_triangles, 6, primarray);
 	gc.reset_program_object();
 	gc.reset_texture(0);
