@@ -143,11 +143,13 @@ private:
 	friend class Fixture_Impl;
 	friend class Body_Impl;
 	friend class PhysicsContext;
+	friend class PhysicsListener;
 
 	friend class DistanceJointDescription;
 	friend class RevoluteJointDescription;
 	friend class PrismaticJointDescription;
 	friend class MouseJointDescription;
+
 };
 
 }

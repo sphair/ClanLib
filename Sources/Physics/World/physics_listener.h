@@ -29,23 +29,45 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
+#include "API/Core/Signals/signal_v1.h"
+#include <list>
 
 namespace clan
 {
 
+class Fixture_Impl;
+class Fixture;
+
 class PhysicsListener : public b2ContactListener, public b2ContactFilter
 {
+
+	struct FixtureCollisionData
+	{
+		Signal_v1<Fixture> *fixture_signalA;
+		Signal_v1<Fixture> *fixture_signalB;
+
+		Fixture_Impl *collide_fixtureA;
+		Fixture_Impl *collide_fixtureB;
+	};
+//																							_______________________
+//																							C O N S T R U C T I O N
 public:
 
 	PhysicsListener();
 	virtual ~PhysicsListener(){};
 
+//																							___________________
+//																							O P E R A T I O N S
+	void emit_collision_signals();
+	
 	virtual void BeginContact(b2Contact* contact);
 	virtual void EndContact(b2Contact* contact);
 	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
 	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
 	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB);
 
+	std::list<FixtureCollisionData> fixture_data;
+	
 };
 
 }

@@ -44,33 +44,53 @@ void PhysicsListener::BeginContact(b2Contact *contact)
 {
 
 	//optimise me
-	Fixture_Impl &fixtureA = *static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
-	Fixture_Impl &fixtureB = *static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	Fixture_Impl *fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
+	Fixture_Impl *fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
 
-	fixtureA.on_begin_collision(fixtureB);
-	fixtureB.on_begin_collision(fixtureA);
+	FixtureCollisionData data;
+	data.fixture_signalA = &fixtureA->sig_begin_collision;
+	data.fixture_signalB = &fixtureB->sig_begin_collision;
+	data.collide_fixtureA = fixtureA;
+	data.collide_fixtureB = fixtureB;
 
+	fixture_data.push_back(data);
+
+	//fixtureA.on_begin_collision(fixtureB);
+	//fixtureB.on_begin_collision(fixtureA);
+
+	/*
 	/////Type cast the two colliding objects to a Body_Impl////////////////
 	Body_Impl &bodyA = *static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
 	Body_Impl &bodyB = *static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
 	bodyA.on_begin_collision(bodyB);
 	bodyB.on_begin_collision(bodyA);
+	*/
 }
 
 void PhysicsListener::EndContact(b2Contact *contact)
 {
 	//optimise me
-	Fixture_Impl &fixtureA = *static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
-	Fixture_Impl &fixtureB = *static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	Fixture_Impl *fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
+	Fixture_Impl *fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
 
-	fixtureA.on_end_collision(fixtureB);
-	fixtureB.on_end_collision(fixtureA);
+	FixtureCollisionData data;
+	data.fixture_signalA = &fixtureA->sig_end_collision;
+	data.fixture_signalB = &fixtureB->sig_end_collision;
+	data.collide_fixtureA = fixtureA;
+	data.collide_fixtureB = fixtureB;
 
+	fixture_data.push_back(data);
+
+	//fixtureA.on_end_collision(fixtureB);
+	//fixtureB.on_end_collision(fixtureA);
+
+	/*
 	/////Type cast the two colliding objects to a Body_Impl////////////////
 	Body_Impl &bodyA = *static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
 	Body_Impl &bodyB = *static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
 	bodyA.on_end_collision(bodyB);
 	bodyB.on_end_collision(bodyA);
+	*/
 }
 
 void PhysicsListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
@@ -85,7 +105,27 @@ void PhysicsListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold
 
 bool PhysicsListener::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 {
+	//TODO
 	return true;
+}
+
+void PhysicsListener::emit_collision_signals()
+{
+	std::list<FixtureCollisionData>::iterator it;
+	for(it = fixture_data.begin(); it!= fixture_data.end() ;)
+	{
+		Fixture fixtureA;
+		fixtureA.impl = (*it).collide_fixtureA->shared_from_this();
+
+		Fixture fixtureB;
+		fixtureB.impl = (*it).collide_fixtureB->shared_from_this();
+
+		(*it).fixture_signalA->invoke(fixtureB);
+		(*it).fixture_signalA->invoke(fixtureA);
+
+		it = fixture_data.erase(it);
+	}
+
 }
 
 }
