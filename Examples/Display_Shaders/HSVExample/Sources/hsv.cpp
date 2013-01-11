@@ -105,8 +105,10 @@ Texture2D HSV::create_texture(Canvas &canvas)
 	return Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
 }
 
-void HSV::render_texture(GraphicContext &gc, ProgramObject &program, Texture &texture, float hue_offset)
+void HSV::render_texture(Canvas &canvas, ProgramObject &program, Texture &texture, float hue_offset)
 {
+	GraphicContext gc = canvas.get_gc();
+
 	Rectf rect(0.0f, 0.0f, (float)gc.get_width(), (float)gc.get_height());
 	Rectf texture_unit1_coords(0.0f, 0.0f, 1.0f, 1.0f);
 
@@ -139,8 +141,19 @@ void HSV::render_texture(GraphicContext &gc, ProgramObject &program, Texture &te
 	//FIXME: primarray.set_attribute(1, Vec1f(hue_offset));
 	primarray.set_attributes(2, gpu_tex1_coords);
 
+	struct ProgramUniformBuffer
+	{
+		Mat4f cl_ModelViewProjectionMatrix;
+	};
+
+	ProgramUniformBuffer buffer;
+	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+
+	UniformVector<ProgramUniformBuffer> uniform_vector(gc, &buffer, 1);
+
 	gc.set_texture(0, texture);
 	gc.set_program_object(program);
+	gc.set_uniform_buffer(0, uniform_vector);
 	gc.draw_primitives(type_triangles, 6, primarray);
 	gc.reset_program_object();
 	gc.reset_texture(0);
