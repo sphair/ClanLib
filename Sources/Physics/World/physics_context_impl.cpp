@@ -121,6 +121,7 @@ void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Body_Impl> body)
 		if( bodies[id]->get_id() == id)
 		{
 			bodies[id].reset();
+			free_body_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Body from the context. The id of the Body is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -138,6 +139,7 @@ void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Fixture_Impl> fixt
 		if( fixtures[id]->get_id() == id)
 		{
 			fixtures[id].reset();
+			free_fixture_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Fixture from the context. The id of the Fixture is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -156,6 +158,7 @@ void PhysicsContext_Impl::remove_from_context(std::shared_ptr<Joint_Impl> joint)
 		if( joints[id]->get_id() == id)
 		{
 			joints[id].reset();
+			free_joint_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Joint from the context. The id of the Joint is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -171,6 +174,7 @@ void PhysicsContext_Impl::remove_body_from_context(int id)
 		if( bodies[id]->get_id() == id)
 		{
 			bodies[id].reset();
+			free_body_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Body from the context. The id of the Body is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -186,6 +190,7 @@ void PhysicsContext_Impl::remove_fixture_from_context(int id)
 		if( fixtures[id]->get_id() == id)
 		{
 			fixtures[id].reset();
+			free_fixture_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Fixture from the context. The id of the Fixture is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -202,6 +207,7 @@ void PhysicsContext_Impl::remove_joint_from_context(int id)
 		if( joints[id]->get_id() == id)
 		{
 			joints[id].reset();
+			free_joint_slots.push_back(id);
 		}
 		else
 		throw Exception("Couldn't delete the Joint from the context. The id of the Joint is different than the one stored in the PhysicsContext."); //TODO: expand this.
@@ -210,6 +216,68 @@ void PhysicsContext_Impl::remove_joint_from_context(int id)
 	throw Exception("Tried to remove a Joint from the context, but the Joint has no ID number"); 
 }
 
-
+void PhysicsContext_Impl::check_body(int id)
+{
+	if(id>=0)
+	{
+		if(bodies[id].get())
+		{
+			if( bodies[id]->get_id() == id)
+			{
+				if (bodies[id].use_count()==1)
+				{
+					bodies[id].reset();
+					free_body_slots.push_back(id);
+				}
+			}
+			else
+			throw Exception("Couldn't check the Body in the context. The id of the Body is different than the one stored in the PhysicsContext."); //TODO: expand this.
+		}
+	}
+	else
+	throw Exception("Tried to check a Body from the context, but the Body has no ID number"); 
+}
+void PhysicsContext_Impl::check_fixture(int id)
+{
+	if(id>=0)
+	{
+		if(fixtures[id].get())
+		{
+			if( fixtures[id]->get_id() == id)
+			{
+				if (fixtures[id].use_count()==1)
+				{
+					fixtures[id].reset();
+					free_fixture_slots.push_back(id);
+				}
+			}
+			else
+			throw Exception("Couldn't check the Fixture in the context. The id of the Fixture is different than the one stored in the PhysicsContext."); //TODO: expand this.
+		}
+	}
+	else
+	throw Exception("Tried to check a Fixture from the context, but the Fixture has no ID number"); 
+}
+void PhysicsContext_Impl::check_joint(int id)
+{
+	if(id>=0)
+	{
+		if(joints[id].get())
+		{
+			if( joints[id]->get_id() == id)
+			{
+				if (joints[id].use_count()==1)
+				{
+					joints[id].reset();
+					free_joint_slots.push_back(id);
+				}
+			}
+			else
+			throw Exception("Couldn't check the Joint in the context. The id of the Joint is different than the one stored in the PhysicsContext."); //TODO: expand this.
+		}
+	}
+	else
+	throw Exception("Tried to check a Joint from the context, but the Joint has no ID number"); 
+}
 
 }

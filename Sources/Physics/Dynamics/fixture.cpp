@@ -28,6 +28,7 @@
 
 #include "Physics/precomp.h"
 #include "fixture_impl.h"
+#include "body_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
 #include "API/Physics/Dynamics/fixture_description.h"
@@ -50,6 +51,7 @@ Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &descr
 	if(!body.is_null())
 	{
 		impl->create_fixture(body,description);
+		body.impl->add_fixture(*this);
 	}
 	else
 	throw Exception("Tried to create a fixture with a null Body object");
@@ -57,6 +59,13 @@ Fixture::Fixture(PhysicsContext &pc, Body &body, const FixtureDescription &descr
 
 Fixture::~Fixture()
 {
+	if(impl)
+	{
+		if(impl->fixture_occupied)
+		{
+			impl->owner_world->check_fixture(impl->id);
+		}
+	}
 }
 
 //																											___________________																											
@@ -86,6 +95,14 @@ Body &Fixture::get_owner_body() const
 
 Fixture &Fixture::operator =(const Fixture &copy)
 {
+	if(impl)
+	{
+		if(impl->fixture_occupied)
+		{
+			impl->owner_world->check_fixture(impl->id);
+		}
+	}
+
 	impl = copy.impl;
 	return *this;
 }
@@ -101,6 +118,10 @@ bool Fixture::test_point(const Vec2f &p) const
 	return impl->fixture->TestPoint(b2Vec2(p.x/scale, p.y/scale));
 }
 
+void Fixture::kill()
+{
+	impl->remove_fixture();
+}
 //																											_____________																										
 //																											S I G N A L S
 

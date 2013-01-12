@@ -30,6 +30,8 @@
 
 #include "../Box2D/Box2D.h"
 #include <memory>
+#include <list>
+#include "API/Physics/Dynamics/fixture.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/body_description.h"
 #include "API/Core/Signals/signal_v0.h"
@@ -37,7 +39,8 @@
 
 namespace clan
 {
-	class PhysicsWorld_Impl;
+
+class PhysicsWorld_Impl;
 
 class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 {
@@ -52,10 +55,13 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
+	void add_fixture(Fixture &fixture);
 	void set_id(int value) { id = value;}
 
 	void create_body(const BodyDescription &description);
 	void remove_body();
+	void remove_body_safetly();
+	void remove_fixtures();
 	void on_begin_collision(Body_Impl &body);
 	void on_end_collision(Body_Impl &body);
 	//b2Fixture *create_fixture(b2FixtureDef &description); //obsolete
@@ -70,6 +76,7 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 public:
+	std::list<Fixture> owned_fixtures;
 	int id;
 	PhysicsWorld_Impl *owner_world;
 	b2Body *body;

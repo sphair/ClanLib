@@ -66,6 +66,10 @@ public:
 	void remove_fixture_from_context(int id);
 	void remove_joint_from_context(int id);
 
+	void check_body(int id);
+	void check_fixture(int id);
+	void check_joint(int id);
+
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 	PhysicsWorld_Impl *owner_world;
