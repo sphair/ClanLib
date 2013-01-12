@@ -96,6 +96,9 @@ public:
 	/// \brief Checks given point for collision with the fixture.
 	bool test_point (const Vec2f &p) const;
 
+	/// \brief Removes the fixture from the simulation.
+	void kill();
+
 /// \}
 /// \name Signals
 /// \{
@@ -123,6 +126,7 @@ private:
 	std::shared_ptr<Fixture_Impl> impl;
 /// \}
 
+	friend class Body_Impl;
 	friend class Fixture_Impl;
 	friend class PhysicsQueryAssistant_Impl;
 	friend class PhysicsContext;

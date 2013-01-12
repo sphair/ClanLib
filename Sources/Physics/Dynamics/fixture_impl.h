@@ -57,6 +57,7 @@ public:
 
 	void create_fixture(Body &body, const FixtureDescription &description); //Not used yet
 	void remove_fixture();
+	void remove_fixture_safetly();
 	void on_begin_collision(Fixture_Impl &body);
 	void on_end_collision(Fixture_Impl &body);
 //																						_____________

@@ -83,6 +83,20 @@ void Fixture_Impl::remove_fixture()
 		//fixture = owner_world->get_dummy_fixture();
 	}
 }
+
+void Fixture_Impl::remove_fixture_safetly()
+{
+	if(fixture_occupied)
+	{
+		sig_fixture_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
+
+		owner_world->safe_destroy_fixture(fixture, id);
+
+		fixture_occupied = false;
+		
+		fixture = owner_world->get_dummy_fixture();
+	}
+}
 void Fixture_Impl::on_begin_collision(Fixture_Impl &fixture)
 {
 	Fixture collision_fixture;

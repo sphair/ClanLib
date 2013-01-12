@@ -29,6 +29,7 @@
 #include "Physics/precomp.h"
 #include "../Box2D/Box2D.h"
 #include "body_impl.h"
+#include "fixture_impl.h"
 #include "body_description_impl.h"
 #include "../World/physics_world_impl.h"
 
@@ -52,6 +53,8 @@ Body_Impl::~Body_Impl()
 	{
 		sig_body_deletion.invoke();
 		owner_world->safe_destroy_body(body, id);
+
+		remove_fixtures();
 	}
 }
 //																						___________________
@@ -60,7 +63,10 @@ void Body_Impl::create_body(const BodyDescription &description)
 {	
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
+		sig_body_deletion.invoke();
+
 		owner_world->destroy_body(shared_from_this());
+
 		//body->GetWorld()->DestroyBody(body);
 	}
 	else
@@ -75,13 +81,31 @@ void Body_Impl::remove_body()
 {
 	if(body_occupied)
 	{
-		sig_body_deletion.invoke();
+		sig_body_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
 
 		owner_world->destroy_body(shared_from_this());
+
 		//body->GetWorld()->DestroyBody(body);
 		body_occupied = false;
 		//body = owner_world->get_dummy_body();
+		remove_fixtures();
 		
+	}
+}
+
+void Body_Impl::remove_body_safetly()
+{
+	if(body_occupied)
+	{
+		sig_body_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
+
+		owner_world->safe_destroy_body(body, id);
+
+		body_occupied = false;
+		
+		body = owner_world->get_dummy_body();
+
+		remove_fixtures();
 	}
 }
 
@@ -99,6 +123,24 @@ void Body_Impl::on_end_collision(Body_Impl &body)
 	collision_body.impl = shared_from_this();
 
 	sig_end_collision.invoke(collision_body); //Send the body that this body collided with.
+}
+
+void Body_Impl::add_fixture(Fixture &fixture)
+{
+	owned_fixtures.push_back(fixture);
+}
+
+void Body_Impl::remove_fixtures()
+{
+	std::list<Fixture>::iterator it;
+	for(it = owned_fixtures.begin() ; it != owned_fixtures.end() ;)
+	{
+		(*it).impl->remove_fixture_safetly();
+			 
+		owner_world->check_fixture((*it).get_id());	//this acts like Fixture destructor.
+		it = owned_fixtures.erase(it); //And no, this does not call Fixture destructor.
+			
+	}
 }
 //																						_____________
 //																						S I G N A L S

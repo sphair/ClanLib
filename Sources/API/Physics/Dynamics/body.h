@@ -100,7 +100,7 @@ public:
 	Body &Body::operator =(const Body &copy);
 
 	/// \brief add a fixture to the body.
-	//Fixture create_fixture(const FixtureDescription &fixture);
+	//void create_fixture(const FixtureDescription &fixture);
 
 	/// \brief set the position of the body.
 	void set_position(const Vec2f &pos);
@@ -113,6 +113,9 @@ public:
 
 	/// \brief set the angular velocity of the body.
 	void set_angular_velocity(const Angle &velocity);
+
+	/// \brief Remove the body from the simulation.
+	void kill();
 
 /// \}
 /// \name Signals
@@ -140,6 +143,7 @@ private:
 
 	std::shared_ptr<Body_Impl> impl;
 /// \}
+	friend class Fixture;
 	friend class Fixture_Impl;
 	friend class Body_Impl;
 	friend class PhysicsContext;

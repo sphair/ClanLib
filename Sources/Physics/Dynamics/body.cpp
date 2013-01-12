@@ -60,6 +60,13 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 
 Body::~Body()
 {
+	if(impl)
+	{
+		if(impl->body_occupied)
+		{
+			impl->owner_world->check_body(impl->id);
+		}
+	}
 }
 
 //																											___________________																											
@@ -107,9 +114,11 @@ int Body::get_id() const
 }
 //																											___________________																											
 //																											O P E R A T I O N S
+
 /*
 Fixture Body::create_fixture(const FixtureDescription &description)
 {
+
 	Fixture fixture(*this,description);
  	
 	return fixture;
@@ -118,6 +127,14 @@ Fixture Body::create_fixture(const FixtureDescription &description)
 
 Body &Body::operator =(const Body &copy)
 {
+	if(impl)
+	{
+		if(impl->body_occupied)
+		{
+			impl->owner_world->check_body(impl->id);
+		}
+	}
+
 	impl = copy.impl;
 	return *this;
 }
@@ -142,6 +159,11 @@ void Body::set_linear_velocity(const Vec2f &velocity)
 void Body::set_angular_velocity(const Angle &velocity)
 {
 	impl->body->SetAngularVelocity(velocity.to_radians());
+}
+
+void Body::kill()
+{
+	impl->remove_body();
 }
 
 //																											_____________																										

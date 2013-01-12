@@ -30,6 +30,7 @@
 #include "Joint_impl.h"
 #include "joint_description.h"
 #include "API/Physics/Dynamics/Joints/joint.h"
+#include "../../World/physics_world_impl.h"
 
 namespace clan
 {
@@ -43,7 +44,13 @@ Joint::Joint()
 
 Joint::~Joint()
 {
-
+	if(impl)
+	{
+		if(impl->joint_occupied)
+		{
+			impl->owner_world->check_joint(impl->id);
+		}
+	}
 }
 
 //																											___________________																											
@@ -106,8 +113,17 @@ int Joint::get_id() const
 
 Joint &Joint::operator =(const Joint &copy)
 {
+	if(impl)
+	{
+		if(impl->joint_occupied)
+		{
+			impl->owner_world->check_joint(impl->id);
+		}
+	}
+	
 	impl = copy.impl;
 	return *this;
+	
 }
 
 

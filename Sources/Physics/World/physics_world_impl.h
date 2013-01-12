@@ -88,11 +88,19 @@ public:
 	void safe_destroy_fixture(b2Fixture *fixture, int id);
 	void safe_destroy_body(b2Body *body, int id);
 
+	//Check if the Physics Context's one is the last one alive.
+	void check_body(int id);
+	void check_fixture(int id);
+	void check_joint(int id);
 private:
 
 	void remove_joints();
 	void remove_fixtures();
 	void remove_bodies();
+
+	void check_joints();
+	void check_fixtures();
+	void check_bodies();
 
 //																						_____________
 //																						S I G N A L S
@@ -105,6 +113,11 @@ public:
 /// \name Implementation
 /// \{
 public:
+	
+	std::list<int> joints_for_checking;
+	std::list<int> fixtures_for_checking;
+	std::list<int> bodies_for_checking;
+
 
 	std::list<b2Joint *> joints_for_destroying;
 	std::list<b2Fixture *> fixtures_for_destroying;

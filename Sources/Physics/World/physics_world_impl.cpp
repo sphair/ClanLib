@@ -103,6 +103,10 @@ void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 }
 void PhysicsWorld_Impl::step()
 {
+	if(joints_for_checking.size()>0) check_joints();
+	if(fixtures_for_checking.size()>0) check_fixtures();
+	if(bodies_for_checking.size()>0) check_bodies();
+
 	if(joints_for_destroying.size()>0) remove_joints();
 	if(fixtures_for_destroying.size()>0) remove_fixtures();
 	if(bodies_for_destroying.size()>0) remove_bodies();
@@ -167,21 +171,35 @@ void PhysicsWorld_Impl::safe_destroy_joint(b2Joint *joint, int id)
 {
 	joints_for_destroying.push_back(joint);
 
-	pc.impl->remove_joint_from_context(id);
+	//pc.impl->remove_joint_from_context(id);
 }
 void PhysicsWorld_Impl::safe_destroy_fixture(b2Fixture *fixture, int id)
 {
 	fixtures_for_destroying.push_back(fixture);
 
-	pc.impl->remove_fixture_from_context(id);
+	//pc.impl->remove_fixture_from_context(id);
 }
 void PhysicsWorld_Impl::safe_destroy_body(b2Body *body, int id)
 {
 	bodies_for_destroying.push_back(body);
 
-	pc.impl->remove_body_from_context(id);
+	//pc.impl->remove_body_from_context(id);
 }
 
+void PhysicsWorld_Impl::check_joint(int id)
+{
+	joints_for_checking.push_back(id);
+}
+
+void PhysicsWorld_Impl::check_fixture(int id)
+{
+	fixtures_for_checking.push_back(id);
+}
+
+void PhysicsWorld_Impl::check_body(int id)
+{
+	bodies_for_checking.push_back(id);
+}
 void PhysicsWorld_Impl::remove_joints()
 {
 	std::list<b2Joint *>::iterator it;
@@ -213,6 +231,41 @@ void PhysicsWorld_Impl::remove_bodies()
 
 		it = bodies_for_destroying.erase(it);
 	}
+}
+
+void PhysicsWorld_Impl::check_joints()
+{
+	std::list<int>::iterator it;
+	for(it = joints_for_checking.begin() ; it != joints_for_checking.end() ;)
+	{
+		pc.impl->check_joint(*it); //Optimise by sending a whole list.
+
+		it = joints_for_checking.erase(it);
+	}
+}
+
+void PhysicsWorld_Impl::check_fixtures()
+{
+	std::list<int>::iterator it;
+	for(it = fixtures_for_checking.begin() ; it != fixtures_for_checking.end() ;)
+	{
+		pc.impl->check_fixture(*it); //Optimise by sending a whole list.
+
+		it = fixtures_for_checking.erase(it);
+	}
+	
+}
+
+void PhysicsWorld_Impl::check_bodies()
+{
+	std::list<int>::iterator it;
+	for(it = bodies_for_checking.begin() ; it != bodies_for_checking.end() ;)
+	{
+		pc.impl->check_body(*it); //Optimise by sending a whole list.
+
+		it = bodies_for_checking.erase(it);
+	}
+	
 }
 
 }
