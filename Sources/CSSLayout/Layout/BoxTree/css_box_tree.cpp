@@ -33,7 +33,7 @@
 #include "css_box_node_walker.h"
 #include "css_whitespace_eraser.h"
 #include "API/CSSLayout/CSSDocument/css_property.h"
-#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 
 namespace clan
 {
@@ -152,7 +152,7 @@ void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElem
 	}
 }
 
-void CSSBoxTree::apply_properties(CSSBoxElement *node, const CSSPropertyValueList &css_properties)
+void CSSBoxTree::apply_properties(CSSBoxElement *node, const std::vector<CSSPropertyValue *> &css_properties)
 {
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(node->properties, css_properties[i-1]);
@@ -161,7 +161,7 @@ void CSSBoxTree::apply_properties(CSSBoxElement *node, const CSSPropertyValueLis
 CSSBoxProperties CSSBoxTree::get_css_properties(const DomElement &element, const std::string &pseudo_element)
 {
 	CSSBoxProperties properties;
-	CSSPropertyValueList css_properties = css.select(element, pseudo_element);
+	std::vector<CSSPropertyValue *> css_properties = css.select(element, pseudo_element);
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(properties, css_properties[i-1]);
 	return properties;

@@ -29,7 +29,7 @@
 #include "GUI/precomp.h"
 #include "API/GUI/gui_theme_part.h"
 #include "API/GUI/gui_manager.h"
-#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "gui_theme_part_impl.h"
 #include "gui_component_select_node.h"
 #include "gui_component_impl.h"
@@ -289,7 +289,7 @@ std::string GUIThemePart::get_property(const std::string &property, const std::s
 /*
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
-	CSSPropertyValueList sheet_properties = document.select(&select_node);
+	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);
 
 	CSSPropertyParsers property_parsers;
 	for (size_t i = sheet_properties.size(); i > 0; i--)

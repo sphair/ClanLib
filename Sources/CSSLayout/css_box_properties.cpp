@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/css_box_properties.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
-#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "PropertyParsers/css_property_parsers.h"
 
 namespace clan
@@ -40,7 +40,7 @@ void CSSBoxProperties::apply_properties(const std::string &style_string)
 	apply_properties(CSSDocument::get_style_properties(style_string));
 }
 
-void CSSBoxProperties::apply_properties(const CSSPropertyValueList &css_properties)
+void CSSBoxProperties::apply_properties(const std::vector<CSSPropertyValue *> &css_properties)
 {
 	CSSPropertyParsers property_parsers;
 	for (size_t i = css_properties.size(); i > 0; i--)

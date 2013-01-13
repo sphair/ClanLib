@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../api_csslayout.h"
-#include "css_property_value_list.h"
+#include "css_property_value.h"
 
 namespace clan
 {
@@ -41,7 +41,7 @@ public:
 
 	virtual void reset() = 0;
 	virtual bool parent() = 0;
-	virtual CSSPropertyValueList &get_values() = 0;
+	virtual std::vector<CSSPropertyValue *> &get_values() = 0;
 
 	template<typename T>
 	T get_computed_value()
@@ -50,7 +50,7 @@ public:
 		{
 			bool inherit = T::is_inherited();
 
-			CSSPropertyValueList &values = get_values();
+			std::vector<CSSPropertyValue *> &values = get_values();
 			for (size_t i = 0; i < values.size(); values++)
 			{
 				T *value = dynamic_cast<T>(values[i]);
@@ -80,7 +80,7 @@ public:
 		{
 			bool inherit = T::is_inherited();
 
-			CSSPropertyValueList &values = get_values();
+			std::vector<CSSPropertyValue *> &values = get_values();
 			for (size_t i = 0; i < values.size(); values++)
 			{
 				T *value = dynamic_cast<T>(values[i]);

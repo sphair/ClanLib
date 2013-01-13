@@ -83,13 +83,13 @@ void CSSDocument::add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std
 	impl->sheets.push_back(std::shared_ptr<CSSDocumentSheet>(new CSSDocumentSheet(origin, tokenizer, base_uri)));
 }
 
-CSSPropertyValueList CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
+std::vector<CSSPropertyValue *> CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
 {
 	DomSelectNode select_node(node);
 	return select(&select_node, pseudo_element);
 }
 
-CSSPropertyValueList CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
+std::vector<CSSPropertyValue *> CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
 {
 	// CSS2.1: 6.4.1 Cascading order
 
@@ -98,7 +98,7 @@ CSSPropertyValueList CSSDocument::select(CSSSelectNode *node, const std::string 
 	//      If you're the one guy in the world actually doing this, feel free to refactor the code!
 
 	std::vector<CSSRulesetMatch> rulesets = impl->select_rulesets(node, pseudo_element);
-	CSSPropertyValueList properties;
+	std::vector<CSSPropertyValue *> properties;
 	for (size_t i = rulesets.size(); i > 0; i--)
 	{
 		for (size_t j = rulesets[i-1].ruleset->important_values.size(); j > 0; j--)
