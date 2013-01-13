@@ -40,7 +40,6 @@ class DomElement;
 class CSSProperty;
 class CSSSelectNode;
 class CSSPropertyValue;
-class CSSPropertyValueList;
 class CSSDocument_Impl;
 
 enum CSSSheetOrigin
@@ -62,8 +61,8 @@ public:
 	void add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
 	void add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std::string &base_uri);
 
-	CSSPropertyValueList select(const DomElement &node, const std::string &pseudo_element = std::string());
-	CSSPropertyValueList select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
+	std::vector<CSSPropertyValue *> select(const DomElement &node, const std::string &pseudo_element = std::string());
+	std::vector<CSSPropertyValue *> select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
 
 	static std::vector<std::unique_ptr<CSSPropertyValue> > get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
 

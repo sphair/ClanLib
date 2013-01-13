@@ -29,7 +29,7 @@
 
 #include "GUI/precomp.h"
 #include "gui_element.h"
-#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "gui_component_select_node.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
 
@@ -62,7 +62,7 @@ void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &doc
 	css_properties = CSSBoxProperties();
 
 	GUIComponentSelectNode select_node(this);
-	CSSPropertyValueList sheet_properties = document.select(&select_node);
+	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);
 	css_properties.apply_properties(sheet_properties);
 
 	if (!func_apply_properties.is_null())

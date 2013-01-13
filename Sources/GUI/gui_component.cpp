@@ -47,7 +47,7 @@
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
-#include "API/CSSLayout/CSSDocument/css_property_value_list.h"
+#include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "CSSLayout/Layout/LayoutTree/css_background_renderer.h"
 #include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
@@ -1451,7 +1451,7 @@ std::string GUIComponent::get_property(const std::string &property, const std::s
 /*
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);
-	CSSPropertyValueList sheet_properties = document.select(&select_node);
+	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);
 
 	CSSPropertyParsers property_parsers;
 	for (size_t i = sheet_properties.size(); i > 0; i--)
