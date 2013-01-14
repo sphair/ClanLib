@@ -41,14 +41,14 @@ int HSV::start(const std::vector<std::string> &args)
 	DisplayWindow window("ClanLib HSV Sprite", 1024, 768);
 	Slot slot = window.sig_window_close().connect(this, &HSV::on_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &HSV::on_input_up);
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 	InputContext ic = window.get_ic();
 
-	Font font(gc, "Tahoma", -11);
+	Font font(canvas, "Tahoma", -11);
 
-	HSVSpriteBatch sprite_batcher(gc);
-	HSVSprite car1(gc, &sprite_batcher, "../../Game/SpritesRTS/Gfx/spaceshoot_body_moving1.png");
-	HSVSprite car2(gc, &sprite_batcher, "Resources/ferrari_maranello.png");
+	HSVSpriteBatch sprite_batcher(canvas);
+	HSVSprite car1(canvas, &sprite_batcher, "../../Game/SpritesRTS/Gfx/spaceshoot_body_moving1.png");
+	HSVSprite car2(canvas, &sprite_batcher, "Resources/ferrari_maranello.png");
 	HSVSprite *cars[] = { &car1, &car2 };
 
 	unsigned int last_fps_update = System::get_time();
@@ -64,22 +64,22 @@ int HSV::start(const std::vector<std::string> &args)
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 
-		if (ic.get_keyboard().get_keycode(KEY_LEFT))
+		if (ic.get_keyboard().get_keycode(keycode_left))
 			hue_offset += 0.0005f * time_delta_ms;
-		else if (ic.get_keyboard().get_keycode(KEY_RIGHT))
+		else if (ic.get_keyboard().get_keycode(keycode_right))
 			hue_offset -= 0.0005f * time_delta_ms;
 		if (hue_offset < -1.0f)
 			hue_offset += 1.0f;
 		if (hue_offset > 1.0f)
 			hue_offset -= 1.0f;
 
-		gc.clear(Colorf::darkslategrey);
+		canvas.clear(Colorf::darkslategrey);
 		float car_hue = hue_offset;
 		for (int y = 0; y < 10; y++)
 		{
 			for (int x = 0; x < 7; x++)
 			{
-				cars[(x+y)%2]->draw(gc, 60+x*128, 60+y*64, car_hue);
+				cars[(x+y)%2]->draw(canvas, 60+x*128, 60+y*64, car_hue);
 
 				car_hue += 0.02f;
 				if (car_hue < -1.0f)
@@ -97,11 +97,11 @@ int HSV::start(const std::vector<std::string> &args)
 			fps = 0;
 		}
 
-		Size fps_size = font.get_text_size(gc, fps_text);
-		font.draw_text(gc, gc.get_width()-10-fps_size.width, 16, fps_text);
-		font.draw_text(gc, 32, 730, "Use cursor keys left and right");
+		Size fps_size = font.get_text_size(canvas, fps_text);
+		font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
+		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
 
-		window.flip(0);
+		canvas.flip(0);
 		KeepAlive::process();
 	}
 
@@ -115,7 +115,7 @@ void HSV::on_close()
 
 void HSV::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
