@@ -161,4 +161,9 @@ void PhysicsWorldDescription::set_physic_scale(int pixels)
 	}
 }
 
+void PhysicsWorldDescription::set_olm(const bool value)
+{
+	impl->olm_enabled = value;
+}
+
 }

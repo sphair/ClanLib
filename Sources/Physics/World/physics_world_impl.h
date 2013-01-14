@@ -114,10 +114,13 @@ public:
 /// \{
 public:
 	
+	//Physics World state information
+
+	bool olm_enabled; //If true this state tells the Physics World to remove physics objects that have no API objects pointing to them anymore.
+
 	std::list<int> joints_for_checking;
 	std::list<int> fixtures_for_checking;
 	std::list<int> bodies_for_checking;
-
 
 	std::list<b2Joint *> joints_for_destroying;
 	std::list<b2Fixture *> fixtures_for_destroying;

@@ -63,14 +63,8 @@ public:
 	/// \param description = Structure that describes how to create the Physics World.
 	PhysicsWorld(const PhysicsWorldDescription &description);
 	
-
 	~PhysicsWorld();
 	
-private:
-
-	/// \brief Constructs a Physics World with impl.
-	PhysicsWorld(std::shared_ptr<PhysicsWorld_Impl> impl);
-
 /// \}
 /// \name Attributes
 /// \{
@@ -84,6 +78,9 @@ public:
 
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }
+
+	/// \brief Returns true if the Physics world has the object lifetime management enabled.
+	bool is_olm_enabled() const;
 
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
@@ -113,6 +110,9 @@ public:
 /// \name Operations
 /// \{
 public:
+
+	/// \brief Sets the object lifetime management. If enabled the physics objects are going to be removed from the Physics Context after the last API object pointing to them cease to exist.
+	void set_olm(const bool value = true);
 
 	/// \brief Simulates one step of the physic simulation
 	void step();

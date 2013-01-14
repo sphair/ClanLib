@@ -47,7 +47,8 @@ public:
 		timestep(1.0f/60.0f),
 		gravity(b2Vec2(0.0f,10.0f)),
 		velocity_iterations(8),
-		position_iterations(3)
+		position_iterations(3),
+		olm_enabled(false)
 	{
 	}
 
@@ -57,6 +58,9 @@ public:
 /// \name Attributes
 /// \{
 public:
+
+	bool olm_enabled;
+
 	std::string name;
 	float physic_scale; // in pixels per 1 Box2D meter. Defaults at 100.
 	bool sleep_enabled;

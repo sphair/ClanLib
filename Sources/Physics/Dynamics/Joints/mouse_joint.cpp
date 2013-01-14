@@ -96,8 +96,7 @@ MouseJoint &MouseJoint::operator =(const MouseJoint &copy)
 
 bool MouseJoint::grab(const Vec2f &target) const
 {
-	PhysicsWorld phys_world(impl->owner_world->shared_from_this()); //Change this so it doesn't require private method in the PhysicsWorld.
-	PhysicsQueryAssistant qa = phys_world.get_qa();
+	PhysicsQueryAssistant qa = impl->owner_world->assistant;
 	
 	return false;
 }
