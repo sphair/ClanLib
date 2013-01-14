@@ -39,5 +39,6 @@ private:
 	void on_window_close();
 
 private:
+
 	bool quit;
 };
