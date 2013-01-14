@@ -48,7 +48,8 @@ PhysicsWorld_Impl::PhysicsWorld_Impl()
 	timestep			(1.0f/60.0f),
 	velocity_iterations	(8),
 	position_iterations (3),
-	physic_scale		(100)
+	physic_scale		(100),
+	olm_enabled			(false)
 {	
 	world.SetContactListener(&listener); //Uncomment after finishing physics context.
 	world.SetContactFilter(&listener); //Uncomment after finishing physics context.
@@ -96,6 +97,7 @@ void PhysicsWorld_Impl::create(const PhysicsWorldDescription &description)
 	velocity_iterations = desc_impl.velocity_iterations;
 	position_iterations = desc_impl.position_iterations;
 	physic_scale = desc_impl.physic_scale;
+	olm_enabled = desc_impl.olm_enabled;
 
 	world.SetAllowSleeping(desc_impl.sleep_enabled);
 	world.SetGravity(desc_impl.gravity);
@@ -188,16 +190,19 @@ void PhysicsWorld_Impl::safe_destroy_body(b2Body *body, int id)
 
 void PhysicsWorld_Impl::check_joint(int id)
 {
+	if(olm_enabled)
 	joints_for_checking.push_back(id);
 }
 
 void PhysicsWorld_Impl::check_fixture(int id)
 {
+	if(olm_enabled)
 	fixtures_for_checking.push_back(id);
 }
 
 void PhysicsWorld_Impl::check_body(int id)
 {
+	if(olm_enabled)
 	bodies_for_checking.push_back(id);
 }
 void PhysicsWorld_Impl::remove_joints()

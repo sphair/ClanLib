@@ -75,6 +75,9 @@ public:
 	/// \brief Returns if bodies are allowed to sleep when they come to rest.
 	bool is_sleep_enabled() const;
 
+	/// \brief Returns true if the Physics world has the object lifetime management enabled.
+	bool is_olm_enabled() const;
+
 	/// \brief Returns the world gravity
 	Vec2f get_gravity() const;
 
@@ -115,12 +118,14 @@ public:
 	/// \brief sets the amount of position iterations on every world tick.
 	void set_position_iterations(int iterations);
 
-	/// \brief Store object in description.
-	void set_data(const std::string &data_name, const std::shared_ptr<PhysicsWorldDescriptionData> &ptr);
-
 	/// \brief Change the amount of pixels for 1 meter in the Physics World. Simulation works best for objects that are larger than 0.1 meter but smaller than 10 meters.
 	void set_physic_scale(int pixels);
 
+	/// \brief Sets the object lifetime management. If enabled the physics objects are going to be removed from the Physics Context after the last API object pointing to them cease to exist.
+	void set_olm(const bool value = true);
+
+	/// \brief Store object in description.
+	void set_data(const std::string &data_name, const std::shared_ptr<PhysicsWorldDescriptionData> &ptr);
 
 /// \}
 /// \name Implementation

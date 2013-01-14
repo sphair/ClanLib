@@ -56,10 +56,6 @@ PhysicsWorld::~PhysicsWorld()
 	impl->sig_world_destroyed.invoke();
 }
 
-PhysicsWorld::PhysicsWorld(std::shared_ptr<PhysicsWorld_Impl> copy)
-{
-	impl = copy;
-}
 //																											___________________																											
 //																											A T T R I B U T E S
 void PhysicsWorld::throw_if_null() const
@@ -67,7 +63,10 @@ void PhysicsWorld::throw_if_null() const
 	if (!impl)
 		throw Exception("PhysicsWorld is null");
 }
-
+bool PhysicsWorld::is_olm_enabled() const
+{
+	return impl->olm_enabled;
+}
 int PhysicsWorld::get_physic_scale() const
 {
 	return (int)impl->physic_scale;
@@ -99,6 +98,10 @@ Signal_v0 &PhysicsWorld::sig_world_destroyed()
 //																											___________________																											
 //																											O P E R A T I O N S
 
+void PhysicsWorld::set_olm(const bool value)
+{
+	impl->olm_enabled = value;
+}
 void PhysicsWorld::step()
 {
 	impl->step();
