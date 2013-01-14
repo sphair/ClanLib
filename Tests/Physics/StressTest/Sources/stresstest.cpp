@@ -72,6 +72,7 @@ int StressTest::start(const std::vector<std::string> &args)
 	phys_desc.set_sleep(true);
 	phys_desc.set_physic_scale(100);
 	phys_desc.set_timestep(1.0f/60.0f);
+	phys_desc.set_olm(true);
 
 	PhysicsWorld phys_world(phys_desc);
 
