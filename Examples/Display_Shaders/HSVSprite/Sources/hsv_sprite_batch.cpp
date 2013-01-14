@@ -106,8 +106,8 @@ void HSVSpriteBatch::flush(GraphicContext &gc)
 			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
 			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, tex1_coord));
-			prim_array.set_attributes(2, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, hue_offset));
+			prim_array.set_attributes(1, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, hue_offset));
+			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, tex1_coord));
 		}
 
 		if (vertices)
