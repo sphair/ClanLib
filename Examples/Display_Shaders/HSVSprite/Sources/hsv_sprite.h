@@ -33,13 +33,13 @@ class HSVSpriteBatch;
 class HSVSprite
 {
 public:
-	HSVSprite(GraphicContext &gc, HSVSpriteBatch *batcher, const std::string &image_filename);
+	HSVSprite(Canvas &canvas, HSVSpriteBatch *batcher, const std::string &image_filename);
 	~HSVSprite();
 
-	void draw(GraphicContext &gc, int x, int y, float hue_offset);
+	void draw(Canvas &canvas, int x, int y, float hue_offset);
 
 private:
 	HSVSpriteBatch *batcher;
 	Rect geometry;
-	Texture texture;
+	Texture2D texture;
 };

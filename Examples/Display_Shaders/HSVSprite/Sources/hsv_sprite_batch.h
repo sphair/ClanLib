@@ -31,23 +31,36 @@
 class HSVSpriteBatch : public RenderBatcher
 {
 public:
-	HSVSpriteBatch(GraphicContext &gc);
+	HSVSpriteBatch(Canvas &canvas);
 
-	Subtexture alloc_sprite(GraphicContext &gc, const Size &size);
-	void draw_sprite(GraphicContext &gc, const Rectf &dest, const Rect &src, const Texture &texture, float hue_offset);
+	Subtexture alloc_sprite(Canvas &canvas, const Size &size);
+	void draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &src, const Texture &texture, float hue_offset);
 
 	void flush(GraphicContext &gc);
-	void modelview_changed(const Mat4f &modelview);
+	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
 
 private:
-	static ProgramObject create_shader_program(GraphicContext &gc);
+	static ProgramObject create_shader_program(Canvas &canvas);
+	inline Vec4f to_position(float x, float y) const;
+	void lock_transfer_buffer(Canvas &canvas);
 
-	enum { num_vertices = 6*256 };
-	Vec2f positions[num_vertices];
-	Vec2f tex1_coords[num_vertices];
-	Vec1f hue_offsets[num_vertices];
+	struct SpriteVertex
+	{
+		Vec4f position;
+		Vec2f tex1_coord;
+		Vec1f hue_offset;
+	};
+
+	enum { max_vertices = 6*256 };
+
+	TransferVector<SpriteVertex> transfer_buffers;
+	VertexArrayVector<SpriteVertex> gpu_vertices;
+	SpriteVertex *vertices;
+
 	int fill_position;
 	Texture current_texture;
+	Mat4f modelview_projection_matrix;
+	PrimitivesArray prim_array;
 
 	TextureGroup texture_group;
 	ProgramObject program;

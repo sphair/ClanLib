@@ -30,21 +30,21 @@
 #include "hsv_sprite.h"
 #include "hsv_sprite_batch.h"
 
-HSVSprite::HSVSprite(GraphicContext &gc, HSVSpriteBatch *batcher, const std::string &image_filename)
+HSVSprite::HSVSprite(Canvas &canvas, HSVSpriteBatch *batcher, const std::string &image_filename)
 : batcher(batcher)
 {
 	PixelBuffer image = ImageProviderFactory::load(image_filename);
-	Subtexture subtexture = batcher->alloc_sprite(gc, image.get_size());
+	Subtexture subtexture = batcher->alloc_sprite(canvas, image.get_size());
 	geometry = subtexture.get_geometry();
 	texture = subtexture.get_texture();
-	texture.set_subimage(geometry.get_top_left(), image, image.get_size());
+	texture.set_subimage(canvas, geometry.get_top_left(), image, image.get_size());
 }
 
 HSVSprite::~HSVSprite()
 {
 }
 
-void HSVSprite::draw(GraphicContext &gc, int x, int y, float hue_offset)
+void HSVSprite::draw(Canvas &canvas, int x, int y, float hue_offset)
 {
-	batcher->draw_sprite(gc, Rect(Point(x, y), geometry.get_size()), geometry, texture, hue_offset);
+	batcher->draw_sprite(canvas, Rect(Point(x, y), geometry.get_size()), geometry, texture, hue_offset);
 }
