@@ -90,6 +90,11 @@ Body &Fixture::get_owner_body() const
 {
 	return *static_cast<Body *> (impl->fixture->GetBody()->GetUserData());
 }
+
+bool Fixture::is_dummy() const
+{
+	return !impl->fixture_occupied;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 

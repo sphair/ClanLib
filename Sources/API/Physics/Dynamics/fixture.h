@@ -82,6 +82,9 @@ public:
 	/// \brief Return the body that this fixture is owned by.
 	Body &get_owner_body() const;
 
+	/// \brief Returns true if this fixture is a dummy fixture.
+	bool is_dummy() const;
+
 /// \}
 /// \name Operations
 /// \{
