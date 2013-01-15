@@ -67,6 +67,21 @@ int PhysicsContext::max_joints() const
 	return impl->max_joint_amount;
 }
 
+Body PhysicsContext::get_body(int id)
+{
+	return impl->get_body_from_context(id);
+}
+
+Fixture PhysicsContext::get_fixture(int id)
+{
+	return impl->get_fixture_from_context(id);
+}
+
+Joint PhysicsContext::get_joint(int id)
+{
+	return impl->get_joint_from_context(id);
+}
+
 //																						___________________
 //																						O P E R A T I O N S
 }
