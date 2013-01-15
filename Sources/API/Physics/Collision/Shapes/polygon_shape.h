@@ -39,6 +39,7 @@
 namespace clan
 {
 
+class PhysicsContext;
 class PhysicsWorld;
 class PolygonShape_Impl;
 class Angle;
@@ -62,6 +63,11 @@ public:
 	/// 
 	/// \param pw = Physics World.
 	PolygonShape(const PhysicsWorld &pw);
+
+	/// \brief Constructs a Polygon Shape.
+	/// 
+	/// \param pc = Physics Context.
+	PolygonShape(const PhysicsContext &pc);
 
 	~PolygonShape();
 

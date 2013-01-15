@@ -39,14 +39,14 @@ class PhysicsWorld_Impl;
 class EdgeShape_Impl
 {
 public:
-	EdgeShape_Impl(PhysicsWorld_Impl &pw_impl)
-	:	owner(&pw_impl)	
+	EdgeShape_Impl(PhysicsWorld_Impl *owner)
+	:	owner_world(owner)	
 	{
 			
 	}
 	virtual ~EdgeShape_Impl() { return; }
 
-	PhysicsWorld_Impl *owner;
+	PhysicsWorld_Impl *owner_world;
 	b2EdgeShape shape;
 };
 

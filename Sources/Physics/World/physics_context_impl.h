@@ -30,6 +30,7 @@
 #include <vector>
 #include <list>
 #include <memory>
+#include "API/Physics/World/physics_context.h"
 
 namespace clan
 {
@@ -37,8 +38,10 @@ namespace clan
 	class Fixture_Impl;
 	class Joint_Impl;
 	class PhysicsWorld_Impl;
+	class B2Body;
+	class B2Fixture;
 
-class PhysicsContext_Impl
+class PhysicsContext_Impl : public std::enable_shared_from_this<PhysicsContext_Impl>
 {
 public:
 
@@ -47,9 +50,11 @@ public:
 	PhysicsContext_Impl(PhysicsWorld_Impl *owner);
 	virtual ~PhysicsContext_Impl() { return; }
 
-
+	void setup_dummy_objects();
 //																						___________________
 //																						A T T R I B U T E S
+	PhysicsContext get_API() { PhysicsContext pc; pc.impl =  shared_from_this(); return pc; }
+	
 	PhysicsWorld_Impl *get_owner(){return owner_world;}
 
 //																						___________________
@@ -73,6 +78,12 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 	PhysicsWorld_Impl *owner_world;
+
+	std::shared_ptr<Body_Impl> dummy_body_impl;
+	std::shared_ptr<Fixture_Impl> dummy_fixture_impl;
+
+	b2Body *dummy_body_b2;
+	b2Fixture *dummy_fixture_b2;
 
 	bool has_something_to_delete;
 	

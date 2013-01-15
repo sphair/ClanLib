@@ -125,6 +125,7 @@ private:
 
 	std::shared_ptr<Fixture_Impl> impl;
 /// \}
+	friend class PhysicsContext_Impl;
 
 	friend class Body_Impl;
 	friend class Fixture_Impl;

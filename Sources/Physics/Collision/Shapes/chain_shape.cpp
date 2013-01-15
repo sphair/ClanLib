@@ -31,9 +31,11 @@
 #include "chain_shape_impl.h"
 #include "API/Physics/Collision/Shapes/chain_shape.h"
 #include "API/Physics/World/physics_world.h"
-#include "../../World/physics_world_impl.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Core/Math/angle.h"
 #include "API/display.h"
+#include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 
 namespace clan
 {
@@ -45,7 +47,14 @@ ChainShape::ChainShape()
 }
 
 ChainShape::ChainShape(const PhysicsWorld &pw)
-: impl(new ChainShape_Impl(*pw.impl))
+: impl(new ChainShape_Impl(pw.impl.get()))
+{
+	shape_impl->shape_type = shape_chain;
+	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
+}
+
+ChainShape::ChainShape(const PhysicsContext &pc)
+: impl(new ChainShape_Impl(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_chain;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
@@ -75,7 +84,7 @@ ChainShape &ChainShape::operator =(const ChainShape &copy)
 void 	ChainShape::create_loop (const Vec2f *vertices,const int count)
 {
 	b2Vec2 *b2_vertices = new b2Vec2[count]; // delete id 1
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 
 	for(int i=0; i<count; i++)
 	{
@@ -100,7 +109,7 @@ void 	ChainShape::create_loop (const CollisionOutline &outline)
 		int point_count = points.size();
 
 		b2Vec2 *b2_vertices = new b2Vec2[point_count]; // delete id 4
-		float scale = impl->owner->physic_scale;
+		float scale = impl->owner_world->physic_scale;
 
 		for(int i=0; i<point_count; i++)
 		{
@@ -121,7 +130,7 @@ void 	ChainShape::create_loop (const CollisionOutline &outline)
 void 	ChainShape::create_chain (const Vec2f *vertices,const int count)
 {
 	b2Vec2 *b2_vertices = new b2Vec2[count]; // delete id 3
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 
 	for(int i=0; i<count; i++)
 	{

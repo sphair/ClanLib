@@ -31,8 +31,10 @@
 #include "circle_shape_impl.h"
 #include "API/Physics/Collision/Shapes/Circle_shape.h"
 #include "API/Physics/World/physics_world.h"
-#include "../../World/physics_world_impl.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Core/Math/angle.h"
+#include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 
 namespace clan
 {
@@ -44,11 +46,19 @@ CircleShape::CircleShape()
 }
 
 CircleShape::CircleShape(const PhysicsWorld &pw)
-: impl(new CircleShape_Impl(*pw.impl))
+: impl(new CircleShape_Impl(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_circle;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
+
+CircleShape::CircleShape(const PhysicsContext &pc)
+: impl(new CircleShape_Impl(pc.impl->get_owner()))
+{
+	shape_impl->shape_type = shape_circle;
+	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
+}
+
 
 CircleShape::~CircleShape()
 {

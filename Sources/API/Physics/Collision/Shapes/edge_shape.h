@@ -37,6 +37,7 @@
 namespace clan
 {
 
+class PhysicsContext;
 class PhysicsWorld;
 class EdgeShape_Impl;
 
@@ -58,6 +59,11 @@ public:
 	/// 
 	/// \param pw = Physics World.
 	EdgeShape(const PhysicsWorld &pw);
+
+	/// \brief Constructs an Edge Shape
+	/// 
+	/// \param pw = Physics World.
+	EdgeShape(const PhysicsContext &pc);
 
 	~EdgeShape();
 

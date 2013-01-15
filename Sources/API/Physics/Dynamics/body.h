@@ -143,6 +143,8 @@ private:
 
 	std::shared_ptr<Body_Impl> impl;
 /// \}
+	friend class PhysicsContext_Impl;
+	
 	friend class Fixture;
 	friend class Fixture_Impl;
 	friend class Body_Impl;

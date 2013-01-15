@@ -37,6 +37,7 @@
 namespace clan
 {
 
+class PhysicsContext;
 class PhysicsWorld;
 class CircleShape_Impl;
 
@@ -57,6 +58,11 @@ public:
 	/// 
 	/// \param pw = Physics World.
 	CircleShape(const PhysicsWorld &pw);
+
+	/// \brief Constructs a Circle Shape.
+	/// 
+	/// \param pc = Physics Context
+	CircleShape(const PhysicsContext &pc);
 
 	~CircleShape();
 

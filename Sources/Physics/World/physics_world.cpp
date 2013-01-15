@@ -28,7 +28,9 @@
 
 #include "Physics/precomp.h"
 #include "physics_world_impl.h"
+#include "physics_context_impl.h"
 #include "API/Physics/World/physics_world.h"
+
 
 namespace clan
 {
@@ -36,10 +38,8 @@ namespace clan
 //																											_______________________																											
 //																											C O N S T R U C T O R S
 PhysicsWorld::PhysicsWorld()
-: impl(new PhysicsWorld_Impl)
 {
-	impl->pc = PhysicsContext(*this);
-	impl->assistant = PhysicsQueryAssistant(*this);
+
 }
 
 PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
@@ -49,6 +49,8 @@ PhysicsWorld::PhysicsWorld(const PhysicsWorldDescription &description)
 	impl->assistant = PhysicsQueryAssistant(*this);
 
 	impl->create(description);
+
+	impl->pc.impl->setup_dummy_objects();
 }
 
 PhysicsWorld::~PhysicsWorld()

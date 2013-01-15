@@ -52,6 +52,12 @@ public:
 	/// \param pw = Physics World
 	FixtureDescription(const PhysicsWorld &pw);
 
+	/// \brief Constructs a Fixture Description
+	///
+	/// \param pc = Physics Context
+	FixtureDescription(const PhysicsContext &pc);
+
+	/// \brief Copy operator.
 	FixtureDescription(const FixtureDescription &copy);
 	
 	virtual ~FixtureDescription();

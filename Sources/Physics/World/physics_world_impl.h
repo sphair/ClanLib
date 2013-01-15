@@ -31,6 +31,7 @@
 #include "../Box2D/Box2D.h"
 #include <memory>
 #include "physics_listener.h"
+#include "API/Physics/World/physics_world.h"
 #include "API/Physics/World/physics_world_description.h"
 #include "API/Physics/World/physics_context.h"
 #include "API/Physics/World/physics_query_assistant.h"
@@ -63,6 +64,7 @@ public:
 /// \name Attributes
 /// \{
 
+	PhysicsWorld get_API() { PhysicsWorld world; world.impl = shared_from_this(); return world; }
 	b2Body *get_dummy_body();
 	b2Fixture *get_dummy_fixture();
 
@@ -125,9 +127,6 @@ public:
 	std::list<b2Joint *> joints_for_destroying;
 	std::list<b2Fixture *> fixtures_for_destroying;
 	std::list<b2Body *> bodies_for_destroying;
-
-	b2Body *dummy_body;
-	b2Fixture *dummy_fixture;
 
 	b2World world;
 	PhysicsListener listener;
