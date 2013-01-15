@@ -32,6 +32,9 @@
 #pragma once
 
 #include "../api_physics.h"
+#include "../Dynamics/body.h"
+#include "../Dynamics/fixture.h"
+#include "../Dynamics/Joints/joint.h"
 #include <memory>
 
 namespace clan
@@ -67,6 +70,15 @@ public:
 
 	/// \brief Returns maximum amount of joints allowed.
 	int max_joints() const;
+
+	/// \brief Returns the Body of the given id. If the id is invalid returns a dummy Body instead.
+	Body get_body(int id);
+
+	/// \brief Returns the Fixture of the given id. If the id is invalid returns a dummy Fixture instead.
+	Fixture get_fixture(int id);
+
+	/// \brief Returns the joint of the given id. If the id is invalid returns a dummy joint instead.
+	Joint get_joint(int id);
 
 /// \}
 /// \name Operations

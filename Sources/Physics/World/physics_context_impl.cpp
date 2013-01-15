@@ -318,4 +318,53 @@ void PhysicsContext_Impl::check_joint(int id)
 	throw Exception("Tried to check a Joint from the context, but the Joint has no ID number"); 
 }
 
+Body PhysicsContext_Impl::get_body_from_context(int id)
+{
+	if(id>=0 && id<max_body_amount)
+	{
+		if(bodies[id].get())
+		{
+			Body body;
+			body.impl = bodies[id];
+			return body;
+		}
+	}
+	
+	Body body;
+	body.impl = dummy_body_impl;
+	return body;
+}
+Fixture PhysicsContext_Impl::get_fixture_from_context(int id)
+{
+	if(id>=0 && id<max_fixture_amount)
+	{
+		if(fixtures[id].get())
+		{
+			Fixture fixture;
+			fixture.impl = fixtures[id];
+			return fixture;
+		}
+	}
+	
+	Fixture fixture;
+	fixture.impl = dummy_fixture_impl;
+	return fixture;
+}
+Joint PhysicsContext_Impl::get_joint_from_context(int id)
+{
+	if(id>=0 && id<max_joint_amount)
+	{
+		if(joints[id].get())
+		{
+			Joint joint;
+			joint.impl = joints[id];
+			return joint;
+		}
+	}
+	
+	Joint joint;
+	//joint.impl = dummy_joint_impl; //Add me.
+	return joint;
+}
+
 }

@@ -57,6 +57,9 @@ public:
 	
 	PhysicsWorld_Impl *get_owner(){return owner_world;}
 
+	Body get_body_from_context(int id);
+	Fixture get_fixture_from_context(int id);
+	Joint get_joint_from_context(int id);
 //																						___________________
 //																						O P E R A T I O N S
 	void create_in_context(std::shared_ptr<Body_Impl> body);
