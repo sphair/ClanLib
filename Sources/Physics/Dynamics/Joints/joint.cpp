@@ -108,6 +108,10 @@ int Joint::get_id() const
 	return impl->id;
 }
 
+bool Joint::is_dummy() const
+{
+	return !impl->joint_occupied;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 

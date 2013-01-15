@@ -112,6 +112,11 @@ int Body::get_id() const
 {
 	return impl->id;
 }
+
+bool Body::is_dummy() const
+{
+	return !impl->body_occupied;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 

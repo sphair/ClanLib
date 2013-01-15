@@ -91,6 +91,9 @@ public:
 	/// \brief Return the world's id of the body.
 	int get_id() const;
 
+	/// \brief Returns true if this body is a dummy body.
+	bool is_dummy() const;
+
 /// \}
 /// \name Operations
 /// \{

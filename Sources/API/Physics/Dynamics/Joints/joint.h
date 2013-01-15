@@ -110,6 +110,9 @@ public:
 	/// \brief Return the world's id of the joint.
 	virtual int get_id() const;
 	
+	/// \brief Returns true if this joint is a dummy joint.
+	bool is_dummy() const;
+
 /// \}
 /// \name Operations
 /// \{
