@@ -133,7 +133,10 @@ private:
 	
 /// \}
 
+	friend class PhysicsWorld_Impl;
 	friend class PhysicsContext;
+	friend class PhysicsDebugDraw;
+
 	friend class PhysicsQueryAssistant;
 	friend class DistanceJointDescription;
 	friend class RevoluteJointDescription;
@@ -142,7 +145,6 @@ private:
 
 	friend class MouseJoint;
 
-	friend class PhysicsDebugDraw;
 	friend class PolygonShape;
 	friend class ChainShape;
 	friend class CircleShape;

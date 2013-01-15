@@ -26,13 +26,18 @@
 */
 
 #include "Physics/precomp.h"
+#include "physics_world_impl.h"
 #include "physics_context_impl.h"
+#include "API/Physics/World/physics_world.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Physics/Dynamics/body_description.h"
+#include "API/Physics/Dynamics/fixture_description.h"
+#include "API/Physics/Dynamics/body.h"
+#include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics/Collision/Shapes/edge_shape.h"
 #include "../Dynamics/body_impl.h"
 #include "../Dynamics/fixture_impl.h"
 #include "../Dynamics/Joints/joint_impl.h"
-#include "API/Physics/World/physics_world.h"
-#include "API/Core/Text/string_format.h"
-#include "physics_world_impl.h"
 
 namespace clan
 {
@@ -63,11 +68,44 @@ PhysicsContext_Impl::PhysicsContext_Impl(PhysicsWorld_Impl *owner)
 		for(int i=0; i<max_joint_amount; i++)
 		{
 			free_joint_slots.push_back(i);
-		}
+		}	
 	}
 	else
 	throw Exception("Tried to create a PhysicsContext using a null PhysicWorld object.");
+}
 
+void PhysicsContext_Impl::setup_dummy_objects()
+{
+	//Setup b2 dummy objects
+	b2BodyDef body_def;
+	body_def.active = false;
+	dummy_body_b2 = owner_world->world.CreateBody(&body_def);
+
+	b2FixtureDef fixture_def;
+	b2EdgeShape shape;
+	shape.Set(b2Vec2(0.0f, 0.0f), b2Vec2(0.0f, 0.0f));
+	fixture_def.shape = &shape;
+	dummy_fixture_b2 = dummy_body_b2->CreateFixture(&fixture_def);
+
+		//Setup impl dummy objects
+	PhysicsContext pc = get_API();
+	BodyDescription body_desc(pc);
+	body_desc.set_active(false);
+
+	Body dummy_body(pc,body_desc);
+
+	FixtureDescription fixture_desc(pc);
+	EdgeShape edge_shape(pc);
+	edge_shape.set(Vec2f(0.0f, 0.0f), Vec2f(0.0f, 0.0f));
+	fixture_desc.set_shape(edge_shape);
+
+	Fixture dummy_fixture(pc, dummy_body, fixture_desc);
+
+	dummy_body.kill();
+	dummy_fixture.kill();
+
+	dummy_body_impl = dummy_body.impl;
+	dummy_fixture_impl = dummy_fixture.impl;
 }
 //																						___________________
 //																						O P E R A T I O N S

@@ -53,16 +53,6 @@ PhysicsWorld_Impl::PhysicsWorld_Impl()
 {	
 	world.SetContactListener(&listener); //Uncomment after finishing physics context.
 	world.SetContactFilter(&listener); //Uncomment after finishing physics context.
-
-	b2BodyDef body_def;
-	body_def.active = false;
-	dummy_body = world.CreateBody(&body_def);
-
-	b2FixtureDef fixture_def;
-	b2EdgeShape shape;
-	shape.Set(b2Vec2(0.0f, 0.0f), b2Vec2(0.0f, 0.0f));
-	fixture_def.shape = &shape;
-	dummy_fixture = dummy_body->CreateFixture(&fixture_def);
 }
 
 PhysicsWorld_Impl::~PhysicsWorld_Impl() 
@@ -79,12 +69,12 @@ PhysicsWorld_Impl::~PhysicsWorld_Impl()
 
 b2Body *PhysicsWorld_Impl::get_dummy_body()
 {
-	return dummy_body;
+	return pc.impl->dummy_body_b2;
 }
 
 b2Fixture *PhysicsWorld_Impl::get_dummy_fixture()
 {
-	return dummy_fixture;
+	return pc.impl->dummy_fixture_b2;
 }
 //																											___________________																											
 //																											O P E R A T I O N S
@@ -159,13 +149,13 @@ void PhysicsWorld_Impl::destroy_joint(std::shared_ptr<Joint_Impl> &joint)
 void PhysicsWorld_Impl::destroy_fixture(std::shared_ptr<Fixture_Impl> &fixture)
 {
 	fixtures_for_destroying.push_back(fixture->fixture);
-	fixture->fixture = dummy_fixture;
+	fixture->fixture = pc.impl->dummy_fixture_b2;
 	pc.impl->remove_from_context(fixture);
 }
 void PhysicsWorld_Impl::destroy_body(std::shared_ptr<Body_Impl> &body)
 {
 	bodies_for_destroying.push_back(body->body);
-	body->body = dummy_body;
+	body->body = pc.impl->dummy_body_b2;
 	pc.impl->remove_from_context(body);
 }
 

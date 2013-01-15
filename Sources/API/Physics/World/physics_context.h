@@ -69,6 +69,11 @@ public:
 	int max_joints() const;
 
 /// \}
+/// \name Operations
+/// \{
+
+
+/// \}
 /// \name Implementation
 /// \{
 
@@ -77,10 +82,17 @@ private:
 
 /// \}
 
+	friend class PhysicsContext_Impl;
 
+	friend class PhysicsWorld;
 	friend class PhysicsWorld_Impl;
 	friend class BodyDescription;
 	friend class FixtureDescription;
+
+	friend class PolygonShape;
+	friend class ChainShape;
+	friend class CircleShape;
+	friend class EdgeShape;
 
 	friend class Body;
 	friend class Fixture;

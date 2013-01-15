@@ -39,14 +39,14 @@ class PhysicsWorld_Impl;
 class ChainShape_Impl
 {
 public:
-	ChainShape_Impl(PhysicsWorld_Impl &pw_impl)
-	:	owner(&pw_impl)	
+	ChainShape_Impl(PhysicsWorld_Impl *owner)
+	:	owner_world(owner)	
 	{
 			
 	}
 	virtual ~ChainShape_Impl() { return; }
 
-	PhysicsWorld_Impl *owner;
+	PhysicsWorld_Impl *owner_world;
 	b2ChainShape shape;
 };
 

@@ -31,8 +31,10 @@
 #include "Edge_shape_impl.h"
 #include "API/Physics/Collision/Shapes/Edge_shape.h"
 #include "API/Physics/World/physics_world.h"
-#include "../../World/physics_world_impl.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Core/Math/angle.h"
+#include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 
 namespace clan
 {
@@ -44,7 +46,14 @@ EdgeShape::EdgeShape()
 }
 
 EdgeShape::EdgeShape(const PhysicsWorld &pw)
-: impl(new EdgeShape_Impl(*pw.impl))
+: impl(new EdgeShape_Impl(pw.impl.get()))
+{
+	shape_impl->shape_type = shape_edge;
+	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
+}
+
+EdgeShape::EdgeShape(const PhysicsContext &pc)
+: impl(new EdgeShape_Impl(pc.impl->get_owner()))
 {
 	shape_impl->shape_type = shape_edge;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);

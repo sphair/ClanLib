@@ -39,14 +39,14 @@ class PhysicsWorld_Impl;
 class CircleShape_Impl
 {
 public:
-	CircleShape_Impl(PhysicsWorld_Impl &pw_impl)
-	:	owner(&pw_impl)	
+	CircleShape_Impl(PhysicsWorld_Impl *owner)
+	:	owner_world(owner)	
 	{
 			
 	}
 	virtual ~CircleShape_Impl() { return; }
 
-	PhysicsWorld_Impl *owner;
+	PhysicsWorld_Impl *owner_world;
 	b2CircleShape shape;
 };
 

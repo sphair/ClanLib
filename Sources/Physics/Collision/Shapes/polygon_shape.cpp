@@ -31,8 +31,10 @@
 #include "polygon_shape_impl.h"
 #include "API/Physics/Collision/Shapes/polygon_shape.h"
 #include "API/Physics/World/physics_world.h"
-#include "../../World/physics_world_impl.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Core/Math/angle.h"
+#include "../../World/physics_world_impl.h"
+#include "../../World/physics_context_impl.h"
 
 namespace clan
 {
@@ -44,11 +46,19 @@ PolygonShape::PolygonShape()
 }
 
 PolygonShape::PolygonShape(const PhysicsWorld &pw)
-: impl(new PolygonShape_Impl(*pw.impl))
+: impl(new PolygonShape_Impl(pw.impl.get()))
 {
 	shape_impl->shape_type = shape_polygon;
 	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
 }
+
+PolygonShape::PolygonShape(const PhysicsContext &pc)
+: impl(new PolygonShape_Impl(pc.impl->get_owner()))
+{
+	shape_impl->shape_type = shape_polygon;
+	shape_impl->shape = dynamic_cast<b2Shape*> (&impl->shape);
+}
+
 
 PolygonShape::~PolygonShape()
 {
@@ -73,12 +83,12 @@ PolygonShape &PolygonShape::operator =(const PolygonShape &copy)
 
 void 	PolygonShape::set_as_box (float width, float height)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->shape.SetAsBox(width/scale,height/scale);
 }
 void 	PolygonShape::set_as_box (float width, float height, const Vec2f &center, Angle &angle)
 {
-	float scale = impl->owner->physic_scale;
+	float scale = impl->owner_world->physic_scale;
 	impl->shape.SetAsBox(width/scale,
 						height/scale,
 						b2Vec2(center.x/scale, center.y/scale),

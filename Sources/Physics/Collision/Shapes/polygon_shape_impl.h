@@ -39,14 +39,14 @@ class PhysicsWorld_Impl;
 class PolygonShape_Impl
 {
 public:
-	PolygonShape_Impl(PhysicsWorld_Impl &pw_impl)
-	:	owner(&pw_impl)	
+	PolygonShape_Impl(PhysicsWorld_Impl *owner)
+	:	owner_world(owner)	
 	{
 			
 	}
 	virtual ~PolygonShape_Impl() { return; }
 
-	PhysicsWorld_Impl *owner;
+	PhysicsWorld_Impl *owner_world;
 	b2PolygonShape shape;
 };
 

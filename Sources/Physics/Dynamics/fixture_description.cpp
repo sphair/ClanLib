@@ -28,10 +28,12 @@
 
 #include "Physics/precomp.h"
 #include "Physics/Dynamics/fixture_description_impl.h"
+#include "API/Physics/World/physics_context.h"
 #include "API/Physics/Dynamics/fixture_description.h"
 #include "API/Physics/Collision/Shapes/shape.h"
 #include "API/Physics/Collision/Shapes/polygon_shape.h"
 #include "../Collision/Shapes/shape_impl.h"
+#include "../World/physics_context_impl.h"
 
 namespace clan
 {
@@ -42,11 +44,16 @@ FixtureDescription::FixtureDescription()
 }
 
 FixtureDescription::FixtureDescription(const PhysicsWorld &pw)
-: impl(new FixtureDescription_Impl(*pw.impl))
+: impl(new FixtureDescription_Impl(pw.impl.get()))
 {
 
 }
 
+FixtureDescription::FixtureDescription(const PhysicsContext &pc)
+:impl(new FixtureDescription_Impl(pc.impl->get_owner()))
+{
+
+}
 FixtureDescription::FixtureDescription(const FixtureDescription &copy)
 : impl(copy.impl)
 {
