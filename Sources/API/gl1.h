@@ -39,10 +39,6 @@
 #include "GL1/opengl1_target.h"
 #include "GL1/opengl1_window_description.h"
 #include "GL1/setup_gl1.h"
-#include "GL1/texture_unit.h"
-#include "GL1/material.h"
-#include "GL1/light_source.h"
-#include "GL1/light_model.h"
 #include "GL1/graphic_context_gl1.h"
 
 #ifdef __cplusplus_cli
