@@ -418,7 +418,7 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
+GlyphOutline FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 {
 	out_advance_x = 0;
 	GLYPHMETRICS glyph_metrics = { 0 };
@@ -456,16 +456,15 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 
 	if (glyph_buffer.is_null())
 	{
-		std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
 		out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
-		return outline;
+		return GlyphOutline();
 	}
 
 	TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *) glyph_buffer.get_data();
 	char *data_end = (char *) polygon_header;
 	data_end += glyph_buffer.get_size();
 
-	std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
+	GlyphOutline outline;
 
 	while( (char *) (polygon_header+1) <= data_end)
 	{
@@ -549,7 +548,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 			poly_curve = next_poly_curve;
 		}
 		// TODO: Do we need to close the curve?
-		outline->add_contour(contour);
+		outline.add_contour(contour);
 	}
 
 	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)

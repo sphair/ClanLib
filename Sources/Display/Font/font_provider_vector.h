@@ -35,6 +35,7 @@
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font.h"
+#include "glyph_outline.h"
 #include <list>
 #include <map>
 
@@ -44,7 +45,6 @@ namespace clan
 class FreetypeFont;
 class GlyphPrimitivesArray;
 class GlyphPrimitivesArrayOutline;
-class GlyphOutline;
 
 class FontEngine;
 
@@ -114,8 +114,8 @@ private:
 	struct vector_glyph
 	{
 		vector_glyph() {}
-		vector_glyph(std::shared_ptr<GlyphOutline> &outline, int advance_x) : outline(outline), advance_x(advance_x) {}
-		std::shared_ptr<GlyphOutline> outline;
+		vector_glyph(GlyphOutline &outline, int advance_x) : outline(outline), advance_x(advance_x) {}
+		GlyphOutline outline;
 
 		//Note advance_x is wrong.  For freetype, it should use...
 		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );

@@ -213,7 +213,7 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
+GlyphOutline FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 {
 	out_advance_x = 0;
 
@@ -239,7 +239,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
 	FT_Outline ft_outline = ft_outline_glyph_rec->outline;
 
-	std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
+	GlyphOutline outline;
 
 //	cl_write_console_line(string_format("Num contours: %1", ft_outline.n_contours));
 
@@ -287,7 +287,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 			}			
 		}
 
-		outline->add_contour(contour);
+		outline.add_contour(contour);
 	}
 
 	FT_Done_Glyph(glyph);
