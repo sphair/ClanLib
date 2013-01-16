@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "Display/precomp.h"
@@ -31,6 +32,7 @@
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/bezier_curve.h"
 #include "glyph_contour.h"
+#include "glyph_contour_impl.h"
 #include <cfloat>
 
 namespace clan
@@ -39,7 +41,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // GlyphContour Construction:
 
-GlyphContour::GlyphContour() : holeness_cached(false), hole(false)
+GlyphContour::GlyphContour() : impl(new GlyphContour_Impl())
 {
 }
 
@@ -52,94 +54,39 @@ GlyphContour::~GlyphContour()
 
 bool GlyphContour::is_hole()
 {
-	if( holeness_cached )
-		return hole;
-
-	PolygonOrientation orientation = get_orientation();
-
-	if( orientation == cl_counter_clockwise )
-	{
-		holeness_cached = true;
-		hole = true;
-		return hole;
-	}
-
-	holeness_cached = true;
-	hole = false;
-	return hole;
+	return impl->is_hole();
 }
 
 bool GlyphContour::is_inside_contour(const GlyphContour &other) const
 {
-	if( other.is_point_inside( contour_points[0] ) ) // if one point is inside then all other have to be also.
-		return true;
-
-	return false;
+	return impl->is_inside_contour(other);
 }
 
 bool GlyphContour::is_point_inside(const Pointf &P) const
 {
-	LineSegment2f lineX( Pointf(P.x, P.y + FLT_EPSILON), Pointf(P.x + 100000.0f, P.y + FLT_EPSILON) );
-
-	int num_intersections = 0;
-
-	for( unsigned int i=0; i < contour_points.size(); ++i )
-	{
-		unsigned int size = contour_points.size();
-
-		LineSegment2f line2(contour_points[ i % size], contour_points[(i+1) % size]);
-
-		if( lineX.intersects(line2, false) )
-		{
-			num_intersections++;
-		}
-	}
-
-	if( num_intersections % 2 )
-		return true;
-	
-	return false;
+	return impl->is_point_inside(P);
 }
+
+const std::vector<Pointf> &GlyphContour::get_contour_points()
+{
+	return impl->get_contour_points();
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphContour Operations:
 
 void GlyphContour::add_curve(BezierCurve &curve)
 {
-	std::vector<Pointf> points = curve.generate_curve_points(Angle::from_degrees(10));
-	
-	for( unsigned int i = 0; i<points.size() - 1; i++ )
-	{
-		contour_points.push_back( points[i] );
-	}
+	impl->add_curve(curve);
 }
 
 void GlyphContour::add_line_to(const Pointf &point )
 {
-	contour_points.push_back(point);
+	impl->add_line_to(point);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphContour Implementation:
-
-PolygonOrientation GlyphContour::get_orientation()
-{
-	float sum = 0;
-
-	unsigned int size = contour_points.size();
-
-	for( unsigned int i = 0; i < size; i++ )
-	{
-		const Pointf &p1 = contour_points[ i ];
-		const Pointf &p2 = contour_points[ (i+1) % size ];
-
-		sum += (p1.x*p2.y - p2.x*p1.y);
-	}
-
-	if( sum > 0.0 )
-		return cl_counter_clockwise;
-
-	return cl_clockwise;
-}
 
 }

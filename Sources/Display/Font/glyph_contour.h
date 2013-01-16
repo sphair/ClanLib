@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
@@ -37,6 +38,7 @@ namespace clan
 {
 
 class BezierCurve;
+class GlyphContour_Impl;
 
 class GlyphContour
 {
@@ -61,7 +63,7 @@ public:
 
 	bool is_point_inside(const Pointf &point) const;
 
-	const std::vector<Pointf> &get_contour_points() { return contour_points; }
+	const std::vector<Pointf> &get_contour_points();
 
 
 
@@ -82,12 +84,7 @@ public:
 
 private:
 
-	PolygonOrientation get_orientation();
-
-	std::vector<Pointf> contour_points;
-
-	bool holeness_cached;
-	bool hole;
+	std::shared_ptr<GlyphContour_Impl> impl;
 /// \}
 };
 

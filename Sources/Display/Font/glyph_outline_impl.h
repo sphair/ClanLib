@@ -31,7 +31,9 @@
 
 
 #include "Display/precomp.h"
+#include "glyph_outline.h"
 #include "glyph_contour.h"
+#include "glyph_outline_impl.h"
 #include <vector>
 #include "API/Display/Render/primitives_array.h"
 #include "API/Display/2D/color.h"
@@ -43,70 +45,17 @@ namespace clan
 
 class GraphicContext;
 class GlyphPrimitivesArray;
-class GlyphPrimitivesArrayOutline;
+class GlyphPrimitivesArray_Outline;
 class Canvas;
-class GlyphOutline_Impl;
 
-class GlyphPrimitivesArray
-{
-//! Construction:
-public:
-
-	/// \brief Constructs a GlyphPrimitivesArray
-	///
-	/// \param num_triangles = value
-	GlyphPrimitivesArray(int num_triangles)
-	{
-		int size = num_triangles*3;
-		vertex.resize(size);
-	}
-
-	~GlyphPrimitivesArray()
-	{
-	}
-
-	std::vector<Vec2f> vertex;
-};
-
-class GlyphPrimitivesArrayOutline
-{
-//! Construction:
-public:
-
-	/// \brief Constructs a GlyphPrimitivesArrayOutline
-	///
-	/// \param num_lines = value
-	GlyphPrimitivesArrayOutline(int num_lines)
-	{
-		vertex.resize(1);
-		vertex[0].resize(num_lines+1);
-	}
-	
-//! Operations:
-public:
-
-	/// \brief New subarray
-	///
-	/// \param num_lines = value
-	void new_subarray(int num_lines)
-	{
-		std::vector<std::vector<Vec2f> >::size_type size = vertex.size();
-		vertex.resize(size+1);
-
-		vertex[size].resize(num_lines+1);
-	}
-
-	std::vector< std::vector<Vec2f> > vertex;
-};
-
-class GlyphOutline
+class GlyphOutline_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	GlyphOutline();
-	virtual ~GlyphOutline();
+	GlyphOutline_Impl();
+	virtual ~GlyphOutline_Impl();
 
 
 /// \}
@@ -139,8 +88,13 @@ public:
 
 private:
 
-	std::shared_ptr<GlyphOutline_Impl> impl;
+	void generate_contour_prim_array();
 
+	std::vector< std::shared_ptr<GlyphContour> > contours;
+
+	std::unique_ptr<GlyphPrimitivesArray> prim_array;
+
+	std::unique_ptr<GlyphPrimitivesArrayOutline> prim_array_outline;
 
 /// \}
 };
