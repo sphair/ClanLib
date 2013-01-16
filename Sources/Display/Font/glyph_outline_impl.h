@@ -92,9 +92,8 @@ private:
 
 	std::vector< GlyphContour > contours;
 
-	std::unique_ptr<GlyphPrimitivesArray> prim_array;
-
-	std::unique_ptr<GlyphPrimitivesArrayOutline> prim_array_outline;
+	GlyphPrimitivesArray prim_array;
+	GlyphPrimitivesArrayOutline prim_array_outline;
 
 /// \}
 };
