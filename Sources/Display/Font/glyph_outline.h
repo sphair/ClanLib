@@ -126,7 +126,7 @@ public:
 
 public:
 
-	void add_contour(std::shared_ptr<GlyphContour>);
+	void add_contour(GlyphContour &contour);
 
 	void triangulate();
 

@@ -65,7 +65,7 @@ GlyphPrimitivesArrayOutline &GlyphOutline_Impl::get_outline()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline_Impl Operations:
 
-void GlyphOutline_Impl::add_contour(std::shared_ptr<GlyphContour> contour)
+void GlyphOutline_Impl::add_contour(GlyphContour &contour)
 {
 	contours.push_back(contour);
 }
@@ -83,16 +83,16 @@ void GlyphOutline_Impl::triangulate()
 	// sort contour vector so that it has the ordering:
 	// outline_1, ouline_1_hole_1, ouline_1_hole_2, outline_2, ouline_2_hole_1 etc.
 
-	std::vector< std::shared_ptr<GlyphContour> > sorted_contours;
+	std::vector< GlyphContour > sorted_contours;
 
 	int outline_count = 0;
 
 	for( i=0; i < contours.size(); ++i )
 	{
-		if( contours[i] == 0 )
+		if( contours[i].get_contour_points().empty() )
 			continue;
 
-		if( contours[i]->is_hole() )
+		if( contours[i].is_hole() )
 			continue;
 
 		outline_count++;
@@ -101,16 +101,16 @@ void GlyphOutline_Impl::triangulate()
 
 		for( unsigned int j=0; j < contours.size(); ++j )
 		{
-			if( contours[j] == 0 ) continue;
+			if( contours[j].get_contour_points().empty() ) continue;
 
-			if( contours[j]->is_hole() && contours[j]->is_inside_contour(*contours[i]) )
+			if( contours[j].is_hole() && contours[j].is_inside_contour(contours[i]) )
 			{
 				sorted_contours.push_back(contours[j]);
-				contours[j] = 0;
+				contours[j] = GlyphContour();
 			}
 		}
 
-		contours[i] = 0;
+		contours[i] = GlyphContour();
 	}
 
 //	cl_write_console_line(string_format("num outlines: %1", outline_count));
@@ -122,12 +122,12 @@ void GlyphOutline_Impl::triangulate()
 
 	for( i=0; i < contours.size(); ++i )
 	{
-		if( contours[i]->is_hole() )
+		if( contours[i].is_hole() )
 		{
 			triangulator.begin_hole();
 		}
 
-		const std::vector<Pointf> &cpoints = contours[i]->get_contour_points();
+		const std::vector<Pointf> &cpoints = contours[i].get_contour_points();
 		unsigned int num_points = cpoints.size();
 
 		for( unsigned int p=0; p<num_points; ++p )
@@ -135,14 +135,14 @@ void GlyphOutline_Impl::triangulate()
 			triangulator.add_vertex(cpoints[p]);
 		}
  
-		if( contours[i]->is_hole() )
+		if( contours[i].is_hole() )
 		{
 			triangulator.end_hole();
 		}
 
 		// if there are still contours left, but the next contour isn't a hole, then triangulate
 		// what has been added to the triangulator so far. Then clear it to start a new contour.
-		if( (i+1 < contours.size()) && (contours[i+1]->is_hole() == false) )
+		if( (i+1 < contours.size()) && (contours[i+1].is_hole() == false) )
 		{
 			triangulator.set_orientation(cl_counter_clockwise);
 
@@ -213,17 +213,17 @@ void GlyphOutline_Impl::generate_contour_prim_array()
 		return;
 	}
 	
-	int size = contours.front()->get_contour_points().size();
+	int size = contours.front().get_contour_points().size();
 	prim_array_outline = std::unique_ptr<GlyphPrimitivesArrayOutline> (new GlyphPrimitivesArrayOutline(size));
 	
-	std::vector< std::shared_ptr<GlyphContour> >::iterator it;
+	std::vector< GlyphContour >::iterator it;
 
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
 		if( it != contours.begin() )
-			prim_array_outline->new_subarray((*it)->get_contour_points().size());
+			prim_array_outline->new_subarray((*it).get_contour_points().size());
 
-		const std::vector<Pointf> &points = (*it)->get_contour_points();
+		const std::vector<Pointf> &points = (*it).get_contour_points();
 
 		int subarray_index = prim_array_outline->vertex.size() - 1;
 
