@@ -108,6 +108,45 @@ Angle Body::get_angular_velocity() const
 	return Angle(velocity,angle_radians);
 }
 
+float Body::get_gravity_scale()
+{
+	return impl->body->GetGravityScale();
+}
+
+BodyType Body::get_type() const
+{
+	BodyType body_type;
+	switch(impl->body->GetType())
+	{
+		case b2_dynamicBody:
+			body_type = body_dynamic;
+		break;
+		case b2_kinematicBody:
+			body_type = body_kinematic;
+		break;
+		case b2_staticBody:
+			body_type = body_static;
+		break;
+	}
+
+	return body_type;
+}
+
+bool Body::has_fixed_rotation() const
+{
+	return impl->body->IsFixedRotation();
+}
+
+float Body::get_linear_damping() const
+{
+	return impl->body->GetLinearDamping();
+}
+
+float Body::get_angular_damping() const
+{
+	return impl->body->GetAngularDamping();
+}
+
 int Body::get_id() const
 {
 	return impl->id;
@@ -117,6 +156,22 @@ bool Body::is_dummy() const
 {
 	return !impl->body_occupied;
 }
+
+bool Body::is_awake() const
+{
+	return impl->body->IsAwake();
+}
+
+bool Body::is_active() const
+{
+	return impl->body->IsActive();
+}
+
+bool Body::is_bullet() const
+{
+	return impl->body->IsBullet();
+}
+
 //																											___________________																											
 //																											O P E R A T I O N S
 
@@ -164,6 +219,102 @@ void Body::set_linear_velocity(const Vec2f &velocity)
 void Body::set_angular_velocity(const Angle &velocity)
 {
 	impl->body->SetAngularVelocity(velocity.to_radians());
+}
+
+void Body::apply_force (const Vec2f &force, const Vec2f &point)
+{
+	float scale = impl->owner_world->physic_scale;
+
+	b2Vec2 b2force(force.x, force.y);
+	b2Vec2 b2point(point.x/scale, point.y/scale);
+
+	impl->body->ApplyForce(b2force, b2point);
+}
+
+void Body::apply_force_to_center (const Vec2f &force)
+{
+	b2Vec2 b2force(force.x, force.y);
+
+	impl->body->ApplyForceToCenter(b2force);
+}
+
+void Body::apply_torque (const float torque)
+{
+	impl->body->ApplyTorque(torque);
+}
+
+void Body::apply_linear_impulse (const Vec2f &impulse, const Vec2f &point)
+{
+	float scale = impl->owner_world->physic_scale;
+
+	b2Vec2 b2impulse(impulse.x, impulse.y);
+	b2Vec2 b2point(point.x/scale, point.y/scale);
+
+	impl->body->ApplyLinearImpulse(b2impulse, b2point);
+}
+
+void Body::apply_angular_impulse (const float impulse)
+{
+	impl->body->ApplyAngularImpulse(impulse);
+}
+
+void Body::set_gravity_scale(const float scale)
+{
+	impl->body->SetGravityScale(scale);
+}
+
+void Body::set_type(const BodyType type)
+{
+	b2BodyType body_type;
+	switch(type)
+	{
+		case body_dynamic:
+			body_type = b2_dynamicBody;
+		break;
+		case body_kinematic:
+			body_type = b2_kinematicBody;
+		break;
+		case body_static:
+			body_type = b2_staticBody;
+		break;
+	}
+
+	impl->body->SetType(body_type);
+}
+
+void Body::set_as_bullet(const bool value)
+{
+	impl->body->SetBullet(value);
+}
+
+void Body::set_awake(const bool value)
+{
+	impl->body->SetAwake(value);
+}
+
+void Body::set_active(const bool value)
+{
+	impl->body->SetActive(value);
+}
+
+void Body::set_fixed_rotation(const bool value)
+{
+	impl->body->SetFixedRotation(value);
+}
+
+void Body::set_linear_damping(const float damping)
+{
+	impl->body->SetLinearDamping(damping);
+}
+
+void Body::set_angular_damping(const float damping)
+{
+	impl->body->SetAngularDamping(damping);
+}
+
+void Body::reset_mass_data()
+{
+	impl->body->ResetMassData();
 }
 
 void Body::kill()
