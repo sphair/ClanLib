@@ -114,6 +114,17 @@ void BodyDescription::set_position(const Pointf &position)
 	impl->bodyDef.position = b2Vec2(position.x/scale, position.y/scale);
 }
 
+void BodyDescription::set_position(const int x, const int y)
+{
+	float scale = impl->owner_world->physic_scale;
+	impl->bodyDef.position = b2Vec2(x/scale, y/scale);
+}
+void BodyDescription::set_position(const float x, const float y)
+{
+	float scale = impl->owner_world->physic_scale;
+	impl->bodyDef.position = b2Vec2(x/scale, y/scale);
+}
+
 void BodyDescription::set_angle(const Angle &angle)
 {
 	impl->bodyDef.angle = angle.to_radians();

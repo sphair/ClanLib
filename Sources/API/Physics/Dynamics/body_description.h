@@ -102,8 +102,11 @@ public:
 	BodyDescription &operator =(const BodyDescription &copy);
 
 	void set_type(const BodyType type);
+
 	void set_position(const Vec2f &position);
 	void set_position(const Pointf &position);
+	void set_position(const int x, const int y);
+	void set_position(const float x, const float y);
 
 	/// \brief Set the Physics World angle of the body.
 	void set_angle(const Angle &angle);
@@ -115,7 +118,9 @@ public:
 	void set_angular_velocity(const Angle &velocity);
 
 	void set_linear_damping(const float damping);
+
 	void set_angular_damping(const float damping);
+
 	void allow_sleep(const bool value = true);
 	
 	/// \brief Should body initially be awake or sleep?

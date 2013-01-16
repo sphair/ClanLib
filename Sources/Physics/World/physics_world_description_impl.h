@@ -48,6 +48,7 @@ public:
 		gravity(b2Vec2(0.0f,10.0f)),
 		velocity_iterations(8),
 		position_iterations(3),
+		physic_scale(100),
 		olm_enabled(false)
 	{
 	}
