@@ -27,56 +27,69 @@
 **    Mark Page
 */
 
-#include "Display/precomp.h"
-#include "glyph_outline.h"
-#include "glyph_outline_impl.h"
-#include "API/Core/Math/ear_clip_result.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Font/font_vector.h"
+#pragma once
+
+
 #include <vector>
+#include "API/Core/Math/point.h"
+#include "API/Core/Math/ear_clip_triangulator.h"
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// GlyphOutline Construction:
+class BezierCurve;
 
-GlyphOutline::GlyphOutline() : impl(new GlyphOutline_Impl())
+class GlyphContour_Impl
 {
-}
+/// \name Construction
+/// \{
 
-GlyphOutline::~GlyphOutline()
-{
-}
+public:
+	GlyphContour_Impl();
 
-/////////////////////////////////////////////////////////////////////////////
-// GlyphOutline Attributes:
-
-GlyphPrimitivesArray &GlyphOutline::get_triarray()
-{
-	return impl->get_triarray();
-}
-
-GlyphPrimitivesArrayOutline &GlyphOutline::get_outline()
-{
-	return impl->get_outline();
-}
+	virtual ~GlyphContour_Impl();
 
 
-/////////////////////////////////////////////////////////////////////////////
-// GlyphOutline Operations:
+/// \}
+/// \name Attributes
+/// \{
 
-void GlyphOutline::add_contour(std::shared_ptr<GlyphContour> contour)
-{
-	impl->add_contour(contour);
-}
+public:
 
-void GlyphOutline::triangulate()
-{
-	impl->triangulate();
-}
+	bool is_hole();
 
-/////////////////////////////////////////////////////////////////////////////
-// GlyphOutline Implementation:
+	bool is_inside_contour(const GlyphContour &other) const;
+
+	bool is_point_inside(const Pointf &point) const;
+
+	const std::vector<Pointf> &get_contour_points() { return contour_points; }
+
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+
+	void add_curve(BezierCurve &);
+
+	void add_line_to(const Pointf &p);
+
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+
+	PolygonOrientation get_orientation();
+
+	std::vector<Pointf> contour_points;
+
+	bool holeness_cached;
+	bool hole;
+/// \}
+};
 
 }

@@ -86,6 +86,7 @@ libclan30Display_la_SOURCES = \
 	Font/font_vector.cpp \
 	Font/font_manager.cpp \
 	Font/glyph_outline.cpp \
+	Font/glyph_outline_impl.cpp \
 	Font/font_provider_vector.cpp \
 	Font/font_provider_sprite.cpp \
 	Font/font.cpp \
@@ -94,6 +95,7 @@ libclan30Display_la_SOURCES = \
 	Font/font_manager_impl.cpp \
 	Font/font_sprite.cpp \
 	Font/glyph_contour.cpp \
+	Font/glyph_contour_impl.cpp \
 	Font/font_description.cpp \
 	Font/font_metrics_impl.cpp \
 	Font/font_provider_system.cpp \
