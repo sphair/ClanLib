@@ -213,8 +213,10 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c)
+std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 {
+	out_advance_x = 0;
+
 	FT_UInt glyph_index;
 
 	glyph_index = FT_Get_Char_Index( face, FT_ULong(c) );
@@ -290,7 +292,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c)
 
 	FT_Done_Glyph(glyph);
 
-	outline->advance_x = get_advance_x( c );	// This should not be here (See comment on GlyphOutline struct)
+	out_advance_x = get_advance_x( c );
 
 	return outline;
 }

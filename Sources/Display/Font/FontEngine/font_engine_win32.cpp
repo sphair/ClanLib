@@ -418,8 +418,9 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
+std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 {
+	out_advance_x = 0;
 	GLYPHMETRICS glyph_metrics = { 0 };
 	MAT2 matrix = { 0 };
 	matrix.eM11.value = 1;
@@ -456,7 +457,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 	if (glyph_buffer.is_null())
 	{
 		std::shared_ptr<GlyphOutline> outline(new GlyphOutline);
-		outline->advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
+		out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
 		return outline;
 	}
 
@@ -551,7 +552,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph)
 		outline->add_contour(contour);
 	}
 
-	outline->advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
+	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
 	return outline;
 }
 

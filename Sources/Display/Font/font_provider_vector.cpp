@@ -188,16 +188,15 @@ void FontProvider_Vector::get_glyphs(
 	{
 		if( char_cache.find(text[i]) == char_cache.end() )
 		{
-			std::shared_ptr<GlyphOutline> outline = font_engine->load_glyph_outline(text[i]);
+			int out_advance_x;
+			std::shared_ptr<GlyphOutline> outline = font_engine->load_glyph_outline(text[i], out_advance_x);
 			outline->triangulate();
 			
-			char_cache[text[i]] = outline;
+			char_cache[text[i]] = vector_glyph(outline, out_advance_x);
 		}
 		
 		out_glyphs[i] = text[i];
-
-		out_interspacing_x[i] = char_cache[text[i]]->advance_x;	// hack hack HACK .. THIS is soo wrong!
-
+		out_interspacing_x[i] = char_cache[text[i]].advance_x;
 	}
 }
 
@@ -221,7 +220,7 @@ void FontProvider_Vector::draw_glyphs(
 
 		if( filled )
 		{
-			GlyphPrimitivesArray &prim_array = char_cache[glyphs[i]]->get_triarray();
+			GlyphPrimitivesArray &prim_array = char_cache[glyphs[i]].outline->get_triarray();
 
 			if (prim_array.vertex.size() > 0)
 			{
@@ -231,7 +230,7 @@ void FontProvider_Vector::draw_glyphs(
 		}
 		else
 		{
-			GlyphPrimitivesArrayOutline &prim_array_outline = char_cache[glyphs[i]]->get_outline();
+			GlyphPrimitivesArrayOutline &prim_array_outline = char_cache[glyphs[i]].outline->get_outline();
 
 			std::vector< std::vector<Vec2f> >::iterator it;
 
