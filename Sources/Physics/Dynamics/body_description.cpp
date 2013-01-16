@@ -89,13 +89,13 @@ void BodyDescription::set_type(const BodyType type)
 	switch(type)
 	{
 		case body_dynamic:
-		body_type = b2_dynamicBody;
+			body_type = b2_dynamicBody;
 		break;
 		case body_kinematic:
-		body_type = b2_kinematicBody;
+			body_type = b2_kinematicBody;
 		break;
 		case body_static:
-		body_type = b2_staticBody;
+			body_type = b2_staticBody;
 		break;
 	}
 
