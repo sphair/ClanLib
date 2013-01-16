@@ -32,6 +32,7 @@
 #include "../Dynamics/fixture_impl.h"
 #include "API/Physics/Dynamics/body.h"
 #include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics/Collision/physics_object.h"
 
 namespace clan
 {
@@ -43,54 +44,26 @@ PhysicsListener::PhysicsListener()
 void PhysicsListener::BeginContact(b2Contact *contact)
 {
 
-	//optimise me
-	Fixture_Impl *fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
-	Fixture_Impl *fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	CollisionData data;
+	data.collide_fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
+	data.collide_fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	data.collide_bodyA = static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
+	data.collide_bodyB = static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
+	data.is_end_collision = false;
 
-	FixtureCollisionData data;
-	data.fixture_signalA = &fixtureA->sig_begin_collision;
-	data.fixture_signalB = &fixtureB->sig_begin_collision;
-	data.collide_fixtureA = fixtureA;
-	data.collide_fixtureB = fixtureB;
-
-	fixture_data.push_back(data);
-
-	//fixtureA.on_begin_collision(fixtureB);
-	//fixtureB.on_begin_collision(fixtureA);
-
-	/*
-	/////Type cast the two colliding objects to a Body_Impl////////////////
-	Body_Impl &bodyA = *static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
-	Body_Impl &bodyB = *static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
-	bodyA.on_begin_collision(bodyB);
-	bodyB.on_begin_collision(bodyA);
-	*/
+	collision_data.push_back(data);	
 }
 
 void PhysicsListener::EndContact(b2Contact *contact)
 {
-	//optimise me
-	Fixture_Impl *fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
-	Fixture_Impl *fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	CollisionData data;
+	data.collide_fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
+	data.collide_fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	data.collide_bodyA = static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
+	data.collide_bodyB = static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
+	data.is_end_collision = true;
 
-	FixtureCollisionData data;
-	data.fixture_signalA = &fixtureA->sig_end_collision;
-	data.fixture_signalB = &fixtureB->sig_end_collision;
-	data.collide_fixtureA = fixtureA;
-	data.collide_fixtureB = fixtureB;
-
-	fixture_data.push_back(data);
-
-	//fixtureA.on_end_collision(fixtureB);
-	//fixtureB.on_end_collision(fixtureA);
-
-	/*
-	/////Type cast the two colliding objects to a Body_Impl////////////////
-	Body_Impl &bodyA = *static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
-	Body_Impl &bodyB = *static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
-	bodyA.on_end_collision(bodyB);
-	bodyB.on_end_collision(bodyA);
-	*/
+	collision_data.push_back(data);
 }
 
 void PhysicsListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
@@ -105,25 +78,59 @@ void PhysicsListener::PreSolve(b2Contact *contact, const b2Manifold *oldManifold
 
 bool PhysicsListener::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 {
-	//TODO
-	return true;
+	Body_Impl *bodyA_impl = static_cast<Body_Impl *> (fixtureA->GetBody()->GetUserData());
+	Body_Impl *bodyB_impl = static_cast<Body_Impl *> (fixtureB->GetBody()->GetUserData());
+
+	PhysicsObject *objectA = bodyA_impl->data;
+	PhysicsObject *objectB = bodyB_impl->data;
+	
+	if(objectA!=nullptr && objectB!=nullptr)
+	{	
+		Body bodyA;
+		bodyA.impl = bodyA_impl->shared_from_this();
+
+		Body bodyB;
+		bodyB.impl = bodyB_impl->shared_from_this();
+
+		return (objectA->should_collide_with(bodyB) && objectB->should_collide_with(bodyA));
+	}
+	else
+	{
+		return true;
+	}
 }
 
 void PhysicsListener::emit_collision_signals()
 {
-	std::list<FixtureCollisionData>::iterator it;
-	for(it = fixture_data.begin(); it!= fixture_data.end() ;)
+	std::list<CollisionData>::iterator it;
+	for(it = collision_data.begin(); it!= collision_data.end() ;)
 	{
-		Fixture fixtureA;
-		fixtureA.impl = (*it).collide_fixtureA->shared_from_this();
+		CollisionData &data = (*it);
+		PhysicsObject *objectA = data.collide_bodyA->data;
+		PhysicsObject *objectB =  data.collide_bodyB->data;
 
-		Fixture fixtureB;
-		fixtureB.impl = (*it).collide_fixtureB->shared_from_this();
+		if(objectA!=nullptr && objectB!=nullptr)
+		{	
+			Body bodyA;
+			bodyA.impl = data.collide_bodyA->shared_from_this();
 
-		(*it).fixture_signalA->invoke(fixtureB);
-		(*it).fixture_signalA->invoke(fixtureA);
+			Body bodyB;
+			bodyB.impl = data.collide_bodyB->shared_from_this();
 
-		it = fixture_data.erase(it);
+			//Might optimise by splitting emit_collision_signals to emit_begin_collision_signals and emit_end_collision_signals.
+			if(!data.is_end_collision)
+			{
+				objectA->on_collision_begin(bodyB);
+				objectB->on_collision_begin(bodyA);
+			}
+			else
+			{
+				objectA->on_collision_end(bodyB);
+				objectB->on_collision_end(bodyA);
+			}
+		}
+
+		it = collision_data.erase(it);
 	}
 
 }

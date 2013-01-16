@@ -45,6 +45,7 @@ class BodyDescription;
 class Body_Impl;
 class FixtureDescription;
 class PhysicsContext;
+class PhysicsObject;
 
 /// \brief Body class
 ///
@@ -119,6 +120,8 @@ public:
 	/// \brief Returns true if this body is a bullet.
 	bool is_bullet() const;
 
+	/// \brief Returns the physics object data.
+	PhysicsObject *get_data();
 /// \}
 /// \name Operations
 /// \{
@@ -203,6 +206,9 @@ public:
 
 	/// \brief Remove the body from the simulation. The body gets swapped with a dummy body.
 	void kill();
+
+	/// \brief Set the physics object object that is going to process collision events.
+	void set_data(PhysicsObject *data);
 
 /// \}
 /// \name Signals

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -26,51 +26,47 @@
 **    Arkadiusz Kalinowski
 */
 
+/// \addtogroup clanPhysics_Collision clanPhysics Collision
+/// \{
 #pragma once
 
-#include "../Box2D/Box2D.h"
-#include "API/Core/Signals/signal_v1.h"
-#include <list>
+#include "../api_physics.h"
 
 namespace clan
 {
+	class Body;
+	class Fixture;
 
-class Fixture_Impl;
-class Body_Impl;
-class Fixture;
-
-class PhysicsListener : public b2ContactListener, public b2ContactFilter
+/// \brief Physics Object class.
+///
+/// A physics object is a pure virtual class that should be a base for all the game object classes
+/// that want to work with collisions.
+/// \xmlonly !group=Physic/Collision! !header=physics.h! \endxmlonly
+class CL_API_PHYSICS PhysicsObject
 {
 
-	struct CollisionData
-	{
-		bool is_end_collision;
-
-		Fixture_Impl *collide_fixtureA;
-		Fixture_Impl *collide_fixtureB;
-
-		Body_Impl *collide_bodyA;
-		Body_Impl *collide_bodyB;
-	};
-//																							_______________________
-//																							C O N S T R U C T I O N
+/// \name Construction
+/// \{
 public:
+	PhysicsObject();
+	~PhysicsObject();
+/// \}
+/// \name Attributes
+/// \{
 
-	PhysicsListener();
-	virtual ~PhysicsListener(){};
+	virtual bool should_collide_with(Body &body) const = 0;
 
-//																							___________________
-//																							O P E R A T I O N S
-	void emit_collision_signals();
-	
-	virtual void BeginContact(b2Contact* contact);
-	virtual void EndContact(b2Contact* contact);
-	virtual void PreSolve(b2Contact* contact, const b2Manifold* oldManifold);
-	virtual void PostSolve(b2Contact* contact, const b2ContactImpulse* impulse);
-	virtual bool ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB);
+/// \}
+/// \name Operations
+/// \{
 
-	std::list<CollisionData> collision_data;
+	virtual void on_collision_begin(Body &body) = 0;
+	virtual void on_collision_end(Body &body) = 0;
+
+/// \}
 	
 };
 
 }
+
+/// \}

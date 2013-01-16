@@ -42,7 +42,8 @@ Body_Impl::Body_Impl( PhysicsWorld_Impl *owner)
 :	body(owner_world->get_dummy_body()),
 	body_occupied(false),
 	owner_world(owner),
-	id(-1)
+	id(-1),
+	data(nullptr)
 {
 
 }

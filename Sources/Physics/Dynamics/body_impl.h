@@ -41,6 +41,7 @@ namespace clan
 {
 
 class PhysicsWorld_Impl;
+class PhysicsObject;
 
 class Body_Impl : public std::enable_shared_from_this<Body_Impl>
 {
@@ -76,6 +77,7 @@ public:
 //																						___________________________
 //																						I M P L E M E N T A T I O N
 public:
+	PhysicsObject *data;
 	std::list<Fixture> owned_fixtures;
 	int id;
 	PhysicsWorld_Impl *owner_world;
