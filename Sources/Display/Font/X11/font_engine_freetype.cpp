@@ -247,7 +247,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 	{
 //		cl_write_console_line(string_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
 		
-		std::shared_ptr<GlyphContour> contour(new GlyphContour);
+		GlyphContour contour;
 		
 		// debug: dump contents of points array to terminal
 //		for( int i = 0; i <= ft_outline.contours[cont]; ++i )
@@ -265,7 +265,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 
 			if( tp.tag == FT_Curve_Tag_On )
 			{
-				contour->add_line_to(tp.pos);
+				contour.add_line_to(tp.pos);
 			}
 			else if( tp.tag == FT_Curve_Tag_Conic )
 			{
@@ -274,7 +274,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 				curve.add_control_point( points[i-1].pos);
 				curve.add_control_point( tp.pos );
 				curve.add_control_point( points[i+1].pos );
-				contour->add_curve(curve);
+				contour.add_curve(curve);
 			}
 			else if( tp.tag == FT_Curve_Tag_Cubic && points[i-1].tag == FT_Curve_Tag_Cubic )
 			{
@@ -283,7 +283,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Freetype::load_glyph_outline(int c, int
 				curve.add_control_point( points[i-1].pos);
 				curve.add_control_point( tp.pos );
 				curve.add_control_point( points[i+1].pos );
-				contour->add_curve(curve);
+				contour.add_curve(curve);
 			}			
 		}
 

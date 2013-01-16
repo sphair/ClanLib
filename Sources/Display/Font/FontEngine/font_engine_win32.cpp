@@ -474,7 +474,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 
 		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
 		//Pointf initial_point = previous_point;
-		std::shared_ptr<GlyphContour> contour(new GlyphContour);
+		GlyphContour contour;
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)
@@ -498,7 +498,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 			if ( next_poly_curve < poly_curve || ( (char *) poly_curve > data_end ) )
 				throw Exception("invalid structure 2");
 	
-			contour->add_line_to(previous_point);
+			contour.add_line_to(previous_point);
 
 			if (poly_curve->wType == TT_PRIM_LINE)
 			{
@@ -506,7 +506,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 				for (int i = 0; i < poly_curve->cpfx; i++)
 				{
 					next_point = PointFXtoPoint(poly_curve->apfx[i]);
-					contour->add_line_to(next_point);
+					contour.add_line_to(next_point);
 				}
 				previous_point = next_point;
 			}
@@ -541,7 +541,7 @@ std::shared_ptr<GlyphOutline> FontEngine_Win32::load_glyph_outline(int glyph, in
 
 					previous_point = next_point;
 				}
-				contour->add_curve(bezier_curve);
+				contour.add_curve(bezier_curve);
 			}
 			else
 				throw Exception("unsupported curve type");

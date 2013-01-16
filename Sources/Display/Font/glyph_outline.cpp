@@ -66,7 +66,7 @@ GlyphPrimitivesArrayOutline &GlyphOutline::get_outline()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Operations:
 
-void GlyphOutline::add_contour(std::shared_ptr<GlyphContour> contour)
+void GlyphOutline::add_contour(GlyphContour &contour)
 {
 	impl->add_contour(contour);
 }
