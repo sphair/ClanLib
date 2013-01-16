@@ -57,7 +57,13 @@ PhysicsWorld_Impl::PhysicsWorld_Impl()
 
 PhysicsWorld_Impl::~PhysicsWorld_Impl() 
 { 
-	//b2World automaticly deletes all remaining b2Bodies, b2Fixtures and b2Joints.
+	if(joints_for_checking.size()>0) check_joints();
+	if(fixtures_for_checking.size()>0) check_fixtures();
+	if(bodies_for_checking.size()>0) check_bodies();
+
+	if(joints_for_destroying.size()>0) remove_joints();
+	if(fixtures_for_destroying.size()>0) remove_fixtures();
+	if(bodies_for_destroying.size()>0) remove_bodies();
 
 	world.SetContactListener(NULL);
 	world.SetContactFilter(NULL);
