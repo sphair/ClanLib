@@ -111,7 +111,19 @@ public:
 
 private:
 
-	std::map<int, std::shared_ptr<GlyphOutline> > char_cache;
+	struct vector_glyph
+	{
+		vector_glyph() {}
+		vector_glyph(std::shared_ptr<GlyphOutline> &outline, int advance_x) : outline(outline), advance_x(advance_x) {}
+		std::shared_ptr<GlyphOutline> outline;
+
+		//Note advance_x is wrong.  For freetype, it should use...
+		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
+		//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
+		int advance_x;
+	};
+
+	std::map<int, vector_glyph> char_cache;
 
 	FontMetrics metrics;
 

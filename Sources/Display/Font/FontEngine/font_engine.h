@@ -47,7 +47,7 @@ public:
 
 	virtual FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) = 0;
 	virtual FontPixelBuffer get_font_glyph_subpixel(int glyph) = 0;
-	virtual std::shared_ptr<GlyphOutline> load_glyph_outline(int glyph_index) = 0;
+	virtual std::shared_ptr<GlyphOutline> load_glyph_outline(int glyph_index, int &out_advance_x) = 0;
 
 };
 
