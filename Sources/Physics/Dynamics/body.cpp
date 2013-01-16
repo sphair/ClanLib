@@ -172,6 +172,10 @@ bool Body::is_bullet() const
 	return impl->body->IsBullet();
 }
 
+PhysicsObject *Body::get_data()
+{
+	return impl->data;
+}
 //																											___________________																											
 //																											O P E R A T I O N S
 
@@ -320,6 +324,11 @@ void Body::reset_mass_data()
 void Body::kill()
 {
 	impl->remove_body();
+}
+
+void Body::set_data(PhysicsObject *data)
+{
+	impl->data = data;
 }
 
 //																											_____________																										
