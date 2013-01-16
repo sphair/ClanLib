@@ -143,9 +143,9 @@ int Raycasting::start(const std::vector<std::string> &args)
 		if(qa.has_query_result())
 		{
 			font.draw_text(canvas, 100,20, "Found object !");
-			canvas.line(p1,p2, Colorf::green);
+			canvas.draw_line(p1,p2, Colorf::green);
 		}
-		else canvas.line(p1, p2, Colorf::red);
+		else canvas.draw_line(p1, p2, Colorf::red);
 		
 		//Raycast
 
@@ -158,10 +158,10 @@ int Raycasting::start(const std::vector<std::string> &args)
 		if(qa.has_query_result())
 		{
 			font.draw_text(canvas, 100,35, "Found object !");
-			canvas.box(rect1, Colorf::green);
+			canvas.draw_box(rect1, Colorf::green);
 
 		}
-		else canvas.box(rect1, Colorf::red);
+		else canvas.draw_box(rect1, Colorf::red);
 		//Query
 
 		phys_world.step();

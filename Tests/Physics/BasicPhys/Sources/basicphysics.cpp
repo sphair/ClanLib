@@ -131,7 +131,7 @@ int BasicPhysics::start(const std::vector<std::string> &args)
 		last_time = current_time;
 
 		canvas.clear();
-		canvas.fill(0.0f, (float)canvas.get_height(), (float)canvas.get_width(), canvas.get_height() - 20.0f, Colorf::crimson);
+		canvas.draw_fill(0.0f, (float)canvas.get_height(), (float)canvas.get_width(), canvas.get_height() - 20.0f, Colorf::crimson);
 		
 
 		phys_world.step();
