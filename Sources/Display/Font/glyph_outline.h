@@ -51,6 +51,7 @@ class GlyphPrimitivesArray
 {
 //! Construction:
 public:
+	GlyphPrimitivesArray() {}
 
 	/// \brief Constructs a GlyphPrimitivesArray
 	///
@@ -72,6 +73,8 @@ class GlyphPrimitivesArrayOutline
 {
 //! Construction:
 public:
+
+	GlyphPrimitivesArrayOutline() {}
 
 	/// \brief Constructs a GlyphPrimitivesArrayOutline
 	///
