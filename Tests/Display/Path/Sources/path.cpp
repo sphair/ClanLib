@@ -38,7 +38,7 @@ int PathApp::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib PathApp Example");
-	desc.set_size(clan::Size(640, 680), true);
+	desc.set_size(clan::Size(800, 680), true);
 	desc.set_allow_resize(true);
 
 	clan::Canvas canvas(desc);
@@ -248,6 +248,43 @@ int PathApp::start(const std::vector<std::string> &args)
 	clan::PathPrimitivesArrayOutline primitives_array_outline_circle;
 	path_group.triangulate(primitives_array_circle, primitives_array_outline_circle);
 
+	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
+
+	std::vector<clan::Vec2f> texture_array_circle;
+	texture_array_circle.resize(primitives_array_circle.size());
+	for (unsigned int cnt=0; cnt< primitives_array_circle.size(); cnt++)
+	{
+		clan::Vec2f pos = primitives_array_circle[cnt];
+		pos.x -= circle_x;
+		pos.y -= circle_y;
+		pos.x /= circle_radius*2.0f;
+		pos.y /= circle_radius*2.0f;
+		pos.x += 0.5f;
+		pos.y += 0.5f;
+		texture_array_circle[cnt] = pos;
+	}
+
+	std::vector<clan::Vec2f> texture_array_g;
+	texture_array_g.resize(primitives_array_g.size());
+	clan::Rectf bounding_rect(10000.0f, 10000.0f, -10000.0f, -10000.0f);
+	for (unsigned int cnt=0; cnt< primitives_array_g.size(); cnt++)
+	{
+		clan::Vec2f pos = primitives_array_g[cnt];
+		bounding_rect.left = clan::min(bounding_rect.left, pos.x);
+		bounding_rect.top = clan::min(bounding_rect.top, pos.y);
+		bounding_rect.right = clan::max(bounding_rect.right, pos.x);
+		bounding_rect.bottom = clan::max(bounding_rect.bottom, pos.y);
+	}
+	for (unsigned int cnt=0; cnt< primitives_array_g.size(); cnt++)
+	{
+		clan::Vec2f pos = primitives_array_g[cnt];
+		pos.x -= bounding_rect.left;
+		pos.y -= bounding_rect.top;
+		pos.x /= bounding_rect.get_width();
+		pos.y /= bounding_rect.get_height();
+		texture_array_g[cnt] = pos;
+	}
+
 	// Run until someone presses escape
 	while (!quit)
 	{
@@ -264,6 +301,11 @@ int PathApp::start(const std::vector<std::string> &args)
 		{
 			canvas.draw_line_strip(&((*it)[0]), it->size());
 		}
+		canvas.pop_modelview();
+
+		canvas.push_translate(360, 160);
+		canvas.mult_scale(2.0f, 2.0f);
+		canvas.draw_triangles(&primitives_array_g[0], &texture_array_g[0], primitives_array_g.size(), texture);
 		canvas.pop_modelview();
 
 		if (!primitives_array_polygon.empty())
@@ -286,6 +328,12 @@ int PathApp::start(const std::vector<std::string> &args)
 			canvas.draw_line_strip(&((*it)[0]), it->size());
 		}
 		canvas.pop_modelview();
+
+		canvas.push_translate(400, 0);
+		if (!primitives_array_circle.empty())
+			canvas.draw_triangles(&primitives_array_circle[0], &texture_array_circle[0], primitives_array_circle.size(), texture);
+		canvas.pop_modelview();
+
 
 		canvas.flip(1);
 
