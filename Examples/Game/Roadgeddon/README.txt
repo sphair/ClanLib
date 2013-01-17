@@ -2,7 +2,7 @@
        Status: Windows(Y)
         Level: Intermediate
    Maintainer: Core developers
-      Summary: Collision outlines, Sprites, Sounds.
+      Summary: Physics, Sprites, Sounds.
 
 Left click to attack.
 WSAD keys to move.

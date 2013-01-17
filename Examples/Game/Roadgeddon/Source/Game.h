@@ -50,6 +50,7 @@ public:
 	int get_width() { return screen_x_res; }
 	int get_height() { return screen_y_res; }
 	GraphicContext &get_gc();
+	PhysicsContext &get_pc();
 	ResourceManager &get_resources();
 
 	Signal_v1<Canvas &>  get_draw_sig() { return draw_signal; }
@@ -84,6 +85,7 @@ private:
 	Signal_v1<Canvas &> draw_signal;
 	Signal_v1<int> update_signal;
 
+	PhysicsContext pc;
 	GraphicContext gc;
 	ResourceManager *resources_;
 	std::list<Gameobject *> objects_for_deletion; 

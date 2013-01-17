@@ -37,18 +37,18 @@ class MissileDesc
 {
 public:
 
-	enum MISSILE_TYPE
+	enum MissileType
 	{
-		T_BULLET,
-		T_ENERGY,
-		T_ROCKET
+		mt_bullet,
+		mt_energy,
+		mt_rocket
 
 	} mType_;
 
 	MissileDesc();
 	~MissileDesc();
 	
-	void set_type(MISSILE_TYPE mType);
+	void set_type(MissileType mType);
 	void set_speed(float speed);
 	void set_angle(Angle angle);
 	void set_game(Game &game_);
@@ -84,15 +84,19 @@ public:
 
 //_________________________________________________________________________________
 //																A T T R I B U T E S
-
+	virtual bool should_collide_with(Body &body);
 //_________________________________________________________________________________
 //																O P E R A T I O N S
+
+	virtual void on_collision_begin(Body &body);
+	virtual void on_collision_end(Body &body);
+
 	void update(int time_elapsed_ms);
 	void draw(Canvas &canvas);
 //_________________________________________________________________________________________
 //																I M P L E M E N T A T I O N
 private:
-	MissileDesc::MISSILE_TYPE mType;
+	MissileDesc::MissileType mType;
 	Game *game;
 
 	Slot draw_slot;
@@ -101,10 +105,8 @@ private:
 	Sprite *bullet;
 	Vec2f pos;
 	Angle angle;
-	CollisionOutline col_out;
-	Rect hitBox;
 
-
+	bool should_die;
 	bool does_hurt_player;
 	bool does_hurt_enemy;
 	float lifeTime;

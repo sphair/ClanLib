@@ -28,13 +28,30 @@
 
 #pragma once
 
-class Gameobject
+#include "Precomp.h"
+
+enum GameobjectType
+{
+	go_player,
+	go_enemy,
+	go_missile
+};
+
+class Gameobject : public PhysicsObject
 {
 public:
+
 	Gameobject();
 	virtual ~Gameobject();
 
-private:
+	GameobjectType get_type() const { return type; }
 
+	virtual bool should_collide_with(Body &body) const { return true; }
+	virtual void on_collision_begin(Body &body) { };
+	virtual void on_collision_end(Body &body) { };
+	virtual void hurt(float damage) { };
 
+protected:
+	Body body;
+	GameobjectType type;
 };

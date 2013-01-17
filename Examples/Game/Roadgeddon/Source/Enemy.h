@@ -60,16 +60,18 @@ public:
 
 //_________________________________________________________________________________
 //																A T T R I B U T E S
-
-	CollisionOutline &get_collision_outline() { return col_out; }
-
+	virtual bool should_collide_with(Body &body);
 //_________________________________________________________________________________
 //																O P E R A T I O N S
 public:
+
+	virtual void on_collision_begin(Body &body);
+	virtual void on_collision_end(Body &body);
+
 	void draw(Canvas &canvas);
 	void update(int time_elapsed_ms);
 	void set_pos(float x,float y);
-	void hurt(float damage);
+	virtual void hurt(float damage);
 	void aimAtPlayer();
 
 private:
@@ -83,7 +85,6 @@ private:
 
 	MissileDesc missile;
 
-	CollisionOutline col_out;
 	Sprite *enemy;
 
 	Slot draw_slot;
