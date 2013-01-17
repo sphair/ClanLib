@@ -43,9 +43,6 @@ namespace clan
 {
 
 class FreetypeFont;
-class GlyphPrimitivesArray;
-class GlyphPrimitivesArrayOutline;
-
 class FontEngine;
 
 class FontProvider_Vector : public FontProvider
@@ -113,9 +110,8 @@ private:
 
 	struct vector_glyph
 	{
-		vector_glyph() {}
-		vector_glyph(GlyphOutline &outline, int advance_x) : outline(outline), advance_x(advance_x) {}
-		GlyphOutline outline;
+		GlyphPrimitivesArray primitives_array;
+		GlyphPrimitivesArrayOutline primitives_array_outline;
 
 		//Note advance_x is wrong.  For freetype, it should use...
 		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );

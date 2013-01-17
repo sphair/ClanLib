@@ -190,9 +190,9 @@ void FontProvider_Vector::get_glyphs(
 		{
 			int out_advance_x;
 			GlyphOutline outline = font_engine->load_glyph_outline(text[i], out_advance_x);
-			outline.triangulate();
-			
-			char_cache[text[i]] = vector_glyph(outline, out_advance_x);
+			vector_glyph &vg = char_cache[text[i]];
+			vg.advance_x = out_advance_x;
+			outline.triangulate(vg.primitives_array, vg.primitives_array_outline);
 		}
 		
 		out_glyphs[i] = text[i];
@@ -220,27 +220,25 @@ void FontProvider_Vector::draw_glyphs(
 
 		if( filled )
 		{
-			GlyphPrimitivesArray &prim_array = char_cache[glyphs[i]].outline.get_triarray();
+			GlyphPrimitivesArray &prim_array = char_cache[glyphs[i]].primitives_array;
 
-			if (prim_array.vertex.size() > 0)
+			if (prim_array.size() > 0)
 			{
 				RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
-				batcher->draw_triangle(canvas, &(prim_array.vertex[0]), color, prim_array.vertex.size());
+				batcher->draw_triangle(canvas, &(prim_array[0]), color, prim_array.size());
 			}
 		}
 		else
 		{
-			GlyphPrimitivesArrayOutline &prim_array_outline = char_cache[glyphs[i]].outline.get_outline();
+			GlyphPrimitivesArrayOutline &prim_array_outline = char_cache[glyphs[i]].primitives_array_outline;
 
 			std::vector< std::vector<Vec2f> >::iterator it;
 
 			RenderBatchLine *batcher = canvas.impl->get_line_batcher();
-			for (it = prim_array_outline.vertex.begin(); it != prim_array_outline.vertex.end(); ++it)
+			for (it = prim_array_outline.begin(); it != prim_array_outline.end(); ++it)
 			{
 				batcher->draw_line_strip(canvas, &((*it)[0]), color, it->size());
 			}
-
-			//FOR DEBUGGING:   char_cache[glyphs[i]]->draw_debug_outline(canvas);
 		}
 		
 		canvas.pop_modelview();

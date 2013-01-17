@@ -42,65 +42,12 @@ namespace clan
 {
 
 class GraphicContext;
-class GlyphPrimitivesArray;
-class GlyphPrimitivesArrayOutline;
 class Canvas;
 class GlyphOutline_Impl;
 
-class GlyphPrimitivesArray
-{
-//! Construction:
-public:
-	GlyphPrimitivesArray() {}
-
-	/// \brief Constructs a GlyphPrimitivesArray
-	///
-	/// \param num_triangles = value
-	GlyphPrimitivesArray(int num_triangles)
-	{
-		int size = num_triangles*3;
-		vertex.resize(size);
-	}
-
-	~GlyphPrimitivesArray()
-	{
-	}
-
-	std::vector<Vec2f> vertex;
-};
-
-class GlyphPrimitivesArrayOutline
-{
-//! Construction:
-public:
-
-	GlyphPrimitivesArrayOutline() {}
-
-	/// \brief Constructs a GlyphPrimitivesArrayOutline
-	///
-	/// \param num_lines = value
-	GlyphPrimitivesArrayOutline(int num_lines)
-	{
-		vertex.resize(1);
-		vertex[0].resize(num_lines+1);
-	}
-	
-//! Operations:
-public:
-
-	/// \brief New subarray
-	///
-	/// \param num_lines = value
-	void new_subarray(int num_lines)
-	{
-		std::vector<std::vector<Vec2f> >::size_type size = vertex.size();
-		vertex.resize(size+1);
-
-		vertex[size].resize(num_lines+1);
-	}
-
-	std::vector< std::vector<Vec2f> > vertex;
-};
+typedef std::vector<Vec2f> GlyphPrimitivesArray;
+typedef std::vector< std::vector<Vec2f> > GlyphPrimitivesArrayOutline;
+typedef std::vector<std::vector<Pointf> > GlyphPrimitivesJoinedOutlines; // for debugging triangulator hole support - don't remove!
 
 class GlyphOutline
 {
@@ -117,11 +64,6 @@ public:
 /// \{
 
 public:
-	GlyphPrimitivesArray &get_triarray();
-
-	GlyphPrimitivesArrayOutline &get_outline();
-
-	std::vector<std::vector<Pointf> > joined_outlines; // for debugging triangulator hole support - don't remove!
 
 /// \}
 /// \name Operations
@@ -131,9 +73,13 @@ public:
 
 	void add_contour(GlyphContour &contour);
 
-	void triangulate();
+	/// \brief triangulate
+	void triangulate(GlyphPrimitivesArray &out_primitives_array);
+	void triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline);
+	void triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline);
+	void triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines);	// For debugging
 
-	void draw_debug_outline(Canvas &canvas);
+	//void draw_debug_outline(Canvas &canvas);
 
 
 /// \}

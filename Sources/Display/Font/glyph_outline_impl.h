@@ -44,8 +44,6 @@ namespace clan
 {
 
 class GraphicContext;
-class GlyphPrimitivesArray;
-class GlyphPrimitivesArray_Outline;
 class Canvas;
 
 class GlyphOutline_Impl
@@ -63,11 +61,6 @@ public:
 /// \{
 
 public:
-	GlyphPrimitivesArray &get_triarray();
-
-	GlyphPrimitivesArrayOutline &get_outline();
-
-	std::vector<std::vector<Pointf> > joined_outlines; // for debugging triangulator hole support - don't remove!
 
 /// \}
 /// \name Operations
@@ -77,10 +70,7 @@ public:
 
 	void add_contour(GlyphContour &contour);
 
-	void triangulate();
-
-	void draw_debug_outline(Canvas &canvas);
-
+	void triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines);
 
 /// \}
 /// \name Implementation
@@ -88,13 +78,9 @@ public:
 
 private:
 
-	void generate_contour_prim_array();
+	void generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline);
 
 	std::vector< GlyphContour > contours;
-
-	GlyphPrimitivesArray prim_array;
-	GlyphPrimitivesArrayOutline prim_array_outline;
-
 /// \}
 };
 
