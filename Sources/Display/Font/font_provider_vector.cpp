@@ -233,10 +233,9 @@ void FontProvider_Vector::draw_glyphs(
 
 			std::vector< std::vector<Vec2f> >::iterator it;
 
-			RenderBatchLine *batcher = canvas.impl->get_line_batcher();
 			for (it = prim_array_outline.begin(); it != prim_array_outline.end(); ++it)
 			{
-				batcher->draw_line_strip(canvas, &((*it)[0]), color, it->size());
+				canvas.draw_line_strip(&((*it)[0]), it->size(), color);
 			}
 		}
 		
