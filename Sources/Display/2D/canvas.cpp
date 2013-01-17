@@ -567,6 +567,12 @@ void Canvas::draw_triangle(const Trianglef &dest_triangle, const Colorf &color)
 	draw_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
 }
 
+void Canvas::draw_triangles(Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+{
+	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+	batcher->draw_triangles(*this, positions, texture_positions, num_vertices, texture, color);
+}
+
 void Canvas::draw_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color )
 {
 	float max_radius = max(radius_x, radius_y);
