@@ -202,11 +202,28 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_line_to(10.375006f,-11.187488f);
 	path_group.add_path(path);
 
+	clan::GlyphPrimitivesArray primitives_array;
+	clan::GlyphPrimitivesArrayOutline primitives_array_outline;
+	path_group.triangulate(primitives_array, primitives_array_outline);
+
+
 	// Run until someone presses escape
 	while (!quit)
 	{
 		// Clear the display in a dark blue nuance
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+
+		canvas.push_translate(64, 128);
+		canvas.draw_triangles(&(primitives_array[0]), primitives_array.size());
+		canvas.pop_modelview();
+
+		canvas.push_translate(200, 128);
+		clan::GlyphPrimitivesArrayOutline::iterator it;
+		for (it = primitives_array_outline.begin(); it != primitives_array_outline.end(); ++it)
+		{
+			canvas.draw_line_strip(&((*it)[0]), it->size());
+		}
+		canvas.pop_modelview();
 
 		canvas.flip(1);
 
