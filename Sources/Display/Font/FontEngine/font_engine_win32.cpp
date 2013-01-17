@@ -548,7 +548,7 @@ PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 			poly_curve = next_poly_curve;
 		}
 		// TODO: Do we need to close the curve?
-		outline.add_contour(contour);
+		outline.add_path(contour);
 	}
 
 	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on PathGroup struct)

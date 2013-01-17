@@ -56,9 +56,9 @@ PathGroup::~PathGroup()
 /////////////////////////////////////////////////////////////////////////////
 // PathGroup Operations:
 
-void PathGroup::add_contour(Path &contour)
+void PathGroup::add_path(Path &path)
 {
-	impl->add_contour(contour);
+	impl->add_path(path);
 }
 
 void PathGroup::triangulate(GlyphPrimitivesArray &out_primitives_array)
