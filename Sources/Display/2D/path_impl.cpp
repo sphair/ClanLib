@@ -31,7 +31,7 @@
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/bezier_curve.h"
-#include "path.h"
+#include "API/Display/2D/path.h"
 #include "path_impl.h"
 #include <cfloat>
 

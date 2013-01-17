@@ -33,7 +33,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
-#include "../glyph_outline.h"
+#include "API/Display/2D/path_group.h"
 #include "API/Core/Math/bezier_curve.h"
 
 namespace clan
@@ -456,7 +456,7 @@ PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 
 	if (glyph_buffer.is_null())
 	{
-		out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on PathGroup struct)
+		out_advance_x = glyph_metrics.gmCellIncX;
 		return PathGroup();
 	}
 

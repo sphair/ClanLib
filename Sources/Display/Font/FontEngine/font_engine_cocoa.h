@@ -32,6 +32,7 @@
 #include "font_engine.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/2D/path_group.h"
 #include <CoreText/CoreText.h>
 #include <CoreGraphics/CoreGraphics.h>
 

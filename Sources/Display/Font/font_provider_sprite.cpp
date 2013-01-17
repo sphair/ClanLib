@@ -42,7 +42,7 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/XML/dom_element.h"
-#include "path_group.h"
+#include "API/Display/2D/path_group.h"
 
 namespace clan
 {
