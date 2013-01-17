@@ -224,7 +224,7 @@ void FontProvider_Vector::draw_glyphs(
 
 			if (prim_array.size() > 0)
 			{
-				canvas.draw_triangles(canvas, &(prim_array[0]), prim_array.size(), color);
+				canvas.draw_triangles(&(prim_array[0]), prim_array.size(), color);
 			}
 		}
 		else
