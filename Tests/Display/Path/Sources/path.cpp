@@ -202,9 +202,21 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_line_to(10.375006f,-11.187488f);
 	path_group.add_path(path);
 
-	clan::PathPrimitivesArray primitives_array;
-	clan::PathPrimitivesArrayOutline primitives_array_outline;
-	path_group.triangulate(primitives_array, primitives_array_outline);
+	clan::PathPrimitivesArray primitives_array_g;
+	clan::PathPrimitivesArrayOutline primitives_array_outline_g;
+	path_group.triangulate(primitives_array_g, primitives_array_outline_g);
+
+	path_group = clan::PathGroup();
+	path = clan::Path();
+	path.add_line_to(10, -200);	//FIXME - Why negative
+	path.add_line_to(108, -210);
+	path.add_line_to(100, -300);
+	path.add_line_to(20, -310);
+	path_group.add_path(path);
+
+	clan::PathPrimitivesArray primitives_array_polygon;
+	clan::PathPrimitivesArrayOutline primitives_array_outline_polygon;
+	path_group.triangulate(primitives_array_polygon, primitives_array_outline_polygon);
 
 
 	// Run until someone presses escape
@@ -214,12 +226,22 @@ int PathApp::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		canvas.push_translate(64, 128);
-		canvas.draw_triangles(&(primitives_array[0]), primitives_array.size());
+		canvas.draw_triangles(&(primitives_array_g[0]), primitives_array_g.size());
 		canvas.pop_modelview();
 
 		canvas.push_translate(200, 128);
 		clan::PathPrimitivesArrayOutline::iterator it;
-		for (it = primitives_array_outline.begin(); it != primitives_array_outline.end(); ++it)
+		for (it = primitives_array_outline_g.begin(); it != primitives_array_outline_g.end(); ++it)
+		{
+			canvas.draw_line_strip(&((*it)[0]), it->size());
+		}
+		canvas.pop_modelview();
+
+		if (!primitives_array_polygon.empty())
+			canvas.draw_triangles(&(primitives_array_polygon[0]), primitives_array_polygon.size());
+
+		canvas.push_translate(200, 0);
+		for (it = primitives_array_outline_polygon.begin(); it != primitives_array_outline_polygon.end(); ++it)
 		{
 			canvas.draw_line_strip(&((*it)[0]), it->size());
 		}
