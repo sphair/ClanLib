@@ -80,6 +80,7 @@ public:
 
 	void add_line_to(const Pointf &p);
 
+	inline void add_line_to(float x, float y) {add_line_to(Pointf(x, y));}
 
 /// \}
 /// \name Implementation
