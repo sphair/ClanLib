@@ -60,7 +60,7 @@ void PathGroup_Impl::add_path(Path &path)
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines)
+void PathGroup_Impl::triangulate(PathPrimitivesArray *out_primitives_array, PathPrimitivesArrayOutline *out_primitives_array_outline, PathPrimitivesJoinedOutlines *out_joined_outlines)
 {
 	if (out_primitives_array_outline)
 		generate_contour_prim_array(out_primitives_array_outline);	// Generate array_outline only when required
@@ -169,8 +169,8 @@ void PathGroup_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, Gly
 		total_triangle_count += earclip_results[i].get_triangles().size();	
 	}
 
-	*out_primitives_array = GlyphPrimitivesArray();
-	GlyphPrimitivesArray &prim_array = *out_primitives_array;
+	*out_primitives_array = PathPrimitivesArray();
+	PathPrimitivesArray &prim_array = *out_primitives_array;
 
 	prim_array.resize(total_triangle_count * 3);
 	int index = 0;
@@ -205,18 +205,18 @@ void PathGroup_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, Gly
 /////////////////////////////////////////////////////////////////////////////
 // PathGroup_Impl Implementation:
 
-void PathGroup_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline)
+void PathGroup_Impl::generate_contour_prim_array(PathPrimitivesArrayOutline *out_primitives_array_outline)
 {
-	GlyphPrimitivesArrayOutline &prim_array_outline = *out_primitives_array_outline;
+	PathPrimitivesArrayOutline &prim_array_outline = *out_primitives_array_outline;
 
 	if( contours.empty() )
 	{
-		prim_array_outline = GlyphPrimitivesArrayOutline();
+		prim_array_outline = PathPrimitivesArrayOutline();
 		return;
 	}
 	
 	int size = contours.front().get_contour_points().size();
-	prim_array_outline = GlyphPrimitivesArrayOutline();
+	prim_array_outline = PathPrimitivesArrayOutline();
 	prim_array_outline.resize(1);
 	prim_array_outline[0].resize(size+1);
 	

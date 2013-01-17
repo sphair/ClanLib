@@ -61,21 +61,21 @@ void PathGroup::add_path(Path &path)
 	impl->add_path(path);
 }
 
-void PathGroup::triangulate(GlyphPrimitivesArray &out_primitives_array)
+void PathGroup::triangulate(PathPrimitivesArray &out_primitives_array)
 {
 	impl->triangulate(&out_primitives_array, NULL, NULL);
 }
-void PathGroup::triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline)
+void PathGroup::triangulate(PathPrimitivesArrayOutline &out_primitives_array_outline)
 {
 	impl->triangulate(NULL, &out_primitives_array_outline, NULL);
 }
 
-void PathGroup::triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline)
+void PathGroup::triangulate(PathPrimitivesArray &out_primitives_array, PathPrimitivesArrayOutline &out_primitives_array_outline)
 {
 	impl->triangulate(&out_primitives_array, &out_primitives_array_outline, NULL);
 }
 
-void PathGroup::triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines)
+void PathGroup::triangulate(PathPrimitivesJoinedOutlines &out_joined_outlines)
 {
 	impl->triangulate(NULL, NULL, &out_joined_outlines);
 }
