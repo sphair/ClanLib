@@ -38,17 +38,17 @@ namespace clan
 {
 
 class BezierCurve;
-class GlyphContour_Impl;
+class Path_Impl;
 
-class GlyphContour
+class Path
 {
 /// \name Construction
 /// \{
 
 public:
-	GlyphContour();
+	Path();
 
-	virtual ~GlyphContour();
+	virtual ~Path();
 
 
 /// \}
@@ -59,7 +59,7 @@ public:
 
 	bool is_hole();
 
-	bool is_inside_contour(const GlyphContour &other) const;
+	bool is_inside_contour(const Path &other) const;
 
 	bool is_point_inside(const Pointf &point) const;
 
@@ -84,7 +84,7 @@ public:
 
 private:
 
-	std::shared_ptr<GlyphContour_Impl> impl;
+	std::shared_ptr<Path_Impl> impl;
 /// \}
 };
 

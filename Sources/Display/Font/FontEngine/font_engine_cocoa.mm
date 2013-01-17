@@ -156,7 +156,7 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
 	return font_buffer;
 }
 
-GlyphOutline FontEngine_Cocoa::load_glyph_outline(int c, int &out_advance_x);
+PathGroup FontEngine_Cocoa::load_glyph_outline(int c, int &out_advance_x);
 {
 	throw Exception("Implement Me");
 }

@@ -418,7 +418,7 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-GlyphOutline FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
+PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 {
 	out_advance_x = 0;
 	GLYPHMETRICS glyph_metrics = { 0 };
@@ -456,15 +456,15 @@ GlyphOutline FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 
 	if (glyph_buffer.is_null())
 	{
-		out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
-		return GlyphOutline();
+		out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on PathGroup struct)
+		return PathGroup();
 	}
 
 	TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *) glyph_buffer.get_data();
 	char *data_end = (char *) polygon_header;
 	data_end += glyph_buffer.get_size();
 
-	GlyphOutline outline;
+	PathGroup outline;
 
 	while( (char *) (polygon_header+1) <= data_end)
 	{
@@ -473,7 +473,7 @@ GlyphOutline FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 
 		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
 		//Pointf initial_point = previous_point;
-		GlyphContour contour;
+		Path contour;
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)
@@ -551,7 +551,7 @@ GlyphOutline FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 		outline.add_contour(contour);
 	}
 
-	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on GlyphOutline struct)
+	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on PathGroup struct)
 	return outline;
 }
 

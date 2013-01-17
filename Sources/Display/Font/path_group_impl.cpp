@@ -28,7 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "glyph_outline_impl.h"
+#include "path_group_impl.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_vector.h"
@@ -38,29 +38,29 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphOutline_Impl Construction:
+// PathGroup_Impl Construction:
 
-GlyphOutline_Impl::GlyphOutline_Impl()
+PathGroup_Impl::PathGroup_Impl()
 {
 }
 
-GlyphOutline_Impl::~GlyphOutline_Impl()
+PathGroup_Impl::~PathGroup_Impl()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphOutline_Impl Attributes:
+// PathGroup_Impl Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphOutline_Impl Operations:
+// PathGroup_Impl Operations:
 
-void GlyphOutline_Impl::add_contour(GlyphContour &contour)
+void PathGroup_Impl::add_contour(Path &contour)
 {
 	contours.push_back(contour);
 }
 
-void GlyphOutline_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines)
+void PathGroup_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines)
 {
 	if (out_primitives_array_outline)
 		generate_contour_prim_array(out_primitives_array_outline);	// Generate array_outline only when required
@@ -77,7 +77,7 @@ void GlyphOutline_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, 
 	// sort contour vector so that it has the ordering:
 	// outline_1, ouline_1_hole_1, ouline_1_hole_2, outline_2, ouline_2_hole_1 etc.
 
-	std::vector< GlyphContour > sorted_contours;
+	std::vector< Path > sorted_contours;
 
 	int outline_count = 0;
 
@@ -100,11 +100,11 @@ void GlyphOutline_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, 
 			if( contours[j].is_hole() && contours[j].is_inside_contour(contours[i]) )
 			{
 				sorted_contours.push_back(contours[j]);
-				contours[j] = GlyphContour();
+				contours[j] = Path();
 			}
 		}
 
-		contours[i] = GlyphContour();
+		contours[i] = Path();
 	}
 
 //	cl_write_console_line(string_format("num outlines: %1", outline_count));
@@ -203,9 +203,9 @@ void GlyphOutline_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphOutline_Impl Implementation:
+// PathGroup_Impl Implementation:
 
-void GlyphOutline_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline)
+void PathGroup_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline)
 {
 	GlyphPrimitivesArrayOutline &prim_array_outline = *out_primitives_array_outline;
 
@@ -220,7 +220,7 @@ void GlyphOutline_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline 
 	prim_array_outline.resize(1);
 	prim_array_outline[0].resize(size+1);
 	
-	std::vector< GlyphContour >::iterator it;
+	std::vector< Path >::iterator it;
 
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
@@ -250,7 +250,7 @@ void GlyphOutline_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline 
 }
 
 /*
-void GlyphOutline_Impl::draw_debug_outline(Canvas &canvas)
+void PathGroup_Impl::draw_debug_outline(Canvas &canvas)
 {
 	for( unsigned int out=0; out<joined_outlines.size(); ++out )
 	{
