@@ -56,14 +56,15 @@ void PhysicsListener::BeginContact(b2Contact *contact)
 
 void PhysicsListener::EndContact(b2Contact *contact)
 {
-	CollisionData data;
-	data.collide_fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
-	data.collide_fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
-	data.collide_bodyA = static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
-	data.collide_bodyB = static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
-	data.is_end_collision = true;
+	//End collisions are currently turned out due to bugs that need to be fixed before enabling the end collisions back.
+	//CollisionData data;
+	//data.collide_fixtureA = static_cast<Fixture_Impl *> (contact->GetFixtureA()->GetUserData());
+	//data.collide_fixtureB = static_cast<Fixture_Impl *> (contact->GetFixtureB()->GetUserData());
+	//data.collide_bodyA = static_cast<Body_Impl *> (contact->GetFixtureA()->GetBody()->GetUserData());
+	//data.collide_bodyB = static_cast<Body_Impl *> (contact->GetFixtureB()->GetBody()->GetUserData());
+	//data.is_end_collision = true;
 
-	collision_data.push_back(data);
+	//collision_data.push_back(data);
 }
 
 void PhysicsListener::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse)
@@ -118,16 +119,16 @@ void PhysicsListener::emit_collision_signals()
 			bodyB.impl = data.collide_bodyB->shared_from_this();
 
 			//Might optimise by splitting emit_collision_signals to emit_begin_collision_signals and emit_end_collision_signals.
-			if(!data.is_end_collision)
-			{
+			//if(!data.is_end_collision)
+			//{
 				objectA->on_collision_begin(bodyB);
 				objectB->on_collision_begin(bodyA);
-			}
-			else
-			{
-				objectA->on_collision_end(bodyB);
-				objectB->on_collision_end(bodyA);
-			}
+			//}
+			//else
+			//{
+			//	objectA->on_collision_end(bodyB);
+			//	objectB->on_collision_end(bodyA);
+			//}
 		}
 
 		it = collision_data.erase(it);

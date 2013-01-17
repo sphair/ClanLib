@@ -48,13 +48,13 @@ class CL_API_PHYSICS PhysicsObject
 /// \name Construction
 /// \{
 public:
-	PhysicsObject();
-	~PhysicsObject();
+	PhysicsObject(){};
+	virtual ~PhysicsObject() { return; }
 /// \}
 /// \name Attributes
 /// \{
 
-	virtual bool should_collide_with(Body &body) const = 0;
+	virtual bool should_collide_with(Body &body) = 0;
 
 /// \}
 /// \name Operations
