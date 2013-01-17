@@ -477,7 +477,6 @@ public:
 private:
 	std::shared_ptr<Canvas_Impl> impl;
 
-	friend class PrimitivesArray;
 	friend class Sprite_Impl;
 	friend class Image;
 	friend class GlyphCache;
