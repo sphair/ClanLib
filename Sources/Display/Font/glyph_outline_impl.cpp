@@ -51,16 +51,6 @@ GlyphOutline_Impl::~GlyphOutline_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline_Impl Attributes:
 
-GlyphPrimitivesArray &GlyphOutline_Impl::get_triarray()
-{
-	return prim_array;
-}
-
-GlyphPrimitivesArrayOutline &GlyphOutline_Impl::get_outline()
-{
-	return prim_array_outline;
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline_Impl Operations:
@@ -70,9 +60,13 @@ void GlyphOutline_Impl::add_contour(GlyphContour &contour)
 	contours.push_back(contour);
 }
 
-void GlyphOutline_Impl::triangulate()
+void GlyphOutline_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines)
 {
-	generate_contour_prim_array();
+	if (out_primitives_array_outline)
+		generate_contour_prim_array(out_primitives_array_outline);	// Generate array_outline only when required
+
+	if (!out_primitives_array && !out_joined_outlines)
+		return;		// Exit now when done
 
 	std::vector<EarClipResult> earclip_results;
 
@@ -147,7 +141,8 @@ void GlyphOutline_Impl::triangulate()
 			triangulator.set_orientation(cl_counter_clockwise);
 
 			// for debugging triangulator hole support - don't remove!
-			joined_outlines.push_back( triangulator.get_vertices() ); // debug
+			if (out_joined_outlines)
+				out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
 
 			EarClipResult result = triangulator.triangulate();
 			earclip_results.push_back(result);
@@ -158,7 +153,11 @@ void GlyphOutline_Impl::triangulate()
 	triangulator.set_orientation(cl_counter_clockwise);
 
 	// for debugging triangulator hole support - don't remove!
-	joined_outlines.push_back( triangulator.get_vertices() ); // debug
+	if (out_joined_outlines)
+		out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
+
+	if (!out_primitives_array)
+		return;			// Exit now if the primitives are not required
 
 	EarClipResult result = triangulator.triangulate();
 	earclip_results.push_back(result);
@@ -170,7 +169,10 @@ void GlyphOutline_Impl::triangulate()
 		total_triangle_count += earclip_results[i].get_triangles().size();	
 	}
 
-	prim_array = GlyphPrimitivesArray(total_triangle_count);
+	*out_primitives_array = GlyphPrimitivesArray();
+	GlyphPrimitivesArray &prim_array = *out_primitives_array;
+
+	prim_array.resize(total_triangle_count * 3);
 	int index = 0;
 
 	for( i=0; i<earclip_results.size(); i++ )
@@ -183,64 +185,71 @@ void GlyphOutline_Impl::triangulate()
 			if (triangles[v].x1 > triangles[v].x2 ||
 				(triangles[v].x1 == triangles[v].y2 && triangles[v].y1 < triangles[v].y2))
 			{
-				prim_array.vertex[index] = Vec2f(triangles[v].x3, -triangles[v].y3);
-				prim_array.vertex[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
-				prim_array.vertex[index+2] = Vec2f(triangles[v].x1, -triangles[v].y1);
+				prim_array[index] = Vec2f(triangles[v].x3, -triangles[v].y3);
+				prim_array[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
+				prim_array[index+2] = Vec2f(triangles[v].x1, -triangles[v].y1);
 				index+=3;
 			}
 			else
 			{
-				prim_array.vertex[index] = Vec2f(triangles[v].x1, -triangles[v].y1);
-				prim_array.vertex[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
-				prim_array.vertex[index+2] = Vec2f(triangles[v].x3, -triangles[v].y3);
+				prim_array[index] = Vec2f(triangles[v].x1, -triangles[v].y1);
+				prim_array[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
+				prim_array[index+2] = Vec2f(triangles[v].x3, -triangles[v].y3);
 				index+=3;
 			}
 		}
 	}
 
-	// We got the primitive arrays now so get rid of the contours.
-	contours.clear();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline_Impl Implementation:
 
-void GlyphOutline_Impl::generate_contour_prim_array()
+void GlyphOutline_Impl::generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline)
 {
+	GlyphPrimitivesArrayOutline &prim_array_outline = *out_primitives_array_outline;
+
 	if( contours.empty() )
 	{
-		prim_array_outline = GlyphPrimitivesArrayOutline(0);
+		prim_array_outline = GlyphPrimitivesArrayOutline();
 		return;
 	}
 	
 	int size = contours.front().get_contour_points().size();
-	prim_array_outline = GlyphPrimitivesArrayOutline(size);
+	prim_array_outline = GlyphPrimitivesArrayOutline();
+	prim_array_outline.resize(1);
+	prim_array_outline[0].resize(size+1);
 	
 	std::vector< GlyphContour >::iterator it;
 
 	for( it = contours.begin(); it != contours.end(); ++it )
 	{
 		if( it != contours.begin() )
-			prim_array_outline.new_subarray((*it).get_contour_points().size());
+		{
+			std::vector<std::vector<Vec2f> >::size_type vertex_size = prim_array_outline.size();
+			prim_array_outline.resize(vertex_size+1);
+			prim_array_outline[vertex_size].resize((*it).get_contour_points().size()+1);
+		}
 
 		const std::vector<Pointf> &points = (*it).get_contour_points();
 
-		int subarray_index = prim_array_outline.vertex.size() - 1;
+		int subarray_index = prim_array_outline.size() - 1;
 
 		int index = 0;
 		for( std::vector<Pointf>::const_iterator it2 = points.begin(); it2 != points.end(); ++it2 )
 		{
-			prim_array_outline.vertex[subarray_index][index] = Vec2f( (*it2).x, -(*it2).y );
+			prim_array_outline[subarray_index][index] = Vec2f( (*it2).x, -(*it2).y );
 			index++;
 		}
 
 		if (index == 0)
 			throw Exception("A glyph outline contour does not contain any points");
 
-		prim_array_outline.vertex[subarray_index][index] = Vec2f(points.front().x, -points.front().y);
+		prim_array_outline[subarray_index][index] = Vec2f(points.front().x, -points.front().y);
 	}
 }
 
+/*
 void GlyphOutline_Impl::draw_debug_outline(Canvas &canvas)
 {
 	for( unsigned int out=0; out<joined_outlines.size(); ++out )
@@ -257,5 +266,6 @@ void GlyphOutline_Impl::draw_debug_outline(Canvas &canvas)
 		canvas.draw_point(pts.back().x, -pts.back().y, Colorf::white );
 	}
 }
+*/
 
 }

@@ -52,16 +52,6 @@ GlyphOutline::~GlyphOutline()
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Attributes:
 
-GlyphPrimitivesArray &GlyphOutline::get_triarray()
-{
-	return impl->get_triarray();
-}
-
-GlyphPrimitivesArrayOutline &GlyphOutline::get_outline()
-{
-	return impl->get_outline();
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Operations:
@@ -71,10 +61,25 @@ void GlyphOutline::add_contour(GlyphContour &contour)
 	impl->add_contour(contour);
 }
 
-void GlyphOutline::triangulate()
+void GlyphOutline::triangulate(GlyphPrimitivesArray &out_primitives_array)
 {
-	impl->triangulate();
+	impl->triangulate(&out_primitives_array, NULL, NULL);
 }
+void GlyphOutline::triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline)
+{
+	impl->triangulate(NULL, &out_primitives_array_outline, NULL);
+}
+
+void GlyphOutline::triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline)
+{
+	impl->triangulate(&out_primitives_array, &out_primitives_array_outline, NULL);
+}
+
+void GlyphOutline::triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines)
+{
+	impl->triangulate(NULL, NULL, &out_joined_outlines);
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // GlyphOutline Implementation:
