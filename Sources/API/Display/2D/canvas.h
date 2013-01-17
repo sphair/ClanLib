@@ -322,6 +322,9 @@ public:
 	/// \brief Lines
 	void draw_lines(Vec2f *line_positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color = Colorf::white);
 
+	/// \brief Line Strip
+	void draw_line_strip(Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
+
 	/// \brief Draw a box / rectangle.
 	void draw_box(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
 
