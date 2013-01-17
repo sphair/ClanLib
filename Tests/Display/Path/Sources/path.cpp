@@ -226,9 +226,9 @@ int PathApp::start(const std::vector<std::string> &args)
 	float circle_y = 400.0f;
 	float circle_radius = 64.0f;
 
-		//FIXME - Why negative Y
-	path.add_line_to(circle_x + circle_radius, -circle_y);
+	//FIXME - Why negative Y
 	bezier_curve = clan::BezierCurve();
+	bezier_curve.add_control_point(circle_x + circle_radius, -circle_y);
 	bezier_curve.add_control_point(circle_x + circle_radius * 1, -(circle_y + circle_radius * 1 * KAPPA));
 	bezier_curve.add_control_point(circle_x + circle_radius * 1 * KAPPA, -(circle_y + circle_radius * 1));
 	bezier_curve.add_control_point(circle_x + circle_radius * 0, -(circle_y + circle_radius * 1));
