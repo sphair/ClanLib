@@ -202,8 +202,8 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_line_to(10.375006f,-11.187488f);
 	path_group.add_path(path);
 
-	clan::GlyphPrimitivesArray primitives_array;
-	clan::GlyphPrimitivesArrayOutline primitives_array_outline;
+	clan::PathPrimitivesArray primitives_array;
+	clan::PathPrimitivesArrayOutline primitives_array_outline;
 	path_group.triangulate(primitives_array, primitives_array_outline);
 
 
@@ -218,7 +218,7 @@ int PathApp::start(const std::vector<std::string> &args)
 		canvas.pop_modelview();
 
 		canvas.push_translate(200, 128);
-		clan::GlyphPrimitivesArrayOutline::iterator it;
+		clan::PathPrimitivesArrayOutline::iterator it;
 		for (it = primitives_array_outline.begin(); it != primitives_array_outline.end(); ++it)
 		{
 			canvas.draw_line_strip(&((*it)[0]), it->size());
