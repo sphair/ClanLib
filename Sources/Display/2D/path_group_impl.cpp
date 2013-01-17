@@ -55,9 +55,9 @@ PathGroup_Impl::~PathGroup_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // PathGroup_Impl Operations:
 
-void PathGroup_Impl::add_contour(Path &contour)
+void PathGroup_Impl::add_path(Path &path)
 {
-	contours.push_back(contour);
+	contours.push_back(path);
 }
 
 void PathGroup_Impl::triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines)

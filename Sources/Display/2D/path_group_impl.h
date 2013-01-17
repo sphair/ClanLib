@@ -68,7 +68,7 @@ public:
 
 public:
 
-	void add_contour(Path &contour);
+	void add_path(Path &path);
 
 	void triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines);
 

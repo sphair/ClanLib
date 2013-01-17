@@ -71,7 +71,7 @@ public:
 
 public:
 
-	void add_contour(Path &contour);
+	void add_path(Path &path);
 
 	/// \brief triangulate
 	void triangulate(GlyphPrimitivesArray &out_primitives_array);
