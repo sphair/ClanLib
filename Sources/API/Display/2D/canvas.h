@@ -418,7 +418,7 @@ public:
 	void draw_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void draw_triangles(Canvas &canvas, Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
+	void draw_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
 	void draw_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
