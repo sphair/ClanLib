@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2011 The ClanLib Team
+**  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,38 +23,65 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Harry Storbacka
 **    Mark Page
 */
 
 #pragma once
 
-#include "font_engine.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
-#include <CoreText/CoreText.h>
-#include <CoreGraphics/CoreGraphics.h>
+
+#include "Display/precomp.h"
+#include "path_group.h"
+#include "path.h"
+#include "path_group_impl.h"
+#include <vector>
+#include "API/Display/Render/primitives_array.h"
+#include "API/Display/2D/color.h"
+#include "API/Core/Math/ear_clip_triangulator.h"
+#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
 
-class DataBuffer;
+class GraphicContext;
+class Canvas;
 
-class FontEngine_Cocoa : public FontEngine
+class PathGroup_Impl
 {
+/// \name Construction
+/// \{
+
 public:
-	FontEngine_Cocoa(const FontDescription &description);
-	~FontEngine_Cocoa();
+	PathGroup_Impl();
+	virtual ~PathGroup_Impl();
 
-	FontMetrics get_metrics();
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
-	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-	PathGroup load_glyph_outline(int c, int &out_advance_x);
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+
+	void add_contour(Path &contour);
+
+	void triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines);
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	FontPixelBuffer get_font_glyph_lcd(int glyph);
-	FontPixelBuffer get_empty_font_glyph(int glyph);
 
-	CTFontRef handle;
+	void generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline);
+
+	std::vector< Path > contours;
+/// \}
 };
 
 }

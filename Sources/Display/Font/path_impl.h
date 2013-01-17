@@ -30,33 +30,24 @@
 #pragma once
 
 
-#include "Display/precomp.h"
-#include "glyph_contour.h"
 #include <vector>
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/2D/color.h"
+#include "API/Core/Math/point.h"
 #include "API/Core/Math/ear_clip_triangulator.h"
-#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
 
-class GraphicContext;
-class Canvas;
-class GlyphOutline_Impl;
+class BezierCurve;
 
-typedef std::vector<Vec2f> GlyphPrimitivesArray;
-typedef std::vector< std::vector<Vec2f> > GlyphPrimitivesArrayOutline;
-typedef std::vector<std::vector<Pointf> > GlyphPrimitivesJoinedOutlines; // for debugging triangulator hole support - don't remove!
-
-class GlyphOutline
+class Path_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	GlyphOutline();
-	virtual ~GlyphOutline();
+	Path_Impl();
+
+	virtual ~Path_Impl();
 
 
 /// \}
@@ -65,21 +56,25 @@ public:
 
 public:
 
+	bool is_hole();
+
+	bool is_inside_contour(const Path &other) const;
+
+	bool is_point_inside(const Pointf &point) const;
+
+	const std::vector<Pointf> &get_contour_points() { return contour_points; }
+
+
+
 /// \}
 /// \name Operations
 /// \{
 
 public:
 
-	void add_contour(GlyphContour &contour);
+	void add_curve(BezierCurve &);
 
-	/// \brief triangulate
-	void triangulate(GlyphPrimitivesArray &out_primitives_array);
-	void triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline);
-	void triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline);
-	void triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines);	// For debugging
-
-	//void draw_debug_outline(Canvas &canvas);
+	void add_line_to(const Pointf &p);
 
 
 /// \}
@@ -88,9 +83,12 @@ public:
 
 private:
 
-	std::shared_ptr<GlyphOutline_Impl> impl;
+	PolygonOrientation get_orientation();
 
+	std::vector<Pointf> contour_points;
 
+	bool holeness_cached;
+	bool hole;
 /// \}
 };
 

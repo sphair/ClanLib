@@ -28,65 +28,60 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/Math/line_math.h"
-#include "API/Core/Math/line_segment.h"
-#include "API/Core/Math/bezier_curve.h"
-#include "glyph_contour.h"
-#include "glyph_contour_impl.h"
-#include <cfloat>
+#include "path_group.h"
+#include "path_group_impl.h"
+#include "API/Core/Math/ear_clip_result.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_vector.h"
+#include <vector>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour Construction:
+// PathGroup Construction:
 
-GlyphContour::GlyphContour() : impl(new GlyphContour_Impl())
+PathGroup::PathGroup() : impl(new PathGroup_Impl())
 {
 }
 
-GlyphContour::~GlyphContour()
+PathGroup::~PathGroup()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour Attributes:
+// PathGroup Attributes:
 
-bool GlyphContour::is_hole()
+
+/////////////////////////////////////////////////////////////////////////////
+// PathGroup Operations:
+
+void PathGroup::add_contour(Path &contour)
 {
-	return impl->is_hole();
+	impl->add_contour(contour);
 }
 
-bool GlyphContour::is_inside_contour(const GlyphContour &other) const
+void PathGroup::triangulate(GlyphPrimitivesArray &out_primitives_array)
 {
-	return impl->is_inside_contour(other);
+	impl->triangulate(&out_primitives_array, NULL, NULL);
+}
+void PathGroup::triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline)
+{
+	impl->triangulate(NULL, &out_primitives_array_outline, NULL);
 }
 
-bool GlyphContour::is_point_inside(const Pointf &P) const
+void PathGroup::triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline)
 {
-	return impl->is_point_inside(P);
+	impl->triangulate(&out_primitives_array, &out_primitives_array_outline, NULL);
 }
 
-const std::vector<Pointf> &GlyphContour::get_contour_points()
+void PathGroup::triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines)
 {
-	return impl->get_contour_points();
+	impl->triangulate(NULL, NULL, &out_joined_outlines);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour Operations:
-
-void GlyphContour::add_curve(BezierCurve &curve)
-{
-	impl->add_curve(curve);
-}
-
-void GlyphContour::add_line_to(const Pointf &point )
-{
-	impl->add_line_to(point);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GlyphContour Implementation:
+// PathGroup Implementation:
 
 }

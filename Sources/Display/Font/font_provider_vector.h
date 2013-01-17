@@ -35,7 +35,7 @@
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font.h"
-#include "glyph_outline.h"
+#include "path_group.h"
 #include <list>
 #include <map>
 

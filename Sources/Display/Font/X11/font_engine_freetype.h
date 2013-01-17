@@ -46,7 +46,7 @@ extern "C"
 namespace clan
 {
 
-class GlyphOutline;
+class PathGroup;
 
 struct TagStruct
 {
@@ -96,7 +96,7 @@ public:
 /// \{
 
 public:
-	std::shared_ptr<GlyphOutline> load_glyph_outline(int glyph_index, int &out_advance_x);
+	std::shared_ptr<PathGroup> load_glyph_outline(int glyph_index, int &out_advance_x);
 
 /// \}
 /// \name Implementation

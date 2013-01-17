@@ -31,28 +31,28 @@
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/bezier_curve.h"
-#include "glyph_contour.h"
-#include "glyph_contour_impl.h"
+#include "path.h"
+#include "path_impl.h"
 #include <cfloat>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour_Impl Construction:
+// Path_Impl Construction:
 
-GlyphContour_Impl::GlyphContour_Impl() : holeness_cached(false), hole(false)
+Path_Impl::Path_Impl() : holeness_cached(false), hole(false)
 {
 }
 
-GlyphContour_Impl::~GlyphContour_Impl()
+Path_Impl::~Path_Impl()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour_Impl Attributes:
+// Path_Impl Attributes:
 
-bool GlyphContour_Impl::is_hole()
+bool Path_Impl::is_hole()
 {
 	if( holeness_cached )
 		return hole;
@@ -71,7 +71,7 @@ bool GlyphContour_Impl::is_hole()
 	return hole;
 }
 
-bool GlyphContour_Impl::is_inside_contour(const GlyphContour &other) const
+bool Path_Impl::is_inside_contour(const Path &other) const
 {
 	if( other.is_point_inside( contour_points[0] ) ) // if one point is inside then all other have to be also.
 		return true;
@@ -79,7 +79,7 @@ bool GlyphContour_Impl::is_inside_contour(const GlyphContour &other) const
 	return false;
 }
 
-bool GlyphContour_Impl::is_point_inside(const Pointf &P) const
+bool Path_Impl::is_point_inside(const Pointf &P) const
 {
 	LineSegment2f lineX( Pointf(P.x, P.y + FLT_EPSILON), Pointf(P.x + 100000.0f, P.y + FLT_EPSILON) );
 
@@ -104,9 +104,9 @@ bool GlyphContour_Impl::is_point_inside(const Pointf &P) const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour_Impl Operations:
+// Path_Impl Operations:
 
-void GlyphContour_Impl::add_curve(BezierCurve &curve)
+void Path_Impl::add_curve(BezierCurve &curve)
 {
 	std::vector<Pointf> points = curve.generate_curve_points(Angle::from_degrees(10));
 	
@@ -116,15 +116,15 @@ void GlyphContour_Impl::add_curve(BezierCurve &curve)
 	}
 }
 
-void GlyphContour_Impl::add_line_to(const Pointf &point )
+void Path_Impl::add_line_to(const Pointf &point )
 {
 	contour_points.push_back(point);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GlyphContour_Impl Implementation:
+// Path_Impl Implementation:
 
-PolygonOrientation GlyphContour_Impl::get_orientation()
+PolygonOrientation Path_Impl::get_orientation()
 {
 	float sum = 0;
 
