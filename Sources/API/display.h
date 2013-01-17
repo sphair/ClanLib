@@ -49,6 +49,8 @@
 #include "Display/2D/image.h"
 #include "Display/2D/rounded_rect.h"
 #include "Display/2D/sprite.h"
+#include "Display/2D/path.h"
+#include "Display/2D/path_group.h"
 #include "Display/2D/sprite_description.h"
 #include "Display/2D/image_description.h"
 #include "Display/2D/subtexture.h"

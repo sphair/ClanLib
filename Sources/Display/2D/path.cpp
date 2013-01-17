@@ -27,65 +27,66 @@
 **    Mark Page
 */
 
-#pragma once
-
-
-#include <vector>
-#include "API/Core/Math/point.h"
-#include "API/Core/Math/ear_clip_triangulator.h"
+#include "Display/precomp.h"
+#include "API/Core/Math/line_math.h"
+#include "API/Core/Math/line_segment.h"
+#include "API/Core/Math/bezier_curve.h"
+#include "API/Display/2D/path.h"
+#include "path_impl.h"
+#include <cfloat>
 
 namespace clan
 {
 
-class BezierCurve;
-class Path_Impl;
+/////////////////////////////////////////////////////////////////////////////
+// Path Construction:
 
-class Path
+Path::Path() : impl(new Path_Impl())
 {
-/// \name Construction
-/// \{
+}
 
-public:
-	Path();
+Path::~Path()
+{
+}
 
-	virtual ~Path();
+/////////////////////////////////////////////////////////////////////////////
+// Path Attributes:
 
+bool Path::is_hole()
+{
+	return impl->is_hole();
+}
 
-/// \}
-/// \name Attributes
-/// \{
+bool Path::is_inside_contour(const Path &other) const
+{
+	return impl->is_inside_contour(other);
+}
 
-public:
+bool Path::is_point_inside(const Pointf &P) const
+{
+	return impl->is_point_inside(P);
+}
 
-	bool is_hole();
-
-	bool is_inside_contour(const Path &other) const;
-
-	bool is_point_inside(const Pointf &point) const;
-
-	const std::vector<Pointf> &get_contour_points();
-
-
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-
-	void add_curve(BezierCurve &);
-
-	void add_line_to(const Pointf &p);
+const std::vector<Pointf> &Path::get_contour_points()
+{
+	return impl->get_contour_points();
+}
 
 
-/// \}
-/// \name Implementation
-/// \{
+/////////////////////////////////////////////////////////////////////////////
+// Path Operations:
 
-private:
+void Path::add_curve(BezierCurve &curve)
+{
+	impl->add_curve(curve);
+}
 
-	std::shared_ptr<Path_Impl> impl;
-/// \}
-};
+void Path::add_line_to(const Pointf &point )
+{
+	impl->add_line_to(point);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Path Implementation:
 
 }

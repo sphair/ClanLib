@@ -26,34 +26,37 @@
 **    Harry Storbacka
 **    Mark Page
 */
+/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \{
 
 #pragma once
 
 
-#include "Display/precomp.h"
-#include "path_group.h"
+#include "../api_display.h"
 #include "path.h"
-#include "path_group_impl.h"
 #include <vector>
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/2D/color.h"
-#include "API/Core/Math/ear_clip_triangulator.h"
-#include "API/Core/System/databuffer.h"
+#include "../Render/primitives_array.h"
+#include "color.h"
 
 namespace clan
 {
 
 class GraphicContext;
 class Canvas;
+class PathGroup_Impl;
 
-class PathGroup_Impl
+typedef std::vector<Vec2f> GlyphPrimitivesArray;
+typedef std::vector< std::vector<Vec2f> > GlyphPrimitivesArrayOutline;
+typedef std::vector<std::vector<Pointf> > GlyphPrimitivesJoinedOutlines; // for debugging triangulator hole support - don't remove!
+
+class CL_API_DISPLAY PathGroup
 {
 /// \name Construction
 /// \{
 
 public:
-	PathGroup_Impl();
-	virtual ~PathGroup_Impl();
+	PathGroup();
+	virtual ~PathGroup();
 
 
 /// \}
@@ -70,7 +73,12 @@ public:
 
 	void add_contour(Path &contour);
 
-	void triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines);
+	/// \brief triangulate
+	void triangulate(GlyphPrimitivesArray &out_primitives_array);
+	void triangulate(GlyphPrimitivesArrayOutline &out_primitives_array_outline);
+	void triangulate(GlyphPrimitivesArray &out_primitives_array, GlyphPrimitivesArrayOutline &out_primitives_array_outline);
+	void triangulate(GlyphPrimitivesJoinedOutlines &out_joined_outlines);	// For debugging
+
 
 /// \}
 /// \name Implementation
@@ -78,10 +86,11 @@ public:
 
 private:
 
-	void generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline);
+	std::shared_ptr<PathGroup_Impl> impl;
 
-	std::vector< Path > contours;
+
 /// \}
 };
 
 }
+/// \}

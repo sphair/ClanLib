@@ -28,7 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "path_group.h"
+#include "API/Display/2D/path_group.h"
 #include "path_group_impl.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/canvas.h"

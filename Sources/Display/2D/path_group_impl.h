@@ -27,66 +27,61 @@
 **    Mark Page
 */
 
+#pragma once
+
+
 #include "Display/precomp.h"
-#include "API/Core/Math/line_math.h"
-#include "API/Core/Math/line_segment.h"
-#include "API/Core/Math/bezier_curve.h"
-#include "path.h"
-#include "path_impl.h"
-#include <cfloat>
+#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/path.h"
+#include "path_group_impl.h"
+#include <vector>
+#include "API/Display/Render/primitives_array.h"
+#include "API/Display/2D/color.h"
+#include "API/Core/Math/ear_clip_triangulator.h"
+#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// Path Construction:
+class GraphicContext;
+class Canvas;
 
-Path::Path() : impl(new Path_Impl())
+class PathGroup_Impl
 {
-}
+/// \name Construction
+/// \{
 
-Path::~Path()
-{
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// Path Attributes:
-
-bool Path::is_hole()
-{
-	return impl->is_hole();
-}
-
-bool Path::is_inside_contour(const Path &other) const
-{
-	return impl->is_inside_contour(other);
-}
-
-bool Path::is_point_inside(const Pointf &P) const
-{
-	return impl->is_point_inside(P);
-}
-
-const std::vector<Pointf> &Path::get_contour_points()
-{
-	return impl->get_contour_points();
-}
+public:
+	PathGroup_Impl();
+	virtual ~PathGroup_Impl();
 
 
-/////////////////////////////////////////////////////////////////////////////
-// Path Operations:
+/// \}
+/// \name Attributes
+/// \{
 
-void Path::add_curve(BezierCurve &curve)
-{
-	impl->add_curve(curve);
-}
+public:
 
-void Path::add_line_to(const Pointf &point )
-{
-	impl->add_line_to(point);
-}
+/// \}
+/// \name Operations
+/// \{
 
-/////////////////////////////////////////////////////////////////////////////
-// Path Implementation:
+public:
+
+	void add_contour(Path &contour);
+
+	void triangulate(GlyphPrimitivesArray *out_primitives_array, GlyphPrimitivesArrayOutline *out_primitives_array_outline, GlyphPrimitivesJoinedOutlines *out_joined_outlines);
+
+/// \}
+/// \name Implementation
+/// \{
+
+private:
+
+	void generate_contour_prim_array(GlyphPrimitivesArrayOutline *out_primitives_array_outline);
+
+	std::vector< Path > contours;
+/// \}
+};
 
 }

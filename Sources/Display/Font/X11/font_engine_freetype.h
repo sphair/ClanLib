@@ -34,6 +34,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Core/System/databuffer.h"
+#include "API/Display/2D/path_group.h"
 
 extern "C"
 {
@@ -45,8 +46,6 @@ extern "C"
 
 namespace clan
 {
-
-class PathGroup;
 
 struct TagStruct
 {
