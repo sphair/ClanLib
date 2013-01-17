@@ -38,7 +38,7 @@ int PathApp::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib PathApp Example");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Size(640, 680), true);
 	desc.set_allow_resize(true);
 
 	clan::Canvas canvas(desc);
@@ -219,6 +219,40 @@ int PathApp::start(const std::vector<std::string> &args)
 	path_group.triangulate(primitives_array_polygon, primitives_array_outline_polygon);
 
 
+	#define KAPPA		0.5522847498f
+	path_group = clan::PathGroup();
+	path = clan::Path();
+	float circle_x = 100.0f;
+	float circle_y = -400.0f;	//FIXME - Why negative
+	float circle_radius = 64.0f;
+
+	path.add_line_to(circle_x + circle_radius, circle_y);
+	bezier_curve = clan::BezierCurve();
+	bezier_curve.add_control_point(circle_x + circle_radius * 1, circle_y + circle_radius * 1 * KAPPA);
+	bezier_curve.add_control_point(circle_x + circle_radius * 1 * KAPPA, circle_y + circle_radius * 1);
+	bezier_curve.add_control_point(circle_x + circle_radius * 0, circle_y + circle_radius * 1);
+	path.add_curve(bezier_curve);
+	bezier_curve = clan::BezierCurve();
+	bezier_curve.add_control_point(circle_x - circle_radius * 1  * KAPPA, circle_y + circle_radius * 1);
+	bezier_curve.add_control_point(circle_x - circle_radius * 1, circle_y + circle_radius * 1 * KAPPA);
+	bezier_curve.add_control_point(circle_x - circle_radius * 1, circle_y + circle_radius * 0);
+	path.add_curve(bezier_curve);
+	bezier_curve = clan::BezierCurve();
+	bezier_curve.add_control_point(circle_x - circle_radius * 1, circle_y - circle_radius * 1  * KAPPA);
+	bezier_curve.add_control_point(circle_x - circle_radius * 1 * KAPPA, circle_y - circle_radius * 1);
+	bezier_curve.add_control_point(circle_x - circle_radius * 0, circle_y - circle_radius * 1);
+	path.add_curve(bezier_curve);
+	bezier_curve = clan::BezierCurve();
+	bezier_curve.add_control_point(circle_x + circle_radius * 1 * KAPPA, circle_y - circle_radius * 1);
+	bezier_curve.add_control_point(circle_x + circle_radius * 1, circle_y - circle_radius * 1 * KAPPA);
+	bezier_curve.add_control_point(circle_x + circle_radius * 1, circle_y - circle_radius * 0);
+	path.add_curve(bezier_curve);
+	path_group.add_path(path);
+
+	clan::PathPrimitivesArray primitives_array_circle;
+	clan::PathPrimitivesArrayOutline primitives_array_outline_circle;
+	path_group.triangulate(primitives_array_circle, primitives_array_outline_circle);
+
 	// Run until someone presses escape
 	while (!quit)
 	{
@@ -242,6 +276,17 @@ int PathApp::start(const std::vector<std::string> &args)
 
 		canvas.push_translate(200, 0);
 		for (it = primitives_array_outline_polygon.begin(); it != primitives_array_outline_polygon.end(); ++it)
+		{
+			canvas.draw_line_strip(&((*it)[0]), it->size());
+		}
+		canvas.pop_modelview();
+
+
+		if (!primitives_array_circle.empty())
+			canvas.draw_triangles(&(primitives_array_circle[0]), primitives_array_circle.size());
+
+		canvas.push_translate(200, 0);
+		for (it = primitives_array_outline_circle.begin(); it != primitives_array_outline_circle.end(); ++it)
 		{
 			canvas.draw_line_strip(&((*it)[0]), it->size());
 		}
