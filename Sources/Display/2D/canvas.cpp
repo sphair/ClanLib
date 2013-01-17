@@ -550,7 +550,7 @@ void Canvas::draw_triangle(const Pointf &a, const Pointf &b, const Pointf &c, co
 	batcher->draw_triangle(*this, positions, color, 3);
 }
 
-void Canvas::draw_triangles(Canvas &canvas, Vec2f *triangle_positions, int num_vertices, const Colorf &color)
+void Canvas::draw_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color)
 {
 	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
 	batcher->draw_triangle(*this, triangle_positions, color, num_vertices);
