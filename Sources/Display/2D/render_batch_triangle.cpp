@@ -86,6 +86,24 @@ void RenderBatchTriangle::draw_triangle(Canvas &canvas, Vec2f *triangle_position
 		position++;
 	}
 }
+
+void RenderBatchTriangle::draw_triangles(Canvas &canvas, Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+{
+	int texindex = set_batcher_active(canvas, texture);
+	lock_transfer_buffer(canvas);
+	for (; num_vertices > 0; num_vertices--)
+	{
+		vertices[position].color = color;
+		vertices[position].position = to_position(positions->x, positions->y);
+		positions++;
+		vertices[position].texcoord = *(texture_positions++);
+		vertices[position].texindex.x = (float)texindex;
+		position++;
+	}
+
+}
+
+
 inline void RenderBatchTriangle::to_sprite_vertex(const Surface_DrawParams1 *params, int index, RenderBatchTriangle::SpriteVertex &v, int texindex) const
 {
 	v.position = to_position(params->dest_position[index].x, params->dest_position[index].y);

@@ -51,6 +51,7 @@ public:
 	void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
 	void draw_triangle(Canvas &canvas, Vec2f *triangle_positions, Vec4f *triangle_colors, int num_vertices);
 	void draw_triangle(Canvas &canvas, Vec2f *triangle_positions, const Colorf &color, int num_vertices);
+	void draw_triangles(Canvas &canvas, Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color);
 	void fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color);
 
 public:
