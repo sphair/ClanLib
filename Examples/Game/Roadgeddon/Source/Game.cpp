@@ -111,8 +111,21 @@ void Game::run()
 	music_session.play();
 	is_music_muted = false;
 
-	//________________________________________________________________
-	//											     G A M E   P R E P
+	//___________________________________________________________________
+	//														P H Y S I C S 
+
+	PhysicsWorldDescription world_desc;
+	world_desc.set_gravity(0.0f, 0.0f);
+	world_desc.set_olm(true);
+
+	PhysicsWorld physics_world (world_desc);
+	PhysicsDebugDraw debug_draw(physics_world);
+	debug_draw.set_flags(f_shape);
+
+	pc = physics_world.get_pc();
+
+	//_______________________________________________________________________
+	//														G A M E   P R E P
 	
 	Map map(*this);
 	Player player(*this);
@@ -137,6 +150,10 @@ void Game::run()
 
 		map.draw(canvas);
 		draw_signal.invoke(canvas);
+		
+		debug_draw.draw(canvas);
+
+		physics_world.step();
 
 		canvas.flush();
 		// Flip the display, showing on the screen what we have drawed since last call to flip()
@@ -169,6 +186,12 @@ GraphicContext &Game::get_gc()
 {
 	return gc;
 }
+
+PhysicsContext &Game::get_pc()
+{
+	return pc;
+}
+
 ResourceManager &Game::get_resources()
 {
 	return *resources_;

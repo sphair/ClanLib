@@ -49,18 +49,12 @@ Player::Player(Game &game_)
 	Player::isPlayer1Playing = true;
 
 	//
-
 	game = &game_;
 	GraphicContext gc = game_.get_gc();
+	PhysicsContext pc = game_.get_pc();
 	ResourceManager &resources = game_.get_resources();
 
 	vehicle		= new Sprite(gc,"Car1",&resources);
-	col_out = CollisionOutline("Gfx/car1.png");
-
-	int x,y;
-	Origin origin;
-	vehicle->get_alignment(origin,x,y);
-	col_out.set_alignment(origin,x,y);
 
 	vehicle->set_linear_filter(false);
 	
@@ -77,7 +71,7 @@ Player::Player(Game &game_)
 
 	missile.set_game(*game);
 	missile.set_speed(500.0f);
-	missile.set_type(MissileDesc::T_BULLET);
+	missile.set_type(MissileDesc::mt_bullet);
 	
 	//________________________________________________________________________
 	//															   R E N D E R
@@ -88,17 +82,35 @@ Player::Player(Game &game_)
 	//________________________________________________________________________
 	//															 P H Y S I C S
 	
+	BodyDescription body_desc(pc);
+	body_desc.set_position(0, game->get_height()-40);
+	body_desc.set_type(body_dynamic);
+	body_desc.set_angular_damping(100.0f);
+
+	PolygonShape shape(pc);
+	shape.set_as_box(vehicle->get_width()/2.5f, vehicle->get_height()/4.0f, Vec2f(0.0f, 10.0f), Angle(0, angle_degrees));
+
+	FixtureDescription fixture_desc(pc);
+	fixture_desc.set_density(1000.0f);
+	fixture_desc.set_shape(shape);
 	
+	body = Body(pc, body_desc);
+	body.set_data(this);
+	Fixture(pc, body, fixture_desc);
+
+	/*
 	pos_x=0;
 	pos_y=game->get_height()-40;
-	xAcc = 1600.0f;
-	yAcc = 800.0f;
+	*/
+	xAcc = 1000.0f;
+	yAcc = 600.0f;
 
-	x_max_speed=300.0f;
-	y_max_speed=60.0f;
+	x_max_speed=80.0f;
+	y_max_speed=40.0f;
 
 	x_speed=0.0f;
 	y_speed=0.0f;
+	
 
 	go_right = false;
 	go_left = false;
@@ -109,6 +121,7 @@ Player::Player(Game &game_)
 
 	//__________________________________________________________________________
 	//															 G A M E P L A Y
+	type = go_player;
 
 	life = max_life = 100.0f;
 	is_dead= false;
@@ -133,8 +146,8 @@ void Player::update(int time_elapsed_ms)
 		float time_elapsed = time_elapsed_ms*0.001f;
 		if(go_right) x_speed+=xAcc* time_elapsed;
 		if(go_left)	x_speed-=xAcc* time_elapsed;
-		if(go_up)	y_speed+=yAcc* time_elapsed;
-		if(go_down)	y_speed-=yAcc* time_elapsed;
+		if(go_up)	y_speed-=yAcc* time_elapsed;
+		if(go_down)	y_speed+=yAcc* time_elapsed;
 
 		if(x_speed>x_max_speed)	x_speed = x_max_speed;
 		if(x_speed<-x_max_speed) x_speed = -x_max_speed;
@@ -142,11 +155,10 @@ void Player::update(int time_elapsed_ms)
 		if(y_speed>y_max_speed) y_speed = y_max_speed;
 		if(y_speed<-y_max_speed) y_speed = -y_max_speed;
 
-		pos_x+=x_speed*time_elapsed;
-		pos_y-=y_speed*time_elapsed;
+		body.set_linear_velocity(Vec2f(x_speed,y_speed));
 
-		col_out.set_translation(pos_x,pos_y);
 		turret->set_angle(turret_angle);
+		vehicle->set_angle(body.get_angle());
 
 		if(doShoot1)
 		{
@@ -162,26 +174,28 @@ void Player::update(int time_elapsed_ms)
 
 		int width = game->get_width();
 		int height = game->get_height();
+		Vec2f pos =  body.get_position();
 
-		if(pos_x<0)
+		if(pos.x<0)
 		{
-			pos_x=0.0f;
+			
+			body.set_position(Vec2f(0.0f, pos.y));
 			x_speed=0.0f;
 		}
-		if(pos_x>width)
+		if(pos.x>width)
 		{
-			pos_x=(float)width;
+			body.set_position(Vec2f(width, pos.y));
 			x_speed=0.0f;
 		}
 
-		if(pos_y>height-30)
+		if(pos.y>height-30)
 		{
-			pos_y=(float)(height-30);
+			body.set_position(Vec2f(pos.x, height-30));
 			y_speed=0.0f;
 		}
-		if(pos_y<height-80)
+		if(pos.y<height-80)
 		{
-			pos_y=(float)(height-80);
+			body.set_position(Vec2f(pos.x, height-80));
 			y_speed=0.0f;
 		}
 
@@ -190,12 +204,33 @@ void Player::update(int time_elapsed_ms)
 }
 void Player::draw(Canvas &canvas)
 {
-	turretPos.x = pos_x-4;
-	turretPos.y = pos_y-20;
+	Vec2f pos = body.get_position();
+	turretPos.x = pos.x-4;
+	turretPos.y = pos.y-20;
 
-	vehicle->draw(canvas,pos_x,pos_y);
+	vehicle->draw(canvas,pos.x,pos.y);
 	turret->draw(canvas,(int)turretPos.x,(int)turretPos.y);
-	turretBase->draw(canvas,pos_x-18,pos_y-4);
+	turretBase->draw(canvas,pos.x-18,pos.y-4);
+}
+
+bool Player::should_collide_with(Body &body)
+{
+	PhysicsObject *data = body.get_data();
+	if(data!=nullptr)
+	{
+		//Gameobject *object = static_cast<Gameobject *> (data);
+		return true;
+	}
+	else
+		return false;
+}
+void Player::on_collision_begin(Body &body)
+{
+
+}
+void Player::on_collision_end(Body &body)
+{
+
 }
 //_______________________________________________________________________
 //													      C O N T R O L S
@@ -248,7 +283,7 @@ void Player::aim_turret()
 
 Vec2f Player::get_pos()
 {
-	return Vec2f(pos_x,pos_y);
+	return body.get_position();
 }
 
 void Player::hurt(float damage)
@@ -259,8 +294,9 @@ void Player::hurt(float damage)
 	{
 		game->play_sample(1);
 		is_dead= true;
-		col_out.set_translation(-999,-999);
 		draw_slot.disable();
+
+		body.kill();
 	}
 	else
 	{

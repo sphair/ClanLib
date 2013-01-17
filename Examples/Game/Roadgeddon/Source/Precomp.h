@@ -33,7 +33,8 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/sound.h>
-#include <ClanLib/vorbis.h> 
+#include <ClanLib/vorbis.h>
+#include <ClanLib/physics.h>
  
 // Choose the target renderer
 //#define USE_OPENGL_2

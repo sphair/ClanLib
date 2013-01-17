@@ -55,23 +55,23 @@ void Enemy::remove_enemy(Enemy *object)
 
 Enemy::Enemy(Game &game_)
 {
-	
-
 	ID = staticID;
 	staticID++;
 	add_enemy(this);
 
 	game = &game_;
 	GraphicContext &gc = game_.get_gc();
+	PhysicsContext pc = game_.get_pc();
 	ResourceManager &resources = game_.get_resources();
 
 //________________________________________________________________________
 //														   G A M E P L A Y
+	type = go_enemy;
 	eType = T_HOVERBOT;
 	
 	missile.set_game(*game);
-	missile.set_speed(300.0f);
-	missile.set_type(MissileDesc::T_ENERGY);
+	missile.set_speed(90.0f);
+	missile.set_type(MissileDesc::mt_energy);
 	missile.should_hurt_player(true);
 	missile.should_hurt_enemy(false);
 	turret_angle = Angle(0,angle_degrees);
@@ -81,23 +81,43 @@ Enemy::Enemy(Game &game_)
 //															   R E N D E R
 	enemy = new Sprite(gc,"Enemy1",&resources);
 	enemy->set_play_loop(true);
-
-	col_out =  CollisionOutline("Gfx/Enemy1_frame1.png");
 	
-	int x,y;
-	Origin origin;
-	enemy->get_alignment(origin,x,y);
-	col_out.set_alignment(origin,x,y);
+	//int x,y;
+	//Origin origin;
+	//enemy->get_alignment(origin,x,y);
 
 	draw_slot = game_.get_draw_sig().connect(this,&Enemy::draw);
 	update_slot = game_.get_update_sig().connect(this,&Enemy::update);
+
+//__________________________________________________________________________
+//															   P H Y S I C S
+
+	BodyDescription body_desc(pc);
+	body_desc.set_position(0, game->get_height()-40);
+	body_desc.set_type(body_dynamic);
+	body_desc.set_angular_damping(100.0f);
+
+	PolygonShape shape(pc);
+	shape.set_as_box(enemy->get_width()/2.5f, enemy->get_height()/2.5f);
+
+	FixtureDescription fixture_desc(pc);
+	fixture_desc.set_density(1000.0f);
+	fixture_desc.set_shape(shape);
 	
+	body = Body(pc, body_desc);
+	body.set_data(this);
+	Fixture(pc, body, fixture_desc);
+
 	pos.x = 50;
 	pos.y = 50;
 	life = 100;
 	is_dead = false;
 
-	speed = 100;
+	body.set_position(pos);
+
+	speed = -35;
+
+	body.set_linear_velocity(Vec2f(speed,0));
 
 	target = Player::getPlayer1();
 }
@@ -111,7 +131,7 @@ void Enemy::set_pos(float x,float y)
 {
 	pos.x = x;
 	pos.y = y;
-	col_out.set_translation(pos.x,pos.y);
+	body.set_position(pos);
 }
 void Enemy::update(int time_elapsed_ms)
 {
@@ -119,7 +139,6 @@ void Enemy::update(int time_elapsed_ms)
 	float time_elapsed = time_elapsed_ms * 0.001f;
 	time_since_last_shoot+=time_elapsed_ms;
 	pos.x -=speed*time_elapsed;
-	col_out.set_translation(pos.x,pos.y);
 
 	if(time_since_last_shoot>2000)
 	{
@@ -139,8 +158,8 @@ void Enemy::update(int time_elapsed_ms)
 }
 void Enemy::draw(Canvas &canvas)
 {
+	Vec2f pos = body.get_position();
 	enemy->draw(canvas,pos.x,pos.y);
-
 }
 
 void Enemy::hurt(float damage)
@@ -158,6 +177,8 @@ void Enemy::hurt(float damage)
 
 void Enemy::aimAt(int x, int y)
 {
+
+	Vec2f pos = body.get_position();
 
 	float dx= x-pos.x;
 	float dy= y-pos.y;
@@ -178,9 +199,32 @@ void Enemy::shoot()
 		
 	aimAt(targetPos.x,targetPos.y);
 
+	Vec2f pos = body.get_position();
 	missile.set_angle(turret_angle);
 	missile.set_pos(pos);
 	missile.fire();
 	time_since_last_shoot=0;
 	
+}
+
+bool Enemy::should_collide_with(Body &body)
+{
+	PhysicsObject *data = body.get_data();
+	if(data!=nullptr)
+	{
+		//Gameobject *object = static_cast<Gameobject *> (data);
+		return true;
+	}
+	else
+		return false;
+}
+
+void Enemy::on_collision_begin(Body &body)
+{
+
+}
+
+void Enemy::on_collision_end(Body &body)
+{
+
 }
