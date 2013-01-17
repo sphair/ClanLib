@@ -224,8 +224,7 @@ void FontProvider_Vector::draw_glyphs(
 
 			if (prim_array.size() > 0)
 			{
-				RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
-				batcher->draw_triangle(canvas, &(prim_array[0]), color, prim_array.size());
+				canvas.draw_triangles(canvas, &(prim_array[0]), prim_array.size(), color);
 			}
 		}
 		else
