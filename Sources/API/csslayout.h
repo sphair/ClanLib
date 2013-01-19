@@ -35,6 +35,14 @@
 #pragma managed(push, off)
 #endif
 
+#include "CSSLayout/CSSTokenizer/css_tokenizer.h"
+#include "CSSLayout/CSSTokenizer/css_token.h"
+#include "CSSLayout/CSSDocument/css_document.h"
+#include "CSSLayout/CSSDocument/css_property.h"
+#include "CSSLayout/CSSDocument/css_select_node.h"
+#include "CSSLayout/CSSDocument/dom_select_node.h"
+#include "CSSLayout/ComputedValues/css_computed_values.h"
+#include "CSSLayout/ComputedValues/css_computed_box.h"
 #include "CSSLayout/Layout/css_layout.h"
 #include "CSSLayout/Layout/css_layout_node.h"
 #include "CSSLayout/Layout/css_layout_element.h"
@@ -42,13 +50,6 @@
 #include "CSSLayout/Layout/css_layout_object.h"
 #include "CSSLayout/Layout/css_layout_user_data.h"
 #include "CSSLayout/Layout/css_hit_test_result.h"
-#include "CSSLayout/CSSTokenizer/css_tokenizer.h"
-#include "CSSLayout/CSSTokenizer/css_token.h"
-#include "CSSLayout/CSSDocument/css_document.h"
-#include "CSSLayout/CSSDocument/css_property.h"
-#include "CSSLayout/CSSDocument/css_select_node.h"
-#include "CSSLayout/CSSDocument/dom_select_node.h"
-#include "CSSLayout/css_box_properties.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

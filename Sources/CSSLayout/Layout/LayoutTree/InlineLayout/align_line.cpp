@@ -154,7 +154,7 @@ void CSSInlineLayoutAlignLine::split_text(CSSInlineGeneratedBox *box, size_t tex
 
 	CSSBoxText *text = dynamic_cast<CSSBoxText *>(box->box_node);
 
-	const CSSBoxProperties &properties = text->get_properties();
+	const CSSComputedBox &properties = text->get_properties();
 	Font font = graphics->get_font(properties);
 
 	box->width = graphics->get_text_size(font, text->processed_text.substr(box->text_start, box->text_end-box->text_start)).width;

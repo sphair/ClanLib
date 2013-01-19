@@ -68,17 +68,17 @@ void GUIThemePart::throw_if_null() const
 
 Font GUIThemePart::get_font() const
 {
-	const CSSBoxProperties &properties = get_css_properties();
+	const CSSComputedBox &properties = get_css_properties();
 	Canvas canvas = impl->component->get_canvas();
 	return GUIComponent_Impl::get_font(canvas, properties);
 }
 
-const CSSBoxProperties &GUIThemePart::get_css_properties() const
+const CSSComputedBox &GUIThemePart::get_css_properties() const
 {
 	return impl->element.get_css_properties();
 }
 
-CSSBoxProperties &GUIThemePart::get_css_properties()
+CSSComputedBox &GUIThemePart::get_css_properties()
 {
 	return impl->element.get_css_properties();
 }

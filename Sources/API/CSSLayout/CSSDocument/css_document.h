@@ -64,8 +64,6 @@ public:
 	std::vector<CSSPropertyValue *> select(const DomElement &node, const std::string &pseudo_element = std::string());
 	std::vector<CSSPropertyValue *> select(CSSSelectNode *node, const std::string &pseudo_element = std::string());
 
-	static std::vector<std::unique_ptr<CSSPropertyValue> > get_style_properties(const std::string &style_string, const std::string &base_uri = std::string());
-
 private:
 	std::shared_ptr<CSSDocument_Impl> impl;
 };

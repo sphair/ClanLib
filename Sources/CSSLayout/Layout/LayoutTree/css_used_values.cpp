@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_used_values.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -40,7 +40,7 @@ CSSUsedValues::CSSUsedValues()
 {
 }
 
-void CSSUsedValues::set_width(const CSSBoxProperties &properties)
+void CSSUsedValues::set_width(const CSSComputedBox &properties)
 {
 	margin.left = get_margin_width(properties.margin_width_left);
 	margin.right = get_margin_width(properties.margin_width_right);
@@ -214,14 +214,14 @@ void CSSUsedValues::set_width(const CSSBoxProperties &properties)
 	calc_noncontent_width(properties);
 }
 
-void CSSUsedValues::set_width(const CSSBoxProperties &properties, CSSUsedValue new_width)
+void CSSUsedValues::set_width(const CSSComputedBox &properties, CSSUsedValue new_width)
 {
 	width = new_width;
 	undetermined_width = false;
 	calc_noncontent_width(properties);
 }
 
-void CSSUsedValues::calc_noncontent_width(const CSSBoxProperties &properties)
+void CSSUsedValues::calc_noncontent_width(const CSSComputedBox &properties)
 {
 	margin.left = get_margin_width(properties.margin_width_left);
 	margin.right = get_margin_width(properties.margin_width_right);
@@ -290,7 +290,7 @@ void CSSUsedValues::calc_noncontent_width(const CSSBoxProperties &properties)
 	}
 }
 
-void CSSUsedValues::set_height(const CSSBoxProperties &properties)
+void CSSUsedValues::set_height(const CSSComputedBox &properties)
 {
 	height = 0;
 	undetermined_height = false;
@@ -395,14 +395,14 @@ void CSSUsedValues::set_height(const CSSBoxProperties &properties)
 	calc_noncontent_height(properties);
 }
 
-void CSSUsedValues::set_height(const CSSBoxProperties &properties, CSSUsedValue new_height)
+void CSSUsedValues::set_height(const CSSComputedBox &properties, CSSUsedValue new_height)
 {
 	height = new_height;
 	undetermined_height = false;
 	calc_noncontent_height(properties);
 }
 
-void CSSUsedValues::calc_noncontent_height(const CSSBoxProperties &properties)
+void CSSUsedValues::calc_noncontent_height(const CSSComputedBox &properties)
 {
 	margin.top = get_margin_width(properties.margin_width_top);
 	margin.bottom = get_margin_width(properties.margin_width_bottom);
@@ -445,12 +445,12 @@ CSSUsedValue CSSUsedValues::get_padding_width(const CSSValuePaddingWidth &paddin
 	}
 }
 
-bool CSSUsedValues::is_inline(const CSSBoxProperties &properties)
+bool CSSUsedValues::is_inline(const CSSComputedBox &properties)
 {
 	return CSSValueDisplay::type_inline;
 }
 
-bool CSSUsedValues::is_block(const CSSBoxProperties &properties)
+bool CSSUsedValues::is_block(const CSSComputedBox &properties)
 {
 	switch (properties.display.type)
 	{
@@ -472,12 +472,12 @@ bool CSSUsedValues::is_block(const CSSBoxProperties &properties)
 	}
 }
 
-bool CSSUsedValues::is_floating(const CSSBoxProperties &properties)
+bool CSSUsedValues::is_floating(const CSSComputedBox &properties)
 {
 	return properties.float_box.type != CSSValueFloat::type_none;
 }
 
-bool CSSUsedValues::is_inline_block(const CSSBoxProperties &properties)
+bool CSSUsedValues::is_inline_block(const CSSComputedBox &properties)
 {
 	switch (properties.display.type)
 	{
@@ -489,7 +489,7 @@ bool CSSUsedValues::is_inline_block(const CSSBoxProperties &properties)
 	}
 }
 
-bool CSSUsedValues::is_absolute(const CSSBoxProperties &properties)
+bool CSSUsedValues::is_absolute(const CSSComputedBox &properties)
 {
 	return properties.position.type == CSSValuePosition::type_absolute;
 }

@@ -40,7 +40,7 @@
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../gui_css_strings.h"
 
 namespace clan
@@ -57,7 +57,7 @@ public:
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_apply_properties(CSSBoxProperties &properties);
+	void on_apply_properties(CSSComputedBox &properties);
 
 	Label *label;
 	std::string text;
@@ -153,7 +153,7 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 	label->render_text(canvas, text, 0, label->get_vertical_text_align(canvas).baseline);
 }
 
-void Label_Impl::on_apply_properties(CSSBoxProperties &properties)
+void Label_Impl::on_apply_properties(CSSComputedBox &properties)
 {
 	if (is_user_color)
 	{

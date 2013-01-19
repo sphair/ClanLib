@@ -47,7 +47,7 @@ Image &CSSLayoutGraphics::get_image(const std::string &url)
 	return cache->get_image(canvas, url);
 }
 
-Font CSSLayoutGraphics::get_font(const CSSBoxProperties &properties)
+Font CSSLayoutGraphics::get_font(const CSSComputedBox &properties)
 {
 	return cache->get_font(canvas, properties);
 }

@@ -51,7 +51,7 @@ bool CSSInlineLayoutLayoutLine::node(CSSInlineGeneratedBox *cur)
 	if (text)
 	{
 		cur->x = x;
-		const CSSBoxProperties &properties = text->get_properties();
+		const CSSComputedBox &properties = text->get_properties();
 		Font font = graphics->get_font(properties);
 		FontMetrics metrics = graphics->get_font_metrics(font);
 		cur->ascent = used_to_actual(metrics.get_ascent());

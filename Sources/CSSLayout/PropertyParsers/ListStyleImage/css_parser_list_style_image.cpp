@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_list_style_image.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {

@@ -54,7 +54,7 @@ public:
 
 #include "css_containing_block.h"
 
-class CSSBoxProperties;
+class CSSComputedBox;
 class CSSValueMarginWidth;
 class CSSValuePaddingWidth;
 
@@ -63,10 +63,10 @@ class CSSUsedValues
 public:
 	CSSUsedValues();
 	void set_replaced(bool replaced = true);
-	void set_width(const CSSBoxProperties &properties);
-	void set_width(const CSSBoxProperties &properties, CSSUsedValue width);
-	void set_height(const CSSBoxProperties &properties);
-	void set_height(const CSSBoxProperties &properties, CSSUsedValue height);
+	void set_width(const CSSComputedBox &properties);
+	void set_width(const CSSComputedBox &properties, CSSUsedValue width);
+	void set_height(const CSSComputedBox &properties);
+	void set_height(const CSSComputedBox &properties, CSSUsedValue height);
 
 	struct Margin
 	{
@@ -107,14 +107,14 @@ public:
 	bool preferred_width_calculated;
 
 private:
-	void calc_noncontent_width(const CSSBoxProperties &properties);
-	void calc_noncontent_height(const CSSBoxProperties &properties);
+	void calc_noncontent_width(const CSSComputedBox &properties);
+	void calc_noncontent_height(const CSSComputedBox &properties);
 
-	static bool is_inline(const CSSBoxProperties &properties);
-	static bool is_block(const CSSBoxProperties &properties);
-	static bool is_floating(const CSSBoxProperties &properties);
-	static bool is_inline_block(const CSSBoxProperties &properties);
-	static bool is_absolute(const CSSBoxProperties &properties);
+	static bool is_inline(const CSSComputedBox &properties);
+	static bool is_block(const CSSComputedBox &properties);
+	static bool is_floating(const CSSComputedBox &properties);
+	static bool is_inline_block(const CSSComputedBox &properties);
+	static bool is_absolute(const CSSComputedBox &properties);
 	CSSUsedValue get_margin_width(const CSSValueMarginWidth &margin_width);
 	CSSUsedValue get_padding_width(const CSSValuePaddingWidth &padding_width);
 };

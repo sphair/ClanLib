@@ -6,7 +6,7 @@ namespace clan
 
 class CSSProperty;
 class CSSPropertyParser;
-class CSSBoxProperties;
+class CSSComputedBox;
 class CSSPropertyValue;
 
 class CSSPropertyParsers

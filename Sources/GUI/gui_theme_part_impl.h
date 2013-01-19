@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "gui_element.h"
 #include "Layout/gui_css_used_values.h"
 

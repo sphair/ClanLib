@@ -66,7 +66,7 @@ class GUITheme;
 class ResourceManager;
 class GUIConsumedKeys;
 class GUIComponent_Impl;
-class CSSBoxProperties;
+class CSSComputedBox;
 
 typedef DisplayWindowDescription GUITopLevelDescription;
 
@@ -145,10 +145,10 @@ public:
 	std::vector<std::string> get_pseudo_classes() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
-	const CSSBoxProperties &get_css_properties() const;
+	const CSSComputedBox &get_css_properties() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
-	CSSBoxProperties &get_css_properties();
+	CSSComputedBox &get_css_properties();
 
 	/// \brief Returns true if the component has the focus.
 	bool has_focus() const;
@@ -401,7 +401,7 @@ public:
 	Callback_v1<std::shared_ptr<GUIMessage> &> &func_filter_message();
 
 	/// \brief Allows a component to override CSS properties
-	Callback_v1<CSSBoxProperties &> &func_apply_properties();
+	Callback_v1<CSSComputedBox &> &func_apply_properties();
 
 	/// \brief bool func_input(const InputEvent &input_event)
 	Callback_1<bool, const InputEvent &> &func_input();

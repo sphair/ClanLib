@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -75,7 +75,7 @@ public:
 class GUICSSInitialUsedValues
 {
 public:
-	static void visit(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
+	static void visit(GUICSSUsedValues &values, const CSSComputedBox &properties, GUICSSUsedValues &containing_box)
 	{
 		values.margin.left = get_css_margin_width(properties.margin_width_left, containing_box.width, containing_box.width_undetermined);
 		values.margin.right = get_css_margin_width(properties.margin_width_right, containing_box.width, containing_box.width_undetermined);
@@ -102,7 +102,7 @@ public:
 	}
 
 private:
-	static void get_css_width(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
+	static void get_css_width(GUICSSUsedValues &values, const CSSComputedBox &properties, GUICSSUsedValues &containing_box)
 	{
 		switch (properties.width.type)
 		{
@@ -129,7 +129,7 @@ private:
 		}
 	}
 
-	static void get_css_height(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
+	static void get_css_height(GUICSSUsedValues &values, const CSSComputedBox &properties, GUICSSUsedValues &containing_box)
 	{
 		switch (properties.height.type)
 		{
@@ -252,7 +252,7 @@ private:
 class GUICSSApplyMinMaxConstraints
 {
 public:
-	static void visit(GUICSSUsedValues &values, const CSSBoxProperties &properties, GUICSSUsedValues &containing_box)
+	static void visit(GUICSSUsedValues &values, const CSSComputedBox &properties, GUICSSUsedValues &containing_box)
 	{
 		values.width = std::min(values.width, values.max_width);
 		values.width = std::max(values.width, values.min_width);
@@ -274,7 +274,7 @@ public:
 
 
 
-	void calculate_absolute_widths(const CSSBoxProperties &properties, LayoutStrategy strategy)
+	void calculate_absolute_widths(const CSSComputedBox &properties, LayoutStrategy strategy)
 	{
 		margin.left = get_css_margin_width(properties.margin_width_left, containing_width);
 		margin.right = get_css_margin_width(properties.margin_width_right, containing_width);
@@ -401,7 +401,7 @@ public:
 			apply_absolute_widths_constraint(min_width, left, right, containing_width);
 	}
 
-	void apply_absolute_widths_constraint(const CSSBoxProperties &properties, CSSUsedValue constraint_width, CSSUsedValue left, CSSUsedValue right, CSSUsedValue containing_width)
+	void apply_absolute_widths_constraint(const CSSComputedBox &properties, CSSUsedValue constraint_width, CSSUsedValue left, CSSUsedValue right, CSSUsedValue containing_width)
 	{
 		width = constraint_width;
 		if (properties.left.type != CSSValueLeft::type_auto &&
@@ -441,7 +441,7 @@ public:
 		}
 	}
 
-	void calculate_absolute_heights(const CSSBoxProperties &properties)
+	void calculate_absolute_heights(const CSSComputedBox &properties)
 	{
 		margin.top = get_css_margin_height(properties.margin_width_top, containing_height);
 		margin.bottom = get_css_margin_height(properties.margin_width_bottom, containing_height);
@@ -532,7 +532,7 @@ public:
 			apply_absolute_heights_constraint(css_min_height, top, bottom);
 	}
 
-	void apply_absolute_heights_constraint(const CSSBoxProperties &properties, CSSUsedValue constraint_height, CSSUsedValue top, CSSUsedValue bottom)
+	void apply_absolute_heights_constraint(const CSSComputedBox &properties, CSSUsedValue constraint_height, CSSUsedValue top, CSSUsedValue bottom)
 	{
 		height = constraint_height;
 		if (properties.top.type != CSSValueTop::type_auto &&
@@ -564,7 +564,7 @@ public:
 		}
 	}
 
-	void calculate_static_widths(const CSSBoxProperties &properties, LayoutStrategy strategy)
+	void calculate_static_widths(const CSSComputedBox &properties, LayoutStrategy strategy)
 	{
 		bool is_table_cell = properties.display.type == CSSValueDisplay::type_table_cell;
 		bool is_float = properties.float_box.type != CSSValueFloat::type_none;
@@ -664,7 +664,7 @@ public:
 		}
 	}
 
-	void calculate_static_heights(const CSSBoxProperties &properties)
+	void calculate_static_heights(const CSSComputedBox &properties)
 	{
 		margin.top = get_css_margin_height(properties.margin_width_top, containing_height);
 		margin.bottom = get_css_margin_height(properties.margin_width_bottom, containing_height);

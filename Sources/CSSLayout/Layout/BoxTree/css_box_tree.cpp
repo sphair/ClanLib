@@ -137,7 +137,7 @@ CSSBoxNode *CSSBoxTree::create_node(const DomNode &node)
 
 void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element)
 {
-	CSSBoxProperties properties = get_css_properties(dom_element, pseudo_element);
+	CSSComputedBox properties = get_css_properties(dom_element, pseudo_element);
 	if (properties.content.type != CSSValueContent::type_none && properties.content.type != CSSValueContent::type_normal)
 	{
 		CSSBoxElement *before_element = new CSSBoxElement();
@@ -158,9 +158,9 @@ void CSSBoxTree::apply_properties(CSSBoxElement *node, const std::vector<CSSProp
 		property_parsers.parse(node->properties, css_properties[i-1]);
 }
 
-CSSBoxProperties CSSBoxTree::get_css_properties(const DomElement &element, const std::string &pseudo_element)
+CSSComputedBox CSSBoxTree::get_css_properties(const DomElement &element, const std::string &pseudo_element)
 {
-	CSSBoxProperties properties;
+	CSSComputedBox properties;
 	std::vector<CSSPropertyValue *> css_properties = css.select(element, pseudo_element);
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(properties, css_properties[i-1]);
@@ -169,7 +169,7 @@ CSSBoxProperties CSSBoxTree::get_css_properties(const DomElement &element, const
 
 void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resource_cache)
 {
-	CSSBoxProperties *parent_properties = 0;
+	CSSComputedBox *parent_properties = 0;
 	CSSBoxNode *parent_node = element->get_parent();
 	if (parent_node)
 		parent_properties = &dynamic_cast<CSSBoxElement*>(parent_node)->computed_properties;

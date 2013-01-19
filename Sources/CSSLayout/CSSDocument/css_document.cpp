@@ -116,50 +116,6 @@ std::vector<CSSPropertyValue *> CSSDocument::select(CSSSelectNode *node, const s
 	return properties;
 }
 
-std::vector<std::unique_ptr<CSSPropertyValue> > CSSDocument::get_style_properties(const std::string &style_string, const std::string &base_uri)
-{
-	static CSSPropertyParsers parsers;
-
-	CSSTokenizer tokenizer(style_string);
-	CSSToken token;
-	std::vector<std::unique_ptr<CSSPropertyValue> > property_list;
-	while (true)
-	{
-		tokenizer.read(token, true);
-		if (token.type == CSSToken::type_ident)
-		{
-			std::string property_name = token.value;
-			tokenizer.read(token, true);
-			if (token.type == CSSToken::type_colon)
-			{
-				tokenizer.read(token, true);
-
-				CSSProperty property;
-				property.set_name(property_name);
-				CSSDocumentSheet::read_property_value(tokenizer, token, property, base_uri);
-				if (!property.get_value_tokens().empty())
-				{
-					parsers.parse(property, property_list);
-				}
-			}
-			else
-			{
-				bool end_of_scope = CSSDocumentSheet::read_end_of_statement(tokenizer, token);
-				if (end_of_scope)
-					break;
-			}
-		}
-		else if (token.type == CSSToken::type_null)
-		{
-			break;
-		}
-	}
-
-	std::reverse(property_list.begin(), property_list.end());
-
-	return property_list;
-}
-
 std::string CSSDocument::get_default_html_sheet()
 {
 	return

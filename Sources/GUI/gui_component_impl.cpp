@@ -289,7 +289,7 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 {
 	SpanLayout span;
 
-	CSSBoxProperties &properties = element.get_css_properties();
+	CSSComputedBox &properties = element.get_css_properties();
 
 	span.add_text(text, font, properties.color.color);
 
@@ -308,7 +308,7 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 	return span;
 }
 
-Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &properties)
+Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &properties)
 {
 	int font_size = used_to_actual(properties.font_size.length.value);
 	std::string font_name;
@@ -385,7 +385,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSBoxProperties &propert
 
 Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only )
 {
-	CSSBoxProperties &properties = element.get_css_properties();
+	CSSComputedBox &properties = element.get_css_properties();
 
 	Size text_size = font.get_text_size(canvas, text);
 

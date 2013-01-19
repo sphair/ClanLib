@@ -41,7 +41,7 @@ namespace clan
 {
 
 class GUIComponent;
-class CSSBoxProperties;
+class CSSComputedBox;
 class GUIThemePart_Impl;
 class Font;
 class Canvas;
@@ -74,10 +74,10 @@ public:
 	void throw_if_null() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
-	const CSSBoxProperties &get_css_properties() const;
+	const CSSComputedBox &get_css_properties() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
-	CSSBoxProperties &get_css_properties();
+	CSSComputedBox &get_css_properties();
 
 	/// \brief Gets the font
 	Font get_font() const;

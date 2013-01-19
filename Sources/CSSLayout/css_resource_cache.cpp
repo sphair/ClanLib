@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_resource_cache.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "Layout/LayoutTree/css_used_value.h"
 
 namespace clan
@@ -72,7 +72,7 @@ int CSSResourceCache::static_enum_font_families_callback(const LOGFONTW *fontinf
 }
 #endif
 
-Font &CSSResourceCache::get_font(Canvas &canvas, const CSSBoxProperties &properties)
+Font &CSSResourceCache::get_font(Canvas &canvas, const CSSComputedBox &properties)
 {
 	int font_size = used_to_actual(properties.font_size.length.value);
 	std::string font_name;

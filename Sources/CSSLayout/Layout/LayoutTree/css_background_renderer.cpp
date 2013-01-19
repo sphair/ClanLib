@@ -35,7 +35,7 @@
 namespace clan
 {
 
-CSSBackgroundRenderer::CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSBoxProperties &computed_properties)
+CSSBackgroundRenderer::CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBox &computed_properties)
 : graphics(graphics), resource_cache(resource_cache), computed_properties(computed_properties), is_root(false)
 {
 }

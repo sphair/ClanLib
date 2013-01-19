@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_bottom.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../css_resource_cache.h"
 
 namespace clan
@@ -39,7 +39,7 @@ CSSValueBottom::CSSValueBottom()
 {
 }
 
-void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position)
+void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position)
 {
 	if (top.type == CSSValueTop::type_inherit)
 	{

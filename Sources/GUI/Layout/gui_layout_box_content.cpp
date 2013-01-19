@@ -58,7 +58,7 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 			box_math.used_lengths.push_back(used_noncontent_width + child_used_values.width);
 			box_math.used_max_lengths.push_back(used_noncontent_width + child_used_values.max_width);
 
-			const CSSBoxProperties &properties = child->get_css_properties();
+			const CSSComputedBox &properties = child->get_css_properties();
 			box_math.used_shrink_weights.push_back(properties.flex_shrink.number);
 			box_math.used_expand_weights.push_back(properties.flex_grow.number);
 		}
@@ -170,7 +170,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 			box_math.used_lengths.push_back(used_noncontent_height + child_used_values.height);
 			box_math.used_max_lengths.push_back(used_noncontent_height + child_used_values.max_height);
 
-			const CSSBoxProperties &properties = child->get_css_properties();
+			const CSSComputedBox &properties = child->get_css_properties();
 
 			box_math.used_shrink_weights.push_back(properties.flex_shrink.number);
 			box_math.used_expand_weights.push_back(properties.flex_grow.number);
@@ -197,7 +197,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 
 CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUIComponent *child)
 {
-	const CSSBoxProperties &properties = child->get_css_properties();
+	const CSSComputedBox &properties = child->get_css_properties();
 
 	if (properties.align_self.type == CSSValueAlignSelf::type_flex_start)
 	{
@@ -223,7 +223,7 @@ CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUICom
 
 CSSUsedValue GUILayoutBoxContent::align_horizontal(GUIComponent_Impl *node, GUIComponent *child)
 {
-	const CSSBoxProperties &properties = child->get_css_properties();
+	const CSSComputedBox &properties = child->get_css_properties();
 	if (properties.align_self.type == CSSValueAlignSelf::type_flex_start)
 	{
 		return 0.0f;
