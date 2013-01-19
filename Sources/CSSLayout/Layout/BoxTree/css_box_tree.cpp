@@ -39,7 +39,7 @@ namespace clan
 {
 
 CSSBoxTree::CSSBoxTree()
-: root_element(0), html_body_element(0), selection_start(0), selection_end(0), selection_start_text_offset(0), selection_end_text_offset(0)
+: root_element(nullptr), html_body_element(nullptr), selection_start(nullptr), selection_end(nullptr), selection_start_text_offset(0), selection_end_text_offset(0)
 {
 }
 
@@ -62,7 +62,7 @@ void CSSBoxTree::set_html_body_element(CSSBoxElement *new_html_body_element)
 void CSSBoxTree::create(const DomNode &node)
 {
 	clear();
-	CSSBoxNode *root_node = create_node(node);
+	CSSBoxNode *root_node = create_node(node, nullptr);
 	root_element = dynamic_cast<CSSBoxElement*>(root_node);
 	if (!root_element)
 	{
@@ -74,7 +74,6 @@ void CSSBoxTree::create(const DomNode &node)
 void CSSBoxTree::prepare(CSSResourceCache *resource_cache)
 {
 	clean();
-	compute_element(root_element, resource_cache);
 	propagate_html_body();
 	convert_run_in_blocks(root_element);
 	CSSWhitespaceEraser::remove_whitespace(root_element);
@@ -104,29 +103,37 @@ void CSSBoxTree::clear()
 	root_element = 0;
 }
 
-CSSBoxNode *CSSBoxTree::create_node(const DomNode &node)
+CSSBoxNode *CSSBoxTree::create_node(const DomNode &node, CSSBoxNode *parent)
 {
 	if (node.is_element())
 	{
 		CSSBoxElement *box_element = new CSSBoxElement();
 		box_element->name = node.get_node_name();
-		box_element->properties = get_css_properties(node.to_element());
+
+		box_element->computed_values = CSSComputedValues(CSSComputedValues());
+		box_element->computed_values.set_specified_values(css.select(node.to_element()), node.to_element().get_attribute("style"));
+
 		create_pseudo_element(box_element, node.to_element(), "before");
+
 		DomNode cur = node.get_first_child();
 		while (!cur.is_null())
 		{
-			CSSBoxNode *box_child = create_node(cur);
-			if (box_child)
-				box_element->push_back(box_child);
+			create_node(cur, parent);
 			cur = cur.get_next_sibling();
 		}
+
 		create_pseudo_element(box_element, node.to_element(), "after");
+
+		if (parent)
+			parent->push_back(box_element);
 		return box_element;
 	}
 	else if (node.is_text())
 	{
 		CSSBoxText *box_text = new CSSBoxText();
 		box_text->set_text(node.get_node_value());
+		if (parent)
+			parent->push_back(box_text);
 		return box_text;
 	}
 	else
@@ -137,36 +144,27 @@ CSSBoxNode *CSSBoxTree::create_node(const DomNode &node)
 
 void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element)
 {
-	CSSComputedBox properties = get_css_properties(dom_element, pseudo_element);
-	if (properties.content.type != CSSValueContent::type_none && properties.content.type != CSSValueContent::type_normal)
+	CSSSelectResult selection = css.select(dom_element, pseudo_element);
+	if (!selection.get_values().empty())
 	{
-		CSSBoxElement *before_element = new CSSBoxElement();
-		before_element->name = string_format("%1:%2", dom_element.get_node_name(), pseudo_element);
-		before_element->properties = properties;
+		CSSComputedValues computed_values(box_element->computed_values);
+		computed_values.set_specified_values(selection);
+		if (computed_values.get_box().content.type != CSSValueContent::type_none && computed_values.get_box().content.type != CSSValueContent::type_normal)
+		{
+			CSSBoxElement *before_element = new CSSBoxElement();
+			before_element->name = string_format("%1:%2", dom_element.get_node_name(), pseudo_element);
+			before_element->computed_values = computed_values;
 
-		CSSBoxText *box_text = new CSSBoxText();
-		box_text->set_text(properties.content.str);
+			CSSBoxText *box_text = new CSSBoxText();
+			box_text->set_text(computed_values.get_box().content.str);
 
-		before_element->push_back(box_text);
-		box_element->push_back(before_element);
+			before_element->push_back(box_text);
+			box_element->push_back(before_element);
+		}
 	}
 }
 
-void CSSBoxTree::apply_properties(CSSBoxElement *node, const std::vector<CSSPropertyValue *> &css_properties)
-{
-	for (size_t i = css_properties.size(); i > 0; i--)
-		property_parsers.parse(node->properties, css_properties[i-1]);
-}
-
-CSSComputedBox CSSBoxTree::get_css_properties(const DomElement &element, const std::string &pseudo_element)
-{
-	CSSComputedBox properties;
-	std::vector<CSSPropertyValue *> css_properties = css.select(element, pseudo_element);
-	for (size_t i = css_properties.size(); i > 0; i--)
-		property_parsers.parse(properties, css_properties[i-1]);
-	return properties;
-}
-
+/*
 void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resource_cache)
 {
 	CSSComputedBox *parent_properties = 0;
@@ -175,7 +173,7 @@ void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resou
 		parent_properties = &dynamic_cast<CSSBoxElement*>(parent_node)->computed_properties;
 
 	element->computed_properties = element->properties;
-	element->computed_properties.compute(parent_properties, resource_cache);
+	element->computed_values.get_box().compute(parent_properties, resource_cache);
 
 	CSSBoxNode *cur = element->get_first_child();
 	while (cur)
@@ -186,26 +184,29 @@ void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resou
 		cur = cur->get_next_sibling();
 	}
 }
+*/
 
 void CSSBoxTree::propagate_html_body()
 {
+#ifdef NEEDS_PORTING
 	if (html_body_element && root_element != html_body_element)
 	{
-		if (root_element->computed_properties.background_image.images[0].type == CSSValueBackgroundImage::image_type_none &&
-			root_element->computed_properties.background_color.color.a == 0.0f)
+		if (root_element->computed_values.get_box().background_image.images[0].type == CSSValueBackgroundImage::image_type_none &&
+			root_element->computed_values.get_box().background_color.color.a == 0.0f)
 		{
-			root_element->computed_properties.background_color = html_body_element->computed_properties.background_color;
-			root_element->computed_properties.background_image = html_body_element->computed_properties.background_image;
-			root_element->computed_properties.background_repeat = html_body_element->computed_properties.background_repeat;
-			root_element->computed_properties.background_attachment = html_body_element->computed_properties.background_attachment;
-			root_element->computed_properties.background_position = html_body_element->computed_properties.background_position;
-			root_element->computed_properties.background_origin = html_body_element->computed_properties.background_origin;
-			root_element->computed_properties.background_clip = html_body_element->computed_properties.background_clip;
-			root_element->computed_properties.background_size = html_body_element->computed_properties.background_size;
-			html_body_element->computed_properties.background_color = CSSValueBackgroundColor();
-			html_body_element->computed_properties.background_image = CSSValueBackgroundImage();
+			root_element->computed_values.get_box().background_color = html_body_element->computed_values.get_box().background_color;
+			root_element->computed_values.get_box().background_image = html_body_element->computed_values.get_box().background_image;
+			root_element->computed_values.get_box().background_repeat = html_body_element->computed_values.get_box().background_repeat;
+			root_element->computed_values.get_box().background_attachment = html_body_element->computed_values.get_box().background_attachment;
+			root_element->computed_values.get_box().background_position = html_body_element->computed_values.get_box().background_position;
+			root_element->computed_values.get_box().background_origin = html_body_element->computed_values.get_box().background_origin;
+			root_element->computed_values.get_box().background_clip = html_body_element->computed_values.get_box().background_clip;
+			root_element->computed_values.get_box().background_size = html_body_element->computed_values.get_box().background_size;
+			html_body_element->computed_values.get_box().background_color = CSSValueBackgroundColor();
+			html_body_element->computed_values.get_box().background_image = CSSValueBackgroundImage();
 		}
 	}
+#endif
 }
 
 void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
@@ -213,18 +214,18 @@ void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
 	// This code is pretty broken.  But then again, who cares?  There's not
 	// a single browser out there yet that managed to implement run-in boxes properly,
 	// so I doubt they are being used much..
-
-	if (element->computed_properties.display.type == CSSValueDisplay::type_run_in)
+/*
+	if (element->computed_values.get_box().display.type == CSSValueDisplay::type_run_in)
 	{
 		if (element->has_block_level_children())
 		{
 			element->properties.display.type = CSSValueDisplay::type_block;
-			element->computed_properties.display.type = CSSValueDisplay::type_block;
+			element->computed_values.get_box().display.type = CSSValueDisplay::type_block;
 		}
 		else
 		{
 			element->properties.display.type = CSSValueDisplay::type_block;
-			element->computed_properties.display.type = CSSValueDisplay::type_block;
+			element->computed_values.get_box().display.type = CSSValueDisplay::type_block;
 
 			CSSBoxNode *next = element->get_next_sibling();
 			while (next)
@@ -238,16 +239,16 @@ void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
 				}
 				else if (next_element)
 				{
-					if (next_element->computed_properties.float_box.type != CSSValueFloat::type_none ||
-						next_element->computed_properties.position.type == CSSValuePosition::type_absolute ||
-						next_element->computed_properties.position.type == CSSValuePosition::type_fixed)
+					if (next_element->computed_values.get_box().float_box.type != CSSValueFloat::type_none ||
+						next_element->computed_values.get_box().position.type == CSSValuePosition::type_absolute ||
+						next_element->computed_values.get_box().position.type == CSSValuePosition::type_fixed)
 					{
 						// Skip floating and absolute positioned boxes
 					}
-					else if (next_element->computed_properties.display.type == CSSValueDisplay::type_block)
+					else if (next_element->computed_values.get_box().display.type == CSSValueDisplay::type_block)
 					{
 						element->properties.display.type = CSSValueDisplay::type_inline;
-						element->computed_properties.display.type = CSSValueDisplay::type_inline;
+						element->computed_values.get_box().display.type = CSSValueDisplay::type_inline;
 						element->remove();
 						next_element->push_front(element);
 						break;
@@ -277,10 +278,13 @@ void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
 			cur = cur->get_next_sibling();
 		}
 	}
+*/
 }
 
 void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 {
+#ifdef NEEDS_PORTING
+
 /*
 	// Remove irrelevant boxes:
 	if (parent.display.type == CSSValueDisplay::type_table_column)
@@ -314,13 +318,13 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 			CSSBoxElement *cur = walker.get_element();
 			CSSBoxElement *parent = static_cast<CSSBoxElement *>(walker.get_element()->get_parent());
 
-			if ((parent->computed_properties.display.type == CSSValueDisplay::type_table ||
-				parent->computed_properties.display.type == CSSValueDisplay::type_inline_table) &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_caption &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_row_group &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_header_group &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_footer_group &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_row)
+			if ((parent->computed_values.get_box().display.type == CSSValueDisplay::type_table ||
+				parent->computed_values.get_box().display.type == CSSValueDisplay::type_inline_table) &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_caption &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row_group &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_header_group &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_footer_group &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row)
 			{
 				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are not proper table children
 
@@ -336,11 +340,11 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 				{
 					cur = dynamic_cast<CSSBoxElement*>(next);
 					if (cur &&
-						cur->computed_properties.display.type != CSSValueDisplay::type_table_caption &&
-						cur->computed_properties.display.type != CSSValueDisplay::type_table_row_group &&
-						cur->computed_properties.display.type != CSSValueDisplay::type_table_header_group &&
-						cur->computed_properties.display.type != CSSValueDisplay::type_table_footer_group &&
-						cur->computed_properties.display.type != CSSValueDisplay::type_table_row)
+						cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_caption &&
+						cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row_group &&
+						cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_header_group &&
+						cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_footer_group &&
+						cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row)
 					{
 						next = next->get_next_sibling();
 						cur->remove();
@@ -354,10 +358,10 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 
 				compute_element(anonymous, resource_cache);
 			}
-			if ((parent->computed_properties.display.type == CSSValueDisplay::type_table_row_group ||
-				parent->computed_properties.display.type == CSSValueDisplay::type_table_header_group ||
-				parent->computed_properties.display.type == CSSValueDisplay::type_table_footer_group) &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_row)
+			if ((parent->computed_values.get_box().display.type == CSSValueDisplay::type_table_row_group ||
+				parent->computed_values.get_box().display.type == CSSValueDisplay::type_table_header_group ||
+				parent->computed_values.get_box().display.type == CSSValueDisplay::type_table_footer_group) &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row)
 			{
 				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are not 'table-row' boxes
 
@@ -372,7 +376,7 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 				while (next)
 				{
 					cur = dynamic_cast<CSSBoxElement*>(next);
-					if (cur && cur->computed_properties.display.type != CSSValueDisplay::type_table_row)
+					if (cur && cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_row)
 					{
 						next = next->get_next_sibling();
 						cur->remove();
@@ -386,8 +390,8 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 
 				compute_element(anonymous, resource_cache);
 			}
-			if (parent->computed_properties.display.type == CSSValueDisplay::type_table_row &&
-				cur->computed_properties.display.type != CSSValueDisplay::type_table_cell)
+			if (parent->computed_values.get_box().display.type == CSSValueDisplay::type_table_row &&
+				cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_cell)
 			{
 				// generate an anonymous 'table-cell' box around C and all consecutive siblings of C that are not 'table-cell' boxes
 
@@ -402,7 +406,7 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 				while (next)
 				{
 					cur = dynamic_cast<CSSBoxElement*>(next);
-					if (cur && cur->computed_properties.display.type != CSSValueDisplay::type_table_cell)
+					if (cur && cur->computed_values.get_box().display.type != CSSValueDisplay::type_table_cell)
 					{
 						next = next->get_next_sibling();
 						cur->remove();
@@ -430,7 +434,7 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 			CSSBoxElement *cur = walker.get_element();
 			CSSBoxElement *parent = static_cast<CSSBoxElement *>(walker.get_element()->get_parent());
 
-			if (cur->computed_properties.display.type == CSSValueDisplay::type_table_cell && parent->computed_properties.display.type != CSSValueDisplay::type_table_row)
+			if (cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_cell && parent->computed_values.get_box().display.type != CSSValueDisplay::type_table_row)
 			{
 				// generate an anonymous 'table-row' box around C and all consecutive siblings of C that are 'table-cell' boxes
 
@@ -445,7 +449,7 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 				while (next)
 				{
 					cur = dynamic_cast<CSSBoxElement*>(next);
-					if (cur && cur->computed_properties.display.type == CSSValueDisplay::type_table_cell)
+					if (cur && cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_cell)
 					{
 						next = next->get_next_sibling();
 						cur->remove();
@@ -461,24 +465,24 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 			}
 
 			bool table_row_misparented =
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_row && 
-				parent->computed_properties.display.type != CSSValueDisplay::type_table &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_inline_table;
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_row && 
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_table &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_inline_table;
 
 			bool table_column_misparented = 
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_column &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_table_column_group &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_table &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_inline_table;
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_column &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_table_column_group &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_table &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_inline_table;
 
 			bool table_group_column_caption_misparented =
-				(cur->computed_properties.display.type == CSSValueDisplay::type_table_row_group ||
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_header_group ||
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_footer_group ||
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_column_group ||
-				cur->computed_properties.display.type == CSSValueDisplay::type_table_caption) &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_table &&
-				parent->computed_properties.display.type != CSSValueDisplay::type_inline_table;
+				(cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_row_group ||
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_header_group ||
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_footer_group ||
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_column_group ||
+				cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_caption) &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_table &&
+				parent->computed_values.get_box().display.type != CSSValueDisplay::type_inline_table;
 
 			if (table_row_misparented || table_column_misparented || table_group_column_caption_misparented)
 			{
@@ -497,13 +501,13 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 				{
 					cur = dynamic_cast<CSSBoxElement*>(next);
 					if (cur &&
-						(cur->computed_properties.display.type == CSSValueDisplay::type_table_caption ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_row_group ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_header_group ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_footer_group ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_row ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_column ||
-						cur->computed_properties.display.type == CSSValueDisplay::type_table_column_group))
+						(cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_caption ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_row_group ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_header_group ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_footer_group ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_row ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_column ||
+						cur->computed_values.get_box().display.type == CSSValueDisplay::type_table_column_group))
 					{
 						next = next->get_next_sibling();
 						cur->remove();
@@ -520,6 +524,7 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 		}
 		walker.next(true);
 	}
+#endif
 }
 
 void CSSBoxTree::set_selection(CSSBoxNode *start, size_t start_text_offset, CSSBoxNode *end, size_t end_text_offset)

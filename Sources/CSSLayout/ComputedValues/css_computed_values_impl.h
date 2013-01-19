@@ -29,6 +29,9 @@
 #pragma once
 
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
+#include "API/CSSLayout/CSSDocument/css_select_result.h"
+#include "API/CSSLayout/CSSDocument/css_style_properties.h"
 
 namespace clan
 {
@@ -36,7 +39,34 @@ namespace clan
 class CSSComputedValues_Impl
 {
 public:
+	CSSComputedValues_Impl() : specified_values_changed(true), box_generation(0) { }
+
+	void update_if_changed();
+
+	CSSComputedValues parent;
+
+	bool specified_values_changed;
+
 	CSSComputedBox box;
+	int box_generation;
+
+	CSSSelectResult selected_values;
+	CSSStyleProperties style_values;
 };
+
+inline void CSSComputedValues_Impl::update_if_changed()
+{
+	if (specified_values_changed)
+	{
+		const CSSComputedBox *parent_computed_box_values = (!parent.is_null()) ? &parent.get_box() : nullptr;
+		CSSResourceCache *resource_cache = nullptr; // To do: get this from somewhere..
+
+		box = CSSComputedBox();
+		box.compute(parent_computed_box_values, resource_cache);
+
+		box_generation++;
+		specified_values_changed = false;
+	}
+}
 
 }

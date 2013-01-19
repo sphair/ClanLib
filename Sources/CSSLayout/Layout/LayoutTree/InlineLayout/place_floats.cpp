@@ -45,12 +45,12 @@ bool CSSInlineLayoutPlaceFloats::node(CSSInlineGeneratedBox *cur, size_t text_st
 		cur->floated = true;
 		layout->floats.push_back(cur->layout_node);
 
-		if (cur->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_left || cur->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
+		if (cur->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_left || cur->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_both)
 		{
 			CSSActualValue clear_left = layout->get_formatting_context()->find_left_clearance();
 			y = max(y, clear_left);
 		}
-		if (cur->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_right || cur->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
+		if (cur->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_right || cur->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_both)
 		{
 			CSSActualValue clear_right = layout->get_formatting_context()->find_right_clearance();
 			y = max(y, clear_right);
@@ -62,11 +62,11 @@ bool CSSInlineLayoutPlaceFloats::node(CSSInlineGeneratedBox *cur, size_t text_st
 		if (strategy == CSSInlineLayout::preferred_strategy && layout->width.expanding)
 		{
 			CSSActualValue w = 1000000;
-			if (cur->layout_node->get_element_node()->computed_properties.float_box.type == CSSValueFloat::type_left)
+			if (cur->layout_node->get_element_node()->computed_values.get_box().float_box.type == CSSValueFloat::type_left)
 			{
 				float_box = layout->get_formatting_context()->float_left(float_box, x+w);
 			}
-			else if (cur->layout_node->get_element_node()->computed_properties.float_box.type == CSSValueFloat::type_right)
+			else if (cur->layout_node->get_element_node()->computed_values.get_box().float_box.type == CSSValueFloat::type_right)
 			{
 				float_box = layout->get_formatting_context()->float_right_shrink_to_fit(float_box, x+w);
 			}
@@ -74,11 +74,11 @@ bool CSSInlineLayoutPlaceFloats::node(CSSInlineGeneratedBox *cur, size_t text_st
 		}
 		else
 		{
-			if (cur->layout_node->get_element_node()->computed_properties.float_box.type == CSSValueFloat::type_left)
+			if (cur->layout_node->get_element_node()->computed_values.get_box().float_box.type == CSSValueFloat::type_left)
 			{
 				float_box = layout->get_formatting_context()->float_left(float_box, x+used_to_actual(layout->width.value));
 			}
-			else if (cur->layout_node->get_element_node()->computed_properties.float_box.type == CSSValueFloat::type_right)
+			else if (cur->layout_node->get_element_node()->computed_values.get_box().float_box.type == CSSValueFloat::type_right)
 			{
 				float_box.translate(layout->width.value-float_box.get_width(), 0);
 				float_box = layout->get_formatting_context()->float_right(float_box, x+used_to_actual(layout->width.value));

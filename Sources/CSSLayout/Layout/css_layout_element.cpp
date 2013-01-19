@@ -69,7 +69,7 @@ void CSSLayoutElement::set_row_span(int span)
 	if (!is_null())
 		static_cast<CSSBoxElement*>(impl->box_node)->row_span = span;
 }
-
+/*
 void CSSLayoutElement::apply_properties(const std::vector<CSSPropertyValue *> &properties)
 {
 	if (!is_null())
@@ -91,7 +91,7 @@ void CSSLayoutElement::apply_properties(const std::string &style_string, const s
 {
 	apply_properties(CSSDocument::get_style_properties(style_string, base_uri));
 }
-
+*/
 void CSSLayoutElement::insert_before(CSSLayoutNode &new_child, CSSLayoutNode &ref_child)
 {
 	if (!is_null() && !new_child.is_null())

@@ -62,7 +62,7 @@ bool CSSInlineLayoutGetCursorBox::node(CSSInlineGeneratedBox *cur)
 	{
 		CSSLayoutTreeNode *object_node = cur->layout_node;
 		bool is_same_stacking_context = (stacking_context == object_node->get_stacking_context());
-		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+		bool is_positioned = (object_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context && !is_positioned)
 		{
 			if (object_node->get_cursor_box(graphics, resources, text_node, pos, box))

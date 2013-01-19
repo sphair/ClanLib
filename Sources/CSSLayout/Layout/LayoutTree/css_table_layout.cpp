@@ -150,7 +150,7 @@ void CSSTableLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCursor
 
 	for (size_t i = 0; i < captions.size(); i++)
 	{
-		if (captions[i]->get_element_node()->computed_properties.caption_side.type == CSSValueCaptionSide::type_top)
+		if (captions[i]->get_element_node()->computed_values.get_box().caption_side.type == CSSValueCaptionSide::type_top)
 		{
 			captions[i]->containing_height = height;
 			captions[i]->calculate_content_top_down_heights();
@@ -166,7 +166,7 @@ void CSSTableLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCursor
 
 	for (size_t i = 0; i < captions.size(); i++)
 	{
-		if (captions[i]->get_element_node()->computed_properties.caption_side.type == CSSValueCaptionSide::type_bottom)
+		if (captions[i]->get_element_node()->computed_values.get_box().caption_side.type == CSSValueCaptionSide::type_bottom)
 		{
 			captions[i]->containing_height = height;
 			captions[i]->calculate_content_top_down_heights();
@@ -196,7 +196,7 @@ Rect CSSTableLayout::get_cell_border_box(size_t row, size_t col)
 	right = left + size_grid.get_width(col);
 	bottom = top + size_grid.get_height(row);
 
-	if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_collapse)
+	if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_collapse)
 	{
 		left -= get_layout(col, row)->border.left;
 		right += get_layout(col, row)->border.right;
@@ -215,24 +215,24 @@ void CSSTableLayout::render_cell_non_content(CSSLayoutGraphics *graphics, CSSRes
 
 	Rect border_box = get_cell_border_box(row, col);
 
-	CSSBackgroundRenderer background(graphics, resources, cell->get_element_node()->computed_properties);
+	CSSBackgroundRenderer background(graphics, resources, cell->get_element_node()->computed_values.get_box());
 	background.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong
 	background.set_content_box(border_box); // Bug: this is wrong
 	background.set_padding_box(border_box); // Bug: this is wrong
 	background.set_border_box(border_box);
 	background.render();
 
-	if (cell->get_element_node()->computed_properties.border_style_top.type == CSSValueBorderStyle::type_solid)
-		graphics->fill(Rect(border_box.left, border_box.top, border_box.right, border_box.top+cell->border.top), cell->get_element_node()->computed_properties.border_color_top.color);
+	if (cell->get_element_node()->computed_values.get_box().border_style_top.type == CSSValueBorderStyle::type_solid)
+		graphics->fill(Rect(border_box.left, border_box.top, border_box.right, border_box.top+cell->border.top), cell->get_element_node()->computed_values.get_box().border_color_top.color);
 
-	if (cell->get_element_node()->computed_properties.border_style_bottom.type == CSSValueBorderStyle::type_solid)
-		graphics->fill(Rect(border_box.left, (border_box.bottom-cell->border.bottom), border_box.right, border_box.bottom), cell->get_element_node()->computed_properties.border_color_bottom.color);
+	if (cell->get_element_node()->computed_values.get_box().border_style_bottom.type == CSSValueBorderStyle::type_solid)
+		graphics->fill(Rect(border_box.left, (border_box.bottom-cell->border.bottom), border_box.right, border_box.bottom), cell->get_element_node()->computed_values.get_box().border_color_bottom.color);
 
-	if (cell->get_element_node()->computed_properties.border_style_left.type == CSSValueBorderStyle::type_solid)
-		graphics->fill(Rect(border_box.left, (border_box.top+cell->border.top), (border_box.left+cell->border.left), (border_box.bottom-cell->border.bottom)), cell->get_element_node()->computed_properties.border_color_left.color);
+	if (cell->get_element_node()->computed_values.get_box().border_style_left.type == CSSValueBorderStyle::type_solid)
+		graphics->fill(Rect(border_box.left, (border_box.top+cell->border.top), (border_box.left+cell->border.left), (border_box.bottom-cell->border.bottom)), cell->get_element_node()->computed_values.get_box().border_color_left.color);
 
-	if (cell->get_element_node()->computed_properties.border_style_right.type == CSSValueBorderStyle::type_solid)
-		graphics->fill(Rect((border_box.right-cell->border.right), (border_box.top+cell->border.top), border_box.right, (border_box.bottom-cell->border.bottom)), cell->get_element_node()->computed_properties.border_color_right.color);
+	if (cell->get_element_node()->computed_values.get_box().border_style_right.type == CSSValueBorderStyle::type_solid)
+		graphics->fill(Rect((border_box.right-cell->border.right), (border_box.top+cell->border.top), border_box.right, (border_box.bottom-cell->border.bottom)), cell->get_element_node()->computed_values.get_box().border_color_right.color);
 }
 
 void CSSTableLayout::set_component_geometry()
@@ -377,7 +377,7 @@ void CSSTableLayout::calculate_minimum_cell_widths(CSSLayoutGraphics *graphics, 
 				else if (cell + 1 == columns.size())
 					cell_width += padding.right;
 
-				if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_separate)
+				if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_separate)
 					cell_width += get_layout(cell, row)->border.left + get_layout(cell, row)->border.right;
 
 				columns[cell].rows[row].minimum_width = cell_width;
@@ -407,7 +407,7 @@ void CSSTableLayout::calculate_preferred_cell_widths(CSSLayoutGraphics *graphics
 				else if (cell + 1 == columns.size())
 					cell_width += padding.right;
 
-				if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_separate)
+				if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_separate)
 					cell_width += get_layout(cell, row)->border.left + get_layout(cell, row)->border.right;
 
 				columns[cell].rows[row].maximum_width = cell_width;
@@ -466,11 +466,11 @@ CSSTableSizeGrid CSSTableLayout::create_minimum_width_grid(CSSLayoutGraphics *gr
 
 void CSSTableLayout::apply_non_content(CSSTableSizeGrid &grid)
 {
-	if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_separate)
+	if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_separate)
 	{
 		grid.apply_separate_table_border(border.left, border.top, border.right, border.bottom);
 		grid.apply_separate_table_padding(padding.left, padding.top, padding.right, padding.bottom);
-		grid.apply_separate_spacing(element_node->computed_properties.border_spacing.length1.value, element_node->computed_properties.border_spacing.length2.value);
+		grid.apply_separate_spacing(element_node->computed_values.get_box().border_spacing.length1.value, element_node->computed_values.get_box().border_spacing.length2.value);
 	}
 	else
 	{
@@ -495,7 +495,7 @@ void CSSTableLayout::calculate_cell_widths(CSSLayoutGraphics *graphics, CSSLayou
 	else
 		size_grid = create_preferred_width_grid(graphics, cursor);
 
-	if (element_node->computed_properties.width.type == CSSValueWidth::type_auto)
+	if (element_node->computed_values.get_box().width.type == CSSValueWidth::type_auto)
 	{
 		if (!containing_width.expanding && size_grid.get_table_width() > containing_width.value)
 		{
@@ -535,17 +535,17 @@ void CSSTableLayout::layout_cells(CSSLayoutGraphics *graphics, CSSLayoutCursor &
 	CSSUsedValue height_used = 0;
 	for (size_t row = 0; row < rows.size(); row++)
 	{
-		switch (rows[row].element->computed_properties.height.type)
+		switch (rows[row].element->computed_values.get_box().height.type)
 		{
 		default:
 		case CSSValueHeight::type_auto:
 			rows[row].height = 0.0f;
 			break;
 		case CSSValueHeight::type_length:
-			rows[row].height = rows[row].element->computed_properties.height.length.value;
+			rows[row].height = rows[row].element->computed_values.get_box().height.length.value;
 			break;
 		case CSSValueHeight::type_percentage:
-			rows[row].height = height.use_content ? 0.0f : (height.value * rows[row].element->computed_properties.height.percentage / 100.0f);
+			rows[row].height = height.use_content ? 0.0f : (height.value * rows[row].element->computed_values.get_box().height.percentage / 100.0f);
 			break;
 		}
 
@@ -557,7 +557,7 @@ void CSSTableLayout::layout_cells(CSSLayoutGraphics *graphics, CSSLayoutCursor &
 				for (int span = 0; span < get_column_span(cell, row); span++)
 					cell_content_width += columns[cell+span].cell_width;
 				cell_content_width -= get_layout(cell, row)->padding.left + get_layout(cell, row)->padding.right;
-				if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_separate)
+				if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_separate)
 					cell_content_width -= get_layout(cell, row)->border.left + get_layout(cell, row)->border.right;
 				get_layout(cell, row)->containing_width = width;
 				get_layout(cell, row)->calculate_top_down_widths(normal_strategy);
@@ -571,7 +571,7 @@ void CSSTableLayout::layout_cells(CSSLayoutGraphics *graphics, CSSLayoutCursor &
 					cell_height += padding.top;
 				else if (row + 1 == rows.size())
 					cell_height += padding.bottom;
-				if (element_node->computed_properties.border_collapse.type == CSSValueBorderCollapse::type_separate)
+				if (element_node->computed_values.get_box().border_collapse.type == CSSValueBorderCollapse::type_separate)
 					cell_height += get_layout(cell, row)->border.top + get_layout(cell, row)->border.bottom;
 				columns[cell].rows[row].height = cell_height;
 				rows[row].height = max(rows[row].height, cell_height);
@@ -622,7 +622,7 @@ void CSSTableLayout::position_cells(CSSLayoutCursor &cursor)
 					cell_padding_bottom += padding.bottom;
 
 				CSSUsedValue offset = 0.0f;
-				if (get_layout(cell, row)->get_element_node()->computed_properties.vertical_align.type == CSSValueVerticalAlign::type_middle)
+				if (get_layout(cell, row)->get_element_node()->computed_values.get_box().vertical_align.type == CSSValueVerticalAlign::type_middle)
 				{
 					CSSUsedValue center_height = get_layout(cell, row)->height.value + cell_padding_top + cell_padding_bottom;
 					offset = cell_padding_top + (size_grid.get_height(row) - center_height)/2.0f;
@@ -659,14 +659,14 @@ void CSSTableLayout::render_layer_background(CSSLayoutGraphics *graphics, CSSRes
 	Rect content_box = padding_box;
 	content_box.shrink(used_to_actual(padding.left), used_to_actual(padding.top), used_to_actual(padding.right), used_to_actual(padding.bottom));
 
-	CSSBackgroundRenderer background(graphics, resources, element_node->computed_properties);
+	CSSBackgroundRenderer background(graphics, resources, element_node->computed_values.get_box());
 	background.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong
 	background.set_content_box(content_box);
 	background.set_padding_box(padding_box);
 	background.set_border_box(border_box);
 	background.render();
 
-	CSSBorderRenderer border_renderer(graphics, resources, element_node->computed_properties);
+	CSSBorderRenderer border_renderer(graphics, resources, element_node->computed_values.get_box());
 	border_renderer.set_border_values(border.left, border.top, border.right, border.bottom);
 	border_renderer.set_border_box(border_box);
 	border_renderer.render();
@@ -688,7 +688,7 @@ void CSSTableLayout::render_layer_non_inline(CSSLayoutGraphics *graphics, CSSRes
 	for (size_t i = 0; i < captions.size(); i++)
 	{
 		bool is_same_stacking_context = (stacking_context == captions[i]->get_stacking_context());
-		bool is_positioned = (captions[i]->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+		bool is_positioned = (captions[i]->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context && !is_positioned)
 		{
 			captions[i]->render_layer_background(graphics, resources, false);
@@ -704,7 +704,7 @@ void CSSTableLayout::render_layer_non_inline(CSSLayoutGraphics *graphics, CSSRes
 			{
 				CSSLayoutTreeNode *cell_node = get_layout(cell, row);
 				bool is_same_stacking_context = (stacking_context == cell_node->get_stacking_context());
-				bool is_positioned = (cell_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+				bool is_positioned = (cell_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 				bool is_float = cell_node->get_element_node()->is_float();
 				if (is_same_stacking_context && !is_positioned && !is_float)
 					cell_node->render_layer_non_inline(graphics, resources);
@@ -723,7 +723,7 @@ void CSSTableLayout::render_layer_floats(CSSLayoutGraphics *graphics, CSSResourc
 			{
 				CSSLayoutTreeNode *cell_node = get_layout(cell, row);
 				bool is_same_stacking_context = (stacking_context == cell_node->get_stacking_context());
-				bool is_positioned = (cell_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+				bool is_positioned = (cell_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 				bool is_float = cell_node->get_element_node()->is_float();
 				if (is_same_stacking_context && !is_positioned)
 				{
@@ -749,7 +749,7 @@ void CSSTableLayout::render_layer_inline(CSSLayoutGraphics *graphics, CSSResourc
 	for (size_t i = 0; i < captions.size(); i++)
 	{
 		bool is_same_stacking_context = (stacking_context == captions[i]->get_stacking_context());
-		bool is_positioned = (captions[i]->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+		bool is_positioned = (captions[i]->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context && !is_positioned)
 		{
 			captions[i]->render_layer_inline(graphics, resources);
@@ -764,7 +764,7 @@ void CSSTableLayout::render_layer_inline(CSSLayoutGraphics *graphics, CSSResourc
 			{
 				CSSLayoutTreeNode *cell_node = get_layout(cell, row);
 				bool is_same_stacking_context = (stacking_context == cell_node->get_stacking_context());
-				bool is_positioned = (cell_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+				bool is_positioned = (cell_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 				bool is_float = cell_node->get_element_node()->is_float();
 				if (is_same_stacking_context && !is_positioned && !is_float)
 					cell_node->render_layer_inline(graphics, resources);
@@ -778,7 +778,7 @@ void CSSTableLayout::render_layer_positioned(CSSLayoutGraphics *graphics, CSSRes
 	for (size_t i = 0; i < captions.size(); i++)
 	{
 		bool is_same_stacking_context = (stacking_context == captions[i]->get_stacking_context());
-		bool is_positioned = (captions[i]->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+		bool is_positioned = (captions[i]->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 		if (is_same_stacking_context)
 		{
 			if (is_positioned)
@@ -800,7 +800,7 @@ void CSSTableLayout::render_layer_positioned(CSSLayoutGraphics *graphics, CSSRes
 			{
 				CSSLayoutTreeNode *cell_node = get_layout(cell, row);
 				bool is_same_stacking_context = (stacking_context == cell_node->get_stacking_context());
-				bool is_positioned = (cell_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+				bool is_positioned = (cell_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 				int level = cell_node->get_stacking_context()->get_level();
 				if (is_same_stacking_context)
 				{

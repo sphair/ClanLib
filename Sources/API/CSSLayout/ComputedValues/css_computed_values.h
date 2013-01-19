@@ -33,6 +33,8 @@
 namespace clan
 {
 
+class CSSSelectResult;
+class CSSStyleProperties;
 class CSSPropertyValue;
 class CSSComputedBox;
 class CSSComputedValues_Impl;
@@ -46,10 +48,12 @@ public:
 	bool is_null() const;
 
 	void set_parent(const CSSComputedValues &parent);
-	void set_values(const std::vector<CSSPropertyValue *> &values);
+	void set_specified_values(const CSSSelectResult &selected_values);
+	void set_specified_values(const CSSSelectResult &selected_values, const std::string &style_values);
+	void set_specified_values(const CSSSelectResult &selected_values, const CSSStyleProperties &style_values);
 
-	const CSSComputedBox &get_box();
-	int get_box_generation();
+	const CSSComputedBox &get_box() const;
+	int get_box_generation() const;
 
 private:
 	std::shared_ptr<CSSComputedValues_Impl> impl;

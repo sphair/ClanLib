@@ -44,7 +44,7 @@ bool CSSInlineLayoutRenderLayerPositioned::node(CSSInlineGeneratedBox *cur)
 	{
 		CSSLayoutTreeNode *object_node = cur->layout_node;
 		bool is_same_stacking_context = (stacking_context == object_node->get_stacking_context());
-		bool is_positioned = (object_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_static);
+		bool is_positioned = (object_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static);
 		int level = object_node->get_stacking_context()->get_level();
 		if (is_same_stacking_context)
 		{

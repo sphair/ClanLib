@@ -49,20 +49,37 @@ bool CSSComputedValues::is_null() const
 
 void CSSComputedValues::set_parent(const CSSComputedValues &parent)
 {
+	impl->parent = parent;
+	impl->specified_values_changed = true;
 }
 
-void CSSComputedValues::set_values(const std::vector<CSSPropertyValue *> &values)
+void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_values)
 {
+	set_specified_values(selected_values, CSSStyleProperties());
 }
 
-const CSSComputedBox &CSSComputedValues::get_box()
+void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_values, const std::string &style_values)
 {
+	set_specified_values(selected_values, CSSStyleProperties(style_values));
+}
+
+void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_values, const CSSStyleProperties &style_values)
+{
+	impl->specified_values_changed = true;
+	impl->selected_values = selected_values;
+	impl->style_values = style_values;
+}
+
+const CSSComputedBox &CSSComputedValues::get_box() const
+{
+	const_cast<CSSComputedValues*>(this)->impl->update_if_changed();
 	return impl->box;
 }
 
-int CSSComputedValues::get_box_generation()
+int CSSComputedValues::get_box_generation() const
 {
-	return 0;
+	const_cast<CSSComputedValues*>(this)->impl->update_if_changed();
+	return impl->box_generation;
 }
 
 }

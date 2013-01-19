@@ -186,8 +186,8 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 		{
 			CSSLayoutTreeNode *layout_node = line_start_pos.box->layout_node;
 
-			if (layout_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_absolute &&
-				layout_node->get_element_node()->computed_properties.position.type != CSSValuePosition::type_fixed)
+			if (layout_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_absolute &&
+				layout_node->get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_fixed)
 			{
 				generate_block_line(line_start_pos);
 				layout_block_line(lines.back(), graphics, cursor, strategy);
@@ -261,13 +261,13 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 					CSSActualValue text_indent = 0;
 					if (lines.empty())
 					{
-						if (element_node->computed_properties.text_indent.type == CSSValueTextIndent::type_length)
+						if (element_node->computed_values.get_box().text_indent.type == CSSValueTextIndent::type_length)
 						{
-							text_indent = used_to_actual(element_node->computed_properties.text_indent.length.value);
+							text_indent = used_to_actual(element_node->computed_values.get_box().text_indent.length.value);
 						}
-						else if (element_node->computed_properties.text_indent.type == CSSValueTextIndent::type_percentage)
+						else if (element_node->computed_values.get_box().text_indent.type == CSSValueTextIndent::type_percentage)
 						{
-							text_indent = used_to_actual(width.value * element_node->computed_properties.text_indent.percentage / 100.0f);
+							text_indent = used_to_actual(width.value * element_node->computed_values.get_box().text_indent.percentage / 100.0f);
 						}
 					}
 
@@ -344,7 +344,7 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 
 void CSSInlineLayout::layout_absolute_and_fixed_content(CSSLayoutGraphics *graphics, CSSResourceCache *resources, Rect containing_block, const Size &viewport_size)
 {
-	if (get_element_node()->computed_properties.position.type != CSSValuePosition::type_static)
+	if (get_element_node()->computed_values.get_box().position.type != CSSValuePosition::type_static)
 	{
 		Rect rect = get_padding_box();
 		containing_block = rect;
@@ -512,16 +512,16 @@ void CSSInlineLayout::layout_line(CSSInlineGeneratedBox *line, Rect &line_box, C
 	CSSInlineLayoutLayoutLine visitor(this, line, line_box, graphics, resources);
 	line->self_and_descendants(&visitor);
 
-	switch (get_element_node()->computed_properties.line_height.type)
+	switch (get_element_node()->computed_values.get_box().line_height.type)
 	{
 	default:
 	case CSSValueLineHeight::type_normal:
 		break;
 	case CSSValueLineHeight::type_length:
-		line->height = max(line->height, used_to_actual(get_element_node()->computed_properties.line_height.length.value));
+		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_box().line_height.length.value));
 		break;
 	case CSSValueLineHeight::type_number:
-		line->height = max(line->height, used_to_actual(get_element_node()->computed_properties.line_height.number * get_element_node()->computed_properties.font_size.length.value));
+		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_box().line_height.number * get_element_node()->computed_values.get_box().font_size.length.value));
 		break;
 	}
 
@@ -549,12 +549,12 @@ void CSSInlineLayout::layout_block_line(CSSInlineGeneratedBox *line, CSSLayoutGr
 	else
 	{
 		int box_y = used_to_actual(cursor.y+cursor.get_total_margin());
-		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_left || line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
+		if (line->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_left || line->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_both)
 		{
 			int clear_left = formatting_context->find_left_clearance();
 			box_y = max(box_y, clear_left);
 		}
-		if (line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_right || line->layout_node->get_element_node()->computed_properties.clear.type == CSSValueClear::type_both)
+		if (line->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_right || line->layout_node->get_element_node()->computed_values.get_box().clear.type == CSSValueClear::type_both)
 		{
 			int clear_right = formatting_context->find_right_clearance();
 			box_y = max(box_y, clear_right);
