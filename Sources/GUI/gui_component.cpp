@@ -200,12 +200,12 @@ std::vector<std::string> GUIComponent::get_pseudo_classes() const
 	return impl->element.get_pseudo_classes();
 }
 
-const CSSBoxProperties &GUIComponent::get_css_properties() const
+const CSSComputedBox &GUIComponent::get_css_properties() const
 {
 	return impl->element.get_css_properties();
 }
 
-CSSBoxProperties &GUIComponent::get_css_properties()
+CSSComputedBox &GUIComponent::get_css_properties()
 {
 	return impl->element.get_css_properties();
 }
@@ -667,7 +667,7 @@ Callback_0<bool> &GUIComponent::func_pointer_exit()
 	return impl->func_pointer_exit;
 }
 
-Callback_v1<CSSBoxProperties &> &GUIComponent::func_apply_properties()
+Callback_v1<CSSComputedBox &> &GUIComponent::func_apply_properties()
 {
 	return impl->element.func_apply_properties;
 }
@@ -739,7 +739,7 @@ bool GUIComponent::is_double_click_enabled() const
 
 Font GUIComponent::get_font() const
 {
-	const CSSBoxProperties &properties = get_css_properties();
+	const CSSComputedBox &properties = get_css_properties();
 	Canvas canvas = get_canvas();
 	return GUIComponent_Impl::get_font(canvas, properties);
 }

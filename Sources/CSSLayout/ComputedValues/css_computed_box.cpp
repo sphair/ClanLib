@@ -27,27 +27,24 @@
 */
 
 #include "CSSLayout/precomp.h"
-#include "API/CSSLayout/css_box_properties.h"
-#include "API/CSSLayout/CSSDocument/css_document.h"
-#include "API/CSSLayout/CSSDocument/css_property_value.h"
-#include "PropertyParsers/css_property_parsers.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
-
-void CSSBoxProperties::apply_properties(const std::string &style_string)
+/*
+void CSSComputedBox::apply_properties(const std::string &style_string)
 {
 	apply_properties(CSSDocument::get_style_properties(style_string));
 }
 
-void CSSBoxProperties::apply_properties(const std::vector<CSSPropertyValue *> &css_properties)
+void CSSComputedBox::apply_properties(const std::vector<CSSPropertyValue *> &css_properties)
 {
 	CSSPropertyParsers property_parsers;
 	for (size_t i = css_properties.size(); i > 0; i--)
 		property_parsers.parse(*this, css_properties[i-1]);
 }
-
-void CSSBoxProperties::compute(const CSSBoxProperties *parent, CSSResourceCache *layout)
+*/
+void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *layout)
 {
 	bool is_containing_block_width_auto = false;
 	bool is_containing_block_height_auto = false;

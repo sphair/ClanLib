@@ -29,7 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_right.h"
 #include "API/CSSLayout/PropertyValues/css_value_left.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../css_resource_cache.h"
 
 namespace clan
@@ -40,7 +40,7 @@ CSSValueRight::CSSValueRight()
 {
 }
 
-void CSSValueRight::compute(CSSValueLeft &left, CSSValueRight &right, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr)
+void CSSValueRight::compute(CSSValueLeft &left, CSSValueRight &right, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr)
 {
 	if (left.type == CSSValueLeft::type_inherit)
 	{

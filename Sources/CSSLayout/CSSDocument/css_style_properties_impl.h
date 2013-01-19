@@ -26,42 +26,17 @@
 **    Magnus Norddahl
 */
 
-#include "CSSLayout/precomp.h"
-#include "css_parser_flex_shrink.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#pragma once
 
 namespace clan
 {
 
-std::vector<std::string> CSSParserFlexShrink::get_names()
-{
-	std::vector<std::string> names;
-	names.push_back("flex-shrink");
-	return names;
-}
+class CSSPropertyValue;
 
-void CSSParserFlexShrink::parse(const std::string &name, const std::vector<CSSToken> &tokens, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
+class CSSStyleProperties_Impl
 {
-	std::unique_ptr<CSSValueFlexShrink> flex_shrink(new CSSValueFlexShrink());
-
-	size_t pos = 0;
-	CSSToken token = next_token(pos, tokens);
-	if (token.type == CSSToken::type_ident && pos == tokens.size())
-	{
-		if (equals(token.value, "inherit"))
-			flex_shrink->type = CSSValueFlexShrink::type_inherit;
-		else
-			return;
-	}
-	else if (token.type == CSSToken::type_number && pos == tokens.size())
-	{
-		flex_shrink->type = CSSValueFlexShrink::type_number;
-		flex_shrink->number = StringHelp::text_to_float(token.value);
-	}
-	else
-	{
-		return;
-	}
-}
+public:
+	std::vector<std::unique_ptr<CSSPropertyValue> > values;
+};
 
 }

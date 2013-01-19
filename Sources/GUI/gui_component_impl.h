@@ -33,7 +33,7 @@
 #include "API/Core/Signals/signal_v1.h"
 #include "API/Core/Math/rect.h"
 #include "API/GUI/gui_component.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "Layout/gui_css_used_values.h"
 #include <vector>
@@ -137,7 +137,7 @@ public:
 	void update_style();
 
 	static SpanLayout create_span_layout( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_rect );
-	static Font get_font(Canvas &canvas, const CSSBoxProperties &properties);
+	static Font get_font(Canvas &canvas, const CSSComputedBox &properties);
 	static Rect render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only );
 	static Rect get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box );
 	static CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);

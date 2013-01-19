@@ -32,7 +32,7 @@ namespace clan
 {
 
 class CSSResourceCache;
-class CSSBoxProperties;
+class CSSComputedBox;
 
 class CSSPropertyValue
 {

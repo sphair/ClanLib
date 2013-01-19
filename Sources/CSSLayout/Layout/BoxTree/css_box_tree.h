@@ -62,7 +62,7 @@ private:
 	void clean(CSSBoxNode *node = 0);
 	CSSBoxNode *create_node(const DomNode &node);
 	void create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element);
-	CSSBoxProperties get_css_properties(const DomElement &element, const std::string &pseudo_element = std::string());
+	CSSComputedBox get_css_properties(const DomElement &element, const std::string &pseudo_element = std::string());
 	void compute_element(CSSBoxElement *element, CSSResourceCache *resource_cache);
 	void propagate_html_body();
 	void create_anonymous_blocks(CSSBoxElement *element, CSSResourceCache *resource_cache);

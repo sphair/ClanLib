@@ -32,7 +32,7 @@ namespace clan
 {
 
 class CSSToken;
-class CSSBoxProperties;
+class CSSComputedBox;
 class CSSLength;
 class CSSPropertyValue;
 

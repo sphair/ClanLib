@@ -59,7 +59,7 @@ GUIElement::~GUIElement()
 
 void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &document)
 {
-	css_properties = CSSBoxProperties();
+	css_properties = CSSComputedBox();
 
 	GUIComponentSelectNode select_node(this);
 	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);

@@ -43,7 +43,7 @@ class CSSValueRight : public CSSPropertyValue
 public:
 	CSSValueRight();
 	std::string to_string() const;
-	static void compute(CSSValueLeft &left, CSSValueRight &right, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr);
+	static void compute(CSSValueLeft &left, CSSValueRight &right, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr);
 
 	enum Type
 	{

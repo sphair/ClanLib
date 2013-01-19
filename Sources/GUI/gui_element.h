@@ -30,7 +30,7 @@
 #pragma once
 
 #include <memory>
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "API/Core/Signals/callback_v1.h"
 #include "API/Core/Signals/signal_v0.h"
 
@@ -65,8 +65,8 @@ public:
 	GUIElement *get_previous_sibling() { return prev_sibling; }
 	const GUIElement *get_next_sibling() const { return next_sibling; }
 	GUIElement *get_next_sibling() { return next_sibling; }
-	const CSSBoxProperties &get_css_properties() const { return css_properties; }
-	CSSBoxProperties &get_css_properties() { return css_properties; }
+	const CSSComputedBox &get_css_properties() const { return css_properties; }
+	CSSComputedBox &get_css_properties() { return css_properties; }
 	const GUIElement *get_parent_component() const { return parent; }
 	const std::string &get_tag_name() const { return tag_name; }
 	const std::string &get_id() const { return id;}
@@ -109,7 +109,7 @@ public:
 /// \{
 public:
 	Signal_v0 sig_style_changed;
-	Callback_v1<CSSBoxProperties &> func_apply_properties;
+	Callback_v1<CSSComputedBox &> func_apply_properties;
 
 /// \}
 
@@ -129,7 +129,7 @@ private:
 	GUIElement *first_child;
 	GUIElement *last_child;
 
-	CSSBoxProperties css_properties;
+	CSSComputedBox css_properties;
 
 	std::string tag_name;
 	std::string id;

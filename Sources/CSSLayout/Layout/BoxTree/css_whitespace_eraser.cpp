@@ -30,7 +30,7 @@
 #include "css_whitespace_eraser.h"
 #include "css_box_element.h"
 #include "css_box_text.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -43,7 +43,7 @@ void CSSWhitespaceEraser::remove_whitespace(CSSBoxElement *root_element)
 		CSSBoxText *child_text = dynamic_cast<CSSBoxText*>(cur);
 		if (child_text)
 		{
-			const CSSBoxProperties &text_properties = child_text->get_properties();
+			const CSSComputedBox &text_properties = child_text->get_properties();
 			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
 				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{
@@ -110,7 +110,7 @@ size_t CSSWhitespaceEraser::erase_space_before(CSSBoxText *text, size_t pos)
 		CSSBoxText *cur_text = dynamic_cast<CSSBoxText*>(cur);
 		if (cur_text)
 		{
-			const CSSBoxProperties &text_properties = cur_text->get_properties();
+			const CSSComputedBox &text_properties = cur_text->get_properties();
 			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
 				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{
@@ -147,7 +147,7 @@ void CSSWhitespaceEraser::erase_space_after(CSSBoxText *text, size_t pos)
 		CSSBoxText *cur_text = dynamic_cast<CSSBoxText*>(cur);
 		if (cur_text)
 		{
-			const CSSBoxProperties &text_properties = cur_text->get_properties();
+			const CSSComputedBox &text_properties = cur_text->get_properties();
 			if (text_properties.white_space.type != CSSValueWhiteSpace::type_pre &&
 				text_properties.white_space.type != CSSValueWhiteSpace::type_pre_wrap)
 			{

@@ -47,7 +47,7 @@ bool CSSInlineLayoutRenderLayerInline::node(CSSInlineGeneratedBox *cur)
 	CSSBoxText *text = dynamic_cast<CSSBoxText*>(node);
 	if (text)
 	{
-		const CSSBoxProperties &properties = text->get_properties();
+		const CSSComputedBox &properties = text->get_properties();
 		if (properties.visibility.type == CSSValueVisibility::type_visible)
 		{
 			Font font = graphics->get_font(properties);

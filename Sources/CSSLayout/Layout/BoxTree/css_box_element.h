@@ -29,7 +29,7 @@
 #pragma once
 
 #include "css_box_node.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -40,8 +40,8 @@ public:
 	CSSBoxElement();
 
 	std::string name;
-	CSSBoxProperties properties;
-	CSSBoxProperties computed_properties;
+	CSSComputedBox properties;
+	CSSComputedBox computed_properties;
 	int col_span;
 	int row_span;
 

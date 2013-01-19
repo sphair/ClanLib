@@ -36,7 +36,7 @@
 #include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/Layout/BoxTree/css_box_text.h"
 #include "CSSLayout/css_resource_cache.h"
-#include "API/CSSLayout/css_box_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "add_content_margin_top.h"
 #include "calculate_top_down_heights.h"
 #include "create_linebreak_opportunities.h"
@@ -596,7 +596,7 @@ void CSSInlineLayout::adjust_start_of_line_text_range(CSSBoxText *text, size_t &
 {
 	if (start_of_line && text_start < text_end)
 	{
-		const CSSBoxProperties &properties = text->get_properties();
+		const CSSComputedBox &properties = text->get_properties();
 		if (properties.white_space.type == CSSValueWhiteSpace::type_pre || properties.white_space.type == CSSValueWhiteSpace::type_pre_wrap)
 		{
 			start_of_line = false;

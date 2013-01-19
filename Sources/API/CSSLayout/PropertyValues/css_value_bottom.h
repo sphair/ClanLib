@@ -43,7 +43,7 @@ public:
 	CSSValueBottom();
 	std::string to_string() const;
 
-	static void compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSBoxProperties *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position);
+	static void compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position);
 
 	enum Type
 	{

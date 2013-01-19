@@ -48,7 +48,7 @@ public:
 	void set_parent(const CSSComputedValues &parent);
 	void set_values(const std::vector<CSSPropertyValue *> &values);
 
-	const CSSComputedBox *get_box();
+	const CSSComputedBox &get_box();
 	int get_box_generation();
 
 private:

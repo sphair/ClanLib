@@ -55,7 +55,7 @@ const CSSBoxElement *CSSBoxText::get_parent_element() const
 	throw Exception("CSSBoxText node has no element parent!");
 }
 
-const CSSBoxProperties &CSSBoxText::get_properties() const
+const CSSComputedBox &CSSBoxText::get_properties() const
 {
 	return get_parent_element()->computed_properties;
 }

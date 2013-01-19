@@ -55,9 +55,9 @@ void CSSComputedValues::set_values(const std::vector<CSSPropertyValue *> &values
 {
 }
 
-const CSSComputedBox *CSSComputedValues::get_box()
+const CSSComputedBox &CSSComputedValues::get_box()
 {
-	return nullptr;
+	return impl->box;
 }
 
 int CSSComputedValues::get_box_generation()
