@@ -30,6 +30,7 @@
 #pragma once
 
 #include <memory>
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "API/Core/Signals/callback_v1.h"
 #include "API/Core/Signals/signal_v0.h"
@@ -37,6 +38,7 @@
 namespace clan
 {
 
+class GUIComponent;
 class GUIElement_Impl;
 class CSSDocument;
 class CSSResourceCache;
@@ -65,8 +67,7 @@ public:
 	GUIElement *get_previous_sibling() { return prev_sibling; }
 	const GUIElement *get_next_sibling() const { return next_sibling; }
 	GUIElement *get_next_sibling() { return next_sibling; }
-	const CSSComputedBox &get_css_properties() const { return css_properties; }
-	CSSComputedBox &get_css_properties() { return css_properties; }
+	const CSSComputedValues &get_css_values() const;
 	const GUIElement *get_parent_component() const { return parent; }
 	const std::string &get_tag_name() const { return tag_name; }
 	const std::string &get_id() const { return id;}
@@ -85,13 +86,12 @@ public:
 /// \name Operations
 /// \{
 public:
+	/// \brief Sets the component owning this element
+	void set_component(GUIComponent *component);
 
-	/// \brief Returns true if the style was updated since the last call to this function
-	bool style_updated();
-
-	void set_tag_name(const std::string &name) { tag_name = name; }
-	void set_class(const std::string &name) { class_string = name; }
-	void set_id(const std::string &name) { id = name; }
+	void set_tag_name(const std::string &name);
+	void set_class(const std::string &name);
+	void set_id(const std::string &name);
 
 	/// \brief Controls the presence of a DOM pseudo class
 	///
@@ -100,9 +100,6 @@ public:
 
 	/// \brief Makes this element a child of the given element, removing it from the previous parent.
 	void set_parent(GUIElement *new_parent);
-
-	/// \brief Re-evaluates which CSS selectors match this component
-	void update_style(CSSResourceCache *resource_cache, CSSDocument &document);
 
 /// \}
 /// \name Signals and callbacks
@@ -116,12 +113,16 @@ public:
 /// \name Implementation
 /// \{
 private:
-	/// \brief Constructs a GUIElement
-	///
-	/// \param other = GUIElement
-	GUIElement(GUIElement &other);
+	/// \brief Updates style_needs_update recursively
+	void set_style_needs_update();
 
-	GUIElement &operator =(const GUIElement &other);
+	/// \brief Re-evaluates which CSS selectors match this component
+	void update_style();
+
+	GUIElement(const GUIElement &other); // Do not implement; copy construction not allowed
+	GUIElement &operator =(const GUIElement &other); // Do not implement; copy construction not allowed
+
+	GUIComponent *component;
 
 	GUIElement *parent;
 	GUIElement *prev_sibling;
@@ -129,14 +130,14 @@ private:
 	GUIElement *first_child;
 	GUIElement *last_child;
 
-	CSSComputedBox css_properties;
+	CSSComputedValues computed_values;
 
 	std::string tag_name;
 	std::string id;
 	std::string class_string;
 	std::vector<std::string> pseudo_classes;
 
-	bool has_style_updated;
+	bool style_needs_update;
 /// \}
 };
 

@@ -134,7 +134,6 @@ public:
 	void layout_content();
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void update_style();
 
 	static SpanLayout create_span_layout( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_rect );
 	static Font get_font(Canvas &canvas, const CSSComputedBox &properties);
