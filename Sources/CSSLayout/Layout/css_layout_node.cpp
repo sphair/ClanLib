@@ -214,10 +214,10 @@ std::string CSSLayoutNode_Impl::print_node(CSSBoxNode *node, int indent)
 
 	if (element)
 	{
-		//if (element->computed_properties.font_family.names.empty())
-			output_string += string_format("%1 { display: %2; float: %3; width: %4 }\r\n", element->name, to_string(element->computed_properties.display), to_string(element->computed_properties.float_box), to_string(element->computed_properties.width));
+		//if (element->computed_values.get_box().font_family.names.empty())
+			output_string += string_format("%1 { display: %2; float: %3; width: %4 }\r\n", element->name, to_string(element->computed_values.get_box().display), to_string(element->computed_values.get_box().float_box), to_string(element->computed_values.get_box().width));
 		//else
-		//	output_string += string_format("%1 { font-family: %2 }\r\n", element->name, element->computed_properties.font_family.names[0].name);
+		//	output_string += string_format("%1 { font-family: %2 }\r\n", element->name, element->computed_values.get_box().font_family.names[0].name);
 	}
 	else if (text)
 	{

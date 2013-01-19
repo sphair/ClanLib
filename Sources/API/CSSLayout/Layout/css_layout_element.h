@@ -48,9 +48,6 @@ public:
 	void set_col_span(int span);
 	void set_row_span(int span);
 
-	void apply_properties(const std::vector<CSSPropertyValue *> &properties);
-	void apply_properties(const std::string &style_string, const std::string &base_uri = std::string());
-
 	void insert_before(CSSLayoutNode &new_child, CSSLayoutNode &ref_child);
 	void append_child(CSSLayoutNode &new_child);
 	void remove_child(CSSLayoutNode &old_child);

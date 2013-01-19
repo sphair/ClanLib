@@ -49,7 +49,6 @@ public:
 	void set_root_element(CSSBoxElement *new_root_element);
 	void set_html_body_element(CSSBoxElement *new_html_body_element);
 	void prepare(CSSResourceCache *resource_cache);
-	void apply_properties(CSSBoxElement *node, const std::vector<CSSPropertyValue *> &properties);
 	void set_selection(CSSBoxNode *start, size_t start_text_offset, CSSBoxNode *end, size_t end_text_offset);
 
 	CSSDocument css;
@@ -59,11 +58,9 @@ public:
 	const CSSBoxElement *get_html_body_element() const { return html_body_element; }
 
 private:
-	void clean(CSSBoxNode *node = 0);
-	CSSBoxNode *create_node(const DomNode &node);
+	void clean(CSSBoxNode *node = nullptr);
+	CSSBoxNode *create_node(const DomNode &node, CSSBoxNode *parent = nullptr);
 	void create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element);
-	CSSComputedBox get_css_properties(const DomElement &element, const std::string &pseudo_element = std::string());
-	void compute_element(CSSBoxElement *element, CSSResourceCache *resource_cache);
 	void propagate_html_body();
 	void create_anonymous_blocks(CSSBoxElement *element, CSSResourceCache *resource_cache);
 	void filter_table(CSSResourceCache *resource_cache);

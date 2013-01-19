@@ -57,7 +57,7 @@ const CSSBoxElement *CSSBoxText::get_parent_element() const
 
 const CSSComputedBox &CSSBoxText::get_properties() const
 {
-	return get_parent_element()->computed_properties;
+	return get_parent_element()->computed_values.get_box();
 }
 
 }

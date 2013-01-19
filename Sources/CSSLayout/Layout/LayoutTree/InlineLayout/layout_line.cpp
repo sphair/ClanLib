@@ -91,19 +91,19 @@ bool CSSInlineLayoutLayoutLine::node(CSSInlineGeneratedBox *cur)
 		else
 		{
 			if (cur->opening)
-				x += used_to_actual(layout->get_css_margin_width(element->computed_properties.margin_width_left, layout->containing_width)) + used_to_actual(element->computed_properties.border_width_left.length.value) + used_to_actual(layout->get_css_padding_width(element->computed_properties.padding_width_left, layout->containing_width));
+				x += used_to_actual(layout->get_css_margin_width(element->computed_values.get_box().margin_width_left, layout->containing_width)) + used_to_actual(element->computed_values.get_box().border_width_left.length.value) + used_to_actual(layout->get_css_padding_width(element->computed_values.get_box().padding_width_left, layout->containing_width));
 			cur->x = x;
-			cur->height = used_to_actual(element->computed_properties.line_height.length.value);
-			switch (element->computed_properties.line_height.type)
+			cur->height = used_to_actual(element->computed_values.get_box().line_height.length.value);
+			switch (element->computed_values.get_box().line_height.type)
 			{
 			default:
 			case CSSValueLineHeight::type_normal:
 				break;
 			case CSSValueLineHeight::type_length:
-				cur->height = used_to_actual(element->computed_properties.line_height.length.value);
+				cur->height = used_to_actual(element->computed_values.get_box().line_height.length.value);
 				break;
 			case CSSValueLineHeight::type_number:
-				cur->height = used_to_actual(element->computed_properties.line_height.number * element->computed_properties.font_size.length.value);
+				cur->height = used_to_actual(element->computed_values.get_box().line_height.number * element->computed_values.get_box().font_size.length.value);
 				break;
 			}
 		}
@@ -123,7 +123,7 @@ void CSSInlineLayoutLayoutLine::close_node(CSSInlineGeneratedBox *cur)
 	}
 	if (element && cur->closing && (cur->layout_node == 0 || !(cur->layout_node->is_replaced() || cur->layout_node->get_element_node()->is_inline_block_level())))
 	{
-		x += used_to_actual(layout->get_css_margin_width(element->computed_properties.margin_width_right, layout->containing_width)) + used_to_actual(element->computed_properties.border_width_right.length.value) + used_to_actual(layout->get_css_padding_width(element->computed_properties.padding_width_right, layout->containing_width));
+		x += used_to_actual(layout->get_css_margin_width(element->computed_values.get_box().margin_width_right, layout->containing_width)) + used_to_actual(element->computed_values.get_box().border_width_right.length.value) + used_to_actual(layout->get_css_padding_width(element->computed_values.get_box().padding_width_right, layout->containing_width));
 	}
 }
 

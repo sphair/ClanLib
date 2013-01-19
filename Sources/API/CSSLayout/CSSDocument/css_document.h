@@ -30,6 +30,7 @@
 
 #include "../api_csslayout.h"
 #include "../../Core/IOData/virtual_directory.h"
+#include "css_select_result.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +41,6 @@ class DomElement;
 class CSSProperty;
 class CSSSelectNode;
 class CSSPropertyValue;
-class CSSSelectResult;
 class CSSDocument_Impl;
 
 enum CSSSheetOrigin

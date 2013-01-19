@@ -60,7 +60,7 @@ bool CSSInlineLayoutGetWidth::node(CSSInlineGeneratedBox *box, size_t text_start
 		}
 		else
 		{
-			width += used_to_actual(tree_node->get_css_margin_width(element->computed_properties.margin_width_left, tree_node->containing_width)) + used_to_actual(element->computed_properties.border_width_left.length.value) + used_to_actual(tree_node->get_css_padding_width(element->computed_properties.padding_width_left, tree_node->containing_width));
+			width += used_to_actual(tree_node->get_css_margin_width(element->computed_values.get_box().margin_width_left, tree_node->containing_width)) + used_to_actual(element->computed_values.get_box().border_width_left.length.value) + used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_box().padding_width_left, tree_node->containing_width));
 		}
 	}
 	return true;
@@ -70,7 +70,7 @@ void CSSInlineLayoutGetWidth::close_node(CSSInlineGeneratedBox *box)
 {
 	CSSBoxElement *element = dynamic_cast<CSSBoxElement *>(box->box_node);
 	if (element && !element->is_float() && (box->layout_node == 0 || !(box->layout_node->is_replaced() || box->layout_node->get_element_node()->is_inline_block_level())))
-		width += used_to_actual(tree_node->get_css_margin_width(element->computed_properties.margin_width_right, tree_node->containing_width)) + used_to_actual(element->computed_properties.border_width_right.length.value) + used_to_actual(tree_node->get_css_padding_width(element->computed_properties.padding_width_right, tree_node->containing_width));
+		width += used_to_actual(tree_node->get_css_margin_width(element->computed_values.get_box().margin_width_right, tree_node->containing_width)) + used_to_actual(element->computed_values.get_box().border_width_right.length.value) + used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_box().padding_width_right, tree_node->containing_width));
 }
 
 }
