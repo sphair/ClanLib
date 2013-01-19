@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_select_result.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/iodevice_memory.h"
 #include "css_document_impl.h"
@@ -83,13 +84,13 @@ void CSSDocument::add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std
 	impl->sheets.push_back(std::shared_ptr<CSSDocumentSheet>(new CSSDocumentSheet(origin, tokenizer, base_uri)));
 }
 
-std::vector<CSSPropertyValue *> CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
+CSSSelectResult CSSDocument::select(const DomElement &node, const std::string &pseudo_element)
 {
 	DomSelectNode select_node(node);
 	return select(&select_node, pseudo_element);
 }
 
-std::vector<CSSPropertyValue *> CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
+CSSSelectResult CSSDocument::select(CSSSelectNode *node, const std::string &pseudo_element)
 {
 	// CSS2.1: 6.4.1 Cascading order
 
@@ -113,7 +114,8 @@ std::vector<CSSPropertyValue *> CSSDocument::select(CSSSelectNode *node, const s
 			properties.push_back(rulesets[i-1].ruleset->values[j-1].get());
 		}
 	}
-	return properties;
+
+	return CSSSelectResult(properties);
 }
 
 std::string CSSDocument::get_default_html_sheet()
