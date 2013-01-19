@@ -41,7 +41,7 @@ namespace clan
 {
 
 class GUIComponent;
-class CSSComputedBox;
+class CSSComputedValues;
 class GUIThemePart_Impl;
 class Font;
 class Canvas;
@@ -74,10 +74,7 @@ public:
 	void throw_if_null() const;
 
 	/// \brief Returns the standard W3C CSS properties active for this component
-	const CSSComputedBox &get_css_properties() const;
-
-	/// \brief Returns the standard W3C CSS properties active for this component
-	CSSComputedBox &get_css_properties();
+	const CSSComputedValues &get_css_values() const;
 
 	/// \brief Gets the font
 	Font get_font() const;
@@ -136,9 +133,6 @@ public:
 public:
 	/// \brief Renders the component and its children.
 	void render_box(Canvas &canvas, const Rect &border_box);
-
-	/// \brief Re-evaluates which CSS selectors match this component
-	void update_style();
 
 	/// \brief Sets the DOM tag name
 	void set_tag_name(const std::string &name); 

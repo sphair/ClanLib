@@ -261,12 +261,6 @@ void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	}
 }
 
-void GUIComponent_Impl::update_style()
-{
-	CSSDocument document = component->get_gui_manager().get_css_document();
-	element.update_style(&component->impl->gui_manager_impl->resource_cache, document);
-}
-
 CSSToken GUIComponent_Impl::next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace)
 {
 	CSSToken token;
@@ -289,7 +283,7 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 {
 	SpanLayout span;
 
-	CSSComputedBox &properties = element.get_css_properties();
+	const CSSComputedBox &properties = element.get_css_values().get_box();
 
 	span.add_text(text, font, properties.color.color);
 
@@ -385,7 +379,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &propertie
 
 Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only )
 {
-	CSSComputedBox &properties = element.get_css_properties();
+	const CSSComputedBox &properties = element.get_css_values().get_box();
 
 	Size text_size = font.get_text_size(canvas, text);
 
@@ -409,7 +403,7 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &
 
 Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_values().get_box());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return render_text(canvas, element, font, text, content_box, baseline, true);
 }

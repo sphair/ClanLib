@@ -40,9 +40,6 @@
 #include "CSSLayout/Layout/LayoutTree/css_border_renderer.h"
 #include "CSSLayout/Layout/LayoutTree/css_layout_graphics.h"
 #include "API/Display/2D/span_layout.h"
-
-#include "CSSLayout/PropertyParsers/css_property_parser.h"
-#include "CSSLayout/PropertyParsers/css_property_parsers.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 
 namespace clan
@@ -55,6 +52,7 @@ GUIThemePart::GUIThemePart()
 GUIThemePart::GUIThemePart(GUIComponent *parent, const std::string &tag_name)
 : impl(new GUIThemePart_Impl(parent))
 {
+	impl->element.set_component(parent);
 	impl->element.set_parent(&parent->impl->element);
 	set_tag_name(tag_name);
 }
@@ -65,22 +63,16 @@ void GUIThemePart::throw_if_null() const
 		throw Exception("GUIThemePart is null");
 }
 
-
 Font GUIThemePart::get_font() const
 {
-	const CSSComputedBox &properties = get_css_properties();
+	const CSSComputedBox &properties = get_css_values().get_box();
 	Canvas canvas = impl->component->get_canvas();
 	return GUIComponent_Impl::get_font(canvas, properties);
 }
 
-const CSSComputedBox &GUIThemePart::get_css_properties() const
+const CSSComputedValues &GUIThemePart::get_css_values() const
 {
-	return impl->element.get_css_properties();
-}
-
-CSSComputedBox &GUIThemePart::get_css_properties()
-{
-	return impl->element.get_css_properties();
+	return impl->element.get_css_values();
 }
 
 std::string GUIThemePart::get_tag_name() const
@@ -111,45 +103,38 @@ std::vector<std::string> GUIThemePart::get_pseudo_classes() const
 void GUIThemePart::set_tag_name(const std::string &name)
 {
 	impl->element.set_tag_name(name);
-	update_style();
 }
 	
 void GUIThemePart::set_class(const std::string &name)
 {
 	impl->element.set_class(name);
-	update_style();
 }
 
 void GUIThemePart::set_id(const std::string &name)
 {
 	impl->element.set_id(name);
-	update_style();
 }
 
 bool GUIThemePart::set_pseudo_class(const std::string &name, bool enable)
 {
-	bool changed = impl->element.set_pseudo_class(name, enable);
-	if (changed)
-		update_style();
-	return changed;
-}
-
-void GUIThemePart::update_style()
-{
-	CSSDocument document = impl->component->get_gui_manager().get_css_document();
-	impl->element.update_style(&impl->component->impl->gui_manager_impl->resource_cache, document);
+	return impl->element.set_pseudo_class(name, enable);
 }
 
 GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values(const Rect &border_box)
 {
-	if ( element.style_updated() || (last_calculated_border_box != border_box ) )
+	bool computed_values_changed = element.get_css_values().get_box_generation() != current_box_generation;
+	bool border_box_changed_last_time = last_calculated_border_box != border_box; // I smell a hack!
+	if (computed_values_changed || border_box_changed_last_time)
 	{
 		last_calculated_border_box = border_box;
+
+		current_box_generation = element.get_css_values().get_box_generation();
+
 		GUICSSUsedValues parent_used_values = component->impl->css_used_values;
 		parent_used_values.width = border_box.get_width();
 		parent_used_values.height = border_box.get_height();
-		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_properties(), parent_used_values);
-		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_properties(), parent_used_values);
+		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_values().get_box(), parent_used_values);
+		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_values().get_box(), parent_used_values);
 	}
 	return css_used_values;
 }
@@ -165,14 +150,14 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 	Rect padding_box = Rect(border_box).shrink(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
 	Rect content_box = Rect(padding_box).shrink(css_used_values.padding.left, css_used_values.padding.top, css_used_values.padding.right, css_used_values.padding.bottom);
 
-	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_properties());
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_values().get_box());
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
 	background.set_initial_containing_box(impl->component->get_top_level_component()->get_viewport());
 	background.render();
 
-	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
+	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_values().get_box());
 	border.set_border_box(border_box);
 	border.set_border_values(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
 	border.render();
@@ -180,22 +165,22 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 
 Size GUIThemePart::get_css_size() const
 {
-	return Size(impl->element.get_css_properties().width.length.value, impl->element.get_css_properties().height.length.value);
+	return Size(impl->element.get_css_values().get_box().width.length.value, impl->element.get_css_values().get_box().height.length.value);
 }
 
 int GUIThemePart::get_css_width() const
 {
-	return impl->element.get_css_properties().width.length.value;
+	return impl->element.get_css_values().get_box().width.length.value;
 }
 
 int GUIThemePart::get_css_height() const
 {
-	return impl->element.get_css_properties().height.length.value;
+	return impl->element.get_css_values().get_box().height.length.value;
 }
 
 Rect GUIThemePart::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, str, content_rect);
 	return span.get_rect();
 }
@@ -230,7 +215,7 @@ VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, const
 
 Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, text, content_rect);
 	span.draw_layout(canvas);
 	return span.get_rect();
@@ -238,14 +223,14 @@ Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, co
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false);
 }
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box, int baseline )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false);
 }
 
@@ -285,7 +270,7 @@ Rect GUIThemePart::get_content_shrink_box() const
 
 std::string GUIThemePart::get_property(const std::string &property, const std::string &default_value) const
 {
-	throw Exception("GUIThemePart::get_property is currently under construction");
+	return default_value;
 /*
 	CSSDocument document = impl->component->get_gui_manager().get_css_document();
 	GUIComponentSelectNode select_node(&impl->element);

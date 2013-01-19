@@ -55,7 +55,7 @@ void GUIFindPreferredWidth::flex_horizontal_node(GUIComponent_Impl *node)
 	}
 
 	node->css_used_values.width = std::max(node->css_used_values.width, preferred_width);
-	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element.get_css_properties(), node->parent->impl->css_used_values);
+	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element.get_css_values().get_box(), node->parent->impl->css_used_values);
 }
 
 void GUIFindPreferredWidth::flex_vertical_node(GUIComponent_Impl *node)
@@ -80,7 +80,7 @@ void GUIFindPreferredWidth::flex_vertical_node(GUIComponent_Impl *node)
 	}
 
 	node->css_used_values.width = std::max(node->css_used_values.width, preferred_width);
-	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element.get_css_properties(), node->parent->impl->css_used_values);
+	GUICSSApplyMinMaxConstraints::visit(node->css_used_values, node->element.get_css_values().get_box(), node->parent->impl->css_used_values);
 }
 
 }

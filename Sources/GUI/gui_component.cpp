@@ -71,6 +71,7 @@ GUIComponent::GUIComponent(GUIComponent *parent, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_parent(parent))
 {
 	impl->component = this;
+	impl->element.set_component(this);
 
 	if (impl->parent->impl->last_child)
 	{
@@ -91,6 +92,8 @@ GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription descripti
 : impl(GUIComponent_Impl::create_from_manager(manager))
 {
 	impl->component = this;
+	impl->element.set_component(this);
+
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, 0, description);
@@ -104,6 +107,8 @@ GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription descripti
 : impl(GUIComponent_Impl::create_from_owner(owner))
 {
 	impl->component = this;
+	impl->element.set_component(this);
+
 	impl->allow_resize = description.get_allow_resize();
 	impl->visible = description.is_visible();
 	impl->gui_manager.lock()->add_component(this, owner, description);
@@ -200,14 +205,9 @@ std::vector<std::string> GUIComponent::get_pseudo_classes() const
 	return impl->element.get_pseudo_classes();
 }
 
-const CSSComputedBox &GUIComponent::get_css_properties() const
+const CSSComputedValues &GUIComponent::get_css_values() const
 {
-	return impl->element.get_css_properties();
-}
-
-CSSComputedBox &GUIComponent::get_css_properties()
-{
-	return impl->element.get_css_properties();
+	return impl->element.get_css_values();
 }
 
 bool GUIComponent::has_focus() const
@@ -666,12 +666,12 @@ Callback_0<bool> &GUIComponent::func_pointer_exit()
 {
 	return impl->func_pointer_exit;
 }
-
+/*
 Callback_v1<CSSComputedBox &> &GUIComponent::func_apply_properties()
 {
 	return impl->element.func_apply_properties;
 }
-
+*/
 Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
 {
 	return impl->func_input;
@@ -739,7 +739,7 @@ bool GUIComponent::is_double_click_enabled() const
 
 Font GUIComponent::get_font() const
 {
-	const CSSComputedBox &properties = get_css_properties();
+	const CSSComputedBox &properties = get_css_values().get_box();
 	Canvas canvas = get_canvas();
 	return GUIComponent_Impl::get_font(canvas, properties);
 }
@@ -760,14 +760,14 @@ void GUIComponent::render(Canvas &canvas, const Rect &clip_rect, bool include_ch
 	Rect padding_box = Rect(border_box).shrink(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	Rect content_box = Rect(padding_box).shrink(impl->css_used_values.padding.left, impl->css_used_values.padding.top, impl->css_used_values.padding.right, impl->css_used_values.padding.bottom);
 
-	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_properties());
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_values().get_box());
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
 	background.set_initial_containing_box(get_top_level_component()->get_viewport());
 	background.render();
 
-	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_properties());
+	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_values().get_box());
 	border.set_border_box(border_box);
 	border.set_border_values(impl->css_used_values.border.left, impl->css_used_values.border.top, impl->css_used_values.border.right, impl->css_used_values.border.bottom);
 	border.render();
@@ -901,33 +901,21 @@ void GUIComponent::capture_proximity(bool capture)
 void GUIComponent::set_tag_name(const std::string &name)
 {
 	impl->element.set_tag_name(name);
-	update_style();
 }
 	
 void GUIComponent::set_class(const std::string &name)
 {
 	impl->element.set_class(name);
-	update_style();
 }
 
 void GUIComponent::set_id(const std::string &name)
 {
 	impl->element.set_id(name);
-	update_style();
 }
 
 bool GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
-	bool changed = impl->element.set_pseudo_class(name, enable);
-	if (changed)
-		update_style();
-	return changed;
-}
-
-void GUIComponent::update_style()
-{
-	impl->update_style();
-	update_layout();
+	return impl->element.set_pseudo_class(name, enable);
 }
 
 void GUIComponent::update_layout()
@@ -1346,7 +1334,7 @@ GUIComponent *GUIComponent::get_previous_component_in_tree()
 void GUIComponent::set_default(bool value)
 {
 	impl->default_handler = value;
-	update_style();
+	request_repaint();
 }
 
 void GUIComponent::set_cancel(bool value)
@@ -1376,7 +1364,7 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 
 Rect GUIComponent::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, str, content_rect);
 	return span.get_rect();
 }
@@ -1412,7 +1400,7 @@ VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas)
 
 Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, text, content_rect);
 	span.draw_layout(canvas);
 	return span.get_rect();
@@ -1421,7 +1409,7 @@ Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, co
 Rect GUIComponent::render_text( Canvas &canvas, const std::string &text )
 {
 	Rect content_box = get_content_box();
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
 }
@@ -1431,7 +1419,7 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpo
 	Rect content_box = get_content_box();
 	content_box.left += xpos;
 	content_box.top += baseline;
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_properties());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
 }
 

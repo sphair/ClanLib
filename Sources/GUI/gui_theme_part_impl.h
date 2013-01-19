@@ -41,7 +41,7 @@ class GUIThemePart_Impl
 {
 public:
 	GUIThemePart_Impl(GUIComponent *component)
-	: component(component)
+	: component(component), current_box_generation(0)
 	{
 	}
 
@@ -51,9 +51,8 @@ public:
 	GUICSSUsedValues &get_css_used_values(const Rect &border_box);
 	Rect last_calculated_border_box;
 private:
-
 	GUICSSUsedValues css_used_values;
-
+	int current_box_generation;
 };
 
 }

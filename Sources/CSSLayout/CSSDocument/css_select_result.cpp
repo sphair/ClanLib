@@ -48,7 +48,7 @@ bool CSSSelectResult::is_null() const
 	return !impl;
 }
 
-const const std::vector<CSSPropertyValue *> &CSSSelectResult::get_values() const
+const std::vector<CSSPropertyValue *> &CSSSelectResult::get_values() const
 {
 	return impl->values;
 }

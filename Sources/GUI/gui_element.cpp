@@ -29,14 +29,16 @@
 
 #include "GUI/precomp.h"
 #include "gui_element.h"
+#include "API/GUI/gui_component.h"
+#include "API/GUI/gui_manager.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
-#include "gui_component_select_node.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
+#include "gui_component_select_node.h"
 
 namespace clan
 {
 
-GUIElement::GUIElement() : parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), has_style_updated(true)
+GUIElement::GUIElement() : component(0), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), style_needs_update(true)
 {
 }
 
@@ -56,33 +58,46 @@ GUIElement::~GUIElement()
 		parent->last_child = prev_sibling;
 }
 
-
-void GUIElement::update_style(CSSResourceCache *resource_cache, CSSDocument &document)
+const CSSComputedValues &GUIElement::get_css_values() const
 {
-	css_properties = CSSComputedBox();
-
-	GUIComponentSelectNode select_node(this);
-	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);
-	css_properties.apply_properties(sheet_properties);
-
-	if (!func_apply_properties.is_null())
-		func_apply_properties.invoke(css_properties);
-
-	if (parent)
-		css_properties.compute(&parent->css_properties, resource_cache);
-	else
-		css_properties.compute(0, resource_cache);
-
-	sig_style_changed.invoke();
-	has_style_updated = true;
-
-	GUIElement *cur_child = first_child;
-	while (cur_child)
+	if (style_needs_update)
 	{
-		cur_child->update_style(resource_cache, document);
-		cur_child = cur_child->get_next_sibling();
+		const_cast<GUIElement*>(this)->update_style();
 	}
 
+	return computed_values;
+}
+
+void GUIElement::set_component(GUIComponent *new_component)
+{
+	component = new_component;
+}
+
+void GUIElement::set_tag_name(const std::string &name)
+{
+	if (tag_name != name)
+	{
+		tag_name = name;
+		set_style_needs_update();
+	}
+}
+
+void GUIElement::set_class(const std::string &name)
+{
+	if (class_string != name)
+	{
+		class_string = name;
+		set_style_needs_update();
+	}
+}
+
+void GUIElement::set_id(const std::string &name)
+{
+	if (id != name)
+	{
+		id = name;
+		set_style_needs_update();
+	}
 }
 
 void GUIElement::set_parent(GUIElement *new_parent)
@@ -107,46 +122,48 @@ void GUIElement::set_parent(GUIElement *new_parent)
 			parent->first_child = this;
 			parent->last_child = this;
 		}
-
-		return;
-	}
-
-	// 1. Remove this component from parents child list.
-	if (parent->first_child == parent->last_child)
-	{
-		parent->first_child = 0;
-		parent->last_child = 0;
-	}
-	else if (parent->first_child == this)
-	{
-		parent->first_child = next_sibling;
-		next_sibling->prev_sibling = 0;
-	}
-	else if (parent->last_child == this)
-	{
-		prev_sibling->next_sibling = 0;
-		parent->last_child = prev_sibling;
 	}
 	else
 	{
-		prev_sibling->next_sibling = next_sibling;
-		next_sibling->prev_sibling = prev_sibling;
+		// 1. Remove this component from parents child list.
+		if (parent->first_child == parent->last_child)
+		{
+			parent->first_child = 0;
+			parent->last_child = 0;
+		}
+		else if (parent->first_child == this)
+		{
+			parent->first_child = next_sibling;
+			next_sibling->prev_sibling = 0;
+		}
+		else if (parent->last_child == this)
+		{
+			prev_sibling->next_sibling = 0;
+			parent->last_child = prev_sibling;
+		}
+		else
+		{
+			prev_sibling->next_sibling = next_sibling;
+			next_sibling->prev_sibling = prev_sibling;
+		}
+
+		// 2. Set this component as last child of new parent.
+		if (new_parent->first_child == 0)
+		{
+			new_parent->first_child = this;
+			prev_sibling = 0;
+		}
+		else if (new_parent->last_child != 0)
+		{
+			new_parent->last_child->next_sibling = this;
+			prev_sibling = new_parent->last_child;
+		}
+		next_sibling = 0;
+		new_parent->last_child = this;
+		parent = new_parent;
 	}
 
-	// 2. Set this component as last child of new parent.
-	if (new_parent->first_child == 0)
-	{
-		new_parent->first_child = this;
-		prev_sibling = 0;
-	}
-	else if (new_parent->last_child != 0)
-	{
-		new_parent->last_child->next_sibling = this;
-		prev_sibling = new_parent->last_child;
-	}
-	next_sibling = 0;
-	new_parent->last_child = this;
-	parent = new_parent;
+	set_style_needs_update();
 }
 
 bool GUIElement::get_pseudo_class(const std::string &name) const
@@ -168,6 +185,7 @@ bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
 			if (!enable)
 			{
 				pseudo_classes.erase(pseudo_classes.begin() + i);
+				set_style_needs_update();
 				return true;
 			}
 			return false;
@@ -176,27 +194,35 @@ bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
 	if (enable)
 	{
 		pseudo_classes.push_back(name);
+		set_style_needs_update();
 		return true;
 	}
 	return false;
 }
 
-GUIElement::GUIElement(GUIElement &other)
+void GUIElement::set_style_needs_update()
 {
-	throw Exception("GUIElement copy construction disallowed");
+	style_needs_update = true;
+
+	GUIElement *child = get_first_child();
+	while (child)
+	{
+		child->set_style_needs_update();
+		child = child->get_next_sibling();
+	}
+
+	sig_style_changed.invoke();
 }
 
-GUIElement &GUIElement::operator =(const GUIElement &other)
+void GUIElement::update_style()
 {
-	throw Exception("GUIElement operator = disallowed");
-}
+	GUIComponentSelectNode select_node(this);
+	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node));
 
-bool GUIElement::style_updated()
-{
-	bool result = has_style_updated;
-	has_style_updated = false;
-	return result;
-}
+//	if (!func_apply_properties.is_null())
+//		func_apply_properties.invoke(css_properties);
 
+	style_needs_update = false;
+}
 
 }

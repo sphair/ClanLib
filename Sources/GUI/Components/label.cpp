@@ -76,7 +76,7 @@ Label::Label(GUIComponent *parent)
 {
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
-	func_apply_properties().set(impl.get(), &Label_Impl::on_apply_properties);
+	//func_apply_properties().set(impl.get(), &Label_Impl::on_apply_properties);
 }
 
 Label::~Label()
@@ -128,7 +128,7 @@ void Label::set_text_color(const Colorf color)
 {
 	impl->user_color = color;
 	impl->is_user_color = true;
-	impl->on_apply_properties(get_css_properties()); // FIXME: this is a hack that only works for simple non-inherited values
+	//impl->on_apply_properties(get_css_properties()); // FIXME: this is a hack that only works for simple non-inherited values
 	request_repaint();
 }
 
