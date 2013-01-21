@@ -46,7 +46,13 @@ CSSValueBorderWidth::CSSValueBorderWidth(ValueType value_type, const CSSValueBor
 }
 void CSSValueBorderWidth::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	switch (value_type)
+	{
+		case left_value: box.border_width_left = *this; break;
+		case top_value: box.border_width_top = *this; break;
+		case right_value: box.border_width_right = *this; break;
+		case bottom_value: box.border_width_bottom = *this; break;
+	}
 }
 
 void CSSValueBorderWidth::compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style)

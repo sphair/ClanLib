@@ -45,7 +45,13 @@ CSSValueBorderRadius::CSSValueBorderRadius(ValueType value_type, const CSSValueB
 }
 void CSSValueBorderRadius::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	switch (value_type)
+	{
+		case top_left_value: box.border_radius_top_left = *this; break;
+		case top_right_value: box.border_radius_top_right = *this; break;
+		case bottom_left_value: box.border_radius_bottom_left = *this; break;
+		case bottom_right_value: box.border_radius_bottom_right = *this; break;
+	}
 }
 
 void CSSValueBorderRadius::compute(const CSSValueBorderRadius *parent, CSSResourceCache *layout, float em_size, float ex_size)
