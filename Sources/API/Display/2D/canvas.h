@@ -53,7 +53,6 @@ class Pointf;
 class Gradient;
 class LineSegment2f;
 class LineSegment2;
-class Quadf;
 class Trianglef;
 class Triangle;
 class DisplayWindow;
