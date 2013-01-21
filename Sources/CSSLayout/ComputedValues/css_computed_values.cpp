@@ -40,6 +40,7 @@ CSSComputedValues::CSSComputedValues()
 CSSComputedValues::CSSComputedValues(const CSSComputedValues &parent)
 : impl(new CSSComputedValues_Impl())
 {
+	set_parent(parent);
 }
 
 bool CSSComputedValues::is_null() const
