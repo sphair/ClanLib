@@ -49,7 +49,7 @@ GUIComponent_Impl::GUIComponent_Impl(const std::shared_ptr<GUIManager_Impl> &ini
 : gui_manager(init_gui_manager), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0),
   focus_policy(GUIComponent::focus_refuse), allow_resize(false), clip_children(false), enabled(true),
   visible(true), activated(false), default_handler(false), cancel_handler(false),
-  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), use_auto_geometry(true), double_click_enabled(true), pointer_inside_component(false)
+  constant_repaint(false), blocks_default_action_when_focused(false), is_selected_in_group(false), use_auto_geometry(true), double_click_enabled(true), pointer_inside_component(false), element(&init_gui_manager->resource_cache)
 {
 	if (parent_or_owner)
 		element.set_parent(&parent_or_owner->impl->element);

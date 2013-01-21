@@ -37,10 +37,9 @@ CSSComputedValues::CSSComputedValues()
 {
 }
 
-CSSComputedValues::CSSComputedValues(const CSSComputedValues &parent)
-: impl(new CSSComputedValues_Impl())
+CSSComputedValues::CSSComputedValues(CSSResourceCache *resource_cache)
+: impl(new CSSComputedValues_Impl(resource_cache))
 {
-	set_parent(parent);
 }
 
 bool CSSComputedValues::is_null() const

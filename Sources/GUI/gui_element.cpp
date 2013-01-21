@@ -38,7 +38,7 @@
 namespace clan
 {
 
-GUIElement::GUIElement() : component(0), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), style_needs_update(true), computed_values(CSSComputedValues(CSSComputedValues()))
+GUIElement::GUIElement(CSSResourceCache *resource_cache) : component(0), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), style_needs_update(true), computed_values(resource_cache)
 {
 }
 
