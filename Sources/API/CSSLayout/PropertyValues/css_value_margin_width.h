@@ -49,6 +49,7 @@ public:
 	CSSValueMarginWidth(ValueType value_type, const CSSValueMarginWidth &value);
 	void compute(const CSSValueMarginWidth *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
+	void apply_to_box(CSSComputedBox &box);
 
 	ValueType value_type;
 

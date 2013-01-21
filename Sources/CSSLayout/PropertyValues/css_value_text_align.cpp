@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_text_align.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueTextAlign::CSSValueTextAlign()
 : type(type_inherit)
 {
+}
+void CSSValueTextAlign::apply_to_box(CSSComputedBox &box)
+{
+	box.text_align = *this;
 }
 
 void CSSValueTextAlign::compute(const CSSValueTextAlign *parent, CSSResourceCache *layout, float em_size, float ex_size)

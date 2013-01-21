@@ -40,6 +40,7 @@ public:
 	CSSValueBackgroundColor();
 	void compute(const CSSValueBackgroundColor *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
+	void apply_to_box(CSSComputedBox &box);
 
 	enum Type
 	{

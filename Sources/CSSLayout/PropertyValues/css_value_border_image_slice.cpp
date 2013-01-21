@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_slice.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -39,6 +40,10 @@ CSSValueBorderImageSlice::CSSValueBorderImageSlice()
   percentage_top(100.0f), percentage_right(100.0f), percentage_bottom(100.0f), percentage_left(100.0f),
   fill_center(false)
 {
+}
+void CSSValueBorderImageSlice::apply_to_box(CSSComputedBox &box)
+{
+	box.border_image_slice = *this;
 }
 
 void CSSValueBorderImageSlice::compute(const CSSValueBorderImageSlice *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_font_size.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueFontSize::CSSValueFontSize()
 : type(type_inherit), percentage(0.0f)
 {
+}
+void CSSValueFontSize::apply_to_box(CSSComputedBox &box)
+{
+	box.font_size = *this;
 }
 
 void CSSValueFontSize::compute(const CSSValueFontSize *parent, CSSResourceCache *layout, float em_size, float ex_size)

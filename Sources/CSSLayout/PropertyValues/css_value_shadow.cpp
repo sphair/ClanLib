@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_shadow.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueShadow::CSSValueShadow()
 : type(type_none)
 {
+}
+void CSSValueShadow::apply_to_box(CSSComputedBox &box)
+{
+	box.shadow = *this;
 }
 
 void CSSValueShadow::compute(const CSSValueShadow *parent, CSSResourceCache *layout, float em_size, float ex_size)

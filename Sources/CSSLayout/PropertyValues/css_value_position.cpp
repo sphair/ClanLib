@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_position.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValuePosition::CSSValuePosition()
 : type(type_static)
 {
+}
+void CSSValuePosition::apply_to_box(CSSComputedBox &box)
+{
+	box.position = *this;
 }
 
 void CSSValuePosition::compute(const CSSValuePosition *parent, CSSResourceCache *layout, float em_size, float ex_size)

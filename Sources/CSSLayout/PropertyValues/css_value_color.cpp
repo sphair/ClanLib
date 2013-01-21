@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_color.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueColor::CSSValueColor()
 : type(type_inherit)
 {
+}
+void CSSValueColor::apply_to_box(CSSComputedBox &box)
+{
+	box.color = *this;
 }
 
 void CSSValueColor::compute(const CSSValueColor *parent, CSSResourceCache *layout, float em_size, float ex_size)

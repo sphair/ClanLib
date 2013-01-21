@@ -48,6 +48,7 @@ public:
 	CSSValueBorderColor(ValueType value_type, const CSSValueBorderColor &value);
 	void compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color);
 	std::string to_string() const;
+	void apply_to_box(CSSComputedBox &box);
 
 	ValueType value_type;
 

@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_size.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ CSSValueBackgroundSize::CSSValueBackgroundSize()
 : type(type_value)
 {
 	values.push_back(Size());
+}
+void CSSValueBackgroundSize::apply_to_box(CSSComputedBox &box)
+{
+	box.background_size = *this;
 }
 
 void CSSValueBackgroundSize::compute(const CSSValueBackgroundSize *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_color.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -40,6 +41,10 @@ CSSValueBorderColor::CSSValueBorderColor()
 CSSValueBorderColor::CSSValueBorderColor(ValueType value_type, const CSSValueBorderColor &value)
 : value_type(value_type), type(value.type), color(value.color)
 {
+}
+void CSSValueBorderColor::apply_to_box(CSSComputedBox &box)
+{
+	box.x = *this;
 }
 
 void CSSValueBorderColor::compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color)

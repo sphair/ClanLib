@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_radius.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -41,6 +42,10 @@ CSSValueBorderRadius::CSSValueBorderRadius()
 CSSValueBorderRadius::CSSValueBorderRadius(ValueType value_type, const CSSValueBorderRadius &value)
 : value_type(value_type), type(value.type), value_type1(value.value_type1), percentage1(value.percentage1), value_type2(value.value_type2), percentage2(value.percentage2)
 {
+}
+void CSSValueBorderRadius::apply_to_box(CSSComputedBox &box)
+{
+	box.x = *this;
 }
 
 void CSSValueBorderRadius::compute(const CSSValueBorderRadius *parent, CSSResourceCache *layout, float em_size, float ex_size)

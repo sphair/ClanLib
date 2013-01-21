@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_empty_cells.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueEmptyCells::CSSValueEmptyCells()
 : type(type_inherit)
 {
+}
+void CSSValueEmptyCells::apply_to_box(CSSComputedBox &box)
+{
+	box.empty_cells = *this;
 }
 
 void CSSValueEmptyCells::compute(const CSSValueEmptyCells *parent, CSSResourceCache *layout, float em_size, float ex_size)

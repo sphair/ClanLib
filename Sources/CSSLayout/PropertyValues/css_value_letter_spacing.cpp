@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_letter_spacing.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueLetterSpacing::CSSValueLetterSpacing()
 : type(type_inherit)
 {
+}
+void CSSValueLetterSpacing::apply_to_box(CSSComputedBox &box)
+{
+	box.letter_spacing = *this;
 }
 
 void CSSValueLetterSpacing::compute(const CSSValueLetterSpacing *parent, CSSResourceCache *layout, float em_size, float ex_size)

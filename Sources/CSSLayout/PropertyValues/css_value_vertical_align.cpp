@@ -30,6 +30,7 @@
 #include "API/CSSLayout/PropertyValues/css_value_vertical_align.h"
 #include "API/CSSLayout/PropertyValues/css_value_line_height.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -37,6 +38,10 @@ namespace clan
 CSSValueVerticalAlign::CSSValueVerticalAlign()
 : type(type_baseline), percentage(0.0f)
 {
+}
+void CSSValueVerticalAlign::apply_to_box(CSSComputedBox &box)
+{
+	box.vertical_align = *this;
 }
 
 void CSSValueVerticalAlign::compute(const CSSValueVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &line_height)

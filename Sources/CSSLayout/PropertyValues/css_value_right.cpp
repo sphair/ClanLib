@@ -31,6 +31,7 @@
 #include "API/CSSLayout/PropertyValues/css_value_left.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -38,6 +39,10 @@ namespace clan
 CSSValueRight::CSSValueRight()
 : type(type_auto)
 {
+}
+void CSSValueRight::apply_to_box(CSSComputedBox &box)
+{
+	box.right = *this;
 }
 
 void CSSValueRight::compute(CSSValueLeft &left, CSSValueRight &right, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr)

@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_font_family.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueFontFamily::CSSValueFontFamily()
 : type(type_inherit)
 {
+}
+void CSSValueFontFamily::apply_to_box(CSSComputedBox &box)
+{
+	box.font_family = *this;
 }
 
 void CSSValueFontFamily::compute(const CSSValueFontFamily *parent, CSSResourceCache *layout, float em_size, float ex_size)
