@@ -39,7 +39,7 @@ namespace clan
 class CSSComputedValues_Impl
 {
 public:
-	CSSComputedValues_Impl() : specified_values_changed(true), box_generation(0) { }
+	CSSComputedValues_Impl(CSSResourceCache *resource_cache) : specified_values_changed(true), box_generation(0), resource_cache(resource_cache) { }
 
 	void update_if_changed();
 
@@ -52,6 +52,8 @@ public:
 
 	CSSSelectResult selected_values;
 	CSSStyleProperties style_values;
+
+	CSSResourceCache *resource_cache;
 };
 
 inline void CSSComputedValues_Impl::update_if_changed()
@@ -59,7 +61,6 @@ inline void CSSComputedValues_Impl::update_if_changed()
 	if (specified_values_changed)
 	{
 		const CSSComputedBox *parent_computed_box_values = (!parent.is_null()) ? &parent.get_box() : nullptr;
-		CSSResourceCache *resource_cache = nullptr; // To do: get this from somewhere..
 
 		box = CSSComputedBox();
 		box.compute(parent_computed_box_values, resource_cache);

@@ -50,7 +50,7 @@ class GUIElement
 /// \{
 public:
 	/// \brief Creates a GUI element
-	GUIElement();
+	GUIElement(CSSResourceCache *resource_cache);
 
 	~GUIElement();
 

@@ -30,6 +30,8 @@
 
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "gui_element.h"
+#include "gui_component_impl.h"
+#include "gui_manager_impl.h"
 #include "Layout/gui_css_used_values.h"
 
 namespace clan
@@ -41,7 +43,7 @@ class GUIThemePart_Impl
 {
 public:
 	GUIThemePart_Impl(GUIComponent *component)
-	: component(component), current_box_generation(0)
+	: component(component), current_box_generation(0), element(&component->impl->gui_manager_impl->resource_cache)
 	{
 	}
 

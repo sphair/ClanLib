@@ -38,12 +38,13 @@ class CSSStyleProperties;
 class CSSPropertyValue;
 class CSSComputedBox;
 class CSSComputedValues_Impl;
+class CSSResourceCache;
 
 class CL_API_CSSLAYOUT CSSComputedValues
 {
 public:
 	CSSComputedValues();
-	CSSComputedValues(const CSSComputedValues &parent);
+	CSSComputedValues(CSSResourceCache *resource_cache);
 
 	bool is_null() const;
 
