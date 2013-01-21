@@ -39,7 +39,7 @@ CSSValueFloat::CSSValueFloat()
 }
 void CSSValueFloat::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	box.float_box = *this;
 }
 
 void CSSValueFloat::compute(const CSSValueFloat *parent, CSSResourceCache *layout, float em_size, float ex_size)
