@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_clear.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueClear::CSSValueClear()
 : type(type_none)
 {
+}
+void CSSValueClear::apply_to_box(CSSComputedBox &box)
+{
+	box.clear = *this;
 }
 
 void CSSValueClear::compute(const CSSValueClear *parent, CSSResourceCache *layout, float em_size, float ex_size)

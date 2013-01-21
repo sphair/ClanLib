@@ -39,6 +39,7 @@ class CSSValueLeft : public CSSPropertyValue
 public:
 	CSSValueLeft();
 	std::string to_string() const;
+	void apply_to_box(CSSComputedBox &box);
 
 	enum Type
 	{

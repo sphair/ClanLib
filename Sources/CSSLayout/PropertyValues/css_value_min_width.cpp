@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_min_width.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueMinWidth::CSSValueMinWidth()
 : type(type_auto), length(0, CSSLength::type_px), percentage(0.0f)
 {
+}
+void CSSValueMinWidth::apply_to_box(CSSComputedBox &box)
+{
+	box.min_width = *this;
 }
 
 void CSSValueMinWidth::compute(const CSSValueMinWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)

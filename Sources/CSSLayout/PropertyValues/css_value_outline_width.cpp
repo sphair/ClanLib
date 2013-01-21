@@ -30,6 +30,7 @@
 #include "API/CSSLayout/PropertyValues/css_value_outline_width.h"
 #include "API/CSSLayout/PropertyValues/css_value_outline_style.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -37,6 +38,10 @@ namespace clan
 CSSValueOutlineWidth::CSSValueOutlineWidth()
 : type(type_medium)
 {
+}
+void CSSValueOutlineWidth::apply_to_box(CSSComputedBox &box)
+{
+	box.outline_width = *this;
 }
 
 void CSSValueOutlineWidth::compute(const CSSValueOutlineWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueOutlineStyle &style)

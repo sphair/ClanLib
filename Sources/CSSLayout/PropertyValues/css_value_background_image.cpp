@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_image.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ CSSValueBackgroundImage::CSSValueBackgroundImage()
 : type(type_images)
 {
 	images.push_back(Image(image_type_none));
+}
+void CSSValueBackgroundImage::apply_to_box(CSSComputedBox &box)
+{
+	box.background_image = *this;
 }
 
 void CSSValueBackgroundImage::compute(const CSSValueBackgroundImage *parent, CSSResourceCache *layout, float em_size, float ex_size)

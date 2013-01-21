@@ -30,6 +30,7 @@
 #include "API/CSSLayout/PropertyValues/css_value_display.h"
 #include "API/CSSLayout/PropertyValues/css_value_position.h"
 #include "API/CSSLayout/PropertyValues/css_value_float.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -37,6 +38,11 @@ namespace clan
 CSSValueDisplay::CSSValueDisplay()
 : type(type_inline)
 {
+}
+
+void CSSValueDisplay::apply_to_box(CSSComputedBox &box)
+{
+	box.display = *this;
 }
 
 void CSSValueDisplay::compute(const CSSValueDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, CSSValueFloat &float_box)

@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_top.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueTop::CSSValueTop()
 : type(type_auto), percentage(0.0f)
 {
+}
+void CSSValueTop::apply_to_box(CSSComputedBox &box)
+{
+	box.top = *this;
 }
 
 std::string CSSValueTop::to_string() const

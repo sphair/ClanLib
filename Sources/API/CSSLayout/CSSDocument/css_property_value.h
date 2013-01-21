@@ -39,6 +39,7 @@ class CSSPropertyValue
 public:
 	virtual ~CSSPropertyValue() { }
 	virtual std::string to_string() const = 0;
+	virtual void apply_to_box(CSSComputedBox &box) = 0;
 };
 
 }

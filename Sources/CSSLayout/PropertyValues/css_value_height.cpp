@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_height.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueHeight::CSSValueHeight()
 : type(type_auto)
 {
+}
+void CSSValueHeight::apply_to_box(CSSComputedBox &box)
+{
+	box.height = *this;
 }
 
 void CSSValueHeight::compute(const CSSValueHeight *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_height_auto)

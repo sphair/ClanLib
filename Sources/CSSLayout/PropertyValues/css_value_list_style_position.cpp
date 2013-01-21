@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_list_style_position.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueListStylePosition::CSSValueListStylePosition()
 : type(type_inherit)
 {
+}
+void CSSValueListStylePosition::apply_to_box(CSSComputedBox &box)
+{
+	box.list_style_position = *this;
 }
 
 void CSSValueListStylePosition::compute(const CSSValueListStylePosition *parent, CSSResourceCache *layout, float em_size, float ex_size)

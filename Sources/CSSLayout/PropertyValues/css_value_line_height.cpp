@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_line_height.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueLineHeight::CSSValueLineHeight()
 : type(type_inherit)
 {
+}
+void CSSValueLineHeight::apply_to_box(CSSComputedBox &box)
+{
+	box.line_height = *this;
 }
 
 void CSSValueLineHeight::compute(const CSSValueLineHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)

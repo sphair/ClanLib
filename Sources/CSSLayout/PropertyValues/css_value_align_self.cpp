@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_align_self.h"
 #include "API/CSSLayout/PropertyValues/css_value_align_items.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,11 @@ namespace clan
 CSSValueAlignSelf::CSSValueAlignSelf()
 : type(type_auto)
 {
+}
+
+void CSSValueAlignSelf::apply_to_box(CSSComputedBox &box)
+{
+	box.align_self = *this;
 }
 
 void CSSValueAlignSelf::compute(const CSSValueAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueAlignItems *parent_align_items)

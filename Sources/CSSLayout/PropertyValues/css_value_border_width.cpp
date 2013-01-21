@@ -30,6 +30,7 @@
 #include "API/CSSLayout/PropertyValues/css_value_border_width.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_style.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -42,6 +43,10 @@ CSSValueBorderWidth::CSSValueBorderWidth()
 CSSValueBorderWidth::CSSValueBorderWidth(ValueType value_type, const CSSValueBorderWidth &value)
 : value_type(value_type), type(value.type), length(value.length)
 {
+}
+void CSSValueBorderWidth::apply_to_box(CSSComputedBox &box)
+{
+	box.x = *this;
 }
 
 void CSSValueBorderWidth::compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style)

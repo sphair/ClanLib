@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_flex_grow.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueFlexGrow::CSSValueFlexGrow()
 : type(type_number), number(0.0f)
 {
+}
+void CSSValueFlexGrow::apply_to_box(CSSComputedBox &box)
+{
+	box.flex_grow = *this;
 }
 
 void CSSValueFlexGrow::compute(const CSSValueFlexGrow *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_order.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueOrder::CSSValueOrder()
 : type(type_integer), value(0)
 {
+}
+void CSSValueOrder::apply_to_box(CSSComputedBox &box)
+{
+	box.order = *this;
 }
 
 void CSSValueOrder::compute(const CSSValueOrder *parent, CSSResourceCache *layout, float em_size, float ex_size)

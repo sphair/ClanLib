@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_content.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueContent::CSSValueContent()
 : type(type_normal)
 {
+}
+void CSSValueContent::apply_to_box(CSSComputedBox &box)
+{
+	box.content = *this;
 }
 
 void CSSValueContent::compute(const CSSValueContent *parent, CSSResourceCache *layout, float em_size, float ex_size, bool before_or_after_pseudo_element)

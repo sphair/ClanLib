@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_orphans.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueOrphans::CSSValueOrphans()
 : type(type_inherit), value(0)
 {
+}
+void CSSValueOrphans::apply_to_box(CSSComputedBox &box)
+{
+	box.orphans = *this;
 }
 
 void CSSValueOrphans::compute(const CSSValueOrphans *parent, CSSResourceCache *layout, float em_size, float ex_size)

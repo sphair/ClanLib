@@ -40,6 +40,7 @@ public:
 	CSSValueHeight();
 	void compute(const CSSValueHeight *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_height_auto);
 	std::string to_string() const;
+	void apply_to_box(CSSComputedBox &box);
 
 	enum Type
 	{

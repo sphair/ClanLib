@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_text_indent.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueTextIndent::CSSValueTextIndent()
 : type(type_inherit), percentage(0.0f)
 {
+}
+void CSSValueTextIndent::apply_to_box(CSSComputedBox &box)
+{
+	box.text_indent = *this;
 }
 
 void CSSValueTextIndent::compute(const CSSValueTextIndent *parent, CSSResourceCache *layout, float em_size, float ex_size)

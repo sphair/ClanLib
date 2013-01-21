@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_flex_basis.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueFlexBasis::CSSValueFlexBasis()
 : type(type_auto), percentage(0.0f)
 {
+}
+void CSSValueFlexBasis::apply_to_box(CSSComputedBox &box)
+{
+	box.flex_basis = *this;
 }
 
 void CSSValueFlexBasis::compute(const CSSValueFlexBasis *parent, CSSResourceCache *layout, float em_size, float ex_size)

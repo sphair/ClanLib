@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_padding_width.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -41,6 +42,10 @@ CSSValuePaddingWidth::CSSValuePaddingWidth()
 CSSValuePaddingWidth::CSSValuePaddingWidth(ValueType value_type, const CSSValuePaddingWidth &value)
 : value_type(value_type), type(value.type), length(value.length), percentage(value.percentage)
 {
+}
+void CSSValuePaddingWidth::apply_to_box(CSSComputedBox &box)
+{
+	box.x = *this;
 }
 
 void CSSValuePaddingWidth::compute(const CSSValuePaddingWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)

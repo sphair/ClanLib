@@ -28,6 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_counter_increment.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -35,6 +36,10 @@ namespace clan
 CSSValueCounterIncrement::CSSValueCounterIncrement()
 : type(type_none)
 {
+}
+void CSSValueCounterIncrement::apply_to_box(CSSComputedBox &box)
+{
+	box.counter_increment = *this;
 }
 
 void CSSValueCounterIncrement::compute(const CSSValueCounterIncrement *parent, CSSResourceCache *layout, float em_size, float ex_size)

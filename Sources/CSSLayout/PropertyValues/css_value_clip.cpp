@@ -29,6 +29,7 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_clip.h"
 #include "../css_resource_cache.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -36,6 +37,10 @@ namespace clan
 CSSValueClip::CSSValueClip()
 : type(type_auto), left_auto(false), top_auto(false), right_auto(false), bottom_auto(false)
 {
+}
+void CSSValueClip::apply_to_box(CSSComputedBox &box)
+{
+	box.clip = *this;
 }
 
 void CSSValueClip::compute(const CSSValueClip *parent, CSSResourceCache *layout, float em_size, float ex_size)
