@@ -45,7 +45,14 @@ CSSValueMarginWidth::CSSValueMarginWidth(ValueType value_type, const CSSValueMar
 }
 void CSSValueMarginWidth::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	switch (value_type)
+	{
+		case left_value: box.margin_width_left = *this; break;
+		case top_value: box.margin_width_top = *this; break;
+		case right_value: box.margin_width_right = *this; break;
+		case bottom_value: box.margin_width_bottom = *this; break;
+	}
+
 }
 
 void CSSValueMarginWidth::compute(const CSSValueMarginWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)

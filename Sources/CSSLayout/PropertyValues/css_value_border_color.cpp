@@ -44,7 +44,13 @@ CSSValueBorderColor::CSSValueBorderColor(ValueType value_type, const CSSValueBor
 }
 void CSSValueBorderColor::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	switch (value_type)
+	{
+		case left_value: box.border_color_left = *this; break;
+		case top_value: box.border_color_top = *this; break;
+		case right_value: box.border_color_right = *this; break;
+		case bottom_value: box.border_color_bottom = *this; break;
+	}
 }
 
 void CSSValueBorderColor::compute(const CSSValueBorderColor *parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &color_property_color)

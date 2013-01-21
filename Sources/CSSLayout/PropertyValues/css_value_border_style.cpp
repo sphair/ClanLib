@@ -44,7 +44,14 @@ CSSValueBorderStyle::CSSValueBorderStyle(ValueType value_type, const CSSValueBor
 }
 void CSSValueBorderStyle::apply_to_box(CSSComputedBox &box)
 {
-	box.x = *this;
+	switch (value_type)
+	{
+		case left_value: box.border_style_left = *this; break;
+		case top_value: box.border_style_top = *this; break;
+		case right_value: box.border_style_right = *this; break;
+		case bottom_value: box.border_style_bottom = *this; break;
+	}
+
 }
 
 void CSSValueBorderStyle::compute(const CSSValueBorderStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
