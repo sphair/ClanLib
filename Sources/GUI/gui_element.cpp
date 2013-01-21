@@ -38,7 +38,7 @@
 namespace clan
 {
 
-GUIElement::GUIElement() : component(0), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), style_needs_update(true)
+GUIElement::GUIElement() : component(0), parent(0), prev_sibling(0), next_sibling(0), first_child(0), last_child(0), style_needs_update(true), computed_values(CSSComputedValues(CSSComputedValues()))
 {
 }
 
@@ -161,6 +161,15 @@ void GUIElement::set_parent(GUIElement *new_parent)
 		next_sibling = 0;
 		new_parent->last_child = this;
 		parent = new_parent;
+	}
+
+	if (new_parent)
+	{
+		computed_values.set_parent(new_parent->computed_values);
+	}
+	else
+	{
+		computed_values.set_parent(CSSComputedValues());
 	}
 
 	set_style_needs_update();
