@@ -91,7 +91,6 @@
 #include "GUI/Components/ribbon_menu.h"
 #include "GUI/Components/ribbon_page.h"
 #include "GUI/Components/ribbon_section.h"
-#include "GUI/Providers/gui_theme_provider.h"
 #include "GUI/Providers/gui_layout_provider.h"
 #include "GUI/Providers/gui_window_manager_provider.h"
 
