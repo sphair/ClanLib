@@ -123,28 +123,27 @@ clanGUI_includes = \
 clanSound_includes = \
 	sound.h \
 	Sound/api_sound.h \
-	Sound/SoundFilters/echofilter.h \
-	Sound/SoundFilters/fadefilter.h \
-	Sound/SoundFilters/inverse_echofilter.h \
+	Sound/cd_drive.h \
 	Sound/setupsound.h \
 	Sound/sound.h \
+	Sound/sound_sse.h \
 	Sound/soundbuffer.h \
 	Sound/soundbuffer_session.h \
 	Sound/soundfilter.h \
 	Sound/soundformat.h \
-	Sound/sound_sse.h \
+	Sound/soundoutput.h \
+	Sound/soundoutput_description.h \
 	Sound/SoundProviders/soundprovider_factory.h \
 	Sound/SoundProviders/soundprovider_type.h \
 	Sound/SoundProviders/soundprovider_type_register.h \
 	Sound/SoundProviders/soundprovider_raw.h \
 	Sound/SoundProviders/soundprovider_wave.h \
-	Sound/SoundProviders/soundprovider_recorder.h \
 	Sound/SoundProviders/soundfilter_provider.h \
-	Sound/cd_drive.h \
-	Sound/soundoutput.h \
-	Sound/soundoutput_description.h \
 	Sound/SoundProviders/soundprovider.h \
-	Sound/SoundProviders/soundprovider_session.h
+	Sound/SoundProviders/soundprovider_session.h \
+	Sound/SoundFilters/echofilter.h \
+	Sound/SoundFilters/fadefilter.h \
+	Sound/SoundFilters/inverse_echofilter.h
 
 clanCore_includes = \
 	core.h \
