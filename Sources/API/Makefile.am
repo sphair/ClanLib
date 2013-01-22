@@ -54,7 +54,7 @@ clanNetwork_includes = \
 clanGUI_includes = \
 	gui.h \
 	GUI/accelerator_key.h \
-	GUI/accelerator_table.h
+	GUI/accelerator_table.h \
 	GUI/api_gui.h \
 	GUI/gui_component.h \
 	GUI/gui_component_description.h \
