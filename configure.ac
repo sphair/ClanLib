@@ -331,11 +331,9 @@ if test "$enable_clanDisplay" != "no"; then
 
 	dnl  Optional linux/joystick.h
 	AC_CHECK_HEADERS(linux/joystick.h, has_linux_joystick=yes)
-	AM_CONDITIONAL(LINUX_JOYSTICK, test x$has_linux_joystick = xyes)
 
 	dnl Optional linux/input.h
 	AC_CHECK_HEADERS(linux/input.h, has_linux_input=yes)
-	AM_CONDITIONAL(LINUX_INPUT, test x$has_linux_input = xyes)
 
 	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
@@ -351,10 +349,9 @@ if test "$enable_clanDisplay" != "no"; then
 			int main(){}void used_stuff(){ DirectInput8Create(NULL, 0, IID_IDirectInput8, NULL, 0); } ],
 			clanDisplay, [ *** Cannot find version 8 of DirectInput], [-ldxguid -lole32 -ldinput8])
 	fi
-else
-	AM_CONDITIONAL(LINUX_JOYSTICK, test x$has_linux_joystick = xyes)
-	AM_CONDITIONAL(LINUX_INPUT, test x$has_linux_input = xyes)
 fi
+AM_CONDITIONAL(LINUX_JOYSTICK, test x$has_linux_joystick = xyes)
+AM_CONDITIONAL(LINUX_INPUT, test x$has_linux_input = xyes)
 
 have_xrender=no
 
@@ -483,26 +480,25 @@ if test "$enable_clanSound" != "no"; then
 			clanSound, [ *** Cannot find directsound libs],[-ldxguid -lwinmm -ldsound])
 	else
 		dnl OSS header check
-	soundcard_h=no
-	AC_CHECK_HEADERS(machine/soundcard.h sys/soundcard.h soundcard.h, [soundcard_h=yes && break])
-	if test "$soundcard_h" == "no"; then
-		CLANLIB_DISABLE_MODULE(clanSound,[ *** Cannot find soundcard.h])
-	fi
-	sound_libs=""
-	have_alsa=no
-	AC_CHECK_LIB(ossaudio, _oss_ioctl, sound_libs=-lossaudio)
-	AC_CHECK_HEADERS(asoundlib.h alsa/asoundlib.h, [have_alsa=yes && break])
-	if test "$have_alsa" != "no"; then
-		sound_libs="$sound_libs -lasound"
-	fi
+		soundcard_h=no
+		AC_CHECK_HEADERS(machine/soundcard.h sys/soundcard.h soundcard.h, [soundcard_h=yes && break])
+		if test "$soundcard_h" == "no"; then
+			CLANLIB_DISABLE_MODULE(clanSound,[ *** Cannot find soundcard.h])
+		fi
+		sound_libs=""
+		have_alsa=no
+		AC_CHECK_LIB(ossaudio, _oss_ioctl, sound_libs=-lossaudio)
+		AC_CHECK_HEADERS(asoundlib.h alsa/asoundlib.h, [have_alsa=yes && break])
+		if test "$have_alsa" != "no"; then
+			sound_libs="$sound_libs -lasound"
+		fi
 
-	extra_LIBS_clanSound="$extra_LIBS_clanSound $sound_libs"
-	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
+		extra_LIBS_clanSound="$extra_LIBS_clanSound $sound_libs"
 	fi
 
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
-
 fi
+AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 
 if test "$enable_clanDatabase" != "no"; then
 	echo "Checking for clanDatabase stuff"
