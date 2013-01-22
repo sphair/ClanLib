@@ -162,6 +162,11 @@ void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *lay
 		align_items.compute(&parent->align_items, layout, em_size, ex_size);
 		align_self.compute(&parent->align_self, layout, em_size, ex_size, &parent->align_items);
 		align_content.compute(&parent->align_content, layout, em_size, ex_size);
+
+		for (size_t cnt = 0; cnt < generic_values.size(); cnt++)
+		{
+			generic_values[cnt].compute(&parent->generic_values, layout, em_size, ex_size);
+		}
 	}
 	else
 	{
@@ -274,7 +279,14 @@ void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *lay
 		align_items.compute(0, layout, em_size, ex_size);
 		align_self.compute(0, layout, em_size, ex_size, 0);
 		align_content.compute(0, layout, em_size, ex_size);
+
+		for (size_t cnt = 0; cnt < generic_values.size(); cnt++)
+		{
+			generic_values[cnt].compute(0, layout, em_size, ex_size);
+		}
+
 	}
+
 }
 
 }

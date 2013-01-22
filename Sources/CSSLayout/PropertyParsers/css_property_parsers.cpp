@@ -132,6 +132,7 @@
 #include "Width/css_parser_width.h"
 #include "WordSpacing/css_parser_word_spacing.h"
 #include "ZIndex/css_parser_z_index.h"
+#include "Generic/css_parser_generic.h"
 
 namespace clan
 {
@@ -250,10 +251,18 @@ CSSPropertyParsers::~CSSPropertyParsers()
 
 void CSSPropertyParsers::parse(const CSSProperty &property, std::vector<std::unique_ptr<CSSPropertyValue> > &inout_values)
 {
+	
 	std::string name = StringHelp::text_to_lower(property.get_name());
 	std::map<std::string, CSSPropertyParser *>::iterator it = name_to_parser.find(name);
 	if (it != name_to_parser.end())
+	{
 		it->second->parse(property.get_name(), property.get_value_tokens(), inout_values);
+	}
+	else
+	{
+		CSSParserGeneric generic_parser;
+		generic_parser.parse(property.get_name(), property.get_value_tokens(), inout_values);
+	}
 }
 
 void CSSPropertyParsers::add(CSSPropertyParser *parser)
