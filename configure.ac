@@ -351,6 +351,9 @@ if test "$enable_clanDisplay" != "no"; then
 			int main(){}void used_stuff(){ DirectInput8Create(NULL, 0, IID_IDirectInput8, NULL, 0); } ],
 			clanDisplay, [ *** Cannot find version 8 of DirectInput], [-ldxguid -lole32 -ldinput8])
 	fi
+else
+	AM_CONDITIONAL(LINUX_JOYSTICK, test x$has_linux_joystick = xyes)
+	AM_CONDITIONAL(LINUX_INPUT, test x$has_linux_input = xyes)
 fi
 
 have_xrender=no
