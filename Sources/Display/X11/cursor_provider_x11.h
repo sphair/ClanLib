@@ -46,7 +46,7 @@ class CursorProvider_X11 : public CursorProvider
 /// \name Construction
 /// \{
 public:
-	CursorProvider_X11(const SpriteDescription &sprite_description, const Point &hotspot);
+	CursorProvider_X11(const CursorDescription &cursor_description, const Point &hotspot);
 	~CursorProvider_X11();
 /// \}
 
@@ -66,7 +66,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	int create_cursor(const SpriteDescription &sprite_description, const Point &hotspot) const;
+	int create_cursor(const CursorDescription &cursor_description, const Point &hotspot) const;
 /// \}
 };
 

@@ -28,7 +28,6 @@
 
 #pragma once
 
-
 #include "API/Display/api_display.h"
 #include "API/Display/TargetProviders/cursor_provider.h"
 #include "API/Core/System/databuffer.h"
