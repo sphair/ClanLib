@@ -28,8 +28,6 @@
 
 #include "Display/precomp.h"
 #include "cursor_provider_x11.h"
-#include "API/Core/System/databuffer.h"
-#include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Window/cursor_description.h"
 #include "x11_window.h"
 
