@@ -95,7 +95,7 @@ public:
 /// \{
 
 public:
-	std::shared_ptr<PathGroup> load_glyph_outline(int glyph_index, int &out_advance_x);
+	PathGroup load_glyph_outline(int glyph_index, int &out_advance_x);
 
 /// \}
 /// \name Implementation
