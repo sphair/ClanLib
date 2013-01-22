@@ -256,16 +256,7 @@ namespace CssStr
 	const std::string icon_width = "icon-width";										// listview, toolbar
 	const std::string icon_height = "icon-height";										// listview, toolbar
 
-	const std::string align = "align";													// generic 
-	const std::string vertical_align = "vertical-align";								// generic 
-
 	// Theme part property values:
-	const std::string left = "left";													// align
-	const std::string center = "center";												// align, vertical-align
-	const std::string right = "right";													// align
-	const std::string justify = "justify";												// align - todo
-	const std::string top = "top";														// vertical-align
-	const std::string bottom = "bottom";												// vertical-align
 
 	const std::string icon_color = "icon-color";										// listview
 	const std::string icon_color_selected = "icon-color-selected";						// listview
