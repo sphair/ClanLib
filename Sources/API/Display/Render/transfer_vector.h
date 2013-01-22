@@ -77,7 +77,7 @@ public:
 	}
 
 	/// \brief Constructs a TransferVector from an existing buffer
-	explicit TransferVector(TransferBuffer &transfer_buffer)
+	explicit TransferVector(const TransferBuffer &transfer_buffer)
 	: TransferBuffer(transfer_buffer)
 	{
 	}
