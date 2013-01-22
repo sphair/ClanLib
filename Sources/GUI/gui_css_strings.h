@@ -213,17 +213,6 @@ namespace CssStr
 		const std::string type_name = "tooltip";
 	}
 
-	namespace Window
-	{
-		const std::string type_name = "window";
-		const std::string part_caption = "caption";
-		const std::string part_frameleft = "frameleft";
-		const std::string part_frameright = "frameright";
-		const std::string part_framebottom = "framebottom";
-		const std::string part_buttonclose = "buttonclose";
-	}
-
-
 	// Theme part states:
 	const std::string normal = "normal";                      // all components, text-weight
 	const std::string hot = "hot";
@@ -248,7 +237,6 @@ namespace CssStr
 
 	// Theme part properties:
 	const std::string text_color = "text-color";
-	const std::string text_color_disabled = "text-color-disabled";						// todo: remove!
 	const std::string text_gap	= "text-gap";											// check, radio, toolbar
 	const std::string first_tab_x_offset = "first-tab-x-offset";						// TabHeader
 	const std::string layout = "layout";												// toolbar
