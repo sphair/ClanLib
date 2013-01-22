@@ -16,6 +16,8 @@ SoundProviders/soundprovider_raw_session.cpp \
 SoundProviders/soundprovider_type.cpp \
 SoundProviders/soundprovider_wave.cpp \
 SoundProviders/soundprovider_wave_session.cpp \
+SoundProviders/soundprovider.cpp \
+SoundProviders/soundprovider_session.cpp \
 cd_drive.cpp \
 precomp.cpp \
 resourcetype_sample.cpp \
@@ -29,16 +31,12 @@ soundfilter.cpp \
 soundoutput.cpp \
 soundoutput_description.cpp \
 soundoutput_impl.cpp \
-SoundProviders/soundprovider.cpp \
-SoundProviders/soundprovider_session.cpp \
 sound_sse.cpp
 
 if WIN32
 libclan30Sound_la_SOURCES += \
 Win32/soundoutput_directsound.cpp \
-Win32/soundoutput_directsound.h \
-SoundProviders/Win32/soundprovider_recorder_directsound.cpp \
-SoundProviders/Win32/soundprovider_recorder_directsound.h
+Win32/soundoutput_directsound.h
 else
 libclan30Sound_la_SOURCES += \
 Unix/soundoutput_oss.cpp \
@@ -48,9 +46,6 @@ libclan30Sound_la_SOURCES += \
 Unix/soundoutput_alsa.cpp \
 Unix/soundoutput_alsa.h
 endif
-libclan30Sound_la_SOURCES += \
-SoundProviders/Unix/soundprovider_recorder_oss.cpp \
-SoundProviders/Unix/soundprovider_recorder_oss.h
 endif
 
 libclan30Sound_la_LDFLAGS = \
