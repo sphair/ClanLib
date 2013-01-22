@@ -16,8 +16,6 @@ SoundProviders/soundprovider_raw_session.cpp \
 SoundProviders/soundprovider_type.cpp \
 SoundProviders/soundprovider_wave.cpp \
 SoundProviders/soundprovider_wave_session.cpp \
-SoundProviders/soundprovider_recorder.cpp \
-SoundProviders/soundprovider_recorder_impl.h \
 cd_drive.cpp \
 precomp.cpp \
 resourcetype_sample.cpp \
