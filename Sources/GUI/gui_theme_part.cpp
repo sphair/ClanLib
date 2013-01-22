@@ -270,25 +270,7 @@ Rect GUIThemePart::get_content_shrink_box() const
 
 std::string GUIThemePart::get_property(const std::string &property, const std::string &default_value) const
 {
-	return default_value;
-/*
-	CSSDocument document = impl->component->get_gui_manager().get_css_document();
-	GUIComponentSelectNode select_node(&impl->element);
-	std::vector<CSSPropertyValue *> sheet_properties = document.select(&select_node);
-
-	CSSPropertyParsers property_parsers;
-	for (size_t i = sheet_properties.size(); i > 0; i--)
-	{
-		if (property == StringHelp::text_to_lower(sheet_properties[i-1].get_name()))
-		{
-			size_t pos = 0;
-			CSSToken token = GUIComponent_Impl::next_token(pos, sheet_properties[i-1].get_value_tokens(), true);
-			return token.value;
-		}
-	}
-
-	return default_value;
-*/
+	return impl->element.get_property(property, default_value);
 }
 
 int GUIThemePart::get_property_int(const std::string &property, const std::string &default_value) const

@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "gui_component_select_node.h"
 
 namespace clan
@@ -234,6 +235,26 @@ void GUIElement::update_style()
 //		func_apply_properties.invoke(css_properties);
 
 	style_needs_update = false;
+}
+
+std::string GUIElement::get_property(const std::string &property, const std::string &default_value) const
+{
+	// TODO: Decode all token types
+	// TODO: If property not found, search standard types?
+	const CSSComputedValues &computed_values = get_css_values();
+	const std::vector<CSSValueGeneric> &generic_values = computed_values.get_box().generic_values;
+
+	for (size_t cnt = 0; cnt < generic_values.size(); cnt++)
+	{
+		if (generic_values[cnt].property_name == property)
+		{
+			const std::vector<CSSToken> &tokens = generic_values[cnt].tokens;
+			if (tokens.empty())
+				return std::string("");
+			return tokens[0].value;
+		}
+	}
+	return default_value;
 }
 
 }
