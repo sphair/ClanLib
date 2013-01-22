@@ -41,6 +41,7 @@ namespace clan
 
 class BezierCurve_Impl;
 class Pointf;
+class Angle;
 
 /// \brief Bezier curve generator.
 ///
