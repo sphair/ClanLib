@@ -53,71 +53,69 @@ clanNetwork_includes = \
 
 clanGUI_includes = \
 	gui.h \
-	GUI/gui_message_close.h \
-	GUI/gui_layout.h \
-	GUI/gui_message_activation_change.h \
-	GUI/gui_message.h \
+	GUI/accelerator_key.h \
+	GUI/accelerator_table.h
 	GUI/api_gui.h \
+	GUI/gui_component.h \
+	GUI/gui_component_description.h \
+	GUI/gui_layout.h \
+	GUI/gui_layout_corners.h \
+	GUI/gui_manager.h \
+	GUI/gui_message.h \
+	GUI/gui_message_activation_change.h \
+	GUI/gui_message_close.h \
+	GUI/gui_message_focus_change.h \
+	GUI/gui_message_input.h \
+	GUI/gui_message_pointer.h \
+	GUI/gui_message_resize.h \
+	GUI/gui_theme_part.h \
+	GUI/gui_window_manager.h \
 	GUI/gui_window_manager_direct.h \
+	GUI/gui_window_manager_system.h \
+	GUI/gui_window_manager_texture.h \
+	GUI/gui_window_manager_texture_window.h \
+	GUI/setup_gui.h \
 	GUI/Providers/gui_window_manager_provider.h \
 	GUI/Providers/gui_layout_provider.h \
-	GUI/gui_layout_corners.h \
-	GUI/gui_component.h \
-	GUI/Components/main_window.h \
-	GUI/Components/radiobutton.h \
-	GUI/Components/listview_icon.h \
-	GUI/Components/textedit.h \
-	GUI/Components/statusbar.h \
-	GUI/Components/popupmenu.h \
-	GUI/Components/menubar.h \
-	GUI/Components/window.h \
-	GUI/Components/toolbar_item.h \
-	GUI/Components/progressbar.h \
-	GUI/Components/toolbar.h \
-	GUI/Components/span_component.h \
-	GUI/Components/spin.h \
-	GUI/Components/scrollbar.h \
-	GUI/Components/tab_page.h \
-	GUI/Components/listview_header.h \
-	GUI/Components/folderbrowsedialog.h \
-	GUI/Components/imageview.h \
-	GUI/Components/listview.h \
-	GUI/Components/combobox.h \
-	GUI/Components/lineedit.h \
-	GUI/Components/slider.h \
-	GUI/Components/listview_column_data.h \
-	GUI/Components/openfiledialog.h \
-	GUI/Components/listview_icon_list.h \
-	GUI/Components/ribbon_menu.h \
 	GUI/Components/checkbox.h \
-	GUI/Components/popupmenu_item.h \
-	GUI/Components/listview_column_header.h \
-	GUI/Components/listview_item.h \
-	GUI/Components/ribbon_page.h \
-	GUI/Components/tooltip.h \
-	GUI/Components/groupbox.h \
-	GUI/Components/savefiledialog.h \
-	GUI/Components/label.h \
-	GUI/Components/ribbon_section.h \
+	GUI/Components/combobox.h \
+	GUI/Components/folderbrowsedialog.h \
 	GUI/Components/frame.h \
-	GUI/Components/ribbon.h \
+	GUI/Components/groupbox.h \
+	GUI/Components/imageview.h \
+	GUI/Components/label.h \
+	GUI/Components/lineedit.h \
+	GUI/Components/listview.h \
+	GUI/Components/listview_column_data.h \
+	GUI/Components/listview_column_header.h \
+	GUI/Components/listview_header.h \
+	GUI/Components/listview_icon.h \
+	GUI/Components/listview_icon_list.h \
+	GUI/Components/listview_item.h \
 	GUI/Components/listview_selected_item.h \
+	GUI/Components/menubar.h \
+	GUI/Components/message_box.h
+	GUI/Components/openfiledialog.h \
+	GUI/Components/popupmenu.h \
+	GUI/Components/popupmenu_item.h \
+	GUI/Components/progressbar.h \
 	GUI/Components/push_button.h \
+	GUI/Components/radiobutton.h \
+	GUI/Components/ribbon.h \
+	GUI/Components/ribbon_menu.h \
+	GUI/Components/ribbon_page.h \
+	GUI/Components/ribbon_section.h \
+	GUI/Components/savefiledialog.h \
+	GUI/Components/scrollbar.h \
+	GUI/Components/slider.h \
+	GUI/Components/spin.h \
+	GUI/Components/statusbar.h \
 	GUI/Components/tab.h \
-	GUI/Components/message_box.h \
-	GUI/gui_window_manager_texture.h \
-	GUI/setup_gui.h \
-	GUI/gui_component_description.h \
-	GUI/gui_message_input.h \
-	GUI/gui_message_focus_change.h \
-	GUI/gui_window_manager_system.h \
-	GUI/gui_message_pointer.h \
-	GUI/gui_window_manager.h \
-	GUI/accelerator_key.h \
-	GUI/gui_manager.h \
-	GUI/gui_message_resize.h \
-	GUI/gui_window_manager_texture_window.h \
-	GUI/accelerator_table.h
+	GUI/Components/tab_page.h \
+	GUI/Components/textedit.h \
+	GUI/Components/toolbar.h \
+	GUI/Components/toolbar_item.h \
+	GUI/Components/tooltip.h
 
 clanSound_includes = \
 	sound.h \
