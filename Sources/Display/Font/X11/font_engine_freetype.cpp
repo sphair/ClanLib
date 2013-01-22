@@ -286,7 +286,7 @@ PathGroup FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 			}			
 		}
 
-		outline.add_contour(contour);
+		outline.add_path(contour);
 	}
 
 	FT_Done_Glyph(glyph);
