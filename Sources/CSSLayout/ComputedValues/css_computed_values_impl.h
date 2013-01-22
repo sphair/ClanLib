@@ -66,16 +66,19 @@ inline void CSSComputedValues_Impl::update_if_changed()
 		if (!selected_values.is_null())
 		{
 			const std::vector<CSSPropertyValue *> &selected_values_vector = selected_values.get_values();
-			for (size_t i = 0; i < selected_values_vector.size(); i++)
+			for (size_t i = selected_values_vector.size(); i > 0; --i)
 			{
-				selected_values_vector[i]->apply_to_box(box);
+				selected_values_vector[i-1]->apply_to_box(box);
 			}
 		}
 
 		if (!style_values.is_null())
 		{
 			const std::vector<std::unique_ptr<CSSPropertyValue> > &style_values_vector = style_values.get_values();
-			for (size_t i = 0; i < style_values_vector.size(); i++) { style_values_vector[i]->apply_to_box(box); }
+			for (size_t i = style_values_vector.size(); i > 0; --i)
+			{
+				style_values_vector[i-1]->apply_to_box(box);
+			}
 		}
 		box.compute(parent_computed_box_values, resource_cache);
 
