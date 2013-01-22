@@ -60,7 +60,6 @@ clanGUI_includes = \
 	GUI/api_gui.h \
 	GUI/gui_window_manager_direct.h \
 	GUI/Providers/gui_window_manager_provider.h \
-	GUI/Providers/gui_theme_provider.h \
 	GUI/Providers/gui_layout_provider.h \
 	GUI/gui_layout_corners.h \
 	GUI/gui_component.h \
