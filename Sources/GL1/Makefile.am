@@ -23,7 +23,7 @@ libclan30GL1_la_SOURCES += \
 	WGL/gl1_window_provider_wgl.cpp
 else
 libclan30GL1_la_SOURCES += \
-	GLX/gl1_window_provider_glx.cpp \
+	GLX/gl1_window_provider_glx.cpp
 endif
 libclan30GL1_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
