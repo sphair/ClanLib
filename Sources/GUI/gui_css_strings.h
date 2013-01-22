@@ -222,7 +222,6 @@ namespace CssStr
 	const std::string unfocused = "unfocused";					// lineedit selection, listview selection
 	const std::string pressed = "pressed";
 	const std::string toggled = "toggled";						// pushbutton
-	const std::string flat = "flat";							// pushbutton
 	const std::string checked = "checked";						// checkbox, radiobutton
 	const std::string unchecked = "unchecked";					// checkbox, radiobutton
 	const std::string indeterminated = "indeterminated";		// checkbox, radiobutton
@@ -236,11 +235,9 @@ namespace CssStr
 	const std::string horizontal = "horizontal";				// toolbar
 
 	// Theme part properties:
-	const std::string text_color = "text-color";
 	const std::string text_gap	= "text-gap";											// check, radio, toolbar
 	const std::string first_tab_x_offset = "first-tab-x-offset";						// TabHeader
 	const std::string layout = "layout";												// toolbar
-	const std::string gap_width = "gap-width";											// slider   todo: replace with "text-gap"
 	const std::string icon_width = "icon-width";										// listview, toolbar
 	const std::string icon_height = "icon-height";										// listview, toolbar
 
