@@ -273,7 +273,8 @@ void RenderBatchTriangle::lock_transfer_buffer(Canvas &canvas)
 	if (vertices == 0)
 	{
 		GraphicContext &gc = canvas.get_gc();
-		transfer_buffers = TransferVector<SpriteVertex>(batch_buffer->get_transfer_buffer(gc));
+		TransferBuffer transfer_buffer = batch_buffer->get_transfer_buffer(gc);
+		transfer_buffers = TransferVector<SpriteVertex>(transfer_buffer);
 		transfer_buffers.lock(gc, access_write_discard);
 		vertices = transfer_buffers.get_data();
 	}
