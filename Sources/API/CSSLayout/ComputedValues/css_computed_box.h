@@ -116,6 +116,7 @@
 #include "../PropertyValues/css_value_width.h"
 #include "../PropertyValues/css_value_word_spacing.h"
 #include "../PropertyValues/css_value_z_index.h"
+#include "../PropertyValues/css_value_generic.h"
 #include <map>
 
 namespace clan
@@ -252,6 +253,8 @@ public:
 	CSSValueBorderSpacing border_spacing;
 	CSSValueVerticalAlign vertical_align;
 	CSSValueEmptyCells empty_cells;
+
+	std::vector<CSSValueGeneric> generic_values;
 
 	void compute(const CSSComputedBox *parent, CSSResourceCache *layout);
 };
