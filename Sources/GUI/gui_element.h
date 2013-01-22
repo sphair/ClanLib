@@ -80,6 +80,9 @@ public:
 	/// \brief Returns all pseudo classes currently present
 	std::vector<std::string> get_pseudo_classes() const { return pseudo_classes; }
 
+	/// \brief Returns the value of a property.
+	std::string get_property(const std::string &property, const std::string &default_value) const;
+
 
 /// \}
 
