@@ -321,8 +321,8 @@ CLANLIB_ARG_ENABLE(clanGUI,      auto, [Build clanGUI module],        [whether w
 CLANLIB_ARG_ENABLE(clanCSSLayout,      auto, [Build clanCSSLayout module],        [whether we should try to build clanCSSLayout])
 CLANLIB_ARG_ENABLE(clanVorbis,   auto, [Build clanVorbis module],     [whether we should try to build clanVorbis])
 
-linux_joystick=no
-linux_input=no
+has_linux_joystick=no
+has_linux_input=no
 echo ""
 if test "$enable_clanDisplay" != "no"; then
 	echo "Checking for clanDisplay stuff"
@@ -330,12 +330,12 @@ if test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
 
 	dnl  Optional linux/joystick.h
-	AC_CHECK_HEADERS(linux/joystick.h, linux_joystick=yes)
-	AM_CONDITIONAL(LINUX_JOYSTICK, test x$linux_joystick = xyes)
+	AC_CHECK_HEADERS(linux/joystick.h, has_linux_joystick=yes)
+	AM_CONDITIONAL(LINUX_JOYSTICK, test x$has_linux_joystick = xyes)
 
 	dnl Optional linux/input.h
-	AC_CHECK_HEADERS(linux/input.h, linux_input=yes)
-	AM_CONDITIONAL(LINUX_INPUT, test x$linux_input = xyes)
+	AC_CHECK_HEADERS(linux/input.h, has_linux_input=yes)
+	AM_CONDITIONAL(LINUX_INPUT, test x$has_linux_input = xyes)
 
 	if test "$WIN32" = "no" && test "$enable_clanDisplay" != "no"; then
 	CLANLIB_CHECK_LIB(fontconfig,  [`cat $srcdir/Setup/Tests/fontconfig.cpp`],  clanDisplay, [ *** Cannot find fontconfig (See http://fontconfig.org/ ) (Try libfontconfig1-dev or better) ], [-lfontconfig])
@@ -822,13 +822,13 @@ echo "                clanNetwork = $enable_clanNetwork"
 
 display_options=""
 if test "$enable_clanDisplay" != "no"; then
-	if test "$linux_joystick" != "no"; then
+	if test "$has_linux_joystick" != "no"; then
 		display_options="$display_options (Linux Joystick Enabled)"
 	else
 		display_options="$display_options (Linux Joystick Disabled)"
 	fi
 
-	if test "$linux_input" != "no"; then
+	if test "$has_linux_input" != "no"; then
 		display_options="$display_options (Linux Input Enabled)"
 	else
 		display_options="$display_options (Linux Input Disabled)"
