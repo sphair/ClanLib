@@ -30,7 +30,6 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Font/font_metrics.h"
-#include "../glyph_outline.h"
 #include "API/Core/Math/bezier_curve.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
