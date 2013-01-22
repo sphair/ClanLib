@@ -450,12 +450,12 @@ if test "$enable_clanDisplay" != "no"; then
 		if test "$enable_clanCSSLayout" != "no"; then
 			if test "$enable_clanGUI" != "no"; then
 				echo "Checking for clanGUI stuff"	
-			echo "=============================="
+				echo "=============================="
 				if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
 
-			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
+dnl				CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
 
-			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
+				if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
 			fi
 		else
 			CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanCSSLayout])
