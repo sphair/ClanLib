@@ -99,7 +99,8 @@ Size MessageBoxComponent::layout_content()
 	rect_icon.translate(border_space.left, 0);
 
 
-	Size text_size = component->get_render_text_box(get_canvas(), detail_text).get_size();
+	Canvas canvas = get_canvas();
+	Size text_size = component->get_render_text_box(canvas, detail_text).get_size();
 	rect_text = component->get_size();
 	rect_text.left = rect_icon.right + icon_margin_right;
 	rect_text.right = rect_text.left + text_size.width;

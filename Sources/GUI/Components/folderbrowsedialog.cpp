@@ -29,6 +29,7 @@
 #include "GUI/precomp.h"
 #include "API/GUI/Components/folderbrowsedialog.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/System/system.h"
 
 #if defined(WIN32)
 #include "API/Core/System/comptr.h"

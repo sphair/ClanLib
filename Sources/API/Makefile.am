@@ -53,69 +53,69 @@ clanNetwork_includes = \
 
 clanGUI_includes = \
 	gui.h \
-	GUI/accelerator_key.h \
-	GUI/accelerator_table.h \
-	GUI/api_gui.h \
-	GUI/gui_component.h \
-	GUI/gui_component_description.h \
-	GUI/gui_layout.h \
-	GUI/gui_layout_corners.h \
 	GUI/gui_manager.h \
-	GUI/gui_message.h \
-	GUI/gui_message_activation_change.h \
-	GUI/gui_message_close.h \
-	GUI/gui_message_focus_change.h \
-	GUI/gui_message_input.h \
-	GUI/gui_message_pointer.h \
-	GUI/gui_message_resize.h \
-	GUI/gui_theme_part.h \
 	GUI/gui_window_manager.h \
 	GUI/gui_window_manager_direct.h \
-	GUI/gui_window_manager_system.h \
-	GUI/gui_window_manager_texture.h \
+	GUI/accelerator_key.h \
+	GUI/gui_message_resize.h \
+	GUI/gui_component.h \
+	GUI/gui_message_pointer.h \
 	GUI/gui_window_manager_texture_window.h \
-	GUI/setup_gui.h \
-	GUI/Providers/gui_window_manager_provider.h \
-	GUI/Providers/gui_layout_provider.h \
-	GUI/Components/checkbox.h \
-	GUI/Components/combobox.h \
-	GUI/Components/folderbrowsedialog.h \
-	GUI/Components/frame.h \
-	GUI/Components/groupbox.h \
-	GUI/Components/imageview.h \
-	GUI/Components/label.h \
+	GUI/api_gui.h \
+	GUI/gui_theme_part.h \
+	GUI/gui_message_focus_change.h \
+	GUI/gui_message_input.h \
+	GUI/gui_message_activation_change.h \
+	GUI/Components/ribbon_menu.h \
 	GUI/Components/lineedit.h \
+	GUI/Components/combobox.h \
+	GUI/Components/groupbox.h \
+	GUI/Components/folderbrowsedialog.h \
 	GUI/Components/listview.h \
+	GUI/Components/tab.h \
+	GUI/Components/frame.h \
 	GUI/Components/listview_column_data.h \
-	GUI/Components/listview_column_header.h \
-	GUI/Components/listview_header.h \
-	GUI/Components/listview_icon.h \
 	GUI/Components/listview_icon_list.h \
+	GUI/Components/tab_page.h \
+	GUI/Components/scrollbar.h \
+	GUI/Components/savefiledialog.h \
+	GUI/Components/imageview.h \
+	GUI/Components/slider.h \
+	GUI/Components/statusbar.h \
+	GUI/Components/label.h \
+	GUI/Components/ribbon_page.h \
 	GUI/Components/listview_item.h \
+	GUI/Components/listview_header.h \
+	GUI/Components/message_box.h \
+	GUI/Components/tooltip.h \
+	GUI/Components/spin.h \
+	GUI/Components/checkbox.h \
+	GUI/Components/push_button.h \
+	GUI/Components/openfiledialog.h \
+	GUI/Components/progressbar.h \
+	GUI/Components/listview_icon.h \
+	GUI/Components/listview_column_header.h \
+	GUI/Components/toolbar_item.h \
+	GUI/Components/popupmenu.h \
+	GUI/Components/radiobutton.h \
 	GUI/Components/listview_selected_item.h \
 	GUI/Components/menubar.h \
-	GUI/Components/message_box.h
-	GUI/Components/openfiledialog.h \
-	GUI/Components/popupmenu.h \
 	GUI/Components/popupmenu_item.h \
-	GUI/Components/progressbar.h \
-	GUI/Components/push_button.h \
-	GUI/Components/radiobutton.h \
 	GUI/Components/ribbon.h \
-	GUI/Components/ribbon_menu.h \
-	GUI/Components/ribbon_page.h \
 	GUI/Components/ribbon_section.h \
-	GUI/Components/savefiledialog.h \
-	GUI/Components/scrollbar.h \
-	GUI/Components/slider.h \
-	GUI/Components/spin.h \
-	GUI/Components/statusbar.h \
-	GUI/Components/tab.h \
-	GUI/Components/tab_page.h \
-	GUI/Components/textedit.h \
 	GUI/Components/toolbar.h \
-	GUI/Components/toolbar_item.h \
-	GUI/Components/tooltip.h
+	GUI/Components/textedit.h \
+	GUI/gui_component_description.h \
+	GUI/gui_message.h \
+	GUI/gui_message_close.h \
+	GUI/gui_window_manager_texture.h \
+	GUI/gui_window_manager_system.h \
+	GUI/gui_layout_corners.h \
+	GUI/accelerator_table.h \
+	GUI/setup_gui.h \
+	GUI/gui_layout.h \
+	GUI/Providers/gui_layout_provider.h \
+	GUI/Providers/gui_window_manager_provider.h
 
 clanSound_includes = \
 	sound.h \
@@ -421,115 +421,115 @@ clanDisplay_includes = \
 
 clanCSSLayout_includes = \
 	csslayout.h \
-	CSSLayout/api_csslayout.h \
+	CSSLayout/CSSTokenizer/css_tokenizer.h \
+	CSSLayout/CSSTokenizer/css_token.h \
+	CSSLayout/Layout/css_hit_test_result.h \
+	CSSLayout/Layout/css_layout_user_data.h \
+	CSSLayout/Layout/css_layout_node.h \
+	CSSLayout/Layout/css_layout_text.h \
+	CSSLayout/Layout/css_layout.h \
+	CSSLayout/Layout/css_replaced_component.h \
+	CSSLayout/Layout/css_layout_element.h \
+	CSSLayout/Layout/css_layout_object.h \
+	CSSLayout/PropertyValues/css_value_empty_cells.h \
+	CSSLayout/PropertyValues/css_value_flex_wrap.h \
+	CSSLayout/PropertyValues/css_value_background_repeat.h \
+	CSSLayout/PropertyValues/css_value_background_origin.h \
+	CSSLayout/PropertyValues/css_value_page_break_before.h \
+	CSSLayout/PropertyValues/css_value_overflow.h \
+	CSSLayout/PropertyValues/css_value_font_weight.h \
+	CSSLayout/PropertyValues/css_value_align_items.h \
+	CSSLayout/PropertyValues/css_value_min_width.h \
+	CSSLayout/PropertyValues/css_value_right.h \
+	CSSLayout/PropertyValues/css_value_border_image_slice.h \
+	CSSLayout/PropertyValues/css_value_list_style_image.h \
+	CSSLayout/PropertyValues/css_value_generic.h \
+	CSSLayout/PropertyValues/css_value_border_radius.h \
+	CSSLayout/PropertyValues/css_value_orphans.h \
+	CSSLayout/PropertyValues/css_value_caption_side.h \
+	CSSLayout/PropertyValues/css_value_flex_shrink.h \
+	CSSLayout/PropertyValues/css_value_border_color.h \
+	CSSLayout/PropertyValues/css_value_color.h \
+	CSSLayout/PropertyValues/css_value_align_self.h \
+	CSSLayout/PropertyValues/css_value_min_height.h \
+	CSSLayout/PropertyValues/css_value_left.h \
+	CSSLayout/PropertyValues/css_value_clear.h \
+	CSSLayout/PropertyValues/css_value_counter_increment.h \
+	CSSLayout/PropertyValues/css_value_padding_width.h \
+	CSSLayout/PropertyValues/css_value_border_image_width.h \
+	CSSLayout/PropertyValues/css_value_display.h \
+	CSSLayout/PropertyValues/css_value_bottom.h \
+	CSSLayout/PropertyValues/css_value_counter_reset.h \
+	CSSLayout/PropertyValues/css_value_background_position.h \
+	CSSLayout/PropertyValues/css_value_border_image_source.h \
+	CSSLayout/PropertyValues/css_value_vertical_align.h \
+	CSSLayout/PropertyValues/css_value_justify_content.h \
+	CSSLayout/PropertyValues/css_value_position.h \
+	CSSLayout/PropertyValues/css_value_cursor.h \
+	CSSLayout/PropertyValues/css_value_outline_color.h \
+	CSSLayout/PropertyValues/css_value_border_collapse.h \
+	CSSLayout/PropertyValues/css_value_font_style.h \
+	CSSLayout/PropertyValues/css_value_max_height.h \
+	CSSLayout/PropertyValues/css_value_list_style_position.h \
+	CSSLayout/PropertyValues/css_value_word_spacing.h \
+	CSSLayout/PropertyValues/css_value_direction.h \
+	CSSLayout/PropertyValues/css_value_line_height.h \
+	CSSLayout/PropertyValues/css_value_table_layout.h \
+	CSSLayout/PropertyValues/css_value_white_space.h \
+	CSSLayout/PropertyValues/css_value_background_clip.h \
+	CSSLayout/PropertyValues/css_value_height.h \
+	CSSLayout/PropertyValues/css_value_flex_basis.h \
+	CSSLayout/PropertyValues/css_value_quotes.h \
+	CSSLayout/PropertyValues/css_value_font_size.h \
+	CSSLayout/PropertyValues/css_value_float.h \
+	CSSLayout/PropertyValues/css_value_max_width.h \
+	CSSLayout/PropertyValues/css_value_page_break_after.h \
+	CSSLayout/PropertyValues/css_value_page_break_inside.h \
+	CSSLayout/PropertyValues/css_value_decoration_break.h \
+	CSSLayout/PropertyValues/css_value_shadow.h \
+	CSSLayout/PropertyValues/css_value_text_align.h \
+	CSSLayout/PropertyValues/css_value_border_style.h \
+	CSSLayout/PropertyValues/css_value_top.h \
+	CSSLayout/PropertyValues/css_value_background_attachment.h \
+	CSSLayout/PropertyValues/css_value_clip.h \
+	CSSLayout/PropertyValues/css_value_width.h \
+	CSSLayout/PropertyValues/css_value_letter_spacing.h \
+	CSSLayout/PropertyValues/css_value_outline_style.h \
+	CSSLayout/PropertyValues/css_value_margin_width.h \
+	CSSLayout/PropertyValues/css_value_align_content.h \
+	CSSLayout/PropertyValues/css_value_font_family.h \
+	CSSLayout/PropertyValues/css_value_flex_grow.h \
+	CSSLayout/PropertyValues/css_value_background_image.h \
+	CSSLayout/PropertyValues/css_value_border_width.h \
+	CSSLayout/PropertyValues/css_value_content.h \
+	CSSLayout/PropertyValues/css_value_border_spacing.h \
+	CSSLayout/PropertyValues/css_value_background_color.h \
+	CSSLayout/PropertyValues/css_value_visibility.h \
+	CSSLayout/PropertyValues/css_value_font_variant.h \
+	CSSLayout/PropertyValues/css_value_text_indent.h \
+	CSSLayout/PropertyValues/css_value_z_index.h \
+	CSSLayout/PropertyValues/css_value_outline_width.h \
+	CSSLayout/PropertyValues/css_value_text_transform.h \
+	CSSLayout/PropertyValues/css_value_border_image_outset.h \
+	CSSLayout/PropertyValues/css_value_flex_direction.h \
+	CSSLayout/PropertyValues/css_value_text_decoration.h \
+	CSSLayout/PropertyValues/css_value_order.h \
+	CSSLayout/PropertyValues/css_value_widows.h \
+	CSSLayout/PropertyValues/css_value_border_image_repeat.h \
+	CSSLayout/PropertyValues/css_value_list_style_type.h \
+	CSSLayout/PropertyValues/css_value_background_size.h \
+	CSSLayout/PropertyValues/css_value_unicode_bidi.h \
 	CSSLayout/ComputedValues/css_computed_box.h \
 	CSSLayout/ComputedValues/css_computed_values.h \
-	CSSLayout/CSSDocument/css_document.h \
+	CSSLayout/CSSDocument/css_property_value.h \
+	CSSLayout/CSSDocument/css_select_result.h \
+	CSSLayout/CSSDocument/dom_select_node.h \
 	CSSLayout/CSSDocument/css_length.h \
 	CSSLayout/CSSDocument/css_property.h \
-	CSSLayout/CSSDocument/css_property_value.h \
 	CSSLayout/CSSDocument/css_select_node.h \
-	CSSLayout/CSSDocument/css_select_result.h \
 	CSSLayout/CSSDocument/css_style_properties.h \
-	CSSLayout/CSSDocument/dom_select_node.h \
-	CSSLayout/CSSTokenizer/css_token.h \
-	CSSLayout/CSSTokenizer/css_tokenizer.h \
-	CSSLayout/Layout/css_hit_test_result.h \
-	CSSLayout/Layout/css_layout.h \
-	CSSLayout/Layout/css_layout_element.h \
-	CSSLayout/Layout/css_layout_node.h \
-	CSSLayout/Layout/css_layout_object.h \
-	CSSLayout/Layout/css_layout_text.h \
-	CSSLayout/Layout/css_layout_user_data.h \
-	CSSLayout/Layout/css_replaced_component.h \
-	CSSLayout/PropertyValues/css_value_align_content.h \
-	CSSLayout/PropertyValues/css_value_align_items.h \
-	CSSLayout/PropertyValues/css_value_align_self.h \
-	CSSLayout/PropertyValues/css_value_background_attachment.h \
-	CSSLayout/PropertyValues/css_value_background_clip.h \
-	CSSLayout/PropertyValues/css_value_background_color.h \
-	CSSLayout/PropertyValues/css_value_background_image.h \
-	CSSLayout/PropertyValues/css_value_background_origin.h \
-	CSSLayout/PropertyValues/css_value_background_position.h \
-	CSSLayout/PropertyValues/css_value_background_repeat.h \
-	CSSLayout/PropertyValues/css_value_background_size.h \
-	CSSLayout/PropertyValues/css_value_border_collapse.h \
-	CSSLayout/PropertyValues/css_value_border_color.h \
-	CSSLayout/PropertyValues/css_value_border_image_outset.h \
-	CSSLayout/PropertyValues/css_value_border_image_repeat.h \
-	CSSLayout/PropertyValues/css_value_border_image_slice.h \
-	CSSLayout/PropertyValues/css_value_border_image_source.h \
-	CSSLayout/PropertyValues/css_value_border_image_width.h \
-	CSSLayout/PropertyValues/css_value_border_radius.h \
-	CSSLayout/PropertyValues/css_value_border_spacing.h \
-	CSSLayout/PropertyValues/css_value_border_style.h \
-	CSSLayout/PropertyValues/css_value_border_width.h \
-	CSSLayout/PropertyValues/css_value_bottom.h \
-	CSSLayout/PropertyValues/css_value_caption_side.h \
-	CSSLayout/PropertyValues/css_value_clear.h \
-	CSSLayout/PropertyValues/css_value_clip.h \
-	CSSLayout/PropertyValues/css_value_color.h \
-	CSSLayout/PropertyValues/css_value_content.h \
-	CSSLayout/PropertyValues/css_value_counter_increment.h \
-	CSSLayout/PropertyValues/css_value_counter_reset.h \
-	CSSLayout/PropertyValues/css_value_cursor.h \
-	CSSLayout/PropertyValues/css_value_decoration_break.h \
-	CSSLayout/PropertyValues/css_value_direction.h \
-	CSSLayout/PropertyValues/css_value_display.h \
-	CSSLayout/PropertyValues/css_value_empty_cells.h \
-	CSSLayout/PropertyValues/css_value_flex_basis.h \
-	CSSLayout/PropertyValues/css_value_flex_direction.h \
-	CSSLayout/PropertyValues/css_value_flex_grow.h \
-	CSSLayout/PropertyValues/css_value_flex_shrink.h \
-	CSSLayout/PropertyValues/css_value_flex_wrap.h \
-	CSSLayout/PropertyValues/css_value_float.h \
-	CSSLayout/PropertyValues/css_value_font_family.h \
-	CSSLayout/PropertyValues/css_value_font_size.h \
-	CSSLayout/PropertyValues/css_value_font_style.h \
-	CSSLayout/PropertyValues/css_value_font_variant.h \
-	CSSLayout/PropertyValues/css_value_font_weight.h \
-	CSSLayout/PropertyValues/css_value_generic.h \
-	CSSLayout/PropertyValues/css_value_height.h \
-	CSSLayout/PropertyValues/css_value_justify_content.h \
-	CSSLayout/PropertyValues/css_value_left.h \
-	CSSLayout/PropertyValues/css_value_letter_spacing.h \
-	CSSLayout/PropertyValues/css_value_line_height.h \
-	CSSLayout/PropertyValues/css_value_list_style_image.h \
-	CSSLayout/PropertyValues/css_value_list_style_position.h \
-	CSSLayout/PropertyValues/css_value_list_style_type.h \
-	CSSLayout/PropertyValues/css_value_margin_width.h \
-	CSSLayout/PropertyValues/css_value_max_height.h \
-	CSSLayout/PropertyValues/css_value_max_width.h \
-	CSSLayout/PropertyValues/css_value_min_height.h \
-	CSSLayout/PropertyValues/css_value_min_width.h \
-	CSSLayout/PropertyValues/css_value_order.h \
-	CSSLayout/PropertyValues/css_value_orphans.h \
-	CSSLayout/PropertyValues/css_value_outline_color.h \
-	CSSLayout/PropertyValues/css_value_outline_style.h \
-	CSSLayout/PropertyValues/css_value_outline_width.h \
-	CSSLayout/PropertyValues/css_value_overflow.h \
-	CSSLayout/PropertyValues/css_value_padding_width.h \
-	CSSLayout/PropertyValues/css_value_page_break_after.h \
-	CSSLayout/PropertyValues/css_value_page_break_before.h \
-	CSSLayout/PropertyValues/css_value_page_break_inside.h \
-	CSSLayout/PropertyValues/css_value_position.h \
-	CSSLayout/PropertyValues/css_value_quotes.h \
-	CSSLayout/PropertyValues/css_value_right.h \
-	CSSLayout/PropertyValues/css_value_shadow.h \
-	CSSLayout/PropertyValues/css_value_table_layout.h \
-	CSSLayout/PropertyValues/css_value_text_align.h \
-	CSSLayout/PropertyValues/css_value_text_decoration.h \
-	CSSLayout/PropertyValues/css_value_text_indent.h \
-	CSSLayout/PropertyValues/css_value_text_transform.h \
-	CSSLayout/PropertyValues/css_value_top.h \
-	CSSLayout/PropertyValues/css_value_unicode_bidi.h \
-	CSSLayout/PropertyValues/css_value_vertical_align.h \
-	CSSLayout/PropertyValues/css_value_visibility.h \
-	CSSLayout/PropertyValues/css_value_white_space.h \
-	CSSLayout/PropertyValues/css_value_widows.h \
-	CSSLayout/PropertyValues/css_value_width.h \
-	CSSLayout/PropertyValues/css_value_word_spacing.h \
-	CSSLayout/PropertyValues/css_value_z_index.h
+	CSSLayout/CSSDocument/css_document.h \
+	CSSLayout/api_csslayout.h
 
 clanVorbis_includes = \
 	vorbis.h \

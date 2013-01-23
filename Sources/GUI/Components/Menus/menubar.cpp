@@ -264,7 +264,7 @@ Rect MenuBar_Impl::get_menu_item_rect(int our_index)
 	Rect menubar_content_rect = menubar->get_content_box();
 
 	int x = menubar_content_rect.left;
-	Canvas &canvas = menubar->get_canvas();
+	Canvas canvas = menubar->get_canvas();
 	std::vector<TopMenu>::size_type index;
 	for (index = 0; index < menus.size(); index++)
 	{
