@@ -915,7 +915,7 @@ void GUIComponent::set_id(const std::string &name)
 
 bool GUIComponent::set_pseudo_class(const std::string &name, bool enable)
 {
-	return impl->element.set_pseudo_class(name, enable);
+	return impl->element.set_pseudo_class(name, enable, true);
 }
 
 void GUIComponent::update_layout()
