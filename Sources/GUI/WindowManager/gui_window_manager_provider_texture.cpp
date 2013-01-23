@@ -117,10 +117,12 @@ void GUIWindowManagerProvider_Texture::update_paint()
 		if (it->second->dirty)
 		{
 			it->second->dirty = false;
-			std::vector<Rect>::size_type size = it->second->update_region_list.size();
+			// Make a copy, since on_render() may call request_repaint()
+			std::vector<Rect> update_region_list = it->second->update_region_list;
+			std::vector<Rect>::size_type size = update_region_list.size();
 			for (int i = 0; i < size; i++)
 			{
-				site->func_paint->invoke(it->first, it->second->update_region_list[i]);
+				site->func_paint->invoke(it->first, update_region_list[i]);
 			}
 		}
 	}
