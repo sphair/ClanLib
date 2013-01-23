@@ -99,7 +99,7 @@ public:
 	/// \brief Controls the presence of a DOM pseudo class
 	///
 	/// \return true, if state changed
-	bool set_pseudo_class(const std::string &name, bool enable);
+	bool set_pseudo_class(const std::string &name, bool enable, bool allow_repainting);
 
 	/// \brief Makes this element a child of the given element, removing it from the previous parent.
 	void set_parent(GUIElement *new_parent);

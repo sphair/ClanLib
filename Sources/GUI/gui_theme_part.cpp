@@ -117,7 +117,7 @@ void GUIThemePart::set_id(const std::string &name)
 
 bool GUIThemePart::set_pseudo_class(const std::string &name, bool enable)
 {
-	return impl->element.set_pseudo_class(name, enable);
+	return impl->element.set_pseudo_class(name, enable, false);
 }
 
 GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values(const Rect &border_box)

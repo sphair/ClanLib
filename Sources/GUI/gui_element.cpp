@@ -186,7 +186,7 @@ bool GUIElement::get_pseudo_class(const std::string &name) const
 	return false;
 }
 
-bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
+bool GUIElement::set_pseudo_class(const std::string &name, bool enable, bool allow_repainting)
 {
 	for (size_t i = 0; i < pseudo_classes.size(); i++)
 	{
@@ -196,7 +196,8 @@ bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
 			{
 				pseudo_classes.erase(pseudo_classes.begin() + i);
 				set_style_needs_update();
-				component->request_repaint();
+				if (allow_repainting)
+					component->request_repaint();
 				return true;
 			}
 			return false;
@@ -206,7 +207,8 @@ bool GUIElement::set_pseudo_class(const std::string &name, bool enable)
 	{
 		pseudo_classes.push_back(name);
 		set_style_needs_update();
-		component->request_repaint();
+		if (allow_repainting)
+			component->request_repaint();
 		return true;
 	}
 	return false;
