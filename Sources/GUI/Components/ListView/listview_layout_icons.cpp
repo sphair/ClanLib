@@ -225,7 +225,7 @@ Rect ListViewLayoutIcons::get_lineedit_rect(ListViewItem &item, const Size &text
 
 void ListViewLayoutIcons::update_shown_items_grid(Font &font, ListViewItem doc_item)
 {
-	Canvas &canvas = listview->get_canvas(); 
+	Canvas canvas = listview->get_canvas(); 
 	shown_items.clear();
 	row_counter = 0;
 

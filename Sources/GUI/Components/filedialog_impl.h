@@ -29,6 +29,7 @@
 #include "GUI/precomp.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/System/system.h"
 
 #if !defined(WIN32) && !defined(__APPLE__)
 #include <gtk/gtk.h>

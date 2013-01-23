@@ -167,12 +167,14 @@ int LineEdit::get_cursor_pos() const
 
 Size LineEdit::get_text_size()
 {
-	return impl->get_visual_text_size(get_canvas());
+	Canvas canvas = get_canvas();
+	return impl->get_visual_text_size(canvas);
 }
 
 Size LineEdit::get_text_size(const std::string &str)
 {
-	return get_render_text_size(get_canvas(), str);;
+	Canvas canvas = get_canvas();
+	return get_render_text_size(canvas, str);;
 }
 
 float LineEdit::get_preferred_content_width()
@@ -339,7 +341,7 @@ void LineEdit::set_cursor_pos(int pos)
 
 void LineEdit::resize_to_fit(int max_width)
 {
-	Canvas &canvas = get_canvas();
+	Canvas canvas = get_canvas();
 
 	Rect g = get_geometry();
 	Rect rect_content = impl->lineedit->get_content_box();
@@ -968,7 +970,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 		return text.size();
 	}
 
-	Canvas &canvas = lineedit->get_canvas();
+	Canvas canvas = lineedit->get_canvas();
 	UTF8_Reader utf8_reader(text.data(), text.length());
 
 	Rect content_rect = lineedit->get_content_box();
@@ -1019,7 +1021,7 @@ int LineEdit_Impl::get_character_index(int mouse_x_wincoords)
 
 void LineEdit_Impl::update_text_clipping()
 {
-	Canvas &canvas = lineedit->get_canvas();
+	Canvas canvas = lineedit->get_canvas();
 
 	Size text_size = get_visual_text_size(canvas, clip_start_offset, text.size() - clip_start_offset);
 
@@ -1074,7 +1076,7 @@ void LineEdit_Impl::update_text_clipping()
 
 Rect LineEdit_Impl::get_cursor_rect()
 {
-	Canvas &canvas = lineedit->get_canvas();
+	Canvas canvas = lineedit->get_canvas();
 
 	Rect cursor_rect;
 
@@ -1104,7 +1106,7 @@ Rect LineEdit_Impl::get_cursor_rect()
 
 Rect LineEdit_Impl::get_selection_rect()
 {
-	Canvas &canvas = lineedit->get_canvas();
+	Canvas canvas = lineedit->get_canvas();
 
 	// text before selection:
 
@@ -1167,7 +1169,7 @@ void LineEdit_Impl::on_timer_expired()
 
 void LineEdit_Impl::on_resized()
 {
-	Canvas &canvas = lineedit->get_canvas();
+	Canvas canvas = lineedit->get_canvas();
 
 	vertical_text_align = lineedit->get_vertical_text_align(canvas);
 

@@ -135,7 +135,7 @@ void TabHeader::add_page(TabPage *tab_page, const std::string &label)
 
 void TabHeader_Impl::update_handle_rects()
 {
-	Canvas &canvas = component->get_canvas();
+	Canvas canvas = component->get_canvas();
 
 	int last_tab_end_x = first_tab_x_offset;
 

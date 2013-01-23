@@ -1056,7 +1056,7 @@ void TextEdit_Impl::on_timer_expired()
 
 void TextEdit_Impl::on_resized()
 {
-	Canvas &canvas = textedit->get_canvas();
+	Canvas canvas = textedit->get_canvas();
 
 	vertical_text_align = textedit->get_vertical_text_align(canvas);
 

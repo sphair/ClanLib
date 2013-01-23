@@ -313,7 +313,7 @@ void PopupMenuWindow::on_render(Canvas &canvas, const Rect &update_rect)
 
 Size PopupMenuWindow::calc_desired_size()
 {
-	Canvas &canvas = get_canvas();
+	Canvas canvas = get_canvas();
 
 	Size size(0,0);
 	int count = menu.get_item_count();
