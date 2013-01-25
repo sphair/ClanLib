@@ -343,7 +343,7 @@ public:
 	void draw_box(const Rectf &rect, const Colorf &color);
 
 	/// \brief Draw a filled box / rectangle.
-	void draw_fill(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
+	void fill_rect(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
 
 	/// \brief Fill
 	///
@@ -351,14 +351,14 @@ public:
 	/// \param start = Pointf
 	/// \param end = Pointf
 	/// \param color = Colorf
-	void draw_fill(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
+	void fill_rect(const Pointf &start, const Pointf &end, const Colorf &color = Colorf::white);
 
 	/// \brief Fill
 	///
 	/// \param gc = Graphic Context
 	/// \param rect = Rectf
 	/// \param color = Colorf
-	void draw_fill(const Rectf &rect, const Colorf &color);
+	void fill_rect(const Rectf &rect, const Colorf &color);
 
 	/// \brief Gradient fill
 	///
@@ -368,7 +368,7 @@ public:
 	/// \param x2 = value
 	/// \param y2 = value
 	/// \param color = Gradient
-	void draw_gradient_fill(float x1, float y1, float x2, float y2, const Gradient &color);
+	void fill_rect(float x1, float y1, float x2, float y2, const Gradient &color);
 
 	/// \brief Gradient fill
 	///
@@ -376,17 +376,17 @@ public:
 	/// \param start = Pointf
 	/// \param end = Pointf
 	/// \param gradient = Gradient
-	void draw_gradient_fill(const Pointf &start, const Pointf &end, const Gradient &gradient);
+	void fill_rect(const Pointf &start, const Pointf &end, const Gradient &gradient);
 
 	/// \brief Gradient fill
 	///
 	/// \param gc = Graphic Context
 	/// \param rect = Rectf
 	/// \param gradient = Gradient
-	void draw_gradient_fill(const Rectf &rect, const Gradient &gradient);
+	void fill_rect(const Rectf &rect, const Gradient &gradient);
 
 	/// \brief Draw a circle.
-	void draw_circle(float center_x, float center_y, float radius, const Colorf &color = Colorf::white);
+	void fill_circle(float center_x, float center_y, float radius, const Colorf &color = Colorf::white);
 
 	/// \brief Circle
 	///
@@ -394,7 +394,7 @@ public:
 	/// \param center = Pointf
 	/// \param radius = value
 	/// \param color = Colorf
-	void draw_circle(const Pointf &center, float radius, const Colorf &color = Colorf::white);
+	void fill_circle(const Pointf &center, float radius, const Colorf &color = Colorf::white);
 
 	/// \brief Gradient circle
 	///
@@ -402,7 +402,7 @@ public:
 	/// \param center = Pointf
 	/// \param radius = value
 	/// \param gradient = Gradient
-	void draw_gradient_circle(const Pointf &center, float radius, const Gradient &gradient);
+	void fill_circle(const Pointf &center, float radius, const Gradient &gradient);
 
 	/// \brief Gradient circle
 	///
@@ -411,25 +411,25 @@ public:
 	/// \param centergradient = Pointf
 	/// \param radius = value
 	/// \param gradient = Gradient
-	void draw_gradient_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient);
+	void fill_circle(const Pointf &center, const Pointf &centergradient, float radius, const Gradient &gradient);
 
 	/// \brief Draw a triangle.
-	void draw_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = Colorf::white);
+	void fill_triangle(const Pointf &a, const Pointf &b, const Pointf &c, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a triangle.
-	void draw_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
+	void fill_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void draw_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
+	void fill_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void draw_triangles(Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+	void fill_triangles(Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
-	void draw_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
+	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a gradient filled ellipse.
-	void draw_ellipse_gradient(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
+	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
 
 	/// \brief Set a new font manager
 	void set_font_manager(FontManager &font_manager);

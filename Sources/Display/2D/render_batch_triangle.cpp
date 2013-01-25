@@ -55,7 +55,7 @@ void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Surface_DrawParams1 
 	to_sprite_vertex(params, 2, vertices[position++], texindex);
 }
 
-void RenderBatchTriangle::draw_triangle(Canvas &canvas, Vec2f *triangle_positions, Vec4f *triangle_colors, int num_vertices)
+void RenderBatchTriangle::fill_triangle(Canvas &canvas, Vec2f *triangle_positions, Vec4f *triangle_colors, int num_vertices)
 {
 	int texindex = set_batcher_active(canvas, num_vertices);
 	lock_transfer_buffer(canvas);
@@ -71,7 +71,7 @@ void RenderBatchTriangle::draw_triangle(Canvas &canvas, Vec2f *triangle_position
 	}
 }
 
-void RenderBatchTriangle::draw_triangle(Canvas &canvas, Vec2f *triangle_positions, const Colorf &color, int num_vertices)
+void RenderBatchTriangle::fill_triangle(Canvas &canvas, Vec2f *triangle_positions, const Colorf &color, int num_vertices)
 {
 	int texindex = set_batcher_active(canvas, num_vertices);
 	lock_transfer_buffer(canvas);
@@ -87,7 +87,7 @@ void RenderBatchTriangle::draw_triangle(Canvas &canvas, Vec2f *triangle_position
 	}
 }
 
-void RenderBatchTriangle::draw_triangles(Canvas &canvas, Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+void RenderBatchTriangle::fill_triangles(Canvas &canvas, Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
 {
 	int texindex = set_batcher_active(canvas, texture);
 	lock_transfer_buffer(canvas);
