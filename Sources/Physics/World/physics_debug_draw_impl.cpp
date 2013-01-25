@@ -83,12 +83,12 @@ void PhysicsDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_seg
 	int i;
 	for(i=0;i<k_segments-3;i++)
 	{
-		used_canvas->draw_triangle(Pointf(vertices[i].x*physic_scale,vertices[i].y*physic_scale),
+		used_canvas->fill_triangle(Pointf(vertices[i].x*physic_scale,vertices[i].y*physic_scale),
 								Pointf(vertices[i+1].x*physic_scale, vertices[i+1].y*physic_scale),
 								Pointf(vertices[i+2].x*physic_scale, vertices[i+2].y*physic_scale),
 								color1);
 	}
-		used_canvas->draw_triangle(Pointf(vertices[0].x*physic_scale,vertices[0].y*physic_scale),
+		used_canvas->fill_triangle(Pointf(vertices[0].x*physic_scale,vertices[0].y*physic_scale),
 								Pointf(vertices[k_segments-2].x*physic_scale, vertices[k_segments-2].y*physic_scale),
 								Pointf(vertices[k_segments-1].x*physic_scale, vertices[k_segments-1].y*physic_scale),
 								color1);
@@ -106,7 +106,7 @@ void PhysicsDebugDraw_Impl::DrawSolidPolygon(const b2Vec2* vertices, int32 k_seg
 
 void PhysicsDebugDraw_Impl::DrawCircle(const b2Vec2& center, float32 radius, const b2Color& color)
 {
-	used_canvas->draw_circle(Pointf(center.x*physic_scale, center.y*physic_scale), radius*physic_scale, Colorf(color.r,color.g,color.b,0.5f));
+	used_canvas->fill_circle(Pointf(center.x*physic_scale, center.y*physic_scale), radius*physic_scale, Colorf(color.r,color.g,color.b,0.5f));
 }
 
 void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius, const b2Vec2& axis, const b2Color& color)
@@ -124,7 +124,7 @@ void PhysicsDebugDraw_Impl::DrawSolidCircle(const b2Vec2& center, float32 radius
 	Colorf color1(0.5f*color.r,0.5f*color.g,0.5f*color.b,0.5f);
 	Colorf color2(color.r,color.g,color.b,1.0f);
 
-	used_canvas->draw_circle(Pointf(CLcenter.x, CLcenter.y), radiuss, Colorf(color.r,color.g,color.b,0.5f));
+	used_canvas->fill_circle(Pointf(CLcenter.x, CLcenter.y), radiuss, Colorf(color.r,color.g,color.b,0.5f));
 
 	int i;
 	for(i=0;i<k_segments;i++)
@@ -181,7 +181,7 @@ void PhysicsDebugDraw_Impl::DrawTransform(const b2Transform& xf)
 
 void PhysicsDebugDraw_Impl::DrawPoint(const b2Vec2& p, float32 size, const b2Color& color)
 {
-	used_canvas->draw_fill(p.x-size,
+	used_canvas->fill_rect(p.x-size,
 					 p.y-size,
 					 p.x+size,
 					 p.y+size,

@@ -99,7 +99,7 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Draw a rectangle in the center of the screen
 		// going from (240, 140) -> (440, 340) _not_ including the 
 		// pixels in the right-most column and bottom-most row (440, 340)
-		canvas.draw_fill(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
+		canvas.fill_rect(clan::Rectf(240.0f, 140.0f, 440.0f, 340.0f), clan::Colorf::white);
 
 		// Frame the rectangle with red lines
 		canvas.draw_box(240.0f, 140.0f, 440.0f, 340.0f, clan::Colorf(1.0f, 0.0f, 0.0f));
@@ -108,10 +108,10 @@ int Basic2D::start(const std::vector<std::string> &args)
 		float x = cos(sin_count)*120.0f;
 		float y = sin(sin_count)*120.0f;
 		sin_count += 0.004f * time_delta_ms;
-		canvas.draw_fill(clan::Rectf( 320.0f + x -30.0f, 240.0f + y -30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(0.0f, 1.0f, 0.0, 0.5f));
+		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240.0f + y -30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(0.0f, 1.0f, 0.0, 0.5f));
 		x = cos(sin_count+clan::PI)*120.0f;
 		y = sin(sin_count+clan::PI)*120.0f;
-		canvas.draw_fill(clan::Rectf( 320.0f + x -30.0f, 240 + y -30.0f,clan:: Sizef(30.0f, 30.0f)), clan::Colorf(1.0f, 1.0f, 0.0, 0.5f));
+		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240 + y -30.0f,clan:: Sizef(30.0f, 30.0f)), clan::Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
 		canvas.pop_cliprect();
 

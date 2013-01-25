@@ -59,7 +59,7 @@ FontMetrics CSSLayoutGraphics::get_font_metrics(Font &font)
 
 void CSSLayoutGraphics::fill(const Rect &box, const Colorf &color)
 {
-	canvas.draw_fill(box, color);
+	canvas.fill_rect(box, color);
 }
 
 void CSSLayoutGraphics::dot_vertical(const Rect &box, const Colorf &color)
