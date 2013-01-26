@@ -61,7 +61,7 @@ public:
 class PixelConverter_Impl
 {
 public:
-	PixelConverter_Impl() : premultiply_alpha(false), flip_vertical(false), gamma(1.0f), swizzle(0,1,2,3) { }
+	PixelConverter_Impl() : premultiply_alpha(false), flip_vertical(false), gamma(1.0f), swizzle(0,1,2,3), input_is_ycrcb(false), output_is_ycrcb(false) { }
 
 	std::unique_ptr<PixelReader> create_reader(TextureFormat format, bool sse2);
 	std::unique_ptr<PixelWriter> create_writer(TextureFormat format, bool sse2, bool sse4);
@@ -71,6 +71,8 @@ public:
 	bool flip_vertical;
 	float gamma;
 	Vec4i swizzle;
+	bool input_is_ycrcb;
+	bool output_is_ycrcb;
 };
 
 }

@@ -69,6 +69,13 @@ public:
 
 	/// \brief Returns the input channel used for each output channel
 	Vec4i get_swizzle() const;
+
+	/// \brief Returns the JPEG JFIF YCrCb input setting
+	bool get_input_is_ycrcb() const;
+
+	/// \brief Returns the JPEG JFIF YCrCb output setting
+	bool get_output_is_ycrcb() const;
+
 /// \}
 
 /// \name Operations
@@ -94,6 +101,12 @@ public:
 	/// Values 0-3 accepted. 0 = red, 1 = green, 2 = blue, 3 = alpha.
 	void set_swizzle(int red_source, int green_source, int blue_source, int alpha_source);
 	void set_swizzle(const Vec4i &swizzle);
+
+	/// \brief Converts from JPEG JFIF YCrCb
+	void set_input_is_ycrcb(bool enable);
+
+	/// \brief Converts to JPEG JFIF YCrCb
+	void set_output_is_ycrcb(bool enable);
 
 	/// \brief Convert some pixel data
 	void convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height);

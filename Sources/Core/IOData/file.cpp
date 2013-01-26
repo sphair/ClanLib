@@ -44,14 +44,17 @@ namespace clan
 std::string File::read_text(const std::string &filename)
 {
 	File file(filename);
-	std::vector<char> text;
 	unsigned int file_size = file.get_size();
+	std::vector<char> text;
 	text.resize(file_size+1);
 	text[file_size] = 0;
 	if (file_size)
 		file.read(&text[0], file_size);
 	file.close();
-	return &text[0];
+	if (file_size)
+		return std::string(&text[0]);
+	else
+		return std::string();
 }
 
 DataBuffer File::read_bytes(const std::string &filename)
@@ -61,6 +64,25 @@ DataBuffer File::read_bytes(const std::string &filename)
 	file.read(buffer.get_data(), buffer.get_size());
 	file.close();
 	return buffer;
+}
+
+void File::write_text(const std::string &filename, const std::string &text, bool write_bom)
+{
+	File file(filename, create_always, access_write);
+	if (write_bom)
+	{
+		unsigned char bom[3] = { 0xef, 0xbb, 0xbf };
+		file.write(bom, 3);
+	}
+	file.write(text.data(), text.length());
+	file.close();
+}
+
+void File::write_bytes(const std::string &filename, const DataBuffer &bytes)
+{
+	File file(filename, create_always, access_write);
+	file.write(bytes.get_data(), bytes.get_size());
+	file.close();
 }
 
 /////////////////////////////////////////////////////////////////////////////
