@@ -53,6 +53,12 @@ public:
 
 	/// \brief Loads an file into a byte buffer.
 	static DataBuffer read_bytes(const std::string &filename);
+
+	/// \brief Saves an UTF-8 text string to file.
+	static void write_text(const std::string &filename, const std::string &text, bool write_bom = false);
+
+	/// \brief Saves a byte buffer to file.
+	static void write_bytes(const std::string &filename, const DataBuffer &bytes);
 /// \}
 
 /// \name Enumerations

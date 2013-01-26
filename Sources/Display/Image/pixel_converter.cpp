@@ -45,6 +45,7 @@
 #include "pixel_filter_gamma.h"
 #include "pixel_filter_premultiply_alpha.h"
 #include "pixel_filter_swizzle.h"
+#include "pixel_filter_rgb_to_ycrcb.h"
 
 namespace clan
 {
@@ -78,6 +79,16 @@ Vec4i PixelConverter::get_swizzle() const
 	return impl->swizzle;
 }
 
+bool PixelConverter::get_input_is_ycrcb() const
+{
+	return impl->input_is_ycrcb;
+}
+
+bool PixelConverter::get_output_is_ycrcb() const
+{
+	return impl->output_is_ycrcb;
+}
+
 void PixelConverter::set_premultiply_alpha(bool enable)
 {
 	impl->premultiply_alpha = enable;
@@ -101,6 +112,16 @@ void PixelConverter::set_swizzle(int red_source, int green_source, int blue_sour
 void PixelConverter::set_swizzle(const Vec4i &swizzle)
 {
 	impl->swizzle = swizzle;
+}
+
+void PixelConverter::set_input_is_ycrcb(bool enable)
+{
+	impl->input_is_ycrcb = enable;
+}
+
+void PixelConverter::set_output_is_ycrcb(bool enable)
+{
+	impl->output_is_ycrcb = enable;
 }
 
 void PixelConverter::convert(void *output, int output_pitch, TextureFormat output_format, const void *input, int input_pitch, TextureFormat input_format, int width, int height)
@@ -490,6 +511,11 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 {
 	std::vector<std::shared_ptr<PixelFilter> > filters;
 
+	if (input_is_ycrcb)
+	{
+		filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterYCrCbToRGB()));
+	}
+
 	if (premultiply_alpha)
 	{
 		if (sse2)
@@ -512,6 +538,11 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzleSSE2(swizzle)));
 		else
 			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSwizzle(swizzle)));
+	}
+
+	if (output_is_ycrcb)
+	{
+		filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterRGBToYCrCb()));
 	}
 
 	return filters;
