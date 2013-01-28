@@ -541,10 +541,13 @@ void Sprite::set_show_on_finish(Sprite::ShowOnFinish show_on_finish)
 
 std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit, OutlineAccuracy accuracy)
 {
-	std::vector<CollisionOutline> outlines;
-
 	SpriteDescription description(gc, resource_id, resources, ImageImportDescription () );
+	return create_collision_outlines(gc, description, alpha_limit, accuracy);
+}
 
+std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, SpriteDescription &description, int alpha_limit, OutlineAccuracy accuracy)
+{
+	std::vector<CollisionOutline> outlines;
 	// Fetch frames
 	const std::vector<SpriteDescriptionFrame> &description_frames = description.get_frames();
 	std::vector<SpriteDescriptionFrame>::const_iterator it_frames;
@@ -571,6 +574,14 @@ std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &
 CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit, OutlineAccuracy accuracy)
 {
 	std::vector<CollisionOutline> outlines = Sprite::create_collision_outlines(gc, resource_id, resources, alpha_limit, accuracy);
+	if (outlines.empty())
+		return CollisionOutline();
+	return outlines[0];
+}
+
+CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, SpriteDescription &description, int alpha_limit, OutlineAccuracy accuracy)
+{
+	std::vector<CollisionOutline> outlines = Sprite::create_collision_outlines(gc, description, alpha_limit, accuracy);
 	if (outlines.empty())
 		return CollisionOutline();
 	return outlines[0];
