@@ -106,6 +106,9 @@ public:
 
 	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect);
 
+	const std::vector<Vec2f> &get_glyph_filled(unsigned int glyph);
+	const std::vector< std::vector<Vec2f> > &get_glyph_outline(unsigned int glyph);
+
 /// \}
 /// \name Implementation
 /// \{
