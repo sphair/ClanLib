@@ -264,24 +264,24 @@ void App::draw_font_example()
 	int descender = (int) font_metrics.get_descent();
 
 	// Surrounding box
-	canvas.fill(Rect(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height), Colorf(0.0f, 0.0f, 0.0f));
+	canvas.fill_rect(Rect(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height), Colorf(0.0f, 0.0f, 0.0f));
 
 	// Draw the external leading line
 	int external_leading_offset = offset_y+font_metrics.get_external_leading() + font_metrics.get_descent();
-	canvas.line(offset_x, external_leading_offset, offset_x + font_size.width, external_leading_offset, Colorf(0.5f, 0.5f, 0.0f));
+	canvas.draw_line(offset_x, external_leading_offset, offset_x + font_size.width, external_leading_offset, Colorf(0.5f, 0.5f, 0.0f));
 
 	// Draw the internal leading line
 	int internal_leading_offset = offset_y - font_metrics.get_ascent() + font_metrics.get_internal_leading();
-	canvas.line(offset_x, internal_leading_offset, offset_x + font_size.width, internal_leading_offset, Colorf(0.5f, 0.5f, 0.0f));
+	canvas.draw_line(offset_x, internal_leading_offset, offset_x + font_size.width, internal_leading_offset, Colorf(0.5f, 0.5f, 0.0f));
 
 	// Draw outline to the bounding box
-	canvas.line(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender, Colorf(1.0f, 0.0f, 0.0f));
-	canvas.line(offset_x, offset_y+descender- font_size.height, offset_x + font_size.width, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
-	canvas.line(offset_x + font_size.width, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
-	canvas.line(offset_x, offset_y+descender, offset_x, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
+	canvas.draw_line(offset_x, offset_y+descender, offset_x + font_size.width, offset_y+descender, Colorf(1.0f, 0.0f, 0.0f));
+	canvas.draw_line(offset_x, offset_y+descender- font_size.height, offset_x + font_size.width, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
+	canvas.draw_line(offset_x + font_size.width, offset_y+descender, offset_x + font_size.width, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
+	canvas.draw_line(offset_x, offset_y+descender, offset_x, offset_y+descender - font_size.height, Colorf(1.0f, 0.0f, 0.0f));
 
 	// Base line
-	canvas.line(offset_x, offset_y, offset_x + font_size.width, offset_y, Colorf(0.0f, 1.0f, 0.0f));
+	canvas.draw_line(offset_x, offset_y, offset_x + font_size.width, offset_y, Colorf(0.0f, 1.0f, 0.0f));
 
 	selected_font.draw_text(canvas, offset_x, offset_y, font_text,  Colorf::white);
 }
