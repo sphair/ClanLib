@@ -202,9 +202,9 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_line_to(10.375006f,-11.187488f);
 	path_group.add_path(path);
 
-	clan::PathPrimitivesArray primitives_array_g;
-	clan::PathPrimitivesArrayOutline primitives_array_outline_g;
-	path_group.triangulate(primitives_array_g, primitives_array_outline_g);
+	std::vector<clan::Vec2f> primitives_array_g;
+	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_g;
+	path_group.triangulate_combined(primitives_array_g, primitives_array_outline_g);
 
 	path_group = clan::PathGroup();
 	path = clan::Path();
@@ -214,9 +214,9 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_line_to(20, -310);
 	path_group.add_path(path);
 
-	clan::PathPrimitivesArray primitives_array_polygon;
-	clan::PathPrimitivesArrayOutline primitives_array_outline_polygon;
-	path_group.triangulate(primitives_array_polygon, primitives_array_outline_polygon);
+	std::vector<clan::Vec2f> primitives_array_polygon;
+	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_polygon;
+	path_group.triangulate_combined(primitives_array_polygon, primitives_array_outline_polygon);
 
 
 	#define KAPPA		0.5522847498f
@@ -244,9 +244,9 @@ int PathApp::start(const std::vector<std::string> &args)
 	path.add_curve(bezier_curve);
 	path_group.add_path(path);
 
-	clan::PathPrimitivesArray primitives_array_circle;
-	clan::PathPrimitivesArrayOutline primitives_array_outline_circle;
-	path_group.triangulate(primitives_array_circle, primitives_array_outline_circle);
+	std::vector<clan::Vec2f> primitives_array_circle;
+	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;
+	path_group.triangulate_combined(primitives_array_circle, primitives_array_outline_circle);
 
 	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
 
@@ -292,11 +292,11 @@ int PathApp::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		canvas.push_translate(64, 128);
-		canvas.draw_triangles(&(primitives_array_g[0]), primitives_array_g.size());
+		canvas.fill_triangles(&(primitives_array_g[0]), primitives_array_g.size());
 		canvas.pop_modelview();
 
 		canvas.push_translate(200, 128);
-		clan::PathPrimitivesArrayOutline::iterator it;
+		std::vector< std::vector<clan::Vec2f> >::iterator it;
 		for (it = primitives_array_outline_g.begin(); it != primitives_array_outline_g.end(); ++it)
 		{
 			canvas.draw_line_strip(&((*it)[0]), it->size());
@@ -305,11 +305,11 @@ int PathApp::start(const std::vector<std::string> &args)
 
 		canvas.push_translate(360, 160);
 		canvas.mult_scale(2.0f, 2.0f);
-		canvas.draw_triangles(&primitives_array_g[0], &texture_array_g[0], primitives_array_g.size(), texture);
+		canvas.fill_triangles(&primitives_array_g[0], &texture_array_g[0], primitives_array_g.size(), texture);
 		canvas.pop_modelview();
 
 		if (!primitives_array_polygon.empty())
-			canvas.draw_triangles(&(primitives_array_polygon[0]), primitives_array_polygon.size());
+			canvas.fill_triangles(&(primitives_array_polygon[0]), primitives_array_polygon.size());
 
 		canvas.push_translate(200, 0);
 		for (it = primitives_array_outline_polygon.begin(); it != primitives_array_outline_polygon.end(); ++it)
@@ -320,7 +320,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 
 		if (!primitives_array_circle.empty())
-			canvas.draw_triangles(&(primitives_array_circle[0]), primitives_array_circle.size());
+			canvas.fill_triangles(&(primitives_array_circle[0]), primitives_array_circle.size());
 
 		canvas.push_translate(200, 0);
 		for (it = primitives_array_outline_circle.begin(); it != primitives_array_outline_circle.end(); ++it)
@@ -331,7 +331,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 		canvas.push_translate(400, 0);
 		if (!primitives_array_circle.empty())
-			canvas.draw_triangles(&primitives_array_circle[0], &texture_array_circle[0], primitives_array_circle.size(), texture);
+			canvas.fill_triangles(&primitives_array_circle[0], &texture_array_circle[0], primitives_array_circle.size(), texture);
 		canvas.pop_modelview();
 
 
