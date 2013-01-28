@@ -53,15 +53,14 @@ class FontProvider_System;
 class Font_TextureGlyph
 {
 public:
-	Font_TextureGlyph() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
+	Font_TextureGlyph() : glyph(0) { };
 
 	/// \brief Glyph this pixel buffer refers to.
 	unsigned int glyph;
 
-	/// \brief True when the pixel buffer is empty
-	bool empty_buffer;
-
-	/// \brief The pixel buffer containing the glyph
+	/// \brief The pixel buffer containing the glyph.
+	///
+	/// This maybe a null texture
 	Texture2D texture;
 
 	/// \brief Geometry of the glyph inside the subtexture (excluding the border)
