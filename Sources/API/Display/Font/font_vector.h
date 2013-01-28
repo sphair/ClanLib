@@ -93,6 +93,10 @@ public:
 	/// \brief Get the largest bounding box for each glyph for this font in a given reference string
 	Rectf get_bounding_box(const std::string &reference_string) const;
 
+	const std::vector<Vec2f> &get_glyph_filled(unsigned int glyph);
+	const std::vector< std::vector<Vec2f> > &get_glyph_outline(unsigned int glyph);
+
+
 /// \}
 /// \name Operations
 /// \{

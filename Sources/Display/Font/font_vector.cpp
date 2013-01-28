@@ -127,6 +127,18 @@ void Font_Vector::reset_texture()
 	get_provider()->set_texture(Texture2D(), Rectf(), Rectf());
 }
 
+const std::vector<Vec2f> &Font_Vector::get_glyph_filled(unsigned int glyph)
+{
+	return get_provider()->get_glyph_filled(glyph);
+}
+const std::vector< std::vector<Vec2f> > &Font_Vector::get_glyph_outline(unsigned int glyph)
+{
+	return get_provider()->get_glyph_outline(glyph);
+
+}
+
+
+
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Implementation:
 

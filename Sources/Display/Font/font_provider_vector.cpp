@@ -289,6 +289,18 @@ void FontProvider_Vector::set_texture(const Texture2D &src_texture, const Rectf 
 
 }
 
+const std::vector<Vec2f> &FontProvider_Vector::get_glyph_filled(unsigned int glyph)
+{
+	store_in_char_cache(glyph);
+	return char_cache[glyph].primitives_array;
+}
+
+const std::vector< std::vector<Vec2f> > &FontProvider_Vector::get_glyph_outline(unsigned int glyph)
+{
+	store_in_char_cache(glyph);
+	return char_cache[glyph].primitives_array_outline;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Vector Implementation:
 
