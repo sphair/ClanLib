@@ -60,12 +60,14 @@ void PathGroup_Impl::add_path(Path &path)
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline, std::vector< std::vector<Pointf> > *out_joined_outlines)
+void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline)
 {
+	//std::vector< std::vector<Pointf> > *out_joined_outlines = NULL;	
+
 	if (out_primitives_array_outline)
 		generate_contour_prim_array(out_primitives_array_outline);	// Generate array_outline only when required
 
-	if (!out_primitives_array && !out_joined_outlines)
+	if (!out_primitives_array)
 		return;		// Exit now when done
 
 	std::vector<EarClipResult> earclip_results;
@@ -141,8 +143,8 @@ void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::
 			triangulator.set_orientation(cl_counter_clockwise);
 
 			// for debugging triangulator hole support - don't remove!
-			if (out_joined_outlines)
-				out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
+			//if (out_joined_outlines)
+			//	out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
 
 			EarClipResult result = triangulator.triangulate();
 			earclip_results.push_back(result);
@@ -153,8 +155,8 @@ void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::
 	triangulator.set_orientation(cl_counter_clockwise);
 
 	// for debugging triangulator hole support - don't remove!
-	if (out_joined_outlines)
-		out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
+	//if (out_joined_outlines)
+	//	out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
 
 	if (!out_primitives_array)
 		return;			// Exit now if the primitives are not required

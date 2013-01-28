@@ -192,7 +192,7 @@ void FontProvider_Vector::get_glyphs(
 			PathGroup outline = font_engine->load_glyph_outline(text[i], out_advance_x);
 			vector_glyph &vg = char_cache[text[i]];
 			vg.advance_x = out_advance_x;
-			outline.triangulate(vg.primitives_array, vg.primitives_array_outline);
+			outline.triangulate_combined(vg.primitives_array, vg.primitives_array_outline);
 		}
 		
 		out_glyphs[i] = text[i];

@@ -70,10 +70,9 @@ public:
 	void add_path(Path &path);
 
 	/// \brief triangulate
-	void triangulate(std::vector<Vec2f> &out_primitives_array);
-	void triangulate(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
-	void triangulate(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
-	void triangulate(std::vector< std::vector<Pointf> > &out_joined_outlines);	// For debugging
+	void triangulate_filled(std::vector<Vec2f> &out_primitives_array);
+	void triangulate_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+	void triangulate_combined(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
 
 
 /// \}

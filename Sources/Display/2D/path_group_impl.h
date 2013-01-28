@@ -70,7 +70,7 @@ public:
 
 	void add_path(Path &path);
 
-	void triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline, std::vector< std::vector<Pointf> > *out_joined_outlines);
+	void triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline);
 
 /// \}
 /// \name Implementation
