@@ -203,7 +203,6 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 	
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = pb.glyph;
-	font_glyph->empty_buffer = pb.empty_buffer;
 	font_glyph->offset = pb.offset;
 	font_glyph->increment = pb.increment;
 
@@ -211,7 +210,6 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 	{
 		PixelBuffer buffer_with_border = PixelBufferHelp::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 
-		font_glyph->empty_buffer = false;
 		Subtexture sub_texture = texture_group.add(gc, Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
@@ -246,14 +244,10 @@ void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture
 
 	if ( (sub_texture.get_geometry().get_width() > 0 ) && (sub_texture.get_geometry().get_height() > 0) )
 	{
-		font_glyph->empty_buffer = false;
 		font_glyph->texture = sub_texture.get_texture();
 		font_glyph->geometry = sub_texture.get_geometry();
 	}
-	else
-	{
-		font_glyph->empty_buffer = true;
-	}
+
 }
 
 void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, int glyph)
@@ -296,7 +290,7 @@ void GlyphCache::draw_text(FontEngine *font_engine, Canvas &canvas, float xpos, 
 		Font_TextureGlyph *gptr = get_glyph(font_engine, gc, glyph);
 		if (gptr == NULL) continue;
 
-		if (!gptr->empty_buffer)
+		if (!gptr->texture.is_null())
 		{
 			float xp = xpos + gptr->offset.x;
 			float yp = ypos + gptr->offset.y;
