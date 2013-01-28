@@ -37,6 +37,7 @@
 #include "API/Display/2D/color.h"
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/2D/texture_group.h"
+#include "API/Display/2D/subtexture.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_system.h"
@@ -211,10 +212,10 @@ void GlyphCache::insert_glyph(GraphicContext &gc, FontPixelBuffer &pb)
 		PixelBuffer buffer_with_border = PixelBufferHelp::add_border(pb.buffer, glyph_border_size, pb.buffer_rect);
 
 		font_glyph->empty_buffer = false;
-		font_glyph->subtexture = texture_group.add(gc, Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
-		font_glyph->geometry = Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
-
-		font_glyph->subtexture.get_texture().set_subimage(gc, font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
+		Subtexture sub_texture = texture_group.add(gc, Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
+		font_glyph->texture = sub_texture.get_texture();
+		font_glyph->geometry = Rect(sub_texture.get_geometry().left + glyph_border_size, sub_texture.get_geometry().top + glyph_border_size, pb.buffer_rect.get_size() );
+		sub_texture.get_texture().set_subimage(gc, sub_texture.get_geometry().left, sub_texture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
 	}
 }
 
@@ -226,10 +227,8 @@ void GlyphCache::insert_glyph(FontEngine *font_engine, GraphicContext &gc, const
 	}
 }
 
-void GlyphCache::insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer)
+void GlyphCache::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment)
 {
-	unsigned int glyph = position.glyph;
-
 	// Search for duplicated glyph's, if found silently ignore them
 	std::vector< Font_TextureGlyph * >::size_type size = glyph_list.size();
 	for (int cnt=0; cnt<size; cnt++)
@@ -242,19 +241,14 @@ void GlyphCache::insert_glyph(GraphicContext &gc, Font_System_Position &position
 	
 	glyph_list.push_back(font_glyph);
 	font_glyph->glyph = glyph;
-	font_glyph->offset = Point(position.x_offset, position.y_offset);
-	font_glyph->increment = Point(position.x_increment, position.y_increment);
+	font_glyph->offset = offset;
+	font_glyph->increment = increment;
 
-	if ( (position.width > 0 ) && (position.height > 0) )
+	if ( (sub_texture.get_geometry().get_width() > 0 ) && (sub_texture.get_geometry().get_height() > 0) )
 	{
-		Rect source_rect(position.x_pos, position.y_pos, position.width + position.x_pos, position.height + position.y_pos);
-		PixelBuffer buffer_with_border = PixelBufferHelp::add_border(pixel_buffer, glyph_border_size, source_rect);
-
 		font_glyph->empty_buffer = false;
-		font_glyph->subtexture = texture_group.add(gc, Size(buffer_with_border.get_width(), buffer_with_border.get_height() ));
-		font_glyph->geometry = Rect(font_glyph->subtexture.get_geometry().left + glyph_border_size, font_glyph->subtexture.get_geometry().top + glyph_border_size, source_rect.get_size() );
-
-		font_glyph->subtexture.get_texture().set_subimage(gc, font_glyph->subtexture.get_geometry().left, font_glyph->subtexture.get_geometry().top, buffer_with_border, buffer_with_border.get_size());
+		font_glyph->texture = sub_texture.get_texture();
+		font_glyph->geometry = sub_texture.get_geometry();
 	}
 	else
 	{
@@ -310,10 +304,10 @@ void GlyphCache::draw_text(FontEngine *font_engine, Canvas &canvas, float xpos, 
 			Rectf dest_size(xp, yp, Sizef(gptr->geometry.get_size()));
 			if (enable_subpixel)
 			{
-				batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->subtexture.get_texture());
+				batcher->draw_glyph_subpixel(canvas, gptr->geometry, dest_size, color, gptr->texture);
 			}else
 			{
-				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->subtexture.get_texture());
+				batcher->draw_image(canvas, gptr->geometry, dest_size, color, gptr->texture);
 			}
 		}
 		xpos += gptr->increment.x;

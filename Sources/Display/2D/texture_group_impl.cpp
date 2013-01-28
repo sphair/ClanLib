@@ -213,7 +213,7 @@ void TextureGroup_Impl::remove(Subtexture &subtexture)
 	}
 	else
 	{
-		throw Exception("Cannot find the SubTexture in the TextureGroup");
+		throw Exception("Cannot find the Subtexture in the TextureGroup");
 	}
 }
 

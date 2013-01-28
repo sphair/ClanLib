@@ -44,6 +44,7 @@ class Colorf;
 class TextureGroup;
 class FontEngine;
 class Font_TextureGlyph;
+class Subtexture;
 
 class GlyphCache
 {
@@ -82,7 +83,7 @@ public:
 
 	int get_character_index(FontEngine *font_engine, GraphicContext &gc, const std::string &text, const Point &point);
 
-	void insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer);
+	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment);
 	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, int glyph);
 	void insert_glyph(GraphicContext &gc, FontPixelBuffer &pb);
 	void insert_glyph(FontEngine *font_engine, GraphicContext &gc, const std::string &text);

@@ -120,9 +120,9 @@ void Font_System::free_font()
 	get_provider()->free_font();
 }
 
-void Font_System::insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer)
+void Font_System::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment)
 {
-	get_provider()->insert_glyph(gc, position, pixel_buffer);
+	get_provider()->insert_glyph(gc, glyph, sub_texture, offset, increment);
 }
 
 void Font_System::insert_glyph(GraphicContext &gc, const std::string &text)
