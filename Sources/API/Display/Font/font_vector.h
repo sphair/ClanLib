@@ -90,6 +90,9 @@ public:
 	/// \brief Retrieves the font provider.
 	FontProvider_Vector *get_provider() const;
 
+	/// \brief Get the largest bounding box for each glyph for this font in a given reference string
+	Rectf get_bounding_box(const std::string &reference_string) const;
+
 /// \}
 /// \name Operations
 /// \{
@@ -97,6 +100,16 @@ public:
 public:
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable = true);
+
+	/// \brief Set the texture
+	///
+	/// \param src_texture = The texture to use.
+	/// \param bounding_rect = The bounding rect of the glyph. Use get_bounding_box() to calculate this
+	/// \param texture_rect = The texture rect
+	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect = Rectf(0.0f, 0.0f, 1.0f, 1.0f) );
+
+	/// \brief Reset the texture
+	void reset_texture();
 
 /// \}
 /// \name Implementation
