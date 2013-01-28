@@ -203,39 +203,6 @@ private:
 /// \}
 };
 
-/// \brief Font pixel buffer format (holds a pixel buffer containing a glyph)
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-class CL_API_DISPLAY FontPixelBuffer
-{
-public:
-	FontPixelBuffer() : glyph(0), empty_buffer(true), offset(0,0), increment(0,0) { };
-
-	/// \brief Glyph this pixel buffer refers to. 0 = Glyph if not valid
-	unsigned int glyph;
-
-	/// \brief True when the pixel buffer is empty
-	bool empty_buffer;
-
-	/// \brief The pixel buffer containing the glyph
-	PixelBuffer buffer;
-
-	/// \brief The rect containing the image inside "buffer"
-	Rect buffer_rect;
-
-	/// \brief Offset to draw the font to buffer
-	/** For example:
-	    x = pos_x + pixelbuffer.offset.x
-	    y = pos_y + pixelbuffer.offset.y*/
-	Point offset;
-
-	/// \brief Increment to draw the next glyph
-	/** For example:
-	    pos_x += pixelbuffer.increment.x;
-	    pos_y += pixelbuffer.increment.y;*/
-	Point increment;
-};
-
 }
 
 /// \}

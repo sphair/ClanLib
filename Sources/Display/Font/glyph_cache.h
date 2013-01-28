@@ -45,6 +45,7 @@ class TextureGroup;
 class FontEngine;
 class Font_TextureGlyph;
 class Subtexture;
+class FontPixelBuffer;
 
 class GlyphCache
 {
