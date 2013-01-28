@@ -45,10 +45,6 @@ class GraphicContext;
 class Canvas;
 class PathGroup_Impl;
 
-typedef std::vector<Vec2f> PathPrimitivesArray;
-typedef std::vector< std::vector<Vec2f> > PathPrimitivesArrayOutline;
-typedef std::vector<std::vector<Pointf> > PathPrimitivesJoinedOutlines; // for debugging triangulator hole support - don't remove!
-
 class CL_API_DISPLAY PathGroup
 {
 /// \name Construction
@@ -74,10 +70,10 @@ public:
 	void add_path(Path &path);
 
 	/// \brief triangulate
-	void triangulate(PathPrimitivesArray &out_primitives_array);
-	void triangulate(PathPrimitivesArrayOutline &out_primitives_array_outline);
-	void triangulate(PathPrimitivesArray &out_primitives_array, PathPrimitivesArrayOutline &out_primitives_array_outline);
-	void triangulate(PathPrimitivesJoinedOutlines &out_joined_outlines);	// For debugging
+	void triangulate(std::vector<Vec2f> &out_primitives_array);
+	void triangulate(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+	void triangulate(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+	void triangulate(std::vector< std::vector<Pointf> > &out_joined_outlines);	// For debugging
 
 
 /// \}

@@ -70,7 +70,7 @@ public:
 
 	void add_path(Path &path);
 
-	void triangulate(PathPrimitivesArray *out_primitives_array, PathPrimitivesArrayOutline *out_primitives_array_outline, PathPrimitivesJoinedOutlines *out_joined_outlines);
+	void triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline, std::vector< std::vector<Pointf> > *out_joined_outlines);
 
 /// \}
 /// \name Implementation
@@ -78,7 +78,7 @@ public:
 
 private:
 
-	void generate_contour_prim_array(PathPrimitivesArrayOutline *out_primitives_array_outline);
+	void generate_contour_prim_array(std::vector< std::vector<Vec2f> > *out_primitives_array_outline);
 
 	std::vector< Path > contours;
 /// \}

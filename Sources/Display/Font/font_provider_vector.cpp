@@ -220,7 +220,7 @@ void FontProvider_Vector::draw_glyphs(
 
 		if( filled )
 		{
-			PathPrimitivesArray &prim_array = char_cache[glyphs[i]].primitives_array;
+			std::vector<Vec2f> &prim_array = char_cache[glyphs[i]].primitives_array;
 
 			if (prim_array.size() > 0)
 			{
@@ -229,7 +229,7 @@ void FontProvider_Vector::draw_glyphs(
 		}
 		else
 		{
-			PathPrimitivesArrayOutline &prim_array_outline = char_cache[glyphs[i]].primitives_array_outline;
+			std::vector< std::vector<Vec2f> > &prim_array_outline = char_cache[glyphs[i]].primitives_array_outline;
 
 			std::vector< std::vector<Vec2f> >::iterator it;
 

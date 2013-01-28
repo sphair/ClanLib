@@ -110,8 +110,8 @@ private:
 
 	struct vector_glyph
 	{
-		PathPrimitivesArray primitives_array;
-		PathPrimitivesArrayOutline primitives_array_outline;
+		std::vector<Vec2f> primitives_array;
+		std::vector< std::vector<Vec2f> > primitives_array_outline;
 
 		//Note advance_x is wrong.  For freetype, it should use...
 		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
