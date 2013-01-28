@@ -36,6 +36,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/path_group.h"
+#include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
 
@@ -73,10 +74,10 @@ public:
 public:
 
 	/// \brief Print text on gc.
-	virtual void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color);
+	void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color);
 
 	/// \brief Calculate size of text string.
-	virtual Size get_text_size(GraphicContext &gc, const std::string &text);
+	Size get_text_size(GraphicContext &gc, const std::string &text);
 
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable);
@@ -101,23 +102,31 @@ public:
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
 	void load_font(const FontDescription &desc);
+	Rectf get_bounding_box(const std::string &reference_string);
+
+	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
+	void  store_in_char_cache(unsigned int glyph);
 
 	struct vector_glyph
 	{
 		std::vector<Vec2f> primitives_array;
 		std::vector< std::vector<Vec2f> > primitives_array_outline;
+		std::vector<Vec2f> texture_positions;
+		Rectf calculated_bounding_rect;	// texture_positions calculated using this rect
+		Rectf calculated_texture_rect;	// texture_positions calculated using this rect
 
 		//Note advance_x is wrong.  For freetype, it should use...
 		//out_interspacing_x[i] = font_engine->get_advance_x( text[i] );
 		//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
 		int advance_x;
 	};
+	void FontProvider_Vector::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color);
 
 	std::map<int, vector_glyph> char_cache;
 
@@ -128,6 +137,10 @@ private:
 	int size_height;
 
 	bool is_filled;
+
+	Texture2D current_texture;
+	Rectf current_bounding_rect;
+	Rectf current_texture_rect;
 
 /// \}
 };

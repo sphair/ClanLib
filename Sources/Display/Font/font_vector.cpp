@@ -103,12 +103,28 @@ FontProvider_Vector *Font_Vector::get_provider() const
 	return static_cast <FontProvider_Vector *> (Font::get_provider());
 }
 
+Rectf Font_Vector::get_bounding_box(const std::string &reference_string) const
+{
+	return get_provider()->get_bounding_box(reference_string);
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Operations:
 
 void Font_Vector::set_filled(bool enable)
 {
 	get_provider()->set_filled(enable);
+}
+
+void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
+{
+	get_provider()->set_texture(src_texture, bounding_rect, texture_rect);
+}
+
+void Font_Vector::reset_texture()
+{
+	get_provider()->set_texture(Texture2D(), Rectf(), Rectf());
 }
 
 /////////////////////////////////////////////////////////////////////////////

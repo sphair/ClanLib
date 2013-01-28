@@ -186,17 +186,22 @@ void FontProvider_Vector::get_glyphs(
 {
 	for( unsigned int i=0; i<text.length(); i++ )
 	{
-		if( char_cache.find(text[i]) == char_cache.end() )
-		{
-			int out_advance_x;
-			PathGroup outline = font_engine->load_glyph_outline(text[i], out_advance_x);
-			vector_glyph &vg = char_cache[text[i]];
-			vg.advance_x = out_advance_x;
-			outline.triangulate_combined(vg.primitives_array, vg.primitives_array_outline);
-		}
+		store_in_char_cache(text[i]);
 		
 		out_glyphs[i] = text[i];
 		out_interspacing_x[i] = char_cache[text[i]].advance_x;
+	}
+}
+
+void FontProvider_Vector::store_in_char_cache(unsigned int glyph)
+{
+	if( char_cache.find(glyph) == char_cache.end() )
+	{
+		int out_advance_x;
+		PathGroup outline = font_engine->load_glyph_outline(glyph, out_advance_x);
+		vector_glyph &vg = char_cache[glyph];
+		vg.advance_x = out_advance_x;
+		outline.triangulate_combined(vg.primitives_array, vg.primitives_array_outline);
 	}
 }
 
@@ -220,12 +225,7 @@ void FontProvider_Vector::draw_glyphs(
 
 		if( filled )
 		{
-			std::vector<Vec2f> &prim_array = char_cache[glyphs[i]].primitives_array;
-
-			if (prim_array.size() > 0)
-			{
-				canvas.fill_triangles(&(prim_array[0]), prim_array.size(), color);
-			}
+			draw_prim_array(canvas, char_cache[glyphs[i]], color);
 		}
 		else
 		{
@@ -255,8 +255,80 @@ void FontProvider_Vector::set_filled(bool enable)
 	is_filled = enable;
 }
 
+Rectf FontProvider_Vector::get_bounding_box(const std::string &reference_string)
+{
+	Rectf bounding_rect(100000.0f, 100000.0f, -100000.0f, -100000.0f);
+	for( unsigned int i=0; i<reference_string.length(); i++ )
+	{
+		store_in_char_cache(reference_string[i]);
+		std::vector<Vec2f> &primitives_array = char_cache[reference_string[i]].primitives_array;
+
+		for (unsigned int cnt=0; cnt< primitives_array.size(); cnt++)
+		{
+			clan::Vec2f pos = primitives_array[cnt];
+			bounding_rect.left = clan::min(bounding_rect.left, pos.x);
+			bounding_rect.top = clan::min(bounding_rect.top, pos.y);
+			bounding_rect.right = clan::max(bounding_rect.right, pos.x);
+			bounding_rect.bottom = clan::max(bounding_rect.bottom, pos.y);
+		}
+
+	}
+
+	if (bounding_rect.left > bounding_rect.right)
+		return Rectf();
+
+	return bounding_rect;
+}
+
+
+void FontProvider_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
+{
+	current_texture = src_texture;
+	current_bounding_rect = bounding_rect;
+	current_texture_rect = texture_rect;
+
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Vector Implementation:
+
+void FontProvider_Vector::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color)
+{
+	if (vg.primitives_array.empty())
+		return;
+
+	if (current_texture.is_null())
+	{
+		canvas.fill_triangles(&vg.primitives_array[0], vg.primitives_array.size(), color);
+		return;
+	}
+
+	if ( (current_bounding_rect != vg.calculated_bounding_rect) || (current_texture_rect != vg.calculated_texture_rect) || vg.texture_positions.empty() )
+	{
+		vg.calculated_bounding_rect = current_bounding_rect;
+		vg.calculated_texture_rect = current_texture_rect;
+		vg.texture_positions.resize(vg.primitives_array.size());
+
+		float scale_x = current_texture_rect.get_width() / current_bounding_rect.get_width();
+		float scale_y = current_texture_rect.get_height() / current_bounding_rect.get_height();
+
+
+		// Recalculate the texture positions
+		for (unsigned int cnt=0; cnt< vg.primitives_array.size(); cnt++)
+		{
+			clan::Vec2f pos = vg.primitives_array[cnt];
+			pos.x -= current_bounding_rect.left;
+			pos.y -= current_bounding_rect.top;
+			pos.x *= scale_x;
+			pos.y *= scale_y;
+			pos.x += current_texture_rect.left;
+			pos.y += current_texture_rect.top;
+
+			vg.texture_positions[cnt] = pos;
+		}
+	}
+	canvas.fill_triangles(&vg.primitives_array[0], &vg.texture_positions[0], vg.primitives_array.size(), current_texture, color);
+
+}
 
 }
