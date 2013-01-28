@@ -61,25 +61,24 @@ void PathGroup::add_path(Path &path)
 	impl->add_path(path);
 }
 
-void PathGroup::triangulate(std::vector<Vec2f> &out_primitives_array)
+
+	void triangulate_filled(std::vector<Vec2f> &out_primitives_array);
+	void triangulate_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+	void triangulate_combined(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+
+void PathGroup::triangulate_filled(std::vector<Vec2f> &out_primitives_array)
 {
-	impl->triangulate(&out_primitives_array, NULL, NULL);
+	impl->triangulate(&out_primitives_array, NULL);
 }
-void PathGroup::triangulate(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
+void PathGroup::triangulate_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
 {
-	impl->triangulate(NULL, &out_primitives_array_outline, NULL);
+	impl->triangulate(NULL, &out_primitives_array_outline);
 }
 
-void PathGroup::triangulate(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
+void PathGroup::triangulate_combined(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
 {
-	impl->triangulate(&out_primitives_array, &out_primitives_array_outline, NULL);
+	impl->triangulate(&out_primitives_array, &out_primitives_array_outline);
 }
-
-void PathGroup::triangulate(std::vector< std::vector<Pointf> > &out_joined_outlines)
-{
-	impl->triangulate(NULL, NULL, &out_joined_outlines);
-}
-
 
 /////////////////////////////////////////////////////////////////////////////
 // PathGroup Implementation:
