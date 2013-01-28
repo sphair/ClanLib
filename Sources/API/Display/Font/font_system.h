@@ -35,7 +35,7 @@
 #include "font.h"
 
 #include "../2D/subtexture.h"
-#include "../Render/texture.h"
+#include "../Render/texture_2d.h"
 
 namespace clan
 {
@@ -43,41 +43,9 @@ namespace clan
 class FontProvider;
 class Font_System_Impl;
 class TextureGroup;
+class Subtexture;
 
 class FontProvider_System;
-
-/// \brief Bitmap Font Position class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
-struct Font_System_Position
-{
-	/// \brief The glyph (0 denotes end of list)
-	unsigned int glyph;
-
-	/// \brief Font X Position in the pixel buffer
-	int x_pos;
-
-	/// \brief Font Y Position in the pixel buffer
-	int y_pos;
-
-	/// \brief Font Width
-	int width;
-
-	/// \brief Font Height
-	int height;
-
-	/// \brief X Offset when drawing
-	int x_offset;
-
-	/// \brief Y Offset when drawing
-	int y_offset;
-
-	/// \brief X Increment when drawing
-	int x_increment;
-
-	/// \brief Y Increment when drawing
-	int y_increment;
-};
 
 /// \brief Font texture format (holds a pixel buffer containing a glyph)
 ///
@@ -94,7 +62,7 @@ public:
 	bool empty_buffer;
 
 	/// \brief The pixel buffer containing the glyph
-	Subtexture subtexture;
+	Texture2D texture;
 
 	/// \brief Geometry of the glyph inside the subtexture (excluding the border)
 	Rect geometry;
@@ -184,7 +152,7 @@ public:
 	/** param: gc = The graphic context
 	    param: position = The bitmap font position
 	    param: pixel_buffer = Pixel buffer containing the glyph.*/
-	void insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer);
+	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment);
 
 	/// \brief Insert glyphs from a text string (using to system font)
 	/** param: gc = The graphic context

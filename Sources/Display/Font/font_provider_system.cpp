@@ -91,9 +91,9 @@ Font_TextureGlyph *FontProvider_System::get_glyph(GraphicContext &gc, unsigned i
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_System Operations:
 
-void FontProvider_System::insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer)
+void FontProvider_System::insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment)
 {
-	glyph_cache.insert_glyph(gc, position, pixel_buffer);
+	glyph_cache.insert_glyph(gc, glyph, sub_texture, offset, increment);
 }
 
 void FontProvider_System::insert_glyph(GraphicContext &gc, const std::string &text)

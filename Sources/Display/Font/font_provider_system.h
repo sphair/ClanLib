@@ -67,7 +67,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	void insert_glyph(GraphicContext &gc, Font_System_Position &position, PixelBuffer &pixel_buffer);
+	void insert_glyph(GraphicContext &gc, unsigned int glyph, Subtexture &sub_texture, const Point &offset, const Point &increment);
 	void insert_glyph(GraphicContext &gc, const std::string &text);
 
 	/// \brief Print text on gc.
