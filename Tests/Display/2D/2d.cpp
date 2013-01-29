@@ -164,7 +164,7 @@ int App::start(const std::vector<std::string> &args)
 					const int offset_y = 80;
 					const int line_length = 6;
 					const int spacing = 8;
-					canvas.draw_fill(xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+					canvas.fill_rect(xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 				}
 			}
 			small_font.draw_text(canvas, 48, 90, "4*3 Fill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
@@ -182,7 +182,7 @@ int App::start(const std::vector<std::string> &args)
 					const int offset_y = 110;
 					const int line_length = 6;
 					const int spacing = 8;
-					canvas.draw_gradient_fill(xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, gradient);
+					canvas.fill_rect(xcnt*spacing, (ycnt*spacing) + offset_y, line_length + (xcnt*spacing), (line_length + (ycnt*spacing)) + offset_y, gradient);
 				}
 			}
 			small_font.draw_text(canvas, 48, 115, "4*3 GradientFill (0 + 8x), (32 + 8y), (6 + 8x), (38 + 8y)");
@@ -193,11 +193,11 @@ int App::start(const std::vector<std::string> &args)
 			{
 				const int offset_y = 140;
 				int radius = 5;
-				canvas.draw_circle(radius, offset_y + radius, radius, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+				canvas.fill_circle(radius, offset_y + radius, radius, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 				const int offset_x = 16;
 				radius = 16;
-				canvas.draw_circle(offset_x + radius, offset_y + radius, radius, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+				canvas.fill_circle(offset_x + radius, offset_y + radius, radius, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 			small_font.draw_text(canvas, 54, 149, "Circle (5, 145) Radius = 5");
 			small_font.draw_text(canvas, 54, 159, "Circle (32, 156) Radius = 16");
@@ -214,13 +214,13 @@ int App::start(const std::vector<std::string> &args)
 				float radius = 17.0;
 				float xpos = radius;
 				float ypos = offset_y + radius;
-				canvas.draw_gradient_circle(Pointf( xpos, ypos ), Pointf(radius/2.0, 0.0f), radius, gradient);
+				canvas.fill_circle(Pointf( xpos, ypos ), Pointf(radius/2.0, 0.0f), radius, gradient);
 
 				const int offset_x = 40;
 				radius = 17.0;
 				xpos = offset_x + radius;
 				ypos = offset_y + radius;
-				canvas.draw_gradient_circle(Pointf( xpos, ypos), Pointf(0.0f, radius/2.0), radius, gradient);
+				canvas.fill_circle(Pointf( xpos, ypos), Pointf(0.0f, radius/2.0), radius, gradient);
 			}
 
 			small_font.draw_text(canvas, 80, 189, "Gradient Circle (16, 196) Radius = 17. Gradient right");
@@ -231,13 +231,13 @@ int App::start(const std::vector<std::string> &args)
 			{
 				const float offset_y = 220.0f;
 				const float size = 12.0f;
-				canvas.draw_triangle(Pointf(0.0f, offset_y), Pointf(0.0f, offset_y + size), Pointf(size, offset_y + size), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+				canvas.fill_triangle(Pointf(0.0f, offset_y), Pointf(0.0f, offset_y + size), Pointf(size, offset_y + size), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 				float offset_x = 16.0f;
-				canvas.draw_triangle(Pointf(offset_x + 0.0f, offset_y + size), Pointf(offset_x + size, offset_y + size), Pointf(offset_x + 0.0f, offset_y), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+				canvas.fill_triangle(Pointf(offset_x + 0.0f, offset_y + size), Pointf(offset_x + size, offset_y + size), Pointf(offset_x + 0.0f, offset_y), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 				offset_x = 32.0f;
-				canvas.draw_triangle(Pointf(offset_x + size, offset_y + size), Pointf(offset_x + 0.0f, offset_y), Pointf(offset_x + 0.0f, offset_y + size), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+				canvas.fill_triangle(Pointf(offset_x + size, offset_y + size), Pointf(offset_x + 0.0f, offset_y), Pointf(offset_x + 0.0f, offset_y + size), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			}
 			small_font.draw_text(canvas, 48, 229, "3 Triangles (12 pixel size) (Left vertical edge).");
 			small_font.draw_text(canvas, 48, 239, "Top Left: (0,220)  (16,220)  (32,220)");
