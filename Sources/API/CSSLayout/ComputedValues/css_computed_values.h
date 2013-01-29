@@ -58,6 +58,8 @@ public:
 
 private:
 	std::shared_ptr<CSSComputedValues_Impl> impl;
+
+	friend class CSSComputedValues_Impl;
 };
 
 }

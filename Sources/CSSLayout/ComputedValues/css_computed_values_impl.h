@@ -32,6 +32,7 @@
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/CSSDocument/css_select_result.h"
 #include "API/CSSLayout/CSSDocument/css_style_properties.h"
+#include <algorithm>
 
 namespace clan
 {
@@ -40,10 +41,14 @@ class CSSComputedValues_Impl
 {
 public:
 	CSSComputedValues_Impl(CSSResourceCache *resource_cache) : specified_values_changed(true), box_generation(0), resource_cache(resource_cache) { }
+	~CSSComputedValues_Impl();
 
+	void set_parent(const CSSComputedValues &parent);
+	void set_specified_values_changed();
 	void update_if_changed();
 
 	CSSComputedValues parent;
+	std::vector<CSSComputedValues_Impl *> children;
 
 	bool specified_values_changed;
 
@@ -54,7 +59,40 @@ public:
 	CSSStyleProperties style_values;
 
 	CSSResourceCache *resource_cache;
+
+private:
+	void detach_from_parent();
 };
+
+inline CSSComputedValues_Impl::~CSSComputedValues_Impl()
+{
+	detach_from_parent();
+}
+
+inline void CSSComputedValues_Impl::set_parent(const CSSComputedValues &new_parent)
+{
+	detach_from_parent();
+
+	parent = new_parent;
+
+	if (parent.impl)
+		parent.impl->children.push_back(this);
+
+	set_specified_values_changed();
+}
+
+inline void CSSComputedValues_Impl::detach_from_parent()
+{
+	if (parent.impl)
+		parent.impl->children.erase(std::find(parent.impl->children.begin(), parent.impl->children.end(), this));
+}
+
+inline void CSSComputedValues_Impl::set_specified_values_changed()
+{
+	specified_values_changed = true;
+	for (size_t i = 0; i < children.size(); i++)
+		children[i]->set_specified_values_changed();
+}
 
 inline void CSSComputedValues_Impl::update_if_changed()
 {

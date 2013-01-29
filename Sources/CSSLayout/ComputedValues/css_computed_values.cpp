@@ -49,8 +49,7 @@ bool CSSComputedValues::is_null() const
 
 void CSSComputedValues::set_parent(const CSSComputedValues &parent)
 {
-	impl->parent = parent;
-	impl->specified_values_changed = true;
+	impl->set_parent(parent);
 }
 
 void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_values)
@@ -65,9 +64,9 @@ void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_val
 
 void CSSComputedValues::set_specified_values(const CSSSelectResult &selected_values, const CSSStyleProperties &style_values)
 {
-	impl->specified_values_changed = true;
 	impl->selected_values = selected_values;
 	impl->style_values = style_values;
+	impl->set_specified_values_changed();
 }
 
 const CSSComputedBox &CSSComputedValues::get_box() const

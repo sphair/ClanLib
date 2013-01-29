@@ -49,9 +49,9 @@ void Custom::on_render(Canvas &canvas, const Rect &update_rect)
 	Rect text2_rect = box2.get_render_text_box(canvas, message_2, box2_content_box);
 	Rect text3_rect = box3.get_render_text_span_box(canvas, message_3, box3_content_box);
 
-	canvas.draw_fill(text1_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
-	canvas.draw_fill(text2_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
-	canvas.draw_fill(text3_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
+	canvas.fill_rect(text1_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
+	canvas.fill_rect(text2_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
+	canvas.fill_rect(text3_rect, Colorf(0.5f, 0.5f, 0.5f, 0.5f));
 	
 	Rect rendered_text1_rect = box1.render_text(canvas, message_1, box1_content_box);
 	Rect rendered_text2_rect = box2.render_text(canvas, message_2, box2_content_box);
