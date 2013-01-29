@@ -65,17 +65,13 @@ void RoundedRect_Impl::draw(Canvas &canvas, const Pointf &position, const Colorf
 	if( outline_needs_update )
 		calculate_outline_points();
 
-	Pointf origin_offset = Pointf::calc_origin(origin, size);
-
-	canvas.push_translate(position.x - origin_offset.x, position.y - origin_offset.y);
-
-	for( unsigned int i=0; i<outline.size(); i++ )
+	if (!outline.empty())
 	{
-		// todo: add StaticLineStripArray primitives array
-		canvas.draw_line(outline[i], outline[(i+1)%outline.size()], color);
+		Pointf origin_offset = Pointf::calc_origin(origin, size);
+		canvas.push_translate(position.x - origin_offset.x, position.y - origin_offset.y);
+		canvas.draw_line_strip(&outline[0], outline.size(), color);
+		canvas.pop_modelview();
 	}
-
-	canvas.pop_modelview();
 }
 
 void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Colorf &color, Origin origin)
@@ -322,6 +318,8 @@ void RoundedRect_Impl::calculate_outline_points()
 
 	points = bez_tl.generate_curve_points(Angle::from_degrees(10));
 	outline.insert(outline.end(), points.begin(), points.end());
+
+	outline.push_back(outline[0]);
 
 	outline_needs_update = false;
 }
