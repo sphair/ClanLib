@@ -46,7 +46,7 @@ namespace clan
 
 RoundedRect_Impl::RoundedRect_Impl() : 
 	cp_tl(0,0),	cp_tr(1,0),	cp_bl(0,1),	cp_br(1,1),
-	round_tl(-1.0,-1.0), round_tr(-1.0,-1.0), round_bl(-1.0,-1.0), round_br(-1.0,-1.0), outline_needs_update(true), triangulation_needs_update(true) 
+	round_tl(-1.0,-1.0), round_tr(-1.0,-1.0), round_bl(-1.0,-1.0), round_br(-1.0,-1.0), outline_needs_update(true), triangulation_needs_update(true), update_colors_flag(true)
 {
 }
 
@@ -79,37 +79,18 @@ void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Colorf
 	if( outline_needs_update )
 		calculate_outline_points();
 
-	GraphicContext &gc = canvas.get_gc();
-
 	if( triangulation_needs_update )
 	{
 		triangulate();
-
-		num_vectors = triangle_positions.size();
-		if (num_vectors)
-		{
-			std::vector<Vec4f> triangle_colors(num_vectors, color);
-			gpu_positions = VertexArrayVector<Vec2f>(gc, &triangle_positions[0], num_vectors);
-			gpu_colors = VertexArrayVector<Vec4f>(gc, &triangle_colors[0], num_vectors);
-
-		}
-
 	}
 
-	if (num_vectors == 0)
+	if (triangle_positions.empty())
 		return;
-
-	PrimitivesArray prim_array(gc);
-	prim_array.set_attributes(0, gpu_positions);
-	prim_array.set_attributes(1, gpu_colors);
 
 	Pointf origin_offset = Pointf::calc_origin(origin, size);
 	canvas.push_translate(position.x - origin_offset.x, position.y - origin_offset.y);
-	canvas.set_program_object(program_color_only);
-	gc.draw_primitives(type_triangles, (int) num_vectors, prim_array);
-	gc.reset_program_object();
+	canvas.fill_triangles(&triangle_positions[0], triangle_positions.size(), color);
 	canvas.pop_modelview();
-
 }
 
 void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Gradient &new_gradient, Origin origin)
@@ -117,33 +98,22 @@ void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Gradie
 	if( outline_needs_update )
 		calculate_outline_points();
 
-	bool update_colors_flag = triangulation_needs_update;
-	GraphicContext &gc = canvas.get_gc();
-
 	if( triangulation_needs_update )
 	{
 		triangulate();
-
-		num_vectors = triangle_positions.size();
-		if (num_vectors)
-		{
-			gpu_positions = VertexArrayVector<Vec2f>(gc, &triangle_positions[0], num_vectors);
-		}
 	}
 
-	if (num_vectors == 0)
+	if (triangle_positions.empty())
 		return;
 
 	if( gradient != new_gradient || update_colors_flag )
 	{
-		std::vector<Vec4f> triangle_colors;
-
+		update_colors_flag = false;
 		gradient = new_gradient;
-		triangle_colors.clear();
-		triangle_colors.reserve(num_vectors);
-
+		triangle_colors.resize(triangle_positions.size());
+		
 		float min_x=99999999.0f, max_x=-99999999.0f, min_y=99999999.0f, max_y=-99999999.0f;
-		for( unsigned int i=0; i<num_vectors; i++ )
+		for( unsigned int i=0; i<triangle_positions.size(); i++ )
 		{
 			Pointf P(triangle_positions[i].x, triangle_positions[i].y);
 			if( P.x < min_x ) min_x = P.x;
@@ -158,7 +128,7 @@ void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Gradie
 		Trianglef triangle1_vert( Pointf(min_x, min_y), Pointf(max_x, min_y), Pointf(max_x, max_y) );
 		Trianglef triangle2_vert( Pointf(max_x, max_y), Pointf(min_x, max_y), Pointf(min_x, min_y) );
 
-		for( unsigned int i=0;  i < num_vectors; i++ )
+		for( unsigned int i=0;  i < triangle_positions.size(); i++ )
 		{
 			Colorf color;
 			Pointf P(triangle_positions[i].x, triangle_positions[i].y);
@@ -171,28 +141,13 @@ void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Gradie
 			{
 				color = point_on_triangle_to_color( triangle2_vert, gradient.bottom_right, gradient.bottom_left, gradient.top_left, P );
 			}
-
-			Vec4f vertex_color;
-			vertex_color.r = color.get_red();
-			vertex_color.g = color.get_green();
-			vertex_color.b = color.get_blue();
-			vertex_color.a = color.get_alpha();
-			triangle_colors.push_back(vertex_color);
+			triangle_colors[i] = color;
 		}
-
-		gpu_colors = VertexArrayVector<Vec4f>(gc, &triangle_colors[0], num_vectors);
 	}
-
-
-	PrimitivesArray prim_array(gc);
-	prim_array.set_attributes(0, gpu_positions);
-	prim_array.set_attributes(1, gpu_colors);
 
 	Pointf origin_offset = Pointf::calc_origin(origin, size);
 	canvas.push_translate(position.x - origin_offset.x, position.y - origin_offset.y);
-	canvas.set_program_object(program_color_only);
-	gc.draw_primitives(type_triangles, (int) num_vectors, prim_array);
-	gc.reset_program_object();
+	canvas.fill_triangles(&triangle_positions[0], &triangle_colors[0], triangle_positions.size());
 	canvas.pop_modelview();
 }
 
@@ -201,6 +156,8 @@ void RoundedRect_Impl::fill(Canvas &canvas, const Pointf &position, const Gradie
 
 void RoundedRect_Impl::triangulate()
 {
+	update_colors_flag = true;
+
 	EarClipTriangulator triangulator;
 
 	for (unsigned int cnt = 0; cnt < outline.size(); cnt++)

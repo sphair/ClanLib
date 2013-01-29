@@ -562,6 +562,12 @@ void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, c
 	batcher->fill_triangle(*this, triangle_positions, color, num_vertices);
 }
 
+void Canvas::fill_triangles(const Vec2f *triangle_positions, const Colorf *colors, int num_vertices)
+{
+	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+	batcher->fill_triangle(*this, triangle_positions, colors, num_vertices);
+}
+
 void Canvas::fill_triangle(const Trianglef &dest_triangle, const Colorf &color)
 {
 	fill_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
