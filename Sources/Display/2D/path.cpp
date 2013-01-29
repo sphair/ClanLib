@@ -52,9 +52,9 @@ Path::~Path()
 /////////////////////////////////////////////////////////////////////////////
 // Path Attributes:
 
-bool Path::is_hole()
+bool Path::is_hole(PolygonOrientation orientation)
 {
-	return impl->is_hole();
+	return impl->is_hole(orientation);
 }
 
 bool Path::is_inside_contour(const Path &other) const

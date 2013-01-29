@@ -473,7 +473,7 @@ Pointf FontEngine_Freetype::FT_Vector_to_Pointf(const FT_Vector &vec)
 	Pointf P;
 
 	P.x = float(vec.x)/64.0f;
-	P.y = float(vec.y)/64.0f;
+	P.y = - float(vec.y)/64.0f;
 
 	return P;
 }

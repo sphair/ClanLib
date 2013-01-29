@@ -52,14 +52,14 @@ Path_Impl::~Path_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // Path_Impl Attributes:
 
-bool Path_Impl::is_hole()
+bool Path_Impl::is_hole(PolygonOrientation polygon_orientation)
 {
 	if( holeness_cached )
 		return hole;
 
 	PolygonOrientation orientation = get_orientation();
 
-	if( orientation == cl_counter_clockwise )
+	if( orientation == polygon_orientation )
 	{
 		holeness_cached = true;
 		hole = true;
@@ -140,7 +140,6 @@ PolygonOrientation Path_Impl::get_orientation()
 
 	if( sum > 0.0 )
 		return cl_counter_clockwise;
-
 	return cl_clockwise;
 }
 

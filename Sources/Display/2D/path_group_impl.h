@@ -70,7 +70,7 @@ public:
 
 	void add_path(Path &path);
 
-	void get_triangles(std::vector<Vec2f> &out_primitives_array);
+	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation);
 	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
 
 /// \}
