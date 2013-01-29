@@ -82,7 +82,7 @@ Ribbon::Ribbon(GUIComponent *container)
 	DwmEnableBlurBehindWindow(hwnd, &blur_behind);
 
 	MARGINS margins = { 0 };
-	margins.cyTopHeight = part_tab_background.get_css_height();
+	margins.cyTopHeight = part_tab_background.get_css_height() + 1;
 	DwmExtendFrameIntoClientArea(hwnd, &margins);
 #endif
 }
