@@ -59,7 +59,7 @@ void RibbonMenu::start(const Point &pos)
 	
 	current_item = -1;
 	int height = update_item_boxes();
-	set_geometry(Rect(0, 0, 519, height).translate(pos));
+	set_window_geometry(Rect(pos, Size(519, height)), true);
 	set_visible(true, false);
 }
 
