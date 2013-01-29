@@ -203,6 +203,18 @@ void PushButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	if (input_msg)
 		on_input_message(input_msg);
 
+	std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(msg);
+	if (pointer)
+	{
+		if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
+		{
+			if (!toggle_mode)
+				button->set_pseudo_class(CssStr::pressed, false);
+		}
+		msg->consumed = true;
+
+	}
+
 	std::shared_ptr<GUIMessage_FocusChange> focus_change_msg = std::dynamic_pointer_cast<GUIMessage_FocusChange>(msg);
 	if (focus_change_msg)
 		on_focus_message(focus_change_msg);
