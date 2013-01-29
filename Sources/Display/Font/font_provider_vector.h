@@ -28,9 +28,7 @@
 **    Mark Page
 */
 
-
 #pragma once
-
 
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/Font/font_metrics.h"
@@ -52,27 +50,20 @@ class FontProvider_Vector : public FontProvider
 /// \{
 
 public:
-
 	FontProvider_Vector();
-
 	virtual ~FontProvider_Vector();
-
 
 /// \}
 /// \name Attributes
 /// \{
-
 public:
 	/// \brief Returns information about the current font.
 	virtual FontMetrics get_font_metrics();
 
-
 /// \}
 /// \name Operations
 /// \{
-
 public:
-
 	/// \brief Print text on gc.
 	void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color);
 
@@ -112,9 +103,8 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-
 private:
-	void  store_in_char_cache(unsigned int glyph);
+	void store_in_char_cache(unsigned int glyph);
 
 	struct vector_glyph
 	{
@@ -129,7 +119,8 @@ private:
 		//out_interspacing_x[i] += font_engine->get_kerning( text[i], text[i+1] );
 		int advance_x;
 	};
-	void FontProvider_Vector::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color);
+	
+	void draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color);
 
 	std::map<int, vector_glyph> char_cache;
 
@@ -144,7 +135,6 @@ private:
 	Texture2D current_texture;
 	Rectf current_bounding_rect;
 	Rectf current_texture_rect;
-
 /// \}
 };
 
