@@ -62,6 +62,15 @@ void CSSParserFlex::parse(const std::string &name, const std::vector<CSSToken> &
 			inout_values.push_back(std::move(flex_shrink));
 			inout_values.push_back(std::move(flex_basis));
 		}
+		else if (equals(token.value, "inherit"))
+		{
+			flex_grow->type = CSSValueFlexGrow::type_inherit;
+			flex_shrink->type = CSSValueFlexShrink::type_inherit;
+			flex_basis->type = CSSValueFlexBasis::type_inherit;
+			inout_values.push_back(std::move(flex_grow));
+			inout_values.push_back(std::move(flex_shrink));
+			inout_values.push_back(std::move(flex_basis));
+		}
 		else
 		{
 			return;
@@ -69,7 +78,11 @@ void CSSParserFlex::parse(const std::string &name, const std::vector<CSSToken> &
 	}
 	else
 	{
+		pos = 0;
+
+		flex_grow->type = CSSValueFlexGrow::type_number;
 		flex_grow->number = 1.0f;
+		flex_shrink->type = CSSValueFlexShrink::type_number;
 		flex_shrink->number = 1.0f;
 		flex_basis->type = CSSValueFlexBasis::type_length;
 		flex_basis->length = CSSLength(0.0f, CSSLength::type_px);
@@ -104,12 +117,7 @@ bool CSSParserFlex::parse_grow_shrink(CSSValueFlexGrow &grow, CSSValueFlexShrink
 	size_t pos = parse_pos;
 	CSSToken token = next_token(pos, tokens);
 
-	if (token.type == CSSToken::type_ident)
-	{
-		if (equals(token.value, "inherit"))
-			grow.type = CSSValueFlexGrow::type_inherit;
-	}
-	else if (token.type == CSSToken::type_number)
+	if (token.type == CSSToken::type_number)
 	{
 		grow.type = CSSValueFlexGrow::type_number;
 		grow.number = StringHelp::text_to_float(token.value);
@@ -125,14 +133,7 @@ bool CSSParserFlex::parse_grow_shrink(CSSValueFlexGrow &grow, CSSValueFlexShrink
 	{
 		token = next_token(pos, tokens);
 
-		if (token.type == CSSToken::type_ident)
-		{
-			if (equals(token.value, "inherit"))
-				shrink.type = CSSValueFlexShrink::type_inherit;
-
-			parse_pos = pos;
-		}
-		else if (token.type == CSSToken::type_number)
+		if (token.type == CSSToken::type_number)
 		{
 			shrink.type = CSSValueFlexShrink::type_number;
 			shrink.number = StringHelp::text_to_float(token.value);
@@ -153,8 +154,8 @@ bool CSSParserFlex::parse_basis(CSSValueFlexBasis &basis, size_t &parse_pos, con
 	{
 		if (equals(token.value, "auto"))
 			basis.type = CSSValueFlexBasis::type_auto;
-		else if (equals(token.value, "inherit"))
-			basis.type = CSSValueFlexBasis::type_inherit;
+		else
+			return false;
 	}
 	else if (is_length(token))
 	{

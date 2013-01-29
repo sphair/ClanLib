@@ -35,8 +35,10 @@
 #include "API/GUI/Components/push_button.h"
 #include "API/Display/Window/input_event.h"
 #include "API/Display/Window/keys.h"
-#include "../../gui_css_strings.h"
 #include "API/Display/2D/canvas.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
+#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "../../gui_css_strings.h"
 
 #ifdef WIN32
 #define GLASS_EFFECT
@@ -61,7 +63,7 @@ Ribbon::Ribbon(GUIComponent *container)
 
 	menu_button = new PushButton(this);
 	menu_button->set_class("menu");
-	menu_button->set_geometry(Rect(0, 0, menu_button->get_content_box().get_width(), 1 + menu_button->get_content_box().get_height()));
+	menu_button->set_geometry(Rect(0, 0, menu_button->get_css_values().get_box().width.length.value, menu_button->get_css_values().get_box().height.length.value));
 	menu_button->func_clicked().set(this, &Ribbon::on_menu_button_clicked);
 
 	menu = new RibbonMenu(this);
@@ -80,7 +82,7 @@ Ribbon::Ribbon(GUIComponent *container)
 	DwmEnableBlurBehindWindow(hwnd, &blur_behind);
 
 	MARGINS margins = { 0 };
-	margins.cyTopHeight = part_tab.get_css_height();
+	margins.cyTopHeight = part_tab_background.get_css_height();
 	DwmExtendFrameIntoClientArea(hwnd, &margins);
 #endif
 }
@@ -117,6 +119,7 @@ void Ribbon::on_resized()
 void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 {
 	Rect glass_area = get_size();
+	glass_area.set_height(part_tab_background.get_css_height());
 	glass_area.clip(clip_rect);
 	set_cliprect(canvas, glass_area);
 #ifdef GLASS_EFFECT
@@ -125,14 +128,13 @@ void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 	canvas.clear(Colorf("#e1e6f6"));
 #endif
 	reset_cliprect(canvas);
-	Size client_size = get_size();
-	part_tab_background.render_box(canvas, client_size);
+	part_tab_background.render_box(canvas, Size(get_size().width, part_tab_background.get_css_height()));
 	paint_tabs(canvas, clip_rect);
 }
 
 void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 {
-	int tab_x = menu_button->get_content_box().get_width() + 2;
+	int tab_x = menu_button->get_width() + 1;
 	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 	{
 		if (pages[page_index]->show_tab)

@@ -1,3 +1,29 @@
+
+.root
+{
+    display: flex;
+    flex-direction: column;
+    
+    background-color: #eded00;
+}
+
+.root textedit
+{
+    flex: 1;
+    border: 1px solid #000000;
+    background: #66ed66;
+    padding: 5px;
+    margin: 7px 0;
+}
+
+
+/*
+
+
+
+
+
+
 *
 {
     display: flex;
@@ -29,8 +55,6 @@ ribbon-header
     flex-direction: row;
    
     height: 23px;
-
-/*  border-image: url('res:RibbonTabBackground') 22 120 0 120 fill / 22px 120px 0px 120px;*/
 
     background-color: #e1e6f6;
     border-image: url('res:Ribbon') 23 0 0 0 fill / 23px 0px 0px 0px;
@@ -385,3 +409,4 @@ label.aligned_label_baseline
     margin: 2px;
 	vertical-align: baseline;
 }
+*/

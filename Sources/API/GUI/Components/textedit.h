@@ -128,16 +128,6 @@ public:
 	/// \return cursor line number
 	int get_cursor_line_number() const;
 
-	/// \brief Returns the preferred content width
-	///
-	/// Override this function if the component has non-css content.
-	float get_preferred_content_width();
-
-	/// \brief Returns the preferred content height for the specified content width
-	///
-	/// Override this function if the component has non-css content.
-	float get_preferred_content_height(float width);
-
 	/// \brief Returns the height required to display all lines with the current width of the control
 	int get_total_height();
 
