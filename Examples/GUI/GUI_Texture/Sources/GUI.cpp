@@ -67,7 +67,7 @@ bool GUI::run()
 
 	canvas.set_map_mode(clan::MapMode(clan::map_2d_upper_left));
 
-	canvas.gradient_fill(app->get_window()->get_viewport(), clan::Gradient(clan::Colorf(0.4f, 0.4f, 0.4f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
+	canvas.fill_rect(app->get_window()->get_viewport(), clan::Gradient(clan::Colorf(0.4f, 0.4f, 0.4f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
 
 	run_manager(canvas);
 
