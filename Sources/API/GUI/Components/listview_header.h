@@ -133,11 +133,6 @@ public:
 	/// \return List View Column Header
 	ListViewColumnHeader insert_before(const std::string &column_id, ListViewColumnHeader new_column);
 
-	/// \brief Set visible
-	///
-	/// \param visible = bool
-	void set_visible(bool visible);
-
 	/// \brief Set display mode
 	///
 	/// \param mode = List View Display Mode
