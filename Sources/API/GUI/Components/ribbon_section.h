@@ -34,10 +34,12 @@
 namespace clan
 {
 
+class RibbonPage;
+
 class RibbonSection : public GUIComponent
 {
 public:
-	RibbonSection(GUIComponent *parent, const std::string &text, int size);
+	RibbonSection(RibbonPage *parent, const std::string &text, int size);
 
 private:
 	void on_render(Canvas &canvas, const Rect &clip_rect);

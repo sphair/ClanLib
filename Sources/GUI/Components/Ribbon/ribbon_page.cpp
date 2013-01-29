@@ -30,6 +30,7 @@
 #include "GUI/precomp.h"
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
+#include "API/GUI/Components/ribbon.h"
 
 namespace clan
 {
@@ -37,10 +38,11 @@ namespace clan
 //////////////////////////////////////////////////////////////////////////
 // Construction
 
-RibbonPage::RibbonPage(GUIComponent *parent, const std::string &text)
+RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
 : GUIComponent(parent, "ribbon-page"), text(text), show_tab(true)
 {
 	func_resized().set(this, &RibbonPage::on_resized);
+	parent->add_page(this);
 }
 
 //////////////////////////////////////////////////////////////////////////

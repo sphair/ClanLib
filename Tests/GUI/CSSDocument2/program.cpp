@@ -31,14 +31,15 @@ int Program::main(const std::vector<std::string> &args)
 	Ribbon *ribbon = new Ribbon(root);
 	RibbonPage *page_home = new RibbonPage(ribbon, "Home");
 	RibbonPage *page_view = new RibbonPage(ribbon, "View");
-	ribbon->add_page(page_home);
-	ribbon->add_page(page_view);
 	ribbon->get_menu()->add_item(Image(ribbon->get_canvas(), "../../../Resources/GUIThemeAero/Images/messagebox_icon_info.png"), "New");
 	ribbon->get_menu()->add_item(Image(ribbon->get_canvas(), "../../../Resources/GUIThemeAero/Images/messagebox_icon_info.png"), "Open");
 	ribbon->get_menu()->add_separator();
 	ribbon->get_menu()->add_item(Image(ribbon->get_canvas(), "../../../Resources/GUIThemeAero/Images/messagebox_icon_info.png"), "About");
 	ribbon->get_menu()->add_separator();
 	ribbon->get_menu()->add_item(Image(ribbon->get_canvas(), "../../../Resources/GUIThemeAero/Images/messagebox_icon_info.png"), "Exit");
+
+	RibbonSection *section1 = new RibbonSection(page_home, "Section 1", 200);
+	RibbonSection *section2 = new RibbonSection(page_home, "Section 2", 300);
 
 	GUIComponent *row = new GUIComponent(root);
 	row->set_class("row");

@@ -34,6 +34,7 @@
 namespace clan
 {
 
+class Ribbon;
 class RibbonSection;
 
 class RibbonPage : public GUIComponent
@@ -41,7 +42,7 @@ class RibbonPage : public GUIComponent
 /// \name Construction
 /// \{
 public:
-	RibbonPage(GUIComponent *parent, const std::string &text);
+	RibbonPage(Ribbon *parent, const std::string &text);
 
 /// \}
 /// \name Attributes
@@ -53,16 +54,14 @@ public:
 /// \name Operations
 /// \{
 public:
-	void add_section(RibbonSection *section);
-
 	void set_show_tab(bool value);
-
 	void set_tab_custom_css_state(const std::string &css_state_name);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
+	void add_section(RibbonSection *section);
 	void on_resized();
 
 	std::string text;
@@ -72,6 +71,7 @@ private:
 	bool show_tab;
 
 	friend class Ribbon;
+	friend class RibbonSection;
 /// \}
 };
 
