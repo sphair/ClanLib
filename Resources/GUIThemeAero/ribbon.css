@@ -6,8 +6,8 @@ ribbon
 	/*height:95px;*/
 	
 	border-image-source:url('res:Ribbon');
-	border-image-slice:8 8 50  8 fill;
-	border-image-width:8px 8px 50px px;
+	border-image-slice:25 0 0 0 fill;
+	border-image-width:25px 0 0 0;
 	
 	font-family:tahoma;
 	font-size:11px;
@@ -51,10 +51,8 @@ ribbon tab:selected
 
 ribbon tab-background
 {
-	border-image-source:url('res:RibbonTabBackground');
-	border-image-slice:120 120 54  8 fill;
-	border-image-width:120px 120px 54px px;
-	font-family:tahoma;
+	background: url('res:RibbonTabBackground') repeat-x;
+	height: 22px;
 }
 
 ribbon-section

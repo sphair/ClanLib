@@ -17,7 +17,8 @@ int Program::main(const std::vector<std::string> &args)
 
 	GUIManager gui(".");
 
-	gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
+	//gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
+	gui.add_theme("../../../Resources/GUIThemeAero");
 
 	GUITopLevelDescription window_desc;
 	window_desc.set_title("GUI Test");
@@ -29,6 +30,16 @@ int Program::main(const std::vector<std::string> &args)
 	root->func_close().set(&Program::on_close, root);
 	root->func_resized().set(&Program::on_resized, root);
 
+	Ribbon *ribbon = new Ribbon(root);
+	RibbonPage *page_home = new RibbonPage(ribbon, "Home");
+	RibbonPage *page_view = new RibbonPage(ribbon, "View");
+	ribbon->add_page(page_home);
+	ribbon->add_page(page_view);
+
+	TextEdit *textedit = new TextEdit(root);
+	textedit->set_text("This is a TextEdit control.");
+
+/*
 	DomDocument xml(File("layout.xml"), false); // Braindead constructors on DomDocument..
 
 	for (DomElement xml_child = xml.get_document_element().get_first_child_element(); xml_child.is_element(); xml_child = xml_child.get_next_sibling_element())
@@ -37,7 +48,7 @@ int Program::main(const std::vector<std::string> &args)
 	}
 
 	create_imageview_test(root);
-
+*/
 	root->update_layout();
 
 	gui.exec();
