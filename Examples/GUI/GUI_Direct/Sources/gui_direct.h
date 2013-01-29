@@ -50,11 +50,10 @@ public:
 	GUI_Direct(GUI *gui);
 	~GUI_Direct();
 
-private:
+public:
+	clan::GUIManager gui_manager;
 
 private:
-	clan::ResourceManager resources_gui;
-	clan::GUIThemeDefault theme;
 	GUI *gui;
 	clan::DisplayWindow *window_ptr;
 	clan::GUIWindowManagerDirect wm;
