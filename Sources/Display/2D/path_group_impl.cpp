@@ -68,56 +68,73 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, Pol
 
 	EarClipTriangulator triangulator;
 
-	unsigned int i;
+
+	// Create the hole cache
+	std::vector< bool > contour_empty;
+	std::vector< bool > contour_hole_cache;
+	contour_empty.resize(contours.size());
+	contour_hole_cache.resize(contours.size());
+	for( size_t cnt=0; cnt < contours.size(); cnt++ )
+	{
+		contour_empty[cnt] = contours[cnt].get_contour_points().empty();
+		if( contour_empty[cnt] )
+			continue;
+
+		contour_hole_cache[cnt] = contours[cnt].is_hole(polygon_orientation);
+			continue;
+	}
 
 	// sort contour vector so that it has the ordering:
 	// outline_1, ouline_1_hole_1, ouline_1_hole_2, outline_2, ouline_2_hole_1 etc.
 
 	std::vector< Path > sorted_contours;
+	std::vector< bool > sorted_hole_cache;
 
 	int outline_count = 0;
 
+	unsigned int i;
 	for( i=0; i < contours.size(); ++i )
 	{
-		if( contours[i].get_contour_points().empty() )
+		if( contour_empty[i] )
 			continue;
 
-		if( contours[i].is_hole(polygon_orientation) )
+		if( contour_hole_cache[i] )
 			continue;
 
 		outline_count++;
 
 		sorted_contours.push_back(contours[i]);
+		sorted_hole_cache.push_back(false);
 
 		for( unsigned int j=0; j < contours.size(); ++j )
 		{
-			if( contours[j].get_contour_points().empty() ) continue;
+			if( contour_empty[j] )
+				continue;
 
-			if( contours[j].is_hole(polygon_orientation) && contours[j].is_inside_contour(contours[i]) )
+			if( contour_hole_cache[j] && contours[j].is_inside_contour(contours[i]) )
 			{
 				sorted_contours.push_back(contours[j]);
-				contours[j] = Path();
+				sorted_hole_cache.push_back(true);
+				contour_empty[j] = true;
 			}
 		}
 
-		contours[i] = Path();
+		contour_empty[i] = true;
 	}
 
 //	cl_write_console_line(string_format("num outlines: %1", outline_count));
 //	cl_write_console_line(string_format("num holes: %1", (int)(contours.size() - outline_count)));
 
-	contours = sorted_contours;
+//	cl_write_console_line("num sorted_contours: %1", (int)sorted_contours.size());
 
-//	cl_write_console_line("num contours: %1", (int)contours.size());
-
-	for( i=0; i < contours.size(); ++i )
+	for( i=0; i < sorted_contours.size(); ++i )
 	{
-		if( contours[i].is_hole(polygon_orientation) )
+		if( sorted_hole_cache[i] )
 		{
 			triangulator.begin_hole();
 		}
 
-		const std::vector<Pointf> &cpoints = contours[i].get_contour_points();
+		const std::vector<Pointf> &cpoints = sorted_contours[i].get_contour_points();
 		unsigned int num_points = cpoints.size();
 
 		for( unsigned int p=0; p<num_points; ++p )
@@ -125,14 +142,14 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, Pol
 			triangulator.add_vertex(cpoints[p]);
 		}
  
-		if( contours[i].is_hole(polygon_orientation) )
+		if( sorted_contours[i].is_hole(polygon_orientation) )
 		{
 			triangulator.end_hole();
 		}
 
-		// if there are still contours left, but the next contour isn't a hole, then triangulate
+		// if there are still sorted_contours left, but the next contour isn't a hole, then triangulate
 		// what has been added to the triangulator so far. Then clear it to start a new contour.
-		if( (i+1 < contours.size()) && (contours[i+1].is_hole(polygon_orientation) == false) )
+		if( (i+1 < sorted_contours.size()) && (sorted_hole_cache[i+1] == false) )
 		{
 			triangulator.set_orientation(polygon_orientation);
 
