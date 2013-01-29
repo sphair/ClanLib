@@ -59,7 +59,7 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	path_group = clan::PathGroup();
 	path = clan::Path();
-	path.add_line_to(10, 200);	//FIXME - Why negative
+	path.add_line_to(10, 200);
 	path.add_line_to(108, 210);
 	path.add_line_to(100, 300);
 	path.add_line_to(20, 310);
@@ -70,7 +70,6 @@ int PathApp::start(const std::vector<std::string> &args)
 	path_group.get_triangles(primitives_array_polygon);
 	path_group.get_outline(primitives_array_outline_polygon);
 
-
 	#define KAPPA		0.5522847498f
 	path_group = clan::PathGroup();
 	path = clan::Path();
@@ -78,7 +77,6 @@ int PathApp::start(const std::vector<std::string> &args)
 	float circle_y = 400.0f;
 	float circle_radius = 64.0f;
 
-	//FIXME - Why negative Y
 	bezier_curve = clan::BezierCurve();
 	bezier_curve.add_control_point(circle_x + circle_radius, circle_y);
 	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y + circle_radius * 1 * KAPPA));
