@@ -64,12 +64,12 @@ public:
 /// \name Operations
 /// \{
 public:
-	void add_page(RibbonPage *page);
 
 /// \}
 /// \name Implementation
 /// \{
 private:
+	void add_page(RibbonPage *page);
 	void on_menu_button_clicked();
 	void on_render(Canvas &canvas, const Rect &clip_rect);
 	void on_resized();
@@ -84,6 +84,8 @@ private:
 	GUIThemePart part_tab;
 	GUIThemePart part_tab_background;
 	unsigned int current_page_index;
+
+	friend class RibbonPage;
 /// \}
 };
 

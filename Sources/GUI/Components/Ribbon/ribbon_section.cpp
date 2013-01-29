@@ -29,15 +29,17 @@
 
 #include "GUI/precomp.h"
 #include "API/GUI/Components/ribbon_section.h"
+#include "API/GUI/Components/ribbon_page.h"
 #include "API/Display/2D/canvas.h"
 
 namespace clan
 {
 
-RibbonSection::RibbonSection(GUIComponent *parent, const std::string &text, int size)
+RibbonSection::RibbonSection(RibbonPage *parent, const std::string &text, int size)
 : GUIComponent(parent, "ribbon-section"), text(text), size(size)
 {
 	func_render().set(this, &RibbonSection::on_render);
+	parent->add_section(this);
 }
 
 void RibbonSection::on_render(Canvas &canvas, const Rect &clip_rect)
