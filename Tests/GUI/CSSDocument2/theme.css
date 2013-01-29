@@ -13,7 +13,20 @@
     border: 1px solid #000000;
     background: #66ed66;
     padding: 5px;
+}
+
+.row
+{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
     margin: 7px 0;
+}
+
+.row listview
+{
+    width: 250px;
+    margin-left: 7px;
 }
 
 

@@ -16,8 +16,6 @@ int Program::main(const std::vector<std::string> &args)
 	SetupGUI setup_gui;
 
 	GUIManager gui(".");
-
-	//gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
 	gui.add_theme("../../../Resources/GUIThemeAero");
 
 	GUITopLevelDescription window_desc;
@@ -36,8 +34,21 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon->add_page(page_home);
 	ribbon->add_page(page_view);
 
-	TextEdit *textedit = new TextEdit(root);
+	GUIComponent *row = new GUIComponent(root);
+	row->set_class("row");
+
+	TextEdit *textedit = new TextEdit(row);
 	textedit->set_text("This is a TextEdit control.");
+
+	ListView *listview = new ListView(row);
+	listview->get_header()->append(listview->get_header()->create_column("name", "Name"));
+	listview->get_document_item().append_child(listview->create_item()).set_column_text("name", "Item 1");
+	listview->get_document_item().append_child(listview->create_item()).set_column_text("name", "Item 2");
+	listview->get_document_item().append_child(listview->create_item()).set_column_text("name", "Item 3");
+	listview->get_document_item().append_child(listview->create_item()).set_column_text("name", "Item 4");
+
+	StatusBar *statusbar = new StatusBar(root);
+	statusbar->set_status_text("Ready");
 
 /*
 	DomDocument xml(File("layout.xml"), false); // Braindead constructors on DomDocument..
