@@ -197,45 +197,20 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 
 void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
 {
-	std::vector< std::vector<Vec2f> > &prim_array_outline = out_primitives_array_outline;
+	out_primitives_array_outline.resize(contours.size());
 
-	if( contours.empty() )
+	for( size_t contours_index = 0; contours_index < contours.size(); contours_index++ )
 	{
-		prim_array_outline = std::vector< std::vector<Vec2f> >();
-		return;
-	}
-	
-	int size = contours.front().get_contour_points().size();
-	prim_array_outline = std::vector< std::vector<Vec2f> >();
-	prim_array_outline.resize(1);
-	prim_array_outline[0].resize(size+1);
-	
-	std::vector< Path >::iterator it;
+		const std::vector<Pointf> &points = contours[contours_index].get_contour_points();
+		out_primitives_array_outline[contours_index].resize( points.size()+1);
 
-	for( it = contours.begin(); it != contours.end(); ++it )
-	{
-		if( it != contours.begin() )
+		for( size_t points_index = 0; points_index < points.size(); points_index++ )
 		{
-			std::vector<std::vector<Vec2f> >::size_type vertex_size = prim_array_outline.size();
-			prim_array_outline.resize(vertex_size+1);
-			prim_array_outline[vertex_size].resize((*it).get_contour_points().size()+1);
+			out_primitives_array_outline[contours_index][points_index] = Vec2f( points[points_index].x, -points[points_index].y );
 		}
 
-		const std::vector<Pointf> &points = (*it).get_contour_points();
-
-		int subarray_index = prim_array_outline.size() - 1;
-
-		int index = 0;
-		for( std::vector<Pointf>::const_iterator it2 = points.begin(); it2 != points.end(); ++it2 )
-		{
-			prim_array_outline[subarray_index][index] = Vec2f( (*it2).x, -(*it2).y );
-			index++;
-		}
-
-		if (index == 0)
-			throw Exception("A glyph outline contour does not contain any points");
-
-		prim_array_outline[subarray_index][index] = Vec2f(points.front().x, -points.front().y);
+		if (!points.empty())
+			out_primitives_array_outline[contours_index][points.size()] = Vec2f(points.front().x, -points.front().y);
 	}
 }
 
