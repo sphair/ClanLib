@@ -41,7 +41,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Path_Impl Construction:
 
-Path_Impl::Path_Impl() : holeness_cached(false), hole(false)
+Path_Impl::Path_Impl()
 {
 }
 
@@ -54,21 +54,9 @@ Path_Impl::~Path_Impl()
 
 bool Path_Impl::is_hole(PolygonOrientation polygon_orientation)
 {
-	if( holeness_cached )
-		return hole;
-
 	PolygonOrientation orientation = get_orientation();
 
-	if( orientation == polygon_orientation )
-	{
-		holeness_cached = true;
-		hole = true;
-		return hole;
-	}
-
-	holeness_cached = true;
-	hole = false;
-	return hole;
+	return orientation == polygon_orientation;
 }
 
 bool Path_Impl::is_inside_contour(const Path &other) const

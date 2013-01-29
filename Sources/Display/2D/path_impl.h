@@ -86,9 +86,6 @@ private:
 	PolygonOrientation get_orientation();
 
 	std::vector<Pointf> contour_points;
-
-	bool holeness_cached;
-	bool hole;
 /// \}
 };
 
