@@ -167,22 +167,15 @@ void RoundedRect_Impl::triangulate()
 
 	EarClipResult result = triangulator.triangulate();
 
-	triangle_positions.clear();
 
 	std::vector<EarClipTriangulator_Triangle> &result_triangles = result.get_triangles();
+	triangle_positions.resize(result_triangles.size() * 3);
 
-	for (unsigned int cnt = 0; cnt < result_triangles.size(); cnt++)
+	for (unsigned int cnt = 0, offset = 0; cnt < result_triangles.size(); cnt++)
 	{
-		Vec2f positions[3] =
-		{
-			Vec2f(result_triangles[cnt].x1, result_triangles[cnt].y1),
-			Vec2f(result_triangles[cnt].x2, result_triangles[cnt].y2),
-			Vec2f(result_triangles[cnt].x3, result_triangles[cnt].y3)
-		};
-
-		triangle_positions.push_back(positions[0]);
-		triangle_positions.push_back(positions[1]);
-		triangle_positions.push_back(positions[2]);
+		triangle_positions[offset++] = Vec2f(result_triangles[cnt].x1, result_triangles[cnt].y1);
+		triangle_positions[offset++] = Vec2f(result_triangles[cnt].x2, result_triangles[cnt].y2);
+		triangle_positions[offset++] = Vec2f(result_triangles[cnt].x3, result_triangles[cnt].y3);
 	}
 
 	triangulation_needs_update = false;
