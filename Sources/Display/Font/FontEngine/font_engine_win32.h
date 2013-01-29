@@ -62,7 +62,7 @@ public:
 private:
 	inline Pointf PointFXtoPoint(POINTFX &fx)
 	{
-		return Pointf( ((float) fx.x.value) + (float) fx.x.fract / 65535.0f , ( ((float) fx.y.value) + (float) fx.y.fract / 65535.0f) );
+		return Pointf( ((float) fx.x.value) + (float) fx.x.fract / 65535.0f , - ( ((float) fx.y.value) + (float) fx.y.fract / 65535.0f) );
 	}
 
 	FontPixelBuffer get_font_glyph_lcd(int glyph);

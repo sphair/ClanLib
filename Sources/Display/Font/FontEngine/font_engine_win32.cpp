@@ -551,7 +551,7 @@ PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 		outline.add_path(contour);
 	}
 
-	out_advance_x = glyph_metrics.gmCellIncX;	// This should not be here (See comment on PathGroup struct)
+	out_advance_x = glyph_metrics.gmCellIncX;
 	return outline;
 }
 

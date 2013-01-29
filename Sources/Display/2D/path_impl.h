@@ -56,7 +56,7 @@ public:
 
 public:
 
-	bool is_hole();
+	bool is_hole(PolygonOrientation polygon_orientation);
 
 	bool is_inside_contour(const Path &other) const;
 

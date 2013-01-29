@@ -60,7 +60,7 @@ void PathGroup_Impl::add_path(Path &path)
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
+void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation)
 {
 	//std::vector< std::vector<Pointf> > *out_joined_outlines = NULL;	
 
@@ -82,7 +82,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 		if( contours[i].get_contour_points().empty() )
 			continue;
 
-		if( contours[i].is_hole() )
+		if( contours[i].is_hole(polygon_orientation) )
 			continue;
 
 		outline_count++;
@@ -93,7 +93,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 		{
 			if( contours[j].get_contour_points().empty() ) continue;
 
-			if( contours[j].is_hole() && contours[j].is_inside_contour(contours[i]) )
+			if( contours[j].is_hole(polygon_orientation) && contours[j].is_inside_contour(contours[i]) )
 			{
 				sorted_contours.push_back(contours[j]);
 				contours[j] = Path();
@@ -112,7 +112,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 
 	for( i=0; i < contours.size(); ++i )
 	{
-		if( contours[i].is_hole() )
+		if( contours[i].is_hole(polygon_orientation) )
 		{
 			triangulator.begin_hole();
 		}
@@ -125,16 +125,16 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 			triangulator.add_vertex(cpoints[p]);
 		}
  
-		if( contours[i].is_hole() )
+		if( contours[i].is_hole(polygon_orientation) )
 		{
 			triangulator.end_hole();
 		}
 
 		// if there are still contours left, but the next contour isn't a hole, then triangulate
 		// what has been added to the triangulator so far. Then clear it to start a new contour.
-		if( (i+1 < contours.size()) && (contours[i+1].is_hole() == false) )
+		if( (i+1 < contours.size()) && (contours[i+1].is_hole(polygon_orientation) == false) )
 		{
-			triangulator.set_orientation(cl_counter_clockwise);
+			triangulator.set_orientation(polygon_orientation);
 
 			// for debugging triangulator hole support - don't remove!
 			//if (out_joined_outlines)
@@ -146,7 +146,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 		}
 	}
 
-	triangulator.set_orientation(cl_counter_clockwise);
+	triangulator.set_orientation(polygon_orientation);
 
 	// for debugging triangulator hole support - don't remove!
 	//if (out_joined_outlines)
@@ -178,16 +178,16 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 			if (triangles[v].x1 > triangles[v].x2 ||
 				(triangles[v].x1 == triangles[v].y2 && triangles[v].y1 < triangles[v].y2))
 			{
-				prim_array[index] = Vec2f(triangles[v].x3, -triangles[v].y3);
-				prim_array[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
-				prim_array[index+2] = Vec2f(triangles[v].x1, -triangles[v].y1);
+				prim_array[index] = Vec2f(triangles[v].x3, triangles[v].y3);
+				prim_array[index+1] = Vec2f(triangles[v].x2, triangles[v].y2);
+				prim_array[index+2] = Vec2f(triangles[v].x1, triangles[v].y1);
 				index+=3;
 			}
 			else
 			{
-				prim_array[index] = Vec2f(triangles[v].x1, -triangles[v].y1);
-				prim_array[index+1] = Vec2f(triangles[v].x2, -triangles[v].y2);
-				prim_array[index+2] = Vec2f(triangles[v].x3, -triangles[v].y3);
+				prim_array[index] = Vec2f(triangles[v].x1, triangles[v].y1);
+				prim_array[index+1] = Vec2f(triangles[v].x2, triangles[v].y2);
+				prim_array[index+2] = Vec2f(triangles[v].x3, triangles[v].y3);
 				index+=3;
 			}
 		}
@@ -206,11 +206,11 @@ void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitiv
 
 		for( size_t points_index = 0; points_index < points.size(); points_index++ )
 		{
-			out_primitives_array_outline[contours_index][points_index] = Vec2f( points[points_index].x, -points[points_index].y );
+			out_primitives_array_outline[contours_index][points_index] = Vec2f( points[points_index].x, points[points_index].y );
 		}
 
 		if (!points.empty())
-			out_primitives_array_outline[contours_index][points.size()] = Vec2f(points.front().x, -points.front().y);
+			out_primitives_array_outline[contours_index][points.size()] = Vec2f(points.front().x, points.front().y);
 	}
 }
 
