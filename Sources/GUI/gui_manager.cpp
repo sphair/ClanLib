@@ -163,7 +163,7 @@ void GUIManager::add_theme(const std::string &path_to_theme)
 	VirtualFileSystem vfs(path_to_theme);
 	VirtualDirectory dir = vfs.get_root_directory();
 
-	impl->resources = ResourceManager("resources.xml", dir);
+	impl->resources.add_resources(ResourceManager("resources.xml", dir));
 	impl->css_document.add_sheet(author_sheet_origin, "theme.css", dir);
 }
 

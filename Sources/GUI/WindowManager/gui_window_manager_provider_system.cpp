@@ -329,7 +329,7 @@ InputContext GUIWindowManagerProvider_System::get_ic(GUITopLevelWindow *handle) 
 Canvas GUIWindowManagerProvider_System::begin_paint(GUITopLevelWindow *handle, const Rect &update_region)
 {
 	Canvas canvas = window_map[handle]->canvas;
-
+	canvas.clear(Colorf::transparent); // This line is needed by the ribbon glass effect.
 	canvas.set_map_mode(map_2d_upper_left);
 	canvas.set_cliprect(update_region);
 	return canvas;
