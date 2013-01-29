@@ -70,15 +70,14 @@ public:
 
 	void add_path(Path &path);
 
-	void triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline);
+	void get_triangles(std::vector<Vec2f> &out_primitives_array);
+	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-
-	void generate_contour_prim_array(std::vector< std::vector<Vec2f> > *out_primitives_array_outline);
 
 	std::vector< Path > contours;
 /// \}

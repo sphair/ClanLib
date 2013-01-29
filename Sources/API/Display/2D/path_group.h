@@ -60,6 +60,10 @@ public:
 /// \{
 
 public:
+	/// \brief triangulate
+	void get_triangles(std::vector<Vec2f> &out_primitives_array);
+
+	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
 
 /// \}
 /// \name Operations
@@ -68,11 +72,6 @@ public:
 public:
 
 	void add_path(Path &path);
-
-	/// \brief triangulate
-	void triangulate_filled(std::vector<Vec2f> &out_primitives_array);
-	void triangulate_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
-	void triangulate_combined(std::vector<Vec2f> &out_primitives_array, std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
 
 
 /// \}
