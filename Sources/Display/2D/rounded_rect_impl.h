@@ -60,6 +60,7 @@ public:
 
 	bool outline_needs_update;
 	bool triangulation_needs_update;
+	bool update_colors_flag;
 
 private:
 	void calculate_outline_points();
@@ -79,9 +80,7 @@ private:
 	std::vector<Pointf> outline;
 
 	std::vector<Vec2f> triangle_positions;
-	VertexArrayVector<Vec2f> gpu_positions;
-	VertexArrayVector<Vec4f> gpu_colors;
-	size_t num_vectors;
+	std::vector<Colorf> triangle_colors;
 
 	Gradient gradient;
 };

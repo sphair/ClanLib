@@ -423,6 +423,9 @@ public:
 	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *triangle_positions, const Colorf *colors, int num_vertices);
+
+	/// \brief Draw triangles
 	void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
