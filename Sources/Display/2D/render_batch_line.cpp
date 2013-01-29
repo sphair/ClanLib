@@ -49,7 +49,7 @@ inline Vec4f RenderBatchLine::to_position(float x, float y) const
 		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
 
-void RenderBatchLine::draw_lines(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+void RenderBatchLine::draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 {
 	if (num_vertices < 2)
 	{
@@ -70,7 +70,7 @@ void RenderBatchLine::draw_lines(Canvas &canvas, Vec2f *line_positions, const Ve
 
 }
 
-void RenderBatchLine::draw_line_strip(Canvas &canvas, Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
+void RenderBatchLine::draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
 {
 	if (num_vertices < 2)
 	{

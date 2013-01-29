@@ -363,19 +363,19 @@ void Canvas::draw_line(const LineSegment2f &line_segment, const Colorf &color)
 	draw_line(line_segment.p.x, line_segment.p.y, line_segment.q.x, line_segment.q.y, color);
 }
 
-void Canvas::draw_lines(Vec2f *positions, int num_vertices, const Colorf &color)
+void Canvas::draw_lines(const Vec2f *positions, int num_vertices, const Colorf &color)
 {
 	RenderBatchLine *batcher = impl->get_line_batcher();
 	batcher->draw_lines(*this, positions, color, num_vertices);
 }
 
-void Canvas::draw_lines(Vec2f *line_positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color)
+void Canvas::draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color)
 {
 	RenderBatchLineTexture *batcher = impl->get_line_texture_batcher();
 	batcher->draw_lines(*this, line_positions, texture_positions, num_vertices, texture, line_color);
 }
 
-void Canvas::draw_line_strip(Vec2f *line_positions, int num_vertices, const Colorf &line_color)
+void Canvas::draw_line_strip(const Vec2f *line_positions, int num_vertices, const Colorf &line_color)
 {
 	RenderBatchLine *batcher = impl->get_line_batcher();
 	batcher->draw_line_strip(*this, line_positions, line_color, num_vertices);
@@ -556,7 +556,7 @@ void Canvas::fill_triangle(const Pointf &a, const Pointf &b, const Pointf &c, co
 	batcher->fill_triangle(*this, positions, color, 3);
 }
 
-void Canvas::fill_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color)
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color)
 {
 	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
 	batcher->fill_triangle(*this, triangle_positions, color, num_vertices);
@@ -567,7 +567,7 @@ void Canvas::fill_triangle(const Trianglef &dest_triangle, const Colorf &color)
 	fill_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
 }
 
-void Canvas::fill_triangles(Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
 {
 	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
 	batcher->fill_triangles(*this, positions, texture_positions, num_vertices, texture, color);

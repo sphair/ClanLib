@@ -49,7 +49,7 @@ inline Vec4f RenderBatchLineTexture::to_position(float x, float y) const
 		modelview_projection_matrix.matrix[0*4+3]*x + modelview_projection_matrix.matrix[1*4+3]*y + modelview_projection_matrix.matrix[3*4+3]);
 }
 
-void RenderBatchLineTexture::draw_lines(Canvas &canvas, Vec2f *line_positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color)
+void RenderBatchLineTexture::draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color)
 {
 	if (num_vertices < 2)
 	{
