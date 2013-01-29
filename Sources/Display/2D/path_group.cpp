@@ -61,12 +61,12 @@ void PathGroup::add_path(Path &path)
 	impl->add_path(path);
 }
 
-void PathGroup::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation)
+void PathGroup::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation) const
 {
 	impl->get_triangles(out_primitives_array, orientation);
 }
 
-void PathGroup::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
+void PathGroup::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
 {
 	impl->get_outline(out_primitives_array_outline);
 }

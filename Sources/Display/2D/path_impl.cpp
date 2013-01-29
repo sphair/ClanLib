@@ -52,7 +52,7 @@ Path_Impl::~Path_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // Path_Impl Attributes:
 
-bool Path_Impl::is_hole(PolygonOrientation polygon_orientation)
+bool Path_Impl::is_hole(PolygonOrientation polygon_orientation) const
 {
 	PolygonOrientation orientation = get_orientation();
 
@@ -112,7 +112,7 @@ void Path_Impl::add_line_to(const Pointf &point )
 /////////////////////////////////////////////////////////////////////////////
 // Path_Impl Implementation:
 
-PolygonOrientation Path_Impl::get_orientation()
+PolygonOrientation Path_Impl::get_orientation() const
 {
 	float sum = 0;
 

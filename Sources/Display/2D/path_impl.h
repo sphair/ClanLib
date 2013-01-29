@@ -56,7 +56,7 @@ public:
 
 public:
 
-	bool is_hole(PolygonOrientation polygon_orientation);
+	bool is_hole(PolygonOrientation polygon_orientation) const;
 
 	bool is_inside_contour(const Path &other) const;
 
@@ -83,7 +83,7 @@ public:
 
 private:
 
-	PolygonOrientation get_orientation();
+	PolygonOrientation get_orientation() const;
 
 	std::vector<Pointf> contour_points;
 /// \}
