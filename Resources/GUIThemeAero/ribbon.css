@@ -39,8 +39,8 @@ ribbon tab
 	border-image-source:none;
 	width:40px;
 	height:23px;
-	border-image-slice:8 8 8  8 fill;
-	border-image-width:8px 8px 8px px;
+	border-image-slice:8 8 8 8 fill;
+	border-image-width:8px 8px 8px 8px;
 	font-family:tahoma;
 	text-align: center;
 }
@@ -61,8 +61,8 @@ ribbon-section
 	border-image-source:url('res:RibbonSection');
 	width:70px;
 	height:87px;
-	border-image-slice:8 8 24  16 fill;
-	border-image-width:8px 8px 24px px;
+	border-image-slice:8 8 24 16 fill;
+	border-image-width:8px 8px 24px 16px;
 }
 
 ribbon-section button
@@ -84,43 +84,43 @@ ribbon-section button.big
 ribbon-section button:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
-	border-image-slice:8 8 1  1 fill;
-	border-image-width:8px 8px 1px px;
+	border-image-slice:8 8 1 1 fill;
+	border-image-width:8px 8px 1px 1px;
 }
 
 ribbon-section button:pressed
 {
 	border-image-source:url('res:RibbonButtonPressed');
-	border-image-slice:8 8 1  1 fill;
-	border-image-width:8px 8px 1px px;
+	border-image-slice:8 8 1 1 fill;
+	border-image-width:8px 8px 1px 1px;
 }
 
 ribbon-section button:toggled
 {
 	border-image-source:url('res:RibbonButtonToggled');
-	border-image-slice:8 8 1  1 fill;
-	border-image-width:8px 8px 1px px;
+	border-image-slice:8 8 1 1 fill;
+	border-image-width:8px 8px 1px 1px;
 }
 
 ribbon-section button:toggled:hot
 {
 	border-image-source:url('res:RibbonButtonHot');
-	border-image-slice:8 8 1  1 fill;
-	border-image-width:8px 8px 1px px;
+	border-image-slice:8 8 1 1 fill;
+	border-image-width:8px 8px 1px 1px;
 }
 
 ribbon-section button:toggled:pressed:hot
 {
 	border-image-source:url('res:RibbonButtonPressed');
-	border-image-slice:8 8 1  1 fill;
-	border-image-width:8px 8px 1px px;
+	border-image-slice:8 8 1 1 fill;
+	border-image-width:8px 8px 1px 1px;
 }
 
 ribbon-menu
 {
 	border-image-source:url('res:RibbonMenuBackground');
-	border-image-slice:2 222 27  22 fill;
-	border-image-width:2px 222px 27px px;
+	border-image-slice:27 22 22 222 fill;
+	border-image-width:27px 22px 22px 222px;
 }
 
 ribbon-menu menu-item
@@ -129,6 +129,8 @@ ribbon-menu menu-item
 	height:44px;
 	font-family: Arial;
 	font-size:11px;
+	border-image-slice:0 fill;
+	border-image-width:0;
 }
 
 ribbon-menu menu-item:selected
@@ -145,8 +147,8 @@ ribbon-menu menu-item:separator
 
 ribbon-section button.dropdown
 {
-	border-image-slice:12 3 3  3 fill;
-	border-image-width:12px 3px 3px px;
+	border-image-slice:12 3 3 3 fill;
+	border-image-width:12px 3px 3px 3px;
 	border-image-source:url('res:RibbonDropDownButton');
 	padding-left: 4;
 	padding-right: 12;
