@@ -204,7 +204,8 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	std::vector<clan::Vec2f> primitives_array_g;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_g;
-	path_group.triangulate_combined(primitives_array_g, primitives_array_outline_g);
+	path_group.get_triangles(primitives_array_g);
+	path_group.get_outline(primitives_array_outline_g);
 
 	path_group = clan::PathGroup();
 	path = clan::Path();
@@ -216,7 +217,8 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	std::vector<clan::Vec2f> primitives_array_polygon;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_polygon;
-	path_group.triangulate_combined(primitives_array_polygon, primitives_array_outline_polygon);
+	path_group.get_triangles(primitives_array_polygon);
+	path_group.get_outline(primitives_array_outline_polygon);
 
 
 	#define KAPPA		0.5522847498f
@@ -246,7 +248,8 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	std::vector<clan::Vec2f> primitives_array_circle;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;
-	path_group.triangulate_combined(primitives_array_circle, primitives_array_outline_circle);
+	path_group.get_triangles(primitives_array_circle);
+	path_group.get_outline(primitives_array_outline_circle);
 
 	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
 
