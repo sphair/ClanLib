@@ -118,16 +118,6 @@ void Ribbon::on_resized()
 
 void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	Rect glass_area = get_size();
-	glass_area.set_height(part_tab_background.get_css_height());
-	glass_area.clip(clip_rect);
-	set_cliprect(canvas, glass_area);
-#ifdef GLASS_EFFECT
-	canvas.clear(Colorf::transparent);
-#else
-	canvas.clear(Colorf("#e1e6f6"));
-#endif
-	reset_cliprect(canvas);
 	part_tab_background.render_box(canvas, Size(get_size().width, part_tab_background.get_css_height()));
 	paint_tabs(canvas, clip_rect);
 }
