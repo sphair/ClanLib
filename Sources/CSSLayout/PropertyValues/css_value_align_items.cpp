@@ -34,7 +34,7 @@ namespace clan
 {
 
 CSSValueAlignItems::CSSValueAlignItems()
-: type(type_flex_start)
+: type(type_stretch)
 {
 }
 

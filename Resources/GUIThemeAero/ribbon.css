@@ -1,16 +1,14 @@
-﻿
-dummy
-{
-}
 
 ribbon
 {
-	border-image-source:url('res:Ribbon');
-	width:271px;
-	height:117px;
+	min-width:271px;
+	min-height:117px;
 	/*height:95px;*/
+	
+	border-image-source:url('res:Ribbon');
 	border-image-slice:8 8 50  8 fill;
 	border-image-width:8px 8px 50px px;
+	
 	font-family:tahoma;
 	font-size:11px;
 }
