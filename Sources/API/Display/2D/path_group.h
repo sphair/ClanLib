@@ -61,9 +61,9 @@ public:
 
 public:
 	/// \brief triangulate
-	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation = cl_clockwise);
+	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation = cl_clockwise) const;
 
-	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline);
+	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const;
 
 /// \}
 /// \name Operations

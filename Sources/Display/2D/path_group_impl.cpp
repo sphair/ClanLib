@@ -60,7 +60,7 @@ void PathGroup_Impl::add_path(Path &path)
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation)
+void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const
 {
 	//std::vector< std::vector<Pointf> > *out_joined_outlines = NULL;	
 
@@ -212,7 +212,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, Pol
 
 }
 
-void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
+void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
 {
 	out_primitives_array_outline.resize(contours.size());
 

@@ -52,7 +52,7 @@ Path::~Path()
 /////////////////////////////////////////////////////////////////////////////
 // Path Attributes:
 
-bool Path::is_hole(PolygonOrientation orientation)
+bool Path::is_hole(PolygonOrientation orientation) const
 {
 	return impl->is_hole(orientation);
 }
@@ -67,7 +67,7 @@ bool Path::is_point_inside(const Pointf &P) const
 	return impl->is_point_inside(P);
 }
 
-const std::vector<Pointf> &Path::get_contour_points()
+const std::vector<Pointf> &Path::get_contour_points() const
 {
 	return impl->get_contour_points();
 }

@@ -60,13 +60,13 @@ public:
 
 public:
 
-	bool is_hole(PolygonOrientation orientation);
+	bool is_hole(PolygonOrientation orientation) const;
 
 	bool is_inside_contour(const Path &other) const;
 
 	bool is_point_inside(const Pointf &point) const;
 
-	const std::vector<Pointf> &get_contour_points();
+	const std::vector<Pointf> &get_contour_points() const;
 
 
 
