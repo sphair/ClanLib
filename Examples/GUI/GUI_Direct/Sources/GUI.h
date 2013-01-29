@@ -45,17 +45,14 @@ public:
 
 	clan::DisplayWindow *get_window();
 	App *get_app() { return app; }
-	clan::GUIManager &get_gui_manager() { return gui_manager; }
 	clan::ResourceManager &get_resources_internal() { return resources_internal; }
 
 	const char *get_theme_location();
-	const char *get_resources_location();
-
+	
 private:
 
 
 private:
-	clan::GUIManager gui_manager;
 	clan::ResourceManager resources_internal;
 	App *app;
 	clan::Font fps_font;

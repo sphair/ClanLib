@@ -53,7 +53,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == keycode_escape)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}

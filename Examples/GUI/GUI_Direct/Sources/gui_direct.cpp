@@ -33,30 +33,24 @@
 
 GUI_Direct::GUI_Direct(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_window()), wm(*window_ptr, gui->get_app()->get_canvas())
 {
-	clan::GUIManager *gui_manager = &gui->get_gui_manager();
+	gui_manager = clan::GUIManager(wm, gui->get_theme_location());
 
-	gui_manager->set_window_manager(wm);
-
-	resources_gui = clan::ResourceManager(gui->get_resources_location());
-
-	theme.set_resources(resources_gui);
-	gui_manager->set_theme(theme); 
-
-	gui_manager->set_css_document(gui->get_theme_location());
+	//resources_gui = clan::ResourceManager(gui->get_resources_location());
+	//gui_manager->set_css_document(gui->get_theme_location());
 
 	// Note, clan::GUIManager deletes these automatically, after GUI_Direct has gone out of scope in the clan::GUIManager destructor
-	pushbutton = new PushButton(gui->get_gui_manager(), gui->get_resources_internal());
-	lineedit = new LineEdit(gui->get_gui_manager());
-	//checkbox = new CheckBox(gui->get_gui_manager());
-	slider = new Slider(gui->get_gui_manager());
-	//radiobutton = new RadioButton(gui->get_gui_manager());
-	scrollbar = new ScrollBar(gui->get_gui_manager());
-	//progressbar = new ProgressBar(gui->get_gui_manager());
-	//tabpage = new TabPage(gui->get_gui_manager());
-	//menubar = new MenuBar(gui->get_gui_manager(), gui->get_resources_internal());
-	//spin = new Spin(gui->get_gui_manager());
-	combobox = new ComboBox(gui->get_gui_manager());
-	//listview = new ListView(gui->get_gui_manager());
+	pushbutton = new PushButton(gui_manager, gui->get_resources_internal());
+	lineedit = new LineEdit(gui_manager);
+	//checkbox = new CheckBox(gui_manager);
+	slider = new Slider(gui_manager);
+	//radiobutton = new RadioButton(gui_manager);
+	scrollbar = new ScrollBar(gui_manager);
+	//progressbar = new ProgressBar(gui_manager);
+	//tabpage = new TabPage(gui_manager);
+	//menubar = new MenuBar(gui_manager, gui->get_resources_internal());
+	//spin = new Spin(gui_manager);
+	combobox = new ComboBox(gui_manager);
+	//listview = new ListView(gui_manager);
 }
 
 GUI_Direct::~GUI_Direct()

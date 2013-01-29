@@ -67,9 +67,9 @@ bool GUI::run()
 
 	clan::Canvas canvas = app->get_canvas();
 
-	canvas.gradient_fill(canvas.get_size(), clan::Gradient(clan::Colorf(0.4f, 0.4f, 0.4f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
+	canvas.fill_rect(canvas.get_size(), clan::Gradient(clan::Colorf(0.4f, 0.4f, 0.4f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
 
-	gui_manager.render_windows();
+	gui_direct->gui_manager.render_windows();
 	
 	std::string fps = clan::string_format("FPS: %1", last_fps);
 	fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -100,41 +100,15 @@ bool GUI::run()
 const char *GUI::get_theme_location()
 {
 	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/theme.css";
+		return "../../../Resources/GUIThemeAero";
 
 	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/theme.css";
+		return "../../../Resources/GUIThemeAeroPacked";
 
 	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/theme.css";
+		return "../../../Resources/GUIThemeBasic";
 
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/theme.css";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/theme.css";
-
-	return "../../../Resources/GUIThemeLuna/theme.css";
-}
-
-const char *GUI::get_resources_location()
-{
-	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/resources.xml";
-
-	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/resources.xml";
-
-	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/resources.xml";
-
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/resources.xml";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/resources.xml";
-
-	return "../../../Resources/GUIThemeLuna/resources.xml";
+	return "../../../Resources/GUIThemeAero";
 }
 
 clan::DisplayWindow *GUI::get_window()
