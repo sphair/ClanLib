@@ -60,15 +60,9 @@ void PathGroup_Impl::add_path(Path &path)
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::vector< std::vector<Vec2f> > *out_primitives_array_outline)
+void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array)
 {
 	//std::vector< std::vector<Pointf> > *out_joined_outlines = NULL;	
-
-	if (out_primitives_array_outline)
-		generate_contour_prim_array(out_primitives_array_outline);	// Generate array_outline only when required
-
-	if (!out_primitives_array)
-		return;		// Exit now when done
 
 	std::vector<EarClipResult> earclip_results;
 
@@ -158,9 +152,6 @@ void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::
 	//if (out_joined_outlines)
 	//	out_joined_outlines->push_back( triangulator.get_vertices() ); // debug
 
-	if (!out_primitives_array)
-		return;			// Exit now if the primitives are not required
-
 	EarClipResult result = triangulator.triangulate();
 	earclip_results.push_back(result);
 
@@ -171,8 +162,8 @@ void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::
 		total_triangle_count += earclip_results[i].get_triangles().size();	
 	}
 
-	*out_primitives_array = std::vector<Vec2f>();
-	std::vector<Vec2f> &prim_array = *out_primitives_array;
+	out_primitives_array.clear();
+	std::vector<Vec2f> &prim_array = out_primitives_array;
 
 	prim_array.resize(total_triangle_count * 3);
 	int index = 0;
@@ -204,12 +195,9 @@ void PathGroup_Impl::triangulate(std::vector<Vec2f> *out_primitives_array, std::
 
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// PathGroup_Impl Implementation:
-
-void PathGroup_Impl::generate_contour_prim_array(std::vector< std::vector<Vec2f> > *out_primitives_array_outline)
+void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline)
 {
-	std::vector< std::vector<Vec2f> > &prim_array_outline = *out_primitives_array_outline;
+	std::vector< std::vector<Vec2f> > &prim_array_outline = out_primitives_array_outline;
 
 	if( contours.empty() )
 	{
@@ -250,6 +238,9 @@ void PathGroup_Impl::generate_contour_prim_array(std::vector< std::vector<Vec2f>
 		prim_array_outline[subarray_index][index] = Vec2f(points.front().x, -points.front().y);
 	}
 }
+
+/////////////////////////////////////////////////////////////////////////////
+// PathGroup_Impl Implementation:
 
 /*
 void PathGroup_Impl::draw_debug_outline(Canvas &canvas)

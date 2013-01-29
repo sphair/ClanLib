@@ -201,7 +201,8 @@ void FontProvider_Vector::store_in_char_cache(unsigned int glyph)
 		PathGroup outline = font_engine->load_glyph_outline(glyph, out_advance_x);
 		vector_glyph &vg = char_cache[glyph];
 		vg.advance_x = out_advance_x;
-		outline.triangulate_combined(vg.primitives_array, vg.primitives_array_outline);
+		outline.get_triangles(vg.primitives_array);
+		outline.get_outline(vg.primitives_array_outline);
 	}
 }
 
