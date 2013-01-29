@@ -42,6 +42,7 @@ ribbon tab
 	border-image-slice:8 8 8  8 fill;
 	border-image-width:8px 8px 8px px;
 	font-family:tahoma;
+	text-align: center;
 }
 
 ribbon tab:selected

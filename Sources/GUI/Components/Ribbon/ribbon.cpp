@@ -148,7 +148,7 @@ void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 				part_tab.set_pseudo_class(custom_state, true);
 			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
 			part_tab.render_box(canvas, current_tab);
-			part_tab.render_text(canvas, pages[page_index]->text, Rect(current_tab.left+current_tab.get_width()/2-size_tab_text.width/2, current_tab.bottom-7, current_tab.get_size() ));
+			part_tab.render_text(canvas, pages[page_index]->text, current_tab, current_tab.bottom - 7);
 
 			if (!custom_state.empty())
 				part_tab.set_pseudo_class(custom_state, false);
