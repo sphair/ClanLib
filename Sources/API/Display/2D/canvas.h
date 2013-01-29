@@ -316,13 +316,13 @@ public:
 	void draw_line(const LineSegment2f &line_segment, const Colorf &color = Colorf::white);
 
 	/// \brief Lines
-	void draw_lines(Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
+	void draw_lines(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Lines
-	void draw_lines(Vec2f *line_positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color = Colorf::white);
+	void draw_lines(const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &line_color = Colorf::white);
 
 	/// \brief Line Strip
-	void draw_line_strip(Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
+	void draw_line_strip(const Vec2f *positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a box / rectangle.
 	void draw_box(float x1, float y1, float x2, float y2, const Colorf &color = Colorf::white);
@@ -420,10 +420,10 @@ public:
 	void fill_triangle(const Trianglef &dest_triangle, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void fill_triangles(Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
+	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void fill_triangles(Vec2f *positions, Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+	void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
