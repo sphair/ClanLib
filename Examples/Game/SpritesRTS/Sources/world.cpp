@@ -303,11 +303,11 @@ void World::draw()
 	{
 		float s = (sinf(System::get_time() / 200.0f) + 3.0f) / 4.0f;
 
-		canvas.box(Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
+		canvas.draw_box(Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
 				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
-		canvas.box(Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
+		canvas.draw_box(Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
 				   Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
-		canvas.box(Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
+		canvas.draw_box(Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
 				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
 
 	}

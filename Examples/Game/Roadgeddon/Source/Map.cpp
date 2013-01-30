@@ -73,7 +73,7 @@ void Map::draw(Canvas &canvas)
 	int xRes,yRes;
 	game->get_screen_resolution(xRes,yRes);
 	Gradient gColor(Colorf::lightblue,Colorf::darkblue);
-	canvas.draw_gradient_fill(0,0,xRes,yRes,gColor);
+	canvas.fill_rect(0,0,xRes,yRes,gColor);
 
 	int yDrawPos = yRes;
 	for(int i=0;i<4;i++)
