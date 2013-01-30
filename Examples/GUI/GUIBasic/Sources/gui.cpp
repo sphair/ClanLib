@@ -31,37 +31,37 @@
 int App::start(const std::vector<std::string> &args)
 {
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("Not themes found");
+		throw clan::Exception("Not themes found");
 
-	GUIManager gui(theme);
+	clan::GUIManager gui(theme);
 
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("BasicGUI Test Application");
-	win_desc.set_position(Rect(200, 200, 540, 440), false);
-	Window window(&gui, win_desc);
+	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
+	clan::GUIComponent window(&gui, win_desc);
 	window.func_close().set(this, &App::on_close, &window);
 
-	Rect client_area = window.get_client_area();
+	clan::Rect client_area = window.get_content_box();
 
-	PushButton button(&window);
-	button.set_geometry(Rect(client_area.left + 10, client_area.top + 10, Size(160, 40)));
+	clan::PushButton button(&window);
+	button.set_geometry(clan::Rect(client_area.left + 10, client_area.top + 10, clan::Size(160, 40)));
 	button.func_clicked().set(this, &App::on_button_clicked, &button);
 	button.set_text("Button");
 
-	PushButton button_disabled(&window);
-	button_disabled.set_geometry(Rect(client_area.left + 10, client_area.top + 60, Size(160, 40)));
+	clan::PushButton button_disabled(&window);
+	button_disabled.set_geometry(clan::Rect(client_area.left + 10, client_area.top + 60, clan::Size(160, 40)));
 	button_disabled.func_clicked().set(this, &App::on_button_clicked, &button_disabled);
 	button_disabled.set_text("Button Disabled");
 	button_disabled.set_enabled(false);
 
-	label = new Label(&window);
-	label->set_geometry(Rect(client_area.left + 10, client_area.top + 160, Size(330, 20)));
+	label = new clan::Label(&window);
+	label->set_geometry(clan::Rect(client_area.left + 10, client_area.top + 160, clan::Size(330, 20)));
 	label->set_text("Click the button");
 
 	gui.exec();
@@ -69,12 +69,12 @@ int App::start(const std::vector<std::string> &args)
 	return 0;
 }
 
-void App::on_button_clicked(PushButton *button)
+void App::on_button_clicked(clan::PushButton *button)
 {
 	label->set_text("You clicked " + button->get_text());
 }
 
-bool App::on_close(Window *win)
+bool App::on_close(clan::GUIComponent *win)
 {
 	win->exit_with_code(0);
 	return true;
