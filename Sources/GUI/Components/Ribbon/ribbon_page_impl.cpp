@@ -41,7 +41,7 @@ namespace clan
 //////////////////////////////////////////////////////////////////////////
 // Construction
 
-RibbonPage_Impl::RibbonPage_Impl(): text(text), show_tab(true)
+RibbonPage_Impl::RibbonPage_Impl(const std::string &text) : text(text), show_tab(true)
 {
 
 }

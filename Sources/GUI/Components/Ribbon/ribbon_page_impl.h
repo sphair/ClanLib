@@ -39,7 +39,7 @@ class RibbonPage;
 class RibbonPage_Impl
 {
 public:
-	RibbonPage_Impl();
+	RibbonPage_Impl(const std::string &text);
 
 	void add_section(RibbonSection *section);
 	void on_resized();
