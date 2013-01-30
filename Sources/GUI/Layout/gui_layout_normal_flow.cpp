@@ -27,7 +27,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "gui_layout_box_content.h"
+#include "gui_layout_normal_flow.h"
 #include "gui_find_preferred_width.h"
 #include "gui_find_preferred_height.h"
 #include "gui_css_flex_math.h"
@@ -38,7 +38,7 @@
 namespace clan
 {
 
-void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::flex_horizontal_node(GUIComponent_Impl *node)
 {
 	// Calculate min/preferred/max widths of all child boxes
 	GUICSSFlexMath box_math;
@@ -121,7 +121,7 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 	set_horizontal_geometry(node);
 }
 
-void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::flex_vertical_node(GUIComponent_Impl *node)
 {
 	GUICSSFlexMath box_math;
 	for (GUIComponent *child = node->first_child; child != 0; child = child->get_next_sibling())
@@ -203,7 +203,7 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 	set_vertical_geometry(node);
 }
 
-CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUIComponent *child)
+CSSUsedValue GUILayoutNormalFlow::align_vertical(GUIComponent_Impl *node, GUIComponent *child)
 {
 	const CSSComputedBox &properties = child->get_css_values().get_box();
 
@@ -229,7 +229,7 @@ CSSUsedValue GUILayoutBoxContent::align_vertical(GUIComponent_Impl *node, GUICom
 	}
 }
 
-CSSUsedValue GUILayoutBoxContent::align_horizontal(GUIComponent_Impl *node, GUIComponent *child)
+CSSUsedValue GUILayoutNormalFlow::align_horizontal(GUIComponent_Impl *node, GUIComponent *child)
 {
 	const CSSComputedBox &properties = child->get_css_values().get_box();
 	if (properties.align_self.type == CSSValueAlignSelf::type_flex_start)
@@ -254,7 +254,7 @@ CSSUsedValue GUILayoutBoxContent::align_horizontal(GUIComponent_Impl *node, GUIC
 	}
 }
 
-void GUILayoutBoxContent::set_horizontal_geometry(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::set_horizontal_geometry(GUIComponent_Impl *node)
 {
 	CSSUsedValue x = node->css_used_values.border.left + node->css_used_values.padding.left;
 	CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
@@ -270,7 +270,7 @@ void GUILayoutBoxContent::set_horizontal_geometry(GUIComponent_Impl *node)
 	}
 }
 
-void GUILayoutBoxContent::set_vertical_geometry(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::set_vertical_geometry(GUIComponent_Impl *node)
 {
 	CSSUsedValue x = node->css_used_values.border.left + node->css_used_values.padding.left;
 	CSSUsedValue y = node->css_used_values.border.top + node->css_used_values.padding.top;
@@ -286,7 +286,7 @@ void GUILayoutBoxContent::set_vertical_geometry(GUIComponent_Impl *node)
 	}
 }
 
-void GUILayoutBoxContent::set_child_geometry(GUIComponent_Impl *node, GUIComponent *child, CSSUsedValue x, CSSUsedValue y)
+void GUILayoutNormalFlow::set_child_geometry(GUIComponent_Impl *node, GUIComponent *child, CSSUsedValue x, CSSUsedValue y)
 {
 	GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
@@ -305,17 +305,17 @@ void GUILayoutBoxContent::set_child_geometry(GUIComponent_Impl *node, GUICompone
 	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
 	child->impl->set_auto_geometry(Rect(x1, y1, x2, y2));
 
-	GUILayoutBoxContent layout_visitor;
+	GUILayoutNormalFlow layout_visitor;
 	layout_visitor.node(child->impl.get());
 }
 
-void GUILayoutBoxContent::find_preferred_width(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::find_preferred_width(GUIComponent_Impl *node)
 {
 	GUIFindPreferredWidth preferred_visitor;
 	preferred_visitor.node(node);
 }
 
-void GUILayoutBoxContent::find_preferred_height(GUIComponent_Impl *node)
+void GUILayoutNormalFlow::find_preferred_height(GUIComponent_Impl *node)
 {
 	GUIFindPreferredHeight preferred_visitor;
 	preferred_visitor.node(node);

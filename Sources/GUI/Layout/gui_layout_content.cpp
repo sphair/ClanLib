@@ -29,7 +29,7 @@
 #include "GUI/precomp.h"
 #include "gui_layout_content.h"
 #include "gui_set_initial_used_values.h"
-#include "gui_layout_box_content.h"
+#include "gui_layout_normal_flow.h"
 #include "gui_layout_absolute_or_fixed.h"
 
 namespace clan
@@ -47,7 +47,7 @@ void GUILayoutContent::node(GUIComponent_Impl *node)
 		initial_visitor.node(node);
 	}
 
-	GUILayoutBoxContent layout_visitor;
+	GUILayoutNormalFlow layout_visitor;
 	layout_visitor.node(node);
 
 	GUILayoutAbsoluteOrFixed absolute_visitor;

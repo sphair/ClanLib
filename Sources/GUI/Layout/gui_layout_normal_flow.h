@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class GUILayoutBoxContent : public GUICSSDisplayVisitor
+class GUILayoutNormalFlow : public GUICSSDisplayVisitor
 {
 public:
 	void flex_horizontal_node(GUIComponent_Impl *node);
