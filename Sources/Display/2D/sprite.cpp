@@ -539,54 +539,6 @@ void Sprite::set_show_on_finish(Sprite::ShowOnFinish show_on_finish)
 	impl->show_on_finish = show_on_finish;
 }
 
-std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit, OutlineAccuracy accuracy)
-{
-	SpriteDescription description(gc, resource_id, resources, ImageImportDescription () );
-	return create_collision_outlines(gc, description, alpha_limit, accuracy);
-}
-
-std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, SpriteDescription &description, int alpha_limit, OutlineAccuracy accuracy)
-{
-	std::vector<CollisionOutline> outlines;
-	// Fetch frames
-	const std::vector<SpriteDescriptionFrame> &description_frames = description.get_frames();
-	std::vector<SpriteDescriptionFrame>::const_iterator it_frames;
-
-	outlines.reserve(description_frames.size());
-
-	for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
-	{
-		SpriteDescriptionFrame description_frame = (*it_frames);
-
-		//FIXME: We do not need to read in the entire texture
-		PixelBuffer target(description_frame.rect.get_width(), description_frame.rect.get_height(), tf_rgba8);
-		PixelBuffer pbuff = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
-		target.set_subimage(pbuff, Point(0, 0), description_frame.rect);
-
-		CollisionOutline outline(target, alpha_limit, accuracy);
-		outlines.push_back(outline);
-
-	}
-	return outlines;
-
-}
-
-CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit, OutlineAccuracy accuracy)
-{
-	std::vector<CollisionOutline> outlines = Sprite::create_collision_outlines(gc, resource_id, resources, alpha_limit, accuracy);
-	if (outlines.empty())
-		return CollisionOutline();
-	return outlines[0];
-}
-
-CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, SpriteDescription &description, int alpha_limit, OutlineAccuracy accuracy)
-{
-	std::vector<CollisionOutline> outlines = Sprite::create_collision_outlines(gc, description, alpha_limit, accuracy);
-	if (outlines.empty())
-		return CollisionOutline();
-	return outlines[0];
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Sprite signals:
 

@@ -25,6 +25,7 @@
 **
 **    Kenneth Gangstoe
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Display/precomp.h"
@@ -504,6 +505,47 @@ void SpriteDescription::add_alphaclipped_frames_free(GraphicContext &gc,
 void SpriteDescription::set_frame_delay(int frame, double delay)
 {
 	impl->frames[frame].delay = delay;
+}
+
+std::vector<CollisionOutline> SpriteDescription::get_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	std::vector<CollisionOutline> outlines;
+	// Fetch frames
+	const std::vector<SpriteDescriptionFrame> &description_frames = get_frames();
+	std::vector<SpriteDescriptionFrame>::const_iterator it_frames;
+
+	outlines.reserve(description_frames.size());
+
+	Texture2D last_texture;
+	PixelBuffer texture_pixelbuffer;
+
+	for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
+	{
+		SpriteDescriptionFrame description_frame = (*it_frames);
+
+		if (last_texture != description_frame.texture)
+		{
+				last_texture = description_frame.texture;
+				texture_pixelbuffer = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+		}
+
+		PixelBuffer target(description_frame.rect.get_width(), description_frame.rect.get_height(), tf_rgba8);
+		target.set_subimage(texture_pixelbuffer, Point(0, 0), description_frame.rect);
+
+		CollisionOutline outline(target, alpha_limit, accuracy);
+		outlines.push_back(outline);
+
+	}
+	return outlines;
+
+}
+
+CollisionOutline SpriteDescription::get_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	std::vector<CollisionOutline> outlines = get_collision_outlines(gc, alpha_limit, accuracy);
+	if (outlines.empty())
+		return CollisionOutline();
+	return outlines[0];
 }
 
 }
