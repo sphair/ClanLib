@@ -56,14 +56,7 @@
 #include "dwm_functions.h"
 #include "../Window/input_context_impl.h"
 
-// #define fun_and_games_with_vista
-
 #include <emmintrin.h>
-
-#ifdef fun_and_games_with_vista
-#include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
-#endif
 
 #ifdef __MINGW32__
 #include <wingdi.h>
@@ -365,101 +358,6 @@ LRESULT Win32Window::static_window_proc(
 
 	LRESULT lresult = 0;
 	BOOL call_window_proc = true;
-
-#ifdef fun_and_games_with_vista
-	/*
-		Misc notes about DWM:
-
-		1. The blur effect is drawn first by the DWM and only covers the region
-		   set by DwmEnableBlurBehindWindow.
-		2. WM_NCPAINT draws the window frame graphics, including the shadow effect.
-		   This means that if we do not forward WM_NCPAINT, we get the blur but not
-		   the default window frame. However, we have to draw the shadow ourselves
-		   then.
-		3. DwmDefWindowProc handles mouse events in the window frame. This is
-		   important if we intend to allow GUI objects in the window frame (such as
-		   toolbars or a larger app icon like Office 2007). In such a situation we
-		   should only pass on the mouse events to DwmDefWindowProc if nothing in the
-		   GUI handled it.
-		4. If the user disables transparency to dodge the terrible blur effect, the
-		   entire DWM is disabled and we have to fall back to Windows XP non-client
-		   area handling. This unfortunately means we lose the ability to do
-		   transparency in the window generally.
-		5. When doing Windows XP non-client area rendering, we have no transparency
-		   and have to setup a complex clipping region if we start drawing our own
-		   frames (unless we restrict those to the default window frame region).
-		6. To avoid Vista enabling backward compatibility stuff, we have to explicitly
-		   set the DWMWA_NCRENDERING_POLICY using DwmSetWindowAttribute.
-	*/
-
-	BOOL dwm_enabled = FALSE;
-	HRESULT result = DwmIsCompositionEnabled(&dwm_enabled);
-	if (FAILED(result))
-		dwm_enabled = FALSE;
-
-	if (dwm_enabled)
-		call_window_proc = !DwmDefWindowProc(wnd, msg, wparam, lparam, &lresult);
-	else
-		MessageBox(0, TEXT("DWM is not enabled!"), TEXT("Oh noes!"), MB_OK|MB_ICONEXCLAMATION);
-
-	if (msg == WM_CREATE)
-	{
-		if (dwm_enabled)
-		{
-			// Following code needed according to MS documentation - go figure.
-			RECT window_rect = { 0,0,0,0 };
-			GetWindowRect(wnd, &window_rect);
-			SetWindowPos(wnd, 0, window_rect.left, window_rect.top, window_rect.right-window_rect.left, window_rect.bottom-window_rect.top, SWP_FRAMECHANGED|SWP_NOZORDER);
-
-			DWMNCRENDERINGPOLICY policy = DWMNCRP_ENABLED;
-			DwmSetWindowAttribute(wnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
-			call_window_proc = true;
-		}
-	}
-	else if (msg == WM_ACTIVATE)
-	{
-		BOOL dwm_enabled = FALSE;
-		HRESULT result = DwmIsCompositionEnabled(&dwm_enabled);
-		if (SUCCEEDED(result) && dwm_enabled)
-		{
-			MARGINS margins;
-			margins.cxLeftWidth = 8;
-			margins.cxRightWidth = 8;
-			margins.cyTopHeight = 20;
-			margins.cyBottomHeight = 27;
-			DwmExtendFrameIntoClientArea(wnd, &margins);
-
-			DWM_BLURBEHIND blur_behind;
-			memset(&blur_behind, 0, sizeof(DWM_BLURBEHIND));
-			blur_behind.dwFlags = DWM_BB_ENABLE|DWM_BB_BLURREGION;
-			blur_behind.fEnable = TRUE;
-			blur_behind.hRgnBlur = 0; // apply the blur behind the entire client area
-			DwmEnableBlurBehindWindow(wnd, &blur_behind);
-		}
-		call_window_proc = true;
-	}
-	else if (call_window_proc && msg == WM_NCCALCSIZE)
-	{
-		if (wparam == TRUE)
-		{
-			BOOL dwm_enabled = FALSE;
-			HRESULT result = DwmIsCompositionEnabled(&dwm_enabled);
-			if (FAILED(result))
-				dwm_enabled = FALSE;
-
-			if (dwm_enabled)
-			{
-				NCCALCSIZE_PARAMS *calcsize_params = reinterpret_cast<NCCALCSIZE_PARAMS *>(lparam);
-				calcsize_params->rgrc[0].left += 0;
-				calcsize_params->rgrc[0].top += 0;
-				calcsize_params->rgrc[0].right -= 0;
-				calcsize_params->rgrc[0].bottom -= 0;
-				vista_x64_workaround.unpatch();
-				return 0;
-			}
-		}
-	}
-#endif
 
 	if (call_window_proc)
 	{
