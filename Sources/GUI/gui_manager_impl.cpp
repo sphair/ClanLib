@@ -92,40 +92,6 @@ GUIManager_Impl::~GUIManager_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager_Impl Attributes:
 
-Font GUIManager_Impl::get_registered_font(const FontDescription &desc)
-{
-	// Perform exact matches
-	std::vector<NamedFontCacheEntry>::iterator it;
-	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
-	{
-		if ((*it).desc == desc)
-			return (*it).font;
-	}
-
-	FontDescription desc_copy;
-	// Match font where the registered font details have not been set
-	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
-	{
-		desc_copy = desc.clone();
-		const FontDescription &current_desc = (*it).desc;
-
-		// Copy the unset details
-		if (current_desc.get_height() == 0)
-			desc_copy.set_height(0);
-
-		if (current_desc.get_average_width() == 0)
-			desc_copy.set_average_width(0);
-
-		if (current_desc.get_weight() == 0)
-			desc_copy.set_weight(0);
-
-		if (current_desc == desc_copy)
-			return (*it).font;
-	}
-
-	return Font();
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager_Impl Operations:
 
@@ -533,17 +499,6 @@ GUIComponent *GUIManager_Impl::get_focus_component()
 	}
 
 	return 0;
-}
-
-void GUIManager_Impl::register_font(const Font &font, const FontDescription &desc)
-{
-	if (get_registered_font(desc).is_null())
-	{
-		NamedFontCacheEntry entry;
-		entry.desc = desc;
-		entry.font = font;
-		named_font_cache.push_back(entry);
-	}
 }
 
 bool GUIManager_Impl::is_constant_repaint_enabled() const

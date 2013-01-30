@@ -123,11 +123,6 @@ int GUIManager::get_exit_code() const
 	return impl->exit_code;
 }
 
-Font GUIManager::get_registered_font(const FontDescription &desc)
-{
-	return impl->get_registered_font(desc);
-}
-
 GUIComponent * GUIManager::get_focused_component()
 {
 	return impl->get_focus_component();
@@ -316,11 +311,6 @@ void GUIManager::render_windows()
 		Rect geometry = cur->component->get_geometry();
 		cur->component->paint(Rect(Point(0,0), geometry.get_size()));
 	}
-}
-
-void GUIManager::register_font(const Font &font, const FontDescription &desc)
-{
-	impl->register_font(font, desc);
 }
 
 void GUIManager::set_clipboard_text(const std::string &str)

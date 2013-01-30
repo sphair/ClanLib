@@ -132,9 +132,6 @@ public:
 	/// \brief Returns the dialog exit code.
 	int get_exit_code() const;
 
-	/// \brief Get a registered user defined GUI font (set with register_font()). Returns NULL if not found
-	Font get_registered_font(const FontDescription &desc);
-
 	/// \brief Get Clipboard text
 	///
 	/// \return clipboard_text
@@ -207,9 +204,6 @@ public:
 
 	/// \brief Mark the specified area to be redrawn.
 	void request_repaint(const Rect &rect, GUIComponent *root_component);
-
-	/// \brief Registers a user defined GUI font - referenced using the specified font description.
-	void register_font(const Font &font, const FontDescription &desc);
 
 	/// \brief Render windows
 	void render_windows();
