@@ -117,8 +117,6 @@ public:
 	/// \brief Search children for component with is_default() set.
 	GUIComponent *get_default_component(GUIComponent *comp=0);
 
-	Font get_registered_font(const FontDescription &desc);
-
 	std::vector<GUITopLevelWindow *> root_components;
 	Signal_v1<std::shared_ptr<GUIMessage> &> sig_filter_message;
 	Callback_0<int> func_exec_handler;
@@ -152,8 +150,6 @@ public:
 	void set_enabled(GUIComponent *component, bool enable);
 	void dispatch_message(std::shared_ptr<GUIMessage> message);
 
-	void register_font(const Font &font, const FontDescription &desc);
-
 	bool is_constant_repaint_enabled() const;
 	bool is_constant_repaint_enabled(GUIComponent *component) const;
 	void invalidate_constant_repaint_components();
@@ -177,14 +173,6 @@ private:
 	void on_input_received(GUITopLevelWindow *toplevel_window, const InputEvent &input_event);
 
 	Image on_resource_cache_get_image(Canvas &canvas, const std::string &url);
-
-	struct NamedFontCacheEntry
-	{
-		Font font;
-		FontDescription desc;
-	};
-
-	std::vector<NamedFontCacheEntry> named_font_cache;
 
 /// \}
 };
