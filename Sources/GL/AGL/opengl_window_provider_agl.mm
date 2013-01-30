@@ -344,6 +344,17 @@ void OpenGLWindowProvider_AGL::set_small_icon(const PixelBuffer &image)
 	cocoa_window.set_small_icon(image);
 }
 
+void OpenGLWindowProvider_AGL::enable_alpha_channel(const Rect &blur_rect)
+{
+	// Implement me, if possible
+}
+
+void OpenGLWindowProvider_AGL::extend_frame_into_client_area(int height)
+{
+	// Implement me, if possible
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider_AGL Implementation:
 

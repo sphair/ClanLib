@@ -37,18 +37,24 @@ class DwmFunctions
 {
 public:
 	static bool is_composition_enabled();
-	static void enable_alpha_channel(HWND hwnd);
+	static void enable_alpha_channel(HWND hwnd, HRGN rgn);
 	static bool is_vista_or_later();
+
+	static void extend_frame_into_client_area(HWND hwnd, int height);
 
 private:
 	typedef HRESULT (WINAPI FuncDwmIsCompositionEnabled)(BOOL *pfEnabled);
 	typedef HRESULT (WINAPI FuncDwmEnableBlurBehindWindow)(HWND hwnd, const DWM_BLURBEHIND *pBlurBehind);
+	typedef HRESULT (WINAPI FuncDwmExtendFrameIntoClientArea)(HWND hwnd, const MARGINS *pMarInset);
 
 	static void open_dll();
 
 	static HMODULE dll_handle;
 	static FuncDwmIsCompositionEnabled *IsCompositionEnabled;
 	static FuncDwmEnableBlurBehindWindow *EnableBlurBehindWindow;
+	static FuncDwmExtendFrameIntoClientArea *ExtendFrameIntoClientArea;
+
+
 };
 
 }

@@ -514,6 +514,16 @@ void GL1WindowProvider_GLX::set_small_icon(const PixelBuffer &image)
 	x11_window.set_small_icon(image);
 }
 
+void GL1WindowProvider_GLX::enable_alpha_channel(const Rect &blur_rect)
+{
+	// Implement me, if possible
+}
+
+void GL1WindowProvider_GLX::extend_frame_into_client_area(int height)
+{
+	// Implement me, if possible
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GL1WindowProvider_GLX Implementation:
 

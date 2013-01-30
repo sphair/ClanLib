@@ -389,6 +389,16 @@ void D3DDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 	window.set_small_icon(image);
 }
 
+void D3DDisplayWindowProvider::enable_alpha_channel(const Rect &blur_rect)
+{
+	window.enable_alpha_channel(blur_rect);
+}
+
+void D3DDisplayWindowProvider::extend_frame_into_client_area(int height)
+{
+	window.extend_frame_into_client_area(height);
+}
+
 void D3DDisplayWindowProvider::validate_context()
 {
 	if (debug)

@@ -47,18 +47,32 @@ bool DwmFunctions::is_composition_enabled()
 	}
 }
 
-void DwmFunctions::enable_alpha_channel(HWND hwnd)
+void DwmFunctions::enable_alpha_channel(HWND hwnd, HRGN rgn)
 {
 	open_dll();
 	if (EnableBlurBehindWindow)
 	{
 		DWM_BLURBEHIND blur_behind = { 0 };
-		blur_behind.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
+		blur_behind.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION | DWM_BB_TRANSITIONONMAXIMIZED;
 		blur_behind.fEnable = TRUE;
-		blur_behind.hRgnBlur = CreateRectRgn(0, 0, 0, 0);
+		blur_behind.fTransitionOnMaximized = TRUE;
+		blur_behind.hRgnBlur = rgn;
+
 		EnableBlurBehindWindow(hwnd, &blur_behind);
 	}
 }
+
+void DwmFunctions::extend_frame_into_client_area(HWND hwnd, int height)
+{
+	open_dll();
+	if (ExtendFrameIntoClientArea)
+	{
+		MARGINS margins = { 0 };
+		margins.cyTopHeight = height;
+		ExtendFrameIntoClientArea(hwnd, &margins);
+	}
+}
+
 
 bool DwmFunctions::is_vista_or_later()
 { 
@@ -77,6 +91,7 @@ void DwmFunctions::open_dll()
 		{
 			IsCompositionEnabled = (FuncDwmIsCompositionEnabled *)GetProcAddress(dll_handle, "DwmIsCompositionEnabled");
 			EnableBlurBehindWindow = (FuncDwmEnableBlurBehindWindow *)GetProcAddress(dll_handle, "DwmEnableBlurBehindWindow");
+			ExtendFrameIntoClientArea = (FuncDwmExtendFrameIntoClientArea *)GetProcAddress(dll_handle, "DwmExtendFrameIntoClientArea");
 		}
 	}
 }
@@ -84,5 +99,6 @@ void DwmFunctions::open_dll()
 HMODULE DwmFunctions::dll_handle = 0;
 DwmFunctions::FuncDwmIsCompositionEnabled *DwmFunctions::IsCompositionEnabled = 0;
 DwmFunctions::FuncDwmEnableBlurBehindWindow *DwmFunctions::EnableBlurBehindWindow = 0;
+DwmFunctions::FuncDwmExtendFrameIntoClientArea *DwmFunctions::ExtendFrameIntoClientArea = 0;
 
 }

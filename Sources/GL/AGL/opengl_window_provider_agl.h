@@ -128,6 +128,10 @@ public:
 
 	void set_large_icon(const PixelBuffer &image);
 	void set_small_icon(const PixelBuffer &image);
+
+	void enable_alpha_channel(const Rect &blur_rect);
+	void extend_frame_into_client_area(int height);
+
 /// \}
 
 /// \name Implementation

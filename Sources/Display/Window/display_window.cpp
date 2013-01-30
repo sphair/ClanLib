@@ -430,6 +430,17 @@ void DisplayWindow::set_small_icon(const PixelBuffer &image)
 	impl->provider->set_small_icon(image);
 }
 
+void DisplayWindow::enable_alpha_channel(const Rect &blur_rect)
+{
+	impl->provider->enable_alpha_channel(blur_rect);
+}
+
+void DisplayWindow::extend_frame_into_client_area(int height)
+{
+	impl->provider->extend_frame_into_client_area(height);
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // DisplayWindow Implementation:
 

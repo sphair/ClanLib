@@ -136,6 +136,9 @@ public:
 
 	void set_allow_drop_shadow(bool value) { allow_dropshadow = value; }
 
+	void enable_alpha_channel(const Rect &blur_rect);
+	void extend_frame_into_client_area(int height);
+
 private:
 	void update_layered_worker_thread();
 	void update_layered_worker_thread_process();

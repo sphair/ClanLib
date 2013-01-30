@@ -581,6 +581,16 @@ void GL1WindowProvider_WGL::set_small_icon(const PixelBuffer &image)
 	win32_window.set_small_icon(image);
 }
 
+void GL1WindowProvider_WGL::enable_alpha_channel(const Rect &blur_rect)
+{
+	win32_window.enable_alpha_channel(blur_rect);
+}
+
+void GL1WindowProvider_WGL::extend_frame_into_client_area(int height)
+{
+	win32_window.extend_frame_into_client_area(height);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GL1WindowProvider_WGL Implementation:
 
