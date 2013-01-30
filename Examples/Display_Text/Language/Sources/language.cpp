@@ -50,55 +50,55 @@ int Language::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set the window
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Language Example");
-	desc.set_size(Size(640, 480), true);
+	desc.set_size(clan::Size(640, 480), true);
 	desc.set_allow_resize(true);
 
-	DisplayWindow window(desc);
+	clan::DisplayWindow window(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = window.sig_window_close().connect(this, &Language::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &Language::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Language::on_input_up);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &Language::on_input_up);
 
 	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas(window);
 
-	File file("Resources/test.xml");
-	DomDocument document(file);
-	DomElement document_element = document.get_document_element();
+	clan::File file("Resources/test.xml");
+	clan::DomDocument document(file);
+	clan::DomElement document_element = document.get_document_element();
 	if (document_element.is_null())
-		throw Exception("Cannot obtain the document element");
+		throw clan::Exception("Cannot obtain the document element");
 
-	Font font_english(gc, "arial", 32);
+	clan::Font font_english(canvas, "arial", 32);
 
-	FontDescription desc_chinese;
+	clan::FontDescription desc_chinese;
 	desc_chinese.set_typeface_name("simsun");
 	desc_chinese.set_height(48);
-	desc_chinese.set_charset(FontDescription::charset_chinesebig5);
-	Font font_chinese(gc, desc_chinese);
+	desc_chinese.set_charset(clan::FontDescription::charset_chinesebig5);
+	clan::Font font_chinese(canvas, desc_chinese);
 
-	FontDescription desc_arabic;
+	clan::FontDescription desc_arabic;
 	desc_arabic.set_typeface_name("arial");
 	desc_arabic.set_height(48);
-	desc_arabic.set_charset(FontDescription::charset_arabic);
-	Font font_arabic(gc, desc_arabic);
+	desc_arabic.set_charset(clan::FontDescription::charset_arabic);
+	clan::Font font_arabic(canvas, desc_arabic);
 
 	// Run until someone presses escape
 	while (!quit)
 	{
 
-		gc.clear(Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 		
 		std::string text;
 		
 		text = document_element.get_child_string("ENGLISH");
-		font_english.draw_text(gc, 10, 30, text);
+		font_english.draw_text(canvas, 10, 30, text);
 
 		text = document_element.get_child_string("CHINESE");
-		font_chinese.draw_text(gc, 10, 130, text);
+		font_chinese.draw_text(canvas, 10, 130, text);
 
 #ifdef ENABLE_THIS_IF_YOU_WANT_TO_USE_FRIBIDI
 		text = document_element.get_child_string("ARABIC");
@@ -122,22 +122,22 @@ int Language::start(const std::vector<std::string> &args)
 		if (fri_result)
 		{
 			output_buffer[text_16.length()] = 0;
-			std::string new_text = StringHelp::ucs2_to_utf8(&output_buffer[0]);
+			std::string new_text = clan::StringHelp::ucs2_to_utf8(&output_buffer[0]);
 			font_arabic.draw_text(gc, 10, 230, new_text);
 		}
 #endif
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void Language::on_input_up(const InputEvent &key)
+void Language::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
