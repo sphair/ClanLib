@@ -66,15 +66,7 @@ void Info::draw(clan::Canvas &canvas)
 	int draw_xpos = 0;
 	int draw_ypos = 0;
 
-	clan::FontDescription desc;
-	desc.set_typeface_name("Tahoma");
-	desc.set_height(14);
-	clan::Font font = get_gui_manager().get_registered_font(desc);
-	if (font.is_null())
-	{
-		font = clan::Font(canvas, desc);
-		get_gui_manager().register_font(font, desc);
-	}
+	clan::Font font = get_font();
 
 	clan::FontMetrics metrics = font.get_font_metrics();
 	draw_ypos += (int) metrics.get_ascent();
