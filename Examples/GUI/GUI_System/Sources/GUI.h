@@ -40,20 +40,17 @@ public:
 
 	int start(const std::vector<std::string> &args);
 
-	clan::GUIManager &get_gui_manager() { return gui_manager; }
 	clan::ResourceManager &get_resources_internal() { return resources_internal; }
 
 	Theme::gui_theme get_theme() {return current_theme;}
 
 	const char *get_theme_location();
-	const char *get_resources_location();
 
 private:
 	void gui_repaint();
 	void gui_exec();
 
 private:
-	clan::GUIManager gui_manager;
 	clan::ResourceManager resources_internal;
 	 std::unique_ptr<GUI_System> gui_system;
 

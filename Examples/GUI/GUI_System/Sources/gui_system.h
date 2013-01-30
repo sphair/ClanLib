@@ -51,13 +51,13 @@ public:
 	~GUI_System();
 
 	bool run();
+	clan::GUIManager gui_manager;
 
 private:
 	bool on_close(clan::GUIComponent *win);
 
 private:
 	clan::ResourceManager resources_gui;
-	clan::GUIThemeDefault theme;
 	GUI *gui;
 	clan::GUIWindowManagerSystem wm;
 
