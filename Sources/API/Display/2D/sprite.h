@@ -40,7 +40,6 @@
 #include "../../Core/Resources/resource_data_session.h"
 #include "../Render/graphic_context.h"
 #include "../Image/image_import_description.h"
-#include "../Collision/collision_outline.h"
 #include "color.h"
 
 namespace clan
@@ -194,43 +193,6 @@ public:
 
 	/// \brief Returns true if animation has looped in the last update cycle
 	bool is_looping() const;
-
-
-	/// \brief Create the collision outlines from the sprites resource
-	///
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	static std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium);
-
-	/// \brief Create the collision outlines from the sprite description
-	///
-	/// \param resource_id = String Ref
-	/// \param description = Sprite description
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	static std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, SpriteDescription &description, int alpha_limit, OutlineAccuracy accuracy);
-
-	/// \brief Create the collision outlines from the sprites resource
-	///
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	static CollisionOutline create_collision_outline(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium);
-
-	/// \brief Create the collision outlines from the sprites description
-	///
-	/// \param resource_id = String Ref
-	/// \param description = Sprite description
-	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
-	/// \param accuracy = Amount of optimization of the outline (default medium)
-	/// \return The collision outlines
-	static CollisionOutline create_collision_outline(GraphicContext &gc, SpriteDescription &description, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium);
 
 /// \}
 

@@ -36,6 +36,7 @@
 #include "../Render/texture_2d.h"
 #include "../Image/pixel_buffer.h"
 #include <vector>
+#include "../Collision/collision_outline.h"
 
 namespace clan
 {
@@ -101,6 +102,20 @@ public:
 public:
 	/// \brief Returns a list over all available frames.
 	const std::vector<SpriteDescriptionFrame> &get_frames() const;
+
+	/// \brief Create the collision outlines from the sprite description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	std::vector<CollisionOutline> get_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
+
+	/// \brief Create the collision outline from the sprites description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	CollisionOutline get_collision_outline(GraphicContext &gc, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium) const;
 
 /// \}
 /// \name Operations
