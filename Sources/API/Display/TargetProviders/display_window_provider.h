@@ -291,6 +291,18 @@ public:
 	/// \brief Sets the small icon used for this window.
 	virtual void set_small_icon(const PixelBuffer &image) = 0;
 
+	/// \brief Enable alpha channel for this window.
+	///
+	/// This is only supported on Windows Vista and above (Else use Layered windows instead)
+	/// \param blur_rect = Blur rectangle. If size = 0, then the entire window is used
+	virtual void enable_alpha_channel(const Rect &blur_rect) = 0;
+
+	/// \brief Exend the window frame into the client area
+	///
+	/// Only implemented on win32
+	virtual void extend_frame_into_client_area(int height) = 0;
+
+
 /// \}
 /// \name Implementation
 /// \{

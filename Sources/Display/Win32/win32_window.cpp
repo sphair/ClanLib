@@ -90,7 +90,6 @@ Win32Window::~Win32Window()
 	if (update_window_region)
 		DeleteObject(update_window_region);
 
-
 	DisplayMessageQueue_Win32::message_queue.remove_client(this);
 	ic.dispose();
 	get_keyboard()->dispose();
@@ -683,7 +682,7 @@ void Win32Window::create_new_window(const DisplayWindowDescription &desc)
 			ShowWindow(hwnd, SW_SHOW);
 
 		if (layered)
-			DwmFunctions::enable_alpha_channel(hwnd);
+			enable_alpha_channel(Rect(-1, -1, -1, -1));
 
 		minimized = is_minimized();
 		maximized = is_maximized();
@@ -2046,6 +2045,27 @@ void Win32Window::update_layered_worker_thread_process()
 	DeleteObject(bitmap);
 	DeleteDC(bitmap_dc);
 	ReleaseDC(hwnd, hdc);
+}
+
+void Win32Window::enable_alpha_channel(const Rect &blur_rect)
+{
+	if (blur_rect.get_width() == 0)
+	{
+		DwmFunctions::enable_alpha_channel(hwnd, 0);
+	}
+	else
+	{
+		HRGN enable_alpha_region = ::CreateRectRgn(blur_rect.left, blur_rect.top, blur_rect.right, blur_rect.bottom);
+		DwmFunctions::enable_alpha_channel(hwnd, enable_alpha_region);
+		DeleteObject(enable_alpha_region);
+
+	}
+
+}
+
+void Win32Window::extend_frame_into_client_area(int height)
+{
+	DwmFunctions::extend_frame_into_client_area(hwnd, height);
 }
 
 }
