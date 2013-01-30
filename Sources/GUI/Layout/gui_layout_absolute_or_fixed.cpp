@@ -40,16 +40,22 @@ namespace clan
 void GUILayoutAbsoluteOrFixed::node(GUIComponent_Impl *node)
 {
 	const CSSComputedBox &properties = node->element.get_css_values().get_box();
-	if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
+
+	bool is_manual_geometry = (node->parent && !node->use_auto_geometry); // Components in manual geometry mode behave like absolute positioned elements with specified left+top+right+bottom+width+height properties
+	bool is_absolute = properties.position.type == CSSValuePosition::type_absolute;
+	bool is_fixed = properties.position.type == CSSValuePosition::type_fixed;
+
+	if (is_manual_geometry || is_absolute || is_fixed)
 	{
-		// to do: implement all the complicated rules from CSSLayoutTreeNode::layout_absolute_or_fixed
-/*
 		GUISetInitialUsedValues initial_visitor;
 		initial_visitor.node(node);
 
-		GUILayoutContent content_visitor;
-		content_visitor.node(node);
-*/
+		GUILayoutContent visitor;
+		visitor.node(node);
+	}
+	else
+	{
+		node->visit_children(this, false);
 	}
 }
 
