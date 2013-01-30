@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
@@ -32,20 +33,18 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/Display/2D/canvas.h"
 
+#include "ribbon_section_impl.h"
+#include "ribbon_page_impl.h"
+
 namespace clan
 {
 
 RibbonSection::RibbonSection(RibbonPage *parent, const std::string &text, int size)
-: GUIComponent(parent, "ribbon-section"), text(text), size(size)
+: GUIComponent(parent, "ribbon-section"), impl(new RibbonSection_Impl(text, size))
 {
-	func_render().set(this, &RibbonSection::on_render);
-	parent->add_section(this);
-}
-
-void RibbonSection::on_render(Canvas &canvas, const Rect &clip_rect)
-{
-	Size size_section_text = get_render_text_size(canvas, text);
-	render_text(canvas, text, get_width()/2-size_section_text.width/2, get_height() - 5);
+	impl->component = this;
+	func_render().set(impl.get(), &RibbonSection_Impl::on_render);
+	parent->impl->add_section(this);
 }
 
 }

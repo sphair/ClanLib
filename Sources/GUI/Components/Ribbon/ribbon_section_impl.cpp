@@ -25,49 +25,26 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
-#pragma once
-
-#include "../gui_component.h"
+#include "GUI/precomp.h"
+#include "API/GUI/Components/ribbon_section.h"
+#include "API/GUI/Components/ribbon_page.h"
+#include "API/Display/2D/canvas.h"
+#include "ribbon_section_impl.h"
 
 namespace clan
 {
 
-class Ribbon;
-class RibbonSection;
-class RibbonPage_Impl;
-class Ribbon_Impl;
-
-class RibbonPage : public GUIComponent
+RibbonSection_Impl::RibbonSection_Impl(const std::string &text, int size) : text(text), size(size)
 {
-/// \name Construction
-/// \{
-public:
-	RibbonPage(Ribbon *parent, const std::string &text);
+}
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool get_show_tab() const;
-
-/// \}
-/// \name Operations
-/// \{
-public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
-
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RibbonPage_Impl> impl;
-
-	friend class Ribbon_Impl;
-	friend class RibbonSection;
-/// \}
-};
+void RibbonSection_Impl::on_render(Canvas &canvas, const Rect &clip_rect)
+{
+	Size size_section_text = component->get_render_text_size(canvas, text);
+	component->render_text(canvas, text, component->get_width()/2-size_section_text.width/2, component->get_height() - 5);
+}
 
 }

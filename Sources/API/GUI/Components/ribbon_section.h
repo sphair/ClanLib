@@ -35,6 +35,7 @@ namespace clan
 {
 
 class RibbonPage;
+class RibbonSection_Impl;
 
 class RibbonSection : public GUIComponent
 {
@@ -42,11 +43,9 @@ public:
 	RibbonSection(RibbonPage *parent, const std::string &text, int size);
 
 private:
-	void on_render(Canvas &canvas, const Rect &clip_rect);
+	std::shared_ptr<RibbonSection_Impl> impl;
 
-	std::string text;
-	int size;
-
+	friend class RibbonPage_Impl;
 	friend class RibbonPage;
 };
 

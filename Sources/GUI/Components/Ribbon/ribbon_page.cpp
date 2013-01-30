@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
@@ -32,6 +33,8 @@
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/GUI/Components/ribbon.h"
 
+#include "ribbon_page_impl.h"
+#include "ribbon_impl.h"
 namespace clan
 {
 
@@ -39,10 +42,11 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
-: GUIComponent(parent, "ribbon-page"), text(text), show_tab(true)
+: GUIComponent(parent, "ribbon-page"), impl(new RibbonPage_Impl)
 {
-	func_resized().set(this, &RibbonPage::on_resized);
-	parent->add_page(this);
+	impl->component = this;
+	func_resized().set(impl.get(), &RibbonPage_Impl::on_resized);
+	parent->impl->add_page(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -50,42 +54,24 @@ RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
 
 bool RibbonPage::get_show_tab() const 
 {
-	return show_tab;
+	return impl->show_tab;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Operations
 
-void RibbonPage::add_section(RibbonSection *section)
-{
-	sections.push_back(section);
-	on_resized();
-}
-
 void RibbonPage::set_show_tab( bool value )
 {
-	show_tab = value;
+	impl->show_tab = value;
 }
 
 
 void RibbonPage::set_tab_custom_css_state(const std::string &css_class_name)
 {
-	this->tab_css_custom_state = css_class_name;
+	impl->tab_css_custom_state = css_class_name;
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation
-
-void RibbonPage::on_resized()
-{
-	Rect page_box = get_size();
-	int section_x = 5;
-	for (size_t i = 0; i < sections.size(); i++)
-	{
-		Rect section_box(section_x, 5, section_x + sections[i]->size, page_box.bottom);
-		sections[i]->set_geometry(section_box);
-		section_x = section_box.right + 5;
-	}
-}
 
 }

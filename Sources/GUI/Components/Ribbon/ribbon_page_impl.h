@@ -25,49 +25,33 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
-#include "../gui_component.h"
-
 namespace clan
 {
 
-class Ribbon;
-class RibbonSection;
-class RibbonPage_Impl;
 class Ribbon_Impl;
+class RibbonPage;
 
-class RibbonPage : public GUIComponent
+class RibbonPage_Impl
 {
-/// \name Construction
-/// \{
 public:
-	RibbonPage(Ribbon *parent, const std::string &text);
+	RibbonPage_Impl();
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool get_show_tab() const;
+	void add_section(RibbonSection *section);
+	void on_resized();
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
+	RibbonPage *component;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RibbonPage_Impl> impl;
+	std::string text;
+	std::string tab_css_custom_state;
+	std::vector<RibbonSection *> sections;
+	Rect position;
+	bool show_tab;
 
-	friend class Ribbon_Impl;
-	friend class RibbonSection;
-/// \}
 };
 
 }

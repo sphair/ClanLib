@@ -37,6 +37,9 @@
 namespace clan
 {
 
+class RibbonMenu_Impl;
+class Ribbon_Impl;
+
 class RibbonMenuItem
 {
 public:
@@ -52,30 +55,14 @@ public:
 class RibbonMenu : public GUIComponent
 {
 public:
-	Callback_v0 &add_item(Image image, std::string text) { items.push_back(RibbonMenuItem(image, text)); return items.back().func_clicked; }
-	void add_separator() { items.push_back(RibbonMenuItem()); items.back().separator = true; }
+	Callback_v0 &add_item(Image image, std::string text);
+	void add_separator();
 
 private:
+	std::shared_ptr<RibbonMenu_Impl> impl;
 	RibbonMenu(GUIComponent *owner);
-	void start(const Point &pos);
-	void end();
-	void on_render(Canvas &canvas, const Rect &update_box);
-	void on_resized();
-	void on_filter_message(std::shared_ptr<GUIMessage> &message);
-	void on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message);
-	int update_item_boxes();
-	static GUITopLevelDescription create_toplevel_description();
 
-	int current_item;
-	std::vector<RibbonMenuItem> items;
-	std::vector<Rect> item_boxes;
-	GUIThemePart part_menu_item;
-	GUIThemePart part_menu_item_selected;
-	GUIThemePart part_menu_item_separator;
-
-	bool running;
-	Slot slot_filter;
-
+	friend class Ribbon_Impl;
 	friend class Ribbon;
 };
 
