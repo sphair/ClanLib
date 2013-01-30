@@ -33,18 +33,18 @@ class Text
 {
 public:
 	Text();
-	void init(GraphicContext &gc, const FontDescription &font_description, const DomElement &configuration, const char *text_name);
-	void draw(GraphicContext &gc, const Rect &rect);
+	void init(clan::Canvas &canvas, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name);
+	void draw(clan::Canvas &canvas, const clan::Rect &rect);
 	void run(int time_delta_ms, int speed);
 private:
-	void init_stage1_count_glyphs(UTF8_Reader &reader);
-	void init_stage2_examine_glyphs(GraphicContext &gc, UTF8_Reader &reader);
-	std::string build_text(GraphicContext &gc, int width, int xoffset, int &out_draw_offset);
+	void init_stage1_count_glyphs(clan::UTF8_Reader &reader);
+	void init_stage2_examine_glyphs(clan::Canvas &canvas, clan::UTF8_Reader &reader);
+	std::string build_text(clan::Canvas &canvas, int width, int xoffset, int &out_draw_offset);
 
 private:
-	Font font;
+	clan::Font font;
 	std::string text;
-	FontMetrics font_metrics;
+	clan::FontMetrics font_metrics;
 
 	std::vector<int> glyph_offset;
 	std::vector<int> glyph_width;

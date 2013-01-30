@@ -34,17 +34,17 @@ Text::Text()
 {
 }
 
-void Text::init(GraphicContext &gc, const FontDescription &font_description, const DomElement &configuration, const char *text_name)
+void Text::init(clan::Canvas &canvas, const clan::FontDescription &font_description, const clan::DomElement &configuration, const char *text_name)
 {
-	font = Font(gc, font_description);
+	font = clan::Font(canvas, font_description);
 
 	text = configuration.get_child_string(text_name);
 	if (text.length() == 0)
-		throw Exception("Cannot find the text");
+		throw clan::Exception("Cannot find the text");
 
-	UTF8_Reader reader(text);
+	clan::UTF8_Reader reader(text.c_str(), text.length());
 	init_stage1_count_glyphs(reader);
-	init_stage2_examine_glyphs(gc, reader);
+	init_stage2_examine_glyphs(canvas, reader);
 
 	font_metrics = font.get_font_metrics();
 
@@ -67,20 +67,20 @@ void Text::run(int time_delta_ms, int speed)
 		scroller_xoffset -=total_width;
 }
 
-void Text::draw(GraphicContext &gc, const Rect &rect)
+void Text::draw(clan::Canvas &canvas, const clan::Rect &rect)
 {
 	int out_draw_offset;
-	std::string text = build_text(gc, rect.get_width(), scroller_xoffset, out_draw_offset);
+	std::string text = build_text(canvas, rect.get_width(), scroller_xoffset, out_draw_offset);
 
 	int ypos = rect.bottom - ((rect.get_height() - font_metrics.get_ascent())/2);
 
 	// Remove the next line to observe how the clipping works
-	gc.set_cliprect(rect);
-	font.draw_text(gc, rect.left - out_draw_offset, ypos, text);
-	gc.reset_cliprect();
+	canvas.set_cliprect(rect);
+	font.draw_text(canvas, rect.left - out_draw_offset, ypos, text);
+	canvas.reset_cliprect();
 }
 
-std::string Text::build_text(GraphicContext &gc, int width, int xoffset, int &out_draw_offset)
+std::string Text::build_text(clan::Canvas &canvas, int width, int xoffset, int &out_draw_offset)
 {
 	const char *str = text.c_str();
 
@@ -131,7 +131,7 @@ std::string Text::build_text(GraphicContext &gc, int width, int xoffset, int &ou
 
 }
 
-void Text::init_stage1_count_glyphs(UTF8_Reader &reader)
+void Text::init_stage1_count_glyphs(clan::UTF8_Reader &reader)
 {
 	reader.set_position(0);
 	int num_glyphs = 0;
@@ -144,7 +144,7 @@ void Text::init_stage1_count_glyphs(UTF8_Reader &reader)
 	glyph_width.resize(num_glyphs);
 }
 
-void Text::init_stage2_examine_glyphs(GraphicContext &gc, UTF8_Reader &reader)
+void Text::init_stage2_examine_glyphs(clan::Canvas &canvas, clan::UTF8_Reader &reader)
 {
 	reader.set_position(0);
 	int current_glyph_count = 0;
@@ -153,7 +153,7 @@ void Text::init_stage2_examine_glyphs(GraphicContext &gc, UTF8_Reader &reader)
 	{
 		glyph_offset[current_glyph_count] = reader.get_position();
 
-		Size size = font.get_glyph_size(gc, reader.get_char());
+		clan::Size size = font.get_glyph_size(canvas, reader.get_char());
 		glyph_width[current_glyph_count] = size.width;
 		total_width += size.width;
 
