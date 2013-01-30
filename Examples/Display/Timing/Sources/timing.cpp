@@ -116,7 +116,7 @@ void Timing::draw_graphics(clan::Canvas &canvas, float time_delta_ms)
 			xpos -= (gc_width + 8);
 		stars[cnt].xpos = xpos;
 
-		canvas.draw_circle(xpos, stars[cnt].ypos, 6.0f, stars[cnt].color);
+		canvas.fill_circle(xpos, stars[cnt].ypos, 6.0f, stars[cnt].color);
 	}
 }
 
