@@ -38,39 +38,40 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Perlin Noise Example");
-	win_desc.set_size(Size( 800, 520 ), false);
+	win_desc.set_size(clan::Size( 800, 520 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
+	clan::Canvas canvas(window);
+
+	clan::GUIWindowManagerTexture wm(window);
+	clan::GUIManager gui(wm, theme);
 	
-	GraphicContext gc = window.get_gc();
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(0, 0, gc.get_size()));
+	Options *options = new Options(gui, canvas.get_size());
 
-	Image image_grid(gc, "../../Display_Render/Blend/Resources/grid.png");
-	image_grid.set_color(Colorf(0.4f, 0.4f, 1.0f, 1.0f));
+	clan::Image image_grid(canvas, "../../Display_Render/Blend/Resources/grid.png");
+	image_grid.set_color(clan::Colorf(0.4f, 0.4f, 1.0f, 1.0f));
 
-	PerlinNoise noise;
+	clan::PerlinNoise noise;
 
-	Image noise_image;
+	clan::Image noise_image;
 
-	TextureFormat last_sized_format = cl_rgb8;
+	clan::TextureFormat last_sized_format = clan::tf_rgb8;
 	float last_amplitude = 0.0f;
 	int last_width = 0;
 	int last_height = 0;
@@ -88,7 +89,7 @@ int App::start(const std::vector<std::string> &args)
 	{
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
 		bool changed_flag = false;
 		if (last_dimension != options->dimension)
@@ -166,7 +167,7 @@ int App::start(const std::vector<std::string> &args)
 
 		if (changed_flag)
 		{
-			PixelBuffer pbuff;
+			clan::PixelBuffer pbuff;
 			switch (last_dimension)
 			{
 				case perlin_1d:
@@ -187,24 +188,24 @@ int App::start(const std::vector<std::string> &args)
 			if (last_is_normals_set)
 				pbuff = convert_to_normalmap(pbuff);
 
-			noise_image = Image(gc, pbuff, pbuff.get_size());
+			noise_image = clan::Image(canvas, pbuff, pbuff.get_size());
 
 		}
 
-		image_grid.draw(gc, 32, 32);
-		noise_image.draw(gc, 33, 33);
+		image_grid.draw(canvas, 32, 32);
+		noise_image.draw(canvas, 33, 33);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -217,14 +218,14 @@ void App::on_window_close()
 	quit = true;
 }
 
-PixelBuffer App::convert_to_normalmap(PixelBuffer &input)
+clan::PixelBuffer App::convert_to_normalmap(clan::PixelBuffer &input)
 {
-	if (input.get_format() != cl_rgb8)
+	if (input.get_format() != clan::tf_rgb8)
 		return input;
 	int width = input.get_width();
 	int height = input.get_height();
 
-	PixelBuffer output(width, height, cl_rgb8);
+	clan::PixelBuffer output(width, height, clan::tf_rgb8);
 
 	int in_pitch = input.get_pitch();
 	int out_pitch = output.get_pitch();
@@ -322,7 +323,7 @@ PixelBuffer App::convert_to_normalmap(PixelBuffer &input)
 			int dY = pixel_bl + 2 * pixel_b + pixel_br - pixel_tl - 2 * pixel_t - pixel_tr;
 	
 			const float strength = 1.0f * 256.0f;
-			Vec3f vector(dX, dY, strength);
+			clan::Vec3f vector(dX, dY, strength);
 			vector.normalize();
 
 			// Stored as BGR

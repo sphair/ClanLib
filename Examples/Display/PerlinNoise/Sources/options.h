@@ -36,13 +36,13 @@ enum PerlinDimension
 	perlin_4d
 };
 
-class Options : public GUIComponent
+class Options : public clan::GUIComponent
 {
 public:
-	Options(GUIManager &gui, Rect gui_position);
+	Options(clan::GUIManager &gui, clan::Rect gui_position);
 	virtual ~Options();
 
-	TextureFormat sized_format;
+	clan::TextureFormat sized_format;
 	float amplitude;
 	int width;
 	int height;
@@ -70,51 +70,51 @@ private:
 	void slider_position_z_changed();
 	void slider_position_w_changed();
 	void checkbox_normal_changed();
-	void set_value(Slider *slider, float value, float max_value);
-	Label *create_slider_label(Slider *slider);
-	void on_format_selected(int value, ComboBox *combo);
-	void on_dimension_selected(int value, ComboBox *combo);
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	Slider *create_slider(int xpos, int ypos);
-	float get_value(Slider *slider, float max_value);
+	void set_value(clan::Slider *slider, float value, float max_value);
+	clan::Label *create_slider_label(clan::Slider *slider);
+	void on_format_selected(int value, clan::ComboBox *combo);
+	void on_dimension_selected(int value, clan::ComboBox *combo);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	clan::Slider *create_slider(int xpos, int ypos);
+	float get_value(clan::Slider *slider, float max_value);
 
-	CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	ComboBox *create_dimension_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item);
-	void make_dimension_menu(PopupMenu &menu);
-	ComboBox *create_format_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item);
-	void make_format_menu(PopupMenu &menu);
-	Label *create_combobox_label(ComboBox *combo, const char *text);
+	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
+	clan::ComboBox *create_dimension_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
+	void make_dimension_menu(clan::PopupMenu &menu);
+	clan::ComboBox *create_format_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
+	void make_format_menu(clan::PopupMenu &menu);
+	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
 private:
-	Slider *slider_width;
-	Label *label_width;
-	Slider *slider_height;
-	Label *label_height;
-	Slider *slider_start_x;
-	Label *label_start_x;
-	Slider *slider_start_y;
-	Label *label_start_y;
-	Slider *slider_length_x;
-	Label *label_length_x;
-	Slider *slider_length_y;
-	Label *label_length_y;
-	Slider *slider_position_z;
-	Label *label_position_z;
-	Slider *slider_position_w;
-	Label *label_position_w;
-	Slider *slider_octaves;
-	Label *label_octaves;
-	Slider *slider_amplitude;
-	Label *label_amplitude;
+	clan::Slider *slider_width;
+	clan::Label *label_width;
+	clan::Slider *slider_height;
+	clan::Label *label_height;
+	clan::Slider *slider_start_x;
+	clan::Label *label_start_x;
+	clan::Slider *slider_start_y;
+	clan::Label *label_start_y;
+	clan::Slider *slider_length_x;
+	clan::Label *label_length_x;
+	clan::Slider *slider_length_y;
+	clan::Label *label_length_y;
+	clan::Slider *slider_position_z;
+	clan::Label *label_position_z;
+	clan::Slider *slider_position_w;
+	clan::Label *label_position_w;
+	clan::Slider *slider_octaves;
+	clan::Label *label_octaves;
+	clan::Slider *slider_amplitude;
+	clan::Label *label_amplitude;
 
-	Label *label_format;
-	ComboBox *combo_format;
-	PopupMenu combo_format_menu;
+	clan::Label *label_format;
+	clan::ComboBox *combo_format;
+	clan::PopupMenu combo_format_menu;
 
-	Label *label_dimension;
-	ComboBox *combo_dimension;
-	PopupMenu combo_dimension_menu;
+	clan::Label *label_dimension;
+	clan::ComboBox *combo_dimension;
+	clan::PopupMenu combo_dimension_menu;
 
-	CheckBox *checkbox_normals;
+	clan::CheckBox *checkbox_normals;
 
 };
 

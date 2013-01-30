@@ -39,10 +39,10 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void set_user_projection(GraphicContext &gc, Sizef &area_size, Options *options);
-	PixelBuffer convert_to_normalmap(PixelBuffer &input);
+	void set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options);
+	clan::PixelBuffer convert_to_normalmap(clan::PixelBuffer &input);
 private:
 	bool quit;
 
