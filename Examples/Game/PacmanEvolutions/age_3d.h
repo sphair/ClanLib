@@ -28,7 +28,7 @@ private:
 	std::vector<WallVertex> create_walls();
 	void write_wall(std::vector<WallVertex> &in_out_vertices, const clan::Vec3f &p1, const clan::Vec3f &p2, const clan::Vec3f &normal);
 
-	void create_billboards(clan::GraphicContext &gc);
+	void create_billboards(clan::Canvas &canvas);
 	void draw_billboard(clan::Canvas &canvas, clan::Sprite &sprite, const clan::Mat4f &world_to_projection, float x, float y);
 	clan::Vec2f project(clan::GraphicContext &gc, const clan::Mat4f &world_to_projection, clan::Vec4f position_in_world);
 
