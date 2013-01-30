@@ -68,8 +68,8 @@ int App::start(const std::vector<std::string> &args)
 	{
 		canvas.set_map_mode(map_2d_upper_left);
 
-		canvas.gradient_fill(Rect(0, 0, canvas.get_width(), canvas.get_height()/2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
-		canvas.gradient_fill(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
+		canvas.fill_rect(Rect(0, 0, canvas.get_width(), canvas.get_height()/2), Gradient(Colorf(0.2f, 0.2f, 0.8f, 1.0f), Colorf(0.0f, 0.0f, 0.2f, 1.0f)));
+		canvas.fill_rect(Rect(0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()), Gradient(Colorf(0.0f, 0.0f, 0.2f, 1.0f), Colorf(0.2f, 0.2f, 0.8f, 1.0f)));
 
 		font.draw_text(canvas, 8, 20, "Press any key, mouse button or joystick button to fire text. Use mouse to control direction.");
 
