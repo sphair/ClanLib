@@ -104,10 +104,10 @@ int FullScreen::start(const std::vector<std::string> &args)
 		float x = cos(sin_count)*120.0f;
 		float y = sin(sin_count)*120.0f;
 		sin_count += 0.002f * time_delta_ms;
-		canvas.draw_fill(Rectf( 320.0f + x -30.0f, 300.0f + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(0.0f, 1.0f, 0.0, 0.5f));
+		canvas.fill_rect(Rectf( 320.0f + x -30.0f, 300.0f + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(0.0f, 1.0f, 0.0, 0.5f));
 		x = cos(sin_count+3.14159f)*120.0f;
 		y = sin(sin_count+3.14159f)*120.0f;
-		canvas.draw_fill(Rectf( 320.0f + x -30.0f, 300 + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(1.0f, 1.0f, 0.0, 0.5f));
+		canvas.fill_rect(Rectf( 320.0f + x -30.0f, 300 + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
 		canvas.flip(1);
 
