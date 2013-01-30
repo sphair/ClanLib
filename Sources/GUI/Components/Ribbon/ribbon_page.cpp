@@ -42,7 +42,7 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
-: GUIComponent(parent, "ribbon-page"), impl(new RibbonPage_Impl)
+: GUIComponent(parent, "ribbon-page"), impl(new RibbonPage_Impl(text))
 {
 	impl->component = this;
 	func_resized().set(impl.get(), &RibbonPage_Impl::on_resized);
