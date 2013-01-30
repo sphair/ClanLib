@@ -32,17 +32,17 @@
 #include "app.h"
 #include "panel.h"
 
-GUI::GUI(App *app) : app(app), window(app->get_window()), wm(window)
+GUI::GUI(App *app) : app(app), window(app->get_window()), wm(window), canvas(app->get_canvas())
 {
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	gui = GUIManager(wm, theme);
+	gui = clan::GUIManager(wm, theme);
 
 	wm.func_input_intercept().set(this, &GUI::wm_input_intercept);
 }
@@ -59,15 +59,13 @@ bool GUI::run()
 
 void GUI::draw()
 {
-	GraphicContext gc = window.get_gc();
-
-	std::vector<GUIWindowManagerTextureWindow> windows = wm.get_windows();
-	std::vector<GUIWindowManagerTextureWindow>::size_type index, size;
+	std::vector<clan::GUIWindowManagerTextureWindow> windows = wm.get_windows();
+	std::vector<clan::GUIWindowManagerTextureWindow>::size_type index, size;
 	size = windows.size();
 
 	for (index = 0; index < size; index++)
 	{
-		GUIWindowManagerTextureWindow texture_window = windows[index];
+		clan::GUIWindowManagerTextureWindow texture_window = windows[index];
 
 		Component3D *component3d = dynamic_cast<Component3D *> (texture_window.get_toplevel_component());
 		if (!component3d)
@@ -76,36 +74,36 @@ void GUI::draw()
 			continue;
 		}
 
-		component3d->resultant_matrix = Mat4f::multiply(gc.get_modelview(), component3d->object_matrix);
-		gc.push_modelview();
-		gc.mult_modelview(component3d->object_matrix);
+		component3d->resultant_matrix = clan::Mat4f::multiply(canvas.get_modelview(), component3d->object_matrix);
+		canvas.push_modelview();
+		canvas.mult_modelview(component3d->object_matrix);
 
-		component3d->resultant_matrix = Mat4f::multiply(app->get_projection_matrix(), gc.get_modelview());
+		component3d->resultant_matrix = clan::Mat4f::multiply(app->get_projection_matrix(), canvas.get_modelview());
 
 		// Translate 2D coords to 3D coords
-		//gc.mult_translate(-1.0f, 1.0f);
-		gc.mult_scale(2.0f/gc.get_width(), -2.0f/gc.get_height());
+		//canvas.mult_translate(-1.0f, 1.0f);
+		canvas.mult_scale(2.0f/canvas.get_width(), -2.0f/canvas.get_height());
 
 		// Prepare to draw
-		Subtexture subtexture = texture_window.get_texture();
-		Texture texture = subtexture.get_texture();
+		clan::Subtexture subtexture = texture_window.get_texture();
+		clan::Texture2D texture = subtexture.get_texture();
 
-		Rect window_geometry = texture_window.get_geometry();
-		Rect subtexture_geometry = subtexture.get_geometry();
-		Rectf texture_unit1_coords(subtexture_geometry);
+		clan::Rect window_geometry = texture_window.get_geometry();
+		clan::Rect subtexture_geometry = subtexture.get_geometry();
+		clan::Rectf texture_unit1_coords(subtexture_geometry);
 
 		// Note, we ignore the GUI position, and simply center the window
-		Size window_size = subtexture_geometry.get_size();
-		Rectf rect(-window_size.width/2.0f, -window_size.height/2.0f, Sizef(window_size));
+		clan::Size window_size = subtexture_geometry.get_size();
+		clan::Rectf rect(-window_size.width/2.0f, -window_size.height/2.0f, clan::Sizef(window_size));
 
-		Vec2f positions[6] =
+		clan::Vec2f positions[6] =
 		{
-			Vec2f(rect.left, rect.top),
-			Vec2f(rect.right, rect.top),
-			Vec2f(rect.left, rect.bottom),
-			Vec2f(rect.right, rect.top),
-			Vec2f(rect.left, rect.bottom),
-			Vec2f(rect.right, rect.bottom)
+			clan::Vec2f(rect.left, rect.top),
+			clan::Vec2f(rect.right, rect.top),
+			clan::Vec2f(rect.left, rect.bottom),
+			clan::Vec2f(rect.right, rect.top),
+			clan::Vec2f(rect.left, rect.bottom),
+			clan::Vec2f(rect.right, rect.bottom)
 		};
 
 		float texture_width = (float) texture.get_width();
@@ -118,55 +116,44 @@ void GUI::draw()
 		float src_top = (texture_unit1_coords.top + texel_centre) / texture_height;
 		float src_bottom = (texture_unit1_coords.bottom + texel_centre) / texture_height;
 
-		Vec2f tex1_coords[6] =
+		clan::Vec2f tex1_coords[6] =
 		{
-			Vec2f(src_left, src_top),
-			Vec2f(src_right, src_top),
-			Vec2f(src_left, src_bottom),
-			Vec2f(src_right, src_top),
-			Vec2f(src_left, src_bottom),
-			Vec2f(src_right, src_bottom)
+			clan::Vec2f(src_left, src_top),
+			clan::Vec2f(src_right, src_top),
+			clan::Vec2f(src_left, src_bottom),
+			clan::Vec2f(src_right, src_top),
+			clan::Vec2f(src_left, src_bottom),
+			clan::Vec2f(src_right, src_bottom)
 		};
 
-		gc.set_texture(0, texture);
-		PrimitivesArray prim_array(gc);
-		prim_array.set_attributes(0, positions);
-		prim_array.set_attribute(1, component3d->component_color);
-		prim_array.set_attributes(2, tex1_coords);
-		gc.set_program_object(cl_program_single_texture);
-		gc.draw_primitives(cl_triangles, 6, prim_array);
-		gc.reset_program_object();
-		gc.reset_texture(0);
-		gc.pop_modelview();
-
+		canvas.fill_triangles(positions, tex1_coords, 6, texture, component3d->component_color);
 	}
 }
 
 
-void GUI::wm_input_intercept(InputEvent &input_event)
+void GUI::wm_input_intercept(clan::InputEvent &input_event)
 {
 	// Get the windows
-	std::vector<GUIWindowManagerTextureWindow> windows = wm.get_windows();
+	std::vector<clan::GUIWindowManagerTextureWindow> windows = wm.get_windows();
 
 	if (windows.empty())	// Exit now if no windows exist
 		return;
 
-	GraphicContext gc = window.get_gc();
-	float gc_width = (float) gc.get_width();
-	float gc_height = (float) gc.get_height();
+	float gc_width = (float) canvas.get_width();
+	float gc_height = (float) canvas.get_height();
 
 	// Transform points to range -1.0f to 1.0f
 	float mouse_x = ((2.0f * input_event.mouse_pos.x) / gc_width) - 1.0f;
 	float mouse_y = ((2.0f * input_event.mouse_pos.y) / gc_height) - 1.0f;
 	mouse_y = -mouse_y;
 
-	Point final_point;
+	clan::Point final_point;
 
-	std::vector<GUIWindowManagerTextureWindow>::size_type index, size;
+	std::vector<clan::GUIWindowManagerTextureWindow>::size_type index, size;
 	size = windows.size();
 	for (index = 0; index < size; index++)
 	{
-		GUIComponent *component = windows[index].get_toplevel_component();
+		clan::GUIComponent *component = windows[index].get_toplevel_component();
 		if (!component)
 			continue;
 
@@ -174,10 +161,10 @@ void GUI::wm_input_intercept(InputEvent &input_event)
 		if (!component3d)
 			continue;
 
-		Mat4d resultant_matrix_double = Mat4d(component3d->resultant_matrix);
-		Mat4d inverse_matrix = resultant_matrix_double.inverse();
+		clan::Mat4d resultant_matrix_double = clan::Mat4d(component3d->resultant_matrix);
+		clan::Mat4d inverse_matrix = resultant_matrix_double.inverse();
 
-		Vec3f point;
+		clan::Vec3f point;
 		float mouse_z;
 		float mouse_low_z = 0.5f;
 		float mouse_high_z = 1.5f;
@@ -187,7 +174,7 @@ void GUI::wm_input_intercept(InputEvent &input_event)
 			// Find the Z position of the panel at this 2d point
 			// Keep bisecting, until we have found the correct Z
 			mouse_z = ( mouse_high_z + mouse_low_z ) / 2.0f;
-			point = transform_point(Vec3d( mouse_x, mouse_y, mouse_z), inverse_matrix);
+			point = transform_point(clan::Vec3d( mouse_x, mouse_y, mouse_z), inverse_matrix);
 			float diff = - point.z;
 			if (diff < 0.0f)
 				diff = -diff;
@@ -205,12 +192,12 @@ void GUI::wm_input_intercept(InputEvent &input_event)
 			}
 		}
 
-		Point window_point;
+		clan::Point window_point;
 		window_point.x = (int) ((((point.x)) * gc_width ) / 2.0f);
 		window_point.y = (int) ((((-point.y)) * gc_height ) / 2.0f);
 
 		// Adjust the GUI postions (as it is drawn relative to center of the window)
-		Rect component_rect = component->get_window_geometry();
+		clan::Rect component_rect = component->get_window_geometry();
 		window_point.x += component_rect.left + component_rect.get_width()/2;
 		window_point.y += component_rect.top + component_rect.get_height()/2;
 
@@ -232,7 +219,7 @@ void GUI::wm_input_intercept(InputEvent &input_event)
 	input_event.mouse_pos = final_point;
 }
 
-Vec3f GUI::transform_point(const Vec3d &src_point, const Mat4d &matrix)
+clan::Vec3f GUI::transform_point(const clan::Vec3d &src_point, const clan::Mat4d &matrix)
 {
 	return matrix.get_transformed_point(src_point);
 }

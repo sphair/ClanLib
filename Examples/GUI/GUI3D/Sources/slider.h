@@ -35,10 +35,10 @@ class GUI;
 class Slider : public Panel
 {
 public:
-	Slider(GUI &gui, Rect gui_position);
+	Slider(GUI &gui, clan::Rect gui_position);
 	virtual ~Slider();
 
-	Slider *component;
+	clan::Slider *component;
 private:
 };
 

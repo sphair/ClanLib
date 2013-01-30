@@ -41,18 +41,19 @@ public:
 	bool run();
 	void draw();
 
-	GUIManager &get_gui_manager() {return gui;}
+	clan::GUIManager &get_gui_manager() {return gui;}
 
 private:
-	Vec3f transform_point(const Vec3d &src_point, const Mat4d &matrix);
-	void wm_input_intercept(InputEvent &input_event);
+	clan::Vec3f transform_point(const clan::Vec3d &src_point, const clan::Mat4d &matrix);
+	void wm_input_intercept(clan::InputEvent &input_event);
 
 private:
 	// NOTE: The order of these constructors is important
-	DisplayWindow window;
-	ResourceManager resources_gui;
-	GUIWindowManagerTexture wm;
-	GUIManager gui;
+	clan::DisplayWindow window;
+	clan::ResourceManager resources_gui;
+	clan::GUIWindowManagerTexture wm;
+	clan::GUIManager gui;
 
+	clan::Canvas canvas;
 	App *app;
 };
