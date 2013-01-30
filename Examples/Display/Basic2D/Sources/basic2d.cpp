@@ -51,10 +51,9 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 	// Load a sprite from a png-file
 	clan::Image spr_logo(canvas, "Resources/logo.png");
+	clan::Font font(canvas, "tahoma", 24);
 
 	float sin_count = 0.0f;
-	float ypos = 0.0f;
-	float ydir = 0.3f;
 
 	unsigned int last_time = clan::System::get_time();
 
@@ -65,35 +64,27 @@ int Basic2D::start(const std::vector<std::string> &args)
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 
+		// Update the moving elements
+		sin_count += 0.004f * time_delta_ms;
+
 		// Clear the display in a dark blue nuance
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
+		std::string text("Welcome to the ClanLib SDK");
+		clan::Size text_size = font.get_text_size(canvas, text);
+		font.draw_text(canvas, ( ( canvas.get_width() - text_size.width) / 2), 32, text, clan::Colorf::white);
+
 		clan::Size canvas_size = canvas.get_size();
 
-		// Move the lines
-		ypos += ydir * time_delta_ms;
-		if (ydir > 0.0f)
-		{
-			if ((ypos+200.0f) >= canvas_size.height)
-			{
-				ypos = (float) (canvas_size.height - 200);
-				ydir *= -1.0f;
-			}
-		}
-		else
-		{
-			if (ypos <= 0.0f)
-			{
-				ypos = 0.0f;
-				ydir *= -1.0f;
-			}
-		}
-			
+		// Draw moving lines
+		float ypos = sin(sin_count)*60.0f + 120.0f;
 		canvas.draw_line(0, ypos-1.0f, (float) canvas_size.width, ypos-1.0f,clan::Colorf(0.5f, 0.0f, 0.0f));
 		canvas.draw_line(0, ypos+198.0f, (float) canvas_size.width, ypos+198.0f, clan::Colorf(0.5f, 0.0f, 0.0f));
 
 		// Show the logo image.
 		spr_logo.draw(canvas, canvas_size.width-spr_logo.get_width(), canvas_size.height-spr_logo.get_height());
+
+		// Add a clipping rect
 		canvas.push_cliprect(clan::Rect(0, (int)(ypos), canvas_size.width, (int)(ypos+198)));
 
 		// Draw a rectangle in the center of the screen
@@ -107,7 +98,6 @@ int Basic2D::start(const std::vector<std::string> &args)
 		// Show a few alpha-blending moving rectangles that moves in circles
 		float x = cos(sin_count)*120.0f;
 		float y = sin(sin_count)*120.0f;
-		sin_count += 0.004f * time_delta_ms;
 		canvas.fill_rect(clan::Rectf( 320.0f + x -30.0f, 240.0f + y -30.0f, clan::Sizef(30.0f, 30.0f)), clan::Colorf(0.0f, 1.0f, 0.0, 0.5f));
 		x = cos(sin_count+clan::PI)*120.0f;
 		y = sin(sin_count+clan::PI)*120.0f;
