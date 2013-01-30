@@ -35,10 +35,10 @@
 #define MAX_POSITION	255.0f
 #define MAX_LENGTH		64.0f
 
-Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITopLevelDescription("Options", gui_position, false))
+Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	is_normals_set = false;
-	sized_format = cl_rgb8;
+	sized_format = clan::tf_rgb8;
 	dimension = perlin_2d;
 	amplitude = 1.0;
 	width = 256;
@@ -156,10 +156,10 @@ Options::~Options()
 
 }
 
-CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
 {
-	CheckBox *checkbox = new CheckBox(this);
-	checkbox->set_geometry(Rect(xpos, ypos , Size(140, 16)));
+	clan::CheckBox *checkbox = new clan::CheckBox(this);
+	checkbox->set_geometry(clan::Rect(xpos, ypos , clan::Size(140, 16)));
 	checkbox->set_text(name);
 	checkbox->set_checked(state);
 	return checkbox;
@@ -170,30 +170,30 @@ void Options::checkbox_normals_changed()
 	is_normals_set = checkbox_normals->is_checked();
 }
 
-void Options::on_render(GraphicContext &gc, const Rect &update_rect)
+void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect rect = get_geometry();
-	Draw::fill(gc, update_rect, Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	clan::Rect rect = get_geometry();
+	canvas.fill_rect(rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
-float Options::get_value(Slider *slider, float max_value)
+float Options::get_value(clan::Slider *slider, float max_value)
 {
 	float value = (float) slider->get_position();
 	value /= (float) slider->get_max();
 	return value * max_value;
 }
 
-void Options::set_value(Slider *slider, float value, float max_value)
+void Options::set_value(clan::Slider *slider, float value, float max_value)
 {
 	value /= max_value;
 	value *= (float) slider->get_max();
 	slider->set_position(value);
 }
 
-Slider *Options::create_slider(int xpos, int ypos)
+clan::Slider *Options::create_slider(int xpos, int ypos)
 {
-	Slider *component = new Slider(this);
-	component->set_geometry(Rect(xpos, ypos, Size(192, 17)));
+	clan::Slider *component = new clan::Slider(this);
+	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(192, 17)));
 	component->set_vertical(false);
 	component->set_horizontal(true);
 	component->set_min(0);
@@ -207,26 +207,26 @@ Slider *Options::create_slider(int xpos, int ypos)
 
 }
 
-void Options::on_format_selected(int value, ComboBox *combo)
+void Options::on_format_selected(int value, clan::ComboBox *combo)
 {
 	switch (value)
 	{
 		case 0:
-			sized_format = cl_rgb8;
+			sized_format = clan::tf_rgb8;
 			break;
 		case 1:
-			sized_format = cl_rgba8;
+			sized_format = clan::tf_rgba8;
 			break;
 		case 2:
-			sized_format = cl_r8;
+			sized_format = clan::tf_r8;
 			break;
 		case 3:
-			sized_format = cl_r32f;
+			sized_format = clan::tf_r32f;
 			break;
 	}
 }
 
-void Options::on_dimension_selected(int value, ComboBox *combo)
+void Options::on_dimension_selected(int value, clan::ComboBox *combo)
 {
 	switch (value)
 	{
@@ -244,11 +244,11 @@ void Options::on_dimension_selected(int value, ComboBox *combo)
 			break;
 	}
 }
-Label *Options::create_slider_label(Slider *slider)
+clan::Label *Options::create_slider_label(clan::Slider *slider)
 {
-	Label *component = new Label(this);
-	Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(Rect(slider_geometry.right + 4, slider_geometry.top - 2, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect slider_geometry = slider->get_geometry();
+	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
 	component->set_text("##################");
 	return component;
 }
@@ -256,62 +256,62 @@ Label *Options::create_slider_label(Slider *slider)
 void Options::slider_amplitude_changed()
 {
 	amplitude = get_value(slider_amplitude, MAX_AMPLITUDE);
-	std::string text(string_format("Amplitude: %1", amplitude));
+	std::string text(clan::string_format("Amplitude: %1", amplitude));
 	label_amplitude->set_text(text);
 }
 void Options::slider_width_changed()
 {
 	width = slider_width->get_position();
-	std::string text(string_format("Width : %1", width));
+	std::string text(clan::string_format("Width : %1", width));
 	label_width->set_text(text);
 }
 void Options::slider_height_changed()
 {
 	height = slider_height->get_position();
-	std::string text(string_format("Height : %1", height));
+	std::string text(clan::string_format("Height : %1", height));
 	label_height->set_text(text);
 }
 void Options::slider_octaves_changed()
 {
 	octaves = slider_octaves->get_position();
-	std::string text(string_format("Octaves : %1", octaves));
+	std::string text(clan::string_format("Octaves : %1", octaves));
 	label_octaves->set_text(text);
 }
 void Options::slider_start_x_changed()
 {
 	start_x = get_value(slider_start_x, MAX_POSITION);
-	std::string text(string_format("Start X : %1", start_x));
+	std::string text(clan::string_format("Start X : %1", start_x));
 	label_start_x->set_text(text);
 }
 void Options::slider_length_x_changed()
 {
 	length_x = get_value(slider_length_x, MAX_LENGTH);
-	std::string text(string_format("Length X : %1", length_x));
+	std::string text(clan::string_format("Length X : %1", length_x));
 	label_length_x->set_text(text);
 }
 
 void Options::slider_start_y_changed()
 {
 	start_y = get_value(slider_start_y, MAX_POSITION);
-	std::string text(string_format("Start Y : %1", start_y));
+	std::string text(clan::string_format("Start Y : %1", start_y));
 	label_start_y->set_text(text);
 }
 void Options::slider_length_y_changed()
 {
 	length_y = get_value(slider_length_y, MAX_LENGTH);
-	std::string text(string_format("Length Y : %1", length_y));
+	std::string text(clan::string_format("Length Y : %1", length_y));
 	label_length_y->set_text(text);
 }
 void Options::slider_position_z_changed()
 {
 	position_z = get_value(slider_position_z, MAX_POSITION);
-	std::string text(string_format("Position Z : %1", position_z));
+	std::string text(clan::string_format("Position Z : %1", position_z));
 	label_position_z->set_text(text);
 }
 void Options::slider_position_w_changed()
 {
 	position_w = get_value(slider_position_w, MAX_POSITION);
-	std::string text(string_format("Position W : %1", position_w));
+	std::string text(clan::string_format("Position W : %1", position_w));
 	label_position_w->set_text(text);
 }
 
@@ -329,10 +329,10 @@ void Options::update_all_slider_text()
 	slider_position_w_changed();
 }
 
-ComboBox *Options::create_format_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_format_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(180, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -343,18 +343,18 @@ ComboBox *Options::create_format_combo_box(int xpos, int ypos, PopupMenu &menu, 
 	return combo;
 }
 
-void Options::make_format_menu(PopupMenu &menu)
+void Options::make_format_menu(clan::PopupMenu &menu)
 {
-	menu.insert_item("cl_rgb8");
-	menu.insert_item("cl_rgba8");
-	menu.insert_item("cl_r8");
-	menu.insert_item("cl_r32f");
+	menu.insert_item("clan::tf_rgb8");
+	menu.insert_item("clan::tf_rgba8");
+	menu.insert_item("clan::tf_r8");
+	menu.insert_item("clan::tf_r32f");
 }
 
-ComboBox *Options::create_dimension_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_dimension_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(180, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -365,7 +365,7 @@ ComboBox *Options::create_dimension_combo_box(int xpos, int ypos, PopupMenu &men
 	return combo;
 }
 
-void Options::make_dimension_menu(PopupMenu &menu)
+void Options::make_dimension_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("1D");
 	menu.insert_item("2D");
@@ -373,11 +373,11 @@ void Options::make_dimension_menu(PopupMenu &menu)
 	menu.insert_item("4D");
 }
 
-Label *Options::create_combobox_label(ComboBox *combo, const char *text)
+clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *text)
 {
-	Label *component = new Label(this);
-	Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(Rect(combo_geometry.left, combo_geometry.top - 20, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect combo_geometry = combo->get_geometry();
+	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
 	component->set_text(text);
 	return component;
 }
