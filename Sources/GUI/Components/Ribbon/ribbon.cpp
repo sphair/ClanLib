@@ -40,17 +40,9 @@
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../../gui_css_strings.h"
-
+#include "API/GUI/gui_manager.h"
+#include "API/GUI/gui_window_manager.h"
 #include "ribbon_impl.h"
-
-#ifdef WIN32
-#define GLASS_EFFECT
-#endif
-
-#ifdef GLASS_EFFECT
-#include <dwmapi.h>
-#pragma comment(lib, "dwmapi.lib")
-#endif
 
 namespace clan
 {
@@ -76,20 +68,11 @@ Ribbon::Ribbon(GUIComponent *container)
 	impl->part_tab = GUIThemePart(this, "tab");
 	impl->part_tab_background = GUIThemePart(this, "tab-background");
 
-#ifdef GLASS_EFFECT
-	// To do: only blur the right area instead of everything.
-	HWND hwnd = get_display_window().get_hwnd();
-	DWM_BLURBEHIND blur_behind = { 0 };
-	blur_behind.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION | DWM_BB_TRANSITIONONMAXIMIZED;
-	blur_behind.fEnable = TRUE;
-	blur_behind.fTransitionOnMaximized = TRUE;
-	blur_behind.hRgnBlur = 0;
-	DwmEnableBlurBehindWindow(hwnd, &blur_behind);
-
-	MARGINS margins = { 0 };
-	margins.cyTopHeight = impl->part_tab_background.get_css_height() + 1;
-	DwmExtendFrameIntoClientArea(hwnd, &margins);
-#endif
+	if (get_gui_manager().get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
+	{
+		get_display_window().enable_alpha_channel(Rect());
+		get_display_window().extend_frame_into_client_area(impl->part_tab_background.get_css_height());
+	}
 }
 
 Ribbon::~Ribbon()
