@@ -159,15 +159,15 @@ int App::start(const std::vector<std::string> &args)
 			tux_position.y -= tux.get_height()/2;
 
 			// Give tux circle blue outer outline, because it looks nice
-			canvas.draw_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+			canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
 			// Make see through border
 			canvas.set_blend_state(blend_state_off);
-			canvas.draw_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, Colorf(0.0f, 0.0f, 0.0f, 0.0f));
+			canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+tux_circle-2, Colorf(0.0f, 0.0f, 0.0f, 0.0f));
 			canvas.reset_blend_state();
 
 			// Give tux circle blue outline, to mask the alpha channel
-			canvas.draw_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
+			canvas.fill_circle(tux_position.x + tux_radius, tux_position.y + tux_radius, tux_radius+2, Colorf(0.0f, 0.0f, 1.0f, 1.0f));
 
 			// Draw tux
 			tux.draw(canvas, tux_position.x, tux_position.y);
