@@ -166,7 +166,7 @@ public:
 	FontDescription &operator =(const FontDescription &copy);
 
 	// \brief Copy the entire font description (not just the implementation)
-	void clone(const FontDescription &copy);
+	FontDescription clone() const;
 
 	/// \brief Sets the typeface name
 	void set_typeface_name(const std::string &name);

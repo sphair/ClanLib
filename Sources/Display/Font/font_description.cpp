@@ -190,26 +190,25 @@ FontDescription &FontDescription::operator =(const FontDescription &copy)
 	return *this;
 }
 
-void FontDescription::clone(const FontDescription &copy)
+FontDescription FontDescription::clone() const
 {
-	if (this != &copy)
-	{
-		impl->typeface_name = copy.impl->typeface_name;
-		impl->filename = copy.impl->filename;
-		impl->height = copy.impl->height;
-		impl->average_width = copy.impl->average_width;
-		impl->escapement = copy.impl->escapement;
-		impl->orientation = copy.impl->orientation;
-		impl->weight = copy.impl->weight;
-		impl->italic = copy.impl->italic;
-		impl->underline = copy.impl->underline;
-		impl->strikeout = copy.impl->strikeout;
-		impl->fixed_pitch = copy.impl->fixed_pitch;
-		impl->anti_alias = copy.impl->anti_alias;
-		impl->subpixel = copy.impl->subpixel;
-		impl->charset = copy.impl->charset;
-		impl->cached = copy.impl->cached;
-	}
+	FontDescription copy;
+	copy.impl->typeface_name = impl->typeface_name;
+	copy.impl->filename = impl->filename;
+	copy.impl->height = impl->height;
+	copy.impl->average_width = impl->average_width;
+	copy.impl->escapement = impl->escapement;
+	copy.impl->orientation = impl->orientation;
+	copy.impl->weight = impl->weight;
+	copy.impl->italic = impl->italic;
+	copy.impl->underline = impl->underline;
+	copy.impl->strikeout = impl->strikeout;
+	copy.impl->fixed_pitch = impl->fixed_pitch;
+	copy.impl->anti_alias = impl->anti_alias;
+	copy.impl->subpixel = impl->subpixel;
+	copy.impl->charset = impl->charset;
+	copy.impl->cached = impl->cached;
+	return copy;
 }
 
 

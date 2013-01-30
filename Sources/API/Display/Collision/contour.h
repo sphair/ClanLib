@@ -96,7 +96,7 @@ public:
 	bool operator<(const Contour &other) const;
 
 	/// \brief Makes a copy of the contour
-	Contour clone();
+	Contour clone() const;
 /// \}
 	
 /// \name Implementation

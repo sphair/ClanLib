@@ -230,7 +230,7 @@ public:
 
 	/// \brief Copies all information from another sprite into this, not sharing animation state.
 	/** This will not share animation state afterwards, like sprite1 = sprite2 would do. */
-	void clone(const Sprite &source);
+	Sprite clone() const;
 
 	/// \brief Draw sprite on graphic context.
 	///
