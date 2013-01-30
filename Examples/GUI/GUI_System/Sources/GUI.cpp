@@ -48,7 +48,7 @@ int GUI::start(const std::vector<std::string> &args)
 
 	gui_system.reset(new GUI_System(this) );
 
-	gui_manager.exec();
+	gui_system->gui_manager.exec();
 
 	return 0;
 }
@@ -60,40 +60,15 @@ GUI::~GUI()
 const char *GUI::get_theme_location()
 {
 	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/theme.css";
+		return "../../../Resources/GUIThemeAero";
 
 	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/theme.css";
+		return "../../../Resources/GUIThemeAeroPacked";
 
 	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/theme.css";
+		return "../../../Resources/GUIThemeBasic";
 
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/theme.css";
+	return "../../../Resources/GUIThemeAero";
 
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/theme.css";
-
-	return "../../../Resources/GUIThemeLuna/theme.css";
-}
-
-const char *GUI::get_resources_location()
-{
-	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/resources.xml";
-
-	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/resources.xml";
-
-	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/resources.xml";
-
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/resources.xml";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/resources.xml";
-
-	return "../../../Resources/GUIThemeLuna/resources.xml";
 }
 
