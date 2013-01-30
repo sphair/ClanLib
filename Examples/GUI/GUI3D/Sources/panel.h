@@ -34,12 +34,12 @@
 
 class GUI;
 
-class Panel : public GUIComponent, public Component3D
+class Panel : public clan::GUIComponent, public Component3D
 {
 public:
-	Panel(GUI &gui, Rect gui_position);
+	Panel(GUI &gui, clan::Rect gui_position);
 	virtual ~Panel();
 
 private:
-	void on_render(GraphicContext &gc, const Rect &update_rect);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 };

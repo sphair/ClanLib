@@ -41,22 +41,25 @@ public:
 
 	int start(const std::vector<std::string> &args);
 
-	DisplayWindow &get_window() { return window; }
+	clan::DisplayWindow &get_window() { return window; }
 
-	const Mat4f &get_projection_matrix() const { return projection_matrix; }
+	const clan::Mat4f &get_projection_matrix() const { return projection_matrix; }
+
+	clan::Canvas get_canvas() const {return canvas; }
 
 private:
-	void on_input_down(const InputEvent &key);
+	void on_input_down(const clan::InputEvent &key);
 	void on_window_close();
 	void calculate_matrix();
 	void control_window();
 
 private:
 	bool quit;
-	DisplayWindow window;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
 
-	Mat4f projection_matrix;
-	Mat4f modelview_matrix;
+	clan::Mat4f projection_matrix;
+	clan::Mat4f modelview_matrix;
 
 	Window1 *window1;
 	Slider *slider_1_xrotation;

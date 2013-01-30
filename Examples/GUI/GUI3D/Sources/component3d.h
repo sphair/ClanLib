@@ -38,10 +38,10 @@ public:
 	Component3D();
 	virtual ~Component3D();
 
-	Mat4f object_matrix;
-	Mat4f resultant_matrix;
+	clan::Mat4f object_matrix;
+	clan::Mat4f resultant_matrix;
 
-	Colorf component_color;
+	clan::Colorf component_color;
 private:
 
 };

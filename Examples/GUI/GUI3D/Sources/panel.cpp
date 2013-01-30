@@ -32,7 +32,7 @@
 #include "panel.h"
 #include "gui.h"
 
-Panel::Panel(GUI &gui, Rect gui_position) : GUIComponent(&gui.get_gui_manager(), GUITopLevelDescription("Panel", gui_position, false))
+Panel::Panel(GUI &gui, clan::Rect gui_position) : GUIComponent(&gui.get_gui_manager(), clan::GUITopLevelDescription("Panel", gui_position, false))
 {
 	func_render().set(this, &Panel::on_render);
 }
@@ -42,8 +42,8 @@ Panel::~Panel()
 
 }
 
-void Panel::on_render(GraphicContext &gc, const Rect &update_rect)
+void Panel::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect rect = get_geometry();
-	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 0.0f));
+	clan::Rect rect = get_geometry();
+	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.0f, 0.0f));
 }

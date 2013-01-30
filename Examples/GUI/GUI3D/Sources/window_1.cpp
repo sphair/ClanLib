@@ -31,13 +31,13 @@
 #include "gui.h"
 #include "window_1.h"
 
-Window1::Window1(GUI &gui, Rect gui_position) :
-	Window(&gui.get_gui_manager(), GUITopLevelDescription("Window 1", gui_position, false))
+Window1::Window1(GUI &gui, clan::Rect gui_position) :
+	GUIComponent(&gui.get_gui_manager(), clan::GUITopLevelDescription("Window 1", gui_position, false))
 {
-	Rect client_area = get_client_area();
+	clan::Rect client_area = get_content_box();
 
-	ScrollBar *scrollbar_vertical = new ScrollBar(this);
-	scrollbar_vertical->set_geometry(Rect(client_area.left + 1, client_area.top + 10, Size(17, 200)));
+	clan::ScrollBar *scrollbar_vertical = new clan::ScrollBar(this);
+	scrollbar_vertical->set_geometry(clan::Rect(client_area.left + 1, client_area.top + 10, clan::Size(17, 200)));
 	scrollbar_vertical->set_vertical();
 	scrollbar_vertical->set_min(0);
 	scrollbar_vertical->set_max(100);
@@ -45,8 +45,8 @@ Window1::Window1(GUI &gui, Rect gui_position) :
 	scrollbar_vertical->set_page_step(40);
 	scrollbar_vertical->set_position(50);
 
-	ScrollBar *scrollbar_horizontal = new ScrollBar(this);
-	scrollbar_horizontal->set_geometry(Rect(client_area.left + 26, client_area.top + 10, Size(200, 17)));
+	clan::ScrollBar *scrollbar_horizontal = new clan::ScrollBar(this);
+	scrollbar_horizontal->set_geometry(clan::Rect(client_area.left + 26, client_area.top + 10, clan::Size(200, 17)));
 	scrollbar_horizontal->set_horizontal();
 	scrollbar_horizontal->set_min(0);
 	scrollbar_horizontal->set_max(100);
@@ -54,8 +54,8 @@ Window1::Window1(GUI &gui, Rect gui_position) :
 	scrollbar_horizontal->set_page_step(40);
 	scrollbar_horizontal->set_position(50);
 
-	PushButton *pushbutton1 = new PushButton(this);
-	pushbutton1->set_geometry(Rect(client_area.left + 70, client_area.top + 100, Size(128, 40)));
+	clan::PushButton *pushbutton1 = new clan::PushButton(this);
+	pushbutton1->set_geometry(clan::Rect(client_area.left + 70, client_area.top + 100, clan::Size(128, 40)));
 	pushbutton1->set_text("Push Button");
 }
 

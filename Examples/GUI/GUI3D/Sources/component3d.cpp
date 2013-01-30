@@ -33,9 +33,9 @@
 
 Component3D::Component3D()
 {
-	component_color = Colorf(1.0f, 1.0f, 1.0f, 1.0f);
-	object_matrix = Mat4f::identity();
-	resultant_matrix = Mat4f::identity();
+	component_color = clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f);
+	object_matrix = clan::Mat4f::identity();
+	resultant_matrix = clan::Mat4f::identity();
 }
 
 Component3D::~Component3D()

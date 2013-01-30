@@ -30,10 +30,10 @@
 
 #include "slider.h"
 
-Slider::Slider(GUI &gui, Rect gui_position) :Panel(gui, gui_position)
+Slider::Slider(GUI &gui, clan::Rect gui_position) :Panel(gui, gui_position)
 {
-	component = new Slider(this);
-	component->set_geometry(Rect(0, 0, gui_position.get_size()));
+	component = new clan::Slider(this);
+	component->set_geometry(clan::Rect(0, 0, gui_position.get_size()));
 	component->set_vertical(false);
 	component->set_horizontal(true);
 	component->set_min(0);

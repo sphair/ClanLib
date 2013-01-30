@@ -32,10 +32,10 @@
 
 class GUI;
 
-class Window1 : public Window, public Component3D
+class Window1 : public clan::GUIComponent, public Component3D
 {
 public:
-	Window1(GUI &gui, Rect gui_position);
+	Window1(GUI &gui, clan::Rect gui_position);
 	virtual ~Window1();
 
 private:
