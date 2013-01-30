@@ -362,13 +362,13 @@ public:
 /// \{
 public:
 	/// \brief Create a new default graphic context compatible with this one
-	GraphicContext create();
+	GraphicContext create() const;
 
 	/// \brief Create a new default graphic context with a frame buffer selected
-	GraphicContext create(FrameBuffer &buffer);
+	GraphicContext create(FrameBuffer &buffer) const;
 
 	/// \brief Create a new default graphic context cloned with this one
-	GraphicContext clone();
+	GraphicContext clone() const;
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format = tf_rgba8, bool clamp = true);

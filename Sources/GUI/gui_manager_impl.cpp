@@ -106,7 +106,7 @@ Font GUIManager_Impl::get_registered_font(const FontDescription &desc)
 	// Match font where the registered font details have not been set
 	for (it = named_font_cache.begin(); it != named_font_cache.end(); ++it)
 	{
-		desc_copy.clone(desc);
+		desc_copy = desc.clone();
 		const FontDescription &current_desc = (*it).desc;
 
 		// Copy the unset details

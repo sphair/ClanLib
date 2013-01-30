@@ -274,29 +274,30 @@ void Sprite::set_image_data(const Sprite &image_source)
 	restart();
 }
 
-void Sprite::clone(const Sprite &source)
+Sprite Sprite::clone() const
 {
-	if(!impl)
-		impl = std::shared_ptr<Sprite_Impl>(new Sprite_Impl());
+	Sprite copy;
+	copy.impl = std::shared_ptr<Sprite_Impl>(new Sprite_Impl());
 
-	impl->angle = source.impl->angle;
-	impl->base_angle = source.impl->base_angle;
-	impl->scale_x = source.impl->scale_x;
-	impl->scale_y = source.impl->scale_y;
-	impl->color = source.impl->color;
-	impl->linear_filter = source.impl->linear_filter;
-	impl->translation_hotspot = source.impl->translation_hotspot;
-	impl->rotation_hotspot = source.impl->rotation_hotspot;
-	impl->translation_origin = source.impl->translation_origin;
-	impl->rotation_origin = source.impl->rotation_origin;
-	impl->id = source.impl->id;
-	impl->play_loop = source.impl->play_loop;
-	impl->play_backward = source.impl->play_backward;
-	impl->play_pingpong = source.impl->play_pingpong;
-	impl->show_on_finish = source.impl->show_on_finish;
-	impl->frames = source.impl->frames;
+	copy.impl->angle = impl->angle;
+	copy.impl->base_angle = impl->base_angle;
+	copy.impl->scale_x = impl->scale_x;
+	copy.impl->scale_y = impl->scale_y;
+	copy.impl->color = impl->color;
+	copy.impl->linear_filter = impl->linear_filter;
+	copy.impl->translation_hotspot = impl->translation_hotspot;
+	copy.impl->rotation_hotspot = impl->rotation_hotspot;
+	copy.impl->translation_origin = impl->translation_origin;
+	copy.impl->rotation_origin = impl->rotation_origin;
+	copy.impl->id = impl->id;
+	copy.impl->play_loop = impl->play_loop;
+	copy.impl->play_backward = impl->play_backward;
+	copy.impl->play_pingpong = impl->play_pingpong;
+	copy.impl->show_on_finish = impl->show_on_finish;
+	copy.impl->frames = impl->frames;
 
-	restart();
+	copy.restart();
+	return copy;
 }
 
 void Sprite::draw(Canvas &canvas, float x, float y)

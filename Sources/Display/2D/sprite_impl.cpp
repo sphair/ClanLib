@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Kenneth Gangstoe
+**    Mark Page
 */
 
 #include "Display/precomp.h"

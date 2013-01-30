@@ -70,7 +70,7 @@ bool Contour::operator!=(const Contour &other) const { return impl!=other.impl; 
 
 bool Contour::operator<(const Contour &other) const { return impl < other.impl; }
 
-Contour Contour::clone()
+Contour Contour::clone() const
 {
 	Contour copy;
 	copy.impl->points = impl->points;

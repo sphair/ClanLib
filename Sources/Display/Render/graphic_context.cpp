@@ -71,7 +71,7 @@ GraphicContext::GraphicContext(GraphicContextProvider *provider)
 
 }
 
-GraphicContext GraphicContext::create()
+GraphicContext GraphicContext::create() const
 {
 	GraphicContext gc;
 	gc.impl = std::shared_ptr<GraphicContext_Impl> (new GraphicContext_Impl(impl.get(), false));
@@ -79,7 +79,7 @@ GraphicContext GraphicContext::create()
 	return gc;
 }
 
-GraphicContext GraphicContext::create(FrameBuffer &buffer)
+GraphicContext GraphicContext::create(FrameBuffer &buffer) const
 {
 	GraphicContext gc;
 	gc.impl = std::shared_ptr<GraphicContext_Impl> (new GraphicContext_Impl(impl.get(), false));
@@ -91,7 +91,7 @@ GraphicContext GraphicContext::create(FrameBuffer &buffer)
 }
 
 
-GraphicContext GraphicContext::clone()
+GraphicContext GraphicContext::clone() const
 {
 	GraphicContext gc;
 	gc.impl = std::shared_ptr<GraphicContext_Impl> (new GraphicContext_Impl(impl.get(), true));
