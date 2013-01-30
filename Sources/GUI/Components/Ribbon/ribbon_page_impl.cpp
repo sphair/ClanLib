@@ -25,49 +25,53 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
-#pragma once
-
-#include "../gui_component.h"
+#include "GUI/precomp.h"
+#include "API/GUI/Components/ribbon_page.h"
+#include "API/GUI/Components/ribbon_section.h"
+#include "API/GUI/Components/ribbon.h"
+#include "ribbon_page_impl.h"
+#include "ribbon_section_impl.h"
 
 namespace clan
 {
 
-class Ribbon;
-class RibbonSection;
-class RibbonPage_Impl;
-class Ribbon_Impl;
+//////////////////////////////////////////////////////////////////////////
+// Construction
 
-class RibbonPage : public GUIComponent
+RibbonPage_Impl::RibbonPage_Impl(): text(text), show_tab(true)
 {
-/// \name Construction
-/// \{
-public:
-	RibbonPage(Ribbon *parent, const std::string &text);
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool get_show_tab() const;
+}
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
+//////////////////////////////////////////////////////////////////////////
+// Attributes
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RibbonPage_Impl> impl;
 
-	friend class Ribbon_Impl;
-	friend class RibbonSection;
-/// \}
-};
+//////////////////////////////////////////////////////////////////////////
+// Operations
+
+void RibbonPage_Impl::add_section(RibbonSection *section)
+{
+	sections.push_back(section);
+	on_resized();
+}
+
+//////////////////////////////////////////////////////////////////////////
+// Implementation
+
+void RibbonPage_Impl::on_resized()
+{
+	Rect page_box = component->get_size();
+	int section_x = 5;
+	for (size_t i = 0; i < sections.size(); i++)
+	{
+		Rect section_box(section_x, 5, section_x + sections[i]->impl->size, page_box.bottom);
+		sections[i]->set_geometry(section_box);
+		section_x = section_box.right + 5;
+	}
+}
 
 }

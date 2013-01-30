@@ -25,49 +25,40 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
-
-#include "../gui_component.h"
 
 namespace clan
 {
 
 class Ribbon;
-class RibbonSection;
-class RibbonPage_Impl;
-class Ribbon_Impl;
 
-class RibbonPage : public GUIComponent
+class Ribbon_Impl
 {
-/// \name Construction
-/// \{
 public:
-	RibbonPage(Ribbon *parent, const std::string &text);
+	Ribbon_Impl();
+	~Ribbon_Impl();
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool get_show_tab() const;
+	void add_page(RibbonPage *page);
+	void on_menu_button_clicked();
+	void on_render(Canvas &canvas, const Rect &clip_rect);
+	void on_resized();
+	bool on_input_pressed(const InputEvent &e);
+	bool on_input_released(const InputEvent &e);
+	bool on_input_pointer_moved(const InputEvent &e);
+	void paint_tabs(Canvas &canvas, const Rect &clip_rect);
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
+	Ribbon *component;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RibbonPage_Impl> impl;
+	PushButton *menu_button;
+	RibbonMenu *menu;
+	std::vector<RibbonPage *> pages;
+	GUIThemePart part_tab;
+	GUIThemePart part_tab_background;
+	unsigned int current_page_index;
 
-	friend class Ribbon_Impl;
-	friend class RibbonSection;
-/// \}
 };
 
 }

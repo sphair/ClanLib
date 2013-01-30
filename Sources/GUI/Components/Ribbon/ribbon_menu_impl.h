@@ -25,49 +25,43 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
-#include "../gui_component.h"
-
 namespace clan
 {
 
-class Ribbon;
-class RibbonSection;
-class RibbonPage_Impl;
-class Ribbon_Impl;
+class RibbonMenu;
 
-class RibbonPage : public GUIComponent
+class RibbonMenu_Impl
 {
-/// \name Construction
-/// \{
 public:
-	RibbonPage(Ribbon *parent, const std::string &text);
+	RibbonMenu_Impl();
 
-/// \}
-/// \name Attributes
-/// \{
-public:
-	bool get_show_tab() const;
+	void start(const Point &pos);
+	void end();
+	void on_render(Canvas &canvas, const Rect &update_box);
+	void on_resized();
+	void on_filter_message(std::shared_ptr<GUIMessage> &message);
+	void on_filter_input_message(std::shared_ptr<GUIMessage_Input> &message);
+	int update_item_boxes();
+	static GUITopLevelDescription create_toplevel_description();
 
-/// \}
-/// \name Operations
-/// \{
-public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
+	RibbonMenu *component;
 
-/// \}
-/// \name Implementation
-/// \{
-private:
-	std::shared_ptr<RibbonPage_Impl> impl;
+	int current_item;
+	std::vector<RibbonMenuItem> items;
+	std::vector<Rect> item_boxes;
+	GUIThemePart part_menu_item;
+	GUIThemePart part_menu_item_selected;
+	GUIThemePart part_menu_item_separator;
 
-	friend class Ribbon_Impl;
-	friend class RibbonSection;
-/// \}
+	bool running;
+	Slot slot_filter;
+
+
 };
 
 }

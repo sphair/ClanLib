@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GUI/precomp.h"
@@ -40,6 +41,8 @@
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "../../gui_css_strings.h"
 
+#include "ribbon_impl.h"
+
 #ifdef WIN32
 #define GLASS_EFFECT
 #endif
@@ -53,23 +56,25 @@ namespace clan
 {
 
 Ribbon::Ribbon(GUIComponent *container)
-: GUIComponent(container, "ribbon"), menu_button(0), current_page_index(0)
+: GUIComponent(container, "ribbon"), impl(new Ribbon_Impl)
 {
-	func_render().set(this, &Ribbon::on_render);
-	func_resized().set(this, &Ribbon::on_resized);
-	func_input_pressed().set(this, &Ribbon::on_input_pressed);
-	func_input_released().set(this, &Ribbon::on_input_released);
-	func_input_pointer_moved().set(this, &Ribbon::on_input_pointer_moved);
+	impl->component = this;
 
-	menu_button = new PushButton(this);
-	menu_button->set_class("menu");
-	menu_button->set_geometry(Rect(0, 0, menu_button->get_css_values().get_box().width.length.value, menu_button->get_css_values().get_box().height.length.value));
-	menu_button->func_clicked().set(this, &Ribbon::on_menu_button_clicked);
+	func_render().set(impl.get(), &Ribbon_Impl::on_render);
+	func_resized().set(impl.get(), &Ribbon_Impl::on_resized);
+	func_input_pressed().set(impl.get(), &Ribbon_Impl::on_input_pressed);
+	func_input_released().set(impl.get(), &Ribbon_Impl::on_input_released);
+	func_input_pointer_moved().set(impl.get(), &Ribbon_Impl::on_input_pointer_moved);
 
-	menu = new RibbonMenu(this);
+	impl->menu_button = new PushButton(this);
+	impl->menu_button->set_class("menu");
+	impl->menu_button->set_geometry(Rect(0, 0, impl->menu_button->get_css_values().get_box().width.length.value, impl->menu_button->get_css_values().get_box().height.length.value));
+	impl->menu_button->func_clicked().set(impl.get(), &Ribbon_Impl::on_menu_button_clicked);
 
-	part_tab = GUIThemePart(this, "tab");
-	part_tab_background = GUIThemePart(this, "tab-background");
+	impl->menu = new RibbonMenu(this);
+
+	impl->part_tab = GUIThemePart(this, "tab");
+	impl->part_tab_background = GUIThemePart(this, "tab-background");
 
 #ifdef GLASS_EFFECT
 	// To do: only blur the right area instead of everything.
@@ -82,120 +87,25 @@ Ribbon::Ribbon(GUIComponent *container)
 	DwmEnableBlurBehindWindow(hwnd, &blur_behind);
 
 	MARGINS margins = { 0 };
-	margins.cyTopHeight = part_tab_background.get_css_height() + 1;
+	margins.cyTopHeight = impl->part_tab_background.get_css_height() + 1;
 	DwmExtendFrameIntoClientArea(hwnd, &margins);
 #endif
 }
 
 Ribbon::~Ribbon()
 {
-	for (size_t i = 0; i < pages.size(); i++)
-		delete pages[i];
+
 }
+
+RibbonMenu *Ribbon::get_menu()
+{
+	return impl->menu;
+}
+
 
 Size Ribbon::get_css_size() const
 {
 	return get_size();
-}
-
-void Ribbon::add_page(RibbonPage *page)
-{
-	bool is_page_visible = (current_page_index == pages.size());
-	pages.push_back(page);
-	page->set_visible(is_page_visible, false);
-	on_resized();
-}
-
-void Ribbon::on_resized()
-{
-	int tab_height = part_tab.get_css_height();
-	Rect page_box = get_size();
-	page_box.top = tab_height;
-	for (size_t i = 0; i < pages.size(); i++)
-		pages[i]->set_geometry(page_box);
-	request_repaint();
-}
-
-void Ribbon::on_render(Canvas &canvas, const Rect &clip_rect)
-{
-	part_tab_background.render_box(canvas, Size(get_size().width, part_tab_background.get_css_height()));
-	paint_tabs(canvas, clip_rect);
-}
-
-void Ribbon::paint_tabs(Canvas &canvas, const Rect &clip_rect)
-{
-	int tab_x = menu_button->get_width() + 1;
-	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
-	{
-		if (pages[page_index]->show_tab)
-		{
-			Size size_tab_text = part_tab.get_render_text_size(canvas, pages[page_index]->text);
-			int tab_width = max(size_tab_text.width, 40)+12;
-			Rect current_tab(Point(tab_x, 0), Size(tab_width+12, part_tab.get_css_height()));
-
-			std::string &custom_state = pages[page_index]->tab_css_custom_state;
-			if (!custom_state.empty())
-				part_tab.set_pseudo_class(custom_state, true);
-			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
-			part_tab.render_box(canvas, current_tab);
-			part_tab.render_text(canvas, pages[page_index]->text, current_tab, current_tab.bottom - 7);
-
-			if (!custom_state.empty())
-				part_tab.set_pseudo_class(custom_state, false);
-
-			pages[page_index]->position = current_tab;
-			tab_x = current_tab.right+2;
-		}
-	}
-}
-
-bool Ribbon::on_input_pressed(const InputEvent &e)
-{
-	if (e.id == mouse_left)
-	{
-		for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
-		{
-			if (pages[page_index]->show_tab)
-			{
-				if (pages[page_index]->position.contains(e.mouse_pos))
-				{
-					if (current_page_index != page_index)
-						pages[current_page_index]->set_visible(false);
-					current_page_index = page_index;
-					pages[current_page_index]->set_visible(true);
-					request_repaint();
-					break;
-				}
-			}
-		}
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Ribbon::on_input_released(const InputEvent &e)
-{
-	if (e.id == mouse_left)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Ribbon::on_input_pointer_moved(const InputEvent &e)
-{
-	return true;
-}
-
-void Ribbon::on_menu_button_clicked()
-{
-	menu->start(component_to_screen_coords(Point(0, -2)));
 }
 
 }

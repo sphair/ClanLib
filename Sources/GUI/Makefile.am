@@ -63,6 +63,10 @@ libclan30GUI_la_SOURCES = \
 	Components/Ribbon/ribbon_menu.cpp \
 	Components/Ribbon/ribbon_page.cpp \
 	Components/Ribbon/ribbon_section.cpp \
+	Components/Ribbon/ribbon_impl.cpp \
+	Components/Ribbon/ribbon_impl_menu.cpp \
+	Components/Ribbon/ribbon_impl_page.cpp \
+	Components/Ribbon/ribbon_impl_section.cpp \
 	Layout/gui_css_display_visitor.cpp \
 	Layout/gui_find_preferred_height.cpp \
 	Layout/gui_find_preferred_width.cpp \

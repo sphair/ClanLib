@@ -40,6 +40,7 @@ class RibbonMenu;
 class RibbonPage;
 class RibbonSection;
 class PushButton;
+class Ribbon_Impl;
 
 /// \brief Ribbon component.
 ///
@@ -56,7 +57,7 @@ public:
 /// \name Attributes
 /// \{
 public:
-	RibbonMenu *get_menu() { return menu; }
+	RibbonMenu *get_menu();
 
 	Size get_css_size() const;
 
@@ -69,21 +70,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	void add_page(RibbonPage *page);
-	void on_menu_button_clicked();
-	void on_render(Canvas &canvas, const Rect &clip_rect);
-	void on_resized();
-	bool on_input_pressed(const InputEvent &e);
-	bool on_input_released(const InputEvent &e);
-	bool on_input_pointer_moved(const InputEvent &e);
-	void paint_tabs(Canvas &canvas, const Rect &clip_rect);
-
-	PushButton *menu_button;
-	RibbonMenu *menu;
-	std::vector<RibbonPage *> pages;
-	GUIThemePart part_tab;
-	GUIThemePart part_tab_background;
-	unsigned int current_page_index;
+	std::shared_ptr<Ribbon_Impl> impl;
 
 	friend class RibbonPage;
 /// \}
