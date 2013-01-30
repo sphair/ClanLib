@@ -36,9 +36,9 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void draw_text(GraphicContext &gc, Font &font, int ypos, const char *text);
+	void draw_text(clan::Canvas &canvas, clan::Font &font, int ypos, const char *text);
 
 private:
 	bool quit;
