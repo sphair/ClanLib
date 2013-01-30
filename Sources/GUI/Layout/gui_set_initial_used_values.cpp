@@ -38,7 +38,43 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 	const CSSComputedBox &properties = node->element.get_css_values().get_box();
 	if (node->parent)
 	{
-		if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
+		if (!node->use_auto_geometry)
+		{
+			// Components in manual geometry mode behave like absolute positioned elements as if all the left + top + right + bottom + width + height properties
+			// had been specified to match the manual geometry (border box) dimensions.
+
+			GUICSSUsedValues containing_box = node->parent->impl->css_used_values;
+			containing_box.width_undetermined = false;
+			containing_box.height_undetermined = false;
+			GUICSSInitialUsedValues::visit(node->css_used_values, properties, containing_box);
+
+			node->css_used_values.width =
+				node->geometry.get_width() -
+				node->css_used_values.border.left -
+				node->css_used_values.border.right -
+				node->css_used_values.padding.left -
+				node->css_used_values.padding.right;
+
+			node->css_used_values.width_undetermined = false;
+
+			node->css_used_values.height =
+				node->geometry.get_height() -
+				node->css_used_values.border.top -
+				node->css_used_values.border.bottom -
+				node->css_used_values.padding.top -
+				node->css_used_values.padding.bottom;
+
+			node->css_used_values.height_undetermined = false;
+
+			// TBD: what to do about the margin values? Since geometry is the border box it doesn't really matter what values they get.
+			node->css_used_values.margin.top = 0.0f;
+			node->css_used_values.margin.bottom = 0.0f;
+			node->css_used_values.margin.left = 0.0f;
+			node->css_used_values.margin.right = 0.0f;
+
+			GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties, containing_box); // TBD: does min/max constraints win over the manual set_geometry() size?
+		}
+		else if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
 		{
 			// To do: find nearest ancestor with 'position:relative'
 			GUICSSUsedValues containing_box = node->parent->impl->css_used_values;

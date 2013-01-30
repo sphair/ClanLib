@@ -41,19 +41,17 @@ namespace clan
 // "initial containing block" virtual parent.
 void GUILayoutContent::node(GUIComponent_Impl *node)
 {
-	GUISetInitialUsedValues initial_visitor;
 	if (node->parent == 0)
+	{
+		GUISetInitialUsedValues initial_visitor;
 		initial_visitor.node(node);
-	node->visit_children(&initial_visitor, true);
+	}
 
 	GUILayoutBoxContent layout_visitor;
 	layout_visitor.node(node);
-	node->visit_children(&layout_visitor, true);
 
 	GUILayoutAbsoluteOrFixed absolute_visitor;
-	if (node->parent == 0)
-		absolute_visitor.node(node);
-	node->visit_children(&absolute_visitor, true);
+	node->visit_children(&absolute_visitor, false);
 }
 
 }

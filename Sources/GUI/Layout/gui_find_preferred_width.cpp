@@ -28,6 +28,7 @@
 
 #include "GUI/precomp.h"
 #include "gui_find_preferred_width.h"
+#include "gui_set_initial_used_values.h"
 #include "../gui_element.h"
 
 namespace clan
@@ -42,6 +43,9 @@ void GUIFindPreferredWidth::flex_horizontal_node(GUIComponent_Impl *node)
 	{
 		if (is_normal_flow(child->impl.get()))
 		{
+			GUISetInitialUsedValues initial_visitor;
+			initial_visitor.node(child->impl.get());
+
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
 			// If the width of the box cannot be determined from CSS, then ask the component:
@@ -67,6 +71,9 @@ void GUIFindPreferredWidth::flex_vertical_node(GUIComponent_Impl *node)
 	{
 		if (is_normal_flow(child->impl.get()))
 		{
+			GUISetInitialUsedValues initial_visitor;
+			initial_visitor.node(child->impl.get());
+
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
 			// If the width of the box cannot be determined from CSS, then ask the component:

@@ -31,6 +31,8 @@
 #include "gui_find_preferred_width.h"
 #include "gui_find_preferred_height.h"
 #include "gui_css_flex_math.h"
+#include "gui_set_initial_used_values.h"
+#include "gui_layout_content.h"
 #include "../gui_element.h"
 
 namespace clan
@@ -44,6 +46,9 @@ void GUILayoutBoxContent::flex_horizontal_node(GUIComponent_Impl *node)
 	{
 		if (is_normal_flow(child->impl.get()))
 		{
+			GUISetInitialUsedValues initial_visitor;
+			initial_visitor.node(child->impl.get());
+
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
 			// If the width of the box cannot be determined from CSS, then ask the component:
@@ -123,6 +128,9 @@ void GUILayoutBoxContent::flex_vertical_node(GUIComponent_Impl *node)
 	{
 		if (is_normal_flow(child->impl.get()))
 		{
+			GUISetInitialUsedValues initial_visitor;
+			initial_visitor.node(child->impl.get());
+
 			GUICSSUsedValues &child_used_values = child->impl->css_used_values;
 
 			// If the width of the box cannot be determined from CSS, then ask the component:
@@ -296,6 +304,9 @@ void GUILayoutBoxContent::set_child_geometry(GUIComponent_Impl *node, GUICompone
 	CSSActualValue x2 = (CSSActualValue)(x + used_border_box_width + 0.5f);
 	CSSActualValue y2 = (CSSActualValue)(y + used_border_box_height + 0.5f);
 	child->impl->set_auto_geometry(Rect(x1, y1, x2, y2));
+
+	GUILayoutBoxContent layout_visitor;
+	layout_visitor.node(child->impl.get());
 }
 
 void GUILayoutBoxContent::find_preferred_width(GUIComponent_Impl *node)
