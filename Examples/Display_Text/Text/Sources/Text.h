@@ -33,11 +33,11 @@ class ExampleText
 public:
 	int start(const std::vector<std::string> &args);
 private:
-	void on_keyboard_up(const InputEvent &key);
+	void on_keyboard_up(const clan::InputEvent &key);
 	void on_window_close();
 
-	void update_text(GraphicContext &gc, FrameBuffer &fb_text, Font &font, std::vector<SpanLayout> &layout);
-	void draw_text(GraphicContext &gc, Texture &texture, Angle angle);
+	void update_text(clan::Canvas &canvas, clan::FrameBuffer &fb_text, clan::Font &font, std::vector<clan::SpanLayout> &layout);
+	void draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan::Angle angle);
 
 	bool quit;
 	float last_fps;
