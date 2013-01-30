@@ -42,11 +42,12 @@ Teapot::Teapot()
 
 void Teapot::create(Canvas &canvas, ResourceManager &resources)
 {
-	teapot_sprites = Sprite(canvas, "teapot", &resources);
+	SpriteDescription desc(canvas, "teapot", &resources);
+	teapot_sprites = Sprite(canvas, desc);
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
-	teapot_collisions = Sprite::create_collision_outlines(canvas, "teapot", &resources, 128, accuracy_high);
+	teapot_collisions = desc.get_collision_outlines(canvas, 128, accuracy_high);
 }
 
 void Teapot::draw_collision_outline(Canvas &canvas)
@@ -65,7 +66,7 @@ void Teapot::clone(const Teapot &source)
 	float_xpos = source.float_xpos;
 	float_ypos = source.float_ypos;
 
-	teapot_sprites.clone(source.teapot_sprites);
+	teapot_sprites = source.teapot_sprites.clone();
 
 	teapot_collisions.resize(source.teapot_collisions.size());
 	for (size_t cnt = 0; cnt < source.teapot_collisions.size(); cnt++)
