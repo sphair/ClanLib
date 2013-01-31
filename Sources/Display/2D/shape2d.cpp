@@ -92,8 +92,10 @@ void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 
 	Path2D path;
 
+	rotationcount *= 4;
+
 	std::vector<Pointf> points;
-	points.resize(rotationcount*4);
+	points.resize(rotationcount);
 
 	for(int i = 0; i < rotationcount ; i++)
 	{
@@ -102,16 +104,6 @@ void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 
 		points[i].x = (center.x + pos1);
 		points[i].y = (center.y + pos2);
-
-		points[rotationcount*2 - (i+1)].x = (center.x - pos1);
-		points[rotationcount*2 - (i+1)].y = (center.y + pos2);
-
-		points[i + rotationcount*2].x = (center.x - pos1);
-		points[i + rotationcount*2].y = (center.y - pos2);
-
-		points[rotationcount*4 - (i+1)].x = (center.x + pos1);
-		points[rotationcount*4 - (i+1)].y = (center.y - pos2);
-
 	}
 
 	path.add_line_to(points);
