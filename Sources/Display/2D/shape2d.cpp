@@ -161,6 +161,22 @@ void Shape2D::add_rounded_rect(const Pointf &origin, const Sizef &size, float ca
 	add_path(path);
 }
 
+void Shape2D::add_rect(const Rectf &rect, bool reverse)
+{
+	Path2D path;
+
+	path.add_line_to(rect.left, rect.top);
+	path.add_line_to(rect.right, rect.top);
+	path.add_line_to(rect.right, rect.bottom);
+	path.add_line_to(rect.left, rect.bottom);
+
+	if (reverse)
+		path.reverse();
+
+	add_path(path);
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Shape2D Implementation:
 
