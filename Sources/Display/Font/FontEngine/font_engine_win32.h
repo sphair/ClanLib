@@ -57,7 +57,7 @@ public:
 	/// \param glyph The glyph
 	FontPixelBuffer get_font_glyph_subpixel(int glyph);
 
-	PathGroup load_glyph_outline(int c, int &out_advance_x);
+	Shape2D load_glyph_outline(int c, int &out_advance_x);
 
 private:
 	inline Pointf PointFXtoPoint(POINTFX &fx)

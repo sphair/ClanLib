@@ -34,7 +34,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/IOData/virtual_file_system.h"
 #include "API/Core/IOData/virtual_directory.h"
-#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/shape.h"
 #include "API/Display/TargetProviders/font_provider.h"
 #include "font_provider_vector.h"
 #include "API/Display/2D/canvas.h"

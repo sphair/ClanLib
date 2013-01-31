@@ -33,7 +33,7 @@
 
 
 #include "../api_display.h"
-#include "path.h"
+#include "path2d.h"
 #include <vector>
 #include "../Render/primitives_array.h"
 #include "color.h"
@@ -43,16 +43,16 @@ namespace clan
 
 class GraphicContext;
 class Canvas;
-class PathGroup_Impl;
+class Shape2D_Impl;
 
-class CL_API_DISPLAY PathGroup
+class CL_API_DISPLAY Shape2D
 {
 /// \name Construction
 /// \{
 
 public:
-	PathGroup();
-	virtual ~PathGroup();
+	Shape2D();
+	virtual ~Shape2D();
 
 
 /// \}
@@ -71,7 +71,7 @@ public:
 
 public:
 
-	void add_path(Path &path);
+	void add_path(Path2D &path);
 
 
 /// \}
@@ -80,7 +80,7 @@ public:
 
 private:
 
-	std::shared_ptr<PathGroup_Impl> impl;
+	std::shared_ptr<Shape2D_Impl> impl;
 
 
 /// \}

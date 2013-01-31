@@ -27,60 +27,51 @@
 **    Mark Page
 */
 
-#pragma once
-
-
 #include "Display/precomp.h"
-#include "API/Display/2D/path_group.h"
-#include "API/Display/2D/path.h"
-#include "path_group_impl.h"
+#include "API/Display/2D/shape2d.h"
+#include "shape2d_impl.h"
+#include "API/Core/Math/ear_clip_result.h"
+#include "API/Display/2D/canvas.h"
+#include "API/Display/Font/font_vector.h"
 #include <vector>
-#include "API/Display/Render/primitives_array.h"
-#include "API/Display/2D/color.h"
-#include "API/Core/Math/ear_clip_triangulator.h"
-#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
 
-class GraphicContext;
-class Canvas;
+/////////////////////////////////////////////////////////////////////////////
+// Shape2D Construction:
 
-class PathGroup_Impl
+Shape2D::Shape2D() : impl(new Shape2D_Impl())
 {
-/// \name Construction
-/// \{
+}
 
-public:
-	PathGroup_Impl();
-	virtual ~PathGroup_Impl();
+Shape2D::~Shape2D()
+{
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Shape2D Attributes:
 
 
-/// \}
-/// \name Attributes
-/// \{
+/////////////////////////////////////////////////////////////////////////////
+// Shape2D Operations:
 
-public:
+void Shape2D::add_path(Path2D &path)
+{
+	impl->add_path(path);
+}
 
-/// \}
-/// \name Operations
-/// \{
+void Shape2D::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation) const
+{
+	impl->get_triangles(out_primitives_array, orientation);
+}
 
-public:
+void Shape2D::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
+{
+	impl->get_outline(out_primitives_array_outline);
+}
 
-	void add_path(Path &path);
-
-	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const;
-	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const;
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-
-	std::vector< Path > contours;
-/// \}
-};
+/////////////////////////////////////////////////////////////////////////////
+// Shape2D Implementation:
 
 }

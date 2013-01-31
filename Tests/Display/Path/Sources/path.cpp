@@ -49,30 +49,30 @@ int PathApp::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &PathApp::on_input_up);
 
-	clan::PathGroup path_group;
-	clan::Path path;
+	clan::Shape2D shape;
+	clan::Path2D path;
 	clan::BezierCurve bezier_curve;
 
 	clan::Font_Vector font(canvas, "tahoma", 128);
 	const std::vector<clan::Vec2f> &primitives_array_g = font.get_glyph_filled('g');
 	const std::vector< std::vector<clan::Vec2f> > &primitives_array_outline_g = font.get_glyph_outline('g');
 
-	path_group = clan::PathGroup();
-	path = clan::Path();
+	shape = clan::Shape2D();
+	path = clan::Path2D();
 	path.add_line_to(10, 200);
 	path.add_line_to(108, 210);
 	path.add_line_to(100, 300);
 	path.add_line_to(20, 310);
-	path_group.add_path(path);
+	shape.add_path(path);
 
 	std::vector<clan::Vec2f> primitives_array_polygon;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_polygon;
-	path_group.get_triangles(primitives_array_polygon);
-	path_group.get_outline(primitives_array_outline_polygon);
+	shape.get_triangles(primitives_array_polygon);
+	shape.get_outline(primitives_array_outline_polygon);
 
 	#define KAPPA		0.5522847498f
-	path_group = clan::PathGroup();
-	path = clan::Path();
+	shape = clan::Shape2D();
+	path = clan::Path2D();
 	float circle_x = 100.0f;
 	float circle_y = 400.0f;
 	float circle_radius = 64.0f;
@@ -92,12 +92,12 @@ int PathApp::start(const std::vector<std::string> &args)
 	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y - circle_radius * 1 * KAPPA));
 	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y - circle_radius * 0));
 	path.add_curve(bezier_curve);
-	path_group.add_path(path);
+	shape.add_path(path);
 
 	std::vector<clan::Vec2f> primitives_array_circle;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;
-	path_group.get_triangles(primitives_array_circle);
-	path_group.get_outline(primitives_array_outline_circle);
+	shape.get_triangles(primitives_array_circle);
+	shape.get_outline(primitives_array_outline_circle);
 
 	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
 

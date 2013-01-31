@@ -26,32 +26,34 @@
 **    Harry Storbacka
 **    Mark Page
 */
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
 
 #pragma once
 
 
-#include "../api_display.h"
+#include "Display/precomp.h"
+#include "API/Display/2D/shape2d.h"
+#include "API/Display/2D/path2d.h"
+#include "shape2d_impl.h"
 #include <vector>
-#include "../../Core/Math/point.h"
-#include "../../Core/Math/ear_clip_triangulator.h"
+#include "API/Display/Render/primitives_array.h"
+#include "API/Display/2D/color.h"
+#include "API/Core/Math/ear_clip_triangulator.h"
+#include "API/Core/System/databuffer.h"
 
 namespace clan
 {
 
-class BezierCurve;
-class Path_Impl;
+class GraphicContext;
+class Canvas;
 
-class CL_API_DISPLAY Path
+class Shape2D_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	Path();
-
-	virtual ~Path();
+	Shape2D_Impl();
+	virtual ~Shape2D_Impl();
 
 
 /// \}
@@ -60,27 +62,16 @@ public:
 
 public:
 
-	bool is_hole(PolygonOrientation orientation) const;
-
-	bool is_inside_contour(const Path &other) const;
-
-	bool is_point_inside(const Pointf &point) const;
-
-	const std::vector<Pointf> &get_contour_points() const;
-
-
-
 /// \}
 /// \name Operations
 /// \{
 
 public:
 
-	void add_curve(BezierCurve &);
+	void add_path(Path2D &path);
 
-	void add_line_to(const Pointf &p);
-
-	inline void add_line_to(float x, float y) {add_line_to(Pointf(x, y));}
+	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const;
+	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const;
 
 /// \}
 /// \name Implementation
@@ -88,9 +79,8 @@ public:
 
 private:
 
-	std::shared_ptr<Path_Impl> impl;
+	std::vector< Path2D > contours;
 /// \}
 };
 
 }
-/// \}
