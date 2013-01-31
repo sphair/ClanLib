@@ -50,7 +50,6 @@ libclan30Display_la_SOURCES = \
 	Render/uniform_buffer.cpp \
 	Render/texture_2d_array.cpp \
 	display_target.cpp \
-	2D/rounded_rect_impl.cpp \
 	2D/texture_group.cpp \
 	2D/color_hsv.cpp \
 	2D/sprite_description.cpp \
@@ -70,7 +69,6 @@ libclan30Display_la_SOURCES = \
 	2D/canvas_impl.cpp \
 	2D/image.cpp \
 	2D/color.cpp \
-	2D/rounded_rect.cpp \
 	2D/span_layout.cpp \
 	setup_display.cpp \
 	Collision/outline_provider_bitmap.cpp \

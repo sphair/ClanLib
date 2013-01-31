@@ -272,51 +272,6 @@ int App::start(const std::vector<std::string> &args)
 			small_font.draw_text(canvas, 76, 260, "Image (0, 250) size=(31,47)");
 			small_font.draw_text(canvas, 76, 275, "Image (33, 250) size=(31,47) (red, magnify*2)");
 
-	// RoundedRect
-			{
-				RoundedRect roundedrect(Sizef(64.0f, 32.0f), 15.0f);
-
-				float offset_x = 0.0f;
-				float offset_y = 300.0f;
-				Origin origin = origin_top_left;
-				roundedrect.draw(canvas, Pointf(offset_x, offset_y), Colorf(1.0f, 1.0f, 1.0f, 1.0f), origin);
-
-				offset_y = 340.0f;
-				roundedrect.fill(canvas, Pointf(offset_x, offset_y), Colorf(1.0f, 1.0f, 1.0f, 1.0f), origin);
-
-				offset_y = 380.0f;
-				Gradient gradient;
-				gradient.top_left = Colorf(1.0f, 1.0f, 1.0f, 1.0f);
-				gradient.top_right = Colorf(1.0f, 0.0f, 0.0f, 1.0f);
-				gradient.bottom_left = Colorf(0.0f, 0.0f, 1.0f, 1.0f);
-				gradient.bottom_right = Colorf(0.0f, 1.0f, 0.0f, 1.0f);
-				roundedrect.fill(canvas, Pointf(offset_x, offset_y), gradient, origin);
-
-				offset_y = 420.0f;
-				roundedrect.set_control_point_bl(Pointf(0.4f, 0.8f));
-				roundedrect.set_rounding_bottom_left(Sizef(0.2f, 0.6f));
-
-				roundedrect.set_control_point_tl(Pointf(0.2f, 0.4f));
-				roundedrect.set_rounding_top_left(Sizef(0.4f, 0.2f));
-
-				roundedrect.set_control_point_tr(Pointf(0.6f, 0.2f));
-				roundedrect.set_rounding_top_right(Sizef(0.8f, 0.4f));
-				roundedrect.set_control_point_br(Pointf(0.6f, 0.8f));
-				roundedrect.set_rounding_bottom_right(Sizef(0.8f, 0.6f));
-
-				roundedrect.fill(canvas, Pointf(offset_x, offset_y), gradient, origin);
-
-			}
-
-			small_font.draw_text(canvas, 76, 310, "RoundedRect - draw (0, 300) size=(64,32)");
-			small_font.draw_text(canvas, 76, 325, "(RoundedRect - draw gradient - is not implemented)");
-			small_font.draw_text(canvas, 76, 350, "RoundedRect - fill (0, 340) size=(64,32)");
-			small_font.draw_text(canvas, 76, 390, "RoundedRect - fill gradient (0, 380) size=(64,32)");
-			small_font.draw_text(canvas, 76, 400, "top left = white. top right = red");
-			small_font.draw_text(canvas, 76, 410, "bottom left = blue. bottom right = green");
-			small_font.draw_text(canvas, 76, 430, "RoundedRect - fill gradient (0, 420) size=(64,32)");
-			small_font.draw_text(canvas, 76, 440, "Controling control / rounding points");
-
 	// Sprite
 			{
 				test_base_angle+=5.0f;

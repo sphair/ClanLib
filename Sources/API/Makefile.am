@@ -365,7 +365,6 @@ clanDisplay_includes = \
 	Display/2D/shape2d.h \
 	Display/2D/span_layout.h \
 	Display/2D/color.h \
-	Display/2D/rounded_rect.h \
 	Display/TargetProviders/vertex_array_buffer_provider.h \
 	Display/TargetProviders/primitives_array_provider.h \
 	Display/TargetProviders/occlusion_query_provider.h \

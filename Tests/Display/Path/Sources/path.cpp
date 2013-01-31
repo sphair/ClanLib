@@ -51,62 +51,54 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	clan::Shape2D shape;
 
-	float circle_x = 100.0f;
-	float circle_y = 400.0f;
-	float circle_radius = 128.0f;
-
 	//shape.add_circle(circle_x, circle_y, circle_radius, false);
 	//shape.add_circle(circle_x+0.0f, circle_y + 0.0f, 64.0f, true);
 	//shape.add_ellipse(circle_x, circle_y, circle_radius, circle_radius / 2.0f, false);
 	//shape.add_ellipse(circle_x+0.0f, circle_y + 0.0f, 64.0f, 32.0f, true);
-	shape.add_rounded_rect(clan::Pointf(100.0f, 400.0f), clan::Sizef(256.0f, 64.0f), 32, clan::Angle(45.0f, clan::angle_degrees), false );
-	//shape.add_rounded_rect(clan::Pointf(120.0f, 420.0f), clan::Sizef(64.0f, 32.0f), 16, true );
+	//shape.add_rounded_rect(clan::Pointf(100.0f, 400.0f), clan::Sizef(256.0f, 128.0f), 32, clan::Angle(45.0f, clan::angle_degrees), false );
+	//shape.add_rounded_rect(clan::Pointf(140.0f, 440.0f), clan::Sizef(200.0f, 32.0f), 32, clan::Angle(45.0f, clan::angle_degrees), true );
+	shape.add_rounded_rect(clan::Pointf(32.0f, 32.0f), clan::Sizef(512.0f, 512.0f), 128, false );
 	//shape.add_rect(clan::Rectf(100.0f, 400.0f, clan::Sizef(256.0f, 128.0f)), false);
 	//shape.add_rect(clan::Rectf(100.0f, 400.0f, clan::Sizef(256.0f, 128.0f)), clan::Angle(12.0f, clan::angle_degrees), false);
+	//shape.add_rounded_line(clan::Pointf(128.0f, 128.0f), clan::Pointf(400.0f, 600.0f), 32, 16, false);
 
-	std::vector<clan::Vec2f> primitives_array_circle;
-	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;
-	shape.get_triangles(primitives_array_circle);
-	shape.get_outline(primitives_array_outline_circle);
+	std::vector<clan::Vec2f> object_triangles;
+	std::vector< std::vector<clan::Vec2f> > object_outline;
+	shape.get_triangles(object_triangles);
+	shape.get_outline(object_outline);
 
 	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
 
-	std::vector<clan::Vec2f> texture_array_circle;
-	texture_array_circle.resize(primitives_array_circle.size());
-	for (unsigned int cnt=0; cnt< primitives_array_circle.size(); cnt++)
-	{
-		clan::Vec2f pos = primitives_array_circle[cnt];
-		pos.x -= circle_x;
-		pos.y -= circle_y;
-		pos.x /= circle_radius*2.0f;
-		pos.y /= circle_radius*2.0f;
-		pos.x += 0.5f;
-		pos.y += 0.5f;
-		texture_array_circle[cnt] = pos;
-	}
+	unsigned int last_time = clan::System::get_time();
+	float angle = 0.0;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
+		unsigned int current_time = clan::System::get_time();
+		float time_delta_ms = static_cast<float> (current_time - last_time);
+		last_time = current_time;
+
+		// Update the moving elements
+		angle += 0.004f * time_delta_ms;
+
 		// Clear the display in a dark blue nuance
-		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.4f,0.4f,0.9f));
+
+	//	canvas.fill_circle(128.0f, 128.0f, 4.0f, clan::Colorf::red);
+	//	canvas.fill_circle(256.0f, 128.0f, 4.0f, clan::Colorf::red);
+	//	canvas.fill_circle(100.0, 228.0f, 4.0f, clan::Colorf::red);
 
 		std::vector< std::vector<clan::Vec2f> >::const_iterator it;
 
-		if (!primitives_array_circle.empty())
-			canvas.fill_triangles(&(primitives_array_circle[0]), primitives_array_circle.size());
+		float size = 64.0f + sin(angle) * 32.0f;
 
-		canvas.push_translate(300, 0);
-		for (it = primitives_array_outline_circle.begin(); it != primitives_array_outline_circle.end(); ++it)
-		{
-			canvas.draw_line_strip(&((*it)[0]), it->size());
-		}
-		canvas.pop_modelview();
-
-		canvas.push_translate(600, 0);
-		if (!primitives_array_circle.empty())
-			canvas.fill_triangles(&primitives_array_circle[0], &texture_array_circle[0], primitives_array_circle.size(), texture);
-		canvas.pop_modelview();
+	//		canvas.fill_triangles(object_triangles, texture, clan::Rect(100, 100, 400, 400));
+		canvas.fill_triangles(object_triangles, texture, clan::Gradient(
+			clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f),
+			clan::Colorf(1.0f, 1.0f, 0.0f, 1.0f),
+			clan::Colorf(0.0f, 0.0f, 0.0f, 0.0f),
+			clan::Colorf(1.0f, 0.0f, 1.0f, 0.5f)));
 
 
 		canvas.flip(1);
