@@ -568,6 +568,24 @@ void Canvas::fill_triangles(const Vec2f *triangle_positions, const Colorf *color
 	batcher->fill_triangle(*this, triangle_positions, colors, num_vertices);
 }
 
+void Canvas::fill_triangles(const std::vector<Vec2f> &triangles, const Colorf *colors)
+{
+	if (!triangles.empty())
+	{
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangle(*this, &triangles[0], colors, triangles.size());
+	}
+}
+
+void Canvas::fill_triangles(const std::vector<Vec2f> &triangles, const Colorf &color)
+{
+	if (!triangles.empty())
+	{
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangle(*this, &triangles[0], color, triangles.size());
+	}
+}
+
 void Canvas::fill_triangle(const Trianglef &dest_triangle, const Colorf &color)
 {
 	fill_triangle(dest_triangle.p, dest_triangle.q, dest_triangle.r, color);
@@ -577,6 +595,15 @@ void Canvas::fill_triangles(const Vec2f *positions, const Vec2f *texture_positio
 {
 	RenderBatchTriangle *batcher = impl->get_triangle_batcher();
 	batcher->fill_triangles(*this, positions, texture_positions, num_vertices, texture, color);
+}
+
+void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+{
+	if (!positions.empty())
+	{
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangles(*this, &positions[0], &texture_positions[0], positions.size(), texture, color);
+	}
 }
 
 void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color )
