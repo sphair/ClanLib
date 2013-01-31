@@ -76,6 +76,7 @@ public:
 
 	void add_line_to(const Pointf &p);
 
+	void reverse();
 
 /// \}
 /// \name Implementation

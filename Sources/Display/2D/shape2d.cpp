@@ -72,11 +72,12 @@ void Shape2D::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_arra
 	impl->get_outline(out_primitives_array_outline);
 }
 
-void Shape2D::add_circle(float center_x, float center_y, float radius)
+void Shape2D::add_circle(float center_x, float center_y, float radius, bool reverse)
 {
 	#define KAPPA		0.5522847498f
 
 	clan::BezierCurve bezier_curve;
+
 	bezier_curve.add_control_point(center_x + radius, center_y);
 	bezier_curve.add_control_point(center_x + radius * 1, (center_y + radius * 1 * KAPPA));
 	bezier_curve.add_control_point(center_x + radius * 1 * KAPPA, (center_y + radius * 1));
@@ -93,12 +94,15 @@ void Shape2D::add_circle(float center_x, float center_y, float radius)
 
 	Path2D path;
 	path.add_curve(bezier_curve);
+	if (reverse)
+		path.reverse();
+
 	add_path(path);
 }
 
-void Shape2D::add_circle(const Pointf &center, float radius)
+void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 {
-	add_circle(center.x, center.y, radius);
+	add_circle(center.x, center.y, radius, reverse);
 }
 
 /////////////////////////////////////////////////////////////////////////////
