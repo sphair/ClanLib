@@ -441,7 +441,13 @@ public:
 	void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors);
+
+	/// \brief Draw triangles
 	void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const Colorf &color = Colorf::white);
+
+	/// \brief Draw triangles
+	void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const std::vector<Colorf> &colors);
 
 	/// \brief Draw triangles
 	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Colorf &color = Colorf::white);
