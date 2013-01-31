@@ -111,6 +111,7 @@ public:
 	/// \param bounding_rect = The bounding rect of the glyph. Use get_bounding_box() to calculate this
 	/// \param texture_rect = The texture rect
 	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect = Rectf(0.0f, 0.0f, 1.0f, 1.0f) );
+	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rect &texture_rect );
 
 	/// \brief Reset the texture
 	void reset_texture();

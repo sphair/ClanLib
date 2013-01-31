@@ -122,6 +122,15 @@ void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &boundin
 	get_provider()->set_texture(src_texture, bounding_rect, texture_rect);
 }
 
+void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rect &texture_rect)
+{
+	Sizef texture_size = src_texture.get_size();
+	Rectf texture_rect_scaled( texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
+
+	get_provider()->set_texture(src_texture, bounding_rect, texture_rect_scaled);
+}
+
+
 void Font_Vector::reset_texture()
 {
 	get_provider()->set_texture(Texture2D(), Rectf(), Rectf());
