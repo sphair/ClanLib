@@ -33,6 +33,7 @@
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_vector.h"
+#include "API/Core/Math/bezier_curve.h"
 #include <vector>
 
 namespace clan
@@ -69,6 +70,35 @@ void Shape2D::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOri
 void Shape2D::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
 {
 	impl->get_outline(out_primitives_array_outline);
+}
+
+void Shape2D::add_circle(float center_x, float center_y, float radius)
+{
+	#define KAPPA		0.5522847498f
+
+	clan::BezierCurve bezier_curve;
+	bezier_curve.add_control_point(center_x + radius, center_y);
+	bezier_curve.add_control_point(center_x + radius * 1, (center_y + radius * 1 * KAPPA));
+	bezier_curve.add_control_point(center_x + radius * 1 * KAPPA, (center_y + radius * 1));
+	bezier_curve.add_control_point(center_x + radius * 0, (center_y + radius * 1));
+	bezier_curve.add_control_point(center_x - radius * 1  * KAPPA, (center_y + radius * 1));
+	bezier_curve.add_control_point(center_x - radius * 1, (center_y + radius * 1 * KAPPA));
+	bezier_curve.add_control_point(center_x - radius * 1, (center_y + radius * 0));
+	bezier_curve.add_control_point(center_x - radius * 1, (center_y - radius * 1  * KAPPA));
+	bezier_curve.add_control_point(center_x - radius * 1 * KAPPA, (center_y - radius * 1));
+	bezier_curve.add_control_point(center_x - radius * 0, (center_y - radius * 1));
+	bezier_curve.add_control_point(center_x + radius * 1 * KAPPA, (center_y - radius * 1));
+	bezier_curve.add_control_point(center_x + radius * 1, (center_y - radius * 1 * KAPPA));
+	bezier_curve.add_control_point(center_x + radius * 1, (center_y - radius * 0));
+
+	Path2D path;
+	path.add_curve(bezier_curve);
+	add_path(path);
+}
+
+void Shape2D::add_circle(const Pointf &center, float radius)
+{
+	add_circle(center.x, center.y, radius);
 }
 
 /////////////////////////////////////////////////////////////////////////////
