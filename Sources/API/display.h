@@ -47,7 +47,6 @@
 #include "Display/2D/color_hsl.h"
 #include "Display/2D/gradient.h"
 #include "Display/2D/image.h"
-#include "Display/2D/rounded_rect.h"
 #include "Display/2D/sprite.h"
 #include "Display/2D/path2d.h"
 #include "Display/2D/shape2d.h"
