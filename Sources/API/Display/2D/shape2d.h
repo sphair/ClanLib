@@ -82,6 +82,8 @@ public:
 	/// \param radius = value
 	void add_circle(const Pointf &center, float radius, bool reverse = false);
 
+	void add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse = false);
+
 
 /// \}
 /// \name Implementation

@@ -114,6 +114,53 @@ void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 	add_path(path);
 }
 
+void Shape2D::add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse)
+{
+	// sanitize rounding values
+	float tmp_rounding = cap_rounding;
+	float min_rounding = min(size.width/2.0f, size.height/2.0f);
+	if( tmp_rounding >= (min_rounding-0.01f) ) // 0.01: hysterezis for floating point errors
+	{
+		tmp_rounding = min_rounding-0.01f; // avoid duplicating curve endpoints 
+	}
+
+	// top right curve
+	BezierCurve bez_tr;
+	bez_tr.add_control_point(origin.x + size.width-tmp_rounding, origin.y);
+	bez_tr.add_control_point(Pointf(origin.x + size.width, origin.y));
+	bez_tr.add_control_point(origin.x + size.width, origin.y + tmp_rounding);
+
+	// bottom right curve
+	BezierCurve bez_br;
+	bez_br.add_control_point(origin.x + size.width, origin.y + size.height-tmp_rounding);
+	bez_br.add_control_point(Pointf(origin.x + size.width, origin.y + size.height));
+	bez_br.add_control_point(origin.x + size.width-tmp_rounding, origin.y + size.height);
+	
+	// bottom left curve
+	BezierCurve bez_bl;
+	bez_bl.add_control_point(origin.x + tmp_rounding, origin.y + size.height);
+	bez_bl.add_control_point(Pointf(origin.x, origin.y + size.height));
+	bez_bl.add_control_point(origin.x, origin.y + size.height-tmp_rounding);
+
+	// top left curve
+	BezierCurve bez_tl;
+	bez_tl.add_control_point(origin.x, origin.y +tmp_rounding);
+	bez_tl.add_control_point(Pointf(origin.x, origin.y));
+	bez_tl.add_control_point(origin.x + tmp_rounding, origin.y);
+	
+	Path2D path;
+
+	path.add_curve(bez_tr);
+	path.add_curve(bez_br);
+	path.add_curve(bez_bl);
+	path.add_curve(bez_tl);
+
+	if (reverse)
+		path.reverse();
+
+	add_path(path);
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Shape2D Implementation:
 
