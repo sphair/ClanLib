@@ -34,6 +34,7 @@
 #include "API/Display/2D/path2d.h"
 #include "path2d_impl.h"
 #include <cfloat>
+#include <algorithm>
 
 namespace clan
 {
@@ -107,6 +108,11 @@ void Path2D_Impl::add_curve(BezierCurve &curve)
 void Path2D_Impl::add_line_to(const Pointf &point )
 {
 	contour_points.push_back(point);
+}
+
+void Path2D_Impl::reverse()
+{
+	std::reverse(contour_points.begin(), contour_points.end());
 }
 
 /////////////////////////////////////////////////////////////////////////////

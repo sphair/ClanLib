@@ -82,6 +82,9 @@ public:
 
 	inline void add_line_to(float x, float y) {add_line_to(Pointf(x, y));}
 
+	// Reverse the contours
+	void reverse();
+
 /// \}
 /// \name Implementation
 /// \{

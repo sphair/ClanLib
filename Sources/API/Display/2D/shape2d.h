@@ -74,13 +74,13 @@ public:
 	void add_path(Path2D &path);
 
 	/// \brief Add a circle.
-	void add_circle(float center_x, float center_y, float radius);
+	void add_circle(float center_x, float center_y, float radius, bool reverse = false);
 
 	/// \brief Add aCircle
 	///
 	/// \param center = Pointf
 	/// \param radius = value
-	void add_circle(const Pointf &center, float radius);
+	void add_circle(const Pointf &center, float radius, bool reverse = false);
 
 
 /// \}
