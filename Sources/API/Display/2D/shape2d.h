@@ -100,6 +100,7 @@ public:
 
 	void add_rect(const Rectf &rect, const Angle &angle, bool reverse = false);
 
+	void add_rounded_line(const Pointf &start, const Pointf &end, float line_width, float cap_rounding, bool reverse);
 
 /// \}
 /// \name Implementation
