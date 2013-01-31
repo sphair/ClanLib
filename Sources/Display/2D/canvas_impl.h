@@ -80,6 +80,9 @@ public:
 	void set_user_projection(const Mat4f &projection);
 	void update_viewport_size();
 
+	static void get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors);
+	static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
+
 	std::vector<Rect> cliprects;
 	FontManager font_manager;
 	DisplayWindow display_window;
