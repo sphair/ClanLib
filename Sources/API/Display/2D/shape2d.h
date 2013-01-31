@@ -94,6 +94,8 @@ public:
 
 	void add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse = false);
 
+	void add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, const Angle &angle, bool reverse = false);
+
 	void add_rect(const Rectf &rect, bool reverse = false);
 
 	void add_rect(const Rectf &rect, const Angle &angle, bool reverse = false);

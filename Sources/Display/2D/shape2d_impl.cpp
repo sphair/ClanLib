@@ -33,6 +33,7 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_vector.h"
 #include <vector>
+#include "API/Core/Math/bezier_curve.h"
 
 namespace clan
 {
@@ -229,6 +230,22 @@ void Shape2D_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives
 		if (!points.empty())
 			out_primitives_array_outline[contours_index][points.size()] = Vec2f(points.front().x, points.front().y);
 	}
+}
+
+void Shape2D_Impl::add_rotated_curve(Path2D &path, const Pointf &center, const Angle &angle, Pointf point_1,  Pointf point_2,  Pointf point_3)
+{
+	if (angle.to_radians() != 0.0f)
+	{
+		point_1.rotate(center, angle);
+		point_2.rotate(center, angle);
+		point_3.rotate(center, angle);
+	}
+	BezierCurve curve;
+	curve.add_control_point(point_1);
+	curve.add_control_point(point_2);
+	curve.add_control_point(point_3);
+	path.add_curve(curve);
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
