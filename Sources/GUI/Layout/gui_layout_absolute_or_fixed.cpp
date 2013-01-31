@@ -41,21 +41,25 @@ void GUILayoutAbsoluteOrFixed::node(GUIComponent_Impl *node)
 {
 	const CSSComputedBox &properties = node->element.get_css_values().get_box();
 
-	bool is_manual_geometry = (node->parent && !node->use_auto_geometry); // Components in manual geometry mode behave like absolute positioned elements with specified left+top+right+bottom+width+height properties
-	bool is_absolute = properties.position.type == CSSValuePosition::type_absolute;
-	bool is_fixed = properties.position.type == CSSValuePosition::type_fixed;
-
-	if (is_manual_geometry || is_absolute || is_fixed)
+	bool is_display_none = !node->visible || properties.display.type == CSSValueDisplay::type_none;
+	if (!is_display_none)
 	{
-		GUISetInitialUsedValues initial_visitor;
-		initial_visitor.node(node);
+		bool is_manual_geometry = (node->parent && !node->use_auto_geometry); // Components in manual geometry mode behave like absolute positioned elements with specified left+top+right+bottom+width+height properties
+		bool is_absolute = properties.position.type == CSSValuePosition::type_absolute;
+		bool is_fixed = properties.position.type == CSSValuePosition::type_fixed;
 
-		GUILayoutContent visitor;
-		visitor.node(node);
-	}
-	else
-	{
-		node->visit_children(this, false);
+		if (is_manual_geometry || is_absolute || is_fixed)
+		{
+			GUISetInitialUsedValues initial_visitor;
+			initial_visitor.node(node);
+
+			GUILayoutContent visitor;
+			visitor.node(node);
+		}
+		else
+		{
+			node->visit_children(this, false);
+		}
 	}
 }
 
