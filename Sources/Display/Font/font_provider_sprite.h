@@ -106,7 +106,7 @@ public:
 
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
-	PathGroup load_glyph_outline(int c, int &out_advance_x);
+	Shape2D load_glyph_outline(int c, int &out_advance_x);
 
 /// \}
 /// \name Implementation

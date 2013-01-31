@@ -34,7 +34,7 @@
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/shape2d.h"
 
 extern "C"
 {
@@ -95,7 +95,7 @@ public:
 /// \{
 
 public:
-	PathGroup load_glyph_outline(int glyph_index, int &out_advance_x);
+	Shape2D load_glyph_outline(int glyph_index, int &out_advance_x);
 
 /// \}
 /// \name Implementation

@@ -42,7 +42,7 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/XML/dom_element.h"
-#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/shape2d.h"
 
 namespace clan
 {
@@ -450,7 +450,7 @@ Font_Sprite_Glyph *FontProvider_Sprite::get_glyph(unsigned int glyph)
 	return NULL;
 }
 
-PathGroup FontProvider_Sprite::load_glyph_outline(int c, int &out_advance_x)
+Shape2D FontProvider_Sprite::load_glyph_outline(int c, int &out_advance_x)
 {
 	throw Exception("Implement Me");
 }

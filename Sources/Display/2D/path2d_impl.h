@@ -39,15 +39,15 @@ namespace clan
 
 class BezierCurve;
 
-class Path_Impl
+class Path2D_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	Path_Impl();
+	Path2D_Impl();
 
-	virtual ~Path_Impl();
+	virtual ~Path2D_Impl();
 
 
 /// \}
@@ -58,7 +58,7 @@ public:
 
 	bool is_hole(PolygonOrientation polygon_orientation) const;
 
-	bool is_inside_contour(const Path &other) const;
+	bool is_inside_contour(const Path2D &other) const;
 
 	bool is_point_inside(const Pointf &point) const;
 

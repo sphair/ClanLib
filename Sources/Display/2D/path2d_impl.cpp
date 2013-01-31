@@ -31,35 +31,35 @@
 #include "API/Core/Math/line_math.h"
 #include "API/Core/Math/line_segment.h"
 #include "API/Core/Math/bezier_curve.h"
-#include "API/Display/2D/path.h"
-#include "path_impl.h"
+#include "API/Display/2D/path2d.h"
+#include "path2d_impl.h"
 #include <cfloat>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// Path_Impl Construction:
+// Path2D_Impl Construction:
 
-Path_Impl::Path_Impl()
+Path2D_Impl::Path2D_Impl()
 {
 }
 
-Path_Impl::~Path_Impl()
+Path2D_Impl::~Path2D_Impl()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Path_Impl Attributes:
+// Path2D_Impl Attributes:
 
-bool Path_Impl::is_hole(PolygonOrientation polygon_orientation) const
+bool Path2D_Impl::is_hole(PolygonOrientation polygon_orientation) const
 {
 	PolygonOrientation orientation = get_orientation();
 
 	return orientation == polygon_orientation;
 }
 
-bool Path_Impl::is_inside_contour(const Path &other) const
+bool Path2D_Impl::is_inside_contour(const Path2D &other) const
 {
 	if( other.is_point_inside( contour_points[0] ) ) // if one point is inside then all other have to be also.
 		return true;
@@ -67,7 +67,7 @@ bool Path_Impl::is_inside_contour(const Path &other) const
 	return false;
 }
 
-bool Path_Impl::is_point_inside(const Pointf &P) const
+bool Path2D_Impl::is_point_inside(const Pointf &P) const
 {
 	LineSegment2f lineX( Pointf(P.x, P.y + FLT_EPSILON), Pointf(P.x + 100000.0f, P.y + FLT_EPSILON) );
 
@@ -92,9 +92,9 @@ bool Path_Impl::is_point_inside(const Pointf &P) const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Path_Impl Operations:
+// Path2D_Impl Operations:
 
-void Path_Impl::add_curve(BezierCurve &curve)
+void Path2D_Impl::add_curve(BezierCurve &curve)
 {
 	std::vector<Pointf> points = curve.generate_curve_points(Angle::from_degrees(10));
 	
@@ -104,15 +104,15 @@ void Path_Impl::add_curve(BezierCurve &curve)
 	}
 }
 
-void Path_Impl::add_line_to(const Pointf &point )
+void Path2D_Impl::add_line_to(const Pointf &point )
 {
 	contour_points.push_back(point);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Path_Impl Implementation:
+// Path2D_Impl Implementation:
 
-PolygonOrientation Path_Impl::get_orientation() const
+PolygonOrientation Path2D_Impl::get_orientation() const
 {
 	float sum = 0;
 

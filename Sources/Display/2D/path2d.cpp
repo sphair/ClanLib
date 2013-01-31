@@ -28,50 +28,65 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Display/2D/path_group.h"
-#include "path_group_impl.h"
-#include "API/Core/Math/ear_clip_result.h"
-#include "API/Display/2D/canvas.h"
-#include "API/Display/Font/font_vector.h"
-#include <vector>
+#include "API/Core/Math/line_math.h"
+#include "API/Core/Math/line_segment.h"
+#include "API/Core/Math/bezier_curve.h"
+#include "API/Display/2D/path2d.h"
+#include "path2d_impl.h"
+#include <cfloat>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup Construction:
+// Path2D Construction:
 
-PathGroup::PathGroup() : impl(new PathGroup_Impl())
+Path2D::Path2D() : impl(new Path2D_Impl())
 {
 }
 
-PathGroup::~PathGroup()
+Path2D::~Path2D()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup Attributes:
+// Path2D Attributes:
+
+bool Path2D::is_hole(PolygonOrientation orientation) const
+{
+	return impl->is_hole(orientation);
+}
+
+bool Path2D::is_inside_contour(const Path2D &other) const
+{
+	return impl->is_inside_contour(other);
+}
+
+bool Path2D::is_point_inside(const Pointf &P) const
+{
+	return impl->is_point_inside(P);
+}
+
+const std::vector<Pointf> &Path2D::get_contour_points() const
+{
+	return impl->get_contour_points();
+}
 
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup Operations:
+// Path2D Operations:
 
-void PathGroup::add_path(Path &path)
+void Path2D::add_curve(BezierCurve &curve)
 {
-	impl->add_path(path);
+	impl->add_curve(curve);
 }
 
-void PathGroup::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation orientation) const
+void Path2D::add_line_to(const Pointf &point )
 {
-	impl->get_triangles(out_primitives_array, orientation);
-}
-
-void PathGroup::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
-{
-	impl->get_outline(out_primitives_array_outline);
+	impl->add_line_to(point);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup Implementation:
+// Path2D Implementation:
 
 }

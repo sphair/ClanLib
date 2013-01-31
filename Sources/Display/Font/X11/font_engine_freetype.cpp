@@ -212,7 +212,7 @@ Size FontEngine_Freetype::get_size(const std::string &text, int pos)
 /////////////////////////////////////////////////////////////////////////////
 // FontEngine_Freetype Operations:
 
-PathGroup FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
+Shape2D FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 {
 	out_advance_x = 0;
 
@@ -238,7 +238,7 @@ PathGroup FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 	FT_OutlineGlyph ft_outline_glyph_rec = (FT_OutlineGlyph)glyph;
 	FT_Outline ft_outline = ft_outline_glyph_rec->outline;
 
-	PathGroup outline;
+	Shape2D outline;
 
 //	cl_write_console_line(string_format("Num contours: %1", ft_outline.n_contours));
 
@@ -246,7 +246,7 @@ PathGroup FontEngine_Freetype::load_glyph_outline(int c, int &out_advance_x)
 	{
 //		cl_write_console_line(string_format("Num points in contour %1: %2", cont, ft_outline.contours[0]+1));
 		
-		Path contour;
+		Path2D contour;
 		
 		// debug: dump contents of points array to terminal
 //		for( int i = 0; i <= ft_outline.contours[cont]; ++i )

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2011 The ClanLib Team
+**  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,39 +23,74 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Harry Storbacka
 **    Mark Page
 */
+/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \{
 
 #pragma once
 
-#include "font_engine.h"
-#include "API/Display/Font/font.h"
-#include "API/Display/Font/font_description.h"
-#include "API/Display/2D/shape2d.h"
-#include <CoreText/CoreText.h>
-#include <CoreGraphics/CoreGraphics.h>
+
+#include "../api_display.h"
+#include <vector>
+#include "../../Core/Math/point.h"
+#include "../../Core/Math/ear_clip_triangulator.h"
 
 namespace clan
 {
 
-class DataBuffer;
+class BezierCurve;
+class Path2D_Impl;
 
-class FontEngine_Cocoa : public FontEngine
+class CL_API_DISPLAY Path2D
 {
+/// \name Construction
+/// \{
+
 public:
-	FontEngine_Cocoa(const FontDescription &description);
-	~FontEngine_Cocoa();
+	Path2D();
 
-	FontMetrics get_metrics();
-	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias);
-	FontPixelBuffer get_font_glyph_subpixel(int glyph);
-	Shape2D load_glyph_outline(int c, int &out_advance_x);
+	virtual ~Path2D();
+
+
+/// \}
+/// \name Attributes
+/// \{
+
+public:
+
+	bool is_hole(PolygonOrientation orientation) const;
+
+	bool is_inside_contour(const Path2D &other) const;
+
+	bool is_point_inside(const Pointf &point) const;
+
+	const std::vector<Pointf> &get_contour_points() const;
+
+
+
+/// \}
+/// \name Operations
+/// \{
+
+public:
+
+	void add_curve(BezierCurve &);
+
+	void add_line_to(const Pointf &p);
+
+	inline void add_line_to(float x, float y) {add_line_to(Pointf(x, y));}
+
+/// \}
+/// \name Implementation
+/// \{
+
 private:
-	FontPixelBuffer get_font_glyph_lcd(int glyph);
-	FontPixelBuffer get_empty_font_glyph(int glyph);
 
-	CTFontRef handle;
+	std::shared_ptr<Path2D_Impl> impl;
+/// \}
 };
 
 }
+/// \}

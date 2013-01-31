@@ -33,7 +33,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/shape2d.h"
 #include "API/Core/Math/bezier_curve.h"
 
 namespace clan
@@ -418,7 +418,7 @@ int FontEngine_Win32::decode_charset(FontDescription::Charset selected_charset)
 
 }
 
-PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
+Shape2D FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 {
 	out_advance_x = 0;
 	GLYPHMETRICS glyph_metrics = { 0 };
@@ -457,14 +457,14 @@ PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 	if (glyph_buffer.is_null())
 	{
 		out_advance_x = glyph_metrics.gmCellIncX;
-		return PathGroup();
+		return Shape2D();
 	}
 
 	TTPOLYGONHEADER * polygon_header = (TTPOLYGONHEADER *) glyph_buffer.get_data();
 	char *data_end = (char *) polygon_header;
 	data_end += glyph_buffer.get_size();
 
-	PathGroup outline;
+	Shape2D outline;
 
 	while( (char *) (polygon_header+1) <= data_end)
 	{
@@ -473,7 +473,7 @@ PathGroup FontEngine_Win32::load_glyph_outline(int glyph, int &out_advance_x)
 
 		Pointf previous_point = PointFXtoPoint(polygon_header->pfxStart);
 		//Pointf initial_point = previous_point;
-		Path contour;
+		Path2D contour;
 
 		int curve_bytes = polygon_header->cb - sizeof(TTPOLYGONHEADER);
 		if (curve_bytes < 0)

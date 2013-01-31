@@ -28,7 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "path_group_impl.h"
+#include "shape2d_impl.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_vector.h"
@@ -38,29 +38,29 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup_Impl Construction:
+// Shape2D_Impl Construction:
 
-PathGroup_Impl::PathGroup_Impl()
+Shape2D_Impl::Shape2D_Impl()
 {
 }
 
-PathGroup_Impl::~PathGroup_Impl()
+Shape2D_Impl::~Shape2D_Impl()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup_Impl Attributes:
+// Shape2D_Impl Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup_Impl Operations:
+// Shape2D_Impl Operations:
 
-void PathGroup_Impl::add_path(Path &path)
+void Shape2D_Impl::add_path(Path2D &path)
 {
 	contours.push_back(path);
 }
 
-void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const
+void Shape2D_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const
 {
 	//std::vector< std::vector<Pointf> > *out_joined_outlines = NULL;	
 
@@ -87,7 +87,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, Pol
 	// sort contour vector so that it has the ordering:
 	// outline_1, ouline_1_hole_1, ouline_1_hole_2, outline_2, ouline_2_hole_1 etc.
 
-	std::vector< Path > sorted_contours;
+	std::vector< Path2D > sorted_contours;
 	std::vector< bool > sorted_hole_cache;
 
 	int outline_count = 0;
@@ -212,7 +212,7 @@ void PathGroup_Impl::get_triangles(std::vector<Vec2f> &out_primitives_array, Pol
 
 }
 
-void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
+void Shape2D_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const
 {
 	out_primitives_array_outline.resize(contours.size());
 
@@ -232,10 +232,10 @@ void PathGroup_Impl::get_outline(std::vector< std::vector<Vec2f> > &out_primitiv
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// PathGroup_Impl Implementation:
+// Shape2D_Impl Implementation:
 
 /*
-void PathGroup_Impl::draw_debug_outline(Canvas &canvas)
+void Shape2D_Impl::draw_debug_outline(Canvas &canvas)
 {
 	for( unsigned int out=0; out<joined_outlines.size(); ++out )
 	{

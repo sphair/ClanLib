@@ -53,7 +53,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_vector.h"
-#include "API/Display/2D/path_group.h"
+#include "API/Display/2D/shape.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
 
@@ -198,7 +198,7 @@ void FontProvider_Vector::store_in_char_cache(unsigned int glyph)
 	if( char_cache.find(glyph) == char_cache.end() )
 	{
 		int out_advance_x;
-		PathGroup outline = font_engine->load_glyph_outline(glyph, out_advance_x);
+		Shape2D outline = font_engine->load_glyph_outline(glyph, out_advance_x);
 		vector_glyph &vg = char_cache[glyph];
 		vg.advance_x = out_advance_x;
 		outline.get_triangles(vg.primitives_array);
