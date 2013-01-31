@@ -72,27 +72,10 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	#define KAPPA		0.5522847498f
 	shape = clan::Shape2D();
-	path = clan::Path2D();
 	float circle_x = 100.0f;
 	float circle_y = 400.0f;
 	float circle_radius = 64.0f;
-
-	bezier_curve = clan::BezierCurve();
-	bezier_curve.add_control_point(circle_x + circle_radius, circle_y);
-	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y + circle_radius * 1 * KAPPA));
-	bezier_curve.add_control_point(circle_x + circle_radius * 1 * KAPPA, (circle_y + circle_radius * 1));
-	bezier_curve.add_control_point(circle_x + circle_radius * 0, (circle_y + circle_radius * 1));
-	bezier_curve.add_control_point(circle_x - circle_radius * 1  * KAPPA, (circle_y + circle_radius * 1));
-	bezier_curve.add_control_point(circle_x - circle_radius * 1, (circle_y + circle_radius * 1 * KAPPA));
-	bezier_curve.add_control_point(circle_x - circle_radius * 1, (circle_y + circle_radius * 0));
-	bezier_curve.add_control_point(circle_x - circle_radius * 1, (circle_y - circle_radius * 1  * KAPPA));
-	bezier_curve.add_control_point(circle_x - circle_radius * 1 * KAPPA, (circle_y - circle_radius * 1));
-	bezier_curve.add_control_point(circle_x - circle_radius * 0, (circle_y - circle_radius * 1));
-	bezier_curve.add_control_point(circle_x + circle_radius * 1 * KAPPA, (circle_y - circle_radius * 1));
-	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y - circle_radius * 1 * KAPPA));
-	bezier_curve.add_control_point(circle_x + circle_radius * 1, (circle_y - circle_radius * 0));
-	path.add_curve(bezier_curve);
-	shape.add_path(path);
+	shape.add_circle(circle_x, circle_y, circle_radius);
 
 	std::vector<clan::Vec2f> primitives_array_circle;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;

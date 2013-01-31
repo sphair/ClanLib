@@ -53,7 +53,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font_vector.h"
-#include "API/Display/2D/shape.h"
+#include "API/Display/2D/shape2d.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
 
