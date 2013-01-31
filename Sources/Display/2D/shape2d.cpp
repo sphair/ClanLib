@@ -74,16 +74,29 @@ void Shape2D::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_arra
 
 void Shape2D::add_circle(float center_x, float center_y, float radius, bool reverse)
 {
-	add_circle(Pointf(center_x, center_y), radius, reverse);
+	add_ellipse(Pointf(center_x, center_y), Pointf(radius, radius), reverse);
+
+}
+
+void Shape2D::add_ellipse(float center_x, float center_y, float radius_x, float radius_y, bool reverse)
+{
+	add_ellipse(Pointf(center_x, center_y), Pointf(radius_x, radius_y), reverse);
 
 }
 
 void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 {
+	add_ellipse(center, Pointf(radius, radius), reverse);
+}
+
+void Shape2D::add_ellipse(const Pointf &center, const Pointf &radius, bool reverse)
+{
 	float offset_x = 0;
 	float offset_y = 0;
 
-	int rotationcount = max(5, (radius - 3));
+	int max_radius = max(radius.x, radius.y);
+
+	int rotationcount = max(5, (max_radius - 3));
 	float halfpi = 1.5707963267948966192313216916398f;
 	float turn = halfpi / rotationcount;
 
@@ -99,8 +112,8 @@ void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 
 	for(int i = 0; i < rotationcount ; i++)
 	{
-		float pos1 = radius * cos(i * turn);
-		float pos2 = radius * sin(i * turn);
+		float pos1 = radius.x * cos(i * turn);
+		float pos2 = radius.y * sin(i * turn);
 
 		points[i].x = (center.x + pos1);
 		points[i].y = (center.y + pos2);
@@ -163,19 +176,38 @@ void Shape2D::add_rounded_rect(const Pointf &origin, const Sizef &size, float ca
 
 void Shape2D::add_rect(const Rectf &rect, bool reverse)
 {
+	add_rect(rect, Angle(), reverse);
+}
+
+void Shape2D::add_rect(const Rectf &rect, const Angle &angle, bool reverse)
+{
 	Path2D path;
 
-	path.add_line_to(rect.left, rect.top);
-	path.add_line_to(rect.right, rect.top);
-	path.add_line_to(rect.right, rect.bottom);
-	path.add_line_to(rect.left, rect.bottom);
+	Pointf point_1(rect.left, rect.top);
+	Pointf point_2(rect.right, rect.top);
+	Pointf point_3(rect.right, rect.bottom);
+	Pointf point_4(rect.left, rect.bottom);
+
+	if (angle.to_radians() != 0.0f)
+	{
+		Pointf center = rect.get_center();
+		point_1.rotate(center, angle);
+		point_2.rotate(center, angle);
+		point_3.rotate(center, angle);
+		point_4.rotate(center, angle);
+	}
+
+	path.add_line_to(point_1);
+	path.add_line_to(point_2);
+	path.add_line_to(point_3);
+	path.add_line_to(point_4);
 
 	if (reverse)
 		path.reverse();
 
 	add_path(path);
-
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Shape2D Implementation:

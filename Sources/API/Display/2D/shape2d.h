@@ -77,15 +77,26 @@ public:
 	/// \brief Add a circle.
 	void add_circle(float center_x, float center_y, float radius, bool reverse = false);
 
+	/// \brief Add a ellispe.
+	void add_ellipse(float center_x, float center_y, float radius_x, float radius_y, bool reverse = false);
+
 	/// \brief Add a Circle
 	///
 	/// \param center = Pointf
 	/// \param radius = value
-	void add_circle(const Pointf &center, float radius, bool reverse = false);
+	void add_circle(const Pointf &center, float radius_x, bool reverse = false);
+
+	/// \brief Add a Circle
+	///
+	/// \param center = Pointf
+	/// \param radius = value
+	void add_ellipse(const Pointf &center, const Pointf &radius, bool reverse = false);
 
 	void add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse = false);
 
 	void add_rect(const Rectf &rect, bool reverse = false);
+
+	void add_rect(const Rectf &rect, const Angle &angle, bool reverse = false);
 
 
 /// \}
