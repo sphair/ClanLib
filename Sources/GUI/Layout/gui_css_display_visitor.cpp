@@ -35,20 +35,23 @@ namespace clan
 
 void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 {
-	const CSSComputedBox &properties = node->element.get_css_values().get_box();
-	switch (properties.display.type)
+	if (node->visible) // invisible components evaluates to display: none
 	{
-	case CSSValueDisplay::type_flex:
-		flex_node(node);
-		break;
-	case CSSValueDisplay::type_clan_grid:
-		clan_grid_node(node);
-		break;
-	case CSSValueDisplay::type_clan_stacked:
-		clan_stacked_node(node);
-		break;
-	//default:
-	//	throw Exception("Unsupported display type for GUI components");
+		const CSSComputedBox &properties = node->element.get_css_values().get_box();
+		switch (properties.display.type)
+		{
+		case CSSValueDisplay::type_flex:
+			flex_node(node);
+			break;
+		case CSSValueDisplay::type_clan_grid:
+			clan_grid_node(node);
+			break;
+		case CSSValueDisplay::type_clan_stacked:
+			clan_stacked_node(node);
+			break;
+		//default:
+		//	throw Exception("Unsupported display type for GUI components");
+		}
 	}
 }
 
@@ -128,6 +131,8 @@ float GUICSSDisplayVisitor::get_css_relative_y(GUIComponent_Impl *node, float co
 bool GUICSSDisplayVisitor::is_normal_flow(GUIComponent_Impl *node)
 {
 	return
+		node->visible &&
+		node->element.get_css_values().get_box().display.type != CSSValueDisplay::type_none &&
 		node->element.get_css_values().get_box().position.type != CSSValuePosition::type_absolute &&
 		node->element.get_css_values().get_box().position.type != CSSValuePosition::type_fixed &&
 		node->use_auto_geometry;
