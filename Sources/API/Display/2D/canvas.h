@@ -449,6 +449,24 @@ public:
 	/// \brief Draw triangles
 	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
 
+	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+
+	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
+
+	/// \brief Draw triangles
+	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Gradient &gradient);
+
+	/// \brief Draw triangles
+	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient);
+
+	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Gradient &gradient);
+
+	/// \brief Draw triangles
+	void fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient);
+
 	/// \brief Draw a filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);
 

@@ -651,6 +651,61 @@ void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D
 	}
 }
 
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
+{
+	fill_triangles(triangle_positions, num_vertices, texture, texture.get_size(), color);
+}
+
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Colorf &color)
+{
+	if (num_vertices)
+	{
+		std::vector<Vec2f> texture_positions;
+		Canvas_Impl::get_texture_coords(triangle_positions, num_vertices, texture, texture_rect, texture_positions);
+
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangles(*this, triangle_positions, &texture_positions[0], num_vertices, texture, color);
+	}
+}
+
+void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Gradient &gradient)
+{
+	fill_triangles(positions, texture, texture.get_size(), gradient);
+}
+
+void Canvas::fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient)
+{
+	if (!positions.empty())
+	{
+		std::vector<Vec2f> texture_positions;
+		Canvas_Impl::get_texture_coords(&positions[0], positions.size(), texture, texture_rect, texture_positions);
+		std::vector<Colorf> colors;
+		Canvas_Impl::get_gradient_colors(&positions[0], positions.size(), gradient, colors);
+
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangles(*this, &positions[0], &texture_positions[0], positions.size(), texture, &colors[0]);
+	}
+}
+
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Gradient &gradient)
+{
+	fill_triangles(triangle_positions, num_vertices, texture, texture.get_size(), gradient);
+}
+
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Texture2D &texture, const Rect &texture_rect, const Gradient &gradient)
+{
+	if (num_vertices)
+	{
+		std::vector<Vec2f> texture_positions;
+		Canvas_Impl::get_texture_coords(triangle_positions, num_vertices, texture, texture_rect, texture_positions);
+		std::vector<Colorf> colors;
+		Canvas_Impl::get_gradient_colors(triangle_positions, num_vertices, gradient, colors);
+
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangles(*this, triangle_positions, &texture_positions[0], num_vertices, texture, &colors[0]);
+	}
+}
+
 void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color )
 {
 	float max_radius = max(radius_x, radius_y);

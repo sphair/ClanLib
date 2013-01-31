@@ -52,6 +52,7 @@ public:
 	void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices);
 	void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices);
 	void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color);
+	void fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors);
 	void fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color);
 
 public:
