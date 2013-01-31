@@ -32,6 +32,7 @@
 #include "API/Display/Render/render_batcher.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
+#include "API/Display/2D/gradient.h"
 
 namespace clan
 {
@@ -289,5 +290,68 @@ void Canvas_Impl::reset_cliprect()
 	gc.reset_scissor();
 }
 
+void Canvas_Impl::get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors)
+{
+	out_colors.clear();
+	out_colors.reserve(num_vertex);
+	if (num_vertex)
+	{
+		Rectf bounding_box = get_triangles_bounding_box(triangles, num_vertex);
+		Sizef bounding_box_size = bounding_box.get_size();
+		if (bounding_box_size.width <= 0.0f)
+			bounding_box_size.width = 1.0f;
+		if (bounding_box_size.height <= 0.0f)
+			bounding_box_size.height = 1.0f;
+
+		Sizef bounding_box_invert_size( 1.0f / bounding_box_size.width, 1.0f / bounding_box_size.height );
+
+		for(;num_vertex>0; --num_vertex)
+		{
+			Vec2f point = *(triangles++);
+			point.x -= bounding_box.left;
+			point.y -= bounding_box.top;
+			point.x *= bounding_box_invert_size.width;
+			point.y *= bounding_box_invert_size.height;
+
+			Colorf top_color(
+				(gradient.top_right.r * point.x) + (gradient.top_left.r * (1.0f - point.x)),
+				(gradient.top_right.g * point.x) + (gradient.top_left.g * (1.0f - point.x)),
+				(gradient.top_right.b * point.x) + (gradient.top_left.b * (1.0f - point.x)),
+				(gradient.top_right.a * point.x) + (gradient.top_left.a * (1.0f - point.x)) );
+
+			Colorf bottom_color(
+				(gradient.bottom_right.r * point.x) + (gradient.bottom_left.r * (1.0f - point.x)),
+				(gradient.bottom_right.g * point.x) + (gradient.bottom_left.g * (1.0f - point.x)),
+				(gradient.bottom_right.b * point.x) + (gradient.bottom_left.b * (1.0f - point.x)),
+				(gradient.bottom_right.a * point.x) + (gradient.bottom_left.a * (1.0f - point.x)) );
+
+			Colorf color(
+				(bottom_color.r * point.y) + (top_color.r * (1.0f - point.y)), 
+				(bottom_color.g * point.y) + (top_color.g * (1.0f - point.y)), 
+				(bottom_color.b * point.y) + (top_color.b * (1.0f - point.y)), 
+				(bottom_color.a * point.y) + (top_color.a * (1.0f - point.y)) );
+				
+			out_colors.push_back(color);
+		}
+	}
+}
+
+Rectf Canvas_Impl::get_triangles_bounding_box(const Vec2f *triangles, int num_vertex)
+{
+	Rectf bounding_box;
+	if (num_vertex)
+		bounding_box = Rectf(triangles->x, triangles->y, triangles->x, triangles->y);
+
+	for (--num_vertex; num_vertex > 0; --num_vertex)
+	{
+		triangles++;
+		bounding_box.left = min(triangles->x, bounding_box.left);
+		bounding_box.top = min(triangles->y, bounding_box.top);
+		bounding_box.right = max(triangles->x, bounding_box.right);
+		bounding_box.bottom = max(triangles->y, bounding_box.bottom);
+	}
+	return bounding_box;
+}
 
 }
+

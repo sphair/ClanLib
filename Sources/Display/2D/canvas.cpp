@@ -577,6 +577,33 @@ void Canvas::fill_triangles(const std::vector<Vec2f> &triangles, const Colorf *c
 	}
 }
 
+void Canvas::fill_triangles(const Vec2f *triangle_positions, int num_vertices, const Gradient &gradient)
+{
+	if (num_vertices)
+	{
+		std::vector<Colorf> colors;
+		Canvas_Impl::get_gradient_colors(triangle_positions, num_vertices, gradient, colors);
+
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangle(*this, triangle_positions, &colors[0], num_vertices);
+
+	}
+}
+
+void Canvas::fill_triangles(const std::vector<Vec2f> &triangles, const Gradient &gradient)
+{
+	if (!triangles.empty())
+	{
+		std::vector<Colorf> colors;
+		Canvas_Impl::get_gradient_colors(&triangles[0], triangles.size(), gradient, colors);
+
+		RenderBatchTriangle *batcher = impl->get_triangle_batcher();
+		batcher->fill_triangle(*this, &triangles[0], &colors[0], triangles.size());
+
+	}
+}
+
+
 void Canvas::fill_triangles(const std::vector<Vec2f> &triangles, const Colorf &color)
 {
 	if (!triangles.empty())
