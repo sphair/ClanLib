@@ -73,6 +73,9 @@ public:
 	void get_triangles(std::vector<Vec2f> &out_primitives_array, PolygonOrientation polygon_orientation) const;
 	void get_outline(std::vector< std::vector<Vec2f> > &out_primitives_array_outline) const;
 
+	static void add_rotated_curve(Path2D &path, const Pointf &center, const Angle &angle, Pointf point_1,  Pointf point_2,  Pointf point_3);
+
+
 /// \}
 /// \name Implementation
 /// \{
