@@ -74,35 +74,52 @@ void Shape2D::get_outline(std::vector< std::vector<Vec2f> > &out_primitives_arra
 
 void Shape2D::add_circle(float center_x, float center_y, float radius, bool reverse)
 {
-	#define KAPPA		0.5522847498f
+	add_circle(Pointf(center_x, center_y), radius, reverse);
 
-	clan::BezierCurve bezier_curve;
-
-	bezier_curve.add_control_point(center_x + radius, center_y);
-	bezier_curve.add_control_point(center_x + radius * 1, (center_y + radius * 1 * KAPPA));
-	bezier_curve.add_control_point(center_x + radius * 1 * KAPPA, (center_y + radius * 1));
-	bezier_curve.add_control_point(center_x + radius * 0, (center_y + radius * 1));
-	bezier_curve.add_control_point(center_x - radius * 1  * KAPPA, (center_y + radius * 1));
-	bezier_curve.add_control_point(center_x - radius * 1, (center_y + radius * 1 * KAPPA));
-	bezier_curve.add_control_point(center_x - radius * 1, (center_y + radius * 0));
-	bezier_curve.add_control_point(center_x - radius * 1, (center_y - radius * 1  * KAPPA));
-	bezier_curve.add_control_point(center_x - radius * 1 * KAPPA, (center_y - radius * 1));
-	bezier_curve.add_control_point(center_x - radius * 0, (center_y - radius * 1));
-	bezier_curve.add_control_point(center_x + radius * 1 * KAPPA, (center_y - radius * 1));
-	bezier_curve.add_control_point(center_x + radius * 1, (center_y - radius * 1 * KAPPA));
-	bezier_curve.add_control_point(center_x + radius * 1, (center_y - radius * 0));
-
-	Path2D path;
-	path.add_curve(bezier_curve);
-	if (reverse)
-		path.reverse();
-
-	add_path(path);
 }
 
 void Shape2D::add_circle(const Pointf &center, float radius, bool reverse)
 {
-	add_circle(center.x, center.y, radius, reverse);
+	float offset_x = 0;
+	float offset_y = 0;
+
+	int rotationcount = max(5, (radius - 3));
+	float halfpi = 1.5707963267948966192313216916398f;
+	float turn = halfpi / rotationcount;
+
+	offset_x = center.x;
+	offset_y = -center.y;
+
+	Path2D path;
+
+	std::vector<Pointf> points;
+	points.resize(rotationcount*4);
+
+	for(int i = 0; i < rotationcount ; i++)
+	{
+		float pos1 = radius * cos(i * turn);
+		float pos2 = radius * sin(i * turn);
+
+		points[i].x = (center.x + pos1);
+		points[i].y = (center.y + pos2);
+
+		points[rotationcount*2 - (i+1)].x = (center.x - pos1);
+		points[rotationcount*2 - (i+1)].y = (center.y + pos2);
+
+		points[i + rotationcount*2].x = (center.x - pos1);
+		points[i + rotationcount*2].y = (center.y - pos2);
+
+		points[rotationcount*4 - (i+1)].x = (center.x + pos1);
+		points[rotationcount*4 - (i+1)].y = (center.y - pos2);
+
+	}
+
+	path.add_line_to(points);
+
+	if (reverse)
+		path.reverse();
+
+	add_path(path);
 }
 
 /////////////////////////////////////////////////////////////////////////////

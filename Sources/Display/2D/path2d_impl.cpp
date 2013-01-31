@@ -110,6 +110,11 @@ void Path2D_Impl::add_line_to(const Pointf &point )
 	contour_points.push_back(point);
 }
 
+void Path2D_Impl::add_line_to( const std::vector<Pointf> &points)
+{
+	contour_points.insert(contour_points.end(), points.begin(), points.end());
+}
+
 void Path2D_Impl::reverse()
 {
 	std::reverse(contour_points.begin(), contour_points.end());
