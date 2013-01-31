@@ -82,6 +82,7 @@ public:
 
 	static void get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors);
 	static Rectf get_triangles_bounding_box(const Vec2f *triangles, int num_vertex);
+	static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
 	std::vector<Rect> cliprects;
 	FontManager font_manager;

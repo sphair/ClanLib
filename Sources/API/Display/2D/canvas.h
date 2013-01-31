@@ -441,7 +441,13 @@ public:
 	void fill_triangles(const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
 
 	/// \brief Draw triangles
-	void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color = Colorf::white);
+	void fill_triangles(const std::vector<Vec2f> &positions, const std::vector<Vec2f> &texture_positions, const Texture2D &texture, const Colorf &color = Colorf::white);
+
+	/// \brief Draw triangles
+	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Colorf &color = Colorf::white);
+
+	/// \brief Draw triangles
+	void fill_triangles(const std::vector<Vec2f> &positions, const Texture2D &texture, const Rect &texture_rect, const Colorf &color = Colorf::white);
 
 	/// \brief Draw a filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Colorf &color = Colorf::white);

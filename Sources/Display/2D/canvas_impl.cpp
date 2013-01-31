@@ -290,6 +290,41 @@ void Canvas_Impl::reset_cliprect()
 	gc.reset_scissor();
 }
 
+void Canvas_Impl::get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions)
+{
+	out_texture_positions.clear();
+	out_texture_positions.reserve(num_vertex);
+	if (num_vertex)
+	{
+		Rectf bounding_box = get_triangles_bounding_box(triangles, num_vertex);
+		Sizef bounding_box_size = bounding_box.get_size();
+		if (bounding_box_size.width <= 0.0f)
+			bounding_box_size.width = 1.0f;
+		if (bounding_box_size.height <= 0.0f)
+			bounding_box_size.height = 1.0f;
+
+		Sizef texture_size = texture.get_size();
+		Rectf texture_rect_scaled( texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
+
+		Sizef bounding_box_invert_size( texture_rect_scaled.get_width() / bounding_box_size.width, texture_rect_scaled.get_height() / bounding_box_size.height );
+
+		for(;num_vertex>0; --num_vertex)
+		{
+			Vec2f point = *(triangles++);
+			point.x -= bounding_box.left;
+			point.y -= bounding_box.top;
+			point.x *= bounding_box_invert_size.width;
+			point.y *= bounding_box_invert_size.height;
+
+			point.x += texture_rect_scaled.left;
+			point.y += texture_rect_scaled.top;
+
+			out_texture_positions.push_back(point);
+		}
+	}
+}
+
+
 void Canvas_Impl::get_gradient_colors(const Vec2f *triangles, int num_vertex, const Gradient &gradient, std::vector<Colorf> &out_colors)
 {
 	out_colors.clear();
