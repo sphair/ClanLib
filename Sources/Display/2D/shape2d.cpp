@@ -34,6 +34,7 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Font/font_vector.h"
 #include "API/Core/Math/bezier_curve.h"
+#include "API/Core/Math/line_segment.h"
 #include <vector>
 
 namespace clan
@@ -130,6 +131,28 @@ void Shape2D::add_ellipse(const Pointf &center, const Pointf &radius, bool rever
 void Shape2D::add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse)
 {
 	add_rounded_rect(origin, size, cap_rounding, Angle(), reverse);
+}
+
+void Shape2D::add_rounded_line(const Pointf &start, const Pointf &end, float line_width, float cap_rounding, bool reverse)
+{
+	float distance = start.distance(end);
+	Sizef size(distance, line_width);
+
+	Vec2f diff = end - start;
+	diff.y = -diff.y;
+	Angle angle(diff.angle_relative(Vec2f()));
+
+	Pointf center(start.x + size.width / 2.0f,  start.y + size.height / 2.0f );
+	Vec2f rotated = start;
+	rotated.rotate(center, angle);
+
+	Vec2f origin( start.x + (start.x - rotated.x), start.y + (start.y - rotated.y));
+	rotated = Vec2f(0.0f, line_width/2.0f);
+	rotated.rotate(Vec2f(), angle);
+	origin.x -= rotated.x;
+	origin.y -= rotated.y;
+
+	add_rounded_rect(origin, size, cap_rounding, angle, reverse);
 }
 
 void Shape2D::add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, const Angle &angle, bool reverse)
