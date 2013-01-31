@@ -57,7 +57,9 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	//shape.add_circle(circle_x, circle_y, circle_radius, false);
 	//shape.add_circle(circle_x+0.0f, circle_y + 0.0f, 64.0f, true);
-	shape.add_rounded_rect(clan::Pointf(100.0f, 400.0f), clan::Sizef(128.0f, 64.0f), 32, false );
+	//shape.add_rounded_rect(clan::Pointf(100.0f, 400.0f), clan::Sizef(128.0f, 64.0f), 32, false );
+	//shape.add_rounded_rect(clan::Pointf(120.0f, 420.0f), clan::Sizef(64.0f, 32.0f), 16, true );
+	shape.add_rect(clan::Rectf(100.0f, 400.0f, clan::Sizef(256.0f, 128.0f)), false);
 
 	std::vector<clan::Vec2f> primitives_array_circle;
 	std::vector< std::vector<clan::Vec2f> > primitives_array_outline_circle;

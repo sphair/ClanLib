@@ -44,6 +44,7 @@ namespace clan
 class GraphicContext;
 class Canvas;
 class Shape2D_Impl;
+class Rectf;
 
 class CL_API_DISPLAY Shape2D
 {
@@ -76,13 +77,15 @@ public:
 	/// \brief Add a circle.
 	void add_circle(float center_x, float center_y, float radius, bool reverse = false);
 
-	/// \brief Add aCircle
+	/// \brief Add a Circle
 	///
 	/// \param center = Pointf
 	/// \param radius = value
 	void add_circle(const Pointf &center, float radius, bool reverse = false);
 
 	void add_rounded_rect(const Pointf &origin, const Sizef &size, float cap_rounding, bool reverse = false);
+
+	void add_rect(const Rectf &rect, bool reverse = false);
 
 
 /// \}
