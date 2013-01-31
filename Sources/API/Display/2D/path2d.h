@@ -80,6 +80,8 @@ public:
 
 	void add_line_to(const Pointf &p);
 
+	void add_line_to( const std::vector<Pointf> &points);
+
 	inline void add_line_to(float x, float y) {add_line_to(Pointf(x, y));}
 
 	// Reverse the contours

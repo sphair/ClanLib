@@ -75,7 +75,7 @@ public:
 	void add_curve(BezierCurve &);
 
 	void add_line_to(const Pointf &p);
-
+	void add_line_to( const std::vector<Pointf> &points);
 	void reverse();
 
 /// \}

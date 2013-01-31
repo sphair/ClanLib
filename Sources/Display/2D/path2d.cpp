@@ -86,6 +86,11 @@ void Path2D::add_line_to(const Pointf &point )
 	impl->add_line_to(point);
 }
 
+void Path2D::add_line_to( const std::vector<Pointf> &points)
+{
+	impl->add_line_to(points);
+}
+
 void Path2D::reverse()
 {
 	impl->reverse();
