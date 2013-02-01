@@ -34,40 +34,40 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set a videomode - 1024x256
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_allow_resize(false);
 	desc.set_title("ClanLib - Advanced Canvas");
 	desc.set_size(Size(1024, 768), true);
 	desc.set_fullscreen(false);
-	DisplayWindow window(desc);
-	gc = window.get_gc();
+	clan::DisplayWindow window(desc);
+	canvas = window.get_gc();
 
 	// Seed randoms
-	srand(System::get_time());
+	srand(clan::System::get_time());
 
 	// Connect Slots
-	Slot slot_quit = window.sig_window_close().connect(this, &ExampleCanvas::on_window_close);
-	Slot slot_keyboard_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &ExampleCanvas::on_keyboard_up);
-	Slot slot_mouse_up = window.get_ic().get_mouse().sig_key_up().connect(this, &ExampleCanvas::on_mouse_up);
-	Slot	slot_mouse_move = window.get_ic().get_mouse().sig_pointer_move().connect(this, &ExampleCanvas::on_mouse_move);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &ExampleCanvas::on_window_close);
+	clan::Slot slot_keyboard_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &ExampleCanvas::on_keyboard_up);
+	clan::Slot slot_mouse_up = window.get_ic().get_mouse().sig_key_up().connect(this, &ExampleCanvas::on_mouse_up);
+	clan::Slot	slot_mouse_move = window.get_ic().get_mouse().sig_pointer_move().connect(this, &ExampleCanvas::on_mouse_move);
 
 	// Load the surfaces
 	// -- This is our ground texture.
-	background = Image(gc, "Resources/background.png");
+	background = clan::Image(canvas, "Resources/background.png");
 
 	// -- This is the light mask that draws over everything (and is attached to our framebuffer).
 	if(USE_SCALE)
-		light_mask = Texture(gc, "Resources/scale_mask.png");
+		light_mask = clan::Texture(canvas, "Resources/scale_mask.png");
 	else
-		light_mask = Texture(gc, "Resources/full_mask.png");
+		light_mask = clan::Texture(canvas, "Resources/full_mask.png");
 
 	// Create the framebuffer, and attach ground texture into its color buffer
-	fb_lightmask = FrameBuffer(gc);
+	fb_lightmask = clan::FrameBuffer(canvas);
 	fb_lightmask.attach_color_buffer(0, light_mask);
 
 	// Just a bunch of variables for keeping time and tracking FPS
 	unsigned int current_time = 0;
-	unsigned int last_time = System::get_time();
+	unsigned int last_time = clan::System::get_time();
 	float micro_second = 0;
 	float fps_ticker = 0;
 	int real_fps = 0;
@@ -78,16 +78,16 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	bool daylight_forward = false;
 
 	// Setup our mouse pointer light.
-	mouse_light = new Light(gc);
+	mouse_light = new Light(canvas);
 	mouse_light->set_scale(3.0f, 3.0f);
-	mouse_light->set_color(Colorf((float)get_random(0,100)/100,(float)get_random(0,100)/100,(float)get_random(0,100)/100,0.20f));
+	mouse_light->set_color(clan::Colorf((float)get_random(0,100)/100,(float)get_random(0,100)/100,(float)get_random(0,100)/100,0.20f));
 	lights.add(mouse_light);
 
 	// Run until someone presses escape
 	while (!quit)
 	{
 		// Manage our time/fps
-		current_time = System::get_time();
+		current_time = clan::System::get_time();
 		if (last_time - current_time == 0)
 			micro_second = 0;
 		else 
@@ -99,7 +99,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		{
 			// a second passed.
 			real_fps = int(frames / fps_ticker);
-			Console::write_line("FPS: %1",real_fps);
+			clan::Console::write_line("FPS: %1",real_fps);
 			fps_ticker = 0;
 			frames = 0;
 		}
@@ -124,48 +124,48 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		// ** Draw Regular Game Objects/Images ** \\
 
 		// Draw background
-		background.draw(gc, 0, 0);
+		background.draw(canvas, 0, 0);
 
 		// Draw your normal game objects around here...
 
 		// Draw colored lights.
 		if(LIGHTS_COLOR)
-			lights.draw(gc);
+			lights.draw(canvas);
 
 		// ** Clip Light Mask ** \\
 
 		// Set the working framebuffer
-		gc.set_frame_buffer(fb_lightmask);
+		canvas.set_frame_buffer(fb_lightmask);
 
 		// Clear it from last frame.
 		// -- Here is where day/night can be accomplished, but interpolating the color/alpha values.
-		gc.clear(Colorf(0.0f, 0.0f, 0.0f, daylight));
+		canvas.clear(clan::Colorf(0.0f, 0.0f, 0.0f, daylight));
 		
 		// Draw the Light cutouts
-		lights.draw_clips(gc);
+		lights.draw_clips(canvas);
 
 		// We're done making our changes to the texture, so reset the buffer.
-		gc.reset_frame_buffer();
+		canvas.reset_frame_buffer();
 	
 		// Draw the lightmask texture
 		// The color of the texture here can influence your output.  I chose to keep it simple
 		// by staying white with 100% alpha.
-		gc.set_texture(0, light_mask);
+		canvas.set_texture(0, light_mask);
 		if(USE_SCALE)
-			gc.mult_scale(CANVAS_SCALE_X,CANVAS_SCALE_Y);
-		Draw::texture(gc, Rect(light_mask.get_size()), Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+			canvas.mult_scale(CANVAS_SCALE_X,CANVAS_SCALE_Y);
+		Draw::texture(canvas, clan::Rect(light_mask.get_size()), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		gc.set_modelview(Mat4f::identity());
+		canvas.set_modelview(clan::Mat4f::identity());
 
 		// Reset
-		gc.reset_texture(0);
+		canvas.reset_texture(0);
 		
 		// Flip the display, showing on the screen what we have drawn (no v-sync)
-		window.flip(0);
+		canvas.flip(0);
 		frames++;
 
 		// This call updates input and performs other "housekeeping"
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 
 	// Cleanup
@@ -174,19 +174,19 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	return 0;
 }
 
-void ExampleCanvas::on_mouse_move(const InputEvent &key)
+void ExampleCanvas::on_mouse_move(const clan::InputEvent &key)
 {
 	// Update our mouse light to reflect the current mouse position.
 	mouse_light->set_translation((float)key.mouse_pos.x, (float)key.mouse_pos.y);
 };
 
-void ExampleCanvas::on_keyboard_up(const InputEvent &key)
+void ExampleCanvas::on_keyboard_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 		quit = true;
 }
 
-void ExampleCanvas::on_mouse_up(const InputEvent &key)
+void ExampleCanvas::on_mouse_up(const clan::InputEvent &key)
 {
 	// Here we create a random light.
 	int r = get_random(0,100);
@@ -194,10 +194,10 @@ void ExampleCanvas::on_mouse_up(const InputEvent &key)
 	int b = get_random(0,100);
 	int scale = get_random(100,500);
 
-	Light *light = new Light(gc);
+	Light *light = new Light(canvas);
 	light->set_translation((float)get_random(50,900), (float)get_random(50,700));
 	light->set_scale((float)scale/100,(float)scale/100);
-	light->set_color(Colorf( (float)r/100, (float)g/100, (float)b/100, 0.20f));
+	light->set_color(clan::Colorf( (float)r/100, (float)g/100, (float)b/100, 0.20f));
 	light->set_life(5000);	// Die in 5 seconds.
 
 	lights.add(light);

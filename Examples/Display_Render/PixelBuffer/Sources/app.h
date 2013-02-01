@@ -38,15 +38,15 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 
-	void read_write_pixel_buffer(PixelBuffer &pbuff);
-	void upload_pixel_buffer(PixelBuffer &pbuff_source, PixelBuffer &pbuff_dest);
+	void read_write_pixel_buffer(clan::PixelBuffer &pbuff);
+	void upload_pixel_buffer(clan::PixelBuffer &pbuff_source, clan::PixelBuffer &pbuff_dest);
 
-	void draw_cpu(GraphicContext &gc, PixelBuffer &cpu_buffer, PixelBuffer &tux, Texture &texture_to_write_into, Texture &texture_to_draw);
-	void draw_gpu(GraphicContext &gc, PixelBuffer &gpu_buffer_to_write_into, PixelBuffer &gpu_buffer_to_draw, PixelBuffer &tux, Texture &texture_to_write_into, Texture &texture_to_draw);
-	void draw_texture(GraphicContext &gc, Texture &texture, int xpos, int ypos);
+	void draw_cpu(clan::Canvas &canvas, clan::PixelBuffer &cpu_buffer, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw);
+	void draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw);
+	void draw_texture(clan::Canvas &canvas, clan::Texture &texture, int xpos, int ypos);
 private:
 	bool quit;
 	bool cpu_active;

@@ -38,59 +38,59 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("ColorWheel Example");
 	win_desc.set_size(Size( 800, 600 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
+	clan::GUIWindowManagerTexture wm(window);
+	clan::GUIManager gui(wm, theme);
 
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas = window.get_gc();
 
 	// Deleted automatically by the GUI
-	new ColorWheel(gc, gui, Rect(32, 32, Size(512, 512)));
+	new ColorWheel(canvas, gui, clan::Rect(32, 32, Size(512, 512)));
 
 
-	unsigned int time_last = System::get_time();
+	unsigned int time_last = clan::System::get_time();
 
 	while (!quit)
 	{
-		unsigned int time_now = System::get_time();
+		unsigned int time_now = clan::System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
-		gc.clear(Colorf(0.0f,0.0f,0.0f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
 	switch (key.id)
 	{
-		case KEY_ESCAPE:
+		case clan::keycode_escape:
 			quit = true;
 			break;
 	}

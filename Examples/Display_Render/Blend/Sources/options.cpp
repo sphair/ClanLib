@@ -30,20 +30,20 @@
 
 #include "options.h"
 
-Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITopLevelDescription("Options", gui_position, false))
+Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// If you change these, you also need to change the default selected combobox item
-	blendfunc[0] = cl_blend_src_alpha;
-	blendfunc[1] = cl_blend_one_minus_src_alpha;
-	blendfunc[2] = cl_blend_src_alpha;
-	blendfunc[3] = cl_blend_one_minus_src_alpha;
-	blendequation[0] = cl_blend_equation_add;
-	blendequation[1] = cl_blend_equation_add;
-	logic_operation = cl_logic_op_set;
+	blendfunc[0] = clan::blend_src_alpha;
+	blendfunc[1] = clan::blend_one_minus_src_alpha;
+	blendfunc[2] = clan::blend_src_alpha;
+	blendfunc[3] = clan::blend_one_minus_src_alpha;
+	blendequation[0] = clan::equation_add;
+	blendequation[1] = clan::equation_add;
+	logic_operation = clan::logic_set;
 	logic_operation_enabled = false;
 
-	primary_color = Colorf::white;
-	blend_color = Colorf::white;
+	primary_color = clan::Colorf::white;
+	blend_color = clan::Colorf::white;
 	num_balls = 4;
 	is_premult_alpha_set = false;
 	is_moveballs_set = true;
@@ -130,23 +130,23 @@ Options::~Options()
 
 }
 
-void Options::on_render(GraphicContext &gc, const Rect &update_rect)
+void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect rect = get_geometry();
-	Draw::fill(gc, update_rect, Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	clan::Rect rect = get_geometry();
+	Draw::fill(canvas, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
-float Options::get_value(Slider *slider)
+float Options::get_value(clan::Slider *slider)
 {
 	float value = (float) slider->get_position();
 	value /= (float) slider->get_max();
 	return value;
 }
 
-Slider *Options::create_slider(int xpos, int ypos)
+clan::Slider *Options::create_slider(int xpos, int ypos)
 {
-	Slider *component = new Slider(this);
-	component->set_geometry(Rect(xpos, ypos, Size(256, 17)));
+	clan::Slider *component = new clan::Slider(this);
+	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(256, 17)));
 	component->set_vertical(false);
 	component->set_horizontal(true);
 	component->set_min(0);
@@ -160,16 +160,16 @@ Slider *Options::create_slider(int xpos, int ypos)
 
 }
 
-CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
 {
-	CheckBox *checkbox = new CheckBox(this);
-	checkbox->set_geometry(Rect(xpos, ypos , Size(140, 16)));
+	clan::CheckBox *checkbox = new clan::CheckBox(this);
+	checkbox->set_geometry(clan::Rect(xpos, ypos , clan::Size(140, 16)));
 	checkbox->set_text(name);
 	checkbox->set_checked(state);
 	return checkbox;
 }
 
-void Options::on_equation_selected(int value, ComboBox *combo)
+void Options::on_equation_selected(int value, clan::ComboBox *combo)
 {
 	int offset = 0;
 	if (combo == combo_alpha_equation)
@@ -178,81 +178,81 @@ void Options::on_equation_selected(int value, ComboBox *combo)
 	switch (value)
 	{
 		case 0:
-			blendequation[offset] = cl_blend_equation_add;
+			blendequation[offset] = clan::equation_add;
 			break;
 		case 1:
-			blendequation[offset] = cl_blend_equation_subtract;
+			blendequation[offset] = clan::equation_subtract;
 			break;
 		case 2:
-			blendequation[offset] = cl_blend_equation_reverse_subtract;
+			blendequation[offset] = clan::equation_reverse_subtract;
 			break;
 		case 3:
-			blendequation[offset] = cl_blend_equation_min;
+			blendequation[offset] = clan::equation_min;
 			break;
 		case 4:
-			blendequation[offset] = cl_blend_equation_max;
+			blendequation[offset] = clan::equation_max;
 			break;
 	}
 }
 
-void Options::on_logic_selected(int value, ComboBox *combo)
+void Options::on_logic_selected(int value, clan::ComboBox *combo)
 {
 	logic_operation_enabled = (value==0) ? false : true;
 
 	switch (value)
 	{
 		case 1:
-			logic_operation = cl_logic_op_clear;
+			logic_operation = clan::logic_clear;
 			break;
 		case 2:
-			logic_operation = cl_logic_op_and;
+			logic_operation = clan::logic_and;
 			break;
 		case 3:
-			logic_operation = cl_logic_op_and_reverse;
+			logic_operation = clan::logic_and_reverse;
 			break;
 		case 4:
-			logic_operation = cl_logic_op_copy;
+			logic_operation = clan::logic_copy;
 			break;
 		case 5:
-			logic_operation = cl_logic_op_and_inverted;
+			logic_operation = clan::logic_and_inverted;
 			break;
 		case 6:
-			logic_operation = cl_logic_op_noop;
+			logic_operation = clan::logic_noop;
 			break;
 		case 7:
-			logic_operation = cl_logic_op_xor;
+			logic_operation = clan::logic_xor;
 			break;
 		case 8:
-			logic_operation = cl_logic_op_or;
+			logic_operation = clan::logic_or;
 			break;
 		case 9:
-			logic_operation = cl_logic_op_nor;
+			logic_operation = clan::logic_nor;
 			break;
 		case 10:
-			logic_operation = cl_logic_op_equiv;
+			logic_operation = clan::logic_equiv;
 			break;
 		case 11:
-			logic_operation = cl_logic_op_invert;
+			logic_operation = clan::logic_invert;
 			break;
 		case 12:
-			logic_operation = cl_logic_op_or_reverse;
+			logic_operation = clan::logic_or_reverse;
 			break;
 		case 13:
-			logic_operation = cl_logic_op_copy_inverted;
+			logic_operation = clan::logic_copy_inverted;
 			break;
 		case 14:
-			logic_operation = cl_logic_op_or_inverted;
+			logic_operation = clan::logic_or_inverted;
 			break;
 		case 15:
-			logic_operation = cl_logic_op_nand;
+			logic_operation = clan::logic_nand;
 			break;
 		case 16:
-			logic_operation = cl_logic_op_set;
+			logic_operation = clan::logic_set;
 			break;
 	}
 }
 
-void Options::on_blend_selected(int value, ComboBox *combo)
+void Options::on_blend_selected(int value, clan::ComboBox *combo)
 {
 	int offset = -1;
 
@@ -271,57 +271,57 @@ void Options::on_blend_selected(int value, ComboBox *combo)
 	switch (value)
 	{
 		case 0:
-			blendfunc[offset] = cl_blend_zero;
+			blendfunc[offset] = clan::blend_zero;
 			break;
 		case 1:
-			blendfunc[offset] = cl_blend_one;
+			blendfunc[offset] = clan::blend_one;
 			break;
 		case 2:
-			blendfunc[offset] = cl_blend_dest_color;
+			blendfunc[offset] = clan::blend_dest_color;
 			break;
 		case 3:
-			blendfunc[offset] = cl_blend_src_color;
+			blendfunc[offset] = clan::blend_src_color;
 			break;
 		case 4:
-			blendfunc[offset] = cl_blend_one_minus_dest_color;
+			blendfunc[offset] = clan::blend_one_minus_dest_color;
 			break;
 		case 5:
-			blendfunc[offset] = cl_blend_one_minus_src_color;
+			blendfunc[offset] = clan::blend_one_minus_src_color;
 			break;
 		case 6:
-			blendfunc[offset] = cl_blend_src_alpha;
+			blendfunc[offset] = clan::blend_src_alpha;
 			break;
 		case 7:
-			blendfunc[offset] = cl_blend_one_minus_src_alpha;
+			blendfunc[offset] = clan::blend_one_minus_src_alpha;
 			break;
 		case 8:
-			blendfunc[offset] = cl_blend_dest_alpha;
+			blendfunc[offset] = clan::blend_dest_alpha;
 			break;
 		case 9:
-			blendfunc[offset] = cl_blend_one_minus_dest_alpha;
+			blendfunc[offset] = clan::blend_one_minus_dest_alpha;
 			break;
 		case 10:
-			blendfunc[offset] = cl_blend_src_alpha_saturate;
+			blendfunc[offset] = clan::blend_src_alpha_saturate;
 			break;
 		case 11:
-			blendfunc[offset] = cl_blend_constant_color;
+			blendfunc[offset] = clan::blend_constant_color;
 			break;
 		case 12:
-			blendfunc[offset] = cl_blend_one_minus_constant_color;
+			blendfunc[offset] = clan::blend_one_minus_constant_color;
 			break;
 		case 13:
-			blendfunc[offset] = cl_blend_constant_alpha;
+			blendfunc[offset] = clan::blend_constant_alpha;
 			break;
 		case 14:
-			blendfunc[offset] = cl_blend_one_minus_constant_alpha;
+			blendfunc[offset] = clan::blend_one_minus_constant_alpha;
 	}
 }
 
-Label *Options::create_slider_label(Slider *slider)
+clan::Label *Options::create_slider_label(clan::Slider *slider)
 {
-	Label *component = new Label(this);
-	Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(Rect(slider_geometry.right + 4, slider_geometry.top - 2, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect slider_geometry = slider->get_geometry();
+	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
 	component->set_text("##################");
 	return component;
 }
@@ -329,63 +329,63 @@ Label *Options::create_slider_label(Slider *slider)
 void Options::slider_numballs_changed()
 {
 	num_balls = slider_numballs->get_position();
-	std::string text(string_format("Number of Balls : %1", num_balls));
+	std::string text(clan::string_format("Number of Balls : %1", num_balls));
 	label_numballs->set_text(text);
 }
 
 void Options::slider_primary_red_changed()
 {
 	primary_color.r = get_value(slider_primary_red);
-	std::string text(string_format("Primary Color Red : %1", primary_color.r));
+	std::string text(clan::string_format("Primary Color Red : %1", primary_color.r));
 	label_primary_red->set_text(text);
 }
 
 void Options::slider_primary_green_changed()
 {
 	primary_color.g = get_value(slider_primary_green);
-	std::string text(string_format("Primary Color green : %1", primary_color.g));
+	std::string text(clan::string_format("Primary Color green : %1", primary_color.g));
 	label_primary_green->set_text(text);
 }
 
 void Options::slider_primary_blue_changed()
 {
 	primary_color.b = get_value(slider_primary_blue);
-	std::string text(string_format("Primary Color blue : %1", primary_color.b));
+	std::string text(clan::string_format("Primary Color blue : %1", primary_color.b));
 	label_primary_blue->set_text(text);
 }
 
 void Options::slider_primary_alpha_changed()
 {
 	primary_color.a = get_value(slider_primary_alpha);
-	std::string text(string_format("Primary Color alpha : %1", primary_color.a));
+	std::string text(clan::string_format("Primary Color alpha : %1", primary_color.a));
 	label_primary_alpha->set_text(text);
 }
 
 void Options::slider_blend_red_changed()
 {
 	blend_color.r = get_value(slider_blend_red);
-	std::string text(string_format("Blend Color Red : %1", blend_color.r));
+	std::string text(clan::string_format("Blend Color Red : %1", blend_color.r));
 	label_blend_red->set_text(text);
 }
 
 void Options::slider_blend_green_changed()
 {
 	blend_color.g = get_value(slider_blend_green);
-	std::string text(string_format("Blend Color green : %1", blend_color.g));
+	std::string text(clan::string_format("Blend Color green : %1", blend_color.g));
 	label_blend_green->set_text(text);
 }
 
 void Options::slider_blend_blue_changed()
 {
 	blend_color.b = get_value(slider_blend_blue);
-	std::string text(string_format("Blend Color blue : %1", blend_color.b));
+	std::string text(clan::string_format("Blend Color blue : %1", blend_color.b));
 	label_blend_blue->set_text(text);
 }
 
 void Options::slider_blend_alpha_changed()
 {
 	blend_color.a = get_value(slider_blend_alpha);
-	std::string text(string_format("Blend Color alpha : %1", blend_color.a));
+	std::string text(clan::string_format("Blend Color alpha : %1", blend_color.a));
 	label_blend_alpha->set_text(text);
 }
 
@@ -417,10 +417,10 @@ void Options::checkbox_premult_alpha_changed()
 	is_premult_alpha_set = checkbox_premult_alpha->is_checked();
 }
 
-ComboBox *Options::create_equation_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_equation_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(140, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(140, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -431,10 +431,10 @@ ComboBox *Options::create_equation_combo_box(int xpos, int ypos, PopupMenu &menu
 	return combo;
 }
 
-ComboBox *Options::create_blend_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_blend_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(180, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -445,10 +445,10 @@ ComboBox *Options::create_blend_combo_box(int xpos, int ypos, PopupMenu &menu, i
 	return combo;
 }
 
-ComboBox *Options::create_logic_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_logic_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(180, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -459,7 +459,7 @@ ComboBox *Options::create_logic_combo_box(int xpos, int ypos, PopupMenu &menu, i
 	return combo;
 }
 
-void Options::make_equation_menu(PopupMenu &menu)
+void Options::make_equation_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("Add");
 	menu.insert_item("Subtract");
@@ -468,7 +468,7 @@ void Options::make_equation_menu(PopupMenu &menu)
 	menu.insert_item("Max");
 }
 
-void Options::make_blend_menu(PopupMenu &menu)
+void Options::make_blend_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("Zero");
 	menu.insert_item("One");
@@ -487,7 +487,7 @@ void Options::make_blend_menu(PopupMenu &menu)
 	menu.insert_item("One Minus Constant Alpha");
 }
 
-void Options::make_logic_menu(PopupMenu &menu)
+void Options::make_logic_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("Disabled");
 	menu.insert_item("clear");
@@ -508,11 +508,11 @@ void Options::make_logic_menu(PopupMenu &menu)
 	menu.insert_item("set");
 }
 
-Label *Options::create_combobox_label(ComboBox *combo, const char *text)
+clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *text)
 {
-	Label *component = new Label(this);
-	Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(Rect(combo_geometry.left, combo_geometry.top - 20, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect combo_geometry = combo->get_geometry();
+	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
 	component->set_text(text);
 	return component;
 }

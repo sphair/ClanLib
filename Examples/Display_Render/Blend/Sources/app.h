@@ -50,14 +50,14 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 	void setup_balls();
 	void move_balls(float time_diff, int num_balls);
-	std::string get_blendequation(BlendEquation equation, const std::string &source, const std::string &dest, const std::string &source_fragment, const std::string &dest_fragment);
-	std::string get_blendfunc(BlendFunc blendfunc, const std::string &fragment_colour);
-	void draw_equation(GraphicContext &gc, Font &font, Options *options);
-	std::string get_logic_operation(LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment);
+	std::string get_blendequation(clan::BlendEquation equation, const std::string &source, const std::string &dest, const std::string &source_fragment, const std::string &dest_fragment);
+	std::string get_blendfunc(clan::BlendFunc blendfunc, const std::string &fragment_colour);
+	void draw_equation(clan::Canvas &canvas, Font &font, Options *options);
+	std::string get_logic_operation(clan::LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment);
 
 private:
 	bool quit;

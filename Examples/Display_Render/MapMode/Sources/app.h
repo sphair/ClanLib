@@ -50,12 +50,12 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key);
+	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
 	void setup_balls();
 	void move_balls(float time_diff, int num_balls);
-	Image get_stencil(GraphicContext &gc, Rect rect);
-	void set_user_projection(GraphicContext &gc, Sizef &area_size, Options *options);
+	clan::Image get_stencil(clan::Canvas &canvas, clan::Rect rect);
+	void set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options);
 private:
 	bool quit;
 	float grid_space;

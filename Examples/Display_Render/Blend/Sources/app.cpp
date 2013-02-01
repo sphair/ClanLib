@@ -38,58 +38,58 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Blend Example");
 	win_desc.set_size(Size( 900, 570 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
+	clan::GUIWindowManagerTexture wm(window);
+	clan::GUIManager gui(wm, theme);
 	
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas = window.get_gc();
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(0, 0, gc.get_size()));
+	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	Image image_grid(gc, "Resources/grid.png");
-	Image image_ball(gc, "Resources/ball.png");
-	ImageImportDescription desc;
+	clan::Image image_grid(canvas, "Resources/grid.png");
+	clan::Image image_ball(canvas, "Resources/ball.png");
+	clan::ImageImportDescription desc;
 	desc.set_premultiply_alpha(true);
-	Image image_ball_premultiply_alpha(gc, "Resources/ball.png", desc);
+	clan::Image image_ball_premultiply_alpha(canvas, "Resources/ball.png", desc);
 	grid_space = (float) (image_grid.get_width() - image_ball.get_width());
 
 	setup_balls();
 
 	options->request_repaint();
 
-	Font font(gc, "Tahoma", 20);
+	clan::Font font(canvas, "Tahoma", 20);
 
-	unsigned int time_last = System::get_time();
+	unsigned int time_last = clan::System::get_time();
 
 	while (!quit)
 	{
-		unsigned int time_now = System::get_time();
+		unsigned int time_now = clan::System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
 		const float grid_xpos = 10.0f;
 		const float grid_ypos = 10.0f;
-		image_grid.draw(gc, grid_xpos, grid_ypos);
+		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
 		image_ball.set_color(options->primary_color);
 		image_ball_premultiply_alpha.set_color(options->primary_color);
@@ -101,43 +101,43 @@ int App::start(const std::vector<std::string> &args)
 		if (options->is_moveballs_set)
 			move_balls(time_diff, num_balls);
 
-		gc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
-		gc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
-		gc.set_blend_color(options->blend_color);
-		gc.enable_blending(options->is_blending_set);
+		canvas.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
+		canvas.set_blend_equation(options->blendequation[0], options->blendequation[1]);
+		canvas.set_blend_color(options->blend_color);
+		canvas.enable_blending(options->is_blending_set);
 
-		gc.set_logic_op(options->logic_operation);
-		gc.enable_logic_op(options->logic_operation_enabled);
+		canvas.set_logic_op(options->logic_operation);
+		canvas.enable_logic_op(options->logic_operation_enabled);
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
 			if (options->is_premult_alpha_set)
 			{
-				image_ball_premultiply_alpha.draw(gc, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+				image_ball_premultiply_alpha.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 			}
 			else
 			{
-				image_ball.draw(gc, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+				image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 			}
 		}
 
-		gc.reset_blend_mode();
-		gc.reset_buffer_control();
+		canvas.reset_blend_mode();
+		canvas.reset_buffer_control();
 
-		draw_equation(gc, font, options);
+		draw_equation(canvas, font, options);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -211,19 +211,19 @@ void App::move_balls(float time_diff, int num_balls)
 	}
 }
 
-void App::draw_equation(GraphicContext &gc, Font &font, Options *options)
+void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options)
 {
-	Rect equation_rect(10, gc.get_height() - 70, Size(gc.get_width() - 20, 60));
-	Draw::fill(gc, equation_rect, Colorf::black);
-	Draw::box(gc, equation_rect, Colorf::white);
+	clan::Rect equation_rect(10, canvas.get_height() - 70, clan::Size(canvas.get_width() - 20, 60));
+	Draw::fill(canvas, equation_rect, clan::Colorf::black);
+	Draw::box(canvas, equation_rect, clan::Colorf::white);
 
 	if (options->logic_operation_enabled)
 	{
 		// OpenGL spec says blending is disabled with Logic Operation is enabled.
 		std::string text = get_logic_operation(options->logic_operation, "Source", "Dest");
-		font.draw_text(gc, equation_rect.left + 8, equation_rect.bottom - 38, "RGBA = " + text );
+		font.draw_text(canvas, equation_rect.left + 8, equation_rect.bottom - 38, "RGBA = " + text );
 		if (options->is_blending_set)
-			font.draw_text(gc, equation_rect.left + 8, equation_rect.bottom - 8, "(OpenGL disables blending when logic operation is used)");
+			font.draw_text(canvas, equation_rect.left + 8, equation_rect.bottom - 8, "(OpenGL disables blending when logic operation is used)");
 	}
 	else
 	{
@@ -236,18 +236,18 @@ void App::draw_equation(GraphicContext &gc, Font &font, Options *options)
 
 			std::string blendfunc_combined_color = get_blendequation(options->blendequation[0], blendfunc_src_color, blendfunc_dest_color, "Cs", "Cd");
 			std::string blendfunc_combined_alpha = get_blendequation(options->blendequation[1], blendfunc_src_alpha, blendfunc_dest_alpha, "As", "Ad");
-			font.draw_text(gc, equation_rect.left + 8, equation_rect.bottom - 38, "Color = " + blendfunc_combined_color );
-			font.draw_text(gc, equation_rect.left + 8, equation_rect.bottom - 8, "Alpha = " + blendfunc_combined_alpha );
+			font.draw_text(canvas, equation_rect.left + 8, equation_rect.bottom - 38, "Color = " + blendfunc_combined_color );
+			font.draw_text(canvas, equation_rect.left + 8, equation_rect.bottom - 8, "Alpha = " + blendfunc_combined_alpha );
 
-			font.draw_text(gc, equation_rect.right - 250, equation_rect.bottom - 38, "(C=RGB Value, A=Alpha Value)", Colorf::yellow);
-			font.draw_text(gc, equation_rect.right - 250, equation_rect.bottom - 8, "(s=Source, d=Dest, c=Constant)", Colorf::yellow);
+			font.draw_text(canvas, equation_rect.right - 250, equation_rect.bottom - 38, "(C=RGB Value, A=Alpha Value)", clan::Colorf::yellow);
+			font.draw_text(canvas, equation_rect.right - 250, equation_rect.bottom - 8, "(s=Source, d=Dest, c=Constant)", clan::Colorf::yellow);
 		}
 
 	}
 
 }
 
-std::string App::get_blendfunc(BlendFunc blendfunc, const std::string &fragment_colour)
+std::string App::get_blendfunc(clan::BlendFunc blendfunc, const std::string &fragment_colour)
 {
 	std::string text;
 	std::string source_colour = "Cs";
@@ -259,48 +259,48 @@ std::string App::get_blendfunc(BlendFunc blendfunc, const std::string &fragment_
 
 	switch (blendfunc)
 	{
-		case cl_blend_zero:
+		case clan::blend_zero:
 			break;
-		case cl_blend_one:
+		case clan::blend_one:
 			text = fragment_colour + " ";
 			break;
-		case cl_blend_dest_color:
+		case clan::blend_dest_color:
 			text = dest_colour + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_src_color:
+		case clan::blend_src_color:
 			text = source_colour + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_dest_color:
+		case clan::blend_one_minus_dest_color:
 			text = "(1 - " + dest_colour + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_src_color:
+		case clan::blend_one_minus_src_color:
 			text = "(1 - " + source_colour + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_src_alpha:
+		case clan::blend_src_alpha:
 			text = source_alpha + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_src_alpha:
+		case clan::blend_one_minus_src_alpha:
 			text = "(1 - " + source_alpha + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_dest_alpha:
+		case clan::blend_dest_alpha:
 			text = dest_alpha + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_dest_alpha:
+		case clan::blend_one_minus_dest_alpha:
 			text = "(1 - " + dest_alpha + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_src_alpha_saturate:
+		case clan::blend_src_alpha_saturate:
 			text = "min(" + source_alpha + ", 1 - " + dest_alpha + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_constant_color:
+		case clan::blend_constant_color:
 			text = constant_colour + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_constant_color:
+		case clan::blend_one_minus_constant_color:
 			text = "(1 - " + constant_colour + ") * " + fragment_colour + " ";
 			break;
-		case cl_blend_constant_alpha:
+		case clan::blend_constant_alpha:
 			text = constant_alpha + " * " + fragment_colour + " ";
 			break;
-		case cl_blend_one_minus_constant_alpha:
+		case clan::blend_one_minus_constant_alpha:
 			text = "(1 - " + constant_alpha + ") * " + fragment_colour + " ";
 			break;
 		default:
@@ -309,28 +309,28 @@ std::string App::get_blendfunc(BlendFunc blendfunc, const std::string &fragment_
 	return text;
 }
 
-std::string App::get_blendequation(BlendEquation equation, const std::string &source, const std::string &dest, const std::string &source_fragment, const std::string &dest_fragment)
+std::string App::get_blendequation(clan::BlendEquation equation, const std::string &source, const std::string &dest, const std::string &source_fragment, const std::string &dest_fragment)
 {
 	std::string text;
 	switch (equation)
 	{
-		case cl_blend_equation_add:
+		case clan::equation_add:
 			text = source + "+ " + dest;
 			break;
 
-		case cl_blend_equation_subtract:
+		case clan::equation_subtract:
 			text = source + "- " + dest;
 			break;
 
-		case cl_blend_equation_reverse_subtract:
+		case clan::equation_reverse_subtract:
 			text = dest + "- " + source;
 			break;
 
-		case cl_blend_equation_min:
+		case clan::equation_min:
 			text = "min(" + source_fragment + ", " + dest_fragment + ")";
 			break;
 
-		case cl_blend_equation_max:
+		case clan::equation_max:
 			text = "max(" + source_fragment + ", " + dest_fragment + ")";
 			break;
 		default:
@@ -340,73 +340,73 @@ std::string App::get_blendequation(BlendEquation equation, const std::string &so
 	return text;
 }
 
-std::string App::get_logic_operation(LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment)
+std::string App::get_logic_operation(clan::LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment)
 {
 	std::string text;
 
 	switch (logic_operation)
 	{
-		case cl_logic_op_clear:
+		case clan::logic_clear:
 			text = "0";
 			break;
 
-		case cl_logic_op_and:
+		case clan::logic_and:
 			text = source_fragment + " & " + dest_fragment;
 			break;
 
-		case cl_logic_op_and_reverse:
+		case clan::logic_and_reverse:
 			text = source_fragment + " & ( ! " + dest_fragment + ")";
 			break;
 
-		case cl_logic_op_copy:
+		case clan::logic_copy:
 			text = source_fragment;
 			break;
 
-		case cl_logic_op_and_inverted:
+		case clan::logic_and_inverted:
 			text = "( ! " + source_fragment + " ) & " + dest_fragment;
 			break;
 
-		case cl_logic_op_noop:
+		case clan::logic_noop:
 			text = dest_fragment;
 			break;
 
-		case cl_logic_op_xor:
+		case clan::logic_xor:
 			text = source_fragment + " ^ " + dest_fragment;
 			break;
 
-		case cl_logic_op_or:
+		case clan::logic_or:
 			text = source_fragment + " | " + dest_fragment;
 			break;
 
-		case cl_logic_op_nor:
+		case clan::logic_nor:
 			text = "! (" + source_fragment + " | " + dest_fragment + ")";
 			break;
 
-		case cl_logic_op_equiv:
+		case clan::logic_equiv:
 			text = "! (" + source_fragment + " ^ " + dest_fragment + ")";
 			break;
 
-		case cl_logic_op_invert:
+		case clan::logic_invert:
 			text = "! " + dest_fragment;
 			break;
 
-		case cl_logic_op_or_reverse:
+		case clan::logic_or_reverse:
 			text = source_fragment + " | ( ! " + dest_fragment + " )";
 			break;
 
-		case cl_logic_op_copy_inverted:
+		case clan::logic_copy_inverted:
 			text = "! " + source_fragment;
 			break;
 
-		case cl_logic_op_or_inverted:
+		case clan::logic_or_inverted:
 			text = "( ! " + source_fragment + ") | " + dest_fragment;
 			break;
 
-		case cl_logic_op_nand:
+		case clan::logic_nand:
 			text = "! ( " + source_fragment + " & " + dest_fragment + ")";
 			break;
 
-		case cl_logic_op_set:
+		case clan::logic_set:
 			text = "1";
 			break;
 

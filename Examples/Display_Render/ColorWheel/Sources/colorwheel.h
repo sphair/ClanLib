@@ -28,28 +28,28 @@
 
 #pragma once
 
-class ColorWheel : public GUIComponent
+class ColorWheel : public clan::GUIComponent
 {
 public:
-	ColorWheel(GraphicContext &gc, GUIManager &gui, Rect gui_position);
+	ColorWheel(clan::Canvas &canvas, clan::GUIManager &gui, clan::Rect gui_position);
 	virtual ~ColorWheel();
 
-	Slider *slider_saturation_outer;
-	Slider *slider_saturation_inner;
-	Slider *slider_value_outer;
-	Slider *slider_value_inner;
-	RadioButton *radiobutton_HSV;
-	RadioButton *radiobutton_HSL;
+	clan::Slider *slider_saturation_outer;
+	clan::Slider *slider_saturation_inner;
+	clan::Slider *slider_value_outer;
+	clan::Slider *slider_value_inner;
+	clan::RadioButton *radiobutton_HSV;
+	clan::RadioButton *radiobutton_HSL;
 
 private:
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	void create_colorwheel(const Pointf &center, float radius);
-	Slider *create_slider(int xpos, int ypos);
-	void draw_labels(GraphicContext &gc);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	void create_colorwheel(const clan::Pointf &center, float radius);
+	clan::Slider *create_slider(int xpos, int ypos);
+	void draw_labels(clan::Canvas &canvas);
 	void get_options();
-	float get_value(Slider *slider);
+	float get_value(clan::Slider *slider);
 	void option_changed();
-	void on_selected(RadioButton *radiobutton);
+	void on_selected(clan::RadioButton *radiobutton);
 
 	float saturation_outer;
 	float saturation_inner;
@@ -58,9 +58,9 @@ private:
 	bool is_hsl;
 
 	const static int colorwheel_segments = 360 / 2;
-	Vec2f colorwheel_positions[colorwheel_segments * 3];
-	Vec4f colorwheel_colors[colorwheel_segments * 3];
+	clan::Vec2f colorwheel_positions[colorwheel_segments * 3];
+	clan::Vec4f colorwheel_colors[colorwheel_segments * 3];
 
-	Font font;
+	clan::Font font;
 };
 

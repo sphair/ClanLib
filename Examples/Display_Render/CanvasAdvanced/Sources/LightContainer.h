@@ -57,7 +57,7 @@ public:
 			delete lights[loc];
 			lights.erase(loc);
 
-			Console::write_line("Removed light %1 (container = %2)", loc, (int) lights.size());
+			clan::Console::write_line("Removed light %1 (container = %2)", loc, (int) lights.size());
 		}
 	};
 
@@ -86,21 +86,21 @@ public:
 		}
 	};
 
-	void draw_clips(GraphicContext gc)
+	void draw_clips(clan::Canvas canvas)
 	{
 		for(std::map<unsigned int, Light*>::iterator it = lights.begin(); it != lights.end(); it++)
 		{
 			if( (*it).second )
-				(*it).second->cutout(gc);
+				(*it).second->cutout(canvas);
 		}
 	};
 
-	void draw(GraphicContext gc)
+	void draw(clan::Canvas canvas)
 	{
 		for(std::map<unsigned int, Light*>::iterator it = lights.begin(); it != lights.end(); it++)
 		{
 			if( (*it).second )
-				(*it).second->draw(gc);
+				(*it).second->draw(canvas);
 		}
 	};
 
