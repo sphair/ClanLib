@@ -38,33 +38,33 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("MapMode Example");
 	win_desc.set_size(Size( 800, 480 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
+	clan::GUIWindowManagerTexture wm(window);
+	clan::GUIManager gui(wm, theme);
 	
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas = window.get_gc();
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(0, 0, gc.get_size()));
+	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	Image image_grid(gc, "../Blend/Resources/grid.png");
-	Image image_ball(gc, "../Blend/Resources/ball.png");
+	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
+	clan::Image image_ball(canvas, "../Blend/Resources/ball.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -74,16 +74,16 @@ int App::start(const std::vector<std::string> &args)
 
 	options->request_repaint();
 
-	unsigned int time_last = System::get_time();
+	unsigned int time_last = clan::System::get_time();
 
 	while (!quit)
 	{
-		unsigned int time_now = System::get_time();
+		unsigned int time_now = clan::System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
 		int num_balls = options->num_balls;
 		if (num_balls > max_balls)
@@ -92,43 +92,43 @@ int App::start(const std::vector<std::string> &args)
 		if (options->is_moveballs_set)
 			move_balls(time_diff, num_balls);
 
-		gc.set_map_mode(options->current_mapmode);
+		canvas.set_map_mode(options->current_mapmode);
 
 		const float grid_xpos = 10.0f;
 		const float grid_ypos = 10.0f;
 
-		if (options->current_mapmode == cl_user_projection)
+		if (options->current_mapmode == clan::cl_user_projection)
 		{
-			Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
-			set_user_projection(gc, area_size, options);
+			clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
+			set_user_projection(canvas, area_size, options);
 		}
 
 		// Draw the grid
-		image_grid.draw(gc, grid_xpos, grid_ypos);
+		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
-		gc.flush_batcher();	// <--- Fix me, this should not be required for cl_user_projection
+		canvas.flush_batcher();	// <--- Fix me, this should not be required for cl_user_projection
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
-			image_ball.draw(gc, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
+			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 		}
 
-		gc.set_modelview(Mat4f::identity());
-		gc.set_projection(Mat4f::identity());
+		canvas.set_modelview(clan::Mat4f::identity());
+		canvas.set_projection(clan::Mat4f::identity());
 
-		gc.set_map_mode(cl_map_2d_upper_left);
+		canvas.set_map_mode(cl_map_2d_upper_left);
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -201,9 +201,9 @@ void App::move_balls(float time_diff, int num_balls)
 	}
 }
 
-void App::set_user_projection(GraphicContext &gc, Sizef &area_size, Options *options)
+void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options)
 {
-	gc.set_viewport(Rectf(0, 0, area_size));
+	canvas.set_viewport(clan::Rectf(0, 0, area_size));
 
 	float lens_zoom = 3.2f;
 	float lens_near = 0.1f;
@@ -216,16 +216,16 @@ void App::set_user_projection(GraphicContext &gc, Sizef &area_size, Options *opt
 	aspect = ( area_size.width * lens_aspect) / area_size.height;
 
 	fov = (fov * 180.0f) / PI;
-	Mat4f projection_matrix = Mat4f::perspective( fov, aspect, lens_near, lens_far);
-	gc.set_projection(projection_matrix);
+	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far);
+	canvas.set_projection(projection_matrix);
 
-	Mat4f modelview_matrix = Mat4f::identity();
+	clan::Mat4f modelview_matrix = clan::Mat4f::identity();
 
 	modelview_matrix.scale_self(1.0f, 1.0f, -1.0f);	// So positive Z goes into the screen
 	modelview_matrix.translate_self(-1.0f, 1.0, lens_zoom);
-	modelview_matrix = modelview_matrix * Mat4f::rotate(Angle((float) -options->grid_angle, cl_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, cl_degrees), 1.0f, 0.0f, 0.0f, false);
 	modelview_matrix.scale_self(2.0f / area_size.width, -2.0f / area_size.height, 1.0f);
 	modelview_matrix.translate_self(cl_pixelcenter_constant,cl_pixelcenter_constant, 0.0f);
 
-	gc.set_modelview(modelview_matrix);
+	canvas.set_modelview(modelview_matrix);
 }

@@ -28,13 +28,13 @@
 
 #pragma once
 
-class Options : public GUIComponent
+class Options : public clan::GUIComponent
 {
 public:
-	Options(GUIManager &gui, Rect gui_position);
+	Options(clan::GUIManager &gui, clan::Rect gui_position);
 	virtual ~Options();
 
-	MapMode current_mapmode;
+	clan::MapMode current_mapmode;
 
 	int num_balls;
 	bool is_moveballs_set;
@@ -45,26 +45,26 @@ private:
 	void update_all_slider_text();
 	void slider_numballs_changed();
 	void slider_grid_angle_changed();
-	Label *create_slider_label(Slider *slider);
-	void on_mapmode_selected(int value, ComboBox *combo);
-	CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	Slider *create_slider(int xpos, int ypos);
-	float get_value(Slider *slider);
-	ComboBox *create_mapmode_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item);
-	void make_mapmode_menu(PopupMenu &menu);
-	Label *create_combobox_label(ComboBox *combo, const char *text);
+	clan::Label *create_slider_label(clan::Slider *slider);
+	void on_mapmode_selected(int value, clan::ComboBox *combo);
+	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	clan::Slider *create_slider(int xpos, int ypos);
+	float get_value(clan::Slider *slider);
+	clan::ComboBox *create_mapmode_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
+	void make_mapmode_menu(clan::PopupMenu &menu);
+	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
 private:
-	Slider *slider_numballs;
-	Label *label_numballs;
-	Slider *slider_grid_angle;
-	Label *label_grid_angle;
+	clan::Slider *slider_numballs;
+	clan::Label *label_numballs;
+	clan::Slider *slider_grid_angle;
+	clan::Label *label_grid_angle;
 
-	CheckBox *checkbox_moveballs;
+	clan::CheckBox *checkbox_moveballs;
 
-	Label *label_mapmode;
-	ComboBox *combo_mapmode;
-	PopupMenu combo_mapmode_menu;
+	clan::Label *label_mapmode;
+	clan::ComboBox *combo_mapmode;
+	clan::PopupMenu combo_mapmode_menu;
 
 };
 

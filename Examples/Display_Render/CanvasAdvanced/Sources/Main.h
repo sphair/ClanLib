@@ -40,18 +40,18 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_mouse_move(const InputEvent &key);
-	void on_keyboard_up(const InputEvent &key);
-	void on_mouse_up(const InputEvent &key);
+	void on_mouse_move(const clan::InputEvent &key);
+	void on_keyboard_up(const clan::InputEvent &key);
+	void on_mouse_up(const clan::InputEvent &key);
 	void on_window_close();
 	int get_random(int low, int high);
 
 	LightContainer		lights;				// Our container for lights.
 	Light				*mouse_light;		// The light that follows our mouse around.
-	Image			background;			// This is a simple image, so we use the simple image class.
-	Texture			light_mask;			// We require more low-level functions for our lights, so this should be a texture.
-	FrameBuffer		fb_lightmask;		// The FrameBuffer.
-	GraphicContext	gc;					// Graphic Context
+	clan::Image			background;			// This is a simple image, so we use the simple image class.
+	clan::Texture			light_mask;			// We require more low-level functions for our lights, so this should be a texture.
+	clan::FrameBuffer		fb_lightmask;		// The FrameBuffer.
+	clan::Canvas	canvas;					// Graphic Context
 
 	bool				quit;				
 };

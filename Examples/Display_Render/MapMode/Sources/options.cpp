@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITopLevelDescription("Options", gui_position, false))
+Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
 	current_mapmode = cl_map_2d_upper_left;
@@ -78,23 +78,23 @@ Options::~Options()
 
 }
 
-void Options::on_render(GraphicContext &gc, const Rect &update_rect)
+void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect rect = get_geometry();
-	Draw::fill(gc, update_rect, Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	clan::Rect rect = get_geometry();
+	Draw::fill(canvas, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
-float Options::get_value(Slider *slider)
+float Options::get_value(clan::Slider *slider)
 {
 	float value = (float) slider->get_position();
 	value /= (float) slider->get_max();
 	return value;
 }
 
-Slider *Options::create_slider(int xpos, int ypos)
+clan::Slider *Options::create_slider(int xpos, int ypos)
 {
-	Slider *component = new Slider(this);
-	component->set_geometry(Rect(xpos, ypos, Size(128, 17)));
+	clan::Slider *component = new clan::Slider(this);
+	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(128, 17)));
 	component->set_vertical(false);
 	component->set_horizontal(true);
 	component->set_min(0);
@@ -108,17 +108,17 @@ Slider *Options::create_slider(int xpos, int ypos)
 
 }
 
-CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
+clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, bool state)
 {
-	CheckBox *checkbox = new CheckBox(this);
-	checkbox->set_geometry(Rect(xpos, ypos , Size(300, 16)));
+	clan::CheckBox *checkbox = new clan::CheckBox(this);
+	checkbox->set_geometry(clan::Rect(xpos, ypos , clan::Size(300, 16)));
 	checkbox->set_text(name);
 	checkbox->set_checked(state);
 	return checkbox;
 }
 
 
-void Options::on_mapmode_selected(int value, ComboBox *combo)
+void Options::on_mapmode_selected(int value, clan::ComboBox *combo)
 {
 	switch (value)
 	{
@@ -134,11 +134,11 @@ void Options::on_mapmode_selected(int value, ComboBox *combo)
 	}
 }
 
-Label *Options::create_slider_label(Slider *slider)
+clan::Label *Options::create_slider_label(clan::Slider *slider)
 {
-	Label *component = new Label(this);
-	Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(Rect(slider_geometry.right + 4, slider_geometry.top - 2, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect slider_geometry = slider->get_geometry();
+	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
 	component->set_text("##################");
 	return component;
 }
@@ -146,14 +146,14 @@ Label *Options::create_slider_label(Slider *slider)
 void Options::slider_numballs_changed()
 {
 	num_balls = slider_numballs->get_position();
-	std::string text(string_format("Number of Balls : %1", num_balls));
+	std::string text(clan::string_format("Number of Balls : %1", num_balls));
 	label_numballs->set_text(text);
 }
 
 void Options::slider_grid_angle_changed()
 {
 	grid_angle = slider_grid_angle->get_position();
-	std::string text(string_format("Grid Rotation : %1 (user projection)", grid_angle));
+	std::string text(clan::string_format("Grid Rotation : %1 (user projection)", grid_angle));
 	label_grid_angle->set_text(text);
 }
 
@@ -168,10 +168,10 @@ void Options::checkbox_moveballs_changed()
 	is_moveballs_set = checkbox_moveballs->is_checked();
 }
 
-ComboBox *Options::create_mapmode_combo_box(int xpos, int ypos, PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_mapmode_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
-	ComboBox *combo = new ComboBox(this);
-	combo->set_geometry(Rect(xpos, ypos, Size(180, 21)));
+	clan::ComboBox *combo = new clan::ComboBox(this);
+	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
 	combo->set_editable(false);
 	combo->set_dropdown_height(128);
 	combo->set_dropdown_minimum_width(64);
@@ -182,18 +182,18 @@ ComboBox *Options::create_mapmode_combo_box(int xpos, int ypos, PopupMenu &menu,
 	return combo;
 }
 
-void Options::make_mapmode_menu(PopupMenu &menu)
+void Options::make_mapmode_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("2d Upper Left");
 	menu.insert_item("2d Lower Left");
 	menu.insert_item("User Projection");
 }
 
-Label *Options::create_combobox_label(ComboBox *combo, const char *text)
+clan::Label *Options::create_combobox_label(clan::ComboBox *combo, const char *text)
 {
-	Label *component = new Label(this);
-	Rect combo_geometry = combo->get_geometry();
-	component->set_geometry(Rect(combo_geometry.left, combo_geometry.top - 20, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect combo_geometry = combo->get_geometry();
+	component->set_geometry(clan::Rect(combo_geometry.left, combo_geometry.top - 20, clan::Size(256, 17)));
 	component->set_text(text);
 	return component;
 }

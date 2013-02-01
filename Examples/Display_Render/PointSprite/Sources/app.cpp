@@ -68,34 +68,34 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	OpenGLWindowDescription win_desc;
+	clan::OpenGLWindowDescription win_desc;
 	//win_desc.set_version(3, 2, false);
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Point Sprite Example");
 	win_desc.set_size(Size( 800, 480 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
+	clan::GUIWindowManagerTexture wm(window);
+	clan::GUIManager gui(wm, theme);
 	
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas = window.get_gc();
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(0, 0, gc.get_size()));
+	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
-	Image image_grid(gc, "../Blend/Resources/grid.png");
-	Texture texture_particle(gc, "Resources/particle.png");
+	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
+	clan::Texture texture_particle(canvas, "Resources/particle.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -103,40 +103,40 @@ int App::start(const std::vector<std::string> &args)
 
 	setup_particles();
 
-	ShaderObject vertex_shader(gc, cl_shadertype_vertex, text_shader_vertex);
+	clan::ShaderObject vertex_shader(canvas, cl_shadertype_vertex, text_shader_vertex);
 	if(!vertex_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
+		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	ShaderObject fragment_shader(gc, cl_shadertype_fragment, text_shader_fragment);
+	clan::ShaderObject fragment_shader(canvas, cl_shadertype_fragment, text_shader_fragment);
 	if(!fragment_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
+		throw clan::Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
 	}
 
-	ProgramObject program_object(gc);
+	clan::ProgramObject program_object(canvas);
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
 	program_object.bind_attribute_location(1, "InColor");
 	if (!program_object.link())
 	{
-		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+		throw clan::Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
 	options->request_repaint();
 
-	unsigned int time_last = System::get_time();
+	unsigned int time_last = clan::System::get_time();
 
 	while (!quit)
 	{
-		unsigned int time_now = System::get_time();
+		unsigned int time_now = clan::System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
 		int num_particles = options->num_particles;
 		if (num_particles > max_particles)
@@ -148,63 +148,63 @@ int App::start(const std::vector<std::string> &args)
 		const float grid_ypos = 10.0f;
 
 		// Draw the grid
-		image_grid.draw(gc, grid_xpos, grid_ypos);
+		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
 		if (num_particles > 0)
 		{
-			std::vector<Vec2f> positions;
-			std::vector<Vec4f> colors;
+			std::vector<clan::Vec2f> positions;
+			std::vector<clan::Vec4f> colors;
 			positions.resize(num_particles);
 			colors.resize(num_particles);
 
 			for (int cnt=0; cnt<num_particles; cnt++)
 			{
-				positions[cnt] = Vec2f(grid_xpos + particles[cnt].xpos, grid_ypos + particles[cnt].ypos);
+				positions[cnt] = clan::Vec2f(grid_xpos + particles[cnt].xpos, grid_ypos + particles[cnt].ypos);
 				switch (cnt % 3)
 				{
 					case 0:
-						colors[cnt] = Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+						colors[cnt] = clan::Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
 						break;
 					case 1:
-						colors[cnt] = Vec4f(0.0f, 1.0f, 0.0f, 1.0f);
+						colors[cnt] = clan::Vec4f(0.0f, 1.0f, 0.0f, 1.0f);
 						break;
 					case 2:
-						colors[cnt] = Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+						colors[cnt] = clan::Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
 						break;
 				}
 			};
 
-			gc.enable_blending(true);
-			gc.set_blend_function(cl_blend_src_alpha, cl_blend_one, cl_blend_src_alpha, cl_blend_one);
-			gc.set_point_size(options->point_size);
-			gc.set_point_sprite_origin(cl_point_sprite_origin_upper_left);
+			canvas.enable_blending(true);
+			canvas.set_blend_function(cl_blend_src_alpha, cl_blend_one, cl_blend_src_alpha, cl_blend_one);
+			canvas.set_point_size(options->point_size);
+			canvas.set_point_sprite_origin(cl_point_sprite_origin_upper_left);
 
 			program_object.set_uniform1i("Texture0", 0);
 
-			gc.set_texture(0, texture_particle);
-			PrimitivesArray prim_array(gc);
+			canvas.set_texture(0, texture_particle);
+			clan::PrimitivesArray prim_array(canvas);
 			prim_array.set_attributes(0, &positions[0]);
 			prim_array.set_attributes(1, &colors[0]);
-			gc.set_program_object(program_object);
-			gc.draw_primitives(cl_points, num_particles, prim_array);
-			gc.reset_program_object();
-			gc.reset_texture(0);
-			gc.reset_blend_mode();
+			canvas.set_program_object(program_object);
+			canvas.draw_primitives(cl_points, num_particles, prim_array);
+			canvas.reset_program_object();
+			canvas.reset_texture(0);
+			canvas.reset_blend_mode();
 
-			gc.reset_pen();
+			canvas.reset_pen();
 		}
 
-		window.flip(1);
+		canvas.flip(1);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}

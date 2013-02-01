@@ -30,7 +30,7 @@
 
 #include "options.h"
 
-Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITopLevelDescription("Options", gui_position, false))
+Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
 	num_particles = 64;
@@ -65,23 +65,23 @@ Options::~Options()
 
 }
 
-void Options::on_render(GraphicContext &gc, const Rect &update_rect)
+void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect rect = get_geometry();
-	Draw::fill(gc, update_rect, Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	clan::Rect rect = get_geometry();
+	Draw::fill(canvas, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
-float Options::get_value(Slider *slider)
+float Options::get_value(clan::Slider *slider)
 {
 	float value = (float) slider->get_position();
 	value /= (float) slider->get_max();
 	return value;
 }
 
-Slider *Options::create_slider(int xpos, int ypos)
+clan::Slider *Options::create_slider(int xpos, int ypos)
 {
-	Slider *component = new Slider(this);
-	component->set_geometry(Rect(xpos, ypos, Size(128, 17)));
+	clan::Slider *component = new clan::Slider(this);
+	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(128, 17)));
 	component->set_vertical(false);
 	component->set_horizontal(true);
 	component->set_min(0);
@@ -95,11 +95,11 @@ Slider *Options::create_slider(int xpos, int ypos)
 
 }
 
-Label *Options::create_slider_label(Slider *slider)
+clan::Label *Options::create_slider_label(clan::Slider *slider)
 {
-	Label *component = new Label(this);
-	Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(Rect(slider_geometry.right + 4, slider_geometry.top - 2, Size(256, 17)));
+	clan::Label *component = new clan::Label(this);
+	clan::Rect slider_geometry = slider->get_geometry();
+	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
 	component->set_text("##################");
 	return component;
 }
@@ -107,14 +107,14 @@ Label *Options::create_slider_label(Slider *slider)
 void Options::slider_num_particles_changed()
 {
 	num_particles = slider_num_particles->get_position();
-	std::string text(string_format("Number of Particles : %1", num_particles));
+	std::string text(clan::string_format("Number of Particles : %1", num_particles));
 	label_num_particles->set_text(text);
 }
 
 void Options::slider_point_size_changed()
 {
 	point_size = slider_point_size->get_position();
-	std::string text(string_format("set_point_size: %1", point_size));
+	std::string text(clan::string_format("set_point_size: %1", point_size));
 	label_point_size->set_text(text);
 }
 

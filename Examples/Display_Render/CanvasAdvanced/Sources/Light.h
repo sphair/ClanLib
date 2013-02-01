@@ -30,10 +30,10 @@
 class Light
 {
 public:
-	Light(GraphicContext gc)
+	Light(clan::Canvas canvas)
 	{
-		clip = Texture(gc, "Resources/light.png");
-		img = Image(gc, "Resources/light.png");
+		clip = clan::Texture(canvas, "Resources/light.png");
+		img = clan::Image(canvas, "Resources/light.png");
 
 		scale_x = scale_y = 1.0f;
 		alive = true;
@@ -43,8 +43,8 @@ public:
 
 	~Light()
 	{
-		clip = Texture();
-		img = Image();
+		clip = clan::Texture();
+		img = clan::Image();
 	};
 
 	void update(float micro_second)
@@ -52,43 +52,43 @@ public:
 		calc_rect();
 	};
 
-	void cutout(GraphicContext gc)
+	void cutout(clan::Canvas canvas)
 	{
 		// Setup blending for zero blend (erase).
-		gc.enable_blending(true);
-		gc.set_blend_function(
-				cl_blend_zero, cl_blend_one_minus_src_alpha,
-				cl_blend_zero, cl_blend_one_minus_src_alpha );
+		canvas.enable_blending(true);
+		canvas.set_blend_function(
+				clan::blend_zero, clan::blend_one_minus_src_alpha,
+				clan::blend_zero, clan::blend_one_minus_src_alpha );
 
 		// Now we draw our texture to the buffer.
-		gc.set_texture(0, clip);
+		canvas.set_texture(0, clip);
 		
 		if(USE_SCALE)
 		{
-			Rectf r;
+			clan::Rectf r;
 
 			// Since it's a smaller texture scaled up, we must account for that.
 			r.left = hot_rect.left / CANVAS_SCALE_X;
 			r.top = hot_rect.top / CANVAS_SCALE_Y;
 			r.right = hot_rect.right / CANVAS_SCALE_X;
 			r.bottom = hot_rect.bottom / CANVAS_SCALE_Y;
-			Draw::texture(gc, r, Colorf(1.0f,1.0f,1.0f,1.0f));
+			Draw::texture(canvas, r, clan::Colorf(1.0f,1.0f,1.0f,1.0f));
 		}
 		else
-			Draw::texture(gc, hot_rect, Colorf(1.0f,1.0f,1.0f,1.0f));
+			Draw::texture(canvas, hot_rect, clan::Colorf(1.0f,1.0f,1.0f,1.0f));
 
-		gc.reset_blend_mode();
-		gc.reset_texture(0);
+		canvas.reset_blend_mode();
+		canvas.reset_texture(0);
 	};
 
-	void draw(GraphicContext gc)
+	void draw(clan::Canvas canvas)
 	{
-		img.draw(gc, hot_rect);
+		img.draw(canvas, hot_rect);
 	};
 
 	void calc_rect()
 	{
-		Rect r = clip.get_size();
+		clan::Rect r = clip.get_size();
 
 		// We do some work here to draw our lights at the center point location, not the top-left (there's probably a better way to do this).
 		hot_rect.left = x - ((r.right*scale_x) / 2);
@@ -120,7 +120,7 @@ public:
 		scale_y = sizeY;
 	};
 
-	void set_color(Colorf the_color) { color = the_color; img.set_color(color); };
+	void set_color(clan::Colorf the_color) { color = the_color; img.set_color(color); };
 
 	bool get_alive() { return alive; };
 
@@ -128,16 +128,16 @@ public:
 	unsigned int get_id() { return id; };
 
 private:
-	Texture		clip;			// Our clip must interact with the frame buffer, so it's a texture.
-	Image		img;			// Our colored lights can be images, though, since they are just simple draws.
+	clan::Texture		clip;			// Our clip must interact with the frame buffer, so it's a texture.
+	clan::Image		img;			// Our colored lights can be images, though, since they are just simple draws.
 	float			x, y;			// Position
 	float			scale_x;		// Scaling
 	float			scale_y;
 	unsigned int	id;				// ID (supplied from the container).
-	Colorf		color;			// Color of the light image.
-	Rectf		hot_rect;		// The dest rect for hotspot orientation.
+	clan::Colorf		color;			// Color of the light image.
+	clan::Rectf		hot_rect;		// The dest rect for hotspot orientation.
 
 	bool			alive;			// Am I alive?
-	Timer		life;			// My life timer.
+	clan::Timer		life;			// My life timer.
 };
 

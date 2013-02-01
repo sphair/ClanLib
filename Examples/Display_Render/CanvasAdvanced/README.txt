@@ -17,7 +17,7 @@ Methodology
 This effect is achieved by masking the viewport with a semi-transparent 
 texture.  We use the framebuffer to "cut" out lights each cycle. For colors, 
 we simply draw an alpha-blended image/texture at the same location as the cut 
-outs (in the main gc, not the frame buffer).  I've provided a simple container 
+outs (in the main canvas, not the frame buffer).  I've provided a simple container 
 class and some methods for scaling and changing colors of the lights.
 
 Day and night cycling is possible by simply interpolating the alpha value of 

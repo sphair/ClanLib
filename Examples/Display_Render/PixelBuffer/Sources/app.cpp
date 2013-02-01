@@ -37,37 +37,37 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("PixelBuffer Example");
 	win_desc.set_size(Size( 600, 630 ), false);
 
-	DisplayWindow window(win_desc);
-	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::DisplayWindow window(win_desc);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	GraphicContext gc = window.get_gc();
+	clan::Canvas canvas = window.get_gc();
 
-	PixelBuffer tux("../../3D/Clan3D/Resources/tux.png");
+	clan::PixelBuffer tux("../../3D/Clan3D/Resources/tux.png");
 
-	PixelBuffer cpu_buffer = tux.copy();
+	clan::PixelBuffer cpu_buffer = tux.copy();
 
 	const int num_gpu_buffers = 2;
-	PixelBuffer gpu_buffer[num_gpu_buffers];
+	clan::PixelBuffer gpu_buffer[num_gpu_buffers];
 	for (int cnt=0; cnt < num_gpu_buffers; cnt++)
 	{
 		// Note - This example only uses PIXEL_UNPACK_BUFFER_ARB, it does not use PIXEL_PACK_BUFFER_ARB
-		gpu_buffer[cnt] = PixelBuffer(gc, tux);
+		gpu_buffer[cnt] = clan::PixelBuffer(canvas, tux);
 	}
 
 	const int num_textures = 2;
-	Texture textures[num_textures];
+	clan::Texture textures[num_textures];
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
-		textures[cnt] = Texture(gc, tux.get_width(), tux.get_height(), cl_rgb);
+		textures[cnt] = clan::Texture(canvas, tux.get_width(), tux.get_height(), clan::tf_rgb);
 	}
 
-	Font font(gc, "Tahoma", 24);
+	clan::Font font(canvas, "Tahoma", 24);
 
 	FramerateCounter framerate_counter;
 
@@ -78,7 +78,7 @@ int App::start(const std::vector<std::string> &args)
 	while (!quit)
 	{
 		framerate_counter.frame_shown();
-		gc.clear(Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		// Modify the pixel buffer
 		read_write_pixel_buffer(tux);
@@ -98,37 +98,38 @@ int App::start(const std::vector<std::string> &args)
 		// Always draw the same text, to ensure matching speed calculation
 		if (cpu_active)
 		{
-			font.draw_text(gc, 8, 24, "GPU Pixel Buffer Object", Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(gc, 8, 24, "CPU Pixel Buffer", Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_cpu(gc, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
+			font.draw_text(canvas, 8, 24, "GPU Pixel Buffer Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+			draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 		}
 		else
 		{
-			font.draw_text(gc, 8, 24, "CPU Pixel Buffer", Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(gc, 8, 24, "GPU Pixel Buffer Object", Colorf(1.0f, 1.0f, 1.0f, 1.0f));
-			draw_gpu(gc, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
+			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+			font.draw_text(canvas, 8, 24, "GPU Pixel Buffer Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+			draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 		}
 
-		font.draw_text(gc, 8, gc.get_height() - 16, "Press any key to toggle method");
+		font.draw_text(canvas, 8, canvas.get_height() - 16, "Press any key to toggle method");
 
 		texture_cycle = texture_cycle_second;
 		gpu_buffer_cycle = gpu_buffer_cycle_second;
 
-		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
-		font.draw_text(gc, gc.get_width() - 100, gc.get_height()-16, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		std::string fps(clan::string_format("%1 fps", framerate_counter.get_framerate()));
+		font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		KeepAlive::process(0);
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		canvas.flip(0);
+		clan::KeepAlive::process(0);
+
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -142,41 +143,41 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::upload_pixel_buffer(PixelBuffer &pbuff_source, PixelBuffer &pbuff_dest)
+void App::upload_pixel_buffer(clan::PixelBuffer &pbuff_source, clan::PixelBuffer &pbuff_dest)
 {
 	pbuff_source.lock(cl_access_read_only);
-	pbuff_dest.upload_data(Rect(0,0, pbuff_source.get_size()), pbuff_source.get_data());
+	pbuff_dest.upload_data(clan::Rect(0,0, pbuff_source.get_size()), pbuff_source.get_data());
 	pbuff_source.unlock();
 }
 
-void App::draw_cpu(GraphicContext &gc, PixelBuffer &cpu_buffer, PixelBuffer &tux, Texture &texture_to_write_into, Texture &texture_to_draw)
+void App::draw_cpu(clan::Canvas &canvas, clan::PixelBuffer &cpu_buffer, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw)
 {
 	upload_pixel_buffer(tux, cpu_buffer);
 	texture_to_write_into.set_subimage(0, 0, cpu_buffer, cpu_buffer.get_size());
 
-	draw_texture(gc, texture_to_draw, 32, 32);
+	draw_texture(canvas, texture_to_draw, 32, 32);
 }
 
-void App::draw_gpu(GraphicContext &gc, PixelBuffer &gpu_buffer_to_write_into, PixelBuffer &gpu_buffer_to_draw, PixelBuffer &tux, Texture &texture_to_write_into, Texture &texture_to_draw)
+void App::draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw)
 {
 	upload_pixel_buffer(tux, gpu_buffer_to_write_into);
 	texture_to_write_into.set_subimage(0, 0, gpu_buffer_to_draw, gpu_buffer_to_draw.get_size());
-	draw_texture(gc, texture_to_draw, 32, 32);
+	draw_texture(canvas, texture_to_draw, 32, 32);
 }
 
-void App::draw_texture(GraphicContext &gc, Texture &texture, int xpos, int ypos)
+void App::draw_texture(clan::Canvas &canvas, clan::Texture &texture, int xpos, int ypos)
 {
-	gc.set_texture(0, texture);
-	Draw::texture(gc, Rectf( (float) xpos, (float) ypos, Sizef(512.0f, 512.0f)));
-	gc.reset_texture(0);
+	canvas.set_texture(0, texture);
+	Draw::texture(canvas, clan::Rectf( (float) xpos, (float) ypos, clan::Sizef(512.0f, 512.0f)));
+	canvas.reset_texture(0);
 }
 
-void App::read_write_pixel_buffer(PixelBuffer &pbuff)
+void App::read_write_pixel_buffer(clan::PixelBuffer &pbuff)
 {
-	unsigned int time_now = System::get_time();
+	unsigned int time_now = clan::System::get_time();
 	pbuff.lock(cl_access_read_write);
-	if (pbuff.get_format() != cl_rgb8)
-		throw Exception("Expected the format to be RGB8");
+	if (pbuff.get_format() != clan::tf_rgb8)
+		throw clan::Exception("Expected the format to be RGB8");
 	unsigned char *dptr = (unsigned char *) pbuff.get_data();
 
 	// Only write to a portion of the pixel buffer - To keep up the example speed

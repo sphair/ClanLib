@@ -28,10 +28,10 @@
 
 #pragma once
 
-class Options : public GUIComponent
+class Options : public clan::GUIComponent
 {
 public:
-	Options(GUIManager &gui, Rect gui_position);
+	Options(clan::GUIManager &gui, clan::Rect gui_position);
 	virtual ~Options();
 
 	int num_particles;
@@ -41,16 +41,16 @@ private:
 	void update_all_slider_text();
 	void slider_num_particles_changed();
 	void slider_point_size_changed();
-	Label *create_slider_label(Slider *slider);
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	Slider *create_slider(int xpos, int ypos);
-	float get_value(Slider *slider);
+	clan::Label *create_slider_label(clan::Slider *slider);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	clan::Slider *create_slider(int xpos, int ypos);
+	float get_value(clan::Slider *slider);
 private:
-	Slider *slider_num_particles;
-	Label *label_num_particles;
+	clan::Slider *slider_num_particles;
+	clan::Label *label_num_particles;
 
-	Slider *slider_point_size;
-	Label *label_point_size;
+	clan::Slider *slider_point_size;
+	clan::Label *label_point_size;
 
 
 };
