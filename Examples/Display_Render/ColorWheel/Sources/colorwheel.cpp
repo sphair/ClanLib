@@ -85,12 +85,7 @@ void ColorWheel::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 	float radius = 200.0f;
 	create_colorwheel(center, radius);
 
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, colorwheel_positions);
-	prim_array.set_attributes(1, colorwheel_colors);
-	canvas.set_program_object(cl_program_color_only);
-	canvas.draw_primitives(cl_triangles, colorwheel_segments * 3, prim_array);
-	canvas.reset_program_object();
+	canvas.fill_triangles(colorwheel_positions, colorwheel_colors, colorwheel_segments * 3);
 
 	draw_labels(canvas);
 }
@@ -149,10 +144,10 @@ void ColorWheel::create_colorwheel(const clan::Pointf &center, float radius)
 		int source_segment = segment;
 		int next_segment = segment + 1;
 
-		float src_angle = (source_segment * PI*2.0f) / colorwheel_segments;
-		float dest_angle = (next_segment * PI*2.0f) / colorwheel_segments;
-		src_angle -= PI/2.0f;	// So red is at the top
-		dest_angle -= PI/2.0f;
+		float src_angle = (source_segment * clan::PI*2.0f) / colorwheel_segments;
+		float dest_angle = (next_segment * clan::PI*2.0f) / colorwheel_segments;
+		src_angle -= clan::PI/2.0f;	// So red is at the top
+		dest_angle -= clan::PI/2.0f;
 		float src_x = cos( src_angle );
 		float src_y = sin( src_angle );
 		float dest_x = cos( dest_angle );
@@ -174,13 +169,13 @@ void ColorWheel::create_colorwheel(const clan::Pointf &center, float radius)
 
 		if (is_hsl)
 		{
-			ColorHSLf color_src_hsv( source_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f );
+			clan::ColorHSLf color_src_hsv( source_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f );
 			work_color_src = clan::Colorf(color_src_hsv);
 
-			ColorHSLf color_dest_hsv( next_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f );
+			clan::ColorHSLf color_dest_hsv( next_segment * 360.0f / colorwheel_segments, saturation_outer, value_outer, 1.0f );
 			work_color_dest = clan::Colorf(color_dest_hsv);
 
-			ColorHSLf color_center_hsv( ( ( source_segment + next_segment) /2.0f ) * 360.0f / colorwheel_segments, saturation_inner, value_inner, 1.0f );
+			clan::ColorHSLf color_center_hsv( ( ( source_segment + next_segment) /2.0f ) * 360.0f / colorwheel_segments, saturation_inner, value_inner, 1.0f );
 			work_color_center = clan::Colorf(color_center_hsv);
 		}
 		else
@@ -195,13 +190,9 @@ void ColorWheel::create_colorwheel(const clan::Pointf &center, float radius)
 			work_color_center = clan::Colorf(color_center_hsv);
 		}
 
-		clan::Vec4f color_center(work_color_center.r, work_color_center.g, work_color_center.b, work_color_center.a);
-		clan::Vec4f color_src(work_color_src.r, work_color_src.g, work_color_src.b, work_color_src.a);
-		clan::Vec4f color_dest(work_color_src.r, work_color_src.g, work_color_src.b, work_color_src.a);
-
-		colorwheel_colors[triangle_offset + 0] = color_center;
-		colorwheel_colors[triangle_offset + 1] = color_src;
-		colorwheel_colors[triangle_offset + 2] = color_dest;
+		colorwheel_colors[triangle_offset + 0] = work_color_center;
+		colorwheel_colors[triangle_offset + 1] = work_color_src;
+		colorwheel_colors[triangle_offset + 2] = work_color_dest;
 
 	}
 }

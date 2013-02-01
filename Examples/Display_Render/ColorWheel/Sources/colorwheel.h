@@ -59,7 +59,7 @@ private:
 
 	const static int colorwheel_segments = 360 / 2;
 	clan::Vec2f colorwheel_positions[colorwheel_segments * 3];
-	clan::Vec4f colorwheel_colors[colorwheel_segments * 3];
+	clan::Colorf colorwheel_colors[colorwheel_segments * 3];
 
 	clan::Font font;
 };
