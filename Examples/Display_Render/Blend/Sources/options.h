@@ -62,7 +62,7 @@ private:
 	void slider_blend_blue_changed();
 	void slider_blend_alpha_changed();
 	clan::Label *create_slider_label(clan::Slider *slider);
-	void on_equation_selected(int value, ComboBox *combo);
+	void on_equation_selected(int value, clan::ComboBox *combo);
 	void on_blend_selected(int value, clan::ComboBox *combo);
 	void on_logic_selected(int value, clan::ComboBox *combo);
 	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);

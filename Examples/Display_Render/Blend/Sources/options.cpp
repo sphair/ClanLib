@@ -133,7 +133,7 @@ Options::~Options()
 void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	clan::Rect rect = get_geometry();
-	Draw::fill(canvas, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	canvas.fill_rect(update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
 float Options::get_value(clan::Slider *slider)

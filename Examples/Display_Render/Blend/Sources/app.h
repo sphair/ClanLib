@@ -56,7 +56,7 @@ private:
 	void move_balls(float time_diff, int num_balls);
 	std::string get_blendequation(clan::BlendEquation equation, const std::string &source, const std::string &dest, const std::string &source_fragment, const std::string &dest_fragment);
 	std::string get_blendfunc(clan::BlendFunc blendfunc, const std::string &fragment_colour);
-	void draw_equation(clan::Canvas &canvas, Font &font, Options *options);
+	void draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options);
 	std::string get_logic_operation(clan::LogicOp logic_operation, const std::string &source_fragment, const std::string &dest_fragment);
 
 private:

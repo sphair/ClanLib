@@ -41,7 +41,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Blend Example");
-	win_desc.set_size(Size( 900, 570 ), false);
+	win_desc.set_size(clan::Size( 900, 570 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -58,7 +58,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::GUIWindowManagerTexture wm(window);
 	clan::GUIManager gui(wm, theme);
 	
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
 	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
@@ -74,7 +74,7 @@ int App::start(const std::vector<std::string> &args)
 
 	options->request_repaint();
 
-	clan::Font font(canvas, "Tahoma", 20);
+	clan::Font font(canvas, "Tahoma", 16);
 
 	unsigned int time_last = clan::System::get_time();
 
@@ -101,13 +101,18 @@ int App::start(const std::vector<std::string> &args)
 		if (options->is_moveballs_set)
 			move_balls(time_diff, num_balls);
 
-		canvas.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
-		canvas.set_blend_equation(options->blendequation[0], options->blendequation[1]);
-		canvas.set_blend_color(options->blend_color);
-		canvas.enable_blending(options->is_blending_set);
+		clan::BlendStateDescription blend_desc;
+		blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
+		blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
+		blend_desc.enable_blending(options->is_blending_set);
 
+		clan::RasterizerState raster_desc;
+		
 		canvas.set_logic_op(options->logic_operation);
 		canvas.enable_logic_op(options->logic_operation_enabled);
+
+		clan::BlendState blend_state(canvas, blend_desc);
+		canvas.set_blend_state(blend_state, options->blend_color);
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
@@ -121,8 +126,8 @@ int App::start(const std::vector<std::string> &args)
 			}
 		}
 
-		canvas.reset_blend_mode();
-		canvas.reset_buffer_control();
+		canvas.reset_blend_state();
+		canvas.enable_logic_op(false);
 
 		draw_equation(canvas, font, options);
 
@@ -214,8 +219,8 @@ void App::move_balls(float time_diff, int num_balls)
 void App::draw_equation(clan::Canvas &canvas, clan::Font &font, Options *options)
 {
 	clan::Rect equation_rect(10, canvas.get_height() - 70, clan::Size(canvas.get_width() - 20, 60));
-	Draw::fill(canvas, equation_rect, clan::Colorf::black);
-	Draw::box(canvas, equation_rect, clan::Colorf::white);
+	canvas.fill_rect(equation_rect, clan::Colorf::black);
+	canvas.draw_box(equation_rect, clan::Colorf::white);
 
 	if (options->logic_operation_enabled)
 	{
