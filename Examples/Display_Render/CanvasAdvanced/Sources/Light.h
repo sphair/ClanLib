@@ -30,10 +30,19 @@
 class Light
 {
 public:
-	Light(clan::Canvas canvas)
+	Light(clan::Canvas &canvas)
 	{
-		clip = clan::Texture(canvas, "Resources/light.png");
+		clip = clan::Texture2D(canvas, "Resources/light.png");
 		img = clan::Image(canvas, "Resources/light.png");
+
+		clan::BlendStateDescription blend_desc;
+		blend_desc.enable_blending(true);
+		blend_desc.set_blend_function(
+				clan::blend_zero, clan::blend_one_minus_src_alpha,
+				clan::blend_zero, clan::blend_one_minus_src_alpha );
+
+		cutout_blend = clan::BlendState(canvas, blend_desc);
+
 
 		scale_x = scale_y = 1.0f;
 		alive = true;
@@ -43,8 +52,6 @@ public:
 
 	~Light()
 	{
-		clip = clan::Texture();
-		img = clan::Image();
 	};
 
 	void update(float micro_second)
@@ -52,16 +59,13 @@ public:
 		calc_rect();
 	};
 
-	void cutout(clan::Canvas canvas)
+	void cutout(clan::Canvas &canvas)
 	{
 		// Setup blending for zero blend (erase).
-		canvas.enable_blending(true);
-		canvas.set_blend_function(
-				clan::blend_zero, clan::blend_one_minus_src_alpha,
-				clan::blend_zero, clan::blend_one_minus_src_alpha );
+		canvas.set_blend_state(cutout_blend);
 
 		// Now we draw our texture to the buffer.
-		canvas.set_texture(0, clip);
+		clan::Image image(canvas, clip, clip.get_size());
 		
 		if(USE_SCALE)
 		{
@@ -72,13 +76,12 @@ public:
 			r.top = hot_rect.top / CANVAS_SCALE_Y;
 			r.right = hot_rect.right / CANVAS_SCALE_X;
 			r.bottom = hot_rect.bottom / CANVAS_SCALE_Y;
-			Draw::texture(canvas, r, clan::Colorf(1.0f,1.0f,1.0f,1.0f));
+			image.draw(canvas, r);
 		}
 		else
-			Draw::texture(canvas, hot_rect, clan::Colorf(1.0f,1.0f,1.0f,1.0f));
+			image.draw(canvas, hot_rect);
 
-		canvas.reset_blend_mode();
-		canvas.reset_texture(0);
+		canvas.reset_blend_state();
 	};
 
 	void draw(clan::Canvas canvas)
@@ -128,7 +131,7 @@ public:
 	unsigned int get_id() { return id; };
 
 private:
-	clan::Texture		clip;			// Our clip must interact with the frame buffer, so it's a texture.
+	clan::Texture2D		clip;			// Our clip must interact with the frame buffer, so it's a texture.
 	clan::Image		img;			// Our colored lights can be images, though, since they are just simple draws.
 	float			x, y;			// Position
 	float			scale_x;		// Scaling
@@ -136,7 +139,7 @@ private:
 	unsigned int	id;				// ID (supplied from the container).
 	clan::Colorf		color;			// Color of the light image.
 	clan::Rectf		hot_rect;		// The dest rect for hotspot orientation.
-
+	clan::BlendState cutout_blend;
 	bool			alive;			// Am I alive?
 	clan::Timer		life;			// My life timer.
 };

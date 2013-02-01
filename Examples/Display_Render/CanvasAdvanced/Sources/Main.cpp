@@ -37,10 +37,10 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription desc;
 	desc.set_allow_resize(false);
 	desc.set_title("ClanLib - Advanced Canvas");
-	desc.set_size(Size(1024, 768), true);
+	desc.set_size(clan::Size(1024, 768), true);
 	desc.set_fullscreen(false);
 	clan::DisplayWindow window(desc);
-	canvas = window.get_gc();
+	canvas = clan::Canvas(window);
 
 	// Seed randoms
 	srand(clan::System::get_time());
@@ -57,13 +57,15 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 
 	// -- This is the light mask that draws over everything (and is attached to our framebuffer).
 	if(USE_SCALE)
-		light_mask = clan::Texture(canvas, "Resources/scale_mask.png");
+		light_mask = clan::Texture2D(canvas, "Resources/scale_mask.png");
 	else
-		light_mask = clan::Texture(canvas, "Resources/full_mask.png");
+		light_mask = clan::Texture2D(canvas, "Resources/full_mask.png");
 
 	// Create the framebuffer, and attach ground texture into its color buffer
 	fb_lightmask = clan::FrameBuffer(canvas);
-	fb_lightmask.attach_color_buffer(0, light_mask);
+	fb_lightmask.attach_color(0, light_mask);
+
+	clan::Canvas canvas_fb(canvas, fb_lightmask);
 
 	// Just a bunch of variables for keeping time and tracking FPS
 	unsigned int current_time = 0;
@@ -134,31 +136,26 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 
 		// ** Clip Light Mask ** \\
 
-		// Set the working framebuffer
-		canvas.set_frame_buffer(fb_lightmask);
-
-		// Clear it from last frame.
+			// Clear it from last frame.
 		// -- Here is where day/night can be accomplished, but interpolating the color/alpha values.
-		canvas.clear(clan::Colorf(0.0f, 0.0f, 0.0f, daylight));
+		canvas_fb.clear(clan::Colorf(0.0f, 0.0f, 0.0f, daylight));
 		
 		// Draw the Light cutouts
-		lights.draw_clips(canvas);
+		lights.draw_clips(canvas_fb);
 
 		// We're done making our changes to the texture, so reset the buffer.
-		canvas.reset_frame_buffer();
+		canvas_fb.flush();
 	
 		// Draw the lightmask texture
 		// The color of the texture here can influence your output.  I chose to keep it simple
 		// by staying white with 100% alpha.
-		canvas.set_texture(0, light_mask);
+		clan::Image light_mask_image(canvas, light_mask, light_mask.get_size());
 		if(USE_SCALE)
 			canvas.mult_scale(CANVAS_SCALE_X,CANVAS_SCALE_Y);
-		Draw::texture(canvas, clan::Rect(light_mask.get_size()), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));
 
 		canvas.set_modelview(clan::Mat4f::identity());
 
-		// Reset
-		canvas.reset_texture(0);
 		
 		// Flip the display, showing on the screen what we have drawn (no v-sync)
 		canvas.flip(0);
