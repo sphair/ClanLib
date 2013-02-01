@@ -41,7 +41,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("ColorWheel Example");
-	win_desc.set_size(Size( 800, 600 ), false);
+	win_desc.set_size(clan::Size( 800, 600 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -58,10 +58,10 @@ int App::start(const std::vector<std::string> &args)
 	clan::GUIWindowManagerTexture wm(window);
 	clan::GUIManager gui(wm, theme);
 
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	new ColorWheel(canvas, gui, clan::Rect(32, 32, Size(512, 512)));
+	new ColorWheel(canvas, gui, clan::Rect(32, 32, clan::Size(512, 512)));
 
 
 	unsigned int time_last = clan::System::get_time();
