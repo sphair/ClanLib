@@ -81,7 +81,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	while (!quit)
 	{
 		// Draw a nice blue gradient in the background
-		canvas_window.gradient_fill(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
+		canvas_window.fill_rect(window.get_viewport(), Gradient(Colorf::lightblue, Colorf::lightblue, Colorf::darkblue, Colorf::darkblue));
 
 		// Draw the moving background
 		back_pos+= 1.0f;
