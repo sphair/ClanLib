@@ -192,6 +192,19 @@ void Canvas::reset_depth_stencil_state()
 	get_gc().reset_depth_stencil_state();
 }
 
+
+void Canvas::enable_logic_op(bool enabled)
+{
+	flush();
+	get_gc().enable_logic_op(enabled);
+}
+
+void Canvas::set_logic_op(LogicOp op)
+{
+	flush();
+	get_gc().set_logic_op(op);
+}
+
 void Canvas::set_cliprect(const Rect &rect)
 {
 	flush();
