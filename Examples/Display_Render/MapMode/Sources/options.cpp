@@ -33,7 +33,7 @@
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
-	current_mapmode = cl_map_2d_upper_left;
+	current_mapmode = clan::map_2d_upper_left;
 	num_balls = 3;
 	grid_angle = 0;
 	is_moveballs_set = true;
@@ -81,7 +81,7 @@ Options::~Options()
 void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	clan::Rect rect = get_geometry();
-	canvas.fill_rect(, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	canvas.fill_rect(update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
 float Options::get_value(clan::Slider *slider)
@@ -123,13 +123,13 @@ void Options::on_mapmode_selected(int value, clan::ComboBox *combo)
 	switch (value)
 	{
 		case 0:
-			current_mapmode = cl_map_2d_upper_left;
+			current_mapmode = clan::map_2d_upper_left;
 			break;
 		case 1:
-			current_mapmode = cl_map_2d_lower_left;
+			current_mapmode = clan::map_2d_lower_left;
 			break;
 		case 2:
-			current_mapmode = cl_user_projection;
+			current_mapmode = clan::map_user_projection;
 			break;
 	}
 }

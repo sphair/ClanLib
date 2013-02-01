@@ -41,7 +41,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("MapMode Example");
-	win_desc.set_size(Size( 800, 480 ), false);
+	win_desc.set_size(clan::Size( 800, 480 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -58,7 +58,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::GUIWindowManagerTexture wm(window);
 	clan::GUIManager gui(wm, theme);
 	
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
 	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
@@ -97,7 +97,7 @@ int App::start(const std::vector<std::string> &args)
 		const float grid_xpos = 10.0f;
 		const float grid_ypos = 10.0f;
 
-		if (options->current_mapmode == clan::cl_user_projection)
+		if (options->current_mapmode == clan::map_user_projection)
 		{
 			clan::Sizef area_size(grid_width + (grid_xpos * 2.0f), grid_height + (grid_ypos * 2.0f));
 			set_user_projection(canvas, area_size, options);
@@ -105,8 +105,7 @@ int App::start(const std::vector<std::string> &args)
 
 		// Draw the grid
 		image_grid.draw(canvas, grid_xpos, grid_ypos);
-
-		canvas.flush_batcher();	// <--- Fix me, this should not be required for cl_user_projection
+		//canvas.flush();
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
@@ -115,8 +114,8 @@ int App::start(const std::vector<std::string> &args)
 
 		canvas.set_modelview(clan::Mat4f::identity());
 		canvas.set_projection(clan::Mat4f::identity());
-
-		canvas.set_map_mode(cl_map_2d_upper_left);
+		canvas.set_map_mode(clan::map_2d_upper_left);
+		canvas.get_gc().set_viewport(canvas.get_size());
 
 		canvas.flip(1);
 
@@ -203,7 +202,7 @@ void App::move_balls(float time_diff, int num_balls)
 
 void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Options *options)
 {
-	canvas.set_viewport(clan::Rectf(0, 0, area_size));
+	canvas.get_gc().set_viewport(clan::Rectf(0, 0, area_size));
 
 	float lens_zoom = 3.2f;
 	float lens_near = 0.1f;
@@ -215,17 +214,15 @@ void App::set_user_projection(clan::Canvas &canvas, clan::Sizef &area_size, Opti
 
 	aspect = ( area_size.width * lens_aspect) / area_size.height;
 
-	fov = (fov * 180.0f) / PI;
-	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far);
+	fov = (fov * 180.0f) / clan::PI;
+	clan::Mat4f projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, clan::clip_negative_positive_w);
 	canvas.set_projection(projection_matrix);
 
 	clan::Mat4f modelview_matrix = clan::Mat4f::identity();
 
-	modelview_matrix.scale_self(1.0f, 1.0f, -1.0f);	// So positive Z goes into the screen
 	modelview_matrix.translate_self(-1.0f, 1.0, lens_zoom);
-	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, cl_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelview_matrix = modelview_matrix * clan::Mat4f::rotate(clan::Angle((float) -options->grid_angle, clan::angle_degrees), 1.0f, 0.0f, 0.0f, false);
 	modelview_matrix.scale_self(2.0f / area_size.width, -2.0f / area_size.height, 1.0f);
-	modelview_matrix.translate_self(cl_pixelcenter_constant,cl_pixelcenter_constant, 0.0f);
 
 	canvas.set_modelview(modelview_matrix);
 }
