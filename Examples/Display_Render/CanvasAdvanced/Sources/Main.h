@@ -49,7 +49,7 @@ private:
 	LightContainer		lights;				// Our container for lights.
 	Light				*mouse_light;		// The light that follows our mouse around.
 	clan::Image			background;			// This is a simple image, so we use the simple image class.
-	clan::Texture			light_mask;			// We require more low-level functions for our lights, so this should be a texture.
+	clan::Texture2D			light_mask;			// We require more low-level functions for our lights, so this should be a texture.
 	clan::FrameBuffer		fb_lightmask;		// The FrameBuffer.
 	clan::Canvas	canvas;					// Graphic Context
 
