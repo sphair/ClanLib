@@ -45,21 +45,18 @@ class RibbonPage : public GUIComponent
 /// \{
 public:
 	RibbonPage(Ribbon *parent, const std::string &text);
-
 /// \}
+
 /// \name Attributes
 /// \{
 public:
-	bool get_show_tab() const;
-
 /// \}
+
 /// \name Operations
 /// \{
 public:
-	void set_show_tab(bool value);
-	void set_tab_custom_css_state(const std::string &css_state_name);
-
 /// \}
+
 /// \name Implementation
 /// \{
 private:

@@ -42,34 +42,17 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
-: GUIComponent(parent, "ribbon-page"), impl(new RibbonPage_Impl(text))
+: GUIComponent(parent->impl->page_area, "ribbon-page"), impl(new RibbonPage_Impl(text))
 {
 	impl->component = this;
-	func_resized().set(impl.get(), &RibbonPage_Impl::on_resized);
 	parent->impl->add_page(this);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Attributes
-
-bool RibbonPage::get_show_tab() const 
-{
-	return impl->show_tab;
-}
-
+	
 //////////////////////////////////////////////////////////////////////////
 // Operations
-
-void RibbonPage::set_show_tab( bool value )
-{
-	impl->show_tab = value;
-}
-
-
-void RibbonPage::set_tab_custom_css_state(const std::string &css_class_name)
-{
-	impl->tab_css_custom_state = css_class_name;
-}
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation

@@ -43,20 +43,19 @@ public:
 
 	void add_page(RibbonPage *page);
 	void on_menu_button_clicked();
-	void on_render(Canvas &canvas, const Rect &clip_rect);
-	void on_resized();
-	bool on_input_pressed(const InputEvent &e);
-	bool on_input_released(const InputEvent &e);
-	bool on_input_pointer_moved(const InputEvent &e);
-	void paint_tabs(Canvas &canvas, const Rect &clip_rect);
+	void on_tab_clicked(RibbonPage *page);
 
 	Ribbon *component;
 
-	PushButton *menu_button;
 	RibbonMenu *menu;
+
+	GUIComponent *tab_row;
+	PushButton *menu_button;
+	std::vector<PushButton *> tab_buttons;
+
+	GUIComponent *page_area;
 	std::vector<RibbonPage *> pages;
-	GUIThemePart part_tab;
-	GUIThemePart part_tab_background;
+
 	unsigned int current_page_index;
 
 };

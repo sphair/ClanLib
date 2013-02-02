@@ -32,6 +32,7 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/GUI/Components/ribbon.h"
+#include "API/GUI/Components/label.h"
 #include "ribbon_page_impl.h"
 #include "ribbon_section_impl.h"
 
@@ -41,9 +42,8 @@ namespace clan
 //////////////////////////////////////////////////////////////////////////
 // Construction
 
-RibbonPage_Impl::RibbonPage_Impl(const std::string &text) : text(text), show_tab(true)
+RibbonPage_Impl::RibbonPage_Impl(const std::string &text) : text(text)
 {
-
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,23 +55,14 @@ RibbonPage_Impl::RibbonPage_Impl(const std::string &text) : text(text), show_tab
 
 void RibbonPage_Impl::add_section(RibbonSection *section)
 {
-	sections.push_back(section);
-	on_resized();
+	GUIComponent *wrapper = new GUIComponent(component, "ribbon-section-wrapper");
+	section->set_parent_component(wrapper);
+	
+	Label *title = new Label(wrapper);
+	title->set_text(section->impl->text);
 }
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation
-
-void RibbonPage_Impl::on_resized()
-{
-	Rect page_box = component->get_size();
-	int section_x = 5;
-	for (size_t i = 0; i < sections.size(); i++)
-	{
-		Rect section_box(section_x, 5, section_x + sections[i]->impl->size, page_box.bottom);
-		sections[i]->set_geometry(section_box);
-		section_x = section_box.right + 5;
-	}
-}
 
 }

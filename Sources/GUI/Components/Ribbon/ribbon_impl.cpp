@@ -39,119 +39,36 @@
 #include "API/Display/2D/canvas.h"
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
-#include "../../gui_css_strings.h"
-
 #include "ribbon_impl.h"
 #include "ribbon_page_impl.h"
 #include "ribbon_menu_impl.h"
+#include "../../gui_css_strings.h"
 
 namespace clan
 {
 
-Ribbon_Impl::Ribbon_Impl() :menu_button(0), current_page_index(0)
+Ribbon_Impl::Ribbon_Impl() : menu_button(0), current_page_index(0)
 {
-
 }
 
 Ribbon_Impl::~Ribbon_Impl()
 {
-	for (size_t i = 0; i < pages.size(); i++)
-		delete pages[i];
 }
 
 void Ribbon_Impl::add_page(RibbonPage *page)
 {
 	bool is_page_visible = (current_page_index == pages.size());
+
+	PushButton *tab_button = new PushButton(tab_row);
+	tab_button->set_class("tab");
+	tab_button->set_text(page->impl->text);
+	tab_button->func_clicked().set(this, &Ribbon_Impl::on_tab_clicked, page);
+
+	tab_buttons.push_back(tab_button);
 	pages.push_back(page);
+
+	tab_button->set_pseudo_class("active", is_page_visible);
 	page->set_visible(is_page_visible, false);
-	on_resized();
-}
-
-void Ribbon_Impl::on_resized()
-{
-	int tab_height = part_tab.get_css_height();
-	Rect page_box = component->get_size();
-	page_box.top = tab_height;
-	for (size_t i = 0; i < pages.size(); i++)
-		pages[i]->set_geometry(page_box);
-	component->request_repaint();
-}
-
-void Ribbon_Impl::on_render(Canvas &canvas, const Rect &clip_rect)
-{
-	part_tab_background.render_box(canvas, Size(component->get_size().width, part_tab_background.get_css_height()));
-	paint_tabs(canvas, clip_rect);
-}
-
-void Ribbon_Impl::paint_tabs(Canvas &canvas, const Rect &clip_rect)
-{
-	int tab_x = menu_button->get_width() + 1;
-	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
-	{
-		if (pages[page_index]->impl->show_tab)
-		{
-			Size size_tab_text = part_tab.get_render_text_size(canvas, pages[page_index]->impl->text);
-			int tab_width = max(size_tab_text.width, 40)+12;
-			Rect current_tab(Point(tab_x, 0), Size(tab_width+12, part_tab.get_css_height()));
-
-			std::string &custom_state = pages[page_index]->impl->tab_css_custom_state;
-			if (!custom_state.empty())
-				part_tab.set_pseudo_class(custom_state, true);
-			part_tab.set_pseudo_class(CssStr::selected, page_index == current_page_index);
-			part_tab.render_box(canvas, current_tab);
-			part_tab.render_text(canvas, pages[page_index]->impl->text, current_tab, current_tab.bottom - 7);
-
-			if (!custom_state.empty())
-				part_tab.set_pseudo_class(custom_state, false);
-
-			pages[page_index]->impl->position = current_tab;
-			tab_x = current_tab.right+2;
-		}
-	}
-}
-
-bool Ribbon_Impl::on_input_pressed(const InputEvent &e)
-{
-	if (e.id == mouse_left)
-	{
-		for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
-		{
-			if (pages[page_index]->impl->show_tab)
-			{
-				if (pages[page_index]->impl->position.contains(e.mouse_pos))
-				{
-					if (current_page_index != page_index)
-						pages[current_page_index]->set_visible(false);
-					current_page_index = page_index;
-					pages[current_page_index]->set_visible(true);
-					component->request_repaint();
-					break;
-				}
-			}
-		}
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Ribbon_Impl::on_input_released(const InputEvent &e)
-{
-	if (e.id == mouse_left)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Ribbon_Impl::on_input_pointer_moved(const InputEvent &e)
-{
-	return true;
 }
 
 void Ribbon_Impl::on_menu_button_clicked()
@@ -159,5 +76,25 @@ void Ribbon_Impl::on_menu_button_clicked()
 	menu->impl->start(component->component_to_screen_coords(Point(0, -2)));
 }
 
+void Ribbon_Impl::on_tab_clicked(RibbonPage *page)
+{
+	for (std::vector<RibbonPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
+	{
+		if (pages[page_index] == page)
+		{
+			if (current_page_index != page_index)
+			{
+				tab_buttons[current_page_index]->set_pseudo_class("active", false);
+				pages[current_page_index]->set_visible(false);
+
+				current_page_index = page_index;
+
+				tab_buttons[current_page_index]->set_pseudo_class("active", true);
+				pages[current_page_index]->set_visible(true);
+			}
+			break;
+		}
+	}
 }
 
+}

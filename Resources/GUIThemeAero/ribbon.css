@@ -1,7 +1,6 @@
 
 ribbon
 {
-	min-width:271px;
 	min-height:117px;
 	/*height:95px;*/
 	
@@ -11,6 +10,21 @@ ribbon
 	
 	font-family:tahoma;
 	font-size:11px;
+	
+	flex-direction: column;
+}
+
+ribbon-tab-row
+{
+	background: url('res:RibbonTabBackground') repeat-x;
+	
+    flex-direction: row;
+}
+
+ribbon-page-area
+{
+    flex: 1;
+    flex-direction: row;
 }
 
 ribbon button.menu
@@ -23,10 +37,9 @@ ribbon button.menu
 	background-attachment:scroll;
 	width:56px;
 	height:22px;
-	border-left:0px;
-	border-right:0px;
-	border-top:0px;
-	border-bottom:0px;
+	border: none;
+	padding: 0;
+	margin: 0;
 }
 
 ribbon button.menu:hot
@@ -34,35 +47,47 @@ ribbon button.menu:hot
 	background-image:url('res:RibbonMenuButtonHot');
 }
 
-ribbon tab
+ribbon button.tab
 {
 	border-image-source:none;
-	width:40px;
-	height:23px;
 	border-image-slice:8 8 8 8 fill;
 	border-image-width:8px 8px 8px 8px;
+	
+	height: 23px;
 	font-family:tahoma;
 	text-align: center;
+	margin: 0 1px;
+	padding: 0 15px;
 }
 
-ribbon tab:selected
+ribbon button.tab:active
 {
 	border-image-source:url('res:RibbonTab');
 }
 
-ribbon tab-background
+ribbon-section-wrapper
 {
-	background: url('res:RibbonTabBackground') repeat-x;
-	height: 22px;
+    flex: 1;
+    flex-direction: column;
+    
+	border-image-source:url('res:RibbonSection');
+	border-image-slice:8 8 24 16 fill;
+	border-image-width:8px 8px 24px 16px;
+	
+    padding: 5px 15px 5px 10px;
+}
+
+ribbon-section-wrapper > label
+{
+    text-align: center;
 }
 
 ribbon-section
 {
-	border-image-source:url('res:RibbonSection');
-	width:70px;
-	height:87px;
-	border-image-slice:8 8 24 16 fill;
-	border-image-width:8px 8px 24px 16px;
+    flex: 1;
+    flex-direction: row;
+    
+    align-items: flex-start;
 }
 
 ribbon-section button

@@ -38,13 +38,10 @@ class RibbonSection;
 class RibbonSection_Impl
 {
 public:
-	RibbonSection_Impl(const std::string &text, int size);
-
-	void on_render(Canvas &canvas, const Rect &clip_rect);
+	RibbonSection_Impl(const std::string &text);
 
 	RibbonSection *component;
 	std::string text;
-	int size;
 
 };
 

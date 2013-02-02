@@ -40,7 +40,7 @@ class RibbonSection_Impl;
 class RibbonSection : public GUIComponent
 {
 public:
-	RibbonSection(RibbonPage *parent, const std::string &text, int size);
+	RibbonSection(RibbonPage *parent, const std::string &text);
 
 private:
 	std::shared_ptr<RibbonSection_Impl> impl;

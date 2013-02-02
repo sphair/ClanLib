@@ -42,16 +42,11 @@ public:
 	RibbonPage_Impl(const std::string &text);
 
 	void add_section(RibbonSection *section);
-	void on_resized();
 
 	RibbonPage *component;
 
 	std::string text;
-	std::string tab_css_custom_state;
 	std::vector<RibbonSection *> sections;
-	Rect position;
-	bool show_tab;
-
 };
 
 }

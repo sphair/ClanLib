@@ -4,7 +4,7 @@
     display: flex;
     flex-direction: column;
     
-    background-color: #eded00;
+    /*background-color: #eded00;*/
 }
 
 .root textedit
@@ -20,13 +20,11 @@
     flex: 1;
     display: flex;
     flex-direction: row;
-    margin: 7px 0;
 }
 
 .row listview
 {
     width: 250px;
-    margin-left: 7px;
 }
 
 
