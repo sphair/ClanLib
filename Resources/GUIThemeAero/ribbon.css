@@ -80,6 +80,7 @@ ribbon-section-wrapper
 ribbon-section-wrapper > label
 {
     text-align: center;
+    color: #738399;
 }
 
 ribbon-section
@@ -221,7 +222,7 @@ combobox lineedit.ribbon
 	border-image-width:2px 2px 2px 2px;
 	border-image-repeat:stretch; 
 	border-image-source:none;
-	background-color:;
+	background: none;
 
 	border-top:0px;
 	border-left:6px;
