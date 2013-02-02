@@ -42,10 +42,14 @@ int Program::main(const std::vector<std::string> &args)
 	RibbonSection *section2 = new RibbonSection(page_home, "Section 2");
 	RibbonSection *section3 = new RibbonSection(page_view, "Section 3");
 
-	PushButton *button1 = new PushButton(section1);
-	PushButton *button11 = new PushButton(section1);
-	PushButton *button2 = new PushButton(section2);
-	PushButton *button3 = new PushButton(section3);
+	RibbonGroup *group1 = new RibbonGroup(section1);
+	RibbonGroup *group2 = new RibbonGroup(section2);
+	RibbonGroup *group3 = new RibbonGroup(section3);
+
+	PushButton *button1 = new PushButton(group1);
+	PushButton *button11 = new PushButton(group1);
+	PushButton *button2 = new PushButton(group2);
+	PushButton *button3 = new PushButton(group3);
 	button1->set_text("New");
 	button11->set_text("Open");
 	button2->set_text("Save");

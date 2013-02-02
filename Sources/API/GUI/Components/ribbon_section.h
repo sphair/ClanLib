@@ -49,4 +49,12 @@ private:
 	friend class RibbonPage;
 };
 
+class RibbonGroup : public GUIComponent
+{
+public:
+	RibbonGroup(GUIComponent *parent) : GUIComponent(parent, "ribbon-group")
+	{
+	}
+};
+
 }
