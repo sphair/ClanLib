@@ -52,32 +52,25 @@ Ribbon::Ribbon(GUIComponent *container)
 {
 	impl->component = this;
 
-	func_render().set(impl.get(), &Ribbon_Impl::on_render);
-	func_resized().set(impl.get(), &Ribbon_Impl::on_resized);
-	func_input_pressed().set(impl.get(), &Ribbon_Impl::on_input_pressed);
-	func_input_released().set(impl.get(), &Ribbon_Impl::on_input_released);
-	func_input_pointer_moved().set(impl.get(), &Ribbon_Impl::on_input_pointer_moved);
-
-	impl->menu_button = new PushButton(this);
-	impl->menu_button->set_class("menu");
-	impl->menu_button->set_geometry(Rect(0, 0, impl->menu_button->get_css_values().get_box().width.length.value, impl->menu_button->get_css_values().get_box().height.length.value));
-	impl->menu_button->func_clicked().set(impl.get(), &Ribbon_Impl::on_menu_button_clicked);
-
 	impl->menu = new RibbonMenu(this);
 
-	impl->part_tab = GUIThemePart(this, "tab");
-	impl->part_tab_background = GUIThemePart(this, "tab-background");
+	impl->tab_row = new GUIComponent(this, "ribbon-tab-row");
+
+	impl->menu_button = new PushButton(impl->tab_row);
+	impl->menu_button->set_class("menu");
+	impl->menu_button->func_clicked().set(impl.get(), &Ribbon_Impl::on_menu_button_clicked);
+
+	impl->page_area = new GUIComponent(this, "ribbon-page-area");
 
 	if (get_gui_manager().get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
 	{
 		get_display_window().enable_alpha_channel(Rect());
-		get_display_window().extend_frame_into_client_area(impl->part_tab_background.get_css_height());
+		get_display_window().extend_frame_into_client_area(23/*impl->tab_row->get_css_values().get_box().height.length.value*/);
 	}
 }
 
 Ribbon::~Ribbon()
 {
-
 }
 
 RibbonMenu *Ribbon::get_menu()
@@ -85,11 +78,6 @@ RibbonMenu *Ribbon::get_menu()
 	return impl->menu;
 }
 
-
-Size Ribbon::get_css_size() const
-{
-	return get_size();
-}
 
 }
 

@@ -52,21 +52,19 @@ class CL_API_GUI Ribbon : public GUIComponent
 public:
 	Ribbon(GUIComponent *container);
 	~Ribbon();
-
 /// \}
+
 /// \name Attributes
 /// \{
 public:
 	RibbonMenu *get_menu();
-
-	Size get_css_size() const;
-
 /// \}
+
 /// \name Operations
 /// \{
 public:
-
 /// \}
+
 /// \name Implementation
 /// \{
 private:

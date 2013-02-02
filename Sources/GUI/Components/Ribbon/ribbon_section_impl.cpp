@@ -37,14 +37,8 @@
 namespace clan
 {
 
-RibbonSection_Impl::RibbonSection_Impl(const std::string &text, int size) : text(text), size(size)
+RibbonSection_Impl::RibbonSection_Impl(const std::string &text) : text(text)
 {
-}
-
-void RibbonSection_Impl::on_render(Canvas &canvas, const Rect &clip_rect)
-{
-	Size size_section_text = component->get_render_text_size(canvas, text);
-	component->render_text(canvas, text, component->get_width()/2-size_section_text.width/2, component->get_height() - 5);
 }
 
 }

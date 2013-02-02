@@ -38,8 +38,18 @@ int Program::main(const std::vector<std::string> &args)
 	ribbon->get_menu()->add_separator();
 	ribbon->get_menu()->add_item(Image(ribbon->get_canvas(), "../../../Resources/GUIThemeAero/Images/messagebox_icon_info.png"), "Exit");
 
-	RibbonSection *section1 = new RibbonSection(page_home, "Section 1", 200);
-	RibbonSection *section2 = new RibbonSection(page_home, "Section 2", 300);
+	RibbonSection *section1 = new RibbonSection(page_home, "Section 1");
+	RibbonSection *section2 = new RibbonSection(page_home, "Section 2");
+	RibbonSection *section3 = new RibbonSection(page_view, "Section 3");
+
+	PushButton *button1 = new PushButton(section1);
+	PushButton *button11 = new PushButton(section1);
+	PushButton *button2 = new PushButton(section2);
+	PushButton *button3 = new PushButton(section3);
+	button1->set_text("New");
+	button11->set_text("Open");
+	button2->set_text("Save");
+	button3->set_text("View Something");
 
 	GUIComponent *row = new GUIComponent(root);
 	row->set_class("row");
