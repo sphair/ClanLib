@@ -91,6 +91,13 @@ ribbon-section
     align-items: flex-start;
 }
 
+ribbon-group
+{
+    flex: 1;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 ribbon-section button
 {
 	border-image-source:none;
