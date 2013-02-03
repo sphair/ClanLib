@@ -192,7 +192,7 @@ void MenuBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 		TopMenu &topmenu = menus[index];
 
 		part_item.set_pseudo_class(CssStr::selected, index == selected_index);
-		part_item.set_pseudo_class(CssStr::hot, (index != selected_index) && (index == hot_index));
+		part_item.set_pseudo_class(CssStr::hover, (index != selected_index) && (index == hot_index));
 
 		Rect item_rect = get_menu_item_rect(index);
 		Rect item_content = part_item.get_content_box(item_rect);

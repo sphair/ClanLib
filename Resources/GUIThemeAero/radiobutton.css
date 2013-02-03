@@ -23,7 +23,7 @@ radiobutton checker:checked:normal
 	background-image:url('res:RadioButtonCheckedNormal'); 
 }
 
-radiobutton checker:checked:hot
+radiobutton checker:checked:hover
 {
 	background-image:url('res:RadioButtonCheckedHot'); 
 }
@@ -43,7 +43,7 @@ radiobutton checker:unchecked:normal
 	background-image:url('res:RadioButtonUncheckedNormal'); 
 }
 
-radiobutton checker:unchecked:hot
+radiobutton checker:unchecked:hover
 {
 	background-image:url('res:RadioButtonUncheckedHot'); 
 }

@@ -78,7 +78,7 @@ ribbon-menu-button
     border-image: url('res:RibbonMenuButton') 0 fill;
 }
 
-ribbon-menu-button:hot
+ribbon-menu-button:hover
 {
     border-image-source: url('res:RibbonMenuButtonHot');
 }
@@ -143,12 +143,12 @@ ribbon-section button.big imageview
     height: 32px;
 }
 
-ribbon-section button:hot, ribbon-section button:toggled:hot
+ribbon-section button:hover, ribbon-section button:toggled:hover
 {
     border-image: url('res:RibbonButtonHot') 1 8 fill / 1px 8px;
 }
 
-ribbon-section button:pressed, ribbon-section button:toggled:pressed:hot
+ribbon-section button:pressed, ribbon-section button:toggled:pressed:hover
 {
     border-image: url('res:RibbonButtonPressed') 1 8 fill / 1px 8px;
 }
@@ -164,7 +164,7 @@ ribbon-section button:toggled
     width: 100px;
     height: 100px;
 }
-.test1:hot
+.test1:hover
 {
     background-color: #ff2222;
 }
@@ -174,7 +174,7 @@ ribbon-section button:toggled
     width: 80px;
     height: 40px;
 }
-.test2:hot
+.test2:hover
 {
     background-color: #22ff22;
 }
@@ -184,7 +184,7 @@ ribbon-section button:toggled
     width: 40px;
     height: 20px;
 }
-.test3:hot
+.test3:hover
 {
     background-color: #2222ff;
 }
@@ -195,7 +195,7 @@ ribbon-section button:toggled
     width: 60px;
     height: 40px;
 }
-.test4:hot
+.test4:hover
 {
     background-color: #ffffff;
 }
@@ -209,7 +209,7 @@ ribbon-section button:toggled
     width: 60px;
     height: 40px;
 }
-.position_test:hot
+.position_test:hover
 {
     background-color: #ffffff;
 }
@@ -261,7 +261,7 @@ imageview.fixedheight
     height: 100px;
 }
 
-.imagecontainer :hot 
+.imagecontainer :hover 
 {
     background-color: #ffffff;
 }
@@ -321,7 +321,7 @@ button:defaulted
     border-image: url('res:ButtonDefaulted') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
 
-button:hot
+button:hover
 {
     border-image: url('res:ButtonHot') 6 6 5 5 fill / 6px 6px 5px 5px;
 }

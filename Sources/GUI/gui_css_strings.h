@@ -215,7 +215,7 @@ namespace CssStr
 
 	// Theme part states:
 	const std::string normal = "normal";                      // all components, text-weight
-	const std::string hot = "hot";
+	const std::string hover = "hover";
 	const std::string defaulted = "defaulted";
 	const std::string disabled = "disabled";
 	const std::string focused = "focused";

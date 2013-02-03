@@ -363,8 +363,8 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			bool state_changed = false;
 			bool in_opener_rect = opener_rect.contains(e.mouse_pos);
-			state_changed |= part_opener.set_pseudo_class(CssStr::hot, in_opener_rect);
-			state_changed |= part_opener_glyph.set_pseudo_class(CssStr::hot, in_opener_rect);
+			state_changed |= part_opener.set_pseudo_class(CssStr::hover, in_opener_rect);
+			state_changed |= part_opener_glyph.set_pseudo_class(CssStr::hover, in_opener_rect);
 
 			if (state_changed)
 				component->request_repaint();
@@ -376,14 +376,14 @@ void ComboBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
-			component->set_pseudo_class(CssStr::hot, true);
+			component->set_pseudo_class(CssStr::hover, true);
 			component->request_repaint();
 		}
 		else
 		{
-			component->set_pseudo_class(CssStr::hot, false);
-			part_opener.set_pseudo_class(CssStr::hot, false);
-			part_opener_glyph.set_pseudo_class(CssStr::hot, false);
+			component->set_pseudo_class(CssStr::hover, false);
+			part_opener.set_pseudo_class(CssStr::hover, false);
+			part_opener_glyph.set_pseudo_class(CssStr::hover, false);
 			component->request_repaint();
 		}
 	}
@@ -432,9 +432,9 @@ void ComboBox_Impl::create_components()
 	component->set_pseudo_class(CssStr::normal, true);
 	part_opener.set_pseudo_class(CssStr::normal, true);
 	part_opener_glyph.set_pseudo_class(CssStr::normal, true);
-	component->set_pseudo_class(CssStr::hot, false);
-	part_opener.set_pseudo_class(CssStr::hot, false);
-	part_opener_glyph.set_pseudo_class(CssStr::hot, false);
+	component->set_pseudo_class(CssStr::hover, false);
+	part_opener.set_pseudo_class(CssStr::hover, false);
+	part_opener_glyph.set_pseudo_class(CssStr::hover, false);
 	component->set_pseudo_class(CssStr::pressed, false);
 	part_opener.set_pseudo_class(CssStr::pressed, false);
 	part_opener_glyph.set_pseudo_class(CssStr::pressed, false);
@@ -476,9 +476,9 @@ void ComboBox_Impl::on_popup_menu_closed()
 	component->set_pseudo_class(CssStr::pressed, false);
 	part_opener.set_pseudo_class(CssStr::pressed, false);
 	part_opener_glyph.set_pseudo_class(CssStr::pressed, false);
-	component->set_pseudo_class(CssStr::hot, false);
-	part_opener.set_pseudo_class(CssStr::hot, false);
-	part_opener_glyph.set_pseudo_class(CssStr::hot, false);
+	component->set_pseudo_class(CssStr::hover, false);
+	part_opener.set_pseudo_class(CssStr::hover, false);
+	part_opener_glyph.set_pseudo_class(CssStr::hover, false);
 
 	component->request_repaint();
 }

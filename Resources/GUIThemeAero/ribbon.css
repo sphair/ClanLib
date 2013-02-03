@@ -42,7 +42,7 @@ ribbon button.menu
 	margin: 0;
 }
 
-ribbon button.menu:hot
+ribbon button.menu:hover
 {
 	background-image:url('res:RibbonMenuButtonHot');
 }
@@ -114,7 +114,7 @@ ribbon-section button.big
 	align: center;
 }
 
-ribbon-section button:hot
+ribbon-section button:hover
 {
 	border-image-source:url('res:RibbonButtonHot');
 	border-image-slice:8 8 1 1 fill;
@@ -135,14 +135,14 @@ ribbon-section button:toggled
 	border-image-width:8px 8px 1px 1px;
 }
 
-ribbon-section button:toggled:hot
+ribbon-section button:toggled:hover
 {
 	border-image-source:url('res:RibbonButtonHot');
 	border-image-slice:8 8 1 1 fill;
 	border-image-width:8px 8px 1px 1px;
 }
 
-ribbon-section button:toggled:pressed:hot
+ribbon-section button:toggled:pressed:hover
 {
 	border-image-source:url('res:RibbonButtonPressed');
 	border-image-slice:8 8 1 1 fill;
@@ -190,7 +190,7 @@ ribbon-section button.dropdown
 	align: right;
 }
 
-ribbon-section button.dropdown:hot
+ribbon-section button.dropdown:hover
 {
 	border-image-source:url('res:RibbonDropDownButtonHot');
 }
@@ -210,7 +210,7 @@ ribbon-section button.dropdown:toggled
 	border-image-source:url('res:RibbonButtonToggled');
 }
 
-ribbon-section button.dropdown:hot:toggled
+ribbon-section button.dropdown:hover:toggled
 {
 	border-image-source:url('res:RibbonDropDownButtonHot');
 }
@@ -245,7 +245,7 @@ combobox lineedit.ribbon:normal
 	border-image-source:none; 
 }
 
-combobox lineedit.ribbon:hot
+combobox lineedit.ribbon:hover
 {
 	border-image-source:none;
 }
@@ -272,7 +272,7 @@ combobox.ribbon opener:normal
 	border-image-source:none; 
 }
 
-combobox.ribbon opener:hot
+combobox.ribbon opener:hover
 {
 	border-image-source:url('res:ListViewBorder'); 
 }
@@ -301,7 +301,7 @@ combobox.ribbon opener_glyph:normal
 	background-image:url('res:RibbonDropDownGlyph');
 }
 
-combobox.ribbon opener_glyph:hot
+combobox.ribbon opener_glyph:hover
 {
 	background-image:url('res:RibbonDropDownGlyph'); 
 }

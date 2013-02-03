@@ -814,7 +814,7 @@ void LineEdit_Impl::create_parts()
 
 	bool enabled = lineedit->is_enabled();
 
-	lineedit->set_pseudo_class(CssStr::hot, false);
+	lineedit->set_pseudo_class(CssStr::hover, false);
 	lineedit->set_pseudo_class(CssStr::normal, enabled);
 	lineedit->set_pseudo_class(CssStr::disabled, !enabled);
 

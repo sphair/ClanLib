@@ -311,16 +311,16 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				bool new_hot_state_arrow_down = button_down_rect.contains(input_msg->input_event.mouse_pos);
 				bool new_hot_state_arrow_up = button_up_rect.contains(input_msg->input_event.mouse_pos);
 
-				if (part_arrow_down.get_pseudo_class(CssStr::hot) != new_hot_state_arrow_down)
+				if (part_arrow_down.get_pseudo_class(CssStr::hover) != new_hot_state_arrow_down)
 				{
-					part_button_down.set_pseudo_class(CssStr::hot, new_hot_state_arrow_down);
-					part_arrow_down.set_pseudo_class(CssStr::hot, new_hot_state_arrow_down);
+					part_button_down.set_pseudo_class(CssStr::hover, new_hot_state_arrow_down);
+					part_arrow_down.set_pseudo_class(CssStr::hover, new_hot_state_arrow_down);
 					component->request_repaint();
 				}
-				if (part_arrow_up.get_pseudo_class(CssStr::hot) != new_hot_state_arrow_up)
+				if (part_arrow_up.get_pseudo_class(CssStr::hover) != new_hot_state_arrow_up)
 				{
-					part_button_up.set_pseudo_class(CssStr::hot, new_hot_state_arrow_up);
-					part_arrow_up.set_pseudo_class(CssStr::hot, new_hot_state_arrow_up);
+					part_button_up.set_pseudo_class(CssStr::hover, new_hot_state_arrow_up);
+					part_arrow_up.set_pseudo_class(CssStr::hover, new_hot_state_arrow_up);
 					component->request_repaint();
 				}
 				input_msg->consumed = true;
@@ -331,22 +331,22 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			{
-				component->set_pseudo_class(CssStr::hot, true);
+				component->set_pseudo_class(CssStr::hover, true);
 				component->request_repaint();
 			}
 			else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			{
-				component->set_pseudo_class(CssStr::hot, false);
+				component->set_pseudo_class(CssStr::hover, false);
 
 				part_button_up.set_pseudo_class(CssStr::pressed, false);
 				part_button_down.set_pseudo_class(CssStr::pressed, false);
 				part_arrow_up.set_pseudo_class(CssStr::pressed, false);
 				part_arrow_down.set_pseudo_class(CssStr::pressed, false);
 
-				part_button_up.set_pseudo_class(CssStr::hot, false);
-				part_button_down.set_pseudo_class(CssStr::hot, false);
-				part_arrow_up.set_pseudo_class(CssStr::hot, false);
-				part_arrow_down.set_pseudo_class(CssStr::hot, false);
+				part_button_up.set_pseudo_class(CssStr::hover, false);
+				part_button_down.set_pseudo_class(CssStr::hover, false);
+				part_arrow_up.set_pseudo_class(CssStr::hover, false);
+				part_arrow_down.set_pseudo_class(CssStr::hover, false);
 
 				component->request_repaint();
 			}

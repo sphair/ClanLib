@@ -392,8 +392,8 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 {
 	int original_slider_position = position;
 	Point mouse_pos = input_event.mouse_pos;
-	slider->set_pseudo_class(CssStr::hot, true);
-	part_track.set_pseudo_class(CssStr::hot, true);
+	slider->set_pseudo_class(CssStr::hover, true);
+	part_track.set_pseudo_class(CssStr::hover, true);
 	slider->set_pseudo_class(CssStr::normal, false);
 	part_track.set_pseudo_class(CssStr::normal, false);
 	part_focus.set_pseudo_class(CssStr::focused, false);
@@ -401,7 +401,7 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 	if (mouse_down_mode != mouse_down_thumb_drag)
 	{
 		bool thumb_hot = rect_thumb.contains(mouse_pos);
-		part_thumb.set_pseudo_class(CssStr::hot, thumb_hot );
+		part_thumb.set_pseudo_class(CssStr::hover, thumb_hot );
 		part_thumb.set_pseudo_class(CssStr::normal, !thumb_hot);
 	}
 	slider->request_repaint();
@@ -503,8 +503,8 @@ void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, 
 
 void Slider_Impl::on_mouse_leave()
 {
-	slider->set_pseudo_class(CssStr::hot, false);
-	part_thumb.set_pseudo_class(CssStr::hot, false);
+	slider->set_pseudo_class(CssStr::hover, false);
+	part_thumb.set_pseudo_class(CssStr::hover, false);
 	slider->set_pseudo_class(CssStr::normal, true);
 	part_thumb.set_pseudo_class(CssStr::normal, true);
 	slider->request_repaint();

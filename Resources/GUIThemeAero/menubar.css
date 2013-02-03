@@ -33,7 +33,7 @@ menubar item:selected
 	border-image-source:url('res:MenuBarItemSelected');
 }
 
-menubar item:hot
+menubar item:hover
 {
 	/*margin-top:3;*/
 

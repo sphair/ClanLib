@@ -107,9 +107,9 @@ void ListViewRenderer::render(
 		ListViewColumnHeader col = header->get_first_column();
 		int i=0;
 
-		part_cell.set_pseudo_class(CssStr::hot, si.mouse_over);
+		part_cell.set_pseudo_class(CssStr::hover, si.mouse_over);
 		part_cell.set_pseudo_class(CssStr::normal, !si.mouse_over);
-		part_selection.set_pseudo_class(CssStr::hot, si.mouse_over);
+		part_selection.set_pseudo_class(CssStr::hover, si.mouse_over);
 		part_selection.set_pseudo_class(CssStr::normal, !si.mouse_over);
 
 		while (!col.is_null())
@@ -187,7 +187,7 @@ void ListViewRenderer::render(
 
 					if (i == 0)
 					{
-						part_cell.set_pseudo_class(CssStr::hot, false); // only the first column gets a hot state. Might want to change this at some point?
+						part_cell.set_pseudo_class(CssStr::hover, false); // only the first column gets a hot state. Might want to change this at some point?
 						part_cell.set_pseudo_class(CssStr::normal, true);
 					}
 				}

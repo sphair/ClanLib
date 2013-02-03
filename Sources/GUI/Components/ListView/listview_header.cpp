@@ -302,7 +302,7 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputE
 		while (!col.is_null())
 		{
 			bool inside = col.impl->rect.contains(pos);
-			col.impl->part.set_pseudo_class(CssStr::hot, inside);
+			col.impl->part.set_pseudo_class(CssStr::hover, inside);
 			col.impl->part.set_pseudo_class(CssStr::normal, !inside);
 			if (inside)
 			{
@@ -323,11 +323,11 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputE
 
 void ListViewHeader_Impl::on_mouse_leave()
 {
-	listview_header->set_pseudo_class(CssStr::hot, false);
+	listview_header->set_pseudo_class(CssStr::hover, false);
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{
-		col.impl->part.set_pseudo_class(CssStr::hot, false);
+		col.impl->part.set_pseudo_class(CssStr::hover, false);
 		col.impl->part.set_pseudo_class(CssStr::normal, true);
 		col = col.get_next_sibling();
 	}
@@ -337,7 +337,7 @@ void ListViewHeader_Impl::on_mouse_leave()
 
 void ListViewHeader_Impl::on_mouse_enter()
 {
-	listview_header->set_pseudo_class(CssStr::hot, true);
+	listview_header->set_pseudo_class(CssStr::hover, true);
 }
 
 void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)

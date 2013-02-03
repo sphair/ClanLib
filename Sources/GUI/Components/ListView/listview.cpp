@@ -819,13 +819,13 @@ void ListView_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent &
 
 void ListView_Impl::on_mouse_enter()
 {
-	listview->set_pseudo_class(CssStr::hot, true);
+	listview->set_pseudo_class(CssStr::hover, true);
 	listview->request_repaint();
 }
 
 void ListView_Impl::on_mouse_leave()
 {
-	listview->set_pseudo_class(CssStr::hot, false);
+	listview->set_pseudo_class(CssStr::hover, false);
 	listview->request_repaint();
 }
 

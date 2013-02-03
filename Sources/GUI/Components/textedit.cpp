@@ -748,7 +748,7 @@ void TextEdit_Impl::create_parts()
 
 	bool enabled = textedit->is_enabled();
 
-	textedit->set_pseudo_class(CssStr::hot, false);
+	textedit->set_pseudo_class(CssStr::hover, false);
 	textedit->set_pseudo_class(CssStr::normal, enabled);
 	textedit->set_pseudo_class(CssStr::disabled, !enabled);
 
