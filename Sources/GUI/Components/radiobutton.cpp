@@ -319,12 +319,12 @@ void RadioButton_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
-			part_checker.set_pseudo_class(CssStr::hot, true);
+			part_checker.set_pseudo_class(CssStr::hover, true);
 			radio->request_repaint();
 		}
 		else
 		{
-			part_checker.set_pseudo_class(CssStr::hot, false);
+			part_checker.set_pseudo_class(CssStr::hover, false);
 			radio->request_repaint();
 		}
 	}
@@ -414,7 +414,7 @@ Callback_v1<RadioButton*> RadioButton_Impl::uncheck_radio_buttons(GUIComponent *
 void RadioButton_Impl::create_parts()
 {
 	part_checker = GUIThemePart(radio, CssStr::RadioButton::part_checker);
-	part_checker.set_pseudo_class(CssStr::hot, false);
+	part_checker.set_pseudo_class(CssStr::hover, false);
 	part_checker.set_pseudo_class(CssStr::normal, true);
 	part_checker.set_pseudo_class(CssStr::pressed, false);
 	part_checker.set_pseudo_class(CssStr::checked, false);

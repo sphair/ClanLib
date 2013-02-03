@@ -124,7 +124,7 @@ void TabHeader::add_page(TabPage *tab_page, const std::string &label)
 	handle.label = label;
 
 	handle.part.set_pseudo_class(CssStr::normal, true);
-	handle.part.set_pseudo_class(CssStr::hot, false);
+	handle.part.set_pseudo_class(CssStr::hover, false);
 	handle.part.set_pseudo_class(CssStr::selected, false);
 	impl->tabs.push_back(handle);
 
@@ -247,14 +247,14 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					{
 						if ((*it).part.get_pseudo_class(CssStr::selected))
 							return;
-						(*it).part.set_pseudo_class(CssStr::hot, true);
+						(*it).part.set_pseudo_class(CssStr::hover, true);
 						(*it).part.set_pseudo_class(CssStr::normal, false);
 						component->request_repaint();
 						msg->consumed = true;
 					}
-					else if ((*it).part.get_pseudo_class(CssStr::hot))
+					else if ((*it).part.get_pseudo_class(CssStr::hover))
 					{
-						(*it).part.set_pseudo_class(CssStr::hot, false);
+						(*it).part.set_pseudo_class(CssStr::hover, false);
 						(*it).part.set_pseudo_class(CssStr::normal, true);						
 						component->request_repaint();
 						msg->consumed = true;
@@ -306,7 +306,7 @@ void TabHeader_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 				std::vector<Handle>::iterator it;
 				for (it = tabs.begin(); it != tabs.end(); ++it)
 				{
-					(*it).part.set_pseudo_class(CssStr::hot, false);
+					(*it).part.set_pseudo_class(CssStr::hover, false);
 					(*it).part.set_pseudo_class(CssStr::normal, true);
 				}
 				component->request_repaint();
@@ -361,7 +361,7 @@ void TabHeader_Impl::unselect_all()
 	{
 		(*it).part.set_pseudo_class(CssStr::selected, false);
 		(*it).part.set_pseudo_class(CssStr::normal, true);
-		(*it).part.set_pseudo_class(CssStr::hot, false);
+		(*it).part.set_pseudo_class(CssStr::hover, false);
 	}
 }
 
@@ -374,7 +374,7 @@ void TabHeader_Impl::select_page(int index)
 	{
 		Handle &handle = tabs[i];
 		handle.part.set_pseudo_class(CssStr::normal, i != index);
-		handle.part.set_pseudo_class(CssStr::hot, false);
+		handle.part.set_pseudo_class(CssStr::hover, false);
 		handle.part.set_pseudo_class(CssStr::selected, i == index);
 	}
 }

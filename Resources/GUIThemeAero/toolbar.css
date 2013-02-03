@@ -60,7 +60,7 @@ toolbar item:normal
 	border-image-source:url('res:ToolBarButtonNormal'); 
 }
 
-toolbar item:hot
+toolbar item:hover
 {
 	border-image-source:url('res:ToolBarButtonHot'); 
 }

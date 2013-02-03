@@ -30,7 +30,7 @@ spin button_up:normal
 	border-image-source:url('res:SpinButtonUpNormal');
 }
 
-spin button_up:hot
+spin button_up:hover
 {
 	border-image-source:url('res:SpinButtonUpHot');
 }
@@ -53,7 +53,7 @@ spin arrow_up:normal
 	background-image:url('res:SpinArrowUpNormal');
 }
 
-spin arrow_up:hot
+spin arrow_up:hover
 {
 	background-position:center center;
 	background-repeat:no-repeat;
@@ -90,7 +90,7 @@ spin button_down:normal
 	border-image-source:url('res:SpinButtonDownNormal');
 }
 
-spin button_down:hot
+spin button_down:hover
 {
 	border-image-source:url('res:SpinButtonDownHot');
 }
@@ -113,7 +113,7 @@ spin arrow_down:normal
 	background-image:url('res:SpinArrowDownNormal');
 }
 
-spin arrow_down:hot
+spin arrow_down:hover
 {
 	background-position:center center;
 	background-repeat:no-repeat;

@@ -444,7 +444,7 @@ void ToolBar_Impl::create_parts()
 	part_item_pressed = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
 	part_item_pressed.set_pseudo_class(CssStr::pressed, true);
 	part_item_hot = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
-	part_item_hot.set_pseudo_class(CssStr::hot, true);
+	part_item_hot.set_pseudo_class(CssStr::hover, true);
 	part_item_on = GUIThemePart(toolbar, CssStr::ToolBar::part_item);
 	part_item_on.set_pseudo_class(CssStr::on, true);
 

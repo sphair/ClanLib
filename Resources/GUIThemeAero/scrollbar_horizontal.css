@@ -17,7 +17,7 @@ scrollbar scrolltrack.left:normal
 	border-image-source:url('res:ScrollbarHoriTrackNormal'); 
 }
 
-scrollbar scrolltrack.left:hot
+scrollbar scrolltrack.left:hover
 {
 	border-image-source:url('res:ScrollbarHoriTrackHot'); 
 }
@@ -44,7 +44,7 @@ scrollbar scrolltrack.right:normal
 	border-image-source:url('res:ScrollbarHoriTrackNormal'); 
 }
 
-scrollbar scrolltrack.right:hot
+scrollbar scrolltrack.right:hover
 {
 	border-image-source:url('res:ScrollbarHoriTrackHot'); 
 }
@@ -71,7 +71,7 @@ scrollbar scrollthumb.horizontal:normal
 	border-image-source:url('res:ScrollbarHoriThumbNormal'); 
 }
 
-scrollbar scrollthumb.horizontal:hot
+scrollbar scrollthumb.horizontal:hover
 {
 	border-image-source:url('res:ScrollbarHoriThumbHot'); 
 }
@@ -98,7 +98,7 @@ scrollbar scrollthumbgripper.horizontal:normal
 	background-image:url('res:ScrollbarHoriThumbGripperNormal'); 
 }
 
-scrollbar scrollthumbgripper.horizontal:hot
+scrollbar scrollthumbgripper.horizontal:hover
 {
 	background-image:url('res:ScrollbarHoriThumbGripperHot'); 
 }
@@ -127,7 +127,7 @@ scrollbar scrollbutton.left:normal
 	border-image-source:url('res:ScrollbarHoriButtonLeftNormal');
 }
 
-scrollbar scrollbutton.left:hot
+scrollbar scrollbutton.left:hover
 {
 	border-image-source:url('res:ScrollbarHoriButtonLeftHot'); 
 }
@@ -156,7 +156,7 @@ scrollbar scrollbutton.right:normal
 	border-image-source:url('res:ScrollbarHoriButtonRightNormal'); 
 }
 
-scrollbar scrollbutton.right:hot
+scrollbar scrollbutton.right:hover
 {
 	border-image-source:url('res:ScrollbarHoriButtonRightHot'); 
 }
