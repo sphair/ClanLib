@@ -50,6 +50,7 @@ libclan30Display_la_SOURCES = \
 	Render/uniform_buffer.cpp \
 	Render/texture_2d_array.cpp \
 	display_target.cpp \
+	display_target_impl.cpp \
 	2D/texture_group.cpp \
 	2D/color_hsv.cpp \
 	2D/sprite_description.cpp \

@@ -48,9 +48,7 @@ DisplayWindow::DisplayWindow(
 	int height,
 	bool start_fullscreen,
 	bool allow_resize,
-	int flipping_buffers,
-	DisplayTarget target)
-: impl(new DisplayWindow_Impl)
+	int flipping_buffers)
 {
 	DisplayWindowDescription description;
 	description.set_title(title);
@@ -65,20 +63,44 @@ DisplayWindow::DisplayWindow(
 	description.set_allow_resize(allow_resize);
 	description.set_flipping_buffers(flipping_buffers);
 
-	DisplayTargetProvider *target_provider = target.get_provider();
-	impl->provider = target_provider->alloc_display_window();
-	impl->provider->create(&impl->site, description);
-
+	*this = DisplayWindow(description);
 }
 
 DisplayWindow::DisplayWindow(
-	const DisplayWindowDescription &description,
-	DisplayTarget target)
-: impl(new DisplayWindow_Impl)
+	const DisplayWindowDescription &description)
 {
-	DisplayTargetProvider *target_provider = target.get_provider();
-	impl->provider = target_provider->alloc_display_window();
-	impl->provider->create(&impl->site, description);
+	std::string exception_text;
+
+	while(true)		// Try each display provider
+	{
+		DisplayTarget target = Display::get_current_target();
+		if (target.is_null())
+			throw Exception("No display targets are available : " + exception_text);
+
+		impl = std::shared_ptr<DisplayWindow_Impl>(new DisplayWindow_Impl);
+		try
+		{
+			DisplayTargetProvider *provider =  target.get_provider();
+			if (!provider)
+			throw Exception("Target provider is invalid : " + exception_text);
+
+			impl->provider = provider->alloc_display_window();
+			impl->provider->create(&impl->site, description);
+			break;
+		}
+		catch(const Exception &exception)
+		{
+			exception_text = exception_text + " \"" + exception.message + "\"";
+			Display::remove_target(target);
+		}
+		catch(...)
+		{
+			exception_text = exception_text + " \"Unknown Error\"";
+			Display::remove_target(target);
+		}
+	}
+
+
 }
 
 DisplayWindow::DisplayWindow(DisplayWindowProvider *provider)

@@ -24,39 +24,43 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
-
-#include "Display/precomp.h"
-#include "API/Display/display.h"
-#include "API/Display/display_target.h"
-#include "display_target_impl.h"
-#include "API/Display/Window/display_window.h"
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// Display Implementation:
+class DisplayTargetProvider;
+class DisplayTarget;
 
 /////////////////////////////////////////////////////////////////////////////
-// Display Attributes:
+// DisplayTarget_Impl class:
 
-DisplayTarget Display::get_current_target()
+class DisplayTarget_Impl
 {
-	return DisplayTarget_Impl::get_current_target();
-}
+public:
+	DisplayTarget_Impl();
 
-/////////////////////////////////////////////////////////////////////////////
-// Display Operations:
+	~DisplayTarget_Impl();
 
-void Display::set_current_target(const DisplayTarget &target)
-{
-	DisplayTarget_Impl::set_current_target(target);
-}
+	void set_provider(DisplayTargetProvider *provider, std::weak_ptr<DisplayTarget_Impl> base);
 
-void Display::remove_target(const DisplayTarget &target)
-{
-	DisplayTarget_Impl::remove_target(target);
-}
+	static DisplayTarget get_current_target();
+	static void set_current_target(const DisplayTarget &target);
+	static void remove_target(const DisplayTarget &target);
+
+	DisplayTargetProvider *get_provider() { return provider; }
+
+private:
+	static void remove_target(std::weak_ptr<DisplayTarget_Impl>);
+
+	DisplayTargetProvider *provider;
+
+	std::weak_ptr<DisplayTarget_Impl> self;
+
+	static bool current_target_valid;
+	static std::weak_ptr<DisplayTarget_Impl> current_target;
+	static std::vector< std::weak_ptr<DisplayTarget_Impl> > display_targets;
+};
 
 }

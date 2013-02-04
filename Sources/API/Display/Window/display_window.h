@@ -109,16 +109,14 @@ public:
 		int height,
 		bool start_fullscreen = false,
 		bool allow_resize = false,
-		int flipping_buffers = 2,
-		DisplayTarget target = DisplayTarget());
+		int flipping_buffers = 2);
 
 	/// \brief Constructs a window.
 	///
 	/// \param description = Structure that describes how to create the display window.
 	/// \param target = Display target used to create the window.
 	DisplayWindow(
-		const DisplayWindowDescription &description,
-		DisplayTarget target = DisplayTarget());
+		const DisplayWindowDescription &description);
 
 	/// \brief Constructs a window.
 	///
