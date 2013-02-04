@@ -705,19 +705,19 @@ void GL1GraphicContextProvider::draw_primitives_array(PrimitivesType type, int o
 		// Multiple textures possible
 		switch(primitives_array_texindex.type)
 		{
-			case type_float:
+			case type_int: 
 			{
 				int stride_float;
 				if (primitives_array_texindex.stride)
 				{
-					stride_float = (primitives_array_texindex.stride / sizeof(float));
+					stride_float = (primitives_array_texindex.stride / sizeof(int));
 				}
 				else
 				{
 					stride_float = primitives_array_texindex.size;
 				}
 
-				float *dptr = (float *) data_ptr;
+				int *dptr = (int *) data_ptr;
 				dptr += offset * stride_float;
 				num_vertices_in_group = 1;
 				texture_index = *dptr;

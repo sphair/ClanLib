@@ -66,7 +66,7 @@ void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_po
 		vertices[position].position = to_position(triangle_positions->x, triangle_positions->y);
 		triangle_positions++;
 		vertices[position].texcoord = Vec2f(0.0f, 0.0f);
-		vertices[position].texindex.x = (float)texindex;
+		vertices[position].texindex.x = texindex;
 		position++;
 	}
 }
@@ -82,7 +82,7 @@ void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_po
 		vertices[position].position = to_position(triangle_positions->x, triangle_positions->y);
 		triangle_positions++;
 		vertices[position].texcoord = Vec2f(0.0f, 0.0f);
-		vertices[position].texindex.x = (float)texindex;
+		vertices[position].texindex.x = texindex;
 		position++;
 	}
 }
@@ -97,7 +97,7 @@ void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions,
 		vertices[position].position = to_position(positions->x, positions->y);
 		positions++;
 		vertices[position].texcoord = *(texture_positions++);
-		vertices[position].texindex.x = (float)texindex;
+		vertices[position].texindex.x = texindex;
 		position++;
 	}
 
@@ -113,7 +113,7 @@ void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions,
 		vertices[position].position = to_position(positions->x, positions->y);
 		positions++;
 		vertices[position].texcoord = *(texture_positions++);
-		vertices[position].texindex.x = (float)texindex;
+		vertices[position].texindex.x = texindex;
 		position++;
 	}
 }
@@ -125,7 +125,7 @@ inline void RenderBatchTriangle::to_sprite_vertex(const Surface_DrawParams1 *par
 
 	v.texcoord.s = params->texture_position[index].x;
 	v.texcoord.t = params->texture_position[index].y;
-	v.texindex.x = (float) texindex;
+	v.texindex.x = texindex;
 }
 
 void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture)
@@ -151,7 +151,7 @@ void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rec
 	for (int i=0; i<6; i++)
 	{
 		vertices[position+i].color = Vec4f(color.r, color.g, color.b, color.a);
-		vertices[position+i].texindex.x = (float)texindex;
+		vertices[position+i].texindex.x = texindex;
 	}
 	position += 6;
 }
@@ -179,7 +179,7 @@ void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, 
 	for (int i=0; i<6; i++)
 	{
 		vertices[position+i].color = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-		vertices[position+i].texindex.x = (float)texindex;
+		vertices[position+i].texindex.x = texindex;
 	}
 	position += 6;
 }
@@ -198,7 +198,7 @@ void RenderBatchTriangle::fill(Canvas &canvas, float x1, float y1, float x2, flo
 	{
 		vertices[position+i].color = Vec4f(color.r, color.g, color.b, color.a);
 		vertices[position+i].texcoord = Vec2f(0.0f, 0.0f);
-		vertices[position+i].texindex.x = (float)texindex;
+		vertices[position+i].texindex.x = texindex;
 	}
 	position += 6;
 }
@@ -304,10 +304,10 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, color));
-			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, texcoord));
-			prim_array.set_attributes(3, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, texindex));
+			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(SpriteVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(SpriteVertex, color));
+			prim_array.set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, texcoord));
+			prim_array.set_attributes(3, gpu_vertices, cl_offsetof(SpriteVertex, texindex));
 
 			BlendStateDescription blend_desc;
 			blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);

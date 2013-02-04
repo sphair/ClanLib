@@ -114,9 +114,9 @@ void RenderBatchLineTexture::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<LineTextureVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(LineTextureVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(LineTextureVertex, color));
-			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(LineTextureVertex, texcoord));
+			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(LineTextureVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(LineTextureVertex, color));
+			prim_array.set_attributes(2, gpu_vertices, cl_offsetof(LineTextureVertex, texcoord));
 		}
 
 		if (vertices)
