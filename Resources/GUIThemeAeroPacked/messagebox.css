@@ -1,0 +1,52 @@
+
+messagebox
+{
+	border-image-source:url('res:MessageBox');
+	border-image-slice:2 2 44 2 fill;
+	border-image-width:2px 2px 44px 2px;
+	border-image-repeat:stretch; 
+
+	padding-left:11px;
+	padding-right:11px;
+	padding-top:11px;
+	padding-bottom:10px;
+	
+	width:300px;
+	height:70px;
+
+	icon_text_gap:7;
+}
+
+messagebox button
+{
+	width:66px;
+	height:21px;
+}
+
+messagebox.warning icon
+{
+	border-image-source:url('res:MessageBoxIconWarning');
+	width:34px;
+	height:34px;
+}
+
+messagebox.info icon
+{
+	border-image-source:url('res:MessageBoxIconInfo');
+	width:34px;
+	height:34px;
+}
+
+messagebox.error icon
+{
+	border-image-source:url('res:MessageBoxIconError');
+	width:34px;
+	height:34px;
+}
+
+messagebox.question icon
+{
+	border-image-source:url('res:MessageBoxIconQuestion');
+	width:34px;
+	height:34px;
+}
