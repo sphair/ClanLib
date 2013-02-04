@@ -161,7 +161,7 @@ void TexturePackerView::on_button_browse_resource_file()
 
 void TexturePackerView::load_resource_file(const std::string &file)
 {
-	packer.load_resources(get_gc(), file);
+	packer.load_resources(get_canvas(), file);
 }
 
 void TexturePackerView::on_button_save_resources()
@@ -178,7 +178,7 @@ void TexturePackerView::on_button_save_resources()
 		if(dlg.show())
 		{
 			std::string filename = dlg.get_filename();
-			packer.save_resources(filename);
+			packer.save_resources(get_canvas(), filename);
 			generation_result->set_text(string_format("Saved resources: %1", filename));
 		}
 	}
@@ -210,7 +210,7 @@ void TexturePackerView::on_button_generate_textures()
 
 	try
 	{
-		TextureGroup *group = packer.pack(get_gc(), texture_size, spin_border->get_value(), check_sort->is_checked());
+		TextureGroup *group = packer.pack(get_canvas(), texture_size, spin_border->get_value(), check_sort->is_checked());
 		texturegroup_component->set_texturegroup(group);
 		texturegroup_component->request_repaint();
 

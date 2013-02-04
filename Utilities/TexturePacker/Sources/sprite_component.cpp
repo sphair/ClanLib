@@ -30,12 +30,10 @@
 #include "sprite_component.h"
 
 SpriteComponent::SpriteComponent(GUIComponent *parent)
-: GUIComponent(parent),
+: GUIComponent(parent, "spritecomponent"),
   sprite_description(0),
   sprite(0)
 {
-	set_type_name("spritecomponent");
-
 	button_startstop = new PushButton(this);
 	button_startstop->set_text("Start");
 	button_startstop->func_clicked().set(this, &SpriteComponent::on_button_startstop_clicked);
@@ -50,22 +48,21 @@ SpriteComponent::SpriteComponent(GUIComponent *parent)
 	update_buttons_enabled_state();
 
 	func_render().set(this, &SpriteComponent::on_render);
-	func_style_changed().set(this, &SpriteComponent::on_style_changed);
 	func_resized().set(this, &SpriteComponent::on_resized);
 }
 
-void SpriteComponent::on_render(GraphicContext &gc, const Rect &update_rect)
+void SpriteComponent::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	push_cliprect(gc, get_size());
+	push_cliprect(canvas, get_size());
 
-	Draw::fill(gc, get_size(), Colorf::cadetblue);
+	canvas.fill_rect(get_size(), Colorf::cadetblue);
 
 	if(sprite)
 	{
 		if(is_playing)
 			sprite->update();
 
-		sprite->draw(gc, 0, 0);
+		sprite->draw(canvas, 0, 0);
 
 		if(sprite->get_current_frame() != sprite_current_frame)
 		{
@@ -82,17 +79,13 @@ void SpriteComponent::on_render(GraphicContext &gc, const Rect &update_rect)
 		{
 			SpriteDescriptionFrame frame = (*it);
 
-			Draw::texture(gc, frame.texture, Quadf(Rect(0,0,frame.texture.get_size())));
-
+			Image image(canvas, frame.texture,  frame.rect);
+			image.draw(canvas, frame.texture.get_size());
 			break;
 		}
 	}
 
-	pop_cliprect(gc);
-}
-
-void SpriteComponent::on_style_changed()
-{
+	pop_cliprect(canvas);
 }
 
 void SpriteComponent::on_resized()

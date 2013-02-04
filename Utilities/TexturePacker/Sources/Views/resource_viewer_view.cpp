@@ -63,9 +63,9 @@ ResourceViewerView::ResourceViewerView(GUIComponent *parent, MainWindow *mainwin
 
 	ListViewIconList icon_list = resource_list->get_icon_list();
 	ListViewIcon icon_disabled;
-	icon_disabled.set_sprite(Sprite(get_gc(), "Resources/sweetie-16-em-cross.png"), listview_mode_details);
+	icon_disabled.set_sprite(Sprite(get_canvas(), "Resources/sweetie-16-em-cross.png"), listview_mode_details);
 	ListViewIcon icon_enabled;
-	icon_enabled.set_sprite(Sprite(get_gc(), "Resources/sweetie-16-em-check.png"), listview_mode_details);
+	icon_enabled.set_sprite(Sprite(get_canvas(), "Resources/sweetie-16-em-check.png"), listview_mode_details);
 	icon_list.set_icon(1, icon_disabled);
 	icon_list.set_icon(2, icon_enabled);
 
@@ -179,7 +179,7 @@ void ResourceViewerView::load_resource_file(const std::string &file)
 {
 	resource_list->clear();
 
-	packer.load_resources(get_gc(), file);
+	packer.load_resources(get_canvas(), file);
 
 	std::vector<ResourceItem *> &items = packer.get_resource_items();
 	for(size_t i = 0; i < items.size(); ++i)

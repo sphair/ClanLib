@@ -51,12 +51,12 @@ public:
 	Callback_v1<View *> cb_view_close;
 
 private:
-	void on_render(GraphicContext &gc, const Rect &clip_rect);
+	void on_render(Canvas &canvas, const Rect &clip_rect);
 	void on_resized();
-	void on_process_message(GUIMessage &msg);
+	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_input_message(GUIMessage_Input msg);
 
-	void paint_tabs(GraphicContext &gc, const Rect &clip_rect);
+	void paint_tabs(Canvas &canvas, const Rect &clip_rect);
 	Rect get_workspace_area();
 
 	struct ViewPage
@@ -74,7 +74,6 @@ private:
 	bool hot;
 	Font font_tab;
 	Image image_cross, image_cross_hot, image_cross_empty;
-	GUIThemePart part_background;
 	GUIThemePart part_tab;
 	std::vector<ViewPage> pages;
 	unsigned int current_page_index;

@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "main_window.h"
 
-class Application
+class TextureApplication
 {
 public:
 	int main(const std::vector<std::string> &args)
@@ -49,14 +49,14 @@ public:
 			ResourceManager resources(resource_filename);
 			local_resources.add_resources(resources);
 
-			GUIThemeDefault theme;
-			theme.set_resources(local_resources);
+			//GUIThemeDefault theme;
+			//theme.set_resources(local_resources);
 
 			GUIWindowManagerSystem wm;
 
 			GUIManager gui;
 			gui.set_window_manager(wm);
-			gui.set_theme(theme);
+			//gui.set_theme(theme);
 			gui.set_css_document(theme_filename);
 
 			MainWindow mainwindow(&gui, &resources);
@@ -83,7 +83,7 @@ public:
 //		SetupD3D setup_d3d;
 		SetupGL setup_gl;
 
-		Application app;
+		TextureApplication app;
 		return app.main(args);
 	}
 };
