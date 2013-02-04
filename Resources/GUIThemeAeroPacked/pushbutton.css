@@ -10,7 +10,7 @@ button:defaulted
     border-image: url('res:ButtonDefaulted') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
 
-button:hot
+button:hover
 {
     border-image: url('res:ButtonHot') 6 6 5 5 fill / 6px 6px 5px 5px;
 }
@@ -52,7 +52,6 @@ button:pressed label
     left: 1px;
     top: 1px;
 }
-
 
 button focus
 {

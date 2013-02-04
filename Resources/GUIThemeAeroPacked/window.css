@@ -54,7 +54,7 @@ window buttonclose:normal
 	background-image:url('res:WindowCloseButtonActiveNormal'); 
 }
 
-window buttonclose:hot
+window buttonclose:hover
 {
 	background-image:url('res:WindowCloseButtonActiveHot'); 
 }

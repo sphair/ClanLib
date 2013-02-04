@@ -34,7 +34,7 @@ checkbox checker:checked:normal
 	background-image:url('res:CheckBoxCheckedNormal'); 
 }
 
-checkbox checker:checked:hot
+checkbox checker:checked:hover
 {
 	background-image:url('res:CheckBoxCheckedHot'); 
 }
@@ -64,7 +64,7 @@ checkbox checker:unchecked:disabled
 	background-image:url('res:CheckBoxUncheckedDisabled'); 
 }
 
-checkbox checker:unchecked:hot
+checkbox checker:unchecked:hover
 {
 	background-image:url('res:CheckBoxUncheckedHot'); 
 }
@@ -84,7 +84,7 @@ checkbox checker:indeterminated:disabled
 	background-image:url('res:CheckBoxIndeterminatedDisabled'); 
 }
 
-checkbox checker:indeterminated:hot
+checkbox checker:indeterminated:hover
 {
 	background-image:url('res:CheckBoxIndeterminatedHot'); 
 }

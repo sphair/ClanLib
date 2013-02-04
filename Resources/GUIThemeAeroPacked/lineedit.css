@@ -18,7 +18,7 @@ lineedit:normal
 	border-image-source:url('res:LineEditNormal'); 
 }
 
-lineedit:hot
+lineedit:hover
 {
 	border-image-source:url('res:LineEditHot');
 }
