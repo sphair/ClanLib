@@ -78,7 +78,6 @@ void ScrollBar_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputEvent 
 	Point pos = input_event.mouse_pos;
 
 	bool should_invalidate = false;
-	should_invalidate |= scrollbar->set_pseudo_class(CssStr::hover, true);
 	should_invalidate |= part_button_decrement.set_pseudo_class(CssStr::hover, rect_button_decrement.contains(pos));
 	should_invalidate |= part_button_increment.set_pseudo_class(CssStr::hover, rect_button_increment.contains(pos));
 	should_invalidate |= part_track_decrement.set_pseudo_class(CssStr::hover, rect_track_decrement.contains(pos));
@@ -261,7 +260,6 @@ void ScrollBar_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage> &msg, Input
 
 void ScrollBar_Impl::on_mouse_leave()
 {
-	scrollbar->set_pseudo_class(CssStr::hover, false);
 	part_button_decrement.set_pseudo_class(CssStr::hover, false);
 	part_button_increment.set_pseudo_class(CssStr::hover, false);
 	part_track_decrement.set_pseudo_class(CssStr::hover, false);

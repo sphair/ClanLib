@@ -392,7 +392,6 @@ void Slider_Impl::on_mouse_move(std::shared_ptr<GUIMessage_Input> &input, InputE
 {
 	int original_slider_position = position;
 	Point mouse_pos = input_event.mouse_pos;
-	slider->set_pseudo_class(CssStr::hover, true);
 	part_track.set_pseudo_class(CssStr::hover, true);
 	slider->set_pseudo_class(CssStr::normal, false);
 	part_track.set_pseudo_class(CssStr::normal, false);
@@ -503,7 +502,6 @@ void Slider_Impl::on_mouse_lbutton_up(std::shared_ptr<GUIMessage_Input> &input, 
 
 void Slider_Impl::on_mouse_leave()
 {
-	slider->set_pseudo_class(CssStr::hover, false);
 	part_thumb.set_pseudo_class(CssStr::hover, false);
 	slider->set_pseudo_class(CssStr::normal, true);
 	part_thumb.set_pseudo_class(CssStr::normal, true);

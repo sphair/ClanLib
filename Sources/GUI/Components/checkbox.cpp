@@ -290,14 +290,12 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			part_checker.set_pseudo_class(CssStr::hover, true);
-			checkbox->set_pseudo_class(CssStr::hover, true);
 			checkbox->request_repaint();
 		}
 		else
 		{
 			part_checker.set_pseudo_class(CssStr::hover, false);
 			part_checker.set_pseudo_class(CssStr::pressed, false);
-			checkbox->set_pseudo_class(CssStr::hover, false);
 			checkbox->request_repaint();
 		}
 		msg->consumed = true;
@@ -349,7 +347,6 @@ void CheckBox_Impl::create_parts(bool checked, bool indeterminated)
 	part_checker = GUIThemePart(checkbox, CssStr::CheckBox::part_checker);
 	part_focus = GUIThemePart(checkbox, CssStr::CheckBox::part_focus);
 
-	checkbox->set_pseudo_class(CssStr::hover, false);
 	checkbox->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
 	checkbox->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 

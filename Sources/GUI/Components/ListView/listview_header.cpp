@@ -323,7 +323,6 @@ void ListViewHeader_Impl::on_mouse_move(std::shared_ptr<GUIMessage> &msg, InputE
 
 void ListViewHeader_Impl::on_mouse_leave()
 {
-	listview_header->set_pseudo_class(CssStr::hover, false);
 	ListViewColumnHeader col = first_column;
 	while (!col.is_null())
 	{
@@ -337,7 +336,6 @@ void ListViewHeader_Impl::on_mouse_leave()
 
 void ListViewHeader_Impl::on_mouse_enter()
 {
-	listview_header->set_pseudo_class(CssStr::hover, true);
 }
 
 void ListViewHeader_Impl::on_render(Canvas &canvas, const Rect &update_rect)

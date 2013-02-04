@@ -251,12 +251,12 @@ void GUIComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
 			component->set_pseudo_class(CssStr::hover, true);
-			//msg->consumed = true;	<-- Disabled, else the LineEdit ibeam cursor is not shown
+			component->request_repaint();
 		}
 		else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 		{
 			component->set_pseudo_class(CssStr::hover, false);
-			//msg->consumed = true;	<-- Disabled, else the LineEdit ibeam cursor is not shown
+			component->request_repaint();
 		}
 	}
 }

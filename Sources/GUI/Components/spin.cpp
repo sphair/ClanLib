@@ -331,13 +331,10 @@ void Spin_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		{
 			if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 			{
-				component->set_pseudo_class(CssStr::hover, true);
 				component->request_repaint();
 			}
 			else if (pointer->pointer_type == GUIMessage_Pointer::pointer_leave)
 			{
-				component->set_pseudo_class(CssStr::hover, false);
-
 				part_button_up.set_pseudo_class(CssStr::pressed, false);
 				part_button_down.set_pseudo_class(CssStr::pressed, false);
 				part_arrow_up.set_pseudo_class(CssStr::pressed, false);
