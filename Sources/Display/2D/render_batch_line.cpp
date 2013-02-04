@@ -132,8 +132,8 @@ void RenderBatchLine::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<LineVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(LineVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec4f*)cl_offsetof(LineVertex, color));
+			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(LineVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(LineVertex, color));
 		}
 
 		if (vertices)

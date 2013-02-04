@@ -63,9 +63,16 @@ void OpenGLPrimitivesArrayProvider::set_attribute(int attrib_index, const Vertex
 
 	glBindBuffer(GL_ARRAY_BUFFER, static_cast<OpenGLVertexArrayBufferProvider *>(attribute.array_provider)->get_handle());
 	glEnableVertexAttribArray(attrib_index);
-	glVertexAttribPointer(
-		attrib_index, attribute.size, OpenGLGraphicContextProvider::to_enum(attribute.type),
-		normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *) attribute.offset);
+
+	if (attribute.type == type_float)
+	{
+		glVertexAttribPointer( attrib_index, attribute.size, OpenGLGraphicContextProvider::to_enum(attribute.type),
+			normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *) attribute.offset);
+	}
+	else
+	{
+		glVertexAttribIPointer( attrib_index, attribute.size, OpenGLGraphicContextProvider::to_enum(attribute.type), attribute.stride, (GLvoid *) attribute.offset);
+	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

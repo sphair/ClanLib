@@ -64,7 +64,7 @@ private:
 		Vec4f position;
 		Vec2f texcoord;
 		Vec4f color;
-		Vec1f texindex;
+		Vec1i texindex;
 	};
 
 	int set_batcher_active(Canvas &canvas, const Texture2D &texture, bool glyph_program = false, const Colorf &constant_color = Colorf::black);
