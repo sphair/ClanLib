@@ -56,6 +56,7 @@ public:
 
 			GUIManager gui;
 			gui.set_window_manager(wm);
+			gui.add_resources(local_resources);
 			//gui.set_theme(theme);
 			gui.set_css_document(theme_filename);
 
