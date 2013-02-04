@@ -68,7 +68,48 @@ ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resour
 			VirtualDirectory virtual_directory = resources->get_directory(resource);
 			Texture2D texture = Texture2D(gc, image_name, virtual_directory, import_desc );
 
-			add_frame(texture);
+			DomNode cur_child(cur_element.get_first_child());
+			if(cur_child.is_null()) 
+			{
+				add_frame(texture);
+			}
+			else 
+			{
+				do {
+					DomElement cur_child_elemnt = cur_child.to_element();
+					if(cur_child.get_node_name() == "grid")
+					{
+						Point position;
+						Size texture_size = texture.get_size();
+						Size size = texture_size;
+
+						std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
+						if (image_size.size() > 0)
+							size.width = StringHelp::text_to_int(image_size[0]);
+						if (image_size.size() > 1)
+							size.height = StringHelp::text_to_int(image_size[1]);
+
+						if (cur_child_elemnt.has_attribute("pos"))
+						{
+							std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+							if (image_pos.size() > 0)
+								position.x = StringHelp::text_to_int(image_pos[0]);
+							if (image_pos.size() > 1)
+								position.y = StringHelp::text_to_int(image_pos[1]);
+						}
+						if ((size.width + position.x) > texture_size.width)
+							size.width = (texture_size.width - position.x);
+						if ((size.height + position.y) > texture_size.height)
+							size.height = (texture_size.height - position.y);
+
+						add_frame(texture, Rect(position, size));
+
+					}
+
+					cur_child = cur_child.get_next_sibling();
+				} while(!cur_child.is_null());
+			}
+
 			break;
 		}
 		cur_node = cur_node.get_next_sibling();
