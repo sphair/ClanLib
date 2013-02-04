@@ -30,11 +30,9 @@
 #include "texturegroup_component.h"
 
 TextureGroupComponent::TextureGroupComponent(GUIComponent *parent)
-: GUIComponent(parent),
+: GUIComponent(parent, "texturegroupcomponent"),
   texture_group(0)
 {
-	set_type_name("texturegroupcomponent");
-
 	component_texture = new GUIComponent(this);
 
 	scroll_horizontal = new ScrollBar(this);
@@ -43,7 +41,6 @@ TextureGroupComponent::TextureGroupComponent(GUIComponent *parent)
 	scroll_vertical->set_vertical();
 
 	func_render().set(this, &TextureGroupComponent::on_render);
-	func_style_changed().set(this, &TextureGroupComponent::on_style_changed);
 	func_resized().set(this, &TextureGroupComponent::on_resized);
 
 	component_texture->func_render().set(this, &TextureGroupComponent::on_render_texture);
@@ -54,34 +51,29 @@ TextureGroupComponent::TextureGroupComponent(GUIComponent *parent)
 	on_resized();
 }
 
-void TextureGroupComponent::on_render(GraphicContext &gc, const Rect &update_rect)
+void TextureGroupComponent::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	Draw::fill(gc, Rect(0, 0, get_size()), Colorf::lightgray);
+	canvas.fill_rect(Rect(0, 0, get_size()), Colorf::lightgray);
 	set_clip_children(true);	// Note, this was moved out of the constructor because at that stage, the geometry is not set
 }
 
-void TextureGroupComponent::on_render_texture(GraphicContext &gc, const Rect &update_rect)
+void TextureGroupComponent::on_render_texture(Canvas &canvas, const Rect &update_rect)
 {
 	if(texture_group)
 	{
-		std::vector<Texture> textures = texture_group->get_textures();
+		std::vector<Texture2D> textures = texture_group->get_textures();
 
 		if(textures.size() > 0)
 		{
-			Draw::fill(gc, Rect(0, 0, component_texture->get_size()), Colorf::black);
+			canvas.fill_rect(Rect(0, 0, component_texture->get_size()), Colorf::black);
 
-			gc.set_texture(0, textures[0]);
 			int xpos = scroll_horizontal->get_position();
 			int ypos = scroll_vertical->get_position();
 			Size texture_size = texture_group->get_texture_sizes();
-			Draw::texture(gc, Rect(-xpos, -ypos, texture_size));
-			gc.reset_texture(0);
+			Image image(canvas, textures[0], textures[0].get_size());
+			image.draw(canvas, Rect(-xpos, -ypos, texture_size));
 		}
 	}
-}
-
-void TextureGroupComponent::on_style_changed()
-{
 }
 
 void TextureGroupComponent::on_scroll()
@@ -91,7 +83,7 @@ void TextureGroupComponent::on_scroll()
 
 void TextureGroupComponent::on_resized()
 {
-	int scrollbar_size = scroll_horizontal->get_preferred_width();
+	int scrollbar_size = scroll_horizontal->get_preferred_content_width();
 
 	Rect geometry = get_geometry();
 

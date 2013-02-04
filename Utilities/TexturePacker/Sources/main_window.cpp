@@ -41,10 +41,8 @@
 #include <algorithm>
 
 MainWindow::MainWindow(GUIManager *gui, ResourceManager *resources)
-: Window(gui, get_window_description()), resources(resources), workspace(0)
+: GUIComponent(gui, get_window_description(), "mainwindow"), resources(resources), workspace(0)
 {
-	set_id_name("mainwindow");
-
 	func_close().set(this, &MainWindow::on_close);
 	func_resized().set(this, &MainWindow::on_resized);
 
@@ -168,7 +166,7 @@ void MainWindow::on_close2()
 }
 void MainWindow::on_resized()
 {
-	Rect client_area = get_client_area();
+	Rect client_area = get_content_box();
 
 	menubar->set_geometry(Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
 	workspace->set_geometry(Rect(client_area.left, client_area.top + 22, client_area.right, client_area.bottom));

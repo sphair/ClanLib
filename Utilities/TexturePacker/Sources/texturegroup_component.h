@@ -43,9 +43,8 @@ public:
 
 // Implementation:
 private:
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	void on_render_texture(GraphicContext &gc, const Rect &update_rect);
-	void on_style_changed();
+	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_render_texture(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
 	void on_scroll();
 

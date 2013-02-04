@@ -4,7 +4,7 @@
 #include "../texture_packer.h"
 
 CreateCollisionDataDialog::CreateCollisionDataDialog(GUIComponent *owner, SpriteResourceItem *sprite_item)
-: Window(owner, get_description()), sprite_item(sprite_item)
+: GUIComponent(owner, get_description()), sprite_item(sprite_item)
 {
 	set_layout(layout);
 
@@ -80,14 +80,14 @@ void CreateCollisionDataDialog::on_generate()
 	std::string directory = StringHelp::trim(edit_directory->get_text());
 	if(directory.length() == 0)
 	{
-		cl_message_box(this, "Missing output directory", "You need to specify an output directory.", cl_mb_buttons_ok, cl_mb_icon_error);
+		message_box(this, "Missing output directory", "You need to specify an output directory.", mb_buttons_ok, mb_icon_error);
 		return;
 	}
 
 	std::string filename = StringHelp::trim(edit_filename->get_text());
 	if(filename.length() == 0)
 	{
-		cl_message_box(this, "Missing output filename", "You need to specify an output filename.", cl_mb_buttons_ok, cl_mb_icon_error);
+		message_box(this, "Missing output filename", "You need to specify an output filename.", mb_buttons_ok, mb_icon_error);
 		return;
 	}
 
@@ -121,10 +121,7 @@ void CreateCollisionDataDialog::generate_collision(const std::string &filename, 
 	{
 		PixelBuffer pb;
 
-		if(frames[i].type == SpriteDescriptionFrame::type_pixelbuffer)
-			pb = frames[i].pixelbuffer;
-		else if(frames[i].type == SpriteDescriptionFrame::type_texture)
-			pb = frames[i].texture.get_pixeldata();
+		pb = frames[i].texture.get_pixeldata(get_canvas());
 
 		if(frames[i].rect != pb.get_size())
 			pb = pb.copy(frames[i].rect);
@@ -153,7 +150,7 @@ void CreateCollisionDataDialog::generate_collision(const std::string &filename, 
 	}
 
 	std::string msg = string_format("%1 collision outlines generated", (int) frames.size());
-	cl_message_box(this, "Collision outlines generated", msg, cl_mb_buttons_ok, cl_mb_icon_info);
+	message_box(this, "Collision outlines generated", msg, mb_buttons_ok, mb_icon_info);
 }
 
 void CreateCollisionDataDialog::update_expected_filenames()

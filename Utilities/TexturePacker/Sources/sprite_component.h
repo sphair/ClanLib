@@ -46,8 +46,7 @@ public:
 
 // Implementation:
 private:
-	void on_render(GraphicContext &gc, const Rect &update_rect);
-	void on_style_changed();
+	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_resized();
 	void on_button_startstop_clicked();
 

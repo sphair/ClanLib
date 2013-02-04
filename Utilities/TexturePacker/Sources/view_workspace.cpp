@@ -31,20 +31,18 @@
 #include "view.h"
 
 ViewWorkspace::ViewWorkspace(GUIComponent *parent)
-: GUIComponent(parent), hot(false), current_page_index(0)
+: GUIComponent(parent, "workspace"), hot(false), current_page_index(0)
 {
-	set_type_name("workspace");
 	func_render().set(this, &ViewWorkspace::on_render);
 	func_resized().set(this, &ViewWorkspace::on_resized);
 	func_process_message().set(this, &ViewWorkspace::on_process_message);
 
-	GraphicContext gc = get_gc();
-	part_background = GUIThemePart(this);
+	Canvas canvas = get_canvas();
 	part_tab = GUIThemePart(this, "workspacetab");
-	font_tab = Font(gc, "Tahoma", -11);//part_background.get_font();
-	image_cross = Image(gc, "Resources/cross-small.png");
-	image_cross_hot = Image(gc, "Resources/cross-small-hot.png");
-	image_cross_empty = Image(gc, "Resources/cross-small-empty.png");
+	font_tab = Font(canvas, "Tahoma", -11);//part_background.get_font();
+	image_cross = Image(canvas, "Resources/cross-small.png");
+	image_cross_hot = Image(canvas, "Resources/cross-small-hot.png");
+	image_cross_empty = Image(canvas, "Resources/cross-small-empty.png");
 	on_resized();
 }
 
@@ -142,11 +140,9 @@ unsigned int ViewWorkspace::get_current_view_index() const
 	return current_page_index;
 }
 
-void ViewWorkspace::on_render(GraphicContext &gc, const Rect &clip_rect)
+void ViewWorkspace::on_render(Canvas &canvas, const Rect &clip_rect)
 {
-	Size client_size = get_size();
-	part_background.render_box(gc, client_size, clip_rect);
-	paint_tabs(gc, clip_rect);
+	paint_tabs(canvas, clip_rect);
 }
 
 void ViewWorkspace::on_resized()
@@ -160,14 +156,14 @@ void ViewWorkspace::on_resized()
 Rect ViewWorkspace::get_workspace_area()
 {
 	Rect client_area = get_size();
-	client_area.top += part_tab.get_preferred_height()+7;
+	client_area.top += part_tab.get_css_height()+7;
 	client_area.left += 7;
 	client_area.right -= 7;
 	client_area.bottom -= 9;
 	return client_area;
 }
 
-void ViewWorkspace::paint_tabs(GraphicContext &gc, const Rect &clip_rect)
+void ViewWorkspace::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 {
 	int tab_x = 15;
 	for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
@@ -192,13 +188,13 @@ void ViewWorkspace::paint_tabs(GraphicContext &gc, const Rect &clip_rect)
 			}
 		}
 
-		span.layout(gc, 1000);
-		int tab_width = cl_max(40, span.get_size().width);
-		Rect current_tab(Point(tab_x, 0), Size(tab_width+20, part_tab.get_preferred_height()));
+		span.layout(canvas, 1000);
+		int tab_width = clan::max(40, span.get_size().width);
+		Rect current_tab(Point(tab_x, 0), Size(tab_width+20, part_tab.get_css_height()));
 		if (page_index == current_page_index)
-			part_tab.render_box(gc, current_tab, clip_rect);
+			part_tab.render_box(canvas, current_tab);
 		span.set_position(Point(tab_x+10, current_tab.bottom-18));
-		span.draw_layout(gc);
+		span.draw_layout(canvas);
 
 		pages[page_index].span = span;
 		pages[page_index].position = current_tab;
@@ -206,24 +202,25 @@ void ViewWorkspace::paint_tabs(GraphicContext &gc, const Rect &clip_rect)
 	}
 }
 
-void ViewWorkspace::on_process_message(GUIMessage &msg)
+void ViewWorkspace::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
-	if (msg.is_type(GUIMessage_Input::get_type_name()))
-		on_input_message(GUIMessage_Input(msg));
+	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	if (input_msg)
+		on_input_message(*input_msg);
 }
 
 void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 {
-	GraphicContext gc = get_gc();
-	InputEvent input_event = msg.get_event();
-	if (input_event.type == InputEvent::pressed && input_event.id == MOUSE_LEFT)
+	Canvas canvas = get_canvas();
+	InputEvent input_event = msg.input_event;
+	if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
 	{
 		Point mouse_pos = input_event.mouse_pos;
 		for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 		{
 			if (pages[page_index].position.contains(mouse_pos))
 			{
-				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(gc, mouse_pos);
+				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
 				if (page_index == current_page_index && result.type == SpanLayout::HitTestResult::inside && result.object_id == 0)
 				{
 					if (!cb_view_close.is_null())
@@ -236,11 +233,11 @@ void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 				break;
 			}
 		}
-		msg.set_consumed();
+		msg.consumed = true;
 	}
-	else if (input_event.type == InputEvent::released && input_event.id == MOUSE_LEFT)
+	else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
 	{
-		msg.set_consumed();
+		msg.consumed = true;
 	}
 	else if (input_event.type == InputEvent::pointer_moved)
 	{
@@ -252,7 +249,7 @@ void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 			if (pages[page_index].position.contains(mouse_pos))
 			{
 				no_match = false;
-				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(gc, mouse_pos);
+				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
 				if (page_index == current_page_index && result.type == SpanLayout::HitTestResult::inside && result.object_id == 0)
 				{
 					new_hot_state = true;
@@ -265,18 +262,18 @@ void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 			hot = new_hot_state;
 			request_repaint();
 		}
-		msg.set_consumed();
+		msg.consumed = true;
 	}
 	else if (input_event.type == InputEvent::pressed && input_event.ctrl)
 	{
 		switch (input_event.id)
 		{
-		case KEY_TAB:
+		case keycode_tab:
 			if (input_event.shift)
 				previous_view();
 			else
 				next_view();
-			msg.set_consumed();
+			msg.consumed = true;
 			break;
 		}
 	}

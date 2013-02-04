@@ -39,7 +39,7 @@ TexturePacker::~TexturePacker()
 {
 }
 
-void TexturePacker::load_resources(GraphicContext &gc, const std::string &filename)
+void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
 {
 	resources = ResourceManager(filename);
 
@@ -53,11 +53,11 @@ void TexturePacker::load_resources(GraphicContext &gc, const std::string &filena
 		std::string resource_id = (*resource_it);
 		Resource resource = resources.get_resource(resource_id);
 
-		resource_items.push_back(load_resource(gc, resource_id, resource, resources));
+		resource_items.push_back(load_resource(canvas, resource_id, resource, resources));
 	}
 }
 
-ResourceItem *TexturePacker::load_resource(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
 	ResourceItem *item = 0;
 
@@ -66,11 +66,11 @@ ResourceItem *TexturePacker::load_resource(GraphicContext &gc, std::string &reso
 		std::string type = resource.get_type();
 		if(type == "sprite")
 		{
-			item = load_sprite(gc, resource_id, resource, resources);
+			item = load_sprite(canvas, resource_id, resource, resources);
 		}
 		else if(type == "image")
 		{
-			item = load_image(gc, resource_id, resource, resources);
+			item = load_image(canvas, resource_id, resource, resources);
 		}
 		else
 		{
@@ -97,11 +97,11 @@ ResourceItem *TexturePacker::load_resource(GraphicContext &gc, std::string &reso
 	return item;
 }
 
-ResourceItem *TexturePacker::load_sprite(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
-	SpriteDescription desc(gc, resource_id, &resources);
+	SpriteDescription desc(canvas, resource_id, &resources);
 
-	Sprite sprite(gc, resource_id, &resources);
+	Sprite sprite(canvas, resource_id, &resources);
 	sprite.set_play_loop(true);
 	sprite.set_alignment(origin_top_left);
 	sprite.set_angle(Angle::from_degrees(360) - sprite.get_base_angle());
@@ -113,11 +113,11 @@ ResourceItem *TexturePacker::load_sprite(GraphicContext &gc, std::string &resour
 	return item;
 }
 
-ResourceItem *TexturePacker::load_image(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
-	SpriteDescription desc(gc, resource_id, &resources);
+	SpriteDescription desc(canvas, resource_id, &resources);
 
-	Image image(gc, resource_id, &resources);
+	Image image(canvas, resource_id, &resources);
 	image.set_alignment(origin_top_left);
 
 	ImageResourceItem *item = new ImageResourceItem(resource);
@@ -184,7 +184,7 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 	return max_width_d1 > max_width_d2;
 }
 
-TextureGroup *TexturePacker::pack(GraphicContext &gc, const Size &texture_size, int border_size, bool sort_on_width)
+TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int border_size, bool sort_on_width)
 {
 	TextureGroup *group = new TextureGroup(texture_size);
 
@@ -209,15 +209,15 @@ TextureGroup *TexturePacker::pack(GraphicContext &gc, const Size &texture_size, 
 			{
 				Rect frame_rect = frames[index].rect;
 
-				Subtexture sub_texture = group->add(gc, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
+				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
 				sprite_item->packed_sub_textures.push_back(sub_texture);
 
-				Texture texture = frames[index].texture;
-				const PixelBuffer &pb = texture.get_pixeldata();
+				Texture2D texture = frames[index].texture;
+				const PixelBuffer &pb = texture.get_pixeldata(canvas);
 				last_border_size = border_size;
 				if (last_border_size < 0) last_border_size= 0;
 				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
-				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
+				sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
 			}
 		}
 
@@ -233,15 +233,15 @@ TextureGroup *TexturePacker::pack(GraphicContext &gc, const Size &texture_size, 
 			{
 				Rect frame_rect = frames[index].rect;
 
-				Subtexture sub_texture = group->add(gc, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
+				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
 				image_item->packed_sub_textures.push_back(sub_texture);
 
-				Texture texture = frames[index].texture;
-				const PixelBuffer &pb = texture.get_pixeldata();
+				Texture2D texture = frames[index].texture;
+				const PixelBuffer &pb = texture.get_pixeldata(canvas);
 				last_border_size = border_size;
 				if (last_border_size < 0) last_border_size = 0;
 				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
-				sub_texture.get_texture().set_subimage(sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
+				sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
 			}
 		}
 
@@ -252,7 +252,7 @@ TextureGroup *TexturePacker::pack(GraphicContext &gc, const Size &texture_size, 
 	return group;
 }
 
-void TexturePacker::save_resources(const std::string &filename)
+void TexturePacker::save_resources(Canvas &canvas, const std::string &filename)
 {
 	// Map containing generated texture filenames for packed Textures
 	std::map<Texture, std::string> generated_texture_filenames;
@@ -268,18 +268,18 @@ void TexturePacker::save_resources(const std::string &filename)
 	{
 		SpriteResourceItem *sprite_item = dynamic_cast<SpriteResourceItem *>(items[item_index]);
 		if (sprite_item)
-			process_resource(sprite_item->resource, sprite_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
+			process_resource(canvas, sprite_item->resource, sprite_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
 
 		ImageResourceItem *image_item = dynamic_cast<ImageResourceItem *>(items[item_index]);
 		if (image_item)
-			process_resource(image_item->resource, image_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
+			process_resource(canvas, image_item->resource, image_item->packed_sub_textures, generated_texture_filenames, generated_texture_index, images_pathname);
 	}
 
 	// Save the entire resource DOM
 	resources.save(filename);
 }
 
-void TexturePacker::process_resource(Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
+void TexturePacker::process_resource(Canvas &canvas, Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
 {
 	// Found a sprite resource, lets modify its content!
 	Resource resource = item_resource;
@@ -308,14 +308,14 @@ void TexturePacker::process_resource(Resource &item_resource, std::vector<Subtex
 
 		// Try to find out if we already have created a texture-on-disk for this subtexture
 		std::string texture_filename;
-		Texture texture = subtexture.get_texture();
+		Texture2D texture = subtexture.get_texture();
 		std::map<Texture, std::string>::iterator it;
 		it = generated_texture_filenames.find(texture);
 		if(it == generated_texture_filenames.end())
 		{
 			// Texture not found, generate a filename and dump texture to disk
 			texture_filename = string_format("texture%1.png", ++generated_texture_index);
-			PNGProvider::save(texture.get_pixeldata(), image_pathname + texture_filename);
+			PNGProvider::save(texture.get_pixeldata(canvas), image_pathname + texture_filename);
 			generated_texture_filenames[texture] = texture_filename;
 		}
 		else

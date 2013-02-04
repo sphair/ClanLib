@@ -75,19 +75,19 @@ public:
 	TexturePacker();
 	~TexturePacker();
 
-	void load_resources(GraphicContext &gc, const std::string &filename);
-	void save_resources(const std::string &filename);
+	void load_resources(Canvas &canvas, const std::string &filename);
+	void save_resources(Canvas &canvas, const std::string &filename);
 
 	std::vector<ResourceItem *> &get_resource_items() { return resource_items; }
 
-	TextureGroup *pack(GraphicContext &gc, const Size &texture_size, int border_size, bool sort_on_width);
+	TextureGroup *pack(Canvas &canvas, const Size &texture_size, int border_size, bool sort_on_width);
 	Callback_v2<int, int> func_pack_progress;
 
 private:
-	ResourceItem *load_resource(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_image(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_sprite(GraphicContext &gc, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	void process_resource(Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
+	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
+	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
+	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
+	void process_resource(Canvas &canvas, Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
 
 	ResourceManager resources;
 

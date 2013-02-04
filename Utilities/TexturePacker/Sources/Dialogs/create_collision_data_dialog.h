@@ -3,7 +3,7 @@
 
 class SpriteResourceItem;
 
-class CreateCollisionDataDialog : public Window
+class CreateCollisionDataDialog : public GUIComponent
 {
 public:
 	CreateCollisionDataDialog(GUIComponent *owner, SpriteResourceItem *sprite_item);

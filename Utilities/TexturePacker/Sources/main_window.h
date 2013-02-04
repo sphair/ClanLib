@@ -28,7 +28,7 @@
 
 #pragma once
 
-class Application;
+class TextureApplication;
 class SpriteComponent;
 class ResourceItem;
 class TexturePacker;
@@ -36,7 +36,7 @@ class TextureGroupComponent;
 class View;
 class ViewWorkspace;
 
-class MainWindow : public Window
+class MainWindow : public GUIComponent
 {
 public:
 	MainWindow(GUIManager *gui, ResourceManager *resources);
@@ -69,7 +69,7 @@ private:
 	void on_resized();
 	void on_view_close(View *view);
 
-	Application *application;
+	TextureApplication *application;
 
 	std::vector<View *> views;
 	ViewWorkspace *workspace;
