@@ -82,10 +82,10 @@ class PixelReader_1cast : public PixelReader
 public:
 	void read(const void *input, Vec4f *output, int num_pixels)
 	{
-		const Vec1<Type> *d = static_cast<const Vec1<Type> *>(input);
+		const Type *d = static_cast<const Type *>(input);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			output[i] = Vec4f(static_cast<float>(d[i].x), 0.0f, 0.0f, 1.0f);
+			output[i] = Vec4f(static_cast<float>(d[i]), 0.0f, 0.0f, 1.0f);
 		}
 	}
 };

@@ -78,7 +78,7 @@ class PixelReader_1hf : public PixelReader
 public:
 	void read(const void *input, Vec4f *output, int num_pixels)
 	{
-		const Vec1hf *d = static_cast<const Vec1hf *>(input);
+		const HalfFloat *d = static_cast<const HalfFloat *>(input);
 		for (int i = 0; i < num_pixels; i++)
 		{
 			output[i] = Vec4f(d[i], 0.0f, 0.0f, 1.0f);

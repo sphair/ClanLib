@@ -35,15 +35,11 @@
 
 #include "../api_core.h"
 #include "cl_math.h"
-#include "vec1.h"
 #include "vec2.h"
 #include "vec3.h"
 
 namespace clan
 {
-
-template<typename Type>
-class Vec1;
 
 template<typename Type>
 class Vec2;
@@ -90,7 +86,6 @@ public:
 
 	Vec4() : x(0), y(0), z(0), w(0) { }
 	explicit Vec4(const Type &scalar) : x(scalar), y(scalar), z(scalar), w(scalar) { }
-	explicit Vec4(const Vec1<Type> &copy, const Type &p2, const Type &p3, const Type &p4) { x = copy.x; y = p2; z = p3; w = p4; }
 	explicit Vec4(const Vec2<Type> &copy, const Type &p3, const Type &p4) { x = copy.x; y = copy.y; z = p3; w = p4; }
 	explicit Vec4(const Vec2<Type> &copy, const Vec2<Type> &copy34) { x = copy.x; y = copy.y; z = copy34.x; w = copy34.y; }
 	explicit Vec4(const Vec3<Type> &copy, const Type &p4) { x = copy.x; y = copy.y; z = copy.z; w = p4; }

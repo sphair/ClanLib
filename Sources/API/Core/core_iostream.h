@@ -54,13 +54,6 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Size& size);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const Sizef& size);
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec1<T>& vec)
-{
-	s << vec.x;
-	return s;
-}
-
-template<typename T>
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
 {
 	s << "["

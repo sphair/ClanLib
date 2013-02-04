@@ -7,7 +7,6 @@ core_global.cpp \
 Math/triangle_math.cpp \
 Math/outline_triangulator_generic.cpp \
 Math/rect.cpp \
-Math/vec1.cpp \
 Math/half_float.cpp \
 Math/mat3.cpp \
 Math/ear_clip_result.cpp \

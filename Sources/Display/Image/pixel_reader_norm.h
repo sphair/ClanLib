@@ -92,10 +92,10 @@ class PixelReader_1norm : public PixelReader_norm
 public:
 	void read(const void *input, Vec4f *output, int num_pixels)
 	{
-		const Vec1<Type> *d = static_cast<const Vec1<Type> *>(input);
+		const Type *d = static_cast<const Type *>(input);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			output[i] = Vec4f(normalize(d[i].x), 0.0f, 0.0f, 1.0f);
+			output[i] = Vec4f(normalize(d[i]), 0.0f, 0.0f, 1.0f);
 		}
 	}
 };
