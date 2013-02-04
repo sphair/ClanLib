@@ -28,6 +28,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/display_target.h"
+#include "display_target_impl.h"
 #include "API/Display/TargetProviders/display_target_provider.h"
 #include "API/Display/display.h"
 
@@ -35,38 +36,16 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// DisplayTarget_Impl class:
-
-class DisplayTarget_Impl
-{
-public:
-	DisplayTarget_Impl()
-	: provider(0)
-	{
-	}
-
-	~DisplayTarget_Impl()
-	{
-		delete provider;
-	}
-
-	DisplayTargetProvider *provider;
-};
-
-/////////////////////////////////////////////////////////////////////////////
 // DisplayTarget Construction:
 
 DisplayTarget::DisplayTarget()
 {
-	if (Display::get_current_target().is_null() == false)
-		*this = Display::get_current_target();
 }
 
 DisplayTarget::DisplayTarget(DisplayTargetProvider *provider)
 : impl(new DisplayTarget_Impl)
 {
-	impl->provider = provider;
-	Display::set_current_target(*this, true);
+	impl->set_provider(provider, impl);
 }
 
 DisplayTarget::DisplayTarget(const std::weak_ptr<DisplayTarget_Impl> impl)
@@ -84,7 +63,7 @@ DisplayTarget::~DisplayTarget()
 DisplayTargetProvider *DisplayTarget::get_provider()
 {
 	if (impl)
-		return impl->provider;
+		return impl->get_provider();
 	else
 		return 0;
 }
@@ -100,7 +79,7 @@ void DisplayTarget::throw_if_null() const
 
 void DisplayTarget::set_current()
 {
-	Display::set_current_target(*this, false);
+	Display::set_current_target(*this);
 }
 
 /////////////////////////////////////////////////////////////////////////////

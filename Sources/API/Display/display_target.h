@@ -49,9 +49,6 @@ class CL_API_DISPLAY DisplayTarget
 /// \{
 
 public:
-	/// \brief Constructs a display target if a Display current target exists. Else create a null instance
-	DisplayTarget();
-
 	/// \brief Constructs a DisplayTarget
 	///
 	/// \param provider = Display Target Provider
@@ -87,6 +84,9 @@ public:
 
 private:
 
+	/// \brief Constructs a null DisplayTarget
+	DisplayTarget();
+
 	/// \brief Constructs a DisplayTarget
 	///
 	/// \param DisplayTarget_Impl = Weak Ptr
@@ -94,7 +94,7 @@ private:
 
 	std::shared_ptr<DisplayTarget_Impl> impl;
 
-	friend class Display;
+	friend class DisplayTarget_Impl;
 /// \}
 };
 

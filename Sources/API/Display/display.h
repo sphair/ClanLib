@@ -37,6 +37,7 @@ namespace clan
 {
 
 class DisplayTarget;
+class DisplayTargetProvider;
 
 /// \brief Top level display class.
 ///
@@ -53,8 +54,9 @@ class CL_API_DISPLAY Display
 /// \{
 
 public:
-	/// \brief Returns the currently selected display target.
+	/// \brief Returns the currently selected display target
 	static DisplayTarget get_current_target();
+
 
 /// \}
 /// \name Operations
@@ -62,7 +64,10 @@ public:
 
 public:
 	/// \brief Sets the currently selected display target.
-	static void set_current_target(const DisplayTarget &target, bool only_set_if_null = false);
+	static void set_current_target(const DisplayTarget &target);
+
+	/// \brief Remove the target from the target list
+	static void remove_target(const DisplayTarget &target);
 
 /// \}
 /// \name Signals
