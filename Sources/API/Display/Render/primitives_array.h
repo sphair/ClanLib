@@ -164,39 +164,39 @@ public:
 		set_attributes(index, (VertexArrayBuffer&)buffer, size, type_float, 0, 0, normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1ub> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<unsigned char> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_byte, 0, sizeof(Vec1ub), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_byte, 0, sizeof(unsigned char), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1b> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<signed char> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_byte, 0, sizeof(Vec1b), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_byte, 0, sizeof(signed char), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1us> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<unsigned short> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_short, 0, sizeof(Vec1us), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_short, 0, sizeof(unsigned short), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1s> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<signed short> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_short, 0, sizeof(Vec1s), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_short, 0, sizeof(signed short), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1ui> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<unsigned int> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_int, 0, sizeof(Vec1ui), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_int, 0, sizeof(unsigned int), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1i> &buffer, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<signed int> &buffer, bool normalize = false)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_int, 0, sizeof(Vec1i), normalize);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_int, 0, sizeof(signed int), normalize);
 	}
 
-	void set_attributes(int index, VertexArrayVector<Vec1f> &buffer)
+	void set_attributes(int index, VertexArrayVector<float> &buffer)
 	{
-		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_float, 0, sizeof(Vec1f), false);
+		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_float, 0, sizeof(float), false);
 	}
 
 	void set_attributes(int index, VertexArrayVector<Vec2ub> &buffer, bool normalize = false)
@@ -305,43 +305,43 @@ public:
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1ub *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, unsigned char *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_byte, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1b *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, signed char *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_byte, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1us *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, unsigned short *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_short, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1s *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, signed short *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_short, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1ui *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, unsigned int *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_unsigned_int, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1i *member_offset, bool normalize = false)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, signed int *member_offset, bool normalize = false)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_int, (size_t)member_offset, sizeof(Type), normalize);
 	}
 
 	template<typename Type>
-	void set_attributes(int index, VertexArrayVector<Type> &buffer, Vec1f *member_offset)
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, float *member_offset)
 	{
 		set_attributes(index, (VertexArrayBuffer&)buffer, 1, type_float, (size_t)member_offset, sizeof(Type), false);
 	}

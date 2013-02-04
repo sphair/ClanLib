@@ -33,7 +33,6 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/Math/vec1.h"
 #include "../../Core/Math/vec2.h"
 #include "../../Core/Math/vec3.h"
 #include "../../Core/Math/vec4.h"
@@ -156,42 +155,42 @@ private:
 /// \}
 };
 
-typedef PixelBufferLock<Vec1ub> PixelBufferLock1ub;
+typedef PixelBufferLock<unsigned char> PixelBufferLock1ub;
 typedef PixelBufferLock<Vec2ub> PixelBufferLock2ub;
 typedef PixelBufferLock<Vec3ub> PixelBufferLock3ub;
 typedef PixelBufferLock<Vec4ub> PixelBufferLock4ub;
-typedef PixelBufferLock<Vec1us> PixelBufferLock1us;
+typedef PixelBufferLock<unsigned short> PixelBufferLock1us;
 typedef PixelBufferLock<Vec2us> PixelBufferLock2us;
 typedef PixelBufferLock<Vec3us> PixelBufferLock3us;
 typedef PixelBufferLock<Vec4us> PixelBufferLock4us;
-typedef PixelBufferLock<Vec1ui> PixelBufferLock1ui;
+typedef PixelBufferLock<unsigned int> PixelBufferLock1ui;
 typedef PixelBufferLock<Vec2ui> PixelBufferLock2ui;
 typedef PixelBufferLock<Vec3ui> PixelBufferLock3ui;
 typedef PixelBufferLock<Vec4ui> PixelBufferLock4ui;
 
-typedef PixelBufferLock<Vec1b> PixelBufferLock1b;
+typedef PixelBufferLock<signed char> PixelBufferLock1b;
 typedef PixelBufferLock<Vec2b> PixelBufferLock2b;
 typedef PixelBufferLock<Vec3b> PixelBufferLock3b;
 typedef PixelBufferLock<Vec4b> PixelBufferLock4b;
-typedef PixelBufferLock<Vec1s> PixelBufferLock1s;
+typedef PixelBufferLock<signed short> PixelBufferLock1s;
 typedef PixelBufferLock<Vec2s> PixelBufferLock2s;
 typedef PixelBufferLock<Vec3s> PixelBufferLock3s;
 typedef PixelBufferLock<Vec4s> PixelBufferLock4s;
-typedef PixelBufferLock<Vec1i> PixelBufferLock1i;
+typedef PixelBufferLock<signed int> PixelBufferLock1i;
 typedef PixelBufferLock<Vec2i> PixelBufferLock2i;
 typedef PixelBufferLock<Vec3i> PixelBufferLock3i;
 typedef PixelBufferLock<Vec4i> PixelBufferLock4i;
 
-typedef PixelBufferLock<Vec1hf> PixelBufferLock1hf;
+typedef PixelBufferLock<HalfFloat> PixelBufferLock1hf;
 typedef PixelBufferLock<Vec2hf> PixelBufferLock2hf;
 typedef PixelBufferLock<Vec3hf> PixelBufferLock3hf;
 typedef PixelBufferLock<Vec4hf> PixelBufferLock4hf;
 
-typedef PixelBufferLock<Vec1f> PixelBufferLock1f;
+typedef PixelBufferLock<float> PixelBufferLock1f;
 typedef PixelBufferLock<Vec2f> PixelBufferLock2f;
 typedef PixelBufferLock<Vec3f> PixelBufferLock3f;
 typedef PixelBufferLock<Vec4f> PixelBufferLock4f;
-typedef PixelBufferLock<Vec1d> PixelBufferLock1d;
+typedef PixelBufferLock<double> PixelBufferLock1d;
 typedef PixelBufferLock<Vec2d> PixelBufferLock2d;
 typedef PixelBufferLock<Vec3d> PixelBufferLock3d;
 typedef PixelBufferLock<Vec4d> PixelBufferLock4d;

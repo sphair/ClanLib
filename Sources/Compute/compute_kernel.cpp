@@ -73,11 +73,6 @@ void ComputeKernel::set_arg_float(int index, float value)
 	set_arg(index, &value, sizeof(float));
 }
 
-void ComputeKernel::set_arg_vec1f(int index, const Vec1f &value)
-{
-	set_arg(index, &value, sizeof(Vec1f));
-}
-
 void ComputeKernel::set_arg_vec2f(int index, const Vec2f &value)
 {
 	set_arg(index, &value, sizeof(Vec2f));

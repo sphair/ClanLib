@@ -78,10 +78,10 @@ class PixelWriter_1hf : public PixelWriter
 public:
 	void write(void *output, Vec4f *input, int num_pixels)
 	{
-		Vec1hf *d = static_cast<Vec1hf *>(output);
+		HalfFloat *d = static_cast<HalfFloat *>(output);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			d[i] = Vec1hf(input[i]);
+			d[i] = HalfFloat(input[i].x);
 		}
 	}
 };

@@ -79,7 +79,6 @@ public:
 	void set_arg(int index, const void *data, int size);
 	void set_arg_int(int index, int value);
 	void set_arg_float(int index, float value);
-	void set_arg_vec1f(int index, const Vec1f &value);
 	void set_arg_vec2f(int index, const Vec2f &value);
 	void set_arg_vec3f(int index, const Vec3f &value);
 	void set_arg_vec4f(int index, const Vec4f &value);

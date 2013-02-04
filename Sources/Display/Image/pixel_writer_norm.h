@@ -115,10 +115,10 @@ class PixelWriter_1norm : public PixelWriter_norm
 public:
 	void write(void *output, Vec4f *input, int num_pixels)
 	{
-		Vec1<Type> *d = static_cast<Vec1<Type> *>(output);
+		Type *d = static_cast<Type *>(output);
 		for (int i = 0; i < num_pixels; i++)
 		{
-			d[i] = Vec1<Type>(unnorm<Type>(input[i].x));
+			d[i] = (unnorm<Type>(input[i].x));
 		}
 	}
 };

@@ -167,7 +167,6 @@
 #include "Core/Math/base64_decoder.h"
 #include "Core/Math/bezier_curve.h"
 #include "Core/Math/circle.h"
-#include "Core/Math/vec1.h"
 #include "Core/Math/vec2.h"
 #include "Core/Math/vec3.h"
 #include "Core/Math/vec4.h"

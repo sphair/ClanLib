@@ -171,7 +171,6 @@ clanCore_includes = \
 	Core/Math/rect.h \
 	Core/Math/ear_clip_result.h \
 	Core/Math/line_segment.h \
-	Core/Math/vec1.h \
 	Core/Math/cl_math.h \
 	Core/Math/line_math.h \
 	Core/Math/bezier_curve.h \
