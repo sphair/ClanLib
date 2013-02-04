@@ -29,7 +29,7 @@ combobox opener:normal
 	border-image-source:url('res:ComboBoxDropDownButtonNormal'); 
 }
 
-combobox opener:hot
+combobox opener:hover
 {
 	border-image-source:url('res:ComboBoxDropDownButtonHot'); 
 }
@@ -58,7 +58,7 @@ combobox opener_glyph:normal
 	background-image:url('res:ComboBoxDropDownButtonNormalGlyph'); 
 }
 
-combobox opener_glyph:hot
+combobox opener_glyph:hover
 {
 	background-image:url('res:ComboBoxDropDownButtonHotGlyph'); 
 }

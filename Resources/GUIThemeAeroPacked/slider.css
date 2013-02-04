@@ -43,7 +43,7 @@ slider sliderthumb.horizontal:normal
 	border-image-source:url('res:SliderHorizontalThumbNormal'); 
 }
 
-slider sliderthumb.horizontal:hot
+slider sliderthumb.horizontal:hover
 {
 	border-image-source:url('res:SliderHorizontalThumbHot');
 }
@@ -76,7 +76,7 @@ slider sliderthumb.vertical:normal
 	border-image-source:url('res:SliderVerticalThumbNormal'); 
 }
 
-slider sliderthumb.vertical:hot
+slider sliderthumb.vertical:hover
 {
 	border-image-source:url('res:SliderVerticalThumbHot');
 }

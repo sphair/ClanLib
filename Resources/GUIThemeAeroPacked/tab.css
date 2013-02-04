@@ -46,7 +46,7 @@ tabheader page:normal
 	border-image-source:url('res:TabHeaderPageNormal');
 }
 
-tabheader page:hot
+tabheader page:hover
 {
 	border-image-source:url('res:TabHeaderPageHot');
 }

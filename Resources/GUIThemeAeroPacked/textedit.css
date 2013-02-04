@@ -24,7 +24,7 @@ textedit:normal
 	background-color: white;
 }
 
-textedit:hot
+textedit:hover
 {
 	border-image-source:none;
 	background-color: white;

@@ -22,3 +22,15 @@
 @import "progressbar.css";
 @import "groupbox.css";
 @import "tooltip.css";
+@import "messagebox.css";
+@import "ribbon.css";
+
+*
+{
+	display:flex;
+	font-weight:normal;
+	font-style:normal;
+	font-size:11px;
+	font-family:"Tahoma";
+
+}
