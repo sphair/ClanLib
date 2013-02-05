@@ -30,22 +30,22 @@
 #pragma once
 
 
-#include "opengl_graphic_context_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
 
 namespace clan
 {
 
-class OpenGLRenderBufferProvider : public RenderBufferProvider, DisposableObject
+class GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLRenderBufferProvider();
+	GL3RenderBufferProvider();
 
-	~OpenGLRenderBufferProvider();
+	~GL3RenderBufferProvider();
 
 
 /// \}

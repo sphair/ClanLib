@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_uniform_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_uniform_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,22 +37,22 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLUniformBufferProvider Construction:
+// GL3UniformBufferProvider Construction:
 
-OpenGLUniformBufferProvider::OpenGLUniformBufferProvider()
+GL3UniformBufferProvider::GL3UniformBufferProvider()
 {
 }
 
-OpenGLUniformBufferProvider::~OpenGLUniformBufferProvider()
+GL3UniformBufferProvider::~GL3UniformBufferProvider()
 {
 }
 
-void OpenGLUniformBufferProvider::create(int size, BufferUsage usage)
+void GL3UniformBufferProvider::create(int size, BufferUsage usage)
 {
 	buffer.create(0, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 }
 
-void OpenGLUniformBufferProvider::create(const void *data, int size, BufferUsage usage)
+void GL3UniformBufferProvider::create(const void *data, int size, BufferUsage usage)
 {
 	buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 }

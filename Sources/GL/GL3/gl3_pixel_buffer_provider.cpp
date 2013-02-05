@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_pixel_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_pixel_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,17 +37,17 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLPixelBufferProvider Construction:
+// GL3PixelBufferProvider Construction:
 
-OpenGLPixelBufferProvider::OpenGLPixelBufferProvider()
+GL3PixelBufferProvider::GL3PixelBufferProvider()
 {
 }
 
-OpenGLPixelBufferProvider::~OpenGLPixelBufferProvider()
+GL3PixelBufferProvider::~GL3PixelBufferProvider()
 {
 }
 
-void OpenGLPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+void GL3PixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 {
 	data_locked = false;
 	texture_format = new_format;
@@ -72,9 +72,9 @@ void OpenGLPixelBufferProvider::create(const void *data, const Size &new_size, P
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLPixelBufferProvider Operations:
+// GL3PixelBufferProvider Operations:
 
-void OpenGLPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
+void GL3PixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
 {
 	// Handle the simple base
 	if ( (dest_rect.left == 0) && (dest_rect.get_width() == size.width) )
@@ -86,12 +86,12 @@ void OpenGLPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest
 	else
 	{
 		// Need to upload in blocks here
-		throw Exception("OpenGLPixelBufferProvider::upload_data() Implement me for this situation");
+		throw Exception("GL3PixelBufferProvider::upload_data() Implement me for this situation");
 	}
 }
 
 
-void *OpenGLPixelBufferProvider::get_data()
+void *GL3PixelBufferProvider::get_data()
 {
 	if (!data_locked)
 		throw Exception("lock() not called before get_data()");

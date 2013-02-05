@@ -32,7 +32,6 @@
 
 #pragma once
 
-#include "API/LegacyGL/api_legacy_gl.h"
 #include "opengl1_defines.h"
 #include <utility>
 #include "API/Display/Render/texture.h"
@@ -53,7 +52,7 @@ typedef void (GL1ProcAddress)();
 /// \brief OpenGL utility class.
 ///
 /// \xmlonly !group=GL1/System! !header=gl1.h! \endxmlonly
-class CL_API_LegacyGL GL1
+class GL1
 {
 /// \name Attributes
 /// \{

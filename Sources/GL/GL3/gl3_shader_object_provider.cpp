@@ -29,8 +29,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_shader_object_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_shader_object_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Render/shared_gc_data.h"
@@ -39,15 +39,15 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLShaderObjectProvider Construction:
+// GL3ShaderObjectProvider Construction:
 
-OpenGLShaderObjectProvider::OpenGLShaderObjectProvider()
+GL3ShaderObjectProvider::GL3ShaderObjectProvider()
 : handle(0)
 {
 	SharedGCData::add_disposable(this);
 }
 
-void OpenGLShaderObjectProvider::create(
+void GL3ShaderObjectProvider::create(
 	ShaderType shader_type,
 	const std::string &source)
 {
@@ -66,7 +66,7 @@ void OpenGLShaderObjectProvider::create(
 	glShaderSource(handle, 1, sources, source_lengths);
 }
 
-void OpenGLShaderObjectProvider::create(
+void GL3ShaderObjectProvider::create(
 	ShaderType shader_type,
 	const std::vector<std::string> &sources)
 {
@@ -99,13 +99,13 @@ void OpenGLShaderObjectProvider::create(
 	}
 }
 
-OpenGLShaderObjectProvider::~OpenGLShaderObjectProvider()
+GL3ShaderObjectProvider::~GL3ShaderObjectProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLShaderObjectProvider::on_dispose()
+void GL3ShaderObjectProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -117,14 +117,14 @@ void OpenGLShaderObjectProvider::on_dispose()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLShaderObjectProvider Attributes:
+// GL3ShaderObjectProvider Attributes:
 
-unsigned int OpenGLShaderObjectProvider::get_handle() const
+unsigned int GL3ShaderObjectProvider::get_handle() const
 {
 	return (unsigned int) handle;
 }
 
-bool OpenGLShaderObjectProvider::get_compile_status() const
+bool GL3ShaderObjectProvider::get_compile_status() const
 {
 	OpenGL::set_active();
 	GLint status = 0;
@@ -132,12 +132,12 @@ bool OpenGLShaderObjectProvider::get_compile_status() const
 	return (status != GL_FALSE);
 }
 
-ShaderType OpenGLShaderObjectProvider::get_shader_type() const
+ShaderType GL3ShaderObjectProvider::get_shader_type() const
 {
 	return type;
 }
 
-std::string OpenGLShaderObjectProvider::get_info_log() const
+std::string GL3ShaderObjectProvider::get_info_log() const
 {
 	OpenGL::set_active();
 	std::string result;
@@ -157,7 +157,7 @@ std::string OpenGLShaderObjectProvider::get_info_log() const
 	return result;
 }
 
-std::string OpenGLShaderObjectProvider::get_shader_source() const
+std::string GL3ShaderObjectProvider::get_shader_source() const
 {
 	OpenGL::set_active();
 	std::string result;
@@ -178,18 +178,18 @@ std::string OpenGLShaderObjectProvider::get_shader_source() const
 }
 
 /////////////////////////////////////////////////////////////////////////////	
-// OpenGLShaderObjectProvider Operations:
+// GL3ShaderObjectProvider Operations:
 
-void OpenGLShaderObjectProvider::compile()
+void GL3ShaderObjectProvider::compile()
 {
 	OpenGL::set_active();
 	glCompileShader(handle);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLShaderObjectProvider Implementation:
+// GL3ShaderObjectProvider Implementation:
 
-GLenum OpenGLShaderObjectProvider::shadertype_to_opengl(ShaderType type)
+GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
 {
 	switch (type)
 	{
@@ -206,7 +206,7 @@ GLenum OpenGLShaderObjectProvider::shadertype_to_opengl(ShaderType type)
 	case shadertype_compute:
 		return GL_COMPUTE_SHADER;
 	default:
-		throw Exception("OpenGLShaderObjectProvider: Unknown shader type: " + type);
+		throw Exception("GL3ShaderObjectProvider: Unknown shader type: " + type);
 	}
 }
 

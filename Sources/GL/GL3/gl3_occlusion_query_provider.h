@@ -36,17 +36,17 @@
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLOcclusionQueryProvider : public OcclusionQueryProvider, DisposableObject
+class GL3OcclusionQueryProvider : public OcclusionQueryProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLOcclusionQueryProvider(OpenGLGraphicContextProvider *gc_provider);
+	GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider);
 
-	~OpenGLOcclusionQueryProvider();
+	~GL3OcclusionQueryProvider();
 
 
 /// \}
@@ -76,7 +76,7 @@ private:
 	/// \brief OpenGL occlusion query handle.
 	GLuint handle;
 
-	OpenGLGraphicContextProvider *gc_provider;
+	GL3GraphicContextProvider *gc_provider;
 /// \}
 };
 

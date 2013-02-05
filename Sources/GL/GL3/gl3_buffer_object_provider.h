@@ -39,15 +39,15 @@ namespace clan
 
 class GraphicContext;
 class TransferBuffer;
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLBufferObjectProvider : public DisposableObject
+class GL3BufferObjectProvider : public DisposableObject
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLBufferObjectProvider();
-	~OpenGLBufferObjectProvider();
+	GL3BufferObjectProvider();
+	~GL3BufferObjectProvider();
 	void create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target);
 /// \}
 

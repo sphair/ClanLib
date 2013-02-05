@@ -32,20 +32,20 @@
 #include "API/Display/TargetProviders/transfer_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_buffer_object_provider.h"
+#include "gl3_buffer_object_provider.h"
 
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLTransferBufferProvider : public TransferBufferProvider
+class GL3TransferBufferProvider : public TransferBufferProvider
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLTransferBufferProvider();
-	~OpenGLTransferBufferProvider();
+	GL3TransferBufferProvider();
+	~GL3TransferBufferProvider();
 	void create(int size, BufferUsage usage);
 	void create(void *data, int size, BufferUsage usage);
 /// \}
@@ -68,7 +68,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	OpenGLBufferObjectProvider buffer;
+	GL3BufferObjectProvider buffer;
 /// \}
 };
 

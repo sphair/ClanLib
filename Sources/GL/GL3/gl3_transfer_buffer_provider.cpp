@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_transfer_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_transfer_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,23 +37,23 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTransferBufferProvider Construction:
+// GL3TransferBufferProvider Construction:
 
-OpenGLTransferBufferProvider::OpenGLTransferBufferProvider()
+GL3TransferBufferProvider::GL3TransferBufferProvider()
 {
 }
 
-OpenGLTransferBufferProvider::~OpenGLTransferBufferProvider()
+GL3TransferBufferProvider::~GL3TransferBufferProvider()
 {
 }
 
 
-void OpenGLTransferBufferProvider::create(int size, BufferUsage usage)
+void GL3TransferBufferProvider::create(int size, BufferUsage usage)
 {
 	create(0, size, usage);
 }
 
-void OpenGLTransferBufferProvider::create(void *data, int size, BufferUsage usage)
+void GL3TransferBufferProvider::create(void *data, int size, BufferUsage usage)
 {
 	buffer.create(data, size, usage, 0, GL_COPY_WRITE_BUFFER);
 }

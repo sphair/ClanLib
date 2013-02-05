@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_element_array_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_element_array_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,23 +37,23 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLElementArrayBufferProvider Construction:
+// GL3ElementArrayBufferProvider Construction:
 
-OpenGLElementArrayBufferProvider::OpenGLElementArrayBufferProvider()
+GL3ElementArrayBufferProvider::GL3ElementArrayBufferProvider()
 {
 }
 
-OpenGLElementArrayBufferProvider::~OpenGLElementArrayBufferProvider()
+GL3ElementArrayBufferProvider::~GL3ElementArrayBufferProvider()
 {
 }
 
 
-void OpenGLElementArrayBufferProvider::create(int size, BufferUsage usage)
+void GL3ElementArrayBufferProvider::create(int size, BufferUsage usage)
 {
 	create(0, size, usage);
 }
 
-void OpenGLElementArrayBufferProvider::create(void *data, int size, BufferUsage usage)
+void GL3ElementArrayBufferProvider::create(void *data, int size, BufferUsage usage)
 {
 	buffer.create(data, size, usage, GL_ELEMENT_ARRAY_BUFFER_BINDING, GL_ELEMENT_ARRAY_BUFFER);
 }

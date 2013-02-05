@@ -27,31 +27,31 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_occlusion_query_provider.h"
+#include "gl3_occlusion_query_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_graphic_context_provider.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLOcclusionQueryProvider Construction:
+// GL3OcclusionQueryProvider Construction:
 
-OpenGLOcclusionQueryProvider::OpenGLOcclusionQueryProvider(OpenGLGraphicContextProvider *gc_provider)
+GL3OcclusionQueryProvider::GL3OcclusionQueryProvider(GL3GraphicContextProvider *gc_provider)
 : handle(0), gc_provider(gc_provider)
 {
 	SharedGCData::add_disposable(this);
 	create();
 }
 
-OpenGLOcclusionQueryProvider::~OpenGLOcclusionQueryProvider()
+GL3OcclusionQueryProvider::~GL3OcclusionQueryProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLOcclusionQueryProvider::on_dispose()
+void GL3OcclusionQueryProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -63,9 +63,9 @@ void OpenGLOcclusionQueryProvider::on_dispose()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLOcclusionQueryProvider Attributes:
+// GL3OcclusionQueryProvider Attributes:
 
-bool OpenGLOcclusionQueryProvider::is_result_ready() const
+bool GL3OcclusionQueryProvider::is_result_ready() const
 {
 	OpenGL::set_active(gc_provider);
 	int available;
@@ -73,7 +73,7 @@ bool OpenGLOcclusionQueryProvider::is_result_ready() const
 	return (available != 0);
 }
 
-GLint OpenGLOcclusionQueryProvider::get_result() const
+GLint GL3OcclusionQueryProvider::get_result() const
 {
 	OpenGL::set_active(gc_provider);
 	GLint result;
@@ -82,9 +82,9 @@ GLint OpenGLOcclusionQueryProvider::get_result() const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLOcclusionQueryProvider Operations:
+// GL3OcclusionQueryProvider Operations:
 
-void OpenGLOcclusionQueryProvider::create()
+void GL3OcclusionQueryProvider::create()
 {
 	OpenGL::set_active(gc_provider);
 
@@ -97,13 +97,13 @@ void OpenGLOcclusionQueryProvider::create()
 	glGenQueries(1, &handle);
 }
 
-void OpenGLOcclusionQueryProvider::begin()
+void GL3OcclusionQueryProvider::begin()
 {
 	OpenGL::set_active(gc_provider);
 	glBeginQuery(GL_SAMPLES_PASSED, handle);
 }
 
-void OpenGLOcclusionQueryProvider::end()
+void GL3OcclusionQueryProvider::end()
 {
 	OpenGL::set_active(gc_provider);
 	glEndQuery(GL_SAMPLES_PASSED);
@@ -111,6 +111,6 @@ void OpenGLOcclusionQueryProvider::end()
 
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLOcclusionQueryProvider Implementation:
+// GL3OcclusionQueryProvider Implementation:
 
 }

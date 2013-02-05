@@ -28,36 +28,36 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_target_provider.h"
+#include "gl3_target_provider.h"
 #if defined(__APPLE__)
-#include "AGL/opengl_window_provider_agl.h"
+#include "AGL/gl3_window_provider_agl.h"
 #elif defined(WIN32)
-#include "WGL/opengl_window_provider_wgl.h"
+#include "WGL/gl3_window_provider_wgl.h"
 #else
-#include "GLX/opengl_window_provider_glx.h"
+#include "GLX/gl3_window_provider_glx.h"
 #endif
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Construction:
+// GL3TargetProvider Construction:
 
-OpenGLTargetProvider::OpenGLTargetProvider()
+GL3TargetProvider::GL3TargetProvider()
 {
 }
 
-OpenGLTargetProvider::~OpenGLTargetProvider()
+GL3TargetProvider::~GL3TargetProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Attributes:
+// GL3TargetProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Operations:
+// GL3TargetProvider Operations:
 
-DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
+DisplayWindowProvider *GL3TargetProvider::alloc_display_window()
 {
 #if defined(__APPLE__)
 	// description not supported on AGL at the moment
@@ -70,6 +70,6 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTargetProvider Implementation:
+// GL3TargetProvider Implementation:
 
 }

@@ -38,17 +38,17 @@
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLShaderObjectProvider : public ShaderObjectProvider, DisposableObject
+class GL3ShaderObjectProvider : public ShaderObjectProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLShaderObjectProvider();
+	GL3ShaderObjectProvider();
 
-	virtual ~OpenGLShaderObjectProvider();
+	virtual ~GL3ShaderObjectProvider();
 
 	virtual void create(ShaderType type, const std::string &source);
 

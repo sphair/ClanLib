@@ -32,20 +32,20 @@
 #include "API/Display/TargetProviders/uniform_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_buffer_object_provider.h"
+#include "gl3_buffer_object_provider.h"
 
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLUniformBufferProvider : public UniformBufferProvider
+class GL3UniformBufferProvider : public UniformBufferProvider
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLUniformBufferProvider();
-	~OpenGLUniformBufferProvider();
+	GL3UniformBufferProvider();
+	~GL3UniformBufferProvider();
 	void create(int size, BufferUsage usage);
 	void create(const void *data, int size, BufferUsage usage);
 /// \}
@@ -67,7 +67,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	OpenGLBufferObjectProvider buffer;
+	GL3BufferObjectProvider buffer;
 /// \}
 };
 

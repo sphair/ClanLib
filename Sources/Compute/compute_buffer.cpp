@@ -33,11 +33,11 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/render_buffer.h"
 #include <D3D11.h>
-#include "GL/opengl_pixel_buffer_provider.h"
-#include "GL/opengl_vertex_array_buffer_provider.h"
-#include "GL/opengl_element_array_buffer_provider.h"
-#include "GL/opengl_texture_provider.h"
-#include "GL/opengl_render_buffer_provider.h"
+#include "GL/gl3_pixel_buffer_provider.h"
+#include "GL/gl3_vertex_array_buffer_provider.h"
+#include "GL/gl3_element_array_buffer_provider.h"
+#include "GL/gl3_texture_provider.h"
+#include "GL/gl3_render_buffer_provider.h"
 #include "D3D/d3d_pixel_buffer_provider.h"
 #include "D3D/d3d_vertex_array_buffer_provider.h"
 #include "D3D/d3d_element_array_buffer_provider.h"
@@ -70,7 +70,7 @@ void ComputeBuffer::throw_if_null() const
 
 ComputeBuffer ComputeBuffer::from_pixel_buffer(ComputeContext &context, PixelBuffer &pixel_buffer, BufferAccess access)
 {
-	OpenGLPixelBufferProvider *gl_provider = dynamic_cast<OpenGLPixelBufferProvider*>(pixel_buffer.get_provider());
+	GL3PixelBufferProvider *gl_provider = dynamic_cast<GL3PixelBufferProvider*>(pixel_buffer.get_provider());
 	if (gl_provider)
 	{
 		ComputeBuffer buffer;
@@ -88,7 +88,7 @@ ComputeBuffer ComputeBuffer::from_pixel_buffer(ComputeContext &context, PixelBuf
 
 ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexArrayBuffer &vertex_buffer, BufferAccess access)
 {
-	OpenGLVertexArrayBufferProvider *gl_provider = dynamic_cast<OpenGLVertexArrayBufferProvider*>(vertex_buffer.get_provider());
+	GL3VertexArrayBufferProvider *gl_provider = dynamic_cast<GL3VertexArrayBufferProvider*>(vertex_buffer.get_provider());
 	D3DVertexArrayBufferProvider *d3d_provider = dynamic_cast<D3DVertexArrayBufferProvider*>(vertex_buffer.get_provider());
 	if (gl_provider)
 	{
@@ -116,7 +116,7 @@ ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexA
 
 ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, ElementArrayBuffer &element_buffer, BufferAccess access)
 {
-	OpenGLElementArrayBufferProvider *gl_provider = dynamic_cast<OpenGLElementArrayBufferProvider*>(element_buffer.get_provider());
+	GL3ElementArrayBufferProvider *gl_provider = dynamic_cast<GL3ElementArrayBufferProvider*>(element_buffer.get_provider());
 	D3DElementArrayBufferProvider *d3d_provider = dynamic_cast<D3DElementArrayBufferProvider*>(element_buffer.get_provider());
 	if (gl_provider)
 	{
@@ -144,7 +144,7 @@ ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, Elemen
 
 ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &texture, int mipmap_level, BufferAccess access)
 {
-	OpenGLTextureProvider *gl_provider = dynamic_cast<OpenGLTextureProvider*>(texture.get_provider());
+	GL3TextureProvider *gl_provider = dynamic_cast<GL3TextureProvider*>(texture.get_provider());
 	D3DTextureProvider *d3d_provider = dynamic_cast<D3DTextureProvider*>(texture.get_provider());
 	if (gl_provider)
 	{
@@ -188,7 +188,7 @@ ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &text
 
 ComputeBuffer ComputeBuffer::from_render_buffer(ComputeContext &context, RenderBuffer &render_buffer, BufferAccess access)
 {
-	OpenGLRenderBufferProvider *gl_provider = dynamic_cast<OpenGLRenderBufferProvider*>(render_buffer.get_provider());
+	GL3RenderBufferProvider *gl_provider = dynamic_cast<GL3RenderBufferProvider*>(render_buffer.get_provider());
 	D3DRenderBufferProvider *d3d_provider = dynamic_cast<D3DRenderBufferProvider*>(render_buffer.get_provider());
 	if (gl_provider)
 	{

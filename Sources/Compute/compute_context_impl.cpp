@@ -30,7 +30,7 @@
 #include "API/Core/Text/logger.h"
 #include "compute_context_impl.h"
 #include "opencl_bindings.h"
-#include "GL/opengl_graphic_context_provider.h"
+#include "GL/gl3_graphic_context_provider.h"
 #include "D3D/d3d_graphic_context_provider.h"
 #include "D3D/d3d_display_window_provider.h"
 
@@ -40,7 +40,7 @@ namespace clan
 ComputeContext_Impl::ComputeContext_Impl(GraphicContext &gc)
 : bindings(0), handle(0), gc(gc)
 {
-	OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider *>(gc.get_provider());
+	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(gc.get_provider());
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(gc.get_provider());
 
 	std::vector<cl_context_properties> properties;

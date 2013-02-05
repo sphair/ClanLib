@@ -36,13 +36,13 @@
 namespace clan
 {
 
-class OpenGLPrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
+class GL3PrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLPrimitivesArrayProvider(OpenGLGraphicContextProvider *gc_provider);
-	~OpenGLPrimitivesArrayProvider();
+	GL3PrimitivesArrayProvider(GL3GraphicContextProvider *gc_provider);
+	~GL3PrimitivesArrayProvider();
 /// \}
 
 /// \name Attributes
@@ -50,7 +50,7 @@ public:
 public:
 	GLuint handle;
 
-	OpenGLGraphicContextProvider *get_gc_provider() { return gc_provider; }
+	GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
 /// \}
 
 /// \name Operations
@@ -65,14 +65,14 @@ public:
 private:
 	void on_dispose();
 
-	OpenGLGraphicContextProvider *gc_provider;
+	GL3GraphicContextProvider *gc_provider;
 /// \}
 };
 
 class PrimitivesArrayStateTracker
 {
 public:
-	PrimitivesArrayStateTracker(OpenGLGraphicContextProvider *gc_provider, GLuint handle);
+	PrimitivesArrayStateTracker(GL3GraphicContextProvider *gc_provider, GLuint handle);
 	~PrimitivesArrayStateTracker();
 
 private:

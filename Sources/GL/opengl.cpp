@@ -40,15 +40,15 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "Display/Render/graphic_context_impl.h"
-#include "opengl_graphic_context_provider.h"
-#include "opengl_texture_provider.h"
+#include "gl3_graphic_context_provider.h"
+#include "gl3_texture_provider.h"
 #include <map>
 
 #if defined(__IOS__)
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
-#include "AGL/opengl_window_provider_agl.h"
+#include "AGL/gl3_window_provider_agl.h"
 #else
 #include <GL/gl.h>
 #endif
@@ -220,14 +220,14 @@ TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
 /////////////////////////////////////////////////////////////////////////////
 // OpenGL context management:
 
-cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = 0;
+cl_tls_variable const GL3GraphicContextProvider * cl_active_opengl_gc = 0;
 static Mutex cl_function_map_mutex;
 
 // A fix for a compiler bug with compiler version 13.00.9466
 #if _MSC_VER > 1300
-typedef std::map<const OpenGLGraphicContextProvider * const, GLFunctions *> cl_function_map_type;
+typedef std::map<const GL3GraphicContextProvider * const, GLFunctions *> cl_function_map_type;
 #else
-typedef std::map<const OpenGLGraphicContextProvider *, GLFunctions *> cl_function_map_type;
+typedef std::map<const GL3GraphicContextProvider *, GLFunctions *> cl_function_map_type;
 #endif
 
 static cl_function_map_type cl_function_map;
@@ -246,7 +246,7 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 void OpenGL::set_active(GraphicContext &gc)
 {
 	gc.impl->set_active();
-	set_active(static_cast<const OpenGLGraphicContextProvider *>(gc.get_provider()));
+	set_active(static_cast<const GL3GraphicContextProvider *>(gc.get_provider()));
 }
 
 bool OpenGL::set_active()
@@ -258,7 +258,7 @@ bool OpenGL::set_active()
 	GraphicContextProvider* shared_provider = SharedGCData::get_provider(mutex_section);
 	if (shared_provider)
 	{
-		OpenGLGraphicContextProvider *gc_provider = dynamic_cast<OpenGLGraphicContextProvider*>(shared_provider);
+		GL3GraphicContextProvider *gc_provider = dynamic_cast<GL3GraphicContextProvider*>(shared_provider);
 		if (gc_provider)
 		{
 			OpenGL::set_active(gc_provider);
@@ -269,7 +269,7 @@ bool OpenGL::set_active()
 	return false;
 }
 
-void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
+void OpenGL::set_active(const GL3GraphicContextProvider * const gc_provider)
 {
 	// Don't do anything if the supplied graphic context is already active.
 //#ifndef __APPLE__ // temp hack to see if iOS changes the current context behind our back
@@ -325,7 +325,7 @@ void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
 	}
 }
 
-void OpenGL::remove_active(const OpenGLGraphicContextProvider * const gc_provider)
+void OpenGL::remove_active(const GL3GraphicContextProvider * const gc_provider)
 {
 	MutexSection mutex_lock(&cl_function_map_mutex);
 	cl_function_map_type::iterator it;
@@ -1147,12 +1147,12 @@ GLFunctions *cl_setup_binds()
 
 GLuint OpenGL::get_texture_handle(Texture &texture)
 {
-	return static_cast<OpenGLTextureProvider*>(texture.get_provider())->get_handle();
+	return static_cast<GL3TextureProvider*>(texture.get_provider())->get_handle();
 }
 
 Texture OpenGL::from_texture_handle(GLuint type, GLuint handle)
 {
-	return Texture(new OpenGLTextureProvider(type, handle));
+	return Texture(new GL3TextureProvider(type, handle));
 }
 
 }

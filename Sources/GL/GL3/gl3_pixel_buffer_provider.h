@@ -33,20 +33,20 @@
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_buffer_object_provider.h"
+#include "gl3_buffer_object_provider.h"
 
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLPixelBufferProvider : public PixelBufferProvider
+class GL3PixelBufferProvider : public PixelBufferProvider
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLPixelBufferProvider();
-	~OpenGLPixelBufferProvider();
+	GL3PixelBufferProvider();
+	~GL3PixelBufferProvider();
 	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 /// \}
 
@@ -77,7 +77,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	OpenGLBufferObjectProvider buffer;
+	GL3BufferObjectProvider buffer;
 	Size size;
 	TextureFormat texture_format;
 	int pitch;

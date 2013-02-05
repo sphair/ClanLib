@@ -36,15 +36,15 @@
 namespace clan
 {
 
-class OpenGLTargetProvider : public DisplayTargetProvider
+class GL3TargetProvider : public DisplayTargetProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLTargetProvider();
+	GL3TargetProvider();
 
-	~OpenGLTargetProvider();
+	~GL3TargetProvider();
 
 
 /// \}

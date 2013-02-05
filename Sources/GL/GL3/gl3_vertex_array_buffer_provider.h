@@ -32,20 +32,20 @@
 #include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_buffer_object_provider.h"
+#include "gl3_buffer_object_provider.h"
 
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLVertexArrayBufferProvider : public VertexArrayBufferProvider
+class GL3VertexArrayBufferProvider : public VertexArrayBufferProvider
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLVertexArrayBufferProvider();
-	~OpenGLVertexArrayBufferProvider();
+	GL3VertexArrayBufferProvider();
+	~GL3VertexArrayBufferProvider();
 	void create(int size, BufferUsage usage);
 	void create(void *data, int size, BufferUsage usage);
 /// \}
@@ -67,7 +67,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	OpenGLBufferObjectProvider buffer;
+	GL3BufferObjectProvider buffer;
 /// \}
 };
 

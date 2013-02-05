@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_texture_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_texture_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Render/shared_gc_data.h"
@@ -37,19 +37,15 @@
 #include "API/GL/opengl.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/System/databuffer.h"
-#ifndef WIN32
-#include "API/Core/Text/console.h"
-#endif
-
-#include "opengl_pixel_buffer_provider.h"
+#include "gl3_pixel_buffer_provider.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTextureProvider Construction:
+// GL3TextureProvider Construction:
 
-OpenGLTextureProvider::OpenGLTextureProvider(GLuint texture_type, GLuint handle)
+GL3TextureProvider::GL3TextureProvider(GLuint texture_type, GLuint handle)
 : width(0), height(0), depth(0), array_size(0), handle(handle), texture_type(texture_type)
 {
 	SharedGCData::add_disposable(this);
@@ -59,7 +55,7 @@ OpenGLTextureProvider::OpenGLTextureProvider(GLuint texture_type, GLuint handle)
 	glGetIntegerv(GL_TEXTURE_DEPTH, &depth);
 }
 
-OpenGLTextureProvider::OpenGLTextureProvider(TextureDimensions texture_dimensions)
+GL3TextureProvider::GL3TextureProvider(TextureDimensions texture_dimensions)
 : width(0), height(0), depth(0), handle(0), texture_type(0)
 {
 	switch (texture_dimensions)
@@ -100,13 +96,13 @@ OpenGLTextureProvider::OpenGLTextureProvider(TextureDimensions texture_dimension
 		glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
-OpenGLTextureProvider::~OpenGLTextureProvider()
+GL3TextureProvider::~GL3TextureProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLTextureProvider::on_dispose()
+void GL3TextureProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -118,19 +114,19 @@ void OpenGLTextureProvider::on_dispose()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTextureProvider Attributes:
+// GL3TextureProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTextureProvider Operations:
+// GL3TextureProvider Operations:
 
-void OpenGLTextureProvider::generate_mipmap()
+void GL3TextureProvider::generate_mipmap()
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glGenerateMipmap(texture_type);
 }
 
-void OpenGLTextureProvider::create(int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
+void GL3TextureProvider::create(int new_width, int new_height, int new_depth, int new_array_size, TextureFormat texture_format, int levels)
 {
 	throw_if_disposed();
 
@@ -214,7 +210,7 @@ void OpenGLTextureProvider::create(int new_width, int new_height, int new_depth,
 	}
 }
 
-PixelBuffer OpenGLTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const 
+PixelBuffer GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const 
 {
 	throw_if_disposed();
 
@@ -235,7 +231,7 @@ PixelBuffer OpenGLTextureProvider::get_pixeldata(GraphicContext &gc, TextureForm
 	}
 }
 
-void OpenGLTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
+void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
 {
 	throw_if_disposed();
 	if (src_rect.left < 0 || src_rect.top < 0 || src_rect.right > src.get_width() || src_rect.bottom > src.get_height())
@@ -259,9 +255,9 @@ void OpenGLTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slic
 	TextureStateTracker state_tracker(texture_type, handle);
 
 	const unsigned char *data = 0;
-	OpenGLPixelBufferProvider *buffer_provider = 0;
+	GL3PixelBufferProvider *buffer_provider = 0;
 	GLint last_buffer = 0;
-	buffer_provider = dynamic_cast<OpenGLPixelBufferProvider*>(src_converted.get_provider());
+	buffer_provider = dynamic_cast<GL3PixelBufferProvider*>(src_converted.get_provider());
 	if (buffer_provider)
 	{
 
@@ -348,7 +344,7 @@ void OpenGLTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slic
 		glBindBuffer(GL_CL_PIXEL_UNPACK_BUFFER, last_buffer);
 }
 
-void OpenGLTextureProvider::copy_image_from(
+void GL3TextureProvider::copy_image_from(
 	int x,
 	int y,
 	int width,
@@ -358,7 +354,7 @@ void OpenGLTextureProvider::copy_image_from(
 	GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	OpenGL::set_active(static_cast<OpenGLGraphicContextProvider*>(gc));
+	OpenGL::set_active(static_cast<GL3GraphicContextProvider*>(gc));
 	TextureStateTracker state_tracker(texture_type, handle);
 
 	TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
@@ -374,7 +370,7 @@ void OpenGLTextureProvider::copy_image_from(
 		0);
 }
 
-void OpenGLTextureProvider::copy_subimage_from(
+void GL3TextureProvider::copy_subimage_from(
 	int offset_x,
 	int offset_y,
 	int x,
@@ -385,7 +381,7 @@ void OpenGLTextureProvider::copy_subimage_from(
 	GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	OpenGL::set_active(static_cast<OpenGLGraphicContextProvider*>(gc));
+	OpenGL::set_active(static_cast<GL3GraphicContextProvider*>(gc));
 	TextureStateTracker state_tracker(texture_type, handle);
 
 	glCopyTexSubImage2D( 
@@ -397,42 +393,42 @@ void OpenGLTextureProvider::copy_subimage_from(
 		width, height );
 }
 
-void OpenGLTextureProvider::set_min_lod(double min_lod)
+void GL3TextureProvider::set_min_lod(double min_lod)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 }
 
-void OpenGLTextureProvider::set_max_lod(double max_lod)
+void GL3TextureProvider::set_max_lod(double max_lod)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 }
 
-void OpenGLTextureProvider::set_lod_bias(double lod_bias)
+void GL3TextureProvider::set_lod_bias(double lod_bias)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 }
 
-void OpenGLTextureProvider::set_base_level(int base_level)
+void GL3TextureProvider::set_base_level(int base_level)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 }
 
-void OpenGLTextureProvider::set_max_level(int max_level)
+void GL3TextureProvider::set_max_level(int max_level)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 }
 
-void OpenGLTextureProvider::set_wrap_mode(
+void GL3TextureProvider::set_wrap_mode(
 	TextureWrapMode wrap_s,
 	TextureWrapMode wrap_t,
 	TextureWrapMode wrap_r)
@@ -446,7 +442,7 @@ void OpenGLTextureProvider::set_wrap_mode(
         glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
 }
 
-void OpenGLTextureProvider::set_wrap_mode(
+void GL3TextureProvider::set_wrap_mode(
 	TextureWrapMode wrap_s,
 	TextureWrapMode wrap_t)
 {
@@ -456,7 +452,7 @@ void OpenGLTextureProvider::set_wrap_mode(
 	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
 }
 
-void OpenGLTextureProvider::set_wrap_mode(
+void GL3TextureProvider::set_wrap_mode(
 	TextureWrapMode wrap_s)
 {
 	throw_if_disposed();
@@ -464,14 +460,14 @@ void OpenGLTextureProvider::set_wrap_mode(
 	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 }
 
-void OpenGLTextureProvider::set_min_filter(TextureFilter filter)
+void GL3TextureProvider::set_min_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
 }
 
-void OpenGLTextureProvider::set_mag_filter(TextureFilter filter)
+void GL3TextureProvider::set_mag_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
@@ -483,14 +479,14 @@ void OpenGLTextureProvider::set_mag_filter(TextureFilter filter)
 	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
 }
 
-void OpenGLTextureProvider::set_max_anisotropy(float v)
+void GL3TextureProvider::set_max_anisotropy(float v)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
 	glTexParameterf(texture_type, GL_TEXTURE_MAX_ANISOTROPY_EXT, v);
 }
 
-void OpenGLTextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
+void GL3TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFunction func)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
@@ -498,15 +494,15 @@ void OpenGLTextureProvider::set_texture_compare(TextureCompareMode mode, Compare
 	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
 }
 
-TextureProvider *OpenGLTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 {
 	throw Exception("create_view not yet implemented for clanGL (needs to call glTextureView)");
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLTextureProvider Implementation:
+// GL3TextureProvider Implementation:
 
-GLenum OpenGLTextureProvider::to_enum(TextureFilter filter)
+GLenum GL3TextureProvider::to_enum(TextureFilter filter)
 {
 	switch(filter)
 	{
@@ -520,7 +516,7 @@ GLenum OpenGLTextureProvider::to_enum(TextureFilter filter)
 	}
 }
 
-GLenum OpenGLTextureProvider::to_enum(TextureWrapMode mode)
+GLenum GL3TextureProvider::to_enum(TextureWrapMode mode)
 {
  	switch(mode)
 	{
@@ -531,7 +527,7 @@ GLenum OpenGLTextureProvider::to_enum(TextureWrapMode mode)
 	}
 }
 
-GLenum OpenGLTextureProvider::to_enum(TextureCompareMode mode)
+GLenum GL3TextureProvider::to_enum(TextureCompareMode mode)
 {
  	switch(mode)
 	{
@@ -541,7 +537,7 @@ GLenum OpenGLTextureProvider::to_enum(TextureCompareMode mode)
 	}
 }
 
-GLenum OpenGLTextureProvider::to_enum(CompareFunction func)
+GLenum GL3TextureProvider::to_enum(CompareFunction func)
 {
 	switch( func )
 	{
@@ -557,7 +553,7 @@ GLenum OpenGLTextureProvider::to_enum(CompareFunction func)
 	}
 }
 
-GLenum OpenGLTextureProvider::to_cube_target(int index)
+GLenum GL3TextureProvider::to_cube_target(int index)
 {
 	// To do: make sure this order matches the order used by Direct3D
 	switch (index)

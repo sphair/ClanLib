@@ -31,26 +31,26 @@
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
-#include "opengl_render_buffer_provider.h"
+#include "gl3_render_buffer_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 
 namespace clan
 {
 
-OpenGLRenderBufferProvider::OpenGLRenderBufferProvider()
+GL3RenderBufferProvider::GL3RenderBufferProvider()
 : handle(0)
 {
 	SharedGCData::add_disposable(this);
 
 }
 
-OpenGLRenderBufferProvider::~OpenGLRenderBufferProvider()
+GL3RenderBufferProvider::~GL3RenderBufferProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLRenderBufferProvider::on_dispose()
+void GL3RenderBufferProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -61,17 +61,17 @@ void OpenGLRenderBufferProvider::on_dispose()
 	}
 }
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLRenderBufferProvider Attributes:
+// GL3RenderBufferProvider Attributes:
 
-GLuint OpenGLRenderBufferProvider::get_handle()
+GLuint GL3RenderBufferProvider::get_handle()
 {
 	return handle;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLRenderBufferProvider Operations:
+// GL3RenderBufferProvider Operations:
 
-void OpenGLRenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
+void GL3RenderBufferProvider::create(int width, int height, TextureFormat texture_format, int multisample_samples)
 {
 	OpenGL::set_active();
 	GLuint last_render_buffer = 0;
