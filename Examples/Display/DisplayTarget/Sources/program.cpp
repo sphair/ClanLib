@@ -37,6 +37,13 @@ int Program::main(const std::vector<std::string> &args)
 		clan::SetupCore setup_core;
 		clan::SetupDisplay setup_display;
 
+		// We support all display targets
+		clan::SetupGL setup_gl;
+#ifdef WIN32
+		clan::SetupD3D setup_d3d;
+#endif
+		clan::SetupGL1 setup_gl1;
+
 		Target app;
 		int retval = app.start(args);
 		return retval;
