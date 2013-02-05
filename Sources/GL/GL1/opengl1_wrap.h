@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanLegacyGL_System clanLegacyGL System
+/// \addtogroup clanGL1_System clanGL1 System
 /// \{
 
 #pragma once

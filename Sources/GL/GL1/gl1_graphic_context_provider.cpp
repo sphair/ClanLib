@@ -29,7 +29,7 @@
 **    Claudio Zanella
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_graphic_context_provider.h"
 #include "gl1_texture_provider.h"
 #include "gl1_program_object_provider.h"
@@ -55,7 +55,7 @@
 #include "opengl1_wrap.h"
 #include "API/Display/2D/image.h"
 
-#include "../Display/2D/render_batch_triangle.h"
+#include "Display/2D/render_batch_triangle.h"
 
 #ifdef WIN32
 #include "WGL/gl1_window_provider_wgl.h"
@@ -499,7 +499,7 @@ void GL1GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 
 	if ( (unit_index <0) || (unit_index >= max_texture_coords) )
 	{
-		throw Exception("Invalid texture unit index in LegacyGL target");
+		throw Exception("Invalid texture unit index in GL1 target");
 	}
 	selected_textures[unit_index].texture = NULL;
 
@@ -1431,7 +1431,7 @@ void GL1GraphicContextProvider::set_primitive_texture( int texture_index, Primit
 	else
 	{
 		//Disabled this exception because the sprite render batcher does this intentionally
-		//throw Exception("Attempt to draw a texture that was not selected in the LegacyGL target");
+		//throw Exception("Attempt to draw a texture that was not selected in the GL1 target");
 	}
 
 }

@@ -27,7 +27,7 @@
 **    Harry Storbacka
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_texture_provider.h"
 #include "gl1_graphic_context_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -120,14 +120,14 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 
 	if ( (new_width > 32768) || (new_width < 1) )
 	{
-		throw Exception("Invalid texture width in the LegacyGL target");
+		throw Exception("Invalid texture width in the GL1 target");
 	}
 
 	if ( (texture_type == GL_TEXTURE_2D) || (texture_type == GL_TEXTURE_3D) )
 	{
 		if ( (new_height > 32768) || (new_height < 1) )
 		{
-			throw Exception("Invalid texture height in the LegacyGL target");
+			throw Exception("Invalid texture height in the GL1 target");
 		}
 	}
 
@@ -135,7 +135,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 	{
 		if ( (new_depth > 32768) || (new_depth < 1) )
 		{
-			throw Exception("Invalid texture depth in the LegacyGL target");
+			throw Exception("Invalid texture depth in the GL1 target");
 		}
 	}
 
@@ -295,7 +295,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	GLenum type;
 	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
 
-	// also check for the pitch (LegacyGL can only skip pixels, not bytes)
+	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
 		const int bytesPerPixel = image.get_bytes_per_pixel();
@@ -327,7 +327,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 
 		format = needs_alpha ? GL_RGBA : GL_RGB;
 
-		// Upload to LegacyGL:
+		// Upload to GL1:
 		cl1BindTexture(GL_TEXTURE_2D, handle);
 
 		// change alignment
@@ -645,7 +645,7 @@ void GL1TextureProvider::set_texture_image2d(
 	GLenum type;
 	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
 
-	// also check for the pitch (LegacyGL can only skip pixels, not bytes)
+	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
 		const int bytesPerPixel = image.get_bytes_per_pixel();
@@ -656,7 +656,7 @@ void GL1TextureProvider::set_texture_image2d(
 	// no conversion needed
 	if (!conv_needed)
 	{
-		// Upload to LegacyGL:
+		// Upload to GL1:
 
 		// change alignment
 		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -748,7 +748,7 @@ void GL1TextureProvider::set_texture_image3d(
 	GLenum type;
 	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
 
-	// also check for the pitch (LegacyGL can only skip pixels, not bytes)
+	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
 	{
 		const int bytesPerPixel = image.get_bytes_per_pixel();
@@ -759,7 +759,7 @@ void GL1TextureProvider::set_texture_image3d(
 	// no conversion needed
 	if (!conv_needed)
 	{
-		// Upload to LegacyGL:
+		// Upload to GL1:
 
 		// change alignment
 		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);

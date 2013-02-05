@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_vertex_array_buffer_provider.h"
 #include "API/Display/Render/transfer_buffer.h"
 

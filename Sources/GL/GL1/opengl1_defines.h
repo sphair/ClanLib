@@ -26,11 +26,10 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanLegacyGL_Display clanLegacyGL Display
+/// \addtogroup clanGL1_Display clanGL1 Display
 /// \{
 
 #pragma once
-#include "API/LegacyGL/api_legacy_gl.h"
 
 #include "API/Core/System/cl_platform.h"
 

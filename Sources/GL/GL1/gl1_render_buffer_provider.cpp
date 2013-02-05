@@ -27,7 +27,7 @@
 **    Harry Storbacka
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "opengl1_wrap.h"
 #include "opengl1.h"

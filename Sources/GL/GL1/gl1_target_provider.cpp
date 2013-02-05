@@ -27,7 +27,7 @@
 **    Harry Storbacka
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_target_provider.h"
 #ifdef WIN32
 #include "WGL/gl1_window_provider_wgl.h"
@@ -39,23 +39,23 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// LegacyGLTargetProvider Construction:
+// GL1TargetProvider Construction:
 
-LegacyGLTargetProvider::LegacyGLTargetProvider()
+GL1TargetProvider::GL1TargetProvider()
 {
 }
 
-LegacyGLTargetProvider::~LegacyGLTargetProvider()
+GL1TargetProvider::~GL1TargetProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// LegacyGLTargetProvider Attributes:
+// GL1TargetProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// LegacyGLTargetProvider Operations:
+// GL1TargetProvider Operations:
 
-DisplayWindowProvider *LegacyGLTargetProvider::alloc_display_window()
+DisplayWindowProvider *GL1TargetProvider::alloc_display_window()
 {
 #ifdef WIN32
 	return new GL1WindowProvider_WGL();
@@ -65,6 +65,6 @@ DisplayWindowProvider *LegacyGLTargetProvider::alloc_display_window()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// LegacyGLTargetProvider Implementation:
+// GL1TargetProvider Implementation:
 
 }

@@ -42,7 +42,7 @@
 #include "opengl1.h"
 #include "API/Core/Math/mat4.h"
 #include "API/Core/Signals/signal_v0.h"
-#include "API/LegacyGL/graphic_context_legacy_gl.h"
+#include "GL/opengl_graphic_context_provider.h"
 #include "API/Core/System/disposable_object.h"
 #include <map>
 
@@ -79,7 +79,7 @@ public:
 	DepthStencilStateDescription desc;
 };
 
-class GL1GraphicContextProvider : public GraphicContextProvider, public DisposableObject
+class GL1GraphicContextProvider : public OpenGLGraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{
@@ -97,10 +97,11 @@ public:
 	const DisplayWindowProvider & get_render_window() const { return *render_window; }
 	Size get_display_window_size() const;
 
-	// LegacyGL Only
+	// GL1 Only
 	int get_max_texture_coords();
 	int get_light_count();
 
+	void get_opengl_version(int &version_major, int &version_minor) { int version_release = 0; get_opengl_version(version_major, version_minor, version_release); }
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
 	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
@@ -192,7 +193,7 @@ public:
 	/// \brief Get OpenGL extension specific function address.
 	GL1ProcAddress *get_proc_address(const std::string& function_name) const;
 
-	// LegacyGL Only
+	// GL1 Only
 	void set_active() const;
 
 	void add_disposable(DisposableObject *disposable);

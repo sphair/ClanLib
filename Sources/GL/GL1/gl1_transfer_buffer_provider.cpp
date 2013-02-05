@@ -27,7 +27,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_transfer_buffer_provider.h"
 
 namespace clan

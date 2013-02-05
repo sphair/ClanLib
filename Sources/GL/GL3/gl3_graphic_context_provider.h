@@ -41,6 +41,7 @@
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/Core/System/disposable_object.h"
 #include "gl3_standard_programs.h"
+#include "GL/opengl_graphic_context_provider.h"
 
 #include <map>
 
@@ -76,7 +77,7 @@ public:
 	DepthStencilStateDescription desc;
 };
 
-class GL3GraphicContextProvider : public GraphicContextProvider, public DisposableObject
+class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{
@@ -108,6 +109,7 @@ public:
 	const DisplayWindowProvider & get_render_window() const { return *render_window; }
 	Size get_display_window_size() const;
 	void get_opengl_version(int &version_major, int &version_minor);
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) { get_opengl_version(version_major, version_minor); version_release = 0; }
 	void get_opengl_shading_language_version(int &version_major, int &version_minor);
 	std::string get_renderer_string();
 	std::string get_vendor_string();

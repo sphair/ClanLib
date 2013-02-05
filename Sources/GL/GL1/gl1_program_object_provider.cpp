@@ -28,7 +28,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_program_object_provider.h"
 #include "API/Display/Render/program_attribute.h"
 #include "API/Display/Render/program_uniform.h"
