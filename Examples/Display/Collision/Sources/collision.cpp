@@ -96,6 +96,7 @@ int Collision::start(const std::vector<std::string> &args)
 			(rand() & 0xFF) / 256.0f,
 			(rand() & 0xFF) / 256.0f,
 			1.0f));
+
 	}
 
 	FramerateCounter frameratecounter;
@@ -126,7 +127,7 @@ int Collision::start(const std::vector<std::string> &args)
 
 		canvas.draw_line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, Colorf::white);
 		
-		canvas.flip(0);
+		canvas.flip(1);
 		frameratecounter.frame_shown();
 
 		KeepAlive::process(0);
