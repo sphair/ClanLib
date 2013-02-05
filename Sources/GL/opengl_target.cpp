@@ -29,7 +29,7 @@
 
 #include "GL/precomp.h"
 #include "API/GL/opengl_target.h"
-#include "opengl_target_provider.h"
+#include "gl3_target_provider.h"
 #include "setup_gl_impl.h"
 #include "API/Display/display.h"
 #include "API/GL/opengl_window_description.h"
@@ -41,7 +41,7 @@ namespace clan
 // OpenGLTarget Construction:
 
 OpenGLTarget::OpenGLTarget()
-: DisplayTarget(new OpenGLTargetProvider)
+: DisplayTarget(new GL3TargetProvider)
 {
 }
 
@@ -58,7 +58,7 @@ bool OpenGLTarget::is_current()
 	if (!ptr)
 		return false;
 
-	OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(ptr);
+	GL3TargetProvider *provider = dynamic_cast<GL3TargetProvider*>(ptr);
 	return (provider != nullptr);
 
 }
@@ -71,7 +71,7 @@ OpenGLWindowDescription OpenGLTarget::get_description()
 	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_target)
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		GL3TargetProvider *provider = dynamic_cast<GL3TargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
 		if (provider)
 		{
 			return provider->get_description();
@@ -85,7 +85,7 @@ void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
 	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_target)
 	{
-		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		GL3TargetProvider *provider = dynamic_cast<GL3TargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
 		if (provider)
 		{
 			provider->set_description(desc);

@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_vertex_array_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_vertex_array_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,22 +37,22 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLVertexArrayBufferProvider Construction:
+// GL3VertexArrayBufferProvider Construction:
 
-OpenGLVertexArrayBufferProvider::OpenGLVertexArrayBufferProvider()
+GL3VertexArrayBufferProvider::GL3VertexArrayBufferProvider()
 {
 }
 
-OpenGLVertexArrayBufferProvider::~OpenGLVertexArrayBufferProvider()
+GL3VertexArrayBufferProvider::~GL3VertexArrayBufferProvider()
 {
 }
 
-void OpenGLVertexArrayBufferProvider::create(int size, BufferUsage usage)
+void GL3VertexArrayBufferProvider::create(int size, BufferUsage usage)
 {
 	create(0, size, usage);
 }
 
-void OpenGLVertexArrayBufferProvider::create(void *data, int size, BufferUsage usage)
+void GL3VertexArrayBufferProvider::create(void *data, int size, BufferUsage usage)
 {
 	buffer.create(data, size, usage, GL_ARRAY_BUFFER_BINDING, GL_ARRAY_BUFFER);
 }

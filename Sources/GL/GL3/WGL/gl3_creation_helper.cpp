@@ -27,8 +27,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_creation_helper.h"
-#include "../opengl_window_description_impl.h"
+#include "gl3_creation_helper.h"
+#include "../../opengl_window_description_impl.h"
 #include "API/GL/opengl_window_description.h"
 #include <commctrl.h>
 

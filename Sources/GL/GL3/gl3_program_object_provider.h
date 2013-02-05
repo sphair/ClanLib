@@ -38,15 +38,15 @@
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLProgramObjectProvider : public ProgramObjectProvider, DisposableObject
+class GL3ProgramObjectProvider : public ProgramObjectProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLProgramObjectProvider();
-	virtual ~OpenGLProgramObjectProvider();
+	GL3ProgramObjectProvider();
+	virtual ~GL3ProgramObjectProvider();
 /// \}
 
 /// \name Attributes

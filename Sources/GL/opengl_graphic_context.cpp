@@ -29,7 +29,7 @@
 
 #include "GL/precomp.h"
 #include "API/GL/opengl_graphic_context.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_graphic_context_provider.h"
 
 namespace clan
 {
@@ -47,7 +47,7 @@ public:
 	~GraphicContext_GL_Impl()
 	{
 	}
-	OpenGLGraphicContextProvider *provider;
+	GL3GraphicContextProvider *provider;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +56,7 @@ public:
 GraphicContext_GL::GraphicContext_GL(GraphicContext &gc) : GraphicContext(gc),
  impl(new GraphicContext_GL_Impl)
 {
-	impl->provider = dynamic_cast <OpenGLGraphicContextProvider *> (GraphicContext::get_provider());
+	impl->provider = dynamic_cast <GL3GraphicContextProvider *> (GraphicContext::get_provider());
 	if (!impl->provider)
 	{
 			throw Exception("Graphic Context is not from a GL target");
@@ -77,9 +77,19 @@ void GraphicContext_GL::throw_if_null() const
 		throw Exception("GraphicContext_GL is null");
 }
 
+int GraphicContext_GL::get_max_texture_coords()
+{
+	return impl->provider->get_max_texture_coords();
+}
+
 void GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor)
 {
 	impl->provider->get_opengl_version(version_major, version_minor);
+}
+
+void GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+{
+	impl->provider->get_opengl_version(version_major, version_minor, version_release);
 }
 
 void GraphicContext_GL::get_opengl_shading_language_version(int &version_major, int &version_minor)

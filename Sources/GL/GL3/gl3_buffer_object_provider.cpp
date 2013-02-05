@@ -28,9 +28,9 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_buffer_object_provider.h"
-#include "opengl_graphic_context_provider.h"
-#include "opengl_transfer_buffer_provider.h"
+#include "gl3_buffer_object_provider.h"
+#include "gl3_graphic_context_provider.h"
+#include "gl3_transfer_buffer_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -38,9 +38,9 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLBufferObjectProvider Construction:
+// GL3BufferObjectProvider Construction:
 
-OpenGLBufferObjectProvider::OpenGLBufferObjectProvider()
+GL3BufferObjectProvider::GL3BufferObjectProvider()
 : handle(0), data_ptr(0)
 {
 	SharedGCData::add_disposable(this);
@@ -49,13 +49,13 @@ OpenGLBufferObjectProvider::OpenGLBufferObjectProvider()
 	glGenBuffers(1, &handle);
 }
 
-OpenGLBufferObjectProvider::~OpenGLBufferObjectProvider()
+GL3BufferObjectProvider::~GL3BufferObjectProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLBufferObjectProvider::on_dispose()
+void GL3BufferObjectProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -66,7 +66,7 @@ void OpenGLBufferObjectProvider::on_dispose()
 	}
 }
 
-void OpenGLBufferObjectProvider::create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target)
+void GL3BufferObjectProvider::create(const void *data, int size, BufferUsage usage, GLenum new_binding, GLenum new_target)
 {
 	throw_if_disposed();
 
@@ -84,9 +84,9 @@ void OpenGLBufferObjectProvider::create(const void *data, int size, BufferUsage 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLBufferObjectProvider Attributes:
+// GL3BufferObjectProvider Attributes:
 
-void *OpenGLBufferObjectProvider::get_data()
+void *GL3BufferObjectProvider::get_data()
 {
 	if (data_ptr == NULL)
 		throw Exception("PixelBuffer was not locked");
@@ -94,9 +94,9 @@ void *OpenGLBufferObjectProvider::get_data()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLBufferObjectProvider Operations:
+// GL3BufferObjectProvider Operations:
 
-void OpenGLBufferObjectProvider::lock(GraphicContext &gc, BufferAccess access)
+void GL3BufferObjectProvider::lock(GraphicContext &gc, BufferAccess access)
 {
 	throw_if_disposed();
 	lock_gc = gc;
@@ -109,7 +109,7 @@ void OpenGLBufferObjectProvider::lock(GraphicContext &gc, BufferAccess access)
 	glBindBuffer(target, last_buffer);
 }
 
-void OpenGLBufferObjectProvider::unlock()
+void GL3BufferObjectProvider::unlock()
 {
 	throw_if_disposed();
 	OpenGL::set_active(lock_gc);
@@ -123,7 +123,7 @@ void OpenGLBufferObjectProvider::unlock()
 	lock_gc = GraphicContext();
 }
 
-void OpenGLBufferObjectProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
+void GL3BufferObjectProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
 {
 	throw_if_disposed();
 	OpenGL::set_active(gc);
@@ -135,18 +135,18 @@ void OpenGLBufferObjectProvider::upload_data(GraphicContext &gc, int offset, con
 	glBindBuffer(target, last_buffer);
 }
 
-void OpenGLBufferObjectProvider::upload_data(GraphicContext &gc, const void *data, int size)
+void GL3BufferObjectProvider::upload_data(GraphicContext &gc, const void *data, int size)
 {
 	upload_data(gc, 0, data, size);
 }
 
-void OpenGLBufferObjectProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+void GL3BufferObjectProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
 	throw_if_disposed();
 	OpenGL::set_active(gc);
 
 	glBindBuffer(GL_COPY_WRITE_BUFFER, handle);
-	glBindBuffer(GL_COPY_READ_BUFFER, static_cast<OpenGLTransferBufferProvider*>(buffer.get_provider())->get_handle());
+	glBindBuffer(GL_COPY_READ_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get_provider())->get_handle());
 
 	glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, src_pos, dest_pos, size);
 
@@ -154,12 +154,12 @@ void OpenGLBufferObjectProvider::copy_from(GraphicContext &gc, TransferBuffer &b
 	glBindBuffer(GL_COPY_READ_BUFFER, 0);
 }
 
-void OpenGLBufferObjectProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+void GL3BufferObjectProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
 	throw_if_disposed();
 	OpenGL::set_active(gc);
 
-	glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<OpenGLTransferBufferProvider*>(buffer.get_provider())->get_handle());
+	glBindBuffer(GL_COPY_WRITE_BUFFER, static_cast<GL3TransferBufferProvider*>(buffer.get_provider())->get_handle());
 	glBindBuffer(GL_COPY_READ_BUFFER, handle);
 
 	glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, dest_pos, src_pos, size);
@@ -169,9 +169,9 @@ void OpenGLBufferObjectProvider::copy_to(GraphicContext &gc, TransferBuffer &buf
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLBufferObjectProvider Implementation:
+// GL3BufferObjectProvider Implementation:
 
-GLenum OpenGLBufferObjectProvider::to_enum(BufferUsage usage) const
+GLenum GL3BufferObjectProvider::to_enum(BufferUsage usage) const
 {
 	switch (usage)
 	{
@@ -198,7 +198,7 @@ GLenum OpenGLBufferObjectProvider::to_enum(BufferUsage usage) const
 	}
 }
 
-GLenum OpenGLBufferObjectProvider::to_enum(BufferAccess access) const
+GLenum GL3BufferObjectProvider::to_enum(BufferAccess access) const
 {
 	switch (access)
 	{

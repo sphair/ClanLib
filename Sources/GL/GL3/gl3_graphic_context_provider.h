@@ -40,7 +40,7 @@
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_standard_programs.h"
+#include "gl3_standard_programs.h"
 
 #include <map>
 
@@ -51,40 +51,40 @@ class DisplayWindowProvider;
 class ShaderObjectProvider;
 class FrameBufferProvider;
 class RenderBufferProvider;
-class OpenGLFrameBufferProvider;
+class GL3FrameBufferProvider;
 class DisposableObject;
 class OpenGLWindowDescription;
 
-class OpenGLRasterizerStateProvider : public RasterizerStateProvider
+class GL3RasterizerStateProvider : public RasterizerStateProvider
 {
 public:
-	OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
+	GL3RasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
 	RasterizerStateDescription desc;
 };
 
-class OpenGLBlendStateProvider : public BlendStateProvider
+class GL3BlendStateProvider : public BlendStateProvider
 {
 public:
-	OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) { }
+	GL3BlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) { }
 	BlendStateDescription desc;
 };
 
-class OpenGLDepthStencilStateProvider : public DepthStencilStateProvider
+class GL3DepthStencilStateProvider : public DepthStencilStateProvider
 {
 public:
-	OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
+	GL3DepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
 	DepthStencilStateDescription desc;
 };
 
-class OpenGLGraphicContextProvider : public GraphicContextProvider, public DisposableObject
+class GL3GraphicContextProvider : public GraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	OpenGLGraphicContextProvider(const DisplayWindowProvider * const render_window);
+	GL3GraphicContextProvider(const DisplayWindowProvider * const render_window);
 
-	~OpenGLGraphicContextProvider();
+	~GL3GraphicContextProvider();
 
 /// \}
 /// \name Attributes
@@ -270,7 +270,7 @@ private:
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
 
-	OpenGLStandardPrograms standard_programs;
+	GL3StandardPrograms standard_programs;
 
 /// \}
 };

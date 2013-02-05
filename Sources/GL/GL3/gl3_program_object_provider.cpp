@@ -28,7 +28,7 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_program_object_provider.h"
+#include "gl3_program_object_provider.h"
 #include "API/Display/Render/program_attribute.h"
 #include "API/Display/Render/program_uniform.h"
 #include "API/Display/Render/shader_object.h"
@@ -37,16 +37,16 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "opengl_graphic_context_provider.h"
-#include "opengl_uniform_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
+#include "gl3_uniform_buffer_provider.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLProgramObjectProvider Construction:
+// GL3ProgramObjectProvider Construction:
 
-OpenGLProgramObjectProvider::OpenGLProgramObjectProvider()
+GL3ProgramObjectProvider::GL3ProgramObjectProvider()
 : handle(0)
 {
 	SharedGCData::add_disposable(this);
@@ -54,13 +54,13 @@ OpenGLProgramObjectProvider::OpenGLProgramObjectProvider()
 	handle = glCreateProgram();
 }
 
-OpenGLProgramObjectProvider::~OpenGLProgramObjectProvider()
+GL3ProgramObjectProvider::~GL3ProgramObjectProvider()
 {
 	dispose();
 	SharedGCData::remove_disposable(this);
 }
 
-void OpenGLProgramObjectProvider::on_dispose()
+void GL3ProgramObjectProvider::on_dispose()
 {
 	if (handle)
 	{
@@ -72,15 +72,15 @@ void OpenGLProgramObjectProvider::on_dispose()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLProgramObjectProvider Attributes:
+// GL3ProgramObjectProvider Attributes:
 
-unsigned int OpenGLProgramObjectProvider::get_handle() const
+unsigned int GL3ProgramObjectProvider::get_handle() const
 {
 	throw_if_disposed();
 	return handle;
 }
 
-bool OpenGLProgramObjectProvider::get_link_status() const
+bool GL3ProgramObjectProvider::get_link_status() const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -89,7 +89,7 @@ bool OpenGLProgramObjectProvider::get_link_status() const
 	return (status != GL_FALSE);
 }
 	
-bool OpenGLProgramObjectProvider::get_validate_status() const
+bool GL3ProgramObjectProvider::get_validate_status() const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -98,13 +98,13 @@ bool OpenGLProgramObjectProvider::get_validate_status() const
 	return (status != GL_FALSE);
 }
 	
-std::vector<ShaderObject> OpenGLProgramObjectProvider::get_shaders() const
+std::vector<ShaderObject> GL3ProgramObjectProvider::get_shaders() const
 {
 	throw_if_disposed();
 	return shaders;
 }
 	
-std::string OpenGLProgramObjectProvider::get_info_log() const
+std::string GL3ProgramObjectProvider::get_info_log() const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -125,7 +125,7 @@ std::string OpenGLProgramObjectProvider::get_info_log() const
 	return result;
 }
 	
-int OpenGLProgramObjectProvider::get_uniform_count() const
+int GL3ProgramObjectProvider::get_uniform_count() const
 {
 	throw_if_disposed();
 	if (cached_uniforms.empty())
@@ -134,7 +134,7 @@ int OpenGLProgramObjectProvider::get_uniform_count() const
 	return (int)cached_uniforms.size();
 }
 	
-std::vector<ProgramUniform> OpenGLProgramObjectProvider::get_uniforms() const
+std::vector<ProgramUniform> GL3ProgramObjectProvider::get_uniforms() const
 {
 	throw_if_disposed();
 	if (cached_uniforms.empty())
@@ -143,14 +143,14 @@ std::vector<ProgramUniform> OpenGLProgramObjectProvider::get_uniforms() const
 	return cached_uniforms;
 }
 	
-int OpenGLProgramObjectProvider::get_uniform_location(const std::string &name) const
+int GL3ProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
 	return glGetUniformLocation(handle, StringHelp::text_to_local8(name).c_str());
 }
 
-int OpenGLProgramObjectProvider::get_attribute_count() const
+int GL3ProgramObjectProvider::get_attribute_count() const
 {
 	throw_if_disposed();
 	if (cached_attribs.empty())
@@ -159,7 +159,7 @@ int OpenGLProgramObjectProvider::get_attribute_count() const
 	return (int)cached_attribs.size();
 }
 	
-std::vector<ProgramAttribute> OpenGLProgramObjectProvider::get_attributes() const
+std::vector<ProgramAttribute> GL3ProgramObjectProvider::get_attributes() const
 {
 	throw_if_disposed();
 	if (cached_attribs.empty())
@@ -168,14 +168,14 @@ std::vector<ProgramAttribute> OpenGLProgramObjectProvider::get_attributes() cons
 	return cached_attribs;
 }
 	
-int OpenGLProgramObjectProvider::get_attribute_location(const std::string &name) const
+int GL3ProgramObjectProvider::get_attribute_location(const std::string &name) const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
 	return glGetAttribLocation(handle, StringHelp::text_to_local8(name).c_str());
 }
 	
-int OpenGLProgramObjectProvider::get_uniform_buffer_size(int block_index) const
+int GL3ProgramObjectProvider::get_uniform_buffer_size(int block_index) const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -189,7 +189,7 @@ int OpenGLProgramObjectProvider::get_uniform_buffer_size(int block_index) const
 	return uniformBlockSize;
 }
 
-int OpenGLProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
+int GL3ProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -200,7 +200,7 @@ int OpenGLProgramObjectProvider::get_uniform_buffer_index(const std::string &blo
 	return glGetUniformBlockIndex(handle, StringHelp::text_to_local8(block_name).c_str());
 }
 
-int OpenGLProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
+int GL3ProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -212,9 +212,9 @@ int OpenGLProgramObjectProvider::get_storage_buffer_index(const std::string &nam
 }
 
 /////////////////////////////////////////////////////////////////////////////	
-// OpenGLProgramObjectProvider Operations:
+// GL3ProgramObjectProvider Operations:
 
-void OpenGLProgramObjectProvider::attach(const ShaderObject &obj)
+void GL3ProgramObjectProvider::attach(const ShaderObject &obj)
 {
 	throw_if_disposed();
 	shaders.push_back(obj);
@@ -222,7 +222,7 @@ void OpenGLProgramObjectProvider::attach(const ShaderObject &obj)
 	glAttachShader(handle, (GLuint) obj.get_handle());
 }
 
-void OpenGLProgramObjectProvider::detach(const ShaderObject &obj)
+void GL3ProgramObjectProvider::detach(const ShaderObject &obj)
 {
 	throw_if_disposed();
 	for (std::vector<ShaderObject>::size_type i = 0; i < shaders.size(); i++)
@@ -237,21 +237,21 @@ void OpenGLProgramObjectProvider::detach(const ShaderObject &obj)
 	glDetachShader(handle, (GLuint) obj.get_handle());
 }
 
-void OpenGLProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
+void GL3ProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
 {
 	throw_if_disposed();
 	OpenGL::set_active();
 	glBindAttribLocation(handle, index, StringHelp::text_to_local8(name).c_str());
 }
 
-void OpenGLProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
+void GL3ProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
 {
 	throw_if_disposed();
 	OpenGL::set_active();
 	glBindFragDataLocation(handle, color_number, StringHelp::text_to_local8(name).c_str());
 }
 
-void OpenGLProgramObjectProvider::link()
+void GL3ProgramObjectProvider::link()
 {
 	throw_if_disposed();
 	OpenGL::set_active();
@@ -261,14 +261,14 @@ void OpenGLProgramObjectProvider::link()
 	cached_uniforms.clear();
 }
 	
-void OpenGLProgramObjectProvider::validate()
+void GL3ProgramObjectProvider::validate()
 {
 	throw_if_disposed();
 	OpenGL::set_active();
 	glValidateProgram(handle);
 }
 
-void OpenGLProgramObjectProvider::set_uniform1i(int location, int p1)
+void GL3ProgramObjectProvider::set_uniform1i(int location, int p1)
 {
 	throw_if_disposed();
 	if (location == -1)
@@ -278,7 +278,7 @@ void OpenGLProgramObjectProvider::set_uniform1i(int location, int p1)
 	glUniform1i(location, p1);	
 }
 
-void OpenGLProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
+void GL3ProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
 {
 	throw_if_disposed();
 	if (block_index == -1 )
@@ -286,7 +286,7 @@ void OpenGLProgramObjectProvider::set_uniform_buffer_index(int block_index, int 
 	glUniformBlockBinding(handle, block_index, bind_index);
 }
 
-void OpenGLProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
+void GL3ProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
 {
 	throw_if_disposed();
 	if (buffer_index == -1 )
@@ -294,7 +294,7 @@ void OpenGLProgramObjectProvider::set_storage_buffer_index(int buffer_index, int
 	glShaderStorageBlockBinding(handle, buffer_index, bind_unit_index);
 }
 
-void OpenGLProgramObjectProvider::fetch_attributes() const
+void GL3ProgramObjectProvider::fetch_attributes() const
 {
 	if (!cached_attribs.empty())
 		return;
@@ -323,7 +323,7 @@ void OpenGLProgramObjectProvider::fetch_attributes() const
 	delete [] name;
 }
 
-void OpenGLProgramObjectProvider::fetch_uniforms() const
+void GL3ProgramObjectProvider::fetch_uniforms() const
 {
 	if (!cached_uniforms.empty())
 		return;
@@ -354,7 +354,7 @@ void OpenGLProgramObjectProvider::fetch_uniforms() const
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLProgramObjectProvider Implementation:
+// GL3ProgramObjectProvider Implementation:
 
 ProgramObjectStateTracker::ProgramObjectStateTracker(GLuint handle) : program_set(false)
 {

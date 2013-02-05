@@ -32,20 +32,20 @@
 #include "API/Display/TargetProviders/storage_buffer_provider.h"
 #include "API/GL/opengl.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl_buffer_object_provider.h"
+#include "gl3_buffer_object_provider.h"
 
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLStorageBufferProvider : public StorageBufferProvider
+class GL3StorageBufferProvider : public StorageBufferProvider
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLStorageBufferProvider();
-	~OpenGLStorageBufferProvider();
+	GL3StorageBufferProvider();
+	~GL3StorageBufferProvider();
 	void create(int size, int stride, BufferUsage usage);
 	void create(const void *data, int size, int stride, BufferUsage usage);
 /// \}
@@ -67,7 +67,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	OpenGLBufferObjectProvider buffer;
+	GL3BufferObjectProvider buffer;
 /// \}
 };
 

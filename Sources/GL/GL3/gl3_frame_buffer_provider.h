@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "opengl_graphic_context_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/TargetProviders/frame_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
@@ -38,13 +38,13 @@
 namespace clan
 {
 
-class CL_API_DISPLAY OpenGLFrameBufferProvider : public FrameBufferProvider, DisposableObject
+class CL_API_DISPLAY GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLFrameBufferProvider(OpenGLGraphicContextProvider *gc_provider);
-	~OpenGLFrameBufferProvider();
+	GL3FrameBufferProvider(GL3GraphicContextProvider *gc_provider);
+	~GL3FrameBufferProvider();
 /// \}
 
 /// \name Attributes
@@ -53,7 +53,7 @@ public:
 	GLuint get_handle();
 	Size get_size() const;
 	FrameBufferBindTarget get_bind_target() const;
-	OpenGLGraphicContextProvider *get_gc_provider() { return gc_provider; }
+	GL3GraphicContextProvider *get_gc_provider() { return gc_provider; }
 /// \}
 
 /// \name Operations
@@ -120,14 +120,14 @@ private:
 
 	FrameBufferBindTarget bind_target;
 
-	OpenGLGraphicContextProvider *gc_provider;
+	GL3GraphicContextProvider *gc_provider;
 /// \}
 };
 
 class FrameBufferStateTracker
 {
 public:
-	FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, OpenGLGraphicContextProvider *gc_provider);
+	FrameBufferStateTracker(FrameBufferBindTarget target, GLuint handle, GL3GraphicContextProvider *gc_provider);
 	~FrameBufferStateTracker();
 
 private:

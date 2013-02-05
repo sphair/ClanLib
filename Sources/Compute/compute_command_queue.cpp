@@ -39,7 +39,7 @@
 #include "compute_buffer_impl.h"
 #include "compute_memory_map_impl.h"
 #include "compute_context_impl.h"
-#include "GL/opengl_graphic_context_provider.h"
+#include "GL/gl3_graphic_context_provider.h"
 #include "D3D/d3d_graphic_context_provider.h"
 
 namespace clan
@@ -290,7 +290,7 @@ ComputeEvent ComputeCommandQueue::migrate_buffers(const std::vector<ComputeBuffe
 
 ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<ComputeBuffer> &buffers, const ComputeWaitList &wait_list)
 {
-	OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(impl->cc.impl->gc.get_provider());
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
 	if (gl_provider)
 	{
@@ -323,7 +323,7 @@ ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<Comp
 
 ComputeEvent ComputeCommandQueue::release_display_objects(const std::vector<ComputeBuffer> &buffers, const ComputeWaitList &wait_list)
 {
-	OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(impl->cc.impl->gc.get_provider());
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
 	if (gl_provider)
 	{

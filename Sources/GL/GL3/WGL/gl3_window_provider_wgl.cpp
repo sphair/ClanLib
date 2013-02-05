@@ -30,7 +30,7 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_window_provider_wgl.h"
+#include "gl3_window_provider_wgl.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/display.h"
@@ -44,10 +44,10 @@
 #include "API/Core/Text/logger.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #include "Display/Win32/dwm_functions.h"
-#include "../opengl_window_description_impl.h"
-#include "../opengl_graphic_context_provider.h"
-#include "../opengl_target_provider.h"
-#include "opengl_creation_helper.h"
+#include "../../opengl_window_description_impl.h"
+#include "../gl3_graphic_context_provider.h"
+#include "../gl3_target_provider.h"
+#include "gl3_creation_helper.h"
 #include <commctrl.h>
 
 namespace clan
@@ -70,7 +70,7 @@ OpenGLWindowProvider_WGL::~OpenGLWindowProvider_WGL()
 	{
 		if (!gc.is_null())
 		{
-			OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider*>(gc.get_provider());
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
 			if (gl_provider)
 				gl_provider->dispose();
 		}
@@ -288,7 +288,7 @@ void OpenGLWindowProvider_WGL::create(DisplayWindowSite *new_site, const Display
 
 		}
 
-		gc = GraphicContext(new OpenGLGraphicContextProvider(this));
+		gc = GraphicContext(new GL3GraphicContextProvider(this));
 	}
 
 	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)OpenGL::get_proc_address("wglSwapIntervalEXT");
@@ -307,7 +307,7 @@ void OpenGLWindowProvider_WGL::on_window_resized()
 	}
 
 	if (gc.get_provider())
-		((OpenGLGraphicContextProvider *) gc.get_provider())->on_window_resized();
+		((GL3GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
 void OpenGLWindowProvider_WGL::show_system_cursor()
@@ -623,7 +623,7 @@ HGLRC OpenGLWindowProvider_WGL::get_share_context()
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
-		OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider*>(gc_providers);
+		GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();

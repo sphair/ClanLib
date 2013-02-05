@@ -28,8 +28,8 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_storage_buffer_provider.h"
-#include "opengl_graphic_context_provider.h"
+#include "gl3_storage_buffer_provider.h"
+#include "gl3_graphic_context_provider.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/Render/shared_gc_data.h"
 
@@ -37,22 +37,22 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLStorageBufferProvider Construction:
+// GL3StorageBufferProvider Construction:
 
-OpenGLStorageBufferProvider::OpenGLStorageBufferProvider()
+GL3StorageBufferProvider::GL3StorageBufferProvider()
 {
 }
 
-OpenGLStorageBufferProvider::~OpenGLStorageBufferProvider()
+GL3StorageBufferProvider::~GL3StorageBufferProvider()
 {
 }
 
-void OpenGLStorageBufferProvider::create(int size, int stride, BufferUsage usage)
+void GL3StorageBufferProvider::create(int size, int stride, BufferUsage usage)
 {
 	buffer.create(0, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 }
 
-void OpenGLStorageBufferProvider::create(const void *data, int size, int stride, BufferUsage usage)
+void GL3StorageBufferProvider::create(const void *data, int size, int stride, BufferUsage usage)
 {
 	buffer.create(data, size, usage, GL_UNIFORM_BUFFER_BINDING, GL_UNIFORM_BUFFER);
 }

@@ -37,16 +37,16 @@
 namespace clan
 {
 
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
-class OpenGLTextureProvider : public TextureProvider, DisposableObject
+class GL3TextureProvider : public TextureProvider, DisposableObject
 {
 /// \name Construction
 /// \{
 public:
-	OpenGLTextureProvider(TextureDimensions texture_dimensions);
-	OpenGLTextureProvider(GLuint texture_type, GLuint handle);
-	~OpenGLTextureProvider();
+	GL3TextureProvider(TextureDimensions texture_dimensions);
+	GL3TextureProvider(GLuint texture_type, GLuint handle);
+	~GL3TextureProvider();
 /// \}
 
 /// \name Attributes

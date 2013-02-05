@@ -28,11 +28,11 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_standard_programs.h"
-#include "opengl_program_object_provider.h"
-#include "opengl_shader_object_provider.h"
-#include "opengl_render_buffer_provider.h"
-#include "opengl_vertex_array_buffer_provider.h"
+#include "gl3_standard_programs.h"
+#include "gl3_program_object_provider.h"
+#include "gl3_shader_object_provider.h"
+#include "gl3_render_buffer_provider.h"
+#include "gl3_vertex_array_buffer_provider.h"
 
 
 namespace clan
@@ -91,11 +91,11 @@ const std::string::value_type *cl_glsl15_fragment_sprite =
 
 
 
-class OpenGLStandardPrograms_Impl
+class GL3StandardPrograms_Impl
 {
 public:
-	OpenGLStandardPrograms_Impl() {}
-	~OpenGLStandardPrograms_Impl() {}
+	GL3StandardPrograms_Impl() {}
+	~GL3StandardPrograms_Impl() {}
 
 	ProgramObject color_only_program;
 	ProgramObject single_texture_program;
@@ -103,11 +103,11 @@ public:
 
 };
 
-OpenGLStandardPrograms::OpenGLStandardPrograms()
+GL3StandardPrograms::GL3StandardPrograms()
 {
 }
 
-OpenGLStandardPrograms::OpenGLStandardPrograms(OpenGLGraphicContextProvider *provider) : impl(new OpenGLStandardPrograms_Impl())
+GL3StandardPrograms::GL3StandardPrograms(GL3GraphicContextProvider *provider) : impl(new GL3StandardPrograms_Impl())
 {
 	ShaderObject vertex_color_only_shader(provider, shadertype_vertex, cl_glsl15_vertex_color_only);
 	if(!vertex_color_only_shader.compile())
@@ -176,11 +176,11 @@ OpenGLStandardPrograms::OpenGLStandardPrograms(OpenGLGraphicContextProvider *pro
 
 }
 
-OpenGLStandardPrograms::~OpenGLStandardPrograms()
+GL3StandardPrograms::~GL3StandardPrograms()
 {
 }
 
-ProgramObject OpenGLStandardPrograms::get_program_object(StandardProgram standard_program) const
+ProgramObject GL3StandardPrograms::get_program_object(StandardProgram standard_program) const
 {
 	switch (standard_program)
 	{

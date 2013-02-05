@@ -42,7 +42,7 @@ namespace clan
 
 class GLFunctions;
 class GraphicContext;
-class OpenGLGraphicContextProvider;
+class GL3GraphicContextProvider;
 
 enum TextureFormat;
 
@@ -79,7 +79,7 @@ public:
 	static void set_active(GraphicContext &gc);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-	static void set_active(const OpenGLGraphicContextProvider * const gc_provider);
+	static void set_active(const GL3GraphicContextProvider * const gc_provider);
 
 	/// \brief Sets the thread's OpenGL context to the first valid allocated one
 	///
@@ -118,15 +118,15 @@ public:
 private:
 	/// \brief Remove the opengl bindings from the thread's OpenGL context
 	/// 
-	/// This should only be called by the OpenGLGraphicContextProvider destructor
-	static void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
+	/// This should only be called by the GL3GraphicContextProvider destructor
+	static void remove_active(const GL3GraphicContextProvider * const gc_provider);
 
 	static int opengl_version_major;
 	static int opengl_version_minor;
 	static int glsl_version_major;
 	static int glsl_version_minor;
 
-	friend class OpenGLGraphicContextProvider;
+	friend class GL3GraphicContextProvider;
 
 };
 
