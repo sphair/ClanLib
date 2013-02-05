@@ -37,10 +37,6 @@ Target::Target()
 
 int Target::start(const std::vector<std::string> &args)
 {
-	clan::SetupGL target_opengl2;
-	clan::SetupGL1 target_opengl1;
-	clan::SetupD3D target_d3d;
-
 	// Since OpenGL 1.3 is compatible and fast - Use that as the default
 	render_target = opengl1;
 
@@ -51,16 +47,18 @@ int Target::start(const std::vector<std::string> &args)
 		switch (render_target)
 		{
 			case (opengl1):
-				target_opengl1.set_current();
+				clan::GL1Target::set_current();
 				break;
 
 			case (opengl2):
-				target_opengl2.set_current();
+				clan::OpenGLTarget::set_current();
 				break;
 
+#ifdef WIN32
 			case (d3d):
-				target_d3d.set_current();
+				clan::D3DTarget::set_current();
 				break;
+#endif
 		}
 
 	}while (run_demo());
@@ -147,20 +145,18 @@ bool Target::run_demo()
 
 		const int font_xpos = 32;
 		const int font_ypos = 64;
-		switch (render_target)
-		{
-			case (opengl1):
+
+		if (clan::GL1Target::is_current())
 				target_font.draw_text(canvas, font_xpos, font_ypos, "1) OpenGL 1.3 (clanGL1)");
-				break;
 
-			case (opengl2):
+		if (clan::OpenGLTarget::is_current())
 				target_font.draw_text(canvas, font_xpos, font_ypos, "2) OpenGL 3.2 or higher(clanGL)");
-				break;
 
-			case (d3d):
+#ifdef WIN32
+		if (clan::D3DTarget::is_current())
 				target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
-				break;
-		}
+#endif
+
 		fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
 
 		float max_height = (float) (canvas.get_height() + 20);
