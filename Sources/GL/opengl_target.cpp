@@ -24,11 +24,15 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL/precomp.h"
 #include "API/GL/opengl_target.h"
 #include "opengl_target_provider.h"
+#include "setup_gl_impl.h"
+#include "API/Display/display.h"
+#include "API/GL/opengl_window_description.h"
 
 namespace clan
 {
@@ -47,9 +51,57 @@ OpenGLTarget::~OpenGLTarget()
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLTarget Attributes:
+bool OpenGLTarget::is_current()
+{
+	DisplayTarget target = Display::get_current_target();
+	DisplayTargetProvider *ptr = target.get_provider();
+	if (!ptr)
+		return false;
+
+	OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(ptr);
+	return (provider != nullptr);
+
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLTarget Operations:
+
+OpenGLWindowDescription OpenGLTarget::get_description()
+{
+	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	if (SetupGL_Impl::cl_opengl_target)
+	{
+		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		if (provider)
+		{
+			return provider->get_description();
+		}
+	}
+	return OpenGLWindowDescription();
+}
+
+void OpenGLTarget::set_description(OpenGLWindowDescription &desc)
+{
+	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	if (SetupGL_Impl::cl_opengl_target)
+	{
+		OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(SetupGL_Impl::cl_opengl_target->get_provider());
+		if (provider)
+		{
+			provider->set_description(desc);
+		}
+	}
+}
+
+
+
+void OpenGLTarget::set_current()
+{
+	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	if (!SetupGL_Impl::cl_opengl_target)
+		throw Exception("clanGL has not been initialised");
+	SetupGL_Impl::cl_opengl_target->DisplayTarget::set_current();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLTarget Implementation:

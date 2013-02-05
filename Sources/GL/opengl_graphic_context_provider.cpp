@@ -78,7 +78,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLGraphicContextProvider Construction:
 
-OpenGLGraphicContextProvider::OpenGLGraphicContextProvider(const DisplayWindowProvider * const render_window, const OpenGLWindowDescription &gldesc)
+OpenGLGraphicContextProvider::OpenGLGraphicContextProvider(const DisplayWindowProvider * const render_window)
 : render_window(render_window), framebuffer_bound(false), opengl_version_major(0), shader_version_major(0), scissor_enabled(false)
 {
 	check_opengl_version();

@@ -58,9 +58,9 @@ GL1TargetProvider::~GL1TargetProvider()
 DisplayWindowProvider *GL1TargetProvider::alloc_display_window()
 {
 #ifdef WIN32
-	return new GL1WindowProvider_WGL;
+	return new GL1WindowProvider_WGL();
 #else
-	return new GL1WindowProvider_GLX;
+	return new GL1WindowProvider_GLX();
 #endif
 }
 

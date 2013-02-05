@@ -23,49 +23,25 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
-
-#include "API/Display/Window/display_window_description.h"
+#include "API/Core/System/mutex.h"
 
 namespace clan
 {
 
-class GL1WindowDescription_Impl : public DisplayWindowDescriptionData
+class OpenGLTarget;
+
+class SetupGL_Impl
 {
-/// \name Construction
-/// \{
-
 public:
-	GL1WindowDescription_Impl()
-	{
-		doublebuffer = true;
-		stereo = false;
-		buffer_size = 24;
-		red_size = 4;
-		green_size = 4;
-		blue_size = 4;
-		alpha_size = 4;
-		multisampling = 0;
-	}
+	static Mutex cl_opengl_mutex;
+	static int cl_opengl_refcount;
+	static OpenGLTarget *cl_opengl_target;
 
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	bool doublebuffer;
-	bool stereo;
-	int buffer_size;
-	int red_size;
-	int green_size;
-	int blue_size;
-	int alpha_size;
-	int multisampling;
-/// \}
 };
 
 }
+

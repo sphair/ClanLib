@@ -24,10 +24,11 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "D3D/precomp.h"
-#include "API/Core/System/mutex.h"
+#include "setup_d3d_impl.h"
 #include "API/D3D/setup_d3d.h"
 #include "API/D3D/d3d_target.h"
 
@@ -40,30 +41,24 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupSWRender Construction:
 
-static Mutex cl_d3d_mutex;
-static int cl_d3d_refcount = 0;
-static D3DTarget *cl_d3d_target = 0;
+Mutex SetupD3D_Impl::cl_d3d_mutex;
+int SetupD3D_Impl::cl_d3d_refcount = 0;
+D3DTarget *SetupD3D_Impl::cl_d3d_target = 0;
 
 SetupD3D::SetupD3D()
 {
-	MutexSection mutex_lock(&cl_d3d_mutex);
-	if (cl_d3d_refcount == 0)
-		cl_d3d_target = new D3DTarget();
-	cl_d3d_refcount++;
+	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
+	if (SetupD3D_Impl::cl_d3d_refcount == 0)
+		SetupD3D_Impl::cl_d3d_target = new D3DTarget();
+	SetupD3D_Impl::cl_d3d_refcount++;
 }
 
 SetupD3D::~SetupD3D()
 {
-	MutexSection mutex_lock(&cl_d3d_mutex);
-	cl_d3d_refcount--;
-	if (cl_d3d_refcount == 0)
-		delete cl_d3d_target;
-}
-
-void SetupD3D::set_current()
-{
-	MutexSection mutex_lock(&cl_d3d_mutex);
-	cl_d3d_target->set_current();
+	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
+	SetupD3D_Impl::cl_d3d_refcount--;
+	if (SetupD3D_Impl::cl_d3d_refcount == 0)
+		delete SetupD3D_Impl::cl_d3d_target;
 }
 
 }

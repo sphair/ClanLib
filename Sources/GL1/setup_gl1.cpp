@@ -29,7 +29,7 @@
 #include "GL1/precomp.h"
 #include "API/GL1/setup_gl1.h"
 #include "API/GL1/opengl1_target.h"
-#include "API/Core/System/mutex.h"
+#include "setup_gl1_impl.h"
 
 namespace clan
 {
@@ -37,32 +37,24 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupGL1 Construction:
 
-static Mutex gl1_mutex;
-
-static int gl1_refcount = 0;
-
-static GL1Target *gl1_target = 0;
+Mutex SetupGL1_Impl::gl1_mutex;
+int SetupGL1_Impl::gl1_refcount = 0;
+GL1Target *SetupGL1_Impl::gl1_target = 0;
 
 SetupGL1::SetupGL1()
 {
-	MutexSection mutex_lock(&gl1_mutex);
-	if (gl1_refcount == 0)
-		gl1_target = new GL1Target();
-	gl1_refcount++;
+	MutexSection mutex_lock(&SetupGL1_Impl::gl1_mutex);
+	if (SetupGL1_Impl::gl1_refcount == 0)
+		SetupGL1_Impl::gl1_target = new GL1Target();
+	SetupGL1_Impl::gl1_refcount++;
 }
 
 SetupGL1::~SetupGL1()
 {
-	MutexSection mutex_lock(&gl1_mutex);
-	gl1_refcount--;
-	if (gl1_refcount == 0)
-		delete gl1_target;
-}
-
-void SetupGL1::set_current()
-{
-	MutexSection mutex_lock(&gl1_mutex);
-	gl1_target->set_current();
+	MutexSection mutex_lock(&SetupGL1_Impl::gl1_mutex);
+	SetupGL1_Impl::gl1_refcount--;
+	if (SetupGL1_Impl::gl1_refcount == 0)
+		delete SetupGL1_Impl::gl1_target;
 }
 
 }

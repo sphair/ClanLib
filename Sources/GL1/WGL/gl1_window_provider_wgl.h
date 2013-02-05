@@ -42,7 +42,6 @@ namespace clan
 
 typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
-class GL1WindowDescription;
 class GL1WindowProvider_WGL;
 class GL1GraphicContextProvider;
 

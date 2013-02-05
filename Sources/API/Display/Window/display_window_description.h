@@ -47,12 +47,6 @@ class Rect;
 class DisplayWindow;
 class DisplayWindowDescription_Impl;
 
-class DisplayWindowDescriptionData
-{
-public:
-	virtual ~DisplayWindowDescriptionData() { }
-};
-
 /// \brief Display window description class.
 ///
 /// This class allows you to setup a more advanced description when creating a display window.
@@ -164,9 +158,6 @@ public:
 	/// \brief Returns true if a tablet context is to be created for the window.
 	bool get_tablet_context() const;
 
-	/// \brief Returns the object stored in the given data name.
-	std::shared_ptr<DisplayWindowDescriptionData> get_data(const std::string &data_name) const;
-
 	/// \brief Returns the minimum required depth buffer.
 	int get_depth_size() const;
 
@@ -182,6 +173,8 @@ public:
 	/// \brief Returns true if DisplayWindow::update should be supported
 	bool is_update_supported() const;
 
+	/// \brief Returns the number of samples per pixel.
+	int get_multisampling() const;
 /// \}
 /// \name Operations
 /// \{
@@ -277,9 +270,6 @@ public:
 	void set_handle(HWND handle);
 #endif
 
-	/// \brief Store object in description.
-	void set_data(const std::string &data_name, const std::shared_ptr<DisplayWindowDescriptionData> &ptr);
-
 	/// \brief Sets the minimum required depth buffer.
 	/** <p>If this value is zero, the smallest available depth buffer is preferred. Otherwise,
 	    the largest available depth buffer of at least the minimum size is preferred.</p>*/
@@ -295,6 +285,9 @@ public:
 	/// The Direct3D target needs to know at window creation time if the application intends to update
 	/// the screen by calling DisplayWindow::update.
 	void set_update_supported(bool value) const;
+
+	/// \brief Sets the number of samples per pixel.
+	void set_multisampling(int value);
 
 /// \}
 /// \name Implementation

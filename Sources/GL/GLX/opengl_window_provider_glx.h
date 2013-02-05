@@ -35,6 +35,7 @@
 #include "API/Display/Window/input_context.h"
 #include "Display/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
+#include "API/GL/opengl_window_description.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -56,6 +57,7 @@ typedef GLXContext (*ptr_glXCreateContextAttribs)(::Display *dpy, GLXFBConfig co
 
 class OpenGLWindowProvider_GLX;
 class OpenGLWindowDescription;
+class DisplayWindowDescription;
 
 #define GL_USE_DLOPEN		// Using dlopen for linux by default
 
@@ -155,7 +157,7 @@ class OpenGLWindowProvider_GLX : public DisplayWindowProvider
 /// \{
 
 public:
-	OpenGLWindowProvider_GLX();
+	OpenGLWindowProvider_GLX(OpenGLWindowDescription &opengl_desc);
 
 	~OpenGLWindowProvider_GLX();
 
@@ -268,7 +270,7 @@ public:
 
 	void process_messages();
 
-	GLXContext create_context(const OpenGLWindowDescription &gl_desc);
+	GLXContext create_context(const DisplayWindowDescription &desc);
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
@@ -294,11 +296,11 @@ private:
 
 	bool on_clicked(XButtonEvent &event);
 
-	GLXContext create_context_glx_1_3(const OpenGLWindowDescription &gl_desc, GLXContext shared_context);
-	GLXContext create_context_glx_1_2(const OpenGLWindowDescription &gl_desc, GLXContext shared_context);
+	GLXContext create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context);
+	GLXContext create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context);
 	void create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
 	void create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
-	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const OpenGLWindowDescription &gldesc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
+	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
 
 	void on_window_resized();
 
@@ -325,7 +327,7 @@ private:
 	void *opengl_lib_handle;
 #endif
 	bool glx_1_3;
-
+	OpenGLWindowDescription opengl_desc;
 /// \}
 };
 

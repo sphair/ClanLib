@@ -37,7 +37,6 @@
 #endif
 
 #include "GL1/opengl1_target.h"
-#include "GL1/opengl1_window_description.h"
 #include "GL1/setup_gl1.h"
 #include "GL1/graphic_context_gl1.h"
 

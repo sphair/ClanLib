@@ -60,12 +60,18 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this display target is the current target
+	///
+	/// This may change after a display window has been created
+	static bool is_current();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	/// \brief Set this display target to be the current target
+	static void set_current();
 
 /// \}
 /// \name Implementation

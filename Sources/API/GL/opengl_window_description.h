@@ -33,7 +33,6 @@
 
 #include "api_gl.h"
 #include <memory>
-#include "../Display/Window/display_window_description.h"
 
 namespace clan
 {
@@ -46,13 +45,12 @@ class OpenGLWindowDescription_Impl;
 ///    window:</p>
 ///    <pre>
 ///    OpenGLWindowDescription desc;
-///    dest.set_title("OpenGL window with stereo visual");
 ///    desc.set_stereo(true);
 ///    desc.set_stencil_size(4);
 ///    OpenGLWindow window(desc);
 ///    </pre> 
 /// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
-class CL_API_GL OpenGLWindowDescription : public DisplayWindowDescription
+class CL_API_GL OpenGLWindowDescription
 {
 /// \name Construction
 /// \{
@@ -63,43 +61,12 @@ public:
 	/// \brief Constructs a OpenGLWindowDescription
 	///
 	/// \param desc = Display Window Description
-	OpenGLWindowDescription(const DisplayWindowDescription &desc);
-	OpenGLWindowDescription &operator=(DisplayWindowDescription &desc);
-
 	virtual ~OpenGLWindowDescription();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if only double-buffered visuals are considered.
-	/** <p>If not enabled, only single-buffered visuals are considered.</p>*/
-	bool get_doublebuffer() const;
-
-	/// \brief Returns true if only stereo visuals are considered.
-	/** <p>If not enabled, only monoscopic visuals are considered.</p>*/
-	bool get_stereo() const;
-
-	/// \brief Returns the desired color buffer size.
-	/** <p>Ignored in GLX (X11)</p>
-	    <p>In WGL (Windows) it specifies the size of the color buffer, excluding the alpha bitplanes.</p>*/
-	int get_buffer_size() const;
-
-	/// \brief Returns the minimum required red buffer.
-	int get_red_size() const;
-
-	/// \brief Returns the minimum required green buffer.
-	int get_green_size() const;
-
-	/// \brief Returns the minimum required blue buffer.
-	int get_blue_size() const;
-
-	/// \brief Returns the minimum required alpha buffer.
-	int get_alpha_size() const;
-
-	/// \brief Returns the number of samples per pixel.
-	int get_multisampling() const;
-
 	/// \brief Returns selected major version number
 	int get_version_major() const;
 
@@ -128,42 +95,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Sets if only double-buffered visuals are considered.
-	/** <p>If not enabled, only single-buffered visuals are considered.</p>*/
-	void set_doublebuffer(bool value);
-
-	/// \brief Sets if only stereo visuals are to be considered.
-	/** <p>If not enabled, only monoscopic visuals are considered.</p>*/
-	void set_stereo(bool value);
-
-	/// \brief Sets the desired color buffer size.
-	/** <p>Ignored in GLX (X11)</p>
-	    <p>In WGL (Windows) it specifies the size of the color buffer, excluding the alpha bitplanes.</p>*/
-	void set_buffer_size(int value);
-
-	/// \brief Sets the minimum required red buffer.
-	/** <p>If this value is zero, the smallest available red buffer is preferred. Otherwise,
-	    the largest available red buffer of at least the minimum size is preferred.</p>*/
-	void set_red_size(int value);
-
-	/// \brief Sets the minimum required green buffer.
-	/** <p>If this value is zero, the smallest available green buffer is preferred. Otherwise,
-	    the largest available green buffer of at least the minimum size is preferred.</p>*/
-	void set_green_size(int value);
-
-	/// \brief Sets the minimum required blue buffer.
-	/** <p>If this value is zero, the smallest available blue buffer is preferred. Otherwise,
-	    the largest available blue buffer of at least the minimum size is preferred.</p>*/
-	void set_blue_size(int value);
-
-	/// \brief Sets the minimum required alpha buffer.
-	/** <p>If this value is zero, the smallest available alpha buffer is preferred. Otherwise,
-	    the largest available alpha buffer of at least the minimum size is preferred.</p>*/
-	void set_alpha_size(int value);
-
-	/// \brief Sets the number of samples per pixel.
-	void set_multisampling(int value);
-
 	/// \brief Select the OpenGL version number
 	///
 	/// Defaults to OpenGL 3.2, without allow lower versions
@@ -217,7 +148,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	std::shared_ptr<OpenGLWindowDescription_Impl> impl_gl;
+	std::shared_ptr<OpenGLWindowDescription_Impl> impl;
 /// \}
 };
 

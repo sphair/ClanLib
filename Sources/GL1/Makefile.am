@@ -13,7 +13,6 @@ libclan30GL1_la_SOURCES = \
 	graphic_context_gl1.cpp \
 	opengl1.cpp \
 	precomp.cpp \
-	gl1_window_description.cpp \
 	gl1_graphic_context_provider.cpp \
 	gl1_render_buffer_provider.cpp 
 
