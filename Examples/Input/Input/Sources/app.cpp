@@ -40,7 +40,7 @@ int App::start(const std::vector<std::string> &args)
 	DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Input Example");
-	win_desc.set_size(Size( 700, 700 ), false);
+	win_desc.set_size(Size( 1000, 700 ), false);
 	window = DisplayWindow(win_desc);
 
 	// Connect the slots that we require

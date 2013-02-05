@@ -44,7 +44,7 @@ GUI::GUI(App *app) : app(app)
 	resources_internal = clan::ResourceManager("../CommonCode/Resources/resources.xml");
 
 	clan::Canvas canvas = app->get_canvas();
-	fps_font = clan::Font(canvas, "Tahoma", 24);
+	fps_font = clan::Font(canvas, "Tahoma", 20);
 
 	balls.Init(canvas);
 

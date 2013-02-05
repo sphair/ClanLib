@@ -145,7 +145,7 @@ int App::start(const std::vector<std::string> &args)
 		const float stencil_image_scale = 0.5f;
 		stencil_image.set_scale(stencil_image_scale, stencil_image_scale);
 		stencil_image.draw(canvas, stencil_image_xpos, stencil_image_ypos);
-		Draw::box(canvas, clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), Colorf::white);
+		canvas.draw_box(clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), Colorf::white);
 		font.draw_text(canvas, stencil_image_xpos, stencil_image_ypos - 4.0f, "Stencil", clan::Colorf::black);
 
 		// Add a note to avoid confusion
@@ -251,7 +251,7 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 	std::vector<unsigned char> buffer;
 	buffer.resize(rect_width * rect_height);
 
-	glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
+	clan::glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
 	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_abgr8);
 	unsigned int *pdata = (unsigned int *) pbuf.get_data();
 	unsigned char *rdata = &buffer[0];

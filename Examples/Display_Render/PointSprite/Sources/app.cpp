@@ -68,11 +68,11 @@ App::App() : quit(false)
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
-	clan::OpenGLWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	//win_desc.set_version(3, 2, false);
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("Point Sprite Example");
-	win_desc.set_size(Size( 800, 480 ), false);
+	win_desc.set_size(clan::Size( 800, 480 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -89,13 +89,13 @@ int App::start(const std::vector<std::string> &args)
 	clan::GUIWindowManagerTexture wm(window);
 	clan::GUIManager gui(wm, theme);
 	
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
 	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
 
 	clan::Image image_grid(canvas, "../Blend/Resources/grid.png");
-	clan::Texture texture_particle(canvas, "Resources/particle.png");
+	clan::Texture2D texture_particle(canvas, "Resources/particle.png");
 	float grid_width = (float) image_grid.get_width();
 	float grid_height = (float) image_grid.get_height();
 
@@ -103,16 +103,16 @@ int App::start(const std::vector<std::string> &args)
 
 	setup_particles();
 
-	clan::ShaderObject vertex_shader(canvas, cl_shadertype_vertex, text_shader_vertex);
+	clan::ShaderObject vertex_shader(canvas, clan::shadertype_vertex, text_shader_vertex);
 	if(!vertex_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	clan::ShaderObject fragment_shader(canvas, cl_shadertype_fragment, text_shader_fragment);
+	clan::ShaderObject fragment_shader(canvas, clan::shadertype_fragment, text_shader_fragment);
 	if(!fragment_shader.compile())
 	{
-		throw clan::Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
+		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
 	}
 
 	clan::ProgramObject program_object(canvas);
@@ -122,7 +122,7 @@ int App::start(const std::vector<std::string> &args)
 	program_object.bind_attribute_location(1, "InColor");
 	if (!program_object.link())
 	{
-		throw clan::Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
+		throw clan::Exception(clan::string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
 	options->request_repaint();

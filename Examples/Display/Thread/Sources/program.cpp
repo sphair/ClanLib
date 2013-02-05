@@ -29,14 +29,6 @@
 #include "program.h"
 #include "app.h"
 
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
-
 int Program::main(const std::vector<std::string> &args)
 {
 	try
@@ -47,13 +39,11 @@ int Program::main(const std::vector<std::string> &args)
 		// Initialize the ClanLib display component
 		clan::SetupDisplay setup_display;
 
-		#ifdef USE_D3D
-			clan::SetupD3D setup_d3d;
-		#endif
-
-		#ifdef USE_OPENGL_2
-			clan::SetupGL setup_gl;
-		#endif
+		// We support all display targets
+		clan::SetupGL setup_gl;
+#ifdef WIN32
+		clan::SetupD3D setup_d3d;
+#endif
 
 		// Start the Application
 		App app;

@@ -40,13 +40,13 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("PixelBuffer Example");
-	win_desc.set_size(Size( 600, 630 ), false);
+	win_desc.set_size(clan::Size( 600, 630 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 	clan::Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	clan::PixelBuffer tux("../../3D/Clan3D/Resources/tux.png");
 
@@ -57,14 +57,14 @@ int App::start(const std::vector<std::string> &args)
 	for (int cnt=0; cnt < num_gpu_buffers; cnt++)
 	{
 		// Note - This example only uses PIXEL_UNPACK_BUFFER_ARB, it does not use PIXEL_PACK_BUFFER_ARB
-		gpu_buffer[cnt] = clan::PixelBuffer(canvas, tux);
+		gpu_buffer[cnt] = clan::PixelBuffer(canvas, tux, tux.get_size());
 	}
 
 	const int num_textures = 2;
-	clan::Texture textures[num_textures];
+	clan::Texture2D textures[num_textures];
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
-		textures[cnt] = clan::Texture(canvas, tux.get_width(), tux.get_height(), clan::tf_rgb);
+		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgb8);
 	}
 
 	clan::Font font(canvas, "Tahoma", 24);
@@ -81,7 +81,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		// Modify the pixel buffer
-		read_write_pixel_buffer(tux);
+		read_write_pixel_buffer(canvas, tux);
 
 		// Control the texture buffering
 		int texture_cycle_first = texture_cycle;
@@ -143,39 +143,38 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::upload_pixel_buffer(clan::PixelBuffer &pbuff_source, clan::PixelBuffer &pbuff_dest)
+void App::upload_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff_source, clan::PixelBuffer &pbuff_dest)
 {
-	pbuff_source.lock(cl_access_read_only);
-	pbuff_dest.upload_data(clan::Rect(0,0, pbuff_source.get_size()), pbuff_source.get_data());
+	pbuff_source.lock(canvas, clan::access_read_only);
+	pbuff_dest.upload_data(canvas, clan::Rect(0,0, pbuff_source.get_size()), pbuff_source.get_data());
 	pbuff_source.unlock();
 }
 
-void App::draw_cpu(clan::Canvas &canvas, clan::PixelBuffer &cpu_buffer, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw)
+void App::draw_cpu(clan::Canvas &canvas, clan::PixelBuffer &cpu_buffer, clan::PixelBuffer &tux, clan::Texture2D &texture_to_write_into, clan::Texture2D &texture_to_draw)
 {
-	upload_pixel_buffer(tux, cpu_buffer);
-	texture_to_write_into.set_subimage(0, 0, cpu_buffer, cpu_buffer.get_size());
+	upload_pixel_buffer(canvas, tux, cpu_buffer);
+	texture_to_write_into.set_subimage(canvas, 0, 0, cpu_buffer, cpu_buffer.get_size());
 
 	draw_texture(canvas, texture_to_draw, 32, 32);
 }
 
-void App::draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture &texture_to_write_into, clan::Texture &texture_to_draw)
+void App::draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_into, clan::PixelBuffer &gpu_buffer_to_draw, clan::PixelBuffer &tux, clan::Texture2D &texture_to_write_into, clan::Texture2D &texture_to_draw)
 {
-	upload_pixel_buffer(tux, gpu_buffer_to_write_into);
-	texture_to_write_into.set_subimage(0, 0, gpu_buffer_to_draw, gpu_buffer_to_draw.get_size());
+	upload_pixel_buffer(canvas, tux, gpu_buffer_to_write_into);
+	texture_to_write_into.set_subimage(canvas, 0, 0, gpu_buffer_to_draw, gpu_buffer_to_draw.get_size());
 	draw_texture(canvas, texture_to_draw, 32, 32);
 }
 
-void App::draw_texture(clan::Canvas &canvas, clan::Texture &texture, int xpos, int ypos)
+void App::draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos, int ypos)
 {
-	canvas.set_texture(0, texture);
-	Draw::texture(canvas, clan::Rectf( (float) xpos, (float) ypos, clan::Sizef(512.0f, 512.0f)));
-	canvas.reset_texture(0);
+	clan::Image image(canvas, texture, texture.get_size());
+	image.draw(canvas, clan::Rectf( (float) xpos, (float) ypos, clan::Sizef(512.0f, 512.0f)));
 }
 
-void App::read_write_pixel_buffer(clan::PixelBuffer &pbuff)
+void App::read_write_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff)
 {
 	unsigned int time_now = clan::System::get_time();
-	pbuff.lock(cl_access_read_write);
+	pbuff.lock(canvas, clan::access_read_write);
 	if (pbuff.get_format() != clan::tf_rgb8)
 		throw clan::Exception("Expected the format to be RGB8");
 	unsigned char *dptr = (unsigned char *) pbuff.get_data();
