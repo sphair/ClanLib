@@ -82,7 +82,7 @@ class OpenGLGraphicContextProvider : public GraphicContextProvider, public Dispo
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	OpenGLGraphicContextProvider(const DisplayWindowProvider * const render_window, const OpenGLWindowDescription &gldesc);
+	OpenGLGraphicContextProvider(const DisplayWindowProvider * const render_window);
 
 	~OpenGLGraphicContextProvider();
 

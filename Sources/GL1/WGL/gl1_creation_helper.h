@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #pragma once
@@ -33,7 +34,7 @@
 namespace clan
 {
 
-class GL1WindowDescription;
+class DisplayWindowDescription;
 
 class GL1CreationHelper
 {
@@ -41,7 +42,7 @@ public:
 	GL1CreationHelper(HWND window, HDC hdc);
 	~GL1CreationHelper();
 
-	void set_multisampling_pixel_format(const GL1WindowDescription &gldesc);
+	void set_multisampling_pixel_format(const DisplayWindowDescription &gldesc);
 	HGLRC create_opengl3_context(HGLRC share_context, int major_version, int minor_version);
 	HGLRC create_opengl2_context(HGLRC share_context);
 

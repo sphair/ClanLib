@@ -63,6 +63,11 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Returns true if this display target is the current target
+	///
+	/// This may change after a display window has been created
+	static bool is_current();
+
 /// \}
 
 /// \name Operations
@@ -110,6 +115,10 @@ public:
 
 	/// \brief Throws an exception with the specified text if the passed result is an error condition
 	static void throw_if_failed(const char *text, HRESULT result);
+
+	/// \brief Set this display target to be the current target
+	static void set_current();
+
 /// \}
 
 /// \name Implementation

@@ -73,6 +73,7 @@ public:
 		use_cached_window = false;
 		allow_screensaver = true;
 		update_supported = false;
+		multisampling = 0;
 	}
 
 	virtual ~DisplayWindowDescription_Impl() { return; }
@@ -107,11 +108,11 @@ public:
 #ifdef WIN32
 	HWND handle;
 #endif
-	std::map<std::string, std::shared_ptr<DisplayWindowDescriptionData> > data_objects;
 	int depth_size;
 	int stencil_size;
 	bool allow_screensaver;
 	bool update_supported;
+	int multisampling;
 /// \}
 };
 

@@ -69,9 +69,9 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider_GLX Construction:
 
-OpenGLWindowProvider_GLX::OpenGLWindowProvider_GLX()
+OpenGLWindowProvider_GLX::OpenGLWindowProvider_GLX(OpenGLWindowDescription &opengl_desc)
 : x11_window(),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1)
+ opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1), opengl_desc(opengl_desc)
 #ifdef GL_USE_DLOPEN
 , opengl_lib_handle(NULL)
 #endif
@@ -252,8 +252,7 @@ void OpenGLWindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 
 	if (create_provider_flag)
 	{
-		OpenGLWindowDescription gldesc(desc);
-		gc = GraphicContext(new OpenGLGraphicContextProvider(this, gldesc));
+		gc = GraphicContext(new OpenGLGraphicContextProvider(this));
 	}
 
 	setup_swap_interval_pointers();
@@ -305,8 +304,6 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 	}
 #endif
 
-	OpenGLWindowDescription gl_desc(desc);
-
 	std::vector<int> gl_attribs;
 	gl_attribs.reserve(64);
 
@@ -319,21 +316,21 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 	gl_attribs.push_back(GLX_X_VISUAL_TYPE);
 	gl_attribs.push_back(GLX_TRUE_COLOR);
 	gl_attribs.push_back(GLX_RED_SIZE);
-	gl_attribs.push_back(gl_desc.get_red_size());
+	gl_attribs.push_back(4);
 	gl_attribs.push_back(GLX_GREEN_SIZE);
-	gl_attribs.push_back(gl_desc.get_green_size());
+	gl_attribs.push_back(4);
 	gl_attribs.push_back(GLX_BLUE_SIZE);
-	gl_attribs.push_back(gl_desc.get_blue_size());
+	gl_attribs.push_back(4);
 	gl_attribs.push_back(GLX_ALPHA_SIZE);
-	gl_attribs.push_back(gl_desc.get_alpha_size());
+	gl_attribs.push_back(4);
 	gl_attribs.push_back(GLX_DEPTH_SIZE);
-	gl_attribs.push_back(gl_desc.get_depth_size());
+	gl_attribs.push_back(desc.get_depth_size());
 	gl_attribs.push_back(GLX_STENCIL_SIZE);
-	gl_attribs.push_back(gl_desc.get_stencil_size());
+	gl_attribs.push_back(desc.get_stencil_size());
 	gl_attribs.push_back(GLX_DOUBLEBUFFER);
-	gl_attribs.push_back(gl_desc.get_doublebuffer() ? True : False);
+	gl_attribs.push_back(True );
 	gl_attribs.push_back(GLX_STEREO);
-	gl_attribs.push_back(gl_desc.get_stereo() ? True : False);
+	gl_attribs.push_back(False);
 	gl_attribs.push_back(None);
 
 	// get an appropriate visual
@@ -356,7 +353,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 		int desired_config = 0;
 		int max_sample_buffers = 0;
 		int max_samples = 0;
-		int required_samples = gl_desc.get_multisampling();
+		int required_samples = desc.get_multisampling();
 		// Find the best fitting multisampling option
 		for (int i=0; i<fb_count; i++)
 		{
@@ -425,7 +422,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 	}
 
 	// create a GLX context
-	opengl_context = create_context(gl_desc);
+	opengl_context = create_context(desc);
 }
 
 
@@ -443,26 +440,23 @@ void OpenGLWindowProvider_GLX::create_glx_1_2(DisplayWindowSite *new_site, const
 
 	int i = 0;
 
-	OpenGLWindowDescription gl_desc(desc);
-
 	int gl_attribs[32];	// WARNING - create() assumes this is 32 in size
 
 	// Note: gl_attribs[32] !!!!
 	gl_attribs[i++] = GLX_RGBA;
-	if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
-	if( gl_desc.get_stereo() ) gl_attribs[i++] = GLX_STEREO;
+	gl_attribs[i++] = GLX_DOUBLEBUFFER;
 	gl_attribs[i++] = GLX_BUFFER_SIZE;
-	gl_attribs[i++] = gl_desc.get_buffer_size();
+	gl_attribs[i++] = 24;
 	gl_attribs[i++] = GLX_RED_SIZE; 
-	gl_attribs[i++] = gl_desc.get_red_size();
+	gl_attribs[i++] = 4;
 	gl_attribs[i++] = GLX_GREEN_SIZE;
-	gl_attribs[i++] = gl_desc.get_green_size();
+	gl_attribs[i++] = 4;
 	gl_attribs[i++] = GLX_BLUE_SIZE;
-	gl_attribs[i++] = gl_desc.get_blue_size();
+	gl_attribs[i++] = 4;
 	gl_attribs[i++] = GLX_DEPTH_SIZE;
-	gl_attribs[i++] = gl_desc.get_depth_size();
+	gl_attribs[i++] = desc.get_depth_size();
 	gl_attribs[i++] = GLX_STENCIL_SIZE;
-	gl_attribs[i++] = gl_desc.get_stencil_size();
+	gl_attribs[i++] = desc.get_stencil_size();
 	gl_attribs[i++] = None;
 
 	// get an appropriate visual
@@ -480,7 +474,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_2(DisplayWindowSite *new_site, const
 	}
 
 	// create a GLX context
-	opengl_context = create_context(gl_desc);
+	opengl_context = create_context(desc);
 
 }
 
@@ -549,7 +543,7 @@ static int cl_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
     return 0;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context(const OpenGLWindowDescription &gl_desc)
+GLXContext OpenGLWindowProvider_GLX::create_context(const DisplayWindowDescription &desc)
 {
 	GLXContext shared_context = NULL;
 
@@ -571,17 +565,17 @@ GLXContext OpenGLWindowProvider_GLX::create_context(const OpenGLWindowDescriptio
 
 	if (glx_1_3)
 	{
-		context = create_context_glx_1_3(gl_desc, shared_context);
+		context = create_context_glx_1_3(desc, shared_context);
 	}
 	else
 	{
-		context = create_context_glx_1_2(gl_desc, shared_context);
+		context = create_context_glx_1_2(desc, shared_context);
 	}
 
 	return context;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const OpenGLWindowDescription &gldesc, ptr_glXCreateContextAttribs glXCreateContextAttribs)
+GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs)
 {
 	std::vector<int> int_attributes;
 
@@ -592,21 +586,21 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext sh
 
 	// Layer plane does not exist on GLX - http://www.opengl.org/registry/specs/ARB/glx_create_context.txt
 	//int_attributes.push_back(0x2093);	// GLX_CONTEXT_LAYER_PLANE_ARB
-	//int_attributes.push_back(gldesc.get_layer_plane());
+	//int_attributes.push_back(opengl_desc.get_layer_plane());
 
 	int_attributes.push_back(0x2094);	// GLX_CONTEXT_FLAGS_ARB
 	int flags = 0;
-	if (gldesc.get_debug())
+	if (opengl_desc.get_debug())
 		flags |= 0x1;	// GLX_CONTEXT_DEBUG_BIT_ARB
-	if (gldesc.get_forward_compatible())	// GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+	if (opengl_desc.get_forward_compatible())	// GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
 		flags |= 0x2;	
 	int_attributes.push_back(flags);
 
 	int_attributes.push_back(0x9126);	// GLX_CONTEXT_PROFILE_MASK_ARB
 	flags = 0;
-	if (gldesc.get_core_profile())
+	if (opengl_desc.get_core_profile())
 		flags |= 0x1;	// GLX_CONTEXT_CORE_PROFILE_BIT_ARB
-	if (gldesc.get_compatibility_profile())	// GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
+	if (opengl_desc.get_compatibility_profile())	// GLX_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
 		flags |= 0x2;	
 	int_attributes.push_back(flags);
 
@@ -627,7 +621,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext sh
 	return context_gl3;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const OpenGLWindowDescription &gl_desc, GLXContext shared_context)
+GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context)
 {
 	GLXContext context;
 
@@ -657,11 +651,11 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const OpenGLWindowDe
 	  
 		GLXContext context_gl3 = 0;
 
-		int gl_major = gl_desc.get_version_major();
-		int gl_minor = gl_desc.get_version_minor();
-		if (gl_desc.get_allow_lower_versions() == false)
+		int gl_major = opengl_desc.get_version_major();
+		int gl_minor = opengl_desc.get_version_minor();
+		if (opengl_desc.get_allow_lower_versions() == false)
 		{
-			context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, gl_desc, glXCreateContextAttribs);
+			context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, desc, glXCreateContextAttribs);
 	
 			if (!context_gl3)
 				throw Exception(string_format("This application requires OpenGL %1.%2 or above. Try updating your drivers, or upgrade to a newer graphics card.",  gl_major, gl_minor));
@@ -701,7 +695,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const OpenGLWindowDe
 						continue;	
 				}
 
-				context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, gl_desc, glXCreateContextAttribs);
+				context_gl3 = create_context_glx_1_3_helper(shared_context, gl_major, gl_minor, desc, glXCreateContextAttribs);
 
 			}while(!context_gl3);
 		}
@@ -718,9 +712,9 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const OpenGLWindowDe
 	return context;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_2(const OpenGLWindowDescription &gl_desc, GLXContext shared_context)
+GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context)
 {
-	if (gl_desc.get_allow_lower_versions() == false)
+	if (opengl_desc.get_allow_lower_versions() == false)
 		throw Exception("GLX 1.2 does not support opengl version selection.");
 
 	GLXContext context;

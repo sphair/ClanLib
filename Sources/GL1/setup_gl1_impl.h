@@ -23,54 +23,25 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    Harry Storbacka
 **    Mark Page
 */
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_target_provider.h"
+#include "API/Core/System/mutex.h"
 
 namespace clan
 {
-
-class GL1TargetProvider : public DisplayTargetProvider
+class GL1Target;
+class SetupGL1_Impl
 {
-/// \name Construction
-/// \{
 
 public:
-	GL1TargetProvider();
+	static Mutex gl1_mutex;
+	static int gl1_refcount;
+	static GL1Target *gl1_target;
 
-	~GL1TargetProvider();
-
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	DisplayWindowProvider *alloc_display_window();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-#ifdef WIN32
-	friend class GL1WindowProvider_WGL;
-#else
-	friend class GL1WindowProvider_GLX;
-#endif
-
-/// \}
 };
 
 }
+

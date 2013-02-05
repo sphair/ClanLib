@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL/precomp.h"
@@ -36,195 +37,86 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowDescription construction:
 
-OpenGLWindowDescription::OpenGLWindowDescription()
+OpenGLWindowDescription::OpenGLWindowDescription() : impl(new OpenGLWindowDescription_Impl)
 {
-	impl_gl = std::dynamic_pointer_cast<OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (!impl_gl)
-	{
-		impl_gl = std::shared_ptr<OpenGLWindowDescription_Impl>(new OpenGLWindowDescription_Impl);
-		set_data("OpenGL", impl_gl);
-	}
 }
 
 OpenGLWindowDescription::~OpenGLWindowDescription()
 {
 }
 
-OpenGLWindowDescription::OpenGLWindowDescription(const DisplayWindowDescription &desc)
-{
-	DisplayWindowDescription::operator=(desc);
-	impl_gl = std::dynamic_pointer_cast<OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (!impl_gl)
-	{
-		impl_gl = std::shared_ptr<OpenGLWindowDescription_Impl>(new OpenGLWindowDescription_Impl);
-		set_data("OpenGL", impl_gl);
-	}
-}
-
-OpenGLWindowDescription &OpenGLWindowDescription::operator=(DisplayWindowDescription &desc)
-{
-	DisplayWindowDescription::operator=(desc);
-	impl_gl = std::dynamic_pointer_cast<OpenGLWindowDescription_Impl>(get_data("OpenGL"));
-	if (!impl_gl)
-	{
-		impl_gl = std::shared_ptr<OpenGLWindowDescription_Impl>(new OpenGLWindowDescription_Impl);
-		set_data("OpenGL", impl_gl);
-	}
-	return *this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowDescription attributes:
 
-int OpenGLWindowDescription::get_buffer_size() const
-{
-	return impl_gl->buffer_size;
-}
-
-bool OpenGLWindowDescription::get_doublebuffer() const
-{
-	return impl_gl->doublebuffer;
-}
-
-bool OpenGLWindowDescription::get_stereo() const
-{
-	return impl_gl->stereo;
-}
-
-int OpenGLWindowDescription::get_red_size() const
-{
-	return impl_gl->red_size;
-}
-
-int OpenGLWindowDescription::get_green_size() const
-{
-	return impl_gl->green_size;
-}
-
-int OpenGLWindowDescription::get_blue_size() const
-{
-	return impl_gl->blue_size;
-}
-
-int OpenGLWindowDescription::get_alpha_size() const
-{
-	return impl_gl->alpha_size;
-}
-
-int OpenGLWindowDescription::get_multisampling() const
-{
-	return impl_gl->multisampling;
-}
-
 int OpenGLWindowDescription::get_version_major() const
 {
-	return impl_gl->version_major;
+	return impl->version_major;
 }
 
 int OpenGLWindowDescription::get_version_minor() const
 {
-	return impl_gl->version_minor;
+	return impl->version_minor;
 }
 
 bool OpenGLWindowDescription::get_allow_lower_versions() const
 {
-	return impl_gl->allow_lower_versions;
+	return impl->allow_lower_versions;
 }
 
 bool OpenGLWindowDescription::get_debug() const
 {
-	return impl_gl->debug_flag;
+	return impl->debug_flag;
 }
 bool OpenGLWindowDescription::get_forward_compatible() const
 {
-	return impl_gl->forward_compatible_flag;
+	return impl->forward_compatible_flag;
 }
 bool OpenGLWindowDescription::get_core_profile() const
 {
-	return impl_gl->core_profile_flag;
+	return impl->core_profile_flag;
 }
 bool OpenGLWindowDescription::get_compatibility_profile() const
 {
-	return impl_gl->compatibility_profile_flag;
+	return impl->compatibility_profile_flag;
 }
 
 int OpenGLWindowDescription::get_layer_plane() const
 {
-	return impl_gl->layer_plane;
+	return impl->layer_plane;
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowDescription operations:
 
-void OpenGLWindowDescription::set_doublebuffer(bool value)
-{
-	impl_gl->doublebuffer = value;
-}
-
-void OpenGLWindowDescription::set_stereo(bool value)
-{
-	impl_gl->stereo = value;
-}
-
-void OpenGLWindowDescription::set_buffer_size(int value)
-{
-	impl_gl->buffer_size = value;
-}
-
-void OpenGLWindowDescription::set_red_size(int value)
-{
-	impl_gl->red_size = value;
-}
-
-void OpenGLWindowDescription::set_green_size(int value)
-{
-	impl_gl->green_size = value;
-}
-
-void OpenGLWindowDescription::set_blue_size(int value)
-{
-	impl_gl->blue_size = value;
-}
-
-void OpenGLWindowDescription::set_alpha_size(int value)
-{
-	impl_gl->alpha_size = value;
-}
-
-void OpenGLWindowDescription::set_multisampling(int value)
-{
-	impl_gl->multisampling = value;
-}
-
 void OpenGLWindowDescription::set_version(int major, int minor, bool allow_lower_versions)
 {
-	impl_gl->version_major = major;
-	impl_gl->version_minor = minor;
-	impl_gl->allow_lower_versions = allow_lower_versions;
+	impl->version_major = major;
+	impl->version_minor = minor;
+	impl->allow_lower_versions = allow_lower_versions;
 	
 }
 
 void OpenGLWindowDescription::set_debug(bool enable)
 {
-	impl_gl->debug_flag = enable;
+	impl->debug_flag = enable;
 }
 void OpenGLWindowDescription::set_forward_compatible(bool enable)
 {
-	impl_gl->forward_compatible_flag = enable;
+	impl->forward_compatible_flag = enable;
 }
 void OpenGLWindowDescription::set_core_profile(bool enable)
 {
-	impl_gl->core_profile_flag = enable;
+	impl->core_profile_flag = enable;
 }
 void OpenGLWindowDescription::set_compatibility_profile(bool enable)
 {
-	impl_gl->compatibility_profile_flag = enable;
+	impl->compatibility_profile_flag = enable;
 }
 
 void OpenGLWindowDescription::set_layer_plane(int value)
 {
-	impl_gl->layer_plane = value;
+	impl->layer_plane = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////

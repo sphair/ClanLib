@@ -35,6 +35,7 @@
 #include "API/Display/Window/input_context.h"
 #include "Display/Win32/win32_window.h"
 #include <memory>
+#include "API/GL/opengl_window_description.h"
 
 namespace clan
 {
@@ -49,7 +50,7 @@ class OpenGLWindowProvider_WGL : public DisplayWindowProvider
 /// \{
 
 public:
-	OpenGLWindowProvider_WGL();
+	OpenGLWindowProvider_WGL(OpenGLWindowDescription &opengl_desc);
 	~OpenGLWindowProvider_WGL();
 
 
@@ -158,6 +159,9 @@ private:
 
 	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
 	int swap_interval;
+
+	OpenGLWindowDescription opengl_desc;
+
 /// \}
 };
 

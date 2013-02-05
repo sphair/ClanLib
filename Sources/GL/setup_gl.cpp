@@ -27,7 +27,7 @@
 */
 
 #include "GL/precomp.h"
-#include "API/Core/System/mutex.h"
+#include "setup_gl_impl.h"
 #include "API/GL/setup_gl.h"
 #include "API/GL/opengl_target.h"
 
@@ -37,32 +37,24 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupGL Construction:
 
-static Mutex cl_opengl_mutex;
-
-static int cl_opengl_refcount = 0;
-
-static OpenGLTarget *cl_opengl_target = 0;
+Mutex SetupGL_Impl::cl_opengl_mutex;
+int SetupGL_Impl::cl_opengl_refcount = 0;
+OpenGLTarget *SetupGL_Impl::cl_opengl_target = 0;
 
 SetupGL::SetupGL()
 {
-	MutexSection mutex_lock(&cl_opengl_mutex);
-	if (cl_opengl_refcount == 0)
-		cl_opengl_target = new OpenGLTarget();
-	cl_opengl_refcount++;
+	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	if (SetupGL_Impl::cl_opengl_refcount == 0)
+		SetupGL_Impl::cl_opengl_target = new OpenGLTarget();
+	SetupGL_Impl::cl_opengl_refcount++;
 }
 
 SetupGL::~SetupGL()
 {
-	MutexSection mutex_lock(&cl_opengl_mutex);
-	cl_opengl_refcount--;
-	if (cl_opengl_refcount == 0)
-		delete cl_opengl_target;
-}
-
-void SetupGL::set_current()
-{
-	MutexSection mutex_lock(&cl_opengl_mutex);
-	cl_opengl_target->set_current();
+	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
+	SetupGL_Impl::cl_opengl_refcount--;
+	if (SetupGL_Impl::cl_opengl_refcount == 0)
+		delete SetupGL_Impl::cl_opengl_target;
 }
 
 }

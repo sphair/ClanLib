@@ -60,11 +60,12 @@ OpenGLTargetProvider::~OpenGLTargetProvider()
 DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 {
 #if defined(__APPLE__)
+	// description not supported on AGL at the moment
 	return cl_alloc_display_window_agl();//new OpenGLWindowProvider_AGL;    
 #elif defined(WIN32)
-	return new OpenGLWindowProvider_WGL;
+	return new OpenGLWindowProvider_WGL(description);
 #else
-	return new OpenGLWindowProvider_GLX;
+	return new OpenGLWindowProvider_GLX(description);
 #endif
 }
 

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 /// \addtogroup clanGL_Display clanGL Display
@@ -40,6 +41,7 @@ namespace clan
 
 class OpenGLTargetProvider;
 class OpenGLTarget_Impl;
+class OpenGLWindowDescription;
 
 /// \brief Display target for clanDisplay.
 ///
@@ -60,12 +62,22 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if this display target is the current target
+	///
+	/// This may change after a display window has been created
+	static bool is_current();
+
+	static OpenGLWindowDescription get_description();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	/// \brief Set this display target to be the current target
+	static void set_current();
+
+	static void set_description(OpenGLWindowDescription &desc);
 
 /// \}
 /// \name Implementation

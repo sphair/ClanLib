@@ -44,7 +44,7 @@ class CL_API_D3D SetupD3D
 /// \name Construction
 /// \{
 public:
-	/// \brief Initializes clanSWRender.
+	/// \brief Initializes clanD3D
 	SetupD3D();
 	~SetupD3D();
 /// \}
@@ -52,8 +52,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Set this display target to be the current target
-	void set_current();
 /// \}
 };
 

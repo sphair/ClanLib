@@ -39,11 +39,9 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "../opengl1.h"
 #include "../opengl1_wrap.h"
-#include "API/GL1/opengl1_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #include "Display/Win32/dwm_functions.h"
-#include "../gl1_window_description_impl.h"
 #include "../gl1_graphic_context_provider.h"
 #include "../gl1_target_provider.h"
 #include "gl1_creation_helper.h"
@@ -214,7 +212,6 @@ void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWin
 
 	if (!opengl_context)
 	{
-		GL1WindowDescription gldesc(desc);
 		hwnd = win32_window.get_hwnd();
 		dwm_layered = false;
 
@@ -232,7 +229,7 @@ void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWin
 		HGLRC share_context = get_share_context();
 
 		GL1CreationHelper helper(hwnd, device_context);
-		helper.set_multisampling_pixel_format(gldesc);
+		helper.set_multisampling_pixel_format(desc);
 		opengl_context = helper.create_opengl3_context(share_context, 3, 0);
 		if (!opengl_context)
 			opengl_context = helper.create_opengl2_context(share_context);

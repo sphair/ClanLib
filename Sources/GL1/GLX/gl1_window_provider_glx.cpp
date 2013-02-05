@@ -40,7 +40,6 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "GL1/opengl1.h"
 #include "GL1/opengl1_wrap.h"
-#include "API/GL1/opengl1_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
 #include "Display/X11/display_message_queue_x11.h"
@@ -244,23 +243,21 @@ void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWin
 		int gl_attribs[32];
 		int i = 0;
 
-		GL1WindowDescription gl_desc(desc);
 		// Note: gl_attribs[32] !!!!
 		gl_attribs[i++] = GLX_RGBA;
-		if( gl_desc.get_doublebuffer() ) gl_attribs[i++] = GLX_DOUBLEBUFFER;
-		if( gl_desc.get_stereo() ) gl_attribs[i++] = GLX_STEREO;
+		gl_attribs[i++] = GLX_DOUBLEBUFFER;
 		gl_attribs[i++] = GLX_BUFFER_SIZE;
-		gl_attribs[i++] = gl_desc.get_buffer_size();
+		gl_attribs[i++] = 24;
 		gl_attribs[i++] = GLX_RED_SIZE; 
-		gl_attribs[i++] = gl_desc.get_red_size();
+		gl_attribs[i++] = 4;
 		gl_attribs[i++] = GLX_GREEN_SIZE;
-		gl_attribs[i++] = gl_desc.get_green_size();
+		gl_attribs[i++] = 4;
 		gl_attribs[i++] = GLX_BLUE_SIZE;
-		gl_attribs[i++] = gl_desc.get_blue_size();
+		gl_attribs[i++] = 4;
 		gl_attribs[i++] = GLX_DEPTH_SIZE;
-		gl_attribs[i++] = gl_desc.get_depth_size();
+		gl_attribs[i++] = desc.get_depth_size();
 		gl_attribs[i++] = GLX_STENCIL_SIZE;
-		gl_attribs[i++] = gl_desc.get_stencil_size();
+		gl_attribs[i++] = desc.get_stencil_size();
 		gl_attribs[i++] = None;
 
 		// get an appropriate visual

@@ -24,11 +24,14 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL1/precomp.h"
 #include "API/GL1/opengl1_target.h"
 #include "gl1_target_provider.h"
+#include "setup_gl1_impl.h"
+#include "API/Display/display.h"
 
 namespace clan
 {
@@ -50,6 +53,25 @@ GL1Target::~GL1Target()
 
 /////////////////////////////////////////////////////////////////////////////
 // GL1Target Operations:
+
+void GL1Target::set_current()
+{
+	MutexSection mutex_lock(&SetupGL1_Impl::gl1_mutex);
+	if (!SetupGL1_Impl::gl1_target)
+		throw Exception("clanGL1 has not been initialised");
+	SetupGL1_Impl::gl1_target->DisplayTarget::set_current();
+}
+
+bool GL1Target::is_current()
+{
+	DisplayTarget target = Display::get_current_target();
+	DisplayTargetProvider *ptr = target.get_provider();
+	if (!ptr)
+		return false;
+
+	GL1TargetProvider *provider = dynamic_cast<GL1TargetProvider*>(ptr);
+	return (provider != nullptr);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // GL1Target Implementation:

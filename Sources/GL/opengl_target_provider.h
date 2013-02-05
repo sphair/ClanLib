@@ -25,11 +25,13 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #pragma once
 
 #include "API/Display/TargetProviders/display_target_provider.h"
+#include "API/GL/opengl_window_description.h"
 
 namespace clan
 {
@@ -50,6 +52,7 @@ public:
 /// \{
 
 public:
+	OpenGLWindowDescription get_description() {return description;}
 
 /// \}
 /// \name Operations
@@ -57,6 +60,8 @@ public:
 
 public:
 	DisplayWindowProvider *alloc_display_window();
+
+	void set_description(OpenGLWindowDescription &desc) {description = desc;}
 
 /// \}
 /// \name Implementation
@@ -68,6 +73,7 @@ private:
 #else
 	friend class OpenGLWindowProvider_GLX;
 #endif
+	OpenGLWindowDescription description;
 
 /// \}
 };

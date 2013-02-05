@@ -33,7 +33,7 @@
 namespace clan
 {
 
-class OpenGLWindowDescription_Impl : public DisplayWindowDescriptionData
+class OpenGLWindowDescription_Impl
 {
 /// \name Construction
 /// \{
@@ -41,14 +41,6 @@ class OpenGLWindowDescription_Impl : public DisplayWindowDescriptionData
 public:
 	OpenGLWindowDescription_Impl()
 	{
-		doublebuffer = true;
-		stereo = false;
-		buffer_size = 24;
-		red_size = 4;
-		green_size = 4;
-		blue_size = 4;
-		alpha_size = 4;
-		multisampling = 0;
 		version_major = 3;
 		version_minor = 2;
 		allow_lower_versions = false;
@@ -65,15 +57,6 @@ public:
 /// \{
 
 public:
-	bool doublebuffer;
-	bool stereo;
-	int buffer_size;
-	int red_size;
-	int green_size;
-	int blue_size;
-	int alpha_size;
-	int multisampling;
-
 	int version_major;
 	int version_minor;
 	bool allow_lower_versions;

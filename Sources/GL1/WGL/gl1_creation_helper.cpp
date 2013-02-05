@@ -24,13 +24,13 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "GL1/precomp.h"
 #include "gl1_creation_helper.h"
-#include "../gl1_window_description_impl.h"
-#include "API/GL1/opengl1_window_description.h"
 #include <commctrl.h>
+#include "API/Display/Window/display_window_description.h"
 
 namespace clan
 {
@@ -89,7 +89,7 @@ GL1CreationHelper::~GL1CreationHelper()
 	DestroyWindow(query_window);
 }
 
-void GL1CreationHelper::set_multisampling_pixel_format(const GL1WindowDescription &gldesc)
+void GL1CreationHelper::set_multisampling_pixel_format(const DisplayWindowDescription &desc)
 {
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
@@ -97,22 +97,21 @@ void GL1CreationHelper::set_multisampling_pixel_format(const GL1WindowDescriptio
 	pfd.nVersion = 1;
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
 	pfd.iPixelType = PFD_TYPE_RGBA;
-	if (gldesc.get_doublebuffer()) pfd.dwFlags |= PFD_DOUBLEBUFFER;
-	if (gldesc.get_stereo()) pfd.dwFlags |= PFD_STEREO;
-	pfd.cColorBits = gldesc.get_buffer_size();
-	pfd.cRedBits = gldesc.get_red_size();
-	pfd.cGreenBits = gldesc.get_green_size();
-	pfd.cBlueBits = gldesc.get_blue_size();
-	pfd.cAlphaBits = gldesc.get_alpha_size();
-	pfd.cDepthBits = gldesc.get_depth_size();
-	pfd.cStencilBits = gldesc.get_stencil_size();
-	if (gldesc.is_layered())
+	pfd.dwFlags |= PFD_DOUBLEBUFFER;
+	pfd.cColorBits = 24;
+	pfd.cRedBits = 4;
+	pfd.cGreenBits = 4;
+	pfd.cBlueBits = 4;
+	pfd.cAlphaBits = 4;
+	pfd.cDepthBits = desc.get_depth_size();
+	pfd.cStencilBits = desc.get_stencil_size();
+	if (desc.is_layered())
 	{
 		pfd.cAlphaBits = 8;
 		pfd.dwFlags |= PFD_DOUBLEBUFFER_DONTCARE; // | PFD_DRAW_TO_BITMAP
 	}
 
-	if (gldesc.get_multisampling() < 1)
+	if (desc.get_multisampling() < 1)
 	{
 		int pixelformat = ChoosePixelFormat(hdc, &pfd);
 		SetPixelFormat(hdc, pixelformat, &pfd);
@@ -137,33 +136,25 @@ void GL1CreationHelper::set_multisampling_pixel_format(const GL1WindowDescriptio
 			int_attributes.push_back(WGL_ACCELERATION);
 			int_attributes.push_back(WGL_FULL_ACCELERATION);
 
-			if (gldesc.get_doublebuffer())
-			{
-				int_attributes.push_back(WGL_DOUBLE_BUFFER);
-				int_attributes.push_back(GL_TRUE);
-			}
-			if (gldesc.get_stereo())
-			{
-				int_attributes.push_back(WGL_STEREO);
-				int_attributes.push_back(GL_TRUE);
-			}
+			int_attributes.push_back(WGL_DOUBLE_BUFFER);
+			int_attributes.push_back(GL_TRUE);
 
 			int_attributes.push_back(WGL_COLOR_BITS);
-			int_attributes.push_back(gldesc.get_red_size() + gldesc.get_green_size() + gldesc.get_blue_size());
+			int_attributes.push_back(4+4+4);
 
 			int_attributes.push_back(WGL_ALPHA_BITS);
-			int_attributes.push_back(gldesc.get_alpha_size());
+			int_attributes.push_back(4);
 
 			int_attributes.push_back(WGL_DEPTH_BITS);
-			int_attributes.push_back(gldesc.get_depth_size());
+			int_attributes.push_back(desc.get_depth_size());
 
 			int_attributes.push_back(WGL_STENCIL_BITS);
-			int_attributes.push_back(gldesc.get_stencil_size());
+			int_attributes.push_back(desc.get_stencil_size());
 
 			int_attributes.push_back(WGL_SAMPLE_BUFFERS);
 			int_attributes.push_back(GL_TRUE);
 			int_attributes.push_back(WGL_SAMPLES);
-			int_attributes.push_back(gldesc.get_multisampling());
+			int_attributes.push_back(desc.get_multisampling());
 
 			float_attributes.push_back(0.0f);
 			float_attributes.push_back(0.0f);

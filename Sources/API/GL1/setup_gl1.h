@@ -54,8 +54,7 @@ public:
 /// \{
 
 public:
-	/// \brief Set this display target to be the current target
-	void set_current();
+
 /// \}
 };
 

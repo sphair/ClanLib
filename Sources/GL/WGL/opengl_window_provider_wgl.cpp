@@ -56,10 +56,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider_WGL Construction:
 
-OpenGLWindowProvider_WGL::OpenGLWindowProvider_WGL()
+OpenGLWindowProvider_WGL::OpenGLWindowProvider_WGL(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
-  wglSwapIntervalEXT(0), swap_interval(-1)
+  wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc)
 {
 	win32_window.func_on_resized().set(this, &OpenGLWindowProvider_WGL::on_window_resized);
 }
@@ -213,8 +213,6 @@ void OpenGLWindowProvider_WGL::create(DisplayWindowSite *new_site, const Display
 
 	win32_window.create(site, desc);
 
-	OpenGLWindowDescription gldesc(desc);
-
 	if (!opengl_context)
 	{
 		hwnd = win32_window.get_hwnd();
@@ -234,13 +232,13 @@ void OpenGLWindowProvider_WGL::create(DisplayWindowSite *new_site, const Display
 		HGLRC share_context = get_share_context();
 
 		OpenGLCreationHelper helper(hwnd, device_context);
-		helper.set_multisampling_pixel_format(gldesc);
+		helper.set_multisampling_pixel_format(desc);
 
-		int gl_major = gldesc.get_version_major();
-		int gl_minor = gldesc.get_version_minor();
-		if (gldesc.get_allow_lower_versions() == false)
+		int gl_major = opengl_desc.get_version_major();
+		int gl_minor = opengl_desc.get_version_minor();
+		if (opengl_desc.get_allow_lower_versions() == false)
 		{
-			opengl_context = helper.create_opengl3_context(share_context, gl_major, gl_minor, gldesc);
+			opengl_context = helper.create_opengl3_context(share_context, gl_major, gl_minor, opengl_desc);
 			if (!opengl_context)
 				throw Exception(string_format("This application requires OpenGL %1.%2 or above. Try updating your drivers, or upgrade to a newer graphics card.",  gl_major, gl_minor));
 		}
@@ -279,7 +277,7 @@ void OpenGLWindowProvider_WGL::create(DisplayWindowSite *new_site, const Display
 						continue;	
 				}
 
-				opengl_context = helper.create_opengl3_context(share_context, major, minor, gldesc);
+				opengl_context = helper.create_opengl3_context(share_context, major, minor, opengl_desc);
 			}while(!opengl_context);
 
 			if (!opengl_context)
@@ -290,7 +288,7 @@ void OpenGLWindowProvider_WGL::create(DisplayWindowSite *new_site, const Display
 
 		}
 
-		gc = GraphicContext(new OpenGLGraphicContextProvider(this, gldesc));
+		gc = GraphicContext(new OpenGLGraphicContextProvider(this));
 	}
 
 	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)OpenGL::get_proc_address("wglSwapIntervalEXT");

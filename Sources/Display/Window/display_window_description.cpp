@@ -205,16 +205,6 @@ bool DisplayWindowDescription::get_tablet_context() const
 	return impl->create_tablet_context;
 }
 
-std::shared_ptr<DisplayWindowDescriptionData> DisplayWindowDescription::get_data(const std::string &name) const
-{
-	std::map<std::string, std::shared_ptr<DisplayWindowDescriptionData> >::const_iterator it;
-	it = impl->data_objects.find(name);
-	if (it != impl->data_objects.end())
-		return it->second;
-	else
-		return std::shared_ptr<DisplayWindowDescriptionData>();
-}
-
 int DisplayWindowDescription::get_depth_size() const
 {
 	return impl->depth_size;
@@ -238,6 +228,11 @@ bool DisplayWindowDescription::get_allow_screensaver() const
 bool DisplayWindowDescription::is_update_supported() const
 {
 	return impl->update_supported;
+}
+
+int DisplayWindowDescription::get_multisampling() const
+{
+	return impl->multisampling;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -364,11 +359,6 @@ void DisplayWindowDescription::set_handle(HWND handle)
 }
 #endif
 
-void DisplayWindowDescription::set_data(const std::string &name, const std::shared_ptr<DisplayWindowDescriptionData> &ptr)
-{
-	impl->data_objects[name] = ptr;
-}
-
 void DisplayWindowDescription::set_depth_size(int value)
 {
 	impl->depth_size = value;
@@ -392,6 +382,11 @@ void DisplayWindowDescription::set_allow_screensaver(bool allow_screensaver)
 void DisplayWindowDescription::set_update_supported(bool value) const
 {
 	impl->update_supported = true;
+}
+
+void DisplayWindowDescription::set_multisampling(int value)
+{
+	impl->multisampling = value;
 }
 
 /////////////////////////////////////////////////////////////////////////////
