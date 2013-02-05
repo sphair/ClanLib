@@ -63,11 +63,23 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
+	/// \brief Get Max texture coords
+	///
+	/// \return max_texture_coords
+	int get_max_texture_coords();
+
 	/// \brief Get the opengl version
 	///
 	/// \param version_major = On Return: Major
 	/// \param version_minor = On Return: Minor
 	void get_opengl_version(int &version_major, int &version_minor);
+
+	/// \brief Get the opengl version
+	///
+	/// \param version_major = On Return: Major
+	/// \param version_minor = On Return: Minor
+	/// \param version_release = On Return: Release
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
 	/// \brief Get the opengl shading language version
 	///
