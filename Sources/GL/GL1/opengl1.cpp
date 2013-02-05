@@ -28,7 +28,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "opengl1.h"
 #include "opengl1_wrap.h"
 #include "API/Core/System/exception.h"

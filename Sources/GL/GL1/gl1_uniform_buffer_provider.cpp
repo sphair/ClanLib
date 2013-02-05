@@ -27,7 +27,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_uniform_buffer_provider.h"
 #include "API/Display/Render/transfer_buffer.h"
 

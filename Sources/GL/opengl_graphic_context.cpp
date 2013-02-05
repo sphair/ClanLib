@@ -29,7 +29,9 @@
 
 #include "GL/precomp.h"
 #include "API/GL/opengl_graphic_context.h"
-#include "gl3_graphic_context_provider.h"
+#include "API/GL/opengl.h"
+#include "opengl_graphic_context_provider.h"
+#include "GL3/gl3_graphic_context_provider.h"
 
 namespace clan
 {
@@ -47,7 +49,7 @@ public:
 	~GraphicContext_GL_Impl()
 	{
 	}
-	GL3GraphicContextProvider *provider;
+	OpenGLGraphicContextProvider *provider;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,7 +58,7 @@ public:
 GraphicContext_GL::GraphicContext_GL(GraphicContext &gc) : GraphicContext(gc),
  impl(new GraphicContext_GL_Impl)
 {
-	impl->provider = dynamic_cast <GL3GraphicContextProvider *> (GraphicContext::get_provider());
+	impl->provider = dynamic_cast <OpenGLGraphicContextProvider *> (GraphicContext::get_provider());
 	if (!impl->provider)
 	{
 			throw Exception("Graphic Context is not from a GL target");
@@ -117,7 +119,7 @@ std::vector<std::string> GraphicContext_GL::get_extensions()
 
 void GraphicContext_GL::set_active()
 {
-	OpenGL::set_active(impl->provider);
+	OpenGL::set_active(static_cast<GL3GraphicContextProvider *>(impl->provider)); // To do: fix this to work with GL1 subtarget too
 }
 
 /////////////////////////////////////////////////////////////////////////////

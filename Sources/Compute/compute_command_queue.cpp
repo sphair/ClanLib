@@ -39,7 +39,7 @@
 #include "compute_buffer_impl.h"
 #include "compute_memory_map_impl.h"
 #include "compute_context_impl.h"
-#include "GL/gl3_graphic_context_provider.h"
+#include "GL/GL3/gl3_graphic_context_provider.h"
 #include "D3D/d3d_graphic_context_provider.h"
 
 namespace clan

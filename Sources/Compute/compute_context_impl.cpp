@@ -30,7 +30,7 @@
 #include "API/Core/Text/logger.h"
 #include "compute_context_impl.h"
 #include "opencl_bindings.h"
-#include "GL/gl3_graphic_context_provider.h"
+#include "GL/GL3/gl3_graphic_context_provider.h"
 #include "D3D/d3d_graphic_context_provider.h"
 #include "D3D/d3d_display_window_provider.h"
 

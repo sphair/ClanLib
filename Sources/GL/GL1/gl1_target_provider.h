@@ -30,20 +30,21 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/display_target_provider.h"
+#include "API/GL/opengl_window_description.h"
+#include "GL/opengl_target_provider.h"
 
 namespace clan
 {
 
-class LegacyGLTargetProvider : public DisplayTargetProvider
+class GL1TargetProvider : public OpenGLTargetProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	LegacyGLTargetProvider();
+	GL1TargetProvider();
 
-	~LegacyGLTargetProvider();
+	~GL1TargetProvider();
 
 
 /// \}

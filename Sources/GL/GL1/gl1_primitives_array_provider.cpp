@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_primitives_array_provider.h"
 
 namespace clan

@@ -29,7 +29,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_window_provider_wgl.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"

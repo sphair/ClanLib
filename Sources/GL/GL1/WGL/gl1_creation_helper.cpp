@@ -27,7 +27,7 @@
 **    Mark Page
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_creation_helper.h"
 #include <commctrl.h>
 #include "API/Display/Window/display_window_description.h"

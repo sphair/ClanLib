@@ -40,8 +40,8 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "Display/Render/graphic_context_impl.h"
-#include "gl3_graphic_context_provider.h"
-#include "gl3_texture_provider.h"
+#include "GL3/gl3_graphic_context_provider.h"
+#include "GL3/gl3_texture_provider.h"
 #include <map>
 
 #if defined(__IOS__)
