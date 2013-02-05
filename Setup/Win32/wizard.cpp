@@ -234,10 +234,10 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanGL1(
-		"GL1",
-		"clanGL1",
-		"gl1.h",
+	Project clanLegacyGL(
+		"LegacyGL",
+		"clanLegacyGL",
+		"legacy_gl.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug);
@@ -313,7 +313,7 @@ Workspace Wizard::create_workspace()
 	//	workspace.projects.push_back(clanSWRender);
 
 	workspace.projects.push_back(clanCSSLayout);
-	workspace.projects.push_back(clanGL1);
+	workspace.projects.push_back(clanLegacyGL);
 
 	workspace.projects.push_back(clanGUI);
 	workspace.projects.push_back(clanVorbis);

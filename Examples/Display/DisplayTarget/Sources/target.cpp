@@ -38,7 +38,7 @@ Target::Target()
 int Target::start(const std::vector<std::string> &args)
 {
 	// Since OpenGL 1.3 is compatible and fast - Use that as the default
-	render_target = opengl1;
+	render_target = legacy_gl;
 
 	do
 	{
@@ -46,11 +46,11 @@ int Target::start(const std::vector<std::string> &args)
 
 		switch (render_target)
 		{
-			case (opengl1):
-				clan::GL1Target::set_current();
+			case (legacy_gl):
+				clan::LegacyGLTarget::set_current();
 				break;
 
-			case (opengl2):
+			case (opengl):
 				clan::OpenGLTarget::set_current();
 				break;
 
@@ -105,12 +105,12 @@ bool Target::run_demo()
 	{
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
 		{
-			render_target = opengl1;
+			render_target = legacy_gl;
 			break;
 		}
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_2))
 		{
-			render_target = opengl2;
+			render_target = opengl;
 			break;
 		}
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_3))
@@ -146,8 +146,8 @@ bool Target::run_demo()
 		const int font_xpos = 32;
 		const int font_ypos = 64;
 
-		if (clan::GL1Target::is_current())
-				target_font.draw_text(canvas, font_xpos, font_ypos, "1) OpenGL 1.3 (clanGL1)");
+		if (clan::LegacyGLTarget::is_current())
+				target_font.draw_text(canvas, font_xpos, font_ypos, "1) OpenGL 1.3 (clanLegacyGL)");
 
 		if (clan::OpenGLTarget::is_current())
 				target_font.draw_text(canvas, font_xpos, font_ypos, "2) OpenGL 3.2 or higher(clanGL)");

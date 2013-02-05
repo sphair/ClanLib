@@ -9,12 +9,12 @@ clanGL_includes = \
 	GL/opengl_graphic_context.h \
 	GL/setup_gl.h
 
-clanGL1_includes = \
-	gl1.h \
-	GL1/api_gl1.h \
-	GL1/graphic_context_gl1.h \
-	GL1/opengl1_target.h \
-	GL1/setup_gl1.h
+clanLegacyGL_includes = \
+	legacy_gl.h \
+	LegacyGL/api_legacy_gl.h \
+	LegacyGL/graphic_context_legacy_gl.h \
+	LegacyGL/legacy_gl_target.h \
+	LegacyGL/setup_legacy_gl.h
 
 clanApp_includes = \
 	application.h \
@@ -552,33 +552,18 @@ clanSqlite_includes = \
 	Sqlite/api_sqlite.h \
 	Sqlite/sqlite_connection.h
 
-clanSWRender_includes = \
-	swrender.h \
-	SWRender/pixel_command.h \
-	SWRender/blit_argb8_sse.h \
-	SWRender/swr_graphic_context.h \
-	SWRender/pixel_buffer_data.h \
-	SWRender/swr_target.h \
-	SWRender/setup_swrender.h \
-	SWRender/pixel_thread_context.h \
-	SWRender/software_program.h \
-	SWRender/swr_program_object.h \
-	SWRender/api_swrender.h
-
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 
 # All available headers are listed here (for 'make dist' and such)
 EXTRA_HEADERS = \
 	$(clanGL_includes) \
-	$(clanGL1_includes) \
+	$(clanLegacyGL_includes) \
 	$(clanCore_includes) \
         $(clanApp_includes) \
 	$(clanDisplay_includes) \
-	$(clanMikMod_includes) \
 	$(clanNetwork_includes) \
 	$(clanGUI_includes) \
-	$(clanSWRender_includes) \
 	$(clanSound_includes) \
 	$(clanVorbis_includes) \
 	$(clanDatabase_includes) \
