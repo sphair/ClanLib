@@ -58,5 +58,6 @@ private:
 	float float_xpos;
 	float float_ypos;
 	float speed;
+	bool flash;
 	int previous_teapot_animation_frame;
 };
