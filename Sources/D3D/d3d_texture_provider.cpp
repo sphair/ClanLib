@@ -968,7 +968,7 @@ DXGI_FORMAT D3DTextureProvider::to_d3d_format(TextureFormat format)
 	case tf_r3_g3_b2: break;
 	case tf_rgb4: break;
 	case tf_rgb5: break;
-	case tf_rgb8_snorm: return DXGI_FORMAT_R8G8_UNORM;
+	case tf_rgb8_snorm: break;
 	case tf_rgb10: break;
 	case tf_rgb12: break;
 	case tf_rgb16: break;
