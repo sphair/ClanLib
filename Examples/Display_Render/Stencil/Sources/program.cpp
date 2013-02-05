@@ -31,23 +31,6 @@
 #include "program.h"
 #include "app.h"
 
-// Choose the target renderer
-#define USE_OPENGL_2
-//#define USE_OPENGL_1
-//#define USE_D3D
-
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_OPENGL_1
-#include <ClanLib/legacy_gl.h>
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
-
 int Program::main(const std::vector<std::string> &args)
 {
 	try
@@ -58,17 +41,10 @@ int Program::main(const std::vector<std::string> &args)
 		// Initialize the ClanLib display component
 		clan::SetupDisplay setup_display;
 
-		#ifdef USE_D3D
-			clan::SetupD3D setup_d3d;
-		#endif
-
-		#ifdef USE_OPENGL_1
-			clan::SetupLegacyGL setup_legacy_gl;
-		#endif
-
-		#ifdef USE_OPENGL_2
-			clan::SetupGL setup_gl;
-		#endif
+		clan::SetupGL setup_gl;
+#ifdef WIN32
+		//clan::SetupD3D setup_d3d;
+#endif
 
 		clan::SetupGUI setup_gui;
 

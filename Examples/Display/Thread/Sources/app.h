@@ -27,10 +27,6 @@
 
 #pragma once
 
-// Choose the target renderer
-#define USE_OPENGL_2
-//#define USE_D3D
-
 class App
 {
 public:
