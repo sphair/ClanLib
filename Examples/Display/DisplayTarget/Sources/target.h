@@ -41,8 +41,8 @@ class Target
 public:
 	enum RenderTarget
 	{
-		opengl1,
-		opengl2,
+		legacy_gl,
+		opengl,
 		d3d
 	};
 

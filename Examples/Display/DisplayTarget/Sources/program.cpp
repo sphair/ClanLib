@@ -42,7 +42,7 @@ int Program::main(const std::vector<std::string> &args)
 #ifdef WIN32
 		clan::SetupD3D setup_d3d;
 #endif
-		clan::SetupGL1 setup_gl1;
+		clan::SetupLegacyGL setup_legacy_gl;
 
 		Target app;
 		int retval = app.start(args);

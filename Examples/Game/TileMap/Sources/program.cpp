@@ -44,7 +44,7 @@ int Program::main(const std::vector<std::string> &args)
 		#endif
 
 		#ifdef USE_OPENGL_1
-		SetupGL1 setup_gl1;
+		SetupLegacyGL setup_legacy_gl;
 		#endif
 
 		#ifdef USE_OPENGL_2

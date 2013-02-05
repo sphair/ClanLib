@@ -14,7 +14,7 @@
 #endif
 
 #ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
+#include <ClanLib/legacy_gl.h>
 #endif
 
 #ifdef USE_OPENGL_2

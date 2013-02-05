@@ -40,7 +40,7 @@
 #endif
 
 #ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
+#include <ClanLib/legacy_gl.h>
 #endif
 
 #ifdef USE_OPENGL_2
@@ -62,7 +62,7 @@ int Program::main(const std::vector<std::string> &args)
 		#endif
 
 		#ifdef USE_OPENGL_1
-			clan::SetupGL1 setup_gl1;
+			clan::SetupLegacyGL setup_legacy_gl;
 		#endif
 
 		#ifdef USE_OPENGL_2
