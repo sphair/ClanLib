@@ -188,6 +188,7 @@ int App::start(const std::vector<std::string> &args)
 			if (last_is_normals_set)
 				pbuff = convert_to_normalmap(pbuff);
 
+			pbuff = pbuff.to_format(clan::tf_rgba8);	// Required for clanD3D
 			noise_image = clan::Image(canvas, pbuff, pbuff.get_size());
 
 		}
