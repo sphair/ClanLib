@@ -29,7 +29,8 @@
 #pragma once
 
 #include "dock_icons_overlay.h"
-
+namespace clan
+{
 class Workspace;
 class DockableComponent;
 
@@ -65,3 +66,6 @@ private:
 	clan::Point last_move_pos;
 	std::unique_ptr<DockIconsOverlay> dock_icons_overlay;
 };
+
+}
+

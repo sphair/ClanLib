@@ -27,7 +27,8 @@
 */
 
 #pragma once
-
+namespace clan
+{
 class Workspace;
 class DockableComponent;
 class Dock;
@@ -65,3 +66,6 @@ private:
 	clan::GUIThemePart part_dock_center;
 	int current_hint;
 };
+
+}
+
