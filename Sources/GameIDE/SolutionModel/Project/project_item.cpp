@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "project_item.h"
-#include "project.h"
+#include "API/GameIDE/SolutionModel/Project/project_item.h"
+#include "API/GameIDE/SolutionModel/Project/project.h"
 
 namespace clan
 {

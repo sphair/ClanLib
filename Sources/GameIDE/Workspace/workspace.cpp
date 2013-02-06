@@ -27,7 +27,7 @@
 */
 #include "GameIDE/precomp.h"
 #include "workspace.h"
-#include "dockable_component.h"
+#include "API/GameIDE/Workspace/dockable_component.h"
 #include "tool_window.h"
 #include "docking_group.h"
 #include "view_dock.h"

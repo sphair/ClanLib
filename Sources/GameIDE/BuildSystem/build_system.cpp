@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "build_system.h"
-#include "build_operation.h"
+#include "API/GameIDE/BuildSystem/build_system.h"
+#include "API/GameIDE/BuildSystem/build_operation.h"
 
 namespace clan
 {

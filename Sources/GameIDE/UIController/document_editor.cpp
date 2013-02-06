@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "document_editor.h"
-#include "ui_controller.h"
+#include "API/GameIDE/UIController/document_editor.h"
+#include "API/GameIDE/UIController/ui_controller.h"
 
 namespace clan
 {

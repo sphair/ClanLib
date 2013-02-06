@@ -28,7 +28,7 @@
 #include "GameIDE/precomp.h"
 #include "tab_dock.h"
 #include "docked_frame.h"
-#include "dockable_component.h"
+#include "API/GameIDE/Workspace/dockable_component.h"
 
 namespace clan
 {

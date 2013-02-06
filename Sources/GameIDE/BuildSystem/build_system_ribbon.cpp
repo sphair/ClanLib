@@ -27,7 +27,7 @@
 */
 #include "GameIDE/precomp.h"
 #include "build_system_ribbon.h"
-#include "build_system.h"
+#include "API/GameIDE/BuildSystem/build_system.h"
 #include "UIController/document_editor.h"
 #include "UIController/ui_controller.h"
 

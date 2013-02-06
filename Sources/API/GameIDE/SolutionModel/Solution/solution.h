@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "project_reference.h"
+#include "API/GameIDE/SolutionModel/Solution/project_reference.h"
 namespace clan
 {
 class Solution

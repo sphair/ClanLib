@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "solution_model.h"
+#include "API/GameIDE/SolutionModel/solution_model.h"
 
 namespace clan
 {
