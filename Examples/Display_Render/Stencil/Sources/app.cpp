@@ -76,6 +76,11 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font(canvas, "Tahoma", 20);
 
+	clan::BlendStateDescription blend_desc;
+	blend_desc.enable_color_write(false, false, false, false);
+	clan::BlendState blend_state_no_color_write(canvas, blend_desc);
+
+
 	unsigned int time_last = clan::System::get_time();
 
 	while (!quit)
@@ -102,7 +107,6 @@ int App::start(const std::vector<std::string> &args)
 		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
 		clan::DepthStencilStateDescription stencil_desc;
-		clan::BlendStateDescription blend_desc;
 
 		// Draw the circle onto the stencil
 		if (options->is_circle_set)
@@ -113,20 +117,18 @@ int App::start(const std::vector<std::string> &args)
 			stencil_desc.set_stencil_compare_back(clan::compare_always, 255, 255);
 			stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
 			stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
-			blend_desc.enable_color_write(false, false, false, false);
 			stencil_desc.enable_depth_write(false);
 			stencil_desc.enable_depth_test(false);
 
-			clan::BlendState blend_state(canvas, blend_desc);
 			clan::DepthStencilState stencil_state(canvas, stencil_desc);
 			canvas.set_depth_stencil_state(stencil_state);
-			canvas.set_blend_state(blend_state);
+			canvas.set_blend_state(blend_state_no_color_write);
 
 			canvas.fill_circle(grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
+			canvas.reset_blend_state();
+
 		}
 
-		blend_desc.enable_color_write(true, true, true, true);
-	
 		stencil_desc.enable_stencil_test(true);
 		stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
 		stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
@@ -140,7 +142,6 @@ int App::start(const std::vector<std::string> &args)
 		clan::BlendState blend_state(canvas, blend_desc);
 		clan::DepthStencilState stencil_state(canvas, stencil_desc);
 		canvas.set_depth_stencil_state(stencil_state);
-		canvas.set_blend_state(blend_state);
 
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
@@ -148,7 +149,6 @@ int App::start(const std::vector<std::string> &args)
 		}
 
 		canvas.reset_depth_stencil_state();
-		canvas.reset_blend_state();
 
 		clan::Image stencil_image = get_stencil(canvas, 
 			clan::Rect(grid_xpos, grid_ypos, image_grid.get_width(), image_grid.get_height()));
