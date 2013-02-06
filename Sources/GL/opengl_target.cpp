@@ -31,7 +31,6 @@
 #include "API/Display/display.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/GL/opengl_target.h"
-#include "GL3/gl3_target_provider.h"
 #include "opengl_target_provider.h"
 #include "setup_gl_impl.h"
 
@@ -42,7 +41,7 @@ namespace clan
 // OpenGLTarget Construction:
 
 OpenGLTarget::OpenGLTarget()
-: DisplayTarget(new GL3TargetProvider)
+: DisplayTarget(new OpenGLTargetProvider)
 {
 }
 
@@ -60,7 +59,7 @@ bool OpenGLTarget::is_current()
 	if (!ptr)
 		return false;
 
-	GL3TargetProvider *provider = dynamic_cast<GL3TargetProvider*>(ptr);
+	OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(ptr);
 	return (provider != nullptr);
 
 }

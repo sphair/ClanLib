@@ -25,51 +25,96 @@
 **
 **    Magnus Norddahl
 **    Harry Storbacka
+**    Mark Page
 */
 
 #include "GL/precomp.h"
-#include "gl3_target_provider.h"
+#include "opengl_target_provider.h"
 #if defined(__APPLE__)
-#include "AGL/gl3_window_provider_agl.h"
+#include "GL3/AGL/gl3_window_provider_agl.h"
 #elif defined(WIN32)
-#include "WGL/gl3_window_provider_wgl.h"
+#include "GL3/WGL/gl3_window_provider_wgl.h"
+#include "GL1/WGL/gl1_window_provider_wgl.h"
 #else
-#include "GLX/gl3_window_provider_glx.h"
+#include "GL3/GLX/gl3_window_provider_glx.h"
+#include "GL1/GLX/gl1_window_provider_glx.h"
 #endif
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3TargetProvider Construction:
+// OpenGLTargetProvider Construction:
 
-GL3TargetProvider::GL3TargetProvider()
+OpenGLTargetProvider::OpenGLTargetProvider()
 {
 }
 
-GL3TargetProvider::~GL3TargetProvider()
+OpenGLTargetProvider::~OpenGLTargetProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3TargetProvider Attributes:
+// OpenGLTargetProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3TargetProvider Operations:
+// OpenGLTargetProvider Operations:
 
-DisplayWindowProvider *GL3TargetProvider::alloc_display_window()
+DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 {
 #if defined(__APPLE__)
 	// description not supported on AGL at the moment
-	return cl_alloc_display_window_agl();//new OpenGLWindowProvider_AGL;    
-#elif defined(WIN32)
-	return new OpenGLWindowProvider_WGL(description);
+	return cl_alloc_display_window_agl();//new OpenGLWindowProvider_AGL;
+
 #else
-	return new OpenGLWindowProvider_GLX(description);
+
+	int version_major = description.get_version_major();
+	int version_minor = description.get_version_minor();
+
+	// Do not attempt GL3, if not requested that version
+	if ((version_major < 3) || ((version_major == 3) && (version_minor < 2)))
+	{
+		#if defined(WIN32)
+			return new GL1WindowProvider_WGL();
+		#else
+			return new GL1WindowProvider_GLX();
+		#endif
+	}
+
+	// If we do not allow lower versions, only attempt GL3
+	if (!description.get_allow_lower_versions())
+	{
+		#if defined(WIN32)
+			return new OpenGLWindowProvider_WGL(description);
+		#else
+			return new OpenGLWindowProvider_GLX(description);
+		#endif
+	}
+
+	try
+	{
+		// Attempt GL3 first
+		#if defined(WIN32)
+			return new OpenGLWindowProvider_WGL(description);
+		#else
+			return new OpenGLWindowProvider_GLX(description);
+		#endif
+	}
+	catch (...)
+	{
+		// Then attempt GL1
+		#if defined(WIN32)
+			return new GL1WindowProvider_WGL();
+		#else
+			return new GL1WindowProvider_GLX();
+		#endif
+
+	}
+
 #endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3TargetProvider Implementation:
+// OpenGLTargetProvider Implementation:
 
 }
