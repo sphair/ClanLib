@@ -27,7 +27,7 @@
 */
 #pragma once
 
-#include "../UIController/document_editor.h"
+#include "API/GameIDE/UIController/document_editor.h"
 #include "scintilla_editor.h"
 namespace clan
 {

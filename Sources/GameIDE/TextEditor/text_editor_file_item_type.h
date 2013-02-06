@@ -29,7 +29,7 @@
 
 #include "../FileItemType/file_item_type.h"
 #include "../FileItemType/file_item_type_factory.h"
-#include "../UIController/document_editor_type.h"
+#include "API/GameIDE/UIController/document_editor_type.h"
 namespace clan
 {
 class TextDocumentEditorType : public DocumentEditorType

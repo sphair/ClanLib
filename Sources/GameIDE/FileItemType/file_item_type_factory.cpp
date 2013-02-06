@@ -28,7 +28,7 @@
 #include "GameIDE/precomp.h"
 #include "file_item_type_factory.h"
 #include "file_item_type.h"
-#include "UIController/document_editor_type.h"
+#include "API/GameIDE/UIController/document_editor_type.h"
 #include <algorithm>
 
 namespace clan

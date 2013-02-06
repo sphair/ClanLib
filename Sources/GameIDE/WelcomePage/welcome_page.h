@@ -27,7 +27,7 @@
 */
 #pragma once
 
-#include "../Workspace/dockable_component.h"
+#include "API/GameIDE/Workspace/dockable_component.h"
 namespace clan
 {
 class WelcomePage : public DockableComponent
