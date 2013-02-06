@@ -40,6 +40,8 @@ int Target::start(const std::vector<std::string> &args)
 	// Since OpenGL 1.3 is compatible and fast - Use that as the default
 	render_target = legacy_gl;
 
+	clan::OpenGLWindowDescription opengl_desc;
+
 	do
 	{
 		clan::KeepAlive::process(0);	// <-- This is important, to flush the win32 keyboard queue
@@ -47,10 +49,14 @@ int Target::start(const std::vector<std::string> &args)
 		switch (render_target)
 		{
 			case (legacy_gl):
-				clan::LegacyGLTarget::set_current();
+				opengl_desc.set_version(1, 3, true);
+				clan::OpenGLTarget::set_description(opengl_desc);
+				clan::OpenGLTarget::set_current();
 				break;
 
 			case (opengl):
+				opengl_desc.set_version(4, 3, true);
+				clan::OpenGLTarget::set_description(opengl_desc);
 				clan::OpenGLTarget::set_current();
 				break;
 
@@ -70,7 +76,7 @@ bool Target::run_demo()
 {
 	clan::DisplayWindowDescription desc;
 	desc.set_title("Target Display (with resizable window)");
-	desc.set_size(clan::Size(640, 480), true);
+	desc.set_size(clan::Size(800, 600), true);
 	desc.set_allow_resize(true);
 	clan::DisplayWindow window(desc);
 
@@ -82,7 +88,7 @@ bool Target::run_demo()
 
 	clan::Canvas canvas(window);
 
-	clan::Font target_font(canvas, "tahoma", 32);
+	clan::Font target_font(canvas, "tahoma", 28);
 	clan::Font fps_font(canvas, "tahoma", 20);
 
 	// Because we are using the alpha channel on fonts, we must disable subpixel rendering
@@ -146,11 +152,23 @@ bool Target::run_demo()
 		const int font_xpos = 32;
 		const int font_ypos = 64;
 
-		if (clan::LegacyGLTarget::is_current())
-				target_font.draw_text(canvas, font_xpos, font_ypos, "1) OpenGL 1.3 (clanLegacyGL)");
-
 		if (clan::OpenGLTarget::is_current())
-				target_font.draw_text(canvas, font_xpos, font_ypos, "2) OpenGL 3.2 or higher(clanGL)");
+		{
+			clan::GraphicContext_GL gc(canvas);
+			int major,minor, version_release;
+			gc.get_opengl_version(major, minor, version_release);
+
+			if (gc.get_shader_language() == clan::shader_fixed_function)
+			{
+				target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("1) OpenGL 1.3 Compatable. Context = %1.%2 (clanGL)", major, minor));
+			}
+			else
+			{
+				target_font.draw_text(canvas, font_xpos, font_ypos, clan::string_format("2) OpenGL 3.2 Compatable. Context = %1.%2 (clanGL)", major, minor));
+			}
+
+
+		}
 
 #ifdef WIN32
 		if (clan::D3DTarget::is_current())
@@ -199,6 +217,7 @@ FontFall Target::new_fontfall(int window_width)
 
 	static int word_counter = 0;
 
+	if (window_width == 0) window_width = 1;
 	FontFall fontfall;
 	// (Note, do not randomize the word order, because it would will make comparing display target fps more difficult)
 	fontfall.text = words[++word_counter % (sizeof(words)/sizeof(std::string))];
