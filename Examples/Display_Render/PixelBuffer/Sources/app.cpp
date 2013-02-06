@@ -53,11 +53,11 @@ int App::start(const std::vector<std::string> &args)
 	clan::PixelBuffer cpu_buffer = tux.copy();
 
 	const int num_gpu_buffers = 2;
-	clan::PixelBuffer gpu_buffer[num_gpu_buffers];
+	clan::TransferTexture gpu_buffer[num_gpu_buffers];
 	for (int cnt=0; cnt < num_gpu_buffers; cnt++)
 	{
 		// Note - This example only uses PIXEL_UNPACK_BUFFER_ARB, it does not use PIXEL_PACK_BUFFER_ARB
-		gpu_buffer[cnt] = clan::PixelBuffer(canvas, tux, tux.get_size());
+		gpu_buffer[cnt] = clan::TransferTexture(canvas, tux);
 	}
 
 	const int num_textures = 2;
@@ -98,14 +98,14 @@ int App::start(const std::vector<std::string> &args)
 		// Always draw the same text, to ensure matching speed calculation
 		if (cpu_active)
 		{
-			font.draw_text(canvas, 8, 24, "GPU Pixel Buffer Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
+			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
 			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			draw_cpu(canvas, cpu_buffer, tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 		}
 		else
 		{
 			font.draw_text(canvas, 8, 24, "CPU Pixel Buffer", clan::Colorf(0.0f, 0.0f, 0.2f, 1.0f));
-			font.draw_text(canvas, 8, 24, "GPU Pixel Buffer Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+			font.draw_text(canvas, 8, 24, "GPU Transfer Texture Object", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 			draw_gpu(canvas, gpu_buffer[gpu_buffer_cycle_first], gpu_buffer[gpu_buffer_cycle_second], tux, textures[texture_cycle_first], textures[texture_cycle_second]);
 		}
 
@@ -175,8 +175,8 @@ void App::read_write_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff
 {
 	unsigned int time_now = clan::System::get_time();
 	pbuff.lock(canvas, clan::access_read_write);
-	if (pbuff.get_format() != clan::tf_rgb8)
-		throw clan::Exception("Expected the format to be RGB8");
+	if (pbuff.get_format() != clan::tf_rgba8)
+		throw clan::Exception("Expected the format to be RGBA8");
 	unsigned char *dptr = (unsigned char *) pbuff.get_data();
 
 	// Only write to a portion of the pixel buffer - To keep up the example speed
@@ -201,6 +201,7 @@ void App::read_write_pixel_buffer(clan::Canvas &canvas, clan::PixelBuffer &pbuff
 			*(dptr++) = blue;
 			*(dptr++) = red;
 			*(dptr++) = green;
+			*(dptr++) = 0xFF;
 		}
 		dptr += next_line;
 	}

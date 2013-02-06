@@ -43,7 +43,7 @@ int Program::main(const std::vector<std::string> &args)
 
 		clan::SetupGL setup_gl;
 #ifdef WIN32
-		clan::SetupD3D setup_d3d;
+		//clan::SetupD3D setup_d3d;
 #endif
 		// Start the Application
 		App app;
