@@ -39,7 +39,7 @@
 namespace clan
 {
 
-class GL3TargetProvider;
+class OpenGLTargetProvider;
 class OpenGLTarget_Impl;
 class OpenGLWindowDescription;
 

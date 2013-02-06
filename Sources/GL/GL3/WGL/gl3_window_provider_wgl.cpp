@@ -46,7 +46,6 @@
 #include "Display/Win32/dwm_functions.h"
 #include "../../opengl_window_description_impl.h"
 #include "../gl3_graphic_context_provider.h"
-#include "../gl3_target_provider.h"
 #include "gl3_creation_helper.h"
 #include <commctrl.h>
 
