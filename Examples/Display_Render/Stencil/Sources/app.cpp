@@ -128,16 +128,10 @@ int App::start(const std::vector<std::string> &args)
 		blend_desc.enable_color_write(true, true, true, true);
 	
 		stencil_desc.enable_stencil_test(true);
-		stencil_desc.set_stencil_compare_front(options->compare_function, 255, 255);
-		stencil_desc.set_stencil_compare_back(options->compare_function, 255, 255);
-		//FIXME: stencil_desc.set_stencil_reference_back(options->compare_reference);
-		//FIXME: stencil_desc.set_stencil_reference_front(options->compare_reference);
+		stencil_desc.set_stencil_compare_front(options->compare_function, options->compare_reference, 255);
+		stencil_desc.set_stencil_compare_back(options->compare_function, options->compare_reference, 255);
 		stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 		stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-
-		//FIXME: Why is this required to get it to work
-			stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
-			stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
 
 		// Note, depth testing disabled for this example
 		stencil_desc.enable_depth_write(false);
