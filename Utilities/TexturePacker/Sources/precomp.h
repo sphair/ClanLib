@@ -6,6 +6,6 @@
 #include <ClanLib/display.h>
 #include <ClanLib/csslayout.h>
 #include <ClanLib/gl.h>
-#include <ClanLib/legacy_gl.h>
+
 #include <ClanLib/d3d.h>
 using namespace clan;

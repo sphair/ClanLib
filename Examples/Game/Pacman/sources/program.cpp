@@ -36,7 +36,7 @@
 #endif
 
 #ifdef USE_OPENGL_1
-#include <ClanLib/legacy_gl.h>
+
 #endif
 
 #ifdef USE_OPENGL_2
