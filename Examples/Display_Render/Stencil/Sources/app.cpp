@@ -107,7 +107,6 @@ int App::start(const std::vector<std::string> &args)
 		// Draw the circle onto the stencil
 		if (options->is_circle_set)
 		{
-			canvas.enable_logic_op(false);
 			stencil_desc.enable_stencil_test(true);
 
 			stencil_desc.set_stencil_compare_front(clan::compare_always, 255, 255);
@@ -117,12 +116,17 @@ int App::start(const std::vector<std::string> &args)
 			blend_desc.enable_color_write(false, false, false, false);
 			stencil_desc.enable_depth_write(false);
 			stencil_desc.enable_depth_test(false);
+
+			clan::BlendState blend_state(canvas, blend_desc);
+			clan::DepthStencilState stencil_state(canvas, stencil_desc);
+			canvas.set_depth_stencil_state(stencil_state);
+			canvas.set_blend_state(blend_state);
+
 			canvas.fill_circle(grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
 		}
 
 		blend_desc.enable_color_write(true, true, true, true);
-		canvas.enable_logic_op(false);
-
+	
 		stencil_desc.enable_stencil_test(true);
 		stencil_desc.set_stencil_compare_front(options->compare_function, 255, 255);
 		stencil_desc.set_stencil_compare_back(options->compare_function, 255, 255);
@@ -130,6 +134,10 @@ int App::start(const std::vector<std::string> &args)
 		//FIXME: stencil_desc.set_stencil_reference_front(options->compare_reference);
 		stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 		stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+
+		//FIXME: Why is this required to get it to work
+			stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
+			stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
 
 		// Note, depth testing disabled for this example
 		stencil_desc.enable_depth_write(false);
@@ -249,6 +257,7 @@ void App::move_balls(float time_diff, int num_balls)
 
 clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 {
+	canvas.flush();
 
 	// For an unknown reason, stencil reads should be a multiple of 32
 	rect.left =  32 * ((rect.left + 31) / 32);
@@ -261,6 +270,15 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 
 	std::vector<unsigned char> buffer;
 	buffer.resize(rect_width * rect_height);
+
+
+	clan::glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	clan::glPixelStorei(GL_PACK_ROW_LENGTH, rect_width);
+	clan::glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+	clan::glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+	clan::glReadBuffer(GL_BACK);
+	if (clan::glClampColor)
+		clan::glClampColor(clan::GL_CLAMP_READ_COLOR, GL_FALSE);
 
 	clan::glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
 	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_rgba8);
