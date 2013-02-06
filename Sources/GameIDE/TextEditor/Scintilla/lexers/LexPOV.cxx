@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexPOV.cxx
  ** Lexer for POV-Ray SDL (Persistance of Vision Raytracer, Scene Description Language).

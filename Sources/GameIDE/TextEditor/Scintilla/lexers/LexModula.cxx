@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 //	-*- coding: utf-8 -*-
 //	Scintilla source code edit control
 /**

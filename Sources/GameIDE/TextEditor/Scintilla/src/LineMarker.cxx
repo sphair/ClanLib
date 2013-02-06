@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LineMarker.cxx
  ** Defines the look of a line marker in the margin .

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexCPP.cxx
  ** Lexer for C++, C, Java, and JavaScript.

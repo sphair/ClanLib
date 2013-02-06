@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexOthers.cxx
  ** Lexers for batch files, diff results, properties files, make files and error lists.

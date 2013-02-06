@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file Document.cxx
  ** Text document that handles notifications, DBCS, styling, words and end of line.

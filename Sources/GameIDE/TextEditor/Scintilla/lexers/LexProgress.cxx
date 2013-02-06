@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexProgress.cxx
  **  Lexer for Progress 4GL.

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexCSS.cxx
  ** Lexer for Cascading Style Sheets

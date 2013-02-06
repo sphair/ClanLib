@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexAsm.cxx
  ** Lexer for Assembler, just for the MASM syntax

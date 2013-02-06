@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 // Copyright 1998-2002 by Neil Hodgson <neilh@scintilla.org>
 /*

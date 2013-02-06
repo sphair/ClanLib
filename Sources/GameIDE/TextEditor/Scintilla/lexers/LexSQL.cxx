@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexSQL.cxx
  ** Lexer for SQL, including PL/SQL and SQL*Plus.

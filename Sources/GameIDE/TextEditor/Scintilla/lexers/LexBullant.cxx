@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // SciTE - Scintilla based Text Editor
 // LexBullant.cxx - lexer for Bullant
 

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file KeyMap.cxx
  ** Defines a mapping between keystrokes and commands.

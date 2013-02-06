@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file CharClassify.cxx
  ** Character classifications used by Document and RESearch.

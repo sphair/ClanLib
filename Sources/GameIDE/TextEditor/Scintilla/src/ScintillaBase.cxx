@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file ScintillaBase.cxx
  ** An enhanced subclass of Editor with calltips, autocomplete and context menu.

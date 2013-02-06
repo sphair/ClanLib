@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file CharacterSet.cxx
  ** Simple case functions for ASCII.

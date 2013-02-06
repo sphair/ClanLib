@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file Lexr.cxx
  ** Lexer for R, S, SPlus Statistics Program (Heavily derived from CPP Lexer).

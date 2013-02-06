@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 
 // File: LexMetapost.cxx - general context conformant metapost coloring scheme

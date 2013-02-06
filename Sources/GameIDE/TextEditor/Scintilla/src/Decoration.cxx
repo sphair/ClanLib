@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 /** @file Decoration.cxx
  ** Visual elements added over text.
  **/
