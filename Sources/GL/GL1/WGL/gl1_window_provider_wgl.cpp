@@ -43,7 +43,6 @@
 #include "Display/Win32/cursor_provider_win32.h"
 #include "Display/Win32/dwm_functions.h"
 #include "../gl1_graphic_context_provider.h"
-#include "../gl1_target_provider.h"
 #include "gl1_creation_helper.h"
 #include <commctrl.h>
 
