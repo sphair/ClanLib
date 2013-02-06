@@ -181,6 +181,15 @@ public:
 	/// \brief Set the current clipping rectangle.
 	void set_cliprect(const Rect &rect);
 
+	/// \brief The default value is 1.0
+	void set_point_size(float);
+
+	/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.
+	void set_point_fade_treshold_size(float);
+
+	/// \brief Sets the origin of texture point sprites.
+	void set_point_sprite_origin(PointSpriteOrigin origin);
+
 	/// \brief Push current clipping rectangle to stack.
 	/** <p>If a rectangle is passed, it afterwards sets clipping
 	    rectangle to the union of the current rectangle and the passed
