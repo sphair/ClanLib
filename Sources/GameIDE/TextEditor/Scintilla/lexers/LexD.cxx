@@ -34,7 +34,7 @@
 #include "OptionSet.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 /* Nested comments require keeping the value of the nesting level for every

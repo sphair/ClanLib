@@ -930,7 +930,7 @@ typedef sptr_t (*SciFnDirect)(sptr_t ptr, unsigned int iMessage, uptr_t wParam, 
  * So older code that treats Scintilla as a RichEdit will work. */
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 struct Sci_CharacterRange {
@@ -1022,7 +1022,7 @@ struct SCNotification {
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #ifdef INCLUDE_DEPRECATED_FEATURES

@@ -9,7 +9,7 @@
 #define LexerNoExceptions_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 // A simple lexer with no state
@@ -26,7 +26,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

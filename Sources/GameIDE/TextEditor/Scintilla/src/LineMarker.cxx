@@ -18,7 +18,7 @@
 #include "LineMarker.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 void LineMarker::RefreshColourPalette(Palette &pal, bool want) {

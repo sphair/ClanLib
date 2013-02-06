@@ -9,7 +9,7 @@
 #define PROPSETSIMPLE_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 class PropSetSimple {
@@ -27,7 +27,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

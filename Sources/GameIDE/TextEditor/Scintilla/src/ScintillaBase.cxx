@@ -49,7 +49,7 @@
 #include "ScintillaBase.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 ScintillaBase::ScintillaBase() {
@@ -473,7 +473,7 @@ void ScintillaBase::ButtonDown(Point pt, unsigned int curTime, bool shift, bool 
 #ifdef SCI_LEXER
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 class LexState : public LexInterface {
@@ -502,7 +502,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 LexState::LexState(Document *pdoc_) : LexInterface(pdoc_) {

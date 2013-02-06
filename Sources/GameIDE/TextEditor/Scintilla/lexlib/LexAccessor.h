@@ -9,7 +9,7 @@
 #define LEXACCESSOR_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 class LexAccessor {
@@ -169,7 +169,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

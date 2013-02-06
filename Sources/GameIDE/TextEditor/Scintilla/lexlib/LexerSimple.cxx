@@ -28,7 +28,7 @@
 #include "LexerSimple.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 LexerSimple::LexerSimple(const LexerModule *module_) : module(module_) {

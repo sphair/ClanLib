@@ -25,7 +25,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 #define SCE_HA_JS (SCE_HJA_START - SCE_HJ_START)

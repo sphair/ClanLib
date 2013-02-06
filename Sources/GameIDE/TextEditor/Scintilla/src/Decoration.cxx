@@ -19,7 +19,7 @@
 #include "Decoration.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 Decoration::Decoration(int indicator_) : next(0), indicator(indicator_) {

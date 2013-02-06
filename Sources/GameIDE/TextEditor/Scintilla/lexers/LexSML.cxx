@@ -31,7 +31,7 @@ inline int issmld(int c) {return isdigit(c) || c == '_';}
 
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 void ColouriseSMLDoc(

@@ -16,7 +16,7 @@
 #include "ContractionState.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 ContractionState::ContractionState() : visible(0), expanded(0), heights(0), displayLines(0), linesInDocument(1) {

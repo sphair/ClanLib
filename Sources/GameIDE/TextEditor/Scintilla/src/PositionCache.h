@@ -9,7 +9,7 @@
 #define POSITIONCACHE_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 static inline bool IsEOLChar(char ch) {
@@ -163,7 +163,7 @@ inline bool IsSpaceOrTab(int ch) {
 }
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

@@ -12,7 +12,7 @@
 #include "CharClassify.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 // Shut up annoying Visual C++ warnings:

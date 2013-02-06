@@ -21,7 +21,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static void ColouriseAsyDoc(unsigned int startPos, int length, int initStyle,

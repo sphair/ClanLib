@@ -37,7 +37,7 @@
 #include "SparseState.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static bool IsSpaceEquiv(int state) {

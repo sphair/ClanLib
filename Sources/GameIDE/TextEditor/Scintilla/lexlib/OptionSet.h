@@ -11,7 +11,7 @@
 #define OPTIONSET_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 template <typename T>
@@ -136,7 +136,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

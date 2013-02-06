@@ -19,7 +19,7 @@
 #include "CellBuffer.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 LineVector::LineVector() : starts(256), perLine(0) {

@@ -18,7 +18,7 @@
 #include "RunStyles.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 // Find the first run at a position
