@@ -27,10 +27,10 @@
 */
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/MainWindow/main_window.h"
-#include "Workspace/workspace.h"
-#include "SolutionExplorer/solution_explorer.h"
-#include "PropertyManager/property_manager.h"
-#include "WelcomePage/welcome_page.h"
+#include "../Workspace/workspace.h"
+#include "../SolutionExplorer/solution_explorer.h"
+#include "../PropertyManager/property_manager.h"
+#include "../WelcomePage/welcome_page.h"
 #include "dlg_add_new_project.h"
 
 namespace clan

@@ -27,9 +27,9 @@
 */
 #pragma once
 
-#include "../Workspace/dockable_component.h"
+#include "API/GameIDE/Workspace/dockable_component.h"
 #include "../FileItemType/file_item_type_factory.h"
-#include "../SolutionModel/Project/project.h"
+#include "API/GameIDE/SolutionModel/Project/project.h"
 namespace clan
 {
 class SolutionModel;

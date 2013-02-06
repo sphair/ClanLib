@@ -28,7 +28,7 @@
 #include "GameIDE/precomp.h"
 #include "text_editor.h"
 #include "text_editor_ribbon.h"
-#include "UIController/ui_controller.h"
+#include "API/GameIDE/UIController/ui_controller.h"
 
 namespace clan
 {
