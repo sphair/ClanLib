@@ -36,34 +36,74 @@
 namespace clan
 {
 
-EditorMainWindow::EditorMainWindow(GUIManager *manager, const FileItemTypeFactory &new_file_item_type_factory)
-: GUIComponent(manager, get_top_level_description(), "editor-main-window"), ribbon(0), workspace(0), file_item_type_factory(new_file_item_type_factory)
+
+class EditorMainWindow_Impl
 {
-	DisplayWindow dispwindow = get_display_window();
+public:
+	EditorMainWindow_Impl(const FileItemTypeFactory &new_file_item_type_factory) : ribbon(0), workspace(0), file_item_type_factory(new_file_item_type_factory) {}
+
+	void setup(EditorMainWindow *component);
+
+	void on_resized();
+	bool on_close();
+	void on_item_new();
+	void on_item_open();
+	void on_item_save();
+	void on_item_save_as();
+	void on_item_about();
+	void on_item_exit();
+
+	static GUITopLevelDescription get_top_level_description();
+
+	EditorMainWindow *component;
+
+	clan::Ribbon *ribbon;
+	Workspace *workspace;
+	std::unique_ptr<UIController> ui_controller;
+	SolutionExplorer *explorer;
+	PropertyManager *property_manager;
+	SolutionModel model;
+	BuildSystem build_system;
+	FileItemTypeFactory file_item_type_factory;
+	TextEditorFileItemType text_editor_file_item_type;
+};
+
+
+EditorMainWindow::EditorMainWindow(GUIManager *manager, const FileItemTypeFactory &new_file_item_type_factory)
+: impl(new EditorMainWindow_Impl(new_file_item_type_factory)), GUIComponent(manager, EditorMainWindow_Impl::get_top_level_description(), "editor-main-window")
+{
+	impl->setup(this);
+}
+
+void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
+{
+	component = source_component;
+
+	DisplayWindow dispwindow = component->get_display_window();
 	dispwindow.set_large_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-48.png"));
 	dispwindow.set_small_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-16.png"));
 
 	file_item_type_factory.register_type(&text_editor_file_item_type);
 
-	func_close().set(this, &EditorMainWindow::on_close);
-	func_resized().set(this, &EditorMainWindow::on_resized);
+	component->func_close().set(this, &EditorMainWindow_Impl::on_close);
+	component->func_resized().set(this, &EditorMainWindow_Impl::on_resized);
 
-	ribbon = new Ribbon(this);
-	workspace = new Workspace(this);
+	ribbon = new Ribbon(component);
+	workspace = new Workspace(component);
 	ui_controller.reset(new UIController(ribbon, model));
-	set_visible(true, true);
+	component->set_visible(true, true);
 
-	Canvas &canvas = get_canvas();
-	ResourceManager resources = get_resources();
+	Canvas &canvas = component->get_canvas();
+	ResourceManager resources = component->get_resources();
 
-	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", &resources), "New").set(this, &EditorMainWindow::on_item_new);
-	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", &resources), "Open").set(this, &EditorMainWindow::on_item_open);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSave24", &resources), "Save").set(this, &EditorMainWindow::on_item_save);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSaveAs24", &resources), "Save As..").set(this, &EditorMainWindow::on_item_save_as);
+	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", &resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
+	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", &resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
+	ribbon->get_menu()->add_item(Image(canvas, "IconSave24", &resources), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
+	ribbon->get_menu()->add_item(Image(canvas, "IconSaveAs24", &resources), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconAbout24", &resources), "About Game IDE").set(this, &EditorMainWindow::on_item_about);
+	ribbon->get_menu()->add_item(Image(canvas, "IconAbout24", &resources), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconExit24", &resources), "Exit").set(this, &EditorMainWindow::on_item_exit);
+	ribbon->get_menu()->add_item(Image(canvas, "IconExit24", &resources), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
 
 	//ui_controller->register_ribbon_setup("RibbonSetupEditorMainWindow");
 
@@ -86,39 +126,44 @@ EditorMainWindow::EditorMainWindow(GUIManager *manager, const FileItemTypeFactor
 
 	explorer->show(); // Small hack until dockable state is improved
 
-	update_layout();
+	component->update_layout();
 }
 
-bool EditorMainWindow::on_close()
+SolutionModel &EditorMainWindow::get_model()
+{
+	return impl->model;
+}
+
+bool EditorMainWindow_Impl::on_close()
 {
 	on_item_exit();
 	return true;
 }
 
-void EditorMainWindow::on_resized()
+void EditorMainWindow_Impl::on_resized()
 {
-	update_layout();
+	component->update_layout();
 }
 
-void EditorMainWindow::on_item_new()
+void EditorMainWindow_Impl::on_item_new()
 {
-	DlgAddNewProject dlg(this, model);
+	DlgAddNewProject dlg(component, model);
 	if(dlg.exec() == 1)
 	{
 		std::string title = string_format("%1 - ClanLib Game Builder", model.solution.name);
-		get_display_window().set_title(title);
+		component->get_display_window().set_title(title);
 	}
 }
 
-void EditorMainWindow::on_item_exit()
+void EditorMainWindow_Impl::on_item_exit()
 {
 	workspace->save_dockables_state();
-	exit_with_code(0);
+	component->exit_with_code(0);
 }
 
-void EditorMainWindow::on_item_open()
+void EditorMainWindow_Impl::on_item_open()
 {
-	OpenFileDialog dlg(this);
+	OpenFileDialog dlg(component);
 	dlg.add_filter("Game Solution Files (*.gamesolution)", "*.gamesolution", true);
 	dlg.add_filter("Project Files (*.gameproject)", "*.gameproject", false);
 	dlg.add_filter("All Files (*.*)", "*.*", false);
@@ -128,14 +173,14 @@ void EditorMainWindow::on_item_open()
 	}
 }
 
-void EditorMainWindow::on_item_save()
+void EditorMainWindow_Impl::on_item_save()
 {
 	model.save_all();
 }
 
-void EditorMainWindow::on_item_save_as()
+void EditorMainWindow_Impl::on_item_save_as()
 {
-	SaveFileDialog dlg(this);
+	SaveFileDialog dlg(component);
 	dlg.add_filter("Game Solution Files (*.gamesolution)", "*.gamesolution", true);
 	dlg.add_filter("Project Files (*.gameproject)", "*.gameproject", false);
 	dlg.add_filter("All Files (*.*)", "*.*", false);
@@ -144,11 +189,11 @@ void EditorMainWindow::on_item_save_as()
 	}
 }
 
-void EditorMainWindow::on_item_about()
+void EditorMainWindow_Impl::on_item_about()
 {
 }
 
-GUITopLevelDescription EditorMainWindow::get_top_level_description()
+GUITopLevelDescription EditorMainWindow_Impl::get_top_level_description()
 {
 	ScreenInfo screen_info;
 	int primary_screen_index = 0;

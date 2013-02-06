@@ -32,7 +32,17 @@
 namespace clan
 {
 
-BuildOperation::BuildOperation(SolutionModel *solution)
+
+class BuildOperation_Impl
+{
+public:
+	std::vector<std::string> get_files_with_extension(const std::string &extension);
+
+	std::map<std::string, bool> files;
+	std::string info_log;
+};
+
+BuildOperation::BuildOperation(SolutionModel *solution) : impl(new BuildOperation_Impl)
 {
 }
 
@@ -51,21 +61,26 @@ bool BuildOperation::is_building() const
 
 std::string BuildOperation::get_info_log()
 {
-	return info_log;
+	return impl->info_log;
 }
 
 void BuildOperation::write_log_line(const std::string &text)
 {
-	info_log += text;
-	info_log += "\n";
+	impl->info_log += text;
+	impl->info_log += "\n";
 }
 
 void BuildOperation::add_file(const std::string &file)
 {
-	files[file] = true;
+	impl->files[file] = true;
 }
 
 std::vector<std::string> BuildOperation::get_files_with_extension(const std::string &extension)
+{
+	return impl->get_files_with_extension(extension);
+}
+
+std::vector<std::string> BuildOperation_Impl::get_files_with_extension(const std::string &extension)
 {
 	std::vector<std::string> found_files;
 	for (auto it = files.begin(); it != files.end(); ++it)

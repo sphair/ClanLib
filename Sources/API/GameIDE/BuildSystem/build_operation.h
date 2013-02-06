@@ -33,7 +33,7 @@
 namespace clan
 {
 class SolutionModel;
-
+class BuildOperation_Impl;
 class BuildOperation
 {
 public:
@@ -48,8 +48,7 @@ public:
 	std::vector<std::string> get_files_with_extension(const std::string &extension);
 
 private:
-	std::map<std::string, bool> files;
-	std::string info_log;
+	std::shared_ptr<BuildOperation_Impl> impl;
 };
 }
 
