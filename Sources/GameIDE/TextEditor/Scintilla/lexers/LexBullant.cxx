@@ -21,7 +21,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static int classifyWordBullant(unsigned int start, unsigned int end, WordList &keywords, Accessor &styler) {

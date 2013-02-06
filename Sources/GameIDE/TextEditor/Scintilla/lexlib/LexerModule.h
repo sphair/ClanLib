@@ -9,7 +9,7 @@
 #define LEXERMODULE_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 class Accessor;
@@ -76,7 +76,7 @@ inline int Maximum(int a, int b) {
 #endif
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

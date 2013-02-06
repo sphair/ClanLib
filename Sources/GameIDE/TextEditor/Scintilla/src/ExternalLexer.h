@@ -15,7 +15,7 @@
 #endif
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 typedef void*(EXT_LEXER_DECL *GetLexerFunction)(unsigned int Index);
@@ -88,7 +88,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

@@ -16,11 +16,11 @@
 #include "CharacterSet.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 int CompareCaseInsensitive(const char *a, const char *b) {
@@ -58,5 +58,5 @@ int CompareNCaseInsensitive(const char *a, const char *b, size_t len) {
 }
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif

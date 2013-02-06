@@ -216,7 +216,7 @@
 #endif
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 #define OKP     1

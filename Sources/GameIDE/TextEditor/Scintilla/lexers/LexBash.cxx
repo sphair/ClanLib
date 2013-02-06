@@ -25,7 +25,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 #define HERE_DELIM_MAX			256

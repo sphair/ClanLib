@@ -33,7 +33,7 @@
 #include "UniConversion.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 // This is ASCII specific but is safe with chars >= 0x80
@@ -2234,7 +2234,7 @@ const char *BuiltinRegex::SubstituteByPosition(Document *doc, const char *text, 
 
 #ifdef SCI_NAMESPACE
 
-RegexSearchBase *Scintilla::CreateRegexSearch(CharClassify *charClassTable) {
+RegexSearchBase *clan::Scintilla::CreateRegexSearch(CharClassify *charClassTable) {
 	return new BuiltinRegex(charClassTable);
 }
 

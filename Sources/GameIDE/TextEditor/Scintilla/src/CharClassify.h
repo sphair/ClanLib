@@ -9,7 +9,7 @@
 #define CHARCLASSIFY_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 class CharClassify {
@@ -28,7 +28,7 @@ private:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

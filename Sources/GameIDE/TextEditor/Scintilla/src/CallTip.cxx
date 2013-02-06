@@ -16,7 +16,7 @@
 #include <stdio.h>
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static const int insetX = 5;    // text inset in x from calltip border

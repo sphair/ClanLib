@@ -56,7 +56,7 @@
 #endif
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 // Underlying the implementation of the platform classes are platform specific types.
@@ -549,14 +549,14 @@ public:
 #define PLATFORM_ASSERT(c) ((void)0)
 #else
 #ifdef SCI_NAMESPACE
-#define PLATFORM_ASSERT(c) ((c) ? (void)(0) : Scintilla::Platform::Assert(#c, __FILE__, __LINE__))
+#define PLATFORM_ASSERT(c) ((c) ? (void)(0) : clan::Scintilla::Platform::Assert(#c, __FILE__, __LINE__))
 #else
 #define PLATFORM_ASSERT(c) ((c) ? (void)(0) : Platform::Assert(#c, __FILE__, __LINE__))
 #endif
 #endif
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 // Shut up annoying Visual C++ warnings:

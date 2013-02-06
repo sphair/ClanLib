@@ -26,7 +26,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static bool strstart(const char *haystack, const char *needle) {

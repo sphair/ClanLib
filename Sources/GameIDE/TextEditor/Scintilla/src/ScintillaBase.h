@@ -9,7 +9,7 @@
 #define SCINTILLABASE_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 #ifdef SCI_LEXER
@@ -95,7 +95,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

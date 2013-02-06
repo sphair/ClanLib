@@ -9,7 +9,7 @@
 #define CELLBUFFER_H
 
 #ifdef SCI_NAMESPACE
-namespace Scintilla {
+namespace clan { namespace Scintilla {
 #endif
 
 // Interface to per-line data that wants to see each line insertion and deletion
@@ -203,7 +203,7 @@ public:
 };
 
 #ifdef SCI_NAMESPACE
-}
+} }
 #endif
 
 #endif

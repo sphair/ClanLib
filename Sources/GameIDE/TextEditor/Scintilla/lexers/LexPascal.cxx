@@ -127,7 +127,7 @@ contains requires
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 static void GetRangeLowered(unsigned int start,

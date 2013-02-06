@@ -48,7 +48,7 @@ static const int baseT[24] = {
 };
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 #ifdef BUILD_AS_EXTERNAL_LEXER

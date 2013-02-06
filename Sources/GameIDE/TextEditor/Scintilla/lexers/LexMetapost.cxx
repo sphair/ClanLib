@@ -32,7 +32,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 // val SCE_METAPOST_DEFAULT = 0

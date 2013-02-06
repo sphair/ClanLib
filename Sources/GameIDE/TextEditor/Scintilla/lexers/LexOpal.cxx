@@ -24,7 +24,7 @@
 #include "LexerModule.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 inline static void getRange( unsigned int start, unsigned int end, Accessor & styler, char * s, unsigned int len )

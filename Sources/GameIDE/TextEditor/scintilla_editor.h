@@ -27,6 +27,9 @@
 */
 #pragma once
 
+namespace clan
+{
+
 namespace Scintilla
 {
 	class CellBuffer;
@@ -35,8 +38,7 @@ namespace Scintilla
 	struct Sci_RangeToFormat;
 	class Document;
 }
-namespace clan
-{
+
 class ScintillaEditor_Impl;
 
 class ScintillaEditor : public clan::GUIComponent

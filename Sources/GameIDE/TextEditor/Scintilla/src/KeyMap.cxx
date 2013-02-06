@@ -13,7 +13,7 @@
 #include "KeyMap.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 KeyMap::KeyMap() : kmap(0), len(0), alloc(0) {

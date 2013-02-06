@@ -26,7 +26,7 @@
 #include "LexerNoExceptions.h"
 
 #ifdef SCI_NAMESPACE
-using namespace Scintilla;
+using namespace clan::Scintilla;
 #endif
 
 int SCI_METHOD LexerNoExceptions::PropertySet(const char *key, const char *val) {
