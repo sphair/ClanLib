@@ -209,6 +209,16 @@ public:
 	/// \brief Clears the whole context using the specified color.
 	void clear(const Colorf &color = Colorf::black);
 
+	/// \brief Clear the stencil buffer
+	///
+	/// \param value value to clear to.
+	void clear_stencil(int value = 0);
+
+	/// \brief Clear the depth buffer
+	///
+	/// \param value: value to clear to. Range 0.0 - 1.0.
+	void clear_depth(float value = 0);
+
 	/// \brief Set active program object to the standard program specified.
 	void set_program_object(StandardProgram standard_program);
 

@@ -258,6 +258,18 @@ void Canvas::clear(const Colorf &color)
 	impl->clear(color);
 }
 
+void Canvas::clear_stencil(int value)
+{
+	flush();
+	get_gc().clear_stencil(value);
+}
+
+void Canvas::clear_depth(float value)
+{
+	flush();
+	get_gc().clear_depth(value);
+}
+
 void Canvas::set_program_object(StandardProgram standard_program)
 {
 	flush();
