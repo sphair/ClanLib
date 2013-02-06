@@ -30,8 +30,8 @@
 #include "API/GameIDE/UIController/document_editor.h"
 #include "API/GameIDE/UIController/document_editor_type.h"
 #include "document_editor_ribbon.h"
-#include "Workspace/workspace.h"
-#include "BuildSystem/build_system_ribbon.h"
+#include "../Workspace/workspace.h"
+#include "../BuildSystem/build_system_ribbon.h"
 #include <algorithm>
 
 namespace clan
