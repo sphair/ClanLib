@@ -73,7 +73,7 @@ void HSVSpriteBatch::draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &
 	vertices[fill_position+5].tex1_coord = Vec2f(src.right/256.f, src.bottom/256.f);
 
 	for (int i=0; i<6; i++)
-		vertices[fill_position+i].hue_offset = Vec1f(hue_offset);
+		vertices[fill_position+i].hue_offset = hue_offset;
 
 	fill_position += 6;
 
@@ -105,9 +105,9 @@ void HSVSpriteBatch::flush(GraphicContext &gc)
 		{
 			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
 			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, (Vec4f*)cl_offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, (Vec1f*)cl_offsetof(SpriteVertex, hue_offset));
-			prim_array.set_attributes(2, gpu_vertices, (Vec2f*)cl_offsetof(SpriteVertex, tex1_coord));
+			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(SpriteVertex, position));
+			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(SpriteVertex, hue_offset));
+			prim_array.set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, tex1_coord));
 		}
 
 		if (vertices)
