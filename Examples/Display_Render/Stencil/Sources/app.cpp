@@ -44,7 +44,7 @@ int App::start(const std::vector<std::string> &args)
 	// For simplicity this example does not use the depth components
 	//win_desc.set_depth_size(16);
 	win_desc.set_title("Stencil Example");
-	win_desc.set_size(Size( 900, 570 ), false);
+	win_desc.set_size(clan::Size( 900, 570 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -56,12 +56,12 @@ int App::start(const std::vector<std::string> &args)
 	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("No themes found");
+		throw clan::Exception("No themes found");
 
 	clan::GUIWindowManagerTexture wm(window);
 	clan::GUIManager gui(wm, theme);
 	
-	clan::Canvas canvas = window.get_gc();
+	clan::Canvas canvas(window);
 
 	// Deleted automatically by the GUI
 	Options *options = new Options(gui, clan::Rect(0, 0, canvas.get_size()));
@@ -74,7 +74,7 @@ int App::start(const std::vector<std::string> &args)
 
 	options->request_repaint();
 
-	clan::Font font(canvas, "Tahoma", 24);
+	clan::Font font(canvas, "Tahoma", 20);
 
 	unsigned int time_last = clan::System::get_time();
 
@@ -101,41 +101,52 @@ int App::start(const std::vector<std::string> &args)
 		const float grid_ypos = 10.0f;
 		image_grid.draw(canvas, grid_xpos, grid_ypos);
 
+		clan::DepthStencilStateDescription stencil_desc;
+		clan::BlendStateDescription blend_desc;
+
 		// Draw the circle onto the stencil
 		if (options->is_circle_set)
 		{
 			canvas.enable_logic_op(false);
-			canvas.enable_stencil_test(true);
+			stencil_desc.enable_stencil_test(true);
 
-			canvas.set_stencil_compare_front(cl_comparefunc_always);
-			canvas.set_stencil_compare_back(cl_comparefunc_always);
-			canvas.set_stencil_op_front(cl_stencil_incr_wrap, cl_stencil_incr_wrap, cl_stencil_incr_wrap);
-			canvas.set_stencil_op_back(cl_stencil_incr_wrap, cl_stencil_incr_wrap, cl_stencil_incr_wrap);
-			canvas.enable_color_write(false);
-			canvas.enable_depth_write(false);
-			canvas.enable_depth_test(false);
-			Draw::circle(canvas, grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
+			stencil_desc.set_stencil_compare_front(clan::compare_always, 255, 255);
+			stencil_desc.set_stencil_compare_back(clan::compare_always, 255, 255);
+			stencil_desc.set_stencil_op_front(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
+			stencil_desc.set_stencil_op_back(clan::stencil_incr_wrap, clan::stencil_incr_wrap, clan::stencil_incr_wrap);
+			blend_desc.enable_color_write(false, false, false, false);
+			stencil_desc.enable_depth_write(false);
+			stencil_desc.enable_depth_test(false);
+			canvas.fill_circle(grid_xpos + image_grid.get_width()/2, grid_ypos + image_grid.get_height()/2, 100, clan::Colorf::white);
 		}
 
-		canvas.enable_color_write(true);
+		blend_desc.enable_color_write(true, true, true, true);
 		canvas.enable_logic_op(false);
 
-		canvas.enable_stencil_test(true);
-		canvas.set_stencil_compare_front(options->compare_function, options->compare_reference);
-		canvas.set_stencil_compare_back(options->compare_function, options->compare_reference);
-		canvas.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
-		canvas.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+		stencil_desc.enable_stencil_test(true);
+		stencil_desc.set_stencil_compare_front(options->compare_function, 255, 255);
+		stencil_desc.set_stencil_compare_back(options->compare_function, 255, 255);
+		//FIXME: stencil_desc.set_stencil_reference_back(options->compare_reference);
+		//FIXME: stencil_desc.set_stencil_reference_front(options->compare_reference);
+		stencil_desc.set_stencil_op_front(options->stencil_fail, options->stencil_pass, options->stencil_pass);
+		stencil_desc.set_stencil_op_back(options->stencil_fail, options->stencil_pass, options->stencil_pass);
 
 		// Note, depth testing disabled for this example
-		canvas.enable_depth_write(false);
-		canvas.enable_depth_test(false);
+		stencil_desc.enable_depth_write(false);
+		stencil_desc.enable_depth_test(false);
 		
+		clan::BlendState blend_state(canvas, blend_desc);
+		clan::DepthStencilState stencil_state(canvas, stencil_desc);
+		canvas.set_depth_stencil_state(stencil_state);
+		canvas.set_blend_state(blend_state);
+
 		for (int cnt=0; cnt<num_balls; cnt++)
 		{
 			image_ball.draw(canvas, grid_xpos + balls[cnt].xpos, grid_ypos + balls[cnt].ypos);
 		}
 
-		canvas.reset_buffer_control();
+		canvas.reset_depth_stencil_state();
+		canvas.reset_blend_state();
 
 		clan::Image stencil_image = get_stencil(canvas, 
 			clan::Rect(grid_xpos, grid_ypos, image_grid.get_width(), image_grid.get_height()));
@@ -145,7 +156,7 @@ int App::start(const std::vector<std::string> &args)
 		const float stencil_image_scale = 0.5f;
 		stencil_image.set_scale(stencil_image_scale, stencil_image_scale);
 		stencil_image.draw(canvas, stencil_image_xpos, stencil_image_ypos);
-		canvas.draw_box(clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), Colorf::white);
+		canvas.draw_box(clan::Rectf(stencil_image_xpos, stencil_image_ypos, clan::Sizef(stencil_image.get_width() * stencil_image_scale, stencil_image.get_height() * stencil_image_scale)), clan::Colorf::white);
 		font.draw_text(canvas, stencil_image_xpos, stencil_image_ypos - 4.0f, "Stencil", clan::Colorf::black);
 
 		// Add a note to avoid confusion
@@ -252,7 +263,7 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 	buffer.resize(rect_width * rect_height);
 
 	clan::glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
-	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_abgr8);
+	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_rgba8);
 	unsigned int *pdata = (unsigned int *) pbuf.get_data();
 	unsigned char *rdata = &buffer[0];
 	for (int ycnt=0; ycnt < rect_height; ycnt++)
