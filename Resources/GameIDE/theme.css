@@ -1,0 +1,632 @@
+
+/* EditorMainWindow styles */
+
+editor-main-window
+{
+    display: flex;
+    flex-direction: column;
+}
+
+/* Workspace styles */
+
+workspace
+{
+    flex: 1;
+	background: #e1e6f6;
+	
+    display: flex;
+    flex-direction: column;
+    
+    padding: 5px;
+}
+
+workspace empty-center
+{
+	background: #293955;
+}
+
+workspace > docking-group
+{
+    flex: 1;
+}
+
+/* Tabbed dock styles */
+
+tab-dock
+{
+    flex: 1;
+    flex-direction: column;
+    
+ 	border-image-slice: 20 6 22 6 fill;
+	border-image-width: 20px 6px 22px 6px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:TabDockBackground'); 
+}
+
+tab-dock header
+{
+    flex-direction: row;
+    
+    height: 12px;
+    color: black;
+    
+	padding-top: 4px;
+	padding-left: 7px;
+	padding-right: 2px;
+	padding-bottom: 3px;
+}
+
+tab-dock header .title
+{
+    flex: 1;
+}
+
+tab-dock header .close
+{
+    width: 16px;
+    padding: 0 2px 0 0;
+    border-width: 0;
+
+    border-image: none;
+    background: url('res:ToolWindowClose') no-repeat center center; /* to do: fix parsing bug, typing center twice shouldn't be needed */
+}
+
+tab-dock header .close:hover
+{
+    background-image: url('res:ToolWindowCloseHot');
+}
+
+tab-dock frame-area
+{
+    flex: 1;
+    padding: 0 2px 0 1px;
+}
+
+tab-dock docked-frame
+{
+    flex: 1;
+}
+
+tab-dock tab-button-row
+{
+    flex-direction: row;
+}
+
+tab-dock tab-button
+{
+    flex-direction: row;
+    
+    height: 16px;
+	padding: 2px 5px;
+    
+    color: black;
+}
+
+tab-dock tab-button.active
+{
+ 	border-image-slice: 0 6 0 6 fill;
+	border-image-width: 0px 6px 0px 6px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:TabDockTab'); 
+}
+
+/* Document dock styles */
+
+document-dock
+{
+    flex-direction: column;
+    
+	border-image-slice: 26 6 20 6 fill;
+	border-image-width: 26px 6px 20px 6px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:DocumentDockBackground'); 
+	
+	padding-bottom: 2px;
+}
+
+document-dock frame-area
+{
+    flex: 1;
+    padding: 0 2px 0 1px;
+}
+
+document-dock docked-frame
+{
+    flex: 1;
+}
+
+document-dock tab-button-row
+{
+    flex-direction: row;
+}
+
+document-dock tab
+{
+    height: 24px;
+
+	padding-top: 4px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-bottom: 4px;
+   
+    color:black;
+}
+
+document-dock tab-button
+{
+    flex-direction: row;
+    
+    height: 20px;
+	padding: 2px 2px 2px 5px;
+    
+    color: black;
+}
+
+document-dock tab-button.active
+{
+ 	border-image-slice: 0 6 0 6 fill;
+	border-image-width: 0px 6px 0px 6px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:DocumentDockTab'); 
+}
+
+document-dock .close
+{
+    width: 16px;
+    padding: 0;
+    border-width: 0;
+
+    border-image: none;
+    background: none;
+}
+
+document-dock tab-button.active .close, document-dock tab-button.active:hover .close
+{
+    background: url('res:ToolWindowClose') no-repeat center center;
+}
+
+document-dock tab-button .close:hover, document-dock tab-button.active .close:hover
+{
+    background: url('res:ToolWindowCloseHot') no-repeat center center;
+}
+
+
+
+/* Unsorted styles (to do: clean this up) */
+
+label.properties_header
+{
+	color: white;
+	background: #316ac5;
+	height: 16px;
+	padding-left: 4px;
+}
+
+label.properties_info
+{
+	color: gray;
+	background: #eeee53;
+	height: 16px;
+	padding-left: 4px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+}
+
+label.properties
+{
+	background: white;
+	width: 80px;
+	height: 22px;
+	padding-left: 4px;
+	color: blue;
+
+	border-color: gray;
+	border-bottom: 1px;
+	border-left: 1px;
+	border-top: 1px;
+}
+
+lineedit.properties
+{
+	background: white;
+	height: 22px;
+
+	padding-left: 4px;
+	padding-right: 16px;
+	
+	border-color: gray;
+	border-left: 1px;
+	border-bottom: 1px;
+	border-right: 1px;
+	border-top: 1px;
+}
+
+lineedit.properties:disabled
+{
+	color: gray;
+	background: #f4f4f4;
+}
+
+textedit.properties
+{
+	background: white;
+	height: 22px;
+
+	padding-left: 4px;
+	padding-right: 16px;
+	
+	border-color: gray;
+	border-left: 1px;
+	border-bottom: 1px;
+	border-right: 1px;
+	border-top: 1px;
+}
+
+textedit.properties:disabled
+{
+	color: gray;
+	background: #f4f4f4;
+}
+
+checkbox.properties
+{
+	background: white;
+	height: 22px;
+
+	padding-top: 3px;
+	padding-left: 4px;
+	padding-right: 16px;
+	
+	border-color: gray;
+	border-left: 1px;
+	border-bottom: 1px;
+	border-right: 1px;
+	border-top: 1px;
+}
+
+property-component 
+{
+/*
+	border-image-slice: 3 3 3 3 fill;
+	border-image-width: 3px 3px 3px 3px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:PropertyComponent'); 
+    border-width: 1px;
+*/
+}
+
+property-component header
+{
+	border-image-slice: 2 2 2 2 fill;
+	border-image-width: 2px 2px 2px 2px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:ListViewHeader'); 
+    
+	height: 20px;
+}
+
+property-component header name, property-component header value
+{
+	border-image-slice: 9 3 14 2 fill;
+	border-image-width: 9px 3px 14px 2px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:ListViewColumnHeaderNormal'); 
+    
+	border-top: 3px;
+	border-left: 7px;
+	border-right: 3px;
+	border-bottom: 3px;
+}
+
+property-component row
+{
+	background: #ffffff;
+	border-top: 0;
+	border-bottom: 0;
+}
+
+property-component row:alternate
+{
+	background: #eeeeee;
+	border-top: 0;
+	border-bottom: 0;
+}
+
+property-component item name
+{
+	color: black;
+    
+	width: 100px;
+	height: 17px;
+
+	padding-top: 2px;
+	padding-left: 4px;
+	padding-right: 0;
+	padding-bottom: 0;
+}
+
+property-component item value
+{
+	color: black;
+    
+	width: 100px;
+	height: 17px;
+
+	padding-top: 2px;
+	padding-left: 4px;
+	padding-right: 0;
+	padding-bottom: 0;
+}
+
+
+view-frame
+{
+	border-image-slice: 2 2 26 2 fill;
+	border-image-width: 2px 2px 26px 2px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:WorkspaceView'); 
+    
+	border-top: 1px;
+	border-left: 1px;
+	border-right: 1px;
+	border-bottom: 1px;
+}
+
+view-frame header
+{
+    height: 18px;
+    color: black;
+    
+	padding-top: 0;
+	padding-left: 4px;
+	padding-right: 0;
+	padding-bottom: 0;
+}
+
+tool-window
+{
+    background: #ffffff;
+}
+
+tool-window header
+{
+    height: 18px;
+    background: palegoldenrod;
+    color: black;
+    
+	padding-top: 2px;
+	padding-left: 7px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+}
+
+tool-window button-area
+{
+    width: 16px;
+	padding-top: 2px;
+	padding-right: 2px;
+}
+
+tool-window button
+{
+	background: url('res:ToolWindowClose') no-repeat center;
+	border-image: none;
+	border-width: 0px;
+}
+
+tool-window button:hover
+{
+	background: url('res:ToolWindowCloseHot') no-repeat center;
+}
+
+listview.borderless
+{
+	border-image: none;
+}
+
+listview_header.hidden
+{
+	height: 0;
+}
+
+listview row:details
+{
+    background: white;
+}
+
+listview row:icons
+{
+    background: white;
+}
+
+listview row:alternate
+{
+    background: white;
+}
+
+listview row:icons
+{
+    background: white;
+}
+
+
+
+dock-icons-overlay up
+{
+    background: url('res:OverlayDockUp') no-repeat center;
+    width: 29px;
+    height: 32px;
+}
+
+dock-icons-overlay down
+{
+    background: url('res:OverlayDockDown') no-repeat center;
+    width: 29px;
+    height: 32px;
+}
+
+dock-icons-overlay left
+{
+    background: url('res:OverlayDockLeft') no-repeat center;
+    width: 29px;
+    height: 32px;
+}
+
+dock-icons-overlay right
+{
+    background: url('res:OverlayDockRight') no-repeat center;
+    width: 29px;
+    height: 32px;
+}
+
+dock-icons-overlay center
+{
+    background: url('res:OverlayDockCenter') no-repeat center;
+    width: 29px;
+    height: 32px;
+}
+
+ribbon-section button.big
+{
+    text-align: center;
+}
+
+ribbon-section button:hover
+{
+ 	border-image-slice: 4 8 4 8 fill;
+	border-image-width: 4px 8px 4px 8px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:RibbonButtonHot'); 
+}
+
+ribbon-section button.dropdown
+{
+ 	border-image-slice: 3 12 3 3 fill;
+	border-image-width: 3px 12px 3px 3px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:RibbonDropDownButton'); 
+    
+    padding-left: 4px;
+    padding-right: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: left;
+}
+
+ribbon-section button.dropdown:hover
+{
+	border-image-source: url('res:RibbonDropDownButtonHot'); 
+}
+
+
+combobox.ribbon
+{
+ 	border-image-slice: 3 3 3 3 fill;
+	border-image-width: 3px 3px 3px 3px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:ListViewBorder'); 
+}
+
+combobox lineedit.ribbon
+{
+	border-image: none;
+	background: none;
+    
+	border-top:0;
+	border-left:6px;
+	border-right:16px;
+	border-bottom:0;
+	
+	color:black;
+	/*text-color-selected:white;*/
+}
+
+combobox lineedit.ribbon:normal
+{
+	border-image-source: none;
+}
+
+combobox lineedit.ribbon:hover
+{
+	border-image-source: none;
+}
+
+combobox lineedit.ribbon:disabled
+{
+	border-image-source: none;
+	color:gray;
+}
+
+combobox.ribbon opener
+{
+	width: 17px;
+	height: 20px;
+
+ 	border-image-slice: 6 5 6 5 fill;
+	border-image-width: 6px 5px 6px 5px;
+	border-image-repeat: stretch;
+
+	text-align: center;
+	vertical-align: middle;
+}
+
+combobox.ribbon opener:normal
+{
+	border-image-source: none;
+}
+
+combobox.ribbon opener:hover
+{
+	border-image-source: url('res:ListViewBorder');
+}
+
+combobox.ribbon opener:pressed
+{
+	border-image-source: url('res:ListViewBorder');
+}
+
+combobox.ribbon opener:disabled
+{
+	border-image-source: url('res:ListViewBorder');
+}
+
+combobox.ribbon opener_glyph
+{
+    background: none;
+	text-align: center;
+	vertical-align: middle;
+}
+
+combobox.ribbon opener_glyph:normal
+{
+	background: url('res:RibbonDropDownGlyph') no-repeat center;
+}
+
+combobox.ribbon opener_glyph:hover
+{
+	background: url('res:RibbonDropDownGlyph') no-repeat center;
+}
+
+combobox.ribbon opener_glyph:pressed
+{
+	background: url('res:RibbonDropDownGlyph') no-repeat center;
+}
+
+combobox.ribbon opener_glyph:disabled
+{
+	background: url('res:RibbonDropDownGlyph') no-repeat center;
+}
+
+curve-editor
+{
+ 	border-image-slice: 6 5 6 5 fill;
+	border-image-width: 6px 5px 6px 5px;
+	border-image-repeat: stretch;
+	border-image-source: url('res:ListViewBorder'); 
+
+    margin-left: 5px;
+    margin-top: 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
