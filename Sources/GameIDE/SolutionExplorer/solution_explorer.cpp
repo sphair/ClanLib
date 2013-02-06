@@ -30,11 +30,11 @@
 #include "dlg_add_new_item.h"
 #include "dlg_open_with.h"
 #include "drag_drop_operation.h"
-#include "SolutionModel/solution_model.h"
-#include "FileItemType/file_item_type.h"
-#include "Workspace/workspace.h"
-#include "UIController/ui_controller.h"
-#include "UIController/document_editor_type.h"
+#include "API/GameIDE/SolutionModel/solution_model.h"
+#include "../FileItemType/file_item_type.h"
+#include "../Workspace/workspace.h"
+#include "API/GameIDE/UIController/ui_controller.h"
+#include "API/GameIDE/UIController/document_editor_type.h"
 
 namespace clan
 {
