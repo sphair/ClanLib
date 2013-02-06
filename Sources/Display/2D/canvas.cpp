@@ -192,6 +192,23 @@ void Canvas::reset_depth_stencil_state()
 	get_gc().reset_depth_stencil_state();
 }
 
+void Canvas::set_point_size(float value)
+{
+	flush();
+	get_gc().set_point_size(value);
+}
+
+void Canvas::set_point_fade_treshold_size(float value)
+{
+	flush();
+	get_gc().set_point_fade_treshold_size(value);
+}
+
+void Canvas::set_point_sprite_origin(PointSpriteOrigin origin)
+{
+	flush();
+	get_gc().set_point_sprite_origin(origin);
+}
 
 void Canvas::enable_logic_op(bool enabled)
 {
