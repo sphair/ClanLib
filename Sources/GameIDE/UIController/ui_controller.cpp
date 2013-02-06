@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "ui_controller.h"
-#include "document_editor.h"
-#include "document_editor_type.h"
+#include "API/GameIDE/UIController/ui_controller.h"
+#include "API/GameIDE/UIController/document_editor.h"
+#include "API/GameIDE/UIController/document_editor_type.h"
 #include "document_editor_ribbon.h"
 #include "Workspace/workspace.h"
 #include "BuildSystem/build_system_ribbon.h"

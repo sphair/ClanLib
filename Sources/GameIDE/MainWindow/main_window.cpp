@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "main_window.h"
+#include "API/GameIDE/MainWindow/main_window.h"
 #include "Workspace/workspace.h"
 #include "SolutionExplorer/solution_explorer.h"
 #include "PropertyManager/property_manager.h"

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "dockable_component.h"
+#include "API/GameIDE/Workspace/dockable_component.h"
 #include "dock.h"
 #include "workspace.h"
 

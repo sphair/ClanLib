@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 #include "GameIDE/precomp.h"
-#include "user_options.h"
+#include "API/GameIDE/SolutionModel/UserOptions/user_options.h"
 
 
 namespace clan
