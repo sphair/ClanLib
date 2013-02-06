@@ -32,12 +32,15 @@
 #include <cstdlib>
 
 const char text_shader_vertex[] =
-	"#version 120\n"
+	"#version 150\n"
 	"\n"
 	"attribute vec3 InPosition;"
 	"attribute vec4 InColor;\n"
-
-	"uniform mat4 cl_ModelViewProjectionMatrix;"
+	"\n"
+	"layout (std140) uniform ProgramUniforms\n"
+	"{\n"
+		"mat4 cl_ModelViewProjectionMatrix;\n"
+	"};\n"
 	"varying vec4 Color;\n"
 	"\n"
 	"void main()\n"
@@ -124,8 +127,14 @@ int App::start(const std::vector<std::string> &args)
 	{
 		throw clan::Exception(clan::string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
+	program_object.set_uniform1i("Texture0", 0);
 
 	options->request_repaint();
+
+	clan::BlendStateDescription blend_state_desc;
+	blend_state_desc.enable_blending(true);
+	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
+	clan::BlendState blend_state(canvas, blend_state_desc);
 
 	unsigned int time_last = clan::System::get_time();
 
@@ -153,7 +162,7 @@ int App::start(const std::vector<std::string> &args)
 		if (num_particles > 0)
 		{
 			std::vector<clan::Vec2f> positions;
-			std::vector<clan::Vec4f> colors;
+			std::vector<clan::Colorf> colors;
 			positions.resize(num_particles);
 			colors.resize(num_particles);
 
@@ -163,35 +172,49 @@ int App::start(const std::vector<std::string> &args)
 				switch (cnt % 3)
 				{
 					case 0:
-						colors[cnt] = clan::Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
+						colors[cnt] = clan::Colorf(1.0f, 0.0f, 0.0f, 1.0f);
 						break;
 					case 1:
-						colors[cnt] = clan::Vec4f(0.0f, 1.0f, 0.0f, 1.0f);
+						colors[cnt] = clan::Colorf(0.0f, 1.0f, 0.0f, 1.0f);
 						break;
 					case 2:
-						colors[cnt] = clan::Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+						colors[cnt] = clan::Colorf(0.0f, 0.0f, 1.0f, 1.0f);
 						break;
 				}
 			};
 
-			canvas.enable_blending(true);
-			canvas.set_blend_function(cl_blend_src_alpha, cl_blend_one, cl_blend_src_alpha, cl_blend_one);
-			canvas.set_point_size(options->point_size);
-			canvas.set_point_sprite_origin(cl_point_sprite_origin_upper_left);
+			canvas.flush();
+			clan::GraphicContext gc = canvas.get_gc();
 
-			program_object.set_uniform1i("Texture0", 0);
+			canvas.set_blend_state(blend_state);
 
-			canvas.set_texture(0, texture_particle);
-			clan::PrimitivesArray prim_array(canvas);
-			prim_array.set_attributes(0, &positions[0]);
-			prim_array.set_attributes(1, &colors[0]);
-			canvas.set_program_object(program_object);
-			canvas.draw_primitives(cl_points, num_particles, prim_array);
-			canvas.reset_program_object();
-			canvas.reset_texture(0);
-			canvas.reset_blend_mode();
+			gc.set_point_size(options->point_size);
+			gc.set_point_sprite_origin(clan::origin_upper_left);
 
-			canvas.reset_pen();
+			clan::PrimitivesArray primarray(gc);
+
+			clan::VertexArrayVector<clan::Vec2f> gpu_positions = clan::VertexArrayVector<clan::Vec2f>(gc, &positions[0], positions.size());
+			clan::VertexArrayVector<clan::Colorf> gpu_colors = clan::VertexArrayVector<clan::Colorf>(gc, &colors[0], colors.size());
+
+			primarray.set_attributes(0, gpu_positions);
+			primarray.set_attributes(1, gpu_colors);
+
+			struct ProgramUniforms
+			{
+				clan::Mat4f cl_ModelViewProjectionMatrix;
+			};
+			ProgramUniforms buffer;
+			buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+			clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
+			gc.set_uniform_buffer(0, uniform_vector);
+
+			gc.set_texture(0, texture_particle);
+			gc.set_program_object(program_object);
+			gc.draw_primitives(clan::type_points, num_particles, primarray);
+			gc.reset_program_object();
+			gc.reset_texture(0);
+
+			gc.reset_blend_state();
 		}
 
 		canvas.flip(1);
