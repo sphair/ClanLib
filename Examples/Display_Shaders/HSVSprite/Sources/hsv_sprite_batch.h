@@ -48,7 +48,7 @@ private:
 	{
 		Vec4f position;
 		Vec2f tex1_coord;
-		Vec1f hue_offset;
+		float hue_offset;
 	};
 
 	enum { max_vertices = 6*256 };
