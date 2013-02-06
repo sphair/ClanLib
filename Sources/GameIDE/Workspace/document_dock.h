@@ -29,7 +29,8 @@
 #pragma once
 
 #include "dock.h"
-
+namespace clan
+{
 class DockedFrame;
 
 class DocumentDock : public Dock
@@ -69,3 +70,6 @@ private:
 	
 	int active_tab_index;
 };
+
+}
+

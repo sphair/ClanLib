@@ -27,7 +27,8 @@
 */
 
 #pragma once
-
+namespace clan
+{
 class Workspace;
 class DockableComponent;
 
@@ -43,3 +44,6 @@ private:
 
 	DockableComponent *dockable;
 };
+
+}
+

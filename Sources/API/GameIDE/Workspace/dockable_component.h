@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2011 The ClanLib Team
+**  Copyright (c) 1997-2012 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -26,8 +26,12 @@
 **    Magnus Norddahl
 */
 
-#pragma once
+/// \addtogroup clanGameIDE_System clanGameIDE System
+/// \{
 
+#pragma once
+namespace clan
+{
 class EditorMainWindow;
 class Workspace;
 class Dock;
@@ -70,3 +74,6 @@ private:
 
 	friend class Workspace;
 };
+}
+
+/// \}

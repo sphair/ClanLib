@@ -27,7 +27,8 @@
 */
 
 #pragma once
-
+namespace clan
+{
 class Dock;
 class DockingGroup;
 class ToolWindow;
@@ -75,3 +76,6 @@ private:
 
 	int next_dockinggroup_id;
 };
+
+}
+

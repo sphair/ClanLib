@@ -29,7 +29,8 @@
 #pragma once
 
 #include "docking_group.h"
-
+namespace clan
+{
 class DockableComponent;
 class DockingGroup;
 
@@ -57,3 +58,6 @@ protected:
 
 	int id;
 };
+
+}
+

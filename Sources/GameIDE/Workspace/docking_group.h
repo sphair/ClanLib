@@ -27,7 +27,8 @@
 */
 
 #pragma once
-
+namespace clan
+{
 class Dock;
 
 class DockingGroup : public clan::GUIComponent
@@ -81,3 +82,6 @@ private:
 	clan::Point sizing_start_pos;
 	int sizing_start_size;
 };
+
+}
+

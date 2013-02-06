@@ -27,7 +27,8 @@
 */
 
 #pragma once
-
+namespace clan
+{
 class Workspace;
 class DockableComponent;
 
@@ -47,3 +48,6 @@ private:
 	clan::Rect header_box;
 	clan::Rect scene_box;
 };
+
+}
+
