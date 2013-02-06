@@ -261,8 +261,6 @@ enum TextureImageYAxis
 
 /// \brief Standard Program
 ///
-/// See "StandardAttributeIndex" if using the standard program with PrimitivesArray
-///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum StandardProgram
 {

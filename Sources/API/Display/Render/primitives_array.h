@@ -38,6 +38,7 @@
 #include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/vec3.h"
+#include "../2D/color.h"
 #include "vertex_array_vector.h"
 
 namespace clan
@@ -66,23 +67,7 @@ enum VertexAttributeDataType
 	type_float
 };
 
-/// \brief Standard Attribute Index
-///
-/// These can be used within Primitives array when you are using StandardProgram.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
-enum StandardAttributeIndex
-{
-	attrib_position = 0,
-	attrib_color = 1,
-	attrib_texture_position = 2,
-	attrib_texture_index = 3,
-	attrib_normal = 4	// The normal vector (Currently only used by the GL1 target)
-};
-
 /// \brief Primitives array description.
-///
-/// See "StandardAttributeIndex" for the index values if using StandardProgram with PrimitivesArray
 ///
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class PrimitivesArray
@@ -304,6 +289,11 @@ public:
 		set_attributes(index, (VertexArrayBuffer&)buffer, 4, type_float, 0, sizeof(Vec4f), false);
 	}
 
+	void set_attributes(int index, VertexArrayVector<Colorf> &buffer)
+	{
+		set_attributes(index, (VertexArrayBuffer&)buffer, 4, type_float, 0, sizeof(Colorf), false);
+	}
+
 	template<typename Type>
 	void set_attributes(int index, VertexArrayVector<Type> &buffer, unsigned char *member_offset, bool normalize = false)
 	{
@@ -472,6 +462,11 @@ public:
 		set_attributes(index, (VertexArrayBuffer&)buffer, 4, type_float, (size_t)member_offset, sizeof(Type), false);
 	}
 
+	template<typename Type>
+	void set_attributes(int index, VertexArrayVector<Type> &buffer, Colorf *member_offset)
+	{
+		set_attributes(index, (VertexArrayBuffer&)buffer, 4, type_float, (size_t)member_offset, sizeof(Type), false);
+	}
 /// \}
 /// \name Implementation
 /// \{
