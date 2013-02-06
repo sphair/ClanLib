@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 /** @file LexD.cxx
  ** Lexer for D.
  **

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file CellBuffer.cxx
  ** Manages a buffer of cells.

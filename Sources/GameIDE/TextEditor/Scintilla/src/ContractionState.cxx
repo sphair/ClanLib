@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file ContractionState.cxx
  ** Manages visibility of lines for folding and wrapping.

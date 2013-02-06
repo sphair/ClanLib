@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // SciTE - Scintilla based Text Editor
 /** @file PropSetSimple.cxx
  ** A Java style properties file module.

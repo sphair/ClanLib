@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexBasic.cxx
  ** Lexer for BlitzBasic and PureBasic.

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file Selection.cxx
  ** Classes maintaining the selection.

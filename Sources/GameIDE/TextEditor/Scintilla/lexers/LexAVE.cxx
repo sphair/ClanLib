@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // SciTE - Scintilla based Text Editor
 /** @file LexAVE.cxx
  ** Lexer for Avenue.

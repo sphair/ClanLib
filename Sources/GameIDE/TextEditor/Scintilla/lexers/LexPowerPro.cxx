@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 // @file LexPowerPro.cxx
 // PowerPro utility, written by Bruce Switzer, is available from http://powerpro.webeddie.com

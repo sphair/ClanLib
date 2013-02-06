@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file Style.cxx
  ** Defines the font and colour style for a class of text.

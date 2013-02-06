@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexOpal.cxx
  ** Lexer for OPAL (functional language similar to Haskell)

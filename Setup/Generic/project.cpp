@@ -74,7 +74,10 @@ static const char *exclude_from_build[] =
 	"Face.py",
 	"HFacer.py",
 	"Scintilla.iface",
-	NULL
+	"license.txt",
+	"LexGen.py",
+	"SciTE.properties",
+	nullptr
 };
 
 /////////////////////////////////////////////////////////////////////////////

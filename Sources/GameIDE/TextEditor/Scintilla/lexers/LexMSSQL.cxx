@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexMSSQL.cxx
  ** Lexer for MSSQL.

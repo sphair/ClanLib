@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 // Nimrod lexer
 // (c) 2009 Andreas Rumpf

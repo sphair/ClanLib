@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexerNoExceptions.cxx
  ** A simple lexer with no state which does not throw exceptions so can be used in an external lexer.

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexSorcus.cxx
 ** Lexer for SORCUS installation files

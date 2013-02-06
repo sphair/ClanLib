@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 /** @file RunStyles.cxx
  ** Data structure used to store sparse styles.
  **/

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file XPM.cxx
  ** Define a class that holds data in the X Pixmap (XPM) format.

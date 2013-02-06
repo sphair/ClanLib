@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexInno.cxx
  ** Lexer for Inno Setup scripts.

@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file PositionCache.cxx
  ** Classes for caching layout information.

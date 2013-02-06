@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexVB.cxx
  ** Lexer for Visual Basic and VBScript.

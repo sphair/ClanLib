@@ -1,3 +1,4 @@
+#include "GameIDE/precomp.h"
 // Scintilla source code edit control
 /** @file LexCrontab.cxx
  ** Lexer to use with extended crontab files used by a powerful
