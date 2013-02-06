@@ -52,14 +52,14 @@ private:
 	void slider_compare_reference_changed();
 	clan::Label *create_slider_label(clan::Slider *slider);
 	void on_passfail_selected(int value, clan::ComboBox *combo);
-	void on_comparefunc_selected(int value, clan::ComboBox *combo);
+	void on_compare_selected(int value, clan::ComboBox *combo);
 	clan::CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
 	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 	clan::Slider *create_slider(int xpos, int ypos);
 	float get_value(clan::Slider *slider);
-	clan::ComboBox *create_comparefunc_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
+	clan::ComboBox *create_compare_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
 	clan::ComboBox *create_passfail_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item);
-	void make_comparefunc_menu(clan::PopupMenu &menu);
+	void make_compare_menu(clan::PopupMenu &menu);
 	void make_passfail_menu(clan::PopupMenu &menu);
 	clan::Label *create_combobox_label(clan::ComboBox *combo, const char *text);
 private:
@@ -74,7 +74,7 @@ private:
 
 	clan::Label *label_comparefunc;
 	clan::ComboBox *combo_comparefunc;
-	clan::PopupMenu combo_comparefunc_menu;
+	clan::PopupMenu combo_compare_menu;
 
 	clan::Label *label_pass;
 	clan::ComboBox *combo_pass;

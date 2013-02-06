@@ -33,9 +33,9 @@
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
 	// Note, when changing these, remember to change the popup menu defaults
-	compare_function = cl_comparefunc_greater;
-	stencil_pass = cl_stencil_keep;
-	stencil_fail = cl_stencil_incr;
+	compare_function = clan::compare_greater;
+	stencil_pass = clan::stencil_keep;
+	stencil_fail = clan::stencil_incr;
 
 	num_balls = 9;
 	is_moveballs_set = true;
@@ -72,8 +72,8 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	checkbox_circle->func_state_changed().set(this, &Options::checkbox_circle_changed);
 	checkbox_ypos += checkbox_gap + 8;
 
-	make_comparefunc_menu(combo_comparefunc_menu);
-	combo_comparefunc = create_comparefunc_combo_box(600, 40, combo_comparefunc_menu, 3);
+	make_compare_menu(combo_compare_menu);
+	combo_comparefunc = create_compare_combo_box(600, 40, combo_compare_menu, 3);
 	label_comparefunc = create_combobox_label(combo_comparefunc, "Compare Function");
 
 	make_passfail_menu(combo_pass_menu);
@@ -97,7 +97,7 @@ Options::~Options()
 void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	clan::Rect rect = get_geometry();
-	canvas.fill_rect(, update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
+	canvas.fill_rect(update_rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
 float Options::get_value(clan::Slider *slider)
@@ -134,33 +134,33 @@ clan::CheckBox *Options::create_checkbox(int xpos, int ypos, const char *name, b
 }
 
 
-void Options::on_comparefunc_selected(int value, clan::ComboBox *combo)
+void Options::on_compare_selected(int value, clan::ComboBox *combo)
 {
 	switch (value)
 	{
 		case 0:
-			compare_function = clan::comparefunc_lequal;
+			compare_function = clan::compare_lequal;
 			break;
 		case 1:
-			compare_function = clan::comparefunc_gequal;
+			compare_function = clan::compare_gequal;
 			break;
 		case 2:
-			compare_function = clan::comparefunc_less;
+			compare_function = clan::compare_less;
 			break;
 		case 3:
-			compare_function = clan::comparefunc_greater;
+			compare_function = clan::compare_greater;
 			break;
 		case 4:
-			compare_function = clan::comparefunc_equal;
+			compare_function = clan::compare_equal;
 			break;
 		case 5:
-			compare_function = clan::comparefunc_notequal;
+			compare_function = clan::compare_notequal;
 			break;
 		case 6:
-			compare_function = clan::comparefunc_always;
+			compare_function = clan::compare_always;
 			break;
 		case 7:
-			compare_function = clan::comparefunc_never;
+			compare_function = clan::compare_never;
 			break;
 	}
 }
@@ -195,7 +195,7 @@ void Options::on_passfail_selected(int value, clan::ComboBox *combo)
 			selected = clan::stencil_decr_wrap;
 			break;
 		default:
-			throw clan::xception("ERROR");
+			throw clan::Exception("ERROR");
 	}
 	if (combo == combo_pass)
 	{
@@ -247,7 +247,7 @@ void Options::checkbox_circle_changed()
 	is_circle_set = checkbox_circle->is_checked();
 }
 
-clan::ComboBox *Options::create_comparefunc_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
+clan::ComboBox *Options::create_compare_combo_box(int xpos, int ypos, clan::PopupMenu &menu, int selected_item)
 {
 	clan::ComboBox *combo = new clan::ComboBox(this);
 	combo->set_geometry(clan::Rect(xpos, ypos, clan::Size(180, 21)));
@@ -256,7 +256,7 @@ clan::ComboBox *Options::create_comparefunc_combo_box(int xpos, int ypos, clan::
 	combo->set_dropdown_minimum_width(64);
 	combo->set_popup_menu(menu);
 	combo->set_selected_item(selected_item);
-	combo->func_item_selected().set(this, &Options::on_comparefunc_selected, combo);
+	combo->func_item_selected().set(this, &Options::on_compare_selected, combo);
 
 	return combo;
 }
@@ -275,7 +275,7 @@ clan::ComboBox *Options::create_passfail_combo_box(int xpos, int ypos, clan::Pop
 	return combo;
 }
 
-void Options::make_comparefunc_menu(clan::PopupMenu &menu)
+void Options::make_compare_menu(clan::PopupMenu &menu)
 {
 	menu.insert_item("lequal");
 	menu.insert_item("gequal");
