@@ -37,8 +37,9 @@
 #include <windows.h>
 #endif
 
-#include "API/Core/System/cl_platform.h"
-#include "API/Core/System/exception.h"
+#include "API/core.h"
+#include "API/display.h"
+#include "API/gui.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
@@ -47,3 +48,5 @@
 #include <cstring>
 #include <vector>
 #include <algorithm>
+#include <map>
+
