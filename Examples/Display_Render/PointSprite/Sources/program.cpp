@@ -42,10 +42,6 @@ int Program::main(const std::vector<std::string> &args)
 		clan::SetupDisplay setup_display;
 
 		clan::SetupGL setup_gl;
-#ifdef WIN32
-		//clan::SetupD3D setup_d3d;
-#endif
-
 		clan::SetupGUI setup_gui;
 
 		// Start the Application
