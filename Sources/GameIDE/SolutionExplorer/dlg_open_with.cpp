@@ -27,7 +27,7 @@
 */
 #include "GameIDE/precomp.h"
 #include "dlg_open_with.h"
-#include "UIController/document_editor_type.h"
+#include "API/GameIDE/UIController/document_editor_type.h"
 
 namespace clan
 {

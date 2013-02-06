@@ -27,7 +27,7 @@
 */
 #include "GameIDE/precomp.h"
 #include "dlg_add_new_item.h"
-#include "../SolutionModel/solution_model.h"
+#include "API/GameIDE/SolutionModel/solution_model.h"
 #include "../FileItemType/file_item_type.h"
 namespace clan
 {

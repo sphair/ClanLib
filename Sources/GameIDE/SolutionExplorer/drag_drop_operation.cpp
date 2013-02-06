@@ -28,7 +28,7 @@
 #include "GameIDE/precomp.h"
 #include "drag_drop_operation.h"
 #include "solution_explorer.h"
-#include "UIController/document_editor.h"
+#include "API/GameIDE/UIController/document_editor.h"
 
 namespace clan
 {
