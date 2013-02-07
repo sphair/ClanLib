@@ -78,18 +78,22 @@ int App::start(const std::vector<std::string> &args)
 	// Shader idea and code from http://www.geeks3d.com/20091116/shader-library-2d-shockwave-post-processing-filter-glsl/
 	// Shader enhanced for clanlib
 
-	shockParams = clan::Vec3f(10.0f, 0.8f, 0.1f);
+	gpu_positions = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(canvas, 1);
+
+	uniforms.shockParams = clan::Vec3f(10.0f, 0.8f, 0.1f);
 
 	unsigned int startTime = clan::System::get_time();
 	shockwave_start_time = 0.0f;
 	shockwave_rate = 1.0f;
-	glow = 0.1f;
+	uniforms.glow = 0.1f;
 
 	while (!quit)
 	{
 		timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		shockwave_time_elapsed = (timer - shockwave_start_time) / shockwave_rate;
+		uniforms.time = (timer - shockwave_start_time) / shockwave_rate;
 
 		// Render standard image to offscreen buffer
 		background.draw(canvas_offscreen, 0, 0);
@@ -98,18 +102,18 @@ int App::start(const std::vector<std::string> &args)
 		ball.draw(canvas_offscreen, xpos, ypos);
 		canvas_offscreen.flush();
 
-		center.x = xpos / ((float) canvas.get_width());
-		center.y = ypos / ((float) canvas.get_height());
+		uniforms.center.x = xpos / ((float) canvas.get_width());
+		uniforms.center.y = ypos / ((float) canvas.get_height());
 
 		render_shockwave(canvas, texture_offscreen, shader);
 
 		const int gap = 32;
 		font.draw_text(canvas, 10, 64 + gap*0, "Press 'M' to emit a shockwave");
-		font.draw_text(canvas, 10, 64 + gap*1, "base: " + clan::StringHelp::float_to_text(shockParams.x) + " (Press Q,W)");
-		font.draw_text(canvas, 10, 64 + gap*2, "exponent: " + clan::StringHelp::float_to_text(shockParams.y) + " (Press A,S)");
-		font.draw_text(canvas, 10, 64 + gap*3, "distance: " + clan::StringHelp::float_to_text(shockParams.z) + " (Press Z,X)");
+		font.draw_text(canvas, 10, 64 + gap*1, "base: " + clan::StringHelp::float_to_text(uniforms.shockParams.x) + " (Press Q,W)");
+		font.draw_text(canvas, 10, 64 + gap*2, "exponent: " + clan::StringHelp::float_to_text(uniforms.shockParams.y) + " (Press A,S)");
+		font.draw_text(canvas, 10, 64 + gap*3, "distance: " + clan::StringHelp::float_to_text(uniforms.shockParams.z) + " (Press Z,X)");
 		font.draw_text(canvas, 10, 64 + gap*4, "rate: " + clan::StringHelp::float_to_text(shockwave_rate) + " (Press E,R)");
-		font.draw_text(canvas, 10, 64 + gap*5, "glow: " + clan::StringHelp::float_to_text(glow) + " (Press D,F)");
+		font.draw_text(canvas, 10, 64 + gap*5, "glow: " + clan::StringHelp::float_to_text(uniforms.glow) + " (Press D,F)");
 
 		canvas.flip();
 
@@ -135,23 +139,9 @@ void App::render_shockwave(clan::Canvas &canvas, clan::Texture2D &source_texture
 	gc.set_texture(0, source_texture);
 	gc.set_program_object(program_object);
 
-	struct ProgramUniforms
-	{
-		clan::Mat4f cl_ModelViewProjectionMatrix;
-		clan::Vec3f shockParams; // 10.0, 0.8, 0.1
-		float time; // effect elapsed time
-		clan::Vec2f center; // Mouse position
-		float glow;
-
-	};
-	ProgramUniforms buffer;
-	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
-	buffer.center = center;
-	buffer.glow = glow;
-	buffer.shockParams = shockParams;
-	buffer.time = shockwave_time_elapsed;
-	clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
-	gc.set_uniform_buffer(0, uniform_vector);
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
 
 	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
@@ -173,27 +163,27 @@ void App::on_input_up(const clan::InputEvent &key)
 
 	if (key.id == clan::keycode_q)
 	{
-		shockParams.x -= 1.0f;
+		uniforms.shockParams.x -= 1.0f;
 	}
 	else if (key.id == clan::keycode_w)
 	{
-		shockParams.x += 1.0f;
+		uniforms.shockParams.x += 1.0f;
 	}
 	else if (key.id == clan::keycode_a)
 	{
-		shockParams.y -= 0.1f;
+		uniforms.shockParams.y -= 0.1f;
 	}
 	else if (key.id == clan::keycode_s)
 	{
-		shockParams.y += 0.1f;
+		uniforms.shockParams.y += 0.1f;
 	}
 	else if (key.id == clan::keycode_z)
 	{
-		shockParams.z -= 0.01f;
+		uniforms.shockParams.z -= 0.01f;
 	}
 	else if (key.id == clan::keycode_x)
 	{
-		shockParams.z += 0.01f;
+		uniforms.shockParams.z += 0.01f;
 	}
 	else if (key.id == clan::keycode_e)
 	{
@@ -207,11 +197,11 @@ void App::on_input_up(const clan::InputEvent &key)
 	}
 	else if (key.id == clan::keycode_d)
 	{
-		glow -= 0.02f;
+		uniforms.glow -= 0.02f;
 	}
 	else if (key.id == clan::keycode_f)
 	{
-		glow += 0.02f;
+		uniforms.glow += 0.02f;
 	}
 }
 
@@ -241,8 +231,8 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 
 	clan::PrimitivesArray prim_array(gc);
 
-	clan::VertexArrayVector<clan::Vec2f> gpu_positions = clan::VertexArrayVector<clan::Vec2f>(gc, positions, 6);
-	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(gc, tex1_coords, 6);
+	gpu_positions.upload_data(gc, positions, 6);
+	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
 
 	prim_array.set_attributes(0, gpu_positions);
 	prim_array.set_attributes(1, gpu_tex1_coords);
