@@ -28,10 +28,10 @@
 #include "GameIDE/precomp.h"
 #include "dlg_add_new_item.h"
 #include "API/GameIDE/SolutionModel/solution_model.h"
-#include "../FileItemType/file_item_type.h"
+#include "API/GameIDE/FileItemType/file_item_type.h"
+
 namespace clan
 {
-
 
 DlgAddNewItem::DlgAddNewItem(GUIComponent *owner, FileItemTypeFactory &factory, const std::string &default_location)
 : GUIComponent(owner, get_toplevel_description())

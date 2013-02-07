@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class BuildOperation;
 
 class BuildTool
@@ -42,6 +44,7 @@ public:
 	virtual int get_priority() = 0;
 	virtual void run(BuildOperation &build_operation, std::map<std::string, std::string> &properties) = 0;
 };
+
 }
 
 /// \}

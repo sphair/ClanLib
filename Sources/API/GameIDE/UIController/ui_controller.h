@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class DocumentEditor;
 class DocumentEditorType;
 class DockableComponent;
@@ -41,13 +43,13 @@ class UIControllerListener;
 class UIController
 {
 public:
-	UIController(clan::Ribbon *ribbon, SolutionModel &solution_model);
+	UIController(Ribbon *ribbon, SolutionModel &solution_model);
 	~UIController();
 
 	void add_listener(std::shared_ptr<UIControllerListener> listener);
 
-	clan::Ribbon *get_ribbon() const { return ribbon; }
-	clan::RibbonSection *get_ribbon_section(const std::string &page_name, const std::string &section_name);
+	Ribbon *get_ribbon() const { return ribbon; }
+	RibbonSection *get_ribbon_section(const std::string &page_name, const std::string &section_name);
 
 	void show_ribbon_section(const std::string &page_name, const std::string &section_name);
 	void hide_ribbon_section(const std::string &page_name, const std::string &section_name);
@@ -60,8 +62,8 @@ public:
 	void add_dockable(DockableComponent *dockable) { dockables.push_back(dockable); }
 	const std::vector<DockableComponent *> &get_dockables() const { return dockables; }
 
-	clan::Signal_v1<DocumentEditor *> sig_editor_activated;
-	clan::Signal_v1<DocumentEditor *> sig_editor_destroyed;
+	Signal_v1<DocumentEditor *> sig_editor_activated;
+	Signal_v1<DocumentEditor *> sig_editor_destroyed;
 
 	SolutionModel &get_solution_model() { return solution_model; }
 
@@ -77,19 +79,19 @@ private:
 	struct RibbonSectionInfo
 	{
 		RibbonSectionInfo() : section(0), visible_count(0) { }
-		clan::RibbonSection *section;
+		RibbonSection *section;
 		int visible_count;
 	};
 
 	struct RibbonPageInfo
 	{
 		RibbonPageInfo() : page(0), visible_count(0) { }
-		clan::RibbonPage *page;
+		RibbonPage *page;
 		int visible_count;
 		std::map<std::string, RibbonSectionInfo> sections;
 	};
 
-	clan::Ribbon *ribbon;
+	Ribbon *ribbon;
 	std::map<std::string, RibbonPageInfo> ribbon_pages;
 	SolutionModel &solution_model;
 	std::vector<OpenDocument> documents;
@@ -98,6 +100,7 @@ private:
 
 	friend class UIControllerListener;
 };
+
 }
 
 /// \}

@@ -30,13 +30,15 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class EditorMainWindow;
 class Workspace;
 class Dock;
 
-class DockableComponent : public clan::GUIComponent
+class DockableComponent : public GUIComponent
 {
 public:
 	DockableComponent();
@@ -51,10 +53,10 @@ public:
 	int get_last_docked_id() const { return last_docked_id; }
 
 protected:
-	virtual void on_render(clan::Canvas &canvas, const clan::Rect &update_box) { }
+	virtual void on_render(Canvas &canvas, const Rect &update_box) { }
 	virtual void on_resized() { }
 
-	void set_dockable_window_geometry(clan::Rect new_window_geometry) { window_geometry = new_window_geometry; }
+	void set_dockable_window_geometry(Rect new_window_geometry) { window_geometry = new_window_geometry; }
 
 private:
 	enum VisibilityState
@@ -67,13 +69,14 @@ private:
 	Dock *dock;
 	VisibilityState visibility;
 	std::string title;
-	clan::Rect window_geometry;
+	Rect window_geometry;
 
 	VisibilityState last_visibility;
 	int last_docked_id;
 
 	friend class Workspace;
 };
+
 }
 
 /// \}

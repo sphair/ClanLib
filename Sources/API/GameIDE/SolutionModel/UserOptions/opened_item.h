@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class OpenedItem
 {
 public:
@@ -41,6 +43,7 @@ public:
 	std::string filename;
 	std::string editor;
 };
+
 }
 
 /// \}

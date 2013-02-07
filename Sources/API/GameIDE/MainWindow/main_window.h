@@ -33,26 +33,28 @@
 
 #include "../SolutionModel/solution_model.h"
 #include "../FileItemType/file_item_type_factory.h"
-#include "../TextEditor/text_editor_file_item_type.h"
 #include "../UIController/ui_controller.h"
 #include "../BuildSystem/build_system.h"
+
 namespace clan
 {
-class clan::Ribbon;
+
+class Ribbon;
 class Workspace;
 class SolutionExplorer;
 class PropertyManager;
 class EditorMainWindow_Impl;
 
-class EditorMainWindow : public clan::GUIComponent
+class EditorMainWindow : public GUIComponent
 {
 public:
-	EditorMainWindow(clan::GUIManager *manager, const FileItemTypeFactory &file_item_type_factory);
+	EditorMainWindow(GUIManager *manager, const FileItemTypeFactory &file_item_type_factory);
 	SolutionModel &get_model();
 
 private:
 	std::shared_ptr<EditorMainWindow_Impl> impl;
 };
+
 }
 
 /// \}

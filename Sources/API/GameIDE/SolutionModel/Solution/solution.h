@@ -31,9 +31,11 @@
 
 #pragma once
 
-#include "API/GameIDE/SolutionModel/Solution/project_reference.h"
+#include "project_reference.h"
+
 namespace clan
 {
+
 class Solution
 {
 public:
@@ -46,6 +48,7 @@ public:
 	std::string filename;
 	std::vector<ProjectReference> projects;
 };
+
 }
 
 /// \}

@@ -33,8 +33,10 @@
 
 #include "project_options.h"
 #include "opened_item.h"
+
 namespace clan
 {
+
 class UserOptions
 {
 public:
@@ -50,6 +52,7 @@ public:
 	std::vector<ProjectOptions> projects;
 	std::vector<OpenedItem> opened_items;
 };
+
 }
 
 /// \}

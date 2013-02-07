@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class Project;
 
 class ProjectItem
@@ -110,6 +112,7 @@ public:
 protected:
 	std::string parent_path_combine(bool project_relative);
 };
+
 }
 
 /// \}

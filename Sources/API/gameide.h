@@ -35,7 +35,25 @@
 #pragma managed(push, off)
 #endif
 
-// #include "GameIDE/setup_gameide.h"
+#include "GameIDE/BuildSystem/build_operation.h"
+#include "GameIDE/BuildSystem/build_system.h"
+#include "GameIDE/BuildSystem/build_tool.h"
+#include "GameIDE/FileItemType/file_item_type.h"
+#include "GameIDE/FileItemType/file_item_type_factory.h"
+#include "GameIDE/MainWindow/main_window.h"
+#include "GameIDE/SolutionModel/Project/project.h"
+#include "GameIDE/SolutionModel/Project/project_item.h"
+#include "GameIDE/SolutionModel/Solution/project_reference.h"
+#include "GameIDE/SolutionModel/Solution/solution.h"
+#include "GameIDE/SolutionModel/UserOptions/opened_item.h"
+#include "GameIDE/SolutionModel/UserOptions/project_options.h"
+#include "GameIDE/SolutionModel/UserOptions/user_options.h"
+#include "GameIDE/SolutionModel/solution_model.h"
+#include "GameIDE/UIController/document_editor.h"
+#include "GameIDE/UIController/document_editor_type.h"
+#include "GameIDE/UIController/ui_controller.h"
+#include "GameIDE/UIController/ui_controller_listener.h"
+#include "GameIDE/Workspace/dockable_component.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

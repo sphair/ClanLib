@@ -28,7 +28,7 @@
 #pragma once
 
 #include "API/GameIDE/Workspace/dockable_component.h"
-#include "../FileItemType/file_item_type_factory.h"
+#include "API/GameIDE/FileItemType/file_item_type_factory.h"
 #include "API/GameIDE/SolutionModel/Project/project.h"
 namespace clan
 {
