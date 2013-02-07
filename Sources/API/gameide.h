@@ -49,6 +49,7 @@
 #include "GameIDE/SolutionModel/UserOptions/project_options.h"
 #include "GameIDE/SolutionModel/UserOptions/user_options.h"
 #include "GameIDE/SolutionModel/solution_model.h"
+#include "GameIDE/TextEditor/text_editor_file_item_type.h"
 #include "GameIDE/UIController/document_editor.h"
 #include "GameIDE/UIController/document_editor_type.h"
 #include "GameIDE/UIController/ui_controller.h"
