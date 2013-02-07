@@ -38,13 +38,26 @@ private:
 	void on_input_up(const clan::InputEvent &key);
 	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords);
 
+	struct ProgramUniforms
+	{
+		clan::Mat4f cl_ModelViewProjectionMatrix;
+		clan::Vec3f shockParams; 
+		float time;
+		clan::Vec2f center;
+		float glow;
+	};
+
+	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
+	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
+	clan::UniformVector<ProgramUniforms> gpu_uniforms;
+
+
+	ProgramUniforms uniforms;
+
 	bool quit;
-	clan::Vec2f center;
 	float timer;
-	float shockwave_time_elapsed;
 	float shockwave_start_time;
-	clan::Vec3f shockParams;
 	float shockwave_rate;
-	float glow;
+
 };
 
