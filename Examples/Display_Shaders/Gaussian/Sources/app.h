@@ -35,9 +35,9 @@ public:
 
 private:
 	float compute_gaussian(float n, float theta);
-	void render_gaussian_blur(GraphicContext &gc, float blur_amount, Texture &source_texture, ProgramObject &program_object, float dx, float dy);
-	void on_input_up(const InputEvent &key);
-	void draw_texture(GraphicContext &gc, const Rectf &rect, const Colorf &color, const Rectf &texture_unit1_coords);
+	void render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy);
+	void on_input_up(const clan::InputEvent &key);
+	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords);
 
 	bool quit;
 	float blur;

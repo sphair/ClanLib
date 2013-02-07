@@ -30,46 +30,46 @@
 
 int App::start(const std::vector<std::string> &args)
 {
-	OpenGLWindowDescription description;
+	clan::DisplayWindowDescription description;
 	description.set_title("NightVision Shader");
 	description.set_size(Size(1024, 768), true);
 
-	DisplayWindow window(description);
-	InputDevice keyboard = window.get_ic().get_keyboard();
-	GraphicContext gc = window.get_gc();
+	clan::DisplayWindow window(description);
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::Canvas canvas(window);
 
-	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
-	Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
+	clan::Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
 
 	// Create offscreen texture
-	Texture texture_offscreen(gc, gc.get_width(), gc.get_height());
-	texture_offscreen.set_min_filter(cl_filter_nearest);
-	texture_offscreen.set_mag_filter(cl_filter_nearest);
+	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen.set_min_filter(clan::filter_nearest);
+	texture_offscreen.set_mag_filter(clan::filter_nearest);
 
-	Texture texture_mask(gc, gc.get_width(), gc.get_height());
-	texture_mask.set_min_filter(cl_filter_nearest);
-	texture_mask.set_mag_filter(cl_filter_nearest);
+	clan::Texture2D texture_mask(canvas, canvas.get_width(), canvas.get_height());
+	texture_mask.set_min_filter(clan::filter_nearest);
+	texture_mask.set_mag_filter(clan::filter_nearest);
 
 	// Create offscreen framebuffer
-	FrameBuffer framebuffer_offscreen(gc);
-	framebuffer_offscreen.attach_color_buffer(0, texture_offscreen);
+	clan::FrameBuffer framebuffer_offscreen(canvas);
+	framebuffer_offscreen.attach_color(0, texture_offscreen);
 
-	FrameBuffer framebuffer_mask(gc);
-	framebuffer_mask.attach_color_buffer(0, texture_mask);
+	clan::FrameBuffer framebuffer_mask(canvas);
+	framebuffer_mask.attach_color(0, texture_mask);
 
-	Image background(gc, "../PostProcessing/Resources/background.png");
-	Image ball(gc, "../PostProcessing/Resources/ball.png");
-	ball.set_alignment(origin_center);
-	Texture noise_texture(gc, "Resources/noise_texture_0001.png");
-	noise_texture.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat);
+	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
+	clan::Image ball(canvas, "../PostProcessing/Resources/ball.png");
+	ball.set_alignment(clan::origin_center);
+	clan::Texture2D noise_texture(canvas, "Resources/noise_texture_0001.png");
+	noise_texture.set_wrap_mode(clan::wrap_repeat, clan::wrap_repeat);
 
 	// Load and link shaders
-	ProgramObject shader = ProgramObject::load(gc, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
+	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
 	shader.bind_attribute_location(2, "TexCoord0");
 	if (!shader.link())
-		throw Exception("Unable to link shader program: Error:" + shader.get_info_log());
+		throw clan::Exception("Unable to link shader program: Error:" + shader.get_info_log());
 
 	quit = false;
 
@@ -78,7 +78,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	Font font(gc, "tahoma", 32);
+	clan::Font font(canvas, "tahoma", 32);
 
 	// Shader based on: http://www.geeks3d.com/20091009/shader-library-night-vision-post-processing-filter-glsl/
 
@@ -88,40 +88,40 @@ int App::start(const std::vector<std::string> &args)
 	effectCoverage = 0.65f;
 
 	// Render the mask
-	gc.set_frame_buffer(framebuffer_mask);
-	gc.clear();
+	canvas.set_frame_buffer(framebuffer_mask);
+	canvas.clear();
 	for (float offset=0.0f; offset<=1.0f; offset+=0.01f)
 	{
-		Draw::circle(gc, gc.get_width() / 2.0f,  gc.get_height() / 2.0f, 400.0f - offset * 64.0f, Colorf(offset, offset, offset, 1.0f));
+		canvas.fill_circle(canvas.get_width() / 2.0f,  canvas.get_height() / 2.0f, 400.0f - offset * 64.0f, Colorf(offset, offset, offset, 1.0f));
 	}
-	gc.reset_frame_buffer();
+	canvas.reset_frame_buffer();
 
-	unsigned int startTime = System::get_time();
+	unsigned int startTime = clan::System::get_time();
 
 	while (!quit)
 	{
-		timer = (System::get_time() - startTime) / 1000.0f;
+		timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 		elapsedTime = timer;
 
 		// Render standard image to offscreen buffer
-		gc.set_frame_buffer(framebuffer_offscreen);
-		background.draw(gc, 0, 0);
-		ball.draw(gc, gc.get_width() / 2 + 200 * sinf(timer / 2.0f), gc.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		gc.reset_frame_buffer();
+		canvas.set_frame_buffer(framebuffer_offscreen);
+		background.draw(canvas, 0, 0);
+		ball.draw(canvas, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+		canvas.reset_frame_buffer();
 
-		render_night_vision(gc, texture_offscreen, texture_mask, noise_texture, shader);
+		render_night_vision(canvas, texture_offscreen, texture_mask, noise_texture, shader);
 
 		const int gap = 32;
-		font.draw_text(gc, 10, 64+gap*0, std::string("luminanceThreshold : " + StringHelp::float_to_text(luminanceThreshold) + " (Press Q,W)" ));
-		font.draw_text(gc, 10, 64+gap*1, std::string("colorAmplification : " + StringHelp::float_to_text(colorAmplification) + " (Press A,S)" ));
-		font.draw_text(gc, 10, 64+gap*2, std::string("effectCoverage : " + StringHelp::float_to_text(effectCoverage) + " (Press Z,X)" ));
+		font.draw_text(canvas, 10, 64+gap*0, std::string("luminanceThreshold : " + clan::StringHelp::float_to_text(luminanceThreshold) + " (Press Q,W)" ));
+		font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(colorAmplification) + " (Press A,S)" ));
+		font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(effectCoverage) + " (Press Z,X)" ));
 
-		window.flip();
+		canvas.flip();
 
-		System::sleep(10);
+		clan::System::sleep(10);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 
 	return 0;
@@ -133,13 +133,13 @@ void App::window_close()
 	quit = true;
 }
 
-void App::render_night_vision(GraphicContext &gc, Texture &source_texture, Texture &mask_texture, Texture &noise_texture, ProgramObject &program_object)
+void App::render_night_vision(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::Texture2D &mask_texture, clan::Texture2D &noise_texture, clan::ProgramObject &program_object)
 {
-	gc.set_texture(0, source_texture);
-	gc.set_texture(1, noise_texture);
-	gc.set_texture(2, mask_texture);
+	canvas.set_texture(0, source_texture);
+	canvas.set_texture(1, noise_texture);
+	canvas.set_texture(2, mask_texture);
 	
-	gc.set_program_object(program_object, cl_program_matrix_modelview_projection);
+	canvas.set_program_object(program_object, cl_program_matrix_modelview_projection);
 	program_object.set_uniform1i("sceneBuffer", 0);
 	program_object.set_uniform1i("noiseTex", 1);
 	program_object.set_uniform1i("maskTex", 2);
@@ -149,74 +149,74 @@ void App::render_night_vision(GraphicContext &gc, Texture &source_texture, Textu
 	program_object.set_uniform1f("colorAmplification", colorAmplification);
 	program_object.set_uniform1f("effectCoverage", effectCoverage);
 
-	draw_texture(gc, Rectf(0.0f,0.0f,gc.get_width(),gc.get_height()), Colorf::white, Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	draw_texture(canvas, clan::Rectf(0.0f,0.0f,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
-	gc.reset_program_object();
-	gc.reset_texture(2);
-	gc.reset_texture(1);
-	gc.reset_texture(0);
+	canvas.reset_program_object();
+	canvas.reset_texture(2);
+	canvas.reset_texture(1);
+	canvas.reset_texture(0);
 }
 
-void App::on_input_up(const InputEvent &key)
+void App::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
 
-	if (key.id == KEY_Q)
+	if (key.id == clan::keycode_q)
 	{
 		luminanceThreshold -= 0.02f;
 	}
-	else if (key.id == KEY_W)
+	else if (key.id == clan::keycode_w)
 	{
 		luminanceThreshold += 0.02f;
 	}
-	else if (key.id == KEY_A)
+	else if (key.id == clan::keycode_a)
 	{
 		colorAmplification -= 0.5f;
 	}
-	else if (key.id == KEY_S)
+	else if (key.id == clan::keycode_s)
 	{
 		colorAmplification += 0.5f;
 	}
-	else if (key.id == KEY_Z)
+	else if (key.id == clan::keycode_z)
 	{
 		effectCoverage -= 0.2f;
 	}
-	else if (key.id == KEY_X)
+	else if (key.id == clan::keycode_x)
 	{
 		effectCoverage += 0.2f;
 	}
 
 }
 
-void App::draw_texture(GraphicContext &gc, const Rectf &rect, const Colorf &color, const Rectf &texture_unit1_coords)
+void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
 {
-	Vec2f positions[6] =
+	clan::Vec2f positions[6] =
 	{
-		Vec2f(rect.left, rect.top),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.bottom)
+		clan::Vec2f(rect.left, rect.top),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.bottom)
 	};
 
-	Vec2f tex1_coords[6] =
+	clan::Vec2f tex1_coords[6] =
 	{
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	PrimitivesArray prim_array(gc);
+	clan::PrimitivesArray prim_array(canvas);
 	prim_array.set_attributes(0, positions);
 	prim_array.set_attribute(1, color);
 	prim_array.set_attributes(2, tex1_coords);
-	gc.draw_primitives(cl_triangles, 6, prim_array);
+	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
 }
 
