@@ -138,7 +138,7 @@ void Enemy::update(int time_elapsed_ms)
 	enemy->update(time_elapsed_ms);
 	float time_elapsed = time_elapsed_ms * 0.001f;
 	time_since_last_shoot+=time_elapsed_ms;
-	pos.x -=speed*time_elapsed;
+	pos = body.get_position();
 
 	if(time_since_last_shoot>2000)
 	{
@@ -149,7 +149,7 @@ void Enemy::update(int time_elapsed_ms)
 		Vec2f tpos = target->get_pos();
 		aimAt( tpos.x,tpos.y);
 	}
-	if(is_dead || pos.x<0)
+	if(is_dead || pos.x<-30)
 	{
 		remove_enemy(this);
 		game->add_for_deletion(this);
