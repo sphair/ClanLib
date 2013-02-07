@@ -50,6 +50,7 @@ int App::start(const std::vector<std::string> &args)
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen(canvas);
 	framebuffer_offscreen.attach_color(0, texture_offscreen);
+	clan::Canvas canvas_offscreen(canvas, framebuffer_offscreen);
 
 	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
 	clan::Image ball(canvas, "../PostProcessing/Resources/ball.png");
@@ -58,9 +59,12 @@ int App::start(const std::vector<std::string> &args)
 	// Load and link shaders
 	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
-	shader.bind_attribute_location(2, "TexCoord0");
+	shader.bind_attribute_location(1, "TexCoord0");
+	shader.bind_frag_data_location(0, "cl_FragColor");
+
 	if (!shader.link())
 		throw clan::Exception("Unable to link shader program: Error:" + shader.get_info_log());
+	shader.set_uniform1i("Texture0", 0);
 
 	quit = false;
 
@@ -88,12 +92,11 @@ int App::start(const std::vector<std::string> &args)
 		shockwave_time_elapsed = (timer - shockwave_start_time) / shockwave_rate;
 
 		// Render standard image to offscreen buffer
-		canvas.set_frame_buffer(framebuffer_offscreen);
-		background.draw(canvas, 0, 0);
+		background.draw(canvas_offscreen, 0, 0);
 		float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
 		float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
-		ball.draw(canvas, xpos, ypos);
-		canvas.reset_frame_buffer();
+		ball.draw(canvas_offscreen, xpos, ypos);
+		canvas_offscreen.flush();
 
 		center.x = xpos / ((float) canvas.get_width());
 		center.y = ypos / ((float) canvas.get_height());
@@ -126,19 +129,34 @@ void App::window_close()
 
 void App::render_shockwave(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object)
 {
-	program_object.set_uniform1i("sceneTex", 0);
-	program_object.set_uniform2f("center", center);
-	program_object.set_uniform1f("glow", glow);
-	program_object.set_uniform1f("time", shockwave_time_elapsed);
-	program_object.set_uniform3f("shockParams", shockParams);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	canvas.set_texture(0, source_texture);
-	canvas.set_program_object(program_object, cl_program_matrix_modelview_projection);
+	gc.set_texture(0, source_texture);
+	gc.set_program_object(program_object);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	struct ProgramUniforms
+	{
+		clan::Mat4f cl_ModelViewProjectionMatrix;
+		clan::Vec3f shockParams; // 10.0, 0.8, 0.1
+		float time; // effect elapsed time
+		clan::Vec2f center; // Mouse position
+		float glow;
 
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
+	};
+	ProgramUniforms buffer;
+	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	buffer.center = center;
+	buffer.glow = glow;
+	buffer.shockParams = shockParams;
+	buffer.time = shockwave_time_elapsed;
+	clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
+	gc.set_uniform_buffer(0, uniform_vector);
+
+	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+
+	gc.reset_program_object();
+	gc.reset_texture(0);
 }
 
 void App::on_input_up(const clan::InputEvent &key)
@@ -197,7 +215,7 @@ void App::on_input_up(const clan::InputEvent &key)
 	}
 }
 
-void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
+void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
 {
 	clan::Vec2f positions[6] =
 	{
@@ -219,10 +237,16 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, positions);
-	prim_array.set_attribute(1, color);
-	prim_array.set_attributes(2, tex1_coords);
-	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
+	clan::GraphicContext gc = canvas.get_gc();
+
+	clan::PrimitivesArray prim_array(gc);
+
+	clan::VertexArrayVector<clan::Vec2f> gpu_positions = clan::VertexArrayVector<clan::Vec2f>(gc, positions, 6);
+	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(gc, tex1_coords, 6);
+
+	prim_array.set_attributes(0, gpu_positions);
+	prim_array.set_attributes(1, gpu_tex1_coords);
+
+	gc.draw_primitives(clan::type_triangles, 6, prim_array);
 }
 
