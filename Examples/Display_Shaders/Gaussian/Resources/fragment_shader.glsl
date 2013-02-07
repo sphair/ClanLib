@@ -1,7 +1,15 @@
-varying vec2 TexCoord;
-uniform vec2 SampleOffsets[15];
-uniform float SampleWeights[15];
+#version 150
+in vec2 TexCoord;
+out vec4 cl_FragColor;
+
 uniform sampler2D SourceTexture;
+
+layout (std140) uniform ProgramUniforms
+{
+	mat4 cl_ModelViewProjectionMatrix;
+	float SampleWeights[15];
+	vec2 SampleOffsets[15];
+};
 
 vec4 GaussianBlur()
 {
@@ -16,5 +24,5 @@ vec4 GaussianBlur()
 
 void main()
 {
-	gl_FragColor = GaussianBlur();
+	cl_FragColor = GaussianBlur();
 }

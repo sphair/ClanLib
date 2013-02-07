@@ -54,9 +54,11 @@ int App::start(const std::vector<std::string> &args)
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen(canvas);
 	framebuffer_offscreen.attach_color(0, texture_offscreen);
+	clan::Canvas canvas_offscreen(canvas, framebuffer_offscreen);
 
 	clan::FrameBuffer framebuffer_offscreen2(canvas);
 	framebuffer_offscreen2.attach_color(0, texture_offscreen2);
+	clan::Canvas canvas_offscreen2(canvas, framebuffer_offscreen2);
 
 	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
 	clan::Image ball(canvas, "../PostProcessing/Resources/ball.png");
@@ -65,9 +67,18 @@ int App::start(const std::vector<std::string> &args)
 	// Load and link shaders
 	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
-	shader.bind_attribute_location(2, "TexCoord0");
+	shader.bind_attribute_location(1, "TexCoord0");
+	shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!shader.link())
 		throw clan::Exception("Unable to link shader program: Error:" + shader.get_info_log());
+	shader.set_uniform1i("SourceTexture", 0);
+
+	gpu_positions = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(canvas, 1);
+	gpu_primitives_array = clan::PrimitivesArray(canvas);
+	gpu_primitives_array.set_attributes(0, gpu_positions);
+	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
 
 	quit = false;
 
@@ -86,14 +97,12 @@ int App::start(const std::vector<std::string> &args)
 		timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 		// Render standard image to offscreen buffer
-		canvas.set_frame_buffer(framebuffer_offscreen);
-		background.draw(canvas, 0, 0);
-		ball.draw(canvas, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		canvas.reset_frame_buffer();
+		background.draw(canvas_offscreen, 0, 0);
+		ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+		canvas_offscreen.flush();
 
-		canvas.set_frame_buffer(framebuffer_offscreen2);
-		render_gaussian_blur(canvas, blur, texture_offscreen, shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
-		canvas.reset_frame_buffer();
+		render_gaussian_blur(canvas_offscreen2, blur, texture_offscreen, shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+		canvas_offscreen2.flush();
 
 		render_gaussian_blur(canvas, blur, texture_offscreen2, shader, 0.0f, 1.0f / texture_offscreen2.get_height());
 
@@ -123,52 +132,48 @@ float App::compute_gaussian(float n, float theta) // theta = Blur Amount
 
 void App::render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy)
 {
-	int sampleCount = 15;
+	uniforms.SampleWeights[0] = compute_gaussian(0, blur_amount);
+	uniforms.SampleOffsets[0] = clan::Vec2f(0.0, 0.0);
 
-	float *sampleWeights = new float[sampleCount];
-	clan::Vec2f *sampleOffsets = new clan::Vec2f[sampleCount];
-
-	sampleWeights[0] = compute_gaussian(0, blur_amount);
-	sampleOffsets[0] = clan::Vec2f(0.0, 0.0);
-
-	float totalWeights = sampleWeights[0];
+	float totalWeights = uniforms.SampleWeights[0];
 
 	for (int i = 0; i < sampleCount / 2; i++)
 	{
 		float weight = compute_gaussian(i + 1.0f, blur_amount);
 
-		sampleWeights[i * 2 + 1] = weight;
-		sampleWeights[i * 2 + 2] = weight;
+		uniforms.SampleWeights[i * 2 + 1] = weight;
+		uniforms.SampleWeights[i * 2 + 2] = weight;
 
 		totalWeights += weight * 2;
 
 		float sampleOffset = i * 2 + 1.5f;
 
-		clan::Vec2f delta = Vec2f(dx * sampleOffset, dy * sampleOffset);
+		clan::Vec2f delta(dx * sampleOffset, dy * sampleOffset);
 
-		sampleOffsets[i * 2 + 1] = delta;
-		sampleOffsets[i * 2 + 2] = Vec2f(-delta.x, -delta.y);
+		uniforms.SampleOffsets[i * 2 + 1] = delta;
+		uniforms.SampleOffsets[i * 2 + 2] = clan::Vec2f(-delta.x, -delta.y);
 	}
 
 	for (int i = 0; i < sampleCount; i++)
 	{
-		sampleWeights[i] /= totalWeights;
+		uniforms.SampleWeights[i] /= totalWeights;
 	}
 
-	program_object.set_uniform1i("SourceTexture", 0);
-	program_object.set_uniformfv("SampleOffsets", 2, sampleCount, (float *)sampleOffsets);
-	program_object.set_uniformfv("SampleWeights", 1, sampleCount, sampleWeights);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	canvas.set_texture(0, source_texture);
-	canvas.set_program_object(program_object, cl_program_matrix_modelview_projection);
+	gc.set_texture(0, source_texture);
+	gc.set_program_object(program_object);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
 
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
-	delete sampleWeights;
-	delete sampleOffsets;
+	gc.reset_program_object();
+	gc.reset_texture(0);
+
 }
 
 void App::on_input_up(const clan::InputEvent &key)
@@ -185,32 +190,32 @@ void App::on_input_up(const clan::InputEvent &key)
 
 }
 
-void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
+
+void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
 {
 	clan::Vec2f positions[6] =
 	{
-		Vec2f(rect.left, rect.top),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.bottom)
+		clan::Vec2f(rect.left, rect.top),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.bottom)
 	};
 
 	clan::Vec2f tex1_coords[6] =
 	{
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, positions);
-	prim_array.set_attribute(1, color);
-	prim_array.set_attributes(2, tex1_coords);
-	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
+	gpu_positions.upload_data(gc, positions, 6);
+	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
+
+	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
 }
 

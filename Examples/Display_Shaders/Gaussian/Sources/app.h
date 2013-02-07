@@ -37,9 +37,26 @@ private:
 	float compute_gaussian(float n, float theta);
 	void render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy);
 	void on_input_up(const clan::InputEvent &key);
-	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords);
+	void draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords);
 
-	bool quit;
+	static const int sampleCount = 15;
+
+
+	struct ProgramUniforms
+	{
+		clan::Mat4f cl_ModelViewProjectionMatrix;
+		float SampleWeights[sampleCount];
+		clan::Vec2f SampleOffsets[sampleCount];
+	};
+
+	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
+	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
+	clan::UniformVector<ProgramUniforms> gpu_uniforms;
+	clan::PrimitivesArray gpu_primitives_array;
+
+	ProgramUniforms uniforms;
+
 	float blur;
+	bool quit;
 };
 
