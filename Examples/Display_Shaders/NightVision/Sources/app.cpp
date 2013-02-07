@@ -32,7 +32,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	clan::DisplayWindowDescription description;
 	description.set_title("NightVision Shader");
-	description.set_size(Size(1024, 768), true);
+	description.set_size(clan::Size(1024, 768), true);
 
 	clan::DisplayWindow window(description);
 	clan::InputDevice keyboard = window.get_ic().get_keyboard();
@@ -54,9 +54,11 @@ int App::start(const std::vector<std::string> &args)
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen(canvas);
 	framebuffer_offscreen.attach_color(0, texture_offscreen);
+	clan::Canvas canvas_offscreen(canvas, framebuffer_offscreen);
 
 	clan::FrameBuffer framebuffer_mask(canvas);
 	framebuffer_mask.attach_color(0, texture_mask);
+	clan::Canvas canvas_mask(canvas, framebuffer_mask);
 
 	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
 	clan::Image ball(canvas, "../PostProcessing/Resources/ball.png");
@@ -67,9 +69,13 @@ int App::start(const std::vector<std::string> &args)
 	// Load and link shaders
 	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
-	shader.bind_attribute_location(2, "TexCoord0");
+	shader.bind_attribute_location(1, "TexCoord0");
+	shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!shader.link())
 		throw clan::Exception("Unable to link shader program: Error:" + shader.get_info_log());
+	shader.set_uniform1i("sceneBuffer", 0);
+	shader.set_uniform1i("noiseTex", 1);
+	shader.set_uniform1i("maskTex", 2);
 
 	quit = false;
 
@@ -82,19 +88,25 @@ int App::start(const std::vector<std::string> &args)
 
 	// Shader based on: http://www.geeks3d.com/20091009/shader-library-night-vision-post-processing-filter-glsl/
 
-	elapsedTime = 0.0f; // seconds
-	luminanceThreshold = 0.2f;
-	colorAmplification = 4.0f;
-	effectCoverage = 0.65f;
+	gpu_positions = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(canvas, 1);
+	gpu_primitives_array = clan::PrimitivesArray(canvas);
+	gpu_primitives_array.set_attributes(0, gpu_positions);
+	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
+
+	uniforms.elapsedTime = 0.0f; // seconds
+	uniforms.luminanceThreshold = 0.2f;
+	uniforms.colorAmplification = 4.0f;
+	uniforms.effectCoverage = 0.65f;
 
 	// Render the mask
-	canvas.set_frame_buffer(framebuffer_mask);
-	canvas.clear();
+	canvas_mask.clear();
 	for (float offset=0.0f; offset<=1.0f; offset+=0.01f)
 	{
-		canvas.fill_circle(canvas.get_width() / 2.0f,  canvas.get_height() / 2.0f, 400.0f - offset * 64.0f, Colorf(offset, offset, offset, 1.0f));
+		canvas_mask.fill_circle(canvas.get_width() / 2.0f,  canvas.get_height() / 2.0f, 400.0f - offset * 64.0f, clan::Colorf(offset, offset, offset, 1.0f));
 	}
-	canvas.reset_frame_buffer();
+	canvas_mask.flush();
 
 	unsigned int startTime = clan::System::get_time();
 
@@ -102,20 +114,19 @@ int App::start(const std::vector<std::string> &args)
 	{
 		timer = (clan::System::get_time() - startTime) / 1000.0f;
 
-		elapsedTime = timer;
+		uniforms.elapsedTime = timer;
 
 		// Render standard image to offscreen buffer
-		canvas.set_frame_buffer(framebuffer_offscreen);
-		background.draw(canvas, 0, 0);
-		ball.draw(canvas, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		canvas.reset_frame_buffer();
+		background.draw(canvas_offscreen, 0, 0);
+		ball.draw(canvas_offscreen, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+		canvas_offscreen.flush();
 
 		render_night_vision(canvas, texture_offscreen, texture_mask, noise_texture, shader);
 
 		const int gap = 32;
-		font.draw_text(canvas, 10, 64+gap*0, std::string("luminanceThreshold : " + clan::StringHelp::float_to_text(luminanceThreshold) + " (Press Q,W)" ));
-		font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(colorAmplification) + " (Press A,S)" ));
-		font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(effectCoverage) + " (Press Z,X)" ));
+		font.draw_text(canvas, 10, 64+gap*0, std::string("luminanceThreshold : " + clan::StringHelp::float_to_text(uniforms.luminanceThreshold) + " (Press Q,W)" ));
+		font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(uniforms.colorAmplification) + " (Press A,S)" ));
+		font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(uniforms.effectCoverage) + " (Press Z,X)" ));
 
 		canvas.flip();
 
@@ -135,26 +146,24 @@ void App::window_close()
 
 void App::render_night_vision(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::Texture2D &mask_texture, clan::Texture2D &noise_texture, clan::ProgramObject &program_object)
 {
-	canvas.set_texture(0, source_texture);
-	canvas.set_texture(1, noise_texture);
-	canvas.set_texture(2, mask_texture);
-	
-	canvas.set_program_object(program_object, cl_program_matrix_modelview_projection);
-	program_object.set_uniform1i("sceneBuffer", 0);
-	program_object.set_uniform1i("noiseTex", 1);
-	program_object.set_uniform1i("maskTex", 2);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	program_object.set_uniform1f("elapsedTime", elapsedTime);
-	program_object.set_uniform1f("luminanceThreshold", luminanceThreshold);
-	program_object.set_uniform1f("colorAmplification", colorAmplification);
-	program_object.set_uniform1f("effectCoverage", effectCoverage);
+	gc.set_texture(0, source_texture);
+	gc.set_texture(1, noise_texture);
+	gc.set_texture(2, mask_texture);
+	gc.set_program_object(program_object);
 
-	draw_texture(canvas, clan::Rectf(0.0f,0.0f,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
 
-	canvas.reset_program_object();
-	canvas.reset_texture(2);
-	canvas.reset_texture(1);
-	canvas.reset_texture(0);
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+
+	gc.reset_program_object();
+	gc.reset_texture(2);
+	gc.reset_texture(1);
+	gc.reset_texture(0);
 }
 
 void App::on_input_up(const clan::InputEvent &key)
@@ -166,32 +175,32 @@ void App::on_input_up(const clan::InputEvent &key)
 
 	if (key.id == clan::keycode_q)
 	{
-		luminanceThreshold -= 0.02f;
+		uniforms.luminanceThreshold -= 0.02f;
 	}
 	else if (key.id == clan::keycode_w)
 	{
-		luminanceThreshold += 0.02f;
+		uniforms.luminanceThreshold += 0.02f;
 	}
 	else if (key.id == clan::keycode_a)
 	{
-		colorAmplification -= 0.5f;
+		uniforms.colorAmplification -= 0.5f;
 	}
 	else if (key.id == clan::keycode_s)
 	{
-		colorAmplification += 0.5f;
+		uniforms.colorAmplification += 0.5f;
 	}
 	else if (key.id == clan::keycode_z)
 	{
-		effectCoverage -= 0.2f;
+		uniforms.effectCoverage -= 0.2f;
 	}
 	else if (key.id == clan::keycode_x)
 	{
-		effectCoverage += 0.2f;
+		uniforms.effectCoverage += 0.2f;
 	}
 
 }
 
-void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
+void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
 {
 	clan::Vec2f positions[6] =
 	{
@@ -213,10 +222,11 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, positions);
-	prim_array.set_attribute(1, color);
-	prim_array.set_attributes(2, tex1_coords);
-	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
+	gpu_positions.upload_data(gc, positions, 6);
+	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
+
+	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
 }
+
+
 

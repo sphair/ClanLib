@@ -1,13 +1,19 @@
+#version 150
 // Shader based on: http://www.geeks3d.com/20091009/shader-library-night-vision-post-processing-filter-glsl/
 
-varying vec2 TexCoord;
+in vec2 TexCoord;
+out vec4 cl_FragColor;
 uniform sampler2D sceneBuffer;
 uniform sampler2D noiseTex;
 uniform sampler2D maskTex;
-uniform float elapsedTime; // seconds
-uniform float luminanceThreshold; // 0.2
-uniform float colorAmplification; // 4.0
-uniform float effectCoverage; // 0.5
+layout (std140) uniform ProgramUniforms
+{
+	mat4 cl_ModelViewProjectionMatrix;
+	float elapsedTime; // seconds
+	float luminanceThreshold;
+	float colorAmplification;
+	float effectCoverage;
+};
 
 void main ()
 {
@@ -36,7 +42,7 @@ void main ()
 		TexCoord);
 	}
 
-	gl_FragColor.rgb = finalColor.rgb;
-	gl_FragColor.a = 1.0;
+	cl_FragColor.rgb = finalColor.rgb;
+	cl_FragColor.a = 1.0;
 	}
 
