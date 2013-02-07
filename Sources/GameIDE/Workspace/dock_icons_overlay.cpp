@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "workspace.h"
 #include "dock_icons_overlay.h"
@@ -209,4 +210,3 @@ GUITopLevelDescription DockIconsOverlay::get_top_level_description()
 }
 
 }
-

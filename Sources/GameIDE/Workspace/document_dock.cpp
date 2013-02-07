@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "document_dock.h"
 #include "docked_frame.h"
@@ -137,4 +138,3 @@ int DocumentDock::find_tab_index(DockableComponent *dockable) const
 }
 
 }
-

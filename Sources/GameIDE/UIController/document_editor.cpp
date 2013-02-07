@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/UIController/document_editor.h"
 #include "API/GameIDE/UIController/ui_controller.h"
@@ -57,4 +58,3 @@ void DocumentEditor::set_dirty(bool dirty)
 }
 
 }
-

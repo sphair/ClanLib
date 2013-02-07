@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "build_system_ribbon.h"
 #include "API/GameIDE/BuildSystem/build_system.h"

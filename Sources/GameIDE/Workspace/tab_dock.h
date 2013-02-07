@@ -29,8 +29,10 @@
 #pragma once
 
 #include "dock.h"
+
 namespace clan
 {
+
 class DockedFrame;
 
 class TabDock : public Dock
@@ -47,27 +49,27 @@ private:
 	void activate_tab(int tab_index);
 	int find_tab_index(DockableComponent *dockable) const;
 	void on_button_close_clicked();
-	bool on_input_pressed(const clan::InputEvent &input_event, DockableComponent *dockable);
-	bool on_input_doubleclick(const clan::InputEvent &input_event, DockableComponent *dockable);
+	bool on_input_pressed(const InputEvent &input_event, DockableComponent *dockable);
+	bool on_input_doubleclick(const InputEvent &input_event, DockableComponent *dockable);
 
-	class TabButton : public clan::GUIComponent
+	class TabButton : public GUIComponent
 	{
 	public:
-		TabButton(clan::GUIComponent *parent) : clan::GUIComponent(parent, "tab-button"), icon(nullptr), label(nullptr)
+		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), icon(nullptr), label(nullptr)
 		{
-			//icon = new clan::ImageView(this);
-			label = new clan::Label(this);
+			//icon = new ImageView(this);
+			label = new Label(this);
 		}
-		clan::ImageView *icon;
-		clan::Label *label;
+		ImageView *icon;
+		Label *label;
 	};
 
-	clan::GUIComponent *header;
-	clan::Label *title_label;
-	clan::PushButton *button_close;
-	clan::GUIComponent *frame_area;
+	GUIComponent *header;
+	Label *title_label;
+	PushButton *button_close;
+	GUIComponent *frame_area;
 	std::vector<DockedFrame *> tabs;
-	clan::GUIComponent *tab_button_row;
+	GUIComponent *tab_button_row;
 	std::vector<TabButton *> tab_buttons;
 	
 	int active_tab_index;

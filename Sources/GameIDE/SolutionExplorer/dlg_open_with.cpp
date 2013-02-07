@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "dlg_open_with.h"
 #include "API/GameIDE/UIController/document_editor_type.h"
@@ -133,4 +134,3 @@ GUITopLevelDescription DlgOpenWith::get_toplevel_description()
 }
 
 }
-

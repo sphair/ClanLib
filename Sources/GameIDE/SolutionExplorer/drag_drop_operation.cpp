@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "drag_drop_operation.h"
 #include "solution_explorer.h"
@@ -110,4 +111,3 @@ GUIComponent *DragDropOperation::find_known_component(GUIComponent *c)
 }
 
 }
-

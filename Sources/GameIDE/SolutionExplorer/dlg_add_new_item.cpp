@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "dlg_add_new_item.h"
 #include "API/GameIDE/SolutionModel/solution_model.h"
@@ -231,4 +232,3 @@ FileItemType *DlgAddNewItem::get_fileitemtype() const
 }
 
 }
-

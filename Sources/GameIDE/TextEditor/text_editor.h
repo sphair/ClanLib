@@ -25,12 +25,15 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/UIController/document_editor.h"
 #include "scintilla_editor.h"
+
 namespace clan
 {
+
 class TextEditor : public DocumentEditor
 {
 public:
@@ -69,5 +72,3 @@ private:
 };
 
 }
-
- 

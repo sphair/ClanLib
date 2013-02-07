@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "view_dock.h"
 #include "view_frame.h"
@@ -102,4 +103,3 @@ void ViewDock::on_resized()
 }
 
 }
-

@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "property_manager.h"
 
@@ -49,4 +50,3 @@ void PropertyManager::on_resized()
 }
 
 }
-

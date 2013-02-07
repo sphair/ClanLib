@@ -29,8 +29,10 @@
 #pragma once
 
 #include "dock.h"
+
 namespace clan
 {
+
 class DockedFrame;
 
 class DocumentDock : public Dock
@@ -47,29 +49,28 @@ private:
 	void activate_tab(int tab_index);
 	int find_tab_index(DockableComponent *dockable) const;
 	void on_button_close_clicked(DockableComponent *dockable);
-	bool on_input_pressed(const clan::InputEvent &input_event, DockableComponent *dockable);
+	bool on_input_pressed(const InputEvent &input_event, DockableComponent *dockable);
 
-	class TabButton : public clan::GUIComponent
+	class TabButton : public GUIComponent
 	{
 	public:
-		TabButton(clan::GUIComponent *parent) : clan::GUIComponent(parent, "tab-button"), label(nullptr), button_close(nullptr)
+		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), label(nullptr), button_close(nullptr)
 		{
-			label = new clan::Label(this);
-			button_close = new clan::PushButton(this);
+			label = new Label(this);
+			button_close = new PushButton(this);
 			button_close->set_class("close");
 		}
-		clan::Label *label;
-		clan::PushButton *button_close;
+		Label *label;
+		PushButton *button_close;
 	};
 
-	clan::GUIComponent *tab_button_row;
+	GUIComponent *tab_button_row;
 	std::vector<TabButton *> tab_buttons;
 
-	clan::GUIComponent *frame_area;
+	GUIComponent *frame_area;
 	std::vector<DockedFrame *> tabs;
 	
 	int active_tab_index;
 };
 
 }
-

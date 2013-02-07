@@ -27,14 +27,16 @@
 */
 
 #pragma once
+
 namespace clan
 {
+
 class Dock;
 
-class DockingGroup : public clan::GUIComponent
+class DockingGroup : public GUIComponent
 {
 public:
-	DockingGroup(clan::GUIComponent *parent);
+	DockingGroup(GUIComponent *parent);
 
 	Dock *get_center() const { return center; }
 	void set_center(Dock *center);
@@ -50,23 +52,23 @@ public:
 
 private:
 	void on_resized();
-	bool on_input_pressed(const clan::InputEvent &input_event);
-	bool on_input_released(const clan::InputEvent &input_event);
-	bool on_input_pointer_moved(const clan::InputEvent &input_event);
+	bool on_input_pressed(const InputEvent &input_event);
+	bool on_input_released(const InputEvent &input_event);
+	bool on_input_pointer_moved(const InputEvent &input_event);
 	int get_left_preferred_width();
 	int get_right_preferred_width();
 	int get_top_preferred_height();
 	int get_bottom_preferred_height();
-	void set_left_geometry(clan::Rect client_box, clan::Rect center_box);
-	void set_right_geometry(clan::Rect client_box, clan::Rect center_box);
-	void set_top_geometry(clan::Rect client_box);
-	void set_bottom_geometry(clan::Rect client_box);
+	void set_left_geometry(Rect client_box, Rect center_box);
+	void set_right_geometry(Rect client_box, Rect center_box);
+	void set_top_geometry(Rect client_box);
+	void set_bottom_geometry(Rect client_box);
 
 	Dock *center;
-	std::vector<clan::Rect> left_grabber_boxes;
-	std::vector<clan::Rect> right_grabber_boxes;
-	std::vector<clan::Rect> top_grabber_boxes;
-	std::vector<clan::Rect> bottom_grabber_boxes;
+	std::vector<Rect> left_grabber_boxes;
+	std::vector<Rect> right_grabber_boxes;
+	std::vector<Rect> top_grabber_boxes;
+	std::vector<Rect> bottom_grabber_boxes;
 	static const int border_width = 5;
 	static const int border_height = 5;
 	enum SizingMode
@@ -79,9 +81,8 @@ private:
 	};
 	SizingMode sizing_mode;
 	DockingGroup *sizing_group;
-	clan::Point sizing_start_pos;
+	Point sizing_start_pos;
 	int sizing_start_size;
 };
 
 }
-

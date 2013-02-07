@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "docked_frame.h"
 #include "workspace.h"
@@ -55,4 +56,3 @@ void DockedFrame::on_resized()
 }
 
 }
-

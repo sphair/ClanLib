@@ -27,8 +27,10 @@
 */
 
 #pragma once
+
 namespace clan
 {
+
 class Dock;
 class DockingGroup;
 class ToolWindow;
@@ -36,10 +38,10 @@ class ViewFrame;
 class DockedFrame;
 class DockableComponent;
 
-class Workspace : public clan::GUIComponent
+class Workspace : public GUIComponent
 {
 public:
-	Workspace(clan::GUIComponent *main_window);
+	Workspace(GUIComponent *main_window);
 	static Workspace *instance() { return _instance; }
 
 	void register_dockable(DockableComponent *dockable);
@@ -51,7 +53,7 @@ public:
 	int generate_dock_id();
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
+	void on_render(Canvas &canvas, const Rect &update_box);
 	void show_as_docked(DockableComponent *dockable, Dock *dock);
 	void show_as_window(DockableComponent *dockable);
 	void hide(DockableComponent *dockable);
@@ -65,7 +67,7 @@ private:
 	void load_dockables(std::string registry_path);
 	void save_dockables(std::string registry_path);
 	DockingGroup *root_docking_group;
-	clan::GUIThemePart part_empty;
+	GUIThemePart part_empty;
 	std::vector<ToolWindow *> tool_windows;
 	std::vector<DockableComponent *> dockable_components;
 
@@ -78,4 +80,3 @@ private:
 };
 
 }
-

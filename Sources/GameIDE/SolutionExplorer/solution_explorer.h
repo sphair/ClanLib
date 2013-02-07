@@ -25,13 +25,16 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/Workspace/dockable_component.h"
 #include "API/GameIDE/FileItemType/file_item_type_factory.h"
 #include "API/GameIDE/SolutionModel/Project/project.h"
+
 namespace clan
 {
+
 class SolutionModel;
 class Solution;
 class Project;
@@ -50,7 +53,7 @@ private:
 	SolutionModel &solution_model();
 	void on_item_show_solution_explorer();
 
-	class ListViewItemData : public clan::ListViewItemUserData
+	class ListViewItemData : public ListViewItemUserData
 	{
 	public:
 		ListViewItemData() : solution(), project_item() { }
@@ -63,18 +66,18 @@ private:
 	typedef std::shared_ptr<ListViewItemData> ListViewItemDataPtr;
 
 	void populate();
-	void populate_item(clan::ListViewItem parent_item, ProjectItem *item);
+	void populate_item(ListViewItem parent_item, ProjectItem *item);
 	void create_icon_list();
-	clan::ListViewItem create_item(Solution *solution);
-	clan::ListViewItem create_item(ProjectPtr project);
-	clan::ListViewItem create_item(ProjectItem *project_item);
-	ListViewItemDataPtr get_item_data(clan::ListViewItem item);
+	ListViewItem create_item(Solution *solution);
+	ListViewItem create_item(ProjectPtr project);
+	ListViewItem create_item(ProjectItem *project_item);
+	ListViewItemDataPtr get_item_data(ListViewItem item);
 
 	void on_resized();
-	void on_listview_mouse_right_up(clan::Point pos);
-	void on_listview_item_doubleclick(const clan::ListViewItem &item);
-	void on_listview_item_opened(const clan::ListViewItem &item);
-	void on_listview_item_closed(const clan::ListViewItem &item);
+	void on_listview_mouse_right_up(Point pos);
+	void on_listview_item_doubleclick(const ListViewItem &item);
+	void on_listview_item_opened(const ListViewItem &item);
+	void on_listview_item_closed(const ListViewItem &item);
 	void on_listview_begin_drag();
 	void on_add_new_item();
 	void on_add_existing_item();
@@ -87,14 +90,13 @@ private:
 
 	FileItemTypeFactory &factory;
 	UIController *controller;
-	clan::ListView *listview;
+	ListView *listview;
 	DragDropOperation *drag_drop;
 	std::map<std::string, int> extension_to_icon;
-	clan::PopupMenu popup;
-	clan::SlotContainer slots;
+	PopupMenu popup;
+	SlotContainer slots;
 
 	friend class DragDropOperation;
 };
 
 }
-

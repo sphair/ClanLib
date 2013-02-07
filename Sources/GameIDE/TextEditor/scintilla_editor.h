@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 namespace clan
@@ -41,10 +42,10 @@ namespace Scintilla
 
 class ScintillaEditor_Impl;
 
-class ScintillaEditor : public clan::GUIComponent
+class ScintillaEditor : public GUIComponent
 {
 public:
-	ScintillaEditor(clan::GUIComponent *parent);
+	ScintillaEditor(GUIComponent *parent);
 
 	// Text retrieval and modification
 
@@ -212,10 +213,10 @@ public:
 	int get_rectangular_selection_anchor_virtual_space();
 	void set_additional_sel_alpha(int alpha);
 	int get_additional_sel_alpha();
-	void set_additional_sel_foreground(const clan::Colorf &colour);
-	void set_additional_sel_background(const clan::Colorf &colour);
-	void set_additional_caret_foreground(const clan::Colorf &colour);
-	clan::Colorf get_additional_caret_foreground();
+	void set_additional_sel_foreground(const Colorf &colour);
+	void set_additional_sel_background(const Colorf &colour);
+	void set_additional_caret_foreground(const Colorf &colour);
+	Colorf get_additional_caret_foreground();
 	void set_additional_carets_blink(bool additionalCaretsBlink);
 	bool get_additional_carets_blink();
 	void set_additional_carets_visible(bool additionalCaretsVisible);
@@ -247,8 +248,8 @@ public:
 
 	void set_view_ws(int wsMode);
 	int get_view_ws();
-	void set_whitespace_foreground(bool useWhitespaceForeColour, const clan::Colorf &colour);
-	void set_whitespace_background(bool useWhitespaceBackColour, const clan::Colorf &colour);
+	void set_whitespace_foreground(bool useWhitespaceForeColour, const Colorf &colour);
+	void set_whitespace_background(bool useWhitespaceBackColour, const Colorf &colour);
 	void set_whitespace_size(int size);
 	int get_whitespace_size();
 	void set_extra_ascent(int extraAscent);
@@ -298,10 +299,10 @@ public:
 	bool style_get_italic(int styleNumber);
 	void style_set_underline(int styleNumber, bool underline);
 	bool style_get_underline(int styleNumber);
-	void style_set_foreground(int styleNumber, const clan::Colorf &colour);
-	clan::Colorf style_get_foreground(int styleNumber);
-	void style_set_background(int styleNumber, const clan::Colorf &colour);
-	clan::Colorf style_get_background(int styleNumber);
+	void style_set_foreground(int styleNumber, const Colorf &colour);
+	Colorf style_get_foreground(int styleNumber);
+	void style_set_background(int styleNumber, const Colorf &colour);
+	Colorf style_get_background(int styleNumber);
 	void style_set_eol_filled(int styleNumber, bool eolFilled);
 	bool style_get_eol_filled(int styleNumber);
 	void style_set_character_set(int styleNumber, int charSet);
@@ -317,18 +318,18 @@ public:
 
 	// Caret, selection, and hotspot styles
 
-	void set_sel_foreground(bool useSelectionForeColour, const clan::Colorf &colour);
-	void set_sel_background(bool useSelectionBackColour, const clan::Colorf &colour);
+	void set_sel_foreground(bool useSelectionForeColour, const Colorf &colour);
+	void set_sel_background(bool useSelectionBackColour, const Colorf &colour);
 	void set_sel_alpha(int alpha);
 	int get_sel_alpha();
 	void set_sel_eol_filled(bool filled);
 	bool get_sel_eol_filled();
-	void set_caret_foreground(const clan::Colorf &colour);
-	clan::Colorf get_caret_foreground();
+	void set_caret_foreground(const Colorf &colour);
+	Colorf get_caret_foreground();
 	void set_caret_line_visible(bool show);
 	bool get_caret_line_visible();
-	void set_caret_line_background(const clan::Colorf &colour);
-	clan::Colorf get_caret_line_background();
+	void set_caret_line_background(const Colorf &colour);
+	Colorf get_caret_line_background();
 	void set_caret_line_background_alpha(int alpha);
 	int get_caret_line_background_alpha();
 	void set_caret_period(int milliseconds);
@@ -337,10 +338,10 @@ public:
 	int get_caret_style();
 	void set_caret_width(int pixels);
 	int get_caret_width();
-	void set_hotspot_active_foreground(bool useSetting, const clan::Colorf &colour);
-	clan::Colorf get_hotspot_active_foreground();
-	void set_hotspot_active_background(bool useSetting, const clan::Colorf &colour);
-	clan::Colorf get_hotspot_active_background();
+	void set_hotspot_active_foreground(bool useSetting, const Colorf &colour);
+	Colorf get_hotspot_active_foreground();
+	void set_hotspot_active_background(bool useSetting, const Colorf &colour);
+	Colorf get_hotspot_active_background();
 	void set_hotspot_active_underline(bool underline);
 	bool get_hotspot_active_underline();
 	void set_hotspot_single_line(bool singleLine);
@@ -367,8 +368,8 @@ public:
 	int get_margin_left();
 	void set_margin_right(int pixels);
 	int get_margin_right();
-	void set_fold_margin_color(bool useSetting, const clan::Colorf &colour);
-	void set_fold_margin_hi_color(bool useSetting, const clan::Colorf &colour);
+	void set_fold_margin_color(bool useSetting, const Colorf &colour);
+	void set_fold_margin_hi_color(bool useSetting, const Colorf &colour);
 	void margin_set_text(int line, const std::string &text);
 	std::string margin_get_text(int line);
 	void margin_set_style(int line, int style);
@@ -434,11 +435,11 @@ public:
 	// Markers
 
 	void marker_define(int markerNumber, int markerSymbols);
-	void marker_define_image(int markerNumber, const clan::PixelBuffer &pixels);
+	void marker_define_image(int markerNumber, const PixelBuffer &pixels);
 	void marker_symbol_defined(int markerNumber);
-	void marker_set_foreground(int markerNumber, const clan::Colorf &colour);
-	void marker_set_background(int markerNumber, const clan::Colorf &colour);
-	void marker_set_background_selected(int markerNumber, const clan::Colorf &colour);
+	void marker_set_foreground(int markerNumber, const Colorf &colour);
+	void marker_set_background(int markerNumber, const Colorf &colour);
+	void marker_set_background_selected(int markerNumber, const Colorf &colour);
 	void marker_enable_highlight(int enabled);
 	void marker_set_alpha(int markerNumber, int alpha);
 	void marker_add(int line, int markerNumber);
@@ -455,8 +456,8 @@ public:
 
 	void indic_set_style(int indicatorNumber, int indicatorStyle);
 	int indic_get_style(int indicatorNumber);
-	void indic_set_foreground(int indicatorNumber, const clan::Colorf &colour);
-	clan::Colorf indic_get_foreground(int indicatorNumber);
+	void indic_set_foreground(int indicatorNumber, const Colorf &colour);
+	Colorf indic_get_foreground(int indicatorNumber);
 	void indic_set_alpha(int indicatorNumber, int alpha);
 	int indic_get_alpha(int indicatorNumber);
 	void indic_set_outline_alpha(int indicatorNumber, int alpha);
@@ -488,7 +489,7 @@ public:
 	bool autocomplete_get_auto_hide();
 	void autocomplete_set_drop_rest_of_word(bool dropRestOfWord);
 	bool autocomplete_get_drop_rest_of_word();
-	void autocomplete_register_image(int type, const clan::PixelBuffer &pixels);
+	void autocomplete_register_image(int type, const PixelBuffer &pixels);
 	int autocomplete_clear_registered_images();
 	void autocomplete_set_type_separator(char separatorCharacter);
 	int autocomplete_get_type_separator();
@@ -504,9 +505,9 @@ public:
 	void calltip_active();
 	int calltip_posstart();
 	void calltip_set_highlight(int highlightStart, int highlightEnd);
-	void calltip_set_backrgound(const clan::Colorf &colour);
-	void calltip_set_foreground(const clan::Colorf &colour);
-	void calltip_set_foreground_highlight(const clan::Colorf &colour);
+	void calltip_set_backrgound(const Colorf &colour);
+	void calltip_set_foreground(const Colorf &colour);
+	void calltip_set_foreground_highlight(const Colorf &colour);
 	void calltip_use_style(int tabsize);
 
 	// Keyboard commands
@@ -687,8 +688,8 @@ public:
 	int get_edge_mode();
 	void set_edge_column(int column);
 	int get_edge_column();
-	void set_edge_color(const clan::Colorf &colour);
-	clan::Colorf get_edge_color();
+	void set_edge_color(const Colorf &colour);
+	Colorf get_edge_color();
 
 	// Lexer
 
@@ -719,49 +720,48 @@ public:
 	void set_identifier(int identifier);
 	int get_identifier();
 
-	clan::Callback_v0 &func_style_needed();
-	clan::Callback_v0 &func_char_added();
-	clan::Callback_v0 &func_save_point_reached();
-	clan::Callback_v0 &func_save_point_left();
-	clan::Callback_v0 &func_modify_attempt_read_only();
-	clan::Callback_v0 &func_key();
-	clan::Callback_v0 &func_double_click();
-	clan::Callback_v0 &func_update_ui();
-	clan::Callback_v0 &func_modified();
+	Callback_v0 &func_style_needed();
+	Callback_v0 &func_char_added();
+	Callback_v0 &func_save_point_reached();
+	Callback_v0 &func_save_point_left();
+	Callback_v0 &func_modify_attempt_read_only();
+	Callback_v0 &func_key();
+	Callback_v0 &func_double_click();
+	Callback_v0 &func_update_ui();
+	Callback_v0 &func_modified();
 
 	// void cb_macro_record(const std::string &macro_command_recorded)
-	clan::Callback_v1<const std::string &> &func_macro_record();
+	Callback_v1<const std::string &> &func_macro_record();
 
 	// void cb_margin_click(bool shift, bool ctrl, bool alt, int position, int margin_number)
-	clan::Callback_v5<bool, bool, bool, int, int> &func_margin_click();
+	Callback_v5<bool, bool, bool, int, int> &func_margin_click();
 
 	// void cb_need_shown(int position, int length)
-	clan::Callback_v2<int, int> &func_need_shown();
+	Callback_v2<int, int> &func_need_shown();
 
-	clan::Callback_v0 &func_painted();
-	clan::Callback_v0 &func_userlist_selection();
+	Callback_v0 &func_painted();
+	Callback_v0 &func_userlist_selection();
 
-	// void dwell_start(int position, clan::Point mouse_pos)
-	clan::Callback_v2<int, clan::Point> &func_dwell_start();
+	// void dwell_start(int position, Point mouse_pos)
+	Callback_v2<int, Point> &func_dwell_start();
 
-	// void dwell_end(int position, clan::Point mouse_pos)
-	clan::Callback_v2<int, clan::Point> &func_dwell_end();
+	// void dwell_end(int position, Point mouse_pos)
+	Callback_v2<int, Point> &func_dwell_end();
 
-	clan::Callback_v0 &func_zoom();
-	clan::Callback_v0 &func_hotspot_click();
-	clan::Callback_v0 &func_hotspot_double_click();
-	clan::Callback_v0 &func_hotspot_release_click();
-	clan::Callback_v0 &func_indicator_click();
-	clan::Callback_v0 &func_indicator_release();
-	clan::Callback_v0 &func_calltip_click();
-	clan::Callback_v0 &func_autocomplete_selection();
-	clan::Callback_v0 &func_autocomplete_cancelled();
-	clan::Callback_v0 &func_autocomplete_char_deleted();
-	clan::Callback_v0 &func_change();
+	Callback_v0 &func_zoom();
+	Callback_v0 &func_hotspot_click();
+	Callback_v0 &func_hotspot_double_click();
+	Callback_v0 &func_hotspot_release_click();
+	Callback_v0 &func_indicator_click();
+	Callback_v0 &func_indicator_release();
+	Callback_v0 &func_calltip_click();
+	Callback_v0 &func_autocomplete_selection();
+	Callback_v0 &func_autocomplete_cancelled();
+	Callback_v0 &func_autocomplete_char_deleted();
+	Callback_v0 &func_change();
 
 private:
 	std::shared_ptr<ScintillaEditor_Impl> impl;
 };
 
 }
-

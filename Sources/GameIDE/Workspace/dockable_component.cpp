@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/Workspace/dockable_component.h"
 #include "dock.h"
@@ -85,4 +86,3 @@ void DockableComponent::hide()
 }
 
 }
-

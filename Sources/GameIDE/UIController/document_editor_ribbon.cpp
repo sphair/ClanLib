@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "document_editor_ribbon.h"
 #include "API/GameIDE/UIController/document_editor.h"
@@ -134,4 +135,3 @@ void DocumentEditorRibbon::on_button_save_clicked()
 }
 
 }
-

@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "view_frame.h"
 #include "workspace.h"
@@ -78,6 +79,4 @@ bool ViewFrame::on_input_doubleclick(const InputEvent &input_event)
 	}
 }
 
-
 }
-

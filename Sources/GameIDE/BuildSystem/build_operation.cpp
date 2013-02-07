@@ -25,13 +25,13 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/BuildSystem/build_operation.h"
 #include "API/GameIDE/SolutionModel/solution_model.h"
 
 namespace clan
 {
-
 
 class BuildOperation_Impl
 {

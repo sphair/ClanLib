@@ -25,12 +25,13 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "dlg_add_new_project.h"
 #include "API/GameIDE/SolutionModel/solution_model.h"
+
 namespace clan
 {
-
 
 DlgAddNewProject::DlgAddNewProject(GUIComponent *owner, SolutionModel &model)
 : GUIComponent(owner, get_toplevel_description()), model(model)
@@ -153,4 +154,3 @@ GUITopLevelDescription DlgAddNewProject::get_toplevel_description()
 }
 
 }
-

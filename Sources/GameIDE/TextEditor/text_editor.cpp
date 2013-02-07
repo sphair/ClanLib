@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "text_editor.h"
 #include "text_editor_ribbon.h"
@@ -312,4 +313,3 @@ void TextEditor::initialize_xml_style_and_document(std::string language)
 */}
 
 }
-

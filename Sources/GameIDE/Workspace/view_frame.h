@@ -27,27 +27,28 @@
 */
 
 #pragma once
+
 namespace clan
 {
+
 class Workspace;
 class DockableComponent;
 
-class ViewFrame : public clan::GUIComponent
+class ViewFrame : public GUIComponent
 {
 public:
-	ViewFrame(clan::GUIComponent *parent, DockableComponent *dockable);
+	ViewFrame(GUIComponent *parent, DockableComponent *dockable);
 	DockableComponent *get_dockable() { return dockable; }
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
+	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
-	bool on_input_doubleclick(const clan::InputEvent &input_event);
+	bool on_input_doubleclick(const InputEvent &input_event);
 
 	DockableComponent *dockable;
-	clan::GUIThemePart part_header;
-	clan::Rect header_box;
-	clan::Rect scene_box;
+	GUIThemePart part_header;
+	Rect header_box;
+	Rect scene_box;
 };
 
 }
-

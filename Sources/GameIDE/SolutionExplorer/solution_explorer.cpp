@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "solution_explorer.h"
 #include "dlg_add_new_item.h"
@@ -405,4 +406,3 @@ int SolutionExplorer::get_icon_index(std::string filename)
 }
 
 }
-

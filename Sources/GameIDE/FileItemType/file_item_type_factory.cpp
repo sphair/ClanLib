@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/FileItemType/file_item_type_factory.h"
 #include "API/GameIDE/FileItemType/file_item_type.h"
@@ -79,4 +80,3 @@ void FileItemTypeFactory::register_ui(UIController *ui_controller)
 }
 
 }
-

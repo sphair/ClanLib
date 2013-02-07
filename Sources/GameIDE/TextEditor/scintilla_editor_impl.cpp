@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "scintilla_editor_impl.h"
 #include "scintilla_editor.h"
@@ -1441,4 +1442,3 @@ void ScintillaListBox::SetList(const char* list, char separator, char typesep)
 }
 
 }
-

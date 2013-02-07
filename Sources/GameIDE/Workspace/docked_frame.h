@@ -27,23 +27,24 @@
 */
 
 #pragma once
+
 namespace clan
 {
+
 class Workspace;
 class DockableComponent;
 
-class DockedFrame : public clan::GUIComponent
+class DockedFrame : public GUIComponent
 {
 public:
-	DockedFrame(clan::GUIComponent *parent, DockableComponent *dockable);
+	DockedFrame(GUIComponent *parent, DockableComponent *dockable);
 	DockableComponent *get_dockable() { return dockable; }
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
+	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
 
 	DockableComponent *dockable;
 };
 
 }
-

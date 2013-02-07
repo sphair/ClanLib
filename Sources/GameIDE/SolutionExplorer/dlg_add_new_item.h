@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/FileItemType/file_item_type_factory.h"
@@ -32,10 +33,10 @@
 namespace clan
 {
 
-class DlgAddNewItem : public clan::GUIComponent
+class DlgAddNewItem : public GUIComponent
 {
 public:
-	DlgAddNewItem(clan::GUIComponent *owner, FileItemTypeFactory &factory, const std::string &default_location);
+	DlgAddNewItem(GUIComponent *owner, FileItemTypeFactory &factory, const std::string &default_location);
 
 	std::string get_name() const;
 	std::string get_location() const;
@@ -47,27 +48,27 @@ private:
 	void on_button_ok_clicked();
 	void on_button_cancel_clicked();
 	void on_button_browse_location_clicked();
-	void on_list_items_selection_changed(clan::ListViewSelection item);
+	void on_list_items_selection_changed(ListViewSelection item);
 
 	void populate(FileItemTypeFactory &factory);
 
-	static clan::GUITopLevelDescription get_toplevel_description();
+	static GUITopLevelDescription get_toplevel_description();
 
-	clan::Label *label_name;
-	clan::LineEdit *lineedit_name;
+	Label *label_name;
+	LineEdit *lineedit_name;
 
-	clan::Label *label_location;
-	clan::LineEdit *lineedit_location;
-	clan::PushButton *button_browse_location;
+	Label *label_location;
+	LineEdit *lineedit_location;
+	PushButton *button_browse_location;
 	
-	clan::ListView *list_items;
-	clan::Label *label_description_header;
-	clan::Label *label_description;
+	ListView *list_items;
+	Label *label_description_header;
+	Label *label_description;
 
-	clan::PushButton *button_ok;
-	clan::PushButton *button_cancel;
+	PushButton *button_ok;
+	PushButton *button_cancel;
 
-	class ListViewItemData : public clan::ListViewItemUserData
+	class ListViewItemData : public ListViewItemUserData
 	{
 	public:
 		ListViewItemData(FileItemType *type) : type(type) { }
@@ -77,4 +78,3 @@ private:
 };
 
 }
-

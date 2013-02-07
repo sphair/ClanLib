@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/SolutionModel/Project/project_item.h"
 #include "API/GameIDE/SolutionModel/Project/project.h"
@@ -178,4 +179,3 @@ std::string ProjectFileItem::parent_path_combine(bool project_relative)
 }
 
 }
-

@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "Platform.h"
@@ -52,8 +53,10 @@
 #include "Scintilla/src/Editor.h"
 #include "Scintilla/src/ScintillaBase.h"
 #include "Scintilla/src/UniConversion.h"
+
 namespace clan
 {
+
 class ScintillaEditor;
 
 class ScintillaWindowHandle
@@ -74,8 +77,8 @@ public:
 	virtual void Window_SetTitle(const char *s) { }
 	virtual Scintilla::PRectangle Window_GetMonitorRect(Scintilla::Point pt) { return Scintilla::PRectangle(); }
 
-	virtual clan::Canvas sci_get_canvas() = 0;
-	virtual void sci_set_cliprect(clan::Canvas &canvas, clan::Rect box) = 0;
+	virtual Canvas sci_get_canvas() = 0;
+	virtual void sci_set_cliprect(Canvas &canvas, Rect box) = 0;
 };
 
 class ScintillaEditor_Impl : public ScintillaWindowHandle, Scintilla::ScintillaBase
@@ -84,8 +87,8 @@ public:
 	ScintillaEditor_Impl(ScintillaEditor *component);
 	~ScintillaEditor_Impl();
 
-	static int to_int_color(const clan::Colorf &c);
-	static clan::Colorf from_int_color(int color);
+	static int to_int_color(const Colorf &c);
+	static Colorf from_int_color(int color);
 
 	int get_text(int length, char *text) { return send_message(SCI_GETTEXT, length, (sptr_t)text); }
 	void set_text(const char *text) { send_message(SCI_SETTEXT, 0, (sptr_t)text); }
@@ -671,45 +674,45 @@ public:
 	void set_identifier(int identifier) { send_message(SCI_SETIDENTIFIER, identifier, 0); }
 	int get_identifier() { return send_message(SCI_GETIDENTIFIER, 0, 0); }
 
-	clan::Callback_v0 cb_style_needed;
-	clan::Callback_v0 cb_char_added;
-	clan::Callback_v0 cb_save_point_reached;
-	clan::Callback_v0 cb_save_point_left;
-	clan::Callback_v0 cb_modify_attempt_read_only;
-	clan::Callback_v0 cb_key;
-	clan::Callback_v0 cb_double_click;
-	clan::Callback_v0 cb_update_ui;
-	clan::Callback_v0 cb_modified;
-	clan::Callback_v1<const std::string &> cb_macro_record;
-	clan::Callback_v5<bool, bool, bool, int, int> cb_margin_click;
-	clan::Callback_v2<int, int> cb_need_shown;
-	clan::Callback_v0 cb_painted;
-	clan::Callback_v0 cb_userlist_selection;
-	clan::Callback_v2<int, clan::Point> cb_dwell_start;
-	clan::Callback_v2<int, clan::Point> cb_dwell_end;
-	clan::Callback_v0 cb_zoom;
-	clan::Callback_v0 cb_hotspot_click;
-	clan::Callback_v0 cb_hotspot_double_click;
-	clan::Callback_v0 cb_hotspot_release_click;
-	clan::Callback_v0 cb_indicator_click;
-	clan::Callback_v0 cb_indicator_release;
-	clan::Callback_v0 cb_calltip_click;
-	clan::Callback_v0 cb_autocomplete_selection;
-	clan::Callback_v0 cb_autocomplete_cancelled;
-	clan::Callback_v0 cb_autocomplete_char_deleted;
-	clan::Callback_v0 cb_change;
+	Callback_v0 cb_style_needed;
+	Callback_v0 cb_char_added;
+	Callback_v0 cb_save_point_reached;
+	Callback_v0 cb_save_point_left;
+	Callback_v0 cb_modify_attempt_read_only;
+	Callback_v0 cb_key;
+	Callback_v0 cb_double_click;
+	Callback_v0 cb_update_ui;
+	Callback_v0 cb_modified;
+	Callback_v1<const std::string &> cb_macro_record;
+	Callback_v5<bool, bool, bool, int, int> cb_margin_click;
+	Callback_v2<int, int> cb_need_shown;
+	Callback_v0 cb_painted;
+	Callback_v0 cb_userlist_selection;
+	Callback_v2<int, Point> cb_dwell_start;
+	Callback_v2<int, Point> cb_dwell_end;
+	Callback_v0 cb_zoom;
+	Callback_v0 cb_hotspot_click;
+	Callback_v0 cb_hotspot_double_click;
+	Callback_v0 cb_hotspot_release_click;
+	Callback_v0 cb_indicator_click;
+	Callback_v0 cb_indicator_release;
+	Callback_v0 cb_calltip_click;
+	Callback_v0 cb_autocomplete_selection;
+	Callback_v0 cb_autocomplete_cancelled;
+	Callback_v0 cb_autocomplete_char_deleted;
+	Callback_v0 cb_change;
 
 	void play_record(const std::string &str);
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
+	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
 	void on_scrollbar_vert_scroll();
 	void on_scrollbar_horz_scroll();
-	bool on_input_pressed(const clan::InputEvent &e);
-	bool on_input_released(const clan::InputEvent &e);
-	bool on_input_doubleclick(const clan::InputEvent &e);
-	bool on_input_pointer_moved(const clan::InputEvent &e);
+	bool on_input_pressed(const InputEvent &e);
+	bool on_input_released(const InputEvent &e);
+	bool on_input_doubleclick(const InputEvent &e);
+	bool on_input_pointer_moved(const InputEvent &e);
 	bool on_focus_gained();
 	bool on_focus_lost();
 	sptr_t send_message(unsigned int message, uptr_t wparam, sptr_t lparam) { return WndProc(message, wparam, lparam); }
@@ -736,8 +739,8 @@ private:
 	void SetMouseCapture(bool on);
 	bool HaveMouseCapture();
 
-	clan::Canvas sci_get_canvas();
-	void sci_set_cliprect(clan::Canvas &canvas, clan::Rect box);
+	Canvas sci_get_canvas();
+	void sci_set_cliprect(Canvas &canvas, Rect box);
 	void Window_Destroy();
 	bool Window_HasFocus();
 	Scintilla::PRectangle Window_GetPosition();
@@ -787,17 +790,17 @@ private:
 
 	ScintillaEditor *component;
 	bool is_mouse_captured;
-	clan::ScrollBar *scrollbar_vert;
-	clan::ScrollBar *scrollbar_horz;
-	clan::Rect client_box;
+	ScrollBar *scrollbar_vert;
+	ScrollBar *scrollbar_horz;
+	Rect client_box;
 };
 
-class ScintillaListBoxHandle : public ScintillaWindowHandle, public clan::GUIComponent
+class ScintillaListBoxHandle : public ScintillaWindowHandle, public GUIComponent
 {
 public:
-	ScintillaListBoxHandle(clan::GUIComponent *parent) : clan::GUIComponent(parent, "sci-listbox") { }
-	clan::Canvas sci_get_canvas() { return get_canvas(); }
-	void sci_set_cliprect(clan::Canvas &gc, clan::Rect box) { return set_cliprect(gc, box); }
+	ScintillaListBoxHandle(GUIComponent *parent) : GUIComponent(parent, "sci-listbox") { }
+	Canvas sci_get_canvas() { return get_canvas(); }
+	void sci_set_cliprect(Canvas &gc, Rect box) { return set_cliprect(gc, box); }
 };
 
 class ScintillaListBox : public Scintilla::ListBox
@@ -828,7 +831,7 @@ class ScintillaSurface : public Scintilla::Surface
 {
 public:
 	ScintillaSurface();
-	ScintillaSurface(ScintillaWindowHandle *component, clan::Canvas &canvas);
+	ScintillaSurface(ScintillaWindowHandle *component, Canvas &canvas);
 	void Init(Scintilla::WindowID wid);
 	void Init(Scintilla::SurfaceID sid, Scintilla::WindowID wid);
 	void InitPixMap(int width, int height, Scintilla::Surface *surface_, Scintilla::WindowID wid);
@@ -872,9 +875,9 @@ public:
 
 private:
 	ScintillaWindowHandle *component;
-	clan::Canvas canvas;
-	clan::Color pen_color;
-	clan::Point pen_pos;
+	Canvas canvas;
+	Color pen_color;
+	Point pen_pos;
 };
 
 class ScintillaFontHandle
@@ -885,16 +888,16 @@ public:
 	{
 	}
 
-	clan::Font &get_font(clan::Canvas &canvas)
+	Font &get_font(Canvas &canvas)
 	{
 		if (font.is_null())
 		{
-			clan::FontDescription desc;
+			FontDescription desc;
 			desc.set_typeface_name(face_name);
 			desc.set_height(-size);
 			desc.set_weight(bold ? 700 : 400);
 			desc.set_italic(italic);
-			font = clan::Font(canvas, desc);
+			font = Font(canvas, desc);
 		}
 		return font;
 	}
@@ -908,7 +911,7 @@ private:
 	bool bold;
 	bool italic;
 	int extra_font_flag;
-	clan::Font font;
+	Font font;
 };
 
 }

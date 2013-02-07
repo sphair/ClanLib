@@ -25,15 +25,18 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
+
 namespace clan
 {
+
 class DocumentEditorType;
 
-class DlgOpenWith : public clan::GUIComponent
+class DlgOpenWith : public GUIComponent
 {
 public:
-	DlgOpenWith(clan::GUIComponent *owner, std::vector<DocumentEditorType *> editors);
+	DlgOpenWith(GUIComponent *owner, std::vector<DocumentEditorType *> editors);
 	DocumentEditorType *get_editor_type();
 
 private:
@@ -41,18 +44,18 @@ private:
 	bool on_close();
 	void on_button_ok_clicked();
 	void on_button_cancel_clicked();
-	void on_item_doubleclick(const clan::ListViewItem &item);
+	void on_item_doubleclick(const ListViewItem &item);
 
 	void populate(std::vector<DocumentEditorType *> editors);
 
-	static clan::GUITopLevelDescription get_toplevel_description();
+	static GUITopLevelDescription get_toplevel_description();
 
-	clan::ListView *list_items;
+	ListView *list_items;
 
-	clan::PushButton *button_ok;
-	clan::PushButton *button_cancel;
+	PushButton *button_ok;
+	PushButton *button_cancel;
 
-	class ListViewItemData : public clan::ListViewItemUserData
+	class ListViewItemData : public ListViewItemUserData
 	{
 	public:
 		ListViewItemData(DocumentEditorType *type) : type(type) { }
@@ -62,4 +65,3 @@ private:
 };
 
 }
-

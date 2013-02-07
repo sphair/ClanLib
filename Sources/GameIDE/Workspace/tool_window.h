@@ -29,41 +29,43 @@
 #pragma once
 
 #include "dock_icons_overlay.h"
+
 namespace clan
 {
+
 class Workspace;
 class DockableComponent;
 
-class ToolWindow : public clan::GUIComponent
+class ToolWindow : public GUIComponent
 {
 public:
-	ToolWindow(DockableComponent *dockable, clan::Rect window_geometry);
+	ToolWindow(DockableComponent *dockable, Rect window_geometry);
 	DockableComponent *get_dockable() { return dockable; }
 
 private:
 	void update_layout_boxes();
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
+	void on_render(Canvas &canvas, const Rect &update_box);
 	void on_resized();
 	bool on_close();
 	void on_button_close_clicked();
-	bool on_input_pressed(const clan::InputEvent &input_event);
-	bool on_input_released(const clan::InputEvent &input_event);
-	bool on_input_doubleclick(const clan::InputEvent &input_event);
-	bool on_input_pointer_moved(const clan::InputEvent &input_event);
-	static clan::GUITopLevelDescription get_top_level_description(const std::string &title, const clan::Rect &box);
+	bool on_input_pressed(const InputEvent &input_event);
+	bool on_input_released(const InputEvent &input_event);
+	bool on_input_doubleclick(const InputEvent &input_event);
+	bool on_input_pointer_moved(const InputEvent &input_event);
+	static GUITopLevelDescription get_top_level_description(const std::string &title, const Rect &box);
 
 	DockableComponent *dockable;
-	clan::PushButton *button_close;
-	clan::GUIThemePart part_header;
-	clan::GUIThemePart part_button_area;
-	clan::Rect resize_box;
-	clan::Rect resize_content_box;
-	clan::Rect header_box;
-	clan::Rect button_area_box;
-	clan::Rect button_area_content_box;
-	clan::Rect dockable_box;
+	PushButton *button_close;
+	GUIThemePart part_header;
+	GUIThemePart part_button_area;
+	Rect resize_box;
+	Rect resize_content_box;
+	Rect header_box;
+	Rect button_area_box;
+	Rect button_area_content_box;
+	Rect dockable_box;
 	bool is_moving;
-	clan::Point last_move_pos;
+	Point last_move_pos;
 	std::unique_ptr<DockIconsOverlay> dock_icons_overlay;
 };
 
