@@ -25,11 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/UIController/ui_controller_listener.h"
+
 namespace clan
 {
+
 class DocumentEditorRibbon : public UIControllerListener
 {
 public:
@@ -45,18 +48,17 @@ private:
 	void on_button_redo_clicked();
 	void on_button_save_clicked();
 
-	clan::RibbonSection *clipboard_section;
-	clan::PushButton *button_cut;
-	clan::PushButton *button_paste;
-	clan::PushButton *button_copy;
+	RibbonSection *clipboard_section;
+	PushButton *button_cut;
+	PushButton *button_paste;
+	PushButton *button_copy;
 
-	clan::RibbonSection *edit_section;
-	clan::PushButton *button_undo;
-	clan::PushButton *button_redo;
-	clan::PushButton *button_save;
+	RibbonSection *edit_section;
+	PushButton *button_undo;
+	PushButton *button_redo;
+	PushButton *button_save;
 
 	DocumentEditor *editor;
 };
 
 }
-

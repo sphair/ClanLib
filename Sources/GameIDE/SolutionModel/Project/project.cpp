@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/SolutionModel/Project/project.h"
 
@@ -169,4 +170,3 @@ void Project::save_item_children(DomElement dom_parent, ProjectItem *item)
 }
 
 }
-

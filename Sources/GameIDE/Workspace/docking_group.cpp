@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "docking_group.h"
 #include "docked_frame.h"
@@ -401,4 +402,3 @@ Dock *DockingGroup::find_dock(int dock_id)
 }
 
 }
-

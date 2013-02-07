@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "scintilla_editor.h"
 #include "scintilla_editor_impl.h"
@@ -3046,4 +3047,3 @@ Callback_v0 &ScintillaEditor::func_change()
 }
 
 }
-

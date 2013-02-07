@@ -29,12 +29,14 @@
 #pragma once
 
 #include "docking_group.h"
+
 namespace clan
 {
+
 class DockableComponent;
 class DockingGroup;
 
-class Dock : public clan::GUIComponent
+class Dock : public GUIComponent
 {
 public:
 	Dock(DockingGroup *parent, int id);
@@ -60,4 +62,3 @@ protected:
 };
 
 }
-

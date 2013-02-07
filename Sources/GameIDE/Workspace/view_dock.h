@@ -29,8 +29,10 @@
 #pragma once
 
 #include "dock.h"
+
 namespace clan
 {
+
 class ViewFrame;
 
 class ViewDock : public Dock
@@ -51,4 +53,3 @@ private:
 };
 
 }
-

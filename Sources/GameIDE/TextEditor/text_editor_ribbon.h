@@ -25,11 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/UIController/ui_controller_listener.h"
+
 namespace clan
 {
+
 class TextEditor;
 
 class TextEditorRibbon : public UIControllerListener
@@ -51,21 +54,20 @@ private:
 	void on_combo_wsmode_visible_always();
 	void on_combo_wsmode_visible_after_indent();
 
-	clan::RibbonSection *text_section;
-	clan::PushButton *button_lowercase;
-	clan::PushButton *button_uppercase;
+	RibbonSection *text_section;
+	PushButton *button_lowercase;
+	PushButton *button_uppercase;
 
-	clan::RibbonSection *macro_section;
-	clan::PushButton *button_macro_run;
-	clan::PushButton *button_macro_record;
-	clan::PushButton *button_macro_stop;
+	RibbonSection *macro_section;
+	PushButton *button_macro_run;
+	PushButton *button_macro_record;
+	PushButton *button_macro_stop;
 
-	clan::RibbonSection *view_section;
-	clan::CheckBox *check_eol;
-	clan::ComboBox *combo_wsmode;
+	RibbonSection *view_section;
+	CheckBox *check_eol;
+	ComboBox *combo_wsmode;
 
 	TextEditor *editor;
 };
 
 }
-

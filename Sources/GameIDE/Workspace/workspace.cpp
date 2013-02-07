@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "workspace.h"
 #include "API/GameIDE/Workspace/dockable_component.h"
@@ -419,4 +420,3 @@ Dock *Workspace::find_dock(int dock_id)
 }
 
 }
-

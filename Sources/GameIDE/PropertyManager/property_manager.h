@@ -25,11 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/Workspace/dockable_component.h"
+
 namespace clan
 {
+
 class PropertyManager : public DockableComponent
 {
 public:
@@ -38,8 +41,7 @@ public:
 private:
 	void on_resized();
 
-	clan::ListView *listview;
+	ListView *listview;
 };
 
 }
-

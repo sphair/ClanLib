@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/MainWindow/main_window.h"
 #include "API/GameIDE/TextEditor/text_editor_file_item_type.h"
@@ -57,7 +58,7 @@ public:
 
 	EditorMainWindow *component;
 
-	clan::Ribbon *ribbon;
+	Ribbon *ribbon;
 	Workspace *workspace;
 	std::unique_ptr<UIController> ui_controller;
 	SolutionExplorer *explorer;
@@ -209,4 +210,3 @@ GUITopLevelDescription EditorMainWindow_Impl::get_top_level_description()
 }
 
 }
-

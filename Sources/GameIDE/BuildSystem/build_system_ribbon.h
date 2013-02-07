@@ -25,12 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/UIController/ui_controller_listener.h"
 
 namespace clan
 {
+
 class BuildSystem;
 
 class BuildSystemRibbon : public UIControllerListener
@@ -46,11 +48,11 @@ private:
 	void on_button_clean();
 	void on_button_show_output();
 
-	clan::RibbonSection *build_section;
-	clan::PushButton *button_build;
-	clan::PushButton *button_rebuild;
-	clan::PushButton *button_clean;
-	clan::PushButton *button_show_output;
+	RibbonSection *build_section;
+	PushButton *button_build;
+	PushButton *button_rebuild;
+	PushButton *button_clean;
+	PushButton *button_show_output;
 };
 
 }

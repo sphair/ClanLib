@@ -27,45 +27,46 @@
 */
 
 #pragma once
+
 namespace clan
 {
+
 class Workspace;
 class DockableComponent;
 class Dock;
 class DockingGroup;
 
-class DockIconsOverlay : public clan::GUIComponent
+class DockIconsOverlay : public GUIComponent
 {
 public:
 	DockIconsOverlay();
 	~DockIconsOverlay();
-	void set_cursor_pos(clan::Point screen_pos);
-	Dock *try_dock_at(clan::Point screen_pos);
+	void set_cursor_pos(Point screen_pos);
+	Dock *try_dock_at(Point screen_pos);
 
 private:
 	enum Place { place_left, place_right, place_top, place_bottom, place_center };
 	struct DockIconArea
 	{
 		DockIconArea(DockIconsOverlay *overlay, DockingGroup *group, Place place);
-		clan::GUIThemePart theme_part;
-		clan::Rect group_box;
-		clan::Rect icon_box;
-		clan::Rect hint_box;
+		GUIThemePart theme_part;
+		Rect group_box;
+		Rect icon_box;
+		Rect hint_box;
 		Place place;
 	};
 
 	void set_current_hint(int new_hint);
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_box);
-	static clan::GUITopLevelDescription get_top_level_description();
+	void on_render(Canvas &canvas, const Rect &update_box);
+	static GUITopLevelDescription get_top_level_description();
 
 	std::vector<DockIconArea> areas;
-	clan::GUIThemePart part_dock_up;
-	clan::GUIThemePart part_dock_down;
-	clan::GUIThemePart part_dock_left;
-	clan::GUIThemePart part_dock_right;
-	clan::GUIThemePart part_dock_center;
+	GUIThemePart part_dock_up;
+	GUIThemePart part_dock_down;
+	GUIThemePart part_dock_left;
+	GUIThemePart part_dock_right;
+	GUIThemePart part_dock_center;
 	int current_hint;
 };
 
 }
-

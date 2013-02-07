@@ -25,13 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "tool_window.h"
 #include "workspace.h"
 #include "API/GameIDE/Workspace/dockable_component.h"
+
 namespace clan
 {
-
 
 ToolWindow::ToolWindow(DockableComponent *dockable, Rect window_geometry)
 : GUIComponent(Workspace::instance(), get_top_level_description(dockable->get_title(), window_geometry), "tool-window"), dockable(dockable), is_moving(false)
@@ -177,4 +178,3 @@ GUITopLevelDescription ToolWindow::get_top_level_description(const std::string &
 }
 
 }
-

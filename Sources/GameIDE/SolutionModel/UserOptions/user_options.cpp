@@ -25,12 +25,13 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/SolutionModel/UserOptions/user_options.h"
 
-
 namespace clan
 {
+
 void UserOptions::load(const std::string &filename)
 {
 	clear();
@@ -131,4 +132,3 @@ void UserOptions::clear()
 }
 
 }
-

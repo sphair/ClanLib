@@ -25,6 +25,7 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/SolutionModel/Solution/solution.h"
 
@@ -95,4 +96,3 @@ void Solution::close()
 }
 
 }
-

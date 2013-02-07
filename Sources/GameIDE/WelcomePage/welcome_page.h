@@ -25,11 +25,14 @@
 **
 **    Magnus Norddahl
 */
+
 #pragma once
 
 #include "API/GameIDE/Workspace/dockable_component.h"
+
 namespace clan
 {
+
 class WelcomePage : public DockableComponent
 {
 public:
@@ -38,9 +41,8 @@ public:
 private:
 	void on_resized();
 
-	clan::Label *welcome;
-	clan::ImageView *logo;
+	Label *welcome;
+	ImageView *logo;
 };
 
 }
-
