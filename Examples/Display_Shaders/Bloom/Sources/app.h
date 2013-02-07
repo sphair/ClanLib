@@ -35,11 +35,11 @@ public:
 
 private:
 	float compute_gaussian(float n, float theta);
-	void render_gaussian_blur(GraphicContext &gc, Texture &source_texture, ProgramObject &program_object, float dx, float dy);
-	void on_input_up(const InputEvent &key);
-	void draw_texture(GraphicContext &gc, const Rectf &rect, const Colorf &color, const Rectf &texture_unit1_coords);
-	void render_extract_highlights(GraphicContext &gc, Texture &source_texture, ProgramObject &program_object);
-	void render_bloom_combine(GraphicContext &gc, Texture &tex_base, Texture &tex_bloom, ProgramObject &program_object);
+	void render_gaussian_blur(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy);
+	void on_input_up(const clan::InputEvent &key);
+	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords);
+	void render_extract_highlights(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object);
+	void render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, clan::Texture2D &tex_bloom, clan::ProgramObject &program_object);
 
 	bool quit;
 

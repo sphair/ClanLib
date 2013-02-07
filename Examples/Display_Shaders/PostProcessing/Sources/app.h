@@ -31,7 +31,7 @@ class App
 {
 public:
 	int start(const std::vector<std::string> &args);
-	void draw_texture(GraphicContext &gc, const Rectf &rect, const Colorf &color = Colorf::white, const Rectf &texture_unit1_coords = Rectf(0.0f,0.0f,1.0f,1.0f));
+	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color = clan::Colorf::white, const clan::Rectf &texture_unit1_coords = clan::Rectf(0.0f,0.0f,1.0f,1.0f));
 	void window_close();
 
 private:

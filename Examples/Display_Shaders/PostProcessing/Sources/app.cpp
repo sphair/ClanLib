@@ -30,31 +30,31 @@
 
 int App::start(const std::vector<std::string> &args)
 {
-	OpenGLWindowDescription description;
+	clan::DisplayWindowDescription description;
 	description.set_title("Postprocessing");
 	description.set_size(Size(1024, 768), true);
 
-	DisplayWindow window(description);
-	InputDevice keyboard = window.get_ic().get_keyboard();
-	GraphicContext gc = window.get_gc();
+	clan::DisplayWindow window(description);
+	clan::InputDevice keyboard = window.get_ic().get_keyboard();
+	clan::Canvas canvas(window);
 
-	Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
+	clan::Slot slot_window_close = window.sig_window_close().connect(this, &App::window_close);
 
 	// Create offscreen texture
-	Texture texture_offscreen(gc, gc.get_width(), gc.get_height());
-	texture_offscreen.set_min_filter(cl_filter_nearest);
-	texture_offscreen.set_mag_filter(cl_filter_nearest);
+	clan::Texture2D texture_offscreen(canvas, canvas.get_width(), canvas.get_height());
+	texture_offscreen.set_min_filter(clan::filter_nearest);
+	texture_offscreen.set_mag_filter(clan::filter_nearest);
 
 	// Create offscreen framebuffer
-	FrameBuffer framebuffer_offscreen(gc);
-	framebuffer_offscreen.attach_color_buffer(0, texture_offscreen);
+	clan::FrameBuffer framebuffer_offscreen(canvas);
+	framebuffer_offscreen.attach_color(0, texture_offscreen);
 
-	Image background(gc, "Resources/background.png");
-	Image ball(gc, "Resources/ball.png");
+	clan::Image background(canvas, "Resources/background.png");
+	clan::Image ball(canvas, "Resources/ball.png");
 	ball.set_alignment(origin_center);
 
 	// Load and link shaders
-	ProgramObject shader = ProgramObject::load(gc, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
+	clan::ProgramObject shader = clan::ProgramObject::load(canvas, "Resources/vertex_shader.glsl", "Resources/fragment_shader.glsl");
 	shader.bind_attribute_location(0, "Position");
 	shader.bind_attribute_location(1, "Color0");
 	shader.bind_attribute_location(2, "TexCoord0");
@@ -70,7 +70,7 @@ int App::start(const std::vector<std::string> &args)
 
 	unsigned int startTime = System::get_time();
 
-	while (!keyboard.get_keycode(KEY_ESCAPE) && !quit )
+	while (!keyboard.get_keycode(clan::keycode_escape) && !quit )
 	{
 		timer = (System::get_time() - startTime) / 1000.0f;
 
@@ -79,20 +79,20 @@ int App::start(const std::vector<std::string> &args)
 		//ball.set_scale(scale, scale);
 
 		// Render standard image to offscreen buffer
-		gc.set_frame_buffer(framebuffer_offscreen);
-		background.draw(gc, 0, 0);
-		ball.draw(gc, gc.get_width() / 2 + 200 * sinf(timer / 2.0f), gc.get_height() / 2 + 200 * cosf(timer / 2.0f));
-		gc.reset_frame_buffer();
+		canvas.set_frame_buffer(framebuffer_offscreen);
+		background.draw(canvas, 0, 0);
+		ball.draw(canvas, canvas.get_width() / 2 + 200 * sinf(timer / 2.0f), canvas.get_height() / 2 + 200 * cosf(timer / 2.0f));
+		canvas.reset_frame_buffer();
 
 		// Render offscreen buffer to screen using post process shader
-		gc.set_texture(0, texture_offscreen);
-		gc.set_program_object(shader, cl_program_matrix_modelview_projection);
+		canvas.set_texture(0, texture_offscreen);
+		canvas.set_program_object(shader, cl_program_matrix_modelview_projection);
 		shader.set_uniform1i("SourceTexture", 0);
 		shader.set_uniform1f("Amount", amount);
 		shader.set_uniform1f("Timer", timer);
-		draw_texture(gc, Rect(0, 0, gc.get_width(), gc.get_height()));
-		gc.reset_program_object();
-		gc.reset_texture(0);
+		draw_texture(canvas, Rect(0, 0, canvas.get_width(), canvas.get_height()));
+		canvas.reset_program_object();
+		canvas.reset_texture(0);
 
 		if(timer > 2.0f)
 		{
@@ -101,43 +101,43 @@ int App::start(const std::vector<std::string> &args)
 				amount = 1.0f;
 		}
 
-		window.flip();
+		canvas.flip();
 
-		System::sleep(10);
+		clan::System::sleep(10);
 
-		KeepAlive::process();
+		clan::KeepAlive::process();
 	}
 
 	return 0;
 }
 
-void App::draw_texture(GraphicContext &gc, const Rectf &rect, const Colorf &color, const Rectf &texture_unit1_coords)
+void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
 {
-	Vec2f positions[6] =
+	clan::Vec2f positions[6] =
 	{
-		Vec2f(rect.left, rect.top),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.top),
-		Vec2f(rect.left, rect.bottom),
-		Vec2f(rect.right, rect.bottom)
+		clan::Vec2f(rect.left, rect.top),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.top),
+		clan::Vec2f(rect.left, rect.bottom),
+		clan::Vec2f(rect.right, rect.bottom)
 	};
 
-	Vec2f tex1_coords[6] =
+	clan::Vec2f tex1_coords[6] =
 	{
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
-		Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
-		Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.top),
+		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
+		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	PrimitivesArray prim_array(gc);
+	clan::PrimitivesArray prim_array(canvas);
 	prim_array.set_attributes(0, positions);
 	prim_array.set_attribute(1, color);
 	prim_array.set_attributes(2, tex1_coords);
-	gc.draw_primitives(cl_triangles, 6, prim_array);
+	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
 }
 
 void App::window_close()
