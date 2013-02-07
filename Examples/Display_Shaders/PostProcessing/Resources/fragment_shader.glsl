@@ -2,6 +2,7 @@
 in vec2 TexCoord;
 
 uniform sampler2D Texture;
+out vec4 cl_FragColor;
 
 layout (std140) uniform ProgramUniforms
 {
@@ -37,6 +38,6 @@ vec4 grey(in vec4 fragment)
 
 void main() 
 {
-	gl_FragColor = grey(scanlines(noise()));
-//	gl_FragColor = grey(scanlines(texture2D(Texture, TexCoord)));
+	cl_FragColor = grey(scanlines(noise()));
+//	cl_FragColor = grey(scanlines(texture2D(Texture, TexCoord)));
 }
