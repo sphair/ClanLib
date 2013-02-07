@@ -7,8 +7,8 @@ out vec2 TexCoord;
 layout (std140) uniform ProgramUniforms
 {
 	mat4 cl_ModelViewProjectionMatrix;
-	float SampleWeights[15];
 	vec2 SampleOffsets[15];
+	float SampleWeights[15];
 };
 
 void main(void) 
