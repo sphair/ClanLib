@@ -1,12 +1,20 @@
+#version 150
+
 // Shader idea and code from http://www.geeks3d.com/20091116/shader-library-2d-shockwave-post-processing-filter-glsl/
 // Enhanced for clanlib
 
-varying vec2 TexCoord;
-uniform sampler2D sceneTex; // 0
-uniform vec2 center; // Mouse position
-uniform float time; // effect elapsed time
-uniform vec3 shockParams; // 10.0, 0.8, 0.1
-uniform float glow;
+in vec2 TexCoord;
+out vec4 cl_FragColor;
+uniform sampler2D Texture0;
+
+layout (std140) uniform ProgramUniforms
+{
+	mat4 cl_ModelViewProjectionMatrix;
+	vec3 shockParams; // 10.0, 0.8, 0.1
+	float time; // effect elapsed time
+	vec2 center; // Mouse position
+	float glow;
+};
 
 void main()
 {
@@ -21,14 +29,14 @@ void main()
 		vec2 diffUV = normalize(uv - center);
 		texture_coord = uv + (diffUV * diffTime);
 
-		gl_FragColor = texture2D(sceneTex, texture_coord);
+		cl_FragColor = texture2D(Texture0, texture_coord);
 
-		gl_FragColor.r += powDiff * glow;
-		gl_FragColor.g += powDiff * glow;
-		gl_FragColor.b += powDiff * glow;
+		cl_FragColor.r += powDiff * glow;
+		cl_FragColor.g += powDiff * glow;
+		cl_FragColor.b += powDiff * glow;
 
 	}
 	else
-		gl_FragColor = texture2D(sceneTex, texture_coord);
+		cl_FragColor = texture2D(Texture0, texture_coord);
 
 }

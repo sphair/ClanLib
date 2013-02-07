@@ -36,7 +36,7 @@ public:
 private:
 	void render_shockwave(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object);
 	void on_input_up(const clan::InputEvent &key);
-	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords);
+	void draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords);
 
 	bool quit;
 	clan::Vec2f center;
