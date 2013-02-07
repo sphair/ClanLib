@@ -45,8 +45,8 @@ private:
 	struct ProgramUniforms
 	{
 		clan::Mat4f cl_ModelViewProjectionMatrix;
-		clan::Vec2f SampleOffsets[sampleCount];
-		float SampleWeights[sampleCount];
+		clan::Vec4f SampleOffsets[sampleCount];
+		clan::Vec4f SampleWeights[sampleCount];
 	};
 
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
