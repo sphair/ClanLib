@@ -1,9 +1,15 @@
-varying vec4 Color;
-varying vec2 TexCoord;
+#version 150
+in vec2 TexCoord;
 
 uniform sampler2D Texture;
-uniform float Amount;
-uniform float Timer;
+
+layout (std140) uniform ProgramUniforms
+{
+	mat4 cl_ModelViewProjectionMatrix;
+	float Amount;
+	float Timer;
+};
+
 
 vec4 scanlines(in vec4 fragment)
 {
