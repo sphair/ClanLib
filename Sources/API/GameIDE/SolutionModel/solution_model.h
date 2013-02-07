@@ -58,7 +58,7 @@ public:
 	std::vector<ProjectPtr> projects;
 	UserOptions user_options;
 
-	clan::Signal_v0 sig_model_updated;
+	Signal_v0 sig_model_updated;
 };
 
 }

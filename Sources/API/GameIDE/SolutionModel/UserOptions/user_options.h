@@ -46,7 +46,7 @@ public:
 
 	static std::string filename_from_solution(const std::string &solution_filename)
 	{
-		return clan::PathHelp::combine(clan::PathHelp::get_fullpath(solution_filename), clan::PathHelp::get_basename(solution_filename) + ".useroptions");
+		return PathHelp::combine(PathHelp::get_fullpath(solution_filename), PathHelp::get_basename(solution_filename) + ".useroptions");
 	}
 
 	std::vector<ProjectOptions> projects;
