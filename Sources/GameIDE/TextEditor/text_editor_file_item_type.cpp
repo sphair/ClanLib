@@ -25,8 +25,9 @@
 **
 **    Magnus Norddahl
 */
+
 #include "GameIDE/precomp.h"
-#include "text_editor_file_item_type.h"
+#include "API/GameIDE/TextEditor/text_editor_file_item_type.h"
 #include "text_editor.h"
 
 namespace clan
