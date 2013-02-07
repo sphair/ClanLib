@@ -50,7 +50,7 @@ private:
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;
 	clan::VertexArrayVector<clan::Vec2f> gpu_tex1_coords;
 	clan::UniformVector<ProgramUniforms> gpu_uniforms;
-
+	clan::PrimitivesArray gpu_primitives_array;
 
 	ProgramUniforms uniforms;
 

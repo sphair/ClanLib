@@ -81,6 +81,9 @@ int App::start(const std::vector<std::string> &args)
 	gpu_positions = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
 	gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(canvas, 1);
+	gpu_primitives_array = clan::PrimitivesArray(canvas);
+	gpu_primitives_array.set_attributes(0, gpu_positions);
+	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
 
 	uniforms.shockParams = clan::Vec3f(10.0f, 0.8f, 0.1f);
 
@@ -229,14 +232,9 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 
 	clan::GraphicContext gc = canvas.get_gc();
 
-	clan::PrimitivesArray prim_array(gc);
-
 	gpu_positions.upload_data(gc, positions, 6);
 	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
 
-	prim_array.set_attributes(0, gpu_positions);
-	prim_array.set_attributes(1, gpu_tex1_coords);
-
-	gc.draw_primitives(clan::type_triangles, 6, prim_array);
+	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
 }
 
