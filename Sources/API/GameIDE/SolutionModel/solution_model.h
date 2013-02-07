@@ -34,8 +34,10 @@
 #include "Solution/solution.h"
 #include "Project/project.h"
 #include "UserOptions/user_options.h"
+
 namespace clan
 {
+
 class SolutionModel
 {
 public:
@@ -58,6 +60,7 @@ public:
 
 	clan::Signal_v0 sig_model_updated;
 };
+
 }
 
 /// \}

@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class UIController;
 class DocumentEditor;
 
@@ -43,6 +45,7 @@ public:
 	virtual void register_ui(UIController *controller) = 0;
 	virtual DocumentEditor *open(UIController *controller, std::string filename) = 0;
 };
+
 }
 
 /// \}

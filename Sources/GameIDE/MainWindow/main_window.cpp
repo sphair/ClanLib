@@ -27,15 +27,15 @@
 */
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/MainWindow/main_window.h"
-#include "../Workspace/workspace.h"
-#include "../SolutionExplorer/solution_explorer.h"
-#include "../PropertyManager/property_manager.h"
-#include "../WelcomePage/welcome_page.h"
+#include "GameIDE/Workspace/workspace.h"
+#include "GameIDE/SolutionExplorer/solution_explorer.h"
+#include "GameIDE/PropertyManager/property_manager.h"
+#include "GameIDE/WelcomePage/welcome_page.h"
+#include "GameIDE/TextEditor/text_editor_file_item_type.h"
 #include "dlg_add_new_project.h"
 
 namespace clan
 {
-
 
 class EditorMainWindow_Impl
 {

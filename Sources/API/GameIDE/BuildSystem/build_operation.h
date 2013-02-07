@@ -30,10 +30,13 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class SolutionModel;
 class BuildOperation_Impl;
+
 class BuildOperation
 {
 public:
@@ -50,6 +53,7 @@ public:
 private:
 	std::shared_ptr<BuildOperation_Impl> impl;
 };
+
 }
 
 /// \}

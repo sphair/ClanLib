@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class UIController;
 class DocumentEditor;
 
@@ -49,6 +51,7 @@ protected:
 private:
 	UIController *controller;
 };
+
 }
 
 /// \}

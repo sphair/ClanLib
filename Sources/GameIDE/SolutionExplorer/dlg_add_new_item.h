@@ -27,9 +27,11 @@
 */
 #pragma once
 
-#include "../FileItemType/file_item_type_factory.h"
+#include "API/GameIDE/FileItemType/file_item_type_factory.h"
+
 namespace clan
 {
+
 class DlgAddNewItem : public clan::GUIComponent
 {
 public:

@@ -30,8 +30,10 @@
 /// \{
 
 #pragma once
+
 namespace clan
 {
+
 class ProjectReference
 {
 public:
@@ -40,6 +42,7 @@ public:
 	std::string name;
 	std::string filename;
 };
+
 }
 
 /// \}

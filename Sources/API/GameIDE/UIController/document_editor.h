@@ -32,8 +32,10 @@
 #pragma once
 
 #include "../Workspace/dockable_component.h"
+
 namespace clan
 {
+
 class UIController;
 
 class DocumentEditor : public DockableComponent
@@ -55,7 +57,7 @@ public:
 
 	virtual void save() { }
 
-	virtual void files_dropped(const std::vector<std::string> &filenames, const clan::InputEvent &e) { }
+	virtual void files_dropped(const std::vector<std::string> &filenames, const InputEvent &e) { }
 
 private:
 	void on_visibility_change(bool new_state);
@@ -65,6 +67,7 @@ private:
 
 	bool dirty;
 };
+
 }
 
 /// \}

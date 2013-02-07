@@ -31,9 +31,11 @@
 
 #pragma once
 
-#include "API/GameIDE/SolutionModel/Project/project_item.h"
+#include "project_item.h"
+
 namespace clan
 {
+
 class Project
 {
 public:
@@ -52,16 +54,17 @@ public:
 	std::string intermediate_directory;
 
 private:
-	ProjectItem *load_item(clan::DomElement dom_item);
-	void load_item_children(ProjectItem *item, clan::DomElement dom_items);
-	void save_item(clan::DomElement dom_parent, ProjectItem *item);
-	void save_item_children(clan::DomElement dom_parent, ProjectItem *item);
+	ProjectItem *load_item(DomElement dom_item);
+	void load_item_children(ProjectItem *item, DomElement dom_items);
+	void save_item(DomElement dom_parent, ProjectItem *item);
+	void save_item_children(DomElement dom_parent, ProjectItem *item);
 
 	Project(Project &other); // do not implement
 	Project &operator =(Project &other); // do not implement
 };
 
 typedef std::shared_ptr<Project> ProjectPtr;
+
 }
 
 /// \}
