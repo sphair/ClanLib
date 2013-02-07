@@ -146,7 +146,7 @@ void App::render_shockwave(clan::Canvas &canvas, clan::Texture2D &source_texture
 	gpu_uniforms.upload_data(gc, &uniforms, 1);
 	gc.set_uniform_buffer(0, gpu_uniforms);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
 	gc.reset_program_object();
 	gc.reset_texture(0);
@@ -208,7 +208,7 @@ void App::on_input_up(const clan::InputEvent &key)
 	}
 }
 
-void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
+void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
 {
 	clan::Vec2f positions[6] =
 	{
@@ -229,8 +229,6 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 		clan::Vec2f(texture_unit1_coords.left, texture_unit1_coords.bottom),
 		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
-
-	clan::GraphicContext gc = canvas.get_gc();
 
 	gpu_positions.upload_data(gc, positions, 6);
 	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
