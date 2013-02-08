@@ -41,12 +41,19 @@ private:
 
 	static const int sampleCount = 15;
 
+	struct Sample
+	{
+		float offset_x;
+		float offset_y;
+		float weight;
+		float padding;
+	};
+
 
 	struct ProgramUniforms
 	{
 		clan::Mat4f cl_ModelViewProjectionMatrix;
-		clan::Vec4f SampleOffsets[sampleCount];
-		clan::Vec4f SampleWeights[sampleCount];
+		Sample sample[sampleCount];		// Each array element must be aligned to a vec4 (4 floats) in GLSL
 	};
 
 	clan::VertexArrayVector<clan::Vec2f> gpu_positions;

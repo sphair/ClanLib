@@ -132,17 +132,18 @@ float App::compute_gaussian(float n, float theta) // theta = Blur Amount
 
 void App::render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy)
 {
-	uniforms.SampleWeights[0] = clan::Vec4f(compute_gaussian(0, blur_amount));
-	uniforms.SampleOffsets[0] = clan::Vec4f(clan::Vec2f(0.0, 0.0));
+	uniforms.sample[0].weight = compute_gaussian(0, blur_amount);
+	uniforms.sample[0].offset_x = 0.0f;
+	uniforms.sample[0].offset_y = 0.0f;
 
-	float totalWeights = uniforms.SampleWeights[0].x;
+	float totalWeights = uniforms.sample[0].weight;
 
 	for (int i = 0; i < sampleCount / 2; i++)
 	{
 		float weight = compute_gaussian(i + 1.0f, blur_amount);
 
-		uniforms.SampleWeights[i * 2 + 1].x = weight;
-		uniforms.SampleWeights[i * 2 + 2].x = weight;
+		uniforms.sample[i * 2 + 1].weight = weight;
+		uniforms.sample[i * 2 + 2].weight = weight;
 
 		totalWeights += weight * 2;
 
@@ -150,13 +151,15 @@ void App::render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Te
 
 		clan::Vec2f delta(dx * sampleOffset, dy * sampleOffset);
 
-		uniforms.SampleOffsets[i * 2 + 1] = clan::Vec4f(delta);
-		uniforms.SampleOffsets[i * 2 + 2] = clan::Vec4f((clan::Vec2f(-delta.x, -delta.y)));
+		uniforms.sample[i * 2 + 1].offset_x = delta.x;
+		uniforms.sample[i * 2 + 1].offset_y = delta.y;
+		uniforms.sample[i * 2 + 2].offset_x = -delta.x;
+		uniforms.sample[i * 2 + 2].offset_y = -delta.y;
 	}
 
 	for (int i = 0; i < sampleCount; i++)
 	{
-		uniforms.SampleWeights[i].x /= totalWeights;
+		uniforms.sample[i].weight /= totalWeights;
 	}
 
 	canvas.flush();
