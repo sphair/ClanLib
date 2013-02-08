@@ -27,6 +27,10 @@
 **    Mark Page
 */
 
+#pragma once
+
+#include <memory>
+
 namespace clan
 {
 
