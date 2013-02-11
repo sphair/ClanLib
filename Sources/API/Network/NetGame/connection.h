@@ -31,8 +31,9 @@
 
 #pragma once
 
+#include <vector>
 #include "../api_network.h"
-
+#include "../../Core/Text/string_types.h"
 #include "event.h"
 #include "../Socket/tcp_connection.h" // TODO: Remove
 #include "../Socket/socket_name.h" // TODO: Remove
