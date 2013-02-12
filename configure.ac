@@ -139,7 +139,6 @@ if test "$WIN32" = "yes"; then
 		extra_LIBS_clanCore="-lz -lmsvcrt -lshell32 -lshlwapi -limagehlp -lmingwex"
 		extra_LIBS_clanDisplay="-lwinmm -lmsvcrt -lmingwex -lddraw -ldinput8 -ldxguid -lmapi32 -lgdi32 -lole32 -lfreetype"
 		extra_LIBS_clanGL="-lopengl32"
-		extra_LIBS_clanLegacyGL="-lopengl32"
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
 		extra_LIBS_clanSqlite="-lsqlite3"
 		extra_LIBS_clanNetwork="-lws2_32"
@@ -149,7 +148,6 @@ if test "$WIN32" = "yes"; then
 	extra_LIBS_clanCore="-lz"
 	extra_LIBS_clanDisplay="-lwinmm -lddraw -ldinput8 -ldxguid -lgdi32 -lole32"
 	extra_LIBS_clanGL="-lopengl32"
-	extra_LIBS_clanLegacyGL="-lopengl32"
 	extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm"
 	extra_LIBS_clanNetwork="-lws2_32"
 	extra_LIBS_clanSqlite="-lsqlite3"
@@ -312,7 +310,6 @@ echo "========================================"
 CLANLIB_ARG_ENABLE(docs,         auto, [Build Clanlib API documentation], [whether we should try to build API documentation])
 CLANLIB_ARG_ENABLE(clanDisplay,  auto, [Build clanDisplay module],    [whether we should try to build clanDisplay])
 CLANLIB_ARG_ENABLE(clanGL,       auto, [Build clanGL module],         [whether we should try to build clanGL])
-CLANLIB_ARG_ENABLE(clanLegacyGL,      auto, [Build clanLegacyGL module],        [whether we should try to build clanLegacyGL])
 CLANLIB_ARG_ENABLE(clanSound,    auto, [Build clanSound module],      [whether we should try to build clanSound])
 CLANLIB_ARG_ENABLE(clanDatabase, auto, [Build clanDatabase module],   [whether we should try to build clanDatabase])
 CLANLIB_ARG_ENABLE(clanSqlite,   auto, [Build clanSqlite module],     [whether we should try to build clanSqlite])
@@ -414,31 +411,6 @@ if test "$enable_clanDisplay" != "no"; then
 			echo ""
 		fi
 	
-		if test "$enable_clanLegacyGL" != "no"; then
-			echo "Checking for clanLegacyGL stuff"
-			echo "=============================="
-			if test "$WIN32" = "yes"; then
-				CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanLegacyGL, [ *** Cannot find opengl32], [-lopengl32])
-			else
-				CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanLegacyGL, [ *** Cannot find GL], [ $LIBPTHREAD -lGL ])
-				if test "$enable_clanLegacyGL" != "no" && test "$X11" = "yes"; then
-			
-					dnl Check that glXGetProcAddressARB is defined in glx.h
-					AC_MSG_CHECKING([whether glx.h defines glXGetProcAddressARB]);
-					AC_TRY_COMPILE([#define GLX_GLXEXT_PROTOTYPES
-						#include <GL/glx.h>], [ char *foo = (char*) glXGetProcAddressARB; ],
-						glx_has_getprocaddressarb="yes", glx_has_getprocaddressarb="no")
-					AC_MSG_RESULT([$glx_has_getprocaddressarb])
-
-					if test "x$glx_has_getprocaddressarb" = "xyes"; then
-						AC_DEFINE(HAVE_GLX_GETPROCADDRESSARB, 1, [Define if the OpenGL library supports the glXGetProcAddressARB call])
-					fi
-				fi
-			fi
-			if test "$enable_clanLegacyGL" = "auto"; then enable_clanLegacyGL=yes; fi
-			echo ""
-		fi
-	
 		if test "$enable_clanCSSLayout" != "no"; then
 			echo "Checking for clanCSSLayout stuff"
 			echo "=============================="
@@ -466,7 +438,6 @@ dnl				CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ **
 		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
 		CLANLIB_DISABLE_MODULE(clanCSSLayout, [ *** clanCSSLayout depends on clanDisplay])
 		CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
-		CLANLIB_DISABLE_MODULE(clanLegacyGL, [ *** clanLegacyGL depends on clanDisplay])
 	fi
 
 have_alsa=no
@@ -553,7 +524,6 @@ AC_SUBST(extra_CFLAGS_clanApp)
 AC_SUBST(extra_CFLAGS_clanCore)
 AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
-AC_SUBST(extra_CFLAGS_clanLegacyGL)
 AC_SUBST(extra_CFLAGS_clanGUI)
 AC_SUBST(extra_CFLAGS_clanCSSLayout)
 AC_SUBST(extra_CFLAGS_clanSound)
@@ -572,7 +542,6 @@ AC_SUBST(extra_LIBS_clanApp)
 AC_SUBST(extra_LIBS_clanCore)
 AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
-AC_SUBST(extra_LIBS_clanLegacyGL)
 AC_SUBST(extra_LIBS_clanGUI)
 AC_SUBST(extra_LIBS_clanCSSLayout)
 AC_SUBST(extra_LIBS_clanSound)
@@ -617,10 +586,6 @@ fi
 
 if test "$enable_clanGL" = "yes"; then
 	CLANLIB_ENABLE_MODULES(GL)
-fi
-
-if test "$enable_clanLegacyGL" = "yes"; then
-	CLANLIB_ENABLE_MODULES(LegacyGL)
 fi
 
 if test "$enable_clanGUI" = "yes"; then
@@ -787,7 +752,6 @@ if test "$enable_clanGL" != "no"; then
 fi
 
 echo "                     clanGL = $enable_clanGL$gl_options"
-echo "                    clanLegacyGL = $enable_clanLegacyGL"
 echo "                    clanApp = yes"
 echo "               clanDatabase = $enable_clanDatabase"
 echo "                 clanSqlite = $enable_clanSqlite"
