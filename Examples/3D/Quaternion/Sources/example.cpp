@@ -57,7 +57,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Quaternion's Example");
 	desc.set_size(Size(900, 700), true);
 	desc.set_multisampling(4);
@@ -159,7 +159,7 @@ int App::start(const std::vector<std::string> &args)
 
 		// Draw information boxes
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 		gc.set_culled(false);
 	
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
@@ -186,7 +186,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -231,12 +231,12 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 18.0f, -25.0f);
-	camera->rotation_x = Angle(30.0f, cl_degrees);
+	camera->rotation_x = Angle(30.0f, angle_degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
 	light_distant->position = Vec3f(0.0f, 32.0f, 20.0f);
-	light_distant->rotation_y = Angle(45.0f, cl_degrees);
-	light_distant->rotation_x = Angle(35.0f, cl_degrees);
+	light_distant->rotation_y = Angle(45.0f, angle_degrees);
+	light_distant->rotation_x = Angle(35.0f, angle_degrees);
 
 	// Set left euler angle teapot
 	SceneObject *ring;
@@ -249,19 +249,19 @@ void App::create_scene(GraphicContext &gc)
 	rotation_euler_a = new SceneObject(scene, scene.base);
 	rotation_euler_a->position = teapot_euler->position;
 	ring = new SceneObject(scene, rotation_euler_a);
-	ring->rotation_y = Angle(-90.0f, cl_degrees);
+	ring->rotation_y = Angle(-90.0f, angle_degrees);
 	ring->model = model_ring_a;
 
 	rotation_euler_b = new SceneObject(scene, rotation_euler_a);
 	ring = new SceneObject(scene, rotation_euler_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = Angle(90.0f, cl_degrees);
+	ring->rotation_x = Angle(90.0f, angle_degrees);
 
 	rotation_euler_c = new SceneObject(scene, rotation_euler_b);
 	ring = new SceneObject(scene, rotation_euler_c);
 	ring->model = model_ring_c;
-	ring->rotation_x = Angle(180.0f, cl_degrees);
-	ring->rotation_z = Angle(90.0f, cl_degrees);
+	ring->rotation_x = Angle(180.0f, angle_degrees);
+	ring->rotation_z = Angle(90.0f, angle_degrees);
 
 	// Set right target angle teapot
 	teapot_target = new SceneObject(scene, scene.base);
@@ -272,19 +272,19 @@ void App::create_scene(GraphicContext &gc)
 	rotation_target_a = new SceneObject(scene, scene.base);
 	rotation_target_a->position = teapot_target->position;
 	ring = new SceneObject(scene, rotation_target_a);
-	ring->rotation_y = Angle(-90.0f, cl_degrees);
+	ring->rotation_y = Angle(-90.0f, angle_degrees);
 	ring->model = model_ring_a;
 
 	rotation_target_b = new SceneObject(scene, rotation_target_a);
 	ring = new SceneObject(scene, rotation_target_b);
 	ring->model = model_ring_b;
-	ring->rotation_x = Angle(90.0f, cl_degrees);
+	ring->rotation_x = Angle(90.0f, angle_degrees);
 
 	rotation_target_c = new SceneObject(scene, rotation_target_b);
 	ring = new SceneObject(scene, rotation_target_c);
 	ring->model = model_ring_c;
-	ring->rotation_x = Angle(180.0f, cl_degrees);
-	ring->rotation_z = Angle(90.0f, cl_degrees);
+	ring->rotation_x = Angle(180.0f, angle_degrees);
+	ring->rotation_z = Angle(90.0f, angle_degrees);
 
 	// Set ring colours
 
@@ -368,12 +368,12 @@ void App::control_target(Options *options)
 
 		time_made_active = current_time;
 		initial_quaternion = options->quaternion;
-		final_quaternion = Quaternionf(options->target_x, options->target_y, options->target_z, cl_YXZ);
+		final_quaternion = Quaternionf(options->target_x, options->target_y, options->target_z, order_YXZ);
 	}
 
 	if (options->button_rotate_clicked)
 	{
-		Quaternionf quat = Quaternionf::multiply(Quaternionf(options->target_x, options->target_y, options->target_z, cl_YXZ), options->quaternion);
+		Quaternionf quat = Quaternionf::multiply(Quaternionf(options->target_x, options->target_y, options->target_z, order_YXZ), options->quaternion);
 		options->set_new_quaternion(quat);
 		options->button_rotate_clicked = false;
 	}

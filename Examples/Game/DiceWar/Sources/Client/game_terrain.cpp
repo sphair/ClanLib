@@ -204,7 +204,7 @@ void GameTerrain::set_area_colors(GraphicContext &gc, const std::vector<unsigned
 
 	texture_colors = Texture2D(gc, area_count+1, 1);
 	texture_colors.set_image(buffer_colors);
-	texture_colors.set_wrap_mode(cl_wrap_clamp_to_edge, cl_wrap_clamp_to_edge);
+	texture_colors.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 	texture_colors.set_min_filter(filter_nearest);
 	texture_colors.set_mag_filter(filter_nearest);
 }
@@ -306,7 +306,7 @@ void GameTerrain::render_sprite(Canvas &canvas, const LightModel &light_model, R
 	shader_program.set_uniform("frontMaterialShininess", material.shininess);
 	shader_program.set_uniform("frontLightModelProductSceneColor", light_model.get_scene_color(material));
 */
-	gc.draw_primitives(cl_triangles, num_vertices, prim_array);
+	gc.draw_primitives(type_triangles, num_vertices, prim_array);
 
 	gc.reset_program_object();
 	gc.reset_texture(0);

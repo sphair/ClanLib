@@ -57,7 +57,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib BumpMap Example");
 	desc.set_size(Size(900, 700), true);
 	desc.set_multisampling(4);
@@ -149,7 +149,7 @@ int App::start(const std::vector<std::string> &args)
 		render(gc);
 
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 		gc.set_culled(false);
 	
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
@@ -172,7 +172,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -215,14 +215,14 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(-20.0f, 40.0f, -60.0f);
-	camera->rotation_x = Angle(20.0f, cl_degrees);
+	camera->rotation_x = Angle(20.0f, angle_degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
 	//light_distant->model = model_cone;
 	//light_distant->position = Vec3f(0.0f, 32.0f, 20.0f);
 	//  Note, these are updated by the options
-	light_distant->rotation_y = Angle(45.0f, cl_degrees);
-	light_distant->rotation_x = Angle(35.0f, cl_degrees);
+	light_distant->rotation_y = Angle(45.0f, angle_degrees);
+	light_distant->rotation_x = Angle(35.0f, angle_degrees);
 
 	teapot = new SceneObject(scene, scene.base);
 	teapot->model = model_teapot;
@@ -279,6 +279,6 @@ void App::rotate_teapot()
 {
 	float delta = ((float) time_delta) / 10.0f;
 
-	teapot->rotation_y = Angle(teapot->rotation_y.to_degrees() + delta, cl_degrees);
+	teapot->rotation_y = Angle(teapot->rotation_y.to_degrees() + delta, angle_degrees);
 
 }

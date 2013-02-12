@@ -102,13 +102,13 @@ char ShaderColor::fragment[] =
 
 ShaderColor::ShaderColor(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, cl_shadertype_vertex, vertex);
+	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
 	if(!vertex_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	ShaderObject fragment_shader(gc, cl_shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
 	if(!fragment_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));

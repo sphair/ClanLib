@@ -462,13 +462,13 @@ void GUI_Layered::setup_shader()
 {
 	clan::Canvas canvas = window_ptr->get_canvas();
 
-	clan::ShaderObject vertex_shader(canvas, cl_shadertype_vertex, GUI_Texture_Shader_Vertex);
+	clan::ShaderObject vertex_shader(canvas, shadertype_vertex, GUI_Texture_Shader_Vertex);
 	if(!vertex_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	clan::ShaderObject fragment_shader(canvas, cl_shadertype_fragment, GUI_Texture_Shader_Fragment);
+	clan::ShaderObject fragment_shader(canvas, shadertype_fragment, GUI_Texture_Shader_Fragment);
 	if(!fragment_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));

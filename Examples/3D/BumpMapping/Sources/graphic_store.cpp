@@ -54,9 +54,9 @@ void GraphicStore::LoadImages( GraphicContext &gc )
 {
 	// Load the texture
 	texture_brick = Texture(gc, "../Shadow/Resources/brick.png");
-	texture_brick.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
+	texture_brick.set_wrap_mode(wrap_repeat, wrap_repeat, wrap_repeat);
 
 	normal_map = Texture(gc, "Resources/normal_map.png");
-	normal_map.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
+	normal_map.set_wrap_mode(wrap_repeat, wrap_repeat, wrap_repeat);
 
 }

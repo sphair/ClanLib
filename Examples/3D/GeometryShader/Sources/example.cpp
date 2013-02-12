@@ -38,7 +38,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Geometry Shader Example");
 	desc.set_size(Size(900, 700), true);
 	desc.set_multisampling(0);
@@ -95,7 +95,7 @@ int App::start(const std::vector<std::string> &args)
 		render(gc);	// Render scene
 
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 
 		std::string fps(string_format("fps = %1", framerate_counter.get_framerate()));
 		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -117,7 +117,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -172,13 +172,13 @@ void App::create_scene(GraphicContext &gc)
 {
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 50.0f, -20.0f);
-	camera->rotation_y = Angle(0.0f, cl_degrees);
+	camera->rotation_y = Angle(0.0f, angle_degrees);
 
 	object_particles = new ParticleObject(gc, scene, scene.base);
 	object_particles->position = Vec3f(-110.0f, 54.0f, -5.0f);
-	object_particles->rotation_y = Angle(0.0f, cl_degrees);
-	object_particles->rotation_x = Angle(0.0f, cl_degrees);
-	object_particles->rotation_z = Angle(0.0f, cl_degrees);
+	object_particles->rotation_y = Angle(0.0f, angle_degrees);
+	object_particles->rotation_x = Angle(0.0f, angle_degrees);
+	object_particles->rotation_z = Angle(0.0f, angle_degrees);
 	object_particles->scale = Vec3f(1.0f, 1.0f, 1.0f);
 }
 
@@ -212,7 +212,7 @@ void App::control_camera()
 
 	camera->position = Vec3f(xpos, 100.0f, zpos);
 
-	camera->rotation_x = Angle(20.0f, cl_degrees);
-	camera->rotation_y = Angle(-(camera_angle+90.0f), cl_degrees);
+	camera->rotation_x = Angle(20.0f, angle_degrees);
+	camera->rotation_y = Angle(-(camera_angle+90.0f), angle_degrees);
 
 }

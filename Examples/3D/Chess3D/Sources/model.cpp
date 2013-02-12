@@ -105,7 +105,7 @@ void Model::render(GraphicContext &gc, const LightModel &light_model, const Posi
 			}
 		}
 
-		gc.draw_primitives_array(cl_triangles, it->second.start, it->second.length);
+		gc.draw_primitives_array(type_triangles, it->second.start, it->second.length);
 	}
 
 	gc.reset_texture(0);
@@ -242,7 +242,7 @@ void Model::load_model(GraphicContext &gc, const std::string & filename)
 						PixelBuffer image = load_image("Resources/Sponza/" + StringHelp::local8_to_text(m->texture1_map.name));
 						textures[m->texture1_map.name] = Texture(gc, image.get_size());
 						textures[m->texture1_map.name].set_image(image);
-						textures[m->texture1_map.name].set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat);
+						textures[m->texture1_map.name].set_wrap_mode(wrap_repeat, wrap_repeat);
 						textures[m->texture1_map.name].set_max_anisotropy(8.0f);
 
 						// FIXME: This does not work, maybe because "Rectangular textures do not support mipmapping"

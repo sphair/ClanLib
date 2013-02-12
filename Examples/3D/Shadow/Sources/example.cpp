@@ -57,7 +57,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Shadow Example");
 	desc.set_size(Size(640, 640), true);
 	desc.set_multisampling(4);
@@ -88,8 +88,8 @@ int App::start(const std::vector<std::string> &args)
 
 	FrameBuffer framebuffer(gc);
 
-	Texture new_depth_texture(gc, Size(1024, 1024), cl_depth_component);
-	new_depth_texture.set_wrap_mode(cl_wrap_clamp_to_edge, cl_wrap_clamp_to_edge, cl_wrap_clamp_to_edge);
+	Texture2D new_depth_texture(gc, Size(1024, 1024), cl_depth_component);
+	new_depth_texture.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge, wrap_clamp_to_edge);
 	framebuffer.attach_depth_buffer(new_depth_texture);
 
 	scene.gs->texture_shadow = new_depth_texture;
@@ -120,7 +120,7 @@ int App::start(const std::vector<std::string> &args)
 		render_from_camera(gc, framebuffer);
 
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
 		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -139,7 +139,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -182,7 +182,7 @@ void App::render_from_lightsource(GraphicContext &gc, FrameBuffer &framebuffer)
 	gc.reset_program_object();
 
 	gc.set_modelview(Mat4f::identity());
-	gc.set_map_mode(MapMode(cl_map_2d_upper_left));
+	gc.set_map_mode(MapMode(map_2d_upper_left));
 
 	gc.reset_frame_buffer();
 }
@@ -226,13 +226,13 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 50.0f, -20.0f);
-	camera->rotation_y = Angle(0.0f, cl_degrees);
+	camera->rotation_y = Angle(0.0f, angle_degrees);
 	camera->scale = Vec3f(1.0f, 1.0f, 1.0f);
 
 	light = new SceneObject(scene, scene.base);
 	light->position = Vec3f(-20.4732f, 48.7872f, -20.5439f);
-	light->rotation_y = Angle(45.0f, cl_degrees);
-	light->rotation_x = Angle(35.0f, cl_degrees);
+	light->rotation_y = Angle(45.0f, angle_degrees);
+	light->rotation_x = Angle(35.0f, angle_degrees);
 	light->scale = Vec3f(1.0f, 1.0f, 1.0f);
 
 	SceneObject *object_landscape = new SceneObject(scene, scene.base);
@@ -291,8 +291,8 @@ void App::control_camera()
 
 	camera->position = Vec3f(xpos, 50.0f, zpos);
 
-	camera->rotation_x = Angle(20.0f, cl_degrees);
-	camera->rotation_y = Angle(-(camera_angle+90.0f), cl_degrees);
+	camera->rotation_x = Angle(20.0f, angle_degrees);
+	camera->rotation_y = Angle(-(camera_angle+90.0f), angle_degrees);
 
 }
 
@@ -343,11 +343,11 @@ void App::rotate_teapot()
 {
 	float delta = ((float) time_delta) / 5.0f;
 
-	object_teapot1->rotation_y = Angle(object_teapot1->rotation_y.to_degrees() + delta, cl_degrees);
+	object_teapot1->rotation_y = Angle(object_teapot1->rotation_y.to_degrees() + delta, angle_degrees);
 
-	object_teapot2->rotation_y = Angle(object_teapot2->rotation_y.to_degrees() - delta, cl_degrees);
+	object_teapot2->rotation_y = Angle(object_teapot2->rotation_y.to_degrees() - delta, angle_degrees);
 
-	object_gear->rotation_z = Angle(object_gear->rotation_z.to_degrees() + delta, cl_degrees);
+	object_gear->rotation_z = Angle(object_gear->rotation_z.to_degrees() + delta, angle_degrees);
 
 
 }

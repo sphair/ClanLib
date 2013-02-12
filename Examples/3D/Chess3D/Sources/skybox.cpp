@@ -50,8 +50,8 @@ Skybox::Skybox(GraphicContext &gc)
 		pb_positive_z,
 		pb_negative_z);
 
-	skybox_texture.set_min_filter(cl_filter_linear);
-	skybox_texture.set_mag_filter(cl_filter_linear);
+	skybox_texture.set_min_filter(filter_linear);
+	skybox_texture.set_mag_filter(filter_linear);
 	//skybox_texture.generate_mipmap(true);
 	//skybox_texture.set_min_filter(cl_filter_linear_mipmap_linear);
 }
@@ -72,7 +72,7 @@ void Skybox::render(GraphicContext &gc, const Camera &camera)
 
 	PrimitivesArray prim_array(gc);
 	prim_array.set_attributes(0, positions);
-	gc.draw_primitives(cl_triangles, 6*6, prim_array);
+	gc.draw_primitives(type_triangles, 6*6, prim_array);
 
 	gc.reset_program_object();
 	gc.reset_texture(0);
