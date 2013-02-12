@@ -39,12 +39,15 @@
 			#pragma comment(lib, "assimp-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt.lib")
+			#pragma comment(lib, "zlib-static-mt.lib")
 		#endif
 	#else
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt-debug.lib")
+			#pragma comment(lib, "zlib-static-mt-debug.lib")
+
 		#endif
 	#endif
 #endif
@@ -70,23 +73,23 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	// Get the canvas
+	Canvas canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(gc);
+	GraphicStore graphic_store(canvas);
 	scene.gs = &graphic_store;
 
 	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	canvas.set_map_mode(map_user_projection);
 
-	gc.set_culled(true);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
+	//FIXME: gc.set_culled(true);
+	//FIXME: gc.set_face_cull_mode(cl_cull_back);
+	//FIXME: gc.set_front_face(cl_face_side_clockwise);
 
-	create_scene(gc);
+	create_scene(canvas);
 
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
 	FramerateCounter framerate_counter;
 
@@ -103,23 +106,23 @@ int App::start(const std::vector<std::string> &args)
 
 		ShaderTexture::main_time = ((float) (time_now - time_start))/1000.0f;
 
-		calculate_matricies(gc);
+		calculate_matricies(canvas);
 
-		update_light(gc);
+		update_light(canvas);
 	
-		gc.set_culled(true);
-		render(gc);
+		//FIXME: gc.set_culled(true);
+		render(canvas);
 
-		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(map_2d_upper_left);
-		gc.set_culled(false);
+		canvas.set_modelview(Mat4f::identity());
+		canvas.set_map_mode(map_2d_upper_left);
+		//FIXME: gc.set_culled(false);
 	
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
-		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(gc, 16, gc.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		canvas.flip(0);
 
 		// This call processes user input and other events
 		KeepAlive::process();
@@ -143,19 +146,21 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::render(GraphicContext &gc)
+void App::render(Canvas &canvas)
 {
-	gc.set_map_mode(cl_user_projection);
+	GraphicContext gc(canvas);
+
+	canvas.set_map_mode(map_user_projection);
 	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
 	gc.set_viewport(viewport_rect);
 
-	gc.set_projection(scene.gs->camera_projection);
+	canvas.set_projection(scene.gs->camera_projection);
 
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	gc.enable_depth_test(true);
-	gc.enable_stencil_test(false);
-	gc.enable_color_write(true);
+//FIXME:	gc.set_depth_compare_function(cl_comparefunc_lequal);
+//FIXME:	gc.enable_depth_write(true);
+//FIXME:	gc.enable_depth_test(true);
+//FIXME:	gc.enable_stencil_test(false);
+//FIXME:	gc.enable_color_write(true);
 
 	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 	gc.clear_depth(1.0f);
@@ -218,10 +223,10 @@ void App::update_light(GraphicContext &gc)
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f);
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);

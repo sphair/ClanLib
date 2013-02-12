@@ -214,6 +214,7 @@ ShaderTexture::ShaderTexture(GraphicContext &gc)
 
 void ShaderTexture::Use(GraphicContext &gc)
 {
+/* FIXME
 	program_object.set_uniform1f("Time", main_time);
 
 	if (!material_updated)
@@ -237,7 +238,7 @@ void ShaderTexture::Use(GraphicContext &gc)
 		program_object.set_uniform4f("LightDiffuse", light_diffuse);
 		program_object.set_uniform4f("LightAmbient", light_ambient);
 	}
-
+*/
 	gc.set_program_object(program_object);
 }
 
