@@ -9,13 +9,6 @@ clanGL_includes = \
 	GL/opengl_graphic_context.h \
 	GL/setup_gl.h
 
-clanLegacyGL_includes = \
-	legacy_gl.h \
-	LegacyGL/api_legacy_gl.h \
-	LegacyGL/graphic_context_legacy_gl.h \
-	LegacyGL/legacy_gl_target.h \
-	LegacyGL/setup_legacy_gl.h
-
 clanApp_includes = \
 	application.h \
 	App/api_app.h \
@@ -558,7 +551,6 @@ nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 # All available headers are listed here (for 'make dist' and such)
 EXTRA_HEADERS = \
 	$(clanGL_includes) \
-	$(clanLegacyGL_includes) \
 	$(clanCore_includes) \
         $(clanApp_includes) \
 	$(clanDisplay_includes) \
