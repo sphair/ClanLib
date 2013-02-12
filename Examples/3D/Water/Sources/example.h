@@ -46,7 +46,7 @@ private:
 	void on_window_close();
 	
 private:
-	void render(GraphicContext &gc);
+	void render(Canvas &canvas);
 	void create_scene(GraphicContext &gc);
 	void update_light(GraphicContext &gc);
 	void calculate_matricies(GraphicContext &gc);

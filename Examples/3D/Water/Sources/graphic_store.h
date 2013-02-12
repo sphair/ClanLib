@@ -41,8 +41,8 @@ public:
 public:
 	ShaderTexture shader_texture;
 
-	Texture texture_underwater;
-	Texture texture_background;
+	Texture2D texture_underwater;
+	Texture2D texture_background;
 
 	Mat4f camera_projection;
 	Mat4f camera_modelview;

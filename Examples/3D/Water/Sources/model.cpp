@@ -42,7 +42,7 @@ public:
 
 private:
 	int count_vertices(const struct aiScene* sc, const struct aiNode* nd);
-	void insert_vbo(int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
+	void insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
 
 	VertexArrayBuffer vbo_positions;
 	VertexArrayBuffer vbo_normals;
@@ -116,11 +116,11 @@ void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename
 		if (!vbo_size)
 			throw Exception("No vertices found in the model");
 	
-		vbo_positions = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f), cl_usage_static_draw);
-		vbo_normals = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f), cl_usage_static_draw);
+		vbo_positions = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f), usage_static_draw);
+		vbo_normals = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f), usage_static_draw);
 		if (generate_texture_coords)
-			vbo_texcoords = VertexArrayBuffer(gc, vbo_size * sizeof(Vec2f), cl_usage_static_draw);
-		insert_vbo(0, scene, scene->mRootNode);
+			vbo_texcoords = VertexArrayBuffer(gc, vbo_size * sizeof(Vec2f), usage_static_draw);
+		insert_vbo(gc, 0, scene, scene->mRootNode);
 	}catch(...)
 	{
 		aiReleaseImport(scene);
@@ -163,7 +163,7 @@ int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd
 	return vertex_count;
 }
 
-void Model_Impl::insert_vbo(int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
+void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
 {
 	int i;
 	unsigned int n = 0, t;
@@ -208,10 +208,15 @@ void Model_Impl::insert_vbo(int vertex_count, const struct aiScene* sc, const st
 			}
 		}
 
-		vbo_positions.upload_data(vertex_count * sizeof(Vec3f), &vertices[0], num_vertex * sizeof(Vec3f));
-		vbo_normals.upload_data(vertex_count * sizeof(Vec3f), &normals[0], num_vertex * sizeof(Vec3f));
+		vbo_positions.upload_data(gc, &vertices[0], num_vertex * sizeof(Vec3f));
+		vbo_normals.upload_data(gc, &normals[0], num_vertex * sizeof(Vec3f));
 		if (use_texcoords)
-			vbo_texcoords.upload_data(vertex_count * sizeof(Vec2f), &tex_coords[0], num_vertex * sizeof(Vec2f));
+			vbo_texcoords.upload_data(gc, &tex_coords[0], num_vertex * sizeof(Vec2f));
+
+//FIXME:		vbo_positions.upload_data(gc, vertex_count * sizeof(Vec3f), &vertices[0], num_vertex * sizeof(Vec3f));
+//FIXME:		vbo_normals.upload_data(gc, vertex_count * sizeof(Vec3f), &normals[0], num_vertex * sizeof(Vec3f));
+//FIXME:		if (use_texcoords)
+//FIXME:			vbo_texcoords.upload_data(gc, vertex_count * sizeof(Vec2f), &tex_coords[0], num_vertex * sizeof(Vec2f));
 
 		vertex_count += num_vertex;
 	}
@@ -219,23 +224,23 @@ void Model_Impl::insert_vbo(int vertex_count, const struct aiScene* sc, const st
 	// All children
 	for (n = 0; n < nd->mNumChildren; ++n)
 	{
-		insert_vbo(vertex_count, sc, nd->mChildren[n]);
+		insert_vbo(gc, vertex_count, sc, nd->mChildren[n]);
 	}
 
 }
 
 void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
-	gc.set_modelview(modelview_matrix);
+	//FIXME: gc.set_modelview(modelview_matrix);
 
 	PrimitivesArray prim_array(gc);
 
-	prim_array.set_attributes(0, vbo_positions, 3, cl_type_float, 0);
-	prim_array.set_attributes(1, vbo_normals, 3, cl_type_float, 0);
+	prim_array.set_attributes(0, vbo_positions, 3, type_float, 0);
+	prim_array.set_attributes(1, vbo_normals, 3, type_float, 0);
 
 	if (!vbo_texcoords.is_null())
 	{
-		prim_array.set_attributes(2, vbo_texcoords, 2, cl_type_float, 0);
+		prim_array.set_attributes(2, vbo_texcoords, 2, type_float, 0);
 		gc.set_texture(0, gs->texture_underwater);
 		gc.set_texture(1, gs->texture_background);
 		gs->shader_texture.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
