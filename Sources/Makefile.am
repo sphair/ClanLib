@@ -7,7 +7,6 @@ DIST_SUBDIRS = \
   Database       \
   Display        \
   GL             \
-  LegacyGL            \
   GUI            \
   CSSLayout      \
   Network        \
