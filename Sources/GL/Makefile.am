@@ -3,7 +3,6 @@ lib_LTLIBRARIES = libclan30GL.la
 libclan30GL_la_SOURCES = \
 	opengl.cpp \
 	opengl_graphic_context.cpp \
-	opengl_graphic_context_provider.cpp \
 	opengl_target.cpp \
 	opengl_target_provider.cpp \
 	opengl_window_description.cpp \
