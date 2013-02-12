@@ -14,3 +14,4 @@
 #include "assimp/scene.h"
 #include "assimp/config.h"
 
+using namespace clan;

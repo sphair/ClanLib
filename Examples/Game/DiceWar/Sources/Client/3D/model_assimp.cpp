@@ -62,7 +62,7 @@ void ModelAssimp::render(Canvas &canvas, const LightModel &light_model, const Po
 	modelmatrix = modelmatrix * orientation.to_matrix();
 	float scale = 1.5f;
 
-	modelmatrix = modelmatrix * Mat4f::rotate(Angle(-90.0f, cl_degrees), 1.0f, 0.0f, 0.0f, false);
+	modelmatrix = modelmatrix * Mat4f::rotate(Angle(-90.0f, angle_degrees), 1.0f, 0.0f, 0.0f, false);
 	modelmatrix = modelmatrix * Mat4f::scale(scale, scale, scale);
 	canvas.push_modelview();
 	canvas.mult_modelview(modelmatrix);
@@ -121,7 +121,7 @@ void ModelAssimp::render_vbo(GraphicContext &gc, const struct aiScene* sc, const
 			gc.set_program_object(program_object_no_texture);
 		}
 
-		gc.draw_primitives(cl_triangles, num_vertex, prim_array);
+		gc.draw_primitives(type_triangles, num_vertex, prim_array);
 	
 
 		if (use_texcoords)
@@ -185,7 +185,7 @@ void ModelAssimp::load_textures(GraphicContext &gc)
 	{
 		std::string filename = string_format("Resources/%1", PathHelp::get_filename((*itr).first));
 		Texture2D texture(gc, filename);
-		texture.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat);
+		texture.set_wrap_mode(wrap_repeat, wrap_repeat);
 		texture.set_min_filter(filter_linear);
 		texture.set_mag_filter(filter_linear);
 		(*itr).second = texture;

@@ -103,7 +103,7 @@ int App::start(const std::vector<std::string> &args)
 		gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		gc.clear_depth(1.0f);
 
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
 		fps_font.draw_text(gc, gc.get_width() - 100, 30, fps);
 		std::string info = string_format("%1 vertices", (int) object_positions.size());
@@ -132,8 +132,8 @@ int App::start(const std::vector<std::string> &args)
 		gc.set_modelview(Mat4f::identity());
 		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
 		gc.mult_translate(0.0f, 0.0f, 800.0f);
-		gc.mult_rotate(Angle(angle*2.0f, cl_degrees), 0.0f, 1.0f, 0.0f, false);
-		gc.mult_rotate(Angle(angle, cl_degrees), 1.0f, 0.0f, 0.0f, false);
+		gc.mult_rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
+		gc.mult_rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
 
 		shader.Set(gc);
 		shader.Use(gc);
@@ -152,7 +152,7 @@ int App::start(const std::vector<std::string> &args)
 			prim_array.set_attributes(1, &object_normals[0]);
 			prim_array.set_attributes(2, &object_material_ambient[0]);
 		}
-		gc.draw_primitives(cl_triangles, object_positions.size(), prim_array);
+		gc.draw_primitives(tyoe_triangles, object_positions.size(), prim_array);
 
 		gc.pop_modelview();
 
@@ -172,7 +172,7 @@ void App::on_input_up(const InputEvent &key)
 {
 	switch (key.id)
 	{
-		case KEY_ESCAPE:
+		case keycode_escape:
 			quit = true;
 			break;
 	}

@@ -255,7 +255,7 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 			gs->shader_color.Use(gc);
 		}
 
-		gc.draw_primitives(cl_triangles, vbo_size, prim_array);
+		gc.draw_primitives(type_triangles, vbo_size, prim_array);
 	}
 	else
 	{
@@ -266,7 +266,7 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 		gs->shader_color_instanced.Use(gc);
 
 		gc.set_primitives_array(prim_array);
-		gc.draw_primitives_array_instanced(cl_triangles, 0, vbo_size, instance_count);
+		gc.draw_primitives_array_instanced(type_triangles, 0, vbo_size, instance_count);
 		gc.reset_primitives_array();
 	}
 

@@ -85,14 +85,14 @@ Orientation Orientation::look_at(float eye_x, float eye_y, float eye_z, float ce
 Orientation Orientation::axis_angle(float angle, const Vec3f &axis)
 {
 	Orientation o;
-	o.q = Quaternionf::axis_angle(Angle(angle, cl_degrees), axis);
+	o.q = Quaternionf::axis_angle(Angle(angle, angle_degrees), axis);
 	return o;
 }
 
 Orientation Orientation::euler_angles(float angle_x, float angle_y, float angle_z)
 {
 	Orientation o;
-	o.q.set(angle_x, angle_y, angle_z, cl_degrees, cl_XYZ);
+	o.q.set(angle_x, angle_y, angle_z, angle_degrees, order_XYZ);
 	return o;
 }
 
@@ -149,13 +149,13 @@ Orientation &Orientation::multiply(const Orientation &orientation)
 
 Orientation &Orientation::rotate(float angle, const Vec3f &axis)
 {
-	q.rotate(Angle(angle, cl_degrees), axis);
+	q.rotate(Angle(angle, angle_degrees), axis);
 	return *this;
 }
 
 Orientation &Orientation::rotate(float angle_x, float angle_y, float angle_z)
 {
-	q.rotate(Angle(angle_x, cl_degrees), Angle(angle_y, cl_degrees), Angle(angle_z, cl_degrees), cl_XYZ);
+	q.rotate(Angle(angle_x, angle_degrees), Angle(angle_y, angle_degrees), Angle(angle_z, angle_degrees), order_XYZ);
 	return *this;
 }
 

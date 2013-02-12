@@ -77,8 +77,8 @@ void GraphicStore::LoadImages( GraphicContext &gc )
 	texture_underwater.set_subimage(0, 0, test, test.get_size());
 	*/
 	texture_underwater = Texture(gc, "../../Game/SpritesRTS/Gfx/background.png");
-	texture_underwater.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
+	texture_underwater.set_wrap_mode(wrap_repeat, wrap_repeat, wrap_repeat);
 
 	texture_background = Texture(gc, "../../Game/DiceWar/Resources/lobby_background1.png");
-	texture_underwater.set_wrap_mode(cl_wrap_repeat, cl_wrap_repeat, cl_wrap_repeat);
+	texture_underwater.set_wrap_mode(wrap_repeat, wrap_repeat, wrap_repeat);
 }

@@ -31,8 +31,6 @@
 #include "orientation.h"
 #include "position.h"
 
-class GraphicContext;
-
 class Camera
 {
 //! Construction:

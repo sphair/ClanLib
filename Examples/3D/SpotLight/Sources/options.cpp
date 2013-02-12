@@ -51,13 +51,13 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 	spot_specular_color = Colorf(1.0f, 0.0f, 0.0f, 1.0f);
 	spot_diffuse_color = Colorf(1.0f, 0.0f, 0.0f, 1.0f);
 
-	distant_direction_heading = Angle(45.0f, cl_degrees);
-	distant_direction_pitch = Angle(35.0f, cl_degrees);
-	distant_direction_bank = Angle(0.0f, cl_degrees);
+	distant_direction_heading = Angle(45.0f, angle_degrees);
+	distant_direction_pitch = Angle(35.0f, angle_degrees);
+	distant_direction_bank = Angle(0.0f, angle_degrees);
 
-	spot_direction_heading = Angle(129.6f, cl_degrees);
-	spot_direction_pitch = Angle(123.8f, cl_degrees);
-	spot_direction_bank = Angle(0.0f, cl_degrees);
+	spot_direction_heading = Angle(129.6f, angle_degrees);
+	spot_direction_pitch = Angle(123.8f, angle_degrees);
+	spot_direction_bank = Angle(0.0f, angle_degrees);
 
 	make_light_menu(combo_light_menu);
 	combo_light = create_light_combo_box(8, 16, combo_light_menu, 1);

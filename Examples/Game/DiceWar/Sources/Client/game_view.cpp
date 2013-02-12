@@ -185,7 +185,7 @@ void GameView::on_message(GUIMessage &message)
 			end_turn();
 			request_repaint();
 		}
-		else if (e.id == KEY_ESCAPE && e.type == InputEvent::pressed)
+		else if (e.id == keycode_escape && e.type == InputEvent::pressed)
 		{
 			exit_with_code(0);		
 		}

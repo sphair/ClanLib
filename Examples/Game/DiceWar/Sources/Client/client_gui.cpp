@@ -3,7 +3,7 @@
 
 ClientGUI::ClientGUI()
 {
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib - Dice War");
 	desc.set_size(Size(1024, 768), true);
 //	desc.set_allow_resize(true);

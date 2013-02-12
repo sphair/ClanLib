@@ -50,7 +50,7 @@
 int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
-    OpenGLWindowDescription desc;
+    DisplayWindowDescription desc;
 
 	desc.set_title("ClanLib Object 3D Example");
 	desc.set_size(Size(640, 480), true);
@@ -143,7 +143,7 @@ int App::start(const std::vector<std::string> &args)
 		gc.set_modelview(Mat4f::identity());
 		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
 		gc.mult_translate(0.0f, 0.0f, 2.0f);
-		gc.mult_rotate(Angle(angle, cl_degrees), 0.0f, 1.0f, 0.0f, false);
+		gc.mult_rotate(Angle(angle, angle_degrees), 0.0f, 1.0f, 0.0f, false);
 
 		gc.push_modelview();
 		recursive_render(gc, scene_teapot, scene_teapot->mRootNode, false);
@@ -167,7 +167,7 @@ int App::start(const std::vector<std::string> &args)
 		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
 		gc.mult_translate(0.7f, 0.5f, 2.0f);
 		gc.mult_scale(0.05f, 0.05f, 0.05f);
-		gc.mult_rotate(Angle(angle * 4.0f, cl_degrees), 0.0f, 1.0f, 0.0f, false);
+		gc.mult_rotate(Angle(angle * 4.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
 		recursive_render(gc, scene_tuxball, scene_tuxball->mRootNode, true);
 		gc.reset_texture(0);
 
@@ -248,7 +248,7 @@ void App::recursive_render(GraphicContext &gc, const struct aiScene *sc, const s
 			prim_array.set_attributes(cl_attrib_normal, &normals[0]);
 			if (use_texture_coords)
 				prim_array.set_attributes(cl_attrib_texture_position, &tex_coords[0]);
-			gc.draw_primitives(cl_triangles, vertices.size(), prim_array);
+			gc.draw_primitives(type_triangles, vertices.size(), prim_array);
 		}
 	}
 
@@ -264,7 +264,7 @@ void App::recursive_render(GraphicContext &gc, const struct aiScene *sc, const s
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}

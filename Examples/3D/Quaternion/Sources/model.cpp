@@ -221,5 +221,5 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 	prim_array.set_attributes(1, vbo_normals, 3, cl_type_float, 0);
 	gs->shader_color.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
 	gs->shader_color.Use(gc);
-	gc.draw_primitives(cl_triangles, vbo_size, prim_array);
+	gc.draw_primitives(type_triangles, vbo_size, prim_array);
 }

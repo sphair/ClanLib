@@ -55,7 +55,7 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	OpenGLWindowDescription desc;
+	DisplayWindowDescription desc;
 	desc.set_title("ClanLib Water Example");
 	desc.set_size(Size(900, 700), true);
 	desc.set_multisampling(4);
@@ -111,7 +111,7 @@ int App::start(const std::vector<std::string> &args)
 		render(gc);
 
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 		gc.set_culled(false);
 	
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
@@ -131,7 +131,7 @@ int App::start(const std::vector<std::string> &args)
 // A key was pressed
 void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 	{
 		quit = true;
 	}
@@ -175,15 +175,15 @@ void App::create_scene(GraphicContext &gc)
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(-0.0f, 167.5f, -255.0f);
-	camera->rotation_y = Angle(0.0f, cl_degrees);
-	camera->rotation_x = Angle(35.4f, cl_degrees);
-	camera->rotation_z = Angle(0.0f, cl_degrees);
+	camera->rotation_y = Angle(0.0f, angle_degrees);
+	camera->rotation_x = Angle(35.4f, angle_degrees);
+	camera->rotation_z = Angle(0.0f, angle_degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
 	light_distant->position = Vec3f(72.0535f, 48.0866f, 29.0f);
 	//  Note, these are updated by the options
-	light_distant->rotation_y = Angle(5.7f, cl_degrees);
-	light_distant->rotation_x = Angle(35.0f, cl_degrees);
+	light_distant->rotation_y = Angle(5.7f, angle_degrees);
+	light_distant->rotation_x = Angle(35.0f, angle_degrees);
 
 	SceneObject *object_landscape = new SceneObject(scene, scene.base);
 	object_landscape->model = model_landscape;

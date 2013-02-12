@@ -38,13 +38,13 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 
 	max_angle_value = 360.0f;
 
-	rotation_x = Angle(0.0f, cl_degrees);
-	rotation_y = Angle(0.0f, cl_degrees);
-	rotation_z = Angle(0.0f, cl_degrees);
+	rotation_x = Angle(0.0f, angle_degrees);
+	rotation_y = Angle(0.0f, angle_degrees);
+	rotation_z = Angle(0.0f, angle_degrees);
 
-	target_x = Angle(0.0f, cl_degrees);
-	target_y = Angle(0.0f, cl_degrees);
-	target_z = Angle(0.0f, cl_degrees);
+	target_x = Angle(0.0f, angle_degrees);
+	target_y = Angle(0.0f, angle_degrees);
+	target_z = Angle(0.0f, angle_degrees);
 
 	int slider_xpos = 8;
 	int slider_ypos = 8;
@@ -320,7 +320,7 @@ void Options::set_all_sliders()
 
 void Options::update_quaternion()
 {
-	quaternion = Quaternionf(rotation_x, rotation_y, rotation_z, cl_YXZ);
+	quaternion = Quaternionf(rotation_x, rotation_y, rotation_z, order_YXZ);
 	write_quaternion();
 	update_all_slider_text();
 
@@ -338,7 +338,7 @@ void Options::update_euler()
 {
 	Mat4f matrix = quaternion.to_matrix();
 
-	Vec3f euler = matrix.get_euler(cl_YXZ);
+	Vec3f euler = matrix.get_euler(order_YXZ);
 	rotation_x.set_radians(euler.x);
 	rotation_y.set_radians(euler.y);
 	rotation_z.set_radians(euler.z);

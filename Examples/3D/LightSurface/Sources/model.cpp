@@ -215,5 +215,5 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 
 	gs->shader_color.Use(gc);
 
-	gc.draw_primitives(cl_triangles, vbo_size, prim_array);
+	gc.draw_primitives(type_triangles, vbo_size, prim_array);
 }

@@ -34,7 +34,7 @@
 
 int Chess::run(const std::vector<std::string> &args)
 {
-	OpenGLWindowDescription windowdesc;
+	DisplayWindowDescription windowdesc;
 	windowdesc.set_title("Chess");
 	windowdesc.set_depth_size(16);
 	windowdesc.set_size(Size(1024, 768), true);
@@ -95,7 +95,7 @@ int Chess::run(const std::vector<std::string> &args)
 	//Font font(gc, "Tahoma", -12);
 
 	quit = false;
-	while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+	while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 	{
 		if (quit)
 			break;
@@ -147,7 +147,7 @@ int Chess::run(const std::vector<std::string> &args)
 
 		gc.set_projection(Mat4f::identity());
 		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(cl_map_2d_upper_left);
+		gc.set_map_mode(map_2d_upper_left);
 		//font.draw_text(gc, 10, 24, string_format("%1,%2,%3", our_position.get_x(), our_position.get_y(), our_position.get_z()));
 
 		window.flip();

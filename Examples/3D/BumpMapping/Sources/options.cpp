@@ -45,9 +45,9 @@ Options::Options(GUIManager &gui, Rect gui_position) : GUIComponent(&gui, GUITop
 	material_specular_color = Colorf(1.0f, 1.0f, 1.0f, 1.0f);
 	material_shininess = 40.0f;
 
-	light_direction_heading = Angle(45.0f, cl_degrees);
-	light_direction_pitch = Angle(35.0f, cl_degrees);
-	light_direction_bank = Angle(0.0f, cl_degrees);
+	light_direction_heading = Angle(45.0f, angle_degrees);
+	light_direction_pitch = Angle(35.0f, angle_degrees);
+	light_direction_bank = Angle(0.0f, angle_degrees);
 
 	int slider_xpos = 8;
 	int slider_ypos = 8;

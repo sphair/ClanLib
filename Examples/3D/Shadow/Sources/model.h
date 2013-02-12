@@ -44,7 +44,7 @@ public:
 	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
 
 private:
-	SharedPtr<Model_Impl> impl;
+	std::shared_ptr<Model_Impl> impl;
 
 };
 
