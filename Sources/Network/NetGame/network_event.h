@@ -50,6 +50,11 @@ public:
 	{
 	}
 
+	NetGameNetworkEvent(NetGameConnection *connection, Type type, const NetGameEvent &game_event)
+	: connection(connection), type(type), game_event(game_event)
+	{
+	}
+
 	NetGameNetworkEvent(NetGameConnection *connection, const NetGameEvent &game_event)
 	: connection(connection), type(event_received), game_event(game_event)
 	{
