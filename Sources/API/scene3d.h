@@ -35,10 +35,10 @@
 #pragma managed(push, off)
 #endif
 
-#include "Scene3D/scene.h"
-#include "Scene3D/scene_light.h"
+#include "API/Scene3D/scene.h"
+#include "API/Scene3D/scene_light.h"
 #include "Scene3D/scene_object.h"
-#include "Scene3D/scene_particle_emitter.h"
+#include "API/Scene3D/scene_particle_emitter.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

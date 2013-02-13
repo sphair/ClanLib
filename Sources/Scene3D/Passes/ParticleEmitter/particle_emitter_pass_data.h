@@ -29,7 +29,7 @@
 #pragma once
 
 #include "Scene3D/Framework/texture.h"
-#include "Scene3D/scene_particle_emitter.h"
+#include "API/Scene3D/scene_particle_emitter.h"
 #include "particle.h"
 #include "particle_uniforms.h"
 namespace clan

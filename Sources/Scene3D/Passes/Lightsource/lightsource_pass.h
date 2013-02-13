@@ -30,7 +30,7 @@
 
 #include "Scene3D/Passes/ZMinMax/z_minmax.h"
 #include "Scene3D/Framework/inout_data.h"
-#include "Scene3D/scene_light.h"
+#include "API/Scene3D/scene_light.h"
 namespace clan
 {
 

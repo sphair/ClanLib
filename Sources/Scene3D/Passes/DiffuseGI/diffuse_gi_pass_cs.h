@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene3D/scene.h"
+#include "API/Scene3D/scene.h"
 #include "Scene3D/Framework/inout_data.h"
 namespace clan
 {

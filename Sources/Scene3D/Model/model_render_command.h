@@ -30,7 +30,7 @@
 
 #include "model_mesh_buffers.h"
 #include "Scene3D/Framework/texture.h"
-#include "Scene3D/scene.h"
+#include "API/Scene3D/scene.h"
 namespace clan
 {
 
