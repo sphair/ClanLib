@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "final_pass.h"
 #include "Performance/scope_timer.h"
-#include "Scene/Framework/shader_setup.h"
+#include "Scene3D/Framework/shader_setup.h"
 
 namespace clan
 {

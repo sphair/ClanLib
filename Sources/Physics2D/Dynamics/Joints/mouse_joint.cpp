@@ -26,17 +26,17 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "../../Box2D/Box2D.h"
 #include "joint_impl.h"
 #include "mouse_joint_impl.h"
 #include "mouse_joint_description_impl.h"
 #include "../../World/physics_world_impl.h"
-#include "API/Physics/World/physics_world.h"
+#include "API/Physics2D/World/physics_world.h"
 #include "../../World/physics_context_impl.h"
-#include "API/Physics/Dynamics/Joints/mouse_joint_description.h"
-#include "API/Physics/Dynamics/Joints/mouse_joint.h"
-#include "API/Physics/World/physics_context.h"
+#include "API/Physics2D/Dynamics/Joints/mouse_joint_description.h"
+#include "API/Physics2D/Dynamics/Joints/mouse_joint.h"
+#include "API/Physics2D/World/physics_context.h"
 #include "API/Core/Math/point.h"
 
 

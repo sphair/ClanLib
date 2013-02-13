@@ -26,13 +26,13 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "physics_listener.h"
 #include "../Dynamics/body_impl.h"
 #include "../Dynamics/fixture_impl.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/Collision/physics_object.h"
+#include "API/Physics2D/Dynamics/body.h"
+#include "API/Physics2D/Dynamics/fixture.h"
+#include "API/Physics2D/Collision/physics_object.h"
 
 namespace clan
 {

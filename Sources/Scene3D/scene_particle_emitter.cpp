@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "scene_particle_emitter.h"
 #include "scene.h"
 #include "Passes/ParticleEmitter/particle_emitter_pass_data.h"

@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "model_shader_cache.h"
-#include "Scene/ModelData/model_data.h"
-#include "Scene/Framework/shader_setup.h"
+#include "Scene3D/ModelData/model_data.h"
+#include "Scene3D/Framework/shader_setup.h"
 #include "model_render_command.h"
 #include "model.h"
 #include "model_lod.h"

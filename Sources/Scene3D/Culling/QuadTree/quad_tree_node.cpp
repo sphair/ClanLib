@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "quad_tree_node.h"
 
 namespace clan

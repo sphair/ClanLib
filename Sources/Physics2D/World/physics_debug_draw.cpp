@@ -26,11 +26,11 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "physics_debug_draw_impl.h"
 #include "physics_world_impl.h"
-#include "API/Physics/World/physics_debug_draw.h"
-#include "API/Physics/World/physics_world.h"
+#include "API/Physics2D/World/physics_debug_draw.h"
+#include "API/Physics2D/World/physics_world.h"
 
 namespace clan
 {

@@ -26,9 +26,9 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "shape_impl.h"
-#include "API/Physics/Collision/Shapes/shape.h"
+#include "API/Physics2D/Collision/Shapes/shape.h"
 
 namespace clan
 {

@@ -28,7 +28,7 @@
 
 #pragma once
 #include "../../Box2D/Box2D.h"
-#include "API/Physics/Dynamics/Joints/Joint.h"
+#include "API/Physics2D/Dynamics/Joints/Joint.h"
 #include "API/Core/Signals/signal_v0.h"
 
 namespace clan

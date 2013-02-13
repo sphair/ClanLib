@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "skybox_pass.h"
-#include "Scene/scene.h"
+#include "Scene3D/scene.h"
 #include "noise_2d.h"
 #include "noise_3d.h"
 

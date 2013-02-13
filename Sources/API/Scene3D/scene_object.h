@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "api_scene.h"
+#include "api_scene3d.h"
 #include <memory>
 
 namespace clan

@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/Passes/GaussianBlur/gaussian_blur.h"
-#include "Scene/Framework/inout_data.h"
+#include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
+#include "Scene3D/Framework/inout_data.h"
 
 namespace clan
 {

@@ -26,11 +26,11 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "physics_world_description_impl.h"
 #include "physics_world_impl.h"
 #include "physics_context_impl.h"
-#include "API/Physics/Dynamics/body_description.h"
+#include "API/Physics2D/Dynamics/body_description.h"
 #include "../Dynamics/body_impl.h"
 #include "../Dynamics/fixture_impl.h"
 #include "../Dynamics/Joints/joint_impl.h"

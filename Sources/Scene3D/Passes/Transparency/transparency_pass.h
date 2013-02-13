@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/Model/model_mesh_visitor.h"
-#include "Scene/Framework/inout_data.h"
+#include "Scene3D/Model/model_mesh_visitor.h"
+#include "Scene3D/Framework/inout_data.h"
 namespace clan
 {
 

@@ -29,8 +29,8 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/World/physics_world.h"
-#include "API/Physics/World/physics_world_description.h"
+#include "API/Physics2D/World/physics_world.h"
+#include "API/Physics2D/World/physics_world_description.h"
 #include <map>
 
 namespace clan

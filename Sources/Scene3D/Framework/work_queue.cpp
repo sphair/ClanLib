@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "work_queue.h"
 
 namespace clan

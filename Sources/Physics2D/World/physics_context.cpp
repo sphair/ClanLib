@@ -25,13 +25,13 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "../Box2D/Box2D.h"
 #include "../Dynamics/body_impl.h"
 #include "../Dynamics/fixture_impl.h"
 #include "../Dynamics/Joints/joint_impl.h"
-#include "API/Physics/World/physics_context.h"
-#include "API/Physics/World/physics_world.h"
+#include "API/Physics2D/World/physics_context.h"
+#include "API/Physics2D/World/physics_world.h"
 #include "physics_context_impl.h"
 #include "physics_world_impl.h"
 

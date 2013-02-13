@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene/Framework/work_queue.h"
+#include "Scene3D/Framework/work_queue.h"
 #include <unordered_map>
 #include "model.h"
 namespace clan

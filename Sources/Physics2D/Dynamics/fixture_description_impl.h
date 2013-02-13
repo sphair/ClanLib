@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics2D/Dynamics/fixture.h"
 
 namespace clan
 {

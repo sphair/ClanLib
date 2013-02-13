@@ -26,9 +26,9 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
-#include "API/Physics/World/physics_query_assistant.h"
-#include "API/Physics/World/physics_world.h"
+#include "Physics2D/precomp.h"
+#include "API/Physics2D/World/physics_query_assistant.h"
+#include "API/Physics2D/World/physics_world.h"
 #include "physics_query_assistant_impl.h"
 #include "physics_world_impl.h"
 #include "API/Core/Math/point.h"

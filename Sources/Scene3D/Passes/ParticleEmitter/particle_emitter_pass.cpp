@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "particle_emitter_pass.h"
-#include "Scene/scene.h"
-#include "Scene/Framework/material_cache.h"
+#include "Scene3D/scene.h"
+#include "Scene3D/Framework/material_cache.h"
 
 namespace clan
 {

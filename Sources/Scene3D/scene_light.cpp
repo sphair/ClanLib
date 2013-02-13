@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "scene_light.h"
 #include "scene.h"
 #include "Passes/VSMShadowMap/vsm_shadow_map_pass.h"

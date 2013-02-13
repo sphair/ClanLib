@@ -26,12 +26,12 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "shape_impl.h"
 #include "polygon_shape_impl.h"
-#include "API/Physics/Collision/Shapes/polygon_shape.h"
-#include "API/Physics/World/physics_world.h"
-#include "API/Physics/World/physics_context.h"
+#include "API/Physics2D/Collision/Shapes/polygon_shape.h"
+#include "API/Physics2D/World/physics_world.h"
+#include "API/Physics2D/World/physics_context.h"
 #include "API/Core/Math/angle.h"
 #include "../../World/physics_world_impl.h"
 #include "../../World/physics_context_impl.h"

@@ -16,7 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "b2Distance.h"
 #include "Shapes/b2CircleShape.h"
 #include "Shapes/b2EdgeShape.h"

@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../Box2D/Box2D.h"
-#include "API/Physics/World/query_result.h"
+#include "API/Physics2D/World/query_result.h"
 #include "API/Core/Math/rect.h"
 
 namespace clan

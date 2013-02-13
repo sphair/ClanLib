@@ -26,13 +26,13 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "../Box2D/Box2D.h"
 #include "body_description_impl.h"
 #include "../World/physics_world_impl.h"
 #include "../World/physics_context_impl.h"
-#include "API/Physics/Dynamics/body_description.h"
-#include "API/Physics/World/physics_world.h"
+#include "API/Physics2D/Dynamics/body_description.h"
+#include "API/Physics2D/World/physics_world.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/angle.h"
 

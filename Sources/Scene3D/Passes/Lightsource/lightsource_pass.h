@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "Scene/Passes/ZMinMax/z_minmax.h"
-#include "Scene/Framework/inout_data.h"
-#include "Scene/scene_light.h"
+#include "Scene3D/Passes/ZMinMax/z_minmax.h"
+#include "Scene3D/Framework/inout_data.h"
+#include "Scene3D/scene_light.h"
 namespace clan
 {
 

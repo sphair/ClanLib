@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/Framework/texture.h"
-#include "Scene/ModelData/model_data.h"
+#include "Scene3D/Framework/texture.h"
+#include "Scene3D/ModelData/model_data.h"
 
 namespace clan
 {

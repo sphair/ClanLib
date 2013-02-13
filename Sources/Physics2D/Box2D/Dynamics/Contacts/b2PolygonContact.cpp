@@ -16,7 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "b2PolygonContact.h"
 #include "../../Common/b2BlockAllocator.h"
 #include "../../Collision/b2TimeOfImpact.h"
