@@ -35,23 +35,23 @@ namespace clan
 class LogAverageLight
 {
 public:
-	LogAverageLight(clan::GraphicContext &gc, int iterations = 8);
-	clan::Texture2D &find_log_average_light(clan::GraphicContext &gc, clan::Texture2D &hdr_texture);
+	LogAverageLight(GraphicContext &gc, int iterations = 8);
+	Texture2D &find_log_average_light(GraphicContext &gc, Texture2D &hdr_texture);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 
 private:
-	clan::ProgramObject compile_and_link(clan::GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source);
+	ProgramObject compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source);
 
 	int iterations;
-	clan::ProgramObject program0, program1, program2;
-	clan::PrimitivesArray prim_array;
-	clan::VertexArrayVector<clan::Vec4f> vertices;
-	clan::FrameBuffer fb0, fb1, fb2, fb3;
-	clan::Texture2D texture0, texture1;
-	clan::Texture2D result_texture0, result_texture1;
+	ProgramObject program0, program1, program2;
+	PrimitivesArray prim_array;
+	VertexArrayVector<Vec4f> vertices;
+	FrameBuffer fb0, fb1, fb2, fb3;
+	Texture2D texture0, texture1;
+	Texture2D result_texture0, result_texture1;
 	int current_index;
-	clan::BlendState blend_state;
+	BlendState blend_state;
 };
 
 }

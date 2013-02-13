@@ -37,12 +37,12 @@ public:
 	GPUTimer();
 	~GPUTimer();
 
-	void begin_frame(clan::GraphicContext &gc);
+	void begin_frame(GraphicContext &gc);
 
-	void begin_time(clan::GraphicContext &gc, const std::string &name);
-	void end_time(clan::GraphicContext &gc);
+	void begin_time(GraphicContext &gc, const std::string &name);
+	void end_time(GraphicContext &gc);
 
-	void end_frame(clan::GraphicContext &gc);
+	void end_frame(GraphicContext &gc);
 
 	struct Result
 	{
@@ -51,20 +51,20 @@ public:
 		float time_elapsed;
 	};
 
-	std::vector<Result> get_results(clan::GraphicContext &gc);
+	std::vector<Result> get_results(GraphicContext &gc);
 
 private:
 	struct Frame
 	{
 		std::vector<std::string> names;
-		std::vector<clan::ComPtr<ID3D11Query> > queries;
-		clan::ComPtr<ID3D11Query> disjoint_query;
+		std::vector<ComPtr<ID3D11Query> > queries;
+		ComPtr<ID3D11Query> disjoint_query;
 	};
 
-	void timestamp(clan::GraphicContext &gc);
+	void timestamp(GraphicContext &gc);
 
-	std::vector<clan::ComPtr<ID3D11Query> > unused_queries;
-	std::vector<clan::ComPtr<ID3D11Query> > unused_disjoint_queries;
+	std::vector<ComPtr<ID3D11Query> > unused_queries;
+	std::vector<ComPtr<ID3D11Query> > unused_disjoint_queries;
 
 	std::vector<std::shared_ptr<Frame> > frames;
 	std::vector<Result> last_results;

@@ -40,7 +40,7 @@ class ModelCache
 {
 public:
 	ModelCache(WorkQueue &work_queue, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, InstancesBuffer &instances_buffer);
-	std::shared_ptr<Model> get_model(clan::GraphicContext &gc, const std::string &model_name);
+	std::shared_ptr<Model> get_model(GraphicContext &gc, const std::string &model_name);
 
 private:
 	std::unordered_map<std::string, std::shared_ptr<Model> > models;

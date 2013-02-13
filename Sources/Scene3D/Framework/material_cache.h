@@ -40,15 +40,15 @@ class MaterialCache : public ModelMaterialCache
 {
 public:
 	MaterialCache(WorkQueue &work_queue);
-	CachedTexture get_texture(clan::GraphicContext &gc, const std::string &material_name, bool linear);
+	CachedTexture get_texture(GraphicContext &gc, const std::string &material_name, bool linear);
 
-	void update(clan::GraphicContext &gc, float time_elapsed);
+	void update(GraphicContext &gc, float time_elapsed);
 
 private:
 	static std::string to_key(const std::string &material_name, bool linear);
-	clan::Texture2D get_dummy_texture(clan::GraphicContext &gc);
+	Texture2D get_dummy_texture(GraphicContext &gc);
 
-	clan::Texture2D dummy_texture;
+	Texture2D dummy_texture;
 	std::unordered_map<std::string, CachedTexture> textures;
 	WorkQueue &work_queue;
 
@@ -64,7 +64,7 @@ public:
 
 private:
 	void process_work();
-	void work_completed(clan::GraphicContext &gc);
+	void work_completed(GraphicContext &gc);
 	void load_ctexture(const std::string &material_name);
 	void load_clanlib_texture(const std::string &material_name);
 	void load_dds_texture(const std::string &material_name);
@@ -77,7 +77,7 @@ private:
 	bool linear;
 	std::string video_file;
 
-	clan::PixelBufferSet pixelbuffer_set;
+	PixelBufferSet pixelbuffer_set;
 };
 
 }

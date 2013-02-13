@@ -35,7 +35,7 @@ namespace clan
 class ModelMaterialCache
 {
 public:
-	virtual CachedTexture get_texture(clan::GraphicContext &gc, const std::string &material_name, bool linear) = 0;
+	virtual CachedTexture get_texture(GraphicContext &gc, const std::string &material_name, bool linear) = 0;
 };
 
 }

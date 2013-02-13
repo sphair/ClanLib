@@ -61,10 +61,10 @@ public:
 	void move_object(PortalMapObject *map_object, const AxisAlignedBoundingBox &box);
 	void remove_object(PortalMapObject *map_object);
 
-	std::vector<VisibleObject *> cull(int frame, ClippingFrustum &frustum, const clan::Mat4f &world_to_projection);
+	std::vector<VisibleObject *> cull(int frame, ClippingFrustum &frustum, const Mat4f &world_to_projection);
 
 private:
-	void cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<VisibleObject *> &pvs, const clan::Rectf &box = clan::Rectf(-1.0f, -1.0f, 1.0f, 1.0f));
+	void cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<VisibleObject *> &pvs, const Rectf &box = Rectf(-1.0f, -1.0f, 1.0f, 1.0f));
 	int find_camera_sector(const PortalClipping &clipping) const;
 	bool is_in_sector(PortalSector *sector, const AxisAlignedBoundingBox &box) const;
 

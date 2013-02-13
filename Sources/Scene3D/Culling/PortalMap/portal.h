@@ -37,8 +37,8 @@ class Portal
 public:
 	Portal() : front(0), back(0) { }
 
-	std::vector<clan::Vec3f> points;
-	clan::Vec4f plane;
+	std::vector<Vec3f> points;
+	Vec4f plane;
 	PortalSector *front;
 	PortalSector *back;
 };

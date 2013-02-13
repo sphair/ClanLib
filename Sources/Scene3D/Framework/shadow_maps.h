@@ -40,13 +40,13 @@ class ShadowMapEntry_Impl;
 class ShadowMaps
 {
 public:
-	ShadowMaps(clan::GraphicContext &gc, int shadow_map_size, int max_active_maps, clan::TextureFormat format);
+	ShadowMaps(GraphicContext &gc, int shadow_map_size, int max_active_maps, TextureFormat format);
 	~ShadowMaps();
 
 	void start_frame();
 	void assign_indexes();
 
-	OutData<clan::Texture2DArray> shadow_maps;
+	OutData<Texture2DArray> shadow_maps;
 
 private:
 	void use_entry(ShadowMapEntry_Impl *entry);
@@ -56,8 +56,8 @@ private:
 	void add_unused(ShadowMapEntry_Impl *entry);
 	void unlink(ShadowMapEntry_Impl *entry);
 
-	std::vector<clan::FrameBuffer> framebuffers;
-	std::vector<clan::Texture2D> views;
+	std::vector<FrameBuffer> framebuffers;
+	std::vector<Texture2D> views;
 
 	ShadowMapEntry_Impl *used_entries;
 	ShadowMapEntry_Impl *unused_entries;
@@ -77,8 +77,8 @@ public:
 	void use_in_frame();
 
 	int get_index() const;
-	clan::FrameBuffer get_framebuffer() const;
-	clan::Texture2D get_view() const;
+	FrameBuffer get_framebuffer() const;
+	Texture2D get_view() const;
 
 private:
 	std::shared_ptr<ShadowMapEntry_Impl> impl;

@@ -50,7 +50,7 @@ void GBufferPass::run(GraphicContext &render_gc, Scene &scene)
 	{
 		// To do: support this in clanlib
 		OpenGL::set_active(gc);
-		clan::GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
+		GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 		glDrawBuffers(4, buffers);
 	}
 
@@ -95,7 +95,7 @@ void GBufferPass::run(GraphicContext &render_gc, Scene &scene)
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		OpenGL::set_active(gc);
-		clan::GLenum buffers2[] = { GL_COLOR_ATTACHMENT0 };
+		GLenum buffers2[] = { GL_COLOR_ATTACHMENT0 };
 		glDrawBuffers(1, buffers2);
 	}
 	gc.reset_frame_buffer();

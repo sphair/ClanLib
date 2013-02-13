@@ -35,9 +35,9 @@ class ModelDataLight
 public:
 	ModelDataLight() : bone_selector(-1), casts_shadows(), rectangle() { }
 
-	ModelDataAnimationData<clan::Vec3f> position;
-	ModelDataAnimationData<clan::Quaternionf> orientation;
-	ModelDataAnimationData<clan::Vec3f> color;
+	ModelDataAnimationData<Vec3f> position;
+	ModelDataAnimationData<Quaternionf> orientation;
+	ModelDataAnimationData<Vec3f> color;
 	ModelDataAnimationData<float> attenuation_start;
 	ModelDataAnimationData<float> attenuation_end;
 	ModelDataAnimationData<float> falloff;

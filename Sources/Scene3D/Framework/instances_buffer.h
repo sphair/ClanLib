@@ -40,17 +40,17 @@ public:
 	void clear();
 	void add(int vectors_count);
 
-	void lock(clan::GraphicContext &gc);
-	clan::Vec4f *upload(int offset_index, int vectors);
-	void unlock(clan::GraphicContext &gc);
+	void lock(GraphicContext &gc);
+	Vec4f *upload(int offset_index, int vectors);
+	void unlock(GraphicContext &gc);
 
-	clan::Texture2D &get_indexes() { return indexes[current_buffer]; }
-	clan::Texture2D &get_vectors() { return vectors[current_buffer]; }
+	Texture2D &get_indexes() { return indexes[current_buffer]; }
+	Texture2D &get_vectors() { return vectors[current_buffer]; }
 
 private:
 	enum { num_buffers = 4 };
-	clan::PixelBuffer indexes_transfer[num_buffers];
-	clan::PixelBuffer vectors_transfer[num_buffers];
+	PixelBuffer indexes_transfer[num_buffers];
+	PixelBuffer vectors_transfer[num_buffers];
 
 	int max_offset_indexes;
 	int next_offset_index;
@@ -59,8 +59,8 @@ private:
 	int num_vectors;
 
 	int current_buffer;
-	clan::Texture2D indexes[num_buffers];
-	clan::Texture2D vectors[num_buffers];
+	Texture2D indexes[num_buffers];
+	Texture2D vectors[num_buffers];
 };
 
 }

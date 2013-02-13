@@ -36,17 +36,17 @@ class ClippingFrustum
 {
 public:
 	ClippingFrustum();
-	explicit ClippingFrustum(const clan::Mat4f &world_to_projection);
+	explicit ClippingFrustum(const Mat4f &world_to_projection);
 
-	clan::Vec4f planes[6];
+	Vec4f planes[6];
 
 private:
-	static clan::Vec4f left_frustum_plane(const clan::Mat4f &matrix);
-	static clan::Vec4f right_frustum_plane(const clan::Mat4f &matrix);
-	static clan::Vec4f top_frustum_plane(const clan::Mat4f &matrix);
-	static clan::Vec4f bottom_frustum_plane(const clan::Mat4f &matrix);
-	static clan::Vec4f near_frustum_plane(const clan::Mat4f &matrix);
-	static clan::Vec4f far_frustum_plane(const clan::Mat4f &matrix);
+	static Vec4f left_frustum_plane(const Mat4f &matrix);
+	static Vec4f right_frustum_plane(const Mat4f &matrix);
+	static Vec4f top_frustum_plane(const Mat4f &matrix);
+	static Vec4f bottom_frustum_plane(const Mat4f &matrix);
+	static Vec4f near_frustum_plane(const Mat4f &matrix);
+	static Vec4f far_frustum_plane(const Mat4f &matrix);
 };
 
 }

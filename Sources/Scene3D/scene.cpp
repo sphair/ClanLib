@@ -39,6 +39,56 @@
 namespace clan
 {
 
+Scene::Scene()
+{
+}
+
+Scene::Scene(GraphicContext &gc)
+: impl(new Scene_Impl(gc))
+{
+}
+
+bool Scene::is_null() const
+{
+	return !impl;
+}
+
+void Scene::set_viewport(const Rect &box)
+{
+	impl->set_viewport(box);
+}
+
+void Scene::set_camera(const Vec3f &position, const Quaternionf &orientation)
+{
+	impl->set_camera(position, orientation);
+}
+
+void Scene::set_camera_position(const Vec3f &position)
+{
+	impl->set_camera_position(position);
+}
+
+void Scene::set_camera_orientation(const Quaternionf &orientation)
+{
+	impl->set_camera_orientation(orientation);
+}
+
+void Scene::set_camera_field_of_view(float fov)
+{
+	impl->set_camera_field_of_view(fov);
+}
+
+void Scene::render(GraphicContext &gc)
+{
+	impl->render(gc);
+}
+
+void Scene::update(GraphicContext &gc, float time_elapsed)
+{
+	impl->update(gc, time_elapsed);
+}
+
+/////////////////////////////////////////////////////////////////////////////
 
 int Scene_Impl::instances_drawn = 0;
 int Scene_Impl::models_drawn = 0;

@@ -40,7 +40,7 @@ class ModelRenderCommand
 {
 public:
 	virtual ~ModelRenderCommand() { }
-	virtual void execute(clan::GraphicContext &gc, int num_instances) = 0;
+	virtual void execute(GraphicContext &gc, int num_instances) = 0;
 };
 
 class ModelRenderCommandList
@@ -52,7 +52,7 @@ public:
 			delete commands[i];
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		for (size_t i = 0; i < commands.size(); i++)
 			commands[i]->execute(gc, num_instances);
@@ -68,7 +68,7 @@ public:
 	{
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		gc.set_primitives_array(buffers->primitives_array);
 		gc.set_primitives_elements(buffers->elements);
@@ -80,26 +80,26 @@ public:
 class ModelRenderCommand_BindShader : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindShader(clan::ProgramObject shader) : shader(shader)
+	ModelRenderCommand_BindShader(ProgramObject shader) : shader(shader)
 	{
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		gc.set_program_object(shader);
 	}
 
-	clan::ProgramObject shader;
+	ProgramObject shader;
 };
 
 class ModelRenderCommand_BindTexture : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindTexture(int bind_index, CachedTexture texture, clan::TextureWrapMode wrap_u, clan::TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
+	ModelRenderCommand_BindTexture(int bind_index, CachedTexture texture, TextureWrapMode wrap_u, TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
 	{
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		texture.get_texture().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
 		gc.set_texture(bind_index, texture.get_texture());
@@ -107,36 +107,36 @@ public:
 
 	int bind_index;
 	CachedTexture texture;
-	clan::TextureWrapMode wrap_u, wrap_v;
+	TextureWrapMode wrap_u, wrap_v;
 };
 
 class ModelRenderCommand_SetRasterizerState : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_SetRasterizerState(clan::RasterizerState state) : state(state)
+	ModelRenderCommand_SetRasterizerState(RasterizerState state) : state(state)
 	{
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		gc.set_rasterizer_state(state);
 	}
 
-	clan::RasterizerState state;
+	RasterizerState state;
 };
 
 class ModelRenderCommand_DrawElements : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_DrawElements(int start_element, int num_elements, clan::UniformVector<ModelMaterialUniforms> uniforms)
+	ModelRenderCommand_DrawElements(int start_element, int num_elements, UniformVector<ModelMaterialUniforms> uniforms)
 		: start_element(start_element), num_elements(num_elements), uniforms(uniforms)
 	{
 	}
 
-	void execute(clan::GraphicContext &gc, int num_instances)
+	void execute(GraphicContext &gc, int num_instances)
 	{
 		gc.set_uniform_buffer(0, uniforms);
-		gc.draw_primitives_elements_instanced(clan::type_triangles, num_elements, clan::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
+		gc.draw_primitives_elements_instanced(type_triangles, num_elements, type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
 		Scene_Impl::draw_calls++;
 		Scene_Impl::triangles_drawn += num_elements / 3;
@@ -144,7 +144,7 @@ public:
 
 	int start_element;
 	int num_elements;
-	clan::UniformVector<ModelMaterialUniforms> uniforms;
+	UniformVector<ModelMaterialUniforms> uniforms;
 };
 
 }

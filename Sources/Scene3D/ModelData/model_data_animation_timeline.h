@@ -46,7 +46,7 @@ public:
 	{
 		size_t index, index2;
 		float t = find_animation_indices(timestamp, index, index2);
-		return clan::mix(values[index], values[index2], t);
+		return mix(values[index], values[index2], t);
 	}
 
 	float find_animation_indices(float timestamp, size_t &index, size_t &index2)
@@ -59,12 +59,12 @@ public:
 		}
 
 		index = binary_search(timestamp);
-		index2 = clan::min(index + 1, timestamps.size() - 1);
+		index2 = min(index + 1, timestamps.size() - 1);
 
 		float start = timestamps[index];
 		float end = timestamps[index2];
 		if (start != end)
-			return clan::clamp((timestamp - start) / (end - start), 0.0f, 1.0f);
+			return clamp((timestamp - start) / (end - start), 0.0f, 1.0f);
 		else
 			return 0.0f;
 	}
@@ -90,15 +90,15 @@ private:
 };
 
 template<>
-clan::Quaternionf ModelDataAnimationTimeline<clan::Quaternionf>::get_value(float timestamp)
+Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp)
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);
-	return clan::Quaternionf::lerp(values[index], values[index2], t);
+	return Quaternionf::lerp(values[index], values[index2], t);
 }
 
 template<>
-clan::Mat4f ModelDataAnimationTimeline<clan::Mat4f>::get_value(float timestamp)
+Mat4f ModelDataAnimationTimeline<Mat4f>::get_value(float timestamp)
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);

@@ -51,7 +51,7 @@ public:
 	std::vector<ModelDataAttachmentPoint> attachment_points;
 	std::vector<ModelDataParticleEmitter> particle_emitters;
 	std::vector<ModelDataAnimation> animations;
-	clan::Vec3f aabb_min, aabb_max;
+	Vec3f aabb_min, aabb_max;
 };
 
 }

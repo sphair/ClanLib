@@ -36,26 +36,26 @@ namespace clan
 class DiffuseGIPassCS
 {
 public:
-	DiffuseGIPassCS(clan::GraphicContext &gc);
+	DiffuseGIPassCS(GraphicContext &gc);
 	~DiffuseGIPassCS();
-	void run(clan::GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
-	InData<clan::Texture2D> diffuse_color_gbuffer;
-	InData<clan::Texture2D> normal_z_gbuffer;
-	InData<clan::Texture2DArray> shadow_maps;
+	InData<Rect> viewport;
+	InData<Texture2D> diffuse_color_gbuffer;
+	InData<Texture2D> normal_z_gbuffer;
+	InData<Texture2DArray> shadow_maps;
 
-	OutData<clan::Texture2D> final_color;
+	OutData<Texture2D> final_color;
 
 private:
-	void update_buffers(clan::GraphicContext &gc);
-	clan::ProgramObject compile_and_link(clan::GraphicContext &gc, const std::string &compute_filename);
+	void update_buffers(GraphicContext &gc);
+	ProgramObject compile_and_link(GraphicContext &gc, const std::string &compute_filename);
 
-	clan::ProgramObject init_lpv_program;
-	clan::ProgramObject init_gv_program;
-	clan::ProgramObject propagate_lpv_program;
-	clan::ProgramObject accumulate_lpv_program;
-	clan::ProgramObject render_result_program;
+	ProgramObject init_lpv_program;
+	ProgramObject init_gv_program;
+	ProgramObject propagate_lpv_program;
+	ProgramObject accumulate_lpv_program;
+	ProgramObject render_result_program;
 };
 
 }

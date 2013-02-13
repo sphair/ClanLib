@@ -38,7 +38,7 @@ class ModelData;
 class ModelLOD
 {
 public:
-	ModelLOD(clan::GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data, int level);
+	ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data, int level);
 
 	std::vector<ModelMeshBuffers> mesh_buffers;
 
@@ -48,10 +48,10 @@ public:
 
 private:
 	template<typename Type>
-	clan::VertexArrayVector<Type> upload_vector(clan::GraphicContext &gc, clan::PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec);
+	VertexArrayVector<Type> upload_vector(GraphicContext &gc, PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec);
 
 	template<typename Type>
-	clan::VertexArrayVector<Type> upload_vector(clan::GraphicContext &gc, clan::PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec, bool normalize);
+	VertexArrayVector<Type> upload_vector(GraphicContext &gc, PrimitivesArray &primitives_array, int index, const std::vector<Type> &vec, bool normalize);
 };
 
 }

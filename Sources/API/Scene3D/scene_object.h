@@ -46,19 +46,19 @@ class CL_API_SCENE SceneObject
 {
 public:
 	SceneObject();
-	SceneObject(clan::GraphicContext &gc, Scene *scene, const std::string &model_name, const clan::Vec3f &position = clan::Vec3f(0.0f), const clan::Quaternionf &orientation = clan::Quaternionf(), const clan::Vec3f &scale = clan::Vec3f(1.0f));
-	SceneObject(clan::GraphicContext &gc, Scene *scene, std::shared_ptr<ModelData> model_data, const clan::Vec3f &position = clan::Vec3f(0.0f), const clan::Quaternionf &orientation = clan::Quaternionf(), const clan::Vec3f &scale = clan::Vec3f(1.0f));
+	SceneObject(GraphicContext &gc, Scene *scene, const std::string &model_name, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
+	SceneObject(GraphicContext &gc, Scene *scene, std::shared_ptr<ModelData> model_data, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
 	bool is_null() const { return !impl; }
 
-	clan::Vec3f get_position() const;
-	clan::Quaternionf get_orientation() const;
-	clan::Vec3f get_scale() const;
-	void set_position(const clan::Vec3f &position);
-	void set_orientation(const clan::Quaternionf &orientation);
-	void set_scale(const clan::Vec3f &scale);
+	Vec3f get_position() const;
+	Quaternionf get_orientation() const;
+	Vec3f get_scale() const;
+	void set_position(const Vec3f &position);
+	void set_orientation(const Quaternionf &orientation);
+	void set_scale(const Vec3f &scale);
 
 	// \brief Moves object relative to its current orientation
-	SceneObject &move(clan::Vec3f offset);
+	SceneObject &move(Vec3f offset);
 
 	// \brief Rotate object relative to its current orientation
 	SceneObject &rotate(float dir, float up, float tilt);

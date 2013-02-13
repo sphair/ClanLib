@@ -47,10 +47,10 @@ public:
 	std::list<SceneLight_Impl *>::iterator it;
 
 	SceneLight::Type type;
-	clan::Vec3f position;
-	clan::Quaternionf orientation;
+	Vec3f position;
+	Quaternionf orientation;
 
-	clan::Vec3f color;
+	Vec3f color;
 	float falloff;
 	float hotspot;
 	float attenuation_start;
@@ -68,7 +68,7 @@ public:
 class SceneLightVisitor
 {
 public:
-	virtual void light(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, SceneLight_Impl *light) = 0;
+	virtual void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light) = 0;
 };
 
 }

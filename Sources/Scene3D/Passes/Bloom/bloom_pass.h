@@ -37,22 +37,22 @@ namespace clan
 class BloomPass
 {
 public:
-	BloomPass(clan::GraphicContext &gc);
-	void run(clan::GraphicContext &gc);
+	BloomPass(GraphicContext &gc);
+	void run(GraphicContext &gc);
 
-	InData<clan::Rect> viewport;
-	InData<clan::Texture2D> final_color;
-	OutData<clan::Texture2D> bloom_contribution;
+	InData<Rect> viewport;
+	InData<Texture2D> final_color;
+	OutData<Texture2D> bloom_contribution;
 
 private:
-	void setup_bloom_extract(clan::GraphicContext &gc);
+	void setup_bloom_extract(GraphicContext &gc);
 
 	GaussianBlur bloom_blur;
-	clan::VertexArrayVector<clan::Vec4f> rect_positions;
-	clan::PrimitivesArray rect_primarray;
-	clan::ProgramObject bloom_shader;
-	clan::FrameBuffer fb_bloom_extract;
-	clan::BlendState blend_state;
+	VertexArrayVector<Vec4f> rect_positions;
+	PrimitivesArray rect_primarray;
+	ProgramObject bloom_shader;
+	FrameBuffer fb_bloom_extract;
+	BlendState blend_state;
 };
 
 }

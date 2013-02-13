@@ -35,8 +35,8 @@ class LevelDataPortal
 public:
 	LevelDataPortal() : front(-1), back(-1) { }
 
-	std::vector<clan::Vec3f> points;
-	clan::Vec4f plane;
+	std::vector<Vec3f> points;
+	Vec4f plane;
 	int front;
 	int back;
 };

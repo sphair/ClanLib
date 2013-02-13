@@ -43,34 +43,34 @@ class ParticleEmitterPass : SceneParticleEmitterVisitor
 {
 public:
 	ParticleEmitterPass(MaterialCache &texture_cache);
-	void run(clan::GraphicContext &gc, Scene &scene);
-	void update(clan::GraphicContext &gc, float time_elapsed);
+	void run(GraphicContext &gc, Scene &scene);
+	void update(GraphicContext &gc, float time_elapsed);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
-	InData<clan::Texture2D> zbuffer;
-	InData<clan::Texture2D> normal_z_gbuffer;
+	InData<Mat4f> world_to_eye;
+	InData<Texture2D> zbuffer;
+	InData<Texture2D> normal_z_gbuffer;
 
-	InOutData<clan::Texture2D> final_color;
+	InOutData<Texture2D> final_color;
 
 private:
-	void setup(clan::GraphicContext &gc);
-	void emitter(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter);
+	void setup(GraphicContext &gc);
+	void emitter(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter);
 
 	MaterialCache &texture_cache;
-	clan::FrameBuffer fb;
-	clan::BlendState blend_state;
-	clan::DepthStencilState depth_stencil_state;
-	clan::RasterizerState rasterizer_state;
-	clan::ProgramObject program;
+	FrameBuffer fb;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
+	RasterizerState rasterizer_state;
+	ProgramObject program;
 
-	clan::PrimitivesArray prim_array;
-	clan::VertexArrayVector<clan::Vec3f> billboard_positions;
-	static clan::Vec3f cpu_billboard_positions[6];
+	PrimitivesArray prim_array;
+	VertexArrayVector<Vec3f> billboard_positions;
+	static Vec3f cpu_billboard_positions[6];
 
-	clan::Texture2D instance_texture;
-	clan::TransferTexture instance_transfer;
+	Texture2D instance_texture;
+	TransferTexture instance_transfer;
 
 	std::vector< std::shared_ptr<ParticleEmitterPassData> > active_emitters;
 };

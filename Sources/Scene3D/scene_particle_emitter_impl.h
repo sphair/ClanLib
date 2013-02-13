@@ -47,8 +47,8 @@ public:
 	std::list<SceneParticleEmitter_Impl *>::iterator it;
 
 	SceneParticleEmitter::Type type;
-	clan::Vec3f position;
-	clan::Quaternionf orientation;
+	Vec3f position;
+	Quaternionf orientation;
 
 	float particles_per_second;
 	float falloff;
@@ -56,7 +56,7 @@ public:
 	float start_size;
 	float end_size;
 	float speed;
-	clan::Vec3f acceleration;
+	Vec3f acceleration;
 	std::string particle_texture;
 	std::string gradient_texture;
 
@@ -66,7 +66,7 @@ public:
 class SceneParticleEmitterVisitor
 {
 public:
-	virtual void emitter(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter) = 0;
+	virtual void emitter(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter) = 0;
 };
 
 }

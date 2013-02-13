@@ -38,29 +38,29 @@ class Model;
 class ModelShaderCache
 {
 public:
-	void create_gbuffer_commands(clan::GraphicContext &gc, Model *model, int level);
-	void create_transparency_commands(clan::GraphicContext &gc, Model *model, int level);
-	void create_shadow_commands(clan::GraphicContext &gc, Model *model, int level);
+	void create_gbuffer_commands(GraphicContext &gc, Model *model, int level);
+	void create_transparency_commands(GraphicContext &gc, Model *model, int level);
+	void create_shadow_commands(GraphicContext &gc, Model *model, int level);
 
 private:
 	struct Shaderset
 	{
-		clan::ProgramObject gbuffer;
-		clan::ProgramObject transparency;
+		ProgramObject gbuffer;
+		ProgramObject transparency;
 	};
 
-	Shaderset get_shader(clan::GraphicContext &gc, const ModelShaderDescription &description);
-	clan::ProgramObject create_gbuffer_program(clan::GraphicContext &gc, const ModelShaderDescription &description);
-	clan::ProgramObject create_transparency_program(clan::GraphicContext &gc, const ModelShaderDescription &description);
-	clan::ProgramObject get_shadow_program(clan::GraphicContext &gc, bool uses_bones);
-	void create_states(clan::GraphicContext &gc);
-	static clan::TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
+	Shaderset get_shader(GraphicContext &gc, const ModelShaderDescription &description);
+	ProgramObject create_gbuffer_program(GraphicContext &gc, const ModelShaderDescription &description);
+	ProgramObject create_transparency_program(GraphicContext &gc, const ModelShaderDescription &description);
+	ProgramObject get_shadow_program(GraphicContext &gc, bool uses_bones);
+	void create_states(GraphicContext &gc);
+	static TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
 
 	std::string base_path;
 	std::map<ModelShaderDescription, Shaderset> shaders;
-	clan::ProgramObject shadow_program, shadow_bones_program;
-	clan::RasterizerState rasterizer_state;
-	clan::RasterizerState two_sided_rasterizer_state;
+	ProgramObject shadow_program, shadow_bones_program;
+	RasterizerState rasterizer_state;
+	RasterizerState two_sided_rasterizer_state;
 };
 
 }

@@ -34,8 +34,8 @@ class ParticleUniforms
 {
 public:
 	ParticleUniforms() : rcp_depth_fade_distance(), instance_vectors_offset(), padding1(), padding2() { }
-	clan::Mat4f object_to_eye;
-	clan::Mat4f eye_to_projection;
+	Mat4f object_to_eye;
+	Mat4f eye_to_projection;
 	float rcp_depth_fade_distance;
 	int instance_vectors_offset;
 	float padding1;

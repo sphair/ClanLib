@@ -36,21 +36,21 @@ namespace clan
 class SSAOPass
 {
 public:
-	SSAOPass(clan::GraphicContext &gc);
-	void run(clan::GraphicContext &gc);
+	SSAOPass(GraphicContext &gc);
+	void run(GraphicContext &gc);
 
-	InData<clan::Texture2D> normal_z_gbuffer;
-	OutData<clan::Texture2D> ssao_contribution;
+	InData<Texture2D> normal_z_gbuffer;
+	OutData<Texture2D> ssao_contribution;
 
 private:
 	static float random_value();
 
 	GaussianBlur blur;
-	clan::ProgramObject extract_shader;
-	clan::FrameBuffer fb;
-	clan::VertexArrayVector<clan::Vec4f> rect_positions;
-	clan::PrimitivesArray rect_primarray;
-	clan::BlendState blend_state;
+	ProgramObject extract_shader;
+	FrameBuffer fb;
+	VertexArrayVector<Vec4f> rect_positions;
+	PrimitivesArray rect_primarray;
+	BlendState blend_state;
 };
 
 }

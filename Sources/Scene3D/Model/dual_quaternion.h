@@ -35,11 +35,11 @@ class DualQuaternionx
 {
 public:
 	DualQuaternionx();
-	DualQuaternionx(const clan::Vec3f translate, const clan::Quaternionf orientation);
-	clan::Mat4<Type> to_matrix();
+	DualQuaternionx(const Vec3f translate, const Quaternionf orientation);
+	Mat4<Type> to_matrix();
 
-	clan::Quaternionx<Type> first;
-	clan::Quaternionx<Type> second;
+	Quaternionx<Type> first;
+	Quaternionx<Type> second;
 };
 
 template<typename Type>
@@ -48,7 +48,7 @@ DualQuaternionx<Type>::DualQuaternionx()
 }
 
 template<typename Type>
-DualQuaternionx<Type>::DualQuaternionx(const clan::Vec3f translate, const clan::Quaternionf orientation)
+DualQuaternionx<Type>::DualQuaternionx(const Vec3f translate, const Quaternionf orientation)
 {
 	first = orientation;
 	second.x = Type( 0.5) * ( translate.x * orientation.w + translate.y * orientation.z - translate.z * orientation.y);
@@ -58,7 +58,7 @@ DualQuaternionx<Type>::DualQuaternionx(const clan::Vec3f translate, const clan::
 }
 
 template<typename Type>
-clan::Mat4<Type> DualQuaternionx<Type>::to_matrix()
+Mat4<Type> DualQuaternionx<Type>::to_matrix()
 {
 	Type length = first.magnitude();
 	Type x = first.x;
@@ -70,7 +70,7 @@ clan::Mat4<Type> DualQuaternionx<Type>::to_matrix()
 	Type t3 = second.z;
 	Type t0 = second.w;
 
-	clan::Mat4<Type> result;
+	Mat4<Type> result;
 	result.m[0][0] = w*w + x*x - y*y - z*z; 
 	result.m[1][0] = 2*x*y - 2*w*z;
 	result.m[2][0] = 2*x*z + 2*w*y;
