@@ -30,7 +30,7 @@
 #include "model.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "model_shader_cache.h"
-#include "Scene3D/ModelData/model_data.h"
+#include "API/Scene3D/ModelData/model_data.h"
 #include "dual_quaternion.h"
 #include "model_mesh_visitor.h"
 #include "model_lod.h"

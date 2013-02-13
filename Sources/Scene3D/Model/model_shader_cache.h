@@ -29,7 +29,7 @@
 #pragma once
 
 #include "model_shader_description.h"
-#include "Scene3D/ModelData/model_data.h"
+#include "API/Scene3D/ModelData/model_data.h"
 namespace clan
 {
 
