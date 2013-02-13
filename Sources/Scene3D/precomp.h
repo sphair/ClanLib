@@ -39,6 +39,8 @@
 #include "API/core.h"
 #include "API/display.h"
 #include "API/gui.h"
+#include "API/gl.h"
+#include "API/d3d.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG

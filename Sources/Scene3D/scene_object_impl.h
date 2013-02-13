@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/Scene/scene_light.h"
+#include "API/Scene3D/scene_light.h"
 #include "Culling/visible_object.h"
 #include "Model/model_instance.h"
 #include <list>

@@ -31,6 +31,7 @@
 #include "Scene3D/Framework/shader_setup.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "API/Scene3D/scene.h"
+#include "Scene3D/Culling/clipping_frustum.h"
 
 namespace clan
 {

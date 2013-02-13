@@ -27,10 +27,10 @@
 */
 
 #include "Scene3D/precomp.h"
-#include "API/Scene/scene.h"
-#include "API/Scene/scene_object.h"
-#include "API/Scene/scene_light.h"
-#include "API/Scene/scene_particle_emitter.h"
+#include "API/Scene3D/scene.h"
+#include "API/Scene3D/scene_object.h"
+#include "API/Scene3D/scene_light.h"
+#include "API/Scene3D/scene_particle_emitter.h"
 #include "scene_impl.h"
 #include "Culling/clipping_frustum.h"
 #include "Performance/scope_timer.h"

@@ -34,6 +34,7 @@
 #include "dual_quaternion.h"
 #include "model_mesh_visitor.h"
 #include "model_lod.h"
+#include "Scene3D/Framework/instances_buffer.h"
 
 namespace clan
 {
