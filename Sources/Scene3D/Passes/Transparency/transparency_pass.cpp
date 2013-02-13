@@ -30,6 +30,7 @@
 #include "transparency_pass.h"
 #include "API/Scene3D/scene.h"
 #include "Scene3D/Model/model_lod.h"
+#include "Scene3D/Culling/clipping_frustum.h"
 
 namespace clan
 {

@@ -32,6 +32,8 @@
 #include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "API/Scene3D/scene_light.h"
+#include "Scene3D/scene_light_impl.h"
+
 namespace clan
 {
 
