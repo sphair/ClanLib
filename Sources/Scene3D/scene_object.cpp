@@ -31,6 +31,8 @@
 #include "API/Scene3D/scene.h"
 #include <algorithm>
 #include "Scene3D/scene_object_impl.h"
+#include "Scene3D/Culling/aabb.h"
+#include "Scene3D/Model/model.h"
 
 namespace clan
 {

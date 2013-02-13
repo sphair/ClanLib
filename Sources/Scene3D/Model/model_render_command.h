@@ -31,6 +31,8 @@
 #include "model_mesh_buffers.h"
 #include "Scene3D/Framework/texture.h"
 #include "API/Scene3D/scene.h"
+#include "Scene3D/scene_impl.h"
+
 namespace clan
 {
 
@@ -136,8 +138,8 @@ public:
 		gc.set_uniform_buffer(0, uniforms);
 		gc.draw_primitives_elements_instanced(clan::type_triangles, num_elements, clan::type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
-		Scene::draw_calls++;
-		Scene::triangles_drawn += num_elements / 3;
+		Scene_Impl::draw_calls++;
+		Scene_Impl::triangles_drawn += num_elements / 3;
 	}
 
 	int start_element;
