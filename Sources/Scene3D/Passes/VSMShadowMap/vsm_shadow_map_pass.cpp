@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "vsm_shadow_map_pass.h"
-#include "Scene3D/scene.h"
+#include "API/Scene3D/scene.h"
 #include "Scene3D/Model/model_lod.h"
 
 namespace clan

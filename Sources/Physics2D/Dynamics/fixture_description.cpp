@@ -27,7 +27,7 @@
 */
 
 #include "Physics2D/precomp.h"
-#include "Physics/Dynamics/fixture_description_impl.h"
+#include "Physics2D/Dynamics/fixture_description_impl.h"
 #include "API/Physics2D/World/physics_context.h"
 #include "API/Physics2D/Dynamics/fixture_description.h"
 #include "API/Physics2D/Collision/Shapes/shape.h"

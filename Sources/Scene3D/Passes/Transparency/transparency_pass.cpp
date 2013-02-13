@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "transparency_pass.h"
-#include "Scene3D/scene.h"
+#include "API/Scene3D/scene.h"
 #include "Scene3D/Model/model_lod.h"
 
 namespace clan

@@ -30,7 +30,7 @@
 #include "lightsource_pass.h"
 #include "Scene3D/Framework/shader_setup.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
-#include "Scene3D/scene.h"
+#include "API/Scene3D/scene.h"
 
 namespace clan
 {
