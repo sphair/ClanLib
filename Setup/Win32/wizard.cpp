@@ -242,10 +242,10 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanScene(
-		"Scene",
-		"clanScene",
-		"scene.h",
+	Project clanScene3D(
+		"Scene3D",
+		"clanScene3D",
+		"scene3d.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug);
@@ -290,10 +290,10 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanPhysics(
-		"Physics",
-		"clanPhysics",
-		"physics.h",
+	Project clanPhysics2D(
+		"Physics2D",
+		"clanPhysics2D",
+		"physics2d.h",
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug);
@@ -316,7 +316,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanD3D);
-	workspace.projects.push_back(clanScene);
+	workspace.projects.push_back(clanScene3D);
 
 	//if (page_target.include_intrinsics)
 	//	workspace.projects.push_back(clanSWRender);
@@ -327,7 +327,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanVorbis);
 
 	workspace.projects.push_back(clanCompute);
-	workspace.projects.push_back(clanPhysics);
+	workspace.projects.push_back(clanPhysics2D);
 	workspace.projects.push_back(clanGameIDE);
 
 	return workspace;
