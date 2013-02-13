@@ -162,12 +162,13 @@ void NetGameConnection_Impl::connection_main()
 				}
 			}
 		}
+
+		site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected));
 	}
 	catch (const Exception& e)
 	{
-		// to do: pass on e.message to the NetGameNetworkEvent::client_disconnected event
+		site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected, NetGameEvent(e.message)));
 	}
-	site->add_network_event(NetGameNetworkEvent(base, NetGameNetworkEvent::client_disconnected));
 }
 
 }
