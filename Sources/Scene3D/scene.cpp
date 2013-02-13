@@ -33,7 +33,7 @@
 #include "API/Scene3D/scene_particle_emitter.h"
 #include "scene_impl.h"
 #include "Culling/clipping_frustum.h"
-#include "Performance/scope_timer.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 namespace clan
 {
