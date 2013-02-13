@@ -28,6 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "particle_emitter_pass_data.h"
+#include "Scene3D/scene_particle_emitter_impl.h"
 
 namespace clan
 {
