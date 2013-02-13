@@ -27,25 +27,26 @@
 */
 
 #include "Scene/precomp.h"
-#include "scene.h"
+#include "API/Scene/scene.h"
+#include "API/Scene/scene_object.h"
+#include "API/Scene/scene_light.h"
+#include "API/Scene/scene_particle_emitter.h"
+#include "scene_impl.h"
 #include "Culling/clipping_frustum.h"
 #include "Performance/scope_timer.h"
-#include "scene_object.h"
-#include "scene_light.h"
-#include "scene_particle_emitter.h"
 
 namespace clan
 {
 
 
-int Scene::instances_drawn = 0;
-int Scene::models_drawn = 0;
-int Scene::draw_calls = 0;
-int Scene::triangles_drawn = 0;
-int Scene::scene_visits = 0;
-std::vector<GPUTimer::Result> Scene::gpu_results;
+int Scene_Impl::instances_drawn = 0;
+int Scene_Impl::models_drawn = 0;
+int Scene_Impl::draw_calls = 0;
+int Scene_Impl::triangles_drawn = 0;
+int Scene_Impl::scene_visits = 0;
+std::vector<GPUTimer::Result> Scene_Impl::gpu_results;
 
-Scene::Scene(GraphicContext &gc)
+Scene_Impl::Scene_Impl(GraphicContext &gc)
 : frame(0), work_queue(gc), material_cache(work_queue), model_cache(work_queue, material_cache, model_shader_cache, instances_buffer), vsm_shadow_map_pass(gc), particle_emitter_pass(material_cache), lightsource_pass(gc), bloom_pass(gc), final_pass(gc)
 {
 	viewport.set(Size(640, 480));
@@ -98,28 +99,28 @@ Scene::Scene(GraphicContext &gc)
 	//final_pass.ambient_occlusion.bind_from(ssao_pass.ssao_contribution);
 }
 
-void Scene::set_viewport(const Rect &box)
+void Scene_Impl::set_viewport(const Rect &box)
 {
 	viewport.set(box);
 }
 
-void Scene::set_camera(const Vec3f &position, const Quaternionf &orientation)
+void Scene_Impl::set_camera(const Vec3f &position, const Quaternionf &orientation)
 {
 	camera_position = position;
 	camera_orientation = orientation;
 }
 
-void Scene::set_camera_position(const Vec3f &position)
+void Scene_Impl::set_camera_position(const Vec3f &position)
 {
 	camera_position = position;
 }
 
-void Scene::set_camera_orientation(const Quaternionf &orientation)
+void Scene_Impl::set_camera_orientation(const Quaternionf &orientation)
 {
 	camera_orientation = orientation;
 }
 
-void Scene::render(GraphicContext &gc)
+void Scene_Impl::render(GraphicContext &gc)
 {
 	ScopeTimeFunction();
 
@@ -183,14 +184,14 @@ void Scene::render(GraphicContext &gc)
 		OpenGL::check_error();
 }
 
-void Scene::update(GraphicContext &gc, float time_elapsed)
+void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 {
 	material_cache.update(gc, time_elapsed);
 	particle_emitter_pass.update(gc, time_elapsed);
 	// To do: update scene object animations here too
 }
 
-void Scene::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor)
+void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
 	scene_visits++;
@@ -231,7 +232,7 @@ void Scene::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &ey
 		models[i]->visit(gc, instances_buffer, visitor);
 }
 
-void Scene::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor)
+void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor)
 {
 	ScopeTimeFunction();
 
@@ -246,7 +247,7 @@ void Scene::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Ma
 	}
 }
 
-void Scene::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor)
+void Scene_Impl::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor)
 {
 	ScopeTimeFunction();
 

@@ -26,43 +26,29 @@
 **    Magnus Norddahl
 */
 
-/// \brief <p>ClanLib Scene library.</p>
-//! Global=Scene
+/// \addtogroup clanScene_Scene clanScene Scene
+/// \{
 
 #pragma once
 
-#ifdef __cplusplus_cli
-#pragma managed(push, off)
-#endif
+#include "api_scene.h"
+#include <memory>
 
-#include "Scene/scene.h"
-#include "Scene/scene_light.h"
-#include "Scene/scene_object.h"
-#include "Scene/scene_particle_emitter.h"
+namespace clan
+{
 
-#ifdef __cplusplus_cli
-#pragma managed(pop)
-#endif
+class Scene_Impl;
 
-#if defined(_MSC_VER)
-	#if !defined(_MT)
-		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
-	#endif
-	#if !defined(_DEBUG)
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt.lib")
-		#endif
-	#else
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll-debug.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll-debug.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt-debug.lib")
-		#endif
-	#endif
-#endif
+class CL_API_SCENE Scene
+{
+public:
+	Scene();
+	bool is_null() const;
+
+private:
+	std::shared_ptr<Scene_Impl> impl;
+};
+
+}
+
+/// \}

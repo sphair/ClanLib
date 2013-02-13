@@ -26,43 +26,18 @@
 **    Magnus Norddahl
 */
 
-/// \brief <p>ClanLib Scene library.</p>
-//! Global=Scene
-
 #pragma once
 
-#ifdef __cplusplus_cli
-#pragma managed(push, off)
-#endif
-
-#include "Scene/scene.h"
-#include "Scene/scene_light.h"
-#include "Scene/scene_object.h"
-#include "Scene/scene_particle_emitter.h"
-
-#ifdef __cplusplus_cli
-#pragma managed(pop)
-#endif
-
-#if defined(_MSC_VER)
-	#if !defined(_MT)
-		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
-	#endif
-	#if !defined(_DEBUG)
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt.lib")
-		#endif
+#ifdef CL_API_DLL
+	#ifdef SCENE_EXPORT
+		#define CL_API_SCENE __declspec(dllexport)
+		#define CL_API_SCENE_STATIC
 	#else
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll-debug.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll-debug.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt-debug.lib")
-		#endif
+		#define CL_API_SCENE __declspec(dllimport)
+		#define CL_API_SCENE_STATIC __declspec(dllimport)
 	#endif
+#else
+	#define CL_API_SCENE
+	#define CL_API_SCENE_STATIC
 #endif
+
