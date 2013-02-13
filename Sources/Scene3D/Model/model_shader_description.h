@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene3D/ModelData/model_data_material_range.h"
+#include "API/Scene3D/ModelData/model_data_material_range.h"
 namespace clan
 {
 

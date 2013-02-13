@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "model_lod.h"
-#include "Scene3D/ModelData/model_data.h"
+#include "API/Scene3D/ModelData/model_data.h"
 #include "Scene3D/Model/model.h"
 
 namespace clan

@@ -29,7 +29,7 @@
 #include "Scene3D/precomp.h"
 #include "model_instance.h"
 #include "model.h"
-#include "Scene3D/ModelData/model_data.h"
+#include "API/Scene3D/ModelData/model_data.h"
 #include "Scene3D/Culling/aabb.h"
 
 namespace clan
