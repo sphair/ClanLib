@@ -35,7 +35,7 @@ namespace clan
 
 void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 {
-	const CSSComputedBox &properties = node->element.get_css_values().get_box();
+	const CSSComputedValues &properties = node->element.get_css_values();
 	if (node->parent)
 	{
 		if (!node->use_auto_geometry)
@@ -72,9 +72,9 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 			node->css_used_values.margin.left = 0.0f;
 			node->css_used_values.margin.right = 0.0f;
 
-			GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties, containing_box); // TBD: does min/max constraints win over the manual set_geometry() size?
+			GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties.get_box(), containing_box); // TBD: does min/max constraints win over the manual set_geometry() size?
 		}
-		else if (properties.position.type == CSSValuePosition::type_absolute || properties.position.type == CSSValuePosition::type_fixed)
+		else if (properties.get_box().position.type == CSSValuePosition::type_absolute || properties.get_box().position.type == CSSValuePosition::type_fixed)
 		{
 			// To do: find nearest ancestor with 'position:relative'
 			GUICSSUsedValues containing_box = node->parent->impl->css_used_values;
@@ -96,7 +96,7 @@ void GUISetInitialUsedValues::node(GUIComponent_Impl *node)
 		initial_containing_box.height = viewport.get_height();
 
 		GUICSSInitialUsedValues::visit(node->css_used_values, properties, initial_containing_box);
-		GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties, initial_containing_box);
+		GUICSSApplyMinMaxConstraints::visit(node->css_used_values, properties.get_box(), initial_containing_box);
 
 		if (node->css_used_values.width_undetermined)
 		{

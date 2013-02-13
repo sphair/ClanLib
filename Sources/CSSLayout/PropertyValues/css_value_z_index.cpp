@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_z_index.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueZIndex::CSSValueZIndex()
 : type(type_auto), value(0)
 {
 }
-void CSSValueZIndex::apply_to_box(CSSComputedBox &box)
+
+void CSSValueZIndex::apply(CSSComputedValuesUpdater *updater)
 {
-	box.z_index = *this;
+	updater->get_misc_reset().z_index = *this;
 }
 
 void CSSValueZIndex::compute(const CSSValueZIndex *parent, CSSResourceCache *layout, float em_size, float ex_size)

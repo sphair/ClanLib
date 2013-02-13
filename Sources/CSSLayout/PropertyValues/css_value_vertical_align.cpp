@@ -29,8 +29,8 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_vertical_align.h"
 #include "API/CSSLayout/PropertyValues/css_value_line_height.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -39,9 +39,10 @@ CSSValueVerticalAlign::CSSValueVerticalAlign()
 : type(type_baseline), percentage(0.0f)
 {
 }
-void CSSValueVerticalAlign::apply_to_box(CSSComputedBox &box)
+
+void CSSValueVerticalAlign::apply(CSSComputedValuesUpdater *updater)
 {
-	box.vertical_align = *this;
+	updater->get_text_reset().vertical_align = *this;
 }
 
 void CSSValueVerticalAlign::compute(const CSSValueVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &line_height)

@@ -39,7 +39,7 @@ public:
 	CSSValueBackgroundRepeat();
 	void compute(const CSSValueBackgroundRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
-	void apply_to_box(CSSComputedBox &box);
+	void apply(CSSComputedValuesUpdater *updater);
 
 	enum Type
 	{

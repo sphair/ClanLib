@@ -41,7 +41,7 @@ public:
 	CSSValueAlignSelf();
 	void compute(const CSSValueAlignSelf *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueAlignItems *parent_align_items);
 	std::string to_string() const;
-	void apply_to_box(CSSComputedBox &box);
+	void apply(CSSComputedValuesUpdater *updater);
 
 	enum Type
 	{

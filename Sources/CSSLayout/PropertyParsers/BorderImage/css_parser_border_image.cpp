@@ -28,7 +28,11 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_image.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_source.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_slice.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_width.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_outset.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_image_repeat.h"
 
 namespace clan
 {

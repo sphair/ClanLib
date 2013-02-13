@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_source.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueBorderImageSource::CSSValueBorderImageSource()
 : type(type_none)
 {
 }
-void CSSValueBorderImageSource::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderImageSource::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_image_source = *this;
+	updater->get_border().border_image_source = *this;
 }
 
 void CSSValueBorderImageSource::compute(const CSSValueBorderImageSource *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_width.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueWidth::CSSValueWidth()
 : type(type_auto), percentage(0.0f)
 {
 }
-void CSSValueWidth::apply_to_box(CSSComputedBox &box)
+
+void CSSValueWidth::apply(CSSComputedValuesUpdater *updater)
 {
-	box.width = *this;
+	updater->get_box().width = *this;
 }
 
 void CSSValueWidth::compute(const CSSValueWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_width_auto)

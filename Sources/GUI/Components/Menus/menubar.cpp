@@ -205,10 +205,10 @@ void MenuBar_Impl::create_parts()
 {
 	part_item = GUIThemePart(menubar, "item");
 
-	item_border_left = part_item.get_css_values().get_box().border_width_left.length.value;
-	item_padding_left = part_item.get_css_values().get_box().padding_width_left.length.value;
-	item_border_right = part_item.get_css_values().get_box().border_width_right.length.value;
-	item_padding_right = part_item.get_css_values().get_box().padding_width_right.length.value;
+	item_border_left = part_item.get_css_values().get_border().border_width_left.length.value;
+	item_padding_left = part_item.get_css_values().get_padding().padding_width_left.length.value;
+	item_border_right = part_item.get_css_values().get_border().border_width_right.length.value;
+	item_padding_right = part_item.get_css_values().get_padding().padding_width_right.length.value;
 }
 
 void MenuBar_Impl::select_item_at(const Point &mouse_pos)

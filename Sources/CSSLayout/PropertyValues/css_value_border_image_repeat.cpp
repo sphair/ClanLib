@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_repeat.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueBorderImageRepeat::CSSValueBorderImageRepeat()
 : type(type_values), repeat_x(repeat_type_stretch), repeat_y(repeat_type_stretch)
 {
 }
-void CSSValueBorderImageRepeat::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderImageRepeat::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_image_repeat = *this;
+	updater->get_border().border_image_repeat = *this;
 }
 
 void CSSValueBorderImageRepeat::compute(const CSSValueBorderImageRepeat *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -32,6 +32,8 @@ namespace clan
 {
 
 class CSSResourceCache;
+class CSSComputedValues;
+class CSSComputedValuesUpdater;
 class CSSComputedBox;
 
 class CSSPropertyValue
@@ -39,7 +41,7 @@ class CSSPropertyValue
 public:
 	virtual ~CSSPropertyValue() { }
 	virtual std::string to_string() const = 0;
-	virtual void apply_to_box(CSSComputedBox &box) = 0;
+	virtual void apply(CSSComputedValuesUpdater *updater) = 0;
 };
 
 }

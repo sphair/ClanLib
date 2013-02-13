@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_decoration_break.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueDecorationBreak::CSSValueDecorationBreak()
 : type(type_slice)
 {
 }
-void CSSValueDecorationBreak::apply_to_box(CSSComputedBox &box)
+
+void CSSValueDecorationBreak::apply(CSSComputedValuesUpdater *updater)
 {
-	box.decoration_break = *this;
+	updater->get_misc_reset().decoration_break = *this;
 }
 
 void CSSValueDecorationBreak::compute(const CSSValueDecorationBreak *parent, CSSResourceCache *layout, float em_size, float ex_size)

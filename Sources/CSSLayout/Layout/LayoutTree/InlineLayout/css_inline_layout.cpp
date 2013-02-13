@@ -261,13 +261,13 @@ void CSSInlineLayout::layout_content(CSSLayoutGraphics *graphics, CSSLayoutCurso
 					CSSActualValue text_indent = 0;
 					if (lines.empty())
 					{
-						if (element_node->computed_values.get_box().text_indent.type == CSSValueTextIndent::type_length)
+						if (element_node->computed_values.get_text_inherit().text_indent.type == CSSValueTextIndent::type_length)
 						{
-							text_indent = used_to_actual(element_node->computed_values.get_box().text_indent.length.value);
+							text_indent = used_to_actual(element_node->computed_values.get_text_inherit().text_indent.length.value);
 						}
-						else if (element_node->computed_values.get_box().text_indent.type == CSSValueTextIndent::type_percentage)
+						else if (element_node->computed_values.get_text_inherit().text_indent.type == CSSValueTextIndent::type_percentage)
 						{
-							text_indent = used_to_actual(width.value * element_node->computed_values.get_box().text_indent.percentage / 100.0f);
+							text_indent = used_to_actual(width.value * element_node->computed_values.get_text_inherit().text_indent.percentage / 100.0f);
 						}
 					}
 
@@ -512,16 +512,16 @@ void CSSInlineLayout::layout_line(CSSInlineGeneratedBox *line, Rect &line_box, C
 	CSSInlineLayoutLayoutLine visitor(this, line, line_box, graphics, resources);
 	line->self_and_descendants(&visitor);
 
-	switch (get_element_node()->computed_values.get_box().line_height.type)
+	switch (get_element_node()->computed_values.get_font().line_height.type)
 	{
 	default:
 	case CSSValueLineHeight::type_normal:
 		break;
 	case CSSValueLineHeight::type_length:
-		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_box().line_height.length.value));
+		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_font().line_height.length.value));
 		break;
 	case CSSValueLineHeight::type_number:
-		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_box().line_height.number * get_element_node()->computed_values.get_box().font_size.length.value));
+		line->height = max(line->height, used_to_actual(get_element_node()->computed_values.get_font().line_height.number * get_element_node()->computed_values.get_font().font_size.length.value));
 		break;
 	}
 
@@ -596,7 +596,7 @@ void CSSInlineLayout::adjust_start_of_line_text_range(CSSBoxText *text, size_t &
 {
 	if (start_of_line && text_start < text_end)
 	{
-		const CSSComputedBox &properties = text->get_properties();
+		const CSSComputedTextInherit &properties = text->get_properties().get_text_inherit();
 		if (properties.white_space.type == CSSValueWhiteSpace::type_pre || properties.white_space.type == CSSValueWhiteSpace::type_pre_wrap)
 		{
 			start_of_line = false;

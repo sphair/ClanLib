@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_caption_side.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueCaptionSide::CSSValueCaptionSide()
 : type(type_inherit)
 {
 }
-void CSSValueCaptionSide::apply_to_box(CSSComputedBox &box)
+
+void CSSValueCaptionSide::apply(CSSComputedValuesUpdater *updater)
 {
-	box.caption_side = *this;
+	updater->get_table_inherit().caption_side = *this;
 }
 
 void CSSValueCaptionSide::compute(const CSSValueCaptionSide *parent, CSSResourceCache *layout, float em_size, float ex_size)

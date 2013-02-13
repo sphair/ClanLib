@@ -29,8 +29,8 @@
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_width.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_style.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -44,14 +44,15 @@ CSSValueBorderWidth::CSSValueBorderWidth(ValueType value_type, const CSSValueBor
 : value_type(value_type), type(value.type), length(value.length)
 {
 }
-void CSSValueBorderWidth::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)
 	{
-		case left_value: box.border_width_left = *this; break;
-		case top_value: box.border_width_top = *this; break;
-		case right_value: box.border_width_right = *this; break;
-		case bottom_value: box.border_width_bottom = *this; break;
+		case left_value: updater->get_border().border_width_left = *this; break;
+		case top_value: updater->get_border().border_width_top = *this; break;
+		case right_value: updater->get_border().border_width_right = *this; break;
+		case bottom_value: updater->get_border().border_width_bottom = *this; break;
 	}
 }
 

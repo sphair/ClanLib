@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_align_items.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -39,9 +39,9 @@ CSSValueAlignItems::CSSValueAlignItems()
 }
 
 
-void CSSValueAlignItems::apply_to_box(CSSComputedBox &box)
+void CSSValueAlignItems::apply(CSSComputedValuesUpdater *updater)
 {
-	box.align_items = *this;
+	updater->get_flex().align_items = *this;
 }
 
 void CSSValueAlignItems::compute(const CSSValueAlignItems *parent, CSSResourceCache *layout, float em_size, float ex_size)

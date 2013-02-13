@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_page_break_after.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValuePageBreakAfter::CSSValuePageBreakAfter()
 : type(type_auto)
 {
 }
-void CSSValuePageBreakAfter::apply_to_box(CSSComputedBox &box)
+
+void CSSValuePageBreakAfter::apply(CSSComputedValuesUpdater *updater)
 {
-	box.page_break_after = *this;
+	updater->get_misc_reset().page_break_after = *this;
 }
 
 void CSSValuePageBreakAfter::compute(const CSSValuePageBreakAfter *parent, CSSResourceCache *layout, float em_size, float ex_size)

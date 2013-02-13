@@ -47,14 +47,14 @@ bool CSSInlineLayoutRenderLayerInline::node(CSSInlineGeneratedBox *cur)
 	CSSBoxText *text = dynamic_cast<CSSBoxText*>(node);
 	if (text)
 	{
-		const CSSComputedBox &properties = text->get_properties();
-		if (properties.visibility.type == CSSValueVisibility::type_visible)
+		const CSSComputedValues &properties = text->get_properties();
+		if (properties.get_misc_inherit().visibility.type == CSSValueVisibility::type_visible)
 		{
 			Font font = graphics->get_font(properties);
 			FontMetrics metrics = graphics->get_font_metrics(font);
 			int pos_x = used_to_actual(cur->relative_x) + formatting_context->get_x();
 			int pos_y = used_to_actual(cur->relative_y) + formatting_context->get_y();
-			graphics->draw_text(font, pos_x + cur->x, pos_y + cur->y + used_to_actual(metrics.get_ascent()), text->processed_text.substr(cur->text_start, cur->text_end - cur->text_start), properties.color.color);
+			graphics->draw_text(font, pos_x + cur->x, pos_y + cur->y + used_to_actual(metrics.get_ascent()), text->processed_text.substr(cur->text_start, cur->text_end - cur->text_start), properties.get_text_inherit().color.color);
 		}
 	}
 	else if (cur->layout_node)

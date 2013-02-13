@@ -42,7 +42,7 @@ class GraphicContext;
 class CSSBoxElement;
 class CSSBoxText;
 class CSSBoxNode;
-class CSSComputedBox;
+class CSSComputedValues;
 class CSSLength;
 class CSSLayoutTreeNode;
 class CSSInlineLayout;
@@ -66,7 +66,7 @@ public:
 	CSSLength get_font_table_smaller(float em_size);
 	CSSLength get_font_table_larger(float em_size);
 
-	Font &get_font(Canvas &canvas, const CSSComputedBox &properties);
+	Font &get_font(Canvas &canvas, const CSSComputedValues &properties);
 	Image &get_image(Canvas &canvas, const std::string &url);
 
 private:

@@ -244,7 +244,7 @@ std::string GUIElement::get_property(const std::string &property, const std::str
 	// TODO: Decode all token types
 	// TODO: If property not found, search standard types?
 	const CSSComputedValues &computed_values = get_css_values();
-	const std::vector<CSSValueGeneric> &generic_values = computed_values.get_box().generic_values;
+	const std::vector<CSSValueGeneric> &generic_values = computed_values.get_generic().generic_values;
 
 	for (size_t cnt = 0; cnt < generic_values.size(); cnt++)
 	{

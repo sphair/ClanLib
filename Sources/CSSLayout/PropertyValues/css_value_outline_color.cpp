@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_outline_color.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueOutlineColor::CSSValueOutlineColor()
 : type(type_invert)
 {
 }
-void CSSValueOutlineColor::apply_to_box(CSSComputedBox &box)
+
+void CSSValueOutlineColor::apply(CSSComputedValuesUpdater *updater)
 {
-	box.outline_color = *this;
+	updater->get_outline().outline_color = *this;
 }
 
 void CSSValueOutlineColor::compute(const CSSValueOutlineColor *parent, CSSResourceCache *layout, float em_size, float ex_size)

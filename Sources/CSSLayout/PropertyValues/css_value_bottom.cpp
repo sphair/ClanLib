@@ -28,9 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_bottom.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -39,9 +38,10 @@ CSSValueBottom::CSSValueBottom()
 : type(type_auto), percentage(0.0f)
 {
 }
-void CSSValueBottom::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBottom::apply(CSSComputedValuesUpdater *updater)
 {
-	box.bottom = *this;
+	updater->get_box().bottom = *this;
 }
 
 void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position)

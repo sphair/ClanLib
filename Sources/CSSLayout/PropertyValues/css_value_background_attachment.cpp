@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_attachment.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -39,9 +39,9 @@ CSSValueBackgroundAttachment::CSSValueBackgroundAttachment()
 	attachments.push_back(attachment_scroll);
 }
 
-void CSSValueBackgroundAttachment::apply_to_box(CSSComputedBox &box)
+void CSSValueBackgroundAttachment::apply(CSSComputedValuesUpdater *updater)
 {
-	box.background_attachment = *this;
+	updater->get_background().background_attachment = *this;
 }
 
 void CSSValueBackgroundAttachment::compute(const CSSValueBackgroundAttachment *parent, CSSResourceCache *layout, float em_size, float ex_size)

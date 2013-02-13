@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_position.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -39,9 +39,10 @@ CSSValueBackgroundPosition::CSSValueBackgroundPosition()
 {
 	positions.push_back(Position());
 }
-void CSSValueBackgroundPosition::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBackgroundPosition::apply(CSSComputedValuesUpdater *updater)
 {
-	box.background_position = *this;
+	updater->get_background().background_position = *this;
 }
 
 void CSSValueBackgroundPosition::compute(const CSSValueBackgroundPosition *parent, CSSResourceCache *layout, float em_size, float ex_size)

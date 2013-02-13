@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_padding_width.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -43,14 +43,15 @@ CSSValuePaddingWidth::CSSValuePaddingWidth(ValueType value_type, const CSSValueP
 : value_type(value_type), type(value.type), length(value.length), percentage(value.percentage)
 {
 }
-void CSSValuePaddingWidth::apply_to_box(CSSComputedBox &box)
+
+void CSSValuePaddingWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)
 	{
-		case left_value: box.padding_width_left = *this; break;
-		case top_value: box.padding_width_top = *this; break;
-		case right_value: box.padding_width_right = *this; break;
-		case bottom_value: box.padding_width_bottom = *this; break;
+		case left_value: updater->get_padding().padding_width_left = *this; break;
+		case top_value: updater->get_padding().padding_width_top = *this; break;
+		case right_value: updater->get_padding().padding_width_right = *this; break;
+		case bottom_value: updater->get_padding().padding_width_bottom = *this; break;
 	}
 
 }

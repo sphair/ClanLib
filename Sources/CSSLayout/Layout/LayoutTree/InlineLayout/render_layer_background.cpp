@@ -52,7 +52,7 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 	}
 	else if (element)
 	{
-		if (element->computed_values.get_box().visibility.type == CSSValueVisibility::type_visible)
+		if (element->computed_values.get_misc_inherit().visibility.type == CSSValueVisibility::type_visible)
 		{
 			int pos_x = used_to_actual(cur->relative_x) + tree_node->get_formatting_context()->get_x();
 			int pos_y = used_to_actual(cur->relative_y) + tree_node->get_formatting_context()->get_y();
@@ -60,32 +60,32 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 
 			Rect padding_box = content;
 			padding_box.expand(
-				cur->opening ? used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_box().padding_width_left, tree_node->containing_width)) : 0,
-				used_to_actual(tree_node->get_css_padding_height(element->computed_values.get_box().padding_width_top, tree_node->containing_height)),
-				cur->closing ?  used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_box().padding_width_right, tree_node->containing_width)) : 0,
-				used_to_actual(tree_node->get_css_padding_height(element->computed_values.get_box().padding_width_bottom, tree_node->containing_height)));
+				cur->opening ? used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_padding().padding_width_left, tree_node->containing_width)) : 0,
+				used_to_actual(tree_node->get_css_padding_height(element->computed_values.get_padding().padding_width_top, tree_node->containing_height)),
+				cur->closing ?  used_to_actual(tree_node->get_css_padding_width(element->computed_values.get_padding().padding_width_right, tree_node->containing_width)) : 0,
+				used_to_actual(tree_node->get_css_padding_height(element->computed_values.get_padding().padding_width_bottom, tree_node->containing_height)));
 
 			Rect border_box = padding_box;
 			border_box.expand(
-				cur->opening ? used_to_actual(element->computed_values.get_box().border_width_left.length.value) : 0,
-				used_to_actual(element->computed_values.get_box().border_width_top.length.value),
-				cur->closing ? used_to_actual(element->computed_values.get_box().border_width_right.length.value) : 0,
-				used_to_actual(element->computed_values.get_box().border_width_bottom.length.value));
+				cur->opening ? used_to_actual(element->computed_values.get_border().border_width_left.length.value) : 0,
+				used_to_actual(element->computed_values.get_border().border_width_top.length.value),
+				cur->closing ? used_to_actual(element->computed_values.get_border().border_width_right.length.value) : 0,
+				used_to_actual(element->computed_values.get_border().border_width_bottom.length.value));
 
-			CSSBackgroundRenderer background(graphics, resources, element->computed_values.get_box());
+			CSSBackgroundRenderer background(graphics, resources, element->computed_values.get_background());
 			background.set_initial_containing_box(Rect(0, 0, used_to_actual(tree_node->containing_width.value), used_to_actual(tree_node->containing_height.value))); // Bug: this is wrong
 			background.set_content_box(content);
 			background.set_padding_box(padding_box);
 			background.set_border_box(border_box);
 			background.render();
 
-			CSSBorderRenderer border(graphics, resources, element->computed_values.get_box());
+			CSSBorderRenderer border(graphics, resources, element->computed_values.get_border());
 			border.set_border_box(border_box);
 			border.set_border_values(
-				cur->opening ? element->computed_values.get_box().border_width_left.length.value : 0,
-				element->computed_values.get_box().border_width_top.length.value,
-				cur->closing ? element->computed_values.get_box().border_width_right.length.value : 0,
-				element->computed_values.get_box().border_width_bottom.length.value);
+				cur->opening ? element->computed_values.get_border().border_width_left.length.value : 0,
+				element->computed_values.get_border().border_width_top.length.value,
+				cur->closing ? element->computed_values.get_border().border_width_right.length.value : 0,
+				element->computed_values.get_border().border_width_bottom.length.value);
 			border.render();
 		}
 	}

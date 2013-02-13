@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
@@ -75,30 +75,35 @@ public:
 class GUICSSInitialUsedValues
 {
 public:
-	static void visit(GUICSSUsedValues &values, const CSSComputedBox &properties, GUICSSUsedValues &containing_box)
+	static void visit(GUICSSUsedValues &values, const CSSComputedValues &properties, GUICSSUsedValues &containing_box)
 	{
-		values.margin.left = get_css_margin_width(properties.margin_width_left, containing_box.width, containing_box.width_undetermined);
-		values.margin.right = get_css_margin_width(properties.margin_width_right, containing_box.width, containing_box.width_undetermined);
-		values.border.left = get_css_border_size(properties.border_width_left);
-		values.border.right = get_css_border_size(properties.border_width_right);
-		values.padding.left = get_css_padding_width(properties.padding_width_left, containing_box.width, containing_box.width_undetermined);
-		values.padding.right = get_css_padding_width(properties.padding_width_right, containing_box.width, containing_box.width_undetermined);
+		const CSSComputedBox &box_properties = properties.get_box();
+		const CSSComputedMargin &margin_properties = properties.get_margin();
+		const CSSComputedBorder &border_properties = properties.get_border();
+		const CSSComputedPadding &padding_properties = properties.get_padding();
 
-		values.margin.top = get_css_margin_height(properties.margin_width_top, containing_box.height, containing_box.height_undetermined);
-		values.margin.bottom = get_css_margin_height(properties.margin_width_bottom, containing_box.height, containing_box.height_undetermined);
-		values.border.top = get_css_border_size(properties.border_width_top);
-		values.border.bottom = get_css_border_size(properties.border_width_bottom);
-		values.padding.top = get_css_padding_height(properties.padding_width_top, containing_box.height, containing_box.height_undetermined);
-		values.padding.bottom = get_css_padding_height(properties.padding_width_bottom, containing_box.height, containing_box.height_undetermined);
+		values.margin.left = get_css_margin_width(margin_properties.margin_width_left, containing_box.width, containing_box.width_undetermined);
+		values.margin.right = get_css_margin_width(margin_properties.margin_width_right, containing_box.width, containing_box.width_undetermined);
+		values.border.left = get_css_border_size(border_properties.border_width_left);
+		values.border.right = get_css_border_size(border_properties.border_width_right);
+		values.padding.left = get_css_padding_width(padding_properties.padding_width_left, containing_box.width, containing_box.width_undetermined);
+		values.padding.right = get_css_padding_width(padding_properties.padding_width_right, containing_box.width, containing_box.width_undetermined);
 
-		values.min_width = get_css_min_width(properties.min_width, containing_box.width, containing_box.width_undetermined);
-		values.max_width = get_css_max_width(properties.max_width, containing_box.width, containing_box.width_undetermined);
+		values.margin.top = get_css_margin_height(margin_properties.margin_width_top, containing_box.height, containing_box.height_undetermined);
+		values.margin.bottom = get_css_margin_height(margin_properties.margin_width_bottom, containing_box.height, containing_box.height_undetermined);
+		values.border.top = get_css_border_size(border_properties.border_width_top);
+		values.border.bottom = get_css_border_size(border_properties.border_width_bottom);
+		values.padding.top = get_css_padding_height(padding_properties.padding_width_top, containing_box.height, containing_box.height_undetermined);
+		values.padding.bottom = get_css_padding_height(padding_properties.padding_width_bottom, containing_box.height, containing_box.height_undetermined);
 
-		values.min_height = get_css_min_height(properties.min_height, containing_box.height, containing_box.height_undetermined);
-		values.max_height = get_css_max_height(properties.max_height, containing_box.height, containing_box.height_undetermined);
+		values.min_width = get_css_min_width(box_properties.min_width, containing_box.width, containing_box.width_undetermined);
+		values.max_width = get_css_max_width(box_properties.max_width, containing_box.width, containing_box.width_undetermined);
 
-		get_css_width(values, properties, containing_box);
-		get_css_height(values, properties, containing_box);
+		values.min_height = get_css_min_height(box_properties.min_height, containing_box.height, containing_box.height_undetermined);
+		values.max_height = get_css_max_height(box_properties.max_height, containing_box.height, containing_box.height_undetermined);
+
+		get_css_width(values, box_properties, containing_box);
+		get_css_height(values, box_properties, containing_box);
 	}
 
 private:

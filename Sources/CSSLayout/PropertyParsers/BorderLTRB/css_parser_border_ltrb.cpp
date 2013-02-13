@@ -28,7 +28,9 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_border_ltrb.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_width.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_style.h"
+#include "API/CSSLayout/PropertyValues/css_value_border_color.h"
 
 namespace clan
 {

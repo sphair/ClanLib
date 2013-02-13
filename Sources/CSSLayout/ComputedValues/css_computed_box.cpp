@@ -32,18 +32,6 @@
 namespace clan
 {
 /*
-void CSSComputedBox::apply_properties(const std::string &style_string)
-{
-	apply_properties(CSSDocument::get_style_properties(style_string));
-}
-
-void CSSComputedBox::apply_properties(const std::vector<CSSPropertyValue *> &css_properties)
-{
-	CSSPropertyParsers property_parsers;
-	for (size_t i = css_properties.size(); i > 0; i--)
-		property_parsers.parse(*this, css_properties[i-1]);
-}
-*/
 void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *layout)
 {
 	bool is_containing_block_width_auto = false;
@@ -286,7 +274,6 @@ void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *lay
 		}
 
 	}
-
 }
-
+*/
 }

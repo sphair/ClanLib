@@ -42,7 +42,7 @@ public:
 	CSSValueOutlineWidth();
 	void compute(const CSSValueOutlineWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueOutlineStyle &style);
 	std::string to_string() const;
-	void apply_to_box(CSSComputedBox &box);
+	void apply(CSSComputedValuesUpdater *updater);
 
 	enum Type
 	{

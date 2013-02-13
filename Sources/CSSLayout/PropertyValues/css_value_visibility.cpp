@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_visibility.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueVisibility::CSSValueVisibility()
 : type(type_inherit)
 {
 }
-void CSSValueVisibility::apply_to_box(CSSComputedBox &box)
+
+void CSSValueVisibility::apply(CSSComputedValuesUpdater *updater)
 {
-	box.visibility = *this;
+	updater->get_misc_inherit().visibility = *this;
 }
 
 void CSSValueVisibility::compute(const CSSValueVisibility *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -42,7 +42,7 @@ public:
 	CSSValueDisplay();
 	void compute(const CSSValueDisplay *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, CSSValueFloat &float_box);
 	std::string to_string() const;
-	void apply_to_box(CSSComputedBox &box);
+	void apply(CSSComputedValuesUpdater *updater);
 
 	enum Type
 	{

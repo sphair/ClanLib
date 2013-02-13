@@ -39,7 +39,7 @@ namespace clan
 CSSStackingContext::CSSStackingContext(CSSLayoutTreeNode *layout)
 : level(0), layout(layout), tree_order(0), next_child_tree_order(0)
 {
-	level = layout->get_element_node()->computed_values.get_box().z_index.value;
+	level = layout->get_element_node()->computed_values.get_misc_reset().z_index.value;
 }
 
 CSSStackingContext::~CSSStackingContext()

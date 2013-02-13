@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_font_style.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -38,11 +38,10 @@ CSSValueFontStyle::CSSValueFontStyle()
 {
 }
 
-void CSSValueFontStyle::apply_to_box(CSSComputedBox &box)
+void CSSValueFontStyle::apply(CSSComputedValuesUpdater *updater)
 {
-	box.font_style = *this;
+	updater->get_font().font_style = *this;
 }
-
 
 void CSSValueFontStyle::compute(const CSSValueFontStyle *parent, CSSResourceCache *layout, float em_size, float ex_size)
 {

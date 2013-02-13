@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_max_height.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueMaxHeight::CSSValueMaxHeight()
 : type(type_none), percentage(0.0f)
 {
 }
-void CSSValueMaxHeight::apply_to_box(CSSComputedBox &box)
+
+void CSSValueMaxHeight::apply(CSSComputedValuesUpdater *updater)
 {
-	box.max_height = *this;
+	updater->get_box().max_height = *this;
 }
 
 void CSSValueMaxHeight::compute(const CSSValueMaxHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)

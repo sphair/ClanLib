@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_quotes.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueQuotes::CSSValueQuotes()
 : type(type_inherit)
 {
 }
-void CSSValueQuotes::apply_to_box(CSSComputedBox &box)
+
+void CSSValueQuotes::apply(CSSComputedValuesUpdater *updater)
 {
-	box.quotes = *this;
+	updater->get_misc_inherit().quotes = *this;
 }
 
 void CSSValueQuotes::compute(const CSSValueQuotes *parent, CSSResourceCache *layout, float em_size, float ex_size)

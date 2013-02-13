@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_slice.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -41,9 +41,10 @@ CSSValueBorderImageSlice::CSSValueBorderImageSlice()
   fill_center(false)
 {
 }
-void CSSValueBorderImageSlice::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderImageSlice::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_image_slice = *this;
+	updater->get_border().border_image_slice = *this;
 }
 
 void CSSValueBorderImageSlice::compute(const CSSValueBorderImageSlice *parent, CSSResourceCache *layout, float em_size, float ex_size)

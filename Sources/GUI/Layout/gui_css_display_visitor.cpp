@@ -57,7 +57,7 @@ void GUICSSDisplayVisitor::node(GUIComponent_Impl *node)
 
 void GUICSSDisplayVisitor::flex_node(GUIComponent_Impl *node)
 {
-	const CSSComputedBox &properties = node->element.get_css_values().get_box();
+	const CSSComputedFlex &properties = node->element.get_css_values().get_flex();
 	if (properties.flex_direction.type == CSSValueFlexDirection::type_column || properties.flex_direction.type == CSSValueFlexDirection::type_column_reverse)
 	{
 		flex_vertical_node(node);

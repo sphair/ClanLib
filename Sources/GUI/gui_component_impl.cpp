@@ -283,7 +283,7 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 {
 	SpanLayout span;
 
-	const CSSComputedBox &properties = element.get_css_values().get_box();
+	const CSSComputedTextInherit &properties = element.get_css_values().get_text_inherit();
 
 	span.add_text(text, font, properties.color.color);
 
@@ -302,22 +302,24 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 	return span;
 }
 
-Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &properties)
+Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedValues &properties)
 {
-	int font_size = used_to_actual(properties.font_size.length.value);
+	const CSSComputedFont &font_properties = properties.get_font();
+
+	int font_size = used_to_actual(font_properties.font_size.length.value);
 	std::string font_name;
-	for (size_t i = 0; i < properties.font_family.names.size(); i++)
+	for (size_t i = 0; i < font_properties.font_family.names.size(); i++)
 	{
 		bool matched = false;
 		std::string search_name;
-		switch (properties.font_family.names[i].type)
+		switch (font_properties.font_family.names[i].type)
 		{
 		case CSSValueFontFamilyName::type_family_name:
-			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
+			search_name = StringHelp::text_to_lower(font_properties.font_family.names[i].name);
 			//FIXME: See CSSResourceCache, creating font_families list
 			//if (font_families.find(search_name) != font_families.end())
 			//{
-				font_name = properties.font_family.names[i].name;
+				font_name = font_properties.font_family.names[i].name;
 				matched = true;
 			//}
 			break;
@@ -344,7 +346,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &propertie
 		font_name = "Times New Roman";
 
 	int font_weight = 400;
-	switch (properties.font_weight.type)
+	switch (font_properties.font_weight.type)
 	{
 	case CSSValueFontWeight::type_100: font_weight = 100; break;
 	case CSSValueFontWeight::type_200: font_weight = 200; break;
@@ -361,7 +363,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &propertie
 	case CSSValueFontWeight::type_lighter: font_weight = 300; break;
 	}
 	bool italic = false;
-	switch (properties.font_style.type)
+	switch (font_properties.font_style.type)
 	{
 	case CSSValueFontStyle::type_normal: italic = false; break;
 	case CSSValueFontStyle::type_italic: italic = true; break;
@@ -379,7 +381,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedBox &propertie
 
 Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only )
 {
-	const CSSComputedBox &properties = element.get_css_values().get_box();
+	const CSSComputedTextInherit &properties = element.get_css_values().get_text_inherit();
 
 	Size text_size = font.get_text_size(canvas, text);
 
@@ -403,7 +405,7 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &
 
 Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_values().get_box());
+	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_values());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return render_text(canvas, element, font, text, content_box, baseline, true);
 }

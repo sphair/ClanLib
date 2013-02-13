@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_table_layout.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueTableLayout::CSSValueTableLayout()
 : type(type_auto)
 {
 }
-void CSSValueTableLayout::apply_to_box(CSSComputedBox &box)
+
+void CSSValueTableLayout::apply(CSSComputedValuesUpdater *updater)
 {
-	box.table_layout = *this;
+	updater->get_table_reset().table_layout = *this;
 }
 
 void CSSValueTableLayout::compute(const CSSValueTableLayout *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_text_decoration.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueTextDecoration::CSSValueTextDecoration()
 : type(type_inherit_special), underline(false), overline(false), line_through(false), blink(false)
 {
 }
-void CSSValueTextDecoration::apply_to_box(CSSComputedBox &box)
+
+void CSSValueTextDecoration::apply(CSSComputedValuesUpdater *updater)
 {
-	box.text_decoration = *this;
+	updater->get_text_reset().text_decoration = *this;
 }
 
 void CSSValueTextDecoration::compute(const CSSValueTextDecoration *parent, CSSResourceCache *layout, float em_size, float ex_size)

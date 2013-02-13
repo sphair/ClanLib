@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_white_space.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueWhiteSpace::CSSValueWhiteSpace()
 : type(type_inherit)
 {
 }
-void CSSValueWhiteSpace::apply_to_box(CSSComputedBox &box)
+
+void CSSValueWhiteSpace::apply(CSSComputedValuesUpdater *updater)
 {
-	box.white_space = *this;
+	updater->get_text_inherit().white_space = *this;
 }
 
 void CSSValueWhiteSpace::compute(const CSSValueWhiteSpace *parent, CSSResourceCache *layout, float em_size, float ex_size)

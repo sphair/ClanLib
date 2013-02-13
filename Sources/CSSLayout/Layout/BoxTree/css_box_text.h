@@ -34,7 +34,7 @@ namespace clan
 {
 
 class CSSBoxElement;
-class CSSComputedBox;
+class CSSComputedValues;
 
 class CSSBoxText : public CSSBoxNode
 {
@@ -50,7 +50,7 @@ public:
 	std::string::size_type processed_selection_start, processed_selection_end;
 
 	const CSSBoxElement *get_parent_element() const;
-	const CSSComputedBox &get_properties() const;
+	const CSSComputedValues &get_properties() const;
 };
 
 }

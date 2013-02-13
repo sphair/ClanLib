@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_empty_cells.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueEmptyCells::CSSValueEmptyCells()
 : type(type_inherit)
 {
 }
-void CSSValueEmptyCells::apply_to_box(CSSComputedBox &box)
+
+void CSSValueEmptyCells::apply(CSSComputedValuesUpdater *updater)
 {
-	box.empty_cells = *this;
+	updater->get_table_inherit().empty_cells = *this;
 }
 
 void CSSValueEmptyCells::compute(const CSSValueEmptyCells *parent, CSSResourceCache *layout, float em_size, float ex_size)

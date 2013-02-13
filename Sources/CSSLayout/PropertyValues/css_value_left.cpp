@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_left.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueLeft::CSSValueLeft()
 : type(type_auto)
 {
 }
-void CSSValueLeft::apply_to_box(CSSComputedBox &box)
+
+void CSSValueLeft::apply(CSSComputedValuesUpdater *updater)
 {
-	box.left = *this;
+	updater->get_box().left = *this;
 }
 
 std::string CSSValueLeft::to_string() const

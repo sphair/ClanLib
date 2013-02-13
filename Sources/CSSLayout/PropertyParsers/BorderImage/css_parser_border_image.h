@@ -29,10 +29,15 @@
 #pragma once
 
 #include "../css_property_parser.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
+
+class CSSValueBorderImageSource;
+class CSSValueBorderImageSlice;
+class CSSValueBorderImageWidth;
+class CSSValueBorderImageOutset;
+class CSSValueBorderImageRepeat;
 
 class CSSParserBorderImage : public CSSPropertyParser
 {

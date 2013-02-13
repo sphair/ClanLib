@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_justify_content.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueJustifyContent::CSSValueJustifyContent()
 : type(type_flex_start)
 {
 }
-void CSSValueJustifyContent::apply_to_box(CSSComputedBox &box)
+
+void CSSValueJustifyContent::apply(CSSComputedValuesUpdater *updater)
 {
-	box.justify_content = *this;
+	updater->get_flex().justify_content = *this;
 }
 
 void CSSValueJustifyContent::compute(const CSSValueJustifyContent *parent, CSSResourceCache *layout, float em_size, float ex_size)
