@@ -51,10 +51,10 @@ public:
 		overlap
 	};
 
-	static Result plane_aabb(const clan::Vec4f &plane, const AxisAlignedBoundingBox &aabb);
-	static Result plane_obb(const clan::Vec4f &plane, const OrientedBoundingBox &obb);
-	static OverlapResult sphere(const clan::Vec3f &center1, float radius1, const clan::Vec3f &center2, float radius2);
-	static OverlapResult sphere_aabb(const clan::Vec3f &center, float radius, const AxisAlignedBoundingBox &aabb);
+	static Result plane_aabb(const Vec4f &plane, const AxisAlignedBoundingBox &aabb);
+	static Result plane_obb(const Vec4f &plane, const OrientedBoundingBox &obb);
+	static OverlapResult sphere(const Vec3f &center1, float radius1, const Vec3f &center2, float radius2);
+	static OverlapResult sphere_aabb(const Vec3f &center, float radius, const AxisAlignedBoundingBox &aabb);
 	static OverlapResult aabb(const AxisAlignedBoundingBox &a, const AxisAlignedBoundingBox &b);
 	static Result frustum_aabb(const ClippingFrustum &frustum, const AxisAlignedBoundingBox &box);
 	static Result frustum_obb(const ClippingFrustum &frustum, const OrientedBoundingBox &box);

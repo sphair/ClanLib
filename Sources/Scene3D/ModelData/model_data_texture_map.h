@@ -47,19 +47,19 @@ public:
 	};
 	WrapMode wrap_x, wrap_y;
 
-	ModelDataAnimationData<clan::Vec3f> uvw_offset;
-	ModelDataAnimationData<clan::Quaternionf> uvw_rotation;
-	ModelDataAnimationData<clan::Vec3f> uvw_scale;
+	ModelDataAnimationData<Vec3f> uvw_offset;
+	ModelDataAnimationData<Quaternionf> uvw_rotation;
+	ModelDataAnimationData<Vec3f> uvw_scale;
 
-	clan::Mat4f get_uvw_matrix(int animation_index, float animation_time)
+	Mat4f get_uvw_matrix(int animation_index, float animation_time)
 	{
 		if (channel != -1 && texture != -1)
 			return
-				clan::Mat4f::translate(uvw_offset.get_value(animation_index, animation_time)) *
-				clan::Mat4f::scale(uvw_scale.get_value(animation_index, animation_time)) *
+				Mat4f::translate(uvw_offset.get_value(animation_index, animation_time)) *
+				Mat4f::scale(uvw_scale.get_value(animation_index, animation_time)) *
 				uvw_rotation.get_value(animation_index, animation_time).to_matrix();
 		else
-			return clan::Mat4f::identity();
+			return Mat4f::identity();
 	}
 
 };

@@ -35,13 +35,13 @@ class WorkItem
 public:
 	virtual ~WorkItem() { }
 	virtual void process_work() = 0;
-	virtual void work_completed(clan::GraphicContext &gc) { }
+	virtual void work_completed(GraphicContext &gc) { }
 };
 
-class WorkQueue : public clan::KeepAliveObject
+class WorkQueue : public KeepAliveObject
 {
 public:
-	WorkQueue(clan::GraphicContext gc);
+	WorkQueue(GraphicContext gc);
 	~WorkQueue();
 
 	void queue(WorkItem *item); // transfers ownership
@@ -52,14 +52,14 @@ private:
 	void process();
 	void worker_main();
 
-	std::vector<clan::Thread> threads;
-	clan::Mutex mutex;
-	clan::Event stop_event, work_available_event;
+	std::vector<Thread> threads;
+	Mutex mutex;
+	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
 
-	//clan::DisplayWindow window_single;
-	clan::GraphicContext gc;
+	//DisplayWindow window_single;
+	GraphicContext gc;
 };
 
 }

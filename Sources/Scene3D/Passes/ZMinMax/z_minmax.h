@@ -36,28 +36,28 @@ class ZMinMax
 {
 public:
 	ZMinMax(int tile_size = 16);
-	void minmax(clan::GraphicContext &gc);
+	void minmax(GraphicContext &gc);
 
-	InData<clan::Rect> viewport;
-	InData<clan::Texture2D> normal_z;
-	OutData<clan::Texture2D> result;
+	InData<Rect> viewport;
+	InData<Texture2D> normal_z;
+	OutData<Texture2D> result;
 
 private:
-	void update_buffers(clan::GraphicContext &gc);
+	void update_buffers(GraphicContext &gc);
 	void get_shader_glsl(std::string &out_vertex_shader, std::string &out_fragment_shader0, std::string &out_fragment_shader1);
 	void get_shader_hlsl(std::string &out_vertex_shader, std::string &out_fragment_shader0, std::string &out_fragment_shader1);
-	clan::Size find_texture_size(clan::Texture2D &normal_z);
-	clan::ProgramObject compile_and_link(clan::GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source);
+	Size find_texture_size(Texture2D &normal_z);
+	ProgramObject compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source);
 	static int find_iterations(int size);
 
 	int tile_size;
 	int iterations;
-	clan::ProgramObject program0, program1;
-	clan::PrimitivesArray prim_array;
-	clan::VertexArrayVector<clan::Vec4f> vertices;
-	clan::FrameBuffer fb0, fb1;
-	clan::Texture2D texture0, texture1;
-	clan::BlendState blend_state;
+	ProgramObject program0, program1;
+	PrimitivesArray prim_array;
+	VertexArrayVector<Vec4f> vertices;
+	FrameBuffer fb0, fb1;
+	Texture2D texture0, texture1;
+	BlendState blend_state;
 };
 
 }

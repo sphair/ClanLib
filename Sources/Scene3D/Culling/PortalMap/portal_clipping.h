@@ -38,17 +38,17 @@ class PortalSector;
 class PortalClipping
 {
 public:
-	PortalClipping(const ClippingFrustum &frustum, const clan::Mat4f &world_to_projection);
-	clan::Rectf intersect(clan::Rectf box, const std::vector<clan::Vec3f> &points) const;
+	PortalClipping(const ClippingFrustum &frustum, const Mat4f &world_to_projection);
+	Rectf intersect(Rectf box, const std::vector<Vec3f> &points) const;
 
-	clan::Mat4f world_to_projection;
-	clan::Mat4f projection_to_world;
+	Mat4f world_to_projection;
+	Mat4f projection_to_world;
 	ClippingFrustum frustum;
 
 private:
-	clan::Rectf project(const std::vector<clan::Vec2f> &points) const;
-	void find_edges(const std::vector<clan::Vec3f> &points, std::vector<clan::Vec2f> &out_edges) const;
-	void add_triangle_edges(const std::vector<clan::Vec3f> &points, int v0, int v1, int v2, std::vector<clan::Vec2f> &out_edges) const;
+	Rectf project(const std::vector<Vec2f> &points) const;
+	void find_edges(const std::vector<Vec3f> &points, std::vector<Vec2f> &out_edges) const;
+	void add_triangle_edges(const std::vector<Vec3f> &points, int v0, int v1, int v2, std::vector<Vec2f> &out_edges) const;
 };
 
 }

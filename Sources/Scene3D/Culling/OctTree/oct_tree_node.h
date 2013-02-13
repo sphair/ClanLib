@@ -61,7 +61,7 @@ private:
 
 	std::vector<OctTreeObject *> objects;
 	OctTreeNode *children[8];
-	static const clan::Vec3f barycentric_weights[16];
+	static const Vec3f barycentric_weights[16];
 	static const int max_iterations = 3;
 };
 

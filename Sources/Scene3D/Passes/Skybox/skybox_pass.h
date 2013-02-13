@@ -38,58 +38,58 @@ class SkyboxPass
 {
 public:
 	SkyboxPass();
-	void run(clan::GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
+	InData<Mat4f> world_to_eye;
 
-	InOutData<clan::Texture2D> diffuse_color_gbuffer;
-	InOutData<clan::Texture2D> specular_color_gbuffer;
-	InOutData<clan::Texture2D> specular_level_gbuffer;
-	InOutData<clan::Texture2D> self_illumination_gbuffer;
-	InOutData<clan::Texture2D> normal_z_gbuffer;
-	InOutData<clan::Texture2D> zbuffer;
+	InOutData<Texture2D> diffuse_color_gbuffer;
+	InOutData<Texture2D> specular_color_gbuffer;
+	InOutData<Texture2D> specular_level_gbuffer;
+	InOutData<Texture2D> self_illumination_gbuffer;
+	InOutData<Texture2D> normal_z_gbuffer;
+	InOutData<Texture2D> zbuffer;
 
 private:
-	void setup(clan::GraphicContext &gc);
-	void create_clouds(clan::GraphicContext &gc);
-	void create_cloud_texture(clan::GraphicContext &gc);
-	void create_stars(clan::GraphicContext &gc);
-	void create_star_texture(clan::GraphicContext &gc);
-	void create_programs(clan::GraphicContext &gc);
-	void create_billboard_program(clan::GraphicContext &gc);
-	void create_cube_program(clan::GraphicContext &gc);
+	void setup(GraphicContext &gc);
+	void create_clouds(GraphicContext &gc);
+	void create_cloud_texture(GraphicContext &gc);
+	void create_stars(GraphicContext &gc);
+	void create_star_texture(GraphicContext &gc);
+	void create_programs(GraphicContext &gc);
+	void create_billboard_program(GraphicContext &gc);
+	void create_cube_program(GraphicContext &gc);
 	static float random(float min_value, float max_value);
 
 	struct Uniforms
 	{
-		clan::Mat4f object_to_eye;
-		clan::Mat4f eye_to_projection;
+		Mat4f object_to_eye;
+		Mat4f eye_to_projection;
 	};
 
-	clan::FrameBuffer fb;
-	clan::BlendState blend_state;
-	clan::DepthStencilState depth_stencil_state;
-	clan::RasterizerState rasterizer_state;
+	FrameBuffer fb;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
+	RasterizerState rasterizer_state;
 
-	clan::UniformVector<Uniforms> uniforms;
+	UniformVector<Uniforms> uniforms;
 
-	clan::ProgramObject billboard_program;
-	clan::VertexArrayVector<clan::Vec3f> billboard_positions;
-	clan::PrimitivesArray billboard_prim_array;
+	ProgramObject billboard_program;
+	VertexArrayVector<Vec3f> billboard_positions;
+	PrimitivesArray billboard_prim_array;
 
-	clan::ProgramObject cube_program;
-	clan::VertexArrayVector<clan::Vec3f> cube_positions;
-	clan::PrimitivesArray cube_prim_array;
+	ProgramObject cube_program;
+	VertexArrayVector<Vec3f> cube_positions;
+	PrimitivesArray cube_prim_array;
 
-	static clan::Vec3f cpu_billboard_positions[6];
-	static clan::Vec3f cpu_cube_positions[6 * 6];
+	static Vec3f cpu_billboard_positions[6];
+	static Vec3f cpu_cube_positions[6 * 6];
 
-	clan::Texture2D cloud_texture;
+	Texture2D cloud_texture;
 
-	clan::Texture2D star_texture;
-	clan::Texture2D star_instance_texture;
+	Texture2D star_texture;
+	Texture2D star_instance_texture;
 	static const int num_star_instances = 1024;
 };
 

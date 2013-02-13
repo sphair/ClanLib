@@ -34,9 +34,9 @@ class ModelMaterialUniforms
 {
 public:
 	ModelMaterialUniforms() : material_glossiness(), material_specular_level(), model_index(), vectors_per_instance(), material_offset() { }
-	clan::Vec4f material_ambient;
-	clan::Vec4f material_diffuse;
-	clan::Vec4f material_specular;
+	Vec4f material_ambient;
+	Vec4f material_diffuse;
+	Vec4f material_specular;
 	float material_glossiness;
 	float material_specular_level;
 	unsigned int model_index;
@@ -50,17 +50,17 @@ public:
 class ModelMeshBuffers
 {
 public:
-	clan::VertexArrayVector<clan::Vec3f> vertices;
-	clan::VertexArrayVector<clan::Vec3f> normals;
-	clan::VertexArrayVector<clan::Vec3f> bitangents;
-	clan::VertexArrayVector<clan::Vec3f> tangents;
-	clan::VertexArrayVector<clan::Vec4ub> bone_weights;
-	clan::VertexArrayVector<clan::Vec4ub> bone_selectors;
-	clan::VertexArrayVector<clan::Vec4ub> colors;
-	clan::ElementArrayVector<unsigned int> elements;
-	std::vector<clan::VertexArrayBuffer> channels;
-	std::vector<clan::UniformVector<ModelMaterialUniforms> > uniforms;
-	clan::PrimitivesArray primitives_array;
+	VertexArrayVector<Vec3f> vertices;
+	VertexArrayVector<Vec3f> normals;
+	VertexArrayVector<Vec3f> bitangents;
+	VertexArrayVector<Vec3f> tangents;
+	VertexArrayVector<Vec4ub> bone_weights;
+	VertexArrayVector<Vec4ub> bone_selectors;
+	VertexArrayVector<Vec4ub> colors;
+	ElementArrayVector<unsigned int> elements;
+	std::vector<VertexArrayBuffer> channels;
+	std::vector<UniformVector<ModelMaterialUniforms> > uniforms;
+	PrimitivesArray primitives_array;
 };
 
 }

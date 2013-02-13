@@ -59,10 +59,10 @@ public:
 	};
 
 	Type get_type() const;
-	clan::Vec3f get_position() const;
-	clan::Quaternionf get_orientation() const;
+	Vec3f get_position() const;
+	Quaternionf get_orientation() const;
 
-	clan::Vec3f get_color() const;
+	Vec3f get_color() const;
 	float get_falloff() const;
 	float get_hotspot() const;
 	float get_attenuation_start() const;
@@ -75,10 +75,10 @@ public:
 	SceneLight get_shadow_source() const;
 
 	void set_type(Type type);
-	void set_position(const clan::Vec3f &position);
-	void set_orientation(const clan::Quaternionf &orientation);
+	void set_position(const Vec3f &position);
+	void set_orientation(const Quaternionf &orientation);
 
-	void set_color(clan::Vec3f color);
+	void set_color(Vec3f color);
 	void set_falloff(float falloff);
 	void set_hotspot(float hotspot);
 	void set_attenuation_start(float attenuation_start);

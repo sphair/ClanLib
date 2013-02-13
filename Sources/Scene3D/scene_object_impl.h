@@ -45,9 +45,9 @@ public:
 	void create_lights(Scene *scene);
 	void update_lights();
 
-	clan::Mat4f get_object_to_world() const
+	Mat4f get_object_to_world() const
 	{
-		return clan::Mat4f::translate(position) * orientation.to_matrix() * clan::Mat4f::scale(scale);
+		return Mat4f::translate(position) * orientation.to_matrix() * Mat4f::scale(scale);
 	}
 
 	AxisAlignedBoundingBox get_aabb() const;
@@ -56,9 +56,9 @@ public:
 	OctTreeObject *tree_object;
 	std::list<SceneObject_Impl *>::iterator it;
 
-	clan::Vec3f position;
-	clan::Quaternionf orientation;
-	clan::Vec3f scale;
+	Vec3f position;
+	Quaternionf orientation;
+	Vec3f scale;
 
 	ModelInstance instance;
 	std::vector<SceneLight> lights;

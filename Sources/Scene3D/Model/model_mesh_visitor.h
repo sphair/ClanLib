@@ -39,7 +39,7 @@ class ModelLOD;
 class ModelMeshVisitor
 {
 public:
-	virtual void render(clan::GraphicContext &gc, ModelLOD *model_lod, int num_instances) = 0;
+	virtual void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances) = 0;
 };
 
 }

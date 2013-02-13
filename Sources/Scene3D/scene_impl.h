@@ -58,22 +58,22 @@ class SceneParticleEmitterVisitor;
 class Scene_Impl
 {
 public:
-	Scene_Impl(clan::GraphicContext &gc);
-	void set_viewport(const clan::Rect &box);
-	void set_camera(const clan::Vec3f &position, const clan::Quaternionf &orientation);
-	void set_camera_position(const clan::Vec3f &position);
-	void set_camera_orientation(const clan::Quaternionf &orientation);
+	Scene_Impl(GraphicContext &gc);
+	void set_viewport(const Rect &box);
+	void set_camera(const Vec3f &position, const Quaternionf &orientation);
+	void set_camera_position(const Vec3f &position);
+	void set_camera_orientation(const Quaternionf &orientation);
 	void set_camera_field_of_view(float fov) { camera_field_of_view.set(fov); }
-	void render(clan::GraphicContext &gc);
-	void update(clan::GraphicContext &gc, float time_elapsed);
+	void render(GraphicContext &gc);
+	void update(GraphicContext &gc, float time_elapsed);
 
-	void visit(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor);
-	void visit_lights(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor);
-	void visit_emitters(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor);
+	void visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor);
+	void visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor);
+	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor);
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
-	clan::Vec3f get_camera_position() const { return camera_position; }
-	clan::Quaternionf get_camera_orientation() const { return camera_orientation; }
+	Vec3f get_camera_position() const { return camera_position; }
+	Quaternionf get_camera_orientation() const { return camera_orientation; }
 
 	static int models_drawn;
 	static int instances_drawn;
@@ -95,11 +95,11 @@ private:
 	std::list<SceneParticleEmitter_Impl *> emitters;
 	OctTree tree;
 
-	clan::Vec3f camera_position;
-	clan::Quaternionf camera_orientation;
+	Vec3f camera_position;
+	Quaternionf camera_orientation;
 	OutData<float> camera_field_of_view;
 
-	OutData<clan::Rect> viewport;
+	OutData<Rect> viewport;
 	VSMShadowMapPass vsm_shadow_map_pass;
 	GBufferPass gbuffer_pass;
 	SkyboxPass skybox_pass;

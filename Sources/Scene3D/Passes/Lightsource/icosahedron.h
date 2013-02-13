@@ -34,13 +34,13 @@ namespace clan
 class Icosahedron
 {
 public:
-	Icosahedron(clan::GraphicContext &gc, bool use_radius_of_inscribed_sphere = false);
+	Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed_sphere = false);
 
-	clan::VertexArrayVector<clan::Vec3f> vertices;
-	clan::ElementArrayVector<unsigned int> elements;
+	VertexArrayVector<Vec3f> vertices;
+	ElementArrayVector<unsigned int> elements;
 };
 
-inline Icosahedron::Icosahedron(clan::GraphicContext &gc, bool use_radius_of_inscribed_sphere)
+inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed_sphere)
 {
 	// radius of a circumscribed sphere (one that touches the icosahedron at all vertices)
 	float x = 0.525731112119133606f;
@@ -52,20 +52,20 @@ inline Icosahedron::Icosahedron(clan::GraphicContext &gc, bool use_radius_of_ins
 		z *= 1.32316908f;
 	}
 
-	clan::Vec3f local_vertices[12] =
+	Vec3f local_vertices[12] =
 	{
-		clan::Vec3f(-x, 0.0f, z),
-		clan::Vec3f( x, 0.0f, z),
-		clan::Vec3f(-x, 0.0f, -z),
-		clan::Vec3f( x, 0.0f, -z),
-		clan::Vec3f( 0.0f, z, x),
-		clan::Vec3f( 0.0f, z, -x),
-		clan::Vec3f( 0.0f, -z, x),
-		clan::Vec3f( 0.0f, -z, -x),
-		clan::Vec3f( z, x, 0.0f),
-		clan::Vec3f(-z, x, 0.0f),
-		clan::Vec3f( z, -x, 0.0f),
-		clan::Vec3f(-z, -x, 0.0f)
+		Vec3f(-x, 0.0f, z),
+		Vec3f( x, 0.0f, z),
+		Vec3f(-x, 0.0f, -z),
+		Vec3f( x, 0.0f, -z),
+		Vec3f( 0.0f, z, x),
+		Vec3f( 0.0f, z, -x),
+		Vec3f( 0.0f, -z, x),
+		Vec3f( 0.0f, -z, -x),
+		Vec3f( z, x, 0.0f),
+		Vec3f(-z, x, 0.0f),
+		Vec3f( z, -x, 0.0f),
+		Vec3f(-z, -x, 0.0f)
 	};
 
 	unsigned int local_elements[20 * 3] =
@@ -92,8 +92,8 @@ inline Icosahedron::Icosahedron(clan::GraphicContext &gc, bool use_radius_of_ins
 		7,2,11
 	};
 
-	vertices = clan::VertexArrayVector<clan::Vec3f>(gc, local_vertices, 12);
-	elements = clan::ElementArrayVector<unsigned int>(gc, local_elements, 20 * 3);
+	vertices = VertexArrayVector<Vec3f>(gc, local_vertices, 12);
+	elements = ElementArrayVector<unsigned int>(gc, local_elements, 20 * 3);
 }
 
 }

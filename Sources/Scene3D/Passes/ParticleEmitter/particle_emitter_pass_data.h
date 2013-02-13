@@ -52,7 +52,7 @@ public:
 
 	CachedTexture life_color_gradient;
 	CachedTexture particle_animation;
-	clan::UniformVector<ParticleUniforms> gpu_uniforms;
+	UniformVector<ParticleUniforms> gpu_uniforms;
 
 private:
 	bool advance(float time_elapsed);

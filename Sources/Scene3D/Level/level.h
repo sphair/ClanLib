@@ -38,7 +38,7 @@ class ModelMeshVisitor;
 class Level
 {
 public:
-	Level(clan::GraphicContext &gc, std::shared_ptr<LevelData> level_data);
+	Level(GraphicContext &gc, std::shared_ptr<LevelData> level_data);
 	void visit(ModelMeshVisitor *visitor, const LevelInstance &instance);
 
 private:

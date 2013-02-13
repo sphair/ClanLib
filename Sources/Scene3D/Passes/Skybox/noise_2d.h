@@ -86,7 +86,7 @@ public:
 private:
 	int noise_width;
 	int noise_height;
-	clan::DataBuffer noise_buffer;
+	DataBuffer noise_buffer;
 	double *noise;
 };
 

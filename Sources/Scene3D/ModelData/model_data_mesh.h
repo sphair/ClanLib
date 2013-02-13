@@ -35,14 +35,14 @@ namespace clan
 class ModelDataMesh
 {
 public:
-	std::vector<clan::Vec3f> vertices;
-	std::vector<clan::Vec3f> normals;
-	std::vector<clan::Vec3f> tangents;
-	std::vector<clan::Vec3f> bitangents;
-	std::vector<clan::Vec4ub> bone_weights;
-	std::vector<clan::Vec4ub> bone_selectors;
-	std::vector<clan::Vec4ub> colors;
-	std::vector< std::vector<clan::Vec2f> > channels;
+	std::vector<Vec3f> vertices;
+	std::vector<Vec3f> normals;
+	std::vector<Vec3f> tangents;
+	std::vector<Vec3f> bitangents;
+	std::vector<Vec4ub> bone_weights;
+	std::vector<Vec4ub> bone_selectors;
+	std::vector<Vec4ub> colors;
+	std::vector< std::vector<Vec2f> > channels;
 	std::vector<unsigned int> elements;
 	std::vector<ModelDataMaterialRange> material_ranges;
 
@@ -56,7 +56,7 @@ inline void ModelDataMesh::calculate_tangents()
 		tangents.resize(vertices.size());
 		bitangents.resize(vertices.size());
 
-		std::vector<clan::Vec3f> tan1, tan2;
+		std::vector<Vec3f> tan1, tan2;
 		tan1.resize(vertices.size());
 		tan2.resize(vertices.size());
 		for (size_t i = 0; i + 2 < elements.size(); i += 3)
@@ -65,13 +65,13 @@ inline void ModelDataMesh::calculate_tangents()
 			unsigned int i2 = elements[i + 1];
 			unsigned int i3 = elements[i + 2];
         
-			const clan::Vec3f& v1 = vertices[i1];
-			const clan::Vec3f& v2 = vertices[i2];
-			const clan::Vec3f& v3 = vertices[i3];
+			const Vec3f& v1 = vertices[i1];
+			const Vec3f& v2 = vertices[i2];
+			const Vec3f& v3 = vertices[i3];
         
-			const clan::Vec2f& w1 = channels[0][i1];
-			const clan::Vec2f& w2 = channels[0][i2];
-			const clan::Vec2f& w3 = channels[0][i3];
+			const Vec2f& w1 = channels[0][i1];
+			const Vec2f& w2 = channels[0][i2];
+			const Vec2f& w3 = channels[0][i3];
         
 			float x1 = v2.x - v1.x;
 			float x2 = v3.x - v1.x;
@@ -86,8 +86,8 @@ inline void ModelDataMesh::calculate_tangents()
 			float t2 = w3.y - w1.y;
         
 			float r = 1.0f / (s1 * t2 - s2 * t1);
-			clan::Vec3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
-			clan::Vec3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
+			Vec3f sdir((t2 * x1 - t1 * x2) * r, (t2 * y1 - t1 * y2) * r, (t2 * z1 - t1 * z2) * r);
+			Vec3f tdir((s1 * x2 - s2 * x1) * r, (s1 * y2 - s2 * y1) * r, (s1 * z2 - s2 * z1) * r);
         
 			tan1[i1] += sdir;
 			tan1[i2] += sdir;
@@ -100,16 +100,16 @@ inline void ModelDataMesh::calculate_tangents()
 
 		for (size_t i = 0; i < vertices.size(); i++)
 		{
-			const clan::Vec3f &n = normals[i];
-			const clan::Vec3f &t = tan1[i];
+			const Vec3f &n = normals[i];
+			const Vec3f &t = tan1[i];
 
 			// Gram-Schmidt orthogonalize
-			tangents[i] = (t - n * clan::Vec3f::dot(n, t)).normalize();
+			tangents[i] = (t - n * Vec3f::dot(n, t)).normalize();
 
 			// Calculate handedness
-			float handedness = (clan::Vec3f::dot(clan::Vec3f::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f;
+			float handedness = (Vec3f::dot(Vec3f::cross(n, t), tan2[i]) < 0.0f) ? -1.0f : 1.0f;
 
-			bitangents[i] = handedness * clan::Vec3f::cross(n, t);
+			bitangents[i] = handedness * Vec3f::cross(n, t);
 		}
 	}
 }

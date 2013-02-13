@@ -39,23 +39,23 @@ class TransparencyPass : ModelMeshVisitor
 {
 public:
 	TransparencyPass();
-	void run(clan::GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
-	InData<clan::Texture2D> zbuffer;
+	InData<Mat4f> world_to_eye;
+	InData<Texture2D> zbuffer;
 
-	InOutData<clan::Texture2D> final_color;
+	InOutData<Texture2D> final_color;
 
 private:
-	void setup(clan::GraphicContext &gc);
-	void render(clan::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void setup(GraphicContext &gc);
+	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
-	clan::FrameBuffer fb_transparency;
-	clan::GraphicContext gc;
-	clan::BlendState blend_state;
-	clan::DepthStencilState depth_stencil_state;
+	FrameBuffer fb_transparency;
+	GraphicContext gc;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
 };
 
 }

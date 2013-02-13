@@ -91,7 +91,7 @@ float SceneParticleEmitter::get_speed() const
 	return impl->speed;
 }
 
-clan::Vec3f SceneParticleEmitter::get_acceleration() const
+Vec3f SceneParticleEmitter::get_acceleration() const
 {
 	return impl->acceleration;
 }
@@ -156,7 +156,7 @@ void SceneParticleEmitter::set_speed(float speed)
 	impl->speed = speed;
 }
 
-void SceneParticleEmitter::set_acceleration(const clan::Vec3f &acceleration)
+void SceneParticleEmitter::set_acceleration(const Vec3f &acceleration)
 {
 	impl->acceleration = acceleration;
 }

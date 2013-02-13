@@ -34,7 +34,7 @@ class ModelDataParticleEmitter
 {
 public:
 	ModelDataParticleEmitter() : bone_selector(-1), size(), speed(), spread(), gravity(), longevity(), delay() { }
-	clan::Vec3f position;
+	Vec3f position;
 	int bone_selector;
 	float size;
 	float speed;
@@ -42,7 +42,7 @@ public:
 	float gravity;
 	float longevity;
 	float delay;
-	clan::Vec4f color;
+	Vec4f color;
 	std::string texture;
 };
 

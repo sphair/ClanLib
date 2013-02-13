@@ -40,27 +40,27 @@ class GBufferPass : ModelMeshVisitor
 {
 public:
 	GBufferPass();
-	void run(clan::GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
+	InData<Mat4f> world_to_eye;
 
-	OutData<clan::Texture2D> diffuse_color_gbuffer;
-	OutData<clan::Texture2D> specular_color_gbuffer;
-	OutData<clan::Texture2D> specular_level_gbuffer;
-	OutData<clan::Texture2D> self_illumination_gbuffer;
-	OutData<clan::Texture2D> normal_z_gbuffer;
-	OutData<clan::Texture2D> zbuffer;
+	OutData<Texture2D> diffuse_color_gbuffer;
+	OutData<Texture2D> specular_color_gbuffer;
+	OutData<Texture2D> specular_level_gbuffer;
+	OutData<Texture2D> self_illumination_gbuffer;
+	OutData<Texture2D> normal_z_gbuffer;
+	OutData<Texture2D> zbuffer;
 
 private:
-	void setup_gbuffer(clan::GraphicContext &gc);
-	void render(clan::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void setup_gbuffer(GraphicContext &gc);
+	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
-	clan::FrameBuffer fb_gbuffer;
-	clan::GraphicContext gc;
-	clan::BlendState blend_state;
-	clan::DepthStencilState depth_stencil_state;
+	FrameBuffer fb_gbuffer;
+	GraphicContext gc;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
 };
 
 }

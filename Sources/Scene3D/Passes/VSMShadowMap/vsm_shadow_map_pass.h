@@ -43,14 +43,14 @@ class VSMShadowMapPassLightData;
 class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
 {
 public:
-	VSMShadowMapPass(clan::GraphicContext &gc);
-	void run(clan::GraphicContext &gc, Scene &scene);
+	VSMShadowMapPass(GraphicContext &gc);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
+	InData<Mat4f> world_to_eye;
 
-	OutData<clan::Texture2DArray> shadow_maps;
+	OutData<Texture2DArray> shadow_maps;
 
 private:
 	void find_lights(Scene &scene);
@@ -59,10 +59,10 @@ private:
 	void blur_maps();
 
 	// ModelMeshVisitor
-	void render(clan::GraphicContext &gc, ModelLOD *model_lod, int num_instances);
+	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
 	// SceneLightVisitor
-	void light(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	std::vector<SceneLight_Impl *> lights;
 	int round_robin;
@@ -70,9 +70,9 @@ private:
 
 	ShadowMaps maps;
 	GaussianBlur blur;
-	clan::GraphicContext gc;
-	clan::BlendState blend_state;
-	clan::DepthStencilState depth_stencil_state;
+	GraphicContext gc;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
 
 	friend class VSMShadowMapPassLightData;
 };
@@ -85,9 +85,9 @@ public:
 	VSMShadowMapPass *pass;
 	SceneLight_Impl *light;
 
-	clan::Mat4f eye_to_projection;
-	clan::Mat4f world_to_eye;
-	clan::Mat4f world_to_shadow_projection;
+	Mat4f eye_to_projection;
+	Mat4f world_to_eye;
+	Mat4f world_to_shadow_projection;
 	ShadowMapEntry shadow_map;
 };
 

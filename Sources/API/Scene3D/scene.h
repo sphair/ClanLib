@@ -43,7 +43,19 @@ class CL_API_SCENE Scene
 {
 public:
 	Scene();
+	Scene(GraphicContext &gc);
+
 	bool is_null() const;
+
+	void set_viewport(const Rect &box);
+	void set_camera(const Vec3f &position, const Quaternionf &orientation);
+	void set_camera_position(const Vec3f &position);
+	void set_camera_orientation(const Quaternionf &orientation);
+	void set_camera_field_of_view(float fov);
+
+	void render(GraphicContext &gc);
+
+	void update(GraphicContext &gc, float time_elapsed);
 
 private:
 	std::shared_ptr<Scene_Impl> impl;

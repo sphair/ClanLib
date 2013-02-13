@@ -43,7 +43,7 @@ public:
 	std::vector<LevelDataObject> objects;
 	std::vector<LevelDataLight> lights;
 	std::vector<std::string> level_sets;
-	clan::Vec3f aabb_min, aabb_max;
+	Vec3f aabb_min, aabb_max;
 };
 
 }

@@ -45,17 +45,17 @@ class InstancesBuffer;
 class Model
 {
 public:
-	Model(clan::GraphicContext &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index);
+	Model(GraphicContext &gc, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, std::shared_ptr<ModelData> model_data, int model_index);
 	const std::vector<ModelDataLight> &get_lights();
 	const std::shared_ptr<ModelData> &get_model_data() const { return model_data; }
 
-	bool add_instance(int frame, const ModelInstance &instance, const clan::Mat4f &object_to_world);
+	bool add_instance(int frame, const ModelInstance &instance, const Mat4f &object_to_world);
 
 	int get_instance_vectors_count() const;
 	int get_vectors_per_instance() const;
-	void upload(InstancesBuffer &instances_buffer, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection);
+	void upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye, const Mat4f &eye_to_projection);
 
-	void visit(clan::GraphicContext &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor);
+	void visit(GraphicContext &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor);
 
 	static const int vectors_per_bone = 3;
 	static const int instance_base_vectors = 15;
@@ -70,10 +70,10 @@ private:
 
 	int frame;
 	std::vector<const ModelInstance *> instances;
-	std::vector<clan::Mat4f> instances_object_to_world;
+	std::vector<Mat4f> instances_object_to_world;
 
-	clan::PixelBuffer instance_bones_transfer;
-	clan::Texture2D instance_bones;
+	PixelBuffer instance_bones_transfer;
+	Texture2D instance_bones;
 	int max_instances;
 
 	int model_index;

@@ -35,19 +35,19 @@ namespace clan
 class FinalPass
 {
 public:
-	FinalPass(clan::GraphicContext &gc);
-	void run(clan::GraphicContext &gc);
+	FinalPass(GraphicContext &gc);
+	void run(GraphicContext &gc);
 
-	InData<clan::Rect> viewport;
-	InData<clan::Texture2D> final_color;
-	InData<clan::Texture2D> bloom_blur_texture;
-	InData<clan::Texture2D> ambient_occlusion;
+	InData<Rect> viewport;
+	InData<Texture2D> final_color;
+	InData<Texture2D> bloom_blur_texture;
+	InData<Texture2D> ambient_occlusion;
 
 private:
-	clan::ProgramObject present_shader;
-	clan::VertexArrayVector<clan::Vec4f> rect_positions;
-	clan::PrimitivesArray rect_primarray;
-	clan::RasterizerState rasterizer_state;
+	ProgramObject present_shader;
+	VertexArrayVector<Vec4f> rect_positions;
+	PrimitivesArray rect_primarray;
+	RasterizerState rasterizer_state;
 };
 
 }

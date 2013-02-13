@@ -40,64 +40,64 @@ class GPUTimer;
 class LightsourcePass : SceneLightVisitor
 {
 public:
-	LightsourcePass(clan::GraphicContext &gc);
+	LightsourcePass(GraphicContext &gc);
 	~LightsourcePass();
 
-	void run(clan::GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene &scene);
 
-	InData<clan::Rect> viewport;
+	InData<Rect> viewport;
 	InData<float> field_of_view;
-	InData<clan::Mat4f> world_to_eye;
-	InData<clan::Texture2D> diffuse_color_gbuffer;
-	InData<clan::Texture2D> specular_color_gbuffer;
-	InData<clan::Texture2D> specular_level_gbuffer;
-	InData<clan::Texture2D> self_illumination_gbuffer;
-	InData<clan::Texture2D> normal_z_gbuffer;
-	InData<clan::Texture2DArray> shadow_maps;
+	InData<Mat4f> world_to_eye;
+	InData<Texture2D> diffuse_color_gbuffer;
+	InData<Texture2D> specular_color_gbuffer;
+	InData<Texture2D> specular_level_gbuffer;
+	InData<Texture2D> self_illumination_gbuffer;
+	InData<Texture2D> normal_z_gbuffer;
+	InData<Texture2DArray> shadow_maps;
 
-	OutData<clan::Texture2D> final_color;
+	OutData<Texture2D> final_color;
 
 private:
-	void find_lights(clan::GraphicContext &gc, Scene &scene);
-	void upload(clan::GraphicContext &gc);
-	void render(clan::GraphicContext &gc, GPUTimer &timer);
-	void update_buffers(clan::GraphicContext &gc);
-	clan::ProgramObject compile_and_link(clan::GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
+	void find_lights(GraphicContext &gc, Scene &scene);
+	void upload(GraphicContext &gc);
+	void render(GraphicContext &gc, GPUTimer &timer);
+	void update_buffers(GraphicContext &gc);
+	ProgramObject compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
 	// SceneLightVisitor
-	void light(clan::GraphicContext &gc, const clan::Mat4f &world_to_eye, const clan::Mat4f &eye_to_projection, SceneLight_Impl *light);
+	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	static const int max_lights = 1023;
 	static const int light_slots_per_tile = 128;
 
 	struct GPULight
 	{
-		clan::Vec4f position;
-		clan::Vec4f color;
-		clan::Vec4f range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), hotspot
-		clan::Vec4f spot_x;
-		clan::Vec4f spot_y;
-		clan::Vec4f spot_z;
+		Vec4f position;
+		Vec4f color;
+		Vec4f range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), hotspot
+		Vec4f spot_x;
+		Vec4f spot_y;
+		Vec4f spot_z;
 	};
 
 	struct Uniforms
 	{
 		float rcp_f;
 		float rcp_f_div_aspect;
-		clan::Vec2f two_rcp_viewport_size;
+		Vec2f two_rcp_viewport_size;
 		unsigned int num_lights;
 		unsigned int num_tiles_x;
 		unsigned int num_tiles_y;
 		unsigned int padding;
 	};
 
-	clan::UniformVector<Uniforms> compute_uniforms;
-	clan::StorageVector<GPULight> compute_lights;
-	clan::TransferVector<GPULight> transfer_lights;
-	clan::StorageVector<unsigned int> compute_visible_lights;
+	UniformVector<Uniforms> compute_uniforms;
+	StorageVector<GPULight> compute_lights;
+	TransferVector<GPULight> transfer_lights;
+	StorageVector<unsigned int> compute_visible_lights;
 
-	clan::ProgramObject cull_tiles_program;
-	clan::ProgramObject render_tiles_program;
+	ProgramObject cull_tiles_program;
+	ProgramObject render_tiles_program;
 
 	std::vector<SceneLight_Impl *> lights;
 
@@ -106,7 +106,7 @@ private:
 	int num_tiles_y;
 
 	ZMinMax zminmax;
-	InData<clan::Texture2D> zminmax_result;
+	InData<Texture2D> zminmax_result;
 };
 
 }

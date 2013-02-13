@@ -33,22 +33,22 @@ namespace clan
 class CachedTextureImpl
 {
 public:
-	clan::Texture texture;
+	Texture texture;
 };
 
 class CachedTexture
 {
 public:
 	CachedTexture() : impl(new CachedTextureImpl()) { }
-	clan::Texture &get_texture() { return impl->texture; }
-	void set_texture(clan::Texture &t) { impl->texture = t; }
+	Texture &get_texture() { return impl->texture; }
+	void set_texture(Texture &t) { impl->texture = t; }
 
 	bool operator<(const CachedTexture &other) const { return impl < other.impl; }
 	bool operator==(const CachedTexture &other) const { return impl == other.impl; }
 	bool operator!=(const CachedTexture &other) const { return impl != other.impl; }
 
-	//operator clan::Texture &() { return impl->texture; }
-	//operator const clan::Texture &() const { return impl->texture; }
+	//operator Texture &() { return impl->texture; }
+	//operator const Texture &() const { return impl->texture; }
 
 private:
 	std::shared_ptr<CachedTextureImpl> impl;

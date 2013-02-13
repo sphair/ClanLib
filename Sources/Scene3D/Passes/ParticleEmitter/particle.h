@@ -34,9 +34,9 @@ class Particle
 {
 public:
 	Particle() : life(-1.0f), life_speed(), start_size(), end_size() { }
-	clan::Vec3f position;
-	clan::Vec3f velocity;
-	clan::Vec3f acceleration;
+	Vec3f position;
+	Vec3f velocity;
+	Vec3f acceleration;
 	float life;
 	float life_speed;
 	float start_size;

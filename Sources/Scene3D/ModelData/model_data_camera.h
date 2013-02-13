@@ -36,8 +36,8 @@ class ModelDataCamera
 {
 public:
 	ModelDataCamera() : fov_y() { }
-	ModelDataAnimationData<clan::Vec3f> position;
-	ModelDataAnimationData<clan::Quaternionf> orientation;
+	ModelDataAnimationData<Vec3f> position;
+	ModelDataAnimationData<Quaternionf> orientation;
 	float fov_y;
 };
 

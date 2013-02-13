@@ -37,9 +37,9 @@ public:
 	LevelDataObject() : level_set(0) { }
 
 	std::string model_filename;
-	clan::Vec3f position;
-	clan::Quaternionf orientation;
-	clan::Vec3f scale;
+	Vec3f position;
+	Quaternionf orientation;
+	Vec3f scale;
 	int level_set;
 };
 

@@ -33,11 +33,11 @@ namespace clan
 class OrientedBoundingBox
 {
 public:
-	clan::Vec3f center;
-	clan::Vec3f extents;
-	clan::Vec3f axis_x;
-	clan::Vec3f axis_y;
-	clan::Vec3f axis_z;
+	Vec3f center;
+	Vec3f extents;
+	Vec3f axis_x;
+	Vec3f axis_y;
+	Vec3f axis_z;
 };
 
 }

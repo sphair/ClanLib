@@ -41,9 +41,9 @@ public:
 	Type get_value(int animation_index, float timestamp)
 	{
 		if (timelines.empty())
-			throw clan::Exception("No animation data!");
+			throw Exception("No animation data!");
 
-		int timeline_index = clan::min(animation_index, (int)timelines.size() - 1);
+		int timeline_index = min(animation_index, (int)timelines.size() - 1);
 		return timelines[timeline_index].get_value(timestamp);
 	}
 };

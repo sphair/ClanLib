@@ -37,11 +37,11 @@ class ModelDataMaterialRange
 {
 public:
 	ModelDataMaterialRange() : glossiness(), specular_level(), two_sided(), transparent(), start_element(), num_elements() { }
-	clan::Vec3f ambient;
-	clan::Vec3f diffuse;
-	clan::Vec3f specular;
+	Vec3f ambient;
+	Vec3f diffuse;
+	Vec3f specular;
 	ModelDataAnimationData<float> self_illumination_amount;
-	ModelDataAnimationData<clan::Vec3f> self_illumination;
+	ModelDataAnimationData<Vec3f> self_illumination;
 	float glossiness;
 	float specular_level;
 	bool two_sided;

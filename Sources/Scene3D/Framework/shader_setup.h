@@ -33,8 +33,8 @@ namespace clan
 class ShaderSetup
 {
 public:
-	static clan::ProgramObject compile(clan::GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines = std::string());
-	static void link(clan::ProgramObject &program, const std::string &program_name);
+	static ProgramObject compile(GraphicContext &gc, std::string shader_path, const std::string &vertex, const std::string &fragment, const std::string &defines = std::string());
+	static void link(ProgramObject &program, const std::string &program_name);
 };
 
 }

@@ -34,12 +34,12 @@ class LevelDataLight
 {
 public:
 	LevelDataLight() : attenuation_start(), attenuation_end(), casts_shadows(), level_set(0) { }
-	LevelDataLight(const clan::Vec3f &position, const clan::Quaternionf &orientation, const clan::Vec3f &color, float attenuation_start, float attenuation_end, float falloff, float hotspot, bool casts_shadows)
+	LevelDataLight(const Vec3f &position, const Quaternionf &orientation, const Vec3f &color, float attenuation_start, float attenuation_end, float falloff, float hotspot, bool casts_shadows)
 		: position(position), orientation(orientation), color(color), attenuation_start(attenuation_start), attenuation_end(attenuation_end), falloff(falloff), hotspot(hotspot), casts_shadows(casts_shadows), level_set(0) { }
 
-	clan::Vec3f position;
-	clan::Quaternionf orientation;
-	clan::Vec3f color;
+	Vec3f position;
+	Quaternionf orientation;
+	Vec3f color;
 	float attenuation_start;
 	float attenuation_end;
 	float falloff;

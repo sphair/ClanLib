@@ -36,18 +36,18 @@ class GaussianBlur
 {
 public:
 	GaussianBlur();
-	void blur(clan::GraphicContext &gc, clan::TextureFormat format, float blur_amount, int sample_count = 15);
+	void blur(GraphicContext &gc, TextureFormat format, float blur_amount, int sample_count = 15);
 
-	InData<clan::Texture2D> input;
-	OutData<clan::FrameBuffer> output;
+	InData<Texture2D> input;
+	OutData<FrameBuffer> output;
 
 private:
-	void setup(clan::GraphicContext &gc, clan::Size new_size, clan::TextureFormat new_format, float blur_amount, int sample_count);
+	void setup(GraphicContext &gc, Size new_size, TextureFormat new_format, float blur_amount, int sample_count);
 
 	void get_shader_glsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
 	void get_shader_hlsl(float blur_amount, int sample_count, std::string &out_vertex_shader, std::string &out_vertical_fragment_shader, std::string &out_horizontal_fragment_shader);
 	float compute_gaussian(float n, float theta);
-	void compute_blur_samples(int sample_count, float blur_amount, int dx, int dy, std::vector<float> &sample_weights, std::vector<clan::Vec2i> &sample_offsets);
+	void compute_blur_samples(int sample_count, float blur_amount, int dx, int dy, std::vector<float> &sample_weights, std::vector<Vec2i> &sample_offsets);
 
 	struct BlurSetup
 	{
@@ -55,19 +55,19 @@ private:
 
 		float blur_amount;
 		int sample_count;
-		clan::ProgramObject vertical_blur_program;
-		clan::ProgramObject horizontal_blur_program;
+		ProgramObject vertical_blur_program;
+		ProgramObject horizontal_blur_program;
 	};
 
-	clan::PrimitivesArray prim_array;
-	clan::VertexArrayVector<clan::Vec4f> gpu_positions;
-	clan::FrameBuffer fb0;
-	clan::Texture2D pass0_texture;
-	clan::Size size;
-	clan::TextureFormat format;
+	PrimitivesArray prim_array;
+	VertexArrayVector<Vec4f> gpu_positions;
+	FrameBuffer fb0;
+	Texture2D pass0_texture;
+	Size size;
+	TextureFormat format;
 	std::vector<BlurSetup> blur_setups;
 	std::vector<BlurSetup>::iterator current_blur_setup;
-	clan::BlendState blend_state;
+	BlendState blend_state;
 };
 
 }

@@ -38,10 +38,10 @@ public:
 	ModelDataBone() : billboarded(), parent_bone(-1) { }
 	bool billboarded;
 	short parent_bone;
-	ModelDataAnimationData<clan::Vec3f> position;
-	ModelDataAnimationData<clan::Quaternionf> orientation; // Maybe use a clan::Vec4ub version to save memory?
-	ModelDataAnimationData<clan::Vec3f> scale;
-	clan::Vec3f pivot;
+	ModelDataAnimationData<Vec3f> position;
+	ModelDataAnimationData<Quaternionf> orientation; // Maybe use a Vec4ub version to save memory?
+	ModelDataAnimationData<Vec3f> scale;
+	Vec3f pivot;
 };
 
 }
