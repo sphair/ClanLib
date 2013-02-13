@@ -242,6 +242,14 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
+	Project clanScene(
+		"Scene",
+		"clanScene",
+		"scene.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug);
+
 	//Project clanSWRender(
 	//	"SWRender",
 	//	"clanSWRender",
@@ -308,6 +316,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanSound);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanD3D);
+	workspace.projects.push_back(clanScene);
 
 	//if (page_target.include_intrinsics)
 	//	workspace.projects.push_back(clanSWRender);
