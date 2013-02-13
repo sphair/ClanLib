@@ -27,9 +27,10 @@
 */
 
 #include "Scene3D/precomp.h"
-#include "scene_object.h"
-#include "scene.h"
+#include "API/Scene3D/scene_object.h"
+#include "API/Scene3D/scene.h"
 #include <algorithm>
+#include "Scene3D/scene_object_impl.h"
 
 namespace clan
 {

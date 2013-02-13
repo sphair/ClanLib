@@ -30,6 +30,7 @@
 #include "particle_emitter_pass.h"
 #include "API/Scene3D/scene.h"
 #include "Scene3D/Framework/material_cache.h"
+#include "Scene3D/Culling/clipping_frustum.h"
 
 namespace clan
 {
