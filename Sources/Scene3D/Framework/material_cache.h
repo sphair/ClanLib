@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/Model/model_material_cache.h"
-//#include "Scene/Video/video_texture.h"
+#include "Scene3D/Model/model_material_cache.h"
+//#include "Scene3D/Video/video_texture.h"
 #include "work_queue.h"
 #include "texture.h"
 #include <unordered_map>

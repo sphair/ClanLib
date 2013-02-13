@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "shadow_maps.h"
 
 namespace clan

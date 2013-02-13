@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene/Culling/aabb.h"
+#include "Scene3D/Culling/aabb.h"
 
 namespace clan
 {

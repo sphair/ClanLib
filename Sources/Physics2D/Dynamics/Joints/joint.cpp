@@ -26,10 +26,10 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "Joint_impl.h"
 #include "joint_description.h"
-#include "API/Physics/Dynamics/Joints/joint.h"
+#include "API/Physics2D/Dynamics/Joints/joint.h"
 #include "../../World/physics_world_impl.h"
 
 namespace clan

@@ -26,7 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "../Box2D/Box2D.h"
 #include "body_impl.h"
 #include "fixture_impl.h"

@@ -26,10 +26,10 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "physics_query_assistant_impl.h"
 #include "../Dynamics/fixture_impl.h"
-#include "API/Physics/Dynamics/fixture.h"
+#include "API/Physics2D/Dynamics/fixture.h"
 #include "API/Core/Math/vec2.h"
 #include "API/Core/Math/point.h"
 

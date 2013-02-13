@@ -26,12 +26,12 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "portal_map.h"
 #include "portal_sector.h"
 #include "portal.h"
 #include "portal_clipping.h"
-#include "Scene/Culling/intersection_test.h"
+#include "Scene3D/Culling/intersection_test.h"
 #include <algorithm>
 
 namespace clan

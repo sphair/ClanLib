@@ -30,7 +30,7 @@
 /// \{
 #pragma once
 
-#include "../api_physics.h"
+#include "../api_physics2d.h"
 #include <memory>
 #include "../../Core/Math/vec2.h"
 

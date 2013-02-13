@@ -31,10 +31,10 @@
 #include "../Box2D/Box2D.h"
 #include <memory>
 #include "physics_listener.h"
-#include "API/Physics/World/physics_world.h"
-#include "API/Physics/World/physics_world_description.h"
-#include "API/Physics/World/physics_context.h"
-#include "API/Physics/World/physics_query_assistant.h"
+#include "API/Physics2D/World/physics_world.h"
+#include "API/Physics2D/World/physics_world_description.h"
+#include "API/Physics2D/World/physics_context.h"
+#include "API/Physics2D/World/physics_query_assistant.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 

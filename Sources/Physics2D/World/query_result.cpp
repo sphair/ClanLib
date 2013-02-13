@@ -26,9 +26,9 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "query_result_impl.h"
-#include "API/Physics/World/query_result.h"
+#include "API/Physics2D/World/query_result.h"
 
 namespace clan
 {

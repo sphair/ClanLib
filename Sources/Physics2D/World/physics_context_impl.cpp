@@ -25,16 +25,16 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "physics_world_impl.h"
 #include "physics_context_impl.h"
-#include "API/Physics/World/physics_world.h"
+#include "API/Physics2D/World/physics_world.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Physics/Dynamics/body_description.h"
-#include "API/Physics/Dynamics/fixture_description.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/Collision/Shapes/edge_shape.h"
+#include "API/Physics2D/Dynamics/body_description.h"
+#include "API/Physics2D/Dynamics/fixture_description.h"
+#include "API/Physics2D/Dynamics/body.h"
+#include "API/Physics2D/Dynamics/fixture.h"
+#include "API/Physics2D/Collision/Shapes/edge_shape.h"
 #include "../Dynamics/body_impl.h"
 #include "../Dynamics/fixture_impl.h"
 #include "../Dynamics/Joints/joint_impl.h"

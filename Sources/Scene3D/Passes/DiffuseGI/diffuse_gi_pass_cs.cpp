@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "diffuse_gi_pass_cs.h"
 #include "Performance/scope_timer.h"
 

@@ -29,8 +29,8 @@
 #pragma once
 
 #include "model_mesh_buffers.h"
-#include "Scene/Framework/texture.h"
-#include "Scene/scene.h"
+#include "Scene3D/Framework/texture.h"
+#include "Scene3D/scene.h"
 namespace clan
 {
 

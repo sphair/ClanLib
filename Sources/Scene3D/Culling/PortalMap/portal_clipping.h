@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/Culling/visible_object.h"
-#include "Scene/Culling/clipping_frustum.h"
+#include "Scene3D/Culling/visible_object.h"
+#include "Scene3D/Culling/clipping_frustum.h"
 namespace clan
 {
 

@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "API/Scene/scene.h"
 #include "API/Scene/scene_object.h"
 #include "API/Scene/scene_light.h"

@@ -28,7 +28,7 @@
 
 #pragma once
 #include "../../Box2D/Box2D.h"
-#include "API/Physics/Dynamics/Joints/prismatic_joint.h"
+#include "API/Physics2D/Dynamics/Joints/prismatic_joint.h"
 
 namespace clan
 {

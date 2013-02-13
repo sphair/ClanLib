@@ -27,11 +27,11 @@
 */
 #pragma once
 
-#include "Scene/Framework/inout_data.h"
-#include "Scene/Framework/shadow_maps.h"
-#include "Scene/Model/model_mesh_visitor.h"
-#include "Scene/Passes/GaussianBlur/gaussian_blur.h"
-#include "Scene/scene_light.h"
+#include "Scene3D/Framework/inout_data.h"
+#include "Scene3D/Framework/shadow_maps.h"
+#include "Scene3D/Model/model_mesh_visitor.h"
+#include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
+#include "Scene3D/scene_light.h"
 namespace clan
 {
 

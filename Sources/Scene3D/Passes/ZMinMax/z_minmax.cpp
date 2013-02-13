@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "z_minmax.h"
-#include "Scene/Framework/shader_setup.h"
+#include "Scene3D/Framework/shader_setup.h"
 
 namespace clan
 {

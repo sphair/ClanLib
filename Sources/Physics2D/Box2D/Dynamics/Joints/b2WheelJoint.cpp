@@ -16,7 +16,7 @@
 * 3. This notice may not be removed or altered from any source distribution.
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "b2WheelJoint.h"
 #include "../../Dynamics/b2Body.h"
 #include "../../Dynamics/b2TimeStep.h"

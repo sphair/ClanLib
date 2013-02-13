@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene/scene.h"
-#include "Scene/Framework/inout_data.h"
+#include "Scene3D/scene.h"
+#include "Scene3D/Framework/inout_data.h"
 namespace clan
 {
 

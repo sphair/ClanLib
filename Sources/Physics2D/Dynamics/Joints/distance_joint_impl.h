@@ -28,7 +28,7 @@
 
 #pragma once
 #include "../../Box2D/Box2D.h"
-#include "API/Physics/Dynamics/Joints/distance_joint.h"
+#include "API/Physics2D/Dynamics/Joints/distance_joint.h"
 
 namespace clan
 {

@@ -26,13 +26,13 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "prismatic_joint_description_impl.h"
 #include "../body_impl.h"
 #include "../../World/physics_world_impl.h"
-#include "API/Physics/World/physics_world.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/Joints/prismatic_joint_description.h"
+#include "API/Physics2D/World/physics_world.h"
+#include "API/Physics2D/Dynamics/body.h"
+#include "API/Physics2D/Dynamics/Joints/prismatic_joint_description.h"
 #include "API/Core/Math/angle.h"
 
 namespace clan

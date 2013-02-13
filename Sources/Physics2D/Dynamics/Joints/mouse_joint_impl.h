@@ -29,7 +29,7 @@
 #pragma once
 #include "../../Box2D/Box2D.h"
 #include <memory>
-#include "API/Physics/Dynamics/Joints/mouse_joint.h"
+#include "API/Physics2D/Dynamics/Joints/mouse_joint.h"
 
 namespace clan
 {

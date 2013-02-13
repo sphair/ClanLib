@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "gbuffer_pass.h"
-#include "Scene/scene.h"
-#include "Scene/Model/model_lod.h"
+#include "Scene3D/scene.h"
+#include "Scene3D/Model/model_lod.h"
 
 namespace clan
 {

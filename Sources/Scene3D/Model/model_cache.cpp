@@ -26,10 +26,10 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "model_cache.h"
-#include "Scene/Framework/instances_buffer.h"
-#include "Scene/ModelData/CModel/cmodel_format.h"
+#include "Scene3D/Framework/instances_buffer.h"
+#include "Scene3D/ModelData/CModel/cmodel_format.h"
 
 namespace clan
 {

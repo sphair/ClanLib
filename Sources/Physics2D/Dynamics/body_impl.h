@@ -31,9 +31,9 @@
 #include "../Box2D/Box2D.h"
 #include <memory>
 #include <list>
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/Dynamics/body.h"
-#include "API/Physics/Dynamics/body_description.h"
+#include "API/Physics2D/Dynamics/fixture.h"
+#include "API/Physics2D/Dynamics/body.h"
+#include "API/Physics2D/Dynamics/body_description.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
 

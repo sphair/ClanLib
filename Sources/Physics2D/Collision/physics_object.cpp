@@ -26,5 +26,5 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
-#include "API/Physics/Collision/physics_object.h"
+#include "Physics2D/precomp.h"
+#include "API/Physics2D/Collision/physics_object.h"

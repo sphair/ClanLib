@@ -26,16 +26,16 @@
 **    Arkadiusz Kalinowski
 */
 
-#include "Physics/precomp.h"
+#include "Physics2D/precomp.h"
 #include "../../Box2D/Box2D.h"
 #include "joint_impl.h"
 #include "revolute_joint_impl.h"
 #include "revolute_joint_description_impl.h"
 #include "../../World/physics_world_impl.h"
 #include "../../World/physics_context_impl.h"
-#include "API/Physics/Dynamics/Joints/revolute_joint_description.h"
-#include "API/Physics/Dynamics/Joints/revolute_joint.h"
-#include "API/Physics/World/physics_context.h"
+#include "API/Physics2D/Dynamics/Joints/revolute_joint_description.h"
+#include "API/Physics2D/Dynamics/Joints/revolute_joint.h"
+#include "API/Physics2D/World/physics_context.h"
 
 
 namespace clan

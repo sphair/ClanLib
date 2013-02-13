@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "API/Physics/Dynamics/fixture.h"
-#include "API/Physics/World/query_result.h"
+#include "API/Physics2D/Dynamics/fixture.h"
+#include "API/Physics2D/World/query_result.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/vec2.h"
 

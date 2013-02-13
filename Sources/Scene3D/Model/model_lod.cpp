@@ -26,9 +26,9 @@
 **    Magnus Norddahl
 */
 
-#include "Scene/precomp.h"
+#include "Scene3D/precomp.h"
 #include "model_lod.h"
-#include "Scene/ModelData/model_data.h"
+#include "Scene3D/ModelData/model_data.h"
 
 namespace clan
 {

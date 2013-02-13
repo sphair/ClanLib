@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Scene/Framework/texture.h"
+#include "Scene3D/Framework/texture.h"
 namespace clan
 {
 
