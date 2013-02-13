@@ -149,14 +149,14 @@ void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElem
 	{
 		CSSComputedValues computed_values(box_element->computed_values);
 		computed_values.set_specified_values(selection);
-		if (computed_values.get_box().content.type != CSSValueContent::type_none && computed_values.get_box().content.type != CSSValueContent::type_normal)
+		if (computed_values.get_misc_reset().content.type != CSSValueContent::type_none && computed_values.get_misc_reset().content.type != CSSValueContent::type_normal)
 		{
 			CSSBoxElement *before_element = new CSSBoxElement();
 			before_element->name = string_format("%1:%2", dom_element.get_node_name(), pseudo_element);
 			before_element->computed_values = computed_values;
 
 			CSSBoxText *box_text = new CSSBoxText();
-			box_text->set_text(computed_values.get_box().content.str);
+			box_text->set_text(computed_values.get_misc_reset().content.str);
 
 			before_element->push_back(box_text);
 			box_element->push_back(before_element);

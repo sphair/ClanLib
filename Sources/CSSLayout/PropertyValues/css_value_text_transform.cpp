@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_text_transform.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueTextTransform::CSSValueTextTransform()
 : type(type_inherit)
 {
 }
-void CSSValueTextTransform::apply_to_box(CSSComputedBox &box)
+
+void CSSValueTextTransform::apply(CSSComputedValuesUpdater *updater)
 {
-	box.text_transform = *this;
+	updater->get_text_inherit().text_transform = *this;
 }
 
 void CSSValueTextTransform::compute(const CSSValueTextTransform *parent, CSSResourceCache *layout, float em_size, float ex_size)

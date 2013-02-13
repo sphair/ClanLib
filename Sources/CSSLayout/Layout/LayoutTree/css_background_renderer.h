@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_background.h"
 #include "css_used_value.h"
 
 namespace clan
@@ -41,7 +41,7 @@ class CSSBoxElement;
 class CSSBackgroundRenderer
 {
 public:
-	CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBox &computed_properties);
+	CSSBackgroundRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBackground &computed_properties);
 	void set_border_box(Rect border_box);
 	void set_padding_box(Rect padding_box);
 	void set_content_box(Rect content_box);
@@ -65,7 +65,7 @@ private:
 
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resource_cache;
-	const CSSComputedBox &computed_properties;
+	const CSSComputedBackground &computed_properties;
 	Rect border_box;
 	Rect padding_box;
 	Rect content_box;

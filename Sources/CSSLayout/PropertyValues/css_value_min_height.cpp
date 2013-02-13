@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_min_height.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueMinHeight::CSSValueMinHeight()
 : type(type_auto), length(0, CSSLength::type_px), percentage(0.0f)
 {
 }
-void CSSValueMinHeight::apply_to_box(CSSComputedBox &box)
+
+void CSSValueMinHeight::apply(CSSComputedValuesUpdater *updater)
 {
-	box.min_height = *this;
+	updater->get_box().min_height = *this;
 }
 
 void CSSValueMinHeight::compute(const CSSValueMinHeight *parent, CSSResourceCache *layout, float em_size, float ex_size)

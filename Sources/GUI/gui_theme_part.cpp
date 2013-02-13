@@ -65,9 +65,8 @@ void GUIThemePart::throw_if_null() const
 
 Font GUIThemePart::get_font() const
 {
-	const CSSComputedBox &properties = get_css_values().get_box();
 	Canvas canvas = impl->component->get_canvas();
-	return GUIComponent_Impl::get_font(canvas, properties);
+	return GUIComponent_Impl::get_font(canvas, get_css_values());
 }
 
 const CSSComputedValues &GUIThemePart::get_css_values() const
@@ -133,7 +132,7 @@ GUICSSUsedValues &GUIThemePart_Impl::get_css_used_values(const Rect &border_box)
 		GUICSSUsedValues parent_used_values = component->impl->css_used_values;
 		parent_used_values.width = border_box.get_width();
 		parent_used_values.height = border_box.get_height();
-		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_values().get_box(), parent_used_values);
+		GUICSSInitialUsedValues::visit(css_used_values, element.get_css_values(), parent_used_values);
 		GUICSSApplyMinMaxConstraints::visit(css_used_values, element.get_css_values().get_box(), parent_used_values);
 	}
 	return css_used_values;
@@ -150,14 +149,14 @@ void GUIThemePart::render_box(Canvas &canvas, const Rect &border_box)
 	Rect padding_box = Rect(border_box).shrink(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
 	Rect content_box = Rect(padding_box).shrink(css_used_values.padding.left, css_used_values.padding.top, css_used_values.padding.right, css_used_values.padding.bottom);
 
-	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_values().get_box());
+	CSSBackgroundRenderer background(&graphics, resource_cache, impl->element.get_css_values().get_background());
 	background.set_border_box(border_box);
 	background.set_padding_box(padding_box);
 	background.set_content_box(content_box);
 	background.set_initial_containing_box(impl->component->get_top_level_component()->get_viewport());
 	background.render();
 
-	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_values().get_box());
+	CSSBorderRenderer border(&graphics, resource_cache, impl->element.get_css_values().get_border());
 	border.set_border_box(border_box);
 	border.set_border_values(css_used_values.border.left, css_used_values.border.top, css_used_values.border.right, css_used_values.border.bottom);
 	border.render();
@@ -180,7 +179,7 @@ int GUIThemePart::get_css_height() const
 
 Rect GUIThemePart::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, str, content_rect);
 	return span.get_rect();
 }
@@ -215,7 +214,7 @@ VerticalTextPosition GUIThemePart::get_vertical_text_align(Canvas &canvas, const
 
 Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, text, content_rect);
 	span.draw_layout(canvas);
 	return span.get_rect();
@@ -223,14 +222,14 @@ Rect GUIThemePart::render_text_span( Canvas &canvas, const std::string &text, co
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false);
 }
 
 Rect GUIThemePart::render_text( Canvas &canvas, const std::string &text, const Rect &content_box, int baseline )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values().get_box());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false);
 }
 

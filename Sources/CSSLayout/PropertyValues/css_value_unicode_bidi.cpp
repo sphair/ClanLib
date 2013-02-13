@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_unicode_bidi.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueUnicodeBidi::CSSValueUnicodeBidi()
 : type(type_normal)
 {
 }
-void CSSValueUnicodeBidi::apply_to_box(CSSComputedBox &box)
+
+void CSSValueUnicodeBidi::apply(CSSComputedValuesUpdater *updater)
 {
-	box.unicode_bidi = *this;
+	updater->get_text_reset().unicode_bidi = *this;
 }
 
 void CSSValueUnicodeBidi::compute(const CSSValueUnicodeBidi *parent, CSSResourceCache *layout, float em_size, float ex_size)

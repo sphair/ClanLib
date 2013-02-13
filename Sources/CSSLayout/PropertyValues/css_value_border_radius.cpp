@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_radius.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -43,14 +43,15 @@ CSSValueBorderRadius::CSSValueBorderRadius(ValueType value_type, const CSSValueB
 : value_type(value_type), type(value.type), value_type1(value.value_type1), percentage1(value.percentage1), value_type2(value.value_type2), percentage2(value.percentage2)
 {
 }
-void CSSValueBorderRadius::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderRadius::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)
 	{
-		case top_left_value: box.border_radius_top_left = *this; break;
-		case top_right_value: box.border_radius_top_right = *this; break;
-		case bottom_left_value: box.border_radius_bottom_left = *this; break;
-		case bottom_right_value: box.border_radius_bottom_right = *this; break;
+		case top_left_value: updater->get_border().border_radius_top_left = *this; break;
+		case top_right_value: updater->get_border().border_radius_top_right = *this; break;
+		case bottom_left_value: updater->get_border().border_radius_bottom_left = *this; break;
+		case bottom_right_value: updater->get_border().border_radius_bottom_right = *this; break;
 	}
 }
 

@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_width.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -41,9 +41,10 @@ CSSValueBorderImageWidth::CSSValueBorderImageWidth()
   percentage_top(0.0f), percentage_right(0.0f), percentage_bottom(0.0f), percentage_left(0.0f)
 {
 }
-void CSSValueBorderImageWidth::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderImageWidth::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_image_width = *this;
+	updater->get_border().border_image_width = *this;
 }
 
 void CSSValueBorderImageWidth::compute(const CSSValueBorderImageWidth *parent, CSSResourceCache *layout, float em_size, float ex_size)

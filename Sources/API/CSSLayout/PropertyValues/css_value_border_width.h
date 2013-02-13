@@ -51,7 +51,7 @@ public:
 	CSSValueBorderWidth(ValueType value_type, const CSSValueBorderWidth &value);
 	void compute(const CSSValueBorderWidth *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueBorderStyle &style);
 	std::string to_string() const;
-	void apply_to_box(CSSComputedBox &box);
+	void apply(CSSComputedValuesUpdater *updater);
 
 	ValueType value_type;
 

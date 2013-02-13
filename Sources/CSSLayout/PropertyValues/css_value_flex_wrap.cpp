@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_flex_wrap.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueFlexWrap::CSSValueFlexWrap()
 : type(type_nowrap)
 {
 }
-void CSSValueFlexWrap::apply_to_box(CSSComputedBox &box)
+
+void CSSValueFlexWrap::apply(CSSComputedValuesUpdater *updater)
 {
-	box.flex_wrap = *this;
+	updater->get_flex().flex_wrap = *this;
 }
 
 void CSSValueFlexWrap::compute(const CSSValueFlexWrap *parent, CSSResourceCache *layout, float em_size, float ex_size)

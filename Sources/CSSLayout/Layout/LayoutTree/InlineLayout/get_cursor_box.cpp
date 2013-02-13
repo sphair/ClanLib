@@ -46,8 +46,8 @@ bool CSSInlineLayoutGetCursorBox::node(CSSInlineGeneratedBox *cur)
 	CSSBoxText *text = dynamic_cast<CSSBoxText*>(node);
 	if (text && text == text_node && cur->text_start <= pos && cur->text_end >= pos)
 	{
-		const CSSComputedBox &properties = text->get_properties();
-		if (properties.visibility.type == CSSValueVisibility::type_visible)
+		const CSSComputedValues &properties = text->get_properties();
+		if (properties.get_misc_inherit().visibility.type == CSSValueVisibility::type_visible)
 		{
 			Font font = graphics->get_font(properties);
 			FontMetrics metrics = graphics->get_font_metrics(font);

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_cursor.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueCursor::CSSValueCursor()
 : type(type_inherit)
 {
 }
-void CSSValueCursor::apply_to_box(CSSComputedBox &box)
+
+void CSSValueCursor::apply(CSSComputedValuesUpdater *updater)
 {
-	box.cursor = *this;
+	updater->get_misc_inherit().cursor = *this;
 }
 
 void CSSValueCursor::compute(const CSSValueCursor *parent, CSSResourceCache *layout, float em_size, float ex_size)

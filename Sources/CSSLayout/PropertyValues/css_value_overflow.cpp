@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_overflow.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueOverflow::CSSValueOverflow()
 : type(type_visible)
 {
 }
-void CSSValueOverflow::apply_to_box(CSSComputedBox &box)
+
+void CSSValueOverflow::apply(CSSComputedValuesUpdater *updater)
 {
-	box.overflow = *this;
+	updater->get_box().overflow = *this;
 }
 
 void CSSValueOverflow::compute(const CSSValueOverflow *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_direction.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueDirection::CSSValueDirection()
 : type(type_inherit)
 {
 }
-void CSSValueDirection::apply_to_box(CSSComputedBox &box)
+
+void CSSValueDirection::apply(CSSComputedValuesUpdater *updater)
 {
-	box.direction = *this;
+	updater->get_misc_inherit().direction = *this;
 }
 
 void CSSValueDirection::compute(const CSSValueDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)

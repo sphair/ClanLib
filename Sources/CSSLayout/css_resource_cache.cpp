@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "Layout/LayoutTree/css_used_value.h"
 
 namespace clan
@@ -72,21 +72,22 @@ int CSSResourceCache::static_enum_font_families_callback(const LOGFONTW *fontinf
 }
 #endif
 
-Font &CSSResourceCache::get_font(Canvas &canvas, const CSSComputedBox &properties)
+Font &CSSResourceCache::get_font(Canvas &canvas, const CSSComputedValues &properties)
 {
-	int font_size = used_to_actual(properties.font_size.length.value);
+	const CSSComputedFont &font_values = properties.get_font();
+	int font_size = used_to_actual(font_values.font_size.length.value);
 	std::string font_name;
-	for (size_t i = 0; i < properties.font_family.names.size(); i++)
+	for (size_t i = 0; i < font_values.font_family.names.size(); i++)
 	{
 		bool matched = false;
 		std::string search_name;
-		switch (properties.font_family.names[i].type)
+		switch (font_values.font_family.names[i].type)
 		{
 		case CSSValueFontFamilyName::type_family_name:
-			search_name = StringHelp::text_to_lower(properties.font_family.names[i].name);
+			search_name = StringHelp::text_to_lower(font_values.font_family.names[i].name);
 			if (font_families.find(search_name) != font_families.end())
 			{
-				font_name = properties.font_family.names[i].name;
+				font_name = font_values.font_family.names[i].name;
 				matched = true;
 			}
 			break;
@@ -113,7 +114,7 @@ Font &CSSResourceCache::get_font(Canvas &canvas, const CSSComputedBox &propertie
 		font_name = "Times New Roman";
 
 	int font_weight = 400;
-	switch (properties.font_weight.type)
+	switch (font_values.font_weight.type)
 	{
 	case CSSValueFontWeight::type_100: font_weight = 100; break;
 	case CSSValueFontWeight::type_200: font_weight = 200; break;
@@ -130,7 +131,7 @@ Font &CSSResourceCache::get_font(Canvas &canvas, const CSSComputedBox &propertie
 	case CSSValueFontWeight::type_lighter: font_weight = 300; break;
 	}
 	bool italic = false;
-	switch (properties.font_style.type)
+	switch (font_values.font_style.type)
 	{
 	case CSSValueFontStyle::type_normal: italic = false; break;
 	case CSSValueFontStyle::type_italic: italic = true; break;

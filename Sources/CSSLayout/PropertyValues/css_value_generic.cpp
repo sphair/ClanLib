@@ -29,8 +29,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_generic.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -40,17 +40,18 @@ CSSValueGeneric::CSSValueGeneric(const std::string &property_name)
 {
 }
 
-void CSSValueGeneric::apply_to_box(CSSComputedBox &box)
+void CSSValueGeneric::apply(CSSComputedValuesUpdater *updater)
 {
-	for (size_t cnt = 0; cnt < box.generic_values.size(); cnt++)
+	CSSComputedGeneric &generic_values = updater->get_generic();
+	for (size_t cnt = 0; cnt < generic_values.generic_values.size(); cnt++)
 	{
-		if (box.generic_values[cnt].property_name == property_name)
+		if (generic_values.generic_values[cnt].property_name == property_name)
 		{
-			box.generic_values[cnt] = *this;
+			generic_values.generic_values[cnt] = *this;
 			return;
 		}
 	}
-	box.generic_values.push_back(*this);
+	generic_values.generic_values.push_back(*this);
 }
 
 void CSSValueGeneric::compute(const std::vector<CSSValueGeneric> *parent, CSSResourceCache *layout, float em_size, float ex_size)

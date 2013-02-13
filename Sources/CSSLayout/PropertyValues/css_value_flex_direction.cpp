@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_flex_direction.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueFlexDirection::CSSValueFlexDirection()
 : type(type_row)
 {
 }
-void CSSValueFlexDirection::apply_to_box(CSSComputedBox &box)
+
+void CSSValueFlexDirection::apply(CSSComputedValuesUpdater *updater)
 {
-	box.flex_direction = *this;
+	updater->get_flex().flex_direction = *this;
 }
 
 void CSSValueFlexDirection::compute(const CSSValueFlexDirection *parent, CSSResourceCache *layout, float em_size, float ex_size)

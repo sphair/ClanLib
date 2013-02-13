@@ -57,7 +57,7 @@ public:
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_apply_properties(CSSComputedBox &properties);
+	//void on_apply_properties(CSSComputedBox &properties);
 
 	Label *label;
 	std::string text;
@@ -152,7 +152,7 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	label->render_text(canvas, text, 0, label->get_vertical_text_align(canvas).baseline);
 }
-
+/*
 void Label_Impl::on_apply_properties(CSSComputedBox &properties)
 {
 	if (is_user_color)
@@ -161,5 +161,5 @@ void Label_Impl::on_apply_properties(CSSComputedBox &properties)
 		properties.color.type = CSSValueColor::type_color;
 	}
 }	
-
+*/
 }

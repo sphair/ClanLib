@@ -29,7 +29,14 @@
 #pragma once
 
 #include "../css_property_parser.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_color.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_image.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_repeat.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_attachment.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_position.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_size.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_origin.h"
+#include "API/CSSLayout/PropertyValues/css_value_background_clip.h"
 
 namespace clan
 {

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_font_weight.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueFontWeight::CSSValueFontWeight()
 : type(type_inherit)
 {
 }
-void CSSValueFontWeight::apply_to_box(CSSComputedBox &box)
+
+void CSSValueFontWeight::apply(CSSComputedValuesUpdater *updater)
 {
-	box.font_weight = *this;
+	updater->get_font().font_weight = *this;
 }
 
 void CSSValueFontWeight::compute(const CSSValueFontWeight *parent, CSSResourceCache *layout, float em_size, float ex_size)

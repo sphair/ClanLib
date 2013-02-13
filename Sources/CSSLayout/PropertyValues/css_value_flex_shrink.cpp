@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_flex_shrink.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueFlexShrink::CSSValueFlexShrink()
 : type(type_number), number(0.0f)
 {
 }
-void CSSValueFlexShrink::apply_to_box(CSSComputedBox &box)
+
+void CSSValueFlexShrink::apply(CSSComputedValuesUpdater *updater)
 {
-	box.flex_shrink = *this;
+	updater->get_flex().flex_shrink = *this;
 }
 
 void CSSValueFlexShrink::compute(const CSSValueFlexShrink *parent, CSSResourceCache *layout, float em_size, float ex_size)

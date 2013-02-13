@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_counter_reset.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueCounterReset::CSSValueCounterReset()
 : type(type_none)
 {
 }
-void CSSValueCounterReset::apply_to_box(CSSComputedBox &box)
+
+void CSSValueCounterReset::apply(CSSComputedValuesUpdater *updater)
 {
-	box.counter_reset = *this;
+	updater->get_counter().counter_reset = *this;
 }
 
 void CSSValueCounterReset::compute(const CSSValueCounterReset *parent, CSSResourceCache *layout, float em_size, float ex_size)

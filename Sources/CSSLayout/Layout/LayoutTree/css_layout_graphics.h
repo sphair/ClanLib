@@ -36,7 +36,7 @@
 namespace clan
 {
 
-class CSSComputedBox;
+class CSSComputedValues;
 class Image;
 class Font;
 class FontMetrics;
@@ -49,7 +49,7 @@ public:
 	~CSSLayoutGraphics();
 
 	Image &get_image(const std::string &url);
-	Font get_font(const CSSComputedBox &properties);
+	Font get_font(const CSSComputedValues &properties);
 	FontMetrics get_font_metrics(Font &font);
 
 	void fill(const Rect &box, const Colorf &color);

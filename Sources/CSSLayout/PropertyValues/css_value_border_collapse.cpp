@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_collapse.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueBorderCollapse::CSSValueBorderCollapse()
 : type(type_inherit)
 {
 }
-void CSSValueBorderCollapse::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderCollapse::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_collapse = *this;
+	updater->get_table_inherit().border_collapse = *this;
 }
 
 void CSSValueBorderCollapse::compute(const CSSValueBorderCollapse *parent, CSSResourceCache *layout, float em_size, float ex_size)

@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_clip.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueBackgroundClip::CSSValueBackgroundClip()
 {
 	values.push_back(clip_border_box);
 }
-void CSSValueBackgroundClip::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBackgroundClip::apply(CSSComputedValuesUpdater *updater)
 {
-	box.background_clip = *this;
+	updater->get_background().background_clip = *this;
 }
 
 void CSSValueBackgroundClip::compute(const CSSValueBackgroundClip *parent, CSSResourceCache *layout, float em_size, float ex_size)

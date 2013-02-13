@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_background_origin.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -38,9 +38,10 @@ CSSValueBackgroundOrigin::CSSValueBackgroundOrigin()
 {
 	values.push_back(origin_padding_box);
 }
-void CSSValueBackgroundOrigin::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBackgroundOrigin::apply(CSSComputedValuesUpdater *updater)
 {
-	box.background_origin = *this;
+	updater->get_background().background_origin = *this;
 }
 
 void CSSValueBackgroundOrigin::compute(const CSSValueBackgroundOrigin *parent, CSSResourceCache *layout, float em_size, float ex_size)

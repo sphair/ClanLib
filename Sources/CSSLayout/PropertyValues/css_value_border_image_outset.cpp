@@ -28,8 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_border_image_outset.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include "../css_resource_cache.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
 
 namespace clan
 {
@@ -40,9 +40,10 @@ CSSValueBorderImageOutset::CSSValueBorderImageOutset()
   number_top(0.0f), number_right(0.0f), number_bottom(0.0f), number_left(0.0f)
 {
 }
-void CSSValueBorderImageOutset::apply_to_box(CSSComputedBox &box)
+
+void CSSValueBorderImageOutset::apply(CSSComputedValuesUpdater *updater)
 {
-	box.border_image_outset = *this;
+	updater->get_border().border_image_outset = *this;
 }
 
 void CSSValueBorderImageOutset::compute(const CSSValueBorderImageOutset *parent, CSSResourceCache *layout, float em_size, float ex_size)

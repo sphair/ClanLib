@@ -28,7 +28,20 @@
 
 #pragma once
 
+#include "API/CSSLayout/ComputedValues/css_computed_background.h"
+#include "API/CSSLayout/ComputedValues/css_computed_border.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_counter.h"
+#include "API/CSSLayout/ComputedValues/css_computed_flex.h"
+#include "API/CSSLayout/ComputedValues/css_computed_font.h"
+#include "API/CSSLayout/ComputedValues/css_computed_generic.h"
+#include "API/CSSLayout/ComputedValues/css_computed_list_style.h"
+#include "API/CSSLayout/ComputedValues/css_computed_margin.h"
+#include "API/CSSLayout/ComputedValues/css_computed_misc.h"
+#include "API/CSSLayout/ComputedValues/css_computed_outline.h"
+#include "API/CSSLayout/ComputedValues/css_computed_padding.h"
+#include "API/CSSLayout/ComputedValues/css_computed_table.h"
+#include "API/CSSLayout/ComputedValues/css_computed_text.h"
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/CSSDocument/css_select_result.h"
 #include "API/CSSLayout/CSSDocument/css_style_properties.h"
@@ -40,7 +53,7 @@ namespace clan
 class CSSComputedValues_Impl
 {
 public:
-	CSSComputedValues_Impl(CSSResourceCache *resource_cache) : specified_values_changed(true), box_generation(0), resource_cache(resource_cache) { }
+	CSSComputedValues_Impl(CSSResourceCache *resource_cache);
 	~CSSComputedValues_Impl();
 
 	void set_parent(const CSSComputedValues &parent);
@@ -55,6 +68,54 @@ public:
 	CSSComputedBox box;
 	int box_generation;
 
+	CSSComputedBackground background;
+	int background_generation;
+
+	CSSComputedBorder border;
+	int border_generation;
+
+	CSSComputedCounter counter;
+	int counter_generation;
+
+	CSSComputedFlex flex;
+	int flex_generation;
+
+	CSSComputedFont font;
+	int font_generation;
+
+	CSSComputedGeneric generic_values;
+	int generic_generation;
+
+	CSSComputedListStyle list_style;
+	int list_style_generation;
+
+	CSSComputedMargin margin;
+	int margin_generation;
+
+	CSSComputedMiscReset misc_reset;
+	int misc_reset_generation;
+
+	CSSComputedMiscInherit misc_inherit;
+	int misc_inherit_generation;
+
+	CSSComputedOutline outline;
+	int outline_generation;
+
+	CSSComputedPadding padding;
+	int padding_generation;
+
+	CSSComputedTableReset table_reset;
+	int table_reset_generation;
+
+	CSSComputedTableInherit table_inherit;
+	int table_inherit_generation;
+
+	CSSComputedTextReset text_reset;
+	int text_reset_generation;
+
+	CSSComputedTextInherit text_inherit;
+	int text_inherit_generation;
+
 	CSSSelectResult selected_values;
 	CSSStyleProperties style_values;
 
@@ -63,6 +124,29 @@ public:
 private:
 	void detach_from_parent();
 };
+
+inline CSSComputedValues_Impl::CSSComputedValues_Impl(CSSResourceCache *resource_cache) :
+	specified_values_changed(true),
+	box_generation(0),
+	background_generation(0),
+	border_generation(0),
+	counter_generation(0),
+	flex_generation(0),
+	font_generation(0),
+	generic_generation(0),
+	list_style_generation(0),
+	margin_generation(0),
+	misc_reset_generation(0),
+	misc_inherit_generation(0),
+	outline_generation(0),
+	padding_generation(0),
+	table_reset_generation(0),
+	table_inherit_generation(0),
+	text_reset_generation(0),
+	text_inherit_generation(0),
+	resource_cache(resource_cache)
+{
+}
 
 inline CSSComputedValues_Impl::~CSSComputedValues_Impl()
 {

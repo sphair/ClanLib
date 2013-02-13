@@ -58,7 +58,7 @@ bool CSSInlineLayoutCreateLinebreakOpportunities::node(CSSInlineGeneratedBox *cu
 			}
 			else
 			{
-				if (prev_space && should_break_at_end_of_spaces(text->get_properties().white_space))
+				if (prev_space && should_break_at_end_of_spaces(text->get_properties().get_text_inherit().white_space))
 					linebreak_opportunities.push_back(CSSInlineLineBreakOpportunity(cur, j));
 				prev_space = false;
 			}

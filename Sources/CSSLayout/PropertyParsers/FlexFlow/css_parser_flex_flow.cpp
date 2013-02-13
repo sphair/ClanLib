@@ -28,7 +28,8 @@
 
 #include "CSSLayout/precomp.h"
 #include "css_parser_flex_flow.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_direction.h"
+#include "API/CSSLayout/PropertyValues/css_value_flex_wrap.h"
 
 namespace clan
 {

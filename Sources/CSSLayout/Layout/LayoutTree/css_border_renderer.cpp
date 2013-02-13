@@ -35,7 +35,7 @@
 namespace clan
 {
 
-CSSBorderRenderer::CSSBorderRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBox &computed_properties)
+CSSBorderRenderer::CSSBorderRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBorder &computed_properties)
 : graphics(graphics), resource_cache(resource_cache), computed_properties(computed_properties), border_left(0), border_top(0), border_right(0), border_bottom(0)
 {
 }

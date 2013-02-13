@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_list_style_image.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueListStyleImage::CSSValueListStyleImage()
 : type(type_inherit)
 {
 }
-void CSSValueListStyleImage::apply_to_box(CSSComputedBox &box)
+
+void CSSValueListStyleImage::apply(CSSComputedValuesUpdater *updater)
 {
-	box.list_style_image = *this;
+	updater->get_list_style().list_style_image = *this;
 }
 
 void CSSValueListStyleImage::compute(const CSSValueListStyleImage *parent, CSSResourceCache *layout, float em_size, float ex_size)

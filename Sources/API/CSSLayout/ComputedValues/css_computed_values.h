@@ -29,6 +29,20 @@
 #pragma once
 
 #include "../api_csslayout.h"
+#include "css_computed_background.h"
+#include "css_computed_border.h"
+#include "css_computed_box.h"
+#include "css_computed_counter.h"
+#include "css_computed_flex.h"
+#include "css_computed_font.h"
+#include "css_computed_generic.h"
+#include "css_computed_list_style.h"
+#include "css_computed_margin.h"
+#include "css_computed_misc.h"
+#include "css_computed_outline.h"
+#include "css_computed_padding.h"
+#include "css_computed_table.h"
+#include "css_computed_text.h"
 
 namespace clan
 {
@@ -36,7 +50,6 @@ namespace clan
 class CSSSelectResult;
 class CSSStyleProperties;
 class CSSPropertyValue;
-class CSSComputedBox;
 class CSSComputedValues_Impl;
 class CSSResourceCache;
 
@@ -55,6 +68,54 @@ public:
 
 	const CSSComputedBox &get_box() const;
 	int get_box_generation() const;
+
+	const CSSComputedBackground &get_background() const;
+	int get_background_generation() const;
+
+	const CSSComputedBorder &get_border() const;
+	int get_border_generation() const;
+
+	const CSSComputedCounter &get_counter() const;
+	int get_counter_generation() const;
+
+	const CSSComputedFlex &get_flex() const;
+	int get_flex_generation() const;
+
+	const CSSComputedFont &get_font() const;
+	int get_font_generation() const;
+
+	const CSSComputedGeneric &get_generic() const;
+	int get_generic_generation() const;
+
+	const CSSComputedListStyle &get_list_style() const;
+	int get_list_style_generation() const;
+
+	const CSSComputedMargin &get_margin() const;
+	int get_margin_generation() const;
+
+	const CSSComputedMiscReset &get_misc_reset() const;
+	int get_misc_reset_generation() const;
+
+	const CSSComputedMiscInherit &get_misc_inherit() const;
+	int get_misc_inherit_generation() const;
+
+	const CSSComputedOutline &get_outline() const;
+	int get_outline_generation() const;
+
+	const CSSComputedPadding &get_padding() const;
+	int get_padding_generation() const;
+
+	const CSSComputedTableReset &get_table_reset() const;
+	int get_table_reset_generation() const;
+
+	const CSSComputedTableInherit &get_table_inherit() const;
+	int get_table_inherit_generation() const;
+
+	const CSSComputedTextReset &get_text_reset() const;
+	int get_text_reset_generation() const;
+
+	const CSSComputedTextInherit &get_text_inherit() const;
+	int get_text_inherit_generation() const;
 
 private:
 	std::shared_ptr<CSSComputedValues_Impl> impl;

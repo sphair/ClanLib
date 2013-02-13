@@ -42,15 +42,15 @@ CSSInlineLayoutAlignLine::CSSInlineLayoutAlignLine(CSSInlineLayout *layout, CSSI
 	offset_x = 0;
 	word_count = 0;
 	word_index = 0;
-	if (layout->get_element_node()->computed_values.get_box().text_align.type == CSSValueTextAlign::type_right)
+	if (layout->get_element_node()->computed_values.get_text_inherit().text_align.type == CSSValueTextAlign::type_right)
 	{
 		offset_x = extra_total;
 	}
-	else if (layout->get_element_node()->computed_values.get_box().text_align.type == CSSValueTextAlign::type_center)
+	else if (layout->get_element_node()->computed_values.get_text_inherit().text_align.type == CSSValueTextAlign::type_center)
 	{
 		offset_x = extra_total / 2;
 	}
-	else if (layout->get_element_node()->computed_values.get_box().text_align.type == CSSValueTextAlign::type_justify && !last_line)
+	else if (layout->get_element_node()->computed_values.get_text_inherit().text_align.type == CSSValueTextAlign::type_justify && !last_line)
 	{
 		word_count = find_word_count(line);
 	}
@@ -154,8 +154,7 @@ void CSSInlineLayoutAlignLine::split_text(CSSInlineGeneratedBox *box, size_t tex
 
 	CSSBoxText *text = dynamic_cast<CSSBoxText *>(box->box_node);
 
-	const CSSComputedBox &properties = text->get_properties();
-	Font font = graphics->get_font(properties);
+	Font font = graphics->get_font(text->get_properties());
 
 	box->width = graphics->get_text_size(font, text->processed_text.substr(box->text_start, box->text_end-box->text_start)).width;
 	box2->width = graphics->get_text_size(font, text->processed_text.substr(box2->text_start, box2->text_end-box2->text_start)).width;

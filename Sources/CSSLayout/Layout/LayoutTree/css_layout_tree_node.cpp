@@ -111,12 +111,12 @@ CSSUsedValue CSSLayoutTreeNode::get_css_padding_height(const CSSValuePaddingWidt
 
 void CSSLayoutTreeNode::calculate_absolute_widths(LayoutStrategy strategy)
 {
-	margin.left = get_css_margin_width(element_node->computed_values.get_box().margin_width_left, containing_width);
-	margin.right = get_css_margin_width(element_node->computed_values.get_box().margin_width_right, containing_width);
-	border.left = element_node->computed_values.get_box().border_width_left.length.value;
-	border.right = element_node->computed_values.get_box().border_width_right.length.value;
-	padding.left = get_css_padding_width(element_node->computed_values.get_box().padding_width_left, containing_width);
-	padding.right = get_css_padding_width(element_node->computed_values.get_box().padding_width_right, containing_width);
+	margin.left = get_css_margin_width(element_node->computed_values.get_margin().margin_width_left, containing_width);
+	margin.right = get_css_margin_width(element_node->computed_values.get_margin().margin_width_right, containing_width);
+	border.left = element_node->computed_values.get_border().border_width_left.length.value;
+	border.right = element_node->computed_values.get_border().border_width_right.length.value;
+	padding.left = get_css_padding_width(element_node->computed_values.get_padding().padding_width_left, containing_width);
+	padding.right = get_css_padding_width(element_node->computed_values.get_padding().padding_width_right, containing_width);
 
 	CSSUsedValue left = 0.0f;
 	if (element_node->computed_values.get_box().left.type == CSSValueLeft::type_length)
@@ -148,13 +148,13 @@ void CSSLayoutTreeNode::calculate_absolute_widths(LayoutStrategy strategy)
 		element_node->computed_values.get_box().right.type != CSSValueRight::type_auto &&
 		element_node->computed_values.get_box().width.type != CSSValueWidth::type_auto)
 	{
-		if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto &&
-			element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+		if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto &&
+			element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			CSSUsedValue space_left = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - left - right;
 			if (space_left < 0.0f)
 			{
-				if (element_node->computed_values.get_box().direction.type == CSSValueDirection::type_ltr)
+				if (element_node->computed_values.get_misc_inherit().direction.type == CSSValueDirection::type_ltr)
 				{
 					margin.left = 0.0f;
 					margin.right = space_left;
@@ -171,11 +171,11 @@ void CSSLayoutTreeNode::calculate_absolute_widths(LayoutStrategy strategy)
 				margin.right = margin.left;
 			}
 		}
-		else if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.left = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - margin.right - left - right;
 		}
-		else if (element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.right = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - margin.left - left - right;
 		}
@@ -242,13 +242,13 @@ void CSSLayoutTreeNode::apply_absolute_widths_constraint(CSSUsedValue constraint
 	if (element_node->computed_values.get_box().left.type != CSSValueLeft::type_auto &&
 		element_node->computed_values.get_box().right.type != CSSValueRight::type_auto)
 	{
-		if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto &&
-			element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+		if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto &&
+			element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			CSSUsedValue space_left = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - left - right;
 			if (space_left < 0.0f)
 			{
-				if (element_node->computed_values.get_box().direction.type == CSSValueDirection::type_ltr)
+				if (element_node->computed_values.get_misc_inherit().direction.type == CSSValueDirection::type_ltr)
 				{
 					margin.left = 0.0f;
 					margin.right = space_left;
@@ -265,11 +265,11 @@ void CSSLayoutTreeNode::apply_absolute_widths_constraint(CSSUsedValue constraint
 				margin.right = margin.left;
 			}
 		}
-		else if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.left = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - margin.right - left - right;
 		}
-		else if (element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.right = containing_width.value - border.left - border.right - padding.left - padding.right - width.value - margin.left - left - right;
 		}
@@ -278,12 +278,12 @@ void CSSLayoutTreeNode::apply_absolute_widths_constraint(CSSUsedValue constraint
 
 void CSSLayoutTreeNode::calculate_absolute_heights()
 {
-	margin.top = get_css_margin_height(element_node->computed_values.get_box().margin_width_top, containing_height);
-	margin.bottom = get_css_margin_height(element_node->computed_values.get_box().margin_width_bottom, containing_height);
-	border.top = element_node->computed_values.get_box().border_width_top.length.value;
-	border.bottom = element_node->computed_values.get_box().border_width_bottom.length.value;
-	padding.top = get_css_padding_height(element_node->computed_values.get_box().padding_width_top, containing_height);
-	padding.bottom = get_css_padding_height(element_node->computed_values.get_box().padding_width_bottom, containing_height);
+	margin.top = get_css_margin_height(element_node->computed_values.get_margin().margin_width_top, containing_height);
+	margin.bottom = get_css_margin_height(element_node->computed_values.get_margin().margin_width_bottom, containing_height);
+	border.top = element_node->computed_values.get_border().border_width_top.length.value;
+	border.bottom = element_node->computed_values.get_border().border_width_bottom.length.value;
+	padding.top = get_css_padding_height(element_node->computed_values.get_padding().padding_width_top, containing_height);
+	padding.bottom = get_css_padding_height(element_node->computed_values.get_padding().padding_width_bottom, containing_height);
 
 	CSSUsedValue top = 0.0f;
 	if (element_node->computed_values.get_box().top.type == CSSValueTop::type_length)
@@ -315,8 +315,8 @@ void CSSLayoutTreeNode::calculate_absolute_heights()
 		element_node->computed_values.get_box().bottom.type != CSSValueBottom::type_auto &&
 		element_node->computed_values.get_box().height.type != CSSValueHeight::type_auto)
 	{
-		if (element_node->computed_values.get_box().margin_width_top.type == CSSValueMarginWidth::type_auto &&
-			element_node->computed_values.get_box().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
+		if (element_node->computed_values.get_margin().margin_width_top.type == CSSValueMarginWidth::type_auto &&
+			element_node->computed_values.get_margin().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 		{
 			CSSUsedValue space_left = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - top - bottom;
 			if (space_left < 0.0f)
@@ -330,11 +330,11 @@ void CSSLayoutTreeNode::calculate_absolute_heights()
 				margin.bottom = margin.top;
 			}
 		}
-		else if (element_node->computed_values.get_box().margin_width_top.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_top.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.top = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - margin.bottom - top - bottom;
 		}
-		else if (element_node->computed_values.get_box().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.bottom = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - margin.top - top - bottom;
 		}
@@ -373,8 +373,8 @@ void CSSLayoutTreeNode::apply_absolute_heights_constraint(CSSUsedValue constrain
 	if (element_node->computed_values.get_box().top.type != CSSValueTop::type_auto &&
 		element_node->computed_values.get_box().bottom.type != CSSValueBottom::type_auto)
 	{
-		if (element_node->computed_values.get_box().margin_width_top.type == CSSValueMarginWidth::type_auto &&
-			element_node->computed_values.get_box().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
+		if (element_node->computed_values.get_margin().margin_width_top.type == CSSValueMarginWidth::type_auto &&
+			element_node->computed_values.get_margin().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 		{
 			CSSUsedValue space_left = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - top - bottom;
 			if (space_left < 0.0f)
@@ -388,11 +388,11 @@ void CSSLayoutTreeNode::apply_absolute_heights_constraint(CSSUsedValue constrain
 				margin.bottom = margin.top;
 			}
 		}
-		else if (element_node->computed_values.get_box().margin_width_top.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_top.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.top = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - margin.bottom - top - bottom;
 		}
-		else if (element_node->computed_values.get_box().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
+		else if (element_node->computed_values.get_margin().margin_width_bottom.type == CSSValueMarginWidth::type_auto)
 		{
 			margin.bottom = containing_height.value - border.top - border.bottom - padding.top - padding.bottom - height.value - margin.top - top - bottom;
 		}
@@ -405,12 +405,12 @@ void CSSLayoutTreeNode::calculate_static_widths(LayoutStrategy strategy)
 	bool is_float = element_node->computed_values.get_box().float_box.type != CSSValueFloat::type_none;
 	//bool is_overflow_visible = (element_node->get_parent() == 0) || element_node->is_overflow_visible();
 
-	margin.left = get_css_margin_width(element_node->computed_values.get_box().margin_width_left, containing_width);
-	margin.right = get_css_margin_width(element_node->computed_values.get_box().margin_width_right, containing_width);
-	border.left = element_node->computed_values.get_box().border_width_left.length.value;
-	border.right = element_node->computed_values.get_box().border_width_right.length.value;
-	padding.left = get_css_padding_width(element_node->computed_values.get_box().padding_width_left, containing_width);
-	padding.right = get_css_padding_width(element_node->computed_values.get_box().padding_width_right, containing_width);
+	margin.left = get_css_margin_width(element_node->computed_values.get_margin().margin_width_left, containing_width);
+	margin.right = get_css_margin_width(element_node->computed_values.get_margin().margin_width_right, containing_width);
+	border.left = element_node->computed_values.get_border().border_width_left.length.value;
+	border.right = element_node->computed_values.get_border().border_width_right.length.value;
+	padding.left = get_css_padding_width(element_node->computed_values.get_padding().padding_width_left, containing_width);
+	padding.right = get_css_padding_width(element_node->computed_values.get_padding().padding_width_right, containing_width);
 
 	if (element_node->computed_values.get_box().width.type == CSSValueWidth::type_length)
 	{
@@ -474,23 +474,23 @@ void CSSLayoutTreeNode::calculate_static_widths(LayoutStrategy strategy)
 
 		if (!containing_width.expanding && !is_float)
 		{
-			if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto && element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+			if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto && element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.left = max(0.0f, (containing_width.value-border.left-border.right-padding.left-padding.right-width.value)/2.0f);
 				margin.right = max(0.0f, containing_width.value-border.left-border.right-padding.left-padding.right-width.value-margin.left);
 			}
-			else if (element_node->computed_values.get_box().margin_width_left.type == CSSValueMarginWidth::type_auto)
+			else if (element_node->computed_values.get_margin().margin_width_left.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.left = max(0.0f, containing_width.value-margin.right-border.left-border.right-padding.left-padding.right-width.value);
 			}
-			else if (element_node->computed_values.get_box().margin_width_right.type == CSSValueMarginWidth::type_auto)
+			else if (element_node->computed_values.get_margin().margin_width_right.type == CSSValueMarginWidth::type_auto)
 			{
 				margin.right = max(0.0f, containing_width.value-margin.left-border.left-border.right-padding.left-padding.right-width.value);
 			}
 
 			if (margin.left + border.left + width.value + border.right + padding.right + margin.right > containing_width.value)
 			{
-				if (element_node->computed_values.get_box().direction.type == CSSValueDirection::type_ltr)
+				if (element_node->computed_values.get_misc_inherit().direction.type == CSSValueDirection::type_ltr)
 					margin.right = max(0.0f, containing_width.value-margin.left-border.left-border.right-padding.left-padding.right-width.value);
 				else
 					margin.left = max(0.0f, containing_width.value-margin.right-border.left-border.right-padding.left-padding.right-width.value);
@@ -501,12 +501,12 @@ void CSSLayoutTreeNode::calculate_static_widths(LayoutStrategy strategy)
 
 void CSSLayoutTreeNode::calculate_static_heights()
 {
-	margin.top = get_css_margin_height(element_node->computed_values.get_box().margin_width_top, containing_height);
-	margin.bottom = get_css_margin_height(element_node->computed_values.get_box().margin_width_bottom, containing_height);
-	border.top = element_node->computed_values.get_box().border_width_top.length.value;
-	border.bottom = element_node->computed_values.get_box().border_width_bottom.length.value;
-	padding.top = get_css_padding_height(element_node->computed_values.get_box().padding_width_top, containing_height);
-	padding.bottom = get_css_padding_height(element_node->computed_values.get_box().padding_width_bottom, containing_height);
+	margin.top = get_css_margin_height(element_node->computed_values.get_margin().margin_width_top, containing_height);
+	margin.bottom = get_css_margin_height(element_node->computed_values.get_margin().margin_width_bottom, containing_height);
+	border.top = element_node->computed_values.get_border().border_width_top.length.value;
+	border.bottom = element_node->computed_values.get_border().border_width_bottom.length.value;
+	padding.top = get_css_padding_height(element_node->computed_values.get_padding().padding_width_top, containing_height);
+	padding.bottom = get_css_padding_height(element_node->computed_values.get_padding().padding_width_bottom, containing_height);
 
 	if (element_node->computed_values.get_box().height.type == CSSValueHeight::type_length)
 	{
@@ -708,7 +708,7 @@ void CSSLayoutTreeNode::layout_absolute_or_fixed(CSSLayoutGraphics *graphics, CS
 		element_node->computed_values.get_box().right.type == CSSValueRight::type_auto &&
 		element_node->computed_values.get_box().width.type == CSSValueWidth::type_auto)
 	{
-		if (element_node->computed_values.get_box().direction.type == CSSValueDirection::type_ltr)
+		if (element_node->computed_values.get_misc_inherit().direction.type == CSSValueDirection::type_ltr)
 		{
 			CSSActualValue offset_x = static_position_parent ? static_position_parent->formatting_context->get_x() : 0;
 			left = offset_x + static_position.left - containing_block.left;
@@ -733,7 +733,7 @@ void CSSLayoutTreeNode::layout_absolute_or_fixed(CSSLayoutGraphics *graphics, CS
 			element_node->computed_values.get_box().right.type == CSSValueRight::type_auto &&
 			element_node->computed_values.get_box().width.type != CSSValueWidth::type_auto) // rule #2
 		{
-			if (element_node->computed_values.get_box().direction.type == CSSValueDirection::type_ltr)
+			if (element_node->computed_values.get_misc_inherit().direction.type == CSSValueDirection::type_ltr)
 			{
 				CSSActualValue offset_x = static_position_parent ? static_position_parent->formatting_context->get_x() : 0;
 				left = offset_x + static_position.left - containing_block.left;
@@ -1103,7 +1103,7 @@ void CSSLayoutTreeNode::set_formatting_context(CSSBlockFormattingContext *new_fo
 
 void CSSLayoutTreeNode::establish_stacking_context_if_needed(CSSStackingContext *current_stacking_context)
 {
-	if (element_node->computed_values.get_box().position.type != CSSValuePosition::type_static && element_node->computed_values.get_box().z_index.type != CSSValueZIndex::type_auto)
+	if (element_node->computed_values.get_box().position.type != CSSValuePosition::type_static && element_node->computed_values.get_misc_reset().z_index.type != CSSValueZIndex::type_auto)
 	{
 		stacking_context = new CSSStackingContext(this);
 		stacking_context_root = true;
@@ -1140,21 +1140,21 @@ CSSActualValue CSSLayoutTreeNode::get_block_height() const
 
 void CSSLayoutTreeNode::render_non_content(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, bool root)
 {
-	if (element_node->computed_values.get_box().visibility.type == CSSValueVisibility::type_visible &&
+	if (element_node->computed_values.get_misc_inherit().visibility.type == CSSValueVisibility::type_visible &&
 		element_node->computed_values.get_box().display.type != CSSValueDisplay::type_table_cell)
 	{
 		render_background(graphics, resource_cache, root);
 		render_border(graphics, resource_cache);
 
 		if (element_node->computed_values.get_box().display.type == CSSValueDisplay::type_list_item &&
-			element_node->computed_values.get_box().list_style_type.type != CSSValueListStyleType::type_none)
+			element_node->computed_values.get_list_style().list_style_type.type != CSSValueListStyleType::type_none)
 		{
 			std::string bullet = StringHelp::wchar_to_utf8(8226);
-			Font font = graphics->get_font(element_node->computed_values.get_box());
+			Font font = graphics->get_font(element_node->computed_values);
 			Size offset = graphics->get_text_size(font, bullet);
 			offset.width += 8;
 			// to do: find baseline of first item
-			graphics->draw_text(font, used_to_actual(relative_x) + formatting_context->get_x() + content_box.left-offset.width, used_to_actual(relative_y) + formatting_context->get_y() + content_box.top + (int)(graphics->get_font_metrics(font).get_ascent()), bullet, element_node->computed_values.get_box().color.color);
+			graphics->draw_text(font, used_to_actual(relative_x) + formatting_context->get_x() + content_box.left-offset.width, used_to_actual(relative_y) + formatting_context->get_y() + content_box.top + (int)(graphics->get_font_metrics(font).get_ascent()), bullet, element_node->computed_values.get_text_inherit().color.color);
 		}
 	}
 }
@@ -1186,7 +1186,7 @@ void CSSLayoutTreeNode::render_background(CSSLayoutGraphics *graphics, CSSResour
 		box.translate(formatting_context->get_parent()->get_x(), formatting_context->get_parent()->get_y());
 	box.translate(used_to_actual(relative_x), used_to_actual(relative_y));
 
-	CSSBackgroundRenderer renderer(graphics, resource_cache, element_node->computed_values.get_box());
+	CSSBackgroundRenderer renderer(graphics, resource_cache, element_node->computed_values.get_background());
 	renderer.set_is_root(root);
 	renderer.set_initial_containing_box(Rect(0, 0, used_to_actual(containing_width.value), used_to_actual(containing_height.value))); // Bug: this is wrong except for the root
 	renderer.set_content_box(box);
@@ -1202,7 +1202,7 @@ void CSSLayoutTreeNode::render_border(CSSLayoutGraphics *graphics, CSSResourceCa
 	Rect border_box = get_border_box();
 	border_box.translate(relative_x, relative_y);
 
-	CSSBorderRenderer renderer(graphics, resource_cache, element_node->computed_values.get_box());
+	CSSBorderRenderer renderer(graphics, resource_cache, element_node->computed_values.get_border());
 	renderer.set_border_values(border.left, border.top, border.right, border.bottom);
 	renderer.set_border_box(border_box);
 	renderer.render();

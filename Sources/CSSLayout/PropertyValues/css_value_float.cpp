@@ -28,7 +28,7 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/PropertyValues/css_value_float.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 
 namespace clan
 {
@@ -37,9 +37,10 @@ CSSValueFloat::CSSValueFloat()
 : type(type_none)
 {
 }
-void CSSValueFloat::apply_to_box(CSSComputedBox &box)
+
+void CSSValueFloat::apply(CSSComputedValuesUpdater *updater)
 {
-	box.float_box = *this;
+	updater->get_box().float_box = *this;
 }
 
 void CSSValueFloat::compute(const CSSValueFloat *parent, CSSResourceCache *layout, float em_size, float ex_size)
