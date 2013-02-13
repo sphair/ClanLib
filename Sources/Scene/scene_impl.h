@@ -55,10 +55,10 @@ class SceneLightVisitor;
 class SceneParticleEmitter_Impl;
 class SceneParticleEmitterVisitor;
 
-class Scene
+class Scene_Impl
 {
 public:
-	Scene(clan::GraphicContext &gc);
+	Scene_Impl(clan::GraphicContext &gc);
 	void set_viewport(const clan::Rect &box);
 	void set_camera(const clan::Vec3f &position, const clan::Quaternionf &orientation);
 	void set_camera_position(const clan::Vec3f &position);

@@ -28,46 +28,13 @@
 
 #pragma once
 
+#include "API/Scene/scene_light.h"
 #include "Culling/visible_object.h"
-#include "scene_light.h"
 #include "Model/model_instance.h"
 #include <list>
+
 namespace clan
 {
-
-class Scene;
-class SceneObject_Impl;
-class OctTreeObject;
-class ModelData;
-
-class SceneObject
-{
-public:
-	SceneObject();
-	SceneObject(clan::GraphicContext &gc, Scene *scene, const std::string &model_name, const clan::Vec3f &position = clan::Vec3f(0.0f), const clan::Quaternionf &orientation = clan::Quaternionf(), const clan::Vec3f &scale = clan::Vec3f(1.0f));
-	SceneObject(clan::GraphicContext &gc, Scene *scene, std::shared_ptr<ModelData> model_data, const clan::Vec3f &position = clan::Vec3f(0.0f), const clan::Quaternionf &orientation = clan::Quaternionf(), const clan::Vec3f &scale = clan::Vec3f(1.0f));
-	bool is_null() const { return !impl; }
-
-	clan::Vec3f get_position() const;
-	clan::Quaternionf get_orientation() const;
-	clan::Vec3f get_scale() const;
-	void set_position(const clan::Vec3f &position);
-	void set_orientation(const clan::Quaternionf &orientation);
-	void set_scale(const clan::Vec3f &scale);
-
-	// \brief Moves object relative to its current orientation
-	SceneObject &move(clan::Vec3f offset);
-
-	// \brief Rotate object relative to its current orientation
-	SceneObject &rotate(float dir, float up, float tilt);
-
-	void play_animation(const std::string &name);
-	void update(float time_elapsed);
-	void moved(float units_moved);
-
-private:
-	std::shared_ptr<SceneObject_Impl> impl;
-};
 
 class SceneObject_Impl : public VisibleObject
 {
