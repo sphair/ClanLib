@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "diffuse_gi_pass_cs.h"
-#include "Performance/scope_timer.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 namespace clan
 {
