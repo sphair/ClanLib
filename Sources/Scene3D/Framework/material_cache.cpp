@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "material_cache.h"
-#include "Crunch/crnlib.h"
+//FIXME: #include "Crunch/crnlib.h"
 
 namespace clan
 {
@@ -40,8 +40,8 @@ MaterialCache::MaterialCache(WorkQueue &work_queue)
 
 void MaterialCache::update(GraphicContext &gc, float time_elapsed)
 {
-	for (size_t i = 0; i < video_textures.size(); i++)
-		video_textures[i].update(gc, time_elapsed);
+//FIXME:	for (size_t i = 0; i < video_textures.size(); i++)
+//FIXME:		video_textures[i].update(gc, time_elapsed);
 }
 
 std::string MaterialCache::to_key(const std::string &material_name, bool linear)
@@ -130,7 +130,7 @@ void MaterialCacheLoadTexture::work_completed(GraphicContext &gc)
 {
 	if (!video_file.empty())
 	{
-		cache->video_textures.push_back(VideoTexture(video_file, texture));
+//FIXME:		cache->video_textures.push_back(VideoTexture(video_file, texture));
 	}
 	else if (!pixelbuffer_set.is_null())
 	{

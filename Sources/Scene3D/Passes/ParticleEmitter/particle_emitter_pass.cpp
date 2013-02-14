@@ -31,6 +31,7 @@
 #include "API/Scene3D/scene.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Culling/clipping_frustum.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -40,7 +41,7 @@ ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache)
 {
 }
 
-void ParticleEmitterPass::run(GraphicContext &gc, Scene &scene)
+void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 {
 	setup(gc);
 
@@ -51,7 +52,7 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene &scene)
 
 	for (size_t i = 0; i < active_emitters.size(); i++)
 		active_emitters[i]->visible = false;
-	scene.visit_emitters(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+	scene->visit_emitters(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 
 	const int vectors_per_particle = 2;
 

@@ -33,6 +33,7 @@
 #include "Scene3D/scene_object_impl.h"
 #include "Scene3D/Culling/aabb.h"
 #include "Scene3D/Model/model.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -42,27 +43,27 @@ SceneObject::SceneObject()
 }
 
 SceneObject::SceneObject(GraphicContext &gc, Scene *scene, const std::string &model_name, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-: impl(new SceneObject_Impl(scene))
+	: impl(new SceneObject_Impl(scene->impl.get()))
 {
 	impl->position = position;
 	impl->orientation = orientation;
 	impl->scale = scale;
-	impl->instance.set_renderer(scene->model_cache.get_model(gc, model_name));
-	impl->tree_object = scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->instance.set_renderer(impl->scene->model_cache.get_model(gc, model_name));
+	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);
 }
 
 SceneObject::SceneObject(GraphicContext &gc, Scene *scene, std::shared_ptr<ModelData> model_data, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-: impl(new SceneObject_Impl(scene))
+	: impl(new SceneObject_Impl(scene->impl.get()))
 {
-	std::shared_ptr<Model> model(new Model(gc, scene->material_cache, scene->model_shader_cache, model_data, scene->instances_buffer.new_offset_index()));
+	std::shared_ptr<Model> model(new Model(gc, impl->scene->material_cache, impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
 
 	impl->position = position;
 	impl->orientation = orientation;
 	impl->scale = scale;
 	impl->instance.set_renderer(model);
-	impl->tree_object = scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);
 }
@@ -142,7 +143,7 @@ SceneObject &SceneObject::rotate(float dir, float up, float tilt)
 
 /////////////////////////////////////////////////////////////////////////////
 
-SceneObject_Impl::SceneObject_Impl(Scene *scene)
+SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene)
 : scene(scene), tree_object(0), scale(1.0f)
 {
 	it = scene->objects.insert(scene->objects.end(), this);
@@ -155,11 +156,11 @@ SceneObject_Impl::~SceneObject_Impl()
 	scene->objects.erase(it);
 }
 
-void SceneObject_Impl::create_lights(Scene *scene)
+void SceneObject_Impl::create_lights(Scene *scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)
-		lights.push_back(SceneLight(scene));
+		lights.push_back(SceneLight(scene_base));
 }
 
 void SceneObject_Impl::update_lights()

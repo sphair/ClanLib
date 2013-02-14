@@ -32,13 +32,13 @@
 namespace clan
 {
 
-class Scene;
+class Scene_Impl;
 
 class SkyboxPass
 {
 public:
 	SkyboxPass();
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
 	InData<float> field_of_view;

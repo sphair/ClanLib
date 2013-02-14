@@ -31,6 +31,7 @@
 #include "API/Scene3D/scene.h"
 #include "noise_2d.h"
 #include "noise_3d.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -39,7 +40,7 @@ SkyboxPass::SkyboxPass()
 {
 }
 
-void SkyboxPass::run(GraphicContext &gc, Scene &scene)
+void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
 {
 	setup(gc);
 
@@ -56,7 +57,7 @@ void SkyboxPass::run(GraphicContext &gc, Scene &scene)
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
-	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene.get_camera_orientation()).to_matrix();
+	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera_orientation()).to_matrix();
 	uniforms.upload_data(gc, &cpu_uniforms, 1);
 
 	gc.set_depth_range(0.9f, 1.0f);

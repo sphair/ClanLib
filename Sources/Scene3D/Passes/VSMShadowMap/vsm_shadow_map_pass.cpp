@@ -53,7 +53,7 @@ VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc)
 	depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
 }
 
-void VSMShadowMapPass::run(GraphicContext &render_gc, Scene &scene)
+void VSMShadowMapPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 {
 	gc = render_gc;
 
@@ -65,7 +65,7 @@ void VSMShadowMapPass::run(GraphicContext &render_gc, Scene &scene)
 	gc = GraphicContext();
 }
 
-void VSMShadowMapPass::find_lights(Scene &scene)
+void VSMShadowMapPass::find_lights(Scene_Impl *scene)
 {
 	lights.clear();
 
@@ -74,7 +74,7 @@ void VSMShadowMapPass::find_lights(Scene &scene)
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	ClippingFrustum frustum(eye_to_cull_projection * world_to_eye.get());
-	scene.visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+	scene->visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 }
 
 void VSMShadowMapPass::light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)
@@ -123,7 +123,7 @@ void VSMShadowMapPass::assign_shadow_map_indexes()
 	maps.assign_indexes();
 }
 
-void VSMShadowMapPass::render_maps(Scene &scene)
+void VSMShadowMapPass::render_maps(Scene_Impl *scene)
 {
 	gc.set_depth_stencil_state(depth_stencil_state);
 	gc.set_blend_state(blend_state);
@@ -146,7 +146,7 @@ void VSMShadowMapPass::render_maps(Scene &scene)
 			Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view, lights[i]->aspect_ratio, 0.1f, lights[i]->attenuation_end + 5.0f, handed_left, clip_negative_positive_w);
 
 			ClippingFrustum frustum(eye_to_cull_projection * lights[i]->vsm_data->world_to_eye);
-			scene.visit(gc, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, this);
+			scene->visit(gc, lights[i]->vsm_data->world_to_eye, lights[i]->vsm_data->eye_to_projection, frustum, this);
 			blur_indexes.push_back(i);
 		}
 	}

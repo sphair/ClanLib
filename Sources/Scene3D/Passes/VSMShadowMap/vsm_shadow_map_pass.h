@@ -37,14 +37,14 @@
 namespace clan
 {
 
-class Scene;
+class Scene_Impl;
 class VSMShadowMapPassLightData;
 
 class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
 {
 public:
 	VSMShadowMapPass(GraphicContext &gc);
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
 	InData<float> field_of_view;
@@ -53,9 +53,9 @@ public:
 	OutData<Texture2DArray> shadow_maps;
 
 private:
-	void find_lights(Scene &scene);
+	void find_lights(Scene_Impl *scene);
 	void assign_shadow_map_indexes();
-	void render_maps(Scene &scene);
+	void render_maps(Scene_Impl *scene);
 	void blur_maps();
 
 	// ModelMeshVisitor

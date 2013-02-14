@@ -33,13 +33,13 @@
 namespace clan
 {
 
-class Scene;
+class Scene_Impl;
 
 class TransparencyPass : ModelMeshVisitor
 {
 public:
 	TransparencyPass();
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
 	InData<float> field_of_view;

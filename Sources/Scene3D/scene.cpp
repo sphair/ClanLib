@@ -195,25 +195,25 @@ void Scene_Impl::render(GraphicContext &gc)
 	particle_emitter_pass.world_to_eye.set(world_to_eye);
 
 	gpu_timer.begin_time(gc, "gbuffer");
-	gbuffer_pass.run(gc, *this);
+	gbuffer_pass.run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "skybox");
-	skybox_pass.run(gc, *this);
+	skybox_pass.run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "vsm");
-	vsm_shadow_map_pass.run(gc, *this);
+	vsm_shadow_map_pass.run(gc, this);
 	gpu_timer.end_time(gc);
 
-	lightsource_pass.run(gc, *this);
+	lightsource_pass.run(gc, this);
 
 	gpu_timer.begin_time(gc, "transparency");
-	transparency_pass.run(gc, *this);
+	transparency_pass.run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "particles");
-	particle_emitter_pass.run(gc, *this);
+	particle_emitter_pass.run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "bloom");

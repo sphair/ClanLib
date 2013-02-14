@@ -32,13 +32,14 @@
 #include "Scene3D/Framework/inout_data.h"
 namespace clan
 {
+class Scene_Impl;
 
 class DiffuseGIPassCS
 {
 public:
 	DiffuseGIPassCS(GraphicContext &gc);
 	~DiffuseGIPassCS();
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
 	InData<Texture2D> diffuse_color_gbuffer;
