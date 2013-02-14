@@ -45,6 +45,7 @@
 #include "API/CSSLayout/ComputedValues/css_computed_values.h"
 #include "API/CSSLayout/CSSDocument/css_select_result.h"
 #include "API/CSSLayout/CSSDocument/css_style_properties.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values_updater.h"
 #include <algorithm>
 
 namespace clan
@@ -125,6 +126,265 @@ private:
 	void detach_from_parent();
 };
 
+class CSSComputedValuesUpdateSession : public CSSComputedValuesUpdater
+{
+public:
+	CSSComputedValuesUpdateSession(CSSComputedValues_Impl *values)
+		: values(values), box_updated(false), background_updated(false), border_updated(false), counter_updated(false),
+		flex_updated(false), font_updated(false), generic_updated(false), list_style_updated(false), margin_updated(false),
+		misc_reset_updated(false), misc_inherit_updated(false), outline_updated(false), padding_updated(false),
+		table_reset_updated(false), table_inherit_updated(false), text_reset_updated(false), text_inherit_updated(false)
+	{
+	}
+
+	CSSComputedBox &get_box()
+	{
+		if (!box_updated)
+		{
+			values->box = CSSComputedBox();
+			box_updated = true;
+		}
+		return values->box;
+	}
+
+	CSSComputedBackground &get_background()
+	{
+		if (!background_updated)
+		{
+			values->background = CSSComputedBackground();
+			background_updated = true;
+		}
+		return values->background;
+	}
+
+	CSSComputedBorder &get_border()
+	{
+		if (!border_updated)
+		{
+			values->border = CSSComputedBorder();
+			border_updated = true;
+		}
+		return values->border;
+	}
+
+	CSSComputedCounter &get_counter()
+	{
+		if (!counter_updated)
+		{
+			values->counter = CSSComputedCounter();
+			counter_updated = true;
+		}
+		return values->counter;
+	}
+
+	CSSComputedFlex &get_flex()
+	{
+		if (!flex_updated)
+		{
+			values->flex = CSSComputedFlex();
+			flex_updated = true;
+		}
+		return values->flex;
+	}
+
+	CSSComputedFont &get_font()
+	{
+		if (!font_updated)
+		{
+			values->font = CSSComputedFont();
+			font_updated = true;
+		}
+		return values->font;
+	}
+
+	CSSComputedGeneric &get_generic()
+	{
+		if (!generic_updated)
+		{
+			values->generic_values = CSSComputedGeneric();
+			generic_updated = true;
+		}
+		return values->generic_values;
+	}
+
+	CSSComputedListStyle &get_list_style()
+	{
+		if (!list_style_updated)
+		{
+			values->list_style = CSSComputedListStyle();
+			list_style_updated = true;
+		}
+		return values->list_style;
+	}
+
+	CSSComputedMargin &get_margin()
+	{
+		if (!margin_updated)
+		{
+			values->margin = CSSComputedMargin();
+			margin_updated = true;
+		}
+		return values->margin;
+	}
+
+	CSSComputedMiscReset &get_misc_reset()
+	{
+		if (!misc_reset_updated)
+		{
+			values->misc_reset = CSSComputedMiscReset();
+			misc_reset_updated = true;
+		}
+		return values->misc_reset;
+	}
+
+	CSSComputedMiscInherit &get_misc_inherit()
+	{
+		if (!misc_inherit_updated)
+		{
+			values->misc_inherit = CSSComputedMiscInherit();
+			misc_inherit_updated = true;
+		}
+		return values->misc_inherit;
+	}
+
+	CSSComputedOutline &get_outline()
+	{
+		if (!outline_updated)
+		{
+			values->outline = CSSComputedOutline();
+			outline_updated = true;
+		}
+		return values->outline;
+	}
+
+	CSSComputedPadding &get_padding()
+	{
+		if (!padding_updated)
+		{
+			values->padding = CSSComputedPadding();
+			padding_updated = true;
+		}
+		return values->padding;
+	}
+
+	CSSComputedTableReset &get_table_reset()
+	{
+		if (!table_reset_updated)
+		{
+			values->table_reset = CSSComputedTableReset();
+			table_reset_updated = true;
+		}
+		return values->table_reset;
+	}
+
+	CSSComputedTableInherit &get_table_inherit()
+	{
+		if (!table_inherit_updated)
+		{
+			values->table_inherit = CSSComputedTableInherit();
+			table_inherit_updated = true;
+		}
+		return values->table_inherit;
+	}
+
+	CSSComputedTextReset &get_text_reset()
+	{
+		if (!text_reset_updated)
+		{
+			values->text_reset = CSSComputedTextReset();
+			text_reset_updated = true;
+		}
+		return values->text_reset;
+	}
+
+	CSSComputedTextInherit &get_text_inherit()
+	{
+		if (!text_inherit_updated)
+		{
+			values->text_inherit = CSSComputedTextInherit();
+			text_inherit_updated = true;
+		}
+		return values->text_inherit;
+	}
+
+	void compute()
+	{
+		// To do: use the updated booleans to only partially compute properties
+
+		//const CSSComputedBox *parent_computed_box_values = (!values->parent.is_null()) ? &values->parent.get_box() : nullptr;
+
+		values->box.compute(values->parent, values->resource_cache);
+		values->box_generation++;
+
+		values->background.compute(values->parent, values->resource_cache);
+		values->background_generation++;
+
+		values->border.compute(values->parent, values->resource_cache);
+		values->border_generation++;
+
+		values->counter.compute(values->parent, values->resource_cache);
+		values->counter_generation++;
+
+		values->flex.compute(values->parent, values->resource_cache);
+		values->flex_generation++;
+
+		values->font.compute(values->parent, values->resource_cache);
+		values->font_generation++;
+
+		values->generic_values.compute(values->parent, values->resource_cache);
+		values->generic_generation++;
+
+		values->list_style.compute(values->parent, values->resource_cache);
+		values->list_style_generation++;
+
+		values->margin.compute(values->parent, values->resource_cache);
+		values->margin_generation++;
+
+		values->misc_reset.compute(values->parent, values->resource_cache);
+		values->misc_reset_generation++;
+
+		values->misc_inherit.compute(values->parent, values->resource_cache);
+		values->misc_inherit_generation++;
+
+		values->outline.compute(values->parent, values->resource_cache);
+		values->outline_generation++;
+
+		values->padding.compute(values->parent, values->resource_cache);
+		values->padding_generation++;
+
+		values->table_reset.compute(values->parent, values->resource_cache);
+		values->table_reset_generation++;
+
+		values->table_inherit.compute(values->parent, values->resource_cache);
+		values->table_inherit_generation++;
+
+		values->text_reset.compute(values->parent, values->resource_cache);
+		values->text_reset_generation++;
+
+		values->text_inherit.compute(values->parent, values->resource_cache);
+		values->text_inherit_generation++;
+	}
+
+	CSSComputedValues_Impl *values;
+	bool box_updated;
+	bool background_updated;
+	bool border_updated;
+	bool counter_updated;
+	bool flex_updated;
+	bool font_updated;
+	bool generic_updated;
+	bool list_style_updated;
+	bool margin_updated;
+	bool misc_reset_updated;
+	bool misc_inherit_updated;
+	bool outline_updated;
+	bool padding_updated;
+	bool table_reset_updated;
+	bool table_inherit_updated;
+	bool text_reset_updated;
+	bool text_inherit_updated;
+};
+
 inline CSSComputedValues_Impl::CSSComputedValues_Impl(CSSResourceCache *resource_cache) :
 	specified_values_changed(true),
 	box_generation(0),
@@ -182,15 +442,14 @@ inline void CSSComputedValues_Impl::update_if_changed()
 {
 	if (specified_values_changed)
 	{
-		const CSSComputedBox *parent_computed_box_values = (!parent.is_null()) ? &parent.get_box() : nullptr;
+		CSSComputedValuesUpdateSession updater(this);
 
-		box = CSSComputedBox();
 		if (!selected_values.is_null())
 		{
 			const std::vector<CSSPropertyValue *> &selected_values_vector = selected_values.get_values();
 			for (size_t i = selected_values_vector.size(); i > 0; --i)
 			{
-				selected_values_vector[i-1]->apply_to_box(box);
+				selected_values_vector[i-1]->apply(&updater);
 			}
 		}
 
@@ -199,12 +458,12 @@ inline void CSSComputedValues_Impl::update_if_changed()
 			const std::vector<std::unique_ptr<CSSPropertyValue> > &style_values_vector = style_values.get_values();
 			for (size_t i = style_values_vector.size(); i > 0; --i)
 			{
-				style_values_vector[i-1]->apply_to_box(box);
+				style_values_vector[i-1]->apply(&updater);
 			}
 		}
-		box.compute(parent_computed_box_values, resource_cache);
 
-		box_generation++;
+		updater.compute();
+
 		specified_values_changed = false;
 	}
 }
