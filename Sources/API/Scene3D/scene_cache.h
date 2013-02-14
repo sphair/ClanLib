@@ -26,45 +26,30 @@
 **    Magnus Norddahl
 */
 
-/// \brief <p>ClanLib Scene library.</p>
-//! Global=Scene
+/// \addtogroup clanScene_Scene clanScene Scene
+/// \{
 
 #pragma once
 
-#ifdef __cplusplus_cli
-#pragma managed(push, off)
-#endif
+#include "api_scene3d.h"
+#include <memory>
 
-#include "Scene3D/scene.h"
-#include "Scene3D/scene_camera.h"
-#include "Scene3D/scene_light.h"
-#include "Scene3D/scene_model.h"
-#include "Scene3D/scene_object.h"
-#include "Scene3D/scene_particle_emitter.h"
+namespace clan
+{
 
-#ifdef __cplusplus_cli
-#pragma managed(pop)
-#endif
+class SceneCache_Impl;
 
-#if defined(_MSC_VER)
-	#if !defined(_MT)
-		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
-	#endif
-	#if !defined(_DEBUG)
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt.lib")
-		#endif
-	#else
-		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll-debug.lib")
-		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll-debug.lib")
-		#else
-			#pragma comment(lib, "clanScene-static-mt-debug.lib")
-		#endif
-	#endif
-#endif
+class CL_API_SCENE SceneCache
+{
+public:
+	SceneCache();
+
+	bool is_null() const;
+
+private:
+	std::shared_ptr<SceneCache_Impl> impl;
+};
+
+}
+
+/// \}
