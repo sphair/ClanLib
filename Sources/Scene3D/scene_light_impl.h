@@ -34,15 +34,17 @@
 namespace clan
 {
 
+class Scene_Impl;
+
 class SceneLight_Impl : public VisibleObject
 {
 public:
-	SceneLight_Impl(Scene *scene);
+	SceneLight_Impl(Scene_Impl *scene);
 	~SceneLight_Impl();
 
 	AxisAlignedBoundingBox get_aabb();
 
-	Scene *scene;
+	Scene_Impl *scene;
 	OctTreeObject *tree_object;
 	std::list<SceneLight_Impl *>::iterator it;
 

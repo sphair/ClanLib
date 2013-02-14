@@ -36,6 +36,7 @@ namespace clan
 {
 
 class GPUTimer;
+class Scene_Impl;
 
 class LightsourcePass : SceneLightVisitor
 {
@@ -43,7 +44,7 @@ public:
 	LightsourcePass(GraphicContext &gc);
 	~LightsourcePass();
 
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
 	InData<float> field_of_view;
@@ -58,7 +59,7 @@ public:
 	OutData<Texture2D> final_color;
 
 private:
-	void find_lights(GraphicContext &gc, Scene &scene);
+	void find_lights(GraphicContext &gc, Scene_Impl *scene);
 	void upload(GraphicContext &gc);
 	void render(GraphicContext &gc, GPUTimer &timer);
 	void update_buffers(GraphicContext &gc);

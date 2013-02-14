@@ -34,15 +34,17 @@
 namespace clan
 {
 
+class Scene_Impl;
+
 class SceneParticleEmitter_Impl : public VisibleObject
 {
 public:
-	SceneParticleEmitter_Impl(Scene *scene);
+	SceneParticleEmitter_Impl(Scene_Impl *scene);
 	~SceneParticleEmitter_Impl();
 
 	AxisAlignedBoundingBox get_aabb();
 
-	Scene *scene;
+	Scene_Impl *scene;
 	OctTreeObject *tree_object;
 	std::list<SceneParticleEmitter_Impl *>::iterator it;
 

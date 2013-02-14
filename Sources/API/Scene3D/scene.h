@@ -38,6 +38,9 @@ namespace clan
 {
 
 class Scene_Impl;
+class SceneLight;
+class SceneParticleEmitter;
+class SceneObject;
 
 class CL_API_SCENE Scene
 {
@@ -59,6 +62,9 @@ public:
 
 private:
 	std::shared_ptr<Scene_Impl> impl;
+	friend class SceneLight;
+	friend class SceneParticleEmitter;
+	friend class SceneObject;
 };
 
 }

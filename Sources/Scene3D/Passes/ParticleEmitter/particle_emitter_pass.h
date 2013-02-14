@@ -36,14 +36,14 @@
 namespace clan
 {
 
-class Scene;
+class Scene_Impl;
 class MaterialCache;
 
 class ParticleEmitterPass : SceneParticleEmitterVisitor
 {
 public:
 	ParticleEmitterPass(MaterialCache &texture_cache);
-	void run(GraphicContext &gc, Scene &scene);
+	void run(GraphicContext &gc, Scene_Impl *scene);
 	void update(GraphicContext &gc, float time_elapsed);
 
 	InData<Rect> viewport;

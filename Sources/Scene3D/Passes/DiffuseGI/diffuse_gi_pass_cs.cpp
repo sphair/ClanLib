@@ -29,6 +29,7 @@
 #include "Scene3D/precomp.h"
 #include "diffuse_gi_pass_cs.h"
 #include "Scene3D/Performance/scope_timer.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -58,7 +59,7 @@ DiffuseGIPassCS::~DiffuseGIPassCS()
 {
 }
 
-void DiffuseGIPassCS::run(GraphicContext &gc, Scene &scene)
+void DiffuseGIPassCS::run(GraphicContext &gc, Scene_Impl *scene)
 {
 	ScopeTimeFunction();
 /*

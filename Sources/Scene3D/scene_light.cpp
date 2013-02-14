@@ -32,6 +32,7 @@
 #include "Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/scene_light_impl.h"
 #include "Scene3D/Culling\aabb.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -41,9 +42,9 @@ SceneLight::SceneLight()
 }
 
 SceneLight::SceneLight(Scene *scene)
-: impl(new SceneLight_Impl(scene))
+	: impl(new SceneLight_Impl(scene->impl.get()))
 {
-	impl->tree_object = scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 }
 
 SceneLight::Type SceneLight::get_type() const
@@ -193,7 +194,7 @@ void SceneLight::set_shadow_source(SceneLight light)
 
 /////////////////////////////////////////////////////////////////////////////
 
-SceneLight_Impl::SceneLight_Impl(Scene *scene)
+SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene)
 : scene(scene), tree_object(0), type(SceneLight::type_omni), color(Colorf::white), falloff(90.0f),
   hotspot(45.0f), attenuation_start(1.0f), attenuation_end(100.0f), rectangle_shape(false), aspect_ratio(1.0f), shadow_caster(false), light_caster(true)
 {

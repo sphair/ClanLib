@@ -34,6 +34,7 @@
 #include "Scene3D/Culling/clipping_frustum.h"
 #include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Performance/gpu_timer.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -65,14 +66,14 @@ LightsourcePass::~LightsourcePass()
 {
 }
 
-void LightsourcePass::run(GraphicContext &gc, Scene &scene)
+void LightsourcePass::run(GraphicContext &gc, Scene_Impl *scene)
 {
 	find_lights(gc, scene);
 	upload(gc);
-	render(gc, scene.get_gpu_timer());
+	render(gc, scene->get_gpu_timer());
 }
 
-void LightsourcePass::find_lights(GraphicContext &gc, Scene &scene)
+void LightsourcePass::find_lights(GraphicContext &gc, Scene_Impl *scene)
 {
 	lights.clear();
 
@@ -81,7 +82,7 @@ void LightsourcePass::find_lights(GraphicContext &gc, Scene &scene)
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	ClippingFrustum frustum(eye_to_cull_projection * world_to_eye.get());
-	scene.visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+	scene->visit_lights(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 }
 
 void LightsourcePass::light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light)

@@ -32,6 +32,7 @@
 #include "Passes/ParticleEmitter/particle_emitter_pass_data.h"
 #include "Scene3D/scene_particle_emitter_impl.h"
 #include "Scene3D/Culling/aabb.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
@@ -41,9 +42,9 @@ SceneParticleEmitter::SceneParticleEmitter()
 }
 
 SceneParticleEmitter::SceneParticleEmitter(Scene *scene)
-: impl(new SceneParticleEmitter_Impl(scene))
+	: impl(new SceneParticleEmitter_Impl(scene->impl.get()))
 {
-	impl->tree_object = scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 }
 
 SceneParticleEmitter::Type SceneParticleEmitter::get_type() const
@@ -173,7 +174,7 @@ void SceneParticleEmitter::set_gradient_texture(const std::string &texture)
 
 /////////////////////////////////////////////////////////////////////////////
 
-SceneParticleEmitter_Impl::SceneParticleEmitter_Impl(Scene *scene)
+SceneParticleEmitter_Impl::SceneParticleEmitter_Impl(Scene_Impl *scene)
 : scene(scene), tree_object(0), type(SceneParticleEmitter::type_omni), particles_per_second(10), falloff(90.0f), life_span(5.0f), start_size(1.0f), end_size(2.0f), speed(10.0f)
 {
 	it = scene->emitters.insert(scene->emitters.end(), this);

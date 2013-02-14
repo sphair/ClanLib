@@ -36,13 +36,15 @@
 namespace clan
 {
 
+class Scene_Impl;
+
 class SceneObject_Impl : public VisibleObject
 {
 public:
-	SceneObject_Impl(Scene *scene);
+	SceneObject_Impl(Scene_Impl *scene);
 	~SceneObject_Impl();
 
-	void create_lights(Scene *scene);
+	void create_lights(Scene *scene_base);
 	void update_lights();
 
 	Mat4f get_object_to_world() const
@@ -52,7 +54,7 @@ public:
 
 	AxisAlignedBoundingBox get_aabb() const;
 
-	Scene *scene;
+	Scene_Impl *scene;
 	OctTreeObject *tree_object;
 	std::list<SceneObject_Impl *>::iterator it;
 
