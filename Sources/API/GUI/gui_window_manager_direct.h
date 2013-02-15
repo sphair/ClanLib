@@ -66,7 +66,13 @@ public:
 public:
 	/// \brief Retrieves the provider.
 	GUIWindowManagerProvider_Direct *get_provider() const;
+/// \}
 
+/// \name Events
+/// \{
+public:
+	/// \brief void func_input_intercept(InputEvent &input_event)
+	Callback_v1<InputEvent &> &func_input_intercept();
 /// \}
 
 /// \name Implementation

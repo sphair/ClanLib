@@ -71,6 +71,7 @@ public:
 	GUIWindowManagerSite *site;
 	std::map<GUITopLevelWindow *, GUITopLevelWindowDirect *> window_map;
 	std::vector<GUITopLevelWindowDirect *> root_window_z_order;	// Beginning is at the top
+	Callback_v1<InputEvent &> func_input_intercept;
 	GUITopLevelWindow *activated_window;
 	GUITopLevelWindow *capture_mouse_window;
 	DisplayWindow display_window;
