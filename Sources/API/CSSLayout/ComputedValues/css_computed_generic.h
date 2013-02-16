@@ -41,6 +41,8 @@ class CL_API_CSSLAYOUT CSSComputedGeneric
 {
 public:
 	std::vector<CSSValueGeneric> generic_values;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

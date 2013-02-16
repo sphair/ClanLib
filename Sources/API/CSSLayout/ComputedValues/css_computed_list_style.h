@@ -36,12 +36,16 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedListStyle
 {
 public:
 	CSSValueListStyleType list_style_type; // inherited
 	CSSValueListStylePosition list_style_position; // inherited
 	CSSValueListStyleImage list_style_image; // inherited
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

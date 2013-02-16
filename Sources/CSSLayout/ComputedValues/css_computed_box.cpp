@@ -28,9 +28,66 @@
 
 #include "CSSLayout/precomp.h"
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
+
+void CSSComputedBox::compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size)
+{
+	// To do: update left,top,right,bottom,width,height properties so they compute the value according to spec.
+	bool is_containing_block_ltr = true;
+	bool is_containing_block_width_auto = false;
+	bool is_containing_block_height_auto = false;
+
+	if (!parent.is_null())
+	{
+		const CSSComputedBox &parent_box = parent.get_box();
+
+		position.compute(&parent_box.position, layout, em_size, ex_size);
+		float_box.compute(&parent_box.float_box, layout, em_size, ex_size);
+
+		display.compute(&parent_box.display, layout, em_size, ex_size, position, float_box);
+
+		CSSValueRight::compute(left, right, &parent_box, layout, em_size, ex_size, position, is_containing_block_ltr);
+		CSSValueBottom::compute(top, bottom, &parent_box, layout, em_size, ex_size, position);
+
+		width.compute(&parent_box.width, layout, em_size, ex_size, is_containing_block_width_auto);
+		height.compute(&parent_box.height, layout, em_size, ex_size, is_containing_block_height_auto);
+
+		clear.compute(&parent_box.clear, layout, em_size, ex_size);
+
+		max_width.compute(&parent_box.max_width, layout, em_size, ex_size);
+		max_height.compute(&parent_box.max_height, layout, em_size, ex_size);
+		min_width.compute(&parent_box.min_width, layout, em_size, ex_size);
+		min_height.compute(&parent_box.min_height, layout, em_size, ex_size);
+
+		overflow.compute(&parent_box.overflow, layout, em_size, ex_size);
+	}
+	else
+	{
+		position.compute(nullptr, layout, em_size, ex_size);
+		float_box.compute(nullptr, layout, em_size, ex_size);
+
+		display.compute(nullptr, layout, em_size, ex_size, position, float_box);
+
+		CSSValueRight::compute(left, right, nullptr, layout, em_size, ex_size, position, is_containing_block_ltr);
+		CSSValueBottom::compute(top, bottom, nullptr, layout, em_size, ex_size, position);
+
+		width.compute(nullptr, layout, em_size, ex_size, is_containing_block_width_auto);
+		height.compute(nullptr, layout, em_size, ex_size, is_containing_block_height_auto);
+
+		clear.compute(nullptr, layout, em_size, ex_size);
+
+		max_width.compute(nullptr, layout, em_size, ex_size);
+		max_height.compute(nullptr, layout, em_size, ex_size);
+		min_width.compute(nullptr, layout, em_size, ex_size);
+		min_height.compute(nullptr, layout, em_size, ex_size);
+
+		overflow.compute(nullptr, layout, em_size, ex_size);
+	}
+}
+
 /*
 void CSSComputedBox::compute(const CSSComputedBox *parent, CSSResourceCache *layout)
 {

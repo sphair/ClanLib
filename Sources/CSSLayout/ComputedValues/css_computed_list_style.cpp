@@ -26,25 +26,29 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../api_csslayout.h"
-#include "../PropertyValues/css_value_margin_width.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/ComputedValues/css_computed_list_style.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
 
-class CSSComputedValues;
-
-class CL_API_CSSLAYOUT CSSComputedMargin
+void CSSComputedListStyle::compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
-public:
-	CSSValueMarginWidth margin_width_left;
-	CSSValueMarginWidth margin_width_top;
-	CSSValueMarginWidth margin_width_right;
-	CSSValueMarginWidth margin_width_bottom;
+	if (!parent.is_null())
+	{
+		const CSSComputedListStyle &parent_list_style = parent.get_list_style();
 
-	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
-};
+		list_style_type.compute(&parent_list_style.list_style_type, layout, em_size, ex_size);
+		list_style_position.compute(&parent_list_style.list_style_position, layout, em_size, ex_size);
+		list_style_image.compute(&parent_list_style.list_style_image, layout, em_size, ex_size);
+	}
+	else
+	{
+		list_style_type.compute(nullptr, layout, em_size, ex_size);
+		list_style_position.compute(nullptr, layout, em_size, ex_size);
+		list_style_image.compute(nullptr, layout, em_size, ex_size);
+	}
+}
 
 }

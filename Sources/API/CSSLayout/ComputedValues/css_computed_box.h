@@ -48,6 +48,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedBox
 {
 public:
@@ -74,7 +76,7 @@ public:
 
 	CSSValueOverflow overflow;
 
-	//void compute(const CSSComputedBox *parent, CSSResourceCache *layout);
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

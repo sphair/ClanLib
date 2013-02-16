@@ -26,25 +26,31 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../api_csslayout.h"
-#include "../PropertyValues/css_value_margin_width.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/ComputedValues/css_computed_margin.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
 
-class CSSComputedValues;
-
-class CL_API_CSSLAYOUT CSSComputedMargin
+void CSSComputedMargin::compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
-public:
-	CSSValueMarginWidth margin_width_left;
-	CSSValueMarginWidth margin_width_top;
-	CSSValueMarginWidth margin_width_right;
-	CSSValueMarginWidth margin_width_bottom;
+	if (!parent.is_null())
+	{
+		const CSSComputedMargin &parent_margin = parent.get_margin();
 
-	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
-};
+		margin_width_left.compute(&parent_margin.margin_width_left, layout, em_size, ex_size);
+		margin_width_top.compute(&parent_margin.margin_width_top, layout, em_size, ex_size);
+		margin_width_right.compute(&parent_margin.margin_width_right, layout, em_size, ex_size);
+		margin_width_bottom.compute(&parent_margin.margin_width_bottom, layout, em_size, ex_size);
+	}
+	else
+	{
+		margin_width_left.compute(nullptr, layout, em_size, ex_size);
+		margin_width_top.compute(nullptr, layout, em_size, ex_size);
+		margin_width_right.compute(nullptr, layout, em_size, ex_size);
+		margin_width_bottom.compute(nullptr, layout, em_size, ex_size);
+	}
+}
 
 }

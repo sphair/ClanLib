@@ -38,10 +38,14 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedTableReset
 {
 public:
 	CSSValueTableLayout table_layout;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 class CL_API_CSSLAYOUT CSSComputedTableInherit
@@ -51,6 +55,8 @@ public:
 	CSSValueBorderCollapse border_collapse; // inherited
 	CSSValueBorderSpacing border_spacing; // inherited
 	CSSValueEmptyCells empty_cells; // inherited
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

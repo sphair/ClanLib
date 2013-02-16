@@ -39,6 +39,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedFont
 {
 public:
@@ -48,6 +50,8 @@ public:
 	CSSValueFontVariant font_variant; // inherited
 	CSSValueFontWeight font_weight; // inherited
 	CSSValueLineHeight line_height; // inherited
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout);
 };
 
 }
