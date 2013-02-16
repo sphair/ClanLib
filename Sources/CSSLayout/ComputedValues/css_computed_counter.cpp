@@ -26,25 +26,27 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../api_csslayout.h"
-#include "../PropertyValues/css_value_margin_width.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/ComputedValues/css_computed_counter.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
 
-class CSSComputedValues;
-
-class CL_API_CSSLAYOUT CSSComputedMargin
+void CSSComputedCounter::compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
-public:
-	CSSValueMarginWidth margin_width_left;
-	CSSValueMarginWidth margin_width_top;
-	CSSValueMarginWidth margin_width_right;
-	CSSValueMarginWidth margin_width_bottom;
+	if (!parent.is_null())
+	{
+		const CSSComputedCounter &parent_counter = parent.get_counter();
 
-	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
-};
+		counter_increment.compute(&parent_counter.counter_increment, layout, em_size, ex_size);
+		counter_reset.compute(&parent_counter.counter_reset, layout, em_size, ex_size);
+	}
+	else
+	{
+		counter_increment.compute(nullptr, layout, em_size, ex_size);
+		counter_reset.compute(nullptr, layout, em_size, ex_size);
+	}
+}
 
 }

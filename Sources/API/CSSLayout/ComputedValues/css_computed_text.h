@@ -43,6 +43,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedTextReset
 {
 public:
@@ -50,6 +52,8 @@ public:
 
 	CSSValueVerticalAlign vertical_align;
 	CSSValueUnicodeBidi unicode_bidi;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &computed_line_height);
 };
 
 class CL_API_CSSLAYOUT CSSComputedTextInherit
@@ -62,6 +66,8 @@ public:
 	CSSValueTextAlign text_align; // inherited
 	CSSValueLetterSpacing letter_spacing; // inherited
 	CSSValueWordSpacing word_spacing; // inherited
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

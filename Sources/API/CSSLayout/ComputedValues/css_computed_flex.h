@@ -43,6 +43,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedFlex
 {
 public:
@@ -58,6 +60,8 @@ public:
 	CSSValueAlignItems align_items;
 	CSSValueAlignSelf align_self;
 	CSSValueAlignContent align_content;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

@@ -42,6 +42,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedBorder
 {
 public:
@@ -70,6 +72,8 @@ public:
 	CSSValueBorderImageWidth border_image_width;
 	CSSValueBorderImageOutset border_image_outset;
 	CSSValueBorderImageRepeat border_image_repeat;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size, const Colorf &computed_color);
 };
 
 }

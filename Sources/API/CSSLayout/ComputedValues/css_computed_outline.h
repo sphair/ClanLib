@@ -36,12 +36,16 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedOutline
 {
 public:
 	CSSValueOutlineColor outline_color;
 	CSSValueOutlineStyle outline_style;
 	CSSValueOutlineWidth outline_width;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

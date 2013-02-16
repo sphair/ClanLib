@@ -34,6 +34,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedPadding
 {
 public:
@@ -41,6 +43,8 @@ public:
 	CSSValuePaddingWidth padding_width_top;
 	CSSValuePaddingWidth padding_width_right;
 	CSSValuePaddingWidth padding_width_bottom;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

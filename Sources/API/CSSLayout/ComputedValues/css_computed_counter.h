@@ -35,11 +35,15 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedCounter
 {
 public:
 	CSSValueCounterIncrement counter_increment;
 	CSSValueCounterReset counter_reset;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }

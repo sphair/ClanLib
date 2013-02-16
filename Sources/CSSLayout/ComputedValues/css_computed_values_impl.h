@@ -311,58 +311,100 @@ public:
 	{
 		// To do: use the updated booleans to only partially compute properties
 
-		//const CSSComputedBox *parent_computed_box_values = (!values->parent.is_null()) ? &values->parent.get_box() : nullptr;
+		// Until the above to do has been implemented we must initialize all existing structures:
 
-		values->box.compute(values->parent, values->resource_cache);
-		values->box_generation++;
+		if (!box_updated)
+			values->box = CSSComputedBox();
+		if (!background_updated)
+			values->background = CSSComputedBackground();
+		if (!border_updated)
+			values->border = CSSComputedBorder();
+		if (!counter_updated)
+			values->counter = CSSComputedCounter();
+		if (!flex_updated)
+			values->flex = CSSComputedFlex();
+		if (!font_updated)
+			values->font = CSSComputedFont();
+		if (!generic_updated)
+			values->generic_values = CSSComputedGeneric();
+		if (!list_style_updated)
+			values->list_style = CSSComputedListStyle();
+		if (!margin_updated)
+			values->margin = CSSComputedMargin();
+		if (!misc_reset_updated)
+			values->misc_reset = CSSComputedMiscReset();
+		if (!misc_inherit_updated)
+			values->misc_inherit = CSSComputedMiscInherit();
+		if (!outline_updated)
+			values->outline = CSSComputedOutline();
+		if (!padding_updated)
+			values->padding = CSSComputedPadding();
+		if (!table_reset_updated)
+			values->table_reset = CSSComputedTableReset();
+		if (!table_inherit_updated)
+			values->table_inherit = CSSComputedTableInherit();
+		if (!text_reset_updated)
+			values->text_reset = CSSComputedTextReset();
+		if (!text_inherit_updated)
+			values->text_inherit = CSSComputedTextInherit();
 
-		values->background.compute(values->parent, values->resource_cache);
-		values->background_generation++;
-
-		values->border.compute(values->parent, values->resource_cache);
-		values->border_generation++;
-
-		values->counter.compute(values->parent, values->resource_cache);
-		values->counter_generation++;
-
-		values->flex.compute(values->parent, values->resource_cache);
-		values->flex_generation++;
+		// Compute everything:
 
 		values->font.compute(values->parent, values->resource_cache);
 		values->font_generation++;
 
-		values->generic_values.compute(values->parent, values->resource_cache);
-		values->generic_generation++;
+		float em_size = values->font.font_size.length.value;
+		float ex_size = em_size * 0.5f;
 
-		values->list_style.compute(values->parent, values->resource_cache);
-		values->list_style_generation++;
+		bool is_before_or_after_pseudo_element = false;
 
-		values->margin.compute(values->parent, values->resource_cache);
-		values->margin_generation++;
+		values->box.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->box_generation++;
 
-		values->misc_reset.compute(values->parent, values->resource_cache);
-		values->misc_reset_generation++;
+		values->background.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->background_generation++;
 
-		values->misc_inherit.compute(values->parent, values->resource_cache);
-		values->misc_inherit_generation++;
-
-		values->outline.compute(values->parent, values->resource_cache);
-		values->outline_generation++;
-
-		values->padding.compute(values->parent, values->resource_cache);
-		values->padding_generation++;
-
-		values->table_reset.compute(values->parent, values->resource_cache);
-		values->table_reset_generation++;
-
-		values->table_inherit.compute(values->parent, values->resource_cache);
-		values->table_inherit_generation++;
-
-		values->text_reset.compute(values->parent, values->resource_cache);
+		values->text_reset.compute(values->parent, values->resource_cache, em_size, ex_size, values->font.line_height);
 		values->text_reset_generation++;
 
-		values->text_inherit.compute(values->parent, values->resource_cache);
+		values->text_inherit.compute(values->parent, values->resource_cache, em_size, ex_size);
 		values->text_inherit_generation++;
+
+		values->border.compute(values->parent, values->resource_cache, em_size, ex_size, values->text_inherit.color.color);
+		values->border_generation++;
+
+		values->counter.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->counter_generation++;
+
+		values->flex.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->flex_generation++;
+
+		values->generic_values.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->generic_generation++;
+
+		values->list_style.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->list_style_generation++;
+
+		values->margin.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->margin_generation++;
+
+		values->misc_reset.compute(values->parent, values->resource_cache, em_size, ex_size, is_before_or_after_pseudo_element);
+		values->misc_reset_generation++;
+
+		values->misc_inherit.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->misc_inherit_generation++;
+
+		values->outline.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->outline_generation++;
+
+		values->padding.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->padding_generation++;
+
+		values->table_reset.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->table_reset_generation++;
+
+		values->table_inherit.compute(values->parent, values->resource_cache, em_size, ex_size);
+		values->table_inherit_generation++;
 	}
 
 	CSSComputedValues_Impl *values;

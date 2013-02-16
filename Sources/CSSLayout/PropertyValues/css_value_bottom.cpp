@@ -44,6 +44,7 @@ void CSSValueBottom::apply(CSSComputedValuesUpdater *updater)
 	updater->get_box().bottom = *this;
 }
 
+/*
 void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position)
 {
 	if (top.type == CSSValueTop::type_inherit)
@@ -123,7 +124,7 @@ void CSSValueBottom::compute(CSSValueTop &top, CSSValueBottom &bottom, const CSS
 		}
 	}
 }
-
+*/
 std::string CSSValueBottom::to_string() const
 {
 	switch (type)

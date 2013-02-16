@@ -26,25 +26,29 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "../api_csslayout.h"
-#include "../PropertyValues/css_value_margin_width.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/ComputedValues/css_computed_outline.h"
+#include "API/CSSLayout/ComputedValues/css_computed_values.h"
 
 namespace clan
 {
 
-class CSSComputedValues;
-
-class CL_API_CSSLAYOUT CSSComputedMargin
+void CSSComputedOutline::compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size)
 {
-public:
-	CSSValueMarginWidth margin_width_left;
-	CSSValueMarginWidth margin_width_top;
-	CSSValueMarginWidth margin_width_right;
-	CSSValueMarginWidth margin_width_bottom;
+	if (!parent.is_null())
+	{
+		const CSSComputedOutline &parent_outline = parent.get_outline();
 
-	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
-};
+		outline_color.compute(&parent_outline.outline_color, layout, em_size, ex_size);
+		outline_style.compute(&parent_outline.outline_style, layout, em_size, ex_size);
+		outline_width.compute(&parent_outline.outline_width, layout, em_size, ex_size, outline_style);
+	}
+	else
+	{
+		outline_color.compute(nullptr, layout, em_size, ex_size);
+		outline_style.compute(nullptr, layout, em_size, ex_size);
+		outline_width.compute(nullptr, layout, em_size, ex_size, outline_style);
+	}
+}
 
 }

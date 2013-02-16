@@ -47,6 +47,8 @@
 namespace clan
 {
 
+class CSSComputedValues;
+
 class CL_API_CSSLAYOUT CSSComputedMiscReset
 {
 public:
@@ -61,6 +63,8 @@ public:
 	CSSValueZIndex z_index;
 	CSSValueClip clip;
 	CSSValueShadow shadow;
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_before_or_after_pseudo_element);
 };
 
 class CL_API_CSSLAYOUT CSSComputedMiscInherit
@@ -76,6 +80,8 @@ public:
 	CSSValueVisibility visibility; // inherited
 
 	CSSValueCursor cursor; // inherited
+
+	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
 }
