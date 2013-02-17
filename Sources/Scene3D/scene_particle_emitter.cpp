@@ -41,8 +41,8 @@ SceneParticleEmitter::SceneParticleEmitter()
 {
 }
 
-SceneParticleEmitter::SceneParticleEmitter(Scene *scene)
-	: impl(new SceneParticleEmitter_Impl(scene->impl.get()))
+SceneParticleEmitter::SceneParticleEmitter(Scene &scene)
+	: impl(new SceneParticleEmitter_Impl(scene.impl.get()))
 {
 	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 }

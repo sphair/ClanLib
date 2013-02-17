@@ -47,7 +47,7 @@ class CL_API_SCENE SceneParticleEmitter
 {
 public:
 	SceneParticleEmitter();
-	SceneParticleEmitter(Scene *scene);
+	SceneParticleEmitter(Scene &scene);
 	bool is_null() const { return !impl; }
 
 	enum Type
