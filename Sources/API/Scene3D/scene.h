@@ -32,6 +32,7 @@
 #pragma once
 
 #include "api_scene3d.h"
+#include "../Display/Render/graphic_context.h"
 #include <memory>
 
 namespace clan
@@ -41,6 +42,7 @@ class Scene_Impl;
 class SceneLight;
 class SceneParticleEmitter;
 class SceneObject;
+class SceneCamera;
 
 class CL_API_SCENE Scene
 {
@@ -51,10 +53,7 @@ public:
 	bool is_null() const;
 
 	void set_viewport(const Rect &box);
-	void set_camera(const Vec3f &position, const Quaternionf &orientation);
-	void set_camera_position(const Vec3f &position);
-	void set_camera_orientation(const Quaternionf &orientation);
-	void set_camera_field_of_view(float fov);
+	void set_camera(const SceneCamera &camera);
 
 	void render(GraphicContext &gc);
 
@@ -65,6 +64,7 @@ private:
 	friend class SceneLight;
 	friend class SceneParticleEmitter;
 	friend class SceneObject;
+	friend class SceneCamera;
 };
 
 }
