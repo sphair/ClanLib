@@ -27,32 +27,21 @@
 */
 
 #pragma once
+
+#include "API/Scene3D/scene_cache_provider.h"
+
 namespace clan
 {
 
-class CachedTextureImpl
+class Scene_Impl;
+
+class SceneCache_Impl
 {
 public:
-	Texture texture;
-};
+	SceneCache_Impl(SceneCacheProvider *provider) : provider(provider) { }
+	~SceneCache_Impl() { delete provider; }
 
-class CachedTexture
-{
-public:
-	CachedTexture() : impl(new CachedTextureImpl()) { }
-	Texture &get_texture() { return impl->texture; }
-	void set_texture(Texture &t) { impl->texture = t; }
-
-	bool operator<(const CachedTexture &other) const { return impl < other.impl; }
-	bool operator==(const CachedTexture &other) const { return impl == other.impl; }
-	bool operator!=(const CachedTexture &other) const { return impl != other.impl; }
-
-	//operator Texture &() { return impl->texture; }
-	//operator const Texture &() const { return impl->texture; }
-
-private:
-	std::shared_ptr<CachedTextureImpl> impl;
+	SceneCacheProvider *provider;
 };
 
 }
-

@@ -28,11 +28,17 @@
 
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/scene_cache.h"
+#include "scene_cache_impl.h"
 
 namespace clan
 {
 
 SceneCache::SceneCache()
+{
+}
+
+SceneCache::SceneCache(SceneCacheProvider *provider)
+	: impl(new SceneCache_Impl(provider))
 {
 }
 

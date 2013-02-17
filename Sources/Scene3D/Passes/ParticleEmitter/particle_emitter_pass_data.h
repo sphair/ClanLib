@@ -28,10 +28,11 @@
 
 #pragma once
 
-#include "Scene3D/Framework/texture.h"
+#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/scene_particle_emitter.h"
 #include "particle.h"
 #include "particle_uniforms.h"
+
 namespace clan
 {
 

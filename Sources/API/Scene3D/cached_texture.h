@@ -28,18 +28,30 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
-#include "API/Scene3D/ModelData/model_data.h"
+#include "../Display/Render/texture.h"
 
 namespace clan
 {
 
-class ModelLOD;
-
-class ModelMeshVisitor
+class CachedTextureImpl
 {
 public:
-	virtual void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances) = 0;
+	Texture texture;
+};
+
+class CachedTexture
+{
+public:
+	CachedTexture() : impl(new CachedTextureImpl()) { }
+	Texture &get_texture() { return impl->texture; }
+	void set_texture(Texture &t) { impl->texture = t; }
+
+	bool operator<(const CachedTexture &other) const { return impl < other.impl; }
+	bool operator==(const CachedTexture &other) const { return impl == other.impl; }
+	bool operator!=(const CachedTexture &other) const { return impl != other.impl; }
+
+private:
+	std::shared_ptr<CachedTextureImpl> impl;
 };
 
 }

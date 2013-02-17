@@ -26,21 +26,34 @@
 **    Magnus Norddahl
 */
 
+/// \addtogroup clanScene_Scene clanScene Scene
+/// \{
+
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
-#include "API/Scene3D/ModelData/model_data.h"
+#include "api_scene3d.h"
+#include <memory>
+#include <string>
 
 namespace clan
 {
 
-class ModelLOD;
+class ModelData;
+class CachedTexture;
+class GraphicContext;
 
-class ModelMeshVisitor
+class SceneCacheProvider
 {
 public:
-	virtual void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances) = 0;
+	virtual ~SceneCacheProvider() { }
+
+	virtual std::shared_ptr<ModelData> get_model_data(const std::string &name) = 0;
+
+	virtual CachedTexture get_texture(GraphicContext &gc, const std::string &name, bool linear) = 0;
+
+	virtual void update_textures(GraphicContext &gc, float time_elapsed) = 0;
 };
 
 }
 
+/// \}
