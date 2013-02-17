@@ -43,12 +43,13 @@ class SceneLight;
 class SceneParticleEmitter;
 class SceneObject;
 class SceneCamera;
+class SceneCache;
 
 class CL_API_SCENE Scene
 {
 public:
 	Scene();
-	Scene(GraphicContext &gc);
+	Scene(GraphicContext &gc, const SceneCache &cache);
 
 	bool is_null() const;
 
