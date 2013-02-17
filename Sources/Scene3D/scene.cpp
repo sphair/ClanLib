@@ -43,8 +43,8 @@ Scene::Scene()
 {
 }
 
-Scene::Scene(GraphicContext &gc)
-: impl(new Scene_Impl(gc))
+Scene::Scene(GraphicContext &gc, const SceneCache &cache)
+: impl(new Scene_Impl(gc, cache))
 {
 	impl->set_camera(SceneCamera(*this));
 }
@@ -83,8 +83,8 @@ int Scene_Impl::triangles_drawn = 0;
 int Scene_Impl::scene_visits = 0;
 std::vector<GPUTimer::Result> Scene_Impl::gpu_results;
 
-Scene_Impl::Scene_Impl(GraphicContext &gc)
-: frame(0), work_queue(gc), material_cache(work_queue), model_cache(work_queue, material_cache, model_shader_cache, instances_buffer), vsm_shadow_map_pass(gc), particle_emitter_pass(material_cache), lightsource_pass(gc), bloom_pass(gc), final_pass(gc)
+Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache)
+: cache(cache), frame(0), work_queue(gc), material_cache(work_queue), model_cache(work_queue, material_cache, model_shader_cache, instances_buffer), vsm_shadow_map_pass(gc), particle_emitter_pass(material_cache), lightsource_pass(gc), bloom_pass(gc), final_pass(gc)
 {
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);

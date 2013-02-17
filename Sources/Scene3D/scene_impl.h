@@ -29,6 +29,7 @@
 #pragma once
 
 #include "API/Scene3D/scene_camera.h"
+#include "API/Scene3D/scene_cache.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
 #include "Scene3D/Model/model_shader_cache.h"
@@ -59,7 +60,7 @@ class SceneParticleEmitterVisitor;
 class Scene_Impl
 {
 public:
-	Scene_Impl(GraphicContext &gc);
+	Scene_Impl(GraphicContext &gc, SceneCache cache);
 	void set_viewport(const Rect &box);
 	void set_camera(const Vec3f &position, const Quaternionf &orientation);
 	void set_camera_position(const Vec3f &position);
@@ -84,6 +85,8 @@ public:
 	static std::vector<GPUTimer::Result> gpu_results;
 
 private:
+	SceneCache cache;
+
 	int frame;
 	InstancesBuffer instances_buffer;
 	ModelCache model_cache;
