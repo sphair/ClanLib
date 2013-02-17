@@ -36,17 +36,25 @@
 namespace clan
 {
 
+class Scene_Impl;
+
 class MaterialCache : public ModelMaterialCache
 {
 public:
-	MaterialCache(WorkQueue &work_queue);
+	MaterialCache(Scene_Impl *scene);
 	CachedTexture get_texture(GraphicContext &gc, const std::string &material_name, bool linear);
 
 	void update(GraphicContext &gc, float time_elapsed);
 
 private:
+	Scene_Impl *scene;
+
+/*
+private:
 	static std::string to_key(const std::string &material_name, bool linear);
 	Texture2D get_dummy_texture(GraphicContext &gc);
+
+	Scene_Impl *scene;
 
 	Texture2D dummy_texture;
 	std::unordered_map<std::string, CachedTexture> textures;
@@ -55,8 +63,9 @@ private:
 //	std::vector<VideoTexture> video_textures;
 
 	friend class MaterialCacheLoadTexture;
+*/
 };
-
+/*
 class MaterialCacheLoadTexture : public WorkItem
 {
 public:
@@ -79,6 +88,6 @@ private:
 
 	PixelBufferSet pixelbuffer_set;
 };
-
+*/
 }
 

@@ -48,6 +48,8 @@ public:
 
 	bool is_null() const;
 
+	SceneCacheProvider *get_provider() const;
+
 private:
 	std::shared_ptr<SceneCache_Impl> impl;
 };

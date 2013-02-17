@@ -47,4 +47,9 @@ bool SceneCache::is_null() const
 	return !impl;
 }
 
+SceneCacheProvider *SceneCache::get_provider() const
+{
+	return impl->provider;
+}
+
 }
