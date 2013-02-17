@@ -57,7 +57,7 @@ void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
 
 	Uniforms cpu_uniforms;
 	cpu_uniforms.eye_to_projection = eye_to_projection;
-	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera_orientation()).to_matrix();
+	cpu_uniforms.object_to_eye = Quaternionf::inverse(scene->get_camera().get_orientation()).to_matrix();
 	uniforms.upload_data(gc, &cpu_uniforms, 1);
 
 	gc.set_depth_range(0.9f, 1.0f);

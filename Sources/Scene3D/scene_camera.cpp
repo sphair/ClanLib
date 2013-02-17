@@ -28,16 +28,31 @@
 
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/scene_camera.h"
+#include "API/Scene3D/scene.h"
+#include "scene_impl.h"
 
 namespace clan
 {
+
+class SceneCamera_Impl
+{
+public:
+	SceneCamera_Impl() : scene(nullptr), fov(60.0f) { }
+
+	Scene_Impl *scene;
+	Vec3f position;
+	Quaternionf orientation;
+	float fov;
+};
 
 SceneCamera::SceneCamera()
 {
 }
 
 SceneCamera::SceneCamera(Scene &scene)
+: impl(new SceneCamera_Impl())
 {
+	impl->scene = scene.impl.get();
 }
 
 bool SceneCamera::is_null() const
@@ -47,29 +62,32 @@ bool SceneCamera::is_null() const
 
 Vec3f SceneCamera::get_position() const
 {
-	return Vec3f();
+	return impl->position;
 }
 
 Quaternionf SceneCamera::get_orientation() const
 {
-	return Quaternionf();
+	return impl->orientation;
 }
 
 float SceneCamera::get_field_of_view() const
 {
-	return 60.0f;
+	return impl->fov;
 }
 
 void SceneCamera::set_position(const Vec3f &position)
 {
+	impl->position = position;
 }
 
 void SceneCamera::set_orientation(const Quaternionf &orientation)
 {
+	impl->orientation = orientation;
 }
 
 void SceneCamera::set_field_of_view(float fov)
 {
+	impl->fov = fov;
 }
 
 }

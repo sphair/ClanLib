@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/Scene3D/scene_camera.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
 #include "Scene3D/Model/model_shader_cache.h"
@@ -72,8 +73,8 @@ public:
 	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor);
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
-	Vec3f get_camera_position() const { return camera_position; }
-	Quaternionf get_camera_orientation() const { return camera_orientation; }
+	const SceneCamera &get_camera() const { return camera; }
+	void set_camera(const SceneCamera &cam) { camera = cam; }
 
 	static int models_drawn;
 	static int instances_drawn;
@@ -95,8 +96,7 @@ private:
 	std::list<SceneParticleEmitter_Impl *> emitters;
 	OctTree tree;
 
-	Vec3f camera_position;
-	Quaternionf camera_orientation;
+	SceneCamera camera;
 	OutData<float> camera_field_of_view;
 
 	OutData<Rect> viewport;

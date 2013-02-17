@@ -46,6 +46,7 @@ Scene::Scene()
 Scene::Scene(GraphicContext &gc)
 : impl(new Scene_Impl(gc))
 {
+	impl->set_camera(SceneCamera(*this));
 }
 
 bool Scene::is_null() const
@@ -58,24 +59,9 @@ void Scene::set_viewport(const Rect &box)
 	impl->set_viewport(box);
 }
 
-void Scene::set_camera(const Vec3f &position, const Quaternionf &orientation)
+void Scene::set_camera(const SceneCamera &camera)
 {
-	impl->set_camera(position, orientation);
-}
-
-void Scene::set_camera_position(const Vec3f &position)
-{
-	impl->set_camera_position(position);
-}
-
-void Scene::set_camera_orientation(const Quaternionf &orientation)
-{
-	impl->set_camera_orientation(orientation);
-}
-
-void Scene::set_camera_field_of_view(float fov)
-{
-	impl->set_camera_field_of_view(fov);
+	impl->set_camera(camera);
 }
 
 void Scene::render(GraphicContext &gc)
@@ -155,22 +141,6 @@ void Scene_Impl::set_viewport(const Rect &box)
 	viewport.set(box);
 }
 
-void Scene_Impl::set_camera(const Vec3f &position, const Quaternionf &orientation)
-{
-	camera_position = position;
-	camera_orientation = orientation;
-}
-
-void Scene_Impl::set_camera_position(const Vec3f &position)
-{
-	camera_position = position;
-}
-
-void Scene_Impl::set_camera_orientation(const Quaternionf &orientation)
-{
-	camera_orientation = orientation;
-}
-
 void Scene_Impl::render(GraphicContext &gc)
 {
 	ScopeTimeFunction();
@@ -183,8 +153,11 @@ void Scene_Impl::render(GraphicContext &gc)
 
 	gpu_timer.begin_frame(gc);
 
-	Quaternionf inv_orientation = Quaternionf::inverse(camera_orientation);
-	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera_position);
+	if (camera_field_of_view.get() != camera.get_field_of_view())
+		camera_field_of_view.set(camera.get_field_of_view());
+
+	Quaternionf inv_orientation = Quaternionf::inverse(camera.get_orientation());
+	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera.get_position());
 
 	// To do: move this elsewhere and set as OutData<Mat4f>:
 	gbuffer_pass.world_to_eye.set(world_to_eye);
