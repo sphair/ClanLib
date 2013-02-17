@@ -28,20 +28,34 @@
 
 #include "Scene3D/precomp.h"
 #include "material_cache.h"
-//FIXME: #include "Crunch/crnlib.h"
+#include "API/Scene3D/scene_cache.h"
+#include "API/Scene3D/scene_cache_provider.h"
+#include "Scene3D/scene_impl.h"
 
 namespace clan
 {
 
-MaterialCache::MaterialCache(WorkQueue &work_queue)
-: work_queue(work_queue)
+MaterialCache::MaterialCache(Scene_Impl *scene)
+: scene(scene)
 {
 }
 
 void MaterialCache::update(GraphicContext &gc, float time_elapsed)
 {
-//FIXME:	for (size_t i = 0; i < video_textures.size(); i++)
-//FIXME:		video_textures[i].update(gc, time_elapsed);
+	scene->get_cache().get_provider()->update_textures(gc, time_elapsed);
+}
+
+CachedTexture MaterialCache::get_texture(GraphicContext &gc, const std::string &material_name, bool linear)
+{
+	return scene->get_cache().get_provider()->get_texture(gc, material_name, linear);
+}
+
+#ifdef CODE_TO_BE_MOVED
+
+void MaterialCache::update(GraphicContext &gc, float time_elapsed)
+{
+	for (size_t i = 0; i < video_textures.size(); i++)
+		video_textures[i].update(gc, time_elapsed);
 }
 
 std::string MaterialCache::to_key(const std::string &material_name, bool linear)
@@ -464,6 +478,8 @@ void MaterialCacheLoadTexture::load_blp_texture(const std::string &material_name
 	}
 */
 }
+
+#endif
 
 }
 

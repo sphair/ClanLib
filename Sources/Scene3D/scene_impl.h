@@ -74,6 +74,8 @@ public:
 	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor);
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
+	const SceneCache &get_cache() const { return cache; }
+
 	const SceneCamera &get_camera() const { return camera; }
 	void set_camera(const SceneCamera &cam) { camera = cam; }
 
