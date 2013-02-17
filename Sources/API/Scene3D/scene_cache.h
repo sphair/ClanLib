@@ -37,12 +37,14 @@
 namespace clan
 {
 
+class SceneCacheProvider;
 class SceneCache_Impl;
 
 class CL_API_SCENE SceneCache
 {
 public:
 	SceneCache();
+	SceneCache(SceneCacheProvider *provider);
 
 	bool is_null() const;
 

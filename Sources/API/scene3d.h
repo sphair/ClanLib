@@ -41,6 +41,11 @@
 #include "Scene3D/scene_model.h"
 #include "Scene3D/scene_object.h"
 #include "Scene3D/scene_particle_emitter.h"
+#include "Scene3D/scene_cache.h"
+#include "Scene3D/scene_cache_provider.h"
+#include "Scene3D/cached_texture.h"
+#include "Scene3D/ModelData/model_data.h"
+#include "Scene3D/LevelData/level_data.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)
@@ -52,19 +57,19 @@
 	#endif
 	#if !defined(_DEBUG)
 		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll.lib")
+			#pragma comment(lib, "clanScene3D-dll.lib")
 		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll.lib")
+			#pragma comment(lib, "clanScene3D-static-mtdll.lib")
 		#else
-			#pragma comment(lib, "clanScene-static-mt.lib")
+			#pragma comment(lib, "clanScene3D-static-mt.lib")
 		#endif
 	#else
 		#if defined(DLL)
-			#pragma comment(lib, "clanScene-dll-debug.lib")
+			#pragma comment(lib, "clanScene3D-dll-debug.lib")
 		#elif defined(_DLL)
-			#pragma comment(lib, "clanScene-static-mtdll-debug.lib")
+			#pragma comment(lib, "clanScene3D-static-mtdll-debug.lib")
 		#else
-			#pragma comment(lib, "clanScene-static-mt-debug.lib")
+			#pragma comment(lib, "clanScene3D-static-mt-debug.lib")
 		#endif
 	#endif
 #endif

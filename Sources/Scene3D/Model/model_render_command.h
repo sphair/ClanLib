@@ -29,7 +29,7 @@
 #pragma once
 
 #include "model_mesh_buffers.h"
-#include "Scene3D/Framework/texture.h"
+#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/scene.h"
 #include "Scene3D/scene_impl.h"
 
