@@ -61,10 +61,12 @@ public:
 
 private:
 	std::shared_ptr<Scene_Impl> impl;
+
 	friend class SceneLight;
 	friend class SceneParticleEmitter;
 	friend class SceneObject;
 	friend class SceneCamera;
+	friend class SceneModel;
 };
 
 }

@@ -26,37 +26,23 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanScene_Scene clanScene Scene
-/// \{
-
 #pragma once
 
-#include "api_scene3d.h"
-#include <string>
 #include <memory>
 
 namespace clan
 {
 
-class Scene;
-class ModelData;
-class SceneModel_Impl;
+class Scene_Impl;
+class Model;
 
-class CL_API_SCENE SceneModel
+class SceneModel_Impl
 {
 public:
-	SceneModel();
-	SceneModel(GraphicContext &gc, Scene &scene, const std::string &model_name);
-	SceneModel(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data);
+	SceneModel_Impl() : scene(nullptr) { }
 
-	bool is_null() const;
-
-private:
-	std::shared_ptr<SceneModel_Impl> impl;
-
-	friend class SceneObject;
+	Scene_Impl *scene;
+	std::shared_ptr<Model> model;
 };
 
 }
-
-/// \}

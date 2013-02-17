@@ -28,6 +28,10 @@
 
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/scene_model.h"
+#include "API/Scene3D/scene.h"
+#include "Scene3D/Model/model_cache.h"
+#include "scene_impl.h"
+#include "scene_model_impl.h"
 
 namespace clan
 {
@@ -36,13 +40,17 @@ SceneModel::SceneModel()
 {
 }
 
-SceneModel::SceneModel(Scene &scene, const std::string &model_name)
+SceneModel::SceneModel(GraphicContext &gc, Scene &scene, const std::string &model_name)
+: impl(new SceneModel_Impl())
 {
-	// To do: find in cache
+	impl->scene = scene.impl.get();
+	impl->model = impl->scene->model_cache.get_model(gc, model_name);
 }
 
-SceneModel::SceneModel(Scene &scene, std::shared_ptr<ModelData> model_data)
+SceneModel::SceneModel(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data)
+: impl(new SceneModel_Impl())
 {
+	impl->model = std::shared_ptr<Model>(new Model(gc, impl->scene->material_cache, impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
 }
 
 bool SceneModel::is_null() const
