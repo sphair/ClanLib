@@ -26,58 +26,25 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "API/Scene3D/scene_camera.h"
-#include "API/Scene3D/scene.h"
-#include "scene_camera_impl.h"
-#include "scene_impl.h"
+#pragma once
+
+#include "API/Core/Math/vec3.h"
+#include "API/Core/Math/quaternion.h"
 
 namespace clan
 {
 
-SceneCamera::SceneCamera()
-{
-}
+class Scene_Impl;
 
-SceneCamera::SceneCamera(Scene &scene)
-: impl(new SceneCamera_Impl())
+class SceneCamera_Impl
 {
-	impl->scene = scene.impl.get();
-}
+public:
+	SceneCamera_Impl() : scene(nullptr), fov(60.0f) { }
 
-bool SceneCamera::is_null() const
-{
-	return !impl;
-}
-
-Vec3f SceneCamera::get_position() const
-{
-	return impl->position;
-}
-
-Quaternionf SceneCamera::get_orientation() const
-{
-	return impl->orientation;
-}
-
-float SceneCamera::get_field_of_view() const
-{
-	return impl->fov;
-}
-
-void SceneCamera::set_position(const Vec3f &position)
-{
-	impl->position = position;
-}
-
-void SceneCamera::set_orientation(const Quaternionf &orientation)
-{
-	impl->orientation = orientation;
-}
-
-void SceneCamera::set_field_of_view(float fov)
-{
-	impl->fov = fov;
-}
+	Scene_Impl *scene;
+	Vec3f position;
+	Quaternionf orientation;
+	float fov;
+};
 
 }
