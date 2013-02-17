@@ -118,6 +118,8 @@ private:
 	friend class SceneLight_Impl;
 	friend class SceneParticleEmitter;
 	friend class SceneParticleEmitter_Impl;
+	friend class SceneModel;
+	friend class SceneModel_Impl;
 };
 
 }

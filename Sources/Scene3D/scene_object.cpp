@@ -28,12 +28,14 @@
 
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/scene_object.h"
+#include "API/Scene3D/scene_model.h"
 #include "API/Scene3D/scene.h"
 #include <algorithm>
 #include "Scene3D/scene_object_impl.h"
 #include "Scene3D/Culling/aabb.h"
 #include "Scene3D/Model/model.h"
 #include "Scene3D/scene_impl.h"
+#include "Scene3D/scene_model_impl.h"
 
 namespace clan
 {
@@ -42,27 +44,13 @@ SceneObject::SceneObject()
 {
 }
 
-SceneObject::SceneObject(GraphicContext &gc, Scene &scene, const std::string &model_name, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
+SceneObject::SceneObject(Scene &scene, const SceneModel &model, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
 	: impl(new SceneObject_Impl(scene.impl.get()))
 {
 	impl->position = position;
 	impl->orientation = orientation;
 	impl->scale = scale;
-	impl->instance.set_renderer(impl->scene->model_cache.get_model(gc, model_name));
-	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
-
-	impl->create_lights(scene);
-}
-
-SceneObject::SceneObject(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-	: impl(new SceneObject_Impl(scene.impl.get()))
-{
-	std::shared_ptr<Model> model(new Model(gc, impl->scene->material_cache, impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
-
-	impl->position = position;
-	impl->orientation = orientation;
-	impl->scale = scale;
-	impl->instance.set_renderer(model);
+	impl->instance.set_renderer(model.impl->model);
 	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);

@@ -38,16 +38,14 @@ namespace clan
 {
 
 class Scene;
+class SceneModel;
 class SceneObject_Impl;
-class OctTreeObject;
-class ModelData;
 
 class CL_API_SCENE SceneObject
 {
 public:
 	SceneObject();
-	SceneObject(GraphicContext &gc, Scene &scene, const std::string &model_name, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
-	SceneObject(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
+	SceneObject(Scene &scene, const SceneModel &model, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
 	bool is_null() const { return !impl; }
 
 	Vec3f get_position() const;
