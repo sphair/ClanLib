@@ -44,7 +44,7 @@ public:
 	SceneObject_Impl(Scene_Impl *scene);
 	~SceneObject_Impl();
 
-	void create_lights(Scene *scene_base);
+	void create_lights(Scene &scene_base);
 	void update_lights();
 
 	Mat4f get_object_to_world() const

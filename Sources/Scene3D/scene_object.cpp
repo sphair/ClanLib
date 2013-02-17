@@ -42,8 +42,8 @@ SceneObject::SceneObject()
 {
 }
 
-SceneObject::SceneObject(GraphicContext &gc, Scene *scene, const std::string &model_name, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-	: impl(new SceneObject_Impl(scene->impl.get()))
+SceneObject::SceneObject(GraphicContext &gc, Scene &scene, const std::string &model_name, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
+	: impl(new SceneObject_Impl(scene.impl.get()))
 {
 	impl->position = position;
 	impl->orientation = orientation;
@@ -54,8 +54,8 @@ SceneObject::SceneObject(GraphicContext &gc, Scene *scene, const std::string &mo
 	impl->create_lights(scene);
 }
 
-SceneObject::SceneObject(GraphicContext &gc, Scene *scene, std::shared_ptr<ModelData> model_data, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
-	: impl(new SceneObject_Impl(scene->impl.get()))
+SceneObject::SceneObject(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data, const Vec3f &position, const Quaternionf &orientation, const Vec3f &scale)
+	: impl(new SceneObject_Impl(scene.impl.get()))
 {
 	std::shared_ptr<Model> model(new Model(gc, impl->scene->material_cache, impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
 
@@ -156,7 +156,7 @@ SceneObject_Impl::~SceneObject_Impl()
 	scene->objects.erase(it);
 }
 
-void SceneObject_Impl::create_lights(Scene *scene_base)
+void SceneObject_Impl::create_lights(Scene &scene_base)
 {
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)

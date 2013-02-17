@@ -47,7 +47,7 @@ class CL_API_SCENE SceneLight
 {
 public:
 	SceneLight();
-	SceneLight(Scene *scene);
+	SceneLight(Scene &scene);
 	bool is_null() const { return !impl; }
 
 	enum Type

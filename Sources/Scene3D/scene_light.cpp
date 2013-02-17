@@ -41,8 +41,8 @@ SceneLight::SceneLight()
 {
 }
 
-SceneLight::SceneLight(Scene *scene)
-	: impl(new SceneLight_Impl(scene->impl.get()))
+SceneLight::SceneLight(Scene &scene)
+	: impl(new SceneLight_Impl(scene.impl.get()))
 {
 	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
 }
