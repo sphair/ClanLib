@@ -30,19 +30,25 @@ int Program::main(const std::vector<std::string> &args)
 	SceneCamera camera(scene);
 	scene.set_camera(camera);
 
-	SceneLight omni(scene);
-	omni.set_type(SceneLight::type_omni);
-	omni.set_color(Vec3f(0.5f, 0.5f, 0.5f));
-	omni.set_position(Vec3f(100.0f, 100.0f, 100.0f));
-	omni.set_attenuation_end(200.0f);
+	std::vector<SceneLight> omni_lights;
+	for (int i = 0; i < 4; i++)
+	{
+		SceneLight omni(scene);
+		omni.set_type(SceneLight::type_omni);
+		omni.set_color(Vec3f(0.1f));
+		omni.set_position(Quaternionf(45.0f, 45.0f + i * 90.0f, 0.0f, angle_degrees, order_YXZ).rotate_vector(Vec3f(0.0f, 0.0f, -100.0f)));
+		omni.set_attenuation_end(200.0f);
+
+		omni_lights.push_back(omni);
+	}
 
 	SceneLight spot(scene);
 	spot.set_type(SceneLight::type_spot);
-	spot.set_position(Vec3f(0.0f, 100.0f, 0.0f));
-	spot.set_color(Vec3f(0.7f, 2.0f, 0.7f));
+	spot.set_orientation(Quaternionf(30.0f, 30.0f, 0.0f, angle_degrees, order_YXZ));
+	spot.set_position(spot.get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, -100.0f)));
+	spot.set_color(Vec3f(2.7f, 2.7f, 0.7f));
 	spot.set_falloff(45.0f);
 	spot.set_hotspot(15.0f);
-	spot.set_orientation(Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
 	spot.set_attenuation_start(20.0f);
 	spot.set_attenuation_end(200.0f);
 	spot.set_shadow_caster(true);
@@ -54,10 +60,10 @@ int Program::main(const std::vector<std::string> &args)
 
 	SceneObject object(scene, plane, Vec3f(0.0f, 0.0f, 0.0f));
 
-	SceneObject box0(scene, box, Vec3f(20.0f, 5.0f, 0.0f));
-	SceneObject box1(scene, box, Vec3f(-20.0f, 5.0f, 0.0f));
-	SceneObject box2(scene, box, Vec3f(0.0f, 5.0f, 20.0f));
-	SceneObject box3(scene, box, Vec3f(0.0f, 5.0f, -20.0f));
+	SceneObject box0(scene, box, Vec3f(20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 20.0f, 0.0f, angle_degrees, order_YXZ));
+	SceneObject box1(scene, box, Vec3f(-20.0f, 5.0f, 0.0f), Quaternionf(0.0f, 50.0f, 0.0f, angle_degrees, order_YXZ));
+	SceneObject box2(scene, box, Vec3f(0.0f, 5.0f, 20.0f), Quaternionf(0.0f, 80.0f, 0.0f, angle_degrees, order_YXZ));
+	SceneObject box3(scene, box, Vec3f(0.0f, 5.0f, -20.0f), Quaternionf(0.0f, 100.0f, 0.0f, angle_degrees, order_YXZ));
 
 	ElapsedTimer elapsed_timer;
 
