@@ -28,13 +28,17 @@ int Program::main(const std::vector<std::string> &args)
 	Scene scene(gc, cache, shader_path);
 
 	SceneCamera camera(scene);
+	camera.set_position(Vec3f(0.0f, 70.0f, -70.0f));
+	camera.set_orientation(Quaternionf(52.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
 	scene.set_camera(camera);
 
 	SceneLight light(scene);
 	light.set_position(Vec3f(100.0f, 100.0f, 100.0f));
+	light.set_type(SceneLight::type_omni);
+	light.set_attenuation_end(200.0f);
 
 	SceneModel model(gc, scene, "plane");
-	SceneObject object(scene, model, Vec3f(0.0f, -10.0f, 0.0f));
+	SceneObject object(scene, model, Vec3f(0.0f, 0.0f, 0.0f));
 
 	ElapsedTimer elapsed_timer;
 
