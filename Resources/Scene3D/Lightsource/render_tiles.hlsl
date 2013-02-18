@@ -217,7 +217,6 @@ float distance_attenuation(Light light, float3 fragment_to_light)
 	float rcp_sqr_delta_attenuation = light.range.z;
 	return saturate(1.0f - (sqr_distance - sqr_attenuation_start) * rcp_sqr_delta_attenuation);
 #else
-	// To do: fix shader input to be linear */
 	float distance = length(fragment_to_light);
 	float attenuation_start = light.range.y;
 	float rcp_attenuation_delta = light.range.z;
