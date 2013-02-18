@@ -15,7 +15,7 @@ int Program::main(const std::vector<std::string> &args)
 	SetupDisplay setup_display;
 	SetupD3D setup_d3d;
 
-	DisplayWindow window("Scene3D Example", 1600, 900);
+	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
 	GraphicContext gc = window.get_gc();
 
@@ -28,9 +28,10 @@ int Program::main(const std::vector<std::string> &args)
 	Scene scene(gc, cache, shader_path);
 
 	SceneCamera camera(scene);
-
-	scene.set_viewport(window.get_viewport());
 	scene.set_camera(camera);
+
+	SceneLight light(scene);
+	light.set_position(Vec3f(100.0f, 100.0f, 100.0f));
 
 	ElapsedTimer elapsed_timer;
 
@@ -38,7 +39,7 @@ int Program::main(const std::vector<std::string> &args)
 	{
 		scene.update(gc, elapsed_timer.seconds_elapsed());
 
-		gc.clear(Colorf::darkkhaki);
+		scene.set_viewport(window.get_viewport());
 		scene.render(gc);
 		
 		window.flip(1);
