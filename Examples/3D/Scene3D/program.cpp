@@ -28,23 +28,42 @@ int Program::main(const std::vector<std::string> &args)
 	Scene scene(gc, cache, shader_path);
 
 	SceneCamera camera(scene);
-	camera.set_position(Vec3f(0.0f, 70.0f, -70.0f));
-	camera.set_orientation(Quaternionf(52.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
 	scene.set_camera(camera);
 
-	SceneLight light(scene);
-	light.set_position(Vec3f(100.0f, 100.0f, 100.0f));
-	light.set_type(SceneLight::type_omni);
-	light.set_attenuation_end(200.0f);
+	SceneLight omni(scene);
+	omni.set_type(SceneLight::type_omni);
+	omni.set_color(Vec3f(0.0f, 0.0f, 0.5f));
+	omni.set_position(Vec3f(100.0f, 100.0f, 100.0f));
+	omni.set_attenuation_end(200.0f);
+
+	SceneLight spot(scene);
+	spot.set_type(SceneLight::type_spot);
+	spot.set_position(Vec3f(0.0f, 100.0f, 0.0f));
+	spot.set_color(Vec3f(0.7f, 4.0f, 0.7f));
+	spot.set_falloff(45.0f);
+	spot.set_hotspot(15.0f);
+	spot.set_orientation(Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+	spot.set_attenuation_end(200.0f);
 
 	SceneModel model(gc, scene, "plane");
 	SceneObject object(scene, model, Vec3f(0.0f, 0.0f, 0.0f));
 
 	ElapsedTimer elapsed_timer;
 
+	float up = 20.0f;
+	float tilt = 0.0f;
+	float dir = 0.0f;
+
 	while (!exit)
 	{
-		scene.update(gc, elapsed_timer.seconds_elapsed());
+		float time_elapsed = elapsed_timer.seconds_elapsed();
+
+		dir = std::fmod(dir + time_elapsed * 5.0f, 360.0f);
+
+		camera.set_orientation(Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
+		camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, -100.0f)));
+
+		scene.update(gc, time_elapsed);
 
 		scene.set_viewport(window.get_viewport());
 		scene.render(gc);
