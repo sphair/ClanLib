@@ -39,18 +39,25 @@ int Program::main(const std::vector<std::string> &args)
 	SceneLight spot(scene);
 	spot.set_type(SceneLight::type_spot);
 	spot.set_position(Vec3f(0.0f, 100.0f, 0.0f));
-	spot.set_color(Vec3f(0.7f, 4.0f, 0.7f));
+	spot.set_color(Vec3f(0.7f, 2.0f, 0.7f));
 	spot.set_falloff(45.0f);
 	spot.set_hotspot(15.0f);
 	spot.set_orientation(Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
-	spot.set_attenuation_start(50.0f);
+	spot.set_attenuation_start(20.0f);
 	spot.set_attenuation_end(200.0f);
 	spot.set_shadow_caster(true);
 	spot.set_rectangle_shape(false);
 	spot.set_aspect_ratio(1.0f);
 
-	SceneModel model(gc, scene, "plane");
-	SceneObject object(scene, model, Vec3f(0.0f, 0.0f, 0.0f));
+	SceneModel plane(gc, scene, "plane");
+	SceneModel box(gc, scene, "box");
+
+	SceneObject object(scene, plane, Vec3f(0.0f, 0.0f, 0.0f));
+
+	SceneObject box0(scene, box, Vec3f(20.0f, 5.0f, 0.0f));
+	SceneObject box1(scene, box, Vec3f(-20.0f, 5.0f, 0.0f));
+	SceneObject box2(scene, box, Vec3f(0.0f, 5.0f, 20.0f));
+	SceneObject box3(scene, box, Vec3f(0.0f, 5.0f, -20.0f));
 
 	ElapsedTimer elapsed_timer;
 
