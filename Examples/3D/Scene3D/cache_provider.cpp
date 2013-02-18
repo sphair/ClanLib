@@ -49,7 +49,7 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::create_plane()
 {
 	std::shared_ptr<ModelData> model_data(new ModelData());
 
-	float size = 50.0f;
+	float size = 75.0f;
 
 	model_data->aabb_min = Vec3f(-size, 0.0f, -size);
 	model_data->aabb_max = Vec3f( size, 0.0f,  size);
@@ -149,93 +149,53 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::create_box()
 	model_data->mesh_lods[0].meshes.resize(1);
 	model_data->mesh_lods[0].meshes[0].channels.resize(1);
 
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size, size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size, size));
-
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, size, size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, size, size));
-
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size,  size,-size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size,  size,-size));
-
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size, size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size, size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size,  size, size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size,  size, size));
-
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size, -size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size,  size, -size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, -size,  size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size,  size,  size));
-
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size, -size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size,  size, -size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, -size,  size));
-	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size,  size,  size));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, -1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, -1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, -1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, -1.0f, 0.0f));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, -1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, -1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, -1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, -1.0f));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(-1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(-1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(-1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(-1.0f, 0.0f, 0.0f));
-
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-
-	// Wrong values but we aren't using a normal map..
-	for (int i = 0; i < 6; i++)
+	Vec3f normal[6] =
 	{
-		model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-		model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-		model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
-		model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
+		Vec3f( 0.0f,  1.0f,  0.0f),
+		Vec3f( 0.0f, -1.0f,  0.0f),
+		Vec3f( 1.0f,  0.0f,  0.0f),
+		Vec3f(-1.0f,  0.0f,  0.0f),
+		Vec3f( 0.0f,  0.0f,  1.0f),
+		Vec3f( 0.0f,  0.0f, -1.0f)
+	};
 
-		model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-		model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-		model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-		model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	}
+	Vec3f tangent[6] =
+	{
+		Vec3f(1.0,  0.0f, 0.0f),
+		Vec3f(1.0,  0.0f, 0.0f),
+		Vec3f(0.0f, 1.0f, 0.0f),
+		Vec3f(0.0f,-1.0f, 0.0f),
+		Vec3f(0.0f, 1.0f, 0.0f),
+		Vec3f(0.0f,-1.0f, 0.0f)
+	};
 
 	for (int i = 0; i < 6; i++)
 	{
+		Vec3f bitangent = Vec3f::cross(normal[i], tangent[i]);
+
+		model_data->mesh_lods[0].meshes[0].vertices.push_back((normal[i] - tangent[i] - bitangent) * size);
+		model_data->mesh_lods[0].meshes[0].vertices.push_back((normal[i] + tangent[i] - bitangent) * size);
+		model_data->mesh_lods[0].meshes[0].vertices.push_back((normal[i] - tangent[i] + bitangent) * size);
+		model_data->mesh_lods[0].meshes[0].vertices.push_back((normal[i] + tangent[i] + bitangent) * size);
+
+		for (int j = 0; j < 4; j++)
+		{
+			model_data->mesh_lods[0].meshes[0].normals.push_back(normal[i]);
+			model_data->mesh_lods[0].meshes[0].tangents.push_back(tangent[i]);
+			model_data->mesh_lods[0].meshes[0].bitangents.push_back(bitangent);
+		}
+
 		model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 0.0f));
 		model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 0.0f));
 		model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 1.0f));
 		model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 1.0f));
 
-		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 2);
-		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 1);
 		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 0);
 		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 1);
 		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 2);
 		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 3);
+		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 2);
+		model_data->mesh_lods[0].meshes[0].elements.push_back(i * 4 + 1);
 	}
 
 	ModelDataMaterialRange range;
