@@ -42,9 +42,10 @@ int Program::main(const std::vector<std::string> &args)
 	spot.set_color(Vec3f(0.7f, 4.0f, 0.7f));
 	spot.set_falloff(45.0f);
 	spot.set_hotspot(15.0f);
-	spot.set_orientation(Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+	spot.set_orientation(Quaternionf(90.0f, 45.0f, 0.0f, angle_degrees, order_YXZ));
 	spot.set_attenuation_end(200.0f);
 	spot.set_shadow_caster(true);
+	spot.set_rectangle_shape(true);
 
 	SceneModel model(gc, scene, "plane");
 	SceneObject object(scene, model, Vec3f(0.0f, 0.0f, 0.0f));
