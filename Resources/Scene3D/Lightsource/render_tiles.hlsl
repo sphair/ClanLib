@@ -14,7 +14,11 @@ struct Light
 {
 	float4 position; // vec3(pos), shadow_index (negative = no shadows)
 	float4 color; // rgb, unused
+#if defined(USE_QUADRATIC_ATTENUATION)
 	float4 range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), falloff_begin
+#else
+	float4 range; // pow(attenuation_end, 2), attenation_start, 1/(attenuation_end-attenuation_start), falloff_begin
+#endif
 	float4 spot_x; // xyz, light type (0 = omni, 1 = circle spot, 2 = rect spot)
 	float4 spot_y; // xyz, unused
 	float4 spot_z; // xyz, unused
@@ -215,7 +219,9 @@ float distance_attenuation(Light light, float3 fragment_to_light)
 #else
 	// To do: fix shader input to be linear */
 	float distance = length(fragment_to_light);
-	return saturate(1.0f - distance / sqrt(1/light.range.z));
+	float attenuation_start = light.range.y;
+	float rcp_attenuation_delta = light.range.z;
+	return saturate(1.0f - (distance - attenuation_start) * rcp_attenuation_delta);
 #endif
 }
 
