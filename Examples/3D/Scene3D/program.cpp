@@ -43,6 +43,7 @@ int Program::main(const std::vector<std::string> &args)
 	spot.set_falloff(45.0f);
 	spot.set_hotspot(15.0f);
 	spot.set_orientation(Quaternionf(90.0f, 0.0f, 0.0f, angle_degrees, order_YXZ));
+	spot.set_attenuation_start(50.0f);
 	spot.set_attenuation_end(200.0f);
 	spot.set_shadow_caster(true);
 	spot.set_rectangle_shape(false);
@@ -68,7 +69,7 @@ int Program::main(const std::vector<std::string> &args)
 
 		scene.update(gc, time_elapsed);
 
-		scene.set_viewport(window.get_viewport());
+		scene.set_viewport(gc.get_size());
 		scene.render(gc);
 		
 		window.flip(1);
