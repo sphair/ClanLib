@@ -19,14 +19,14 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 
 	model_data->animations.resize(1);
 	model_data->animations[0].name = "default";
-/*
+
 	model_data->textures.resize(1);
 	model_data->textures[0].gamma = 2.2f;
-	model_data->textures[0].name = "texture.png";
-*/
+	model_data->textures[0].name = "../Clan3D/Resources/tux.png";
+
 	model_data->mesh_lods.resize(1);
 	model_data->mesh_lods[0].meshes.resize(1);
-//	model_data->mesh_lods[0].meshes[0].channels.resize(1);
+	model_data->mesh_lods[0].meshes[0].channels.resize(1);
 
 	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, 0.0f,-size));
 	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, 0.0f,-size));
@@ -47,12 +47,12 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-/*
+
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 1.0f));
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 1.0f));
-*/
+
 	model_data->mesh_lods[0].meshes[0].elements.push_back(2);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(1);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(0);
@@ -75,7 +75,6 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 	range.self_illumination.timelines[0].timestamps.push_back(0.0f);
 	range.self_illumination.timelines[0].values.push_back(Vec3f());
 
-/*
 	range.diffuse_map.channel = 0;
 	range.diffuse_map.texture = 0;
 	range.diffuse_map.uvw_offset.timelines.resize(1);
@@ -87,7 +86,6 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 	range.diffuse_map.uvw_scale.timelines.resize(1);
 	range.diffuse_map.uvw_scale.timelines[0].timestamps.push_back(0.0f);
 	range.diffuse_map.uvw_scale.timelines[0].values.push_back(Vec3f(1.0f));
-*/
 
 	model_data->mesh_lods[0].meshes[0].material_ranges.push_back(range);
 
