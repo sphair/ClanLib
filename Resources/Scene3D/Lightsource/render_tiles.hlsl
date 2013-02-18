@@ -228,7 +228,7 @@ float distance_attenuation(Light light, float3 fragment_to_light)
 float circle_falloff_attenuation(Light light, float3 shadow_projection)
 {
 	float falloff_begin = light.range.w; // hotspot
-	const float falloff_end = 1.414213562373f;
+	const float falloff_end = 1.0f;
 	return 1.0f - smoothstep(falloff_begin, falloff_end, dot(shadow_projection.xy, shadow_projection.xy));
 }
 
