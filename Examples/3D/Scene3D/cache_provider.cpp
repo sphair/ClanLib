@@ -33,20 +33,20 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f(-size, 0.0f, size));
 	model_data->mesh_lods[0].meshes[0].vertices.push_back(Vec3f( size, 0.0f, size));
 
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
-	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 0.0f, 1.0f));
+	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
+	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
+	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
+	model_data->mesh_lods[0].meshes[0].normals.push_back(Vec3f(0.0f, 1.0f, 0.0f));
 
 	model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].tangents.push_back(Vec3f(1.0f, 0.0f, 0.0f));
 
-	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
-	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 1.0f, 0.0f));
+	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
+	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
+	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
+	model_data->mesh_lods[0].meshes[0].bitangents.push_back(Vec3f(0.0f, 0.0f, 1.0f));
 
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 0.0f));
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 0.0f));
