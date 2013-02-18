@@ -10,7 +10,7 @@ public:
 	{
 		long long current_time = clan::System::get_microseconds();
 
-		double seconds = (current_time - last_time) * 1e-9;
+		double seconds = (current_time - last_time) * 1e-6;
 
 		last_time = current_time;
 
