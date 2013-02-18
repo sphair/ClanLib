@@ -84,7 +84,7 @@ const std::string::value_type *cl_glsl15_fragment_sprite =
 	"uniform sampler2D Texture3; "
 	"in vec4 Color; "
 	"in vec2 TexCoord; "
-	"in int TexIndex; "
+	"flat in int TexIndex; "
 	"out vec4 cl_FragColor;"
 	"highp vec4 sampleTexture(int index, highp vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
 	"void main(void) { cl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
