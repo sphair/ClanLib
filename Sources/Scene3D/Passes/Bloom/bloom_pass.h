@@ -37,7 +37,7 @@ namespace clan
 class BloomPass
 {
 public:
-	BloomPass(GraphicContext &gc);
+	BloomPass(GraphicContext &gc, const std::string &shader_path);
 	void run(GraphicContext &gc);
 
 	InData<Rect> viewport;

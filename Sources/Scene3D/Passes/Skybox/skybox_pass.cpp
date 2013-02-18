@@ -36,7 +36,8 @@
 namespace clan
 {
 
-SkyboxPass::SkyboxPass()
+SkyboxPass::SkyboxPass(const std::string &shader_path)
+	: shader_path(shader_path)
 {
 }
 
@@ -215,7 +216,7 @@ void SkyboxPass::create_billboard_program(GraphicContext &gc)
 {
 	billboard_positions = VertexArrayVector<Vec3f>(gc, cpu_billboard_positions, 6);
 
-	billboard_program = ProgramObject::load(gc, "Resources/Engine/Skybox/vertex_billboard.hlsl", "Resources/Engine/Skybox/fragment_billboard.hlsl");
+	billboard_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_billboard.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_billboard.hlsl"));
 	billboard_program.bind_attribute_location(0, "AttrPosition");
 	billboard_program.bind_frag_data_location(0, "FragColor");
 	if (!billboard_program.link())
@@ -230,7 +231,7 @@ void SkyboxPass::create_cube_program(GraphicContext &gc)
 {
 	cube_positions = VertexArrayVector<Vec3f>(gc, cpu_cube_positions, 36);
 
-	cube_program = ProgramObject::load(gc, "Resources/Engine/Skybox/vertex_cube.hlsl", "Resources/Engine/Skybox/fragment_sphere.hlsl");
+	cube_program = ProgramObject::load(gc, PathHelp::combine(shader_path, "Skybox/vertex_cube.hlsl"), PathHelp::combine(shader_path, "Skybox/fragment_sphere.hlsl"));
 	cube_program.bind_attribute_location(0, "AttrPosition");
 	cube_program.bind_frag_data_location(0, "FragColor");
 	if (!cube_program.link())

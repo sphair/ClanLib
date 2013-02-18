@@ -35,16 +35,16 @@ namespace clan
 {
 
 
-FinalPass::FinalPass(GraphicContext &gc)
+FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path)
 {
 	if (gc.get_shader_language() == shader_glsl)
 	{
-		present_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.glsl", "Resources/Engine/Final/fragment_present.glsl", "");
+		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");
 		present_shader.bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		present_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.hlsl", "Resources/Engine/Final/fragment_present.hlsl", "");
+		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "Final/fragment_present.hlsl"), "");
 	}
 	if (!present_shader.link())
 		throw Exception("Shader linking failed!");

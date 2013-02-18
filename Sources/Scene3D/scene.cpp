@@ -43,8 +43,8 @@ Scene::Scene()
 {
 }
 
-Scene::Scene(GraphicContext &gc, const SceneCache &cache)
-: impl(new Scene_Impl(gc, cache))
+Scene::Scene(GraphicContext &gc, const SceneCache &cache, const std::string &shader_path)
+: impl(new Scene_Impl(gc, cache, shader_path))
 {
 	impl->set_camera(SceneCamera(*this));
 }
@@ -87,57 +87,67 @@ std::vector<GPUTimer::Result> Scene_Impl::gpu_results;
 #pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
 #endif
 
-Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache)
-: cache(cache), frame(0), work_queue(gc), material_cache(this), model_cache(this, work_queue, material_cache, model_shader_cache, instances_buffer), vsm_shadow_map_pass(gc), particle_emitter_pass(material_cache), lightsource_pass(gc), bloom_pass(gc), final_pass(gc)
+Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path)
+: cache(cache), frame(0), work_queue(gc)
 {
+	material_cache = std::unique_ptr<MaterialCache>(new MaterialCache(this));
+	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
+	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, work_queue, *material_cache, *model_shader_cache, instances_buffer));
+
+	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc));
+	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path));
+	lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path));
+	bloom_pass = std::unique_ptr<BloomPass>(new BloomPass(gc, shader_path));
+	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path));
+
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);
 
-	vsm_shadow_map_pass.viewport.bind_from(viewport);
-	vsm_shadow_map_pass.field_of_view.bind_from(camera_field_of_view);
+	vsm_shadow_map_pass->viewport.bind_from(viewport);
+	vsm_shadow_map_pass->field_of_view.bind_from(camera_field_of_view);
 
-	gbuffer_pass.viewport.bind_from(viewport);
-	gbuffer_pass.field_of_view.bind_from(camera_field_of_view);
+	gbuffer_pass->viewport.bind_from(viewport);
+	gbuffer_pass->field_of_view.bind_from(camera_field_of_view);
 
-	skybox_pass.viewport.bind_from(viewport);
-	skybox_pass.field_of_view.bind_from(camera_field_of_view);
-	skybox_pass.diffuse_color_gbuffer.bind_from(gbuffer_pass.diffuse_color_gbuffer);
-	skybox_pass.specular_color_gbuffer.bind_from(gbuffer_pass.specular_color_gbuffer);
-	skybox_pass.specular_level_gbuffer.bind_from(gbuffer_pass.specular_level_gbuffer);
-	skybox_pass.self_illumination_gbuffer.bind_from(gbuffer_pass.self_illumination_gbuffer);
-	skybox_pass.normal_z_gbuffer.bind_from(gbuffer_pass.normal_z_gbuffer);
-	skybox_pass.zbuffer.bind_from(gbuffer_pass.zbuffer);
+	skybox_pass->viewport.bind_from(viewport);
+	skybox_pass->field_of_view.bind_from(camera_field_of_view);
+	skybox_pass->diffuse_color_gbuffer.bind_from(gbuffer_pass->diffuse_color_gbuffer);
+	skybox_pass->specular_color_gbuffer.bind_from(gbuffer_pass->specular_color_gbuffer);
+	skybox_pass->specular_level_gbuffer.bind_from(gbuffer_pass->specular_level_gbuffer);
+	skybox_pass->self_illumination_gbuffer.bind_from(gbuffer_pass->self_illumination_gbuffer);
+	skybox_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
+	skybox_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
 
-	lightsource_pass.viewport.bind_from(viewport);
-	lightsource_pass.field_of_view.bind_from(camera_field_of_view);
-	lightsource_pass.diffuse_color_gbuffer.bind_from(gbuffer_pass.diffuse_color_gbuffer);
-	lightsource_pass.specular_color_gbuffer.bind_from(gbuffer_pass.specular_color_gbuffer);
-	lightsource_pass.specular_level_gbuffer.bind_from(gbuffer_pass.specular_level_gbuffer);
-	lightsource_pass.self_illumination_gbuffer.bind_from(gbuffer_pass.self_illumination_gbuffer);
-	lightsource_pass.normal_z_gbuffer.bind_from(gbuffer_pass.normal_z_gbuffer);
-	lightsource_pass.shadow_maps.bind_from(vsm_shadow_map_pass.shadow_maps);
+	lightsource_pass->viewport.bind_from(viewport);
+	lightsource_pass->field_of_view.bind_from(camera_field_of_view);
+	lightsource_pass->diffuse_color_gbuffer.bind_from(gbuffer_pass->diffuse_color_gbuffer);
+	lightsource_pass->specular_color_gbuffer.bind_from(gbuffer_pass->specular_color_gbuffer);
+	lightsource_pass->specular_level_gbuffer.bind_from(gbuffer_pass->specular_level_gbuffer);
+	lightsource_pass->self_illumination_gbuffer.bind_from(gbuffer_pass->self_illumination_gbuffer);
+	lightsource_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
+	lightsource_pass->shadow_maps.bind_from(vsm_shadow_map_pass->shadow_maps);
 
-	transparency_pass.viewport.bind_from(viewport);
-	transparency_pass.field_of_view.bind_from(camera_field_of_view);
-	transparency_pass.zbuffer.bind_from(gbuffer_pass.zbuffer);
-	transparency_pass.final_color.bind_from(lightsource_pass.final_color);
+	transparency_pass->viewport.bind_from(viewport);
+	transparency_pass->field_of_view.bind_from(camera_field_of_view);
+	transparency_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
+	transparency_pass->final_color.bind_from(lightsource_pass->final_color);
 
-	particle_emitter_pass.viewport.bind_from(viewport);
-	particle_emitter_pass.field_of_view.bind_from(camera_field_of_view);
-	particle_emitter_pass.zbuffer.bind_from(gbuffer_pass.zbuffer);
-	particle_emitter_pass.normal_z_gbuffer.bind_from(gbuffer_pass.normal_z_gbuffer);
-	particle_emitter_pass.final_color.bind_from(lightsource_pass.final_color);
+	particle_emitter_pass->viewport.bind_from(viewport);
+	particle_emitter_pass->field_of_view.bind_from(camera_field_of_view);
+	particle_emitter_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
+	particle_emitter_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
+	particle_emitter_pass->final_color.bind_from(lightsource_pass->final_color);
 
-	bloom_pass.viewport.bind_from(viewport);
-	bloom_pass.final_color.bind_from(lightsource_pass.final_color);
+	bloom_pass->viewport.bind_from(viewport);
+	bloom_pass->final_color.bind_from(lightsource_pass->final_color);
 
-	//ssao_pass.viewport.bind_from(viewport);
-	//ssao_pass.normal_z_gbuffer.bind_from(gbuffer_pass_normal_z_gbuffer);
+	//ssao_pass->viewport.bind_from(viewport);
+	//ssao_pass->normal_z_gbuffer.bind_from(gbuffer_pass_normal_z_gbuffer);
 
-	final_pass.viewport.bind_from(viewport);
-	final_pass.final_color.bind_from(lightsource_pass.final_color);
-	final_pass.bloom_blur_texture.bind_from(bloom_pass.bloom_contribution);
-	//final_pass.ambient_occlusion.bind_from(ssao_pass.ssao_contribution);
+	final_pass->viewport.bind_from(viewport);
+	final_pass->final_color.bind_from(lightsource_pass->final_color);
+	final_pass->bloom_blur_texture.bind_from(bloom_pass->bloom_contribution);
+	//final_pass->ambient_occlusion.bind_from(ssao_pass->ssao_contribution);
 }
 
 void Scene_Impl::set_viewport(const Rect &box)
@@ -164,44 +174,44 @@ void Scene_Impl::render(GraphicContext &gc)
 	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera.get_position());
 
 	// To do: move this elsewhere and set as OutData<Mat4f>:
-	gbuffer_pass.world_to_eye.set(world_to_eye);
-	skybox_pass.world_to_eye.set(world_to_eye);
-	vsm_shadow_map_pass.world_to_eye.set(world_to_eye);
-	lightsource_pass.world_to_eye.set(world_to_eye);
-	transparency_pass.world_to_eye.set(world_to_eye);
-	particle_emitter_pass.world_to_eye.set(world_to_eye);
+	gbuffer_pass->world_to_eye.set(world_to_eye);
+	skybox_pass->world_to_eye.set(world_to_eye);
+	vsm_shadow_map_pass->world_to_eye.set(world_to_eye);
+	lightsource_pass->world_to_eye.set(world_to_eye);
+	transparency_pass->world_to_eye.set(world_to_eye);
+	particle_emitter_pass->world_to_eye.set(world_to_eye);
 
 	gpu_timer.begin_time(gc, "gbuffer");
-	gbuffer_pass.run(gc, this);
+	gbuffer_pass->run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "skybox");
-	skybox_pass.run(gc, this);
+	skybox_pass->run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "vsm");
-	vsm_shadow_map_pass.run(gc, this);
+	vsm_shadow_map_pass->run(gc, this);
 	gpu_timer.end_time(gc);
 
-	lightsource_pass.run(gc, this);
+	lightsource_pass->run(gc, this);
 
 	gpu_timer.begin_time(gc, "transparency");
-	transparency_pass.run(gc, this);
+	transparency_pass->run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "particles");
-	particle_emitter_pass.run(gc, this);
+	particle_emitter_pass->run(gc, this);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.begin_time(gc, "bloom");
-	bloom_pass.run(gc);
+	bloom_pass->run(gc);
 	gpu_timer.end_time(gc);
 
 	//gpu_timer.begin_time(gc, "ssao");
-	//ssao_pass.run(gc);
+	//ssao_pass->run(gc);
 
 	gpu_timer.begin_time(gc, "final");
-	final_pass.run(gc);
+	final_pass->run(gc);
 	gpu_timer.end_time(gc);
 
 	gpu_timer.end_frame(gc);
@@ -214,8 +224,8 @@ void Scene_Impl::render(GraphicContext &gc)
 
 void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 {
-	material_cache.update(gc, time_elapsed);
-	particle_emitter_pass.update(gc, time_elapsed);
+	material_cache->update(gc, time_elapsed);
+	particle_emitter_pass->update(gc, time_elapsed);
 	// To do: update scene object animations here too
 }
 

@@ -40,17 +40,17 @@ namespace clan
 {
 
 
-LightsourcePass::LightsourcePass(GraphicContext &gc)
+LightsourcePass::LightsourcePass(GraphicContext &gc, const std::string &shader_path)
 {
 	if (gc.get_shader_language() == shader_glsl)
 	{
-		cull_tiles_program = compile_and_link(gc, "Resources/Engine/Lightsource/cull_tiles.glsl");
-		render_tiles_program = compile_and_link(gc, "Resources/Engine/Lightsource/render_tiles.glsl");
+		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.glsl"));
+		render_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/render_tiles.glsl"));
 	}
 	else
 	{
-		cull_tiles_program = compile_and_link(gc, "Resources/Engine/Lightsource/cull_tiles.hlsl");
-		render_tiles_program = compile_and_link(gc, "Resources/Engine/Lightsource/render_tiles.hlsl");
+		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.hlsl"));
+		render_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/render_tiles.hlsl"));
 	}
 
 	compute_uniforms = UniformVector<Uniforms>(gc, 1);

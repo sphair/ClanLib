@@ -38,6 +38,8 @@ class Model;
 class ModelShaderCache
 {
 public:
+	ModelShaderCache(const std::string &shader_path);
+
 	void create_gbuffer_commands(GraphicContext &gc, Model *model, int level);
 	void create_transparency_commands(GraphicContext &gc, Model *model, int level);
 	void create_shadow_commands(GraphicContext &gc, Model *model, int level);

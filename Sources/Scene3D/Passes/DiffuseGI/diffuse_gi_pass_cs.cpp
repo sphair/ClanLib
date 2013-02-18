@@ -35,23 +35,23 @@ namespace clan
 {
 
 
-DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc)
+DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path)
 {
 	if (gc.get_shader_language() == shader_glsl)
 	{
-		init_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/init_lpv.glsl");
-		init_gv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/init_gv.glsl");
-		propagate_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/propagate_lpv.glsl");
-		accumulate_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/accumulate_lpv.glsl");
-		render_result_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/render_result.glsl");
+		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.glsl"));
+		init_gv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_gv.glsl"));
+		propagate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/propagate_lpv.glsl"));
+		accumulate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/accumulate_lpv.glsl"));
+		render_result_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/render_result.glsl"));
 	}
 	else
 	{
-		init_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/init_lpv.hlsl");
-		init_gv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/init_gv.hlsl");
-		propagate_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/propagate_lpv.hlsl");
-		accumulate_lpv_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/accumulate_lpv.hlsl");
-		render_result_program = compile_and_link(gc, "Resources/Engine/DiffuseGI/render_result.hlsl");
+		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.hlsl"));
+		init_gv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_gv.hlsl"));
+		propagate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/propagate_lpv.hlsl"));
+		accumulate_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/accumulate_lpv.hlsl"));
+		render_result_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/render_result.hlsl"));
 	}
 }
 

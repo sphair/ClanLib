@@ -35,7 +35,7 @@ namespace clan
 class FinalPass
 {
 public:
-	FinalPass(GraphicContext &gc);
+	FinalPass(GraphicContext &gc, const std::string &shader_path);
 	void run(GraphicContext &gc);
 
 	InData<Rect> viewport;

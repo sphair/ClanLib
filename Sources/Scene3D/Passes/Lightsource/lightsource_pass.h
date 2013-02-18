@@ -41,7 +41,7 @@ class Scene_Impl;
 class LightsourcePass : SceneLightVisitor
 {
 public:
-	LightsourcePass(GraphicContext &gc);
+	LightsourcePass(GraphicContext &gc, const std::string &shader_path);
 	~LightsourcePass();
 
 	void run(GraphicContext &gc, Scene_Impl *scene);

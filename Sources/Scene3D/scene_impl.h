@@ -60,7 +60,7 @@ class SceneParticleEmitterVisitor;
 class Scene_Impl
 {
 public:
-	Scene_Impl(GraphicContext &gc, SceneCache cache);
+	Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path);
 	void set_viewport(const Rect &box);
 	void set_camera(const Vec3f &position, const Quaternionf &orientation);
 	void set_camera_position(const Vec3f &position);
@@ -88,13 +88,16 @@ public:
 
 private:
 	SceneCache cache;
+	std::string shader_path;
 
 	int frame;
 	InstancesBuffer instances_buffer;
-	ModelCache model_cache;
+
 	WorkQueue work_queue;
-	MaterialCache material_cache;
-	ModelShaderCache model_shader_cache;
+
+	std::unique_ptr<MaterialCache> material_cache;
+	std::unique_ptr<ModelShaderCache> model_shader_cache;
+	std::unique_ptr<ModelCache> model_cache;
 
 	std::list<SceneObject_Impl *> objects;
 	std::list<SceneLight_Impl *> lights;
@@ -102,18 +105,19 @@ private:
 	OctTree tree;
 
 	SceneCamera camera;
-	OutData<float> camera_field_of_view;
 
+	OutData<float> camera_field_of_view;
 	OutData<Rect> viewport;
-	VSMShadowMapPass vsm_shadow_map_pass;
-	GBufferPass gbuffer_pass;
-	SkyboxPass skybox_pass;
-	LightsourcePass lightsource_pass;
-	TransparencyPass transparency_pass;
-	ParticleEmitterPass particle_emitter_pass;
-	BloomPass bloom_pass;
-	//SSAOPass ssao_pass;
-	FinalPass final_pass;
+
+	std::unique_ptr<VSMShadowMapPass> vsm_shadow_map_pass;
+	std::unique_ptr<GBufferPass> gbuffer_pass;
+	std::unique_ptr<SkyboxPass> skybox_pass;
+	std::unique_ptr<LightsourcePass> lightsource_pass;
+	std::unique_ptr<TransparencyPass> transparency_pass;
+	std::unique_ptr<ParticleEmitterPass> particle_emitter_pass;
+	std::unique_ptr<BloomPass> bloom_pass;
+	//std::unique_ptr<SSAOPass> ssao_pass;
+	std::unique_ptr<FinalPass> final_pass;
 
 	GPUTimer gpu_timer;
 
