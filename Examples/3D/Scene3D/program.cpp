@@ -33,6 +33,9 @@ int Program::main(const std::vector<std::string> &args)
 	SceneLight light(scene);
 	light.set_position(Vec3f(100.0f, 100.0f, 100.0f));
 
+	SceneModel model(gc, scene, "plane");
+	SceneObject object(scene, model, Vec3f(0.0f, -10.0f, 0.0f));
+
 	ElapsedTimer elapsed_timer;
 
 	while (!exit)

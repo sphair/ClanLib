@@ -303,9 +303,9 @@ ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, 
 
 	ProgramObject transparency;
 	if (gc.get_shader_language() == shader_glsl)
-		transparency = ShaderSetup::compile(gc, base_path, "Resources/Engine/Transparency/vertex.glsl", "Resources/Engine/Transparency/fragment.glsl", defines);
+		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.glsl", "Transparency/fragment.glsl", defines);
 	else
-		transparency = ShaderSetup::compile(gc, base_path, "Resources/Engine/Transparency/vertex.hlsl", "Resources/Engine/Transparency/fragment.hlsl", defines);
+		transparency = ShaderSetup::compile(gc, base_path, "Transparency/vertex.hlsl", "Transparency/fragment.hlsl", defines);
 
 	transparency.bind_frag_data_location(0, "FragColor");
 	transparency.bind_frag_data_location(1, "FragFaceNormal");
@@ -363,9 +363,9 @@ ProgramObject ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses
 
 	ProgramObject program;
 	if (gc.get_shader_language() == shader_glsl)
-		program = ShaderSetup::compile(gc, base_path, "Resources/Engine/SceneLights/vertex.glsl", "Resources/Engine/SceneLights/fragment_shadow.glsl", defines);
+		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "SceneLights/fragment_shadow.glsl", defines);
 	else
-		program = ShaderSetup::compile(gc, base_path, "Resources/Engine/SceneLights/vertex.hlsl", "Resources/Engine/SceneLights/fragment_shadow.hlsl", defines);
+		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "SceneLights/fragment_shadow.hlsl", defines);
 
 	program.bind_frag_data_location(0, "FragMoment");
 
