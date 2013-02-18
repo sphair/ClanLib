@@ -53,9 +53,9 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(0.0f, 1.0f));
 	model_data->mesh_lods[0].meshes[0].channels[0].push_back(Vec2f(1.0f, 1.0f));
 */
-	model_data->mesh_lods[0].meshes[0].elements.push_back(0);
-	model_data->mesh_lods[0].meshes[0].elements.push_back(1);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(2);
+	model_data->mesh_lods[0].meshes[0].elements.push_back(1);
+	model_data->mesh_lods[0].meshes[0].elements.push_back(0);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(1);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(2);
 	model_data->mesh_lods[0].meshes[0].elements.push_back(3);
