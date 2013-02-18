@@ -95,9 +95,13 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &
 	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, work_queue, *material_cache, *model_shader_cache, instances_buffer));
 
 	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc));
-	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path));
+	gbuffer_pass = std::unique_ptr<GBufferPass>(new GBufferPass());
+	skybox_pass = std::unique_ptr<SkyboxPass>(new SkyboxPass(shader_path));
 	lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path));
+	transparency_pass = std::unique_ptr<TransparencyPass>(new TransparencyPass());
+	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path));
 	bloom_pass = std::unique_ptr<BloomPass>(new BloomPass(gc, shader_path));
+	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path));
 	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path));
 
 	viewport.set(Size(640, 480));
