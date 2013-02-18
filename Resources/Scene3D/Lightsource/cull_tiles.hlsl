@@ -12,7 +12,11 @@ struct Light
 {
 	float4 position; // vec3(pos), shadow_index (negative = no shadows)
 	float4 color; // rgb, unused
+#if defined(USE_QUADRATIC_ATTENUATION)
 	float4 range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), falloff_begin
+#else
+	float4 range; // pow(attenuation_end, 2), attenation_start, 1/(attenuation_end-attenuation_start), falloff_begin
+#endif
 	float4 spot_x; // xyz, light type (0 = omni, 1 = circle spot, 2 = rect spot)
 	float4 spot_y; // xyz, unused
 	float4 spot_z; // xyz, unused

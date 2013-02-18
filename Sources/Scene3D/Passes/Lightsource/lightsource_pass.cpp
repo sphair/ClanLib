@@ -139,8 +139,12 @@ void LightsourcePass::upload(GraphicContext &gc)
 		if (attenuation_delta == 0.0f)
 			attenuation_delta = 1e-6f;
 		float sqr_radius = radius * radius;
+#ifdef USE_QUADRATIC_ATTENUATION
 		float sqr_attenuation_start = lights[i]->attenuation_start * lights[i]->attenuation_start;
 		float sqr_attenuation_delta = attenuation_delta * attenuation_delta;
+#else
+		float attenuation_start = lights[i]->attenuation_start;
+#endif
 		float sqr_falloff_begin = 0.0f;
 		float light_type = 0.0f;
 		if (lights[i]->type == SceneLight::type_spot)
@@ -156,7 +160,11 @@ void LightsourcePass::upload(GraphicContext &gc)
 
 		data[i].position = Vec4f(position_in_eye, (float)shadow_map_index);
 		data[i].color = Vec4f(lights[i]->color, 1.0f);
+#ifdef USE_QUADRATIC_ATTENUATION
 		data[i].range = Vec4f(sqr_radius, sqr_attenuation_start, 1.0f / sqr_attenuation_delta, sqr_falloff_begin);
+#else
+		data[i].range = Vec4f(sqr_radius, attenuation_start, 1.0f / attenuation_delta, sqr_falloff_begin);
+#endif
 		data[i].spot_x = Vec4f(eye_to_shadow_projection[0], eye_to_shadow_projection[4], eye_to_shadow_projection[8], light_type);
 		data[i].spot_y = Vec4f(eye_to_shadow_projection[1], eye_to_shadow_projection[5], eye_to_shadow_projection[9], 0.0f);
 		data[i].spot_z = Vec4f(eye_to_shadow_projection[2], eye_to_shadow_projection[6], eye_to_shadow_projection[10], 0.0f);
