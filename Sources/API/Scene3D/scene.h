@@ -49,7 +49,7 @@ class CL_API_SCENE Scene
 {
 public:
 	Scene();
-	Scene(GraphicContext &gc, const SceneCache &cache);
+	Scene(GraphicContext &gc, const SceneCache &cache, const std::string &shader_path);
 
 	bool is_null() const;
 

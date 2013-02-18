@@ -37,7 +37,7 @@ class Scene_Impl;
 class SkyboxPass
 {
 public:
-	SkyboxPass();
+	SkyboxPass(const std::string &shader_path);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	InData<Rect> viewport;
@@ -61,6 +61,8 @@ private:
 	void create_billboard_program(GraphicContext &gc);
 	void create_cube_program(GraphicContext &gc);
 	static float random(float min_value, float max_value);
+
+	std::string shader_path;
 
 	struct Uniforms
 	{

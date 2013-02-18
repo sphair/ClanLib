@@ -42,7 +42,7 @@ class MaterialCache;
 class ParticleEmitterPass : SceneParticleEmitterVisitor
 {
 public:
-	ParticleEmitterPass(MaterialCache &texture_cache);
+	ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 	void update(GraphicContext &gc, float time_elapsed);
 
@@ -57,6 +57,8 @@ public:
 private:
 	void setup(GraphicContext &gc);
 	void emitter(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter);
+
+	std::string shader_path;
 
 	MaterialCache &texture_cache;
 	FrameBuffer fb;

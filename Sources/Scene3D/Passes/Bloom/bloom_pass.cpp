@@ -35,16 +35,16 @@ namespace clan
 {
 
 
-BloomPass::BloomPass(GraphicContext &gc)
+BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path)
 {
 	if (gc.get_shader_language() == shader_glsl)
 	{
-		bloom_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.glsl", "Resources/Engine/Bloom/fragment_bloom_extract.glsl", "");
+		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.glsl"), "");
 		bloom_shader.bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		bloom_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.hlsl", "Resources/Engine/Bloom/fragment_bloom_extract.hlsl", "");
+		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.hlsl"), "");
 	}
 
 	ShaderSetup::link(bloom_shader, "bloom extract program");

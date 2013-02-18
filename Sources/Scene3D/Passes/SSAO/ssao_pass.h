@@ -36,7 +36,7 @@ namespace clan
 class SSAOPass
 {
 public:
-	SSAOPass(GraphicContext &gc);
+	SSAOPass(GraphicContext &gc, const std::string &shader_path);
 	void run(GraphicContext &gc);
 
 	InData<Texture2D> normal_z_gbuffer;

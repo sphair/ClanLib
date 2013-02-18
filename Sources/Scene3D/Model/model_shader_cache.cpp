@@ -37,6 +37,10 @@
 namespace clan
 {
 
+ModelShaderCache::ModelShaderCache(const std::string &shader_path)
+	: base_path(shader_path)
+{
+}
 
 void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model, int level)
 {
@@ -236,9 +240,9 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 
 	ProgramObject gbuffer;
 	if (gc.get_shader_language() == shader_glsl)
-		gbuffer = ShaderSetup::compile(gc, base_path, "Resources/Engine/GBuffer/vertex.glsl", "Resources/Engine/GBuffer/fragment_gbuffer.glsl", defines);
+		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.glsl", "GBuffer/fragment_gbuffer.glsl", defines);
 	else
-		gbuffer = ShaderSetup::compile(gc, base_path, "Resources/Engine/GBuffer/vertex.hlsl", "Resources/Engine/GBuffer/fragment_gbuffer.hlsl", defines);
+		gbuffer = ShaderSetup::compile(gc, base_path, "GBuffer/vertex.hlsl", "GBuffer/fragment_gbuffer.hlsl", defines);
 
 	gbuffer.bind_frag_data_location(0, "FragColor");
 	gbuffer.bind_frag_data_location(1, "FragFaceNormal");

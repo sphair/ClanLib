@@ -36,8 +36,8 @@
 namespace clan
 {
 
-ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache)
-: texture_cache(texture_cache)
+ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path)
+: shader_path(shader_path), texture_cache(texture_cache)
 {
 }
 
@@ -136,8 +136,8 @@ void ParticleEmitterPass::setup(GraphicContext &gc)
 {
 	if (program.is_null())
 	{
-		std::string vertex_filename = "Resources/Engine/ParticleEmitter/vertex.hlsl";
-		std::string fragment_filename = "Resources/Engine/ParticleEmitter/fragment.hlsl";
+		std::string vertex_filename = PathHelp::combine(shader_path, "ParticleEmitter/vertex.hlsl");
+		std::string fragment_filename = PathHelp::combine(shader_path, "ParticleEmitter/fragment.hlsl");
 		program = ProgramObject::load(gc, vertex_filename, fragment_filename);
 		program.bind_attribute_location(0, "AttrPosition");
 		program.bind_frag_data_location(0, "FragColor");

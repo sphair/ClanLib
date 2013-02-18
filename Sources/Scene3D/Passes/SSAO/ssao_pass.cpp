@@ -33,16 +33,16 @@
 namespace clan
 {
 
-SSAOPass::SSAOPass(GraphicContext &gc)
+SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path)
 {
 	if (gc.get_shader_language() == shader_glsl)
 	{
-		extract_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.glsl", "Resources/Engine/SSAO/fragment_ssao_extract.glsl", "");
+		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.glsl"), "");
 		extract_shader.bind_frag_data_location(0, "FragColor");
 	}
 	else
 	{
-		extract_shader = ShaderSetup::compile(gc, "", "Resources/Engine/Final/vertex_present.hlsl", "Resources/Engine/SSAO/fragment_ssao_extract.hlsl", "");
+		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.hlsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.hlsl"), "");
 	}
 	ShaderSetup::link(extract_shader, "ssao extract program");
 	extract_shader.bind_attribute_location(0, "AttrPositionInProjection");

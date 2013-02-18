@@ -37,7 +37,7 @@ class Scene_Impl;
 class DiffuseGIPassCS
 {
 public:
-	DiffuseGIPassCS(GraphicContext &gc);
+	DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path);
 	~DiffuseGIPassCS();
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
