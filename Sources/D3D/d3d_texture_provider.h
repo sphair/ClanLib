@@ -123,6 +123,10 @@ public:
 /// \name Implementation
 /// \{
 private:
+	void create_1d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+	void create_2d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+	void create_3d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
+
 	struct ViewHandles
 	{
 		ViewHandles(const ComPtr<ID3D11Device> &device) : device(device), sampler_state(device) { }

@@ -536,109 +536,161 @@ void D3DTextureProvider::create(int width, int height, int depth, int array_size
 {
 	if (data->texture_dimensions == texture_1d || data->texture_dimensions == texture_1d_array)
 	{
-		D3D11_TEXTURE1D_DESC texture_desc;
-		texture_desc.Width = width;
-		texture_desc.MipLevels = levels;
-		texture_desc.ArraySize = array_size;
-		texture_desc.Format = to_d3d_format(texture_format);
-		texture_desc.Usage = D3D11_USAGE_DEFAULT;
-		texture_desc.CPUAccessFlags = 0;
-		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-
-		if (PixelBuffer::is_compressed(texture_format))
-		{
-			texture_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		}
-		else
-		{
-			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-			if (data->feature_level >= D3D_FEATURE_LEVEL_10_1)
-				texture_desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
-			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
-		}
-
-		HRESULT result = data->handles.front()->device->CreateTexture1D(&texture_desc, 0, (ID3D11Texture1D **) (data->handles.front()->texture.output_variable()));
-		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture1D failed", result);
+		create_1d(width, height, depth, array_size, texture_format, levels);
 	}
 	else if (data->texture_dimensions == texture_2d || data->texture_dimensions == texture_2d_array || data->texture_dimensions == texture_cube || data->texture_dimensions == texture_cube_array)
 	{
-		D3D11_TEXTURE2D_DESC texture_desc;
-		texture_desc.Width = width;
-		texture_desc.Height = height;
-		texture_desc.MipLevels = levels;
-		texture_desc.Format = to_d3d_format(texture_format);
-		texture_desc.SampleDesc.Count = 1;
-		texture_desc.SampleDesc.Quality = 0;
-		texture_desc.Usage = D3D11_USAGE_DEFAULT;
-		texture_desc.CPUAccessFlags = 0;
-		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-
-		if (data->texture_dimensions == texture_cube)
-		{
-			texture_desc.ArraySize = 6;
-			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
-		}
-		else if (data->texture_dimensions == texture_cube_array)
-		{
-			texture_desc.ArraySize = 6 * array_size;
-			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
-		}
-		else
-		{
-			texture_desc.ArraySize = array_size;
-		}
-
-		if (is_stencil_or_depth_format(texture_format))
-		{
-			texture_desc.MipLevels = 1;
-			texture_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		}
-		else if (PixelBuffer::is_compressed(texture_format))
-		{
-			texture_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		}
-		else
-		{
-			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-			if (data->feature_level >= D3D_FEATURE_LEVEL_10_1)
-				texture_desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
-			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
-		}
-
-		HRESULT result = data->handles.front()->device->CreateTexture2D(&texture_desc, 0, (ID3D11Texture2D **) (data->handles.front()->texture.output_variable()));
-		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
+		create_2d(width, height, depth, array_size, texture_format, levels);
 	}
 	else if (data->texture_dimensions == texture_3d)
 	{
-		D3D11_TEXTURE3D_DESC texture_desc;
-		texture_desc.Width = width;
-		texture_desc.Height = height;
-		texture_desc.MipLevels = levels;
-		texture_desc.Depth = depth;
-		texture_desc.Format = to_d3d_format(texture_format);
-		texture_desc.Usage = D3D11_USAGE_DEFAULT;
-		texture_desc.CPUAccessFlags = 0;
-		texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
-
-		if (PixelBuffer::is_compressed(texture_format))
-		{
-			texture_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		}
-		else
-		{
-			texture_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-			if (data->feature_level >= D3D_FEATURE_LEVEL_10_1)
-				texture_desc.BindFlags |= D3D11_BIND_UNORDERED_ACCESS;
-			texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
-		}
-
-		HRESULT result = data->handles.front()->device->CreateTexture3D(&texture_desc, 0, (ID3D11Texture3D **) (data->handles.front()->texture.output_variable()));
-		D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
+		create_3d(width, height, depth, array_size, texture_format, levels);
 	}
 	else
 	{
 		throw Exception("Unknown texture dimensions type");
 	}
+}
+
+void D3DTextureProvider::create_1d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+{
+	D3D11_TEXTURE1D_DESC texture_desc;
+	texture_desc.Width = width;
+	texture_desc.MipLevels = levels;
+	texture_desc.ArraySize = array_size;
+	texture_desc.Format = to_d3d_format(texture_format);
+	texture_desc.Usage = D3D11_USAGE_DEFAULT;
+	texture_desc.CPUAccessFlags = 0;
+	texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+
+	UINT bind_flags_with_compute = 0;
+	UINT bind_flags_without_compute = 0;
+
+	if (PixelBuffer::is_compressed(texture_format))
+	{
+		bind_flags_without_compute = D3D11_BIND_SHADER_RESOURCE;
+		bind_flags_with_compute = bind_flags_without_compute;
+	}
+	else
+	{
+		bind_flags_without_compute = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		bind_flags_with_compute = bind_flags_without_compute | D3D11_BIND_UNORDERED_ACCESS;
+
+		texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	}
+
+	texture_desc.BindFlags = bind_flags_with_compute;
+
+	HRESULT result = data->handles.front()->device->CreateTexture1D(&texture_desc, 0, (ID3D11Texture1D **) (data->handles.front()->texture.output_variable()));
+	if (result == E_INVALIDARG && bind_flags_with_compute != bind_flags_without_compute)
+	{
+		texture_desc.BindFlags = bind_flags_without_compute;
+		result = data->handles.front()->device->CreateTexture1D(&texture_desc, 0, (ID3D11Texture1D **) (data->handles.front()->texture.output_variable()));
+	}
+
+	D3DTarget::throw_if_failed("ID3D11Device.CreateTexture1D failed", result);
+}
+
+void D3DTextureProvider::create_2d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+{
+	D3D11_TEXTURE2D_DESC texture_desc;
+	texture_desc.Width = width;
+	texture_desc.Height = height;
+	texture_desc.MipLevels = levels;
+	texture_desc.Format = to_d3d_format(texture_format);
+	texture_desc.SampleDesc.Count = 1;
+	texture_desc.SampleDesc.Quality = 0;
+	texture_desc.Usage = D3D11_USAGE_DEFAULT;
+	texture_desc.CPUAccessFlags = 0;
+	texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+
+	if (data->texture_dimensions == texture_cube)
+	{
+		texture_desc.ArraySize = 6;
+		texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+	}
+	else if (data->texture_dimensions == texture_cube_array)
+	{
+		texture_desc.ArraySize = 6 * array_size;
+		texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+	}
+	else
+	{
+		texture_desc.ArraySize = array_size;
+	}
+
+	UINT bind_flags_with_compute = 0;
+	UINT bind_flags_without_compute = 0;
+
+	if (is_stencil_or_depth_format(texture_format))
+	{
+		texture_desc.MipLevels = 1;
+
+		bind_flags_without_compute = D3D11_BIND_DEPTH_STENCIL;
+		bind_flags_with_compute = bind_flags_without_compute;
+	}
+	else if (PixelBuffer::is_compressed(texture_format))
+	{
+		bind_flags_without_compute = D3D11_BIND_SHADER_RESOURCE;
+		bind_flags_with_compute = bind_flags_without_compute;
+	}
+	else
+	{
+		bind_flags_without_compute = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		bind_flags_with_compute = bind_flags_without_compute | D3D11_BIND_UNORDERED_ACCESS;
+
+		texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	}
+
+	texture_desc.BindFlags = bind_flags_with_compute;
+
+	HRESULT result = data->handles.front()->device->CreateTexture2D(&texture_desc, 0, (ID3D11Texture2D **) (data->handles.front()->texture.output_variable()));
+	if (result == E_INVALIDARG && bind_flags_with_compute != bind_flags_without_compute)
+	{
+		texture_desc.BindFlags = bind_flags_without_compute;
+		result = data->handles.front()->device->CreateTexture2D(&texture_desc, 0, (ID3D11Texture2D **) (data->handles.front()->texture.output_variable()));
+	}
+
+	D3DTarget::throw_if_failed("ID3D11Device.CreateTexture2D failed", result);
+}
+
+void D3DTextureProvider::create_3d(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
+{
+	D3D11_TEXTURE3D_DESC texture_desc;
+	texture_desc.Width = width;
+	texture_desc.Height = height;
+	texture_desc.MipLevels = levels;
+	texture_desc.Depth = depth;
+	texture_desc.Format = to_d3d_format(texture_format);
+	texture_desc.Usage = D3D11_USAGE_DEFAULT;
+	texture_desc.CPUAccessFlags = 0;
+	texture_desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+
+	UINT bind_flags_with_compute = 0;
+	UINT bind_flags_without_compute = 0;
+
+	if (PixelBuffer::is_compressed(texture_format))
+	{
+		bind_flags_without_compute = D3D11_BIND_SHADER_RESOURCE;
+	}
+	else
+	{
+		bind_flags_without_compute = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		bind_flags_with_compute = bind_flags_without_compute | D3D11_BIND_UNORDERED_ACCESS;
+
+		texture_desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	}
+
+	texture_desc.BindFlags = bind_flags_with_compute;
+
+	HRESULT result = data->handles.front()->device->CreateTexture3D(&texture_desc, 0, (ID3D11Texture3D **) (data->handles.front()->texture.output_variable()));
+	if (result == E_INVALIDARG && bind_flags_with_compute != bind_flags_without_compute)
+	{
+		texture_desc.BindFlags = bind_flags_without_compute;
+		result = data->handles.front()->device->CreateTexture3D(&texture_desc, 0, (ID3D11Texture3D **) (data->handles.front()->texture.output_variable()));
+	}
+
+	D3DTarget::throw_if_failed("ID3D11Device.CreateTexture3D failed", result);
 }
 
 PixelBuffer D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
