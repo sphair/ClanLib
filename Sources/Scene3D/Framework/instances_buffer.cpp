@@ -56,6 +56,9 @@ void InstancesBuffer::add(int vectors_count)
 
 void InstancesBuffer::lock(GraphicContext &gc)
 {
+	if (num_vectors == 0)
+		return;
+
 	if (num_vectors > max_vectors)
 	{
 		max_vectors = num_vectors * 2;
@@ -96,6 +99,9 @@ Vec4f *InstancesBuffer::upload(int offset_index, int vectors)
 
 void InstancesBuffer::unlock(GraphicContext &gc)
 {
+	if (num_vectors == 0)
+		return;
+
 	indexes_transfer[current_buffer].unlock();
 	vectors_transfer[current_buffer].unlock();
 
