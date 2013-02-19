@@ -44,7 +44,6 @@ int App::start(const std::vector<std::string> &args)
 	desc.set_multisampling(0);
 	desc.set_allow_resize(false);
 	desc.set_depth_size(16);
-	desc.set_version(3, 2, false);
 
 	DisplayWindow window(desc);
 
@@ -54,25 +53,24 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(gc);
+	GraphicStore graphic_store(canvas);
 	scene.gs = &graphic_store;
 
 	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	//gc.set_map_mode(cl_user_projection);
 
-	gc.set_culled(false);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
+	//gc.set_culled(false);
+	//gc.set_face_cull_mode(cl_cull_back);
+	//gc.set_front_face(cl_face_side_clockwise);
 	
-	create_scene(gc);
+	create_scene(canvas);
 
 	camera_angle = 0.0f;
 
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
 	FramerateCounter framerate_counter;
 
@@ -87,25 +85,25 @@ int App::start(const std::vector<std::string> &args)
 		time_last = time_now;
 
 		control_camera();
-		calculate_matricies(gc);
+		calculate_matricies(canvas);
 
-		gc.clear_depth(1.0f);
+		canvas.clear_depth(1.0f);
 		// ** If enabling below, change the graphic from alpha_ball2.png to alpha_ball.png in graphic_store.cpp
 		//render_depth_buffer(gc);	// Render to depth buffer first, to fake sorting the particles
-		render(gc);	// Render scene
+		render(canvas);	// Render scene
 
-		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(map_2d_upper_left);
+		//gc.set_modelview(Mat4f::identity());
+		//gc.set_map_mode(map_2d_upper_left);
 
 		std::string fps(string_format("fps = %1", framerate_counter.get_framerate()));
-		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(gc, 16, gc.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 		std::string info(string_format("Drawing %1 particles", ParticleObject::num_points));
-		font.draw_text(gc, 16, 30, info);
+		font.draw_text(canvas, 16, 30, info);
 
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		canvas.flip(0);
 
 		// This call processes user input and other events
 		KeepAlive::process();
@@ -131,6 +129,8 @@ void App::on_window_close()
 
 void App::render_depth_buffer(GraphicContext &gc)
 {
+	// FIXME
+/*
 	gc.set_map_mode(cl_user_projection);
 	gc.set_viewport(scene.gs->texture_depth.get_size());
 
@@ -141,7 +141,7 @@ void App::render_depth_buffer(GraphicContext &gc)
 	gc.enable_depth_test(true);
 	gc.enable_stencil_test(false);
 	gc.enable_color_write(false);
-
+*/
 	Mat4f modelview_matrix = scene.gs->camera_modelview;
 	scene.Draw(modelview_matrix, gc);
 	gc.reset_program_object();
@@ -149,17 +149,17 @@ void App::render_depth_buffer(GraphicContext &gc)
 
 void App::render(GraphicContext &gc)
 {
-	gc.set_map_mode(cl_user_projection);
+//	gc.set_map_mode(cl_user_projection);
 	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
 	gc.set_viewport(viewport_rect);
 
-	gc.set_projection(scene.gs->camera_projection);
+//	gc.set_projection(scene.gs->camera_projection);
 
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	gc.enable_depth_test(true);
-	gc.enable_stencil_test(false);
-	gc.enable_color_write(true);
+//	gc.set_depth_compare_function(cl_comparefunc_lequal);
+//	gc.enable_depth_write(true);
+//	gc.enable_depth_test(true);
+//	gc.enable_stencil_test(false);
+//	gc.enable_color_write(true);
 
 	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
@@ -184,7 +184,7 @@ void App::create_scene(GraphicContext &gc)
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);

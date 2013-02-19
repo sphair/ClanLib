@@ -83,16 +83,16 @@ void ParticleObject::Draw(GraphicContext &gc, const Mat4f &current_modelview)
 
 void ParticleObject::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
-	gc.set_modelview(modelview_matrix);
+//FIXME:	gc.set_modelview(modelview_matrix);
 
 	PrimitivesArray prim_array(gc);
 
-	prim_array.set_attributes(0, object_positions_vbo, 3, cl_type_float, 0);
-	prim_array.set_attributes(1, object_colours_vbo, 4, cl_type_float, 0);
+	prim_array.set_attributes(0, object_positions_vbo, 3, type_float, 0);
+	prim_array.set_attributes(1, object_colours_vbo, 4, type_float, 0);
 
 	gs->shader_color_geometry.Use(gc);
 
 	gc.set_texture(0, gs->texture_alpha_ball);
-	gc.draw_primitives(cl_points, num_points, prim_array);
+	gc.draw_primitives(type_points, num_points, prim_array);
 	gc.reset_texture(0);
 }
