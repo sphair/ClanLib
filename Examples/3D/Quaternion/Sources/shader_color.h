@@ -52,12 +52,9 @@ private:
 		Vec4f LightDiffuse;
 		Vec4f LightAmbient;
 		Vec3f LightVector;
-		float padding1;
+		float padding;
 		Vec3f LightHalfVector;
-		float padding2;
-		Colorf blob;
 		float MaterialShininess;
-		float padding3[3];
 
 	};
 

@@ -50,7 +50,6 @@ char ShaderColor::vertex[] =
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
 	"	vec3 LightHalfVector;\n"
-	"	vec4 blob;\n"
 	"	float MaterialShininess;\n"
 	"};\n"
 	"out vec3 WorldSpaceNormal; \n"
@@ -89,7 +88,6 @@ char ShaderColor::fragment[] =
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
 	"	vec3 LightHalfVector;\n"
-	"	vec4 blob;\n"
 	"	float MaterialShininess;\n"
 	"};\n"
 	"\n"
@@ -155,8 +153,6 @@ ShaderColor::ShaderColor(GraphicContext &gc)
 	uniforms.LightVector = Vec3f(0.0f, 0.0f, 1.0f);
 	uniforms.LightSpecular = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	uniforms.LightDiffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-
-	uniforms.blob = Colorf::green;
 
 }
 
