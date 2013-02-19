@@ -29,6 +29,7 @@
 #include "Sound/precomp.h"
 #include "API/Sound/setupsound.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
+#include "API/Sound/SoundProviders/soundprovider_vorbis.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Signals/slot.h"
@@ -43,6 +44,7 @@ namespace clan
 static int ref_count = 0;
 static Slot slot_resource_added;
 static SoundProviderType *providertype_wave = 0;
+static SoundProviderType *providertype_ogg = 0;
 
 SetupSound::SetupSound(bool register_resources_only)
 {
@@ -60,6 +62,7 @@ void SetupSound::init(bool register_resources_only)
 	if (ref_count > 1)
 		return;
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
+	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
 	if (register_resources_only)
 		return;
 }
@@ -72,6 +75,9 @@ void SetupSound::deinit()
 
 	delete providertype_wave;
 	providertype_wave = 0;
+
+	delete providertype_ogg;
+	providertype_ogg = 0;
 }
 
 }

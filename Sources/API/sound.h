@@ -55,6 +55,7 @@
 
 #include "Sound/SoundProviders/soundprovider_wave.h"
 #include "Sound/SoundProviders/soundprovider_raw.h"
+#include "Sound/SoundProviders/soundprovider_vorbis.h"
 #include "Sound/SoundProviders/soundfilter_provider.h"
 
 #include "Sound/SoundFilters/echofilter.h"
