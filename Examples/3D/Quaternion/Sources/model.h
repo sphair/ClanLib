@@ -42,6 +42,7 @@ public:
 
 	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix);
 	bool is_null();
+	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
 
 private:
 	std::shared_ptr<Model_Impl> impl;

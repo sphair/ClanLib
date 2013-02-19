@@ -34,6 +34,8 @@ public:
 	ShaderColor(GraphicContext &gc);
 
 	void Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal);
+	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
+	void SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient);
 
 private:
 
@@ -42,9 +44,25 @@ private:
 		Mat4f cl_ModelViewMatrix;
 		Mat4f cl_ModelViewProjectionMatrix;
 		Mat4f cl_NormalMatrix;
+
+		Vec4f MaterialEmission;
+		Vec4f MaterialSpecular;
+		Vec4f MaterialAmbient;
+		Vec4f LightSpecular;
+		Vec4f LightDiffuse;
+		Vec4f LightAmbient;
+		Vec3f LightVector;
+		float padding1;
+		Vec3f LightHalfVector;
+		float padding2;
+		Colorf blob;
+		float MaterialShininess;
+		float padding3[3];
+
 	};
 
 	clan::UniformVector<ProgramUniforms> gpu_uniforms;
+	ProgramUniforms uniforms;
 
 	static char vertex[];
 	static char fragment[];
