@@ -266,14 +266,6 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
-	Project clanVorbis(
-		"Vorbis",
-		"clanVorbis",
-		"vorbis.h",
-		libs_list_shared,
-		libs_list_release,
-		libs_list_debug);
-
 	Project clanCSSLayout(
 		"CSSLayout",
 		"clanCSSLayout",
@@ -324,7 +316,6 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanCSSLayout);
 
 	workspace.projects.push_back(clanGUI);
-	workspace.projects.push_back(clanVorbis);
 
 	workspace.projects.push_back(clanCompute);
 	workspace.projects.push_back(clanPhysics2D);
