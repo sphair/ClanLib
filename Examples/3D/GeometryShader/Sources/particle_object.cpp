@@ -92,7 +92,7 @@ void ParticleObject::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &mod
 
 	gs->shader_color_geometry.Use(gc, matrix_modelview_projection);
 
-	gc.set_texture(0, gs->texture_alpha_ball);
+	gc.set_texture(0, gs->texture_ball);
 	gc.draw_primitives(type_points, num_points, prim_array);
 	gc.reset_texture(0);
 }

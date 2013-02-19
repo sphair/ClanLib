@@ -38,8 +38,10 @@ GraphicStore::GraphicStore(GraphicContext &gc) : shader_color_geometry(gc)
 	framebuffer_depth.attach_depth(texture_depth);
 
 	// Load graphics
-	texture_alpha_ball = Texture2D(gc, "Resources/alpha_ball2.png");
-	texture_alpha_ball.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	texture_alpha = Texture2D(gc, "Resources/alpha_ball.png");
+	texture_solid = Texture2D(gc, "Resources/alpha_ball2.png");
+	texture_alpha.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
+	texture_solid.set_wrap_mode(wrap_clamp_to_edge, wrap_clamp_to_edge);
 
 }
 

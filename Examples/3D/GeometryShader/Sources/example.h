@@ -61,6 +61,8 @@ private:
 
 	ParticleObject *object_particles;
 
+	bool enable_dual_pass;
+
 	int time_delta;
 	bool quit;
 };
