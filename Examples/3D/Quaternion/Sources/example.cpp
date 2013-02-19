@@ -288,8 +288,7 @@ void App::create_scene(GraphicContext &gc)
 
 	// Set ring colours
 
-	//FIXME
-/*	model_ring_a.SetMaterial(
+	model_ring_a.SetMaterial(
 			64,		// material_shininess
 			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// material_emission
 			Vec4f(1.0f, 0.0f, 0.0f, 1.0f),	// material_ambient
@@ -307,7 +306,7 @@ void App::create_scene(GraphicContext &gc)
 			Vec4f(0.0f, 1.0f, 0.0f, 1.0f),	// material_ambient
 			Vec4f(0.0f, 1.0f, 0.0f, 1.0f)	//material_specular
 			);
-*/
+
 	scene.gs->LoadImages(gc);
 
 }
@@ -330,9 +329,9 @@ void App::update_light(GraphicContext &gc, Options *options)
 
 	Vec4f light_specular(0.5f, 0.5f, 0.5f, 1.0f);
 	Vec4f light_diffuse(0.5f, 0.5f, 0.5f, 1.0f);
-	Vec4f light_ambient(0.0f, 0.0f, 0.0f, 1.0f);
+	Vec4f light_ambient(0.2f, 0.2f, 0.0f, 1.0f);
 
-//FIXME	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
+	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
 }
 
 void App::calculate_matricies(GraphicContext &gc)

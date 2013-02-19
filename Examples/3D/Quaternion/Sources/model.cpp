@@ -38,7 +38,8 @@ public:
 	void Load(GraphicContext &gc, GraphicStore *gs, const char *filename);
 
 	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix);
-	
+	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
+
 private:
 	int count_vertices(const struct aiScene* sc, const struct aiNode* nd);
 	void insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
@@ -47,7 +48,10 @@ private:
 	VertexArrayBuffer vbo_normals;
 	VertexArrayBuffer vbo_texcoords;
 	int vbo_size;
-
+	float material_shininess;
+	Vec4f material_emission;
+	Vec4f material_ambient;
+	Vec4f material_specular;
 	bool generate_texture_coords;
 
 };
@@ -67,6 +71,19 @@ bool Model::is_null()
 	return !impl;
 }
 
+void Model::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular)
+{
+	impl->SetMaterial(new_material_shininess, new_material_emission, new_material_ambient, new_material_specular);
+}
+
+void Model_Impl::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular)
+{
+	material_shininess = new_material_shininess;
+	material_emission = new_material_emission;
+	material_ambient = new_material_ambient;
+	material_specular = new_material_specular;
+}
+
 void Model::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
 	impl->Draw(gc, gs, modelview_matrix);
@@ -75,6 +92,10 @@ void Model::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_ma
 Model_Impl::Model_Impl()
 {
 	vbo_size = 0;
+	material_shininess = 64.0f;
+	material_emission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	material_ambient =  Vec4f(0.9f, 0.2f, 0.2f, 1.0f);
+	material_specular = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename)
@@ -192,12 +213,15 @@ void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct a
 void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix)
 {
 	Mat4f matrix_modelview_projection = gs->camera_projection *  modelview_matrix;
-	Mat4f normal_matrix = Mat4f::identity();
+	Mat3f normal_matrix = Mat3f(modelview_matrix);
+	normal_matrix.inverse();
+	normal_matrix.transpose();
 
 	PrimitivesArray prim_array(gc);
 	
 	prim_array.set_attributes(0, vbo_positions, 3, type_float, 0);
 	prim_array.set_attributes(1, vbo_normals, 3, type_float, 0);
-	gs->shader_color.Use(gc, modelview_matrix, matrix_modelview_projection, normal_matrix);
+	gs->shader_color.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
+	gs->shader_color.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
 	gc.draw_primitives(type_triangles, vbo_size, prim_array);
 }
