@@ -52,7 +52,6 @@ char ShaderColorGeometry::geometry[] =
 	"layout(points) in;\n"
 	"layout(triangle_strip, max_vertices=3) out;\n"
 	"\n"
-	"uniform mat4 cl_ModelViewMatrix;"
 	"uniform mat4 cl_ModelViewProjectionMatrix;"
 	"out vec2 TexCoord0;\n"
 	"in vec4 PointColor[1];\n"
@@ -113,7 +112,7 @@ ShaderColorGeometry::ShaderColorGeometry(GraphicContext &gc)
 		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	ShaderObject geometry_shader(gc, cl_shadertype_geometry, geometry);
+	ShaderObject geometry_shader(gc, shadertype_geometry, geometry);
 	if(!geometry_shader.compile())
 	{
 		throw Exception(string_format("Unable to compile geometry shader object: %1", geometry_shader.get_info_log()));

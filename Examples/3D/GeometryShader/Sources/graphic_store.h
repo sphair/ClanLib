@@ -39,8 +39,8 @@ public:
 public:
 	ShaderColorGeometry shader_color_geometry;
 
-	Texture texture_alpha_ball;
-	Texture texture_depth;
+	Texture2D texture_alpha_ball;
+	Texture2D texture_depth;
 	FrameBuffer framebuffer_depth;
 
 	Mat4f camera_projection;
