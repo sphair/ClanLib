@@ -39,7 +39,9 @@ public:
 public:
 	ShaderColorGeometry shader_color_geometry;
 
-	Texture2D texture_alpha_ball;
+	Texture2D texture_ball;		// Set to texture_alpha or texture_solid
+	Texture2D texture_alpha;
+	Texture2D texture_solid;
 	Texture2D texture_depth;
 	FrameBuffer framebuffer_depth;
 

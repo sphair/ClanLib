@@ -69,6 +69,8 @@ int App::start(const std::vector<std::string> &args)
 	depth_state_desc.enable_depth_write(true);
 	depth_state_desc.enable_depth_test(true);
 	depth_state_desc.enable_stencil_test(false);
+	depth_state_desc.set_depth_compare_function(compare_lequal);
+
 	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
 
 	BlendStateDescription blend_state_desc;
@@ -80,6 +82,8 @@ int App::start(const std::vector<std::string> &args)
 	camera_angle = 0.0f;
 
 	Font font(canvas, "tahoma", 24);
+
+	enable_dual_pass = false;
 
 	FramerateCounter framerate_counter;
 
@@ -101,11 +105,17 @@ int App::start(const std::vector<std::string> &args)
 		canvas.set_depth_stencil_state(depth_write_enabled);
 		canvas.set_rasterizer_state(raster_state);
 
-
-		// ** If enabling below, change the graphic from alpha_ball2.png to alpha_ball.png in graphic_store.cpp
-		//canvas.set_blend_state(blend_disable_color_write);
-		//render_depth_buffer(gc);	// Render to depth buffer first, to fake sorting the particles
-		//canvas.reset_blend_state();
+		if (enable_dual_pass)
+		{
+			canvas.set_blend_state(blend_disable_color_write);
+			graphic_store.texture_ball = graphic_store.texture_alpha;
+			render_depth_buffer(canvas);	// Render to depth buffer first, to fake sorting the particles
+			canvas.reset_blend_state();
+		}
+		else
+		{
+			graphic_store.texture_ball = graphic_store.texture_solid;
+		}
 
 		render(canvas);	// Render scene
 		canvas.reset_rasterizer_state();
@@ -117,6 +127,8 @@ int App::start(const std::vector<std::string> &args)
 
 		std::string info(string_format("Drawing %1 particles", ParticleObject::num_points));
 		font.draw_text(canvas, 16, 30, info);
+
+		font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
 
 		// Use flip(1) to lock the fps
 		canvas.flip(0);
@@ -135,6 +147,8 @@ void App::on_input_up(const InputEvent &key)
 	{
 		quit = true;
 	}
+	if (key.id == keycode_space)
+		enable_dual_pass = !enable_dual_pass;
 }
 
 // The window was closed
@@ -145,15 +159,7 @@ void App::on_window_close()
 
 void App::render_depth_buffer(GraphicContext &gc)
 {
-	// FIXME
-/*
 	gc.set_viewport(scene.gs->texture_depth.get_size());
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	gc.enable_depth_test(true);
-	gc.enable_stencil_test(false);
-	gc.enable_color_write(false);
-*/
 	Mat4f modelview_matrix = scene.gs->camera_modelview;
 	scene.Draw(modelview_matrix, gc);
 	gc.reset_program_object();
@@ -162,12 +168,6 @@ void App::render_depth_buffer(GraphicContext &gc)
 void App::render(GraphicContext &gc)
 {
 	gc.set_viewport(gc.get_size());
-
-//	gc.set_depth_compare_function(cl_comparefunc_lequal);
-//	gc.enable_depth_write(true);
-//	gc.enable_depth_test(true);
-//	gc.enable_stencil_test(false);
-//	gc.enable_color_write(true);
 
 	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
