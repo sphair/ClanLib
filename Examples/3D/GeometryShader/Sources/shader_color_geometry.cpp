@@ -52,7 +52,10 @@ char ShaderColorGeometry::geometry[] =
 	"layout(points) in;\n"
 	"layout(triangle_strip, max_vertices=3) out;\n"
 	"\n"
-	"uniform mat4 cl_ModelViewProjectionMatrix;"
+	"layout (std140) uniform ProgramUniforms\n"
+	"{\n"
+	"	mat4 cl_ModelViewProjectionMatrix;\n"
+	"};\n"
 	"out vec2 TexCoord0;\n"
 	"in vec4 PointColor[1];\n"
 	"out vec4 TextureColor;\n"
@@ -142,10 +145,19 @@ ShaderColorGeometry::ShaderColorGeometry(GraphicContext &gc)
 	
 	program_object.set_uniform1i("Texture0", 0);
 
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
+
+
 }
 
-void ShaderColorGeometry::Use(GraphicContext &gc)
+void ShaderColorGeometry::Use(GraphicContext &gc, const Mat4f &matrix_modelview_projection)
 {
+	ProgramUniforms uniforms;
+
+	uniforms.cl_ModelViewProjectionMatrix = matrix_modelview_projection;
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
+
 	gc.set_program_object(program_object);
 }
 

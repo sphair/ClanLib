@@ -59,13 +59,22 @@ int App::start(const std::vector<std::string> &args)
 	GraphicStore graphic_store(canvas);
 	scene.gs = &graphic_store;
 
-	// Prepare the display
-	//gc.set_map_mode(cl_user_projection);
+	RasterizerStateDescription rasterizer_state_desc;
+	rasterizer_state_desc.set_culled(false);
+	rasterizer_state_desc.set_face_cull_mode(cull_back);
+	rasterizer_state_desc.set_front_face(face_clockwise);
+	RasterizerState raster_state(canvas, rasterizer_state_desc);
 
-	//gc.set_culled(false);
-	//gc.set_face_cull_mode(cl_cull_back);
-	//gc.set_front_face(cl_face_side_clockwise);
-	
+	DepthStencilStateDescription depth_state_desc;
+	depth_state_desc.enable_depth_write(true);
+	depth_state_desc.enable_depth_test(true);
+	depth_state_desc.enable_stencil_test(false);
+	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
+
+	BlendStateDescription blend_state_desc;
+	blend_state_desc.enable_color_write(false, false, false, false);
+	BlendState blend_disable_color_write(canvas, blend_state_desc);
+
 	create_scene(canvas);
 
 	camera_angle = 0.0f;
@@ -88,12 +97,19 @@ int App::start(const std::vector<std::string> &args)
 		calculate_matricies(canvas);
 
 		canvas.clear_depth(1.0f);
-		// ** If enabling below, change the graphic from alpha_ball2.png to alpha_ball.png in graphic_store.cpp
-		//render_depth_buffer(gc);	// Render to depth buffer first, to fake sorting the particles
-		render(canvas);	// Render scene
 
-		//gc.set_modelview(Mat4f::identity());
-		//gc.set_map_mode(map_2d_upper_left);
+		canvas.set_depth_stencil_state(depth_write_enabled);
+		canvas.set_rasterizer_state(raster_state);
+
+
+		// ** If enabling below, change the graphic from alpha_ball2.png to alpha_ball.png in graphic_store.cpp
+		//canvas.set_blend_state(blend_disable_color_write);
+		//render_depth_buffer(gc);	// Render to depth buffer first, to fake sorting the particles
+		//canvas.reset_blend_state();
+
+		render(canvas);	// Render scene
+		canvas.reset_rasterizer_state();
+		canvas.reset_depth_stencil_state();
 
 		std::string fps(string_format("fps = %1", framerate_counter.get_framerate()));
 		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -131,11 +147,7 @@ void App::render_depth_buffer(GraphicContext &gc)
 {
 	// FIXME
 /*
-	gc.set_map_mode(cl_user_projection);
 	gc.set_viewport(scene.gs->texture_depth.get_size());
-
-	gc.set_projection(scene.gs->camera_projection);
-
 	gc.set_depth_compare_function(cl_comparefunc_lequal);
 	gc.enable_depth_write(true);
 	gc.enable_depth_test(true);
@@ -149,11 +161,7 @@ void App::render_depth_buffer(GraphicContext &gc)
 
 void App::render(GraphicContext &gc)
 {
-//	gc.set_map_mode(cl_user_projection);
-	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
-	gc.set_viewport(viewport_rect);
-
-//	gc.set_projection(scene.gs->camera_projection);
+	gc.set_viewport(gc.get_size());
 
 //	gc.set_depth_compare_function(cl_comparefunc_lequal);
 //	gc.enable_depth_write(true);
@@ -188,7 +196,6 @@ void App::calculate_matricies(GraphicContext &gc)
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
-	scene.gs->camera_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->camera_modelview.inverse();
 
 }
