@@ -34,7 +34,7 @@ layout(std140) uniform Uniforms
 {
 	float rcp_f;
 	float rcp_f_div_aspect;
-	float2 two_rcp_viewport_size;
+	vec2 two_rcp_viewport_size;
 	uint num_lights;
 	uint num_tiles_x;
 	uint num_tiles_y;
@@ -53,13 +53,13 @@ buffer VisibleLightIndices
 
 uniform sampler2D zminmax;
 
-vec3 unproject_direction(float2 pos)
+vec3 unproject_direction(vec2 pos)
 {
 //	float field_of_view_y_rad = field_of_view_y_degrees * M_PI / 180.0f;
 //	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
 //	float rcp_f = 1.0f / f;
 //	float rcp_f_div_aspect = 1.0f / (f / aspect);
-	float2 normalized = float2(pos * two_rcp_viewport_size);
+	vec2 normalized = vec2(pos * two_rcp_viewport_size);
 #if defined(TOP_DOWN_RENDER_TARGET)
 	normalized.x = normalized.x - 1.0f;
 	normalized.y = 1.0f - normalized.y;
@@ -69,7 +69,7 @@ vec3 unproject_direction(float2 pos)
 	return vec3(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
 }
 
-vec3 unproject(float2 pos, float eye_z)
+vec3 unproject(vec2 pos, float eye_z)
 {
 	return unproject_direction(pos) * eye_z;
 }
@@ -146,8 +146,8 @@ Tile find_tile_frustum(float eye_z_near, float eye_z_far, uint tile_x, uint tile
 	uint tile_height = TILE_SIZE;
 	uint x = tile_x * tile_width;
 	uint y = tile_y * tile_height;
-	vec3 tl_direction = unproject_direction(float2(x, y));
-	vec3 br_direction = unproject_direction(float2(x + tile_width, y + tile_height));
+	vec3 tl_direction = unproject_direction(vec2(x, y));
+	vec3 br_direction = unproject_direction(vec2(x + tile_width, y + tile_height));
 	vec3 front_tl = tl_direction * eye_z_near;
 	vec3 front_br = br_direction * eye_z_near;
 	vec3 back_tl = tl_direction * eye_z_far;
