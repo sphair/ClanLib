@@ -117,11 +117,9 @@ Options::~Options()
 
 }
 
-void Options::on_render(GraphicContext &gc, const Rect &update_rect)
+void Options::on_render(Canvas &canvas, const Rect &update_rect)
 {
-	gc.enable_blending(false);
-	Draw::fill(gc, update_rect, Colorf(0.6f, 0.6f, 0.8f, 0.0f));
-	gc.reset_blend_mode();
+	canvas.fill_rect(update_rect, Colorf(0.6f, 0.6f, 0.8f, 1.0f));
 }
 
 float Options::get_value(Slider *slider, float min_value, float max_value)
