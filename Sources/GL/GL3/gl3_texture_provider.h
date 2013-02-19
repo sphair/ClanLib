@@ -114,6 +114,9 @@ public:
 /// \name Implementation
 /// \{
 private:
+	void create_initial(TextureDimensions texture_dimensions);
+	GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
+
 	void on_dispose();
 	static GLenum to_enum(TextureFilter filter);
 	static GLenum to_enum(TextureWrapMode mode);
