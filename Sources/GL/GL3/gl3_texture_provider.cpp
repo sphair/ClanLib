@@ -58,6 +58,23 @@ GL3TextureProvider::GL3TextureProvider(GLuint texture_type, GLuint handle)
 GL3TextureProvider::GL3TextureProvider(TextureDimensions texture_dimensions)
 : width(0), height(0), depth(0), handle(0), texture_type(0)
 {
+	create_initial(texture_dimensions);
+}
+
+GL3TextureProvider::GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+	: width(0), height(0), depth(0), handle(0), texture_type(0)
+{
+	create_initial(texture_dimensions);
+
+	TextureFormat_GL tf = OpenGL::get_textureformat(texture_format);
+	if (!tf.valid)
+		throw Exception("Texture format not supported by OpenGL");
+
+	glTextureView(handle, texture_type, orig_texture->handle, tf.internal_format, min_level, num_levels, min_layer, num_layers);
+}
+
+void GL3TextureProvider::create_initial(TextureDimensions texture_dimensions)
+{
 	switch (texture_dimensions)
 	{
 	case texture_1d:
@@ -496,7 +513,7 @@ void GL3TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFun
 
 TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 {
-	throw Exception("create_view not yet implemented for clanGL (needs to call glTextureView)");
+	return new GL3TextureProvider(this, texture_dimensions, texture_format, min_level, num_levels, min_layer, num_layers);
 }
 
 /////////////////////////////////////////////////////////////////////////////
