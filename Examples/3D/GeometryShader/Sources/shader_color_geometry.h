@@ -33,9 +33,16 @@ class ShaderColorGeometry
 public:
 	ShaderColorGeometry(GraphicContext &gc);
 
-	void Use(GraphicContext &gc);
+	void Use(GraphicContext &gc, const Mat4f &matrix_modelview_projection);
 
 private:
+
+	struct ProgramUniforms
+	{
+		clan::Mat4f cl_ModelViewProjectionMatrix;
+	};
+
+	clan::UniformVector<ProgramUniforms> gpu_uniforms;
 
 	static char vertex[];
 	static char geometry[];
