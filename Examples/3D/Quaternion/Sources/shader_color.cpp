@@ -32,18 +32,19 @@
 
 char ShaderColor::vertex[] =
 	"\n"
-	"#version 120\n"
+	"#version 150\n"
 	"\n"
-	"attribute vec3 InPosition;"
-	"attribute vec3 InNormal;"
-	"uniform mat4 cl_ModelViewMatrix;"
-	"uniform mat4 cl_ModelViewProjectionMatrix;"
-	"uniform mat3 cl_NormalMatrix;"
-	"\n"
-	"varying vec3 WorldSpaceNormal; \n"
-	"varying vec3 WorldSpacePosition; \n"
-	"varying vec4 ObjPos;\n"
-	"varying vec4 MaterialAmbient;\n"
+	"in vec3 InPosition;"
+	"in vec3 InNormal;"
+	"layout (std140) uniform ProgramUniforms\n"
+	"{\n"
+	"	mat4 cl_ModelViewMatrix;\n"
+	"	mat4 cl_ModelViewProjectionMatrix;\n"
+	"	mat3 cl_NormalMatrix;\n"
+	"};\n"
+	"out vec3 WorldSpaceNormal; \n"
+	"out vec3 WorldSpacePosition; \n"
+	"out vec4 ObjPos;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
@@ -57,25 +58,26 @@ char ShaderColor::vertex[] =
 
 char ShaderColor::fragment[] =
 	"\n"
-	"#version 120\n"
+	"#version 150\n"
 	"\n"
-	"varying vec3 WorldSpaceNormal; \n"
-	"varying vec3 WorldSpacePosition; \n"
-	"varying vec4 ObjPos;\n"
-	"\n"
-	"uniform float MaterialShininess;\n"
-	"uniform vec4 MaterialEmission;\n"
-	"uniform vec4 MaterialSpecular;\n"
-	"uniform vec4 MaterialAmbient;\n"
-	"\n"
-	"uniform vec3 LightVector;\n"
-	"uniform vec3 LightHalfVector;\n"
-	"uniform vec4 LightSpecular;\n"
-	"uniform vec4 LightDiffuse;\n"
-	"uniform vec4 LightAmbient;\n"
+	"in vec3 WorldSpaceNormal; \n"
+	"in vec3 WorldSpacePosition; \n"
+	"in vec4 ObjPos;\n"
+	"out vec4 cl_FragColor;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
+	"	float MaterialShininess = 64.0;\n"
+	"	vec4 MaterialEmission = vec4(0.0, 0.0, 0.0, 1.0);\n"
+	"	vec4 MaterialSpecular = vec4(0.0, 0.0, 0.0, 1.0);\n"
+	"	vec4 MaterialAmbient = vec4(0.9, 0.2, 0.2, 1.0);\n"
+	"\n"
+	"	vec3 LightVector = vec3(0.0, 0.0, 1.0);\n"
+	"	vec3 LightHalfVector = LightVector;\n"
+	"	vec4 LightSpecular = vec4(0.7, 0.7, 0.7, 1.0);\n"
+	"	vec4 LightDiffuse = vec4(0.7, 0.7, 0.7, 1.0);\n"
+	"	vec4 LightAmbient = vec4(0.2, 0.2, 0.2, 1.0);\n"
+	"\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
 	"	vec4 diff = vec4(0); \n"
 	"	vec4 spec = vec4(0); \n"
@@ -94,8 +96,8 @@ char ShaderColor::fragment[] =
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
 	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
-	"	gl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
-	"	gl_FragColor.a = MaterialAmbient.a;\n"
+	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	cl_FragColor.a = MaterialAmbient.a;\n"
 	"}\n"
 	;
 
@@ -118,103 +120,28 @@ ShaderColor::ShaderColor(GraphicContext &gc)
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
 	program_object.bind_attribute_location(1, "InNormal");
+	program_object.bind_frag_data_location(0, "cl_FragColor");
 	if (!program_object.link())
 	{
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
 
-	material_updated = false;
-	light_updated = false;
-
-	material_shininess = 64.0f;
-	material_emission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	material_ambient =  Vec4f(1.0f, 0.0f, 0.0f, 1.0f);
-	material_specular = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-
-	light_ambient = Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
-	light_vector = Vec3f(0.0f, 0.0f, 1.0f);
-	light_specular = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-	light_diffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
 
 }
 
-void ShaderColor::Use(GraphicContext &gc)
+void ShaderColor::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal)
 {
-	if (!material_updated)
-	{
-		material_updated = true;
-		program_object.set_uniform1f("MaterialShininess", material_shininess);
-		program_object.set_uniform4f("MaterialEmission", material_emission);
-		program_object.set_uniform4f("MaterialSpecular", material_specular);
-		program_object.set_uniform4f("MaterialAmbient", material_ambient);
-	}
+	ProgramUniforms uniforms;
 
-	if (!light_updated)
-	{
-		light_updated = true;
-		program_object.set_uniform3f("LightVector", light_vector);
-		Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
-		light_halfvector += light_vector;
-		light_halfvector.normalize();
-		program_object.set_uniform3f("LightHalfVector", light_halfvector);
-		program_object.set_uniform4f("LightSpecular", light_specular);
-		program_object.set_uniform4f("LightDiffuse", light_diffuse);
-		program_object.set_uniform4f("LightAmbient", light_ambient);
-	}
+	uniforms.cl_ModelViewProjectionMatrix = matrix_modelview_projection;
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
 
 	gc.set_program_object(program_object);
 }
 
-void ShaderColor::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular)
-{
-	if (new_material_shininess != material_shininess)
-	{
-		material_updated = false;
-		material_shininess = new_material_shininess;
-	}
 
-	if (new_material_emission != material_emission)
-	{
-		material_updated = false;
-		material_emission = new_material_emission;
-	}
-
-	if (new_material_ambient != material_ambient)
-	{
-		material_updated = false;
-		material_ambient = new_material_ambient;
-	}
-
-	if (new_material_specular != material_specular)
-	{
-		material_updated = false;
-		material_specular = new_material_specular;
-	}
-}
-
-void ShaderColor::SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient)
-{
-	if (new_light_vector != light_vector)
-	{
-		light_updated = false;
-		light_vector = new_light_vector;
-	}
-	if (new_light_specular != light_specular)
-	{
-		light_updated = false;
-		light_specular = new_light_specular;
-	}
-	if (new_light_diffuse != light_diffuse)
-	{
-		light_updated = false;
-		light_diffuse = new_light_diffuse;
-	}
-	if (new_light_ambient != light_ambient)
-	{
-		light_updated = false;
-		light_ambient = new_light_ambient;
-	}
-}
 

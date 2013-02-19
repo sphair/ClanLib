@@ -47,6 +47,8 @@
 			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt-debug.lib")
+			#pragma comment(lib, "zlib-static-mt-debug.lib")
+
 		#endif
 	#endif
 #endif
@@ -85,26 +87,32 @@ int App::start(const std::vector<std::string> &args)
 	GUIManager gui(wm, theme);
 
 	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
 	// Deleted automatically by the GUI
-	Options *options = new Options(gui, Rect(8, 8, Size(gc.get_width()-16, 170)));
+	Options *options = new Options(gui, Rect(8, 8, Size(canvas.get_width()-16, 170)));
 	options->request_repaint();
 
 	// Setup graphic store
-	GraphicStore graphic_store(gc);
+	GraphicStore graphic_store(canvas);
 	scene.gs = &graphic_store;
 
-	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	RasterizerStateDescription rasterizer_state_desc;
+	rasterizer_state_desc.set_culled(true);
+	rasterizer_state_desc.set_face_cull_mode(cull_back);
+	rasterizer_state_desc.set_front_face(face_clockwise);
+	RasterizerState raster_state(canvas, rasterizer_state_desc);
 
-	gc.set_culled(true);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
+	DepthStencilStateDescription depth_state_desc;
+	depth_state_desc.enable_depth_write(true);
+	depth_state_desc.enable_depth_test(true);
+	depth_state_desc.enable_stencil_test(false);
+	depth_state_desc.set_depth_compare_function(compare_lequal);
+	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
 
-	create_scene(gc);
+	create_scene(canvas);
 
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
 	FramerateCounter framerate_counter;
 
@@ -145,37 +153,38 @@ int App::start(const std::vector<std::string> &args)
 		teapot_target->rotation_z = options->target_z;
 
 		// Render the scene using euler angles
-		calculate_matricies(gc);
-		update_light(gc, options);
-		gc.set_culled(true);
-		render(gc);
+		calculate_matricies(canvas);
+		update_light(canvas, options);
+
+		canvas.set_depth_stencil_state(depth_write_enabled);
+		canvas.set_rasterizer_state(raster_state);
+		render(canvas);
 
 		// Show the quaternion teapot
 		Mat4f modelview_matrix = scene.gs->camera_modelview;
 		modelview_matrix.translate_self(0.0f, 0.0f, 0.0f);
 		modelview_matrix = modelview_matrix * options->quaternion.to_matrix();
 		modelview_matrix.scale_self(5.0f, 5.0f, 5.0f);
-		model_teapot.Draw(gc, scene.gs, modelview_matrix);
+		model_teapot.Draw(canvas, scene.gs, modelview_matrix);
 
 		// Draw information boxes
-		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(map_2d_upper_left);
-		gc.set_culled(false);
+		canvas.reset_rasterizer_state();
+		canvas.reset_depth_stencil_state();
 	
 		std::string fps(string_format("%1 fps", framerate_counter.get_framerate()));
-		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(gc, 16, gc.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		font.draw_text(gc, 60, 250, "Euler Orientation");
-		font.draw_text(gc, 330, 250, "Quaternion Orientation");
-		font.draw_text(gc, 600, 250, "Target Euler Orientation");
-		font.draw_text(gc, 16, 630, "(Using YXZ rotation order)");
+		font.draw_text(canvas, 60, 250, "Euler Orientation");
+		font.draw_text(canvas, 330, 250, "Quaternion Orientation");
+		font.draw_text(canvas, 600, 250, "Target Euler Orientation");
+		font.draw_text(canvas, 16, 630, "(Using YXZ rotation order)");
 
 		wm.process();
-		wm.draw_windows(gc);
+		wm.draw_windows(canvas);
 
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		canvas.flip(0);
 
 		KeepAlive::process();
 	}
@@ -202,17 +211,8 @@ void App::render(GraphicContext &gc)
 {
 	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
-	gc.set_map_mode(cl_user_projection);
 	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
 	gc.set_viewport(viewport_rect);
-
-	gc.set_projection(scene.gs->camera_projection);
-
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	gc.enable_depth_test(true);
-	gc.enable_stencil_test(false);
-	gc.enable_color_write(true);
 
 	gc.clear_depth(1.0f);
 
@@ -288,7 +288,8 @@ void App::create_scene(GraphicContext &gc)
 
 	// Set ring colours
 
-	model_ring_a.SetMaterial(
+	//FIXME
+/*	model_ring_a.SetMaterial(
 			64,		// material_shininess
 			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// material_emission
 			Vec4f(1.0f, 0.0f, 0.0f, 1.0f),	// material_ambient
@@ -306,6 +307,7 @@ void App::create_scene(GraphicContext &gc)
 			Vec4f(0.0f, 1.0f, 0.0f, 1.0f),	// material_ambient
 			Vec4f(0.0f, 1.0f, 0.0f, 1.0f)	//material_specular
 			);
+*/
 	scene.gs->LoadImages(gc);
 
 }
@@ -330,24 +332,22 @@ void App::update_light(GraphicContext &gc, Options *options)
 	Vec4f light_diffuse(0.5f, 0.5f, 0.5f, 1.0f);
 	Vec4f light_ambient(0.0f, 0.0f, 0.0f, 1.0f);
 
-	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
+//FIXME	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
 }
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f);
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
-	scene.gs->camera_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->camera_modelview.inverse();
 
 	scene.gs->light_modelview = Mat4f::identity();
 	light_distant->GetWorldMatrix(scene.gs->light_modelview);
-	scene.gs->light_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->light_modelview.inverse();
 }
 

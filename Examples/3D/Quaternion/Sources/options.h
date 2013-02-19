@@ -63,7 +63,7 @@ private:
 	void update_all_slider_text();
 	Label *create_slider_label(Slider *slider);
 	CheckBox *create_checkbox(int xpos, int ypos, const char *name, bool state);
-	void on_render(GraphicContext &gc, const Rect &update_rect);
+	void on_render(Canvas &canvas, const Rect &update_rect);
 	Slider *create_slider(int xpos, int ypos);
 	float get_value(Slider *slider, float min_value, float max_value);
 	void set_value(Slider *slider, float value, float min_value, float max_value);
