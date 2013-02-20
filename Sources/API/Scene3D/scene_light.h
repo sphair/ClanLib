@@ -65,6 +65,7 @@ public:
 	Vec3f get_color() const;
 	float get_falloff() const;
 	float get_hotspot() const;
+	float get_ambient_illumination() const;
 	float get_attenuation_start() const;
 	float get_attenuation_end() const;
 	bool is_rectangle_shape() const;
@@ -81,6 +82,7 @@ public:
 	void set_color(Vec3f color);
 	void set_falloff(float falloff);
 	void set_hotspot(float hotspot);
+	void set_ambient_illumination(float factor);
 	void set_attenuation_start(float attenuation_start);
 	void set_attenuation_end(float attenuation_end);
 	void set_rectangle_shape(bool rectangle);

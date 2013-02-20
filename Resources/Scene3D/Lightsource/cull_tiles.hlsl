@@ -11,7 +11,7 @@
 struct Light
 {
 	float4 position; // vec3(pos), shadow_index (negative = no shadows)
-	float4 color; // rgb, unused
+	float4 color; // rgb, ambient_illumination
 #if defined(USE_QUADRATIC_ATTENUATION)
 	float4 range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), falloff_begin
 #else

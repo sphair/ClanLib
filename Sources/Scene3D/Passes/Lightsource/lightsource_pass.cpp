@@ -159,7 +159,7 @@ void LightsourcePass::upload(GraphicContext &gc)
 		int shadow_map_index = lights[i]->vsm_data->shadow_map.get_index();
 
 		data[i].position = Vec4f(position_in_eye, (float)shadow_map_index);
-		data[i].color = Vec4f(lights[i]->color, 1.0f);
+		data[i].color = Vec4f(lights[i]->color, lights[i]->ambient_illumination);
 #ifdef USE_QUADRATIC_ATTENUATION
 		data[i].range = Vec4f(sqr_radius, sqr_attenuation_start, 1.0f / sqr_attenuation_delta, sqr_falloff_begin);
 #else
