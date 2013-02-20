@@ -55,6 +55,7 @@ public:
 	Vec3f color;
 	float falloff;
 	float hotspot;
+	float ambient_illumination;
 	float attenuation_start;
 	float attenuation_end;
 	bool rectangle_shape;

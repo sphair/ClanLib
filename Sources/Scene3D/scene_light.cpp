@@ -77,6 +77,11 @@ float SceneLight::get_hotspot() const
 	return impl->hotspot;
 }
 
+float SceneLight::get_ambient_illumination() const
+{
+	return impl->ambient_illumination;
+}
+
 float SceneLight::get_attenuation_start() const
 {
 	return impl->attenuation_start;
@@ -147,6 +152,11 @@ void SceneLight::set_hotspot(float hotspot)
 	impl->hotspot = hotspot;
 }
 
+void SceneLight::set_ambient_illumination(float factor)
+{
+	impl->ambient_illumination = factor;
+}
+
 void SceneLight::set_attenuation_start(float attenuation_start)
 {
 	if (impl->attenuation_start != attenuation_start)
@@ -196,7 +206,7 @@ void SceneLight::set_shadow_source(SceneLight light)
 
 SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene)
 : scene(scene), tree_object(0), type(SceneLight::type_omni), color(Colorf::white), falloff(90.0f),
-  hotspot(45.0f), attenuation_start(1.0f), attenuation_end(100.0f), rectangle_shape(false), aspect_ratio(1.0f), shadow_caster(false), light_caster(true)
+  hotspot(45.0f), ambient_illumination(0.0f), attenuation_start(1.0f), attenuation_end(100.0f), rectangle_shape(false), aspect_ratio(1.0f), shadow_caster(false), light_caster(true)
 {
 	it = scene->lights.insert(scene->lights.end(), this);
 }

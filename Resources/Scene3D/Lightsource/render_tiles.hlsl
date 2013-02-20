@@ -1,6 +1,4 @@
 
-#define USE_FAKE_GI
-
 #define MAX_LOCAL_LIGHTS 128
 #define TILE_SIZE 16
 //#define DEBUG_LIGHT_COUNT
@@ -13,7 +11,7 @@
 struct Light
 {
 	float4 position; // vec3(pos), shadow_index (negative = no shadows)
-	float4 color; // rgb, unused
+	float4 color; // rgb, ambient_illumination
 #if defined(USE_QUADRATIC_ATTENUATION)
 	float4 range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), falloff_begin
 #else
@@ -120,12 +118,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 #else
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
-#if defined(USE_FAKE_GI)
 	float3 color = material_self_illumination * 4;
-#else
-	float ambience = 0.01f;
-	float3 color = material_diffuse_color.xyz * ambience + material_self_illumination * 4;
-#endif
 
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;
@@ -144,7 +137,7 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
 		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
 		float3 specular_color = material_specular_color * light.color.xyz;
-		float3 lit_color = (diffuse_color * diffuse_contribution + specular_color * specular_contribution);
+		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
 
 		float light_type = light.spot_x.w;
 #if defined(ONLY_OMNI_LIGHTS)
@@ -181,23 +174,18 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 #else
 		float attenuation = distance_attenuation(light, fragment_to_light);
 		float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
-		float extra_attenuation = 1.0f;
 		if (light_type != 0)
-			extra_attenuation *= step(0, shadow_projection.z);
+			attenuation *= step(0, shadow_projection.z);
 		if (light_type == 1)
-			extra_attenuation *= circle_falloff_attenuation(light, shadow_projection);
+			attenuation *= circle_falloff_attenuation(light, shadow_projection);
 		else if (light_type == 2)
-			extra_attenuation *= rect_falloff_attenuation(light, shadow_projection);
+			attenuation *= rect_falloff_attenuation(light, shadow_projection);
 
+		float shadow_att = 1.0f;
 		if (light.position.w >= 0.0f)
-			extra_attenuation *= shadow_attenuation(light, fragment_to_light, shadow_projection);
+			shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
 
-#if defined(USE_FAKE_GI)
-		color += attenuation * extra_attenuation * lit_color + attenuation * 0.025f * diffuse_color;
-#else
-		color += attenuation * extra_attenuation * lit_color;
-#endif
-		
+		color += attenuation * (shadow_att * lit_color + light.color.a * diffuse_color);
 #endif
 	}
 #endif

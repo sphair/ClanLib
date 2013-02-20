@@ -35,9 +35,10 @@ int Program::main(const std::vector<std::string> &args)
 	{
 		SceneLight omni(scene);
 		omni.set_type(SceneLight::type_omni);
-		omni.set_color(Vec3f(0.005f));
+		omni.set_color(Vec3f(0.05f));
 		omni.set_position(Quaternionf(45.0f, 45.0f + i * 90.0f, 0.0f, angle_degrees, order_YXZ).rotate_vector(Vec3f(0.0f, 0.0f, -100.0f)));
 		omni.set_attenuation_end(200.0f);
+		omni.set_ambient_illumination(0.025f);
 
 		omni_lights.push_back(omni);
 	}
@@ -65,6 +66,7 @@ int Program::main(const std::vector<std::string> &args)
 	spot2.set_attenuation_end(130.0f);
 	spot2.set_shadow_caster(true);
 	spot2.set_rectangle_shape(false);
+	spot2.set_ambient_illumination(0.025f);
 
 	SceneModel plane(gc, scene, "plane");
 	SceneModel box(gc, scene, "box");
