@@ -50,20 +50,23 @@ int App::start(const std::vector<std::string> &args)
 	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
-	Shader shader(gc);
+	Shader shader(canvas);
 
 	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	RasterizerStateDescription rasterizer_state_desc;
+	rasterizer_state_desc.set_culled(true);
+	rasterizer_state_desc.set_face_cull_mode(cull_back);
+	rasterizer_state_desc.set_front_face(face_clockwise);
+	RasterizerState raster_state(canvas, rasterizer_state_desc);
 
-	gc.set_culled(true);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
-
-	gc.enable_depth_test(true);
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
+	DepthStencilStateDescription depth_state_desc;
+	depth_state_desc.enable_depth_write(true);
+	depth_state_desc.enable_depth_test(true);
+	depth_state_desc.enable_stencil_test(false);
+	depth_state_desc.set_depth_compare_function(compare_lequal);
+	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
 
 	std::vector<Vec3f> object_positions;
 	std::vector<Vec3f> object_normals;
@@ -79,20 +82,19 @@ int App::start(const std::vector<std::string> &args)
 		create_cube(object_positions, object_normals, object_material_ambient);
 	}
 
-	VertexArrayBuffer vb_positions(gc, &object_positions[0], sizeof(Vec3f) * object_positions.size());
-	VertexArrayBuffer vb_normals(gc, &object_normals[0], sizeof(Vec3f) * object_normals.size());
-	VertexArrayBuffer vb_material_ambient(gc, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
+	VertexArrayBuffer vb_positions(canvas, &object_positions[0], sizeof(Vec3f) * object_positions.size());
+	VertexArrayBuffer vb_normals(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
+	VertexArrayBuffer vb_material_ambient(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
 
 	// ** Note, at this point "object_positions, object_normals and object_material_ambient"
 	// ** can be destroyed. But for the purpose of this example, is it kept
 
-	Font fps_font(gc, "tahoma", 20);
+	Font fps_font(canvas, "tahoma", 20);
 
 	FramerateCounter frameratecounter;
 	unsigned int time_last = System::get_time();
 
 	float angle = 0.0f;
-	is_vertex_buffer_on = true;
 
 	while (!quit)
 	{
@@ -100,65 +102,49 @@ int App::start(const std::vector<std::string> &args)
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 
-		gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		gc.clear_depth(1.0f);
+		canvas.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+		canvas.clear_depth(1.0f);
 
-		gc.set_map_mode(map_2d_upper_left);
 		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
-		fps_font.draw_text(gc, gc.get_width() - 100, 30, fps);
+		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 		std::string info = string_format("%1 vertices", (int) object_positions.size());
-		fps_font.draw_text(gc, 30, 30, info);
+		fps_font.draw_text(canvas, 30, 30, info);
 
-		fps_font.draw_text(gc, 30, gc.get_height() - 8, "Press any key to toggle the Vertex Buffer option");
-
-		if (is_vertex_buffer_on)
-		{
-			fps_font.draw_text(gc, 200, 30, "Vertex Buffer = ON");
-		}
-		else
-		{
-			fps_font.draw_text(gc, 200, 30, "Vertex Buffer = OFF");
-		}
-
-		gc.set_map_mode(cl_user_projection);
-		Mat4f perp = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 100000.0f);
-		gc.set_projection(perp);
+		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 100000.0f, handed_left, clip_negative_positive_w );
 
 		angle += time_diff / 20.0f;
 		if (angle >= 360.0f)
 			angle -= 360.0f;
 
-		gc.push_modelview();
-		gc.set_modelview(Mat4f::identity());
-		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
-		gc.mult_translate(0.0f, 0.0f, 800.0f);
-		gc.mult_rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
-		gc.mult_rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
+		Mat4f modelview_matrix = Mat4f::identity();
+		modelview_matrix = modelview_matrix.translate(0.0f, 0.0f, 800.0f);
+		modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle*2.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
+		modelview_matrix = modelview_matrix * Mat4f::rotate(Angle(angle, angle_degrees), 1.0f, 0.0f, 0.0f, false);
 
-		shader.Set(gc);
-		shader.Use(gc);
 
-		PrimitivesArray prim_array(gc);
+		canvas.set_depth_stencil_state(depth_write_enabled);
+		canvas.set_rasterizer_state(raster_state);
 
-		if (is_vertex_buffer_on)
-		{
-			prim_array.set_attributes(0, vb_positions, 3, cl_type_float, 0);
-			prim_array.set_attributes(1, vb_normals, 3, cl_type_float, 0);
-			prim_array.set_attributes(2, vb_material_ambient, 4, cl_type_float, 0);
-		}
-		else
-		{
-			prim_array.set_attributes(0, &object_positions[0]);
-			prim_array.set_attributes(1, &object_normals[0]);
-			prim_array.set_attributes(2, &object_material_ambient[0]);
-		}
-		gc.draw_primitives(tyoe_triangles, object_positions.size(), prim_array);
+		PrimitivesArray prim_array(canvas);
 
-		gc.pop_modelview();
+		prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
+		prim_array.set_attributes(1, vb_normals, 3, type_float, 0);
+		prim_array.set_attributes(2, vb_material_ambient, 4, type_float, 0);
 
-		gc.reset_program_object();
+		Mat4f matrix_modelview_projection = perspective_matrix *  modelview_matrix;
+		Mat3f normal_matrix = Mat3f(modelview_matrix);
+		normal_matrix.inverse();
+		normal_matrix.transpose();
 
-		window.flip(0);
+		shader.Use(canvas, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
+
+		canvas.get_gc().draw_primitives(type_triangles, object_positions.size(), prim_array);
+		canvas.get_gc().reset_program_object();
+		canvas.reset_rasterizer_state();
+		canvas.reset_depth_stencil_state();
+
+
+		canvas.flip(0);
 		frameratecounter.frame_shown();
 
 		KeepAlive::process();
@@ -176,8 +162,6 @@ void App::on_input_up(const InputEvent &key)
 			quit = true;
 			break;
 	}
-
-	is_vertex_buffer_on = !is_vertex_buffer_on;
 
 }
 

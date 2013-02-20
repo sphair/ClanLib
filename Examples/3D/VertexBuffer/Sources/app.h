@@ -42,7 +42,6 @@ private:
 	void create_cube( std::vector<Vec3f> &object_positions, std::vector<Vec3f> &object_normals, std::vector<Vec4f> &object_material_ambient );
 
 private:
-	bool is_vertex_buffer_on;
 	bool quit;
 
 };
