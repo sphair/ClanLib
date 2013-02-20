@@ -28,6 +28,9 @@
 
 #pragma once
 
+#include "scene.h"
+#include "model.h"
+
 // This is the Application class (That is instantiated by the Program Class)
 class App
 {
@@ -35,9 +38,25 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
+	void render(GraphicContext &gc);
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
-	void recursive_render (GraphicContext &gc, const struct aiScene *sc, const struct aiNode* nd, bool use_texture_coords);
+	void create_scene(GraphicContext &gc);
+	void update_light(GraphicContext &gc);
+	void calculate_matricies(GraphicContext &gc);
+
+	Scene scene;
+
+	Model model_teapot;
+	Model model_clanlib;
+	Model model_tuxball;
+
+	SceneObject *camera;
+	SceneObject *light_distant;
+	SceneObject *scene_teapot;
+	SceneObject *scene_clanlib;
+	SceneObject *scene_tuxball;
+
 
 	bool quit;
 };

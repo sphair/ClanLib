@@ -39,12 +39,15 @@
 	#if !defined(_DEBUG)
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll.lib")
+			#pragma comment(lib, "zlib-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt.lib")
+			#pragma comment(lib, "zlib-static-mt.lib")
 		#endif
 	#else
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+			#pragma comment(lib, "zlib-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt-debug.lib")
 			#pragma comment(lib, "zlib-static-mt-debug.lib")
@@ -86,7 +89,6 @@ int App::start(const std::vector<std::string> &args)
 	GUIWindowManagerTexture wm(window);
 	GUIManager gui(wm, theme);
 
-	// Get the graphic context
 	Canvas canvas(window);
 
 	// Deleted automatically by the GUI
