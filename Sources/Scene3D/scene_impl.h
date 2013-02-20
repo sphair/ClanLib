@@ -30,6 +30,7 @@
 
 #include "API/Scene3D/scene_camera.h"
 #include "API/Scene3D/scene_cache.h"
+#include "API/Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
 #include "Scene3D/Model/model_shader_cache.h"
@@ -44,7 +45,6 @@
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
 #include "Scene3D/Culling/OctTree/oct_tree.h"
-#include "Scene3D/Performance/gpu_timer.h"
 #include <list>
 namespace clan
 {

@@ -46,6 +46,8 @@
 #include "Scene3D/cached_texture.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/LevelData/level_data.h"
+#include "Scene3D/Performance/gpu_timer.h"
+#include "Scene3D/Performance/scope_timer.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

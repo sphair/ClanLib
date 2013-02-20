@@ -31,9 +31,9 @@
 #include "API/Scene3D/scene_object.h"
 #include "API/Scene3D/scene_light.h"
 #include "API/Scene3D/scene_particle_emitter.h"
+#include "API/Scene3D/Performance/scope_timer.h"
 #include "scene_impl.h"
 #include "Culling/clipping_frustum.h"
-#include "Scene3D/Performance/scope_timer.h"
 #include "Scene3D/scene_object_impl.h"
 
 namespace clan

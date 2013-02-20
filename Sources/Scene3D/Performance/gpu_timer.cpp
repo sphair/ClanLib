@@ -27,23 +27,41 @@
 */
 
 #include "Scene3D/precomp.h"
-#include "gpu_timer.h"
+#include "API/Scene3D/Performance/gpu_timer.h"
+#include "API/Core/System/comptr.h"
+#include <d3d11.h>
 
 namespace clan
 {
 
+class GPUTimer_Impl
+{
+public:
+	struct Frame
+	{
+		std::vector<std::string> names;
+		std::vector<ComPtr<ID3D11Query> > queries;
+		ComPtr<ID3D11Query> disjoint_query;
+	};
+
+	void timestamp(GraphicContext &gc);
+
+	std::vector<ComPtr<ID3D11Query> > unused_queries;
+	std::vector<ComPtr<ID3D11Query> > unused_disjoint_queries;
+
+	std::vector<std::shared_ptr<Frame> > frames;
+	std::vector<GPUTimer::Result> last_results;
+};
+
 
 GPUTimer::GPUTimer()
-{
-}
-
-GPUTimer::~GPUTimer()
+	: impl(new GPUTimer_Impl())
 {
 }
 
 void GPUTimer::begin_frame(GraphicContext &gc)
 {
-	if (unused_disjoint_queries.empty())
+	if (impl->unused_disjoint_queries.empty())
 	{
 		ID3D11Device *device = D3DTarget::get_device_handle(gc);
 		D3D11_QUERY_DESC desc;
@@ -55,33 +73,33 @@ void GPUTimer::begin_frame(GraphicContext &gc)
 		if (FAILED(result))
 			throw Exception("D3D11Device.CreateQuery(D3D11_QUERY_TIMESTAMP_DISJOINT) failed");
 
-		unused_disjoint_queries.push_back(disjoint_query);
+		impl->unused_disjoint_queries.push_back(disjoint_query);
 	}
 
-	frames.push_back(std::shared_ptr<Frame>(new Frame()));
-	frames.back()->queries.reserve(unused_queries.capacity());
-	frames.back()->disjoint_query = unused_disjoint_queries.back();
-	unused_disjoint_queries.pop_back();
+	impl->frames.push_back(std::shared_ptr<GPUTimer_Impl::Frame>(new GPUTimer_Impl::Frame()));
+	impl->frames.back()->queries.reserve(impl->unused_queries.capacity());
+	impl->frames.back()->disjoint_query = impl->unused_disjoint_queries.back();
+	impl->unused_disjoint_queries.pop_back();
 
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
-	context->Begin(frames.back()->disjoint_query.get());
+	context->Begin(impl->frames.back()->disjoint_query.get());
 }
 
 void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
 {
-	frames.back()->names.push_back(name);
-	timestamp(gc);
+	impl->frames.back()->names.push_back(name);
+	impl->timestamp(gc);
 }
 
 void GPUTimer::end_time(GraphicContext &gc)
 {
-	timestamp(gc);
+	impl->timestamp(gc);
 }
 
 void GPUTimer::end_frame(GraphicContext &gc)
 {
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
-	context->End(frames.back()->disjoint_query.get());
+	context->End(impl->frames.back()->disjoint_query.get());
 }
 
 std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
@@ -89,33 +107,33 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjoint_data;
-	if (context->GetData(frames.front()->disjoint_query.get(), &disjoint_data, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0) != S_OK)
-		return last_results;
+	if (context->GetData(impl->frames.front()->disjoint_query.get(), &disjoint_data, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0) != S_OK)
+		return impl->last_results;
 
 	std::vector<Result> results;
-	for (size_t i = 0; i < frames.front()->names.size(); i++)
+	for (size_t i = 0; i < impl->frames.front()->names.size(); i++)
 	{
 		UINT64 start = 0;
-		if (context->GetData(frames.front()->queries[i * 2].get(), &start, sizeof(UINT64), 0) != S_OK)
-			return last_results;
+		if (context->GetData(impl->frames.front()->queries[i * 2].get(), &start, sizeof(UINT64), 0) != S_OK)
+			return impl->last_results;
 
 		UINT64 end = 0;
-		if (context->GetData(frames.front()->queries[i * 2 + 1].get(), &end, sizeof(UINT64), 0) != S_OK)
-			return last_results;
+		if (context->GetData(impl->frames.front()->queries[i * 2 + 1].get(), &end, sizeof(UINT64), 0) != S_OK)
+			return impl->last_results;
 
 		float time_elapsed = (float)((end - start) / (double)disjoint_data.Frequency);
-		results.push_back(Result(frames.front()->names[i], time_elapsed));
+		results.push_back(Result(impl->frames.front()->names[i], time_elapsed));
 	}
-	last_results = results;
+	impl->last_results = results;
 
-	unused_queries.insert(unused_queries.end(), frames.front()->queries.begin(), frames.front()->queries.end());
-	unused_disjoint_queries.push_back(frames.front()->disjoint_query);
-	frames.erase(frames.begin());
+	impl->unused_queries.insert(impl->unused_queries.end(), impl->frames.front()->queries.begin(), impl->frames.front()->queries.end());
+	impl->unused_disjoint_queries.push_back(impl->frames.front()->disjoint_query);
+	impl->frames.erase(impl->frames.begin());
 
 	return results;
 }
 
-void GPUTimer::timestamp(GraphicContext &gc)
+void GPUTimer_Impl::timestamp(GraphicContext &gc)
 {
 	if (unused_queries.empty())
 	{
