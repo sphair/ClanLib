@@ -43,7 +43,6 @@ char Shader::vertex[] =
 	"	mat4 cl_ModelViewProjectionMatrix;\n"
 	"	mat3 cl_NormalMatrix;\n"
 	"	vec4 padding;\n"
-	"	vec4 MaterialEmission;\n"
 	"	vec4 LightDiffuse;\n"
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
@@ -79,7 +78,6 @@ char Shader::fragment[] =
 	"	mat4 cl_ModelViewProjectionMatrix;\n"
 	"	mat3 cl_NormalMatrix;\n"
 	"	vec4 padding;\n"
-	"	vec4 MaterialEmission;\n"
 	"	vec4 LightDiffuse;\n"
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
@@ -94,7 +92,7 @@ char Shader::fragment[] =
 	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
 	"	diff += LightDiffuse * nDotL;\n"
 	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
-	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color;\n"
+	"	cl_FragColor = LightAmbient * final_texture_color + diff * final_texture_color;\n"
 	"	cl_FragColor.a = MaterialAmbient.a;\n"
 	"}\n"
 	;
@@ -129,7 +127,6 @@ Shader::Shader(GraphicContext &gc)
 
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
-	uniforms.MaterialEmission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	uniforms.LightAmbient = Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
 	uniforms.LightVector = Vec3f(0.0f, 0.0f, -1.0f);
 	uniforms.LightDiffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
