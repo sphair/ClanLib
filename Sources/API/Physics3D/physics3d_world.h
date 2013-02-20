@@ -32,6 +32,7 @@
 #pragma once
 
 #include "api_physics3d.h"
+#include "../Core/Math/vec3.h"
 #include <memory>
 
 namespace clan
@@ -45,6 +46,8 @@ public:
 	Physics3DWorld();
 
 	bool is_null() const;
+
+	void set_gravity(const Vec3f &gravity);
 
 	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
 	void step_simulation_once(float time_step);
