@@ -105,8 +105,6 @@ int App::start(const std::vector<std::string> &args)
 		int time_delta_ms = current_time - last_time;
 		last_time = current_time;
 
-		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
-
 		canvas.clear(Colorf::black);
 		canvas.clear_depth(1.0f);
 
@@ -115,15 +113,15 @@ int App::start(const std::vector<std::string> &args)
 			angle -= 360.0f;
 
 		scene_teapot->rotation_y.set_degrees(angle);
-		scene_clanlib->rotation_y.set_degrees(angle);
-		scene_tuxball->rotation_y.set_degrees(angle);
+		//scene_clanlib->rotation_y.set_degrees(angle);
+		//scene_tuxball->rotation_y.set_degrees(angle);
 
 		// Render the scene using euler angles
 		calculate_matricies(canvas);
 		update_light(canvas);
 
-		canvas.set_depth_stencil_state(depth_write_enabled);
-		canvas.set_rasterizer_state(raster_state);
+		//canvas.set_depth_stencil_state(depth_write_enabled);
+		//canvas.set_rasterizer_state(raster_state);
 		render(canvas);
 
 		canvas.reset_rasterizer_state();
@@ -157,8 +155,8 @@ void App::create_scene(GraphicContext &gc)
 {
 
 	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae");
-	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae");
-	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae");
+//	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae");
+//	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae");
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 2.0f, -3.0f);
@@ -174,7 +172,7 @@ void App::create_scene(GraphicContext &gc)
 	scene_teapot->position = Vec3f(0.0f, 0.0f, 2.0f);
 	scene_teapot->scale = Vec3f(1.0f, 1.0f, 1.0f);
 
-	scene_clanlib = new SceneObject(scene, scene.base);
+/*	scene_clanlib = new SceneObject(scene, scene.base);
 	scene_clanlib->model = model_clanlib;
 	scene_clanlib->position = Vec3f(0.0f, -0.5f, 0.0f);
 	scene_clanlib->scale = Vec3f(0.5f, 0.5f, 0.5f);
@@ -183,7 +181,7 @@ void App::create_scene(GraphicContext &gc)
 	scene_tuxball->model = model_tuxball;
 	scene_tuxball->position = Vec3f(0.7f, 0.5f, 2.0f);
 	scene_tuxball->scale = Vec3f(0.05f, 0.05f, 0.05f);
-
+*/
 	scene.gs->LoadImages(gc);
 
 }
@@ -213,10 +211,10 @@ void App::update_light(GraphicContext &gc)
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
