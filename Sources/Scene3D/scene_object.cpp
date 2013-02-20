@@ -172,6 +172,7 @@ void SceneObject_Impl::update_lights()
 			lights[i].set_aspect_ratio(model_lights[i].aspect.get_value(animation_index, animation_time));
 			lights[i].set_falloff(model_lights[i].falloff.get_value(animation_index, animation_time));
 			lights[i].set_hotspot(model_lights[i].hotspot.get_value(animation_index, animation_time));
+			lights[i].set_ambient_illumination(model_lights[i].ambient_illumination.get_value(animation_index, animation_time));
 			lights[i].set_shadow_caster(model_lights[i].casts_shadows);
 			lights[i].set_light_caster(true);
 			lights[i].set_rectangle_shape(model_lights[i].rectangle);
