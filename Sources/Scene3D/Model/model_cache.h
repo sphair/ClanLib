@@ -28,9 +28,9 @@
 
 #pragma once
 
-#include "Scene3D/Framework/work_queue.h"
 #include <unordered_map>
 #include "model.h"
+
 namespace clan
 {
 
@@ -40,13 +40,12 @@ class InstancesBuffer;
 class ModelCache
 {
 public:
-	ModelCache(Scene_Impl *scene, WorkQueue &work_queue, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, InstancesBuffer &instances_buffer);
+	ModelCache(Scene_Impl *scene, ModelMaterialCache &texture_cache, ModelShaderCache &shader_cache, InstancesBuffer &instances_buffer);
 	std::shared_ptr<Model> get_model(GraphicContext &gc, const std::string &model_name);
 
 private:
 	Scene_Impl *scene;
 	std::unordered_map<std::string, std::shared_ptr<Model> > models;
-	WorkQueue &work_queue;
 	ModelMaterialCache &texture_cache;
 	ModelShaderCache &shader_cache;
 	InstancesBuffer &instances_buffer;

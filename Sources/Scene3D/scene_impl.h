@@ -93,8 +93,6 @@ private:
 	int frame;
 	InstancesBuffer instances_buffer;
 
-	WorkQueue work_queue;
-
 	std::unique_ptr<MaterialCache> material_cache;
 	std::unique_ptr<ModelShaderCache> model_shader_cache;
 	std::unique_ptr<ModelCache> model_cache;
