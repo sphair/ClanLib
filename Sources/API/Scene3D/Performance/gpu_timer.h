@@ -28,14 +28,17 @@
 
 #pragma once
 
+#include <memory>
+
 namespace clan
 {
+
+class GPUTimer_Impl;
 
 class GPUTimer
 {
 public:
 	GPUTimer();
-	~GPUTimer();
 
 	void begin_frame(GraphicContext &gc);
 
@@ -54,20 +57,7 @@ public:
 	std::vector<Result> get_results(GraphicContext &gc);
 
 private:
-	struct Frame
-	{
-		std::vector<std::string> names;
-		std::vector<ComPtr<ID3D11Query> > queries;
-		ComPtr<ID3D11Query> disjoint_query;
-	};
-
-	void timestamp(GraphicContext &gc);
-
-	std::vector<ComPtr<ID3D11Query> > unused_queries;
-	std::vector<ComPtr<ID3D11Query> > unused_disjoint_queries;
-
-	std::vector<std::shared_ptr<Frame> > frames;
-	std::vector<Result> last_results;
+	std::shared_ptr<GPUTimer_Impl> impl;
 };
 
 }
