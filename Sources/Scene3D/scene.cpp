@@ -88,11 +88,11 @@ std::vector<GPUTimer::Result> Scene_Impl::gpu_results;
 #endif
 
 Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path)
-: cache(cache), frame(0), work_queue(gc)
+: cache(cache), frame(0)
 {
 	material_cache = std::unique_ptr<MaterialCache>(new MaterialCache(this));
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
-	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, work_queue, *material_cache, *model_shader_cache, instances_buffer));
+	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, *material_cache, *model_shader_cache, instances_buffer));
 
 	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc));
 	gbuffer_pass = std::unique_ptr<GBufferPass>(new GBufferPass());
