@@ -32,8 +32,8 @@
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "API/Scene3D/scene.h"
 #include "Scene3D/Culling/clipping_frustum.h"
-#include "Scene3D/Performance/scope_timer.h"
-#include "Scene3D/Performance/gpu_timer.h"
+#include "API/Scene3D/Performance/scope_timer.h"
+#include "API/Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/scene_impl.h"
 
 namespace clan

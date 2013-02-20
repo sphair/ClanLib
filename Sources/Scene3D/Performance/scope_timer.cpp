@@ -27,7 +27,7 @@
 */
 
 #include "Scene3D/precomp.h"
-#include "scope_timer.h"
+#include "API/Scene3D/Performance/scope_timer.h"
 
 namespace clan
 {
