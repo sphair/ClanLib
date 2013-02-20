@@ -52,12 +52,12 @@ public:
 
 	bool is_null() const;
 
-	static Physics3DShape box(const clan::Vec3f &size);
+	static Physics3DShape box(const Vec3f &size);
 	static Physics3DShape capsule(float radius, float height);
-	static Physics3DShape terrain(const std::shared_ptr<clan::TerrainData> &terrain_data, clan::Mat4f &out_transform);
-	static Physics3DShape model(const std::shared_ptr<clan::ModelData> &model_data);
-	static Physics3DShape scale_model(const Physics3DShape &base_model, clan::Vec3f scale);
-	static Physics3DShape gimpact_model(const std::shared_ptr<clan::ModelData> &model_data);
+	static Physics3DShape terrain(const std::shared_ptr<TerrainData> &terrain_data, Mat4f &out_transform);
+	static Physics3DShape model(const std::shared_ptr<ModelData> &model_data);
+	static Physics3DShape scale_model(const Physics3DShape &base_model, Vec3f scale);
+	static Physics3DShape gimpact_model(const std::shared_ptr<ModelData> &model_data);
 
 private:
 	std::shared_ptr<Physics3DShape_Impl> impl;
