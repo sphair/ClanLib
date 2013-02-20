@@ -33,6 +33,7 @@
 
 #include "api_scene3d.h"
 #include "../Display/Render/graphic_context.h"
+#include "Performance/gpu_timer.h"
 #include <memory>
 
 namespace clan
@@ -59,6 +60,14 @@ public:
 	void render(GraphicContext &gc);
 
 	void update(GraphicContext &gc, float time_elapsed);
+
+	// To do: should not be static, should be getter functions, etc.
+	static int models_drawn;
+	static int instances_drawn;
+	static int draw_calls;
+	static int triangles_drawn;
+	static int scene_visits;
+	static std::vector<GPUTimer::Result> gpu_results;
 
 private:
 	std::shared_ptr<Scene_Impl> impl;

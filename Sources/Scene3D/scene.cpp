@@ -74,18 +74,14 @@ void Scene::update(GraphicContext &gc, float time_elapsed)
 	impl->update(gc, time_elapsed);
 }
 
+int Scene::instances_drawn = 0;
+int Scene::models_drawn = 0;
+int Scene::draw_calls = 0;
+int Scene::triangles_drawn = 0;
+int Scene::scene_visits = 0;
+std::vector<GPUTimer::Result> Scene::gpu_results;
+
 /////////////////////////////////////////////////////////////////////////////
-
-int Scene_Impl::instances_drawn = 0;
-int Scene_Impl::models_drawn = 0;
-int Scene_Impl::draw_calls = 0;
-int Scene_Impl::triangles_drawn = 0;
-int Scene_Impl::scene_visits = 0;
-std::vector<GPUTimer::Result> Scene_Impl::gpu_results;
-
-#ifdef _MSC_VER
-#pragma warning(disable: 4355) // warning C4355: 'this' : used in base member initializer list
-#endif
 
 Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path)
 : cache(cache), frame(0)
@@ -163,11 +159,11 @@ void Scene_Impl::render(GraphicContext &gc)
 {
 	ScopeTimeFunction();
 
-	models_drawn = 0;
-	instances_drawn = 0;
-	draw_calls = 0;
-	triangles_drawn = 0;
-	scene_visits = 0;
+	Scene::models_drawn = 0;
+	Scene::instances_drawn = 0;
+	Scene::draw_calls = 0;
+	Scene::triangles_drawn = 0;
+	Scene::scene_visits = 0;
 
 	gpu_timer.begin_frame(gc);
 
@@ -220,7 +216,7 @@ void Scene_Impl::render(GraphicContext &gc)
 
 	gpu_timer.end_frame(gc);
 
-	gpu_results = gpu_timer.get_results(gc);
+	Scene::gpu_results = gpu_timer.get_results(gc);
 
 	if (gc.get_shader_language() == shader_glsl)
 		OpenGL::check_error();
@@ -236,7 +232,7 @@ void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
-	scene_visits++;
+	Scene::scene_visits++;
 
 	std::vector<Model *> models;
 
@@ -248,12 +244,12 @@ void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4
 		{
 			if (object->instance.get_renderer())
 			{
-				instances_drawn++;
+				Scene::instances_drawn++;
 				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world());
 				if (first_instance)
 				{
 					models.push_back(object->instance.get_renderer().get());
-					models_drawn++;
+					Scene::models_drawn++;
 				}
 			}
 		}

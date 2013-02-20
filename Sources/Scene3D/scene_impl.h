@@ -79,13 +79,6 @@ public:
 	const SceneCamera &get_camera() const { return camera; }
 	void set_camera(const SceneCamera &cam) { camera = cam; }
 
-	static int models_drawn;
-	static int instances_drawn;
-	static int draw_calls;
-	static int triangles_drawn;
-	static int scene_visits;
-	static std::vector<GPUTimer::Result> gpu_results;
-
 private:
 	SceneCache cache;
 	std::string shader_path;
