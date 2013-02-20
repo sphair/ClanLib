@@ -29,19 +29,26 @@
 #include "precomp.h"
 #include "example.h"
 #include "shader.h"
+#include "scene_object.h"
+#include "model.h"
+#include "graphic_store.h"
 
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll.lib")
+			#pragma comment(lib, "zlib-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt.lib")
+			#pragma comment(lib, "zlib-static-mt.lib")
 		#endif
 	#else
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+			#pragma comment(lib, "zlib-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt-debug.lib")
+			#pragma comment(lib, "zlib-static-mt-debug.lib")
 		#endif
 	#endif
 #endif
@@ -55,17 +62,10 @@ int App::start(const std::vector<std::string> &args)
 	desc.set_title("ClanLib Object 3D Example");
 	desc.set_size(Size(640, 480), true);
 	desc.set_multisampling(4);
+	desc.set_allow_resize(true);
 	desc.set_depth_size(16);
 
 	DisplayWindow window(desc);
-
-#ifdef _DEBUG
-	//struct aiLogStream stream;
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_STDOUT,NULL);
-	//aiAttachLogStream(&stream);
-	//stream = aiGetPredefinedLogStream(aiDefaultLogStream_FILE,"assimp_log.txt");
-	//aiAttachLogStream(&stream);
-#endif
 
 	// Connect the Window close event
 	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -73,105 +73,61 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
-#ifdef USE_OPENGL_1
-    GraphicContext_GL1 gc_gl1 = gc;
-#endif
+	// Setup graphic store
+	GraphicStore graphic_store(canvas);
+	scene.gs = &graphic_store;
 
 	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	RasterizerStateDescription rasterizer_state_desc;
+	rasterizer_state_desc.set_culled(true);
+	rasterizer_state_desc.set_face_cull_mode(cull_back);
+	rasterizer_state_desc.set_front_face(face_clockwise);
+	RasterizerState raster_state(canvas, rasterizer_state_desc);
 
-	gc.set_culled(true);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
+	DepthStencilStateDescription depth_state_desc;
+	depth_state_desc.enable_depth_write(true);
+	depth_state_desc.enable_depth_test(true);
+	depth_state_desc.enable_stencil_test(false);
+	depth_state_desc.set_depth_compare_function(compare_lequal);
+	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
 	
-	gc.enable_depth_test(true);
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	
-#ifdef USE_OPENGL_2
-    Shader shader(gc);
-#endif
+  	create_scene(canvas);
 
-	// Create the objects
-
-	aiPropertyStore* store = aiCreatePropertyStore();
-	aiSetImportPropertyFloat(store, AI_CONFIG_PP_GSN_MAX_SMOOTHING_ANGLE,89.53f);
-
-	const struct aiScene* scene_teapot = aiImportFileExWithProperties("../Clan3D/Resources/teapot.dae",aiProcessPreset_TargetRealtime_MaxQuality, NULL, store);
-	if (!scene_teapot)
-		throw Exception("Cannot load the teapot model");
-
-	const struct aiScene* scene_clanlib = aiImportFileExWithProperties("../Clan3D/Resources/clanlib.dae",aiProcessPreset_TargetRealtime_MaxQuality, NULL, store);
-	if (!scene_clanlib)
-		throw Exception("Cannot load the clanlib model");
-
-	const struct aiScene* scene_tuxball = aiImportFileExWithProperties("../Clan3D/Resources/tux_ball.dae",aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs, NULL, store);
-	if (!scene_tuxball)
-		throw Exception("Cannot load the tux ball model");
-
-	// Load the texture
-	Texture tux(gc, "../Clan3D/Resources/tux.png");
+	unsigned int last_time = clan::System::get_time();
 
 	float angle = 0.0f;
 	// Run until someone presses escape
 	while (!quit)
 	{
+		unsigned int current_time = clan::System::get_time();
+		int time_delta_ms = current_time - last_time;
+		last_time = current_time;
 
-		Mat4f perp = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
-		gc.set_projection(perp);
+		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
 
-		gc.clear(Colorf::black);
-		gc.clear_depth(1.0f);
+		canvas.clear(Colorf::black);
+		canvas.clear_depth(1.0f);
 
-		angle += 1.0f;
+		angle += time_delta_ms / 10.0f;
 		if (angle >= 360.0f)
 			angle -= 360.0f;
 
+		scene_teapot->rotation_y.set_degrees(angle);
+		scene_clanlib->rotation_y.set_degrees(angle);
+		scene_tuxball->rotation_y.set_degrees(angle);
 
-#ifdef USE_OPENGL_2
-        shader.Set(gc);
-        shader.Use(gc);
-#else
-        gc.set_program_object(cl_program_color_only);
-#endif
+		// Render the scene using euler angles
+		calculate_matricies(canvas);
+		update_light(canvas);
 
-		PrimitivesArray prim_array(gc);
+		canvas.set_depth_stencil_state(depth_write_enabled);
+		canvas.set_rasterizer_state(raster_state);
+		render(canvas);
 
-		gc.set_modelview(Mat4f::identity());
-		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
-		gc.mult_translate(0.0f, 0.0f, 2.0f);
-		gc.mult_rotate(Angle(angle, angle_degrees), 0.0f, 1.0f, 0.0f, false);
-
-		gc.push_modelview();
-		recursive_render(gc, scene_teapot, scene_teapot->mRootNode, false);
-		gc.pop_modelview();
-
-		gc.push_modelview();
-		gc.mult_scale(0.5f, 0.5f, 0.5f);
-		gc.mult_translate(0.0f, -0.5f, 0.0f);
-		recursive_render(gc, scene_clanlib, scene_clanlib->mRootNode, false);
-		gc.pop_modelview();
-
-#ifdef USE_OPENGL_2
-        shader.Set(gc, 0);
-        shader.Use(gc);
-#else
-        gc.set_program_object(cl_program_single_texture);
-#endif
-
-		gc.set_texture(0, tux);
- 		gc.set_modelview(Mat4f::identity());
-		gc.mult_scale(1.0f,1.0f, -1.0f);	// So +'ve Z goes into the screen
-		gc.mult_translate(0.7f, 0.5f, 2.0f);
-		gc.mult_scale(0.05f, 0.05f, 0.05f);
-		gc.mult_rotate(Angle(angle * 4.0f, angle_degrees), 0.0f, 1.0f, 0.0f, false);
-		recursive_render(gc, scene_tuxball, scene_tuxball->mRootNode, true);
-		gc.reset_texture(0);
-
-		gc.reset_program_object();
+		canvas.reset_rasterizer_state();
+		canvas.reset_depth_stencil_state();
 		
 		// Flip the display, showing on the screen what we have drawed
 		// since last call to flip()
@@ -181,84 +137,94 @@ int App::start(const std::vector<std::string> &args)
 		KeepAlive::process();
 	}
 
-	aiReleaseImport(scene_tuxball);
-	aiReleaseImport(scene_clanlib);
-	aiReleaseImport(scene_teapot);
-	aiReleasePropertyStore(store);
-	aiDetachAllLogStreams();
-
 	return 0;
 }
-
-void App::recursive_render(GraphicContext &gc, const struct aiScene *sc, const struct aiNode* nd, bool use_texture_coords)
+void App::render(GraphicContext &gc)
 {
-	int i;
-	unsigned int n = 0, t;
-	aiMatrix4x4 m = nd->mTransformation;
+	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 
-	// update transform
-	aiTransposeMatrix4(&m);
-	gc.push_modelview();
-	gc.mult_modelview(Mat4f((float*)&m));
+	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
+	gc.set_viewport(viewport_rect);
 
-	// draw all meshes assigned to this node
-	for (; n < nd->mNumMeshes; ++n)
-	{
-		const struct aiMesh* mesh = sc->mMeshes[nd->mMeshes[n]];
+	gc.clear_depth(1.0f);
 
-		if (mesh->mNormals == NULL)
-			throw Exception("This example expects normals to be set");
+	Mat4f modelview_matrix = scene.gs->camera_modelview;
+	scene.Draw(modelview_matrix, gc);
+	gc.reset_program_object();
+}
 
-		std::vector<Vec3f> normals;
-		std::vector<Vec3f> vertices;
-		std::vector<Vec2f> tex_coords;
+void App::create_scene(GraphicContext &gc)
+{
 
-		normals.reserve(mesh->mNumFaces * 3);
-		vertices.reserve(mesh->mNumFaces * 3);
+	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae");
+	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae");
+	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae");
 
-		if (use_texture_coords)
-		{
-			if (mesh->mTextureCoords == NULL || mesh->mTextureCoords[0] == NULL)
-				throw Exception("This example expects texcoords to be set for this object");
-			tex_coords.reserve(mesh->mNumFaces * 3);
-		}
+	camera = new SceneObject(scene, scene.base);
+	camera->position = Vec3f(0.0f, 2.0f, -3.0f);
+	camera->rotation_x = Angle(30.0f, angle_degrees);
 
-		for (t = 0; t < mesh->mNumFaces; ++t)
-		{
-			const struct aiFace* face = &mesh->mFaces[t];
+	light_distant = new SceneObject(scene, scene.base);
+	light_distant->position = Vec3f(0.0f, 32.0f, 20.0f);
+	light_distant->rotation_y = Angle(45.0f, angle_degrees);
+	light_distant->rotation_x = Angle(35.0f, angle_degrees);
 
-			if (face->mNumIndices != 3)
-					throw Exception("This example only supports triangles");
+	scene_teapot = new SceneObject(scene, scene.base);
+	scene_teapot->model = model_teapot;
+	scene_teapot->position = Vec3f(0.0f, 0.0f, 2.0f);
+	scene_teapot->scale = Vec3f(1.0f, 1.0f, 1.0f);
 
-			for(i = 0; i < face->mNumIndices; i++)
-			{
-				int index = face->mIndices[i];
-				normals.push_back(Vec3f(&mesh->mNormals[index].x));
-				vertices.push_back( Vec3f(&mesh->mVertices[index].x));
-				if (use_texture_coords)
-					tex_coords.push_back( Vec2f(&mesh->mTextureCoords[0][index].x));
-			}
-		}
+	scene_clanlib = new SceneObject(scene, scene.base);
+	scene_clanlib->model = model_clanlib;
+	scene_clanlib->position = Vec3f(0.0f, -0.5f, 0.0f);
+	scene_clanlib->scale = Vec3f(0.5f, 0.5f, 0.5f);
 
-		if (!vertices.empty())
-		{
-			PrimitivesArray prim_array(gc);
-			prim_array.set_attributes(cl_attrib_position, &vertices[0]);
-			prim_array.set_attribute(cl_attrib_color, Colorf::white);
-			prim_array.set_attributes(cl_attrib_normal, &normals[0]);
-			if (use_texture_coords)
-				prim_array.set_attributes(cl_attrib_texture_position, &tex_coords[0]);
-			gc.draw_primitives(type_triangles, vertices.size(), prim_array);
-		}
-	}
+	scene_tuxball = new SceneObject(scene, scene.base);
+	scene_tuxball->model = model_tuxball;
+	scene_tuxball->position = Vec3f(0.7f, 0.5f, 2.0f);
+	scene_tuxball->scale = Vec3f(0.05f, 0.05f, 0.05f);
 
-	// draw all children
-	for (n = 0; n < nd->mNumChildren; ++n)
-	{
-		recursive_render(gc, sc, nd->mChildren[n], use_texture_coords);
-	}
+	scene.gs->LoadImages(gc);
 
-	gc.pop_modelview();
+}
+
+
+void App::update_light(GraphicContext &gc)
+{
+	Mat4f light_modelview_matrix = Mat4f::identity();
+	light_distant->GetWorldMatrix(light_modelview_matrix);
+
+	Mat4f work_matrix = scene.gs->camera_modelview;
+	work_matrix = work_matrix * light_modelview_matrix;
+
+	// Clear translation
+	work_matrix.matrix[0+3*4] = 0.0f;
+	work_matrix.matrix[1+3*4] = 0.0f;
+	work_matrix.matrix[2+3*4] = 0.0f;
+
+	Vec3f light_vector = work_matrix.get_transformed_point(Vec3f(0.0f, 0.0f, -1.0f));
+
+	Vec4f light_specular(0.5f, 0.5f, 0.5f, 1.0f);
+	Vec4f light_diffuse(0.5f, 0.5f, 0.5f, 1.0f);
+	Vec4f light_ambient(0.2f, 0.2f, 0.0f, 1.0f);
+
+	scene.gs->shader.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
+}
+
+void App::calculate_matricies(GraphicContext &gc)
+{
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+
+	float ortho_size = 60.0f / 2.0f;
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, clip_negative_positive_w);
+
+	scene.gs->camera_modelview = Mat4f::identity();
+	camera->GetWorldMatrix(scene.gs->camera_modelview);
+	scene.gs->camera_modelview.inverse();
+
+	scene.gs->light_modelview = Mat4f::identity();
+	light_distant->GetWorldMatrix(scene.gs->light_modelview);
+	scene.gs->light_modelview.inverse();
 }
 
 // A key was pressed

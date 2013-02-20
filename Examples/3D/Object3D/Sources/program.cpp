@@ -31,14 +31,6 @@
 #include "program.h"
 #include "example.h"
 
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
-
 int Program::main(const std::vector<std::string> &args)
 {
 	try
@@ -49,13 +41,7 @@ int Program::main(const std::vector<std::string> &args)
 		// Initialize the ClanLib display component
 		SetupDisplay setup_display;
 
-		#ifdef USE_D3D
-			SetupD3D setup_d3d;
-		#endif
-
-		#ifdef USE_OPENGL_2
-			SetupGL setup_gl;
-		#endif
+		SetupGL setup_gl;
 
 		// Start the Application
 		App app;
