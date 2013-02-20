@@ -32,12 +32,16 @@
 #pragma once
 
 #include "api_physics3d.h"
+#include "../Core/Math/vec3.h"
+#include "../Core/Math/mat4.h"
 #include <string>
 #include <memory>
 
 namespace clan
 {
 
+class ModelData;
+class TerrainData;
 class Physics3DWorld;
 class Physics3DShape_Impl;
 
@@ -47,6 +51,13 @@ public:
 	Physics3DShape();
 
 	bool is_null() const;
+
+	static Physics3DShape box(const clan::Vec3f &size);
+	static Physics3DShape capsule(float radius, float height);
+	static Physics3DShape terrain(const std::shared_ptr<clan::TerrainData> &terrain_data, clan::Mat4f &out_transform);
+	static Physics3DShape model(const std::shared_ptr<clan::ModelData> &model_data);
+	static Physics3DShape scale_model(const Physics3DShape &base_model, clan::Vec3f scale);
+	static Physics3DShape gimpact_model(const std::shared_ptr<clan::ModelData> &model_data);
 
 private:
 	std::shared_ptr<Physics3DShape_Impl> impl;
