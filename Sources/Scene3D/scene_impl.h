@@ -77,6 +77,7 @@ public:
 	const SceneCache &get_cache() const { return cache; }
 
 	const SceneCamera &get_camera() const { return camera; }
+	SceneCamera &get_camera() { return camera; }
 	void set_camera(const SceneCamera &cam) { camera = cam; }
 
 private:
