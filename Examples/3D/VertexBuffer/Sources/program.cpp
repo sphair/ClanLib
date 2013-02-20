@@ -41,6 +41,9 @@ int Program::main(const std::vector<std::string> &args)
 		// Initialize the ClanLib display component
 		SetupDisplay setup_display;
 
+#ifdef WIN32
+		clan::SetupD3D setup_d3d;
+#endif
 		SetupGL setup_gl;
 
 		// Start the Application
