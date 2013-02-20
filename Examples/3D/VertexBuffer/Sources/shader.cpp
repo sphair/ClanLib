@@ -81,13 +81,13 @@ const char Shader::fragment_hlsl[] =
 	"\n"
 	"struct PixelOut\n"
 	"{\n"
-	"	float4 FragColor : SV_Target0;\n"
+	"	float4 cl_FragColor : SV_Target0;\n"
 	"};\n"
 	"\n"
 	"PixelOut main(PixelIn input)\n"
 	"{\n"
 	"	PixelOut output;\n"
-	"	output.FragColor = float4(1,1,1,1);\n"
+	"	output.cl_FragColor = float4(1,1,1,1);\n"
 	"	return output;\n"
 	"}\n";
 
