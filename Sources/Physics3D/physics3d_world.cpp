@@ -29,6 +29,7 @@
 #include "Physics3D/precomp.h"
 #include "API/Physics3D/physics3d_world.h"
 #include "physics3d_world_impl.h"
+#include "API/Core/System/exception.h"
 
 namespace clan
 {
@@ -41,6 +42,38 @@ Physics3DWorld::Physics3DWorld()
 bool Physics3DWorld::is_null() const
 {
 	return !impl;
+}
+
+int Physics3DWorld::step_simulation(float time_step, int max_sub_steps, float fixed_time_step)
+{
+	int num_sub_steps = impl->dynamics_world->stepSimulation(time_step, max_sub_steps, fixed_time_step);
+	return num_sub_steps;
+}
+
+void Physics3DWorld::step_simulation_once(float time_step)
+{
+	int steps = impl->dynamics_world->stepSimulation(time_step, 0, time_step);
+	if (steps == 0)
+		throw Exception("btDynamicsWorld::stepSimulation failed");
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Physics3DWorld_Impl::Physics3DWorld_Impl()
+{
+	collision_configuration.reset(new btDefaultCollisionConfiguration());
+	dispatcher.reset(new btCollisionDispatcher(collision_configuration.get()));
+	broadphase.reset(new btDbvtBroadphase());
+	ghost_pair_callback.reset(new btGhostPairCallback());
+	broadphase->getOverlappingPairCache()->setInternalGhostPairCallback(ghost_pair_callback.get());
+	constraint_solver.reset(new btSequentialImpulseConstraintSolver());
+	dynamics_world.reset(new btDiscreteDynamicsWorld(dispatcher.get(), broadphase.get(), constraint_solver.get(), collision_configuration.get()));
+	dynamics_world->getDispatchInfo().m_allowedCcdPenetration=0.0001f; // This line is needed by the character controller
+}
+
+Physics3DWorld_Impl::~Physics3DWorld_Impl()
+{
+	// To do: dispose all collision user objects
 }
 
 }

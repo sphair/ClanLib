@@ -46,6 +46,9 @@ public:
 
 	bool is_null() const;
 
+	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
+	void step_simulation_once(float time_step);
+
 private:
 	std::shared_ptr<Physics3DWorld_Impl> impl;
 
