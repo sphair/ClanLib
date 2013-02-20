@@ -54,6 +54,16 @@ bool Scene::is_null() const
 	return !impl;
 }
 
+const SceneCamera &Scene::get_camera() const
+{
+	return impl->get_camera();
+}
+
+SceneCamera &Scene::get_camera()
+{
+	return impl->get_camera();
+}
+
 void Scene::set_viewport(const Rect &box)
 {
 	impl->set_viewport(box);

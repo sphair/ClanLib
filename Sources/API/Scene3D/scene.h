@@ -54,6 +54,9 @@ public:
 
 	bool is_null() const;
 
+	const SceneCamera &get_camera() const;
+	SceneCamera &get_camera();
+
 	void set_viewport(const Rect &box);
 	void set_camera(const SceneCamera &camera);
 

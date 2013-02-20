@@ -35,6 +35,9 @@
 #include "API/Core/Signals/slot.h"
 #include "resourcetype_sample.h"
 
+#define INCLUDED_FROM_SETUPVORBIS
+#include "SoundProviders/stb_vorbis.h"
+
 namespace clan
 {
 
