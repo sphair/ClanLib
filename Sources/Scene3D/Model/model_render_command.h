@@ -138,8 +138,8 @@ public:
 		gc.set_uniform_buffer(0, uniforms);
 		gc.draw_primitives_elements_instanced(type_triangles, num_elements, type_unsigned_int, start_element * sizeof(unsigned int), num_instances);
 
-		Scene_Impl::draw_calls++;
-		Scene_Impl::triangles_drawn += num_elements / 3;
+		Scene::draw_calls++;
+		Scene::triangles_drawn += num_elements / 3;
 	}
 
 	int start_element;
