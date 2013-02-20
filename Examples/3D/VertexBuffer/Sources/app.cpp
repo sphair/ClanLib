@@ -110,7 +110,7 @@ int App::start(const std::vector<std::string> &args)
 		std::string info = string_format("%1 vertices", (int) object_positions.size());
 		fps_font.draw_text(canvas, 30, 30, info);
 
-		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 100000.0f, handed_left, clip_negative_positive_w );
+		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 100000.0f, handed_left, canvas.get_gc().get_provider()->get_clip_z_range() );
 
 		angle += time_diff / 20.0f;
 		if (angle >= 360.0f)
