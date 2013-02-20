@@ -290,6 +290,14 @@ Workspace Wizard::create_workspace()
 		libs_list_release,
 		libs_list_debug);
 
+	Project clanPhysics3D(
+		"Physics3D",
+		"clanPhysics3D",
+		"physics3d.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug);
+
 	Project clanGameIDE(
 		"GameIDE",
 		"clanGameIDE",
@@ -319,6 +327,7 @@ Workspace Wizard::create_workspace()
 
 	workspace.projects.push_back(clanCompute);
 	workspace.projects.push_back(clanPhysics2D);
+	workspace.projects.push_back(clanPhysics3D);
 	workspace.projects.push_back(clanGameIDE);
 
 	return workspace;
