@@ -129,12 +129,12 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 	vec3 position_in_eye = unproject(vec2(x, y) + 0.5f, z_in_eye);
 
 #if defined(USE_FAKE_GI)
-	float ambience = 0.001f;
+	vec3 color = material_self_illumination * 4;
 #else
 	float ambience = 0.01f;
+	vec3 color = material_diffuse_color.xyz * ambience + material_self_illumination * 4;
 #endif
 
-	vec3 color = material_diffuse_color.xyz * ambience + material_self_illumination * 4;
 #if defined(DEBUG_LIGHT_COUNT)
 	uint item_index = local_x + local_y * TILE_SIZE;
 	if (item_index < in_visible_light_indices[visible_light_indices_start])
@@ -201,12 +201,11 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 			extra_attenuation *= shadow_attenuation(light, fragment_to_light, shadow_projection);
 
 #if defined(USE_FAKE_GI)
-		attenuation *= max(extra_attenuation, 0.05f);
+		color += attenuation * extra_attenuation * lit_color + attenuation * 0.025f * diffuse_color;
 #else
-		attenuation *= extra_attenuation;
+		color += attenuation * extra_attenuation * lit_color;
 #endif
-		
-		color += attenuation * lit_color;
+
 #endif
 	}
 #endif
