@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "bloom_pass.h"
-#include "Scene3D/Performance/scope_timer.h"
+#include "API/Scene3D/Performance/scope_timer.h"
 #include "Scene3D/Framework/shader_setup.h"
 
 namespace clan
