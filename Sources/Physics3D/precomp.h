@@ -34,16 +34,10 @@
 # pragma warning (disable:4786)
 #endif
 #include <windows.h>
+#undef min
+#undef max
 #endif
-
-#include "API/core.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
 #endif
-
-#include <cstring>
-#include <vector>
-#include <algorithm>
-#include <map>
-
