@@ -57,6 +57,11 @@ void Physics3DWorld::step_simulation_once(float time_step)
 		throw Exception("btDynamicsWorld::stepSimulation failed");
 }
 
+void Physics3DWorld::set_gravity(const Vec3f &gravity)
+{
+	impl->dynamics_world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 Physics3DWorld_Impl::Physics3DWorld_Impl()
