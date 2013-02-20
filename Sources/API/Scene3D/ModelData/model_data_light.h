@@ -43,6 +43,7 @@ public:
 	ModelDataAnimationData<float> falloff;
 	ModelDataAnimationData<float> hotspot;
 	ModelDataAnimationData<float> aspect;
+	ModelDataAnimationData<float> ambient_illumination;
 	int bone_selector;
 	bool casts_shadows;
 	bool rectangle;
