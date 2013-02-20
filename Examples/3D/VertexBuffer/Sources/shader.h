@@ -44,14 +44,10 @@ private:
 		Mat4f cl_NormalMatrix;
 
 		Vec4f MaterialEmission;
-		Vec4f MaterialSpecular;
-		Vec4f LightSpecular;
 		Vec4f LightDiffuse;
 		Vec4f LightAmbient;
 		Vec3f LightVector;
 		float padding;
-		Vec3f LightHalfVector;
-		float MaterialShininess;
 
 	};
 

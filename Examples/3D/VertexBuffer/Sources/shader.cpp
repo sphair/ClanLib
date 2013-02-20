@@ -44,13 +44,9 @@ char Shader::vertex[] =
 	"	mat3 cl_NormalMatrix;\n"
 	"	vec4 padding;\n"
 	"	vec4 MaterialEmission;\n"
-	"	vec4 MaterialSpecular;\n"
-	"	vec4 LightSpecular;\n"
 	"	vec4 LightDiffuse;\n"
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
-	"	vec3 LightHalfVector;\n"
-	"	float MaterialShininess;\n"
 	"};\n"
 	"out vec3 WorldSpaceNormal; \n"
 	"out vec3 WorldSpacePosition; \n"
@@ -84,36 +80,21 @@ char Shader::fragment[] =
 	"	mat3 cl_NormalMatrix;\n"
 	"	vec4 padding;\n"
 	"	vec4 MaterialEmission;\n"
-	"	vec4 MaterialSpecular;\n"
-	"	vec4 LightSpecular;\n"
 	"	vec4 LightDiffuse;\n"
 	"	vec4 LightAmbient;\n"
 	"	vec3 LightVector;\n"
-	"	vec3 LightHalfVector;\n"
-	"	float MaterialShininess;\n"
 	"};\n"
 	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
 	"	vec4 diff = vec4(0); \n"
-	"	vec4 spec = vec4(0); \n"
 	"\n"
 	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
 	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
-	"	float pf; \n"
-	"	if (nDotL == 0.0)\n"
-	"	{\n"
-	"		pf = 0.0; \n"
-	"	}else\n"
-	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
-	"			pf = pow(nDotHV, MaterialShininess);\n"
-	"	}\n"
-	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
 	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
-	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color;\n"
 	"	cl_FragColor.a = MaterialAmbient.a;\n"
 	"}\n"
 	;
@@ -144,22 +125,14 @@ Shader::Shader(GraphicContext &gc)
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
+	program_object.set_uniform_buffer_index("ProgramUniforms", 0);
 
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
-	uniforms.MaterialShininess = 64.0f;
 	uniforms.MaterialEmission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	uniforms.MaterialSpecular = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-
 	uniforms.LightAmbient = Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
 	uniforms.LightVector = Vec3f(0.0f, 0.0f, -1.0f);
-	uniforms.LightSpecular = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	uniforms.LightDiffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-
-	Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
-	light_halfvector += uniforms.LightVector;
-	light_halfvector.normalize();
-	uniforms.LightHalfVector = light_halfvector;
 
 }
 
