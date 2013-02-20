@@ -30,7 +30,62 @@
 
 #include "shader.h"
 
-char Shader::vertex[] =
+const char Shader::vertex_hlsl[] =
+	"\n"
+	"cbuffer ProgramUniforms\n"
+	"{\n"
+	"	float4x4 cl_ModelViewMatrix;\n"
+	"	float4x4 cl_ModelViewProjectionMatrix;\n"
+	"	float3x3 cl_NormalMatrix;\n"
+	"	float4 padding;\n"
+	"	float4 MaterialEmission;\n"
+	"	float4 MaterialSpecular;\n"
+	"	float4 MaterialAmbient;\n"
+	"	float4 LightSpecular;\n"
+	"	float4 LightDiffuse;\n"
+	"	float4 LightAmbient;\n"
+	"	float3 LightVector;\n"
+	"	float3 LightHalfVector;\n"
+	"	float MaterialShininess;\n"
+	"}\n"
+	"struct VertexIn\n"
+	"	{\n"
+	"		float3 InPosition : InPosition;\n"
+	"	};\n"
+	"\n"
+	"	struct VertexOut\n"
+	"	{\n"
+	"		float4 PositionInProjection : SV_Position;\n"
+	"	};\n"
+	"\n"
+	"	VertexOut main(VertexIn input)\n"
+	"	{\n"
+	"		VertexOut output;\n"
+	"		float4 in_position = float4(input.InPosition.xyz, 1.0);\n"
+	"		output.PositionInProjection = mul(cl_ModelViewProjectionMatrix,in_position);\n"
+	"		return output;\n"
+	"	}\n";
+
+const char Shader::fragment_hlsl[] =
+	"\n"
+	"struct PixelIn\n"
+	"{\n"
+	"	float4 ScreenPos : SV_Position;\n"
+	"};\n"
+	"\n"
+	"struct PixelOut\n"
+	"{\n"
+	"	float4 FragColor : SV_Target0;\n"
+	"};\n"
+	"\n"
+	"PixelOut main(PixelIn input)\n"
+	"{\n"
+	"	PixelOut output;\n"
+	"	output.FragColor = float4(1,1,1,1);\n"
+	"	return output;\n"
+	"}\n";
+
+const char Shader::vertex_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
@@ -66,7 +121,7 @@ char Shader::vertex[] =
 	"}\n"
 	;
 
-char Shader::fragment[] =
+const char Shader::fragment_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
@@ -118,29 +173,35 @@ char Shader::fragment[] =
 
 Shader::Shader(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
+	ShaderLanguage shader_language = gc.get_shader_language();
+	
+	ShaderObject vertex_shader(gc, shadertype_vertex, shader_language==shader_glsl ? vertex_glsl : vertex_hlsl);
 	if(!vertex_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
+		std::string log = vertex_shader.get_info_log();
+		throw Exception(string_format("Unable to compile vertex shader object: %1", log));
 	}
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, shadertype_fragment, shader_language==shader_glsl ? fragment_glsl : fragment_hlsl);
 	if(!fragment_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
+		std::string log = fragment_shader.get_info_log();
+		throw Exception(string_format("Unable to compile fragment shader object: %1", log));
 	}
 
 	program_object = ProgramObject(gc);
 	program_object.attach(vertex_shader);
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
-	program_object.bind_attribute_location(1, "InNormal");
+	//program_object.bind_attribute_location(1, "InNormal");
 	program_object.bind_frag_data_location(0, "cl_FragColor");
 	if (!program_object.link())
 	{
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
+	// Uniforms
+	program_object.set_uniform_buffer_index("ProgramUniforms", 0);
 
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 

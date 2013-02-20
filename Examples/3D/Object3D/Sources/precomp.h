@@ -7,6 +7,10 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
+#ifdef WIN32
+#include <ClanLib/d3d.h>
+#endif
+
 #include <cstdlib>
 using namespace clan;
 

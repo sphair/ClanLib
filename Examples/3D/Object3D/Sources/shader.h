@@ -61,7 +61,9 @@ private:
 	clan::UniformVector<ProgramUniforms> gpu_uniforms;
 	ProgramUniforms uniforms;
 
-	static char vertex[];
-	static char fragment[];
+	static const char vertex_hlsl[];
+	static const char fragment_hlsl[];
+	static const char vertex_glsl[];
+	static const char fragment_glsl[];
 	ProgramObject program_object;
 };
