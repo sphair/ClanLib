@@ -43,7 +43,6 @@ private:
 		Mat4f cl_ModelViewProjectionMatrix;
 		Mat4f cl_NormalMatrix;
 
-		Vec4f MaterialEmission;
 		Vec4f LightDiffuse;
 		Vec4f LightAmbient;
 		Vec3f LightVector;
