@@ -32,6 +32,8 @@
 #pragma once
 
 #include "api_physics3d.h"
+#include "../Core/Math/vec3.h"
+#include "../Core/Math/quaternion.h"
 #include <memory>
 
 namespace clan
