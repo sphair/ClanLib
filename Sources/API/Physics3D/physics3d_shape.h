@@ -54,6 +54,7 @@ public:
 
 	static Physics3DShape box(const Vec3f &size);
 	static Physics3DShape capsule(float radius, float height);
+	static Physics3DShape sphere(float radius);
 	static Physics3DShape terrain(const std::shared_ptr<TerrainData> &terrain_data, Mat4f &out_transform);
 	static Physics3DShape model(const std::shared_ptr<ModelData> &model_data);
 	static Physics3DShape scale_model(const Physics3DShape &base_model, Vec3f scale);
