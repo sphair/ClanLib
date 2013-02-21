@@ -62,7 +62,31 @@ void D3DPrimitivesArrayProvider::get_vertex_buffers(std::vector<ID3D11Buffer *> 
 		{
 			D3DVertexArrayBufferProvider *array_provider = static_cast<D3DVertexArrayBufferProvider*>(attributes_data[i].array_provider);
 			out_buffers.push_back(array_provider->get_buffer(device));
-			out_strides.push_back(attributes_data[i].stride);
+			int stride = attributes_data[i].stride;
+			// Stride is not optional in D3D
+			if (!stride)
+			{
+				switch (attributes_data[i].type)
+				{
+				case type_unsigned_byte:
+				case type_byte:
+					stride = 1 * attributes_data[i].size;
+					break;
+
+				case type_unsigned_short:
+				case type_short:
+					stride = 2 * attributes_data[i].size;
+					break;
+
+				case type_unsigned_int:
+				case type_int:
+				case type_float:
+					stride = 4 * attributes_data[i].size;
+					break;
+				}
+			}
+
+			out_strides.push_back(stride);
 			out_offsets.push_back(0);
 		}
 		else
