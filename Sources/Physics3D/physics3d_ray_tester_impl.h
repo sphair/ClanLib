@@ -26,40 +26,29 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanPhysics3D_World clanPhysics3D World
-/// \{
-
 #pragma once
 
-#include "api_physics3d.h"
-#include "../Core/Math/vec3.h"
-#include <memory>
+#include "Physics3D/Bullet/btBulletDynamicsCommon.h"
+#include "API/Core/Math/vec3.h"
 
 namespace clan
 {
 
+class Physics3DObject_Impl;
 class Physics3DWorld_Impl;
 
-class CL_API_PHYSICS3D Physics3DWorld
+class Physics3DRayTester_Impl
 {
 public:
-	Physics3DWorld();
+	Physics3DRayTester_Impl(Physics3DWorld_Impl *world);
+	~Physics3DRayTester_Impl();
 
-	bool is_null() const;
+	Physics3DWorld_Impl *world;
 
-	void set_gravity(const Vec3f &gravity);
-
-	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
-	void step_simulation_once(float time_step);
-
-private:
-	std::shared_ptr<Physics3DWorld_Impl> impl;
-
-	friend class Physics3DObject;
-	friend class Physics3DShape;
-	friend class Physics3DRayTester;
+	Vec3f start, end;
+	bool has_hit;
+	float hit_fraction;
+	Physics3DObject_Impl *hit_object;
 };
 
 }
-
-/// \}

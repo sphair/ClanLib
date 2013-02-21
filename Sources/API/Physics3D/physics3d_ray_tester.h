@@ -38,26 +38,27 @@
 namespace clan
 {
 
-class Physics3DWorld_Impl;
+class Physics3DWorld;
+class Physics3DObject;
+class Physics3DRayTester_Impl;
 
-class CL_API_PHYSICS3D Physics3DWorld
+class CL_API_PHYSICS3D Physics3DRayTester
 {
 public:
-	Physics3DWorld();
+	Physics3DRayTester();
+	Physics3DRayTester(Physics3DWorld &world);
 
 	bool is_null() const;
 
-	void set_gravity(const Vec3f &gravity);
+	bool test(const clan::Vec3f &start, const clan::Vec3f &end);
 
-	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
-	void step_simulation_once(float time_step);
+	bool has_hit() const;
+	float get_hit_fraction() const;
+	Vec3f get_hit_position() const;
+	Physics3DObject get_hit_object() const;
 
 private:
-	std::shared_ptr<Physics3DWorld_Impl> impl;
-
-	friend class Physics3DObject;
-	friend class Physics3DShape;
-	friend class Physics3DRayTester;
+	std::shared_ptr<Physics3DRayTester_Impl> impl;
 };
 
 }
