@@ -28,9 +28,9 @@
 
 #include "precomp.h"
 
-#include "shader.h"
+#include "shader_texture.h"
 
-const char Shader::vertex_hlsl[] =
+const char ShaderTexture::vertex_hlsl[] =
 	"\n"
 	"cbuffer ProgramUniforms\n"
 	"{\n"
@@ -52,6 +52,7 @@ const char Shader::vertex_hlsl[] =
 	"	{\n"
 	"		float3 InPosition : InPosition;\n"
 	"		float3 InNormal : InNormal;\n"
+	"		float2 InTextureCoords : InTextureCoords;\n"
 	"	};\n"
 	"\n"
 	"	struct VertexOut\n"
@@ -59,6 +60,7 @@ const char Shader::vertex_hlsl[] =
 	"		float4 PositionInProjection : SV_Position;\n"
 	"		float3 WorldSpaceNormal : WorldSpaceNormal; \n"
 	"		float4 ObjPos : ObjPos;\n"
+	"		float2 TextureCoords : TextureCoords;\n"
 	"	};\n"
 	"\n"
 	"	VertexOut main(VertexIn input)\n"
@@ -68,11 +70,12 @@ const char Shader::vertex_hlsl[] =
 	"		output.PositionInProjection = mul(cl_ModelViewProjectionMatrix,in_position);\n"
 	"		output.WorldSpaceNormal = normalize( mul(cl_NormalMatrix,input.InNormal));\n"
 	"		output.ObjPos = mul(cl_ModelViewMatrix,in_position);\n"
+	"		output.TextureCoords = input.InTextureCoords;\n"
 	"		return output;\n"
 	"	}\n";
 
 
-const char Shader::fragment_hlsl[] =
+const char ShaderTexture::fragment_hlsl[] =
 	"\n"
 	"cbuffer ProgramUniforms\n"
 	"{\n"
@@ -95,7 +98,10 @@ const char Shader::fragment_hlsl[] =
 	"	float4 ScreenPos : SV_Position;\n"
 	"	float3 WorldSpaceNormal : WorldSpaceNormal; \n"
 	"	float4 ObjPos : ObjPos;\n"
+	"	float2 TextureCoords : TextureCoords;\n"
 	"};\n"
+	"Texture2D Texture0;\r\n"
+	"SamplerState Sampler0;\r\n"
 	"\n"
 	"struct PixelOut\n"
 	"{\n"
@@ -122,18 +128,19 @@ const char Shader::fragment_hlsl[] =
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
-	"	float4 final_texture_color = float4(MaterialAmbient.rgb,1.0);\n"
+	"	float4 final_texture_color = Texture0.Sample(Sampler0, input.TextureCoords) * float4(MaterialAmbient.rgb,1.0);\n"
 	"	output.cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
 	"	output.cl_FragColor.a = MaterialAmbient.a;\n"
 	"	return output;\n"
 	"}\n";
 
-const char Shader::vertex_glsl[] =
+const char ShaderTexture::vertex_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
 	"in vec3 InPosition;"
 	"in vec3 InNormal;"
+	"in vec2 InTextureCoords;"
 	"layout (std140) uniform ProgramUniforms\n"
 	"{\n"
 	"	mat4 cl_ModelViewMatrix;\n"
@@ -153,6 +160,7 @@ const char Shader::vertex_glsl[] =
 	"out vec3 WorldSpaceNormal; \n"
 	"out vec3 WorldSpacePosition; \n"
 	"out vec4 ObjPos;\n"
+	"out vec2 TextureCoords;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
@@ -161,15 +169,17 @@ const char Shader::vertex_glsl[] =
 	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
 	"	WorldSpacePosition = InPosition;\n"
 	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
+	"	TextureCoords = InTextureCoords;\n"
 	"}\n"
 	;
 
-const char Shader::fragment_glsl[] =
+const char ShaderTexture::fragment_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
 	"in vec3 WorldSpaceNormal; \n"
 	"in vec3 WorldSpacePosition; \n"
+    "in vec2 TextureCoords;\n"
 	"in vec4 ObjPos;\n"
 	"out vec4 cl_FragColor;\n"
 	"layout (std140) uniform ProgramUniforms\n"
@@ -188,7 +198,8 @@ const char Shader::fragment_glsl[] =
 	"	vec3 LightHalfVector;\n"
 	"	float MaterialShininess;\n"
 	"};\n"
- 	"\n"
+	"uniform sampler2D Texture0;"
+	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
@@ -208,13 +219,13 @@ const char Shader::fragment_glsl[] =
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
-	"	vec4 final_texture_color = vec4(MaterialAmbient.rgb,1.0);\n"
+	"	vec4 final_texture_color = texture2D(Texture0, TextureCoords) * vec4(MaterialAmbient.rgb,1.0);\n"
 	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
 	"	cl_FragColor.a = MaterialAmbient.a;\n"
 	"}\n"
 	;
 
-Shader::Shader(GraphicContext &gc)
+ShaderTexture::ShaderTexture(GraphicContext &gc)
 {
 	ShaderLanguage shader_language = gc.get_shader_language();
 	
@@ -237,6 +248,7 @@ Shader::Shader(GraphicContext &gc)
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
 	program_object.bind_attribute_location(1, "InNormal");
+	program_object.bind_attribute_location(2, "InTextureCoords");
 	program_object.bind_frag_data_location(0, "cl_FragColor");
 	if (!program_object.link())
 	{
@@ -245,6 +257,8 @@ Shader::Shader(GraphicContext &gc)
 
 	// Uniforms
 	program_object.set_uniform_buffer_index("ProgramUniforms", 0);
+	program_object.set_uniform1i("Texture0", 0);
+
 
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
@@ -260,7 +274,7 @@ Shader::Shader(GraphicContext &gc)
 
 }
 
-void Shader::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal)
+void ShaderTexture::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal)
 {
 	uniforms.cl_ModelViewProjectionMatrix = matrix_modelview_projection;
 	uniforms.cl_ModelViewMatrix = matrix_modelview;
@@ -270,7 +284,7 @@ void Shader::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f 
 	gc.set_program_object(program_object);
 }
 
-void Shader::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular)
+void ShaderTexture::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular)
 {
 	uniforms.MaterialShininess = new_material_shininess;
 	uniforms.MaterialEmission = new_material_emission;
@@ -278,7 +292,7 @@ void Shader::SetMaterial(float new_material_shininess, const Vec4f &new_material
 	uniforms.MaterialSpecular = new_material_specular;
 }
 
-void Shader::SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient)
+void ShaderTexture::SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient)
 {
 
 	uniforms.LightAmbient = new_light_ambient;

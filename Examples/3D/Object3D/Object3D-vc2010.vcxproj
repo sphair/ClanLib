@@ -151,6 +151,7 @@
     <ClCompile Include="Sources\scene.cpp" />
     <ClCompile Include="Sources\scene_object.cpp" />
     <ClCompile Include="Sources\shader.cpp" />
+    <ClCompile Include="Sources\shader_texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\example.h" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Sources\scene.h" />
     <ClInclude Include="Sources\scene_object.h" />
     <ClInclude Include="Sources\shader.h" />
+    <ClInclude Include="Sources\shader_texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.txt" />
