@@ -2,7 +2,7 @@ radialmenu
 {
 	background-position:center center;
 	background-repeat:no-repeat;
-	background-attachment:fixed;
+	background-attachment:scroll;
 
 	background-image:url('res:RadialMenuBackground'); 
 	
