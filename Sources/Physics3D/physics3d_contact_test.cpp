@@ -26,43 +26,56 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanPhysics3D_World clanPhysics3D World
-/// \{
-
-#pragma once
-
-#include "api_physics3d.h"
-#include "../Core/Math/vec3.h"
-#include <memory>
+#include "Physics3D/precomp.h"
+#include "API/Physics3D/physics3d_contact_test.h"
+#include "API/Physics3D/physics3d_object.h"
+#include "API/Physics3D/physics3d_world.h"
+#include "API/Core/System/exception.h"
+#include "physics3d_contact_test_impl.h"
+#include "physics3d_world_impl.h"
 
 namespace clan
 {
 
-class Physics3DWorld_Impl;
-
-class CL_API_PHYSICS3D Physics3DWorld
+Physics3DContactTest::Physics3DContactTest()
 {
-public:
-	Physics3DWorld();
-
-	bool is_null() const;
-
-	void set_gravity(const Vec3f &gravity);
-
-	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
-	void step_simulation_once(float time_step);
-
-private:
-	std::shared_ptr<Physics3DWorld_Impl> impl;
-
-	friend class Physics3DObject;
-	friend class Physics3DShape;
-	friend class Physics3DRayTest;
-	friend class Physics3DSweepTest;
-	friend class Physics3DContactTest;
-	friend class Physics3DContactPairTest;
-};
-
 }
 
-/// \}
+Physics3DContactTest::Physics3DContactTest(Physics3DWorld &world)
+	: impl(new Physics3DContactTest_Impl(world.impl.get()))
+{
+}
+
+bool Physics3DContactTest::is_null() const
+{
+	return !impl;
+}
+
+bool Physics3DContactTest::test(const Physics3DObject &object)
+{
+	throw Exception("Physics3DContactTest::test not implemented");
+}
+
+int Physics3DContactTest::get_hit_count() const
+{
+	return 0;
+}
+
+Physics3DObject Physics3DContactTest::get_hit_object(int index) const
+{
+	return Physics3DObject();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+Physics3DContactTest_Impl::Physics3DContactTest_Impl(Physics3DWorld_Impl *world)
+	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(nullptr)
+{
+}
+
+Physics3DContactTest_Impl::~Physics3DContactTest_Impl()
+{
+}
+
+
+}

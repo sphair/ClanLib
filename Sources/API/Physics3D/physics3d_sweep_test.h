@@ -33,34 +33,35 @@
 
 #include "api_physics3d.h"
 #include "../Core/Math/vec3.h"
+#include "../Core/Math/quaternion.h"
 #include <memory>
 
 namespace clan
 {
 
-class Physics3DWorld_Impl;
+class Physics3DWorld;
+class Physics3DShape;
+class Physics3DObject;
+class Physics3DSweepTest_Impl;
 
-class CL_API_PHYSICS3D Physics3DWorld
+class CL_API_PHYSICS3D Physics3DSweepTest
 {
 public:
-	Physics3DWorld();
+	Physics3DSweepTest();
+	Physics3DSweepTest(Physics3DWorld &world);
 
 	bool is_null() const;
 
-	void set_gravity(const Vec3f &gravity);
+	bool test(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Vec3f &to_orientation, float allowed_ccd_penetration = 0.0f);
 
-	int step_simulation(float time_step, int max_sub_steps, float fixed_time_step);
-	void step_simulation_once(float time_step);
+	int get_hit_count() const;
+	float get_hit_fraction(int index) const;
+	Vec3f get_hit_position(int index) const;
+	Quaternionf get_hit_orientation(int index) const;
+	Physics3DObject get_hit_object(int index) const;
 
 private:
-	std::shared_ptr<Physics3DWorld_Impl> impl;
-
-	friend class Physics3DObject;
-	friend class Physics3DShape;
-	friend class Physics3DRayTest;
-	friend class Physics3DSweepTest;
-	friend class Physics3DContactTest;
-	friend class Physics3DContactPairTest;
+	std::shared_ptr<Physics3DSweepTest_Impl> impl;
 };
 
 }
