@@ -27,30 +27,30 @@
 */
 
 #include "Physics3D/precomp.h"
-#include "API/Physics3D/physics3d_ray_tester.h"
+#include "API/Physics3D/physics3d_ray_test.h"
 #include "API/Physics3D/physics3d_object.h"
 #include "API/Physics3D/physics3d_world.h"
-#include "physics3d_ray_tester_impl.h"
+#include "physics3d_ray_test_impl.h"
 #include "physics3d_world_impl.h"
 
 namespace clan
 {
 
-Physics3DRayTester::Physics3DRayTester()
+Physics3DRayTest::Physics3DRayTest()
 {
 }
 
-Physics3DRayTester::Physics3DRayTester(Physics3DWorld &world)
-	: impl(new Physics3DRayTester_Impl(world.impl.get()))
+Physics3DRayTest::Physics3DRayTest(Physics3DWorld &world)
+	: impl(new Physics3DRayTest_Impl(world.impl.get()))
 {
 }
 
-bool Physics3DRayTester::is_null() const
+bool Physics3DRayTest::is_null() const
 {
 	return !impl;
 }
 
-bool Physics3DRayTester::test(const clan::Vec3f &new_start, const clan::Vec3f &new_end)
+bool Physics3DRayTest::test(const clan::Vec3f &new_start, const clan::Vec3f &new_end)
 {
 	impl->start = new_start;
 	impl->end = new_end;
@@ -76,22 +76,22 @@ bool Physics3DRayTester::test(const clan::Vec3f &new_start, const clan::Vec3f &n
 	return impl->has_hit;
 }
 
-bool Physics3DRayTester::has_hit() const
+bool Physics3DRayTest::has_hit() const
 {
 	return impl->has_hit;
 }
 
-float Physics3DRayTester::get_hit_fraction() const
+float Physics3DRayTest::get_hit_fraction() const
 {
 	return impl->hit_fraction;
 }
 
-Vec3f Physics3DRayTester::get_hit_position() const
+Vec3f Physics3DRayTest::get_hit_position() const
 {
 	return mix(impl->start, impl->end, impl->hit_fraction);
 }
 
-Physics3DObject Physics3DRayTester::get_hit_object() const
+Physics3DObject Physics3DRayTest::get_hit_object() const
 {
 	// To do: convert Physics3DObject_Impl * to Physics3DObject
 	return Physics3DObject();
@@ -99,12 +99,12 @@ Physics3DObject Physics3DRayTester::get_hit_object() const
 
 /////////////////////////////////////////////////////////////////////////////
 
-Physics3DRayTester_Impl::Physics3DRayTester_Impl(Physics3DWorld_Impl *world)
+Physics3DRayTest_Impl::Physics3DRayTest_Impl(Physics3DWorld_Impl *world)
 	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(nullptr)
 {
 }
 
-Physics3DRayTester_Impl::~Physics3DRayTester_Impl()
+Physics3DRayTest_Impl::~Physics3DRayTest_Impl()
 {
 }
 
