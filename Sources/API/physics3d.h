@@ -36,6 +36,7 @@
 #endif
 
 #include "Physics3D/physics3d_object.h"
+#include "Physics3D/physics3d_ray_test.h"
 #include "Physics3D/physics3d_shape.h"
 #include "Physics3D/physics3d_world.h"
 

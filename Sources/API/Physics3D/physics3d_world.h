@@ -57,7 +57,7 @@ private:
 
 	friend class Physics3DObject;
 	friend class Physics3DShape;
-	friend class Physics3DRayTester;
+	friend class Physics3DRayTest;
 };
 
 }
