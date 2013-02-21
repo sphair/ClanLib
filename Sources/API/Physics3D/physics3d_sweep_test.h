@@ -52,12 +52,14 @@ public:
 
 	bool is_null() const;
 
-	bool test(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Vec3f &to_orientation, float allowed_ccd_penetration = 0.0f);
+	bool test_any_hit(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Quaternionf &to_orientation, float allowed_ccd_penetration = 0.0f);
+	bool test_first_hit(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Quaternionf &to_orientation, float allowed_ccd_penetration = 0.0f);
+	bool test_all_hits(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Quaternionf &to_orientation, float allowed_ccd_penetration = 0.0f);
 
 	int get_hit_count() const;
 	float get_hit_fraction(int index) const;
 	Vec3f get_hit_position(int index) const;
-	Quaternionf get_hit_orientation(int index) const;
+	Vec3f get_hit_normal(int index) const;
 	Physics3DObject get_hit_object(int index) const;
 
 private:

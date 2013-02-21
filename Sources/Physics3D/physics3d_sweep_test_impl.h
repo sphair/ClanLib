@@ -30,6 +30,7 @@
 
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include "API/Core/Math/vec3.h"
+#include <vector>
 
 namespace clan
 {
@@ -45,8 +46,18 @@ public:
 
 	Physics3DWorld_Impl *world;
 
-	Vec3f start, end;
-	Quaternionf orientation_start, orientation_end;
+	Vec3f from_pos, to_pos;
+
+	struct SweepHit
+	{
+		SweepHit() : hit_fraction(0.0f), hit_collision_object(nullptr) { }
+
+		float hit_fraction;
+		Vec3f hit_normal;
+		Physics3DObject_Impl *hit_collision_object;
+	};
+
+	std::vector<SweepHit> hits;
 };
 
 }
