@@ -47,15 +47,19 @@ class CL_API_PHYSICS3D Physics3DObject
 {
 public:
 	Physics3DObject();
-	Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf(), const Vec3f &scale = Vec3f(1.0f));
+	Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());
 	bool is_null() const { return !impl; }
 
 	Vec3f get_position() const;
 	Quaternionf get_orientation() const;
-	Vec3f get_scale() const;
+
+	bool is_kinematic() const;
+
 	void set_position(const Vec3f &position);
 	void set_orientation(const Quaternionf &orientation);
-	void set_scale(const Vec3f &scale);
+	void set_transform(const Vec3f &position, const Quaternionf &orientation);
+
+	void set_kinematic(bool enable);
 
 private:
 	std::shared_ptr<Physics3DObject_Impl> impl;
