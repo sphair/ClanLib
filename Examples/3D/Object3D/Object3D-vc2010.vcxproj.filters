@@ -30,6 +30,9 @@
     <ClCompile Include="Sources\scene_object.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\shader_texture.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\example.h">
@@ -54,6 +57,9 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="Sources\scene_object.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\shader_texture.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>

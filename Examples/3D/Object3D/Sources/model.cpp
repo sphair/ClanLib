@@ -35,7 +35,7 @@ class Model_Impl
 public:
 	Model_Impl();
 
-	void Load(GraphicContext &gc, GraphicStore *gs, const char *filename);
+	void Load(GraphicContext &gc, GraphicStore *gs, const char *filename, bool generate_texture_coords);
 
 	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix);
 	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
@@ -61,9 +61,9 @@ Model::Model()
 {
 }
 
-Model::Model(GraphicContext &gc, GraphicStore *gs, const char *filename): impl(new Model_Impl())
+Model::Model(GraphicContext &gc, GraphicStore *gs, const char *filename, bool generate_texture_coords): impl(new Model_Impl())
 {
-	impl->Load(gc, gs, filename);
+	impl->Load(gc, gs, filename, generate_texture_coords);
 }
 
 bool Model::is_null()
@@ -98,10 +98,8 @@ Model_Impl::Model_Impl()
 	material_specular = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename)
+void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename, bool generate_texture_coords)
 {
-	generate_texture_coords = true;
-
 	const struct aiScene* scene = aiImportFileExWithProperties(filename,aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_FlipUVs, NULL, gs->store);
 	if (!scene)
 		throw Exception("Cannot load a model");
@@ -178,6 +176,14 @@ void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct a
 		normals.reserve(num_vertex);
 		vertices.reserve(num_vertex);
 
+		if (use_texcoords)
+		{
+			if (mesh->mTextureCoords == NULL || mesh->mTextureCoords[0] == NULL)
+				throw Exception("This example expects texcoords to be set for this object");
+			tex_coords.reserve(num_vertex);
+		}
+
+
 		for (t = 0; t < mesh->mNumFaces; ++t)
 		{
 			const struct aiFace* face = &mesh->mFaces[t];
@@ -189,11 +195,16 @@ void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct a
 				int index = face->mIndices[i];
 				normals.push_back(Vec3f(&mesh->mNormals[index].x));
 				vertices.push_back(Vec3f( &mesh->mVertices[index].x));
+				if (use_texcoords)
+					tex_coords.push_back( Vec2f(&mesh->mTextureCoords[0][index].x));
+
 			}
 		}
 
 		vbo_positions.upload_data(gc, vertex_count * sizeof(Vec3f), &vertices[0], num_vertex * sizeof(Vec3f));
 		vbo_normals.upload_data(gc, vertex_count * sizeof(Vec3f), &normals[0], num_vertex * sizeof(Vec3f));
+		if (use_texcoords)
+			vbo_texcoords.upload_data(gc, vertex_count * sizeof(Vec2f), &tex_coords[0], num_vertex * sizeof(Vec2f));
 
 		vertex_count += num_vertex;
 	}
@@ -218,7 +229,21 @@ void Model_Impl::Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelvi
 	
 	prim_array.set_attributes(0, vbo_positions, 3, type_float, 0);
 	prim_array.set_attributes(1, vbo_normals, 3, type_float, 0);
-	gs->shader.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
-	gs->shader.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
+
+	bool use_texcoords = !vbo_texcoords.is_null();
+	if (use_texcoords)
+	{
+		gc.set_texture(0, gs->tux);
+		prim_array.set_attributes(2, vbo_texcoords, 2, type_float, 0);
+		gs->shader_texture.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
+		gs->shader_texture.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
+
+	}
+	else
+	{
+		gs->shader.SetMaterial(material_shininess, material_emission, material_ambient, material_specular);
+		gs->shader.Use(gc, modelview_matrix, matrix_modelview_projection, Mat4f(normal_matrix));
+	}
 	gc.draw_primitives(type_triangles, vbo_size, prim_array);
+	gc.reset_texture(0);
 }

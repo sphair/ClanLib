@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "graphic_store.h"
 
-GraphicStore::GraphicStore(GraphicContext &gc) : shader(gc)
+GraphicStore::GraphicStore(GraphicContext &gc) : shader(gc), shader_texture(gc)
 {
 #ifdef DEBUG_ASSIMP
 	//struct aiLogStream stream;

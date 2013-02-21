@@ -29,6 +29,7 @@
 #pragma once
 
 #include "shader.h"
+#include "shader_texture.h"
 
 class GraphicStore
 {
@@ -40,6 +41,7 @@ public:
 
 public:
 	Shader shader;
+	ShaderTexture shader_texture;
 	Texture2D tux;
 
 	Mat4f camera_projection;

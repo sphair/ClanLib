@@ -29,6 +29,7 @@
 #include "precomp.h"
 #include "example.h"
 #include "shader.h"
+#include "shader_texture.h"
 #include "scene_object.h"
 #include "model.h"
 #include "graphic_store.h"
@@ -139,7 +140,7 @@ int App::start(const std::vector<std::string> &args)
 }
 void App::render(GraphicContext &gc)
 {
-	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	gc.clear(Colorf(0.2f, 0.2f, 0.2f, 1.0f));
 
 	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
 	gc.set_viewport(viewport_rect);
@@ -154,12 +155,12 @@ void App::render(GraphicContext &gc)
 void App::create_scene(GraphicContext &gc)
 {
 
-	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae");
-	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae");
-	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae");
+	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae", false);
+	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae", false);
+	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae", true);
 
 	camera = new SceneObject(scene, scene.base);
-	camera->position = Vec3f(0.0f, 2.0f, -3.0f);
+	camera->position = Vec3f(0.0f, 1.0f, 0.0f);
 	camera->rotation_x = Angle(30.0f, angle_degrees);
 
 	light_distant = new SceneObject(scene, scene.base);
@@ -174,13 +175,27 @@ void App::create_scene(GraphicContext &gc)
 
 	scene_clanlib = new SceneObject(scene, scene.base);
 	scene_clanlib->model = model_clanlib;
-	scene_clanlib->position = Vec3f(0.0f, -0.5f, 0.0f);
-	scene_clanlib->scale = Vec3f(0.5f, 0.5f, 0.5f);
+	scene_clanlib->position = Vec3f(0.0f, -3.0f, 5.0f);
+	scene_clanlib->scale = Vec3f(1.0f, 1.0f, 1.0f);
 
 	scene_tuxball = new SceneObject(scene, scene.base);
 	scene_tuxball->model = model_tuxball;
 	scene_tuxball->position = Vec3f(0.7f, 0.5f, 2.0f);
 	scene_tuxball->scale = Vec3f(0.05f, 0.05f, 0.05f);
+
+	model_tuxball.SetMaterial(
+			64,		// material_shininess
+			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// material_emission
+			Vec4f(0.0f, 1.0f, 0.0f, 1.0f),	// material_ambient
+			Vec4f(0.0f, 1.0f, 0.0f, 1.0f)	//material_specular
+			);
+
+	model_teapot.SetMaterial(
+			64,		// material_shininess
+			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// material_emission
+			Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// material_ambient
+			Vec4f(1.0f, 1.0f, 1.0f, 1.0f)	//material_specular
+			);
 
 	scene.gs->LoadImages(gc);
 
@@ -207,6 +222,7 @@ void App::update_light(GraphicContext &gc)
 	Vec4f light_ambient(0.2f, 0.2f, 0.0f, 1.0f);
 
 	scene.gs->shader.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
+	scene.gs->shader_texture.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
 }
 
 void App::calculate_matricies(GraphicContext &gc)
