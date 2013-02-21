@@ -72,7 +72,7 @@ int App::start(const std::vector<std::string> &args)
 	std::vector<Vec3f> object_normals;
 	std::vector<Vec4f> object_material_ambient;
 
-	const int num_cubes = 200;
+	const int num_cubes = 20000;
 	object_positions.reserve(num_cubes * 6 * 6);	// 6 faces, and 6 vertices per face
 	object_normals.reserve(num_cubes * 6 * 6);
 	object_material_ambient.reserve(num_cubes * 6 * 6);
@@ -86,8 +86,7 @@ int App::start(const std::vector<std::string> &args)
 	VertexArrayBuffer vb_normals(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
 	VertexArrayBuffer vb_material_ambient(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
 
-	// ** Note, at this point "object_positions, object_normals and object_material_ambient"
-	// ** can be destroyed. But for the purpose of this example, is it kept
+	// ** Note, at this point "object_positions, object_normals and object_material_ambient" can be destroyed.
 
 	Font fps_font(canvas, "tahoma", 20);
 
@@ -110,7 +109,8 @@ int App::start(const std::vector<std::string> &args)
 		std::string info = string_format("%1 vertices", (int) object_positions.size());
 		fps_font.draw_text(canvas, 30, 30, info);
 
-		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 100000.0f, handed_left, canvas.get_gc().get_provider()->get_clip_z_range() );
+		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, canvas.get_gc().get_clip_z_range() );
+		//Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, clip_negative_positive_w );
 
 		angle += time_diff / 20.0f;
 		if (angle >= 360.0f)
