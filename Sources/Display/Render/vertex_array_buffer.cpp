@@ -98,9 +98,9 @@ bool VertexArrayBuffer::operator==(const VertexArrayBuffer &other) const
 	return impl == other.impl;
 }
 
-void VertexArrayBuffer::upload_data(GraphicContext &gc, const void *data, int size)
+void VertexArrayBuffer::upload_data(GraphicContext &gc, int offset, const void *data, int size)
 {
-	impl->provider->upload_data(gc, data, size);
+	impl->provider->upload_data(gc, offset, data, size);
 }
 
 void VertexArrayBuffer::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)

@@ -94,9 +94,7 @@ public:
 	bool operator==(const VertexArrayBuffer &other) const;
 
 	/// \brief Uploads data to vertex array buffer.
-	///
-	/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-	void upload_data(GraphicContext &gc, const void *data, int size);
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
 
 	/// \brief Copies data from transfer buffer
 	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos = 0, int src_pos = 0, int size = -1);

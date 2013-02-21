@@ -71,12 +71,12 @@ void GL1VertexArrayBufferProvider::create(void *init_data, int new_size, BufferU
 /////////////////////////////////////////////////////////////////////////////
 // GL1VertexArrayBufferProvider Operations:
 
-void GL1VertexArrayBufferProvider::upload_data(GraphicContext &gc, const void *data, int size)
+void GL1VertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *new_data, int new_size)
 {
-	if ( (size < 0) || (size > this->size) )
+	if ( (offset < 0) || (new_size < 0) || ((new_size+offset) > size) )
 		throw Exception("Vertex array buffer, invalid size");
 
-	memcpy(this->data, data, size);
+	memcpy(data + offset, new_data, new_size);
 }
 
 void GL1VertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)

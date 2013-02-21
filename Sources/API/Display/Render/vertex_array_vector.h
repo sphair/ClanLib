@@ -87,18 +87,16 @@ public:
 /// \{
 public:
 	/// \brief Uploads data to vertex array buffer.
-	///
-	/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-	void upload_data(GraphicContext &gc, const Type *data, int size)
+	void upload_data(GraphicContext &gc, int offset, const Type *data, int size)
 	{
-		VertexArrayBuffer::upload_data(gc, data, size * sizeof(Type));
+		VertexArrayBuffer::upload_data(gc, offset * sizeof(Type), data, size * sizeof(Type));
 	}
 
 	/// \brief Uploads data to vertex array buffer.
-	void upload_data(GraphicContext &gc, const std::vector<Type> &data)
+	void upload_data(GraphicContext &gc, int offset, const std::vector<Type> &data)
 	{
 		if (!data.empty())
-			VertexArrayBuffer::upload_data(gc, &data[0], data.size() * sizeof(Type));
+			VertexArrayBuffer::upload_data(gc, offset, &data[0], data.size() * sizeof(Type));
 	}
 
 	/// \brief Copies data from transfer buffer

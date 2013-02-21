@@ -98,15 +98,24 @@ ComPtr<ID3D11Buffer> &D3DVertexArrayBufferProvider::get_buffer(const ComPtr<ID3D
 /////////////////////////////////////////////////////////////////////////////
 // D3DVertexArrayBufferProvider Operations:
 
-void D3DVertexArrayBufferProvider::upload_data(GraphicContext &gc, const void *data, int data_size)
+void D3DVertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *data, int data_size)
 {
-	if (data_size != size)
-		throw Exception("Upload data size does not match vertex array buffer");
+	if ( (offset < 0) || (data_size < 0) || ((data_size+offset) > size) )
+		throw Exception("Vertex array buffer, invalid size");
 
 	const ComPtr<ID3D11Device> &device = static_cast<D3DGraphicContextProvider*>(gc.get_provider())->get_window()->get_device();
 	ComPtr<ID3D11DeviceContext> device_context;
 	device->GetImmediateContext(device_context.output_variable());
-	device_context->UpdateSubresource(get_handles(device).buffer, 0, 0, data, 0, 0);
+
+	D3D11_BOX box;
+	box.left = offset;
+	box.right = offset + data_size;
+	box.top = 0;
+	box.bottom = 1;
+	box.front = 0;
+	box.back = 1;
+
+	device_context->UpdateSubresource(get_handles(device).buffer, 0, &box, data, 0, 0);
 }
 
 void D3DVertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int copy_size)
