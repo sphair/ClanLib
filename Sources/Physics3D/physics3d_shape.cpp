@@ -66,6 +66,15 @@ Physics3DShape Physics3DShape::capsule(float radius, float height)
 	return shape;
 }
 
+Physics3DShape Physics3DShape::sphere(float radius)
+{
+	Physics3DShape shape;
+	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
+	shape.impl->shape.reset(new btSphereShape(radius));
+	shape.impl->shape->setUserPointer(shape.impl.get());
+	return shape;
+}
+
 Physics3DShape Physics3DShape::model(const std::shared_ptr<clan::ModelData> &model_data)
 {
 	Physics3DShape shape;
