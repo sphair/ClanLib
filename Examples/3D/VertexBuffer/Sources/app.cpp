@@ -86,19 +86,6 @@ int App::start(const std::vector<std::string> &args)
 	VertexArrayBuffer vb_normals(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
 	VertexArrayBuffer vb_material_ambient(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
 
-	// **** Why does this code work, and not vb_positions ***
-	// ******************************************************
-	int size = object_positions.size();
-	TransferVector<Vec3f> transfer_buffer(canvas, size, usage_stream_draw);
-	transfer_buffer.lock(canvas, access_write_discard);
-	Vec3f *vertices = transfer_buffer.get_data();
-	memcpy(vertices, &object_positions[0], sizeof(Vec3f) * size);
-	transfer_buffer.unlock();
-	VertexArrayVector<Vec3f> gpu_vertices(canvas, size);
-	gpu_vertices.copy_from(canvas, transfer_buffer, 0, 0,  size);
-	// ******************************************************
-
-
 	// ** Note, at this point "object_positions, object_normals and object_material_ambient"
 	// ** can be destroyed. But for the purpose of this example, is it kept
 
@@ -140,8 +127,7 @@ int App::start(const std::vector<std::string> &args)
 
 		PrimitivesArray prim_array(canvas);
 
-//		prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
-		prim_array.set_attributes(0, gpu_vertices, (Vec3f*) 0);
+		prim_array.set_attributes(0, vb_positions, 3, type_float, 0);
 		prim_array.set_attributes(1, vb_normals, 3, type_float, 0);
 		prim_array.set_attributes(2, vb_material_ambient, 4, type_float, 0);
 
