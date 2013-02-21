@@ -44,7 +44,7 @@ int Program::main(const std::vector<std::string> &args)
 #ifdef WIN32
 		clan::SetupD3D setup_d3d;
 #endif
-		SetupGL setup_gl;
+		//SetupGL setup_gl;
 
 		// Start the Application
 		App app;
