@@ -6,3 +6,4 @@
 #include <ClanLib/display.h>
 #include <ClanLib/d3d.h>
 #include <ClanLib/scene3d.h>
+#include <ClanLib/physics3d.h>

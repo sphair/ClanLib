@@ -304,4 +304,8 @@ Physics3DShape_Impl::Physics3DShape_Impl()
 {
 }
 
+Physics3DShape_Impl::~Physics3DShape_Impl()
+{
+}
+
 }
