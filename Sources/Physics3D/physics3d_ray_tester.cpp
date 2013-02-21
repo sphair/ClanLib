@@ -52,7 +52,28 @@ bool Physics3DRayTester::is_null() const
 
 bool Physics3DRayTester::test(const clan::Vec3f &new_start, const clan::Vec3f &new_end)
 {
-	return false;
+	impl->start = new_start;
+	impl->end = new_end;
+
+	btVector3 bt_start(impl->start.x, impl->start.y, impl->start.z);
+	btVector3 bt_end(impl->end.x, impl->end.y, impl->end.z);
+
+	btCollisionWorld::ClosestRayResultCallback callback(bt_start, bt_end);
+	impl->world->dynamics_world->rayTest(bt_start, bt_end, callback);
+	if (callback.hasHit())
+	{
+		impl->has_hit = true;
+		impl->hit_fraction = callback.m_closestHitFraction;
+		impl->hit_object = static_cast<Physics3DObject_Impl*>(callback.m_collisionObject->getUserPointer());
+	}
+	else
+	{
+		impl->has_hit = false;
+		impl->hit_fraction = 1.0f;
+		impl->hit_object = nullptr;
+	}
+
+	return impl->has_hit;
 }
 
 bool Physics3DRayTester::has_hit() const
@@ -72,6 +93,7 @@ Vec3f Physics3DRayTester::get_hit_position() const
 
 Physics3DObject Physics3DRayTester::get_hit_object() const
 {
+	// To do: convert Physics3DObject_Impl * to Physics3DObject
 	return Physics3DObject();
 }
 
