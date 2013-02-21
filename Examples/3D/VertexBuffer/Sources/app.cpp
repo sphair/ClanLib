@@ -82,7 +82,11 @@ int App::start(const std::vector<std::string> &args)
 		create_cube(object_positions, object_normals, object_material_ambient);
 	}
 
-	VertexArrayBuffer vb_positions(canvas, &object_positions[0], sizeof(Vec3f) * object_positions.size());
+	//VertexArrayBuffer vb_positions(canvas, &object_positions[0], sizeof(Vec3f) * object_positions.size());
+	VertexArrayBuffer vb_positions(canvas, sizeof(Vec3f) * object_positions.size());
+	vb_positions.upload_data(canvas, 0, &object_positions[0], sizeof(Vec3f) * object_positions.size()/2);
+	vb_positions.upload_data(canvas, sizeof(Vec3f) * object_positions.size()/2, &object_positions[object_positions.size()/2], sizeof(Vec3f) * object_positions.size()/2);
+
 	VertexArrayBuffer vb_normals(canvas, &object_normals[0], sizeof(Vec3f) * object_normals.size());
 	VertexArrayBuffer vb_material_ambient(canvas, &object_material_ambient[0], sizeof(Vec4f) * object_material_ambient.size());
 

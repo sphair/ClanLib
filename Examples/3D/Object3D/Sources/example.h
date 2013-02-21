@@ -48,14 +48,14 @@ private:
 	Scene scene;
 
 	Model model_teapot;
-	//Model model_clanlib;
-	//Model model_tuxball;
+	Model model_clanlib;
+	Model model_tuxball;
 
 	SceneObject *camera;
 	SceneObject *light_distant;
 	SceneObject *scene_teapot;
-	//SceneObject *scene_clanlib;
-	//SceneObject *scene_tuxball;
+	SceneObject *scene_clanlib;
+	SceneObject *scene_tuxball;
 
 
 	bool quit;
