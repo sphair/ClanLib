@@ -68,9 +68,7 @@ public:
 /// \{
 public:
 	/// \brief Uploads data to vertex array buffer.
-	///
-	/// The size specified must match the size of the buffer and is only included to help guard against buffer overruns.
-	virtual void upload_data(GraphicContext &gc, const void *data, int size) = 0;
+	virtual void upload_data(GraphicContext &gc, int offset, const void *data, int size) = 0;
 
 	/// \brief Copies data from transfer buffer
 	virtual void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size) = 0;
