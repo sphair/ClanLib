@@ -64,6 +64,7 @@ private:
 	std::shared_ptr<Physics3DShape_Impl> impl;
 
 	friend class Physics3DObject;
+	friend class Physics3DSweepTest;
 };
 
 }
