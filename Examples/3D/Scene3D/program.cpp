@@ -91,6 +91,8 @@ int Program::main(const std::vector<std::string> &args)
 	Physics3DObject phys_box2(physics_world, box_shape, Vec3f(0.0f, 5.0f, 20.0f), Quaternionf(0.0f, 80.0f, 0.0f, angle_degrees, order_YXZ));
 	Physics3DObject phys_box3(physics_world, box_shape, Vec3f(0.0f, 5.0f, -20.0f), Quaternionf(0.0f, 100.0f, 0.0f, angle_degrees, order_YXZ));
 
+	Physics3DSweepTest sweep_test(physics_world);
+
 	ElapsedTimer elapsed_timer;
 
 	float up = 20.0f;
@@ -104,20 +106,60 @@ int Program::main(const std::vector<std::string> &args)
 	{
 		float time_elapsed = elapsed_timer.seconds_elapsed();
 
-		dir = std::fmod(dir + time_elapsed * 5.0f, 360.0f);
+		// Animate lights:
+
 		spot_dir = std::fmod(spot_dir + time_elapsed * 30.0f, 90.0f);
 		aspect_time = std::fmod(aspect_time + time_elapsed * 0.2f, 2.0f);
 
 		spot2.set_aspect_ratio(clamp(aspect_time >= 1.0f ? 2.0f - aspect_time : aspect_time, 0.1f, 1.0f));
 		spot2.set_orientation(Quaternionf(65.0f + (spot_dir >= 45.0f ? 90.0f - spot_dir : spot_dir), 60.0f, dir * 4.0f, angle_degrees, order_YXZ));
 
-		camera.set_orientation(Quaternionf(up, dir, tilt, angle_degrees, order_YXZ));
-		camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, -100.0f)));
+		// Update camera orientation:
+
+		float dir_speed = 50.0f;
+		if (window.get_ic().get_keyboard().get_keycode(keycode_left))
+		{
+			dir = std::fmod(dir - time_elapsed * dir_speed, 360.0f);
+		}
+		else if (window.get_ic().get_keyboard().get_keycode(keycode_right))
+		{
+			dir = std::fmod(dir + time_elapsed * dir_speed, 360.0f);
+		}
+
+		float up_speed = 50.0f;
+		if (window.get_ic().get_keyboard().get_keycode(keycode_up))
+		{
+			up = clamp(up - time_elapsed * up_speed, -90.0f, 90.0f);
+		}
+		else if (window.get_ic().get_keyboard().get_keycode(keycode_down))
+		{
+			up = clamp(up + time_elapsed * up_speed, -90.0f, 90.0f);
+		}
+
+		// Check for collision with scene objects:
+
+		Quaternionf camera_orientation(up, dir, tilt, angle_degrees, order_YXZ);
+		Vec3f camera_look_pos(0.0f, 1.0f, 0.0f);
+		Vec3f camera_pos = camera_look_pos + camera_orientation.rotate_vector(Vec3f(0.0f, 0.0f, -100.0f));
+
+		if (sweep_test.test_first_hit(sphere_shape, camera_look_pos, Quaternionf(), camera_pos, Quaternionf()))
+		{
+			camera_pos = sweep_test.get_hit_position(0);
+		}
+
+		// Update scene camera:
+
+		camera.set_orientation(camera_orientation);
+		camera.set_position(camera_pos);
+
+		// Render scene:
 
 		scene.update(gc, time_elapsed);
 
 		scene.set_viewport(gc.get_size());
 		scene.render(gc);
+
+		// Show result:
 		
 		window.flip(1);
 
