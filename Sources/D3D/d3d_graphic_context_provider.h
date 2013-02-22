@@ -195,7 +195,6 @@ private:
 
 	std::shared_ptr<D3DRenderBufferProvider> default_depth_render_buffer;
 	ComPtr<ID3D11DepthStencilView> default_dsv;
-	Size last_default_depth_size;
 	int default_depth;
 
 /// \}
