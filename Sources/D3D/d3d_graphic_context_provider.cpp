@@ -93,7 +93,6 @@ D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *w
 	set_default_dsv();
 
 	SharedGCData::add_provider(this);
-
 }
 
 D3DGraphicContextProvider::~D3DGraphicContextProvider()
@@ -104,6 +103,9 @@ D3DGraphicContextProvider::~D3DGraphicContextProvider()
 void D3DGraphicContextProvider::begin_resize_swap_chain()
 {
 	window->get_device_context()->OMSetRenderTargets(0, 0, 0);
+
+	default_dsv.clear();
+	default_depth_render_buffer.reset();
 }
 
 void D3DGraphicContextProvider::end_resize_swap_chain()
@@ -116,7 +118,6 @@ void D3DGraphicContextProvider::end_resize_swap_chain()
 	window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
 
 	set_default_dsv();
-
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -828,42 +829,24 @@ UINT D3DGraphicContextProvider::to_d3d_index_location(VertexAttributeDataType in
 
 void D3DGraphicContextProvider::set_default_dsv()
 {
-	if (default_depth <= 0)
+	if (default_depth != 0 && !default_depth_render_buffer)
 	{
-		ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
-		ID3D11DepthStencilView *default_depth_stencil_rtv = 0;
-		window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
-	}
-	else
-	{
+		TextureFormat texture_format = tf_depth_component32;
+		if (default_depth <= 16)
+			texture_format = tf_depth_component32;
+		else  if (default_depth <= 24)
+			texture_format = tf_depth_component24;
+
 		Size viewport_size = get_display_window_size();
-		bool update_required = true;
-		if (default_depth_render_buffer)
-		{
-			if (last_default_depth_size == viewport_size)
-				update_required = false;
-		}
 
-		if (update_required)
-		{
-			default_depth_render_buffer.reset();
-			default_dsv.clear();
-
-			TextureFormat texture_format = tf_depth_component32;
-			if (default_depth <= 16)
-				texture_format = tf_depth_component32;
-			else  if (default_depth <= 24)
-				texture_format = tf_depth_component24;
-
-
-			default_depth_render_buffer = std::shared_ptr<D3DRenderBufferProvider>( new D3DRenderBufferProvider(window->get_device()));
-			default_depth_render_buffer->create(viewport_size.width, viewport_size.height, texture_format, 1);
-			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
-			last_default_depth_size = viewport_size;
-		}
-		ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
-		window->get_device_context()->OMSetRenderTargets(1, targets, default_dsv);
+		default_depth_render_buffer = std::shared_ptr<D3DRenderBufferProvider>( new D3DRenderBufferProvider(window->get_device()));
+		default_depth_render_buffer->create(viewport_size.width, viewport_size.height, texture_format, 1);
+		default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
 	}
+
+	ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
+	ID3D11DepthStencilView *default_depth_stencil_rtv = (default_depth != 0) ? default_dsv.get() : nullptr;
+	window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
 }
 
 }
