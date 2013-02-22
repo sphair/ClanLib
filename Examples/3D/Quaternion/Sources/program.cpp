@@ -42,7 +42,9 @@ int Program::main(const std::vector<std::string> &args)
 		SetupDisplay setup_display;
 
 		SetupGL setup_gl;
-
+#ifdef WIN32
+		clan::SetupD3D setup_d3d;
+#endif
 		SetupGUI setup_gui;
 
 		// Start the Application
