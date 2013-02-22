@@ -47,6 +47,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/transfer_texture.h"
 #include "API/Display/Render/shared_gc_data.h"
+#include "API/Display/Window/display_window_description.h"
 
 namespace clan
 {
@@ -54,7 +55,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // D3DGraphicContextProvider Construction:
 
-D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *window)
+D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc)
 :	window(window),
 	current_prim_array_provider(0),
 	current_program_provider(0),
@@ -64,9 +65,7 @@ D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *w
 //	set_blend_function(blend_one, blend_zero, blend_one, blend_zero);
 //	enable_blending(false);
 
-	ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
-	ID3D11DepthStencilView *default_depth_stencil_rtv = 0;
-	window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
+	default_depth = display_desc.get_depth_size();
 
 	Size viewport_size = get_display_window_size();
 	for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
@@ -91,6 +90,8 @@ D3DGraphicContextProvider::D3DGraphicContextProvider(D3DDisplayWindowProvider *w
 	for (int i = 0; i < shadertype_num_types; i++)
 		shader_bound[i] = false;
 
+	set_default_dsv();
+
 	SharedGCData::add_provider(this);
 
 }
@@ -107,16 +108,15 @@ void D3DGraphicContextProvider::begin_resize_swap_chain()
 
 void D3DGraphicContextProvider::end_resize_swap_chain()
 {
-	ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
-	ID3D11DepthStencilView *default_depth_stencil_rtv = 0;
-	window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
-
 	Size viewport_size = get_display_window_size();
 	viewports[0].Width = viewport_size.width;
 	viewports[0].Height = viewport_size.height;
 	viewports[0].TopLeftX = 0;
 	viewports[0].TopLeftY = 0;
 	window->get_device_context()->RSSetViewports(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT, viewports);
+
+	set_default_dsv();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -452,9 +452,7 @@ void D3DGraphicContextProvider::set_frame_buffer(const FrameBuffer &write_buffer
 
 void D3DGraphicContextProvider::reset_frame_buffer()
 {
-	ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
-	ID3D11DepthStencilView *default_depth_stencil_rtv = 0;
-	window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
+	set_default_dsv();
 }
 
 void D3DGraphicContextProvider::enable_logic_op(bool enabled)
@@ -826,6 +824,46 @@ UINT D3DGraphicContextProvider::to_d3d_index_location(VertexAttributeDataType in
 	if (offset % index_data_bytesize != 0)
 		throw Exception("Unaligned element offsets not supported by D3D target");
 	return offset / index_data_bytesize;
+}
+
+void D3DGraphicContextProvider::set_default_dsv()
+{
+	if (default_depth <= 0)
+	{
+		ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
+		ID3D11DepthStencilView *default_depth_stencil_rtv = 0;
+		window->get_device_context()->OMSetRenderTargets(1, targets, default_depth_stencil_rtv);
+	}
+	else
+	{
+		Size viewport_size = get_display_window_size();
+		bool update_required = true;
+		if (default_depth_render_buffer)
+		{
+			if (last_default_depth_size == viewport_size)
+				update_required = false;
+		}
+
+		if (update_required)
+		{
+			default_depth_render_buffer.reset();
+			default_dsv.clear();
+
+			TextureFormat texture_format = tf_depth_component32;
+			if (default_depth <= 16)
+				texture_format = tf_depth_component32;
+			else  if (default_depth <= 24)
+				texture_format = tf_depth_component24;
+
+
+			default_depth_render_buffer = std::shared_ptr<D3DRenderBufferProvider>( new D3DRenderBufferProvider(window->get_device()));
+			default_depth_render_buffer->create(viewport_size.width, viewport_size.height, texture_format, 1);
+			default_dsv = default_depth_render_buffer->create_dsv(window->get_device());
+			last_default_depth_size = viewport_size;
+		}
+		ID3D11RenderTargetView *targets[] = { window->get_back_buffer_rtv() };
+		window->get_device_context()->OMSetRenderTargets(1, targets, default_dsv);
+	}
 }
 
 }

@@ -41,6 +41,7 @@
 #include "d3d_unit_map.h"
 #include <map>
 #include <memory>
+#include "d3d_render_buffer_provider.h"
 
 namespace clan
 {
@@ -49,13 +50,14 @@ class D3DDisplayWindowProvider;
 class D3DProgramObjectProvider;
 class D3DPrimitivesArrayProvider;
 class D3DElementArrayBufferProvider;
+class DisplayWindowDescription;
 
 class D3DGraphicContextProvider : public GraphicContextProvider
 {
 /// \name Construction
 /// \{
 public:
-	D3DGraphicContextProvider(D3DDisplayWindowProvider *window);
+	D3DGraphicContextProvider(D3DDisplayWindowProvider *window, const DisplayWindowDescription &display_desc);
 	~D3DGraphicContextProvider();
 /// \}
 
@@ -168,6 +170,7 @@ public:
 /// \name Implementation
 /// \{
 private:
+	void set_default_dsv();
 	static D3D11_PRIMITIVE_TOPOLOGY to_d3d_primitive_topology(PrimitivesType type);
 	static DXGI_FORMAT to_d3d_format(VertexAttributeDataType indices_type);
 	static UINT to_d3d_index_location(VertexAttributeDataType indices_type, size_t offset);
@@ -189,6 +192,12 @@ private:
 	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
+
+	std::shared_ptr<D3DRenderBufferProvider> default_depth_render_buffer;
+	ComPtr<ID3D11DepthStencilView> default_dsv;
+	Size last_default_depth_size;
+	int default_depth;
+
 /// \}
 };
 

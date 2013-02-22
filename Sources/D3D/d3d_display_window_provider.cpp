@@ -225,7 +225,7 @@ void D3DDisplayWindowProvider::create(DisplayWindowSite *new_site, const Display
 
 	create_swap_chain_buffers();
 
-	gc = GraphicContext(new D3DGraphicContextProvider(this));
+	gc = GraphicContext(new D3DGraphicContextProvider(this, description));
 
 	if (description.is_fullscreen())
 		swap_chain->SetFullscreenState(TRUE, 0);
