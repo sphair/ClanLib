@@ -7,6 +7,9 @@
 #include <ClanLib/application.h>
 #include <ClanLib/gui.h>
 
+#ifdef WIN32
+#include <ClanLib/d3d.h>
+#endif
 #include <cstdlib>
 
 #include "assimp/cimport.h"

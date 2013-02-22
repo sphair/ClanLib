@@ -30,7 +30,105 @@
 
 #include "shader_color.h"
 
-char ShaderColor::vertex[] =
+const char ShaderColor::vertex_hlsl[] =
+	"\n"
+	"cbuffer ProgramUniforms\n"
+	"{\n"
+	"	float4x4 cl_ModelViewMatrix;\n"
+	"	float4x4 cl_ModelViewProjectionMatrix;\n"
+	"	float3x3 cl_NormalMatrix;\n"
+	"	float4 padding;\n"
+	"	float4 MaterialEmission;\n"
+	"	float4 MaterialSpecular;\n"
+	"	float4 MaterialAmbient;\n"
+	"	float4 LightSpecular;\n"
+	"	float4 LightDiffuse;\n"
+	"	float4 LightAmbient;\n"
+	"	float3 LightVector;\n"
+	"	float3 LightHalfVector;\n"
+	"	float MaterialShininess;\n"
+	"}\n"
+	"struct VertexIn\n"
+	"	{\n"
+	"		float3 InPosition : InPosition;\n"
+	"		float3 InNormal : InNormal;\n"
+	"	};\n"
+	"\n"
+	"	struct VertexOut\n"
+	"	{\n"
+	"		float4 PositionInProjection : SV_Position;\n"
+	"		float3 WorldSpaceNormal : WorldSpaceNormal; \n"
+	"		float4 ObjPos : ObjPos;\n"
+	"	};\n"
+	"\n"
+	"	VertexOut main(VertexIn input)\n"
+	"	{\n"
+	"		VertexOut output;\n"
+	"		float4 in_position = float4(input.InPosition.xyz, 1.0);\n"
+	"		output.PositionInProjection = mul(cl_ModelViewProjectionMatrix,in_position);\n"
+	"		output.WorldSpaceNormal = normalize( mul(cl_NormalMatrix,input.InNormal));\n"
+	"		output.ObjPos = mul(cl_ModelViewMatrix,in_position);\n"
+	"		return output;\n"
+	"	}\n";
+
+
+const char ShaderColor::fragment_hlsl[] =
+	"\n"
+	"cbuffer ProgramUniforms\n"
+	"{\n"
+	"	float4x4 cl_ModelViewMatrix;\n"
+	"	float4x4 cl_ModelViewProjectionMatrix;\n"
+	"	float3x3 cl_NormalMatrix;\n"
+	"	float4 padding;\n"
+	"	float4 MaterialEmission;\n"
+	"	float4 MaterialSpecular;\n"
+	"	float4 MaterialAmbient;\n"
+	"	float4 LightSpecular;\n"
+	"	float4 LightDiffuse;\n"
+	"	float4 LightAmbient;\n"
+	"	float3 LightVector;\n"
+	"	float3 LightHalfVector;\n"
+	"	float MaterialShininess;\n"
+	"}\n"
+	"struct PixelIn\n"
+	"{\n"
+	"	float4 ScreenPos : SV_Position;\n"
+	"	float3 WorldSpaceNormal : WorldSpaceNormal; \n"
+	"	float4 ObjPos : ObjPos;\n"
+	"};\n"
+	"\n"
+	"struct PixelOut\n"
+	"{\n"
+	"	float4 cl_FragColor : SV_Target0;\n"
+	"};\n"
+	"\n"
+	"PixelOut main(PixelIn input)\n"
+	"{\n"
+	"	PixelOut output;\n"
+	"	float3 eye = -normalize(input.ObjPos.xyz); \n"
+	"	float4 diff = float4(0,0,0,0); \n"
+	"	float4 spec = float4(0,0,0,0); \n"
+	"\n"
+	"	float3 world_space_normal = normalize(input.WorldSpaceNormal);\n"
+	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
+	"	float pf; \n"
+	"	if (nDotL == 0.0)\n"
+	"	{\n"
+	"		pf = 0.0; \n"
+	"	}else\n"
+	"	{\n"
+	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
+	"			pf = pow(nDotHV, MaterialShininess);\n"
+	"	}\n"
+	"	spec += LightSpecular * pf; \n"
+	"	diff += LightDiffuse * nDotL;\n"
+	"	float4 final_texture_color = float4(MaterialAmbient.rgb,1.0);\n"
+	"	output.cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	output.cl_FragColor.a = MaterialAmbient.a;\n"
+	"	return output;\n"
+	"}\n";
+
+const char ShaderColor::vertex_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
@@ -66,7 +164,7 @@ char ShaderColor::vertex[] =
 	"}\n"
 	;
 
-char ShaderColor::fragment[] =
+const char ShaderColor::fragment_glsl[] =
 	"\n"
 	"#version 150\n"
 	"\n"
@@ -90,7 +188,7 @@ char ShaderColor::fragment[] =
 	"	vec3 LightHalfVector;\n"
 	"	float MaterialShininess;\n"
 	"};\n"
-	"\n"
+ 	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
@@ -118,16 +216,20 @@ char ShaderColor::fragment[] =
 
 ShaderColor::ShaderColor(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
+	ShaderLanguage shader_language = gc.get_shader_language();
+	
+	ShaderObject vertex_shader(gc, shadertype_vertex, shader_language==shader_glsl ? vertex_glsl : vertex_hlsl);
 	if(!vertex_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
+		std::string log = vertex_shader.get_info_log();
+		throw Exception(string_format("Unable to compile vertex shader object: %1", log));
 	}
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, shadertype_fragment, shader_language==shader_glsl ? fragment_glsl : fragment_hlsl);
 	if(!fragment_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
+		std::string log = fragment_shader.get_info_log();
+		throw Exception(string_format("Unable to compile fragment shader object: %1", log));
 	}
 
 	program_object = ProgramObject(gc);
@@ -141,6 +243,8 @@ ShaderColor::ShaderColor(GraphicContext &gc)
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
+	// Uniforms
+	program_object.set_uniform_buffer_index("ProgramUniforms", 0);
 
 	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
@@ -163,7 +267,6 @@ void ShaderColor::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const M
 	uniforms.cl_NormalMatrix = matrix_normal;
 	gpu_uniforms.upload_data(gc, &uniforms, 1);
 	gc.set_uniform_buffer(0, gpu_uniforms);
-
 	gc.set_program_object(program_object);
 }
 
