@@ -42,11 +42,12 @@ public:
 
 private:
 	int count_vertices(const struct aiScene* sc, const struct aiNode* nd);
-	void insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
+	int insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd);
 
-	VertexArrayBuffer vbo_positions;
-	VertexArrayBuffer vbo_normals;
-	VertexArrayBuffer vbo_texcoords;
+	VertexArrayVector<Vec3f> vbo_positions;
+	VertexArrayVector<Vec3f> vbo_normals;
+	VertexArrayVector<Vec2f> vbo_texcoords;
+
 	int vbo_size;
 	float material_shininess;
 	Vec4f material_emission;
@@ -110,10 +111,10 @@ void Model_Impl::Load(GraphicContext &gc, GraphicStore *gs, const char *filename
 		if (!vbo_size)
 			throw Exception("No vertices found in the model");
 	
-		vbo_positions = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f));
-		vbo_normals = VertexArrayBuffer(gc, vbo_size * sizeof(Vec3f));
+		vbo_positions =VertexArrayVector<Vec3f>(gc, vbo_size);
+		vbo_normals = VertexArrayVector<Vec3f>(gc, vbo_size);
 		if (generate_texture_coords)
-			vbo_texcoords = VertexArrayBuffer(gc, vbo_size * sizeof(Vec2f));
+			vbo_texcoords = VertexArrayVector<Vec2f>(gc, vbo_size);
 		insert_vbo(gc, 0, scene, scene->mRootNode);
 	}catch(...)
 	{
@@ -154,7 +155,7 @@ int Model_Impl::count_vertices(const struct aiScene* sc, const struct aiNode* nd
 	return vertex_count;
 }
 
-void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
+int Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct aiScene* sc, const struct aiNode* nd)
 {
 	int i;
 	unsigned int n = 0, t;
@@ -201,10 +202,10 @@ void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct a
 			}
 		}
 
-		vbo_positions.upload_data(gc, vertex_count * sizeof(Vec3f), &vertices[0], num_vertex * sizeof(Vec3f));
-		vbo_normals.upload_data(gc, vertex_count * sizeof(Vec3f), &normals[0], num_vertex * sizeof(Vec3f));
+		vbo_positions.upload_data(gc, vertex_count, &vertices[0], num_vertex);
+		vbo_normals.upload_data(gc, vertex_count , &normals[0], num_vertex);
 		if (use_texcoords)
-			vbo_texcoords.upload_data(gc, vertex_count * sizeof(Vec2f), &tex_coords[0], num_vertex * sizeof(Vec2f));
+			vbo_texcoords.upload_data(gc, vertex_count, &tex_coords[0], num_vertex);
 
 		vertex_count += num_vertex;
 	}
@@ -212,9 +213,9 @@ void Model_Impl::insert_vbo(GraphicContext &gc, int vertex_count, const struct a
 	// All children
 	for (n = 0; n < nd->mNumChildren; ++n)
 	{
-		insert_vbo(gc, vertex_count, sc, nd->mChildren[n]);
+		vertex_count = insert_vbo(gc, vertex_count, sc, nd->mChildren[n]);
 	}
-
+	return vertex_count;
 }
 
 
