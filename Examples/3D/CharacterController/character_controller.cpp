@@ -24,7 +24,11 @@ void CharacterController::move(const Vec3f &velocity)
 {
 	if (flying)
 	{
+		// Apply gravity (disable for water / space)
 		fly_velocity -= Vec3f(0.0f, gravity, 0.0f);
+
+		// Move in air
+		fly_velocity += velocity * 0.005f;
 
 		if (move_vertical(position + fly_velocity))
 		{
