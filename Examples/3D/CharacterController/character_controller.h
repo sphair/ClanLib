@@ -14,6 +14,11 @@ public:
 
 private:
 	bool try_move_to(const clan::Vec3f &target);
+	void move_forward(clan::Vec3f target);
+
+	static clan::Vec3f reflect(const clan::Vec3f &direction, const clan::Vec3f &normal);
+	static clan::Vec3f parallel_component(const clan::Vec3f &direction, const clan::Vec3f &normal);
+	static clan::Vec3f perpendicular_component(const clan::Vec3f &direction, const clan::Vec3f &normal);
 
 	clan::Physics3DShape shape;
 	float height_offset;
@@ -22,6 +27,8 @@ private:
 	float gravity;
 	clan::Vec3f fly_velocity;
 	bool flying;
+
+	float margin;
 
 	clan::Physics3DSweepTest sweep_test;
 
