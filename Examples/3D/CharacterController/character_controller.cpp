@@ -32,8 +32,15 @@ void CharacterController::move(const Vec3f &velocity)
 
 		if (move_vertical(position + fly_velocity))
 		{
-			flying = false;
-			fly_velocity = Vec3f();
+			if (fly_velocity.y > 0.0f)
+			{
+				fly_velocity.y = 0.0f;
+			}
+			else
+			{
+				flying = false;
+				fly_velocity = Vec3f();
+			}
 		}
 	}
 	else if (velocity != Vec3f())
