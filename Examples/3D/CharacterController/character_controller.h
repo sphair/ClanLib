@@ -15,6 +15,7 @@ public:
 private:
 	bool try_move_to(const clan::Vec3f &target);
 	void move_forward(clan::Vec3f target);
+	bool move_vertical(clan::Vec3f target);
 
 	static clan::Vec3f reflect(const clan::Vec3f &direction, const clan::Vec3f &normal);
 	static clan::Vec3f parallel_component(const clan::Vec3f &direction, const clan::Vec3f &normal);
