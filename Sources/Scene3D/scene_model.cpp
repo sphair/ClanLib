@@ -50,6 +50,7 @@ SceneModel::SceneModel(GraphicContext &gc, Scene &scene, const std::string &mode
 SceneModel::SceneModel(GraphicContext &gc, Scene &scene, std::shared_ptr<ModelData> model_data)
 : impl(new SceneModel_Impl())
 {
+	impl->scene = scene.impl.get();
 	impl->model = std::shared_ptr<Model>(new Model(gc, *impl->scene->material_cache, *impl->scene->model_shader_cache, model_data, impl->scene->instances_buffer.new_offset_index()));
 }
 
