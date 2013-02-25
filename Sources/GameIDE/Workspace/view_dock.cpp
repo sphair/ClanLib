@@ -59,6 +59,8 @@ void ViewDock::dock(DockableComponent *dockable)
 	if (!is_docked(dockable))
 	{
 		views.push_back(new ViewFrame(this, dockable));
+
+		get_top_level_component()->update_layout();
 	}
 }
 
@@ -70,6 +72,9 @@ void ViewDock::undock(DockableComponent *dockable)
 		{
 			delete views[i];
 			views.erase(views.begin() + i);
+
+			get_top_level_component()->update_layout();
+
 			break;
 		}
 	}

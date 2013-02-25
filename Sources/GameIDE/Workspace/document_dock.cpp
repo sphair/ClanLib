@@ -82,6 +82,8 @@ void DocumentDock::dock(DockableComponent *dockable)
 		button->button_close->func_clicked().set(this, &DocumentDock::on_button_close_clicked, dockable);
 
 		tab_buttons.push_back(button);
+
+		get_top_level_component()->update_layout();
 	}
 }
 
@@ -98,6 +100,8 @@ void DocumentDock::undock(DockableComponent *dockable)
 
 		active_tab_index = -1;
 		activate_tab(min((int)i, ((int)tabs.size()) - 1));
+
+		get_top_level_component()->update_layout();
 	}
 }
 
