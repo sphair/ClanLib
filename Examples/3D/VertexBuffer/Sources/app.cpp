@@ -72,7 +72,7 @@ int App::start(const std::vector<std::string> &args)
 	std::vector<Vec3f> object_normals;
 	std::vector<Vec4f> object_material_ambient;
 
-	const int num_cubes = 8;
+	const int num_cubes = 200;
 	object_positions.reserve(num_cubes * 6 * 6);	// 6 faces, and 6 vertices per face
 	object_normals.reserve(num_cubes * 6 * 6);
 	object_material_ambient.reserve(num_cubes * 6 * 6);
@@ -82,7 +82,6 @@ int App::start(const std::vector<std::string> &args)
 		create_cube(object_positions, object_normals, object_material_ambient);
 	}
 
-	//VertexArrayBuffer vb_positions(canvas, &object_positions[0], sizeof(Vec3f) * object_positions.size());
 	VertexArrayBuffer vb_positions(canvas, sizeof(Vec3f) * object_positions.size());
 	vb_positions.upload_data(canvas, 0, &object_positions[0], sizeof(Vec3f) * object_positions.size()/2);
 	vb_positions.upload_data(canvas, sizeof(Vec3f) * object_positions.size()/2, &object_positions[object_positions.size()/2], sizeof(Vec3f) * object_positions.size()/2);
@@ -189,7 +188,7 @@ void App::create_cube( std::vector<Vec3f> &object_positions, std::vector<Vec3f> 
 	material_ambient.b = ((float) (rand() & 0xFF)) / 255.0f;
 	material_ambient.a = 1.0f;
 
-	Vec3f size(50.0f, 50.0f, 50.0f);
+	Vec3f size(10.0f, 10.0f, 10.0f);
 
 	object_positions.push_back(Vec3f(-size.x, size.y, size.z) +position);
 	object_positions.push_back(Vec3f(-size.x, size.y, -size.z) +position);
