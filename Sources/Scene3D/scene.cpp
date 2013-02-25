@@ -84,6 +84,30 @@ void Scene::update(GraphicContext &gc, float time_elapsed)
 	impl->update(gc, time_elapsed);
 }
 
+void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
+{
+	Size viewport_size = impl->viewport->get_size();
+
+	Mat4f eye_to_projection = Mat4f::perspective(impl->camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
+
+	float aspect = impl->viewport->get_width()/(float)impl->viewport->get_height();
+	float field_of_view_y_degrees = impl->camera_field_of_view.get();
+	float field_of_view_y_rad = (float)(field_of_view_y_degrees * PI / 180.0);
+	float f = 1.0f / tan(field_of_view_y_rad * 0.5f);
+	float rcp_f = 1.0f / f;
+	float rcp_f_div_aspect = 1.0f / (f / aspect);
+
+	Vec2f pos(screen_pos.x - impl->viewport->left, screen_pos.y - impl->viewport->top);
+
+	Vec2f normalized(pos.x * 2.0f / impl->viewport->get_width(), pos.y * 2.0f / impl->viewport->get_height());
+	normalized -= 1.0f;
+
+	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
+
+	out_ray_start = impl->camera.get_position();
+	out_ray_direction = ray_direction;
+}
+
 int Scene::instances_drawn = 0;
 int Scene::models_drawn = 0;
 int Scene::draw_calls = 0;

@@ -64,6 +64,8 @@ public:
 
 	void update(GraphicContext &gc, float time_elapsed);
 
+	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
+
 	// To do: should not be static, should be getter functions, etc.
 	static int models_drawn;
 	static int instances_drawn;
