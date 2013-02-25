@@ -948,7 +948,8 @@ void GUIComponent::set_enabled(bool enable)
 
 void GUIComponent::set_visible(bool visible, bool activate_root_win)
 {
-	if (visible != impl->visible)
+	bool visibility_changed = visible != impl->visible;
+	if (visibility_changed)
 	{
 		request_repaint();
 		if (!impl->func_visibility_change.is_null())
@@ -956,6 +957,12 @@ void GUIComponent::set_visible(bool visible, bool activate_root_win)
 	}
 
 	impl->visible = visible;
+
+	if (visibility_changed)
+	{
+		get_top_level_component()->update_layout();
+	}
+
 	if (impl->parent == 0)
 	{
 		GUITopLevelWindow *toplevel_window = impl->gui_manager.lock()->get_toplevel_window(this);
