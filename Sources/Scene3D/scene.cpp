@@ -84,11 +84,26 @@ void Scene::update(GraphicContext &gc, float time_elapsed)
 	impl->update(gc, time_elapsed);
 }
 
+Mat4f Scene::world_to_eye() const
+{
+	Quaternionf inv_orientation = Quaternionf::inverse(impl->camera.get_orientation());
+	return inv_orientation.to_matrix() * Mat4f::translate(-impl->camera.get_position());
+}
+
+Mat4f Scene::eye_to_projection() const
+{
+	Size viewport_size = impl->viewport->get_size();
+	return Mat4f::perspective(impl->camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
+}
+
+Mat4f Scene::world_to_projection() const
+{
+	return eye_to_projection() * world_to_eye();
+}
+
 void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction)
 {
 	Size viewport_size = impl->viewport->get_size();
-
-	Mat4f eye_to_projection = Mat4f::perspective(impl->camera_field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, clip_negative_positive_w);
 
 	float aspect = impl->viewport->get_width()/(float)impl->viewport->get_height();
 	float field_of_view_y_degrees = impl->camera_field_of_view.get();

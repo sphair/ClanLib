@@ -64,6 +64,10 @@ public:
 
 	void update(GraphicContext &gc, float time_elapsed);
 
+	Mat4f world_to_eye() const;
+	Mat4f eye_to_projection() const;
+	Mat4f world_to_projection() const;
+
 	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
 
 	// To do: should not be static, should be getter functions, etc.
