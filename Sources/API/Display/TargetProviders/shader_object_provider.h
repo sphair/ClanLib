@@ -52,6 +52,9 @@ public:
 	/// \brief Creates a shader object.
 	virtual void create(ShaderType type, const std::string &source)=0;
 
+	/// \brief Creates a shader object.
+	virtual void create(ShaderType type, const void *source, int source_size)=0;
+
 	/// \brief Create
 	///
 	/// \param type = Shader Type

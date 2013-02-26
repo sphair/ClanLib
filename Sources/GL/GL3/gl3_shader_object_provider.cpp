@@ -46,6 +46,12 @@ GL3ShaderObjectProvider::GL3ShaderObjectProvider()
 {
 	SharedGCData::add_disposable(this);
 }
+void GL3ShaderObjectProvider::create(
+	ShaderType shader_type,
+	const void *source, int source_size )
+{
+	throw Exception("Fixme");
+}
 
 void GL3ShaderObjectProvider::create(
 	ShaderType shader_type,

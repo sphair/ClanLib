@@ -52,6 +52,8 @@ public:
 
 	virtual void create(ShaderType type, const std::string &source);
 
+	virtual void create(ShaderType type, const void *source, int source_size);
+
 	virtual void create(ShaderType type, const std::vector<std::string> &sources);
 	
 /// \}

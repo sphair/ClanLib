@@ -86,6 +86,9 @@ public:
 	ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source);
 
 	/// \brief Constructs a ShaderObject
+	ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size);
+
+	/// \brief Constructs a ShaderObject
 	///
 	/// \param gc = Graphic Context
 	/// \param type = Shader Type

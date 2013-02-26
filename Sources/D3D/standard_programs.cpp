@@ -32,6 +32,13 @@
 
 namespace clan
 {
+// *** These shaders are built using Resources\StandardShaders\compile_shaders.bat" ***
+#include "Shaders\color_only_vertex.h"
+#include "Shaders\color_only_fragment.h"
+#include "Shaders\single_texture_vertex.h"
+#include "Shaders\single_texture_fragment.h"
+#include "Shaders\sprite_vertex.h"
+#include "Shaders\sprite_fragment.h"
 
 class StandardPrograms_Impl
 {
@@ -54,13 +61,14 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(new StandardProgra
 	ProgramObject single_texture_program;
 	ProgramObject sprite_program;
 
-	color_only_program = compile(gc, color_only_vertex, color_only_fragment);
+
+	color_only_program = compile(gc, color_only_vertex, sizeof(color_only_vertex), color_only_fragment, sizeof(color_only_fragment));
 	color_only_program.bind_attribute_location(0, "VertexPosition");
 	color_only_program.bind_attribute_location(1, "VertexColor");
 	link(color_only_program, "Unable to link color-only standard program");
 	color_only_program.set_uniform_buffer_index("Uniforms", 0);
 
-	single_texture_program = compile(gc, single_texture_vertex, single_texture_fragment);
+	single_texture_program = compile(gc,single_texture_vertex, sizeof(single_texture_vertex), single_texture_fragment, sizeof(single_texture_fragment));
 	single_texture_program.bind_attribute_location(0, "VertexPosition");
 	single_texture_program.bind_attribute_location(1, "VertexColor");
 	single_texture_program.bind_attribute_location(2, "VertexTexCoord");
@@ -69,7 +77,7 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(new StandardProgra
 	single_texture_program.set_uniform1i("Texture0", 0);
 	single_texture_program.set_uniform1i("Sampler0", 0);
 
-	sprite_program = compile(gc, sprite_vertex, sprite_fragment);
+	sprite_program = compile(gc, sprite_vertex, sizeof(sprite_vertex), sprite_fragment, sizeof(sprite_fragment));
 	sprite_program.bind_attribute_location(0, "VertexPosition");
 	sprite_program.bind_attribute_location(1, "VertexColor");
 	sprite_program.bind_attribute_location(2, "VertexTexCoord");
@@ -88,7 +96,6 @@ StandardPrograms::StandardPrograms(GraphicContext &gc) : impl(new StandardProgra
 	impl->color_only_program = color_only_program;
 	impl->single_texture_program = single_texture_program;
 	impl->sprite_program = sprite_program;
-
 }
 
 ProgramObject StandardPrograms::get_program_object(StandardProgram standard_program) const
@@ -102,13 +109,13 @@ ProgramObject StandardPrograms::get_program_object(StandardProgram standard_prog
 	throw Exception("Unsupported standard program");
 }
 
-ProgramObject StandardPrograms::compile(GraphicContext &gc, const std::string &vertex_code, const std::string &fragment_code)
+ProgramObject StandardPrograms::compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex_code);
+	ShaderObject vertex_shader(gc, shadertype_vertex, vertex_code, vertex_code_size);
 	if (!vertex_shader.compile())
 		throw Exception(string_format("Unable to compile standard vertex shader: %1", vertex_shader.get_info_log()));
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment_code);
+	ShaderObject fragment_shader(gc, shadertype_fragment, fragment_code, fragment_code_size);
 	if (!fragment_shader.compile())
 		throw Exception(string_format("Unable to compile standard fragment shader: %1", fragment_shader.get_info_log()));
 
@@ -123,145 +130,5 @@ void StandardPrograms::link(ProgramObject &program, const std::string &error_mes
 	if (!program.link())
 		throw Exception(string_format("%1: %2", error_message, program.get_info_log()));
 }
-
-const char *StandardPrograms::color_only_vertex =
-	"struct VertexIn\r\n"
-	"{\r\n"
-	"	float4 position : VertexPosition;\r\n"
-	"	float4 color : VertexColor;\r\n"
-	"};\r\n"
-	"struct VertexOut\r\n"
-	"{\r\n"
-	"	float4 position : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"};\r\n"
-	"VertexOut main(VertexIn input)\r\n"
-	"{\r\n"
-	"	VertexOut output;\r\n"
-	"	output.position = input.position;\r\n"
-	"	output.color = input.color;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
-
-const char *StandardPrograms::color_only_fragment =
-	"struct PixelIn\r\n"
-	"{\r\n"
-	"	float4 screenpos : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"};\r\n"
-	"struct PixelOut\r\n"
-	"{\r\n"
-	"	float4 color : SV_Target0;\r\n"
-	"};\r\n"
-	"PixelOut main(PixelIn input)\r\n"
-	"{\r\n"
-	"	PixelOut output;\r\n"
-	"	output.color = input.color;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
-
-const char *StandardPrograms::single_texture_vertex =
-	"struct VertexIn\r\n"
-	"{\r\n"
-	"	float4 position : VertexPosition;\r\n"
-	"	float4 color : VertexColor;\r\n"
-	"	float2 uv : VertexTexCoord;\r\n"
-	"};\r\n"
-	"struct VertexOut\r\n"
-	"{\r\n"
-	"	float4 position : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"	float2 uv : PixelTexCoord;\r\n"
-	"};\r\n"
-	"VertexOut main(VertexIn input)\r\n"
-	"{\r\n"
-	"	VertexOut output;\r\n"
-	"	output.position = input.position;\r\n"
-	"	output.color = input.color;\r\n"
-	"	output.uv = input.uv;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
-
-const char *StandardPrograms::single_texture_fragment =
-	"struct PixelIn\r\n"
-	"{\r\n"
-	"	float4 screenpos : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"	float2 uv : PixelTexCoord;\r\n"
-	"};\r\n"
-	"struct PixelOut\r\n"
-	"{\r\n"
-	"	float4 color : SV_Target0;\r\n"
-	"};\r\n"
-	"Texture2D Texture0;\r\n"
-	"SamplerState Sampler0;\r\n"
-	"PixelOut main(PixelIn input)\r\n"
-	"{\r\n"
-	"	PixelOut output;\r\n"
-	"	output.color = Texture0.Sample(Sampler0, input.uv) * input.color;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
-
-const char *StandardPrograms::sprite_vertex =
-	"struct VertexIn\r\n"
-	"{\r\n"
-	"	float4 position : VertexPosition;\r\n"
-	"	float4 color : VertexColor;\r\n"
-	"	float2 uv : VertexTexCoord;\r\n"
-	"	int texindex : VertexTexIndex;\r\n"
-	"};\r\n"
-	"struct VertexOut\r\n"
-	"{\r\n"
-	"	float4 position : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"	float2 uv : PixelTexCoord;\r\n"
-	"	int texindex : PixelTexIndex;\r\n"
-	"};\r\n"
-	"VertexOut main(VertexIn input)\r\n"
-	"{\r\n"
-	"	VertexOut output;\r\n"
-	"	output.position = input.position;\r\n"
-	"	output.color = input.color;\r\n"
-	"	output.uv = input.uv;\r\n"
-	"	output.texindex = input.texindex;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
-
-const char *StandardPrograms::sprite_fragment =
-	"struct PixelIn\r\n"
-	"{\r\n"
-	"	float4 screenpos : SV_Position;\r\n"
-	"	float4 color : PixelColor;\r\n"
-	"	float2 uv : PixelTexCoord;\r\n"
-	"	int texindex : PixelTexIndex;\r\n"
-	"};\r\n"
-	"struct PixelOut\r\n"
-	"{\r\n"
-	"	float4 color : SV_Target0;\r\n"
-	"};\r\n"
-	"Texture2D Texture0;\r\n"
-	"Texture2D Texture1;\r\n"
-	"Texture2D Texture2;\r\n"
-	"Texture2D Texture3;\r\n"
-	"SamplerState Sampler0;\r\n"
-	"SamplerState Sampler1;\r\n"
-	"SamplerState Sampler2;\r\n"
-	"SamplerState Sampler3;\r\n"
-	"PixelOut main(PixelIn input)\r\n"
-	"{\r\n"
-	"	int index = input.texindex;\r\n"
-	"	PixelOut output;\r\n"
-	"	if (index == 0)\r\n"
-	"		output.color = Texture0.Sample(Sampler0, input.uv) * input.color;\r\n"
-	"	else if (index == 1)\r\n"
-	"		output.color = Texture1.Sample(Sampler1, input.uv) * input.color;\r\n"
-	"	else if (index == 2)\r\n"
-	"		output.color = Texture2.Sample(Sampler2, input.uv) * input.color;\r\n"
-	"	else if (index == 3)\r\n"
-	"		output.color = Texture3.Sample(Sampler3, input.uv) * input.color;\r\n"
-	"	else\r\n"
-	"		output.color = input.color;\r\n"
-	"	return output;\r\n"
-	"}\r\n";
 
 }
