@@ -53,6 +53,7 @@ Physics3DObject::Physics3DObject(Physics3DWorld &world, const Physics3DShape &sh
 
 	impl->shape = shape;
 	impl->object.reset(new btCollisionObject());
+	impl->object->setUserPointer(impl.get());
 	impl->object->setCollisionShape(shape.impl->shape.get());
 	impl->object->setWorldTransform(transform);
 
