@@ -94,7 +94,10 @@ Vec3f Physics3DRayTest::get_hit_position() const
 
 Physics3DObject Physics3DRayTest::get_hit_object() const
 {
-	return Physics3DObject(impl->hit_object->shared_from_this());
+	if (impl->hit_object)
+		return Physics3DObject(impl->hit_object->shared_from_this());
+	else
+		return Physics3DObject();
 }
 
 /////////////////////////////////////////////////////////////////////////////
