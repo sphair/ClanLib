@@ -101,6 +101,11 @@ void Physics3DObject::set_kinematic(bool enable)
 		impl->object->setCollisionFlags(impl->object->getCollisionFlags() & (~btCollisionObject::CF_KINEMATIC_OBJECT));
 }
 
+UserDataOwner *Physics3DObject::get_userdata_owner()
+{
+	return &impl->userdata_owner;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 
 Physics3DObject_Impl::Physics3DObject_Impl(Physics3DWorld_Impl *world)
