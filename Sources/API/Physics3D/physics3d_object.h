@@ -48,6 +48,7 @@ class CL_API_PHYSICS3D Physics3DObject
 {
 public:
 	Physics3DObject();
+	Physics3DObject(std::shared_ptr<Physics3DObject_Impl> impl);
 	Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());
 	bool is_null() const { return !impl; }
 

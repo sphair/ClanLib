@@ -36,7 +36,7 @@ namespace clan
 
 class Physics3DWorld_Impl;
 
-class Physics3DObject_Impl
+class Physics3DObject_Impl : public std::enable_shared_from_this<Physics3DObject_Impl>
 {
 public:
 	Physics3DObject_Impl(Physics3DWorld_Impl *world);
