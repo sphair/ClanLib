@@ -120,7 +120,7 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 	Vec3f ray_direction(normalized.x * rcp_f_div_aspect, normalized.y * rcp_f, 1.0f);
 
 	out_ray_start = impl->camera.get_position();
-	out_ray_direction = ray_direction;
+	out_ray_direction = impl->camera.get_orientation().rotate_vector(ray_direction);
 }
 
 int Scene::instances_drawn = 0;

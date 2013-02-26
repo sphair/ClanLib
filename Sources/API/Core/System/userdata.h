@@ -85,7 +85,7 @@ public:
 	template<typename T>
 	std::shared_ptr<T> get_data()
 	{
-		UserData<T> *d = dynamic_cast<UserData<T> >(user_data);
+		UserData<T> *d = dynamic_cast<UserData<T> *>(user_data);
 		if (d)
 		{
 			return d->data;
