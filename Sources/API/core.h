@@ -88,6 +88,7 @@
 #include "Core/System/timer.h"
 #include "Core/System/registry_key.h"
 #include "Core/System/interlocked_variable.h"
+#include "Core/System/userdata.h"
 #include "Core/Signals/callback_0.h"
 #include "Core/Signals/callback_1.h"
 #include "Core/Signals/callback_2.h"

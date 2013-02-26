@@ -26,60 +26,82 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanPhysics3D_World clanPhysics3D World
+/// \addtogroup clanCore_System clanCore System
 /// \{
 
 #pragma once
 
-#include "api_physics3d.h"
-#include "../Core/Math/vec3.h"
-#include "../Core/Math/quaternion.h"
-#include "../Core/System/userdata.h"
+#include "../api_core.h"
 #include <memory>
 
 namespace clan
 {
 
-class Physics3DWorld;
-class Physics3DShape;
-class Physics3DObject_Impl;
-
-class CL_API_PHYSICS3D Physics3DObject
+class UserDataBase
 {
 public:
-	Physics3DObject();
-	Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position = Vec3f(0.0f), const Quaternionf &orientation = Quaternionf());
-	bool is_null() const { return !impl; }
+	virtual ~UserDataBase() { }
+};
 
-	Vec3f get_position() const;
-	Quaternionf get_orientation() const;
+template<typename T>
+class UserData : public UserDataBase
+{
+public:
+	UserData(const std::shared_ptr<T> &data) : data(data) { }
+	std::shared_ptr<T> data;
+};
 
-	bool is_kinematic() const;
+/// \brief Helper class to store any shared_ptr as user data on an object.
+class CL_API_CORE UserDataOwner
+{
+public:
+	UserDataOwner()
+	: user_data(nullptr)
+	{
+	}
 
-	void set_position(const Vec3f &position);
-	void set_orientation(const Quaternionf &orientation);
-	void set_transform(const Vec3f &position, const Quaternionf &orientation);
-
-	void set_kinematic(bool enable);
+	~UserDataOwner()
+	{
+		if (user_data)
+		{
+			user_data->~UserDataBase();
+			user_data = nullptr;
+		}
+	}
 
 	template<typename T>
 	void set_data(const std::shared_ptr<T> &data)
 	{
-		get_userdata_owner()->set_data<T>(data);
-	}
+		if (user_data)
+		{
+			user_data->~UserDataBase();
+			user_data = nullptr;
+		}
 
+		static_assert(sizeof(UserData<T>) <= 32, "userdata_storage is too small!");
+		user_data = new(userdata_storage) UserData<T>(data);
+	}
+  
 	template<typename T>
 	std::shared_ptr<T> get_data()
 	{
-		return get_userdata_owner()->get_data<T>();
+		UserData<T> *d = dynamic_cast<UserData<T> >(user_data);
+		if (d)
+		{
+			return d->data;
+		}
+		else
+		{
+			return std::shared_ptr<T>();
+		}
 	}
-
+  
 private:
-	UserDataOwner *get_userdata_owner();
+	UserDataOwner(const UserDataOwner &that); // do not implement
+	UserDataOwner &operator=(const UserDataOwner &that); // do not implement
 
-	std::shared_ptr<Physics3DObject_Impl> impl;
+	UserDataBase *user_data;
+	char userdata_storage[32];
 };
 
 }
-
-/// \}
