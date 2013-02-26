@@ -35,6 +35,7 @@
 #include "physics3d_sweep_test_impl.h"
 #include "physics3d_world_impl.h"
 #include "physics3d_shape_impl.h"
+#include "physics3d_object_impl.h"
 
 namespace clan
 {
@@ -116,8 +117,7 @@ Vec3f Physics3DSweepTest::get_hit_normal(int index) const
 
 Physics3DObject Physics3DSweepTest::get_hit_object(int index) const
 {
-	//Physics3DObject_Impl *object_impl = impl->hits[index].hit_collision_object;
-	return Physics3DObject(/*object_impl*/);
+	return Physics3DObject(impl->hits[index].hit_collision_object->shared_from_this());
 }
 
 /////////////////////////////////////////////////////////////////////////////

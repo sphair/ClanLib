@@ -41,6 +41,11 @@ Physics3DObject::Physics3DObject()
 {
 }
 
+Physics3DObject::Physics3DObject(std::shared_ptr<Physics3DObject_Impl> impl)
+	: impl(impl)
+{
+}
+
 Physics3DObject::Physics3DObject(Physics3DWorld &world, const Physics3DShape &shape, const Vec3f &position, const Quaternionf &orientation)
 	: impl(new Physics3DObject_Impl(world.impl.get()))
 {

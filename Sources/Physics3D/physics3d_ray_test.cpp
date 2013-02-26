@@ -32,6 +32,7 @@
 #include "API/Physics3D/physics3d_world.h"
 #include "physics3d_ray_test_impl.h"
 #include "physics3d_world_impl.h"
+#include "physics3d_object_impl.h"
 
 namespace clan
 {
@@ -93,8 +94,7 @@ Vec3f Physics3DRayTest::get_hit_position() const
 
 Physics3DObject Physics3DRayTest::get_hit_object() const
 {
-	// To do: convert Physics3DObject_Impl * to Physics3DObject
-	return Physics3DObject();
+	return Physics3DObject(impl->hit_object->shared_from_this());
 }
 
 /////////////////////////////////////////////////////////////////////////////
