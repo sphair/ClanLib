@@ -147,7 +147,7 @@ ID3D11InputLayout *D3DPrimitivesArrayProvider::get_input_layout(D3DProgramObject
 
 ComPtr<ID3D11InputLayout> D3DPrimitivesArrayProvider::create_input_layout(D3DProgramObjectProvider *program)
 {
-	ID3DBlob *shader_bytecode = program->get_shader_bytecode(shadertype_vertex);
+	DataBuffer shader_bytecode = program->get_shader_bytecode(shadertype_vertex);
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> elements;
 	for (std::map<int, D3DProgramObjectProvider::AttributeBinding>::iterator it = program->attribute_bindings.begin(); it != program->attribute_bindings.end(); ++it)
@@ -168,7 +168,7 @@ ComPtr<ID3D11InputLayout> D3DPrimitivesArrayProvider::create_input_layout(D3DPro
 	}
 
 	ComPtr<ID3D11InputLayout> input_layout;
-	HRESULT result = device->CreateInputLayout(&elements[0], elements.size(), shader_bytecode->GetBufferPointer(), shader_bytecode->GetBufferSize(), input_layout.output_variable());
+	HRESULT result = device->CreateInputLayout(&elements[0], elements.size(), shader_bytecode.get_data(), shader_bytecode.get_size(), input_layout.output_variable());
 	D3DTarget::throw_if_failed("CreateInputLayout failed", result);
 	return input_layout;
 }

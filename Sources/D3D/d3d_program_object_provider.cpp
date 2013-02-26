@@ -135,7 +135,7 @@ int D3DProgramObjectProvider::get_storage_buffer_index(const std::string &block_
 		return -1;
 }
 
-ComPtr<ID3DBlob> &D3DProgramObjectProvider::get_shader_bytecode(ShaderType shader_type)
+DataBuffer &D3DProgramObjectProvider::get_shader_bytecode(ShaderType shader_type)
 {
 	return get_shader_provider(shader_type)->bytecode;
 }

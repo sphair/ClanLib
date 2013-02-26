@@ -69,6 +69,14 @@ ShaderObject::ShaderObject()
 	// empty
 }
 
+ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const void *source, int source_size)
+: impl(new ShaderObject_Impl)
+{
+	GraphicContextProvider *gc_provider = gc.get_provider();
+	impl->provider = gc_provider->alloc_shader_object();
+	impl->provider->create(type, source, source_size);
+}
+
 ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::string &source)
 : impl(new ShaderObject_Impl)
 {
@@ -76,6 +84,7 @@ ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::strin
 	impl->provider = gc_provider->alloc_shader_object();
 	impl->provider->create(type, source);
 }
+
 
 ShaderObject::ShaderObject(GraphicContext &gc, ShaderType type, const std::vector<std::string> &sources)
 : impl(new ShaderObject_Impl)

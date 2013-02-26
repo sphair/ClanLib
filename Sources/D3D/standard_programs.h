@@ -46,17 +46,17 @@ public:
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
 private:
-	ProgramObject compile(GraphicContext &gc, const std::string &vertex_code, const std::string &fragment_code);
+	ProgramObject compile(GraphicContext &gc, const void *vertex_code, int vertex_code_size, const void *fragment_code, int fragment_code_size);
 	void link(ProgramObject &program, const std::string &error_message);
 
 	std::shared_ptr<StandardPrograms_Impl> impl;
 
-	static const char *color_only_vertex;
-	static const char *color_only_fragment;
-	static const char *single_texture_vertex;
-	static const char *single_texture_fragment;
-	static const char *sprite_vertex;
-	static const char *sprite_fragment;
+	static const BYTE color_only_vertex[];
+	static const BYTE color_only_fragment[];
+	static const BYTE single_texture_vertex[];
+	static const BYTE single_texture_fragment[];
+	static const BYTE sprite_vertex[];
+	static const BYTE sprite_fragment[];
 };
 
 }

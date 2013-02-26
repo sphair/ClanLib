@@ -44,6 +44,7 @@ public:
 	D3DShaderObjectProvider(const ComPtr<ID3D11Device> &device, D3D_FEATURE_LEVEL feature_level);
 	~D3DShaderObjectProvider();
 	void create(ShaderType type, const std::string &source);
+	void create(ShaderType type, const void *source, int source_size);
 	void create(ShaderType type, const std::vector<std::string> &sources);
 /// \}
 
@@ -64,7 +65,7 @@ public:
 	ID3D11ComputeShader *get_compute() { return static_cast<ID3D11ComputeShader*>(shader.get()); }
 
 	ComPtr<ID3D11Device> device;
-	ComPtr<ID3DBlob> bytecode;
+	DataBuffer bytecode;
 	ComPtr<ID3D11DeviceChild> shader;
 
 	std::map<std::string, int> sampler_locations;
@@ -84,6 +85,7 @@ public:
 /// \name Implementation
 /// \{
 private:
+	void set_binding(D3D11_SHADER_INPUT_BIND_DESC &binding);
 	void create_shader();
 	void find_locations();
 	std::string get_shader_model() const;

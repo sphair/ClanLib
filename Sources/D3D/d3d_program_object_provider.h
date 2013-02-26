@@ -102,7 +102,7 @@ public:
 	int get_uniform_buffer_index(const std::string &block_name) const;
 	int get_storage_buffer_index(const std::string &name) const;
 
-	ComPtr<ID3DBlob> &get_shader_bytecode(ShaderType shader_type);
+	DataBuffer &get_shader_bytecode(ShaderType shader_type);
 	D3DShaderObjectProvider *get_shader_provider(ShaderType shader_type);
 
 	struct AttributeBinding
