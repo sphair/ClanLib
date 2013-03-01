@@ -112,7 +112,7 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 	float rcp_f = 1.0f / f;
 	float rcp_f_div_aspect = 1.0f / (f / aspect);
 
-	Vec2f pos(screen_pos.x - impl->viewport->left, screen_pos.y - impl->viewport->top);
+	Vec2f pos(screen_pos.x - impl->viewport->left, impl->viewport->bottom - screen_pos.y);
 
 	Vec2f normalized(pos.x * 2.0f / impl->viewport->get_width(), pos.y * 2.0f / impl->viewport->get_height());
 	normalized -= 1.0f;
