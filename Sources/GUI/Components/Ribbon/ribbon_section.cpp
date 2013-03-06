@@ -44,4 +44,10 @@ RibbonSection::RibbonSection(RibbonPage *parent, const std::string &text)
 	parent->impl->add_section(this);
 }
 
+void RibbonSection::show_section(bool enable)
+{
+	// Show/hide the parent wrapper instead
+	get_parent_component()->set_visible(enable, false);
+}
+
 }

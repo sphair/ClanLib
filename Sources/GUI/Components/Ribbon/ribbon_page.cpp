@@ -32,9 +32,9 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/GUI/Components/ribbon.h"
-
 #include "ribbon_page_impl.h"
 #include "ribbon_impl.h"
+
 namespace clan
 {
 
@@ -53,6 +53,11 @@ RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
 	
 //////////////////////////////////////////////////////////////////////////
 // Operations
+
+void RibbonPage::show_page(bool enable)
+{
+
+}
 
 //////////////////////////////////////////////////////////////////////////
 // Implementation

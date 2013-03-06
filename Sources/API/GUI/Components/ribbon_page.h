@@ -55,6 +55,7 @@ public:
 /// \name Operations
 /// \{
 public:
+	void show_page(bool enable);
 /// \}
 
 /// \name Implementation

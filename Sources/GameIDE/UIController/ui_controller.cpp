@@ -63,13 +63,13 @@ RibbonSection *UIController::get_ribbon_section(const std::string &page_name, co
 	if (page_info.page == 0)
 	{
 		page_info.page = new RibbonPage(ribbon, page_name);
-		page_info.page->set_visible(false);
+		page_info.page->show_page(false);
 	}
 
 	if (section_info.section == 0)
 	{
 		section_info.section = new RibbonSection(page_info.page, section_name);
-		section_info.section->set_visible(false);
+		section_info.section->show_section(false);
 	}
 
 	return section_info.section;
@@ -85,7 +85,7 @@ void UIController::show_ribbon_section(const std::string &page_name, const std::
 		page_info.visible_count++;
 		if (page_info.visible_count == 1)
 		{
-			page_info.page->set_visible(true, false);
+			page_info.page->show_page(true);
 			ribbon->request_repaint(); // Bug: shouldn't be needed.
 		}
 	}
@@ -94,7 +94,7 @@ void UIController::show_ribbon_section(const std::string &page_name, const std::
 	{
 		section_info.visible_count++;
 		if (section_info.visible_count == 1)
-			section_info.section->set_visible(true, false);
+			section_info.section->show_section(true);
 	}
 }
 
@@ -107,14 +107,14 @@ void UIController::hide_ribbon_section(const std::string &page_name, const std::
 	{
 		section_info.visible_count--;
 		if (section_info.visible_count == 0)
-			section_info.section->set_visible(false, false);
+			section_info.section->show_section(false);
 	}
 
 	if (page_info.page)
 	{
 		page_info.visible_count--;
 		if (page_info.visible_count == 0)
-			page_info.page->set_visible(false);
+			page_info.page->show_page(false);
 	}
 }
 
