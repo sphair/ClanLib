@@ -42,6 +42,8 @@ class RibbonSection : public GUIComponent
 public:
 	RibbonSection(RibbonPage *parent, const std::string &text);
 
+	void show_section(bool enable);
+
 private:
 	std::shared_ptr<RibbonSection_Impl> impl;
 
