@@ -26,49 +26,45 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "API/GameIDE/UIController/ui_controller_listener.h"
+#include "GameIDE/precomp.h"
+#include "API/GameIDE/UIController/ui_ribbon_section.h"
+#include "API/GameIDE/UIController/ui_controller.h"
 
 namespace clan
 {
 
-class TextEditor;
-class UIRibbonSection;
-
-class TextEditorRibbon : public UIControllerListener
+class UIRibbonSection_Impl
 {
 public:
-	TextEditorRibbon(UIController *controller);
-	void set_active(DocumentEditor *editor);
-	void editor_destroyed(DocumentEditor *editor);
-
-private:
-	void on_button_lowercase();
-	void on_button_uppercase();
-	void on_button_macro_run();
-	void on_button_macro_record();
-	void on_button_macro_stop();
-	void on_check_eol_checked();
-	void on_check_eol_unchecked();
-	void on_combo_wsmode_invisible();
-	void on_combo_wsmode_visible_always();
-	void on_combo_wsmode_visible_after_indent();
-
-	UIRibbonSection *text_section;
-	PushButton *button_lowercase;
-	PushButton *button_uppercase;
-
-	UIRibbonSection *macro_section;
-	PushButton *button_macro_run;
-	PushButton *button_macro_record;
-	PushButton *button_macro_stop;
-
-	UIRibbonSection *view_section;
-	CheckBox *check_eol;
-	ComboBox *combo_wsmode;
-
-	TextEditor *editor;
+	UIRibbonSection_Impl() : ui_controller(nullptr), is_visible(false) { }
+	UIController *ui_controller;
+	std::string page_name;
+	std::string section_name;
+	bool is_visible;
 };
+
+UIRibbonSection::UIRibbonSection(UIController *ui_controller, const std::string &page_name, const std::string &section_name)
+	: GUIComponent(ui_controller->get_ribbon_section(page_name, section_name)), impl(new UIRibbonSection_Impl())
+{
+	impl->ui_controller = ui_controller;
+	impl->page_name = page_name;
+	impl->section_name = section_name;
+}
+
+void UIRibbonSection::show_section(bool enable)
+{
+	if (impl->is_visible != enable)
+	{
+		impl->is_visible = enable;
+		if (enable)
+		{
+			impl->ui_controller->show_ribbon_section(impl->page_name, impl->section_name);
+		}
+		else
+		{
+			impl->ui_controller->hide_ribbon_section(impl->page_name, impl->section_name);
+		}
+	}
+}
 
 }

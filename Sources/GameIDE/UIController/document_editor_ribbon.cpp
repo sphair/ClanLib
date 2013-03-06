@@ -30,6 +30,7 @@
 #include "document_editor_ribbon.h"
 #include "API/GameIDE/UIController/document_editor.h"
 #include "API/GameIDE/UIController/ui_controller.h"
+#include "API/GameIDE/UIController/ui_ribbon_section.h"
 
 namespace clan
 {
@@ -37,7 +38,7 @@ namespace clan
 DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	: UIControllerListener(controller), clipboard_section(0), button_cut(0), button_paste(0), button_copy(0), editor(0)
 {
-	clipboard_section = controller->get_ribbon_section("Home", "Clipboard");
+	clipboard_section = new UIRibbonSection(controller, "Home", "Clipboard");
 
 	ResourceManager resources = clipboard_section->get_resources();
 	Canvas canvas = clipboard_section->get_canvas();
@@ -59,7 +60,7 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_cut->func_clicked().set(this, &DocumentEditorRibbon::on_button_cut_clicked);
 	button_copy->func_clicked().set(this, &DocumentEditorRibbon::on_button_copy_clicked);
 
-	edit_section = controller->get_ribbon_section("Home", "Edit");
+	edit_section = new UIRibbonSection(controller, "Home", "Edit");
 
 	RibbonGroup *edit_group1 = new RibbonGroup(edit_section);
 	RibbonGroup *edit_group2 = new RibbonGroup(edit_section);
@@ -83,8 +84,8 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_save->func_clicked().set(this, &DocumentEditorRibbon::on_button_save_clicked);
 
 	// Always show the clipboard and save buttons
-	get_controller()->show_ribbon_section("Home", "Clipboard");
-	get_controller()->show_ribbon_section("Home", "Edit");
+	clipboard_section->show_section(true);
+	edit_section->show_section(true);
 }
 
 void DocumentEditorRibbon::set_active(DocumentEditor *editor)

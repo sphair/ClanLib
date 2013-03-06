@@ -49,10 +49,6 @@ public:
 	void add_listener(std::shared_ptr<UIControllerListener> listener);
 
 	Ribbon *get_ribbon() const { return ribbon; }
-	RibbonSection *get_ribbon_section(const std::string &page_name, const std::string &section_name);
-
-	void show_ribbon_section(const std::string &page_name, const std::string &section_name);
-	void hide_ribbon_section(const std::string &page_name, const std::string &section_name);
 
 	void open(std::string filename, DocumentEditorType *editor_type);
 
@@ -68,6 +64,11 @@ public:
 	SolutionModel &get_solution_model() { return solution_model; }
 
 private:
+	RibbonSection *get_ribbon_section(const std::string &page_name, const std::string &section_name);
+
+	void show_ribbon_section(const std::string &page_name, const std::string &section_name);
+	void hide_ribbon_section(const std::string &page_name, const std::string &section_name);
+
 	struct OpenDocument
 	{
 		OpenDocument(DocumentEditor *editor, DocumentEditorType *type) : editor(editor), type(type) { }
@@ -99,6 +100,7 @@ private:
 	std::vector<std::shared_ptr<UIControllerListener> > listeners;
 
 	friend class UIControllerListener;
+	friend class UIRibbonSection;
 };
 
 }

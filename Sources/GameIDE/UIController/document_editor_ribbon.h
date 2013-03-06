@@ -33,6 +33,8 @@
 namespace clan
 {
 
+class UIRibbonSection;
+
 class DocumentEditorRibbon : public UIControllerListener
 {
 public:
@@ -48,12 +50,12 @@ private:
 	void on_button_redo_clicked();
 	void on_button_save_clicked();
 
-	RibbonSection *clipboard_section;
+	UIRibbonSection *clipboard_section;
 	PushButton *button_cut;
 	PushButton *button_paste;
 	PushButton *button_copy;
 
-	RibbonSection *edit_section;
+	UIRibbonSection *edit_section;
 	PushButton *button_undo;
 	PushButton *button_redo;
 	PushButton *button_save;

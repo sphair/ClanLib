@@ -31,6 +31,7 @@
 #include "API/GameIDE/BuildSystem/build_system.h"
 #include "API/GameIDE/UIController/document_editor.h"
 #include "API/GameIDE/UIController/ui_controller.h"
+#include "API/GameIDE/UIController/ui_ribbon_section.h"
 
 namespace clan
 {
@@ -38,7 +39,7 @@ namespace clan
 BuildSystemRibbon::BuildSystemRibbon(UIController *controller)
 	: UIControllerListener(controller)
 {
-	build_section = controller->get_ribbon_section("Home", "Build");
+	build_section = new UIRibbonSection(controller, "Home", "Build");
 
 	ResourceManager resources = build_section->get_resources();
 	Canvas canvas = build_section->get_canvas();
@@ -63,7 +64,7 @@ BuildSystemRibbon::BuildSystemRibbon(UIController *controller)
 	button_show_output->func_clicked().set(this, &BuildSystemRibbon::on_button_show_output);
 
 	// Always show the build section
-	get_controller()->show_ribbon_section("Home", "Build");
+	build_section->show_section(true);
 }
 
 void BuildSystemRibbon::set_active(DocumentEditor *doc_editor)

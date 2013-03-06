@@ -26,49 +26,29 @@
 **    Magnus Norddahl
 */
 
+/// \addtogroup clanGameIDE_System clanGameIDE System
+/// \{
+
 #pragma once
 
-#include "API/GameIDE/UIController/ui_controller_listener.h"
+#include "../../GUI/gui_component.h"
 
 namespace clan
 {
 
-class TextEditor;
-class UIRibbonSection;
+class UIController;
+class UIRibbonSection_Impl;
 
-class TextEditorRibbon : public UIControllerListener
+class UIRibbonSection : public GUIComponent
 {
 public:
-	TextEditorRibbon(UIController *controller);
-	void set_active(DocumentEditor *editor);
-	void editor_destroyed(DocumentEditor *editor);
+	UIRibbonSection(UIController *ui_controller, const std::string &page_name, const std::string &section_name);
+	void show_section(bool enable);
 
 private:
-	void on_button_lowercase();
-	void on_button_uppercase();
-	void on_button_macro_run();
-	void on_button_macro_record();
-	void on_button_macro_stop();
-	void on_check_eol_checked();
-	void on_check_eol_unchecked();
-	void on_combo_wsmode_invisible();
-	void on_combo_wsmode_visible_always();
-	void on_combo_wsmode_visible_after_indent();
-
-	UIRibbonSection *text_section;
-	PushButton *button_lowercase;
-	PushButton *button_uppercase;
-
-	UIRibbonSection *macro_section;
-	PushButton *button_macro_run;
-	PushButton *button_macro_record;
-	PushButton *button_macro_stop;
-
-	UIRibbonSection *view_section;
-	CheckBox *check_eol;
-	ComboBox *combo_wsmode;
-
-	TextEditor *editor;
+	std::shared_ptr<UIRibbonSection_Impl> impl;
 };
 
 }
+
+/// \}
