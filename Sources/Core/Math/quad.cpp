@@ -113,6 +113,41 @@ Quadx<Type> &Quadx<Type>::apply_alignment(Origin origin, Type x, Type y)
 	return *this;
 }
 
+template<typename Type>
+bool Quadx<Type>::is_inside(const Vec2<Type> &point) const
+{
+	const int num_points = 4;
+	const Vec2<Type> *vertices[num_points] = { &p, &q, &r, &s };
+
+	// Ray cast to the right to determine if the point is inside the polygon:
+	// An uneven count of crossed lines means we are inside the polygon.
+
+	bool inside = false;
+
+	int prev = num_points - 1;
+	for (int current = 0; current < num_points; current++)
+	{
+		bool vertically_in_range = (vertices[current]->y >= point.y) != (vertices[prev]->y > point.y);
+		if (vertically_in_range)
+		{
+			// Find intersection point between line and our ray:
+			Type line_range_x = vertices[prev]->x - vertices[current]->x;
+			Type line_range_y = vertices[prev]->y - vertices[current]->y;
+			Type delta_y = point.y - vertices[current]->y;
+			Type intersect_x = line_range_x * delta_y / line_range_y + vertices[current]->x;
+
+			if (point.x < intersect_x)
+			{
+				inside = !inside;
+			}
+		}
+
+		prev = current;
+	}
+
+	return inside;
+}
+
 // Explicit instantiate the versions we use:
 template class Quadx<int>;
 template class Quadx<float>;
