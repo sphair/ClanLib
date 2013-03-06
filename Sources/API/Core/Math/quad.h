@@ -197,6 +197,9 @@ public:
 	/// \return reference to this object
 	Quadx<Type> &apply_alignment(Origin origin, Type x, Type y);
 
+	/// \brief Check if a point is inside or outside the quad
+	bool is_inside(const Vec2<Type> &point) const;
+
 /// \}
 };
 
