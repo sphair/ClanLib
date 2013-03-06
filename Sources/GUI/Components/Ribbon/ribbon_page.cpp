@@ -32,6 +32,7 @@
 #include "API/GUI/Components/ribbon_page.h"
 #include "API/GUI/Components/ribbon_section.h"
 #include "API/GUI/Components/ribbon.h"
+#include "API/GUI/Components/push_button.h"
 #include "ribbon_page_impl.h"
 #include "ribbon_impl.h"
 
@@ -42,7 +43,7 @@ namespace clan
 // Construction
 
 RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
-: GUIComponent(parent->impl->page_area, "ribbon-page"), impl(new RibbonPage_Impl(text))
+: GUIComponent(parent->impl->page_area, "ribbon-page"), impl(new RibbonPage_Impl(parent->impl.get(), text))
 {
 	impl->component = this;
 	parent->impl->add_page(this);
@@ -56,7 +57,15 @@ RibbonPage::RibbonPage(Ribbon *parent, const std::string &text)
 
 void RibbonPage::show_page(bool enable)
 {
-
+	for (size_t i = 0; i < impl->ribbon_impl->pages.size(); i++)
+	{
+		if (impl->ribbon_impl->pages[i] == this)
+		{
+			impl->ribbon_impl->tab_buttons[i]->set_visible(enable, false);
+			set_visible(enable, false);
+			break;
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

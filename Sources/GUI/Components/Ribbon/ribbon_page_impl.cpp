@@ -42,7 +42,7 @@ namespace clan
 //////////////////////////////////////////////////////////////////////////
 // Construction
 
-RibbonPage_Impl::RibbonPage_Impl(const std::string &text) : text(text)
+RibbonPage_Impl::RibbonPage_Impl(Ribbon_Impl *ribbon_impl, const std::string &text) : ribbon_impl(ribbon_impl), text(text)
 {
 }
 

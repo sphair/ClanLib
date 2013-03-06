@@ -39,10 +39,11 @@ class RibbonPage;
 class RibbonPage_Impl
 {
 public:
-	RibbonPage_Impl(const std::string &text);
+	RibbonPage_Impl(Ribbon_Impl *ribbon_impl, const std::string &text);
 
 	void add_section(RibbonSection *section);
 
+	Ribbon_Impl *ribbon_impl;
 	RibbonPage *component;
 
 	std::string text;
