@@ -31,6 +31,7 @@
 #include "text_editor.h"
 #include "API/GameIDE/UIController/document_editor.h"
 #include "API/GameIDE/UIController/ui_controller.h"
+#include "API/GameIDE/UIController/ui_ribbon_section.h"
 
 namespace clan
 {
@@ -38,9 +39,9 @@ namespace clan
 TextEditorRibbon::TextEditorRibbon(UIController *controller)
 	: UIControllerListener(controller), editor(0)
 {
-	text_section = controller->get_ribbon_section("Home", "Text");
-	macro_section = controller->get_ribbon_section("Home", "Macro");
-	view_section = controller->get_ribbon_section("Home", "Whitespace");
+	text_section = new UIRibbonSection(controller, "Home", "Text");
+	macro_section = new UIRibbonSection(controller, "Home", "Macro");
+	view_section = new UIRibbonSection(controller, "Home", "Whitespace");
 
 	ResourceManager resources = text_section->get_resources();
 	Canvas canvas = text_section->get_canvas();
@@ -101,19 +102,11 @@ void TextEditorRibbon::set_active(DocumentEditor *doc_editor)
 {
 	editor = dynamic_cast<TextEditor *>(doc_editor);
 
-	// TBD: Clipboard should probably always be visible
-	if (editor)
-	{
-		get_controller()->show_ribbon_section("Home", "Text");
-		get_controller()->show_ribbon_section("Home", "Macro");
-		get_controller()->show_ribbon_section("Home", "Whitespace");
-	}
-	else
-	{
-		get_controller()->hide_ribbon_section("Home", "Text");
-		get_controller()->hide_ribbon_section("Home", "Macro");
-		get_controller()->hide_ribbon_section("Home", "Whitespace");
-	}
+	bool enable = (editor != nullptr);
+
+	text_section->show_section(enable);
+	macro_section->show_section(enable);
+	view_section->show_section(enable);
 }
 
 void TextEditorRibbon::editor_destroyed(DocumentEditor *doc_editor)

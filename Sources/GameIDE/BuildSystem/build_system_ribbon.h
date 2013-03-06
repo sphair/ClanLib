@@ -34,6 +34,7 @@ namespace clan
 {
 
 class BuildSystem;
+class UIRibbonSection;
 
 class BuildSystemRibbon : public UIControllerListener
 {
@@ -48,7 +49,7 @@ private:
 	void on_button_clean();
 	void on_button_show_output();
 
-	RibbonSection *build_section;
+	UIRibbonSection *build_section;
 	PushButton *button_build;
 	PushButton *button_rebuild;
 	PushButton *button_clean;

@@ -54,6 +54,7 @@
 #include "GameIDE/UIController/document_editor_type.h"
 #include "GameIDE/UIController/ui_controller.h"
 #include "GameIDE/UIController/ui_controller_listener.h"
+#include "GameIDE/UIController/ui_ribbon_section.h"
 #include "GameIDE/Workspace/dockable_component.h"
 
 #ifdef __cplusplus_cli
