@@ -90,6 +90,7 @@ PushButton::PushButton(GUIComponent *parent)
 
 	impl->button = this;
 	impl->icon = new ImageView(this);
+	impl->icon->set_visible(false);
 	impl->label = new Label(this);
 
 	set_pseudo_class(CssStr::defaulted, is_default());
@@ -170,6 +171,7 @@ void PushButton::set_toggle(bool enable)
 void PushButton::set_icon(const Image &icon)
 {
 	impl->icon->set_image(icon);
+	impl->icon->set_visible(!icon.is_null(), false);
 }
 
 void PushButton::set_icon_position(IconPosition pos)
