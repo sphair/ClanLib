@@ -40,8 +40,24 @@ button:focus
     border-image: url('res:ButtonFocus') 8 9 8 8 fill / 8px 9px 8px 8px;
 }
 
-button imageview
+button.left-icon imageview
 {
+    padding: 0 3px 0 0;
+}
+
+button.right-icon imageview
+{
+    padding: 0 0 0 3px;
+}
+
+button.top-icon imageview
+{
+    padding: 0 0 3px 0;
+}
+
+button.bottom-icon imageview
+{
+    padding: 3px 0 0 0;
 }
 
 button:pressed imageview
