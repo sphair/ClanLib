@@ -91,7 +91,7 @@ bool GUIElement::set_class(const std::string &name, bool enable, bool allow_repa
 		{
 			if (!enable)
 			{
-				classes.erase(pseudo_classes.begin() + i);
+				classes.erase(classes.begin() + i);
 				set_style_needs_update();
 				if (allow_repainting)
 					component->request_repaint();
@@ -102,7 +102,7 @@ bool GUIElement::set_class(const std::string &name, bool enable, bool allow_repa
 	}
 	if (enable)
 	{
-		pseudo_classes.push_back(name);
+		classes.push_back(name);
 		set_style_needs_update();
 		if (allow_repainting)
 			component->request_repaint();
