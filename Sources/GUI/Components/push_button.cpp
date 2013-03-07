@@ -90,14 +90,11 @@ PushButton::PushButton(GUIComponent *parent)
 
 	impl->button = this;
 	impl->icon = new ImageView(this);
-	impl->icon->set_visible(false);
 	impl->label = new Label(this);
 
 	set_pseudo_class(CssStr::defaulted, is_default());
 	set_pseudo_class(CssStr::disabled, !is_enabled());
 	impl->part_focus = GUIThemePart(this, "focus");
-
-	set_class("left-icon", true);
 }
 
 PushButton::~PushButton()
@@ -171,7 +168,21 @@ void PushButton::set_toggle(bool enable)
 void PushButton::set_icon(const Image &icon)
 {
 	impl->icon->set_image(icon);
-	impl->icon->set_visible(!icon.is_null(), false);
+
+	if (!icon.is_null())
+	{
+		set_class("left-icon", impl->icon_position == icon_left);
+		set_class("top-icon", impl->icon_position == icon_top);
+		set_class("right-icon", impl->icon_position == icon_right);
+		set_class("bottom-icon", impl->icon_position == icon_bottom);
+	}
+	else
+	{
+		set_class("left-icon", false);
+		set_class("top-icon", false);
+		set_class("right-icon", false);
+		set_class("bottom-icon", false);
+	}
 }
 
 void PushButton::set_icon_position(IconPosition pos)
@@ -180,10 +191,13 @@ void PushButton::set_icon_position(IconPosition pos)
 	{
 		impl->icon_position = pos;
 
-		set_class("left-icon", pos == icon_left);
-		set_class("top-icon", pos == icon_top);
-		set_class("right-icon", pos == icon_right);
-		set_class("bottom-icon", pos == icon_bottom);
+		if (!impl->icon->get_image().is_null())
+		{
+			set_class("left-icon", impl->icon_position == icon_left);
+			set_class("top-icon", impl->icon_position == icon_top);
+			set_class("right-icon", impl->icon_position == icon_right);
+			set_class("bottom-icon", impl->icon_position == icon_bottom);
+		}
 	}
 }
 
