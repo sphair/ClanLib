@@ -71,10 +71,13 @@ public:
 	const GUIElement *get_parent_component() const { return parent; }
 	const std::string &get_tag_name() const { return tag_name; }
 	const std::string &get_id() const { return id;}
-	const std::string &get_class() const { return class_string; }
+	const std::vector<std::string> &get_classes() const { return classes; }
 	GUIElement *get_parent_component() { return parent; }
 
-	/// \brief Returns whether a DOM pseudo class is present or not.
+	/// \brief Returns whether a CSS pseudo class is present or not.
+	bool get_class(const std::string &name) const;
+
+	/// \brief Returns whether a CSS pseudo class is present or not.
 	bool get_pseudo_class(const std::string &name) const;
 
 	/// \brief Returns all pseudo classes currently present
@@ -93,10 +96,10 @@ public:
 	void set_component(GUIComponent *component);
 
 	void set_tag_name(const std::string &name);
-	void set_class(const std::string &name);
+	bool set_class(const std::string &name, bool enable, bool allow_repainting);
 	void set_id(const std::string &name);
 
-	/// \brief Controls the presence of a DOM pseudo class
+	/// \brief Controls the presence of a CSS pseudo class
 	///
 	/// \return true, if state changed
 	bool set_pseudo_class(const std::string &name, bool enable, bool allow_repainting);
@@ -137,7 +140,7 @@ private:
 
 	std::string tag_name;
 	std::string id;
-	std::string class_string;
+	std::vector<std::string> classes;
 	std::vector<std::string> pseudo_classes;
 
 	bool style_needs_update;

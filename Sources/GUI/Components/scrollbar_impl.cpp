@@ -295,12 +295,12 @@ void ScrollBar_Impl::create_parts()
 	part_thumb = GUIThemePart(scrollbar,"scrollthumb");
 	part_thumb_gripper = GUIThemePart(scrollbar,"scrollthumbgripper");
 
-	part_button_decrement.set_class(vertical ? "up" : "left");
-	part_button_increment.set_class(vertical ? "down" : "right");
-	part_track_decrement.set_class(vertical ? "up" : "left");
-	part_track_increment.set_class(vertical ? "down" : "right");
-	part_thumb.set_class(vertical ? "vertical" : "horizontal");
-	part_thumb_gripper.set_class(vertical ? "vertical" : "horizontal");
+	part_button_decrement.set_class(vertical ? "up" : "left", true);
+	part_button_increment.set_class(vertical ? "down" : "right", true);
+	part_track_decrement.set_class(vertical ? "up" : "left", true);
+	part_track_increment.set_class(vertical ? "down" : "right", true);
+	part_thumb.set_class(vertical ? "vertical" : "horizontal", true);
+	part_thumb_gripper.set_class(vertical ? "vertical" : "horizontal", true);
 
 	scrollbar->set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());
 	part_button_decrement.set_pseudo_class(CssStr::disabled, !scrollbar->is_enabled());

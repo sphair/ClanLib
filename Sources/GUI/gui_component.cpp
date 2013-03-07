@@ -190,9 +190,14 @@ std::string GUIComponent::get_id() const
 	return impl->element.get_id();
 }
 
-std::string GUIComponent::get_class() const
+bool GUIComponent::get_class(const std::string &name) const
 {
-	return impl->element.get_class();
+	return impl->element.get_class(name);
+}
+
+std::vector<std::string> GUIComponent::get_classes() const
+{
+	return impl->element.get_classes();
 }
 
 bool GUIComponent::get_pseudo_class(const std::string &name) const
@@ -902,9 +907,9 @@ void GUIComponent::set_tag_name(const std::string &name)
 	impl->element.set_tag_name(name);
 }
 	
-void GUIComponent::set_class(const std::string &name)
+bool GUIComponent::set_class(const std::string &name, bool enable)
 {
-	impl->element.set_class(name);
+	return impl->element.set_class(name, enable, true);
 }
 
 void GUIComponent::set_id(const std::string &name)

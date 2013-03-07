@@ -60,7 +60,7 @@ void Ribbon_Impl::add_page(RibbonPage *page)
 	bool is_page_visible = (current_page_index == pages.size());
 
 	PushButton *tab_button = new PushButton(tab_row);
-	tab_button->set_class("tab");
+	tab_button->set_class("tab", true);
 	tab_button->set_text(page->impl->text);
 	tab_button->func_clicked().set(this, &Ribbon_Impl::on_tab_clicked, page);
 

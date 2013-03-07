@@ -55,8 +55,8 @@ SolutionExplorer::SolutionExplorer(FileItemTypeFactory &factory, UIController *c
 	listview->func_item_opened().set(this, &SolutionExplorer::on_listview_item_opened);
 	listview->func_item_closed().set(this, &SolutionExplorer::on_listview_item_closed);
 	listview->func_begin_drag().set(this, &SolutionExplorer::on_listview_begin_drag);
-	listview->set_class("borderless");
-	listview->get_header()->set_class("hidden");
+	listview->set_class("borderless", true);
+	listview->get_header()->set_class("hidden", true);
 	listview->get_header()->append(listview->get_header()->create_column("name", "Name")).set_width(110);
 
 	drag_drop = new DragDropOperation(this);

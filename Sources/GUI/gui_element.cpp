@@ -83,13 +83,32 @@ void GUIElement::set_tag_name(const std::string &name)
 	}
 }
 
-void GUIElement::set_class(const std::string &name)
+bool GUIElement::set_class(const std::string &name, bool enable, bool allow_repainting)
 {
-	if (class_string != name)
+	for (size_t i = 0; i < classes.size(); i++)
 	{
-		class_string = name;
-		set_style_needs_update();
+		if (classes[i] == name)
+		{
+			if (!enable)
+			{
+				classes.erase(pseudo_classes.begin() + i);
+				set_style_needs_update();
+				if (allow_repainting)
+					component->request_repaint();
+				return true;
+			}
+			return false;
+		}
 	}
+	if (enable)
+	{
+		pseudo_classes.push_back(name);
+		set_style_needs_update();
+		if (allow_repainting)
+			component->request_repaint();
+		return true;
+	}
+	return false;
 }
 
 void GUIElement::set_id(const std::string &name)
@@ -174,6 +193,16 @@ void GUIElement::set_parent(GUIElement *new_parent)
 	}
 
 	set_style_needs_update();
+}
+
+bool GUIElement::get_class(const std::string &name) const
+{
+	for (size_t i = 0; i < classes.size(); i++)
+	{
+		if (classes[i] == name)
+			return true;
+	}
+	return false;
 }
 
 bool GUIElement::get_pseudo_class(const std::string &name) const

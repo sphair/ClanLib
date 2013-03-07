@@ -84,9 +84,14 @@ std::string GUIThemePart::get_id() const
 	return impl->element.get_id();
 }
 
-std::string GUIThemePart::get_class() const
+bool GUIThemePart::get_class(const std::string &name) const
 {
-	return impl->element.get_class();
+	return impl->element.get_class(name);
+}
+
+std::vector<std::string> GUIThemePart::get_classes() const
+{
+	return impl->element.get_classes();
 }
 
 bool GUIThemePart::get_pseudo_class(const std::string &name) const
@@ -104,14 +109,14 @@ void GUIThemePart::set_tag_name(const std::string &name)
 	impl->element.set_tag_name(name);
 }
 	
-void GUIThemePart::set_class(const std::string &name)
-{
-	impl->element.set_class(name);
-}
-
 void GUIThemePart::set_id(const std::string &name)
 {
 	impl->element.set_id(name);
+}
+
+bool GUIThemePart::set_class(const std::string &name, bool enable)
+{
+	return impl->element.set_class(name, enable, false);
 }
 
 bool GUIThemePart::set_pseudo_class(const std::string &name, bool enable)

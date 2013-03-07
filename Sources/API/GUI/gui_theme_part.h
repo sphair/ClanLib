@@ -79,16 +79,19 @@ public:
 	/// \brief Gets the font
 	Font get_font() const;
 
-	/// \brief Returns the DOM tag name
+	/// \brief Returns the CSS tag name
 	std::string get_tag_name() const;
 
-	/// \brief Returns the DOM id attribute
+	/// \brief Returns the CSS id attribute
 	std::string get_id() const;
 
-	/// \brief Returns the DOM class attribute
-	std::string get_class() const;
+	/// \brief Returns whether a CSS class is present or not.
+	bool get_class(const std::string &name) const;
 
-	/// \brief Returns whether a DOM pseudo class is present or not.
+	/// \brief Returns all classes currently present
+	std::vector<std::string> get_classes() const;
+
+	/// \brief Returns whether a CSS pseudo class is present or not.
 	bool get_pseudo_class(const std::string &name) const;
 
 	/// \brief Returns all pseudo classes currently present
@@ -134,16 +137,18 @@ public:
 	/// \brief Renders the component and its children.
 	void render_box(Canvas &canvas, const Rect &border_box);
 
-	/// \brief Sets the DOM tag name
+	/// \brief Sets the CSS tag name
 	void set_tag_name(const std::string &name); 
 
-	/// \brief Sets the DOM class
-	void set_class(const std::string &name);
+	/// \brief Controls the presence of a CSS class
+	///
+	/// \return true if changed
+	bool set_class(const std::string &name, bool enable);
 
-	/// \brief Sets the DOM id
+	/// \brief Sets the CSS id
 	void set_id(const std::string &name);
 
-	/// \brief Controls the presence of a DOM pseudo class
+	/// \brief Controls the presence of a CSS pseudo class
 	///
 	/// \return true if changed
 	bool set_pseudo_class(const std::string &name, bool enable);
