@@ -95,6 +95,8 @@ PushButton::PushButton(GUIComponent *parent)
 	set_pseudo_class(CssStr::defaulted, is_default());
 	set_pseudo_class(CssStr::disabled, !is_enabled());
 	impl->part_focus = GUIThemePart(this, "focus");
+
+	set_class("left-icon", true);
 }
 
 PushButton::~PushButton()
@@ -175,6 +177,11 @@ void PushButton::set_icon_position(IconPosition pos)
 	if (impl->icon_position != pos)
 	{
 		impl->icon_position = pos;
+
+		set_class("left-icon", pos == icon_left);
+		set_class("top-icon", pos == icon_top);
+		set_class("right-icon", pos == icon_right);
+		set_class("bottom-icon", pos == icon_bottom);
 	}
 }
 
