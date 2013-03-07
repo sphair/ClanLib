@@ -5,6 +5,16 @@ button
     padding: 5px;
 }
 
+button.top-icon
+{
+    flex-direction: column;
+}
+
+button.bottom-icon
+{
+    flex-direction: column-reverse;
+}
+
 button:defaulted
 {
     border-image: url('res:ButtonDefaulted') 6 6 5 5 fill / 6px 6px 5px 5px;
