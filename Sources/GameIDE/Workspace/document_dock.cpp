@@ -112,13 +112,13 @@ void DocumentDock::activate_tab(int tab_index)
 		if (active_tab_index != -1)
 		{
 			tabs[active_tab_index]->set_visible(false, false);
-			tab_buttons[active_tab_index]->set_class("");
+			tab_buttons[active_tab_index]->set_class("active", false);
 		}
 
 		active_tab_index = tab_index;
 
 		tabs[active_tab_index]->set_visible(true, false);
-		tab_buttons[active_tab_index]->set_class("active");
+		tab_buttons[active_tab_index]->set_class("active", true);
 	}
 }
 

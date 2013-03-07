@@ -90,7 +90,7 @@ std::string GUIComponentSelectNode::id()
 
 std::vector<std::string> GUIComponentSelectNode::element_classes()
 {
-	return StringHelp::split_text(pos->get_class(), " ");
+	return pos->get_classes();
 }
 
 std::vector<std::string> GUIComponentSelectNode::pseudo_classes()

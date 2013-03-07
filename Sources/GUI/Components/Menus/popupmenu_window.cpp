@@ -69,7 +69,7 @@ PopupMenuWindow::PopupMenuWindow(const PopupMenu &menu, const Point &screen_posi
 : GUIComponent(owner, create_toplevel_description(), CssStr::PopupMenuWindow::type_name),
   menu(menu), selected(-1)
 {
-	set_class(menu.get_class());
+	set_class(menu.get_class(), true);
 
 	create_parts();
 

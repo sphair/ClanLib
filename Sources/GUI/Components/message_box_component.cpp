@@ -270,25 +270,21 @@ void MessageBoxComponent::set_css_class()
 {
 	Canvas canvas = get_canvas();
 
-	std::string icon_class = "";
-
 	switch (messagebox_icon)
 	{
 	case mb_icon_error:
-		icon_class = "error";
+		set_class("error", true);
 		break; 
 	case mb_icon_warning:
-		icon_class = "warning";
+		set_class("warning", true);
 		break;
 	case mb_icon_info:
-		icon_class = "info";
+		set_class("info", true);
 		break;
 	case mb_icon_question:
-		icon_class = "question";
+		set_class("question", true);
 		break;
 	}
-
-	set_class(icon_class);
 }
 
 void MessageBoxComponent::on_render(Canvas &canvas, const Rect &dirty_rect)

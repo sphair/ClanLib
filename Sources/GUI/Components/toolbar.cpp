@@ -112,7 +112,7 @@ public:
 ToolBar::ToolBar(GUIComponent *parent)
 : GUIComponent(parent, CssStr::ToolBar::type_name), impl(new ToolBar_Impl)
 {
-	set_class("horizontal");
+	set_class("horizontal", true);
 	impl->toolbar = this;
 	func_process_message().set(impl.get(), &ToolBar_Impl::on_process_message);
 	func_render().set(impl.get(), &ToolBar_Impl::on_render);

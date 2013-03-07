@@ -58,7 +58,7 @@ private:
 		{
 			label = new Label(this);
 			button_close = new PushButton(this);
-			button_close->set_class("close");
+			button_close->set_class("close", true);
 		}
 		Label *label;
 		PushButton *button_close;

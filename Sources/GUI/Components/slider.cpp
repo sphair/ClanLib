@@ -531,8 +531,8 @@ void Slider_Impl::create_parts()
 	part_track = GUIThemePart(slider,"slidertrack");
 	part_thumb = GUIThemePart(slider,"sliderthumb");
 
-	part_track.set_class(vertical ? "vertical" : "horizontal");
-	part_thumb.set_class(vertical ? "vertical" : "horizontal");
+	part_track.set_class(vertical ? "vertical" : "horizontal", true);
+	part_thumb.set_class(vertical ? "vertical" : "horizontal", true);
 	part_focus = GUIThemePart(slider, CssStr::Slider::part_focus);
 
 	bool enabled = slider->is_enabled();

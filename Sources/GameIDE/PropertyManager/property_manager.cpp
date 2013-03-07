@@ -39,8 +39,8 @@ PropertyManager::PropertyManager()
 	set_dockable_window_geometry(Rect(Point(50, 50), Size(300, 400)));
 
 	listview = new ListView(this);
-	listview->set_class("borderless");
-	listview->get_header()->set_class("hidden");
+	listview->set_class("borderless", true);
+	listview->get_header()->set_class("hidden", true);
 	listview->get_header()->append(listview->get_header()->create_column("name", "Name")).set_width(110);
 }
 

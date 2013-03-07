@@ -48,7 +48,7 @@ DlgOpenWith::DlgOpenWith(GUIComponent *owner, std::vector<DocumentEditorType *> 
 	list_items->get_header()->append(list_items->get_header()->create_column("name", "Name")).set_width(110);
 	list_items->show_detail_opener(false);
 	list_items->show_detail_icon(false);
-	list_items->get_header()->set_class("hidden");
+	list_items->get_header()->set_class("hidden", true);
 
 
 	func_resized().set(this, &DlgOpenWith::on_resized);

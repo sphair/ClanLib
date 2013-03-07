@@ -41,9 +41,9 @@ TabDock::TabDock(DockingGroup *parent, int id)
 
 	header = new GUIComponent(this, "header");
 	title_label = new Label(header);
-	title_label->set_class("title");
+	title_label->set_class("title", true);
 	button_close = new PushButton(header);
-	button_close->set_class("close");
+	button_close->set_class("close", true);
 
 	frame_area = new GUIComponent(this, "frame-area");
 
@@ -135,13 +135,13 @@ void TabDock::activate_tab(int tab_index)
 		if (active_tab_index != -1)
 		{
 			tabs[active_tab_index]->set_visible(false, false);
-			tab_buttons[active_tab_index]->set_class("");
+			tab_buttons[active_tab_index]->set_class("active", false);
 		}
 
 		active_tab_index = tab_index;
 
 		tabs[active_tab_index]->set_visible(true, false);
-		tab_buttons[active_tab_index]->set_class("active");
+		tab_buttons[active_tab_index]->set_class("active", true);
 
 		title_label->set_text(tabs[active_tab_index]->get_dockable()->get_title());
 	}

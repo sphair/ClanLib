@@ -45,7 +45,7 @@ TextEditor::TextEditor(UIController *controller, std::string filename)
 	set_dockable_window_geometry(Rect(Point(50, 50), Size(300, 400)));
 
 	textedit = new ScintillaEditor(this);
-	textedit->set_class("borderless");
+	textedit->set_class("borderless", true);
 	textedit->set_tab_indents(true);
 	textedit->set_tab_width(4);
 	textedit->func_macro_record().set(this, &TextEditor::on_macro_recorded);
