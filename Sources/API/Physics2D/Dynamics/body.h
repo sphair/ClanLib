@@ -40,6 +40,7 @@
 namespace clan
 {
 
+class ResourceManager;
 class PhysicsWorld;
 class BodyDescription;
 class Body_Impl;
@@ -59,11 +60,18 @@ public:
 	/// \brief Constructs a null instance.
 	Body();
 
-	/// \brief Constructs a World
+	/// \brief Constructs a Body
 	///
 	/// \param pc = Physics Context
 	/// \param description = Body Description
 	Body(PhysicsContext &pc, const BodyDescription &description);
+
+	/// \brief Constructs a Body
+	///
+	/// \param pc = Physics Context
+	/// \param resource_id = String Ref
+	/// \param resources = Resource Manager
+	Body(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources);
 
 	~Body();
 

@@ -36,7 +36,6 @@
 #include "API/Physics2D/Dynamics/body_description.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Core/Signals/signal_v1.h"
-
 namespace clan
 {
 
@@ -56,6 +55,7 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
+	void init(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources);
 	void add_fixture(Fixture &fixture);
 	void set_id(int value) { id = value;}
 

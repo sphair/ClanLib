@@ -32,6 +32,9 @@
 #include "fixture_impl.h"
 #include "body_description_impl.h"
 #include "../World/physics_world_impl.h"
+#include "API/Core/XML/dom_element.h"
+#include "API/Core/Resources/resource.h"
+
 
 namespace clan
 {
@@ -60,6 +63,18 @@ Body_Impl::~Body_Impl()
 }
 //																						___________________
 //																						O P E R A T I O N S
+
+void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources)
+{
+	Resource resource = resources->get_resource(resource_id);
+
+	// Create body from body description
+	BodyDescription desc(pc, resource_id, resources);
+
+	create_body(desc);
+
+	//Load fixture and joint parameters here.
+}
 void Body_Impl::create_body(const BodyDescription &description)
 {	
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion

@@ -35,6 +35,11 @@
 #include "API/Physics2D/World/physics_world.h"
 #include "API/Core/Math/point.h"
 #include "API/Core/Math/angle.h"
+#include "API/Core/XML/dom_node.h"
+#include "API/Core/XML/dom_element.h"
+#include "API/Core/Resources/resource.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 
 namespace clan
 {
@@ -55,6 +60,152 @@ BodyDescription::BodyDescription(const PhysicsContext &pc)
 : impl(new BodyDescription_Impl(pc.impl->get_owner()))
 {
 
+}
+
+BodyDescription::BodyDescription(const PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources)
+: impl(new BodyDescription_Impl(pc.impl->get_owner()))
+{
+	/* example resource entry with all parameters:
+	
+	<body2d name="TestBody" type="static">
+        <position x="0" y="0"/>
+        <rotation angle="180"/>
+        <velocity x="0" y="0" angular="0"/>
+        <damping linear="0" angular="0"/>
+		<parameters awake="true" can_sleep="true" bullet="false" active="true" />
+    </body2d>
+
+	*/
+	Resource resource = resources->get_resource(resource_id);
+	if (resource.get_type() != "body2d" && resource.get_type() != "body2d_description")
+		throw Exception(string_format("Resource '%1' is not of type 'body2d' or 'body2d_description'", resource_id));
+
+	DomNode cur_node = resource.get_element().get_first_child();
+
+	//Body type
+	std::string body_type = resource.get_element().get_attribute("type","static");
+	if(body_type == "kinematic") set_type(body_kinematic);
+	else if(body_type == "dynamic") set_type(body_dynamic);
+	else set_type(body_static);
+
+	while(!cur_node.is_null())
+	{
+		if (!cur_node.is_element()) 
+			continue;
+		
+		DomElement cur_element = cur_node.to_element();
+		std::string tag_name = cur_element.get_tag_name();
+
+		//<position x="0" y="0"/>
+		if(tag_name == "position")
+		{
+			float pos_x = 0.0f;
+			float pos_y = 0.0f;
+
+			if(cur_element.has_attribute("x"))
+			{
+				pos_x = StringHelp::text_to_float(cur_element.get_attribute("x"));
+			}
+
+			if(cur_element.has_attribute("y"))
+			{
+				pos_y = StringHelp::text_to_float(cur_element.get_attribute("y"));
+			}
+
+			set_position(pos_x, pos_y);
+		}
+
+		//<rotation angle="180"/>
+		else if(tag_name == "rotation")
+		{
+			Angle angle(0.0f, angle_degrees);
+
+			if(cur_element.has_attribute("angle"))
+			{
+				angle = Angle(StringHelp::text_to_float(cur_element.get_attribute("angle")), angle_degrees);
+			}
+
+			set_angle(angle);
+		}
+
+		//<velocity x="0" y="0" angular="0"/>
+		else if(tag_name == "velocity")
+		{
+			Vec2f velocity(0.0f, 0.0f);
+			Angle angular_velocity(0.0f, angle_degrees);
+
+			if(cur_element.has_attribute("x"))
+			{
+				velocity.x = StringHelp::text_to_float(cur_element.get_attribute("x"));
+			}
+
+			if(cur_element.has_attribute("y"))
+			{
+				velocity.y = StringHelp::text_to_float(cur_element.get_attribute("y"));
+			}
+
+			if(cur_element.has_attribute("angular"))
+			{
+				angular_velocity = Angle(StringHelp::text_to_float(cur_element.get_attribute("angular")), angle_degrees);
+			}
+
+			set_linear_velocity(velocity);
+			set_angular_velocity(angular_velocity);
+		}
+
+		//<damping linear="0" angular="0"/>
+		else if(tag_name == "damping")
+		{
+			float linear;
+			float angular;
+
+			if(cur_element.has_attribute("linear"))
+			{
+				linear = StringHelp::text_to_float(cur_element.get_attribute("linear"));
+			}
+
+			if(cur_element.has_attribute("angular"))
+			{
+				angular = StringHelp::text_to_float(cur_element.get_attribute("angular"));
+			}
+
+			set_linear_damping(linear);
+			set_angular_damping(angular);
+		}
+
+		//<parameters awake="true" can_sleep="true" bullet="false" active="true" />
+		else if(tag_name == "parameters")
+		{
+			bool value;
+		
+			if(cur_element.has_attribute("awake"))
+			{
+				value = true;
+				value = StringHelp::text_to_bool(cur_element.get_attribute("awake"));
+				set_awake(value);
+			}
+			if(cur_element.has_attribute("active"))
+			{
+				value = true;
+				value = StringHelp::text_to_bool(cur_element.get_attribute("active"));
+				set_active(value);
+			}
+			if(cur_element.has_attribute("bullet"))
+			{
+				value = false;
+				value = StringHelp::text_to_bool(cur_element.get_attribute("bullet"));
+				set_as_bullet(value);
+			}
+			if(cur_element.has_attribute("can_sleep"))
+			{
+				value = true;
+				value = StringHelp::text_to_bool(cur_element.get_attribute("can_sleep"));
+				allow_sleep(value);
+			}
+		}
+
+		cur_node = cur_node.get_next_sibling();
+	}
 }
 
 BodyDescription::BodyDescription(const BodyDescription &copy)
