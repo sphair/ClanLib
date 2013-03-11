@@ -516,7 +516,10 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (input_is_ycrcb)
 	{
-		filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterYCrCbToRGB()));
+		if (sse2)
+			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_YCrCbToRGB()));
+		else
+			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterYCrCbToRGB()));
 	}
 
 	if (premultiply_alpha)
@@ -545,7 +548,10 @@ std::vector<std::shared_ptr<PixelFilter> > PixelConverter_Impl::create_filters(b
 
 	if (output_is_ycrcb)
 	{
-		filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterRGBToYCrCb()));
+		if (sse2)
+			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterSSE2_RGBToYCrCb()));
+		else
+			filters.push_back(std::shared_ptr<PixelFilter>(new PixelFilterRGBToYCrCb()));
 	}
 
 	return filters;
