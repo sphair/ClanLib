@@ -386,7 +386,10 @@ std::unique_ptr<PixelWriter> PixelConverter_Impl::create_writer(TextureFormat fo
 	case tf_rgb5_a1:
 		return std::unique_ptr<PixelWriter>(new PixelWriter_rgb5_a1());
 	case tf_rgba8:
-		return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned char>());
+		if (sse2)
+			return std::unique_ptr<PixelWriter>(new PixelWriterSSE2_rgba8());
+		else
+			return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<unsigned char>());
 	case tf_rgba8_snorm:
 		return std::unique_ptr<PixelWriter>(new PixelWriter_4norm<char>());
 	case tf_rgb10_a2:
