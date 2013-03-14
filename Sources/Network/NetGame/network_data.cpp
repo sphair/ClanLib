@@ -36,23 +36,32 @@
 namespace clan
 {
 
-NetGameEvent NetGameNetworkData::receive_data(TCPConnection connection)
+NetGameEvent NetGameNetworkData::receive_data(const void *data, int size, int &out_bytes_consumed)
 {
-	int size = connection.read_uint16();
-	if (size > packet_limit)
-		throw Exception("Incoming message too big");
-	DataBuffer buffer(size);
-	connection.read(buffer.get_data(), buffer.get_size());
-	return decode_event(buffer);
+	if (size >= 2)
+	{
+		int payload_size = *static_cast<const unsigned short *>(data);
+		if (payload_size > packet_limit)
+			throw Exception("Incoming message too big");
+
+		if (size >= 2 + payload_size)
+		{
+			out_bytes_consumed = 2 + payload_size;
+			DataBuffer buffer(static_cast<const char*>(data) + 2, payload_size);
+			return decode_event(buffer);
+		}
+	}
+
+	out_bytes_consumed = 0;
+	return NetGameEvent(std::string());
 }
 
-void NetGameNetworkData::send_data(TCPConnection connection, const NetGameEvent &e)
+DataBuffer NetGameNetworkData::send_data(const NetGameEvent &e)
 {
 	DataBuffer buffer = encode_event(e);
-	if (buffer.get_size() > packet_limit)
+	if (buffer.get_size() > packet_limit + 2)
 		throw Exception("Outgoing message too big");
-	connection.write_uint16(buffer.get_size());
-	connection.write(buffer.get_data(), buffer.get_size());
+	return buffer;
 }
 
 NetGameEvent NetGameNetworkData::decode_event(const DataBuffer &data)
@@ -168,8 +177,11 @@ DataBuffer NetGameNetworkData::encode_event(const NetGameEvent &e)
 	for (unsigned int i = 0; i < e.get_argument_count(); i++)
 		length += get_encoded_length(e.get_argument(i));
 
-	DataBuffer data(length);
-	unsigned char *d = data.get_data<unsigned char>();
+	DataBuffer data(length + 2);
+
+	*data.get_data<unsigned short>() = length;
+
+	unsigned char *d = data.get_data<unsigned char>() + 2;
 
 	// Write name (2 + name length)
 	unsigned int name_length = e.get_name().length();
