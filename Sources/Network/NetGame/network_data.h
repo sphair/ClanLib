@@ -40,8 +40,8 @@ class DataBuffer;
 class NetGameNetworkData
 {
 public:
-	static NetGameEvent receive_data(TCPConnection connection);
-	static void send_data(TCPConnection connection, const NetGameEvent &e);
+	static NetGameEvent receive_data(const void *data, int size, int &out_bytes_consumed);
+	static DataBuffer send_data(const NetGameEvent &e);
 
 private:
 	static NetGameEvent decode_event(const DataBuffer &data);

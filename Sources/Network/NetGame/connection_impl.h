@@ -47,8 +47,9 @@ public:
 
 private:
 	void connection_main();
+	bool read_data(const void *data, int size, int &out_bytes_consumed);
+	bool write_data(DataBuffer &buffer);
 
-private:
 	NetGameConnection *base;
 
 	NetGameConnectionSite *site;
