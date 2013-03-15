@@ -235,4 +235,12 @@ bool NetGameEventValue::to_boolean() const
 		throw Exception("NetGameEventValue is not a boolean");
 }
 
+DataBuffer NetGameEventValue::to_binary() const
+{
+	if (is_binary())
+		return value_binary;
+	else
+		throw Exception("NetGameEventValue is not a binary");
+}
+
 }
