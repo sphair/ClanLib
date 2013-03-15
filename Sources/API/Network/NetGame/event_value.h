@@ -32,6 +32,7 @@
 #pragma once
 
 #include "../api_network.h"
+#include "../../Core/System/databuffer.h"
 
 namespace clan
 {
@@ -52,7 +53,8 @@ public:
 		string,
 		boolean,
 		number,
-		complex
+		complex,
+		binary
 	};
 
 	NetGameEventValue();
@@ -96,7 +98,16 @@ public:
 	///
 	/// \param str = wchar_t
 	NetGameEventValue(const wchar_t *str);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = bool
 	explicit NetGameEventValue(bool value);
+
+	/// \brief Constructs a NetGameEventValue
+	///
+	/// \param value = DataBuffer
+	NetGameEventValue(const DataBuffer &value);
 
 	/// \brief Constructs a NetGameEventValue
 	///
@@ -147,6 +158,11 @@ public:
 	///
 	/// \return true = boolean
 	bool is_boolean() const;
+
+	/// \brief Is Binary
+	///
+	/// \return true = binary
+	bool is_binary() const;
 
 	/// \brief Is Complex
 	///
@@ -202,6 +218,11 @@ public:
 	/// \return bool
 	bool to_boolean() const;
 
+	/// \brief To binary
+	///
+	/// \return binary
+	DataBuffer to_binary() const;
+
 	inline operator unsigned int() const { return to_uinteger(); }
 	inline operator int() const { return to_integer(); }
 	inline operator unsigned char() const { return to_ucharacter(); }
@@ -209,6 +230,7 @@ public:
 	inline operator float() const { return to_number(); }
 	inline operator std::string() const { return to_string(); }
 	inline operator bool() const { return to_boolean(); }
+	inline operator DataBuffer() const { return to_binary(); }
 
 private:
 
@@ -226,6 +248,7 @@ private:
 		bool value_bool;
 	};
 	std::string value_string;
+	DataBuffer value_binary;
 	std::vector<NetGameEventValue> value_complex;
 };
 
