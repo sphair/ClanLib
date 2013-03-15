@@ -84,6 +84,11 @@ NetGameEventValue::NetGameEventValue(bool value)
 {
 }
 
+NetGameEventValue::NetGameEventValue(const DataBuffer &value)
+: type(binary), value_binary(value)
+{
+}
+
 NetGameEventValue::NetGameEventValue(Type type)
 : type(type), value_int(0)
 {
@@ -132,6 +137,11 @@ bool NetGameEventValue::is_string() const
 bool NetGameEventValue::is_boolean() const
 {
 	return type == boolean;
+}
+
+bool NetGameEventValue::is_binary() const
+{
+	return type == binary;
 }
 
 bool NetGameEventValue::is_complex() const
