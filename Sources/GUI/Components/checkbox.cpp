@@ -29,6 +29,7 @@
 
 #include "GUI/precomp.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
@@ -37,16 +38,16 @@
 #include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/checkbox.h"
 #include "API/GUI/Components/label.h"
-#include "API/Core/Text/string_help.h"
-#include "API/Display/Window/input_event.h"
-#include "API/Display/Window/keys.h"
-#include "../gui_css_strings.h"
-#include "API/Display/2D/canvas.h"
 #include "API/GUI/Components/imageview.h"
 #include "API/GUI/gui_theme_part.h"
+#include "API/Display/Window/input_event.h"
+#include "API/Display/Window/keys.h"
+#include "API/Display/2D/canvas.h"
+#include "../gui_css_strings.h"
 
 namespace clan
 {
+
 /////////////////////////////////////////////////////////////////////////////
 // CheckBox_Impl Class:
 
@@ -59,10 +60,9 @@ public:
 	}
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_render(Canvas &canvas, const Rect &update_rect);
 	void on_enablemode_changed();
 
-	void create_parts(bool checked = false, bool indeterminated = false);
+	void update_classes(bool checked = false, bool indeterminated = false);
 
 	CheckBox *checkbox;
 
@@ -71,12 +71,10 @@ public:
 	Callback_v0 func_indeterminated;
 	Callback_v0 func_state_changed;
 
-	std::string text;
-
 	bool three_state;
 
-	GUIThemePart part_checker;
-	GUIThemePart part_focus;
+	GUIComponent *checker;
+	Label *label;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -86,14 +84,17 @@ CheckBox::CheckBox(GUIComponent *parent)
 : GUIComponent(parent, CssStr::CheckBox::type_name), impl(new CheckBox_Impl)
 {
 	impl->checkbox = this;
+
+	impl->checker = new GUIComponent(this, CssStr::CheckBox::part_checker);
+	impl->label = new Label(this);
+
 	set_focus_policy(focus_local);
 	set_double_click_enabled(false);
 
 	func_process_message().set(impl.get(), &CheckBox_Impl::on_process_message);
-	func_render().set(impl.get(), &CheckBox_Impl::on_render);
 	func_enablemode_changed().set(impl.get(), &CheckBox_Impl::on_enablemode_changed);
 
-	impl->create_parts();
+	impl->update_classes();
 }
 
 CheckBox::~CheckBox()
@@ -117,12 +118,12 @@ CheckBox *CheckBox::get_named_item(GUIComponent *reference_component, const std:
 
 bool CheckBox::is_indeterminated() const
 {
-	return impl->part_checker.get_pseudo_class(CssStr::indeterminated);
+	return impl->checker->get_pseudo_class(CssStr::indeterminated);
 }
 
 bool CheckBox::is_checked() const
 {
-	return impl->part_checker.get_pseudo_class(CssStr::checked);
+	return impl->checker->get_pseudo_class(CssStr::checked);
 }
 
 bool CheckBox::is_3state() const
@@ -132,17 +133,7 @@ bool CheckBox::is_3state() const
 
 const std::string &CheckBox::get_text() const
 {
-	return impl->text;
-}
-
-float CheckBox::get_preferred_content_width()
-{
-	return impl->part_checker.get_css_width();
-}
-
-float CheckBox::get_preferred_content_height(float width)
-{
-	return impl->part_checker.get_css_height();
+	return impl->label->get_text();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -150,20 +141,16 @@ float CheckBox::get_preferred_content_height(float width)
 
 void CheckBox::set_indeterminated()
 {
-	impl->part_checker.set_pseudo_class(CssStr::checked, false);
-	impl->part_checker.set_pseudo_class(CssStr::unchecked, false);
-	impl->part_checker.set_pseudo_class(CssStr::indeterminated, true);
-
-	request_repaint();
+	impl->checker->set_pseudo_class(CssStr::checked, false);
+	impl->checker->set_pseudo_class(CssStr::unchecked, false);
+	impl->checker->set_pseudo_class(CssStr::indeterminated, true);
 }
 
 void CheckBox::set_checked(bool enable)
 {
-	impl->part_checker.set_pseudo_class(CssStr::checked, enable);
-	impl->part_checker.set_pseudo_class(CssStr::unchecked, !enable);
-	impl->part_checker.set_pseudo_class(CssStr::indeterminated, false);
-
-	request_repaint();
+	impl->checker->set_pseudo_class(CssStr::checked, enable);
+	impl->checker->set_pseudo_class(CssStr::unchecked, !enable);
+	impl->checker->set_pseudo_class(CssStr::indeterminated, false);
 }
 
 void CheckBox::set_3state(bool enable)
@@ -173,7 +160,7 @@ void CheckBox::set_3state(bool enable)
 
 void CheckBox::set_text(const std::string &text)
 {
-	impl->text = text;
+	impl->label->set_text(text);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -215,49 +202,45 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		if (e.type == InputEvent::pressed && (e.id == mouse_left || e.id == keycode_space))
 		{
 			checkbox->set_pseudo_class(CssStr::pressed, true);
-			part_checker.set_pseudo_class(CssStr::pressed, true);
-			checkbox->request_repaint();
+			checker->set_pseudo_class(CssStr::pressed, true);
 			msg->consumed = true;
 		}
-		else if (e.type == InputEvent::released && 
-			(e.id == mouse_left || e.id == keycode_space) &&
-			part_checker.get_pseudo_class(CssStr::pressed))
+		else if (e.type == InputEvent::released && (e.id == mouse_left || e.id == keycode_space) && checker->get_pseudo_class(CssStr::pressed))
 		{
 			if (checkbox->get_focus_policy() == GUIComponent::focus_local)
 				checkbox->set_focus(true);
 
-			part_checker.set_pseudo_class(CssStr::pressed, false);
-			if (part_checker.get_pseudo_class(CssStr::checked))
+			checker->set_pseudo_class(CssStr::pressed, false);
+			if (checker->get_pseudo_class(CssStr::checked))
 			{
-				part_checker.set_pseudo_class(CssStr::unchecked, true);
-				part_checker.set_pseudo_class(CssStr::checked, false);
+				checker->set_pseudo_class(CssStr::unchecked, true);
+				checker->set_pseudo_class(CssStr::checked, false);
 			}
-			else if (part_checker.get_pseudo_class(CssStr::unchecked))
+			else if (checker->get_pseudo_class(CssStr::unchecked))
 			{
 				if (three_state)
 				{
-					part_checker.set_pseudo_class(CssStr::indeterminated, true);
-					part_checker.set_pseudo_class(CssStr::unchecked, false);
+					checker->set_pseudo_class(CssStr::indeterminated, true);
+					checker->set_pseudo_class(CssStr::unchecked, false);
 				}
 				else
 				{
-					part_checker.set_pseudo_class(CssStr::checked, true);
-					part_checker.set_pseudo_class(CssStr::unchecked, false);
+					checker->set_pseudo_class(CssStr::checked, true);
+					checker->set_pseudo_class(CssStr::unchecked, false);
 				}
 			}
-			else if (part_checker.get_pseudo_class(CssStr::indeterminated))
+			else if (checker->get_pseudo_class(CssStr::indeterminated))
 			{
-				part_checker.set_pseudo_class(CssStr::checked, true);
-				part_checker.set_pseudo_class(CssStr::indeterminated, false);
+				checker->set_pseudo_class(CssStr::checked, true);
+				checker->set_pseudo_class(CssStr::indeterminated, false);
 			}
-			checkbox->request_repaint();
 
-			if (part_checker.get_pseudo_class(CssStr::checked))
+			if (checker->get_pseudo_class(CssStr::checked))
 			{
 				if (!func_checked.is_null())
 					func_checked.invoke();
 			}
-			else if (part_checker.get_pseudo_class(CssStr::indeterminated))
+			else if (checker->get_pseudo_class(CssStr::indeterminated))
 			{
 				if (!func_indeterminated.is_null())
 					func_indeterminated.invoke();
@@ -289,14 +272,12 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 	{
 		if (pointer->pointer_type == GUIMessage_Pointer::pointer_enter)
 		{
-			part_checker.set_pseudo_class(CssStr::hover, true);
-			checkbox->request_repaint();
+			checker->set_pseudo_class(CssStr::hover, true);
 		}
 		else
 		{
-			part_checker.set_pseudo_class(CssStr::hover, false);
-			part_checker.set_pseudo_class(CssStr::pressed, false);
-			checkbox->request_repaint();
+			checker->set_pseudo_class(CssStr::hover, false);
+			checker->set_pseudo_class(CssStr::pressed, false);
 		}
 		msg->consumed = true;
 	}
@@ -307,62 +288,31 @@ void CheckBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		if (focus_change_msg->focus_type == GUIMessage_FocusChange::gained_focus)
 		{
 			checkbox->set_pseudo_class(CssStr::focused, true);
-			checkbox->request_repaint();
 		}
 		else 
 		{
 			checkbox->set_pseudo_class(CssStr::focused, false);
-			checkbox->request_repaint();
 		}
 		msg->consumed = true;
 	}
 }
 
-void CheckBox_Impl::on_render(Canvas &canvas, const Rect &update_rect)
+void CheckBox_Impl::update_classes(bool checked, bool indeterminated)
 {
-	Rect rect = checkbox->get_geometry();
-
-	Size pref_size = part_checker.get_css_size();
-	Rect content_rect = checkbox->get_content_box();
-
-	int ypos = content_rect.top + content_rect.get_height()/2 - pref_size.height/2;
-
-	Rect checker_rect(content_rect.left, ypos, content_rect.left + pref_size.width, ypos + pref_size.height);
-
-	part_checker.render_box(canvas, checker_rect);
-
-	int text_gap = checkbox->get_property_int(CssStr::text_gap, "2");
-
-	Size text_size = checkbox->render_text(canvas, text, checker_rect.right + text_gap, checkbox->get_vertical_text_align(canvas).baseline).get_size();
-
-	int focus_left = checker_rect.right + text_gap - 2; // todo: remove magic number hacks
-	Rect focus_rect = RectPS(focus_left, content_rect.top, text_size.width+4, content_rect.bottom);
-
-	if (checkbox->has_focus())
-		part_focus.render_box(canvas, focus_rect);
-}
-
-void CheckBox_Impl::create_parts(bool checked, bool indeterminated)
-{
-	part_checker = GUIThemePart(checkbox, CssStr::CheckBox::part_checker);
-	part_focus = GUIThemePart(checkbox, CssStr::CheckBox::part_focus);
-
 	checkbox->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
 	checkbox->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 
-	part_checker.set_pseudo_class(CssStr::normal, checkbox->is_enabled());
-	part_checker.set_pseudo_class(CssStr::pressed, false);
-	part_checker.set_pseudo_class(CssStr::indeterminated, indeterminated);
-	part_checker.set_pseudo_class(CssStr::checked, indeterminated ? false : checked);
-	part_checker.set_pseudo_class(CssStr::unchecked, indeterminated ? false : !checked);
-	part_checker.set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
+	checker->set_pseudo_class(CssStr::normal, checkbox->is_enabled());
+	checker->set_pseudo_class(CssStr::pressed, false);
+	checker->set_pseudo_class(CssStr::indeterminated, indeterminated);
+	checker->set_pseudo_class(CssStr::checked, indeterminated ? false : checked);
+	checker->set_pseudo_class(CssStr::unchecked, indeterminated ? false : !checked);
+	checker->set_pseudo_class(CssStr::disabled, !checkbox->is_enabled());
 }
 
 void CheckBox_Impl::on_enablemode_changed()
 {
-	create_parts(checkbox->is_checked(), checkbox->is_indeterminated());
-	checkbox->request_repaint();
+	update_classes(checkbox->is_checked(), checkbox->is_indeterminated());
 }
-
 
 }
