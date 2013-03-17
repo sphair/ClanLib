@@ -40,9 +40,10 @@ VertexOut main(VertexIn input)
 	output.SpotY = InstanceTexture.Load(uint2(LightOffset + 4, 0));
 	output.SpotZ = InstanceTexture.Load(uint2(LightOffset + 5, 0));
 
-	output.PositionInEye.xyz += input.PositionInObject.xyz * sqrt(output.Range.x);
+	// PositionInEye is the light position in eye space; VertexInEye is the icosahedron vertex for the light
+	float3 VertexInEye = output.PositionInEye.xyz + input.PositionInObject.xyz * sqrt(output.Range.x);
 
-	output.PositionInProjection = mul(EyeToProjection, float4(output.PositionInEye.xyz, 1));
+	output.PositionInProjection = mul(EyeToProjection, float4(VertexInEye, 1));
 
 	return output;
 }
