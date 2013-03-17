@@ -57,7 +57,7 @@ LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::stri
 
 	light_program.bind_attribute_location(0, "AttrPositionInObject");
 	light_program.set_uniform_buffer_index("Uniforms", 0);
-	light_program.set_uniform1i("LightInstanceTexture", 0);
+	light_program.set_uniform1i("InstanceTexture", 0);
 	light_program.set_uniform1i("NormalZTexture", 1);
 	light_program.set_uniform1i("DiffuseColorTexture", 2);
 	light_program.set_uniform1i("SpecularColorTexture", 3);
