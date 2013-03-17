@@ -79,7 +79,6 @@ private:
 		float rcp_f;
 		float rcp_f_div_aspect;
 		Vec2f two_rcp_viewport_size;
-		unsigned int padding;
 	};
 
 	FrameBuffer fb;

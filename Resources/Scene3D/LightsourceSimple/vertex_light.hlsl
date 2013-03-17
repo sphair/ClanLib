@@ -23,7 +23,6 @@ cbuffer Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	float2 two_rcp_viewport_size;
-	uint padding; // 16 byte boundary alignment
 }
 
 Texture1D InstanceTexture;
