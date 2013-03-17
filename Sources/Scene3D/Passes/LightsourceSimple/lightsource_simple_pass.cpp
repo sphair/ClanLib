@@ -41,30 +41,8 @@ namespace clan
 
 LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path)
 {
-	if (gc.get_shader_language() == shader_glsl)
-	{
-		light_program = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "LightsourceSimple/vertex_light.glsl"), PathHelp::combine(shader_path, "LightsourceSimple/fragment_light.glsl"), "");
-	}
-	else
-	{
-		light_program = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "LightsourceSimple/vertex_light.hlsl"), PathHelp::combine(shader_path, "LightsourceSimple/fragment_light.hlsl"), "");
-	}
-
-	light_program.bind_frag_data_location(0, "FragColor");
-
-	if (!light_program.link())
-		throw Exception("Shader linking failed!");
-
-	light_program.bind_attribute_location(0, "AttrPositionInObject");
-	light_program.set_uniform_buffer_index("Uniforms", 0);
-	light_program.set_uniform1i("InstanceTexture", 0);
-	light_program.set_uniform1i("NormalZTexture", 1);
-	light_program.set_uniform1i("DiffuseColorTexture", 2);
-	light_program.set_uniform1i("SpecularColorTexture", 3);
-	light_program.set_uniform1i("SpecularLevelTexture", 4);
-	light_program.set_uniform1i("ShadowMapsTexture", 5);
-	light_program.set_uniform1i("ShadowMapsTextureSampler", 5);
-	light_program.set_uniform1i("SelfIlluminationTexture", 6);
+	icosahedron_light_program = compile_and_link(gc, shader_path, "icosahedron");
+	rect_light_program = compile_and_link(gc, shader_path, "rect");
 
 	light_instance_texture = Texture1D(gc, max_lights * vectors_per_light, tf_rgba32f);
 	light_instance_transfer = PixelBuffer(max_lights * vectors_per_light, 1, tf_rgba32f);
@@ -74,6 +52,41 @@ LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::stri
 
 LightsourceSimplePass::~LightsourceSimplePass()
 {
+}
+
+ProgramObject LightsourceSimplePass::compile_and_link(GraphicContext &gc, const std::string &shader_path, const std::string &type)
+{
+	ProgramObject program;
+
+	std::string vertex_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/vertex_%1.%2", type, gc.get_shader_language() == shader_glsl ? "glsl" : "hlsl"));
+	std::string fragment_filename = PathHelp::combine(shader_path, string_format("LightsourceSimple/fragment_light.%1", type, gc.get_shader_language() == shader_glsl ? "glsl" : "hlsl"));
+
+	if (gc.get_shader_language() == shader_glsl)
+	{
+		program = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "LightsourceSimple/vertex_icosahedron.glsl"), PathHelp::combine(shader_path, "LightsourceSimple/fragment_light.glsl"), "");
+	}
+	else
+	{
+		program = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "LightsourceSimple/vertex_icosahedron.hlsl"), PathHelp::combine(shader_path, "LightsourceSimple/fragment_light.hlsl"), "");
+	}
+
+	program.bind_frag_data_location(0, "FragColor");
+
+	if (!program.link())
+		throw Exception("Shader linking failed!");
+
+	program.bind_attribute_location(0, "AttrPositionInObject");
+	program.set_uniform_buffer_index("Uniforms", 0);
+	program.set_uniform1i("InstanceTexture", 0);
+	program.set_uniform1i("NormalZTexture", 1);
+	program.set_uniform1i("DiffuseColorTexture", 2);
+	program.set_uniform1i("SpecularColorTexture", 3);
+	program.set_uniform1i("SpecularLevelTexture", 4);
+	program.set_uniform1i("ShadowMapsTexture", 5);
+	program.set_uniform1i("ShadowMapsTextureSampler", 5);
+	program.set_uniform1i("SelfIlluminationTexture", 6);
+
+	return program;
 }
 
 void LightsourceSimplePass::setup(GraphicContext &gc)
@@ -92,20 +105,43 @@ void LightsourceSimplePass::setup(GraphicContext &gc)
 		blend_desc.set_blend_function(blend_one, blend_one, blend_one, blend_one);
 		blend_state = BlendState(gc, blend_desc);
 
-		DepthStencilStateDescription depth_stencil_desc;
-		depth_stencil_desc.enable_depth_write(false);
-		depth_stencil_desc.enable_depth_test(true);
-		depth_stencil_desc.set_depth_compare_function(compare_lequal);
-		depth_stencil_state = DepthStencilState(gc, depth_stencil_desc);
+		DepthStencilStateDescription icosahedron_depth_stencil_desc;
+		icosahedron_depth_stencil_desc.enable_depth_write(false);
+		icosahedron_depth_stencil_desc.enable_depth_test(true);
+		icosahedron_depth_stencil_desc.set_depth_compare_function(compare_lequal);
+		icosahedron_depth_stencil_state = DepthStencilState(gc, icosahedron_depth_stencil_desc);
 
-		RasterizerStateDescription rasterizer_desc;
-		rasterizer_desc.set_culled(true);
-		rasterizer_state = RasterizerState(gc, rasterizer_desc);
+		RasterizerStateDescription icosahedron_rasterizer_desc;
+		icosahedron_rasterizer_desc.set_culled(true);
+		icosahedron_rasterizer_state = RasterizerState(gc, icosahedron_rasterizer_desc);
+
+		DepthStencilStateDescription rect_depth_stencil_desc;
+		rect_depth_stencil_desc.enable_depth_write(false);
+		rect_depth_stencil_desc.enable_depth_test(false);
+		rect_depth_stencil_state = DepthStencilState(gc, rect_depth_stencil_desc);
+
+		RasterizerStateDescription rect_rasterizer_desc;
+		rect_rasterizer_desc.set_culled(false);
+		rect_rasterizer_state = RasterizerState(gc, rect_rasterizer_desc);
 
 		uniforms = UniformVector<Uniforms>(gc, 1);
 
-		prim_array = PrimitivesArray(gc);
-		prim_array.set_attributes(0, icosahedron->vertices);
+		icosahedron_prim_array = PrimitivesArray(gc);
+		icosahedron_prim_array.set_attributes(0, icosahedron->vertices);
+
+		Vec4f positions[6] =
+		{
+			Vec4f(-1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f, -1.0f, 1.0f, 1.0f),
+			Vec4f(-1.0f,  1.0f, 1.0f, 1.0f),
+			Vec4f( 1.0f,  1.0f, 1.0f, 1.0f)
+		};
+		rect_positions = VertexArrayVector<Vec4f>(gc, positions, 6);
+
+		rect_prim_array  = PrimitivesArray(gc);
+		rect_prim_array.set_attributes(0, rect_positions);
 	}
 }
 
@@ -228,10 +264,6 @@ void LightsourceSimplePass::render(GraphicContext &gc, GPUTimer &timer)
 
 		gc.set_viewport(viewport->get_size());
 
-		gc.set_depth_stencil_state(depth_stencil_state);
-		gc.set_blend_state(blend_state);
-		gc.set_rasterizer_state(rasterizer_state);
-
 		gc.set_depth_range(0.0f, 0.9f);
 
 		gc.set_uniform_buffer(0, uniforms);
@@ -243,11 +275,36 @@ void LightsourceSimplePass::render(GraphicContext &gc, GPUTimer &timer)
 		gc.set_texture(5, shadow_maps.get());
 		gc.set_texture(6, self_illumination_gbuffer.get());
 
-		gc.set_program_object(light_program);
+		gc.set_blend_state(blend_state);
 
 		gc.clear();
 
-		gc.set_primitives_array(prim_array);
+		// To do: use icosahedron for smaller lights and when the camera is not inside the light influence sphere
+		// To do: combine multiple lights into the same rect pass to reduce overdraw penalty
+
+		gc.set_depth_stencil_state(rect_depth_stencil_state);
+		gc.set_rasterizer_state(rect_rasterizer_state);
+		gc.set_program_object(rect_light_program);
+
+		gc.set_primitives_array(rect_prim_array);
+		gc.draw_primitives_array_instanced(type_triangles, 0, 6, lights.size());
+		gc.reset_primitives_array();
+
+/*
+		gc.set_depth_stencil_state(icosahedron_depth_stencil_state);
+		gc.set_rasterizer_state(icosahedron_rasterizer_state);
+		gc.set_program_object(icosahedron_light_program);
+
+		gc.set_primitives_array(icosahedron_prim_array);
+		gc.draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
+		gc.reset_primitives_array();
+*/
+
+		gc.set_depth_stencil_state(icosahedron_depth_stencil_state);
+		gc.set_rasterizer_state(icosahedron_rasterizer_state);
+		gc.set_program_object(icosahedron_light_program);
+
+		gc.set_primitives_array(icosahedron_prim_array);
 		gc.draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
 		gc.reset_primitives_array();
 
