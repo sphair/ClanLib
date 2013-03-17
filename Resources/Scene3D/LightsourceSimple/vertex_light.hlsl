@@ -8,12 +8,12 @@ struct VertexIn
 struct VertexOut
 {
 	float4 PositionInProjection : SV_Position;
-	float4 PositionInEye : PixelPositionInEye;
-	float4 Color : PixelColor;
-	float4 Range : PixelRange; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), hotspot
-	float4 SpotX : PixelSpotX;
-	float4 SpotY : PixelSpotY;
-	float4 SpotZ : PixelSpotZ;
+	nointerpolation float4 PositionInEye : PixelPositionInEye;
+	nointerpolation float4 Color : PixelColor;
+	nointerpolation float4 Range : PixelRange; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), hotspot
+	nointerpolation float4 SpotX : PixelSpotX;
+	nointerpolation float4 SpotY : PixelSpotY;
+	nointerpolation float4 SpotZ : PixelSpotZ;
 };
 
 cbuffer Uniforms
