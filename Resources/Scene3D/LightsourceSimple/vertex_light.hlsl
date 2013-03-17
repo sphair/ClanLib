@@ -33,14 +33,16 @@ VertexOut main(VertexIn input)
 
 	uint LightOffset = input.InstanceId * 6;
 
-	output.PositionInEye = InstanceTexture.Load(uint2(LightOffset  + 0, 0));
-	output.Color = InstanceTexture.Load(uint2(LightOffset  + 1, 0));
-	output.Range = InstanceTexture.Load(uint2(LightOffset  + 2, 0));
-	output.SpotX = InstanceTexture.Load(uint2(LightOffset  + 3, 0));
-	output.SpotY = InstanceTexture.Load(uint2(LightOffset  + 4, 0));
-	output.SpotZ = InstanceTexture.Load(uint2(LightOffset  + 5, 0));
+	output.PositionInEye = InstanceTexture.Load(uint2(LightOffset + 0, 0));
+	output.Color = InstanceTexture.Load(uint2(LightOffset + 1, 0));
+	output.Range = InstanceTexture.Load(uint2(LightOffset + 2, 0));
+	output.SpotX = InstanceTexture.Load(uint2(LightOffset + 3, 0));
+	output.SpotY = InstanceTexture.Load(uint2(LightOffset + 4, 0));
+	output.SpotZ = InstanceTexture.Load(uint2(LightOffset + 5, 0));
 
-	output.PositionInProjection = mul(EyeToProjection, output.PositionInEye);
+	output.PositionInEye.xyz += input.PositionInObject.xyz * sqrt(output.Range.x);
+
+	output.PositionInProjection = mul(EyeToProjection, float4(output.PositionInEye.xyz, 1));
 
 	return output;
 }
