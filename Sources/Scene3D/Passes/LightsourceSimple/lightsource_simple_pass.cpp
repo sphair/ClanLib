@@ -69,7 +69,7 @@ LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::stri
 	light_instance_texture = Texture1D(gc, max_lights * vectors_per_light, tf_rgba32f);
 	light_instance_transfer = PixelBuffer(max_lights * vectors_per_light, 1, tf_rgba32f);
 
-	icosahedron.reset(new Icosahedron(gc));
+	icosahedron.reset(new Icosahedron(gc, true));
 }
 
 LightsourceSimplePass::~LightsourceSimplePass()
