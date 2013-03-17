@@ -31,7 +31,7 @@ Texture2DArray<float4> ShadowMapsTexture;
 SamplerState ShadowMapsTextureSampler;
 Texture2D<float4> NormalZTexture;
 Texture2D<float4> DiffuseColorTexture;
-Texture2D<float4> SpecularTexture;
+Texture2D<float4> SpecularColorTexture;
 Texture2D<float4> SpecularLevelTexture;
 Texture2D<float4> SelfIlluminationTexture;
 
@@ -65,7 +65,7 @@ PixelOut main(PixelIn input)
 	float2 glossiness_and_specular_level = SpecularLevelTexture.Load(texelpos).xy;
 
 	float4 material_diffuse_color = DiffuseColorTexture.Load(texelpos);
-	float3 material_specular_color = SpecularTexture.Load(texelpos).xyz;
+	float3 material_specular_color = SpecularColorTexture.Load(texelpos).xyz;
 	float material_glossiness = glossiness_and_specular_level.x;
 	float material_specular_level = glossiness_and_specular_level.y;
 	float3 material_self_illumination = SelfIlluminationTexture.Load(texelpos).xyz;
