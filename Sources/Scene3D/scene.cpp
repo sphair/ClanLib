@@ -166,7 +166,7 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &
 	skybox_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
 	skybox_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
 
-	bool use_simple_pass = true; // To do: check the feature level to decide this
+	bool use_simple_pass = false; // To do: check the feature level to decide this
 	if (use_simple_pass)
 	{
 		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path));
