@@ -38,6 +38,9 @@ public:
 
 	VertexArrayVector<Vec3f> vertices;
 	ElementArrayVector<unsigned int> elements;
+
+	static const int num_vertices = 12;
+	static const int num_elements = 20 * 3;
 };
 
 inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed_sphere)
@@ -52,7 +55,7 @@ inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed
 		z *= 1.32316908f;
 	}
 
-	Vec3f local_vertices[12] =
+	Vec3f local_vertices[num_vertices] =
 	{
 		Vec3f(-x, 0.0f, z),
 		Vec3f( x, 0.0f, z),
@@ -68,7 +71,7 @@ inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed
 		Vec3f(-z, -x, 0.0f)
 	};
 
-	unsigned int local_elements[20 * 3] =
+	unsigned int local_elements[num_elements] =
 	{
 		0,4,1,
 		0,9,4,
@@ -92,8 +95,8 @@ inline Icosahedron::Icosahedron(GraphicContext &gc, bool use_radius_of_inscribed
 		7,2,11
 	};
 
-	vertices = VertexArrayVector<Vec3f>(gc, local_vertices, 12);
-	elements = ElementArrayVector<unsigned int>(gc, local_elements, 20 * 3);
+	vertices = VertexArrayVector<Vec3f>(gc, local_vertices, num_vertices);
+	elements = ElementArrayVector<unsigned int>(gc, local_elements, num_elements);
 }
 
 }

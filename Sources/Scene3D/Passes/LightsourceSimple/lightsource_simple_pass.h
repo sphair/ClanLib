@@ -28,10 +28,10 @@
 
 #pragma once
 
-#include "Scene3D/Passes/ZMinMax/z_minmax.h"
-#include "Scene3D/Framework/inout_data.h"
 #include "API/Scene3D/scene_light.h"
+#include "Scene3D/Framework/inout_data.h"
 #include "Scene3D/scene_light_impl.h"
+#include "icosahedron.h"
 
 namespace clan
 {
@@ -39,11 +39,11 @@ namespace clan
 class GPUTimer;
 class Scene_Impl;
 
-class LightsourcePass : SceneLightVisitor
+class LightsourceSimplePass : SceneLightVisitor
 {
 public:
-	LightsourcePass(GraphicContext &gc, const std::string &shader_path);
-	~LightsourcePass();
+	LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path);
+	~LightsourceSimplePass();
 
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
@@ -56,60 +56,48 @@ public:
 	InData<Texture2D> self_illumination_gbuffer;
 	InData<Texture2D> normal_z_gbuffer;
 	InData<Texture2DArray> shadow_maps;
+	InData<Texture2D> zbuffer;
 
 	OutData<Texture2D> final_color;
 
 private:
+	void setup(GraphicContext &gc);
 	void find_lights(GraphicContext &gc, Scene_Impl *scene);
-	void upload(GraphicContext &gc);
+	void upload(GraphicContext &gc, Scene_Impl *scene);
 	void render(GraphicContext &gc, GPUTimer &timer);
-	void update_buffers(GraphicContext &gc);
-	ProgramObject compile_and_link(GraphicContext &gc, const std::string &compute_filename, const std::string &defines = std::string());
 
 	// SceneLightVisitor
 	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	static const int max_lights = 1023;
-	static const int light_slots_per_tile = 128;
-
-	struct GPULight
-	{
-		Vec4f position;
-		Vec4f color;
-		Vec4f range; // pow(attenuation_end, 2), pow(attenation_start, 2), 1/pow(attenuation_end-attenuation_start, 2), hotspot
-		Vec4f spot_x;
-		Vec4f spot_y;
-		Vec4f spot_z;
-	};
+	static const int vectors_per_light = 6;
 
 	struct Uniforms
 	{
+		Mat4f object_to_eye;
+		Mat4f eye_to_projection;
 		float rcp_f;
 		float rcp_f_div_aspect;
 		Vec2f two_rcp_viewport_size;
-		unsigned int num_lights;
-		unsigned int num_tiles_x;
-		unsigned int num_tiles_y;
 		unsigned int padding;
 	};
 
-	UniformVector<Uniforms> compute_uniforms;
-	StorageVector<GPULight> compute_lights;
-	TransferVector<GPULight> transfer_lights;
-	StorageVector<unsigned int> compute_visible_lights;
+	FrameBuffer fb;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
+	RasterizerState rasterizer_state;
+	PrimitivesArray prim_array;
 
-	ProgramObject cull_tiles_program;
-	ProgramObject render_tiles_program;
+	UniformVector<Uniforms> uniforms;
+
+	std::unique_ptr<Icosahedron> icosahedron;
+
+	PixelBuffer light_instance_transfer;
+	Texture1D light_instance_texture;
+
+	ProgramObject light_program;
 
 	std::vector<SceneLight_Impl *> lights;
-
-	int tile_size;
-	int num_tiles_x;
-	int num_tiles_y;
-
-	ZMinMax zminmax;
-	InData<Texture2D> zminmax_result;
 };
 
 }
-
