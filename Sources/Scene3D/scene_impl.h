@@ -37,6 +37,7 @@
 #include "Scene3D/Model/model_cache.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
 #include "Scene3D/Passes/Lightsource/lightsource_pass.h"
+#include "Scene3D/Passes/LightsourceSimple/lightsource_simple_pass.h"
 #include "Scene3D/Passes/GBuffer/gbuffer_pass.h"
 #include "Scene3D/Passes/Skybox/skybox_pass.h"
 #include "Scene3D/Passes/Bloom/bloom_pass.h"
@@ -105,6 +106,7 @@ private:
 	std::unique_ptr<GBufferPass> gbuffer_pass;
 	std::unique_ptr<SkyboxPass> skybox_pass;
 	std::unique_ptr<LightsourcePass> lightsource_pass;
+	std::unique_ptr<LightsourceSimplePass> lightsource_simple_pass;
 	std::unique_ptr<TransparencyPass> transparency_pass;
 	std::unique_ptr<ParticleEmitterPass> particle_emitter_pass;
 	std::unique_ptr<BloomPass> bloom_pass;

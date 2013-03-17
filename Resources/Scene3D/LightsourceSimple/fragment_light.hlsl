@@ -16,7 +16,7 @@ struct PixelIn
 struct PixelOut
 {
 	float4 PixelColor : SV_Target0;
-}
+};
 
 cbuffer Uniforms
 {
@@ -25,7 +25,6 @@ cbuffer Uniforms
 	float rcp_f;
 	float rcp_f_div_aspect;
 	float2 two_rcp_viewport_size;
-	uint padding; // 16 byte boundary alignment
 }
 
 Texture2DArray<float4> ShadowMapsTexture;
@@ -57,7 +56,9 @@ PixelOut main(PixelIn input)
 {
 	PixelOut output;
 
-	int2 pos = int2(input.ScreenPos.xy);
+	int x = int(input.ScreenPos.x);
+	int y = int(input.ScreenPos.y);
+	int2 pos = int2(x,y);
 	uint3 texelpos = uint3(pos,0);
 
 	float4 normal_and_z = NormalZTexture.Load(texelpos);
@@ -65,8 +66,8 @@ PixelOut main(PixelIn input)
 
 	float4 material_diffuse_color = DiffuseColorTexture.Load(texelpos);
 	float3 material_specular_color = SpecularTexture.Load(texelpos).xyz;
-	float material_glossiness = glossiness_and_SpecularLevelTexture.x;
-	float material_specular_level = glossiness_and_SpecularLevelTexture.y;
+	float material_glossiness = glossiness_and_specular_level.x;
+	float material_specular_level = glossiness_and_specular_level.y;
 	float3 material_self_illumination = SelfIlluminationTexture.Load(texelpos).xyz;
 	float3 normal_in_eye = normal_and_z.xyz;
 	float z_in_eye = normal_and_z.w;
@@ -89,47 +90,47 @@ PixelOut main(PixelIn input)
 #if defined(ONLY_OMNI_LIGHTS)
 	if (light_type == 0)
 	{
-		float attenuation = distance_attenuation(light, fragment_to_light);
+		float attenuation = distance_attenuation(input, fragment_to_light);
 		color += attenuation * lit_color;
 	}
 #elif defined(ONLY_SPOT_LIGHTS)
 	if (light_type != 0 && input.PositionInEye.w < 0.0f)
 	{
-		float attenuation = distance_attenuation(light, fragment_to_light);
-		float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
+		float attenuation = distance_attenuation(input, fragment_to_light);
+		float3 shadow_projection = project_on_shadow_map(input, fragment_to_light);
 		attenuation *= step(0, shadow_projection.z);
 		if (light_type == 1)
-			attenuation *= circle_falloff_attenuation(light, shadow_projection);
+			attenuation *= circle_falloff_attenuation(input, shadow_projection);
 		else if (light_type == 2)
-			attenuation *= rect_falloff_attenuation(light, shadow_projection);
+			attenuation *= rect_falloff_attenuation(input, shadow_projection);
 		color += attenuation * lit_color;
 	}
 #elif defined(ONLY_SHADOW_SPOT_LIGHTS)
 	if (light_type != 0 && input.PositionInEye.w >= 0.0f)
 	{
-		float attenuation = distance_attenuation(light, fragment_to_light);
-		float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
+		float attenuation = distance_attenuation(input, fragment_to_light);
+		float3 shadow_projection = project_on_shadow_map(input, fragment_to_light);
 		attenuation *= step(0, shadow_projection.z);
 		if (light_type == 1)
-			attenuation *= circle_falloff_attenuation(light, shadow_projection);
+			attenuation *= circle_falloff_attenuation(input, shadow_projection);
 		else if (light_type == 2)
-			attenuation *= rect_falloff_attenuation(light, shadow_projection);
-		attenuation *= shadow_attenuation(light, fragment_to_light, shadow_projection);
+			attenuation *= rect_falloff_attenuation(input, shadow_projection);
+		attenuation *= shadow_attenuation(input, fragment_to_light, shadow_projection);
 		color += attenuation * lit_color;
 	}
 #else
-	float attenuation = distance_attenuation(light, fragment_to_light);
-	float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
+	float attenuation = distance_attenuation(input, fragment_to_light);
+	float3 shadow_projection = project_on_shadow_map(input, fragment_to_light);
 	if (light_type != 0)
 		attenuation *= step(0, shadow_projection.z);
 	if (light_type == 1)
-		attenuation *= circle_falloff_attenuation(light, shadow_projection);
+		attenuation *= circle_falloff_attenuation(input, shadow_projection);
 	else if (light_type == 2)
-		attenuation *= rect_falloff_attenuation(light, shadow_projection);
+		attenuation *= rect_falloff_attenuation(input, shadow_projection);
 
 	float shadow_att = 1.0f;
 	if (input.PositionInEye.w >= 0.0f)
-		shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
+		shadow_att = shadow_attenuation(input, fragment_to_light, shadow_projection);
 
 	color += attenuation * (shadow_att * lit_color + input.Color.a * diffuse_color);
 #endif
@@ -174,7 +175,7 @@ float shadow_attenuation(PixelIn light, float3 fragment_to_light, float3 shadow_
 #endif
 	shadow_projection = shadow_projection * 0.5f + 0.5f;
 
-	float shadow_index = light.position.w;
+	float shadow_index = light.PositionInEye.w;
 	float2 moments = ShadowMapsTexture.SampleLevel(ShadowMapsTextureSampler, float3(shadow_projection.xy, shadow_index), 0).xy;
 	return vsm_attenuation(moments, length(fragment_to_light));
 }

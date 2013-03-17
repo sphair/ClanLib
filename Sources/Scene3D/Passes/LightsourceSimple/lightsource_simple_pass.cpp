@@ -63,6 +63,7 @@ LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::stri
 	light_program.set_uniform1i("SpecularColorTexture", 3);
 	light_program.set_uniform1i("SpecularLevelTexture", 4);
 	light_program.set_uniform1i("ShadowMapsTexture", 5);
+	light_program.set_uniform1i("ShadowMapsTextureSampler", 5);
 	light_program.set_uniform1i("SelfIlluminationTexture", 6);
 
 	light_instance_texture = Texture1D(gc, max_lights * vectors_per_light, tf_rgba32f);
@@ -78,8 +79,10 @@ LightsourceSimplePass::~LightsourceSimplePass()
 void LightsourceSimplePass::setup(GraphicContext &gc)
 {
 	Size viewport_size = viewport->get_size();
-	if (fb.is_null() || !gc.is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated())
+	if (fb.is_null() || !gc.is_frame_buffer_owner(fb) || final_color.updated() || zbuffer.updated() || diffuse_color_gbuffer.updated())
 	{
+		final_color.set(Texture2D(gc, viewport->get_width(), viewport->get_height(), tf_rgba32f));
+
 		fb = FrameBuffer(gc);
 		fb.attach_color(0, final_color.get());
 		fb.attach_depth(zbuffer.get());

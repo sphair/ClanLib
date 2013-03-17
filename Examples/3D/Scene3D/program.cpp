@@ -15,6 +15,9 @@ int Program::main(const std::vector<std::string> &args)
 	SetupDisplay setup_display;
 	SetupD3D setup_d3d;
 
+	try
+	{
+
 	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
 	GraphicContext gc = window.get_gc();
@@ -164,6 +167,14 @@ int Program::main(const std::vector<std::string> &args)
 		window.flip(1);
 
 		KeepAlive::process();
+	}
+
+	}
+	catch (Exception &e)
+	{
+		ConsoleWindow w("Debug", 140, 40);
+		Console::write_line(e.get_message_and_stack_trace());
+		w.wait_for_key();
 	}
 
 	return 0;
