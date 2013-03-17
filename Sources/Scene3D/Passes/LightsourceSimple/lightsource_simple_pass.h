@@ -61,6 +61,8 @@ public:
 	OutData<Texture2D> final_color;
 
 private:
+	ProgramObject compile_and_link(GraphicContext &gc, const std::string &shader_path, const std::string &type);
+
 	void setup(GraphicContext &gc);
 	void find_lights(GraphicContext &gc, Scene_Impl *scene);
 	void upload(GraphicContext &gc, Scene_Impl *scene);
@@ -83,18 +85,26 @@ private:
 
 	FrameBuffer fb;
 	BlendState blend_state;
-	DepthStencilState depth_stencil_state;
-	RasterizerState rasterizer_state;
-	PrimitivesArray prim_array;
+
+	DepthStencilState icosahedron_depth_stencil_state;
+	RasterizerState icosahedron_rasterizer_state;
+
+	DepthStencilState rect_depth_stencil_state;
+	RasterizerState rect_rasterizer_state;
+
+	PrimitivesArray icosahedron_prim_array;
+	PrimitivesArray rect_prim_array;
 
 	UniformVector<Uniforms> uniforms;
 
 	std::unique_ptr<Icosahedron> icosahedron;
+	VertexArrayVector<Vec4f> rect_positions;
 
 	PixelBuffer light_instance_transfer;
 	Texture1D light_instance_texture;
 
-	ProgramObject light_program;
+	ProgramObject icosahedron_light_program;
+	ProgramObject rect_light_program;
 
 	std::vector<SceneLight_Impl *> lights;
 };
