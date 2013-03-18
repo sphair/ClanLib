@@ -60,7 +60,7 @@ void D3DTransferBufferProvider::create(int new_size, BufferUsage usage)
 	desc.Usage = D3D11_USAGE_STAGING;
 	desc.BindFlags = 0;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE|D3D11_CPU_ACCESS_READ;
-	desc.MiscFlags = D3D11_RESOURCE_MISC_SHARED;
+	desc.MiscFlags = 0; // To do: Debug layer refuses to create a buffer with D3D11_RESOURCE_MISC_SHARED specified. This breaks get_handles().
 	desc.StructureByteStride = 0;
 
 	if (usage == usage_stream_draw) // To do: find a buffer usage API that works well for both Direct3D and OpenGL
