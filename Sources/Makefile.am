@@ -11,7 +11,6 @@ DIST_SUBDIRS = \
   CSSLayout      \
   Network        \
   Sound          \
-  Sqlite         \
-  Vorbis
+  Sqlite
 
 # EOF #

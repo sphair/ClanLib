@@ -468,8 +468,9 @@ if test "$enable_clanSound" != "no"; then
 	fi
 
 	if test "$enable_clanSound" = "auto"; then enable_clanSound=yes; fi
+	AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
+
 fi
-AM_CONDITIONAL(ALSA, test x$have_alsa = xyes)
 
 if test "$enable_clanDatabase" != "no"; then
 	echo "Checking for clanDatabase stuff"
@@ -598,10 +599,6 @@ fi
 
 if test "$enable_clanNetwork" = "yes"; then
 	CLANLIB_ENABLE_MODULES(Network)
-fi
-
-if test "$enable_clanVorbis" = "yes"; then
-	CLANLIB_ENABLE_MODULES(Vorbis)
 fi
 
 dnl ----------------------------------------
