@@ -64,19 +64,19 @@ libclan30GUI_la_SOURCES = \
 	Components/Ribbon/ribbon_page.cpp \
 	Components/Ribbon/ribbon_section.cpp \
 	Components/Ribbon/ribbon_impl.cpp \
-	Components/Ribbon/ribbon_impl_menu.cpp \
-	Components/Ribbon/ribbon_impl_page.cpp \
-	Components/Ribbon/ribbon_impl_section.cpp \
+	Components/Ribbon/ribbon_menu_impl.cpp \
+	Components/Ribbon/ribbon_page_impl.cpp \
+	Components/Ribbon/ribbon_section_impl.cpp \
+	Layout/gui_layout.cpp \
+	Layout/gui_layout_corners.cpp \
+	Layout/gui_set_initial_used_values.cpp \
 	Layout/gui_css_display_visitor.cpp \
 	Layout/gui_find_preferred_height.cpp \
-	Layout/gui_find_preferred_width.cpp \
-	Layout/gui_layout.cpp \
 	Layout/gui_layout_absolute_or_fixed.cpp \
-	Layout/gui_layout_box_content.cpp \
+	Layout/gui_layout_normal_flow.cpp \
 	Layout/gui_layout_content.cpp \
-	Layout/gui_layout_corners.cpp \
 	Layout/gui_layout_provider_corners.cpp \
-	Layout/gui_set_initial_used_values.cpp \
+	Layout/gui_find_preferred_width.cpp \
 	WindowManager/gui_window_manager.cpp \
 	WindowManager/gui_window_manager_direct.cpp \
 	WindowManager/gui_window_manager_provider_direct.cpp \
