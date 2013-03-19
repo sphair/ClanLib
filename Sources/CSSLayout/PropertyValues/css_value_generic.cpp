@@ -58,7 +58,7 @@ void CSSValueGeneric::compute(const std::vector<CSSValueGeneric> *parent, CSSRes
 {
 	if (type == type_inherit)
 	{
-		const CSSValueGeneric *matching_parent = nullptr;
+		const CSSValueGeneric *matching_parent = 0;
 		if (parent)
 		{
 			for (size_t cnt = 0; cnt < parent->size(); cnt++)
