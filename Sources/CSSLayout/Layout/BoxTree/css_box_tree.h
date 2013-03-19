@@ -58,8 +58,8 @@ public:
 	const CSSBoxElement *get_html_body_element() const { return html_body_element; }
 
 private:
-	void clean(CSSBoxNode *node = nullptr);
-	CSSBoxNode *create_node(const DomNode &node, CSSBoxNode *parent = nullptr);
+	void clean(CSSBoxNode *node = 0);
+	CSSBoxNode *create_node(const DomNode &node, CSSBoxNode *parent = 0);
 	void create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element);
 	void propagate_html_body();
 	void create_anonymous_blocks(CSSBoxElement *element, CSSResourceCache *resource_cache);

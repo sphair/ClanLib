@@ -39,7 +39,7 @@ namespace clan
 {
 
 CSSBoxTree::CSSBoxTree()
-: root_element(nullptr), html_body_element(nullptr), selection_start(nullptr), selection_end(nullptr), selection_start_text_offset(0), selection_end_text_offset(0)
+: root_element(0), html_body_element(0), selection_start(0), selection_end(0), selection_start_text_offset(0), selection_end_text_offset(0)
 {
 }
 
@@ -62,7 +62,7 @@ void CSSBoxTree::set_html_body_element(CSSBoxElement *new_html_body_element)
 void CSSBoxTree::create(const DomNode &node)
 {
 	clear();
-	CSSBoxNode *root_node = create_node(node, nullptr);
+	CSSBoxNode *root_node = create_node(node, 0);
 	root_element = dynamic_cast<CSSBoxElement*>(root_node);
 	if (!root_element)
 	{

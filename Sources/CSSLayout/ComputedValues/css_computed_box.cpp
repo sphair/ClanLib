@@ -66,25 +66,25 @@ void CSSComputedBox::compute(const CSSComputedValues &parent, CSSResourceCache *
 	}
 	else
 	{
-		position.compute(nullptr, layout, em_size, ex_size);
-		float_box.compute(nullptr, layout, em_size, ex_size);
+		position.compute(0, layout, em_size, ex_size);
+		float_box.compute(0, layout, em_size, ex_size);
 
-		display.compute(nullptr, layout, em_size, ex_size, position, float_box);
+		display.compute(0, layout, em_size, ex_size, position, float_box);
 
-		CSSValueRight::compute(left, right, nullptr, layout, em_size, ex_size, position, is_containing_block_ltr);
-		CSSValueBottom::compute(top, bottom, nullptr, layout, em_size, ex_size, position);
+		CSSValueRight::compute(left, right, 0, layout, em_size, ex_size, position, is_containing_block_ltr);
+		CSSValueBottom::compute(top, bottom, 0, layout, em_size, ex_size, position);
 
-		width.compute(nullptr, layout, em_size, ex_size, is_containing_block_width_auto);
-		height.compute(nullptr, layout, em_size, ex_size, is_containing_block_height_auto);
+		width.compute(0, layout, em_size, ex_size, is_containing_block_width_auto);
+		height.compute(0, layout, em_size, ex_size, is_containing_block_height_auto);
 
-		clear.compute(nullptr, layout, em_size, ex_size);
+		clear.compute(0, layout, em_size, ex_size);
 
-		max_width.compute(nullptr, layout, em_size, ex_size);
-		max_height.compute(nullptr, layout, em_size, ex_size);
-		min_width.compute(nullptr, layout, em_size, ex_size);
-		min_height.compute(nullptr, layout, em_size, ex_size);
+		max_width.compute(0, layout, em_size, ex_size);
+		max_height.compute(0, layout, em_size, ex_size);
+		min_width.compute(0, layout, em_size, ex_size);
+		min_height.compute(0, layout, em_size, ex_size);
 
-		overflow.compute(nullptr, layout, em_size, ex_size);
+		overflow.compute(0, layout, em_size, ex_size);
 	}
 }
 
