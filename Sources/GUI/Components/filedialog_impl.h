@@ -31,7 +31,7 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/System/system.h"
 
-#if !defined(WIN32) && !defined(__APPLE__)
+#if !defined(WIN32) && !defined(__APPLE__) && defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 #include <gtk/gtk.h>
 #endif
 
@@ -196,9 +196,9 @@ public:
 		return success;
 #elif defined(__APPLE__)
         
-        return false;
+                return false;
         
-#else
+#elif defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 		if (!gtk_init_check(NULL, NULL))
 			throw Exception("gtk_init_check Failed!");
 
@@ -234,6 +234,8 @@ public:
 
 		bool success = false;
 		return success;
+#else
+                return false;
 #endif
 	}
 };

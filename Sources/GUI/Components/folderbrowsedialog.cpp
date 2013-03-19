@@ -37,7 +37,9 @@
 #elif defined(__APPLE__)
 // To do: add Cocoa includes here
 #else
+#if defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 #include <gtk/gtk.h>
+#endif
 #endif
 
 namespace clan
@@ -174,7 +176,7 @@ public:
         // To do: add cocoa code here
         return false;
         
-#else
+#elif defined(I_LOVE_AUTOHELL_AND_FIXED_THE_GTK_CHECK)
 
 		if (!gtk_init_check(NULL, NULL))
 			throw Exception("gtk_init_check Failed!");
@@ -211,6 +213,9 @@ public:
 	
 		bool success = false;
 		return success;
+		
+#else
+	return false;
 #endif
 	}
 
