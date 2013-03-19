@@ -29,7 +29,7 @@
 **    Kevin J Bluck
 */
 
-#include "LegacyGL/precomp.h"
+#include "GL/precomp.h"
 #include "gl1_window_provider_glx.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
@@ -38,14 +38,12 @@
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "LegacyGL/opengl1.h"
-#include "LegacyGL/opengl1_wrap.h"
+#include "../opengl1.h"
+#include "../opengl1_wrap.h"
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
 #include "Display/X11/display_message_queue_x11.h"
-#include "../gl1_window_description_impl.h"
 #include "../gl1_graphic_context_provider.h"
-#include "../gl1_target_provider.h"
 #include <cstdio>
 
 #ifdef GL_USE_DLOPEN

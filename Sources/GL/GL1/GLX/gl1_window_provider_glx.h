@@ -36,7 +36,7 @@
 #include "Display/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "LegacyGL/opengl1_wrap.h"
+#include "GL1/opengl1_wrap.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
