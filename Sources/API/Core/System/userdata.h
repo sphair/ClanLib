@@ -56,7 +56,7 @@ class CL_API_CORE UserDataOwner
 {
 public:
 	UserDataOwner()
-	: user_data(nullptr)
+	: user_data(0)
 	{
 	}
 
@@ -65,7 +65,7 @@ public:
 		if (user_data)
 		{
 			user_data->~UserDataBase();
-			user_data = nullptr;
+			user_data = 0;
 		}
 	}
 
@@ -75,7 +75,7 @@ public:
 		if (user_data)
 		{
 			user_data->~UserDataBase();
-			user_data = nullptr;
+			user_data = 0;
 		}
 
 		static_assert(sizeof(UserData<T>) <= 32, "userdata_storage is too small!");
