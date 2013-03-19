@@ -30,7 +30,7 @@
 */
 
 #include "GL/precomp.h"
-#include "opengl_window_provider_glx.h"
+#include "gl3_window_provider_glx.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/display.h"
@@ -43,9 +43,10 @@
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
 #include "Display/X11/display_message_queue_x11.h"
-#include "../opengl_window_description_impl.h"
-#include "../opengl_graphic_context_provider.h"
-#include "../opengl_target_provider.h"
+#include "GL/opengl_window_description_impl.h"
+#include "GL/opengl_graphic_context_provider.h"
+#include "GL/opengl_target_provider.h"
+#include "GL/GL3/gl3_graphic_context_provider.h"
 #include <cstdio>
 
 #ifdef GL_USE_DLOPEN
@@ -164,7 +165,7 @@ OpenGLWindowProvider_GLX::~OpenGLWindowProvider_GLX()
 	{
 		if (!gc.is_null())
 		{
-			OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider*>(gc.get_provider());
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
 			if (gl_provider)
 				gl_provider->dispose();
 		}
@@ -252,7 +253,7 @@ void OpenGLWindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 
 	if (create_provider_flag)
 	{
-		gc = GraphicContext(new OpenGLGraphicContextProvider(this));
+		gc = GraphicContext(new GL3GraphicContextProvider(this));
 	}
 
 	setup_swap_interval_pointers();
@@ -481,7 +482,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_2(DisplayWindowSite *new_site, const
 void OpenGLWindowProvider_GLX::on_window_resized()
 {
 	if (gc.get_provider())
-		((OpenGLGraphicContextProvider *) gc.get_provider())->on_window_resized();
+		((GL3GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
 bool OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
@@ -551,7 +552,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context(const DisplayWindowDescripti
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
-		OpenGLGraphicContextProvider *gl_provider = dynamic_cast<OpenGLGraphicContextProvider*>(gc_providers);
+		GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
