@@ -40,7 +40,9 @@
 #include "API/display.h"
 #include "API/gui.h"
 #include "API/gl.h"
+#ifdef WIN32
 #include "API/d3d.h"
+#endif
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG

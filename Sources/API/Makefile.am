@@ -540,12 +540,18 @@ clanCSSLayout_includes = \
 	CSSLayout/PropertyValues/css_value_border_radius.h \
 	CSSLayout/PropertyValues/css_value_margin_width.h \
 	CSSLayout/PropertyValues/css_value_direction.h
+	
+clanScene3D_includes = \
+	scene3d.h
 
-clanVorbis_includes = \
-	vorbis.h \
-	Vorbis/api_vorbis.h \
-	Vorbis/setupvorbis.h \
-	Vorbis/soundprovider_vorbis.h
+clanPhysics3D_includes = \
+	physics3d.h
+
+clanPhysics2D_includes = \
+	physics2d.h
+
+clanGameIDE_includes = \
+	gameide.h
 
 clanDatabase_includes = \
 	database.h \
@@ -577,10 +583,12 @@ EXTRA_HEADERS = \
 	$(clanNetwork_includes) \
 	$(clanGUI_includes) \
 	$(clanSound_includes) \
-	$(clanVorbis_includes) \
+	$(clanScene3D_includes) \
+	$(clanPhysics3D_includes) \
+	$(clanPhysics2D_includes) \
+	$(clanGameIDE_includes) \
 	$(clanDatabase_includes) \
-	$(clanSqlite_includes) \
-	$(clanRegExp_includes)
+	$(clanSqlite_includes)
 
 # EOF #
 
