@@ -60,6 +60,11 @@
 namespace clan
 {
 
+DisplayWindowProvider *newGL1WindowProvider_GLX()
+{
+	return new GL1WindowProvider_GLX();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // GL1WindowProvider_GLX Construction:
 

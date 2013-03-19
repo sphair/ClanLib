@@ -60,7 +60,7 @@ bool OpenGLTarget::is_current()
 		return false;
 
 	OpenGLTargetProvider *provider = dynamic_cast<OpenGLTargetProvider*>(ptr);
-	return (provider != nullptr);
+	return (provider != 0);
 
 }
 

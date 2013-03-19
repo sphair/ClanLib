@@ -37,7 +37,7 @@
 #include "GL1/WGL/gl1_window_provider_wgl.h"
 #else
 #include "GL3/GLX/gl3_window_provider_glx.h"
-#include "GL1/GLX/gl1_window_provider_glx.h"
+namespace clan { DisplayWindowProvider *newGL1WindowProvider_GLX(); } // #include "GL1/GLX/gl1_window_provider_glx.h"
 #endif
 
 namespace clan
@@ -77,7 +77,7 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 		#if defined(WIN32)
 			return new GL1WindowProvider_WGL();
 		#else
-			return new GL1WindowProvider_GLX();
+			return newGL1WindowProvider_GLX();
 		#endif
 	}
 
@@ -106,7 +106,7 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 		#if defined(WIN32)
 			return new GL1WindowProvider_WGL();
 		#else
-			return new GL1WindowProvider_GLX();
+			return newGL1WindowProvider_GLX();
 		#endif
 
 	}
