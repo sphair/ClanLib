@@ -45,9 +45,9 @@ void CSSComputedTextReset::compute(const CSSComputedValues &parent, CSSResourceC
 	}
 	else
 	{
-		text_decoration.compute(nullptr, layout, em_size, ex_size);
-		vertical_align.compute(nullptr, layout, em_size, ex_size, computed_line_height);
-		unicode_bidi.compute(nullptr, layout, em_size, ex_size);
+		text_decoration.compute(0, layout, em_size, ex_size);
+		vertical_align.compute(0, layout, em_size, ex_size, computed_line_height);
+		unicode_bidi.compute(0, layout, em_size, ex_size);
 	}
 }
 
@@ -67,13 +67,13 @@ void CSSComputedTextInherit::compute(const CSSComputedValues &parent, CSSResourc
 	}
 	else
 	{
-		white_space.compute(nullptr, layout, em_size, ex_size);
-		color.compute(nullptr, layout, em_size, ex_size);
-		text_indent.compute(nullptr, layout, em_size, ex_size);
-		text_transform.compute(nullptr, layout, em_size, ex_size);
-		text_align.compute(nullptr, layout, em_size, ex_size);
-		letter_spacing.compute(nullptr, layout, em_size, ex_size);
-		word_spacing.compute(nullptr, layout, em_size, ex_size);
+		white_space.compute(0, layout, em_size, ex_size);
+		color.compute(0, layout, em_size, ex_size);
+		text_indent.compute(0, layout, em_size, ex_size);
+		text_transform.compute(0, layout, em_size, ex_size);
+		text_align.compute(0, layout, em_size, ex_size);
+		letter_spacing.compute(0, layout, em_size, ex_size);
+		word_spacing.compute(0, layout, em_size, ex_size);
 	}
 }
 

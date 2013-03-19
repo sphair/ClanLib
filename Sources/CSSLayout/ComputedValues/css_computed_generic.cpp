@@ -47,7 +47,7 @@ void CSSComputedGeneric::compute(const CSSComputedValues &parent, CSSResourceCac
 	{
 		for (size_t i = 0; i < generic_values.size(); i++)
 		{
-			generic_values[i].compute(nullptr, layout, em_size, ex_size);
+			generic_values[i].compute(0, layout, em_size, ex_size);
 		}
 	}
 }

@@ -247,8 +247,21 @@ libclan30CSSLayout_la_SOURCES = \
 	PropertyValues/css_value_border_spacing.cpp \
 	PropertyValues/css_value_width.cpp \
 	PropertyValues/css_value_bottom.cpp \
-	ComputedValues/css_computed_values.cpp \
+	ComputedValues/css_computed_list_style.cpp \
 	ComputedValues/css_computed_box.cpp \
+	ComputedValues/css_computed_table.cpp \
+	ComputedValues/css_computed_font.cpp \
+	ComputedValues/css_computed_border.cpp \
+	ComputedValues/css_computed_margin.cpp \
+	ComputedValues/css_computed_misc.cpp \
+	ComputedValues/css_computed_text.cpp \
+	ComputedValues/css_computed_flex.cpp \
+	ComputedValues/css_computed_values.cpp \
+	ComputedValues/css_computed_outline.cpp \
+	ComputedValues/css_computed_generic.cpp \
+	ComputedValues/css_computed_padding.cpp \
+	ComputedValues/css_computed_background.cpp \
+	ComputedValues/css_computed_counter.cpp \
 	CSSDocument/css_document.cpp \
 	CSSDocument/css_document_sheet.cpp \
 	CSSDocument/css_select_result.cpp \

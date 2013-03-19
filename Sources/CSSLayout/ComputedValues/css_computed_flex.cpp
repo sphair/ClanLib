@@ -52,16 +52,16 @@ void CSSComputedFlex::compute(const CSSComputedValues &parent, CSSResourceCache 
 	}
 	else
 	{
-		flex_direction.compute(nullptr, layout, em_size, ex_size);
-		flex_wrap.compute(nullptr, layout, em_size, ex_size);
-		order.compute(nullptr, layout, em_size, ex_size);
-		flex_grow.compute(nullptr, layout, em_size, ex_size);
-		flex_shrink.compute(nullptr, layout, em_size, ex_size);
-		flex_basis.compute(nullptr, layout, em_size, ex_size);
-		justify_content.compute(nullptr, layout, em_size, ex_size);
-		align_items.compute(nullptr, layout, em_size, ex_size);
-		align_self.compute(nullptr, layout, em_size, ex_size, nullptr);
-		align_content.compute(nullptr, layout, em_size, ex_size);
+		flex_direction.compute(0, layout, em_size, ex_size);
+		flex_wrap.compute(0, layout, em_size, ex_size);
+		order.compute(0, layout, em_size, ex_size);
+		flex_grow.compute(0, layout, em_size, ex_size);
+		flex_shrink.compute(0, layout, em_size, ex_size);
+		flex_basis.compute(0, layout, em_size, ex_size);
+		justify_content.compute(0, layout, em_size, ex_size);
+		align_items.compute(0, layout, em_size, ex_size);
+		align_self.compute(0, layout, em_size, ex_size, 0);
+		align_content.compute(0, layout, em_size, ex_size);
 	}
 }
 

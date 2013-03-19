@@ -45,9 +45,9 @@ void CSSComputedOutline::compute(const CSSComputedValues &parent, CSSResourceCac
 	}
 	else
 	{
-		outline_color.compute(nullptr, layout, em_size, ex_size);
-		outline_style.compute(nullptr, layout, em_size, ex_size);
-		outline_width.compute(nullptr, layout, em_size, ex_size, outline_style);
+		outline_color.compute(0, layout, em_size, ex_size);
+		outline_style.compute(0, layout, em_size, ex_size);
+		outline_width.compute(0, layout, em_size, ex_size, outline_style);
 	}
 }
 

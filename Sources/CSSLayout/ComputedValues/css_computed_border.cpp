@@ -67,31 +67,31 @@ void CSSComputedBorder::compute(const CSSComputedValues &parent, CSSResourceCach
 	}
 	else
 	{
-		border_color_left.compute(nullptr, layout, em_size, ex_size, computed_color);
-		border_color_top.compute(nullptr, layout, em_size, ex_size, computed_color);
-		border_color_right.compute(nullptr, layout, em_size, ex_size, computed_color);
-		border_color_bottom.compute(nullptr, layout, em_size, ex_size, computed_color);
+		border_color_left.compute(0, layout, em_size, ex_size, computed_color);
+		border_color_top.compute(0, layout, em_size, ex_size, computed_color);
+		border_color_right.compute(0, layout, em_size, ex_size, computed_color);
+		border_color_bottom.compute(0, layout, em_size, ex_size, computed_color);
 
-		border_style_left.compute(nullptr, layout, em_size, ex_size);
-		border_style_top.compute(nullptr, layout, em_size, ex_size);
-		border_style_right.compute(nullptr, layout, em_size, ex_size);
-		border_style_bottom.compute(nullptr, layout, em_size, ex_size);
+		border_style_left.compute(0, layout, em_size, ex_size);
+		border_style_top.compute(0, layout, em_size, ex_size);
+		border_style_right.compute(0, layout, em_size, ex_size);
+		border_style_bottom.compute(0, layout, em_size, ex_size);
 
-		border_width_left.compute(nullptr, layout, em_size, ex_size, border_style_left);
-		border_width_top.compute(nullptr, layout, em_size, ex_size, border_style_top);
-		border_width_right.compute(nullptr, layout, em_size, ex_size, border_style_right);
-		border_width_bottom.compute(nullptr, layout, em_size, ex_size, border_style_bottom);
+		border_width_left.compute(0, layout, em_size, ex_size, border_style_left);
+		border_width_top.compute(0, layout, em_size, ex_size, border_style_top);
+		border_width_right.compute(0, layout, em_size, ex_size, border_style_right);
+		border_width_bottom.compute(0, layout, em_size, ex_size, border_style_bottom);
 
-		border_radius_top_right.compute(nullptr, layout, em_size, ex_size);
-		border_radius_bottom_right.compute(nullptr, layout, em_size, ex_size);
-		border_radius_bottom_left.compute(nullptr, layout, em_size, ex_size);
-		border_radius_top_left.compute(nullptr, layout, em_size, ex_size);
+		border_radius_top_right.compute(0, layout, em_size, ex_size);
+		border_radius_bottom_right.compute(0, layout, em_size, ex_size);
+		border_radius_bottom_left.compute(0, layout, em_size, ex_size);
+		border_radius_top_left.compute(0, layout, em_size, ex_size);
 
-		border_image_source.compute(nullptr, layout, em_size, ex_size);
-		border_image_slice.compute(nullptr, layout, em_size, ex_size);
-		border_image_width.compute(nullptr, layout, em_size, ex_size);
-		border_image_outset.compute(nullptr, layout, em_size, ex_size);
-		border_image_repeat.compute(nullptr, layout, em_size, ex_size);
+		border_image_source.compute(0, layout, em_size, ex_size);
+		border_image_slice.compute(0, layout, em_size, ex_size);
+		border_image_width.compute(0, layout, em_size, ex_size);
+		border_image_outset.compute(0, layout, em_size, ex_size);
+		border_image_repeat.compute(0, layout, em_size, ex_size);
 	}
 }
 

@@ -43,7 +43,7 @@ void CSSComputedTableReset::compute(const CSSComputedValues &parent, CSSResource
 	}
 	else
 	{
-		table_layout.compute(nullptr, layout, em_size, ex_size);
+		table_layout.compute(0, layout, em_size, ex_size);
 	}
 }
 
@@ -60,10 +60,10 @@ void CSSComputedTableInherit::compute(const CSSComputedValues &parent, CSSResour
 	}
 	else
 	{
-		caption_side.compute(nullptr, layout, em_size, ex_size);
-		border_collapse.compute(nullptr, layout, em_size, ex_size);
-		border_spacing.compute(nullptr, layout, em_size, ex_size);
-		empty_cells.compute(nullptr, layout, em_size, ex_size);
+		caption_side.compute(0, layout, em_size, ex_size);
+		border_collapse.compute(0, layout, em_size, ex_size);
+		border_spacing.compute(0, layout, em_size, ex_size);
+		empty_cells.compute(0, layout, em_size, ex_size);
 	}
 }
 

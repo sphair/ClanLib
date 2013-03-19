@@ -50,14 +50,14 @@ void CSSComputedMiscReset::compute(const CSSComputedValues &parent, CSSResourceC
 	}
 	else
 	{
-		decoration_break.compute(nullptr, layout, em_size, ex_size);
-		page_break_before.compute(nullptr, layout, em_size, ex_size);
-		page_break_after.compute(nullptr, layout, em_size, ex_size);
-		page_break_inside.compute(nullptr, layout, em_size, ex_size);
-		content.compute(nullptr, layout, em_size, ex_size, is_before_or_after_pseudo_element);
-		z_index.compute(nullptr, layout, em_size, ex_size);
-		clip.compute(nullptr, layout, em_size, ex_size);
-		shadow.compute(nullptr, layout, em_size, ex_size);
+		decoration_break.compute(0, layout, em_size, ex_size);
+		page_break_before.compute(0, layout, em_size, ex_size);
+		page_break_after.compute(0, layout, em_size, ex_size);
+		page_break_inside.compute(0, layout, em_size, ex_size);
+		content.compute(0, layout, em_size, ex_size, is_before_or_after_pseudo_element);
+		z_index.compute(0, layout, em_size, ex_size);
+		clip.compute(0, layout, em_size, ex_size);
+		shadow.compute(0, layout, em_size, ex_size);
 	}
 }
 
@@ -76,12 +76,12 @@ void CSSComputedMiscInherit::compute(const CSSComputedValues &parent, CSSResourc
 	}
 	else
 	{
-		direction.compute(nullptr, layout, em_size, ex_size);
-		orphans.compute(nullptr, layout, em_size, ex_size);
-		widows.compute(nullptr, layout, em_size, ex_size);
-		quotes.compute(nullptr, layout, em_size, ex_size);
-		visibility.compute(nullptr, layout, em_size, ex_size);
-		cursor.compute(nullptr, layout, em_size, ex_size);
+		direction.compute(0, layout, em_size, ex_size);
+		orphans.compute(0, layout, em_size, ex_size);
+		widows.compute(0, layout, em_size, ex_size);
+		quotes.compute(0, layout, em_size, ex_size);
+		visibility.compute(0, layout, em_size, ex_size);
+		cursor.compute(0, layout, em_size, ex_size);
 	}
 }
 
