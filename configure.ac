@@ -316,7 +316,6 @@ CLANLIB_ARG_ENABLE(clanSqlite,   auto, [Build clanSqlite module],     [whether w
 CLANLIB_ARG_ENABLE(clanNetwork,  auto, [Build clanNetwork module],    [whether we should try to build clanNetwork])
 CLANLIB_ARG_ENABLE(clanGUI,      auto, [Build clanGUI module],        [whether we should try to build clanGUI])
 CLANLIB_ARG_ENABLE(clanCSSLayout,      auto, [Build clanCSSLayout module],        [whether we should try to build clanCSSLayout])
-CLANLIB_ARG_ENABLE(clanVorbis,   auto, [Build clanVorbis module],     [whether we should try to build clanVorbis])
 
 has_linux_joystick=no
 has_linux_input=no
@@ -531,7 +530,6 @@ AC_SUBST(extra_CFLAGS_clanSound)
 AC_SUBST(extra_CFLAGS_clanDatabase)
 AC_SUBST(extra_CFLAGS_clanSqlite)
 AC_SUBST(extra_CFLAGS_clanNetwork)
-AC_SUBST(extra_CFLAGS_clanVorbis)
 
 AC_SUBST(clanGUI_CXXFLAGS)
 
@@ -549,7 +547,6 @@ AC_SUBST(extra_LIBS_clanSound)
 AC_SUBST(extra_LIBS_clanDatabase)
 AC_SUBST(extra_LIBS_clanSqlite)
 AC_SUBST(extra_LIBS_clanNetwork)
-AC_SUBST(extra_LIBS_clanVorbis)
 
 dnl ----------------------------------------------------
 dnl Which clan subprojects should be compiled?
@@ -796,7 +793,6 @@ if test "$enable_clanDisplay" != "no"; then
 fi
 
 echo "                clanDisplay = $enable_clanDisplay$display_options"
-echo "                 clanVorbis = $enable_clanVorbis"
 echo ""
 
 if test "$enable_docs" == "no"; then
