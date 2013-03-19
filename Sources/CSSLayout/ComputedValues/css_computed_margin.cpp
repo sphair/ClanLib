@@ -46,10 +46,10 @@ void CSSComputedMargin::compute(const CSSComputedValues &parent, CSSResourceCach
 	}
 	else
 	{
-		margin_width_left.compute(nullptr, layout, em_size, ex_size);
-		margin_width_top.compute(nullptr, layout, em_size, ex_size);
-		margin_width_right.compute(nullptr, layout, em_size, ex_size);
-		margin_width_bottom.compute(nullptr, layout, em_size, ex_size);
+		margin_width_left.compute(0, layout, em_size, ex_size);
+		margin_width_top.compute(0, layout, em_size, ex_size);
+		margin_width_right.compute(0, layout, em_size, ex_size);
+		margin_width_bottom.compute(0, layout, em_size, ex_size);
 	}
 }
 

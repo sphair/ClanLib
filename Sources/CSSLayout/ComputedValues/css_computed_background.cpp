@@ -50,14 +50,14 @@ void CSSComputedBackground::compute(const CSSComputedValues &parent, CSSResource
 	}
 	else
 	{
-		background_attachment.compute(nullptr, layout, em_size, ex_size);
-		background_color.compute(nullptr, layout, em_size, ex_size);
-		background_image.compute(nullptr, layout, em_size, ex_size);
-		background_position.compute(nullptr, layout, em_size, ex_size);
-		background_repeat.compute(nullptr, layout, em_size, ex_size);
-		background_origin.compute(nullptr, layout, em_size, ex_size);
-		background_clip.compute(nullptr, layout, em_size, ex_size);
-		background_size.compute(nullptr, layout, em_size, ex_size);
+		background_attachment.compute(0, layout, em_size, ex_size);
+		background_color.compute(0, layout, em_size, ex_size);
+		background_image.compute(0, layout, em_size, ex_size);
+		background_position.compute(0, layout, em_size, ex_size);
+		background_repeat.compute(0, layout, em_size, ex_size);
+		background_origin.compute(0, layout, em_size, ex_size);
+		background_clip.compute(0, layout, em_size, ex_size);
+		background_size.compute(0, layout, em_size, ex_size);
 	}
 }
 

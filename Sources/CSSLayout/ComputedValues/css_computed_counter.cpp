@@ -44,8 +44,8 @@ void CSSComputedCounter::compute(const CSSComputedValues &parent, CSSResourceCac
 	}
 	else
 	{
-		counter_increment.compute(nullptr, layout, em_size, ex_size);
-		counter_reset.compute(nullptr, layout, em_size, ex_size);
+		counter_increment.compute(0, layout, em_size, ex_size);
+		counter_reset.compute(0, layout, em_size, ex_size);
 	}
 }
 

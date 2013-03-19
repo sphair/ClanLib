@@ -16,8 +16,14 @@ SoundProviders/soundprovider_raw_session.cpp \
 SoundProviders/soundprovider_type.cpp \
 SoundProviders/soundprovider_wave.cpp \
 SoundProviders/soundprovider_wave_session.cpp \
+SoundProviders/soundprovider_vorbis.cpp \
+SoundProviders/soundprovider_vorbis_session.cpp \
 SoundProviders/soundprovider.cpp \
 SoundProviders/soundprovider_session.cpp \
+AudioWorld/audio_cache.cpp \
+AudioWorld/audio_definition.cpp \
+AudioWorld/audio_object.cpp \
+AudioWorld/audio_world.cpp \
 cd_drive.cpp \
 precomp.cpp \
 resourcetype_sample.cpp \

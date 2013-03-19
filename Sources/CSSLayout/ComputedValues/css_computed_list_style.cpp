@@ -45,9 +45,9 @@ void CSSComputedListStyle::compute(const CSSComputedValues &parent, CSSResourceC
 	}
 	else
 	{
-		list_style_type.compute(nullptr, layout, em_size, ex_size);
-		list_style_position.compute(nullptr, layout, em_size, ex_size);
-		list_style_image.compute(nullptr, layout, em_size, ex_size);
+		list_style_type.compute(0, layout, em_size, ex_size);
+		list_style_position.compute(0, layout, em_size, ex_size);
+		list_style_image.compute(0, layout, em_size, ex_size);
 	}
 }
 

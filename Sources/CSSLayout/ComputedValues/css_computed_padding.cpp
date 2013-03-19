@@ -46,10 +46,10 @@ void CSSComputedPadding::compute(const CSSComputedValues &parent, CSSResourceCac
 	}
 	else
 	{
-		padding_width_left.compute(nullptr, layout, em_size, ex_size);
-		padding_width_top.compute(nullptr, layout, em_size, ex_size);
-		padding_width_right.compute(nullptr, layout, em_size, ex_size);
-		padding_width_bottom.compute(nullptr, layout, em_size, ex_size);
+		padding_width_left.compute(0, layout, em_size, ex_size);
+		padding_width_top.compute(0, layout, em_size, ex_size);
+		padding_width_right.compute(0, layout, em_size, ex_size);
+		padding_width_bottom.compute(0, layout, em_size, ex_size);
 	}
 }
 

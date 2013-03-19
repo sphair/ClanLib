@@ -58,16 +58,16 @@ void CSSComputedFont::compute(const CSSComputedValues &parent, CSSResourceCache 
 		float initial_em_size = 16.0f;
 		float initial_ex_size = initial_em_size * 0.5f;
 
-		font_size.compute(nullptr, layout, initial_em_size, initial_ex_size);
+		font_size.compute(0, layout, initial_em_size, initial_ex_size);
 
 		float em_size = font_size.length.value;
 		float ex_size = em_size * 0.5f;
 
-		font_family.compute(nullptr, layout, em_size, ex_size);
-		font_style.compute(nullptr, layout, em_size, ex_size);
-		font_variant.compute(nullptr, layout, em_size, ex_size);
-		font_weight.compute(nullptr, layout, em_size, ex_size);
-		line_height.compute(nullptr, layout, em_size, ex_size);
+		font_family.compute(0, layout, em_size, ex_size);
+		font_style.compute(0, layout, em_size, ex_size);
+		font_variant.compute(0, layout, em_size, ex_size);
+		font_weight.compute(0, layout, em_size, ex_size);
+		line_height.compute(0, layout, em_size, ex_size);
 	}
 }
 
