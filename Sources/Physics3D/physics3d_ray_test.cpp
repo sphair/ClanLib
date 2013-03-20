@@ -65,12 +65,14 @@ bool Physics3DRayTest::test(const clan::Vec3f &new_start, const clan::Vec3f &new
 	{
 		impl->has_hit = true;
 		impl->hit_fraction = callback.m_closestHitFraction;
+		impl->hit_normal = Vec3f(callback.m_hitNormalWorld.x(), callback.m_hitNormalWorld.y(), callback.m_hitNormalWorld.z());
 		impl->hit_object = static_cast<Physics3DObject_Impl*>(callback.m_collisionObject->getUserPointer());
 	}
 	else
 	{
 		impl->has_hit = false;
 		impl->hit_fraction = 1.0f;
+		impl->hit_normal = Vec3f();
 		impl->hit_object = nullptr;
 	}
 
@@ -90,6 +92,11 @@ float Physics3DRayTest::get_hit_fraction() const
 Vec3f Physics3DRayTest::get_hit_position() const
 {
 	return mix(impl->start, impl->end, impl->hit_fraction);
+}
+
+Vec3f Physics3DRayTest::get_hit_normal() const
+{
+	return impl->hit_normal;
 }
 
 Physics3DObject Physics3DRayTest::get_hit_object() const

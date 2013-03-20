@@ -48,6 +48,7 @@ public:
 	Vec3f start, end;
 	bool has_hit;
 	float hit_fraction;
+	Vec3f hit_normal;
 	Physics3DObject_Impl *hit_object;
 };
 

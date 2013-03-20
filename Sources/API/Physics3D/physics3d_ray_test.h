@@ -55,6 +55,7 @@ public:
 	bool has_hit() const;
 	float get_hit_fraction() const;
 	Vec3f get_hit_position() const;
+	Vec3f get_hit_normal() const;
 	Physics3DObject get_hit_object() const;
 
 private:
