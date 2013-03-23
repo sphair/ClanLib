@@ -54,50 +54,30 @@ SWRenderTextureProvider::~SWRenderTextureProvider()
 void SWRenderTextureProvider::generate_mipmap()
 {
 }
-
-void SWRenderTextureProvider::create(int width, int height, TextureFormat internal_format, int depth)
+void SWRenderTextureProvider::create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels)
 {
 	if (depth != 1)
 		throw Exception("Unsupported depth specified for GDI target");
 	image = PixelBuffer(width, height, tf_bgra8);
 }
 
-PixelBuffer SWRenderTextureProvider::get_pixeldata(TextureFormat sized_format, int level) const
+PixelBuffer SWRenderTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const
 {
 	if (level != 0)
 		throw Exception("Unsupported mipmap level specified for GDI target");
-	return image.to_format(sized_format);
+	return image.to_format(texture_format);
 }
 
+/*FIXME
 void SWRenderTextureProvider::set_image(PixelBuffer &new_image, int level)
 {
 	if (level != 0)
 		throw Exception("Unsupported mipmap level specified for GDI target");
 	image = new_image.to_format(tf_bgra8);
 }
+*/
 
-void SWRenderTextureProvider::set_cube_map(
-	PixelBuffer &cube_map_positive_x,
-	PixelBuffer &cube_map_negative_x,
-	PixelBuffer &cube_map_positive_y,
-	PixelBuffer &cube_map_negative_y,
-	PixelBuffer &cube_map_positive_z,
-	PixelBuffer &cube_map_negative_z,
-	int level)
-{
-	throw Exception("Cube texture maps not supported by GDI target");
-}
-
-void SWRenderTextureProvider::set_compressed_image(
-	int level,
-	TextureFormat internal_format,
-	int width,
-	int height,
-	DataBuffer &image)
-{
-	throw Exception("Compressed textures not supported by GDI target");
-}
-
+/*FIXME
 void SWRenderTextureProvider::set_subimage(
 	int x,
 	int y,
@@ -131,6 +111,7 @@ void SWRenderTextureProvider::set_subimage(
 		}
 	}
 }
+*/
 
 void SWRenderTextureProvider::copy_image_from(
 	int x,

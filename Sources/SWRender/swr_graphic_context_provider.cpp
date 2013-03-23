@@ -81,14 +81,9 @@ Size SWRenderGraphicContextProvider::get_max_texture_size() const
 	return Size(8*1024, 8*1024);
 }
 
-int SWRenderGraphicContextProvider::get_width() const
+Size SWRenderGraphicContextProvider::get_display_window_size() const
 {
-	return canvas->get_width();
-}
-
-int SWRenderGraphicContextProvider::get_height() const
-{
-	return canvas->get_height();
+	return Size(canvas->get_width(), canvas->get_height());
 }
 
 #ifdef WIN32
@@ -175,6 +170,7 @@ void SWRenderGraphicContextProvider::set_texture(int unit_index, const Texture &
 	canvas->set_sampler(unit_index, dynamic_cast<SWRenderTextureProvider*>(bound_textures[unit_index].get_provider())->get_image());
 }
 
+/* FIXME
 void SWRenderGraphicContextProvider::reset_texture(int unit_index, const Texture &texture)
 {
 	std::map<int, Texture>::iterator it = bound_textures.find(unit_index);
@@ -182,6 +178,7 @@ void SWRenderGraphicContextProvider::reset_texture(int unit_index, const Texture
 		bound_textures.erase(it);
 	canvas->reset_sampler(unit_index);
 }
+*/
 
 void SWRenderGraphicContextProvider::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
 {
@@ -211,6 +208,7 @@ void SWRenderGraphicContextProvider::set_blend_mode(const BlendMode &blendmode)
 }
 */
 
+/* FIXME
 void SWRenderGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayData * const prim_array)
 {
 	set_primitives_array(prim_array);
@@ -225,6 +223,7 @@ void SWRenderGraphicContextProvider::set_primitives_array(const PrimitivesArrayD
 	for (int i = 0; i < num_attribute_fetchers; i++)
 		attribute_fetchers[i].bind(current_prim_array, i);
 }
+*/
 
 void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 {
@@ -267,6 +266,7 @@ void SWRenderGraphicContextProvider::draw_primitives_array_instanced(PrimitivesT
 {
 }
 
+/* FIXME
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned int *indices)
 {
 	if (type == type_triangles)
@@ -374,6 +374,7 @@ void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(Primitiv
 void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned char *indices, int instance_count)
 {
 }
+*/
 
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset)
 {
@@ -383,9 +384,11 @@ void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(Primitiv
 {
 }
 
+/* FIXME
 void SWRenderGraphicContextProvider::primitives_array_freed(const PrimitivesArrayData * const prim_array)
 {
 }
+*/
 
 void SWRenderGraphicContextProvider::reset_primitives_array()
 {
@@ -395,6 +398,7 @@ void SWRenderGraphicContextProvider::reset_primitives_array()
 	current_prim_array = 0;
 }
 
+/* FIXME
 void SWRenderGraphicContextProvider::draw_pixels(GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color)
 {
 	Vec4f pos(x, y, 1.0, 1.0);
@@ -403,6 +407,7 @@ void SWRenderGraphicContextProvider::draw_pixels(GraphicContext &gc, float x, fl
 	Rect dest(Point((int)screen_pos.x,(int)screen_pos.y),Size((int)(src_rect.get_width()*zoom_x),(int)(src_rect.get_height()*zoom_y)));
 	canvas->draw_pixels(dest, pixel_buffer, src_rect, color);
 }
+*/
 
 void SWRenderGraphicContextProvider::draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels)
 {
@@ -416,12 +421,12 @@ void SWRenderGraphicContextProvider::queue_command(std::unique_ptr<PixelCommand>
 	canvas->queue_command(command);
 }
 
-void SWRenderGraphicContextProvider::set_clip_rect(const Rect &rect)
+void SWRenderGraphicContextProvider::set_scissor(const Rect &rect)
 {
 	canvas->set_clip_rect(rect);
 }
 
-void SWRenderGraphicContextProvider::reset_clip_rect()
+void SWRenderGraphicContextProvider::reset_scissor()
 {
 	canvas->reset_clip_rect();
 }
@@ -436,10 +441,6 @@ void SWRenderGraphicContextProvider::clear_depth(float value)
 }
 
 void SWRenderGraphicContextProvider::clear_stencil(int value)
-{
-}
-
-void SWRenderGraphicContextProvider::set_map_mode(MapMode mode)
 {
 }
 

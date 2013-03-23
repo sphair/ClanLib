@@ -59,18 +59,28 @@ public:
 public:
 	int get_max_attributes();
 	Size get_max_texture_size() const;
-	int get_width() const;
-	int get_height() const;
+	Size get_display_window_size() const;
+	PixelCanvas *get_canvas() const { return canvas.get(); }
+
 #ifdef WIN32
 	HDC get_drawable() const;
 #endif
-	PixelCanvas *get_canvas() const { return canvas.get(); }
+
+	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
+	ProgramObject get_program_object(StandardProgram standard_program) const;
+
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat pixel_format, bool clamp) const;
+	void draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
+	void queue_command(std::unique_ptr<PixelCommand> &command);
+
+	ClipZRange get_clip_z_range() const { return clip_zero_positive_w; }
+	TextureImageYAxis get_texture_image_y_axis() const { return y_axis_top_down; }
+	ShaderLanguage get_shader_language() const { return shader_hlsl; }
+	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 	OcclusionQueryProvider *alloc_occlusion_query();
 	ProgramObjectProvider *alloc_program_object();
@@ -78,40 +88,74 @@ public:
 	FrameBufferProvider *alloc_frame_buffer();
 	RenderBufferProvider *alloc_render_buffer();
 	VertexArrayBufferProvider *alloc_vertex_array_buffer();
+	UniformBufferProvider *alloc_uniform_buffer();
+	StorageBufferProvider *alloc_storage_buffer();
 	ElementArrayBufferProvider *alloc_element_array_buffer();
+	TransferBufferProvider *alloc_transfer_buffer();
 	PixelBufferProvider *alloc_pixel_buffer();
+	PrimitivesArrayProvider *alloc_primitives_array();
+	std::shared_ptr<RasterizerStateProvider> create_rasterizer_state(const RasterizerStateDescription &desc);
+	std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc);
+	std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc);
+	void set_rasterizer_state(RasterizerStateProvider *state);
+	void set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask);
+	void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref);
 	void set_program_object(StandardProgram standard_program);
 	void set_program_object(const ProgramObject &program);
 	void reset_program_object();
+	void set_uniform_buffer(int index, const UniformBuffer &buffer);
+	void reset_uniform_buffer(int index);
+	void set_storage_buffer(int index, const StorageBuffer &buffer);
+	void reset_storage_buffer(int index);
 	void set_texture(int unit_index, const Texture &texture);
-	void reset_texture(int unit_index, const Texture &texture);
+	void reset_texture(int unit_index);
+	void set_image_texture(int unit_index, const Texture &texture);
+	void reset_image_texture(int unit_index);
+	bool is_frame_buffer_owner(const FrameBuffer &fb);
 	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
 	void reset_frame_buffer();
-	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayData * const prim_array);
-	void set_primitives_array(const PrimitivesArrayData * const prim_array);
+	void enable_logic_op(bool enabled);
+	void set_logic_op(LogicOp op);
+	void set_draw_buffer(DrawBuffer buffer);
+
+	void set_point_size(float value);
+	void set_point_fade_treshold_size(float value);
+	void set_line_width(float value);
+	void enable_vertex_program_point_size(bool enabled);
+	void set_point_sprite_origin(PointSpriteOrigin origin);
+
+	void set_antialiased(bool value);
+	void set_point_offset(bool value);
+	void set_line_offset(bool value);
+	void set_polygon_offset(bool value);
+	void set_offset_factor(float value);
+	void set_offset_units(float value);
+
+	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
+	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
+	void set_primitives_array(const PrimitivesArray &primitives_array);
 	void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
 	void draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count);
-	void draw_primitives_elements(PrimitivesType type, int count, unsigned int *indices);
-	void draw_primitives_elements(PrimitivesType type, int count, unsigned short *indices);
-	void draw_primitives_elements(PrimitivesType type, int count, unsigned char *indices);
-	void draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned int *indices, int instance_count);
-	void draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned short *indices, int instance_count);
-	void draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned char *indices, int instance_count);
+	void set_primitives_elements(ElementArrayBufferProvider *array_provider);
+	void draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset = 0);
+	void draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count);
+	void reset_primitives_elements();
 	void draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset);
 	void draw_primitives_elements_instanced(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset, int instance_count);
-	void primitives_array_freed(const PrimitivesArrayData * const prim_array);
 	void reset_primitives_array();
-	void draw_pixels(GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color);
-	void draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
-	void queue_command(std::unique_ptr<PixelCommand> &command);
-	void set_clip_rect(const Rect &rect);
-	void reset_clip_rect();
+	void set_scissor(const Rect &rect);
+	void reset_scissor();
+	void dispatch(int x, int y, int z);
 	void clear(const Colorf &color);
 	void clear_depth(float value);
 	void clear_stencil(int value);
-	void set_map_mode(MapMode mode);
 	void set_viewport(const Rectf &viewport);
+	void set_viewport(int index, const Rectf &viewport);
+
+	void set_depth_range(float n, float f);
+	void set_depth_range(int viewport, float n, float f);
 	void on_window_resized();
+
 /// \}
 
 /// \name Implementation
@@ -132,6 +176,8 @@ private:
 	VertexAttributeFetcherPtr attribute_fetchers[num_attribute_fetchers];
 	SoftwareProgram_Standard cl_software_program_standard;
 	ProgramObject_SWRender program_object_standard;
+	Signal_v1<const Size &> window_resized_signal;
+
 /// \}
 };
 
