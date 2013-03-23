@@ -35,10 +35,10 @@ namespace clan
 PixelThreadContext::PixelThreadContext(int core, int num_cores)
 : core(core),
   num_cores(num_cores),
-  cur_blend_src(cl_blend_src_alpha),
-  cur_blend_dest(cl_blend_one_minus_src_alpha),
-  cur_blend_src_alpha(cl_blend_one), 
-  cur_blend_dest_alpha(cl_blend_one_minus_src_alpha)
+  cur_blend_src(blend_src_alpha),
+  cur_blend_dest(blend_one_minus_src_alpha),
+  cur_blend_src_alpha(blend_one), 
+  cur_blend_dest_alpha(blend_one_minus_src_alpha)
 {
 	unsigned int white = 0xffffffff;
 	pixelbuffer_white = PixelBuffer(1, 1, tf_bgra8, &white);

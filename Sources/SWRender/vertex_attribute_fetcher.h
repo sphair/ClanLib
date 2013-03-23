@@ -319,7 +319,7 @@ inline void VertexAttributeFetcher::bind(const PrimitivesArrayData *new_prim_arr
 {
 	prim_array = new_prim_array;
 	bound_attribute_index = new_bound_attribute_index;
-	range = cl_min(prim_array->attributes[bound_attribute_index].size, 4);
+	range = min(prim_array->attributes[bound_attribute_index].size, 4);
 }
 
 inline const void *VertexAttributeFetcher::find_vertex_data(int index)
@@ -495,7 +495,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(Vec2f *result, int *indexes,
 	for (int i = 0; i < num; i++)
 	{
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
-		int r = cl_min( static_cast<int>(range), 2);
+		int r = min( static_cast<int>(range), 2);
 		for (unsigned int j=0; j<r; j++)
 			result[i][j] = v[j];
 		for (unsigned int j=r; j<2; j++)

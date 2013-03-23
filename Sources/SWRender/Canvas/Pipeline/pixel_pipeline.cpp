@@ -319,7 +319,7 @@ void *PixelPipeline::alloc_command(size_t s)
 		}
 		cur_block = 0;
 
-		size_t block_size = cl_max(s, (size_t)16*1024);
+		size_t block_size = max(s, (size_t)16*1024);
 		char *data = new char[sizeof(AllocBlock) + block_size];
 		cur_block = (AllocBlock *)data;
 		cur_block->size = block_size;
