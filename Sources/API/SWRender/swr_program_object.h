@@ -32,7 +32,7 @@
 #pragma once
 
 #include "api_swrender.h"
-#include "../Core/System/sharedptr.h"
+
 #include "../Display/Render/graphic_context.h"
 #include "../Display/Render/program_object.h"
 #include "software_program.h"

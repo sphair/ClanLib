@@ -32,8 +32,8 @@
 #pragma once
 
 #include "api_swrender.h"
-#include "../Core/System/sharedptr.h"
-#include "../Core/System/uniqueptr.h"
+
+
 #include "../Display/Render/graphic_context.h"
 
 namespace clan
