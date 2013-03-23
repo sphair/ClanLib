@@ -83,7 +83,8 @@ FrameBufferBindTarget SWRenderFrameBufferProvider::get_bind_target() const
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderFrameBufferProvider Operations:
 
-void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const RenderBuffer &render_buffer)
+/*FIXME
+void SWRenderFrameBufferProvider::attach_color(int color_buffer, const RenderBuffer &render_buffer)
 {
 	if (color_buffer == 0)
 	{
@@ -94,7 +95,7 @@ void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Re
 	}
 }
 
-void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
+void SWRenderFrameBufferProvider::attach_color(int color_buffer, const Texture2D &texture, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
@@ -105,7 +106,7 @@ void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Te
 	}
 }
 
-void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, TextureSubtype subtype, int level, int zoffset)
+void SWRenderFrameBufferProvider::attach_color(int color_buffer, const Texture &texture, TextureSubtype subtype, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
@@ -116,7 +117,7 @@ void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Te
 	}
 }
 
-void SWRenderFrameBufferProvider::detach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
+void SWRenderFrameBufferProvider::detach_color(int color_buffer, const Texture &texture, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
@@ -126,28 +127,32 @@ void SWRenderFrameBufferProvider::detach_color_buffer(int color_buffer, const Te
 		sig_changed_event.invoke();
 	}
 }
+*/
 
-void SWRenderFrameBufferProvider::detach_color_buffer( int color_buffer, const RenderBuffer &render_buffer )
-{
-}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture3D &texture, int depth, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) {}
+void SWRenderFrameBufferProvider::detach_color(int attachment_index) {}
 
-void SWRenderFrameBufferProvider::attach_stencil_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::detach_stencil_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::attach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::attach_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::detach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_stencil(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_stencil(const Texture2D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
+void SWRenderFrameBufferProvider::detach_stencil() {}
 
-void SWRenderFrameBufferProvider::attach_depth_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::detach_depth_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::attach_depth_buffer(const Texture &texture, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::attach_depth_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::detach_depth_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_depth(const Texture2D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_depth(const TextureCube &texture, TextureSubtype subtype, int level) {}
+void SWRenderFrameBufferProvider::detach_depth() {}
 
-void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
-void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil(const Texture2D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil(const TextureCube &texture, TextureSubtype subtype, int level) {}
+void SWRenderFrameBufferProvider::detach_depth_stencil() {}
+
 
 void SWRenderFrameBufferProvider::set_bind_target( FrameBufferBindTarget target )
 {

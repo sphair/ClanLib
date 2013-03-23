@@ -70,7 +70,13 @@ void SWRenderVertexArrayBufferProvider::unlock()
 {
 }
 
-void SWRenderVertexArrayBufferProvider::upload_data(int offset, void *data, int size)
+void SWRenderVertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
+{
+}
+void SWRenderVertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+{
+}
+void SWRenderVertexArrayBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
 }
 

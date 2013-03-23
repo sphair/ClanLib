@@ -70,9 +70,17 @@ void SWRenderElementArrayBufferProvider::unlock()
 {
 }
 
-void SWRenderElementArrayBufferProvider::upload_data(int offset, void *data, int size)
+void SWRenderElementArrayBufferProvider::upload_data(GraphicContext &gc, const void *data, int size)
+{
+
+}
+void SWRenderElementArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
 }
+void SWRenderElementArrayBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
+{
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderElementArrayBufferProvider Implementation:

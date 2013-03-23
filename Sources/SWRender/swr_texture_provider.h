@@ -58,45 +58,21 @@ public:
 /// \{
 
 public:
-	void generate_mipmap();
-
 	void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
 
 	PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
 
-	void set_image(PixelBuffer &image, int level);
-
-	void set_cube_map(
-		PixelBuffer &cube_map_positive_x,
-		PixelBuffer &cube_map_negative_x,
-		PixelBuffer &cube_map_positive_y,
-		PixelBuffer &cube_map_negative_y,
-		PixelBuffer &cube_map_positive_z,
-		PixelBuffer &cube_map_negative_z,
-		int level);
-
-	void set_compressed_image(
-		int level,
-		TextureFormat internal_format,
-		int width,
-		int height,
-		DataBuffer &image);
-
-	void set_subimage(
-		int x,
-		int y,
-		const PixelBuffer &image,
-		const Rect &src_rect,
-		int level);
+	void generate_mipmap();
 
 	void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
+
 	void copy_image_from(
 		int x,
 		int y,
 		int width,
 		int height,
 		int level,
-		TextureFormat internal_format,
+		TextureFormat texture_format,
 		GraphicContextProvider *gc);
 
 	void copy_subimage_from(
@@ -109,11 +85,8 @@ public:
 		int level,
 		GraphicContextProvider *gc);
 
-	TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 	void set_min_lod(double min_lod);
-
 	void set_max_lod(double max_lod);
-
 	void set_lod_bias(double lod_bias);
 
 	void set_base_level(int base_level);
@@ -131,15 +104,11 @@ public:
 
 	void set_wrap_mode(
 		TextureWrapMode wrap_s);
-
 	void set_min_filter(TextureFilter filter);
-
 	void set_mag_filter(TextureFilter filter);
-
 	void set_max_anisotropy(float v);
-
 	void set_texture_compare(TextureCompareMode mode, CompareFunction func);
-
+	TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 /// \}
 /// \name Implementation

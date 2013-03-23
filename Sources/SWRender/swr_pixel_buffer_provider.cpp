@@ -43,7 +43,7 @@ SWRenderPixelBufferProvider::~SWRenderPixelBufferProvider()
 {
 }
 
-void SWRenderPixelBufferProvider::create(const void *data, int new_width, int new_height, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
+void SWRenderPixelBufferProvider::create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 {
 	// Maybe create a normal PixelBuffer inside here to store the data?
 }
@@ -59,15 +59,13 @@ void *SWRenderPixelBufferProvider::get_data()
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderPixelBufferProvider Operations:
 
-void SWRenderPixelBufferProvider::lock(BufferAccess access)
+void SWRenderPixelBufferProvider::lock(GraphicContext &gc, BufferAccess access)
 {
 }
-
 void SWRenderPixelBufferProvider::unlock()
 {
 }
-
-void SWRenderPixelBufferProvider::upload_data(const Rect &dest_rect, const void *data)
+void SWRenderPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data)
 {
 }
 
