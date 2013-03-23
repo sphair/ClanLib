@@ -83,7 +83,6 @@ private:
 	std::shared_ptr<GraphicContext_SWRender_Impl> impl;
 };
 
-namespace clan
-{
+}
 
 /// \}

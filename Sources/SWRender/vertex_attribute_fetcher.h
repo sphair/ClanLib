@@ -33,6 +33,7 @@
 
 namespace clan
 {
+class PrimitivesArrayData;
 
 class VertexAttributeFetcher
 {
@@ -201,7 +202,7 @@ inline VertexAttributeFetcherPtr::~VertexAttributeFetcherPtr()
 inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_array, int attribute_index)
 {
 	clear();
-
+/* FIXME
 	int bound_attribute_index = -1;
 	for (int j = 0; j < prim_array->num_attributes; j++)
 	{
@@ -298,6 +299,7 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_arra
 	}
 
 	fetcher->bind(prim_array, bound_attribute_index);
+	*/
 }
 
 inline void VertexAttributeFetcherPtr::throw_if_insufficient_buffer(size_t size)
@@ -319,11 +321,12 @@ inline void VertexAttributeFetcher::bind(const PrimitivesArrayData *new_prim_arr
 {
 	prim_array = new_prim_array;
 	bound_attribute_index = new_bound_attribute_index;
-	range = min(prim_array->attributes[bound_attribute_index].size, 4);
+//FIXME:	range = min(prim_array->attributes[bound_attribute_index].size, 4);
 }
 
 inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 {
+	/* FIXME
 	if (data == 0)
 	{
 		const PrimitivesArrayData::VertexData &vertex_data = prim_array->attributes[bound_attribute_index];
@@ -355,63 +358,63 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 			}
 		}
 	}
-
+	*/
 	return data + stride*index;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueUnsignedByte::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_ubyte[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_ubyte[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueUnsignedShort::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_ushort[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_ushort[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueUnsignedInt::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_uint[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_uint[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueByte::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_byte[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_byte[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueShort::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_short[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_short[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueInt::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_int[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_int[i];
 	return result;
 }
 
 inline Vec4f VertexAttributeFetcherSingleValueFloat::fetch(int index, const Vec4f &default_value)
 {
 	Vec4f result = default_value;
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_float[i];
+//FIXME:	for (unsigned int i=0; i<range; i++)
+//FIXME:		result[i] = prim_array->attributes[bound_attribute_index].value_float[i];
 	return result;
 }
 
@@ -508,7 +511,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(float *result, int *indexes,
 	for (int i = 0; i < num; i++)
 	{
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
-		result[i].x = range > 0 ? v[0] : default_value.x;
+//FIXME:		result[i].x = range > 0 ? v[0] : default_value.x;
 	}
 }
 
