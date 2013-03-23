@@ -43,10 +43,7 @@ public:
 
 	~SWRenderPixelBufferProvider();
 
-	void create(const void *data, int new_width, int new_height, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
-
-	void destroy();
-
+	void create(const void *data, const Size &new_size, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 
 /// \}
 /// \name Attributes
@@ -54,6 +51,10 @@ public:
 
 public:
 	void *get_data();
+	int get_pitch() const;
+	Size get_size() const;
+	bool is_gpu() const;
+	TextureFormat get_format() const;
 
 
 /// \}
@@ -61,11 +62,9 @@ public:
 /// \{
 
 public:
-	void lock(BufferAccess access);
-
+	void lock(GraphicContext &gc, BufferAccess access);
 	void unlock();
-
-	void upload_data(const Rect &dest_rect, const void *data);
+	void upload_data(GraphicContext &gc, const Rect &dest_rect, const void *data);
 
 /// \}
 /// \name Implementation

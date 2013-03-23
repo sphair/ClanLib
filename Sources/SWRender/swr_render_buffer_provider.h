@@ -59,9 +59,6 @@ public:
 public:
 	void create(int width, int height, TextureFormat internal_format, int multisample_samples);
 
-	void destroy();
-
-
 /// \}
 /// \name Implementation
 /// \{

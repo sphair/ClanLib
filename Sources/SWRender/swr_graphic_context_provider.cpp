@@ -101,11 +101,6 @@ HDC SWRenderGraphicContextProvider::get_drawable() const
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderGraphicContextProvider Operations:
 
-void SWRenderGraphicContextProvider::destroy()
-{
-	delete this;
-}
-
 PixelBuffer SWRenderGraphicContextProvider::get_pixeldata(const Rect& rect, TextureFormat pixel_format, bool clamp) const
 {
 	return canvas->to_pixelbuffer().copy(rect).to_format(pixel_format);

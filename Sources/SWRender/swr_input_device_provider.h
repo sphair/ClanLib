@@ -44,9 +44,6 @@ public:
 
 	~SWRenderInputDeviceProvider();
 
-	void destroy();
-
-
 /// \}
 /// \name Attributes
 /// \{

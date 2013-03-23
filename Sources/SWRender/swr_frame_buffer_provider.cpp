@@ -83,11 +83,6 @@ FrameBufferBindTarget SWRenderFrameBufferProvider::get_bind_target() const
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderFrameBufferProvider Operations:
 
-void SWRenderFrameBufferProvider::destroy()
-{
-	delete this;
-}
-
 void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const RenderBuffer &render_buffer)
 {
 	if (color_buffer == 0)

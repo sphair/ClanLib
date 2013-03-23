@@ -70,7 +70,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	void destroy();
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat pixel_format, bool clamp) const;
 	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 	OcclusionQueryProvider *alloc_occlusion_query();

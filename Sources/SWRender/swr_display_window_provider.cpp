@@ -155,11 +155,6 @@ void SWRenderDisplayWindowProvider::capture_mouse(bool capture)
 	window.capture_mouse(capture);
 }
 
-void SWRenderDisplayWindowProvider::destroy()
-{
-	delete this;
-}
-
 void SWRenderDisplayWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
 {
 	site = new_site;

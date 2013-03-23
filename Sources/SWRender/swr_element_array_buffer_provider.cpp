@@ -51,11 +51,6 @@ void SWRenderElementArrayBufferProvider::create(void *data, int size, BufferUsag
 {
 }
 
-void SWRenderElementArrayBufferProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderElementArrayBufferProvider Attributes:
 

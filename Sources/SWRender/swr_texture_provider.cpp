@@ -51,11 +51,6 @@ SWRenderTextureProvider::~SWRenderTextureProvider()
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTextureProvider Operations:
 
-void SWRenderTextureProvider::destroy()
-{
-	delete this;
-}
-
 void SWRenderTextureProvider::generate_mipmap()
 {
 }

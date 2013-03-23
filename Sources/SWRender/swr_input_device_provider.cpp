@@ -43,11 +43,6 @@ SWRenderInputDeviceProvider::~SWRenderInputDeviceProvider()
 {
 }
 
-void SWRenderInputDeviceProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderInputDeviceProvider Attributes:
 

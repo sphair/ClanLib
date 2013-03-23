@@ -65,9 +65,6 @@ public:
 
 	void create();
 
-	void destroy();
-
-
 /// \}
 /// \name Implementation
 /// \{
