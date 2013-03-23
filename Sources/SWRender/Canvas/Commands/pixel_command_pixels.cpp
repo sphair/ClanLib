@@ -228,10 +228,10 @@ void PixelCommandPixels::render_pixels_noscale_white(PixelThreadContext *context
 Rect PixelCommandPixels::get_clipped_dest_rect(PixelThreadContext *context) const
 {
 	Rect dest = dest_rect;
-	dest.left = cl_max(cl_min(dest.left, context->clip_rect.right), context->clip_rect.left);
-	dest.right = cl_max(cl_min(dest.right, context->clip_rect.right), context->clip_rect.left);
-	dest.top = cl_max(cl_min(dest.top, context->clip_rect.bottom), context->clip_rect.top);
-	dest.bottom = cl_max(cl_min(dest.bottom, context->clip_rect.bottom), context->clip_rect.top);
+	dest.left = max(min(dest.left, context->clip_rect.right), context->clip_rect.left);
+	dest.right = max(min(dest.right, context->clip_rect.right), context->clip_rect.left);
+	dest.top = max(min(dest.top, context->clip_rect.bottom), context->clip_rect.top);
+	dest.bottom = max(min(dest.bottom, context->clip_rect.bottom), context->clip_rect.top);
 	return dest;
 }
 

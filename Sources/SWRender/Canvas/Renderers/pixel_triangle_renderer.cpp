@@ -87,9 +87,9 @@ void PixelTriangleRenderer::render_nearest(unsigned int v1, unsigned int v2, uns
 	int middle_y = ((int)(floor(y[v2]-0.5f)))+1;
 	int end_y = ((int)(floor(y[v3]-0.5f)))+1;
 
-	start_y = cl_max(cl_min(start_y, clip_rect.bottom), clip_rect.top);
-	middle_y = cl_max(cl_min(middle_y, clip_rect.bottom), clip_rect.top);
-	end_y = cl_max(cl_min(end_y, clip_rect.bottom), clip_rect.top);
+	start_y = max(min(start_y, clip_rect.bottom), clip_rect.top);
+	middle_y = max(min(middle_y, clip_rect.bottom), clip_rect.top);
+	end_y = max(min(end_y, clip_rect.bottom), clip_rect.top);
 
 
 	// Band for the area covered by v1 to v2
@@ -125,9 +125,9 @@ void PixelTriangleRenderer::render_linear(unsigned int v1, unsigned int v2, unsi
 	int middle_y = ((int)(floor(y[v2]-0.5f)))+1;
 	int end_y = ((int)(floor(y[v3]-0.5f)))+1;
 
-	start_y = cl_max(cl_min(start_y, clip_rect.bottom), clip_rect.top);
-	middle_y = cl_max(cl_min(middle_y, clip_rect.bottom), clip_rect.top);
-	end_y = cl_max(cl_min(end_y, clip_rect.bottom), clip_rect.top);
+	start_y = max(min(start_y, clip_rect.bottom), clip_rect.top);
+	middle_y = max(min(middle_y, clip_rect.bottom), clip_rect.top);
+	end_y = max(min(end_y, clip_rect.bottom), clip_rect.top);
 
 	// Band for the area covered by v1 to v2
 	for (int y = start_y; y < middle_y; y++)
@@ -418,8 +418,8 @@ void PixelTriangleRenderer::prepare_scanline2(int y, const LinePoint &p0, const 
 	out_scanline.slope_a = (p1.a-p0.a)/dx;
 	out_scanline.start_x = (int)floor(p0.x+0.5f);
 	out_scanline.end_x = ((int)floor(p1.x-0.5f))+1;
-	out_scanline.start_x = cl_max(clip_rect.left, out_scanline.start_x);
-	out_scanline.end_x = cl_min(clip_rect.right, out_scanline.end_x);
+	out_scanline.start_x = max(clip_rect.left, out_scanline.start_x);
+	out_scanline.end_x = min(clip_rect.right, out_scanline.end_x);
 	float offset = out_scanline.start_x+0.5f-p0.x;
 	out_scanline.cur_tx = p0.tx + offset*out_scanline.slope_tx;
 	out_scanline.cur_ty = p0.ty + offset*out_scanline.slope_ty;

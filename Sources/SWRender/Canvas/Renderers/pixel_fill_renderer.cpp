@@ -80,7 +80,7 @@ void PixelFillRenderer::clear(const Colorf &color)
 		// Write single bytes until we are byte aligned:
 		if (line_align)
 		{
-			int prefix_length = cl_min(length, (int) (16 - line_align));
+			int prefix_length = min(length, (int) (16 - line_align));
 			for (; pos < prefix_length; pos++)
 				line[pos] = ptr_color8888[pos&0x3];
 		}
@@ -108,10 +108,10 @@ void PixelFillRenderer::fill_rect(const Rect &dest, const Colorf &primary_color)
 	int dest_buffer_width = colorbuffer0.size.width;
 	unsigned int *dest_data = colorbuffer0.data;
 
-	int start_x = cl_max(dest.left, clip_rect.left);
-	int end_x = cl_min(dest.right, clip_rect.right);
-	int start_y = cl_max(dest.top, clip_rect.top);
-	int end_y = cl_min(dest.bottom, clip_rect.bottom);
+	int start_x = max(dest.left, clip_rect.left);
+	int end_x = min(dest.right, clip_rect.right);
+	int start_y = max(dest.top, clip_rect.top);
+	int end_y = min(dest.bottom, clip_rect.bottom);
 	if (start_x < end_x && start_y < end_y)
 	{
 		int dest_y = find_first_line_for_core(start_y, core, num_cores);

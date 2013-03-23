@@ -47,10 +47,10 @@ namespace clan
 PixelCanvas::PixelCanvas(const Size &size)
 : primary_colorbuffer0(size.width, size.height, tf_bgra8),
   framebuffer_set(false), cliprect_set(false),
-  cur_blend_src(cl_blend_src_alpha),
-  cur_blend_dest(cl_blend_one_minus_src_alpha),
-  cur_blend_src_alpha(cl_blend_one), 
-  cur_blend_dest_alpha(cl_blend_one_minus_src_alpha)
+  cur_blend_src(blend_src_alpha),
+  cur_blend_dest(blend_one_minus_src_alpha),
+  cur_blend_src_alpha(blend_one), 
+  cur_blend_dest_alpha(blend_one_minus_src_alpha)
 {
 	pipeline.reset(new PixelPipeline());
 

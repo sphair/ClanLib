@@ -122,7 +122,7 @@ void PixelCommandSprite::render_sprite(PixelThreadContext *context)
 		float dx = (texcoords[1].x-texcoords[0].x)/(points[1].x-points[0].x);
 		bool scale = (dx < 0.999f || dx > 1.001f);
 		bool white = (primcolor == Vec4f(1.0f, 1.0f, 1.0f, 1.0f));
-		if (context->cur_blend_src == cl_blend_constant_color)
+		if (context->cur_blend_src == blend_constant_color)
 		{
 			if (scale)
 				render_glyph_scale(context, box);
@@ -492,10 +492,10 @@ Rect PixelCommandSprite::get_dest_rect(PixelThreadContext *context) const
 	dest.top = (int)(y0 + 0.5f);
 	dest.bottom = (int)(y1 - 0.5f) + 1;
 
-	dest.left = cl_max(cl_min(dest.left, context->clip_rect.right), context->clip_rect.left);
-	dest.right = cl_max(cl_min(dest.right, context->clip_rect.right), context->clip_rect.left);
-	dest.top = cl_max(cl_min(dest.top, context->clip_rect.bottom), context->clip_rect.top);
-	dest.bottom = cl_max(cl_min(dest.bottom, context->clip_rect.bottom), context->clip_rect.top);
+	dest.left = max(min(dest.left, context->clip_rect.right), context->clip_rect.left);
+	dest.right = max(min(dest.right, context->clip_rect.right), context->clip_rect.left);
+	dest.top = max(min(dest.top, context->clip_rect.bottom), context->clip_rect.top);
+	dest.bottom = max(min(dest.bottom, context->clip_rect.bottom), context->clip_rect.top);
 
 	return dest;
 }

@@ -213,7 +213,7 @@ void SWRenderGraphicContextProvider::set_blend_mode(const BlendMode &blendmode)
 	}
 	else
 	{
-		canvas->set_blend_function(cl_blend_one, cl_blend_zero, cl_blend_one, cl_blend_zero, Colorf::black);
+		canvas->set_blend_function(blend_one, blend_zero, blend_one, blend_zero, Colorf::black);
 	}
 }
 
