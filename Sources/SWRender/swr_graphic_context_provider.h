@@ -88,10 +88,6 @@ public:
 	void reset_texture(int unit_index, const Texture &texture);
 	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
 	void reset_frame_buffer();
-	void set_blend_mode(const BlendMode &blendmode);
-	void set_buffer_control(const BufferControl &buffer_control);
-	void set_pen(const Pen &pen);
-	void set_polygon_rasterizer(const PolygonRasterizer &raster);
 	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayData * const prim_array);
 	void set_primitives_array(const PrimitivesArrayData * const prim_array);
 	void draw_primitives_array(PrimitivesType type, int offset, int num_vertices);
