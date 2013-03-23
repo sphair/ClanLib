@@ -105,7 +105,7 @@ PixelPipeline::~PixelPipeline()
 #endif
 }
 
-void PixelPipeline::queue(UniquePtr<PixelCommand> &command)
+void PixelPipeline::queue(std::unique_ptr<PixelCommand> &command)
 {
 	wait_for_space();
 	delete command_queue[local_writer_index];

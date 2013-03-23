@@ -429,7 +429,7 @@ void SWRenderGraphicContextProvider::draw_pixels_bicubic(float x, float y, int z
 	canvas->draw_pixels_bicubic((int)screen_pos.x,(int)screen_pos.y, zoom_number, zoom_denominator, pixels);
 }
 
-void SWRenderGraphicContextProvider::queue_command(UniquePtr<PixelCommand> &command)
+void SWRenderGraphicContextProvider::queue_command(std::unique_ptr<PixelCommand> &command)
 {
 	canvas->queue_command(command);
 }
@@ -494,7 +494,7 @@ void SWRenderGraphicContextProvider::draw_triangle(int index1, int index2, int i
 	for (size_t i = 0; i < bind_locations.size(); i++)
 		attribute_fetchers[bind_locations[i]]->fetch(&current_attribute_values[i*3], indexes, 3, attribute_defaults[i]);
 
-	UniquePtr<PixelCommand> command(current_program_provider->get_program()->draw_triangle(canvas->get_pipeline(), current_attribute_values));
+	std::unique_ptr<PixelCommand> command(current_program_provider->get_program()->draw_triangle(canvas->get_pipeline(), current_attribute_values));
 	if (command.get())
 		canvas->queue_command(command);
 }
@@ -509,7 +509,7 @@ void SWRenderGraphicContextProvider::draw_sprite(int index1, int index2, int ind
 	for (size_t i = 0; i < bind_locations.size(); i++)
 		attribute_fetchers[bind_locations[i]]->fetch(&current_attribute_values[i*3], indexes, 3, attribute_defaults[i]);
 
-	UniquePtr<PixelCommand> command(current_program_provider->get_program()->draw_sprite(canvas->get_pipeline(), current_attribute_values));
+	std::unique_ptr<PixelCommand> command(current_program_provider->get_program()->draw_sprite(canvas->get_pipeline(), current_attribute_values));
 	if (command.get())
 		canvas->queue_command(command);
 }
@@ -524,7 +524,7 @@ void SWRenderGraphicContextProvider::draw_line(int index1, int index2)
 	for (size_t i = 0; i < bind_locations.size(); i++)
 		attribute_fetchers[bind_locations[i]]->fetch(&current_attribute_values[i*2], indexes, 2, attribute_defaults[i]);
 
-	UniquePtr<PixelCommand> command(current_program_provider->get_program()->draw_line(canvas->get_pipeline(), current_attribute_values));
+	std::unique_ptr<PixelCommand> command(current_program_provider->get_program()->draw_line(canvas->get_pipeline(), current_attribute_values));
 	if (command.get())
 		canvas->queue_command(command);
 }

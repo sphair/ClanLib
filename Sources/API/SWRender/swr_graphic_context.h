@@ -76,7 +76,7 @@ public:
 	/// \brief Queues a pixel command in the pipeline
 	template<typename T>
 	void queue_command(T *command) { queue_command(std::unique_ptr<T>(command)); }
-	void queue_command(UniquePtr<PixelCommand> &command);
+	void queue_command(std::unique_ptr<PixelCommand> &command);
 
 //!Implementation
 private:
