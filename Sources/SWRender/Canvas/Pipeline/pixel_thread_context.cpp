@@ -41,7 +41,7 @@ PixelThreadContext::PixelThreadContext(int core, int num_cores)
   cur_blend_dest_alpha(cl_blend_one_minus_src_alpha)
 {
 	unsigned int white = 0xffffffff;
-	pixelbuffer_white = PixelBuffer(1, 1, cl_argb8, &white);
+	pixelbuffer_white = PixelBuffer(1, 1, tf_bgra8, &white);
 	for (int i=0; i<max_samplers; i++)
 		samplers[i].set(pixelbuffer_white);
 }

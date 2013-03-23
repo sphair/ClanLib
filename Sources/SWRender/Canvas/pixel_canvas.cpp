@@ -45,7 +45,7 @@ namespace clan
 {
 
 PixelCanvas::PixelCanvas(const Size &size)
-: primary_colorbuffer0(size.width, size.height, cl_argb8),
+: primary_colorbuffer0(size.width, size.height, tf_bgra8),
   framebuffer_set(false), cliprect_set(false),
   cur_blend_src(cl_blend_src_alpha),
   cur_blend_dest(cl_blend_one_minus_src_alpha),
@@ -69,7 +69,7 @@ PixelCanvas::~PixelCanvas()
 void PixelCanvas::resize(const Size &size)
 {
 	Size old_size = colorbuffer0.size;
-	primary_colorbuffer0 = PixelBuffer(size.width, size.height, cl_argb8);
+	primary_colorbuffer0 = PixelBuffer(size.width, size.height, tf_bgra8);
 	if (!framebuffer_set)
 	{
 		pipeline->wait_for_workers();
@@ -165,28 +165,28 @@ void PixelCanvas::clear(const Colorf &color)
 
 void PixelCanvas::draw_pixels(const Rect &dest, const PixelBuffer &image, const Rect &src_rect, const Colorf &primary_color)
 {
-	if (image.get_format() == cl_argb8)
+	if (image.get_format() == tf_bgra8)
 	{
 		pipeline->queue(new(pipeline.get()) PixelCommandPixels(dest, image, src_rect, primary_color));
 		pipeline->wait_for_workers();
 	}
 	else
 	{
-		PixelBuffer image_argb8 = image.to_format(cl_argb8);
+		PixelBuffer image_argb8 = image.to_format(tf_bgra8);
 		draw_pixels(dest, image_argb8, src_rect, primary_color);
 	}
 }
 
 void PixelCanvas::draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &image)
 {
-	if (image.get_format() == cl_argb8)
+	if (image.get_format() == tf_bgra8)
 	{
 		pipeline->queue(new(pipeline.get()) PixelCommandBicubic(x, y, zoom_number, zoom_denominator, image));
 		pipeline->wait_for_workers();
 	}
 	else
 	{
-		PixelBuffer image_argb8 = image.to_format(cl_argb8);
+		PixelBuffer image_argb8 = image.to_format(tf_bgra8);
 		draw_pixels_bicubic(x, y, zoom_number, zoom_denominator, image_argb8);
 	}
 }
