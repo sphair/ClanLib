@@ -208,13 +208,6 @@ int GL1GraphicContextProvider::get_max_attributes()
 	return max_attributes;
 }
 
-int GL1GraphicContextProvider::get_light_count()
-{
-	set_active();
-	GLint max_lights = 0;
-	cl1GetIntegerv(GL_MAX_LIGHTS, &max_lights);
-	return max_lights;
-}
 
 Size GL1GraphicContextProvider::get_max_texture_size() const
 {

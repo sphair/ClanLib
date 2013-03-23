@@ -99,7 +99,6 @@ public:
 
 	// GL1 Only
 	int get_max_texture_coords();
-	int get_light_count();
 
 	void get_opengl_version(int &version_major, int &version_minor) { int version_release = 0; get_opengl_version(version_major, version_minor, version_release); }
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
