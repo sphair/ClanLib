@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_vertex_array_buffer_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderVertexArrayBufferProvider Construction:
 
@@ -78,3 +81,5 @@ void CL_SWRenderVertexArrayBufferProvider::upload_data(int offset, void *data, i
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderVertexArrayBufferProvider Implementation:
+
+}

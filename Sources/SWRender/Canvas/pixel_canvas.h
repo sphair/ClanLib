@@ -38,6 +38,9 @@
 #include "API/Display/Render/blend_mode.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 class CL_PixelPipeline;
 class CL_PixelCommand;
 class CL_ProgramObject_SWRender;
@@ -92,3 +95,5 @@ private:
 
 	CL_UniquePtr<CL_PixelPipeline> pipeline;
 };
+
+}

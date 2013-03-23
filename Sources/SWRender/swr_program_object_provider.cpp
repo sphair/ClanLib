@@ -33,6 +33,9 @@
 #include "API/Display/Render/program_uniform.h"
 #include "API/SWRender/software_program.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderProgramObjectProvider Construction:
 
@@ -77,9 +80,9 @@ bool CL_SWRenderProgramObjectProvider::get_validate_status() const
 	return false;
 }
 
-CL_String CL_SWRenderProgramObjectProvider::get_info_log() const
+std::string CL_SWRenderProgramObjectProvider::get_info_log() const
 {
-	return CL_String();
+	return std::string();
 }
 
 int CL_SWRenderProgramObjectProvider::get_attribute_count() const
@@ -97,7 +100,7 @@ std::vector<CL_ProgramAttribute> CL_SWRenderProgramObjectProvider::get_attribute
 	return std::vector<CL_ProgramAttribute>();
 }
 
-int CL_SWRenderProgramObjectProvider::get_attribute_location(const CL_StringRef &name) const
+int CL_SWRenderProgramObjectProvider::get_attribute_location(const std::string &name) const
 {
 	int attribute_index = current_program->get_attribute_index(name);
 	if (attribute_index >= 0 && attribute_index < (int)bind_locations.size())
@@ -116,7 +119,7 @@ std::vector<CL_ProgramUniform> CL_SWRenderProgramObjectProvider::get_uniforms() 
 	return std::vector<CL_ProgramUniform>();
 }
 
-int CL_SWRenderProgramObjectProvider::get_uniform_location(const CL_StringRef &name) const
+int CL_SWRenderProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
 	return 0;
 }
@@ -151,14 +154,14 @@ void CL_SWRenderProgramObjectProvider::detach(const CL_ShaderObject &obj)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::bind_attribute_location(int index, const CL_StringRef &name)
+void CL_SWRenderProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
 {
 	int attribute_index = current_program->get_attribute_index(name);
 	if (attribute_index >= 0 && attribute_index < (int)bind_locations.size())
 		bind_locations[attribute_index] = index;
 }
 
-void CL_SWRenderProgramObjectProvider::bind_frag_data_location(int color_number, const CL_StringRef &name)
+void CL_SWRenderProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
 {
 }
 
@@ -170,55 +173,55 @@ void CL_SWRenderProgramObjectProvider::validate()
 {
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform1i(const CL_StringRef &name, int v1)
+void CL_SWRenderProgramObjectProvider::set_uniform1i(const std::string &name, int v1)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, 0.0f, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform2i(const CL_StringRef &name, int v1, int v2)
+void CL_SWRenderProgramObjectProvider::set_uniform2i(const std::string &name, int v1, int v2)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform3i(const CL_StringRef &name, int v1, int v2, int v3)
+void CL_SWRenderProgramObjectProvider::set_uniform3i(const std::string &name, int v1, int v2, int v3)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform4i(const CL_StringRef &name, int v1, int v2, int v3, int v4)
+void CL_SWRenderProgramObjectProvider::set_uniform4i(const std::string &name, int v1, int v2, int v3, int v4)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, v4));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniformiv(const CL_StringRef &name, int size, int count, int *data)
+void CL_SWRenderProgramObjectProvider::set_uniformiv(const std::string &name, int size, int count, int *data)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform1f(const CL_StringRef &name, float v1)
+void CL_SWRenderProgramObjectProvider::set_uniform1f(const std::string &name, float v1)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, 0.0f, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform2f(const CL_StringRef &name, float v1, float v2)
+void CL_SWRenderProgramObjectProvider::set_uniform2f(const std::string &name, float v1, float v2)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform3f(const CL_StringRef &name, float v1, float v2, float v3)
+void CL_SWRenderProgramObjectProvider::set_uniform3f(const std::string &name, float v1, float v2, float v3)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform4f(const CL_StringRef &name, float v1, float v2, float v3, float v4)
+void CL_SWRenderProgramObjectProvider::set_uniform4f(const std::string &name, float v1, float v2, float v3, float v4)
 {
 	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, v4));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniformfv(const CL_StringRef &name, int size, int count, float *data)
+void CL_SWRenderProgramObjectProvider::set_uniformfv(const std::string &name, int size, int count, float *data)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform_matrix(const CL_StringRef &name, int size, int count, bool transpose, float *data)
+void CL_SWRenderProgramObjectProvider::set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data)
 {
 	if (!transpose)
 		current_program->set_uniform_matrix(name, CL_Mat4f(data));
@@ -228,3 +231,5 @@ void CL_SWRenderProgramObjectProvider::set_uniform_matrix(const CL_StringRef &na
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderProgramObjectProvider Implementation:
+
+}

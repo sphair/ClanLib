@@ -43,6 +43,10 @@
 #include "API/Core/Text/string_format.h"
 #endif
 
+namespace clan
+{
+
+
 CL_PixelPipeline::CL_PixelPipeline()
 : active_cores(0), local_writer_index(0), local_reader_index(0), local_commands_written(0), cur_block(0)
 {
@@ -357,4 +361,6 @@ void CL_PixelPipeline::free_command(void *d)
 	unsigned __int64 end_time = __rdtsc();
 	profiler.alloc_time += end_time-start_time;
 #endif
+}
+
 }

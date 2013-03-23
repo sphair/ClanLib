@@ -34,6 +34,9 @@
 #include "../Renderers/pixel_triangle_renderer.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 CL_PixelCommandSprite::CL_PixelCommandSprite(const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor, const CL_Vec2f init_texcoords[3], int init_sampler)
 {
 	for (int i = 0; i < 3; i++)
@@ -845,4 +848,6 @@ void CL_PixelCommandSprite::render_linear_scanline(Scanline *d)
 		for (int c = 0; c < length-sselength; c++)
 			dest[x+c] = dpixels[c];
 	}
+}
+
 }

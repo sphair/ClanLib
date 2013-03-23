@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_shader_object_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderShaderObjectProvider Construction:
 
@@ -40,11 +43,11 @@ CL_SWRenderShaderObjectProvider::~CL_SWRenderShaderObjectProvider()
 {
 }
 
-void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const CL_StringRef &source)
+void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const std::string &source)
 {
 }
 
-void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const std::vector<CL_StringRef> &sources)
+void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const std::vector<std::string> &sources)
 {
 }
 
@@ -71,14 +74,14 @@ CL_ShaderType CL_SWRenderShaderObjectProvider::get_shader_type() const
 	return cl_shadertype_vertex;
 }
 
-CL_String CL_SWRenderShaderObjectProvider::get_info_log() const
+std::string CL_SWRenderShaderObjectProvider::get_info_log() const
 {
-	return CL_String();
+	return std::string();
 }
 
-CL_String CL_SWRenderShaderObjectProvider::get_shader_source() const
+std::string CL_SWRenderShaderObjectProvider::get_shader_source() const
 {
-	return CL_String();
+	return std::string();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -90,3 +93,5 @@ void CL_SWRenderShaderObjectProvider::compile()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderShaderObjectProvider Implementation:
+
+}

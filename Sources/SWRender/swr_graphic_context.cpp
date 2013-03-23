@@ -32,6 +32,9 @@
 #include "swr_graphic_context_provider.h"
 #include "Canvas/pixel_canvas.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext_SWRender_Impl Class:
 
@@ -95,3 +98,4 @@ void CL_GraphicContext_SWRender::queue_command(CL_UniquePtr<CL_PixelCommand> &co
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_GraphicContext_SWRender Implementation:
+}

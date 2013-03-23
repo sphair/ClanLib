@@ -36,6 +36,9 @@
 #include "../Core/System/uniqueptr.h"
 #include "../Display/Render/graphic_context.h"
 
+namespace clan
+{
+
 class CL_PixelCommand;
 class CL_PixelPipeline;
 class CL_GraphicContext_SWRender_Impl;
@@ -77,7 +80,10 @@ public:
 
 //!Implementation
 private:
-	CL_SharedPtr<CL_GraphicContext_SWRender_Impl> impl;
+	std::shared_ptr<CL_GraphicContext_SWRender_Impl> impl;
 };
+
+namespace clan
+{
 
 /// \}

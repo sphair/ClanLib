@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_thread_context.h"
 #include "../Renderers/pixel_bicubic_renderer.h"
 
+namespace clan
+{
+
 CL_PixelCommandBicubic::CL_PixelCommandBicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &image)
 : x(x), y(y), zoom_number(zoom_number), zoom_denominator(zoom_denominator), image(image)
 {
@@ -43,4 +46,6 @@ void CL_PixelCommandBicubic::run(CL_PixelThreadContext *context)
 	bicubic_renderer.set_src((unsigned int*)image.get_data(), image.get_width(), image.get_height());
 	bicubic_renderer.set_core(context->core, context->num_cores);
 	bicubic_renderer.render(x, y, zoom_number, zoom_denominator);
+}
+
 }

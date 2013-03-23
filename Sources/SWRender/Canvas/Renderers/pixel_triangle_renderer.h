@@ -31,6 +31,9 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/Render/blend_mode.h"
 
+namespace clan
+{
+
 class CL_PixelTriangleRenderer
 {
 public:
@@ -101,3 +104,5 @@ private:
 	int core;
 	int num_cores;
 };
+
+}

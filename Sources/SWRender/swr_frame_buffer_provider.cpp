@@ -31,6 +31,9 @@
 #include "swr_render_buffer_provider.h"
 #include "swr_texture_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderFrameBufferProvider Construction:
 
@@ -157,3 +160,4 @@ void CL_SWRenderFrameBufferProvider::set_bind_target( CL_FrameBufferBindTarget t
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderFrameBufferProvider Implementation:
+}

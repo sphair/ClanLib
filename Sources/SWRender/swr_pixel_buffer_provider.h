@@ -28,8 +28,10 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/pixel_buffer_provider.h"
+
+namespace clan
+{
 
 class CL_SWRenderPixelBufferProvider : public CL_PixelBufferProvider
 {
@@ -73,4 +75,5 @@ private:
 /// \}
 };
 
+}
 

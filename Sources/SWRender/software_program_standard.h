@@ -30,16 +30,19 @@
 
 #include "API/SWRender/software_program.h"
 
+namespace clan
+{
+
 class CL_SoftwareProgram_Standard : public CL_SoftwareProgram
 {
 public:
 	CL_SoftwareProgram_Standard();
 
 	int get_attribute_count() const;
-	int get_attribute_index(const CL_StringRef &name) const;
+	int get_attribute_index(const std::string &name) const;
 	CL_Vec4f get_attribute_default(int index);
-	void set_uniform(const CL_StringRef &name, const CL_Vec4f &vec);
-	void set_uniform_matrix(const CL_StringRef &name, const CL_Mat4f &mat);
+	void set_uniform(const std::string &name, const CL_Vec4f &vec);
+	void set_uniform_matrix(const std::string &name, const CL_Mat4f &mat);
 
 	CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values);
 	CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values);
@@ -53,3 +56,6 @@ private:
 
 	CL_Mat4f modelview;
 };
+
+
+}

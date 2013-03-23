@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_input_device_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderInputDeviceProvider Construction:
 
@@ -48,14 +51,14 @@ void CL_SWRenderInputDeviceProvider::destroy()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderInputDeviceProvider Attributes:
 
-CL_String CL_SWRenderInputDeviceProvider::get_name() const
+std::string CL_SWRenderInputDeviceProvider::get_name() const
 {
-	return CL_String();
+	return std::string();
 }
 
-CL_String CL_SWRenderInputDeviceProvider::get_device_name() const
+std::string CL_SWRenderInputDeviceProvider::get_device_name() const
 {
-	return CL_String();
+	return std::string();
 }
 
 CL_InputDevice::Type CL_SWRenderInputDeviceProvider::get_type() const
@@ -63,9 +66,9 @@ CL_InputDevice::Type CL_SWRenderInputDeviceProvider::get_type() const
 	return CL_InputDevice::unknown;
 }
 
-CL_String CL_SWRenderInputDeviceProvider::get_key_name(int id) const
+std::string CL_SWRenderInputDeviceProvider::get_key_name(int id) const
 {
-	return CL_String();
+	return std::string();
 }
 
 bool CL_SWRenderInputDeviceProvider::get_keycode(int keycode) const
@@ -116,3 +119,5 @@ bool CL_SWRenderInputDeviceProvider::poll(bool peek_only)
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderInputDeviceProvider Implementation:
+
+}

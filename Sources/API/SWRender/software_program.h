@@ -37,6 +37,9 @@
 #include "../Core/Math/vec4.h"
 #include "../Core/Math/mat4.h"
 
+namespace clan
+{
+
 class CL_PixelPipeline;
 class CL_PixelCommand;
 
@@ -50,14 +53,16 @@ public:
 	virtual ~CL_SoftwareProgram() { }
 
 	virtual int get_attribute_count() const = 0;
-	virtual int get_attribute_index(const CL_StringRef &name) const = 0;
+	virtual int get_attribute_index(const std::string &name) const = 0;
 	virtual CL_Vec4f get_attribute_default(int index) { return CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f); }
-	virtual void set_uniform(const CL_StringRef &name, const CL_Vec4f &vec) = 0;
-	virtual void set_uniform_matrix(const CL_StringRef &name, const CL_Mat4f &mat) = 0;
+	virtual void set_uniform(const std::string &name, const CL_Vec4f &vec) = 0;
+	virtual void set_uniform_matrix(const std::string &name, const CL_Mat4f &mat) = 0;
 
 	virtual CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
 	virtual CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
 	virtual CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
 };
+
+}
 
 /// \}

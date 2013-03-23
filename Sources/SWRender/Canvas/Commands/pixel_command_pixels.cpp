@@ -31,6 +31,9 @@
 #include "API/SWRender/blit_argb8_sse.h"
 #include "API/SWRender/pixel_thread_context.h"
 
+namespace clan
+{
+
 CL_PixelCommandPixels::CL_PixelCommandPixels(const CL_Rect &dest_rect, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &primary_color)
 : dest_rect(dest_rect), image(image), src_rect(src_rect), primary_color(primary_color)
 {
@@ -230,4 +233,6 @@ CL_Rect CL_PixelCommandPixels::get_clipped_dest_rect(CL_PixelThreadContext *cont
 	dest.top = cl_max(cl_min(dest.top, context->clip_rect.bottom), context->clip_rect.top);
 	dest.bottom = cl_max(cl_min(dest.bottom, context->clip_rect.bottom), context->clip_rect.top);
 	return dest;
+}
+
 }

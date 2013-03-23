@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_occlusion_query_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderOcclusionQueryProvider Construction:
 
@@ -75,3 +78,5 @@ void CL_SWRenderOcclusionQueryProvider::destroy()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderOcclusionQueryProvider Implementation:
+
+}

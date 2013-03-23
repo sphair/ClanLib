@@ -28,9 +28,11 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/texture_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
+
+namespace clan
+{
 
 class CL_SWRenderTextureProvider : public CL_TextureProvider
 {
@@ -150,4 +152,5 @@ private:
 /// \}
 };
 
+}
 

@@ -37,6 +37,9 @@
 #include "software_program_standard.h"
 #include <map>
 
+namespace clan
+{
+
 class CL_PixelCanvas;
 class CL_PixelCommand;
 class CL_SWRenderDisplayWindowProvider;
@@ -139,3 +142,5 @@ private:
 	CL_ProgramObject_SWRender program_object_standard;
 /// \}
 };
+
+}

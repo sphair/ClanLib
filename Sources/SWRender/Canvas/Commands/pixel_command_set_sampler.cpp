@@ -30,6 +30,9 @@
 #include "pixel_command_set_sampler.h"
 #include "API/SWRender/pixel_thread_context.h"
 
+namespace clan
+{
+
 CL_PixelCommandSetSampler::CL_PixelCommandSetSampler(int index, const CL_PixelBuffer &pixelbuffer)
 : index(index)
 {
@@ -47,4 +50,6 @@ void CL_PixelCommandSetSampler::run(CL_PixelThreadContext *context)
 		context->samplers[index] = sampler;
 	else
 		context->samplers[index].set(context->pixelbuffer_white);
+}
+
 }

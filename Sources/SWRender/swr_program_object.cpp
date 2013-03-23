@@ -31,6 +31,9 @@
 #include "API/SWRender/swr_program_object.h"
 #include "swr_program_object_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgramObject_SWRender Construction:
 
@@ -76,3 +79,5 @@ CL_SWRenderProgramObjectProvider *CL_ProgramObject_SWRender::get_provider() cons
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_ProgramObject_SWRender Implementation:
+
+}

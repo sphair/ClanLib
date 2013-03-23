@@ -31,6 +31,9 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Core/Math/cl_math.h"
 
+namespace clan
+{
+
 class VertexAttributeFetcher
 {
 public:
@@ -507,4 +510,6 @@ inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec1f *result, int *index
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
 		result[i].x = range > 0 ? v[0] : default_value.x;
 	}
+}
+
 }

@@ -37,6 +37,9 @@
 #include "../Display/Render/program_object.h"
 #include "software_program.h"
 
+namespace clan
+{
+
 class CL_SWRenderProgramObjectProvider;
 
 /// \brief SWRender Graphic Context
@@ -82,5 +85,7 @@ public:
 private:
 
 };
+
+}
 
 /// \}

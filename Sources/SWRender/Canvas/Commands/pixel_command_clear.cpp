@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_thread_context.h"
 #include "../Renderers/pixel_fill_renderer.h"
 
+namespace clan
+{
+
 CL_PixelCommandClear::CL_PixelCommandClear(const CL_Colorf &color)
 : color(color)
 {
@@ -43,4 +46,6 @@ void CL_PixelCommandClear::run(CL_PixelThreadContext *context)
 	fill_renderer.set_clip_rect(context->clip_rect);
 	fill_renderer.set_core(context->core, context->num_cores);
 	fill_renderer.clear(color);
+}
+
 }

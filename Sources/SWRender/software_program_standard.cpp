@@ -33,6 +33,9 @@
 #include "Canvas/Commands/pixel_command_triangle.h"
 #include "Canvas/Commands/pixel_command_line.h"
 
+namespace clan
+{
+
 CL_SoftwareProgram_Standard::CL_SoftwareProgram_Standard()
 : modelview(CL_Mat4f::identity())
 {
@@ -43,7 +46,7 @@ int CL_SoftwareProgram_Standard::get_attribute_count() const
 	return 4;
 }
 
-int CL_SoftwareProgram_Standard::get_attribute_index(const CL_StringRef &name) const
+int CL_SoftwareProgram_Standard::get_attribute_index(const std::string &name) const
 {
 	if (name == "Position")
 		return 0;
@@ -73,11 +76,11 @@ CL_Vec4f CL_SoftwareProgram_Standard::get_attribute_default(int index)
 	}
 }
 
-void CL_SoftwareProgram_Standard::set_uniform(const CL_StringRef &name, const CL_Vec4f &vec)
+void CL_SoftwareProgram_Standard::set_uniform(const std::string &name, const CL_Vec4f &vec)
 {
 }
 
-void CL_SoftwareProgram_Standard::set_uniform_matrix(const CL_StringRef &name, const CL_Mat4f &mat)
+void CL_SoftwareProgram_Standard::set_uniform_matrix(const std::string &name, const CL_Mat4f &mat)
 {
 	if (name == "cl_ModelView")
 		set_modelview(mat);
@@ -119,4 +122,5 @@ CL_Vec2f CL_SoftwareProgram_Standard::transform(const CL_Vec4f &vertex) const
 {
 	CL_Vec4f v = modelview * vertex;
 	return CL_Vec2f(v.x, v.y);
+}
 }

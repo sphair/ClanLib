@@ -45,6 +45,9 @@
 #include "API/Display/Render/blend_mode.h"
 #include "API/SWRender/swr_program_object.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderGraphicContextProvider Construction:
 
@@ -524,4 +527,5 @@ void CL_SWRenderGraphicContextProvider::draw_line(int index1, int index2)
 	CL_UniquePtr<CL_PixelCommand> command(current_program_provider->get_program()->draw_line(canvas->get_pipeline(), current_attribute_values));
 	if (command.get())
 		canvas->queue_command(command);
+}
 }

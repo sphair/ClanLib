@@ -31,6 +31,9 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/Render/blend_mode.h"
 
+namespace clan
+{
+
 class CL_PixelFillRenderer
 {
 public:
@@ -61,3 +64,5 @@ private:
 	int core;
 	int num_cores;
 };
+
+}

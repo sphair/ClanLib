@@ -30,6 +30,9 @@
 #include "API/SWRender/swr_target.h"
 #include "swr_target_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTarget Construction:
 
@@ -50,3 +53,5 @@ CL_SWRenderTarget::~CL_SWRenderTarget()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTarget Implementation:
+
+}

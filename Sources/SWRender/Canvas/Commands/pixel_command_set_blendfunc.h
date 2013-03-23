@@ -32,6 +32,9 @@
 #include "API/Display/Render/blend_mode.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 class CL_PixelCommandSetBlendFunc : public CL_PixelCommand
 {
 public:
@@ -45,3 +48,5 @@ private:
 	CL_BlendFunc dest_alpha;
 	CL_Colorf const_color;
 };
+
+}

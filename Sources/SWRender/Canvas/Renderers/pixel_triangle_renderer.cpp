@@ -30,6 +30,9 @@
 #include "pixel_triangle_renderer.h"
 #include "API/SWRender/blit_argb8_sse.h"
 
+namespace clan
+{
+
 CL_PixelTriangleRenderer::CL_PixelTriangleRenderer()
 : dest(0), dest_width(0), dest_height(0), src(0), src_width(0), src_height(0), x(0), y(0), tx(0), ty(0), red(0), blue(0), green(0), alpha(0), core(0), num_cores(1)
 {
@@ -469,4 +472,6 @@ void CL_PixelTriangleRenderer::sort_triangle_vertices(unsigned int &v1, unsigned
 		v3 = v2;
 		v2 = t;
 	}
+}
+
 }

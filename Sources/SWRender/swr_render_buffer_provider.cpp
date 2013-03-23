@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_render_buffer_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderRenderBufferProvider Construction:
 
@@ -58,3 +61,5 @@ void CL_SWRenderRenderBufferProvider::destroy()
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderRenderBufferProvider Implementation:
+
+}

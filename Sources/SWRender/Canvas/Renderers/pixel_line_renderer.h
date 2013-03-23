@@ -32,6 +32,9 @@
 #include "API/Core/Math/rect.h"
 #include "API/Display/Render/blend_mode.h"
 
+namespace clan
+{
+
 class CL_LineSegment2;
 class CL_Colorf;
 
@@ -60,3 +63,5 @@ private:
 	int num_cores;
 
 };
+
+}

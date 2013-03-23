@@ -31,6 +31,9 @@
 
 #include "API/Display/TargetProviders/shader_object_provider.h"
 
+namespace clan
+{
+
 class CL_SWRenderShaderObjectProvider : public CL_ShaderObjectProvider
 {
 /// \name Construction
@@ -41,9 +44,9 @@ public:
 
 	~CL_SWRenderShaderObjectProvider();
 
-	void create(CL_ShaderType type, const CL_StringRef &source);
+	void create(CL_ShaderType type, const std::string &source);
 
-	void create(CL_ShaderType type, const std::vector<CL_StringRef> &sources);
+	void create(CL_ShaderType type, const std::vector<std::string> &sources);
 
 	void destroy();
 
@@ -59,9 +62,9 @@ public:
 
 	CL_ShaderType get_shader_type() const;
 
-	CL_String get_info_log() const;
+	std::string get_info_log() const;
 
-	CL_String get_shader_source() const;
+	std::string get_shader_source() const;
 
 
 /// \}
@@ -80,4 +83,5 @@ private:
 /// \}
 };
 
+}
 

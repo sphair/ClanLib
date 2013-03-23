@@ -33,6 +33,9 @@
 
 #include "api_swrender.h"
 
+namespace clan
+{
+
 /// \brief ClanSWRender initialization functions.
 ///
 /// \xmlonly !group=SWRender/System! !header=swrender.h! \endxmlonly
@@ -55,5 +58,7 @@ public:
 	void set_current();
 /// \}
 };
+
+}
 
 /// \}

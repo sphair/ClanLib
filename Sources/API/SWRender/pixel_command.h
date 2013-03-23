@@ -33,6 +33,9 @@
 
 #include "api_swrender.h"
 
+namespace clan
+{
+
 class CL_PixelThreadContext;
 class CL_PixelPipeline;
 
@@ -55,5 +58,7 @@ public:
 	/// \brief Returns the first line to be rendered by the specified core
 	static int find_first_line_for_core(int y_start, int core, int num_cores);
 };
+
+}
 
 /// \}

@@ -31,6 +31,9 @@
 
 #include "API/Display/TargetProviders/element_array_buffer_provider.h"
 
+namespace clan
+{
+
 class CL_SWRenderElementArrayBufferProvider : public CL_ElementArrayBufferProvider
 {
 /// \name Construction
@@ -76,4 +79,5 @@ private:
 /// \}
 };
 
+}
 

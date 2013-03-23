@@ -30,6 +30,9 @@
 #include "swr_target_provider.h"
 #include "swr_display_window_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTargetProvider Construction:
 
@@ -60,3 +63,4 @@ CL_DisplayWindowProvider *CL_SWRenderTargetProvider::alloc_display_window()
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTargetProvider Implementation:
 
+}

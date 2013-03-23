@@ -33,6 +33,9 @@
 #include <malloc.h>
 #endif
 
+namespace clan
+{
+
 // Implementation of Michael J. Aramini's Efficient Image Magnification by Bicubic Spline Interpolation
 // http://members.bellatlantic.net/~vze2vrva/design.html
 // http://members.bellatlantic.net/~vze2vrva/magnify_c.txt
@@ -238,4 +241,6 @@ void CL_PixelBicubicRenderer::aligned_free(void *ptr)
 		free(ptr);
 #endif
 	}
+}
+
 }

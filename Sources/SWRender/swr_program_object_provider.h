@@ -33,6 +33,9 @@
 #include "API/Display/TargetProviders/program_object_provider.h"
 #include "API/Core/Math/vec4.h"
 
+namespace clan
+{
+
 class CL_SoftwareProgram;
 
 class CL_SWRenderProgramObjectProvider : public CL_ProgramObjectProvider
@@ -53,14 +56,14 @@ public:
 	unsigned int get_handle() const;
 	bool get_link_status() const;
 	bool get_validate_status() const;
-	CL_String get_info_log() const;
+	std::string get_info_log() const;
 	int get_attribute_count() const;
 	std::vector<CL_ShaderObject> get_shaders() const;
 	std::vector<CL_ProgramAttribute> get_attributes() const;
-	int get_attribute_location(const CL_StringRef &name) const;
+	int get_attribute_location(const std::string &name) const;
 	int get_uniform_count() const;
 	std::vector<CL_ProgramUniform> get_uniforms() const;
-	int get_uniform_location(const CL_StringRef &name) const;
+	int get_uniform_location(const std::string &name) const;
 
 	const std::vector<int> &get_bind_locations() const { return bind_locations; }
 	const std::vector<CL_Vec4f> &get_attribute_defaults() const { return attribute_defaults; }
@@ -74,23 +77,23 @@ public:
 	void set_sprite_program(bool is_sprite_program_flag);
 	void attach(const CL_ShaderObject &obj);
 	void detach(const CL_ShaderObject &obj);
-	void bind_attribute_location(int index, const CL_StringRef &name);
-	void bind_frag_data_location(int color_number, const CL_StringRef &name);
+	void bind_attribute_location(int index, const std::string &name);
+	void bind_frag_data_location(int color_number, const std::string &name);
 	void link();
 	void validate();
 
-	void set_uniform1i(const CL_StringRef &name, int);
-	void set_uniform2i(const CL_StringRef &name, int, int);
-	void set_uniform3i(const CL_StringRef &name, int, int, int);
-	void set_uniform4i(const CL_StringRef &name, int, int, int, int);
-	void set_uniformiv(const CL_StringRef &name, int size, int count, int *data);
-	void set_uniform1f(const CL_StringRef &name, float);
-	void set_uniform2f(const CL_StringRef &name, float, float);
-	void set_uniform3f(const CL_StringRef &name, float, float, float);
-	void set_uniform4f(const CL_StringRef &name, float, float, float, float);
-	void set_uniformfv(const CL_StringRef &name, int size, int count, float *data);
+	void set_uniform1i(const std::string &name, int);
+	void set_uniform2i(const std::string &name, int, int);
+	void set_uniform3i(const std::string &name, int, int, int);
+	void set_uniform4i(const std::string &name, int, int, int, int);
+	void set_uniformiv(const std::string &name, int size, int count, int *data);
+	void set_uniform1f(const std::string &name, float);
+	void set_uniform2f(const std::string &name, float, float);
+	void set_uniform3f(const std::string &name, float, float, float);
+	void set_uniform4f(const std::string &name, float, float, float, float);
+	void set_uniformfv(const std::string &name, int size, int count, float *data);
 
-	void set_uniform_matrix(const CL_StringRef &name, int size, int count, bool transpose, float *data);
+	void set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data);
 /// \}
 
 /// \name Implementation
@@ -104,4 +107,5 @@ private:
 /// \}
 };
 
+}
 

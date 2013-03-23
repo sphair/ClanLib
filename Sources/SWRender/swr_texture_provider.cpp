@@ -30,6 +30,9 @@
 #include "swr_texture_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTextureProvider Construction:
 
@@ -222,3 +225,5 @@ void CL_SWRenderTextureProvider::set_texture_compare(CL_TextureCompareMode mode,
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderTextureProvider Implementation:
+
+}

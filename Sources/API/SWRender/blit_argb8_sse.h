@@ -41,6 +41,9 @@
 
 #include <emmintrin.h>
 
+namespace clan
+{
+
 /// \brief SSE accelerated rendering operations for ARGB8888
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
@@ -335,6 +338,9 @@ inline void CL_BlitARGB8SSE::channels_to_pixels(__m128i &dest0, __m128i &dest1, 
 		else \
 			break; \
 	} \
+}
+
+
 }
 
 #endif

@@ -33,6 +33,9 @@
 #include "API/Display/Render/render_buffer.h"
 #include "API/Display/Render/texture.h"
 
+namespace clan
+{
+
 class CL_PixelBuffer;
 
 class CL_SWRenderFrameBufferProvider : public CL_FrameBufferProvider
@@ -104,3 +107,4 @@ private:
 };
 
 
+}

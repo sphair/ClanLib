@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_thread_context.h"
 #include "../Renderers/pixel_triangle_renderer.h"
 
+namespace clan
+{
+
 CL_PixelCommandTriangle::CL_PixelCommandTriangle(const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler)
 {
 	for (int i = 0; i < 3; i++)
@@ -61,4 +64,5 @@ void CL_PixelCommandTriangle::run(CL_PixelThreadContext *context)
 	triangle_renderer.set_core(context->core, context->num_cores);
 	triangle_renderer.set_blend_function(context->cur_blend_src, context->cur_blend_dest, context->cur_blend_src_alpha, context->cur_blend_dest_alpha);
 	triangle_renderer.render_nearest(0, 1, 2);
+}
 }

@@ -33,6 +33,9 @@
 #include "API/Core/Math/line_segment.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 CL_PixelCommandLine::CL_PixelCommandLine(const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler)
 {
 	for (int i = 0; i < 2; i++)
@@ -60,4 +63,6 @@ void CL_PixelCommandLine::run(CL_PixelThreadContext *context)
 	line_renderer.set_core(context->core, context->num_cores);
 	line_renderer.set_blend_function(context->cur_blend_src, context->cur_blend_dest, context->cur_blend_src_alpha, context->cur_blend_dest_alpha);
 	line_renderer.draw_line(line, color);
+}
+
 }
