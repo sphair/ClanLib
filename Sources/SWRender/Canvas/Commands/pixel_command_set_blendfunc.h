@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/SWRender/pixel_command.h"
-#include "API/Display/Render/blend_mode.h"
+#include "API/Display/Render/blend_state.h"
 #include "API/Display/2D/color.h"
 
 namespace clan

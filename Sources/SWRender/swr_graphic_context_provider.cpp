@@ -42,7 +42,7 @@
 #include "API/SWRender/pixel_command.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Render/blend_mode.h"
+#include "API/Display/Render/blend_state.h"
 #include "API/SWRender/swr_program_object.h"
 
 namespace clan

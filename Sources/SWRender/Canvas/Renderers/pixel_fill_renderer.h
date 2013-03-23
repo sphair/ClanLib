@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Core/Math/rect.h"
-#include "API/Display/Render/blend_mode.h"
+#include "API/Display/Render/blend_state.h"
 
 namespace clan
 {
