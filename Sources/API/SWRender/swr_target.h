@@ -33,8 +33,6 @@
 
 #include "api_swrender.h"
 #include "../Display/display_target.h"
-#include "../Core/System/sharedptr.h"
-#include "../Core/Text/string_types.h"
 
 namespace clan
 {
