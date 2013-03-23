@@ -82,7 +82,7 @@ public:
 	ElementArrayBufferProvider *alloc_element_array_buffer();
 	PixelBufferProvider *alloc_pixel_buffer();
 	void set_program_object(StandardProgram standard_program);
-	void set_program_object(const ProgramObject &program, int program_matrix_flags);
+	void set_program_object(const ProgramObject &program);
 	void reset_program_object();
 	void set_texture(int unit_index, const Texture &texture);
 	void reset_texture(int unit_index, const Texture &texture);
@@ -112,8 +112,6 @@ public:
 	void clear_stencil(int value);
 	void set_map_mode(MapMode mode);
 	void set_viewport(const Rectf &viewport);
-	void set_projection(const Mat4f &matrix);
-	void set_modelview(const Mat4f &matrix);
 	void on_window_resized();
 /// \}
 
@@ -129,7 +127,6 @@ private:
 	std::unique_ptr<PixelCanvas> canvas;
 	std::map<int, Texture> bound_textures;
 	const PrimitivesArrayData * current_prim_array;
-	Mat4f modelview_matrix;
 	SWRenderProgramObjectProvider *current_program_provider;
 	bool is_sprite_program;
 	static const int num_attribute_fetchers = 32;

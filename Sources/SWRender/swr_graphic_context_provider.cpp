@@ -52,7 +52,7 @@ namespace clan
 // SWRenderGraphicContextProvider Construction:
 
 SWRenderGraphicContextProvider::SWRenderGraphicContextProvider(SWRenderDisplayWindowProvider *window)
-: window(window), current_prim_array(0), modelview_matrix(Mat4f::identity()), current_program_provider(0), is_sprite_program(false)
+: window(window), current_prim_array(0), current_program_provider(0), is_sprite_program(false)
 {
 	canvas.reset(new PixelCanvas(window->get_viewport().get_size()));
 	program_object_standard = ProgramObject_SWRender(&cl_software_program_standard, false);
@@ -60,7 +60,7 @@ SWRenderGraphicContextProvider::SWRenderGraphicContextProvider(SWRenderDisplayWi
 	program_object_standard.bind_attribute_location(1, "Color0");
 	program_object_standard.bind_attribute_location(2, "TexCoord0");
 	program_object_standard.bind_attribute_location(3, "TexIndex0");
-	set_program_object(cl_program_single_texture);
+	set_program_object(program_single_texture);
 }
 
 SWRenderGraphicContextProvider::~SWRenderGraphicContextProvider()
@@ -158,22 +158,20 @@ PixelBufferProvider *SWRenderGraphicContextProvider::alloc_pixel_buffer()
 
 void SWRenderGraphicContextProvider::set_program_object(StandardProgram standard_program)
 {
-	set_program_object(program_object_standard, cl_program_matrix_all_standard);
-	is_sprite_program = (standard_program == cl_program_sprite);
+	set_program_object(program_object_standard);
+	is_sprite_program = (standard_program == program_sprite);
 }
 
-void SWRenderGraphicContextProvider::set_program_object(const ProgramObject &program, int program_matrix_flags)
+void SWRenderGraphicContextProvider::set_program_object(const ProgramObject &program)
 {
 	ProgramObject_SWRender swr_program(program);
 	is_sprite_program = swr_program.is_sprite_program();
 	current_program_provider = static_cast<SWRenderProgramObjectProvider *>(swr_program.get_provider());
-	if (program_matrix_flags & cl_program_matrix_modelview)
-		current_program_provider->get_program()->set_uniform_matrix("cl_ModelView", modelview_matrix);
 }
 
 void SWRenderGraphicContextProvider::reset_program_object()
 {
-	set_program_object(cl_program_sprite);
+	set_program_object(program_sprite);
 }
 
 void SWRenderGraphicContextProvider::set_texture(int unit_index, const Texture &texture)
@@ -199,7 +197,7 @@ void SWRenderGraphicContextProvider::reset_frame_buffer()
 {
 	canvas->reset_framebuffer();
 }
-
+/*FIXME
 void SWRenderGraphicContextProvider::set_blend_mode(const BlendMode &blendmode)
 {
 	if (blendmode.is_blend_enabled())
@@ -216,18 +214,7 @@ void SWRenderGraphicContextProvider::set_blend_mode(const BlendMode &blendmode)
 		canvas->set_blend_function(blend_one, blend_zero, blend_one, blend_zero, Colorf::black);
 	}
 }
-
-void SWRenderGraphicContextProvider::set_buffer_control(const BufferControl &buffer_control)
-{
-}
-
-void SWRenderGraphicContextProvider::set_pen(const Pen &pen)
-{
-}
-
-void SWRenderGraphicContextProvider::set_polygon_rasterizer(const PolygonRasterizer &raster)
-{
-}
+*/
 
 void SWRenderGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayData * const prim_array)
 {
@@ -246,7 +233,7 @@ void SWRenderGraphicContextProvider::set_primitives_array(const PrimitivesArrayD
 
 void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 {
-	if (type == cl_triangles)
+	if (type == type_triangles)
 	{
 		int end_vertices = offset+num_vertices;
 
@@ -261,14 +248,14 @@ void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, 
 				draw_triangle(i+0, i+1, i+2);
 		}
 	}
-	else if (type == cl_lines)
+	else if (type == type_lines)
 	{
 		int end_vertices = offset+num_vertices;
 
 		for (int i = offset; i+1 < end_vertices; i+=2)
 			draw_line(i+0, i+1);
 	}
-	else if (type == cl_line_loop)
+	else if (type == type_line_loop)
 	{
 		int end_vertices = offset+num_vertices;
 		int i;
@@ -287,7 +274,7 @@ void SWRenderGraphicContextProvider::draw_primitives_array_instanced(PrimitivesT
 
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned int *indices)
 {
-	if (type == cl_triangles)
+	if (type == type_triangles)
 	{
 		if (is_sprite_program)
 		{
@@ -300,12 +287,12 @@ void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType typ
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
 	}
-	else if (type == cl_lines)
+	else if (type == type_lines)
 	{
 			for (int i = 0; i+1 < count; i+=2)
 				draw_line(indices[i], indices[i+1]);
 	}
-	else if (type == cl_line_loop)
+	else if (type == type_line_loop)
 	{
 		int i;
 		
@@ -319,7 +306,7 @@ void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType typ
 
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned short *indices)
 {
-	if (type == cl_triangles)
+	if (type == type_triangles)
 	{
 		if (is_sprite_program)
 		{
@@ -332,12 +319,12 @@ void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType typ
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
 	}
-	else if (type == cl_lines)
+	else if (type == type_lines)
 	{
 		for (int i = 0; i+1 < count; i+=2)
 			draw_line(indices[i], indices[i+1]);
 	}
-	else if (type == cl_line_loop)
+	else if (type == type_line_loop)
 	{
 		int i;
 		
@@ -351,7 +338,7 @@ void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType typ
 
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned char *indices)
 {
-	if (type == cl_triangles)
+	if (type == type_triangles)
 	{
 		if (is_sprite_program)
 		{
@@ -364,12 +351,12 @@ void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType typ
 				draw_triangle(indices[i], indices[i+1], indices[i+2]);
 		}
 	}
-	else if (type == cl_lines)
+	else if (type == type_lines)
 	{
 		for (int i = 0; i+1 < count; i+=2)
 			draw_line(indices[i], indices[i+1]);
 	}
-	else if (type == cl_line_loop)
+	else if (type == type_line_loop)
 	{
 		int i;
 		
@@ -463,17 +450,6 @@ void SWRenderGraphicContextProvider::set_map_mode(MapMode mode)
 
 void SWRenderGraphicContextProvider::set_viewport(const Rectf &viewport)
 {
-}
-
-void SWRenderGraphicContextProvider::set_projection(const Mat4f &matrix)
-{
-	current_program_provider->get_program()->set_uniform_matrix("cl_Projection", matrix);
-}
-
-void SWRenderGraphicContextProvider::set_modelview(const Mat4f &matrix)
-{
-	modelview_matrix = matrix;
-	current_program_provider->get_program()->set_uniform_matrix("cl_ModelView", matrix);
 }
 
 void SWRenderGraphicContextProvider::on_window_resized()

@@ -100,7 +100,7 @@ GraphicContext& SWRenderDisplayWindowProvider::get_gc()
 	return gc;
 }
 
-InputContext& SWRenderDisplayWindowProvider::get_ic()
+InputContext SWRenderDisplayWindowProvider::get_ic()
 {
 	return window.get_ic();
 }

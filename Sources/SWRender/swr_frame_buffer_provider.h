@@ -100,7 +100,7 @@ private:
 	enum Type { type_none, type_render, type_texture };
 	Type colorbuffer0_type;
 	RenderBuffer colorbuffer0_render;
-	Texture colorbuffer0_texture;
+	Texture2D colorbuffer0_texture;
 	Signal_v0 sig_changed_event;
 	mutable std::vector<int> attachment_indexes;
 /// \}
