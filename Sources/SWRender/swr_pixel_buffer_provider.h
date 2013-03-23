@@ -33,17 +33,17 @@
 namespace clan
 {
 
-class CL_SWRenderPixelBufferProvider : public CL_PixelBufferProvider
+class SWRenderPixelBufferProvider : public PixelBufferProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderPixelBufferProvider();
+	SWRenderPixelBufferProvider();
 
-	~CL_SWRenderPixelBufferProvider();
+	~SWRenderPixelBufferProvider();
 
-	void create(const void *data, int new_width, int new_height, CL_PixelBufferDirection direction, CL_TextureFormat new_format, CL_BufferUsage usage);
+	void create(const void *data, int new_width, int new_height, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage);
 
 	void destroy();
 
@@ -61,11 +61,11 @@ public:
 /// \{
 
 public:
-	void lock(CL_BufferAccess access);
+	void lock(BufferAccess access);
 
 	void unlock();
 
-	void upload_data(const CL_Rect &dest_rect, const void *data);
+	void upload_data(const Rect &dest_rect, const void *data);
 
 /// \}
 /// \name Implementation

@@ -36,47 +36,47 @@
 namespace clan
 {
 
-class CL_SoftwareProgram;
+class SoftwareProgram;
 
-class CL_SWRenderProgramObjectProvider : public CL_ProgramObjectProvider
+class SWRenderProgramObjectProvider : public ProgramObjectProvider
 {
 /// \name Construction
 /// \{
 public:
-	CL_SWRenderProgramObjectProvider();
-	~CL_SWRenderProgramObjectProvider();
+	SWRenderProgramObjectProvider();
+	~SWRenderProgramObjectProvider();
 	void destroy();
 /// \}
 
 /// \name Attributes
 /// \{
 public:
-	CL_SoftwareProgram *get_program() const;
+	SoftwareProgram *get_program() const;
 	bool is_sprite_program() const;
 	unsigned int get_handle() const;
 	bool get_link_status() const;
 	bool get_validate_status() const;
 	std::string get_info_log() const;
 	int get_attribute_count() const;
-	std::vector<CL_ShaderObject> get_shaders() const;
-	std::vector<CL_ProgramAttribute> get_attributes() const;
+	std::vector<ShaderObject> get_shaders() const;
+	std::vector<ProgramAttribute> get_attributes() const;
 	int get_attribute_location(const std::string &name) const;
 	int get_uniform_count() const;
-	std::vector<CL_ProgramUniform> get_uniforms() const;
+	std::vector<ProgramUniform> get_uniforms() const;
 	int get_uniform_location(const std::string &name) const;
 
 	const std::vector<int> &get_bind_locations() const { return bind_locations; }
-	const std::vector<CL_Vec4f> &get_attribute_defaults() const { return attribute_defaults; }
-	std::vector<CL_Vec4f> &get_current_attribute_values() { return current_attribute_values; }
+	const std::vector<Vec4f> &get_attribute_defaults() const { return attribute_defaults; }
+	std::vector<Vec4f> &get_current_attribute_values() { return current_attribute_values; }
 /// \}
 
 /// \name Operations
 /// \{
 public:
-	void set_program(CL_SoftwareProgram *program);
+	void set_program(SoftwareProgram *program);
 	void set_sprite_program(bool is_sprite_program_flag);
-	void attach(const CL_ShaderObject &obj);
-	void detach(const CL_ShaderObject &obj);
+	void attach(const ShaderObject &obj);
+	void detach(const ShaderObject &obj);
 	void bind_attribute_location(int index, const std::string &name);
 	void bind_frag_data_location(int color_number, const std::string &name);
 	void link();
@@ -99,11 +99,11 @@ public:
 /// \name Implementation
 /// \{
 private:
-	CL_SoftwareProgram *current_program;
+	SoftwareProgram *current_program;
 	bool sprite_program;
 	std::vector<int> bind_locations;
-	std::vector<CL_Vec4f> attribute_defaults;
-	std::vector<CL_Vec4f> current_attribute_values;
+	std::vector<Vec4f> attribute_defaults;
+	std::vector<Vec4f> current_attribute_values;
 /// \}
 };
 

@@ -35,38 +35,38 @@ namespace clan
 {
 
 
-CL_PixelFillRenderer::CL_PixelFillRenderer()
+PixelFillRenderer::PixelFillRenderer()
 : core(0), num_cores(1)
 {
 }
 
-void CL_PixelFillRenderer::set_clip_rect(const CL_Rect &new_clip_rect)
+void PixelFillRenderer::set_clip_rect(const Rect &new_clip_rect)
 {
 	clip_rect = new_clip_rect;
 }
 
-void CL_PixelFillRenderer::set_dest(unsigned int *data, int width, int height)
+void PixelFillRenderer::set_dest(unsigned int *data, int width, int height)
 {
 	colorbuffer0.data = data;
-	colorbuffer0.size = CL_Size(width, height);
+	colorbuffer0.size = Size(width, height);
 }
 
-void CL_PixelFillRenderer::set_core(int new_core, int new_num_cores)
+void PixelFillRenderer::set_core(int new_core, int new_num_cores)
 {
 	core = new_core;
 	num_cores = new_num_cores;
 }
 
-void CL_PixelFillRenderer::set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha)
+void PixelFillRenderer::set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
 {
 }
 
-void CL_PixelFillRenderer::clear(const CL_Colorf &color)
+void PixelFillRenderer::clear(const Colorf &color)
 {
 	int dest_buffer_width = colorbuffer0.size.width;
 	unsigned char *dest_data = (unsigned char *) colorbuffer0.data;
 
-	CL_Color c = color;
+	Color c = color;
 	unsigned int color8888 = (c.get_alpha() << 24) + (c.get_red() << 16) + (c.get_green() << 8) + c.get_blue();
 	unsigned char *ptr_color8888 = (unsigned char *) &color8888;
 
@@ -103,7 +103,7 @@ void CL_PixelFillRenderer::clear(const CL_Colorf &color)
 	}
 }
 
-void CL_PixelFillRenderer::fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color)
+void PixelFillRenderer::fill_rect(const Rect &dest, const Colorf &primary_color)
 {
 	int dest_buffer_width = colorbuffer0.size.width;
 	unsigned int *dest_data = colorbuffer0.data;
@@ -171,7 +171,7 @@ void CL_PixelFillRenderer::fill_rect(const CL_Rect &dest, const CL_Colorf &prima
 	}
 }
 
-int CL_PixelFillRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
+int PixelFillRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
 {
 	int y = y_start / num_cores;
 	y *= num_cores;

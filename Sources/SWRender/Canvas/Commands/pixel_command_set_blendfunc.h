@@ -35,18 +35,18 @@
 namespace clan
 {
 
-class CL_PixelCommandSetBlendFunc : public CL_PixelCommand
+class PixelCommandSetBlendFunc : public PixelCommand
 {
 public:
-	CL_PixelCommandSetBlendFunc(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, CL_Colorf const_color);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandSetBlendFunc(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha, Colorf const_color);
+	void run(PixelThreadContext *context);
 
 private:
-	CL_BlendFunc src;
-	CL_BlendFunc dest;
-	CL_BlendFunc src_alpha;
-	CL_BlendFunc dest_alpha;
-	CL_Colorf const_color;
+	BlendFunc src;
+	BlendFunc dest;
+	BlendFunc src_alpha;
+	BlendFunc dest_alpha;
+	Colorf const_color;
 };
 
 }

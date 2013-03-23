@@ -33,12 +33,12 @@
 namespace clan
 {
 
-CL_PixelTriangleRenderer::CL_PixelTriangleRenderer()
+PixelTriangleRenderer::PixelTriangleRenderer()
 : dest(0), dest_width(0), dest_height(0), src(0), src_width(0), src_height(0), x(0), y(0), tx(0), ty(0), red(0), blue(0), green(0), alpha(0), core(0), num_cores(1)
 {
 }
 
-void CL_PixelTriangleRenderer::set_vertex_arrays(float *new_x, float *new_y, float *new_tx, float *new_ty, float *new_red, float *new_green, float *new_blue, float *new_alpha)
+void PixelTriangleRenderer::set_vertex_arrays(float *new_x, float *new_y, float *new_tx, float *new_ty, float *new_red, float *new_green, float *new_blue, float *new_alpha)
 {
 	x = new_x;
 	y = new_y;
@@ -50,36 +50,36 @@ void CL_PixelTriangleRenderer::set_vertex_arrays(float *new_x, float *new_y, flo
 	alpha = new_alpha;
 }
 
-void CL_PixelTriangleRenderer::set_clip_rect(const CL_Rect &new_clip_rect)
+void PixelTriangleRenderer::set_clip_rect(const Rect &new_clip_rect)
 {
 	clip_rect = new_clip_rect;
 }
 
-void CL_PixelTriangleRenderer::set_dest(unsigned int *data, int width, int height)
+void PixelTriangleRenderer::set_dest(unsigned int *data, int width, int height)
 {
 	dest = data;
 	dest_width = width;
 	dest_height = height;
 }
 
-void CL_PixelTriangleRenderer::set_src(unsigned int *data, int width, int height)
+void PixelTriangleRenderer::set_src(unsigned int *data, int width, int height)
 {
 	src = data;
 	src_width = width;
 	src_height = height;
 }
 
-void CL_PixelTriangleRenderer::set_core(int new_core, int new_num_cores)
+void PixelTriangleRenderer::set_core(int new_core, int new_num_cores)
 {
 	core = new_core;
 	num_cores = new_num_cores;
 }
 
-void CL_PixelTriangleRenderer::set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha)
+void PixelTriangleRenderer::set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
 {
 }
 
-void CL_PixelTriangleRenderer::render_nearest(unsigned int v1, unsigned int v2, unsigned int v3)
+void PixelTriangleRenderer::render_nearest(unsigned int v1, unsigned int v2, unsigned int v3)
 {
 	sort_triangle_vertices(v1, v2, v3);
 
@@ -117,7 +117,7 @@ void CL_PixelTriangleRenderer::render_nearest(unsigned int v1, unsigned int v2, 
 	}
 }
 
-void CL_PixelTriangleRenderer::render_linear(unsigned int v1, unsigned int v2, unsigned int v3)
+void PixelTriangleRenderer::render_linear(unsigned int v1, unsigned int v2, unsigned int v3)
 {
 	sort_triangle_vertices(v1, v2, v3);
 
@@ -154,17 +154,17 @@ void CL_PixelTriangleRenderer::render_linear(unsigned int v1, unsigned int v2, u
 	}
 }
 
-void CL_PixelTriangleRenderer::get_left_line_x(unsigned int v1, unsigned int v2, unsigned int yposi, LinePoint &out_point)
+void PixelTriangleRenderer::get_left_line_x(unsigned int v1, unsigned int v2, unsigned int yposi, LinePoint &out_point)
 {
 	get_line_x(v1, v2, v1, yposi, out_point);
 }
 
-void CL_PixelTriangleRenderer::get_right_line_x(unsigned int v1, unsigned int v2, unsigned int yposi, LinePoint &out_point)
+void PixelTriangleRenderer::get_right_line_x(unsigned int v1, unsigned int v2, unsigned int yposi, LinePoint &out_point)
 {
 	get_line_x(v1, v2, v2, yposi, out_point);
 }
 
-void CL_PixelTriangleRenderer::get_line_x(unsigned int v1, unsigned int v2, unsigned int horz_v, unsigned int yposi, LinePoint &out_point)
+void PixelTriangleRenderer::get_line_x(unsigned int v1, unsigned int v2, unsigned int horz_v, unsigned int yposi, LinePoint &out_point)
 {
 	if (y[v1] == y[v2]) // Horizontal line
 	{
@@ -198,7 +198,7 @@ void CL_PixelTriangleRenderer::get_line_x(unsigned int v1, unsigned int v2, unsi
 	}
 }
 
-void CL_PixelTriangleRenderer::render_scanline_nearest(int y, const LinePoint &p0, const LinePoint &p1)
+void PixelTriangleRenderer::render_scanline_nearest(int y, const LinePoint &p0, const LinePoint &p1)
 {
 	ScanLine scanline;
 	if (prepare_scanline(y, p0, p1, scanline))
@@ -225,8 +225,8 @@ void CL_PixelTriangleRenderer::render_scanline_nearest(int y, const LinePoint &p
 		int length = scanline.end_x-scanline.start_x;
 
 		__m128i one, half;
-		CL_BlitARGB8SSE::set_one(one);
-		CL_BlitARGB8SSE::set_half(half);
+		BlitARGB8SSE::set_one(one);
+		BlitARGB8SSE::set_half(half);
 
 		__m128i tx = _mm_set_epi32(icur_tx, icur_tx+islope_tx, icur_tx+islope_tx*2, icur_tx+islope_tx*3);
 		__m128i ty = _mm_set_epi32(icur_ty, icur_ty+islope_ty, icur_ty+islope_ty*2, icur_ty+islope_ty*3);
@@ -295,14 +295,14 @@ void CL_PixelTriangleRenderer::render_scanline_nearest(int y, const LinePoint &p
 			__m128i src0, dest0;
 			src0 = _mm_unpacklo_epi8(p4src, _mm_setzero_si128());
 			dest0 = _mm_unpacklo_epi8(p4dest, _mm_setzero_si128());
-			CL_BlitARGB8SSE::multiply_color(src0, _mm_packs_epi32(_mm_srai_epi32(color0, 8), _mm_srai_epi32(color1, 8)));
-			CL_BlitARGB8SSE::blend_normal(dest0, src0, one, half);
+			BlitARGB8SSE::multiply_color(src0, _mm_packs_epi32(_mm_srai_epi32(color0, 8), _mm_srai_epi32(color1, 8)));
+			BlitARGB8SSE::blend_normal(dest0, src0, one, half);
 
 			__m128i src1, dest1;
 			src1 = _mm_unpackhi_epi8(p4src, _mm_setzero_si128());
 			dest1 = _mm_unpackhi_epi8(p4dest, _mm_setzero_si128());
-			CL_BlitARGB8SSE::multiply_color(src1, _mm_packs_epi32(_mm_srai_epi32(color2, 8), _mm_srai_epi32(color3, 8)));
-			CL_BlitARGB8SSE::blend_normal(dest1, src1, one, half);
+			BlitARGB8SSE::multiply_color(src1, _mm_packs_epi32(_mm_srai_epi32(color2, 8), _mm_srai_epi32(color3, 8)));
+			BlitARGB8SSE::blend_normal(dest1, src1, one, half);
 
 			p4dest = _mm_packus_epi16(dest0, dest1);
 			_mm_storeu_si128((__m128i*) dest_last, p4dest);
@@ -316,7 +316,7 @@ void CL_PixelTriangleRenderer::render_scanline_nearest(int y, const LinePoint &p
 	}
 }
 
-void CL_PixelTriangleRenderer::render_scanline_linear(int y, const LinePoint &p0, const LinePoint &p1)
+void PixelTriangleRenderer::render_scanline_linear(int y, const LinePoint &p0, const LinePoint &p1)
 {
 	ScanLine scanline;
 	if (prepare_scanline(y, p0, p1, scanline))
@@ -343,8 +343,8 @@ void CL_PixelTriangleRenderer::render_scanline_linear(int y, const LinePoint &p0
 		int length = scanline.end_x-scanline.start_x;
 
 		__m128i one, half;
-		CL_BlitARGB8SSE::set_one(one);
-		CL_BlitARGB8SSE::set_half(half);
+		BlitARGB8SSE::set_one(one);
+		BlitARGB8SSE::set_half(half);
 
 		int src_width16 = src_width<<16;
 		int src_height16 = src_height<<16;
@@ -379,17 +379,17 @@ void CL_PixelTriangleRenderer::render_scanline_linear(int y, const LinePoint &p0
 
 			__m128i src0, dest0, primcolor;
 			int offset = sy0*src_width+sx0;
-			CL_BlitARGB8SSE::load_pixel_linear(src0, src[offset], src[offset+1], src[offset+src_width], src[offset+1+src_width], ifracx, ifracy);
-			CL_BlitARGB8SSE::load_pixel(dest0, dest_line[x]);
-			CL_BlitARGB8SSE::set_color(primcolor, r0, g0, b0, a0);
-			CL_BlitARGB8SSE::multiply_color(src0, primcolor);
-			CL_BlitARGB8SSE::blend_normal(dest0, src0, one, half);
-			CL_BlitARGB8SSE::store_pixel(dest_line[x], dest0);
+			BlitARGB8SSE::load_pixel_linear(src0, src[offset], src[offset+1], src[offset+src_width], src[offset+1+src_width], ifracx, ifracy);
+			BlitARGB8SSE::load_pixel(dest0, dest_line[x]);
+			BlitARGB8SSE::set_color(primcolor, r0, g0, b0, a0);
+			BlitARGB8SSE::multiply_color(src0, primcolor);
+			BlitARGB8SSE::blend_normal(dest0, src0, one, half);
+			BlitARGB8SSE::store_pixel(dest_line[x], dest0);
 		}
 	}
 }
 
-bool CL_PixelTriangleRenderer::prepare_scanline(int y, const LinePoint &p0, const LinePoint &p1, ScanLine &out_scanline)
+bool PixelTriangleRenderer::prepare_scanline(int y, const LinePoint &p0, const LinePoint &p1, ScanLine &out_scanline)
 {
 	if (p0.x < p1.x)
 	{
@@ -407,7 +407,7 @@ bool CL_PixelTriangleRenderer::prepare_scanline(int y, const LinePoint &p0, cons
 	}
 }
 
-void CL_PixelTriangleRenderer::prepare_scanline2(int y, const LinePoint &p0, const LinePoint &p1, ScanLine &out_scanline)
+void PixelTriangleRenderer::prepare_scanline2(int y, const LinePoint &p0, const LinePoint &p1, ScanLine &out_scanline)
 {
 	float dx = p1.x-p0.x;
 	out_scanline.slope_tx = (p1.tx-p0.tx)/dx;
@@ -429,7 +429,7 @@ void CL_PixelTriangleRenderer::prepare_scanline2(int y, const LinePoint &p0, con
 	out_scanline.cur_a = p0.a + offset*out_scanline.slope_a;
 }
 
-void CL_PixelTriangleRenderer::sort_triangle_vertices(unsigned int &v1, unsigned int &v2, unsigned int &v3)
+void PixelTriangleRenderer::sort_triangle_vertices(unsigned int &v1, unsigned int &v2, unsigned int &v3)
 {
 	if ((y[v1] <= y[v2]) && (y[v2] <= y[v3]))
 	{

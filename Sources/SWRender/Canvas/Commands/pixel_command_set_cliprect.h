@@ -34,14 +34,14 @@
 namespace clan
 {
 
-class CL_PixelCommandSetClipRect : public CL_PixelCommand
+class PixelCommandSetClipRect : public PixelCommand
 {
 public:
-	CL_PixelCommandSetClipRect(const CL_Rect &rect);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandSetClipRect(const Rect &rect);
+	void run(PixelThreadContext *context);
 
 private:
-	CL_Rect rect;
+	Rect rect;
 };
 
 }

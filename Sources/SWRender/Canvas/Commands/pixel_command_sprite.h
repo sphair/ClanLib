@@ -37,11 +37,11 @@ namespace clan
 {
 
 
-class CL_PixelCommandSprite : public CL_PixelCommand
+class PixelCommandSprite : public PixelCommand
 {
 public:
-	CL_PixelCommandSprite(const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor, const CL_Vec2f init_texcoords[3], int init_sampler);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandSprite(const Vec2f init_points[3], const Vec4f init_primcolor, const Vec2f init_texcoords[3], int init_sampler);
+	void run(PixelThreadContext *context);
 
 private:
 	struct Scanline
@@ -59,21 +59,21 @@ private:
 		int startx, endx;
 	};
 
-	void render_sprite(CL_PixelThreadContext *context);
-	void render_sprite_rotated(CL_PixelThreadContext *context);
-	void render_sprite_scale(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_sprite_scale_linear(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_sprite_noscale(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_sprite_noscale_white(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_glyph_scale(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_glyph_noscale(CL_PixelThreadContext *context, const CL_Rect &box);
-	CL_Rect get_dest_rect(CL_PixelThreadContext *context) const;
+	void render_sprite(PixelThreadContext *context);
+	void render_sprite_rotated(PixelThreadContext *context);
+	void render_sprite_scale(PixelThreadContext *context, const Rect &box);
+	void render_sprite_scale_linear(PixelThreadContext *context, const Rect &box);
+	void render_sprite_noscale(PixelThreadContext *context, const Rect &box);
+	void render_sprite_noscale_white(PixelThreadContext *context, const Rect &box);
+	void render_glyph_scale(PixelThreadContext *context, const Rect &box);
+	void render_glyph_noscale(PixelThreadContext *context, const Rect &box);
+	Rect get_dest_rect(PixelThreadContext *context) const;
 
 	void render_linear_scanline(Scanline *d);
 
-	CL_Vec2f points[3];
-	CL_Vec4f primcolor;
-	CL_Vec2f texcoords[3];
+	Vec2f points[3];
+	Vec4f primcolor;
+	Vec2f texcoords[3];
 	int sampler;
 };
 

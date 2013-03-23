@@ -34,17 +34,17 @@
 namespace clan
 {
 
-class CL_PixelTriangleRenderer
+class PixelTriangleRenderer
 {
 public:
-	CL_PixelTriangleRenderer();
+	PixelTriangleRenderer();
 
 	void set_vertex_arrays(float *x, float *y, float *tx, float *ty, float *red, float *green, float *blue, float *alpha);
-	void set_clip_rect(const CL_Rect &clip_rect);
+	void set_clip_rect(const Rect &clip_rect);
 	void set_dest(unsigned int *data, int width, int height);
 	void set_src(unsigned int *data, int width, int height);
 	void set_core(int core, int num_cores);
-	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
+	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
 
 	void render_nearest(unsigned int v1, unsigned int v2, unsigned int v3);
 	void render_linear(unsigned int v1, unsigned int v2, unsigned int v3);
@@ -100,7 +100,7 @@ private:
 	float *green;
 	float *blue;
 	float *alpha;
-	CL_Rect clip_rect;
+	Rect clip_rect;
 	int core;
 	int num_cores;
 };

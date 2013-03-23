@@ -55,7 +55,7 @@
 		#error Your application is set to link with the single-threaded version of the run-time library. Go to project settings, in the C++ section, and change it to multi-threaded.
 	#endif
 	#if !defined(_DEBUG)
-		#if defined(CL_DLL)
+		#if defined(DLL)
 			#pragma comment(lib, "clanSWRender-dll.lib")
 		#elif defined(_DLL)
 			#pragma comment(lib, "clanSWRender-static-mtdll.lib")
@@ -63,7 +63,7 @@
 			#pragma comment(lib, "clanSWRender-static-mt.lib")
 		#endif
 	#else
-		#if defined(CL_DLL)
+		#if defined(DLL)
 			#pragma comment(lib, "clanSWRender-dll-debug.lib")
 		#elif defined(_DLL)
 			#pragma comment(lib, "clanSWRender-static-mtdll-debug.lib")

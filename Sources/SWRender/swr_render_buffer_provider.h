@@ -34,15 +34,15 @@
 namespace clan
 {
 
-class CL_SWRenderRenderBufferProvider : public CL_RenderBufferProvider
+class SWRenderRenderBufferProvider : public RenderBufferProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderRenderBufferProvider();
+	SWRenderRenderBufferProvider();
 
-	~CL_SWRenderRenderBufferProvider();
+	~SWRenderRenderBufferProvider();
 
 
 /// \}
@@ -50,14 +50,14 @@ public:
 /// \{
 
 public:
-	CL_PixelBuffer buffer;
+	PixelBuffer buffer;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	void create(int width, int height, CL_TextureFormat internal_format, int multisample_samples);
+	void create(int width, int height, TextureFormat internal_format, int multisample_samples);
 
 	void destroy();
 

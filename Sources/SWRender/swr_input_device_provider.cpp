@@ -33,91 +33,91 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderInputDeviceProvider Construction:
+// SWRenderInputDeviceProvider Construction:
 
-CL_SWRenderInputDeviceProvider::CL_SWRenderInputDeviceProvider()
+SWRenderInputDeviceProvider::SWRenderInputDeviceProvider()
 {
 }
 
-CL_SWRenderInputDeviceProvider::~CL_SWRenderInputDeviceProvider()
+SWRenderInputDeviceProvider::~SWRenderInputDeviceProvider()
 {
 }
 
-void CL_SWRenderInputDeviceProvider::destroy()
+void SWRenderInputDeviceProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderInputDeviceProvider Attributes:
+// SWRenderInputDeviceProvider Attributes:
 
-std::string CL_SWRenderInputDeviceProvider::get_name() const
+std::string SWRenderInputDeviceProvider::get_name() const
 {
 	return std::string();
 }
 
-std::string CL_SWRenderInputDeviceProvider::get_device_name() const
+std::string SWRenderInputDeviceProvider::get_device_name() const
 {
 	return std::string();
 }
 
-CL_InputDevice::Type CL_SWRenderInputDeviceProvider::get_type() const
+InputDevice::Type SWRenderInputDeviceProvider::get_type() const
 {
-	return CL_InputDevice::unknown;
+	return InputDevice::unknown;
 }
 
-std::string CL_SWRenderInputDeviceProvider::get_key_name(int id) const
+std::string SWRenderInputDeviceProvider::get_key_name(int id) const
 {
 	return std::string();
 }
 
-bool CL_SWRenderInputDeviceProvider::get_keycode(int keycode) const
+bool SWRenderInputDeviceProvider::get_keycode(int keycode) const
 {
 	return false;
 }
 
-int CL_SWRenderInputDeviceProvider::get_x() const
+int SWRenderInputDeviceProvider::get_x() const
 {
 	return 0;
 }
 
-int CL_SWRenderInputDeviceProvider::get_y() const
+int SWRenderInputDeviceProvider::get_y() const
 {
 	return 0;
 }
 
-float CL_SWRenderInputDeviceProvider::get_axis(int index) const
+float SWRenderInputDeviceProvider::get_axis(int index) const
 {
 	return 0.0f;
 }
 
-int CL_SWRenderInputDeviceProvider::get_axis_count() const
+int SWRenderInputDeviceProvider::get_axis_count() const
 {
 	return 0;
 }
 
-int CL_SWRenderInputDeviceProvider::get_button_count() const
+int SWRenderInputDeviceProvider::get_button_count() const
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderInputDeviceProvider Operations:
+// SWRenderInputDeviceProvider Operations:
 
-void CL_SWRenderInputDeviceProvider::init(CL_Signal_v1<const CL_InputEvent &> *sig_provider_event)
+void SWRenderInputDeviceProvider::init(Signal_v1<const InputEvent &> *sig_provider_event)
 {
 }
 
-void CL_SWRenderInputDeviceProvider::set_position(int x, int y)
+void SWRenderInputDeviceProvider::set_position(int x, int y)
 {
 }
 
-bool CL_SWRenderInputDeviceProvider::poll(bool peek_only)
+bool SWRenderInputDeviceProvider::poll(bool peek_only)
 {
 	return false;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderInputDeviceProvider Implementation:
+// SWRenderInputDeviceProvider Implementation:
 
 }

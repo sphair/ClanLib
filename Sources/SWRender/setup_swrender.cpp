@@ -35,38 +35,38 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SetupSWRender Construction:
+// SetupSWRender Construction:
 
-static CL_Mutex cl_gdi_mutex;
+static Mutex cl_gdi_mutex;
 
 static int cl_gdi_refcount = 0;
 
-static CL_SWRenderTarget *cl_gdi_target = 0;
+static SWRenderTarget *cl_gdi_target = 0;
 
-CL_SetupSWRender::CL_SetupSWRender()
+SetupSWRender::SetupSWRender()
 {
-	if (!CL_System::detect_cpu_extension(CL_System::sse2))
+	if (!System::detect_cpu_extension(System::sse2))
 	{
-		throw CL_Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
+		throw Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
 	}
 
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
+	MutexSection mutex_lock(&cl_gdi_mutex);
 	if (cl_gdi_refcount == 0)
-		cl_gdi_target = new CL_SWRenderTarget();
+		cl_gdi_target = new SWRenderTarget();
 	cl_gdi_refcount++;
 }
 
-CL_SetupSWRender::~CL_SetupSWRender()
+SetupSWRender::~SetupSWRender()
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
+	MutexSection mutex_lock(&cl_gdi_mutex);
 	cl_gdi_refcount--;
 	if (cl_gdi_refcount == 0)
 		delete cl_gdi_target;
 }
 
-void CL_SetupSWRender::set_current()
+void SetupSWRender::set_current()
 {
-	CL_MutexSection mutex_lock(&cl_gdi_mutex);
+	MutexSection mutex_lock(&cl_gdi_mutex);
 	cl_gdi_target->set_current();
 }
 

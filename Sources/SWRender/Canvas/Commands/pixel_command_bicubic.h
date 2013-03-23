@@ -34,18 +34,18 @@
 namespace clan
 {
 
-class CL_PixelCommandBicubic : public CL_PixelCommand
+class PixelCommandBicubic : public PixelCommand
 {
 public:
-	CL_PixelCommandBicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &image);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandBicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &image);
+	void run(PixelThreadContext *context);
 
 private:
 	int x;
 	int y;
 	int zoom_number;
 	int zoom_denominator;
-	CL_PixelBuffer image;
+	PixelBuffer image;
 };
 
 }

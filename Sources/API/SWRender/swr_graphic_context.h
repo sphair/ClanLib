@@ -39,24 +39,24 @@
 namespace clan
 {
 
-class CL_PixelCommand;
-class CL_PixelPipeline;
-class CL_GraphicContext_SWRender_Impl;
+class PixelCommand;
+class PixelPipeline;
+class GraphicContext_SWRender_Impl;
 
 /// \brief SWRender Graphic Context
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_GraphicContext_SWRender : public CL_GraphicContext
+class API_SWRender GraphicContext_SWRender : public GraphicContext
 {
 //!Construction
 public:
 	// \brief Create a null instance
-	CL_GraphicContext_SWRender() {}
+	GraphicContext_SWRender() {}
 
 	/// \brief Create a SWRender specific graphics context
-	CL_GraphicContext_SWRender(CL_GraphicContext &gc);
+	GraphicContext_SWRender(GraphicContext &gc);
 
-	~CL_GraphicContext_SWRender();
+	~GraphicContext_SWRender();
 
 //!Attributes
 public:
@@ -66,21 +66,21 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief Returns the pixel pipeline class needed to allocated CL_PixelCommand objects.
-	CL_PixelPipeline *get_pipeline() const;
+	/// \brief Returns the pixel pipeline class needed to allocated PixelCommand objects.
+	PixelPipeline *get_pipeline() const;
 
 //!Operations
 public:
-	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &pixels);
+	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
 
 	/// \brief Queues a pixel command in the pipeline
 	template<typename T>
 	void queue_command(T *command) { queue_command(std::unique_ptr<T>(command)); }
-	void queue_command(CL_UniquePtr<CL_PixelCommand> &command);
+	void queue_command(UniquePtr<PixelCommand> &command);
 
 //!Implementation
 private:
-	std::shared_ptr<CL_GraphicContext_SWRender_Impl> impl;
+	std::shared_ptr<GraphicContext_SWRender_Impl> impl;
 };
 
 namespace clan

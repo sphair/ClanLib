@@ -33,65 +33,65 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderShaderObjectProvider Construction:
+// SWRenderShaderObjectProvider Construction:
 
-CL_SWRenderShaderObjectProvider::CL_SWRenderShaderObjectProvider()
+SWRenderShaderObjectProvider::SWRenderShaderObjectProvider()
 {
 }
 
-CL_SWRenderShaderObjectProvider::~CL_SWRenderShaderObjectProvider()
+SWRenderShaderObjectProvider::~SWRenderShaderObjectProvider()
 {
 }
 
-void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const std::string &source)
+void SWRenderShaderObjectProvider::create(ShaderType type, const std::string &source)
 {
 }
 
-void CL_SWRenderShaderObjectProvider::create(CL_ShaderType type, const std::vector<std::string> &sources)
+void SWRenderShaderObjectProvider::create(ShaderType type, const std::vector<std::string> &sources)
 {
 }
 
-void CL_SWRenderShaderObjectProvider::destroy()
+void SWRenderShaderObjectProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderShaderObjectProvider Attributes:
+// SWRenderShaderObjectProvider Attributes:
 
-unsigned int CL_SWRenderShaderObjectProvider::get_handle() const
+unsigned int SWRenderShaderObjectProvider::get_handle() const
 {
 	return 0;
 }
 
-bool CL_SWRenderShaderObjectProvider::get_compile_status() const
+bool SWRenderShaderObjectProvider::get_compile_status() const
 {
 	return false;
 }
 
-CL_ShaderType CL_SWRenderShaderObjectProvider::get_shader_type() const
+ShaderType SWRenderShaderObjectProvider::get_shader_type() const
 {
 	return cl_shadertype_vertex;
 }
 
-std::string CL_SWRenderShaderObjectProvider::get_info_log() const
+std::string SWRenderShaderObjectProvider::get_info_log() const
 {
 	return std::string();
 }
 
-std::string CL_SWRenderShaderObjectProvider::get_shader_source() const
+std::string SWRenderShaderObjectProvider::get_shader_source() const
 {
 	return std::string();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderShaderObjectProvider Operations:
+// SWRenderShaderObjectProvider Operations:
 
-void CL_SWRenderShaderObjectProvider::compile()
+void SWRenderShaderObjectProvider::compile()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderShaderObjectProvider Implementation:
+// SWRenderShaderObjectProvider Implementation:
 
 }

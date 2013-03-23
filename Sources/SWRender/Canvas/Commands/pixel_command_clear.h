@@ -34,14 +34,14 @@
 namespace clan
 {
 
-class CL_PixelCommandClear : public CL_PixelCommand
+class PixelCommandClear : public PixelCommand
 {
 public:
-	CL_PixelCommandClear(const CL_Colorf &color);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandClear(const Colorf &color);
+	void run(PixelThreadContext *context);
 
 private:
-	CL_Colorf color;
+	Colorf color;
 };
 
 }

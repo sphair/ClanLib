@@ -35,22 +35,22 @@
 namespace clan
 {
 
-class CL_PixelCommandPixels : public CL_PixelCommand
+class PixelCommandPixels : public PixelCommand
 {
 public:
-	CL_PixelCommandPixels(const CL_Rect &dest_rect, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &primary_color);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandPixels(const Rect &dest_rect, const PixelBuffer &image, const Rect &src_rect, const Colorf &primary_color);
+	void run(PixelThreadContext *context);
 
 private:
-	void render_pixels_scale(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_pixels_noscale(CL_PixelThreadContext *context, const CL_Rect &box);
-	void render_pixels_noscale_white(CL_PixelThreadContext *context, const CL_Rect &box);
-	CL_Rect get_clipped_dest_rect(CL_PixelThreadContext *context) const;
+	void render_pixels_scale(PixelThreadContext *context, const Rect &box);
+	void render_pixels_noscale(PixelThreadContext *context, const Rect &box);
+	void render_pixels_noscale_white(PixelThreadContext *context, const Rect &box);
+	Rect get_clipped_dest_rect(PixelThreadContext *context) const;
 
-	CL_Rect dest_rect;
-	CL_PixelBuffer image;
-	CL_Rect src_rect;
-	CL_Colorf primary_color;
+	Rect dest_rect;
+	PixelBuffer image;
+	Rect src_rect;
+	Colorf primary_color;
 };
 
 }

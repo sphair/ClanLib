@@ -34,14 +34,14 @@
 namespace clan
 {
 
-CL_PixelCommandClear::CL_PixelCommandClear(const CL_Colorf &color)
+PixelCommandClear::PixelCommandClear(const Colorf &color)
 : color(color)
 {
 }
 
-void CL_PixelCommandClear::run(CL_PixelThreadContext *context)
+void PixelCommandClear::run(PixelThreadContext *context)
 {
-	CL_PixelFillRenderer fill_renderer;
+	PixelFillRenderer fill_renderer;
 	fill_renderer.set_dest(context->colorbuffer0.data, context->colorbuffer0.size.width, context->colorbuffer0.size.height);
 	fill_renderer.set_clip_rect(context->clip_rect);
 	fill_renderer.set_core(context->core, context->num_cores);

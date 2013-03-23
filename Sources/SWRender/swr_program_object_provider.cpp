@@ -37,70 +37,70 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderProgramObjectProvider Construction:
+// SWRenderProgramObjectProvider Construction:
 
-CL_SWRenderProgramObjectProvider::CL_SWRenderProgramObjectProvider() : current_program(NULL), sprite_program(false)
+SWRenderProgramObjectProvider::SWRenderProgramObjectProvider() : current_program(NULL), sprite_program(false)
 {
 }
 
-CL_SWRenderProgramObjectProvider::~CL_SWRenderProgramObjectProvider()
+SWRenderProgramObjectProvider::~SWRenderProgramObjectProvider()
 {
 }
 
-void CL_SWRenderProgramObjectProvider::destroy()
+void SWRenderProgramObjectProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderProgramObjectProvider Attributes:
+// SWRenderProgramObjectProvider Attributes:
 
-CL_SoftwareProgram *CL_SWRenderProgramObjectProvider::get_program() const
+SoftwareProgram *SWRenderProgramObjectProvider::get_program() const
 {
 	return current_program;
 }
 
-bool CL_SWRenderProgramObjectProvider::is_sprite_program() const
+bool SWRenderProgramObjectProvider::is_sprite_program() const
 {
 	return sprite_program;
 }
 
-unsigned int CL_SWRenderProgramObjectProvider::get_handle() const
+unsigned int SWRenderProgramObjectProvider::get_handle() const
 {
 	return 0;
 }
 
-bool CL_SWRenderProgramObjectProvider::get_link_status() const
+bool SWRenderProgramObjectProvider::get_link_status() const
 {
 	return false;
 }
 
-bool CL_SWRenderProgramObjectProvider::get_validate_status() const
+bool SWRenderProgramObjectProvider::get_validate_status() const
 {
 	return false;
 }
 
-std::string CL_SWRenderProgramObjectProvider::get_info_log() const
+std::string SWRenderProgramObjectProvider::get_info_log() const
 {
 	return std::string();
 }
 
-int CL_SWRenderProgramObjectProvider::get_attribute_count() const
+int SWRenderProgramObjectProvider::get_attribute_count() const
 {
 	return 0;
 }
 
-std::vector<CL_ShaderObject> CL_SWRenderProgramObjectProvider::get_shaders() const
+std::vector<ShaderObject> SWRenderProgramObjectProvider::get_shaders() const
 {
-	return std::vector<CL_ShaderObject>();
+	return std::vector<ShaderObject>();
 }
 
-std::vector<CL_ProgramAttribute> CL_SWRenderProgramObjectProvider::get_attributes() const
+std::vector<ProgramAttribute> SWRenderProgramObjectProvider::get_attributes() const
 {
-	return std::vector<CL_ProgramAttribute>();
+	return std::vector<ProgramAttribute>();
 }
 
-int CL_SWRenderProgramObjectProvider::get_attribute_location(const std::string &name) const
+int SWRenderProgramObjectProvider::get_attribute_location(const std::string &name) const
 {
 	int attribute_index = current_program->get_attribute_index(name);
 	if (attribute_index >= 0 && attribute_index < (int)bind_locations.size())
@@ -109,25 +109,25 @@ int CL_SWRenderProgramObjectProvider::get_attribute_location(const std::string &
 		return -1;
 }
 
-int CL_SWRenderProgramObjectProvider::get_uniform_count() const
+int SWRenderProgramObjectProvider::get_uniform_count() const
 {
 	return 0;
 }
 
-std::vector<CL_ProgramUniform> CL_SWRenderProgramObjectProvider::get_uniforms() const
+std::vector<ProgramUniform> SWRenderProgramObjectProvider::get_uniforms() const
 {
-	return std::vector<CL_ProgramUniform>();
+	return std::vector<ProgramUniform>();
 }
 
-int CL_SWRenderProgramObjectProvider::get_uniform_location(const std::string &name) const
+int SWRenderProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderProgramObjectProvider Operations:
+// SWRenderProgramObjectProvider Operations:
 
-void CL_SWRenderProgramObjectProvider::set_program(CL_SoftwareProgram *program)
+void SWRenderProgramObjectProvider::set_program(SoftwareProgram *program)
 {
 	current_program = program;
 	bind_locations.clear();
@@ -141,95 +141,95 @@ void CL_SWRenderProgramObjectProvider::set_program(CL_SoftwareProgram *program)
 	}
 }
 
-void CL_SWRenderProgramObjectProvider::set_sprite_program(bool is_sprite_program_flag)
+void SWRenderProgramObjectProvider::set_sprite_program(bool is_sprite_program_flag)
 {
 	sprite_program = is_sprite_program_flag;
 }
 
-void CL_SWRenderProgramObjectProvider::attach(const CL_ShaderObject &obj)
+void SWRenderProgramObjectProvider::attach(const ShaderObject &obj)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::detach(const CL_ShaderObject &obj)
+void SWRenderProgramObjectProvider::detach(const ShaderObject &obj)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
+void SWRenderProgramObjectProvider::bind_attribute_location(int index, const std::string &name)
 {
 	int attribute_index = current_program->get_attribute_index(name);
 	if (attribute_index >= 0 && attribute_index < (int)bind_locations.size())
 		bind_locations[attribute_index] = index;
 }
 
-void CL_SWRenderProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
+void SWRenderProgramObjectProvider::bind_frag_data_location(int color_number, const std::string &name)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::link()
+void SWRenderProgramObjectProvider::link()
 {
 }
 
-void CL_SWRenderProgramObjectProvider::validate()
+void SWRenderProgramObjectProvider::validate()
 {
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform1i(const std::string &name, int v1)
+void SWRenderProgramObjectProvider::set_uniform1i(const std::string &name, int v1)
 {
-	current_program->set_uniform(name, CL_Vec4f(v1, 0.0f, 1.0f, 1.0f));
+	current_program->set_uniform(name, Vec4f(v1, 0.0f, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform2i(const std::string &name, int v1, int v2)
+void SWRenderProgramObjectProvider::set_uniform2i(const std::string &name, int v1, int v2)
 {
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, 1.0f, 1.0f));
+	current_program->set_uniform(name, Vec4f(v1, v2, 1.0f, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform3i(const std::string &name, int v1, int v2, int v3)
+void SWRenderProgramObjectProvider::set_uniform3i(const std::string &name, int v1, int v2, int v3)
 {
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, 1.0f));
+	current_program->set_uniform(name, Vec4f(v1, v2, v3, 1.0f));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform4i(const std::string &name, int v1, int v2, int v3, int v4)
+void SWRenderProgramObjectProvider::set_uniform4i(const std::string &name, int v1, int v2, int v3, int v4)
 {
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, v4));
+	current_program->set_uniform(name, Vec4f(v1, v2, v3, v4));
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniformiv(const std::string &name, int size, int count, int *data)
-{
-}
-
-void CL_SWRenderProgramObjectProvider::set_uniform1f(const std::string &name, float v1)
-{
-	current_program->set_uniform(name, CL_Vec4f(v1, 0.0f, 1.0f, 1.0f));
-}
-
-void CL_SWRenderProgramObjectProvider::set_uniform2f(const std::string &name, float v1, float v2)
-{
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, 1.0f, 1.0f));
-}
-
-void CL_SWRenderProgramObjectProvider::set_uniform3f(const std::string &name, float v1, float v2, float v3)
-{
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, 1.0f));
-}
-
-void CL_SWRenderProgramObjectProvider::set_uniform4f(const std::string &name, float v1, float v2, float v3, float v4)
-{
-	current_program->set_uniform(name, CL_Vec4f(v1, v2, v3, v4));
-}
-
-void CL_SWRenderProgramObjectProvider::set_uniformfv(const std::string &name, int size, int count, float *data)
+void SWRenderProgramObjectProvider::set_uniformiv(const std::string &name, int size, int count, int *data)
 {
 }
 
-void CL_SWRenderProgramObjectProvider::set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data)
+void SWRenderProgramObjectProvider::set_uniform1f(const std::string &name, float v1)
+{
+	current_program->set_uniform(name, Vec4f(v1, 0.0f, 1.0f, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform2f(const std::string &name, float v1, float v2)
+{
+	current_program->set_uniform(name, Vec4f(v1, v2, 1.0f, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform3f(const std::string &name, float v1, float v2, float v3)
+{
+	current_program->set_uniform(name, Vec4f(v1, v2, v3, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform4f(const std::string &name, float v1, float v2, float v3, float v4)
+{
+	current_program->set_uniform(name, Vec4f(v1, v2, v3, v4));
+}
+
+void SWRenderProgramObjectProvider::set_uniformfv(const std::string &name, int size, int count, float *data)
+{
+}
+
+void SWRenderProgramObjectProvider::set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data)
 {
 	if (!transpose)
-		current_program->set_uniform_matrix(name, CL_Mat4f(data));
+		current_program->set_uniform_matrix(name, Mat4f(data));
 	else
-		current_program->set_uniform_matrix(name, CL_Mat4f(data).transpose());
+		current_program->set_uniform_matrix(name, Mat4f(data).transpose());
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderProgramObjectProvider Implementation:
+// SWRenderProgramObjectProvider Implementation:
 
 }

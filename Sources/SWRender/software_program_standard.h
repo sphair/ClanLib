@@ -33,28 +33,28 @@
 namespace clan
 {
 
-class CL_SoftwareProgram_Standard : public CL_SoftwareProgram
+class SoftwareProgram_Standard : public SoftwareProgram
 {
 public:
-	CL_SoftwareProgram_Standard();
+	SoftwareProgram_Standard();
 
 	int get_attribute_count() const;
 	int get_attribute_index(const std::string &name) const;
-	CL_Vec4f get_attribute_default(int index);
-	void set_uniform(const std::string &name, const CL_Vec4f &vec);
-	void set_uniform_matrix(const std::string &name, const CL_Mat4f &mat);
+	Vec4f get_attribute_default(int index);
+	void set_uniform(const std::string &name, const Vec4f &vec);
+	void set_uniform_matrix(const std::string &name, const Mat4f &mat);
 
-	CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values);
-	CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values);
-	CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values);
+	PixelCommand *draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values);
+	PixelCommand *draw_sprite(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values);
+	PixelCommand *draw_line(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values);
 
-	CL_Vec2f transform(const CL_Vec4f &vertex) const;
+	Vec2f transform(const Vec4f &vertex) const;
 
 private:
-	const CL_Mat4f &get_modelview() const { return modelview; }
-	void set_modelview(const CL_Mat4f &new_modelview);
+	const Mat4f &get_modelview() const { return modelview; }
+	void set_modelview(const Mat4f &new_modelview);
 
-	CL_Mat4f modelview;
+	Mat4f modelview;
 };
 
 

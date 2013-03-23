@@ -42,16 +42,16 @@ namespace clan
 /// \brief Display target for clanDisplay.
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_SWRenderTarget : public CL_DisplayTarget
+class API_SWRender SWRenderTarget : public DisplayTarget
 {
 /// \name Construction
 /// \{
 
 public:
 	/// \brief Constructs a SWRender target.
-	CL_SWRenderTarget();
+	SWRenderTarget();
 
-	~CL_SWRenderTarget();
+	~SWRenderTarget();
 
 /// \}
 /// \name Attributes

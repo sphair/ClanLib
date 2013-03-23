@@ -36,16 +36,16 @@
 namespace clan
 {
 
-class CL_PixelBuffer;
+class PixelBuffer;
 
-class CL_SWRenderFrameBufferProvider : public CL_FrameBufferProvider
+class SWRenderFrameBufferProvider : public FrameBufferProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderFrameBufferProvider();
-	~CL_SWRenderFrameBufferProvider();
+	SWRenderFrameBufferProvider();
+	~SWRenderFrameBufferProvider();
 
 
 /// \}
@@ -53,13 +53,13 @@ public:
 /// \{
 
 public:
-	CL_Size get_size() const;
+	Size get_size() const;
 
-	CL_PixelBuffer get_colorbuffer0() const;
+	PixelBuffer get_colorbuffer0() const;
 
-	CL_Signal_v0 &get_sig_changed_event() {return sig_changed_event;}
+	Signal_v0 &get_sig_changed_event() {return sig_changed_event;}
 
-	CL_FrameBufferBindTarget get_bind_target() const;
+	FrameBufferBindTarget get_bind_target() const;
 
 /// \}
 /// \name Operations
@@ -67,31 +67,31 @@ public:
 
 public:
 	void destroy();
-	void attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
-	void detach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer);
-	void attach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
-	void attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
-	void detach_color_buffer(int color_buffer, const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_color_buffer(int color_buffer, const RenderBuffer &render_buffer);
+	void detach_color_buffer(int color_buffer, const RenderBuffer &render_buffer);
+	void attach_color_buffer(int color_buffer, const Texture &texture, int level = 0, int zoffset = 0);
+	void attach_color_buffer(int color_buffer, const Texture &texture, TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_color_buffer(int color_buffer, const Texture &texture, int level = 0, int zoffset = 0);
 
-	void attach_stencil_buffer(const CL_RenderBuffer &render_buffer);
-	void detach_stencil_buffer(const CL_RenderBuffer &render_buffer);
-	void attach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
-	void attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
-	void detach_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_stencil_buffer(const RenderBuffer &render_buffer);
+	void detach_stencil_buffer(const RenderBuffer &render_buffer);
+	void attach_stencil_buffer(const Texture &texture, int level = 0, int zoffset = 0);
+	void attach_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_stencil_buffer(const Texture &texture, int level = 0, int zoffset = 0);
 
-	void attach_depth_buffer(const CL_RenderBuffer &render_buffer);
-	void detach_depth_buffer(const CL_RenderBuffer &render_buffer);
-	void attach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
-	void attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
-	void detach_depth_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_buffer(const RenderBuffer &render_buffer);
+	void detach_depth_buffer(const RenderBuffer &render_buffer);
+	void attach_depth_buffer(const Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_buffer(const Texture &texture, TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_buffer(const Texture &texture, int level = 0, int zoffset = 0);
 
-	void attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
-	void detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer);
-	void attach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
-	void attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level = 0, int zoffset = 0);
-	void detach_depth_stencil_buffer(const CL_Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_stencil_buffer(const RenderBuffer &render_buffer);
+	void detach_depth_stencil_buffer(const RenderBuffer &render_buffer);
+	void attach_depth_stencil_buffer(const Texture &texture, int level = 0, int zoffset = 0);
+	void attach_depth_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level = 0, int zoffset = 0);
+	void detach_depth_stencil_buffer(const Texture &texture, int level = 0, int zoffset = 0);
 
-	void set_bind_target(CL_FrameBufferBindTarget target);
+	void set_bind_target(FrameBufferBindTarget target);
 
 /// \}
 /// \name Implementation
@@ -99,9 +99,9 @@ public:
 private:
 	enum Type { type_none, type_render, type_texture };
 	Type colorbuffer0_type;
-	CL_RenderBuffer colorbuffer0_render;
-	CL_Texture colorbuffer0_texture;
-	CL_Signal_v0 sig_changed_event;
+	RenderBuffer colorbuffer0_render;
+	Texture colorbuffer0_texture;
+	Signal_v0 sig_changed_event;
 	mutable std::vector<int> attachment_indexes;
 /// \}
 };

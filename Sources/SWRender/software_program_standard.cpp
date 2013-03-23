@@ -36,17 +36,17 @@
 namespace clan
 {
 
-CL_SoftwareProgram_Standard::CL_SoftwareProgram_Standard()
-: modelview(CL_Mat4f::identity())
+SoftwareProgram_Standard::SoftwareProgram_Standard()
+: modelview(Mat4f::identity())
 {
 }
 
-int CL_SoftwareProgram_Standard::get_attribute_count() const
+int SoftwareProgram_Standard::get_attribute_count() const
 {
 	return 4;
 }
 
-int CL_SoftwareProgram_Standard::get_attribute_index(const std::string &name) const
+int SoftwareProgram_Standard::get_attribute_index(const std::string &name) const
 {
 	if (name == "Position")
 		return 0;
@@ -60,67 +60,67 @@ int CL_SoftwareProgram_Standard::get_attribute_index(const std::string &name) co
 		return -1;
 }
 
-CL_Vec4f CL_SoftwareProgram_Standard::get_attribute_default(int index)
+Vec4f SoftwareProgram_Standard::get_attribute_default(int index)
 {
 	switch (index)
 	{
 	case 0:
-		return CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
+		return Vec4f(0.0f, 0.0f, 1.0f, 1.0f);
 	case 1:
-		return CL_Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+		return Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	case 2:
-		return CL_Vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+		return Vec4f(0.0f, 0.0f, 0.0f, 0.0f);
 	case 3:
 	default:
-		return CL_Vec4f(0.0f, 0.0f, 0.0f, 0.0f);
+		return Vec4f(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 }
 
-void CL_SoftwareProgram_Standard::set_uniform(const std::string &name, const CL_Vec4f &vec)
+void SoftwareProgram_Standard::set_uniform(const std::string &name, const Vec4f &vec)
 {
 }
 
-void CL_SoftwareProgram_Standard::set_uniform_matrix(const std::string &name, const CL_Mat4f &mat)
+void SoftwareProgram_Standard::set_uniform_matrix(const std::string &name, const Mat4f &mat)
 {
 	if (name == "cl_ModelView")
 		set_modelview(mat);
 }
 
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values)
+PixelCommand *SoftwareProgram_Standard::draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values)
 {
-	CL_Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
-	CL_Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
-	CL_Vec2f init_texcoords[3] = { CL_Vec2f(attribute_values[6]), CL_Vec2f(attribute_values[7]), CL_Vec2f(attribute_values[8]) };
+	Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
+	Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
+	Vec2f init_texcoords[3] = { Vec2f(attribute_values[6]), Vec2f(attribute_values[7]), Vec2f(attribute_values[8]) };
 	int init_sampler = (int)attribute_values[9].x;
-	return new(pipeline) CL_PixelCommandTriangle(init_points, init_primcolor, init_texcoords, init_sampler);
+	return new(pipeline) PixelCommandTriangle(init_points, init_primcolor, init_texcoords, init_sampler);
 }
 
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values)
+PixelCommand *SoftwareProgram_Standard::draw_sprite(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values)
 {
-	CL_Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
-	CL_Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
-	CL_Vec2f init_texcoords[3] = { CL_Vec2f(attribute_values[6]), CL_Vec2f(attribute_values[7]), CL_Vec2f(attribute_values[8]) };
+	Vec2f init_points[3] = { transform(attribute_values[0]), transform(attribute_values[1]), transform(attribute_values[2]) };
+	Vec4f init_primcolor[3] = { attribute_values[3], attribute_values[4], attribute_values[5] };
+	Vec2f init_texcoords[3] = { Vec2f(attribute_values[6]), Vec2f(attribute_values[7]), Vec2f(attribute_values[8]) };
 	int init_sampler = (int)attribute_values[9].x;
-	return new(pipeline) CL_PixelCommandSprite(init_points, init_primcolor[0], init_texcoords, init_sampler);
+	return new(pipeline) PixelCommandSprite(init_points, init_primcolor[0], init_texcoords, init_sampler);
 }
 
-CL_PixelCommand *CL_SoftwareProgram_Standard::draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values)
+PixelCommand *SoftwareProgram_Standard::draw_line(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values)
 {
-	CL_Vec2f init_points[2] = { transform(attribute_values[0]), transform(attribute_values[1]) };
-	CL_Vec4f init_primcolor[2] = { attribute_values[2], attribute_values[3] };
-	CL_Vec2f init_texcoords[2] = { CL_Vec2f(attribute_values[4]), CL_Vec2f(attribute_values[5]) };
+	Vec2f init_points[2] = { transform(attribute_values[0]), transform(attribute_values[1]) };
+	Vec4f init_primcolor[2] = { attribute_values[2], attribute_values[3] };
+	Vec2f init_texcoords[2] = { Vec2f(attribute_values[4]), Vec2f(attribute_values[5]) };
 	int init_sampler = (int)attribute_values[6].x;
-	return new(pipeline) CL_PixelCommandLine(init_points, init_primcolor, init_texcoords, init_sampler);
+	return new(pipeline) PixelCommandLine(init_points, init_primcolor, init_texcoords, init_sampler);
 }
 
-void CL_SoftwareProgram_Standard::set_modelview(const CL_Mat4f &new_modelview)
+void SoftwareProgram_Standard::set_modelview(const Mat4f &new_modelview)
 {
 	modelview = new_modelview;
 }
 
-CL_Vec2f CL_SoftwareProgram_Standard::transform(const CL_Vec4f &vertex) const
+Vec2f SoftwareProgram_Standard::transform(const Vec4f &vertex) const
 {
-	CL_Vec4f v = modelview * vertex;
-	return CL_Vec2f(v.x, v.y);
+	Vec4f v = modelview * vertex;
+	return Vec2f(v.x, v.y);
 }
 }

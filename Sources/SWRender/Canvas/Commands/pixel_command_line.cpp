@@ -36,7 +36,7 @@
 namespace clan
 {
 
-CL_PixelCommandLine::CL_PixelCommandLine(const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler)
+PixelCommandLine::PixelCommandLine(const Vec2f init_points[2], const Vec4f init_primcolor[2], const Vec2f init_texcoords[2], int init_sampler)
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -47,17 +47,17 @@ CL_PixelCommandLine::CL_PixelCommandLine(const CL_Vec2f init_points[2], const CL
 	sampler = init_sampler;
 }
 
-void CL_PixelCommandLine::run(CL_PixelThreadContext *context)
+void PixelCommandLine::run(PixelThreadContext *context)
 {
-	CL_LineSegment2 line(
-		CL_Vec2i(points[0].x, points[0].y),
-		CL_Vec2i(points[1].x, points[1].y));
+	LineSegment2 line(
+		Vec2i(points[0].x, points[0].y),
+		Vec2i(points[1].x, points[1].y));
 
-	CL_Colorf color(primcolor[0].r, primcolor[0].g, primcolor[0].b, primcolor[0].a);
+	Colorf color(primcolor[0].r, primcolor[0].g, primcolor[0].b, primcolor[0].a);
 
 	// Textured line is currently not supported - So ignore the samplers
 
-	CL_PixelLineRenderer line_renderer;
+	PixelLineRenderer line_renderer;
 	line_renderer.set_clip_rect(context->clip_rect);
 	line_renderer.set_dest(context->colorbuffer0.data, context->colorbuffer0.size.width, context->colorbuffer0.size.height);
 	line_renderer.set_core(context->core, context->num_cores);

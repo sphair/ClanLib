@@ -40,27 +40,27 @@
 namespace clan
 {
 
-class CL_PixelPipeline;
-class CL_PixelCommand;
+class PixelPipeline;
+class PixelCommand;
 
 /// \brief Interface for commands participating in drawing primitives
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_SoftwareProgram
+class SoftwareProgram
 {
 //!Operations
 public:
-	virtual ~CL_SoftwareProgram() { }
+	virtual ~SoftwareProgram() { }
 
 	virtual int get_attribute_count() const = 0;
 	virtual int get_attribute_index(const std::string &name) const = 0;
-	virtual CL_Vec4f get_attribute_default(int index) { return CL_Vec4f(0.0f, 0.0f, 1.0f, 1.0f); }
-	virtual void set_uniform(const std::string &name, const CL_Vec4f &vec) = 0;
-	virtual void set_uniform_matrix(const std::string &name, const CL_Mat4f &mat) = 0;
+	virtual Vec4f get_attribute_default(int index) { return Vec4f(0.0f, 0.0f, 1.0f, 1.0f); }
+	virtual void set_uniform(const std::string &name, const Vec4f &vec) = 0;
+	virtual void set_uniform_matrix(const std::string &name, const Mat4f &mat) = 0;
 
-	virtual CL_PixelCommand *draw_triangle(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
-	virtual CL_PixelCommand *draw_sprite(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
-	virtual CL_PixelCommand *draw_line(CL_PixelPipeline *pipeline, const std::vector<CL_Vec4f> &attribute_values) = 0;
+	virtual PixelCommand *draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values) = 0;
+	virtual PixelCommand *draw_sprite(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values) = 0;
+	virtual PixelCommand *draw_line(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values) = 0;
 };
 
 }

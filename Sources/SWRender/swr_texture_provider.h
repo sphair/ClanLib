@@ -34,15 +34,15 @@
 namespace clan
 {
 
-class CL_SWRenderTextureProvider : public CL_TextureProvider
+class SWRenderTextureProvider : public TextureProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderTextureProvider();
+	SWRenderTextureProvider();
 
-	~CL_SWRenderTextureProvider();
+	~SWRenderTextureProvider();
 
 
 /// \}
@@ -50,8 +50,8 @@ public:
 /// \{
 
 public:
-	CL_PixelBuffer &get_image() { return image; };
-	const CL_PixelBuffer &get_image() const { return image; };
+	PixelBuffer &get_image() { return image; };
+	const PixelBuffer &get_image() const { return image; };
 
 /// \}
 /// \name Operations
@@ -62,33 +62,33 @@ public:
 
 	void generate_mipmap();
 
-	void create(int width, int height, CL_TextureFormat internal_format, int depth);
+	void create(int width, int height, TextureFormat internal_format, int depth);
 
-	CL_PixelBuffer get_pixeldata(CL_TextureFormat sized_format, int level) const;
+	PixelBuffer get_pixeldata(TextureFormat sized_format, int level) const;
 
-	void set_image(CL_PixelBuffer &image, int level);
+	void set_image(PixelBuffer &image, int level);
 
 	void set_cube_map(
-		CL_PixelBuffer &cube_map_positive_x,
-		CL_PixelBuffer &cube_map_negative_x,
-		CL_PixelBuffer &cube_map_positive_y,
-		CL_PixelBuffer &cube_map_negative_y,
-		CL_PixelBuffer &cube_map_positive_z,
-		CL_PixelBuffer &cube_map_negative_z,
+		PixelBuffer &cube_map_positive_x,
+		PixelBuffer &cube_map_negative_x,
+		PixelBuffer &cube_map_positive_y,
+		PixelBuffer &cube_map_negative_y,
+		PixelBuffer &cube_map_positive_z,
+		PixelBuffer &cube_map_negative_z,
 		int level);
 
 	void set_compressed_image(
 		int level,
-		CL_TextureFormat internal_format,
+		TextureFormat internal_format,
 		int width,
 		int height,
-		CL_DataBuffer &image);
+		DataBuffer &image);
 
 	void set_subimage(
 		int x,
 		int y,
-		const CL_PixelBuffer &image,
-		const CL_Rect &src_rect,
+		const PixelBuffer &image,
+		const Rect &src_rect,
 		int level);
 
 	void copy_image_from(
@@ -97,8 +97,8 @@ public:
 		int width,
 		int height,
 		int level,
-		CL_TextureFormat internal_format,
-		CL_GraphicContextProvider *gc);
+		TextureFormat internal_format,
+		GraphicContextProvider *gc);
 
 	void copy_subimage_from(
 		int offset_x,
@@ -108,7 +108,7 @@ public:
 		int width,
 		int height,
 		int level,
-		CL_GraphicContextProvider *gc);
+		GraphicContextProvider *gc);
 
 	void set_min_lod(double min_lod);
 
@@ -121,24 +121,24 @@ public:
 	void set_max_level(int max_level);
 
 	void set_wrap_mode(
-		CL_TextureWrapMode wrap_s,
-		CL_TextureWrapMode wrap_t,
-		CL_TextureWrapMode wrap_r);
+		TextureWrapMode wrap_s,
+		TextureWrapMode wrap_t,
+		TextureWrapMode wrap_r);
 
 	void set_wrap_mode(
-		CL_TextureWrapMode wrap_s,
-		CL_TextureWrapMode wrap_t);
+		TextureWrapMode wrap_s,
+		TextureWrapMode wrap_t);
 
 	void set_wrap_mode(
-		CL_TextureWrapMode wrap_s);
+		TextureWrapMode wrap_s);
 
-	void set_min_filter(CL_TextureFilter filter);
+	void set_min_filter(TextureFilter filter);
 
-	void set_mag_filter(CL_TextureFilter filter);
+	void set_mag_filter(TextureFilter filter);
 
 	void set_max_anisotropy(float v);
 
-	void set_texture_compare(CL_TextureCompareMode mode, CL_CompareFunction func);
+	void set_texture_compare(TextureCompareMode mode, CompareFunction func);
 
 
 /// \}
@@ -146,9 +146,9 @@ public:
 /// \{
 
 private:
-	CL_PixelBuffer image;
-	CL_TextureWrapMode wrap_s, wrap_t;
-	CL_TextureFilter min_filter, mag_filter;
+	PixelBuffer image;
+	TextureWrapMode wrap_s, wrap_t;
+	TextureFilter min_filter, mag_filter;
 /// \}
 };
 

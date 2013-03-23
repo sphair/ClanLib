@@ -40,42 +40,42 @@
 namespace clan
 {
 
-class CL_SWRenderProgramObjectProvider;
+class SWRenderProgramObjectProvider;
 
 /// \brief SWRender Graphic Context
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_ProgramObject_SWRender : public CL_ProgramObject
+class API_SWRender ProgramObject_SWRender : public ProgramObject
 {
 //!Construction
 public:
 	// \brief Create a null instance
-	CL_ProgramObject_SWRender() {}
+	ProgramObject_SWRender() {}
 
 	/// \brief Create a SWRender specific graphics context
 	///
 	/// \param program = The software program
 	/// \param is_sprite_program = true when the specified triangles will form rectangles (This is slightly faster)
-	CL_ProgramObject_SWRender(CL_SoftwareProgram *program, bool is_sprite_program);
+	ProgramObject_SWRender(SoftwareProgram *program, bool is_sprite_program);
 
 	/// \brief Create a SWRender specific program object
 	///
 	/// An exception is thrown if the program object is not a SWRender object
-	CL_ProgramObject_SWRender(const CL_ProgramObject &program_object);
+	ProgramObject_SWRender(const ProgramObject &program_object);
 
-	~CL_ProgramObject_SWRender();
+	~ProgramObject_SWRender();
 
 //!Attributes
 public:
 
 	/// \brief Get the attached program
-	CL_SoftwareProgram *get_program() const;
+	SoftwareProgram *get_program() const;
 
 	/// \brief Returns true if this program object was created as a sprite program
 	bool is_sprite_program() const;
 
 	/// \brief Retrieves the provider.
-	CL_SWRenderProgramObjectProvider *get_provider() const;
+	SWRenderProgramObjectProvider *get_provider() const;
 
 
 //!Operations

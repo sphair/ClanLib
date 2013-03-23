@@ -35,49 +35,49 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_ProgramObject_SWRender Construction:
+// ProgramObject_SWRender Construction:
 
-CL_ProgramObject_SWRender::CL_ProgramObject_SWRender(CL_SoftwareProgram *program, bool is_sprite_program) : CL_ProgramObject( new CL_SWRenderProgramObjectProvider )
+ProgramObject_SWRender::ProgramObject_SWRender(SoftwareProgram *program, bool is_sprite_program) : ProgramObject( new SWRenderProgramObjectProvider )
 {
-	CL_SWRenderProgramObjectProvider *provider = get_provider();
+	SWRenderProgramObjectProvider *provider = get_provider();
 	provider->set_program(program);
 	provider->set_sprite_program(is_sprite_program);
 }
 
-CL_ProgramObject_SWRender::CL_ProgramObject_SWRender(const CL_ProgramObject &program_object) : CL_ProgramObject(program_object)
+ProgramObject_SWRender::ProgramObject_SWRender(const ProgramObject &program_object) : ProgramObject(program_object)
 {
 	if (!get_provider())
-		throw CL_Exception("Program Object is not from the SWRender target");
+		throw Exception("Program Object is not from the SWRender target");
 
 }
 
-CL_ProgramObject_SWRender::~CL_ProgramObject_SWRender()
+ProgramObject_SWRender::~ProgramObject_SWRender()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_ProgramObject_SWRender Attributes:
+// ProgramObject_SWRender Attributes:
 
-CL_SoftwareProgram *CL_ProgramObject_SWRender::get_program() const
+SoftwareProgram *ProgramObject_SWRender::get_program() const
 {
 	return get_provider()->get_program();
 }
 
 	/// \brief Returns true if this program object was created as a sprite program
-bool CL_ProgramObject_SWRender::is_sprite_program() const
+bool ProgramObject_SWRender::is_sprite_program() const
 {
 	return get_provider()->is_sprite_program();
 }
 
-CL_SWRenderProgramObjectProvider *CL_ProgramObject_SWRender::get_provider() const
+SWRenderProgramObjectProvider *ProgramObject_SWRender::get_provider() const
 {
-	return static_cast <CL_SWRenderProgramObjectProvider *> (CL_ProgramObject::get_provider());
+	return static_cast <SWRenderProgramObjectProvider *> (ProgramObject::get_provider());
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_ProgramObject_SWRender Operations:
+// ProgramObject_SWRender Operations:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_ProgramObject_SWRender Implementation:
+// ProgramObject_SWRender Implementation:
 
 }

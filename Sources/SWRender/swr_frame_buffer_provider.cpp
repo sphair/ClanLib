@@ -35,129 +35,129 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderFrameBufferProvider Construction:
+// SWRenderFrameBufferProvider Construction:
 
-CL_SWRenderFrameBufferProvider::CL_SWRenderFrameBufferProvider()
+SWRenderFrameBufferProvider::SWRenderFrameBufferProvider()
 : colorbuffer0_type(type_none)
 {
 }
 
-CL_SWRenderFrameBufferProvider::~CL_SWRenderFrameBufferProvider()
+SWRenderFrameBufferProvider::~SWRenderFrameBufferProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderFrameBufferProvider Attributes:
+// SWRenderFrameBufferProvider Attributes:
 
-CL_Size CL_SWRenderFrameBufferProvider::get_size() const
+Size SWRenderFrameBufferProvider::get_size() const
 {
 	switch (colorbuffer0_type)
 	{
 	case type_render:
-		return dynamic_cast<CL_SWRenderRenderBufferProvider*>(colorbuffer0_render.get_provider())->buffer.get_size();
+		return dynamic_cast<SWRenderRenderBufferProvider*>(colorbuffer0_render.get_provider())->buffer.get_size();
 	case type_texture:
 		return colorbuffer0_texture.get_size();
 	default:
-		return CL_Size();
+		return Size();
 	}
 }
 
-CL_PixelBuffer CL_SWRenderFrameBufferProvider::get_colorbuffer0() const
+PixelBuffer SWRenderFrameBufferProvider::get_colorbuffer0() const
 {
 	switch (colorbuffer0_type)
 	{
 	case type_render:
-		return dynamic_cast<CL_SWRenderRenderBufferProvider*>(colorbuffer0_render.get_provider())->buffer;
+		return dynamic_cast<SWRenderRenderBufferProvider*>(colorbuffer0_render.get_provider())->buffer;
 	case type_texture:
-		return dynamic_cast<CL_SWRenderTextureProvider*>(colorbuffer0_texture.get_provider())->get_image();
+		return dynamic_cast<SWRenderTextureProvider*>(colorbuffer0_texture.get_provider())->get_image();
 	default:
-		return CL_PixelBuffer();
+		return PixelBuffer();
 	}
 }
 
-CL_FrameBufferBindTarget CL_SWRenderFrameBufferProvider::get_bind_target() const
+FrameBufferBindTarget SWRenderFrameBufferProvider::get_bind_target() const
 {
 	return cl_framebuffer_draw;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderFrameBufferProvider Operations:
+// SWRenderFrameBufferProvider Operations:
 
-void CL_SWRenderFrameBufferProvider::destroy()
+void SWRenderFrameBufferProvider::destroy()
 {
 	delete this;
 }
 
-void CL_SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_RenderBuffer &render_buffer)
+void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const RenderBuffer &render_buffer)
 {
 	if (color_buffer == 0)
 	{
 		colorbuffer0_type = type_render;
 		colorbuffer0_render = render_buffer;
-		colorbuffer0_texture = CL_Texture();
+		colorbuffer0_texture = Texture();
 		sig_changed_event.invoke();
 	}
 }
 
-void CL_SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, int level, int zoffset)
+void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
 		colorbuffer0_type = type_texture;
-		colorbuffer0_render = CL_RenderBuffer();
+		colorbuffer0_render = RenderBuffer();
 		colorbuffer0_texture = texture;
 		sig_changed_event.invoke();
 	}
 }
 
-void CL_SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset)
+void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, TextureSubtype subtype, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
 		colorbuffer0_type = type_texture;
-		colorbuffer0_render = CL_RenderBuffer();
+		colorbuffer0_render = RenderBuffer();
 		colorbuffer0_texture = texture;
 		sig_changed_event.invoke();
 	}
 }
 
-void CL_SWRenderFrameBufferProvider::detach_color_buffer(int color_buffer, const CL_Texture &texture, int level, int zoffset)
+void SWRenderFrameBufferProvider::detach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
 {
 	if (color_buffer == 0)
 	{
 		colorbuffer0_type = type_none;
-		colorbuffer0_render = CL_RenderBuffer();
-		colorbuffer0_texture = CL_Texture();
+		colorbuffer0_render = RenderBuffer();
+		colorbuffer0_texture = Texture();
 		sig_changed_event.invoke();
 	}
 }
 
-void CL_SWRenderFrameBufferProvider::detach_color_buffer( int color_buffer, const CL_RenderBuffer &render_buffer )
+void SWRenderFrameBufferProvider::detach_color_buffer( int color_buffer, const RenderBuffer &render_buffer )
 {
 }
 
-void CL_SWRenderFrameBufferProvider::attach_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::detach_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::attach_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::detach_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_stencil_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::detach_stencil_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::detach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
 
-void CL_SWRenderFrameBufferProvider::attach_depth_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::detach_depth_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::attach_depth_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::detach_depth_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::detach_depth_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_depth_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::detach_depth_buffer(const Texture &texture, int level, int zoffset) {}
 
-void CL_SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const CL_RenderBuffer &render_buffer) {}
-void CL_SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const CL_Texture &texture, CL_TextureSubtype subtype, int level, int zoffset) {}
-void CL_SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const CL_Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
+void SWRenderFrameBufferProvider::detach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
 
-void CL_SWRenderFrameBufferProvider::set_bind_target( CL_FrameBufferBindTarget target )
+void SWRenderFrameBufferProvider::set_bind_target( FrameBufferBindTarget target )
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderFrameBufferProvider Implementation:
+// SWRenderFrameBufferProvider Implementation:
 }

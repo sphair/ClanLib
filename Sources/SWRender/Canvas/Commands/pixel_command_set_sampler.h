@@ -34,16 +34,16 @@
 namespace clan
 {
 
-class CL_PixelCommandSetSampler : public CL_PixelCommand
+class PixelCommandSetSampler : public PixelCommand
 {
 public:
-	CL_PixelCommandSetSampler(int index, const CL_PixelBuffer &pixelbuffer);
-	CL_PixelCommandSetSampler(int index);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandSetSampler(int index, const PixelBuffer &pixelbuffer);
+	PixelCommandSetSampler(int index);
+	void run(PixelThreadContext *context);
 
 private:
 	int index;
-	CL_PixelBufferData sampler;
+	PixelBufferData sampler;
 };
 
 }

@@ -43,29 +43,29 @@ namespace clan
 /// \brief Thread specific rendering data for pixel commands
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_PixelThreadContext
+class API_SWRender PixelThreadContext
 {
 //!Construction
 public:
-	CL_PixelThreadContext(int core, int num_cores);
+	PixelThreadContext(int core, int num_cores);
 
 //!Attributes
 public:
 	int core;
 	int num_cores;
 
-	CL_PixelBufferData colorbuffer0;
-	CL_Rect clip_rect;
+	PixelBufferData colorbuffer0;
+	Rect clip_rect;
 
 	enum { max_samplers = 6 };
-	CL_PixelBufferData samplers[max_samplers];
-	CL_PixelBuffer pixelbuffer_white;
+	PixelBufferData samplers[max_samplers];
+	PixelBuffer pixelbuffer_white;
 
-	CL_BlendFunc cur_blend_src;
-	CL_BlendFunc cur_blend_dest;
-	CL_BlendFunc cur_blend_src_alpha;
-	CL_BlendFunc cur_blend_dest_alpha;
-	CL_Colorf cur_blend_color;
+	BlendFunc cur_blend_src;
+	BlendFunc cur_blend_dest;
+	BlendFunc cur_blend_src_alpha;
+	BlendFunc cur_blend_dest_alpha;
+	Colorf cur_blend_color;
 };
 
 }

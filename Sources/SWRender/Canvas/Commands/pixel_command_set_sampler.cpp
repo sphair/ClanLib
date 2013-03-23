@@ -33,18 +33,18 @@
 namespace clan
 {
 
-CL_PixelCommandSetSampler::CL_PixelCommandSetSampler(int index, const CL_PixelBuffer &pixelbuffer)
+PixelCommandSetSampler::PixelCommandSetSampler(int index, const PixelBuffer &pixelbuffer)
 : index(index)
 {
 	sampler.set(pixelbuffer);
 }
 
-CL_PixelCommandSetSampler::CL_PixelCommandSetSampler(int index)
+PixelCommandSetSampler::PixelCommandSetSampler(int index)
 : index(index)
 {
 }
 
-void CL_PixelCommandSetSampler::run(CL_PixelThreadContext *context)
+void PixelCommandSetSampler::run(PixelThreadContext *context)
 {
 	if (sampler.data)
 		context->samplers[index] = sampler;

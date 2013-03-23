@@ -33,11 +33,11 @@
 namespace clan
 {
 
-class CL_PixelBicubicRenderer
+class PixelBicubicRenderer
 {
 public:
-	CL_PixelBicubicRenderer();
-	~CL_PixelBicubicRenderer();
+	PixelBicubicRenderer();
+	~PixelBicubicRenderer();
 
 	void set_dest(unsigned int *data, int width, int height);
 	void set_src(unsigned int *data, int width, int height);

@@ -33,33 +33,33 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderRenderBufferProvider Construction:
+// SWRenderRenderBufferProvider Construction:
 
-CL_SWRenderRenderBufferProvider::CL_SWRenderRenderBufferProvider()
+SWRenderRenderBufferProvider::SWRenderRenderBufferProvider()
 {
 }
 
-CL_SWRenderRenderBufferProvider::~CL_SWRenderRenderBufferProvider()
+SWRenderRenderBufferProvider::~SWRenderRenderBufferProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderRenderBufferProvider Attributes:
+// SWRenderRenderBufferProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderRenderBufferProvider Operations:
+// SWRenderRenderBufferProvider Operations:
 
-void CL_SWRenderRenderBufferProvider::create(int width, int height, CL_TextureFormat internal_format, int multisample_samples)
+void SWRenderRenderBufferProvider::create(int width, int height, TextureFormat internal_format, int multisample_samples)
 {
-	buffer = CL_PixelBuffer(width, height, cl_argb8);
+	buffer = PixelBuffer(width, height, cl_argb8);
 }
 
-void CL_SWRenderRenderBufferProvider::destroy()
+void SWRenderRenderBufferProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderRenderBufferProvider Implementation:
+// SWRenderRenderBufferProvider Implementation:
 
 }
