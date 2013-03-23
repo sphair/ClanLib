@@ -108,7 +108,7 @@ public:
 	void reset_primitives_array();
 	void draw_pixels(GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color);
 	void draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
-	void queue_command(UniquePtr<PixelCommand> &command);
+	void queue_command(std::unique_ptr<PixelCommand> &command);
 	void set_clip_rect(const Rect &rect);
 	void reset_clip_rect();
 	void clear(const Colorf &color);
@@ -130,7 +130,7 @@ private:
 
 
 	SWRenderDisplayWindowProvider *window;
-	UniquePtr<PixelCanvas> canvas;
+	std::unique_ptr<PixelCanvas> canvas;
 	std::map<int, Texture> bound_textures;
 	const PrimitivesArrayData * current_prim_array;
 	Mat4f modelview_matrix;

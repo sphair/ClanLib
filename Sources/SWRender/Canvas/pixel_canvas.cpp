@@ -191,7 +191,7 @@ void PixelCanvas::draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_de
 	}
 }
 
-void PixelCanvas::queue_command(UniquePtr<PixelCommand> &command)
+void PixelCanvas::queue_command(std::unique_ptr<PixelCommand> &command)
 {
 	pipeline->queue(command);
 }

@@ -67,7 +67,7 @@ public:
 	void clear(const Colorf &color);
 	void draw_pixels(const Rect &dest, const PixelBuffer &image, const Rect &src_rect, const Colorf &primary_color);
 	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
-	void queue_command(UniquePtr<PixelCommand> &command);
+	void queue_command(std::unique_ptr<PixelCommand> &command);
 
 	void set_sampler(int index, const PixelBuffer &new_sampler);
 	void reset_sampler(int index);
@@ -93,7 +93,7 @@ private:
 	BlendFunc cur_blend_dest_alpha;
 	Colorf cur_blend_color;
 
-	UniquePtr<PixelPipeline> pipeline;
+	std::unique_ptr<PixelPipeline> pipeline;
 };
 
 }

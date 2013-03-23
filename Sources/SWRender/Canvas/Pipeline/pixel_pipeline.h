@@ -48,8 +48,8 @@ public:
 	PixelPipeline();
 	~PixelPipeline();
 
-	void queue(PixelCommand *command) { UniquePtr<PixelCommand> cmd(command); queue(cmd); } 
-	void queue(UniquePtr<PixelCommand> &command);
+	void queue(PixelCommand *command) { std::unique_ptr<PixelCommand> cmd(command); queue(cmd); } 
+	void queue(std::unique_ptr<PixelCommand> &command);
 
 	void wait_for_workers();
 
