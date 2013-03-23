@@ -237,8 +237,8 @@ void GlslTokenizer::read_token(GlslToken &out_token)
 {
 	// To do: add backslask (\) line-continuation when used as last character of line
 
-	std::string::char_type next_char = 0;
-	std::string::char_type third_char = 0;
+	std::string::value_type next_char = 0;
+	std::string::value_type third_char = 0;
 	if (pos + 1 < data.length())
 		next_char = data[pos + 1];
 	if (pos + 2 < data.length())

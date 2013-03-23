@@ -4,7 +4,7 @@
 #include "GLSL/AST/glsl_ast.h"
 #include "GLSL/AST/glsl_expression_visitor.h"
 #include "glsl_operand.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 class GlslProgram;
 class GlslNameScope;

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "GLSL/Lex/glsl_tokenizer.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 class GlslAstType;
 

@@ -724,7 +724,7 @@ void GlslExpressionCodeGen::construct_void(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_float(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 1)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 
 	GlslOperand operand1 = operands.pop();
 	llvm::Value *value = operand1.llvm_value(builder);
@@ -746,7 +746,7 @@ void GlslExpressionCodeGen::construct_float(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_double(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 1)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 
 	GlslOperand operand1 = operands.pop();
 	llvm::Value *value = operand1.llvm_value(builder);
@@ -768,7 +768,7 @@ void GlslExpressionCodeGen::construct_double(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_int(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 1)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 
 	GlslOperand operand1 = operands.pop();
 	llvm::Value *value = operand1.llvm_value(builder);
@@ -786,7 +786,7 @@ void GlslExpressionCodeGen::construct_int(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_uint(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 1)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 
 	GlslOperand operand1 = operands.pop();
 	llvm::Value *value = operand1.llvm_value(builder);
@@ -804,7 +804,7 @@ void GlslExpressionCodeGen::construct_uint(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_bool(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 1)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 
 	GlslOperand operand1 = operands.pop();
 	llvm::Value *value = operand1.llvm_value(builder);
@@ -824,7 +824,7 @@ void GlslExpressionCodeGen::construct_bool(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_vec2(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 2)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 	node->parameters[0]->codegen(this);
 	node->parameters[1]->codegen(this);
 	llvm::Type *type = llvm::VectorType::get(llvm::Type::getFloatTy(context()), 2);
@@ -838,7 +838,7 @@ void GlslExpressionCodeGen::construct_vec2(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_vec3(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 3)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 	node->parameters[0]->codegen(this);
 	node->parameters[1]->codegen(this);
 	node->parameters[2]->codegen(this);
@@ -855,7 +855,7 @@ void GlslExpressionCodeGen::construct_vec3(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_vec4(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 4)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 	node->parameters[0]->codegen(this);
 	node->parameters[1]->codegen(this);
 	node->parameters[2]->codegen(this);
@@ -971,7 +971,7 @@ void GlslExpressionCodeGen::construct_mat3x4(GlslAstConstructorCall *node)
 void GlslExpressionCodeGen::construct_mat4(GlslAstConstructorCall *node)
 {
 	if (node->parameters.size() != 16)
-		throw Exception(cl_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
+		throw Exception(string_format("no overloaded function takes %1 arguments", (int)node->parameters.size()));
 	std::vector<GlslOperand> elements;
 	for (int i = 0; i < 16; i++)
 	{

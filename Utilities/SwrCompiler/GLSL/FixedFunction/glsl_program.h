@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 class GlslProgram
 {
