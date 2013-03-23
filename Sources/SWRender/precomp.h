@@ -37,8 +37,8 @@
 #include <windows.h>
 #endif
 
-#include "API/Core/Text/string_types.h"
-#include "API/Core/System/exception.h"
+#include "API/core.h"
+#include "API/display.h"
 
 #if defined(_DEBUG) && !defined(DEBUG)
 #define DEBUG
