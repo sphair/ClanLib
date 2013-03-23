@@ -77,7 +77,7 @@ PixelBuffer SWRenderFrameBufferProvider::get_colorbuffer0() const
 
 FrameBufferBindTarget SWRenderFrameBufferProvider::get_bind_target() const
 {
-	return cl_framebuffer_draw;
+	return framebuffer_draw;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -94,7 +94,7 @@ void SWRenderFrameBufferProvider::attach_color_buffer(int color_buffer, const Re
 	{
 		colorbuffer0_type = type_render;
 		colorbuffer0_render = render_buffer;
-		colorbuffer0_texture = Texture();
+		colorbuffer0_texture = Texture2D();
 		sig_changed_event.invoke();
 	}
 }
