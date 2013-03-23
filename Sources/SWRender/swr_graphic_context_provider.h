@@ -32,7 +32,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
 #include "API/SWRender/swr_program_object.h"
-#include "API/Core/System/uniqueptr.h"
+
 #include "vertex_attribute_fetcher.h"
 #include "software_program_standard.h"
 #include <map>

@@ -32,10 +32,10 @@
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/mat4.h"
 #include "API/Core/Signals/slot.h"
-#include "API/Core/System/uniqueptr.h"
+
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/frame_buffer.h"
-#include "API/Display/Render/blend_mode.h"
+#include "API/Display/Render/blend_state.h"
 #include "API/Display/2D/color.h"
 
 namespace clan

@@ -33,7 +33,7 @@
 
 #include "api_swrender.h"
 #include "pixel_buffer_data.h"
-#include "../Display/Render/blend_mode.h"
+#include "../Display/Render/blend_state.h"
 #include "../Display/2D/color.h"
 #include "api_swrender.h"
 
