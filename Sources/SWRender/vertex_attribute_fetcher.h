@@ -54,7 +54,7 @@ public:
 	virtual void fetch(float *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = float(fetch(indexes[i], default_value));
+			result[i] = fetch(indexes[i], default_value).x;
 	}
 
 protected:
