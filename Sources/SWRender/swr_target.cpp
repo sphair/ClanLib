@@ -34,24 +34,24 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTarget Construction:
+// SWRenderTarget Construction:
 
-CL_SWRenderTarget::CL_SWRenderTarget()
-: CL_DisplayTarget(new CL_SWRenderTargetProvider)
+SWRenderTarget::SWRenderTarget()
+: DisplayTarget(new SWRenderTargetProvider)
 {
 }
 
-CL_SWRenderTarget::~CL_SWRenderTarget()
+SWRenderTarget::~SWRenderTarget()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTarget Attributes:
+// SWRenderTarget Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTarget Operations:
+// SWRenderTarget Operations:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTarget Implementation:
+// SWRenderTarget Implementation:
 
 }

@@ -36,66 +36,66 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GraphicContext_SWRender_Impl Class:
+// GraphicContext_SWRender_Impl Class:
 
-class CL_GraphicContext_SWRender_Impl
+class GraphicContext_SWRender_Impl
 {
 public:
-	CL_GraphicContext_SWRender_Impl() : provider(0)
+	GraphicContext_SWRender_Impl() : provider(0)
 	{
 	}
 
-	~CL_GraphicContext_SWRender_Impl()
+	~GraphicContext_SWRender_Impl()
 	{
 	}
-	CL_SWRenderGraphicContextProvider *provider;
+	SWRenderGraphicContextProvider *provider;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GraphicContext_SWRender Construction:
+// GraphicContext_SWRender Construction:
 
-CL_GraphicContext_SWRender::CL_GraphicContext_SWRender(CL_GraphicContext &gc) : CL_GraphicContext(gc),
- impl(new CL_GraphicContext_SWRender_Impl)
+GraphicContext_SWRender::GraphicContext_SWRender(GraphicContext &gc) : GraphicContext(gc),
+ impl(new GraphicContext_SWRender_Impl)
 {
-	impl->provider = dynamic_cast <CL_SWRenderGraphicContextProvider *> (CL_GraphicContext::get_provider());
+	impl->provider = dynamic_cast <SWRenderGraphicContextProvider *> (GraphicContext::get_provider());
 	if (!impl->provider)
 	{
-			throw CL_Exception("Graphic Context is not from a SWRender target");
+			throw Exception("Graphic Context is not from a SWRender target");
 	}
 
 }
 
-CL_GraphicContext_SWRender::~CL_GraphicContext_SWRender()
+GraphicContext_SWRender::~GraphicContext_SWRender()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GraphicContext_SWRender Attributes:
+// GraphicContext_SWRender Attributes:
 
-void CL_GraphicContext_SWRender::throw_if_null() const
+void GraphicContext_SWRender::throw_if_null() const
 {
 	if (!impl)
-		throw CL_Exception("CL_GraphicContext_SWRender is null");
+		throw Exception("GraphicContext_SWRender is null");
 }
 
-CL_PixelPipeline *CL_GraphicContext_SWRender::get_pipeline() const
+PixelPipeline *GraphicContext_SWRender::get_pipeline() const
 {
 	return impl->provider->get_canvas()->get_pipeline();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GraphicContext_SWRender Operations:
+// GraphicContext_SWRender Operations:
 
-void CL_GraphicContext_SWRender::draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &pixels)
+void GraphicContext_SWRender::draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels)
 {
 	impl->provider->draw_pixels_bicubic(x, y, zoom_number, zoom_denominator, pixels);
 }
 
-void CL_GraphicContext_SWRender::queue_command(CL_UniquePtr<CL_PixelCommand> &command)
+void GraphicContext_SWRender::queue_command(UniquePtr<PixelCommand> &command)
 {
 	impl->provider->queue_command(command);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_GraphicContext_SWRender Implementation:
+// GraphicContext_SWRender Implementation:
 }

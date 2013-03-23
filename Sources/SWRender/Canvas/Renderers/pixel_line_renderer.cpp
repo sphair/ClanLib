@@ -37,34 +37,34 @@
 namespace clan
 {
 
-CL_PixelLineRenderer::CL_PixelLineRenderer()
+PixelLineRenderer::PixelLineRenderer()
 : dest(0), dest_width(0), dest_height(0), core(0), num_cores(1)
 {
 }
 
-void CL_PixelLineRenderer::set_clip_rect(const CL_Rect &new_clip_rect)
+void PixelLineRenderer::set_clip_rect(const Rect &new_clip_rect)
 {
 	clip_rect = new_clip_rect;
 }
 
-void CL_PixelLineRenderer::set_dest(unsigned int *data, int width, int height)
+void PixelLineRenderer::set_dest(unsigned int *data, int width, int height)
 {
 	dest = data;
 	dest_width = width;
 	dest_height = height;
 }
 
-void CL_PixelLineRenderer::set_core(int new_core, int new_num_cores)
+void PixelLineRenderer::set_core(int new_core, int new_num_cores)
 {
 	core = new_core;
 	num_cores = new_num_cores;
 }
 
-void CL_PixelLineRenderer::set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha)
+void PixelLineRenderer::set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
 {
 }
 
-int CL_PixelLineRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
+int PixelLineRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
 {
 	int y = y_start / num_cores;
 	y *= num_cores;
@@ -74,10 +74,10 @@ int CL_PixelLineRenderer::find_first_line_for_core(int y_start, int core, int nu
 	return y;
 }
 
-void CL_PixelLineRenderer::draw_line(const CL_LineSegment2 &line_dest, const CL_Colorf &primary_color)
+void PixelLineRenderer::draw_line(const LineSegment2 &line_dest, const Colorf &primary_color)
 {
 	// Clip the input line
-	CL_LineSegment2 line(line_dest);
+	LineSegment2 line(line_dest);
 	bool clipped;
 	line.clip(clip_rect, clipped);
 	if (!clipped)	// Off screen
@@ -85,7 +85,7 @@ void CL_PixelLineRenderer::draw_line(const CL_LineSegment2 &line_dest, const CL_
 
 	if (line.p.y > line.q.y)	// We draw top down
 	{
-		CL_Vec2i t(line.p);
+		Vec2i t(line.p);
 		line.p = line.q;
 		line.q = t;
 	}

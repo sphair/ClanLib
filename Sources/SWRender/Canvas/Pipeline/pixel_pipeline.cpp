@@ -47,7 +47,7 @@ namespace clan
 {
 
 
-CL_PixelPipeline::CL_PixelPipeline()
+PixelPipeline::PixelPipeline()
 : active_cores(0), local_writer_index(0), local_reader_index(0), local_commands_written(0), cur_block(0)
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
@@ -56,33 +56,33 @@ CL_PixelPipeline::CL_PixelPipeline()
 	profiler.start_time = __rdtsc();
 #endif
 
-	active_cores = CL_System::get_num_cores();
+	active_cores = System::get_num_cores();
 	for (size_t i = 0; i < queue_max; i++)
 		command_queue[i] = 0;
 	reader_indices.resize(active_cores);
 	reader_active.resize(active_cores);
 
 	// Do not change this code to event_more_commands.resize().
-	// If you do this, the same CL_Event handle end up in every index due to resize(n) calling resize(n, CL_Event()).
+	// If you do this, the same Event handle end up in every index due to resize(n) calling resize(n, Event()).
 	for (int core = 0; core < active_cores; core++)
-		event_more_commands.push_back(CL_Event());
+		event_more_commands.push_back(Event());
 
 	for (int core = 0; core < active_cores; core++)
 	{
-		CL_Thread worker_thread;
-		worker_thread.start(this, &CL_PixelPipeline::worker_main, core);
+		Thread worker_thread;
+		worker_thread.start(this, &PixelPipeline::worker_main, core);
 		worker_threads.push_back(worker_thread);
 	}
 }
 
-CL_PixelPipeline::~CL_PixelPipeline()
+PixelPipeline::~PixelPipeline()
 {
 	wait_for_workers();
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	profiler.end_time = __rdtsc();
 #endif
 	event_stop.set();
-	for (std::vector<CL_Thread>::size_type i = 0; i < worker_threads.size(); i++)
+	for (std::vector<Thread>::size_type i = 0; i < worker_threads.size(); i++)
 		worker_threads[i].join();
 
 	for (size_t i = 0; i < queue_max; i++)
@@ -105,7 +105,7 @@ CL_PixelPipeline::~CL_PixelPipeline()
 #endif
 }
 
-void CL_PixelPipeline::queue(CL_UniquePtr<CL_PixelCommand> &command)
+void PixelPipeline::queue(UniquePtr<PixelCommand> &command)
 {
 	wait_for_space();
 	delete command_queue[local_writer_index];
@@ -148,7 +148,7 @@ void CL_PixelPipeline::queue(CL_UniquePtr<CL_PixelCommand> &command)
 #endif
 }
 
-void CL_PixelPipeline::wait_for_space()
+void PixelPipeline::wait_for_space()
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	unsigned __int64 start_time = __rdtsc();
@@ -174,7 +174,7 @@ void CL_PixelPipeline::wait_for_space()
 #endif
 }
 
-void CL_PixelPipeline::wait_for_workers()
+void PixelPipeline::wait_for_workers()
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	unsigned __int64 start_time = __rdtsc();
@@ -207,7 +207,7 @@ void CL_PixelPipeline::wait_for_workers()
 #endif
 }
 
-void CL_PixelPipeline::update_local_reader_index()
+void PixelPipeline::update_local_reader_index()
 {
 	local_reader_index = local_writer_index;
 	for (int i = 0; i < active_cores; i++)
@@ -222,7 +222,7 @@ void CL_PixelPipeline::update_local_reader_index()
 		local_reader_index += queue_max;
 }
 
-void CL_PixelPipeline::worker_main(int core)
+void PixelPipeline::worker_main(int core)
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	SetThreadIdealProcessor(GetCurrentThread(), core);
@@ -230,13 +230,13 @@ void CL_PixelPipeline::worker_main(int core)
 	unsigned __int64 ticks_waiting = 0;
 	unsigned __int64 ticks_working = 0;
 #endif
-	CL_PixelThreadContext context(core, active_cores);
+	PixelThreadContext context(core, active_cores);
 	while (true)
 	{
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 		unsigned __int64 wait_start_time = __rdtsc();
 #endif
-		int wakeup_reason = CL_Event::wait(event_more_commands[core], event_stop);
+		int wakeup_reason = Event::wait(event_more_commands[core], event_stop);
 		if (wakeup_reason != 0)
 			break;
 		event_more_commands[core].reset();
@@ -260,7 +260,7 @@ void CL_PixelPipeline::worker_main(int core)
 #endif
 }
 
-void CL_PixelPipeline::process_commands(CL_PixelThreadContext *context)
+void PixelPipeline::process_commands(PixelThreadContext *context)
 {
 	while (true)
 	{
@@ -273,7 +273,7 @@ void CL_PixelPipeline::process_commands(CL_PixelThreadContext *context)
 		reader_active[context->core].set(1);
 		while (worker_reader_index != worker_writer_index)
 		{
-			CL_PixelCommand *command = command_queue[worker_reader_index];
+			PixelCommand *command = command_queue[worker_reader_index];
 			command->run(context);
 
 			worker_reader_index++;
@@ -301,7 +301,7 @@ void CL_PixelPipeline::process_commands(CL_PixelThreadContext *context)
 	}
 }
 
-void *CL_PixelPipeline::alloc_command(size_t s)
+void *PixelPipeline::alloc_command(size_t s)
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	unsigned __int64 start_time = __rdtsc();
@@ -343,7 +343,7 @@ void *CL_PixelPipeline::alloc_command(size_t s)
 	return d;
 }
 
-void CL_PixelPipeline::free_command(void *d)
+void PixelPipeline::free_command(void *d)
 {
 #if defined(WIN32) && defined(PROFILE_PIPELINE)
 	unsigned __int64 start_time = __rdtsc();

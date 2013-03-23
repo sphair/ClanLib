@@ -40,44 +40,44 @@ namespace clan
 // http://members.bellatlantic.net/~vze2vrva/design.html
 // http://members.bellatlantic.net/~vze2vrva/magnify_c.txt
 
-CL_PixelBicubicRenderer::CL_PixelBicubicRenderer()
+PixelBicubicRenderer::PixelBicubicRenderer()
 : h_vector(0), dest(0), dest_width(0), dest_height(0), src(0), src_width(0), src_height(0), core(0), num_cores(1)
 {
 	for (int i = 0; i < 4; i++)
 		c_vector[i] = 0;
 }
 
-CL_PixelBicubicRenderer::~CL_PixelBicubicRenderer()
+PixelBicubicRenderer::~PixelBicubicRenderer()
 {
 	reset();
 }
 
-void CL_PixelBicubicRenderer::set_dest(unsigned int *data, int width, int height)
+void PixelBicubicRenderer::set_dest(unsigned int *data, int width, int height)
 {
 	dest = data;
 	dest_width = width;
 	dest_height = height;
 }
 
-void CL_PixelBicubicRenderer::set_src(unsigned int *data, int width, int height)
+void PixelBicubicRenderer::set_src(unsigned int *data, int width, int height)
 {
 	src = data;
 	src_width = width;
 	src_height = height;
 }
 
-void CL_PixelBicubicRenderer::set_core(int new_core, int new_num_cores)
+void PixelBicubicRenderer::set_core(int new_core, int new_num_cores)
 {
 	core = new_core;
 	num_cores = new_num_cores;
 }
 
-void CL_PixelBicubicRenderer::render(int x, int y, int zoom_number, int zoom_denominator)
+void PixelBicubicRenderer::render(int x, int y, int zoom_number, int zoom_denominator)
 {
 	scale(-0.5f, zoom_number, zoom_denominator, src_width, src_width*4, src_height, src, src_width*zoom_number/zoom_denominator, dest_width*4, src_height*zoom_number/zoom_denominator, dest+x+y*dest_width);
 }
 
-void CL_PixelBicubicRenderer::scale(float a, int n, int d, int in_width, int in_pitch, int in_height, const unsigned int *in_data, int out_width, int out_pitch, int out_height, unsigned int *out_data)
+void PixelBicubicRenderer::scale(float a, int n, int d, int in_width, int in_pitch, int in_height, const unsigned int *in_data, int out_width, int out_pitch, int out_height, unsigned int *out_data)
 {
 	prepare(a, n, d, in_width, out_width, out_height);
 	int *L = get_L();
@@ -122,12 +122,12 @@ void CL_PixelBicubicRenderer::scale(float a, int n, int d, int in_width, int in_
 	}
 }
 
-int CL_PixelBicubicRenderer::get_larger_out_dimension(int out_width, int out_height)
+int PixelBicubicRenderer::get_larger_out_dimension(int out_width, int out_height)
 {
 	return (out_width > out_height) ? out_width : out_height;
 }
 
-void CL_PixelBicubicRenderer::prepare(float a, int n, int d, int in_width, int out_width, int out_height)
+void PixelBicubicRenderer::prepare(float a, int n, int d, int in_width, int out_width, int out_height)
 {
 	int larger_out_dimension = get_larger_out_dimension(out_width, out_height);
 
@@ -155,7 +155,7 @@ void CL_PixelBicubicRenderer::prepare(float a, int n, int d, int in_width, int o
 			c[l][k] = c[l][k % n];
 }
 
-void CL_PixelBicubicRenderer::reset()
+void PixelBicubicRenderer::reset()
 {
 	aligned_free(h_vector);
 	h_vector = 0;
@@ -166,42 +166,42 @@ void CL_PixelBicubicRenderer::reset()
 	}
 }
 
-inline float CL_PixelBicubicRenderer::C0(float t, float a)
+inline float PixelBicubicRenderer::C0(float t, float a)
 {
 	return -a * t * t * t + a * t * t;
 }
 
-inline float CL_PixelBicubicRenderer::C1(float t, float a)
+inline float PixelBicubicRenderer::C1(float t, float a)
 {
 	return -(a + 2.0f) * t * t * t + (2.0f * a + 3.0f) * t * t - a * t;
 }
 
-inline float CL_PixelBicubicRenderer::C2(float t, float a)
+inline float PixelBicubicRenderer::C2(float t, float a)
 {
 	return (a + 2.0f) * t * t * t - (a + 3.0f) * t * t + 1.0f;
 }
 
-inline float CL_PixelBicubicRenderer::C3(float t, float a)
+inline float PixelBicubicRenderer::C3(float t, float a)
 {
 	return a * t * t * t - 2.0f * a * t * t + a * t;
 }
 
-__m128 *CL_PixelBicubicRenderer::get_h()
+__m128 *PixelBicubicRenderer::get_h()
 {
 	return (__m128*)&h_vector[0];
 }
 
-int *CL_PixelBicubicRenderer::get_L()
+int *PixelBicubicRenderer::get_L()
 {
 	return &L_vector[0];
 }
 
-__m128 *CL_PixelBicubicRenderer::get_c(int i)
+__m128 *PixelBicubicRenderer::get_c(int i)
 {
 	return (__m128*)&c_vector[i][0];
 }
 
-int CL_PixelBicubicRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
+int PixelBicubicRenderer::find_first_line_for_core(int y_start, int core, int num_cores)
 {
 	int y = y_start / num_cores;
 	y *= num_cores;
@@ -211,27 +211,27 @@ int CL_PixelBicubicRenderer::find_first_line_for_core(int y_start, int core, int
 	return y;
 }
 
-void *CL_PixelBicubicRenderer::aligned_alloc(int size)
+void *PixelBicubicRenderer::aligned_alloc(int size)
 {
 	void *ptr;
 #if defined _MSC_VER || (defined __MINGW32__ && __MSVCRT_VERSION__ >= 0x0700)
 	ptr = _aligned_malloc(size, 16);
 	if (!ptr)
-		throw CL_Exception("Out of memory");
+		throw Exception("Out of memory");
 #elif defined __MINGW32__
 	ptr = __mingw_aligned_malloc(size, 16);
 	if (!ptr)
-		throw CL_Exception("Out of memory");	
+		throw Exception("Out of memory");	
 #else
 	if (posix_memalign( (void **) &ptr, 16, size))
 	{
-		throw CL_Exception("Panic! posix_memalign failed");
+		throw Exception("Panic! posix_memalign failed");
 	}
 #endif
 	return ptr;
 }
 
-void CL_PixelBicubicRenderer::aligned_free(void *ptr)
+void PixelBicubicRenderer::aligned_free(void *ptr)
 {
 	if (ptr)
 	{

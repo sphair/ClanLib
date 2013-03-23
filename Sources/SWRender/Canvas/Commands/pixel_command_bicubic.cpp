@@ -34,14 +34,14 @@
 namespace clan
 {
 
-CL_PixelCommandBicubic::CL_PixelCommandBicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &image)
+PixelCommandBicubic::PixelCommandBicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &image)
 : x(x), y(y), zoom_number(zoom_number), zoom_denominator(zoom_denominator), image(image)
 {
 }
 
-void CL_PixelCommandBicubic::run(CL_PixelThreadContext *context)
+void PixelCommandBicubic::run(PixelThreadContext *context)
 {
-	CL_PixelBicubicRenderer bicubic_renderer;
+	PixelBicubicRenderer bicubic_renderer;
 	bicubic_renderer.set_dest(context->colorbuffer0.data, context->colorbuffer0.size.width, context->colorbuffer0.size.height);
 	bicubic_renderer.set_src((unsigned int*)image.get_data(), image.get_width(), image.get_height());
 	bicubic_renderer.set_core(context->core, context->num_cores);

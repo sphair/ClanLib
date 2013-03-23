@@ -34,19 +34,19 @@
 namespace clan
 {
 
-class CL_SWRenderElementArrayBufferProvider : public CL_ElementArrayBufferProvider
+class SWRenderElementArrayBufferProvider : public ElementArrayBufferProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderElementArrayBufferProvider();
+	SWRenderElementArrayBufferProvider();
 
-	~CL_SWRenderElementArrayBufferProvider();
+	~SWRenderElementArrayBufferProvider();
 
-	void create(int size, CL_BufferUsage usage);
+	void create(int size, BufferUsage usage);
 
-	void create(void *data, int size, CL_BufferUsage usage);
+	void create(void *data, int size, BufferUsage usage);
 
 	void destroy();
 
@@ -64,7 +64,7 @@ public:
 /// \{
 
 public:
-	void lock(CL_BufferAccess access);
+	void lock(BufferAccess access);
 
 	void unlock();
 

@@ -36,23 +36,23 @@
 namespace clan
 {
 
-class CL_PixelThreadContext;
-class CL_PixelPipeline;
+class PixelThreadContext;
+class PixelPipeline;
 
 /// \brief Interface for commands participating in the rendering pipeline
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_PixelCommand
+class API_SWRender PixelCommand
 {
 //!Operations
 public:
-	virtual ~CL_PixelCommand() { }
+	virtual ~PixelCommand() { }
 
 	/// \brief Called by each rendering thread in the pipeline to run the command
-	virtual void run(CL_PixelThreadContext *context) = 0;
+	virtual void run(PixelThreadContext *context) = 0;
 
-	void *operator new(size_t s, CL_PixelPipeline *p);
-	void operator delete(void *obj, CL_PixelPipeline *p);
+	void *operator new(size_t s, PixelPipeline *p);
+	void operator delete(void *obj, PixelPipeline *p);
 	void operator delete(void *obj);
 
 	/// \brief Returns the first line to be rendered by the specified core

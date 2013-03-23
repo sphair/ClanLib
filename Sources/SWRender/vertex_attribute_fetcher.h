@@ -37,34 +37,34 @@ namespace clan
 class VertexAttributeFetcher
 {
 public:
-	virtual CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f()) = 0;
+	virtual Vec4f fetch(int index, const Vec4f &default_value = Vec4f()) = 0;
 
-	virtual void fetch(CL_Vec4f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f())
+	virtual void fetch(Vec4f *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
 	{
 		for (int i = 0; i < num; i++)
 			result[i] = fetch(indexes[i], default_value);
 	}
 
-	virtual void fetch(CL_Vec2f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f())
+	virtual void fetch(Vec2f *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = CL_Vec2f(fetch(indexes[i], default_value));
+			result[i] = Vec2f(fetch(indexes[i], default_value));
 	}
 
-	virtual void fetch(CL_Vec1f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f())
+	virtual void fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = CL_Vec1f(fetch(indexes[i], default_value));
+			result[i] = Vec1f(fetch(indexes[i], default_value));
 	}
 
 protected:
 	VertexAttributeFetcher() : prim_array(0), bound_attribute_index(-1), range(0), data(0), stride(0) { }
 	virtual ~VertexAttributeFetcher() { }
 
-	void bind(const CL_PrimitivesArrayData *prim_array, int bound_attribute_index);
+	void bind(const PrimitivesArrayData *prim_array, int bound_attribute_index);
 	const void *find_vertex_data(int index);
 
-	const CL_PrimitivesArrayData *prim_array;
+	const PrimitivesArrayData *prim_array;
 	int bound_attribute_index;
 	unsigned int range;
 	const char *data;
@@ -79,7 +79,7 @@ public:
 	VertexAttributeFetcherPtr();
 	~VertexAttributeFetcherPtr();
 
-	void bind(const CL_PrimitivesArrayData *prim_array, int attribute_index);
+	void bind(const PrimitivesArrayData *prim_array, int attribute_index);
 	void clear();
 
 	VertexAttributeFetcher *operator->() { return fetcher; }
@@ -98,94 +98,94 @@ private:
 class VertexAttributeFetcherNull : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f()) { return default_value; }
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f()) { return default_value; }
 };
 
 class VertexAttributeFetcherSingleValueUnsignedByte : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueUnsignedShort : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueUnsignedInt : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueByte : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueShort : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueInt : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherSingleValueFloat : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayUnsignedByte : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayUnsignedShort : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayUnsignedInt : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayByte : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayShort : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayInt : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 };
 
 class VertexAttributeFetcherArrayFloat : public VertexAttributeFetcher
 {
 public:
-	CL_Vec4f fetch(int index, const CL_Vec4f &default_value = CL_Vec4f());
-	void fetch(CL_Vec4f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f());
-	void fetch(CL_Vec2f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f());
-	void fetch(CL_Vec1f *result, int *indexes, int num, const CL_Vec4f &default_value = CL_Vec4f());
+	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
+	void fetch(Vec4f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
+	void fetch(Vec2f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
+	void fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
 };
 
 inline VertexAttributeFetcherPtr::VertexAttributeFetcherPtr()
@@ -198,7 +198,7 @@ inline VertexAttributeFetcherPtr::~VertexAttributeFetcherPtr()
 	clear();
 }
 
-inline void VertexAttributeFetcherPtr::bind(const CL_PrimitivesArrayData *prim_array, int attribute_index)
+inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_array, int attribute_index)
 {
 	clear();
 
@@ -303,7 +303,7 @@ inline void VertexAttributeFetcherPtr::bind(const CL_PrimitivesArrayData *prim_a
 inline void VertexAttributeFetcherPtr::throw_if_insufficient_buffer(size_t size)
 {
 	if (alloc_buffer_size < size)
-		throw CL_Exception("Insufficient buffer size for vertex attribute fetcher object");
+		throw Exception("Insufficient buffer size for vertex attribute fetcher object");
 }
 
 inline void VertexAttributeFetcherPtr::clear()
@@ -315,7 +315,7 @@ inline void VertexAttributeFetcherPtr::clear()
 	}
 }
 
-inline void VertexAttributeFetcher::bind(const CL_PrimitivesArrayData *new_prim_array, int new_bound_attribute_index)
+inline void VertexAttributeFetcher::bind(const PrimitivesArrayData *new_prim_array, int new_bound_attribute_index)
 {
 	prim_array = new_prim_array;
 	bound_attribute_index = new_bound_attribute_index;
@@ -326,10 +326,10 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 {
 	if (data == 0)
 	{
-		const CL_PrimitivesArrayData::VertexData &vertex_data = prim_array->attributes[bound_attribute_index];
+		const PrimitivesArrayData::VertexData &vertex_data = prim_array->attributes[bound_attribute_index];
 		if (vertex_data.array_provider)
 		{
-			// CL_SWRenderVertexArrayBufferProvider *array_provider = static_cast<CL_SWRenderVertexArrayBufferProvider*>(vertex_data.array_provider);
+			// SWRenderVertexArrayBufferProvider *array_provider = static_cast<SWRenderVertexArrayBufferProvider*>(vertex_data.array_provider);
 			// data = array_provider->buffer.get_data();
 			data = 0; // currently no support for vertex array buffers
 			stride = 0;
@@ -359,126 +359,126 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 	return data + stride*index;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueUnsignedByte::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueUnsignedByte::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_ubyte[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueUnsignedShort::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueUnsignedShort::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_ushort[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueUnsignedInt::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueUnsignedInt::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_uint[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueByte::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueByte::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_byte[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueShort::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueShort::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_short[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueInt::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueInt::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_int[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherSingleValueFloat::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherSingleValueFloat::fetch(int index, const Vec4f &default_value)
 {
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = prim_array->attributes[bound_attribute_index].value_float[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayUnsignedByte::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayUnsignedByte::fetch(int index, const Vec4f &default_value)
 {
 	const unsigned char *v = static_cast<const unsigned char *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayUnsignedShort::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayUnsignedShort::fetch(int index, const Vec4f &default_value)
 {
 	const unsigned short *v = static_cast<const unsigned short *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayUnsignedInt::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayUnsignedInt::fetch(int index, const Vec4f &default_value)
 {
 	const unsigned int *v = static_cast<const unsigned int *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayByte::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayByte::fetch(int index, const Vec4f &default_value)
 {
 	const char *v = static_cast<const char *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayShort::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayShort::fetch(int index, const Vec4f &default_value)
 {
 	const short *v = static_cast<const short *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayInt::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayInt::fetch(int index, const Vec4f &default_value)
 {
 	const int *v = static_cast<const int *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline CL_Vec4f VertexAttributeFetcherArrayFloat::fetch(int index, const CL_Vec4f &default_value)
+inline Vec4f VertexAttributeFetcherArrayFloat::fetch(int index, const Vec4f &default_value)
 {
 	const float *v = static_cast<const float *>(find_vertex_data(index));
-	CL_Vec4f result = default_value;
+	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
 		result[i] = v[i];
 	return result;
 }
 
-inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec4f *result, int *indexes, int num, const CL_Vec4f &default_value)
+inline void VertexAttributeFetcherArrayFloat::fetch(Vec4f *result, int *indexes, int num, const Vec4f &default_value)
 {
 	for (int i = 0; i < num; i++)
 	{
@@ -490,7 +490,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec4f *result, int *index
 	}
 }
 
-inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec2f *result, int *indexes, int num, const CL_Vec4f &default_value)
+inline void VertexAttributeFetcherArrayFloat::fetch(Vec2f *result, int *indexes, int num, const Vec4f &default_value)
 {
 	for (int i = 0; i < num; i++)
 	{
@@ -503,7 +503,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec2f *result, int *index
 	}
 }
 
-inline void VertexAttributeFetcherArrayFloat::fetch(CL_Vec1f *result, int *indexes, int num, const CL_Vec4f &default_value)
+inline void VertexAttributeFetcherArrayFloat::fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value)
 {
 	for (int i = 0; i < num; i++)
 	{

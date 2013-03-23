@@ -35,16 +35,16 @@
 namespace clan
 {
 
-class CL_PixelCommandLine : public CL_PixelCommand
+class PixelCommandLine : public PixelCommand
 {
 public:
-	CL_PixelCommandLine(const CL_Vec2f init_points[2], const CL_Vec4f init_primcolor[2], const CL_Vec2f init_texcoords[2], int init_sampler);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandLine(const Vec2f init_points[2], const Vec4f init_primcolor[2], const Vec2f init_texcoords[2], int init_sampler);
+	void run(PixelThreadContext *context);
 
 private:
-	CL_Vec2f points[2];
-	CL_Vec4f primcolor[2];
-	CL_Vec2f texcoords[2];
+	Vec2f points[2];
+	Vec4f primcolor[2];
+	Vec2f texcoords[2];
 	int sampler;
 };
 

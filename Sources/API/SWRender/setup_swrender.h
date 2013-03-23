@@ -39,16 +39,16 @@ namespace clan
 /// \brief ClanSWRender initialization functions.
 ///
 /// \xmlonly !group=SWRender/System! !header=swrender.h! \endxmlonly
-class CL_API_SWRender CL_SetupSWRender
+class API_SWRender SetupSWRender
 {
 /// \name Construction
 /// \{
 
 public:
 	/// \brief Initializes clanSWRender.
-	CL_SetupSWRender();
+	SetupSWRender();
 
-	~CL_SetupSWRender();
+	~SetupSWRender();
 /// \}
 /// \name Operations
 /// \{

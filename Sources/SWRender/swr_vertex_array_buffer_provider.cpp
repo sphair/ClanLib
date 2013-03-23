@@ -33,53 +33,53 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderVertexArrayBufferProvider Construction:
+// SWRenderVertexArrayBufferProvider Construction:
 
-CL_SWRenderVertexArrayBufferProvider::CL_SWRenderVertexArrayBufferProvider()
+SWRenderVertexArrayBufferProvider::SWRenderVertexArrayBufferProvider()
 {
 }
 
-CL_SWRenderVertexArrayBufferProvider::~CL_SWRenderVertexArrayBufferProvider()
+SWRenderVertexArrayBufferProvider::~SWRenderVertexArrayBufferProvider()
 {
 }
 
-void CL_SWRenderVertexArrayBufferProvider::create(int size, CL_BufferUsage usage)
+void SWRenderVertexArrayBufferProvider::create(int size, BufferUsage usage)
 {
 }
 
-void CL_SWRenderVertexArrayBufferProvider::create(void *data, int size, CL_BufferUsage usage)
+void SWRenderVertexArrayBufferProvider::create(void *data, int size, BufferUsage usage)
 {
 }
 
-void CL_SWRenderVertexArrayBufferProvider::destroy()
+void SWRenderVertexArrayBufferProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderVertexArrayBufferProvider Attributes:
+// SWRenderVertexArrayBufferProvider Attributes:
 
-void *CL_SWRenderVertexArrayBufferProvider::get_data()
+void *SWRenderVertexArrayBufferProvider::get_data()
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderVertexArrayBufferProvider Operations:
+// SWRenderVertexArrayBufferProvider Operations:
 
-void CL_SWRenderVertexArrayBufferProvider::lock(CL_BufferAccess access)
+void SWRenderVertexArrayBufferProvider::lock(BufferAccess access)
 {
 }
 
-void CL_SWRenderVertexArrayBufferProvider::unlock()
+void SWRenderVertexArrayBufferProvider::unlock()
 {
 }
 
-void CL_SWRenderVertexArrayBufferProvider::upload_data(int offset, void *data, int size)
+void SWRenderVertexArrayBufferProvider::upload_data(int offset, void *data, int size)
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderVertexArrayBufferProvider Implementation:
+// SWRenderVertexArrayBufferProvider Implementation:
 
 }

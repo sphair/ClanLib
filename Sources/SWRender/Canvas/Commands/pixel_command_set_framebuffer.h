@@ -34,15 +34,15 @@
 namespace clan
 {
 
-class CL_PixelCommandSetFrameBuffer : public CL_PixelCommand
+class PixelCommandSetFrameBuffer : public PixelCommand
 {
 public:
-	CL_PixelCommandSetFrameBuffer(const CL_PixelBufferData &colorbuffer0);
-	void run(CL_PixelThreadContext *context);
+	PixelCommandSetFrameBuffer(const PixelBufferData &colorbuffer0);
+	void run(PixelThreadContext *context);
 
 private:
 	int index;
-	CL_PixelBufferData colorbuffer0;
+	PixelBufferData colorbuffer0;
 };
 
 }

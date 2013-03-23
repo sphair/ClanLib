@@ -34,19 +34,19 @@
 namespace clan
 {
 
-class CL_SWRenderShaderObjectProvider : public CL_ShaderObjectProvider
+class SWRenderShaderObjectProvider : public ShaderObjectProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderShaderObjectProvider();
+	SWRenderShaderObjectProvider();
 
-	~CL_SWRenderShaderObjectProvider();
+	~SWRenderShaderObjectProvider();
 
-	void create(CL_ShaderType type, const std::string &source);
+	void create(ShaderType type, const std::string &source);
 
-	void create(CL_ShaderType type, const std::vector<std::string> &sources);
+	void create(ShaderType type, const std::vector<std::string> &sources);
 
 	void destroy();
 
@@ -60,7 +60,7 @@ public:
 
 	bool get_compile_status() const;
 
-	CL_ShaderType get_shader_type() const;
+	ShaderType get_shader_type() const;
 
 	std::string get_info_log() const;
 

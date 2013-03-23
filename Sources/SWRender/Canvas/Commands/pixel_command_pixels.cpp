@@ -34,26 +34,26 @@
 namespace clan
 {
 
-CL_PixelCommandPixels::CL_PixelCommandPixels(const CL_Rect &dest_rect, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &primary_color)
+PixelCommandPixels::PixelCommandPixels(const Rect &dest_rect, const PixelBuffer &image, const Rect &src_rect, const Colorf &primary_color)
 : dest_rect(dest_rect), image(image), src_rect(src_rect), primary_color(primary_color)
 {
 }
 
-void CL_PixelCommandPixels::run(CL_PixelThreadContext *context)
+void PixelCommandPixels::run(PixelThreadContext *context)
 {
-	CL_Rect box = get_clipped_dest_rect(context);
+	Rect box = get_clipped_dest_rect(context);
 	if (box.get_width() > 0 && box.get_height() > 0)
 	{
 		if (dest_rect.get_width() != src_rect.get_width())
 			render_pixels_scale(context, box);
-		else if (primary_color == CL_Colorf::white)
+		else if (primary_color == Colorf::white)
 			render_pixels_noscale_white(context, box);
 		else
 			render_pixels_noscale(context, box);
 	}
 }
 
-void CL_PixelCommandPixels::render_pixels_scale(CL_PixelThreadContext *context, const CL_Rect &box)
+void PixelCommandPixels::render_pixels_scale(PixelThreadContext *context, const Rect &box)
 {
 	int dtx = src_rect.get_width() * 32768 / dest_rect.get_width();
 	int dty = src_rect.get_height() * 32768 / dest_rect.get_height();
@@ -70,9 +70,9 @@ void CL_PixelCommandPixels::render_pixels_scale(CL_PixelThreadContext *context, 
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half, color;
-	CL_BlitARGB8SSE::set_one(one);
-	CL_BlitARGB8SSE::set_half(half);
-	CL_BlitARGB8SSE::set_color(
+	BlitARGB8SSE::set_one(one);
+	BlitARGB8SSE::set_half(half);
+	BlitARGB8SSE::set_color(
 		color,
 		(int)(primary_color.r * 256.0f + 0.5f),
 		(int)(primary_color.g * 256.0f + 0.5f),
@@ -98,28 +98,28 @@ void CL_PixelCommandPixels::render_pixels_scale(CL_PixelThreadContext *context, 
 			tx += dtx;
 
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixels(spixel, src_line[tx0>>15], src_line[tx1>>15]);
-			CL_BlitARGB8SSE::load_pixels(dpixel, dest+i);
-			CL_BlitARGB8SSE::multiply_color(spixel, color);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixels(dest+i, dpixel);
+			BlitARGB8SSE::load_pixels(spixel, src_line[tx0>>15], src_line[tx1>>15]);
+			BlitARGB8SSE::load_pixels(dpixel, dest+i);
+			BlitARGB8SSE::multiply_color(spixel, color);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixels(dest+i, dpixel);
 		}
 
 		if (i != width)
 		{
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixel(spixel, src_line[tx>>15]);
-			CL_BlitARGB8SSE::load_pixel(dpixel, dest[i]);
-			CL_BlitARGB8SSE::multiply_color(spixel, color);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixel(dest[i], dpixel);
+			BlitARGB8SSE::load_pixel(spixel, src_line[tx>>15]);
+			BlitARGB8SSE::load_pixel(dpixel, dest[i]);
+			BlitARGB8SSE::multiply_color(spixel, color);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixel(dest[i], dpixel);
 		}
 
 		ty += dty;
 	}
 }
 
-void CL_PixelCommandPixels::render_pixels_noscale(CL_PixelThreadContext *context, const CL_Rect &box)
+void PixelCommandPixels::render_pixels_noscale(PixelThreadContext *context, const Rect &box)
 {
 	int dty = src_rect.get_height() * 32768 / dest_rect.get_height();
 
@@ -135,9 +135,9 @@ void CL_PixelCommandPixels::render_pixels_noscale(CL_PixelThreadContext *context
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half, color;
-	CL_BlitARGB8SSE::set_one(one);
-	CL_BlitARGB8SSE::set_half(half);
-	CL_BlitARGB8SSE::set_color(
+	BlitARGB8SSE::set_one(one);
+	BlitARGB8SSE::set_half(half);
+	BlitARGB8SSE::set_color(
 		color,
 		(int)(primary_color.r * 256.0f + 0.5f),
 		(int)(primary_color.g * 256.0f + 0.5f),
@@ -155,28 +155,28 @@ void CL_PixelCommandPixels::render_pixels_noscale(CL_PixelThreadContext *context
 		for (i = 0; i < sse_width; i+=2)
 		{
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixels(spixel, src_line+i);
-			CL_BlitARGB8SSE::load_pixels(dpixel, dest+i);
-			CL_BlitARGB8SSE::multiply_color(spixel, color);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixels(dest+i, dpixel);
+			BlitARGB8SSE::load_pixels(spixel, src_line+i);
+			BlitARGB8SSE::load_pixels(dpixel, dest+i);
+			BlitARGB8SSE::multiply_color(spixel, color);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixels(dest+i, dpixel);
 		}
 
 		if (i != width)
 		{
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixel(spixel, src_line[i]);
-			CL_BlitARGB8SSE::load_pixel(dpixel, dest[i]);
-			CL_BlitARGB8SSE::multiply_color(spixel, color);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixel(dest[i], dpixel);
+			BlitARGB8SSE::load_pixel(spixel, src_line[i]);
+			BlitARGB8SSE::load_pixel(dpixel, dest[i]);
+			BlitARGB8SSE::multiply_color(spixel, color);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixel(dest[i], dpixel);
 		}
 
 		ty += dty;
 	}
 }
 
-void CL_PixelCommandPixels::render_pixels_noscale_white(CL_PixelThreadContext *context, const CL_Rect &box)
+void PixelCommandPixels::render_pixels_noscale_white(PixelThreadContext *context, const Rect &box)
 {
 	int dty = src_rect.get_height() * 32768 / dest_rect.get_height();
 
@@ -192,8 +192,8 @@ void CL_PixelCommandPixels::render_pixels_noscale_white(CL_PixelThreadContext *c
 	int sse_width = width / 2 * 2;
 
 	__m128i one, half;
-	CL_BlitARGB8SSE::set_one(one);
-	CL_BlitARGB8SSE::set_half(half);
+	BlitARGB8SSE::set_one(one);
+	BlitARGB8SSE::set_half(half);
 
 	unsigned int *src = (unsigned int *) image.get_data();
 	int src_width = image.get_width();
@@ -206,28 +206,28 @@ void CL_PixelCommandPixels::render_pixels_noscale_white(CL_PixelThreadContext *c
 		for (i = 0; i < sse_width; i+=2)
 		{
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixels(spixel, src_line+i);
-			CL_BlitARGB8SSE::load_pixels(dpixel, dest+i);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixels(dest+i, dpixel);
+			BlitARGB8SSE::load_pixels(spixel, src_line+i);
+			BlitARGB8SSE::load_pixels(dpixel, dest+i);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixels(dest+i, dpixel);
 		}
 
 		if (i != width)
 		{
 			__m128i spixel, dpixel;
-			CL_BlitARGB8SSE::load_pixel(spixel, src_line[i]);
-			CL_BlitARGB8SSE::load_pixel(dpixel, dest[i]);
-			CL_BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
-			CL_BlitARGB8SSE::store_pixel(dest[i], dpixel);
+			BlitARGB8SSE::load_pixel(spixel, src_line[i]);
+			BlitARGB8SSE::load_pixel(dpixel, dest[i]);
+			BlitARGB8SSE::blend_normal(dpixel, spixel, one, half);
+			BlitARGB8SSE::store_pixel(dest[i], dpixel);
 		}
 
 		ty += dty;
 	}
 }
 
-CL_Rect CL_PixelCommandPixels::get_clipped_dest_rect(CL_PixelThreadContext *context) const
+Rect PixelCommandPixels::get_clipped_dest_rect(PixelThreadContext *context) const
 {
-	CL_Rect dest = dest_rect;
+	Rect dest = dest_rect;
 	dest.left = cl_max(cl_min(dest.left, context->clip_rect.right), context->clip_rect.left);
 	dest.right = cl_max(cl_min(dest.right, context->clip_rect.right), context->clip_rect.left);
 	dest.top = cl_max(cl_min(dest.top, context->clip_rect.bottom), context->clip_rect.top);

@@ -32,7 +32,7 @@
 namespace clan
 {
 
-CL_PixelThreadContext::CL_PixelThreadContext(int core, int num_cores)
+PixelThreadContext::PixelThreadContext(int core, int num_cores)
 : core(core),
   num_cores(num_cores),
   cur_blend_src(cl_blend_src_alpha),
@@ -41,7 +41,7 @@ CL_PixelThreadContext::CL_PixelThreadContext(int core, int num_cores)
   cur_blend_dest_alpha(cl_blend_one_minus_src_alpha)
 {
 	unsigned int white = 0xffffffff;
-	pixelbuffer_white = CL_PixelBuffer(1, 1, cl_argb8, &white);
+	pixelbuffer_white = PixelBuffer(1, 1, cl_argb8, &white);
 	for (int i=0; i<max_samplers; i++)
 		samplers[i].set(pixelbuffer_white);
 }

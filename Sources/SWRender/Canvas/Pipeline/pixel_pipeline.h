@@ -40,16 +40,16 @@
 namespace clan
 {
 
-class CL_PixelCommand;
+class PixelCommand;
 
-class CL_PixelPipeline
+class PixelPipeline
 {
 public:
-	CL_PixelPipeline();
-	~CL_PixelPipeline();
+	PixelPipeline();
+	~PixelPipeline();
 
-	void queue(CL_PixelCommand *command) { CL_UniquePtr<CL_PixelCommand> cmd(command); queue(cmd); } 
-	void queue(CL_UniquePtr<CL_PixelCommand> &command);
+	void queue(PixelCommand *command) { UniquePtr<PixelCommand> cmd(command); queue(cmd); } 
+	void queue(UniquePtr<PixelCommand> &command);
 
 	void wait_for_workers();
 
@@ -58,26 +58,26 @@ public:
 
 private:
 	void worker_main(int core);
-	void process_commands(CL_PixelThreadContext *context);
+	void process_commands(PixelThreadContext *context);
 	void wait_for_space();
 	void update_local_reader_index();
 
 	int active_cores;
-	CL_Event event_stop;
-	std::vector<CL_Thread> worker_threads;
+	Event event_stop;
+	std::vector<Thread> worker_threads;
 
 	enum { queue_max = 12*1024, fragment_size = 3*1024 };
-	CL_PixelCommand *command_queue[queue_max];
+	PixelCommand *command_queue[queue_max];
 
 	int local_writer_index;
 	int local_reader_index;
 	int local_commands_written;
-	CL_InterlockedVariable writer_index;
-	std::vector<CL_InterlockedVariable> reader_indices;
-	std::vector<CL_Event> event_more_commands;
-	CL_Event event_reader_done;
+	InterlockedVariable writer_index;
+	std::vector<InterlockedVariable> reader_indices;
+	std::vector<Event> event_more_commands;
+	Event event_reader_done;
 
-	std::vector<CL_InterlockedVariable> reader_active;
+	std::vector<InterlockedVariable> reader_active;
 
 	struct AllocBlock
 	{

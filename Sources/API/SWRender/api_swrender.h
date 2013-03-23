@@ -28,16 +28,16 @@
 
 #pragma once
 
-#ifdef CL_API_DLL
-	#ifdef CL_SWRender_EXPORT
-		#define CL_API_SWRender __declspec(dllexport)
-		#define CL_API_SWRender_STATIC
+#ifdef API_DLL
+	#ifdef SWRender_EXPORT
+		#define API_SWRender __declspec(dllexport)
+		#define API_SWRender_STATIC
 	#else
-		#define CL_API_SWRender __declspec(dllimport)
-		#define CL_API_SWRender_STATIC __declspec(dllimport)
+		#define API_SWRender __declspec(dllimport)
+		#define API_SWRender_STATIC __declspec(dllimport)
 	#endif
 #else
-	#define CL_API_SWRender
-	#define CL_API_SWRender_STATIC
+	#define API_SWRender
+	#define API_SWRender_STATIC
 #endif
 

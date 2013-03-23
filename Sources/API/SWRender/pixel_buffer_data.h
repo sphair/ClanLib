@@ -39,21 +39,21 @@ namespace clan
 /// \brief Frame buffer or texture data for pixel commands
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
-class CL_PixelBufferData
+class PixelBufferData
 {
 //!Construction
 public:
-	CL_PixelBufferData() : data(0) { }
+	PixelBufferData() : data(0) { }
 
 //!Attributes
 public:
-	CL_PixelBuffer pixelbuffer;
-	CL_Size size;
+	PixelBuffer pixelbuffer;
+	Size size;
 	unsigned int *data;
 
 //!Operations
 public:
-	void set(const CL_PixelBuffer &new_pixelbuffer)
+	void set(const PixelBuffer &new_pixelbuffer)
 	{
 		pixelbuffer = new_pixelbuffer;
 		if (!pixelbuffer.is_null())
@@ -63,7 +63,7 @@ public:
 		}
 		else
 		{
-			size = CL_Size();
+			size = Size();
 			data = 0;
 		}
 	}

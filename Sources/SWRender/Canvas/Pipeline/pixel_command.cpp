@@ -33,37 +33,37 @@
 namespace clan
 {
 
-void *CL_PixelCommand::operator new(size_t s, CL_PixelPipeline *p)
+void *PixelCommand::operator new(size_t s, PixelPipeline *p)
 {
-	char *d = (char *) p->alloc_command(s+sizeof(CL_PixelPipeline *));
-	CL_PixelPipeline **pcopy = (CL_PixelPipeline **) d;
+	char *d = (char *) p->alloc_command(s+sizeof(PixelPipeline *));
+	PixelPipeline **pcopy = (PixelPipeline **) d;
 	*pcopy = p;
-	d += sizeof(CL_PixelPipeline *);
+	d += sizeof(PixelPipeline *);
 	return d;
 }
 
-void CL_PixelCommand::operator delete(void *obj, CL_PixelPipeline *p)
+void PixelCommand::operator delete(void *obj, PixelPipeline *p)
 {
 	if (obj)
 	{
 		char *d = (char *) obj;
-		d -= sizeof(CL_PixelPipeline *);
+		d -= sizeof(PixelPipeline *);
 		p->free_command(d);
 	}
 }
 
-void CL_PixelCommand::operator delete(void *obj)
+void PixelCommand::operator delete(void *obj)
 {
 	if (obj)
 	{
 		char *d = (char *) obj;
-		d -= sizeof(CL_PixelPipeline *);
-		CL_PixelPipeline **pcopy = (CL_PixelPipeline **) d;
+		d -= sizeof(PixelPipeline *);
+		PixelPipeline **pcopy = (PixelPipeline **) d;
 		(*pcopy)->free_command(d);
 	}
 }
 
-int CL_PixelCommand::find_first_line_for_core(int y_start, int core, int num_cores)
+int PixelCommand::find_first_line_for_core(int y_start, int core, int num_cores)
 {
 	int y = y_start / num_cores;
 	y *= num_cores;

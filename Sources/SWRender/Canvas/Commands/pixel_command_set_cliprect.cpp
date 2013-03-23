@@ -33,12 +33,12 @@
 namespace clan
 {
 
-CL_PixelCommandSetClipRect::CL_PixelCommandSetClipRect(const CL_Rect &rect)
+PixelCommandSetClipRect::PixelCommandSetClipRect(const Rect &rect)
 : rect(rect)
 {
 }
 
-void CL_PixelCommandSetClipRect::run(CL_PixelThreadContext *context)
+void PixelCommandSetClipRect::run(PixelThreadContext *context)
 {
 	context->clip_rect = rect;
 }

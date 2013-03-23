@@ -33,53 +33,53 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderElementArrayBufferProvider Construction:
+// SWRenderElementArrayBufferProvider Construction:
 
-CL_SWRenderElementArrayBufferProvider::CL_SWRenderElementArrayBufferProvider()
+SWRenderElementArrayBufferProvider::SWRenderElementArrayBufferProvider()
 {
 }
 
-CL_SWRenderElementArrayBufferProvider::~CL_SWRenderElementArrayBufferProvider()
+SWRenderElementArrayBufferProvider::~SWRenderElementArrayBufferProvider()
 {
 }
 
-void CL_SWRenderElementArrayBufferProvider::create(int size, CL_BufferUsage usage)
+void SWRenderElementArrayBufferProvider::create(int size, BufferUsage usage)
 {
 }
 
-void CL_SWRenderElementArrayBufferProvider::create(void *data, int size, CL_BufferUsage usage)
+void SWRenderElementArrayBufferProvider::create(void *data, int size, BufferUsage usage)
 {
 }
 
-void CL_SWRenderElementArrayBufferProvider::destroy()
+void SWRenderElementArrayBufferProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderElementArrayBufferProvider Attributes:
+// SWRenderElementArrayBufferProvider Attributes:
 
-void *CL_SWRenderElementArrayBufferProvider::get_data()
+void *SWRenderElementArrayBufferProvider::get_data()
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderElementArrayBufferProvider Operations:
+// SWRenderElementArrayBufferProvider Operations:
 
-void CL_SWRenderElementArrayBufferProvider::lock(CL_BufferAccess access)
+void SWRenderElementArrayBufferProvider::lock(BufferAccess access)
 {
 }
 
-void CL_SWRenderElementArrayBufferProvider::unlock()
+void SWRenderElementArrayBufferProvider::unlock()
 {
 }
 
-void CL_SWRenderElementArrayBufferProvider::upload_data(int offset, void *data, int size)
+void SWRenderElementArrayBufferProvider::upload_data(int offset, void *data, int size)
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderElementArrayBufferProvider Implementation:
+// SWRenderElementArrayBufferProvider Implementation:
 
 }

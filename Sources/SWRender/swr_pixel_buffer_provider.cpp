@@ -33,50 +33,50 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderPixelBufferProvider Construction:
+// SWRenderPixelBufferProvider Construction:
 
-CL_SWRenderPixelBufferProvider::CL_SWRenderPixelBufferProvider()
+SWRenderPixelBufferProvider::SWRenderPixelBufferProvider()
 {
 }
 
-CL_SWRenderPixelBufferProvider::~CL_SWRenderPixelBufferProvider()
+SWRenderPixelBufferProvider::~SWRenderPixelBufferProvider()
 {
 }
 
-void CL_SWRenderPixelBufferProvider::create(const void *data, int new_width, int new_height, CL_PixelBufferDirection direction, CL_TextureFormat new_format, CL_BufferUsage usage)
+void SWRenderPixelBufferProvider::create(const void *data, int new_width, int new_height, PixelBufferDirection direction, TextureFormat new_format, BufferUsage usage)
 {
-	// Maybe create a normal CL_PixelBuffer inside here to store the data?
+	// Maybe create a normal PixelBuffer inside here to store the data?
 }
 
-void CL_SWRenderPixelBufferProvider::destroy()
+void SWRenderPixelBufferProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderPixelBufferProvider Attributes:
+// SWRenderPixelBufferProvider Attributes:
 
-void *CL_SWRenderPixelBufferProvider::get_data()
+void *SWRenderPixelBufferProvider::get_data()
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderPixelBufferProvider Operations:
+// SWRenderPixelBufferProvider Operations:
 
-void CL_SWRenderPixelBufferProvider::lock(CL_BufferAccess access)
+void SWRenderPixelBufferProvider::lock(BufferAccess access)
 {
 }
 
-void CL_SWRenderPixelBufferProvider::unlock()
+void SWRenderPixelBufferProvider::unlock()
 {
 }
 
-void CL_SWRenderPixelBufferProvider::upload_data(const CL_Rect &dest_rect, const void *data)
+void SWRenderPixelBufferProvider::upload_data(const Rect &dest_rect, const void *data)
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderPixelBufferProvider Implementation:
+// SWRenderPixelBufferProvider Implementation:
 
 }

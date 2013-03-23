@@ -33,50 +33,50 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderOcclusionQueryProvider Construction:
+// SWRenderOcclusionQueryProvider Construction:
 
-CL_SWRenderOcclusionQueryProvider::CL_SWRenderOcclusionQueryProvider()
+SWRenderOcclusionQueryProvider::SWRenderOcclusionQueryProvider()
 {
 }
 
-CL_SWRenderOcclusionQueryProvider::~CL_SWRenderOcclusionQueryProvider()
+SWRenderOcclusionQueryProvider::~SWRenderOcclusionQueryProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderOcclusionQueryProvider Attributes:
+// SWRenderOcclusionQueryProvider Attributes:
 
-bool CL_SWRenderOcclusionQueryProvider::is_result_ready() const
+bool SWRenderOcclusionQueryProvider::is_result_ready() const
 {
 	return false;
 }
 
-int CL_SWRenderOcclusionQueryProvider::get_result() const
+int SWRenderOcclusionQueryProvider::get_result() const
 {
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderOcclusionQueryProvider Operations:
+// SWRenderOcclusionQueryProvider Operations:
 
-void CL_SWRenderOcclusionQueryProvider::begin()
+void SWRenderOcclusionQueryProvider::begin()
 {
 }
 
-void CL_SWRenderOcclusionQueryProvider::end()
+void SWRenderOcclusionQueryProvider::end()
 {
 }
 
-void CL_SWRenderOcclusionQueryProvider::create()
+void SWRenderOcclusionQueryProvider::create()
 {
 }
 
-void CL_SWRenderOcclusionQueryProvider::destroy()
+void SWRenderOcclusionQueryProvider::destroy()
 {
 	delete this;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderOcclusionQueryProvider Implementation:
+// SWRenderOcclusionQueryProvider Implementation:
 
 }

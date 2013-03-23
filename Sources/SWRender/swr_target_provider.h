@@ -33,15 +33,15 @@
 namespace clan
 {
 
-class CL_SWRenderTargetProvider : public CL_DisplayTargetProvider
+class SWRenderTargetProvider : public DisplayTargetProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderTargetProvider();
+	SWRenderTargetProvider();
 
-	~CL_SWRenderTargetProvider();
+	~SWRenderTargetProvider();
 
 
 /// \}
@@ -57,7 +57,7 @@ public:
 public:
 	void destroy();
 
-	CL_DisplayWindowProvider *alloc_display_window();
+	DisplayWindowProvider *alloc_display_window();
 
 
 /// \}
@@ -65,7 +65,7 @@ public:
 /// \{
 
 private:
-	friend class CL_SWRenderDisplayWindowProvider;
+	friend class SWRenderDisplayWindowProvider;
 /// \}
 };
 

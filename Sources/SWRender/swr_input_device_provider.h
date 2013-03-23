@@ -34,15 +34,15 @@ namespace clan
 
 #include "API/Display/TargetProviders/input_device_provider.h"
 
-class CL_SWRenderInputDeviceProvider : public CL_InputDeviceProvider
+class SWRenderInputDeviceProvider : public InputDeviceProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderInputDeviceProvider();
+	SWRenderInputDeviceProvider();
 
-	~CL_SWRenderInputDeviceProvider();
+	~SWRenderInputDeviceProvider();
 
 	void destroy();
 
@@ -56,7 +56,7 @@ public:
 
 	std::string get_device_name() const;
 
-	CL_InputDevice::Type get_type() const;
+	InputDevice::Type get_type() const;
 
 	std::string get_key_name(int id) const;
 
@@ -84,7 +84,7 @@ public:
 /// \{
 
 public:
-	void init(CL_Signal_v1<const CL_InputEvent &> *sig_provider_event);
+	void init(Signal_v1<const InputEvent &> *sig_provider_event);
 
 	void set_position(int x, int y);
 

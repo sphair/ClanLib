@@ -47,120 +47,120 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderDisplayWindowProvider Construction:
+// SWRenderDisplayWindowProvider Construction:
 
-CL_SWRenderDisplayWindowProvider::CL_SWRenderDisplayWindowProvider()
+SWRenderDisplayWindowProvider::SWRenderDisplayWindowProvider()
 : site(0)
 {
 #ifdef WIN32
 	window.set_allow_drop_shadow(true);
 #endif
-	window.func_on_resized().set(this, &CL_SWRenderDisplayWindowProvider::on_window_resized);
+	window.func_on_resized().set(this, &SWRenderDisplayWindowProvider::on_window_resized);
 }
 
-CL_SWRenderDisplayWindowProvider::~CL_SWRenderDisplayWindowProvider()
+SWRenderDisplayWindowProvider::~SWRenderDisplayWindowProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderDisplayWindowProvider Attributes:
+// SWRenderDisplayWindowProvider Attributes:
 
-CL_Rect CL_SWRenderDisplayWindowProvider::get_geometry() const
+Rect SWRenderDisplayWindowProvider::get_geometry() const
 {
 	return window.get_geometry();
 }
 
-CL_Rect CL_SWRenderDisplayWindowProvider::get_viewport() const
+Rect SWRenderDisplayWindowProvider::get_viewport() const
 {
 	return window.get_viewport();
 }
 
-bool CL_SWRenderDisplayWindowProvider::has_focus() const
+bool SWRenderDisplayWindowProvider::has_focus() const
 {
 	return window.has_focus();
 }
 
-bool CL_SWRenderDisplayWindowProvider::is_minimized() const
+bool SWRenderDisplayWindowProvider::is_minimized() const
 {
 	return window.is_minimized();
 }
 
-bool CL_SWRenderDisplayWindowProvider::is_maximized() const
+bool SWRenderDisplayWindowProvider::is_maximized() const
 {
 	return window.is_maximized();
 }
 
-bool CL_SWRenderDisplayWindowProvider::is_visible() const
+bool SWRenderDisplayWindowProvider::is_visible() const
 {
 	return window.is_visible();
 }
 
-CL_GraphicContext& CL_SWRenderDisplayWindowProvider::get_gc()
+GraphicContext& SWRenderDisplayWindowProvider::get_gc()
 {
 	return gc;
 }
 
-CL_InputContext& CL_SWRenderDisplayWindowProvider::get_ic()
+InputContext& SWRenderDisplayWindowProvider::get_ic()
 {
 	return window.get_ic();
 }
 
 #ifdef WIN32
-HWND CL_SWRenderDisplayWindowProvider::get_hwnd() const
+HWND SWRenderDisplayWindowProvider::get_hwnd() const
 {
 	return window.get_hwnd();
 }
 #endif
 
-bool CL_SWRenderDisplayWindowProvider::is_clipboard_text_available() const
+bool SWRenderDisplayWindowProvider::is_clipboard_text_available() const
 {
 	return window.is_clipboard_text_available();
 }
 
-bool CL_SWRenderDisplayWindowProvider::is_clipboard_image_available() const
+bool SWRenderDisplayWindowProvider::is_clipboard_image_available() const
 {
 	return window.is_clipboard_image_available();
 }
 
-CL_Size CL_SWRenderDisplayWindowProvider::get_minimum_size(bool client_area) const
+Size SWRenderDisplayWindowProvider::get_minimum_size(bool client_area) const
 {
 	return window.get_minimum_size(client_area);
 }
 
-CL_Size CL_SWRenderDisplayWindowProvider::get_maximum_size( bool client_area/*=false*/ ) const
+Size SWRenderDisplayWindowProvider::get_maximum_size( bool client_area/*=false*/ ) const
 {
 	return window.get_maximum_size(client_area);
 }
 
-std::string CL_SWRenderDisplayWindowProvider::get_title() const
+std::string SWRenderDisplayWindowProvider::get_title() const
 {
 	return window.get_title();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderDisplayWindowProvider Operations:
+// SWRenderDisplayWindowProvider Operations:
 
-CL_Point CL_SWRenderDisplayWindowProvider::client_to_screen(const CL_Point &client)
+Point SWRenderDisplayWindowProvider::client_to_screen(const Point &client)
 {
 	return window.client_to_screen(client);
 }
 
-CL_Point CL_SWRenderDisplayWindowProvider::screen_to_client(const CL_Point &screen)
+Point SWRenderDisplayWindowProvider::screen_to_client(const Point &screen)
 {
 	return window.screen_to_client(screen);
 }
 
-void CL_SWRenderDisplayWindowProvider::capture_mouse(bool capture)
+void SWRenderDisplayWindowProvider::capture_mouse(bool capture)
 {
 	window.capture_mouse(capture);
 }
 
-void CL_SWRenderDisplayWindowProvider::destroy()
+void SWRenderDisplayWindowProvider::destroy()
 {
 	delete this;
 }
 
-void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, const CL_DisplayWindowDescription &description)
+void SWRenderDisplayWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &description)
 {
 	site = new_site;
 	flip_timer_set = false;
@@ -187,109 +187,109 @@ void CL_SWRenderDisplayWindowProvider::create(CL_DisplayWindowSite *new_site, co
 	else if (XMatchVisualInfo(disp, screen, 8, GrayScale, &visual_info)) {bpp = 8;}
 	else if (XMatchVisualInfo(disp, screen, 8, StaticGray, &visual_info)) {bpp = 8;}
 	else if (XMatchVisualInfo(disp, screen, 1, StaticGray, &visual_info)) {bpp = 1;}
-	else { throw CL_Exception("Cannot match visual info"); }
+	else { throw Exception("Cannot match visual info"); }
 
 	window.create(&visual_info, site, description);
 #endif
-	gc = CL_GraphicContext(new CL_SWRenderGraphicContextProvider(this));
+	gc = GraphicContext(new SWRenderGraphicContextProvider(this));
 }
 
-void CL_SWRenderDisplayWindowProvider::show_system_cursor()
+void SWRenderDisplayWindowProvider::show_system_cursor()
 {
 	window.show_system_cursor();
 }
 
-CL_CursorProvider *CL_SWRenderDisplayWindowProvider::create_cursor(const CL_SpriteDescription &sprite_description, const CL_Point &hotspot)
+CursorProvider *SWRenderDisplayWindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
 {
 #ifdef WIN32
-	return new CL_CursorProvider_Win32(sprite_description, hotspot);
+	return new CursorProvider_Win32(sprite_description, hotspot);
 #elif !defined(__APPLE__)
-	return new CL_CursorProvider_X11(sprite_description, hotspot);
+	return new CursorProvider_X11(sprite_description, hotspot);
 #endif
 }
 
-void CL_SWRenderDisplayWindowProvider::set_cursor(CL_CursorProvider *cursor)
+void SWRenderDisplayWindowProvider::set_cursor(CursorProvider *cursor)
 {
 #ifdef WIN32
-	window.set_cursor(static_cast<CL_CursorProvider_Win32 *>(cursor));
+	window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor));
 #elif !defined(__APPLE__)
-	window.set_cursor(static_cast<CL_CursorProvider_X11 *>(cursor));
+	window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
 #endif
 }
 
-void CL_SWRenderDisplayWindowProvider::set_cursor(CL_StandardCursor type)
+void SWRenderDisplayWindowProvider::set_cursor(StandardCursor type)
 {
 	window.set_cursor(type);
 }
 
-void CL_SWRenderDisplayWindowProvider::hide_system_cursor()
+void SWRenderDisplayWindowProvider::hide_system_cursor()
 {
 	window.hide_system_cursor();
 }
 
-void CL_SWRenderDisplayWindowProvider::set_title(const std::string &new_title)
+void SWRenderDisplayWindowProvider::set_title(const std::string &new_title)
 {
 	window.set_title(new_title);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_position(const CL_Rect &pos, bool client_area)
+void SWRenderDisplayWindowProvider::set_position(const Rect &pos, bool client_area)
 {
 	window.set_position(pos, client_area);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_size(int width, int height, bool client_area)
+void SWRenderDisplayWindowProvider::set_size(int width, int height, bool client_area)
 {
 	window.set_size(width, height, client_area);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_minimum_size( int width, int height, bool client_area )
+void SWRenderDisplayWindowProvider::set_minimum_size( int width, int height, bool client_area )
 {
 	window.set_minimum_size(width,height,client_area);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_maximum_size( int width, int height, bool client_area )
+void SWRenderDisplayWindowProvider::set_maximum_size( int width, int height, bool client_area )
 {
 	window.set_maximum_size(width,height,client_area);
 }
-void CL_SWRenderDisplayWindowProvider::set_enabled(bool enable)
+void SWRenderDisplayWindowProvider::set_enabled(bool enable)
 {
 	window.set_enabled(enable);
 }
 
-void CL_SWRenderDisplayWindowProvider::minimize()
+void SWRenderDisplayWindowProvider::minimize()
 {
 	window.minimize();
 }
 
-void CL_SWRenderDisplayWindowProvider::restore()
+void SWRenderDisplayWindowProvider::restore()
 {
 	window.restore();
 }
 
-void CL_SWRenderDisplayWindowProvider::maximize()
+void SWRenderDisplayWindowProvider::maximize()
 {
 	window.maximize();
 }
 
-void CL_SWRenderDisplayWindowProvider::show(bool activate)
+void SWRenderDisplayWindowProvider::show(bool activate)
 {
 	window.show(activate);
 }
 
-void CL_SWRenderDisplayWindowProvider::hide()
+void SWRenderDisplayWindowProvider::hide()
 {
 	window.hide();
 }
 
-void CL_SWRenderDisplayWindowProvider::bring_to_front()
+void SWRenderDisplayWindowProvider::bring_to_front()
 {
 	window.bring_to_front();
 }
 
-void CL_SWRenderDisplayWindowProvider::flip(int interval)
+void SWRenderDisplayWindowProvider::flip(int interval)
 {
-	CL_SWRenderGraphicContextProvider *gc_provider = static_cast<CL_SWRenderGraphicContextProvider*>(gc.get_provider());
-	CL_PixelCanvas *canvas = gc_provider->get_canvas();
+	SWRenderGraphicContextProvider *gc_provider = static_cast<SWRenderGraphicContextProvider*>(gc.get_provider());
+	PixelCanvas *canvas = gc_provider->get_canvas();
 
 #ifdef WIN32
 	HWND hwnd = window.get_hwnd();
@@ -297,8 +297,8 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 	draw_image(hdc, get_viewport(), canvas->to_pixelbuffer());
 	ReleaseDC(hwnd, hdc);
 #elif !defined(__APPLE__)
-	CL_PixelBuffer &image = canvas->to_pixelbuffer();
-	draw_image(get_viewport(), image, CL_Rect(0, 0, image.get_width(), image.get_height()));
+	PixelBuffer &image = canvas->to_pixelbuffer();
+	draw_image(get_viewport(), image, Rect(0, 0, image.get_width(), image.get_height()));
 #endif
 
 	if (interval == -1)
@@ -314,12 +314,12 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 	{
 		if (!flip_timer_set)
 		{
-			flip_last_time = CL_System::get_time();
+			flip_last_time = System::get_time();
 			flip_timer_set = true;
 		}
 		else
 		{
-			unsigned int current_time = CL_System::get_time();
+			unsigned int current_time = System::get_time();
 
 			int time_diff = current_time - flip_last_time;
 
@@ -328,7 +328,7 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 
 			if ( (time_wait > 0) && (time_wait < interval) )
 			{
-				CL_System::sleep(time_wait);
+				System::sleep(time_wait);
 				flip_last_time = current_time + time_wait;
 			}
 			else
@@ -339,72 +339,72 @@ void CL_SWRenderDisplayWindowProvider::flip(int interval)
 	}
 }
 
-void CL_SWRenderDisplayWindowProvider::update(const CL_Rect &rect)
+void SWRenderDisplayWindowProvider::update(const Rect &rect)
 {
-	CL_SWRenderGraphicContextProvider *gc_provider = static_cast<CL_SWRenderGraphicContextProvider*>(gc.get_provider());
-	CL_PixelCanvas *canvas = gc_provider->get_canvas();
+	SWRenderGraphicContextProvider *gc_provider = static_cast<SWRenderGraphicContextProvider*>(gc.get_provider());
+	PixelCanvas *canvas = gc_provider->get_canvas();
 #ifdef WIN32
 	HWND hwnd = window.get_hwnd();
 	HDC hdc = GetDC(hwnd);
 	draw_image(hdc, rect, canvas->to_pixelbuffer(), rect);
 	ReleaseDC(hwnd, hdc);
 #elif !defined(__APPLE__)
-	CL_PixelBuffer &image = canvas->to_pixelbuffer();
+	PixelBuffer &image = canvas->to_pixelbuffer();
 	draw_image(rect, image, rect);
 #endif
 }
 
-void CL_SWRenderDisplayWindowProvider::set_clipboard_text(const std::string &text)
+void SWRenderDisplayWindowProvider::set_clipboard_text(const std::string &text)
 {
 	window.set_clipboard_text(text);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_clipboard_image(const CL_PixelBuffer &buf)
+void SWRenderDisplayWindowProvider::set_clipboard_image(const PixelBuffer &buf)
 {
 	window.set_clipboard_image(buf);
 }
 
-std::string CL_SWRenderDisplayWindowProvider::get_clipboard_text() const
+std::string SWRenderDisplayWindowProvider::get_clipboard_text() const
 {
 	return window.get_clipboard_text();
 }
 
-CL_PixelBuffer CL_SWRenderDisplayWindowProvider::get_clipboard_image() const
+PixelBuffer SWRenderDisplayWindowProvider::get_clipboard_image() const
 {
 	return window.get_clipboard_image();
 }
 
-void CL_SWRenderDisplayWindowProvider::request_repaint(const CL_Rect &rect)
+void SWRenderDisplayWindowProvider::request_repaint(const Rect &rect)
 {
 	window.request_repaint(rect);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_large_icon(const CL_PixelBuffer &image)
+void SWRenderDisplayWindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	window.set_large_icon(image);
 }
 
-void CL_SWRenderDisplayWindowProvider::set_small_icon(const CL_PixelBuffer &image)
+void SWRenderDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	window.set_small_icon(image);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderDisplayWindowProvider Implementation:
+// SWRenderDisplayWindowProvider Implementation:
 
-void CL_SWRenderDisplayWindowProvider::on_window_resized()
+void SWRenderDisplayWindowProvider::on_window_resized()
 {
 	if (gc.get_provider())
-		((CL_SWRenderGraphicContextProvider *) gc.get_provider())->on_window_resized();
+		((SWRenderGraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
 #ifdef WIN32
-void CL_SWRenderDisplayWindowProvider::draw_image(HDC hdc, const CL_Rect &dest, const CL_PixelBuffer &image)
+void SWRenderDisplayWindowProvider::draw_image(HDC hdc, const Rect &dest, const PixelBuffer &image)
 {
-	draw_image(hdc, dest, image, CL_Rect(0, 0, image.get_width(), image.get_height()));
+	draw_image(hdc, dest, image, Rect(0, 0, image.get_width(), image.get_height()));
 }
 
-void CL_SWRenderDisplayWindowProvider::draw_image(HDC hdc, const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src)
+void SWRenderDisplayWindowProvider::draw_image(HDC hdc, const Rect &dest, const PixelBuffer &image, const Rect &src)
 {
 	BITMAPV5HEADER bmp_header;
 	memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
@@ -422,7 +422,7 @@ void CL_SWRenderDisplayWindowProvider::draw_image(HDC hdc, const CL_Rect &dest, 
 	SetDIBitsToDevice(hdc, dest.left, dest.top, dest.get_width(), dest.get_height(), src.left, image.get_height()-src.bottom, 0, image.get_height(), image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 }
 #elif !defined(__APPLE__)
-void CL_SWRenderDisplayWindowProvider::draw_image(const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src)
+void SWRenderDisplayWindowProvider::draw_image(const Rect &dest, const PixelBuffer &image, const Rect &src)
 {
 	XImage ximage;
 	memset(&ximage, 0, sizeof(ximage));
@@ -464,7 +464,7 @@ void CL_SWRenderDisplayWindowProvider::draw_image(const CL_Rect &dest, const CL_
 
 	if (!XInitImage(&ximage))
 	{
-		throw CL_Exception("Cannot initialise image");
+		throw Exception("Cannot initialise image");
 	}
 
 	GC xgc = XCreateGC(window.get_display(), window.get_window(), 0, NULL); 

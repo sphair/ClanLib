@@ -34,33 +34,33 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTargetProvider Construction:
+// SWRenderTargetProvider Construction:
 
-CL_SWRenderTargetProvider::CL_SWRenderTargetProvider()
+SWRenderTargetProvider::SWRenderTargetProvider()
 {
 }
 
-CL_SWRenderTargetProvider::~CL_SWRenderTargetProvider()
+SWRenderTargetProvider::~SWRenderTargetProvider()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTargetProvider Attributes:
+// SWRenderTargetProvider Attributes:
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTargetProvider Operations:
+// SWRenderTargetProvider Operations:
 
-void CL_SWRenderTargetProvider::destroy()
+void SWRenderTargetProvider::destroy()
 {
 	delete this;
 }
 
-CL_DisplayWindowProvider *CL_SWRenderTargetProvider::alloc_display_window()
+DisplayWindowProvider *SWRenderTargetProvider::alloc_display_window()
 {
-	return new CL_SWRenderDisplayWindowProvider;
+	return new SWRenderDisplayWindowProvider;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// CL_SWRenderTargetProvider Implementation:
+// SWRenderTargetProvider Implementation:
 
 }

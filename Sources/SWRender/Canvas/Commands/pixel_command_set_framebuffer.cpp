@@ -33,12 +33,12 @@
 namespace clan
 {
 
-CL_PixelCommandSetFrameBuffer::CL_PixelCommandSetFrameBuffer(const CL_PixelBufferData &colorbuffer0)
+PixelCommandSetFrameBuffer::PixelCommandSetFrameBuffer(const PixelBufferData &colorbuffer0)
 : colorbuffer0(colorbuffer0)
 {
 }
 
-void CL_PixelCommandSetFrameBuffer::run(CL_PixelThreadContext *context)
+void PixelCommandSetFrameBuffer::run(PixelThreadContext *context)
 {
 	context->colorbuffer0 = colorbuffer0;
 }

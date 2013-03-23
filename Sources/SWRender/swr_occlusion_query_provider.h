@@ -33,15 +33,15 @@
 namespace clan
 {
 
-class CL_SWRenderOcclusionQueryProvider : public CL_OcclusionQueryProvider
+class SWRenderOcclusionQueryProvider : public OcclusionQueryProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderOcclusionQueryProvider();
+	SWRenderOcclusionQueryProvider();
 
-	~CL_SWRenderOcclusionQueryProvider();
+	~SWRenderOcclusionQueryProvider();
 
 
 /// \}

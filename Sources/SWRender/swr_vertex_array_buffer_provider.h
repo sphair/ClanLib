@@ -34,19 +34,19 @@
 namespace clan
 {
 
-class CL_SWRenderVertexArrayBufferProvider : public CL_VertexArrayBufferProvider
+class SWRenderVertexArrayBufferProvider : public VertexArrayBufferProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	CL_SWRenderVertexArrayBufferProvider();
+	SWRenderVertexArrayBufferProvider();
 
-	~CL_SWRenderVertexArrayBufferProvider();
+	~SWRenderVertexArrayBufferProvider();
 
-	void create(int size, CL_BufferUsage usage);
+	void create(int size, BufferUsage usage);
 
-	void create(void *data, int size, CL_BufferUsage usage);
+	void create(void *data, int size, BufferUsage usage);
 
 	void destroy();
 
@@ -64,7 +64,7 @@ public:
 /// \{
 
 public:
-	void lock(CL_BufferAccess access);
+	void lock(BufferAccess access);
 
 	void unlock();
 

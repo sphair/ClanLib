@@ -41,59 +41,59 @@
 namespace clan
 {
 
-class CL_PixelPipeline;
-class CL_PixelCommand;
-class CL_ProgramObject_SWRender;
+class PixelPipeline;
+class PixelCommand;
+class ProgramObject_SWRender;
 
-class CL_PixelCanvas
+class PixelCanvas
 {
 public:
-	CL_PixelCanvas(const CL_Size &size);
-	~CL_PixelCanvas();
+	PixelCanvas(const Size &size);
+	~PixelCanvas();
 
-	void resize(const CL_Size &size);
+	void resize(const Size &size);
 
 	int get_width() const { return colorbuffer0.size.width; }
 	int get_height() const { return colorbuffer0.size.height; }
 
-	void set_clip_rect(const CL_Rect &new_clip_rect);
+	void set_clip_rect(const Rect &new_clip_rect);
 	void reset_clip_rect();
 
-	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha, const CL_Colorf &const_color);
+	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha, const Colorf &const_color);
 
-	void set_framebuffer(const CL_FrameBuffer &buffer);
+	void set_framebuffer(const FrameBuffer &buffer);
 	void reset_framebuffer();
 
-	void clear(const CL_Colorf &color);
-	void draw_pixels(const CL_Rect &dest, const CL_PixelBuffer &image, const CL_Rect &src_rect, const CL_Colorf &primary_color);
-	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const CL_PixelBuffer &pixels);
-	void queue_command(CL_UniquePtr<CL_PixelCommand> &command);
+	void clear(const Colorf &color);
+	void draw_pixels(const Rect &dest, const PixelBuffer &image, const Rect &src_rect, const Colorf &primary_color);
+	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
+	void queue_command(UniquePtr<PixelCommand> &command);
 
-	void set_sampler(int index, const CL_PixelBuffer &new_sampler);
+	void set_sampler(int index, const PixelBuffer &new_sampler);
 	void reset_sampler(int index);
 
-	CL_PixelBuffer &to_pixelbuffer();
-	CL_PixelPipeline *get_pipeline() const { return pipeline.get(); }
+	PixelBuffer &to_pixelbuffer();
+	PixelPipeline *get_pipeline() const { return pipeline.get(); }
 
 private:
 	void modified_framebuffer();
 
-	CL_PixelBuffer primary_colorbuffer0;
-	CL_PixelBufferData colorbuffer0;
+	PixelBuffer primary_colorbuffer0;
+	PixelBufferData colorbuffer0;
 	bool framebuffer_set;
-	CL_FrameBuffer framebuffer;
-	CL_Slot slot_framebuffer_modified;
+	FrameBuffer framebuffer;
+	Slot slot_framebuffer_modified;
 
-	CL_Rect clip_rect;
+	Rect clip_rect;
 	bool cliprect_set;
 
-	CL_BlendFunc cur_blend_src;
-	CL_BlendFunc cur_blend_dest;
-	CL_BlendFunc cur_blend_src_alpha;
-	CL_BlendFunc cur_blend_dest_alpha;
-	CL_Colorf cur_blend_color;
+	BlendFunc cur_blend_src;
+	BlendFunc cur_blend_dest;
+	BlendFunc cur_blend_src_alpha;
+	BlendFunc cur_blend_dest_alpha;
+	Colorf cur_blend_color;
 
-	CL_UniquePtr<CL_PixelPipeline> pipeline;
+	UniquePtr<PixelPipeline> pipeline;
 };
 
 }

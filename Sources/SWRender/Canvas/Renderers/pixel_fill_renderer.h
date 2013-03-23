@@ -34,18 +34,18 @@
 namespace clan
 {
 
-class CL_PixelFillRenderer
+class PixelFillRenderer
 {
 public:
-	CL_PixelFillRenderer();
+	PixelFillRenderer();
 
-	void set_clip_rect(const CL_Rect &clip_rect);
+	void set_clip_rect(const Rect &clip_rect);
 	void set_dest(unsigned int *data, int width, int height);
 	void set_core(int core, int num_cores);
-	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
+	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
 
-	void clear(const CL_Colorf &color);
-	void fill_rect(const CL_Rect &dest, const CL_Colorf &primary_color);
+	void clear(const Colorf &color);
+	void fill_rect(const Rect &dest, const Colorf &primary_color);
 
 private:
 	static int find_first_line_for_core(int y_start, int core, int num_cores);
@@ -54,13 +54,13 @@ private:
 	{
 		PixelBufferData() : data(0) { }
 
-		CL_Size size;
+		Size size;
 		unsigned int *data;
 	};
 
 	PixelBufferData colorbuffer0;
 
-	CL_Rect clip_rect;
+	Rect clip_rect;
 	int core;
 	int num_cores;
 };

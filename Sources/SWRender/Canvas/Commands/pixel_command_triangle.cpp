@@ -34,7 +34,7 @@
 namespace clan
 {
 
-CL_PixelCommandTriangle::CL_PixelCommandTriangle(const CL_Vec2f init_points[3], const CL_Vec4f init_primcolor[3], const CL_Vec2f init_texcoords[3], int init_sampler)
+PixelCommandTriangle::PixelCommandTriangle(const Vec2f init_points[3], const Vec4f init_primcolor[3], const Vec2f init_texcoords[3], int init_sampler)
 {
 	for (int i = 0; i < 3; i++)
 	{
@@ -45,7 +45,7 @@ CL_PixelCommandTriangle::CL_PixelCommandTriangle(const CL_Vec2f init_points[3], 
 	sampler = init_sampler;
 }
 
-void CL_PixelCommandTriangle::run(CL_PixelThreadContext *context)
+void PixelCommandTriangle::run(PixelThreadContext *context)
 {
 	float x[3] = { points[0].x, points[1].x, points[2].x };
 	float y[3] = { points[0].y, points[1].y, points[2].y };
@@ -56,7 +56,7 @@ void CL_PixelCommandTriangle::run(CL_PixelThreadContext *context)
 	float blue[3] = { primcolor[0].b, primcolor[1].b, primcolor[2].b };
 	float alpha[3] = { primcolor[0].a, primcolor[1].a, primcolor[2].a };
 
-	CL_PixelTriangleRenderer triangle_renderer;
+	PixelTriangleRenderer triangle_renderer;
 	triangle_renderer.set_clip_rect(context->clip_rect);
 	triangle_renderer.set_vertex_arrays(x,y,tx,ty,red,green,blue,alpha);
 	triangle_renderer.set_dest(context->colorbuffer0.data, context->colorbuffer0.size.width, context->colorbuffer0.size.height);

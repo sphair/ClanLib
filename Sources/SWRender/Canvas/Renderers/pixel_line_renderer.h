@@ -35,19 +35,19 @@
 namespace clan
 {
 
-class CL_LineSegment2;
-class CL_Colorf;
+class LineSegment2;
+class Colorf;
 
-class CL_PixelLineRenderer
+class PixelLineRenderer
 {
 public:
-	CL_PixelLineRenderer();
+	PixelLineRenderer();
 
-	void draw_line(const CL_LineSegment2 &line_dest, const CL_Colorf &primary_color);
-	void set_clip_rect(const CL_Rect &clip_rect);
+	void draw_line(const LineSegment2 &line_dest, const Colorf &primary_color);
+	void set_clip_rect(const Rect &clip_rect);
 	void set_dest(unsigned int *data, int width, int height);
 	void set_core(int core, int num_cores);
-	void set_blend_function(CL_BlendFunc src, CL_BlendFunc dest, CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
+	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
 
 private:
 	int find_first_line_for_core(int y_start, int core, int num_cores);
@@ -58,7 +58,7 @@ private:
 	int dest_width;
 	int dest_height;
 
-	CL_Rect clip_rect;
+	Rect clip_rect;
 	int core;
 	int num_cores;
 
