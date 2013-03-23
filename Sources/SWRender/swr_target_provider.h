@@ -55,8 +55,6 @@ public:
 /// \{
 
 public:
-	void destroy();
-
 	DisplayWindowProvider *alloc_display_window();
 
 

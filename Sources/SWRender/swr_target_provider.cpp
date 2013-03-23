@@ -50,11 +50,6 @@ SWRenderTargetProvider::~SWRenderTargetProvider()
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTargetProvider Operations:
 
-void SWRenderTargetProvider::destroy()
-{
-	delete this;
-}
-
 DisplayWindowProvider *SWRenderTargetProvider::alloc_display_window()
 {
 	return new SWRenderDisplayWindowProvider;

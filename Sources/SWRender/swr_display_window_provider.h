@@ -65,7 +65,7 @@ public:
 	Size get_maximum_size(bool client_area=false) const;
 
 	GraphicContext& get_gc();
-	InputContext& get_ic();
+	InputContext get_ic();
 
 #ifdef WIN32
 	HWND get_hwnd() const;
@@ -88,6 +88,8 @@ public:
 /// \name Operations
 /// \{
 public:
+	void make_current() const;
+
 	Point client_to_screen(const Point &client);
 	Point screen_to_client(const Point &screen);
 
@@ -97,9 +99,10 @@ public:
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
 	void show_system_cursor();
-	CursorProvider *create_cursor(const SpriteDescription &sprite_description, const Point &hotspot);
+	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot);
 	void set_cursor(CursorProvider *cursor);
 	void set_cursor(StandardCursor type);
+	void set_cursor_handle(HCURSOR cursor);
 	void hide_system_cursor();
 
 	void set_title(const std::string &new_title);
@@ -129,6 +132,8 @@ public:
 
 	void set_large_icon(const PixelBuffer &image);
 	void set_small_icon(const PixelBuffer &image);
+	void enable_alpha_channel(const Rect &blur_rect);
+	void extend_frame_into_client_area(int height);
 
 /// \}
 /// \name Implementation
