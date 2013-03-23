@@ -32,9 +32,12 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
 #include "API/SWRender/swr_program_object.h"
-
+#include "API/Core/System/disposable_object.h"
 #include "vertex_attribute_fetcher.h"
 #include "software_program_standard.h"
+#include "API/Display/Render/rasterizer_state_description.h"
+#include "API/Display/Render/blend_state_description.h"
+#include "API/Display/Render/depth_stencil_state_description.h"
 #include <map>
 
 namespace clan
@@ -45,7 +48,30 @@ class PixelCommand;
 class SWRenderDisplayWindowProvider;
 class SWRenderProgramObjectProvider;
 
-class SWRenderGraphicContextProvider : public GraphicContextProvider
+
+class SWRenderRasterizerStateProvider : public RasterizerStateProvider
+{
+public:
+	SWRenderRasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
+	RasterizerStateDescription desc;
+};
+
+class SWRenderBlendStateProvider : public BlendStateProvider
+{
+public:
+	SWRenderBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) { }
+	BlendStateDescription desc;
+};
+
+class SWRenderDepthStencilStateProvider : public DepthStencilStateProvider
+{
+public:
+	SWRenderDepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
+	DepthStencilStateDescription desc;
+};
+
+
+class SWRenderGraphicContextProvider : public GraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{
@@ -62,10 +88,6 @@ public:
 	Size get_display_window_size() const;
 	PixelCanvas *get_canvas() const { return canvas.get(); }
 
-#ifdef WIN32
-	HDC get_drawable() const;
-#endif
-
 	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
 	ProgramObject get_program_object(StandardProgram standard_program) const;
 
@@ -74,6 +96,7 @@ public:
 /// \name Operations
 /// \{
 public:
+	void on_dispose();
 	void draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
 	void queue_command(std::unique_ptr<PixelCommand> &command);
 
@@ -177,6 +200,9 @@ private:
 	SoftwareProgram_Standard cl_software_program_standard;
 	ProgramObject_SWRender program_object_standard;
 	Signal_v1<const Size &> window_resized_signal;
+	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
+	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
+	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
 
 /// \}
 };

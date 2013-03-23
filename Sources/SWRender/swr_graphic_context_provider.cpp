@@ -44,7 +44,10 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/blend_state.h"
 #include "API/SWRender/swr_program_object.h"
-
+#include "API/Display/Render/shared_gc_data.h"
+#include "swr_primitives_array_provider.h"
+#include "swr_uniform_buffer_provider.h"
+#include "swr_transfer_buffer_provider.h"
 namespace clan
 {
 
@@ -61,11 +64,20 @@ SWRenderGraphicContextProvider::SWRenderGraphicContextProvider(SWRenderDisplayWi
 	program_object_standard.bind_attribute_location(2, "TexCoord0");
 	program_object_standard.bind_attribute_location(3, "TexIndex0");
 	set_program_object(program_single_texture);
+	SharedGCData::add_provider(this);
+
 }
 
 SWRenderGraphicContextProvider::~SWRenderGraphicContextProvider()
 {
+	dispose();
 	canvas.reset();
+}
+
+void SWRenderGraphicContextProvider::on_dispose()
+{
+	canvas.reset();
+	SharedGCData::remove_provider(this);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -85,13 +97,6 @@ Size SWRenderGraphicContextProvider::get_display_window_size() const
 {
 	return Size(canvas->get_width(), canvas->get_height());
 }
-
-#ifdef WIN32
-HDC SWRenderGraphicContextProvider::get_drawable() const
-{
-	return 0; //static_cast<SWRenderDisplayWindowProvider *>(window)->get_device_context();
-}
-#endif
 
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderGraphicContextProvider Operations:
@@ -136,6 +141,11 @@ VertexArrayBufferProvider *SWRenderGraphicContextProvider::alloc_vertex_array_bu
 	return new SWRenderVertexArrayBufferProvider;
 }
 
+UniformBufferProvider *SWRenderGraphicContextProvider::alloc_uniform_buffer()
+{
+	return new SWRenderUniformBufferProvider;
+}
+
 ElementArrayBufferProvider *SWRenderGraphicContextProvider::alloc_element_array_buffer()
 {
 	return new SWRenderElementArrayBufferProvider;
@@ -144,6 +154,129 @@ ElementArrayBufferProvider *SWRenderGraphicContextProvider::alloc_element_array_
 PixelBufferProvider *SWRenderGraphicContextProvider::alloc_pixel_buffer()
 {
 	return new SWRenderPixelBufferProvider;
+}
+
+TransferBufferProvider *SWRenderGraphicContextProvider::alloc_transfer_buffer()
+{
+	return new SWRenderTransferBufferProvider;
+}
+
+PrimitivesArrayProvider *SWRenderGraphicContextProvider::alloc_primitives_array()
+{
+	return new SWRenderPrimitivesArrayProvider();
+}
+
+std::shared_ptr<RasterizerStateProvider> SWRenderGraphicContextProvider::create_rasterizer_state(const RasterizerStateDescription &desc)
+{
+	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> >::iterator it = rasterizer_states.find(desc);
+	if (it != rasterizer_states.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		std::shared_ptr<RasterizerStateProvider> state(new SWRenderRasterizerStateProvider(desc));
+		rasterizer_states[desc.clone()] = state;
+		return state;
+	}
+}
+
+std::shared_ptr<BlendStateProvider> SWRenderGraphicContextProvider::create_blend_state(const BlendStateDescription &desc)
+{
+	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> >::iterator it = blend_states.find(desc);
+	if (it != blend_states.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		std::shared_ptr<BlendStateProvider> state(new SWRenderBlendStateProvider(desc));
+		blend_states[desc.clone()] = state;
+		return state;
+	}
+}
+
+std::shared_ptr<DepthStencilStateProvider> SWRenderGraphicContextProvider::create_depth_stencil_state(const DepthStencilStateDescription &desc)
+{
+	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> >::iterator it = depth_stencil_states.find(desc);
+	if (it != depth_stencil_states.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		std::shared_ptr<DepthStencilStateProvider> state(new SWRenderDepthStencilStateProvider(desc));
+		depth_stencil_states[desc.clone()] = state;
+		return state;
+	}
+}
+
+void SWRenderGraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *state)
+{
+	if (state)
+	{
+		SWRenderRasterizerStateProvider *swr_state = static_cast<SWRenderRasterizerStateProvider*>(state);
+
+/*		set_culled(swr_state->desc.get_culled());
+		enable_line_antialiasing(swr_state->desc.get_enable_line_antialiasing());
+		set_face_cull_mode(swr_state->desc.get_face_cull_mode());
+		set_face_fill_mode(swr_state->desc.get_face_fill_mode());
+		set_front_face(swr_state->desc.get_front_face());
+		scissor_enabled = swr_state->desc.get_enable_scissor();
+*/
+	}
+}
+
+void SWRenderGraphicContextProvider::set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask)
+{
+	if (state)
+	{
+		SWRenderBlendStateProvider *swr_state = static_cast<SWRenderBlendStateProvider*>(state);
+
+		bool red, green, blue, alpha;
+		BlendEquation equation_color, equation_alpha;
+		BlendFunc src, dest, src_alpha, dest_alpha;
+		swr_state->desc.get_color_write(red, green, blue, alpha);
+		swr_state->desc.get_blend_equation(equation_color, equation_alpha);
+		swr_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
+
+	/*	enable_color_write(red, green, blue, alpha);
+		enable_blending(swr_state->desc.is_blending_enabled());
+		set_blend_color(Colorf(blend_color));
+		set_blend_equation(equation_color, equation_alpha);
+		set_blend_function(src, dest, src_alpha, dest_alpha);
+		*/
+	}
+}
+
+void SWRenderGraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref)
+{
+	if (state)
+	{
+		SWRenderDepthStencilStateProvider *swr_state = static_cast<SWRenderDepthStencilStateProvider*>(state);
+
+		CompareFunction front; int front_ref; int front_mask;
+		CompareFunction back; int back_ref; int back_mask;
+		unsigned char front_facing_mask, back_facing_mask;
+		StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
+		StencilOp fail_back, pass_depth_fail_back, pass_depth_pass_back;
+		swr_state->desc.get_stencil_compare_front(front, front_ref, front_mask);
+		swr_state->desc.get_stencil_compare_back(back, back_ref, back_mask);
+		swr_state->desc.get_stencil_write_mask(front_facing_mask, back_facing_mask);
+		swr_state->desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
+		swr_state->desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
+
+	/*	enable_stencil_test(swr_state->desc.is_stencil_test_enabled());
+		set_stencil_compare_front(front, front_ref, front_mask);
+		set_stencil_compare_back(back, back_ref, back_mask);
+		set_stencil_write_mask(front_facing_mask, back_facing_mask);
+		set_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
+		set_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
+		enable_depth_test(swr_state->desc.is_depth_test_enabled());
+		enable_depth_write(swr_state->desc.is_depth_write_enabled());
+		set_depth_compare_function(swr_state->desc.get_depth_compare_function());
+	*/
+	}
 }
 
 void SWRenderGraphicContextProvider::set_program_object(StandardProgram standard_program)
