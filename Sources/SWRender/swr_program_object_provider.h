@@ -45,7 +45,7 @@ class SWRenderProgramObjectProvider : public ProgramObjectProvider
 public:
 	SWRenderProgramObjectProvider();
 	~SWRenderProgramObjectProvider();
-	void destroy();
+
 /// \}
 
 /// \name Attributes
@@ -68,11 +68,19 @@ public:
 	const std::vector<int> &get_bind_locations() const { return bind_locations; }
 	const std::vector<Vec4f> &get_attribute_defaults() const { return attribute_defaults; }
 	std::vector<Vec4f> &get_current_attribute_values() { return current_attribute_values; }
+	int get_uniform_buffer_size(int block_index) const;
+	int get_uniform_buffer_index(const std::string &block_name) const;
+	int get_storage_buffer_index(const std::string &name) const;
 /// \}
 
 /// \name Operations
 /// \{
 public:
+
+	void set_uniform1i(int location, int);
+	void set_uniform_buffer_index(int block_index, int bind_index);
+	void set_storage_buffer_index(int buffer_index, int bind_unit_index);
+
 	void set_program(SoftwareProgram *program);
 	void set_sprite_program(bool is_sprite_program_flag);
 	void attach(const ShaderObject &obj);

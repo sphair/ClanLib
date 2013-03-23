@@ -95,7 +95,6 @@ public:
 
 	void capture_mouse(bool capture);
 
-	void destroy();
 	void create(DisplayWindowSite *site, const DisplayWindowDescription &description);
 
 	void show_system_cursor();

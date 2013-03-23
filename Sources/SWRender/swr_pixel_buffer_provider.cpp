@@ -48,11 +48,6 @@ void SWRenderPixelBufferProvider::create(const void *data, int new_width, int ne
 	// Maybe create a normal PixelBuffer inside here to store the data?
 }
 
-void SWRenderPixelBufferProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderPixelBufferProvider Attributes:
 

@@ -54,11 +54,6 @@ void SWRenderRenderBufferProvider::create(int width, int height, TextureFormat i
 	buffer = PixelBuffer(width, height, tf_bgra8);
 }
 
-void SWRenderRenderBufferProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderRenderBufferProvider Implementation:
 

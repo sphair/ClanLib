@@ -47,9 +47,7 @@ public:
 	void create(ShaderType type, const std::string &source);
 
 	void create(ShaderType type, const std::vector<std::string> &sources);
-
-	void destroy();
-
+	void create(ShaderType type, const void *source, int source_size);
 
 /// \}
 /// \name Attributes

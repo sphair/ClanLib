@@ -48,9 +48,6 @@ public:
 
 	void create(void *data, int size, BufferUsage usage);
 
-	void destroy();
-
-
 /// \}
 /// \name Attributes
 /// \{
@@ -68,7 +65,9 @@ public:
 
 	void unlock();
 
-	void upload_data(int offset, void *data, int size);
+	void upload_data(GraphicContext &gc, int offset, const void *data, int size);
+	void copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
+	void copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size);
 
 
 /// \}

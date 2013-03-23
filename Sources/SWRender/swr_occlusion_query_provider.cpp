@@ -71,11 +71,6 @@ void SWRenderOcclusionQueryProvider::create()
 {
 }
 
-void SWRenderOcclusionQueryProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderOcclusionQueryProvider Implementation:
 

@@ -47,11 +47,6 @@ SWRenderProgramObjectProvider::~SWRenderProgramObjectProvider()
 {
 }
 
-void SWRenderProgramObjectProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderProgramObjectProvider Attributes:
 

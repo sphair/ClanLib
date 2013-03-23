@@ -58,13 +58,11 @@ public:
 /// \{
 
 public:
-	void destroy();
-
 	void generate_mipmap();
 
-	void create(int width, int height, TextureFormat internal_format, int depth);
+	void create(int width, int height, int depth, int array_size, TextureFormat texture_format, int levels);
 
-	PixelBuffer get_pixeldata(TextureFormat sized_format, int level) const;
+	PixelBuffer get_pixeldata(GraphicContext &gc, TextureFormat texture_format, int level) const;
 
 	void set_image(PixelBuffer &image, int level);
 
@@ -91,6 +89,7 @@ public:
 		const Rect &src_rect,
 		int level);
 
+	void copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect);
 	void copy_image_from(
 		int x,
 		int y,
@@ -110,6 +109,7 @@ public:
 		int level,
 		GraphicContextProvider *gc);
 
+	TextureProvider *create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 	void set_min_lod(double min_lod);
 
 	void set_max_lod(double max_lod);

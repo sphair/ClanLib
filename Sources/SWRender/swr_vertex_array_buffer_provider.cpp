@@ -51,11 +51,6 @@ void SWRenderVertexArrayBufferProvider::create(void *data, int size, BufferUsage
 {
 }
 
-void SWRenderVertexArrayBufferProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderVertexArrayBufferProvider Attributes:
 

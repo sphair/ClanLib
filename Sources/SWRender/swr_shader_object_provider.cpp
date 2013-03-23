@@ -51,11 +51,6 @@ void SWRenderShaderObjectProvider::create(ShaderType type, const std::vector<std
 {
 }
 
-void SWRenderShaderObjectProvider::destroy()
-{
-	delete this;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderShaderObjectProvider Attributes:
 
