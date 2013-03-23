@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{845972B5-1C53-4A31-BC1D-742A0623CF9E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SwrCompiler</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v110</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="PropertySheets\WindowsApplication.props" />
+    <Import Project="PropertySheets\Win32PlatformDefines.props" />
+    <Import Project="PropertySheets\WarningLevel.props" />
+    <Import Project="PropertySheets\StaticDebugRuntimeLibrary.props" />
+    <Import Project="PropertySheets\UseProgramDatabase.props" />
+    <Import Project="PropertySheets\UseBuildDirectory.props" />
+    <Import Project="PropertySheets\MulticoreCompile.props" />
+    <Import Project="PropertySheets\EnableSSE2.props" />
+    <Import Project="PropertySheets\DisableOptimizations.props" />
+    <Import Project="PropertySheets\UseLLVM.props" />
+    <Import Project="PropertySheets\LocalIncludes.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="PropertySheets\WindowsApplication.props" />
+    <Import Project="PropertySheets\Win32PlatformDefines.props" />
+    <Import Project="PropertySheets\WarningLevel.props" />
+    <Import Project="PropertySheets\StaticReleaseRuntimeLibrary.props" />
+    <Import Project="PropertySheets\UseProgramDatabase.props" />
+    <Import Project="PropertySheets\UseBuildDirectory.props" />
+    <Import Project="PropertySheets\MulticoreCompile.props" />
+    <Import Project="PropertySheets\EnableSSE2.props" />
+    <Import Project="PropertySheets\OptimizeForSpeed.props" />
+    <Import Project="PropertySheets\UseLLVM.props" />
+    <Import Project="PropertySheets\LocalIncludes.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>precomp.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="GLSL\AST\glsl_ast_garbage_collector.cpp" />
+    <ClCompile Include="GLSL\CodeGen\glsl_codegen.cpp" />
+    <ClCompile Include="GLSL\CodeGen\glsl_expression_codegen.cpp" />
+    <ClCompile Include="GLSL\CodeGen\glsl_operand.cpp" />
+    <ClCompile Include="GLSL\CodeGen\glsl_statement_codegen.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\glsl_fixed_function.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\glsl_program.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_bool.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_float.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_float_ptr.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_for_block.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_function.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_if_block.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_int.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_scope.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_struct_type.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_ubyte.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_ubyte_ptr.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_value.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec16ub.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec4f.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec4f_ptr.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec4i.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec4i_ptr.cpp" />
+    <ClCompile Include="GLSL\FixedFunction\SSA\ssa_vec8s.cpp" />
+    <ClCompile Include="GLSL\Frontend\glsl_frontend.cpp" />
+    <ClCompile Include="GLSL\Lex\glsl_tokenizer.cpp" />
+    <ClCompile Include="GLSL\Parse\glsl_parser.cpp" />
+    <ClCompile Include="precomp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="program.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GLSL\AST\glsl_ast.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_declaration.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_expression.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_function.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_garbage_collector.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_node.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_statement.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_translation_unit.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_type.h" />
+    <ClInclude Include="GLSL\AST\glsl_ast_variable.h" />
+    <ClInclude Include="GLSL\AST\glsl_expression_visitor.h" />
+    <ClInclude Include="GLSL\AST\glsl_statement_visitor.h" />
+    <ClInclude Include="GLSL\CodeGen\glsl_codegen.h" />
+    <ClInclude Include="GLSL\CodeGen\glsl_expression_codegen.h" />
+    <ClInclude Include="GLSL\CodeGen\glsl_name_scope.h" />
+    <ClInclude Include="GLSL\CodeGen\glsl_operand.h" />
+    <ClInclude Include="GLSL\CodeGen\glsl_statement_codegen.h" />
+    <ClInclude Include="GLSL\FixedFunction\glsl_fixed_function.h" />
+    <ClInclude Include="GLSL\FixedFunction\glsl_program.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_barycentric_weight.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_bool.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_float.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_float_ptr.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_for_block.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_function.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_if_block.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_int.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_phi.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixelformat4f.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixelformat4ub.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixelformat4ub_argb_rev.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixelformat4ub_rev.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixels.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_pixeltype.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_scope.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_stack.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_struct_type.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_ubyte.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_ubyte_ptr.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_value.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec16ub.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec4f.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec4f_ptr.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec4i.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec4i_ptr.h" />
+    <ClInclude Include="GLSL\FixedFunction\SSA\ssa_vec8s.h" />
+    <ClInclude Include="GLSL\Frontend\glsl_frontend.h" />
+    <ClInclude Include="GLSL\Frontend\glsl_frontend_impl.h" />
+    <ClInclude Include="GLSL\Lex\glsl_token.h" />
+    <ClInclude Include="GLSL\Lex\glsl_tokenizer.h" />
+    <ClInclude Include="GLSL\Parse\glsl_parser.h" />
+    <ClInclude Include="llvm_include.h" />
+    <ClInclude Include="precomp.h" />
+    <ClInclude Include="program.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
