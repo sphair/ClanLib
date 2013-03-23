@@ -32,6 +32,9 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 class CL_PixelCommandPixels : public CL_PixelCommand
 {
 public:
@@ -49,3 +52,5 @@ private:
 	CL_Rect src_rect;
 	CL_Colorf primary_color;
 };
+
+}

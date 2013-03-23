@@ -31,6 +31,9 @@
 #include "API/SWRender/setup_swrender.h"
 #include "API/SWRender/swr_target.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SetupSWRender Construction:
 
@@ -67,3 +70,4 @@ void CL_SetupSWRender::set_current()
 	cl_gdi_target->set_current();
 }
 
+}

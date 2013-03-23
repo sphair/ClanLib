@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "API/SWRender/pixel_thread_context.h"
 
+namespace clan
+{
+
 CL_PixelThreadContext::CL_PixelThreadContext(int core, int num_cores)
 : core(core),
   num_cores(num_cores),
@@ -41,4 +44,6 @@ CL_PixelThreadContext::CL_PixelThreadContext(int core, int num_cores)
 	pixelbuffer_white = CL_PixelBuffer(1, 1, cl_argb8, &white);
 	for (int i=0; i<max_samplers; i++)
 		samplers[i].set(pixelbuffer_white);
+}
+
 }

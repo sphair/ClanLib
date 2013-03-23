@@ -28,6 +28,9 @@
 
 #pragma once
 
+namespace clan
+{
+
 
 #include "API/Display/TargetProviders/input_device_provider.h"
 
@@ -49,19 +52,19 @@ public:
 /// \{
 
 public:
-	CL_String get_name() const;
+	std::string get_name() const;
 
-	CL_String get_device_name() const;
+	std::string get_device_name() const;
 
 	CL_InputDevice::Type get_type() const;
 
-	CL_String get_key_name(int id) const;
+	std::string get_key_name(int id) const;
 
 //	bool supports_keyid_mapping() const { return false; }
 
-//	CL_String keyid_to_string(int keycode) const { return CL_String(); }
+//	std::string keyid_to_string(int keycode) const { return std::string(); }
 
-//	int string_to_keyid(const CL_String &str) const { return 0; }
+//	int string_to_keyid(const std::string &str) const { return 0; }
 
 	bool get_keycode(int keycode) const;
 
@@ -97,3 +100,4 @@ private:
 };
 
 
+}

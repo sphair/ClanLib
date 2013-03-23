@@ -33,6 +33,9 @@
 
 #include "../Display/Image/pixel_buffer.h"
 
+namespace clan
+{
+
 /// \brief Frame buffer or texture data for pixel commands
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
@@ -65,4 +68,6 @@ public:
 		}
 	}
 };
+}
+
 /// \}

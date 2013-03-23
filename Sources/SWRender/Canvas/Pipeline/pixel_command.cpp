@@ -30,6 +30,9 @@
 #include "API/SWRender/pixel_command.h"
 #include "pixel_pipeline.h"
 
+namespace clan
+{
+
 void *CL_PixelCommand::operator new(size_t s, CL_PixelPipeline *p)
 {
 	char *d = (char *) p->alloc_command(s+sizeof(CL_PixelPipeline *));
@@ -68,4 +71,6 @@ int CL_PixelCommand::find_first_line_for_core(int y_start, int core, int num_cor
 	if (y < y_start)
 		y += num_cores;
 	return y;
+}
+
 }

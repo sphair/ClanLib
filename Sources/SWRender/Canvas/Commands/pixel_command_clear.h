@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_command.h"
 #include "API/Display/2D/color.h"
 
+namespace clan
+{
+
 class CL_PixelCommandClear : public CL_PixelCommand
 {
 public:
@@ -40,3 +43,5 @@ public:
 private:
 	CL_Colorf color;
 };
+
+}

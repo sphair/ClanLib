@@ -28,8 +28,10 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/display_target_provider.h"
+
+namespace clan
+{
 
 class CL_SWRenderTargetProvider : public CL_DisplayTargetProvider
 {
@@ -67,4 +69,5 @@ private:
 /// \}
 };
 
+}
 

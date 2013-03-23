@@ -30,6 +30,9 @@
 
 #include <emmintrin.h>
 
+namespace clan
+{
+
 class CL_PixelBicubicRenderer
 {
 public:
@@ -82,3 +85,5 @@ private:
 	int core;
 	int num_cores;
 };
+
+}

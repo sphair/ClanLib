@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_command.h"
 #include "API/Core/Math/rect.h"
 
+namespace clan
+{
+
 class CL_PixelCommandSetClipRect : public CL_PixelCommand
 {
 public:
@@ -40,3 +43,5 @@ public:
 private:
 	CL_Rect rect;
 };
+
+}

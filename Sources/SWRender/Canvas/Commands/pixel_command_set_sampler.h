@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_command.h"
 #include "API/SWRender/pixel_buffer_data.h"
 
+namespace clan
+{
+
 class CL_PixelCommandSetSampler : public CL_PixelCommand
 {
 public:
@@ -42,3 +45,5 @@ private:
 	int index;
 	CL_PixelBufferData sampler;
 };
+
+}

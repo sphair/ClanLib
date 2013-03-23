@@ -30,6 +30,9 @@
 #include "pixel_command_set_cliprect.h"
 #include "API/SWRender/pixel_thread_context.h"
 
+namespace clan
+{
+
 CL_PixelCommandSetClipRect::CL_PixelCommandSetClipRect(const CL_Rect &rect)
 : rect(rect)
 {
@@ -38,4 +41,6 @@ CL_PixelCommandSetClipRect::CL_PixelCommandSetClipRect(const CL_Rect &rect)
 void CL_PixelCommandSetClipRect::run(CL_PixelThreadContext *context)
 {
 	context->clip_rect = rect;
+}
+
 }

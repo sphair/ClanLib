@@ -37,6 +37,9 @@
 #include "API/SWRender/pixel_command.h"
 #include <memory>
 
+namespace clan
+{
+
 class CL_PixelCommand;
 
 class CL_PixelPipeline
@@ -99,3 +102,5 @@ private:
 	} profiler;
 	#endif
 };
+
+}

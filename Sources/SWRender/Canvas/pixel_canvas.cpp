@@ -41,6 +41,9 @@
 #include "Commands/pixel_command_triangle.h"
 #include "../swr_frame_buffer_provider.h"
 
+namespace clan
+{
+
 CL_PixelCanvas::CL_PixelCanvas(const CL_Size &size)
 : primary_colorbuffer0(size.width, size.height, cl_argb8),
   framebuffer_set(false), cliprect_set(false),
@@ -222,4 +225,6 @@ void CL_PixelCanvas::modified_framebuffer()
 		set_clip_rect(rect);
 	else
 		pipeline->queue(new(pipeline.get()) CL_PixelCommandSetClipRect(clip_rect));
+}
+
 }

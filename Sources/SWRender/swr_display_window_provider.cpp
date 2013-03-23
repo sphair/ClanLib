@@ -43,6 +43,9 @@
 #include "Display/X11/cursor_provider_x11.h"
 #endif
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderDisplayWindowProvider Construction:
 
@@ -129,7 +132,7 @@ CL_Size CL_SWRenderDisplayWindowProvider::get_maximum_size( bool client_area/*=f
 	return window.get_maximum_size(client_area);
 }
 
-CL_String CL_SWRenderDisplayWindowProvider::get_title() const
+std::string CL_SWRenderDisplayWindowProvider::get_title() const
 {
 	return window.get_title();
 }
@@ -224,7 +227,7 @@ void CL_SWRenderDisplayWindowProvider::hide_system_cursor()
 	window.hide_system_cursor();
 }
 
-void CL_SWRenderDisplayWindowProvider::set_title(const CL_StringRef &new_title)
+void CL_SWRenderDisplayWindowProvider::set_title(const std::string &new_title)
 {
 	window.set_title(new_title);
 }
@@ -351,7 +354,7 @@ void CL_SWRenderDisplayWindowProvider::update(const CL_Rect &rect)
 #endif
 }
 
-void CL_SWRenderDisplayWindowProvider::set_clipboard_text(const CL_StringRef &text)
+void CL_SWRenderDisplayWindowProvider::set_clipboard_text(const std::string &text)
 {
 	window.set_clipboard_text(text);
 }
@@ -361,7 +364,7 @@ void CL_SWRenderDisplayWindowProvider::set_clipboard_image(const CL_PixelBuffer 
 	window.set_clipboard_image(buf);
 }
 
-CL_String CL_SWRenderDisplayWindowProvider::get_clipboard_text() const
+std::string CL_SWRenderDisplayWindowProvider::get_clipboard_text() const
 {
 	return window.get_clipboard_text();
 }
@@ -472,3 +475,4 @@ void CL_SWRenderDisplayWindowProvider::draw_image(const CL_Rect &dest, const CL_
 
 #endif
 
+}

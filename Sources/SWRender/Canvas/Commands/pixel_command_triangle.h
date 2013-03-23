@@ -32,6 +32,9 @@
 #include "API/Core/Math/vec2.h"
 #include "API/Core/Math/vec4.h"
 
+namespace clan
+{
+
 class CL_PixelCommandTriangle : public CL_PixelCommand
 {
 public:
@@ -44,3 +47,5 @@ private:
 	CL_Vec2f texcoords[3];
 	int sampler;
 };
+
+}

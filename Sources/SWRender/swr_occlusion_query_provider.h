@@ -28,8 +28,10 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/occlusion_query_provider.h"
+
+namespace clan
+{
 
 class CL_SWRenderOcclusionQueryProvider : public CL_OcclusionQueryProvider
 {
@@ -73,5 +75,7 @@ public:
 private:
 /// \}
 };
+
+}
 
 

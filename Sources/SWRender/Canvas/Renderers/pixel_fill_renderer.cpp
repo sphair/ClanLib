@@ -31,6 +31,10 @@
 #include "API/Display/2D/color.h"
 #include <emmintrin.h>
 
+namespace clan
+{
+
+
 CL_PixelFillRenderer::CL_PixelFillRenderer()
 : core(0), num_cores(1)
 {
@@ -175,4 +179,6 @@ int CL_PixelFillRenderer::find_first_line_for_core(int y_start, int core, int nu
 	if (y < y_start)
 		y += num_cores;
 	return y;
+}
+
 }

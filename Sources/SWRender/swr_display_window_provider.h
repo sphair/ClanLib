@@ -37,6 +37,9 @@
 #include "Display/X11/x11_window.h"
 #endif
 
+namespace clan
+{
+
 class CL_SWRenderDisplayWindowProvider : public CL_DisplayWindowProvider
 {
 /// \name Construction
@@ -57,7 +60,7 @@ public:
 	bool is_maximized() const;
 	bool is_visible() const;
 	bool is_fullscreen() const { return false; } // FIXME: real implementation
-	CL_String get_title() const;
+	std::string get_title() const;
 	CL_Size get_minimum_size(bool client_area=false) const;
 	CL_Size get_maximum_size(bool client_area=false) const;
 
@@ -78,7 +81,7 @@ public:
 
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
-	CL_String get_clipboard_text() const;
+	std::string get_clipboard_text() const;
 	CL_PixelBuffer get_clipboard_image() const;
 
 /// \}
@@ -99,7 +102,7 @@ public:
 	void set_cursor(CL_StandardCursor type);
 	void hide_system_cursor();
 
-	void set_title(const CL_StringRef &new_title);
+	void set_title(const std::string &new_title);
 	void set_position(const CL_Rect &pos, bool client_area);
 	void set_size(int width, int height, bool client_area);
 	void set_minimum_size(int width, int height, bool client_area);
@@ -119,7 +122,7 @@ public:
 
 	void update(const CL_Rect &rect);
 
-	void set_clipboard_text(const CL_StringRef &text);
+	void set_clipboard_text(const std::string &text);
 	void set_clipboard_image(const CL_PixelBuffer &buf);
 
 	void request_repaint(const CL_Rect &rect);
@@ -155,3 +158,5 @@ private:
 	int swap_interval;
 /// \}
 };
+
+}

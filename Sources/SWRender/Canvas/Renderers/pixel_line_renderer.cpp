@@ -34,6 +34,9 @@
 #include "API/Core/Math/vec2.h"
 #include "API/Core/Math/line_segment.h"
 
+namespace clan
+{
+
 CL_PixelLineRenderer::CL_PixelLineRenderer()
 : dest(0), dest_width(0), dest_height(0), core(0), num_cores(1)
 {
@@ -225,4 +228,6 @@ void CL_PixelLineRenderer::draw_line(const CL_LineSegment2 &line_dest, const CL_
 
 		}
 	}
+}
+
 }

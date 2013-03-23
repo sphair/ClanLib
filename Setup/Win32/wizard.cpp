@@ -225,7 +225,13 @@ Workspace Wizard::create_workspace()
 		libs_list_shared,
 		libs_list_release,
 		libs_list_debug);
-
+	Project clanSWRender(
+		"SWRender",
+		"clanSWRender",
+		"swrender.h",
+		libs_list_shared,
+		libs_list_release,
+		libs_list_debug);
 	Project clanGL(
 		"GL",
 		"clanGL",
@@ -314,6 +320,7 @@ Workspace Wizard::create_workspace()
 	workspace.projects.push_back(clanNetwork);
 	workspace.projects.push_back(clanDisplay);
 	workspace.projects.push_back(clanSound);
+	workspace.projects.push_back(clanSWRender);
 	workspace.projects.push_back(clanGL);
 	workspace.projects.push_back(clanD3D);
 	workspace.projects.push_back(clanScene3D);

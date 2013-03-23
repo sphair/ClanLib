@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_element_array_buffer_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderElementArrayBufferProvider Construction:
 
@@ -78,3 +81,5 @@ void CL_SWRenderElementArrayBufferProvider::upload_data(int offset, void *data, 
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderElementArrayBufferProvider Implementation:
+
+}

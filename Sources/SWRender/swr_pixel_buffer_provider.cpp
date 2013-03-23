@@ -29,6 +29,9 @@
 #include "SWRender/precomp.h"
 #include "swr_pixel_buffer_provider.h"
 
+namespace clan
+{
+
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderPixelBufferProvider Construction:
 
@@ -75,3 +78,5 @@ void CL_SWRenderPixelBufferProvider::upload_data(const CL_Rect &dest_rect, const
 
 /////////////////////////////////////////////////////////////////////////////
 // CL_SWRenderPixelBufferProvider Implementation:
+
+}

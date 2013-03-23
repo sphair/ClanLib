@@ -31,6 +31,9 @@
 #include "API/SWRender/pixel_command.h"
 #include "API/Display/Image/pixel_buffer.h"
 
+namespace clan
+{
+
 class CL_PixelCommandBicubic : public CL_PixelCommand
 {
 public:
@@ -44,3 +47,5 @@ private:
 	int zoom_denominator;
 	CL_PixelBuffer image;
 };
+
+}

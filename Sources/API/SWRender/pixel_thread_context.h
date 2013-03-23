@@ -37,6 +37,9 @@
 #include "../Display/2D/color.h"
 #include "api_swrender.h"
 
+namespace clan
+{
+
 /// \brief Thread specific rendering data for pixel commands
 ///
 /// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
@@ -64,5 +67,7 @@ public:
 	CL_BlendFunc cur_blend_dest_alpha;
 	CL_Colorf cur_blend_color;
 };
+
+}
 
 /// \}

@@ -30,6 +30,9 @@
 #include "pixel_command_set_framebuffer.h"
 #include "API/SWRender/pixel_thread_context.h"
 
+namespace clan
+{
+
 CL_PixelCommandSetFrameBuffer::CL_PixelCommandSetFrameBuffer(const CL_PixelBufferData &colorbuffer0)
 : colorbuffer0(colorbuffer0)
 {
@@ -38,4 +41,6 @@ CL_PixelCommandSetFrameBuffer::CL_PixelCommandSetFrameBuffer(const CL_PixelBuffe
 void CL_PixelCommandSetFrameBuffer::run(CL_PixelThreadContext *context)
 {
 	context->colorbuffer0 = colorbuffer0;
+}
+
 }

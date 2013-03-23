@@ -31,6 +31,9 @@
 
 #include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
 
+namespace clan
+{
+
 class CL_SWRenderVertexArrayBufferProvider : public CL_VertexArrayBufferProvider
 {
 /// \name Construction
@@ -76,4 +79,5 @@ private:
 /// \}
 };
 
+}
 
