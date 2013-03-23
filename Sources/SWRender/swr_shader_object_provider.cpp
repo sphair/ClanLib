@@ -71,7 +71,7 @@ bool SWRenderShaderObjectProvider::get_compile_status() const
 
 ShaderType SWRenderShaderObjectProvider::get_shader_type() const
 {
-	return cl_shadertype_vertex;
+	return shadertype_vertex;
 }
 
 std::string SWRenderShaderObjectProvider::get_info_log() const
