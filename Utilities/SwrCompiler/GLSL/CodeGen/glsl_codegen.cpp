@@ -100,7 +100,7 @@ llvm::Function *GlslCodeGen::create_function(GlslAstFunction *node)
 	if (func == 0)
 	{
 		func = llvm::Function::Create(func_type, llvm::Function::PrivateLinkage, function_name.c_str(), module);
-		func->addFnAttr(llvm::Attribute::AlwaysInline);
+		func->addFnAttr(llvm::Attributes::AlwaysInline);
 	}
 	return func;
 }

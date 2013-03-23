@@ -16,4 +16,3 @@ int Program::main(const std::vector<std::string> &args)
 	window.display_close_message();
 	return 0;
 }
-

@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "ssa_vec4i_ptr.h"
 #include "ssa_scope.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 using namespace clan;
 

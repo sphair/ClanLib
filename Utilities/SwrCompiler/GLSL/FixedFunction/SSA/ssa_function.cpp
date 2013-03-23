@@ -4,7 +4,7 @@
 #include "ssa_int.h"
 #include "ssa_scope.h"
 #include "ssa_value.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 using namespace clan;
 
@@ -43,7 +43,7 @@ void SSAFunction::create_private()
 	{
 		llvm::FunctionType *function_type = llvm::FunctionType::get(return_type, parameters, false);
 		func = llvm::Function::Create(function_type, llvm::Function::PrivateLinkage, name.c_str(), SSAScope::module());
-		func->addFnAttr(llvm::Attribute::AlwaysInline);
+		func->addFnAttr(llvm::Attributes::AlwaysInline);
 	}
 	llvm::BasicBlock *entry = llvm::BasicBlock::Create(SSAScope::context(), "entry", func);
 	SSAScope::builder().SetInsertPoint(entry);

@@ -18,10 +18,10 @@ GlslProgram::GlslProgram()
 	engine_builder.setRelocationModel(llvm::Reloc::Static);
 	_engine = engine_builder.create();
 	if (_engine == 0)
-		throw Exception(cl_format("Failed to create LLVM execution engine: %1", error_string));
+		throw Exception(string_format("Failed to create LLVM execution engine: %1", error_string));
 
 	pass_manager = new llvm::PassManager();
-	pass_manager->add(new llvm::TargetData(*_engine->getTargetData()));
+	pass_manager->add(new llvm::DataLayout(*_engine->getDataLayout()));
 
 	llvm::PassManagerBuilder pass_manager_builder;
 	pass_manager_builder.OptLevel = 3;

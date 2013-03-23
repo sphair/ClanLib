@@ -53,7 +53,7 @@ std::unique_ptr<GlslAstTranslationUnit> GlslParser::parse()
 		}
 	}
 
-	return cl_move(ast);
+	return std::move(ast);
 }
 
 GlslParser::FunctionOrGlobalPreparse GlslParser::preparse_function_or_global()

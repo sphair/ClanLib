@@ -2,7 +2,7 @@
 #pragma once
 
 #include "ssa_bool.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 class SSAForBlock
 {

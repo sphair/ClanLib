@@ -12,7 +12,7 @@
 #include "SSA/ssa_pixels.h"
 #include "SSA/ssa_stack.h"
 #include "SSA/ssa_barycentric_weight.h"
-#include "GLSL/llvm_include.h"
+#include "llvm_include.h"
 
 class GlslProgram;
 class GlslCodeGen;
