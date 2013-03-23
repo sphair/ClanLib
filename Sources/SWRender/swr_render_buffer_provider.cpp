@@ -51,7 +51,7 @@ SWRenderRenderBufferProvider::~SWRenderRenderBufferProvider()
 
 void SWRenderRenderBufferProvider::create(int width, int height, TextureFormat internal_format, int multisample_samples)
 {
-	buffer = PixelBuffer(width, height, cl_argb8);
+	buffer = PixelBuffer(width, height, tf_bgra8);
 }
 
 void SWRenderRenderBufferProvider::destroy()

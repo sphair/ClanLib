@@ -37,7 +37,7 @@ namespace clan
 // SWRenderTextureProvider Construction:
 
 SWRenderTextureProvider::SWRenderTextureProvider()
-: wrap_s(cl_wrap_repeat), wrap_t(cl_wrap_repeat), min_filter(cl_filter_nearest), mag_filter(cl_filter_nearest)
+: wrap_s(wrap_repeat), wrap_t(wrap_repeat), min_filter(filter_nearest), mag_filter(filter_nearest)
 {
 }
 
@@ -64,7 +64,7 @@ void SWRenderTextureProvider::create(int width, int height, TextureFormat intern
 {
 	if (depth != 1)
 		throw Exception("Unsupported depth specified for GDI target");
-	image = PixelBuffer(width, height, cl_argb8);
+	image = PixelBuffer(width, height, tf_bgra8);
 }
 
 PixelBuffer SWRenderTextureProvider::get_pixeldata(TextureFormat sized_format, int level) const
@@ -78,7 +78,7 @@ void SWRenderTextureProvider::set_image(PixelBuffer &new_image, int level)
 {
 	if (level != 0)
 		throw Exception("Unsupported mipmap level specified for GDI target");
-	image = new_image.to_format(cl_argb8);
+	image = new_image.to_format(tf_bgra8);
 }
 
 void SWRenderTextureProvider::set_cube_map(
@@ -113,7 +113,7 @@ void SWRenderTextureProvider::set_subimage(
 	if (level != 0)
 		throw Exception("Unsupported mipmap level specified for GDI target");
 
-	PixelBuffer temp_source(src_rect.get_width(), src_rect.get_height(), cl_argb8);
+	PixelBuffer temp_source(src_rect.get_width(), src_rect.get_height(), tf_bgra8);
 	source_image.convert(temp_source, Rect(0, 0, temp_source.get_width(), temp_source.get_height()), src_rect);
 
 	int dest_buffer_width = image.get_width();
