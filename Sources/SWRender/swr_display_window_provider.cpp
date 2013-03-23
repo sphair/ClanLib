@@ -199,7 +199,7 @@ void SWRenderDisplayWindowProvider::show_system_cursor()
 	window.show_system_cursor();
 }
 
-CursorProvider *SWRenderDisplayWindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *SWRenderDisplayWindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
 #ifdef WIN32
 	return new CursorProvider_Win32(sprite_description, hotspot);
