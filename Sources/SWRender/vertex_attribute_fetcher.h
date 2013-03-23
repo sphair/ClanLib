@@ -51,10 +51,10 @@ public:
 			result[i] = Vec2f(fetch(indexes[i], default_value));
 	}
 
-	virtual void fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
+	virtual void fetch(float *result, int *indexes, int num, const Vec4f &default_value = Vec4f())
 	{
 		for (int i = 0; i < num; i++)
-			result[i] = Vec1f(fetch(indexes[i], default_value));
+			result[i] = float(fetch(indexes[i], default_value));
 	}
 
 protected:
@@ -185,7 +185,7 @@ public:
 	Vec4f fetch(int index, const Vec4f &default_value = Vec4f());
 	void fetch(Vec4f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
 	void fetch(Vec2f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
-	void fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
+	void fetch(float *result, int *indexes, int num, const Vec4f &default_value = Vec4f());
 };
 
 inline VertexAttributeFetcherPtr::VertexAttributeFetcherPtr()
@@ -223,31 +223,31 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_arra
 		{
 			switch (prim_array->attributes[bound_attribute_index].type)
 			{
-			case cl_type_unsigned_byte:
+			case type_unsigned_byte:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueUnsignedByte));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueUnsignedByte();
 				break;
-			case cl_type_unsigned_short:
+			case type_unsigned_short:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueUnsignedShort));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueUnsignedShort();
 				break;
-			case cl_type_unsigned_int:
+			case type_unsigned_int:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueUnsignedInt));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueUnsignedInt();
 				break;
-			case cl_type_byte:
+			case type_byte:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueByte));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueByte();
 				break;
-			case cl_type_short:
+			case type_short:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueShort));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueShort();
 				break;
-			case cl_type_int:
+			case type_int:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueInt));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueInt();
 				break;
-			case cl_type_float:
+			case type_float:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherSingleValueFloat));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherSingleValueFloat();
 				break;
@@ -261,31 +261,31 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_arra
 		{
 			switch (prim_array->attributes[bound_attribute_index].type)
 			{
-			case cl_type_unsigned_byte:
+			case type_unsigned_byte:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayUnsignedByte));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayUnsignedByte();
 				break;
-			case cl_type_unsigned_short:
+			case type_unsigned_short:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayUnsignedShort));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayUnsignedShort();
 				break;
-			case cl_type_unsigned_int:
+			case type_unsigned_int:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayUnsignedInt));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayUnsignedInt();
 				break;
-			case cl_type_byte:
+			case type_byte:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayByte));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayByte();
 				break;
-			case cl_type_short:
+			case type_short:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayShort));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayShort();
 				break;
-			case cl_type_int:
+			case type_int:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayInt));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayInt();
 				break;
-			case cl_type_float:
+			case type_float:
 				throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayFloat));
 				fetcher = new (&alloc_buffer) VertexAttributeFetcherArrayFloat();
 				break;
@@ -343,13 +343,13 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 			{
 				switch (vertex_data.type)
 				{
-				case cl_type_unsigned_byte: stride = sizeof(unsigned char) * vertex_data.size; break;
-				case cl_type_unsigned_short: stride = sizeof(unsigned short) * vertex_data.size; break;
-				case cl_type_unsigned_int: stride = sizeof(unsigned int) * vertex_data.size; break;
-				case cl_type_byte: stride = sizeof(char) * vertex_data.size; break;
-				case cl_type_short: stride = sizeof(short) * vertex_data.size; break;
-				case cl_type_int: stride = sizeof(int) * vertex_data.size; break;
-				case cl_type_float: stride = sizeof(float) * vertex_data.size; break;
+				case type_unsigned_byte: stride = sizeof(unsigned char) * vertex_data.size; break;
+				case type_unsigned_short: stride = sizeof(unsigned short) * vertex_data.size; break;
+				case type_unsigned_int: stride = sizeof(unsigned int) * vertex_data.size; break;
+				case type_byte: stride = sizeof(char) * vertex_data.size; break;
+				case type_short: stride = sizeof(short) * vertex_data.size; break;
+				case type_int: stride = sizeof(int) * vertex_data.size; break;
+				case type_float: stride = sizeof(float) * vertex_data.size; break;
 				default: break;
 				}
 			}
@@ -503,7 +503,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(Vec2f *result, int *indexes,
 	}
 }
 
-inline void VertexAttributeFetcherArrayFloat::fetch(Vec1f *result, int *indexes, int num, const Vec4f &default_value)
+inline void VertexAttributeFetcherArrayFloat::fetch(float *result, int *indexes, int num, const Vec4f &default_value)
 {
 	for (int i = 0; i < num; i++)
 	{
