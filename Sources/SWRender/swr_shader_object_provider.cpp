@@ -51,6 +51,10 @@ void SWRenderShaderObjectProvider::create(ShaderType type, const std::vector<std
 {
 }
 
+void SWRenderShaderObjectProvider::create(ShaderType type, const void *source, int source_size)
+{
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderShaderObjectProvider Attributes:
 

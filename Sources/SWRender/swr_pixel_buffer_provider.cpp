@@ -69,6 +69,31 @@ void SWRenderPixelBufferProvider::upload_data(GraphicContext &gc, const Rect &de
 {
 }
 
+int SWRenderPixelBufferProvider::get_pitch() const
+{
+	//FIXME: Stub
+	return 0;
+}
+Size SWRenderPixelBufferProvider::get_size() const
+{
+	//FIXME: Stub
+	return Size();
+
+}
+
+bool SWRenderPixelBufferProvider::is_gpu() const
+{
+	//FIXME: Stub
+	return false;
+}
+
+TextureFormat SWRenderPixelBufferProvider::get_format() const
+{
+	//FIXME: Stub
+	return tf_rgba8;
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderPixelBufferProvider Implementation:
 

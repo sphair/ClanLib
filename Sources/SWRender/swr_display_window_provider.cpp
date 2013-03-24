@@ -383,6 +383,22 @@ void SWRenderDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	window.set_small_icon(image);
 }
+void SWRenderDisplayWindowProvider::make_current() const
+{
+	//FIXME: Stub
+}
+void SWRenderDisplayWindowProvider::set_cursor_handle(HCURSOR cursor)
+{
+	//FIXME: Stub
+}
+void SWRenderDisplayWindowProvider::enable_alpha_channel(const Rect &blur_rect)
+{
+	//FIXME: Stub
+}
+void SWRenderDisplayWindowProvider::extend_frame_into_client_area(int height)
+{
+	//FIXME: Stub
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderDisplayWindowProvider Implementation:
