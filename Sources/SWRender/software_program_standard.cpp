@@ -37,7 +37,6 @@ namespace clan
 {
 
 SoftwareProgram_Standard::SoftwareProgram_Standard()
-: modelview(Mat4f::identity())
 {
 }
 
@@ -82,8 +81,6 @@ void SoftwareProgram_Standard::set_uniform(const std::string &name, const Vec4f 
 
 void SoftwareProgram_Standard::set_uniform_matrix(const std::string &name, const Mat4f &mat)
 {
-	if (name == "cl_ModelView")
-		set_modelview(mat);
 }
 
 PixelCommand *SoftwareProgram_Standard::draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values)
@@ -113,14 +110,8 @@ PixelCommand *SoftwareProgram_Standard::draw_line(PixelPipeline *pipeline, const
 	return new(pipeline) PixelCommandLine(init_points, init_primcolor, init_texcoords, init_sampler);
 }
 
-void SoftwareProgram_Standard::set_modelview(const Mat4f &new_modelview)
-{
-	modelview = new_modelview;
-}
-
 Vec2f SoftwareProgram_Standard::transform(const Vec4f &vertex) const
 {
-	Vec4f v = modelview * vertex;
-	return Vec2f(v.x, v.y);
+	return Vec2f(vertex.x, vertex.y);
 }
 }

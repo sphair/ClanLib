@@ -51,10 +51,7 @@ public:
 	Vec2f transform(const Vec4f &vertex) const;
 
 private:
-	const Mat4f &get_modelview() const { return modelview; }
-	void set_modelview(const Mat4f &new_modelview);
 
-	Mat4f modelview;
 };
 
 
