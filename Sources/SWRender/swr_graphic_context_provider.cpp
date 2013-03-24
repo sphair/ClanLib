@@ -378,116 +378,14 @@ void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, 
 void SWRenderGraphicContextProvider::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
 {
 }
-
-/* FIXME
-void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned int *indices)
-{
-	if (type == type_triangles)
-	{
-		if (is_sprite_program)
-		{
-			for (int i = 0; i+2 < count; i+=6)
-				draw_sprite(indices[i], indices[i+1], indices[i+2]);
-		}
-		else
-		{
-			for (int i = 0; i+2 < count; i+=3)
-				draw_triangle(indices[i], indices[i+1], indices[i+2]);
-		}
-	}
-	else if (type == type_lines)
-	{
-			for (int i = 0; i+1 < count; i+=2)
-				draw_line(indices[i], indices[i+1]);
-	}
-	else if (type == type_line_loop)
-	{
-		int i;
-		
-		for (i = 0; i < count-1; i++)
-		{
-			draw_line(indices[i], indices[i+1]);
-		}
-		draw_line(indices[i], indices[0]);
-	}
-}
-
-void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned short *indices)
-{
-	if (type == type_triangles)
-	{
-		if (is_sprite_program)
-		{
-			for (int i = 0; i+2 < count; i+=6)
-				draw_sprite(indices[i], indices[i+1], indices[i+2]);
-		}
-		else
-		{
-			for (int i = 0; i+2 < count; i+=3)
-				draw_triangle(indices[i], indices[i+1], indices[i+2]);
-		}
-	}
-	else if (type == type_lines)
-	{
-		for (int i = 0; i+1 < count; i+=2)
-			draw_line(indices[i], indices[i+1]);
-	}
-	else if (type == type_line_loop)
-	{
-		int i;
-		
-		for (i = 0; i < count-1; i++)
-		{
-			draw_line(indices[i], indices[i+1]);
-		}
-		draw_line(indices[i], indices[0]);
-	}
-}
-
-void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned char *indices)
-{
-	if (type == type_triangles)
-	{
-		if (is_sprite_program)
-		{
-			for (int i = 0; i+2 < count; i+=6)
-				draw_sprite(indices[i], indices[i+1], indices[i+2]);
-		}
-		else
-		{
-			for (int i = 0; i+2 < count; i+=3)
-				draw_triangle(indices[i], indices[i+1], indices[i+2]);
-		}
-	}
-	else if (type == type_lines)
-	{
-		for (int i = 0; i+1 < count; i+=2)
-			draw_line(indices[i], indices[i+1]);
-	}
-	else if (type == type_line_loop)
-	{
-		int i;
-		
-		for (i = 0; i < count-1; i++)
-		{
-			draw_line(indices[i], indices[i+1]);
-		}
-		draw_line(indices[i], indices[0]);
-	}
-}
-
-void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned int *indices, int instance_count)
+void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
 {
 }
 
-void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned short *indices, int instance_count)
+void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 {
-}
 
-void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, unsigned char *indices, int instance_count)
-{
 }
-*/
 
 void SWRenderGraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, ElementArrayBufferProvider *array_provider, VertexAttributeDataType indices_type, void *offset)
 {
@@ -497,12 +395,6 @@ void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(Primitiv
 {
 }
 
-/* FIXME
-void SWRenderGraphicContextProvider::primitives_array_freed(const PrimitivesArray &primitives_array)
-{
-}
-*/
-
 void SWRenderGraphicContextProvider::reset_primitives_array()
 {
 	for (int i = 0; i < num_attribute_fetchers; i++)
@@ -511,7 +403,6 @@ void SWRenderGraphicContextProvider::reset_primitives_array()
 	current_prim_array = PrimitivesArray();
 }
 
-/* FIXME
 void SWRenderGraphicContextProvider::draw_pixels(GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color)
 {
 	Vec4f pos(x, y, 1.0, 1.0);
@@ -520,7 +411,6 @@ void SWRenderGraphicContextProvider::draw_pixels(GraphicContext &gc, float x, fl
 	Rect dest(Point((int)screen_pos.x,(int)screen_pos.y),Size((int)(src_rect.get_width()*zoom_x),(int)(src_rect.get_height()*zoom_y)));
 	canvas->draw_pixels(dest, pixel_buffer, src_rect, color);
 }
-*/
 
 void SWRenderGraphicContextProvider::draw_pixels_bicubic(float x, float y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels)
 {
