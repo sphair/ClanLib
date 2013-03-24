@@ -292,6 +292,7 @@ void SWRenderGraphicContextProvider::set_program_object(const ProgramObject &pro
 	ProgramObject_SWRender swr_program(program);
 	is_sprite_program = swr_program.is_sprite_program();
 	current_program_provider = static_cast<SWRenderProgramObjectProvider *>(swr_program.get_provider());
+	current_program = swr_program;
 }
 
 void SWRenderGraphicContextProvider::reset_program_object()
@@ -505,8 +506,7 @@ void SWRenderGraphicContextProvider::draw_line(int index1, int index2)
 }
 ProgramObject SWRenderGraphicContextProvider::get_program_object(StandardProgram standard_program) const
 {
-	//FIXME: Stub
-	throw Exception("Stub");
+	return current_program;
 }
 StorageBufferProvider *SWRenderGraphicContextProvider::alloc_storage_buffer()
 {

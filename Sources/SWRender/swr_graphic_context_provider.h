@@ -197,7 +197,8 @@ private:
 	std::unique_ptr<PixelCanvas> canvas;
 	std::map<int, Texture> bound_textures;
 	PrimitivesArray current_prim_array;
-	SWRenderProgramObjectProvider *current_program_provider;
+	SWRenderProgramObjectProvider *current_program_provider;	// Provider of current_program
+	ProgramObject_SWRender current_program;
 	bool is_sprite_program;
 	static const int num_attribute_fetchers = 32;
 	VertexAttributeFetcherPtr attribute_fetchers[num_attribute_fetchers];
