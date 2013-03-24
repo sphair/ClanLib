@@ -59,13 +59,13 @@ public:
 	}
 
 protected:
-	VertexAttributeFetcher() : prim_array(0), bound_attribute_index(-1), range(0), data(0), stride(0) { }
+	VertexAttributeFetcher() : bound_attribute_index(-1), range(0), data(0), stride(0) { }
 	virtual ~VertexAttributeFetcher() { }
 
-	void bind(const PrimitivesArrayData *prim_array, int bound_attribute_index);
+	void bind(const PrimitivesArray &primitives_array, int bound_attribute_index);
 	const void *find_vertex_data(int index);
 
-	const PrimitivesArrayData *prim_array;
+	PrimitivesArray primitives_array;
 	int bound_attribute_index;
 	unsigned int range;
 	const char *data;
@@ -80,7 +80,7 @@ public:
 	VertexAttributeFetcherPtr();
 	~VertexAttributeFetcherPtr();
 
-	void bind(const PrimitivesArrayData *prim_array, int attribute_index);
+	void bind(const PrimitivesArray &primitives_array, int attribute_index);
 	void clear();
 
 	VertexAttributeFetcher *operator->() { return fetcher; }
@@ -199,7 +199,7 @@ inline VertexAttributeFetcherPtr::~VertexAttributeFetcherPtr()
 	clear();
 }
 
-inline void VertexAttributeFetcherPtr::bind(const PrimitivesArrayData *prim_array, int attribute_index)
+inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_array, int attribute_index)
 {
 	clear();
 /* FIXME
@@ -317,9 +317,9 @@ inline void VertexAttributeFetcherPtr::clear()
 	}
 }
 
-inline void VertexAttributeFetcher::bind(const PrimitivesArrayData *new_prim_array, int new_bound_attribute_index)
+inline void VertexAttributeFetcher::bind(const PrimitivesArray &new_primitives_array, int new_bound_attribute_index)
 {
-	prim_array = new_prim_array;
+	primitives_array = new_primitives_array;
 	bound_attribute_index = new_bound_attribute_index;
 //FIXME:	range = min(prim_array->attributes[bound_attribute_index].size, 4);
 }

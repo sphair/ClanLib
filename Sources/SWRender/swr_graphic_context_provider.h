@@ -192,7 +192,7 @@ private:
 	SWRenderDisplayWindowProvider *window;
 	std::unique_ptr<PixelCanvas> canvas;
 	std::map<int, Texture> bound_textures;
-	const PrimitivesArrayData * current_prim_array;
+	PrimitivesArray current_prim_array;
 	SWRenderProgramObjectProvider *current_program_provider;
 	bool is_sprite_program;
 	static const int num_attribute_fetchers = 32;

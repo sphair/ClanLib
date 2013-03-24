@@ -55,7 +55,7 @@ namespace clan
 // SWRenderGraphicContextProvider Construction:
 
 SWRenderGraphicContextProvider::SWRenderGraphicContextProvider(SWRenderDisplayWindowProvider *window)
-: window(window), current_prim_array(0), current_program_provider(0), is_sprite_program(false)
+: window(window), current_program_provider(0), is_sprite_program(false)
 {
 	canvas.reset(new PixelCanvas(window->get_viewport().get_size()));
 	program_object_standard = ProgramObject_SWRender(&cl_software_program_standard, false);
@@ -240,12 +240,14 @@ void SWRenderGraphicContextProvider::set_blend_state(BlendStateProvider *state, 
 		swr_state->desc.get_blend_equation(equation_color, equation_alpha);
 		swr_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
-	/*	enable_color_write(red, green, blue, alpha);
-		enable_blending(swr_state->desc.is_blending_enabled());
-		set_blend_color(Colorf(blend_color));
-		set_blend_equation(equation_color, equation_alpha);
-		set_blend_function(src, dest, src_alpha, dest_alpha);
-		*/
+		if (swr_state->desc.is_blending_enabled())
+		{
+			canvas->set_blend_function(src, dest, src_alpha, dest_alpha, Colorf(blend_color));
+		}
+		else
+		{
+			canvas->set_blend_function(blend_one, blend_zero, blend_one, blend_zero, Colorf::black);
+		}
 	}
 }
 
@@ -303,15 +305,13 @@ void SWRenderGraphicContextProvider::set_texture(int unit_index, const Texture &
 	canvas->set_sampler(unit_index, dynamic_cast<SWRenderTextureProvider*>(bound_textures[unit_index].get_provider())->get_image());
 }
 
-/* FIXME
-void SWRenderGraphicContextProvider::reset_texture(int unit_index, const Texture &texture)
+void SWRenderGraphicContextProvider::reset_texture(int unit_index)
 {
 	std::map<int, Texture>::iterator it = bound_textures.find(unit_index);
 	if (it != bound_textures.end())
 		bound_textures.erase(it);
 	canvas->reset_sampler(unit_index);
 }
-*/
 
 void SWRenderGraphicContextProvider::set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer)
 {
@@ -322,41 +322,21 @@ void SWRenderGraphicContextProvider::reset_frame_buffer()
 {
 	canvas->reset_framebuffer();
 }
-/*FIXME
-void SWRenderGraphicContextProvider::set_blend_mode(const BlendMode &blendmode)
-{
-	if (blendmode.is_blend_enabled())
-	{
-		canvas->set_blend_function(
-			blendmode.get_blend_function_src(),
-			blendmode.get_blend_function_dest(),
-			blendmode.get_blend_function_src_alpha(),
-			blendmode.get_blend_function_dest_alpha(),
-			blendmode.get_blend_color());
-	}
-	else
-	{
-		canvas->set_blend_function(blend_one, blend_zero, blend_one, blend_zero, Colorf::black);
-	}
-}
-*/
 
-/* FIXME
-void SWRenderGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArrayData * const prim_array)
+void SWRenderGraphicContextProvider::draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array)
 {
-	set_primitives_array(prim_array);
+	set_primitives_array(primitives_array);
 	draw_primitives_array(type, 0, num_vertices);
 	reset_primitives_array();
 }
 
-void SWRenderGraphicContextProvider::set_primitives_array(const PrimitivesArrayData * const prim_array)
+void SWRenderGraphicContextProvider::set_primitives_array(const PrimitivesArray &primitives_array)
 {
-	current_prim_array = prim_array;
+	current_prim_array = primitives_array;
 
 	for (int i = 0; i < num_attribute_fetchers; i++)
 		attribute_fetchers[i].bind(current_prim_array, i);
 }
-*/
 
 void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 {
@@ -518,7 +498,7 @@ void SWRenderGraphicContextProvider::draw_primitives_elements_instanced(Primitiv
 }
 
 /* FIXME
-void SWRenderGraphicContextProvider::primitives_array_freed(const PrimitivesArrayData * const prim_array)
+void SWRenderGraphicContextProvider::primitives_array_freed(const PrimitivesArray &primitives_array)
 {
 }
 */
@@ -528,7 +508,7 @@ void SWRenderGraphicContextProvider::reset_primitives_array()
 	for (int i = 0; i < num_attribute_fetchers; i++)
 		attribute_fetchers[i].clear();
 
-	current_prim_array = 0;
+	current_prim_array = PrimitivesArray();
 }
 
 /* FIXME
