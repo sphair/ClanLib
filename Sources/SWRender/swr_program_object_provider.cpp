@@ -224,6 +224,34 @@ void SWRenderProgramObjectProvider::set_uniform_matrix(const std::string &name, 
 		current_program->set_uniform_matrix(name, Mat4f(data).transpose());
 }
 
+int SWRenderProgramObjectProvider::get_uniform_buffer_size(int block_index) const
+{
+	//FIXME: Stub
+	return 0;
+}
+int SWRenderProgramObjectProvider::get_uniform_buffer_index(const std::string &block_name) const
+{
+	//FIXME: Stub
+	return 0;
+}
+int SWRenderProgramObjectProvider::get_storage_buffer_index(const std::string &name) const
+{
+	//FIXME: Stub
+	return 0;
+}
+void SWRenderProgramObjectProvider::set_uniform1i(int location, int)
+{
+	//FIXME: Stub
+}
+void SWRenderProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
+{
+	//FIXME: Stub
+}
+void SWRenderProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bind_unit_index)
+{
+	//FIXME: Stub
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderProgramObjectProvider Implementation:
 

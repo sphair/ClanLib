@@ -503,4 +503,130 @@ void SWRenderGraphicContextProvider::draw_line(int index1, int index2)
 	if (command.get())
 		canvas->queue_command(command);
 }
+ProgramObject SWRenderGraphicContextProvider::get_program_object(StandardProgram standard_program) const
+{
+	//FIXME: Stub
+	throw Exception("Stub");
+}
+StorageBufferProvider *SWRenderGraphicContextProvider::alloc_storage_buffer()
+{
+	//FIXME: Stub
+	throw Exception("Stub");
+}
+void SWRenderGraphicContextProvider::set_uniform_buffer(int index, const UniformBuffer &buffer)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::reset_uniform_buffer(int index)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_storage_buffer(int index, const StorageBuffer &buffer)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::reset_storage_buffer(int index)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_image_texture(int unit_index, const Texture &texture)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::reset_image_texture(int unit_index)
+{
+	//FIXME: Stub
+}
+bool SWRenderGraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
+{
+	//FIXME: Stub
+	return true;
+}
+void SWRenderGraphicContextProvider::set_point_size(float value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_point_fade_treshold_size(float value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_line_width(float value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::enable_vertex_program_point_size(bool enabled)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_point_sprite_origin(PointSpriteOrigin origin)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_antialiased(bool value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_point_offset(bool value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_line_offset(bool value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_polygon_offset(bool value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_offset_factor(float value)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_offset_units(float value)
+{
+	//FIXME: Stub
+}
+bool SWRenderGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
+{
+	//FIXME: Stub
+	return true;
+}
+void SWRenderGraphicContextProvider::set_primitives_elements(ElementArrayBufferProvider *array_provider)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::reset_primitives_elements()
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::dispatch(int x, int y, int z)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_depth_range(float n, float f)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_depth_range(int viewport, float n, float f)
+{
+	//FIXME: Stub
+}
+
+void SWRenderGraphicContextProvider::enable_logic_op(bool enabled)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_logic_op(LogicOp op)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
+{
+	//FIXME: Stub
+}
+void SWRenderGraphicContextProvider::set_viewport(int index, const Rectf &viewport)
+{
+	//FIXME: Stub
+}
+
 }

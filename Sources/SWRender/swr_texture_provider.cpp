@@ -199,6 +199,16 @@ void SWRenderTextureProvider::set_texture_compare(TextureCompareMode mode, Compa
 {
 }
 
+void SWRenderTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
+{
+	//FIXME: Stub
+}
+TextureProvider *SWRenderTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
+{
+	//FIXME: Stub
+	throw Exception("Stub");
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTextureProvider Implementation:
 
