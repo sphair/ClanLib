@@ -516,7 +516,7 @@ inline void VertexAttributeFetcherArrayFloat::fetch(float *result, int *indexes,
 	for (int i = 0; i < num; i++)
 	{
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
-//FIXME:		result[i].x = range > 0 ? v[0] : default_value.x;
+		result[i] = range > 0 ? v[0] : default_value.x;
 	}
 }
 
