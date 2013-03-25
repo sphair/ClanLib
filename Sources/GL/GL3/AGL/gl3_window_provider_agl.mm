@@ -51,9 +51,9 @@ void cl_agl_make_none_current()
     [EAGLContext setCurrentContext:nil];    
 }
 
-OpenGLWindowProvider *cl_alloc_display_window_agl()
+GL3WindowProvider *cl_alloc_display_window_agl()
 {
-    return new OpenGLWindowProvider_AGL();
+    return new GL3WindowProvider();
 }
 
 void cl_set_default_frame_buffer(DisplayWindowProvider *provider)
@@ -63,7 +63,7 @@ void cl_set_default_frame_buffer(DisplayWindowProvider *provider)
         wptr->set_default_frame_buffer();
 }
 
-CL_GL_RenderWindowProvider_AGL::CL_GL_RenderWindowProvider_AGL(OpenGLWindowProvider_AGL & window, EAGLContext *agl_context, bool own_context)
+CL_GL_RenderWindowProvider_AGL::CL_GL_RenderWindowProvider_AGL(GL3WindowProvider & window, EAGLContext *agl_context, bool own_context)
 	: window(window), agl_context(agl_context), own_context(own_context)
 {
 }
@@ -98,15 +98,15 @@ void CL_GL_RenderWindowProvider_AGL::set_default_frame_buffer()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_AGL Construction:
+// GL3WindowProvider Construction:
 
-OpenGLWindowProvider_AGL::OpenGLWindowProvider_AGL()
+GL3WindowProvider::GL3WindowProvider()
 : cocoa_window(), opengl_context(0), swap_interval(-1), default_framebuffer_handle(0), default_colorbuffer_handle(0), default_depthbuffer_handle(0)
 {
-	cocoa_window.func_on_resized().set(this, &OpenGLWindowProvider_AGL::on_window_resized);
+	cocoa_window.func_on_resized().set(this, &GL3WindowProvider::on_window_resized);
 }
 
-OpenGLWindowProvider_AGL::~OpenGLWindowProvider_AGL()
+GL3WindowProvider::~GL3WindowProvider()
 {
 	if (opengl_context)
 	{
@@ -126,18 +126,18 @@ OpenGLWindowProvider_AGL::~OpenGLWindowProvider_AGL()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_AGL Attributes:
+// GL3WindowProvider Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_AGL Operations:
+// GL3WindowProvider Operations:
 
-void OpenGLWindowProvider_AGL::make_current() const
+void GL3WindowProvider::make_current() const
 {
     [EAGLContext setCurrentContext:agl_context];
 }
 
-void OpenGLWindowProvider_AGL::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void GL3WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 
@@ -162,13 +162,13 @@ void OpenGLWindowProvider_AGL::create(DisplayWindowSite *new_site, const Display
 	}
 }
 
-void OpenGLWindowProvider_AGL::on_window_resized()
+void GL3WindowProvider::on_window_resized()
 {
 	if (gc.get_provider())
 		((OpenGLGraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-EAGLContext *OpenGLWindowProvider_AGL::create_context()
+EAGLContext *GL3WindowProvider::create_context()
 {
 	EAGLContext *shared_context = NULL;
 
@@ -198,7 +198,7 @@ EAGLContext *OpenGLWindowProvider_AGL::create_context()
     return context;
 }
 
-void OpenGLWindowProvider_AGL::setup_default_framebuffer()
+void GL3WindowProvider::setup_default_framebuffer()
 {    
     //[EAGLContext setCurrentContext:context];
 	OpenGL::set_active(gc);
@@ -238,13 +238,13 @@ void OpenGLWindowProvider_AGL::setup_default_framebuffer()
     glViewport(0, 0, width, height);
 }
 
-void OpenGLWindowProvider_AGL::set_default_frame_buffer()
+void GL3WindowProvider::set_default_frame_buffer()
 {
     OpenGL::set_active(gc);
     glBindFramebuffer(GL_FRAMEBUFFER, default_framebuffer_handle);
 }
 
-void OpenGLWindowProvider_AGL::flip(int interval)
+void GL3WindowProvider::flip(int interval)
 {
 	GraphicContext gc = get_gc();
 	OpenGL::set_active(gc);
@@ -266,7 +266,7 @@ void OpenGLWindowProvider_AGL::flip(int interval)
     [opengl_context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-void OpenGLWindowProvider_AGL::update(const Rect &_rect)
+void GL3WindowProvider::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -323,40 +323,40 @@ void OpenGLWindowProvider_AGL::update(const Rect &_rect)
 }
 
 
-CursorProvider *OpenGLWindowProvider_AGL::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
+CursorProvider *GL3WindowProvider::create_cursor(const SpriteDescription &sprite_description, const Point &hotspot)
 {
 //	return new CursorProvider_Cocoa(sprite_description, hotspot);
     return 0;
 }
 
-void OpenGLWindowProvider_AGL::set_cursor(CursorProvider *cursor)
+void GL3WindowProvider::set_cursor(CursorProvider *cursor)
 {
 //	cocoa_window.set_cursor(static_cast<CursorProvider_Cocoa *>(cursor));
 }
 
-void OpenGLWindowProvider_AGL::set_large_icon(const PixelBuffer &image)
+void GL3WindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	cocoa_window.set_large_icon(image);
 }
 
-void OpenGLWindowProvider_AGL::set_small_icon(const PixelBuffer &image)
+void GL3WindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	cocoa_window.set_small_icon(image);
 }
 
-void OpenGLWindowProvider_AGL::enable_alpha_channel(const Rect &blur_rect)
+void GL3WindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
 	// Implement me, if possible
 }
 
-void OpenGLWindowProvider_AGL::extend_frame_into_client_area(int height)
+void GL3WindowProvider::extend_frame_into_client_area(int height)
 {
 	// Implement me, if possible
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_AGL Implementation:
+// GL3WindowProvider Implementation:
 
 }
 

@@ -73,7 +73,7 @@ void PBuffer_GL1_Impl::reset()
 	pbuffer = 0;
 }
 
-void PBuffer_GL1_Impl::create(GL1WindowProvider_WGL &window_provider, const Size &size)
+void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &size)
 {
 	reset();
 
@@ -127,8 +127,8 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider_WGL &window_provider, const Size
 
 	wglShareLists(share_context, pbuffer_context);
 
-	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
-	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
+//FIXME	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
+//FIXME	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
 	pbuffer_size = size;
 }
 

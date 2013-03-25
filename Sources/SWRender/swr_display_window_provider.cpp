@@ -383,10 +383,7 @@ void SWRenderDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	window.set_small_icon(image);
 }
-void SWRenderDisplayWindowProvider::make_current() const
-{
 
-}
 void SWRenderDisplayWindowProvider::set_cursor_handle(HCURSOR cursor)
 {
 	window.set_cursor_handle(cursor);

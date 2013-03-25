@@ -284,7 +284,7 @@ void OpenGL::set_active(const GL3GraphicContextProvider * const gc_provider)
 			glsl_version_minor = gc_provider->get_glsl_version_minor();
 
 			// Make render context associated with graphic context current.
-			gc_provider->get_render_window().make_current();
+			gc_provider->make_current();
 
 			// Map bound functions for this graphic context. Add to static cache if necessary.
 			MutexSection mutex_lock(&cl_function_map_mutex);

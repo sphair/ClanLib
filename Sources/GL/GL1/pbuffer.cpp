@@ -53,12 +53,12 @@ PBuffer_GL1::~PBuffer_GL1()
 }
 
 #ifdef WIN32
-void PBuffer_GL1::create(GL1WindowProvider_WGL &window_provider, Size &size)
+void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
 {
 	impl->create(window_provider, size);
 }
 #else
-void PBuffer_GL1::create(GL1WindowProvider_GLX &window_provider, Size &size)
+void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
 {
 	impl->create(window_provider, size);
 }

@@ -88,8 +88,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	void make_current() const;
-
 	Point client_to_screen(const Point &client);
 	Point screen_to_client(const Point &screen);
 

@@ -53,10 +53,10 @@ namespace clan
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
 
-class GL1WindowProvider_GLX;
+class GL1WindowProvider;
 class GL1GraphicContextProvider;
 
-class OpenGLWindowProvider_GLX;
+class GL3WindowProvider;
 
 #define GL_USE_DLOPEN		// Using dlopen for linux by default
 
@@ -161,15 +161,15 @@ public:
 	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
 };
 
-class GL1WindowProvider_GLX : public DisplayWindowProvider
+class GL1WindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	GL1WindowProvider_GLX();
+	GL1WindowProvider();
 
-	~GL1WindowProvider_GLX();
+	~GL1WindowProvider();
 
 
 /// \}

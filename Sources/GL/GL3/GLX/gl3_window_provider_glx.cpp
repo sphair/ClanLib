@@ -68,9 +68,9 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_GLX Construction:
+// GL3WindowProvider Construction:
 
-OpenGLWindowProvider_GLX::OpenGLWindowProvider_GLX(OpenGLWindowDescription &opengl_desc)
+GL3WindowProvider::GL3WindowProvider(OpenGLWindowDescription &opengl_desc)
 : x11_window(),
  opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1), opengl_desc(opengl_desc)
 #ifdef GL_USE_DLOPEN
@@ -149,10 +149,10 @@ OpenGLWindowProvider_GLX::OpenGLWindowProvider_GLX(OpenGLWindowDescription &open
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
-	x11_window.func_on_resized().set(this, &OpenGLWindowProvider_GLX::on_window_resized);
+	x11_window.func_on_resized().set(this, &GL3WindowProvider::on_window_resized);
 }
 
-OpenGLWindowProvider_GLX::~OpenGLWindowProvider_GLX()
+GL3WindowProvider::~GL3WindowProvider()
 {
 
 	if (opengl_visual_info)
@@ -189,14 +189,14 @@ OpenGLWindowProvider_GLX::~OpenGLWindowProvider_GLX()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_GLX Attributes:
+// GL3WindowProvider Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_GLX Operations:
+// GL3WindowProvider Operations:
 
 
-ProcAddress *OpenGLWindowProvider_GLX::get_proc_address(const std::string& function_name) const
+ProcAddress *GL3WindowProvider::get_proc_address(const std::string& function_name) const
 {
 	if (glx.glXGetProcAddressARB)
 		return glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
@@ -205,7 +205,7 @@ ProcAddress *OpenGLWindowProvider_GLX::get_proc_address(const std::string& funct
 	return NULL;
 }
 
-void OpenGLWindowProvider_GLX::make_current() const
+void GL3WindowProvider::make_current() const
 {
 	// *** Note, If glxMakeCurrent crashes KDE when using a nvidia graphics card, then
 	// update the driver from nvidia.com ***
@@ -213,7 +213,7 @@ void OpenGLWindowProvider_GLX::make_current() const
 
 }
 
-void OpenGLWindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void GL3WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 	bool create_provider_flag = false;
@@ -271,7 +271,7 @@ void OpenGLWindowProvider_GLX::create(DisplayWindowSite *new_site, const Display
 	}
 }
 
-void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
+void GL3WindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
 {
 	if (glx.glXChooseFBConfig == NULL)
 		throw Exception("Cannot find the glXChooseFBConfig function");
@@ -300,7 +300,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 		}
 		if (use_layered)
 		{
-			x11_window.func_on_clicked().set(this, &OpenGLWindowProvider_GLX::on_clicked);
+			x11_window.func_on_clicked().set(this, &GL3WindowProvider::on_clicked);
 		}
 	}
 #endif
@@ -427,7 +427,7 @@ void OpenGLWindowProvider_GLX::create_glx_1_3(DisplayWindowSite *new_site, const
 }
 
 
-void OpenGLWindowProvider_GLX::create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
+void GL3WindowProvider::create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
 {
 	// Setup OpenGL:
 	int gl_attribs_single[] =
@@ -479,13 +479,13 @@ void OpenGLWindowProvider_GLX::create_glx_1_2(DisplayWindowSite *new_site, const
 
 }
 
-void OpenGLWindowProvider_GLX::on_window_resized()
+void GL3WindowProvider::on_window_resized()
 {
 	if (gc.get_provider())
 		((GL3GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-bool OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
+bool GL3WindowProvider::is_glx_extension_supported(const char *ext_name)
 {
 	const char *ext_string = glx.glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
 	if (ext_string)
@@ -520,7 +520,7 @@ bool OpenGLWindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-void OpenGLWindowProvider_GLX::setup_swap_interval_pointers()
+void GL3WindowProvider::setup_swap_interval_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) OpenGL::get_proc_address("glXSwapIntervalSGI");
 	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) OpenGL::get_proc_address("glXSwapIntervalMESA");
@@ -544,7 +544,7 @@ static int cl_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
     return 0;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context(const DisplayWindowDescription &desc)
+GLXContext GL3WindowProvider::create_context(const DisplayWindowDescription &desc)
 {
 	GLXContext shared_context = NULL;
 
@@ -556,7 +556,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context(const DisplayWindowDescripti
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
-			const OpenGLWindowProvider_GLX *render_window_glx = dynamic_cast<const OpenGLWindowProvider_GLX*>(rwp);
+			const GL3WindowProvider *render_window_glx = dynamic_cast<const GL3WindowProvider*>(rwp);
 			if (render_window_glx)
 				shared_context = render_window_glx->opengl_context;
 		}
@@ -576,7 +576,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context(const DisplayWindowDescripti
 	return context;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs)
+GLXContext GL3WindowProvider::create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs)
 {
 	std::vector<int> int_attributes;
 
@@ -622,7 +622,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3_helper(GLXContext sh
 	return context_gl3;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context)
+GLXContext GL3WindowProvider::create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context)
 {
 	GLXContext context;
 
@@ -713,7 +713,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_3(const DisplayWindowD
 	return context;
 }
 
-GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context)
+GLXContext GL3WindowProvider::create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context)
 {
 	if (opengl_desc.get_allow_lower_versions() == false)
 		throw Exception("GLX 1.2 does not support opengl version selection.");
@@ -726,7 +726,7 @@ GLXContext OpenGLWindowProvider_GLX::create_context_glx_1_2(const DisplayWindowD
 	return context;
 }
 
-void OpenGLWindowProvider_GLX::flip(int interval)
+void GL3WindowProvider::flip(int interval)
 {
 	GraphicContext gc = get_gc();
 	OpenGL::set_active(gc);
@@ -748,7 +748,7 @@ void OpenGLWindowProvider_GLX::flip(int interval)
 	glx.glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
 }
 
-void OpenGLWindowProvider_GLX::update(const Rect &_rect)
+void GL3WindowProvider::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -807,41 +807,41 @@ void OpenGLWindowProvider_GLX::update(const Rect &_rect)
 }
 
 
-CursorProvider *OpenGLWindowProvider_GLX::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider *GL3WindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
 	return new CursorProvider_X11(cursor_description, hotspot);
 }
 
-void OpenGLWindowProvider_GLX::set_cursor(CursorProvider *cursor)
+void GL3WindowProvider::set_cursor(CursorProvider *cursor)
 {
 	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
 }
 
-void OpenGLWindowProvider_GLX::set_large_icon(const PixelBuffer &image)
+void GL3WindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	x11_window.set_large_icon(image);
 }
 
-void OpenGLWindowProvider_GLX::set_small_icon(const PixelBuffer &image)
+void GL3WindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	x11_window.set_small_icon(image);
 }
 
-void OpenGLWindowProvider_GLX::enable_alpha_channel(const Rect &blur_rect)
+void GL3WindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
 	// Implement me, if possible
 }
 
-void OpenGLWindowProvider_GLX::extend_frame_into_client_area(int height)
+void GL3WindowProvider::extend_frame_into_client_area(int height)
 {
 	// Implement me, if possible
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider_GLX Implementation:
+// GL3WindowProvider Implementation:
 
 
-bool OpenGLWindowProvider_GLX::on_clicked(XButtonEvent &event)
+bool GL3WindowProvider::on_clicked(XButtonEvent &event)
 {
 	if (event.button != 1)	// Left mouse button
 		return true;

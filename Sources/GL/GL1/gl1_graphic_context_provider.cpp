@@ -77,7 +77,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Construction:
 
-GL1GraphicContextProvider::GL1GraphicContextProvider(const DisplayWindowProvider * const render_window)
+GL1GraphicContextProvider::GL1GraphicContextProvider(const GL1WindowProvider * const render_window)
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false)
@@ -228,7 +228,7 @@ GL1ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& f
 #ifdef WIN32
 	return (void (*)())wglGetProcAddress(function_name.c_str());
 #else
-	const GL1WindowProvider_GLX *wptr = dynamic_cast<const GL1WindowProvider_GLX *> (render_window);
+	const GL1WindowProvider *wptr = dynamic_cast<const GL1WindowProvider *> (render_window);
 	if (wptr)
 		return wptr->get_proc_address(function_name);
 
@@ -1200,6 +1200,16 @@ void GL1GraphicContextProvider::set_depth_compare_function(CompareFunction func)
 void GL1GraphicContextProvider::enable_color_write(bool red, bool green, bool blue, bool alpha)
 {
 	//set_active();
+}
+
+void GL1GraphicContextProvider::make_current() const
+{
+	render_window->make_current();
+}
+
+const DisplayWindowProvider & GL1GraphicContextProvider::get_render_window() const
+{
+	return *render_window; 
 }
 
 /////////////////////////////////////////////////////////////////////////////

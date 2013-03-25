@@ -55,7 +55,7 @@ typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
 typedef GLXContext (*ptr_glXCreateContextAttribs)(::Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
-class OpenGLWindowProvider_GLX;
+class GL3WindowProvider;
 class OpenGLWindowDescription;
 class DisplayWindowDescription;
 
@@ -151,15 +151,15 @@ public:
 
 };
 
-class OpenGLWindowProvider_GLX : public DisplayWindowProvider
+class GL3WindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLWindowProvider_GLX(OpenGLWindowDescription &opengl_desc);
+	GL3WindowProvider(OpenGLWindowDescription &opengl_desc);
 
-	~OpenGLWindowProvider_GLX();
+	~GL3WindowProvider();
 
 
 /// \}
