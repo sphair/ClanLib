@@ -317,6 +317,7 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 			throw Exception("Invalid SWRenderVertexArrayBufferProvider");
 
 		data = reinterpret_cast<const char*>(vertex_provider->get_data());
+		data += vertex_data.offset;
 		stride = vertex_data.stride;
 		if (stride == 0)
 		{

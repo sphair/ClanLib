@@ -425,10 +425,10 @@ void SWRenderDisplayWindowProvider::draw_image(HDC hdc, const Rect &dest, const 
 	bmp_header.bV5Planes = 1;
 	bmp_header.bV5BitCount = 32;
 	bmp_header.bV5Compression = BI_BITFIELDS;
-	bmp_header.bV5RedMask = 0xFF000000;	//image.get_red_mask();
-	bmp_header.bV5GreenMask = 0x00FF0000;	//image.get_green_mask();
-	bmp_header.bV5BlueMask = 0x0000FF00;	//image.get_blue_mask();
-	bmp_header.bV5AlphaMask = 0x000000FF;	//image.get_alpha_mask();
+	bmp_header.bV5RedMask =   0x00FF0000;	//image.get_red_mask();
+	bmp_header.bV5GreenMask = 0x0000FF00;	//image.get_green_mask();
+	bmp_header.bV5BlueMask =  0x0000000FF;	//image.get_blue_mask();
+	bmp_header.bV5AlphaMask = 0xFF000000;	//image.get_alpha_mask();
 	//StretchDIBits(hdc, dest.left, dest.top, dest.get_width(), dest.get_height(), src.left, src.top, src.get_width(), src.get_height(), image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS, SRCCOPY);
 	SetDIBitsToDevice(hdc, dest.left, dest.top, dest.get_width(), dest.get_height(), src.left, image.get_height()-src.bottom, 0, image.get_height(), image.get_data(), (BITMAPINFO *) &bmp_header, DIB_RGB_COLORS);
 }
