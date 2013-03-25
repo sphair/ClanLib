@@ -6,7 +6,7 @@
 #ifdef WIN32
 #include <ClanLib/d3d.h>
 #endif
-
+#include <ClanLib/swrender.h>
 #include <ClanLib/gl.h>
 #include <cmath>
 
