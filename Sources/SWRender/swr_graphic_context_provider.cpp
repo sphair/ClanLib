@@ -633,7 +633,8 @@ void SWRenderGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 }
 void SWRenderGraphicContextProvider::set_viewport(int index, const Rectf &viewport)
 {
-	//FIXME: Stub
+	if (index==0)
+		set_viewport(viewport);
 }
 
 }
