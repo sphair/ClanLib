@@ -112,6 +112,20 @@ PixelCommand *SoftwareProgram_Standard::draw_line(PixelPipeline *pipeline, const
 
 Vec2f SoftwareProgram_Standard::transform(const Vec4f &vertex) const
 {
-	return Vec2f(vertex.x, vertex.y);
+	float hack_canvas_width = 640.0f;
+	float hack_canvas_height = 480.0f;
+	
+	float x = vertex.x;
+	float y = vertex.y;
+
+	x += 1.0f;
+	y = -y;
+	y += 1.0f;
+
+	x *= hack_canvas_width/2.0f;
+	y *= hack_canvas_height/2.0f;
+
+
+	return Vec2f(x,y);
 }
 }
