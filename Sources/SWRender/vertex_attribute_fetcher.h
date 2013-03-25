@@ -62,13 +62,14 @@ public:
 	}
 
 protected:
-	VertexAttributeFetcher() : bound_attribute_index(-1), range(0), data(0), stride(0) { }
+	VertexAttributeFetcher() : bound_attribute_index(-1), range(0), data(0), stride(0), primitives_array_provider(NULL) { }
 	virtual ~VertexAttributeFetcher() { }
 
-	void bind(const PrimitivesArray &primitives_array, int bound_attribute_index);
+	void bind(const SWRenderPrimitivesArrayProvider *primitives_array_provider, int bound_attribute_index);
 	const void *find_vertex_data(int index);
 
-	PrimitivesArray primitives_array;
+	const SWRenderPrimitivesArrayProvider *primitives_array_provider;
+
 	int bound_attribute_index;
 	unsigned int range;
 	const char *data;
@@ -83,7 +84,7 @@ public:
 	VertexAttributeFetcherPtr();
 	~VertexAttributeFetcherPtr();
 
-	void bind(const PrimitivesArray &primitives_array, int attribute_index);
+	void bind(const SWRenderPrimitivesArrayProvider *primitives_array_provider, int attribute_index);
 	void clear();
 
 	VertexAttributeFetcher *operator->() { return fetcher; }
@@ -202,25 +203,21 @@ inline VertexAttributeFetcherPtr::~VertexAttributeFetcherPtr()
 	clear();
 }
 
-inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_array, int attribute_index)
+inline void VertexAttributeFetcherPtr::bind(const SWRenderPrimitivesArrayProvider *primitives_array_provider, int attribute_index)
 {
 	clear();
 
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
 	int bound_attribute_index = -1;
-	if (attribute_index >=0 && attribute_index <prim_array->attributes.size())
+	if (attribute_index >=0 && attribute_index <primitives_array_provider->attributes.size())
 	{
 		bound_attribute_index = attribute_index;
 	}
 
 	/* I guess this is not required (replaced by the above code) (See  HACK HACK HACK below)
 	int bound_attribute_index = -1;
-	for (int j = 0; j < prim_array->attributes.size(); j++)
+	for (int j = 0; j < primitives_array_provider->attributes.size(); j++)
 	{
-		if (prim_array->attribute_indexes[j] == attribute_index)
+		if (primitives_array_provider->attribute_indexes[j] == attribute_index)
 		{
 			bound_attribute_index = j;
 			break;
@@ -232,11 +229,11 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_ar
 	{
 		throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherNull));
 		fetcher = new (alloc_buffer) VertexAttributeFetcherNull();
-		bound_attribute_index = 0;	// HACK HACK HACK!!!
+		bound_attribute_index = 0;	// HACK HACK HACK (So doesn't crash later on)
 	}
 	else
 	{
-		switch (prim_array->attributes[bound_attribute_index].type)
+		switch (primitives_array_provider->attributes[bound_attribute_index].type)
 		{
 		case type_unsigned_byte:
 			throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherArrayUnsignedByte));
@@ -273,7 +270,7 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_ar
 		}
 	}
 
-	fetcher->bind(primitives_array, bound_attribute_index);
+	fetcher->bind(primitives_array_provider, bound_attribute_index);
 }
 
 inline void VertexAttributeFetcherPtr::throw_if_insufficient_buffer(size_t size)
@@ -291,28 +288,19 @@ inline void VertexAttributeFetcherPtr::clear()
 	}
 }
 
-inline void VertexAttributeFetcher::bind(const PrimitivesArray &new_primitives_array, int new_bound_attribute_index)
+inline void VertexAttributeFetcher::bind(const SWRenderPrimitivesArrayProvider *new_primitives_array_provider, int new_bound_attribute_index)
 {
-	primitives_array = new_primitives_array;
+	primitives_array_provider = new_primitives_array_provider;
 	bound_attribute_index = new_bound_attribute_index;
-
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	range = min(prim_array->attributes[bound_attribute_index].size, 4);
+	range = min(primitives_array_provider->attributes[bound_attribute_index].size, 4);
 }
 
 inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 {
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
 	if (data == 0)
 	{
-		const PrimitivesArrayProvider::VertexData &vertex_data = prim_array->attributes[bound_attribute_index];
-		SWRenderVertexArrayBufferProvider * vertex_provider = static_cast<SWRenderVertexArrayBufferProvider *>(prim_array->attributes[bound_attribute_index].array_provider);
+		const PrimitivesArrayProvider::VertexData &vertex_data = primitives_array_provider->attributes[bound_attribute_index];
+		SWRenderVertexArrayBufferProvider * vertex_provider = static_cast<SWRenderVertexArrayBufferProvider *>(vertex_data.array_provider);
 		if (!vertex_provider)
 			throw Exception("Invalid SWRenderVertexArrayBufferProvider");
 
@@ -337,92 +325,7 @@ inline const void *VertexAttributeFetcher::find_vertex_data(int index)
 
 	return data + stride*index;
 }
-/*
-inline Vec4f VertexAttributeFetcherSingleValueUnsignedByte::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
 
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_ubyte[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueUnsignedShort::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_ushort[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueUnsignedInt::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_uint[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueByte::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_byte[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueShort::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_short[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueInt::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_int[i];
-	return result;
-}
-
-inline Vec4f VertexAttributeFetcherSingleValueFloat::fetch(int index, const Vec4f &default_value)
-{
-	Vec4f result = default_value;
-	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
-	if(!prim_array)
-		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
-	for (unsigned int i=0; i<range; i++)
-		result[i] = prim_array->attributes[bound_attribute_index].value_float[i];
-	return result;
-}
-*/
 inline Vec4f VertexAttributeFetcherArrayUnsignedByte::fetch(int index, const Vec4f &default_value)
 {
 	const unsigned char *v = static_cast<const unsigned char *>(find_vertex_data(index));

@@ -336,9 +336,12 @@ void SWRenderGraphicContextProvider::draw_primitives(PrimitivesType type, int nu
 void SWRenderGraphicContextProvider::set_primitives_array(const PrimitivesArray &primitives_array)
 {
 	current_prim_array = primitives_array;
+	SWRenderPrimitivesArrayProvider * prim_array = static_cast<SWRenderPrimitivesArrayProvider *>(primitives_array.get_provider());
+	if(!prim_array)
+		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
 
 	for (int i = 0; i < num_attribute_fetchers; i++)
-		attribute_fetchers[i].bind(current_prim_array, i);
+		attribute_fetchers[i].bind(prim_array, i);
 }
 
 void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
