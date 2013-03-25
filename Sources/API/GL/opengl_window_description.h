@@ -97,7 +97,7 @@ public:
 public:
 	/// \brief Select the OpenGL version number
 	///
-	/// Defaults to OpenGL 3.2, without allow lower versions
+	/// Defaults to OpenGL 3.2 with lower versions (will drop to Legacy OpenGL without shader support if lower)
 	///
 	/// \param major = OpenGL major number (e.g. 4)
 	/// \param minor = OpenGL minor number (e.g. 1)
