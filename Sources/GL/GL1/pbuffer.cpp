@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2011 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -23,31 +23,56 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
-**    (if your name is missing here, please add it)
+**    Mark Page
 */
 
-#pragma once
-
-
-#ifdef WIN32
-#ifdef _MSC_VER
-# pragma warning (disable:4786)
-#endif
-#include <windows.h>
-#endif
-
-#include "API/core.h"
-
-#if defined(_DEBUG) && !defined(DEBUG)
-#define DEBUG
-#endif
+#include "GL/precomp.h"
 
 #ifdef WIN32
-#define BREAKPOINT
+#include "WGL/pbuffer_impl.h"
 #else
-#define BREAKPOINT asm("int $03");
+#include "GLX/pbuffer_impl.h"
+#endif
+#include "pbuffer.h"
+
+#include "gl1_graphic_context_provider.h"
+
+namespace clan
+{
+
+PBuffer_GL1::PBuffer_GL1()
+{
+}
+
+PBuffer_GL1::PBuffer_GL1(GL1GraphicContextProvider *gc_provider) : impl(new PBuffer_GL1_Impl(gc_provider))
+{
+}
+
+PBuffer_GL1::~PBuffer_GL1()
+{
+}
+
+#ifdef WIN32
+void PBuffer_GL1::create(GL1WindowProvider_WGL &window_provider, Size &size)
+{
+	impl->create(window_provider, size);
+}
+#else
+void PBuffer_GL1::create(GL1WindowProvider_GLX &window_provider, Size &size)
+{
+	impl->create(window_provider, size);
+}
 #endif
 
-#include <cstring>
+void PBuffer_GL1::set_active() const
+{
+	impl->set_active();
+}
 
+void PBuffer_GL1::throw_if_null() const
+{
+	if (!impl)
+		throw Exception("is null");
+}
+
+}
