@@ -188,7 +188,6 @@ public:
 /// \name Operations
 /// \{
 public:
-	virtual void make_current() const = 0;
 
 	/// \brief Convert from window client coordinates to screen coordinates.
 	virtual Point client_to_screen(const Point &client) = 0;

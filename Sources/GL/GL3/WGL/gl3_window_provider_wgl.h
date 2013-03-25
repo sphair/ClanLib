@@ -44,14 +44,14 @@ typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
 class OpenGLWindowDescription;
 
-class OpenGLWindowProvider_WGL : public DisplayWindowProvider
+class GL3WindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	OpenGLWindowProvider_WGL(OpenGLWindowDescription &opengl_desc);
-	~OpenGLWindowProvider_WGL();
+	GL3WindowProvider(OpenGLWindowDescription &opengl_desc);
+	~GL3WindowProvider();
 
 
 /// \}

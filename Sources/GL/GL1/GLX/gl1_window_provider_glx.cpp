@@ -60,15 +60,15 @@
 namespace clan
 {
 
-DisplayWindowProvider *newGL1WindowProvider_GLX()
+DisplayWindowProvider *newGL1WindowProvider()
 {
-	return new GL1WindowProvider_GLX();
+	return new GL1WindowProvider();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_GLX Construction:
+// GL1WindowProvider Construction:
 
-GL1WindowProvider_GLX::GL1WindowProvider_GLX()
+GL1WindowProvider::GL1WindowProvider()
 : x11_window(),
  opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1)
 #ifdef GL_USE_DLOPEN
@@ -149,10 +149,10 @@ GL1WindowProvider_GLX::GL1WindowProvider_GLX()
 		throw Exception("Cannot obtain required OpenGL GLX functions");
 	}
 
-	x11_window.func_on_resized().set(this, &GL1WindowProvider_GLX::on_window_resized);
+	x11_window.func_on_resized().set(this, &GL1WindowProvider::on_window_resized);
 }
 
-GL1WindowProvider_GLX::~GL1WindowProvider_GLX()
+GL1WindowProvider::~GL1WindowProvider()
 {
 
 	if (opengl_visual_info)
@@ -188,13 +188,13 @@ GL1WindowProvider_GLX::~GL1WindowProvider_GLX()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_GLX Attributes:
+// GL1WindowProvider Attributes:
 
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_GLX Operations:
+// GL1WindowProvider Operations:
 
-GL1ProcAddress *GL1WindowProvider_GLX::get_proc_address(const std::string& function_name) const
+GL1ProcAddress *GL1WindowProvider::get_proc_address(const std::string& function_name) const
 {
 	if (glx.glXGetProcAddressARB)
 		return glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
@@ -203,7 +203,7 @@ GL1ProcAddress *GL1WindowProvider_GLX::get_proc_address(const std::string& funct
 	return NULL;
 }
 
-void GL1WindowProvider_GLX::make_current() const
+void GL1WindowProvider::make_current() const
 {
 	// *** Note, If glxMakeCurrent crashes KDE when using a nvidia graphics card, then
 	// update the driver from nvidia.com ***
@@ -211,7 +211,7 @@ void GL1WindowProvider_GLX::make_current() const
 
 }
 
-void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void GL1WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 	bool create_provider_flag = false;
@@ -306,13 +306,13 @@ void GL1WindowProvider_GLX::create(DisplayWindowSite *new_site, const DisplayWin
 	}
 }
 
-void GL1WindowProvider_GLX::on_window_resized()
+void GL1WindowProvider::on_window_resized()
 {
 	if (gc.get_provider())
 		((GL1GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-bool GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
+bool GL1WindowProvider::is_glx_extension_supported(const char *ext_name)
 {
 	const char *ext_string = glx.glXQueryExtensionsString(x11_window.get_display(), opengl_visual_info->screen);
 	if (ext_string)
@@ -347,7 +347,7 @@ bool GL1WindowProvider_GLX::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-void GL1WindowProvider_GLX::setup_extension_pointers()
+void GL1WindowProvider::setup_extension_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) GL1::get_proc_address("glXSwapIntervalSGI");
 	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) GL1::get_proc_address("glXSwapIntervalMESA");
@@ -380,7 +380,7 @@ void GL1WindowProvider_GLX::setup_extension_pointers()
 	}
 }
 
-GLXContext GL1WindowProvider_GLX::get_share_context()
+GLXContext GL1WindowProvider::get_share_context()
 {
 	GLXContext shared_context = NULL;
 
@@ -392,7 +392,7 @@ GLXContext GL1WindowProvider_GLX::get_share_context()
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
-			const GL1WindowProvider_GLX *render_window_glx = dynamic_cast<const GL1WindowProvider_GLX*>(rwp);
+			const GL1WindowProvider *render_window_glx = dynamic_cast<const GL1WindowProvider*>(rwp);
 			if (render_window_glx)
 				shared_context = render_window_glx->opengl_context;
 		}
@@ -400,7 +400,7 @@ GLXContext GL1WindowProvider_GLX::get_share_context()
 	return shared_context;
 }
 
-GLXContext GL1WindowProvider_GLX::create_context()
+GLXContext GL1WindowProvider::create_context()
 {
 	GLXContext shared_context = get_share_context();
 
@@ -412,7 +412,7 @@ GLXContext GL1WindowProvider_GLX::create_context()
 	return context;
 }
 
-void GL1WindowProvider_GLX::flip(int interval)
+void GL1WindowProvider::flip(int interval)
 {
 	GraphicContext gc = get_gc();
 	GL1::set_active(gc);
@@ -433,7 +433,7 @@ void GL1WindowProvider_GLX::flip(int interval)
 	glx.glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
 }
 
-void GL1WindowProvider_GLX::update(const Rect &_rect)
+void GL1WindowProvider::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -494,38 +494,38 @@ void GL1WindowProvider_GLX::update(const Rect &_rect)
 }
 
 
-CursorProvider *GL1WindowProvider_GLX::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider *GL1WindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
 	return new CursorProvider_X11(cursor_description, hotspot);
 }
 
-void GL1WindowProvider_GLX::set_cursor(CursorProvider *cursor)
+void GL1WindowProvider::set_cursor(CursorProvider *cursor)
 {
 	x11_window.set_cursor(static_cast<CursorProvider_X11 *>(cursor));
 }
 
-void GL1WindowProvider_GLX::set_large_icon(const PixelBuffer &image)
+void GL1WindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	x11_window.set_large_icon(image);
 }
 
-void GL1WindowProvider_GLX::set_small_icon(const PixelBuffer &image)
+void GL1WindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	x11_window.set_small_icon(image);
 }
 
-void GL1WindowProvider_GLX::enable_alpha_channel(const Rect &blur_rect)
+void GL1WindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
 	// Implement me, if possible
 }
 
-void GL1WindowProvider_GLX::extend_frame_into_client_area(int height)
+void GL1WindowProvider::extend_frame_into_client_area(int height)
 {
 	// Implement me, if possible
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_GLX Implementation:
+// GL1WindowProvider Implementation:
 
 }
 

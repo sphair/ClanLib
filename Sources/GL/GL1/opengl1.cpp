@@ -500,7 +500,7 @@ void GL1::set_active(const GL1GraphicContextProvider * const gc_provider)
 		if (gc_provider)
 		{
 			// Make render context associated with graphic context current.
-			gc_provider->get_render_window().make_current();
+			gc_provider->make_current();
 
 			// Map bound functions for this graphic context. Add to static cache if necessary.
 			MutexSection mutex_lock(&gl1_function_map_mutex);

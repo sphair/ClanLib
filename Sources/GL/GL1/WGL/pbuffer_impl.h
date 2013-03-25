@@ -35,7 +35,7 @@ namespace clan
 {
 
 class GL1GraphicContextProvider;
-class GL1WindowProvider_WGL;
+class GL1WindowProvider;
 
 class PBuffer_GL1_Impl : public DisplayWindowProvider
 {
@@ -100,7 +100,7 @@ public:
 
 
 public:
-	void create(GL1WindowProvider_WGL &window_provider, const Size &size);
+	void create(GL1WindowProvider &window_provider, const Size &size);
 	void set_active() const;
 
 

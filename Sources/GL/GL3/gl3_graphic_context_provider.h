@@ -55,6 +55,7 @@ class RenderBufferProvider;
 class GL3FrameBufferProvider;
 class DisposableObject;
 class OpenGLWindowDescription;
+class GL3WindowProvider;
 
 class GL3RasterizerStateProvider : public RasterizerStateProvider
 {
@@ -83,7 +84,7 @@ class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public Di
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL3GraphicContextProvider(const DisplayWindowProvider * const render_window);
+	GL3GraphicContextProvider(const GL3WindowProvider * const render_window);
 
 	~GL3GraphicContextProvider();
 
@@ -106,7 +107,7 @@ public:
 	/// \brief Get the glsl version minor number
 	int get_glsl_version_minor() const {return shader_version_minor;}
 
-	const DisplayWindowProvider & get_render_window() const { return *render_window; }
+	const DisplayWindowProvider & get_render_window() const;
 	Size get_display_window_size() const;
 	void get_opengl_version(int &version_major, int &version_minor);
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) { get_opengl_version(version_major, version_minor); version_release = 0; }
@@ -220,6 +221,8 @@ public:
 	static GLenum to_enum(enum PrimitivesType value);
 	static GLenum to_enum(enum LogicOp op);
 
+	void make_current() const;
+
 /// \}
 /// \name Implementation
 /// \{
@@ -252,7 +255,7 @@ private:
 	void check_opengl_version();
 
 	/// \brief OpenGL render window.
-	const DisplayWindowProvider * const render_window;
+	const GL3WindowProvider * const render_window;
 
 	bool framebuffer_bound;
 

@@ -50,17 +50,17 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_WGL Construction:
+// GL1WindowProvider Construction:
 
-GL1WindowProvider_WGL::GL1WindowProvider_WGL()
+GL1WindowProvider::GL1WindowProvider()
 : win32_window(),
   opengl_context(0), device_context(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1)
 {
-	win32_window.func_on_resized().set(this, &GL1WindowProvider_WGL::on_window_resized);
+	win32_window.func_on_resized().set(this, &GL1WindowProvider::on_window_resized);
 }
 
-GL1WindowProvider_WGL::~GL1WindowProvider_WGL()
+GL1WindowProvider::~GL1WindowProvider()
 {
 	if (opengl_context)
 	{
@@ -95,89 +95,89 @@ GL1WindowProvider_WGL::~GL1WindowProvider_WGL()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_WGL Attributes:
+// GL1WindowProvider Attributes:
 
-// std::list<HGLRC> GL1WindowProvider_WGL::opengl_contexts;
+// std::list<HGLRC> GL1WindowProvider::opengl_contexts;
 
-Rect GL1WindowProvider_WGL::get_geometry() const
+Rect GL1WindowProvider::get_geometry() const
 {
 	return win32_window.get_geometry();
 }
 
-Rect GL1WindowProvider_WGL::get_viewport() const
+Rect GL1WindowProvider::get_viewport() const
 {
 	return win32_window.get_viewport();
 }
 
-bool GL1WindowProvider_WGL::is_fullscreen() const
+bool GL1WindowProvider::is_fullscreen() const
 {
 	return fullscreen;
 }
 
-bool GL1WindowProvider_WGL::has_focus() const
+bool GL1WindowProvider::has_focus() const
 {
 	return win32_window.has_focus();
 }
 
-bool GL1WindowProvider_WGL::is_minimized() const
+bool GL1WindowProvider::is_minimized() const
 {
 	return win32_window.is_minimized();
 }
 
-bool GL1WindowProvider_WGL::is_maximized() const
+bool GL1WindowProvider::is_maximized() const
 {
 	return win32_window.is_maximized();
 }
 
-bool GL1WindowProvider_WGL::is_visible() const
+bool GL1WindowProvider::is_visible() const
 {
 	return win32_window.is_visible();
 }
 
-bool GL1WindowProvider_WGL::is_clipboard_text_available() const
+bool GL1WindowProvider::is_clipboard_text_available() const
 {
 	return win32_window.is_clipboard_text_available();
 }
 
-bool GL1WindowProvider_WGL::is_clipboard_image_available() const
+bool GL1WindowProvider::is_clipboard_image_available() const
 {
 	return win32_window.is_clipboard_image_available();
 }
 
-Size GL1WindowProvider_WGL::get_minimum_size(bool client_area) const
+Size GL1WindowProvider::get_minimum_size(bool client_area) const
 {
 	return win32_window.get_minimum_size(client_area);
 }
 
-Size GL1WindowProvider_WGL::get_maximum_size(bool client_area) const
+Size GL1WindowProvider::get_maximum_size(bool client_area) const
 {
 	return win32_window.get_maximum_size(client_area);
 }
 
-std::string GL1WindowProvider_WGL::get_title() const
+std::string GL1WindowProvider::get_title() const
 {
 	return win32_window.get_title();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_WGL Operations:
+// GL1WindowProvider Operations:
 
-void GL1WindowProvider_WGL::make_current() const
+void GL1WindowProvider::make_current() const
 {
 	wglMakeCurrent(device_context, opengl_context);
 }
 
-Point GL1WindowProvider_WGL::client_to_screen(const Point &client)
+Point GL1WindowProvider::client_to_screen(const Point &client)
 {
 	return win32_window.client_to_screen(client);
 }
 
-Point GL1WindowProvider_WGL::screen_to_client(const Point &screen)
+Point GL1WindowProvider::screen_to_client(const Point &screen)
 {
 	return win32_window.screen_to_client(screen);
 }
 
-void GL1WindowProvider_WGL::create_shadow_window(HWND wnd)
+void GL1WindowProvider::create_shadow_window(HWND wnd)
 {
 	WINDOWINFO window_info;
 	memset(&window_info, 0, sizeof(WINDOWINFO));
@@ -202,7 +202,7 @@ void GL1WindowProvider_WGL::create_shadow_window(HWND wnd)
 	shadow_window = true;
 }
 
-void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void GL1WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 	fullscreen = desc.is_fullscreen();
@@ -242,7 +242,7 @@ void GL1WindowProvider_WGL::create(DisplayWindowSite *new_site, const DisplayWin
 		wglSwapIntervalEXT(swap_interval);
 }
 
-void GL1WindowProvider_WGL::on_window_resized()
+void GL1WindowProvider::on_window_resized()
 {
 	if (shadow_window)
 	{
@@ -255,97 +255,97 @@ void GL1WindowProvider_WGL::on_window_resized()
 		((GL1GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-void GL1WindowProvider_WGL::show_system_cursor()
+void GL1WindowProvider::show_system_cursor()
 {
 	win32_window.show_system_cursor();
 }
 
-CursorProvider *GL1WindowProvider_WGL::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider *GL1WindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
 	return new CursorProvider_Win32(cursor_description, hotspot);
 }
 
-void GL1WindowProvider_WGL::set_cursor(CursorProvider *cursor)
+void GL1WindowProvider::set_cursor(CursorProvider *cursor)
 {
 	win32_window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor));
 }
 
-void GL1WindowProvider_WGL::set_cursor(StandardCursor type)
+void GL1WindowProvider::set_cursor(StandardCursor type)
 {
 	win32_window.set_cursor(type);
 }
 
-void GL1WindowProvider_WGL::set_cursor_handle(HCURSOR cursor)
+void GL1WindowProvider::set_cursor_handle(HCURSOR cursor)
 {
 	win32_window.set_cursor_handle(cursor);
 }
 
-void GL1WindowProvider_WGL::hide_system_cursor()
+void GL1WindowProvider::hide_system_cursor()
 {
 	win32_window.hide_system_cursor();
 }
 
-void GL1WindowProvider_WGL::set_title(const std::string &new_title)
+void GL1WindowProvider::set_title(const std::string &new_title)
 {
 	win32_window.set_title(new_title);
 }
 
-void GL1WindowProvider_WGL::set_position(const Rect &pos, bool client_area)
+void GL1WindowProvider::set_position(const Rect &pos, bool client_area)
 {
 	win32_window.set_position(pos, client_area);
 }
 
-void GL1WindowProvider_WGL::set_size(int width, int height, bool client_area)
+void GL1WindowProvider::set_size(int width, int height, bool client_area)
 {
 	win32_window.set_size(width, height, client_area);
 }
 
-void GL1WindowProvider_WGL::set_minimum_size( int width, int height, bool client_area )
+void GL1WindowProvider::set_minimum_size( int width, int height, bool client_area )
 {
 	win32_window.set_minimum_size(width,height,client_area);
 }
 
-void GL1WindowProvider_WGL::set_maximum_size( int width, int height, bool client_area )
+void GL1WindowProvider::set_maximum_size( int width, int height, bool client_area )
 {
 	win32_window.set_maximum_size(width,height,client_area);
 }
 
-void GL1WindowProvider_WGL::set_enabled(bool enable)
+void GL1WindowProvider::set_enabled(bool enable)
 {
 	win32_window.set_enabled(enable);
 }
 
-void GL1WindowProvider_WGL::minimize()
+void GL1WindowProvider::minimize()
 {
 	win32_window.minimize();
 }
 
-void GL1WindowProvider_WGL::restore()
+void GL1WindowProvider::restore()
 {
 	win32_window.restore();
 }
 
-void GL1WindowProvider_WGL::maximize()
+void GL1WindowProvider::maximize()
 {
 	win32_window.maximize();
 }
 
-void GL1WindowProvider_WGL::show(bool activate)
+void GL1WindowProvider::show(bool activate)
 {
 	win32_window.show(activate);
 }
 
-void GL1WindowProvider_WGL::hide()
+void GL1WindowProvider::hide()
 {
 	win32_window.hide();
 }
 
-void GL1WindowProvider_WGL::bring_to_front()
+void GL1WindowProvider::bring_to_front()
 {
 	win32_window.bring_to_front();
 }
 
-void GL1WindowProvider_WGL::flip(int interval)
+void GL1WindowProvider::flip(int interval)
 {
 	GL1::set_active(get_gc());
 
@@ -433,7 +433,7 @@ void GL1WindowProvider_WGL::flip(int interval)
 	}
 }
 
-void GL1WindowProvider_WGL::update(const Rect &_rect)
+void GL1WindowProvider::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -547,50 +547,50 @@ void GL1WindowProvider_WGL::update(const Rect &_rect)
 
 }
 
-void GL1WindowProvider_WGL::capture_mouse(bool capture)
+void GL1WindowProvider::capture_mouse(bool capture)
 {
 	win32_window.capture_mouse(capture);
 }
 
-void GL1WindowProvider_WGL::set_clipboard_text(const std::string &text)
+void GL1WindowProvider::set_clipboard_text(const std::string &text)
 {
 	win32_window.set_clipboard_text(text);
 }
 
-std::string GL1WindowProvider_WGL::get_clipboard_text() const
+std::string GL1WindowProvider::get_clipboard_text() const
 {
 	return win32_window.get_clipboard_text();
 }
 
-void GL1WindowProvider_WGL::request_repaint(const Rect &rect)
+void GL1WindowProvider::request_repaint(const Rect &rect)
 {
 	win32_window.request_repaint(rect);
 }
 
-void GL1WindowProvider_WGL::set_large_icon(const PixelBuffer &image)
+void GL1WindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	win32_window.set_large_icon(image);
 }
 
-void GL1WindowProvider_WGL::set_small_icon(const PixelBuffer &image)
+void GL1WindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	win32_window.set_small_icon(image);
 }
 
-void GL1WindowProvider_WGL::enable_alpha_channel(const Rect &blur_rect)
+void GL1WindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
 	win32_window.enable_alpha_channel(blur_rect);
 }
 
-void GL1WindowProvider_WGL::extend_frame_into_client_area(int height)
+void GL1WindowProvider::extend_frame_into_client_area(int height)
 {
 	win32_window.extend_frame_into_client_area(height);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL1WindowProvider_WGL Implementation:
+// GL1WindowProvider Implementation:
 
-HGLRC GL1WindowProvider_WGL::get_share_context()
+HGLRC GL1WindowProvider::get_share_context()
 {
 	HGLRC share_context = 0;
 	std::unique_ptr<MutexSection> mutex_section;
@@ -602,7 +602,7 @@ HGLRC GL1WindowProvider_WGL::get_share_context()
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
-			const GL1WindowProvider_WGL *render_window_wgl = dynamic_cast<const GL1WindowProvider_WGL*>(rwp);
+			const GL1WindowProvider *render_window_wgl = dynamic_cast<const GL1WindowProvider*>(rwp);
 			if (render_window_wgl)
 				share_context = render_window_wgl->opengl_context;
 		}
@@ -610,12 +610,12 @@ HGLRC GL1WindowProvider_WGL::get_share_context()
 	return share_context;
 }
 
-void GL1WindowProvider_WGL::set_clipboard_image( const PixelBuffer &buf )
+void GL1WindowProvider::set_clipboard_image( const PixelBuffer &buf )
 {
 	win32_window.set_clipboard_image(buf);
 }
 
-PixelBuffer GL1WindowProvider_WGL::get_clipboard_image() const
+PixelBuffer GL1WindowProvider::get_clipboard_image() const
 {
 	return win32_window.get_clipboard_image();
 }

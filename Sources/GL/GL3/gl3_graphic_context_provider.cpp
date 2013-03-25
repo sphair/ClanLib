@@ -70,6 +70,11 @@
 #elif !defined(WIN32)
 #include "GLX/gl3_window_provider_glx.h"
 #endif
+
+#ifdef WIN32
+#include "WGL/gl3_window_provider_wgl.h"
+#endif
+
 #include <memory>
 
 namespace clan
@@ -78,7 +83,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Construction:
 
-GL3GraphicContextProvider::GL3GraphicContextProvider(const DisplayWindowProvider * const render_window)
+GL3GraphicContextProvider::GL3GraphicContextProvider(const GL3WindowProvider * const render_window)
 : render_window(render_window), framebuffer_bound(false), opengl_version_major(0), shader_version_major(0), scissor_enabled(false)
 {
 	check_opengl_version();
@@ -339,7 +344,7 @@ ProcAddress *GL3GraphicContextProvider::get_proc_address(const std::string& func
 			0));
 #else
 
-	const OpenGLWindowProvider_GLX *wptr = dynamic_cast<const OpenGLWindowProvider_GLX *> (render_window);
+	const GL3WindowProvider *wptr = dynamic_cast<const GL3WindowProvider *> (render_window);
 	if (wptr == NULL)
 		return NULL;
 
@@ -1254,6 +1259,15 @@ void GL3GraphicContextProvider::enable_color_write(bool red, bool green, bool bl
 	glColorMask(red,green,blue,alpha);
 }
 
+void GL3GraphicContextProvider::make_current() const
+{
+	render_window->make_current();
+}
+
+const DisplayWindowProvider & GL3GraphicContextProvider::get_render_window() const
+{
+	return *render_window;
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Implementation:

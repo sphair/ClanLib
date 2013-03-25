@@ -36,9 +36,9 @@ namespace clan
 class PBuffer_GL1_Impl;
 
 #ifdef WIN32
-class GL1WindowProvider_WGL;
+class GL1WindowProvider;
 #else
-class GL1WindowProvider_GLX;
+class GL1WindowProvider;
 #endif
 
 class GL1GraphicContextProvider;
@@ -74,9 +74,9 @@ public:
 
 public:
 #ifdef WIN32
-	void create(GL1WindowProvider_WGL &window_provider, Size &size);
+	void create(GL1WindowProvider &window_provider, Size &size);
 #else
-	void create(GL1WindowProvider_GLX &window_provider, Size &size);
+	void create(GL1WindowProvider &window_provider, Size &size);
 #endif
 	void set_active() const;
 

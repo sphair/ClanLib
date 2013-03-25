@@ -57,6 +57,7 @@ class GL1TextureProvider;
 class GL1SelectedTexture;
 class DisposableObject;
 class GL1ProgramObjectProvider;
+class GL1WindowProvider;
 
 class GL1RasterizerStateProvider : public RasterizerStateProvider
 {
@@ -85,7 +86,7 @@ class GL1GraphicContextProvider : public OpenGLGraphicContextProvider, public Di
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL1GraphicContextProvider(const DisplayWindowProvider * const render_window);
+	GL1GraphicContextProvider(const GL1WindowProvider * const render_window);
 	~GL1GraphicContextProvider();
 
 /// \}
@@ -94,7 +95,7 @@ public:
 public:
 	int get_max_attributes();
 	Size get_max_texture_size() const;
-	const DisplayWindowProvider & get_render_window() const { return *render_window; }
+	const DisplayWindowProvider & get_render_window() const;
 	Size get_display_window_size() const;
 
 	// GL1 Only
@@ -197,6 +198,7 @@ public:
 
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
+	void make_current() const;
 
 /// \}
 /// \name Implementation
@@ -242,7 +244,7 @@ private:
 	GLenum to_enum(enum LogicOp op);
 
 	/// \brief OpenGL render window.
-	const DisplayWindowProvider * const render_window;
+	const GL1WindowProvider * const render_window;
 
 	bool prim_arrays_set;
 

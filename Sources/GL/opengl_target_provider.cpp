@@ -37,7 +37,7 @@
 #include "GL1/WGL/gl1_window_provider_wgl.h"
 #else
 #include "GL3/GLX/gl3_window_provider_glx.h"
-namespace clan { DisplayWindowProvider *newGL1WindowProvider_GLX(); } // #include "GL1/GLX/gl1_window_provider_glx.h"
+namespace clan { DisplayWindowProvider *newGL1WindowProvider(); } // #include "GL1/GLX/gl1_window_provider_glx.h"
 #endif
 
 namespace clan
@@ -64,7 +64,7 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 {
 #if defined(__APPLE__)
 	// description not supported on AGL at the moment
-	return cl_alloc_display_window_agl();//new OpenGLWindowProvider_AGL;
+	return cl_alloc_display_window_agl();//new GL3WindowProvider;
 
 #else
 
@@ -75,9 +75,9 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 	if ((version_major < 3) || ((version_major == 3) && (version_minor < 2)))
 	{
 		#if defined(WIN32)
-			return new GL1WindowProvider_WGL();
+			return new GL1WindowProvider();
 		#else
-			return newGL1WindowProvider_GLX();
+			return newGL1WindowProvider();
 		#endif
 	}
 
@@ -85,9 +85,9 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 	if (!description.get_allow_lower_versions())
 	{
 		#if defined(WIN32)
-			return new OpenGLWindowProvider_WGL(description);
+			return new GL3WindowProvider(description);
 		#else
-			return new OpenGLWindowProvider_GLX(description);
+			return new GL3WindowProvider(description);
 		#endif
 	}
 
@@ -95,18 +95,18 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 	{
 		// Attempt GL3 first
 		#if defined(WIN32)
-			return new OpenGLWindowProvider_WGL(description);
+			return new GL3WindowProvider(description);
 		#else
-			return new OpenGLWindowProvider_GLX(description);
+			return new GL3WindowProvider(description);
 		#endif
 	}
 	catch (...)
 	{
 		// Then attempt GL1
 		#if defined(WIN32)
-			return new GL1WindowProvider_WGL();
+			return new GL1WindowProvider();
 		#else
-			return newGL1WindowProvider_GLX();
+			return newGL1WindowProvider();
 		#endif
 
 	}
