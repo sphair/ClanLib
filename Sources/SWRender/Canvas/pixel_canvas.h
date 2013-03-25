@@ -53,8 +53,7 @@ public:
 
 	void resize(const Size &size);
 
-	int get_width() const { return colorbuffer0.size.width; }
-	int get_height() const { return colorbuffer0.size.height; }
+	Size get_size() const { return colorbuffer0.size; }
 
 	void set_clip_rect(const Rect &new_clip_rect);
 	void reset_clip_rect();

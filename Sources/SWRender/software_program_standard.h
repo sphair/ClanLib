@@ -50,8 +50,10 @@ public:
 
 	Vec2f transform(const Vec4f &vertex) const;
 
-private:
+	void set_size(const Size &new_size) {target_size = new_size;}
 
+private:
+	Size target_size;
 };
 
 
