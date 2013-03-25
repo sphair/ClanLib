@@ -68,51 +68,6 @@ PixelBuffer SWRenderTextureProvider::get_pixeldata(GraphicContext &gc, TextureFo
 	return image.to_format(texture_format);
 }
 
-/*FIXME
-void SWRenderTextureProvider::set_image(PixelBuffer &new_image, int level)
-{
-	if (level != 0)
-		throw Exception("Unsupported mipmap level specified for GDI target");
-	image = new_image.to_format(tf_bgra8);
-}
-*/
-
-/*FIXME
-void SWRenderTextureProvider::set_subimage(
-	int x,
-	int y,
-	const PixelBuffer &source_image,
-	const Rect &src_rect,
-	int level)
-{
-	if (level != 0)
-		throw Exception("Unsupported mipmap level specified for GDI target");
-
-	PixelBuffer temp_source(src_rect.get_width(), src_rect.get_height(), tf_bgra8);
-	source_image.convert(temp_source, Rect(0, 0, temp_source.get_width(), temp_source.get_height()), src_rect);
-
-	int dest_buffer_width = image.get_width();
-	int dest_buffer_height = image.get_height();
-	int src_buffer_width = temp_source.get_width();
-	unsigned int *dest_data = static_cast<unsigned int *>(image.get_data());
-	const unsigned int *src_data = static_cast<const unsigned int *>(temp_source.get_data());
-
-	for (int yy = 0; yy < temp_source.get_height(); yy++)
-	{
-		if (y+yy >= dest_buffer_height)
-			break;
-
-		for (int xx = 0; xx < temp_source.get_width(); xx++)
-		{
-			if (x+xx < dest_buffer_width)
-				dest_data[x+xx+(y+yy)*dest_buffer_width] = src_data[xx+yy*src_buffer_width];
-			else
-				break;
-		}
-	}
-}
-*/
-
 void SWRenderTextureProvider::copy_image_from(
 	int x,
 	int y,
@@ -201,7 +156,32 @@ void SWRenderTextureProvider::set_texture_compare(TextureCompareMode mode, Compa
 
 void SWRenderTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &src, const Rect &src_rect)
 {
-	//FIXME: Stub
+	if (level != 0)
+		throw Exception("Unsupported mipmap level specified for SWRender target");
+
+	PixelBuffer temp_source(src_rect.get_width(), src_rect.get_height(), tf_bgra8);
+	temp_source.set_subimage(src, Point(0,0), src_rect);
+
+	int dest_buffer_width = image.get_width();
+	int dest_buffer_height = image.get_height();
+	int src_buffer_width = temp_source.get_width();
+	unsigned int *dest_data = static_cast<unsigned int *>(image.get_data());
+	const unsigned int *src_data = static_cast<const unsigned int *>(temp_source.get_data());
+
+	for (int yy = 0; yy < temp_source.get_height(); yy++)
+	{
+		if (y+yy >= dest_buffer_height)
+			break;
+
+		for (int xx = 0; xx < temp_source.get_width(); xx++)
+		{
+			if (x+xx < dest_buffer_width)
+				dest_data[x+xx+(y+yy)*dest_buffer_width] = src_data[xx+yy*src_buffer_width];
+			else
+				break;
+		}
+	}
+
 }
 TextureProvider *SWRenderTextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
 {
