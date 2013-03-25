@@ -36,48 +36,58 @@ namespace clan
 // SWRenderVertexArrayBufferProvider Construction:
 
 SWRenderVertexArrayBufferProvider::SWRenderVertexArrayBufferProvider()
+: data(0), size(0)
 {
 }
 
 SWRenderVertexArrayBufferProvider::~SWRenderVertexArrayBufferProvider()
 {
+	delete[] data;
 }
 
-void SWRenderVertexArrayBufferProvider::create(int size, BufferUsage usage)
+void SWRenderVertexArrayBufferProvider::create(int new_size, BufferUsage usage)
 {
+	delete[] data;
+	data = 0;
+	size = 0;
+	data = new char[new_size];
+	size = new_size;
 }
 
-void SWRenderVertexArrayBufferProvider::create(void *data, int size, BufferUsage usage)
+void SWRenderVertexArrayBufferProvider::create(void *init_data, int new_size, BufferUsage usage)
 {
+	delete[] data;
+	data = 0;
+	size = 0;
+	data = new char[new_size];
+	size = new_size;
+	memcpy(data, init_data, size);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderVertexArrayBufferProvider Attributes:
 
-void *SWRenderVertexArrayBufferProvider::get_data()
-{
-	return 0;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderVertexArrayBufferProvider Operations:
 
-void SWRenderVertexArrayBufferProvider::lock(BufferAccess access)
+void SWRenderVertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *new_data, int new_size)
 {
+	if ( (offset < 0) || (new_size < 0) || ((new_size+offset) > size) )
+		throw Exception("Vertex array buffer, invalid size");
+
+	memcpy(data + offset, new_data, new_size);
 }
 
-void SWRenderVertexArrayBufferProvider::unlock()
-{
-}
-
-void SWRenderVertexArrayBufferProvider::upload_data(GraphicContext &gc, int offset, const void *data, int size)
-{
-}
 void SWRenderVertexArrayBufferProvider::copy_from(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
+	buffer.lock(gc, access_read_only);
+	memcpy(this->data + dest_pos, (char *) buffer.get_data() + src_pos, size);
+	buffer.unlock();
 }
+
 void SWRenderVertexArrayBufferProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer, int dest_pos, int src_pos, int size)
 {
+	buffer.upload_data(gc, dest_pos, this->data + src_pos, size);
 }
 
 /////////////////////////////////////////////////////////////////////////////
