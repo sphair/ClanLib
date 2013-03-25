@@ -385,19 +385,19 @@ void SWRenderDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 }
 void SWRenderDisplayWindowProvider::make_current() const
 {
-	//FIXME: Stub
+
 }
 void SWRenderDisplayWindowProvider::set_cursor_handle(HCURSOR cursor)
 {
-	//FIXME: Stub
+	window.set_cursor_handle(cursor);
 }
 void SWRenderDisplayWindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
-	//FIXME: Stub
+	window.enable_alpha_channel(blur_rect);
 }
 void SWRenderDisplayWindowProvider::extend_frame_into_client_area(int height)
 {
-	//FIXME: Stub
+	window.extend_frame_into_client_area(height);
 }
 
 /////////////////////////////////////////////////////////////////////////////
