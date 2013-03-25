@@ -58,6 +58,8 @@ SWRenderGraphicContextProvider::SWRenderGraphicContextProvider(SWRenderDisplayWi
 : window(window), current_program_provider(0), is_sprite_program(false)
 {
 	canvas.reset(new PixelCanvas(window->get_viewport().get_size()));
+	cl_software_program_standard.set_size(canvas->get_size());
+
 	program_object_standard = ProgramObject_SWRender(&cl_software_program_standard, false);
 	program_object_standard.bind_attribute_location(0, "Position");
 	program_object_standard.bind_attribute_location(1, "Color0");
@@ -95,7 +97,7 @@ Size SWRenderGraphicContextProvider::get_max_texture_size() const
 
 Size SWRenderGraphicContextProvider::get_display_window_size() const
 {
-	return Size(canvas->get_width(), canvas->get_height());
+	return canvas->get_size();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -455,6 +457,8 @@ void SWRenderGraphicContextProvider::set_viewport(const Rectf &viewport)
 void SWRenderGraphicContextProvider::on_window_resized()
 {
 	canvas->resize(window->get_viewport().get_size());
+	cl_software_program_standard.set_size(canvas->get_size());
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
