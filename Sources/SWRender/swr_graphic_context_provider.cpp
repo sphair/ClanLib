@@ -406,7 +406,7 @@ void SWRenderGraphicContextProvider::reset_primitives_array()
 	current_prim_array = PrimitivesArray();
 }
 
-void SWRenderGraphicContextProvider::draw_pixels(GraphicContext &gc, float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color)
+void SWRenderGraphicContextProvider::draw_pixels(float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color)
 {
 	Vec4f pos(x, y, 1.0, 1.0);
 	Vec2f screen_pos = cl_software_program_standard.transform(pos);

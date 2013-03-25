@@ -91,6 +91,11 @@ void GraphicContext_SWRender::draw_pixels_bicubic(int x, int y, int zoom_number,
 	impl->provider->draw_pixels_bicubic(x, y, zoom_number, zoom_denominator, pixels);
 }
 
+void GraphicContext_SWRender::draw_pixels(float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color)
+{
+	impl->provider->draw_pixels(x, y, zoom_x, zoom_y, pixel_buffer, src_rect, color);
+}
+
 void GraphicContext_SWRender::queue_command(std::unique_ptr<PixelCommand> &command)
 {
 	impl->provider->queue_command(command);

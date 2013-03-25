@@ -71,6 +71,7 @@ public:
 
 //!Operations
 public:
+	void draw_pixels(float x, float y, float zoom_x, float zoom_y, const PixelBuffer &pixel_buffer, const Rect &src_rect, const Colorf &color);
 	void draw_pixels_bicubic(int x, int y, int zoom_number, int zoom_denominator, const PixelBuffer &pixels);
 
 	/// \brief Queues a pixel command in the pipeline
