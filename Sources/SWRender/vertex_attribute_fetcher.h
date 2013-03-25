@@ -210,9 +210,13 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_ar
 	if(!prim_array)
 		throw Exception("Invalid SWRenderPrimitivesArrayProvider");
 
-	int bound_attribute_index = attribute_index;
+	int bound_attribute_index = -1;
+	if (attribute_index >=0 && attribute_index <prim_array->attributes.size())
+	{
+		bound_attribute_index = attribute_index;
+	}
 
-	/* I guess this is not required
+	/* I guess this is not required (replaced by the above code) (See  HACK HACK HACK below)
 	int bound_attribute_index = -1;
 	for (int j = 0; j < prim_array->attributes.size(); j++)
 	{
@@ -228,6 +232,7 @@ inline void VertexAttributeFetcherPtr::bind(const PrimitivesArray &primitives_ar
 	{
 		throw_if_insufficient_buffer(sizeof(VertexAttributeFetcherNull));
 		fetcher = new (alloc_buffer) VertexAttributeFetcherNull();
+		bound_attribute_index = 0;	// HACK HACK HACK!!!
 	}
 	else
 	{

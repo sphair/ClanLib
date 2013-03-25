@@ -53,7 +53,7 @@ public:
 /// \{
 
 public:
-	void *get_data();
+	void *get_data() const { return data; }
 
 
 /// \}
@@ -75,6 +75,9 @@ public:
 /// \{
 
 private:
+	char *data;
+	int size;
+
 /// \}
 };
 
