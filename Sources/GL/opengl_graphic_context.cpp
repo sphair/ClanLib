@@ -79,11 +79,6 @@ void GraphicContext_GL::throw_if_null() const
 		throw Exception("GraphicContext_GL is null");
 }
 
-int GraphicContext_GL::get_max_texture_coords()
-{
-	return impl->provider->get_max_texture_coords();
-}
-
 void GraphicContext_GL::get_opengl_version(int &version_major, int &version_minor)
 {
 	impl->provider->get_opengl_version(version_major, version_minor);
@@ -101,25 +96,36 @@ void GraphicContext_GL::get_opengl_shading_language_version(int &version_major, 
 
 std::string GraphicContext_GL::get_renderer_string()
 {
-	return impl->provider->get_renderer_string();
+	set_active();
+	std::string renderer = (char*)glGetString(GL_RENDERER);
+	return renderer;
 }
 
 std::string GraphicContext_GL::get_vendor_string()
 {
-	return impl->provider->get_vendor_string();
+	set_active();
+	std::string vendor = (char*)glGetString(GL_VENDOR);
+	return vendor;
 }
 
 std::vector<std::string> GraphicContext_GL::get_extensions()
 {
-	return impl->provider->get_extensions();
+	set_active();
+	std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
+	std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
+	std::vector<std::string> extensions;
+	for (std::vector<std::string>::size_type i=0; i<tmp.size(); i++)
+		extensions.push_back(tmp[i]);
+	return extensions;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // GraphicContext_GL Operations:
 
 void GraphicContext_GL::set_active()
 {
-	OpenGL::set_active(static_cast<GL3GraphicContextProvider *>(impl->provider)); // To do: fix this to work with GL1 subtarget too
+	OpenGL::set_active(impl->provider);
 }
 
 /////////////////////////////////////////////////////////////////////////////

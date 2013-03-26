@@ -250,31 +250,6 @@ void GL3GraphicContextProvider::calculate_shading_language_version()
 	}
 }
 
-std::string GL3GraphicContextProvider::get_renderer_string()
-{
-	OpenGL::set_active(this);
-	std::string renderer = (char*)glGetString(GL_RENDERER);
-	return renderer;
-}
-
-std::string GL3GraphicContextProvider::get_vendor_string()
-{
-	OpenGL::set_active(this);
-	std::string vendor = (char*)glGetString(GL_VENDOR);
-	return vendor;
-}
-
-std::vector<std::string> GL3GraphicContextProvider::get_extensions()
-{
-	OpenGL::set_active(this);
-	std::string extension_string = (char*)glGetString(GL_EXTENSIONS);
-	std::vector<std::string> tmp = StringHelp::split_text(extension_string, " ");
-	std::vector<std::string> extensions;
-	for (std::vector<std::string>::size_type i=0; i<tmp.size(); i++)
-		extensions.push_back(tmp[i]);
-	return extensions;
-}
-
 int GL3GraphicContextProvider::get_max_attributes()
 {
 	OpenGL::set_active(this);

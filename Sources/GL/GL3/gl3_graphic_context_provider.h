@@ -78,7 +78,7 @@ public:
 	DepthStencilStateDescription desc;
 };
 
-class GL3GraphicContextProvider : public OpenGLGraphicContextProvider, public DisposableObject
+class GL3GraphicContextProvider : public OpenGLGraphicContextProvider,  public GraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{
@@ -112,9 +112,6 @@ public:
 	void get_opengl_version(int &version_major, int &version_minor);
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) { get_opengl_version(version_major, version_minor); version_release = 0; }
 	void get_opengl_shading_language_version(int &version_major, int &version_minor) { version_major = shader_version_major; version_minor = shader_version_minor; }
-	std::string get_renderer_string();
-	std::string get_vendor_string();
-	std::vector<std::string> get_extensions();
 
 	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
 
