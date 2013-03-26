@@ -45,9 +45,6 @@
 #include <GL/gl.h>
 #endif
 
-#ifndef DISPLAYDEFINES_DEFINES
-#define DISPLAYDEFINES_DEFINES
-
 #include <cstddef>
 
 namespace clan
@@ -83,7 +80,6 @@ typedef void * CLDEBUGPROC;
 /// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 enum DisplayDefines
 {
-
 	// GL_VERSION_1_1
 	// AttribMask
 #ifndef GL_DEPTH_BUFFER_BIT
@@ -1774,36 +1770,50 @@ enum DisplayDefines
 	GL_COMPRESSED_RGB_S3TC_DXT1_EXT        = 0x83F0,
 	GL_COMPRESSED_RGBA_S3TC_DXT1_EXT       = 0x83F1,
 	GL_COMPRESSED_RGBA_S3TC_DXT3_EXT       = 0x83F2,
-	GL_COMPRESSED_RGBA_S3TC_DXT5_EXT       = 0x83F3
+	GL_COMPRESSED_RGBA_S3TC_DXT5_EXT       = 0x83F3,
 
 #endif
 
 	// NOTE - NOT PART OF THE OPENGL 4.3 STANDARD HEADER FILES
-#ifndef GL_EXT_texture_sRGB
-	#define GL_SRGB_EXT                       0x8C40
-	#define GL_SRGB8_EXT                      0x8C41
-	#define GL_SRGB_ALPHA_EXT                 0x8C42
-	#define GL_SRGB8_ALPHA8_EXT               0x8C43
-	#define GL_SLUMINANCE_ALPHA_EXT           0x8C44
-	#define GL_SLUMINANCE8_ALPHA8_EXT         0x8C45
-	#define GL_SLUMINANCE_EXT                 0x8C46
-	#define GL_SLUMINANCE8_EXT                0x8C47
-	#define GL_COMPRESSED_SRGB_EXT            0x8C48
-	#define GL_COMPRESSED_SRGB_ALPHA_EXT      0x8C49
-	#define GL_COMPRESSED_SLUMINANCE_EXT      0x8C4A
-	#define GL_COMPRESSED_SLUMINANCE_ALPHA_EXT 0x8C4B
-	#define GL_COMPRESSED_SRGB_S3TC_DXT1_EXT  0x8C4C
-	#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT 0x8C4D
-	#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT 0x8C4E
-	#define GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT 0x8C4F
+#ifndef GL_SRGB_EXT
+	GL_SRGB_EXT =  0x8C40,
+	GL_SRGB8_EXT = 0x8C41,
+	GL_SRGB_ALPHA_EXT =  0x8C42,
+	GL_SRGB8_ALPHA8_EXT =  0x8C43,
+	GL_SLUMINANCE_ALPHA_EXT =  0x8C44,
+	GL_SLUMINANCE8_ALPHA8_EXT =  0x8C45,
+	GL_SLUMINANCE_EXT =  0x8C46,
+	GL_SLUMINANCE8_EXT = 0x8C47,
+	GL_COMPRESSED_SRGB_EXT = 0x8C48,
+	GL_COMPRESSED_SRGB_ALPHA_EXT = 0x8C49,
+	GL_COMPRESSED_SLUMINANCE_EXT = 0x8C4A,
+	GL_COMPRESSED_SLUMINANCE_ALPHA_EXT =  0x8C4B,
+	GL_COMPRESSED_SRGB_S3TC_DXT1_EXT = 0x8C4C,
+	GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT =  0x8C4D,
+	GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT =  0x8C4E,
+	GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT =  0x8C4F,
 #endif
 
+	// ***********************************************************
+	// *** Legacy defines for ClanLib OpenGL 1.3 (GL1) support ***
+#ifndef GL_COMPARE_R_TO_TEXTURE
+	GL_COMPARE_R_TO_TEXTURE = 0x884e,
+#endif
+#ifndef GL_POINT_SPRITE
+	GL_POINT_SPRITE = 0x8861,
+#endif
+#ifndef GL_MAX_TEXTURE_COORDS
+	GL_MAX_TEXTURE_COORDS = 0x8871,
+#endif
+#ifndef GL_MAX_TEXTURE_UNITS
+	GL_MAX_TEXTURE_UNITS = 0x84E2,
+#endif
+
+	// ***********************************************************
 
 };
 
 }
-
-#endif
 
 /// \}
 

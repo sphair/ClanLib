@@ -32,7 +32,7 @@
 
 #pragma once
 
-#include "opengl1_defines.h"
+#include "API/GL/opengl_defines.h"
 #include <utility>
 #include "API/Display/Render/texture.h"
 #include "API/Core/System/thread_local_storage.h"

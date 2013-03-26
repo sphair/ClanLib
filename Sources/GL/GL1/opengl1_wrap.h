@@ -32,7 +32,7 @@
 #pragma once
 
 #include "opengl1.h"
-#include "opengl1_defines.h"
+#include "API/GL/opengl_defines.h"
 
 namespace clan
 {
