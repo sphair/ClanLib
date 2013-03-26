@@ -64,6 +64,20 @@ namespace clan
 {
 
 cl_tls_variable GLFunctions *OpenGL::functions = 0;
+cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = 0;
+static Mutex cl_function_map_mutex;
+
+// A fix for a compiler bug with compiler version 13.00.9466
+#if _MSC_VER > 1300
+typedef std::map<const OpenGLGraphicContextProvider * const, GLFunctions *> cl_function_map_type;
+#else
+typedef std::map<const OpenGLGraphicContextProvider *, GLFunctions *> cl_function_map_type;
+#endif
+
+static cl_function_map_type cl_function_map;
+
+GLFunctions *cl_setup_binds();
+
 
 void OpenGL::check_error()
 {
@@ -217,26 +231,43 @@ TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
 /////////////////////////////////////////////////////////////////////////////
 // OpenGL context management:
 
-cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = 0;
-static Mutex cl_function_map_mutex;
-
-// A fix for a compiler bug with compiler version 13.00.9466
-#if _MSC_VER > 1300
-typedef std::map<const OpenGLGraphicContextProvider * const, GLFunctions *> cl_function_map_type;
-#else
-typedef std::map<const OpenGLGraphicContextProvider *, GLFunctions *> cl_function_map_type;
-#endif
-
-static cl_function_map_type cl_function_map;
-
-GLFunctions *cl_setup_binds();
-
 ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 {
-	if (cl_active_opengl_gc)
+#ifdef WIN32
+	if (!wglGetProcAddress)
+		return NULL;
+	return (void (*)())wglGetProcAddress(function_name.c_str());
+#else
+#ifdef __APPLE__
+	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
+	if (cl_gBundleRefOpenGL == 0)
 	{
-		return cl_active_opengl_gc->get_proc_address(function_name);
-	}
+		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
+		if (cl_gBundleRefOpenGL == 0)
+        {
+            cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengles"));
+            if (cl_gBundleRefOpenGL == 0)
+                throw Exception("Unable to find opengl bundle");
+        }
+    }
+
+	return (ProcAddress *) CFBundleGetFunctionPointerForName(
+		cl_gBundleRefOpenGL,
+		CFStringCreateWithCStringNoCopy(
+			0,
+			function_name.c_str(),
+			CFStringGetSystemEncoding(),
+			0));
+#else
+
+	const GL3WindowProvider *wptr = dynamic_cast<const GL3WindowProvider *> (render_window);
+	if (wptr == NULL)
+		return NULL;
+
+	return wptr->get_proc_address(function_name);
+#endif
+#endif
+
 	return NULL;
 }
 

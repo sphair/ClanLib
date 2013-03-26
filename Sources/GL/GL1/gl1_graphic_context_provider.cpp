@@ -222,21 +222,6 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& function_name) const
-{
-
-#ifdef WIN32
-	return (void (*)())wglGetProcAddress(function_name.c_str());
-#else
-	const GL1WindowProvider *wptr = dynamic_cast<const GL1WindowProvider *> (render_window);
-	if (wptr)
-		return wptr->get_proc_address(function_name);
-
-	return NULL;
-#endif
-
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Operations:
 

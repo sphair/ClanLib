@@ -201,9 +201,6 @@ public:
 	
 	void on_window_resized();
 
-	/// \brief Get OpenGL extension specific function address.
-	ProcAddress *get_proc_address(const std::string& function_name) const ;
-
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
 
