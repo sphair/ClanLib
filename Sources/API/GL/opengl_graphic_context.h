@@ -63,11 +63,6 @@ public:
 	/// \brief Throw an exception if this object is invalid.
 	void throw_if_null() const;
 
-	/// \brief Get Max texture coords
-	///
-	/// \return max_texture_coords
-	int get_max_texture_coords();
-
 	/// \brief Get the opengl version
 	///
 	/// \param version_major = On Return: Major

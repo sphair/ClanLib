@@ -80,7 +80,7 @@ public:
 	DepthStencilStateDescription desc;
 };
 
-class GL1GraphicContextProvider : public OpenGLGraphicContextProvider, public DisposableObject
+class GL1GraphicContextProvider : public OpenGLGraphicContextProvider,  public GraphicContextProvider, public DisposableObject
 {
 /// \name Construction
 /// \{

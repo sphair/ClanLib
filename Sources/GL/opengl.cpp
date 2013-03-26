@@ -58,6 +58,8 @@
 #include <GL/glx.h>
 #endif
 
+#include "API/GL/opengl_graphic_context.h"
+
 namespace clan
 {
 
@@ -241,7 +243,9 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 void OpenGL::set_active(GraphicContext &gc)
 {
 	gc.impl->set_active();
-	set_active(static_cast<const OpenGLGraphicContextProvider *>(gc.get_provider()));
+
+	GraphicContext_GL gc_gl(gc);
+	gc_gl.set_active();
 }
 
 bool OpenGL::set_active()

@@ -33,17 +33,13 @@
 namespace clan
 {
 
-class OpenGLGraphicContextProvider : public GraphicContextProvider
+class OpenGLGraphicContextProvider
 {
 public:
-	virtual int get_max_texture_coords() { return 0; }
 	virtual void get_opengl_version(int &version_major, int &version_minor) = 0;
 	virtual void get_opengl_version(int &version_major, int &version_minor, int &version_release) = 0;
 	virtual void get_opengl_shading_language_version(int &version_major, int &version_minor) { version_major = 0; version_minor = 0; }
 	virtual void make_current() const = 0;
-	virtual std::string get_renderer_string() { return std::string(); }
-	virtual std::string get_vendor_string() { return std::string(); }
-	virtual std::vector<std::string> get_extensions() { return std::vector<std::string>(); }
 	virtual ProcAddress *get_proc_address(const std::string& function_name) const = 0;
 
 };
