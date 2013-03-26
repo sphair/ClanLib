@@ -38,8 +38,8 @@
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
-#include "../opengl1.h"
-#include "../opengl1_wrap.h"
+#include "API/GL/opengl.h"
+#include "API/GL/opengl_wrap.h"
 #include "API/Core/Text/logger.h"
 #include "Display/X11/cursor_provider_x11.h"
 #include "Display/X11/display_message_queue_x11.h"
@@ -175,7 +175,7 @@ GL1WindowProvider::~GL1WindowProvider()
 		::Display *disp = x11_window.get_display();
 		if (glx.glXGetCurrentContext() == opengl_context)
 		{
-			GL1::set_active(NULL);
+			OpenGL::set_active(NULL);
 		}
 
 		if (disp)
@@ -194,7 +194,7 @@ GL1WindowProvider::~GL1WindowProvider()
 /////////////////////////////////////////////////////////////////////////////
 // GL1WindowProvider Operations:
 
-GL1ProcAddress *GL1WindowProvider::get_proc_address(const std::string& function_name) const
+ProcAddress *GL1WindowProvider::get_proc_address(const std::string& function_name) const
 {
 	if (glx.glXGetProcAddressARB)
 		return glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
@@ -349,8 +349,8 @@ bool GL1WindowProvider::is_glx_extension_supported(const char *ext_name)
 
 void GL1WindowProvider::setup_extension_pointers()
 {
-	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) GL1::get_proc_address("glXSwapIntervalSGI");
-	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) GL1::get_proc_address("glXSwapIntervalMESA");
+	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) OpenGL::get_proc_address("glXSwapIntervalSGI");
+	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) OpenGL::get_proc_address("glXSwapIntervalMESA");
 
 	// See - http://dri.freedesktop.org/wiki/glXGetProcAddressNeverReturnsNULL ,get_proc_address() may return an invalid extension address
 	if ( !is_glx_extension_supported("GLX_SGI_swap_control") )
@@ -364,10 +364,10 @@ void GL1WindowProvider::setup_extension_pointers()
 	}
 
 
-	glx.glXCreatePbufferSGIX = (GL1_GLXFunctions::ptr_glXCreatePbufferSGIX) GL1::get_proc_address("glXCreateGLXPbufferSGIX");
-	glx.glXDestroyPbufferSGIX = (GL1_GLXFunctions::ptr_glXDestroyPbuffer) GL1::get_proc_address("glXDestroyGLXPbufferSGIX");
-	glx.glXChooseFBConfigSGIX = (GL1_GLXFunctions::ptr_glXChooseFBConfig) GL1::get_proc_address("glXChooseFBConfigSGIX");
-	glx.glXGetVisualFromFBConfigSGIX = (GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) GL1::get_proc_address("glXGetVisualFromFBConfigSGIX");
+	glx.glXCreatePbufferSGIX = (GL1_GLXFunctions::ptr_glXCreatePbufferSGIX) OpenGL::get_proc_address("glXCreateGLXPbufferSGIX");
+	glx.glXDestroyPbufferSGIX = (GL1_GLXFunctions::ptr_glXDestroyPbuffer) OpenGL::get_proc_address("glXDestroyGLXPbufferSGIX");
+	glx.glXChooseFBConfigSGIX = (GL1_GLXFunctions::ptr_glXChooseFBConfig) OpenGL::get_proc_address("glXChooseFBConfigSGIX");
+	glx.glXGetVisualFromFBConfigSGIX = (GL1_GLXFunctions::ptr_glXGetVisualFromFBConfig) OpenGL::get_proc_address("glXGetVisualFromFBConfigSGIX");
 	if ( !is_glx_extension_supported("GLX_SGIX_pbuffer") )
 	{
 		glx.glXCreatePbufferSGIX = NULL;
@@ -415,7 +415,7 @@ GLXContext GL1WindowProvider::create_context()
 void GL1WindowProvider::flip(int interval)
 {
 	GraphicContext gc = get_gc();
-	GL1::set_active(gc);
+	OpenGL::set_active(gc);
 
 	if (interval != -1 && interval != swap_interval)
 	{
@@ -450,47 +450,47 @@ void GL1WindowProvider::update(const Rect &_rect)
 	if (rect.right <= rect.left || rect.bottom <= rect.top)
 		return;
 
-	GL1::set_active(gc);
+	OpenGL::set_active(gc);
 
 	GLint old_viewport[4], old_matrix_mode;
 	GLdouble old_matrix_projection[16], old_matrix_modelview[16];
-	cl1GetIntegerv(GL_VIEWPORT, old_viewport);
-	cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
-	cl1GetDoublev(GL_PROJECTION_MATRIX, old_matrix_projection);
-	cl1GetDoublev(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+	glGetIntegerv(GL_VIEWPORT, old_viewport);
+	glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+	glGetDoublev(GL_PROJECTION_MATRIX, old_matrix_projection);
+	glGetDoublev(GL_MODELVIEW_MATRIX, old_matrix_modelview);
 
-	cl1Viewport(0, 0, width, height);
-	cl1MatrixMode(GL_PROJECTION);
-	cl1LoadIdentity();
-	cl1MultMatrixf(Mat4f::ortho_2d(0.0, width, 0.0, height, handed_right, clip_negative_positive_w));
-	cl1MatrixMode(GL_MODELVIEW);
-	cl1LoadIdentity();
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMultMatrixf(Mat4f::ortho_2d(0.0, width, 0.0, height, handed_right, clip_negative_positive_w));
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	GLboolean isDoubleBuffered = GL_TRUE;
-	cl1GetBooleanv(GL_DOUBLEBUFFER, &isDoubleBuffered);
+	glGetBooleanv(GL_DOUBLEBUFFER, &isDoubleBuffered);
 	if (isDoubleBuffered)
 	{
-		cl1ReadBuffer(GL_BACK);
-		cl1DrawBuffer(GL_FRONT);
+		glReadBuffer(GL_BACK);
+		glDrawBuffer(GL_FRONT);
 
-		cl1RasterPos2i(rect.left, height - rect.bottom);
+		glRasterPos2i(rect.left, height - rect.bottom);
 
-		cl1PixelZoom(1.0f, 1.0f);
+		glPixelZoom(1.0f, 1.0f);
 
-		cl1CopyPixels(	rect.left, height - rect.bottom,
+		glCopyPixels(	rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,
 				GL_COLOR);
 
-		cl1DrawBuffer(GL_BACK);
-		cl1Flush();
+		glDrawBuffer(GL_BACK);
+		glFlush();
 	}
 
-	cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	cl1MatrixMode(GL_PROJECTION);
-	cl1LoadMatrixd(old_matrix_projection);
-	cl1MatrixMode(GL_MODELVIEW);
-	cl1LoadMatrixd(old_matrix_modelview);
-	cl1MatrixMode(old_matrix_mode);
+	glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixd(old_matrix_projection);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixd(old_matrix_modelview);
+	glMatrixMode(old_matrix_mode);
 }
 
 

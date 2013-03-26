@@ -209,7 +209,7 @@ HGLRC GL1CreationHelper::create_opengl2_context(HGLRC share_context)
 
 void GL1CreationHelper::set_active()
 {
-	GL1::set_active(0);
+	OpenGL::set_active(0);
 	wglMakeCurrent(query_dc, query_context);
 }
 

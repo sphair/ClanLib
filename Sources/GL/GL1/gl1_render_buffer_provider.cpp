@@ -29,8 +29,8 @@
 
 #include "GL/precomp.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
-#include "opengl1_wrap.h"
-#include "opengl1.h"
+#include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl.h"
 #include "gl1_render_buffer_provider.h"
 
 namespace clan

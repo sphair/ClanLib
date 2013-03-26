@@ -31,8 +31,8 @@
 #pragma once
 
 
-#include "opengl1_wrap.h"
-#include "opengl1.h"
+#include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl.h"
 #include "API/Display/TargetProviders/program_object_provider.h"
 #include "API/Core/System/disposable_object.h"
 

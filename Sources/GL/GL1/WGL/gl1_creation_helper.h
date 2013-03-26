@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "../opengl1_wrap.h"
+#include "API/GL/opengl_wrap.h"
 
 namespace clan
 {
@@ -56,11 +56,11 @@ private:
 	HDC query_dc;
 	HGLRC query_context;
 
-	typedef HGLRC (GL1FUNC *ptr_wglCreateContextAttribsARB)(HDC, HGLRC, const int *);
+	typedef HGLRC (GLFUNC *ptr_wglCreateContextAttribsARB)(HDC, HGLRC, const int *);
 
-	typedef BOOL (GL1FUNC *ptr_wglGetPixelFormatAttribivEXT)(HDC, int, int, UINT, int *, int *);
-	typedef BOOL (GL1FUNC *ptr_wglGetPixelFormatAttribfvEXT)(HDC, int, int, UINT, int *, FLOAT *);
-	typedef BOOL (GL1FUNC *ptr_wglChoosePixelFormatEXT)(HDC, const int *, const FLOAT *, UINT, int *, UINT *);
+	typedef BOOL (GLFUNC *ptr_wglGetPixelFormatAttribivEXT)(HDC, int, int, UINT, int *, int *);
+	typedef BOOL (GLFUNC *ptr_wglGetPixelFormatAttribfvEXT)(HDC, int, int, UINT, int *, FLOAT *);
+	typedef BOOL (GLFUNC *ptr_wglChoosePixelFormatEXT)(HDC, const int *, const FLOAT *, UINT, int *, UINT *);
 };
 
 #define WGL_CONTEXT_MAJOR_VERSION_ARB           0x2091

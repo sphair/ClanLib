@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "../opengl1_wrap.h"
+#include "API/GL/opengl_wrap.h"
 #include "API/Display/TargetProviders/display_window_provider.h"
 
 namespace clan
@@ -108,7 +108,7 @@ private:
 	void reset();
 
 	GL1GraphicContextProvider *gc_provider;
-	GL1Functions::HPBUFFERARB pbuffer;
+	//GLFunctions::HPBUFFERARB pbuffer;
 	HGLRC pbuffer_context;
 	HDC pbuffer_dc;
 

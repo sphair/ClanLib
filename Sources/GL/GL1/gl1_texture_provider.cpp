@@ -32,8 +32,8 @@
 #include "gl1_graphic_context_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/texture.h"
-#include "opengl1_wrap.h"
-#include "opengl1.h"
+#include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl.h"
 #include "API/Core/IOData/cl_endian.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Display/Render/shared_gc_data.h"
@@ -70,17 +70,17 @@ GL1TextureProvider::GL1TextureProvider(TextureDimensions texture_dimensions)
 		break;
 	}
 
-	GL1::set_active();
-	cl1GenTextures(1, &handle);
+	OpenGL::set_active();
+	glGenTextures(1, &handle);
 	GL1TextureStateTracker state_tracker(texture_type, 0);
-	cl1BindTexture(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	cl1TexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glBindTexture(texture_type, handle);
+	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	if (texture_type != GL_TEXTURE_1D)
-		cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	if (texture_type == GL_TEXTURE_3D)
-		cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 }
 
 GL1TextureProvider::~GL1TextureProvider()
@@ -93,9 +93,9 @@ void GL1TextureProvider::on_dispose()
 {
 	if (handle)
 	{
-		if (GL1::set_active())
+		if (OpenGL::set_active())
 		{
-			cl1DeleteTextures(1, &handle);
+			glDeleteTextures(1, &handle);
 		}
 	}
 }
@@ -116,7 +116,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
-	GL1::to_opengl_textureformat(texture_format, gl_internal_format, gl_pixel_format);
+	to_opengl_textureformat(texture_format, gl_internal_format, gl_pixel_format);
 
 	if ( (new_width > 32768) || (new_width < 1) )
 	{
@@ -157,7 +157,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 		}
 
 		pot_ratio_width = (float) width / pot_width;
-		cl1TexImage1D(
+		glTexImage1D(
 			GL_TEXTURE_1D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
@@ -182,7 +182,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 		pot_ratio_width = (float) width / pot_width;
 		pot_ratio_height = (float) height / pot_height;
 
-		cl1TexImage2D(
+		glTexImage2D(
 			GL_TEXTURE_2D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
@@ -202,15 +202,15 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 
 			GLenum format;
 			GLenum type;
-			GL1::to_opengl_pixelformat(image, format, type);
+			to_opengl_pixelformat(image, format, type);
 
-			cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			const int bytesPerPixel = image.get_bytes_per_pixel();
-			cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-			cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-			cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+			glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+			glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
-			cl1TexImage2D(
+			glTexImage2D(
 				GL_TEXTURE_2D,		// target
 				0,					// level
 				gl_internal_format,	// internalformat
@@ -240,7 +240,7 @@ void GL1TextureProvider::create(int new_width, int new_height, int new_depth, in
 			power_of_two_texture=false;
 		}
 
-		cl1TexImage3D(
+		glTexImage3D(
 			GL_TEXTURE_3D,			// target
 			0,						// level
 			gl_internal_format,		// internalformat
@@ -257,28 +257,28 @@ PixelBuffer GL1TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 {
 	throw_if_disposed();
 
-	GL1::set_active(gc);
+	OpenGL::set_active(gc);
 	GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLenum gl_format = 0, gl_type = 0;
-	bool supported = GL1::to_opengl_pixelformat(texture_format, gl_format, gl_type);
+	bool supported = to_opengl_pixelformat(texture_format, gl_format, gl_type);
 	if (supported)
 	{
 		PixelBuffer buffer(width, height, texture_format);
-		cl1GetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
+		glGetTexImage(texture_type, level, gl_format, gl_type, buffer.get_data());
 		return buffer;
 	}
 	else
 	{
 		PixelBuffer buffer(width, height, tf_rgba8);
-		cl1GetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
+		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 		return buffer.to_format(texture_format);
 	}
 }
 
 void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, int level, const PixelBuffer &ximage, const Rect &src_rect)
 {
-	GL1::set_active(gc);
+	OpenGL::set_active(gc);
 
 	PixelBuffer image = ximage;
 
@@ -293,7 +293,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 
 	GLenum format;
 	GLenum type;
-	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
+	bool conv_needed = !to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
@@ -307,11 +307,11 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	if (!conv_needed)
 	{
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, src_rect.left);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, src_rect.top);
 
 	}
 	// conversion needed
@@ -328,21 +328,21 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		format = needs_alpha ? GL_RGBA : GL_RGB;
 
 		// Upload to GL1:
-		cl1BindTexture(GL_TEXTURE_2D, handle);
+		glBindTexture(GL_TEXTURE_2D, handle);
 
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		type = GL_UNSIGNED_BYTE;
 		image = buffer;
 	}
 
 	// upload
-	cl1TexSubImage2D(
+	glTexSubImage2D(
 		GL_TEXTURE_2D,            // target
 		level,                    // level
 		x, y,                     // xoffset, yoffset
@@ -365,7 +365,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 
 			for(int edge_cnt = right_edge; edge_cnt < pot_width; edge_cnt++)
 			{
-				cl1TexSubImage2D(
+				glTexSubImage2D(
 					GL_TEXTURE_2D,		// target
 					level,				// level
 					edge_cnt, y,		// xoffset, yoffset
@@ -385,7 +385,7 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 
 			for(int edge_cnt = bottom_edge; edge_cnt < pot_height; edge_cnt++)
 			{
-				cl1TexSubImage2D(
+				glTexSubImage2D(
 					GL_TEXTURE_2D,		// target
 					level,				// level
 					x, edge_cnt,		// xoffset, yoffset
@@ -398,8 +398,8 @@ void GL1TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		}
 	}
 	// Restore these unpack values to the default
-	cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-	cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+	glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+	glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 }
 
 void GL1TextureProvider::copy_image_from(
@@ -412,14 +412,14 @@ void GL1TextureProvider::copy_image_from(
 	GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	GL1::set_active(static_cast<GL1GraphicContextProvider*>(gc));
+	OpenGL::set_active(static_cast<GL1GraphicContextProvider*>(gc));
 	GL1TextureStateTracker state_tracker(texture_type, handle);
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
-	GL1::to_opengl_textureformat(texture_format, gl_internal_format, gl_pixel_format);
+	to_opengl_textureformat(texture_format, gl_internal_format, gl_pixel_format);
 
-	cl1CopyTexImage2D(
+	glCopyTexImage2D(
 		GL_TEXTURE_2D,
 		level,
 		gl_internal_format,
@@ -439,10 +439,10 @@ void GL1TextureProvider::copy_subimage_from(
 	GraphicContextProvider *gc)
 {
 	throw_if_disposed();
-	GL1::set_active(static_cast<GL1GraphicContextProvider*>(gc));
+	OpenGL::set_active(static_cast<GL1GraphicContextProvider*>(gc));
 	GL1TextureStateTracker state_tracker(texture_type, handle);
 
-	cl1CopyTexSubImage2D( 
+	glCopyTexSubImage2D( 
 		GL_TEXTURE_2D,
 		level, 
 		offset_x, 
@@ -455,35 +455,35 @@ void GL1TextureProvider::set_min_lod(double min_lod)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
+	glTexParameterf(texture_type, GL_TEXTURE_MIN_LOD, (GLfloat)min_lod);
 }
 
 void GL1TextureProvider::set_max_lod(double max_lod)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
+	glTexParameterf(texture_type, GL_TEXTURE_MAX_LOD, (GLfloat)max_lod);
 }
 
 void GL1TextureProvider::set_lod_bias(double lod_bias)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
+	glTexParameterf(texture_type, GL_TEXTURE_LOD_BIAS, (GLfloat)lod_bias);
 }
 
 void GL1TextureProvider::set_base_level(int base_level)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
+	glTexParameteri(texture_type, GL_TEXTURE_BASE_LEVEL, base_level);
 }
 
 void GL1TextureProvider::set_max_level(int max_level)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
+	glTexParameteri(texture_type, GL_TEXTURE_MAX_LEVEL, max_level);
 }
 
 void GL1TextureProvider::set_wrap_mode(
@@ -493,9 +493,9 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
 }
 
 void GL1TextureProvider::set_wrap_mode(
@@ -504,8 +504,8 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
 }
 
 void GL1TextureProvider::set_wrap_mode(
@@ -513,21 +513,21 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
 }
 
 void GL1TextureProvider::set_min_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
 }
 
 void GL1TextureProvider::set_mag_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
 }
 
 void GL1TextureProvider::set_max_anisotropy(float v)
@@ -538,8 +538,8 @@ void GL1TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFun
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
-	cl1TexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
 }
 
 void GL1TextureProvider::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
@@ -623,7 +623,7 @@ void GL1TextureProvider::set_texture_image2d(
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
-	GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+	to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 
 /*
@@ -643,7 +643,7 @@ void GL1TextureProvider::set_texture_image2d(
 
 	GLenum format;
 	GLenum type;
-	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
+	bool conv_needed = !to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
@@ -659,11 +659,11 @@ void GL1TextureProvider::set_texture_image2d(
 		// Upload to GL1:
 
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
@@ -674,7 +674,7 @@ void GL1TextureProvider::set_texture_image2d(
 		while (image_width < image.get_width()) image_width *= 2;
 		while (image_height < image.get_height()) image_height *= 2;
 */
-		cl1TexImage2D(
+		glTexImage2D(
 			target,                   // target
 			level,                    // level
 			gl_internal_format,           // internalformat
@@ -701,14 +701,14 @@ void GL1TextureProvider::set_texture_image2d(
 		// Upload to OpenGL:
 
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		// upload
-		cl1TexImage2D(
+		glTexImage2D(
 			target,                   // target
 			level,                    // level
 			gl_internal_format,           // internalformat
@@ -720,10 +720,10 @@ void GL1TextureProvider::set_texture_image2d(
 			buffer.get_data());       // texels
 
 		/*
-		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		cl1TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		*/
 	}
 }
@@ -739,14 +739,14 @@ void GL1TextureProvider::set_texture_image3d(
 
 	GLint gl_internal_format;
 	GLenum gl_pixel_format;
-	GL1::to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
+	to_opengl_textureformat(image.get_format(), gl_internal_format, gl_pixel_format);
 
 	// check out if the original texture needs or doesn't need an alpha channel
 	bool needs_alpha = image.has_transparency();
 
 	GLenum format;
 	GLenum type;
-	bool conv_needed = !GL1::to_opengl_pixelformat(image, format, type);
+	bool conv_needed = !to_opengl_pixelformat(image, format, type);
 
 	// also check for the pitch (GL1 can only skip pixels, not bytes)
 	if (!conv_needed)
@@ -762,17 +762,17 @@ void GL1TextureProvider::set_texture_image3d(
 		// Upload to GL1:
 
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = image.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, image.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		char *data = (char *) image.get_data();
 		int image_width = image.get_width();
 		int image_height = image.get_height() / image_depth;
 
-		cl1TexImage3D(
+		glTexImage3D(
 			target,                   // target
 			level,                    // level
 			gl_internal_format,           // internalformat
@@ -800,17 +800,17 @@ void GL1TextureProvider::set_texture_image3d(
 		// Upload to OpenGL:
 
 		// change alignment
-		cl1PixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		const int bytesPerPixel = buffer.get_bytes_per_pixel();
-		cl1PixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
-		cl1PixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / bytesPerPixel);
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 
 		int image_width = image.get_width();
 		int image_height = image.get_height() / image_depth;
 
 		// upload
-		cl1TexImage3D(
+		glTexImage3D(
 			target,                   // target
 			level,                    // level
 			gl_internal_format,           // internalformat
@@ -880,65 +880,65 @@ GLenum GL1TextureProvider::to_enum(CompareFunction func)
 
 GL1TextureStateTracker::GL1TextureStateTracker(GLuint texture_type, GLuint handle)
 {
-	GL1::set_active();
+	OpenGL::set_active();
 
-	last_is_enabled_texture1d = cl1IsEnabled(GL_TEXTURE_1D);
-	last_is_enabled_texture2d = cl1IsEnabled(GL_TEXTURE_2D);
-	last_is_enabled_texture3d = cl1IsEnabled(GL_TEXTURE_3D);
-	last_is_enabled_texture_cube_map = cl1IsEnabled(GL_TEXTURE_CUBE_MAP);
-	cl1GetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
-	cl1GetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
-	cl1GetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
-	cl1GetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
+	last_is_enabled_texture1d = glIsEnabled(GL_TEXTURE_1D);
+	last_is_enabled_texture2d = glIsEnabled(GL_TEXTURE_2D);
+	last_is_enabled_texture3d = glIsEnabled(GL_TEXTURE_3D);
+	last_is_enabled_texture_cube_map = glIsEnabled(GL_TEXTURE_CUBE_MAP);
+	glGetIntegerv(GL_TEXTURE_BINDING_1D, (GLint *) &last_bound_texture1d);
+	glGetIntegerv(GL_TEXTURE_BINDING_2D, (GLint *) &last_bound_texture2d);
+	glGetIntegerv(GL_TEXTURE_BINDING_3D, (GLint *) &last_bound_texture3d);
+	glGetIntegerv(GL_TEXTURE_BINDING_CUBE_MAP, (GLint *) &last_bound_texture_cube_map);
 
 	if (texture_type == GL_TEXTURE_1D)
 	{
-		cl1Disable(GL_TEXTURE_2D);
-		cl1Disable(GL_TEXTURE_3D);
-		cl1Disable(GL_TEXTURE_CUBE_MAP);
-		cl1Enable(GL_TEXTURE_1D);
-		cl1BindTexture(GL_TEXTURE_1D, handle);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_3D);
+		glDisable(GL_TEXTURE_CUBE_MAP);
+		glEnable(GL_TEXTURE_1D);
+		glBindTexture(GL_TEXTURE_1D, handle);
 	}
 
 	if (texture_type == GL_TEXTURE_2D)
 	{
-		cl1Disable(GL_TEXTURE_1D);
-		cl1Disable(GL_TEXTURE_3D);
-		cl1Disable(GL_TEXTURE_CUBE_MAP);
-		cl1Enable(GL_TEXTURE_2D);
-		cl1BindTexture(GL_TEXTURE_2D, handle);
+		glDisable(GL_TEXTURE_1D);
+		glDisable(GL_TEXTURE_3D);
+		glDisable(GL_TEXTURE_CUBE_MAP);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, handle);
 	}
 
 	if (texture_type == GL_TEXTURE_3D)
 	{
-		cl1Disable(GL_TEXTURE_1D);
-		cl1Disable(GL_TEXTURE_2D);
-		cl1Disable(GL_TEXTURE_CUBE_MAP);
-		cl1Enable(GL_TEXTURE_3D);
-		cl1BindTexture(GL_TEXTURE_3D, handle);
+		glDisable(GL_TEXTURE_1D);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_CUBE_MAP);
+		glEnable(GL_TEXTURE_3D);
+		glBindTexture(GL_TEXTURE_3D, handle);
 	}
 
 	if (texture_type == GL_TEXTURE_CUBE_MAP)
 	{
-		cl1Disable(GL_TEXTURE_1D);
-		cl1Disable(GL_TEXTURE_2D);
-		cl1Disable(GL_TEXTURE_3D);
-		cl1Enable(GL_TEXTURE_CUBE_MAP);
-		cl1BindTexture(GL_TEXTURE_CUBE_MAP, handle);
+		glDisable(GL_TEXTURE_1D);
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_TEXTURE_3D);
+		glEnable(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, handle);
 	}
 }
 
 GL1TextureStateTracker::~GL1TextureStateTracker()
 {
-	if (last_is_enabled_texture1d) cl1Enable(GL_TEXTURE_1D); else cl1Disable(GL_TEXTURE_1D);
-	if (last_is_enabled_texture2d) cl1Enable(GL_TEXTURE_2D); else cl1Disable(GL_TEXTURE_2D);
-	if (last_is_enabled_texture3d) cl1Enable(GL_TEXTURE_3D); else cl1Disable(GL_TEXTURE_3D);
-	if (last_is_enabled_texture_cube_map) cl1Enable(GL_TEXTURE_CUBE_MAP); else cl1Disable(GL_TEXTURE_CUBE_MAP);
+	if (last_is_enabled_texture1d) glEnable(GL_TEXTURE_1D); else glDisable(GL_TEXTURE_1D);
+	if (last_is_enabled_texture2d) glEnable(GL_TEXTURE_2D); else glDisable(GL_TEXTURE_2D);
+	if (last_is_enabled_texture3d) glEnable(GL_TEXTURE_3D); else glDisable(GL_TEXTURE_3D);
+	if (last_is_enabled_texture_cube_map) glEnable(GL_TEXTURE_CUBE_MAP); else glDisable(GL_TEXTURE_CUBE_MAP);
 
-	if (last_is_enabled_texture1d) cl1BindTexture(GL_TEXTURE_1D, last_bound_texture1d);
-	if (last_is_enabled_texture2d) cl1BindTexture(GL_TEXTURE_2D, last_bound_texture2d);
-	if (last_is_enabled_texture3d) cl1BindTexture(GL_TEXTURE_3D, last_bound_texture3d);
-	if (last_is_enabled_texture_cube_map) cl1BindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
+	if (last_is_enabled_texture1d) glBindTexture(GL_TEXTURE_1D, last_bound_texture1d);
+	if (last_is_enabled_texture2d) glBindTexture(GL_TEXTURE_2D, last_bound_texture2d);
+	if (last_is_enabled_texture3d) glBindTexture(GL_TEXTURE_3D, last_bound_texture3d);
+	if (last_is_enabled_texture_cube_map) glBindTexture(GL_TEXTURE_CUBE_MAP, last_bound_texture_cube_map);
 }
 
 int GL1TextureProvider::get_next_power_of_two(int value)
@@ -949,6 +949,393 @@ int GL1TextureProvider::get_next_power_of_two(int value)
 			return pot_count;
 	}
 	return 32768;
+}
+
+void GL1TextureProvider::to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format)
+{
+	switch (format)
+	{
+	// base internal format
+
+	// sized internal format
+
+		// TODO: Should this really be here?
+		case tf_stencil_index1: gl_internal_format = GL_STENCIL_INDEX1; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case tf_stencil_index4: gl_internal_format = GL_STENCIL_INDEX4; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case tf_stencil_index8: gl_internal_format = GL_STENCIL_INDEX8; gl_pixel_format = GL_STENCIL_INDEX; break;
+		case tf_stencil_index16: gl_internal_format = GL_STENCIL_INDEX16; gl_pixel_format = GL_STENCIL_INDEX; break;
+
+		//case tf_r8: gl_internal_format = GL_R8; gl_pixel_format = GL_RED; break;
+		//case tf_r8_snorm: gl_internal_format = GL_R8_SNORM; gl_pixel_format = GL_RED; break;
+		//case tf_r16: gl_internal_format = GL_R16; gl_pixel_format = GL_RED; break;
+		//case tf_r16_snorm: gl_internal_format = GL_R16_SNORM; gl_pixel_format = GL_RED; break;
+		//case tf_rg8: gl_internal_format = GL_RG8; gl_pixel_format = GL_RG; break;
+		//case tf_rg8_snorm: gl_internal_format = GL_RG8_SNORM; gl_pixel_format = GL_RG; break;
+		//case tf_rg16: gl_internal_format = GL_RG16; gl_pixel_format = GL_RG; break;
+		//case tf_rg16_snorm: gl_internal_format = GL_RG16_SNORM; gl_pixel_format = GL_RG; break;
+		case tf_r3_g3_b2: gl_internal_format = GL_R3_G3_B2; gl_pixel_format = GL_RGB; break;
+		case tf_rgb4: gl_internal_format = GL_RGB4; gl_pixel_format = GL_RGB; break;
+		case tf_rgb5: gl_internal_format = GL_RGB5; gl_pixel_format = GL_RGB; break;
+		case tf_rgb8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_RGB; break;
+		case tf_rgb10: gl_internal_format = GL_RGB10; gl_pixel_format = GL_RGB; break;
+		case tf_rgb12: gl_internal_format = GL_RGB12; gl_pixel_format = GL_RGB; break;
+		case tf_rgb16: gl_internal_format = GL_RGB16; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb16_snorm: gl_internal_format = GL_RGB16_SNORM; gl_pixel_format = GL_RGB; break;
+		case tf_rgba2: gl_internal_format = GL_RGBA2; gl_pixel_format = GL_RGBA; break;
+		case tf_rgba4: gl_internal_format = GL_RGBA4; gl_pixel_format = GL_RGBA; break;
+		case tf_rgb5_a1: gl_internal_format = GL_RGB5_A1; gl_pixel_format = GL_RGBA; break;
+		case tf_rgba8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_RGBA; break;
+		case tf_bgra8: gl_internal_format = GL_RGBA8; gl_pixel_format = GL_BGRA; break;
+		case tf_bgr8: gl_internal_format = GL_RGB8; gl_pixel_format = GL_BGR; break;
+		//case tf_rgba8_snorm: gl_internal_format = GL_RGBA8_SNORM; gl_pixel_format = GL_RGBA; break;
+		case tf_rgb10_a2: gl_internal_format = GL_RGB10_A2; gl_pixel_format = GL_RGBA; break;
+		case tf_rgba12: gl_internal_format = GL_RGBA12; gl_pixel_format = GL_RGBA; break;
+		case tf_rgba16: gl_internal_format = GL_RGBA16; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba16_snorm: gl_internal_format = GL_RGBA16_SNORM; gl_pixel_format = GL_RGBA; break;
+		//case tf_srgb8: gl_internal_format = GL_SRGB8; gl_pixel_format = GL_RGB; break;
+		//case tf_srgb8_alpha8: gl_internal_format = GL_SRGB8_ALPHA8; gl_pixel_format = GL_RGBA; break;
+		//case tf_r16f: gl_internal_format = GL_R16F; gl_pixel_format = GL_RED; break;
+		//case tf_rg16f: gl_internal_format = GL_RG16F; gl_pixel_format = GL_RG; break;
+		//case tf_rgb16f: gl_internal_format = GL_RGB16F; gl_pixel_format = GL_RGB; break;
+		//case tf_rgba16f: gl_internal_format = GL_RGBA16F; gl_pixel_format = GL_RGBA; break;
+		//case tf_r32f: gl_internal_format = GL_R32F; gl_pixel_format = GL_RED; break;
+		//case tf_rg32f: gl_internal_format = GL_RG32F; gl_pixel_format = GL_RG; break;
+		//case tf_rgb32f: gl_internal_format = GL_RGB32F; gl_pixel_format = GL_RGB; break;
+		//case tf_rgba32f: gl_internal_format = GL_RGBA32F; gl_pixel_format = GL_RGBA; break;
+		//case tf_r11f_g11f_b10f: gl_internal_format = GL_R11F_G11F_B10F; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb9_e5: gl_internal_format = GL_RGB9_E5; gl_pixel_format = GL_RGB; break;
+		//case tf_r8i: gl_internal_format = GL_R8I; gl_pixel_format = GL_RED; break;
+		//case tf_r8ui: gl_internal_format = GL_R8UI; gl_pixel_format = GL_RED; break;
+		//case tf_r16i: gl_internal_format = GL_R16I; gl_pixel_format = GL_RED; break;
+		//case tf_r16ui: gl_internal_format = GL_R16UI; gl_pixel_format = GL_RED; break;
+		//case tf_r32i: gl_internal_format = GL_R32I; gl_pixel_format = GL_RED; break;
+		//case tf_r32ui: gl_internal_format = GL_R32UI; gl_pixel_format = GL_RED; break;
+		//case tf_rg8i: gl_internal_format = GL_RG8I; gl_pixel_format = GL_RG; break;
+		//case tf_rg8ui: gl_internal_format = GL_RG8UI; gl_pixel_format = GL_RG; break;
+		//case tf_rg16i: gl_internal_format = GL_RG16I; gl_pixel_format = GL_RG; break;
+		//case tf_rg16ui: gl_internal_format = GL_RG16UI; gl_pixel_format = GL_RG; break;
+		//case tf_rg32i: gl_internal_format = GL_RG32I; gl_pixel_format = GL_RG; break;
+		//case tf_rg32ui: gl_internal_format = GL_RG32UI; gl_pixel_format = GL_RG; break;
+		//case tf_rgb8i: gl_internal_format = GL_RGB8I; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb8ui: gl_internal_format = GL_RGB8UI; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb16i: gl_internal_format = GL_RGB16I; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb16ui: gl_internal_format = GL_RGB16UI; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb32i: gl_internal_format = GL_RGB32I; gl_pixel_format = GL_RGB; break;
+		//case tf_rgb32ui: gl_internal_format = GL_RGB32UI; gl_pixel_format = GL_RGB; break;
+		//case tf_rgba8i: gl_internal_format = GL_RGBA8I; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba8ui: gl_internal_format = GL_RGBA8UI; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba16i: gl_internal_format = GL_RGBA16I; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba16ui: gl_internal_format = GL_RGBA16UI; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba32i: gl_internal_format = GL_RGBA32I; gl_pixel_format = GL_RGBA; break;
+		//case tf_rgba32ui: gl_internal_format = GL_RGBA32UI; gl_pixel_format = GL_RGBA; break;
+		case tf_depth_component16: gl_internal_format = GL_DEPTH_COMPONENT16; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case tf_depth_component24: gl_internal_format = GL_DEPTH_COMPONENT24; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		case tf_depth_component32: gl_internal_format = GL_DEPTH_COMPONENT32; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		//case tf_depth_component32f: gl_internal_format = GL_DEPTH_COMPONENT32F; gl_pixel_format = GL_DEPTH_COMPONENT; break;
+		//case tf_depth24_stencil8: gl_internal_format = GL_DEPTH24_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+		//case tf_depth32f_stencil8: gl_internal_format = GL_DEPTH32F_STENCIL8; gl_pixel_format = GL_DEPTH_STENCIL; break;
+
+		//case tf_compressed_red: gl_internal_format = GL_COMPRESSED_RED; gl_pixel_format = GL_RED; break;
+		//case tf_compressed_rg: gl_internal_format = GL_COMPRESSED_RG; gl_pixel_format = GL_RG; break;
+		case tf_compressed_rgb: gl_internal_format = GL_COMPRESSED_RGB; gl_pixel_format = GL_RGB; break;
+		case tf_compressed_rgba: gl_internal_format = GL_COMPRESSED_RGBA; gl_pixel_format = GL_RGBA; break;
+		//case tf_compressed_srgb: gl_internal_format = GL_COMPRESSED_SRGB; gl_pixel_format = GL_RGB; break;
+		//case tf_compressed_srgb_alpha: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA; gl_pixel_format = GL_RGBA; break;
+		//case tf_compressed_red_rgtc1: gl_internal_format = GL_COMPRESSED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		//case tf_compressed_signed_red_rgtc1: gl_internal_format = GL_COMPRESSED_SIGNED_RED_RGTC1; gl_pixel_format = GL_RED; break;
+		//case tf_compressed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+		//case tf_compressed_signed_rg_rgtc2: gl_internal_format = GL_COMPRESSED_SIGNED_RG_RGTC2; gl_pixel_format = GL_RG; break;
+
+		case tf_compressed_rgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
+		case tf_compressed_rgba_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
+		case tf_compressed_rgba_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
+		case tf_compressed_rgba_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
+		//case tf_compressed_srgb_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_S3TC_DXT1_EXT; gl_pixel_format = GL_RGB; break;
+		//case tf_compressed_srgb_alpha_s3tc_dxt1: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT; gl_pixel_format = GL_RGBA; break;
+		//case tf_compressed_srgb_alpha_s3tc_dxt3: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT; gl_pixel_format = GL_RGBA; break;
+		//case tf_compressed_srgb_alpha_s3tc_dxt5: gl_internal_format = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT; gl_pixel_format = GL_RGBA; break;
+
+		default:
+			throw Exception(string_format("Unsupported TextureFormat (%1)", format));
+	}
+}
+
+bool GL1TextureProvider::to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GLenum &type)
+{
+	bool valid = false;
+
+	//TODO: We should really use Endian::is_system_big()
+
+	//TODO: All the formats in this switch are not supported - Maybe they can be
+
+	switch (texture_format)
+	{
+		case tf_rgba8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_rgb8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case tf_bgr8: 
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGR;
+			break;
+		}
+		case tf_bgra8: 
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_BGRA;
+			break;
+		}
+		case tf_stencil_index1: break;
+		case tf_stencil_index4: break;
+		case tf_stencil_index8: break;
+		case tf_stencil_index16: break;
+		case tf_r8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case tf_r8_snorm:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case tf_r16:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case tf_r16_snorm:
+		{
+			valid = true;
+			type = GL_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case tf_rg8: break;
+		case tf_rg8_snorm: break;
+		case tf_rg16: break;
+		case tf_rg16_snorm: break;
+		case tf_r3_g3_b2:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE_3_3_2;
+			format = GL_RGB;
+			break;
+		}
+		case tf_rgb4: break;
+		case tf_rgb5: break;
+		case tf_rgb8_snorm:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case tf_rgb10: break;
+		case tf_rgb12: break;
+		case tf_rgb16: break;
+		case tf_rgb16_snorm: break;
+		case tf_rgba2: break;
+		case tf_rgba4:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT_4_4_4_4;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_rgb5_a1:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT_5_5_5_1;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_rgba8_snorm: break;
+		case tf_rgb10_a2: break;
+		case tf_rgba12: break;
+		case tf_rgba16: break;
+		case tf_rgba16_snorm: break;
+		case tf_srgb8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case tf_srgb8_alpha8:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_r16f: break;
+		case tf_rg16f: break;
+		case tf_rgb16f: break;
+		case tf_rgba16f: break;
+
+		case tf_r32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RED;
+			break;
+		}
+		case tf_rg32f: break;
+		case tf_rgb32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RGB;
+			break;
+		}
+		
+		case tf_rgba32f:
+		{
+			valid = true;
+			type = GL_FLOAT;
+			format = GL_RGBA;
+			break;
+		}
+		
+		case tf_r11f_g11f_b10f: break;
+		case tf_rgb9_e5: break;
+		case tf_r8i:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case tf_r8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RED;
+			break;
+		}
+		case tf_r16i:
+		{
+			valid = true;
+			type = GL_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case tf_r16ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_SHORT;
+			format = GL_RED;
+			break;
+		}
+		case tf_r32i:
+		{
+			valid = true;
+			type = GL_INT;
+			format = GL_RED;
+			break;
+		}
+		case tf_r32ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_INT;
+			format = GL_RED;
+			break;
+		}
+		case tf_rg8i: break;
+		case tf_rg8ui: break;
+		case tf_rg16i: break;
+		case tf_rg16ui: break;
+		case tf_rg32i: break;
+		case tf_rg32ui: break;
+		case tf_rgb8i:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case tf_rgb8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGB;
+			break;
+		}
+		case tf_rgb16i: break;
+		case tf_rgb16ui: break;
+		case tf_rgb32i: break;
+		case tf_rgb32ui: break;
+		case tf_rgba8i:
+		{
+			valid = true;
+			type = GL_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_rgba8ui:
+		{
+			valid = true;
+			type = GL_UNSIGNED_BYTE;
+			format = GL_RGBA;
+			break;
+		}
+		case tf_rgba16i: break;
+		case tf_rgba16ui: break;
+		case tf_rgba32i: break;
+		case tf_rgba32ui: break;
+		case tf_depth_component16: break;
+		case tf_depth_component24: break;
+		case tf_depth_component32: break;
+		case tf_depth_component32f: break;
+		case tf_depth24_stencil8: break;
+		case tf_depth32f_stencil8: break;
+		case tf_compressed_red: break;
+		case tf_compressed_rg: break;
+		case tf_compressed_rgb: break;
+		case tf_compressed_rgba: break;
+		case tf_compressed_srgb: break;
+		case tf_compressed_srgb_alpha: break;
+		case tf_compressed_red_rgtc1: break;
+		case tf_compressed_signed_red_rgtc1: break;
+		case tf_compressed_rg_rgtc2: break;
+		case tf_compressed_signed_rg_rgtc2: break;
+
+		case tf_compressed_rgb_s3tc_dxt1: break;
+		case tf_compressed_rgba_s3tc_dxt1: break;
+		case tf_compressed_rgba_s3tc_dxt3: break;
+		case tf_compressed_rgba_s3tc_dxt5: break;
+		case tf_compressed_srgb_s3tc_dxt1: break;
+		case tf_compressed_srgb_alpha_s3tc_dxt1: break;
+		case tf_compressed_srgb_alpha_s3tc_dxt3: break;
+		case tf_compressed_srgb_alpha_s3tc_dxt5: break;
+	}
+
+	return valid;
+}
+
+bool GL1TextureProvider::to_opengl_pixelformat(const PixelBuffer &pbuffer, GLenum &format, GLenum &type)
+{
+	return to_opengl_pixelformat(pbuffer.get_format(), format, type);
 }
 
 }

@@ -35,6 +35,7 @@
 
 namespace clan
 {
+class GL3GraphicContextProvider;
 
 class GL3PrimitivesArrayProvider : public PrimitivesArrayProvider, DisposableObject
 {
