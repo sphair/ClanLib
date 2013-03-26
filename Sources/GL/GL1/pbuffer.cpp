@@ -39,7 +39,7 @@
 
 namespace clan
 {
-/*
+
 PBuffer_GL1::PBuffer_GL1()
 {
 }
@@ -74,5 +74,5 @@ void PBuffer_GL1::throw_if_null() const
 	if (!impl)
 		throw Exception("is null");
 }
-*/
+
 }
