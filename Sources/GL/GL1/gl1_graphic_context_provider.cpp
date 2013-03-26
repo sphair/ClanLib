@@ -385,11 +385,31 @@ void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 		gl1_state->desc.get_blend_equation(equation_color, equation_alpha);
 		gl1_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
-		enable_color_write(red, green, blue, alpha);
-		enable_blending(gl1_state->desc.is_blending_enabled());
-		set_blend_color(Colorf(blend_color));
-		set_blend_equation(equation_color, equation_alpha);
-		set_blend_function(src, dest, src_alpha, dest_alpha);
+		gl1_state->desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+
+		if (glBlendColor)
+				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
+
+		if (glBlendEquation)
+			glBlendEquation(to_enum(equation_color));
+
+		if( src == src_alpha && dest == dest_alpha )
+		{
+			if (glBlendFunc)
+				glBlendFunc(to_enum(src), to_enum(dest));
+		}
+		else
+		{
+			if (glBlendFuncSeparate)
+			{
+				glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
+			}
+			else
+			{
+				if (glBlendFunc)
+					glBlendFunc(to_enum(src), to_enum(dest));
+			}
+		}
 	}
 }
 
@@ -903,63 +923,6 @@ void GL1GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 	}
 }
 
-void GL1GraphicContextProvider::enable_blending(bool value)
-{
-	set_active();
-	if( value )
-		glEnable(GL_BLEND);
-	else
-		glDisable(GL_BLEND);
-
-}
-
-void GL1GraphicContextProvider::set_blend_color(const Colorf &color)
-{
-	set_active();
-	if (glBlendColor)
-	{
-		glBlendColor(
-			GLclampf(color.get_red()),
-			GLclampf(color.get_green()),
-			GLclampf(color.get_blue()),
-			GLclampf(color.get_alpha()));
-	}
-}
-
-void GL1GraphicContextProvider::set_blend_equation(BlendEquation equation_color, BlendEquation equation_alpha)
-{
-	set_active();
-	if (glBlendEquation)
-		glBlendEquation(to_enum(equation_color));
-}
-
-void GL1GraphicContextProvider::set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
-{
-	set_active();
-	if( src == src_alpha && dest == dest_alpha )
-	{
-		if (glBlendFunc)
-			glBlendFunc(to_enum(src), to_enum(dest));
-	}
-	else
-	{
-		if (glBlendFuncSeparate)
-		{
-			glBlendFuncSeparate( 
-				to_enum(src),
-				to_enum(dest),
-				to_enum(src_alpha),
-				to_enum(dest_alpha) );
-		}
-		else
-		{
-			if (glBlendFunc)
-				glBlendFunc(to_enum(src), to_enum(dest));
-		}
-	}
-}
-
-
 void GL1GraphicContextProvider::set_point_size(float value)
 {
 	set_active();
@@ -1120,11 +1083,6 @@ void GL1GraphicContextProvider::set_depth_compare_function(CompareFunction func)
 	set_active();
 	glDepthFunc(to_enum(func));
 
-}
-
-void GL1GraphicContextProvider::enable_color_write(bool red, bool green, bool blue, bool alpha)
-{
-	//set_active();
 }
 
 void GL1GraphicContextProvider::make_current() const

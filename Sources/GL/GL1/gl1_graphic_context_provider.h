@@ -209,12 +209,6 @@ private:
 
 	void set_culled(bool value);
 
-	void enable_color_write(bool red, bool green, bool blue, bool alpha);
-	void enable_blending(bool value);
-	void set_blend_color(const Colorf &color);
-	void set_blend_equation(BlendEquation color, BlendEquation alpha);
-	void set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha);
-
 	void enable_stencil_test(bool enabled);
 	void set_stencil_compare_front(CompareFunction front, int front_ref, int front_mask);
 	void set_stencil_compare_back(CompareFunction back, int back_ref, int back_mask);
