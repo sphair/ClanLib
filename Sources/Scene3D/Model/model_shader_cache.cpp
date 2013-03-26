@@ -209,6 +209,29 @@ void ModelShaderCache::create_shadow_commands(GraphicContext &gc, Model *model, 
 	}
 }
 
+void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model, int level)
+{
+	create_states(gc);
+
+	std::vector<ModelMeshBuffers> &mesh_buffers = model->levels[level]->mesh_buffers;
+	ModelRenderCommandList &out_list = model->levels[level]->early_z_commands;
+	std::shared_ptr<ModelData> &model_data = model->model_data;
+
+	// To do: add support for two_sided
+
+	bool uses_bones = !model_data->bones.empty();
+
+	out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(rasterizer_state));
+	out_list.commands.push_back(new ModelRenderCommand_BindShader(get_early_z_program(gc, uses_bones)));
+	for (size_t i = 0; i < mesh_buffers.size(); i++)
+	{
+		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
+
+		ModelDataMesh &mesh_data = model_data->mesh_lods[level].meshes[i];
+		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.material_ranges.back().start_element + mesh_data.material_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
+	}
+}
+
 ModelShaderCache::Shaderset ModelShaderCache::get_shader(GraphicContext &gc, const ModelShaderDescription &description)
 {
 	std::map<ModelShaderDescription, Shaderset>::iterator it = shaders.find(description);
@@ -386,6 +409,46 @@ ProgramObject ModelShaderCache::get_shadow_program(GraphicContext &gc, bool uses
 		shadow_program = program;
 	else
 		shadow_bones_program = program;
+
+	return program;
+}
+
+ProgramObject ModelShaderCache::get_early_z_program(GraphicContext &gc, bool uses_bones)
+{
+	if (!uses_bones && !early_z_program.is_null())
+		return early_z_program;
+	else if (uses_bones && !early_z_bones_program.is_null())
+		return early_z_bones_program;
+
+	std::string defines;
+	if (uses_bones)
+		defines += " USE_BONES";
+
+	ProgramObject program;
+	if (gc.get_shader_language() == shader_glsl)
+		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.glsl", "", defines);
+	else
+		program = ShaderSetup::compile(gc, base_path, "SceneLights/vertex.hlsl", "", defines);
+
+	program.bind_frag_data_location(0, "FragMoment");
+
+	program.bind_attribute_location(0, "AttrPositionInObject");
+	program.bind_attribute_location(1, "AttrNormal");
+	program.bind_attribute_location(2, "AttrBitangent");
+	program.bind_attribute_location(3, "AttrTangent");
+	program.bind_attribute_location(4, "AttrBoneWeights");
+	program.bind_attribute_location(5, "AttrBoneSelectors");
+
+	ShaderSetup::link(program, "early_z program");
+
+	program.set_uniform1i("InstanceOffsets", 0);
+	program.set_uniform1i("InstanceVectors", 1);
+	program.set_uniform_buffer_index("ModelMaterialUniforms", 0);
+
+	if (!uses_bones)
+		early_z_program = program;
+	else
+		early_z_bones_program = program;
 
 	return program;
 }

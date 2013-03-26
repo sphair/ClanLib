@@ -73,6 +73,7 @@ Model::Model(GraphicContext &gc, ModelMaterialCache &texture_cache, ModelShaderC
 		shader_cache.create_gbuffer_commands(gc, this, i);
 		shader_cache.create_transparency_commands(gc, this, i);
 		shader_cache.create_shadow_commands(gc, this, i);
+		shader_cache.create_early_z_commands(gc, this, i);
 	}
 }
 

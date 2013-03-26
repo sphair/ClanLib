@@ -45,6 +45,7 @@ public:
 	ModelRenderCommandList gbuffer_commands;
 	ModelRenderCommandList transparency_commands;
 	ModelRenderCommandList shadow_commands;
+	ModelRenderCommandList early_z_commands;
 
 private:
 	template<typename Type>
