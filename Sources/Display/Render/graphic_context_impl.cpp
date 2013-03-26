@@ -313,34 +313,29 @@ void GraphicContext_Impl::set_antialiased(bool value)
 	graphic_screen->on_antialiased_enabled_changed(this);
 }
 	
-void GraphicContext_Impl::set_point_offset(bool value)
+void GraphicContext_Impl::set_offset_point(bool value)
 {
-	is_point_offset = value;
-	graphic_screen->on_point_offset_changed(this);
+	is_offset_point = value;
+	graphic_screen->on_offset_point_changed(this);
 }
 	
-void GraphicContext_Impl::set_line_offset(bool value)
+void GraphicContext_Impl::set_offset_line(bool value)
 {
-	is_line_offset = value;
-	graphic_screen->on_line_offset_changed(this);
+	is_offset_line = value;
+	graphic_screen->on_offset_line_changed(this);
 }
 	
-void GraphicContext_Impl::set_polygon_offset(bool value)
+void GraphicContext_Impl::set_offset_fill(bool value)
 {
-	is_polygon_offset = value;
+	is_offset_fill = value;
+	graphic_screen->on_offset_fill_changed(this);
+}
+	
+void GraphicContext_Impl::set_polygon_offset(float factor, float units)
+{
+	offset_factor = factor;
+	offset_units = units;
 	graphic_screen->on_polygon_offset_changed(this);
-}
-	
-void GraphicContext_Impl::set_offset_factor(float value)
-{
-	offset_factor = value;
-	graphic_screen->on_offset_factor_changed(this);
-}
-	
-void GraphicContext_Impl::set_offset_units(float value)
-{
-	offset_units = value;
-	graphic_screen->on_offset_units_changed(this);
 }
 
 }

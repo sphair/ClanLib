@@ -501,30 +501,26 @@ void D3DGraphicContextProvider::set_antialiased(bool value)
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_point_offset(bool value)
+void D3DGraphicContextProvider::set_offset_point(bool value)
 {
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_line_offset(bool value)
+void D3DGraphicContextProvider::set_offset_line(bool value)
 {
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_polygon_offset(bool value)
+void D3DGraphicContextProvider::set_offset_fill(bool value)
 {
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_offset_factor(float value)
+void D3DGraphicContextProvider::set_polygon_offset(float factor, float units)
 {
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_offset_units(float value)
-{
-	// To do: what does this map to in D3D?
-}
 
 bool D3DGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
 {

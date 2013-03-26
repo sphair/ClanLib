@@ -247,11 +247,10 @@ public:
 	virtual void set_point_sprite_origin(PointSpriteOrigin origin) = 0;
 
 	virtual void set_antialiased(bool value) = 0;
-	virtual void set_point_offset(bool value) = 0;
-	virtual void set_line_offset(bool value) = 0;
-	virtual void set_polygon_offset(bool value) = 0;
-	virtual void set_offset_factor(float value) = 0;
-	virtual void set_offset_units(float value) = 0;
+	virtual void set_offset_point(bool value) = 0;
+	virtual void set_offset_line(bool value) = 0;
+	virtual void set_offset_fill(bool value) = 0;
+	virtual void set_polygon_offset(float factor, float units) = 0;
 
 	/// \brief Returns true if this primitives_array is owned by this graphic context.
 	virtual bool is_primitives_array_owner(const PrimitivesArray &primitives_array) = 0;

@@ -971,7 +971,7 @@ void GL1GraphicContextProvider::set_antialiased(bool value)
 		glDisable(GL_POLYGON_SMOOTH);
 }
 
-void GL1GraphicContextProvider::set_point_offset(bool value)
+void GL1GraphicContextProvider::set_offset_point(bool value)
 {
 	set_active();
 
@@ -982,18 +982,16 @@ void GL1GraphicContextProvider::set_point_offset(bool value)
 
 }
 
-void GL1GraphicContextProvider::set_line_offset(bool value)
+void GL1GraphicContextProvider::set_offset_line(bool value)
 {
 	set_active();
 	if (value)
 		glEnable(GL_POLYGON_OFFSET_LINE);
 	else
 		glDisable(GL_POLYGON_OFFSET_LINE);
-
-
 }
 
-void GL1GraphicContextProvider::set_polygon_offset(bool value)
+void GL1GraphicContextProvider::set_offset_fill(bool value)
 {
 	set_active();
 	if (value)
@@ -1002,15 +1000,10 @@ void GL1GraphicContextProvider::set_polygon_offset(bool value)
 		glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
-void GL1GraphicContextProvider::set_offset_factor(float value)
+void GL1GraphicContextProvider::set_polygon_offset(float factor, float units)
 {
 	set_active();
-	glPolygonOffset(value, value);
-}
-
-void GL1GraphicContextProvider::set_offset_units(float value)
-{
-	// TODO: What to do here?
+	glPolygonOffset(factor, units);
 }
 
 void GL1GraphicContextProvider::enable_logic_op(bool enabled)

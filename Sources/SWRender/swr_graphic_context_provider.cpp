@@ -573,26 +573,23 @@ void SWRenderGraphicContextProvider::set_antialiased(bool value)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_point_offset(bool value)
+void SWRenderGraphicContextProvider::set_offset_point(bool value)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_line_offset(bool value)
+void SWRenderGraphicContextProvider::set_offset_line(bool value)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_polygon_offset(bool value)
+void SWRenderGraphicContextProvider::set_offset_fill(bool value)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_offset_factor(float value)
+void SWRenderGraphicContextProvider::set_polygon_offset(float factor, float units)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_offset_units(float value)
-{
-	//FIXME: Stub
-}
+
 bool SWRenderGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
 {
 	//FIXME: Stub

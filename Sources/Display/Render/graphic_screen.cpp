@@ -424,12 +424,12 @@ void GraphicScreen::on_antialiased_enabled_changed(GraphicContext_State *state)
 	}
 }
 
-void GraphicScreen::on_point_offset_changed(GraphicContext_State *state)
+void GraphicScreen::on_offset_point_changed(GraphicContext_State *state)
 {
 	if (state == current)
 	{
-		active_state.is_point_offset = state->is_point_offset;
-		provider->set_point_offset(active_state.is_point_offset);
+		active_state.is_offset_point = state->is_offset_point;
+		provider->set_offset_point(active_state.is_offset_point);
 	}
 	else
 	{
@@ -437,12 +437,25 @@ void GraphicScreen::on_point_offset_changed(GraphicContext_State *state)
 	}
 }
 
-void GraphicScreen::on_line_offset_changed(GraphicContext_State *state)
+void GraphicScreen::on_offset_line_changed(GraphicContext_State *state)
 {
 	if (state == current)
 	{
-		active_state.is_line_offset = state->is_line_offset;
-		provider->set_line_offset(active_state.is_line_offset);
+		active_state.is_offset_line = state->is_offset_line;
+		provider->set_offset_line(active_state.is_offset_line);
+	}
+	else
+	{
+		set_active(state);
+	}
+}
+
+void GraphicScreen::on_offset_fill_changed(GraphicContext_State *state)
+{
+	if (state == current)
+	{
+		active_state.is_offset_fill = state->is_offset_fill;
+		provider->set_offset_fill(active_state.is_offset_fill);
 	}
 	else
 	{
@@ -454,34 +467,9 @@ void GraphicScreen::on_polygon_offset_changed(GraphicContext_State *state)
 {
 	if (state == current)
 	{
-		active_state.is_polygon_offset = state->is_polygon_offset;
-		provider->set_polygon_offset(active_state.is_polygon_offset);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_offset_factor_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
 		active_state.offset_factor = state->offset_factor;
-		provider->set_offset_factor(active_state.offset_factor);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_offset_units_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
 		active_state.offset_units = state->offset_units;
-		provider->set_offset_units(active_state.offset_units);
+		provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
 	}
 	else
 	{
@@ -547,34 +535,29 @@ void GraphicScreen::set_active_polygon_rasterizer(GraphicContext_State *state)
 		provider->set_antialiased(active_state.is_antialiased);
 	}
 
-	if (active_state.is_point_offset != state->is_point_offset)
+	if (active_state.is_offset_point != state->is_offset_point)
 	{
-		active_state.is_point_offset = state->is_point_offset;
-		provider->set_point_offset(active_state.is_point_offset);
+		active_state.is_offset_point = state->is_offset_point;
+		provider->set_offset_point(active_state.is_offset_point);
 	}
 
-	if (active_state.is_line_offset != state->is_line_offset)
+	if (active_state.is_offset_line != state->is_offset_line)
 	{
-		active_state.is_line_offset = state->is_line_offset;
-		provider->set_line_offset(active_state.is_line_offset);
+		active_state.is_offset_line = state->is_offset_line;
+		provider->set_offset_line(active_state.is_offset_line);
 	}
 
-	if (active_state.is_polygon_offset != state->is_polygon_offset)
+	if (active_state.is_offset_fill != state->is_offset_fill)
 	{
-		active_state.is_polygon_offset = state->is_polygon_offset;
-		provider->set_polygon_offset(active_state.is_polygon_offset);
+		active_state.is_offset_fill = state->is_offset_fill;
+		provider->set_offset_fill(active_state.is_offset_fill);
 	}
 
-	if (active_state.offset_factor != state->offset_factor)
+	if ( (active_state.offset_factor != state->offset_factor) || (active_state.offset_units != state->offset_units) )
 	{
 		active_state.offset_factor = state->offset_factor;
-		provider->set_offset_factor(active_state.offset_factor);
-	}
-
-	if (active_state.offset_units != state->offset_units)
-	{
 		active_state.offset_units = state->offset_units;
-		provider->set_offset_units(active_state.offset_units);
+		provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
 	}
 
 }
@@ -778,11 +761,10 @@ void GraphicScreen::set_default_state()
 	provider->set_draw_buffer(active_state.draw_buffer);
 
 	provider->set_antialiased(active_state.is_antialiased);
-	provider->set_point_offset(active_state.is_point_offset);
-	provider->set_line_offset(active_state.is_line_offset);
-	provider->set_polygon_offset(active_state.is_polygon_offset);
-	provider->set_offset_factor(active_state.offset_factor);
-	provider->set_offset_units(active_state.offset_units);
+	provider->set_offset_point(active_state.is_offset_point);
+	provider->set_offset_line(active_state.is_offset_line);
+	provider->set_offset_fill(active_state.is_offset_fill);
+	provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
 
 	provider->reset_scissor();
 	provider->set_viewport(active_state.viewport[0]);

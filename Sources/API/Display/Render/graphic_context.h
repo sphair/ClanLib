@@ -695,19 +695,16 @@ public:
 	void set_antialiased(bool value);
 
 	/// \brief Enables/disables point offsetting.
-	void set_point_offset(bool value);
+	void set_offset_point(bool value);
 
 	/// \brief Enables/disables line offsetting.
-	void set_line_offset(bool value);
+	void set_offset_line(bool value);
 
 	/// \brief Enables/disables polygon offsetting.
-	void set_polygon_offset(bool value);
+	void set_offset_fill(bool value);
 
 	/// \brief Sets the offset factor.
-	void set_offset_factor(float value);
-
-	/// \brief Sets the offset units.
-	void set_offset_units(float value);
+	void set_polygon_offset(float factor, float units);
 
 /// \}
 /// \name Events

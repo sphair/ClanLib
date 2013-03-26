@@ -83,11 +83,10 @@ public:
 	void set_logic_op(LogicOp op);
 
 	void set_antialiased(bool value);
-	void set_point_offset(bool value);
-	void set_line_offset(bool value);
-	void set_polygon_offset(bool value);
-	void set_offset_factor(float value);
-	void set_offset_units(float value);
+	void set_offset_point(bool value);
+	void set_offset_line(bool value);
+	void set_offset_fill(bool value);
+	void set_polygon_offset(float factor, float units);
 private:
 	void on_window_resized(const Size &size);
 

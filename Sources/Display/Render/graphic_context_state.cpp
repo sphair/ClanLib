@@ -76,9 +76,9 @@ void GraphicContext_State::reset_buffer_control_states()
 void GraphicContext_State::reset_polygon_rasterizer_states()
 {
 	is_antialiased = false;
-	is_point_offset = false;
-	is_line_offset = false;
-	is_polygon_offset = false;
+	is_offset_point = false;
+	is_offset_line = false;
+	is_offset_fill = false;
 	offset_factor = 0.0f;
 	offset_units = 0.0f;
 }

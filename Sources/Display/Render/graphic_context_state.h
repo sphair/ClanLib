@@ -115,9 +115,9 @@ public:
 	// Old PolygonRasterizer
 	bool is_antialiased;
 //	bool is_culled;
-	bool is_point_offset;
-	bool is_line_offset;
-	bool is_polygon_offset;
+	bool is_offset_point;
+	bool is_offset_line;
+	bool is_offset_fill;
 //	CullMode face_cull_mode;
 //	FillMode face_fill_mode;
 //	FaceSide front_face_side;
