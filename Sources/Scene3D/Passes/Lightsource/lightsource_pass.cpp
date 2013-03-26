@@ -99,6 +99,21 @@ void LightsourcePass::light(GraphicContext &gc, const Mat4f &world_to_eye, const
 	}
 }
 
+class LightsourcePass_LightCompare
+{
+public:
+	bool operator()(SceneLight_Impl *a, SceneLight_Impl *b)
+	{
+		bool a_has_shadow = a->vsm_data->shadow_map.get_index() >= 0;
+		bool b_has_shadow = b->vsm_data->shadow_map.get_index() >= 0;
+
+		if (a_has_shadow != b_has_shadow)
+			return a_has_shadow < b_has_shadow;
+		else
+			return a->type < b->type;
+	}
+};
+
 void LightsourcePass::upload(GraphicContext &gc)
 {
 	ScopeTimeFunction();
@@ -106,6 +121,8 @@ void LightsourcePass::upload(GraphicContext &gc)
 	int num_lights = lights.size();
 	if (num_lights == 0)
 		return;
+
+	std::sort(lights.begin(), lights.end(), LightsourcePass_LightCompare());
 
 	float aspect = viewport->get_width()/(float)viewport->get_height();
 	float field_of_view_y_degrees = field_of_view.get();
