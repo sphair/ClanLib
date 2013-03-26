@@ -61,9 +61,9 @@ void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
 
 }
 
-void PBuffer_GL1::set_active() const
+void PBuffer_GL1::set_active()
 {
-	impl->set_active();
+	OpenGL::set_active(impl.get());
 }
 
 void PBuffer_GL1::throw_if_null() const
