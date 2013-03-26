@@ -58,7 +58,10 @@ void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
 	set_active();
 
 	glEnable(GL_POINT_SPRITE);
-
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void PBuffer_GL1::set_active()

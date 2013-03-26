@@ -107,6 +107,10 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(const GL1WindowProvider * c
 
 	// Enable point sprites for legacy opengl
 	glEnable(GL_POINT_SPRITE);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	SharedGCData::add_provider(this);
 }
@@ -453,32 +457,7 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 
 void GL1GraphicContextProvider::set_uniform_buffer(int index, const UniformBuffer &buffer)
 {
-	GL1UniformBufferProvider *provider = static_cast<GL1UniformBufferProvider*>(buffer.get_provider());
-
-	const char *data = (const char *) provider->get_data();
-
-	///   mat4 modelviewMatrix;
-	///   mat4 projectionMatrix;
-	///   mat4 modelviewProjectionMatrix;
-	///   mat3 normalMatrix;
-	Mat4f modelview( (float * ) (data) );
-	Mat4f projection( (float * ) (data + (sizeof(float) * 16 )));
-
-	if (last_projection != projection)
-	{
-		last_projection = projection;
-		set_active();
-		glMatrixMode(GL_PROJECTION);
-		glLoadMatrixf(last_projection.matrix);
-	}
-
-	if (last_modelview != modelview)
-	{
-		last_modelview = modelview;
-		set_active();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadMatrixf(last_modelview);
-	}
+	//GL1UniformBufferProvider *provider = static_cast<GL1UniformBufferProvider*>(buffer.get_provider());
 }
 
 void GL1GraphicContextProvider::reset_uniform_buffer(int index)

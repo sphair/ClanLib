@@ -101,15 +101,6 @@ std::vector<ProgramUniform> GL1ProgramObjectProvider::get_uniforms() const
 	
 int GL1ProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
-	if (name == "cl_ModelViewMatrix")
-	{
-		return 1;
-	}
-
-	if (name == "cl_ProjectionMatrix")
-	{
-		return 2;
-	}
 	return -1;
 }
 
