@@ -152,11 +152,6 @@ private:
 	void set_texture_image3d(GLuint target, PixelBuffer &image, int image_depth, int level);
 	int get_next_power_of_two(int value);
 
-	GLenum to_enum(TextureFilter filter);
-	GLenum to_enum(TextureWrapMode mode);
-	GLenum to_enum(CompareFunction func);
-	GLenum to_enum(TextureCompareMode mode);
-
 	int width, height, depth;
 	int pot_width, pot_height, pot_depth;
 	float pot_ratio_width, pot_ratio_height, pot_ratio_depth;

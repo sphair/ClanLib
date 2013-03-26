@@ -207,19 +207,6 @@ private:
 	void reset_primitive_texture( int texture_index);
 	void reset_primitive_texture_all();
 
-	void set_culled(bool value);
-
-	GLenum to_enum(enum DrawBuffer buf);
-	GLenum to_enum(enum CompareFunction func);
-	GLenum to_enum(enum StencilOp op);
-	GLenum to_enum(enum CullMode mode);
-	GLenum to_enum(enum FillMode mode);
-	GLenum to_enum(enum BlendFunc func);
-	GLenum to_enum(enum BlendEquation eq);
-	GLenum to_enum(enum VertexAttributeDataType value);
-	GLenum to_enum(enum PrimitivesType value);
-	GLenum to_enum(enum LogicOp op);
-
 	/// \brief OpenGL render window.
 	const GL1WindowProvider * const render_window;
 

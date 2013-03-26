@@ -212,13 +212,13 @@ void GL3TextureProvider::create(int new_width, int new_height, int new_depth, in
 		else if (texture_type == GL_TEXTURE_CUBE_MAP)
 		{
 			for (int i = 0; i < 6; i++)
-				glTexImage2D(to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, 0);
+				glTexImage2D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, 0, tf.pixel_format, tf.pixel_datatype, 0);
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 		{
 			array_size /= 6;
 			for (int i = 0; i < 6; i++)
-				glTexImage3D(to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, 0);
+				glTexImage3D(OpenGL::to_cube_target(i), level, tf.internal_format, mip_width, mip_height, array_size, 0, tf.pixel_format, tf.pixel_datatype, 0);
 		}
 		else
 		{
@@ -311,11 +311,11 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP)
 		{
-			glCompressedTexSubImage2D(to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
+			glCompressedTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, data_size, data);
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 		{
-			glCompressedTexSubImage3D(to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_datatype, data_size, data);
+			glCompressedTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_datatype, data_size, data);
 		}
 	}
 	else
@@ -345,11 +345,11 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP)
 		{
-			glTexSubImage2D(to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, tf.pixel_datatype, data);
+			glTexSubImage2D(OpenGL::to_cube_target(slice), level, x, y, src_rect.get_width(), src_rect.get_height(), tf.pixel_datatype, tf.pixel_datatype, data);
 		}
 		else if (texture_type == GL_TEXTURE_CUBE_MAP_ARRAY)
 		{
-			glTexSubImage3D(to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_format, tf.pixel_datatype, data);
+			glTexSubImage3D(OpenGL::to_cube_target(slice % 6), level, x, y, slice / 6, src_rect.get_width(), src_rect.get_height(), 1, tf.pixel_format, tf.pixel_datatype, data);
 		}
 
 		// Restore these unpack values to the default
@@ -452,11 +452,11 @@ void GL3TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
     if (texture_type != GL_TEXTURE_1D)
-        glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+        glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
     if (texture_type != GL_TEXTURE_1D && texture_type != GL_TEXTURE_2D)
-        glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
+        glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
 }
 
 void GL3TextureProvider::set_wrap_mode(
@@ -465,8 +465,8 @@ void GL3TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
 }
 
 void GL3TextureProvider::set_wrap_mode(
@@ -474,14 +474,14 @@ void GL3TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
 }
 
 void GL3TextureProvider::set_min_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, OpenGL::to_enum(filter));
 }
 
 void GL3TextureProvider::set_mag_filter(TextureFilter filter)
@@ -493,7 +493,7 @@ void GL3TextureProvider::set_mag_filter(TextureFilter filter)
 	if ( ! ((filter == filter_nearest) || (filter == filter_linear)) )
 		throw Exception("filter_nearest, filter_linear are only valid options for the mag filter");
 
-	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, OpenGL::to_enum(filter));
 }
 
 void GL3TextureProvider::set_max_anisotropy(float v)
@@ -507,8 +507,8 @@ void GL3TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFun
 {
 	throw_if_disposed();
 	TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
-	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, OpenGL::to_enum(mode));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));	
 }
 
 TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers)
@@ -519,71 +519,6 @@ TextureProvider *GL3TextureProvider::create_view(TextureDimensions texture_dimen
 /////////////////////////////////////////////////////////////////////////////
 // GL3TextureProvider Implementation:
 
-GLenum GL3TextureProvider::to_enum(TextureFilter filter)
-{
-	switch(filter)
-	{
-	case filter_nearest: return GL_NEAREST;
-	case filter_linear: return GL_LINEAR;
-	case filter_nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
-	case filter_nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
-	case filter_linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
-	case filter_linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
-	default: return GL_NEAREST;
-	}
-}
-
-GLenum GL3TextureProvider::to_enum(TextureWrapMode mode)
-{
- 	switch(mode)
-	{
-	case wrap_clamp_to_edge: return GL_CLAMP_TO_EDGE;
-	case wrap_repeat: return GL_REPEAT;
-	case wrap_mirrored_repeat: return GL_MIRRORED_REPEAT;
-	default: return GL_CLAMP_TO_EDGE;
-	}
-}
-
-GLenum GL3TextureProvider::to_enum(TextureCompareMode mode)
-{
- 	switch(mode)
-	{
-	case comparemode_none: return GL_NONE;
-	case comparemode_compare_r_to_texture: return GL_COMPARE_REF_TO_TEXTURE;		
-	default: return GL_NONE;
-	}
-}
-
-GLenum GL3TextureProvider::to_enum(CompareFunction func)
-{
-	switch( func )
-	{
-	case compare_never: return GL_NEVER;
-	case compare_less: return GL_LESS;
-	case compare_lequal: return GL_LEQUAL; 
-	case compare_greater: return GL_GREATER; 
-	case compare_gequal: return GL_GEQUAL; 
-	case compare_equal: return GL_EQUAL; 
-	case compare_notequal: return GL_NOTEQUAL; 
-	case compare_always: return GL_ALWAYS; 
-	default: return GL_LEQUAL;
-	}
-}
-
-GLenum GL3TextureProvider::to_cube_target(int index)
-{
-	// To do: make sure this order matches the order used by Direct3D
-	switch (index)
-	{
-	case 0: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-	case 1: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
-	case 2: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
-	case 3: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
-	case 4: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
-	case 5: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
-	default: throw Exception("Invalid index specified for cube texture");
-	}
-}
 
 /////////////////////////////////////////////////////////////////////////////
 

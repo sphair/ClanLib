@@ -418,7 +418,7 @@ void GL3GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 				break;
 		}
 		if (glPolygonMode)
-	        glPolygonMode(GL_FRONT_AND_BACK, to_enum(gl_state->desc.get_face_fill_mode()));
+	        glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(gl_state->desc.get_face_fill_mode()));
 
 		gl_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 		scissor_enabled = gl_state->desc.get_enable_scissor();
@@ -450,20 +450,20 @@ void GL3GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 
 		if (equation_color == equation_alpha)
 		{
-			glBlendEquation(to_enum(equation_color));
+			glBlendEquation(OpenGL::to_enum(equation_color));
 		}
 		else
 		{
-			glBlendEquationSeparate( to_enum(equation_color), to_enum(equation_alpha) );
+			glBlendEquationSeparate( OpenGL::to_enum(equation_color), OpenGL::to_enum(equation_alpha) );
 		}
 
 		if( src == src_alpha && dest == dest_alpha )
 		{
-			glBlendFunc(to_enum(src), to_enum(dest));
+			glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
 		}
 		else
 		{
-			glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
+			glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
 		}
 
 	}
@@ -489,17 +489,17 @@ void GL3GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 		OpenGL::set_active(this);
 		gl_state->desc.is_stencil_test_enabled() ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 
-		glStencilFuncSeparate(GL_FRONT, to_enum(front), front_ref, front_mask);
-		glStencilFuncSeparate(GL_BACK, to_enum(back), back_ref, back_mask);
+		glStencilFuncSeparate(GL_FRONT, OpenGL::to_enum(front), front_ref, front_mask);
+		glStencilFuncSeparate(GL_BACK, OpenGL::to_enum(back), back_ref, back_mask);
 		glStencilMaskSeparate( GL_FRONT, front_facing_mask );
 		glStencilMaskSeparate( GL_BACK, back_facing_mask );
 
-		glStencilOpSeparate(GL_FRONT, to_enum(fail_front), to_enum(pass_depth_fail_front), to_enum(pass_depth_pass_front));
-		glStencilOpSeparate(GL_BACK, to_enum(fail_back), to_enum(pass_depth_fail_back), to_enum(pass_depth_pass_back));
+		glStencilOpSeparate(GL_FRONT, OpenGL::to_enum(fail_front), OpenGL::to_enum(pass_depth_fail_front), OpenGL::to_enum(pass_depth_pass_front));
+		glStencilOpSeparate(GL_BACK, OpenGL::to_enum(fail_back), OpenGL::to_enum(pass_depth_fail_back), OpenGL::to_enum(pass_depth_pass_back));
 
 		gl_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 		glDepthMask(gl_state->desc.is_depth_write_enabled() ? 1 : 0);
-		glDepthFunc(to_enum(gl_state->desc.get_depth_compare_function()));
+		glDepthFunc(OpenGL::to_enum(gl_state->desc.get_depth_compare_function()));
 
 	}
 }
@@ -703,13 +703,13 @@ void GL3GraphicContextProvider::set_primitives_array(const PrimitivesArray &prim
 void GL3GraphicContextProvider::draw_primitives_array(PrimitivesType type, int offset, int num_vertices)
 {
 	OpenGL::set_active(this);
-	glDrawArrays(to_enum(type), offset, num_vertices);
+	glDrawArrays(OpenGL::to_enum(type), offset, num_vertices);
 }
 
 void GL3GraphicContextProvider::draw_primitives_array_instanced(PrimitivesType type, int offset, int num_vertices, int instance_count)
 {
 	OpenGL::set_active(this);
-	glDrawArraysInstanced(to_enum(type), offset, num_vertices, instance_count);
+	glDrawArraysInstanced(OpenGL::to_enum(type), offset, num_vertices, instance_count);
 }
 
 void GL3GraphicContextProvider::set_primitives_elements(ElementArrayBufferProvider *array_provider)
@@ -721,13 +721,13 @@ void GL3GraphicContextProvider::set_primitives_elements(ElementArrayBufferProvid
 void GL3GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset)
 {
 	OpenGL::set_active(this);
-	glDrawElements(to_enum(type), count, to_enum(indices_type), (const GLvoid*)offset);
+	glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), (const GLvoid*)offset);
 }
 
 void GL3GraphicContextProvider::draw_primitives_elements_instanced(PrimitivesType type, int count, VertexAttributeDataType indices_type, size_t offset, int instance_count)
 {
 	OpenGL::set_active(this);
-	glDrawElementsInstanced(to_enum(type), count, to_enum(indices_type), (const GLvoid*)offset, instance_count);
+	glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), (const GLvoid*)offset, instance_count);
 }
 
 void GL3GraphicContextProvider::reset_primitives_elements()
@@ -745,7 +745,7 @@ void GL3GraphicContextProvider::draw_primitives_elements(
 {
 	OpenGL::set_active(this);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
-	glDrawElements(to_enum(type), count, to_enum(indices_type), offset);
+	glDrawElements(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), offset);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
@@ -759,7 +759,7 @@ void GL3GraphicContextProvider::draw_primitives_elements_instanced(
 {
 	OpenGL::set_active(this);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, static_cast<GL3ElementArrayBufferProvider *>(array_provider)->get_handle());
-	glDrawElementsInstanced(to_enum(type), count, to_enum(indices_type), offset, instance_count);
+	glDrawElementsInstanced(OpenGL::to_enum(type), count, OpenGL::to_enum(indices_type), offset, instance_count);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
@@ -982,7 +982,7 @@ void GL3GraphicContextProvider::enable_logic_op(bool enabled)
 void GL3GraphicContextProvider::set_logic_op(LogicOp op)
 {
 	OpenGL::set_active(this);
-		glLogicOp(to_enum(op));
+		glLogicOp(OpenGL::to_enum(op));
 }
 
 
@@ -990,7 +990,7 @@ void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	OpenGL::set_active(this);
     if (glDrawBuffer)
-        glDrawBuffer( to_enum(buffer) );
+        glDrawBuffer( OpenGL::to_enum(buffer) );
 
 }
 
@@ -1006,178 +1006,5 @@ const DisplayWindowProvider & GL3GraphicContextProvider::get_render_window() con
 
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Implementation:
-
-GLenum GL3GraphicContextProvider::to_enum(DrawBuffer buffer)
-{
-	switch(buffer)
-	{
-	case buffer_back: return GL_BACK;
-	case buffer_back_left: return GL_BACK_LEFT;
-	case buffer_back_right: return GL_BACK_RIGHT;
-	case buffer_front: return GL_FRONT;
-	case buffer_front_and_back: return GL_FRONT_AND_BACK;
-	case buffer_front_left: return GL_FRONT_LEFT;
-	case buffer_front_right: return GL_FRONT_RIGHT;
-	case buffer_left: return GL_LEFT;
-	case buffer_none: return GL_NONE;
-	case buffer_right: return GL_RIGHT;
-	default: return GL_BACK;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(CompareFunction func)
-{
-	switch( func )
-	{
-	case compare_never: return GL_NEVER;
-	case compare_less: return GL_LESS;
-	case compare_lequal: return GL_LEQUAL; 
-	case compare_greater: return GL_GREATER; 
-	case compare_gequal: return GL_GEQUAL; 
-	case compare_equal: return GL_EQUAL; 
-	case compare_notequal: return GL_NOTEQUAL; 
-	case compare_always: return GL_ALWAYS; 
-	default: return GL_LEQUAL;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(StencilOp op)
-{
-	switch( op )
-	{
-	case stencil_decr: return GL_DECR;
-	case stencil_decr_wrap: return GL_DECR_WRAP;
-	case stencil_incr: return GL_INCR;
-	case stencil_incr_wrap: return GL_INCR_WRAP;
-	case stencil_invert: return GL_INVERT;
-	case stencil_keep: return GL_KEEP;
-	case stencil_replace: return GL_REPLACE;
-	case stencil_zero: return GL_ZERO;	
-	default: return GL_KEEP;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(CullMode mode)
-{
-	switch( mode )
-	{
-	case cull_front: return GL_FRONT;
-	case cull_back: return GL_BACK;
-	case cull_front_and_back: return GL_FRONT_AND_BACK;
-	default: return GL_BACK;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(FillMode mode)
-{
-	switch( mode )
-	{
-	case fill_point: return GL_POINT;
-	case fill_line: return GL_LINE;
-	case fill_polygon: return GL_FILL;
-	default: return GL_FILL;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(BlendFunc func)
-{
-	switch( func )
-	{
-	case blend_zero: return GL_ZERO;
-	case blend_one: return GL_ONE;
-	case blend_dest_color: return GL_DST_COLOR;
-	case blend_src_color: return GL_SRC_COLOR;
-	case blend_one_minus_dest_color: return GL_ONE_MINUS_DST_COLOR;
-	case blend_one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
-	case blend_src_alpha: return GL_SRC_ALPHA;
-	case blend_one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
-	case blend_dest_alpha: return GL_DST_ALPHA;
-	case blend_one_minus_dest_alpha: return GL_ONE_MINUS_DST_ALPHA;
-	case blend_src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
-	case blend_constant_color: return GL_CONSTANT_COLOR;
-	case blend_one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
-	case blend_constant_alpha: return GL_CONSTANT_ALPHA;
-	case blend_one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-	default: return GL_BLEND_SRC;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(BlendEquation eq)
-{
-	switch( eq )
-	{
-	case equation_add: return GL_FUNC_ADD;
-	case equation_subtract: return GL_FUNC_SUBTRACT;
-	case equation_reverse_subtract: return GL_FUNC_REVERSE_SUBTRACT;
-	case equation_min: return GL_MIN;
-	case equation_max: return GL_MAX;
-	default: return GL_FUNC_ADD;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(enum VertexAttributeDataType value)
-{
-	switch(value)
-	{
-	case type_unsigned_byte:
-		return GL_UNSIGNED_BYTE;
-	case type_unsigned_short:
-		return GL_UNSIGNED_SHORT;
-	case type_unsigned_int:
-		return GL_UNSIGNED_INT;
-	case type_byte:
-		return GL_BYTE;
-	case type_short:
-		return GL_SHORT;
-	case type_int:
-		return GL_INT;
-	case type_float:
-		return GL_FLOAT;
-	default:
-		return 0;
-	}
-}
-
-GLenum GL3GraphicContextProvider::to_enum(enum PrimitivesType value)
-{
-	GLenum gl_mode = 0;
-	switch (value)
-	{
-	case type_points: gl_mode = GL_POINTS; break;
-	case type_line_strip: gl_mode = GL_LINE_STRIP; break;
-	case type_line_loop: gl_mode = GL_LINE_LOOP; break;
-	case type_lines: gl_mode = GL_LINES; break;
-	case type_triangle_strip: gl_mode = GL_TRIANGLE_STRIP; break;
-	case type_triangle_fan: gl_mode = GL_TRIANGLE_FAN; break;
-	case type_triangles: gl_mode = GL_TRIANGLES; break;
-	}
-	return gl_mode;
-}
-
-GLenum GL3GraphicContextProvider::to_enum(enum LogicOp op)
-{
-	GLenum gl_op = 0;
-	switch (op)
-	{
-		case logic_clear: gl_op = GL_CLEAR; break;  
-		case logic_and: gl_op = GL_AND; break;
-		case logic_and_reverse: gl_op = GL_AND_REVERSE; break;
-		case logic_copy: gl_op = GL_COPY; break;
-		case logic_and_inverted: gl_op = GL_AND_INVERTED; break;
-		case logic_noop: gl_op = GL_NOOP; break;
-		case logic_xor: gl_op = GL_XOR; break;
-		case logic_or: gl_op = GL_OR; break;
-		case logic_nor: gl_op = GL_NOR; break;
-		case logic_equiv: gl_op = GL_EQUIV; break;
-		case logic_invert: gl_op = GL_INVERT; break;
-		case logic_or_reverse: gl_op = GL_OR_REVERSE; break;
-		case logic_copy_inverted: gl_op = GL_COPY_INVERTED; break;
-		case logic_or_inverted: gl_op = GL_OR_INVERTED; break;
-		case logic_nand: gl_op = GL_NAND; break;
-		case logic_set: gl_op = GL_SET; break;
-		default: break;
-	}
-	return gl_op;
-}
 
 }

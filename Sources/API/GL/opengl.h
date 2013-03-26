@@ -104,6 +104,23 @@ public:
 	/// The returned object takes ownership of the texture handle (it calls glDeleteTextures when destroyed)
 	static Texture from_texture_handle(GLuint type, GLuint handle);
 
+	static GLenum OpenGL::to_enum(DrawBuffer buf);
+	static GLenum OpenGL::to_enum(CompareFunction func);
+	static GLenum OpenGL::to_enum(StencilOp op);
+	static GLenum OpenGL::to_enum(CullMode mode);
+	static GLenum OpenGL::to_enum(FillMode mode);
+	static GLenum OpenGL::to_enum(BlendFunc func);
+	static GLenum OpenGL::to_enum(BlendEquation eq);
+	static GLenum OpenGL::to_enum(VertexAttributeDataType value);
+	static GLenum OpenGL::to_enum(PrimitivesType value);
+	static GLenum OpenGL::to_enum(LogicOp op);
+	static GLenum OpenGL::to_enum(TextureFilter filter);
+	static GLenum OpenGL::to_enum(TextureWrapMode mode);
+	static GLenum OpenGL::to_enum(TextureCompareMode mode);
+	static GLenum to_cube_target(int index);
+	static GLenum OpenGL::to_enum(BufferUsage usage);
+	static GLenum OpenGL::to_enum(BufferAccess access);
+
 /// \}
 
 private:

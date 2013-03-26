@@ -204,17 +204,6 @@ public:
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
 
-	static GLenum to_enum(enum DrawBuffer buf);
-	static GLenum to_enum(enum CompareFunction func);
-	static GLenum to_enum(enum StencilOp op);
-	static GLenum to_enum(enum CullMode mode);
-	static GLenum to_enum(enum FillMode mode);
-	static GLenum to_enum(enum BlendFunc func);
-	static GLenum to_enum(enum BlendEquation eq);
-	static GLenum to_enum(enum VertexAttributeDataType value);
-	static GLenum to_enum(enum PrimitivesType value);
-	static GLenum to_enum(enum LogicOp op);
-
 	void make_current() const;
 
 /// \}
@@ -223,8 +212,6 @@ public:
 private:
 	void on_dispose();
 	void create_standard_programs();
-
-	void set_culled(bool value);
 	
 	void check_opengl_version();
 	void calculate_shading_language_version();

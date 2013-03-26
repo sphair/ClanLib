@@ -361,8 +361,8 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 				glCullFace(GL_FRONT_AND_BACK);
 				break;
 		}
-		glPolygonMode(GL_FRONT, to_enum(gl1_state->desc.get_face_fill_mode()));
-		glPolygonMode(GL_BACK, to_enum(gl1_state->desc.get_face_fill_mode()));
+		glPolygonMode(GL_FRONT, OpenGL::to_enum(gl1_state->desc.get_face_fill_mode()));
+		glPolygonMode(GL_BACK, OpenGL::to_enum(gl1_state->desc.get_face_fill_mode()));
 
 		gl1_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 
@@ -393,23 +393,23 @@ void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
 
 		if (glBlendEquation)
-			glBlendEquation(to_enum(equation_color));
+			glBlendEquation(OpenGL::to_enum(equation_color));
 
 		if( src == src_alpha && dest == dest_alpha )
 		{
 			if (glBlendFunc)
-				glBlendFunc(to_enum(src), to_enum(dest));
+				glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
 		}
 		else
 		{
 			if (glBlendFuncSeparate)
 			{
-				glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
+				glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
 			}
 			else
 			{
 				if (glBlendFunc)
-					glBlendFunc(to_enum(src), to_enum(dest));
+					glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
 			}
 		}
 	}
@@ -424,7 +424,7 @@ void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 
 		gl1_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 		glDepthMask(gl1_state->desc.is_depth_write_enabled() ? 1 : 0);
-		glDepthFunc(to_enum(gl1_state->desc.get_depth_compare_function()));
+		glDepthFunc(OpenGL::to_enum(gl1_state->desc.get_depth_compare_function()));
 	}
 }
 
@@ -633,11 +633,11 @@ void GL1GraphicContextProvider::set_primitives_array(const PrimitivesArray &prim
 		{
 			case 0: // POSITION
 				glEnableClientState(GL_VERTEX_ARRAY);
-				glVertexPointer(attribute.size, to_enum(attribute.type),  attribute.stride,  data_ptr);
+				glVertexPointer(attribute.size, OpenGL::to_enum(attribute.type),  attribute.stride,  data_ptr);
 				break;
 			case 1: // COLOR
 				glEnableClientState(GL_COLOR_ARRAY);
-				glColorPointer(attribute.size, to_enum(attribute.type),  attribute.stride,  data_ptr);
+				glColorPointer(attribute.size, OpenGL::to_enum(attribute.type),  attribute.stride,  data_ptr);
 
 				break;
 			case 2: // TEXTURE
@@ -650,7 +650,7 @@ void GL1GraphicContextProvider::set_primitives_array(const PrimitivesArray &prim
 				break;
 			case 4: // NORMAL
 				glEnableClientState(GL_NORMAL_ARRAY);
-				glNormalPointer(to_enum(attribute.type),  attribute.stride,  data_ptr);
+				glNormalPointer(OpenGL::to_enum(attribute.type),  attribute.stride,  data_ptr);
 				break;
 		}
 	}
@@ -663,11 +663,11 @@ void GL1GraphicContextProvider::draw_primitives_array(PrimitivesType type, int o
 	// Simple condition - No textures set
 	if (!primitives_array_texture_set)
 	{
-		glDrawArrays(to_enum(type), offset, num_vertices);
+		glDrawArrays(OpenGL::to_enum(type), offset, num_vertices);
 		return;
 	}
 
-	GLenum primitive_type = to_enum(type);
+	GLenum primitive_type = OpenGL::to_enum(type);
 
 	int total_vertices = offset + num_vertices;
 
@@ -1029,13 +1029,13 @@ void GL1GraphicContextProvider::enable_logic_op(bool enabled)
 void GL1GraphicContextProvider::set_logic_op(LogicOp op)
 {
 	set_active();
-	glLogicOp(to_enum(op));
+	glLogicOp(OpenGL::to_enum(op));
 }
 
 void GL1GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	set_active();
-	glDrawBuffer( to_enum(buffer) );
+	glDrawBuffer( OpenGL::to_enum(buffer) );
 
 }
 
@@ -1051,180 +1051,6 @@ const DisplayWindowProvider & GL1GraphicContextProvider::get_render_window() con
 
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Implementation:
-
-GLenum GL1GraphicContextProvider::to_enum(DrawBuffer buffer)
-{
-	switch(buffer)
-	{
-	case buffer_back: return GL_BACK;
-	case buffer_back_left: return GL_BACK_LEFT;
-	case buffer_back_right: return GL_BACK_RIGHT;
-	case buffer_front: return GL_FRONT;
-	case buffer_front_and_back: return GL_FRONT_AND_BACK;
-	case buffer_front_left: return GL_FRONT_LEFT;
-	case buffer_front_right: return GL_FRONT_RIGHT;
-	case buffer_left: return GL_LEFT;
-	case buffer_none: return GL_NONE;
-	case buffer_right: return GL_RIGHT;
-	default: return GL_BACK;
-	}
-}
-
-GLenum GL1GraphicContextProvider::to_enum(CompareFunction func)
-{
-	switch( func )
-	{
-	case compare_never: return GL_NEVER;
-	case compare_less: return GL_LESS;
-	case compare_lequal: return GL_LEQUAL; 
-	case compare_greater: return GL_GREATER; 
-	case compare_gequal: return GL_GEQUAL; 
-	case compare_equal: return GL_EQUAL; 
-	case compare_notequal: return GL_NOTEQUAL; 
-	case compare_always: return GL_ALWAYS; 
-	default: return GL_LEQUAL;
-	}
-}
-
-GLenum GL1GraphicContextProvider::to_enum(StencilOp op)
-{
-	switch( op )
-	{
-	case stencil_decr: return GL_DECR;
-	case stencil_decr_wrap: return GL_DECR_WRAP;
-	case stencil_incr: return GL_INCR;
-	case stencil_incr_wrap: return GL_INCR_WRAP;
-	case stencil_invert: return GL_INVERT;
-	case stencil_keep: return GL_KEEP;
-	case stencil_replace: return GL_REPLACE;
-	case stencil_zero: return GL_ZERO;	
-	default: return GL_KEEP;
-	}
-}
-
-GLenum GL1GraphicContextProvider::to_enum(CullMode mode)
-{
-	switch( mode )
-	{
-	case cull_front: return GL_FRONT;
-	case cull_back: return GL_BACK;
-	case cull_front_and_back: return GL_FRONT_AND_BACK;
-	default: return GL_BACK;
-	}
-};
-
-GLenum GL1GraphicContextProvider::to_enum(FillMode mode)
-{
-	switch( mode )
-	{
-	case fill_point: return GL_POINT;
-	case fill_line: return GL_LINE;
-	case fill_polygon: return GL_FILL;
-	default: return GL_FILL;
-	}
-};
-
-GLenum GL1GraphicContextProvider::to_enum(BlendFunc func)
-{
-	switch( func )
-	{
-	case blend_zero: return GL_ZERO;
-	case blend_one: return GL_ONE;
-	case blend_dest_color: return GL_DST_COLOR;
-	case blend_src_color: return GL_SRC_COLOR;
-	case blend_one_minus_dest_color: return GL_ONE_MINUS_DST_COLOR;
-	case blend_one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
-	case blend_src_alpha: return GL_SRC_ALPHA;
-	case blend_one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
-	case blend_dest_alpha: return GL_DST_ALPHA;
-	case blend_one_minus_dest_alpha: return GL_ONE_MINUS_DST_ALPHA;
-	case blend_src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
-	case blend_constant_color: return GL_CONSTANT_COLOR;
-	case blend_one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
-	case blend_constant_alpha: return GL_CONSTANT_ALPHA;
-	case blend_one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
-	default: return GL_BLEND_SRC;
-	}
-}
-
-
-GLenum GL1GraphicContextProvider::to_enum(BlendEquation eq)
-{
-	switch( eq )
-	{
-	case equation_add: return GL_FUNC_ADD;
-	case equation_subtract: return GL_FUNC_SUBTRACT;
-	case equation_reverse_subtract: return GL_FUNC_REVERSE_SUBTRACT;
-	case equation_min: return GL_MIN;
-	case equation_max: return GL_MAX;
-	default: return GL_FUNC_ADD;
-	}
-};
-
-GLenum GL1GraphicContextProvider::to_enum(enum VertexAttributeDataType value)
-{
-	switch(value)
-	{
-	case type_unsigned_byte:
-		return GL_UNSIGNED_BYTE;
-	case type_unsigned_short:
-		return GL_UNSIGNED_SHORT;
-	case type_unsigned_int:
-		return GL_UNSIGNED_INT;
-	case type_byte:
-		return GL_BYTE;
-	case type_short:
-		return GL_SHORT;
-	case type_int:
-		return GL_INT;
-	case type_float:
-		return GL_FLOAT;
-	default:
-		return 0;
-	}
-}
-
-GLenum GL1GraphicContextProvider::to_enum(enum PrimitivesType value)
-{
-	GLenum gl_mode = 0;
-	switch (value)
-	{
-	case type_points: gl_mode = GL_POINTS; break;
-	case type_line_strip: gl_mode = GL_LINE_STRIP; break;
-	case type_line_loop: gl_mode = GL_LINE_LOOP; break;
-	case type_lines: gl_mode = GL_LINES; break;
-	case type_triangle_strip: gl_mode = GL_TRIANGLE_STRIP; break;
-	case type_triangle_fan: gl_mode = GL_TRIANGLE_FAN; break;
-	case type_triangles: gl_mode = GL_TRIANGLES; break;
-	}
-	return gl_mode;
-}
-
-GLenum GL1GraphicContextProvider::to_enum(enum LogicOp op)
-{
-	GLenum gl_op = 0;
-	switch (op)
-	{
-		case logic_clear: gl_op = GL_CLEAR; break;  
-		case logic_and: gl_op = GL_AND; break;
-		case logic_and_reverse: gl_op = GL_AND_REVERSE; break;
-		case logic_copy: gl_op = GL_COPY; break;
-		case logic_and_inverted: gl_op = GL_AND_INVERTED; break;
-		case logic_noop: gl_op = GL_NOOP; break;
-		case logic_xor: gl_op = GL_XOR; break;
-		case logic_or: gl_op = GL_OR; break;
-		case logic_nor: gl_op = GL_NOR; break;
-		case logic_equiv: gl_op = GL_EQUIV; break;
-		case logic_invert: gl_op = GL_INVERT; break;
-		case logic_or_reverse: gl_op = GL_OR_REVERSE; break;
-		case logic_copy_inverted: gl_op = GL_COPY_INVERTED; break;
-		case logic_or_inverted: gl_op = GL_OR_INVERTED; break;
-		case logic_nand: gl_op = GL_NAND; break;
-		case logic_set: gl_op = GL_SET; break;
-		default: break;
-	}
-	return gl_op;
-}
 
 void GL1GraphicContextProvider::set_primitive_texture( int texture_index, PrimitivesArrayProvider::VertexData &array_texture, int offset, int num_vertices, int total_vertices)
 {
@@ -1259,7 +1085,7 @@ void GL1GraphicContextProvider::set_primitive_texture( int texture_index, Primit
 
 			const char *data_ptr = ((const char *) vertex_array_ptr->get_data()) + array_texture.offset;
 
-			glTexCoordPointer(array_texture.size, to_enum(array_texture.type),  array_texture.stride,  data_ptr);
+			glTexCoordPointer(array_texture.size, OpenGL::to_enum(array_texture.type),  array_texture.stride,  data_ptr);
 		}
 		else
 		{
