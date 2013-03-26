@@ -91,12 +91,9 @@ public:
 	/// \brief Get the list of opengl extensions.
 	std::vector<std::string> get_extensions();
 
-
 //!Operations
 public:
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context
-	///
-	/// This is the same as calling OpenGL::set_active(gc);
 	void set_active();
 
 //!Implementation

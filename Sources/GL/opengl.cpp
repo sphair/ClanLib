@@ -234,8 +234,6 @@ TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
 ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 {
 #ifdef WIN32
-	if (!wglGetProcAddress)
-		return NULL;
 	return (void (*)())wglGetProcAddress(function_name.c_str());
 #else
 #ifdef __APPLE__
@@ -1181,6 +1179,7 @@ GLuint OpenGL::get_texture_handle(Texture &texture)
 
 Texture OpenGL::from_texture_handle(GLuint type, GLuint handle)
 {
+	//FIXME For GL1
 	return Texture(new GL3TextureProvider(type, handle));
 }
 
