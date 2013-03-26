@@ -277,44 +277,6 @@ Size GL3GraphicContextProvider::get_display_window_size() const
 static CFBundleRef cl_gBundleRefOpenGL = 0;
 #endif
 
-ProcAddress *GL3GraphicContextProvider::get_proc_address(const std::string& function_name) const
-{
-
-#ifdef WIN32
-	return (void (*)())wglGetProcAddress(function_name.c_str());
-#else
-#ifdef __APPLE__
-	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
-	if (cl_gBundleRefOpenGL == 0)
-	{
-		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
-		if (cl_gBundleRefOpenGL == 0)
-        {
-            cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengles"));
-            if (cl_gBundleRefOpenGL == 0)
-                throw Exception("Unable to find opengl bundle");
-        }
-    }
-
-	return (ProcAddress *) CFBundleGetFunctionPointerForName(
-		cl_gBundleRefOpenGL,
-		CFStringCreateWithCStringNoCopy(
-			0,
-			function_name.c_str(),
-			CFStringGetSystemEncoding(),
-			0));
-#else
-
-	const GL3WindowProvider *wptr = dynamic_cast<const GL3WindowProvider *> (render_window);
-	if (wptr == NULL)
-		return NULL;
-
-	return wptr->get_proc_address(function_name);
-#endif
-#endif
-
-}
-
 ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram standard_program) const
 {
 	return standard_programs.get_program_object(standard_program);

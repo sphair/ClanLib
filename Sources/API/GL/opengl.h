@@ -74,6 +74,7 @@ public:
 
 	/// \brief Function table for OpenGL 2.0.
 	static cl_tls_variable GLFunctions *functions;
+
 	/// \brief Returns the opengl texture format
 	static TextureFormat_GL get_textureformat(TextureFormat format);
 
