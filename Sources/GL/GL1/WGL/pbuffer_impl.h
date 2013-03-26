@@ -48,7 +48,10 @@ public:
 public:
 	void make_current() const;
 
-public:
+	void get_opengl_version(int &version_major, int &version_minor);
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
 	void create(GL1WindowProvider &window_provider, const Size &size);
 	void set_active() const;
 

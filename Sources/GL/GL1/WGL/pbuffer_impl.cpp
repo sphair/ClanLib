@@ -135,4 +135,21 @@ void PBuffer_GL1_Impl::make_current() const
 	wglMakeCurrent(pbuffer_dc, pbuffer_context);
 }
 
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor)
+{
+	//FIXME:
+}
+
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+{
+	//FIXME:
+}
+
+ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
+{
+	//FIXME:
+	return 0;
+}
+
+
 }
