@@ -42,6 +42,8 @@ namespace clan
 
 class GLFunctions;
 class GraphicContext;
+class OpenGLGraphicContextProvider;
+class GL1GraphicContextProvider;
 class GL3GraphicContextProvider;
 
 enum TextureFormat;
@@ -79,7 +81,7 @@ public:
 	static void set_active(GraphicContext &gc);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-	static void set_active(const GL3GraphicContextProvider * const gc_provider);
+	static void set_active(const OpenGLGraphicContextProvider * const gc_provider);
 
 	/// \brief Sets the thread's OpenGL context to the first valid allocated one
 	///
@@ -92,18 +94,6 @@ public:
 	///
 	/// Remember to call glGetError() to clear any previous errors
 	static void check_error();
-
-	/// \brief Get the opengl version major number
-	static int get_opengl_version_major() {return opengl_version_major;}
-
-	/// \brief Get the opengl version minor number
-	static int get_opengl_version_minor() {return opengl_version_minor;}
-
-	/// \brief Get the glsl version major number
-	static int get_glsl_version_major() {return glsl_version_major;}
-
-	/// \brief Get the glsl version minor number
-	static int get_glsl_version_minor() {return glsl_version_minor;}
 
 	/// \brief Returns the OpenGL texture handle
 	static GLuint get_texture_handle(Texture &texture);
@@ -118,14 +108,10 @@ public:
 private:
 	/// \brief Remove the opengl bindings from the thread's OpenGL context
 	/// 
-	/// This should only be called by the GL3GraphicContextProvider destructor
-	static void remove_active(const GL3GraphicContextProvider * const gc_provider);
+	/// This should only be called by the OpenGLGraphicContextProvider destructor
+	static void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
 
-	static int opengl_version_major;
-	static int opengl_version_minor;
-	static int glsl_version_major;
-	static int glsl_version_minor;
-
+	friend class GL1GraphicContextProvider;
 	friend class GL3GraphicContextProvider;
 
 };

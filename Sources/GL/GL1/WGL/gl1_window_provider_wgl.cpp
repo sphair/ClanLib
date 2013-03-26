@@ -37,8 +37,8 @@
 #include "API/Display/display_target.h"
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "../opengl1.h"
-#include "../opengl1_wrap.h"
+#include "API/GL/opengl.h"
+#include "API/GL/opengl_wrap.h"
 #include "API/Core/Text/logger.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #include "Display/Win32/dwm_functions.h"
@@ -73,7 +73,7 @@ GL1WindowProvider::~GL1WindowProvider()
 
 		// Delete the context
 		if (wglGetCurrentContext() == opengl_context)
-			GL1::set_active(0);
+			OpenGL::set_active(0);
 		wglDeleteContext(opengl_context);
 
 		opengl_context = 0;
@@ -236,7 +236,7 @@ void GL1WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowD
 		gc = GraphicContext(new GL1GraphicContextProvider(this));
 	}
 
-	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)GL1::get_proc_address("wglSwapIntervalEXT");
+	wglSwapIntervalEXT = (ptr_wglSwapIntervalEXT)OpenGL::get_proc_address("wglSwapIntervalEXT");
 	swap_interval = desc.get_swap_interval();
 	if (wglSwapIntervalEXT && swap_interval != -1)
 		wglSwapIntervalEXT(swap_interval);
@@ -347,7 +347,7 @@ void GL1WindowProvider::bring_to_front()
 
 void GL1WindowProvider::flip(int interval)
 {
-	GL1::set_active(get_gc());
+	OpenGL::set_active(get_gc());
 
 	if (shadow_window)
 	{
@@ -356,30 +356,30 @@ void GL1WindowProvider::flip(int interval)
 
 		GLint old_viewport[4], old_matrix_mode;
 		GLfloat old_matrix_projection[16], old_matrix_modelview[16];
-		cl1GetIntegerv(GL_VIEWPORT, old_viewport);
-		cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
-		cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
-		cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
-		GLboolean blending = cl1IsEnabled(GL_BLEND);
-		cl1Disable(GL_BLEND);
+		glGetIntegerv(GL_VIEWPORT, old_viewport);
+		glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+		glGetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+		glGetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+		GLboolean blending = glIsEnabled(GL_BLEND);
+		glDisable(GL_BLEND);
 
-		cl1Viewport(0, 0, width, height);
-		cl1MatrixMode(GL_PROJECTION);
-		cl1LoadIdentity();
-		cl1MultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
-		cl1MatrixMode(GL_MODELVIEW);
-		cl1LoadIdentity();
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
-		cl1ReadBuffer(GL_BACK);
-		cl1RasterPos2i(0, 0);
-		cl1PixelZoom(1.0f, 1.0f);
+		glReadBuffer(GL_BACK);
+		glRasterPos2i(0, 0);
+		glPixelZoom(1.0f, 1.0f);
 
 		PixelBuffer pixelbuffer(width, height, tf_rgba8);
-		cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
-		cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
-		cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
-		cl1ReadPixels(
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+		glReadPixels(
 			0, 0,
 			width, height,
 			GL_RGBA,
@@ -389,13 +389,13 @@ void GL1WindowProvider::flip(int interval)
 		win32_window.update_layered(pixelbuffer);
 
 		if (blending)
-			cl1Enable(GL_BLEND);
-		cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-		cl1MatrixMode(GL_PROJECTION);
-		cl1LoadMatrixf(old_matrix_projection);
-		cl1MatrixMode(GL_MODELVIEW);
-		cl1LoadMatrixf(old_matrix_modelview);
-		cl1MatrixMode(old_matrix_mode);
+			glEnable(GL_BLEND);
+		glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(old_matrix_projection);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(old_matrix_modelview);
+		glMatrixMode(old_matrix_mode);
 	}
 	else
 	{
@@ -413,14 +413,14 @@ void GL1WindowProvider::flip(int interval)
 			int width = get_viewport().get_width();
 			int height = get_viewport().get_height();
 
-			cl1ReadBuffer(GL_FRONT);
+			glReadBuffer(GL_FRONT);
 
 			PixelBuffer pixelbuffer(width, height, tf_r8);
-			cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
-			cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
-			cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
-			cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
-			cl1ReadPixels(
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+			glReadPixels(
 				0, 0,
 				width, height,
 				GL_ALPHA,
@@ -450,39 +450,39 @@ void GL1WindowProvider::update(const Rect &_rect)
 	if (rect.right <= rect.left || rect.bottom <= rect.top)
 		return;
 
-	GL1::set_active(gc);
+	OpenGL::set_active(gc);
 
 	GLint old_viewport[4], old_matrix_mode;
 	GLfloat old_matrix_projection[16], old_matrix_modelview[16];
-	cl1GetIntegerv(GL_VIEWPORT, old_viewport);
-	cl1GetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
-	cl1GetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
-	cl1GetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
-	GLboolean blending = cl1IsEnabled(GL_BLEND);
-	cl1Disable(GL_BLEND);
+	glGetIntegerv(GL_VIEWPORT, old_viewport);
+	glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+	glGetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+	glGetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+	GLboolean blending = glIsEnabled(GL_BLEND);
+	glDisable(GL_BLEND);
 
-	cl1Viewport(0, 0, width, height);
-	cl1MatrixMode(GL_PROJECTION);
-	cl1LoadIdentity();
-	cl1MultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
-	cl1MatrixMode(GL_MODELVIEW);
-	cl1LoadIdentity();
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	if (shadow_window)
 	{
-		cl1ReadBuffer(GL_BACK);
-		cl1RasterPos2i(0, 0);
-		cl1PixelZoom(1.0f, 1.0f);
+		glReadBuffer(GL_BACK);
+		glRasterPos2i(0, 0);
+		glPixelZoom(1.0f, 1.0f);
 
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = Rect(0,0, width, height);
 
 		PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_rgba8);
-		cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
-		cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
-		cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
-		cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
-		cl1ReadPixels(
+		glPixelStorei(GL_PACK_ALIGNMENT, 1);
+		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+		glReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
 			GL_RGBA,
@@ -494,38 +494,38 @@ void GL1WindowProvider::update(const Rect &_rect)
 	else
 	{
 		GLboolean isdoublebuffered = GL_TRUE;
-		cl1GetBooleanv(GL_DOUBLEBUFFER, &isdoublebuffered);
+		glGetBooleanv(GL_DOUBLEBUFFER, &isdoublebuffered);
 		if (isdoublebuffered)
 		{
-			cl1ReadBuffer(GL_BACK);
-			cl1DrawBuffer(GL_FRONT);
+			glReadBuffer(GL_BACK);
+			glDrawBuffer(GL_FRONT);
 
-			cl1RasterPos2i(rect.left, height - rect.bottom);
-			cl1PixelZoom(1.0f, 1.0f);
+			glRasterPos2i(rect.left, height - rect.bottom);
+			glPixelZoom(1.0f, 1.0f);
 
-			cl1CopyPixels(
+			glCopyPixels(
 				rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,
 				GL_COLOR);
 
-			cl1DrawBuffer(GL_BACK);
-			cl1Flush();
+			glDrawBuffer(GL_BACK);
+			glFlush();
 		}
 
 		if (dwm_layered)
 		{
-			cl1DrawBuffer(GL_BACK);
-			cl1ReadBuffer(GL_FRONT);
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_FRONT);
 
 			// ** Currently update layered windows only supports full screen rect update **
 			rect = Rect(0,0, width, height);
 
 			PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_r8);
-			cl1PixelStorei(GL_PACK_ALIGNMENT, 1);
-			cl1PixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
-			cl1PixelStorei(GL_PACK_SKIP_PIXELS, 0);
-			cl1PixelStorei(GL_PACK_SKIP_ROWS, 0);
-			cl1ReadPixels(
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+			glReadPixels(
 				rect.left, height - rect.bottom,
 				rect.right - rect.left, rect.bottom - rect.top,
 				GL_ALPHA,
@@ -537,13 +537,13 @@ void GL1WindowProvider::update(const Rect &_rect)
 
 	}
 	if (blending)
-		cl1Enable(GL_BLEND);
-	cl1Viewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
-	cl1MatrixMode(GL_PROJECTION);
-	cl1LoadMatrixf(old_matrix_projection);
-	cl1MatrixMode(GL_MODELVIEW);
-	cl1LoadMatrixf(old_matrix_modelview);
-	cl1MatrixMode(old_matrix_mode);
+		glEnable(GL_BLEND);
+	glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+	glMatrixMode(GL_PROJECTION);
+	glLoadMatrixf(old_matrix_projection);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(old_matrix_modelview);
+	glMatrixMode(old_matrix_mode);
 
 }
 

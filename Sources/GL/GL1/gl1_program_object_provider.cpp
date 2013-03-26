@@ -33,7 +33,7 @@
 #include "API/Display/Render/program_attribute.h"
 #include "API/Display/Render/program_uniform.h"
 #include "API/Display/Render/shader_object.h"
-#include "opengl1_wrap.h"
+#include "API/GL/opengl_wrap.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"

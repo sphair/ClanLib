@@ -87,16 +87,7 @@ GL3GraphicContextProvider::GL3GraphicContextProvider(const GL3WindowProvider * c
 : render_window(render_window), framebuffer_bound(false), opengl_version_major(0), shader_version_major(0), scissor_enabled(false)
 {
 	check_opengl_version();
-
-	int glsl_version_major;
-	int glsl_version_minor;
-	get_opengl_shading_language_version(glsl_version_major, glsl_version_minor);
-
-	// Must write here, although OpenGL::SetActive() updates it, because the version number is not available on the initial OpenGL::SetActive() call
-	OpenGL::opengl_version_major = opengl_version_major;
-	OpenGL::opengl_version_minor = opengl_version_minor;
-	OpenGL::glsl_version_major = shader_version_major;
-	OpenGL::glsl_version_minor = shader_version_minor;
+	calculate_shading_language_version();
 
 	create_standard_programs();
 
@@ -211,57 +202,52 @@ void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &vers
 	version_minor = opengl_version_minor;
 }
 
-void GL3GraphicContextProvider::get_opengl_shading_language_version(int &version_major, int &version_minor)
+void GL3GraphicContextProvider::calculate_shading_language_version()
 {
-	if (!shader_version_major)	// Is not cached
+	// See http://www.opengl.org/wiki/Detecting_the_Shader_Model
+	shader_version_major = 0;
+	shader_version_minor = 0;
+
+	if ( (opengl_version_major < 2) || ( (opengl_version_major == 2) && (opengl_version_minor < 1) ) )
 	{
-		// See http://www.opengl.org/wiki/Detecting_the_Shader_Model
-		shader_version_major = 0;
-		shader_version_minor = 0;
-
-		if ( (opengl_version_major < 2) || ( (opengl_version_major == 2) && (opengl_version_minor < 1) ) )
-		{
-			OpenGL::set_active(this);
+		OpenGL::set_active(this);
 			
-			std::string version = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
+		std::string version = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
-			std::vector<std::string> split_version = StringHelp::split_text(version, ".");
-			if(split_version.size() > 0)
-				shader_version_major = StringHelp::text_to_int(split_version[0]);
-			if(split_version.size() > 1)
-				shader_version_minor = StringHelp::text_to_int(split_version[1]);
+		std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+		if(split_version.size() > 0)
+			shader_version_major = StringHelp::text_to_int(split_version[0]);
+		if(split_version.size() > 1)
+			shader_version_minor = StringHelp::text_to_int(split_version[1]);
+	}
+	else
+	{
+		if (opengl_version_major == 2)
+		{
+			shader_version_major = 1;
+			shader_version_minor = 20;
+		}
+		else if ( (opengl_version_major == 3) && (opengl_version_minor == 0) )
+		{
+			shader_version_major = 1;
+			shader_version_minor = 30;
+		}
+		else if ( (opengl_version_major == 3) && (opengl_version_minor == 1) )
+		{
+			shader_version_major = 1;
+			shader_version_minor = 40;
+		}
+		else if ( (opengl_version_major == 3) && (opengl_version_minor == 2) )
+		{
+			shader_version_major = 1;
+			shader_version_minor = 50;
 		}
 		else
 		{
-			if (opengl_version_major == 2)
-			{
-				shader_version_major = 1;
-				shader_version_minor = 20;
-			}
-			else if ( (opengl_version_major == 3) && (opengl_version_minor == 0) )
-			{
-				shader_version_major = 1;
-				shader_version_minor = 30;
-			}
-			else if ( (opengl_version_major == 3) && (opengl_version_minor == 1) )
-			{
-				shader_version_major = 1;
-				shader_version_minor = 40;
-			}
-			else if ( (opengl_version_major == 3) && (opengl_version_minor == 2) )
-			{
-				shader_version_major = 1;
-				shader_version_minor = 50;
-			}
-			else
-			{
-				shader_version_major = opengl_version_major;
-				shader_version_minor = opengl_version_minor * 10;
-			}
+			shader_version_major = opengl_version_major;
+			shader_version_minor = opengl_version_minor * 10;
 		}
 	}
-	version_major = shader_version_major;
-	version_minor = shader_version_minor;
 }
 
 std::string GL3GraphicContextProvider::get_renderer_string()
@@ -598,17 +584,9 @@ void GL3GraphicContextProvider::set_texture(int unit_index, const Texture &textu
 		return;
 	}
 
-	if (texture.is_null())
-	{
-		// Perhaps call glBindTexture(texture_type, 0) ?
-	}
-	else
+	if (!texture.is_null())
 	{
 		GL3TextureProvider *provider = static_cast<GL3TextureProvider *>(texture.get_provider());
-		if (OpenGL::get_opengl_version_major() < 3)
-		{
-			glEnable(provider->get_texture_type());
-		}
 		glBindTexture(provider->get_texture_type(), provider->get_handle());
 	}
 }

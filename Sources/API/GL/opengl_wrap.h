@@ -674,6 +674,9 @@ public:
 	typedef void (GLFUNC *ptr_glVertexArrayVertexAttribBindingEXT)(GLuint vaobj, GLuint attribindex, GLuint bindingindex);
 	typedef void (GLFUNC *ptr_glVertexArrayVertexBindingDivisorEXT)(GLuint vaobj, GLuint bindingindex, GLuint divisor);
 
+	// For Legacy OpenGL (For GL1 target)
+	typedef GLvoid (GLFUNC *ptr_glClientActiveTextureARB)(GLenum);
+
 
 /// \}
 
@@ -1298,6 +1301,9 @@ public:
 	ptr_glVertexArrayVertexAttribBindingEXT vertexArrayVertexAttribBindingEXT;
 	ptr_glVertexArrayVertexBindingDivisorEXT vertexArrayVertexBindingDivisorEXT;
 
+	// For Legacy OpenGL (For GL1 target)
+	ptr_glClientActiveTextureARB clientActiveTexture;
+
 
 /// \}
 };
@@ -1918,6 +1924,9 @@ public:
 #define glVertexArrayVertexAttribLFormatEXT OpenGL::functions->vertexArrayVertexAttribLFormatEXT
 #define glVertexArrayVertexAttribBindingEXT OpenGL::functions->vertexArrayVertexAttribBindingEXT
 #define glVertexArrayVertexBindingDivisorEXT OpenGL::functions->vertexArrayVertexBindingDivisorEXT
+
+// For Legacy OpenGL (For GL1 target)
+#define glClientActiveTexture OpenGL::functions->clientActiveTexture
 
 /// \}
 

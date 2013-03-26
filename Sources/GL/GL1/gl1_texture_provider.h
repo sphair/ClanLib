@@ -33,7 +33,7 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/TargetProviders/primitives_array_provider.h"
 #include "API/Core/System/disposable_object.h"
-#include "opengl1.h"
+#include "API/GL/opengl.h"
 
 namespace clan
 {
@@ -59,6 +59,23 @@ public:
 
 	Size get_surface_size() const { return Size(width, height); }
 	Size get_texture_size() const { return Size(pot_width, pot_height); }
+
+	/// \brief Get a OpenGL format out of a pixel format.
+	/** <p>The function returns false if pixelformat color depth is not convertible to
+	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
+	static bool to_opengl_pixelformat(const PixelBuffer &pbuffer, GLenum &format, GLenum &type);
+
+		/// \brief Get a OpenGL format out of a pixel format.
+	/** <p>The function returns false if pixelformat color depth is not convertible to
+	    OpenGL pixel format, otherwise the format and type are returned with values in format and type.</p>*/
+	static bool to_opengl_pixelformat(TextureFormat texture_format, GLenum &format, GLenum &type);
+
+	/// \brief To opengl textureformat
+	///
+	/// \param format = Texture Format
+	/// \param gl_internal_format = GLint
+	/// \param gl_pixel_format = GLenum
+	static void to_opengl_textureformat(TextureFormat format, GLint &gl_internal_format, GLenum &gl_pixel_format);
 
 /// \}
 

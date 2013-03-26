@@ -27,8 +27,8 @@
 */
 
 #include "GL/precomp.h"
-#include "../opengl1_wrap.h"
-#include "../opengl1.h"
+#include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl.h"
 #include "pbuffer_impl.h"
 #include "../gl1_graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
@@ -37,7 +37,7 @@
 
 namespace clan
 {
-
+/*
 PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
 , pbuffer(0), pbuffer_context(0), pbuffer_dc(0), pbuffer_gc_provider(0)
 {
@@ -58,13 +58,13 @@ void PBuffer_GL1_Impl::reset()
 		pbuffer_gc = GraphicContext();
 		pbuffer_gc_provider = NULL;
 	}
-	GL1::set_active(gc_provider);
+	OpenGL::set_active(gc_provider);
 
 	if (pbuffer_context) wglDeleteContext(pbuffer_context);
-	if (pbuffer_dc) cl1WglReleasePbufferDCARB(pbuffer, pbuffer_dc);
-	if (pbuffer) cl1WglDestroyPbufferARB(pbuffer);
+	if (pbuffer_dc) glWglReleasePbufferDCARB(pbuffer, pbuffer_dc);
+	if (pbuffer) glWglDestroyPbufferARB(pbuffer);
 
-	// Note: cl1WglReleasePbufferDCARB does not delete the GDI object associated with the pbuffer DC
+	// Note: glWglReleasePbufferDCARB does not delete the GDI object associated with the pbuffer DC
 	// DeleteDC must be called to prevent GDI object leaks
 	if (pbuffer_dc) DeleteDC(pbuffer_dc);
 
@@ -77,9 +77,9 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &si
 {
 	reset();
 
-	GL1::set_active(gc_provider);
+	OpenGL::set_active(gc_provider);
 
-	if (cl1WglCreatePbufferARB == 0)
+	if (glWglCreatePbufferARB == 0)
 	{
 		throw Exception("WGL_ARB_pbuffer OpenGL extension not supported by this card");
 	}
@@ -112,13 +112,13 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &si
 
 	int pixelformat = ChoosePixelFormat(wglGetCurrentDC(), &pfd);
 
-	pbuffer = cl1WglCreatePbufferARB(
+	pbuffer = glWglCreatePbufferARB(
 		wglGetCurrentDC(),
 		pixelformat,
 		size.width,
 		size.height,
 		attribList);
-	pbuffer_dc = cl1WglGetPbufferDCARB(pbuffer);
+	pbuffer_dc = glWglGetPbufferDCARB(pbuffer);
 	pbuffer_context = wglCreateContext(pbuffer_dc);
 
 	HGLRC share_context = window_provider.get_share_context();
@@ -134,7 +134,7 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &si
 
 void PBuffer_GL1_Impl::set_active() const
 {
-	GL1::set_active(pbuffer_gc_provider);
+	OpenGL::set_active(pbuffer_gc_provider);
 }
 
 InputContext PBuffer_GL1_Impl::get_ic()
@@ -156,5 +156,6 @@ HWND PBuffer_GL1_Impl::get_hwnd() const
 {
 	return gc_provider->get_render_window().get_hwnd();
 }
+*/
 
 }

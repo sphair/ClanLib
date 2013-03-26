@@ -39,7 +39,7 @@
 #include "API/Display/Render/rasterizer_state_description.h"
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/Render/depth_stencil_state_description.h"
-#include "opengl1.h"
+#include "API/GL/opengl.h"
 #include "API/Core/Math/mat4.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "GL/opengl_graphic_context_provider.h"
@@ -191,7 +191,7 @@ public:
 	void on_window_resized();
 
 	/// \brief Get OpenGL extension specific function address.
-	GL1ProcAddress *get_proc_address(const std::string& function_name) const;
+	ProcAddress *get_proc_address(const std::string& function_name) const;
 
 	// GL1 Only
 	void set_active() const;

@@ -111,7 +111,7 @@ public:
 	Size get_display_window_size() const;
 	void get_opengl_version(int &version_major, int &version_minor);
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release) { get_opengl_version(version_major, version_minor); version_release = 0; }
-	void get_opengl_shading_language_version(int &version_major, int &version_minor);
+	void get_opengl_shading_language_version(int &version_major, int &version_minor) { version_major = shader_version_major; version_minor = shader_version_minor; }
 	std::string get_renderer_string();
 	std::string get_vendor_string();
 	std::vector<std::string> get_extensions();
@@ -253,7 +253,7 @@ private:
 	void set_depth_compare_function(CompareFunction func);
 
 	void check_opengl_version();
-
+	void calculate_shading_language_version();
 	/// \brief OpenGL render window.
 	const GL3WindowProvider * const render_window;
 
