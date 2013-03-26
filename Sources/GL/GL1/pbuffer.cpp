@@ -52,17 +52,14 @@ PBuffer_GL1::~PBuffer_GL1()
 {
 }
 
-#ifdef WIN32
 void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
 {
 	impl->create(window_provider, size);
+	set_active();
+
+	glEnable(GL_POINT_SPRITE);
+
 }
-#else
-void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
-{
-	impl->create(window_provider, size);
-}
-#endif
 
 void PBuffer_GL1::set_active() const
 {

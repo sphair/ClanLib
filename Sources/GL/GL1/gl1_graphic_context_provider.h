@@ -208,10 +208,6 @@ private:
 	void reset_primitive_texture_all();
 
 	void set_culled(bool value);
-	void enable_line_antialiasing(bool enabled);
-	void set_face_cull_mode(CullMode value);
-	void set_face_fill_mode(FillMode value);
-	void set_front_face(FaceSide value);
 
 	void enable_color_write(bool red, bool green, bool blue, bool alpha);
 	void enable_blending(bool value);

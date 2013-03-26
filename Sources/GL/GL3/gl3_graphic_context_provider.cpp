@@ -401,12 +401,30 @@ void GL3GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 	{
 		GL3RasterizerStateProvider *gl_state = static_cast<GL3RasterizerStateProvider*>(state);
 
-		set_culled(gl_state->desc.get_culled());
-		enable_line_antialiasing(gl_state->desc.get_enable_line_antialiasing());
-		set_face_cull_mode(gl_state->desc.get_face_cull_mode());
-		set_face_fill_mode(gl_state->desc.get_face_fill_mode());
-		set_front_face(gl_state->desc.get_front_face());
+		OpenGL::set_active(this);
+		gl_state->desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+		gl_state->desc.get_enable_line_antialiasing() ?	glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
+
+		switch (gl_state->desc.get_face_cull_mode())
+		{
+			case cull_front:
+				glCullFace(GL_FRONT);
+				break;
+			case cull_back:
+				glCullFace(GL_BACK);
+				break;
+			case cull_front_and_back:
+				glCullFace(GL_FRONT_AND_BACK);
+				break;
+		}
+		if (glPolygonMode)
+	        glPolygonMode(GL_FRONT_AND_BACK, to_enum(gl_state->desc.get_face_fill_mode()));
+
+		gl_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
 		scissor_enabled = gl_state->desc.get_enable_scissor();
+		if (!scissor_enabled)
+			glDisable(GL_SCISSOR_TEST);
+
 	}
 }
 
@@ -907,16 +925,6 @@ void GL3GraphicContextProvider::set_line_width(float value)
 
 }
 
-void GL3GraphicContextProvider::enable_line_antialiasing(bool enabled)
-{
-	OpenGL::set_active(this);
-	if (enabled)
-		glEnable(GL_LINE_SMOOTH);
-	else
-		glDisable(GL_LINE_SMOOTH);
-
-}
-
 void GL3GraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
 	OpenGL::set_active(this);
@@ -952,15 +960,6 @@ void GL3GraphicContextProvider::set_antialiased(bool value)
 		glDisable(GL_POLYGON_SMOOTH);
 }
 
-void GL3GraphicContextProvider::set_culled(bool value)
-{
-	OpenGL::set_active(this);
-	if (value)
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
-}
-
 void GL3GraphicContextProvider::set_point_offset(bool value)
 {
 	OpenGL::set_active(this);
@@ -987,47 +986,6 @@ void GL3GraphicContextProvider::set_polygon_offset(bool value)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 	else
 		glDisable(GL_POLYGON_OFFSET_FILL);
-}
-
-void GL3GraphicContextProvider::set_face_cull_mode(CullMode value)
-{
-	OpenGL::set_active(this);
-	switch (value)
-	{
-	case cull_front:
-		glCullFace(GL_FRONT);
-		break;
-	case cull_back:
-		glCullFace(GL_BACK);
-		break;
-	case cull_front_and_back:
-		glCullFace(GL_FRONT_AND_BACK);
-		break;
-	}
-
-}
-
-void GL3GraphicContextProvider::set_face_fill_mode(FillMode value)
-{
-	OpenGL::set_active(this);
-   if (glPolygonMode)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, to_enum(value));
-    }
-}
-
-void GL3GraphicContextProvider::set_front_face(FaceSide value)
-{
-	OpenGL::set_active(this);
-	switch (value)
-	{
-	case face_counter_clockwise:
-		glFrontFace(GL_CCW);
-		break;
-	case face_clockwise:
-		glFrontFace(GL_CW);
-		break;
-	}
 }
 
 void GL3GraphicContextProvider::set_offset_factor(float value)

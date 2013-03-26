@@ -346,12 +346,28 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 	{
 		GL1RasterizerStateProvider *gl1_state = static_cast<GL1RasterizerStateProvider*>(state);
 
-		set_culled(gl1_state->desc.get_culled());
-		enable_line_antialiasing(gl1_state->desc.get_enable_line_antialiasing());
-		set_face_cull_mode(gl1_state->desc.get_face_cull_mode());
-		set_face_fill_mode(gl1_state->desc.get_face_fill_mode());
-		set_front_face(gl1_state->desc.get_front_face());
+		gl1_state->desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+		gl1_state->desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
+		switch (gl1_state->desc.get_face_cull_mode())
+		{
+			case cull_front:
+				glCullFace(GL_FRONT);
+				break;
+			case cull_back:
+				glCullFace(GL_BACK);
+				break;
+			case cull_front_and_back:
+				glCullFace(GL_FRONT_AND_BACK);
+				break;
+		}
+		glPolygonMode(GL_FRONT, to_enum(gl1_state->desc.get_face_fill_mode()));
+		glPolygonMode(GL_BACK, to_enum(gl1_state->desc.get_face_fill_mode()));
+
+		gl1_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
+
 		scissor_enabled = gl1_state->desc.get_enable_scissor();
+		if (!scissor_enabled)
+			glDisable(GL_SCISSOR_TEST);
 
 	}
 }
@@ -749,26 +765,6 @@ void GL1GraphicContextProvider::reset_primitives_elements()
 	throw Exception("Cannot draw Element Array Buffers for the OpenGL 1.3 target");
 }
 
-/*
-void GL1GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned int *indices)
-{
-	set_active();
-	glDrawElements(to_enum(type), count, GL_UNSIGNED_INT, indices);
-}
-
-void GL1GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned short *indices)
-{
-	set_active();
-	glDrawElements(to_enum(type), count, GL_UNSIGNED_SHORT, indices);
-}
-
-void GL1GraphicContextProvider::draw_primitives_elements(PrimitivesType type, int count, unsigned char *indices)
-{
-	set_active();
-	glDrawElements(to_enum(type), count, GL_UNSIGNED_BYTE, indices);
-}
-*/
-
 void GL1GraphicContextProvider::draw_primitives_elements(
 	PrimitivesType type,
 	int count,
@@ -987,14 +983,6 @@ void GL1GraphicContextProvider::set_line_width(float value)
 
 }
 
-void GL1GraphicContextProvider::enable_line_antialiasing(bool enabled)
-{
-	set_active();
-	if (enabled)
-		glEnable(GL_LINE_SMOOTH);
-	else
-		glDisable(GL_LINE_SMOOTH);
-}
 
 void GL1GraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
@@ -1034,16 +1022,6 @@ void GL1GraphicContextProvider::set_antialiased(bool value)
 		glDisable(GL_POLYGON_SMOOTH);
 }
 
-void GL1GraphicContextProvider::set_culled(bool value)
-{
-	set_active();
-	if (value)
-		glEnable(GL_CULL_FACE);
-	else
-		glDisable(GL_CULL_FACE);
-
-}
-
 void GL1GraphicContextProvider::set_point_offset(bool value)
 {
 	set_active();
@@ -1073,44 +1051,6 @@ void GL1GraphicContextProvider::set_polygon_offset(bool value)
 		glEnable(GL_POLYGON_OFFSET_FILL);
 	else
 		glDisable(GL_POLYGON_OFFSET_FILL);
-}
-
-void GL1GraphicContextProvider::set_face_cull_mode(CullMode value)
-{
-	set_active();
-	switch (value)
-	{
-	case cull_front:
-		glCullFace(GL_FRONT);
-		break;
-	case cull_back:
-		glCullFace(GL_BACK);
-		break;
-	case cull_front_and_back:
-		glCullFace(GL_FRONT_AND_BACK);
-		break;
-	}
-}
-
-void GL1GraphicContextProvider::set_face_fill_mode(FillMode value)
-{
-	set_active();
-	glPolygonMode(GL_FRONT, to_enum(value));
-	glPolygonMode(GL_BACK, to_enum(value));
-}
-
-void GL1GraphicContextProvider::set_front_face(FaceSide value)
-{
-	set_active();
-	switch (value)
-	{
-	case face_counter_clockwise:
-		glFrontFace(GL_CCW);
-		break;
-	case face_clockwise:
-		glFrontFace(GL_CW);
-		break;
-	}
 }
 
 void GL1GraphicContextProvider::set_offset_factor(float value)
