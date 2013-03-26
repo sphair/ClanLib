@@ -676,6 +676,14 @@ public:
 
 	// For Legacy OpenGL (For GL1 target)
 	typedef GLvoid (GLFUNC *ptr_glClientActiveTextureARB)(GLenum);
+#ifdef WIN32
+    DECLARE_HANDLE(HPBUFFERARB);
+	typedef HPBUFFERARB (GLFUNC *ptr_wglCreatePbufferARB)(HDC hDC, int iPixelFormat, int iWidth, int iHeight, const int *piAttribList);
+	typedef HDC (GLFUNC *ptr_wglGetPbufferDCARB)(HPBUFFERARB hPbuffer);
+	typedef int (GLFUNC *ptr_wglReleasePbufferDCARB)(HPBUFFERARB hPbuffer, HDC hDC);
+	typedef BOOL (GLFUNC *ptr_wglDestroyPbufferARB)(HPBUFFERARB hPbuffer);
+	typedef BOOL (GLFUNC *ptr_wglQueryPbufferARB)(HPBUFFERARB hPbuffer, int iAttribute, int *piValue);
+#endif
 
 
 /// \}
@@ -1303,6 +1311,13 @@ public:
 
 	// For Legacy OpenGL (For GL1 target)
 	ptr_glClientActiveTextureARB clientActiveTexture;
+#ifdef WIN32
+	ptr_wglCreatePbufferARB wglCreatePbufferARB;
+	ptr_wglGetPbufferDCARB wglGetPbufferDCARB;
+	ptr_wglReleasePbufferDCARB wglReleasePbufferDCARB;
+	ptr_wglDestroyPbufferARB wglDestroyPbufferARB;
+	ptr_wglQueryPbufferARB wglQueryPbufferARB;
+#endif
 
 
 /// \}
@@ -1927,7 +1942,13 @@ public:
 
 // For Legacy OpenGL (For GL1 target)
 #define glClientActiveTexture OpenGL::functions->clientActiveTexture
-
+#ifdef WIN32
+#define glWglCreatePbufferARB OpenGL::functions->wglCreatePbufferARB
+#define glWglGetPbufferDCARB OpenGL::functions->wglGetPbufferDCARB
+#define glWglReleasePbufferDCARB OpenGL::functions->wglReleasePbufferDCARB
+#define glWglDestroyPbufferARB OpenGL::functions->wglDestroyPbufferARB
+#define glWglQueryPbufferARB OpenGL::functions->wglQueryPbufferARB
+#endif
 /// \}
 
 }
