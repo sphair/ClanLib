@@ -930,7 +930,7 @@ void GL3GraphicContextProvider::set_antialiased(bool value)
 		glDisable(GL_POLYGON_SMOOTH);
 }
 
-void GL3GraphicContextProvider::set_point_offset(bool value)
+void GL3GraphicContextProvider::set_offset_point(bool value)
 {
 	OpenGL::set_active(this);
 	if (value)
@@ -939,7 +939,7 @@ void GL3GraphicContextProvider::set_point_offset(bool value)
 		glDisable(GL_POLYGON_OFFSET_POINT);
 }
 
-void GL3GraphicContextProvider::set_line_offset(bool value)
+void GL3GraphicContextProvider::set_offset_line(bool value)
 {
 	OpenGL::set_active(this);
 	if (value)
@@ -949,7 +949,7 @@ void GL3GraphicContextProvider::set_line_offset(bool value)
 
 }
 
-void GL3GraphicContextProvider::set_polygon_offset(bool value)
+void GL3GraphicContextProvider::set_offset_fill(bool value)
 {
 	OpenGL::set_active(this);
 	if (value)
@@ -958,16 +958,10 @@ void GL3GraphicContextProvider::set_polygon_offset(bool value)
 		glDisable(GL_POLYGON_OFFSET_FILL);
 }
 
-void GL3GraphicContextProvider::set_offset_factor(float value)
+void GL3GraphicContextProvider::set_polygon_offset(float factor, float units)
 {
 	OpenGL::set_active(this);
-	glPolygonOffset(value, value);
-}
-
-void GL3GraphicContextProvider::set_offset_units(float value)
-{
-	//OpenGL::set_active(this);
-	//TODO: Where is the code?
+	glPolygonOffset(factor, units);
 }
 
 void GL3GraphicContextProvider::enable_logic_op(bool enabled)

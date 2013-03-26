@@ -150,11 +150,10 @@ public:
 	void set_point_sprite_origin(PointSpriteOrigin origin);
 
 	void set_antialiased(bool value);
-	void set_point_offset(bool value);
-	void set_line_offset(bool value);
-	void set_polygon_offset(bool value);
-	void set_offset_factor(float value);
-	void set_offset_units(float value);
+	void set_offset_point(bool value);
+	void set_offset_line(bool value);
+	void set_offset_fill(bool value);
+	void set_polygon_offset(float factor, float units);
 
 	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
 	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);

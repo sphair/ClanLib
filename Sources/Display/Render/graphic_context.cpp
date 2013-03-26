@@ -533,29 +533,24 @@ void GraphicContext::set_antialiased(bool value)
 	impl->set_antialiased(value);
 }
 
-void GraphicContext::set_point_offset(bool value)
+void GraphicContext::set_offset_point(bool value)
 {
-	impl->set_point_offset(value);
+	impl->set_offset_point(value);
 }
 
-void GraphicContext::set_line_offset(bool value)
+void GraphicContext::set_offset_line(bool value)
 {
-	impl->set_line_offset(value);
+	impl->set_offset_line(value);
 }
 
-void GraphicContext::set_polygon_offset(bool value)
+void GraphicContext::set_offset_fill(bool value)
 {
-	impl->set_polygon_offset(value);
+	impl->set_offset_fill(value);
 }
 
-void GraphicContext::set_offset_factor(float value)
+void GraphicContext::set_polygon_offset(float factor, float units)
 {
-	impl->set_offset_factor(value);
-}
-
-void GraphicContext::set_offset_units(float value)
-{
-	impl->set_offset_units(value);
+	impl->set_polygon_offset(factor, units);
 }
 
 /////////////////////////////////////////////////////////////////////////////
