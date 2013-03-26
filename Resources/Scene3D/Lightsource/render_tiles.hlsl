@@ -126,7 +126,28 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		color = float3(1.0f, 1.0f, 1.0f);
 #else
 
-	for (uint i = 0; i < num_visible_lights; i++)
+	uint i;
+	// Type 0 (omni) lights with no shadows:
+	for (i = 0; i < num_visible_lights && local_lights[i].spot_x.w == 0 && local_lights[i].position.w < 0; i++)
+	{
+		Light light = local_lights[i];
+
+		float3 fragment_to_light = light.position.xyz - position_in_eye;
+
+		float3 light_direction_in_eye = normalize(fragment_to_light);
+		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
+		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
+		float3 specular_color = material_specular_color * light.color.xyz;
+		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
+
+		float attenuation = distance_attenuation(light, fragment_to_light);
+
+		color += attenuation * (lit_color + light.color.a * diffuse_color);
+	}
+
+	// Type 1 and 2 (spot circle, spot rect) lights with no shadows:
+	for (; i < num_visible_lights && local_lights[i].position.w < 0; i++)
 	{
 		Light light = local_lights[i];
 
@@ -140,38 +161,35 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
 
 		float light_type = light.spot_x.w;
-#if defined(ONLY_OMNI_LIGHTS)
-		if (light_type == 0)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			color += attenuation * lit_color;
-		}
-#elif defined(ONLY_SPOT_LIGHTS)
-		if (light_type != 0 && light.position.w < 0.0f)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
-			attenuation *= step(0, shadow_projection.z);
-			if (light_type == 1)
-				attenuation *= circle_falloff_attenuation(light, shadow_projection);
-			else if (light_type == 2)
-				attenuation *= rect_falloff_attenuation(light, shadow_projection);
-			color += attenuation * lit_color;
-		}
-#elif defined(ONLY_SHADOW_SPOT_LIGHTS)
-		if (light_type != 0 && light.position.w >= 0.0f)
-		{
-			float attenuation = distance_attenuation(light, fragment_to_light);
-			float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
-			attenuation *= step(0, shadow_projection.z);
-			if (light_type == 1)
-				attenuation *= circle_falloff_attenuation(light, shadow_projection);
-			else if (light_type == 2)
-				attenuation *= rect_falloff_attenuation(light, shadow_projection);
-			attenuation *= shadow_attenuation(light, fragment_to_light, shadow_projection);
-			color += attenuation * lit_color;
-		}
-#else
+
+		float attenuation = distance_attenuation(light, fragment_to_light);
+		float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
+		attenuation *= step(0, shadow_projection.z);
+
+		if (light_type == 1)
+			attenuation *= circle_falloff_attenuation(light, shadow_projection);
+		else if (light_type == 2)
+			attenuation *= rect_falloff_attenuation(light, shadow_projection);
+
+		color += attenuation * (lit_color + light.color.a * diffuse_color);
+	}
+
+	// Shadow casting lights:
+	for (; i < num_visible_lights; i++)
+	{
+		Light light = local_lights[i];
+
+		float3 fragment_to_light = light.position.xyz - position_in_eye;
+
+		float3 light_direction_in_eye = normalize(fragment_to_light);
+		float diffuse_contribution = lambertian_diffuse_contribution(light_direction_in_eye, normal_in_eye);
+		float specular_contribution = blinn_specular_contribution(light_direction_in_eye, position_in_eye, normal_in_eye, material_glossiness, material_specular_level);
+		float3 diffuse_color = material_diffuse_color.xyz * light.color.xyz;
+		float3 specular_color = material_specular_color * light.color.xyz;
+		float3 lit_color = diffuse_color * diffuse_contribution + specular_color * specular_contribution;
+
+		float light_type = light.spot_x.w;
+
 		float attenuation = distance_attenuation(light, fragment_to_light);
 		float3 shadow_projection = project_on_shadow_map(light, fragment_to_light);
 		if (light_type != 0)
@@ -181,12 +199,9 @@ void render_lights(int x, int y, int local_x, int local_y, uint num_visible_ligh
 		else if (light_type == 2)
 			attenuation *= rect_falloff_attenuation(light, shadow_projection);
 
-		float shadow_att = 1.0f;
-		if (light.position.w >= 0.0f)
-			shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
+		float shadow_att = shadow_attenuation(light, fragment_to_light, shadow_projection);
 
 		color += attenuation * (shadow_att * lit_color + light.color.a * diffuse_color);
-#endif
 	}
 #endif
 #if defined(DEBUG_BLOOM)
