@@ -118,11 +118,6 @@ private:
 	GL3TextureProvider(GL3TextureProvider *orig_texture, TextureDimensions texture_dimensions, TextureFormat texture_format, int min_level, int num_levels, int min_layer, int num_layers);
 
 	void on_dispose();
-	static GLenum to_enum(TextureFilter filter);
-	static GLenum to_enum(TextureWrapMode mode);
-	static GLenum to_enum(CompareFunction func);
-	static GLenum to_enum(TextureCompareMode mode);
-	static GLenum to_cube_target(int index);
 
 	int width, height, depth, array_size;
 

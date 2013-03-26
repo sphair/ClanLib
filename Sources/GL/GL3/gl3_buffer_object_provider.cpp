@@ -79,7 +79,7 @@ void GL3BufferObjectProvider::create(const void *data, int size, BufferUsage usa
 	if (binding)
 		glGetIntegerv(binding, &last_buffer);
 	glBindBuffer(target, handle);
-	glBufferData(target, size, data, to_enum(usage));
+	glBufferData(target, size, data, OpenGL::to_enum(usage));
 	glBindBuffer(target, last_buffer);
 }
 
@@ -105,7 +105,7 @@ void GL3BufferObjectProvider::lock(GraphicContext &gc, BufferAccess access)
 	if (binding)
 		glGetIntegerv(binding, &last_buffer);
 	glBindBuffer(target, handle);
-	data_ptr = (void *) glMapBuffer(target, to_enum(access));
+	data_ptr = (void *) glMapBuffer(target, OpenGL::to_enum(access));
 	glBindBuffer(target, last_buffer);
 }
 
@@ -171,47 +171,5 @@ void GL3BufferObjectProvider::copy_to(GraphicContext &gc, TransferBuffer &buffer
 /////////////////////////////////////////////////////////////////////////////
 // GL3BufferObjectProvider Implementation:
 
-GLenum GL3BufferObjectProvider::to_enum(BufferUsage usage) const
-{
-	switch (usage)
-	{
-	case usage_stream_draw:
-		return GL_STREAM_DRAW;
-	case usage_stream_read:
-		return GL_STREAM_READ;
-	case usage_stream_copy:
-		return GL_STREAM_COPY;
-	case usage_static_draw:
-		return GL_STATIC_DRAW;
-	case usage_static_read:
-		return GL_STATIC_READ;
-	case usage_static_copy:
-		return GL_STATIC_COPY;
-	case usage_dynamic_draw:
-		return GL_DYNAMIC_DRAW;
-	case usage_dynamic_read:
-		return GL_DYNAMIC_READ;
-	case usage_dynamic_copy:
-		return GL_DYNAMIC_COPY;
-	default:
-		return GL_STATIC_DRAW;
-	}
-}
-
-GLenum GL3BufferObjectProvider::to_enum(BufferAccess access) const
-{
-	switch (access)
-	{
-	case access_read_only:
-		return GL_READ_ONLY;
-	case access_write_only:
-	case access_write_discard:
-		return GL_WRITE_ONLY;
-	case access_read_write:
-		return GL_READ_WRITE;
-	default:
-		return GL_READ_WRITE;
-	}
-};
 
 }

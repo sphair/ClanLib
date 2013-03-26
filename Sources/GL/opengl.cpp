@@ -1172,6 +1172,273 @@ GLFunctions *cl_setup_binds()
 	return functions;
 }
 
+GLenum OpenGL::to_enum(DrawBuffer buffer)
+{
+	switch(buffer)
+	{
+	case buffer_back: return GL_BACK;
+	case buffer_back_left: return GL_BACK_LEFT;
+	case buffer_back_right: return GL_BACK_RIGHT;
+	case buffer_front: return GL_FRONT;
+	case buffer_front_and_back: return GL_FRONT_AND_BACK;
+	case buffer_front_left: return GL_FRONT_LEFT;
+	case buffer_front_right: return GL_FRONT_RIGHT;
+	case buffer_left: return GL_LEFT;
+	case buffer_none: return GL_NONE;
+	case buffer_right: return GL_RIGHT;
+	default: return GL_BACK;
+	}
+}
+
+GLenum OpenGL::to_enum(CompareFunction func)
+{
+	switch( func )
+	{
+	case compare_never: return GL_NEVER;
+	case compare_less: return GL_LESS;
+	case compare_lequal: return GL_LEQUAL; 
+	case compare_greater: return GL_GREATER; 
+	case compare_gequal: return GL_GEQUAL; 
+	case compare_equal: return GL_EQUAL; 
+	case compare_notequal: return GL_NOTEQUAL; 
+	case compare_always: return GL_ALWAYS; 
+	default: return GL_LEQUAL;
+	}
+}
+
+GLenum OpenGL::to_enum(StencilOp op)
+{
+	switch( op )
+	{
+	case stencil_decr: return GL_DECR;
+	case stencil_decr_wrap: return GL_DECR_WRAP;
+	case stencil_incr: return GL_INCR;
+	case stencil_incr_wrap: return GL_INCR_WRAP;
+	case stencil_invert: return GL_INVERT;
+	case stencil_keep: return GL_KEEP;
+	case stencil_replace: return GL_REPLACE;
+	case stencil_zero: return GL_ZERO;	
+	default: return GL_KEEP;
+	}
+}
+
+GLenum OpenGL::to_enum(CullMode mode)
+{
+	switch( mode )
+	{
+	case cull_front: return GL_FRONT;
+	case cull_back: return GL_BACK;
+	case cull_front_and_back: return GL_FRONT_AND_BACK;
+	default: return GL_BACK;
+	}
+}
+
+GLenum OpenGL::to_enum(FillMode mode)
+{
+	switch( mode )
+	{
+	case fill_point: return GL_POINT;
+	case fill_line: return GL_LINE;
+	case fill_polygon: return GL_FILL;
+	default: return GL_FILL;
+	}
+}
+
+GLenum OpenGL::to_enum(BlendFunc func)
+{
+	switch( func )
+	{
+	case blend_zero: return GL_ZERO;
+	case blend_one: return GL_ONE;
+	case blend_dest_color: return GL_DST_COLOR;
+	case blend_src_color: return GL_SRC_COLOR;
+	case blend_one_minus_dest_color: return GL_ONE_MINUS_DST_COLOR;
+	case blend_one_minus_src_color: return GL_ONE_MINUS_SRC_COLOR;
+	case blend_src_alpha: return GL_SRC_ALPHA;
+	case blend_one_minus_src_alpha: return GL_ONE_MINUS_SRC_ALPHA;
+	case blend_dest_alpha: return GL_DST_ALPHA;
+	case blend_one_minus_dest_alpha: return GL_ONE_MINUS_DST_ALPHA;
+	case blend_src_alpha_saturate: return GL_SRC_ALPHA_SATURATE;
+	case blend_constant_color: return GL_CONSTANT_COLOR;
+	case blend_one_minus_constant_color: return GL_ONE_MINUS_CONSTANT_COLOR;
+	case blend_constant_alpha: return GL_CONSTANT_ALPHA;
+	case blend_one_minus_constant_alpha: return GL_ONE_MINUS_CONSTANT_ALPHA;
+	default: return GL_BLEND_SRC;
+	}
+}
+
+GLenum OpenGL::to_enum(BlendEquation eq)
+{
+	switch( eq )
+	{
+	case equation_add: return GL_FUNC_ADD;
+	case equation_subtract: return GL_FUNC_SUBTRACT;
+	case equation_reverse_subtract: return GL_FUNC_REVERSE_SUBTRACT;
+	case equation_min: return GL_MIN;
+	case equation_max: return GL_MAX;
+	default: return GL_FUNC_ADD;
+	}
+}
+
+GLenum OpenGL::to_enum(enum VertexAttributeDataType value)
+{
+	switch(value)
+	{
+	case type_unsigned_byte:
+		return GL_UNSIGNED_BYTE;
+	case type_unsigned_short:
+		return GL_UNSIGNED_SHORT;
+	case type_unsigned_int:
+		return GL_UNSIGNED_INT;
+	case type_byte:
+		return GL_BYTE;
+	case type_short:
+		return GL_SHORT;
+	case type_int:
+		return GL_INT;
+	case type_float:
+		return GL_FLOAT;
+	default:
+		return 0;
+	}
+}
+
+GLenum OpenGL::to_enum(enum PrimitivesType value)
+{
+	GLenum gl_mode = 0;
+	switch (value)
+	{
+	case type_points: gl_mode = GL_POINTS; break;
+	case type_line_strip: gl_mode = GL_LINE_STRIP; break;
+	case type_line_loop: gl_mode = GL_LINE_LOOP; break;
+	case type_lines: gl_mode = GL_LINES; break;
+	case type_triangle_strip: gl_mode = GL_TRIANGLE_STRIP; break;
+	case type_triangle_fan: gl_mode = GL_TRIANGLE_FAN; break;
+	case type_triangles: gl_mode = GL_TRIANGLES; break;
+	}
+	return gl_mode;
+}
+
+GLenum OpenGL::to_enum(enum LogicOp op)
+{
+	GLenum gl_op = 0;
+	switch (op)
+	{
+		case logic_clear: gl_op = GL_CLEAR; break;  
+		case logic_and: gl_op = GL_AND; break;
+		case logic_and_reverse: gl_op = GL_AND_REVERSE; break;
+		case logic_copy: gl_op = GL_COPY; break;
+		case logic_and_inverted: gl_op = GL_AND_INVERTED; break;
+		case logic_noop: gl_op = GL_NOOP; break;
+		case logic_xor: gl_op = GL_XOR; break;
+		case logic_or: gl_op = GL_OR; break;
+		case logic_nor: gl_op = GL_NOR; break;
+		case logic_equiv: gl_op = GL_EQUIV; break;
+		case logic_invert: gl_op = GL_INVERT; break;
+		case logic_or_reverse: gl_op = GL_OR_REVERSE; break;
+		case logic_copy_inverted: gl_op = GL_COPY_INVERTED; break;
+		case logic_or_inverted: gl_op = GL_OR_INVERTED; break;
+		case logic_nand: gl_op = GL_NAND; break;
+		case logic_set: gl_op = GL_SET; break;
+		default: break;
+	}
+	return gl_op;
+}
+
+GLenum OpenGL::to_enum(TextureFilter filter)
+{
+	switch(filter)
+	{
+	case filter_nearest: return GL_NEAREST;
+	case filter_linear: return GL_LINEAR;
+	case filter_nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
+	case filter_nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
+	case filter_linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
+	case filter_linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
+	default: return GL_NEAREST;
+	}
+}
+
+GLenum OpenGL::to_enum(TextureWrapMode mode)
+{
+ 	switch(mode)
+	{
+	case wrap_clamp_to_edge: return GL_CLAMP_TO_EDGE;
+	case wrap_repeat: return GL_REPEAT;
+	case wrap_mirrored_repeat: return GL_MIRRORED_REPEAT;
+	default: return GL_CLAMP_TO_EDGE;
+	}
+}
+
+GLenum OpenGL::to_enum(TextureCompareMode mode)
+{
+ 	switch(mode)
+	{
+	case comparemode_none: return GL_NONE;
+	case comparemode_compare_r_to_texture: return GL_COMPARE_REF_TO_TEXTURE;		
+	default: return GL_NONE;
+	}
+}
+
+GLenum OpenGL::to_cube_target(int index)
+{
+	// To do: make sure this order matches the order used by Direct3D
+	switch (index)
+	{
+	case 0: return GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+	case 1: return GL_TEXTURE_CUBE_MAP_NEGATIVE_X;
+	case 2: return GL_TEXTURE_CUBE_MAP_POSITIVE_Y;
+	case 3: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Y;
+	case 4: return GL_TEXTURE_CUBE_MAP_POSITIVE_Z;
+	case 5: return GL_TEXTURE_CUBE_MAP_NEGATIVE_Z;
+	default: throw Exception("Invalid index specified for cube texture");
+	}
+}
+
+GLenum OpenGL::to_enum(BufferUsage usage)
+{
+	switch (usage)
+	{
+	case usage_stream_draw:
+		return GL_STREAM_DRAW;
+	case usage_stream_read:
+		return GL_STREAM_READ;
+	case usage_stream_copy:
+		return GL_STREAM_COPY;
+	case usage_static_draw:
+		return GL_STATIC_DRAW;
+	case usage_static_read:
+		return GL_STATIC_READ;
+	case usage_static_copy:
+		return GL_STATIC_COPY;
+	case usage_dynamic_draw:
+		return GL_DYNAMIC_DRAW;
+	case usage_dynamic_read:
+		return GL_DYNAMIC_READ;
+	case usage_dynamic_copy:
+		return GL_DYNAMIC_COPY;
+	default:
+		return GL_STATIC_DRAW;
+	}
+}
+
+GLenum OpenGL::to_enum(BufferAccess access)
+{
+	switch (access)
+	{
+	case access_read_only:
+		return GL_READ_ONLY;
+	case access_write_only:
+	case access_write_discard:
+		return GL_WRITE_ONLY;
+	case access_read_write:
+		return GL_READ_WRITE;
+	default:
+		return GL_READ_WRITE;
+	}
+}
+
+
 GLuint OpenGL::get_texture_handle(Texture &texture)
 {
 	return static_cast<GL3TextureProvider*>(texture.get_provider())->get_handle();
@@ -1182,5 +1449,6 @@ Texture OpenGL::from_texture_handle(GLuint type, GLuint handle)
 	//FIXME For GL1
 	return Texture(new GL3TextureProvider(type, handle));
 }
+
 
 }

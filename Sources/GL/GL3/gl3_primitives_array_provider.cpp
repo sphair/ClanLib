@@ -66,12 +66,12 @@ void GL3PrimitivesArrayProvider::set_attribute(int attrib_index, const VertexDat
 
 	if (attribute.type == type_float)
 	{
-		glVertexAttribPointer( attrib_index, attribute.size, GL3GraphicContextProvider::to_enum(attribute.type),
+		glVertexAttribPointer( attrib_index, attribute.size, OpenGL::to_enum(attribute.type),
 			normalize ? GL_TRUE : GL_FALSE, attribute.stride, (GLvoid *) attribute.offset);
 	}
 	else
 	{
-		glVertexAttribIPointer( attrib_index, attribute.size, GL3GraphicContextProvider::to_enum(attribute.type), attribute.stride, (GLvoid *) attribute.offset);
+		glVertexAttribIPointer( attrib_index, attribute.size, OpenGL::to_enum(attribute.type), attribute.stride, (GLvoid *) attribute.offset);
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

@@ -493,9 +493,9 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, to_enum(wrap_r));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_R, OpenGL::to_enum(wrap_r));
 }
 
 void GL1TextureProvider::set_wrap_mode(
@@ -504,8 +504,8 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, to_enum(wrap_t));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_T, OpenGL::to_enum(wrap_t));
 }
 
 void GL1TextureProvider::set_wrap_mode(
@@ -513,21 +513,21 @@ void GL1TextureProvider::set_wrap_mode(
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, to_enum(wrap_s));
+	glTexParameteri(texture_type, GL_TEXTURE_WRAP_S, OpenGL::to_enum(wrap_s));
 }
 
 void GL1TextureProvider::set_min_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MIN_FILTER, OpenGL::to_enum(filter));
 }
 
 void GL1TextureProvider::set_mag_filter(TextureFilter filter)
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, to_enum(filter));
+	glTexParameteri(texture_type, GL_TEXTURE_MAG_FILTER, OpenGL::to_enum(filter));
 }
 
 void GL1TextureProvider::set_max_anisotropy(float v)
@@ -538,8 +538,8 @@ void GL1TextureProvider::set_texture_compare(TextureCompareMode mode, CompareFun
 {
 	throw_if_disposed();
 	GL1TextureStateTracker state_tracker(texture_type, handle);
-	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, to_enum(mode));	
-	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, to_enum(func));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_MODE, OpenGL::to_enum(mode));	
+	glTexParameteri(texture_type, GL_TEXTURE_COMPARE_FUNC, OpenGL::to_enum(func));	
 }
 
 void GL1TextureProvider::transform_coordinate(const PrimitivesArrayProvider::VertexData &attribute, std::vector<float> &transformed_data, int vertex_offset, int num_vertices, int total_vertices)
@@ -822,57 +822,6 @@ void GL1TextureProvider::set_texture_image3d(
 			GL_UNSIGNED_BYTE,         // type
 			buffer.get_data());       // texels
 
-	}
-}
-
-GLenum GL1TextureProvider::to_enum(TextureFilter filter)
-{
-	switch(filter)
-	{
-	case filter_nearest: return GL_NEAREST;
-	case filter_linear: return GL_LINEAR;
-	case filter_nearest_mipmap_nearest: return GL_NEAREST_MIPMAP_NEAREST;
-	case filter_nearest_mipmap_linear: return GL_NEAREST_MIPMAP_LINEAR;
-	case filter_linear_mipmap_nearest: return GL_LINEAR_MIPMAP_NEAREST;
-	case filter_linear_mipmap_linear: return GL_LINEAR_MIPMAP_LINEAR;
-	default: return GL_NEAREST;
-	}
-}
-
-GLenum GL1TextureProvider::to_enum(TextureWrapMode mode)
-{
- 	switch(mode)
-	{
-	case wrap_clamp_to_edge: return GL_CLAMP_TO_EDGE;
-	case wrap_repeat: return GL_REPEAT;
-	case wrap_mirrored_repeat: return GL_MIRRORED_REPEAT;
-	default: return GL_CLAMP_TO_EDGE;
-	}
-}
-
-GLenum GL1TextureProvider::to_enum(TextureCompareMode mode)
-{
- 	switch(mode)
-	{
-	case comparemode_none: return GL_NONE;
-	case comparemode_compare_r_to_texture: return GL_COMPARE_R_TO_TEXTURE;		
-	default: return GL_NONE;
-	}
-}
-
-GLenum GL1TextureProvider::to_enum(CompareFunction func)
-{
-	switch( func )
-	{
-	case compare_never: return GL_NEVER;
-	case compare_less: return GL_LESS;
-	case compare_lequal: return GL_LEQUAL; 
-	case compare_greater: return GL_GREATER; 
-	case compare_gequal: return GL_GEQUAL; 
-	case compare_equal: return GL_EQUAL; 
-	case compare_notequal: return GL_NOTEQUAL; 
-	case compare_always: return GL_ALWAYS; 
-	default: return GL_LEQUAL;
 	}
 }
 

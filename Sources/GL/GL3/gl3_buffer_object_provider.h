@@ -77,8 +77,6 @@ public:
 /// \{
 private:
 	void on_dispose();
-	GLenum to_enum(BufferUsage usage) const;
-	GLenum to_enum(BufferAccess access) const;
 
 	GLuint handle;
 	GLenum binding;
