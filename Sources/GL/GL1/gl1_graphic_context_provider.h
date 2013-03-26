@@ -230,8 +230,6 @@ private:
 
 	ProgramObject internal_program;
 	GL1ProgramObjectProvider *internal_program_provider;		// Pointer is owned by "internal_program"
-	Mat4f last_projection;
-	Mat4f last_modelview;
 
 	bool scissor_enabled;
 
