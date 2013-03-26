@@ -209,16 +209,6 @@ private:
 
 	void set_culled(bool value);
 
-	void enable_stencil_test(bool enabled);
-	void set_stencil_compare_front(CompareFunction front, int front_ref, int front_mask);
-	void set_stencil_compare_back(CompareFunction back, int back_ref, int back_mask);
-	void set_stencil_write_mask(unsigned char front_facing_mask, unsigned char back_facing_mask);
-	void set_stencil_op_front(StencilOp fail_front, StencilOp pass_depth_fail_front, StencilOp pass_depth_pass_front);
-	void set_stencil_op_back(StencilOp fail_back, StencilOp pass_depth_fail_back, StencilOp pass_depth_pass_back);
-	void enable_depth_test(bool enabled);
-	void enable_depth_write(bool enabled);
-	void set_depth_compare_function(CompareFunction func);
-
 	GLenum to_enum(enum DrawBuffer buf);
 	GLenum to_enum(enum CompareFunction func);
 	GLenum to_enum(enum StencilOp op);

@@ -446,29 +446,24 @@ void GL3GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 
 		gl_state->desc.is_blending_enabled() ? glEnable(GL_BLEND) :	glDisable(GL_BLEND);
 
-		if (glBlendColor)
-				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
+		glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
 
 		if (equation_color == equation_alpha)
 		{
-			if (glBlendEquation)
-				glBlendEquation(to_enum(equation_color));
+			glBlendEquation(to_enum(equation_color));
 		}
 		else
 		{
-			if (glBlendEquationSeparate)
-				glBlendEquationSeparate( to_enum(equation_color), to_enum(equation_alpha) );
+			glBlendEquationSeparate( to_enum(equation_color), to_enum(equation_alpha) );
 		}
 
 		if( src == src_alpha && dest == dest_alpha )
 		{
-			if (glBlendFunc)
-				glBlendFunc(to_enum(src), to_enum(dest));
+			glBlendFunc(to_enum(src), to_enum(dest));
 		}
 		else
 		{
-			if (glBlendFuncSeparate)
-				glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
+			glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
 		}
 
 	}
@@ -491,15 +486,21 @@ void GL3GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 		gl_state->desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
 		gl_state->desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
 
-		enable_stencil_test(gl_state->desc.is_stencil_test_enabled());
-		set_stencil_compare_front(front, front_ref, front_mask);
-		set_stencil_compare_back(back, back_ref, back_mask);
-		set_stencil_write_mask(front_facing_mask, back_facing_mask);
-		set_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-		set_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
-		enable_depth_test(gl_state->desc.is_depth_test_enabled());
-		enable_depth_write(gl_state->desc.is_depth_write_enabled());
-		set_depth_compare_function(gl_state->desc.get_depth_compare_function());
+		OpenGL::set_active(this);
+		gl_state->desc.is_stencil_test_enabled() ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
+
+		glStencilFuncSeparate(GL_FRONT, to_enum(front), front_ref, front_mask);
+		glStencilFuncSeparate(GL_BACK, to_enum(back), back_ref, back_mask);
+		glStencilMaskSeparate( GL_FRONT, front_facing_mask );
+		glStencilMaskSeparate( GL_BACK, back_facing_mask );
+
+		glStencilOpSeparate(GL_FRONT, to_enum(fail_front), to_enum(pass_depth_fail_front), to_enum(pass_depth_pass_front));
+		glStencilOpSeparate(GL_BACK, to_enum(fail_back), to_enum(pass_depth_fail_back), to_enum(pass_depth_pass_back));
+
+		gl_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+		glDepthMask(gl_state->desc.is_depth_write_enabled() ? 1 : 0);
+		glDepthFunc(to_enum(gl_state->desc.get_depth_compare_function()));
+
 	}
 }
 
@@ -991,104 +992,6 @@ void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
     if (glDrawBuffer)
         glDrawBuffer( to_enum(buffer) );
 
-}
-
-void GL3GraphicContextProvider::enable_stencil_test(bool enabled)
-{
-	OpenGL::set_active(this);
-	if (enabled)
-	{
-		glEnable(GL_STENCIL_TEST);
-	}
-	else
-	{
-		glDisable(GL_STENCIL_TEST);
-	}
-}
-
-void GL3GraphicContextProvider::set_stencil_compare_front(CompareFunction compare_front, int front_ref, int front_mask)
-{
-	OpenGL::set_active(this);
-
-	if (glStencilFuncSeparate)
-	{
-		glStencilFuncSeparate(GL_FRONT,
-			to_enum(compare_front),
-			front_ref,
-			front_mask);
-	}
-}
-
-void GL3GraphicContextProvider::set_stencil_compare_back(CompareFunction compare_back, int back_ref, int back_mask)
-{
-	OpenGL::set_active(this);
-
-	if (glStencilFuncSeparate)
-	{
-		glStencilFuncSeparate(GL_BACK,
-			to_enum(compare_back),
-			back_ref,
-			back_mask);
-	}
-}
-
-void GL3GraphicContextProvider::set_stencil_write_mask(unsigned char front_facing_mask, unsigned char back_facing_mask)
-{
-	OpenGL::set_active(this);
-	if (glStencilMaskSeparate)
-	{
-		glStencilMaskSeparate( GL_FRONT, front_facing_mask );
-		glStencilMaskSeparate( GL_BACK, back_facing_mask );
-	}
-
-}
-
-void GL3GraphicContextProvider::set_stencil_op_front(StencilOp fail_front, StencilOp pass_depth_fail_front, StencilOp pass_depth_pass_front)
-{
-	OpenGL::set_active(this);
-
-	if (glStencilOpSeparate)
-	{
-		glStencilOpSeparate(GL_FRONT,
-			to_enum(fail_front),
-			to_enum(pass_depth_fail_front),
-			to_enum(pass_depth_pass_front));
-	}
-
-}
-
-void GL3GraphicContextProvider::set_stencil_op_back(StencilOp fail_back, StencilOp pass_depth_fail_back, StencilOp pass_depth_pass_back)
-{
-	OpenGL::set_active(this);
-
-	if (glStencilOpSeparate)
-	{
-		glStencilOpSeparate(GL_BACK,
-			to_enum(fail_back),
-			to_enum(pass_depth_fail_back),
-			to_enum(pass_depth_pass_back));
-	}}
-
-void GL3GraphicContextProvider::enable_depth_test(bool enabled)
-{
-	OpenGL::set_active(this);
-	if( enabled )
-		glEnable(GL_DEPTH_TEST);
-	else
-		glDisable(GL_DEPTH_TEST);
-
-}
-
-void GL3GraphicContextProvider::enable_depth_write(bool enabled)
-{
-	OpenGL::set_active(this);
-	glDepthMask(enabled ? 1 : 0);
-}
-
-void GL3GraphicContextProvider::set_depth_compare_function(CompareFunction func)
-{
-	OpenGL::set_active(this);
-	glDepthFunc(to_enum(func));
 }
 
 void GL3GraphicContextProvider::make_current() const

@@ -345,6 +345,7 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 	if (state)
 	{
 		GL1RasterizerStateProvider *gl1_state = static_cast<GL1RasterizerStateProvider*>(state);
+		set_active();
 
 		gl1_state->desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 		gl1_state->desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
@@ -377,6 +378,7 @@ void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 	if (state)
 	{
 		GL1BlendStateProvider *gl1_state = static_cast<GL1BlendStateProvider*>(state);
+		set_active();
 
 		bool red, green, blue, alpha;
 		BlendEquation equation_color, equation_alpha;
@@ -418,27 +420,11 @@ void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 	if (state)
 	{
 		GL1DepthStencilStateProvider *gl1_state = static_cast<GL1DepthStencilStateProvider*>(state);
+		set_active();
 
-		CompareFunction front; int front_ref; int front_mask;
-		CompareFunction back; int back_ref; int back_mask;
-		unsigned char front_facing_mask, back_facing_mask;
-		StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
-		StencilOp fail_back, pass_depth_fail_back, pass_depth_pass_back;
-		gl1_state->desc.get_stencil_compare_front(front, front_ref, front_mask);
-		gl1_state->desc.get_stencil_compare_back(back, back_ref, back_mask);
-		gl1_state->desc.get_stencil_write_mask(front_facing_mask, back_facing_mask);
-		gl1_state->desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-		gl1_state->desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
-
-		enable_stencil_test(gl1_state->desc.is_stencil_test_enabled());
-		set_stencil_compare_front(front, front_ref, front_mask);
-		set_stencil_compare_back(back, back_ref, back_mask);
-		set_stencil_write_mask(front_facing_mask, back_facing_mask);
-		set_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-		set_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
-		enable_depth_test(gl1_state->desc.is_depth_test_enabled());
-		enable_depth_write(gl1_state->desc.is_depth_write_enabled());
-		set_depth_compare_function(gl1_state->desc.get_depth_compare_function());
+		gl1_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+		glDepthMask(gl1_state->desc.is_depth_write_enabled() ? 1 : 0);
+		glDepthFunc(to_enum(gl1_state->desc.get_depth_compare_function()));
 	}
 }
 
@@ -1050,38 +1036,6 @@ void GL1GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	set_active();
 	glDrawBuffer( to_enum(buffer) );
-
-}
-
-void GL1GraphicContextProvider::enable_stencil_test(bool enabled){}
-void GL1GraphicContextProvider::set_stencil_compare_front(CompareFunction front, int front_ref, int front_mask){}
-void GL1GraphicContextProvider::set_stencil_compare_back(CompareFunction back, int back_ref, int back_mask){}
-void GL1GraphicContextProvider::set_stencil_write_mask(unsigned char front_facing_mask, unsigned char back_facing_mask){}
-void GL1GraphicContextProvider::set_stencil_op_front(StencilOp fail_front, StencilOp pass_depth_fail_front, StencilOp pass_depth_pass_front){}
-void GL1GraphicContextProvider::set_stencil_op_back(StencilOp fail_back, StencilOp pass_depth_fail_back, StencilOp pass_depth_pass_back){}
-
-void GL1GraphicContextProvider::enable_depth_test(bool enabled)
-{
-	set_active();
-	if(enabled )
-		glEnable(GL_DEPTH_TEST);
-	else
-		glDisable(GL_DEPTH_TEST);
-
-}
-
-void GL1GraphicContextProvider::enable_depth_write(bool enabled)
-{
-	set_active();
-
-	glDepthMask(enabled ? 1 : 0);
-
-}
-
-void GL1GraphicContextProvider::set_depth_compare_function(CompareFunction func)
-{
-	set_active();
-	glDepthFunc(to_enum(func));
 
 }
 
