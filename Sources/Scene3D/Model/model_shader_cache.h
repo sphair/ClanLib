@@ -43,6 +43,7 @@ public:
 	void create_gbuffer_commands(GraphicContext &gc, Model *model, int level);
 	void create_transparency_commands(GraphicContext &gc, Model *model, int level);
 	void create_shadow_commands(GraphicContext &gc, Model *model, int level);
+	void create_early_z_commands(GraphicContext &gc, Model *model, int level);
 
 private:
 	struct Shaderset
@@ -55,12 +56,14 @@ private:
 	ProgramObject create_gbuffer_program(GraphicContext &gc, const ModelShaderDescription &description);
 	ProgramObject create_transparency_program(GraphicContext &gc, const ModelShaderDescription &description);
 	ProgramObject get_shadow_program(GraphicContext &gc, bool uses_bones);
+	ProgramObject get_early_z_program(GraphicContext &gc, bool uses_bones);
 	void create_states(GraphicContext &gc);
 	static TextureWrapMode to_wrap_mode(ModelDataTextureMap::WrapMode mode);
 
 	std::string base_path;
 	std::map<ModelShaderDescription, Shaderset> shaders;
 	ProgramObject shadow_program, shadow_bones_program;
+	ProgramObject early_z_program, early_z_bones_program;
 	RasterizerState rasterizer_state;
 	RasterizerState two_sided_rasterizer_state;
 };

@@ -68,7 +68,12 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
 	ClippingFrustum frustum(eye_to_cull_projection * world_to_eye.get());
+
+	render_list.clear();
 	scene->visit(gc, world_to_eye.get(), eye_to_projection, frustum, this);
+
+	for (size_t i = 0; i < render_list.size(); i++)
+		render_list[i].model_lod->gbuffer_commands.execute(gc, render_list[i].num_instances);
 
 	if (gc.get_shader_language() == shader_glsl)
 	{
@@ -139,7 +144,8 @@ void GBufferPass::setup_gbuffer(GraphicContext &gc)
 
 void GBufferPass::render(GraphicContext &gc, ModelLOD *model_lod, int num_instances)
 {
-	model_lod->gbuffer_commands.execute(gc, num_instances);
+	model_lod->early_z_commands.execute(gc, num_instances);
+	render_list.push_back(RenderEntry(model_lod, num_instances));
 }
 
 }
