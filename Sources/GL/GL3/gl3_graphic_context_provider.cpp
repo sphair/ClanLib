@@ -434,18 +434,43 @@ void GL3GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 	{
 		GL3BlendStateProvider *gl_state = static_cast<GL3BlendStateProvider*>(state);
 
-		bool red, green, blue, alpha;
 		BlendEquation equation_color, equation_alpha;
 		BlendFunc src, dest, src_alpha, dest_alpha;
-		gl_state->desc.get_color_write(red, green, blue, alpha);
 		gl_state->desc.get_blend_equation(equation_color, equation_alpha);
 		gl_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
-		enable_color_write(red, green, blue, alpha);
-		enable_blending(gl_state->desc.is_blending_enabled());
-		set_blend_color(Colorf(blend_color));
-		set_blend_equation(equation_color, equation_alpha);
-		set_blend_function(src, dest, src_alpha, dest_alpha);
+		OpenGL::set_active(this);
+		bool red, green, blue, alpha;
+		gl_state->desc.get_color_write(red, green, blue, alpha);
+		glColorMask(red,green,blue,alpha);
+
+		gl_state->desc.is_blending_enabled() ? glEnable(GL_BLEND) :	glDisable(GL_BLEND);
+
+		if (glBlendColor)
+				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
+
+		if (equation_color == equation_alpha)
+		{
+			if (glBlendEquation)
+				glBlendEquation(to_enum(equation_color));
+		}
+		else
+		{
+			if (glBlendEquationSeparate)
+				glBlendEquationSeparate( to_enum(equation_color), to_enum(equation_alpha) );
+		}
+
+		if( src == src_alpha && dest == dest_alpha )
+		{
+			if (glBlendFunc)
+				glBlendFunc(to_enum(src), to_enum(dest));
+		}
+		else
+		{
+			if (glBlendFuncSeparate)
+				glBlendFuncSeparate( to_enum(src), to_enum(dest), to_enum(src_alpha), to_enum(dest_alpha) );
+		}
+
 	}
 }
 
@@ -843,66 +868,6 @@ void GL3GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 	glDepthRangeIndexed(viewport, (float)n, (float)f);
 }
 
-void GL3GraphicContextProvider::enable_blending(bool value)
-{
-	OpenGL::set_active(this);
-
-	if( value )
-		glEnable(GL_BLEND);
-	else
-		glDisable(GL_BLEND);
-}
-
-void GL3GraphicContextProvider::set_blend_color(const Colorf &color)
-{
-	OpenGL::set_active(this);
-	if (glBlendColor)
-	{
-		glBlendColor(
-			GLclampf(color.get_red()),
-			GLclampf(color.get_green()),
-			GLclampf(color.get_blue()),
-			GLclampf(color.get_alpha()));
-	}
-}
-
-void GL3GraphicContextProvider::set_blend_equation(BlendEquation equation_color, BlendEquation equation_alpha)
-{
-	OpenGL::set_active(this);
-	if (equation_color == equation_alpha)
-	{
-		if (glBlendEquation)
-			glBlendEquation(to_enum(equation_color));
-	}
-	else
-	{
-		if (glBlendEquationSeparate)
-			glBlendEquationSeparate(
-				to_enum(equation_color),
-				to_enum(equation_alpha) );
-	}
-}
-
-void GL3GraphicContextProvider::set_blend_function(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
-{
-	OpenGL::set_active(this);
-
-	if( src == src_alpha && dest == dest_alpha )
-	{
-		if (glBlendFunc)
-			glBlendFunc(to_enum(src), to_enum(dest));
-	}
-	else
-	{
-		if (glBlendFuncSeparate)
-			glBlendFuncSeparate( 
-				to_enum(src),
-				to_enum(dest),
-				to_enum(src_alpha),
-				to_enum(dest_alpha) );
-	}
-}
-
 void GL3GraphicContextProvider::set_point_size(float value)
 {
 	OpenGL::set_active(this);
@@ -1124,12 +1089,6 @@ void GL3GraphicContextProvider::set_depth_compare_function(CompareFunction func)
 {
 	OpenGL::set_active(this);
 	glDepthFunc(to_enum(func));
-}
-
-void GL3GraphicContextProvider::enable_color_write(bool red, bool green, bool blue, bool alpha)
-{
-	OpenGL::set_active(this);
-	glColorMask(red,green,blue,alpha);
 }
 
 void GL3GraphicContextProvider::make_current() const
