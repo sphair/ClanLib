@@ -125,11 +125,6 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &si
 	pbuffer_size = size;
 }
 
-void PBuffer_GL1_Impl::set_active() const
-{
-	OpenGL::set_active(this);
-}
-
 void PBuffer_GL1_Impl::make_current() const
 {
 	wglMakeCurrent(pbuffer_dc, pbuffer_context);
@@ -137,19 +132,12 @@ void PBuffer_GL1_Impl::make_current() const
 
 void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor)
 {
-	//FIXME:
+	gc_provider->get_opengl_version(version_major, version_minor);
 }
 
 void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release)
 {
-	//FIXME:
+	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }
-
-ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
-{
-	//FIXME:
-	return 0;
-}
-
 
 }
