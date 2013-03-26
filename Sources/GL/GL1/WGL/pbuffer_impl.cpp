@@ -37,9 +37,9 @@
 
 namespace clan
 {
-/*
+
 PBuffer_GL1_Impl::PBuffer_GL1_Impl(GL1GraphicContextProvider *gc_provider) : gc_provider(gc_provider)
-, pbuffer(0), pbuffer_context(0), pbuffer_dc(0), pbuffer_gc_provider(0)
+, pbuffer(0), pbuffer_context(0), pbuffer_dc(0)
 {
 	if (!gc_provider)
 		throw Exception("Unexpected provider");
@@ -53,11 +53,6 @@ PBuffer_GL1_Impl::~PBuffer_GL1_Impl()
 
 void PBuffer_GL1_Impl::reset()
 {
-	if (pbuffer_gc_provider)
-	{
-		pbuffer_gc = GraphicContext();
-		pbuffer_gc_provider = NULL;
-	}
 	OpenGL::set_active(gc_provider);
 
 	if (pbuffer_context) wglDeleteContext(pbuffer_context);
@@ -127,35 +122,17 @@ void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &si
 
 	wglShareLists(share_context, pbuffer_context);
 
-//FIXME	pbuffer_gc_provider = new GL1GraphicContextProvider(this);
-//FIXME	pbuffer_gc = GraphicContext(pbuffer_gc_provider);
 	pbuffer_size = size;
 }
 
 void PBuffer_GL1_Impl::set_active() const
 {
-	OpenGL::set_active(pbuffer_gc_provider);
-}
-
-InputContext PBuffer_GL1_Impl::get_ic()
-{
-	throw Exception("FrameBuffer does not contain InputContext");
-}
-
-PixelBuffer PBuffer_GL1_Impl::get_clipboard_image() const
-{
-	return PixelBuffer();
+	OpenGL::set_active(this);
 }
 
 void PBuffer_GL1_Impl::make_current() const
 {
 	wglMakeCurrent(pbuffer_dc, pbuffer_context);
 }
-
-HWND PBuffer_GL1_Impl::get_hwnd() const
-{
-	return gc_provider->get_render_window().get_hwnd();
-}
-*/
 
 }

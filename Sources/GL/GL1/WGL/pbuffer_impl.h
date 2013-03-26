@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/GL/opengl_wrap.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
+#include "../../opengl_graphic_context_provider.h"
 
 namespace clan
 {
@@ -37,7 +37,7 @@ namespace clan
 class GL1GraphicContextProvider;
 class GL1WindowProvider;
 
-class PBuffer_GL1_Impl : public DisplayWindowProvider
+class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 {
 
 public:
@@ -46,74 +46,20 @@ public:
 	~PBuffer_GL1_Impl();
 
 public:
-	//gc_provider->get_render_window().has_focus();
-	Rect get_geometry() const {return pbuffer_size;}
-	Rect get_viewport() const {return pbuffer_size;}
-	bool has_focus() const {return false;}
-	bool is_minimized() const {return false;}
-	bool is_maximized() const {return false;}
-	bool is_visible() const {return false;}
-	bool is_fullscreen() const {return false;}
-	Size get_minimum_size(bool client_area) const {return pbuffer_size;}
-	Size get_maximum_size(bool client_area) const {return pbuffer_size;}
-	std::string get_title() const {return "PBuffer";}
-	GraphicContext& get_gc() {return pbuffer_gc;}
-	InputContext get_ic();
-	HWND get_hwnd() const;
-	bool is_clipboard_text_available() const {return false;}
-	bool is_clipboard_image_available() const {return false;}
-	std::string get_clipboard_text() const {return "";}
-	PixelBuffer get_clipboard_image() const;
 	void make_current() const;
-	Point client_to_screen(const Point &client) {return client;}
-	Point screen_to_client(const Point &screen) {return screen;}
-	void capture_mouse(bool capture) {}
-	void request_repaint(const Rect &rect) {}
-	void create(DisplayWindowSite *site, const DisplayWindowDescription &description) {}
-	void show_system_cursor() {}
-	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot) {return 0;}
-	void set_cursor(CursorProvider *cursor) {}
-	void set_cursor(enum StandardCursor type) {}
-	void set_cursor_handle(HCURSOR cursor) {}
-	void hide_system_cursor() {}
-	void set_title(const std::string &new_title) {}
-	void set_position(const Rect &pos, bool client_area) {}
-	void set_size(int width, int height, bool client_area) {}
-	void set_minimum_size(int width, int height, bool client_area) {}
-	void set_maximum_size(int width, int height, bool client_area) {}
-	void set_enabled(bool enable) {}
-	void minimize() {}
-	void restore() {}
-	void maximize() {}
-	void show(bool activate) {}
-	void hide() {}
-	void bring_to_front() {}
-	void flip(int interval) {}
-	void update(const Rect &rect) {}
-	void set_clipboard_text(const std::string &text) {}
-	void set_clipboard_image(const PixelBuffer &buf) {}
-	void set_large_icon(const PixelBuffer &image) {}
-	void set_small_icon(const PixelBuffer &image) {}
-	void enable_alpha_channel(const Rect &blur_rect) {}
-	void extend_frame_into_client_area(int height) {}
-
-
 
 public:
 	void create(GL1WindowProvider &window_provider, const Size &size);
 	void set_active() const;
 
-
 private:
 	void reset();
 
 	GL1GraphicContextProvider *gc_provider;
-	//GLFunctions::HPBUFFERARB pbuffer;
+	GLFunctions::HPBUFFERARB pbuffer;
 	HGLRC pbuffer_context;
 	HDC pbuffer_dc;
 
-	GL1GraphicContextProvider *pbuffer_gc_provider;
-	GraphicContext pbuffer_gc;
 	Size pbuffer_size;
 
 
