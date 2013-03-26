@@ -633,6 +633,8 @@ void GL3GraphicContextProvider::set_frame_buffer(const FrameBuffer &draw_buffer,
 	draw_buffer_provider->check_framebuffer_complete();
 	if (draw_buffer_provider != read_buffer_provider)
 		read_buffer_provider->check_framebuffer_complete();
+
+	framebuffer_bound = true;
 }
 
 void GL3GraphicContextProvider::reset_frame_buffer()
@@ -648,6 +650,8 @@ void GL3GraphicContextProvider::reset_frame_buffer()
 #endif
 	glDrawBuffer(GL_BACK);	// OpenGL default
 	glReadBuffer(GL_BACK);	// OpenGL default
+
+	framebuffer_bound = false;
 
 }
 
