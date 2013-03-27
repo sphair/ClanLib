@@ -350,7 +350,6 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 		version_major = StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
 		version_minor = StringHelp::text_to_int(split_version[1]);
-	version_major = 1;
 }
 
 void OpenGLWindowProvider::on_window_resized()
