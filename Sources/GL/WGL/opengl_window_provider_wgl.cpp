@@ -262,8 +262,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 				4,0,
 				3,3,
 				3,2,
-				3,1,
-				3,0,
+				// Note, 3.1, and 3.0 are not supported. Using OpenGL 2 context instead
 				0,0,	// End of list
 			};
 
@@ -306,7 +305,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 		{
 			use_gl3 = false;
 		}
-		else if (!opengl_desc.get_allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
+		else if (!opengl_desc.get_allow_lower_versions())	// Else, if we do not allow lower versions, only attempt GL3
 		{
 			use_gl3 = true;
 		}
@@ -359,6 +358,7 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 		version_major = StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
 		version_minor = StringHelp::text_to_int(split_version[1]);
+
 }
 
 void OpenGLWindowProvider::on_window_resized()

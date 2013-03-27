@@ -763,8 +763,7 @@ GLXContext OpenGLWindowProvider::create_context_glx_1_3(const DisplayWindowDescr
 				4,0,
 				3,3,
 				3,2,
-				3,1,
-				3,0,
+				// Note, 3.1, and 3.0 are not supported. Using OpenGL 2 context instead
 				0,0,	// End of list
 			};
 
