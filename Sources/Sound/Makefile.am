@@ -1,56 +1,51 @@
 lib_LTLIBRARIES = libclan30Sound.la
 
 libclan30Sound_la_SOURCES = \
-SoundFilters/echofilter.cpp \
-SoundFilters/fadefilter.cpp \
-SoundFilters/inverse_echofilter.cpp \
-SoundFilters/echofilter_provider.h \
-SoundFilters/fadefilter_provider.h \
-SoundFilters/inverse_echofilter_provider.h \
-SoundFilters/echofilter_provider.cpp \
-SoundFilters/fadefilter_provider.cpp \
-SoundFilters/inverse_echofilter_provider.cpp \
-SoundProviders/soundprovider_factory.cpp \
+Mixer/sound_format_conversion.cpp \
+soundbuffer_session.cpp \
+sound.cpp \
 SoundProviders/soundprovider_raw.cpp \
-SoundProviders/soundprovider_raw_session.cpp \
-SoundProviders/soundprovider_type.cpp \
-SoundProviders/soundprovider_wave.cpp \
-SoundProviders/soundprovider_wave_session.cpp \
 SoundProviders/soundprovider_vorbis.cpp \
-SoundProviders/soundprovider_vorbis_session.cpp \
+SoundProviders/soundprovider_raw_session.cpp \
+SoundProviders/soundprovider_factory.cpp \
 SoundProviders/soundprovider.cpp \
 SoundProviders/soundprovider_session.cpp \
+SoundProviders/soundprovider_vorbis_session.cpp \
+SoundProviders/soundprovider_type.cpp \
+SoundProviders/soundprovider_wave_session.cpp \
+SoundProviders/soundprovider_wave.cpp \
+setupsound.cpp \
+precomp.cpp \
+soundoutput_impl.cpp \
+soundfilter.cpp \
+soundbuffer_impl.cpp \
+cd_drive.cpp \
+SoundFilters/inverse_echofilter.cpp \
+SoundFilters/echofilter.cpp \
+SoundFilters/fadefilter.cpp \
+SoundFilters/fadefilter_provider.cpp \
+SoundFilters/echofilter_provider.cpp \
+SoundFilters/inverse_echofilter_provider.cpp \
 AudioWorld/audio_cache.cpp \
-AudioWorld/audio_definition.cpp \
 AudioWorld/audio_object.cpp \
 AudioWorld/audio_world.cpp \
-cd_drive.cpp \
-precomp.cpp \
-resourcetype_sample.cpp \
-setupsound.cpp \
-sound.cpp \
-soundbuffer.cpp \
-soundbuffer_impl.cpp \
-soundbuffer_session.cpp \
+AudioWorld/audio_definition.cpp \
 soundbuffer_session_impl.cpp \
-soundfilter.cpp \
-soundoutput.cpp \
+soundbuffer.cpp \
 soundoutput_description.cpp \
-soundoutput_impl.cpp \
-sound_sse.cpp
+sound_sse.cpp \
+resourcetype_sample.cpp \
+soundoutput.cpp
 
 if WIN32
 libclan30Sound_la_SOURCES += \
-Win32/soundoutput_directsound.cpp \
-Win32/soundoutput_directsound.h
+Win32/soundoutput_win32.cpp
 else
 libclan30Sound_la_SOURCES += \
-Unix/soundoutput_oss.cpp \
-Unix/soundoutput_oss.h
+Unix/soundoutput_oss.cpp
 if ALSA
 libclan30Sound_la_SOURCES += \
-Unix/soundoutput_alsa.cpp \
-Unix/soundoutput_alsa.h
+Unix/soundoutput_alsa.cpp
 endif
 endif
 
