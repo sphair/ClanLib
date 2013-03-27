@@ -51,6 +51,6 @@ libclan30Network_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
   $(extra_LIBS_Network)
 
-libclan30Sound_la_CXXFLAGS=$(Network_CXXFLAGS) $(extra_CFLAGS_Network)
+libclan30Network_la_CXXFLAGS=$(Network_CXXFLAGS) $(extra_CFLAGS_Network)
 
 # EOF #
