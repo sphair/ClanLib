@@ -10,6 +10,7 @@ DIST_SUBDIRS = \
   GUI            \
   CSSLayout      \
   SWRender       \
+  GameIDE \
   Compute \
   Network        \
   Sound          \

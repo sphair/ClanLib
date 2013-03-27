@@ -563,7 +563,7 @@ fi
 if test "$enable_clanSqlite" != "no"; then
 	echo "Checking for clanSqlite stuff"
 	echo "==============================="
-	dnl CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3 -ldl])
+	CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3 -ldl])
 	echo ""
 fi
 
