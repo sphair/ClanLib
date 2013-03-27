@@ -31,13 +31,12 @@
 #include "GL/precomp.h"
 #include "opengl_target_provider.h"
 #if defined(__APPLE__)
-#include "GL3/AGL/gl3_window_provider_agl.h"
+#include "AGL/opengl_window_provider_agl.h"
 #elif defined(WIN32)
-#include "GL3/WGL/gl3_window_provider_wgl.h"
-#include "GL1/WGL/gl1_window_provider_wgl.h"
+#include "WGL/opengl_window_provider_wgl.h"
 #else
-#include "GL3/GLX/gl3_window_provider_glx.h"
-namespace clan { DisplayWindowProvider *newGL1WindowProvider(); } // #include "GL1/GLX/gl1_window_provider_glx.h"
+#include "GLX/opengl_window_provider_glx.h"
+namespace clan { DisplayWindowProvider *newOpenGLWindowProvider(); }
 #endif
 
 namespace clan
@@ -64,53 +63,9 @@ DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 {
 #if defined(__APPLE__)
 	// description not supported on AGL at the moment
-	return cl_alloc_display_window_agl();//new GL3WindowProvider;
-
+	return cl_alloc_display_window_agl();//new OpenGLWindowProvider;
 #else
-
-	int version_major = description.get_version_major();
-	int version_minor = description.get_version_minor();
-
-	// Do not attempt GL3, if not requested that version
-	if ((version_major < 3) || ((version_major == 3) && (version_minor < 2)))
-	{
-		#if defined(WIN32)
-			return new GL1WindowProvider();
-		#else
-			return newGL1WindowProvider();
-		#endif
-	}
-
-	// If we do not allow lower versions, only attempt GL3
-	if (!description.get_allow_lower_versions())
-	{
-		#if defined(WIN32)
-			return new GL3WindowProvider(description);
-		#else
-			return new GL3WindowProvider(description);
-		#endif
-	}
-
-	try
-	{
-		// Attempt GL3 first
-		#if defined(WIN32)
-			return new GL3WindowProvider(description);
-		#else
-			return new GL3WindowProvider(description);
-		#endif
-	}
-	catch (...)
-	{
-		// Then attempt GL1
-		#if defined(WIN32)
-			return new GL1WindowProvider();
-		#else
-			return newGL1WindowProvider();
-		#endif
-
-	}
-
+	return new OpenGLWindowProvider(description);
 #endif
 }
 

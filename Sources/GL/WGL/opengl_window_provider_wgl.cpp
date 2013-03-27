@@ -30,7 +30,7 @@
 */
 
 #include "GL/precomp.h"
-#include "gl3_window_provider_wgl.h"
+#include "opengl_window_provider_wgl.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/Window/display_window_description.h"
 #include "API/Display/display.h"
@@ -44,26 +44,26 @@
 #include "API/Core/Text/logger.h"
 #include "Display/Win32/cursor_provider_win32.h"
 #include "Display/Win32/dwm_functions.h"
-#include "../../opengl_window_description_impl.h"
-#include "../gl3_graphic_context_provider.h"
-#include "gl3_creation_helper.h"
+#include "../opengl_window_description_impl.h"
+#include "../GL3/gl3_graphic_context_provider.h"
+#include "opengl_creation_helper.h"
 #include <commctrl.h>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3WindowProvider Construction:
+// OpenGLWindowProvider Construction:
 
-GL3WindowProvider::GL3WindowProvider(OpenGLWindowDescription &opengl_desc)
+OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
   wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc)
 {
-	win32_window.func_on_resized().set(this, &GL3WindowProvider::on_window_resized);
+	win32_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
 }
 
-GL3WindowProvider::~GL3WindowProvider()
+OpenGLWindowProvider::~OpenGLWindowProvider()
 {
 	if (opengl_context)
 	{
@@ -98,89 +98,89 @@ GL3WindowProvider::~GL3WindowProvider()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3WindowProvider Attributes:
+// OpenGLWindowProvider Attributes:
 
-// std::list<HGLRC> GL3WindowProvider::opengl_contexts;
+// std::list<HGLRC> OpenGLWindowProvider::opengl_contexts;
 
-Rect GL3WindowProvider::get_geometry() const
+Rect OpenGLWindowProvider::get_geometry() const
 {
 	return win32_window.get_geometry();
 }
 
-Rect GL3WindowProvider::get_viewport() const
+Rect OpenGLWindowProvider::get_viewport() const
 {
 	return win32_window.get_viewport();
 }
 
-bool GL3WindowProvider::is_fullscreen() const
+bool OpenGLWindowProvider::is_fullscreen() const
 {
 	return fullscreen;
 }
 
-bool GL3WindowProvider::has_focus() const
+bool OpenGLWindowProvider::has_focus() const
 {
 	return win32_window.has_focus();
 }
 
-bool GL3WindowProvider::is_minimized() const
+bool OpenGLWindowProvider::is_minimized() const
 {
 	return win32_window.is_minimized();
 }
 
-bool GL3WindowProvider::is_maximized() const
+bool OpenGLWindowProvider::is_maximized() const
 {
 	return win32_window.is_maximized();
 }
 
-bool GL3WindowProvider::is_visible() const
+bool OpenGLWindowProvider::is_visible() const
 {
 	return win32_window.is_visible();
 }
 
-Size GL3WindowProvider::get_minimum_size(bool client_area) const
+Size OpenGLWindowProvider::get_minimum_size(bool client_area) const
 {
 	return win32_window.get_minimum_size(client_area);
 }
 
-Size GL3WindowProvider::get_maximum_size(bool client_area) const
+Size OpenGLWindowProvider::get_maximum_size(bool client_area) const
 {
 	return win32_window.get_maximum_size(client_area);
 }
 
-std::string GL3WindowProvider::get_title() const
+std::string OpenGLWindowProvider::get_title() const
 {
 	return win32_window.get_title();
 }
 
-bool GL3WindowProvider::is_clipboard_text_available() const
+bool OpenGLWindowProvider::is_clipboard_text_available() const
 {
 	return win32_window.is_clipboard_text_available();
 }
 
-bool GL3WindowProvider::is_clipboard_image_available() const
+bool OpenGLWindowProvider::is_clipboard_image_available() const
 {
 	return win32_window.is_clipboard_image_available();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3WindowProvider Operations:
+// OpenGLWindowProvider Operations:
 
-void GL3WindowProvider::make_current() const
+void OpenGLWindowProvider::make_current() const
 {
 	wglMakeCurrent(device_context, opengl_context);
 }
 
-Point GL3WindowProvider::client_to_screen(const Point &client)
+Point OpenGLWindowProvider::client_to_screen(const Point &client)
 {
 	return win32_window.client_to_screen(client);
 }
 
-Point GL3WindowProvider::screen_to_client(const Point &screen)
+Point OpenGLWindowProvider::screen_to_client(const Point &screen)
 {
 	return win32_window.screen_to_client(screen);
 }
 
-void GL3WindowProvider::create_shadow_window(HWND wnd)
+void OpenGLWindowProvider::create_shadow_window(HWND wnd)
 {
 	WINDOWINFO window_info;
 	memset(&window_info, 0, sizeof(WINDOWINFO));
@@ -205,7 +205,7 @@ void GL3WindowProvider::create_shadow_window(HWND wnd)
 	shadow_window = true;
 }
 
-void GL3WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
+void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
 	site = new_site;
 	fullscreen = desc.is_fullscreen();
@@ -296,7 +296,7 @@ void GL3WindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowD
 		wglSwapIntervalEXT(swap_interval);
 }
 
-void GL3WindowProvider::on_window_resized()
+void OpenGLWindowProvider::on_window_resized()
 {
 	if (shadow_window)
 	{
@@ -309,99 +309,99 @@ void GL3WindowProvider::on_window_resized()
 		((GL3GraphicContextProvider *) gc.get_provider())->on_window_resized();
 }
 
-void GL3WindowProvider::show_system_cursor()
+void OpenGLWindowProvider::show_system_cursor()
 {
 	win32_window.show_system_cursor();
 }
 
-CursorProvider *GL3WindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
+CursorProvider *OpenGLWindowProvider::create_cursor(const CursorDescription &cursor_description, const Point &hotspot)
 {
 	return new CursorProvider_Win32(cursor_description, hotspot);
 }
 
-void GL3WindowProvider::set_cursor(CursorProvider *cursor)
+void OpenGLWindowProvider::set_cursor(CursorProvider *cursor)
 {
 	win32_window.set_cursor(static_cast<CursorProvider_Win32 *>(cursor));
 }
 
-void GL3WindowProvider::set_cursor(StandardCursor type)
+void OpenGLWindowProvider::set_cursor(StandardCursor type)
 {
 	win32_window.set_cursor(type);
 }
 
-void GL3WindowProvider::set_cursor_handle(HCURSOR cursor)
+void OpenGLWindowProvider::set_cursor_handle(HCURSOR cursor)
 {
 	win32_window.set_cursor_handle(cursor);
 }
 
-void GL3WindowProvider::hide_system_cursor()
+void OpenGLWindowProvider::hide_system_cursor()
 {
 	win32_window.hide_system_cursor();
 }
 
-void GL3WindowProvider::set_title(const std::string &new_title)
+void OpenGLWindowProvider::set_title(const std::string &new_title)
 {
 	win32_window.set_title(new_title);
 }
 
-void GL3WindowProvider::set_position(const Rect &pos, bool client_area)
+void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
 {
 	win32_window.set_position(pos, client_area);
 }
 
-void GL3WindowProvider::set_size(int width, int height, bool client_area)
+void OpenGLWindowProvider::set_size(int width, int height, bool client_area)
 {
 	win32_window.set_size(width, height, client_area);
 }
 
-void GL3WindowProvider::set_minimum_size( int width, int height, bool client_area )
+void OpenGLWindowProvider::set_minimum_size( int width, int height, bool client_area )
 {
 	win32_window.set_minimum_size(width,height,client_area);
 }
 
-void GL3WindowProvider::set_maximum_size( int width, int height, bool client_area )
+void OpenGLWindowProvider::set_maximum_size( int width, int height, bool client_area )
 {
 	win32_window.set_maximum_size(width,height,client_area);
 }
 
-void GL3WindowProvider::set_enabled(bool enable)
+void OpenGLWindowProvider::set_enabled(bool enable)
 {
 	win32_window.set_enabled(enable);
 }
 
-void GL3WindowProvider::minimize()
+void OpenGLWindowProvider::minimize()
 {
 	win32_window.minimize();
 }
 
-void GL3WindowProvider::restore()
+void OpenGLWindowProvider::restore()
 {
 	win32_window.restore();
 }
 
-void GL3WindowProvider::maximize()
+void OpenGLWindowProvider::maximize()
 {
 	win32_window.maximize();
 }
 
-void GL3WindowProvider::show(bool activate)
+void OpenGLWindowProvider::show(bool activate)
 {
 	win32_window.show(activate);
 }
 
-void GL3WindowProvider::hide()
+void OpenGLWindowProvider::hide()
 {
 	win32_window.hide();
 }
 
-void GL3WindowProvider::bring_to_front()
+void OpenGLWindowProvider::bring_to_front()
 {
 	win32_window.bring_to_front();
 }
 
 
 
-void GL3WindowProvider::flip(int interval)
+void OpenGLWindowProvider::flip(int interval)
 {
 	OpenGL::set_active(get_gc());
 	glFlush();
@@ -464,7 +464,7 @@ void GL3WindowProvider::flip(int interval)
 	}
 }
 
-void GL3WindowProvider::update(const Rect &_rect)
+void OpenGLWindowProvider::update(const Rect &_rect)
 {
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
@@ -571,51 +571,51 @@ void GL3WindowProvider::update(const Rect &_rect)
 	}
 }
 
-void GL3WindowProvider::capture_mouse(bool capture)
+void OpenGLWindowProvider::capture_mouse(bool capture)
 {
 	win32_window.capture_mouse(capture);
 }
 
-void GL3WindowProvider::set_clipboard_text(const std::string &text)
+void OpenGLWindowProvider::set_clipboard_text(const std::string &text)
 {
 	win32_window.set_clipboard_text(text);
 }
 
-std::string GL3WindowProvider::get_clipboard_text() const
+std::string OpenGLWindowProvider::get_clipboard_text() const
 {
 	return win32_window.get_clipboard_text();
 }
 
-void GL3WindowProvider::request_repaint(const Rect &rect)
+void OpenGLWindowProvider::request_repaint(const Rect &rect)
 {
 	win32_window.request_repaint(rect);
 }
 
-void GL3WindowProvider::set_large_icon(const PixelBuffer &image)
+void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
 {
 	win32_window.set_large_icon(image);
 }
 
-void GL3WindowProvider::set_small_icon(const PixelBuffer &image)
+void OpenGLWindowProvider::set_small_icon(const PixelBuffer &image)
 {
 	win32_window.set_small_icon(image);
 }
 
-void GL3WindowProvider::enable_alpha_channel(const Rect &blur_rect)
+void OpenGLWindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
 	win32_window.enable_alpha_channel(blur_rect);
 }
 
-void GL3WindowProvider::extend_frame_into_client_area(int height)
+void OpenGLWindowProvider::extend_frame_into_client_area(int height)
 {
 	win32_window.extend_frame_into_client_area(height);
 }
 
 
 /////////////////////////////////////////////////////////////////////////////
-// GL3WindowProvider Implementation:
+// OpenGLWindowProvider Implementation:
 
-HGLRC GL3WindowProvider::get_share_context()
+HGLRC OpenGLWindowProvider::get_share_context()
 {
 	HGLRC share_context = 0;
 	std::unique_ptr<MutexSection> mutex_section;
@@ -626,7 +626,7 @@ HGLRC GL3WindowProvider::get_share_context()
 		if (gl_provider)
 		{
 			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
-			const GL3WindowProvider *render_window_wgl = dynamic_cast<const GL3WindowProvider*>(rwp);
+			const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(rwp);
 			if (render_window_wgl)
 				share_context = render_window_wgl->opengl_context;
 		}
@@ -634,12 +634,12 @@ HGLRC GL3WindowProvider::get_share_context()
 	return share_context;
 }
 
-void GL3WindowProvider::set_clipboard_image( const PixelBuffer &buf )
+void OpenGLWindowProvider::set_clipboard_image( const PixelBuffer &buf )
 {
 	win32_window.set_clipboard_image(buf);
 }
 
-PixelBuffer GL3WindowProvider::get_clipboard_image() const
+PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 {
 	return win32_window.get_clipboard_image();
 }

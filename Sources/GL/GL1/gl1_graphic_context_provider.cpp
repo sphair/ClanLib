@@ -58,9 +58,9 @@
 #include "Display/2D/render_batch_triangle.h"
 
 #ifdef WIN32
-#include "WGL/gl1_window_provider_wgl.h"
+#include "../WGL/opengl_window_provider_wgl.h"
 #else
-#include "GLX/gl1_window_provider_glx.h"
+#include "../GLX/opengl_window_provider_glx.h"
 #endif
 
 namespace clan
@@ -77,7 +77,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Construction:
 
-GL1GraphicContextProvider::GL1GraphicContextProvider(const GL1WindowProvider * const render_window)
+GL1GraphicContextProvider::GL1GraphicContextProvider(const OpenGLWindowProvider * const render_window)
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false)

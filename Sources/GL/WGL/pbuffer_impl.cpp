@@ -30,10 +30,10 @@
 #include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl.h"
 #include "pbuffer_impl.h"
-#include "../gl1_graphic_context_provider.h"
+#include "../GL1/gl1_graphic_context_provider.h"
 #include "API/Display/Render/shared_gc_data.h"
-#include "gl1_window_provider_wgl.h"
 #include "API/Display/Window/input_context.h"
+#include "opengl_window_provider_wgl.h"
 
 namespace clan
 {
@@ -68,7 +68,7 @@ void PBuffer_GL1_Impl::reset()
 	pbuffer = 0;
 }
 
-void PBuffer_GL1_Impl::create(GL1WindowProvider &window_provider, const Size &size)
+void PBuffer_GL1_Impl::create(OpenGLWindowProvider &window_provider, const Size &size)
 {
 	reset();
 

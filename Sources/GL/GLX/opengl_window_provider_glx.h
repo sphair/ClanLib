@@ -35,8 +35,7 @@
 #include "API/Display/Window/input_context.h"
 #include "Display/X11/x11_window.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/GL/opengl_wrap.h"
+#include "API/GL/opengl_window_description.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -46,21 +45,23 @@
 
 #include <GL/glx.h>
 
+#include "API/GL/opengl_wrap.h"
+
 namespace clan
 {
 
 
 typedef int (*ptr_glXSwapIntervalSGI)(int interval);
 typedef int (*ptr_glXSwapIntervalMESA)(int interval);
+typedef GLXContext (*ptr_glXCreateContextAttribs)(::Display *dpy, GLXFBConfig config, GLXContext share_list, Bool direct, const int *attrib_list);
 
-class GL1WindowProvider;
-class GL1GraphicContextProvider;
-
-class GL3WindowProvider;
+class OpenGLWindowProvider;
+class OpenGLWindowDescription;
+class DisplayWindowDescription;
 
 #define GL_USE_DLOPEN		// Using dlopen for linux by default
 
-class GL1_GLXFunctions
+class GL_GLXFunctions
 {
 public:
 	typedef XVisualInfo* (GLFUNC *ptr_glXChooseVisual)(::Display *dpy, int screen, int *attrib_list);
@@ -105,12 +106,6 @@ public:
 	typedef __GLXextFuncPtr (GLFUNC *ptr_glXGetProcAddress) (const GLubyte *);
 	typedef void (*(GLFUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
 
-	typedef GLXPbuffer (*ptr_glXCreatePbufferSGIX)(
-		::Display *dpy,
-		GLXFBConfig config,
-		unsigned int width,
-		unsigned int height,
-		int *attrib_list);
 
 public:
 	ptr_glXChooseVisual glXChooseVisual;
@@ -154,22 +149,17 @@ public:
 	ptr_glXGetProcAddress glXGetProcAddress;
 	ptr_glXGetProcAddressARB glXGetProcAddressARB;
 
-	bool glx_1_3;
-	ptr_glXCreatePbufferSGIX glXCreatePbufferSGIX;
-	ptr_glXDestroyPbuffer glXDestroyPbufferSGIX;
-	ptr_glXChooseFBConfig glXChooseFBConfigSGIX; 
-	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
 };
 
-class GL1WindowProvider : public DisplayWindowProvider
+class OpenGLWindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	GL1WindowProvider();
+	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
 
-	~GL1WindowProvider();
+	~OpenGLWindowProvider();
 
 
 /// \}
@@ -191,13 +181,13 @@ public:
 
 	bool is_visible() const {return x11_window.is_visible();}
 
-	std::string get_title() const { return x11_window.get_title(); }
-	Size get_minimum_size(bool client_area) const { return x11_window.get_minimum_size(client_area); }
-	Size get_maximum_size(bool client_area) const { return x11_window.get_maximum_size(client_area); }
-
 	bool is_clipboard_text_available() const { return x11_window.is_clipboard_text_available(); }
 
 	bool is_clipboard_image_available() const { return x11_window.is_clipboard_image_available(); }
+
+	std::string get_title() const { return x11_window.get_title(); }
+	Size get_minimum_size(bool client_area) const { return x11_window.get_minimum_size(client_area); }
+	Size get_maximum_size(bool client_area) const { return x11_window.get_maximum_size(client_area); }
 
 	std::string get_clipboard_text() const { return x11_window.get_clipboard_text(); }
 
@@ -218,15 +208,15 @@ public:
 
 	GraphicContext gc;
 
-	GL1_GLXFunctions glx;
+	GL_GLXFunctions glx;
+
+	ProcAddress *get_proc_address(const std::string& function_name) const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	ProcAddress *get_proc_address(const std::string& function_name) const;
-
 	void make_current() const;
 	void destroy() { delete this; }
 	Point client_to_screen(const Point &client) { return x11_window.client_to_screen(client); }
@@ -280,7 +270,7 @@ public:
 
 	void process_messages();
 
-	GLXContext create_context();
+	GLXContext create_context(const DisplayWindowDescription &desc);
 
 	/// \brief Check for window messages
 	/** \return true when there is a message*/
@@ -291,8 +281,6 @@ public:
 	void set_clipboard_image(const PixelBuffer &buf) { x11_window.set_clipboard_image(buf); }
 
 	void request_repaint(const Rect &rect) { x11_window.request_repaint(rect); }
-
-	GLXContext get_share_context();
 
 	void set_large_icon(const PixelBuffer &image);
 	void set_small_icon(const PixelBuffer &image);
@@ -306,11 +294,19 @@ public:
 
 private:
 
+	bool on_clicked(XButtonEvent &event);
+
+	GLXContext create_context_glx_1_3(const DisplayWindowDescription &desc, GLXContext shared_context);
+	GLXContext create_context_glx_1_2(const DisplayWindowDescription &desc, GLXContext shared_context);
+	void create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
+	void create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
+	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
+
 	void on_window_resized();
 
 	bool is_glx_extension_supported(const char *ext_name);
 
-	void setup_extension_pointers();
+	void setup_swap_interval_pointers();
 
 	X11Window x11_window;
 
@@ -323,16 +319,19 @@ private:
 
 	ptr_glXSwapIntervalSGI glXSwapIntervalSGI;
 	ptr_glXSwapIntervalMESA glXSwapIntervalMESA;
-
 	int swap_interval;
+
+	GLXFBConfig fbconfig;
 
 #ifdef GL_USE_DLOPEN
 	void *opengl_lib_handle;
 #endif
-
+	bool glx_1_3;
+	OpenGLWindowDescription opengl_desc;
 /// \}
 };
 
-
 }
+
+
 

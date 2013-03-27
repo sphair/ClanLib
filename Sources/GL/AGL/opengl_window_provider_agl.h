@@ -36,7 +36,7 @@
 
 namespace clan
 {
-class GL3WindowProvider;
+class OpenGLWindowProvider;
     
 void cl_agl_make_none_current();
 DisplayWindowProvider *cl_alloc_display_window_agl();
@@ -54,15 +54,15 @@ void cl_set_default_frame_buffer(DisplayWindowProvider *provider);
 namespace clan
 {
 
-class GL3WindowProvider;
+class OpenGLWindowProvider;
 
-class GL3WindowProvider : public DisplayWindowProvider
+class OpenGLWindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 public:
-	GL3WindowProvider();
-	~GL3WindowProvider();
+	OpenGLWindowProvider();
+	~OpenGLWindowProvider();
 /// \}
     
 /// \name Attributes

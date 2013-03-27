@@ -36,14 +36,11 @@ libclan30GL_la_SOURCES = \
 
 if WIN32
 libclan30GL_la_SOURCES += \
-	GL1/WGL/gl1_creation_helper.cpp \
-	GL1/WGL/gl1_window_provider_wgl.cpp \
-	GL3/WGL/gl3_creation_helper.cpp \
-	GL3/WGL/gl3_window_provider_wgl.cpp
+	WGL/opengl_creation_helper.cpp \
+	WGL/opengl_window_provider_wgl.cpp
 else
 libclan30GL_la_SOURCES += \
-	GL3/GLX/gl3_window_provider_glx.cpp \
-	GL1/GLX/gl1_window_provider_glx.cpp
+	GLX/opengl_window_provider_glx.cpp
 endif
 libclan30GL_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \

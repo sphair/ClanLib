@@ -30,29 +30,28 @@
 
 #pragma once
 
-
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
 #include "Display/Win32/win32_window.h"
 #include <memory>
+#include "API/GL/opengl_window_description.h"
 
 namespace clan
 {
 
 typedef BOOL (APIENTRY *ptr_wglSwapIntervalEXT)(int interval);
 
-class GL1WindowProvider;
-class GL1GraphicContextProvider;
+class OpenGLWindowDescription;
 
-class GL1WindowProvider : public DisplayWindowProvider
+class OpenGLWindowProvider : public DisplayWindowProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	GL1WindowProvider();
-	~GL1WindowProvider();
+	OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc);
+	~OpenGLWindowProvider();
 
 
 /// \}
@@ -60,6 +59,7 @@ public:
 /// \{
 
 public:
+
 	Rect get_geometry() const;
 	Rect get_viewport() const;
 	bool is_fullscreen() const;
@@ -159,6 +159,9 @@ private:
 
 	ptr_wglSwapIntervalEXT wglSwapIntervalEXT;
 	int swap_interval;
+
+	OpenGLWindowDescription opengl_desc;
+
 /// \}
 };
 
