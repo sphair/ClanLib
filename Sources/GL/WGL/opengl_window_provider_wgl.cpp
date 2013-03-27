@@ -59,7 +59,7 @@ namespace clan
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
-  wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc)
+  wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
 {
 	win32_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
 }
@@ -320,10 +320,12 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 		if (use_gl3)
 		{
+			using_gl3 = true;
 			gc = GraphicContext(new GL3GraphicContextProvider(this));
 		}
 		else
 		{
+			using_gl3 = false;
 			gc = GraphicContext(new GL1GraphicContextProvider(this));
 		}
 	}
@@ -348,6 +350,7 @@ void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_m
 		version_major = StringHelp::text_to_int(split_version[0]);
 	if(split_version.size() > 1)
 		version_minor = StringHelp::text_to_int(split_version[1]);
+	version_major = 1;
 }
 
 void OpenGLWindowProvider::on_window_resized()
@@ -453,35 +456,80 @@ void OpenGLWindowProvider::bring_to_front()
 	win32_window.bring_to_front();
 }
 
-
-
 void OpenGLWindowProvider::flip(int interval)
 {
 	OpenGL::set_active(get_gc());
 	glFlush();
-
 	if (shadow_window)
 	{
 		int width = get_viewport().get_width();
 		int height = get_viewport().get_height();
 
-		//glReadBuffer(GL_BACK);
-		glDrawBuffer(GL_BACK);
-		glReadBuffer(GL_FRONT);
+		if (using_gl3)
+		{
+			//glReadBuffer(GL_BACK);
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_FRONT);
 
-		PixelBuffer pixelbuffer(width, height, tf_rgba8);
-		glPixelStorei(GL_PACK_ALIGNMENT, 1);
-		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
-		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
-		glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-		glReadPixels(
-			0, 0,
-			width, height,
-			GL_RGBA,
-			GL_UNSIGNED_BYTE,
-			pixelbuffer.get_data());
+			PixelBuffer pixelbuffer(width, height, tf_rgba8);
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+			glReadPixels(
+				0, 0,
+				width, height,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				pixelbuffer.get_data());
 
-		win32_window.update_layered(pixelbuffer);
+			win32_window.update_layered(pixelbuffer);
+		}
+		else
+		{
+			GLint old_viewport[4], old_matrix_mode;
+			GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+			glGetIntegerv(GL_VIEWPORT, old_viewport);
+			glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+			glGetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+			glGetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+			GLboolean blending = glIsEnabled(GL_BLEND);
+			glDisable(GL_BLEND);
+
+			glViewport(0, 0, width, height);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			glReadBuffer(GL_BACK);
+			glRasterPos2i(0, 0);
+			glPixelZoom(1.0f, 1.0f);
+
+			PixelBuffer pixelbuffer(width, height, tf_rgba8);
+			glPixelStorei(GL_PACK_ALIGNMENT, 1);
+			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
+			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+			glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+			glReadPixels(
+				0, 0,
+				width, height,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				pixelbuffer.get_data());
+
+			win32_window.update_layered(pixelbuffer);
+
+			if (blending)
+				glEnable(GL_BLEND);
+			glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+			glMatrixMode(GL_PROJECTION);
+			glLoadMatrixf(old_matrix_projection);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadMatrixf(old_matrix_modelview);
+			glMatrixMode(old_matrix_mode);
+		}
 	}
 	else
 	{
@@ -520,6 +568,48 @@ void OpenGLWindowProvider::flip(int interval)
 
 void OpenGLWindowProvider::update(const Rect &_rect)
 {
+
+	OpenGL::set_active(gc);
+	glFlush();
+	if (using_gl3)
+	{
+		update_helper(_rect);
+	}
+	else
+	{
+		int width = get_viewport().get_width();
+		int height = get_viewport().get_height();
+		GLint old_viewport[4], old_matrix_mode;
+		GLfloat old_matrix_projection[16], old_matrix_modelview[16];
+		glGetIntegerv(GL_VIEWPORT, old_viewport);
+		glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+		glGetFloatv(GL_PROJECTION_MATRIX, old_matrix_projection);
+		glGetFloatv(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+		GLboolean blending = glIsEnabled(GL_BLEND);
+		glDisable(GL_BLEND);
+
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMultMatrixf(Mat4f::ortho_2d(0.0f, (float)width, 0.0f, (float)height, handed_right, clip_negative_positive_w));
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		update_helper(_rect);
+
+		if (blending)
+			glEnable(GL_BLEND);
+		glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixf(old_matrix_projection);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(old_matrix_modelview);
+		glMatrixMode(old_matrix_mode);
+	}
+}
+
+void OpenGLWindowProvider::update_helper(const Rect &_rect)
+{
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
 
@@ -534,9 +624,6 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 		rect.bottom = height;
 	if (rect.right <= rect.left || rect.bottom <= rect.top)
 		return;
-
-	OpenGL::set_active(gc);
-	glFlush();
 
 	if (shadow_window)
 	{

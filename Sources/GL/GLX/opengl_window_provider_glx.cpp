@@ -73,7 +73,7 @@ namespace clan
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : x11_window(),
- opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1), opengl_desc(opengl_desc)
+ opengl_context(0), opengl_visual_info(0), glXSwapIntervalSGI(NULL), glXSwapIntervalMESA(NULL), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
 #ifdef GL_USE_DLOPEN
 , opengl_lib_handle(NULL)
 #endif
@@ -287,10 +287,12 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 		if (use_gl3)
 		{
+			using_gl3 = true;
 			gc = GraphicContext(new GL3GraphicContextProvider(this));
 		}
 		else
 		{
+			using_gl3 = false;
 			gc = GraphicContext(new GL1GraphicContextProvider(this));
 		}
 	}
@@ -806,6 +808,42 @@ void OpenGLWindowProvider::flip(int interval)
 
 void OpenGLWindowProvider::update(const Rect &_rect)
 {
+	OpenGL::set_active(gc);
+	glFlush();
+	if (using_gl3)
+	{
+		update_helper(_rect);
+	}
+	else
+	{
+		GLint old_viewport[4], old_matrix_mode;
+		GLdouble old_matrix_projection[16], old_matrix_modelview[16];
+		glGetIntegerv(GL_VIEWPORT, old_viewport);
+		glGetIntegerv(GL_MATRIX_MODE, &old_matrix_mode);
+		glGetDoublev(GL_PROJECTION_MATRIX, old_matrix_projection);
+		glGetDoublev(GL_MODELVIEW_MATRIX, old_matrix_modelview);
+
+		glViewport(0, 0, width, height);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMultMatrixf(Mat4f::ortho_2d(0.0, width, 0.0, height, handed_right, clip_negative_positive_w));
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
+		update_helper(_rect);
+
+		glViewport(old_viewport[0], old_viewport[1], old_viewport[2], old_viewport[3]);
+		glMatrixMode(GL_PROJECTION);
+		glLoadMatrixd(old_matrix_projection);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixd(old_matrix_modelview);
+		glMatrixMode(old_matrix_mode);
+
+	}
+}
+
+void OpenGLWindowProvider::update_helper(const Rect &_rect)
+{
 	int width = get_viewport().get_width();
 	int height = get_viewport().get_height();
 
@@ -820,9 +858,6 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 		rect.bottom = height;
 	if (rect.right <= rect.left || rect.bottom <= rect.top)
 		return;
-
-	OpenGL::set_active(gc);
-	glFlush();
 
 	GLboolean isDoubleBuffered = GL_TRUE;
 	glGetBooleanv(GL_DOUBLEBUFFER, &isDoubleBuffered);
