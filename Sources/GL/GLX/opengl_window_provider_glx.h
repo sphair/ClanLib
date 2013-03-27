@@ -302,6 +302,7 @@ private:
 	void create_glx_1_2(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp);
 	GLXContext create_context_glx_1_3_helper(GLXContext shared_context, int major_version, int minor_version, const DisplayWindowDescription &desc, ptr_glXCreateContextAttribs glXCreateContextAttribs);
 	void get_opengl_version(int &version_major, int &version_minor);
+	void update_helper(const Rect &_rect);
 
 	void on_window_resized();
 
@@ -329,6 +330,8 @@ private:
 #endif
 	bool glx_1_3;
 	OpenGLWindowDescription opengl_desc;
+	bool using_gl3;
+
 /// \}
 };
 
