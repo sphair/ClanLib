@@ -24,18 +24,18 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Mark Page
 */
 
 #include "GL/precomp.h"
-#include "gl1_creation_helper.h"
+#include "opengl_creation_helper.h"
+#include "../opengl_window_description_impl.h"
+#include "API/GL/opengl_window_description.h"
 #include <commctrl.h>
-#include "API/Display/Window/display_window_description.h"
 
 namespace clan
 {
 
-GL1CreationHelper::GL1CreationHelper(HWND window, HDC hdc)
+OpenGLCreationHelper::OpenGLCreationHelper(HWND window, HDC hdc)
 : window(window), hdc(hdc), query_window(0), query_dc(0), query_context(0)
 {
 	WINDOWINFO window_info;
@@ -82,14 +82,14 @@ GL1CreationHelper::GL1CreationHelper(HWND window, HDC hdc)
 	}
 }
 
-GL1CreationHelper::~GL1CreationHelper()
+OpenGLCreationHelper::~OpenGLCreationHelper()
 {
 	wglDeleteContext(query_context);
 	DeleteDC(query_dc);
 	DestroyWindow(query_window);
 }
 
-void GL1CreationHelper::set_multisampling_pixel_format(const DisplayWindowDescription &desc)
+void OpenGLCreationHelper::set_multisampling_pixel_format(const DisplayWindowDescription &desc)
 {
 	PIXELFORMATDESCRIPTOR pfd;
 	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
@@ -139,6 +139,7 @@ void GL1CreationHelper::set_multisampling_pixel_format(const DisplayWindowDescri
 			int_attributes.push_back(WGL_DOUBLE_BUFFER);
 			int_attributes.push_back(GL_TRUE);
 
+
 			int_attributes.push_back(WGL_COLOR_BITS);
 			int_attributes.push_back(4+4+4);
 
@@ -171,11 +172,10 @@ void GL1CreationHelper::set_multisampling_pixel_format(const DisplayWindowDescri
 	}
 }
 
-HGLRC GL1CreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version)
+HGLRC OpenGLCreationHelper::create_opengl3_context(HGLRC share_context, int major_version, int minor_version, const OpenGLWindowDescription &gldesc)
 {
 	set_active();
 	ptr_wglCreateContextAttribsARB wglCreateContextAttribsARB = (ptr_wglCreateContextAttribsARB) wglGetProcAddress("wglCreateContextAttribsARB");
-	reset_active();
 
 	HGLRC opengl3_context = 0;
 	if (wglCreateContextAttribsARB)
@@ -186,20 +186,37 @@ HGLRC GL1CreationHelper::create_opengl3_context(HGLRC share_context, int major_v
 		int_attributes.push_back(major_version);
 		int_attributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
 		int_attributes.push_back(minor_version);
-		//int_attributes.push_back(WGL_CONTEXT_LAYER_PLANE_ARB);
-		//int_attributes.push_back(layer_plane);
-		//int_attributes.push_back(WGL_CONTEXT_FLAGS_ARB);
-		//int_attributes.push_back(flags);
-		//int_attributes.push_back(WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB);
-		//int_attributes.push_back(forward_compatible_bit);
+
+		int_attributes.push_back(0x2093);	// WGL_CONTEXT_LAYER_PLANE_ARB
+		int_attributes.push_back(gldesc.get_layer_plane());
+		int_attributes.push_back(0x2094);	// WGL_CONTEXT_FLAGS_ARB
+		int flags = 0;
+		if (gldesc.get_debug())
+			flags |= 0x1;	// WGL_CONTEXT_DEBUG_BIT_ARB
+		if (gldesc.get_forward_compatible())	// WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+			flags |= 0x2;	
+		int_attributes.push_back(flags);
+
+		int_attributes.push_back(0x9126);	// WGL_CONTEXT_PROFILE_MASK_ARB
+		flags = 0;
+		if (gldesc.get_core_profile())
+			flags |= 0x1;	// WGL_CONTEXT_CORE_PROFILE_BIT_ARB
+
+		if (gldesc.get_compatibility_profile())	// WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
+			flags |= 0x2;	
+		int_attributes.push_back(flags);
+
 		int_attributes.push_back(0);
 
 		opengl3_context = wglCreateContextAttribsARB(hdc, share_context, &int_attributes[0]);
 	}
+
+	reset_active();
+
 	return opengl3_context;
 }
 
-HGLRC GL1CreationHelper::create_opengl2_context(HGLRC share_context)
+HGLRC OpenGLCreationHelper::create_opengl2_context(HGLRC share_context)
 {
 	HGLRC opengl2_context = wglCreateContext(hdc);
 	if (opengl2_context)
@@ -207,13 +224,13 @@ HGLRC GL1CreationHelper::create_opengl2_context(HGLRC share_context)
 	return opengl2_context;
 }
 
-void GL1CreationHelper::set_active()
+void OpenGLCreationHelper::set_active()
 {
 	OpenGL::set_active(0);
 	wglMakeCurrent(query_dc, query_context);
 }
 
-void GL1CreationHelper::reset_active()
+void OpenGLCreationHelper::reset_active()
 {
 	wglMakeCurrent(0, 0);
 }

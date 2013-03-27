@@ -66,13 +66,13 @@
 #include "API/GL/opengl_window_description.h"
 #ifdef __APPLE__
 #include <CoreFoundation/CoreFoundation.h>
-#include "AGL/gl3_window_provider_agl.h"
+#include "../AGL/opengl_window_provider_agl.h"
 #elif !defined(WIN32)
-#include "GLX/gl3_window_provider_glx.h"
+#include "../GLX/opengl_window_provider_glx.h"
 #endif
 
 #ifdef WIN32
-#include "WGL/gl3_window_provider_wgl.h"
+#include "../WGL/opengl_window_provider_wgl.h"
 #endif
 
 #include <memory>
@@ -83,7 +83,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Construction:
 
-GL3GraphicContextProvider::GL3GraphicContextProvider(const GL3WindowProvider * const render_window)
+GL3GraphicContextProvider::GL3GraphicContextProvider(const OpenGLWindowProvider * const render_window)
 : render_window(render_window), framebuffer_bound(false), opengl_version_major(0), shader_version_major(0), scissor_enabled(false)
 {
 	check_opengl_version();

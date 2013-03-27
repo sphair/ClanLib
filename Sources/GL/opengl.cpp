@@ -48,7 +48,7 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
-#include "AGL/gl3_window_provider_agl.h"
+#include "AGL/opengl_window_provider_agl.h"
 #else
 #include <GL/gl.h>
 #endif
@@ -258,7 +258,7 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 			0));
 #else
 
-	const GL3WindowProvider *wptr = dynamic_cast<const GL3WindowProvider *> (render_window);
+	const OpenGLWindowProvider *wptr = dynamic_cast<const OpenGLWindowProvider *> (render_window);
 	if (wptr == NULL)
 		return NULL;
 

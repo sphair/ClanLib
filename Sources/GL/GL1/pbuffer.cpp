@@ -29,9 +29,9 @@
 #include "GL/precomp.h"
 
 #ifdef WIN32
-#include "WGL/pbuffer_impl.h"
+#include "../WGL/pbuffer_impl.h"
 #else
-#include "GLX/pbuffer_impl.h"
+#include "../GLX/pbuffer_impl.h"
 #endif
 #include "pbuffer.h"
 
@@ -52,7 +52,7 @@ PBuffer_GL1::~PBuffer_GL1()
 {
 }
 
-void PBuffer_GL1::create(GL1WindowProvider &window_provider, Size &size)
+void PBuffer_GL1::create(OpenGLWindowProvider &window_provider, Size &size)
 {
 	impl->create(window_provider, size);
 	set_active();

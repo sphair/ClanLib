@@ -69,9 +69,9 @@ public:
 
 private:
 #ifdef WIN32
-	friend class GL3WindowProvider;
+	friend class OpenGLWindowProvider;
 #else
-	friend class GL3WindowProvider;
+	friend class OpenGLWindowProvider;
 #endif
 	OpenGLWindowDescription description;
 

@@ -55,7 +55,7 @@ class RenderBufferProvider;
 class GL3FrameBufferProvider;
 class DisposableObject;
 class OpenGLWindowDescription;
-class GL3WindowProvider;
+class OpenGLWindowProvider;
 
 class GL3RasterizerStateProvider : public RasterizerStateProvider
 {
@@ -84,7 +84,7 @@ class GL3GraphicContextProvider : public OpenGLGraphicContextProvider,  public G
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL3GraphicContextProvider(const GL3WindowProvider * const render_window);
+	GL3GraphicContextProvider(const OpenGLWindowProvider * const render_window);
 
 	~GL3GraphicContextProvider();
 
@@ -215,7 +215,7 @@ private:
 	void check_opengl_version();
 	void calculate_shading_language_version();
 	/// \brief OpenGL render window.
-	const GL3WindowProvider * const render_window;
+	const OpenGLWindowProvider * const render_window;
 
 	bool framebuffer_bound;
 

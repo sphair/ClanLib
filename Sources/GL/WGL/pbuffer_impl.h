@@ -29,13 +29,13 @@
 #pragma once
 
 #include "API/GL/opengl_wrap.h"
-#include "../../opengl_graphic_context_provider.h"
+#include "../opengl_graphic_context_provider.h"
 
 namespace clan
 {
 
 class GL1GraphicContextProvider;
-class GL1WindowProvider;
+class OpenGLWindowProvider;
 
 class PBuffer_GL1_Impl : public OpenGLGraphicContextProvider
 {
@@ -51,7 +51,7 @@ public:
 	void get_opengl_version(int &version_major, int &version_minor);
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
-	void create(GL1WindowProvider &window_provider, const Size &size);
+	void create(OpenGLWindowProvider &window_provider, const Size &size);
 
 private:
 	void reset();

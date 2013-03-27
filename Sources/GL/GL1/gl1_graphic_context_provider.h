@@ -57,7 +57,7 @@ class GL1TextureProvider;
 class GL1SelectedTexture;
 class DisposableObject;
 class GL1ProgramObjectProvider;
-class GL1WindowProvider;
+class OpenGLWindowProvider;
 
 class GL1RasterizerStateProvider : public RasterizerStateProvider
 {
@@ -86,7 +86,7 @@ class GL1GraphicContextProvider : public OpenGLGraphicContextProvider,  public G
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL1GraphicContextProvider(const GL1WindowProvider * const render_window);
+	GL1GraphicContextProvider(const OpenGLWindowProvider * const render_window);
 	~GL1GraphicContextProvider();
 
 /// \}
@@ -207,7 +207,7 @@ private:
 	void reset_primitive_texture_all();
 
 	/// \brief OpenGL render window.
-	const GL1WindowProvider * const render_window;
+	const OpenGLWindowProvider * const render_window;
 
 	bool prim_arrays_set;
 
