@@ -337,7 +337,8 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_minor)
 {
 	make_current();
-	std::string version = (char*)glGetString(GL_VERSION);
+#undef glGetString
+	std::string version = (char*)::glGetString(GL_VERSION);
 
 	version_major = 0;
 	version_minor = 0;
