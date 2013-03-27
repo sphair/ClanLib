@@ -142,6 +142,7 @@ private:
 	static BOOL CALLBACK enum_windows_callback_restore(HWND hwnd, LPARAM lParam);
 	void create_shadow_window(HWND wnd);
 	void on_window_resized();
+	void get_opengl_version(int &version_major, int &version_minor);
 
 	GraphicContext gc;
 	Win32Window win32_window;

@@ -47,6 +47,7 @@
 #include "GL/opengl_graphic_context_provider.h"
 #include "GL/opengl_target_provider.h"
 #include "GL/GL3/gl3_graphic_context_provider.h"
+#include "GL/GL1/gl1_graphic_context_provider.h"
 #include <cstdio>
 
 #ifdef GL_USE_DLOPEN
@@ -253,7 +254,45 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 	if (create_provider_flag)
 	{
-		gc = GraphicContext(new GL3GraphicContextProvider(this));
+
+		bool use_gl3;
+		int desc_version_major = opengl_desc.get_version_major();
+		int desc_version_minor = opengl_desc.get_version_minor();
+
+		// Do not attempt GL3, if not requested that version
+		if ((desc_version_major < 3) || ((desc_version_major == 3) && (desc_version_minor < 2)))
+		{
+			use_gl3 = false;
+		}
+		else if (!opengl_desc.get_allow_lower_versions())	// If we do not allow lower versions, only attempt GL3
+		{
+			use_gl3 = true;
+		}
+		else
+		{
+			// Choose the target depending on the current opengl version
+			int gl_version_major;
+			int gl_version_minor;
+			get_opengl_version(gl_version_major, gl_version_minor);
+			if ((gl_version_major < 3) || ((gl_version_major == 3) && (gl_version_minor < 2)))
+			{
+				use_gl3 = false;
+			}
+			else
+			{
+				use_gl3 = true;
+			}
+
+		}
+
+		if (use_gl3)
+		{
+			gc = GraphicContext(new GL3GraphicContextProvider(this));
+		}
+		else
+		{
+			gc = GraphicContext(new GL1GraphicContextProvider(this));
+		}
 	}
 
 	setup_swap_interval_pointers();
@@ -269,6 +308,22 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 			glXSwapIntervalMESA(swap_interval);
 		}
 	}
+}
+
+void OpenGLWindowProvider::get_opengl_version(int &version_major, int &version_minor)
+{
+	make_current();
+	std::string version = (char*)glGetString(GL_VERSION);
+
+	version_major = 0;
+	version_minor = 0;
+    
+	std::vector<std::string> split_version = StringHelp::split_text(version, ".");
+	if(split_version.size() > 0)
+		version_major = StringHelp::text_to_int(split_version[0]);
+	if(split_version.size() > 1)
+		version_minor = StringHelp::text_to_int(split_version[1]);
+
 }
 
 void OpenGLWindowProvider::create_glx_1_3(DisplayWindowSite *new_site, const DisplayWindowDescription &desc, ::Display *disp)
