@@ -1,7 +1,6 @@
 lib_LTLIBRARIES = libclan30SWRender.la
 
-libclan30SWRender_la_SOURCES = precomp.cpp \
-
+libclan30SWRender_la_SOURCES = precomp.cpp
 if DISABLE_SSE2
 libclan30SWRender_la_SOURCES += \
 X11/Stub/setup_swrender.cpp \
@@ -36,7 +35,6 @@ Canvas/Commands/pixel_command_set_sampler.cpp \
 Canvas/Commands/pixel_command_set_blendfunc.cpp \
 Canvas/Commands/pixel_command_clear.cpp \
 swr_target_provider.cpp \
-precomp.cpp \
 swr_element_array_buffer_provider.cpp \
 swr_program_object.cpp \
 swr_shader_object_provider.cpp \
@@ -50,6 +48,7 @@ swr_frame_buffer_provider.cpp \
 swr_display_window_provider.cpp \
 swr_program_object_provider.cpp \
 swr_texture_provider.cpp
+
 endif
 
 libclan30SWRender_la_LDFLAGS = \
