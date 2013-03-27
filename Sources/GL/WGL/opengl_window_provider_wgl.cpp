@@ -70,9 +70,18 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 	{
 		if (!gc.is_null())
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
-			if (gl_provider)
-				gl_provider->dispose();
+			if (using_gl3)
+			{
+				GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+				if (gl_provider)
+					gl_provider->dispose();
+			}
+			else
+			{
+				GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+				if (gl_provider)
+					gl_provider->dispose();
+			}
 		}
 
 		// Delete the context
@@ -361,8 +370,19 @@ void OpenGLWindowProvider::on_window_resized()
 		SetWindowPos(hwnd, 0, 0, 0, rect.right, rect.bottom, SWP_NOREPOSITION|SWP_NOZORDER);
 	}
 
-	if (gc.get_provider())
-		((GL3GraphicContextProvider *) gc.get_provider())->on_window_resized();
+	if (using_gl3)
+	{
+		GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc.get_provider());
+		if (gl_provider)
+			gl_provider->on_window_resized();
+	}
+	else
+	{
+		GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc.get_provider());
+		if (gl_provider)
+			gl_provider->on_window_resized();
+	}
+
 }
 
 void OpenGLWindowProvider::show_system_cursor()
@@ -762,10 +782,23 @@ HGLRC OpenGLWindowProvider::get_share_context()
 	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
 	if (gc_providers)
 	{
-		GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
-		if (gl_provider)
+		const DisplayWindowProvider *rwp = NULL;
+
+		if (using_gl3)
 		{
-			const DisplayWindowProvider *rwp = &gl_provider->get_render_window();
+			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+			if (gl_provider)
+				rwp = &gl_provider->get_render_window();
+		}
+		else
+		{
+			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
+			if (gl_provider)
+				rwp = &gl_provider->get_render_window();
+		}
+
+		if (rwp)
+		{
 			const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(rwp);
 			if (render_window_wgl)
 				share_context = render_window_wgl->opengl_context;
