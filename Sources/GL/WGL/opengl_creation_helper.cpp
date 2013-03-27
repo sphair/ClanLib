@@ -139,7 +139,6 @@ void OpenGLCreationHelper::set_multisampling_pixel_format(const DisplayWindowDes
 			int_attributes.push_back(WGL_DOUBLE_BUFFER);
 			int_attributes.push_back(GL_TRUE);
 
-
 			int_attributes.push_back(WGL_COLOR_BITS);
 			int_attributes.push_back(4+4+4);
 
