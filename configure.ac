@@ -142,6 +142,7 @@ if test "$WIN32" = "yes"; then
 		extra_LIBS_clanSound="-ldsound -ldxguid -lwinmm -lmsvcrt -lmingwex"
 		extra_LIBS_clanSqlite="-lsqlite3"
 		extra_LIBS_clanNetwork="-lws2_32"
+		extra_LIBS_clanSWRender="-lmsvcrt"
 		;;
 	*)
 	extra_CFLAGS_clanApp="-mwindows"
@@ -320,6 +321,9 @@ CLANLIB_ARG_ENABLE(clanScene3D,   auto, [Build clanScene3D module],        [whet
 CLANLIB_ARG_ENABLE(clanPhysics3D, auto, [Build clanPhysics3D module],      [whether we should try to build clanPhysics3D])
 CLANLIB_ARG_ENABLE(clanPhysics2D, auto, [Build clanPhysics2D module],      [whether we should try to build clanPhysics2D])
 CLANLIB_ARG_ENABLE(clanGameIDE,   auto, [Build clanGameIDE module],        [whether we should try to build clanGameIDE])
+CLANLIB_ARG_ENABLE(clanSWRender,      auto, [Build clanSWRender module],        [whether we should try to build clanSWRender])
+CLANLIB_ARG_ENABLE(clanCompute,      auto, [Build clanCompute module],        [whether we should try to build clanCompute])
+
 
 has_linux_joystick=no
 has_linux_input=no
@@ -380,87 +384,115 @@ if test "$enable_clanDisplay" != "no"; then
 
 
 		echo ""
-		fi
-
-		if test "$enable_clanGL" != "no"; then
-			echo "Checking for clanGL stuff"
-			echo "=============================="
-			if test "$WIN32" = "yes"; then
-				CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
-			else
-				CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL], [ $LIBPTHREAD -lGL ])
-				if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
-			
-					dnl Check for optional usage of /X11/extensions/Xrender.h
-					AC_CHECK_HEADERS(X11/extensions/Xrender.h, have_xrender=yes)
-
-					if test x"$have_xrender" = "xyes"; then
-						CLANLIB_CHECK_LIB(Xrender, [`cat $srcdir/Setup/Tests/xrender.cpp`], clanGL, [ *** Cannot find Xrender. Try installing libxrender-dev], [ -lXrender])
-					fi
-
-					dnl Check that glXGetProcAddressARB is defined in glx.h
-					AC_MSG_CHECKING([whether glx.h defines glXGetProcAddressARB]);
-					AC_TRY_COMPILE([#define GLX_GLXEXT_PROTOTYPES
-						#include <GL/glx.h>], [ char *foo = (char*) glXGetProcAddressARB; ],
-						glx_has_getprocaddressarb="yes", glx_has_getprocaddressarb="no")
-					AC_MSG_RESULT([$glx_has_getprocaddressarb])
-
-					if test "x$glx_has_getprocaddressarb" = "xyes"; then
-						AC_DEFINE(HAVE_GLX_GETPROCADDRESSARB, 1, [Define if the OpenGL library supports the glXGetProcAddressARB call])
-					fi
-				fi
-			fi
-			if test "$enable_clanGL" = "auto"; then enable_clanGL=yes; fi
-			echo ""
-		fi
-	
-		if test "$enable_clanCSSLayout" != "no"; then
-			echo "Checking for clanCSSLayout stuff"
-			echo "=============================="
-
-			if test "$enable_clanCSSLayout" = "auto"; then enable_clanCSSLayout=yes; fi
-
-		fi
-
-		if test "$enable_clanCSSLayout" != "no"; then
-			if test "$enable_clanGUI" != "no"; then
-				echo "Checking for clanGUI stuff"	
-				echo "=============================="
-				if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
-
-dnl				CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
-
-				if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
-			fi
-		else
-			CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanCSSLayout])
-		fi
-
-		if test "$enable_clanScene3D" != "no"; then
-			echo "Checking for clanScene3D stuff"
-			echo "=============================="
-
-			if test "$enable_clanScene3D" = "auto"; then enable_clanScene3D=yes; fi
-
-		fi
-
-		if test "$enable_clanGameIDE" != "no"; then
-			echo "Checking for clanGameIDE stuff"
-			echo "=============================="
-
-			if test "$enable_clanGameIDE" = "auto"; then enable_clanGameIDE=yes; fi
-
-		fi
-
-		echo ""
-	else
-		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
-		CLANLIB_DISABLE_MODULE(clanCSSLayout, [ *** clanCSSLayout depends on clanDisplay])
-		CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
-		CLANLIB_DISABLE_MODULE(clanScene3D, [ *** clanScene3D depends on clanDisplay])
-		CLANLIB_DISABLE_MODULE(clanGameIDE, [ *** clanGameIDE depends on clanDisplay])
 	fi
 
+	if test "$enable_clanGL" != "no"; then
+		echo "Checking for clanGL stuff"
+		echo "=============================="
+		if test "$WIN32" = "yes"; then
+			CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
+		else
+			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL], [ $LIBPTHREAD -lGL ])
+			if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
+			
+				dnl Check for optional usage of /X11/extensions/Xrender.h
+				AC_CHECK_HEADERS(X11/extensions/Xrender.h, have_xrender=yes)
+
+				if test x"$have_xrender" = "xyes"; then
+					CLANLIB_CHECK_LIB(Xrender, [`cat $srcdir/Setup/Tests/xrender.cpp`], clanGL, [ *** Cannot find Xrender. Try installing libxrender-dev], [ -lXrender])
+				fi
+
+				dnl Check that glXGetProcAddressARB is defined in glx.h
+				AC_MSG_CHECKING([whether glx.h defines glXGetProcAddressARB]);
+				AC_TRY_COMPILE([#define GLX_GLXEXT_PROTOTYPES
+					#include <GL/glx.h>], [ char *foo = (char*) glXGetProcAddressARB; ],
+					glx_has_getprocaddressarb="yes", glx_has_getprocaddressarb="no")
+				AC_MSG_RESULT([$glx_has_getprocaddressarb])
+
+				if test "x$glx_has_getprocaddressarb" = "xyes"; then
+					AC_DEFINE(HAVE_GLX_GETPROCADDRESSARB, 1, [Define if the OpenGL library supports the glXGetProcAddressARB call])
+				fi
+			fi
+		fi
+		if test "$enable_clanGL" = "auto"; then enable_clanGL=yes; fi
+		echo ""
+	fi
+
+	if test "$enable_clanSWRender" != "no"; then
+		echo "Checking for clanSWRender stuff"
+		echo "=============================="
+
+		if test "$use_sse2" != "yes"; then
+		 	dnl CLANLIB_DISABLE_MODULE(clanSWRender, [ *** Requires SSE2 Support ] )
+			echo "Compiling using Stub. Required SSE2 Support"
+		fi
+
+		if test "$enable_clanSWRender" = "auto"; then enable_clanSWRender=yes; fi
+
+		echo ""
+
+	fi
+	
+	if test "$enable_clanCSSLayout" != "no"; then
+		echo "Checking for clanCSSLayout stuff"
+		echo "=============================="
+
+		if test "$enable_clanCSSLayout" = "auto"; then enable_clanCSSLayout=yes; fi
+
+	fi
+
+	if test "$enable_clanCSSLayout" != "no"; then
+		if test "$enable_clanGUI" != "no"; then
+			echo "Checking for clanGUI stuff"	
+			echo "=============================="
+			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
+
+dnl			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
+
+			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
+		fi
+	else
+		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanCSSLayout])
+	fi
+
+	if test "$enable_clanScene3D" != "no"; then
+		echo "Checking for clanScene3D stuff"
+		echo "=============================="
+		if test "$enable_clanScene3D" = "auto"; then enable_clanScene3D=yes; fi
+
+	fi
+
+	if test "$enable_clanGameIDE" != "no"; then
+		echo "Checking for clanGameIDE stuff"
+		echo "=============================="
+
+		if test "$enable_clanGameIDE" = "auto"; then enable_clanGameIDE=yes; fi
+
+	fi
+
+	echo ""
+else
+	CLANLIB_DISABLE_MODULE(clanSWRender, [ *** clanSWRender depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanCSSLayout, [ *** clanCSSLayout depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanGL,  [ *** clanGL  depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanCompute,  [ *** clanCompute  depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanScene3D, [ *** clanScene3D depends on clanDisplay])
+	CLANLIB_DISABLE_MODULE(clanGameIDE, [ *** clanGameIDE depends on clanDisplay])
+fi
+
+if test "$enable_clanCompute" != "no"; then
+	if test "$enable_clanGL" != "no"; then
+		echo "Checking for clanCompute stuff"
+		echo "=============================="
+
+		if test "$enable_clanCompute" = "auto"; then enable_clanCompute=yes; fi
+	fi
+	else
+		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanCompute depends on clanGL])
+	fi
+
+fi
 
 if test "$enable_clanPhysics3D" != "no"; then
 	echo "Checking for clanPhysics3D stuff"
@@ -565,6 +597,8 @@ AC_SUBST(extra_CFLAGS_clanDisplay)
 AC_SUBST(extra_CFLAGS_clanGL)
 AC_SUBST(extra_CFLAGS_clanGUI)
 AC_SUBST(extra_CFLAGS_clanCSSLayout)
+AC_SUBST(extra_CFLAGS_clanSWRender)
+AC_SUBST(extra_CFLAGS_clanCompute)
 AC_SUBST(extra_CFLAGS_clanScene3D)
 AC_SUBST(extra_CFLAGS_clanPhysics3D)
 AC_SUBST(extra_CFLAGS_clanPhysics2D)
@@ -586,6 +620,8 @@ AC_SUBST(extra_LIBS_clanDisplay)
 AC_SUBST(extra_LIBS_clanGL)
 AC_SUBST(extra_LIBS_clanGUI)
 AC_SUBST(extra_LIBS_clanCSSLayout)
+AC_SUBST(extra_LIBS_clanSWRender)
+AC_SUBST(extra_LIBS_clanCompute)
 AC_SUBST(extra_LIBS_clanScene3D)
 AC_SUBST(extra_LIBS_clanPhysics3D)
 AC_SUBST(extra_LIBS_clanPhysics2D)
@@ -639,6 +675,12 @@ fi
 
 if test "$enable_clanCSSLayout" = "yes"; then
 	CLANLIB_ENABLE_MODULES(CSSLayout)
+fi
+if test "$enable_clanSWRender" = "yes"; then
+	CLANLIB_ENABLE_MODULES(SWRender)
+fi
+if test "$enable_clanCompute" = "yes"; then
+	CLANLIB_ENABLE_MODULES(Compute)
 fi
 
 if test "$enable_clanScene3D" = "yes"; then
@@ -813,6 +855,16 @@ echo "                    clanApp = yes"
 echo "               clanDatabase = $enable_clanDatabase"
 echo "                 clanSqlite = $enable_clanSqlite"
 echo "                    clanGUI = $enable_clanGUI"
+echo "                    clanCompute = $enable_clanCompute"
+swrender_options=""
+if test "$enable_clanSWRender" != "no"; then
+	if test "$use_sse2" != "yes"; then
+		swrender_options="$swrender_options * Warning SSE2 Disabled - Using stub"
+	fi
+fi
+echo "               clanSWRender = $enable_clanSWRender $swrender_options"
+
+
 echo "              clanCSSLayout = $enable_clanCSSLayout"
 echo "                clanScene3D = $enable_clanScene3D"
 echo "              clanPhysics3D = $enable_clanPhysics3D"

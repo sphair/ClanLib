@@ -1,0 +1,15 @@
+# pkg-config Metadata for clanSWRender
+
+prefix=@prefix@
+exec_prefix=${prefix}
+libdir=@libdir@
+includedir=${prefix}/include/ClanLib-@LT_RELEASE@
+
+Name: clanSWRender
+Description: ClanLib software graphic rendering
+Version: @VERSION@
+Requires: clanDisplay-@LT_RELEASE@ = @VERSION@
+Libs:   -L${libdir} -lclan@CLANLIB_RELEASE@SWRender @extra_LIBS_clanSWRender@
+Cflags: -I${includedir} @extra_CFLAGS_clanSWRender@
+
+# EOF #

@@ -9,6 +9,8 @@ DIST_SUBDIRS = \
   GL             \
   GUI            \
   CSSLayout      \
+  SWRender       \
+  Compute \
   Network        \
   Sound          \
   Sqlite
