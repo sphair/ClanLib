@@ -61,7 +61,6 @@ IOData/directory.cpp \
 IOData/security_descriptor.cpp \
 IOData/iodevice_provider_file.cpp \
 IOData/endianess.cpp \
-IOData/Win32/directory_scanner_win32.cpp \
 IOData/directory_scanner.cpp \
 IOData/virtual_directory_listing_entry.cpp \
 IOData/pipe_connection.cpp \
