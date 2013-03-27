@@ -571,6 +571,22 @@ clanSqlite_includes = \
 	Sqlite/api_sqlite.h \
 	Sqlite/sqlite_connection.h
 
+clanSWRender_includes = \
+	swrender.h \
+	SWRender/pixel_command.h \
+	SWRender/blit_argb8_sse.h \
+	SWRender/swr_graphic_context.h \
+	SWRender/pixel_buffer_data.h \
+	SWRender/swr_target.h \
+	SWRender/setup_swrender.h \
+	SWRender/pixel_thread_context.h \
+	SWRender/software_program.h \
+	SWRender/swr_program_object.h \
+	SWRender/api_swrender.h
+
+clanCompute_includes = \
+	compute.h
+
 ClanLibincludedir=$(includedir)/ClanLib-@LT_RELEASE@/ClanLib
 nobase_ClanLibinclude_HEADERS = @ClanLib_API_Modules@
 
