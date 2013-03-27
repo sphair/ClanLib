@@ -243,6 +243,7 @@ AC_ARG_ENABLE(sse2, AC_HELP_STRING([--enable-sse2], [Enable SSE2 support]),
 
   ])
 
+AM_CONDITIONAL([DISABLE_SSE2], [test x$use_sse2 = xno])
 
 if test "$use_sse2" != "no"; then
 	CXXFLAGS="$CXXFLAGS -msse2"
@@ -297,8 +298,6 @@ if test "$WIN32" = "no"; then
 	dnl Check for thread-local storage support
 	GCC_CHECK_TLS
 fi
-
-AC_CHECK_LIB(z, main, , AC_MSG_ERROR([" *** ClanLib requires zlib (try zlib1g-dev or better)."]))
 
 dnl ----------------------------------------------------------
 dnl Check for ClanLib modules that should be enabled/disabled
@@ -392,7 +391,7 @@ if test "$enable_clanDisplay" != "no"; then
 		if test "$WIN32" = "yes"; then
 			CLANLIB_CHECK_LIB(opengl32, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find opengl32], [-lopengl32])
 		else
-			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL], [ $LIBPTHREAD -lGL ])
+			CLANLIB_CHECK_LIB(GL, [`cat $srcdir/Setup/Tests/opengl.cpp`], clanGL, [ *** Cannot find GL. Try installing libgl-mesa-dev], [ $LIBPTHREAD -lGL ])
 			if test "$enable_clanGL" != "no" && test "$X11" = "yes"; then
 			
 				dnl Check for optional usage of /X11/extensions/Xrender.h
@@ -414,7 +413,9 @@ if test "$enable_clanDisplay" != "no"; then
 				fi
 			fi
 		fi
-		if test "$enable_clanGL" = "auto"; then enable_clanGL=yes; fi
+		if test "$enable_clanGL" = "auto"; then 
+			enable_clanGL=yes;
+		fi
 		echo ""
 	fi
 
@@ -427,7 +428,9 @@ if test "$enable_clanDisplay" != "no"; then
 			echo "Compiling using Stub. Required SSE2 Support"
 		fi
 
-		if test "$enable_clanSWRender" = "auto"; then enable_clanSWRender=yes; fi
+		if test "$enable_clanSWRender" = "auto"; then
+			enable_clanSWRender=yes;
+		fi
 
 		echo ""
 
@@ -438,6 +441,7 @@ if test "$enable_clanDisplay" != "no"; then
 		echo "=============================="
 
 		if test "$enable_clanCSSLayout" = "auto"; then enable_clanCSSLayout=yes; fi
+		echo ""
 
 	fi
 
@@ -445,11 +449,14 @@ if test "$enable_clanDisplay" != "no"; then
 		if test "$enable_clanGUI" != "no"; then
 			echo "Checking for clanGUI stuff"	
 			echo "=============================="
-			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
+			if test "$enable_clanGUI" = "auto"; then
+				enable_clanGUI=yes;
+			fi
 
 dnl			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ *** Cannot find gtk 3 (Try libgtk-3-dev or better) ], [`pkg-config gtk+-3.0 --libs` ], [ `pkg-config gtk+-3.0 --cflags`])
 
 			if test "$enable_clanGUI" = "auto"; then enable_clanGUI=yes; fi
+			echo ""
 		fi
 	else
 		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanGUI depends on clanCSSLayout])
@@ -459,6 +466,25 @@ dnl			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ ***
 		echo "Checking for clanScene3D stuff"
 		echo "=============================="
 		if test "$enable_clanScene3D" = "auto"; then enable_clanScene3D=yes; fi
+		echo ""
+
+	fi
+
+	if test "$enable_clanPhysics3D" != "no"; then
+		echo "Checking for clanPhysics3D stuff"
+		echo "=============================="
+
+		if test "$enable_clanPhysics3D" = "auto"; then enable_clanPhysics3D=yes; fi
+		echo ""
+
+	fi
+
+	if test "$enable_clanPhysics2D" != "no"; then
+		echo "Checking for clanPhysics2D stuff"
+		echo "=============================="
+
+		if test "$enable_clanPhysics2D" = "auto"; then enable_clanPhysics2D=yes; fi
+		echo ""
 
 	fi
 
@@ -468,6 +494,19 @@ dnl			CLANLIB_CHECK_LIB(gtk, [`cat $srcdir/Setup/Tests/gtk.cpp`], clanGUI, [ ***
 
 		if test "$enable_clanGameIDE" = "auto"; then enable_clanGameIDE=yes; fi
 
+		echo ""
+	fi
+
+	if test "$enable_clanCompute" != "no"; then
+		if test "$enable_clanGL" != "no"; then
+			echo "Checking for clanCompute stuff"
+			echo "=============================="
+
+			if test "$enable_clanCompute" = "auto"; then enable_clanCompute=yes; fi
+		else
+			CLANLIB_DISABLE_MODULE(clanCompute, [ *** clanCompute depends on clanGL])
+		fi
+		echo ""
 	fi
 
 	echo ""
@@ -479,34 +518,6 @@ else
 	CLANLIB_DISABLE_MODULE(clanCompute,  [ *** clanCompute  depends on clanDisplay])
 	CLANLIB_DISABLE_MODULE(clanScene3D, [ *** clanScene3D depends on clanDisplay])
 	CLANLIB_DISABLE_MODULE(clanGameIDE, [ *** clanGameIDE depends on clanDisplay])
-fi
-
-if test "$enable_clanCompute" != "no"; then
-	if test "$enable_clanGL" != "no"; then
-		echo "Checking for clanCompute stuff"
-		echo "=============================="
-
-		if test "$enable_clanCompute" = "auto"; then enable_clanCompute=yes; fi
-	fi
-	else
-		CLANLIB_DISABLE_MODULE(clanGUI, [ *** clanCompute depends on clanGL])
-	fi
-
-fi
-
-if test "$enable_clanPhysics3D" != "no"; then
-	echo "Checking for clanPhysics3D stuff"
-	echo "=============================="
-
-	if test "$enable_clanPhysics3D" = "auto"; then enable_clanPhysics3D=yes; fi
-
-fi
-
-if test "$enable_clanPhysics2D" != "no"; then
-	echo "Checking for clanPhysics2D stuff"
-	echo "=============================="
-
-	if test "$enable_clanPhysics2D" = "auto"; then enable_clanPhysics2D=yes; fi
 
 fi
 
@@ -552,7 +563,7 @@ fi
 if test "$enable_clanSqlite" != "no"; then
 	echo "Checking for clanSqlite stuff"
 	echo "==============================="
-	CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3 -ldl])
+	dnl CLANLIB_CHECK_LIB(sqlite, [`cat $srcdir/Setup/Tests/sqlite.cpp`], clanSqlite, [ *** Cannot find sqlite (See: http://www.sqlite.org/ ) (Try  libsqlite3-dev or better) ], [-lsqlite3 -ldl])
 	echo ""
 fi
 
