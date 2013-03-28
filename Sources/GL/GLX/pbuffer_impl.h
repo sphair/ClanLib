@@ -52,6 +52,7 @@ public:
 	void get_opengl_version(int &version_major, int &version_minor, int &version_release);
 
 	void create(OpenGLWindowProvider &window_provider, const Size &size);
+	ProcAddress *get_proc_address(const std::string& function_name) const;
 
 private:
 	void reset();

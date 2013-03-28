@@ -189,6 +189,8 @@ public:
 	void set_point_sprite_origin(PointSpriteOrigin origin);
 	void on_window_resized();
 
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
 	// GL1 Only
 	void set_active() const;
 

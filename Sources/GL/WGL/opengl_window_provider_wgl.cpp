@@ -112,6 +112,11 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 
 // std::list<HGLRC> OpenGLWindowProvider::opengl_contexts;
 
+ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
+{
+	return (void (*)())wglGetProcAddress(function_name.c_str());
+}
+
 Rect OpenGLWindowProvider::get_geometry() const
 {
 	return win32_window.get_geometry();

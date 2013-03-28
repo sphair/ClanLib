@@ -77,5 +77,11 @@ void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor
 {
 	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }
+	
+ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
+{
+	return NULL;
+}
 
 }
+

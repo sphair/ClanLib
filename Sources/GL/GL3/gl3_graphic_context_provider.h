@@ -203,6 +203,8 @@ public:
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
 
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
 	void make_current() const;
 
 /// \}
