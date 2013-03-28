@@ -56,6 +56,7 @@
 #if !defined(WIN32) && !defined(__APPLE__)
 #define GLX_GLXEXT_PROTOTYPES
 #include <GL/glx.h>
+#include "GLX/opengl_window_provider_glx.h"
 #endif
 
 #include "API/GL/opengl_graphic_context.h"
@@ -258,7 +259,7 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 			0));
 #else
 
-	const OpenGLWindowProvider *wptr = dynamic_cast<const OpenGLWindowProvider *> (render_window);
+	const OpenGLWindowProvider *wptr = dynamic_cast<const OpenGLWindowProvider *> (cl_active_opengl_gc);
 	if (wptr == NULL)
 		return NULL;
 

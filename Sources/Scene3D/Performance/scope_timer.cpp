@@ -43,7 +43,7 @@ ScopeTimerResults::ScopeTimerResults()
 void ScopeTimerResults::start()
 {
 	instance.current_results.clear();
-	instance.current_start_time = __rdtsc();
+	instance.current_start_time = rdtsc();
 	instance.current_end_time = instance.current_start_time;
 }
 
@@ -62,7 +62,7 @@ void ScopeTimerResults::add_result(const ScopeTimerResult &result)
 
 void ScopeTimerResults::end()
 {
-	instance.current_end_time = __rdtsc();
+	instance.current_end_time = rdtsc();
 	instance.results = instance.current_results;
 	instance.start_time = instance.current_start_time;
 	instance.end_time = instance.current_end_time;
@@ -70,10 +70,10 @@ void ScopeTimerResults::end()
 
 int ScopeTimerResults::percentage(const char *name)
 {
-	unsigned __int64 elapsed = instance.end_time - instance.start_time;
+	unsigned long long elapsed = instance.end_time - instance.start_time;
 	if (elapsed != 0)
 	{
-		unsigned __int64 ticks = 0;
+		unsigned long long ticks = 0;
 		for (size_t i = 0; i < instance.results.size(); i++)
 		{
 			if (instance.results[i].name == name)

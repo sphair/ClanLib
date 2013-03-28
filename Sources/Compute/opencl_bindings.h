@@ -54,7 +54,9 @@ public:
 	static FuncGetPlatformIDs *GetPlatformIDs;
 	static FuncGetPlatformInfo *GetPlatformInfo;
 
+#ifdef WIN32
 	static HMODULE handle;
+#endif
 	static std::map<cl_platform_id, OpenCLPlatformBindings> platform_bindings;
 };
 

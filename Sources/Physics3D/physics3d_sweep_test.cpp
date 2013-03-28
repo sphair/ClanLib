@@ -62,7 +62,7 @@ bool Physics3DSweepTest::test_any_hit(const Physics3DShape &shape, const Vec3f &
 bool Physics3DSweepTest::test_first_hit(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Quaternionf &to_orientation, float allowed_ccd_penetration)
 {
 	btConvexShape *convex_shape = dynamic_cast<btConvexShape*>(shape.impl->shape.get());
-	if (convex_shape == nullptr)
+	if (convex_shape == 0)
 		throw Exception("Sweep testing is only supported for convex shapes");
 
 	impl->from_pos = from_pos;

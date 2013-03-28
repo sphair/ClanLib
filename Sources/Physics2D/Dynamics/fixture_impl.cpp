@@ -56,9 +56,10 @@ Fixture_Impl::~Fixture_Impl()
 }
 void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &description)
 {
+	std::shared_ptr<Fixture_Impl> impl = shared_from_this();
 	if(fixture_occupied)
 	{
-		owner_world->destroy_fixture(shared_from_this());
+		owner_world->destroy_fixture(impl);
 		//fixture->GetBody()->DestroyFixture(fixture);
 	}
 	else
@@ -66,7 +67,7 @@ void Fixture_Impl::create_fixture(Body &body, const FixtureDescription &descript
 		fixture_occupied = true;
 	}
 		
-	owner_world->create_fixture(shared_from_this(), body.impl->body, description.impl->fixtureDef);
+	owner_world->create_fixture(impl, body.impl->body, description.impl->fixtureDef);
 	fixture->SetUserData(this);
 }
 
@@ -76,7 +77,8 @@ void Fixture_Impl::remove_fixture()
 	{
 		sig_fixture_deletion.invoke();
 
-		owner_world->destroy_fixture(shared_from_this());
+		std::shared_ptr<Fixture_Impl> impl = shared_from_this();
+		owner_world->destroy_fixture(impl);
 		//fixture->GetBody()->DestroyFixture(fixture);
 		fixture_occupied = false;
 

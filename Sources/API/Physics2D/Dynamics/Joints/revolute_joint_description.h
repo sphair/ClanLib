@@ -99,7 +99,7 @@ public:
 /// \{
 
 	/// \brief Copy assignment operator.
-	RevoluteJointDescription &RevoluteJointDescription::operator =(const RevoluteJointDescription &copy);
+	RevoluteJointDescription &operator =(const RevoluteJointDescription &copy);
 
 	/// \brief Sets two bodies to be connected by the joint.
 	///

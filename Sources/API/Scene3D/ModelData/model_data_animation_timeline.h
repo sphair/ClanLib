@@ -90,7 +90,7 @@ private:
 };
 
 template<>
-Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp)
+inline Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp)
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);
@@ -98,7 +98,7 @@ Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp)
 }
 
 template<>
-Mat4f ModelDataAnimationTimeline<Mat4f>::get_value(float timestamp)
+inline Mat4f ModelDataAnimationTimeline<Mat4f>::get_value(float timestamp)
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);

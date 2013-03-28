@@ -95,7 +95,7 @@ public:
 	/// \Brief Contact filtering data.
 	void set_filter(); //Add me.
 
-	FixtureDescription &FixtureDescription::operator =(const FixtureDescription &copy);
+	FixtureDescription &operator =(const FixtureDescription &copy);
 
 /// \}
 /// \name Implementation

@@ -89,7 +89,7 @@ public:
 /// \{
 
 	/// \brief Copy assignment operator.
-	DistanceJointDescription &DistanceJointDescription::operator =(const DistanceJointDescription &copy);
+	DistanceJointDescription &operator =(const DistanceJointDescription &copy);
 
 	/// \brief Sets two bodies to be connected by the joint.
 	///

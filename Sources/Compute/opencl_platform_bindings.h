@@ -30,7 +30,9 @@
 
 #include "CL/cl.h"
 #include "CL/cl_gl.h"
+#ifdef WIN32
 #include "CL/cl_d3d11.h"
+#endif
 
 namespace clan
 {
@@ -757,12 +759,14 @@ public:
 	FuncCreateFromGLTexture2D *CreateFromGLTexture2D;
 	FuncCreateFromGLTexture3D *CreateFromGLTexture3D;
 
+#ifdef WIN32
 	clGetDeviceIDsFromD3D11KHR_fn GetDeviceIDsFromD3D11KHR;
 	clCreateFromD3D11BufferKHR_fn CreateFromD3D11BufferKHR;
 	clCreateFromD3D11Texture2DKHR_fn CreateFromD3D11Texture2DKHR;
 	clCreateFromD3D11Texture3DKHR_fn CreateFromD3D11Texture3DKHR;
 	clEnqueueAcquireD3D11ObjectsKHR_fn EnqueueAcquireD3D11ObjectsKHR;
 	clEnqueueReleaseD3D11ObjectsKHR_fn EnqueueReleaseD3D11ObjectsKHR;
+#endif
 };
 
 }

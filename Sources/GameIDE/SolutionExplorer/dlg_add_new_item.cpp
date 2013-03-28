@@ -82,7 +82,7 @@ void DlgAddNewItem::populate(FileItemTypeFactory &factory)
 {
 	int icon_index = 1;
 
-	Canvas &canvas = get_canvas();
+	Canvas canvas = get_canvas();
 	ResourceManager resources = get_resources();
 
 	const std::vector<FileItemType*> &types = factory.types();

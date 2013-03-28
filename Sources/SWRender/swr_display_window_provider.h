@@ -73,10 +73,10 @@ public:
 	// nothing
 #else
 	/// \brief Returns the X11 display handle.
-	Display *get_display() const { return window.get_display(); }
+	::Display *get_display() const { return window.get_display(); }
 
 	/// \brief Handle to X11 window handle.
-	Window get_window() const { return window.get_window(); }
+	::Window get_window() const { return window.get_window(); }
 #endif
 
 	bool is_clipboard_text_available() const;
@@ -99,7 +99,9 @@ public:
 	CursorProvider *create_cursor(const CursorDescription &cursor_description, const Point &hotspot);
 	void set_cursor(CursorProvider *cursor);
 	void set_cursor(StandardCursor type);
+#ifdef WIN32
 	void set_cursor_handle(HCURSOR cursor);
+#endif
 	void hide_system_cursor();
 
 	void set_title(const std::string &new_title);

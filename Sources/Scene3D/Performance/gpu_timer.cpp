@@ -29,7 +29,9 @@
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/Performance/gpu_timer.h"
 #include "API/Core/System/comptr.h"
+#ifdef WIN32
 #include <d3d11.h>
+#endif
 
 namespace clan
 {
@@ -37,6 +39,7 @@ namespace clan
 class GPUTimer_Impl
 {
 public:
+#ifdef WIN32
 	struct Frame
 	{
 		std::vector<std::string> names;
@@ -51,6 +54,7 @@ public:
 
 	std::vector<std::shared_ptr<Frame> > frames;
 	std::vector<GPUTimer::Result> last_results;
+#endif
 };
 
 
@@ -61,6 +65,7 @@ GPUTimer::GPUTimer()
 
 void GPUTimer::begin_frame(GraphicContext &gc)
 {
+#ifdef WIN32
 	if (impl->unused_disjoint_queries.empty())
 	{
 		ID3D11Device *device = D3DTarget::get_device_handle(gc);
@@ -83,27 +88,35 @@ void GPUTimer::begin_frame(GraphicContext &gc)
 
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 	context->Begin(impl->frames.back()->disjoint_query.get());
+#endif
 }
 
 void GPUTimer::begin_time(GraphicContext &gc, const std::string &name)
 {
+#ifdef WIN32
 	impl->frames.back()->names.push_back(name);
 	impl->timestamp(gc);
+#endif
 }
 
 void GPUTimer::end_time(GraphicContext &gc)
 {
+#ifdef WIN32
 	impl->timestamp(gc);
+#endif
 }
 
 void GPUTimer::end_frame(GraphicContext &gc)
 {
+#ifdef WIN32
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 	context->End(impl->frames.back()->disjoint_query.get());
+#endif
 }
 
 std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 {
+#ifdef WIN32
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 
 	D3D11_QUERY_DATA_TIMESTAMP_DISJOINT disjoint_data;
@@ -131,8 +144,12 @@ std::vector<GPUTimer::Result> GPUTimer::get_results(GraphicContext &gc)
 	impl->frames.erase(impl->frames.begin());
 
 	return results;
+#else
+	return std::vector<GPUTimer::Result>();
+#endif
 }
 
+#ifdef WIN32
 void GPUTimer_Impl::timestamp(GraphicContext &gc)
 {
 	if (unused_queries.empty())
@@ -156,5 +173,6 @@ void GPUTimer_Impl::timestamp(GraphicContext &gc)
 	ID3D11DeviceContext *context = D3DTarget::get_device_context_handle(gc);
 	context->End(frames.back()->queries.back().get());
 }
+#endif
 
 }

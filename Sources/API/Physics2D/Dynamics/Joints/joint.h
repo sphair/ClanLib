@@ -117,7 +117,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	Joint &Joint::operator =(const Joint &copy);
+	Joint &operator =(const Joint &copy);
 
 	//Add us
 	// 	Clone the concrete Joint

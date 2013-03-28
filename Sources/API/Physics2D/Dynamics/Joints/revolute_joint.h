@@ -80,7 +80,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	RevoluteJoint &RevoluteJoint::operator =(const RevoluteJoint &copy);
+	RevoluteJoint &operator =(const RevoluteJoint &copy);
 		
 };
 

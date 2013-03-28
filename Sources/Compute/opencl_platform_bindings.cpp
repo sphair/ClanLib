@@ -145,6 +145,7 @@ void OpenCLPlatformBindings::bind(cl_platform_id platform)
 
 	CreateFromGLTexture = get_function<FuncCreateFromGLTexture*>(1, 2, "clCreateFromGLTexture");
 
+#ifdef WIN32
 	if (extensions.find("cl_khr_d3d11_sharing") != std::string::npos)
 	{
 		GetDeviceIDsFromD3D11KHR = get_extension_function<clGetDeviceIDsFromD3D11KHR_fn>("clGetDeviceIDsFromD3D11KHR");
@@ -172,6 +173,7 @@ void OpenCLPlatformBindings::bind(cl_platform_id platform)
 		EnqueueAcquireD3D11ObjectsKHR = 0;
 		EnqueueReleaseD3D11ObjectsKHR = 0;
 	}
+#endif
 }
 
 std::string OpenCLPlatformBindings::get_info_string(cl_platform_info param_name) const
@@ -191,10 +193,14 @@ std::string OpenCLPlatformBindings::get_info_string(cl_platform_info param_name)
 template<typename FuncType>
 FuncType OpenCLPlatformBindings::get_function(int min_major_version, int min_minor_version, const char *name)
 {
+#ifdef WIN32
 	if (major_version > min_major_version || (major_version == min_major_version && minor_version >= min_minor_version))
 		return reinterpret_cast<FuncType>(GetProcAddress(OpenCLBindings::handle, name));
 	else
 		return 0;
+#else
+	throw Exception("OpenCLPlatformBindings::get_function not implemented yet for this platform");
+#endif
 }
 
 template<typename FuncType>

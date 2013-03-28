@@ -46,7 +46,7 @@ Body_Impl::Body_Impl( PhysicsWorld_Impl *owner)
 	body_occupied(false),
 	owner_world(owner),
 	id(-1),
-	data(nullptr)
+	data(0)
 {
 
 }
@@ -77,11 +77,12 @@ void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, Resourc
 }
 void Body_Impl::create_body(const BodyDescription &description)
 {	
+	std::shared_ptr<Body_Impl> impl = shared_from_this();
 	if(body_occupied)	//Add proper handling of Physics World in a case of a deletion
 	{
 		sig_body_deletion.invoke();
 
-		owner_world->destroy_body(shared_from_this());
+		owner_world->destroy_body(impl);
 
 		//body->GetWorld()->DestroyBody(body);
 	}
@@ -90,7 +91,7 @@ void Body_Impl::create_body(const BodyDescription &description)
 		body_occupied = true;
 	}
 
-	owner_world->create_body(shared_from_this(), description.impl->bodyDef);
+	owner_world->create_body(impl, description.impl->bodyDef);
 	body->SetUserData(this);
 }
 void Body_Impl::remove_body()
@@ -99,7 +100,8 @@ void Body_Impl::remove_body()
 	{
 		sig_body_deletion.invoke(); //Might move this to the physics world when the bodies are deleted for real.
 
-		owner_world->destroy_body(shared_from_this());
+		std::shared_ptr<Body_Impl> impl = shared_from_this();
+		owner_world->destroy_body(impl);
 
 		//body->GetWorld()->DestroyBody(body);
 		body_occupied = false;

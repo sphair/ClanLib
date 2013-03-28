@@ -82,7 +82,7 @@ public:
 /// \{
 
 	/// \brief Copy assignment operator.
-	MouseJointDescription &MouseJointDescription::operator =(const MouseJointDescription &copy);
+	MouseJointDescription &operator =(const MouseJointDescription &copy);
 
 	/// \brief Sets two bodies to be connected by the joint.
 	///

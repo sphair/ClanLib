@@ -29,7 +29,7 @@
 #include "Physics2D/precomp.h"
 #include "shape_impl.h"
 #include "circle_shape_impl.h"
-#include "API/Physics2D/Collision/Shapes/Circle_shape.h"
+#include "API/Physics2D/Collision/Shapes/circle_shape.h"
 #include "API/Physics2D/World/physics_world.h"
 #include "API/Physics2D/World/physics_context.h"
 #include "API/Core/Math/angle.h"

@@ -91,7 +91,7 @@ public:
 public:
 
 	/// \brief Copy operator.
-	Fixture &Fixture::operator =(const Fixture &copy);
+	Fixture &operator =(const Fixture &copy);
 
 	/// \brief Set the fixture as a sensor.
 	void set_as_sensor (const bool value = true);

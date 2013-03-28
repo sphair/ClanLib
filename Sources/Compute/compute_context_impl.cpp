@@ -31,8 +31,10 @@
 #include "compute_context_impl.h"
 #include "opencl_bindings.h"
 #include "GL/GL3/gl3_graphic_context_provider.h"
+#ifdef WIN32
 #include "D3D/d3d_graphic_context_provider.h"
 #include "D3D/d3d_display_window_provider.h"
+#endif
 
 namespace clan
 {
@@ -41,7 +43,9 @@ ComputeContext_Impl::ComputeContext_Impl(GraphicContext &gc)
 : bindings(0), handle(0), gc(gc)
 {
 	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(gc.get_provider());
+#ifdef WIN32
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(gc.get_provider());
+#endif
 
 	std::vector<cl_context_properties> properties;
 
@@ -52,6 +56,7 @@ ComputeContext_Impl::ComputeContext_Impl(GraphicContext &gc)
 	if (gl_provider)
 	{
 		OpenGL::set_active(gc);
+#ifdef WIN32
 		HGLRC opengl_context = wglGetCurrentContext();//gl_provider->get_opengl_context();
 		HDC opengl_dc = wglGetCurrentDC();//gl_provider->get_opengl_dc();
 
@@ -59,13 +64,18 @@ ComputeContext_Impl::ComputeContext_Impl(GraphicContext &gc)
 		properties.push_back((intptr_t)opengl_context);
 		properties.push_back(CL_WGL_HDC_KHR);
 		properties.push_back((intptr_t)opengl_dc);
+#else
+		throw Exception("ComputeContext with an OpenGL context is not yet implemented for this platform");
+#endif
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		ID3D11Device *device = d3d_provider->get_window()->get_device();
 		properties.push_back(CL_CONTEXT_D3D11_DEVICE_KHR);
 		properties.push_back((intptr_t)device);
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");

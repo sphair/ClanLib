@@ -71,7 +71,7 @@ public:
 /// \name Operations
 /// \{
 
-	JointDescription &JointDescription::operator =(const JointDescription &copy);
+	JointDescription &operator =(const JointDescription &copy);
 
 	//Add us
 	// 	Clone the concrete JointDescription

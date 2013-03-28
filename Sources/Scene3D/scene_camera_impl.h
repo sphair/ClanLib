@@ -39,7 +39,7 @@ class Scene_Impl;
 class SceneCamera_Impl
 {
 public:
-	SceneCamera_Impl() : scene(nullptr), fov(60.0f) { }
+	SceneCamera_Impl() : scene(0), fov(60.0f) { }
 
 	Scene_Impl *scene;
 	Vec3f position;

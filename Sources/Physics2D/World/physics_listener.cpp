@@ -85,7 +85,7 @@ bool PhysicsListener::ShouldCollide(b2Fixture* fixtureA, b2Fixture* fixtureB)
 	PhysicsObject *objectA = bodyA_impl->data;
 	PhysicsObject *objectB = bodyB_impl->data;
 	
-	if(objectA!=nullptr && objectB!=nullptr)
+	if(objectA!=0 && objectB!=0)
 	{	
 		Body bodyA;
 		bodyA.impl = bodyA_impl->shared_from_this();
@@ -110,7 +110,7 @@ void PhysicsListener::emit_collision_signals()
 		PhysicsObject *objectA = data.collide_bodyA->data;
 		PhysicsObject *objectB =  data.collide_bodyB->data;
 
-		if(objectA!=nullptr && objectB!=nullptr)
+		if(objectA!=0 && objectB!=0)
 		{	
 			Body bodyA;
 			bodyA.impl = data.collide_bodyA->shared_from_this();

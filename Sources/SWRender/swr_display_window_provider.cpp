@@ -37,9 +37,9 @@
 #include "API/Display/Window/input_context.h"
 #include "API/Display/Window/display_window_description.h"
 
-#ifdef WIN32
+#if defined(WIN32)
 #include "Display/Win32/cursor_provider_win32.h"
-#else if !defined(__APPLE__)
+#elif !defined(__APPLE__)
 #include "Display/X11/cursor_provider_x11.h"
 #endif
 
@@ -168,7 +168,7 @@ void SWRenderDisplayWindowProvider::create(DisplayWindowSite *new_site, const Di
 #ifdef WIN32
 	window.create(site, description);
 #elif !defined(__APPLE__)
-	Display *disp = window.get_display();
+	::Display *disp = window.get_display();
 
 	int bpp = 24;
 	XVisualInfo visual_info;
@@ -384,17 +384,25 @@ void SWRenderDisplayWindowProvider::set_small_icon(const PixelBuffer &image)
 	window.set_small_icon(image);
 }
 
+#ifdef WIN32
 void SWRenderDisplayWindowProvider::set_cursor_handle(HCURSOR cursor)
 {
 	window.set_cursor_handle(cursor);
 }
+#endif
+
 void SWRenderDisplayWindowProvider::enable_alpha_channel(const Rect &blur_rect)
 {
+#ifdef WIN32
 	window.enable_alpha_channel(blur_rect);
+#endif
 }
+
 void SWRenderDisplayWindowProvider::extend_frame_into_client_area(int height)
 {
+#ifdef WIN32
 	window.extend_frame_into_client_area(height);
+#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -466,9 +474,9 @@ void SWRenderDisplayWindowProvider::draw_image(const Rect &dest, const PixelBuff
 
 	ximage.bits_per_pixel = image_bpp * 8;
 
-	ximage.red_mask = image.get_red_mask();
-	ximage.green_mask = image.get_green_mask();
-	ximage.blue_mask = image.get_blue_mask();
+	ximage.red_mask = 0x00ff0000;
+	ximage.green_mask = 0x0000ff00;
+	ximage.blue_mask = 0x000000ff;
 
 	if (!XInitImage(&ximage))
 	{

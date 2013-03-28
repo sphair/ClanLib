@@ -34,6 +34,7 @@ namespace clan
 
 void OpenCLBindings::bind()
 {
+#ifdef WIN32
 	// To do: should we silently ignore errors here and just make zero platforms available?
 
 	if (handle == 0)
@@ -63,12 +64,17 @@ void OpenCLBindings::bind()
 		for (size_t i = 0; i < num_platforms; i++)
 			platform_bindings[ids[i]].bind(ids[i]);
 	}
+#else
+	throw Exception("OpenCLBindings::bind not implemented yet for this platform");
+#endif
 }
 
 OpenCLBindings::FuncGetPlatformIDs *OpenCLBindings::GetPlatformIDs = 0;
 OpenCLBindings::FuncGetPlatformInfo *OpenCLBindings::GetPlatformInfo = 0;
 
+#ifdef WIN32
 HMODULE OpenCLBindings::handle = 0;
+#endif
 std::map<cl_platform_id, OpenCLPlatformBindings> OpenCLBindings::platform_bindings;
 
 }

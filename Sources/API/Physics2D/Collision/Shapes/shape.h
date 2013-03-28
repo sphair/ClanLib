@@ -76,7 +76,7 @@ public:
 /// \{
 
 	/// \brief Copy operator.
-	Shape &Shape::operator =(const Shape &copy);
+	Shape &operator =(const Shape &copy);
 	//Add us
 	// 	Clone the concrete shape
 	//virtual Shape	*Clone () const = 0;

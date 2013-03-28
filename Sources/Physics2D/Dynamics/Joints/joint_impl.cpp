@@ -65,9 +65,10 @@ Joint_Impl::~Joint_Impl()
 //																											O P E R A T I O N S
 void Joint_Impl::create_joint(b2JointDef &joint_def)
 {
+        std::shared_ptr<Joint_Impl> impl = shared_from_this();
 	if(joint_occupied)
 	{
-		owner_world->destroy_joint(shared_from_this());
+		owner_world->destroy_joint(impl);
 		sig_joint_deletion.invoke();
 	}
 	else
@@ -75,14 +76,15 @@ void Joint_Impl::create_joint(b2JointDef &joint_def)
 		joint_occupied = true;
 	}
 
-	owner_world->create_joint(shared_from_this(), joint_def);
+	owner_world->create_joint(impl, joint_def);
 	joint->SetUserData(this);
 }
 void  Joint_Impl::remove_joint()
 {
 	if(joint_occupied)
 	{
-		owner_world->destroy_joint(shared_from_this());
+	        std::shared_ptr<Joint_Impl> impl = shared_from_this();
+		owner_world->destroy_joint(impl);
 		//owner_world->world.DestroyJoint(joint);
 		joint_occupied = false;
 		sig_joint_deletion.invoke();
