@@ -320,8 +320,8 @@ CLANLIB_ARG_ENABLE(clanScene3D,   auto, [Build clanScene3D module],        [whet
 CLANLIB_ARG_ENABLE(clanPhysics3D, auto, [Build clanPhysics3D module],      [whether we should try to build clanPhysics3D])
 CLANLIB_ARG_ENABLE(clanPhysics2D, auto, [Build clanPhysics2D module],      [whether we should try to build clanPhysics2D])
 CLANLIB_ARG_ENABLE(clanGameIDE,   auto, [Build clanGameIDE module],        [whether we should try to build clanGameIDE])
-CLANLIB_ARG_ENABLE(clanSWRender,      auto, [Build clanSWRender module],        [whether we should try to build clanSWRender])
-CLANLIB_ARG_ENABLE(clanCompute,      auto, [Build clanCompute module],        [whether we should try to build clanCompute])
+CLANLIB_ARG_ENABLE(clanSWRender,  auto, [Build clanSWRender module],       [whether we should try to build clanSWRender])
+CLANLIB_ARG_ENABLE(clanCompute,   auto, [Build clanCompute module],        [whether we should try to build clanCompute])
 
 
 has_linux_joystick=no
@@ -866,7 +866,7 @@ echo "                    clanApp = yes"
 echo "               clanDatabase = $enable_clanDatabase"
 echo "                 clanSqlite = $enable_clanSqlite"
 echo "                    clanGUI = $enable_clanGUI"
-echo "                    clanCompute = $enable_clanCompute"
+echo "                clanCompute = $enable_clanCompute"
 swrender_options=""
 if test "$enable_clanSWRender" != "no"; then
 	if test "$use_sse2" != "yes"; then
