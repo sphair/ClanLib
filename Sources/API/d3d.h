@@ -32,6 +32,8 @@
 
 #pragma once
 
+#ifdef WIN32
+
 #ifdef __cplusplus_cli
 #pragma managed(push, off)
 #endif
@@ -67,3 +69,19 @@
 	#pragma comment(lib, "winmm.lib")
 	#pragma comment(lib, "D3D11.lib")
 #endif
+
+#else
+// Not win32 - Stub
+namespace clan
+{
+
+class SetupD3D
+{
+public:
+	SetupD3D() {}
+	~SetupD3D() {}
+};
+}
+
+#endif
+

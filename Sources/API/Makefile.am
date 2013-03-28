@@ -302,6 +302,7 @@ clanCore_includes = \
 
 clanDisplay_includes = \
 	display.h \
+	d3d.h \
 	Display/Render/program_uniform.h \
 	Display/Render/vertex_array_buffer.h \
 	Display/Render/texture_cube.h \
