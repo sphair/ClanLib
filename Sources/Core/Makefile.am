@@ -71,7 +71,6 @@ IOData/virtual_file_system.cpp \
 IOData/virtual_file_source_zip.cpp \
 IOData/path_help.cpp \
 IOData/security_identifier.cpp \
-IOData/Unix/directory_scanner_unix.cpp \
 IOData/access_control_list.cpp \
 XML/dom_processing_instruction.cpp \
 XML/dom_exception.cpp \
