@@ -33,6 +33,8 @@
 
 #pragma once
 
+#include <cstring>
+
 #ifdef WIN32
 // GCC automatically sets __SSE2__
 #ifndef CL_DISABLE_SSE2
