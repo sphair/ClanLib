@@ -86,6 +86,9 @@ public:
 	GraphicContext& get_gc() { return gc; }
 	InputContext get_ic() { return cocoa_window.get_ic(); }
 	GraphicContext gc;
+
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
 /// \}
 
 /// \name Operations

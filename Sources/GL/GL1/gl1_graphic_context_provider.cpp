@@ -190,6 +190,11 @@ void GL1GraphicContextProvider::get_opengl_version(int &version_major, int &vers
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Attributes:
 
+ProcAddress *GL1GraphicContextProvider::get_proc_address(const std::string& function_name) const
+{
+	return render_window->get_proc_address(function_name);
+}
+
 int GL1GraphicContextProvider::get_max_texture_coords()
 {
 	set_active();

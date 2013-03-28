@@ -154,6 +154,11 @@ void GL3GraphicContextProvider::remove_disposable(DisposableObject *disposable)
 /////////////////////////////////////////////////////////////////////////////
 // GL3GraphicContextProvider Attributes:
 
+ProcAddress *GL3GraphicContextProvider::get_proc_address(const std::string& function_name) const
+{
+	return render_window->get_proc_address(function_name);
+}
+
 void GL3GraphicContextProvider::check_opengl_version()
 {
 	int version_major = 0;

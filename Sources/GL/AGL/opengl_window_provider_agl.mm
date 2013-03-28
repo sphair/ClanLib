@@ -355,6 +355,32 @@ void OpenGLWindowProvider::extend_frame_into_client_area(int height)
 }
 
 
+ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
+{
+	//TODO: If "cl_gBundleRefOpenGL" not found, it is because it is located elsewhere, but where? (This function was moved)
+
+	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
+	if (cl_gBundleRefOpenGL == 0)
+	{
+		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
+		if (cl_gBundleRefOpenGL == 0)
+        {
+            cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengles"));
+            if (cl_gBundleRefOpenGL == 0)
+                throw Exception("Unable to find opengl bundle");
+        }
+    }
+
+	return (ProcAddress *) CFBundleGetFunctionPointerForName(
+		cl_gBundleRefOpenGL,
+		CFStringCreateWithCStringNoCopy(
+			0,
+			function_name.c_str(),
+			CFStringGetSystemEncoding(),
+			0));
+
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // OpenGLWindowProvider Implementation:
 

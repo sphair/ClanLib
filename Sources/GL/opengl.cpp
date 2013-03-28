@@ -237,36 +237,11 @@ ProcAddress *OpenGL::get_proc_address(const std::string& function_name)
 #ifdef WIN32
 	return (void (*)())wglGetProcAddress(function_name.c_str());
 #else
-#ifdef __APPLE__
-	// Mac OS X doesn't have an OpenGL extension fetch function. Isn't that silly?
-	if (cl_gBundleRefOpenGL == 0)
-	{
-		cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
-		if (cl_gBundleRefOpenGL == 0)
-        {
-            cl_gBundleRefOpenGL = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengles"));
-            if (cl_gBundleRefOpenGL == 0)
-                throw Exception("Unable to find opengl bundle");
-        }
-    }
+	// Note Win32 can also do this, maybe it should
+	if (cl_active_opengl_gc)
+		return cl_active_opengl_gc->get_proc_address(function_name);
 
-	return (ProcAddress *) CFBundleGetFunctionPointerForName(
-		cl_gBundleRefOpenGL,
-		CFStringCreateWithCStringNoCopy(
-			0,
-			function_name.c_str(),
-			CFStringGetSystemEncoding(),
-			0));
-#else
-
-	const OpenGLWindowProvider *wptr = dynamic_cast<const OpenGLWindowProvider *> (cl_active_opengl_gc);
-	if (wptr == NULL)
-		return NULL;
-
-	return wptr->get_proc_address(function_name);
 #endif
-#endif
-
 	return NULL;
 }
 

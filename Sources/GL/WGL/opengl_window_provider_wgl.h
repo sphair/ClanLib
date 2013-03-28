@@ -133,6 +133,8 @@ public:
 	void enable_alpha_channel(const Rect &blur_rect);
 	void extend_frame_into_client_area(int height);
 
+	ProcAddress *get_proc_address(const std::string& function_name) const;
+
 /// \}
 /// \name Implementation
 /// \{
