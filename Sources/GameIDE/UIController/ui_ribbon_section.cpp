@@ -36,7 +36,7 @@ namespace clan
 class UIRibbonSection_Impl
 {
 public:
-	UIRibbonSection_Impl() : ui_controller(nullptr), is_visible(false) { }
+	UIRibbonSection_Impl() : ui_controller(0), is_visible(false) { }
 	UIController *ui_controller;
 	std::string page_name;
 	std::string section_name;

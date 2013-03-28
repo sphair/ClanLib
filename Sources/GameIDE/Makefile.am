@@ -8,11 +8,6 @@ SolutionExplorer/drag_drop_operation.cpp \
 SolutionExplorer/dlg_add_new_item.cpp \
 WelcomePage/welcome_page.cpp \
 PropertyManager/property_manager.cpp \
-TextEditor/scintilla_editor.cpp \
-TextEditor/text_editor_ribbon.cpp \
-TextEditor/scintilla_editor_impl.cpp \
-TextEditor/text_editor.cpp \
-TextEditor/text_editor_file_item_type.cpp \
 MainWindow/dlg_add_new_project.cpp \
 MainWindow/main_window.cpp \
 precomp.cpp \
@@ -38,7 +33,15 @@ SolutionModel/Solution/solution.cpp \
 SolutionModel/solution_model.cpp \
 BuildSystem/build_system.cpp \
 BuildSystem/build_operation.cpp \
-BuildSystem/build_system_ribbon.cpp \
+BuildSystem/build_system_ribbon.cpp
+
+if WIN32
+libclan30GameIDE_la_SOURCES += \
+TextEditor/scintilla_editor.cpp \
+TextEditor/text_editor_ribbon.cpp \
+TextEditor/scintilla_editor_impl.cpp \
+TextEditor/text_editor.cpp \
+TextEditor/text_editor_file_item_type.cpp \
 TextEditor/Scintilla/lexers/LexErlang.cxx \
 TextEditor/Scintilla/lexers/LexOthers.cxx \
 TextEditor/Scintilla/lexers/LexPascal.cxx \
@@ -152,6 +155,7 @@ TextEditor/Scintilla/lexlib/StyleContext.cxx \
 TextEditor/Scintilla/lexlib/PropSetSimple.cxx \
 TextEditor/Scintilla/lexlib/LexerBase.cxx \
 TextEditor/Scintilla/lexlib/LexerModule.cxx
+endif
 
 libclan30GameIDE_la_LDFLAGS = \
   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) $(LDFLAGS_LT_RELEASE) \
