@@ -80,7 +80,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	DistanceJoint &DistanceJoint::operator =(const DistanceJoint &copy);
+	DistanceJoint &operator =(const DistanceJoint &copy);
 
 	//Add us
 	// 	Clone the concrete DistanceJoint

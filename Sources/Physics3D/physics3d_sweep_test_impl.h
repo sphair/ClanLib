@@ -50,7 +50,7 @@ public:
 
 	struct SweepHit
 	{
-		SweepHit() : hit_fraction(0.0f), hit_collision_object(nullptr) { }
+		SweepHit() : hit_fraction(0.0f), hit_collision_object(0) { }
 
 		float hit_fraction;
 		Vec3f hit_normal;

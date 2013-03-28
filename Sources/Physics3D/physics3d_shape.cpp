@@ -33,7 +33,7 @@
 #include "API/Core/Math/quaternion.h"
 #include "API/Scene3D/ModelData/model_data.h"
 #include "Physics3D/Bullet/BulletCollision/CollisionShapes/btHeightfieldTerrainShape.h"
-#include "Physics3D/Bullet/BulletCollision/GImpact/btGImpactShape.h"
+#include "Physics3D/Bullet/BulletCollision/Gimpact/btGImpactShape.h"
 #include "physics3d_shape_impl.h"
 
 namespace clan
@@ -147,7 +147,7 @@ Physics3DShape Physics3DShape::model(const std::shared_ptr<clan::ModelData> &mod
 Physics3DShape Physics3DShape::scale_model(const Physics3DShape &base_model, clan::Vec3f scale)
 {
 	btBvhTriangleMeshShape *base_shape = dynamic_cast<btBvhTriangleMeshShape*>(base_model.impl->shape.get());
-	if (base_shape == nullptr)
+	if (base_shape == 0)
 		throw Exception("Physics3DShape is not a model shape!");
 
 	Physics3DShape shape;

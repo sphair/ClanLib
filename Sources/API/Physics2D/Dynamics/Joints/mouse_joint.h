@@ -81,7 +81,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	MouseJoint &MouseJoint::operator =(const MouseJoint &copy);
+	MouseJoint &operator =(const MouseJoint &copy);
 
 	bool grab(const Vec2f &target) const;
 	bool grab(const Pointf &target) const;

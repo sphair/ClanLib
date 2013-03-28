@@ -121,7 +121,7 @@ Physics3DObject_Impl::Physics3DObject_Impl(Physics3DWorld_Impl *world)
 
 Physics3DObject_Impl::~Physics3DObject_Impl()
 {
-	if (object != nullptr)
+	if (object != 0)
 	{
 		world->dynamics_world->removeCollisionObject(object.get());
 	}

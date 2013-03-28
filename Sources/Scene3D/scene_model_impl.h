@@ -39,7 +39,7 @@ class Model;
 class SceneModel_Impl
 {
 public:
-	SceneModel_Impl() : scene(nullptr) { }
+	SceneModel_Impl() : scene(0) { }
 
 	Scene_Impl *scene;
 	std::shared_ptr<Model> model;

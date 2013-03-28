@@ -40,7 +40,9 @@
 #include "compute_memory_map_impl.h"
 #include "compute_context_impl.h"
 #include "GL/GL3/gl3_graphic_context_provider.h"
+#ifdef WIN32
 #include "D3D/d3d_graphic_context_provider.h"
+#endif
 
 namespace clan
 {
@@ -291,7 +293,9 @@ ComputeEvent ComputeCommandQueue::migrate_buffers(const std::vector<ComputeBuffe
 ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<ComputeBuffer> &buffers, const ComputeWaitList &wait_list)
 {
 	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+#ifdef WIN32
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+#endif
 	if (gl_provider)
 	{
 		OpenGL::set_active(impl->cc.impl->gc);
@@ -305,6 +309,7 @@ ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<Comp
 			throw Exception("clEnqueueAcquireGLObjects failed");
 		return ComputeEvent(new ComputeEvent_Impl(impl->bindings, event));
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		std::vector<cl_event> wait_list_ids = impl->get_event_ids(wait_list);
@@ -315,6 +320,7 @@ ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<Comp
 			throw Exception("clEnqueueAcquireD3D11ObjectsKHR failed");
 		return ComputeEvent(new ComputeEvent_Impl(impl->bindings, event));
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");
@@ -324,7 +330,9 @@ ComputeEvent ComputeCommandQueue::acquire_display_objects(const std::vector<Comp
 ComputeEvent ComputeCommandQueue::release_display_objects(const std::vector<ComputeBuffer> &buffers, const ComputeWaitList &wait_list)
 {
 	GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+#ifdef WIN32
 	D3DGraphicContextProvider *d3d_provider = dynamic_cast<D3DGraphicContextProvider *>(impl->cc.impl->gc.get_provider());
+#endif
 	if (gl_provider)
 	{
 		std::vector<cl_event> wait_list_ids = impl->get_event_ids(wait_list);
@@ -335,6 +343,7 @@ ComputeEvent ComputeCommandQueue::release_display_objects(const std::vector<Comp
 			throw Exception("clEnqueueReleaseGLObjects failed");
 		return ComputeEvent(new ComputeEvent_Impl(impl->bindings, event));
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		std::vector<cl_event> wait_list_ids = impl->get_event_ids(wait_list);
@@ -345,6 +354,7 @@ ComputeEvent ComputeCommandQueue::release_display_objects(const std::vector<Comp
 			throw Exception("clEnqueueReleaseD3D11ObjectsKHR failed");
 		return ComputeEvent(new ComputeEvent_Impl(impl->bindings, event));
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");

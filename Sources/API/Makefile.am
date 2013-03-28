@@ -23,7 +23,6 @@ clanNetwork_includes = \
 	Network/Web/http_request_handler.h \
 	Network/Web/http_server_connection.h \
 	Network/Web/http_server.h \
-	Network/api_network.h \
 	Network/NetGame/event_value.h \
 	Network/NetGame/client.h \
 	Network/NetGame/event_dispatcher_v2.h \

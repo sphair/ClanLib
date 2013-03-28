@@ -107,13 +107,13 @@ private:
 	int generation;
 };
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1800 // C++11 syntax
-template<typename Type> using InPass = InOutPass<Type>;
-template<typename Type> using OutPass = InOutPass<Type>;
-#else
+//#if !defined(_MSC_VER) || _MSC_VER >= 1800 // C++11 syntax
+//template<typename Type> using InPass = InOutPass<Type>;
+//template<typename Type> using OutPass = InOutPass<Type>;
+//#else
 #define InData InOutData
 #define OutData InOutData
-#endif
+//#endif
 
 }
 

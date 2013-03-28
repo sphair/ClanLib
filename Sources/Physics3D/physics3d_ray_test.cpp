@@ -73,7 +73,7 @@ bool Physics3DRayTest::test(const clan::Vec3f &new_start, const clan::Vec3f &new
 		impl->has_hit = false;
 		impl->hit_fraction = 1.0f;
 		impl->hit_normal = Vec3f();
-		impl->hit_object = nullptr;
+		impl->hit_object = 0;
 	}
 
 	return impl->has_hit;
@@ -110,7 +110,7 @@ Physics3DObject Physics3DRayTest::get_hit_object() const
 /////////////////////////////////////////////////////////////////////////////
 
 Physics3DRayTest_Impl::Physics3DRayTest_Impl(Physics3DWorld_Impl *world)
-	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(nullptr)
+	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(0)
 {
 }
 

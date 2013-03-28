@@ -27,7 +27,7 @@
 */
 
 #include "Physics2D/precomp.h"
-#include "Joint_impl.h"
+#include "joint_impl.h"
 #include "joint_description.h"
 #include "API/Physics2D/Dynamics/Joints/joint.h"
 #include "../../World/physics_world_impl.h"
@@ -82,19 +82,19 @@ Body *Joint::get_body_b()
 }
 Vec2f Joint::get_anchor_a()
 {
-	b2Vec2 &vec = impl->joint->GetAnchorA();
+	b2Vec2 vec = impl->joint->GetAnchorA();
 	return Vec2f(vec.x, vec.y);
 }
 
 Vec2f Joint::get_anchor_b()
 {
-	b2Vec2 &vec = impl->joint->GetAnchorB();
+	b2Vec2 vec = impl->joint->GetAnchorB();
 	return Vec2f(vec.x, vec.y);
 }
 
 Vec2f Joint::get_reaction_force (float dt)
 {
-	b2Vec2 &vec = impl->joint->GetReactionForce(dt);
+	b2Vec2 vec = impl->joint->GetReactionForce(dt);
 	return Vec2f(vec.x, vec.y);
 }
  

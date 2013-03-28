@@ -80,7 +80,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	PrismaticJoint &PrismaticJoint::operator =(const PrismaticJoint &copy);
+	PrismaticJoint &operator =(const PrismaticJoint &copy);
 	
 };
 

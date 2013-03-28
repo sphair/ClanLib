@@ -89,7 +89,7 @@ public:
 /// \{
 
 	/// \brief Copy assignment operator.
-	PrismaticJointDescription &PrismaticJointDescription::operator =(const PrismaticJointDescription &copy);
+	PrismaticJointDescription &operator =(const PrismaticJointDescription &copy);
 
 	/// \brief Sets two bodies to be connected by the joint.
 	///

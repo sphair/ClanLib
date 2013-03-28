@@ -105,7 +105,7 @@ public:
 public:
 
 	/// \brief Copy operator.
-	QueryResult &QueryResult::operator =(const QueryResult &copy);
+	QueryResult &operator =(const QueryResult &copy);
 
 /// \}
 /// \name Implementation

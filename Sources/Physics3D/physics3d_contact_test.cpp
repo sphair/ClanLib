@@ -69,7 +69,7 @@ Physics3DObject Physics3DContactTest::get_hit_object(int index) const
 /////////////////////////////////////////////////////////////////////////////
 
 Physics3DContactTest_Impl::Physics3DContactTest_Impl(Physics3DWorld_Impl *world)
-	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(nullptr)
+	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(0)
 {
 }
 

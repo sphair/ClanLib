@@ -136,7 +136,7 @@ public:
 public:
 
 	/// \brief Copy operator.
-	Body &Body::operator =(const Body &copy);
+	Body &operator =(const Body &copy);
 
 	/// \brief add a fixture to the body.
 	//void create_fixture(const FixtureDescription &fixture);

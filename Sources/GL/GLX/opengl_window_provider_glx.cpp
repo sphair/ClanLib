@@ -848,6 +848,9 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 	}
 	else
 	{
+		int width = get_viewport().get_width();
+		int height = get_viewport().get_width();
+
 		GLint old_viewport[4], old_matrix_mode;
 		GLdouble old_matrix_projection[16], old_matrix_modelview[16];
 		glGetIntegerv(GL_VIEWPORT, old_viewport);

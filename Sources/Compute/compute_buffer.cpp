@@ -32,17 +32,19 @@
 #include "API/Compute/compute_context.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Render/render_buffer.h"
-#include <D3D11.h>
 #include "GL/GL3/gl3_pixel_buffer_provider.h"
 #include "GL/GL3/gl3_vertex_array_buffer_provider.h"
 #include "GL/GL3/gl3_element_array_buffer_provider.h"
 #include "GL/GL3/gl3_texture_provider.h"
 #include "GL/GL3/gl3_render_buffer_provider.h"
+#ifdef WIN32
+#include <D3D11.h>
 #include "D3D/d3d_pixel_buffer_provider.h"
 #include "D3D/d3d_vertex_array_buffer_provider.h"
 #include "D3D/d3d_element_array_buffer_provider.h"
 #include "D3D/d3d_texture_provider.h"
 #include "D3D/d3d_render_buffer_provider.h"
+#endif
 #include "compute_buffer_impl.h"
 #include "compute_context_impl.h"
 
@@ -89,7 +91,9 @@ ComputeBuffer ComputeBuffer::from_pixel_buffer(ComputeContext &context, PixelBuf
 ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexArrayBuffer &vertex_buffer, BufferAccess access)
 {
 	GL3VertexArrayBufferProvider *gl_provider = dynamic_cast<GL3VertexArrayBufferProvider*>(vertex_buffer.get_provider());
+#ifdef WIN32
 	D3DVertexArrayBufferProvider *d3d_provider = dynamic_cast<D3DVertexArrayBufferProvider*>(vertex_buffer.get_provider());
+#endif
 	if (gl_provider)
 	{
 		ComputeBuffer buffer;
@@ -99,6 +103,7 @@ ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexA
 			throw Exception("clCreateFromGLBuffer failed");
 		return buffer;
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		ComputeBuffer buffer;
@@ -108,6 +113,7 @@ ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexA
 			throw Exception("clCreateFromD3D11BufferKHR failed");
 		return buffer;
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");
@@ -117,7 +123,9 @@ ComputeBuffer ComputeBuffer::from_vertex_buffer(ComputeContext &context, VertexA
 ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, ElementArrayBuffer &element_buffer, BufferAccess access)
 {
 	GL3ElementArrayBufferProvider *gl_provider = dynamic_cast<GL3ElementArrayBufferProvider*>(element_buffer.get_provider());
+#ifdef WIN32
 	D3DElementArrayBufferProvider *d3d_provider = dynamic_cast<D3DElementArrayBufferProvider*>(element_buffer.get_provider());
+#endif
 	if (gl_provider)
 	{
 		ComputeBuffer buffer;
@@ -127,6 +135,7 @@ ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, Elemen
 			throw Exception("clCreateFromGLBuffer failed");
 		return buffer;
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		ComputeBuffer buffer;
@@ -136,6 +145,7 @@ ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, Elemen
 			throw Exception("clCreateFromD3D11BufferKHR failed");
 		return buffer;
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");
@@ -145,7 +155,9 @@ ComputeBuffer ComputeBuffer::from_element_buffer(ComputeContext &context, Elemen
 ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &texture, int mipmap_level, BufferAccess access)
 {
 	GL3TextureProvider *gl_provider = dynamic_cast<GL3TextureProvider*>(texture.get_provider());
+#ifdef WIN32
 	D3DTextureProvider *d3d_provider = dynamic_cast<D3DTextureProvider*>(texture.get_provider());
+#endif
 	if (gl_provider)
 	{
 		ComputeBuffer buffer;
@@ -171,6 +183,7 @@ ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &text
 
 		return buffer;
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		ComputeBuffer buffer;
@@ -180,6 +193,7 @@ ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &text
 			throw Exception("clCreateFromD3D11Texture2DKHR failed");
 		return buffer;
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");
@@ -189,7 +203,9 @@ ComputeBuffer ComputeBuffer::from_texture(ComputeContext &context, Texture &text
 ComputeBuffer ComputeBuffer::from_render_buffer(ComputeContext &context, RenderBuffer &render_buffer, BufferAccess access)
 {
 	GL3RenderBufferProvider *gl_provider = dynamic_cast<GL3RenderBufferProvider*>(render_buffer.get_provider());
+#ifdef WIN32
 	D3DRenderBufferProvider *d3d_provider = dynamic_cast<D3DRenderBufferProvider*>(render_buffer.get_provider());
+#endif
 	if (gl_provider)
 	{
 		ComputeBuffer buffer;
@@ -199,6 +215,7 @@ ComputeBuffer ComputeBuffer::from_render_buffer(ComputeContext &context, RenderB
 			throw Exception("clCreateFromGLBuffer failed");
 		return buffer;
 	}
+#ifdef WIN32
 	else if (d3d_provider)
 	{
 		ComputeBuffer buffer;
@@ -208,6 +225,7 @@ ComputeBuffer ComputeBuffer::from_render_buffer(ComputeContext &context, RenderB
 			throw Exception("clCreateFromD3D11Texture2DKHR failed");
 		return buffer;
 	}
+#endif
 	else
 	{
 		throw Exception("Unsupported display target");
