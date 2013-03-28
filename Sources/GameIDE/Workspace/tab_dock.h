@@ -55,7 +55,7 @@ private:
 	class TabButton : public GUIComponent
 	{
 	public:
-		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), icon(nullptr), label(nullptr)
+		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), icon(0), label(0)
 		{
 			//icon = new ImageView(this);
 			label = new Label(this);

@@ -28,7 +28,9 @@
 
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/MainWindow/main_window.h"
+#ifdef WIN32
 #include "API/GameIDE/TextEditor/text_editor_file_item_type.h"
+#endif
 #include "GameIDE/Workspace/workspace.h"
 #include "GameIDE/SolutionExplorer/solution_explorer.h"
 #include "GameIDE/PropertyManager/property_manager.h"
@@ -66,7 +68,9 @@ public:
 	SolutionModel model;
 	BuildSystem build_system;
 	FileItemTypeFactory file_item_type_factory;
+#ifdef WIN32
 	TextEditorFileItemType text_editor_file_item_type;
+#endif
 };
 
 
@@ -84,7 +88,9 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	dispwindow.set_large_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-48.png"));
 	dispwindow.set_small_icon(PNGProvider::load("Resources/GameIDE/Icons/gameide-16.png"));
 
+#ifdef WIN32
 	file_item_type_factory.register_type(&text_editor_file_item_type);
+#endif
 
 	component->func_close().set(this, &EditorMainWindow_Impl::on_close);
 	component->func_resized().set(this, &EditorMainWindow_Impl::on_resized);
@@ -94,7 +100,7 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	ui_controller.reset(new UIController(ribbon, model));
 	component->set_visible(true, true);
 
-	Canvas &canvas = component->get_canvas();
+	Canvas canvas = component->get_canvas();
 	ResourceManager resources = component->get_resources();
 
 	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", &resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);

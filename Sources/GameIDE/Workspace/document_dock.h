@@ -54,7 +54,7 @@ private:
 	class TabButton : public GUIComponent
 	{
 	public:
-		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), label(nullptr), button_close(nullptr)
+		TabButton(GUIComponent *parent) : GUIComponent(parent, "tab-button"), label(0), button_close(0)
 		{
 			label = new Label(this);
 			button_close = new PushButton(this);
