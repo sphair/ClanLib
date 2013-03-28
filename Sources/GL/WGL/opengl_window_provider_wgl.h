@@ -36,6 +36,7 @@
 #include "Display/Win32/win32_window.h"
 #include <memory>
 #include "API/GL/opengl_window_description.h"
+#include "API/GL/opengl_wrap.h"
 
 namespace clan
 {
