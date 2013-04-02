@@ -206,6 +206,7 @@
 #include "Core/Crypto/aes256_encrypt.h"
 #include "Core/Crypto/aes256_decrypt.h"
 #include "Core/Crypto/rsa.h"
+#include "Core/Crypto/tls_client.h"
 #include "Core/Math/size.h"
 #include "Core/Math/triangle_math.h"
 #include "Core/Math/line.h"
