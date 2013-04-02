@@ -120,7 +120,8 @@ void IODeviceProvider_TLSConnection::update_io_buffers(bool wait)
 	// Pass on any encrypted data ready to be sent:
 	if (tls_client.get_encrypted_data_available() != 0)
 	{
-		connected_device.write(tls_client.get_encrypted_data(), tls_client.get_encrypted_data_available(), wait);
+		int written = connected_device.write(tls_client.get_encrypted_data(), tls_client.get_encrypted_data_available(), wait);
+		tls_client.encrypted_data_consumed(written);
 	}
 
 	// Read incoming data:
