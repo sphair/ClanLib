@@ -39,59 +39,107 @@
 #include <ctime>
 #include "x509.h"
 
+#ifdef min
+#undef min
+#endif
+
 namespace clan
 {
 
 TLSClient_Impl::TLSClient_Impl() :
-	conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen(), receive_record_unprocessed_plaintext_offset(), receive_record_unprocessed_plaintext_type()
+	recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen(), receive_record_unprocessed_plaintext_offset(), receive_record_unprocessed_plaintext_type()
 {
 }
 
 const void *TLSClient_Impl::get_decrypted_data() const
 {
-	return 0;
+	return recv_out_data.get_data() + recv_out_data_read_pos;
 }
 
 int TLSClient_Impl::get_decrypted_data_available() const
 {
-	return 0;
+	return recv_out_data.get_size() - send_out_data_read_pos;
 }
 
 const void *TLSClient_Impl::get_encrypted_data() const
 {
-	return 0;
+	return send_out_data.get_data() + send_out_data_read_pos;
 }
 
 int TLSClient_Impl::get_encrypted_data_available() const
 {
-	return 0;
+	return send_out_data.get_size() - send_out_data_read_pos;
 }
 
 int TLSClient_Impl::encrypt(const void *data, int size)
 {
-	// To do: update buffer state
-	int bytes_consumed = 0;
+	if (size == 0)
+		return 0;
+
+	int insert_pos = send_in_data.get_size();
+	int buffer_space_available = desired_buffer_size - insert_pos;
+	int bytes_consumed = std::min(size, buffer_space_available);
+
+	send_in_data.set_size(insert_pos + bytes_consumed);
+	memcpy(send_in_data.get_data() + insert_pos, data, bytes_consumed);
+
 	progress_conversation();
+
 	return bytes_consumed;
 }
 
 int TLSClient_Impl::decrypt(const void *data, int size)
 {
-	// To do: update buffer state
-	int bytes_consumed = 0;
+	if (size == 0)
+		return 0;
+
+	int insert_pos = recv_in_data.get_size();
+	int buffer_space_available = desired_buffer_size - insert_pos;
+	int bytes_consumed = std::min(size, buffer_space_available);
+
+	recv_in_data.set_size(insert_pos + bytes_consumed);
+	memcpy(recv_in_data.get_data() + insert_pos, data, bytes_consumed);
+
 	progress_conversation();
+
 	return bytes_consumed;
 }
 
 void TLSClient_Impl::decrypted_data_consumed(int size)
 {
-	// To do: update buffer state
+	if (size == 0)
+		return;
+	if (recv_out_data_read_pos + size > recv_out_data.get_size())
+		throw Exception("TLSClient::decrypted_data_consumed misuse");
+
+	recv_out_data_read_pos += size;
+	if (recv_out_data_read_pos > desired_buffer_size / 2)
+	{
+		int available = recv_out_data.get_size() - recv_out_data_read_pos;
+		memmove(recv_out_data.get_data(), recv_out_data.get_data() + recv_out_data_read_pos, available);
+		recv_out_data.set_size(available);
+		recv_out_data_read_pos = 0;
+	}
+
 	progress_conversation();
 }
 
 void TLSClient_Impl::encrypted_data_consumed(int size)
 {
-	// To do: update buffer state
+	if (size == 0)
+		return;
+	if (send_out_data_read_pos + size > send_out_data.get_size())
+		throw Exception("TLSClient::encrypted_data_consumed misuse");
+
+	send_out_data_read_pos += size;
+	if (send_out_data_read_pos > desired_buffer_size / 2)
+	{
+		int available = send_out_data.get_size() - send_out_data_read_pos;
+		memmove(send_out_data.get_data(), send_out_data.get_data() + send_out_data_read_pos, available);
+		send_out_data.set_size(available);
+		send_out_data_read_pos = 0;
+	}
+
 	progress_conversation();
 }
 
@@ -133,7 +181,9 @@ void TLSClient_Impl::progress_conversation()
 				should_continue = receive_finished();
 				break;
 			case cl_tls_state_connected:
-				should_continue = false; // FIXME: process input/output buffers
+				should_continue = false;
+				should_continue |= receive_application_data();
+				should_continue |= send_application_data();
 				break;
 
 			case cl_tls_state_error:
@@ -152,27 +202,9 @@ void TLSClient_Impl::progress_conversation()
 	}
 }
 
-/* To do: Convert to read/write from input/output buffers when in cl_tls_state_connected conversation state
-
-int IODeviceProvider_TLSConnection::send(const void *data, int len, bool send_all)
+bool TLSClient_Impl::receive_application_data()
 {
-	int offset = 0;
-	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
-	int offset_tls_appdata = offset;				offset += len;
-
-	Secret message(offset);
-	unsigned char *message_ptr = message.get_data();
-
-	set_tls_record(message_ptr + offset_tls_record, cl_tls_content_application_data, offset - offset_tls_record);
-
-	memcpy(message_ptr + offset_tls_appdata, data, len);
-
-	send_record(message_ptr, offset);
-	return len;
-}
-
-int IODeviceProvider_TLSConnection::receive(void *data, int len, bool receive_all)
-{
+/*
 	unsigned int record_length;
 	int content_type;
 	unsigned char *dest_ptr = (unsigned char *) data;
@@ -180,13 +212,48 @@ int IODeviceProvider_TLSConnection::receive(void *data, int len, bool receive_al
 	receive_record_type(record_length, content_type, cl_tls_content_application_data);
 	len = receive_plaintext(dest_ptr, len, false);
 	return len;
-}
 */
+	return false;
+}
+
+bool TLSClient_Impl::send_application_data()
+{
+	if (send_in_data.get_size() == send_in_data_read_pos || !can_send_record())
+		return false;
+
+	const char *data = send_in_data.get_data() + send_in_data_read_pos;
+	int size = send_in_data.get_size() - send_in_data_read_pos;
+
+	unsigned int data_in_record = std::min((unsigned int)size, max_record_length);
+
+	int offset = 0;
+	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
+	int offset_tls_appdata = offset;				offset += data_in_record;
+
+	Secret message(offset);
+	unsigned char *message_ptr = message.get_data();
+
+	set_tls_record(message_ptr + offset_tls_record, cl_tls_content_application_data, offset - offset_tls_record);
+
+	memcpy(message_ptr + offset_tls_appdata, data, data_in_record);
+
+	send_record(message_ptr, offset);
+
+
+	send_in_data_read_pos += data_in_record;
+	if (send_in_data_read_pos > desired_buffer_size / 2 || send_in_data_read_pos == 0)
+	{
+		int available = send_in_data.get_size() - send_in_data_read_pos;
+		memmove(send_in_data.get_data(), send_in_data.get_data() + send_in_data_read_pos, available);
+		send_in_data.set_size(available);
+		send_in_data_read_pos = 0;
+	}
+
+	return true;
+}
 
 bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_content_type)
 {
-	return false;
-/*
 	// We have a cached unprocessed plaintext
 	// "RFC 2246 (5.2.1) multiple client messages of the same ContentType may be coalesced into a single TLSPlaintext record"
 	if (receive_record_unprocessed_plaintext.size())
@@ -194,25 +261,15 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 		// Create a fake record
 		out_content_type = receive_record_unprocessed_plaintext_type;
 		out_record_length = receive_record_unprocessed_plaintext.size() - receive_record_unprocessed_plaintext_offset;
-		return;
+		return true;
 	}
 
+	int data_available = recv_in_data.get_size() - recv_in_data_read_pos;
+	if (data_available < sizeof(TLS_Record))
+		return false;
+
 	TLS_Record record;
-	int offset = 0;
-	int size_left = sizeof(TLS_Record);
-	do
-	{
-		bool wakeup_reason = connected_device.get_read_event().wait(connection_timeout_value);
-		if (!wakeup_reason)
-			throw Exception("Time out receiving TLS record");
-
-		int size = connected_device.receive(((unsigned char *) &record) + offset, size_left, false);
-		if (!size)
-			throw Exception("Server disconnected the connection");
-
-		size_left -=size;
-		offset += size;
-	} while(size_left > 0);
+	memcpy(&record, recv_in_data.get_data() + recv_in_data_read_pos, sizeof(TLS_Record));
 
 	int record_length;
 	record_length = record.length[0] << 8 | record.length[1];
@@ -220,6 +277,9 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 		throw Exception("Maximum record length exceeded when receieving");
 	if (record_length == 0)	// The TLS Record Layer receives uninterpreted data from higher layers in non-empty blocks of arbitrary size.
 		throw Exception("Received an empty block");
+
+	if (sizeof(TLS_Record) + record_length < data_available)
+		return false;
 
 	if (is_protocol_chosen)
 	{
@@ -236,19 +296,8 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 	receive_record_unprocessed_plaintext.resize(record_length);
 	receive_record_unprocessed_plaintext_type = record.type;
 	receive_record_unprocessed_plaintext_offset = 0;
-	offset = 0;
-	do
-	{
-		bool wakeup_reason = connected_device.get_read_event().wait(connection_timeout_value);
-		if (!wakeup_reason)
-			throw Exception("Time out receiving plaintext");
 
-		int receive_size = connected_device.receive(&receive_record_unprocessed_plaintext[offset], record_length, false);
-		if (!receive_size)
-			throw Exception("Server disconnected the connection");
-		record_length -= receive_size;
-		offset += receive_size;
-	} while(record_length > 0);
+	memcpy(&receive_record_unprocessed_plaintext[0], recv_in_data.get_data() + recv_in_data_read_pos + sizeof(TLS_Record), record_length);
 
 	if (security_parameters.is_receive_encrypted)
 		decrypt_record(record, receive_record_unprocessed_plaintext);
@@ -259,17 +308,25 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 	security_parameters.read_sequence_number++;
 	if (security_parameters.read_sequence_number == 0)
 		throw Exception("Sequence number wraparound");
-*/
+
+	recv_in_data_read_pos += sizeof(TLS_Record) + record_length;
+	if (recv_in_data_read_pos > desired_buffer_size / 2)
+	{
+		int available = recv_in_data.get_size() - recv_in_data_read_pos;
+		memmove(recv_in_data.get_data(), recv_in_data.get_data() + recv_in_data_read_pos, available);
+		recv_in_data.set_size(available);
+		recv_in_data_read_pos = 0;
+	}
+	return true;
 }
 
-bool TLSClient_Impl::can_send_record(unsigned int data_size) const
+bool TLSClient_Impl::can_send_record() const
 {
-	return false;
+	return send_out_data.get_size() < desired_buffer_size;
 }
 
 void TLSClient_Impl::send_record(void *data_ptr, unsigned int data_size)
 {
-/*
 	TLS_Record *record_ptr = (TLS_Record *) data_ptr;
 
 	int record_length;
@@ -295,18 +352,21 @@ void TLSClient_Impl::send_record(void *data_ptr, unsigned int data_size)
 		record_ptr->length[0] = new_length >> 8;
 		record_ptr->length[1] = new_length;
 
-		connected_device.write(data_ptr, sizeof(TLS_Record));
-		connected_device.write(encrypted.get_data(), new_length);
+		int pos = send_out_data.get_size();
+		send_out_data.set_size(pos + sizeof(TLS_Record) + new_length);
+		memcpy(send_out_data.get_data() + pos, data_ptr, sizeof(TLS_Record));
+		memcpy(send_out_data.get_data() + pos + sizeof(TLS_Record), encrypted.get_data(), new_length);
 	}
 	else
 	{
-		connected_device.write(data_ptr, data_size);
+		int pos = send_out_data.get_size();
+		send_out_data.set_size(pos + data_size);
+		memcpy(send_out_data.get_data() + pos, data_ptr, data_size);
 	}
 
 	security_parameters.write_sequence_number++;
 	if (security_parameters.write_sequence_number == 0)
 		throw Exception("Sequence number wraparound");
-*/
 }
 
 void TLSClient_Impl::reset()
@@ -487,6 +547,9 @@ void TLSClient_Impl::select_cipher_suite(ubyte8 value1, ubyte8 value2)
 
 bool TLSClient_Impl::send_client_hello()
 {
+	if (!can_send_record())
+		return false;
+
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
 	int offset_tls_handshake = offset;				offset += sizeof(TLS_Handshake);
@@ -849,6 +912,9 @@ bool TLSClient_Impl::receive_server_hello_done()
 
 bool TLSClient_Impl::send_client_key_exchange()
 {
+	if (!can_send_record())
+		return false;
+
 	// If RSA is being used for key agreement and authentication, the
 	// client generates a 48-byte premaster secret, encrypts it using
 	// the public key from the server's certificate or the temporary RSA
@@ -1020,6 +1086,9 @@ void TLSClient_Impl::set_server_public_key()
 
 bool TLSClient_Impl::send_change_cipher_spec()
 {
+	if (!can_send_record())
+		return false;
+
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
 	int offset_tls_change_cipher_spec = offset;		offset += 1;
@@ -1040,6 +1109,9 @@ bool TLSClient_Impl::send_change_cipher_spec()
 
 bool TLSClient_Impl::send_finished()
 {
+	if (!can_send_record())
+		return false;
+
 	const int verify_data_size = 12;
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
