@@ -253,9 +253,12 @@ public:
 private:
 	void progress_conversation();
 
-	bool can_send_record(unsigned int data_size) const;
+	bool can_send_record() const;
 	void send_record(void *data_ptr, unsigned int data_size);	// !< Note "data_ptr" may be written to
 	bool receive_record(unsigned int &out_record_length, int &out_content_type);
+
+	bool send_application_data();
+	bool receive_application_data();
 
 	bool send_client_hello();
 	void reset();
@@ -297,7 +300,20 @@ private:
 
 	static const unsigned int max_record_length = 2<<14;	// RFC 2246 (6.2.1)
 	static const unsigned int max_handshake_length = 2<<24;	// RFC 2246 (implied by length in7.4)
-	static const int connection_timeout_value = 5000;
+
+	static const int desired_buffer_size = 64*1024;
+
+	DataBuffer recv_in_data;
+	int recv_in_data_read_pos;
+
+	DataBuffer recv_out_data;
+	int recv_out_data_read_pos;
+
+	DataBuffer send_in_data;
+	int send_in_data_read_pos;
+
+	DataBuffer send_out_data;
+	int send_out_data_read_pos;
 
 	TLS_ConversationState conversation_state;
 
