@@ -41,6 +41,7 @@
 #include "API/Display/Render/uniform_buffer.h"
 #include "API/Display/Render/storage_buffer.h"
 #include "API/Display/Render/texture.h"
+#include "API/Core/Text/string_format.h"
 #include <map>
 
 namespace clan
@@ -50,6 +51,8 @@ class ShaderEffect_Impl
 {
 public:
 	ShaderEffect_Impl() : elements_type(), num_vertices(0) { }
+
+	static std::string defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines);
 
 	ProgramObject program;
 
@@ -82,6 +85,11 @@ ShaderEffect::ShaderEffect()
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
 : impl(new ShaderEffect_Impl)
 {
+}
+
+bool ShaderEffect::is_null() const
+{
+	return !impl;
 }
 
 void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
@@ -217,6 +225,19 @@ void ShaderEffect::draw(GraphicContext &gc)
 		gc.reset_frame_buffer();
 
 	gc.reset_program_object();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines)
+{
+	std::string prefix;
+	if (gc.get_shader_language() == shader_glsl)
+		prefix += "#version 330\r\n";
+	for (size_t i = 0; i < defines.size(); i++)
+		prefix += string_format("#define %1\r\n", defines[i]);
+	prefix += "#line 0\r\n";
+	return prefix;
 }
 
 }

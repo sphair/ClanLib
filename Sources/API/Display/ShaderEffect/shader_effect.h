@@ -63,6 +63,7 @@ public:
 /// \name Attributes
 /// \{
 public:
+	bool is_null() const;
 /// \}
 
 /// \name Operations
