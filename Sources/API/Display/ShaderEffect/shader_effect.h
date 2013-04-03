@@ -44,7 +44,6 @@ class ShaderEffectDescription;
 
 /// \brief Shader Feffect
 ///
-///    <p>...</p> 
 /// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ShaderEffect
 {
@@ -59,21 +58,21 @@ public:
 	/// \param description Shader effect description.
 	/// \param gc Graphics context in which to create the shader effect.
 	ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description);
-
 /// \}
+
 /// \name Attributes
 /// \{
 public:
-
 /// \}
+
 /// \name Operations
 /// \{
 public:
 	void dispatch(GraphicContext &gc, int x, int y = 1, int z = 1);
 	
 	void draw(GraphicContext &gc);
+/// \}
 
-	/// \}
 /// \name Implementation
 /// \{
 private:
