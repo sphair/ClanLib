@@ -279,6 +279,48 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 
 void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
+	prim_array = PrimitivesArray(gc);
+	
+	int index = 0;
+	for (auto it = description->attributes.begin(); it != description->attributes.end(); ++it, index++)
+	{
+		if (it->second.attribute_type == ShaderEffectDescription_Impl::attribute_type_buffer)
+		{
+			VertexArrayBuffer buffer = it->second.buffer;
+			prim_array.set_attributes(index, buffer, it->second.size, it->second.type, it->second.offset, it->second.stride, it->second.normalize);
+			attributes.push_back(buffer);
+		}
+		else if (it->second.attribute_type == ShaderEffectDescription_Impl::attribute_type_screen_quad)
+		{
+			Vec4f screen_quad[6] =
+			{
+				Vec4f(-1.0f,-1.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f,-1.0f, 0.0f, 1.0f),
+				Vec4f(-1.0f, 1.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f, 1.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f,-1.0f, 0.0f, 1.0f),
+				Vec4f(-1.0f, 1.0f, 0.0f, 1.0f)
+			};
+			VertexArrayVector<Vec4f> gpu_screen_quad(gc, screen_quad, 6);
+			prim_array.set_attributes(index, gpu_screen_quad);
+			attributes.push_back(gpu_screen_quad);
+		}
+		else if (it->second.attribute_type == ShaderEffectDescription_Impl::attribute_type_uv_quad)
+		{
+			Vec4f uv_quad[6] =
+			{
+				Vec4f( 0.0f, 0.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f, 0.0f, 0.0f, 1.0f),
+				Vec4f( 0.0f, 1.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f, 1.0f, 0.0f, 1.0f),
+				Vec4f( 1.0f, 0.0f, 0.0f, 1.0f),
+				Vec4f( 0.0f, 1.0f, 0.0f, 1.0f)
+			};
+			VertexArrayVector<Vec4f> gpu_uv_quad(gc, uv_quad, 6);
+			prim_array.set_attributes(index, gpu_uv_quad);
+			attributes.push_back(gpu_uv_quad);
+		}
+	}
 }
 
 }
