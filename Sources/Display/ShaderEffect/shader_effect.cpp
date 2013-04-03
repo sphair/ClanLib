@@ -285,6 +285,13 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 		program.bind_frag_data_location(index++, it->first);
 	}
 
+	index = 0;
+	for(auto it = description->uniform_buffers.begin(); it != description->uniform_buffers.end(); ++it, index++)
+	{
+		program.set_uniform_buffer_index(it->first, index);
+		uniform_bindings[index] = it->second;
+	}
+
 	if (!program.link())
 		throw Exception(string_format("Link failed: %1", program.get_info_log()));
 }
