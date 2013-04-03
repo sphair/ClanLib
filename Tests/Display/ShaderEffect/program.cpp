@@ -28,13 +28,14 @@ int Program::main(const std::vector<std::string> &args)
 		Slot slot = window.sig_window_close().connect(&Program::exit_func);
 
 		GraphicContext gc = window.get_gc();
-
+		InputDevice mouse = window.get_ic().get_mouse();
 		Texture2D texture(gc, "../2D/tux.png");
 
 		struct Uniforms
 		{
 			Vec3f resolution;
 			float time;
+			Vec4f mouse;
 		};
 
 		Uniforms uniforms;
@@ -54,6 +55,7 @@ int Program::main(const std::vector<std::string> &args)
 		while (!exit)
 		{
 			uniforms.time = System::get_time() / 1000.0f;
+			uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
 			uniformVector.upload_data(gc, &uniforms, 1);
 
 			effect.draw(gc);
