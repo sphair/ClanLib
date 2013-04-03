@@ -38,8 +38,8 @@
 #include "../Render/rasterizer_state_description.h"
 #include "../Render/blend_state_description.h"
 #include "../Render/depth_stencil_state_description.h"
-#include "../Render/storage_vector.h"
-#include "../Render/uniform_vector.h"
+#include "../Render/storage_buffer.h"
+#include "../Render/uniform_buffer.h"
 #include "../Render/texture.h"
 #include "../Render/render_buffer.h"
 
@@ -92,24 +92,21 @@ public:
 	void set_frag_data(std::string name, Texture texture);
 	void set_frag_data_back_buffer(std::string name);
 
-	void set_depth_data(TextureFormat format);
 	void set_depth_data(RenderBuffer buffer);
 	void set_depth_data(Texture texture);
 
-	void set_stencil_data(TextureFormat format);
 	void set_stencil_data(RenderBuffer buffer);
 	void set_stencil_data(Texture texture);
 
-	void set_depth_stencil_data(TextureFormat format);
-	void set_depth_stencil_data(RenderBuffer buffer);
-	void set_depth_stencil_data(Texture texture);
-
 	void set_texture(std::string name, Texture texture);
+	void set_image(std::string name, Texture texture);
 
 	void set_storage(std::string name, StorageBuffer values);
 	void set_empty_storage(std::string name, int size);
 
 	void set_uniform_block(std::string name, UniformBuffer values);
+
+	void set_attribute(std::string name, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false);
 
 	template<typename Type>
 	void set_attribute(std::string name, VertexArrayVector<Type> values);

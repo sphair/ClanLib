@@ -94,19 +94,11 @@ void ShaderEffectDescription::set_frag_data(std::string name, Texture texture)
 {
 }
 
-void ShaderEffectDescription::set_depth_data(TextureFormat format)
-{
-}
-
 void ShaderEffectDescription::set_depth_data(RenderBuffer buffer)
 {
 }
 
 void ShaderEffectDescription::set_depth_data(Texture texture)
-{
-}
-
-void ShaderEffectDescription::set_stencil_data(TextureFormat format)
 {
 }
 
@@ -118,19 +110,11 @@ void ShaderEffectDescription::set_stencil_data(Texture texture)
 {
 }
 
-void ShaderEffectDescription::set_depth_stencil_data(TextureFormat format)
-{
-}
-
-void ShaderEffectDescription::set_depth_stencil_data(RenderBuffer buffer)
-{
-}
-
-void ShaderEffectDescription::set_depth_stencil_data(Texture texture)
-{
-}
-
 void ShaderEffectDescription::set_texture(std::string name, Texture texture)
+{
+}
+
+void ShaderEffectDescription::set_image(std::string name, Texture texture)
 {
 }
 
@@ -151,6 +135,10 @@ void ShaderEffectDescription::set_attribute_screen_quad(std::string name)
 }
 
 void ShaderEffectDescription::set_attribute_uv_quad(std::string name, UVQuadType type)
+{
+}
+
+void ShaderEffectDescription::set_attribute(std::string name, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
 {
 }
 

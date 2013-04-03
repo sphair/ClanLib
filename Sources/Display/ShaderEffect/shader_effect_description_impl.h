@@ -39,11 +39,7 @@ class ShaderEffectDescription_Impl
 {
 public:
 	ShaderEffectDescription_Impl()
-	: glsl_version(330)
-	{
-	}
-
-	~ShaderEffectDescription_Impl()
+	: glsl_version(330), elements_type()
 	{
 	}
 
@@ -63,6 +59,43 @@ public:
 	RasterizerStateDescription rasterizer_state;
 	BlendStateDescription blend_state;
 	DepthStencilStateDescription depth_stencil_state;
+
+	struct FragDataDescription
+	{
+		FragDataDescription() : use_back_buffer(false) { }
+
+		RenderBuffer buffer;
+		Texture texture;
+		bool use_back_buffer;
+	};
+
+	std::map<std::string, FragDataDescription> frag_data;
+
+	RenderBuffer depth_buffer;
+	Texture depth_texture;
+
+	RenderBuffer stencil_buffer;
+	Texture stencil_texture;
+
+	std::map<std::string, UniformBuffer> uniform_buffers;
+	std::map<std::string, Texture> textures;
+	std::map<std::string, Texture> images;
+	std::map<std::string, StorageBuffer> storage_buffers;
+
+	ElementArrayBuffer elements;
+	VertexAttributeDataType elements_type;
+
+	struct VertexAttributeDescription
+	{
+		VertexAttributeDescription() : size(0), type(), offset(0), stride(0), normalize(false) { }
+
+		int size;
+		VertexAttributeDataType type;
+		size_t offset;
+		int stride;
+		bool normalize;
+	};
+	std::map<std::string, VertexAttributeDescription> attributes;
 };
 
 }
