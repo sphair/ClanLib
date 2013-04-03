@@ -142,11 +142,6 @@ void ShaderEffectDescription::set_storage(std::string name, StorageBuffer values
 	impl->storage_buffers[name] = values;
 }
 
-void ShaderEffectDescription::set_empty_storage(std::string name, int size)
-{
-	throw Exception("Not implemented yet");
-}
-
 void ShaderEffectDescription::set_uniform_block(std::string name, UniformBuffer values)
 {
 	impl->uniform_buffers[name] = values;
@@ -154,12 +149,16 @@ void ShaderEffectDescription::set_uniform_block(std::string name, UniformBuffer 
 
 void ShaderEffectDescription::set_attribute_screen_quad(std::string name)
 {
-	throw Exception("Not implemented yet");
+	ShaderEffectDescription_Impl::VertexAttributeDescription desc;
+	desc.attribute_type = ShaderEffectDescription_Impl::attribute_type_screen_quad;
+	impl->attributes[name] = desc;
 }
 
-void ShaderEffectDescription::set_attribute_uv_quad(std::string name, UVQuadType type)
+void ShaderEffectDescription::set_attribute_uv_quad(std::string name)
 {
-	throw Exception("Not implemented yet");
+	ShaderEffectDescription_Impl::VertexAttributeDescription desc;
+	desc.attribute_type = ShaderEffectDescription_Impl::attribute_type_uv_quad;
+	impl->attributes[name] = desc;
 }
 
 void ShaderEffectDescription::set_attribute(std::string name, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)

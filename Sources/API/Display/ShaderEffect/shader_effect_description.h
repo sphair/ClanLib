@@ -46,14 +46,6 @@
 namespace clan
 {
 
-/// \brief Texture coordinate wrapping modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
-enum UVQuadType
-{
-	uv_zero_one
-};
-
 class ShaderEffectDescription_Impl;
 
 /// \brief Shader Effect Description
@@ -102,7 +94,6 @@ public:
 	void set_image(std::string name, Texture texture);
 
 	void set_storage(std::string name, StorageBuffer values);
-	void set_empty_storage(std::string name, int size);
 
 	void set_uniform_block(std::string name, UniformBuffer values);
 
@@ -289,7 +280,7 @@ public:
 	}
 
 	void set_attribute_screen_quad(std::string name);
-	void set_attribute_uv_quad(std::string name, UVQuadType type = uv_zero_one);
+	void set_attribute_uv_quad(std::string name);
 
 	void set_elements(ElementArrayBuffer &element_array, VertexAttributeDataType indices_type);
 

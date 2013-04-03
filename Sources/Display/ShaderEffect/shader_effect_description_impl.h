@@ -85,10 +85,18 @@ public:
 	ElementArrayBuffer elements;
 	VertexAttributeDataType elements_type;
 
+	enum VertexAttributeType
+	{
+		attribute_type_buffer,
+		attribute_type_screen_quad,
+		attribute_type_uv_quad
+	};
+
 	struct VertexAttributeDescription
 	{
-		VertexAttributeDescription() : size(0), type(), offset(0), stride(0), normalize(false) { }
+		VertexAttributeDescription() : attribute_type(attribute_type_buffer), size(0), type(), offset(0), stride(0), normalize(false) { }
 
+		VertexAttributeType attribute_type;
 		VertexArrayBuffer buffer;
 		int size;
 		VertexAttributeDataType type;
