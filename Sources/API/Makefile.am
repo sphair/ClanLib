@@ -193,6 +193,7 @@ clanCore_includes = \
 	Core/Crypto/aes256_encrypt.h \
 	Core/Crypto/secret.h \
 	Core/Crypto/sha512.h \
+	Core/Crypto/tls_client.h \
 	Core/IOData/security_identifier.h \
 	Core/IOData/file_help.h \
 	Core/IOData/virtual_directory_listing_entry.h \
