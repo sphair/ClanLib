@@ -1,3 +1,5 @@
+// Shader code by Frequency (http://www.frequency.fr/)
+
 #version 330
 
 out vec4 FragColor;
