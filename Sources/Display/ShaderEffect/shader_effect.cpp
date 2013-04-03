@@ -56,7 +56,8 @@ public:
 
 	static std::string defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines, int glsl_shader_version = 330);
 
-	void compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription &description);
+	void compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
+	void create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 
 	ProgramObject program;
 
@@ -89,7 +90,8 @@ ShaderEffect::ShaderEffect()
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
 : impl(new ShaderEffect_Impl(gc))
 {
-	impl->compile_and_attach_shaders(gc, description);
+	impl->compile_and_attach_shaders(gc, description.impl.get());
+	impl->create_primitives_array(gc, description.impl.get());
 }
 
 bool ShaderEffect::is_null() const
@@ -245,25 +247,35 @@ std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, std::vector<co
 	return prefix;
 }
 
-void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription &description)
+void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, description.impl->vertex_shader_code);
-	if(!vertex_shader.compile())
-		throw Exception(string_format("Unable to compile vertex shader: %1", vertex_shader.get_info_log()));
-	program.attach(vertex_shader);
-
-	ShaderObject fragment_shader(gc, shadertype_fragment, description.impl->fragment_shader_code);
-	if(!fragment_shader.compile())
-		throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
-	program.attach(fragment_shader);
-
-	if(!description.impl->compute_shader_code.empty()) 
+	if (!description->vertex_shader_code.empty()) 
 	{
-		ShaderObject compute_shader(gc, shadertype_compute, description.impl->compute_shader_code);
+		ShaderObject vertex_shader(gc, shadertype_vertex, description->vertex_shader_code);
+		if(!vertex_shader.compile())
+			throw Exception(string_format("Unable to compile vertex shader: %1", vertex_shader.get_info_log()));
+		program.attach(vertex_shader);
+	}
+
+	if (!description->fragment_shader_code.empty()) 
+	{
+		ShaderObject fragment_shader(gc, shadertype_fragment, description->fragment_shader_code);
+		if(!fragment_shader.compile())
+			throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
+		program.attach(fragment_shader);
+	}
+
+	if (!description->compute_shader_code.empty()) 
+	{
+		ShaderObject compute_shader(gc, shadertype_compute, description->compute_shader_code);
 		if(!compute_shader.compile())
 			throw Exception(string_format("Unable to compile compute shader: %1", compute_shader.get_info_log()));
 		program.attach(compute_shader);
 	}
+}
+
+void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
+{
 }
 
 }
