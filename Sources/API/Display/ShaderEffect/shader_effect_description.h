@@ -35,6 +35,9 @@
 #include <memory>
 #include "../api_display.h"
 #include "../Render/graphic_context.h"
+#include "../Render/rasterizer_state_description.h"
+#include "../Render/blend_state_description.h"
+#include "../Render/depth_stencil_state_description.h"
 
 namespace clan
 {
@@ -66,6 +69,10 @@ public:
 	void set_vertex_shader(std::string code, ShaderLanguage language = shader_glsl);
 	void set_fragment_shader(std::string code, ShaderLanguage language = shader_glsl);
 	void set_compute_shader(std::string code, ShaderLanguage language = shader_glsl);
+
+	RasterizerStateDescription &rasterizer();
+	BlendStateDescription &blend();
+	DepthStencilStateDescription &depth_stencil();
 
 /// \}
 /// \name Implementation
