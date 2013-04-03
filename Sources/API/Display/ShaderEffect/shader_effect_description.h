@@ -307,7 +307,7 @@ private:
 	std::shared_ptr<ShaderEffectDescription_Impl> impl;
 /// \}
 
-	friend class ShaderEffect_Impl;
+	friend class ShaderEffect;
 };
 
 }
