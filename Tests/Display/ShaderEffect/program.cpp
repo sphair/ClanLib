@@ -26,7 +26,6 @@ int Program::main(const std::vector<std::string> &args)
 		Slot slot = window.sig_window_close().connect(&Program::exit_func);
 
 		GraphicContext gc = window.get_gc();
-		InputContext ic = window.get_ic();
 
 		ShaderEffectDescription effect_description;
 		effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
@@ -37,9 +36,7 @@ int Program::main(const std::vector<std::string> &args)
 		while (!exit)
 		{
 			gc.clear();
-
 			effect.draw(gc);
-
 			window.flip(0);
 			KeepAlive::process();
 		}
