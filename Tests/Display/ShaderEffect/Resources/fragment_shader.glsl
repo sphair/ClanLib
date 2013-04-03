@@ -18,7 +18,7 @@ void main( void ) {
 	float radius = length(gl_FragCoord.xy - resolution.xy/2.0);
 	vec4 color = vec4(48.0/radius * (1.0 + sin(time)), 24.0/radius * (1.0 + cos(time)), 6.0/radius * (1.0 + tan(time)), 1.0);
 
-	vec2 position = ( gl_FragCoord.xy / resolution.xy ) + mouse / 4.0;
+	vec2 position = ( gl_FragCoord.xy / resolution.xy ) + mouse.xy / 4.0;
 
 	float color2 = 0.0;
 	color2 += sin( position.x * cos( time / 15.0 ) * 80.0 ) + cos( position.y * cos( time / 15.0 ) * 10.0 );
