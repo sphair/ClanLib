@@ -51,6 +51,10 @@ TLSClient_Impl::TLSClient_Impl() :
 {
 }
 
+TLSClient_Impl::~TLSClient_Impl()
+{
+}
+
 const void *TLSClient_Impl::get_decrypted_data() const
 {
 	return recv_out_data.get_data() + recv_out_data_read_pos;
