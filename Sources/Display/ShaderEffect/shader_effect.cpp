@@ -30,43 +30,51 @@
 #include "Display/precomp.h"
 #include "API/Display/ShaderEffect/shader_effect.h"
 #include "API/Display/ShaderEffect/shader_effect_description.h"
+#include "API/Display/Render/frame_buffer.h"
+#include "API/Display/Render/rasterizer_state.h"
+#include "API/Display/Render/blend_state.h"
+#include "API/Display/Render/depth_stencil_state.h"
+#include "API/Display/Render/primitives_array.h"
+#include <map>
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffect_Impl Class:
-
 class ShaderEffect_Impl
 {
 public:
-	ShaderEffect_Impl() 
-	{
-	}
+	ShaderEffect_Impl() : num_vertices(0) { }
 
-	~ShaderEffect_Impl()
-	{
-	}
+	FrameBuffer fb;
+
+	RasterizerState rasterizer_state;
+	BlendState blend_state;
+	DepthStencilState depth_stencil_state;
+
+	std::vector<VertexArrayBuffer> attributes;
+	ElementArrayBuffer elements;
+
+	PrimitivesArray prim_array;
+
+	std::map<int, UniformBuffer> uniform_bindings;
+
+	std::map<int, StorageBuffer> storage_bindings;
+	std::map<int, Texture> image_bindings;
+
+	std::map<int, Texture> texture_bindings;
+	std::map<int, Texture> sampler_bindings;
+
+	int num_vertices;
 };
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffect Construction:
 
 ShaderEffect::ShaderEffect()
 {
-	// empty
 }
 
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
 : impl(new ShaderEffect_Impl)
 {
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffect Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffect Operations:
 
 void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
 {
@@ -75,8 +83,5 @@ void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
 void ShaderEffect::draw(GraphicContext &gc)
 {
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffect Implementation:
 
 }
