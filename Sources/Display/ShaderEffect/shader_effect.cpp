@@ -292,6 +292,27 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 		uniform_bindings[index] = it->second;
 	}
 
+	index = 0;
+	for(auto it = description->textures.begin(); it != description->textures.end(); ++it, index++)
+	{
+		program.set_uniform1i(it->first, index);
+		texture_bindings[index] = it->second;
+	}
+
+	index = 0;
+	for(auto it = description->images.begin(); it != description->images.end(); ++it, index++)
+	{
+		program.set_uniform1i(it->first, index);
+		image_bindings[index] = it->second;
+	}
+
+	index = 0;
+	for(auto it = description->storage_buffers.begin(); it != description->storage_buffers.end(); ++it, index++)
+	{
+		program.set_uniform1i(it->first, index);
+		storage_bindings[index] = it->second;
+	}
+
 	if (!program.link())
 		throw Exception(string_format("Link failed: %1", program.get_info_log()));
 }
