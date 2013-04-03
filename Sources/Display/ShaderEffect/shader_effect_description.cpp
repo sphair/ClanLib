@@ -29,52 +29,15 @@
 
 #include "Display/precomp.h"
 #include "API/Display/ShaderEffect/shader_effect_description.h"
-#include <map>
+#include "shader_effect_description_impl.h"
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffectDescription_Impl Class:
-
-class ShaderEffectDescription_Impl
+ShaderEffectDescription::ShaderEffectDescription()
+	: impl(new ShaderEffectDescription_Impl())
 {
-public:
-	ShaderEffectDescription_Impl()
-	: glsl_version(330)
-	{
-	}
-
-	~ShaderEffectDescription_Impl()
-	{
-	}
-
-	int glsl_version;
-
-	std::map<std::string, std::string> defines;
-
-	std::string vertex_shader_code;
-	ShaderLanguage vertex_shader_language;
-
-	std::string fragment_shader_code;
-	ShaderLanguage fragment_shader_language;
-
-	std::string compute_shader_code;
-	ShaderLanguage compute_shader_language;
-
-	RasterizerStateDescription rasterizer_state;
-	BlendStateDescription blend_state;
-	DepthStencilStateDescription depth_stencil_state;
-};
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffectDescription Construction:
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffectDescription Attributes:
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffectDescription Operations:
+}
 
 void ShaderEffectDescription::set_glsl_version(int version)
 {
@@ -248,8 +211,5 @@ template<typename Type>
 void ShaderEffectDescription::set_elements(ElementArrayVector<Type> elements)
 {
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// ShaderEffectDescription Implementation:
 
 }

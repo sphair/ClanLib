@@ -65,13 +65,14 @@ class CL_API_DISPLAY ShaderEffectDescription
 /// \name Construction
 /// \{
 public:
-
+	ShaderEffectDescription();
 /// \}
+
 /// \name Attributes
 /// \{
 public:
-
 /// \}
+
 /// \name Operations
 /// \{
 public:
@@ -136,11 +137,10 @@ public:
 	void set_elements(std::vector<Type> elements);
 	template<typename Type>
 	void set_elements(ElementArrayVector<Type> elements);
-
 /// \}
+
 /// \name Implementation
 /// \{
-
 private:
 	std::shared_ptr<ShaderEffectDescription_Impl> impl;
 /// \}
