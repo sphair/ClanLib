@@ -186,8 +186,7 @@ void TLSClient_Impl::progress_conversation()
 				break;
 
 			case cl_tls_state_error:
-				should_continue = false; // TBD: Should we rather throw an exception when the conversation is in error state?
-				break;
+				return; // TBD: Should we rather throw an exception when the conversation is in error state?
 
 			default:
 				throw Exception("Unknown TLSClient conversation state");
