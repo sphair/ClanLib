@@ -41,6 +41,7 @@
 #include "API/Display/Render/uniform_buffer.h"
 #include "API/Display/Render/storage_buffer.h"
 #include "API/Display/Render/texture.h"
+#include "API/Display/Render/shader_object.h"
 #include "API/Core/Text/string_format.h"
 #include "shader_effect_description_impl.h"
 #include <map>
@@ -51,9 +52,11 @@ namespace clan
 class ShaderEffect_Impl
 {
 public:
-	ShaderEffect_Impl() : elements_type(), num_vertices(0) { }
+	ShaderEffect_Impl(GraphicContext &gc) : elements_type(), num_vertices(0), program(gc) { }
 
 	static std::string defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines, int glsl_shader_version = 330);
+
+	void compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription &description);
 
 	ProgramObject program;
 
@@ -84,8 +87,9 @@ ShaderEffect::ShaderEffect()
 }
 
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
-: impl(new ShaderEffect_Impl)
+: impl(new ShaderEffect_Impl(gc))
 {
+	impl->compile_and_attach_shaders(gc, description);
 }
 
 bool ShaderEffect::is_null() const
@@ -239,6 +243,27 @@ std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, std::vector<co
 		prefix += string_format("#define %1\r\n", defines[i]);
 	prefix += "#line 0\r\n";
 	return prefix;
+}
+
+void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription &description)
+{
+	ShaderObject vertex_shader(gc, shadertype_vertex, description.impl->vertex_shader_code);
+	if(!vertex_shader.compile())
+		throw Exception(string_format("Unable to compile vertex shader: %1", vertex_shader.get_info_log()));
+	program.attach(vertex_shader);
+
+	ShaderObject fragment_shader(gc, shadertype_fragment, description.impl->fragment_shader_code);
+	if(!fragment_shader.compile())
+		throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
+	program.attach(fragment_shader);
+
+	if(description.impl->compute_shader_code.length() > 0) 
+	{
+		ShaderObject compute_shader(gc, shadertype_compute, description.impl->compute_shader_code);
+		if(!compute_shader.compile())
+			throw Exception(string_format("Unable to compile compute shader: %1", compute_shader.get_info_log()));
+		program.attach(compute_shader);
+	}
 }
 
 }
