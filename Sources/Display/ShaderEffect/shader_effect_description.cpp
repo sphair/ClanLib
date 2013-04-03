@@ -41,6 +41,7 @@ class ShaderEffectDescription_Impl
 {
 public:
 	ShaderEffectDescription_Impl()
+	: glsl_version(330)
 	{
 	}
 
