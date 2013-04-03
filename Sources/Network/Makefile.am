@@ -20,9 +20,6 @@ Web/web_request.cpp \
 Web/web_response.cpp \
 TLS/tls_connection.cpp \
 TLS/iodevice_provider_tls_connection.cpp \
-TLS/x509.cpp \
-TLS/x509_impl.cpp \
-TLS/asn1.cpp \
 Socket/dns_packet.cpp \
 Socket/dns_resolver.cpp \
 Socket/dns_resolver_impl.cpp \

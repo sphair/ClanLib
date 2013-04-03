@@ -47,6 +47,11 @@ Crypto/random_impl.cpp \
 Crypto/sha512.cpp \
 Crypto/sha256_impl.cpp \
 Crypto/aes256_decrypt.cpp \
+Crypto/x509.cpp \
+Crypto/x509_impl.cpp \
+Crypto/tls_client.cpp \
+Crypto/tls_client_impl.cpp \
+Crypto/asn1.cpp \
 precomp.cpp \
 IOData/virtual_directory_listing.cpp \
 IOData/iodevice_provider_memory.cpp \
