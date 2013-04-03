@@ -257,7 +257,7 @@ void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const Sha
 		throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
 	program.attach(fragment_shader);
 
-	if(description.impl->compute_shader_code.length() > 0) 
+	if(!description.impl->compute_shader_code.empty()) 
 	{
 		ShaderObject compute_shader(gc, shadertype_compute, description.impl->compute_shader_code);
 		if(!compute_shader.compile())
