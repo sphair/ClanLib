@@ -20,6 +20,8 @@ int Program::main(const std::vector<std::string> &args)
 	SetupDisplay setup_display;
 	SetupGL setup_gl;
 
+	ConsoleWindow console_window("Debug");
+
 	try
 	{
 		DisplayWindow window("Hello ShaderEffect", 800, 600, false, true);
@@ -44,6 +46,7 @@ int Program::main(const std::vector<std::string> &args)
 	catch (Exception &e)
 	{
 		Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
+		Console::wait_for_key();
 		return -1;
 	}
 
