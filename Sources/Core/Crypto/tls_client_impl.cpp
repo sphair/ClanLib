@@ -63,7 +63,7 @@ const void *TLSClient_Impl::get_decrypted_data() const
 
 int TLSClient_Impl::get_decrypted_data_available() const
 {
-	return recv_out_data.get_size() - send_out_data_read_pos;
+	return recv_out_data.get_size() - recv_out_data_read_pos;
 }
 
 const void *TLSClient_Impl::get_encrypted_data() const
@@ -152,9 +152,10 @@ void TLSClient_Impl::progress_conversation()
 {
 	try
 	{
-		bool should_continue = true;
+		bool should_continue;
 		do
 		{
+			should_continue = false;
 			switch (conversation_state)
 			{
 			case cl_tls_state_send_client_hello:
