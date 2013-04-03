@@ -84,66 +84,100 @@ DepthStencilStateDescription &ShaderEffectDescription::depth_stencil()
 
 void ShaderEffectDescription::set_frag_data_back_buffer(std::string name)
 {
+	ShaderEffectDescription_Impl::FragDataDescription desc;
+	desc.use_back_buffer = true;
+	impl->frag_data[name] = desc;
 }
 
 void ShaderEffectDescription::set_frag_data(std::string name, RenderBuffer buffer)
 {
+	ShaderEffectDescription_Impl::FragDataDescription desc;
+	desc.buffer = buffer;
+	impl->frag_data[name] = desc;
 }
 
 void ShaderEffectDescription::set_frag_data(std::string name, Texture texture)
 {
+	ShaderEffectDescription_Impl::FragDataDescription desc;
+	desc.texture = texture;
+	impl->frag_data[name] = desc;
 }
 
 void ShaderEffectDescription::set_depth_data(RenderBuffer buffer)
 {
+	impl->depth_buffer = buffer;
+	impl->depth_texture = Texture();
 }
 
 void ShaderEffectDescription::set_depth_data(Texture texture)
 {
+	impl->depth_buffer = RenderBuffer();
+	impl->depth_texture = texture;
 }
 
 void ShaderEffectDescription::set_stencil_data(RenderBuffer buffer)
 {
+	impl->stencil_buffer = buffer;
+	impl->stencil_texture = Texture();
 }
 
 void ShaderEffectDescription::set_stencil_data(Texture texture)
 {
+	impl->stencil_buffer = RenderBuffer();
+	impl->stencil_texture = texture;
 }
 
 void ShaderEffectDescription::set_texture(std::string name, Texture texture)
 {
+	impl->textures[name] = texture;
 }
 
 void ShaderEffectDescription::set_image(std::string name, Texture texture)
 {
+	impl->images[name] = texture;
 }
 
 void ShaderEffectDescription::set_storage(std::string name, StorageBuffer values)
 {
+	impl->storage_buffers[name] = values;
 }
 
 void ShaderEffectDescription::set_empty_storage(std::string name, int size)
 {
+	throw Exception("Not implemented yet");
 }
 
 void ShaderEffectDescription::set_uniform_block(std::string name, UniformBuffer values)
 {
+	impl->uniform_buffers[name] = values;
 }
 
 void ShaderEffectDescription::set_attribute_screen_quad(std::string name)
 {
+	throw Exception("Not implemented yet");
 }
 
 void ShaderEffectDescription::set_attribute_uv_quad(std::string name, UVQuadType type)
 {
+	throw Exception("Not implemented yet");
 }
 
 void ShaderEffectDescription::set_attribute(std::string name, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset, int stride, bool normalize)
 {
+	ShaderEffectDescription_Impl::VertexAttributeDescription desc;
+	desc.buffer = buffer;
+	desc.size = size;
+	desc.type = type;
+	desc.offset = offset;
+	desc.stride = stride;
+	desc.normalize = normalize;
+	impl->attributes[name] = desc;
 }
 
 void ShaderEffectDescription::set_elements(ElementArrayBuffer &element_array, VertexAttributeDataType indices_type)
 {
+	impl->elements = element_array;
+	impl->elements_type = indices_type;
 }
 
 }
