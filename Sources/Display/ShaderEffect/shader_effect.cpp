@@ -30,6 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Display/ShaderEffect/shader_effect.h"
 #include "API/Display/ShaderEffect/shader_effect_description.h"
+#include "API/Display/Render/program_object.h"
 #include "API/Display/Render/frame_buffer.h"
 #include "API/Display/Render/rasterizer_state.h"
 #include "API/Display/Render/blend_state.h"
@@ -48,7 +49,9 @@ namespace clan
 class ShaderEffect_Impl
 {
 public:
-	ShaderEffect_Impl() : num_vertices(0) { }
+	ShaderEffect_Impl() : elements_type(), num_vertices(0) { }
+
+	ProgramObject program;
 
 	FrameBuffer fb;
 
@@ -60,6 +63,7 @@ public:
 	PrimitivesArray prim_array;
 
 	ElementArrayBuffer elements;
+	VertexAttributeDataType elements_type;
 
 	std::map<int, UniformBuffer> uniform_bindings;
 
@@ -67,7 +71,6 @@ public:
 	std::map<int, Texture> image_bindings;
 
 	std::map<int, Texture> texture_bindings;
-	std::map<int, Texture> sampler_bindings;
 
 	int num_vertices;
 };
@@ -83,11 +86,137 @@ ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &de
 
 void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
 {
+	gc.set_program_object(impl->program);
 
+	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	{
+		gc.set_uniform_buffer(it->first, it->second);
+	}
+
+	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	{
+		gc.set_storage_buffer(it->first, it->second);
+	}
+
+	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	{
+		gc.set_image_texture(it->first, it->second);
+	}
+
+	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	{
+		gc.set_texture(it->first, it->second);
+	}
+
+	gc.dispatch(x, y, z);
+
+	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	{
+		gc.reset_uniform_buffer(it->first);
+	}
+
+	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	{
+		gc.reset_storage_buffer(it->first);
+	}
+
+	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	{
+		gc.reset_image_texture(it->first);
+	}
+
+	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	{
+		gc.reset_texture(it->first);
+	}
+
+	gc.reset_program_object();
 }
-	
+
 void ShaderEffect::draw(GraphicContext &gc)
 {
+	gc.set_program_object(impl->program);
+
+	if (!impl->fb.is_null())
+		gc.set_frame_buffer(impl->fb);
+
+	if (!impl->rasterizer_state.is_null())
+		gc.set_rasterizer_state(impl->rasterizer_state);
+
+	if (!impl->blend_state.is_null())
+		gc.set_blend_state(impl->blend_state);
+
+	if (!impl->depth_stencil_state.is_null())
+		gc.set_depth_stencil_state(impl->depth_stencil_state);
+
+	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	{
+		gc.set_uniform_buffer(it->first, it->second);
+	}
+
+	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	{
+		gc.set_storage_buffer(it->first, it->second);
+	}
+
+	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	{
+		gc.set_image_texture(it->first, it->second);
+	}
+
+	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	{
+		gc.set_texture(it->first, it->second);
+	}
+
+	if (!impl->elements.is_null())
+	{
+		gc.set_primitives_elements(impl->elements);
+		gc.set_primitives_array(impl->prim_array);
+		gc.draw_primitives_elements(type_triangles, impl->num_vertices, impl->elements_type);
+		gc.reset_primitives_array();
+		gc.reset_primitives_elements();
+	}
+	else
+	{
+		gc.set_primitives_array(impl->prim_array);
+		gc.draw_primitives_array(type_triangles, 0, impl->num_vertices);
+		gc.reset_primitives_array();
+	}
+
+	for (auto it = impl->uniform_bindings.begin(); it != impl->uniform_bindings.end(); ++it)
+	{
+		gc.reset_uniform_buffer(it->first);
+	}
+
+	for (auto it = impl->storage_bindings.begin(); it != impl->storage_bindings.end(); ++it)
+	{
+		gc.reset_storage_buffer(it->first);
+	}
+
+	for (auto it = impl->image_bindings.begin(); it != impl->image_bindings.end(); ++it)
+	{
+		gc.reset_image_texture(it->first);
+	}
+
+	for (auto it = impl->texture_bindings.begin(); it != impl->texture_bindings.end(); ++it)
+	{
+		gc.reset_texture(it->first);
+	}
+
+	if (!impl->rasterizer_state.is_null())
+		gc.reset_rasterizer_state();
+
+	if (!impl->blend_state.is_null())
+		gc.reset_blend_state();
+
+	if (!impl->depth_stencil_state.is_null())
+		gc.reset_depth_stencil_state();
+
+	if (!impl->fb.is_null())
+		gc.reset_frame_buffer();
+
+	gc.reset_program_object();
 }
 
 }
