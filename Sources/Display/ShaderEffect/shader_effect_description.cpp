@@ -142,4 +142,8 @@ void ShaderEffectDescription::set_attribute(std::string name, VertexArrayBuffer 
 {
 }
 
+void ShaderEffectDescription::set_elements(ElementArrayBuffer &element_array, VertexAttributeDataType indices_type)
+{
+}
+
 }
