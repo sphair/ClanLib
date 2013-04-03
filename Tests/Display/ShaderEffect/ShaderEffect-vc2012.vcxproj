@@ -75,6 +75,10 @@
     <ClInclude Include="precomp.h" />
     <ClInclude Include="program.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fragment_shader.glsl" />
+    <None Include="Resources\vertex_shader.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
