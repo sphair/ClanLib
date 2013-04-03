@@ -273,6 +273,18 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 		program.attach(compute_shader);
 	}
 
+	int index = 0;
+	for(auto it = description->attributes.begin(); it != description->attributes.end(); ++it)
+	{
+		program.bind_attribute_location(index++, it->first);
+	}
+
+	index = 0;
+	for(auto it = description->frag_data.begin(); it != description->frag_data.end(); ++it)
+	{
+		program.bind_frag_data_location(index++, it->first);
+	}
+
 	if (!program.link())
 		throw Exception(string_format("Link failed: %1", program.get_info_log()));
 }
