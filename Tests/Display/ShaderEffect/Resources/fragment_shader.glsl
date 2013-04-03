@@ -4,8 +4,8 @@ out vec4 FragColor;
 
 layout(std140) uniform Uniforms
 {
-	uniform float time;
 	uniform vec3 resolution;
+	uniform float time;
 };
 
 layout(origin_upper_left) in vec4 gl_FragCoord;

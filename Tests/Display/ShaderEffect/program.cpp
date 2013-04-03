@@ -31,8 +31,8 @@ int Program::main(const std::vector<std::string> &args)
 
 		struct Uniforms
 		{
-			float time;
 			Vec3f resolution;
+			float time;
 		};
 
 		Uniforms uniforms;
