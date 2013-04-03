@@ -488,12 +488,6 @@ void TLSClient_Impl::handshake_data(DataBuffer record_plaintext)
 	// All handshake messages except handshake_finished needs to be included in the handshake hash calculation:
 	if (handshake.msg_type != cl_tls_handshake_finished)
 	{
-/*
-		if (!receive_record_unprocessed_plaintext_offset)	// Don't hash handshake if already processed on fragmented items
-		{
-			hash_handshake( &receive_record_unprocessed_plaintext[0], receive_record_unprocessed_plaintext.size() );
-		}
-*/
 		hash_handshake(&handshake, length + sizeof(TLS_Handshake));
 	}
 
