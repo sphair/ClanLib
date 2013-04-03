@@ -61,6 +61,10 @@ public:
 
 	std::string compute_shader_code;
 	ShaderLanguage compute_shader_language;
+
+	RasterizerStateDescription rasterizer_state;
+	BlendStateDescription blend_state;
+	DepthStencilStateDescription depth_stencil_state;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -98,6 +102,21 @@ void ShaderEffectDescription::set_compute_shader(std::string code, ShaderLanguag
 {
 	impl->compute_shader_code = code;
 	impl->compute_shader_language = language;
+}
+
+RasterizerStateDescription &ShaderEffectDescription::rasterizer()
+{
+	return impl->rasterizer_state;
+}
+
+BlendStateDescription &ShaderEffectDescription::blend()
+{
+	return impl->blend_state;
+}
+
+DepthStencilStateDescription &ShaderEffectDescription::depth_stencil()
+{
+	return impl->depth_stencil_state;
 }
 
 
