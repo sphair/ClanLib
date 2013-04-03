@@ -82,7 +82,7 @@ DepthStencilStateDescription &ShaderEffectDescription::depth_stencil()
 	return impl->depth_stencil_state;
 }
 
-void ShaderEffectDescription::set_frag_data_back_buffer(std::string name)
+void ShaderEffectDescription::set_frag_data_to_back_buffer(std::string name)
 {
 	ShaderEffectDescription_Impl::FragDataDescription desc;
 	desc.use_back_buffer = true;

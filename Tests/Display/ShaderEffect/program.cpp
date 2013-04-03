@@ -33,12 +33,12 @@ int Program::main(const std::vector<std::string> &args)
 		effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
 		effect_description.set_fragment_shader(File::read_text("Resources/fragment_shader.glsl"));
 		effect_description.set_attribute_screen_quad("PositionInProjection");
-		effect_description.set_frag_data_back_buffer("FragColor");
+		effect_description.set_frag_data_to_back_buffer("FragColor");
 		ShaderEffect effect(gc, effect_description);
 
 		while (!exit)
 		{
-			gc.clear();
+			gc.clear(Colorf::green);
 			effect.draw(gc);
 			window.flip(0);
 			KeepAlive::process();
