@@ -55,14 +55,12 @@ Canvas::Canvas()
 Canvas::Canvas(GraphicContext &context) : impl(new Canvas_Impl(context))
 {
 	set_map_mode(map_2d_upper_left);
-
 }
 
 Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl(window.get_gc()))
 {
 	impl->display_window = window;
 	set_map_mode(map_2d_upper_left);
-
 }
 
 Canvas::Canvas(DisplayWindowDescription &desc)

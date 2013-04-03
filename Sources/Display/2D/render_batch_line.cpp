@@ -67,7 +67,6 @@ void RenderBatchLine::draw_lines(Canvas &canvas, const Vec2f *line_positions, co
 		line_positions++;
 		position++;
 	}
-
 }
 
 void RenderBatchLine::draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices)
@@ -96,7 +95,6 @@ void RenderBatchLine::draw_line_strip(Canvas &canvas, const Vec2f *line_position
 		vertices[position].position = next_start_position;
 		position++;
 	}
-
 }
 
 void RenderBatchLine::set_batcher_active(Canvas &canvas, int num_vertices)
@@ -152,7 +150,6 @@ void RenderBatchLine::flush(GraphicContext &gc)
 
 		batch_buffer->next_buffer();
 	}
-
 }
 
 void RenderBatchLine::matrix_changed(const Mat4f &new_modelview, const Mat4f &new_projection)
