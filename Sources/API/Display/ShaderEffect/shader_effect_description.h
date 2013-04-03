@@ -82,7 +82,7 @@ public:
 
 	void set_frag_data(std::string name, RenderBuffer buffer);
 	void set_frag_data(std::string name, Texture texture);
-	void set_frag_data_back_buffer(std::string name);
+	void set_frag_data_to_back_buffer(std::string name);
 
 	void set_depth_data(RenderBuffer buffer);
 	void set_depth_data(Texture texture);
