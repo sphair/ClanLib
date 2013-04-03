@@ -1363,6 +1363,8 @@ DataBuffer TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBuffer &
 	unsigned char *decrypted_data = (unsigned char *) decrypted.get_data();
 
 	int decoded_size = decrypted.get_size() - security_parameters.hash_size;
+	if (decoded_size < 0)
+		throw Exception("Invalid decoded_size");
 
 	// Update the length
 	record.length[0] = decoded_size >> 8;
@@ -1373,6 +1375,7 @@ DataBuffer TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBuffer &
 	if (memcmp(mac.get_data(), decrypted_data + decoded_size, mac.get_size()))
 		throw Exception("HMAC failed");
 
+	decrypted.set_size(decoded_size);
 	return decrypted;
 }
 
