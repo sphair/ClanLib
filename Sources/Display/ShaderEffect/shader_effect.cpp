@@ -92,6 +92,8 @@ ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &de
 {
 	impl->create_shaders(gc, description.impl.get());
 	impl->create_primitives_array(gc, description.impl.get());
+	impl->elements = description.impl->elements;
+	impl->elements_type = description.impl->elements_type;
 }
 
 bool ShaderEffect::is_null() const
