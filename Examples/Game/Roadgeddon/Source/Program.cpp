@@ -39,7 +39,6 @@ int Program::main(const std::vector<std::string> &args)
 		SetupDisplay setup_display;
 
 		SetupSound setup_sound;
-		SetupVorbis setup_vorbis;
 	 
 		SoundOutput output(44100);
 
