@@ -53,7 +53,6 @@ int Program::main(const std::vector<std::string> &args)
 			uniforms.time = System::get_time() / 1000.0f;
 			uniformVector.upload_data(gc, &uniforms, 1);
 
-			gc.clear(Colorf::green);
 			effect.draw(gc);
 			window.flip(0);
 			KeepAlive::process();
