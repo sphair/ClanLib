@@ -31,24 +31,28 @@ int Program::main(const std::vector<std::string> &args)
 
 		struct Uniforms
 		{
-			float blueness;
-			float padding[3];
+			float time;
+			Vec3f resolution;
 		};
 
 		Uniforms uniforms;
-		uniforms.blueness = 0.5;
+		uniforms.time = 0.0f;
+		uniforms.resolution = Vec3f(800, 600, 0);
+		UniformVector<Uniforms> uniformVector(gc, &uniforms, 1);
 
 		ShaderEffectDescription effect_description;
 		effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
 		effect_description.set_fragment_shader(File::read_text("Resources/fragment_shader.glsl"));
 		effect_description.set_attribute_screen_quad("PositionInProjection");
-		effect_description.set_attribute_uv_quad("AttrUV");
 		effect_description.set_frag_data_to_back_buffer("FragColor");
-		effect_description.set_uniform_block("Uniforms", UniformVector<Uniforms>(gc, &uniforms, 1));
+		effect_description.set_uniform_block("Uniforms", uniformVector);
 		ShaderEffect effect(gc, effect_description);
 
 		while (!exit)
 		{
+			uniforms.time = System::get_time() / 1000.0f;
+			uniformVector.upload_data(gc, &uniforms, 1);
+
 			gc.clear(Colorf::green);
 			effect.draw(gc);
 			window.flip(0);
