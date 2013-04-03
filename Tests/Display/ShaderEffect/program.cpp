@@ -29,12 +29,22 @@ int Program::main(const std::vector<std::string> &args)
 
 		GraphicContext gc = window.get_gc();
 
+		struct Uniforms
+		{
+			float blueness;
+			float padding[3];
+		};
+
+		Uniforms uniforms;
+		uniforms.blueness = 0.5;
+
 		ShaderEffectDescription effect_description;
 		effect_description.set_vertex_shader(File::read_text("Resources/vertex_shader.glsl"));
 		effect_description.set_fragment_shader(File::read_text("Resources/fragment_shader.glsl"));
 		effect_description.set_attribute_screen_quad("PositionInProjection");
 		effect_description.set_attribute_uv_quad("AttrUV");
 		effect_description.set_frag_data_to_back_buffer("FragColor");
+		effect_description.set_uniform_block("Uniforms", UniformVector<Uniforms>(gc, &uniforms, 1));
 		ShaderEffect effect(gc, effect_description);
 
 		while (!exit)

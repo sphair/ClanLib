@@ -3,7 +3,12 @@
 in vec2 UV;
 out vec4 FragColor;
 
+layout(std140) uniform Uniforms
+{
+	float Blueness;
+};
+
 void main()
 {
-	FragColor = vec4(UV, 0.0, 1.0);
+	FragColor = vec4(UV, Blueness, 1.0);
 }
