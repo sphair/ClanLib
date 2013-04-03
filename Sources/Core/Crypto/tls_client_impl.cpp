@@ -47,7 +47,8 @@ namespace clan
 {
 
 TLSClient_Impl::TLSClient_Impl() :
-	recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen(), receive_record_unprocessed_plaintext_offset(), receive_record_unprocessed_plaintext_type()
+	recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), handshake_in_read_pos(0),
+	conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen()
 {
 }
 
@@ -160,13 +161,11 @@ void TLSClient_Impl::progress_conversation()
 				should_continue = send_client_hello();
 				break;
 			case cl_tls_state_receive_server_hello:
-				should_continue = receive_server_hello();
 				break;
 			case cl_tls_state_receive_certificate:
-				should_continue = receive_certificate();
+				break;
 			//FIXME: Implement "7.4.3. Server key exchange message"
 			case cl_tls_state_receive_server_hello_done:
-				should_continue = receive_server_hello_done();
 				break;
 			// FIXME: Should be send a "client certificate message" ?
 			case cl_tls_state_send_client_key_exchange:
@@ -179,15 +178,11 @@ void TLSClient_Impl::progress_conversation()
 				should_continue = send_finished();
 				break;
 			case cl_tls_state_receive_change_cipher_spec:
-				should_continue = receive_change_cipher_spec();
 				break;
 			case cl_tls_state_receive_finished:
-				should_continue = receive_finished();
 				break;
 			case cl_tls_state_connected:
-				should_continue = false;
-				should_continue |= receive_application_data();
-				should_continue |= send_application_data();
+				should_continue = send_application_data();
 				break;
 
 			case cl_tls_state_error:
@@ -197,6 +192,10 @@ void TLSClient_Impl::progress_conversation()
 			default:
 				throw Exception("Unknown TLSClient conversation state");
 			}
+
+			if (receive_record())
+				should_continue = true;
+
 		} while (should_continue);
 	}
 	catch (...)
@@ -204,20 +203,6 @@ void TLSClient_Impl::progress_conversation()
 		conversation_state = cl_tls_state_error;
 		throw;
 	}
-}
-
-bool TLSClient_Impl::receive_application_data()
-{
-/*
-	unsigned int record_length;
-	int content_type;
-	unsigned char *dest_ptr = (unsigned char *) data;
-
-	receive_record_type(record_length, content_type, cl_tls_content_application_data);
-	len = receive_plaintext(dest_ptr, len, false);
-	return len;
-*/
-	return false;
 }
 
 bool TLSClient_Impl::send_application_data()
@@ -256,17 +241,11 @@ bool TLSClient_Impl::send_application_data()
 	return true;
 }
 
-bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_content_type)
+bool TLSClient_Impl::receive_record()
 {
-	// We have a cached unprocessed plaintext
-	// "RFC 2246 (5.2.1) multiple client messages of the same ContentType may be coalesced into a single TLSPlaintext record"
-	if (receive_record_unprocessed_plaintext.size())
-	{
-		// Create a fake record
-		out_content_type = receive_record_unprocessed_plaintext_type;
-		out_record_length = receive_record_unprocessed_plaintext.size() - receive_record_unprocessed_plaintext_offset;
-		return true;
-	}
+	// Do not read more records if our application data output buffer is full
+	if (recv_out_data.get_size() - recv_out_data_read_pos >= desired_buffer_size)
+		return false;
 
 	int data_available = recv_in_data.get_size() - recv_in_data_read_pos;
 	if (data_available < sizeof(TLS_Record))
@@ -297,21 +276,8 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 		// We set the protocol version in ServerHello
 	}
 
-	receive_record_unprocessed_plaintext.resize(record_length);
-	receive_record_unprocessed_plaintext_type = record.type;
-	receive_record_unprocessed_plaintext_offset = 0;
-
-	memcpy(&receive_record_unprocessed_plaintext[0], recv_in_data.get_data() + recv_in_data_read_pos + sizeof(TLS_Record), record_length);
-
-	if (security_parameters.is_receive_encrypted)
-		decrypt_record(record, receive_record_unprocessed_plaintext);
-
-	out_record_length = receive_record_unprocessed_plaintext.size();
-	out_content_type = record.type;
-
-	security_parameters.read_sequence_number++;
-	if (security_parameters.read_sequence_number == 0)
-		throw Exception("Sequence number wraparound");
+	record_data_buffer.set_size(record_length);
+	memcpy(record_data_buffer.get_data(), recv_in_data.get_data() + recv_in_data_read_pos + sizeof(TLS_Record), record_length);
 
 	recv_in_data_read_pos += sizeof(TLS_Record) + record_length;
 	if (recv_in_data_read_pos > desired_buffer_size / 2)
@@ -321,7 +287,430 @@ bool TLSClient_Impl::receive_record(unsigned int &out_record_length, int &out_co
 		recv_in_data.set_size(available);
 		recv_in_data_read_pos = 0;
 	}
+
+	DataBuffer plaintext;
+	if (security_parameters.is_receive_encrypted)
+		plaintext = decrypt_record(record, record_data_buffer);
+	else
+		plaintext = record_data_buffer;
+
+	security_parameters.read_sequence_number++;
+	if (security_parameters.read_sequence_number == 0)
+		throw Exception("Sequence number wraparound");
+
+	switch (record.type)
+	{
+	case cl_tls_content_change_cipher_spec:
+		change_cipher_spec_data(plaintext);
+		break;
+
+	case cl_tls_content_alert:
+		alert_data(plaintext);
+		break;
+
+	case cl_tls_content_handshake:
+		handshake_data(plaintext);
+		break;
+
+	case cl_tls_content_application_data:
+		application_data(plaintext);
+		break;
+
+	default:
+		// In order to allow extension of the TLS protocol additional record types can be supported by the record protocol. 
+		// If a TLS implementation receives a record type it does not understand, it should just ignore it.
+		break;
+	}
+
 	return true;
+}
+
+void TLSClient_Impl::change_cipher_spec_data(DataBuffer record_plaintext)
+{
+	if (conversation_state != cl_tls_state_receive_change_cipher_spec)
+		throw Exception("Unexpected TLS change cipher record received");
+
+	if (record_plaintext.get_size() != 1)
+		throw Exception("Invalid TLS content change cipher spec size");
+
+	security_parameters.read_sequence_number = 0;
+
+	ubyte8 value = record_plaintext.get_data<ubyte8>()[0];
+	if (value != 1)
+		throw Exception("TLS server change cipher spec did not send 1");
+
+	security_parameters.is_receive_encrypted = true;
+
+	conversation_state = cl_tls_state_receive_finished;
+}
+
+void TLSClient_Impl::alert_data(DataBuffer record_plaintext)
+{
+	if (record_plaintext.get_size() != 2) // To do: theoretically this is not safe - it could be split into two 1 byte records.
+		throw Exception("Invalid TLS content alert message");
+
+	const int alert_data_size = 2;
+	ubyte8 *alert_data = record_plaintext.get_data<ubyte8>();
+
+	if (alert_data[0] == cl_tls_warning)
+		return;
+
+	const char *desc = "Unknown";
+
+	switch (alert_data[1])
+	{
+		case cl_tls_close_notify:
+			desc = "close_notify";
+			break;
+
+		case cl_tls_unexpected_message:
+			desc = "unexpected_message";
+			break;
+
+		case cl_tls_bad_record_mac:
+			desc = "bad_record_mac";
+			break;
+
+		case cl_tls_decryption_failed:
+			desc = "decryption_failed";
+			break;
+
+		case cl_tls_record_overflow:
+			desc = "record_overflow";
+			break;
+
+		case cl_tls_decompression_failure:
+			desc = "decompression_failure";
+			break;
+
+		case cl_tls_handshake_failure:
+			desc = "handshake_failure";
+			break;
+
+		case cl_tls_bad_certificate:
+			desc = "bad_certificate";
+			break;
+
+		case cl_tls_unsupported_certificate:
+			desc = "unsupported_certificate";
+			break;
+
+		case cl_tls_certificate_revoked:
+			desc = "certificate_revoked";
+			break;
+
+		case cl_tls_certificate_expired:
+			desc = "certificate_expired";
+			break;
+
+		case cl_tls_certificate_unknown:
+			desc = "certificate_unknown";
+			break;
+
+		case cl_tls_illegal_parameter:
+			desc = "illegal_parameter";
+			break;
+
+		case cl_tls_unknown_ca:
+			desc = "unknown_ca";
+			break;
+
+		case cl_tls_access_denied:
+			desc = "access_denied";
+			break;
+
+		case cl_tls_decode_error:
+			desc = "decode_error";
+			break;
+
+		case cl_tls_decrypt_error:
+			desc = "decrypt_error";
+			break;
+
+		case cl_tls_export_restriction:
+			desc = "export_restriction";
+			break;
+
+		case cl_tls_protocol_version:
+			desc = "protocol_version";
+			break;
+
+		case cl_tls_insufficient_security:
+			desc = "insufficient_security";
+			break;
+
+		case cl_tls_internal_error:
+			desc = "internal_error";
+			break;
+
+		case cl_tls_user_canceled:
+			desc = "user_canceled";
+			break;
+
+		case cl_tls_no_renegotiation:
+			desc = "no_renegotiation";
+			break;
+	}
+
+	std::string string(string_format("TLS Alert %1", desc));
+	throw Exception(string);
+}
+
+void TLSClient_Impl::handshake_data(DataBuffer record_plaintext)
+{
+	// Copy handshake data into input buffer for easier processing:
+	// "RFC 2246 (5.2.1) multiple client messages of the same ContentType may be coalesced into a single TLSPlaintext record"
+	int pos = handshake_in_data.get_size();
+	handshake_in_data.set_size(pos + record_plaintext.get_size());
+	memcpy(handshake_in_data.get_data() + pos, record_plaintext.get_data(), record_plaintext.get_size());
+
+	// Check if we have received enough data to peek at the handshake header:
+	int available = handshake_in_data.get_size() - handshake_in_read_pos;
+	if (available < sizeof(TLS_Handshake))
+		return;
+
+	// Check if we have received enough data to read the entire handshake message:
+	TLS_Handshake &handshake = *reinterpret_cast<TLS_Handshake*>(handshake_in_data.get_data() + handshake_in_read_pos);
+	int length = handshake.length[0] << 16 | handshake.length[1] << 8 | handshake.length[2];
+	if (length <= available - sizeof(TLS_Handshake))
+		return;
+
+	const char *data = handshake_in_data.get_data() + handshake_in_read_pos + sizeof(TLS_Handshake);
+
+	// We got a full message.
+
+	// All handshake messages except handshake_finished needs to be included in the handshake hash calculation:
+	if (handshake.msg_type != cl_tls_handshake_finished)
+	{
+/*
+		if (!receive_record_unprocessed_plaintext_offset)	// Don't hash handshake if already processed on fragmented items
+		{
+			hash_handshake( &receive_record_unprocessed_plaintext[0], receive_record_unprocessed_plaintext.size() );
+		}
+*/
+		hash_handshake(&handshake, length + sizeof(TLS_Handshake));
+	}
+
+	// Dispatch message for further parsing:
+	switch (handshake.msg_type)
+	{
+	case cl_tls_handshake_hello_request:
+		handshake_hello_request_received(data, length);
+		break;
+	case cl_tls_handshake_client_hello:
+		handshake_client_hello_received(data, length);
+		break;
+	case cl_tls_handshake_server_hello:
+		handshake_server_hello_received(data, length);
+		break;
+	case cl_tls_handshake_certificate:
+		handshake_certificate_received(data, length);
+		break;
+	case cl_tls_handshake_server_key_exchange:
+		handshake_server_key_exchange_received(data, length);
+		break;
+	case cl_tls_handshake_certificate_request:
+		handshake_certificate_request_received(data, length);
+		break;
+	case cl_tls_handshake_server_hello_done:
+		handshake_server_hello_done_received(data, length);
+		break;
+	case cl_tls_handshake_certificate_verify:
+		handshake_certificate_verify_received(data, length);
+		break;
+	case cl_tls_handshake_client_key_exchange:
+		handshake_client_key_exchange_received(data, length);
+		break;
+	case cl_tls_handshake_finished:
+		handshake_finished_received(data, length);
+		break;
+	default:
+		throw Exception("Unknown handshake type");
+	}
+
+	// Remove processed handshake message from the input buffer:
+	handshake_in_read_pos += sizeof(TLS_Handshake) + length;
+	if (handshake_in_read_pos >= desired_buffer_size / 2)
+	{
+		available = handshake_in_data.get_size() - handshake_in_read_pos;
+		memmove(handshake_in_data.get_data(), handshake_in_data.get_data() + handshake_in_read_pos, available);
+		handshake_in_data.set_size(available);
+	}
+}
+
+void TLSClient_Impl::application_data(DataBuffer record_plaintext)
+{
+	if (conversation_state != cl_tls_state_connected)
+		throw Exception("Unexpected application data record received");
+
+	int pos = recv_out_data.get_size();
+	recv_out_data.set_size(pos + record_plaintext.get_size());
+	memcpy(recv_out_data.get_data() + pos, record_plaintext.get_data(), record_plaintext.get_size());
+}
+
+void TLSClient_Impl::handshake_hello_request_received(const void *data, int size)
+{
+	throw Exception("Unexpected hello request handshake message received");
+}
+
+void TLSClient_Impl::handshake_client_hello_received(const void *data, int size)
+{
+	throw Exception("Unexpected client hello handshake message received");
+}
+
+void TLSClient_Impl::handshake_server_hello_received(const void *data, int size)
+{
+	if (conversation_state != cl_tls_state_receive_server_hello)
+		throw Exception("TLS Expected server hello");
+
+	// The server responds with a ServerHello message, containing the chosen protocol version, 
+	// a random number, CipherSuite and compression method from the choices offered by the client. 
+	// To confirm or allow resumed handshakes the server may send a session ID. 
+	// The chosen protocol version should be the highest that both the client and server support. 
+	// For example, if the client supports TLS1.1 and the server supports TLS1.2, TLS1.1 should be 
+	// selected; SSL 3.0 should not be selected
+
+	TLS_ProtocolVersion server_version;
+
+	copy_data(&server_version, sizeof(server_version), data, size);
+
+	bool invalid_protocol = false;
+
+	// Check server version is not higher than this version
+	if (server_version.major > protocol.major)
+		invalid_protocol = true;
+
+	if (server_version.major == protocol.major)
+		if (server_version.minor > protocol.minor)
+			invalid_protocol = true;
+
+	// Check minimum is 3.1
+	if (server_version.major < 3)
+		invalid_protocol = true;
+
+	if (server_version.major == 3)
+		if (server_version.minor < 1)
+			invalid_protocol = true;
+
+	if (invalid_protocol)
+		throw Exception("Server Protocol not supported");
+
+	// Use the server protocol (will be lower that "protocol" but higher than 3.1)
+	protocol.major = server_version.major;
+	protocol.minor = server_version.minor;
+
+	is_protocol_chosen = true;
+
+	// Get TLS_Random
+	copy_data(security_parameters.server_random.get_data(), security_parameters.server_random.get_size(), data, size);
+
+	// "This structure is generated by the server and must be different from (and independent of) ClientHello.random"
+	if (!memcmp(security_parameters.server_random.get_data(), security_parameters.client_random.get_data(), security_parameters.server_random.get_size()))
+		throw Exception("TLS Client and Server random numbers must not match");
+
+	ubyte8 session_id_length;
+	copy_data(&session_id_length, 1, data, size);
+	Secret session_id(session_id_length);
+	copy_data(session_id.get_data(), session_id_length, data, size);
+
+	byte8 buffer[3];
+	copy_data(buffer, 3, data, size);
+
+	select_cipher_suite(buffer[0], buffer[1]);
+	select_compression_method(buffer[2]);
+
+	conversation_state = cl_tls_state_receive_certificate;
+}
+
+void TLSClient_Impl::handshake_certificate_received(const void *data, int size)
+{
+	if (conversation_state != cl_tls_state_receive_certificate)
+		throw Exception("TLS Expected certificate");
+
+	ubyte8 buffer[3];
+	copy_data(buffer, 3, data, size);
+
+	unsigned int certificate_list_size = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
+	if ( (size < certificate_list_size) || (certificate_list_size == 0) )
+		throw Exception("Invalid certification size");
+
+	while(certificate_list_size > 0)
+	{
+		if (certificate_list_size < 3)
+			throw Exception("Invalid record length");
+		copy_data(buffer, 3, data, size);
+		certificate_list_size -= 3;
+
+		unsigned int certificate_size = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
+		if ( (certificate_list_size < certificate_size) || (certificate_size == 0) )
+			throw Exception("Invalid certification size");
+
+		std::vector<unsigned char> cert_buffer;
+		cert_buffer.resize(certificate_size);
+		copy_data(&cert_buffer[0], certificate_size, data, size);
+
+		inspect_certificate(cert_buffer);
+
+		certificate_list_size -= certificate_size;
+	}
+
+	conversation_state = cl_tls_state_receive_server_hello_done;
+}
+
+void TLSClient_Impl::handshake_server_key_exchange_received(const void *data, int size)
+{
+	throw Exception("Unexpected server key exchange handshake message received");
+}
+
+void TLSClient_Impl::handshake_certificate_request_received(const void *data, int size)
+{
+	throw Exception("Unexpected certificate request handshake message received");
+}
+
+void TLSClient_Impl::handshake_server_hello_done_received(const void *data, int size)
+{
+	if (conversation_state != cl_tls_state_receive_server_hello_done)
+		throw Exception("TLS Expected server hello done");
+
+	conversation_state = cl_tls_state_send_client_key_exchange;
+}
+
+void TLSClient_Impl::handshake_certificate_verify_received(const void *data, int size)
+{
+	throw Exception("Unexpected certificate verify handshake message received");
+}
+
+void TLSClient_Impl::handshake_client_key_exchange_received(const void *data, int size)
+{
+	throw Exception("Unexpected client key exchange handshake message received");
+}
+
+void TLSClient_Impl::handshake_finished_received(const void *data, int size)
+{
+	if (conversation_state != cl_tls_state_receive_finished)
+		throw Exception("TLS Expected server finished");
+
+	const int verify_data_size = 12;
+	Secret server_verify_data(verify_data_size);
+	copy_data(server_verify_data.get_data(), verify_data_size, data, size);
+
+	Secret client_verify_data(verify_data_size);
+
+	Secret md5_handshake_messages(16);
+	Secret sha1_handshake_messages(20);
+
+	server_handshake_md5_hash.calculate();
+	server_handshake_sha1_hash.calculate();
+
+	server_handshake_md5_hash.get_hash(md5_handshake_messages.get_data());
+	server_handshake_sha1_hash.get_hash(sha1_handshake_messages.get_data());
+
+	PRF(client_verify_data.get_data(), verify_data_size, security_parameters.master_secret, "server finished", md5_handshake_messages, sha1_handshake_messages);
+
+	if (memcmp(client_verify_data.get_data(), server_verify_data.get_data(), verify_data_size))
+		throw Exception("TLS server finished verify data failed");
+
+	conversation_state = cl_tls_state_connected;
 }
 
 bool TLSClient_Impl::can_send_record() const
@@ -381,6 +770,16 @@ void TLSClient_Impl::reset()
 	client_handshake_sha1_hash.reset();
 	server_handshake_md5_hash.reset();
 	server_handshake_sha1_hash.reset();
+}
+
+void TLSClient_Impl::copy_data(void *out_data, int size, const void *&data, int &data_left)
+{
+	if (size > data_left)
+		throw Exception("Invalid handshake message");
+	memcpy(out_data, data, size);
+
+	data = static_cast<const char*>(data) + size;
+	data_left -= size;
 }
 
 void TLSClient_Impl::set_tls_record(unsigned char *dest_ptr, TLS_ContentType content_type, unsigned int length)
@@ -582,336 +981,10 @@ bool TLSClient_Impl::send_client_hello()
 	return true;
 }
 
-unsigned int TLSClient_Impl::receive_plaintext(void *destination_ptr, unsigned int size, bool receive_all)
-{
-	unsigned char *dest_ptr = (unsigned char *) destination_ptr;
-	while(size > 0)
-	{
-		// Check for unprocessed cached plaintext
-		if (receive_record_unprocessed_plaintext.size())
-		{
-			int size_to_copy = receive_record_unprocessed_plaintext.size() - receive_record_unprocessed_plaintext_offset;
-			if (size_to_copy > size)
-				size_to_copy = size;
-
-			memcpy(dest_ptr, &receive_record_unprocessed_plaintext[receive_record_unprocessed_plaintext_offset], size_to_copy);
-			receive_record_unprocessed_plaintext_offset += size_to_copy;
-			if (receive_record_unprocessed_plaintext_offset >= receive_record_unprocessed_plaintext.size())
-			{
-				receive_record_unprocessed_plaintext.clear();
-				receive_record_unprocessed_plaintext_offset = 0;
-			}
-			dest_ptr += size_to_copy;
-			size -= size_to_copy;
-		}
-
-		// Need to read more data from the socket (RFC 2246 (6.2.1) "a single message may be fragmented across several records").
-		if(size > 0)
-		{
-			if (!receive_all)
-			{
-				break;
-			}
-
-			unsigned int record_length;	// Indirectly this will be saved into receive_record_unprocessed_plaintext.size()
-			int content_type;
-			int last_receive_record_unprocessed_plaintext_type = receive_record_unprocessed_plaintext_type;
-			receive_record(record_length, content_type);
-
-			if (content_type != last_receive_record_unprocessed_plaintext_type)
-				throw Exception("Unexpected TLS content type, mixed content in fragment");
-		}
-	}
-	return dest_ptr - ((unsigned char *) destination_ptr);
-
-}
-
-void TLSClient_Impl::receive_record_type(unsigned int &out_record_length, int &out_content_type, TLS_ContentType expected_type)
-{
-	// In order to allow extension of the TLS protocol additional record types can be supported by the record protocol. 
-	// If a TLS implementation receives a record type it does not understand, it should just ignore it.
-
-	while(true)
-	{
-		receive_record(out_record_length, out_content_type);
-		if (out_content_type == cl_tls_content_alert)
-		{
-			process_alert(out_record_length);
-		}
-		else if (out_content_type == expected_type)
-		{
-			break;
-		}
-
-		// Ignore record and try again
-		receive_record_unprocessed_plaintext.clear();
-	}
-
-}
-
-int TLSClient_Impl::process_alert(int last_record_length)
-{
-	const int alert_data_size = 2;
-	ubyte8 alert_data[alert_data_size];
-	receive_plaintext(alert_data, alert_data_size);
-
-	if (alert_data[0] == cl_tls_warning)
-		return alert_data[1];
-
-	const char *desc = "Unknown";
-
-	switch (alert_data[1])
-	{
-		case cl_tls_close_notify:
-			desc = "close_notify";
-			break;
-
-		case cl_tls_unexpected_message:
-			desc = "unexpected_message";
-			break;
-
-		case cl_tls_bad_record_mac:
-			desc = "bad_record_mac";
-			break;
-
-		case cl_tls_decryption_failed:
-			desc = "decryption_failed";
-			break;
-
-		case cl_tls_record_overflow:
-			desc = "record_overflow";
-			break;
-
-		case cl_tls_decompression_failure:
-			desc = "decompression_failure";
-			break;
-
-		case cl_tls_handshake_failure:
-			desc = "handshake_failure";
-			break;
-
-		case cl_tls_bad_certificate:
-			desc = "bad_certificate";
-			break;
-
-		case cl_tls_unsupported_certificate:
-			desc = "unsupported_certificate";
-			break;
-
-		case cl_tls_certificate_revoked:
-			desc = "certificate_revoked";
-			break;
-
-		case cl_tls_certificate_expired:
-			desc = "certificate_expired";
-			break;
-
-		case cl_tls_certificate_unknown:
-			desc = "certificate_unknown";
-			break;
-
-		case cl_tls_illegal_parameter:
-			desc = "illegal_parameter";
-			break;
-
-		case cl_tls_unknown_ca:
-			desc = "unknown_ca";
-			break;
-
-		case cl_tls_access_denied:
-			desc = "access_denied";
-			break;
-
-		case cl_tls_decode_error:
-			desc = "decode_error";
-			break;
-
-		case cl_tls_decrypt_error:
-			desc = "decrypt_error";
-			break;
-
-		case cl_tls_export_restriction:
-			desc = "export_restriction";
-			break;
-
-		case cl_tls_protocol_version:
-			desc = "protocol_version";
-			break;
-
-		case cl_tls_insufficient_security:
-			desc = "insufficient_security";
-			break;
-
-		case cl_tls_internal_error:
-			desc = "internal_error";
-			break;
-
-		case cl_tls_user_canceled:
-			desc = "user_canceled";
-			break;
-
-		case cl_tls_no_renegotiation:
-			desc = "no_renegotiation";
-			break;
-	}
-
-	std::string string(string_format("TLS Alert %1", desc));
-	throw Exception(string);
-}
-
-void TLSClient_Impl::receive_handshake(unsigned int &out_handshake_length, int &out_handshake_type, bool include_in_hash_handshake)
-{
-	TLS_Handshake handshake;
-
-	unsigned int record_length;
-	int content_type;
-
-	receive_record_type(record_length, content_type, cl_tls_content_handshake);
-
-	if (include_in_hash_handshake)
-	{
-		if (!receive_record_unprocessed_plaintext_offset)	// Don't hash handshake if already processed on fragmented items
-		{
-			hash_handshake( &receive_record_unprocessed_plaintext[0], receive_record_unprocessed_plaintext.size() );
-		}
-	}
-
-	receive_plaintext(&handshake, sizeof(handshake));
-
-	out_handshake_length = handshake.length[0] << 16 | handshake.length[1] << 8 | handshake.length[2];
-	out_handshake_type = handshake.msg_type;
-}
-
-bool TLSClient_Impl::receive_server_hello()
-{
-	// The server responds with a ServerHello message, containing the chosen protocol version, 
-	// a random number, CipherSuite and compression method from the choices offered by the client. 
-	// To confirm or allow resumed handshakes the server may send a session ID. 
-	// The chosen protocol version should be the highest that both the client and server support. 
-	// For example, if the client supports TLS1.1 and the server supports TLS1.2, TLS1.1 should be 
-	// selected; SSL 3.0 should not be selected
-
-	unsigned int handshake_length;
-	int out_handshake_type;
-	receive_handshake(handshake_length, out_handshake_type, true);
-
-	if (out_handshake_type != cl_tls_handshake_server_hello)
-		throw Exception("TLS Expected server hello");
-
-	TLS_ProtocolVersion server_version;
-
-	receive_plaintext(&server_version, sizeof(server_version) );
-
-	bool invalid_protocol = false;
-
-	// Check server version is not higher than this version
-	if (server_version.major > protocol.major)
-		invalid_protocol = true;
-
-	if (server_version.major == protocol.major)
-		if (server_version.minor > protocol.minor)
-			invalid_protocol = true;
-
-	// Check minimum is 3.1
-	if (server_version.major < 3)
-		invalid_protocol = true;
-
-	if (server_version.major == 3)
-		if (server_version.minor < 1)
-			invalid_protocol = true;
-
-	if (invalid_protocol)
-		throw Exception("Server Protocol not supported");
-
-	// Use the server protocol (will be lower that "protocol" but higher than 3.1)
-	protocol.major = server_version.major;
-	protocol.minor = server_version.minor;
-
-	is_protocol_chosen = true;
-
-	// Get TLS_Random
-	receive_plaintext(security_parameters.server_random.get_data(), security_parameters.server_random.get_size() );
-
-	// "This structure is generated by the server and must be different from (and independent of) ClientHello.random"
-	if (!memcmp(security_parameters.server_random.get_data(), security_parameters.client_random.get_data(), security_parameters.server_random.get_size()))
-		throw Exception("TLS Client and Server random numbers must not match");
-
-	ubyte8 session_id_length;
-	receive_plaintext(&session_id_length, 1);
-	Secret session_id(session_id_length);
-	receive_plaintext(session_id.get_data(), session_id_length);
-
-	byte8 buffer[3];
-	receive_plaintext(buffer, 3);
-
-	select_cipher_suite(buffer[0], buffer[1]);
-	select_compression_method(buffer[2]);
-
-	conversation_state = cl_tls_state_receive_certificate;
-	return true;
-}
-
-bool TLSClient_Impl::receive_certificate()
-{
-	unsigned int handshake_length;
-	int out_handshake_type;
-	receive_handshake(handshake_length, out_handshake_type, true);
-
-	if (out_handshake_type != cl_tls_handshake_certificate)
-		throw Exception("TLS Expected certificate");
-
-	if (handshake_length < 3)
-		throw Exception("Invalid record length");
-	ubyte8 buffer[3];
-	receive_plaintext(buffer, 3);
-	handshake_length -= 3;
-
-	unsigned int certificate_list_size = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
-	if ( (handshake_length < certificate_list_size) || (certificate_list_size == 0) )
-		throw Exception("Invalid certification size");
-
-	while(certificate_list_size > 0)
-	{
-		if (certificate_list_size < 3)
-			throw Exception("Invalid record length");
-		receive_plaintext(buffer, 3);
-		certificate_list_size -= 3;
-
-		unsigned int certificate_size = buffer[0] << 16 | buffer[1] << 8 | buffer[2];
-		if ( (certificate_list_size < certificate_size) || (certificate_size == 0) )
-			throw Exception("Invalid certification size");
-
-		std::vector<unsigned char> cert_buffer;
-		cert_buffer.resize(certificate_size);
-		receive_plaintext(&cert_buffer[0], certificate_size);
-
-		inspect_certificate(cert_buffer);
-
-		certificate_list_size -= certificate_size;
-
-	}
-
-	conversation_state = cl_tls_state_receive_server_hello_done;
-	return true;
-}
-
 void TLSClient_Impl::inspect_certificate(std::vector<unsigned char> &cert)
 {
 	X509 x509(&cert[0], cert.size());
 	certificate_chain.push_back(x509);
-}
-
-bool TLSClient_Impl::receive_server_hello_done()
-{
-	unsigned int handshake_length;
-	int out_handshake_type;
-	receive_handshake(handshake_length, out_handshake_type, true);
-
-	if (out_handshake_type != cl_tls_handshake_server_hello_done)
-		throw Exception("TLS Expected server hello done");
-
-	conversation_state = cl_tls_state_send_client_key_exchange;
-	return true;
 }
 
 bool TLSClient_Impl::send_client_key_exchange()
@@ -1238,59 +1311,6 @@ void TLSClient_Impl::hash_handshake(const void *data_ptr, unsigned int data_size
 	server_handshake_sha1_hash.add(data_ptr, data_size);
 }
 
-bool TLSClient_Impl::receive_change_cipher_spec()
-{
-	unsigned int record_length;
-	int content_type;
-
-	receive_record_type(record_length, content_type, cl_tls_content_change_cipher_spec);
-
-	security_parameters.read_sequence_number = 0;
-
-	ubyte8 value;
-	receive_plaintext(&value, 1);
-	if (value != 1)
-		throw Exception("TLS server change cipher spec did not send 1");
-
-	security_parameters.is_receive_encrypted = true;
-
-	conversation_state = cl_tls_state_receive_finished;
-	return true;
-}
-
-bool TLSClient_Impl::receive_finished()
-{
-	unsigned int handshake_length;
-	int out_handshake_type;
-	receive_handshake(handshake_length, out_handshake_type, false);
-
-	if (out_handshake_type != cl_tls_handshake_finished)
-		throw Exception("TLS Expected server finished");
-
-	const int verify_data_size = 12;
-	Secret server_verify_data(verify_data_size);
-	receive_plaintext(server_verify_data.get_data(), verify_data_size);
-
-	Secret client_verify_data(verify_data_size);
-
-	Secret md5_handshake_messages(16);
-	Secret sha1_handshake_messages(20);
-
-	server_handshake_md5_hash.calculate();
-	server_handshake_sha1_hash.calculate();
-
-	server_handshake_md5_hash.get_hash(md5_handshake_messages.get_data());
-	server_handshake_sha1_hash.get_hash(sha1_handshake_messages.get_data());
-
-	PRF(client_verify_data.get_data(), verify_data_size, security_parameters.master_secret, "server finished", md5_handshake_messages, sha1_handshake_messages);
-
-	if (memcmp(client_verify_data.get_data(), server_verify_data.get_data(), verify_data_size))
-		throw Exception("TLS server finished verify data failed");
-
-	conversation_state = cl_tls_state_connected;
-	return true;
-}
-
 DataBuffer TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_size)
 {
 	DataBuffer buffer;
@@ -1325,9 +1345,9 @@ DataBuffer TLSClient_Impl::decrypt_data(const void *data_ptr, unsigned int data_
 
 }
 
-void TLSClient_Impl::decrypt_record(TLS_Record &record, std::vector<unsigned char> &plaintext)
+DataBuffer TLSClient_Impl::decrypt_record(TLS_Record &record, const DataBuffer &record_data)
 {
-	DataBuffer decrypted = decrypt_data(&plaintext[0] , plaintext.size());
+	DataBuffer decrypted = decrypt_data(record_data.get_data(), record_data.get_size());
 
 	unsigned char *decrypted_data = (unsigned char *) decrypted.get_data();
 
@@ -1342,10 +1362,7 @@ void TLSClient_Impl::decrypt_record(TLS_Record &record, std::vector<unsigned cha
 	if (memcmp(mac.get_data(), decrypted_data + decoded_size, mac.get_size()))
 		throw Exception("HMAC failed");
 
-	// Copy the data
-	plaintext.resize(decoded_size);
-	memcpy(&plaintext[0], decrypted_data, decoded_size);
-
+	return decrypted;
 }
 
 }
