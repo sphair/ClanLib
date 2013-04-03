@@ -50,6 +50,12 @@ TLSClient_Impl::TLSClient_Impl() :
 	recv_in_data_read_pos(0), recv_out_data_read_pos(0), send_in_data_read_pos(0), send_out_data_read_pos(0), handshake_in_read_pos(0),
 	conversation_state(cl_tls_state_send_client_hello), security_parameters(), protocol(), is_protocol_chosen()
 {
+	// Set TLS 3.1
+	protocol.major = 3;
+	protocol.minor = 1;
+	is_protocol_chosen = false;
+
+	create_security_parameters_client_random();
 }
 
 TLSClient_Impl::~TLSClient_Impl()
@@ -261,7 +267,7 @@ bool TLSClient_Impl::receive_record()
 	if (record_length == 0)	// The TLS Record Layer receives uninterpreted data from higher layers in non-empty blocks of arbitrary size.
 		throw Exception("Received an empty block");
 
-	if (sizeof(TLS_Record) + record_length < data_available)
+	if (sizeof(TLS_Record) + record_length > data_available)
 		return false;
 
 	if (is_protocol_chosen)
@@ -472,7 +478,7 @@ void TLSClient_Impl::handshake_data(DataBuffer record_plaintext)
 	// Check if we have received enough data to read the entire handshake message:
 	TLS_Handshake &handshake = *reinterpret_cast<TLS_Handshake*>(handshake_in_data.get_data() + handshake_in_read_pos);
 	int length = handshake.length[0] << 16 | handshake.length[1] << 8 | handshake.length[2];
-	if (length <= available - sizeof(TLS_Handshake))
+	if (sizeof(TLS_Handshake) + length > available)
 		return;
 
 	const char *data = handshake_in_data.get_data() + handshake_in_read_pos + sizeof(TLS_Handshake);
@@ -550,7 +556,16 @@ void TLSClient_Impl::application_data(DataBuffer record_plaintext)
 
 void TLSClient_Impl::handshake_hello_request_received(const void *data, int size)
 {
-	throw Exception("Unexpected hello request handshake message received");
+	// RFC 2246:
+	// "Hello request is a simple notification that the client should
+	// begin the negotiation process anew by sending a client hello
+	// message when convenient. This message will be ignored by the
+	// client if the client is currently negotiating a session. This
+	// message may be ignored by the client if it does not wish to
+	// renegotiate a session, or the client may, if it wishes, respond
+	// with a no_renegotiation alert."
+
+	// Since we allowed to do nothing, we do nothing.
 }
 
 void TLSClient_Impl::handshake_client_hello_received(const void *data, int size)
@@ -671,6 +686,8 @@ void TLSClient_Impl::handshake_server_hello_done_received(const void *data, int 
 {
 	if (conversation_state != cl_tls_state_receive_server_hello_done)
 		throw Exception("TLS Expected server hello done");
+
+	set_server_public_key();
 
 	conversation_state = cl_tls_state_send_client_key_exchange;
 }
