@@ -42,6 +42,7 @@
 #include "API/Display/Render/storage_buffer.h"
 #include "API/Display/Render/texture.h"
 #include "API/Core/Text/string_format.h"
+#include "shader_effect_description_impl.h"
 #include <map>
 
 namespace clan
