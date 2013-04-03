@@ -82,7 +82,7 @@ DepthStencilStateDescription &ShaderEffectDescription::depth_stencil()
 	return impl->depth_stencil_state;
 }
 
-void ShaderEffectDescription::set_frag_data(std::string name, int index)
+void ShaderEffectDescription::set_frag_data_back_buffer(std::string name)
 {
 }
 
@@ -91,10 +91,6 @@ void ShaderEffectDescription::set_frag_data(std::string name, RenderBuffer buffe
 }
 
 void ShaderEffectDescription::set_frag_data(std::string name, Texture texture)
-{
-}
-
-void ShaderEffectDescription::set_frag_data_screen_sized(std::string name, TextureFormat format)
 {
 }
 
@@ -134,25 +130,11 @@ void ShaderEffectDescription::set_depth_stencil_data(Texture texture)
 {
 }
 
-void ShaderEffectDescription::set_texture(std::string name, int index)
-{
-}
-
 void ShaderEffectDescription::set_texture(std::string name, Texture texture)
 {
 }
 
-void ShaderEffectDescription::set_storage(std::string name, int index)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_storage(std::string name, std::vector<Type> values)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_storage(std::string name, StorageVector<Type> values)
+void ShaderEffectDescription::set_storage(std::string name, StorageBuffer values)
 {
 }
 
@@ -160,37 +142,7 @@ void ShaderEffectDescription::set_empty_storage(std::string name, int size)
 {
 }
 
-void ShaderEffectDescription::set_uniform_block(std::string name, int index)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_uniform_block(std::string name, Type value)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_uniform_block(std::string name, std::vector<Type> values)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_uniform_block(std::string name, UniformVector<Type> values)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_attribute(std::string name, Type *values, int count)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_attribute(std::string name, std::vector<Type> values)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_attribute(std::string name, VertexArrayVector<Type> values)
+void ShaderEffectDescription::set_uniform_block(std::string name, UniformBuffer values)
 {
 }
 
@@ -199,16 +151,6 @@ void ShaderEffectDescription::set_attribute_screen_quad(std::string name)
 }
 
 void ShaderEffectDescription::set_attribute_uv_quad(std::string name, UVQuadType type)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_elements(std::vector<Type> elements)
-{
-}
-
-template<typename Type>
-void ShaderEffectDescription::set_elements(ElementArrayVector<Type> elements)
 {
 }
 

@@ -88,10 +88,9 @@ public:
 	BlendStateDescription &blend();
 	DepthStencilStateDescription &depth_stencil();
 
-	void set_frag_data(std::string name, int index);
 	void set_frag_data(std::string name, RenderBuffer buffer);
 	void set_frag_data(std::string name, Texture texture);
-	void set_frag_data_screen_sized(std::string name, TextureFormat format);
+	void set_frag_data_back_buffer(std::string name);
 
 	void set_depth_data(TextureFormat format);
 	void set_depth_data(RenderBuffer buffer);
@@ -105,36 +104,18 @@ public:
 	void set_depth_stencil_data(RenderBuffer buffer);
 	void set_depth_stencil_data(Texture texture);
 
-	void set_texture(std::string name, int index);
 	void set_texture(std::string name, Texture texture);
 
-	void set_storage(std::string name, int index);
-	template<typename Type>
-	void set_storage(std::string name, std::vector<Type> values);
-	template<typename Type>
-	void set_storage(std::string name, StorageVector<Type> values);
-
+	void set_storage(std::string name, StorageBuffer values);
 	void set_empty_storage(std::string name, int size);
 
-	void set_uniform_block(std::string name, int index);
-	template<typename Type>
-	void set_uniform_block(std::string name, Type value);
-	template<typename Type>
-	void set_uniform_block(std::string name, std::vector<Type> values);
-	template<typename Type>
-	void set_uniform_block(std::string name, UniformVector<Type> values);
+	void set_uniform_block(std::string name, UniformBuffer values);
 
-	template<typename Type>
-	void set_attribute(std::string name, Type *values, int count);
-	template<typename Type>
-	void set_attribute(std::string name, std::vector<Type> values);
 	template<typename Type>
 	void set_attribute(std::string name, VertexArrayVector<Type> values);
 	void set_attribute_screen_quad(std::string name);
 	void set_attribute_uv_quad(std::string name, UVQuadType type = uv_zero_one);
 
-	template<typename Type>
-	void set_elements(std::vector<Type> elements);
 	template<typename Type>
 	void set_elements(ElementArrayVector<Type> elements);
 /// \}
@@ -145,6 +126,16 @@ private:
 	std::shared_ptr<ShaderEffectDescription_Impl> impl;
 /// \}
 };
+
+template<typename Type>
+inline void ShaderEffectDescription::set_attribute(std::string name, VertexArrayVector<Type> values)
+{
+}
+
+template<typename Type>
+inline void ShaderEffectDescription::set_elements(ElementArrayVector<Type> elements)
+{
+}
 
 }
 
