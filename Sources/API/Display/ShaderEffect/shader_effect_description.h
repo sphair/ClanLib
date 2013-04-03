@@ -34,6 +34,7 @@
 
 #include <memory>
 #include "../api_display.h"
+#include "../Render/graphic_context.h"
 
 namespace clan
 {
@@ -59,6 +60,12 @@ public:
 /// \name Operations
 /// \{
 public:
+	void set_glsl_version(int version = 330);
+	void set_define(std::string name, std::string value = "1");
+
+	void set_vertex_shader(std::string code, ShaderLanguage language = shader_glsl);
+	void set_fragment_shader(std::string code, ShaderLanguage language = shader_glsl);
+	void set_compute_shader(std::string code, ShaderLanguage language = shader_glsl);
 
 /// \}
 /// \name Implementation

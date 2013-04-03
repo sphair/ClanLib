@@ -29,6 +29,7 @@
 
 #include "Display/precomp.h"
 #include "API/Display/ShaderEffect/shader_effect_description.h"
+#include <map>
 
 namespace clan
 {
@@ -46,6 +47,19 @@ public:
 	~ShaderEffectDescription_Impl()
 	{
 	}
+
+	int glsl_version;
+
+	std::map<std::string, std::string> defines;
+
+	std::string vertex_shader_code;
+	ShaderLanguage vertex_shader_language;
+
+	std::string fragment_shader_code;
+	ShaderLanguage fragment_shader_language;
+
+	std::string compute_shader_code;
+	ShaderLanguage compute_shader_language;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -56,6 +70,35 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////
 // ShaderEffectDescription Operations:
+
+void ShaderEffectDescription::set_glsl_version(int version)
+{
+	impl->glsl_version = version;
+}
+
+void ShaderEffectDescription::set_define(std::string name, std::string value)
+{
+	impl->defines[name] = value;
+}
+
+void ShaderEffectDescription::set_vertex_shader(std::string code, ShaderLanguage language)
+{
+	impl->vertex_shader_code = code;
+	impl->vertex_shader_language = language;
+}
+
+void ShaderEffectDescription::set_fragment_shader(std::string code, ShaderLanguage language)
+{
+	impl->fragment_shader_code = code;
+	impl->fragment_shader_language = language;
+}
+
+void ShaderEffectDescription::set_compute_shader(std::string code, ShaderLanguage language)
+{
+	impl->compute_shader_code = code;
+	impl->compute_shader_language = language;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // ShaderEffectDescription Implementation:
