@@ -34,7 +34,12 @@
 #include "API/Display/Render/rasterizer_state.h"
 #include "API/Display/Render/blend_state.h"
 #include "API/Display/Render/depth_stencil_state.h"
+#include "API/Display/Render/vertex_array_buffer.h"
 #include "API/Display/Render/primitives_array.h"
+#include "API/Display/Render/element_array_buffer.h"
+#include "API/Display/Render/uniform_buffer.h"
+#include "API/Display/Render/storage_buffer.h"
+#include "API/Display/Render/texture.h"
 #include <map>
 
 namespace clan
@@ -52,9 +57,9 @@ public:
 	DepthStencilState depth_stencil_state;
 
 	std::vector<VertexArrayBuffer> attributes;
-	ElementArrayBuffer elements;
-
 	PrimitivesArray prim_array;
+
+	ElementArrayBuffer elements;
 
 	std::map<int, UniformBuffer> uniform_bindings;
 
@@ -78,6 +83,7 @@ ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &de
 
 void ShaderEffect::dispatch(GraphicContext &gc, int x, int y, int z)
 {
+
 }
 	
 void ShaderEffect::draw(GraphicContext &gc)
