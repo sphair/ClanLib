@@ -89,6 +89,7 @@ public:
 	{
 		VertexAttributeDescription() : size(0), type(), offset(0), stride(0), normalize(false) { }
 
+		VertexArrayBuffer buffer;
 		int size;
 		VertexAttributeDataType type;
 		size_t offset;
