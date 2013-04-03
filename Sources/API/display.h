@@ -118,6 +118,8 @@
 #include "Display/Render/texture_cube_array.h"
 #include "Display/Render/vertex_array_buffer.h"
 #include "Display/Render/vertex_array_vector.h"
+#include "Display/ShaderEffect/shader_effect.h"
+#include "Display/ShaderEffect/shader_effect_description.h"
 #include "Display/TargetProviders/cursor_provider.h"
 #include "Display/TargetProviders/display_target_provider.h"
 #include "Display/TargetProviders/display_window_provider.h"

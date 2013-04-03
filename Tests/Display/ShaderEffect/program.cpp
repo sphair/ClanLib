@@ -28,6 +28,10 @@ int Program::main(const std::vector<std::string> &args)
 		GraphicContext gc = window.get_gc();
 		InputContext ic = window.get_ic();
 
+		ShaderEffectDescription effect_description;
+
+		ShaderEffect effect;
+
 		while (!exit)
 		{
 			gc.clear();
