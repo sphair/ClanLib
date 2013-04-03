@@ -28,7 +28,7 @@
     //____________________________________________________________________________________
     //                                                                         S O U N D S
     
-     <sample name="Music1" file="Sound/SongTest.ogg"/>
+     <sample name="Music1" file="Sound/Song.ogg"/>
      <sample name="Explosion1" file="Sound/explosion1.wav"/>
      <sample name="Explosion2" file="Sound/explosion2.wav"/>
      <sample name="Hurt1" file="Sound/hurt1.wav"/>
