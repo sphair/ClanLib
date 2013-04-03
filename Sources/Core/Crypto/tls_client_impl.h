@@ -255,13 +255,35 @@ private:
 
 	bool can_send_record() const;
 	void send_record(void *data_ptr, unsigned int data_size);	// !< Note "data_ptr" may be written to
-	bool receive_record(unsigned int &out_record_length, int &out_content_type);
 
-	bool send_application_data();
-	bool receive_application_data();
+	bool receive_record();
+
+	void change_cipher_spec_data(DataBuffer record_plaintext);
+	void alert_data(DataBuffer record_plaintext);
+	void handshake_data(DataBuffer record_plaintext);
+	void application_data(DataBuffer record_plaintext);
+
+	void handshake_hello_request_received(const void *data, int size);
+	void handshake_client_hello_received(const void *data, int size);
+	void handshake_server_hello_received(const void *data, int size);
+	void handshake_certificate_received(const void *data, int size);
+	void handshake_server_key_exchange_received(const void *data, int size);
+	void handshake_certificate_request_received(const void *data, int size);
+	void handshake_server_hello_done_received(const void *data, int size);
+	void handshake_certificate_verify_received(const void *data, int size);
+	void handshake_client_key_exchange_received(const void *data, int size);
+	void handshake_finished_received(const void *data, int size);
 
 	bool send_client_hello();
+	bool send_client_key_exchange();
+	bool send_change_cipher_spec();
+	bool send_finished();
+	bool send_application_data();
+
 	void reset();
+
+	void copy_data(void *out_data, int size, const void *&data, int &data_left);
+
 	void set_tls_record(unsigned char *dest_ptr, TLS_ContentType content_type, unsigned int length);
 	void set_tls_handshake(unsigned char *dest_ptr, TLS_HandshakeType handshake_type, unsigned int length);
 	void set_tls_protocol_version(unsigned char *dest_ptr);
@@ -273,26 +295,14 @@ private:
 	void set_compression_methods(unsigned char *dest_ptr) const;
 	int get_cipher_suites_length() const;
 	void set_cipher_suites(unsigned char *dest_ptr) const;
-	bool receive_server_hello();
-	void receive_handshake(unsigned int &out_handshake_length, int &out_handshake_type, bool include_in_hash_handshake);
-	unsigned int receive_plaintext(void *destination_ptr, unsigned int size, bool receive_all = true);
-	int process_alert(int last_record_length);
 	void select_cipher_suite(ubyte8 value1, ubyte8 value2);
 	void select_compression_method(ubyte8 value);
-	bool receive_certificate();
 	void inspect_certificate(std::vector<unsigned char> &cert);
-	bool receive_server_hello_done();
-	bool send_client_key_exchange();
 	void set_server_public_key();
 	void PRF(void *output_ptr, unsigned int output_size, const Secret &secret, const char *label_ptr, const Secret &seed_part1, const Secret &seed_part2);
-	bool send_change_cipher_spec();
-	bool send_finished();
 	void hash_handshake(const void *data_ptr, unsigned int data_size);
 
-	bool receive_change_cipher_spec();
-	bool receive_finished();
-	void receive_record_type(unsigned int &out_record_length, int &out_content_type, TLS_ContentType expected_type);
-	void decrypt_record(TLS_Record &record, std::vector<unsigned char> &plaintext);
+	DataBuffer decrypt_record(TLS_Record &record, const DataBuffer &record_data);
 	DataBuffer decrypt_data(const void *data_ptr, unsigned int data_size);
 
 	Secret calculate_mac(const void *data_ptr, unsigned int data_size, const void *data2_ptr, unsigned int data2_size, ubyte64 sequence_number, const Secret &mac_secret);
@@ -315,7 +325,12 @@ private:
 	DataBuffer send_out_data;
 	int send_out_data_read_pos;
 
+	DataBuffer handshake_in_data;
+	int handshake_in_read_pos;
+
 	TLS_ConversationState conversation_state;
+
+	DataBuffer record_data_buffer; // local variable of receive_record(). Placed here to avoid allocating memory each time a record is processed
 
 	TLS_SecurityParameters security_parameters;
 	TLS_ProtocolVersion protocol;
@@ -324,11 +339,6 @@ private:
 	DataBuffer server_public_modulus;
 
 	bool is_protocol_chosen;	// Set by the server hello response
-
-	// These 2 variables are only to be used by receive_plaintext() and receive_record()
-	std::vector<unsigned char> receive_record_unprocessed_plaintext;
-	int receive_record_unprocessed_plaintext_offset;
-	int receive_record_unprocessed_plaintext_type;	// TLS_ContentType
 
 	Random m_Random;
 
