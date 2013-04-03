@@ -56,7 +56,7 @@ public:
 
 	static std::string defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines, int glsl_shader_version = 330);
 
-	void compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
+	void create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 	void create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 
 	ProgramObject program;
@@ -90,7 +90,7 @@ ShaderEffect::ShaderEffect()
 ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &description)
 : impl(new ShaderEffect_Impl(gc))
 {
-	impl->compile_and_attach_shaders(gc, description.impl.get());
+	impl->create_shaders(gc, description.impl.get());
 	impl->create_primitives_array(gc, description.impl.get());
 }
 
@@ -247,7 +247,7 @@ std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, std::vector<co
 	return prefix;
 }
 
-void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
+void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
 	if (!description->vertex_shader_code.empty()) 
 	{
@@ -272,6 +272,9 @@ void ShaderEffect_Impl::compile_and_attach_shaders(GraphicContext &gc, const Sha
 			throw Exception(string_format("Unable to compile compute shader: %1", compute_shader.get_info_log()));
 		program.attach(compute_shader);
 	}
+
+	if (!program.link())
+		throw Exception(string_format("Link failed: %1", program.get_info_log()));
 }
 
 void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
