@@ -29,6 +29,8 @@ int Program::main(const std::vector<std::string> &args)
 
 		GraphicContext gc = window.get_gc();
 
+		Texture2D texture(gc, "../2D/tux.png");
+
 		struct Uniforms
 		{
 			Vec3f resolution;
@@ -46,6 +48,7 @@ int Program::main(const std::vector<std::string> &args)
 		effect_description.set_attribute_screen_quad("PositionInProjection");
 		effect_description.set_frag_data_to_back_buffer("FragColor");
 		effect_description.set_uniform_block("Uniforms", uniformVector);
+		effect_description.set_texture("Tux", texture);
 		ShaderEffect effect(gc, effect_description);
 
 		while (!exit)
