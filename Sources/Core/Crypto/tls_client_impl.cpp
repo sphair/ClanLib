@@ -219,7 +219,8 @@ bool TLSClient_Impl::send_application_data()
 	const char *data = send_in_data.get_data() + send_in_data_read_pos;
 	int size = send_in_data.get_size() - send_in_data_read_pos;
 
-	unsigned int data_in_record = std::min((unsigned int)size, max_record_length);
+	unsigned int max_record_length_gcc_fix = max_record_length;
+	unsigned int data_in_record = std::min((unsigned int)size, max_record_length_gcc_fix);
 
 	int offset = 0;
 	int offset_tls_record = offset;					offset += sizeof(TLS_Record);
