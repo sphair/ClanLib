@@ -42,8 +42,6 @@ class Image;
 class StatusBar_Impl;
 
 /// \brief Status bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI StatusBar : public GUIComponent
 {
 /// \name Construction

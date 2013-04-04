@@ -40,8 +40,6 @@ namespace clan
 class ProgramUniform_Impl;
 
 /// \brief OpenGL program object uniform variable.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ProgramUniform
 {
 /// \name Construction

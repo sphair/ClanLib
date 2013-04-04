@@ -44,8 +44,6 @@ class Random;
 /// \brief Random class
 ///
 /// Uses the operating system cryptographically secure pseudorandom number generator
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE Random
 {
 /// \name Construction

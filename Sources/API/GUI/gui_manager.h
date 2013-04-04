@@ -61,8 +61,6 @@ class DisplayWindow;
 class ResourceManager;
 
 /// \brief GUI manager.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIManager
 {
 /// \name Construction

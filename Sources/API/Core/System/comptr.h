@@ -35,8 +35,6 @@ namespace clan
 
 template <typename Type>
 /// \brief ComPtr
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE ComPtr
 {
 public:

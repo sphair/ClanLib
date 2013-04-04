@@ -43,8 +43,6 @@ namespace clan
 class SWRenderProgramObjectProvider;
 
 /// \brief SWRender Graphic Context
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class API_SWRender ProgramObject_SWRender : public ProgramObject
 {
 //!Construction

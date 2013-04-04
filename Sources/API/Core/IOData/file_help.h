@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief File operation helpers.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE FileHelp
 {
 /// \name Operations

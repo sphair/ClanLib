@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Directory utility class
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE Directory
 {
 /// \name Operations

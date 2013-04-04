@@ -45,7 +45,6 @@ namespace clan
 ///
 /// These quads templates are defined for: int (Quad), float (Quadf), double (Quadd)
 ///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class CL_API_CORE Quadx
 {
@@ -204,8 +203,6 @@ public:
 };
 
 /// \brief 2D quad structure - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Quad : public Quadx<int>
 {
 public:
@@ -216,8 +213,6 @@ public:
 };
 
 /// \brief 2D quad structure - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Quadf : public Quadx<float>
 {
 public:
@@ -228,8 +223,6 @@ public:
 };
 
 /// \brief 2D quad structure - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Quadd : public Quadx<double>
 {
 public:

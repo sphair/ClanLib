@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanSWRender initialization functions.
-///
-/// \xmlonly !group=SWRender/System! !header=swrender.h! \endxmlonly
 class API_SWRender SetupSWRender
 {
 /// \name Construction

@@ -42,8 +42,6 @@ namespace clan
 class ProgressBar_Impl;
 
 /// \brief Progress bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ProgressBar : public GUIComponent
 {
 /// \name Construction

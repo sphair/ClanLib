@@ -68,7 +68,6 @@ namespace clan
 ///    nodes that are siblings; the DocumentFragment acts as the parent of these
 ///    nodes so that the user can use the standard methods from the Node interface,
 ///    such as insertBefore() and appendChild().</p> 
-/// \xmlonly !group=Core/XML! !header=core.h \endxmlonly
 class CL_API_CORE DomDocumentFragment : public DomNode
 {
 /// \name Construction

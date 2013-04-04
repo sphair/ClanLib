@@ -44,7 +44,6 @@ class SoundOutput;
 //    same functionality. The only difference is, that the ones Sound
 //    operate on a selected sound output. This saves the trouble of passing around
 //    a pointer to the sound output, when only a single one is used anyway.</p>
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND Sound
 {
 /// \name Selected SoundOutput accessors

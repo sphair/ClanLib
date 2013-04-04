@@ -60,8 +60,6 @@ enum JointType
 };
 
 /// \brief Joint class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS Joint
 {
 

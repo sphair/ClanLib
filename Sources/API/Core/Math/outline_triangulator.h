@@ -42,7 +42,6 @@ class OutlineTriangulator_Impl;
 /// \brief Polygon Tesselator.
 ///
 /// This class uses constrained delauney triangulation to convert polygon outlines into triangles.
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE OutlineTriangulator
 {
 /// \name Construction

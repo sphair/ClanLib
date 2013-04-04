@@ -44,8 +44,6 @@ class ToolBarItem;
 class ToolBar_Impl;
 
 /// \brief Tool bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ToolBar : public GUIComponent
 {
 /// \name Construction

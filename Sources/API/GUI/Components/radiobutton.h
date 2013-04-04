@@ -42,8 +42,6 @@ namespace clan
 class RadioButton_Impl;
 
 /// \brief Radio button component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI RadioButton : public GUIComponent
 {
 /// \name Construction

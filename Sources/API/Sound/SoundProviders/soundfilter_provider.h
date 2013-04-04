@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Sound Filter Interface
-///
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundFilterProvider
 {
 /// \name Construction

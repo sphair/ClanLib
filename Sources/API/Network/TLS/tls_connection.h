@@ -41,8 +41,6 @@ class SocketName;
 class Event;
 
 /// \brief TLS connection over an I/O device.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK TLSConnection : public IODevice
 {
 /// \name Construction

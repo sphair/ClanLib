@@ -45,8 +45,6 @@ namespace clan
 	class Pointf;
 
 /// \brief Query types
-///
-/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 enum QueryResultType
 {
 	query_raycast,
@@ -55,7 +53,6 @@ enum QueryResultType
 
 ///
 /// Used by physics query assistant.
-/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 
 class CL_API_PHYSICS QueryResult
 {

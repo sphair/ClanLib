@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanGL initialization functions.
-///
-/// \xmlonly !group=GL/System! !header=gl.h! \endxmlonly
 class CL_API_GL SetupGL
 {
 /// \name Construction

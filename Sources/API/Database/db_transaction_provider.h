@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Database transaction provider.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBTransactionProvider
 {
 /// \name Construction

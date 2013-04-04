@@ -40,8 +40,6 @@ namespace clan
 class ListViewColumnData_Impl;
 
 /// \brief ListView column data.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewColumnData
 {
 /// \name Construction

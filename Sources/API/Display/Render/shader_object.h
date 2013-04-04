@@ -48,8 +48,6 @@ class ShaderObject_Impl;
 class ShaderObjectProvider;
 
 /// \brief Shader Type
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum ShaderType
 {
 	shadertype_vertex,
@@ -68,7 +66,6 @@ enum ShaderType
 ///    objects. Shader objects are attached to a program objects to form a
 ///    programmable setup. ShaderObject is ClanLib's C++ interface to OpenGL
 ///    shader objects.</p> 
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ShaderObject
 {
 /// \name Construction

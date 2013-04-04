@@ -43,8 +43,6 @@ class GUIWindowManagerSystem_Impl;
 class GUIWindowManagerProvider_System;
 
 /// \brief System (OS) window manager.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIWindowManagerSystem : public GUIWindowManager
 {
 /// \name Construction

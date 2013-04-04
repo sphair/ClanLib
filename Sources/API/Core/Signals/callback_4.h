@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4>
 class Callback_Impl_4
 {
@@ -51,7 +50,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4>
 class Callback_Impl_4_static : public Callback_Impl_4<RetVal, P1, P2, P3, P4>
 {
@@ -70,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4, typename UserData>
 class Callback_Impl_4_static_user : public Callback_Impl_4<RetVal, P1, P2, P3, P4>
 {
@@ -92,7 +89,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4, typename InstanceClass>
 class Callback_Impl_4_member : public Callback_Impl_4<RetVal, P1, P2, P3, P4>
 {
@@ -114,7 +110,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4, typename InstanceClass, typename UserData>
 class Callback_Impl_4_member_user : public Callback_Impl_4<RetVal, P1, P2, P3, P4>
 {
@@ -138,7 +133,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, class P1, class P2, class P3, class P4, class Functor>
 class Callback_Impl_4_functor : public Callback_Impl_4<RetVal, P1, P2, P3, P4>
 {
@@ -158,7 +152,6 @@ public:
 
 /// \brief Callback_4
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4>
 class Callback_4
 {
@@ -244,7 +237,6 @@ private:
 
 /// \brief Callback_4_functor
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4>
 class Callback_4_functor : public Callback_4<RetVal, P1, P2, P3, P4>
 {

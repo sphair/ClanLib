@@ -52,8 +52,6 @@ class GUIWindowManagerProvider;
 class GUIWindowManager_Impl;
 
 /// \brief GUI window manager site.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_DISPLAY GUIWindowManagerSite
 {
 /// \name Attributes
@@ -84,8 +82,6 @@ public:
 };
 
 /// \brief GUI window manager interface.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIWindowManager
 {
 /// \name Enumerations

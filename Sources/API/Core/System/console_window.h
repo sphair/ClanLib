@@ -41,7 +41,6 @@ class ConsoleWindow_Impl;
 /// \brief Text console window.
 ///
 ///  Note: This class has no effect under Linux.
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE ConsoleWindow
 {
 /// \name Construction

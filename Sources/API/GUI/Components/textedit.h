@@ -41,8 +41,6 @@ namespace clan
 class TextEdit_Impl;
 
 /// \brief Text edit component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI TextEdit : public GUIComponent
 {
 /// \name Construction

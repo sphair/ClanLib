@@ -61,8 +61,6 @@ typedef struct
 } TextureFormat_GL;
 
 /// \brief OpenGL utility class.
-///
-/// \xmlonly !group=GL/System! !header=gl.h! \endxmlonly
 class CL_API_GL OpenGL
 {
 /// \name Attributes

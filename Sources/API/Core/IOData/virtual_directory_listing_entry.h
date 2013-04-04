@@ -36,8 +36,6 @@ namespace clan
 class VirtualDirectoryListingEntry_Impl;
 
 /// \brief Virtual File System (VFS) directory listing entry class.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class VirtualDirectoryListingEntry
 {
 /// \name Construction

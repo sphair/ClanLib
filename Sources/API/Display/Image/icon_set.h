@@ -42,8 +42,6 @@ class PixelBuffer;
 class IconSet_Impl;
 
 /// \brief Icon set class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY IconSet
 {
 /// \name Construction

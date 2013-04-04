@@ -42,8 +42,6 @@ namespace clan
 class CheckBox_Impl;
 
 /// \brief Check box component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI CheckBox : public GUIComponent
 {
 /// \name Construction

@@ -47,8 +47,6 @@ class DisplayWindow;
 class GUITopLevelWindow;
 
 /// \brief GUI window manager interface.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIWindowManagerProvider
 {
 /// \name Construction

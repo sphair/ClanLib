@@ -42,8 +42,6 @@ class DNSResourceRecord;
 class DNSPacket_Impl;
 
 /// \brief DNS packet.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK DNSPacket
 {
 /// \name Construction

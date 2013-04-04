@@ -40,8 +40,6 @@ class DataBuffer;
 class DateTime;
 
 /// \brief Database command provider.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBCommandProvider
 {
 /// \name Construction

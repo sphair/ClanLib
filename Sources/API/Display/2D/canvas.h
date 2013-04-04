@@ -60,8 +60,6 @@ class DisplayWindowDescription;
 class FontManager;
 
 /// \brief Mapping modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum MapMode
 {
 	map_2d_upper_left,
@@ -70,8 +68,6 @@ enum MapMode
 };
 
 /// \brief 2D Graphics Canvas
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Canvas
 {
 /// \name Construction

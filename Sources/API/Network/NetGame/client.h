@@ -46,8 +46,6 @@ class NetGameConnection;
 class NetGameClient_Impl;
 
 /// \brief NetGameClient
-///
-/// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
 class CL_API_NETWORK NetGameClient : NetGameConnectionSite
 {
 public:

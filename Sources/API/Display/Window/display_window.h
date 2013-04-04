@@ -64,8 +64,6 @@ class DisplayWindow_Impl;
 class PixelBuffer;
 
 /// \brief Standard Cursor
-///
-/// \xmlonly !group=Display/Window! !header=display.h! \endxmlonly
 enum StandardCursor
 {
 	cursor_arrow,
@@ -84,8 +82,6 @@ enum StandardCursor
 };
 
 /// \brief Top-level window class.
-///
-/// \xmlonly !group=Display/Window! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DisplayWindow
 {
 /// \name Construction

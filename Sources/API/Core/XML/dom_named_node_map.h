@@ -49,7 +49,6 @@ class DomNamedNodeMap_Impl;
 ///    implementing NamedNodeMap may also be accessed by an ordinal index, but this is simply to
 ///    allow convenient enumeration of the contents of a NamedNodeMap, and does not imply that the
 ///    DOM specifies an order to these Nodes.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomNamedNodeMap
 {
 /// \name Construction

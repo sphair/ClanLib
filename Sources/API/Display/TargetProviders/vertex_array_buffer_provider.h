@@ -39,8 +39,6 @@ namespace clan
 class GraphicContext;
 
 /// \brief Vertex Array Buffer provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY VertexArrayBufferProvider
 {
 /// \name Construction

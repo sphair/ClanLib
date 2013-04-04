@@ -44,8 +44,6 @@ class VirtualDirectory;
 class IODevice;
 
 /// \brief Sound Provider Factor class.
-///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProviderFactory
 {
 /// \name Attributes

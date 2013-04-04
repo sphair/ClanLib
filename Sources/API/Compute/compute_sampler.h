@@ -56,8 +56,6 @@ class ComputeContext;
 class ComputeSampler_Impl;
 
 /// \brief Compute sampler object
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeSampler
 {
 /// \name Construction

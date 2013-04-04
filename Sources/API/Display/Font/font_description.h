@@ -44,7 +44,6 @@ class FontDescription_Impl;
 /// \brief Font description class.
 ///
 ///  This class allows you to setup a more advanced description when creating a font.
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY FontDescription
 {
 /// \name Construction

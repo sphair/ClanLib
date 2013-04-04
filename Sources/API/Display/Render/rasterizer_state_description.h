@@ -40,8 +40,6 @@ namespace clan
 class RasterizerStateDescription_Impl;
 
 /// \brief Rasterizer state description.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY RasterizerStateDescription
 {
 /// \name Construction

@@ -42,8 +42,6 @@ namespace clan
 class Thread_Impl;
 
 /// \brief Thread class.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE Thread
 {
 /// \name Construction

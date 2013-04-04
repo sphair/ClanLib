@@ -41,8 +41,6 @@ class DomNode;
 class XPathEvaluator_Impl;
 
 /// \brief XPath evaluator.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class XPathEvaluator
 {
 /// \name Construction

@@ -38,7 +38,6 @@ namespace clan
 
 /// \brief Class template to register a sound provider type.
 ///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 template<class SoundProviderClass>
 class SoundProviderType_Register : public SoundProviderType
 {

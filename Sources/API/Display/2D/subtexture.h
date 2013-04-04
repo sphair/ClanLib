@@ -43,8 +43,6 @@ class Texture2D;
 class Subtexture_Impl;
 
 /// \brief Sub-texture description.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Subtexture
 {
 /// \name Construction

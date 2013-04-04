@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief NetGameEvent
-///
-/// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
 class CL_API_NETWORK NetGameEvent
 {
 public:

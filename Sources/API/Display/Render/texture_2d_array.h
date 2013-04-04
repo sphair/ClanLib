@@ -41,8 +41,6 @@ namespace clan
 class Texture2D;
 
 /// \brief 2D texture array object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Texture2DArray : public Texture
 {
 /// \name Construction

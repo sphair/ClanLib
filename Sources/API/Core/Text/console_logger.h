@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Console logger.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE ConsoleLogger : public Logger
 {
 /// \name Construction

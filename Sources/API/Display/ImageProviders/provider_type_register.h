@@ -41,7 +41,6 @@ namespace clan
 
 /// \brief Class template to register a provider type.
 ///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 template<class ProviderClass>
 class ProviderType_Register : public ImageProviderType
 {

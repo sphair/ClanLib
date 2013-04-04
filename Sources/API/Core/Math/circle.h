@@ -40,7 +40,6 @@ namespace clan
 /// \brief Circle
 ///
 /// These circle templates are defined for: int (Circle), float (Circlef), double (Circled)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Circlex
 {
@@ -78,8 +77,6 @@ public:
 };
 
 /// \brief Circle - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Circle : public Circlex<int>
 {
 public:
@@ -90,8 +87,6 @@ public:
 };
 
 /// \brief Circle - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Circlef : public Circlex<float>
 {
 public:
@@ -102,8 +97,6 @@ public:
 };
 
 /// \brief Circle - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Circled : public Circlex<double>
 {
 public:

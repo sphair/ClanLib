@@ -39,7 +39,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 class CL_API_CORE SlotCallback_v0 : public SlotCallback
 {
 public:
@@ -47,7 +46,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 class CL_API_CORE SlotCallback_v0_static : public SlotCallback_v0
 {
 public:
@@ -58,7 +56,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class UserData>
 class SlotCallback_v0_static_user : public SlotCallback_v0
 {
@@ -71,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class InstanceClass>
 class SlotCallback_v0_member : public SlotCallback_v0
 {
@@ -84,7 +80,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class InstanceClass, class UserData>
 class SlotCallback_v0_member_user : public SlotCallback_v0
 {
@@ -98,7 +93,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Functor>
 class SlotCallback_v0_functor : public SlotCallback_v0
 {
@@ -110,8 +104,6 @@ public:
 };
 
 /// \brief Signal_v0
-///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 class CL_API_CORE Signal_v0
 {
 /// \name Construction

@@ -42,7 +42,6 @@ namespace clan
 /// \brief Quaternion
 ///
 /// These quaternion templates are defined for: float (Quaternionf), double (Quaterniond)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Quaternionx
 {
@@ -186,8 +185,6 @@ public:
 };
 
 /// \brief Quaternion - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Quaternionf : public Quaternionx<float>
 {
 public:
@@ -204,8 +201,6 @@ public:
 };
 
 /// \brief Quaternion - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Quaterniond : public Quaternionx<double>
 {
 public:

@@ -42,8 +42,6 @@ class Size;
 class RectPacker_Impl;
 
 /// \brief Generic rect packer class. Implements an algorithm to pack rects into groups efficiently.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_CORE RectPacker
 {
 /// \name Enumerations and structs

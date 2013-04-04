@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Path helper functions.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE PathHelp
 {
 /// \name Operations

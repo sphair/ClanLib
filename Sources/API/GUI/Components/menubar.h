@@ -42,8 +42,6 @@ class PopupMenu;
 class MenuBar_Impl;
 
 /// \brief Menu bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI MenuBar : public GUIComponent
 {
 /// \name Construction

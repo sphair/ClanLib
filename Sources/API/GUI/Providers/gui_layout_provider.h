@@ -42,8 +42,6 @@ class Rect;
 class GUILayout_Impl;
 
 /// \brief Layout management interface.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUILayoutProvider
 {
 /// \name Construction

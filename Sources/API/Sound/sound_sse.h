@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Sound related functions implemented as SIMD using SSE
-///
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundSSE
 {
 /// \name Operations

@@ -42,8 +42,6 @@ namespace clan
 {
 
 /// \brief Interface for implementing a InputDevice source.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY InputDeviceProvider : public DisposableObject
 {
 /// \name Construction

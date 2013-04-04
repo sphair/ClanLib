@@ -48,7 +48,6 @@ namespace clan
 ///
 /// These line templates are defined for: int (Rect), float (Rectf), double (Rectd)
 ///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class CL_API_CORE Rectx
 {
@@ -446,8 +445,6 @@ inline Rectx<Type>::Rectx(const Rectx<double> &rect)
 { left = (Type) rect.left; top = (Type) rect.top; right = (Type) rect.right; bottom = (Type) rect.bottom; }
 
 /// \brief 2D (left,top,right,bottom) rectangle structure - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Rect : public Rectx<int>
 {
 public:
@@ -462,8 +459,6 @@ public:
 };
 
 /// \brief 2D (left,top,right,bottom) rectangle structure - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Rectf : public Rectx<float>
 {
 public:
@@ -479,8 +474,6 @@ public:
 };
 
 /// \brief 2D (left,top,right,bottom) rectangle structure - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Rectd : public Rectx<double>
 {
 public:

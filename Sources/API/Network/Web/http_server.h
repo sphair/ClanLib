@@ -42,8 +42,6 @@ class HTTPRequestHandler;
 class HTTPServer_Impl;
 
 /// \brief HTTP server.
-///
-/// \xmlonly !group=Network/Web! !header=network.h! \endxmlonly
 class CL_API_NETWORK HTTPServer
 {
 /// \name Construction

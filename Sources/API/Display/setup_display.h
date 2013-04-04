@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanDisplay initialization functions.
-///
-/// \xmlonly !group=Display/System! !header=display.h! \endxmlonly
 class CL_API_DISPLAY SetupDisplay
 {
 /// \name Construction

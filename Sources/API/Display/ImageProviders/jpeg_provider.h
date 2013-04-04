@@ -42,8 +42,6 @@ namespace clan
 class VirtualDirectory;
 
 /// \brief Image provider that can load JPEG (.jpg) files.
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY JPEGProvider
 {
 /// \name Construction

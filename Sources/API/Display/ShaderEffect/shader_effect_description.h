@@ -51,7 +51,6 @@ class ShaderEffectDescription_Impl;
 /// \brief Shader Effect Description
 ///
 ///    <p>...</p> 
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ShaderEffectDescription
 {
 /// \name Construction

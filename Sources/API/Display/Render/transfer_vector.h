@@ -38,7 +38,6 @@ namespace clan
 
 /// \brief Transfer Vector
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class TransferVector : public TransferBuffer
 {

@@ -42,8 +42,6 @@ class InputSourceProvider;
 class VirtualDirectory;
 
 /// \brief Sound provider type
-///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProviderType
 {
 /// \name Construction

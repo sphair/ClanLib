@@ -39,7 +39,6 @@ namespace clan
 
 /// \brief Element Array Vector
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class ElementArrayVector : public ElementArrayBuffer
 {

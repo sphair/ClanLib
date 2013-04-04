@@ -41,8 +41,6 @@ namespace clan
 
 template<typename ContextParam1, typename ContextParam2>
 /// \brief NetGameEventDispatcher_v2
-///
-/// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
 class CL_API_NETWORK NetGameEventDispatcher_v2
 {
 public:

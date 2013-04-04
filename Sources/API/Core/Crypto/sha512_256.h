@@ -42,8 +42,6 @@ class DataBuffer;
 class SHA512_Impl;
 
 /// \brief SHA-512_256 hash function class.
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE SHA512_256
 {
 /// \name Construction

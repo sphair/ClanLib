@@ -56,7 +56,6 @@ class Angle;
 /// \brief 3D matrix
 ///
 /// These matrix templates are defined for: int (Mat3i), float (Mat3f), double (Mat3d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Mat3
 {

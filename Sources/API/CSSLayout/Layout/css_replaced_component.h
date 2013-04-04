@@ -56,7 +56,6 @@ private:
 
 /// \brief Span Component Binder (templated class)
 ///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 template<typename T>
 class CSSReplacedComponentBinder : public CSSReplacedComponent
 {

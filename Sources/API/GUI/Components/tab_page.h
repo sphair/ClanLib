@@ -40,8 +40,6 @@ namespace clan
 class TabPage_Impl;
 
 /// \brief Tab component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI TabPage : public GUIComponent
 {
 /// \name Construction

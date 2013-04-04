@@ -44,8 +44,6 @@ class GUILayout_Impl;
 class GUILayoutProvider;
 
 /// \brief Layout management base class.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUILayout
 {
 /// \name Construction

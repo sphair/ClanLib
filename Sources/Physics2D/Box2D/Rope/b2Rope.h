@@ -23,7 +23,6 @@
 
 class b2Draw;
 
-/// 
 struct b2RopeDef
 {
 	b2RopeDef()
@@ -59,7 +58,6 @@ struct b2RopeDef
 	float32 k3;
 };
 
-/// 
 class b2Rope
 {
 public:

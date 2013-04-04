@@ -45,7 +45,6 @@ class EdgeShape_Impl;
 ///
 /// A line segment (edge) shape. These can be connected in chains or loops to other edge shapes.
 /// The connectivity information is used to ensure correct contact normals. 
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS EdgeShape : public Shape
 {
 /// \name Construction

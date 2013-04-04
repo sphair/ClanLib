@@ -42,8 +42,6 @@ class InputSourceProvider;
 class SoundProvider_Vorbis_Impl;
 
 /// \brief Ogg Vorbis format sound provider.
-///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProvider_Vorbis : public SoundProvider
 {
 /// \name Construction

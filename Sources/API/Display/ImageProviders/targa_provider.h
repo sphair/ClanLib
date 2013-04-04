@@ -42,8 +42,6 @@ namespace clan
 class VirtualDirectory;
 
 /// \brief Surface provider that can load targa (.tga) files.
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TargaProvider
 {
 /// \name Construction

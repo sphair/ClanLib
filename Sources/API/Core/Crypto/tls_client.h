@@ -43,8 +43,6 @@ class DataBuffer;
 class TLSClient_Impl;
 
 /// \brief Transport Layer Security (TLS) client class
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE TLSClient
 {
 /// \name Construction

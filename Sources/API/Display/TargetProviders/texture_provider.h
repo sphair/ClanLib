@@ -48,8 +48,6 @@ class PixelFormat;
 class GraphicContextProvider;
 
 /// \brief Interface for implementing a Texture target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TextureProvider
 {
 /// \name Construction

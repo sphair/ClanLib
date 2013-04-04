@@ -47,8 +47,6 @@ class Vec3hf;
 class Vec4hf;
 
 /// \brief 2D half-float vector
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Vec2hf
 {
 public:
@@ -97,8 +95,6 @@ public:
 };
 
 /// \brief 3D half-float vector
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Vec3hf
 {
 public:
@@ -144,8 +140,6 @@ public:
 };
 
 /// \brief 4D half-float vector
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Vec4hf
 {
 public:

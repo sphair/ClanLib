@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanGUI initialization functions.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI SetupGUI
 {
 /// \name Construction

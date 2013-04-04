@@ -44,7 +44,6 @@ namespace clan
 
 /// \brief PixelBuffer locking helper.
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class CL_API_DISPLAY PixelBufferLock
 {

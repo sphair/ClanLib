@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1>
 class Callback_Impl_1
 {
@@ -51,7 +50,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1>
 class Callback_Impl_1_static : public Callback_Impl_1<RetVal, P1>
 {
@@ -70,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename UserData>
 class Callback_Impl_1_static_user : public Callback_Impl_1<RetVal, P1>
 {
@@ -92,7 +89,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename InstanceClass>
 class Callback_Impl_1_member : public Callback_Impl_1<RetVal, P1>
 {
@@ -114,7 +110,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename InstanceClass, typename UserData>
 class Callback_Impl_1_member_user : public Callback_Impl_1<RetVal, P1>
 {
@@ -138,7 +133,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, class P1, class Functor>
 class Callback_Impl_1_functor : public Callback_Impl_1<RetVal, P1>
 {
@@ -158,7 +152,6 @@ public:
 
 /// \brief Callback_1
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1>
 class Callback_1
 {
@@ -244,7 +237,6 @@ private:
 
 /// \brief Callback_1_functor
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1>
 class Callback_1_functor : public Callback_1<RetVal, P1>
 {

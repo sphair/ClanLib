@@ -51,8 +51,6 @@ namespace clan
 {
 
 /// \brief Console access helper class.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class Console
 {
 /// \name Operations

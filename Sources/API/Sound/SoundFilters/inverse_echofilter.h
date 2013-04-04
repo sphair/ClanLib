@@ -41,8 +41,6 @@ namespace clan
 class InverseEchoFilterProvider;
 
 /// \brief Inverse Echo Filter Class
-///
-/// \xmlonly !group=Sound/Filters! !header=sound.h! \endxmlonly
 class CL_API_SOUND InverseEchoFilter : public SoundFilter
 {
 /// \name Construction

@@ -48,7 +48,6 @@ class IODevice_Impl;
 /// This class can store basic datatypes and retain portability (using the specified endian mode)\n
 ///    The supported datatypes are: byte64, byte32, byte16 and byte8\n
 ///    The std::string datatype is supported - Using Size(byte32), Charactor Data (std::string characters) 
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE IODevice
 {
 /// \name Enumerations

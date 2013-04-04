@@ -41,8 +41,6 @@ class ComputeContext;
 class ComputeProgram_Impl;
 
 /// \brief Compute program object
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeProgram
 {
 /// \name Construction

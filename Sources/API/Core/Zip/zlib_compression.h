@@ -37,8 +37,6 @@ namespace clan
 class DataBuffer;
 
 /// \brief Deflate compressor
-///
-/// \xmlonly !group=Core/Zip! !header=core.h! \endxmlonly
 class ZLibCompression
 {
 /// \name Operations

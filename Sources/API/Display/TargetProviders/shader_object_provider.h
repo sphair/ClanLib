@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Shader Object provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class ShaderObjectProvider
 {
 /// \name Construction

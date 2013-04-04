@@ -43,8 +43,6 @@ class ToolBarItem_Impl;
 class ToolBar;
 
 /// \brief Toolbar menu item.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class ToolBarItem
 {
 /// \name Construction

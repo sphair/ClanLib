@@ -52,7 +52,6 @@ namespace clan
 ///    <p>The CDATASection interface inherits the CharacterData interface through the Text
 ///    interface. Adjacent CDATASections nodes are not merged by use of the Element.normalize()
 ///    method.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomCDATASection : public DomText
 {
 /// \name Construction

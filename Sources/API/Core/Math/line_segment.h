@@ -57,7 +57,6 @@ class Angle;
 ///
 /// A line segment has a start point and an end point\n
 /// These line templates are defined for: int (LineSegment3), float (LineSegment3f), double (LineSegment3d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class LineSegment3x
 {
@@ -106,7 +105,6 @@ public:
 ///
 /// A line segment has a start point and an end point\n
 /// These line templates are defined for: int (LineSegment2i), float (LineSegment2f), double (LineSegment2d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class LineSegment2x
 {
@@ -199,7 +197,6 @@ public:
 /// \brief 2D line segment - Integer
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment2 : public LineSegment2x<int>
 {
 public:
@@ -211,7 +208,6 @@ public:
 /// \brief 2D line segment - Float
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment2f : public LineSegment2x<float>
 {
 public:
@@ -223,7 +219,6 @@ public:
 /// \brief 2D line segment - Double
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment2d : public LineSegment2x<double>
 {
 public:
@@ -235,7 +230,6 @@ public:
 /// \brief 3D line segment - Integer
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment3 : public LineSegment3x<int>
 {
 public:
@@ -247,7 +241,6 @@ public:
 /// \brief 3D line segment - Float
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment3f : public LineSegment3x<float>
 {
 public:
@@ -259,7 +252,6 @@ public:
 /// \brief 3D line segment - Double
 ///
 /// A line segment has a start point and an end point\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineSegment3d : public LineSegment3x<double>
 {
 public:

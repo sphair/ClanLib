@@ -44,8 +44,6 @@ class VirtualDirectory;
 class FontProvider_Vector;
 
 /// \brief Vector font drawing class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Font_Vector : public Font
 {
 /// \name Construction

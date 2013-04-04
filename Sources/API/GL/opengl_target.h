@@ -44,8 +44,6 @@ class OpenGLTarget_Impl;
 class OpenGLWindowDescription;
 
 /// \brief Display target for clanDisplay.
-///
-/// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 class CL_API_GL OpenGLTarget : public DisplayTarget
 {
 /// \name Construction

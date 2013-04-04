@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Thread runnable object.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE Runnable
 {
 /// \name Construction
@@ -80,7 +78,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C>
 class RunnableMember_v0 : public Runnable
 {
@@ -123,7 +120,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C, class P1>
 class RunnableMember_v1 : public Runnable
 {
@@ -169,7 +165,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C, class P1, class P2>
 class RunnableMember_v2 : public Runnable
 {
@@ -218,7 +213,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C, class P1, class P2, class P3>
 class RunnableMember_v3 : public Runnable
 {
@@ -270,7 +264,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C, class P1, class P2, class P3, class P4>
 class RunnableMember_v4 : public Runnable
 {
@@ -325,7 +318,6 @@ private:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 template<class C, class P1, class P2, class P3, class P4, class P5>
 class RunnableMember_v5 : public Runnable
 {

@@ -42,8 +42,6 @@ class DataBuffer;
 class HTTPServerConnection_Impl;
 
 /// \brief HTTP server connection.
-///
-/// \xmlonly !group=Network/Web! !header=network.h! \endxmlonly
 class CL_API_NETWORK HTTPServerConnection : public IODevice
 {
 /// \name Construction

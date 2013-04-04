@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanD3D initialization functions.
-///
-/// \xmlonly !group=D3D/System! !header=d3d.h! \endxmlonly
 class CL_API_D3D SetupD3D
 {
 /// \name Construction

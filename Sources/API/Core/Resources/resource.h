@@ -49,8 +49,6 @@ public:
 };
 
 /// \brief Resource Manager resource.
-///
-/// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
 class CL_API_CORE Resource
 {
 /// \name Construction

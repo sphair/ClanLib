@@ -40,8 +40,6 @@ namespace clan
 class BlendStateDescription_Impl;
 
 /// \brief Blend state description.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY BlendStateDescription
 {
 /// \name Construction

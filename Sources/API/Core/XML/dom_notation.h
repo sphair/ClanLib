@@ -46,7 +46,6 @@ namespace clan
 ///    declared name of the notation.</p>
 ///    <p>The DOM Level 1 does not support editing Notation nodes; they are therefore readonly.</p>
 ///    <p>A Notation node does not have any parent.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomNotation : public DomNode
 {
 /// \name Construction

@@ -41,8 +41,6 @@ namespace clan
 class FadeFilterProvider;
 
 /// \brief Fade Filter Class
-///
-/// \xmlonly !group=Sound/Filters! !header=sound.h! \endxmlonly
 class CL_API_SOUND FadeFilter : public SoundFilter
 {
 /// \name Construction

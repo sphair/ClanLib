@@ -72,7 +72,6 @@ class Angle;
 /// These vector templates are defined for:\n
 /// char (Vec4c), unsigned char (Vec4uc), short (Vec4s),\n
 /// unsigned short (Vec4us), int (Vec4i), unsigned int (Vec4ui), float (Vec4f), double (Vec4d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Vec4
 {

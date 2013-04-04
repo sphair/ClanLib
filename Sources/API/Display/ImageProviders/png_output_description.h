@@ -111,8 +111,6 @@ private:
 
 
 /// \brief Set PNG output options. Used with PNGProvider::save().
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class PNGOutputDescription
 {
 

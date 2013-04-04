@@ -41,8 +41,6 @@ namespace clan
 class PerlinNoise_Impl;
 
 /// \brief Perlin Noise Generator class
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PerlinNoise
 {
 

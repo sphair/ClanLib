@@ -41,8 +41,6 @@ class ScreenInfo_Impl;
 class Rect;
 
 /// \brief Screen Information class.
-///
-/// \xmlonly !group=Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ScreenInfo
 {
 /// \name Construction

@@ -43,7 +43,6 @@ class OutlineCircle;
 /// \brief Math operations on outlines
 ///
 ///  <p>This class provides general methods for calulating things on outlines.</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class OutlineMath
 {
 /// \name Operations

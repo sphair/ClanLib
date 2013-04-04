@@ -42,8 +42,6 @@ namespace clan
 class SocketName_Impl;
 
 /// \brief Socket name; container class for an IP address and port.
-///
-/// \xmlonly !group=Network/Sockets! !header=network.h! \endxmlonly
 class CL_API_NETWORK SocketName
 {
 /// \name Construction

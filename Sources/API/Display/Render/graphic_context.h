@@ -68,8 +68,6 @@ class BlendState;
 class DepthStencilState;
 
 /// \brief Polygon culling modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CullMode
 {
 	cull_front,
@@ -78,8 +76,6 @@ enum CullMode
 };
 
 /// \brief Polygon filling modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum FillMode
 {
 	fill_point,
@@ -88,8 +84,6 @@ enum FillMode
 };
 
 /// \brief Front face modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum FaceSide
 {
 	face_clockwise,
@@ -97,8 +91,6 @@ enum FaceSide
 };
 
 /// \brief Compare functions.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum CompareFunction
 {
 	compare_lequal,
@@ -112,8 +104,6 @@ enum CompareFunction
 };
 
 /// \brief Stencil operations
-///
-/// \xmlonly !group=Display/Display 2D! !header=display.h! \endxmlonly
 enum StencilOp
 {
 	stencil_keep,
@@ -142,8 +132,6 @@ enum DrawBuffer
 };
 
 /// \brief Logic Op
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum LogicOp
 {
 	logic_clear,
@@ -165,8 +153,6 @@ enum LogicOp
 };
 
 /// \brief Blending functions.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum BlendFunc
 {
 	/// \brief source or destination (0, 0, 0, 0)
@@ -216,8 +202,6 @@ enum BlendFunc
 };
 
 /// \brief Blending equations.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum BlendEquation
 {
 	equation_add,
@@ -228,8 +212,6 @@ enum BlendEquation
 };
 
 /// \brief Point Sprite Origin
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum PointSpriteOrigin
 {
 	origin_upper_left,
@@ -237,8 +219,6 @@ enum PointSpriteOrigin
 };
 
 /// \brief Primitive types.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum PrimitivesType
 {
 	type_points,
@@ -251,8 +231,6 @@ enum PrimitivesType
 };
 
 /// \brief Y axis direction for viewports, clipping rects, textures and render targets
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureImageYAxis
 {
 	y_axis_bottom_up,  // OpenGL, origin is lower left with Y going upwards
@@ -260,8 +238,6 @@ enum TextureImageYAxis
 };
 
 /// \brief Standard Program
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum StandardProgram
 {
 	program_color_only,
@@ -278,8 +254,6 @@ enum ShaderLanguage
 };
 
 /// \brief Interface to drawing graphics.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY GraphicContext
 {
 /// \name Construction

@@ -42,8 +42,6 @@ namespace clan
 class PixelBuffer;
 
 /// \brief Provider type
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ImageProviderType
 {
 /// \name Construction

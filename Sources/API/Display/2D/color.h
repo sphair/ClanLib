@@ -44,8 +44,6 @@ class PixelFormat;
 class Colorf;
 
 /// \brief Color description class.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Color : public Vec4ub
 {
 /// \name Construction
@@ -657,8 +655,6 @@ public:
 };
 
 /// \brief Floating point color description class (for float).
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class Colorf : public Vec4f
 {
 /// \name Construction

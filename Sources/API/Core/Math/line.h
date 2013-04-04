@@ -53,7 +53,6 @@ class Angle;
 /// \brief 3D line
 ///
 /// These line templates are defined for: int (Line3), float (Line3f), double (Line3d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Line3x
 {
@@ -94,7 +93,6 @@ public:
 /// \brief 2D line
 ///
 /// These line templates are defined for: int (Line2i), float (Line2f), double (Line2d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Line2x
 {
@@ -148,8 +146,6 @@ public:
 };
 
 /// \brief 2D line - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line2 : public Line2x<int>
 {
 public:
@@ -160,8 +156,6 @@ public:
 };
 
 /// \brief 2D line - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line2f : public Line2x<float>
 {
 public:
@@ -172,8 +166,6 @@ public:
 };
 
 /// \brief 2D line - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line2d : public Line2x<double>
 {
 public:
@@ -184,8 +176,6 @@ public:
 };
 
 /// \brief 3D line - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line3 : public Line3x<int>
 {
 public:
@@ -195,8 +185,6 @@ public:
 };
 
 /// \brief 3D line - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line3f : public Line3x<float>
 {
 public:
@@ -206,8 +194,6 @@ public:
 };
 
 /// \brief 3D line - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Line3d : public Line3x<double>
 {
 public:

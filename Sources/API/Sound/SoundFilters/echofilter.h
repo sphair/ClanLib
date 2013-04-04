@@ -41,8 +41,6 @@ namespace clan
 class EchoFilterProvider;
 
 /// \brief Echo Filter Class
-///
-/// \xmlonly !group=Sound/Filters! !header=sound.h! \endxmlonly
 class CL_API_SOUND EchoFilter : public SoundFilter
 {
 /// \name Construction

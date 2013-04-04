@@ -43,8 +43,6 @@ namespace clan
 class PixelConverter_Impl;
 
 /// \brief Low level pixel format converter class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PixelConverter
 {
 /// \name Construction

@@ -47,8 +47,6 @@ class ComboBox_Impl;
 class PopupMenu;
 
 /// \brief Combo box component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ComboBox : public GUIComponent
 {
 /// \name Construction

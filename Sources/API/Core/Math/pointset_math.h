@@ -42,8 +42,6 @@ namespace clan
 {
 
 /// \brief Math operations related to point sets.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE PointSetMath
 {
 /// \name Operations

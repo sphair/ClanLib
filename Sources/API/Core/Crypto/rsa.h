@@ -61,8 +61,6 @@ class DataBuffer;
 /// \brief RSA class
 ///
 /// Important: This class has NOT been tested thoroughly by a cryptography expert.
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE RSA
 {
 /// \name Attributes

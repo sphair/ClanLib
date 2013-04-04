@@ -42,8 +42,6 @@ class Font_Sprite_Impl;
 class FontProvider_Sprite;
 
 /// \brief Sprite Font class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Font_Sprite : public Font
 {
 /// \name Construction

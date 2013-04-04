@@ -42,8 +42,6 @@ class EarClipResult_Impl;
 class EarClipTriangulator_Triangle;
 
 /// \brief Ear clipping triangulation result structure.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE EarClipResult
 {
 /// \name Construction

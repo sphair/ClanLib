@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Resource data usage tracker / garbage collector.
-///
-/// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
 class CL_API_CORE ResourceDataSession
 {
 /// \name Construction

@@ -41,8 +41,6 @@ class GraphicContext;
 class Canvas;
 
 /// \brief Render batching abstraction
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY RenderBatcher
 {
 /// \name Operations

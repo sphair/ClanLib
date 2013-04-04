@@ -42,8 +42,6 @@ class Secret;
 class DataBuffer;
 
 /// \brief X509 certificate class.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_CORE X509
 {
 /// \name Construction

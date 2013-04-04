@@ -44,8 +44,6 @@ class DBReaderProvider;
 class DBReader_Impl;
 
 /// \brief Database reader.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBReader
 {
 /// \name Construction

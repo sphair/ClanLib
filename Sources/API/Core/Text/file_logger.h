@@ -40,8 +40,6 @@ namespace clan
 class File;
 
 /// \brief File logger.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE FileLogger : public Logger
 {
 /// \name Construction

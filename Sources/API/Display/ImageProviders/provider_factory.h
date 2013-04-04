@@ -44,8 +44,6 @@ class PixelBuffer;
 class ImageProviderType;
 
 /// \brief Image Provider factory
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ImageProviderFactory
 {
 /// \name Static Attributes

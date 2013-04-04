@@ -42,8 +42,6 @@ class SocketName;
 class UDPSocket_Impl;
 
 /// \brief UDP socket.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK UDPSocket
 {
 /// \name Construction

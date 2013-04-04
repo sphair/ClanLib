@@ -43,8 +43,6 @@ class RenderBuffer;
 class Texture2D;
 
 /// \brief Interface for implementing a FrameBuffer target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY FrameBufferProvider
 {
 /// \name Construction

@@ -41,8 +41,6 @@ namespace clan
 class ZipFileEntry_Impl;
 
 /// \brief File entry in zip file.
-///
-/// \xmlonly !group=Core/Zip! !header=core.h! \endxmlonly
 class CL_API_CORE ZipFileEntry
 {
 /// \name Construction

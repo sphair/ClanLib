@@ -41,8 +41,6 @@ class DisplayTargetProvider;
 class DisplayTarget_Impl;
 
 /// \brief Display target for clanDisplay.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DisplayTarget
 {
 /// \name Construction

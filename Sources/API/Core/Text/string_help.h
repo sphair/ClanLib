@@ -43,8 +43,6 @@ namespace clan
 {
 
 /// \brief String helper functions.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE StringHelp
 {
 /// \name Operations

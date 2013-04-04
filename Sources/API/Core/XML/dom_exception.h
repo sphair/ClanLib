@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief DOM Exception class.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomException : public Exception
 {
 /// \name Construction

@@ -49,8 +49,6 @@ class PhysicsContext;
 class PhysicsObject;
 
 /// \brief Body class
-///
-/// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS Body
 {
 

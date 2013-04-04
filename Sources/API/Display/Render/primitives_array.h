@@ -54,8 +54,6 @@ class PrimitivesArrayProvider;
 #define cl_offsetof(s,m) (&(((s *)0)->m))
 
 /// \brief Primitives array description.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum VertexAttributeDataType
 {
 	type_unsigned_byte,
@@ -68,8 +66,6 @@ enum VertexAttributeDataType
 };
 
 /// \brief Primitives array description.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class PrimitivesArray
 {
 /// \name Construction

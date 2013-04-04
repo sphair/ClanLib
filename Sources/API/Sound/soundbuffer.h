@@ -52,7 +52,6 @@ class VirtualDirectory;
 ///    <p>The SoundBuffer class represents a sample in ClanLib. It can
 ///    either be static or streamed. The soundbuffer gets its sample data from
 ///    a soundprovider, that is passed during construction.</p>
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundBuffer
 {
 /// \name Construction

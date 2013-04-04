@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2>
 class Callback_Impl_2
 {
@@ -51,7 +50,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2>
 class Callback_Impl_2_static : public Callback_Impl_2<RetVal, P1, P2>
 {
@@ -70,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename UserData>
 class Callback_Impl_2_static_user : public Callback_Impl_2<RetVal, P1, P2>
 {
@@ -92,7 +89,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename InstanceClass>
 class Callback_Impl_2_member : public Callback_Impl_2<RetVal, P1, P2>
 {
@@ -114,7 +110,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename InstanceClass, typename UserData>
 class Callback_Impl_2_member_user : public Callback_Impl_2<RetVal, P1, P2>
 {
@@ -138,7 +133,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, class P1, class P2, class Functor>
 class Callback_Impl_2_functor : public Callback_Impl_2<RetVal, P1, P2>
 {
@@ -158,7 +152,6 @@ public:
 
 /// \brief Callback_2
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2>
 class Callback_2
 {
@@ -244,7 +237,6 @@ private:
 
 /// \brief Callback_2_functor
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2>
 class Callback_2_functor : public Callback_2<RetVal, P1, P2>
 {

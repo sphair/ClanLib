@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Slot
-///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 class CL_API_CORE Slot
 {
 /// \name Construction

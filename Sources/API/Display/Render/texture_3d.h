@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief 3D texture object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Texture3D : public Texture
 {
 /// \name Construction

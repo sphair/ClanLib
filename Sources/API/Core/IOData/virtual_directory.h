@@ -45,8 +45,6 @@ class VirtualDirectory_Impl;
 class VirtualDirectoryListing;
 
 /// \brief Virtual File System (VFS) directory.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE VirtualDirectory
 {
 /// \name Construction

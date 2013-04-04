@@ -49,7 +49,6 @@ class Pointd;
 /// \brief 2D (x,y) point structure.
 ///
 /// These point templates are defined for: int (Point), float (Pointf), double (Pointd)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Pointx : public Vec2<Type>
 {
@@ -61,8 +60,6 @@ public:
 };
 
 /// \brief 2D (x,y) point structure - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Point : public Pointx<int>
 {
 public:
@@ -73,8 +70,6 @@ public:
 };
 
 /// \brief 2D (x,y) point structure - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Pointf : public Pointx<float>
 {
 public:
@@ -85,8 +80,6 @@ public:
 };
 
 /// \brief 2D (x,y) point structure - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Pointd : public Pointx<double>
 {
 public:

@@ -41,8 +41,6 @@ namespace clan
 class AccessControlList_Impl;
 
 /// \brief Access Control List (ACL).
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE AccessControlList
 {
 /// \name Construction

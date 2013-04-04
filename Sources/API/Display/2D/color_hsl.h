@@ -42,7 +42,6 @@ class Colorf;
 /// \brief Color HSL description class.
 ///
 /// These templates are defined for: int (ColorHSLi), float (ColorHSLf), double (ColorHSLd)
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 template<typename Type, typename ColorType>
 class CL_API_DISPLAY ColorHSLx
 {

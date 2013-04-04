@@ -43,8 +43,6 @@ class IODevice;
 class ZipWriter_Impl;
 
 /// \brief Zip file writer.
-///
-/// \xmlonly !group=Core/Zip! !header=core.h! \endxmlonly
 class CL_API_CORE ZipWriter
 {
 /// \name Construction

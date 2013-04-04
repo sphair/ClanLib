@@ -34,8 +34,6 @@ namespace clan
 {
 
 /// \brief DisposableObject
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class DisposableObject
 {
 public:

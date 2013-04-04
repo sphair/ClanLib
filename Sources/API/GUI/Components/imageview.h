@@ -45,8 +45,6 @@ class PixelBuffer;
 class ImageView_Impl;
 
 /// \brief Frame component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ImageView : public GUIComponent
 {
 /// \name Construction

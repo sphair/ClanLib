@@ -46,7 +46,6 @@ class PixelBuffer;
 /// \brief Image Import Description Class.
 ///
 /// This class allows you to setup a more advanced description when importing images.
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ImageImportDescription
 {
 /// \name Construction

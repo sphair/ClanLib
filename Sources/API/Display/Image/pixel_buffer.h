@@ -57,8 +57,6 @@ class PixelBufferProvider;
 class PixelConverter;
 
 /// \brief Pixel buffer prefered direction
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum PixelBufferDirection
 {
 	/// \brief Use of the pixel buffer is to send data to the gpu
@@ -69,8 +67,6 @@ enum PixelBufferDirection
 };
 
 /// \brief Pixel data container.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PixelBuffer
 {
 /// \name Construction

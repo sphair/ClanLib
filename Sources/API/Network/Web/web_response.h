@@ -12,8 +12,6 @@ class IODevice;
 class WebResponse_Impl;
 
 /// \brief HTTP web response class.
-///
-/// \xmlonly !group=Network/Web! !header=network.h! \endxmlonly
 class CL_API_NETWORK WebResponse
 {
 public:

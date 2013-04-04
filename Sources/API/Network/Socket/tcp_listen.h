@@ -43,8 +43,6 @@ class TCPConnection;
 class TCPListen_Impl;
 
 /// \brief TCP listen socket.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK TCPListen
 {
 /// \name Construction

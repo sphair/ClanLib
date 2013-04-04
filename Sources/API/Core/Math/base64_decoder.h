@@ -41,8 +41,6 @@ class DataBuffer;
 class Base64Decoder_Impl;
 
 /// \brief Base64 decoder class.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE Base64Decoder
 {
 /// \name Construction

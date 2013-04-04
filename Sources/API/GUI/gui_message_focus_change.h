@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief GUI focus change notification message.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIMessage_FocusChange : public GUIMessage
 {
 /// \name Construction

@@ -41,7 +41,6 @@ namespace clan
 
 /// \brief Compute transfer buffer
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class ComputeTransferBuffer
 {

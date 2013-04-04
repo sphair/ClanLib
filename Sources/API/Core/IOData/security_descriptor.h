@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Security descriptor.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE SecurityDescriptor
 {
 /// \name Construction

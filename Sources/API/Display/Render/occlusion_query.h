@@ -43,8 +43,6 @@ class GraphicContext;
 class OcclusionQueryProvider;
 
 /// \brief Graphics occlusion query class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY OcclusionQuery
 {
 /// \name Construction

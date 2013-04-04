@@ -44,8 +44,6 @@ class Subtexture;
 class GUIWindowManagerTextureWindow_Impl;
 
 /// \brief Texture window manager window.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class GUIWindowManagerTextureWindow
 {
 /// \name Construction

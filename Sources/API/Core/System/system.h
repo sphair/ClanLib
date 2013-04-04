@@ -41,7 +41,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/System! !header=core.h! !hide! \endxmlonly
 struct CL_API_CORE PreallocatedMemory
 {
 	int dummy;
@@ -50,8 +49,6 @@ struct CL_API_CORE PreallocatedMemory
 class Mutex;
 
 /// \brief General system helper functions.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE System
 {
 /// \name Attributes

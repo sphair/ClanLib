@@ -75,7 +75,6 @@ class CommandLine_Impl;
 ///    <p>In the above example the first '-f -b' options are treated as
 ///    normal while the ones after the '--' are treated as rest arguments
 ///    (aka filenames in most programs).</p> 
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE CommandLine
 {
 /// \name Construction

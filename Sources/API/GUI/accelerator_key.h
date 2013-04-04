@@ -44,8 +44,6 @@ namespace clan
 class AcceleratorKey_Impl;
 
 /// \brief GUI Accelerator Table Entry.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class AcceleratorKey
 {
 /// \name Construction

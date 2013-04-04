@@ -41,8 +41,6 @@ class Angle_Impl;
 
 
 /// \brief Angle unit
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum AngleUnit
 {
 	angle_degrees,
@@ -50,8 +48,6 @@ enum AngleUnit
 };
 
 /// \brief Euler angle rotation order
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum EulerOrder
 {
 	order_XYZ,
@@ -64,8 +60,6 @@ enum EulerOrder
 
 
 /// \brief Angle class.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE Angle
 {
 /// \name Construction

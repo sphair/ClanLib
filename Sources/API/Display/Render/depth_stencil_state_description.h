@@ -40,8 +40,6 @@ namespace clan
 class DepthStencilStateDescription_Impl;
 
 /// \brief DepthStencil state description.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DepthStencilStateDescription
 {
 /// \name Construction

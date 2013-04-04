@@ -41,8 +41,6 @@ class DBTransactionProvider;
 class DBTransaction_Impl;
 
 /// \brief Database transaction.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBTransaction
 {
 /// \name Construction

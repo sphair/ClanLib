@@ -42,8 +42,6 @@ class DepthStencilStateDescription;
 class DepthStencilStateProvider;
 
 /// \brief DepthStencil state setup.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DepthStencilState
 {
 /// \name Construction

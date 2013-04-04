@@ -44,7 +44,6 @@ namespace clan
 /// <p>Outline circles split the line segments into groups for faster collision detection.
 ///    If two circles encapsulating the lines don't collide, none of the lines inside them can
 ///    collide either. </p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class OutlineCircle
 {
 /// \name Construction

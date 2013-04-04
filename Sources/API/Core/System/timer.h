@@ -38,8 +38,6 @@ class Timer_Impl;
 class Callback_v0;
 
 /// \brief Timer class that invokes a callback on a specified interval
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE Timer
 {
 /// \name Construction

@@ -45,8 +45,6 @@ class Point;
 class Cursor_Impl;
 
 /// \brief Mouse cursor class.
-///
-/// \xmlonly !group=Display/Window! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Cursor
 {
 /// \name Construction

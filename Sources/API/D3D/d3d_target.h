@@ -48,8 +48,6 @@ class UniformBuffer;
 class GraphicContext;
 
 /// \brief Display target for clanDisplay.
-///
-/// \xmlonly !group=D3D/Display! !header=d3d.h! \endxmlonly
 class CL_API_D3D D3DTarget : public DisplayTarget
 {
 /// \name Construction

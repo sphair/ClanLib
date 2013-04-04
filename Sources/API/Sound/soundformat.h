@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Sound Format Enums
-///
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 enum SoundFormat
 {
 	sf_8bit_unsigned,

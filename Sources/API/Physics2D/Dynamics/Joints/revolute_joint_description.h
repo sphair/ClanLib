@@ -44,8 +44,6 @@ namespace clan
 	class RevoluteJointDescription_Impl;
 
 /// \brief RevoluteJointDescription class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS RevoluteJointDescription
 {
 

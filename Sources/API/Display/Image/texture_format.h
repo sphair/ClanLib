@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Texture format.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureFormat
 {
 	// Standard ClanLib sized formats (most common listed first)
