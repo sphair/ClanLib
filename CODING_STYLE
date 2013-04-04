@@ -2,7 +2,7 @@
 ClanLib coding style and conventions:
 --------------------------------------
 
-1. All classes have a "CL_" prefix. Eg. CL_Display, CL_SoundBuffer...
+1. All classes are in the clan namespace
 2. All macros have a "cl_" prefix. Eg. cl_assert, cl_info...
 
 3. We do NOT use K&R style C style. We use the special ClanSoft variant of
@@ -148,41 +148,7 @@ functional details are explained. Example:
 	class CL_Sprite
 	{ ...
 
-3) Function groups.
-
-Functions in a class is grouped into different sections. The typical ones
-are Construction, Attributes, Operations and Implementation. These groups
-are marked up like this:
-
-	/// \name Construction
-	/// \{
-		(blank line)
-		(code here)
-		(blank line)
-	/// \}
-	/// \name Attributes
-	/// \{
-		(blank line)
-		(code here)
-		(blank line)
-	/// \}
-	/// \name Operations
-	/// \{
-		(blank line)
-		(code here)
-		(blank line)
-	/// \}
-	/// \name Implementation
-	/// \{
-		(blank line)
-		(code here)
-		(blank line)
-	/// \}
-
-Any functions following such a group markup will belong to that group. The
-group markups are placed at the beginning of the line:
-
-4) Function parameters.
+3) Function parameters.
 
 Parameters of a function are desired to have a parameter description. An example:
 
@@ -211,9 +177,6 @@ Each header file should contain below the ClanLib SDK license:
 {Group} denotes the ClanLib group (eg clanCore, clanDisplay, clanGUI)
 {Section} denotes the group section (eg "Controls" for GUI)
 
-Each class should contain at the end of the long description:
-/// \xmlonly !group={Group2}/{Section}! !header={header}! \endxmlonly
-
 {Group2} this is the same as {Group} without the "clan" prefix
 {Header} denotes the base header file that includes this class
 
@@ -226,7 +189,6 @@ For Example:
 /// \brief Interface to drawing graphics.
 ///
 /// The long description
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CL_GraphicContext
 {
 ...
