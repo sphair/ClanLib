@@ -6,12 +6,8 @@ all-local:
 
 html:
 	if [ -d doxyoutput ]; then rm -rf doxyoutput; fi
-	if [ -d reftest ]; then rm -rf reftest; fi
 	mkdir doxyoutput;
-	mkdir reftest
 	doxygen ./clanlib.doxygen
-	make -C ../Utilities/ReferenceDocs
-	../Utilities/ReferenceDocs/ReferenceDocs
 
 install-html:
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)
@@ -20,7 +16,9 @@ install-html:
 	$(INSTALL) -d $(DESTDIR)$(HTML_PREFIX)/Reference/html
 	$(INSTALL) -m 0644 $(srcdir)/images/*.png $(DESTDIR)$(HTML_PREFIX)/Reference/images
 
-	find reftest/ -name "*.html" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
+	find doxyoutput/html/ -name "*.html" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
+	find doxyoutput/html/ -name "*.png" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
+	find doxyoutput/html/ -name "*.css" -exec $(INSTALL) -m 0644 {} $(DESTDIR)$(HTML_PREFIX)/Reference/html \;
 
 clean-local:
 	rm -rf doxyoutput
