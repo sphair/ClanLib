@@ -41,8 +41,6 @@ namespace clan
 class GraphicContext_GL_Impl;
 
 /// \brief GL Graphic Context
-///
-/// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 class CL_API_GL GraphicContext_GL : public GraphicContext
 {
 //!Construction

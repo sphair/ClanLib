@@ -40,8 +40,6 @@ namespace clan
 {
 
 /// \brief EarClipTriangulator_Triangle
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class EarClipTriangulator_Triangle
 {
 public:
@@ -52,8 +50,6 @@ class EarClipTriangulator_Impl;
 class EarClipResult;
 
 /// \brief Polygon orientations.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum PolygonOrientation
 {
 	cl_clockwise,
@@ -61,8 +57,6 @@ enum PolygonOrientation
 };
 
 /// \brief Ear-clipping triangulator.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class EarClipTriangulator
 {
 /// \name Construction

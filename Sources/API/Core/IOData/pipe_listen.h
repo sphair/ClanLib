@@ -42,8 +42,6 @@ class PipeConnection;
 class PipeListen_Impl;
 
 /// \brief Pipe listen class.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE PipeListen
 {
 /// \name Construction

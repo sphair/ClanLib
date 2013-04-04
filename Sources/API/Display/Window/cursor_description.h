@@ -44,8 +44,6 @@ class CursorDescription_Impl;
 class ResourceManager;
 
 /// \brief This class describes a single frame in a cursor description.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CursorDescriptionFrame
 {
 
@@ -70,7 +68,6 @@ public:
 ///    creating a cursor, individual frames can come from different image
 ///    sources, or be cut out from an image source using various different
 ///    techniques.</p>
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CursorDescription
 {
 /// \name Construction

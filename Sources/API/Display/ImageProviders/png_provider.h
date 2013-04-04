@@ -42,8 +42,6 @@ namespace clan
 class VirtualDirectory;
 
 /// \brief Surface provider that can load PNG (.png) files.
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PNGProvider
 {
 /// \name Construction

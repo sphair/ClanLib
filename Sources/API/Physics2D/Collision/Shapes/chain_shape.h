@@ -49,7 +49,6 @@ class CollisionOutline;
 /// Since there may be many vertices, they are allocated using b2Alloc.
 /// Connectivity information is used to create smooth collisions.
 /// WARNING: The chain will not collide properly if there are self-intersections. 
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS ChainShape : public Shape
 {
 /// \name Construction

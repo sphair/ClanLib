@@ -42,8 +42,6 @@ class InputDevice;
 class InputContext_Impl;
 
 /// \brief InputContext
-///
-/// \xmlonly !group=Display/Input! !header=display.h! \endxmlonly
 class CL_API_DISPLAY InputContext
 {
 /// \name Construction

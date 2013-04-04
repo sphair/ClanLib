@@ -49,7 +49,6 @@ class SoundOutput;
 ///    class, which can be used to control the sound (its volume, pitch,
 ///    pan, position). It can also be used to retrigger the sound
 ///    or to stop it.</p> 
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundBuffer_Session
 {
 /// \name Construction

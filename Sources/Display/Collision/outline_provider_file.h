@@ -45,7 +45,6 @@ class Size;
 /// \brief File outline provider is used to load precompiled outlines.
 ///
 /// <p>A OutlineProviderFile is used to load precompiled outlines.</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class OutlineProviderFile
 {
 /// \name Construction

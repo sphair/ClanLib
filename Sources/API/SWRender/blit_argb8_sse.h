@@ -45,8 +45,6 @@ namespace clan
 {
 
 /// \brief SSE accelerated rendering operations for ARGB8888
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class BlitARGB8SSE
 {
 //!Operations

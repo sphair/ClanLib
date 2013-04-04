@@ -44,8 +44,6 @@ class PixelPipeline;
 class GraphicContext_SWRender_Impl;
 
 /// \brief SWRender Graphic Context
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class API_SWRender GraphicContext_SWRender : public GraphicContext
 {
 //!Construction

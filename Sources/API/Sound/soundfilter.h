@@ -42,8 +42,6 @@ class SoundFilter_Impl;
 class SoundFilterProvider;
 
 /// \brief Sound Filter Class
-///
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundFilter
 {
 /// \name Construction

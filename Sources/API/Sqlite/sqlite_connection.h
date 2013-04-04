@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Sqlite database connection.
-///
-/// \xmlonly !group=Sqlite/System! !header=sqlite.h! \endxmlonly
 class CL_API_SQLITE SqliteConnection : public DBConnection
 {
 /// \name Construction

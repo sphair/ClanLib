@@ -42,8 +42,6 @@ class BlendStateDescription;
 class BlendStateProvider;
 
 /// \brief Blend state setup.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY BlendState
 {
 /// \name Construction

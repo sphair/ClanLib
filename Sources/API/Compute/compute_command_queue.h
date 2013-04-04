@@ -47,8 +47,6 @@ class ComputeMemoryMap;
 class ComputeCommandQueue_Impl;
 
 /// \brief Compute command queue
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeCommandQueue
 {
 /// \name Construction

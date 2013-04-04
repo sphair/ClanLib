@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Occlusion query provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY OcclusionQueryProvider
 {
 /// \name Construction

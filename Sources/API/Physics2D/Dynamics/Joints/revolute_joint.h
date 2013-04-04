@@ -44,8 +44,6 @@ namespace clan
 	class PhysicsContext;
 
 /// \brief RevoluteJoint class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS RevoluteJoint : public Joint
 {
 

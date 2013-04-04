@@ -40,8 +40,6 @@ namespace clan
 class DataBuffer_Impl;
 
 /// \brief General purpose data buffer.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE DataBuffer
 {
 /// \name Construction

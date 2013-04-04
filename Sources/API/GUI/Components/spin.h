@@ -42,8 +42,6 @@ namespace clan
 class Spin_Impl;
 
 /// \brief Spin component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI Spin : public GUIComponent
 {
 /// \name Construction

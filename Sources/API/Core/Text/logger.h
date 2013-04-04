@@ -40,8 +40,6 @@ namespace clan
 {
 
 /// \brief Logger interface.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE Logger
 {
 /// \name Construction
@@ -88,7 +86,6 @@ private:
 
 /// \brief Log text to logger.
 ///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 CL_API_CORE void cl_log_event(const std::string &type, const std::string &text);
 
 template <class Arg1>

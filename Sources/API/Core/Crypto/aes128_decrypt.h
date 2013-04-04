@@ -42,8 +42,6 @@ class DataBuffer;
 class AES128_Decrypt_Impl;
 
 /// \brief AES-128 decryption class (running in Cipher Block Chaining mode)
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE AES128_Decrypt
 {
 /// \name Construction

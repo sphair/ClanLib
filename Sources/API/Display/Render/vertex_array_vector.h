@@ -39,7 +39,6 @@ namespace clan
 
 /// \brief Vertex Array Vector
 ///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 template<typename Type>
 class VertexArrayVector : public VertexArrayBuffer
 {

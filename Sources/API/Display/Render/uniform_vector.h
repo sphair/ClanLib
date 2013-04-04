@@ -40,7 +40,6 @@ namespace clan
 
 /// \brief Uniform Buffer Vector
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class CL_API_DISPLAY UniformVector : public UniformBuffer
 {

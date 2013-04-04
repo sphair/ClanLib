@@ -41,7 +41,6 @@ namespace clan
 /// \brief Triangles
 ///
 /// These triangle templates are defined for: int (Triangle), float (Trianglef), double (Triangled)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Trianglex
 {
@@ -88,8 +87,6 @@ public:
 };
 
 /// \brief Triangles - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Triangle : public Trianglex<int>
 {
 public:
@@ -99,8 +96,6 @@ public:
 };
 
 /// \brief Triangles - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Trianglef : public Trianglex<float>
 {
 public:
@@ -110,8 +105,6 @@ public:
 };
 
 /// \brief Triangles - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Triangled : public Trianglex<double>
 {
 public:

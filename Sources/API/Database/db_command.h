@@ -43,8 +43,6 @@ class DBCommandProvider;
 class DBCommand_Impl;
 
 /// \brief Database command.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBCommand
 {
 /// \name Construction

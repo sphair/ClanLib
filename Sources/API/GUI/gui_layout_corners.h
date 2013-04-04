@@ -41,8 +41,6 @@ class GUIComponent;
 class GUILayoutProvider_Corners;
 
 /// \brief Component Anchor Point
-///
-/// \xmlonly !group=GUI/Framework! !header=gui.h! \endxmlonly
 enum ComponentAnchorPoint
 {
 	cl_anchor_top_left,
@@ -53,8 +51,6 @@ enum ComponentAnchorPoint
 };
 
 /// \brief GUI base component class.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUILayoutCorners : public GUILayout
 {
 /// \name Construction

@@ -41,8 +41,6 @@ class GUIWindowManagerProvider_Direct;
 class GUIWindowManagerDirectWindow;
 
 /// \brief Direct window manager.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIWindowManagerDirect : public GUIWindowManager
 {
 /// \name Construction

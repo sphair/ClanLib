@@ -45,8 +45,6 @@ class InputDeviceProvider;
 class InputDevice_Impl;
 
 /// \brief InputDevice
-///
-/// \xmlonly !group=Display/Input! !header=display.h! \endxmlonly
 class CL_API_DISPLAY InputDevice
 {
 public:

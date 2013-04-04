@@ -44,8 +44,6 @@ class DBConnectionProvider;
 class DBConnection_Impl;
 
 /// \brief Database connection.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBConnection
 {
 /// \name Construction

@@ -43,7 +43,6 @@ class CDDrive_Impl;
 /// \brief CD drive audio interface.
 ///
 /// Use this class to control the CDROM drive in your computer.
-/// \xmlonly !group=Sound/CD Audio! !header=sound.h! \endxmlonly
 class CL_API_SOUND CDDrive
 {
 /// \name Construction

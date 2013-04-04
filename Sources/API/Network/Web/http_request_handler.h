@@ -42,8 +42,6 @@ class HTTPRequestHandlerProvider;
 class HTTPRequestHandler_Impl;
 
 /// \brief HTTP request handler class.
-///
-/// \xmlonly !group=Network/Web! !header=network.h! \endxmlonly
 class CL_API_NETWORK HTTPRequestHandler
 {
 /// \name Construction

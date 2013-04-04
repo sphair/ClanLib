@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 class Callback_Impl_v0
 {
 public:
@@ -50,7 +49,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 class Callback_Impl_v0_static : public Callback_Impl_v0
 {
 public:
@@ -68,7 +66,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename UserData>
 class Callback_Impl_v0_static_user : public Callback_Impl_v0
 {
@@ -90,7 +87,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename InstanceClass>
 class Callback_Impl_v0_member : public Callback_Impl_v0
 {
@@ -112,7 +108,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename InstanceClass, typename UserData>
 class Callback_Impl_v0_member_user : public Callback_Impl_v0
 {
@@ -136,7 +131,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Functor>
 class Callback_Impl_v0_functor : public Callback_Impl_v0
 {
@@ -155,8 +149,6 @@ public:
 };
 
 /// \brief Callback_v0
-///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 class Callback_v0
 {
 public:
@@ -240,8 +232,6 @@ private:
 };
 
 /// \brief Callback_v0_functor
-///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 class Callback_v0_functor : public Callback_v0
 {
 public:

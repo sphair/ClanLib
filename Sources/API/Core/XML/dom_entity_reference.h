@@ -49,7 +49,6 @@ namespace clan
 ///    Entity node representing the referenced entity; but if such an Entity exists, then the child list
 ///    of the EntityReference node is the same as that of the Entity node. As with the Entity node, all
 ///    descendants of the EntityReference are readonly.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomEntityReference : public DomNode
 {
 /// \name Construction

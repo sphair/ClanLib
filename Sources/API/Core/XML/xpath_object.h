@@ -42,8 +42,6 @@ class DomNode;
 class XPathObject_Impl;
 
 /// \brief XPath result object.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class XPathObject
 {
 /// \name Constuction

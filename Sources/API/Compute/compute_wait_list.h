@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief List of events that must have completed before a new operation is executed
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeWaitList : public std::vector<ComputeEvent>
 {
 /// \name Construction

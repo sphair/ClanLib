@@ -47,8 +47,6 @@ namespace clan
 #if defined(WIN32) || __GNUC__ > 4 ||  (__GNUC__ == 4 & __GNUC_MINOR__ >= 1)
 
 /// \brief Interlocked variable class
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class InterlockedVariable
 {
 public:

@@ -40,8 +40,6 @@ class PixelThreadContext;
 class PixelPipeline;
 
 /// \brief Interface for commands participating in the rendering pipeline
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class API_SWRender PixelCommand
 {
 //!Operations

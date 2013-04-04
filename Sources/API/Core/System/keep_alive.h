@@ -42,8 +42,6 @@ class KeepAliveObject;
 class KeepAliveObject_Impl;
 
 /// \brief KeepAlive application loop helper
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE KeepAlive
 {
 public:
@@ -78,8 +76,6 @@ public:
 };
 
 /// \brief Interface for objects participating in the thread keep-alive processing loop
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE KeepAliveObject
 {
 public:

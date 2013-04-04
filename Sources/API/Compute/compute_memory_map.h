@@ -41,8 +41,6 @@ class ComputeEvent;
 class ComputeMemoryMap_Impl;
 
 /// \brief Compute memory mapping
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeMemoryMap
 {
 /// \name Construction

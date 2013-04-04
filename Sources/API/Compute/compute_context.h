@@ -41,8 +41,6 @@ class GraphicContext;
 class ComputeContext_Impl;
 
 /// \brief Interface to compute operations.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeContext
 {
 /// \name Construction

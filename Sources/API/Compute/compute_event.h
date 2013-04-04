@@ -40,8 +40,6 @@ namespace clan
 class ComputeEvent_Impl;
 
 /// \brief Compute event object
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeEvent
 {
 /// \name Construction

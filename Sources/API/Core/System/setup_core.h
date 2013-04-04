@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Library initializer class.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE SetupCore
 {
 /// \name Construction

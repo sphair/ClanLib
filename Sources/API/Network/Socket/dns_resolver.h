@@ -43,8 +43,6 @@ class DNSPacket;
 class DNSResolver_Impl;
 
 /// \brief DNS resolver.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK DNSResolver
 {
 /// \name Construction

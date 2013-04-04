@@ -49,8 +49,6 @@ class SpanComponent;
 class Canvas;
 
 /// \brief Span Align
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 enum SpanAlign
 {
 	span_left,
@@ -60,8 +58,6 @@ enum SpanAlign
 };
 
 /// \brief Span layout class
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class SpanLayout
 {
 /// \name Construction

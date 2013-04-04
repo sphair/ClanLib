@@ -51,7 +51,6 @@ class Vec4;
 ///
 /// These line templates are defined for: int (Size), float (Sizef), double (Sized)
 ///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class CL_API_CORE Sizex
 {
@@ -155,8 +154,6 @@ public:
 };
 
 /// \brief 2D (width,height) size structure - Integer
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Size : public Sizex<int>
 {
 public:
@@ -170,8 +167,6 @@ public:
 };
 
 /// \brief 2D (width,height) size structure - Float
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Sizef : public Sizex<float>
 {
 public:
@@ -185,8 +180,6 @@ public:
 };
 
 /// \brief 2D (width,height) size structure - Double
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class Sized : public Sizex<double>
 {
 public:

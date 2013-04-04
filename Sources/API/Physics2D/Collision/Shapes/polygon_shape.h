@@ -49,7 +49,6 @@ class Angle;
 /// A convex polygon. It is assumed that the interior of the polygon is to the left of each edge.
 /// Polygons have a maximum number of vertices equal to b2_maxPolygonVertices.
 /// In most cases you should not need many vertices for a convex polygon. 
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PolygonShape : public Shape
 {
 /// \name Construction

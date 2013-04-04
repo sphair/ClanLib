@@ -52,7 +52,6 @@ namespace clan
 /// Application clanapp(&MyApplication::main);
 /// \endcode
 /// Your program does not have to use this class.\n
-/// \xmlonly !group=App/System! !header=application.h! \endxmlonly
 class CL_API_APP Application
 {
 /// \name Construction

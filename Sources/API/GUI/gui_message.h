@@ -41,8 +41,6 @@ namespace clan
 class GUIComponent;
 
 /// \brief GUI message.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIMessage
 {
 /// \name Construction

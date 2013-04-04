@@ -40,8 +40,6 @@ namespace clan
 class SoundProvider_Raw_Impl;
 
 /// \brief Sound provider in a raw PCM format (no header in file).
-///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProvider_Raw : public SoundProvider
 {
 /// \name Construction

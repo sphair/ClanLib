@@ -48,7 +48,6 @@ class Pointf;
 /// \brief Collision detection contour.
 ///
 /// <p>A outline consists of contours, which hold the actual outline geometry</p>
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class Contour
 {
 /// \name Construction

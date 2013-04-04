@@ -41,8 +41,6 @@ namespace clan
 class ProgramAttribute_Impl;
 
 /// \brief OpenGL program object vertex attribute information class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ProgramAttribute
 {
 /// \name Construction

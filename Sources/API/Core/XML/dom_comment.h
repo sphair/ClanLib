@@ -42,7 +42,6 @@ namespace clan
 ///    <p>This represents the content of a comment, i.e., all the characters between the starting
 ///    '&lt;!--' and ending '--&gt;'. Note that this is the definition of a comment in XML, and,
 ///    in practice, HTML, although some HTML tools may implement the full SGML comment structure.</p>
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomComment : public DomCharacterData
 {
 /// \name Construction

@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief GUI window close message.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIMessage_Close : public GUIMessage
 {
 /// \name Construction

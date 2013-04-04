@@ -56,8 +56,6 @@ class CursorProvider;
 class CursorDescription;
 
 /// \brief Display Window site.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DisplayWindowSite
 {
 /// \name Attributes
@@ -107,8 +105,6 @@ public:
 };
 
 /// \brief Interface for implementing a DisplayWindow target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DisplayWindowProvider
 {
 /// \name Construction

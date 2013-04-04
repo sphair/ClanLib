@@ -44,8 +44,6 @@ class TabPage;
 class DomElement;
 
 /// \brief Tab component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI Tab : public GUIComponent
 {
 /// \name Construction

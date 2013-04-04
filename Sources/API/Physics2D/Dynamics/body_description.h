@@ -52,8 +52,6 @@ class ResourceManager;
 		body_dynamic	= 2
 	};
 /// \brief BodyDescription class
-///
-/// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS BodyDescription
 {
 public:

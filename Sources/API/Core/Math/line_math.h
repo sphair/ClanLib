@@ -42,8 +42,6 @@ namespace clan
 /// \brief Math operations on 2D lines.
 ///
 /// Obsolete - Use Line, LineRay, LineSegment
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE LineMath
 {
 public:

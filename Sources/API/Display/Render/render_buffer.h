@@ -45,8 +45,6 @@ class RenderBufferProvider;
 class RenderBuffer_Impl;
 
 /// \brief Render-buffer object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY RenderBuffer
 {
 /// \name Construction

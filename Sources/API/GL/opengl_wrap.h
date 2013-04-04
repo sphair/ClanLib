@@ -48,8 +48,6 @@ namespace clan
 /// \{
 
 /// \brief GLFunctions
-///
-/// \xmlonly !group=GL/System! !header=gl.h! \endxmlonly
 class GLFunctions
 {
 

@@ -58,7 +58,6 @@ class Canvas;
 /// \brief Collision point information structure.
 ///
 ///  <p>Structure used for returning information about collisions</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 struct CollisionPoint
 {
 	/// \brief Coordinates of the point where the contours intersected.
@@ -77,7 +76,6 @@ struct CollisionPoint
 /// \brief Strurcture containing information about contours that collided.
 ///
 /// <p>Structure used for returning information about collisions</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 struct CollidingContours
 {
 	const Contour *contour1;
@@ -111,7 +109,6 @@ struct CollidingContours
 /// \brief Collision detection outline.
 ///
 /// <p>A collision outline is used in collision detection</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class CL_API_DISPLAY CollisionOutline
 {
 /// \name Construction

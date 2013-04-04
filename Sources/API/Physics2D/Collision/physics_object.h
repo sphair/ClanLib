@@ -41,7 +41,6 @@ namespace clan
 ///
 /// A physics object is a pure virtual class that should be a base for all the game object classes
 /// that want to work with collisions.
-/// \xmlonly !group=Physic/Collision! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicsObject
 {
 

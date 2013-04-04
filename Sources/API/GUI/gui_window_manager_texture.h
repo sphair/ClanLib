@@ -47,8 +47,6 @@ class GUIWindowManagerProvider_Texture;
 class GUIWindowManagerTextureWindow;
 
 /// \brief Texture window manager.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIWindowManagerTexture : public GUIWindowManager
 {
 /// \name Construction

@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief 2D texture cube array object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TextureCubeArray : public Texture
 {
 /// \name Construction

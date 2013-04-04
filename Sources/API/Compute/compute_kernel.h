@@ -44,8 +44,6 @@ class ComputeSampler;
 class ComputeKernel_Impl;
 
 /// \brief Compute program kernel object
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_COMPUTE ComputeKernel
 {
 /// \name Construction

@@ -54,8 +54,6 @@ class TransferTexture_Impl;
 class SharedGCData_Impl;
 
 /// \brief Texture Transfer class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TransferTexture : public PixelBuffer
 {
 /// \name Construction

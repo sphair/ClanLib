@@ -44,7 +44,6 @@ class CircleShape_Impl;
 /// \brief Circle Shape class.
 ///
 /// A circle shape.
-/// \xmlonly !group=Physic/Collision/Shapes! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS CircleShape : public Shape
 {
 /// \name Construction

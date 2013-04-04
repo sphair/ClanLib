@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief I/O device provider interface.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE IODeviceProvider
 {
 /// \name Construction

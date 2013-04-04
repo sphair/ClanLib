@@ -61,8 +61,6 @@ typedef unsigned int	cl_bigint_size;
 /// \brief Big Integer class
 ///
 /// ** Designed to clear internal memory after use **
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class BigInt
 {
 /// \name Construction

@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
 class Callback_Impl_v6
 {
@@ -51,7 +50,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
 class Callback_Impl_v6_static : public Callback_Impl_v6<P1, P2, P3, P4, P5, P6>
 {
@@ -70,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename UserData>
 class Callback_Impl_v6_static_user : public Callback_Impl_v6<P1, P2, P3, P4, P5, P6>
 {
@@ -92,7 +89,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename InstanceClass>
 class Callback_Impl_v6_member : public Callback_Impl_v6<P1, P2, P3, P4, P5, P6>
 {
@@ -114,7 +110,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename InstanceClass, typename UserData>
 class Callback_Impl_v6_member_user : public Callback_Impl_v6<P1, P2, P3, P4, P5, P6>
 {
@@ -138,7 +133,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class P1, class P2, class P3, class P4, class P5, class P6, class Functor>
 class Callback_Impl_v6_functor : public Callback_Impl_v6<P1, P2, P3, P4, P5, P6>
 {
@@ -158,7 +152,6 @@ public:
 
 /// \brief Callback_v6
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
 class Callback_v6
 {
@@ -244,7 +237,6 @@ private:
 
 /// \brief Callback_v6_functor
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
 class Callback_v6_functor : public Callback_v6<P1, P2, P3, P4, P5, P6>
 {

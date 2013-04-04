@@ -48,7 +48,6 @@ class DomNamedNodeMap;
 ///    various XML scheme efforts on DTD representation are not clearly understood
 ///    as of this writing.</p>
 ///    <p>The DOM Level 1 doesn't support editing DocumentType nodes.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomDocumentType : public DomNode
 {
 /// \name Construction

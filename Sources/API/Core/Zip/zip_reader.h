@@ -43,8 +43,6 @@ class IODevice;
 class ZipReader_Impl;
 
 /// \brief Zip file reader.
-///
-/// \xmlonly !group=Core/Zip! !header=core.h! \endxmlonly
 class CL_API_CORE ZipReader
 {
 /// \name Construction

@@ -52,8 +52,6 @@ class CollisionOutline;
 class Canvas;
 
 /// \brief Sprite class.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Sprite
 {
 /// \name Enums

@@ -45,8 +45,6 @@ class FixtureDescription;
 class Fixture_Impl;
 
 /// \brief Fixture class
-///
-/// \xmlonly !group=Physics/Dynamics! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS Fixture
 {
 public:

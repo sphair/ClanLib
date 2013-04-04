@@ -40,8 +40,6 @@ namespace clan
 class FileDialog_Impl;
 
 /// \brief OpenFileDialog component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI OpenFileDialog
 {
 /// \name Construction

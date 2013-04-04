@@ -41,8 +41,6 @@ class ListViewColumnHeader_Impl;
 class GUIThemePart;
 
 /// \brief ListView column header class.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewColumnHeader
 {
 /// \name Construction

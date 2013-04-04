@@ -75,7 +75,6 @@ class Angle;
 /// \brief 4D matrix
 ///
 /// These matrix templates are defined for: int (Mat4i), float (Mat4f), double (Mat4d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Mat4
 {

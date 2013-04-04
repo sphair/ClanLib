@@ -44,8 +44,6 @@ namespace clan
 	class MouseJointDescription_Impl;
 
 /// \brief MouseJointDescription class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS MouseJointDescription
 {
 

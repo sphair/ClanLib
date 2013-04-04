@@ -54,7 +54,6 @@ class Angle;
 ///
 /// A ray has a start point and a direction\n
 /// These line templates are defined for: int (LineRay3), float (LineRay3f), double (LineRay3d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class LineRay3x
 {
@@ -95,7 +94,6 @@ public:
 ///
 /// A ray has a start point and a direction\n
 /// These line templates are defined for: int (LineRay2i), float (LineRay2f), double (LineRay2d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class LineRay2x
 {
@@ -135,7 +133,6 @@ public:
 /// \brief 2D line ray - Integer
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay2 : public LineRay2x<int>
 {
 public:
@@ -148,7 +145,6 @@ public:
 /// \brief 2D line ray - Float
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay2f : public LineRay2x<float>
 {
 public:
@@ -161,7 +157,6 @@ public:
 /// \brief 2D line ray - Double
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay2d : public LineRay2x<double>
 {
 public:
@@ -174,7 +169,6 @@ public:
 /// \brief 3D line ray - Integer
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay3 : public LineRay3x<int>
 {
 public:
@@ -187,7 +181,6 @@ public:
 /// \brief 3D line ray - Float
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay3f : public LineRay3x<float>
 {
 public:
@@ -200,7 +193,6 @@ public:
 /// \brief 3D line ray - Double
 ///
 /// A ray has a start point and a direction\n
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class LineRay3d : public LineRay3x<double>
 {
 public:

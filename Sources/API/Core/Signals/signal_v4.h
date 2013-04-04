@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4>
 class SlotCallback_v4 : public SlotCallback
 {
@@ -47,7 +46,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4>
 class SlotCallback_v4_static : public SlotCallback_v4<Param1, Param2, Param3, Param4>
 {
@@ -59,7 +57,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class UserData>
 class SlotCallback_v4_static_user : public SlotCallback_v4<Param1, Param2, Param3, Param4>
 {
@@ -72,7 +69,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class InstanceClass>
 class SlotCallback_v4_member : public SlotCallback_v4<Param1, Param2, Param3, Param4>
 {
@@ -85,7 +81,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class InstanceClass, class UserData>
 class SlotCallback_v4_member_user : public SlotCallback_v4<Param1, Param2, Param3, Param4>
 {
@@ -99,7 +94,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Functor>
 class SlotCallback_v4_functor : public SlotCallback_v4<Param1, Param2, Param3, Param4>
 {
@@ -112,7 +106,6 @@ public:
 
 /// \brief Signal_v4
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4>
 class Signal_v4
 {

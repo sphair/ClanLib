@@ -39,8 +39,6 @@ namespace clan
 class HTTPServerConnection;
 
 /// \brief HTTP request handler provider interface.
-///
-/// \xmlonly !group=Network/Web! !header=network.h! \endxmlonly
 class CL_API_NETWORK HTTPRequestHandlerProvider
 {
 /// \name Construction

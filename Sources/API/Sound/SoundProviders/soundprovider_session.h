@@ -43,7 +43,6 @@ class SoundProvider_Session_Impl;
 /// \brief Sound provider playback session.
 ///
 ///  <p>Interface used by ClanLib during playback of sound providers.</p>
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProvider_Session
 {
 /// \name Construction

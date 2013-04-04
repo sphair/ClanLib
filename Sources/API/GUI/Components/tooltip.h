@@ -42,8 +42,6 @@ class GUIManager;
 class ToolTip_Impl;
 
 /// \brief Tool tip component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ToolTip : public GUIComponent
 {
 /// \name Construction

@@ -45,8 +45,6 @@ class EventProvider;
 class Event_Impl;
 
 /// \brief OS level event.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE Event
 {
 /// \name Construction

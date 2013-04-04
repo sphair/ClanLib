@@ -42,8 +42,6 @@ class RasterizerStateDescription;
 class RasterizerStateProvider;
 
 /// \brief Rasterizer state setup.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY RasterizerState
 {
 /// \name Construction

@@ -61,8 +61,6 @@ class ListViewIconList;
 class InputEvent;
 
 /// \brief List view component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListView : public GUIComponent
 {
 /// \name Construction

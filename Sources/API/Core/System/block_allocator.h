@@ -51,7 +51,6 @@ class BlockAllocator_Impl;
 ///    <p>The allocator allocates memory from the heap in blocks. Each time the
 ///    allocated block is exhausted, the allocator will double the block size
 ///    and allocate more memory.</p>
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE BlockAllocator
 {
 /// \name Construction
@@ -222,7 +221,6 @@ private:
 ///    <p>Before freeing up the memory using BlockAllocator::free() you have
 ///    to delete the object first using operator delete. If you fail to do this
 ///    the destructor will not get called.</p>
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class BlockAllocated
 {
 /// \name Operations

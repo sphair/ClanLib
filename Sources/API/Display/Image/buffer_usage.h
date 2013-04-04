@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Array Buffer usage enum
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum BufferUsage
 {
 	usage_stream_draw,
@@ -54,8 +52,6 @@ enum BufferUsage
 };
 
 /// \brief Array Buffer access enum
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum BufferAccess
 {
 	access_read_only,

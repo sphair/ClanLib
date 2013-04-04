@@ -41,8 +41,6 @@ namespace clan
 class DisplayWindowProvider;
 
 /// \brief Interface for implementing a DisplayTarget target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DisplayTargetProvider
 {
 /// \name Construction

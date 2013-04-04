@@ -55,7 +55,6 @@ namespace clan
 ///    connect_signal() for each function you want hooked up.</p>
 ///    <p>See the login_view.cpp/h in the CTalk example for an example of how to use
 ///    this class.</p>
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 class CL_API_CORE SlotContainer
 {
 /// \name Operations

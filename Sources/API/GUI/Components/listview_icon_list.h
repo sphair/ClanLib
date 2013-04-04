@@ -42,8 +42,6 @@ class ListViewIconList_Impl;
 class ListViewIcon_Impl;
 
 /// \brief ListView icon list.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewIconList
 {
 /// \name Construction

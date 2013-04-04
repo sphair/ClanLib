@@ -43,7 +43,6 @@ namespace clan
 ///    XML document. Note that this models the entity itself not the entity
 ///    declaration. Entity declaration modeling has been left for a later Level
 ///    of the DOM specification.</p>
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomEntity : public DomNode
 {
 /// \name Construction

@@ -42,8 +42,6 @@ class ShaderObject;
 class UniformBuffer;
 
 /// \brief Program Object provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class ProgramObjectProvider
 {
 /// \name Construction

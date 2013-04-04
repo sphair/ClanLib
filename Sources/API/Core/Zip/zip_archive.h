@@ -44,8 +44,6 @@ class IODevice;
 class ZipArchive_Impl;
 
 /// \brief Zip archive.
-///
-/// \xmlonly !group=Core/Zip! !header=core.h! \endxmlonly
 class CL_API_CORE ZipArchive
 {
 /// \name Construction

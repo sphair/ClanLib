@@ -56,7 +56,6 @@ class Angle;
 /// \brief 2D matrix
 ///
 /// These matrix templates are defined for: int (Mat2i), float (Mat2f), double (Mat2d)
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 template<typename Type>
 class Mat2
 {

@@ -45,8 +45,6 @@ class SpriteDescription_Impl;
 class ResourceManager;
 
 /// \brief This class describes a single frame in a sprite description.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class SpriteDescriptionFrame
 {
 
@@ -70,7 +68,6 @@ public:
 ///    creating a sprite, individual frames can come from different image
 ///    sources, or be cut out from an image source using various different
 ///    techniques.</p>
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY SpriteDescription
 {
 /// \name Construction

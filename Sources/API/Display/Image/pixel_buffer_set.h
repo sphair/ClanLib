@@ -44,8 +44,6 @@ class PixelBuffer;
 class PixelBufferSet_Impl;
 
 /// \brief Set of images that combined form a complete texture
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class PixelBufferSet
 {
 /// \name Construction

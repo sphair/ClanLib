@@ -42,8 +42,6 @@ class XMLToken;
 class XMLWriter_Impl;
 
 /// \brief The XML Writer writes a XML file based on XML tokens.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE XMLWriter
 {
 /// \name Construction

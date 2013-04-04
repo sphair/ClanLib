@@ -40,8 +40,6 @@ namespace clan
 class SoundOutput_Description_Impl;
 
 /// \brief Sound output description class.
-///
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundOutput_Description
 {
 /// \name Construction

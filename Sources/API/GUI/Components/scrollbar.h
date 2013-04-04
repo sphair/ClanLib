@@ -43,8 +43,6 @@ namespace clan
 class ScrollBar_Impl;
 
 /// \brief Scroll bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ScrollBar : public GUIComponent
 {
 /// \name Construction

@@ -41,8 +41,6 @@ namespace clan
 class GUIComponentDescription_Impl;
 
 /// \brief GUI component description.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIComponentDescription
 {
 /// \name Construction

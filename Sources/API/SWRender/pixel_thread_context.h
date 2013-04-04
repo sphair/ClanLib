@@ -41,8 +41,6 @@ namespace clan
 {
 
 /// \brief Thread specific rendering data for pixel commands
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class API_SWRender PixelThreadContext
 {
 //!Construction

@@ -43,8 +43,6 @@ class PushButton;
 class Ribbon_Impl;
 
 /// \brief Ribbon component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI Ribbon : public GUIComponent
 {
 /// \name Construction

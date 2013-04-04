@@ -42,8 +42,6 @@ class InputSourceProvider;
 class SoundProvider_Wave_Impl;
 
 /// \brief Windows WAVE sample format (.wav) sound provider.
-///
-/// \xmlonly !group=Sound/Sound Providers! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProvider_Wave : public SoundProvider
 {
 /// \name Construction

@@ -42,8 +42,6 @@ namespace clan
 class FontMetrics_Impl;
 
 /// \brief Font metrics class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY FontMetrics
 {
 /// \name Construction

@@ -47,8 +47,6 @@ namespace clan
 {
 
 /// \brief Mutex class.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE Mutex
 {
 /// \name Construction
@@ -97,8 +95,6 @@ private:
 };
 
 /// \brief Mutex locking helper.
-///
-/// \xmlonly !group=Core/System! !header=core.h! \endxmlonly
 class CL_API_CORE MutexSection
 {
 /// \name Construction

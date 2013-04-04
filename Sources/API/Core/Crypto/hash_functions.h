@@ -47,8 +47,6 @@ namespace clan
 {
 
 /// \brief A Collection of checksum functions.
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE HashFunctions
 {
 /// \name Construction

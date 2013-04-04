@@ -42,8 +42,6 @@ class DataBuffer;
 class MD5_Impl;
 
 /// \brief MD5 hash function class.
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE MD5
 {
 /// \name Construction

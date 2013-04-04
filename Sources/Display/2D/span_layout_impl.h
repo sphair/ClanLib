@@ -40,8 +40,6 @@ namespace clan
 class Canvas;
 
 /// \brief Span component class
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class SpanComponent
 {
 public:
@@ -60,7 +58,6 @@ public:
 
 /// \brief Span Component Binder (templated class)
 ///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 template<typename T>
 class SpanComponentBinder : public SpanComponent
 {

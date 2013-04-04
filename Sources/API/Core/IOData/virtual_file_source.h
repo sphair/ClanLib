@@ -43,8 +43,6 @@ class IODevice;
 class VirtualDirectoryListingEntry;
 
 /// \brief Virtual File System (VFS) file source.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE VirtualFileSource
 {
 /// \name Construction

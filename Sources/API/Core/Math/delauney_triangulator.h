@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Vertex in the delauney triangulation.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE DelauneyTriangulator_Vertex
 {
 /// \name Attributes
@@ -59,8 +57,6 @@ public:
 };
 
 /// \brief Triangle generated from a delauney triangulation.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class DelauneyTriangulator_Triangle
 {
 /// \name Attributes
@@ -85,7 +81,6 @@ class DelauneyTriangulator_Impl;
 ///    <p>This class uses the <a href="http://astronomy.swin.edu.au/~pbourke/terrain/triangulate/">
 ///    delauney triangulation algorithm</a> to produce
 ///    triangles between a list of points.</p>
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class DelauneyTriangulator
 {
 /// \name Construction

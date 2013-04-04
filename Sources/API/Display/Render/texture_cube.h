@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Texture cube directions
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureCubeDirection
 {
 	cl_cube_positive_x,
@@ -52,8 +50,6 @@ enum TextureCubeDirection
 };
 
 /// \brief 2D texture cube object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TextureCube : public Texture
 {
 /// \name Construction

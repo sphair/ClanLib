@@ -44,8 +44,6 @@ class VertexArrayBufferProvider;
 class VertexArrayBuffer_Impl;
 
 /// \brief Vertex Array Buffer
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY VertexArrayBuffer
 {
 /// \name Construction

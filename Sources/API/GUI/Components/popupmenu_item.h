@@ -43,8 +43,6 @@ class PopupMenuItem_Impl;
 class PopupMenu;
 
 /// \brief Popup menu item.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class PopupMenuItem
 {
 /// \name Construction

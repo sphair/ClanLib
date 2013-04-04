@@ -45,8 +45,6 @@ class Rect;
 class Canvas;
 
 /// \brief Interface for implementing a Font target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY FontProvider
 {
 /// \name Construction

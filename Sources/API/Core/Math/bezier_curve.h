@@ -44,8 +44,6 @@ class Pointf;
 class Angle;
 
 /// \brief Bezier curve generator.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 class CL_API_CORE BezierCurve
 {
 /// \name Construction

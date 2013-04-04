@@ -44,8 +44,6 @@ namespace clan
 	class DistanceJointDescription_Impl;
 
 /// \brief DistanceJointDescription class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS DistanceJointDescription
 {
 

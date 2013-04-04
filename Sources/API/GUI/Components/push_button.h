@@ -45,8 +45,6 @@ class Image;
 class PushButton_Impl;
 
 /// \brief Push button component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI PushButton : public GUIComponent
 {
 /// \name Construction

@@ -41,8 +41,6 @@ namespace clan
 {
 
 /// \brief Input event class.
-///
-/// \xmlonly !group=Display/Input! !header=display.h! \endxmlonly
 class CL_API_DISPLAY InputEvent
 {
 public:

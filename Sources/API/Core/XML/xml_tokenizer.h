@@ -42,8 +42,6 @@ class XMLToken;
 class XMLTokenizer_Impl;
 
 /// \brief The XML Tokenizer breaks a XML file into XML tokens.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE XMLTokenizer
 {
 /// \name Construction

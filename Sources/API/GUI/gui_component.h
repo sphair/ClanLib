@@ -78,8 +78,6 @@ struct VerticalTextPosition
 };
 
 /// \brief GUI base component class.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIComponent
 {
 /// \name Construction

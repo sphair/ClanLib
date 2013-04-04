@@ -43,8 +43,6 @@ class Secret_Impl;
 /// \brief Key class
 ///
 /// This class zero's the key from memory when the class is destroyed
-///
-/// \xmlonly !group=Core/Crypto! !header=core.h! \endxmlonly
 class CL_API_CORE Secret
 {
 /// \name Construction

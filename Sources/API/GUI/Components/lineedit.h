@@ -45,8 +45,6 @@ namespace clan
 class LineEdit_Impl;
 
 /// \brief Single line edit component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI LineEdit : public GUIComponent
 {
 /// \name Construction

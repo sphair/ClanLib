@@ -49,7 +49,6 @@ class PhysicsQueryAssistant;
 ///
 /// The world class manages all physics entities, dynamic simulation, and asynchronous queries.
 /// The world also contains efficient memory management facilities. 
-/// \xmlonly !group=Physic/World! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS PhysicsWorld
 {
 /// \name Construction

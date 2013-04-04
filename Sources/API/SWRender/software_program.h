@@ -44,8 +44,6 @@ class PixelPipeline;
 class PixelCommand;
 
 /// \brief Interface for commands participating in drawing primitives
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class SoftwareProgram
 {
 //!Operations

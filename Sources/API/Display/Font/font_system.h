@@ -48,8 +48,6 @@ class Subtexture;
 class FontProvider_System;
 
 /// \brief Font texture format (holds a pixel buffer containing a glyph)
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class Font_TextureGlyph
 {
 public:
@@ -83,8 +81,6 @@ public:
 /// \}
 
 /// \brief System Font class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Font_System : public Font
 {
 /// \name Construction

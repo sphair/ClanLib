@@ -76,8 +76,6 @@ typedef void * CLDEBUGPROCARB;
 typedef void * CLDEBUGPROC;
 
 /// \brief Display Defines
-///
-/// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 enum DisplayDefines
 {
 	// GL_VERSION_1_1

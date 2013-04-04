@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanCompute initialization functions.
-///
-/// \xmlonly !group=Compute/System! !header=compute.h! \endxmlonly
 class CL_API_COMPUTE SetupCompute
 {
 /// \name Construction

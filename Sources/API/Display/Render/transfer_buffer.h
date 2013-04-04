@@ -43,8 +43,6 @@ class TransferBufferProvider;
 class TransferBuffer_Impl;
 
 /// \brief Transfer Buffer
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TransferBuffer
 {
 /// \name Construction

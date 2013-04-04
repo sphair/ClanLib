@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Endianess management class.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE Endian
 {
 public:

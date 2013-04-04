@@ -49,7 +49,6 @@ class OpenGLWindowDescription_Impl;
 ///    desc.set_stencil_size(4);
 ///    OpenGLWindow window(desc);
 ///    </pre> 
-/// \xmlonly !group=GL/Display! !header=gl.h! \endxmlonly
 class CL_API_GL OpenGLWindowDescription
 {
 /// \name Construction

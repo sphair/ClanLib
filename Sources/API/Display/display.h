@@ -47,7 +47,6 @@ class DisplayTargetProvider;
 ///    equalent functions in DisplayWindow, GraphicContext and such.</p>
 ///    <p>The entire point of this is to allow applications with only one
 ///    window to not pass around a pointer to the display window.</p>
-/// \xmlonly !group=Display/Display! !header=display.h! !hide! \endxmlonly
 class CL_API_DISPLAY Display
 {
 /// \name Attributes

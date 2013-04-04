@@ -55,8 +55,6 @@ class PixelBuffer;
 class Canvas;
 
 /// \brief Image class.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Image
 {
 /// \name Construction

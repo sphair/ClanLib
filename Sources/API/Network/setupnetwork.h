@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Initialization class for clanNetwork.
-///
-/// \xmlonly !group=Network/System! !header=network.h! \endxmlonly
 class CL_API_NETWORK SetupNetwork
 {
 /// \name Construction

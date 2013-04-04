@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Interface for implementing a PrimitivesArray target.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PrimitivesArrayProvider
 {
 /// \name Construction

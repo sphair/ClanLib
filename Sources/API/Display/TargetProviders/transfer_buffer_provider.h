@@ -39,8 +39,6 @@ namespace clan
 class GraphicContext;
 
 /// \brief Transfer Buffer provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY TransferBufferProvider
 {
 /// \name Construction

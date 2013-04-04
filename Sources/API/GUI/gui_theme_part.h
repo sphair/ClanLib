@@ -50,8 +50,6 @@ class Size;
 class Point;
 
 /// \brief A GUI theme part represents a pseudo element in CSS.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIThemePart
 {
 /// \name Construction

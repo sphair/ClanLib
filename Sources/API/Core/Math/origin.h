@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Alignment origins.
-///
-/// \xmlonly !group=Core/Math! !header=core.h! \endxmlonly
 enum Origin
 {
 	origin_top_left,

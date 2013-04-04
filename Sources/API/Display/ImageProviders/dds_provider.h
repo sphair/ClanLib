@@ -41,8 +41,6 @@ namespace clan
 class VirtualDirectory;
 
 /// \brief Image provider that can load Direct3D texture (.dds) files.
-///
-/// \xmlonly !group=Display/Image Providers! !header=display.h! \endxmlonly
 class CL_API_DISPLAY DDSProvider
 {
 /// \name Construction

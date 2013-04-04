@@ -40,8 +40,6 @@ namespace clan
 
 class JointDescription_Impl;
 /// \brief JointDescription class.
-///
-/// \xmlonly !group=Physic/Dynamics/JointDescriptions! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS JointDescription
 {
 

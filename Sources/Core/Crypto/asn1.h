@@ -40,8 +40,6 @@ namespace clan
 {
 
 /// \brief ASN1 class.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_CORE ASN1
 {
 /// \name Construction

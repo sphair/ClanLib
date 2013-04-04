@@ -61,8 +61,6 @@ class Texture_Impl;
 class SharedGCData_Impl;
 
 /// \brief Texture coordinate wrapping modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureWrapMode
 {
 	wrap_clamp_to_edge,
@@ -71,8 +69,6 @@ enum TextureWrapMode
 };
 
 /// \brief Texture filters.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureFilter
 {
 	filter_nearest,
@@ -84,8 +80,6 @@ enum TextureFilter
 };
 
 /// \brief Texture compare modes.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureCompareMode
 {
 	comparemode_none,
@@ -93,8 +87,6 @@ enum TextureCompareMode
 };
 
 /// \brief Texture dimensions.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureDimensions
 {
 	texture_1d,
@@ -107,8 +99,6 @@ enum TextureDimensions
 };
 
 /// \brief Texture object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Texture
 {
 /// \name Construction

@@ -42,8 +42,6 @@ class Sprite;
 class Frame_Impl;
 
 /// \brief Frame component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI Frame : public GUIComponent
 {
 /// \name Construction

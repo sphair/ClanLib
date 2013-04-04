@@ -45,8 +45,6 @@ class AcceleratorKey_Impl;
 class AcceleratorKey;
 
 /// \brief GUI Accelerator Table.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI AcceleratorTable
 {
 /// \name Construction

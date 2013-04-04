@@ -44,8 +44,6 @@ class ElementArrayBufferProvider;
 class ElementArrayBuffer_Impl;
 
 /// \brief Element Array Buffer
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ElementArrayBuffer
 {
 /// \name Construction

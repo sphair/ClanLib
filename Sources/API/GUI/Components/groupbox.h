@@ -43,8 +43,6 @@ namespace clan
 class GroupBox_Impl;
 
 /// \brief Group box component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI GroupBox : public GUIComponent
 {
 /// \name Construction

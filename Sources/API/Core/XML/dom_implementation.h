@@ -46,7 +46,6 @@ class DomDocumentType;
 ///
 ///    <p>The DOM Implementation interface provides a number of methods for performing
 ///    operations that are independent of any particular instance of the document object model.</p>
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomImplementation
 {
 /// \name Construction

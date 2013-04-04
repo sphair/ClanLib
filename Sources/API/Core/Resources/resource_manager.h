@@ -46,8 +46,6 @@ class VirtualDirectory;
 class ResourceManager_Impl;
 
 /// \brief Resource Manager.
-///
-/// \xmlonly !group=Core/Resources! !header=core.h! \endxmlonly
 class CL_API_CORE ResourceManager
 {
 /// \name Construction

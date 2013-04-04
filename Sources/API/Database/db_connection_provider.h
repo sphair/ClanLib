@@ -43,8 +43,6 @@ class DBTransactionProvider;
 class DBReaderProvider;
 
 /// \brief Database connection provider.
-///
-/// \xmlonly !group=Database/System! !header=database.h! \endxmlonly
 class CL_API_DATABASE DBConnectionProvider
 {
 /// \name Construction

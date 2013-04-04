@@ -40,8 +40,6 @@ namespace clan
 class DataBuffer;
 
 /// \brief Memory I/O device.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE IODevice_Memory : public IODevice
 {
 /// \name Construction

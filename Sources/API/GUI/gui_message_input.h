@@ -40,8 +40,6 @@ namespace clan
 {
 
 /// \brief GUI input message.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIMessage_Input : public GUIMessage
 {
 /// \name Construction

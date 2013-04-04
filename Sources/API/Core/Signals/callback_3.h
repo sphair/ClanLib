@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3>
 class Callback_Impl_3
 {
@@ -51,7 +50,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3>
 class Callback_Impl_3_static : public Callback_Impl_3<RetVal, P1, P2, P3>
 {
@@ -70,7 +68,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename UserData>
 class Callback_Impl_3_static_user : public Callback_Impl_3<RetVal, P1, P2, P3>
 {
@@ -92,7 +89,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename InstanceClass>
 class Callback_Impl_3_member : public Callback_Impl_3<RetVal, P1, P2, P3>
 {
@@ -114,7 +110,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3, typename InstanceClass, typename UserData>
 class Callback_Impl_3_member_user : public Callback_Impl_3<RetVal, P1, P2, P3>
 {
@@ -138,7 +133,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <typename RetVal, class P1, class P2, class P3, class Functor>
 class Callback_Impl_3_functor : public Callback_Impl_3<RetVal, P1, P2, P3>
 {
@@ -158,7 +152,6 @@ public:
 
 /// \brief Callback_3
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3>
 class Callback_3
 {
@@ -244,7 +237,6 @@ private:
 
 /// \brief Callback_3_functor
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <typename RetVal, typename P1, typename P2, typename P3>
 class Callback_3_functor : public Callback_3<RetVal, P1, P2, P3>
 {

@@ -40,8 +40,6 @@ namespace clan
 {
 
 /// \brief NetGameEventDispatcher_v0
-///
-/// \xmlonly !group=Network/NetGame! !header=network.h! \endxmlonly
 class CL_API_NETWORK NetGameEventDispatcher_v0
 {
 public:

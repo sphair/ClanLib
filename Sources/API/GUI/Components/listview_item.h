@@ -47,8 +47,6 @@ public:
 };
 
 /// \brief ListView item.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewItem
 {
 /// \name Construction

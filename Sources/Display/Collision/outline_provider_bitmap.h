@@ -45,7 +45,6 @@ class Size;
 /// \brief Bitmap outline provider.
 ///
 ///  <p>A OutlineProviderBitmap is used to find outlines based on the alpha channel of images.</p> 
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 class OutlineProviderBitmap
 {
 /// \name Construction

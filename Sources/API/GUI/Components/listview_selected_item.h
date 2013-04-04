@@ -41,8 +41,6 @@ class ListViewSelectedItem_Impl;
 class ListViewSelection_Impl;
 
 /// \brief ListView selected item.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewSelectedItem
 {
 /// \name Construction
@@ -113,8 +111,6 @@ private:
 };
 
 /// \brief ListView selection.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI ListViewSelection
 {
 /// \name Construction

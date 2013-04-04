@@ -51,8 +51,6 @@ class MutexSection;
 class FontManager;
 
 /// \brief Shared Graphic Context Data
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class SharedGCData
 {
 public:

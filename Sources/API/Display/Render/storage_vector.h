@@ -40,7 +40,6 @@ namespace clan
 
 /// \brief Storage Buffer Vector
 ///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 template<typename Type>
 class CL_API_DISPLAY StorageVector : public StorageBuffer
 {

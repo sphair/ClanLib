@@ -41,8 +41,6 @@ class SocketName;
 class Event;
 
 /// \brief TCP connection socket I/O device.
-///
-/// \xmlonly !group=Network/Socket! !header=network.h! \endxmlonly
 class CL_API_NETWORK TCPConnection : public IODevice
 {
 /// \name Construction

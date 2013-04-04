@@ -52,8 +52,6 @@ class FrameBufferProvider;
 class FrameBuffer_Impl;
 
 /// \brief Texture Subtype
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum TextureSubtype
 {
 	subtype_cube_map_positive_x,
@@ -65,8 +63,6 @@ enum TextureSubtype
 };
 
 /// \brief Framebuffer bind target.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 enum FrameBufferBindTarget 
 {
 	framebuffer_draw,
@@ -74,8 +70,6 @@ enum FrameBufferBindTarget
 };
 
 /// \brief Frame-buffer object class.
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY FrameBuffer
 {
 /// \name Construction

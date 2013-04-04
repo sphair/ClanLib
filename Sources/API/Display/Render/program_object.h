@@ -69,7 +69,6 @@ class ProgramObjectProvider;
 ///    <p>For more information about program objects, see the OpenGL 2.0
 ///    specification at <a href="http://www.opengl.org">www.opengl.org</a>. Documentation
 ///    about the OpenGL Shader Language (GLSL) is also available from www.opengl.org.</p>
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ProgramObject
 {
 /// \name Construction

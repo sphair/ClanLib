@@ -41,7 +41,6 @@ namespace clan
 ///
 ///    <p>The ProcessingInstruction interface represents a "processing instruction", used in
 ///    XML as a way to keep processor-specific information in the text of the document.</p> 
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE DomProcessingInstruction : public DomNode
 {
 /// \name Construction

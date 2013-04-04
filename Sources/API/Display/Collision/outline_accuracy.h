@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Outline optimization accuracy.
-///
-/// \xmlonly !group=Display/Collision! !header=display.h! \endxmlonly
 enum OutlineAccuracy
 {
 	accuracy_raw,

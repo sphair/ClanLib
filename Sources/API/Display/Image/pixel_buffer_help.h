@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Pixel data helper class
-///
-/// \xmlonly !group=Display/Display! !header=display.h! \endxmlonly
 class CL_API_DISPLAY PixelBufferHelp
 {
 /// \name Operations

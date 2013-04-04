@@ -55,7 +55,6 @@ class DirectoryScanner_Impl;
 ///    		}
 ///    }
 ///    </pre> 
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE DirectoryScanner
 {
 /// \name Construction

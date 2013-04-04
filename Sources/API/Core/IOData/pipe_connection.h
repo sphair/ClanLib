@@ -40,8 +40,6 @@ namespace clan
 class Event;
 
 /// \brief Pipe connection I/O device.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE PipeConnection : public IODevice
 {
 /// \name Construction

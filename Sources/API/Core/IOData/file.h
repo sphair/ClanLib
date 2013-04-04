@@ -41,8 +41,6 @@ namespace clan
 class SecurityDescriptor;
 
 /// \brief File I/O device.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class CL_API_CORE File : public IODevice
 {
 /// \name Static helper functions

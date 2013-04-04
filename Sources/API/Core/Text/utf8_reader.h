@@ -40,8 +40,6 @@ namespace clan
 class UTF8_Reader_Impl;
 
 /// \brief UTF8 reader helper functions.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE UTF8_Reader
 {
 public:

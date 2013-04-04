@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief ClanSound initialization functions.
-///
-/// \xmlonly !group=Sound/System! !header=sound.h! \endxmlonly
 class CL_API_SOUND SetupSound
 {
 /// \name Construction

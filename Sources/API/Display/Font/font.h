@@ -45,8 +45,6 @@ class Canvas;
 class Font_Impl;
 
 /// \brief Font class.
-///
-/// \xmlonly !group=Display/Font! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Font
 {
 /// \name Construction

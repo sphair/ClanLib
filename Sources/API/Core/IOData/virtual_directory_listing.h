@@ -38,8 +38,6 @@ class VirtualFileSource;
 class VirtualDirectoryListing_Impl;
 
 /// \brief Virtual File System (VFS) directory listing class.
-///
-/// \xmlonly !group=Core/IO Data! !header=core.h! \endxmlonly
 class VirtualDirectoryListing
 {
 /// \name Construction

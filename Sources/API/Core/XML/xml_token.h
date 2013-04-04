@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief XML token in a XML file.
-///
-/// \xmlonly !group=Core/XML! !header=core.h! \endxmlonly
 class CL_API_CORE XMLToken
 {
 /// \name Construction

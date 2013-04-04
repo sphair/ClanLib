@@ -42,8 +42,6 @@ class Size;
 class Rect;
 
 /// \brief GUI resize message.
-///
-/// \xmlonly !group=GUI/System! !header=gui.h! \endxmlonly
 class CL_API_GUI GUIMessage_Resize : public GUIMessage
 {
 /// \name Construction

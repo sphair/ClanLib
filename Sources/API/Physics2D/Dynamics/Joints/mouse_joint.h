@@ -45,8 +45,6 @@ namespace clan
 	class Pointf;
 
 /// \brief MouseJoint class.
-///
-/// \xmlonly !group=Physic/Dynamics/Joints! !header=physics.h! \endxmlonly
 class CL_API_PHYSICS MouseJoint : public Joint
 {
 

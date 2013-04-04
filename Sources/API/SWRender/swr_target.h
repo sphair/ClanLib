@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief Display target for clanDisplay.
-///
-/// \xmlonly !group=SWRender/Display! !header=swrender.h! \endxmlonly
 class API_SWRender SWRenderTarget : public DisplayTarget
 {
 /// \name Construction

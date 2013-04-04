@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
 class SlotCallback_v6 : public SlotCallback
 {
@@ -47,7 +46,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
 class SlotCallback_v6_static : public SlotCallback_v6<Param1, Param2, Param3, Param4, Param5, Param6>
 {
@@ -59,7 +57,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class UserData>
 class SlotCallback_v6_static_user : public SlotCallback_v6<Param1, Param2, Param3, Param4, Param5, Param6>
 {
@@ -72,7 +69,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class InstanceClass>
 class SlotCallback_v6_member : public SlotCallback_v6<Param1, Param2, Param3, Param4, Param5, Param6>
 {
@@ -85,7 +81,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class InstanceClass, class UserData>
 class SlotCallback_v6_member_user : public SlotCallback_v6<Param1, Param2, Param3, Param4, Param5, Param6>
 {
@@ -99,7 +94,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6, class Functor>
 class SlotCallback_v6_functor : public SlotCallback_v6<Param1, Param2, Param3, Param4, Param5, Param6>
 {
@@ -112,7 +106,6 @@ public:
 
 /// \brief Signal_v6
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
 class Signal_v6
 {

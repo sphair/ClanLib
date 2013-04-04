@@ -46,7 +46,6 @@ class SoundOutput_Impl;
 ///
 ///   <p>SoundOutput is the interface to a sound output device. It is used to
 ///    control the main mixer volume and other global settings.</p>
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundOutput
 {
 /// \name Construction

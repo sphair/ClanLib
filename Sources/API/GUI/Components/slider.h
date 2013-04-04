@@ -41,8 +41,6 @@ namespace clan
 class Slider_Impl;
 
 /// \brief Track bar component.
-///
-/// \xmlonly !group=GUI/Components! !header=gui.h! \endxmlonly
 class CL_API_GUI Slider : public GUIComponent
 {
 /// \name Construction

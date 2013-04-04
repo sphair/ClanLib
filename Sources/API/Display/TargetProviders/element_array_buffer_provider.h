@@ -37,8 +37,6 @@ namespace clan
 {
 
 /// \brief Element Array Buffer provider.
-///
-/// \xmlonly !group=Display/Display Target Interface! !header=display.h! \endxmlonly
 class CL_API_DISPLAY ElementArrayBufferProvider
 {
 /// \name Construction

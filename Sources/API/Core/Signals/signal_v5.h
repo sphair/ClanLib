@@ -38,7 +38,6 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5>
 class SlotCallback_v5 : public SlotCallback
 {
@@ -47,7 +46,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5>
 class SlotCallback_v5_static : public SlotCallback_v5<Param1, Param2, Param3, Param4, Param5>
 {
@@ -59,7 +57,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class UserData>
 class SlotCallback_v5_static_user : public SlotCallback_v5<Param1, Param2, Param3, Param4, Param5>
 {
@@ -72,7 +69,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class InstanceClass>
 class SlotCallback_v5_member : public SlotCallback_v5<Param1, Param2, Param3, Param4, Param5>
 {
@@ -85,7 +81,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class InstanceClass, class UserData>
 class SlotCallback_v5_member_user : public SlotCallback_v5<Param1, Param2, Param3, Param4, Param5>
 {
@@ -99,7 +94,6 @@ public:
 };
 
 /// (Internal ClanLib Class)
-/// \xmlonly !group=Core/Signals! !header=core.h! !hide! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5, class Functor>
 class SlotCallback_v5_functor : public SlotCallback_v5<Param1, Param2, Param3, Param4, Param5>
 {
@@ -112,7 +106,6 @@ public:
 
 /// \brief Signal_v5
 ///
-/// \xmlonly !group=Core/Signals! !header=core.h! \endxmlonly
 template <class Param1, class Param2, class Param3, class Param4, class Param5>
 class Signal_v5
 {

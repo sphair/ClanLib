@@ -43,7 +43,6 @@ class SoundProvider_Impl;
 /// \brief Sound provider.
 ///
 /// Interface to sound sources. Used by the SoundBuffer class to start and stop playback.
-/// \xmlonly !group=Sound/Audio Mixing! !header=sound.h! \endxmlonly
 class CL_API_SOUND SoundProvider
 {
 /// \name Construction

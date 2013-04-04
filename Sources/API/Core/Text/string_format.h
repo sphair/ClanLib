@@ -38,8 +38,6 @@ namespace clan
 {
 
 /// \brief String formatting class.
-///
-/// \xmlonly !group=Core/Text! !header=core.h! \endxmlonly
 class CL_API_CORE StringFormat
 {
 /// \name Construction

@@ -39,8 +39,6 @@ namespace clan
 {
 
 /// \brief Colorgradient description class.
-///
-/// \xmlonly !group=Display/2D! !header=display.h! \endxmlonly
 class CL_API_DISPLAY Gradient
 {
 /// \name Construction
