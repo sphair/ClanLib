@@ -54,7 +54,7 @@ class ShaderEffect_Impl
 public:
 	ShaderEffect_Impl(GraphicContext &gc) : elements_type(), num_vertices(0), program(gc) { }
 
-	static std::string defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines, int glsl_shader_version = 330);
+	//static std::string defines_prefix(GraphicContext &gc, const std::vector<const std::string> &defines, int glsl_shader_version = 330);
 
 	void create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 	void create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
@@ -238,16 +238,20 @@ void ShaderEffect::draw(GraphicContext &gc)
 
 /////////////////////////////////////////////////////////////////////////////
 
-std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, std::vector<const std::string> &defines, int glsl_shader_version)
+/*
+This doesn't compile on gcc - On line: "for (size_t i = 0; i < defines.size(); i++)" for an unknown reason. Since the function is not used, I will not fix it :)
+std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, const std::vector<const std::string> &defines, int glsl_shader_version)
 {
 	std::string prefix;
 	if (gc.get_shader_language() == shader_glsl)
 		prefix += string_format("#version %1\r\n", glsl_shader_version);
+
 	for (size_t i = 0; i < defines.size(); i++)
 		prefix += string_format("#define %1\r\n", defines[i]);
 	prefix += "#line 0\r\n";
 	return prefix;
 }
+*/
 
 void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
