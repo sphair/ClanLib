@@ -165,6 +165,40 @@ Parameters of a function are desired to have a parameter description. An example
 		/// \return The number of pixels written
 		int draw(int x, int y, CL_GraphicContext *gc = 0);
 
+4) Function groups.
+
+Functions in a class is grouped into different sections. The typical ones
+are Construction, Attributes, Operations and Implementation. These groups
+are marked up like this:
+
+	/// \name Construction
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Attributes
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Operations
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+	/// \name Implementation
+	/// \{
+		(blank line)
+		(code here)
+		(blank line)
+	/// \}
+
+Any functions following such a group markup will belong to that group. The
+group markups are placed at the beginning of the line:
+
 5) Class groups and header file info.
 
 Each header file should contain below the ClanLib SDK license:
