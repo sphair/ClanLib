@@ -13,6 +13,11 @@ void Program::exit_func()
 {
 	exit = true;
 }
+		struct Uniforms
+		{
+			Vec3f resolution;
+			float time;
+		};
 
 int Program::main(const std::vector<std::string> &args)
 {
@@ -27,11 +32,6 @@ int Program::main(const std::vector<std::string> &args)
 
 		GraphicContext gc = window.get_gc();
 
-		struct Uniforms
-		{
-			Vec3f resolution;
-			float time;
-		};
 
 		Uniforms uniforms;
 		uniforms.time = 0.0f;
