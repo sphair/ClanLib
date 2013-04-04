@@ -718,13 +718,11 @@ dnl ----------------------------------------
 dnl Check for documentation generation tools
 dnl ----------------------------------------
 
-if test "$enable_docs" != "yes"; then
-	enable_docs=no
-fi
-
 if test "$enable_docs" != "no"; then
 	echo "Checking for Documentation stuff"
 	echo "================================"
+
+dnl -- TODO: Is perl actually required?
 
 	AC_PATH_PROG([perl_exec], [perl])
 	if test -z "$perl_exec"; then
@@ -741,6 +739,15 @@ if test "$enable_docs" != "no"; then
 			AC_MSG_ERROR([cannot find doxygen])
 		else
 			AC_MSG_WARN([cannot find doxygen])
+			enable_docs=no
+		fi
+	fi
+	AC_PATH_PROG([dot_exec], [dot])
+	if test -z "$dot_exec"; then
+		if test "$enable_docs" = "yes"; then
+			AC_MSG_ERROR([cannot find graphviz])
+		else
+			AC_MSG_WARN([cannot find graphviz])
 			enable_docs=no
 		fi
 	fi
@@ -926,7 +933,7 @@ echo "                clanDisplay = $enable_clanDisplay$display_options"
 echo ""
 
 if test "$enable_docs" == "no"; then
-	echo "        Build Documentation = no (Use --enable-docs to enable)"
+	echo "        Build Documentation = no"
 else
 	echo "        Build Documentation = yes (Use \"make html\" and \"make install-html\" to also install the API documentation)"
 fi
