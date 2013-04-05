@@ -250,7 +250,8 @@ enum ShaderLanguage
 {
 	shader_glsl,
 	shader_hlsl,
-	shader_fixed_function
+	shader_fixed_function,
+	num_shader_languages
 };
 
 /// \brief Interface to drawing graphics.

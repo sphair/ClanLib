@@ -39,7 +39,7 @@ class ShaderEffectDescription_Impl
 {
 public:
 	ShaderEffectDescription_Impl()
-	: glsl_version(330), elements_type()
+	: glsl_version(0), elements_type()
 	{
 	}
 
@@ -47,14 +47,9 @@ public:
 
 	std::map<std::string, std::string> defines;
 
-	std::string vertex_shader_code;
-	ShaderLanguage vertex_shader_language;
-
-	std::string fragment_shader_code;
-	ShaderLanguage fragment_shader_language;
-
-	std::string compute_shader_code;
-	ShaderLanguage compute_shader_language;
+	std::string vertex_shader_code[num_shader_languages];
+	std::string fragment_shader_code[num_shader_languages];
+	std::string compute_shader_code[num_shader_languages];
 
 	RasterizerStateDescription rasterizer_state;
 	BlendStateDescription blend_state;

@@ -51,20 +51,17 @@ void ShaderEffectDescription::set_define(std::string name, std::string value)
 
 void ShaderEffectDescription::set_vertex_shader(std::string code, ShaderLanguage language)
 {
-	impl->vertex_shader_code = code;
-	impl->vertex_shader_language = language;
+	impl->vertex_shader_code[language] = code;
 }
 
 void ShaderEffectDescription::set_fragment_shader(std::string code, ShaderLanguage language)
 {
-	impl->fragment_shader_code = code;
-	impl->fragment_shader_language = language;
+	impl->fragment_shader_code[language] = code;
 }
 
 void ShaderEffectDescription::set_compute_shader(std::string code, ShaderLanguage language)
 {
-	impl->compute_shader_code = code;
-	impl->compute_shader_language = language;
+	impl->compute_shader_code[language] = code;
 }
 
 RasterizerStateDescription &ShaderEffectDescription::rasterizer()
