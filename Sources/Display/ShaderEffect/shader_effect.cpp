@@ -94,6 +94,9 @@ ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &de
 	impl->create_primitives_array(gc, description.impl.get());
 	impl->elements = description.impl->elements;
 	impl->elements_type = description.impl->elements_type;
+	impl->rasterizer_state = RasterizerState(gc, description.impl->rasterizer_state);
+	impl->blend_state = BlendState(gc, description.impl->blend_state);
+	impl->depth_stencil_state = DepthStencilState(gc, description.impl->depth_stencil_state);
 }
 
 bool ShaderEffect::is_null() const
