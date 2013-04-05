@@ -54,7 +54,7 @@ class ShaderEffect_Impl
 public:
 	ShaderEffect_Impl(GraphicContext &gc) : elements_type(), num_vertices(0), program(gc) { }
 
-	//static std::string defines_prefix(GraphicContext &gc, const std::vector<const std::string> &defines, int glsl_shader_version = 330);
+	static std::string add_defines(GraphicContext &gc, const std::string * const code, const ShaderEffectDescription_Impl *description);
 
 	void create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 	void create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
@@ -241,42 +241,47 @@ void ShaderEffect::draw(GraphicContext &gc)
 
 /////////////////////////////////////////////////////////////////////////////
 
-/*
-This doesn't compile on gcc - On line: "for (size_t i = 0; i < defines.size(); i++)" for an unknown reason. Since the function is not used, I will not fix it :)
-std::string ShaderEffect_Impl::defines_prefix(GraphicContext &gc, const std::vector<const std::string> &defines, int glsl_shader_version)
+std::string ShaderEffect_Impl::add_defines(GraphicContext &gc, const std::string * const code, const ShaderEffectDescription_Impl *description)
 {
-	std::string prefix;
-	if (gc.get_shader_language() == shader_glsl)
-		prefix += string_format("#version %1\r\n", glsl_shader_version);
+	if (code[gc.get_shader_language()].empty())
+		return std::string();
 
-	for (size_t i = 0; i < defines.size(); i++)
-		prefix += string_format("#define %1\r\n", defines[i]);
+	std::string prefix;
+	if (gc.get_shader_language() == shader_glsl && description->glsl_version != 0)
+		prefix += string_format("#version %1\r\n", description->glsl_version);
+
+	for (auto it = description->defines.begin(); it != description->defines.end(); ++it)
+		prefix += string_format("#define %1 %2\r\n", it->first, it->second);
 	prefix += "#line 0\r\n";
-	return prefix;
+
+	return prefix + code[gc.get_shader_language()];
 }
-*/
 
 void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
 {
-	if (!description->vertex_shader_code.empty()) 
+	std::string vertex_shader_code = add_defines(gc, description->vertex_shader_code, description);
+	std::string fragment_shader_code = add_defines(gc, description->fragment_shader_code, description);
+	std::string compute_shader_code = add_defines(gc, description->compute_shader_code, description);
+
+	if (!vertex_shader_code.empty()) 
 	{
-		ShaderObject vertex_shader(gc, shadertype_vertex, description->vertex_shader_code);
+		ShaderObject vertex_shader(gc, shadertype_vertex, vertex_shader_code);
 		if(!vertex_shader.compile())
 			throw Exception(string_format("Unable to compile vertex shader: %1", vertex_shader.get_info_log()));
 		program.attach(vertex_shader);
 	}
 
-	if (!description->fragment_shader_code.empty()) 
+	if (!fragment_shader_code.empty()) 
 	{
-		ShaderObject fragment_shader(gc, shadertype_fragment, description->fragment_shader_code);
+		ShaderObject fragment_shader(gc, shadertype_fragment, fragment_shader_code);
 		if(!fragment_shader.compile())
 			throw Exception(string_format("Unable to compile fragment shader: %1", fragment_shader.get_info_log()));
 		program.attach(fragment_shader);
 	}
 
-	if (!description->compute_shader_code.empty()) 
+	if (!compute_shader_code.empty()) 
 	{
-		ShaderObject compute_shader(gc, shadertype_compute, description->compute_shader_code);
+		ShaderObject compute_shader(gc, shadertype_compute, compute_shader_code);
 		if(!compute_shader.compile())
 			throw Exception(string_format("Unable to compile compute shader: %1", compute_shader.get_info_log()));
 		program.attach(compute_shader);
