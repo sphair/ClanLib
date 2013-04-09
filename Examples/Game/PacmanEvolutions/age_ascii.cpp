@@ -28,7 +28,7 @@ void AgeAscii::render(clan::Canvas &canvas)
 
 	if (game->player)
 	{
-		set_character((int)game->player->get_x(), (int)game->player->get_y(), L'¤', clan::Colorf::yellow);
+		set_character((int)game->player->get_x(), (int)game->player->get_y(), 164, clan::Colorf::yellow);
 	}
 
 	for (size_t i = 0; i < game->ghosts.size(); i++)
