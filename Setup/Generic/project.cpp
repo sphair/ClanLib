@@ -71,12 +71,6 @@ static const char *exclude_from_build[] =
 	"AGL",
 	"font_engine_cocoa.h",
 	"font_engine_cocoa.mm",
-	"Face.py",
-	"HFacer.py",
-	"Scintilla.iface",
-	"license.txt",
-	"LexGen.py",
-	"SciTE.properties",
 	nullptr
 };
 

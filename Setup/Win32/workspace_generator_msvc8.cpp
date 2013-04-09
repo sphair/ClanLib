@@ -539,8 +539,7 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 		"Sheets\\WindowsVersion.vsprops;"
 		"Sheets\\DirectXVersion.vsprops;"
 		"Sheets\\LocalIncludes.vsprops;"
-		"Sheets\\MultiprocessorBuilding.vsprops;"
-		"Sheets\\ScintillaIncludes.vsprops;";
+		"Sheets\\MultiprocessorBuilding.vsprops;";
 
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\BuildDirectory.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ExternalDirectories.props");
@@ -548,7 +547,6 @@ WorkspaceGenerator_MSVC8::SharedConfig WorkspaceGenerator_MSVC8::create_shared_c
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\DirectXVersion.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\LocalIncludes.props");
 	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\MultiprocessorBuilding.props");
-	shared.config->inherited_property_sheets_vs100.push_back("Sheets\\ScintillaIncludes.props");
 
 	if (!is_enable_intrinsics)
 	{
