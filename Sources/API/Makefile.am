@@ -623,7 +623,6 @@ clanGameIDE_includes = \
 	gameide.h \
 	GameIDE/FileItemType/file_item_type_factory.h \
 	GameIDE/FileItemType/file_item_type.h \
-	GameIDE/TextEditor/text_editor_file_item_type.h \
 	GameIDE/MainWindow/main_window.h \
 	GameIDE/UIController/ui_controller_listener.h \
 	GameIDE/UIController/ui_ribbon_section.h \
