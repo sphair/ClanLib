@@ -15,7 +15,6 @@ int Program::main(const std::vector<std::string> &args)
 	clan::SetupDisplay setup_display;
 	clan::SetupGL setup_gl;
 	clan::SetupSound setup_sound;
-	clan::SetupVorbis setup_vorbis;
 
 	clan::DisplayWindowDescription window_desc;
 	window_desc.set_title("Pacman Evolutions!");
@@ -61,9 +60,15 @@ int Program::main(const std::vector<std::string> &args)
 			clan::KeepAlive::process();
 		}
 	}
-	catch (clan::Exception &e)
+	catch (clan::Exception &exception)
 	{
-		MessageBox(window.get_hwnd(), clan::StringHelp::utf8_to_ucs2(e.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
+#ifdef WIN32
+		MessageBox(window.get_hwnd(), clan::StringHelp::utf8_to_ucs2(exception.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
+#else
+		clan::ConsoleWindow console("Console", 80, 160);
+		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+		console.display_close_message();
+#endif
 	}
 
 	return 0;
