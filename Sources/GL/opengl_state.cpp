@@ -46,24 +46,43 @@ public:
 private:
 	BlendStateProvider_GL *from;
 	BlendStateProvider_GL *to;
-	std::vector<std::shared_ptr<StateChange> > changes;
+	std::vector<std::shared_ptr<BlendStateChange> > changes;
 };
 
-class BlendStateChange_BlendFunc : public StateChange
+class BlendStateChange_BlendFunc : public BlendStateChange
 {
 public:
-	void apply()
+	void apply(const BlendStateDescription &desc)
 	{
-		//glBlendFunc(yada,yada,yada);
+		BlendFunc src, dest, src_alpha, dest_alpha;
+		desc.get_blend_function(src, dest, src_alpha, dest_alpha);
+
+		if( src == src_alpha && dest == dest_alpha )
+		{
+			if (glBlendFunc)
+				glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
+		}
+		else
+		{
+			if (glBlendFuncSeparate)
+			{
+				glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
+			}
+			else
+			{
+				if (glBlendFunc)
+					glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
+			}
+		}
 	}
 };
 
 BlendStateChangeset::BlendStateChangeset(BlendStateProvider_GL *from, BlendStateProvider_GL *to)
 : from(from), to(to)
 {
-	// To do: compare from->desc with to->desc and create StateChange objects here
+	// To do: compare from->desc with to->desc and create BlendStateChange objects here
 	//if (from->desc.blendfunc != to->desc.blendfunc)
-		changes.push_back(std::shared_ptr<StateChange>(new BlendStateChange_BlendFunc()));
+		changes.push_back(std::shared_ptr<BlendStateChange>(new BlendStateChange_BlendFunc()));
 }
 	
 void BlendStateChangeset::apply()
