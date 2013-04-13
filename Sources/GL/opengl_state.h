@@ -57,11 +57,11 @@ private:
 	friend class BlendStateChangeset;
 };
 
-class StateChange
+class BlendStateChange
 {
 public:
-	virtual ~StateChange() { }
-	virtual void apply() = 0;
+	virtual ~BlendStateChange() { }
+	virtual void apply(const BlendStateDescription &desc) = 0;
 };
 
 }
