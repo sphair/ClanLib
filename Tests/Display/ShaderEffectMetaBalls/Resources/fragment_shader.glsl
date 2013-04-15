@@ -27,5 +27,5 @@ float sum() {
 
 void main() {
     float s = sum();
-	FragColor = vec4(s, s * sin(time), s * sin(time), 1.0);
+	FragColor = vec4(s, s * sin(mouse.x), s * sin(mouse.y), 1);
 }
