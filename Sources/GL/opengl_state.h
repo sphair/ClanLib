@@ -61,7 +61,7 @@ class BlendStateChange
 {
 public:
 	virtual ~BlendStateChange() { }
-	virtual void apply(const BlendStateDescription &desc) = 0;
+	virtual void apply() = 0;
 };
 
 }
