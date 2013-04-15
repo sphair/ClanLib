@@ -30,23 +30,26 @@ int Program::main(const std::vector<std::string> &args)
 		GraphicContext gc = window.get_gc();
 		InputDevice mouse = window.get_ic().get_mouse();
 
+		const int particle_count = 30;
+
 		struct Uniforms
 		{
 			Vec3f resolution;
 			float time;
 			Vec4f mouse;
 
-			Vec4f positions[3];
+			Vec4f positions[particle_count];
 			int particle_count;
 		};
 
 		Uniforms uniforms;
 		uniforms.time = 0.0f;
 		uniforms.resolution = Vec3f(800, 600, 0);
-		uniforms.particle_count = 3;
-		uniforms.positions[0] = Vec4f(0.0f, 0.0f, 5.0f, 1.0f);
-		uniforms.positions[1] = Vec4f(0.0f, 0.0f, 20.0f, 1.0f);
-		uniforms.positions[2] = Vec4f(0.0f, 0.0f, 15.0f, 1.0f);
+		uniforms.particle_count = particle_count;
+		for(int i=0; i<particle_count; ++i) 
+		{
+			uniforms.positions[i] = Vec4f(rand() % 300 + 200.0f, rand() % 300 + 200.0f, rand() % 15, 1.0f);
+		}
 
 		UniformVector<Uniforms> uniformVector(gc, &uniforms, 1);
 
@@ -64,13 +67,12 @@ int Program::main(const std::vector<std::string> &args)
 			float time = System::get_time() / 1000.0f;
 			uniforms.time = time;
 			uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
-			uniforms.positions[0].x = 200.0f + sinf(time + 0.5f) * 100;
-			uniforms.positions[0].y = 200.0f + cosf(time + 0.5f) * 100;
-			uniforms.positions[1].x = 250.0f + sinf(time) * 100;
-			uniforms.positions[1].y = 250.0f + cosf(time) * 100;
-			uniforms.positions[2].x = 300.0f + sinf(time + 1.0f) * 100;
-			uniforms.positions[2].y = 300.0f + cosf(time + 1.0f) * 100;
 
+			for(int i=0; i< uniforms.particle_count; ++i)
+			{
+				uniforms.positions[i].x += sinf(time + i * 2.0f) / 40.0f;
+				uniforms.positions[i].y += cosf(time + i * 2.0f) / 40.0f;
+			}
 			uniformVector.upload_data(gc, &uniforms, 1);
 
 			effect.draw(gc);

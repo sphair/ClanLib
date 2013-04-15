@@ -8,13 +8,14 @@ layout(std140) uniform Uniforms
 	uniform float time;
 	uniform vec4 mouse;
 
-	uniform vec4 particles[3];
+	uniform vec4 particles[30];
 	uniform int particle_count;
 };
 
 layout(origin_upper_left) in vec4 gl_FragCoord;
 
-float sum() {
+float sum()
+{
     float sum = 0.0;
 
     for (int i = 0; i < particle_count; i++) {
@@ -25,7 +26,8 @@ float sum() {
 	return sum;
 }
 
-void main() {
+void main()
+{
     float s = sum();
 	FragColor = vec4(s, s * sin(mouse.x), s * sin(mouse.y), 1);
 }
