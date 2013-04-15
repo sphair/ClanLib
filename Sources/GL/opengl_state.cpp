@@ -52,11 +52,13 @@ private:
 class BlendStateChange_BlendFunc : public BlendStateChange
 {
 public:
-	void apply(const BlendStateDescription &desc)
+	BlendStateChange_BlendFunc(BlendFunc src, BlendFunc dest, BlendFunc src_alpha, BlendFunc dest_alpha)
+	: src(src), dest(dest), src_alpha(src_alpha), dest_alpha(dest_alpha)
 	{
-		BlendFunc src, dest, src_alpha, dest_alpha;
-		desc.get_blend_function(src, dest, src_alpha, dest_alpha);
+	}
 
+	void apply()
+	{
 		if( src == src_alpha && dest == dest_alpha )
 		{
 			if (glBlendFunc)
@@ -75,14 +77,23 @@ public:
 			}
 		}
 	}
+private:
+	BlendFunc src, dest, src_alpha, dest_alpha;
 };
 
 BlendStateChangeset::BlendStateChangeset(BlendStateProvider_GL *from, BlendStateProvider_GL *to)
 : from(from), to(to)
 {
-	// To do: compare from->desc with to->desc and create BlendStateChange objects here
-	//if (from->desc.blendfunc != to->desc.blendfunc)
-		changes.push_back(std::shared_ptr<BlendStateChange>(new BlendStateChange_BlendFunc()));
+	BlendFunc a_src, a_dest, a_src_alpha, a_dest_alpha;
+	BlendFunc b_src, b_dest, b_src_alpha, b_dest_alpha;
+	from->desc.get_blend_function(a_src, a_dest, a_src_alpha, a_dest_alpha);
+	to->desc.get_blend_function(b_src, b_dest, b_src_alpha, b_dest_alpha);
+
+	if ( (a_src != b_src) || (a_dest != b_dest) || (a_src_alpha != b_src_alpha) || (a_dest_alpha != b_dest_alpha) )
+	{
+		to->desc.set_blend_function(a_src, a_dest, a_src_alpha, a_dest_alpha);
+		changes.push_back(std::shared_ptr<BlendStateChange>(new BlendStateChange_BlendFunc(a_src, a_dest, a_src_alpha, a_dest_alpha)));
+	}
 }
 	
 void BlendStateChangeset::apply()
