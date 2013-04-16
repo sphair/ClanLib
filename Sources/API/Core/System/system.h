@@ -40,12 +40,6 @@
 namespace clan
 {
 
-/// (Internal ClanLib Class)
-struct CL_API_CORE PreallocatedMemory
-{
-	int dummy;
-};
-
 class Mutex;
 
 /// \brief General system helper functions.
@@ -66,9 +60,6 @@ public:
 
     static bool detect_cpu_extension(CPU_ExtensionX86 ext);
     static bool detect_cpu_extension(CPU_ExtensionPPC ext);
-
-	/// \brief Returns the mutex used by std::shared_ptr.
-	static Mutex *get_sharedptr_mutex();
 
 	/// \brief Return the number of CPU cores
 	static int get_num_cores();
@@ -114,63 +105,6 @@ public:
 	    GetModuleFileName() on Win32.</p>
 	    \return full dirname of the executable, trailing slash is included*/
 	static std::string get_exe_path();
-
-	/// \brief Calls the constructor of a class.
-	template<typename T>
-	static void call_constructor(T *memory)
-	{
-		new ((PreallocatedMemory *) memory) T;
-	}
-
-	template<typename T, typename P1>
-	static void call_constructor(T *memory, P1 p1)
-	{
-		new ((PreallocatedMemory *) memory) T(p1);
-	}
-
-	template<typename T, typename P1, typename P2>
-	static void call_constructor(T *memory, P1 p1, P2 p2)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2);
-	}
-
-	template<typename T, typename P1, typename P2, typename P3>
-	static void call_constructor(T *memory, P1 p1, P2 p2, P3 p3)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2, p3);
-	}
-
-	template<typename T, typename P1, typename P2, typename P3, typename P4>
-	static void call_constructor(T *memory, P1 p1, P2 p2, P3 p3, P4 p4)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2, p3, p4);
-	}
-
-	template<typename T, typename P1, typename P2, typename P3, typename P4, typename P5>
-	static void call_constructor(T *memory, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2, p3, p4, p5);
-	}
-
-	template<typename T, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
-	static void call_constructor(T *memory, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2, p3, p4, p5, p6);
-	}
-
-	template<typename T, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>
-	static void call_constructor(T *memory, P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7)
-	{
-		new ((PreallocatedMemory *) memory) T(p1, p2, p3, p4, p5, p6, p7);
-	}
-
-	/// \brief Calls the destructor of a class.
-	template<typename T>
-	static void call_destructor(T *memory)
-	{
-		memory->~T();
-	}
-
 
 /// \}
 /// \name Implementation

@@ -301,22 +301,6 @@ void System::pause(int msecs)
 #endif
 }
 
-Mutex *System::get_sharedptr_mutex()
-{
-	static Mutex *sharedptr_mutex = new Mutex;
-	return sharedptr_mutex;
-}
-
-}
-
-void *operator new(size_t size, clan::PreallocatedMemory *memory)
-{
-	return memory;
-}
-
-namespace clan
-{
-
 int System::get_num_cores()
 {
 #ifdef WIN32
