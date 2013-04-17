@@ -6,9 +6,28 @@ layout(std140) uniform Uniforms
 {
 	uniform vec3 resolution;
 	uniform float time;
+	uniform vec4 mouse;
+
+	uniform vec4 particles[30];
+	uniform int particle_count;
 };
 
-void main(void)
+layout(origin_upper_left) in vec4 gl_FragCoord;
+
+float sum()
 {
-	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    float sum = 0.0;
+
+    for (int i = 0; i < particle_count; i++) {
+		vec4 p = particles[i];
+        sum += p.a * p.z / distance(p.xy, gl_FragCoord.xy);
+    }
+    
+	return sum;
+}
+
+void main()
+{
+    float s = sum();
+	FragColor = vec4(s* cos(mouse.y), s * sin(mouse.x) / 2.0f, s * sin(mouse.y), 0.08);
 }
