@@ -41,8 +41,8 @@ public:
 	int get_attribute_count() const;
 	int get_attribute_index(const std::string &name) const;
 	Vec4f get_attribute_default(int index);
-	void set_uniform(const std::string &name, const Vec4f &vec);
-	void set_uniform_matrix(const std::string &name, const Mat4f &mat);
+	void set_uniform(int location, const Vec4f &vec);
+	void set_uniform_matrix(int location, const Mat4f &mat);
 
 	PixelCommand *draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values);
 	PixelCommand *draw_sprite(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values);

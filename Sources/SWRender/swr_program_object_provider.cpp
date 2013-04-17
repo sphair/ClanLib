@@ -168,60 +168,60 @@ void SWRenderProgramObjectProvider::validate()
 {
 }
 
-void SWRenderProgramObjectProvider::set_uniform1i(const std::string &name, int v1)
+void SWRenderProgramObjectProvider::set_uniform1i(int location, int v1)
 {
-	current_program->set_uniform(name, Vec4f(v1, 0.0f, 1.0f, 1.0f));
+	current_program->set_uniform(location, Vec4f(v1, 0.0f, 1.0f, 1.0f));
 }
 
-void SWRenderProgramObjectProvider::set_uniform2i(const std::string &name, int v1, int v2)
+void SWRenderProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
 {
-	current_program->set_uniform(name, Vec4f(v1, v2, 1.0f, 1.0f));
+	current_program->set_uniform(location, Vec4f(v1, v2, 1.0f, 1.0f));
 }
 
-void SWRenderProgramObjectProvider::set_uniform3i(const std::string &name, int v1, int v2, int v3)
+void SWRenderProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
 {
-	current_program->set_uniform(name, Vec4f(v1, v2, v3, 1.0f));
+	current_program->set_uniform(location, Vec4f(v1, v2, v3, 1.0f));
 }
 
-void SWRenderProgramObjectProvider::set_uniform4i(const std::string &name, int v1, int v2, int v3, int v4)
+void SWRenderProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
 {
-	current_program->set_uniform(name, Vec4f(v1, v2, v3, v4));
+	current_program->set_uniform(location, Vec4f(v1, v2, v3, v4));
 }
 
-void SWRenderProgramObjectProvider::set_uniformiv(const std::string &name, int size, int count, int *data)
-{
-}
-
-void SWRenderProgramObjectProvider::set_uniform1f(const std::string &name, float v1)
-{
-	current_program->set_uniform(name, Vec4f(v1, 0.0f, 1.0f, 1.0f));
-}
-
-void SWRenderProgramObjectProvider::set_uniform2f(const std::string &name, float v1, float v2)
-{
-	current_program->set_uniform(name, Vec4f(v1, v2, 1.0f, 1.0f));
-}
-
-void SWRenderProgramObjectProvider::set_uniform3f(const std::string &name, float v1, float v2, float v3)
-{
-	current_program->set_uniform(name, Vec4f(v1, v2, v3, 1.0f));
-}
-
-void SWRenderProgramObjectProvider::set_uniform4f(const std::string &name, float v1, float v2, float v3, float v4)
-{
-	current_program->set_uniform(name, Vec4f(v1, v2, v3, v4));
-}
-
-void SWRenderProgramObjectProvider::set_uniformfv(const std::string &name, int size, int count, float *data)
+void SWRenderProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
 {
 }
 
-void SWRenderProgramObjectProvider::set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data)
+void SWRenderProgramObjectProvider::set_uniform1f(int location, float v1)
+{
+	current_program->set_uniform(location, Vec4f(v1, 0.0f, 1.0f, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+{
+	current_program->set_uniform(location, Vec4f(v1, v2, 1.0f, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+{
+	current_program->set_uniform(location, Vec4f(v1, v2, v3, 1.0f));
+}
+
+void SWRenderProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+{
+	current_program->set_uniform(location, Vec4f(v1, v2, v3, v4));
+}
+
+void SWRenderProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+{
+}
+
+void SWRenderProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
 {
 	if (!transpose)
-		current_program->set_uniform_matrix(name, Mat4f(data));
+		current_program->set_uniform_matrix(location, Mat4f(data));
 	else
-		current_program->set_uniform_matrix(name, Mat4f(data).transpose());
+		current_program->set_uniform_matrix(location, Mat4f(data).transpose());
 }
 
 int SWRenderProgramObjectProvider::get_uniform_buffer_size(int block_index) const
@@ -239,10 +239,7 @@ int SWRenderProgramObjectProvider::get_storage_buffer_index(const std::string &n
 	//FIXME: Stub
 	return 0;
 }
-void SWRenderProgramObjectProvider::set_uniform1i(int location, int)
-{
-	//FIXME: Stub
-}
+
 void SWRenderProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
 {
 	//FIXME: Stub

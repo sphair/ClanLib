@@ -278,6 +278,47 @@ void D3DProgramObjectProvider::set_uniform1i(int location, int v1)
 	}
 }
 
+
+void D3DProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+{
+}
+
+void D3DProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform1f(int location, float v1)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+{
+}
+
+void D3DProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+{
+}
+
+void D3DProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+{
+}
+
 void D3DProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
 {
 	if (block_index >= 0 && block_index <= (int)uniform_blocks.size())

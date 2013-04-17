@@ -53,8 +53,8 @@ public:
 	virtual int get_attribute_count() const = 0;
 	virtual int get_attribute_index(const std::string &name) const = 0;
 	virtual Vec4f get_attribute_default(int index) { return Vec4f(0.0f, 0.0f, 1.0f, 1.0f); }
-	virtual void set_uniform(const std::string &name, const Vec4f &vec) = 0;
-	virtual void set_uniform_matrix(const std::string &name, const Mat4f &mat) = 0;
+	virtual void set_uniform(int location, const Vec4f &vec) = 0;
+	virtual void set_uniform_matrix(int location, const Mat4f &mat) = 0;
 
 	virtual PixelCommand *draw_triangle(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values) = 0;
 	virtual PixelCommand *draw_sprite(PixelPipeline *pipeline, const std::vector<Vec4f> &attribute_values) = 0;
