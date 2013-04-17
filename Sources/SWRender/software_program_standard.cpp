@@ -75,11 +75,11 @@ Vec4f SoftwareProgram_Standard::get_attribute_default(int index)
 	}
 }
 
-void SoftwareProgram_Standard::set_uniform(const std::string &name, const Vec4f &vec)
+void SoftwareProgram_Standard::set_uniform(int location, const Vec4f &vec)
 {
 }
 
-void SoftwareProgram_Standard::set_uniform_matrix(const std::string &name, const Mat4f &mat)
+void SoftwareProgram_Standard::set_uniform_matrix(int location, const Mat4f &mat)
 {
 }
 

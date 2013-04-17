@@ -177,6 +177,47 @@ void GL1ProgramObjectProvider::set_uniform1i(int location, int p1)
 {
 }
 
+
+void GL1ProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform1f(int location, float v1)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+{
+}
+
+void GL1ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+{
+}
+
 void GL1ProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
 {
 }

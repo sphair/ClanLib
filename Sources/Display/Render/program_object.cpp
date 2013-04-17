@@ -433,14 +433,59 @@ bool ProgramObject::validate()
 	return impl->provider->get_validate_status();
 }
 
-void ProgramObject::set_uniform1i(const std::string &name, int v1)
-{
-	impl->provider->set_uniform1i(get_uniform_location(name), v1);
-}
-
 void ProgramObject::set_uniform1i(int location, int v1)
 {
 	impl->provider->set_uniform1i(location, v1);
+}
+
+void ProgramObject::set_uniform2i(int location, int v1, int v2)
+{
+	impl->provider->set_uniform2i(location, v1, v2);
+}
+
+void ProgramObject::set_uniform3i(int location, int v1, int v2, int v3)
+{
+	impl->provider->set_uniform3i(location, v1, v2, v3);
+}
+
+void ProgramObject::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+{
+	impl->provider->set_uniform4i(location, v1, v2, v3, v4);
+}
+
+void ProgramObject::set_uniformiv(int location, int size, int count, int *data)
+{
+	impl->provider->set_uniformiv(location, size, count, data);
+}
+
+void ProgramObject::set_uniform1f(int location, float v1)
+{
+	impl->provider->set_uniform1f(location, v1);
+}
+
+void ProgramObject::set_uniform2f(int location, float v1, float v2)
+{
+	impl->provider->set_uniform2f(location, v1, v2);
+}
+
+void ProgramObject::set_uniform3f(int location, float v1, float v2, float v3)
+{
+	impl->provider->set_uniform3f(location, v1, v2, v3);
+}
+
+void ProgramObject::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+{
+	impl->provider->set_uniform4f(location, v1, v2, v3, v4);
+}
+
+void ProgramObject::set_uniformfv(int location, int size, int count, float *data)
+{
+	impl->provider->set_uniformfv(location, size, count, data);
+}
+
+void ProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+{
+	impl->provider->set_uniform_matrix(location, size, count, transpose, data);
 }
 
 void ProgramObject::set_uniform_buffer_index(const std::string &name, int bind_index)

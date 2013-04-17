@@ -308,17 +308,77 @@ public:
 	/** <p>If the validation fails, get_info_log() will return the validation log.</p>*/
 	bool validate();
 
-	/// \brief Set uniform variable(s).
-	///
-	/// \param name = String Ref
-	/// \param value_a = value
-	void set_uniform1i(const std::string &name, int value_a);
-
-	/// \brief Set uniform variable(s).
-	///
-	/// \param location = Location from get_uniform_location()
-	/// \param value_a = value
 	void set_uniform1i(int location, int value_a);
+	void set_uniform2i(int location, int value_a, int value_b);
+	void set_uniform3i(int location, int value_a, int value_b, int value_c);
+	void set_uniform4i(int location, int value_a, int value_b, int value_c, int value_d);
+	void set_uniformiv(int location, int size, int count, int *data);
+	void set_uniform2i(int location, Vec2i vec) {set_uniform2i(location, vec.x, vec.y);}
+	void set_uniform3i(int location, Vec3i vec) {set_uniform3i(location, vec.x, vec.y, vec.z);}
+	void set_uniform4i(int location, Vec4i vec) {set_uniform4i(location, vec.x, vec.y, vec.z, vec.w);}
+	void set_uniform2s(int location, Vec2s vec) {set_uniform2i(location, vec.x, vec.y);}
+	void set_uniform3s(int location, Vec3s vec) {set_uniform3i(location, vec.x, vec.y, vec.z);}
+	void set_uniform4s(int location, Vec4s vec) {set_uniform4i(location, vec.x, vec.y, vec.z, vec.w);}
+	void set_uniform2b(int location, Vec2b vec) {set_uniform2i(location, vec.x, vec.y);}
+	void set_uniform3b(int location, Vec3b vec) {set_uniform3i(location, vec.x, vec.y, vec.z);}
+	void set_uniform4b(int location, Vec4b vec) {set_uniform4i(location, vec.x, vec.y, vec.z, vec.w);}
+	void set_uniformiv(int location, int count, Vec2i *data) {set_uniformiv(location, 2, count, *data);}
+	void set_uniformiv(int location, int count, Vec3i *data) {set_uniformiv(location, 3, count, *data);}
+	void set_uniformiv(int location, int count, Vec4i *data) {set_uniformiv(location, 4, count, *data);}
+	void set_uniform1f(int location, float value_a);
+	void set_uniform2f(int location, float value_a, float value_b);
+	void set_uniform3f(int location, float value_a, float value_b, float value_c);
+	void set_uniform4f(int location, float value_a, float value_b, float value_c, float value_d);
+	void set_uniformfv(int location, int size, int count, float *data);
+	void set_uniform2f(int location, Vec2f vec) {set_uniform2f(location, vec.x, vec.y);}
+	void set_uniform3f(int location, Vec3f vec) {set_uniform3f(location, vec.x, vec.y, vec.z);}
+	void set_uniform4f(int location, Vec4f vec) {set_uniform4f(location, vec.x, vec.y, vec.z, vec.w);}
+	void set_uniformfv(int location, int count, Vec2f *data) {set_uniformfv(location, 2, count, *data);}
+	void set_uniformfv(int location, int count, Vec3f *data) {set_uniformfv(location, 3, count, *data);}
+	void set_uniformfv(int location, int count, Vec4f *data) {set_uniformfv(location, 4, count, *data);}
+	void set_uniform_matrix(int location, int size, int count, bool transpose, float *data);
+	void set_uniform_matrix(int location, Mat2f matrix) {set_uniform_matrix(location, 2, 1, false, matrix.matrix);}
+	void set_uniform_matrix(int location, Mat3f matrix) {set_uniform_matrix(location, 3, 1, false, matrix.matrix);}
+	void set_uniform_matrix(int location, Mat4f matrix) {set_uniform_matrix(location, 4, 1, false, matrix.matrix);}
+	void set_uniform_matrix(int location, int count, Mat2f *matrix) {set_uniform_matrix(location, 2, count, false, matrix->matrix);}
+	void set_uniform_matrix(int location, int count, Mat3f *matrix) {set_uniform_matrix(location, 3, count, false, matrix->matrix);}
+	void set_uniform_matrix(int location, int count, Mat4f *matrix) {set_uniform_matrix(location, 4, count, false, matrix->matrix);}
+
+	void set_uniform1i(const std::string &name, int value_a) { set_uniform1i(get_uniform_location(name), value_a); }
+	void set_uniform2i(const std::string &name, int value_a, int value_b) { set_uniform2i(get_uniform_location(name), value_a, value_b); }
+	void set_uniform3i(const std::string &name, int value_a, int value_b, int value_c) { set_uniform3i(get_uniform_location(name), value_a, value_b, value_c); }
+	void set_uniform4i(const std::string &name, int value_a, int value_b, int value_c, int value_d) { set_uniform4i(get_uniform_location(name), value_a, value_b, value_c, value_d); }
+	void set_uniformiv(const std::string &name, int size, int count, int *data) { set_uniformiv(get_uniform_location(name), size, count, data); }
+	void set_uniform2i(const std::string &name, Vec2i vec) { set_uniform2i(get_uniform_location(name), vec); }
+	void set_uniform3i(const std::string &name, Vec3i vec) { set_uniform3i(get_uniform_location(name), vec); }
+	void set_uniform4i(const std::string &name, Vec4i vec) { set_uniform4i(get_uniform_location(name), vec); }
+	void set_uniform2s(const std::string &name, Vec2s vec) { set_uniform2s(get_uniform_location(name), vec); }
+	void set_uniform3s(const std::string &name, Vec3s vec) { set_uniform3s(get_uniform_location(name), vec); }
+	void set_uniform4s(const std::string &name, Vec4s vec) { set_uniform4s(get_uniform_location(name), vec); }
+	void set_uniform2b(const std::string &name, Vec2b vec) { set_uniform2b(get_uniform_location(name), vec); }
+	void set_uniform3b(const std::string &name, Vec3b vec) { set_uniform3b(get_uniform_location(name), vec); }
+	void set_uniform4b(const std::string &name, Vec4b vec) { set_uniform4b(get_uniform_location(name), vec); }
+	void set_uniformiv(const std::string &name, int count, Vec2i *data) { set_uniformiv(get_uniform_location(name), count, data); }
+	void set_uniformiv(const std::string &name, int count, Vec3i *data) { set_uniformiv(get_uniform_location(name), count, data); }
+	void set_uniformiv(const std::string &name, int count, Vec4i *data) { set_uniformiv(get_uniform_location(name), count, data); }
+	void set_uniform1f(const std::string &name, float value_a) { set_uniform1f(get_uniform_location(name), value_a); }
+	void set_uniform2f(const std::string &name, float value_a, float value_b) { set_uniform2f(get_uniform_location(name), value_a, value_b); }
+	void set_uniform3f(const std::string &name, float value_a, float value_b, float value_c) { set_uniform3f(get_uniform_location(name), value_a, value_b, value_c); }
+	void set_uniform4f(const std::string &name, float value_a, float value_b, float value_c, float value_d) { set_uniform4f(get_uniform_location(name), value_a, value_b, value_c, value_d); }
+	void set_uniformfv(const std::string &name, int size, int count, float *data) { set_uniformfv(get_uniform_location(name), size, count, data); }
+	void set_uniform2f(const std::string &name, Vec2f vec) { set_uniform2f(get_uniform_location(name), vec); }
+	void set_uniform3f(const std::string &name, Vec3f vec) { set_uniform3f(get_uniform_location(name), vec); }
+	void set_uniform4f(const std::string &name, Vec4f vec) { set_uniform4f(get_uniform_location(name), vec); }
+	void set_uniformfv(const std::string &name, int count, Vec2f *data) { set_uniformfv(get_uniform_location(name), count, data); }
+	void set_uniformfv(const std::string &name, int count, Vec3f *data) { set_uniformfv(get_uniform_location(name), count, data); }
+	void set_uniformfv(const std::string &name, int count, Vec4f *data) { set_uniformfv(get_uniform_location(name), count, data); }
+	void set_uniform_matrix(const std::string &name, int size, int count, bool transpose, float *data) { set_uniform_matrix(get_uniform_location(name), size, count, transpose, data); }
+	void set_uniform_matrix(const std::string &name, Mat2f matrix) { set_uniform_matrix(get_uniform_location(name), matrix); }
+	void set_uniform_matrix(const std::string &name, Mat3f matrix) { set_uniform_matrix(get_uniform_location(name), matrix); }
+	void set_uniform_matrix(const std::string &name, Mat4f matrix) { set_uniform_matrix(get_uniform_location(name), matrix); }
+	void set_uniform_matrix(const std::string &name, int count, Mat2f *matrix) { set_uniform_matrix(get_uniform_location(name), count, matrix); }
+	void set_uniform_matrix(const std::string &name, int count, Mat3f *matrix) { set_uniform_matrix(get_uniform_location(name), count, matrix); }
+	void set_uniform_matrix(const std::string &name, int count, Mat4f *matrix) { set_uniform_matrix(get_uniform_location(name), count, matrix); }
 
 	/// \brief Sets the UniformBuffer
 	void set_uniform_buffer_index(const std::string &block_name, int bind_index);

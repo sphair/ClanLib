@@ -271,11 +271,119 @@ void GL3ProgramObjectProvider::validate()
 void GL3ProgramObjectProvider::set_uniform1i(int location, int p1)
 {
 	throw_if_disposed();
-	if (location == -1)
-		return;
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform1i(location, p1);	
+	}
+}
 
-	ProgramObjectStateTracker state_tracker(handle);
-	glUniform1i(location, p1);	
+void GL3ProgramObjectProvider::set_uniform2i(int location, int v1, int v2)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform2i(location, v1, v2);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform3i(int location, int v1, int v2, int v3)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform3i(location, v1, v2, v3);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v3, int v4)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform4i(location, v1, v2, v3, v4);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		if( size == 1 ) glUniform1iv(location, count, data);	
+		else if( size == 2 ) glUniform2iv(location, count, data);	
+		else if( size == 3 ) glUniform3iv(location, count, data);	
+		else if( size == 4 ) glUniform4iv(location, count, data);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform1f(int location, float v1)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform1f(location, v1);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform2f(int location, float v1, float v2)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform2f(location, v1, v2);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform3f(int location, float v1, float v2, float v3)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform3f(location, v1, v2, v3);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform4f(int location, float v1, float v2, float v3, float v4)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		glUniform4f(location, v1, v2, v3, v4);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		if( size == 1 ) glUniform1fv(location, count, data);	
+		else if( size == 2 ) glUniform2fv(location, count, data);	
+		else if( size == 3 ) glUniform3fv(location, count, data);	
+		else if( size == 4 ) glUniform4fv(location, count, data);	
+	}
+}
+
+void GL3ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+{
+	throw_if_disposed();
+	if (location >= 0)
+	{
+		ProgramObjectStateTracker state_tracker(handle);
+		if( size == 2 ) glUniformMatrix2fv(location, count, transpose, data);	
+		else if( size == 3 ) glUniformMatrix3fv(location, count, transpose, data);	
+		else if( size == 4 ) glUniformMatrix4fv(location, count, transpose, data);
+	}
 }
 
 void GL3ProgramObjectProvider::set_uniform_buffer_index(int block_index, int bind_index)
