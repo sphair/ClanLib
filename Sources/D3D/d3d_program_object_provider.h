@@ -90,12 +90,8 @@ public:
 	bool get_link_status() const;
 	bool get_validate_status() const;
 	std::string get_info_log() const;
-	int get_attribute_count() const;
 	std::vector<ShaderObject> get_shaders() const;
-	std::vector<ProgramAttribute> get_attributes() const;
 	int get_attribute_location(const std::string &name) const;
-	int get_uniform_count() const;
-	std::vector<ProgramUniform> get_uniforms() const;
 	int get_uniform_location(const std::string &name) const;
 
 	int get_uniform_buffer_size(int block_index) const;

@@ -32,8 +32,6 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/Display/Render/program_object.h"
-#include "API/Display/Render/program_attribute.h"
-#include "API/Display/Render/program_uniform.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/TargetProviders/program_object_provider.h"
@@ -335,29 +333,9 @@ std::string ProgramObject::get_info_log() const
 	return impl->provider->get_info_log();
 }
 
-int ProgramObject::get_attribute_count() const
-{
-	return impl->provider->get_attribute_count();
-}
-
-std::vector<ProgramAttribute> ProgramObject::get_attributes() const
-{
-	return impl->provider->get_attributes();
-}
-
 int ProgramObject::get_attribute_location(const std::string &name) const
 {
 	return impl->provider->get_attribute_location(name);
-}
-
-int ProgramObject::get_uniform_count() const
-{
-	return impl->provider->get_uniform_count();	
-}
-
-std::vector<ProgramUniform> ProgramObject::get_uniforms() const
-{
-	return impl->provider->get_uniforms();
 }
 
 int ProgramObject::get_uniform_location(const std::string &name) const
