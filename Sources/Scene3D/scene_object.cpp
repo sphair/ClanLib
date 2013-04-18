@@ -149,6 +149,7 @@ void SceneObject_Impl::create_lights(Scene &scene_base)
 	std::vector<ModelDataLight> &model_lights = instance.get_renderer()->get_model_data()->lights;
 	for (size_t i = 0; i < model_lights.size(); i++)
 		lights.push_back(SceneLight(scene_base));
+	update_lights();
 }
 
 void SceneObject_Impl::update_lights()
