@@ -36,8 +36,6 @@
 namespace clan
 {
 
-class ProgramAttribute;
-class ProgramUniform;
 class ShaderObject;
 class UniformBuffer;
 
@@ -68,23 +66,11 @@ public:
 	/// \brief Returns the current info log for the program object.
 	virtual std::string get_info_log() const=0;
 
-	/// \brief Returns the count of active attributes.
-	virtual int get_attribute_count() const=0;
-
 	/// \brief Returns the shaders used in this program.
 	virtual std::vector<ShaderObject> get_shaders() const=0;
 
-	/// \brief Returns the active attributes.
-	virtual std::vector<ProgramAttribute> get_attributes() const=0;
-
 	/// \brief Returns the location of a named active attribute.
 	virtual int get_attribute_location(const std::string &name) const=0;
-
-	/// \brief Returns the count of active uniform variables.
-	virtual int get_uniform_count() const=0;
-
-	/// \brief Returns the active uniforms.
-	virtual std::vector<ProgramUniform> get_uniforms() const=0;
 
 	/// \brief Returns the location of a named uniform variable.
 	virtual int get_uniform_location(const std::string &name) const=0;

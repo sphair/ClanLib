@@ -29,8 +29,6 @@
 #include "SWRender/precomp.h"
 #include "swr_program_object_provider.h"
 #include "API/Display/Render/shader_object.h"
-#include "API/Display/Render/program_attribute.h"
-#include "API/Display/Render/program_uniform.h"
 #include "API/SWRender/software_program.h"
 
 namespace clan
@@ -80,19 +78,9 @@ std::string SWRenderProgramObjectProvider::get_info_log() const
 	return std::string();
 }
 
-int SWRenderProgramObjectProvider::get_attribute_count() const
-{
-	return 0;
-}
-
 std::vector<ShaderObject> SWRenderProgramObjectProvider::get_shaders() const
 {
 	return std::vector<ShaderObject>();
-}
-
-std::vector<ProgramAttribute> SWRenderProgramObjectProvider::get_attributes() const
-{
-	return std::vector<ProgramAttribute>();
 }
 
 int SWRenderProgramObjectProvider::get_attribute_location(const std::string &name) const
@@ -102,16 +90,6 @@ int SWRenderProgramObjectProvider::get_attribute_location(const std::string &nam
 		return bind_locations[attribute_index];
 	else
 		return -1;
-}
-
-int SWRenderProgramObjectProvider::get_uniform_count() const
-{
-	return 0;
-}
-
-std::vector<ProgramUniform> SWRenderProgramObjectProvider::get_uniforms() const
-{
-	return std::vector<ProgramUniform>();
 }
 
 int SWRenderProgramObjectProvider::get_uniform_location(const std::string &name) const

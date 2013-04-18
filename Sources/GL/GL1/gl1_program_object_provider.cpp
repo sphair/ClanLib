@@ -30,8 +30,6 @@
 
 #include "GL/precomp.h"
 #include "gl1_program_object_provider.h"
-#include "API/Display/Render/program_attribute.h"
-#include "API/Display/Render/program_uniform.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Core/System/exception.h"
@@ -87,32 +85,10 @@ std::string GL1ProgramObjectProvider::get_info_log() const
 {
 	return std::string("Not implemented");
 }
-	
-int GL1ProgramObjectProvider::get_uniform_count() const
-{
-	return 0;
-}
 
-std::vector<ProgramUniform> GL1ProgramObjectProvider::get_uniforms() const
-{
-	std::vector<ProgramUniform> uniforms;
-	return uniforms;
-}
-	
 int GL1ProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
 	return -1;
-}
-
-int GL1ProgramObjectProvider::get_attribute_count() const
-{
-	return 0;
-}
-	
-std::vector<ProgramAttribute> GL1ProgramObjectProvider::get_attributes() const
-{
-	std::vector<ProgramAttribute> attributes;
-	return attributes;
 }
 	
 int GL1ProgramObjectProvider::get_attribute_location(const std::string &name) const

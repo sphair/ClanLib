@@ -306,7 +306,6 @@ clanDisplay_includes = \
 	d3d.h \
 	Display/ShaderEffect/shader_effect.h \
 	Display/ShaderEffect/shader_effect_description.h \
-	Display/Render/program_uniform.h \
 	Display/Render/vertex_array_buffer.h \
 	Display/Render/texture_cube.h \
 	Display/Render/transfer_vector.h \
@@ -340,7 +339,6 @@ clanDisplay_includes = \
 	Display/Render/texture_cube_array.h \
 	Display/Render/texture_1d.h \
 	Display/Render/element_array_vector.h \
-	Display/Render/program_attribute.h \
 	Display/Render/depth_stencil_state_description.h \
 	Display/display_target.h \
 	Display/2D/image.h \

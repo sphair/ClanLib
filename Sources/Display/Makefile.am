@@ -6,7 +6,6 @@ libclan30Display_la_LIBADD =
 endif
 libclan30Display_la_SOURCES = \
 Render/storage_buffer.cpp \
-Render/program_attribute.cpp \
 Render/graphic_context.cpp \
 Render/shared_gc_data.cpp \
 Render/transfer_buffer.cpp \
@@ -39,7 +38,6 @@ Render/blend_state_description.cpp \
 Render/texture_3d.cpp \
 Render/occlusion_query.cpp \
 Render/shared_gc_data_impl.cpp \
-Render/program_uniform.cpp \
 screen_info.cpp \
 display_target.cpp \
 ShaderEffect/shader_effect.cpp \

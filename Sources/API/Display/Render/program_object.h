@@ -43,8 +43,6 @@ namespace clan
 {
 
 class ShaderObject;
-class ProgramAttribute;
-class ProgramUniform;
 class ProgramObject_Impl;
 class GraphicContext;
 class GraphicContextProvider;
@@ -243,20 +241,8 @@ public:
 	/// \brief Returns the current info log for the program object.
 	std::string get_info_log() const;
 
-	/// \brief Returns the count of active attributes.
-	int get_attribute_count() const;
-
-	/// \brief Returns the active attributes.
-	std::vector<ProgramAttribute> get_attributes() const;
-
 	/// \brief Returns the location of a named active attribute.
 	int get_attribute_location(const std::string &name) const;
-
-	/// \brief Returns the count of active uniform variables.
-	int get_uniform_count() const;
-
-	/// \brief Returns the active uniforms.
-	std::vector<ProgramUniform> get_uniforms() const;
 
 	/// \brief Returns the location of a named uniform variable.
 	int get_uniform_location(const std::string &name) const;

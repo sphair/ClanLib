@@ -29,8 +29,6 @@
 
 #include "GL/precomp.h"
 #include "gl3_program_object_provider.h"
-#include "API/Display/Render/program_attribute.h"
-#include "API/Display/Render/program_uniform.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Core/System/exception.h"
@@ -124,25 +122,7 @@ std::string GL3ProgramObjectProvider::get_info_log() const
 	}
 	return result;
 }
-	
-int GL3ProgramObjectProvider::get_uniform_count() const
-{
-	throw_if_disposed();
-	if (cached_uniforms.empty())
-		fetch_uniforms();
 
-	return (int)cached_uniforms.size();
-}
-	
-std::vector<ProgramUniform> GL3ProgramObjectProvider::get_uniforms() const
-{
-	throw_if_disposed();
-	if (cached_uniforms.empty())
-		fetch_uniforms();
-
-	return cached_uniforms;
-}
-	
 int GL3ProgramObjectProvider::get_uniform_location(const std::string &name) const
 {
 	throw_if_disposed();
@@ -150,24 +130,6 @@ int GL3ProgramObjectProvider::get_uniform_location(const std::string &name) cons
 	return glGetUniformLocation(handle, StringHelp::text_to_local8(name).c_str());
 }
 
-int GL3ProgramObjectProvider::get_attribute_count() const
-{
-	throw_if_disposed();
-	if (cached_attribs.empty())
-		fetch_attributes();
-
-	return (int)cached_attribs.size();
-}
-	
-std::vector<ProgramAttribute> GL3ProgramObjectProvider::get_attributes() const
-{
-	throw_if_disposed();
-	if (cached_attribs.empty())
-		fetch_attributes();
-
-	return cached_attribs;
-}
-	
 int GL3ProgramObjectProvider::get_attribute_location(const std::string &name) const
 {
 	throw_if_disposed();
@@ -256,9 +218,6 @@ void GL3ProgramObjectProvider::link()
 	throw_if_disposed();
 	OpenGL::set_active();
 	glLinkProgram(handle);
-
-	cached_attribs.clear();
-	cached_uniforms.clear();
 }
 	
 void GL3ProgramObjectProvider::validate()
@@ -401,65 +360,6 @@ void GL3ProgramObjectProvider::set_storage_buffer_index(int buffer_index, int bi
 		return;
 	glShaderStorageBlockBinding(handle, buffer_index, bind_unit_index);
 }
-
-void GL3ProgramObjectProvider::fetch_attributes() const
-{
-	if (!cached_attribs.empty())
-		return;
-
-	OpenGL::set_active();
-
-	GLint count = 0;
-	glGetProgramiv(handle, GL_ACTIVE_ATTRIBUTES, &count);
-	GLint name_size = 0;
-	glGetProgramiv(handle, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &name_size);
-	GLchar *name = new GLchar[name_size+1];
-	name[name_size] = 0;
-	for (int i=0; i<count; i++)
-	{
-		GLsizei length = 0;
-		GLint size = 0;
-		GLenum type = 0;
-		name[0] = 0;
-		glGetActiveAttrib(handle, i, name_size, &length, &size, &type, name);
-		std::string attrib_name = StringHelp::local8_to_text(std::string(name, length));
-
-		int loc = glGetAttribLocation(handle, StringHelp::text_to_local8(name).c_str());
-		ProgramAttribute attribute(attrib_name, size, type, loc);
-		cached_attribs.push_back(attribute);
-	}
-	delete [] name;
-}
-
-void GL3ProgramObjectProvider::fetch_uniforms() const
-{
-	if (!cached_uniforms.empty())
-		return;
-
-	OpenGL::set_active();
-
-	GLint count = 0;
-	glGetProgramiv(handle, GL_ACTIVE_UNIFORMS, &count);
-	GLint name_size = 0;
-	glGetProgramiv(handle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &name_size);
-	GLchar *name = new GLchar[name_size+1];
-	name[name_size] = 0;
-	for (int i=0; i<count; i++)
-	{
-		GLsizei length = 0;
-		GLint size = 0;
-		GLenum type = 0;
-		name[0] = 0;
-		glGetActiveUniform(handle, i, name_size, &length, &size, &type, name);
-
-		std::string uniform_name = StringHelp::local8_to_text(std::string(name, length));
-		int loc = glGetUniformLocation(handle, StringHelp::text_to_local8(name).c_str());
-
-		ProgramUniform uniform(uniform_name, size, type, loc);
-		cached_uniforms.push_back(uniform);
-	}
-	delete[] name;
-};
 
 /////////////////////////////////////////////////////////////////////////////
 // GL3ProgramObjectProvider Implementation:

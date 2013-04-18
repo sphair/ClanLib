@@ -56,37 +56,25 @@ public:
 
 public:
 	/// \brief Returns the OpenGL program object handle.
-	virtual unsigned int get_handle() const;
+	unsigned int get_handle() const;
 
 	/// \brief Returns true if the link succeeded.
-	virtual bool get_link_status() const;
+	bool get_link_status() const;
 
 	/// \brief Returns true if validation succeeded.
-	virtual bool get_validate_status() const;
+	bool get_validate_status() const;
 
 	/// \brief Returns the current info log for the program object.
-	virtual std::string get_info_log() const;
-
-	/// \brief Returns the count of active attributes.
-	virtual int get_attribute_count() const;
+	std::string get_info_log() const;
 
 	/// \brief Returns the shaders used in this program.
-	virtual std::vector<ShaderObject> get_shaders() const;
-
-	/// \brief Returns the active attributes.
-	virtual std::vector<ProgramAttribute> get_attributes() const;
+	std::vector<ShaderObject> get_shaders() const;
 
 	/// \brief Returns the location of a named active attribute.
-	virtual int get_attribute_location(const std::string &name) const;
-
-	/// \brief Returns the count of active uniform variables.
-	virtual int get_uniform_count() const;
-
-	/// \brief Returns the active uniforms.
-	virtual std::vector<ProgramUniform> get_uniforms() const;
+	int get_attribute_location(const std::string &name) const;
 
 	/// \brief Returns the location of a named uniform variable.
-	virtual int get_uniform_location(const std::string &name) const;
+	int get_uniform_location(const std::string &name) const;
 
 	int get_uniform_buffer_size(int block_index) const;
 	int get_uniform_buffer_index(const std::string &block_name) const;
@@ -98,28 +86,28 @@ public:
 
 public:
 	/// \brief Add shader to program object.
-	virtual void attach(const ShaderObject &obj);
+	void attach(const ShaderObject &obj);
 
 	/// \brief Remove shader from program object.
-	virtual void detach(const ShaderObject &obj);
+	void detach(const ShaderObject &obj);
 
 	/// \brief Bind attribute to specific location.
 	/** <p>This function must be called before linking.</p>*/
-	virtual void bind_attribute_location(int index, const std::string &name);
+	void bind_attribute_location(int index, const std::string &name);
 
 	/// \brief Bind shader out variable a specific color buffer location.
 	/** <p>This function must be called before linking.</p>*/
-	virtual void bind_frag_data_location(int color_number, const std::string &name);
+	void bind_frag_data_location(int color_number, const std::string &name);
 
 	/// \brief Link program.
 	/** <p>If the linking fails, get_link_status() will return false and
 	    get_info_log() will return the link log.</p>*/
-	virtual void link();
+	void link();
 
 	/// \brief Validate program.
 	/** <p>If the validation fails, get_validate_status() will return
 	    false and get_info_log() will return the validation log.</p>*/
-	virtual void validate();
+	void validate();
 
 	/// \brief Set uniform variable(s).
 	void set_uniform1i(int location, int);

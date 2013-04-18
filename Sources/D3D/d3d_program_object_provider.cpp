@@ -31,8 +31,6 @@
 #include "d3d_shader_object_provider.h"
 #include "d3d_uniform_buffer_provider.h"
 #include "API/Display/Render/shader_object.h"
-#include "API/Display/Render/program_attribute.h"
-#include "API/Display/Render/program_uniform.h"
 #include "API/Core/Text/string_help.h"
 
 namespace clan
@@ -73,34 +71,14 @@ std::string D3DProgramObjectProvider::get_info_log() const
 	return std::string();
 }
 
-int D3DProgramObjectProvider::get_attribute_count() const
-{
-	return 0;
-}
-
 std::vector<ShaderObject> D3DProgramObjectProvider::get_shaders() const
 {
 	return std::vector<ShaderObject>();
 }
 
-std::vector<ProgramAttribute> D3DProgramObjectProvider::get_attributes() const
-{
-	return std::vector<ProgramAttribute>();
-}
-
 int D3DProgramObjectProvider::get_attribute_location(const std::string &name) const
 {
 	return -1;
-}
-
-int D3DProgramObjectProvider::get_uniform_count() const
-{
-	return uniforms.size();
-}
-
-std::vector<ProgramUniform> D3DProgramObjectProvider::get_uniforms() const
-{
-	return std::vector<ProgramUniform>();
 }
 
 int D3DProgramObjectProvider::get_uniform_location(const std::string &name) const
