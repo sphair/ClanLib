@@ -27,6 +27,7 @@
 **    Harry Storbacka
 **    Kenneth Gangstoe
 **    Kevin J Bluck
+**    Mark Page
 */
 
 #pragma once
@@ -44,6 +45,7 @@
 #include "API/Core/Signals/signal_v0.h"
 #include "GL/opengl_graphic_context_provider.h"
 #include "API/Core/System/disposable_object.h"
+#include "../State/opengl_blend_state.h"
 #include <map>
 
 namespace clan
@@ -64,13 +66,6 @@ class GL1RasterizerStateProvider : public RasterizerStateProvider
 public:
 	GL1RasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
 	RasterizerStateDescription desc;
-};
-
-class GL1BlendStateProvider : public BlendStateProvider
-{
-public:
-	GL1BlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) { }
-	BlendStateDescription desc;
 };
 
 class GL1DepthStencilStateProvider : public DepthStencilStateProvider
@@ -238,6 +233,9 @@ private:
 	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
+
+	OpenGLBlendStateProvider selected_blend_state;
+
 /// \}
 };
 

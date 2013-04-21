@@ -80,7 +80,8 @@ public:
 GL1GraphicContextProvider::GL1GraphicContextProvider(const OpenGLWindowProvider * const render_window)
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
-  primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false)
+  primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false),
+  selected_blend_state(BlendStateDescription())
 {
 	check_opengl_version();
 	max_texture_coords = get_max_texture_coords();
@@ -328,7 +329,7 @@ std::shared_ptr<BlendStateProvider> GL1GraphicContextProvider::create_blend_stat
 	}
 	else
 	{
-		std::shared_ptr<BlendStateProvider> state(new GL1BlendStateProvider(desc));
+		std::shared_ptr<BlendStateProvider> state(new OpenGLBlendStateProvider(desc));
 		blend_states[desc.clone()] = state;
 		return state;
 	}
@@ -386,40 +387,12 @@ void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 {
 	if (state)
 	{
-		GL1BlendStateProvider *gl1_state = static_cast<GL1BlendStateProvider*>(state);
-		set_active();
-
-		bool red, green, blue, alpha;
-		BlendEquation equation_color, equation_alpha;
-		BlendFunc src, dest, src_alpha, dest_alpha;
-		gl1_state->desc.get_color_write(red, green, blue, alpha);
-		gl1_state->desc.get_blend_equation(equation_color, equation_alpha);
-		gl1_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
-
-		gl1_state->desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
-
-		if (glBlendColor)
-				glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
-
-		if (glBlendEquation)
-			glBlendEquation(OpenGL::to_enum(equation_color));
-
-		if( src == src_alpha && dest == dest_alpha )
+		OpenGLBlendStateProvider *gl1_state = static_cast<OpenGLBlendStateProvider*>(state);
+		if (gl1_state)
 		{
-			if (glBlendFunc)
-				glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
-		}
-		else
-		{
-			if (glBlendFuncSeparate)
-			{
-				glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
-			}
-			else
-			{
-				if (glBlendFunc)
-					glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
-			}
+			set_active();
+			selected_blend_state.set(gl1_state, blend_color);
+			selected_blend_state.apply();
 		}
 	}
 }

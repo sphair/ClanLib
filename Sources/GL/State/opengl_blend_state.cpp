@@ -43,10 +43,13 @@ OpenGLBlendStateProvider::OpenGLBlendStateProvider(const BlendStateDescription &
 
 void OpenGLBlendStateProvider::set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color)
 {
-	if (!(new_state->desc == desc))
+	if (new_state != this)
 	{
-		desc = new_state->desc.clone();
-		changed_desc = true;
+		if (!(new_state->desc == desc))
+		{
+			desc = new_state->desc.clone();
+			changed_desc = true;
+		}
 	}
 	if (new_blend_color != blend_color)
 	{
