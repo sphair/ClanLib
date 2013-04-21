@@ -38,30 +38,24 @@
 namespace clan
 {
 
-class BlendStateChangeset;
-
-class BlendStateProvider_GL : public BlendStateProvider
+class OpenGLBlendStateProvider : public BlendStateProvider
 {
 public:
-	BlendStateProvider_GL(const BlendStateDescription &desc);
+	OpenGLBlendStateProvider(const BlendStateDescription &desc);
+	virtual ~OpenGLBlendStateProvider() {};
 
-	~BlendStateProvider_GL();
+	void set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color);
+	void apply();
 
-	BlendStateDescription desc;
+	BlendStateDescription &get() {return desc;}
 
-	static void apply(BlendStateProvider_GL *from, BlendStateProvider_GL *to);
-	
 private:
-	std::map<BlendStateProvider_GL *, std::shared_ptr<BlendStateChangeset> > changesets;
+	BlendStateDescription desc;
+	Vec4f blend_color;
+	bool changed_desc;
+	bool changed_blend_color;
 
-	friend class BlendStateChangeset;
 };
 
-class BlendStateChange
-{
-public:
-	virtual ~BlendStateChange() { }
-	virtual void apply() = 0;
-};
 
 }
