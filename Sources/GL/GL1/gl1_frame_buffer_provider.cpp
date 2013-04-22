@@ -83,11 +83,6 @@ void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2D 
 	if(!pbuffer.is_null())
 		sync_texture();
 
-	if (texture.is_null())
-	{
-		return;
-	}
-
 	GL1TextureProvider *texture_provider = dynamic_cast<GL1TextureProvider *> (texture.get_provider());
 	if (texture_provider == NULL)
 	{
@@ -178,6 +173,9 @@ void GL1FrameBufferProvider::stop()
 
 void GL1FrameBufferProvider::sync_pbuffer()
 {
+	if (selected_surface.is_null())
+		return;
+
 	set_active();
 
 	Size surface_size = selected_texture_provider->get_surface_size();
@@ -256,7 +254,7 @@ void GL1FrameBufferProvider::sync_pbuffer()
 
 void GL1FrameBufferProvider::sync_texture()
 {
-	if (pbuffer_changed && (!pbuffer.is_null()))
+	if (pbuffer_changed && (!pbuffer.is_null()) && !selected_surface.is_null())
 	{
 		set_active();
 
