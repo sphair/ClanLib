@@ -3,6 +3,8 @@ lib_LTLIBRARIES = libclan30GL.la
 libclan30GL_la_SOURCES = \
 setup_gl.cpp \
 State/opengl_blend_state.cpp \
+State/opengl_depth_stencil_state.cpp \
+State/opengl_rasterizer_state.cpp \
 GL3/gl3_pixel_buffer_provider.cpp \
 GL3/gl3_frame_buffer_provider.cpp \
 GL3/gl3_occlusion_query_provider.cpp \

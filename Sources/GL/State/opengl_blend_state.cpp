@@ -64,17 +64,38 @@ void OpenGLBlendStateProvider::apply()
 	{
 		changed_desc = false;
 
-		bool red, green, blue, alpha;
 		BlendEquation equation_color, equation_alpha;
 		BlendFunc src, dest, src_alpha, dest_alpha;
-		desc.get_color_write(red, green, blue, alpha);
 		desc.get_blend_equation(equation_color, equation_alpha);
 		desc.get_blend_function(src, dest, src_alpha, dest_alpha);
 
 		desc.is_blending_enabled() ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 
-		if (glBlendEquation)
-			glBlendEquation(OpenGL::to_enum(equation_color));
+		if (glColorMask)
+		{
+			bool red, green, blue, alpha;
+			desc.get_color_write(red, green, blue, alpha);
+			glColorMask(red,green,blue,alpha);
+		}
+
+
+		if (equation_color == equation_alpha)
+		{
+			if (glBlendEquation)
+				glBlendEquation(OpenGL::to_enum(equation_color));
+		}
+		else
+		{
+			if (glBlendEquationSeparate)
+			{
+				glBlendEquationSeparate( OpenGL::to_enum(equation_color), OpenGL::to_enum(equation_alpha) );
+			}
+			else
+			{
+				if (glBlendEquation)
+					glBlendEquation(OpenGL::to_enum(equation_color));
+			}
+		}
 
 		if( src == src_alpha && dest == dest_alpha )
 		{

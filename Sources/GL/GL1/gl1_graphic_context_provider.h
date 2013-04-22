@@ -46,6 +46,8 @@
 #include "GL/opengl_graphic_context_provider.h"
 #include "API/Core/System/disposable_object.h"
 #include "../State/opengl_blend_state.h"
+#include "../State/opengl_rasterizer_state.h"
+#include "../State/opengl_depth_stencil_state.h"
 #include <map>
 
 namespace clan
@@ -60,20 +62,6 @@ class GL1SelectedTexture;
 class DisposableObject;
 class GL1ProgramObjectProvider;
 class OpenGLWindowProvider;
-
-class GL1RasterizerStateProvider : public RasterizerStateProvider
-{
-public:
-	GL1RasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
-	RasterizerStateDescription desc;
-};
-
-class GL1DepthStencilStateProvider : public DepthStencilStateProvider
-{
-public:
-	GL1DepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
-	DepthStencilStateDescription desc;
-};
 
 class GL1GraphicContextProvider : public OpenGLGraphicContextProvider,  public GraphicContextProvider, public DisposableObject
 {
@@ -235,6 +223,8 @@ private:
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
 
 	OpenGLBlendStateProvider selected_blend_state;
+	OpenGLRasterizerStateProvider selected_rasterizer_state;
+	OpenGLDepthStencilStateProvider selected_depth_stencil_state;
 
 /// \}
 };

@@ -31,27 +31,27 @@
 
 #include "API/Display/TargetProviders/display_target_provider.h"
 #include "API/GL/opengl_window_description.h"
-#include "API/Display/Render/blend_state_description.h"
+#include "API/Display/Render/rasterizer_state_description.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include <map>
 
 namespace clan
 {
 
-class OpenGLBlendStateProvider : public BlendStateProvider
+class OpenGLRasterizerStateProvider : public RasterizerStateProvider
 {
 public:
-	OpenGLBlendStateProvider(const BlendStateDescription &desc);
-	virtual ~OpenGLBlendStateProvider() {};
+	OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc);
+	virtual ~OpenGLRasterizerStateProvider() {};
 
-	void set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color);
+	bool get_enable_scissor() const { return desc.get_enable_scissor();}
+
+	void set(const OpenGLRasterizerStateProvider *new_state);
 	void apply();
 
 private:
-	BlendStateDescription desc;
-	Vec4f blend_color;
+	RasterizerStateDescription desc;
 	bool changed_desc;
-	bool changed_blend_color;
 
 };
 
