@@ -325,34 +325,6 @@ void GL1FrameBufferProvider::set_active()
 	pbuffer_changed = true;
 }
 
-}
-/*
-
-
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1FrameBufferProvider Attributes:
-
-Size GL1FrameBufferProvider::get_size() const
-{
-	if (selected_surface.is_null())
-	{
-		return Size();
-	}
-	return selected_surface.get_size();
-}
-
-FrameBufferBindTarget GL1FrameBufferProvider::get_bind_target() const
-{
-	return framebuffer_draw;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1FrameBufferProvider Operations:
-
-
-
-
 void GL1FrameBufferProvider::start()
 {
 	if (pbuffer.is_null())
@@ -361,46 +333,4 @@ void GL1FrameBufferProvider::start()
 	}
 }
 
-void GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
-{
-
 }
-
-void GL1FrameBufferProvider::attach_color_buffer(int color_buffer, const Texture &texture, TextureSubtype subtype, int level, int zoffset)
-{
-	throw Exception("Implement me");
-}
-
-void GL1FrameBufferProvider::detach_color_buffer(int color_buffer, const Texture &texture, int level, int zoffset)
-{
-	detach_all();
-}
-
-void GL1FrameBufferProvider::attach_stencil_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::detach_stencil_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::attach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-void GL1FrameBufferProvider::attach_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void GL1FrameBufferProvider::detach_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-
-void GL1FrameBufferProvider::attach_depth_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::detach_depth_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::attach_depth_buffer(const Texture &texture, int level, int zoffset) {}
-void GL1FrameBufferProvider::attach_depth_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void GL1FrameBufferProvider::detach_depth_buffer(const Texture &texture, int level, int zoffset) {}
-
-void GL1FrameBufferProvider::attach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::detach_depth_stencil_buffer(const RenderBuffer &render_buffer) {}
-void GL1FrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-void GL1FrameBufferProvider::attach_depth_stencil_buffer(const Texture &texture, TextureSubtype subtype, int level, int zoffset) {}
-void GL1FrameBufferProvider::detach_depth_stencil_buffer(const Texture &texture, int level, int zoffset) {}
-
-void GL1FrameBufferProvider::set_bind_target(FrameBufferBindTarget target)
-{
-	throw Exception("Implement Me");
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// GL1FrameBufferProvider Implementation:
-
-
-*/

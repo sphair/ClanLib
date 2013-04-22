@@ -58,6 +58,7 @@ class ShaderObjectProvider;
 class FrameBufferProvider;
 class RenderBufferProvider;
 class GL1TextureProvider;
+class GL1FrameBufferProvider;
 class GL1SelectedTexture;
 class DisposableObject;
 class GL1ProgramObjectProvider;
@@ -227,6 +228,9 @@ private:
 	OpenGLBlendStateProvider selected_blend_state;
 	OpenGLRasterizerStateProvider selected_rasterizer_state;
 	OpenGLDepthStencilStateProvider selected_depth_stencil_state;
+
+	GL1FrameBufferProvider *framebuffer_provider;	// Only valid when framebuffer_bound == true
+	bool framebuffer_bound;
 
 /// \}
 };
