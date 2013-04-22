@@ -31,27 +31,25 @@
 
 #include "API/Display/TargetProviders/display_target_provider.h"
 #include "API/GL/opengl_window_description.h"
-#include "API/Display/Render/blend_state_description.h"
+#include "API/Display/Render/depth_stencil_state_description.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include <map>
 
 namespace clan
 {
 
-class OpenGLBlendStateProvider : public BlendStateProvider
+class OpenGLDepthStencilStateProvider : public DepthStencilStateProvider
 {
 public:
-	OpenGLBlendStateProvider(const BlendStateDescription &desc);
-	virtual ~OpenGLBlendStateProvider() {};
+	OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc);
+	virtual ~OpenGLDepthStencilStateProvider() {};
 
-	void set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color);
+	void set(const OpenGLDepthStencilStateProvider *new_state);
 	void apply();
 
 private:
-	BlendStateDescription desc;
-	Vec4f blend_color;
+	DepthStencilStateDescription desc;
 	bool changed_desc;
-	bool changed_blend_color;
 
 };
 

@@ -81,7 +81,9 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(const OpenGLWindowProvider 
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false),
-  selected_blend_state(BlendStateDescription())
+  selected_blend_state(BlendStateDescription()),
+  selected_rasterizer_state(RasterizerStateDescription()),
+  selected_depth_stencil_state(DepthStencilStateDescription())
 {
 	check_opengl_version();
 	max_texture_coords = get_max_texture_coords();
@@ -314,7 +316,7 @@ std::shared_ptr<RasterizerStateProvider> GL1GraphicContextProvider::create_raste
 	}
 	else
 	{
-		std::shared_ptr<RasterizerStateProvider> state(new GL1RasterizerStateProvider(desc));
+		std::shared_ptr<RasterizerStateProvider> state(new OpenGLRasterizerStateProvider(desc));
 		rasterizer_states[desc.clone()] = state;
 		return state;
 	}
@@ -344,7 +346,7 @@ std::shared_ptr<DepthStencilStateProvider> GL1GraphicContextProvider::create_dep
 	}
 	else
 	{
-		std::shared_ptr<DepthStencilStateProvider> state(new GL1DepthStencilStateProvider(desc));
+		std::shared_ptr<DepthStencilStateProvider> state(new OpenGLDepthStencilStateProvider(desc));
 		depth_stencil_states[desc.clone()] = state;
 		return state;
 	}
@@ -354,31 +356,15 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 {
 	if (state)
 	{
-		GL1RasterizerStateProvider *gl1_state = static_cast<GL1RasterizerStateProvider*>(state);
-		set_active();
-
-		gl1_state->desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-		gl1_state->desc.get_enable_line_antialiasing() ? glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
-		switch (gl1_state->desc.get_face_cull_mode())
+		OpenGLRasterizerStateProvider *gl1_state = static_cast<OpenGLRasterizerStateProvider*>(state);
+		if (gl1_state)
 		{
-			case cull_front:
-				glCullFace(GL_FRONT);
-				break;
-			case cull_back:
-				glCullFace(GL_BACK);
-				break;
-			case cull_front_and_back:
-				glCullFace(GL_FRONT_AND_BACK);
-				break;
+			set_active();
+			selected_rasterizer_state.set(gl1_state);
+			selected_rasterizer_state.apply();
+
+			scissor_enabled = gl1_state->get_enable_scissor();
 		}
-		glPolygonMode(GL_FRONT, OpenGL::to_enum(gl1_state->desc.get_face_fill_mode()));
-		glPolygonMode(GL_BACK, OpenGL::to_enum(gl1_state->desc.get_face_fill_mode()));
-
-		gl1_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
-
-		scissor_enabled = gl1_state->desc.get_enable_scissor();
-		if (!scissor_enabled)
-			glDisable(GL_SCISSOR_TEST);
 
 	}
 }
@@ -401,12 +387,13 @@ void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 {
 	if (state)
 	{
-		GL1DepthStencilStateProvider *gl1_state = static_cast<GL1DepthStencilStateProvider*>(state);
-		set_active();
-
-		gl1_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-		glDepthMask(gl1_state->desc.is_depth_write_enabled() ? 1 : 0);
-		glDepthFunc(OpenGL::to_enum(gl1_state->desc.get_depth_compare_function()));
+		OpenGLDepthStencilStateProvider *gl1_state = static_cast<OpenGLDepthStencilStateProvider*>(state);
+		if (gl1_state)
+		{
+			set_active();
+			selected_depth_stencil_state.set(gl1_state);
+			selected_depth_stencil_state.apply();
+		}
 	}
 }
 
