@@ -162,8 +162,13 @@ void GL1FrameBufferProvider::on_dispose()
 //	GL1GraphicContextProvider *gc_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
 //	if (gc_provider)
 //	{
-		stop();
+//		stop();
 //	}
+	stop();
+	pbuffer = PBuffer_GL1();
+
+	gc_provider->remove_disposable(this);
+
 }
 
 void GL1FrameBufferProvider::stop()
