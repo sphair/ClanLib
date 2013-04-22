@@ -77,7 +77,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////
 // GL1GraphicContextProvider Construction:
 
-GL1GraphicContextProvider::GL1GraphicContextProvider(const OpenGLWindowProvider * const render_window)
+GL1GraphicContextProvider::GL1GraphicContextProvider(OpenGLWindowProvider * render_window)
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false),
@@ -982,6 +982,11 @@ void GL1GraphicContextProvider::make_current() const
 }
 
 const DisplayWindowProvider & GL1GraphicContextProvider::get_render_window() const
+{
+	return *render_window; 
+}
+
+OpenGLWindowProvider & GL1GraphicContextProvider::get_opengl_window()
 {
 	return *render_window; 
 }

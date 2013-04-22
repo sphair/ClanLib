@@ -25,6 +25,7 @@ opengl.cpp \
 opengl_target.cpp \
 precomp.cpp \
 GL1/pbuffer.cpp \
+GL1/gl1_frame_buffer_provider.cpp \
 GL1/gl1_vertex_array_buffer_provider.cpp \
 GL1/gl1_transfer_buffer_provider.cpp \
 GL1/gl1_render_buffer_provider.cpp \

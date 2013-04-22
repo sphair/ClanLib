@@ -69,7 +69,7 @@ class GL1GraphicContextProvider : public OpenGLGraphicContextProvider,  public G
 /// \{
 public:
 	/// \brief Creates a new OpenGL graphic context provider for a rendering window.
-	GL1GraphicContextProvider(const OpenGLWindowProvider * const render_window);
+	GL1GraphicContextProvider(OpenGLWindowProvider * render_window);
 	~GL1GraphicContextProvider();
 
 /// \}
@@ -79,6 +79,8 @@ public:
 	int get_max_attributes();
 	Size get_max_texture_size() const;
 	const DisplayWindowProvider & get_render_window() const;
+	OpenGLWindowProvider & get_opengl_window();
+	
 	Size get_display_window_size() const;
 
 	// GL1 Only
@@ -192,7 +194,7 @@ private:
 	void reset_primitive_texture_all();
 
 	/// \brief OpenGL render window.
-	const OpenGLWindowProvider * const render_window;
+	OpenGLWindowProvider * render_window;
 
 	bool prim_arrays_set;
 
