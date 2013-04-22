@@ -93,13 +93,15 @@ public:
 
 	void set_bind_target(FrameBufferBindTarget target);
 
+	void set_active();
+	void stop();
+	void start();
+
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	void set_active();
-	void stop();
 	void on_dispose();
 	void sync_pbuffer();
 	void sync_texture();

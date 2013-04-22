@@ -54,7 +54,7 @@
 #include "API/GL/opengl.h"
 #include "API/GL/opengl_wrap.h"
 #include "API/Display/2D/image.h"
-
+#include "gl1_frame_buffer_provider.h"
 #include "Display/2D/render_batch_triangle.h"
 
 #ifdef WIN32
@@ -83,7 +83,8 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(OpenGLWindowProvider * rend
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false),
   selected_blend_state(BlendStateDescription()),
   selected_rasterizer_state(RasterizerStateDescription()),
-  selected_depth_stencil_state(DepthStencilStateDescription())
+  selected_depth_stencil_state(DepthStencilStateDescription()),
+  framebuffer_bound(false)
 {
 	check_opengl_version();
 	max_texture_coords = get_max_texture_coords();
@@ -239,7 +240,14 @@ Size GL1GraphicContextProvider::get_display_window_size() const
 
 void GL1GraphicContextProvider::set_active() const
 {
-	OpenGL::set_active(this);
+	if (framebuffer_bound)
+	{
+		framebuffer_provider->set_active();
+	}
+	else
+	{
+		OpenGL::set_active(this);
+	}
 }
 
 OcclusionQueryProvider *GL1GraphicContextProvider::alloc_occlusion_query()
@@ -264,7 +272,7 @@ TextureProvider *GL1GraphicContextProvider::alloc_texture(TextureDimensions text
 
 FrameBufferProvider *GL1GraphicContextProvider::alloc_frame_buffer()
 {
-	throw Exception("FrameBuffer emulation using pbuffers are no longer supported");
+	return new GL1FrameBufferProvider(this);
 }
 
 RenderBufferProvider *GL1GraphicContextProvider::alloc_render_buffer()
@@ -407,7 +415,8 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 
 	PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
 	set_active();
-	glReadBuffer(GL_BACK);
+	if (!framebuffer_bound)
+		glReadBuffer(GL_BACK);
 
 	Size display_size = get_display_window_size();
 
@@ -514,10 +523,23 @@ bool GL1GraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb)
 
 void GL1GraphicContextProvider::set_frame_buffer(const FrameBuffer &w_buffer, const FrameBuffer &r_buffer)
 {
+	framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get_provider());
+	framebuffer_provider->set_active();
+	framebuffer_provider->start();
+
+	framebuffer_bound = true;
 }
 
 void GL1GraphicContextProvider::reset_frame_buffer()
 {
+	if (framebuffer_bound)
+	{
+		framebuffer_bound = false;
+
+		framebuffer_provider->set_active();
+		framebuffer_provider->stop();
+		OpenGL::set_active(this);
+	}
 }
 
 void GL1GraphicContextProvider::set_program_object(StandardProgram standard_program)
