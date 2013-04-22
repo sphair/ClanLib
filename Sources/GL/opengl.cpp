@@ -1144,7 +1144,13 @@ GLFunctions *cl_setup_binds()
 
 	// For Legacy OpenGL (For GL1 target)
 	functions->clientActiveTexture = (GLFunctions::ptr_glClientActiveTextureARB) cl_get_proc_address_extension("glClientActiveTextureARB");
-
+#ifdef WIN32
+	functions->wglCreatePbufferARB = (GLFunctions::ptr_wglCreatePbufferARB) cl_get_proc_address_extension("wglCreatePbufferARB");
+	functions->wglGetPbufferDCARB = (GLFunctions::ptr_wglGetPbufferDCARB) cl_get_proc_address_extension("wglGetPbufferDCARB");
+	functions->wglReleasePbufferDCARB = (GLFunctions::ptr_wglReleasePbufferDCARB) cl_get_proc_address_extension("wglReleasePbufferDCARB");
+	functions->wglDestroyPbufferARB = (GLFunctions::ptr_wglDestroyPbufferARB) cl_get_proc_address_extension("wglDestroyPbufferARB");
+	functions->wglQueryPbufferARB = (GLFunctions::ptr_wglQueryPbufferARB) cl_get_proc_address_extension("wglQueryPbufferARB");
+#endif
 	return functions;
 }
 
