@@ -707,7 +707,7 @@ PixelBuffer D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 		D3D11_TEXTURE1D_DESC texture_desc;
 		data_handles.get_texture_1d()->GetDesc(&texture_desc);
 
-		width = max(texture_desc.Width >> level, 1);
+		width = max(texture_desc.Width >> level, (UINT)1);
 		height = 1;
 		format = texture_desc.Format;
 	}
@@ -716,8 +716,8 @@ PixelBuffer D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 		D3D11_TEXTURE2D_DESC texture_desc;
 		data_handles.get_texture_2d()->GetDesc(&texture_desc);
 
-		width = max(texture_desc.Width >> level, 1);
-		height = max(texture_desc.Height >> level, 1);
+		width = max(texture_desc.Width >> level, (UINT)1);
+		height = max(texture_desc.Height >> level, (UINT)1);
 		format = texture_desc.Format;
 	}
 	else
@@ -725,8 +725,8 @@ PixelBuffer D3DTextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 		D3D11_TEXTURE3D_DESC texture_desc;
 		data_handles.get_texture_3d()->GetDesc(&texture_desc);
 
-		width = max(texture_desc.Width >> level, 1);
-		height = max(texture_desc.Height >> level, 1);
+		width = max(texture_desc.Width >> level, (UINT)1);
+		height = max(texture_desc.Height >> level, (UINT)1);
 		format = texture_desc.Format;
 	}
 
@@ -763,7 +763,7 @@ void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	{
 		D3D11_TEXTURE1D_DESC texture_desc;
 		data_handles.get_texture_1d()->GetDesc(&texture_desc);
-		texture_width = max(texture_desc.Width >> level, 1);
+		texture_width = max(texture_desc.Width >> level, (UINT)1);
 		texture_height = 1;
 		format = texture_desc.Format;
 		mip_levels = texture_desc.MipLevels;
@@ -772,8 +772,8 @@ void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	{
 		D3D11_TEXTURE2D_DESC texture_desc;
 		data_handles.get_texture_2d()->GetDesc(&texture_desc);
-		texture_width = max(texture_desc.Width >> level, 1);
-		texture_height = max(texture_desc.Height >> level, 1);
+		texture_width = max(texture_desc.Width >> level, (UINT)1);
+		texture_height = max(texture_desc.Height >> level, (UINT)1);
 		format = texture_desc.Format;
 		mip_levels = texture_desc.MipLevels;
 	}
@@ -781,8 +781,8 @@ void D3DTextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	{
 		D3D11_TEXTURE3D_DESC texture_desc;
 		data_handles.get_texture_3d()->GetDesc(&texture_desc);
-		texture_width = max(texture_desc.Width >> level, 1);
-		texture_height = max(texture_desc.Height >> level, 1);
+		texture_width = max(texture_desc.Width >> level, (UINT)1);
+		texture_height = max(texture_desc.Height >> level, (UINT)1);
 		format = texture_desc.Format;
 		mip_levels = texture_desc.MipLevels;
 		z = slice;

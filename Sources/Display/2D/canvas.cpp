@@ -520,7 +520,7 @@ void Canvas::fill_circle(const Pointf &center, const Pointf &centergradient, flo
 	float offset_x = 0;
 	float offset_y = 0;
 
-	float rotationcount = max(5, (radius - 3));
+	float rotationcount = max(5.0f, (radius - 3.0f));
 	float halfpi = 1.5707963267948966192313216916398f;
 	float turn = halfpi / rotationcount;
 

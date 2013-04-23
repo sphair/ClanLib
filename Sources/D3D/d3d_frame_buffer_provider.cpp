@@ -64,8 +64,8 @@ Size D3DFrameBufferProvider::get_size() const
 		else if (!color_buffers[i].render_buffer.is_null())
 			color_buffers[i].get_render_buffer_provider()->get_texture(device)->GetDesc(&desc);
 
-		size.width = max(desc.Width, size.width);
-		size.height = max(desc.Height, size.height);
+		size.width = max(desc.Width, UINT(size.width));
+		size.height = max(desc.Height, UINT(size.height));
 	}
 	return size;
 }
@@ -111,49 +111,49 @@ std::vector<ID3D11RenderTargetView*> D3DFrameBufferProvider::get_views(ID3D11Dep
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(render_buffer);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level, array_index);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const Texture3D &texture, int depth, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level, depth);
 }
 
 void D3DFrameBufferProvider::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer(texture, level, 0, subtype);
 }
 
 void D3DFrameBufferProvider::detach_color(int attachment_index)
 {
-	color_buffers.resize(max(attachment_index + 1, color_buffers.size()));
+	color_buffers.resize(max((size_t)attachment_index + 1, color_buffers.size()));
 	color_buffers[attachment_index] = AttachedBuffer();
 }
 

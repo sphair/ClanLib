@@ -30,6 +30,7 @@
 #include "API/Physics3D/physics3d_ray_test.h"
 #include "API/Physics3D/physics3d_object.h"
 #include "API/Physics3D/physics3d_world.h"
+#include "API/Core/Math/cl_math.h"
 #include "physics3d_ray_test_impl.h"
 #include "physics3d_world_impl.h"
 #include "physics3d_object_impl.h"

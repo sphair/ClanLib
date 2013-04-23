@@ -3,6 +3,7 @@
 #include "API/Sound/AudioWorld/audio_world.h"
 #include "API/Sound/AudioWorld/audio_object.h"
 #include "API/Sound/soundbuffer.h"
+#include "API/Core/Math/cl_math.h"
 #include "audio_world_impl.h"
 #include "audio_object_impl.h"
 

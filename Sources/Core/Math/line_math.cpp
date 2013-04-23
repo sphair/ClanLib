@@ -31,6 +31,7 @@
 #include "Core/precomp.h"
 #include "API/Core/Math/angle.h"
 #include "API/Core/Math/line_math.h"
+#include "API/Core/Math/cl_math.h"
 
 namespace clan
 {

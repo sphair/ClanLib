@@ -32,6 +32,7 @@
 #include "API/Physics3D/physics3d_shape.h"
 #include "API/Physics3D/physics3d_world.h"
 #include "API/Core/System/exception.h"
+#include "API/Core/Math/cl_math.h"
 #include "physics3d_sweep_test_impl.h"
 #include "physics3d_world_impl.h"
 #include "physics3d_shape_impl.h"
