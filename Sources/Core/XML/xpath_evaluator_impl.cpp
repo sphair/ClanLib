@@ -2042,10 +2042,10 @@ XPathObject XPathEvaluator_Impl::function_substring(const XPathNodeSet& context,
 		throw XPathException("Function substring(string, number, number?) expects 2 or 3 parameters");
 
 	std::string str = string(parameters[0]).get_string();
-	std::string::size_type pos = max(0, static_cast<std::string::size_type>(number(parameters[1]).get_number()+0.5)-1);
+	std::string::size_type pos = max(std::string::size_type(0), static_cast<std::string::size_type>(number(parameters[1]).get_number()+0.5)-1);
 	std::string::size_type num = std::string::npos;
 	if (parameters.size() == 3)
-		num = max(0, static_cast<std::string::size_type>(number(parameters[2]).get_number() + 0.5));
+		num = max(std::string::size_type(0), static_cast<std::string::size_type>(number(parameters[2]).get_number() + 0.5));
 
 	return XPathObject(str.substr(pos, num));
 }

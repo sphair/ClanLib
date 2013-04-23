@@ -455,7 +455,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					if (cursor_pos.y > 0)
 					{
 						cursor_pos.y--;
-						cursor_pos.x = min(lines[cursor_pos.y].text.size(), cursor_pos.x);
+						cursor_pos.x = min(lines[cursor_pos.y].text.size(), (size_t)cursor_pos.x);
 					}
 
 					if (e.shift)
@@ -482,7 +482,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 					if (cursor_pos.y < lines.size() - 1)
 					{
 						cursor_pos.y++;
-						cursor_pos.x = min(lines[cursor_pos.y].text.size(), cursor_pos.x);
+						cursor_pos.x = min(lines[cursor_pos.y].text.size(), (size_t)cursor_pos.x);
 					}
 
 					if (e.shift)
@@ -785,7 +785,7 @@ void TextEdit_Impl::update_vertical_scroll()
 	vert_scrollbar->set_geometry(rect);
 
 	int total_height = get_total_line_height();
-	int height_per_line = max(1,total_height / max(1,lines.size()));
+	int height_per_line = max((size_t)1,total_height / max((size_t)1,lines.size()));
 	bool visible = total_height > content_rect.get_height();
 	vert_scrollbar->calculate_ranges(content_rect.get_height() / height_per_line, total_height/height_per_line);
 	vert_scrollbar->set_line_step(1);
@@ -800,7 +800,7 @@ void TextEdit_Impl::update_vertical_scroll()
 void TextEdit_Impl::move_vertical_scroll()
 {
 	int total_height = get_total_line_height();
-	int height_per_line = max(1,total_height / max(1,lines.size()));
+	int height_per_line = max((size_t)1,total_height / max((size_t)1,lines.size()));
 	int lines_fit = content_rect.get_height() / height_per_line;
 	if(cursor_pos.y >= vert_scrollbar->get_position() + lines_fit)
 	{
@@ -1100,7 +1100,7 @@ std::string::size_type TextEdit_Impl::to_offset(Vec2i pos) const
 		{
 			offset += lines[line].text.size() + 1;
 		}
-		return offset + min(pos.x, lines[pos.y].text.size());
+		return offset + min((size_t)pos.x, lines[pos.y].text.size());
 	}
 	else
 	{

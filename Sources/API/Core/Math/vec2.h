@@ -34,10 +34,10 @@
 #pragma once
 
 #include "../api_core.h"
-#include "cl_math.h"
 #include "vec3.h"
 #include "vec4.h"
 #include "origin.h"
+#include <cmath>
 
 namespace clan
 {
@@ -324,55 +324,55 @@ Vec2<Type> operator * (const Mat2<Type>& matrix, const Vec2<Type>& v)
 //////////////////////////////////////////////////////////////////////////
 
 template<>
-inline Vec2<unsigned char>::Vec2(const Vec2<float> &copy) { x = (unsigned char) floor(copy.x +0.5f); y = (unsigned char) floor(copy.y + 0.5f); }
+inline Vec2<unsigned char>::Vec2(const Vec2<float> &copy) { x = (unsigned char) std::floor(copy.x +0.5f); y = (unsigned char) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<unsigned char>::Vec2(const Vec2<double> &copy) { x = (unsigned char) floor(copy.x+0.5); y = (unsigned char) floor(copy.y+0.5); }
+inline Vec2<unsigned char>::Vec2(const Vec2<double> &copy) { x = (unsigned char) std::floor(copy.x+0.5); y = (unsigned char) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<unsigned char>::Vec2(const Vec2<int> &copy) { x = (unsigned char) copy.x; y = (unsigned char) copy.y; }
 
 template<>
-inline Vec2<char>::Vec2(const Vec2<float> &copy) { x = (char) floor(copy.x +0.5f); y = (char) floor(copy.y + 0.5f); }
+inline Vec2<char>::Vec2(const Vec2<float> &copy) { x = (char) std::floor(copy.x +0.5f); y = (char) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<char>::Vec2(const Vec2<double> &copy) { x = (char) floor(copy.x+0.5); y = (char) floor(copy.y+0.5); }
+inline Vec2<char>::Vec2(const Vec2<double> &copy) { x = (char) std::floor(copy.x+0.5); y = (char) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<char>::Vec2(const Vec2<int> &copy) { x = (char) copy.x; y = (char) copy.y; }
 
 template<>
-inline Vec2<unsigned short>::Vec2(const Vec2<float> &copy) { x = (unsigned short) floor(copy.x +0.5f); y = (unsigned short) floor(copy.y + 0.5f); }
+inline Vec2<unsigned short>::Vec2(const Vec2<float> &copy) { x = (unsigned short) std::floor(copy.x +0.5f); y = (unsigned short) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<unsigned short>::Vec2(const Vec2<double> &copy) { x = (unsigned short) floor(copy.x+0.5); y = (unsigned short) floor(copy.y+0.5); }
+inline Vec2<unsigned short>::Vec2(const Vec2<double> &copy) { x = (unsigned short) std::floor(copy.x+0.5); y = (unsigned short) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<unsigned short>::Vec2(const Vec2<int> &copy) { x = (unsigned short) copy.x; y = (unsigned short) copy.y; }
 
 template<>
-inline Vec2<short>::Vec2(const Vec2<float> &copy) { x = (short) floor(copy.x +0.5f); y = (short) floor(copy.y + 0.5f); }
+inline Vec2<short>::Vec2(const Vec2<float> &copy) { x = (short) std::floor(copy.x +0.5f); y = (short) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<short>::Vec2(const Vec2<double> &copy) { x = (short) floor(copy.x+0.5); y = (short) floor(copy.y+0.5); }
+inline Vec2<short>::Vec2(const Vec2<double> &copy) { x = (short) std::floor(copy.x+0.5); y = (short) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<short>::Vec2(const Vec2<int> &copy) { x = (short) copy.x; y = (short) copy.y; }
 
 template<>
-inline Vec2<int>::Vec2(const Vec2<float> &copy) { x = (int) floor(copy.x +0.5f); y = (int) floor(copy.y + 0.5f); }
+inline Vec2<int>::Vec2(const Vec2<float> &copy) { x = (int) std::floor(copy.x +0.5f); y = (int) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<int>::Vec2(const Vec2<double> &copy) { x = (int) floor(copy.x+0.5); y = (int) floor(copy.y+0.5); }
+inline Vec2<int>::Vec2(const Vec2<double> &copy) { x = (int) std::floor(copy.x+0.5); y = (int) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<int>::Vec2(const Vec2<int> &copy) { x = (int) copy.x; y = (int) copy.y; }
 
 template<>
-inline Vec2<unsigned int>::Vec2(const Vec2<float> &copy) { x = (unsigned int) floor(copy.x +0.5f); y = (unsigned int) floor(copy.y + 0.5f); }
+inline Vec2<unsigned int>::Vec2(const Vec2<float> &copy) { x = (unsigned int) std::floor(copy.x +0.5f); y = (unsigned int) std::floor(copy.y + 0.5f); }
 
 template<>
-inline Vec2<unsigned int>::Vec2(const Vec2<double> &copy) { x = (unsigned int) floor(copy.x+0.5); y = (unsigned int) floor(copy.y+0.5); }
+inline Vec2<unsigned int>::Vec2(const Vec2<double> &copy) { x = (unsigned int) std::floor(copy.x+0.5); y = (unsigned int) std::floor(copy.y+0.5); }
 
 template<>
 inline Vec2<unsigned int>::Vec2(const Vec2<int> &copy) { x = (unsigned int) copy.x; y = (unsigned int) copy.y; }

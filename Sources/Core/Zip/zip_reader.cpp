@@ -169,7 +169,7 @@ byte64 ZipReader_Impl::deflate_read(void *data, byte64 size, bool read_all)
 			int received_input = 0;
 			while (received_input < 16*1024)
 			{
-				received_input += input.receive(zbuffer, int(min(16*1024, local_header.compressed_size - compressed_pos)), true);
+				received_input += input.receive(zbuffer, int(min((byte64)16*1024, local_header.compressed_size - compressed_pos)), true);
 				if (compressed_pos + received_input == local_header.compressed_size) break;
 			}
 			compressed_pos += received_input;
