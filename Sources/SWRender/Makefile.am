@@ -9,7 +9,6 @@ X11/Stub/swr_graphic_context.cpp \
 X11/Stub/swr_target.cpp
 else
 libclan30SWRender_la_SOURCES += \
-swr_input_device_provider.cpp \
 swr_pixel_buffer_provider.cpp \
 swr_transfer_buffer_provider.cpp \
 swr_vertex_array_buffer_provider.cpp \
