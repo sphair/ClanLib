@@ -53,6 +53,7 @@ PBuffer_GL1_Impl::~PBuffer_GL1_Impl()
 void PBuffer_GL1_Impl::reset()
 {
 	OpenGL::set_active(gc_provider);
+	OpenGL::remove_active(this);
 }
 
 void PBuffer_GL1_Impl::create(OpenGLWindowProvider &window_provider, const Size &size)
