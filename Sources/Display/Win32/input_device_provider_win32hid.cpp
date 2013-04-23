@@ -140,6 +140,14 @@ std::vector<int> InputDeviceProvider_Win32Hid::get_axis_ids() const
 	return axis_ids;
 }
 
+int InputDeviceProvider_Win32Hid::get_hat(int id) const
+{
+	if (id >= 0 && id < hat_names.size())
+		return hat_values[id];
+	else
+		return -1;
+}
+
 int InputDeviceProvider_Win32Hid::get_button_count() const
 {
 	return buttons.size();
@@ -250,7 +258,7 @@ void InputDeviceProvider_Win32Hid::find_value_names(HANDLE device, void *prepars
 		{
 			for (Hid::USAGE usage = value_caps[collection].Range.UsageMin; usage <= value_caps[collection].Range.UsageMax; usage++)
 			{
-				if (usage < 0x30 || usage >= 0x39)
+				if (usage < 0x30 || usage > 0x39)
 				{
 					if (value_caps[collection].LogicalMin == 0 && value_caps[collection].LogicalMax == 3 && value_caps[collection].HasNull) // Four direction hat
 					{
@@ -361,13 +369,13 @@ void InputDeviceProvider_Win32Hid::update_values(void *preparse_data, void *repo
 				{
 					std::map<Hid::USAGE, int>::iterator it = usage_to_hat_index.find(usage);
 					if (it != usage_to_hat_index.end())
-						hat_values[it->second] = (value == -1) ? -1 : (value * 360 / 4);
+						hat_values[it->second] = (value == 8) ? -1 : (value * 360 / 4);
 				}
 				else if (value_caps[collection].LogicalMin == 0 && value_caps[collection].LogicalMax == 7 && value_caps[collection].HasNull) // Eight direction hat
 				{
 					std::map<Hid::USAGE, int>::iterator it = usage_to_hat_index.find(usage);
 					if (it != usage_to_hat_index.end())
-						hat_values[it->second] = (value == -1) ? -1 : (value * 360 / 8);
+						hat_values[it->second] = (value == 8) ? -1 : (value * 360 / 8);
 				}
 				else
 				{

@@ -443,6 +443,14 @@ std::vector<int> InputDevice::get_axis_ids() const
 		return std::vector<int>();
 }
 
+int InputDevice::get_hat(int index) const
+{
+	if (impl->provider)
+		return impl->provider->get_hat(index);
+	else
+		return 0;
+}
+
 int InputDevice::get_button_count() const
 {
 	if (impl->provider)

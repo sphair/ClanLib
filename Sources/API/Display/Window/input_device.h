@@ -133,6 +133,10 @@ public:
 	/// \brief Returns the number of axes available on this device.
 	std::vector<int> get_axis_ids() const;
 
+	/// \brief Returns the current position of a joystick hat.
+	/// \return Hat direction in degrees (0-360), or -1 if the hat is centered.
+	int get_hat(int index) const;
+
 	/// \brief Returns the number of buttons available on this device.
 	/** <p>If used on a keyboard, this function returns -1.</p>*/
 	int get_button_count() const;
