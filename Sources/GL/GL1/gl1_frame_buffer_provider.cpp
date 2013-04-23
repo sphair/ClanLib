@@ -157,15 +157,9 @@ void GL1FrameBufferProvider::set_bind_target( FrameBufferBindTarget target )
 // GL1FrameBufferProvider Implementation:
 void GL1FrameBufferProvider::on_dispose()
 {
-//	std::unique_ptr<MutexSection> mutex_section;
-//	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
-//	GL1GraphicContextProvider *gc_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
-//	if (gc_provider)
-//	{
-//		stop();
-//	}
 	stop();
 	pbuffer = PBuffer_GL1();
+	texture_pbuffer_map.clear();
 
 	gc_provider->remove_disposable(this);
 

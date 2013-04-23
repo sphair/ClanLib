@@ -129,6 +129,7 @@ private:
 
 	friend class GL1GraphicContextProvider;
 	friend class GL3GraphicContextProvider;
+	friend class PBuffer_GL1_Impl;
 
 };
 
