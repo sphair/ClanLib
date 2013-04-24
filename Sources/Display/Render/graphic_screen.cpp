@@ -59,6 +59,8 @@ void GraphicScreen::set_active(GraphicContext_State *state)
 
 		current = state;
 
+		set_active_frame_buffer(state);	// Set the framebuffer first, this is more friendly for the GL1 target, so only the pbuffer context is set (depending on the application code flow)
+
 		active_state.rasterizer_state = state->rasterizer_state;
 		active_state.blend_state = state->blend_state;
 		active_state.blend_color = state->blend_color;
@@ -73,7 +75,6 @@ void GraphicScreen::set_active(GraphicContext_State *state)
 		set_active_buffer_control(state);
 		set_active_polygon_rasterizer(state);
 		set_active_depth_range(state);
-		set_active_frame_buffer(state);
 		set_active_textures(state);
 		set_active_image_textures(state);
 		set_active_scissor(state);
