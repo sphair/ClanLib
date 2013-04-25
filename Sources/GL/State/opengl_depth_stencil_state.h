@@ -41,10 +41,19 @@ namespace clan
 class OpenGLDepthStencilStateProvider : public DepthStencilStateProvider
 {
 public:
-	OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc);
+	OpenGLDepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) {}
 	virtual ~OpenGLDepthStencilStateProvider() {};
 
-	void set(const OpenGLDepthStencilStateProvider *new_state);
+	DepthStencilStateDescription desc;
+};
+
+class OpenGLDepthStencilState
+{
+public:
+	OpenGLDepthStencilState();
+
+	void set(const DepthStencilStateDescription &new_state);
+	void set(const OpenGLDepthStencilState &new_state);
 	void apply();
 
 private:

@@ -80,6 +80,8 @@ void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1D 
 void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) {}
 void GL1FrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level)
 {
+	throw_if_disposed();
+
 	if(!pbuffer.is_null())
 		sync_texture();
 
@@ -152,6 +154,33 @@ void GL1FrameBufferProvider::detach_depth_stencil() {}
 void GL1FrameBufferProvider::set_bind_target( FrameBufferBindTarget target )
 {
 }
+
+void GL1FrameBufferProvider::set_state(OpenGLBlendState &new_blend)
+{
+	selected_state.blend.set(new_blend);
+	selected_state.blend.apply();
+}
+
+void GL1FrameBufferProvider::set_state(OpenGLRasterizerState &new_rasterizer)
+{
+	selected_state.rasterizer.set(new_rasterizer);
+	selected_state.rasterizer.apply();
+}
+
+void GL1FrameBufferProvider::set_state(OpenGLDepthStencilState &new_depth_stencil)
+{
+	selected_state.depth_stencil.set(new_depth_stencil);
+	selected_state.depth_stencil.apply();
+}
+
+void GL1FrameBufferProvider::set_state(GL1State &new_selected_state)
+{
+	set_state(new_selected_state.blend);
+	set_state(new_selected_state.rasterizer);
+	set_state(new_selected_state.depth_stencil);
+
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // GL1FrameBufferProvider Implementation:

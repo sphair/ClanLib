@@ -64,6 +64,22 @@ class DisposableObject;
 class GL1ProgramObjectProvider;
 class OpenGLWindowProvider;
 
+class GL1State
+{
+public:
+	GL1State() { }
+	void apply()
+	{
+		blend.apply();
+		rasterizer.apply();
+		depth_stencil.apply();
+	}
+
+	OpenGLBlendState blend;
+	OpenGLRasterizerState rasterizer;
+	OpenGLDepthStencilState depth_stencil;
+};
+
 class GL1GraphicContextProvider : public OpenGLGraphicContextProvider,  public GraphicContextProvider, public DisposableObject
 {
 /// \name Construction
@@ -225,9 +241,7 @@ private:
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
 
-	OpenGLBlendStateProvider selected_blend_state;
-	OpenGLRasterizerStateProvider selected_rasterizer_state;
-	OpenGLDepthStencilStateProvider selected_depth_stencil_state;
+	GL1State selected_state;
 
 	GL1FrameBufferProvider *framebuffer_provider;	// Only valid when framebuffer_bound == true
 	bool framebuffer_bound;
