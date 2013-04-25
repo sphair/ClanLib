@@ -66,14 +66,12 @@ void GameTime::update()
 
 	impl->current_time = System::get_microseconds();
 
-	long long delta_time = impl->current_time - last_time;
-
 	long long ticks_per_microsecond = 1000000 / impl->ticks_per_second;
-	long long current_tick = delta_time / ticks_per_microsecond;
+	long long current_tick = (impl->current_time - impl->start_time) / ticks_per_microsecond;
 
 	impl->ticks_elapsed = current_tick - impl->last_tick;
-	impl->time_elapsed = (float)(delta_time / (double) 1000000);
-	impl->tick_interpolation_time = (float)((delta_time % ticks_per_microsecond) / (double)ticks_per_microsecond);
+	impl->time_elapsed = (float)((impl->current_time - last_time) / (double) 1000000);
+	impl->tick_interpolation_time = (float)(((impl->current_time - impl->start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
 	impl->last_tick = current_tick;
 }
