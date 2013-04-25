@@ -50,6 +50,11 @@ int GameTime::get_ticks_elapsed() const
 	return impl->ticks_elapsed;
 }
 
+float GameTime::get_tick_time_elapsed() const
+{
+	return 1.0f / impl->ticks_per_second;
+}
+
 float GameTime::get_tick_interpolation_time() const
 {
 	return impl->tick_interpolation_time;
