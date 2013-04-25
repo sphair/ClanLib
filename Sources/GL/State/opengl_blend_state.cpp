@@ -35,22 +35,19 @@
 namespace clan
 {
 
-OpenGLBlendStateProvider::OpenGLBlendStateProvider(const BlendStateDescription &desc) 
-	: changed_desc(true), changed_blend_color(true),
-	desc(desc.clone()), blend_color(Colorf::white)
+OpenGLBlendState::OpenGLBlendState() 
+	: changed_desc(true), changed_blend_color(true), blend_color(Colorf::white)
 {
 }
 
-void OpenGLBlendStateProvider::set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color)
+void OpenGLBlendState::set(const BlendStateDescription &new_state, const Vec4f &new_blend_color)
 {
-	if (new_state != this)
+	if (!(new_state == desc))
 	{
-		if (!(new_state->desc == desc))
-		{
-			desc = new_state->desc.clone();
-			changed_desc = true;
-		}
+		desc = new_state.clone();
+		changed_desc = true;
 	}
+
 	if (new_blend_color != blend_color)
 	{
 		blend_color = new_blend_color;
@@ -58,7 +55,13 @@ void OpenGLBlendStateProvider::set(const OpenGLBlendStateProvider *new_state, co
 	}
 }
 
-void OpenGLBlendStateProvider::apply()
+void OpenGLBlendState::set(const OpenGLBlendState &new_state)
+{
+	set(new_state.desc, new_state.blend_color);
+}
+
+
+void OpenGLBlendState::apply()
 {
 	if (changed_desc)
 	{

@@ -81,9 +81,6 @@ GL1GraphicContextProvider::GL1GraphicContextProvider(OpenGLWindowProvider * rend
 : render_window(render_window),
   prim_arrays_set(false), num_set_tex_arrays(0),
   primitives_array_texture_set(false), primitives_array_texindex_set(false), scissor_enabled(false),
-  selected_blend_state(BlendStateDescription()),
-  selected_rasterizer_state(RasterizerStateDescription()),
-  selected_depth_stencil_state(DepthStencilStateDescription()),
   framebuffer_bound(false)
 {
 	check_opengl_version();
@@ -367,11 +364,11 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 		OpenGLRasterizerStateProvider *gl1_state = static_cast<OpenGLRasterizerStateProvider*>(state);
 		if (gl1_state)
 		{
+			selected_state.rasterizer.set(gl1_state->desc);
 			set_active();
-			selected_rasterizer_state.set(gl1_state);
-			selected_rasterizer_state.apply();
-
-			scissor_enabled = gl1_state->get_enable_scissor();
+			framebuffer_bound ? framebuffer_provider->set_state(selected_state.rasterizer) : selected_state.rasterizer.apply();
+	
+			scissor_enabled = gl1_state->desc.get_enable_scissor();
 		}
 
 	}
@@ -384,9 +381,9 @@ void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 		OpenGLBlendStateProvider *gl1_state = static_cast<OpenGLBlendStateProvider*>(state);
 		if (gl1_state)
 		{
+			selected_state.blend.set(gl1_state->desc, blend_color);
 			set_active();
-			selected_blend_state.set(gl1_state, blend_color);
-			selected_blend_state.apply();
+			framebuffer_bound ? framebuffer_provider->set_state(selected_state.blend) : selected_state.blend.apply();
 		}
 	}
 }
@@ -398,9 +395,9 @@ void GL1GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 		OpenGLDepthStencilStateProvider *gl1_state = static_cast<OpenGLDepthStencilStateProvider*>(state);
 		if (gl1_state)
 		{
+			selected_state.depth_stencil.set(gl1_state->desc);
 			set_active();
-			selected_depth_stencil_state.set(gl1_state);
-			selected_depth_stencil_state.apply();
+			framebuffer_bound ? framebuffer_provider->set_state(selected_state.depth_stencil) : selected_state.depth_stencil.apply();
 		}
 	}
 }
@@ -525,6 +522,7 @@ void GL1GraphicContextProvider::set_frame_buffer(const FrameBuffer &w_buffer, co
 {
 	framebuffer_provider = dynamic_cast<GL1FrameBufferProvider *>(w_buffer.get_provider());
 	framebuffer_provider->set_active();
+	framebuffer_provider->set_state(selected_state);
 	framebuffer_provider->start();
 
 	framebuffer_bound = true;
@@ -539,6 +537,7 @@ void GL1GraphicContextProvider::reset_frame_buffer()
 		framebuffer_provider->set_active();
 		framebuffer_provider->stop();
 		OpenGL::set_active(this);
+		selected_state.apply();
 	}
 }
 

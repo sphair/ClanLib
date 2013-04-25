@@ -35,24 +35,25 @@
 namespace clan
 {
 
-OpenGLRasterizerStateProvider::OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc) 
-	: changed_desc(true), desc(desc.clone())
+OpenGLRasterizerState::OpenGLRasterizerState() 
+	: changed_desc(true)
 {
 }
 
-void OpenGLRasterizerStateProvider::set(const OpenGLRasterizerStateProvider *new_state)
+void OpenGLRasterizerState::set(const RasterizerStateDescription &new_state)
 {
-	if (new_state != this)
+	if (!(new_state == desc))
 	{
-		if (!(new_state->desc == desc))
-		{
-			desc = new_state->desc.clone();
-			changed_desc = true;
-		}
+		desc = new_state.clone();
+		changed_desc = true;
 	}
 }
+void OpenGLRasterizerState::set(const OpenGLRasterizerState &new_state)
+{
+	set(new_state.desc);
+}
 
-void OpenGLRasterizerStateProvider::apply()
+void OpenGLRasterizerState::apply()
 {
 	if (changed_desc)
 	{

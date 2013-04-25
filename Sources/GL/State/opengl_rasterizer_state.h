@@ -37,16 +37,23 @@
 
 namespace clan
 {
-
 class OpenGLRasterizerStateProvider : public RasterizerStateProvider
 {
 public:
-	OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc);
+	OpenGLRasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) {}
 	virtual ~OpenGLRasterizerStateProvider() {};
 
-	bool get_enable_scissor() const { return desc.get_enable_scissor();}
+	RasterizerStateDescription desc;
 
-	void set(const OpenGLRasterizerStateProvider *new_state);
+};
+	
+class OpenGLRasterizerState
+{
+public:
+	OpenGLRasterizerState();
+
+	void set(const RasterizerStateDescription &new_state);
+	void set(const OpenGLRasterizerState &new_state);
 	void apply();
 
 private:

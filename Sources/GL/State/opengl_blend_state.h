@@ -41,10 +41,20 @@ namespace clan
 class OpenGLBlendStateProvider : public BlendStateProvider
 {
 public:
-	OpenGLBlendStateProvider(const BlendStateDescription &desc);
+	OpenGLBlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) {}
 	virtual ~OpenGLBlendStateProvider() {};
 
-	void set(const OpenGLBlendStateProvider *new_state, const Vec4f &new_blend_color);
+	BlendStateDescription desc;
+
+};
+
+class OpenGLBlendState
+{
+public:
+	OpenGLBlendState();
+
+	void set(const BlendStateDescription &new_state, const Vec4f &new_blend_color);
+	void set(const OpenGLBlendState &new_state);
 	void apply();
 
 private:

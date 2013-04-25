@@ -97,6 +97,11 @@ public:
 	void stop();
 	void start();
 
+	void set_state(OpenGLBlendState &new_blend);
+	void set_state(OpenGLRasterizerState &new_rasterizer);
+	void set_state(OpenGLDepthStencilState &new_depth_stencil);
+	void set_state(GL1State &new_selected_state);
+
 /// \}
 /// \name Implementation
 /// \{
@@ -120,6 +125,8 @@ private:
 	PBuffer_GL1 pbuffer;
 	Texture2D selected_surface;
 	GL1TextureProvider *selected_texture_provider;
+
+	GL1State selected_state;
 
 	GL1GraphicContextProvider *gc_provider;
 
