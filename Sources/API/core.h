@@ -89,6 +89,7 @@
 #include "Core/System/registry_key.h"
 #include "Core/System/interlocked_variable.h"
 #include "Core/System/userdata.h"
+#include "Core/System/game_time.h"
 #include "Core/ErrorReporting/crash_reporter.h"
 #include "Core/ErrorReporting/detect_hang.h"
 #include "Core/ErrorReporting/exception_dialog.h"
