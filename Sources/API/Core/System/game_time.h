@@ -59,6 +59,9 @@ public:
 	/// \brief Returns the number of ticks that elapsed since last update.
 	int get_ticks_elapsed() const;
 
+	/// \brief Returns the time elapsed per tick.
+	float get_tick_time_elapsed() const;
+
 	/// \brief Returns the current time between ticks as a normalized number.
 	///
 	/// If the current time is half-way between two tick updates this function returns 0.5,
