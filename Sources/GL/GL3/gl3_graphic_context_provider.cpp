@@ -364,7 +364,7 @@ std::shared_ptr<RasterizerStateProvider> GL3GraphicContextProvider::create_raste
 	}
 	else
 	{
-		std::shared_ptr<RasterizerStateProvider> state(new GL3RasterizerStateProvider(desc));
+		std::shared_ptr<RasterizerStateProvider> state(new OpenGLRasterizerStateProvider(desc));
 		rasterizer_states[desc.clone()] = state;
 		return state;
 	}
@@ -379,7 +379,7 @@ std::shared_ptr<BlendStateProvider> GL3GraphicContextProvider::create_blend_stat
 	}
 	else
 	{
-		std::shared_ptr<BlendStateProvider> state(new GL3BlendStateProvider(desc));
+		std::shared_ptr<BlendStateProvider> state(new OpenGLBlendStateProvider(desc));
 		blend_states[desc.clone()] = state;
 		return state;
 	}
@@ -394,7 +394,7 @@ std::shared_ptr<DepthStencilStateProvider> GL3GraphicContextProvider::create_dep
 	}
 	else
 	{
-		std::shared_ptr<DepthStencilStateProvider> state(new GL3DepthStencilStateProvider(desc));
+		std::shared_ptr<DepthStencilStateProvider> state(new OpenGLDepthStencilStateProvider(desc));
 		depth_stencil_states[desc.clone()] = state;
 		return state;
 	}
@@ -404,32 +404,14 @@ void GL3GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 {
 	if (state)
 	{
-		GL3RasterizerStateProvider *gl_state = static_cast<GL3RasterizerStateProvider*>(state);
-
-		OpenGL::set_active(this);
-		gl_state->desc.get_culled() ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
-		gl_state->desc.get_enable_line_antialiasing() ?	glEnable(GL_LINE_SMOOTH) : glDisable(GL_LINE_SMOOTH);
-
-		switch (gl_state->desc.get_face_cull_mode())
+		OpenGLRasterizerStateProvider *gl3_state = static_cast<OpenGLRasterizerStateProvider*>(state);
+		if (gl3_state)
 		{
-			case cull_front:
-				glCullFace(GL_FRONT);
-				break;
-			case cull_back:
-				glCullFace(GL_BACK);
-				break;
-			case cull_front_and_back:
-				glCullFace(GL_FRONT_AND_BACK);
-				break;
+			selected_rasterizer_state.set(gl3_state->desc);
+			OpenGL::set_active(this);
+			selected_rasterizer_state.apply();
+			scissor_enabled = gl3_state->desc.get_enable_scissor();
 		}
-		if (glPolygonMode)
-	        glPolygonMode(GL_FRONT_AND_BACK, OpenGL::to_enum(gl_state->desc.get_face_fill_mode()));
-
-		gl_state->desc.get_front_face() == face_counter_clockwise ? glFrontFace(GL_CCW) : glFrontFace(GL_CW);
-		scissor_enabled = gl_state->desc.get_enable_scissor();
-		if (!scissor_enabled)
-			glDisable(GL_SCISSOR_TEST);
-
 	}
 }
 
@@ -437,40 +419,13 @@ void GL3GraphicContextProvider::set_blend_state(BlendStateProvider *state, const
 {
 	if (state)
 	{
-		GL3BlendStateProvider *gl_state = static_cast<GL3BlendStateProvider*>(state);
-
-		BlendEquation equation_color, equation_alpha;
-		BlendFunc src, dest, src_alpha, dest_alpha;
-		gl_state->desc.get_blend_equation(equation_color, equation_alpha);
-		gl_state->desc.get_blend_function(src, dest, src_alpha, dest_alpha);
-
-		OpenGL::set_active(this);
-		bool red, green, blue, alpha;
-		gl_state->desc.get_color_write(red, green, blue, alpha);
-		glColorMask(red,green,blue,alpha);
-
-		gl_state->desc.is_blending_enabled() ? glEnable(GL_BLEND) :	glDisable(GL_BLEND);
-
-		glBlendColor(blend_color.r, blend_color.g, blend_color.b, blend_color.a);
-
-		if (equation_color == equation_alpha)
+		OpenGLBlendStateProvider *gl3_state = static_cast<OpenGLBlendStateProvider*>(state);
+		if (gl3_state)
 		{
-			glBlendEquation(OpenGL::to_enum(equation_color));
+			selected_blend_state.set(gl3_state->desc, blend_color);
+			OpenGL::set_active(this);
+			selected_blend_state.apply();
 		}
-		else
-		{
-			glBlendEquationSeparate( OpenGL::to_enum(equation_color), OpenGL::to_enum(equation_alpha) );
-		}
-
-		if( src == src_alpha && dest == dest_alpha )
-		{
-			glBlendFunc(OpenGL::to_enum(src), OpenGL::to_enum(dest));
-		}
-		else
-		{
-			glBlendFuncSeparate( OpenGL::to_enum(src), OpenGL::to_enum(dest), OpenGL::to_enum(src_alpha), OpenGL::to_enum(dest_alpha) );
-		}
-
 	}
 }
 
@@ -478,34 +433,13 @@ void GL3GraphicContextProvider::set_depth_stencil_state(DepthStencilStateProvide
 {
 	if (state)
 	{
-		GL3DepthStencilStateProvider *gl_state = static_cast<GL3DepthStencilStateProvider*>(state);
-
-		CompareFunction front; int front_ref; int front_mask;
-		CompareFunction back; int back_ref; int back_mask;
-		unsigned char front_facing_mask, back_facing_mask;
-		StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
-		StencilOp fail_back, pass_depth_fail_back, pass_depth_pass_back;
-		gl_state->desc.get_stencil_compare_front(front, front_ref, front_mask);
-		gl_state->desc.get_stencil_compare_back(back, back_ref, back_mask);
-		gl_state->desc.get_stencil_write_mask(front_facing_mask, back_facing_mask);
-		gl_state->desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
-		gl_state->desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
-
-		OpenGL::set_active(this);
-		gl_state->desc.is_stencil_test_enabled() ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
-
-		glStencilFuncSeparate(GL_FRONT, OpenGL::to_enum(front), front_ref, front_mask);
-		glStencilFuncSeparate(GL_BACK, OpenGL::to_enum(back), back_ref, back_mask);
-		glStencilMaskSeparate( GL_FRONT, front_facing_mask );
-		glStencilMaskSeparate( GL_BACK, back_facing_mask );
-
-		glStencilOpSeparate(GL_FRONT, OpenGL::to_enum(fail_front), OpenGL::to_enum(pass_depth_fail_front), OpenGL::to_enum(pass_depth_pass_front));
-		glStencilOpSeparate(GL_BACK, OpenGL::to_enum(fail_back), OpenGL::to_enum(pass_depth_fail_back), OpenGL::to_enum(pass_depth_pass_back));
-
-		gl_state->desc.is_depth_test_enabled() ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
-		glDepthMask(gl_state->desc.is_depth_write_enabled() ? 1 : 0);
-		glDepthFunc(OpenGL::to_enum(gl_state->desc.get_depth_compare_function()));
-
+		OpenGLDepthStencilStateProvider *gl3_state = static_cast<OpenGLDepthStencilStateProvider*>(state);
+		if (gl3_state)
+		{
+			selected_depth_stencil_state.set(gl3_state->desc);
+			OpenGL::set_active(this);
+			selected_depth_stencil_state.apply();
+		}
 	}
 }
 

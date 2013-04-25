@@ -42,6 +42,9 @@
 #include "API/Core/System/disposable_object.h"
 #include "gl3_standard_programs.h"
 #include "GL/opengl_graphic_context_provider.h"
+#include "../State/opengl_blend_state.h"
+#include "../State/opengl_rasterizer_state.h"
+#include "../State/opengl_depth_stencil_state.h"
 
 #include <map>
 
@@ -57,26 +60,6 @@ class DisposableObject;
 class OpenGLWindowDescription;
 class OpenGLWindowProvider;
 
-class GL3RasterizerStateProvider : public RasterizerStateProvider
-{
-public:
-	GL3RasterizerStateProvider(const RasterizerStateDescription &desc) : desc(desc.clone()) { }
-	RasterizerStateDescription desc;
-};
-
-class GL3BlendStateProvider : public BlendStateProvider
-{
-public:
-	GL3BlendStateProvider(const BlendStateDescription &desc) : desc(desc.clone()) { }
-	BlendStateDescription desc;
-};
-
-class GL3DepthStencilStateProvider : public DepthStencilStateProvider
-{
-public:
-	GL3DepthStencilStateProvider(const DepthStencilStateDescription &desc) : desc(desc.clone()) { }
-	DepthStencilStateDescription desc;
-};
 
 class GL3GraphicContextProvider : public OpenGLGraphicContextProvider,  public GraphicContextProvider, public DisposableObject
 {
@@ -236,6 +219,10 @@ private:
 	std::map<RasterizerStateDescription, std::shared_ptr<RasterizerStateProvider> > rasterizer_states;
 	std::map<BlendStateDescription, std::shared_ptr<BlendStateProvider> > blend_states;
 	std::map<DepthStencilStateDescription, std::shared_ptr<DepthStencilStateProvider> > depth_stencil_states;
+
+	OpenGLBlendState selected_blend_state;
+	OpenGLRasterizerState selected_rasterizer_state;
+	OpenGLDepthStencilState selected_depth_stencil_state;
 
 	GL3StandardPrograms standard_programs;
 
