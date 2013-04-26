@@ -632,17 +632,15 @@ GLXContext OpenGLWindowProvider::create_context(const DisplayWindowDescription &
 
 		const DisplayWindowProvider *rwp = NULL;
 
-		if (using_gl3)
+		GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+		if (gl3_provider)
+			rwp = &gl3_provider->get_render_window();
+
+		if (!rwp)
 		{
-			GL3GraphicContextProvider *gl_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
-			if (gl_provider)
-				rwp = &gl_provider->get_render_window();
-		}
-		else
-		{
-			GL1GraphicContextProvider *gl_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
-			if (gl_provider)
-				rwp = &gl_provider->get_render_window();
+			GL1GraphicContextProvider *gl1_provider = dynamic_cast<GL1GraphicContextProvider*>(gc_providers);
+			if (gl1_provider)
+				rwp = &gl1_provider->get_render_window();
 		}
 
 		if (rwp)
