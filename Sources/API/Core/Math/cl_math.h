@@ -32,9 +32,9 @@
 #pragma once
 
 #include "../api_core.h"
+#include <cmath>
 #include "../System/cl_platform.h"
 #include "vec4.h"
-#include <cmath>
 
 namespace clan
 {

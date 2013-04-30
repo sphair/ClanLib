@@ -92,11 +92,12 @@ private:
 
 #else
 
-class CrashReporter
+class CrashReporter_Impl
 {
 public:
-	CrashReporter(const std::string &reports_directory, const std::string &uploader_executable = std::string());
+	CrashReporter_Impl(const std::string &reports_directory, const std::string &uploader_executable = std::string());
 
+	static void hook_thread();
 	static void invoke() { }
 	static void generate_report() { }
 };
