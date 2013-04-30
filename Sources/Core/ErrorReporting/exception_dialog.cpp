@@ -30,7 +30,10 @@
 #include "API/Core/ErrorReporting/exception_dialog.h"
 #include "API/Core/Text/string_help.h"
 #include "exception_dialog_impl.h"
+
+#ifdef WIN32
 #include <commctrl.h>
+#endif
 
 namespace clan
 {
