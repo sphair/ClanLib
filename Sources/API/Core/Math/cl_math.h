@@ -48,6 +48,17 @@ inline T pow2(T value)
 	return value*value;
 }
 
+template<typename A, typename B> inline A min(A a, B b) { return a < b ? a : b; }
+template<typename A, typename B> inline A max(A a, B b) { return a > b ? a : b; }
+// *** Disabled The following min/max functions, so ClanLib compiles on GCC
+// ... to fix all the "max(long unsigned int, int)’ is ambiguous" etc problems on GCC !  Also GCC requires inline int min(size_t a, size_t b), but VisualStudio says ouch, conflict!
+// And whats wrong using Vec types, they work?
+// For example:
+//	clan::Vec3f vec1(1.0, 2.0f, 3.0f);
+//	clan::Vec3f vec2(3.0, 2.0f, 1.0f);
+//	clan::Vec3f vec3 = min(vec1, vec2);
+
+/*
 inline unsigned int min(unsigned int a, unsigned int b)
 {
 	return a < b ? a : b;
@@ -117,6 +128,7 @@ inline double max(double a, double b)
 {
 	return a > b ? a : b;
 }
+*/
 
 template<typename Type>
 inline Vec2<Type> min(Vec2<Type> a, Vec2<Type> b)
