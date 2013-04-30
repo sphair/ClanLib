@@ -784,7 +784,7 @@ void TextEdit_Impl::update_vertical_scroll()
 
 	vert_scrollbar->set_geometry(rect);
 
-	int total_height = get_total_line_height();
+	size_t total_height = get_total_line_height();
 	int height_per_line = max((size_t)1,total_height / max((size_t)1,lines.size()));
 	bool visible = total_height > content_rect.get_height();
 	vert_scrollbar->calculate_ranges(content_rect.get_height() / height_per_line, total_height/height_per_line);
@@ -799,7 +799,7 @@ void TextEdit_Impl::update_vertical_scroll()
 
 void TextEdit_Impl::move_vertical_scroll()
 {
-	int total_height = get_total_line_height();
+	size_t total_height = get_total_line_height();
 	int height_per_line = max((size_t)1,total_height / max((size_t)1,lines.size()));
 	int lines_fit = content_rect.get_height() / height_per_line;
 	if(cursor_pos.y >= vert_scrollbar->get_position() + lines_fit)
