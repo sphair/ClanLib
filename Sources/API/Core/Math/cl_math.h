@@ -58,6 +58,11 @@ inline int min(int a, int b)
 	return a < b ? a : b;
 }
 
+inline int min(size_t a, size_t b)
+{
+	return a < b ? a : b;
+}
+
 inline unsigned long long min(unsigned long long a, unsigned long long b)
 {
 	return a < b ? a : b;
@@ -84,6 +89,11 @@ inline unsigned int max(unsigned int a, unsigned int b)
 }
 
 inline int max(int a, int b)
+{
+	return a > b ? a : b;
+}
+
+inline int max(size_t a, size_t b)
 {
 	return a > b ? a : b;
 }

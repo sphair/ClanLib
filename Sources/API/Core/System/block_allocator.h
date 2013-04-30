@@ -74,7 +74,7 @@ public:
 
 public:
 	/// \brief Allocate memory (See note on this class for the allocation method)
-	/** Also see: new_obj() which allocates and calls the constructor
+	/** 
 	    param: size = Size to allocate (in bytes)
 	    \return The memory*/
 	void *allocate(int size);
@@ -82,124 +82,6 @@ public:
 	/// \brief Free the allocated memory
 	/** If required, use delete_obj() to call the destructor before using this function*/
 	void free();
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** \return The class*/
-	template<typename Type>
-	Type *new_obj()
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type>(data);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    \return The class*/
-	template<typename Type, typename P1>
-	Type *new_obj(P1 p1)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1>(data, p1);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    \return The class*/
-	template<typename Type, typename P1, typename P2>
-	Type *new_obj(P1 p1, P2 p2)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2>(data, p1, p2);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    param: p3 = Parameter 3
-	    \return The class*/
-	template<typename Type, typename P1, typename P2, typename P3>
-	Type *new_obj(P1 p1, P2 p2, P3 p3)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2, P3>(data, p1, p2, p3);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    param: p3 = Parameter 3
-	    param: p4 = Parameter 4
-	    \return The class*/
-	template<typename Type, typename P1, typename P2, typename P3, typename P4>
-	Type *new_obj(P1 p1, P2 p2, P3 p3, P4 p4)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2, P3, P4>(data, p1, p2, p3, p4);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    param: p3 = Parameter 3
-	    param: p4 = Parameter 4
-	    param: p5 = Parameter 5
-	    \return The class*/
-	template<typename Type, typename P1, typename P2, typename P3, typename P4, typename P5>
-	Type *new_obj(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2, P3, P4, P5>(data, p1, p2, p3, p4, p5);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    param: p3 = Parameter 3
-	    param: p4 = Parameter 4
-	    param: p5 = Parameter 5
-	    param: p6 = Parameter 6
-	    \return The class*/
-	template<typename Type, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>
-	Type *new_obj(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2, P3, P4, P5, P6>(data, p1, p2, p3, p4, p5, p6);
-		return data;
-	}
-
-	/// \brief Allocate a class (And call it's constructor)
-	/** param: p1 = Parameter 1
-	    param: p2 = Parameter 2
-	    param: p3 = Parameter 3
-	    param: p4 = Parameter 4
-	    param: p5 = Parameter 5
-	    param: p6 = Parameter 6
-	    param: p7 = Parameter 7
-	    \return The class*/
-	template<typename Type, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6, typename P7>
-	Type *new_obj(P1 p1, P2 p2, P3 p3, P4 p4, P5 p5, P6 p6, P7 p7)
-	{
-		Type *data = (Type *) allocate(sizeof(Type));
-		System::call_constructor<Type, P1, P2, P3, P4, P5, P6, P7>(data, p1, p2, p3, p4, p5, p6, p7);
-		return data;
-	}
-
-	/// \brief Call the class destructor
-	/** This template does not call free()
-	    param: obj = the object which to call the destructor*/
-	template<typename Type>
-	void delete_obj(Type *obj)
-	{
-		System::call_destructor(obj);
-	}
-
 
 /// \}
 /// \name Implementation
