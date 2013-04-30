@@ -3,6 +3,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES = libclan30Core.la
 
 libclan30Core_la_SOURCES = \
+ErrorReporting/crash_reporter.cpp \
+ErrorReporting/detect_hang.cpp \
+ErrorReporting/exception_dialog.cpp \
 Text/console_logger.cpp \
 Text/utf8_reader.cpp \
 Text/string_format.cpp \
@@ -148,6 +151,7 @@ Math/rect_packer.cpp \
 Math/vec3.cpp \
 core_global.cpp \
 core_iostream.cpp \
+System/game_time.cpp \
 System/runnable.cpp \
 System/command_line_generic.cpp \
 System/setup_core.cpp \

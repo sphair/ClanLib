@@ -141,6 +141,9 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
+	Core/ErrorReporting/crash_reporter.h \
+	Core/ErrorReporting/detect_hang.h \
+	Core/ErrorReporting/exception_dialog.h \
 	Core/Signals/callback_1.h \
 	Core/Signals/callback_2.h \
 	Core/Signals/callback_3.h \
@@ -299,6 +302,7 @@ clanCore_includes = \
 	Core/System/console_window.h \
 	Core/System/disposable_object.h \
 	Core/System/event.h \
+	Core/System/game_time.h \
 	Core/System/system.h
 
 clanDisplay_includes = \
