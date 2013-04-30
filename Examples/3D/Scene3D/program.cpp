@@ -23,7 +23,7 @@ int Program::main(const std::vector<std::string> &args)
 	GraphicContext gc = window.get_gc();
 
 	bool exit = false;
-	Slot slot_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
+	//Slot slot_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
 
 	SceneCache cache(new ExampleSceneCacheProvider());
 	std::string shader_path = "../../../Resources/Scene3D";
