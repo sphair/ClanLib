@@ -32,7 +32,8 @@ CachedTexture ExampleSceneCacheProvider::get_texture(GraphicContext &gc, const s
 		ImageImportDescription desc;
 		desc.set_srgb(!linear);
 
-		texture.set_texture(Texture2D(gc, name, desc));
+		Texture2D texture2d(gc, name, desc);
+		texture.set_texture(texture2d);
 
 		loaded_textures[name] = texture;
 
