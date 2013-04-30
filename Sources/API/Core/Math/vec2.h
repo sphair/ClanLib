@@ -34,10 +34,10 @@
 #pragma once
 
 #include "../api_core.h"
+#include <cmath>
 #include "vec3.h"
 #include "vec4.h"
 #include "origin.h"
-#include <cmath>
 
 namespace clan
 {
