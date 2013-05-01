@@ -282,7 +282,6 @@ clanCore_includes = \
 	Core/api_core.h \
 	Core/System/runnable.h \
 	Core/System/service.h \
-	Core/System/command_line.h \
 	Core/System/keep_alive.h \
 	Core/System/block_allocator.h \
 	Core/System/thread.h \

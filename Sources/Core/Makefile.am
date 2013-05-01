@@ -153,7 +153,6 @@ core_global.cpp \
 core_iostream.cpp \
 System/game_time.cpp \
 System/runnable.cpp \
-System/command_line_generic.cpp \
 System/setup_core.cpp \
 System/service_impl.cpp \
 System/event_impl.cpp \
@@ -174,7 +173,6 @@ System/thread_local_storage.cpp \
 System/detect_cpu_ext.cpp \
 System/service.cpp \
 System/thread_local_storage_impl.cpp \
-System/command_line.cpp \
 System/datetime.cpp
 
 
