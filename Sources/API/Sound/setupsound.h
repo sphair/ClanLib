@@ -46,7 +46,7 @@ public:
 	/// \brief Initializes clanSound.
 	/** <p>Constructing a SetupSound object is equalent to calling SetupSound::init().</p>
 	    <p>When the SetupSound instance is destroyed, SetupSound::deinit() is called.</p>*/
-	SetupSound(bool register_resources_only = false);
+	SetupSound();
 
 	~SetupSound();
 
@@ -56,7 +56,7 @@ public:
 
 public:
 	/// \brief Initialize the clanSound library.
-	static void init(bool register_resources_only = false);
+	static void init();
 
 	/// \brief Deinitialize the clanSound library.
 	static void deinit();
