@@ -49,9 +49,9 @@ static Slot slot_resource_added;
 static SoundProviderType *providertype_wave = 0;
 static SoundProviderType *providertype_ogg = 0;
 
-SetupSound::SetupSound(bool register_resources_only)
+SetupSound::SetupSound()
 {
-	SetupSound::init(register_resources_only);
+	SetupSound::init();
 }
 
 SetupSound::~SetupSound()
@@ -59,15 +59,13 @@ SetupSound::~SetupSound()
 	SetupSound::deinit();
 }
 
-void SetupSound::init(bool register_resources_only)
+void SetupSound::init()
 {
 	ref_count++;
 	if (ref_count > 1)
 		return;
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
-	if (register_resources_only)
-		return;
 }
 
 void SetupSound::deinit()
