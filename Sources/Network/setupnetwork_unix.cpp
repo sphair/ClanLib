@@ -33,18 +33,16 @@
 namespace clan
 {
 
-static int ref_count = 0;
-
-SetupNetwork::SetupNetwork(bool register_resources_only)
+SetupNetwork::SetupNetwork()
 {
-	ref_count++;
-	if (ref_count > 1) return;
+}
+
+SetupNetwork::SetupNetwork(const std::vector<std::string> &args)
+{
 }
 
 SetupNetwork::~SetupNetwork()
 {
-	ref_count--;
-	if (ref_count > 0) return;
 }
 
 }

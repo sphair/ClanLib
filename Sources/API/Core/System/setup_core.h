@@ -34,6 +34,7 @@
 #pragma once
 
 #include "../api_core.h"
+#include <vector>
 
 namespace clan
 {
