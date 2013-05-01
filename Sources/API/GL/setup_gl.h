@@ -45,6 +45,7 @@ class CL_API_GL SetupGL
 public:
 	/// \brief Initializes clanGL.
 	SetupGL();
+	SetupGL(const std::vector<std::string> &args);
 
 	~SetupGL();
 /// \}

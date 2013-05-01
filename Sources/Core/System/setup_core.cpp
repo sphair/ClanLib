@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Core/precomp.h"
@@ -35,16 +36,42 @@
 namespace clan
 {
 
+
+class SetupCore_Impl
+{
+public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // SetupCore Construction:
 
 SetupCore::SetupCore()
 {
+	std::vector<std::string> args;
+	SetupCore_Impl::init(args);
+}
+
+SetupCore::SetupCore(const std::vector<std::string> &args)
+{
+	SetupCore_Impl::init(args);
+}
+
+SetupCore::~SetupCore()
+{
+	SetupCore_Impl::deinit();
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// SetupCore Implementation:
+void SetupCore_Impl::init(const std::vector<std::string> &args)
+{
 	ThreadLocalStorage::create_initial_instance();
 #ifndef DISABLE_SSE2
 	if (!System::detect_cpu_extension(System::sse2))
 	{
-		throw Exception("Sorry, ClanLib 2.4 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
+		throw Exception("Sorry, ClanLib 3.0 and higher requires a processor capable of SSE2 instructions. (Update your CPU)");
 	}
 #endif
 
@@ -53,15 +80,11 @@ SetupCore::SetupCore()
 #endif
 }
 
-SetupCore::~SetupCore()
+void SetupCore_Impl::deinit()
 {
 #ifdef WIN32
 	::CoUninitialize();
 #endif
-
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// SetupCore Implementation:
 
 }

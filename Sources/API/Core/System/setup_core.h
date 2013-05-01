@@ -47,6 +47,7 @@ class CL_API_CORE SetupCore
 public:
 	/// \brief Initializes clanCore.
 	SetupCore();
+	SetupCore(const std::vector<std::string> &args);
 
 	~SetupCore();
 

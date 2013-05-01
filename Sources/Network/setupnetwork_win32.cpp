@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Network/precomp.h"
@@ -35,25 +36,44 @@
 
 namespace clan
 {
+class SetupNetwork_Impl
+{
+public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+	static int ref_count;
+};
 
-static int ref_count = 0;
+int SetupNetwork_Impl::ref_count = 0;
 
-SetupNetwork::SetupNetwork(bool register_resources_only)
+SetupNetwork::SetupNetwork()
+{
+	const std::vector<std::string> args;
+	SetupNetwork_Impl::init(args);
+
+}
+SetupNetwork::SetupNetwork(const std::vector<std::string> &args)
+{
+	SetupNetwork_Impl::init(args);
+}
+
+SetupNetwork::~SetupNetwork()
+{
+	SetupNetwork_Impl::deinit();
+}
+void SetupNetwork_Impl::init(const std::vector<std::string> &args)
 {
 	ref_count++;
 	if (ref_count > 1) return;
 
-	if (register_resources_only == false)
-	{
-		WORD winsock_version = MAKEWORD( 2, 2 ); 
-		WSADATA wsaData;
-		int err = WSAStartup(winsock_version, &wsaData);
-		if (err != 0)
-			throw Exception("Failed to initialize winsockets");
-	}
+	WORD winsock_version = MAKEWORD( 2, 2 ); 
+	WSADATA wsaData;
+	int err = WSAStartup(winsock_version, &wsaData);
+	if (err != 0)
+		throw Exception("Failed to initialize winsockets");
 }
 
-SetupNetwork::~SetupNetwork()
+void SetupNetwork_Impl::deinit()
 {
 	ref_count--;
 	if (ref_count > 0) return;

@@ -44,9 +44,8 @@ class CL_API_SOUND SetupSound
 
 public:
 	/// \brief Initializes clanSound.
-	/** <p>Constructing a SetupSound object is equalent to calling SetupSound::init().</p>
-	    <p>When the SetupSound instance is destroyed, SetupSound::deinit() is called.</p>*/
 	SetupSound();
+	SetupSound(const std::vector<std::string> &args);
 
 	~SetupSound();
 
@@ -55,11 +54,7 @@ public:
 /// \{
 
 public:
-	/// \brief Initialize the clanSound library.
-	static void init();
 
-	/// \brief Deinitialize the clanSound library.
-	static void deinit();
 /// \}
 };
 

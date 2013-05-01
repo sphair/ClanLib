@@ -44,9 +44,8 @@ class CL_API_NETWORK SetupNetwork
 
 public:
 	/// \brief Initializes clanNetwork.
-	/** <p>Constructing a SetupNetwork object is equalent to calling SetupNetwork::init().</p>
-	    <p>When the SetupNetwork instance is destroyed, SetupNetwork::deinit() is called.</p>*/
-	SetupNetwork(bool register_resources_only = false);
+	SetupNetwork();
+	SetupNetwork(const std::vector<std::string> &args);
 
 	~SetupNetwork();
 

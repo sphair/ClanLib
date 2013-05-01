@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "Sound/precomp.h"
@@ -44,22 +45,41 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SetupSound operations:
 
-static int ref_count = 0;
-static Slot slot_resource_added;
-static SoundProviderType *providertype_wave = 0;
-static SoundProviderType *providertype_ogg = 0;
+class SetupSound_Impl
+{
+public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+
+	static int ref_count;
+	static Slot slot_resource_added;
+	static SoundProviderType *providertype_wave;
+	static SoundProviderType *providertype_ogg;
+
+};
+
+int SetupSound_Impl::ref_count = 0;
+Slot SetupSound_Impl::slot_resource_added;
+SoundProviderType *SetupSound_Impl::providertype_wave = 0;
+SoundProviderType *SetupSound_Impl::providertype_ogg = 0;
 
 SetupSound::SetupSound()
 {
-	SetupSound::init();
+	const std::vector<std::string> args;
+	SetupSound_Impl::init(args);
+}
+
+SetupSound::SetupSound(const std::vector<std::string> &args)
+{
+	SetupSound_Impl::init(args);
 }
 
 SetupSound::~SetupSound()
 {
-	SetupSound::deinit();
+	SetupSound_Impl::deinit();
 }
 
-void SetupSound::init()
+void SetupSound_Impl::init(const std::vector<std::string> &args)
 {
 	ref_count++;
 	if (ref_count > 1)
@@ -68,7 +88,7 @@ void SetupSound::init()
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
 }
 
-void SetupSound::deinit()
+void SetupSound_Impl::deinit()
 {
 	ref_count--;
 	if (ref_count > 0)

@@ -45,6 +45,7 @@ class API_SWRender SetupSWRender
 public:
 	/// \brief Initializes clanSWRender.
 	SetupSWRender();
+	SetupSWRender(const std::vector<std::string> &args);
 
 	~SetupSWRender();
 /// \}
@@ -52,8 +53,7 @@ public:
 /// \{
 
 public:
-	/// \brief Set this display target to be the current target
-	void set_current();
+
 /// \}
 };
 

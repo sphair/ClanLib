@@ -44,6 +44,7 @@ class CL_API_COMPUTE SetupCompute
 public:
 	/// \brief Initializes clanCompute.
 	SetupCompute();
+	SetupCompute(const std::vector<std::string> &args);
 	~SetupCompute();
 /// \}
 };
