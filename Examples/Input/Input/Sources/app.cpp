@@ -59,7 +59,7 @@ int App::start(const std::vector<std::string> &args)
 
 	canvas = Canvas(window);
 
-	font = Font(canvas, "tahoma", 16);
+	font = clan::Font(canvas, "tahoma", 16);
 	vector_font = Font_Vector(canvas, "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf", 256);
 
 	calculate_matrix(canvas);
