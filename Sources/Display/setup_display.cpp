@@ -42,16 +42,45 @@
 namespace clan
 {
 
-static ProviderType_Register<JPEGProvider> *jpeg_provider = NULL;
-static ProviderType_Register<JPEGProvider> *jpg_provider = NULL;
-static ProviderType_Register<PNGProvider> *png_provider = NULL;
-static ProviderType_Register<TargaProvider> *targa_provider = NULL;
-static ProviderType_Register<TargaProvider> *tga_provider = NULL;
+class SetupDisplay_Impl
+{
+public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+
+	static ProviderType_Register<JPEGProvider> *jpeg_provider;
+	static ProviderType_Register<JPEGProvider> *jpg_provider;
+	static ProviderType_Register<PNGProvider> *png_provider;
+	static ProviderType_Register<TargaProvider> *targa_provider;
+	static ProviderType_Register<TargaProvider> *tga_provider;
+};
+
+ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpeg_provider = NULL;
+ProviderType_Register<JPEGProvider> *SetupDisplay_Impl::jpg_provider = NULL;
+ProviderType_Register<PNGProvider> *SetupDisplay_Impl::png_provider = NULL;
+ProviderType_Register<TargaProvider> *SetupDisplay_Impl::targa_provider = NULL;
+ProviderType_Register<TargaProvider> *SetupDisplay_Impl::tga_provider = NULL;
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupDisplay Construction:
 
 SetupDisplay::SetupDisplay()
+{
+	const std::vector<std::string> args;
+	SetupDisplay_Impl::init(args);
+}
+
+SetupDisplay::SetupDisplay(const std::vector<std::string> &args)
+{
+	SetupDisplay_Impl::init(args);
+}
+
+SetupDisplay::~SetupDisplay()
+{
+	SetupDisplay_Impl::deinit();
+}
+
+void SetupDisplay_Impl::init(const std::vector<std::string> &args)
 {
 #ifndef WIN32
 #ifndef __APPLE__
@@ -67,7 +96,7 @@ SetupDisplay::SetupDisplay()
 	tga_provider   = new ProviderType_Register<TargaProvider>("tga");
 }
 
-SetupDisplay::~SetupDisplay()
+void SetupDisplay_Impl::deinit()
 {
 	delete jpeg_provider;
 	jpeg_provider = NULL;

@@ -37,6 +37,9 @@ class OpenGLTarget;
 class SetupGL_Impl
 {
 public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+
 	static Mutex cl_opengl_mutex;
 	static int cl_opengl_refcount;
 	static OpenGLTarget *cl_opengl_target;

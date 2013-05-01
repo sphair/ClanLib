@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Mark Page
 */
 
 #include "SWRender/precomp.h"
@@ -33,17 +34,41 @@
 
 namespace clan
 {
+class SetupSWRender_Impl
+{
+public:
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
+
+	static Mutex cl_gdi_mutex;
+	static int cl_gdi_refcount;
+	static SWRenderTarget *cl_gdi_target;
+};
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupSWRender Construction:
 
-static Mutex cl_gdi_mutex;
-
-static int cl_gdi_refcount = 0;
-
-static SWRenderTarget *cl_gdi_target = 0;
+Mutex SetupSWRender_Impl::cl_gdi_mutex;
+int SetupSWRender_Impl::cl_gdi_refcount = 0;
+SWRenderTarget *SetupSWRender_Impl::cl_gdi_target = 0;
 
 SetupSWRender::SetupSWRender()
+{
+	const std::vector<std::string> args;
+	SetupSWRender_Impl::init(args);
+}
+
+SetupSWRender::SetupSWRender(const std::vector<std::string> &args)
+{
+	SetupSWRender_Impl::init(args);
+}
+
+SetupSWRender::~SetupSWRender()
+{
+	SetupSWRender_Impl::deinit();
+}
+
+void SetupSWRender_Impl::init(const std::vector<std::string> &args)
 {
 	if (!System::detect_cpu_extension(System::sse2))
 	{
@@ -56,18 +81,12 @@ SetupSWRender::SetupSWRender()
 	cl_gdi_refcount++;
 }
 
-SetupSWRender::~SetupSWRender()
+void SetupSWRender_Impl::deinit()
 {
 	MutexSection mutex_lock(&cl_gdi_mutex);
 	cl_gdi_refcount--;
 	if (cl_gdi_refcount == 0)
 		delete cl_gdi_target;
-}
-
-void SetupSWRender::set_current()
-{
-	MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_target->set_current();
 }
 
 }

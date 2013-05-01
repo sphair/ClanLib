@@ -45,6 +45,7 @@ class CL_API_GUI SetupGUI
 public:
 	/// \brief Initializes clanGUI.
 	SetupGUI();
+	SetupGUI(const std::vector<std::string> &args);
 
 	~SetupGUI();
 /// \}

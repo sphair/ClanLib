@@ -47,18 +47,36 @@ D3DTarget *SetupD3D_Impl::cl_d3d_target = 0;
 
 SetupD3D::SetupD3D()
 {
+	std::vector<std::string> args;
+	SetupD3D_Impl::init(args);
+
+}
+SetupD3D::SetupD3D(const std::vector<std::string> &args)
+{
+	SetupD3D_Impl::init(args);
+
+}
+
+SetupD3D::~SetupD3D()
+{
+	SetupD3D_Impl::deinit();
+}
+
+void SetupD3D_Impl::init(const std::vector<std::string> &args)
+{
 	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
 	if (SetupD3D_Impl::cl_d3d_refcount == 0)
 		SetupD3D_Impl::cl_d3d_target = new D3DTarget();
 	SetupD3D_Impl::cl_d3d_refcount++;
 }
 
-SetupD3D::~SetupD3D()
+void SetupD3D_Impl::deinit()
 {
 	MutexSection mutex_lock(&SetupD3D_Impl::cl_d3d_mutex);
 	SetupD3D_Impl::cl_d3d_refcount--;
 	if (SetupD3D_Impl::cl_d3d_refcount == 0)
 		delete SetupD3D_Impl::cl_d3d_target;
 }
+
 
 }

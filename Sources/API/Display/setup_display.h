@@ -45,6 +45,7 @@ class CL_API_DISPLAY SetupDisplay
 public:
 	/// \brief Initializes clanDisplay.
 	SetupDisplay();
+	SetupDisplay(const std::vector<std::string> &args);
 
 	~SetupDisplay();
 /// \}

@@ -46,6 +46,8 @@ namespace clan
 #define cl_tls_variable __thread
 #endif
 
+class SetupCore_Impl;
+
 class ThreadLocalStorageData
 {
 public:
@@ -94,7 +96,7 @@ public:
 
 private:
 /// \}
-	friend class SetupCore;
+	friend class SetupCore_Impl;
 };
 
 }

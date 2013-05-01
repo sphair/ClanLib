@@ -43,13 +43,30 @@ OpenGLTarget *SetupGL_Impl::cl_opengl_target = 0;
 
 SetupGL::SetupGL()
 {
+	const std::vector<std::string> args;
+	SetupGL_Impl::init(args);
+}
+
+SetupGL::SetupGL(const std::vector<std::string> &args)
+{
+	SetupGL_Impl::init(args);
+}
+
+SetupGL::~SetupGL()
+{
+	SetupGL_Impl::deinit();
+
+}
+
+void SetupGL_Impl::init(const std::vector<std::string> &args)
+{
 	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
 	if (SetupGL_Impl::cl_opengl_refcount == 0)
 		SetupGL_Impl::cl_opengl_target = new OpenGLTarget();
 	SetupGL_Impl::cl_opengl_refcount++;
 }
 
-SetupGL::~SetupGL()
+void SetupGL_Impl::deinit()
 {
 	MutexSection mutex_lock(&SetupGL_Impl::cl_opengl_mutex);
 	SetupGL_Impl::cl_opengl_refcount--;

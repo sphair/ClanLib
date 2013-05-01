@@ -38,6 +38,9 @@ namespace clan
 SetupGUI::SetupGUI()
 {
 }
+SetupGUI::SetupGUI(const std::vector<std::string> &args)
+{
+}
 
 SetupGUI::~SetupGUI()
 {
