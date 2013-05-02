@@ -53,7 +53,7 @@ class CL_API_D3D D3DTarget : public DisplayTarget
 /// \name Construction
 /// \{
 public:
-	/// \brief Constructs a SWRender target.
+	/// \brief Constructs a D3DTarget target.
 	D3DTarget();
 	~D3DTarget();
 /// \}
