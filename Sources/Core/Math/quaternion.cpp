@@ -340,14 +340,14 @@ Quaternionx<Type> Quaternionx<Type>::slerp(const Quaternionx<Type> &quaternion_i
 }
 
 template<typename Type>
-Vec3<Type> Quaternionx<Type>::rotate_vector(const Vec3<Type> &v)
+Vec3<Type> Quaternionx<Type>::rotate_vector(const Vec3<Type> &v) const
 {
 	Vec3<Type> q3(x, y, z);
 	return v + Vec3<Type>::cross(q3, Vec3<Type>::cross(q3, v) + v * w) * ((Type) 2.0);
 }
 
 template<typename Type>
-Vec4<Type> Quaternionx<Type>::rotate_vector(const Vec4<Type> &v)
+Vec4<Type> Quaternionx<Type>::rotate_vector(const Vec4<Type> &v) const
 {
 	Vec3<Type> rot = rotate_vector((Vec3<Type>)v);
 	return Vec4<Type>(rot.x, rot.y, rot.z, v.w);

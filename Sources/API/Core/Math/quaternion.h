@@ -126,9 +126,9 @@ public:
 	/// \param v = Vertex to rotate
 	///
 	/// \return rotated vector
-	Vec3<Type> rotate_vector(const Vec3<Type> &v);
+	Vec3<Type> rotate_vector(const Vec3<Type> &v) const;
 
-	Vec4<Type> rotate_vector(const Vec4<Type> &v);
+	Vec4<Type> rotate_vector(const Vec4<Type> &v) const;
 
 	/// \brief Normalizes this quaternion
 	///
