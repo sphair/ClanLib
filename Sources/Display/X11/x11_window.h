@@ -139,6 +139,7 @@ public:
 	Point get_mouse_position() const;
 
 	void process_queued_events();
+	bool process_window_sockets();
 
 /// \}
 /// \name Implementation
