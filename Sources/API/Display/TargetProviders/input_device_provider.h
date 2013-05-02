@@ -121,13 +121,6 @@ public:
 	/// \brief Sets the position of the device.
 	virtual void set_position(int x, int y) = 0;
 
-	/// \brief Update device
-	///
-	/// \param peek_only Treat as a request to see if an event would occur
-	///
-	/// \return true when the device event has occurred
-	virtual bool poll(bool peek_only) = 0;
-
 /// \}
 /// \name Implementation
 /// \{

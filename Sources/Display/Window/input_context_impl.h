@@ -96,27 +96,12 @@ public:
 	/// \brief Called by input devices when events are received.
 	void received_event(const InputEvent &e, std::weak_ptr<InputDevice_Impl> &input_device);
 
-	/// \brief Update device
-	///
-	/// \param peek_only Treat as a request to see if an event would occur
-	///
-	/// \return true when the device event has occurred
-	bool poll(bool peek_only);
-
-
 /// \}
 /// \name Implementation
 /// \{
 
 private:
 	void on_dispose();
-
-	/// \brief Update a specific device
-	///
-	/// \param peek_only Treat as a request to see if an event would occur
-	/// \param device = The device
-	/// \param message_flag = Set to true when an event has occurred
-	void poll_device( bool peek_only, std::vector<InputDevice> &device, bool &message_flag);
 
 	std::vector< std::pair<InputEvent, std::weak_ptr<InputDevice_Impl> > > events;
 /// \}
