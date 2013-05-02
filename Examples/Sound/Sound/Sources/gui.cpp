@@ -62,7 +62,7 @@ void App::spin_value_modified(Spin *spin)
 	}
 }
 
-void App::prepare_gui(Window &window)
+void App::prepare_gui(GUIComponent &window)
 {
 	btn_update_soundoutput = PushButton::get_named_item(&window, "btn_update_soundoutput");
 	btn_update_soundoutput->func_clicked().set(this, &App::on_btn_update_soundoutput);
@@ -119,7 +119,6 @@ void App::prepare_gui(Window &window)
 
 	PopupMenu menu;
 	menu.insert_item("Pacman Start Sample(.wav)");
-	menu.insert_item("Methane Boss Music (.mod)");
 	menu.insert_item("Cheering Sample (.ogg)");
 
 	cbox_sound = ComboBox::get_named_item(&window, "cbox_sound");
@@ -189,7 +188,7 @@ void App::on_inverse_echo_filter_unchecked()
 	btn_set_soundoutput_filters->set_enabled(true);
 }
 
-Spin *App::set_slide_and_spin(Window &window, const char *slider_name, const char *spin_name, int min, int start, int max, bool enabled)
+Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, const char *spin_name, int min, int start, int max, bool enabled)
 {
 	Slider *slider = dynamic_cast<Slider*>(window.get_named_item(slider_name));
 	if (!slider)
@@ -226,7 +225,7 @@ Spin *App::set_slide_and_spin(Window &window, const char *slider_name, const cha
 	return spin;
 }
 
-Spin *App::set_slide_and_spin(Window &window, const char *slider_name, const char *spin_name, float min, float start, float max, bool enabled)
+Spin *App::set_slide_and_spin(GUIComponent &window, const char *slider_name, const char *spin_name, float min, float start, float max, bool enabled)
 {
 	Slider *slider = dynamic_cast<Slider*>(window.get_named_item(slider_name));
 	if (!slider)
@@ -391,7 +390,7 @@ void App::set_slider_to_spin_float(Slider *slider, Spin *spin)
 	slider->set_position(new_value);
 }
 
-bool App::on_close(Window *win)
+bool App::on_close(GUIComponent *win)
 {
 	win->exit_with_code(0);
 	return true;
@@ -513,11 +512,6 @@ SoundBuffer &App::get_selected_soundbuffer()
 	}
 
 	if (item==1)
-	{
-		return sfx_beast_title;
-	}
-
-	if (item==2)
 	{
 		return sfx_cheer;
 	}

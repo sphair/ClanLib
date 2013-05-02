@@ -73,12 +73,6 @@ int Program::main(const std::vector<std::string> &args)
 		// Initialize the sound system
 		SetupSound setup_sound;
 
-		// Initialize mikmod
-		SetupMikMod setup_mikmod;
-
-		// Initialize vorbis
-		SetupVorbis setup_vorbis;
-
 		// Start the Application
 		App app;
 		int retval = app.start(args);

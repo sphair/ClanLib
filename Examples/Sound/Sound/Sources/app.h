@@ -32,8 +32,6 @@
 #include <ClanLib/display.h>
 #include <ClanLib/gui.h>
 #include <ClanLib/sound.h>
-#include <ClanLib/mikmod.h>
-#include <ClanLib/vorbis.h>
 #include <list>
 using namespace clan;
 
@@ -64,13 +62,13 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	bool on_close(Window *win);
+	bool on_close(GUIComponent *win);
 	void on_btn_play();
 	void on_btn_prepare();
 	void on_btn_update_soundoutput();
-	void prepare_gui(Window &window);
-	Spin *set_slide_and_spin(Window &window, const char *slider_name, const char *spin_name, int min, int start, int max, bool enabled);
-	Spin *set_slide_and_spin(Window &window, const char *slider_name, const char *spin_name, float min, float start, float max, bool enabled);
+	void prepare_gui(GUIComponent &window);
+	Spin *set_slide_and_spin(GUIComponent &window, const char *slider_name, const char *spin_name, int min, int start, int max, bool enabled);
+	Spin *set_slide_and_spin(GUIComponent &window, const char *slider_name, const char *spin_name, float min, float start, float max, bool enabled);
 	void spin_value_modified(Spin *spin);
 	void on_spin_changed_integer(Spin *spin);
 	void set_slider_to_spin_integer(Slider *slider, Spin *spin);
@@ -109,7 +107,6 @@ private:
 
 private:
 	SoundBuffer sfx_pacman_start;
-	SoundBuffer sfx_beast_title;
 	SoundBuffer sfx_cheer;
 
 	ComboBox *cbox_sound;
