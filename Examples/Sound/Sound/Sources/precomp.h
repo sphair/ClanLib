@@ -4,6 +4,6 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/sound.h>
-#include <ClanLib/vorbis.h>
+#include <ClanLib/gl.h>
 #include <cmath>
 using namespace clan;
