@@ -32,8 +32,8 @@
 #include "app.h"
 
 // Choose the target renderer
-#define USE_OPENGL_2
-//#define USE_OPENGL_1
+//#define USE_OPENGL_2
+#define USE_SWRENDER
 //#define USE_D3D
 
 #ifdef USE_D3D
@@ -62,8 +62,8 @@ int Program::main(const std::vector<std::string> &args)
 			SetupD3D setup_d3d;
 		#endif
 
-		#ifdef USE_OPENGL_1
-			SetupLegacyGL setup_legacy_gl;
+		#ifdef USE_SWRENDER
+			SetupSWRender setup_swrender;
 		#endif
 
 		#ifdef USE_OPENGL_2
