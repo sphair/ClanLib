@@ -630,10 +630,6 @@ private:
 	friend class GUIManager_Impl;
 
 	friend class GUIComponent_Impl;
-
-	friend class Window;
-
-	friend class Window_Impl;
 /// \}
 };
 
