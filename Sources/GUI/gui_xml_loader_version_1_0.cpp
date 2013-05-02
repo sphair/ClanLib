@@ -58,8 +58,6 @@
 #include "gui_xml_loader_version_1_0.h"
 #include "Layout/gui_layout_provider_corners.h"
 
-#ifdef INCLUDE_COMPONENTS
-
 namespace clan
 {
 
@@ -100,9 +98,9 @@ void GUIXMLLoaderVersion_1_0::load(DomDocument &doc)
 
 	if (dialog_title != "")
 	{
-		Window *win = dynamic_cast<Window*>(component);
-		if (win)
-			win->set_title(dialog_title);
+		//FIXME: Window *win = dynamic_cast<Window*>(component);
+		//FIXME: if (win)
+		//FIXME:	win->set_title(dialog_title);
 	}
 }
 
@@ -295,7 +293,8 @@ void GUIXMLLoaderVersion_1_0::load(DomElement &element, GUIComponent *parent)
 				throw Exception(string_format("GUIXMLLoaderVersion_1_0 need the field id for the component \"%1\"", tag));
 			new_comp->set_id(e.get_attribute("id"));
 
-			new_comp->set_class(e.get_attribute("class"));
+			new_comp->set_tag_name(e.get_attribute("class"));
+//			new_comp->set_class(e.get_attribute("class"));
 			new_comp->set_enabled(e.get_attribute_bool("enabled", true));
 
 			//Position
@@ -352,4 +351,3 @@ void GUIXMLLoaderVersion_1_0::load(DomElement &element, GUIComponent *parent)
 
 }
 
-#endif
