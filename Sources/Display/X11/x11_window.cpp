@@ -1348,7 +1348,7 @@ void X11Window::process_message(XEvent &event, X11Window *mouse_capture_window)
 }
 void X11Window::process_message_complete()
 {
-	ic.poll(false);		// Check input devices	-- TODO: Is this required
+	process_window_sockets(false);		// Check input devices
 
 	// Send any exposure events, unless they have already been sent
 	unsigned int max = exposed_rects.size();
@@ -1676,14 +1676,14 @@ InputDeviceProvider_X11Mouse *X11Window::get_mouse() const
 	return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get_provider());
 }
 
-bool X11Window::process_window_sockets()
+bool X11Window::process_window_sockets(bool peek_only)
 {
 	bool message = false;
 	for (size_t i = 0; i < joysticks.size(); i++)
 	{
 		InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(joysticks[i].get_provider());
 		if (joystick_provider)
-			message = joystick_provider->poll(true);
+			message = joystick_provider->poll(peek_only);
 	}
 	return message;
 }

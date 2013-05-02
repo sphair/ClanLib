@@ -483,15 +483,6 @@ void InputDevice::set_position(int x, int y)
 		impl->provider->set_position(x, y);
 }
 
-bool InputDevice::poll(bool peek_only)
-{
-	if (impl->provider)
-	{
-		return impl->provider->poll(peek_only);
-	}
-	return false;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // InputDevice Signals:
 

@@ -156,13 +156,6 @@ public:
 	/** <p>Only valid for mouse.</p>*/
 	void set_position(int x, int y);
 
-	/// \brief Update device
-	///
-	/// \param peek_only Treat as a request to see if an event would occur
-	///
-	/// \return true when the device event has occurred
-	bool poll(bool peek_only);
-
 /// \}
 /// \name Signals
 /// \{

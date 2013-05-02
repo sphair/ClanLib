@@ -161,35 +161,6 @@ void InputContext_Impl::received_event(
 			input_device));
 }
 
-bool InputContext_Impl::poll(bool peek_only)
-{
-	throw_if_disposed();
-
-	bool message_flag = false;
-
-	poll_device(peek_only, joysticks, message_flag);
-	poll_device(peek_only, mice, message_flag);
-	poll_device(peek_only, keyboards, message_flag);
-	poll_device(peek_only, tablets, message_flag);
-
-	return message_flag;
-}
-
-void InputContext_Impl::poll_device( bool peek_only, std::vector<InputDevice> &device, bool &message_flag)
-{
-	throw_if_disposed();
-
-	std::vector< InputDevice >::size_type pos, size;
-	size = device.size();
-	for (pos = 0; pos < size; pos++)
-	{
-		if (device[pos].poll(peek_only))
-		{
-			message_flag = true;
-		}
-	}
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // InputContext_Impl implementation:
 

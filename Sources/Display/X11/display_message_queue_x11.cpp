@@ -405,7 +405,7 @@ bool DisplayMessageQueue_X11::has_internal_messages()
 	size = thread_data->windows.size();
 	for (index = 0; index < size; index++)
 	{
-		if (thread_data->windows[index]->process_window_sockets())
+		if (thread_data->windows[index]->process_window_sockets(true))
 			message_flag = true;
 	}
 	return message_flag;

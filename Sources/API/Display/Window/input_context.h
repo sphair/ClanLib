@@ -108,13 +108,6 @@ public:
 	/// \brief Process and dispatch messages to signals.
 	void process_messages();
 
-	/// \brief Update device
-	///
-	/// \param peek_only Treat as a request to see if an event would occur
-	///
-	/// \return true when the device event has occurred
-	bool poll(bool peek_only);
-
 	/// \brief Stop anyone accessing this input context
 	///
 	/// This should is only called internally by the display window destructor

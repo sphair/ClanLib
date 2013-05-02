@@ -155,11 +155,6 @@ void InputContext::process_messages()
 	impl->process_messages();
 }
 
-bool InputContext::poll(bool peek_only)
-{
-	return (impl->poll(peek_only));
-}
-
 void InputContext::dispose()
 {
 	impl->dispose();
