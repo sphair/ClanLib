@@ -1676,4 +1676,17 @@ InputDeviceProvider_X11Mouse *X11Window::get_mouse() const
 	return static_cast<InputDeviceProvider_X11Mouse *>(mouse.get_provider());
 }
 
+bool X11Window::process_window_sockets()
+{
+	bool message = false;
+	for (size_t i = 0; i < joysticks.size(); i++)
+	{
+		InputDeviceProvider_LinuxJoystick *joystick_provider = dynamic_cast<InputDeviceProvider_LinuxJoystick *>(joysticks[i].get_provider());
+		if (joystick_provider)
+			message = joystick_provider->poll(true);
+	}
+	return message;
 }
+
+}
+
