@@ -1029,8 +1029,6 @@ GUIComponent *GUIComponent::get_named_item(const std::string &id)
 
 void GUIComponent::create_components(const DomDocument &gui_xml)
 {
-#ifdef INCLUDE_COMPONENTS
-
 	DomDocument const_hack = gui_xml;
 
 	// Check if loaded document uses namespaces and if its a clanlib resources xml document:
@@ -1048,8 +1046,6 @@ void GUIComponent::create_components(const DomDocument &gui_xml)
 	{
 		throw Exception("XML document is not a ClanLib GUI XML document.");
 	}
-
-#endif
 }
 
 void GUIComponent::create_components(const std::string &filename, const VirtualDirectory &dir)
