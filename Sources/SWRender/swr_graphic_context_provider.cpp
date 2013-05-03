@@ -455,12 +455,13 @@ void SWRenderGraphicContextProvider::clear_stencil(int value)
 
 void SWRenderGraphicContextProvider::set_viewport(const Rectf &viewport)
 {
+	canvas->resize(window->get_viewport().get_size());
+	cl_software_program_standard.set_size(canvas->get_size());
 }
 
 void SWRenderGraphicContextProvider::on_window_resized()
 {
-	canvas->resize(window->get_viewport().get_size());
-	cl_software_program_standard.set_size(canvas->get_size());
+	window_resized_signal.invoke(window->get_viewport().get_size());
 
 }
 
