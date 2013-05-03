@@ -57,7 +57,7 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("Sound Example");
 	win_desc.set_position(Rect(200, 100, 540, 440), false);
 	win_desc.set_visible(false);
-	GUIComponent window(&gui, win_desc);
+	GUIComponent window(&gui, win_desc, "window");
 	window.func_close().set(this, &App::on_close, &window);
 
 	GUILayoutCorners layout;
