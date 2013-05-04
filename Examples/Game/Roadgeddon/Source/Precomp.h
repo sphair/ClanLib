@@ -37,15 +37,15 @@
  
 // Choose the target renderer
 #define USE_OPENGL_2
-//#define USE_OPENGL_1
+//#define USE_SWRENDER
 //#define USE_D3D
 
 #ifdef USE_D3D
 #include <ClanLib/d3d.h>
 #endif
 
-#ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
+#ifdef USE_SWRENDER
+#include <ClanLib/swrender.h>
 #endif
 
 #ifdef USE_OPENGL_2

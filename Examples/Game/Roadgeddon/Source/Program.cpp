@@ -48,8 +48,8 @@ int Program::main(const std::vector<std::string> &args)
 		SetupD3D setup_d3d;
 		#endif
 
-		#ifdef USE_OPENGL_1
-		SetupGL1 setup_gl1;
+		#ifdef USE_SWRENDER
+		SetupSWRender setup_swrender;
 		#endif
 
 		#ifdef USE_OPENGL_2
