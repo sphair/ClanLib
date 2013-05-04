@@ -72,19 +72,19 @@
 	#endif
 	#if !defined(_DEBUG)
 		#if defined(DLL)
-			#pragma comment(lib, "clanPhysics-dll.lib")
+			#pragma comment(lib, "clanPhysics2D-dll.lib")
 		#elif defined(_DLL)
-			#pragma comment(lib, "clanPhysics-static-mtdll.lib")
+			#pragma comment(lib, "clanPhysics2D-static-mtdll.lib")
 		#else
-			#pragma comment(lib, "clanPhysics-static-mt.lib")
+			#pragma comment(lib, "clanPhysics2D-static-mt.lib")
 		#endif
 	#else
 		#if defined(DLL)
-			#pragma comment(lib, "clanPhysics-dll-debug.lib")
+			#pragma comment(lib, "clanPhysics2D-dll-debug.lib")
 		#elif defined(_DLL)
-			#pragma comment(lib, "clanPhysics-static-mtdll-debug.lib")
+			#pragma comment(lib, "clanPhysics2D-static-mtdll-debug.lib")
 		#else
-			#pragma comment(lib, "clanPhysics-static-mt-debug.lib")
+			#pragma comment(lib, "clanPhysics2D-static-mt-debug.lib")
 
 		#endif
 	#endif
