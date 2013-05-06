@@ -37,6 +37,7 @@
 #include "physics3d_world_impl.h"
 #include "physics3d_shape_impl.h"
 #include "physics3d_object_impl.h"
+#include <algorithm>
 
 namespace clan
 {
@@ -93,7 +94,26 @@ bool Physics3DSweepTest::test_first_hit(const Physics3DShape &shape, const Vec3f
 
 bool Physics3DSweepTest::test_all_hits(const Physics3DShape &shape, const Vec3f &from_pos, const Quaternionf &from_orientation, const Vec3f &to_pos, const Quaternionf &to_orientation, float allowed_ccd_penetration)
 {
-	throw Exception("Physics3DSweepTest::test_all_hits not implemented");
+	btConvexShape *convex_shape = dynamic_cast<btConvexShape*>(shape.impl->shape.get());
+	if (convex_shape == 0)
+		throw Exception("Sweep testing is only supported for convex shapes");
+
+	impl->from_pos = from_pos;
+	impl->to_pos = to_pos;
+	impl->hits.clear();
+
+	btVector3 bt_from_pos(from_pos.x, from_pos.y, from_pos.z);
+	btVector3 bt_to_pos(to_pos.x, to_pos.y, to_pos.z);
+
+	btTransform bt_from_transform(btQuaternion(from_orientation.x, from_orientation.y, from_orientation.z, from_orientation.w), bt_from_pos);
+	btTransform bt_to_transform(btQuaternion(to_orientation.x, to_orientation.y, to_orientation.z, to_orientation.w), bt_to_pos);
+
+	Physics3DSweepTest_Impl::AllHitsConvexResultCallback callback(impl.get());
+	impl->world->dynamics_world->convexSweepTest(convex_shape, bt_from_transform, bt_to_transform, callback, allowed_ccd_penetration);
+
+	std::sort(impl->hits.begin(), impl->hits.end());
+
+	return !impl->hits.empty();
 }
 
 int Physics3DSweepTest::get_hit_count() const
