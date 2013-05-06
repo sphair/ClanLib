@@ -52,12 +52,58 @@ public:
 	{
 		SweepHit() : hit_fraction(0.0f), hit_collision_object(0) { }
 
+		bool operator<(const SweepHit &other) const { return hit_fraction < other.hit_fraction; }
+
 		float hit_fraction;
 		Vec3f hit_normal;
 		Physics3DObject_Impl *hit_collision_object;
 	};
 
 	std::vector<SweepHit> hits;
+
+	class AllHitsConvexResultCallback : public btCollisionWorld::ConvexResultCallback
+	{
+	public:
+		AllHitsConvexResultCallback(Physics3DSweepTest_Impl *impl) : impl(impl)
+		{
+		}
+
+		btAlignedObjectArray<btVector3>	m_hitNormalWorld;
+		btAlignedObjectArray<btVector3>	m_hitPointWorld;
+		btAlignedObjectArray<const btCollisionObject*> m_hitCollisionObjects;
+		btAlignedObjectArray<btScalar> m_hitFractions;
+
+		virtual	btScalar addSingleResult(btCollisionWorld::LocalConvexResult& convexResult,bool normalInWorldSpace)
+		{
+			SweepHit hit;
+			hit.hit_fraction = convexResult.m_hitFraction;
+			hit.hit_collision_object = static_cast<Physics3DObject_Impl*>(convexResult.m_hitCollisionObject->getUserPointer());
+
+			if (normalInWorldSpace)
+			{
+				hit.hit_normal = to_vec3f(convexResult.m_hitNormalLocal);
+			}
+			else
+			{
+				///need to transform normal into worldspace
+				hit.hit_normal = to_vec3f(convexResult.m_hitCollisionObject->getWorldTransform().getBasis() * convexResult.m_hitNormalLocal);
+			}
+
+			//hit.hit_point = to_vec3f(convexResult.m_hitPointLocal);
+
+			impl->hits.push_back(hit);
+
+			return btScalar(1.);
+		}
+
+	private:
+		static Vec3f to_vec3f(const btVector3 &v)
+		{
+			return Vec3f(v.getX(), v.getY(), v.getZ());
+		}
+
+		Physics3DSweepTest_Impl *impl;
+	};
 };
 
 }
