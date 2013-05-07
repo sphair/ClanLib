@@ -167,15 +167,22 @@ public:
 	///
 	/// \param vector = Second vector used to calculate angle.
 	///
-	/// \return The angle between the two vectors (between 0 and PI)
+	/// \return The angle between the two vectors
 	Angle angle(const Vec2<Type>& vector) const;
 
-	/// \brief Calculate the angle between this vector relative to another vector.
+	/// \brief Calculate the angle between this vector and an other vector, where the vectors are unit vectors
 	///
 	/// \param vector = Second vector used to calculate angle.
 	///
-	/// \return The angle between the two vectors (between -PI and PI)
-	Angle angle_relative(const Vec2<Type>& vector) const;
+	/// \return The angle between the two vectors 
+	Angle angle_normed(const Vec2<Type>& vector) const;
+
+	/// \brief Calculate the angle of the line joining this point and other point
+	///
+	/// \param point = Second point in the line
+	///
+	/// \return The angle
+	Angle angle_line(const Vec2<Type>& point) const;
 
 	/// \brief Calculate the distance between this vector and an other vector.
 	///

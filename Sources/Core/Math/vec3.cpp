@@ -72,6 +72,12 @@ Angle Vec3<Type>::angle(const Vec3<Type>& v) const
 }
 
 template<typename Type>
+Angle Vec3<Type>::angle_normed(const Vec3<Type>& v) const
+{
+	return Angle(acosf(float(dot(v))), angle_radians);
+}
+
+template<typename Type>
 Vec3<Type> Vec3<Type>::cross(const Vec3<Type>& v1, const Vec3<Type>& v2)
 {
 	Vec3<Type> tmp = Vec3<Type>(v1.y * v2.z - v1.z * v2.y,

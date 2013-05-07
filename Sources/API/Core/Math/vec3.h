@@ -164,6 +164,13 @@ public:
 	/// \return The angle between the two vectors.
 	Angle angle(const Vec3<Type>& vector) const;
 
+	/// \brief Calculate the angle between this vector and an other vector, where the vectors are unit vectors
+	///
+	/// \param vector Second vector used to calculate angle.
+	///
+	/// \return The angle between the two vectors.
+	Angle angle_normed(const Vec3<Type>& vector) const;
+
 	/// \brief Calculate the distance between this vector and an other vector.
 	///
 	/// \param vector = Second vector used to calculate distance.

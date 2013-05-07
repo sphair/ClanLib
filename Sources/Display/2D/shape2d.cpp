@@ -138,9 +138,7 @@ void Shape2D::add_rounded_line(const Pointf &start, const Pointf &end, float lin
 	float distance = start.distance(end);
 	Sizef size(distance, line_width);
 
-	Vec2f diff = end - start;
-	diff.y = -diff.y;
-	Angle angle(diff.angle_relative(Vec2f()));
+	Angle angle(start.angle_line(end));
 
 	Pointf center(start.x + size.width / 2.0f,  start.y + size.height / 2.0f );
 	Vec2f rotated = start;
