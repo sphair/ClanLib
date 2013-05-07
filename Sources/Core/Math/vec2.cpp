@@ -150,20 +150,38 @@ Angle Vec2<int>::angle(const Vec2<int>& v) const
 }
 
 template<typename Type>
-Angle Vec2<Type>::angle_relative(const Vec2<Type>& v) const
+Angle Vec2<Type>::angle_normed(const Vec2<Type>& v) const
 {
-	return Angle( atan2f(v.y, v.x) - atan2f(y, x), angle_radians);
+	return Angle((float)acosf(float(dot(v))), angle_radians);
 }
 
 template<>
-Angle Vec2<int>::angle_relative(const Vec2<int>& v) const
+Angle Vec2<int>::angle_normed(const Vec2<int>& v) const
 {
 	float this_x = (float) x;
 	float this_y = (float) y;
 	float v_x = (float) v.x;
 	float v_y = (float) v.y;
 
-	return Angle( atan2f(v_y, v_x) - atan2f(this_y, this_x), angle_radians);
+	float dot_v = this_x * v_x + this_y * v_y;
+	return Angle(acosf(dot_v), angle_radians);
+}
+
+template<typename Type>
+Angle Vec2<Type>::angle_line(const Vec2<Type>& v) const
+{
+	return Angle( atan2f(v.y - y, v.x - x), angle_radians);
+}
+
+template<>
+Angle Vec2<int>::angle_line(const Vec2<int>& v) const
+{
+	float this_x = (float) x;
+	float this_y = (float) y;
+	float v_x = (float) v.x;
+	float v_y = (float) v.y;
+
+	return Angle( atan2f(v_y - this_y, v_x - this_x), angle_radians);
 }
 
 template<typename Type>
