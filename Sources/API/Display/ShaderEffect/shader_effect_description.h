@@ -298,6 +298,8 @@ public:
 		set_elements(element_array, type_unsigned_byte);
 	}
 
+	void set_draw_count(int count);
+
 /// \}
 
 /// \name Implementation

@@ -176,4 +176,9 @@ void ShaderEffectDescription::set_elements(ElementArrayBuffer &element_array, Ve
 	impl->elements_type = indices_type;
 }
 
+void ShaderEffectDescription::set_draw_count(int count)
+{
+	impl->draw_count = count;
+}
+
 }

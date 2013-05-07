@@ -39,7 +39,7 @@ class ShaderEffectDescription_Impl
 {
 public:
 	ShaderEffectDescription_Impl()
-	: glsl_version(0), elements_type()
+	: glsl_version(0), elements_type(), draw_count(0)
 	{
 	}
 
@@ -100,6 +100,8 @@ public:
 		bool normalize;
 	};
 	std::map<std::string, VertexAttributeDescription> attributes;
+
+	int draw_count;
 };
 
 }
