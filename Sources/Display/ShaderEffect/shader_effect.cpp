@@ -344,7 +344,7 @@ void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const Shader
 			prim_array.set_attributes(index, buffer, it->second.size, it->second.type, it->second.offset, it->second.stride, it->second.normalize);
 			attributes.push_back(buffer);
 
-			// To do: VertexArrayBuffer cannot return the size of the buffer. We have no way to determine how many vertices we have.
+			num_vertices = description->draw_count;
 		}
 		else if (it->second.attribute_type == ShaderEffectDescription_Impl::attribute_type_screen_quad)
 		{
