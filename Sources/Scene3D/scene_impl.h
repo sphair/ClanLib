@@ -66,7 +66,7 @@ class Scene_Impl
 public:
 	Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path);
 
-	ScenePass add_pass(const std::string &name, const std::string &insert_before);
+	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
 	void set_viewport(const Rect &box);
 	void set_camera(const Vec3f &position, const Quaternionf &orientation);

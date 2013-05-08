@@ -175,6 +175,19 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &
 	{
 		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
 	}
+
+	add_pass("gbuffer").func_run().set(gbuffer_pass.get(), &GBufferPass::run, this);
+	add_pass("skybox").func_run().set(skybox_pass.get(), &SkyboxPass::run, this);
+	add_pass("vsm").func_run().set(vsm_shadow_map_pass.get(), &VSMShadowMapPass::run, this);
+	if (lightsource_pass)
+		add_pass("light").func_run().set(lightsource_pass.get(), &LightsourcePass::run, this);
+	else
+		add_pass("light").func_run().set(lightsource_simple_pass.get(), &LightsourceSimplePass::run, this);
+	add_pass("transparency").func_run().set(transparency_pass.get(), &TransparencyPass::run, this);
+	add_pass("particles").func_run().set(particle_emitter_pass.get(), &ParticleEmitterPass::run, this);
+	add_pass("bloom").func_run().set(bloom_pass.get(), &BloomPass::run);
+	//add_pass("ssao").func_run().set(ssao_pass.get(), &SSAOPass::run);
+	add_pass("final").func_run().set(final_pass.get(), &FinalPass::run);
 }
 
 ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)
@@ -233,42 +246,6 @@ void Scene_Impl::render(GraphicContext &gc)
 			gpu_timer.end_time(gc);
 		}
 	}
-
-	gpu_timer.begin_time(gc, "gbuffer");
-	gbuffer_pass->run(gc, this);
-	gpu_timer.end_time(gc);
-
-	gpu_timer.begin_time(gc, "skybox");
-	skybox_pass->run(gc, this);
-	gpu_timer.end_time(gc);
-
-	gpu_timer.begin_time(gc, "vsm");
-	vsm_shadow_map_pass->run(gc, this);
-	gpu_timer.end_time(gc);
-
-	if (lightsource_pass)
-		lightsource_pass->run(gc, this);
-	else
-		lightsource_simple_pass->run(gc, this);
-
-	gpu_timer.begin_time(gc, "transparency");
-	transparency_pass->run(gc, this);
-	gpu_timer.end_time(gc);
-
-	gpu_timer.begin_time(gc, "particles");
-	particle_emitter_pass->run(gc, this);
-	gpu_timer.end_time(gc);
-
-	gpu_timer.begin_time(gc, "bloom");
-	bloom_pass->run(gc);
-	gpu_timer.end_time(gc);
-
-	//gpu_timer.begin_time(gc, "ssao");
-	//ssao_pass->run(gc);
-
-	gpu_timer.begin_time(gc, "final");
-	final_pass->run(gc);
-	gpu_timer.end_time(gc);
 
 	gpu_timer.end_frame(gc);
 
