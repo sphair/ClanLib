@@ -12,7 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>GUITexturedButtons</ProjectName>
-    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA1234AAA}</ProjectGuid>
+    <ProjectGuid>{701B757E-368D-4C51-94AB-283A98331BBF}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

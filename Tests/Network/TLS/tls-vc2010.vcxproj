@@ -15,7 +15,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectName>tls</ProjectName>
-    <ProjectGuid>{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}</ProjectGuid>
+    <ProjectGuid>{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}</ProjectGuid>
     <RootNamespace>tls</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
