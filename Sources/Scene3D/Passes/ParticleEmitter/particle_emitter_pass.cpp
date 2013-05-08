@@ -36,9 +36,16 @@
 namespace clan
 {
 
-ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path)
+ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, SceneInOutDataContainer &inout)
 : shader_path(shader_path), texture_cache(texture_cache)
 {
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
+	zbuffer = inout.get<Texture2D>("ZBuffer");
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+
+	final_color = inout.get<Texture2D>("FinalColor");
 }
 
 void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)

@@ -34,9 +34,12 @@
 namespace clan
 {
 
-
-BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path)
+BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	final_color = inout.get<Texture2D>("FinalColor");
+	bloom_contribution = inout.get<Texture2D>("BloomContribution");
+
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		bloom_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Bloom/fragment_bloom_extract.glsl"), "");
@@ -67,7 +70,7 @@ BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path)
 	rect_primarray = PrimitivesArray(gc);
 	rect_primarray.set_attributes(0, rect_positions);
 
-	bloom_blur.input.bind_from(bloom_contribution);
+	bloom_blur.input = bloom_contribution;
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);

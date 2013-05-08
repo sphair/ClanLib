@@ -36,8 +36,18 @@ namespace clan
 {
 
 
-GBufferPass::GBufferPass()
+GBufferPass::GBufferPass(SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
+
+	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
+	specular_color_gbuffer = inout.get<Texture2D>("SpecularColorGBuffer");
+	specular_level_gbuffer = inout.get<Texture2D>("SpecularLevelGBuffer");
+	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+	zbuffer = inout.get<Texture2D>("ZBuffer");
 }
 
 void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)

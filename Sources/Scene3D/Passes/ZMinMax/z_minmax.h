@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
+
 namespace clan
 {
 
@@ -38,9 +39,12 @@ public:
 	ZMinMax(int tile_size = 16);
 	void minmax(GraphicContext &gc);
 
-	InData<Rect> viewport;
-	InData<Texture2D> normal_z;
-	OutData<Texture2D> result;
+	// In:
+	SceneInOutData<Rect> viewport;
+	SceneInOutData<Texture2D> normal_z;
+
+	// Out:
+	SceneInOutData<Texture2D> result;
 
 private:
 	void update_buffers(GraphicContext &gc);

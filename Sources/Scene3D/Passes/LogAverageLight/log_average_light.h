@@ -28,20 +28,22 @@
 
 #pragma once
 
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
+
 namespace clan
 {
 
 class LogAverageLight
 {
 public:
-	LogAverageLight(GraphicContext &gc, int iterations = 8);
+	LogAverageLight(GraphicContext &gc, SceneInOutDataContainer &inout, int iterations = 8);
 	Texture2D &find_log_average_light(GraphicContext &gc, Texture2D &hdr_texture);
-
-	InData<Rect> viewport;
 
 private:
 	ProgramObject compile_and_link(GraphicContext &gc, const std::string &vertex_source, const std::string &fragment_source);
+
+	// In:
+	SceneInOutData<Rect> viewport;
 
 	int iterations;
 	ProgramObject program0, program1, program2;

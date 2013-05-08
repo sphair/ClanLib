@@ -37,8 +37,14 @@ namespace clan
 {
 
 
-TransparencyPass::TransparencyPass()
+TransparencyPass::TransparencyPass(SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
+	zbuffer = inout.get<Texture2D>("ZBuffer");
+
+	final_color = inout.get<Texture2D>("FinalColor");
 }
 
 void TransparencyPass::run(GraphicContext &render_gc, Scene_Impl *scene)

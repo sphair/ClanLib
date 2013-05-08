@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
+
 namespace clan
 {
 
@@ -38,8 +39,8 @@ public:
 	GaussianBlur();
 	void blur(GraphicContext &gc, TextureFormat format, float blur_amount, int sample_count = 15);
 
-	InData<Texture2D> input;
-	OutData<FrameBuffer> output;
+	SceneInOutData<Texture2D> input;
+	SceneInOutData<FrameBuffer> output;
 
 private:
 	void setup(GraphicContext &gc, Size new_size, TextureFormat new_format, float blur_amount, int sample_count);

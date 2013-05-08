@@ -33,8 +33,12 @@
 namespace clan
 {
 
-SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path)
+SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+
+	ssao_contribution = inout.get<Texture2D>("AmbientOcclusion");
+
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		extract_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "SSAO/fragment_ssao_extract.glsl"), "");
@@ -71,7 +75,7 @@ SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path)
 	rect_primarray = PrimitivesArray(gc);
 	rect_primarray.set_attributes(0, rect_positions);
 
-	blur.input.bind_from(ssao_contribution);
+	blur.input = ssao_contribution;
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);

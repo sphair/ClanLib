@@ -39,8 +39,21 @@
 namespace clan
 {
 
-LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path)
+LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
+	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
+	specular_color_gbuffer = inout.get<Texture2D>("SpecularColorGBuffer");
+	specular_level_gbuffer = inout.get<Texture2D>("SpecularLevelGBuffer");
+	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+	shadow_maps = inout.get<Texture2DArray>("ShadowMaps");
+	zbuffer = inout.get<Texture2D>("ZBuffer");
+
+	final_color = inout.get<Texture2D>("FinalColor");
+
 	icosahedron_light_program = compile_and_link(gc, shader_path, "icosahedron");
 	rect_light_program = compile_and_link(gc, shader_path, "rect");
 
