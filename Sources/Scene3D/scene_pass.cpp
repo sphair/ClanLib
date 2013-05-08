@@ -28,7 +28,9 @@
 
 #include "Scene3D/precomp.h"
 #include "API/Scene3D/scene_pass.h"
+#include "API/Scene3D/scene.h"
 #include "scene_pass_impl.h"
+#include "scene_impl.h"
 
 namespace clan
 {
@@ -37,14 +39,45 @@ ScenePass::ScenePass()
 {
 }
 
-ScenePass::ScenePass(Scene &scene, const std::string &insertion_point)
-	: impl(new ScenePass_Impl())
+ScenePass::ScenePass(Scene &scene, const std::string &name, const std::string &insert_before)
+	: impl(new ScenePass_Impl(scene.impl.get(), name))
 {
+	if (insert_before.empty())
+	{
+		scene.impl->passes.push_back(*this);
+	}
+	else
+	{
+		for (size_t i = 0; i < impl->scene_impl->passes.size(); i++)
+		{
+			if (impl->scene_impl->passes[i].get_name() == insert_before)
+			{
+				scene.impl->passes.insert(scene.impl->passes.begin() + i, *this);
+				return;
+			}
+		}
+		throw Exception(string_format("Pass %1 not found", insert_before));
+	}
 }
 
 bool ScenePass::is_null() const
 {
 	return !impl;
+}
+
+Callback_v1<GraphicContext &> &ScenePass::func_run()
+{
+	return impl->cb_run;
+}
+
+const std::string &ScenePass::get_name() const
+{
+	return impl->name;
+}
+
+SceneInOutDataContainer &ScenePass::get_inout_container()
+{
+	return impl->scene_impl->inout_data;
 }
 
 }

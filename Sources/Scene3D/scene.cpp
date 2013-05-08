@@ -239,6 +239,16 @@ void Scene_Impl::render(GraphicContext &gc)
 	Quaternionf inv_orientation = Quaternionf::inverse(camera.get_orientation());
 	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera.get_position());
 
+	for (size_t i = 0; i < passes.size(); i++)
+	{
+		if (!passes[i].func_run().is_null())
+		{
+			gpu_timer.begin_time(gc, passes[i].get_name());
+			passes[i].func_run().invoke(gc);
+			gpu_timer.end_time(gc);
+		}
+	}
+
 	// To do: move this elsewhere and set as OutData<Mat4f>:
 	gbuffer_pass->world_to_eye.set(world_to_eye);
 	skybox_pass->world_to_eye.set(world_to_eye);
