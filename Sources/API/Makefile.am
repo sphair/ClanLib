@@ -573,6 +573,8 @@ clanScene3D_includes = \
 	Scene3D/scene_object.h \
 	Scene3D/api_scene3d.h \
 	Scene3D/scene.h \
+	Scene3D/scene_pass.h \
+	Scene3D/scene_inout_data.h \
 	Scene3D/scene_light.h \
 	Scene3D/scene_cache_provider.h \
 	Scene3D/scene_particle_emitter.h \

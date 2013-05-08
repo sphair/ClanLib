@@ -21,6 +21,7 @@ Passes/DiffuseGI/diffuse_gi_pass_cs.cpp \
 Passes/GBuffer/gbuffer_pass.cpp \
 scene_camera.cpp \
 scene_cache.cpp \
+scene_pass.cpp \
 precomp.cpp \
 Culling/intersection_test.cpp \
 Culling/PortalMap/portal_map.cpp \
