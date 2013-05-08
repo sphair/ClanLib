@@ -35,8 +35,13 @@ namespace clan
 {
 
 
-FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path)
+FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	final_color = inout.get<Texture2D>("FinalColor");
+	bloom_blur_texture = inout.get<Texture2D>("BloomContribution");
+	ambient_occlusion = inout.get<Texture2D>("AmbientOcclusion");
+
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		present_shader = ShaderSetup::compile(gc, "", PathHelp::combine(shader_path, "Final/vertex_present.glsl"), PathHelp::combine(shader_path, "Final/fragment_present.glsl"), "");

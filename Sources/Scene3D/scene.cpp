@@ -139,81 +139,31 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
 	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, *material_cache, *model_shader_cache, instances_buffer));
 
-	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc));
-	gbuffer_pass = std::unique_ptr<GBufferPass>(new GBufferPass());
-	skybox_pass = std::unique_ptr<SkyboxPass>(new SkyboxPass(shader_path));
-	transparency_pass = std::unique_ptr<TransparencyPass>(new TransparencyPass());
-	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path));
-	bloom_pass = std::unique_ptr<BloomPass>(new BloomPass(gc, shader_path));
-	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path));
-	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path));
+	vsm_shadow_map_pass = std::unique_ptr<VSMShadowMapPass>(new VSMShadowMapPass(gc, inout_data));
+	gbuffer_pass = std::unique_ptr<GBufferPass>(new GBufferPass(inout_data));
+	skybox_pass = std::unique_ptr<SkyboxPass>(new SkyboxPass(shader_path, inout_data));
+	transparency_pass = std::unique_ptr<TransparencyPass>(new TransparencyPass(inout_data));
+	particle_emitter_pass = std::unique_ptr<ParticleEmitterPass>(new ParticleEmitterPass(*material_cache, shader_path, inout_data));
+	bloom_pass = std::unique_ptr<BloomPass>(new BloomPass(gc, shader_path, inout_data));
+	//ssao_pass = std::unique_ptr<SSAOPass>(new SSAOPass(gc, shader_path, inout_data));
+	final_pass = std::unique_ptr<FinalPass>(new FinalPass(gc, shader_path, inout_data));
+
+	viewport = inout_data.get<Rect>("Viewport");
+	camera_field_of_view = inout_data.get<float>("FieldOfView");
+	out_world_to_eye = inout_data.get<Mat4f>("WorldToEye");
 
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);
 
-	vsm_shadow_map_pass->viewport.bind_from(viewport);
-	vsm_shadow_map_pass->field_of_view.bind_from(camera_field_of_view);
-
-	gbuffer_pass->viewport.bind_from(viewport);
-	gbuffer_pass->field_of_view.bind_from(camera_field_of_view);
-
-	skybox_pass->viewport.bind_from(viewport);
-	skybox_pass->field_of_view.bind_from(camera_field_of_view);
-	skybox_pass->diffuse_color_gbuffer.bind_from(gbuffer_pass->diffuse_color_gbuffer);
-	skybox_pass->specular_color_gbuffer.bind_from(gbuffer_pass->specular_color_gbuffer);
-	skybox_pass->specular_level_gbuffer.bind_from(gbuffer_pass->specular_level_gbuffer);
-	skybox_pass->self_illumination_gbuffer.bind_from(gbuffer_pass->self_illumination_gbuffer);
-	skybox_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
-	skybox_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
-
 	bool use_simple_pass = false; // To do: check the feature level to decide this
 	if (use_simple_pass)
 	{
-		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path));
-		lightsource_simple_pass->viewport.bind_from(viewport);
-		lightsource_simple_pass->field_of_view.bind_from(camera_field_of_view);
-		lightsource_simple_pass->diffuse_color_gbuffer.bind_from(gbuffer_pass->diffuse_color_gbuffer);
-		lightsource_simple_pass->specular_color_gbuffer.bind_from(gbuffer_pass->specular_color_gbuffer);
-		lightsource_simple_pass->specular_level_gbuffer.bind_from(gbuffer_pass->specular_level_gbuffer);
-		lightsource_simple_pass->self_illumination_gbuffer.bind_from(gbuffer_pass->self_illumination_gbuffer);
-		lightsource_simple_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
-		lightsource_simple_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
-		lightsource_simple_pass->shadow_maps.bind_from(vsm_shadow_map_pass->shadow_maps);
+		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
 	}
 	else
 	{
-		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path));
-		lightsource_pass->viewport.bind_from(viewport);
-		lightsource_pass->field_of_view.bind_from(camera_field_of_view);
-		lightsource_pass->diffuse_color_gbuffer.bind_from(gbuffer_pass->diffuse_color_gbuffer);
-		lightsource_pass->specular_color_gbuffer.bind_from(gbuffer_pass->specular_color_gbuffer);
-		lightsource_pass->specular_level_gbuffer.bind_from(gbuffer_pass->specular_level_gbuffer);
-		lightsource_pass->self_illumination_gbuffer.bind_from(gbuffer_pass->self_illumination_gbuffer);
-		lightsource_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
-		lightsource_pass->shadow_maps.bind_from(vsm_shadow_map_pass->shadow_maps);
+		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
 	}
-
-	transparency_pass->viewport.bind_from(viewport);
-	transparency_pass->field_of_view.bind_from(camera_field_of_view);
-	transparency_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
-	transparency_pass->final_color.bind_from(lightsource_pass ? lightsource_pass->final_color: lightsource_simple_pass->final_color);
-
-	particle_emitter_pass->viewport.bind_from(viewport);
-	particle_emitter_pass->field_of_view.bind_from(camera_field_of_view);
-	particle_emitter_pass->zbuffer.bind_from(gbuffer_pass->zbuffer);
-	particle_emitter_pass->normal_z_gbuffer.bind_from(gbuffer_pass->normal_z_gbuffer);
-	particle_emitter_pass->final_color.bind_from(lightsource_pass ? lightsource_pass->final_color: lightsource_simple_pass->final_color);
-
-	bloom_pass->viewport.bind_from(viewport);
-	bloom_pass->final_color.bind_from(lightsource_pass ? lightsource_pass->final_color: lightsource_simple_pass->final_color);
-
-	//ssao_pass->viewport.bind_from(viewport);
-	//ssao_pass->normal_z_gbuffer.bind_from(gbuffer_pass_normal_z_gbuffer);
-
-	final_pass->viewport.bind_from(viewport);
-	final_pass->final_color.bind_from(lightsource_pass ? lightsource_pass->final_color: lightsource_simple_pass->final_color);
-	final_pass->bloom_blur_texture.bind_from(bloom_pass->bloom_contribution);
-	//final_pass->ambient_occlusion.bind_from(ssao_pass->ssao_contribution);
 }
 
 void Scene_Impl::set_viewport(const Rect &box)
@@ -239,6 +189,8 @@ void Scene_Impl::render(GraphicContext &gc)
 	Quaternionf inv_orientation = Quaternionf::inverse(camera.get_orientation());
 	Mat4f world_to_eye = inv_orientation.to_matrix() * Mat4f::translate(-camera.get_position());
 
+	out_world_to_eye.set(world_to_eye);
+
 	for (size_t i = 0; i < passes.size(); i++)
 	{
 		if (!passes[i].func_run().is_null())
@@ -248,17 +200,6 @@ void Scene_Impl::render(GraphicContext &gc)
 			gpu_timer.end_time(gc);
 		}
 	}
-
-	// To do: move this elsewhere and set as OutData<Mat4f>:
-	gbuffer_pass->world_to_eye.set(world_to_eye);
-	skybox_pass->world_to_eye.set(world_to_eye);
-	vsm_shadow_map_pass->world_to_eye.set(world_to_eye);
-	if (lightsource_pass)
-		lightsource_pass->world_to_eye.set(world_to_eye);
-	else
-		lightsource_simple_pass->world_to_eye.set(world_to_eye);
-	transparency_pass->world_to_eye.set(world_to_eye);
-	particle_emitter_pass->world_to_eye.set(world_to_eye);
 
 	gpu_timer.begin_time(gc, "gbuffer");
 	gbuffer_pass->run(gc, this);

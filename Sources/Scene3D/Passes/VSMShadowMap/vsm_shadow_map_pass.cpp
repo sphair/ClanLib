@@ -37,10 +37,12 @@ namespace clan
 {
 
 
-VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc)
-: maps(gc, 512, 64, tf_rg32f), round_robin(0)
+VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, SceneInOutDataContainer &inout)
+: maps(gc, inout.get<Texture2DArray>("ShadowMaps"), 512, 64, tf_rg32f), round_robin(0)
 {
-	shadow_maps.bind_from(maps.shadow_maps);
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
 
 	BlendStateDescription blend_desc;
 	blend_desc.enable_blending(false);

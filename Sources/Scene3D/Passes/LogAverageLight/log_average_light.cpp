@@ -34,9 +34,11 @@ namespace clan
 {
 
 
-LogAverageLight::LogAverageLight(GraphicContext &gc, int iterations)
+LogAverageLight::LogAverageLight(GraphicContext &gc, SceneInOutDataContainer &inout, int iterations)
 : iterations(iterations), current_index(0)
 {
+	viewport = inout.get<Rect>("Viewport");
+
 	Size texture_size(1 << iterations, 1 << iterations);
 
 	std::string vertex_program =

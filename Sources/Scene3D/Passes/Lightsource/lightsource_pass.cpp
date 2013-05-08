@@ -40,8 +40,20 @@ namespace clan
 {
 
 
-LightsourcePass::LightsourcePass(GraphicContext &gc, const std::string &shader_path)
+LightsourcePass::LightsourcePass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	field_of_view = inout.get<float>("FieldOfView");
+	world_to_eye = inout.get<Mat4f>("WorldToEye");
+	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
+	specular_color_gbuffer = inout.get<Texture2D>("SpecularColorGBuffer");
+	specular_level_gbuffer = inout.get<Texture2D>("SpecularLevelGBuffer");
+	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+	shadow_maps = inout.get<Texture2DArray>("ShadowMaps");
+
+	final_color = inout.get<Texture2D>("FinalColor");
+
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		cull_tiles_program = compile_and_link(gc, PathHelp::combine(shader_path, "Lightsource/cull_tiles.glsl"));
@@ -57,9 +69,8 @@ LightsourcePass::LightsourcePass(GraphicContext &gc, const std::string &shader_p
 	compute_lights = StorageVector<GPULight>(gc, max_lights);
 	transfer_lights = TransferVector<GPULight>(gc, max_lights);
 
-	zminmax.viewport.bind_from(viewport);
-	zminmax.normal_z.bind_from(normal_z_gbuffer);
-	zminmax_result.bind_from(zminmax.result);
+	zminmax.viewport = viewport;
+	zminmax.normal_z = normal_z_gbuffer;
 }
 
 LightsourcePass::~LightsourcePass()

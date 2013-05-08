@@ -35,8 +35,15 @@ namespace clan
 {
 
 
-DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path)
+DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
 {
+	viewport = inout.get<Rect>("Viewport");
+	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");
+	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
+	shadow_maps = inout.get<Texture2DArray>("ShadowMaps");
+
+	final_color = inout.get<Texture2D>("FinalColor");
+
 	if (gc.get_shader_language() == shader_glsl)
 	{
 		init_lpv_program = compile_and_link(gc, PathHelp::combine(shader_path, "DiffuseGI/init_lpv.glsl"));

@@ -56,6 +56,7 @@ public:
 template<typename Type>
 class SceneInOutData
 {
+public:
 	SceneInOutData()
 	: object(new SceneInOutData_Impl<Type>()), generation(-1)
 	{
@@ -86,7 +87,7 @@ class SceneInOutData
 	void set(const Type &value)
 	{
 		object->value = value;
-		generation = ++obj->generation;
+		generation = ++object->generation;
 	}
 
 	Type &get()
@@ -123,7 +124,7 @@ public:
 		std::shared_ptr<SceneInOutData_BaseImpl> inout_base = impl->inout_data[name];
 		if (inout_base)
 		{
-			std::shared_ptr<SceneInOutData_Impl<Type> > inout = std::dynamic_pointer_cast<Type>(inout_base);
+			std::shared_ptr<SceneInOutData_Impl<Type> > inout = std::dynamic_pointer_cast<SceneInOutData_Impl<Type> >(inout_base);
 			if (!inout)
 				throw Exception(string_format("ScenePass inout type mismatch for %1", name));
 			return SceneInOutData<Type>(inout);

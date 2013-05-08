@@ -29,7 +29,7 @@
 #pragma once
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
 
 namespace clan
 {
@@ -37,15 +37,18 @@ namespace clan
 class BloomPass
 {
 public:
-	BloomPass(GraphicContext &gc, const std::string &shader_path);
+	BloomPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout);
 	void run(GraphicContext &gc);
-
-	InData<Rect> viewport;
-	InData<Texture2D> final_color;
-	OutData<Texture2D> bloom_contribution;
 
 private:
 	void setup_bloom_extract(GraphicContext &gc);
+
+	// In:
+	SceneInOutData<Rect> viewport;
+	SceneInOutData<Texture2D> final_color;
+
+	// Out:
+	SceneInOutData<Texture2D> bloom_contribution;
 
 	GaussianBlur bloom_blur;
 	VertexArrayVector<Vec4f> rect_positions;

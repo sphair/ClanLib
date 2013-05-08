@@ -105,8 +105,9 @@ private:
 
 	SceneCamera camera;
 
-	OutData<float> camera_field_of_view;
-	OutData<Rect> viewport;
+	SceneInOutData<float> camera_field_of_view;
+	SceneInOutData<Rect> viewport;
+	SceneInOutData<Mat4f> out_world_to_eye;
 
 	std::unique_ptr<VSMShadowMapPass> vsm_shadow_map_pass;
 	std::unique_ptr<GBufferPass> gbuffer_pass;

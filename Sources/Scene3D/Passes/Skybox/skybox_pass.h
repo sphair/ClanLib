@@ -28,7 +28,8 @@
 
 #pragma once
 
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
+
 namespace clan
 {
 
@@ -37,19 +38,8 @@ class Scene_Impl;
 class SkyboxPass
 {
 public:
-	SkyboxPass(const std::string &shader_path);
+	SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
-
-	InData<Rect> viewport;
-	InData<float> field_of_view;
-	InData<Mat4f> world_to_eye;
-
-	InOutData<Texture2D> diffuse_color_gbuffer;
-	InOutData<Texture2D> specular_color_gbuffer;
-	InOutData<Texture2D> specular_level_gbuffer;
-	InOutData<Texture2D> self_illumination_gbuffer;
-	InOutData<Texture2D> normal_z_gbuffer;
-	InOutData<Texture2D> zbuffer;
 
 private:
 	void setup(GraphicContext &gc);
@@ -61,6 +51,19 @@ private:
 	void create_billboard_program(GraphicContext &gc);
 	void create_cube_program(GraphicContext &gc);
 	static float random(float min_value, float max_value);
+
+	// In:
+	SceneInOutData<Rect> viewport;
+	SceneInOutData<float> field_of_view;
+	SceneInOutData<Mat4f> world_to_eye;
+
+	// InOut:
+	SceneInOutData<Texture2D> diffuse_color_gbuffer;
+	SceneInOutData<Texture2D> specular_color_gbuffer;
+	SceneInOutData<Texture2D> specular_level_gbuffer;
+	SceneInOutData<Texture2D> self_illumination_gbuffer;
+	SceneInOutData<Texture2D> normal_z_gbuffer;
+	SceneInOutData<Texture2D> zbuffer;
 
 	std::string shader_path;
 

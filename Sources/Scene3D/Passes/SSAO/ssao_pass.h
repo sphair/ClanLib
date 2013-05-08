@@ -29,21 +29,25 @@
 #pragma once
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
+
 namespace clan
 {
 
 class SSAOPass
 {
 public:
-	SSAOPass(GraphicContext &gc, const std::string &shader_path);
+	SSAOPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout);
 	void run(GraphicContext &gc);
-
-	InData<Texture2D> normal_z_gbuffer;
-	OutData<Texture2D> ssao_contribution;
 
 private:
 	static float random_value();
+
+	// In:
+	SceneInOutData<Texture2D> normal_z_gbuffer;
+
+	// Out:
+	SceneInOutData<Texture2D> ssao_contribution;
 
 	GaussianBlur blur;
 	ProgramObject extract_shader;

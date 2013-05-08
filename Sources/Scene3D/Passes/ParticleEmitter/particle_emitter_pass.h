@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Scene3D/scene_particle_emitter.h"
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
 #include "particle_emitter_pass_data.h"
 #include "Scene3D/scene_particle_emitter_impl.h"
 
@@ -42,21 +42,23 @@ class MaterialCache;
 class ParticleEmitterPass : SceneParticleEmitterVisitor
 {
 public:
-	ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path);
+	ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, SceneInOutDataContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 	void update(GraphicContext &gc, float time_elapsed);
-
-	InData<Rect> viewport;
-	InData<float> field_of_view;
-	InData<Mat4f> world_to_eye;
-	InData<Texture2D> zbuffer;
-	InData<Texture2D> normal_z_gbuffer;
-
-	InOutData<Texture2D> final_color;
 
 private:
 	void setup(GraphicContext &gc);
 	void emitter(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneParticleEmitter_Impl *emitter);
+
+	// In:
+	SceneInOutData<Rect> viewport;
+	SceneInOutData<float> field_of_view;
+	SceneInOutData<Mat4f> world_to_eye;
+	SceneInOutData<Texture2D> zbuffer;
+	SceneInOutData<Texture2D> normal_z_gbuffer;
+
+	// InOut:
+	SceneInOutData<Texture2D> final_color;
 
 	std::string shader_path;
 

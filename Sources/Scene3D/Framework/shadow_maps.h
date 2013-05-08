@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include "Scene3D/Framework/inout_data.h"
+#include "API/Scene3D/scene_inout_data.h"
 #include <list>
+
 namespace clan
 {
 
@@ -40,13 +41,11 @@ class ShadowMapEntry_Impl;
 class ShadowMaps
 {
 public:
-	ShadowMaps(GraphicContext &gc, int shadow_map_size, int max_active_maps, TextureFormat format);
+	ShadowMaps(GraphicContext &gc, const SceneInOutData<Texture2DArray> &shadow_maps, int shadow_map_size, int max_active_maps, TextureFormat format);
 	~ShadowMaps();
 
 	void start_frame();
 	void assign_indexes();
-
-	OutData<Texture2DArray> shadow_maps;
 
 private:
 	void use_entry(ShadowMapEntry_Impl *entry);
@@ -55,6 +54,8 @@ private:
 	void add_used(ShadowMapEntry_Impl *entry);
 	void add_unused(ShadowMapEntry_Impl *entry);
 	void unlink(ShadowMapEntry_Impl *entry);
+
+	SceneInOutData<Texture2DArray> shadow_maps;
 
 	std::vector<FrameBuffer> framebuffers;
 	std::vector<Texture2D> views;
