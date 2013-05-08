@@ -271,7 +271,7 @@ void LightsourceSimplePass::render(GraphicContext &gc, GPUTimer &timer)
 
 	if (!lights.empty())
 	{
-		timer.begin_time(gc, "light(simple)");
+		//timer.begin_time(gc, "light(simple)");
 
 		gc.set_frame_buffer(fb);
 
@@ -321,8 +321,8 @@ void LightsourceSimplePass::render(GraphicContext &gc, GPUTimer &timer)
 		gc.draw_primitives_elements_instanced(type_triangles, icosahedron->num_elements, icosahedron->elements, 0, lights.size());
 		gc.reset_primitives_array();
 
-		timer.end_time(gc);
-		timer.begin_time(gc, "light(simple)");
+		//timer.end_time(gc);
+		//timer.begin_time(gc, "light(simple)");
 
 		gc.reset_texture(6);
 		gc.reset_texture(5);
@@ -333,7 +333,7 @@ void LightsourceSimplePass::render(GraphicContext &gc, GPUTimer &timer)
 		gc.reset_texture(0);
 		gc.reset_uniform_buffer(0);
 
-		timer.end_time(gc);
+		//timer.end_time(gc);
 	}
 }
 

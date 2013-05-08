@@ -211,7 +211,7 @@ void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
 	update_buffers(gc);
 	if (!lights.empty())
 	{
-		timer.begin_time(gc, "light(cull)");
+		//timer.begin_time(gc, "light(cull)");
 
 		gc.set_uniform_buffer(0, compute_uniforms);
 		gc.set_storage_buffer(0, compute_lights);
@@ -228,8 +228,8 @@ void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
 		gc.set_program_object(cull_tiles_program);
 		gc.dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
 
-		timer.end_time(gc);
-		timer.begin_time(gc, "light(render)");
+		//timer.end_time(gc);
+		//timer.begin_time(gc, "light(render)");
 
 		gc.set_program_object(render_tiles_program);
 		gc.dispatch(num_tiles_x, num_tiles_y);
@@ -246,7 +246,7 @@ void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
 		gc.reset_uniform_buffer(1);
 		gc.reset_uniform_buffer(0);
 
-		timer.end_time(gc);
+		//timer.end_time(gc);
 	}
 }
 
