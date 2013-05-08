@@ -97,8 +97,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RectPacker", "Tests\Core\Re
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Color", "Tests\Display\Color\Color-vc2010.vcxproj", "{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSSTokenize", "Tests\Core\CSSTokenize\CSSTokenize-vc2010.vcxproj", "{80C87802-898E-428B-A314-AB34E920EFA5}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HDR", "Tests\Display\HDR\hdr-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D111A1A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texture3D", "Tests\Display\Texture3D\Texture3D-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2A4427AE}"
@@ -121,13 +119,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpanLayout", "Tests\Display
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WM_Input", "Tests\Display\WM_Input\WM_Input-vc2010.vcxproj", "{3D4C085A-2901-4126-96EE-E5E0B1EB79CE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Test1", "Tests\GDI\Test1\Test1-vc2010.vcxproj", "{1E77A022-BDCD-434D-A48D-C409F992DE14}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Crypt", "Tests\Core\Crypt\Crypt-vc2010.vcxproj", "{A8995F04-3B46-4E2B-9390-B670006546ED}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinPos", "Tests\Display\WinPos\WinPos-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA237766A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UniformBlock", "Tests\Display\UniformBlock\UniformBlock-vc2010.vcxproj", "{C40C2488-5052-4581-A9A5-392CC19418DB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WebBrowser", "Tests\CSSLayout\WebBrowser\WebBrowser.vcxproj", "{52FD82E0-6197-4C4A-BCFC-9D012DA0AF64}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Basic", "Tests\D3D\Basic\Basic.vcxproj", "{FAF63430-738F-45DA-ADBF-4F0FB6EED2B9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Path", "Tests\Display\Path\Path-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA236FFE4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tls", "Tests\Network\TLS\tls-vc2010.vcxproj", "{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -327,10 +331,6 @@ Global
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Debug|Win32.Build.0 = Debug|Win32
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Release|Win32.ActiveCfg = Release|Win32
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Release|Win32.Build.0 = Release|Win32
-		{80C87802-898E-428B-A314-AB34E920EFA5}.Debug|Win32.ActiveCfg = Debug|Win32
-		{80C87802-898E-428B-A314-AB34E920EFA5}.Debug|Win32.Build.0 = Debug|Win32
-		{80C87802-898E-428B-A314-AB34E920EFA5}.Release|Win32.ActiveCfg = Release|Win32
-		{80C87802-898E-428B-A314-AB34E920EFA5}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Release|Win32.ActiveCfg = Release|Win32
@@ -375,10 +375,6 @@ Global
 		{3D4C085A-2901-4126-96EE-E5E0B1EB79CE}.Debug|Win32.Build.0 = Debug|Win32
 		{3D4C085A-2901-4126-96EE-E5E0B1EB79CE}.Release|Win32.ActiveCfg = Release|Win32
 		{3D4C085A-2901-4126-96EE-E5E0B1EB79CE}.Release|Win32.Build.0 = Release|Win32
-		{1E77A022-BDCD-434D-A48D-C409F992DE14}.Debug|Win32.ActiveCfg = Debug|Win32
-		{1E77A022-BDCD-434D-A48D-C409F992DE14}.Debug|Win32.Build.0 = Debug|Win32
-		{1E77A022-BDCD-434D-A48D-C409F992DE14}.Release|Win32.ActiveCfg = Release|Win32
-		{1E77A022-BDCD-434D-A48D-C409F992DE14}.Release|Win32.Build.0 = Release|Win32
 		{A8995F04-3B46-4E2B-9390-B670006546ED}.Debug|Win32.ActiveCfg = Debug|Win32
 		{A8995F04-3B46-4E2B-9390-B670006546ED}.Debug|Win32.Build.0 = Debug|Win32
 		{A8995F04-3B46-4E2B-9390-B670006546ED}.Release|Win32.ActiveCfg = Release|Win32
@@ -391,6 +387,22 @@ Global
 		{C40C2488-5052-4581-A9A5-392CC19418DB}.Debug|Win32.Build.0 = Debug|Win32
 		{C40C2488-5052-4581-A9A5-392CC19418DB}.Release|Win32.ActiveCfg = Release|Win32
 		{C40C2488-5052-4581-A9A5-392CC19418DB}.Release|Win32.Build.0 = Release|Win32
+		{52FD82E0-6197-4C4A-BCFC-9D012DA0AF64}.Debug|Win32.ActiveCfg = Debug|Win32
+		{52FD82E0-6197-4C4A-BCFC-9D012DA0AF64}.Debug|Win32.Build.0 = Debug|Win32
+		{52FD82E0-6197-4C4A-BCFC-9D012DA0AF64}.Release|Win32.ActiveCfg = Release|Win32
+		{52FD82E0-6197-4C4A-BCFC-9D012DA0AF64}.Release|Win32.Build.0 = Release|Win32
+		{FAF63430-738F-45DA-ADBF-4F0FB6EED2B9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FAF63430-738F-45DA-ADBF-4F0FB6EED2B9}.Debug|Win32.Build.0 = Debug|Win32
+		{FAF63430-738F-45DA-ADBF-4F0FB6EED2B9}.Release|Win32.ActiveCfg = Release|Win32
+		{FAF63430-738F-45DA-ADBF-4F0FB6EED2B9}.Release|Win32.Build.0 = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA236FFE4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA236FFE4}.Debug|Win32.Build.0 = Debug|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA236FFE4}.Release|Win32.ActiveCfg = Release|Win32
+		{4E27E943-27C7-4F00-A431-B6ACA236FFE4}.Release|Win32.Build.0 = Release|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.Build.0 = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.ActiveCfg = Release|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
