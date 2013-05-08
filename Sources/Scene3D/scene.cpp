@@ -35,6 +35,7 @@
 #include "scene_impl.h"
 #include "Culling/clipping_frustum.h"
 #include "Scene3D/scene_object_impl.h"
+#include "scene_pass_impl.h"
 
 namespace clan
 {
@@ -62,6 +63,11 @@ const SceneCamera &Scene::get_camera() const
 SceneCamera &Scene::get_camera()
 {
 	return impl->get_camera();
+}
+
+SceneInOutDataContainer &Scene::get_inout_container()
+{
+	return impl->inout_data;
 }
 
 void Scene::set_viewport(const Rect &box)
@@ -123,6 +129,11 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 	out_ray_direction = impl->camera.get_orientation().rotate_vector(ray_direction);
 }
 
+ScenePass Scene::add_pass(const std::string &name, const std::string &insert_before)
+{
+	return impl->add_pass(name, insert_before);
+}
+
 int Scene::instances_drawn = 0;
 int Scene::models_drawn = 0;
 int Scene::draw_calls = 0;
@@ -163,6 +174,28 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &
 	else
 	{
 		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
+	}
+}
+
+ScenePass Scene_Impl::add_pass(const std::string &name, const std::string &insert_before)
+{
+	ScenePass pass(std::shared_ptr<ScenePass_Impl>(new ScenePass_Impl(this, name)));
+	if (insert_before.empty())
+	{
+		passes.push_back(pass);
+		return pass;
+	}
+	else
+	{
+		for (size_t i = 0; i < passes.size(); i++)
+		{
+			if (passes[i].get_name() == insert_before)
+			{
+				passes.insert(passes.begin() + i, pass);
+				return pass;
+			}
+		}
+		throw Exception(string_format("Pass %1 not found", insert_before));
 	}
 }
 

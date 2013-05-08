@@ -34,6 +34,7 @@
 #include "api_scene3d.h"
 #include "../Display/Render/graphic_context.h"
 #include "Performance/gpu_timer.h"
+#include "scene_inout_data.h"
 #include <memory>
 
 namespace clan
@@ -45,6 +46,7 @@ class SceneParticleEmitter;
 class SceneObject;
 class SceneCamera;
 class SceneCache;
+class ScenePass;
 
 class CL_API_SCENE Scene
 {
@@ -56,6 +58,14 @@ public:
 
 	const SceneCamera &get_camera() const;
 	SceneCamera &get_camera();
+
+	SceneInOutDataContainer &get_inout_container();
+
+	template<typename Type>
+	SceneInOutData<Type> get_inout(const std::string &name)
+	{
+		return get_inout_container().get<Type>(name);
+	}
 
 	void set_viewport(const Rect &box);
 	void set_camera(const SceneCamera &camera);
@@ -69,6 +79,8 @@ public:
 	Mat4f world_to_projection() const;
 
 	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
+
+	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
 	// To do: should not be static, should be getter functions, etc.
 	static int models_drawn;

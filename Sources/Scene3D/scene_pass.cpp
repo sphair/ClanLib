@@ -39,25 +39,9 @@ ScenePass::ScenePass()
 {
 }
 
-ScenePass::ScenePass(Scene &scene, const std::string &name, const std::string &insert_before)
-	: impl(new ScenePass_Impl(scene.impl.get(), name))
+ScenePass::ScenePass(std::shared_ptr<ScenePass_Impl> impl)
+	: impl(impl)
 {
-	if (insert_before.empty())
-	{
-		scene.impl->passes.push_back(*this);
-	}
-	else
-	{
-		for (size_t i = 0; i < impl->scene_impl->passes.size(); i++)
-		{
-			if (impl->scene_impl->passes[i].get_name() == insert_before)
-			{
-				scene.impl->passes.insert(scene.impl->passes.begin() + i, *this);
-				return;
-			}
-		}
-		throw Exception(string_format("Pass %1 not found", insert_before));
-	}
 }
 
 bool ScenePass::is_null() const
@@ -73,11 +57,6 @@ Callback_v1<GraphicContext &> &ScenePass::func_run()
 const std::string &ScenePass::get_name() const
 {
 	return impl->name;
-}
-
-SceneInOutDataContainer &ScenePass::get_inout_container()
-{
-	return impl->scene_impl->inout_data;
 }
 
 }
