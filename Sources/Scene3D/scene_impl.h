@@ -30,6 +30,7 @@
 
 #include "API/Scene3D/scene_camera.h"
 #include "API/Scene3D/scene_cache.h"
+#include "API/Scene3D/scene_pass.h"
 #include "API/Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
@@ -47,6 +48,7 @@
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
 #include "Scene3D/Culling/OctTree/oct_tree.h"
 #include <list>
+
 namespace clan
 {
 
@@ -55,6 +57,7 @@ class ClippingFrustum;
 class SceneObject_Impl;
 class SceneLight_Impl;
 class SceneLightVisitor;
+class SceneInOutData_BaseImpl;
 class SceneParticleEmitter_Impl;
 class SceneParticleEmitterVisitor;
 
@@ -80,6 +83,9 @@ public:
 	const SceneCamera &get_camera() const { return camera; }
 	SceneCamera &get_camera() { return camera; }
 	void set_camera(const SceneCamera &cam) { camera = cam; }
+
+	SceneInOutDataContainer inout_data;
+	std::vector<ScenePass> passes;
 
 private:
 	SceneCache cache;

@@ -38,6 +38,11 @@ class Scene_Impl;
 class ScenePass_Impl
 {
 public:
+	ScenePass_Impl(Scene_Impl *scene_impl, const std::string &name) : scene_impl(scene_impl), name(name) { }
+
+	Scene_Impl *scene_impl;
+	const std::string name;
+	Callback_v1<GraphicContext &> cb_run;
 };
 
 }
