@@ -134,6 +134,19 @@ ScenePass Scene::add_pass(const std::string &name, const std::string &insert_bef
 	return impl->add_pass(name, insert_before);
 }
 
+void Scene::remove_pass(const std::string &name)
+{
+	for (size_t i = 0; i < impl->passes.size(); i++)
+	{
+		if (impl->passes[i].get_name() == name)
+		{
+			impl->passes.erase(impl->passes.begin() + i);
+			return;
+		}
+	}
+	throw Exception(string_format("Pass %1 not found", name));
+}
+
 int Scene::instances_drawn = 0;
 int Scene::models_drawn = 0;
 int Scene::draw_calls = 0;

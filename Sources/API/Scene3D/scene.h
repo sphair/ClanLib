@@ -81,6 +81,7 @@ public:
 	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
+	void remove_pass(const std::string &name);
 
 	// To do: should not be static, should be getter functions, etc.
 	static int models_drawn;
