@@ -32,9 +32,6 @@
 #pragma once
 
 #include "api_scene3d.h"
-#include "scene_inout_data.h"
-#include "../Core/Signals/callback_v1.h"
-#include "../Core/Text/string_format.h"
 #include <memory>
 #include <string>
 
@@ -49,21 +46,13 @@ class CL_API_SCENE ScenePass
 {
 public:
 	ScenePass();
-	ScenePass(Scene &scene, const std::string &name, const std::string &insert_before = std::string());
+	ScenePass(std::shared_ptr<ScenePass_Impl> impl);
 
 	bool is_null() const;
 
 	Callback_v1<GraphicContext &> &func_run();
 
 	const std::string &get_name() const;
-
-	SceneInOutDataContainer &get_inout_container();
-
-	template<typename Type>
-	SceneInOutData<Type> get_inout(const std::string &name)
-	{
-		return get_inout_container().get<Type>(name);
-	}
 
 private:
 	std::shared_ptr<ScenePass_Impl> impl;
