@@ -55,13 +55,7 @@
 namespace clan
 {
 
-typedef ubyte32		cl_bigint_digit;
-typedef ubyte64		cl_bigint_word;		// Must be twice the size of cl_bigint_digit
-typedef unsigned int	cl_bigint_size;
-
 /// \brief Big Integer class
-///
-/// ** Designed to clear internal memory after use **
 class BigInt
 {
 /// \name Construction
@@ -96,33 +90,33 @@ public:
 
 	void zero();
 
-	bool make_prime(cl_bigint_size num_bits);
+	bool make_prime(unsigned int num_bits);
 
 	// Compare a <=> 0.  Returns <0 if a<0, 0 if a=0, >0 if a>0.
 	int cmp_z() const;
 
-	void set_bit(cl_bigint_size bit_number, cl_bigint_size value);
+	void set_bit(unsigned int bit_number, unsigned int value);
 
 	int significant_bits() const;
 
-	void sieve(const cl_bigint_digit *primes, cl_bigint_size num_primes, std::vector<unsigned char> &sieve);
+	void sieve(const ubyte32 *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
 
 	// Compute c = a (mod d).  Result will always be 0 <= c < d
-	cl_bigint_digit mod_d(cl_bigint_digit d) const;
+	ubyte32 mod_d(ubyte32 d) const;
 
 	// Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
-	void div_d(cl_bigint_digit d, BigInt *q, cl_bigint_digit *r) const;
+	void div_d(ubyte32 d, BigInt *q, ubyte32 *r) const;
 
 	void copy(BigInt *to) const;
 
 	// Compute the sum out_b = this + d, for a single digit d.  Respects the sign of its primary addend (single digits are unsigned anyway).
-	void add_d(cl_bigint_digit d, BigInt &out_b) const;
+	void add_d(ubyte32 d, BigInt &out_b) const;
 
 	// Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
 	// If a is prime, and (w, a) = 1, then w^a == w (mod a).
 	// So, we compute z = w^a (mod a) and compare z to w; if they are
 	// equal, the test passes and we return true.  Otherwise, we return false.
-	bool fermat(cl_bigint_digit w) const;
+	bool fermat(ubyte32 w) const;
 
 
 	// Performs nt iteration of the Miller-Rabin probabilistic primality
@@ -130,7 +124,7 @@ public:
 	// If false is returned, the number is definitely composite.  If true
 	bool pprime(int nt) const;
 
-	void set(cl_bigint_digit d);
+	void set(ubyte32 d);
 
 	// Compute c = (a ** b) mod m.  Uses a standard square-and-multiply
 	// method with modular reductions at each step. (This is basically the
@@ -155,17 +149,17 @@ public:
 	int cmp(const BigInt *b) const;
 
 	// Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
-	int cmp_d(cl_bigint_digit d) const;
+	int cmp_d(ubyte32 d) const;
 
 	// Compute the difference b = a - d, for a single digit d.  Respects the sign of its subtrahend (single digits are unsigned anyway).
-	void sub_d(cl_bigint_digit d, BigInt *b) const;
+	void sub_d(ubyte32 d, BigInt *b) const;
 
 	// Compute b = -a.  'a' and 'b' may be identical.
 	void neg(BigInt *b) const;
 
-	cl_bigint_size trailing_zeros() const;
+	unsigned int trailing_zeros() const;
 
-	void div_2d(cl_bigint_digit d, BigInt *q, BigInt *r) const;
+	void div_2d(ubyte32 d, BigInt *q, BigInt *r) const;
 
 	void sqrmod(const BigInt *m, BigInt *c) const;
 	void sqr(BigInt *b) const;
@@ -216,51 +210,51 @@ public:
 private:
 
 	static const int default_allocated_precision = 64;
-	static const int num_bits_in_digit = (8*sizeof(cl_bigint_digit));
-	static const int num_bits_in_word = (8*sizeof(cl_bigint_word));
-	static const cl_bigint_word digit_radix = 1ULL << (8*sizeof(cl_bigint_digit));
-	static const cl_bigint_digit digit_half_radix = 1U << (8*sizeof(cl_bigint_digit) - 1);
-	static const cl_bigint_word word_maximim_value = ~0;
+	static const int num_bits_in_digit = (8*sizeof(ubyte32));
+	static const int num_bits_in_word = (8*sizeof(ubyte64));
+	static const ubyte64 digit_radix = 1ULL << (8*sizeof(ubyte32));
+	static const ubyte32 digit_half_radix = 1U << (8*sizeof(ubyte32) - 1);
+	static const ubyte64 word_maximim_value = ~0;
 
-	inline cl_bigint_digit internal_carryout(cl_bigint_word w) const
+	inline ubyte32 internal_carryout(ubyte64 w) const
 	{
 		return w >> num_bits_in_digit;
 	}
 
-	inline cl_bigint_digit internal_accum(cl_bigint_word w) const
+	inline ubyte32 internal_accum(ubyte64 w) const
 	{
-		return (cl_bigint_digit) w;
+		return (ubyte32) w;
 	}
 
-	void internal_init_size(cl_bigint_size prec);
+	void internal_init_size(unsigned int prec);
 	void internal_free();
-	void internal_lshd(cl_bigint_size p);
-	void internal_pad(cl_bigint_size min);
-	void internal_grow(cl_bigint_size min);
+	void internal_lshd(unsigned int p);
+	void internal_pad(unsigned int min);
+	void internal_grow(unsigned int min);
 	void internal_clamp();
-	int internal_ispow2d(cl_bigint_digit d) const;
-	void internal_div_2d(cl_bigint_digit d);
-	void internal_rshd(cl_bigint_size p);
+	int internal_ispow2d(ubyte32 d) const;
+	void internal_div_2d(ubyte32 d);
+	void internal_rshd(unsigned int p);
 	int  internal_ispow2() const;
-	void internal_mod_2d(cl_bigint_digit d);
-	void internal_mul_2d(cl_bigint_digit d);
+	void internal_mod_2d(ubyte32 d);
+	void internal_mul_2d(ubyte32 d);
 
 	// Exchange the data for a and b; (b, a) = (a, b)
 	void internal_exch(BigInt *b);
 
 	// Compare |a| <=> d, return 0 if equal, <0 if a<d, >0 if a>d
-	int internal_cmp_d(cl_bigint_digit d) const;
+	int internal_cmp_d(ubyte32 d) const;
 
-	void internal_div_d(cl_bigint_digit d, cl_bigint_digit *r);
+	void internal_div_d(ubyte32 d, ubyte32 *r);
 
-	void internal_add_d(cl_bigint_digit d);
-	void internal_sub_d(cl_bigint_digit d);
-	cl_bigint_digit internal_norm(BigInt *b);
+	void internal_add_d(ubyte32 d);
+	void internal_sub_d(ubyte32 d);
+	ubyte32 internal_norm(BigInt *b);
 	void internal_sub(const BigInt *b);
 
 	int internal_cmp(const BigInt *b) const;
 	void internal_div(BigInt *b);
-	void internal_mul_d(cl_bigint_digit d);
+	void internal_mul_d(ubyte32 d);
 	void internal_add(const BigInt *b);
 	void internal_mul(const BigInt *b);
 	void internal_div_2();
@@ -272,12 +266,12 @@ private:
 	void build_primes();
 
 	bool digits_negative;	// True if the value is negative
-	cl_bigint_size digits_alloc;		// How many digits allocated
-	cl_bigint_size digits_used;		// How many digits used
-	cl_bigint_digit *digits;	// The digits themselves
+	unsigned int digits_alloc;		// How many digits allocated
+	unsigned int digits_used;		// How many digits used
+	ubyte32 *digits;	// The digits themselves
 
 	static const int prime_tab_size = 6542;
-	static cl_bigint_digit prime_tab[prime_tab_size];
+	static ubyte32 prime_tab[prime_tab_size];
 	static bool prime_tab_built;
 
 /// \}
