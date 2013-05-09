@@ -54,6 +54,7 @@
 
 namespace clan
 {
+class BigInt_Impl;
 
 /// \brief Big Integer class
 class BigInt
@@ -110,14 +111,13 @@ public:
 	void copy(BigInt *to) const;
 
 	// Compute the sum out_b = this + d, for a single digit d.  Respects the sign of its primary addend (single digits are unsigned anyway).
-	void add_d(ubyte32 d, BigInt &out_b) const;
+	void add_d(ubyte32 d, BigInt *out_b) const;
 
 	// Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
 	// If a is prime, and (w, a) = 1, then w^a == w (mod a).
 	// So, we compute z = w^a (mod a) and compare z to w; if they are
 	// equal, the test passes and we return true.  Otherwise, we return false.
 	bool fermat(ubyte32 w) const;
-
 
 	// Performs nt iteration of the Miller-Rabin probabilistic primality
 	// test on a.  Returns true if the tests pass, false if one fails.
@@ -208,49 +208,8 @@ public:
 /// \name Implementation
 /// \{
 private:
-
-
-	void internal_init_size(unsigned int prec);
-	void internal_free();
-	void internal_lshd(unsigned int p);
-	void internal_pad(unsigned int min);
-	void internal_grow(unsigned int min);
-	void internal_clamp();
-	int internal_ispow2d(ubyte32 d) const;
-	void internal_div_2d(ubyte32 d);
-	void internal_rshd(unsigned int p);
-	int  internal_ispow2() const;
-	void internal_mod_2d(ubyte32 d);
-	void internal_mul_2d(ubyte32 d);
-
-	// Exchange the data for a and b; (b, a) = (a, b)
-	void internal_exch(BigInt *b);
-
-	// Compare |a| <=> d, return 0 if equal, <0 if a<d, >0 if a>d
-	int internal_cmp_d(ubyte32 d) const;
-
-	void internal_div_d(ubyte32 d, ubyte32 *r);
-
-	void internal_add_d(ubyte32 d);
-	void internal_sub_d(ubyte32 d);
-	ubyte32 internal_norm(BigInt *b);
-	void internal_sub(const BigInt *b);
-
-	int internal_cmp(const BigInt *b) const;
-	void internal_div(BigInt *b);
-	void internal_mul_d(ubyte32 d);
-	void internal_add(const BigInt *b);
-	void internal_mul(const BigInt *b);
-	void internal_div_2();
-	void internal_mul_2();
-
-	void internal_reduce(const BigInt *m, BigInt *mu);
-	void internal_sqr();
-
-	bool digits_negative;	// True if the value is negative
-	unsigned int digits_alloc;		// How many digits allocated
-	unsigned int digits_used;		// How many digits used
-	ubyte32 *digits;	// The digits themselves
+	std::unique_ptr<BigInt_Impl> impl;
+	friend class BigInt_Impl;
 
 /// \}
 

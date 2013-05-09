@@ -37,6 +37,7 @@ Crypto/sha512_impl.cpp \
 Crypto/aes256_encrypt.cpp \
 Crypto/aes256_decrypt_impl.cpp \
 Crypto/big_int.cpp \
+Crypto/big_int_impl.cpp \
 Crypto/md5.cpp \
 Crypto/hash_functions.cpp \
 Crypto/rsa_impl.cpp \
