@@ -52,12 +52,38 @@
 namespace clan
 {
 
-bool BigInt::prime_tab_built = false;
-ubyte32 BigInt::prime_tab[prime_tab_size];
+class BigInt_Impl
+{
+public:
+	static const int default_allocated_precision = 64;
+	static const int num_bits_in_digit = (8*sizeof(ubyte32));
+	static const int num_bits_in_word = (8*sizeof(ubyte64));
+	static const ubyte64 digit_radix = 1ULL << (8*sizeof(ubyte32));
+	static const ubyte32 digit_half_radix = 1U << (8*sizeof(ubyte32) - 1);
+	static const ubyte64 word_maximim_value = ~0;
+
+	static const int prime_tab_size = 6542;
+	static std::vector<ubyte32> prime_tab;
+
+	static void build_primes();
+
+	static inline ubyte32 BigInt_Impl::internal_carryout(ubyte64 w)
+	{
+		return w >> num_bits_in_digit;
+	}
+
+	static inline ubyte32 BigInt_Impl::internal_accum(ubyte64 w)
+	{
+		return (ubyte32) w;
+	}
+
+};
+
+std::vector<ubyte32> BigInt_Impl::prime_tab;
 
 BigInt::BigInt() : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
 {
-	internal_init_size(default_allocated_precision);
+	internal_init_size(BigInt_Impl::default_allocated_precision);
 }
 
 BigInt::BigInt(unsigned int precision_digits) : digits_negative(false), digits_alloc(0), digits_used(0), digits(NULL)
@@ -199,7 +225,7 @@ void BigInt::internal_grow(unsigned int min)
 	{
 
 		// Set min to next nearest default precision block size
-		min = ((min + (default_allocated_precision - 1)) / default_allocated_precision) * default_allocated_precision;
+		min = ((min + (BigInt_Impl::default_allocated_precision - 1)) / BigInt_Impl::default_allocated_precision) * BigInt_Impl::default_allocated_precision;
 
 		ubyte32 *tmp = new ubyte32[min];
 
@@ -261,13 +287,13 @@ void BigInt::internal_clamp()
 
 void BigInt::set_bit(unsigned int bit_number, unsigned int value)
 {
-	unsigned int ix = bit_number / num_bits_in_digit;
+	unsigned int ix = bit_number / BigInt_Impl::num_bits_in_digit;
 	if (ix + 1 > digits_used)
 	{
 		internal_pad(ix + 1);
 	}
 
-	bit_number = bit_number % num_bits_in_digit;
+	bit_number = bit_number % BigInt_Impl::num_bits_in_digit;
 	ubyte32 mask = 1 << bit_number;
 
 	if (value)
@@ -304,7 +330,7 @@ int BigInt::significant_bits() const
 			break;
 		}
 	}
-	bits += ix * num_bits_in_digit;
+	bits += ix * BigInt_Impl::num_bits_in_digit;
 	if (!bits)
 		bits = 1;
 	return bits;
@@ -396,8 +422,8 @@ void BigInt::internal_div_2d(ubyte32 d)
 
 	ubyte32 save, next, mask, *dp = digits;
 
-	internal_rshd(d / num_bits_in_digit);
-	d %= num_bits_in_digit;
+	internal_rshd(d / BigInt_Impl::num_bits_in_digit);
+	d %= BigInt_Impl::num_bits_in_digit;
 
 	mask = (1 << d) - 1;
 
@@ -405,7 +431,7 @@ void BigInt::internal_div_2d(ubyte32 d)
 	for(int ix = digits_used - 1; ix >= 0; ix--)
 	{
 		next = dp[ix] & mask;
-		dp[ix] = (dp[ix] >> d) | (save << (num_bits_in_digit - d));
+		dp[ix] = (dp[ix] >> d) | (save << (BigInt_Impl::num_bits_in_digit - d));
 		save = next;
 	}
 
@@ -435,7 +461,7 @@ void BigInt::internal_div_d(ubyte32 d, ubyte32 *r)
 	// Divide without subtraction
 	for(ix = digits_used - 1; ix >= 0; ix--)
 	{
-		w = (w << num_bits_in_digit) | dp[ix];
+		w = (w << BigInt_Impl::num_bits_in_digit) | dp[ix];
 
 		if(w >= d)
 		{
@@ -617,14 +643,14 @@ void BigInt::internal_add_d(ubyte32 d)
 	ubyte32 *dp = digits;
 
 	w = dp[0] + d;
-	dp[0] = internal_accum(w);
-	k = internal_carryout(w);
+	dp[0] = BigInt_Impl::internal_accum(w);
+	k = BigInt_Impl::internal_carryout(w);
 
 	while(ix < used && k)
 	{
 		w = (ubyte64) dp[ix] + k;
-		dp[ix] = internal_accum(w);
-		k = internal_carryout(w);
+		dp[ix] = BigInt_Impl::internal_accum(w);
+		k = BigInt_Impl::internal_carryout(w);
 		++ix;
 	}
 
@@ -646,16 +672,16 @@ void BigInt::internal_sub_d(ubyte32 d)
 	ubyte32 *dp = digits;
 
 	// Compute initial subtraction 
-	w = (digit_radix + dp[0]) - d;
-	b = internal_carryout(w) ? 0 : 1;
-	dp[0] = internal_accum(w);
+	w = (BigInt_Impl::digit_radix + dp[0]) - d;
+	b = BigInt_Impl::internal_carryout(w) ? 0 : 1;
+	dp[0] = BigInt_Impl::internal_accum(w);
 
 	// Propagate borrows leftward
 	while(b && ix < used)
 	{
-		w = (digit_radix + dp[ix]) - b;
-		b = internal_carryout(w) ? 0 : 1;
-		dp[ix] = internal_accum(w);
+		w = (BigInt_Impl::digit_radix + dp[ix]) - b;
+		b = BigInt_Impl::internal_carryout(w) ? 0 : 1;
+		dp[ix] = BigInt_Impl::internal_accum(w);
 		++ix;
 	}
 
@@ -751,7 +777,7 @@ int  BigInt::internal_ispow2() const
 			--dp; --ix;
 		}
 
-		return ((uv - 1) * num_bits_in_digit) + extra;
+		return ((uv - 1) * BigInt_Impl::num_bits_in_digit) + extra;
 	} 
 
 	return -1;
@@ -762,7 +788,7 @@ void BigInt::internal_mod_2d(ubyte32 d)
 	// Remainder the integer by 2^d, where d is a number of bits.  This
 	// amounts to a bitwise AND of the value, and does not require the full division code
 
-	unsigned int  ndig = (d / num_bits_in_digit), nbit = (d % num_bits_in_digit);
+	unsigned int  ndig = (d / BigInt_Impl::num_bits_in_digit), nbit = (d % BigInt_Impl::num_bits_in_digit);
 	unsigned int  ix;
 	ubyte32 dmask, *dp = digits;
 
@@ -791,15 +817,15 @@ void BigInt::internal_mul_2d(ubyte32 d)
 	unsigned int  used;
 	unsigned int ix;
 
-	internal_lshd(d / num_bits_in_digit);
+	internal_lshd(d / BigInt_Impl::num_bits_in_digit);
 
 	dp = digits; used = digits_used;
-	d %= num_bits_in_digit;
+	d %= BigInt_Impl::num_bits_in_digit;
 
 	mask = (1 << d) - 1;
 
 	// If the shift requires another digit, make sure we've got one to work with
-	if((dp[used - 1] >> (num_bits_in_digit - d)) & mask)
+	if((dp[used - 1] >> (BigInt_Impl::num_bits_in_digit - d)) & mask)
 	{
 		internal_grow(used + 1);
 		dp = digits;
@@ -809,7 +835,7 @@ void BigInt::internal_mul_2d(ubyte32 d)
 	save = 0;
 	for(ix = 0; ix < used; ix++)
 	{
-		next = (dp[ix] >> (num_bits_in_digit - d)) & mask;
+		next = (dp[ix] >> (BigInt_Impl::num_bits_in_digit - d)) & mask;
 		dp[ix] = (dp[ix] << d) | save;
 		save = next;
 	}
@@ -843,7 +869,7 @@ ubyte32 BigInt::internal_norm(BigInt *b)
 	ubyte32  t, d = 0;
 
 	t = b->digits[b->digits_used - 1];
-	while(t < digit_half_radix)
+	while(t < BigInt_Impl::digit_half_radix)
 	{
 		t <<= 1;
 		++d;
@@ -876,7 +902,7 @@ void BigInt::internal_mul_d(ubyte32 d)
 
 	max = digits_used;
 	w = (ubyte64) dp[max - 1] * d;
-	if(internal_carryout(w) != 0)
+	if(BigInt_Impl::internal_carryout(w) != 0)
 	{
 		internal_pad(max + 1);
 		dp = digits;
@@ -885,8 +911,8 @@ void BigInt::internal_mul_d(ubyte32 d)
 	for(ix = 0; ix < max; ix++)
 	{
 		w = ((ubyte64) dp[ix] * (ubyte64) d) + k;
-		dp[ix] = internal_accum(w);
-		k = internal_carryout(w);
+		dp[ix] = BigInt_Impl::internal_accum(w);
+		k = BigInt_Impl::internal_carryout(w);
 	}
 
 	// If there is a precision increase, take care of it here; the above
@@ -920,17 +946,17 @@ void BigInt::internal_sub(const BigInt *b)
 
 	for(ix = 0; ix < used; ++ix)
 	{
-		w = (digit_radix + *pa) - w - *pb++;
-		*pa++ = internal_accum(w);
-		w = internal_carryout(w) ? 0 : 1;
+		w = (BigInt_Impl::digit_radix + *pa) - w - *pb++;
+		*pa++ = BigInt_Impl::internal_accum(w);
+		w = BigInt_Impl::internal_carryout(w) ? 0 : 1;
 	}
 
 	used = digits_used;
 	while(ix < used)
 	{
-		w = digit_radix + *pa - w;
-		*pa++ = internal_accum(w);
-		w = internal_carryout(w) ? 0 : 1;
+		w = BigInt_Impl::digit_radix + *pa - w;
+		*pa++ = BigInt_Impl::internal_accum(w);
+		w = BigInt_Impl::internal_carryout(w) ? 0 : 1;
 		++ix;
 	}
 
@@ -994,13 +1020,13 @@ void BigInt::internal_div(BigInt *b)
 		// Compute a guess for the next quotient digit
 		q = rem.digits[rem.digits_used - 1];
 		if(q <= b->digits[b->digits_used - 1] && rem.digits_used > 1)
-			q = (q << num_bits_in_digit) | rem.digits[rem.digits_used - 2];
+			q = (q << BigInt_Impl::num_bits_in_digit) | rem.digits[rem.digits_used - 2];
 
 		q /= (ubyte64) b->digits[b->digits_used - 1];
 
 		// The guess can be as much as RADIX + 1
-		if(q >= digit_radix)
-			q = digit_radix - 1;
+		if(q >= BigInt_Impl::digit_radix)
+			q = BigInt_Impl::digit_radix - 1;
 
 		// See what that multiplies out to
 		b->copy(&t);
@@ -1219,8 +1245,8 @@ void BigInt::internal_add(const BigInt *b)
 	for(ix = 0; ix < used; ++ix)
 	{
 		w += (ubyte64) *pa + (ubyte64) *pb++;
-		*pa++ = internal_accum(w);
-		w = internal_carryout(w);
+		*pa++ = BigInt_Impl::internal_accum(w);
+		w = BigInt_Impl::internal_carryout(w);
 	}
 
 	// If we run out of 'b' digits before we're actually done, make	sure the carries get propagated upward...  
@@ -1228,8 +1254,8 @@ void BigInt::internal_add(const BigInt *b)
 	while(w && ix < used)
 	{
 		w += (ubyte64) *pa;
-		*pa++ = internal_accum(w);
-		w = internal_carryout(w);
+		*pa++ = BigInt_Impl::internal_accum(w);
+		w = BigInt_Impl::internal_carryout(w);
 		++ix;
 	}
 
@@ -1314,8 +1340,8 @@ void BigInt::internal_mul(const BigInt *b)
 		{
 			pt = pbt + ix + jx;
 			w = (ubyte64) *pb * (ubyte64) *pa + k + (ubyte64) *pt;
-			*pt = internal_accum(w);
-			k = internal_carryout(w);
+			*pt = BigInt_Impl::internal_accum(w);
+			k = BigInt_Impl::internal_carryout(w);
 		}
 
 		pbt[ix + jx] = k;
@@ -1445,12 +1471,12 @@ void BigInt::internal_reduce(const BigInt *m, BigInt *mu)
 	q.internal_rshd(um + 1);       // q3 = q2 / b^(k+1)
 
 	// x = x mod b^(k+1), quick (no division)
-	internal_mod_2d(num_bits_in_digit * (um + 1));
+	internal_mod_2d(BigInt_Impl::num_bits_in_digit * (um + 1));
 
 	// q = q * m mod b^(k+1), quick (no division)
 	q.internal_mul(m);
 
-	q.internal_mod_2d(num_bits_in_digit * (um + 1));
+	q.internal_mod_2d(BigInt_Impl::num_bits_in_digit * (um + 1));
 
 	// x = x - q
 	sub(&q, this);
@@ -1498,8 +1524,8 @@ void BigInt::internal_sqr()
 
 		w = (ubyte64) tmp.digits[ix + ix] + ( (ubyte64) *pa1 * (ubyte64) *pa1);
 
-		pbt[ix + ix] = internal_accum(w);
-		k = internal_carryout(w);
+		pbt[ix + ix] = BigInt_Impl::internal_accum(w);
+		k = BigInt_Impl::internal_carryout(w);
 
 
 		// The inner product is computed as:
@@ -1522,7 +1548,7 @@ void BigInt::internal_sqr()
 			// If w is more than half MP_WORD_MAX, the doubling will
 			// overflow, and we need to record a carry out into the next
 			// word
-			u = (w >> (num_bits_in_word - 1)) & 1;
+			u = (w >> (BigInt_Impl::num_bits_in_word - 1)) & 1;
 
 			// Double what we've got, overflow will be ignored as defined
 			// for C arithmetic (we've already noted if it is to occur)
@@ -1533,24 +1559,24 @@ void BigInt::internal_sqr()
 
 			// If we do not already have an overflow carry, check to see
 			// if the addition will cause one, and set the carry out if so 
-			u |= ((word_maximim_value - v) < w);
+			u |= ((BigInt_Impl::word_maximim_value - v) < w);
 
 			// Add in the rest, again ignoring overflow
 			w += v;
 
 			// Set the i,j digit of the output
-			*pt = internal_accum(w);
+			*pt = BigInt_Impl::internal_accum(w);
 
 			// Save carry information for the next iteration of the loop.
 			// This is why k must be an mp_word, instead of an mp_digit
-			k = internal_carryout(w) | ( (ubyte64) u << num_bits_in_digit);
+			k = BigInt_Impl::internal_carryout(w) | ( (ubyte64) u << BigInt_Impl::num_bits_in_digit);
 
 		}
 
 		// Set the last digit in the cycle and reset the carry
 		k = (ubyte64) tmp.digits[ix + jx] + k;
-		pbt[ix + jx] = internal_accum(k);
-		k = internal_carryout(k);
+		pbt[ix + jx] = BigInt_Impl::internal_accum(k);
+		k = BigInt_Impl::internal_carryout(k);
 
 		// If we are carrying out, propagate the carry to the next digit
 		// in the output.  This may cascade, so we have to be somewhat
@@ -1561,8 +1587,8 @@ void BigInt::internal_sqr()
 		while(k)
 		{
 			k = (ubyte64) pbt[ix + jx + kx] + 1;
-			pbt[ix + jx + kx] = internal_accum(k);
-			k = internal_carryout(k);
+			pbt[ix + jx + kx] = BigInt_Impl::internal_accum(k);
+			k = BigInt_Impl::internal_carryout(k);
 			++kx;
 		}
 	}
@@ -1600,7 +1626,7 @@ void BigInt::exptmod(const BigInt *b, const BigInt *m, BigInt *c) const
 		d = *db++;
 
 		// Loop over the bits of the lower-order digits
-		for(bit = 0; bit < num_bits_in_digit; bit++)
+		for(bit = 0; bit < BigInt_Impl::num_bits_in_digit; bit++)
 		{
 			if(d & 1)
 			{
@@ -1706,7 +1732,7 @@ unsigned int BigInt::trailing_zeros() const
 		if (d)
 			break;
 
-		n += num_bits_in_digit;
+		n += BigInt_Impl::num_bits_in_digit;
 	}
 
 	if (!d)
@@ -1938,7 +1964,7 @@ void BigInt::internal_mul_2()
 	// Shift digits leftward by 1 bit
 	for(ix = 0; ix < digits_used; ix++)
 	{
-		kout = (dp[ix] >> (num_bits_in_digit - 1)) & 1;
+		kout = (dp[ix] >> (BigInt_Impl::num_bits_in_digit - 1)) & 1;
 		dp[ix] = (dp[ix] << 1) | kin;
 
 		kin = kout;
@@ -2112,8 +2138,8 @@ bool BigInt::make_prime(unsigned int num_bits)
 	}
 
 	// Start sieveing with prime value of 3.
-	build_primes();		// Build prime numbers if they do not already exist
-	sieve(prime_tab + 1, prime_tab_size - 1, work_sieve);
+	BigInt_Impl::build_primes();		// Build prime numbers if they do not already exist
+	sieve(&BigInt_Impl::prime_tab[1], BigInt_Impl::prime_tab_size - 1, work_sieve);
 
 	unsigned char *sieve_ptr = &work_sieve[0];
 
@@ -2221,10 +2247,12 @@ void BigInt::to_unsigned_octets(unsigned char *output_str, unsigned int output_l
 		*output_str = 0;
 }
 
-void BigInt::build_primes()
+void BigInt_Impl::build_primes()
 {
-	if (prime_tab_built)
+	if (!prime_tab.empty())
 		return;
+
+	prime_tab.resize(prime_tab_size);
 
 	// Perform the Sieve of Eratosthenes on the first 65536 integers
 	const int sieve_max = 65536;
@@ -2258,15 +2286,12 @@ void BigInt::build_primes()
 			if (prime_offset >= prime_tab_size)
 				throw Exception("Build primes unexpected result");
 
-			prime_tab[prime_offset] = (cnt * 2) + 1;
+			BigInt_Impl::prime_tab[prime_offset] = (cnt * 2) + 1;
 			prime_offset++;
 		}
 	}
 	if (prime_offset != prime_tab_size)
 			throw Exception("Build primes unexpected result");
-
-	prime_tab_built = true;
-
 }
 
 }

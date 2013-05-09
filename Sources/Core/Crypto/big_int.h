@@ -209,22 +209,6 @@ public:
 /// \{
 private:
 
-	static const int default_allocated_precision = 64;
-	static const int num_bits_in_digit = (8*sizeof(ubyte32));
-	static const int num_bits_in_word = (8*sizeof(ubyte64));
-	static const ubyte64 digit_radix = 1ULL << (8*sizeof(ubyte32));
-	static const ubyte32 digit_half_radix = 1U << (8*sizeof(ubyte32) - 1);
-	static const ubyte64 word_maximim_value = ~0;
-
-	inline ubyte32 internal_carryout(ubyte64 w) const
-	{
-		return w >> num_bits_in_digit;
-	}
-
-	inline ubyte32 internal_accum(ubyte64 w) const
-	{
-		return (ubyte32) w;
-	}
 
 	void internal_init_size(unsigned int prec);
 	void internal_free();
@@ -263,16 +247,10 @@ private:
 	void internal_reduce(const BigInt *m, BigInt *mu);
 	void internal_sqr();
 
-	void build_primes();
-
 	bool digits_negative;	// True if the value is negative
 	unsigned int digits_alloc;		// How many digits allocated
 	unsigned int digits_used;		// How many digits used
 	ubyte32 *digits;	// The digits themselves
-
-	static const int prime_tab_size = 6542;
-	static ubyte32 prime_tab[prime_tab_size];
-	static bool prime_tab_built;
 
 /// \}
 
