@@ -36,8 +36,6 @@ Crypto/aes128_decrypt_impl.cpp \
 Crypto/sha512_impl.cpp \
 Crypto/aes256_encrypt.cpp \
 Crypto/aes256_decrypt_impl.cpp \
-Crypto/big_int.cpp \
-Crypto/big_int_impl.cpp \
 Crypto/md5.cpp \
 Crypto/hash_functions.cpp \
 Crypto/rsa_impl.cpp \
@@ -119,6 +117,8 @@ Zip/zlib_compression.cpp \
 Zip/zip_reader.cpp \
 Zip/zip_local_file_descriptor.cpp \
 Zip/zip_archive.cpp \
+Math/big_int.cpp \
+Math/big_int_impl.cpp \
 Math/mat3.cpp \
 Math/line.cpp \
 Math/rect_packer_impl.cpp \
