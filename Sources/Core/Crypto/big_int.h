@@ -31,6 +31,7 @@
 // Some ideas and algorithms are from NSS (Netscape Security Suite). Where they have been used, the function contains a reference note
 //
 // Note, since September 2011, I believe the MPI homepage is now: http://spinning-yarns.org/michael/mpi/
+// Note, since 2013, the MPI page no longer exists, however the internet archive has the details here: http://web.archive.org/web/20100426001741/http://spinning-yarns.org/michael/mpi/README
 // The license is as follows
 // This software was written by Michael J. Fromberger,
 //   http://www.dartmouth.edu/~sting/
