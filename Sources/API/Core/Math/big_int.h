@@ -52,6 +52,7 @@
 
 #include "../api_core.h"
 #include "../System/cl_platform.h"
+#include <memory>
 
 namespace clan
 {
