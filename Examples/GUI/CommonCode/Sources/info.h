@@ -51,7 +51,7 @@ private:
 	std::string name;
 	std::string comment;
 
-	unsigned int activated_time;
+	clan::ubyte64 activated_time;
 	bool activated_flag;
 };
 

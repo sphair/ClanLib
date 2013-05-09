@@ -69,13 +69,13 @@ int PathApp::start(const std::vector<std::string> &args)
 
 	clan::Texture2D texture(canvas, "../../../Examples/Game/DiceWar/Resources/lobby_background2.png");
 
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 	float angle = 0.0;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 

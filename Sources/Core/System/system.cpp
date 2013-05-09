@@ -282,7 +282,7 @@ void System::pause(int msecs)
 // For sleep less than 30ms (except 0), we perform a spinlock to increase the accuracy of sleep() to avoid the win32 scheduler misunderstanding the sleep hint
 	if ((msecs < 30) && (msecs >0) )
 	{
-		unsigned int time_start = get_time();
+		ubyte64 time_start = get_time();
 		do
 		{
 			Sleep(0);

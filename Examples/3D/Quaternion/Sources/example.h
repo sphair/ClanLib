@@ -75,7 +75,7 @@ private:
 	bool active_lerp;
 	bool active_slerp;
 
-	int current_time;
+	clan::ubyte64 current_time;
 	int time_delta;
 	bool quit;
 };

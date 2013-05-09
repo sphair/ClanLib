@@ -103,7 +103,7 @@ int App::start(const std::vector<std::string> &args)
 	bloom_saturation = 1.0f;
 	base_saturation = 1.0f;
 
-	unsigned int startTime = clan::System::get_time();
+	clan::ubyte64 startTime = clan::System::get_time();
 
 	while (!quit)
 	{

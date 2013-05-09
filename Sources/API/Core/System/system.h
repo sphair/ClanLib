@@ -50,7 +50,7 @@ class CL_API_CORE System
 
 public:
 	/// \brief Get the current time (since system boot), in milliseconds.
-	static unsigned int get_time();
+	static ubyte64 get_time();
 
 	/// \brief Get the current time microseconds.
 	static ubyte64 get_microseconds();

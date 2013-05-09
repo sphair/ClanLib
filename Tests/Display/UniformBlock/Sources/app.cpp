@@ -73,7 +73,7 @@ int App::start(const std::vector<std::string> &args)
 
 	Font font(gc, "tahoma", 32);
 
-	unsigned int startTime = System::get_time();
+	clan::ubyte64 startTime = System::get_time();
 
 
 

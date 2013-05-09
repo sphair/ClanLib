@@ -77,7 +77,7 @@ int App::start(const std::vector<std::string> &args)
 
 	float scale = 1.0f;
 
-	unsigned int startTime = System::get_time();
+	ubyte64 startTime = System::get_time();
 
 	while (!keyboard.get_keycode(clan::keycode_escape) && !quit )
 	{

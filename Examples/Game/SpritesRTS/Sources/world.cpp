@@ -275,9 +275,9 @@ void World::update()
 // Calculate amount of time since last frame
 int World::calcTimeElapsed()
 {
-	static unsigned int lastTime = 0;
+	static ubyte64 lastTime = 0;
 
-	unsigned int newTime = System::get_time();
+	ubyte64 newTime = System::get_time();
 	if(lastTime == 0)
 		lastTime = newTime;
 

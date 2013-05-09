@@ -133,7 +133,7 @@ public:
 	int delta_frame;
 
 	int update_time_ms;
-	unsigned int last_time_ms;
+	ubyte64 last_time_ms;
 
 	int id;
 

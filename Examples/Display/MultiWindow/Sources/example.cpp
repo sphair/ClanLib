@@ -72,7 +72,7 @@ int Example::start(const std::vector<std::string> &args)
 	int font_counter = 0;
 
 	// Start program timer
-	unsigned int time_start = System::get_time();
+	ubyte64 time_start = System::get_time();
 	int last_elapsed = 0;
 
 	// Set the window colors

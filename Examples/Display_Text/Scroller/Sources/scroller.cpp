@@ -66,12 +66,12 @@ int Scroller::start(const std::vector<std::string> &args)
 	font_description.set_height(24);
 	text.init(canvas, font_description, document_element, "TEXT");
 
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		int time_delta_ms = current_time - last_time;
 		last_time = current_time;
 

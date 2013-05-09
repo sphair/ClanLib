@@ -54,12 +54,12 @@ int SineScroll::start(const std::vector<std::string> &args)
 
 	texture = clan::Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
 
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		int delta_ms = current_time - last_time;
 		last_time = current_time;
 

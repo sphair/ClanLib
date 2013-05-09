@@ -35,14 +35,14 @@ void test1()
 	SocketName socket_name("www.clanlib.org", "80");
 	TCPConnection connection(socket_name);
 	connection.set_nodelay(true);
-	unsigned int start_time = System::get_time();
+	clan::ubyte64 start_time = System::get_time();
 	Console::write_line("Time start: %1", start_time);
 	for (int i = 0; i < 10; i++)
 	{
 		send_request(connection);
 		receive_response(connection);
 	}
-	unsigned int end_time = System::get_time();
+	clan::ubyte64 end_time = System::get_time();
 	Console::write_line("Time end: %1", end_time);
 	Console::write_line("Delta time: %1", (end_time - start_time));
 
@@ -59,7 +59,7 @@ void test2()
 
 	SocketName socket_name("www.clanlib.org", "80");
 	HTTPClientConnection connection(socket_name);
-	unsigned int start_time = System::get_time();
+	clan::ubyte64 start_time = System::get_time();
 	Console::write_line("Time start: %1", start_time);
 
 	for (int i = 0; i < 10; i++)
@@ -73,7 +73,7 @@ void test2()
 		Console::write_line(status_text);
 	}
 
-	unsigned int end_time = System::get_time();
+	clan::ubyte64 end_time = System::get_time();
 	Console::write_line("Time end: %1", end_time);
 	Console::write_line("Delta time: %1", (end_time - start_time));
 

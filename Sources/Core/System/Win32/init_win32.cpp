@@ -58,9 +58,9 @@ namespace clan
 
 // Win32 implementation of System functions:
 
-unsigned int System::get_time()
+ubyte64 System::get_time()
 {
-	return (unsigned int) (get_microseconds() / 1000);
+	return (get_microseconds() / 1000);
 }
 
 ubyte64 System::get_microseconds()

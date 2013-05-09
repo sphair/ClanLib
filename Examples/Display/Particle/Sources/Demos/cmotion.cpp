@@ -69,13 +69,13 @@ int DemoCMotion::run(clan::DisplayWindow &window)
 	set_style(canvas);
 
 	FramerateCounter frameratecounter;
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 
 	while(!quit)
 	{
 		canvas.clear(bg_color);
 
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 

@@ -94,13 +94,13 @@ int App::start(const std::vector<std::string> &args)
 	Font fps_font(canvas, "tahoma", 20);
 
 	FramerateCounter frameratecounter;
-	unsigned int time_last = System::get_time();
+	ubyte64 time_last = System::get_time();
 
 	float angle = 0.0f;
 
 	while (!quit)
 	{
-		unsigned int time_now = System::get_time();
+		ubyte64 time_now = System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 

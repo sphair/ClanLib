@@ -157,7 +157,7 @@ private:
 	GraphicContext gc;
 
 	bool flip_timer_set;
-	unsigned int flip_last_time;
+	ubyte64 flip_last_time;
 	int refresh_rate;
 	int swap_interval;
 /// \}

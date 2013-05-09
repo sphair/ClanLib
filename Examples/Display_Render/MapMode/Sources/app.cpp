@@ -74,11 +74,11 @@ int App::start(const std::vector<std::string> &args)
 
 	options->request_repaint();
 
-	unsigned int time_last = clan::System::get_time();
+	clan::ubyte64 time_last = clan::System::get_time();
 
 	while (!quit)
 	{
-		unsigned int time_now = clan::System::get_time();
+		clan::ubyte64 time_now = clan::System::get_time();
 		float time_diff = (float) (time_now - time_last);
 		time_last = time_now;
 

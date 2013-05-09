@@ -64,13 +64,13 @@ int App::start(const std::vector<std::string> &args)
 
 		Font font(gc, "Tahoma", 20);
 
-		unsigned int time_last = System::get_time();
+		clan::ubyte64 time_last = System::get_time();
 
 		bool direction = false;
 
 		while (!quit)
 		{
-			unsigned int time_now = System::get_time();
+			clan::ubyte64 time_now = System::get_time();
 			time_delta = ((float) time_now - time_last) / 1000.0f;
 			time_last = time_now;
 

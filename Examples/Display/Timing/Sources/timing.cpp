@@ -53,13 +53,13 @@ int Timing::start(const std::vector<std::string> &args)
 
 	set_stars(canvas, 100);
 
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
 		// Get the time delta to control movement
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		float time_delta_ms = (float) (current_time - last_time);
 		last_time = current_time;
 
