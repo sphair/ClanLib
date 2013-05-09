@@ -207,7 +207,7 @@ void App::on_window_close()
 
 void App::render(DisplayWindow &window)
 {
-	int start_time = System::get_time();
+	ubyte64 start_time = System::get_time();
 
 	canvas.set_map_mode(MapMode(map_2d_upper_left));
 

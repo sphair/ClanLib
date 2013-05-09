@@ -82,7 +82,7 @@ private:
 
 	bool got_powerup;
 
-	int powerup_starttime;
+	ubyte64 powerup_starttime;
 
 	//: Pacman images.
 	Sprite spr_pacman;

@@ -59,7 +59,7 @@ void KeepAlive::process(int timeout)
 		events.push_back(objects[i]->impl->wakeup_event);
 	}
 		
-	int time_start = System::get_time();
+	ubyte64 time_start = System::get_time();
 	while (true)
 	{
 		int time_elapsed = System::get_time() - time_start;

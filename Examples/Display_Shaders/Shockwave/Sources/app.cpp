@@ -87,7 +87,7 @@ int App::start(const std::vector<std::string> &args)
 
 	uniforms.shockParams = clan::Vec3f(10.0f, 0.8f, 0.1f);
 
-	unsigned int startTime = clan::System::get_time();
+	clan::ubyte64 startTime = clan::System::get_time();
 	shockwave_start_time = 0.0f;
 	shockwave_rate = 1.0f;
 	uniforms.glow = 0.1f;

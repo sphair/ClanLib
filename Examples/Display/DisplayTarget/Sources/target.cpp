@@ -102,7 +102,7 @@ bool Target::run_demo()
 
 	FramerateCounter frameratecounter;
 
-	unsigned int time_last = clan::System::get_time();
+	clan::ubyte64 time_last = clan::System::get_time();
 	float fontfall_ticker = 0.0f;
 
 	quit = false;
@@ -130,7 +130,7 @@ bool Target::run_demo()
 			break;
 		}
 
-		unsigned int time_now = clan::System::get_time();
+		clan::ubyte64 time_now = clan::System::get_time();
 		float time_delta = (float) (time_now - time_last);
 		time_last = time_now;
 

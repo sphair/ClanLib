@@ -87,7 +87,7 @@ int DemoUserCollision::run(clan::DisplayWindow &window)
 
 	clan::Font font(canvas,  "Arial", 16 );
 	FramerateCounter frameratecounter;
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 last_time = clan::System::get_time();
 
 	clan::InputDevice &keyboard = window.get_ic().get_keyboard();
 	while(!quit)
@@ -114,7 +114,7 @@ int DemoUserCollision::run(clan::DisplayWindow &window)
 
 		shooting_eff->set_velocity(vel);
 
-		unsigned int current_time = clan::System::get_time();
+		clan::ubyte64 current_time = clan::System::get_time();
 		int time_run = current_time - last_time;
 		last_time = current_time;
 

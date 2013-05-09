@@ -9,5 +9,5 @@ public:
 	float update();
 
 private:
-	unsigned int last_time;
+	clan::ubyte64 last_time;
 };

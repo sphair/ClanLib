@@ -101,12 +101,12 @@ int Collision::start(const std::vector<std::string> &args)
 
 	FramerateCounter frameratecounter;
 
-	unsigned int last_time = System::get_time();
+	clan::ubyte64 last_time = System::get_time();
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		unsigned int current_time = System::get_time();
+		clan::ubyte64 current_time = System::get_time();
 		int time_elapsed = current_time - last_time;
 		last_time = current_time;
 

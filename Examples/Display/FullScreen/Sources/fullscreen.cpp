@@ -50,7 +50,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 	float sin_count = 0.0f;
 
-	unsigned int last_time = System::get_time();
+	clan::ubyte64 last_time = System::get_time();
 
 	FontDescription desc;
 	desc.set_typeface_name("tahoma");
@@ -74,7 +74,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 		}
 
-		unsigned int current_time = System::get_time();
+		clan::ubyte64 current_time = System::get_time();
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 

@@ -58,7 +58,7 @@ GUI::~GUI()
 bool GUI::run()
 {
 	static int total_time = 0, fps_count = 0, last_fps= 0;
-	static int start_time = 0;
+	static clan::ubyte64 start_time = 0;
 
 	if (start_time == 0)
 	{
@@ -78,7 +78,7 @@ bool GUI::run()
 	fps_font.draw_text(canvas, 24, canvas.get_height() - 48, "Rendering GUI, Directly onto the display window. Some demo windows disabled to improve FPS (in gui_direct.cpp)", clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 	fps_count++;
-	int time = clan::System::get_time();
+	clan::ubyte64 time = clan::System::get_time();
 	total_time += time - start_time;
 	start_time = time;
 	if(total_time >= 1000)

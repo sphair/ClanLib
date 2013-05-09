@@ -129,12 +129,12 @@ int App::start(const std::vector<std::string> &args)
 		BlendState blend_state_off(canvas, blend_desc);
 
 		float rotation = 0.0f;
-		unsigned int time_last = System::get_time();
+		clan::ubyte64 time_last = System::get_time();
 
 		// Run until someone presses escape
 		while (!quit)
 		{
-			unsigned time_now = System::get_time();
+			clan::ubyte64 time_now = System::get_time();
 			float time_diff = (float) (time_now - time_last);
 			time_last = time_now;
 

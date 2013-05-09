@@ -95,13 +95,13 @@ int App::start(const std::vector<std::string> &args)
 
 	FramerateCounter framerate_counter;
 
-	unsigned int time_last = System::get_time();
+	ubyte64 time_last = System::get_time();
 	// Run until someone presses escape
 	while (!quit)
 	{
 		framerate_counter.frame_shown();
 
-		unsigned int time_now = System::get_time();
+		ubyte64 time_now = System::get_time();
 		time_delta = time_now - time_last;
 		time_last = time_now;
 

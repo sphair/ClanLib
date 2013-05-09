@@ -42,7 +42,7 @@ public:
 	void set_color_component(bool new_red, bool new_green, bool new_blue);
 
 	// Returns false when the text has reached the destination position
-	bool draw(Canvas &canvas, unsigned int current_time);
+	bool draw(Canvas &canvas, clan::ubyte64 current_time);
 
 private:
 	Font_Vector vector_font;
@@ -51,7 +51,7 @@ private:
 	Vec3f start_position;
 	Vec3f end_position;
 	int duration;
-	unsigned int start_time;
+	ubyte64 start_time;
 
 	float end_fade_time;
 	float initial_white_time;

@@ -180,10 +180,10 @@ public:
 	int dump_fps()
 	{
 		// Calculate time since last update
-		static int start_time = System::get_time();
+		static clan::ubyte64 start_time = System::get_time();
 		static int fps_dump_time = 0;
 
-		int cur_time = System::get_time();
+		clan::ubyte64 cur_time = System::get_time();
 		int delta_time = cur_time - start_time;
 		start_time = cur_time;
 

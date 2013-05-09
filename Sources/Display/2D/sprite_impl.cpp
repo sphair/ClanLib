@@ -540,7 +540,7 @@ void Sprite_Impl::draw_calcs_step2(
 int Sprite_Impl::calc_time_elapsed()
 {
 	// Calculate amount of time since last frame
-	unsigned int new_time = System::get_time();
+	ubyte64 new_time = System::get_time();
 	if(last_time_ms == 0)
 		last_time_ms = new_time;
 

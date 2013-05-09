@@ -80,7 +80,7 @@ int App::start(const std::vector<std::string> &args)
 		Font small_font = Font(gc, "Tahoma", 12);
 
 		int num_windows_created = 0;
-		int start_time = System::get_time();
+		clan::ubyte64 start_time = System::get_time();
 
 		OpenGLWindowDescription desc2;
 		desc2.set_title("test window");

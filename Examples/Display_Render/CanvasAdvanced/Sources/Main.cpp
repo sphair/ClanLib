@@ -68,8 +68,8 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	clan::Canvas canvas_fb(canvas, fb_lightmask);
 
 	// Just a bunch of variables for keeping time and tracking FPS
-	unsigned int current_time = 0;
-	unsigned int last_time = clan::System::get_time();
+	clan::ubyte64 current_time = 0;
+	clan::ubyte64 last_time = clan::System::get_time();
 	float micro_second = 0;
 	float fps_ticker = 0;
 	int real_fps = 0;

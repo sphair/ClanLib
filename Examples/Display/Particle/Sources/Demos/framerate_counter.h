@@ -40,6 +40,6 @@ public:
 
 private:
 	int current_fps;
-	int start_time;
+	clan::ubyte64 start_time;
 	int frames;
 };

@@ -57,7 +57,7 @@ void TestApp::test_timer(void)
 	Timer timer_5;
 	Timer timer_6;
 
-	unsigned int start_time = System::get_time();
+	clan::ubyte64 start_time = System::get_time();
 
 	timer_1.func_expired().set(this, &TestApp::funx_timer_1);
 	timer_2.func_expired().set(this, &TestApp::funx_timer_2);
@@ -76,7 +76,7 @@ void TestApp::test_timer(void)
 	bool stopped_flag = false;
 	while(true)
 	{
-		unsigned int time_now = System::get_time();
+		clan::ubyte64 time_now = System::get_time();
 		int time_diff = time_now - start_time;
 		if (time_diff >= 1600) break;
 
@@ -109,7 +109,7 @@ void TestApp::test_timer(void)
 	timer_1.start(3000, false);
 	while(true)
 	{
-		unsigned int time_now = System::get_time();
+		clan::ubyte64 time_now = System::get_time();
 		int time_diff = time_now - start_time;
 		if (time_diff >= 1600) break;
 

@@ -314,7 +314,7 @@ void SWRenderDisplayWindowProvider::flip(int interval)
 		}
 		else
 		{
-			unsigned int current_time = System::get_time();
+			ubyte64 current_time = System::get_time();
 
 			int time_diff = current_time - flip_last_time;
 

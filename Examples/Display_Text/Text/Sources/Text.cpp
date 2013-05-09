@@ -154,7 +154,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 	// Run until someone presses escape
 	while (!quit)
 	{
-		int start_time = clan::System::get_time();
+		clan::ubyte64 start_time = clan::System::get_time();
 
 		canvas.set_map_mode(clan::map_2d_upper_left);
 

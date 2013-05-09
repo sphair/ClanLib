@@ -209,7 +209,7 @@ void App::calculate_matrix(Canvas &canvas)
 
 void App::draw_text_shooter(Canvas &canvas)
 {
-	unsigned int current_time = System::get_time();
+	ubyte64 current_time = System::get_time();
 
 	std::list<TextShooter>::iterator it;
 	for (it = text_shooter.begin(); it != text_shooter.end();)

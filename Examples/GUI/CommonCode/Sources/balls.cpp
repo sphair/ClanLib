@@ -47,7 +47,7 @@ void Balls::Init(clan::Canvas &canvas)
 
 void Balls::Run(clan::Canvas &canvas)
 {
-	unsigned int time_now = clan::System::get_time();
+	clan::ubyte64 time_now = clan::System::get_time();
 	float time_diff = (float) (time_now - time_last);
 	time_last = time_now;
 

@@ -48,12 +48,12 @@ int HSV::start(const std::vector<std::string> &args)
 
 	Font font(canvas, "tahoma", 24);
 
-	unsigned int last_time = System::get_time();
+	ubyte64 last_time = System::get_time();
 
 	float hue_offset = 0.0;
 	while (!quit)
 	{
-		unsigned int current_time = System::get_time();
+		ubyte64 current_time = System::get_time();
 		float time_delta_ms = static_cast<float> (current_time - last_time);
 		last_time = current_time;
 

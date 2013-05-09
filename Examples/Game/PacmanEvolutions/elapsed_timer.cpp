@@ -14,7 +14,7 @@ void ElapsedTimer::reset()
 
 float ElapsedTimer::update()
 {
-	unsigned int current_time = clan::System::get_time();
+	clan::ubyte64 current_time = clan::System::get_time();
 	if (last_time == 0 || current_time < last_time)
 	{
 		last_time = current_time;

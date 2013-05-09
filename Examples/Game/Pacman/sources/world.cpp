@@ -111,10 +111,10 @@ void World::run(DisplayWindow &window)
 //	playback.play();
 
 	// Start the game simulation:
-	int start_time = System::get_time();
+	ubyte64 start_time = System::get_time();
 
-	int begin_time = System::get_time();
-	int score_time = System::get_time();
+	ubyte64 begin_time = System::get_time();
+	ubyte64 score_time = System::get_time();
 	
 	int center_x = 0;
 	int center_y = 0;

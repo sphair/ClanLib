@@ -46,7 +46,7 @@ public:
 	Timer_Object() : stopped(true) {}
 
 	bool stopped;
-	unsigned int end_time;
+	ubyte64 end_time;
 	unsigned int timeout;
 	bool repeating;
 	Callback_v0 func_expired;
@@ -118,7 +118,7 @@ public:
 	{
 		MutexSection mutex_lock(&mutex);
 
-		unsigned int current_time = System::get_time();
+		ubyte64 current_time = System::get_time();
 
 		// Scan for events and trigger them
 		for (std::map<int, Timer_Object *>::iterator it = timer_objects.begin(); it != timer_objects.end();)
@@ -183,7 +183,7 @@ private:
 			if (stop_thread)
 				break;
 
-			unsigned int current_time = System::get_time();
+			ubyte64 current_time = System::get_time();
 			timeout = -1;
 			bool found_timer = false;
 

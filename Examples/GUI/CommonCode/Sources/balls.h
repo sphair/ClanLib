@@ -63,5 +63,5 @@ private:
 	static const int max_balls = 5;
 	BallPosition balls[max_balls];
 
-	unsigned int time_last;
+	ubyte64 time_last;
 };

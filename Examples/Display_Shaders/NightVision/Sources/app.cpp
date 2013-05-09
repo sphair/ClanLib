@@ -108,7 +108,7 @@ int App::start(const std::vector<std::string> &args)
 	}
 	canvas_mask.flush();
 
-	unsigned int startTime = clan::System::get_time();
+	clan::ubyte64 startTime = clan::System::get_time();
 
 	while (!quit)
 	{

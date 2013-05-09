@@ -107,7 +107,7 @@ private:
 	clan::Mat4f resultant_matrix;
 
 	float wobble_offset;
-	unsigned int last_time;
+	clan::ubyte64 last_time;
 
 	float current_zoffset;
 

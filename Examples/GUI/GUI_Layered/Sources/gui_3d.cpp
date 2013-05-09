@@ -122,7 +122,7 @@ const char GUI_Texture_Shader_Fragment[] =
 bool GUI_Layered::run3d()
 {
 	// Control the sine wave wobble
-	unsigned int current_time = clan::System::get_time();
+	clan::ubyte64 current_time = clan::System::get_time();
 	if (panel3d->is_animated())
 		wobble_offset += ((float) (current_time - last_time)) / 2000.0f;
 	last_time = current_time;
