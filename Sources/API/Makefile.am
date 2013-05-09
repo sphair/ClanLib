@@ -247,6 +247,7 @@ clanCore_includes = \
 	Core/Zip/zip_reader.h \
 	Core/Zip/zip_archive.h \
 	Core/Zip/zlib_compression.h \
+	Core/Math/big_int.h \
 	Core/Math/half_float.h \
 	Core/Math/quad.h \
 	Core/Math/ear_clip_triangulator.h \

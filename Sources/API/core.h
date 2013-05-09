@@ -192,6 +192,7 @@
 #include "Core/Math/rect_packer.h"
 #include "Core/Math/half_float.h"
 #include "Core/Math/half_float_vector.h"
+#include "Core/Math/big_int.h"
 #include "Core/Crypto/random.h"
 #include "Core/Crypto/secret.h"
 #include "Core/Crypto/sha1.h"
