@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tls", "tls-vc2010.vcxproj", "{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tls", "tls-vc2010.vcxproj", "{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}.Debug|Win32.Build.0 = Debug|Win32
-		{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}.Release|Win32.ActiveCfg = Release|Win32
-		{4EBA0C76-44FB-4B5C-8CEF-54008DA70535}.Release|Win32.Build.0 = Release|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Debug|Win32.Build.0 = Debug|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.ActiveCfg = Release|Win32
+		{E413D9A0-1CEB-4EA7-A7DF-7D796A554331}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
