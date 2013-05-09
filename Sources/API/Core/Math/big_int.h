@@ -50,7 +50,8 @@
 
 #pragma once
 
-#include "API/Core/System/cl_platform.h"
+#include "../api_core.h"
+#include "../System/cl_platform.h"
 
 namespace clan
 {
