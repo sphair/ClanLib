@@ -30,7 +30,7 @@
 #include "lightsource_simple_pass.h"
 #include "Scene3D/Framework/shader_setup.h"
 #include "Scene3D/Passes/VSMShadowMap/vsm_shadow_map_pass.h"
-#include "Scene3D/Culling/clipping_frustum.h"
+#include "API/Core/Math/frustum_planes.h"
 #include "Scene3D/scene_impl.h"
 #include "API/Scene3D/scene.h"
 #include "API/Scene3D/Performance/scope_timer.h"

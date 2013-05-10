@@ -30,7 +30,7 @@
 #include "model_instance.h"
 #include "model.h"
 #include "API/Scene3D/ModelData/model_data.h"
-#include "Scene3D/Culling/aabb.h"
+#include "API/Core/Math/aabb.h"
 
 namespace clan
 {

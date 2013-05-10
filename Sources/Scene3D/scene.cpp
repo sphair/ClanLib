@@ -32,7 +32,7 @@
 #include "API/Scene3D/scene_light.h"
 #include "API/Scene3D/scene_particle_emitter.h"
 #include "API/Scene3D/Performance/scope_timer.h"
-#include "Scene3D/Culling/clipping_frustum.h"
+#include "API/Core/Math/frustum_planes.h"
 #include "Scene3D/Culling/OctTree/oct_tree.h"
 #include "scene_impl.h"
 #include "scene_object_impl.h"

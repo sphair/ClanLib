@@ -31,7 +31,7 @@
 #include "portal_sector.h"
 #include "portal.h"
 #include "portal_clipping.h"
-#include "Scene3D/Culling/intersection_test.h"
+#include "API/Core/Math/intersection_test.h"
 #include <algorithm>
 
 namespace clan

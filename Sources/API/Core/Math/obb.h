@@ -26,7 +26,12 @@
 **    Magnus Norddahl
 */
 
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
+
 #pragma once
+
+#include "vec3.h"
 
 namespace clan
 {
@@ -43,3 +48,4 @@ public:
 
 }
 
+/// \}

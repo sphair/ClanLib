@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Scene3D/scene_cull_provider.h"
-#include "Scene3D/Culling/clipping_frustum.h"
+#include "API/Core/Math/frustum_planes.h"
 
 namespace clan
 {
