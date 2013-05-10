@@ -67,9 +67,6 @@ public:
 	/// \brief Constructs a big integer (initialised to zero)
 	BigInt();
 
-	/// \brief Constructs a big integer (initialised to zero)
-	BigInt(unsigned int precision_digits);
-
 	/// \brief Copy constructor
 	BigInt(const BigInt &other);
 
