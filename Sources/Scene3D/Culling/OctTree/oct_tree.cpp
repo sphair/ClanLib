@@ -38,6 +38,11 @@ OctTree::OctTree()
 {
 }
 
+OctTree::OctTree(const AxisAlignedBoundingBox &aabb)
+: aabb(aabb), root(new OctTreeNode()), frame(0)
+{
+}
+
 OctTree::~OctTree()
 {
 	delete root;

@@ -34,10 +34,13 @@
 namespace clan
 {
 
+class AxisAlignedBoundingBox;
+
 class OctTree : public SceneCullProvider
 {
 public:
 	OctTree();
+	OctTree(const AxisAlignedBoundingBox &aabb);
 	~OctTree();
 
 	SceneCullProxy *create_proxy(SceneItem *item, const AxisAlignedBoundingBox &aabb);

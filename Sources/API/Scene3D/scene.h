@@ -80,6 +80,10 @@ public:
 
 	void unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_ray_direction);
 
+	void set_cull_oct_tree(const AxisAlignedBoundingBox &aabb);
+	void set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max);
+	void set_cull_oct_tree(float max_size);
+
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 	void remove_pass(const std::string &name);
 

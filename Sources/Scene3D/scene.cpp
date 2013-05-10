@@ -130,6 +130,24 @@ void Scene::unproject(const Vec2i &screen_pos, Vec3f &out_ray_start, Vec3f &out_
 	out_ray_direction = impl->camera.get_orientation().rotate_vector(ray_direction);
 }
 
+void Scene::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
+{
+	impl->cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree(aabb));
+}
+
+void Scene::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
+{
+	if (!impl->objects.empty() || !impl->lights.empty() || !impl->emitters.empty())
+		throw Exception("Cannot change scene culling strategy after objects have been added");
+
+	set_cull_oct_tree(AxisAlignedBoundingBox(aabb_min, aabb_max));
+}
+
+void Scene::set_cull_oct_tree(float max_size)
+{
+	set_cull_oct_tree(AxisAlignedBoundingBox(Vec3f(-max_size), Vec3f(max_size)));
+}
+
 ScenePass Scene::add_pass(const std::string &name, const std::string &insert_before)
 {
 	return impl->add_pass(name, insert_before);
