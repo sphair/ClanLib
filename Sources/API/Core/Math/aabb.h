@@ -26,29 +26,32 @@
 **    Magnus Norddahl
 */
 
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
+
 #pragma once
 
-#include "aabb.h"
+#include "vec3.h"
+#include "cl_math.h"
 
 namespace clan
 {
 
-class FrustumPlanes
+class AxisAlignedBoundingBox
 {
 public:
-	FrustumPlanes();
-	explicit FrustumPlanes(const Mat4f &world_to_projection);
+	AxisAlignedBoundingBox() { }
+	AxisAlignedBoundingBox(const Vec3f &aabb_min, const Vec3f &aabb_max) : aabb_min(aabb_min), aabb_max(aabb_max) { }
+	AxisAlignedBoundingBox(const AxisAlignedBoundingBox &aabb, const Vec3f &barycentric_min, const Vec3f &barycentric_max)
+	: aabb_min(mix(aabb.aabb_min, aabb.aabb_max, barycentric_min)), aabb_max(mix(aabb.aabb_min, aabb.aabb_max, barycentric_max)) { }
 
-	Vec4f planes[6];
+	Vec3f center() const { return (aabb_max + aabb_min) * 0.5f; }
+	Vec3f extents() const { return (aabb_max - aabb_min) * 0.5f; }
 
-private:
-	static Vec4f left_frustum_plane(const Mat4f &matrix);
-	static Vec4f right_frustum_plane(const Mat4f &matrix);
-	static Vec4f top_frustum_plane(const Mat4f &matrix);
-	static Vec4f bottom_frustum_plane(const Mat4f &matrix);
-	static Vec4f near_frustum_plane(const Mat4f &matrix);
-	static Vec4f far_frustum_plane(const Mat4f &matrix);
+	Vec3f aabb_min;
+	Vec3f aabb_max;
 };
 
 }
 
+/// \}

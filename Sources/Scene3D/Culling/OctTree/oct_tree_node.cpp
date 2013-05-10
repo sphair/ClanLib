@@ -28,7 +28,7 @@
 
 #include "Scene3D/precomp.h"
 #include "oct_tree_node.h"
-#include "Scene3D/Culling/intersection_test.h"
+#include "API/Core/Math/intersection_test.h"
 #include <algorithm>
 
 namespace clan

@@ -27,8 +27,8 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "clipping_frustum.h"
+#include "Core/precomp.h"
+#include "API/Core/Math/frustum_planes.h"
 
 namespace clan
 {

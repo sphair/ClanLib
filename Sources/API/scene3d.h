@@ -45,6 +45,7 @@
 #include "Scene3D/scene_cache_provider.h"
 #include "Scene3D/scene_pass.h"
 #include "Scene3D/scene_inout_data.h"
+#include "Scene3D/scene_cull_provider.h"
 #include "Scene3D/cached_texture.h"
 #include "Scene3D/ModelData/model_data.h"
 #include "Scene3D/LevelData/level_data.h"

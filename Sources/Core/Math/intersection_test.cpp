@@ -26,11 +26,11 @@
 **    Magnus Norddahl
 */
 
-#include "Scene3D/precomp.h"
-#include "intersection_test.h"
-#include "aabb.h"
-#include "obb.h"
-#include "clipping_frustum.h"
+#include "Core/precomp.h"
+#include "API/Core/Math/intersection_test.h"
+#include "API/Core/Math/aabb.h"
+#include "API/Core/Math/obb.h"
+#include "API/Core/Math/frustum_planes.h"
 
 namespace clan
 {

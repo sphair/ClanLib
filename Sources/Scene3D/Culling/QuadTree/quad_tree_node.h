@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include "Scene3D/Culling/aabb.h"
-#include "Scene3D/Culling/clipping_frustum.h"
+#include "API/Core/Math/aabb.h"
+#include "API/Core/Math/frustum_planes.h"
 #include "API/Scene3D/scene_cull_provider.h"
 
 namespace clan
