@@ -211,7 +211,6 @@ public:
 /// \{
 private:
 	std::unique_ptr<BigInt_Impl> impl;
-	friend class BigInt_Impl;
 
 /// \}
 
