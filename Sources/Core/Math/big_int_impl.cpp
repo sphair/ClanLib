@@ -399,8 +399,7 @@ void BigInt_Impl::internal_div_d(ubyte32 d, ubyte32 *r)
 	// single digit d.  If r is null, the remainder will be discarded.
 
 	ubyte64 w = 0, t;
-	BigInt quot(digits_used);
-	BigInt_Impl *quot_impl = quot.impl.get();
+	BigInt_Impl quot_impl(digits_used);
 
 	ubyte32 *dp = digits, *qp;
 
@@ -409,8 +408,8 @@ void BigInt_Impl::internal_div_d(ubyte32 d, ubyte32 *r)
 	if(d == 0)
 		throw Exception("Divide by zero");
 
-	quot_impl->digits_used = digits_used; // so clamping will work below
-	qp = quot_impl->digits;
+	quot_impl.digits_used = digits_used; // so clamping will work below
+	qp = quot_impl.digits;
 
 	// Divide without subtraction
 	for(ix = digits_used - 1; ix >= 0; ix--)
@@ -433,8 +432,8 @@ void BigInt_Impl::internal_div_d(ubyte32 d, ubyte32 *r)
 	if(r)
 		*r = w;
 
-	quot_impl->internal_clamp();
-	quot_impl->internal_exch(this);
+	quot_impl.internal_clamp();
+	quot_impl.internal_exch(this);
 
 }
 
@@ -943,13 +942,9 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 		return;
 	}
 
-	BigInt   quot(digits_used);
-	BigInt   rem(digits_used);
-	BigInt   t(digits_used);
-
-	BigInt_Impl *quot_impl = quot.impl.get();
-	BigInt_Impl *rem_impl = rem.impl.get();
-	BigInt_Impl *t_impl = t.impl.get();
+	BigInt_Impl quot_impl(digits_used);
+	BigInt_Impl rem_impl(digits_used);
+	BigInt_Impl t_impl(digits_used);
 
 	// Normalize to optimize guessing
 	d = internal_norm(b);
@@ -960,23 +955,23 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 	while(ix >= 0)
 	{
 		// Find a partial substring of a which is at least b
-		while(rem_impl->internal_cmp(b) < 0 && ix >= 0)
+		while(rem_impl.internal_cmp(b) < 0 && ix >= 0)
 		{
-			rem_impl->internal_lshd(1);
-			quot_impl->internal_lshd(1);
-			rem_impl->digits[0] = digits[ix];
-			rem_impl->internal_clamp();
+			rem_impl.internal_lshd(1);
+			quot_impl.internal_lshd(1);
+			rem_impl.digits[0] = digits[ix];
+			rem_impl.internal_clamp();
 			--ix;
 		}
 
 		// If we didn't find one, we're finished dividing
-		if(rem_impl->internal_cmp(b) < 0) 
+		if(rem_impl.internal_cmp(b) < 0) 
 			break;    
 
 		// Compute a guess for the next quotient digit
-		q = rem_impl->digits[rem_impl->digits_used - 1];
-		if(q <= b->digits[b->digits_used - 1] && rem_impl->digits_used > 1)
-			q = (q << num_bits_in_digit) | rem_impl->digits[rem_impl->digits_used - 2];
+		q = rem_impl.digits[rem_impl.digits_used - 1];
+		if(q <= b->digits[b->digits_used - 1] && rem_impl.digits_used > 1)
+			q = (q << num_bits_in_digit) | rem_impl.digits[rem_impl.digits_used - 2];
 
 		q /= (ubyte64) b->digits[b->digits_used - 1];
 
@@ -985,40 +980,40 @@ void BigInt_Impl::internal_div(BigInt_Impl *b)
 			q = digit_radix - 1;
 
 		// See what that multiplies out to
-		b->copy(t_impl);
-		t_impl->internal_mul_d(q);
+		b->copy(&t_impl);
+		t_impl.internal_mul_d(q);
 
 		// If it's too big, back it off.  We should not have to do this
 		// more than once, or, in rare cases, twice.  Knuth describes a
 		// method by which this could be reduced to a maximum of once, but
 		// I didn't implement that here.
-		while(t_impl->internal_cmp(rem_impl) > 0)
+		while(t_impl.internal_cmp(&rem_impl) > 0)
 		{
 			--q;
-			t_impl->internal_sub(b);
+			t_impl.internal_sub(b);
 		}
 
 		// At this point, q should be the right next digit 
-		rem_impl->internal_sub(t.impl.get());
+		rem_impl.internal_sub(&t_impl);
 
 		// Include the digit in the quotient.  We allocated enough memory
 		// for any quotient we could ever possibly get, so we should not
 		// have to check for failures here
-		quot_impl->digits[0] = q;
+		quot_impl.digits[0] = q;
 	}
 
 	// Denormalize remainder
 	if(d != 0) 
-		rem_impl->internal_div_2d(d);
+		rem_impl.internal_div_2d(d);
 
-	quot_impl->internal_clamp();
-	rem_impl->internal_clamp();
+	quot_impl.internal_clamp();
+	rem_impl.internal_clamp();
 
 	// Copy quotient back to output
-	quot_impl->internal_exch(this);
+	quot_impl.internal_exch(this);
  
 	// Copy remainder back to output
-	rem_impl->internal_exch(b);
+	rem_impl.internal_exch(b);
 }
 
 void BigInt_Impl::div_2d(ubyte32 d, BigInt_Impl *q, BigInt_Impl *r) const
@@ -1274,14 +1269,13 @@ void BigInt_Impl::internal_mul(const BigInt_Impl *b)
 	const ubyte32 *pb;
 	ubyte32 *pt, *pbt;
 
-	BigInt tmp(ua + ub);
-	BigInt_Impl *tmp_impl = tmp.impl.get();
+	BigInt_Impl tmp_impl(ua + ub);
 
 	// This has the effect of left-padding with zeroes...
-	tmp_impl->digits_used = ua + ub;
+	tmp_impl.digits_used = ua + ub;
 
 	// We're going to need the base value each iteration
-	pbt = tmp_impl->digits;
+	pbt = tmp_impl.digits;
 
 	// Outer loop:  Digits of b
 
@@ -1305,8 +1299,8 @@ void BigInt_Impl::internal_mul(const BigInt_Impl *b)
 		k = 0;
 	}
 
-	tmp_impl->internal_clamp();
-	tmp_impl->internal_exch(this);
+	tmp_impl.internal_clamp();
+	tmp_impl.internal_exch(this);
 
 }
 
@@ -1465,14 +1459,13 @@ void BigInt_Impl::internal_sqr()
 	unsigned int  ix, jx, kx, used = digits_used;
 	ubyte32 *pa1, *pa2, *pt, *pbt;
 
-	BigInt tmp( 2 * used);
-	BigInt_Impl *tmp_impl = tmp.impl.get();
+	BigInt_Impl tmp_impl( 2 * used);
 
 	// Left-pad with zeroes
-	tmp_impl->digits_used = 2 * used;
+	tmp_impl.digits_used = 2 * used;
 
 	// We need the base value each time through the loop
-	pbt = tmp_impl->digits;
+	pbt = tmp_impl.digits;
 
 	pa1 = digits;
 	for(ix = 0; ix < used; ++ix, ++pa1) 
@@ -1480,7 +1473,7 @@ void BigInt_Impl::internal_sqr()
 		if(*pa1 == 0)
 			continue;
 
-		w = (ubyte64) tmp_impl->digits[ix + ix] + ( (ubyte64) *pa1 * (ubyte64) *pa1);
+		w = (ubyte64) tmp_impl.digits[ix + ix] + ( (ubyte64) *pa1 * (ubyte64) *pa1);
 
 		pbt[ix + ix] = internal_accum(w);
 		k = internal_carryout(w);
@@ -1532,7 +1525,7 @@ void BigInt_Impl::internal_sqr()
 		}
 
 		// Set the last digit in the cycle and reset the carry
-		k = (ubyte64) tmp_impl->digits[ix + jx] + k;
+		k = (ubyte64) tmp_impl.digits[ix + jx] + k;
 		pbt[ix + jx] = internal_accum(k);
 		k = internal_carryout(k);
 
@@ -1551,8 +1544,8 @@ void BigInt_Impl::internal_sqr()
 		}
 	}
 
-	tmp_impl->internal_clamp();
-	tmp_impl->internal_exch(this);
+	tmp_impl.internal_clamp();
+	tmp_impl.internal_exch(this);
 }
 
 void BigInt_Impl::exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Impl *c) const
@@ -2055,9 +2048,7 @@ bool BigInt_Impl::make_prime(unsigned int num_bits)
 	std::vector<unsigned char> work_sieve;
 	work_sieve.resize(sieve_size);
 
-	BigInt trial;
-	
-	BigInt_Impl *trial_impl = trial.impl.get();
+	BigInt_Impl trial_impl(default_allocated_precision);
 
 	unsigned int num_tests;
 
@@ -2111,14 +2102,14 @@ bool BigInt_Impl::make_prime(unsigned int num_bits)
 		if (sieve_ptr[i])	// this number is composite
 			continue;
 
-		add_d(2 * i, trial_impl);
+		add_d(2 * i, &trial_impl);
 
 		// Run a Fermat test
-		if (!trial_impl->fermat(2))
+		if (!trial_impl.fermat(2))
 			continue;	// was composite
 
 		// If that passed, run some Miller-Rabin tests
-		if (!trial_impl->pprime(num_tests))
+		if (!trial_impl.pprime(num_tests))
 			continue;	// was composite
 
 		// Note, we can test q = 2p + 1. For an unknown reason, by default, NSS does not do this. This should be investigated
@@ -2128,7 +2119,7 @@ bool BigInt_Impl::make_prime(unsigned int num_bits)
 	if (!found_prime)
 		return false;
 
-	internal_exch(trial_impl);
+	internal_exch(&trial_impl);
 
 	memset(&work_sieve[0], 0, work_sieve.size());
 
