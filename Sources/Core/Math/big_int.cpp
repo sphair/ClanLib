@@ -57,10 +57,6 @@ BigInt::BigInt() : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision
 {
 }
 
-BigInt::BigInt(unsigned int precision_digits) : impl(new BigInt_Impl(precision_digits))
-{
-}
-
 BigInt::BigInt(const BigInt &other)
 {
 	if (&other != this)
