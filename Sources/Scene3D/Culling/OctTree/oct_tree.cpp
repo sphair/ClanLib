@@ -34,7 +34,7 @@ namespace clan
 
 
 OctTree::OctTree()
-: aabb(Vec3f(-300.0f), Vec3f(300.0f)), root(new OctTreeNode())
+: aabb(Vec3f(-300.0f), Vec3f(300.0f)), root(new OctTreeNode()), frame(0)
 {
 }
 
@@ -43,30 +43,38 @@ OctTree::~OctTree()
 	delete root;
 }
 
-OctTreeObject *OctTree::add_object(VisibleObject *object, const AxisAlignedBoundingBox &box)
+SceneCullProxy *OctTree::create_proxy(SceneItem *object, const AxisAlignedBoundingBox &box)
 {
 	OctTreeObject *tree_object = new OctTreeObject(object, box);
 	root->insert(tree_object, aabb);
 	return tree_object;
 }
 
-void OctTree::move_object(OctTreeObject *tree_object, const AxisAlignedBoundingBox &box)
+void OctTree::delete_proxy(SceneCullProxy *proxy)
 {
+	OctTreeObject *tree_object = static_cast<OctTreeObject*>(proxy);
+	root->remove(tree_object, aabb);
+	tree_object->release();
+}
+
+void OctTree::set_aabb(SceneCullProxy *proxy, const AxisAlignedBoundingBox &box)
+{
+	OctTreeObject *tree_object = static_cast<OctTreeObject*>(proxy);
 	root->remove(tree_object, aabb);
 	tree_object->box = box;
 	root->insert(tree_object, aabb);
 }
 
-void OctTree::remove_object(OctTreeObject *tree_object)
+AxisAlignedBoundingBox OctTree::get_aabb(SceneCullProxy *proxy)
 {
-	root->remove(tree_object, aabb);
-	tree_object->release();
+	OctTreeObject *tree_object = static_cast<OctTreeObject*>(proxy);
+	return tree_object->box;
 }
 
-std::vector<VisibleObject *> OctTree::cull(int frame, ClippingFrustum &frustum)
+std::vector<SceneItem *> OctTree::cull(const FrustumPlanes &frustum)
 {
-	std::vector<VisibleObject *> pvs;
-	root->cull(frame, frustum, aabb, pvs);
+	std::vector<SceneItem *> pvs;
+	root->cull(frame++, frustum, aabb, pvs);
 	return pvs;
 }
 

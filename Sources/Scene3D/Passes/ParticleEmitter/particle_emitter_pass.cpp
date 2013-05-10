@@ -55,7 +55,7 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	Size viewport_size = viewport->get_size();
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	ClippingFrustum frustum(eye_to_cull_projection * world_to_eye.get());
+	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 
 	for (size_t i = 0; i < active_emitters.size(); i++)
 		active_emitters[i]->visible = false;

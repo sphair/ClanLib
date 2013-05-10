@@ -29,21 +29,33 @@
 #pragma once
 
 #include "Scene3D/Culling/aabb.h"
-#include "Scene3D/Culling/visible_object.h"
 #include "Scene3D/Culling/clipping_frustum.h"
+#include "API/Scene3D/scene_cull_provider.h"
+
 namespace clan
 {
 
-class OctTreeObject
+class OctTreeObject : public SceneCullProxy
 {
 public:
-	OctTreeObject(VisibleObject *visible_object, const AxisAlignedBoundingBox &box) : ref_count(1), visible_object(visible_object), box(box) { }
+	OctTreeObject(SceneItem *visible_object, const AxisAlignedBoundingBox &box) : ref_count(1), visible_object(visible_object), box(box), rendered_frame(-1) { }
 	void add_ref() { ref_count++; }
 	void release() { if (--ref_count == 0) delete this; }
 
 	int ref_count;
-	VisibleObject *visible_object;
+	SceneItem *visible_object;
 	AxisAlignedBoundingBox box;
+
+	int rendered_frame;
+
+	void add(int frame, std::vector<SceneItem *> &pvs)
+	{
+		if (rendered_frame != frame)
+		{
+			rendered_frame = frame;
+			pvs.push_back(visible_object);
+		}
+	}
 };
 
 class OctTreeNode
@@ -53,8 +65,8 @@ public:
 	~OctTreeNode();
 	void insert(OctTreeObject *object, const AxisAlignedBoundingBox &aabb, int iteration = 0);
 	void remove(OctTreeObject *object, const AxisAlignedBoundingBox &aabb, int iteration = 0);
-	void cull(int frame, ClippingFrustum &frustum, const AxisAlignedBoundingBox &aabb, std::vector<VisibleObject *> &pvs);
-	void show(int frame, std::vector<VisibleObject *> &pvs);
+	void cull(int frame, const FrustumPlanes &frustum, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs);
+	void show(int frame, std::vector<SceneItem *> &pvs);
 
 private:
 	static AxisAlignedBoundingBox child_aabb(int index, const AxisAlignedBoundingBox &aabb);

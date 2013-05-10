@@ -31,6 +31,7 @@
 #include "API/Scene3D/scene_camera.h"
 #include "API/Scene3D/scene_cache.h"
 #include "API/Scene3D/scene_pass.h"
+#include "API/Scene3D/scene_cull_provider.h"
 #include "API/Scene3D/Performance/gpu_timer.h"
 #include "Scene3D/Framework/material_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
@@ -46,14 +47,13 @@
 #include "Scene3D/Passes/Final/final_pass.h"
 #include "Scene3D/Passes/Transparency/transparency_pass.h"
 #include "Scene3D/Passes/ParticleEmitter/particle_emitter_pass.h"
-#include "Scene3D/Culling/OctTree/oct_tree.h"
 #include <list>
 
 namespace clan
 {
 
 class ModelMeshVisitor;
-class ClippingFrustum;
+class FrustumPlanes;
 class SceneObject_Impl;
 class SceneLight_Impl;
 class SceneLightVisitor;
@@ -76,9 +76,9 @@ public:
 	void render(GraphicContext &gc);
 	void update(GraphicContext &gc, float time_elapsed);
 
-	void visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor);
-	void visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor);
-	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor);
+	void visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor);
+	void visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor);
+	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
 	const SceneCache &get_cache() const { return cache; }
@@ -104,7 +104,8 @@ private:
 	std::list<SceneObject_Impl *> objects;
 	std::list<SceneLight_Impl *> lights;
 	std::list<SceneParticleEmitter_Impl *> emitters;
-	OctTree tree;
+
+	std::unique_ptr<SceneCullProvider> cull_provider;
 
 	SceneCamera camera;
 

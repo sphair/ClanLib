@@ -83,6 +83,9 @@ public:
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 	void remove_pass(const std::string &name);
 
+	void show_skybox_stars(bool enable);
+	void set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors);
+
 	// To do: should not be static, should be getter functions, etc.
 	static int models_drawn;
 	static int instances_drawn;

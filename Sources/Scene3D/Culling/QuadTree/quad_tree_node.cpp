@@ -44,7 +44,7 @@ QuadTreeNode::~QuadTreeNode()
 		delete children[i];
 }
 
-void QuadTreeNode::cull(int frame, ClippingFrustum &frustum, const AxisAlignedBoundingBox &aabb, std::vector<VisibleObject *> &pvs)
+void QuadTreeNode::cull(int frame, const FrustumPlanes &frustum, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs)
 {
 /*	if (frustum.is_visible(aabb))
 	{

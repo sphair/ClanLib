@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "Culling/visible_object.h"
+#include "API/Scene3D/scene_cull_provider.h"
 #include <list>
 
 namespace clan
@@ -36,7 +36,7 @@ namespace clan
 
 class Scene_Impl;
 
-class SceneParticleEmitter_Impl : public VisibleObject
+class SceneParticleEmitter_Impl : public SceneItem
 {
 public:
 	SceneParticleEmitter_Impl(Scene_Impl *scene);
@@ -45,7 +45,7 @@ public:
 	AxisAlignedBoundingBox get_aabb();
 
 	Scene_Impl *scene;
-	OctTreeObject *tree_object;
+	SceneCullProxy *cull_proxy;
 	std::list<SceneParticleEmitter_Impl *>::iterator it;
 
 	SceneParticleEmitter::Type type;

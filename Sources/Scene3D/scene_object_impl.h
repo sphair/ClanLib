@@ -29,7 +29,7 @@
 #pragma once
 
 #include "API/Scene3D/scene_light.h"
-#include "Culling/visible_object.h"
+#include "API/Scene3D/scene_cull_provider.h"
 #include "Model/model_instance.h"
 #include <list>
 
@@ -38,7 +38,7 @@ namespace clan
 
 class Scene_Impl;
 
-class SceneObject_Impl : public VisibleObject
+class SceneObject_Impl : public SceneItem
 {
 public:
 	SceneObject_Impl(Scene_Impl *scene);
@@ -55,7 +55,7 @@ public:
 	AxisAlignedBoundingBox get_aabb() const;
 
 	Scene_Impl *scene;
-	OctTreeObject *tree_object;
+	SceneCullProxy *cull_proxy;
 	std::list<SceneObject_Impl *>::iterator it;
 
 	Vec3f position;

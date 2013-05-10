@@ -101,7 +101,7 @@ void OctTreeNode::remove(OctTreeObject *object, const AxisAlignedBoundingBox &aa
 	}
 }
 
-void OctTreeNode::cull(int frame, ClippingFrustum &frustum, const AxisAlignedBoundingBox &aabb, std::vector<VisibleObject *> &pvs)
+void OctTreeNode::cull(int frame, const FrustumPlanes &frustum, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs)
 {
 	IntersectionTest::Result result = IntersectionTest::frustum_aabb(frustum, aabb);
 	if (result == IntersectionTest::inside)
@@ -113,7 +113,7 @@ void OctTreeNode::cull(int frame, ClippingFrustum &frustum, const AxisAlignedBou
 		for (size_t i = 0; i < objects.size(); i++)
 		{
 			if (IntersectionTest::aabb(objects[i]->box, aabb) == IntersectionTest::overlap)
-				objects[i]->visible_object->add(frame, pvs);
+				objects[i]->add(frame, pvs);
 		}
 
 		for (int i = 0; i < 8; i++)
@@ -124,10 +124,10 @@ void OctTreeNode::cull(int frame, ClippingFrustum &frustum, const AxisAlignedBou
 	}
 }
 
-void OctTreeNode::show(int frame, std::vector<VisibleObject *> &pvs)
+void OctTreeNode::show(int frame, std::vector<SceneItem *> &pvs)
 {
 	for (size_t i = 0; i < objects.size(); i++)
-		objects[i]->visible_object->add(frame, pvs);
+		objects[i]->add(frame, pvs);
 
 	for (int i = 0; i < 8; i++)
 	{

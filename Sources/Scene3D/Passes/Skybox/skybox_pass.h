@@ -41,6 +41,9 @@ public:
 	SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
+	void show_skybox_stars(bool enable);
+	void set_skybox_texture(Texture2D texture);
+
 private:
 	void setup(GraphicContext &gc);
 	void create_clouds(GraphicContext &gc);
@@ -96,6 +99,8 @@ private:
 	Texture2D star_texture;
 	Texture2D star_instance_texture;
 	static const int num_star_instances = 1024;
+
+	bool show_stars;
 };
 
 }

@@ -53,7 +53,7 @@ PortalMap::~PortalMap()
 		delete portals[i];
 }
 
-PortalMapObject *PortalMap::add_object(VisibleObject *object, const AxisAlignedBoundingBox &box)
+PortalMapObject *PortalMap::add_object(SceneItem *object, const AxisAlignedBoundingBox &box)
 {
 	PortalMapObject *map_object = new PortalMapObject(object, box);
 	for (size_t i = 0; i < sectors.size(); i++)
@@ -103,9 +103,9 @@ void PortalMap::remove_object(PortalMapObject *map_object)
 	map_object->release();
 }
 
-std::vector<VisibleObject *> PortalMap::cull(int frame, ClippingFrustum &frustum, const Mat4f &world_to_projection)
+std::vector<SceneItem *> PortalMap::cull(int frame, FrustumPlanes &frustum, const Mat4f &world_to_projection)
 {
-	std::vector<VisibleObject *> pvs;
+	std::vector<SceneItem *> pvs;
 	PortalClipping clipping(frustum, world_to_projection);
 	int camera_sector = find_camera_sector(clipping);
 	if (camera_sector != -1)
@@ -113,11 +113,11 @@ std::vector<VisibleObject *> PortalMap::cull(int frame, ClippingFrustum &frustum
 	return pvs;
 }
 
-void PortalMap::cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<VisibleObject *> &pvs, const Rectf &box)
+void PortalMap::cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<SceneItem *> &pvs, const Rectf &box)
 {
 	for (size_t i = 0; i < sector->objects.size(); i++)
 	{
-		sector->objects[i]->visible_object->add(frame, pvs);
+		sector->objects[i]->add(frame, pvs);
 	}
 
 	for (size_t i = 0; i < sector->portals.size(); i++)

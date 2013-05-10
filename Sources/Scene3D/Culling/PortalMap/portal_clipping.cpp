@@ -32,7 +32,7 @@
 namespace clan
 {
 
-PortalClipping::PortalClipping(const ClippingFrustum &frustum, const Mat4f &world_to_projection)
+PortalClipping::PortalClipping(const FrustumPlanes &frustum, const Mat4f &world_to_projection)
 : world_to_projection(world_to_projection), projection_to_world(Mat4f::inverse(world_to_projection)), frustum(frustum)
 {
 }
