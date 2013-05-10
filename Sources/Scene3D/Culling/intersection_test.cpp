@@ -107,7 +107,7 @@ IntersectionTest::OverlapResult IntersectionTest::aabb(const AxisAlignedBounding
 	}
 }
 
-IntersectionTest::Result IntersectionTest::frustum_aabb(const ClippingFrustum &frustum, const AxisAlignedBoundingBox &box)
+IntersectionTest::Result IntersectionTest::frustum_aabb(const FrustumPlanes &frustum, const AxisAlignedBoundingBox &box)
 {
 	bool is_intersecting = false;
 	for (int i = 0; i < 6; i++)
@@ -125,7 +125,7 @@ IntersectionTest::Result IntersectionTest::frustum_aabb(const ClippingFrustum &f
 		return inside;
 }
 
-IntersectionTest::Result IntersectionTest::frustum_obb(const ClippingFrustum &frustum, const OrientedBoundingBox &box)
+IntersectionTest::Result IntersectionTest::frustum_obb(const FrustumPlanes &frustum, const OrientedBoundingBox &box)
 {
 	bool is_intersecting = false;
 	for (int i = 0; i < 6; i++)

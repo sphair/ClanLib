@@ -37,7 +37,7 @@ namespace clan
 {
 
 SkyboxPass::SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &inout)
-	: shader_path(shader_path)
+	: shader_path(shader_path), show_stars(true)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
@@ -49,6 +49,16 @@ SkyboxPass::SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &
 	self_illumination_gbuffer = inout.get<Texture2D>("SelfIlluminationGBuffer");
 	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
 	zbuffer = inout.get<Texture2D>("ZBuffer");
+}
+
+void SkyboxPass::show_skybox_stars(bool enable)
+{
+	show_stars = enable;
+}
+
+void SkyboxPass::set_skybox_texture(Texture2D texture)
+{
+	cloud_texture = texture;
 }
 
 void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
@@ -73,13 +83,16 @@ void SkyboxPass::run(GraphicContext &gc, Scene_Impl *scene)
 
 	gc.set_depth_range(0.9f, 1.0f);
 
-	gc.set_program_object(billboard_program);
-	gc.set_primitives_array(billboard_prim_array);
-	gc.set_uniform_buffer(0, uniforms);
-	gc.set_texture(0, star_instance_texture);
-	gc.set_texture(1, star_texture);
-	gc.draw_primitives_array_instanced(type_triangles, 0, 6, num_star_instances);
-	gc.reset_primitives_array();
+	if (show_stars)
+	{
+		gc.set_program_object(billboard_program);
+		gc.set_primitives_array(billboard_prim_array);
+		gc.set_uniform_buffer(0, uniforms);
+		gc.set_texture(0, star_instance_texture);
+		gc.set_texture(1, star_texture);
+		gc.draw_primitives_array_instanced(type_triangles, 0, 6, num_star_instances);
+		gc.reset_primitives_array();
+	}
 
 	gc.set_program_object(cube_program);
 	gc.set_primitives_array(cube_prim_array);
@@ -150,7 +163,8 @@ void SkyboxPass::setup(GraphicContext &gc)
 
 void SkyboxPass::create_clouds(GraphicContext &gc)
 {
-	create_cloud_texture(gc);
+	if (cloud_texture.is_null())
+		create_cloud_texture(gc);
 }
 
 void SkyboxPass::create_cloud_texture(GraphicContext &gc)

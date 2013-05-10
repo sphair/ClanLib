@@ -63,7 +63,7 @@ void TransparencyPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
-	ClippingFrustum frustum(eye_to_cull_projection * world_to_eye.get());
+	FrustumPlanes frustum(eye_to_cull_projection * world_to_eye.get());
 	scene->visit(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 
 	gc.reset_rasterizer_state();

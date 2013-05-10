@@ -36,19 +36,30 @@ namespace clan
 class Portal;
 class PortalSector;
 class PortalClipping;
-class VisibleObject;
-class ClippingFrustum;
+class SceneItem;
+class FrustumPlanes;
 
 class PortalMapObject
 {
 public:
-	PortalMapObject(VisibleObject *visible_object, const AxisAlignedBoundingBox &box) : ref_count(1), visible_object(visible_object), box(box) { }
+	PortalMapObject(SceneItem *visible_object, const AxisAlignedBoundingBox &box) : ref_count(1), visible_object(visible_object), box(box), rendered_frame(-1) { }
 	void add_ref() { ref_count++; }
 	void release() { if (--ref_count == 0) delete this; }
 
 	int ref_count;
-	VisibleObject *visible_object;
+	SceneItem *visible_object;
 	AxisAlignedBoundingBox box;
+
+	int rendered_frame;
+
+	void add(int frame, std::vector<SceneItem *> &pvs)
+	{
+		if (rendered_frame != frame)
+		{
+			rendered_frame = frame;
+			pvs.push_back(visible_object);
+		}
+	}
 };
 
 class PortalMap
@@ -57,14 +68,14 @@ public:
 	PortalMap();
 	~PortalMap();
 
-	PortalMapObject *add_object(VisibleObject *object, const AxisAlignedBoundingBox &box);
+	PortalMapObject *add_object(SceneItem *object, const AxisAlignedBoundingBox &box);
 	void move_object(PortalMapObject *map_object, const AxisAlignedBoundingBox &box);
 	void remove_object(PortalMapObject *map_object);
 
-	std::vector<VisibleObject *> cull(int frame, ClippingFrustum &frustum, const Mat4f &world_to_projection);
+	std::vector<SceneItem *> cull(int frame, FrustumPlanes &frustum, const Mat4f &world_to_projection);
 
 private:
-	void cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<VisibleObject *> &pvs, const Rectf &box = Rectf(-1.0f, -1.0f, 1.0f, 1.0f));
+	void cull_sector(const PortalClipping &clipping, PortalSector *sector, int frame, std::vector<SceneItem *> &pvs, const Rectf &box = Rectf(-1.0f, -1.0f, 1.0f, 1.0f));
 	int find_camera_sector(const PortalClipping &clipping) const;
 	bool is_in_sector(PortalSector *sector, const AxisAlignedBoundingBox &box) const;
 

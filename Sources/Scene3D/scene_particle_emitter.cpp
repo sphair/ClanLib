@@ -44,7 +44,7 @@ SceneParticleEmitter::SceneParticleEmitter()
 SceneParticleEmitter::SceneParticleEmitter(Scene &scene)
 	: impl(new SceneParticleEmitter_Impl(scene.impl.get()))
 {
-	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 }
 
 SceneParticleEmitter::Type SceneParticleEmitter::get_type() const
@@ -117,8 +117,8 @@ void SceneParticleEmitter::set_position(const Vec3f &position)
 	if (impl->position != position)
 	{
 		impl->position = position;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 	}
 }
 
@@ -175,15 +175,15 @@ void SceneParticleEmitter::set_gradient_texture(const std::string &texture)
 /////////////////////////////////////////////////////////////////////////////
 
 SceneParticleEmitter_Impl::SceneParticleEmitter_Impl(Scene_Impl *scene)
-: scene(scene), tree_object(0), type(SceneParticleEmitter::type_omni), particles_per_second(10), falloff(90.0f), life_span(5.0f), start_size(1.0f), end_size(2.0f), speed(10.0f)
+: scene(scene), cull_proxy(0), type(SceneParticleEmitter::type_omni), particles_per_second(10), falloff(90.0f), life_span(5.0f), start_size(1.0f), end_size(2.0f), speed(10.0f)
 {
 	it = scene->emitters.insert(scene->emitters.end(), this);
 }
 
 SceneParticleEmitter_Impl::~SceneParticleEmitter_Impl()
 {
-	if (tree_object)
-		scene->tree.remove_object(tree_object);
+	if (cull_proxy)
+		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->emitters.erase(it);
 
 	if (pass_data)

@@ -51,7 +51,7 @@ SceneObject::SceneObject(Scene &scene, const SceneModel &model, const Vec3f &pos
 	impl->orientation = orientation;
 	impl->scale = scale;
 	impl->instance.set_renderer(model.impl->model);
-	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 
 	impl->create_lights(scene);
 }
@@ -76,8 +76,8 @@ void SceneObject::set_position(const Vec3f &position)
 	if (impl->position != position)
 	{
 		impl->position = position;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 		impl->update_lights();
 	}
 }
@@ -93,8 +93,8 @@ void SceneObject::set_scale(const Vec3f &scale)
 	if (impl->scale != scale)
 	{
 		impl->scale = scale;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 		impl->update_lights();
 	}
 }
@@ -132,15 +132,15 @@ SceneObject &SceneObject::rotate(float dir, float up, float tilt)
 /////////////////////////////////////////////////////////////////////////////
 
 SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene)
-: scene(scene), tree_object(0), scale(1.0f)
+: scene(scene), cull_proxy(0), scale(1.0f)
 {
 	it = scene->objects.insert(scene->objects.end(), this);
 }
 
 SceneObject_Impl::~SceneObject_Impl()
 {
-	if (tree_object)
-		scene->tree.remove_object(tree_object);
+	if (cull_proxy)
+		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->objects.erase(it);
 }
 

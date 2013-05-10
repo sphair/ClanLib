@@ -44,7 +44,7 @@ SceneLight::SceneLight()
 SceneLight::SceneLight(Scene &scene)
 	: impl(new SceneLight_Impl(scene.impl.get()))
 {
-	impl->tree_object = impl->scene->tree.add_object(impl.get(), impl->get_aabb());
+	impl->cull_proxy = impl->scene->cull_provider->create_proxy(impl.get(), impl->get_aabb());
 }
 
 SceneLight::Type SceneLight::get_type() const
@@ -127,8 +127,8 @@ void SceneLight::set_position(const Vec3f &position)
 	if (impl->position != position)
 	{
 		impl->position = position;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 	}
 }
 
@@ -162,8 +162,8 @@ void SceneLight::set_attenuation_start(float attenuation_start)
 	if (impl->attenuation_start != attenuation_start)
 	{
 		impl->attenuation_start = attenuation_start;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 	}
 }
 
@@ -172,8 +172,8 @@ void SceneLight::set_attenuation_end(float attenuation_end)
 	if (impl->attenuation_end != attenuation_end)
 	{
 		impl->attenuation_end = attenuation_end;
-		if (impl->tree_object)
-			impl->scene->tree.move_object(impl->tree_object, impl->get_aabb());
+		if (impl->cull_proxy)
+			impl->scene->cull_provider->set_aabb(impl->cull_proxy, impl->get_aabb());
 	}
 }
 
@@ -205,7 +205,7 @@ void SceneLight::set_shadow_source(SceneLight light)
 /////////////////////////////////////////////////////////////////////////////
 
 SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene)
-: scene(scene), tree_object(0), type(SceneLight::type_omni), color(Colorf::white), falloff(90.0f),
+: scene(scene), cull_proxy(0), type(SceneLight::type_omni), color(Colorf::white), falloff(90.0f),
   hotspot(45.0f), ambient_illumination(0.0f), attenuation_start(1.0f), attenuation_end(100.0f), rectangle_shape(false), aspect_ratio(1.0f), shadow_caster(false), light_caster(true)
 {
 	it = scene->lights.insert(scene->lights.end(), this);
@@ -213,8 +213,8 @@ SceneLight_Impl::SceneLight_Impl(Scene_Impl *scene)
 
 SceneLight_Impl::~SceneLight_Impl()
 {
-	if (tree_object)
-		scene->tree.remove_object(tree_object);
+	if (cull_proxy)
+		scene->cull_provider->delete_proxy(cull_proxy);
 	scene->lights.erase(it);
 }
 

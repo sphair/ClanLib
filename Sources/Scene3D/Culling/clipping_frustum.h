@@ -29,14 +29,15 @@
 #pragma once
 
 #include "aabb.h"
+
 namespace clan
 {
 
-class ClippingFrustum
+class FrustumPlanes
 {
 public:
-	ClippingFrustum();
-	explicit ClippingFrustum(const Mat4f &world_to_projection);
+	FrustumPlanes();
+	explicit FrustumPlanes(const Mat4f &world_to_projection);
 
 	Vec4f planes[6];
 

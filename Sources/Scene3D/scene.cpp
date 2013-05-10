@@ -32,9 +32,10 @@
 #include "API/Scene3D/scene_light.h"
 #include "API/Scene3D/scene_particle_emitter.h"
 #include "API/Scene3D/Performance/scope_timer.h"
+#include "Scene3D/Culling/clipping_frustum.h"
+#include "Scene3D/Culling/OctTree/oct_tree.h"
 #include "scene_impl.h"
-#include "Culling/clipping_frustum.h"
-#include "Scene3D/scene_object_impl.h"
+#include "scene_object_impl.h"
 #include "scene_pass_impl.h"
 
 namespace clan
@@ -147,6 +148,29 @@ void Scene::remove_pass(const std::string &name)
 	throw Exception(string_format("Pass %1 not found", name));
 }
 
+void Scene::show_skybox_stars(bool enable)
+{
+	impl->skybox_pass->show_skybox_stars(enable);
+}
+
+void Scene::set_skybox_gradient(GraphicContext &gc, std::vector<Colorf> &colors)
+{
+	PixelBuffer pb(1, colors.size(), tf_rgba32f);
+	Vec4f *pixels = pb.get_data<Vec4f>();
+
+	for (size_t i = 0; i < colors.size(); i++)
+	{
+		pixels[i] = Vec4f(colors[i].r, colors[i].g, colors[i].b, colors[i].a * 0.25f);
+	}
+
+	Texture2D texture(gc, pb.get_size(), tf_rgba32f);
+	texture.set_image(gc, pb);
+	texture.set_min_filter(filter_linear);
+	texture.set_mag_filter(filter_linear);
+
+	impl->skybox_pass->set_skybox_texture(texture);
+}
+
 int Scene::instances_drawn = 0;
 int Scene::models_drawn = 0;
 int Scene::draw_calls = 0;
@@ -159,6 +183,8 @@ std::vector<GPUTimer::Result> Scene::gpu_results;
 Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path)
 : cache(cache), frame(0)
 {
+	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
+
 	material_cache = std::unique_ptr<MaterialCache>(new MaterialCache(this));
 	model_shader_cache = std::unique_ptr<ModelShaderCache>(new ModelShaderCache(shader_path));
 	model_cache = std::unique_ptr<ModelCache>(new ModelCache(this, *material_cache, *model_shader_cache, instances_buffer));
@@ -275,14 +301,14 @@ void Scene_Impl::update(GraphicContext &gc, float time_elapsed)
 	// To do: update scene object animations here too
 }
 
-void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, ModelMeshVisitor *visitor)
+void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor)
 {
 	ScopeTimeFunction();
 	Scene::scene_visits++;
 
 	std::vector<Model *> models;
 
-	std::vector<VisibleObject *> visible_objects = tree.cull(frame, frustum);
+	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
 	for (size_t i = 0; i < visible_objects.size(); i++)
 	{
 		SceneObject_Impl *object = dynamic_cast<SceneObject_Impl*>(visible_objects[i]);
@@ -316,11 +342,11 @@ void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4
 		models[i]->visit(gc, instances_buffer, visitor);
 }
 
-void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneLightVisitor *visitor)
+void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor)
 {
 	ScopeTimeFunction();
 
-	std::vector<VisibleObject *> visible_objects = tree.cull(frame++, frustum);
+	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
 	for (size_t i = 0; i < visible_objects.size(); i++)
 	{
 		SceneLight_Impl *light = dynamic_cast<SceneLight_Impl*>(visible_objects[i]);
@@ -331,11 +357,11 @@ void Scene_Impl::visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, con
 	}
 }
 
-void Scene_Impl::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, ClippingFrustum frustum, SceneParticleEmitterVisitor *visitor)
+void Scene_Impl::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor)
 {
 	ScopeTimeFunction();
 
-	std::vector<VisibleObject *> visible_objects = tree.cull(frame++, frustum);
+	std::vector<SceneItem *> visible_objects = cull_provider->cull(frustum);
 	for (size_t i = 0; i < visible_objects.size(); i++)
 	{
 		SceneParticleEmitter_Impl *emitter = dynamic_cast<SceneParticleEmitter_Impl*>(visible_objects[i]);

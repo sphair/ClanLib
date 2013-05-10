@@ -28,25 +28,30 @@
 
 #pragma once
 
+#include "API/Scene3D/scene_cull_provider.h"
 #include "oct_tree_node.h"
+
 namespace clan
 {
 
-class OctTree
+class OctTree : public SceneCullProvider
 {
 public:
 	OctTree();
 	~OctTree();
 
-	OctTreeObject *add_object(VisibleObject *object, const AxisAlignedBoundingBox &box);
-	void move_object(OctTreeObject *tree_object, const AxisAlignedBoundingBox &box);
-	void remove_object(OctTreeObject *tree_object);
+	SceneCullProxy *create_proxy(SceneItem *item, const AxisAlignedBoundingBox &aabb);
+	void delete_proxy(SceneCullProxy *proxy);
 
-	std::vector<VisibleObject *> cull(int frame, ClippingFrustum &frustum);
+	void set_aabb(SceneCullProxy *proxy, const AxisAlignedBoundingBox &aabb);
+	AxisAlignedBoundingBox get_aabb(SceneCullProxy *proxy);
+
+	std::vector<SceneItem *> cull(const FrustumPlanes &frustum);
 
 private:
 	AxisAlignedBoundingBox aabb;
 	OctTreeNode *root;
+	int frame;
 };
 
 }

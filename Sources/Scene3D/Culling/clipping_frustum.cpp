@@ -34,11 +34,11 @@ namespace clan
 {
 
 
-ClippingFrustum::ClippingFrustum()
+FrustumPlanes::FrustumPlanes()
 {
 }
 
-ClippingFrustum::ClippingFrustum(const Mat4f &world_to_projection)
+FrustumPlanes::FrustumPlanes(const Mat4f &world_to_projection)
 {
 	planes[0] = near_frustum_plane(world_to_projection);
 	planes[1] = far_frustum_plane(world_to_projection);
@@ -48,7 +48,7 @@ ClippingFrustum::ClippingFrustum(const Mat4f &world_to_projection)
 	planes[5] = bottom_frustum_plane(world_to_projection);
 }
 
-Vec4f ClippingFrustum::left_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::left_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] + matrix[0+0*4],
@@ -59,7 +59,7 @@ Vec4f ClippingFrustum::left_frustum_plane(const Mat4f &matrix)
 	return plane;
 }
 
-Vec4f ClippingFrustum::right_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::right_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] - matrix[0+0*4],
@@ -70,7 +70,7 @@ Vec4f ClippingFrustum::right_frustum_plane(const Mat4f &matrix)
 	return plane;
 }
 
-Vec4f ClippingFrustum::top_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::top_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] - matrix[1+0*4],
@@ -81,7 +81,7 @@ Vec4f ClippingFrustum::top_frustum_plane(const Mat4f &matrix)
 	return plane;
 }
 
-Vec4f ClippingFrustum::bottom_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::bottom_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] + matrix[1+0*4],
@@ -92,7 +92,7 @@ Vec4f ClippingFrustum::bottom_frustum_plane(const Mat4f &matrix)
 	return plane;
 }
 
-Vec4f ClippingFrustum::near_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::near_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] + matrix[2+0*4],
@@ -103,7 +103,7 @@ Vec4f ClippingFrustum::near_frustum_plane(const Mat4f &matrix)
 	return plane;
 }
 
-Vec4f ClippingFrustum::far_frustum_plane(const Mat4f &matrix)
+Vec4f FrustumPlanes::far_frustum_plane(const Mat4f &matrix)
 {
 	Vec4f plane(
 		matrix[3+0*4] - matrix[2+0*4],

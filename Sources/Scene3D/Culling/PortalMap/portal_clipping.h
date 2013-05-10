@@ -28,8 +28,9 @@
 
 #pragma once
 
-#include "Scene3D/Culling/visible_object.h"
+#include "API/Scene3D/scene_cull_provider.h"
 #include "Scene3D/Culling/clipping_frustum.h"
+
 namespace clan
 {
 
@@ -38,12 +39,12 @@ class PortalSector;
 class PortalClipping
 {
 public:
-	PortalClipping(const ClippingFrustum &frustum, const Mat4f &world_to_projection);
+	PortalClipping(const FrustumPlanes &frustum, const Mat4f &world_to_projection);
 	Rectf intersect(Rectf box, const std::vector<Vec3f> &points) const;
 
 	Mat4f world_to_projection;
 	Mat4f projection_to_world;
-	ClippingFrustum frustum;
+	FrustumPlanes frustum;
 
 private:
 	Rectf project(const std::vector<Vec2f> &points) const;

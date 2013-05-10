@@ -29,19 +29,28 @@
 #pragma once
 
 #include "quad_tree_node.h"
+
 namespace clan
 {
 
-class QuadTree
+class QuadTree : public SceneCullProvider
 {
 public:
 	QuadTree();
 	~QuadTree();
-	std::vector<VisibleObject *> cull(int frame, ClippingFrustum &frustum);
+
+	SceneCullProxy *create_proxy(SceneItem *item, const AxisAlignedBoundingBox &aabb);
+	void delete_proxy(SceneCullProxy *proxy);
+
+	void set_aabb(SceneCullProxy *proxy, const AxisAlignedBoundingBox &aabb);
+	AxisAlignedBoundingBox get_aabb(SceneCullProxy *proxy);
+
+	std::vector<SceneItem *> cull(const FrustumPlanes &frustum);
 
 private:
 	AxisAlignedBoundingBox aabb;
 	QuadTreeNode *root;
+	int frame;
 };
 
 }

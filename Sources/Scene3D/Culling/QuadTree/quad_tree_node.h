@@ -30,7 +30,8 @@
 
 #include "Scene3D/Culling/aabb.h"
 #include "Scene3D/Culling/clipping_frustum.h"
-#include "Scene3D/Culling/visible_object.h"
+#include "API/Scene3D/scene_cull_provider.h"
+
 namespace clan
 {
 
@@ -39,10 +40,10 @@ class QuadTreeNode
 public:
 	QuadTreeNode();
 	~QuadTreeNode();
-	void cull(int frame, ClippingFrustum &frustum, const AxisAlignedBoundingBox &aabb, std::vector<VisibleObject *> &pvs);
+	void cull(int frame, const FrustumPlanes &frustum, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs);
 
 private:
-	std::vector<VisibleObject *> objects;
+	std::vector<SceneItem *> objects;
 	QuadTreeNode *children[4];
 };
 
