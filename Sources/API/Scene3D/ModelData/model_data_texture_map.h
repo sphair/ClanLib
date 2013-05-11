@@ -29,14 +29,15 @@
 #pragma once
 
 #include "model_data_animation_data.h"
+
 namespace clan
 {
 
 class ModelDataTextureMap
 {
 public:
-	ModelDataTextureMap() : replaceable_texture(), texture(-1), channel(-1), wrap_x(wrap_repeat), wrap_y(wrap_repeat) { }
-	bool replaceable_texture;
+	ModelDataTextureMap() : texture(-1), channel(-1), wrap_x(wrap_repeat), wrap_y(wrap_repeat) { }
+
 	int texture;
 	int channel;
 	enum WrapMode

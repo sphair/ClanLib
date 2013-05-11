@@ -38,7 +38,7 @@ class ModelData;
 class ModelLOD
 {
 public:
-	ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data, int level);
+	ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data);
 
 	std::vector<ModelMeshBuffers> mesh_buffers;
 

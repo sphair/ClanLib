@@ -35,40 +35,40 @@ namespace clan
 {
 
 
-ModelLOD::ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data, int level)
+ModelLOD::ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelData> model_data)
 {
-	mesh_buffers.reserve(model_data->mesh_lods[level].meshes.size());
-	for (size_t i = 0; i < model_data->mesh_lods[level].meshes.size(); i++)
+	mesh_buffers.reserve(model_data->meshes.size());
+	for (size_t i = 0; i < model_data->meshes.size(); i++)
 	{
 		ModelMeshBuffers buffers;
 		buffers.primitives_array = PrimitivesArray(gc);
-		buffers.vertices = upload_vector(gc, buffers.primitives_array, 0, model_data->mesh_lods[level].meshes[i].vertices);
-		buffers.normals = upload_vector(gc, buffers.primitives_array, 1, model_data->mesh_lods[level].meshes[i].normals);
-		buffers.bitangents = upload_vector(gc, buffers.primitives_array, 2, model_data->mesh_lods[level].meshes[i].bitangents);
-		buffers.tangents = upload_vector(gc, buffers.primitives_array, 3, model_data->mesh_lods[level].meshes[i].tangents);
-		buffers.bone_weights = upload_vector(gc, buffers.primitives_array, 4, model_data->mesh_lods[level].meshes[i].bone_weights, true);
-		buffers.bone_selectors = upload_vector(gc, buffers.primitives_array, 5, model_data->mesh_lods[level].meshes[i].bone_selectors, false);
-		buffers.colors = upload_vector(gc, buffers.primitives_array, 6, model_data->mesh_lods[level].meshes[i].colors, true);
+		buffers.vertices = upload_vector(gc, buffers.primitives_array, 0, model_data->meshes[i].vertices);
+		buffers.normals = upload_vector(gc, buffers.primitives_array, 1, model_data->meshes[i].normals);
+		buffers.bitangents = upload_vector(gc, buffers.primitives_array, 2, model_data->meshes[i].bitangents);
+		buffers.tangents = upload_vector(gc, buffers.primitives_array, 3, model_data->meshes[i].tangents);
+		buffers.bone_weights = upload_vector(gc, buffers.primitives_array, 4, model_data->meshes[i].bone_weights, true);
+		buffers.bone_selectors = upload_vector(gc, buffers.primitives_array, 5, model_data->meshes[i].bone_selectors, false);
+		buffers.colors = upload_vector(gc, buffers.primitives_array, 6, model_data->meshes[i].colors, true);
 
-		for (size_t channel = 0; channel < model_data->mesh_lods[level].meshes[i].channels.size(); channel++)
+		for (size_t channel = 0; channel < model_data->meshes[i].channels.size(); channel++)
 		{
-			buffers.channels.push_back(upload_vector(gc, buffers.primitives_array, 7 + channel, model_data->mesh_lods[level].meshes[i].channels[channel]));
+			buffers.channels.push_back(upload_vector(gc, buffers.primitives_array, 7 + channel, model_data->meshes[i].channels[channel]));
 		}
 
-		buffers.elements = ElementArrayVector<unsigned int>(gc, model_data->mesh_lods[level].meshes[i].elements);
+		buffers.elements = ElementArrayVector<unsigned int>(gc, model_data->meshes[i].elements);
 
-		size_t num_materials = model_data->mesh_lods[level].meshes[i].material_ranges.size();
+		size_t num_materials = model_data->meshes[i].material_ranges.size();
 		for (size_t j = 0; j < num_materials; j++)
 		{
-			const ModelDataMaterialRange &material_range = model_data->mesh_lods[level].meshes[i].material_ranges[j];
+			const ModelDataMaterialRange &material_range = model_data->meshes[i].material_ranges[j];
 
 			ModelMaterialUniforms block;
 
-			block.material_ambient = Vec4f(material_range.ambient, 0.0f);
-			block.material_diffuse = Vec4f(material_range.diffuse, 0.0f);
-			block.material_specular = Vec4f(material_range.specular, 0.0f);
-			block.material_glossiness = material_range.glossiness;
-			block.material_specular_level = material_range.specular_level;
+			block.material_ambient = Vec4f(material_range.ambient.get_single_value(), 0.0f);
+			block.material_diffuse = Vec4f(material_range.diffuse.get_single_value(), 0.0f);
+			block.material_specular = Vec4f(material_range.specular.get_single_value(), 0.0f);
+			block.material_glossiness = material_range.glossiness.get_single_value();
+			block.material_specular_level = material_range.specular_level.get_single_value();
 
 			block.model_index = model_index;
 			block.vectors_per_instance = Model::instance_base_vectors + model_data->bones.size() * Model::vectors_per_bone + num_materials * Model::vectors_per_material;

@@ -33,26 +33,22 @@
 namespace clan
 {
 
+/// \brief A list of time stamps and the values to be used for each.
 template<typename Type>
 class ModelDataAnimationTimeline
 {
 public:
-	/*enum InterpolationType
-	{
-		linear_interpolation
-	};
-	InterpolationType interpolation;*/
 	std::vector<float> timestamps;
 	std::vector<Type> values;
 
-	Type get_value(float timestamp)
+	Type get_value(float timestamp) const
 	{
 		size_t index, index2;
 		float t = find_animation_indices(timestamp, index, index2);
 		return mix(values[index], values[index2], t);
 	}
 
-	float find_animation_indices(float timestamp, size_t &index, size_t &index2)
+	float find_animation_indices(float timestamp, size_t &index, size_t &index2) const
 	{
 		if (timestamps.empty())
 		{
@@ -73,7 +69,7 @@ public:
 	}
 
 private:
-	size_t binary_search(float timestamp)
+	size_t binary_search(float timestamp) const
 	{
 		size_t imin = 0;
 		size_t imax = timestamps.size() - 1;
@@ -93,7 +89,7 @@ private:
 };
 
 template<>
-inline Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp)
+inline Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float timestamp) const
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);
@@ -101,7 +97,7 @@ inline Quaternionf ModelDataAnimationTimeline<Quaternionf>::get_value(float time
 }
 
 template<>
-inline Mat4f ModelDataAnimationTimeline<Mat4f>::get_value(float timestamp)
+inline Mat4f ModelDataAnimationTimeline<Mat4f>::get_value(float timestamp) const
 {
 	size_t index, index2;
 	float t = find_animation_indices(timestamp, index, index2);
