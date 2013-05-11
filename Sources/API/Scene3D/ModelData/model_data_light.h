@@ -31,6 +31,7 @@
 namespace clan
 {
 
+/// \brief Description of a light in a model
 class ModelDataLight
 {
 public:

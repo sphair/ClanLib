@@ -40,6 +40,7 @@
 namespace clan
 {
 
+/// \brief Data structure describing a model.
 class ModelData
 {
 public:

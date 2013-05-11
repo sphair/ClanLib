@@ -31,6 +31,7 @@
 namespace clan
 {
 
+/// \brief Description of a texture used by a model
 class ModelDataTexture
 {
 public:
