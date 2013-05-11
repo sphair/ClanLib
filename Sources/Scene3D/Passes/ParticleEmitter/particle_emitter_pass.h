@@ -77,6 +77,19 @@ private:
 	TransferTexture instance_transfer;
 
 	std::vector< std::shared_ptr<ParticleEmitterPassData> > active_emitters;
+
+	struct ParticleOrderIndex
+	{
+		ParticleOrderIndex(int index, float sqr_distance) : index(index), sqr_distance(sqr_distance) { }
+
+		bool operator<(const ParticleOrderIndex &that) const
+		{
+			return sqr_distance > that.sqr_distance;
+		}
+
+		int index;
+		float sqr_distance;
+	};
 };
 
 }
