@@ -31,11 +31,15 @@
 namespace clan
 {
 
+/// \brief Named attachment points of interest for a model
 class ModelDataAttachmentPoint
 {
 public:
 	ModelDataAttachmentPoint() : bone_selector(-1) { }
+
+	std::string name;
 	Vec3f position;
+	Quaternionf orientation;
 	int bone_selector;
 };
 
