@@ -57,10 +57,10 @@ ModelLOD::ModelLOD(GraphicContext &gc, int model_index, std::shared_ptr<ModelDat
 
 		buffers.elements = ElementArrayVector<unsigned int>(gc, model_data->meshes[i].elements);
 
-		size_t num_materials = model_data->meshes[i].material_ranges.size();
+		size_t num_materials = model_data->meshes[i].draw_ranges.size();
 		for (size_t j = 0; j < num_materials; j++)
 		{
-			const ModelDataMaterialRange &material_range = model_data->meshes[i].material_ranges[j];
+			const ModelDataDrawRange &material_range = model_data->meshes[i].draw_ranges[j];
 
 			ModelMaterialUniforms block;
 

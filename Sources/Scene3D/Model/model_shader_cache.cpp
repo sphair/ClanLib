@@ -51,9 +51,9 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 	std::shared_ptr<ModelData> &model_data = model->model_data;
 
 	bool is_two_sided = false;
-	if (!model_data->meshes.empty() && !model_data->meshes[0].material_ranges.empty())
+	if (!model_data->meshes.empty() && !model_data->meshes[0].draw_ranges.empty())
 	{
-		is_two_sided = model_data->meshes[0].material_ranges[0].two_sided;
+		is_two_sided = model_data->meshes[0].draw_ranges[0].two_sided;
 		out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 	}
 
@@ -65,9 +65,9 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
-		for (size_t j = 0; j < model_data->meshes[i].material_ranges.size(); j++)
+		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
 		{
-			const ModelDataMaterialRange &material_range = model_data->meshes[i].material_ranges[j];
+			const ModelDataDrawRange &material_range = model_data->meshes[i].draw_ranges[j];
 
 			if (material_range.num_elements == 0) // Some formats got some silly empty material ranges
 				continue;
@@ -123,9 +123,9 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 	std::shared_ptr<ModelData> &model_data = model->model_data;
 
 	bool is_two_sided = false;
-	if (!model_data->meshes.empty() && !model_data->meshes[0].material_ranges.empty())
+	if (!model_data->meshes.empty() && !model_data->meshes[0].draw_ranges.empty())
 	{
-		is_two_sided = model_data->meshes[0].material_ranges[0].two_sided;
+		is_two_sided = model_data->meshes[0].draw_ranges[0].two_sided;
 		out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 	}
 
@@ -137,9 +137,9 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
-		for (size_t j = 0; j < model_data->meshes[i].material_ranges.size(); j++)
+		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
 		{
-			const ModelDataMaterialRange &material_range = model_data->meshes[i].material_ranges[j];
+			const ModelDataDrawRange &material_range = model_data->meshes[i].draw_ranges[j];
 
 			if (material_range.num_elements == 0) // Some formats got some silly empty material ranges
 				continue;
@@ -205,7 +205,7 @@ void ModelShaderCache::create_shadow_commands(GraphicContext &gc, Model *model, 
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 
 		ModelDataMesh &mesh_data = model_data->meshes[i];
-		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.material_ranges.back().start_element + mesh_data.material_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
+		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
 	}
 }
 
@@ -228,7 +228,7 @@ void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model,
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 
 		ModelDataMesh &mesh_data = model_data->meshes[i];
-		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.material_ranges.back().start_element + mesh_data.material_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
+		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
 	}
 }
 
