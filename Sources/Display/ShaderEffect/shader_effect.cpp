@@ -32,6 +32,7 @@
 #include "API/Display/ShaderEffect/shader_effect_description.h"
 #include "API/Display/Render/program_object.h"
 #include "API/Display/Render/frame_buffer.h"
+#include "API/Display/Render/render_buffer.h"
 #include "API/Display/Render/rasterizer_state.h"
 #include "API/Display/Render/blend_state.h"
 #include "API/Display/Render/depth_stencil_state.h"
@@ -41,6 +42,7 @@
 #include "API/Display/Render/uniform_buffer.h"
 #include "API/Display/Render/storage_buffer.h"
 #include "API/Display/Render/texture.h"
+#include "API/Display/Render/texture_2d.h"
 #include "API/Display/Render/shader_object.h"
 #include "API/Core/Text/string_format.h"
 #include "shader_effect_description_impl.h"
@@ -58,6 +60,7 @@ public:
 
 	void create_shaders(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 	void create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
+	void create_frame_buffer(GraphicContext &gc, const ShaderEffectDescription_Impl *description);
 
 	ProgramObject program;
 
@@ -92,6 +95,7 @@ ShaderEffect::ShaderEffect(GraphicContext &gc, const ShaderEffectDescription &de
 {
 	impl->create_shaders(gc, description.impl.get());
 	impl->create_primitives_array(gc, description.impl.get());
+	impl->create_frame_buffer(gc, description.impl.get());
 	impl->elements = description.impl->elements;
 	impl->elements_type = description.impl->elements_type;
 	impl->rasterizer_state = RasterizerState(gc, description.impl->rasterizer_state);
@@ -380,6 +384,43 @@ void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const Shader
 
 			num_vertices = 6;
 		}
+	}
+}
+
+void ShaderEffect_Impl::create_frame_buffer(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
+{
+	int index = 0;
+	for (auto it = description->frag_data.begin(); it != description->frag_data.end(); ++it)
+	{
+		if (!it->second.texture.is_null())
+		{
+			if (fb.is_null())
+				fb = FrameBuffer(gc);
+
+			// To do: improve this so it can attach more than just 2d textures
+
+			fb.attach_color(index, it->second.texture.to_texture_2d());
+		}
+		else if (!it->second.buffer.is_null())
+		{
+			if (fb.is_null())
+				fb = FrameBuffer(gc);
+			fb.attach_color(index, it->second.buffer);
+		}
+		index++;
+	}
+
+	if (!description->depth_texture.is_null())
+	{
+		if (fb.is_null())
+			fb = FrameBuffer(gc);
+		fb.attach_depth(description->depth_texture.to_texture_2d());
+	}
+	else if (!description->depth_buffer.is_null())
+	{
+		if (fb.is_null())
+			fb = FrameBuffer(gc);
+		fb.attach_depth(description->depth_buffer);
 	}
 }
 
