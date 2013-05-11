@@ -33,19 +33,22 @@
 namespace clan
 {
 
+/// \brief Texture sampler state and UVW animation data used when drawing vertex elements
 class ModelDataTextureMap
 {
 public:
-	ModelDataTextureMap() : texture(-1), channel(-1), wrap_x(wrap_repeat), wrap_y(wrap_repeat) { }
-
-	int texture;
-	int channel;
 	enum WrapMode
 	{
 		wrap_repeat,
 		wrap_clamp_to_edge,
 		wrap_mirror
 	};
+
+	ModelDataTextureMap() : texture(-1), channel(-1), wrap_x(wrap_repeat), wrap_y(wrap_repeat) { }
+
+	int texture;
+	int channel;
+
 	WrapMode wrap_x, wrap_y;
 
 	ModelDataAnimationData<Vec3f> uvw_offset;

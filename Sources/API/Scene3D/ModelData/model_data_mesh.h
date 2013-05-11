@@ -33,6 +33,7 @@
 namespace clan
 {
 
+/// \brief Vertex attributes and draw ranges required to draw a mesh
 class ModelDataMesh
 {
 public:

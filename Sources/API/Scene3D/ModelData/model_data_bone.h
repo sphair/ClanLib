@@ -33,6 +33,7 @@
 namespace clan
 {
 
+/// \brief Bone data.
 class ModelDataBone
 {
 public:

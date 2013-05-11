@@ -33,6 +33,7 @@
 namespace clan
 {
 
+/// \brief Camera in the model
 class ModelDataCamera
 {
 public:

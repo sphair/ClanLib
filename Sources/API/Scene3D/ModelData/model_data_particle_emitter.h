@@ -31,6 +31,7 @@
 namespace clan
 {
 
+/// \brief Description of a particle emitter in a model
 class ModelDataParticleEmitter
 {
 public:

@@ -34,6 +34,7 @@
 namespace clan
 {
 
+/// \brief Information needed to draw a range of vertex elements in a ModelDataMesh.
 class ModelDataDrawRange
 {
 public:
