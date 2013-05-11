@@ -257,7 +257,7 @@ void LightsourcePass::update_buffers(GraphicContext &gc)
 		tile_size = 16;
 		num_tiles_x = (viewport->get_width() + tile_size - 1) / tile_size;
 		num_tiles_y = (viewport->get_height() + tile_size - 1) / tile_size;
-		final_color.set(Texture2D(gc, viewport->get_width(), viewport->get_height(), tf_rgba32f));
+		final_color.set(Texture2D(gc, viewport->get_width(), viewport->get_height(), tf_rgba16f));
 
 		compute_visible_lights = StorageVector<unsigned int>(gc, num_tiles_x * num_tiles_y * light_slots_per_tile);
 	}
