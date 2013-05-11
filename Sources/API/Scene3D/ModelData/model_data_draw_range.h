@@ -38,13 +38,22 @@ namespace clan
 class ModelDataDrawRange
 {
 public:
-	ModelDataDrawRange() : start_element(), num_elements(), two_sided(), transparent() { }
+	ModelDataDrawRange() : start_element(), num_elements(), two_sided(), transparent(), alpha_test() { }
 
+	/// \brief First vertex element to draw
 	int start_element;
+
+	/// \brief Number of elements to draw
 	int num_elements;
 
+	/// \brief Toggles if back facing faces should be drawn too
 	bool two_sided;
+
+	/// \brief Controls if faces should be rendered with alpha blending enabled
 	bool transparent;
+
+	/// \brief Must be set to true if the faces are rendered with alpha test transparency
+	bool alpha_test;
 
 	ModelDataAnimationData<Vec3f> ambient;
 	ModelDataAnimationData<Vec3f> diffuse;

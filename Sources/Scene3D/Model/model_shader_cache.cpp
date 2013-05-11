@@ -225,10 +225,32 @@ void ModelShaderCache::create_early_z_commands(GraphicContext &gc, Model *model,
 	out_list.commands.push_back(new ModelRenderCommand_BindShader(get_early_z_program(gc, uses_bones)));
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
-		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
-
 		ModelDataMesh &mesh_data = model_data->meshes[i];
-		out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
+
+		size_t compatible_ranges_count = 0;
+		for (size_t j = 0; j < mesh_data.draw_ranges.size(); j++)
+		{
+			if (!mesh_data.draw_ranges[j].transparent && !mesh_data.draw_ranges[j].two_sided && !mesh_data.draw_ranges[j].alpha_test)
+				compatible_ranges_count++;
+		}
+
+		if (compatible_ranges_count > 0)
+			out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
+
+		if (compatible_ranges_count == mesh_data.draw_ranges.size())
+		{
+			out_list.commands.push_back(new ModelRenderCommand_DrawElements(0, mesh_data.draw_ranges.back().start_element + mesh_data.draw_ranges.back().num_elements, mesh_buffers[i].uniforms[0]));
+		}
+		else
+		{
+			for (size_t j = 0; j < mesh_data.draw_ranges.size(); j++)
+			{
+				if (!mesh_data.draw_ranges[j].transparent && !mesh_data.draw_ranges[j].two_sided && !mesh_data.draw_ranges[j].alpha_test)
+				{
+					out_list.commands.push_back(new ModelRenderCommand_DrawElements(mesh_data.draw_ranges[j].start_element, mesh_data.draw_ranges[j].num_elements, mesh_buffers[i].uniforms[j]));
+				}
+			}
+		}
 	}
 }
 
