@@ -74,7 +74,7 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 
 	gc.set_depth_range(0.0f, 0.9f);
 	gc.set_depth_stencil_state(depth_stencil_state);
-	gc.set_blend_state(blend_state);
+	gc.set_blend_state(early_z_blend_state);
 
 	Mat4f eye_to_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 1.e10f, handed_left, gc.get_clip_z_range());
 	Mat4f eye_to_cull_projection = Mat4f::perspective(field_of_view.get(), viewport_size.width/(float)viewport_size.height, 0.1f, 150.0f, handed_left, clip_negative_positive_w);
@@ -83,6 +83,7 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 	render_list.clear();
 	scene->visit(gc, world_to_eye.get(), eye_to_projection, frustum, this);
 
+	gc.set_blend_state(blend_state);
 	for (size_t i = 0; i < render_list.size(); i++)
 		render_list[i].model_lod->gbuffer_commands.execute(gc, render_list[i].num_instances);
 
@@ -144,6 +145,11 @@ void GBufferPass::setup_gbuffer(GraphicContext &gc)
 		blend_desc.enable_blending(false);
 		blend_desc.set_blend_function(blend_one, blend_one_minus_src_alpha, blend_zero, blend_zero);
 		blend_state = BlendState(gc, blend_desc);
+
+		BlendStateDescription early_z_blend_desc;
+		early_z_blend_desc.enable_blending(false);
+		early_z_blend_desc.enable_color_write(false, false, false, false);
+		early_z_blend_state = BlendState(gc, early_z_blend_desc);
 
 		DepthStencilStateDescription depth_stencil_desc;
 		depth_stencil_desc.enable_depth_write(true);

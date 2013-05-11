@@ -63,6 +63,7 @@ private:
 	FrameBuffer fb_gbuffer;
 	GraphicContext gc;
 	BlendState blend_state;
+	BlendState early_z_blend_state;
 	DepthStencilState depth_stencil_state;
 
 	struct RenderEntry
