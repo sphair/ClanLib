@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "model_data_mesh_lod.h"
+#include "model_data_mesh.h"
 #include "model_data_bone.h"
 #include "model_data_light.h"
 #include "model_data_camera.h"
@@ -36,15 +36,15 @@
 #include "model_data_particle_emitter.h"
 #include "model_data_animation.h"
 #include "model_data_texture.h"
+
 namespace clan
 {
 
 class ModelData
 {
 public:
-	std::vector<ModelDataMeshLOD> mesh_lods;
+	std::vector<ModelDataMesh> meshes;
 	std::vector<ModelDataTexture> textures;
-	std::vector<std::string> replaceable_textures;
 	std::vector<ModelDataBone> bones;
 	std::vector<ModelDataLight> lights;
 	std::vector<ModelDataCamera> cameras;

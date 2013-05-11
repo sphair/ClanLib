@@ -27,6 +27,7 @@
 */
 
 #pragma once
+
 namespace clan
 {
 

@@ -81,12 +81,12 @@ Physics3DShape Physics3DShape::model(const std::shared_ptr<clan::ModelData> &mod
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
 
 	unsigned int vertex_offset = 0;
-	for (size_t i = 0; i < model_data->mesh_lods[0].meshes.size(); i++)
+	for (size_t i = 0; i < model_data->meshes.size(); i++)
 	{
-		shape.impl->model_vertices.insert(shape.impl->model_vertices.end(), model_data->mesh_lods[0].meshes[i].vertices.begin(), model_data->mesh_lods[0].meshes[i].vertices.end());
-		for (size_t j = 0; j < model_data->mesh_lods[0].meshes[i].elements.size(); j++)
-			shape.impl->model_elements.push_back(vertex_offset + model_data->mesh_lods[0].meshes[i].elements[j]);
-		vertex_offset += model_data->mesh_lods[0].meshes[i].vertices.size();
+		shape.impl->model_vertices.insert(shape.impl->model_vertices.end(), model_data->meshes[i].vertices.begin(), model_data->meshes[i].vertices.end());
+		for (size_t j = 0; j < model_data->meshes[i].elements.size(); j++)
+			shape.impl->model_elements.push_back(vertex_offset + model_data->meshes[i].elements[j]);
+		vertex_offset += model_data->meshes[i].vertices.size();
 	}
 
 	btIndexedMesh submesh;
@@ -164,12 +164,12 @@ Physics3DShape Physics3DShape::gimpact_model(const std::shared_ptr<clan::ModelDa
 	shape.impl = std::shared_ptr<Physics3DShape_Impl>(new Physics3DShape_Impl());
 
 	unsigned int vertex_offset = 0;
-	for (size_t i = 0; i < model_data->mesh_lods[0].meshes.size(); i++)
+	for (size_t i = 0; i < model_data->meshes.size(); i++)
 	{
-		shape.impl->model_vertices.insert(shape.impl->model_vertices.end(), model_data->mesh_lods[0].meshes[i].vertices.begin(), model_data->mesh_lods[0].meshes[i].vertices.end());
-		for (size_t j = 0; j < model_data->mesh_lods[0].meshes[i].elements.size(); j++)
-			shape.impl->model_elements.push_back(vertex_offset + model_data->mesh_lods[0].meshes[i].elements[j]);
-		vertex_offset += model_data->mesh_lods[0].meshes[i].vertices.size();
+		shape.impl->model_vertices.insert(shape.impl->model_vertices.end(), model_data->meshes[i].vertices.begin(), model_data->meshes[i].vertices.end());
+		for (size_t j = 0; j < model_data->meshes[i].elements.size(); j++)
+			shape.impl->model_elements.push_back(vertex_offset + model_data->meshes[i].elements[j]);
+		vertex_offset += model_data->meshes[i].vertices.size();
 	}
 
 	btIndexedMesh submesh;

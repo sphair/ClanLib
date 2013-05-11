@@ -30,28 +30,33 @@
 
 #include "model_data_texture_map.h"
 #include "model_data_animation_data.h"
+
 namespace clan
 {
 
 class ModelDataMaterialRange
 {
 public:
-	ModelDataMaterialRange() : glossiness(), specular_level(), two_sided(), transparent(), start_element(), num_elements() { }
-	Vec3f ambient;
-	Vec3f diffuse;
-	Vec3f specular;
-	ModelDataAnimationData<float> self_illumination_amount;
-	ModelDataAnimationData<Vec3f> self_illumination;
-	float glossiness;
-	float specular_level;
+	ModelDataMaterialRange() : start_element(), num_elements(), two_sided(), transparent() { }
+
+	int start_element;
+	int num_elements;
+
 	bool two_sided;
 	bool transparent;
+
+	ModelDataAnimationData<Vec3f> ambient;
+	ModelDataAnimationData<Vec3f> diffuse;
+	ModelDataAnimationData<Vec3f> specular;
+	ModelDataAnimationData<float> self_illumination_amount;
+	ModelDataAnimationData<Vec3f> self_illumination;
+	ModelDataAnimationData<float> glossiness;
+	ModelDataAnimationData<float> specular_level;
+
 	ModelDataTextureMap diffuse_map;
 	ModelDataTextureMap specular_map;
 	ModelDataTextureMap bumpmap_map;
 	ModelDataTextureMap self_illumination_map;
-	int start_element;
-	int num_elements;
 };
 
 }

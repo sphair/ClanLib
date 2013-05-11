@@ -29,6 +29,7 @@
 #pragma once
 
 #include "model_data_animation_data.h"
+
 namespace clan
 {
 

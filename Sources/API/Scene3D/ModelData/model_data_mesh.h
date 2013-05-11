@@ -29,6 +29,7 @@
 #pragma once
 
 #include "model_data_material_range.h"
+
 namespace clan
 {
 
