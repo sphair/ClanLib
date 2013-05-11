@@ -91,11 +91,22 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	size_t vector_offset = 0;
 	for (size_t j = 0; j < active_emitters.size(); j++)
 	{
+		Vec3f eye_pos = scene->get_camera().get_position();
+		std::vector<ParticleOrderIndex> sorted_particles;
+		sorted_particles.reserve(active_emitters[j]->cpu_particles.size());
 		for (size_t i = 0; i < active_emitters[j]->cpu_particles.size(); i++)
 		{
+			Vec3f delta = active_emitters[j]->cpu_particles[i].position - eye_pos;
+			sorted_particles.push_back(ParticleOrderIndex(i, Vec3f::dot(delta, delta)));
+		}
+		std::sort(sorted_particles.begin(), sorted_particles.end());
+
+		for (size_t k = 0; k < sorted_particles.size(); k++)
+		{
+			int i = sorted_particles[k].index;
 			float size = mix(active_emitters[j]->cpu_particles[i].start_size, active_emitters[j]->cpu_particles[i].end_size, active_emitters[j]->cpu_particles[i].life);
-			vectors[vector_offset + i * vectors_per_particle + 0] = Vec4f(active_emitters[j]->cpu_particles[i].position, size);
-			vectors[vector_offset + i * vectors_per_particle + 1] = Vec4f(active_emitters[j]->cpu_particles[i].life, 0.0f, 0.0f, 0.0f);
+			vectors[vector_offset + k * vectors_per_particle + 0] = Vec4f(active_emitters[j]->cpu_particles[i].position, size);
+			vectors[vector_offset + k * vectors_per_particle + 1] = Vec4f(active_emitters[j]->cpu_particles[i].life, 0.0f, 0.0f, 0.0f);
 		}
 
 		vector_offset += active_emitters[j]->cpu_particles.size() * vectors_per_particle;
