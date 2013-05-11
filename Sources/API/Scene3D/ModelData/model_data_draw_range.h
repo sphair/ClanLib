@@ -34,10 +34,10 @@
 namespace clan
 {
 
-class ModelDataMaterialRange
+class ModelDataDrawRange
 {
 public:
-	ModelDataMaterialRange() : start_element(), num_elements(), two_sided(), transparent() { }
+	ModelDataDrawRange() : start_element(), num_elements(), two_sided(), transparent() { }
 
 	int start_element;
 	int num_elements;

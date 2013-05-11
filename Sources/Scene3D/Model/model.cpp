@@ -104,7 +104,7 @@ int Model::get_vectors_per_instance() const
 {
 	if (model_data->meshes.size() != 1)
 		throw Exception("Model::get_vectors_per_instance does not support multiple meshes yet");
-	size_t num_materials = model_data->meshes[0].material_ranges.size();
+	size_t num_materials = model_data->meshes[0].draw_ranges.size();
 	return instance_base_vectors + model_data->bones.size() * vectors_per_bone + num_materials * vectors_per_material;
 }
 
@@ -174,22 +174,22 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 			vectors[instance_base_vectors + i * vectors_per_bone + 2] = Vec4f(transform[8], transform[9], transform[10], transform[11]);
 		}
 
-		size_t num_materials = model_data->meshes[0].material_ranges.size();
+		size_t num_materials = model_data->meshes[0].draw_ranges.size();
 		for (size_t i = 0; i < num_materials; i++)
 		{
 			int material_offset = instance_base_vectors + model_data->bones.size() * vectors_per_bone + i * vectors_per_material;
 
-			Vec3f self_illumination = model_data->meshes[0].material_ranges[i].self_illumination.get_value(instances[j]->animation_index, instances[j]->animation_time);
-			float self_illumination_amount = model_data->meshes[0].material_ranges[i].self_illumination_amount.get_value(instances[j]->animation_index, instances[j]->animation_time);
+			Vec3f self_illumination = model_data->meshes[0].draw_ranges[i].self_illumination.get_value(instances[j]->animation_index, instances[j]->animation_time);
+			float self_illumination_amount = model_data->meshes[0].draw_ranges[i].self_illumination_amount.get_value(instances[j]->animation_index, instances[j]->animation_time);
 			vectors[material_offset + 0] = Vec4f(self_illumination, self_illumination_amount);
-			vectors[material_offset + 1] = Vec4f(0.0f); // model_data->meshes[0].material_ranges[i].diffuse_map.replaceable_texture
+			vectors[material_offset + 1] = Vec4f(0.0f); // model_data->meshes[0].draw_ranges[i].diffuse_map.replaceable_texture
 
 			Mat4f uvw[4] = 
 			{
-				model_data->meshes[0].material_ranges[i].diffuse_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].material_ranges[i].bumpmap_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].material_ranges[i].self_illumination_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
-				model_data->meshes[0].material_ranges[i].specular_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time)
+				model_data->meshes[0].draw_ranges[i].diffuse_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
+				model_data->meshes[0].draw_ranges[i].bumpmap_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
+				model_data->meshes[0].draw_ranges[i].self_illumination_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time),
+				model_data->meshes[0].draw_ranges[i].specular_map.get_uvw_matrix(instances[j]->animation_index, instances[j]->animation_time)
 			};
 
 			for (int h = 0; h < 4; h++)

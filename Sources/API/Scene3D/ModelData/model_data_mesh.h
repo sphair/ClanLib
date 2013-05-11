@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "model_data_material_range.h"
+#include "model_data_draw_range.h"
 
 namespace clan
 {
@@ -45,7 +45,7 @@ public:
 	std::vector<Vec4ub> colors;
 	std::vector< std::vector<Vec2f> > channels;
 	std::vector<unsigned int> elements;
-	std::vector<ModelDataMaterialRange> material_ranges;
+	std::vector<ModelDataDrawRange> draw_ranges;
 
 	void calculate_tangents();
 };

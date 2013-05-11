@@ -28,11 +28,12 @@
 
 #pragma once
 
-#include "API/Scene3D/ModelData/model_data_material_range.h"
+#include "API/Scene3D/ModelData/model_data_draw_range.h"
+
 namespace clan
 {
 
-class ModelDataMaterialRange;
+class ModelDataDrawRange;
 
 class ModelShaderDescription
 {
@@ -42,7 +43,7 @@ public:
 	{
 	}
 
-	ModelShaderDescription(const ModelDataMaterialRange &description, bool use_bones)
+	ModelShaderDescription(const ModelDataDrawRange &description, bool use_bones)
 		: color_channel(), diffuse_channel(), specular_channel(), bumpmap_channel(), self_illumination_channel()
 	{
 		color_channel = false;
