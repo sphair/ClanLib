@@ -77,6 +77,9 @@ ubyte64 System::get_microseconds()
 		first_time = false;
 	}
 
+	// Note on Win32, this looses accuracy after approx 9 days (by 1 to 4 microseconds), due to the precision of a 64bit double.
+	// If you require ultra precision, modify this function to use clan::BigInt
+
 	QueryPerformanceCounter(&perf_counter);
 	double quad_part = (double) perf_counter.QuadPart;
 	return (ubyte64) (((1000000.0 * quad_part) / perf_frequency) + 0.5);
