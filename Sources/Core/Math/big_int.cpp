@@ -386,14 +386,14 @@ void BigInt::abs(BigInt *b) const
 	impl->abs(b->impl.get());
 }
 
-int BigInt::iseven() const
+bool BigInt::is_even() const
 {
-	return impl->iseven();
+	return impl->iseven() != 0;
 }
 
-int BigInt::isodd() const
+bool BigInt::is_odd() const
 {
-	return impl->isodd();
+	return impl->isodd() != 0;
 }
 
 void BigInt::div_2(BigInt *c) const

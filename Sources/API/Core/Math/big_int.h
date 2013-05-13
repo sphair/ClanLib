@@ -250,10 +250,11 @@ public:
 	/// \brief   Compute b = |a|.  'a' and 'b' may be identical.
 	void abs(BigInt *b) const;
 
-	int iseven() const;
+	///  \brief  Returns a true if number is even
+	bool is_even() const;
 
-	/// \brief   Returns a true (non-zero) value if a is odd, false (zero) otherwise.
-	int isodd() const;
+	///  \brief  Returns a true if number is odd
+	bool is_odd() const;
 
 	/// \brief  Compute c = a / 2, disregarding the remainder.
 	void div_2(BigInt *c) const;
