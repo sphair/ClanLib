@@ -326,17 +326,17 @@ Mat4<Type> Mat4<Type>::rotate(const Angle &angle_x, const Angle &angle_y, const 
 	switch (order)
 	{
 		case order_XYZ:
-			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
-		case order_XZY:
-			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
-		case order_YZX:
-			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
-		case order_YXZ:
-			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
-		case order_ZXY:
-			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
-		case order_ZYX:
 			return rotation_matrix_x * rotation_matrix_y * rotation_matrix_z;
+		case order_XZY:
+			return rotation_matrix_x * rotation_matrix_z * rotation_matrix_y;
+		case order_YZX:
+			return rotation_matrix_y * rotation_matrix_z * rotation_matrix_x;
+		case order_YXZ:
+			return rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
+		case order_ZXY:
+			return rotation_matrix_z * rotation_matrix_x * rotation_matrix_y;
+		case order_ZYX:
+			return rotation_matrix_z * rotation_matrix_y * rotation_matrix_x;
 		default:
 			throw Exception("Unknown euler order");
 	}
