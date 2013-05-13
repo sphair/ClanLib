@@ -158,10 +158,17 @@ public:
 	/// computation will be discarded (although it will still be computed)
 	void div(const BigInt *b, BigInt *q, BigInt *r) const;
 
-	/// \brief  Compute c = a + b.  All parameters may be identical.
-	void add(const BigInt *b, BigInt *c) const;
+	/// \brief Compute result = this + b.
+	BigInt operator + (const BigInt& b);
 
-	void sub(const BigInt *b, BigInt *c) const;
+	/// \brief Compute this += b.
+	BigInt operator += (const BigInt& b);
+
+	/// \brief Compute result = this - b.
+	BigInt operator - (const BigInt& b);
+
+	/// \brief Compute this -= b.
+	BigInt operator -= (const BigInt& b);
 
 	int cmp(const BigInt *b) const;
 
