@@ -37,8 +37,7 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: BigInt constructors");
 	{
-		BigInt value;
-		value.set(1234);
+		BigInt value(1234);
 		BigInt value2(value);
 		BigInt value3;
 		value3 = value;
@@ -71,8 +70,7 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: BigInt set(ubyte32) and get(ubyte32)");
 	{
-		BigInt value;
-		value.set(1234);
+		BigInt value(1234);
 		ubyte32 result;
 		value.get(result);
 		if (result != 1234)
@@ -89,8 +87,7 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: BigInt set(ubyte64) and get(ubyte64)");
 	{
-		BigInt value;
-		value.set(1234);
+		BigInt value(1234);
 		ubyte64 result;
 		value.get(result);
 		if (result != 1234ULL)
@@ -108,8 +105,7 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: BigInt set(byte32) and get(byte32)");
 	{
-		BigInt value;
-		value.set(1234);
+		BigInt value(1234);
 		byte32 result;
 		value.get(result);
 		if (result != 1234)
@@ -131,8 +127,7 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: BigInt set(byte64) and get(byte64)");
 	{
-		BigInt value;
-		value.set(1234LL);
+		BigInt value(1234LL);
 		byte64 result;
 		value.get(result);
 		if (result != 1234LL)
@@ -154,39 +149,41 @@ void TestApp::test_bigint(void)
 
 	Console::write_line("   Function: operator + ");
 	{
-		BigInt value1;
-		BigInt value2;
+		BigInt value1(5);
+		BigInt value2(3);
 		BigInt value3;
 
-		value1.set(5);
-		value2.set(3);
 		value3 = value1 + value2;
 		byte32 result;
 		value3.get(result);
 		if (result != 8)
 			fail();
+
+
 	}
 	Console::write_line("   Function: operator += ");
 	{
-		BigInt value1;
-		BigInt value2;
-	
-		value1.set(5);
-		value2.set(3);
+		BigInt value1(5);
+		BigInt value2(3);
+
 		value1 += value2;
 		byte32 result;
 		value1.get(result);
 		if (result != 8)
 			fail();
+
+		value1 += 1;
+		value1.get(result);
+		if (result != 9)
+			fail();
+
 	}
 	Console::write_line("   Function: operator - ");
 	{
-		BigInt value1;
-		BigInt value2;
+		BigInt value1(5);
+		BigInt value2(3);
 		BigInt value3;
 
-		value1.set(5);
-		value2.set(3);
 		value3 = value1 - value2;
 		byte32 result;
 		value3.get(result);
@@ -195,11 +192,9 @@ void TestApp::test_bigint(void)
 	}
 	Console::write_line("   Function: operator -= ");
 	{
-		BigInt value1;
-		BigInt value2;
+		BigInt value1(5);
+		BigInt value2(3);
 	
-		value1.set(5);
-		value2.set(3);
 		value1 -= value2;
 		byte32 result;
 		value1.get(result);
