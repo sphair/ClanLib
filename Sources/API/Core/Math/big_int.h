@@ -168,7 +168,7 @@ public:
 	/// Input parameters may be re-used
 	/// as output parameters.  If q or r is NULL, that portion of the
 	/// computation will be discarded (although it will still be computed)
-	void div(const BigInt *b, BigInt *q, BigInt *r) const;
+	void div(const BigInt &b, BigInt *q, BigInt *r) const;
 
 	/// \brief Compute result = this + b.
 	BigInt operator + (const BigInt& b);
@@ -189,11 +189,16 @@ public:
 	BigInt operator *= (const BigInt& b);
 
 	/// \brief Compute result = this / b.
-	//BigInt operator / (const BigInt& b);
+	BigInt operator / (const BigInt& b);
 
 	/// \brief Compute this /= b.
-	//BigInt operator /= (const BigInt& b);
+	BigInt operator /= (const BigInt& b);
 
+	/// \brief Compute result = this % b.
+	BigInt operator % (const BigInt& b);
+
+	/// \brief Compute this %= b.
+	BigInt operator %= (const BigInt& b);
 
 	int cmp(const BigInt *b) const;
 

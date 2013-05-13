@@ -226,7 +226,56 @@ void TestApp::test_bigint(void)
 		value1.get(result);
 		if (result != 15)
 			fail();
+	}
+	Console::write_line("   Function: operator / ");
+	{
+		BigInt value1(9);
+		BigInt value2(4);
+		BigInt value3;
 
-}
+		value3 = value1 / value2;
+		byte32 result;
+		value3.get(result);
+		if (result != 2)
+			fail();
+
+
+	}
+	Console::write_line("   Function: operator /= ");
+	{
+		BigInt value1(9);
+		BigInt value2(4);
+
+		value1 /= value2;
+		byte32 result;
+		value1.get(result);
+		if (result != 2)
+			fail();
+	}
+	Console::write_line("   Function: operator % ");
+	{
+		BigInt value1(9);
+		BigInt value2(4);
+		BigInt value3;
+
+		value3 = value1 % value2;
+		byte32 result;
+		value3.get(result);
+		if (result != 1)
+			fail();
+
+
+	}
+	Console::write_line("   Function: operator %= ");
+	{
+		BigInt value1(9);
+		BigInt value2(4);
+
+		value1 %= value2;
+		byte32 result;
+		value1.get(result);
+		if (result != 1)
+			fail();
+	}
 
 }
