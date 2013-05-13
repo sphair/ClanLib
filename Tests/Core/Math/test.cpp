@@ -68,6 +68,7 @@ int TestApp::main(const std::vector<std::string> &args)
 #endif
 		Console::write_line("Directory: API/Core/Math");
 
+		test_bigint();
 		test_angle();
 		test_quaternion_f();
 		test_quaternion_d();
