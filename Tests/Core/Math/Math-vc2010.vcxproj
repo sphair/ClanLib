@@ -131,6 +131,7 @@
   <ItemGroup>
     <ClCompile Include="test.cpp" />
     <ClCompile Include="test_angle.cpp" />
+    <ClCompile Include="test_bigint.cpp" />
     <ClCompile Include="test_line.cpp" />
     <ClCompile Include="test_line_ray.cpp" />
     <ClCompile Include="test_line_segment.cpp" />
