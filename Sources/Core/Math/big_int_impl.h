@@ -98,6 +98,7 @@ public:
 	void random();
 	void exch(BigInt_Impl *mp2);
 	void mul(const BigInt_Impl *b, BigInt_Impl *c) const;
+	void mul_d(ubyte32 d, BigInt_Impl *c) const;
 	bool invmod(const BigInt_Impl *m, BigInt_Impl *c) const;
 	void xgcd(const BigInt_Impl *b, BigInt_Impl *g, BigInt_Impl *x, BigInt_Impl *y) const;
 	void abs(BigInt_Impl *b) const;
