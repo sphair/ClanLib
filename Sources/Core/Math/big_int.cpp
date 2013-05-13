@@ -195,12 +195,6 @@ void BigInt::div_2d(ubyte32 d, BigInt *q, BigInt *r) const
 	impl->div_2d(d, q->impl.get(), r->impl.get());
 }
 
-void BigInt::div(const BigInt *b, BigInt *q, BigInt *r) const
-{
-	impl->div(b->impl.get(),q->impl.get(), r->impl.get());
-}
-
-
 BigInt BigInt::operator + (const BigInt& b)
 {
 	BigInt c;
@@ -245,6 +239,40 @@ BigInt BigInt::operator *= (const BigInt& b)
 	impl->mul(b.impl.get(), impl.get());
 	return *this;
 }
+
+BigInt BigInt::operator / (const BigInt& b)
+{
+	BigInt c;
+	impl->div(b.impl.get(), c.impl.get(), NULL);
+	return c;
+}
+
+BigInt BigInt::operator /= (const BigInt& b)
+{
+	BigInt c;
+	impl->div(b.impl.get(), impl.get(), NULL);
+	return *this;
+}
+
+BigInt BigInt::operator % (const BigInt& b)
+{
+	BigInt c;
+	impl->div(b.impl.get(), NULL, c.impl.get());
+	return c;
+}
+
+BigInt BigInt::operator %= (const BigInt& b)
+{
+	BigInt c;
+	impl->div(b.impl.get(), NULL, impl.get());
+	return *this;
+}
+
+void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const
+{
+	impl->div(b.impl.get(),q->impl.get(), r->impl.get());
+}
+
 
 int BigInt::cmp(const BigInt *b) const
 {
