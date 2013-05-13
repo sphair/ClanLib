@@ -92,7 +92,7 @@ public:
 
 	bool make_prime(unsigned int num_bits);
 
-	// Compare a <=> 0.  Returns <0 if a<0, 0 if a=0, >0 if a>0.
+	/// \brief  Compare a <=> 0.  Returns <0 if a<0, 0 if a=0, >0 if a>0.
 	int cmp_z() const;
 
 	void set_bit(unsigned int bit_number, unsigned int value);
@@ -101,67 +101,77 @@ public:
 
 	void sieve(const ubyte32 *primes, unsigned int num_primes, std::vector<unsigned char> &sieve);
 
-	// Compute c = a (mod d).  Result will always be 0 <= c < d
+	/// \brief  Compute c = a (mod d).  Result will always be 0 <= c < d
 	ubyte32 mod_d(ubyte32 d) const;
 
-	// Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
+	/// \brief  Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
 	void div_d(ubyte32 d, BigInt *q, ubyte32 *r) const;
 
 	void copy(BigInt *to) const;
 
-	// Compute the sum out_b = this + d, for a single digit d.  Respects the sign of its primary addend (single digits are unsigned anyway).
+	/// \brief  Compute the sum out_b = this + d, for a single digit d.  Respects the sign of its primary addend (single digits are unsigned anyway).
 	void add_d(ubyte32 d, BigInt *out_b) const;
 
-	// Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
-	// If a is prime, and (w, a) = 1, then w^a == w (mod a).
-	// So, we compute z = w^a (mod a) and compare z to w; if they are
-	// equal, the test passes and we return true.  Otherwise, we return false.
+	/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
+	///
+	/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
+	/// So, we compute z = w^a (mod a) and compare z to w; if they are
+	/// equal, the test passes and we return true.  Otherwise, we return false.
 	bool fermat(ubyte32 w) const;
 
-	// Performs nt iteration of the Miller-Rabin probabilistic primality
-	// test on a.  Returns true if the tests pass, false if one fails.
-	// If false is returned, the number is definitely composite.  If true
+	/// \brief  Performs nt iteration of the Miller-Rabin probabilistic primality test on a.
+	///
+	/// Returns true if the tests pass, false if one fails.
+	/// If false is returned, the number is definitely composite.  If true
 	bool pprime(int nt) const;
 
+	/// \brief Sets a value
 	void set(byte32 d);
 	void set(ubyte32 d);
 	void set(ubyte64 d);
 	void set(byte64 d);
 
+	/// \brief Gets a value.
+	///
+	/// Throws exception if number exceeds datatype bounds
 	void get(ubyte32 &d);
 	void get(ubyte64 &d);
 	void get(byte64 &d);
 	void get(byte32 &d);
 
-	// Compute c = (a ** b) mod m.  Uses a standard square-and-multiply
-	// method with modular reductions at each step. (This is basically the
-	// same code as expt(), except for the addition of the reductions)
-	//
-	// The modular reductions are done using Barrett's algorithm (see reduce() for details)
+	/// \brief  Compute c = (a ** b) mod m.
+	///
+	/// Uses a standard square-and-multiply
+	/// method with modular reductions at each step. (This is basically the
+	/// same code as expt(), except for the addition of the reductions)
+	///
+	/// The modular reductions are done using Barrett's algorithm (see reduce() for details)
 	void exptmod(const BigInt *b, const BigInt *m, BigInt *c) const;
 
-	// Compute c = a (mod m).  Result will always be 0 <= c < m.
+	/// \brief  Compute c = a (mod m).  Result will always be 0 <= c < m.
 	void mod(const BigInt *m, BigInt *c) const;
 
-	// Compute q = a / b and r = a mod b.  Input parameters may be re-used
-	// as output parameters.  If q or r is NULL, that portion of the
-	// computation will be discarded (although it will still be computed)
+	/// \brief  Compute q = a / b and r = a mod b.
+	///
+	/// Input parameters may be re-used
+	/// as output parameters.  If q or r is NULL, that portion of the
+	/// computation will be discarded (although it will still be computed)
 	void div(const BigInt *b, BigInt *q, BigInt *r) const;
 
-	// Compute c = a + b.  All parameters may be identical.
+	/// \brief  Compute c = a + b.  All parameters may be identical.
 	void add(const BigInt *b, BigInt *c) const;
 
 	void sub(const BigInt *b, BigInt *c) const;
 
 	int cmp(const BigInt *b) const;
 
-	// Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
+	/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
 	int cmp_d(ubyte32 d) const;
 
-	// Compute the difference b = a - d, for a single digit d.  Respects the sign of its subtrahend (single digits are unsigned anyway).
+	/// \brief  Compute the difference b = a - d, for a single digit d.  Respects the sign of its subtrahend (single digits are unsigned anyway).
 	void sub_d(ubyte32 d, BigInt *b) const;
 
-	// Compute b = -a.  'a' and 'b' may be identical.
+	/// \brief  Compute b = -a.  'a' and 'b' may be identical.
 	void neg(BigInt *b) const;
 
 	unsigned int trailing_zeros() const;
@@ -171,41 +181,46 @@ public:
 	void sqrmod(const BigInt *m, BigInt *c) const;
 	void sqr(BigInt *b) const;
 
-	// Assigns a random value to a.  This value is generated using the
-	// standard C library's rand() function, so it should not be used for
-	// cryptographic purposes, but it should be fine for primality testing,
-	// since all we really care about there is reasonable statistical
-	// properties.
-	// As many digits as a currently has are filled with random digits.  */
+	/// \brief Assigns a random value to a.
+	///
+	/// This value is generated using the
+	/// standard C library's rand() function, so it should not be used for
+	/// cryptographic purposes, but it should be fine for primality testing,
+	/// since all we really care about there is reasonable statistical
+	/// properties.
+	/// As many digits as a currently has are filled with random digits.
 	void random();
 
-	// Exchange mp1 and mp2 without allocating any intermediate memory
-	// (well, unless you count the stack space needed for this call and the
-	// locals it creates...).  This cannot fail.
+	/// \brief Exchange mp1 and mp2 without allocating any intermediate memory
+	///
+	/// (well, unless you count the stack space needed for this call and the
+	/// locals it creates...).  This cannot fail.
 	void exch(BigInt *mp2);
 
-	// Compute c = a * b.  All parameters may be identical.
+	/// \brief Compute c = a * b.  All parameters may be identical.
 	void mul(const BigInt *b, BigInt *c) const;
 
-	// Compute c = a^-1 (mod m), if there is an inverse for a (mod m).
-	// This is equivalent to the question of whether (a, m) = 1.  If not,
-	// false is returned, and there is no inverse.
+	/// \brief  Compute c = a^-1 (mod m), if there is an inverse for a (mod m).
+	///
+	/// This is equivalent to the question of whether (a, m) = 1.  If not,
+	/// false is returned, and there is no inverse.
 	bool invmod(const BigInt *m, BigInt *c) const;
 
-	// Compute g = (a, b) and values x and y satisfying Bezout's identity
-	// (that is, ax + by = g).  This uses the extended binary GCD algorithm
-	// based on the Stein algorithm used for mp_gcd()
+	/// \brief  Compute g = (a, b) and values x and y satisfying Bezout's identity
+	///
+	/// (that is, ax + by = g).  This uses the extended binary GCD algorithm
+	/// based on the Stein algorithm used for mp_gcd()
 	void xgcd(const BigInt *b, BigInt *g, BigInt *x, BigInt *y) const;
 
-	//  Compute b = |a|.  'a' and 'b' may be identical.
+	/// \brief   Compute b = |a|.  'a' and 'b' may be identical.
 	void abs(BigInt *b) const;
 
 	int iseven() const;
 
-	//  Returns a true (non-zero) value if a is odd, false (zero) otherwise.
+	/// \brief   Returns a true (non-zero) value if a is odd, false (zero) otherwise.
 	int isodd() const;
 
-	// Compute c = a / 2, disregarding the remainder.
+	/// \brief  Compute c = a / 2, disregarding the remainder.
 	void div_2(BigInt *c) const;
 
 	void to_unsigned_octets( unsigned char *output_str, unsigned int output_length) const;
