@@ -74,11 +74,10 @@ private:
 	void check_normalize_180(float input_angle, float output_angle);
 	void check_float(float value, float target);
 	void check_double(double value, double target);
-	void test_vector1(void);
-	void test_vector2(void);
-	void test_vector3(void);
-	void test_vector4(void);
-	void test_matrix(void);
+	void test_vector2();
+	void test_vector3();
+	void test_vector4();
+	void test_matrix();
 	void test_angle();
 	void test_quaternion_f();
 	void test_quaternion_d();
@@ -94,7 +93,7 @@ private:
 	void test_matrix_mat4();
 	void test_rect();
 
-	void fail(void);
+	void fail();
 
 };
 
