@@ -232,6 +232,20 @@ BigInt BigInt::operator -= (const BigInt& b)
 	return *this;
 }
 
+BigInt BigInt::operator * (const BigInt& b)
+{
+	BigInt c;
+	impl->mul(b.impl.get(), c.impl.get());
+	return c;
+}
+
+BigInt BigInt::operator *= (const BigInt& b)
+{
+	BigInt c;
+	impl->mul(b.impl.get(), impl.get());
+	return *this;
+}
+
 int BigInt::cmp(const BigInt *b) const
 {
 	return impl->cmp(b->impl.get());
@@ -286,11 +300,6 @@ void BigInt::random()
 bool BigInt::pprime(int nt) const
 {
 	return impl->pprime(nt);
-}
-
-void BigInt::mul(const BigInt *b, BigInt *c) const
-{
-	impl->mul(b->impl.get(), c->impl.get());
 }
 
 bool BigInt::invmod(const BigInt *m, BigInt *c) const

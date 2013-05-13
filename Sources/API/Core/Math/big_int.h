@@ -182,6 +182,19 @@ public:
 	/// \brief Compute this -= b.
 	BigInt operator -= (const BigInt& b);
 
+	/// \brief Compute result = this * b.
+	BigInt operator * (const BigInt& b);
+
+	/// \brief Compute this *= b.
+	BigInt operator *= (const BigInt& b);
+
+	/// \brief Compute result = this / b.
+	//BigInt operator / (const BigInt& b);
+
+	/// \brief Compute this /= b.
+	//BigInt operator /= (const BigInt& b);
+
+
 	int cmp(const BigInt *b) const;
 
 	/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
@@ -215,9 +228,6 @@ public:
 	/// (well, unless you count the stack space needed for this call and the
 	/// locals it creates...).  This cannot fail.
 	void exch(BigInt *mp2);
-
-	/// \brief Compute c = a * b.  All parameters may be identical.
-	void mul(const BigInt *b, BigInt *c) const;
 
 	/// \brief  Compute c = a^-1 (mod m), if there is an inverse for a (mod m).
 	///

@@ -123,7 +123,7 @@ bool RSA_Impl::build_from_primes(BigInt *p, BigInt *q, BigInt *e, BigInt *d, uns
 	BigInt psub1, qsub1, tmp;
 
 	// 1.  Compute n = p*q
-	p->mul(q, &n);
+	n = (*p) * (*q);
 
 	// verify that the modulus has the desired number of bits
 	if (n.significant_bits() != key_size_in_bits)
@@ -135,7 +135,7 @@ bool RSA_Impl::build_from_primes(BigInt *p, BigInt *q, BigInt *e, BigInt *d, uns
 	p->sub_d( 1, &psub1);
 	q->sub_d( 1, &qsub1);
 
-	psub1.mul(&qsub1, &phi);
+	phi = psub1 * qsub1;
 
 	// 3.  Compute e = d**-1 mod(phi)
 	bool inverse_found = e->invmod( &phi, d);
