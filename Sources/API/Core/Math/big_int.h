@@ -124,6 +124,7 @@ public:
 	bool pprime(int nt) const;
 
 	void set(ubyte32 d);
+	void get(ubyte32 &d);
 
 	// Compute c = (a ** b) mod m.  Uses a standard square-and-multiply
 	// method with modular reductions at each step. (This is basically the

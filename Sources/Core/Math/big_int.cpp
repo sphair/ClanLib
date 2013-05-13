@@ -61,7 +61,7 @@ BigInt::BigInt(const BigInt &other)
 {
 	if (&other != this)
 	{
-		other.copy(this);
+		impl = std::unique_ptr<BigInt_Impl>(new BigInt_Impl(*other.impl.get()));
 	}
 }
 
@@ -131,6 +131,11 @@ void BigInt::add_d(ubyte32 d, BigInt *out_b) const
 void BigInt::set(ubyte32 d)
 {
 	impl->set(d);
+}
+
+void BigInt::get(ubyte32 &d)
+{
+	impl->get(d);
 }
 
 void BigInt::div_2d(ubyte32 d, BigInt *q, BigInt *r) const

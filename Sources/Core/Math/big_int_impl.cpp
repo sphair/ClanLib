@@ -2245,4 +2245,20 @@ void BigInt_Impl::build_primes()
 			throw Exception("Build primes unexpected result");
 }
 
+void BigInt_Impl::get(ubyte32 &d)
+{
+	if (digits_used == 0)
+	{
+		d = 0;
+		return;
+	}
+	if (digits_used > 1)
+			throw Exception("Number greater than 32bit");
+
+	if (digits_negative)
+			throw Exception("Number is negative");
+
+	d = digits[0];
+}
+
 }
