@@ -180,9 +180,19 @@ void BigInt::div(const BigInt *b, BigInt *q, BigInt *r) const
 	impl->div(b->impl.get(),q->impl.get(), r->impl.get());
 }
 
-void BigInt::add(const BigInt *b, BigInt *c) const
+
+BigInt BigInt::operator + (const BigInt& b)
 {
-	impl->add(b->impl.get(), c->impl.get());
+	BigInt c;
+	impl->add(b.impl.get(), c.impl.get());
+	return c;
+}
+
+BigInt BigInt::operator += (const BigInt& b)
+{
+	BigInt c;
+	impl->add(b.impl.get(), impl.get());
+	return *this;
 }
 
 void BigInt::mod(const BigInt *m, BigInt *c) const
@@ -190,9 +200,16 @@ void BigInt::mod(const BigInt *m, BigInt *c) const
 	impl->mod(m->impl.get(), c->impl.get());
 }
 
-void BigInt::sub(const BigInt *b, BigInt *c) const
+BigInt BigInt::operator - (const BigInt& b)
 {
-	impl->sub(b->impl.get(), c->impl.get());
+	BigInt c;
+	impl->sub(b.impl.get(), c.impl.get());
+	return c;
+}
+BigInt BigInt::operator -= (const BigInt& b)
+{
+	impl->sub(b.impl.get(), impl.get());
+	return *this;
 }
 
 int BigInt::cmp(const BigInt *b) const
