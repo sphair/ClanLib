@@ -145,7 +145,7 @@ Mat2<Type> Mat2<Type>::operator +(const Mat2<Type> &add_matrix) const
 	result.matrix[(0*2) + 1] = matrix[(0*2) + 1] + add_matrix.matrix[(0*2) + 1];
 	result.matrix[(1*2) + 0] = matrix[(1*2) + 0] + add_matrix.matrix[(1*2) + 0];
 	result.matrix[(1*2) + 1] = matrix[(1*2) + 1] + add_matrix.matrix[(1*2) + 1];
-	return *this;
+	return result;
 }
 
 template<typename Type>
