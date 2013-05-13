@@ -308,4 +308,26 @@ void TestApp::test_bigint(void)
 			fail();
 	}
 
+	Console::write_line("   Function: is_odd() ");
+	{
+		BigInt value;
+		value.set(130);
+		if (value.is_odd())
+			fail();
+		value.set(131);
+		if (!value.is_odd())
+			fail();
+	}
+
+
+	Console::write_line("   Function: is_even() ");
+	{
+		BigInt value;
+		value.set(131);
+		if (value.is_even())
+			fail();
+		value.set(130);
+		if (!value.is_even())
+			fail();
+	}
 }
