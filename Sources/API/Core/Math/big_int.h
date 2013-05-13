@@ -119,8 +119,6 @@ public:
 	/// \brief  Compute the quotient q = a / d and remainder r = a mod d, for a single digit d.  Respects the sign of its divisor (single digits are unsigned anyway).
 	void div_d(ubyte32 d, BigInt *q, ubyte32 *r) const;
 
-	void copy(BigInt *to) const;
-
 	/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
 	///
 	/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
