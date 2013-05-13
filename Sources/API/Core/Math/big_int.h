@@ -67,6 +67,18 @@ public:
 	/// \brief Constructs a big integer (initialised to zero)
 	BigInt();
 
+	/// \brief Constructs a big integer (initialised to value)
+	BigInt(ubyte32 value);
+
+	/// \brief Constructs a big integer (initialised to value)
+	BigInt(byte32 value);
+
+	/// \brief Constructs a big integer (initialised to value)
+	BigInt(ubyte64 value);
+
+	/// \brief Constructs a big integer (initialised to value)
+	BigInt(byte64 value);
+
 	/// \brief Copy constructor
 	BigInt(const BigInt &other);
 

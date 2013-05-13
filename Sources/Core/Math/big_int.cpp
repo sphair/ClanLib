@@ -57,6 +57,26 @@ BigInt::BigInt() : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision
 {
 }
 
+BigInt::BigInt(ubyte32 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
+BigInt::BigInt(byte32 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
+BigInt::BigInt(ubyte64 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
+BigInt::BigInt(byte64 value) : impl(new BigInt_Impl(BigInt_Impl::default_allocated_precision))
+{
+	set(value);
+}
+
 BigInt::BigInt(const BigInt &other)
 {
 	if (&other != this)
