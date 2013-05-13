@@ -673,9 +673,18 @@ void BigInt_Impl::set(ubyte32 d)
 void BigInt_Impl::set(ubyte64 d)
 {
 	zero();
-	internal_pad(2);
+	ubyte32 d_low = d;
+	ubyte32 d_high = d>>32;
+
+	if (d_high)
+	{
+		internal_pad(2);
+		digits[1] = d_high;
+	}
+
 	digits[0] = d;
-	digits[1] = d>>32;
+
+
 }
 
 void BigInt_Impl::set(byte32 d)
@@ -692,15 +701,24 @@ void BigInt_Impl::set(byte32 d)
 void BigInt_Impl::set(byte64 d)
 {
 	zero();
-	internal_pad(2);
 
 	if (d <0)
 	{
 		d = -d;
 		digits_negative = true;
 	}
+
+	ubyte32 d_low = d;
+	ubyte32 d_high = d>>32;
+
+	if (d_high)
+	{
+		internal_pad(2);
+		digits[1] = d_high;
+	}
+
 	digits[0] = d;
-	digits[1] = d>>32;
+
 }
 
 int BigInt_Impl::internal_cmp(const BigInt_Impl *b) const
