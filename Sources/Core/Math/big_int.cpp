@@ -89,7 +89,7 @@ BigInt &BigInt::operator=(const BigInt& other)
 {
 	if (&other != this)
 	{
-		other.copy(this);
+		other.impl->copy(this->impl.get());
 	}
 	return *this;
 }
@@ -121,11 +121,6 @@ void BigInt::set_bit(unsigned int bit_number, unsigned int value)
 int BigInt::significant_bits() const
 {
 	return impl->significant_bits();
-}
-
-void BigInt::copy(BigInt *to) const
-{
-	impl->copy(to->impl.get());
 }
 
 void BigInt::div_d(ubyte32 d, BigInt *q, ubyte32 *r) const
