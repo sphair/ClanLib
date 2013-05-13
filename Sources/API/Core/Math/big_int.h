@@ -121,9 +121,6 @@ public:
 
 	void copy(BigInt *to) const;
 
-	/// \brief  Compute the sum out_b = this + d, for a single digit d.  Respects the sign of its primary addend (single digits are unsigned anyway).
-	void add_d(ubyte32 d, BigInt *out_b) const;
-
 	/// \brief  Using w as a witness, try pseudo-primality testing based on Fermat's little theorem. 
 	///
 	/// If a is prime, and (w, a) = 1, then w^a == w (mod a).
@@ -169,51 +166,57 @@ public:
 	/// as output parameters.  If q or r is NULL, that portion of the
 	/// computation will be discarded (although it will still be computed)
 	void div(const BigInt &b, BigInt *q, BigInt *r) const;
+	void div(ubyte32 d, BigInt *q, BigInt *r) const;
 
 	/// \brief Compute result = this + b.
 	BigInt operator + (const BigInt& b);
+	BigInt operator + (ubyte32 d);
 
 	/// \brief Compute this += b.
 	BigInt operator += (const BigInt& b);
+	BigInt operator += (ubyte32 d);
 
 	/// \brief Compute result = this - b.
 	BigInt operator - (const BigInt& b);
+	BigInt operator - (ubyte32 d);
 
 	/// \brief Compute this -= b.
 	BigInt operator -= (const BigInt& b);
+	BigInt operator -= (ubyte32 d);
 
 	/// \brief Compute result = this * b.
 	BigInt operator * (const BigInt& b);
+	BigInt operator * (ubyte32 d);
 
 	/// \brief Compute this *= b.
 	BigInt operator *= (const BigInt& b);
+	BigInt operator *= (ubyte32 d);
 
 	/// \brief Compute result = this / b.
 	BigInt operator / (const BigInt& b);
+	BigInt operator / (ubyte32 d);
 
 	/// \brief Compute this /= b.
 	BigInt operator /= (const BigInt& b);
+	BigInt operator /= (ubyte32 d);
 
 	/// \brief Compute result = this % b.
 	BigInt operator % (const BigInt& b);
+	BigInt operator % (ubyte32 d);
 
 	/// \brief Compute this %= b.
 	BigInt operator %= (const BigInt& b);
+	BigInt operator %= (ubyte32 d);
 
 	int cmp(const BigInt *b) const;
 
 	/// \brief  Compare a <=> d.  Returns <0 if a<d, 0 if a=d, >0 if a>d
 	int cmp_d(ubyte32 d) const;
 
-	/// \brief  Compute the difference b = a - d, for a single digit d.  Respects the sign of its subtrahend (single digits are unsigned anyway).
-	void sub_d(ubyte32 d, BigInt *b) const;
-
 	/// \brief  Compute b = -a.  'a' and 'b' may be identical.
 	void neg(BigInt *b) const;
 
 	unsigned int trailing_zeros() const;
-
-	void div_2d(ubyte32 d, BigInt *q, BigInt *r) const;
 
 	void sqrmod(const BigInt *m, BigInt *c) const;
 	void sqr(BigInt *b) const;

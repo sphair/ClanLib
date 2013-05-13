@@ -1888,6 +1888,20 @@ void BigInt_Impl::mul(const BigInt_Impl *b, BigInt_Impl *c) const
  
 }
 
+void BigInt_Impl::mul_d(ubyte32 d, BigInt_Impl *c) const
+{
+	copy(c);
+
+	bool  is_negative = digits_negative;
+
+	c->internal_mul_d(d);
+  
+	if(is_negative == false || c->internal_cmp_d(0) == 0)
+		c->digits_negative = false;
+	else
+		c->digits_negative = is_negative;
+}
+
 bool BigInt_Impl::invmod(const BigInt_Impl *m, BigInt_Impl *c) const
 {
 	bool  is_negative;

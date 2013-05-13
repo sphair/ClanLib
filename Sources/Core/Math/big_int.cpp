@@ -143,11 +143,6 @@ void BigInt::sieve(const ubyte32 *primes, unsigned int num_primes, std::vector<u
 	impl->sieve(primes, num_primes, sieve);
 }
 
-void BigInt::add_d(ubyte32 d, BigInt *out_b) const
-{
-	impl->add_d(d, out_b->impl.get());
-}
-
 void BigInt::set(ubyte32 d)
 {
 	impl->set(d);
@@ -190,15 +185,27 @@ void BigInt::get(byte64 &d)
 	impl->get(d);
 }
 
-void BigInt::div_2d(ubyte32 d, BigInt *q, BigInt *r) const
+void BigInt::div(ubyte32 d, BigInt *q, BigInt *r) const
 {
 	impl->div_2d(d, q->impl.get(), r->impl.get());
 }
+
+void BigInt::mod(const BigInt *m, BigInt *c) const
+{
+	impl->mod(m->impl.get(), c->impl.get());
+}
+
 
 BigInt BigInt::operator + (const BigInt& b)
 {
 	BigInt c;
 	impl->add(b.impl.get(), c.impl.get());
+	return c;
+}
+BigInt BigInt::operator + (ubyte32 d)
+{
+	BigInt c;
+	impl->add_d(d, c.impl.get());
 	return c;
 }
 
@@ -209,9 +216,11 @@ BigInt BigInt::operator += (const BigInt& b)
 	return *this;
 }
 
-void BigInt::mod(const BigInt *m, BigInt *c) const
+BigInt BigInt::operator += (ubyte32 d)
 {
-	impl->mod(m->impl.get(), c->impl.get());
+	BigInt c;
+	impl->add_d(d, impl.get());
+	return *this;
 }
 
 BigInt BigInt::operator - (const BigInt& b)
@@ -220,16 +229,35 @@ BigInt BigInt::operator - (const BigInt& b)
 	impl->sub(b.impl.get(), c.impl.get());
 	return c;
 }
+
+BigInt BigInt::operator - (ubyte32 d)
+{
+	BigInt c;
+	impl->sub_d(d, c.impl.get());
+	return c;
+}
+
 BigInt BigInt::operator -= (const BigInt& b)
 {
 	impl->sub(b.impl.get(), impl.get());
 	return *this;
 }
 
+BigInt BigInt::operator -= (ubyte32 d)
+{
+	impl->sub_d(d, impl.get());
+	return *this;
+}
 BigInt BigInt::operator * (const BigInt& b)
 {
 	BigInt c;
 	impl->mul(b.impl.get(), c.impl.get());
+	return c;
+}
+BigInt BigInt::operator * (ubyte32 d)
+{
+	BigInt c;
+	impl->mul_d(d, c.impl.get());
 	return c;
 }
 
@@ -239,11 +267,23 @@ BigInt BigInt::operator *= (const BigInt& b)
 	impl->mul(b.impl.get(), impl.get());
 	return *this;
 }
+BigInt BigInt::operator *= (ubyte32 d)
+{
+	BigInt c;
+	impl->mul_d(d, impl.get());
+	return *this;
+}
 
 BigInt BigInt::operator / (const BigInt& b)
 {
 	BigInt c;
 	impl->div(b.impl.get(), c.impl.get(), NULL);
+	return c;
+}
+BigInt BigInt::operator / (ubyte32 d)
+{
+	BigInt c;
+	impl->div_d(d, c.impl.get(), NULL);
 	return c;
 }
 
@@ -254,10 +294,22 @@ BigInt BigInt::operator /= (const BigInt& b)
 	return *this;
 }
 
+BigInt BigInt::operator /= (ubyte32 d)
+{
+	BigInt c;
+	impl->div_d(d, impl.get(), NULL);
+	return *this;
+}
 BigInt BigInt::operator % (const BigInt& b)
 {
 	BigInt c;
 	impl->div(b.impl.get(), NULL, c.impl.get());
+	return c;
+}
+BigInt BigInt::operator % (ubyte32 d)
+{
+	BigInt c;
+	impl->div_2d(d, NULL, c.impl.get());
 	return c;
 }
 
@@ -267,7 +319,12 @@ BigInt BigInt::operator %= (const BigInt& b)
 	impl->div(b.impl.get(), NULL, impl.get());
 	return *this;
 }
-
+BigInt BigInt::operator %= (ubyte32 d)
+{
+	BigInt c;
+	impl->div_2d(d, NULL, impl.get());
+	return *this;
+}
 void BigInt::div(const BigInt &b, BigInt *q, BigInt *r) const
 {
 	impl->div(b.impl.get(),q->impl.get(), r->impl.get());
@@ -297,12 +354,6 @@ int BigInt::cmp_d(ubyte32 d) const
 void BigInt::neg(BigInt *b) const
 {
 	impl->neg(b->impl.get());
-}
-
-
-void BigInt::sub_d(ubyte32 d, BigInt *b) const
-{
-	impl->sub_d(d, b->impl.get());
 }
 
 unsigned int BigInt::trailing_zeros() const

@@ -132,8 +132,8 @@ bool RSA_Impl::build_from_primes(BigInt *p, BigInt *q, BigInt *e, BigInt *d, uns
 	}
 
 	// 2.  Compute phi = (p-1)*(q-1)
-	p->sub_d( 1, &psub1);
-	q->sub_d( 1, &qsub1);
+	psub1 = (*p) - 1;
+	qsub1 = (*q) - 1;
 
 	phi = psub1 * qsub1;
 

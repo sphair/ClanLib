@@ -214,7 +214,6 @@ void TestApp::test_bigint(void)
 		if (result != 15)
 			fail();
 
-
 	}
 	Console::write_line("   Function: operator *= ");
 	{
@@ -225,6 +224,37 @@ void TestApp::test_bigint(void)
 		byte32 result;
 		value1.get(result);
 		if (result != 15)
+			fail();
+
+		value1.set(-5);
+		value2.set(3);
+		value1 *= value2;
+	
+		value1.get(result);
+		if (result != -15)
+			fail();
+
+		value1.set(5);
+		value2.set(-3);
+		value1 *= value2;
+	
+		value1.get(result);
+		if (result != -15)
+			fail();
+
+		value1.set(-5);
+		value2.set(-3);
+		value1 *= value2;
+	
+		value1.get(result);
+		if (result != 15)
+			fail();
+
+		value1.set(-5);
+		value1 *= 3;
+	
+		value1.get(result);
+		if (result != -15)
 			fail();
 	}
 	Console::write_line("   Function: operator / ");
