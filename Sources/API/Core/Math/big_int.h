@@ -125,7 +125,12 @@ public:
 
 	void set(byte32 d);
 	void set(ubyte32 d);
+	void set(ubyte64 d);
+	void set(byte64 d);
+
 	void get(ubyte32 &d);
+	void get(ubyte64 &d);
+	void get(byte64 &d);
 	void get(byte32 &d);
 
 	// Compute c = (a ** b) mod m.  Uses a standard square-and-multiply
