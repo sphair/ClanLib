@@ -68,16 +68,12 @@ void TestApp::test_matrix_mat3()
 
 	Console::write_line("   Function: multiply() and operator");
 	{
-		Mat3i result = test_a * test_b;
+		Mat3i result = test_b * test_a;
 		Mat3i answer(21, 42, 17, 53, 97, 51, 28, 43, 21);
 		if (result != answer) fail();
 
-		result = Mat3i::multiply(test_a, test_b);
+		result = Mat3i::multiply(test_b, test_a);
 		if (result != answer) fail();
-
-		//FIXME: result = test_b;
-		//FIXME: result.multiply(test_a);
-		//FIXME: if (result != answer) fail();
 
 	}
 
@@ -89,10 +85,6 @@ void TestApp::test_matrix_mat3()
 		result = Mat3i::add(test_a, test_b);
 		if (result != Mat3i(7, 8, 4, 9, 8, 11, 6, 11, 4)) fail();
 
-		//FIXME: result = test_b;
-		//FIXME: result.add(test_a);
-		//FIXME: if (result != Mat3i(7, 8, 4, 9, 8, 11, 6, 11, 4)) fail();
-
 	}
 
 	Console::write_line("   Function: subtract() and operator");
@@ -102,11 +94,6 @@ void TestApp::test_matrix_mat3()
 
 		result = Mat3i::subtract(test_a, test_b);
 		if (result != Mat3i(-1, -6, 0, -1, 2, 1, 2, -7, -2)) fail();
-
-		//FIXME: result = test_b;
-		//FIXME: result.subtract(test_a);
-		//FIXME: if (result != Mat3i(-1, -6, 0, -1, 2, 1, 2, -7, -2)) fail();
-
 	}
 }
 
@@ -147,10 +134,6 @@ void TestApp::test_matrix_mat4()
 		result = Mat4i::add(test_a, test_b);
 		if (result != answer) fail();
 
-		//FIXME: result = test_b;
-		//FIXME: result.add(test_a);
-		//FIXME: if (result != answer) fail();
-
 	}
 
 	Console::write_line("   Function: subtract() and operator");
@@ -163,10 +146,6 @@ void TestApp::test_matrix_mat4()
 
 		result = Mat4i::subtract(test_a, test_b);
 		if (result != answer) fail();
-
-		//FIXME: result = test_b;
-		//FIXME: result.subtract(test_a);
-		//FIXME: if (result != answer) fail();
 
 	}
 
@@ -231,15 +210,11 @@ void TestApp::test_matrix_mat2()
 
 	Console::write_line("   Function: multiply() and operator");
 	{
-		Mat2d result = test_a * test_b;
+		Mat2d result = test_b * test_a;
 		if (result != Mat2d(-7, 26, 2, 34)) fail();
 
-		result = Mat2d::multiply(test_a, test_b);
+		result = Mat2d::multiply(test_b, test_a);
 		if (result != Mat2d(-7, 26, 2, 34)) fail();
-
-		//FIXME: result = test_b;
-		//FIXME: result.multiply(test_a);
-		//FIXME: if (result != Mat2d(-7, 26, 2, 34)) fail();
 
 	}
 
@@ -248,12 +223,8 @@ void TestApp::test_matrix_mat2()
 		Mat2d result = test_a + test_b;
 		if (result != Mat2d(0, 8, 4, 9)) fail();
 
-		result = Mat2d::add(test_a, test_b);
+		result = Mat2d::add(test_b, test_a);
 		if (result != Mat2d(0, 8, 4, 9)) fail();
-
-		//FIXME: result = test_b;
-		//FIXME: result.add(test_a);
-		//FIXME: if (result != Mat2d(0, 8, 4, 9)) fail();
 
 	}
 
@@ -265,9 +236,6 @@ void TestApp::test_matrix_mat2()
 		result = Mat2d::subtract(test_a, test_b);
 		if (result != Mat2d(6, -6, 0, -1)) fail();
 
-		//FIXME: result = test_b;
-		//FIXME: result.subtract(test_a);
-		//FIXME: if (result != Mat2d(6, -6, 0, -1)) fail();
 
 	}
 

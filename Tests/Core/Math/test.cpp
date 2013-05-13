@@ -71,11 +71,10 @@ int TestApp::main(const std::vector<std::string> &args)
 		test_angle();
 		test_quaternion_f();
 		test_quaternion_d();
-		test_vector1();
 		test_vector2();
 		test_vector3();
 		test_vector4();
-		//FIXME: test_matrix();
+		test_matrix();
 		test_line2();
 		test_line3();
 		test_line_ray2();
