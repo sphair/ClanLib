@@ -670,20 +670,38 @@ void BigInt_Impl::set(ubyte32 d)
 	digits[0] = d;
 }
 
+void BigInt_Impl::set(ubyte64 d)
+{
+	zero();
+	internal_pad(2);
+	digits[0] = d;
+	digits[1] = d>>32;
+}
+
 void BigInt_Impl::set(byte32 d)
 {
 	zero();
-	if (d >=0)
+	if (d <0)
 	{
-		digits[0] = d;
-	}
-	else
-	{
-		digits[0] = -d;
+		d = -d;
 		digits_negative = true;
 	}
+	digits[0] = d;
 }
 
+void BigInt_Impl::set(byte64 d)
+{
+	zero();
+	internal_pad(2);
+
+	if (d <0)
+	{
+		d = -d;
+		digits_negative = true;
+	}
+	digits[0] = d;
+	digits[1] = d>>32;
+}
 
 int BigInt_Impl::internal_cmp(const BigInt_Impl *b) const
 {
@@ -2294,5 +2312,50 @@ void BigInt_Impl::get(byte32 &d)
 		d = -d;
 
 }
+
+void BigInt_Impl::get(ubyte64 &d)
+{
+	if (digits_used == 0)
+	{
+		d = 0;
+		return;
+	}
+	if (digits_used > 2)
+			throw Exception("Number greater than 64bit");
+
+	if (digits_negative)
+			throw Exception("Number is negative");
+
+	d = digits[0];
+	if (digits_used == 2)
+	{
+		ubyte64 d2 = digits[1];
+		d |= d2 << 32;
+	}
+}
+
+void BigInt_Impl::get(byte64 &d)
+{
+	if (digits_used == 0)
+	{
+		d = 0;
+		return;
+	}
+	if (digits_used > 2)
+			throw Exception("Number greater than 64bit");
+
+	d = digits[0];
+	if (digits_used == 2)
+	{
+		byte64 d2= digits[1];
+		if (d2 & (1<<(num_bits_in_digit-1)))
+			throw Exception("Number is too large");
+		d |= d2 << 32LL;
+	}
+	if (digits_negative)
+		d = -d;
+
+}
+
 
 }

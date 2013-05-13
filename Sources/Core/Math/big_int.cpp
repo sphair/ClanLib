@@ -138,6 +138,16 @@ void BigInt::set(byte32 d)
 	impl->set(d);
 }
 
+void BigInt::set(ubyte64 d)
+{
+	impl->set(d);
+}
+
+void BigInt::set(byte64 d)
+{
+	impl->set(d);
+}
+
 
 void BigInt::get(ubyte32 &d)
 {
@@ -145,6 +155,17 @@ void BigInt::get(ubyte32 &d)
 }
 
 void BigInt::get(byte32 &d)
+{
+	impl->get(d);
+}
+
+
+void BigInt::get(ubyte64 &d)
+{
+	impl->get(d);
+}
+
+void BigInt::get(byte64 &d)
 {
 	impl->get(d);
 }

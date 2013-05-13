@@ -77,7 +77,34 @@ void TestApp::test_bigint(void)
 		value.get(result);
 		if (result != 1234)
 			fail();
+		value.set(0xffffffff);
+		value.get(result);
+		if (result != 0xffffffff)
+			fail();
+		value.set(0x12345678);
+		value.get(result);
+		if (result != 0x12345678)
+			fail();
 	}
+
+	Console::write_line("   Function: BigInt set(ubyte64) and get(ubyte64)");
+	{
+		BigInt value;
+		value.set(1234);
+		ubyte64 result;
+		value.get(result);
+		if (result != 1234ULL)
+			fail();
+		value.set(0xffffffffffffffffULL);
+		value.get(result);
+		if (result != 0xffffffffffffffffULL)
+			fail();
+		value.set(0x12345678ABCD6543ULL);
+		value.get(result);
+		if (result != 0x12345678ABCD6543ULL)
+			fail();
+	}
+
 
 	Console::write_line("   Function: BigInt set(byte32) and get(byte32)");
 	{
@@ -99,6 +126,29 @@ void TestApp::test_bigint(void)
 		value.set(-0x7fffffff);
 		value.get(result);
 		if (result != -0x7fffffff)
+			fail();
+	}
+
+	Console::write_line("   Function: BigInt set(byte64) and get(byte64)");
+	{
+		BigInt value;
+		value.set(1234LL);
+		byte64 result;
+		value.get(result);
+		if (result != 1234LL)
+			fail();
+
+		value.set(-1234LL);
+		value.get(result);
+		if (result != -1234LL)
+			fail();
+		value.set(0x7fffffffffffffffLL);
+		value.get(result);
+		if (result != 0x7fffffffffffffffLL)
+			fail();
+		value.set(-0x7fffffffffffffffLL);
+		value.get(result);
+		if (result != -0x7fffffffffffffffLL)
 			fail();
 	}
 
