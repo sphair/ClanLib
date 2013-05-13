@@ -69,7 +69,7 @@ void TestApp::test_bigint(void)
 		
 	}
 
-	Console::write_line("   Function: BigInt set() and get()");
+	Console::write_line("   Function: BigInt set(ubyte32) and get(ubyte32)");
 	{
 		BigInt value;
 		value.set(1234);
@@ -78,6 +78,30 @@ void TestApp::test_bigint(void)
 		if (result != 1234)
 			fail();
 	}
+
+	Console::write_line("   Function: BigInt set(byte32) and get(byte32)");
+	{
+		BigInt value;
+		value.set(1234);
+		byte32 result;
+		value.get(result);
+		if (result != 1234)
+			fail();
+
+		value.set(-1234);
+		value.get(result);
+		if (result != -1234)
+			fail();
+		value.set(0x7fffffff);
+		value.get(result);
+		if (result != 0x7fffffff)
+			fail();
+		value.set(-0x7fffffff);
+		value.get(result);
+		if (result != -0x7fffffff)
+			fail();
+	}
+
 }
 
 

@@ -100,7 +100,7 @@ void BigInt_Impl::internal_free()
 
 void BigInt_Impl::zero()
 {
-	memset(digits, 0, digits_alloc * sizeof(ubyte32));
+	memset(digits, 0, digits_alloc * sizeof(ubyte32));		// <-- Do not try to optimise this, it's possible code assumes unused digits are zero (unless you are willing to check the entire code)
 	digits_used = 1;
 	digits_negative = false;
 }
@@ -669,6 +669,21 @@ void BigInt_Impl::set(ubyte32 d)
 	zero();
 	digits[0] = d;
 }
+
+void BigInt_Impl::set(byte32 d)
+{
+	zero();
+	if (d >=0)
+	{
+		digits[0] = d;
+	}
+	else
+	{
+		digits[0] = -d;
+		digits_negative = true;
+	}
+}
+
 
 int BigInt_Impl::internal_cmp(const BigInt_Impl *b) const
 {
@@ -2259,6 +2274,25 @@ void BigInt_Impl::get(ubyte32 &d)
 			throw Exception("Number is negative");
 
 	d = digits[0];
+}
+
+void BigInt_Impl::get(byte32 &d)
+{
+	if (digits_used == 0)
+	{
+		d = 0;
+		return;
+	}
+	if (digits_used > 1)
+			throw Exception("Number greater than 32bit");
+
+	d = digits[0];
+	if (d & (1<<(num_bits_in_digit-1)))
+		throw Exception("Number is too large");
+
+	if (digits_negative)
+		d = -d;
+
 }
 
 }

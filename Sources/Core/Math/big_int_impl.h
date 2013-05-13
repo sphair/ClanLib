@@ -75,7 +75,9 @@ public:
 	bool fermat(ubyte32 w) const;
 	bool pprime(int nt) const;
 	void set(ubyte32 d);
+	void set(byte32 d);
 	void get(ubyte32 &d);
+	void get(byte32 &d);
 	void exptmod(const BigInt_Impl *b, const BigInt_Impl *m, BigInt_Impl *c) const;
 	void mod(const BigInt_Impl *m, BigInt_Impl *c) const;
 	void div(const BigInt_Impl *b, BigInt_Impl *q, BigInt_Impl *r) const;
