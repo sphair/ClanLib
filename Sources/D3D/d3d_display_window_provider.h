@@ -156,6 +156,25 @@ private:
 	ComPtr<ID3D11Texture2D> fake_front_buffer;
 
 	int current_interval_setting;
+
+	typedef HRESULT (WINAPI *FuncD3D11CreateDeviceAndSwapChain)(
+		__in_opt IDXGIAdapter* pAdapter,
+		D3D_DRIVER_TYPE DriverType,
+		HMODULE Software,
+		UINT Flags,
+		__in_ecount_opt( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
+		UINT FeatureLevels,
+		UINT SDKVersion,
+		__in_opt CONST DXGI_SWAP_CHAIN_DESC* pSwapChainDesc,
+		__out_opt IDXGISwapChain** ppSwapChain,
+		__out_opt ID3D11Device** ppDevice,
+		__out_opt D3D_FEATURE_LEVEL* pFeatureLevel,
+		__out_opt ID3D11DeviceContext** ppImmediateContext );
+
+	static Mutex d3d11_mutex;
+	static HMODULE d3d11_dll;
+	static FuncD3D11CreateDeviceAndSwapChain d3d11_createdeviceandswapchain;
+
 /// \}
 };
 

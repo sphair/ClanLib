@@ -32,8 +32,8 @@
 #include "API/D3D/setup_d3d.h"
 #include "API/D3D/d3d_target.h"
 
-#pragma comment(lib, "D3D11.lib")
-#pragma comment(lib, "D3dcompiler.lib")
+//#pragma comment(lib, "D3D11.lib")
+//#pragma comment(lib, "D3dcompiler.lib")
 
 namespace clan
 {

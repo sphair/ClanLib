@@ -42,6 +42,9 @@
 
 namespace clan
 {
+Mutex D3DDisplayWindowProvider::d3d11_mutex;
+HMODULE D3DDisplayWindowProvider::d3d11_dll = 0;
+D3DDisplayWindowProvider::FuncD3D11CreateDeviceAndSwapChain D3DDisplayWindowProvider::d3d11_createdeviceandswapchain = 0;
 
 /////////////////////////////////////////////////////////////////////////////
 // D3DDisplayWindowProvider Construction:
@@ -193,7 +196,29 @@ void D3DDisplayWindowProvider::create(DisplayWindowSite *new_site, const Display
 	if (debug_mode)
 		device_flags |= D3D11_CREATE_DEVICE_DEBUG;
 
-	HRESULT result = D3D11CreateDeviceAndSwapChain(
+	MutexSection mutex_lock(&d3d11_mutex);
+	if (d3d11_dll == 0)
+	{
+		d3d11_dll = LoadLibrary(L"d3d11.dll");
+		if (d3d11_dll == 0)
+			throw Exception("Unable to load d3d11.dll");
+
+		try
+		{
+			d3d11_createdeviceandswapchain = reinterpret_cast<FuncD3D11CreateDeviceAndSwapChain>(GetProcAddress(d3d11_dll, "D3D11CreateDeviceAndSwapChain"));
+			if (d3d11_createdeviceandswapchain == 0)
+				throw Exception("D3D11CreateDeviceAndSwapChain function not found!");
+
+		}
+		catch (...)
+		{
+			CloseHandle(d3d11_dll);
+			d3d11_dll = 0;
+			d3d11_createdeviceandswapchain = 0;
+			throw;
+		}
+	}
+	HRESULT result = d3d11_createdeviceandswapchain(
 		0,
 		D3D_DRIVER_TYPE_HARDWARE,
 		0,
