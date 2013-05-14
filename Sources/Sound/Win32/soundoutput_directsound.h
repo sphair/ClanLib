@@ -28,7 +28,7 @@
 #pragma once
 
 #include "../soundoutput_impl.h"
-#include <dsound.h>
+//#include <dsound.h>
 
 #ifndef __DSOUND_INCLUDED__
 
