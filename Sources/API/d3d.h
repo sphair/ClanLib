@@ -67,7 +67,7 @@
 		#endif
 	#endif
 	#pragma comment(lib, "winmm.lib")
-	#pragma comment(lib, "D3D11.lib")
+	//#pragma comment(lib, "D3D11.lib")
 #endif
 
 #else
