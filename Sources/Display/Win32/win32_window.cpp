@@ -1639,6 +1639,7 @@ void Win32Window::create_hid_devices()
 		{
 			RID_DEVICE_INFO device_info;
 			UINT device_info_size = sizeof(RID_DEVICE_INFO);
+			device_info.cbSize = device_info_size;
 			result = GetRawInputDeviceInfo(device_list[i].hDevice, RIDI_DEVICEINFO, &device_info, &device_info_size);
 			if (result == (UINT)-1)
 				throw Exception("GetRawInputDeviceInfo failed");
