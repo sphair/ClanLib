@@ -51,12 +51,6 @@ Mutex SoundOutput_DirectSound::dsound_mutex;
 HMODULE SoundOutput_DirectSound::dsound_dll = 0;
 SoundOutput_DirectSound::FuncDirectSoundCreate SoundOutput_DirectSound::directsound_create = 0;
 
-#define CL_DEFINE_GUID(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) EXTERN_C const GUID name = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
-#ifndef IID_IDirectSoundNotify
-CL_DEFINE_GUID(IID_IDirectSoundNotify, 0xb0210783, 0x89cd, 0x11d0, 0xaf, 0x8, 0x0, 0xa0, 0xc9, 0x25, 0xcd, 0x16);
-#endif
-
-
 /////////////////////////////////////////////////////////////////////////////
 // SoundOutput_DirectSound construction:
 
