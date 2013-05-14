@@ -168,15 +168,33 @@ void SoundOutput_DirectSound::write_to_sound_buffer(int write_pos, const float *
 void SoundOutput_DirectSound::release_resources()
 {
 	if (notify)
+	{
 		notify->Release();
+		notify = 0;
+	}
+
 	if (soundbuffer)
+	{
 		soundbuffer->Release();
+		soundbuffer = 0;
+	}
+
 	if (directsound)
+	{
 		directsound->Release();
+		directsound = 0;
+	}
 	if (sleep_event)
+	{
 		CloseHandle(sleep_event);
+		sleep_event = 0;
+	}
 	if (hwnd)
+	{
 		DestroyWindow(hwnd);
+		hwnd = 0;
+	}
+
 }
 
 void SoundOutput_DirectSound::create_directsound_object()
