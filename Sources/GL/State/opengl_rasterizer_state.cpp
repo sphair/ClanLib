@@ -81,6 +81,36 @@ void OpenGLRasterizerState::apply()
 		// Note, enabled in GraphicContextProvider::set_scissor()
 		if (!desc.get_enable_scissor())
 			glDisable(GL_SCISSOR_TEST);
+
+		if (glPointSize)
+			glPointSize((GLfloat)desc.get_point_size());
+		if (glPointParameterf)
+			glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)desc.get_point_fade_treshold_size());
+		desc.is_point_size() ? glEnable(GL_VERTEX_PROGRAM_POINT_SIZE) : glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+		if(glPointParameterf)
+		{
+			switch (desc.get_point_sprite_origin())
+			{
+			case origin_upper_left:
+				glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_UPPER_LEFT);
+				break;
+			case origin_lower_left:
+				glPointParameterf(GL_POINT_SPRITE_COORD_ORIGIN, GL_LOWER_LEFT);
+				break;
+			}
+		}
+		desc.get_antialiased() ? glEnable(GL_POLYGON_SMOOTH) : glDisable(GL_POLYGON_SMOOTH);
+		desc.get_offset_point() ? glEnable(GL_POLYGON_OFFSET_POINT) : glDisable(GL_POLYGON_OFFSET_POINT);
+		desc.get_offset_line() ? glEnable(GL_POLYGON_OFFSET_LINE) : glDisable(GL_POLYGON_OFFSET_LINE);
+		desc.get_offset_fill() ? glEnable(GL_POLYGON_OFFSET_FILL) : glDisable(GL_POLYGON_OFFSET_FILL);
+		if (glPolygonOffset)
+		{
+			float factor,units;
+			desc.get_polygon_offset(factor, units);
+			glPolygonOffset(factor, units);
+		}
+
 	}
 
 }

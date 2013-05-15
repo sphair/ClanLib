@@ -550,42 +550,6 @@ bool SWRenderGraphicContextProvider::is_frame_buffer_owner(const FrameBuffer &fb
 	//FIXME: Stub
 	return true;
 }
-void SWRenderGraphicContextProvider::set_point_size(float value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_point_fade_treshold_size(float value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::enable_vertex_program_point_size(bool enabled)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_point_sprite_origin(PointSpriteOrigin origin)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_antialiased(bool value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_offset_point(bool value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_offset_line(bool value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_offset_fill(bool value)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_polygon_offset(float factor, float units)
-{
-	//FIXME: Stub
-}
 
 bool SWRenderGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
 {

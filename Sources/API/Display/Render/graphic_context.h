@@ -641,35 +641,8 @@ public:
 	/// \brief Specifies the depth range for the specified viewport
 	void set_depth_range(int viewport, float n, float f);
 
-	/// \brief The default value is 1.0
-	void set_point_size(float);
-
-	/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.
-	void set_point_fade_treshold_size(float);
-
-	/// \brief Enables if points sizes is set by the vertex shader.
-	void enable_vertex_program_point_size(bool enable);
-
-	/// \brief Sets the origin of texture point sprites.
-	void set_point_sprite_origin(PointSpriteOrigin origin);
-
 	/// \brief Set used draw buffer.
 	void set_draw_buffer(DrawBuffer buffer);
-
-	/// \brief Enables/disables anti-aliasing.
-	void set_antialiased(bool value);
-
-	/// \brief Enables/disables point offsetting.
-	void set_offset_point(bool value);
-
-	/// \brief Enables/disables line offsetting.
-	void set_offset_line(bool value);
-
-	/// \brief Enables/disables polygon offsetting.
-	void set_offset_fill(bool value);
-
-	/// \brief Sets the offset factor.
-	void set_polygon_offset(float factor, float units);
 
 /// \}
 /// \name Events

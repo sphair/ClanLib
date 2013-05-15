@@ -59,10 +59,7 @@ void GraphicContext_State::reset_blend_mode_states()
 
 void GraphicContext_State::reset_pen_states()
 {
-	pen_point_size = 1.0f;
-	pen_point_fade_treshold_size = 1.0f;
-	pen_vertex_shader_point_sizes = false;
-	pen_point_sprite_origin = origin_upper_left;
+
 }
 
 void GraphicContext_State::reset_buffer_control_states()
@@ -72,12 +69,6 @@ void GraphicContext_State::reset_buffer_control_states()
 
 void GraphicContext_State::reset_polygon_rasterizer_states()
 {
-	is_antialiased = false;
-	is_offset_point = false;
-	is_offset_line = false;
-	is_offset_fill = false;
-	offset_factor = 0.0f;
-	offset_units = 0.0f;
 }
 
 }

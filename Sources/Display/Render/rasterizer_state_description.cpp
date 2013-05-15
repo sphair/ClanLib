@@ -35,7 +35,18 @@ namespace clan
 class RasterizerStateDescription_Impl
 {
 public:
-	RasterizerStateDescription_Impl() : culled(), line_antialiasing(), face_cull_mode(), face_fill_mode(), front_face(), enable_scissor()
+	RasterizerStateDescription_Impl() : culled(), line_antialiasing(), face_cull_mode(), face_fill_mode(), front_face(), enable_scissor(),
+		is_antialiased(false),
+		is_offset_point(false),
+		is_offset_line(false),
+		is_offset_fill(false),
+		offset_factor(0.0f),
+		offset_units(0.0f),
+		pen_point_size(1.0f),
+		pen_point_fade_treshold_size(1.0f),
+		pen_vertex_shader_point_sizes(false),
+		pen_point_sprite_origin(origin_upper_left)
+
 	{
 		line_antialiasing = false;
 		culled = false;
@@ -53,7 +64,17 @@ public:
 			face_cull_mode == other.face_cull_mode &&
 			face_fill_mode == other.face_fill_mode &&
 			front_face == other.front_face &&
-			enable_scissor == other.enable_scissor;
+			enable_scissor == other.enable_scissor &&
+			is_antialiased == other.is_antialiased &&
+			is_offset_point == other.is_offset_point &&
+			is_offset_line == other.is_offset_line &&
+			is_offset_fill == other.is_offset_fill &&
+			offset_factor == other.offset_factor &&
+			offset_units == other.offset_units &&
+			pen_point_size == other.pen_point_size &&
+			pen_point_fade_treshold_size == other.pen_point_fade_treshold_size &&
+			pen_vertex_shader_point_sizes == other.pen_vertex_shader_point_sizes &&
+			pen_point_sprite_origin == other.pen_point_sprite_origin;
 	}
 
 	bool operator<(const RasterizerStateDescription_Impl &other) const
@@ -68,8 +89,28 @@ public:
 			return face_fill_mode < other.face_fill_mode;
 		else if (front_face != other.front_face)
 			return front_face < other.front_face;
-		else
+		else if (enable_scissor != other.enable_scissor)
 			return enable_scissor < other.enable_scissor;
+		else if (is_antialiased != other.is_antialiased)
+			return is_antialiased < other.is_antialiased;
+		else if (is_offset_point != other.is_offset_point)
+			return is_offset_point < other.is_offset_point;
+		else if (is_offset_line != other.is_offset_line)
+			return is_offset_line < other.is_offset_line;
+		else if (is_offset_fill != other.is_offset_fill)
+			return is_offset_fill < other.is_offset_fill;
+		else if (offset_factor != other.offset_factor)
+			return offset_factor < other.offset_factor;
+		else if (offset_units != other.offset_units)
+			return offset_units < other.offset_units;
+		else if (pen_point_size != other.pen_point_size)
+			return pen_point_size < other.pen_point_size;
+		else if (pen_point_fade_treshold_size != other.pen_point_fade_treshold_size)
+			return pen_point_fade_treshold_size < other.pen_point_fade_treshold_size;
+		else if (pen_vertex_shader_point_sizes != other.pen_vertex_shader_point_sizes)
+			return pen_vertex_shader_point_sizes < other.pen_vertex_shader_point_sizes;
+		else
+			return pen_point_sprite_origin < other.pen_point_sprite_origin;
 	}
 
 	bool culled;
@@ -78,6 +119,19 @@ public:
 	FillMode face_fill_mode;
 	FaceSide front_face;
 	bool enable_scissor;
+
+	bool is_antialiased;
+	bool is_offset_point;
+	bool is_offset_line;
+	bool is_offset_fill;
+	float offset_factor;
+	float offset_units;
+
+	float pen_point_size;
+	float pen_point_fade_treshold_size;
+	bool pen_vertex_shader_point_sizes;
+	PointSpriteOrigin pen_point_sprite_origin;
+
 };
 
 RasterizerStateDescription::RasterizerStateDescription()
@@ -121,6 +175,99 @@ FaceSide RasterizerStateDescription::get_front_face() const
 bool RasterizerStateDescription::get_enable_scissor() const
 {
 	return impl->enable_scissor;
+}
+
+bool RasterizerStateDescription::get_antialiased() const
+{
+	return impl->is_antialiased;
+}
+
+bool RasterizerStateDescription::get_offset_point() const
+{
+	return impl->is_offset_point;
+}
+
+bool RasterizerStateDescription::get_offset_line() const
+{
+	return impl->is_offset_line;
+}
+
+bool RasterizerStateDescription::get_offset_fill() const
+{
+	return impl->is_offset_fill;
+}
+
+void RasterizerStateDescription::get_polygon_offset(float &out_factor, float &out_units) const
+{
+	out_factor = impl->offset_factor;
+	out_units = impl->offset_units;
+}
+
+float RasterizerStateDescription::get_point_size() const
+{
+	return impl->pen_point_size;
+}
+
+float RasterizerStateDescription::get_point_fade_treshold_size() const
+{
+	return impl->pen_point_fade_treshold_size;
+}
+
+bool RasterizerStateDescription::is_point_size() const
+{
+	return impl->pen_vertex_shader_point_sizes;
+}
+
+PointSpriteOrigin RasterizerStateDescription::get_point_sprite_origin() const
+{
+	return impl->pen_point_sprite_origin;
+}
+
+
+void RasterizerStateDescription::enable_antialiased(bool value)
+{
+	impl->is_antialiased = value;
+}
+
+void RasterizerStateDescription::enable_offset_point(bool value)
+{
+	impl->is_offset_point = value;
+}
+
+void RasterizerStateDescription::enable_offset_line(bool value)
+{
+	impl->is_offset_line = value;
+}
+
+void RasterizerStateDescription::enable_offset_fill(bool value)
+{
+	impl->is_offset_fill = value;
+}
+
+void RasterizerStateDescription::set_polygon_offset(float factor, float units)
+{
+	impl->offset_factor = factor;
+	impl->offset_units = units;
+}
+
+void RasterizerStateDescription::set_point_size(float value)
+{
+	impl->pen_point_size = value;
+}
+
+void RasterizerStateDescription::set_point_fade_treshold_size(float value)
+{
+	impl->pen_point_fade_treshold_size = value;
+}
+
+void RasterizerStateDescription::enable_point_size(bool enable)
+{
+	impl->pen_vertex_shader_point_sizes = enable;
+}
+
+void RasterizerStateDescription::set_point_sprite_origin(PointSpriteOrigin origin)
+{
+	impl->pen_point_sprite_origin = origin;
 }
 
 void RasterizerStateDescription::set_culled(bool value)

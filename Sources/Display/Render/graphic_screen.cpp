@@ -308,58 +308,6 @@ void GraphicScreen::on_program_changed(GraphicContext_State *state)
 	}
 }
 
-void GraphicScreen::on_point_size_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.pen_point_size = state->pen_point_size;
-		provider->set_point_size(active_state.pen_point_size);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_point_fade_treshold_size_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.pen_point_fade_treshold_size = state->pen_point_fade_treshold_size;
-		provider->set_point_fade_treshold_size(active_state.pen_point_fade_treshold_size);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_vertex_program_point_size_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.pen_vertex_shader_point_sizes = state->pen_vertex_shader_point_sizes;
-		provider->enable_vertex_program_point_size(active_state.pen_vertex_shader_point_sizes);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_point_sprite_origin(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.pen_point_sprite_origin = state->pen_point_sprite_origin;
-		provider->set_point_sprite_origin(active_state.pen_point_sprite_origin);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
 void GraphicScreen::on_draw_buffer_changed(GraphicContext_State *state)
 {
 	if (state == current)
@@ -373,94 +321,9 @@ void GraphicScreen::on_draw_buffer_changed(GraphicContext_State *state)
 	}
 }
 
-void GraphicScreen::on_antialiased_enabled_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.is_antialiased = state->is_antialiased;
-		provider->set_antialiased(active_state.is_antialiased);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_offset_point_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.is_offset_point = state->is_offset_point;
-		provider->set_offset_point(active_state.is_offset_point);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_offset_line_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.is_offset_line = state->is_offset_line;
-		provider->set_offset_line(active_state.is_offset_line);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_offset_fill_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.is_offset_fill = state->is_offset_fill;
-		provider->set_offset_fill(active_state.is_offset_fill);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_polygon_offset_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.offset_factor = state->offset_factor;
-		active_state.offset_units = state->offset_units;
-		provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
 void GraphicScreen::set_active_pen(GraphicContext_State *state)
 {
-	if (active_state.pen_point_size != state->pen_point_size)
-	{
-		active_state.pen_point_size = state->pen_point_size;
-		provider->set_point_size(active_state.pen_point_size);
-	}
-	if (active_state.pen_point_fade_treshold_size != state->pen_point_fade_treshold_size)
-	{
-		active_state.pen_point_fade_treshold_size = state->pen_point_fade_treshold_size;
-		provider->set_point_fade_treshold_size(active_state.pen_point_fade_treshold_size);
-	}
-	if (active_state.pen_vertex_shader_point_sizes != state->pen_vertex_shader_point_sizes)
-	{
-		active_state.pen_vertex_shader_point_sizes = state->pen_vertex_shader_point_sizes;
-		provider->enable_vertex_program_point_size(active_state.pen_vertex_shader_point_sizes);
-	}
-	if (active_state.pen_point_sprite_origin != state->pen_point_sprite_origin)
-	{
-		active_state.pen_point_sprite_origin = state->pen_point_sprite_origin;
-		provider->set_point_sprite_origin(active_state.pen_point_sprite_origin);
-	}
+
 }
 
 void GraphicScreen::set_active_buffer_control(GraphicContext_State *state)
@@ -474,36 +337,6 @@ void GraphicScreen::set_active_buffer_control(GraphicContext_State *state)
 
 void GraphicScreen::set_active_polygon_rasterizer(GraphicContext_State *state)
 {
-	if (active_state.is_antialiased != state->is_antialiased)
-	{
-		active_state.is_antialiased = state->is_antialiased;
-		provider->set_antialiased(active_state.is_antialiased);
-	}
-
-	if (active_state.is_offset_point != state->is_offset_point)
-	{
-		active_state.is_offset_point = state->is_offset_point;
-		provider->set_offset_point(active_state.is_offset_point);
-	}
-
-	if (active_state.is_offset_line != state->is_offset_line)
-	{
-		active_state.is_offset_line = state->is_offset_line;
-		provider->set_offset_line(active_state.is_offset_line);
-	}
-
-	if (active_state.is_offset_fill != state->is_offset_fill)
-	{
-		active_state.is_offset_fill = state->is_offset_fill;
-		provider->set_offset_fill(active_state.is_offset_fill);
-	}
-
-	if ( (active_state.offset_factor != state->offset_factor) || (active_state.offset_units != state->offset_units) )
-	{
-		active_state.offset_factor = state->offset_factor;
-		active_state.offset_units = state->offset_units;
-		provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
-	}
 
 }
 
@@ -695,18 +528,7 @@ void GraphicScreen::set_active_program(GraphicContext_State *state)
 // This is used to initialise OpenGL to the default GraphicContext_State
 void GraphicScreen::set_default_state()
 {
-	provider->set_point_size(active_state.pen_point_size);
-	provider->set_point_fade_treshold_size(active_state.pen_point_fade_treshold_size);
-	provider->enable_vertex_program_point_size(active_state.pen_vertex_shader_point_sizes);
-	provider->set_point_sprite_origin(active_state.pen_point_sprite_origin);
-
 	provider->set_draw_buffer(active_state.draw_buffer);
-
-	provider->set_antialiased(active_state.is_antialiased);
-	provider->set_offset_point(active_state.is_offset_point);
-	provider->set_offset_line(active_state.is_offset_line);
-	provider->set_offset_fill(active_state.is_offset_fill);
-	provider->set_polygon_offset(active_state.offset_factor, active_state.offset_units);
 
 	provider->reset_scissor();
 	provider->set_viewport(active_state.viewport[0]);
