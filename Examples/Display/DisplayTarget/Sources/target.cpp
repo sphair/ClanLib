@@ -59,12 +59,12 @@ int Target::start(const std::vector<std::string> &args)
 				clan::OpenGLTarget::set_description(opengl_desc);
 				clan::OpenGLTarget::set_current();
 				break;
-
-#ifdef WIN32
 			case (d3d):
 				clan::D3DTarget::set_current();
 				break;
-#endif
+			case (swrender):
+				clan::SWRenderTarget::set_current();
+				break;
 		}
 
 	}while (run_demo());
@@ -124,6 +124,11 @@ bool Target::run_demo()
 			render_target = d3d;
 			break;
 		}
+		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_4))
+		{
+			render_target = swrender;
+			break;
+		}
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
 		{
 			quit = true;
@@ -170,12 +175,13 @@ bool Target::run_demo()
 
 		}
 
-#ifdef WIN32
 		if (clan::D3DTarget::is_current())
 				target_font.draw_text(canvas, font_xpos, font_ypos, "3) Direct3D renderer (clanD3D)");
-#endif
 
-		fps_font.draw_text(canvas, 32, 96, "Press 1,2 or 3 to select targets, or escape to quit.");
+		if (clan::SWRenderTarget::is_current())
+			target_font.draw_text(canvas, font_xpos, font_ypos, "4) Software Renderer (clanSWRender)");
+
+		fps_font.draw_text(canvas, 32, 96, "Press 1,2,3 or 4 to select targets, or escape to quit.");
 
 		float max_height = (float) (canvas.get_height() + 20);
 		float half_height = (float) canvas.get_height() / 2.0f;
