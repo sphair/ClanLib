@@ -38,15 +38,19 @@ public:
 
 	int ticks_per_second;
 
-	long long start_time;
-	long long current_time;
+	ubyte64 start_time;
+	ubyte64 current_time;
 
-	long long last_tick;
+	ubyte64 last_tick;
 
 	float time_elapsed;
 	int time_elapsed_ms;
 	int ticks_elapsed;
 	float tick_interpolation_time;
+
+	int update_counter;
+	ubyte64 update_frame_start_time;
+	float current_fps;
 };
 
 }

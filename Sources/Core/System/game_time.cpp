@@ -70,17 +70,38 @@ float GameTime::get_tick_interpolation_time() const
 	return impl->tick_interpolation_time;
 }
 
+float GameTime::get_updates_per_second() const
+{
+	return impl->current_fps;
+}
+
+float GameTime::get_current_time() const
+{
+	double timer = ((double) (impl->current_time - impl->start_time)) / 1000000.0;
+	return (float) timer;
+}
+
+ubyte64 GameTime::get_current_time_microseconds() const
+{
+	return (impl->current_time - impl->start_time);
+}
+
+ubyte64 GameTime::get_current_time_ms() const
+{
+	return (impl->current_time - impl->start_time) / 1000;
+}
+
 void GameTime::update()
 {
-	long long last_time = impl->current_time;
+	ubyte64 last_time = impl->current_time;
 
 	impl->current_time = System::get_microseconds();
 
 	if (impl->current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
 		last_time = impl->current_time;
 
-	long long ticks_per_microsecond = 1000000 / impl->ticks_per_second;
-	long long current_tick = (impl->current_time - impl->start_time) / ticks_per_microsecond;
+	ubyte64 ticks_per_microsecond = 1000000 / impl->ticks_per_second;
+	ubyte64 current_tick = (impl->current_time - impl->start_time) / ticks_per_microsecond;
 
 	impl->ticks_elapsed = current_tick - impl->last_tick;
 	impl->time_elapsed_ms = (int) ((impl->current_time - last_time) / 1000);
@@ -88,6 +109,20 @@ void GameTime::update()
 	impl->tick_interpolation_time = (float)(((impl->current_time - impl->start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
 	impl->last_tick = current_tick;
+
+	impl->update_counter++;
+	int delta_time_ms = (impl->current_time - impl->update_frame_start_time) / 1000;
+
+	if ((delta_time_ms < 0) || (delta_time_ms > 2000))		// Sample FPS every 2 seconds
+	{
+		if (delta_time_ms > 0)
+		{
+			impl->current_fps = (impl->update_counter*1000.0f) / (float) delta_time_ms;
+		}
+		impl->update_counter = 0;
+		impl->update_frame_start_time =	impl->current_time;
+	}
+
 }
 
 void GameTime::reset()
@@ -99,6 +134,9 @@ void GameTime::reset()
 	impl->ticks_elapsed = 0;
 	impl->tick_interpolation_time = 0.0f;
 	impl->time_elapsed_ms = 0;
+	impl->update_counter = 0;
+	impl->update_frame_start_time = impl->current_time;
+	impl->current_fps = 0;
 }
 
 }
