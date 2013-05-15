@@ -78,49 +78,18 @@ public:
 	// Old Pen
 	float pen_point_size;
 	float pen_point_fade_treshold_size;
-	float pen_line_width;
-//	bool pen_line_antialiased;
 	bool pen_vertex_shader_point_sizes;
 	PointSpriteOrigin pen_point_sprite_origin;
-/*
-	// Old BlendMode
-	BlendFunc blend_src_func, blend_dest_func, blend_src_alpha_func, blend_dest_alpha_func;
-	BlendEquation blend_color_equation, blend_alpha_equation;
-	Colorf blend_blend_color;
-	bool blend_blending_enabled;
 
-	// Old BufferControl
-	StencilOp stencil_pass_depth_pass_front;
-	StencilOp stencil_pass_depth_fail_front;
-	StencilOp stencil_fail_front;
-	StencilOp stencil_pass_depth_pass_back;
-	StencilOp stencil_pass_depth_fail_back;
-	StencilOp stencil_fail_back;
-	CompareFunction stencil_compare_func_front, stencil_compare_func_back;
-	bool stencil_test_enabled;
-	int stencil_compare_ref_front, stencil_compare_ref_back;
-	unsigned char stencil_compare_mask_front;
-	unsigned char stencil_compare_mask_back;
-	unsigned char stencil_enable_mask_front;
-	unsigned char stencil_enable_mask_back;
-	CompareFunction depth_compare_func;
-	bool depth_write_enabled;
-	bool depth_test_enabled;
-	bool red_write_enabled, green_write_enabled, blue_write_enabled, alpha_write_enabled;
-*/
 	DrawBuffer draw_buffer;
 	bool logic_op_enabled;
 	LogicOp logic_op;
 
 	// Old PolygonRasterizer
 	bool is_antialiased;
-//	bool is_culled;
 	bool is_offset_point;
 	bool is_offset_line;
 	bool is_offset_fill;
-//	CullMode face_cull_mode;
-//	FillMode face_fill_mode;
-//	FaceSide front_face_side;
 	float offset_factor;
 	float offset_units;
 };

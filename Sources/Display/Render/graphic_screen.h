@@ -63,7 +63,6 @@ public:
 	void on_program_changed(GraphicContext_State *state);
 	void on_point_size_changed(GraphicContext_State *state);
 	void on_point_fade_treshold_size_changed(GraphicContext_State *state);
-	void on_line_width_changed(GraphicContext_State *state);
 	void on_vertex_program_point_size_changed(GraphicContext_State *state);
 	void on_point_sprite_origin(GraphicContext_State *state);
 	void on_draw_buffer_changed(GraphicContext_State *state);

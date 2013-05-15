@@ -890,14 +890,6 @@ void GL1GraphicContextProvider::set_point_fade_treshold_size(float value)
 //	}
 }
 
-void GL1GraphicContextProvider::set_line_width(float value)
-{
-	set_active();
-	glLineWidth(value);
-
-}
-
-
 void GL1GraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
 	set_active();

@@ -481,11 +481,6 @@ void D3DGraphicContextProvider::set_point_fade_treshold_size(float value)
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_line_width(float value)
-{
-	// To do: what does this map to in D3D?
-}
-
 void D3DGraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
 	// To do: what does this map to in D3D?

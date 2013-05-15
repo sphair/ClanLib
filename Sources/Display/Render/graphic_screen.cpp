@@ -334,19 +334,6 @@ void GraphicScreen::on_point_fade_treshold_size_changed(GraphicContext_State *st
 	}
 }
 
-void GraphicScreen::on_line_width_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.pen_line_width = state->pen_line_width;
-		provider->set_line_width(active_state.pen_line_width);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
 void GraphicScreen::on_vertex_program_point_size_changed(GraphicContext_State *state)
 {
 	if (state == current)
@@ -489,11 +476,6 @@ void GraphicScreen::set_active_pen(GraphicContext_State *state)
 	{
 		active_state.pen_point_fade_treshold_size = state->pen_point_fade_treshold_size;
 		provider->set_point_fade_treshold_size(active_state.pen_point_fade_treshold_size);
-	}
-	if (active_state.pen_line_width != state->pen_line_width)
-	{
-		active_state.pen_line_width = state->pen_line_width;
-		provider->set_line_width(active_state.pen_line_width);
 	}
 	if (active_state.pen_vertex_shader_point_sizes != state->pen_vertex_shader_point_sizes)
 	{
@@ -753,7 +735,6 @@ void GraphicScreen::set_default_state()
 {
 	provider->set_point_size(active_state.pen_point_size);
 	provider->set_point_fade_treshold_size(active_state.pen_point_fade_treshold_size);
-	provider->set_line_width(active_state.pen_line_width);
 	provider->enable_vertex_program_point_size(active_state.pen_vertex_shader_point_sizes);
 	provider->set_point_sprite_origin(active_state.pen_point_sprite_origin);
 

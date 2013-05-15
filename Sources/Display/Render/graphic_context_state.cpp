@@ -61,7 +61,6 @@ void GraphicContext_State::reset_pen_states()
 {
 	pen_point_size = 1.0f;
 	pen_point_fade_treshold_size = 1.0f;
-	pen_line_width = 1.0f;
 	pen_vertex_shader_point_sizes = false;
 	pen_point_sprite_origin = origin_upper_left;
 }
