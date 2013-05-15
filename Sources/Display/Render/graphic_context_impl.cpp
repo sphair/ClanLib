@@ -271,12 +271,6 @@ void GraphicContext_Impl::set_point_fade_treshold_size(float value)
 	graphic_screen->on_point_fade_treshold_size_changed(this);
 }
 
-void GraphicContext_Impl::set_line_width(float value)
-{
-	pen_line_width = value;
-	graphic_screen->on_line_width_changed(this);
-}
-
 void GraphicContext_Impl::enable_vertex_program_point_size(bool enable)
 {
 	pen_vertex_shader_point_sizes = enable;

@@ -647,10 +647,6 @@ public:
 	/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.
 	void set_point_fade_treshold_size(float);
 
-	/// \brief Set the number of times each bit in the stipple pattern is used.
-	/** <p>The initial value of the line width is 1.0.</p>*/
-	void set_line_width(float);
-
 	/// \brief Enables if points sizes is set by the vertex shader.
 	void enable_vertex_program_point_size(bool enable);
 

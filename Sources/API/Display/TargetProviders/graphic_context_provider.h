@@ -240,7 +240,6 @@ public:
 
 	virtual void set_point_size(float value) = 0;
 	virtual void set_point_fade_treshold_size(float value) = 0;
-	virtual void set_line_width(float value) = 0;
 	virtual void enable_vertex_program_point_size(bool enabled) = 0;
 	virtual void set_point_sprite_origin(PointSpriteOrigin origin) = 0;
 

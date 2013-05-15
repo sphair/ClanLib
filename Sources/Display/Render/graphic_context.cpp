@@ -498,11 +498,6 @@ void GraphicContext::set_point_fade_treshold_size(float value)
 	impl->set_point_fade_treshold_size(value);
 }
 
-void GraphicContext::set_line_width(float value)
-{
-	impl->set_line_width(value);
-}
-
 void GraphicContext::enable_vertex_program_point_size(bool enable)
 {
 	impl->enable_vertex_program_point_size(enable);

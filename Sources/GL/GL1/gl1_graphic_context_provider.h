@@ -186,7 +186,6 @@ public:
 	void set_depth_range(int viewport, float n, float f);
 	void set_point_size(float value);
 	void set_point_fade_treshold_size(float value);
-	void set_line_width(float value);
 	void enable_vertex_program_point_size(bool enabled);
 	void set_point_sprite_origin(PointSpriteOrigin origin);
 	void on_window_resized();

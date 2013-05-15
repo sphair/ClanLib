@@ -827,13 +827,6 @@ void GL3GraphicContextProvider::set_point_fade_treshold_size(float value)
 		glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, (GLfloat)value);
 }
 
-void GL3GraphicContextProvider::set_line_width(float value)
-{
-	OpenGL::set_active(this);
-	glLineWidth((GLfloat)value);
-
-}
-
 void GL3GraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
 	OpenGL::set_active(this);

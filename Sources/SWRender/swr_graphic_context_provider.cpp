@@ -558,10 +558,6 @@ void SWRenderGraphicContextProvider::set_point_fade_treshold_size(float value)
 {
 	//FIXME: Stub
 }
-void SWRenderGraphicContextProvider::set_line_width(float value)
-{
-	//FIXME: Stub
-}
 void SWRenderGraphicContextProvider::enable_vertex_program_point_size(bool enabled)
 {
 	//FIXME: Stub

@@ -74,7 +74,6 @@ public:
 
 	void set_point_size(float);
 	void set_point_fade_treshold_size(float);
-	void set_line_width(float);
 	void enable_vertex_program_point_size(bool enable);
 	void set_point_sprite_origin(PointSpriteOrigin origin);
 
