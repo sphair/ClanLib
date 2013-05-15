@@ -23,58 +23,26 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Mark Page
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
-
 #pragma once
-
-#include "api_swrender.h"
-#include "../Display/display_target.h"
+#include "API/Core/System/mutex.h"
 
 namespace clan
 {
 
-/// \brief Display target for clanDisplay.
-class API_SWRender SWRenderTarget : public DisplayTarget
+class SWRenderTarget;
+class SetupSWRender_Impl
 {
-/// \name Construction
-/// \{
-
 public:
-	/// \brief Constructs a SWRender target.
-	SWRenderTarget();
+	static void init(const std::vector<std::string> &args);
+	static void deinit();
 
-	~SWRenderTarget();
-
-/// \}
-/// \name Attributes
-/// \{
-
-public:
-	/// \brief Returns true if this display target is the current target
-	///
-	/// This may change after a display window has been created
-	static bool is_current();
-
-/// \}
-/// \name Operations
-/// \{
-
-public:
-	/// \brief Set this display target to be the current target
-	static void set_current();
-
-/// \}
-/// \name Implementation
-/// \{
-
-private:
-/// \}
+	static Mutex cl_swrender_mutex;
+	static int cl_swrender_refcount;
+	static SWRenderTarget *cl_swrender_target;
 };
 
 }
 
-/// \}
