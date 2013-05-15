@@ -45,6 +45,11 @@ float GameTime::get_time_elapsed() const
 	return impl->time_elapsed;
 }
 
+int GameTime::get_time_elapsed_ms() const
+{
+	return impl->time_elapsed_ms;
+}
+
 int GameTime::get_ticks_elapsed() const
 {
 	return impl->ticks_elapsed;
@@ -53,6 +58,11 @@ int GameTime::get_ticks_elapsed() const
 float GameTime::get_tick_time_elapsed() const
 {
 	return 1.0f / impl->ticks_per_second;
+}
+
+int GameTime::get_tick_time_elapsed_ms() const
+{
+	return 1000 / impl->ticks_per_second;
 }
 
 float GameTime::get_tick_interpolation_time() const
@@ -66,10 +76,14 @@ void GameTime::update()
 
 	impl->current_time = System::get_microseconds();
 
+	if (impl->current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
+		last_time = impl->current_time;
+
 	long long ticks_per_microsecond = 1000000 / impl->ticks_per_second;
 	long long current_tick = (impl->current_time - impl->start_time) / ticks_per_microsecond;
 
 	impl->ticks_elapsed = current_tick - impl->last_tick;
+	impl->time_elapsed_ms = (int) ((impl->current_time - last_time) / 1000);
 	impl->time_elapsed = (float)((impl->current_time - last_time) / (double) 1000000);
 	impl->tick_interpolation_time = (float)(((impl->current_time - impl->start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
@@ -84,6 +98,7 @@ void GameTime::reset()
 	impl->time_elapsed = 0.0f;
 	impl->ticks_elapsed = 0;
 	impl->tick_interpolation_time = 0.0f;
+	impl->time_elapsed_ms = 0;
 }
 
 }

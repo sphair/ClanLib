@@ -56,11 +56,17 @@ public:
 	/// \brief Returns the time elapsed in seconds since last update.
 	float get_time_elapsed() const;
 
+	/// \brief Returns the time elapsed in seconds since last update in milliseconds
+	int get_time_elapsed_ms() const;
+
 	/// \brief Returns the number of ticks that elapsed since last update.
 	int get_ticks_elapsed() const;
 
 	/// \brief Returns the time elapsed per tick.
 	float get_tick_time_elapsed() const;
+
+	/// \brief Returns the time elapsed per tick in milliseconds
+	int get_tick_time_elapsed_ms() const;
 
 	/// \brief Returns the current time between ticks as a normalized number.
 	///
