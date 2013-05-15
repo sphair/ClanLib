@@ -33,6 +33,7 @@
 #pragma once
 
 #include "../api_core.h"
+#include "../System/cl_platform.h"
 #include <memory>
 
 namespace clan
@@ -73,6 +74,20 @@ public:
 	/// If the current time is half-way between two tick updates this function returns 0.5,
 	/// at the start of a tick its 0.0, and at the end its 1.0.
 	float get_tick_interpolation_time() const;
+
+	/// \brief Returns the number of updates that occurred every second (aka fps, frames per second)
+	float get_updates_per_second() const;
+
+	/// \brief Returns the number of seconds since this class was reset()
+	float get_current_time() const;
+
+	/// \brief Returns the number of microseconds since this class was reset()
+	ubyte64 get_current_time_microseconds() const;
+
+	/// \brief Returns the number of milliseconds since this class was reset()
+	ubyte64 get_current_time_ms() const;
+
+
 /// \}
 
 /// \name Operations
