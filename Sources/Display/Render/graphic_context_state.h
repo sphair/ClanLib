@@ -45,10 +45,6 @@ class GraphicContext_State
 public:
 	GraphicContext_State();
 	void copy_state(const GraphicContext_State *other);
-	void reset_blend_mode_states();
-	void reset_pen_states();
-	void reset_buffer_control_states();
-	void reset_polygon_rasterizer_states();
 
 	FrameBuffer read_frame_buffer;
 	FrameBuffer write_frame_buffer;

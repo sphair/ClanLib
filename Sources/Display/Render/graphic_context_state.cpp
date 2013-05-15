@@ -42,33 +42,12 @@ GraphicContext_State::GraphicContext_State()
 	blend_color = Vec4f(1.0f);
 	sample_mask = 0xffffffff;
 	stencil_ref = 0;
-	reset_pen_states();
-	reset_blend_mode_states();
-	reset_buffer_control_states();
-	reset_polygon_rasterizer_states();
+	draw_buffer = buffer_back;
 }
 
 void GraphicContext_State::copy_state(const GraphicContext_State *other)
 {
 	*this = *other;
-}
-
-void GraphicContext_State::reset_blend_mode_states()
-{
-}
-
-void GraphicContext_State::reset_pen_states()
-{
-
-}
-
-void GraphicContext_State::reset_buffer_control_states()
-{
-	draw_buffer = buffer_back;
-}
-
-void GraphicContext_State::reset_polygon_rasterizer_states()
-{
 }
 
 }
