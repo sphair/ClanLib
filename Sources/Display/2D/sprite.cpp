@@ -324,20 +324,14 @@ void Sprite::draw(Canvas &canvas, const Rectf &dest)
 		impl->draw(canvas, dest);
 }
 
-int Sprite::update(int time_elapsed)
+void Sprite::update(int time_elapsed)
 {
 	impl->looping = false;
 
-	if(time_elapsed == -1)
-		time_elapsed = impl->calc_time_elapsed();
-
 	int total_frames = impl->frames.size();
 
-	//we still want to know when a 1 frame 'anim' loops, based on the timer -mrfun
-	//if(total_frames < 2 || impl->finished)
-	//	return time_elapsed; 
-	// but we need to stop when animation is finished -gpmfuchs
-	if (impl->finished) return time_elapsed;
+	if (impl->finished)
+		return;
 
 	Sprite_Impl::SpriteFrame *frame = &impl->frames[impl->current_frame];
 
@@ -357,7 +351,7 @@ int Sprite::update(int time_elapsed)
 				if(delta_frame != impl->delta_frame || impl->play_pingpong == false)
 				{
 					finish();
-					return time_elapsed;
+					return;
 				}
 			}
 				
@@ -380,8 +374,6 @@ int Sprite::update(int time_elapsed)
 			}
 		}
 	}
-
-	return time_elapsed;
 }
 
 void Sprite::set_angle(Angle angle)
@@ -513,7 +505,6 @@ void Sprite::finish()
 void Sprite::restart()
 {
 	impl->update_time_ms = 0;
-	impl->last_time_ms = 0;
 	impl->finished = false;
 	impl->current_frame = impl->play_backward ? impl->frames.size() - 1 : 0;
 	impl->delta_frame = impl->play_backward ? -1 : 1;

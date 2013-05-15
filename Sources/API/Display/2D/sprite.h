@@ -257,9 +257,8 @@ public:
 
 	/// \brief Call this function to update the animation.
 	///
-	/// \param time_elapsed_ms = Time elapsed in milliseconds. Use -1 for automatic time calculation
-	/// \return time_elapsed milliseconds since last update
-	int update(int time_elapsed_ms = -1);
+	/// \param time_elapsed_ms = Time elapsed in milliseconds.
+	void update(int time_elapsed_ms);
 
 	/// \brief Set absolute rotation angle.
 	void set_angle(Angle angle);
