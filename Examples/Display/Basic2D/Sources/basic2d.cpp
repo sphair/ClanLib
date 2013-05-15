@@ -55,17 +55,15 @@ int Basic2D::start(const std::vector<std::string> &args)
 
 	float sin_count = 0.0f;
 
-	clan::ubyte64 last_time = clan::System::get_time();
+	clan::GameTime game_time;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		clan::ubyte64 current_time = clan::System::get_time();
-		float time_delta_ms = static_cast<float> (current_time - last_time);
-		last_time = current_time;
+		game_time.update();
 
 		// Update the moving elements
-		sin_count += 0.004f * time_delta_ms;
+		sin_count += 4.0f * game_time.get_time_elapsed();
 
 		// Clear the display in a dark blue nuance
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
