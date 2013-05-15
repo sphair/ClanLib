@@ -44,6 +44,7 @@ public:
 	long long last_tick;
 
 	float time_elapsed;
+	int time_elapsed_ms;
 	int ticks_elapsed;
 	float tick_interpolation_time;
 };
