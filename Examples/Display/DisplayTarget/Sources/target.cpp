@@ -28,7 +28,6 @@
 
 #include "precomp.h"
 #include "target.h"
-#include "framerate_counter.h"
 
 Target::Target()
 {
@@ -100,15 +99,15 @@ bool Target::run_demo()
 
 	std::vector<FontFall> font_fall;
 
-	FramerateCounter frameratecounter;
-
-	clan::ubyte64 time_last = clan::System::get_time();
+	clan::GameTime game_time;
 	float fontfall_ticker = 0.0f;
 
 	quit = false;
 	// Run until someone presses escape
 	while (!quit)
 	{
+		game_time.update();
+
 		if (window.get_ic().get_keyboard().get_keycode(clan::keycode_1))
 		{
 			render_target = legacy_gl;
@@ -135,12 +134,8 @@ bool Target::run_demo()
 			break;
 		}
 
-		clan::ubyte64 time_now = clan::System::get_time();
-		float time_delta = (float) (time_now - time_last);
-		time_last = time_now;
-
-		fontfall_ticker += time_delta;
-		if (fontfall_ticker >= 10.0f)
+		fontfall_ticker += game_time.get_time_elapsed();;
+		if (fontfall_ticker >= 0.01f)
 		{
 			fontfall_ticker = 0.0f;
 			font_fall.push_back(new_fontfall(canvas.get_width()));
@@ -148,7 +143,7 @@ bool Target::run_demo()
 
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		std::string fps = clan::string_format("%1 fps", frameratecounter.get_framerate());
+		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 
 		std::string words = clan::string_format("%1 words", (int) font_fall.size());
@@ -188,7 +183,7 @@ bool Target::run_demo()
 		for (std::vector<FontFall>::iterator it = font_fall.begin(); it != font_fall.end();)
 		{
 			FontFall &item = *it;
-			item.ypos += time_delta / 10.0f;
+			item.ypos += game_time.get_time_elapsed() * 100.0f;
 			if (item.ypos >= max_height)
 			{
 				it = font_fall.erase(it);
@@ -204,8 +199,7 @@ bool Target::run_demo()
 		}
 
 		canvas.flip(0);
-		frameratecounter.frame_shown();
-
+	
 		clan::KeepAlive::process(0);
 	}
 	return !quit;
