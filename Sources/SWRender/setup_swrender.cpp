@@ -31,26 +31,18 @@
 #include "API/Core/System/mutex.h"
 #include "API/SWRender/setup_swrender.h"
 #include "API/SWRender/swr_target.h"
+#include "setup_swrender_impl.h"
 
 namespace clan
 {
-class SetupSWRender_Impl
-{
-public:
-	static void init(const std::vector<std::string> &args);
-	static void deinit();
 
-	static Mutex cl_gdi_mutex;
-	static int cl_gdi_refcount;
-	static SWRenderTarget *cl_gdi_target;
-};
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupSWRender Construction:
 
-Mutex SetupSWRender_Impl::cl_gdi_mutex;
-int SetupSWRender_Impl::cl_gdi_refcount = 0;
-SWRenderTarget *SetupSWRender_Impl::cl_gdi_target = 0;
+Mutex SetupSWRender_Impl::cl_swrender_mutex;
+int SetupSWRender_Impl::cl_swrender_refcount = 0;
+SWRenderTarget *SetupSWRender_Impl::cl_swrender_target = 0;
 
 SetupSWRender::SetupSWRender()
 {
@@ -75,18 +67,18 @@ void SetupSWRender_Impl::init(const std::vector<std::string> &args)
 		throw Exception("Sorry, clanSWRender requires a processor capable of SSE2 instructions. (Update your CPU)");
 	}
 
-	MutexSection mutex_lock(&cl_gdi_mutex);
-	if (cl_gdi_refcount == 0)
-		cl_gdi_target = new SWRenderTarget();
-	cl_gdi_refcount++;
+	MutexSection mutex_lock(&cl_swrender_mutex);
+	if (cl_swrender_refcount == 0)
+		cl_swrender_target = new SWRenderTarget();
+	cl_swrender_refcount++;
 }
 
 void SetupSWRender_Impl::deinit()
 {
-	MutexSection mutex_lock(&cl_gdi_mutex);
-	cl_gdi_refcount--;
-	if (cl_gdi_refcount == 0)
-		delete cl_gdi_target;
+	MutexSection mutex_lock(&cl_swrender_mutex);
+	cl_swrender_refcount--;
+	if (cl_swrender_refcount == 0)
+		delete cl_swrender_target;
 }
 
 }

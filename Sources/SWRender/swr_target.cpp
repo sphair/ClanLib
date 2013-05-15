@@ -29,6 +29,7 @@
 #include "SWRender/precomp.h"
 #include "API/SWRender/swr_target.h"
 #include "swr_target_provider.h"
+#include "setup_swrender_impl.h"
 
 namespace clan
 {
@@ -47,10 +48,25 @@ SWRenderTarget::~SWRenderTarget()
 
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTarget Attributes:
+bool SWRenderTarget::is_current()
+{
+	DisplayTarget target = Display::get_current_target();
+	DisplayTargetProvider *ptr = target.get_provider();
+	if (!ptr)
+		return false;
 
+	SWRenderTargetProvider *provider = dynamic_cast<SWRenderTargetProvider*>(ptr);
+	return (provider != nullptr);
+}
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTarget Operations:
-
+void SWRenderTarget::set_current()
+{
+	MutexSection mutex_lock(&SetupSWRender_Impl::cl_swrender_mutex);
+	if (!SetupSWRender_Impl::cl_swrender_target)
+		throw Exception("clanSWRender has not been initialised");
+	SetupSWRender_Impl::cl_swrender_target->DisplayTarget::set_current();
+}
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTarget Implementation:
 
