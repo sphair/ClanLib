@@ -68,8 +68,6 @@ void GraphicContext_State::reset_pen_states()
 void GraphicContext_State::reset_buffer_control_states()
 {
 	draw_buffer = buffer_back;
-	logic_op_enabled = false;
-	logic_op = logic_copy;
 }
 
 void GraphicContext_State::reset_polygon_rasterizer_states()

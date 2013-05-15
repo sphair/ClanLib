@@ -373,32 +373,6 @@ void GraphicScreen::on_draw_buffer_changed(GraphicContext_State *state)
 	}
 }
 
-void GraphicScreen::on_logic_op_enabled_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.logic_op_enabled = state->logic_op_enabled;
-		provider->enable_logic_op(active_state.logic_op_enabled);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
-void GraphicScreen::on_logic_op_changed(GraphicContext_State *state)
-{
-	if (state == current)
-	{
-		active_state.logic_op = state->logic_op;
-		provider->set_logic_op(active_state.logic_op);
-	}
-	else
-	{
-		set_active(state);
-	}
-}
-
 void GraphicScreen::on_antialiased_enabled_changed(GraphicContext_State *state)
 {
 	if (state == current)
@@ -491,18 +465,6 @@ void GraphicScreen::set_active_pen(GraphicContext_State *state)
 
 void GraphicScreen::set_active_buffer_control(GraphicContext_State *state)
 {
-	if (active_state.logic_op_enabled != state->logic_op_enabled)
-	{
-		active_state.logic_op_enabled = state->logic_op_enabled;
-		provider->enable_logic_op(active_state.logic_op_enabled);
-	}
-
-	if (active_state.logic_op != state->logic_op)
-	{
-		active_state.logic_op = state->logic_op;
-		provider->set_logic_op(active_state.logic_op);
-	}
-
 	if (active_state.draw_buffer != state->draw_buffer)
 	{
 		active_state.draw_buffer = state->draw_buffer;
@@ -738,8 +700,6 @@ void GraphicScreen::set_default_state()
 	provider->enable_vertex_program_point_size(active_state.pen_vertex_shader_point_sizes);
 	provider->set_point_sprite_origin(active_state.pen_point_sprite_origin);
 
-	provider->enable_logic_op(active_state.logic_op_enabled);
-	provider->set_logic_op(active_state.logic_op);
 	provider->set_draw_buffer(active_state.draw_buffer);
 
 	provider->set_antialiased(active_state.is_antialiased);

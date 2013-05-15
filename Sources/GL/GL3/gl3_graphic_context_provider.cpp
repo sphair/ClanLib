@@ -896,26 +896,6 @@ void GL3GraphicContextProvider::set_polygon_offset(float factor, float units)
 	glPolygonOffset(factor, units);
 }
 
-void GL3GraphicContextProvider::enable_logic_op(bool enabled)
-{
-	OpenGL::set_active(this);
-	if (enabled)
-	{
-		glEnable(GL_COLOR_LOGIC_OP);
-	}
-	else
-	{
-		glDisable(GL_COLOR_LOGIC_OP);
-	}
-}
-
-void GL3GraphicContextProvider::set_logic_op(LogicOp op)
-{
-	OpenGL::set_active(this);
-		glLogicOp(OpenGL::to_enum(op));
-}
-
-
 void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	OpenGL::set_active(this);

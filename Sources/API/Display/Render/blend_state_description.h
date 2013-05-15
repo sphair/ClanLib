@@ -56,6 +56,9 @@ public:
 	void get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const;
 	void get_blend_function(BlendFunc &out_src, BlendFunc &out_dest, BlendFunc &out_src_alpha, BlendFunc &out_dest_alpha) const;
 	void get_color_write(bool &out_red, bool &out_green, bool &out_blue, bool &out_alpha) const;
+	bool is_logic_op_enabled() const;
+	LogicOp get_logic_op() const;
+
 /// \}
 
 /// \name Operations
@@ -72,6 +75,13 @@ public:
 
 	/// \brief Enable/disable writing to the color buffer
 	void enable_color_write(bool red, bool green, bool blue, bool alpha);
+
+	/// \brief Enable/disable logic op. (clanGL only)
+	void enable_logic_op(bool enabled);
+
+	/// \brief Set logic operation. (clanGL only)
+	void set_logic_op(LogicOp op);
+
 /// \}
 
 	bool operator==(const BlendStateDescription &other) const;

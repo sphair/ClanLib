@@ -289,18 +289,6 @@ void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)
 	graphic_screen->on_draw_buffer_changed(this);
 }
 
-void GraphicContext_Impl::enable_logic_op(bool enabled)
-{
-	logic_op_enabled = enabled;
-	graphic_screen->on_logic_op_enabled_changed(this);
-}
-
-void GraphicContext_Impl::set_logic_op(LogicOp op)
-{
-	logic_op = op;
-	graphic_screen->on_logic_op_changed(this);
-}
-
 void GraphicContext_Impl::set_antialiased(bool value)
 {
 	is_antialiased = value;

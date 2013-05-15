@@ -963,25 +963,6 @@ void GL1GraphicContextProvider::set_polygon_offset(float factor, float units)
 	glPolygonOffset(factor, units);
 }
 
-void GL1GraphicContextProvider::enable_logic_op(bool enabled)
-{
-	set_active();
-	if (enabled)
-	{
-		glEnable(GL_COLOR_LOGIC_OP);
-	}
-	else
-	{
-		glDisable(GL_COLOR_LOGIC_OP);
-	}
-}
-
-void GL1GraphicContextProvider::set_logic_op(LogicOp op)
-{
-	set_active();
-	glLogicOp(OpenGL::to_enum(op));
-}
-
 void GL1GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	set_active();

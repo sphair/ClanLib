@@ -82,8 +82,6 @@ public:
 	PointSpriteOrigin pen_point_sprite_origin;
 
 	DrawBuffer draw_buffer;
-	bool logic_op_enabled;
-	LogicOp logic_op;
 
 	// Old PolygonRasterizer
 	bool is_antialiased;

@@ -36,7 +36,8 @@ class BlendStateDescription_Impl
 {
 public:
 	BlendStateDescription_Impl()
-	: enable_blending(true), equation_color(), equation_alpha(), func_src(), func_dest(), func_src_alpha(), func_dest_alpha(), write_red(true), write_green(true), write_blue(true), write_alpha(true)
+	: enable_blending(true), equation_color(), equation_alpha(), func_src(), func_dest(), func_src_alpha(), func_dest_alpha(), write_red(true), write_green(true), write_blue(true), write_alpha(true),
+	logic_op_enabled(false), logic_op(logic_copy)
 	{
 		func_src = blend_src_alpha;
 		func_dest = blend_one_minus_src_alpha;
@@ -59,7 +60,9 @@ public:
 			write_red == other.write_red &&
 			write_green == other.write_green &&
 			write_blue == other.write_blue &&
-			write_alpha == other.write_alpha;
+			write_alpha == other.write_alpha &&
+			logic_op_enabled == other.logic_op_enabled &&
+			logic_op == other.logic_op;
 	}
 
 	bool operator<(const BlendStateDescription_Impl &other) const
@@ -84,8 +87,12 @@ public:
 			return write_green < other.write_green;
 		else if (write_blue != other.write_blue)
 			return write_blue < other.write_blue;
-		else
+		else if (write_alpha != other.write_alpha)
 			return write_alpha < other.write_alpha;
+		else if (logic_op_enabled != other.logic_op_enabled)
+			return logic_op_enabled < other.logic_op_enabled;
+		else
+			return logic_op < other.logic_op;
 	}
 
 	bool enable_blending;
@@ -96,6 +103,9 @@ public:
 	BlendFunc func_src_alpha;
 	BlendFunc func_dest_alpha;
 	bool write_red, write_green, write_blue, write_alpha;
+	bool logic_op_enabled;
+	LogicOp logic_op;
+
 };
 
 BlendStateDescription::BlendStateDescription()
@@ -114,6 +124,16 @@ BlendStateDescription BlendStateDescription::clone() const
 bool BlendStateDescription::is_blending_enabled() const
 {
 	return impl->enable_blending;
+}
+
+bool BlendStateDescription::is_logic_op_enabled() const
+{
+	return impl->logic_op_enabled;
+}
+
+LogicOp BlendStateDescription::get_logic_op() const
+{
+	return impl->logic_op;
 }
 
 void BlendStateDescription::get_blend_equation(BlendEquation &out_color, BlendEquation &out_alpha) const
@@ -163,6 +183,16 @@ void BlendStateDescription::enable_color_write(bool red, bool green, bool blue, 
 	impl->write_green = green;
 	impl->write_blue = blue;
 	impl->write_alpha = alpha;
+}
+
+void BlendStateDescription::enable_logic_op(bool enabled)
+{
+	impl->logic_op_enabled = true;
+}
+
+void BlendStateDescription::set_logic_op(LogicOp op)
+{
+	impl->logic_op = op;
 }
 
 bool BlendStateDescription::operator==(const BlendStateDescription &other) const

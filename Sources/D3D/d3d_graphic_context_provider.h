@@ -120,8 +120,6 @@ public:
 	bool is_frame_buffer_owner(const FrameBuffer &fb);
 	void set_frame_buffer(const FrameBuffer &write_buffer, const FrameBuffer &read_buffer);
 	void reset_frame_buffer();
-	void enable_logic_op(bool enabled);
-	void set_logic_op(LogicOp op);
 	void set_draw_buffer(DrawBuffer buffer);
 
 	void set_point_size(float value);

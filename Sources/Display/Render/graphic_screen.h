@@ -66,8 +66,6 @@ public:
 	void on_vertex_program_point_size_changed(GraphicContext_State *state);
 	void on_point_sprite_origin(GraphicContext_State *state);
 	void on_draw_buffer_changed(GraphicContext_State *state);
-	void on_logic_op_enabled_changed(GraphicContext_State *state);
-	void on_logic_op_changed(GraphicContext_State *state);
 	void on_antialiased_enabled_changed(GraphicContext_State *state);
 	void on_offset_point_changed(GraphicContext_State *state);
 	void on_offset_line_changed(GraphicContext_State *state);

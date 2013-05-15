@@ -513,16 +513,6 @@ void GraphicContext::set_draw_buffer(DrawBuffer buffer)
 	impl->set_draw_buffer(buffer);
 }
 
-void GraphicContext::enable_logic_op(bool enabled)
-{
-	impl->enable_logic_op(enabled);
-}
-
-void GraphicContext::set_logic_op(LogicOp op)
-{
-	impl->set_logic_op(op);
-}
-
 void GraphicContext::set_antialiased(bool value)
 {
 	impl->set_antialiased(value);
