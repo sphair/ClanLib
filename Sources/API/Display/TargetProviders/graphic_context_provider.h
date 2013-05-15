@@ -233,9 +233,6 @@ public:
 	/// \brief Set the rendering buffer back to the screen.
 	virtual void reset_frame_buffer() = 0;
 
-	virtual void enable_logic_op(bool enabled) = 0;
-	virtual void set_logic_op(LogicOp op) = 0;
-
 	virtual void set_draw_buffer(DrawBuffer buffer) = 0;
 
 	virtual void set_point_size(float value) = 0;

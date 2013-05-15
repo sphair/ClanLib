@@ -168,12 +168,6 @@ public:
 	/// \brief Set active depth stencil state
 	void reset_depth_stencil_state();
 
-	/// \brief Enable/disable logic op.
-	void enable_logic_op(bool enabled);
-
-	/// \brief Set logic operation.
-	void set_logic_op(LogicOp op);
-
 	/// \brief Set the current clipping rectangle.
 	void set_cliprect(const Rect &rect);
 

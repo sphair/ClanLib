@@ -656,12 +656,6 @@ public:
 	/// \brief Set used draw buffer.
 	void set_draw_buffer(DrawBuffer buffer);
 
-	/// \brief Enable/disable logic op.
-	void enable_logic_op(bool enabled);
-
-	/// \brief Set logic operation.
-	void set_logic_op(LogicOp op);
-
 	/// \brief Enables/disables anti-aliasing.
 	void set_antialiased(bool value);
 

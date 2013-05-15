@@ -613,14 +613,6 @@ void SWRenderGraphicContextProvider::set_depth_range(int viewport, float n, floa
 	//FIXME: Stub
 }
 
-void SWRenderGraphicContextProvider::enable_logic_op(bool enabled)
-{
-	//FIXME: Stub
-}
-void SWRenderGraphicContextProvider::set_logic_op(LogicOp op)
-{
-	//FIXME: Stub
-}
 void SWRenderGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	//FIXME: Stub

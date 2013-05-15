@@ -142,8 +142,6 @@ public:
 	void set_program_object(const ProgramObject &program);
 	void reset_program_object();
 
-	void enable_logic_op(bool enabled);
-	void set_logic_op(LogicOp op);
 	void set_draw_buffer(DrawBuffer buffer);
 
 	void set_antialiased(bool value);

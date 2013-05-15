@@ -456,16 +456,6 @@ void D3DGraphicContextProvider::reset_frame_buffer()
 	set_default_dsv();
 }
 
-void D3DGraphicContextProvider::enable_logic_op(bool enabled)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_logic_op(LogicOp op)
-{
-	// To do: what does this map to in D3D?
-}
-
 void D3DGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	// To do: what does this map to in D3D?

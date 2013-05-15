@@ -78,8 +78,6 @@ public:
 	void set_point_sprite_origin(PointSpriteOrigin origin);
 
 	void set_draw_buffer(DrawBuffer buffer);
-	void enable_logic_op(bool enabled);
-	void set_logic_op(LogicOp op);
 
 	void set_antialiased(bool value);
 	void set_offset_point(bool value);

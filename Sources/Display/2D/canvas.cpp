@@ -208,18 +208,6 @@ void Canvas::set_point_sprite_origin(PointSpriteOrigin origin)
 	get_gc().set_point_sprite_origin(origin);
 }
 
-void Canvas::enable_logic_op(bool enabled)
-{
-	flush();
-	get_gc().enable_logic_op(enabled);
-}
-
-void Canvas::set_logic_op(LogicOp op)
-{
-	flush();
-	get_gc().set_logic_op(op);
-}
-
 void Canvas::set_cliprect(const Rect &rect)
 {
 	flush();
