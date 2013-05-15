@@ -75,21 +75,8 @@ public:
 	DepthStencilState depth_stencil_state;
 	int stencil_ref;
 
-	// Old Pen
-	float pen_point_size;
-	float pen_point_fade_treshold_size;
-	bool pen_vertex_shader_point_sizes;
-	PointSpriteOrigin pen_point_sprite_origin;
-
 	DrawBuffer draw_buffer;
 
-	// Old PolygonRasterizer
-	bool is_antialiased;
-	bool is_offset_point;
-	bool is_offset_line;
-	bool is_offset_fill;
-	float offset_factor;
-	float offset_units;
 };
 
 }

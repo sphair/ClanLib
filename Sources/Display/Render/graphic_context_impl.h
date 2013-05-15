@@ -72,18 +72,8 @@ public:
 	void set_blend_state(const BlendState &state, const Vec4f &blend_color, unsigned int sample_mask);
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
 
-	void set_point_size(float);
-	void set_point_fade_treshold_size(float);
-	void enable_vertex_program_point_size(bool enable);
-	void set_point_sprite_origin(PointSpriteOrigin origin);
-
 	void set_draw_buffer(DrawBuffer buffer);
 
-	void set_antialiased(bool value);
-	void set_offset_point(bool value);
-	void set_offset_line(bool value);
-	void set_offset_fill(bool value);
-	void set_polygon_offset(float factor, float units);
 private:
 	void on_window_resized(const Size &size);
 

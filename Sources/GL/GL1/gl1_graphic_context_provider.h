@@ -154,12 +154,6 @@ public:
 	void reset_program_object();
 	void set_draw_buffer(DrawBuffer buffer);
 
-	void set_antialiased(bool value);
-	void set_offset_point(bool value);
-	void set_offset_line(bool value);
-	void set_offset_fill(bool value);
-	void set_polygon_offset(float factor, float units);
-	
 	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
 	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
 	void set_primitives_array(const PrimitivesArray &primitives_array);
@@ -182,10 +176,6 @@ public:
 	void set_viewport(int index, const Rectf &viewport);
 	void set_depth_range(float n, float f);
 	void set_depth_range(int viewport, float n, float f);
-	void set_point_size(float value);
-	void set_point_fade_treshold_size(float value);
-	void enable_vertex_program_point_size(bool enabled);
-	void set_point_sprite_origin(PointSpriteOrigin origin);
 	void on_window_resized();
 
 	ProcAddress *get_proc_address(const std::string& function_name) const;

@@ -461,52 +461,6 @@ void D3DGraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 	// To do: what does this map to in D3D?
 }
 
-void D3DGraphicContextProvider::set_point_size(float value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_point_fade_treshold_size(float value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::enable_vertex_program_point_size(bool enabled)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_point_sprite_origin(PointSpriteOrigin origin)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_antialiased(bool value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_offset_point(bool value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_offset_line(bool value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_offset_fill(bool value)
-{
-	// To do: what does this map to in D3D?
-}
-
-void D3DGraphicContextProvider::set_polygon_offset(float factor, float units)
-{
-	// To do: what does this map to in D3D?
-}
-
-
 bool D3DGraphicContextProvider::is_primitives_array_owner(const PrimitivesArray &primitives_array)
 {
 	D3DPrimitivesArrayProvider *array_provider = static_cast<D3DPrimitivesArrayProvider *>(primitives_array.get_provider());

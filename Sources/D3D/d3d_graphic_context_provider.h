@@ -122,17 +122,6 @@ public:
 	void reset_frame_buffer();
 	void set_draw_buffer(DrawBuffer buffer);
 
-	void set_point_size(float value);
-	void set_point_fade_treshold_size(float value);
-	void enable_vertex_program_point_size(bool enabled);
-	void set_point_sprite_origin(PointSpriteOrigin origin);
-
-	void set_antialiased(bool value);
-	void set_offset_point(bool value);
-	void set_offset_line(bool value);
-	void set_offset_fill(bool value);
-	void set_polygon_offset(float factor, float units);
-
 	bool is_primitives_array_owner(const PrimitivesArray &primitives_array);
 	void draw_primitives(PrimitivesType type, int num_vertices, const PrimitivesArray &primitives_array);
 	void set_primitives_array(const PrimitivesArray &primitives_array);

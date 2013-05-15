@@ -61,16 +61,8 @@ public:
 	void on_depth_range_changed(GraphicContext_State *state, int viewport);
 	void on_framebuffer_changed(GraphicContext_State *state);
 	void on_program_changed(GraphicContext_State *state);
-	void on_point_size_changed(GraphicContext_State *state);
-	void on_point_fade_treshold_size_changed(GraphicContext_State *state);
-	void on_vertex_program_point_size_changed(GraphicContext_State *state);
-	void on_point_sprite_origin(GraphicContext_State *state);
 	void on_draw_buffer_changed(GraphicContext_State *state);
-	void on_antialiased_enabled_changed(GraphicContext_State *state);
-	void on_offset_point_changed(GraphicContext_State *state);
-	void on_offset_line_changed(GraphicContext_State *state);
-	void on_offset_fill_changed(GraphicContext_State *state);
-	void on_polygon_offset_changed(GraphicContext_State *state);
+
 
 private:
 	void set_default_state();

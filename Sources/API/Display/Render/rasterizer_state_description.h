@@ -58,6 +58,17 @@ public:
 	FillMode get_face_fill_mode() const;
 	FaceSide get_front_face() const;
 	bool get_enable_scissor() const;
+
+	bool get_antialiased() const;
+	bool get_offset_point() const;
+	bool get_offset_line() const;
+	bool get_offset_fill() const;
+	void get_polygon_offset(float &out_factor, float &out_units) const;
+	float get_point_size() const;
+	float get_point_fade_treshold_size() const;
+	bool is_point_size() const;
+	PointSpriteOrigin get_point_sprite_origin() const;
+
 /// \}
 
 /// \name Operations
@@ -81,6 +92,35 @@ public:
 
 	/// \brief Enables/disables if clipping rects are used
 	void enable_scissor(bool enabled);
+
+	/// \brief Enables/disables anti-aliasing.	(clanGL only)
+	void enable_antialiased(bool value);
+
+	/// \brief Enables/disables point offsetting.
+	void enable_offset_point(bool value);
+
+	/// \brief Enables/disables line offsetting.
+	void enable_offset_line(bool value);
+
+	/// \brief Enables/disables polygon offsetting.
+	void enable_offset_fill(bool value);
+
+	/// \brief Sets the offset factor.
+	void set_polygon_offset(float factor, float units);
+
+	/// \brief The default value is 1.0	(clanGL only)
+	void set_point_size(float);
+
+	/// \brief Alpha fade point once minimum size treshold reached. Requires multisampling to be enabled.	(clanGL only)
+	void set_point_fade_treshold_size(float);
+
+	/// \brief Enables if points sizes is set by the vertex shader.	(clanGL only)
+	void enable_point_size(bool enable);
+
+	/// \brief Sets the origin of texture point sprites.	(clanGL only)
+	void set_point_sprite_origin(PointSpriteOrigin origin);
+
+
 /// \}
 
 	bool operator==(const RasterizerStateDescription &other) const;

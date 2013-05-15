@@ -259,65 +259,10 @@ void GraphicContext_Impl::set_depth_stencil_state(const DepthStencilState &state
 	graphic_screen->on_depth_stencil_state_changed(this);
 }
 
-void GraphicContext_Impl::set_point_size(float value)
-{
-	pen_point_size = value;
-	graphic_screen->on_point_size_changed(this);
-}
-
-void GraphicContext_Impl::set_point_fade_treshold_size(float value)
-{
-	pen_point_fade_treshold_size = value;
-	graphic_screen->on_point_fade_treshold_size_changed(this);
-}
-
-void GraphicContext_Impl::enable_vertex_program_point_size(bool enable)
-{
-	pen_vertex_shader_point_sizes = enable;
-	graphic_screen->on_vertex_program_point_size_changed(this);
-}
-
-void GraphicContext_Impl::set_point_sprite_origin(PointSpriteOrigin origin)
-{
-	pen_point_sprite_origin = origin;
-	graphic_screen->on_point_sprite_origin(this);
-}
-
 void GraphicContext_Impl::set_draw_buffer(DrawBuffer buffer)
 {
 	draw_buffer = buffer;
 	graphic_screen->on_draw_buffer_changed(this);
-}
-
-void GraphicContext_Impl::set_antialiased(bool value)
-{
-	is_antialiased = value;
-	graphic_screen->on_antialiased_enabled_changed(this);
-}
-	
-void GraphicContext_Impl::set_offset_point(bool value)
-{
-	is_offset_point = value;
-	graphic_screen->on_offset_point_changed(this);
-}
-	
-void GraphicContext_Impl::set_offset_line(bool value)
-{
-	is_offset_line = value;
-	graphic_screen->on_offset_line_changed(this);
-}
-	
-void GraphicContext_Impl::set_offset_fill(bool value)
-{
-	is_offset_fill = value;
-	graphic_screen->on_offset_fill_changed(this);
-}
-	
-void GraphicContext_Impl::set_polygon_offset(float factor, float units)
-{
-	offset_factor = factor;
-	offset_units = units;
-	graphic_screen->on_polygon_offset_changed(this);
 }
 
 }

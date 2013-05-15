@@ -488,55 +488,11 @@ void GraphicContext::set_depth_range(int viewport, float n, float f)
 	impl->set_depth_range(viewport, n, f);
 }
 
-void GraphicContext::set_point_size(float value)
-{
-	impl->set_point_size(value);
-}
-
-void GraphicContext::set_point_fade_treshold_size(float value)
-{
-	impl->set_point_fade_treshold_size(value);
-}
-
-void GraphicContext::enable_vertex_program_point_size(bool enable)
-{
-	impl->enable_vertex_program_point_size(enable);
-}
-
-void GraphicContext::set_point_sprite_origin(PointSpriteOrigin origin)
-{
-	impl->set_point_sprite_origin(origin);
-}
-
 void GraphicContext::set_draw_buffer(DrawBuffer buffer)
 {
 	impl->set_draw_buffer(buffer);
 }
 
-void GraphicContext::set_antialiased(bool value)
-{
-	impl->set_antialiased(value);
-}
-
-void GraphicContext::set_offset_point(bool value)
-{
-	impl->set_offset_point(value);
-}
-
-void GraphicContext::set_offset_line(bool value)
-{
-	impl->set_offset_line(value);
-}
-
-void GraphicContext::set_offset_fill(bool value)
-{
-	impl->set_offset_fill(value);
-}
-
-void GraphicContext::set_polygon_offset(float factor, float units)
-{
-	impl->set_polygon_offset(factor, units);
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // GraphicContext Implementation:

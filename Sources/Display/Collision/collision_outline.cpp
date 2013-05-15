@@ -291,7 +291,6 @@ void CollisionOutline::draw(
 	Canvas &canvas)
 {
 	GraphicContext &gc = canvas.get_gc();
-	gc.set_point_size(2.0f);
 
 	// Draw collision outline (Contours are assumed as closed polygons, hence we use line-loop)
 	for(unsigned int i = 0; i < impl->contours.size(); i++)
