@@ -133,7 +133,6 @@ public:
 	int delta_frame;
 
 	int update_time_ms;
-	ubyte64 last_time_ms;
 
 	int id;
 
@@ -157,8 +156,6 @@ public:
 	{
 		return (finished == false || show_on_finish != Sprite::show_blank) && frames.size() > 0;
 	}
-
-	int calc_time_elapsed();
 
 	void create_textures(GraphicContext &gc, const SpriteDescription &description);
 

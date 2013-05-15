@@ -62,7 +62,6 @@ Sprite_Impl::Sprite_Impl() :
 	current_frame(0),
 	delta_frame(1),
 	update_time_ms(0),
-	last_time_ms(0),
 	id(0),
 	finished(false),
 	looping(false),
@@ -265,7 +264,6 @@ Sprite_Impl &Sprite_Impl::operator =(const Sprite_Impl &copy)
 	current_frame = copy.current_frame;
 	delta_frame = copy.delta_frame;
 	update_time_ms = copy.update_time_ms;
-	last_time_ms = copy.last_time_ms;
 	id = copy.id;
 	finished = copy.finished;
 	play_loop = copy.play_loop;
@@ -535,19 +533,6 @@ void Sprite_Impl::draw_calcs_step2(
 	}
 
 	params1.color = params2.color;
-}
-
-int Sprite_Impl::calc_time_elapsed()
-{
-	// Calculate amount of time since last frame
-	ubyte64 new_time = System::get_time();
-	if(last_time_ms == 0)
-		last_time_ms = new_time;
-
-	int delta_time = new_time - last_time_ms;
-	last_time_ms = new_time;
-
-	return delta_time;
 }
 
 void Sprite_Impl::create_textures(GraphicContext &gc, const SpriteDescription &description)
