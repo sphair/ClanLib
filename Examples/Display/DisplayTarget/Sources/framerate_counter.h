@@ -48,7 +48,7 @@ public:
 		}
 		else
 		{
-			int delta_time = current_time - start_time;
+			int delta_time = (int) (current_time - start_time);
 			if (delta_time < 0 || delta_time > 2000)
 			{
 				if (delta_time > 0)
@@ -61,6 +61,6 @@ public:
 
 private:
 	int current_fps;
-	ubyte64 start_time;
+	clan::ubyte64 start_time;
 	int frames;
 };
