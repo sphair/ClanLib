@@ -34,8 +34,8 @@
 namespace clan
 {
 
-GameTime::GameTime(int ticks_per_second)
-	: impl(new GameTime_Impl(ticks_per_second))
+GameTime::GameTime(int ticks_per_second, int max_updates_per_second)
+	: impl(new GameTime_Impl(ticks_per_second, max_updates_per_second))
 {
 	reset();
 }
@@ -93,50 +93,91 @@ ubyte64 GameTime::get_current_time_ms() const
 
 void GameTime::update()
 {
-	ubyte64 last_time = impl->current_time;
+	impl->update();
+}
 
-	impl->current_time = System::get_microseconds();
+void GameTime_Impl::update()
+{
+	ubyte64 last_time = current_time;
 
-	if (impl->current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
-		last_time = impl->current_time;
+	current_time = System::get_microseconds();
 
-	ubyte64 ticks_per_microsecond = 1000000 / impl->ticks_per_second;
-	ubyte64 current_tick = (impl->current_time - impl->start_time) / ticks_per_microsecond;
+	if (current_time < last_time)		// Old cpu's may report time travelling on early multicore processors (iirc)
+		last_time = current_time;
 
-	impl->ticks_elapsed = current_tick - impl->last_tick;
-	impl->time_elapsed_ms = (int) ((impl->current_time - last_time) / 1000);
-	impl->time_elapsed = (float)((impl->current_time - last_time) / (double) 1000000);
-	impl->tick_interpolation_time = (float)(((impl->current_time - impl->start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
+	ubyte64 ticks_per_microsecond = 1000000 / ticks_per_second;
+	ubyte64 current_tick = (current_time - start_time) / ticks_per_microsecond;
 
-	impl->last_tick = current_tick;
+	ticks_elapsed = current_tick - last_tick;
+	time_elapsed_ms = (int) ((current_time - last_time) / 1000);
+	time_elapsed = (float)((current_time - last_time) / (double) 1000000);
+	tick_interpolation_time = (float)(((current_time - start_time) % ticks_per_microsecond) / (double)ticks_per_microsecond);
 
-	impl->update_counter++;
-	int delta_time_ms = (impl->current_time - impl->update_frame_start_time) / 1000;
+	last_tick = current_tick;
+
+	if (max_updates_per_second)	// Handle max fps
+		process_max_fps();
+
+	calculate_fps();
+}
+
+void GameTime_Impl::process_max_fps()
+{
+	num_updates_in_second++;
+	update_second_time_ms += time_elapsed_ms;
+
+	int expected_update_second_time_ms = (1000 * num_updates_in_second) / max_updates_per_second;
+	int diff = expected_update_second_time_ms - update_second_time_ms;
+	if (diff > 0)	// We have spare cpu cycles
+	{
+		System::sleep(diff);
+	}
+	if (num_updates_in_second == max_updates_per_second)	// Here we have reached a second or exceeded the second
+	{
+		num_updates_in_second = 0;
+		update_second_time_ms -= 1000;		// Subtract a second
+		if (update_second_time_ms > (1000 / max_updates_per_second))		// Limit slow updates, to give a change to catch it
+			update_second_time_ms = 1000 / max_updates_per_second;
+	}
+}
+
+void GameTime_Impl::calculate_fps()
+{
+	num_updates_in_2_seconds++;
+	int delta_time_ms = (current_time - update_frame_start_time) / 1000;
 
 	if ((delta_time_ms < 0) || (delta_time_ms > 2000))		// Sample FPS every 2 seconds
 	{
 		if (delta_time_ms > 0)
 		{
-			impl->current_fps = (impl->update_counter*1000.0f) / (float) delta_time_ms;
+			current_fps = (num_updates_in_2_seconds*1000.0f) / (float) delta_time_ms;
 		}
-		impl->update_counter = 0;
-		impl->update_frame_start_time =	impl->current_time;
+		num_updates_in_2_seconds = 0;
+		update_frame_start_time = current_time;
 	}
 
 }
 
 void GameTime::reset()
 {
-	impl->start_time = System::get_microseconds();
-	impl->current_time = impl->start_time;
-	impl->last_tick = 0;
-	impl->time_elapsed = 0.0f;
-	impl->ticks_elapsed = 0;
-	impl->tick_interpolation_time = 0.0f;
-	impl->time_elapsed_ms = 0;
-	impl->update_counter = 0;
-	impl->update_frame_start_time = impl->current_time;
-	impl->current_fps = 0;
+	impl->reset();
+}
+void GameTime_Impl::reset()
+{
+	start_time = System::get_microseconds();
+	current_time = start_time;
+	last_tick = 0;
+	time_elapsed = 0.0f;
+	ticks_elapsed = 0;
+	tick_interpolation_time = 0.0f;
+	time_elapsed_ms = 0;
+	num_updates_in_2_seconds = 0;
+	update_frame_start_time = current_time;
+	current_fps = 0;
+	num_updates_in_second = 0;
+	num_updates_in_2_seconds = 0;
+	update_second_time_ms = 0;
+
 }
 
 }
