@@ -30,6 +30,9 @@
 #include <iostream>
 #include "API/Core/System/setup_core.h"
 #include "API/App/clanapp.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/System/console_window.h"
+#include "API/Core/Text/console.h"
 
 
 int main(int argc, char **argv)
@@ -43,10 +46,36 @@ int main(int argc, char **argv)
 	std::vector<std::string> args;
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
-	int retval = clan::Application::main(args);
+	// Call clanapp main:
+	if (clan::Application::enable_catch_exceptions)
+	{
+		try
+		{
+			retval = clan::Application::main(args);
+		}
+		catch(clan::Exception &exception)
+		{
+			// Create a console window for text-output if not available
+			std::string console_name("Console");
+			if (!args.empty())
+				console_name = args[0];
+
+			clan::ConsoleWindow console(console_name, 80, 160);
+			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			console.display_close_message();
+
+			retval = -1;
+		}
+
+	}
+	else
+	{
+		retval = clan::Application::main(args);
+	}
 
 	return retval;
 }
 
 clan::Application::MainFunction *clan::Application::main = 0;
+bool clan::Application::enable_catch_exceptions = true;
 

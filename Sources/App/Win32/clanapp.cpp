@@ -36,6 +36,9 @@
 #include "API/Core/System/setup_core.h"
 #include "API/App/clanapp.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/System/console_window.h"
+#include "API/Core/Text/console.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -47,7 +50,7 @@
 
 namespace clan
 {
-	static void calc_commandline(int *argc, TCHAR ***argv);
+	static void calc_commandline(std::vector<std::string> &out_args);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,8 +65,6 @@ int WINAPI WinMain(
 	using namespace clan;
 
 	int retval;
-	int argc;
-	TCHAR **argv;
 
 #if defined(_DEBUG) && defined(_MSC_VER)
 	// Visual C++ memoryleak debugging. By setting the _CRTDBG_LEAK_CHECK_DF
@@ -83,16 +84,36 @@ int WINAPI WinMain(
 	}
 
 	// Get commandline arguments.
-	calc_commandline(&argc, &argv);
-
-	// Initialize arguments and call clanapp main:
 	std::vector<std::string> args;
-	for (int i=0; i<argc; i++)
-		args.push_back(StringHelp::ucs2_to_text(argv[i]));
-	retval = clan::Application::main(args);
+	calc_commandline(args);
 
-	// calc_commandline() doesn't clean up after itself. tsk tsk:
-	delete[] argv;
+	// Call clanapp main:
+	if (clan::Application::enable_catch_exceptions)
+	{
+		try
+		{
+			retval = clan::Application::main(args);
+		}
+		catch(clan::Exception &exception)
+		{
+			// Create a console window for text-output if not available
+			std::string console_name("Console");
+			if (!args.empty())
+				console_name = args[0];
+			//clan::ConsoleWindow console(console_name, 80, 160);
+			//clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			//console.display_close_message();
+			std::string text("Unhandled Exception: " + exception.get_message_and_stack_trace());
+			::MessageBox(NULL, clan::StringHelp::utf8_to_ucs2(text).c_str(), clan::StringHelp::utf8_to_ucs2(console_name).c_str(), MB_OK|MB_ICONERROR);
+
+			retval = -1;
+		}
+
+	}
+	else
+	{
+		retval = clan::Application::main(args);
+	}
 
 	return retval;
 }
@@ -102,7 +123,7 @@ int WINAPI WinMain(
 
 namespace clan
 {
-	static void calc_commandline(int *argc, TCHAR ***argv)
+	static void calc_commandline(std::vector<std::string> &out_args)
 	{
 		TCHAR *command_line = GetCommandLine();
 		static std::vector<TCHAR *> pos;
@@ -138,19 +159,11 @@ namespace clan
 				*command_line = 0;
 			}
 		}
-		int num_words = pos.size();
-
-		TCHAR **words = new TCHAR*[num_words + 1];
-
-		int i;
-		for (i=0; i<num_words; i++)
+		out_args.reserve(pos.size());
+		for (std::vector<TCHAR *>::size_type cnt=0; cnt<pos.size(); cnt++)
 		{
-			words[i] = pos[i];
+			out_args.push_back(StringHelp::ucs2_to_text(pos[cnt]));
 		}
-		words[i] = NULL;
-
-		*argc = num_words;
-		*argv = words;
 	}
 }
 
@@ -158,4 +171,5 @@ namespace clan
 // clan::Application:
 
 clan::Application::MainFunction *clan::Application::main = 0;
+bool clan::Application::enable_catch_exceptions = true;
 
