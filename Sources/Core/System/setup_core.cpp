@@ -40,7 +40,7 @@ namespace clan
 class SetupCore_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 };
 
@@ -49,14 +49,9 @@ public:
 
 SetupCore::SetupCore()
 {
-	std::vector<std::string> args;
-	SetupCore_Impl::init(args);
+	SetupCore_Impl::init();
 }
 
-SetupCore::SetupCore(const std::vector<std::string> &args)
-{
-	SetupCore_Impl::init(args);
-}
 
 SetupCore::~SetupCore()
 {
@@ -65,7 +60,7 @@ SetupCore::~SetupCore()
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupCore Implementation:
-void SetupCore_Impl::init(const std::vector<std::string> &args)
+void SetupCore_Impl::init()
 {
 	ThreadLocalStorage::create_initial_instance();
 #ifndef DISABLE_SSE2

@@ -39,7 +39,7 @@ namespace clan
 class SetupNetwork_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 	static int ref_count;
 };
@@ -48,20 +48,16 @@ int SetupNetwork_Impl::ref_count = 0;
 
 SetupNetwork::SetupNetwork()
 {
-	const std::vector<std::string> args;
-	SetupNetwork_Impl::init(args);
+	SetupNetwork_Impl::init();
 
 }
-SetupNetwork::SetupNetwork(const std::vector<std::string> &args)
-{
-	SetupNetwork_Impl::init(args);
-}
+
 
 SetupNetwork::~SetupNetwork()
 {
 	SetupNetwork_Impl::deinit();
 }
-void SetupNetwork_Impl::init(const std::vector<std::string> &args)
+void SetupNetwork_Impl::init()
 {
 	ref_count++;
 	if (ref_count > 1) return;

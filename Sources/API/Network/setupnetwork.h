@@ -45,8 +45,6 @@ class CL_API_NETWORK SetupNetwork
 public:
 	/// \brief Initializes clanNetwork.
 	SetupNetwork();
-	SetupNetwork(const std::vector<std::string> &args);
-
 	~SetupNetwork();
 
 /// \}

@@ -36,7 +36,7 @@ class SWRenderTarget;
 class SetupSWRender_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 
 	static Mutex cl_swrender_mutex;

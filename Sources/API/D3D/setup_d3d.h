@@ -44,7 +44,6 @@ class CL_API_D3D SetupD3D
 public:
 	/// \brief Initializes clanD3D
 	SetupD3D();
-	SetupD3D(const std::vector<std::string> &args);
 	~SetupD3D();
 /// \}
 

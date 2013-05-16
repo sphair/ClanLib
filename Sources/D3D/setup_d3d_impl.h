@@ -37,7 +37,7 @@ class D3DTarget;
 class SetupD3D_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 
 	static Mutex cl_d3d_mutex;

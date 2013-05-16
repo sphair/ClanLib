@@ -48,7 +48,10 @@ class CL_API_CORE GameTime
 /// \{
 public:
 	/// \brief GameTime constructor
-	GameTime(int ticks_per_second = 20);
+	///
+	/// \param ticks_per_second = Number of ticks per second
+	/// \param max_updates_per_second = Maximum number of updates per second (aka FPS, frames per second). 0 = Unlimited
+	GameTime(int ticks_per_second = 20, int max_updates_per_second = 0);
 /// \}
 
 /// \name Attributes

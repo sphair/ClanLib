@@ -37,10 +37,6 @@ SetupNetwork::SetupNetwork()
 {
 }
 
-SetupNetwork::SetupNetwork(const std::vector<std::string> &args)
-{
-}
-
 SetupNetwork::~SetupNetwork()
 {
 }

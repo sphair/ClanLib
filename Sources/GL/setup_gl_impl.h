@@ -37,7 +37,7 @@ class OpenGLTarget;
 class SetupGL_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 
 	static Mutex cl_opengl_mutex;

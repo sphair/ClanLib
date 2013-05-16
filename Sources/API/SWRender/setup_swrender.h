@@ -45,8 +45,6 @@ class API_SWRender SetupSWRender
 public:
 	/// \brief Initializes clanSWRender.
 	SetupSWRender();
-	SetupSWRender(const std::vector<std::string> &args);
-
 	~SetupSWRender();
 /// \}
 /// \name Operations
