@@ -45,8 +45,6 @@ class CL_API_SOUND SetupSound
 public:
 	/// \brief Initializes clanSound.
 	SetupSound();
-	SetupSound(const std::vector<std::string> &args);
-
 	~SetupSound();
 
 /// \}

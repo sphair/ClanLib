@@ -45,7 +45,7 @@ namespace clan
 class SetupDisplay_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 
 	static ProviderType_Register<JPEGProvider> *jpeg_provider;
@@ -66,21 +66,16 @@ ProviderType_Register<TargaProvider> *SetupDisplay_Impl::tga_provider = NULL;
 
 SetupDisplay::SetupDisplay()
 {
-	const std::vector<std::string> args;
-	SetupDisplay_Impl::init(args);
+	SetupDisplay_Impl::init();
 }
 
-SetupDisplay::SetupDisplay(const std::vector<std::string> &args)
-{
-	SetupDisplay_Impl::init(args);
-}
 
 SetupDisplay::~SetupDisplay()
 {
 	SetupDisplay_Impl::deinit();
 }
 
-void SetupDisplay_Impl::init(const std::vector<std::string> &args)
+void SetupDisplay_Impl::init()
 {
 #ifndef WIN32
 #ifndef __APPLE__

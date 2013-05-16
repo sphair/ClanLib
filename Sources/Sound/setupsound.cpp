@@ -48,7 +48,7 @@ namespace clan
 class SetupSound_Impl
 {
 public:
-	static void init(const std::vector<std::string> &args);
+	static void init();
 	static void deinit();
 
 	static int ref_count;
@@ -65,13 +65,7 @@ SoundProviderType *SetupSound_Impl::providertype_ogg = 0;
 
 SetupSound::SetupSound()
 {
-	const std::vector<std::string> args;
-	SetupSound_Impl::init(args);
-}
-
-SetupSound::SetupSound(const std::vector<std::string> &args)
-{
-	SetupSound_Impl::init(args);
+	SetupSound_Impl::init();
 }
 
 SetupSound::~SetupSound()
@@ -79,7 +73,7 @@ SetupSound::~SetupSound()
 	SetupSound_Impl::deinit();
 }
 
-void SetupSound_Impl::init(const std::vector<std::string> &args)
+void SetupSound_Impl::init()
 {
 	ref_count++;
 	if (ref_count > 1)

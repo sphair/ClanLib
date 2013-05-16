@@ -46,13 +46,7 @@ SWRenderTarget *SetupSWRender_Impl::cl_swrender_target = 0;
 
 SetupSWRender::SetupSWRender()
 {
-	const std::vector<std::string> args;
-	SetupSWRender_Impl::init(args);
-}
-
-SetupSWRender::SetupSWRender(const std::vector<std::string> &args)
-{
-	SetupSWRender_Impl::init(args);
+	SetupSWRender_Impl::init();
 }
 
 SetupSWRender::~SetupSWRender()
@@ -60,7 +54,7 @@ SetupSWRender::~SetupSWRender()
 	SetupSWRender_Impl::deinit();
 }
 
-void SetupSWRender_Impl::init(const std::vector<std::string> &args)
+void SetupSWRender_Impl::init()
 {
 	if (!System::detect_cpu_extension(System::sse2))
 	{
