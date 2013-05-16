@@ -51,6 +51,7 @@ namespace clan
 ///
 /// Application clanapp(&MyApplication::main);
 /// \endcode
+/// If you do not want exceptions to be automatically caught, pass "false" to the optional catch_exceptions parameter in Application\n
 /// Your program does not have to use this class.\n
 class CL_API_APP Application
 {
@@ -61,9 +62,10 @@ public:
 	typedef int (MainFunction)(const std::vector<std::string> &args);
 
 	/// \brief Clan Application constructor
-	Application(MainFunction *main_function)
+	Application(MainFunction *main_function, bool catch_exceptions = true)
 	{
 		main = main_function;
+		enable_catch_exceptions = catch_exceptions;
 	}
 
 /// \}
@@ -71,6 +73,7 @@ public:
 /// \{
 public:
 	static MainFunction *main;
+	static bool enable_catch_exceptions;
 /// \}
 };
 

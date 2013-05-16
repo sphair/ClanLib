@@ -31,6 +31,9 @@
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/App/clanapp.h"
+#include "API/Core/System/exception.h"
+#include "API/Core/System/console_window.h"
+#include "API/Core/Text/console.h"
 
 #if defined(USE_IOS)
 
@@ -85,7 +88,30 @@ int main(int argc, char **argv)
 
 void cl_runloop_callout()
 {
-	Application::main(cl_main_args);
+	// Call clanapp main:
+	if (clan::Application::enable_catch_exceptions)
+	{
+		try
+		{
+			clan::Application::main(cl_main_args);
+		}
+		catch(clan::Exception &exception)
+		{
+			// Create a console window for text-output if not available
+			std::string console_name("Console");
+			if (!cl_main_args.empty())
+				console_name = cl_main_args[0];
+
+			clan::ConsoleWindow console(console_name, 80, 160);
+			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			console.display_close_message();
+		}
+
+	}
+	else
+	{
+		clan::Application::main(cl_main_args);
+	}
 }
 
 void *cl_app_on_thread_id()
@@ -104,5 +130,6 @@ void cl_app_on_awake_thread(void *thread_id)
 // Application:
 
 Application::MainFunction *Application::main = 0;
+bool clan::Application::enable_catch_exceptions = true;
 
 #endif
