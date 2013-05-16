@@ -80,15 +80,12 @@ int App::start(const std::vector<std::string> &args)
 	blend_desc.enable_color_write(false, false, false, false);
 	clan::BlendState blend_state_no_color_write(canvas, blend_desc);
 
-
-	clan::ubyte64 time_last = clan::System::get_time();
+	clan::GameTime game_time;
 
 	while (!quit)
 	{
-		clan::ubyte64 time_now = clan::System::get_time();
-		float time_diff = (float) (time_now - time_last);
-		time_last = time_now;
-
+		game_time.update();
+	
 		wm.process();
 		wm.draw_windows(canvas);
 
@@ -97,7 +94,7 @@ int App::start(const std::vector<std::string> &args)
 			num_balls = max_balls;
 
 		if (options->is_moveballs_set)
-			move_balls(time_diff, num_balls);
+			move_balls(game_time.get_time_elapsed(), num_balls);
 
 		canvas.clear_stencil(0);
 
@@ -205,8 +202,8 @@ void App::move_balls(float time_diff, int num_balls)
 {
 	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-		float xdisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
-		float ydisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
+		float xdisp = (balls[cnt].xspeed * time_diff) * 0.5f;
+		float ydisp = (balls[cnt].xspeed * time_diff) * 0.5f;
 
 		if (balls[cnt].xdir)
 		{

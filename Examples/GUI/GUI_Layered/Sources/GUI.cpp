@@ -53,15 +53,8 @@ GUI::~GUI()
 {
 }
 
-bool GUI::run()
+bool GUI::run(clan::GameTime &game_time)
 {
-	static int total_time = 0, fps_count = 0, last_fps= 0;
-	static clan::ubyte64 start_time = 0;
-
-	if (start_time == 0)
-	{
-		start_time = clan::System::get_time();
-	}
 
 	clan::Canvas canvas = app->get_window()->get_canvas();
 
@@ -73,22 +66,11 @@ bool GUI::run()
 
 	run_manager();
 
-	std::string fps = clan::string_format("FPS: %1", last_fps);
+	std::string fps = clan::string_format("FPS: %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 	fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 	fps_font.draw_text(canvas, canvas.get_width() - 100, 24, fps, clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
 
 	fps_font.draw_text(canvas, 24, canvas.get_height() - 48, "Rendering GUI onto a clan::Texture, then onto the layered OpenGL window.",  clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
-
-	fps_count++;
-	clan::ubyte64 time = clan::System::get_time();
-	total_time += time - start_time;
-	start_time = time;
-	if(total_time >= 1000)
-	{
-		last_fps = fps_count;
-		total_time -= 1000;
-		fps_count = 0;
-	}
 
 	clan::KeepAlive::process();
 	app->get_window()->flip(0);
@@ -133,13 +115,8 @@ const char *GUI::get_theme_location()
 	if (current_theme == Theme::theme_basic)
 		return "../../../Resources/GUIThemeBasic/theme.css";
 
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/theme.css";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/theme.css";
-
-	return "../../../Resources/GUIThemeLuna/theme.css";
+//	if (current_theme == Theme::theme_basic_packed)
+	return "../../../Resources/GUIThemeBasicPacked/theme.css";
 }
 
 const char *GUI::get_resources_location()
@@ -153,13 +130,8 @@ const char *GUI::get_resources_location()
 	if (current_theme == Theme::theme_basic)
 		return "../../../Resources/GUIThemeBasic/resources.xml";
 
-	if (current_theme == Theme::theme_basic_packed)
-		return "../../../Resources/GUIThemeBasicPacked/resources.xml";
-
-	if (current_theme == Theme::theme_luna_packed)
-		return "../../../Resources/GUIThemeLunaPacked/resources.xml";
-
-	return "../../../Resources/GUIThemeLuna/resources.xml";
+//	if (current_theme == Theme::theme_basic_packed)
+	return "../../../Resources/GUIThemeBasicPacked/resources.xml";
 }
 
 clan::DisplayWindow *GUI::get_window()

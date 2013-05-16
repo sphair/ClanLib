@@ -50,17 +50,19 @@ int FullScreen::start(const std::vector<std::string> &args)
 
 	float sin_count = 0.0f;
 
-	clan::ubyte64 last_time = System::get_time();
-
 	FontDescription desc;
 	desc.set_typeface_name("tahoma");
 	desc.set_height(24);
 	desc.set_subpixel(true);
 	Font font(canvas, desc);
 
+	GameTime game_time;
+
 	// Run until someone presses escape
 	while (!quit)
 	{
+		game_time.update();
+
 		// Check for fullscreen switch
 		if (fullscreen_requested != is_fullscreen)
 		{
@@ -71,12 +73,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 		if (window.get_gc() != canvas.get_gc()) 
 		{
 			canvas = Canvas(window); // Always get the graphic context, the window may have been recreated
-
 		}
-
-		clan::ubyte64 current_time = System::get_time();
-		float time_delta_ms = static_cast<float> (current_time - last_time);
-		last_time = current_time;
 
 		canvas.clear(Colorf(0.0f,0.0f,0.2f));
 
@@ -103,7 +100,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 		// Show a few alpha-blending moving rectangles that moves in circles
 		float x = cos(sin_count)*120.0f;
 		float y = sin(sin_count)*120.0f;
-		sin_count += 0.002f * time_delta_ms;
+		sin_count += 2.0f * game_time.get_time_elapsed();
 		canvas.fill_rect(Rectf( 320.0f + x -30.0f, 300.0f + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(0.0f, 1.0f, 0.0, 0.5f));
 		x = cos(sin_count+3.14159f)*120.0f;
 		y = sin(sin_count+3.14159f)*120.0f;

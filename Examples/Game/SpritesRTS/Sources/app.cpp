@@ -33,14 +33,12 @@
 int App::main(const std::vector<std::string> &args)
 {
 	// Create a window
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib RTS Demo");
-	desc.set_size(Size(1024, 768), true);	// Use this resolution (as caption is disabled)
-	DisplayWindow window(desc);
+	desc.set_size(clan::Size(1024, 768), true);
+	clan::DisplayWindow window(desc);
 
-	GraphicContext gc = window.get_gc();
-
-	SoundOutput output(44100);
+	clan::SoundOutput output(44100);
 
 	// Create world
 	World world(window);

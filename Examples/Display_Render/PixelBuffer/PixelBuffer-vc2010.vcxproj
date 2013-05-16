@@ -149,7 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\app.h" />
-    <ClInclude Include="Sources\framerate_counter.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>

@@ -76,14 +76,11 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font(canvas, "Tahoma", 16);
 
-	clan::ubyte64 time_last = clan::System::get_time();
-
+	clan::GameTime game_time;
 	while (!quit)
 	{
-		clan::ubyte64 time_now = clan::System::get_time();
-		float time_diff = (float) (time_now - time_last);
-		time_last = time_now;
-
+		game_time.update();
+	
 		wm.process();
 		wm.draw_windows(canvas);
 
@@ -99,18 +96,17 @@ int App::start(const std::vector<std::string> &args)
 			num_balls = max_balls;
 
 		if (options->is_moveballs_set)
-			move_balls(time_diff, num_balls);
+			move_balls(game_time.get_time_elapsed(), num_balls);
 
 		clan::BlendStateDescription blend_desc;
 		blend_desc.set_blend_function(options->blendfunc[0],options->blendfunc[1],options->blendfunc[2],options->blendfunc[3]);
 		blend_desc.set_blend_equation(options->blendequation[0], options->blendequation[1]);
 		blend_desc.enable_blending(options->is_blending_set);
+		blend_desc.set_logic_op(options->logic_operation);
+		blend_desc.enable_logic_op(options->logic_operation_enabled);
 
 		clan::RasterizerState raster_desc;
-		
-		canvas.set_logic_op(options->logic_operation);
-		canvas.enable_logic_op(options->logic_operation_enabled);
-
+	
 		clan::BlendState blend_state(canvas, blend_desc);
 		canvas.set_blend_state(blend_state, options->blend_color);
 
@@ -127,8 +123,7 @@ int App::start(const std::vector<std::string> &args)
 		}
 
 		canvas.reset_blend_state();
-		canvas.enable_logic_op(false);
-
+	
 		draw_equation(canvas, font, options);
 
 		canvas.flip(1);
@@ -172,8 +167,8 @@ void App::move_balls(float time_diff, int num_balls)
 {
 	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-		float xdisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
-		float ydisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
+		float xdisp = (balls[cnt].xspeed * time_diff) * 5.0f;
+		float ydisp = (balls[cnt].xspeed * time_diff) * 5.0f;
 
 		if (balls[cnt].xdir)
 		{

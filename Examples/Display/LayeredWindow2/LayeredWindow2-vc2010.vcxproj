@@ -138,9 +138,6 @@
     <ClCompile Include="example.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framerate_counter.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="README.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

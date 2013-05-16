@@ -33,14 +33,14 @@
 Missile::Missile(World *world, GameObject *_owner)
 : GameObject(world)
 {
-	GraphicContext gc = world->get_gc();
+	clan::Canvas canvas = world->get_canvas();
 
-	spriteMissile = new Sprite(gc, "SpaceShootMissile", &world->resources);
-	spriteExplosion = new Sprite(gc, "Explosion", &world->resources);
-	sound = new SoundBuffer("MissileHit", &world->resources);
+	spriteMissile = new clan::Sprite(canvas, "SpaceShootMissile", &world->resources);
+	spriteExplosion = new clan::Sprite(canvas, "Explosion", &world->resources);
+	sound = new clan::SoundBuffer("MissileHit", &world->resources);
 
-	collisionMissile = new CollisionOutline("Gfx/spaceshoot_missile.png");
-	collisionMissile->set_alignment(origin_center);
+	collisionMissile = new clan::CollisionOutline("Gfx/spaceshoot_missile.png");
+	collisionMissile->set_alignment(clan::origin_center);
 	
 	sound->set_volume(1.0f);
 	sound->prepare();
@@ -71,8 +71,8 @@ void Missile::setPos(int x, int y)
 void Missile::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(Angle(angle, angle_degrees));
-	collisionMissile->set_angle(Angle(angle, angle_degrees));
+	sprite->set_angle(clan::Angle(angle, clan::angle_degrees));
+	collisionMissile->set_angle(clan::Angle(angle, clan::angle_degrees));
 }
 
 void Missile::setSpeed(float newSpeed)
@@ -82,8 +82,8 @@ void Missile::setSpeed(float newSpeed)
 
 void Missile::move(float length)
 {
-	posX += length * float(sin(angle * PI / 180.0f));
-	posY += length * float(-cos(angle * PI / 180.0f));
+	posX += length * float(sin(angle * clan::PI / 180.0f));
+	posY += length * float(-cos(angle * clan::PI / 180.0f));
 
 	collisionMissile->set_translation(posX, posY);
 }
@@ -92,7 +92,7 @@ void Missile::draw()
 {
 	if(!hidden)
 	{
-		Canvas canvas = world->get_canvas();
+		clan::Canvas canvas = world->get_canvas();
 		sprite->draw(canvas, posX, posY);
 	}
 }
@@ -117,13 +117,13 @@ bool Missile::update(int timeElapsed_ms)
 			sound->play();
 
 			sprite = spriteExplosion;
-			sprite->set_angle(Angle(0, angle_degrees));
+			sprite->set_angle(clan::Angle(0, clan::angle_degrees));
 			sprite->set_alpha(0.85f);
 
 			exploding = true;
 		}
 	}
 
-	GraphicContext gc = world->get_gc();
-	return !(posX < -100 || posY < -100 || posX > gc.get_width() + 100 || posY > gc.get_height() + 100);
+	clan::Canvas canvas = world->get_canvas();
+	return !(posX < -100 || posY < -100 || posX > canvas.get_width() + 100 || posY > canvas.get_height() + 100);
 }

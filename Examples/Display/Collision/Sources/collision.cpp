@@ -30,7 +30,6 @@
 #include "precomp.h"
 #include "collision.h"
 #include "teapot.h"
-#include "framerate_counter.h"
 
 // The start of the Application
 int Collision::start(const std::vector<std::string> &args)
@@ -38,26 +37,26 @@ int Collision::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set the window
-	DisplayWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib Collision Example");
-	desc.set_size(Size(1000, 700), true);
+	desc.set_size(clan::Size(1000, 700), true);
 	desc.set_allow_resize(true);
 
-	Canvas canvas(desc);
+	clan::Canvas canvas(desc);
 
 	// Connect the Window close event
-	Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &Collision::on_window_close);
+	clan::Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &Collision::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
+	clan::Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
 
 	// Get the graphic context
 
-	ResourceManager resources = ResourceManager("Resources/resources.xml");
+	clan::ResourceManager resources = clan::ResourceManager("Resources/resources.xml");
 	
-	Font font(canvas, "tahoma", 24);
+	clan::Font font(canvas, "tahoma", 24);
 
-	canvas.clear(Colorf(0.0f,0.0f,0.2f));
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 	font.draw_text(canvas, 32, 32, "Calculating Collision Outlines");
 	font.draw_text(canvas, 32, 64, "Note, collision outlines can be saved to disk for faster loading times");
 	canvas.flip();
@@ -80,7 +79,7 @@ int Collision::start(const std::vector<std::string> &args)
 
 		int x_delta = (rand() & 0xffff);
 		int y_delta = (rand() & 0xffff);
-		Vec2f normal((x_delta - 0x7fff) * 0.00001f, (y_delta - 0x7fff) * 0.000001f);
+		clan::Vec2f normal((x_delta - 0x7fff) * 0.00001f, (y_delta - 0x7fff) * 0.000001f);
 		normal.normalize();
 
 		teapot_list[cnt].set_movement_delta(normal, 0.1f);
@@ -91,7 +90,7 @@ int Collision::start(const std::vector<std::string> &args)
 		int frame = (rand() & 0xffff);
 		teapot_list[cnt].set_frame(frame % 60);	// Assuming teapots has 60 frames
 
-		teapot_list[cnt].set_color( Colorf(
+		teapot_list[cnt].set_color( clan::Colorf(
 			(rand() & 0xFF) / 256.0f,
 			(rand() & 0xFF) / 256.0f,
 			(rand() & 0xFF) / 256.0f,
@@ -99,47 +98,42 @@ int Collision::start(const std::vector<std::string> &args)
 
 	}
 
-	FramerateCounter frameratecounter;
-
-	clan::ubyte64 last_time = System::get_time();
+	clan::GameTime game_time;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		clan::ubyte64 current_time = System::get_time();
-		int time_elapsed = current_time - last_time;
-		last_time = current_time;
+		game_time.update();
 
-		canvas.clear(Colorf(0.0f,0.0f,0.2f));
+		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		font.draw_text(canvas, 16, 32, "Sprite Image");
 		font.draw_text(canvas, 16, canvas.get_height()/2 + 32, "Collision Outline");
 
-		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
-		font.draw_text(canvas, canvas.get_width() - 100, 32, fps);
+		std::string fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+		font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 
 		for (int cnt=0; cnt<num_teapots; cnt++)
 		{
-			teapot_list[cnt].update(canvas, time_elapsed, teapot_list);
+			teapot_list[cnt].update(canvas, game_time.get_time_elapsed_ms(), teapot_list);
 			teapot_list[cnt].draw_collision_outline(canvas);
 			teapot_list[cnt].draw_teapot(canvas);
 		}
 
-		canvas.draw_line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, Colorf::white);
+		canvas.draw_line( 0, canvas.get_height()/2, canvas.get_width(), canvas.get_height()/2, clan::Colorf::white);
 		
 		canvas.flip(1);
-		frameratecounter.frame_shown();
-
-		KeepAlive::process(0);
+	
+		clan::KeepAlive::process(0);
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void Collision::on_input_up(const InputEvent &key)
+void Collision::on_input_up(const clan::InputEvent &key)
 {
-	if(key.id == keycode_escape)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}

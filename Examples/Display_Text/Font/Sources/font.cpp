@@ -179,9 +179,11 @@ int App::start(const std::vector<std::string> &args)
 
 	small_font = Font(canvas, "Tahoma", 16);
 
+	GameTime game_time;
 	while(!quit)
 	{
-		render(window);
+		game_time.update();
+		render(window, game_time);
 	}
 
 	small_font = Font();
@@ -205,10 +207,8 @@ void App::on_window_close()
 	quit = true;
 }
 
-void App::render(DisplayWindow &window)
+void App::render(DisplayWindow &window, GameTime &game_time)
 {
-	ubyte64 start_time = System::get_time();
-
 	canvas.set_map_mode(MapMode(map_2d_upper_left));
 
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
@@ -227,13 +227,12 @@ void App::render(DisplayWindow &window)
 	draw_font_example();
 	draw_font_info();
 
-	last_fps = 1000.0f / (System::get_time()-start_time);
+	last_fps = game_time.get_updates_per_second();
 
 	wm_ptr->process();
 	wm_ptr->draw_windows(canvas);
 
-	canvas.flush();
-	window.flip(1);
+	canvas.flip(1);
 
 	KeepAlive::process();
 }

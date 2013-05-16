@@ -60,7 +60,7 @@ Age2D::Age2D(clan::Canvas &canvas, GameWorld *game)
 */
 }
 
-void Age2D::render(clan::Canvas &canvas)
+void Age2D::render(clan::Canvas &canvas, int elapsed_time_ms)
 {
 	canvas.clear();
 
@@ -84,9 +84,9 @@ void Age2D::render(clan::Canvas &canvas)
 	}
 
 	for (int i = 0; i < 4; i++)
-		pacman[i].update();
+		pacman[i].update(elapsed_time_ms);
 	for (int i = 0; i < 2; i++)
-		ghost[i].update();
+		ghost[i].update(elapsed_time_ms);
 
 	int center_x = tiles.get_width() / 2 + 3;
 	int center_y = tiles.get_height() / 2 + 2;

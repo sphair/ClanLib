@@ -35,82 +35,77 @@ int Example::start(const std::vector<std::string> &args)
 	quit = false;
 
 	// Set the window 1 description
-	DisplayWindowDescription desc_window_1;
+	clan::DisplayWindowDescription desc_window_1;
 	desc_window_1.set_title("MultiWindow Example - Window 1");
 	desc_window_1.set_allow_resize(true);
-	desc_window_1.set_position(Rect(50, 50, Size(350, 350)), false);
+	desc_window_1.set_position(clan::Rect(50, 50, clan::Size(350, 350)), false);
 
 	// Set the window 2 description
-	DisplayWindowDescription desc_window_2;
+	clan::DisplayWindowDescription desc_window_2;
 	desc_window_2.set_title("MultiWindow Example - Window 2");
 	desc_window_2.set_allow_resize(true);
-	desc_window_2.set_position(Rect(50 + 350, 50, Size(350, 350)), false);
+	desc_window_2.set_position(clan::Rect(50 + 350, 50, clan::Size(350, 350)), false);
 
 	// Open the windows
-	DisplayWindow window_1(desc_window_1);
-	DisplayWindow window_2(desc_window_2);
+	clan::DisplayWindow window_1(desc_window_1);
+	clan::DisplayWindow window_2(desc_window_2);
 
 	// Connect the Window close event - to both windows
-	Slot slot_quit_window_1 = window_1.sig_window_close().connect(this, &Example::on_window_close, &window_1);
-	Slot slot_quit_window_2 = window_2.sig_window_close().connect(this, &Example::on_window_close, &window_2);
+	clan::Slot slot_quit_window_1 = window_1.sig_window_close().connect(this, &Example::on_window_close, &window_1);
+	clan::Slot slot_quit_window_2 = window_2.sig_window_close().connect(this, &Example::on_window_close, &window_2);
 
 	// Connect a keyboard handler to on_key_up() - to both windows
-	Slot slot_input_up_window_1 = (window_1.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 1);
-	Slot slot_input_up_window_2 = (window_2.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 2);
+	clan::Slot slot_input_up_window_1 = (window_1.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 1);
+	clan::Slot slot_input_up_window_2 = (window_2.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 2);
 
 	// Get the graphic context - for both windows
-	Canvas canvas_1(window_1.get_gc());
-	Canvas canvas_2(window_2.get_gc());
+	clan::Canvas canvas_1(window_1.get_gc());
+	clan::Canvas canvas_2(window_2.get_gc());
 
 	// Load the example text - Note, any window can create the font
-	Font font(canvas_1, "tahoma", 64);
+	clan::Font font(canvas_1, "tahoma", 64);
 	std::string example_text("This is an example ClanLib application that uses 2 windows. Try resizing and moving the windows. Press a key to flash selected window. ");
-	Size text_size = font.get_text_size(canvas_1, example_text);	
-	FontMetrics font_metrics = font.get_font_metrics();
+	clan::Size text_size = font.get_text_size(canvas_1, example_text);	
+	clan::FontMetrics font_metrics = font.get_font_metrics();
 	int font_yoffset = (int)( font_metrics.get_ascent() - font_metrics.get_internal_leading() ) / 2;
 	int font_xoffset = 0;
 	int font_counter = 0;
-
-	// Start program timer
-	ubyte64 time_start = System::get_time();
-	int last_elapsed = 0;
 
 	// Set the window colors
 	window_1_color = 0.2f;
 	window_2_color = 0.2f;
 
+	clan::GameTime game_time;
+
 	// Run until someone presses escape
 	while (!quit)
 	{
-		// Get program timer
-		int elapsed = System::get_time() - time_start;
-		int time_delta = elapsed - last_elapsed;
-		last_elapsed = elapsed;
+		game_time.update();
 
 		// Control the window colors
-		window_1_color -= ((float) time_delta) / 1000.0f;
+		window_1_color -= game_time.get_time_elapsed();
 		if (window_1_color < 0.2f)
 			window_1_color = 0.2f;
 
-		window_2_color -= ((float) time_delta) / 1000.0f;
+		window_2_color -= game_time.get_time_elapsed();
 		if (window_2_color < 0.2f)
 			window_2_color = 0.2f;
 
 		// Clear both displays
-		canvas_1.clear(Colorf(0.0f,0.0f,window_1_color, 1.0f));
-		canvas_2.clear(Colorf(0.0f,0.0f,window_2_color, 1.0f));
+		canvas_1.clear(clan::Colorf(0.0f,0.0f,window_1_color, 1.0f));
+		canvas_2.clear(clan::Colorf(0.0f,0.0f,window_2_color, 1.0f));
 
 		// Get the window geometry
-		Rect window_geometry_1 = window_1.get_geometry();
-		Rect window_geometry_2 = window_2.get_geometry();
+		clan::Rect window_geometry_1 = window_1.get_geometry();
+		clan::Rect window_geometry_2 = window_2.get_geometry();
 
 		// Get the connecting point (right edge of window 1 and left edge of window 2)
-		Point window_1_connect(window_geometry_1.get_center());
-		Point window_2_connect(window_geometry_2.get_center());
+		clan::Point window_1_connect(window_geometry_1.get_center());
+		clan::Point window_2_connect(window_geometry_2.get_center());
 
 		// Scroll the text
 		const int font_speed = 5;
-		font_counter += time_delta;
+		font_counter += game_time.get_time_elapsed_ms();
 		font_counter %= text_size.width * font_speed;		// Wrap around counter
 		font_xoffset = font_counter / font_speed;
 
@@ -121,19 +116,19 @@ int Example::start(const std::vector<std::string> &args)
 		// To keep the example simple, the scroll text is drawn 3 times
 		canvas_1.push_modelview();
 		canvas_1.mult_translate( (float) canvas_1.get_width() / 2.0f, (float) canvas_1.get_height() / 2.0f );
-		canvas_1.mult_rotate( Angle(angle, angle_radians), 0.0f, 0.0f, 1.0f, false );
-		font.draw_text(canvas_1, -font_xoffset, font_yoffset, example_text, Colorf::white);
-		font.draw_text(canvas_1, text_size.width - font_xoffset, font_yoffset, example_text, Colorf::white);
-		font.draw_text(canvas_1, -text_size.width - font_xoffset, font_yoffset, example_text, Colorf::white);
+		canvas_1.mult_rotate( clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false );
+		font.draw_text(canvas_1, -font_xoffset, font_yoffset, example_text, clan::Colorf::white);
+		font.draw_text(canvas_1, text_size.width - font_xoffset, font_yoffset, example_text,clan:: Colorf::white);
+		font.draw_text(canvas_1, -text_size.width - font_xoffset, font_yoffset, example_text, clan::Colorf::white);
 		canvas_1.pop_modelview();
 
 		// Draw the text for window 2
 		canvas_2.push_modelview();
 		canvas_2.mult_translate( (float) canvas_1.get_width() / 2.0f, (float) canvas_1.get_height() / 2.0f );
-		canvas_2.mult_rotate( Angle(angle, angle_radians), 0.0f, 0.0f, 1.0f, false );
-		font.draw_text(canvas_2, -font_xoffset-canvas_1.get_width(), font_yoffset, example_text, Colorf::white);
-		font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, Colorf::white);
-		font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, Colorf::white);
+		canvas_2.mult_rotate( clan::Angle(angle, clan::angle_radians), 0.0f, 0.0f, 1.0f, false );
+		font.draw_text(canvas_2, -font_xoffset-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
+		font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
+		font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 		canvas_2.pop_modelview();
 
 		canvas_1.flush();
@@ -144,16 +139,16 @@ int Example::start(const std::vector<std::string> &args)
 		window_2.flip(1);	// Sync to vertical blanking on the second (last) window
 
 		// This call processes user input and other events
-		KeepAlive::process(0);
+		clan::KeepAlive::process(0);
 	}
 
 	return 0;
 }
 
 // A key was pressed
-void Example::on_input_up(const InputEvent &key, int window_number)
+void Example::on_input_up(const clan::InputEvent &key, int window_number)
 {
-	if(key.id == keycode_escape)
+	if(key.id == clan::keycode_escape)
 	{
 		quit = true;
 	}
@@ -169,7 +164,7 @@ void Example::on_input_up(const InputEvent &key, int window_number)
 }
 
 // The window was closed
-void Example::on_window_close(DisplayWindow *window)
+void Example::on_window_close(clan::DisplayWindow *window)
 {
 	quit = true;
 }

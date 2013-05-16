@@ -33,14 +33,14 @@
 Building::Building(BuildingType buiding_type, World *world)
 : GameObject(world)
 {
-	GraphicContext gc = world->get_gc();
+	clan::Canvas canvas = world->get_canvas();
 
 	switch(buiding_type)
 	{
 	case HELI_PAD:
-		sprite = new Sprite(gc, "helipad", &world->resources);
-		collisionBuilding = new CollisionOutline("Gfx/helipad.png");
-		collisionBuilding->set_alignment(origin_center);
+		sprite = new clan::Sprite(canvas, "helipad", &world->resources);
+		collisionBuilding = new clan::CollisionOutline("Gfx/helipad.png");
+		collisionBuilding->set_alignment(clan::origin_center);
 		break;
 	}
 	
@@ -63,14 +63,14 @@ void Building::setPos(int x, int y)
 void Building::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(Angle(angle, angle_degrees));
-	collisionBuilding->set_angle(Angle(angle, angle_degrees));
+	sprite->set_angle(clan::Angle(angle, clan::angle_degrees));
+	collisionBuilding->set_angle(clan::Angle(angle, clan::angle_degrees));
 }
 
 void Building::draw()
 {
 	
-	Canvas canvas = world->get_canvas();
+	clan::Canvas canvas = world->get_canvas();
 	sprite->draw(canvas, posX, posY);
 
 }
@@ -81,7 +81,7 @@ bool Building::update(int timeElapsed_ms)
 	return true;
 }
 
-bool Building::hitCheck(CollisionOutline *outline, GameObject *other)
+bool Building::hitCheck(clan::CollisionOutline *outline, GameObject *other)
 {
 	return collisionBuilding->collide(*outline);
 }

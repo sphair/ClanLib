@@ -34,9 +34,9 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_button_clicked(PushButton *button);
-	bool on_close(Window *win);
+	void on_button_clicked(clan::PushButton *button);
+	bool on_close(clan::Window *win);
 
 private:
-	Label *label;
+	clan::Label *label;
 };

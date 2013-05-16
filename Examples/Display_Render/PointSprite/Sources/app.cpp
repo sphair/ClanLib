@@ -136,13 +136,11 @@ int App::start(const std::vector<std::string> &args)
 	blend_state_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one, clan::blend_src_alpha, clan::blend_one);
 	clan::BlendState blend_state(canvas, blend_state_desc);
 
-	unsigned int time_last = clan::System::get_time();
+	clan::GameTime game_time;
 
 	while (!quit)
 	{
-		unsigned int time_now = clan::System::get_time();
-		float time_diff = (float) (time_now - time_last);
-		time_last = time_now;
+		game_time.update();
 
 		wm.process();
 		wm.draw_windows(canvas);
@@ -151,7 +149,7 @@ int App::start(const std::vector<std::string> &args)
 		if (num_particles > max_particles)
 			num_particles = max_particles;
 
-		move_particles(time_diff, num_particles);
+		move_particles(game_time.get_time_elapsed(), num_particles);
 
 		const float grid_xpos = 10.0f;
 		const float grid_ypos = 10.0f;
@@ -257,8 +255,8 @@ void App::move_particles(float time_diff, int num_particles)
 {
 	for (int cnt=0; cnt<num_particles; cnt++)
 	{
-		float xdisp = (particles[cnt].xspeed * time_diff) / 5000.0f;
-		float ydisp = (particles[cnt].yspeed * time_diff) / 5000.0f;
+		float xdisp = (particles[cnt].xspeed * time_diff) * 0.5f;
+		float ydisp = (particles[cnt].yspeed * time_diff) * 0.5f;
 
 		if (particles[cnt].xdir)
 		{

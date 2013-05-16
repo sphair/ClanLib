@@ -7,7 +7,7 @@ class Age2D
 {
 public:
 	Age2D(clan::Canvas &canvas, GameWorld *game);
-	void render(clan::Canvas &canvas);
+	void render(clan::Canvas &canvas, int elapsed_time_ms);
 
 private:
 	GameWorld *game;

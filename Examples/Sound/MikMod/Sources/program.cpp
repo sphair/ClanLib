@@ -35,26 +35,16 @@ int Program::main(const std::vector<std::string> &args)
 {
 	clan::ConsoleWindow console("Console", 80, 160);
 
-	try
-	{
-		// Initialize ClanLib base components
-		clan::SetupCore setup_core;
+	// Initialize ClanLib base components
+	clan::SetupCore setup_core;
 
-		// Initialize the sound system
-		clan::SetupSound setup_sound;
+	// Initialize the sound system
+	clan::SetupSound setup_sound;
 
-		// Start the Application
-		MikMod app;
-		int retval = app.start(args);
-		return retval;
-	}
-	catch(clan::Exception &exception)
-	{
-		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
+	// Start the Application
+	MikMod app;
+	int retval = app.start(args);
+	return retval;
 }
 
 // Instantiate clan::ClanApplication, informing it where the Program is located

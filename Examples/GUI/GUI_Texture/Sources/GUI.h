@@ -41,7 +41,7 @@ public:
 	GUI(App *app);
 	~GUI();
 
-	bool run();
+	bool run(clan::GameTime &game_time);
 
 	clan::Canvas &get_canvas(){return canvas;}
 	App *get_app() { return app; }

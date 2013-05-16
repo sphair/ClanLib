@@ -7,7 +7,7 @@ class Age3D
 {
 public:
 	Age3D(clan::Canvas &canvas, GameWorld *game);
-	void render(clan::Canvas &canvas);
+	void render(clan::Canvas &canvas, int elapsed_time_ms);
 
 private:
 	struct WallVertex

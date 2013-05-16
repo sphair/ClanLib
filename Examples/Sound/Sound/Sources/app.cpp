@@ -41,7 +41,6 @@ int App::start(const std::vector<std::string> &args)
 	sfx_pacman_start = SoundBuffer("../../Game/Pacman/resources/start.wav");
 	sfx_cheer = SoundBuffer("Resources/cheer1.ogg");
 
-
 	std::string theme;
 	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";

@@ -28,7 +28,6 @@
 
 #include "precomp.h"
 #include "app.h"
-#include "framerate_counter.h"
 
 App::App() : quit(false)
 {
@@ -69,7 +68,7 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Font font(canvas, "Tahoma", 24);
 
-	FramerateCounter framerate_counter;
+	clan::GameTime game_time;
 
 	int gpu_buffer_cycle = 0;
 	int texture_cycle = 0;
@@ -77,7 +76,7 @@ int App::start(const std::vector<std::string> &args)
 
 	while (!quit)
 	{
-		framerate_counter.frame_shown();
+		game_time.update();
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 
 		// Modify the pixel buffer
@@ -114,7 +113,7 @@ int App::start(const std::vector<std::string> &args)
 		texture_cycle = texture_cycle_second;
 		gpu_buffer_cycle = gpu_buffer_cycle_second;
 
-		std::string fps(clan::string_format("%1 fps", framerate_counter.get_framerate()));
+		std::string fps(clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
 		font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// Use flip(1) to lock the fps

@@ -42,16 +42,11 @@ void Balls::Init(clan::Canvas &canvas)
 
 	setup_balls();
 
-	time_last = clan::System::get_time();
 }
 
-void Balls::Run(clan::Canvas &canvas)
+void Balls::Run(clan::Canvas &canvas, float time_elapsed)
 {
-	clan::ubyte64 time_now = clan::System::get_time();
-	float time_diff = (float) (time_now - time_last);
-	time_last = time_now;
-
-	move_balls(time_diff, max_balls);
+	move_balls(time_elapsed, max_balls);
 
 	float grid_xpos = ( ((float) canvas.get_width()) - grid_space) / 2.0f;
 	float grid_ypos = ( ((float) canvas.get_height()) - grid_space) / 2.0f;
@@ -79,8 +74,8 @@ void Balls::move_balls(float time_diff, int num_balls)
 {
 	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-		float xdisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
-		float ydisp = (balls[cnt].xspeed * time_diff) / 5000.0f;
+		float xdisp = (balls[cnt].xspeed * time_diff) * 5.0f;
+		float ydisp = (balls[cnt].xspeed * time_diff) * 5.0f;
 
 		if (balls[cnt].xdir)
 		{

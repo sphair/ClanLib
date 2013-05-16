@@ -46,7 +46,7 @@ public:
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void draw_graphics(clan::Canvas &canvas, float time_delta_ms);
+	void draw_graphics(clan::Canvas &canvas, float time_delta);
 	void set_stars(clan::Canvas &canvas, int star_cnt);
 private:
 	bool quit;

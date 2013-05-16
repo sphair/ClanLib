@@ -33,33 +33,21 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	try
-	{
-		// Initialize ClanLib base components
-		clan::SetupCore setup_core;
+	// Initialize ClanLib base components
+	clan::SetupCore setup_core;
 
-		// Initialize the ClanLib display component
-		clan::SetupDisplay setup_display;
+	// Initialize the ClanLib display component
+	clan::SetupDisplay setup_display;
 
-		// We support all display targets, in order listed here
-		clan::SetupD3D setup_d3d;
-		clan::SetupGL setup_gl;
-		clan::SetupSWRender setup_swrender;
+	// We support all display targets, in order listed here
+	clan::SetupD3D setup_d3d;
+	clan::SetupGL setup_gl;
+	clan::SetupSWRender setup_swrender;
 
-		// Start the Application
-		Basic2D app;
-		int retval = app.start(args);
-		return retval;
-	}
-	catch(clan::Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		clan::ConsoleWindow console("Console", 80, 160);
-		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
+	// Start the Application
+	Basic2D app;
+	int retval = app.start(args);
+	return retval;
 }
 
 // Instantiate Application, informing it where the Program is located

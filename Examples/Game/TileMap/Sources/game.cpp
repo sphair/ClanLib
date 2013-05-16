@@ -60,7 +60,7 @@ void Game::run()
 		// ** Enable these 3 lines to display the example magnified **
 		//Mat4f matrix = Mat4f::scale( 2.0f, 2.0f, 1.0f);
 		//x /= 2; y /= 2;
-		//gc.set_modelview(matrix);
+		//canvas.set_modelview(matrix);
 
 		map.set_scroll(x, y);
 
@@ -68,10 +68,9 @@ void Game::run()
 
 		map.draw(canvas);
 
-		canvas.flush();
 
 		// Flip the display, showing on the screen what we have drawed since last call to flip()
-		window.flip(1);
+		canvas.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process(0);

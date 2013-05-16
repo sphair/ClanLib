@@ -36,7 +36,7 @@ public:
 	void set_start_position(const Vec3f &new_start_position);
 	void set_end_position(const Vec3f &new_end_position);
 	void set_duration(int new_duration);
-	void set_start_time(int new_start_time);
+	void set_start_time( clan::ubyte64 new_start_time);
 	void set_end_fade_time(int new_end_fade_time);
 	void set_initial_white_time(int new_initial_white_time);
 	void set_color_component(bool new_red, bool new_green, bool new_blue);
