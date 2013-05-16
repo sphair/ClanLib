@@ -185,7 +185,6 @@
   <ItemGroup>
     <ClInclude Include="sources\application.h" />
     <ClInclude Include="sources\fontblowup.h" />
-    <ClInclude Include="sources\framerate_counter.h" />
     <ClInclude Include="sources\gameobject.h" />
     <ClInclude Include="sources\gameobject_ghost.h" />
     <ClInclude Include="sources\gameobject_moving.h" />

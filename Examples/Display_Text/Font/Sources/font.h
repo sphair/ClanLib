@@ -63,7 +63,7 @@ private:
 	void on_input_up(const InputEvent &key);
 	void on_window_close();
 	void on_lineedit_changed(InputEvent &e);
-	void render(DisplayWindow &window);
+	void render(DisplayWindow &window, GameTime &game_time);
 	void select_font();
 	void draw_font_example();
 	void draw_font_info();

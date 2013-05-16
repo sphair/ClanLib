@@ -40,7 +40,7 @@ public:
 	GUI(App *app);
 	~GUI();
 
-	bool run();
+	bool run(clan::GameTime &game_time);
 
 	clan::DisplayWindow *get_window();
 	App *get_app() { return app; }

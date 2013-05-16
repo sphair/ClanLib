@@ -33,44 +33,21 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	try
-	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
+	SetupCore setup_core;
+	SetupDisplay setup_display;
 
-		SetupSound setup_sound;
+	SetupSound setup_sound;
 	 
-		SoundOutput output(44100);
+	SoundOutput output(44100);
 
-		// You can change the display target in precomp.h
+	// We support all display targets, in order listed here
+	clan::SetupD3D setup_d3d;
+	clan::SetupGL setup_gl;
+	clan::SetupSWRender setup_swrender;
 
-		#ifdef USE_D3D
-		SetupD3D setup_d3d;
-		#endif
-
-		#ifdef USE_SWRENDER
-		SetupSWRender setup_swrender;
-		#endif
-
-		#ifdef USE_OPENGL_2
-		SetupGL setup_gl;
-		#endif
-
-		//ConsoleLogger logger;
-
-		Game game;
-		game.run();
-		return 0;
-	}
-	catch(Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		ConsoleWindow console("Console", 80, 160);
-		Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
+	Game game;
+	game.run();
+	return 0;
 }
 
 // Instantiate ClanApplication, informing it where the Program is located

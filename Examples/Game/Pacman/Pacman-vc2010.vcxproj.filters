@@ -50,9 +50,6 @@
     <ClInclude Include="sources\fontblowup.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sources\framerate_counter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sources\gameobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -31,32 +31,32 @@
 int App::start(const std::vector<std::string> &args)
 {
 	std::string theme;
-	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw Exception("Not themes found");
+		throw clan::Exception("Not themes found");
 
-	GUIManager gui(theme);
+	clan::GUIManager gui(theme);
 
-	DisplayWindowDescription win_desc;
+	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("GUILayout Test Application");
-	win_desc.set_position(Rect(200, 200, 540, 440), false);
+	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
 	win_desc.set_visible(false);
-	Window window(&gui, win_desc);
+	clan::GUIComponent window(&gui, win_desc, "Window");
 	window.func_close().set(this, &App::on_close, &window);
 
-	GUILayoutCorners layout;
+	clan::GUILayoutCorners layout;
 	window.set_layout(layout);
 
 	window.create_components("Resources/layout.xml");
 
-	PushButton *button = PushButton::get_named_item(&window, "MyButton");
+	clan::PushButton *button = clan::PushButton::get_named_item(&window, "MyButton");
 	button->func_clicked().set(this, &App::on_button_clicked, button);
 
-	label = Label::get_named_item(&window, "MyLabel");
+	label = clan::Label::get_named_item(&window, "MyLabel");
 
 	window.set_visible(true);
 
@@ -64,12 +64,12 @@ int App::start(const std::vector<std::string> &args)
 	return 0;
 }
 
-void App::on_button_clicked(PushButton *button)
+void App::on_button_clicked(clan::PushButton *button)
 {
 	label->set_text("You clicked " + button->get_text());
 }
 
-bool App::on_close(Window *win)
+bool App::on_close(clan::Window *win)
 {
 	win->exit_with_code(0);
 	return true;

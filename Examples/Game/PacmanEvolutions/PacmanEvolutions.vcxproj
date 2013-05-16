@@ -85,7 +85,6 @@
     <ClInclude Include="age_3d.h" />
     <ClInclude Include="age_ascii.h" />
     <ClInclude Include="elapsed_timer.h" />
-    <ClInclude Include="framerate_counter.h" />
     <ClInclude Include="text_explosion_2d.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="game_object_ghost.h" />

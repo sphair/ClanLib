@@ -31,23 +31,6 @@
 #include "program.h"
 #include "gui.h"
 
-// Choose the target renderer
-#define USE_OPENGL_2
-//#define USE_OPENGL_1
-//#define USE_SOFTWARE_RENDERER
-
-#ifdef USE_SOFTWARE_RENDERER
-#include <ClanLib/swrender.h>
-#endif
-
-#ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
-
 int Program::main(const std::vector<CL_String> &args)
 {
 	try
@@ -58,17 +41,12 @@ int Program::main(const std::vector<CL_String> &args)
 		// Initialize the ClanLib display component
 		CL_SetupDisplay setup_display;
 
-		#ifdef USE_SOFTWARE_RENDERER
-			CL_SetupSWRender setup_swrender;
-		#endif
+	// We support all display targets, in order listed here
+	clan::SetupD3D setup_d3d;
+	clan::SetupGL setup_gl;
+	clan::SetupSWRender setup_swrender;
 
-		#ifdef USE_OPENGL_1
-			CL_SetupGL1 setup_gl1;
-		#endif
 
-		#ifdef USE_OPENGL_2
-			CL_SetupGL setup_gl;
-		#endif
 
 		CL_SetupGUI setup_gui;
 

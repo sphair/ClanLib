@@ -52,12 +52,12 @@ public:
 
 // Implementation:
 private:
-	Sprite *spriteMissile;
-	Sprite *spriteExplosion;
-	SoundBuffer *sound;
+	clan::Sprite *spriteMissile;
+	clan::Sprite *spriteExplosion;
+	clan::SoundBuffer *sound;
 	
-	Sprite *sprite;
-	CollisionOutline *collisionMissile;
+	clan::Sprite *sprite;
+	clan::CollisionOutline *collisionMissile;
 	
 	GameObject *owner;
 	

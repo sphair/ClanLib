@@ -4,10 +4,8 @@
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
 #include <ClanLib/network.h>
-#ifdef WIN32
 #include <ClanLib/d3d.h>
-#endif
-
+#include <ClanLib/swrender.h>
 #include <ClanLib/gl.h>
 #include <cmath>
 

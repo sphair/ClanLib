@@ -44,7 +44,7 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("BasicGUI Test Application");
 	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
-	clan::GUIComponent window(&gui, win_desc);
+	clan::GUIComponent window(&gui, win_desc, "Window");
 	window.func_close().set(this, &App::on_close, &window);
 
 	clan::Rect client_area = window.get_content_box();

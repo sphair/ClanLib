@@ -96,9 +96,8 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		image_cutter.set_scale(scale, scale);
 		image_cutter.draw(canvas_window, mouse_pos.x - image_cutter.get_width() * 0.5f * scale, mouse_pos.y - image_cutter.get_height() * 0.5f * scale);
 
-		canvas_window.flush();
 		// Flip the display, showing on the screen what we have drawn
-		window.flip(1);
+		canvas_window.flip(1);
 
 		// This call updates input and performs other "housekeeping" call this each frame
 		KeepAlive::process();

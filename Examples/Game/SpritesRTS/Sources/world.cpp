@@ -31,25 +31,24 @@
 #include "tankvehicle.h"
 #include "building.h"
 
-World::World(DisplayWindow &display_window) : window(display_window), quit(false)
+World::World(clan::DisplayWindow &display_window) : window(display_window), quit(false)
 {
-	Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &World::on_window_close);
 
-	canvas = Canvas(window);
-	gc = canvas.get_gc();
+	canvas = clan::Canvas(window);
 
-	BlendStateDescription blend_desc;
-	blendstate_default = BlendState(gc, blend_desc);
-	blend_desc.set_blend_function(blend_zero, blend_one_minus_src_alpha, blend_zero, blend_one_minus_src_alpha);
-	blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha = BlendState(gc, blend_desc);
+	clan::BlendStateDescription blend_desc;
+	blendstate_default = clan::BlendState(canvas, blend_desc);
+	blend_desc.set_blend_function(clan::blend_zero, clan::blend_one_minus_src_alpha, clan::blend_zero, clan::blend_one_minus_src_alpha);
+	blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha = clan::BlendState(canvas, blend_desc);
 
-	blend_desc.set_blend_function(blend_src_alpha, blend_one_minus_src_alpha, blend_src_alpha, blend_one_minus_src_alpha);
-	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = BlendState(gc, blend_desc);
+	blend_desc.set_blend_function(clan::blend_src_alpha, clan::blend_one_minus_src_alpha, clan::blend_src_alpha, clan::blend_one_minus_src_alpha);
+	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = clan::BlendState(canvas, blend_desc);
 
 	// Setup resources
-	resources = ResourceManager("resources.xml");
+	resources = clan::ResourceManager("resources.xml");
 
-	background = Image(gc, "background", &resources);
+	background = clan::Image(canvas, "background", &resources);
 	
 	// Receive mouse clicks
 	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
@@ -104,7 +103,7 @@ void World::addTank(TankVehicle *tank)
 	tanks.push_back(tank);
 }
 
-bool World::hitCheck(CollisionOutline *outline, GameObject *other)
+bool World::hitCheck(clan::CollisionOutline *outline, GameObject *other)
 {
 	std::list<GameObject *>::iterator it;
 	for(it = objects.begin(); it != objects.end(); ++it)
@@ -119,10 +118,10 @@ bool World::hitCheck(CollisionOutline *outline, GameObject *other)
 	return false;
 }
 
-void World::onKeyDown(const InputEvent &key)
+void World::onKeyDown(const clan::InputEvent &key)
 {
 	// Fire missile on space
-	if(key.id == keycode_space)
+	if(key.id == clan::keycode_space)
 	{
 		std::list<TankVehicle *>::iterator it;
 		for(it = tanks.begin(); it != tanks.end(); ++it)
@@ -130,10 +129,10 @@ void World::onKeyDown(const InputEvent &key)
 	}
 }
 
-void World::onMouseDown(const InputEvent &key)
+void World::onMouseDown(const clan::InputEvent &key)
 {
 	// Start dragging on left click
-	if(key.id == mouse_left)
+	if(key.id == clan::mouse_left)
 	{
 		dragArea.left = key.mouse_pos.x;
 		dragArea.top = key.mouse_pos.y;
@@ -142,7 +141,7 @@ void World::onMouseDown(const InputEvent &key)
 	}
 
 	// Right click = move or fire
-	if(key.id == mouse_right)
+	if(key.id == clan::mouse_right)
 	{
 		std::list<TankVehicle *>::iterator it;
 		for(it = tanks.begin(); it != tanks.end(); ++it)
@@ -187,9 +186,9 @@ void World::onMouseDown(const InputEvent &key)
 	}
 }
 
-void World::onMouseUp(const InputEvent &key)
+void World::onMouseUp(const clan::InputEvent &key)
 {
-	if(key.id == mouse_left)
+	if(key.id == clan::mouse_left)
 	{
 		// Set end of drag area
 		dragArea.right = key.mouse_pos.x;
@@ -216,7 +215,7 @@ void World::onMouseUp(const InputEvent &key)
 	mouseDown = false;
 }
 
-void World::onMouseMove(const InputEvent &key)
+void World::onMouseMove(const clan::InputEvent &key)
 {
 	// Expand drag area
 	if(mouseDown)
@@ -240,23 +239,23 @@ void World::onMouseMove(const InputEvent &key)
 
 void World::run()
 {
-	while(!window.get_ic().get_keyboard().get_keycode(keycode_escape))
+	clan::GameTime game_time;
+	while(!window.get_ic().get_keyboard().get_keycode(clan::keycode_escape))
 	{
+		game_time.update();
 		if (quit)
 			break;
 
-		update();
+		update(game_time.get_time_elapsed_ms());
 		draw();
 
-		window.flip(1);
-		KeepAlive::process();
+		canvas.flip(1);
+		clan::KeepAlive::process();
 	};
 }
 
-void World::update()
+void World::update(int timeElapsed_ms)
 {
-	int timeElapsed_ms = calcTimeElapsed();
-	
 	// Update all gameobjects
 	std::list<GameObject *>::iterator it;
 	for(it = objects.begin(); it != objects.end(); )
@@ -272,25 +271,10 @@ void World::update()
 	}
 }
 
-// Calculate amount of time since last frame
-int World::calcTimeElapsed()
-{
-	static ubyte64 lastTime = 0;
-
-	ubyte64 newTime = System::get_time();
-	if(lastTime == 0)
-		lastTime = newTime;
-
-	int deltaTime = (newTime - lastTime);
-	lastTime = newTime;
-
-	return deltaTime;
-}
-
 void World::draw()
 {
 	// Draw background 
-	Rect window_rect = window.get_viewport();
+	clan::Rect window_rect = window.get_viewport();
 	background.draw(canvas, window_rect);
 
 	// Draw all gameobjects
@@ -301,14 +285,14 @@ void World::draw()
 	// Draw drag area
 	if(dragging)
 	{
-		float s = (sinf(System::get_time() / 200.0f) + 3.0f) / 4.0f;
+		float s = (sinf(clan::System::get_time() / 200.0f) + 3.0f) / 4.0f;
 
-		canvas.draw_box(Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
-				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
-		canvas.draw_box(Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
-				   Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
-		canvas.draw_box(Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
-				   Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+		canvas.draw_box(clan::Rectf(dragArea.left - 1, dragArea.top - 1, dragArea.right + 1, dragArea.bottom + 1), 
+				   clan::Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
+		canvas.draw_box(clan::Rectf(dragArea.left, dragArea.top, dragArea.right, dragArea.bottom), 
+				   clan::Colorf(0.0f, 1.0f, 0.0f, (200.0f * s)/256.0f));
+		canvas.draw_box(clan::Rectf(dragArea.left + 1, dragArea.top + 1, dragArea.right - 1, dragArea.bottom - 1), 
+				   clan::Colorf(0.0f, 1.0f, 0.0f, (100.0f * s)/256.0f));
 
 	}
 

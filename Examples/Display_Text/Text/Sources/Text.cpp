@@ -150,11 +150,12 @@ int ExampleText::start(const std::vector<std::string> &args)
 		ypos += layout[line_count].get_size().height;
 
 	}
+	clan::GameTime game_time;
 
 	// Run until someone presses escape
 	while (!quit)
 	{
-		clan::ubyte64 start_time = clan::System::get_time();
+		game_time.update();
 
 		canvas.set_map_mode(clan::map_2d_upper_left);
 
@@ -171,7 +172,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 		// Draw the text
 		draw_text(canvas, texture_text, clan::Angle(angle, clan::angle_degrees));
 
-		last_fps = 1000.0f / (clan::System::get_time()-start_time);
+		last_fps = game_time.get_updates_per_second();
 		// Flip the display, showing on the screen what we have drawn
 		canvas.flip(1);
 

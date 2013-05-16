@@ -34,22 +34,8 @@
 #include <ClanLib/display.h>
 #include <ClanLib/sound.h>
 #include <ClanLib/physics2d.h>
- 
-// Choose the target renderer
-#define USE_OPENGL_2
-//#define USE_SWRENDER
-//#define USE_D3D
-
-#ifdef USE_D3D
 #include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_SWRENDER
 #include <ClanLib/swrender.h>
-#endif
-
-#ifdef USE_OPENGL_2
 #include <ClanLib/gl.h>
-#endif
 
 using namespace clan;

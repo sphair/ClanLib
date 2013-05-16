@@ -66,16 +66,12 @@ int Scroller::start(const std::vector<std::string> &args)
 	font_description.set_height(24);
 	text.init(canvas, font_description, document_element, "TEXT");
 
-	clan::ubyte64 last_time = clan::System::get_time();
-
+	clan::GameTime game_time;
 	// Run until someone presses escape
 	while (!quit)
 	{
-		clan::ubyte64 current_time = clan::System::get_time();
-		int time_delta_ms = current_time - last_time;
-		last_time = current_time;
-
-		text.run(time_delta_ms, 20);
+		game_time.update();
+		text.run(game_time.get_time_elapsed_ms(), 20);
 
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.2f));
 

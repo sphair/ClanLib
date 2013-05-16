@@ -31,32 +31,30 @@
 #include "world.h"
 #include "missile.h"
 
-#ifndef WIN32
 // For rand()
 #include <stdlib.h>
-#endif
 
 TankVehicle::TankVehicle(TankType type, World *world)
 : GameObject(world)
 {
-	GraphicContext gc = world->get_gc();
+	clan::Canvas canvas = world->get_canvas();
 
 	switch(type)
 	{
 	case SPACE_SHOOT:
-		spriteBodyStill = new Sprite(gc, "SpaceShootBodyStill", &world->resources);
-		spriteBodyMoving = new Sprite(gc, "SpaceShootBodyMoving", &world->resources);
-		spriteTurretStill = new Sprite(gc, "SpaceShootTurretStill", &world->resources);
-		spriteTurretShooting = new Sprite(gc, "SpaceShootTurretShooting", &world->resources);
-		spriteTurretReloading = new Sprite(gc, "SpaceShootTurretReloading", &world->resources);
-		spriteTurretGunFlash = new Sprite(gc, "SpaceShootTurretGunFlash", &world->resources);
-		spriteSelected = new Sprite(gc, "SpaceShootSelected", &world->resources);
-		spriteRedGlow = new Sprite(gc, "RedGlow", &world->resources);
+		spriteBodyStill = new clan::Sprite(canvas, "SpaceShootBodyStill", &world->resources);
+		spriteBodyMoving = new clan::Sprite(canvas, "SpaceShootBodyMoving", &world->resources);
+		spriteTurretStill = new clan::Sprite(canvas, "SpaceShootTurretStill", &world->resources);
+		spriteTurretShooting = new clan::Sprite(canvas, "SpaceShootTurretShooting", &world->resources);
+		spriteTurretReloading = new clan::Sprite(canvas, "SpaceShootTurretReloading", &world->resources);
+		spriteTurretGunFlash = new clan::Sprite(canvas, "SpaceShootTurretGunFlash", &world->resources);
+		spriteSelected = new clan::Sprite(canvas, "SpaceShootSelected", &world->resources);
+		spriteRedGlow = new clan::Sprite(canvas, "RedGlow", &world->resources);
 
-		collisionBody = new CollisionOutline("Gfx/spaceshoot_body_still1.png");
-		collisionBody->set_alignment(origin_center);
+		collisionBody = new clan::CollisionOutline("Gfx/spaceshoot_body_still1.png");
+		collisionBody->set_alignment(clan::origin_center);
 
-		soundTurret = new SoundBuffer("SpaceShootTurret", &world->resources);
+		soundTurret = new clan::SoundBuffer("SpaceShootTurret", &world->resources);
 		soundTurret->set_volume(0.3f);
 		soundTurret->prepare();
 		
@@ -102,8 +100,8 @@ void TankVehicle::setPos(int x, int y)
 
 void TankVehicle::setTurretTargetPos(int x, int y)
 {
-	Vec2f vector(posX - x, posY - y);
-	Vec2f up(0.0f, 1.0f);
+	clan::Vec2f vector(posX - x, posY - y);
+	clan::Vec2f up(0.0f, 1.0f);
 
 	// Calculate angle from current sprite position to mouse position
 	float angle = up.angle(vector).to_degrees();
@@ -118,8 +116,8 @@ void TankVehicle::setTargetPos(int x, int y)
 	destPosX = (float)x;
 	destPosY = (float)y;
 
-	Vec2f vector(posX - destPosX, posY - destPosY);
-	Vec2f up(0.0f, 1.0f);
+	clan::Vec2f vector(posX - destPosX, posY - destPosY);
+	clan::Vec2f up(0.0f, 1.0f);
 
 	// Calculate angle from current sprite position to mouse position
 	float angle = up.angle(vector).to_degrees();
@@ -139,7 +137,7 @@ void TankVehicle::setTargetPos(int x, int y)
 void TankVehicle::setAngle(float angle)
 {
 	bodyAngle = angle;
-	collisionBody->set_angle(Angle(angle, angle_degrees));
+	collisionBody->set_angle(clan::Angle(angle, clan::angle_degrees));
 }
 
 void TankVehicle::setTurretAngle(float angle)
@@ -181,12 +179,12 @@ void TankVehicle::setDestTurretAngle(float destAngle)
 	}
 }
 
-bool TankVehicle::hitCheck(CollisionOutline *outline, GameObject *other)
+bool TankVehicle::hitCheck(clan::CollisionOutline *outline, GameObject *other)
 {
 	return collisionBody->collide(*outline);
 }
 
-bool TankVehicle::hitCheck(const Rect &rect)
+bool TankVehicle::hitCheck(const clan::Rect &rect)
 {
 	int width = spriteBody->get_width();
 	int height = spriteBody->get_height();
@@ -315,20 +313,20 @@ bool TankVehicle::update(int timeElapsed_ms)
 		}
 	}
 	
-	spriteBody->set_angle(Angle(bodyAngle, angle_degrees));
-	spriteSelected->set_angle(Angle(bodyAngle, angle_degrees));
-	spriteTurret->set_angle(Angle(turretAngle, angle_degrees));
-	spriteTurretGunFlash->set_angle(Angle(turretAngle, angle_degrees));
+	spriteBody->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
+	spriteSelected->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
+	spriteTurret->set_angle(clan::Angle(turretAngle, clan::angle_degrees));
+	spriteTurretGunFlash->set_angle(clan::Angle(turretAngle, clan::angle_degrees));
 	
-	collisionBody->set_angle(Angle(bodyAngle, angle_degrees));
+	collisionBody->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
 	
 	if( !reverse )
 	{
 		if( world->hitCheck(collisionBody, this) )
 		{
 			setTargetPos(
-				int(posX+cos((PI/180.0f)*(bodyAngle+90+int(rand()%60)-30))*30),
-				int(posY+sin((PI/180.0f)*(bodyAngle+90+int(rand()%60)-30))*30));
+				int(posX+cos((clan::PI/180.0f)*(bodyAngle+90+int(rand()%60)-30))*30),
+				int(posY+sin((clan::PI/180.0f)*(bodyAngle+90+int(rand()%60)-30))*30));
 			
 			reverse = true;
 		}
@@ -339,7 +337,7 @@ bool TankVehicle::update(int timeElapsed_ms)
 
 void TankVehicle::draw()
 {
-	Canvas canvas = world->get_canvas();
+	clan::Canvas canvas = world->get_canvas();
 
 	// Draw selection	
 	if(selected)

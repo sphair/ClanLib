@@ -27,48 +27,39 @@ int Program::main(const std::vector<std::string> &args)
 	bool exit = false;
 	clan::Slot slot = window.sig_window_close().connect_functor([&exit] { exit = true; });
 
-	try
+	GameWorld game_world;
+	AgeAscii age_ascii(canvas, &game_world);
+	Age2D age_2d(canvas, &game_world);
+	Age3D age_3d(canvas, &game_world);
+
+	//game_world.next_age();
+
+	clan::GameTime game_time;
+
+	while (!exit)
 	{
-		GameWorld game_world;
-		AgeAscii age_ascii(canvas, &game_world);
-		Age2D age_2d(canvas, &game_world);
-		Age3D age_3d(canvas, &game_world);
+		game_time.update();
 
-		//game_world.next_age();
-
-		while (!exit)
+		game_world.button_left = ic.get_keyboard().get_keycode(clan::keycode_left);
+		game_world.button_right = ic.get_keyboard().get_keycode(clan::keycode_right);
+		game_world.button_up = ic.get_keyboard().get_keycode(clan::keycode_up);
+		game_world.button_down = ic.get_keyboard().get_keycode(clan::keycode_down);
+		game_world.button_respawn = ic.get_keyboard().get_keycode(clan::keycode_space);
+		game_world.update(game_time);
+		switch (game_world.age)
 		{
-			game_world.button_left = ic.get_keyboard().get_keycode(clan::keycode_left);
-			game_world.button_right = ic.get_keyboard().get_keycode(clan::keycode_right);
-			game_world.button_up = ic.get_keyboard().get_keycode(clan::keycode_up);
-			game_world.button_down = ic.get_keyboard().get_keycode(clan::keycode_down);
-			game_world.button_respawn = ic.get_keyboard().get_keycode(clan::keycode_space);
-			game_world.update();
-			switch (game_world.age)
-			{
-			case GameWorld::age_ascii:
-				age_ascii.render(canvas);
-				break;
-			case GameWorld::age_2d:
-				age_2d.render(canvas);
-				break;
-			case GameWorld::age_3d:
-				age_3d.render(canvas);
-				break;
-			}
-			canvas.flip();
-			clan::KeepAlive::process();
+		case GameWorld::age_ascii:
+			age_ascii.render(canvas);
+			break;
+		case GameWorld::age_2d:
+			age_2d.render(canvas, game_time.get_time_elapsed_ms());
+			break;
+		case GameWorld::age_3d:
+			age_3d.render(canvas, game_time.get_time_elapsed_ms());
+			break;
 		}
-	}
-	catch (clan::Exception &exception)
-	{
-#ifdef WIN32
-		MessageBox(window.get_hwnd(), clan::StringHelp::utf8_to_ucs2(exception.get_message_and_stack_trace()).c_str(), L"Unhandled Exception", MB_OK|MB_ICONERROR);
-#else
-		clan::ConsoleWindow console("Console", 80, 160);
-		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-#endif
+		canvas.flip();
+		clan::KeepAlive::process();
 	}
 
 	return 0;

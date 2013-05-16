@@ -38,21 +38,20 @@ class World
 {
 // Construction
 public:
-	World(DisplayWindow &display_window);
+	World(clan::DisplayWindow &display_window);
 	~World();
 	
 // Attributes:
 public:
-	ResourceManager resources;
+	clan::ResourceManager resources;
 	
-	GraphicContext get_gc() { return gc; }
-	Canvas get_canvas() { return canvas; }
+	clan::Canvas get_canvas() { return canvas; }
 
 // Operations:
 public:
 	void initLevel();
 	
-	bool hitCheck(CollisionOutline *outline, GameObject *other);
+	bool hitCheck(clan::CollisionOutline *outline, GameObject *other);
 	
 	void addObject(GameObject *object);
 	void addTank(TankVehicle *tank);
@@ -62,40 +61,37 @@ public:
 // Implementation:
 private:
 	void draw();
-	void update();
+	void update(int timeElapsed_ms);
 
-	int calcTimeElapsed();
-
-	void onKeyDown(const InputEvent &key);
-	void onMouseDown(const InputEvent &key);
-	void onMouseUp(const InputEvent &key);
-	void onMouseMove(const InputEvent &key);
+	void onKeyDown(const clan::InputEvent &key);
+	void onMouseDown(const clan::InputEvent &key);
+	void onMouseUp(const clan::InputEvent &key);
+	void onMouseMove(const clan::InputEvent &key);
 	void on_window_close();
 
-	Slot slotMouseDown;
-	Slot slotMouseUp;
-	Slot slotMouseDblClick;
-	Slot slotMouseMove;
-	Slot slotKeyDown;
+	clan::Slot slotMouseDown;
+	clan::Slot slotMouseUp;
+	clan::Slot slotMouseDblClick;
+	clan::Slot slotMouseMove;
+	clan::Slot slotKeyDown;
 	
-	Image background;
+	clan::Image background;
 	
 	bool dragging;
 	bool mouseDown;
-	Rect dragArea;
+	clan::Rect dragArea;
 	float highlightValue;
 		
 	std::list<GameObject *> objects;
 	std::list<TankVehicle *> tanks;
 
-	DisplayWindow window;
-	GraphicContext gc;
-	Canvas canvas;
+	clan::DisplayWindow window;
+	clan::Canvas canvas;
 
 	bool quit;
 public:
-	BlendState blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha;
-	BlendState blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha;
-	BlendState blendstate_default;
+	clan::BlendState blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha;
+	clan::BlendState blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha;
+	clan::BlendState blendstate_default;
 
 };

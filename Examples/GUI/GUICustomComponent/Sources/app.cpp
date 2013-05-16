@@ -34,9 +34,6 @@
 
 int App::main(const std::vector<std::string> &args)
 {
-	ConsoleWindow console("Console", 80, 1000);
-	ConsoleLogger logger;
-
 	DisplayWindow display_window("Custom GUI Components", 640, 480);
 
 	GUIManager gui(display_window, "Resources");

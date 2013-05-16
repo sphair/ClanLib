@@ -41,9 +41,11 @@ int App::start(const std::vector<std::string> &args)
 
 	GUI gui(this);
 
+	clan::GameTime game_time;
 	while(!quit)
 	{
-		if (!gui.run())
+		game_time.update();
+		if (!gui.run(game_time))
 			break;
 	}
 

@@ -41,8 +41,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VertexBuffer", "Examples\3D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CpuExt", "Examples\Core\CpuExt\CpuExt-vc2010.vcxproj", "{4A8A4039-02D6-4CF7-97BB-58B494123AAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommandLine", "Examples\Core\CommandLine\CommandLine-vc2010.vcxproj", "{4A8A4039-02D6-4CF7-97BB-58B494706C94}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DisplayTarget", "Examples\Display\DisplayTarget\DisplayTarget-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACADEFAA99}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Basic2D", "Examples\Display\Basic2D\Basic2D-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA236FFE4}"
@@ -255,12 +253,6 @@ Global
 		{4A8A4039-02D6-4CF7-97BB-58B494123AAA}.Release|Win32.ActiveCfg = Release|Win32
 		{4A8A4039-02D6-4CF7-97BB-58B494123AAA}.Release|Win32.Build.0 = Release|Win32
 		{4A8A4039-02D6-4CF7-97BB-58B494123AAA}.Release|x64.ActiveCfg = Release|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Debug|Win32.Build.0 = Debug|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Debug|x64.ActiveCfg = Debug|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Release|Win32.ActiveCfg = Release|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Release|Win32.Build.0 = Release|Win32
-		{4A8A4039-02D6-4CF7-97BB-58B494706C94}.Release|x64.ActiveCfg = Release|Win32
 		{4E27E943-27C7-4F00-A431-B6ACADEFAA99}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4E27E943-27C7-4F00-A431-B6ACADEFAA99}.Debug|Win32.Build.0 = Debug|Win32
 		{4E27E943-27C7-4F00-A431-B6ACADEFAA99}.Debug|x64.ActiveCfg = Debug|Win32

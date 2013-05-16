@@ -32,29 +32,18 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	try
-	{
-		clan::SetupCore setup_core;
-		clan::SetupDisplay setup_display;
+	clan::SetupCore setup_core;
+	clan::SetupDisplay setup_display;
 
-		// We support all display targets
-		clan::SetupGL setup_gl;
-		clan::SetupD3D setup_d3d;
-		clan::SetupSWRender setup_swrender;
+	// We support all display targets
+	clan::SetupGL setup_gl;
+	clan::SetupD3D setup_d3d;
+	clan::SetupSWRender setup_swrender;
 
-		Target app;
-		int retval = app.start(args);
-		return retval;
-	}
-	catch(clan::Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		clan::ConsoleWindow console("Console", 80, 160);
-		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
+	Target app;
+	int retval = app.start(args);
+	return retval;
 
-		return -1;
-	}
 }
 
 // Instantiate Application, informing it where the Program is located

@@ -36,8 +36,8 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, int window_number);
-	void on_window_close(DisplayWindow *window);
+	void on_input_up(const clan::InputEvent &key, int window_number);
+	void on_window_close(clan::DisplayWindow *window);
 
 private:
 	float window_1_color;

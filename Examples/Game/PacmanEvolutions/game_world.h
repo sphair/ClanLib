@@ -2,7 +2,6 @@
 #pragma once
 
 #include "elapsed_timer.h"
-#include "framerate_counter.h"
 #include "map.h"
 #include "game_object_pacman.h"
 #include "game_object_ghost.h"
@@ -11,11 +10,10 @@ class GameWorld
 {
 public:
 	GameWorld();
-	void update();
+	void update(clan::GameTime &game_time);
 	void next_age();
 
 	ElapsedTimer timer;
-	FramerateCounter fps_counter;
 
 	std::shared_ptr<GameObject_Pacman> player;
 	std::vector<std::shared_ptr<GameObject_Ghost> > ghosts;

@@ -68,12 +68,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	clan::Canvas canvas_fb(canvas, fb_lightmask);
 
 	// Just a bunch of variables for keeping time and tracking FPS
-	clan::ubyte64 current_time = 0;
-	clan::ubyte64 last_time = clan::System::get_time();
-	float micro_second = 0;
-	float fps_ticker = 0;
-	int real_fps = 0;
-	int frames = 0;
+	clan::GameTime game_time;
 
 	// Some day/night cycle variables.
 	float daylight = 0.50f;
@@ -88,23 +83,10 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	// Run until someone presses escape
 	while (!quit)
 	{
-		// Manage our time/fps
-		current_time = clan::System::get_time();
-		if (last_time - current_time == 0)
-			micro_second = 0;
-		else 
-			micro_second = (float(current_time) - float(last_time)) / 1000.0f;
-		last_time = current_time;
-		fps_ticker += micro_second;
+		// Manage our time
+		game_time.update();
 
-		if(fps_ticker > 1.00f)
-		{
-			// a second passed.
-			real_fps = int(frames / fps_ticker);
-			clan::Console::write_line("FPS: %1",real_fps);
-			fps_ticker = 0;
-			frames = 0;
-		}
+		float micro_second = game_time.get_time_elapsed() / 1000.0f;
 
 		// Manage our day/night cycle
 		if(daylight_forward)
@@ -155,11 +137,9 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));
 
 		canvas.set_modelview(clan::Mat4f::identity());
-
 		
 		// Flip the display, showing on the screen what we have drawn (no v-sync)
 		canvas.flip(0);
-		frames++;
 
 		// This call updates input and performs other "housekeeping"
 		clan::KeepAlive::process();

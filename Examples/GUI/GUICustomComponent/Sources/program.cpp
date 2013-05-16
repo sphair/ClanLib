@@ -33,35 +33,23 @@
 
 int Program::main(const std::vector<std::string> &args)
 {
-	try
-	{
-		// Initialize ClanLib base components
-		SetupCore setup_core;
+	// Initialize ClanLib base components
+	SetupCore setup_core;
 
-		// Initialize the ClanLib display component
-		SetupDisplay setup_display;
+	// Initialize the ClanLib display component
+	SetupDisplay setup_display;
 
-		clan::SetupGL setup_gl;
-#ifdef WIN32
-		clan::SetupD3D setup_d3d;
-#endif
+	// We support all display targets, in order listed here
+	SetupD3D setup_d3d;
+	SetupGL setup_gl;
+	SetupSWRender setup_swrender;
 
-		SetupGUI setup_gui;
+	SetupGUI setup_gui;
 
-		// Start the Application
-		App app;
-		int retval = app.main(args);
-		return retval;
-	}
-	catch(Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		ConsoleWindow console("Console", 80, 160);
-		Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
+	// Start the Application
+	App app;
+	int retval = app.main(args);
+	return retval;
 }
 
 // Instantiate Application, informing it where the Program is located

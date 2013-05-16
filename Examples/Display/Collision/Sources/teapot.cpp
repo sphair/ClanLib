@@ -41,20 +41,20 @@ Teapot::Teapot()
 	flash = false;
 }
 
-void Teapot::create(Canvas &canvas, ResourceManager &resources)
+void Teapot::create(clan::Canvas &canvas, clan::ResourceManager &resources)
 {
-	SpriteDescription desc(canvas, "teapot", &resources);
-	teapot_sprites = Sprite(canvas, desc);
+	clan::SpriteDescription desc(canvas, "teapot", &resources);
+	teapot_sprites = clan::Sprite(canvas, desc);
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
-	teapot_collisions = desc.get_collision_outlines(canvas, 128, accuracy_high);
+	teapot_collisions = desc.get_collision_outlines(canvas, 128, clan::accuracy_high);
 }
 
-void Teapot::draw_collision_outline(Canvas &canvas)
+void Teapot::draw_collision_outline(clan::Canvas &canvas)
 {
-	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, canvas.get_height()/2, Colorf::limegreen, canvas);
-//	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, 0, Colorf::limegreen, canvas);
+	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, canvas.get_height()/2, clan::Colorf::limegreen, canvas);
+//	teapot_collisions[teapot_sprites.get_current_frame()].draw( 0, 0, clan::Colorf::limegreen, canvas);
 
 }
 
@@ -77,7 +77,7 @@ void Teapot::clone(const Teapot &source)
 }
 
 
-void Teapot::update(Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list)
+void Teapot::update(clan::Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list)
 {
 	int collided_teapot_offset;
 	if (is_collision(dest_xpos, dest_ypos, teapot_list, collided_teapot_offset))
@@ -103,7 +103,7 @@ void Teapot::update(Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_
 	check_hit_other_object(last_xpos,last_ypos, dest_xpos, dest_ypos, teapot_list);
 
 	// Set the translation, so other teapots can correctly collide with this one
-	CollisionOutline &this_outline = teapot_collisions[teapot_sprites.get_current_frame()];
+	clan::CollisionOutline &this_outline = teapot_collisions[teapot_sprites.get_current_frame()];
 	this_outline.set_translation(dest_xpos, dest_ypos);
 	float scale_x, scale_y;
 	teapot_sprites.get_scale(scale_x, scale_y);
@@ -115,14 +115,14 @@ bool Teapot::check_hit_other_object(int previous_xpos, int previous_ypos, int xp
 	int collided_teapot_offset;
 	if (is_collision(xpos, ypos, teapot_list, collided_teapot_offset))
 	{
-		const std::vector<CollidingContours> &colpointinfo = teapot_collisions[teapot_sprites.get_current_frame()].get_collision_info();
+		const std::vector<clan::CollidingContours> &colpointinfo = teapot_collisions[teapot_sprites.get_current_frame()].get_collision_info();
 		if (!colpointinfo.empty())
 		{
 			if (!colpointinfo[0].points.empty())
 			{
-				const CollisionPoint &point = colpointinfo[0].points[0];
+				const clan::CollisionPoint &point = colpointinfo[0].points[0];
 
-				Pointf normal = point.normal;
+				clan::Pointf normal = point.normal;
 				x_delta = normal.x * speed;
 				y_delta = normal.y * speed;
 
@@ -145,7 +145,7 @@ bool Teapot::check_hit_other_object(int previous_xpos, int previous_ypos, int xp
 
 bool Teapot::is_collision(int xpos, int ypos, const std::vector<Teapot> &teapot_list, int &collided_teapot_offset)
 {
-	CollisionOutline &this_outline = teapot_collisions[teapot_sprites.get_current_frame()];
+	clan::CollisionOutline &this_outline = teapot_collisions[teapot_sprites.get_current_frame()];
 	this_outline.set_translation(xpos, ypos);
 
 	this_outline.enable_collision_info(false,true,false,false);
@@ -171,7 +171,7 @@ bool Teapot::is_collision(int xpos, int ypos, const std::vector<Teapot> &teapot_
 	return false;
 }
 
-void Teapot::move(Canvas &canvas, int elapsed_ms)
+void Teapot::move(clan::Canvas &canvas, int elapsed_ms)
 {
 	float_xpos += x_delta * (float) elapsed_ms;
 	float_ypos += y_delta * (float) elapsed_ms;
@@ -216,12 +216,12 @@ void Teapot::move(Canvas &canvas, int elapsed_ms)
 
 }
 
-void Teapot::draw_teapot(Canvas &canvas)
+void Teapot::draw_teapot(clan::Canvas &canvas)
 {
 	if (flash)
 	{
-		Colorf old_color = teapot_sprites.get_color();
-		teapot_sprites.set_color(Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		clan::Colorf old_color = teapot_sprites.get_color();
+		teapot_sprites.set_color(clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 		teapot_sprites.draw(canvas, dest_xpos, dest_ypos);
 		teapot_sprites.set_color(old_color);
 		flash = false;
@@ -255,14 +255,14 @@ void Teapot::set_scale(float x_scale, float y_scale)
 	}
 }
 
-void Teapot::set_movement_delta(Vec2f &normal, float new_speed)
+void Teapot::set_movement_delta(clan::Vec2f &normal, float new_speed)
 {
 	speed = new_speed;
 	x_delta = normal.x * speed;
 	y_delta = normal.y * speed;
 }
 
-void Teapot::set_color(const Colorf &color)
+void Teapot::set_color(const clan::Colorf &color)
 {
 	teapot_sprites.set_color(color);
 }

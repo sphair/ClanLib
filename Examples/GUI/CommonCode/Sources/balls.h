@@ -49,7 +49,7 @@ public:
 
 	void Init(clan::Canvas &canvas);
 
-	void Run(clan::Canvas &canvas);
+	void Run(clan::Canvas &canvas, float time_elapsed);
 
 private:
 	void setup_balls();
@@ -62,6 +62,4 @@ private:
 
 	static const int max_balls = 5;
 	BallPosition balls[max_balls];
-
-	ubyte64 time_last;
 };

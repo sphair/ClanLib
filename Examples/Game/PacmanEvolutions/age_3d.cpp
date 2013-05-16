@@ -56,7 +56,7 @@ Age3D::Age3D(clan::Canvas &canvas, GameWorld *game)
 	create_billboards(canvas);
 }
 
-void Age3D::render(clan::Canvas &canvas)
+void Age3D::render(clan::Canvas &canvas, int elapsed_time_ms)
 {
 	if (game->player)
 		look_at = clan::Vec2f(game->player->get_x(), game->player->get_y());
@@ -102,9 +102,9 @@ void Age3D::render(clan::Canvas &canvas)
 	// Draw billboards on top:
 
 	for (int i = 0; i < 4; i++)
-		pacman[i].update();
+		pacman[i].update(elapsed_time_ms);
 	for (int i = 0; i < 2; i++)
-		ghost[i].update();
+		ghost[i].update(elapsed_time_ms);
 
 	clan::Mat4f world_to_projection = cpu_uniforms.eye_to_projection * cpu_uniforms.world_to_eye;
 

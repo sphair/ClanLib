@@ -54,12 +54,12 @@ public:
 	
 	virtual void draw();
 	virtual bool update(int timeElapsed_ms);
-	virtual bool hitCheck(CollisionOutline *outline, GameObject *other);
+	virtual bool hitCheck(clan::CollisionOutline *outline, GameObject *other);
 
 // Implementation:
 private:
-	Sprite *sprite;
-	CollisionOutline *collisionBuilding;
+	clan::Sprite *sprite;
+	clan::CollisionOutline *collisionBuilding;
 	
 	float angle;	
 	float posX;

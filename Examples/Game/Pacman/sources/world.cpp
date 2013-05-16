@@ -32,7 +32,6 @@
 #include "gameobject_ghost.h"
 #include "gameobject_pacman.h"
 #include "fontblowup.h"
-#include "framerate_counter.h"
 #include "program.h"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -50,12 +49,8 @@ World::World(ResourceManager *resources, DisplayWindow &window) :
 	// Load all resources in the game section now. This isn't a
 	// requirement, but prevents game from loading them when object is
 	// first time created.
-//FIXME:	resources->load_section("Game");
 
 	fnt_clansoft = Font_Sprite(canvas, "Game/fnt_clansoft", resources);
-	//fnt_clansoft = Font(gc, L"Tahoma", 32);
-
-//	sample = SoundBuffer("resources/ancient.mod");
 
 	map = new Map(resources, gc);
 }
@@ -70,8 +65,6 @@ World::~World()
 		delete *it;
 	}
 	objects.clear();
-	
-//FIXME:	resources->unload_section("Game");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -96,36 +89,29 @@ void World::run(DisplayWindow &window)
 	objects.push_back(player);
 
 	// Create four ghosts in each corner of map:
-//FIXME: (why was this loop in place?)	for (int i=0; i<4; i++)
-	{
-		objects.push_back(new GameObject_Ghost(1, 1, this));
-		objects.push_back(new GameObject_Ghost(map->get_width()-2, 1, this));
-		objects.push_back(new GameObject_Ghost(1, map->get_height()-2, this));
-		objects.push_back(new GameObject_Ghost(map->get_width()-2, map->get_height()-2, this));
-	}
+	objects.push_back(new GameObject_Ghost(1, 1, this));
+	objects.push_back(new GameObject_Ghost(map->get_width()-2, 1, this));
+	objects.push_back(new GameObject_Ghost(1, map->get_height()-2, this));
+	objects.push_back(new GameObject_Ghost(map->get_width()-2, map->get_height()-2, this));
 
-
-	// Prepare the music
-//	SoundBuffer_Session playback(sample.prepare());
-//	playback.set_looping(true);
-//	playback.play();
 
 	// Start the game simulation:
-	ubyte64 start_time = System::get_time();
 
-	ubyte64 begin_time = System::get_time();
-	ubyte64 score_time = System::get_time();
 	
 	int center_x = 0;
 	int center_y = 0;
 
 	bool welcome_shown = false;
 
-	FramerateCounter frameratecounter;
+	GameTime game_time;
+	ubyte64 start_time = game_time.get_current_time_ms();
 
+	ubyte64 begin_time = game_time.get_current_time_ms();
+	ubyte64 score_time = game_time.get_current_time_ms();
 	while (!quit)
 	{
-		float time_elapsed = (System::get_time() - begin_time)/(float) 1000;
+		game_time.update();
+		float time_elapsed = (game_time.get_current_time_ms() - begin_time)/(float) 1000;
 		begin_time = System::get_time();
 
 		if (System::get_time()-score_time > 1000 && player != NULL)
@@ -223,7 +209,7 @@ void World::run(DisplayWindow &window)
 			welcome_shown = true;
 		}
 
-		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
+		std::string fps = string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		fnt_clansoft.draw_text(canvas, 20, 52, fps);
 
 		std::string text2 = string_format("%1 bonus bananas", score);
@@ -248,17 +234,13 @@ void World::run(DisplayWindow &window)
 			}
 		}
 
-		canvas.flush();
-		window.flip(0);
-		frameratecounter.frame_shown();
+		canvas.flip(0);
 
 		if (map->get_eggs_left() == 0) break; // level completed
 
 		KeepAlive::process();
 	}
 
-	Console::write_line("Frames per second: %1", frameratecounter.get_framerate());
-	// MessageBox(0, string_format("Frames per second: %1", frameratecounter.get_framerate()).c_str(), TEXT("FPS"), MB_OK);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -53,34 +53,20 @@ int Timing::start(const std::vector<std::string> &args)
 
 	set_stars(canvas, 100);
 
-	clan::ubyte64 last_time = clan::System::get_time();
-
+	clan::GameTime game_time(60, 60);
+	
 	// Run until someone presses escape
 	while (!quit)
 	{
-		// Get the time delta to control movement
-		clan::ubyte64 current_time = clan::System::get_time();
-		float time_delta_ms = (float) (current_time - last_time);
-		last_time = current_time;
+		game_time.update();
 
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
-		draw_graphics(canvas, time_delta_ms);
+		draw_graphics(canvas, game_time.get_time_elapsed());
 
-		canvas.flip(1);
+		canvas.flip();
 
 		clan::KeepAlive::process(0);
-
-		// Sleep to give other processes more time
-		current_time = clan::System::get_time();
-		const int main_loop_rate = 10;	// 10 ms (100 hz)
-		int time_to_sleep_for = main_loop_rate - (current_time - last_time);
-		if (time_to_sleep_for > 0)
-		{
-			// Depending on the application, it may be preferable to use System::sleep() instead
-			clan::System::pause(time_to_sleep_for);
-		}
-
 	}
 
 	return 0;
@@ -101,17 +87,15 @@ void Timing::on_window_close()
 	quit = true;
 }
 
-void Timing::draw_graphics(clan::Canvas &canvas, float time_delta_ms)
+void Timing::draw_graphics(clan::Canvas &canvas, float time_delta)
 {
 	int gc_width = canvas.get_width();
-	int gc_height = canvas.get_height();
-
 	std::vector<Star>::size_type max, cnt;
 	max = stars.size();
 	for (cnt=0; cnt<max; cnt++)
 	{
 		float xpos = stars[cnt].xpos;
-		xpos += time_delta_ms * stars[cnt].speed;
+		xpos += time_delta * stars[cnt].speed;
 		if (xpos >= gc_width)
 			xpos -= (gc_width + 8);
 		stars[cnt].xpos = xpos;
@@ -134,7 +118,7 @@ void Timing::set_stars(clan::Canvas &canvas, int star_cnt)
 		random+= 143222321;
 		stars[cnt].ypos = (float) (random % gc_height);
 		random+= 89079086;
-		stars[cnt].speed = (((float) (random % 256)) / 1024.0f) + 0.01f;
+		stars[cnt].speed = (((float) (random % 256)) ) + 10.0f;
 		random*= 595443965;
 		stars[cnt].color.r = (((float) (random % 256)) / 256.0f);
 		random*= 196243625;

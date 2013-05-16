@@ -14,7 +14,7 @@ GameWorld::GameWorld()
 	ghosts.push_back(std::shared_ptr<GameObject_Ghost>(new GameObject_Ghost(map.get_width()-2, map.get_height()-2, this)));
 }
 
-void GameWorld::update()
+void GameWorld::update(clan::GameTime &game_time)
 {
 	float time_elapsed = timer.update();
 	total_time_elapsed += time_elapsed;
@@ -34,10 +34,8 @@ void GameWorld::update()
 			i++;
 	}
 
-	fps_counter.frame_shown();
-
 	text_score = clan::string_format("%1 bonus bananas", score);
-	text_fps = clan::string_format("%1 fps", fps_counter.get_framerate());
+	text_fps = clan::string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 
 	if (!player)
 	{

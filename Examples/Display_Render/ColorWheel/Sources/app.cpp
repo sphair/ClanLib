@@ -63,15 +63,8 @@ int App::start(const std::vector<std::string> &args)
 	// Deleted automatically by the GUI
 	new ColorWheel(canvas, gui, clan::Rect(32, 32, clan::Size(512, 512)));
 
-
-	clan::ubyte64 time_last = clan::System::get_time();
-
 	while (!quit)
 	{
-		clan::ubyte64 time_now = clan::System::get_time();
-		float time_diff = (float) (time_now - time_last);
-		time_last = time_now;
-
 		canvas.clear(clan::Colorf(0.0f,0.0f,0.0f));
 
 		wm.process();
