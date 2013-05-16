@@ -26,8 +26,7 @@
 **    Magnus Norddahl
 */
 
-// This file is needed (with precompiled headers disabled) to fix unresolved ID3D11ShaderReflection references
-// (why __uuidof() wasn't good enough for Microsoft for this one interface is a mystery..)
+// This file is needed (with precompiled headers disabled) to fix unresolved DirectSound references
 
 #define INITGUID
 #include <dsound.h>

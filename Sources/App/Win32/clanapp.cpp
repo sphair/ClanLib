@@ -39,6 +39,7 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
+#include "API/Core/ErrorReporting/exception_dialog.h"
 
 #ifdef _MSC_VER
 #include <crtdbg.h>
@@ -97,14 +98,14 @@ int WINAPI WinMain(
 		catch(clan::Exception &exception)
 		{
 			// Create a console window for text-output if not available
-			std::string console_name("Console");
-			if (!args.empty())
-				console_name = args[0];
+			//std::string console_name("Console");
+			//if (!args.empty())
+			//	console_name = args[0];
 			//clan::ConsoleWindow console(console_name, 80, 160);
 			//clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
 			//console.display_close_message();
-			std::string text("Unhandled Exception: " + exception.get_message_and_stack_trace());
-			::MessageBox(NULL, clan::StringHelp::utf8_to_ucs2(text).c_str(), clan::StringHelp::utf8_to_ucs2(console_name).c_str(), MB_OK|MB_ICONERROR);
+
+			ExceptionDialog::show(exception);
 
 			retval = -1;
 		}
