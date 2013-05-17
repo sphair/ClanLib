@@ -33,6 +33,7 @@
 
 #include "api_app.h"
 #include <vector>
+#include <string>
 
 namespace clan
 {
