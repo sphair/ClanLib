@@ -3,9 +3,6 @@ AUTOMAKE_OPTIONS = subdir-objects
 lib_LTLIBRARIES = libclan30Core.la
 
 libclan30Core_la_SOURCES = \
-ErrorReporting/crash_reporter.cpp \
-ErrorReporting/detect_hang.cpp \
-ErrorReporting/exception_dialog.cpp \
 Text/console_logger.cpp \
 Text/utf8_reader.cpp \
 Text/string_format.cpp \
@@ -16,11 +13,17 @@ Text/string_help.cpp \
 Resources/resource_manager.cpp \
 Resources/resource.cpp \
 Resources/resource_data_session.cpp \
+ErrorReporting/crash_reporter.cpp \
+ErrorReporting/detect_hang.cpp \
+ErrorReporting/exception_dialog.cpp \
 Crypto/random.cpp \
 Crypto/aes128_decrypt.cpp \
+Crypto/x509_impl.cpp \
 Crypto/aes192_encrypt.cpp \
 Crypto/aes192_encrypt_impl.cpp \
+Crypto/asn1.cpp \
 Crypto/sha512_256.cpp \
+Crypto/tls_client_impl.cpp \
 Crypto/sha.cpp \
 Crypto/sha1_impl.cpp \
 Crypto/aes256_encrypt_impl.cpp \
@@ -44,16 +47,13 @@ Crypto/aes192_decrypt.cpp \
 Crypto/aes192_decrypt_impl.cpp \
 Crypto/sha384.cpp \
 Crypto/secret_impl.cpp \
+Crypto/tls_client.cpp \
 Crypto/aes128_encrypt_impl.cpp \
 Crypto/random_impl.cpp \
 Crypto/sha512.cpp \
 Crypto/sha256_impl.cpp \
 Crypto/aes256_decrypt.cpp \
 Crypto/x509.cpp \
-Crypto/x509_impl.cpp \
-Crypto/tls_client.cpp \
-Crypto/tls_client_impl.cpp \
-Crypto/asn1.cpp \
 precomp.cpp \
 IOData/virtual_directory_listing.cpp \
 IOData/iodevice_provider_memory.cpp \
@@ -117,13 +117,13 @@ Zip/zlib_compression.cpp \
 Zip/zip_reader.cpp \
 Zip/zip_local_file_descriptor.cpp \
 Zip/zip_archive.cpp \
-Math/big_int.cpp \
-Math/big_int_impl.cpp \
 Math/mat3.cpp \
+Math/intersection_test.cpp \
 Math/line.cpp \
 Math/rect_packer_impl.cpp \
 Math/angle.cpp \
 Math/triangle_math.cpp \
+Math/big_int_impl.cpp \
 Math/base64_decoder.cpp \
 Math/bezier_curve_impl.cpp \
 Math/mat2.cpp \
@@ -141,6 +141,8 @@ Math/half_float.cpp \
 Math/ear_clip_result.cpp \
 Math/base64_encoder.cpp \
 Math/delauney_triangulator_generic.cpp \
+Math/big_int.cpp \
+Math/frustum_planes.cpp \
 Math/line_segment.cpp \
 Math/line_math.cpp \
 Math/quaternion.cpp \
@@ -152,12 +154,12 @@ Math/rect_packer.cpp \
 Math/vec3.cpp \
 core_global.cpp \
 core_iostream.cpp \
-System/game_time.cpp \
 System/runnable.cpp \
 System/setup_core.cpp \
 System/service_impl.cpp \
 System/event_impl.cpp \
 System/thread.cpp \
+System/game_time.cpp \
 System/mutex.cpp \
 System/keep_alive.cpp \
 System/timer.cpp \
@@ -175,7 +177,6 @@ System/detect_cpu_ext.cpp \
 System/service.cpp \
 System/thread_local_storage_impl.cpp \
 System/datetime.cpp
-
 
 if WIN32
 libclan30Core_la_SOURCES += \
