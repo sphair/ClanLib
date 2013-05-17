@@ -47,6 +47,7 @@ int main(int argc, char **argv)
 	for (int i = 0; i < argc; i++)
 		args.push_back(argv[i]);
 	// Call clanapp main:
+	int retval;
 	if (clan::Application::enable_catch_exceptions)
 	{
 		try

@@ -141,9 +141,6 @@ clanSound_includes = \
 
 clanCore_includes = \
 	core.h \
-	Core/ErrorReporting/crash_reporter.h \
-	Core/ErrorReporting/detect_hang.h \
-	Core/ErrorReporting/exception_dialog.h \
 	Core/Signals/callback_1.h \
 	Core/Signals/callback_2.h \
 	Core/Signals/callback_3.h \
@@ -178,6 +175,10 @@ clanCore_includes = \
 	Core/Resources/resource_data_session.h \
 	Core/Resources/resource.h \
 	Core/Resources/resource_manager.h \
+	Core/ErrorReporting/detect_hang.h \
+	Core/ErrorReporting/crash_reporter.h \
+	Core/ErrorReporting/exception_dialog.h \
+	Core/Crypto/tls_client.h \
 	Core/Crypto/md5.h \
 	Core/Crypto/hash_functions.h \
 	Core/Crypto/aes192_decrypt.h \
@@ -196,7 +197,6 @@ clanCore_includes = \
 	Core/Crypto/aes256_encrypt.h \
 	Core/Crypto/secret.h \
 	Core/Crypto/sha512.h \
-	Core/Crypto/tls_client.h \
 	Core/IOData/security_identifier.h \
 	Core/IOData/file_help.h \
 	Core/IOData/virtual_directory_listing_entry.h \
@@ -247,28 +247,32 @@ clanCore_includes = \
 	Core/Zip/zip_reader.h \
 	Core/Zip/zip_archive.h \
 	Core/Zip/zlib_compression.h \
-	Core/Math/big_int.h \
 	Core/Math/half_float.h \
 	Core/Math/quad.h \
+	Core/Math/frustum_planes.h \
 	Core/Math/ear_clip_triangulator.h \
 	Core/Math/size.h \
 	Core/Math/vec4.h \
 	Core/Math/delauney_triangulator.h \
 	Core/Math/pointset_math.h \
 	Core/Math/circle.h \
+	Core/Math/intersection_test.h \
 	Core/Math/line.h \
 	Core/Math/mat2.h \
 	Core/Math/rect.h \
 	Core/Math/bezier_curve.h \
 	Core/Math/line_ray.h \
+	Core/Math/aabb.h \
 	Core/Math/angle.h \
 	Core/Math/base64_encoder.h \
 	Core/Math/half_float_vector.h \
 	Core/Math/line_math.h \
+	Core/Math/big_int.h \
 	Core/Math/vec3.h \
 	Core/Math/rect_packer.h \
 	Core/Math/cl_math.h \
 	Core/Math/outline_triangulator.h \
+	Core/Math/obb.h \
 	Core/Math/origin.h \
 	Core/Math/mat4.h \
 	Core/Math/mat3.h \
@@ -295,6 +299,7 @@ clanCore_includes = \
 	Core/System/datetime.h \
 	Core/System/interlocked_variable.h \
 	Core/System/registry_key.h \
+	Core/System/game_time.h \
 	Core/System/databuffer.h \
 	Core/System/setup_core.h \
 	Core/System/timer.h \
@@ -302,7 +307,6 @@ clanCore_includes = \
 	Core/System/console_window.h \
 	Core/System/disposable_object.h \
 	Core/System/event.h \
-	Core/System/game_time.h \
 	Core/System/system.h
 
 clanDisplay_includes = \
@@ -559,7 +563,6 @@ clanScene3D_includes = \
 	Scene3D/LevelData/level_data_object.h \
 	Scene3D/ModelData/model_data_animation_data.h \
 	Scene3D/ModelData/model_data_texture.h \
-	Scene3D/ModelData/model_data_material_range.h \
 	Scene3D/ModelData/model_data_attachment_point.h \
 	Scene3D/ModelData/model_data_particle_emitter.h \
 	Scene3D/ModelData/model_data_camera.h \
@@ -568,17 +571,18 @@ clanScene3D_includes = \
 	Scene3D/ModelData/model_data.h \
 	Scene3D/ModelData/model_data_mesh.h \
 	Scene3D/ModelData/model_data_animation.h \
+	Scene3D/ModelData/model_data_draw_range.h \
 	Scene3D/ModelData/model_data_animation_timeline.h \
 	Scene3D/ModelData/model_data_bone.h \
-	Scene3D/ModelData/model_data_mesh_lod.h \
 	Scene3D/scene_object.h \
 	Scene3D/api_scene3d.h \
-	Scene3D/scene.h \
 	Scene3D/scene_pass.h \
-	Scene3D/scene_inout_data.h \
+	Scene3D/scene.h \
 	Scene3D/scene_light.h \
+	Scene3D/scene_inout_data.h \
 	Scene3D/scene_cache_provider.h \
 	Scene3D/scene_particle_emitter.h \
+	Scene3D/scene_cull_provider.h \
 	Scene3D/scene_cache.h \
 	Scene3D/scene_model.h \
 	Scene3D/cached_texture.h
