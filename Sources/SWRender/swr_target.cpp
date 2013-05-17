@@ -56,7 +56,7 @@ bool SWRenderTarget::is_current()
 		return false;
 
 	SWRenderTargetProvider *provider = dynamic_cast<SWRenderTargetProvider*>(ptr);
-	return (provider != nullptr);
+	return (provider != NULL);
 }
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderTarget Operations:
