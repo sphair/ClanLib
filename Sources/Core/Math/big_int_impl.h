@@ -122,12 +122,12 @@ private:
 
 	static void build_primes();
 
-	static inline ubyte32 BigInt_Impl::internal_carryout(ubyte64 w)
+	static inline ubyte32 internal_carryout(ubyte64 w)
 	{
 		return w >> num_bits_in_digit;
 	}
 
-	static inline ubyte32 BigInt_Impl::internal_accum(ubyte64 w)
+	static inline ubyte32 internal_accum(ubyte64 w)
 	{
 		return (ubyte32) w;
 	}
