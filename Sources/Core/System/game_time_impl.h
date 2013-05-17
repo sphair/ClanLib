@@ -34,14 +34,14 @@ namespace clan
 class GameTime_Impl
 {
 public:
-	GameTime_Impl(int ticks_per_second, int max_updates_per_second) : ticks_per_second(ticks_per_second), max_updates_per_second(max_updates_per_second),
+	GameTime_Impl(int ticks_per_second, int max_updates_per_second) : ticks_per_second(ticks_per_second), min_update_time_ms(1000/max_updates_per_second),
 		start_time(0), current_time(0), time_elapsed(0.0f) { }
 
 	void update();
 	void reset();
 
 	int ticks_per_second;
-	int max_updates_per_second;
+	int min_update_time_ms;
 
 	ubyte64 start_time;
 	ubyte64 current_time;
@@ -60,9 +60,8 @@ private:
 	void calculate_fps();
 	void process_max_fps();
 
-	int num_updates_in_second;
 	int num_updates_in_2_seconds;
-	int update_second_time_ms;
+	int update_time_ms;
 
 };
 
