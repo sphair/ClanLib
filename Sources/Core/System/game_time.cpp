@@ -115,7 +115,7 @@ void GameTime_Impl::update()
 
 	last_tick = current_tick;
 
-	if (max_updates_per_second)	// Handle max fps
+	if (min_update_time_ms)	// Handle max fps
 		process_max_fps();
 
 	calculate_fps();
@@ -123,22 +123,18 @@ void GameTime_Impl::update()
 
 void GameTime_Impl::process_max_fps()
 {
-	num_updates_in_second++;
-	update_second_time_ms += time_elapsed_ms;
+	update_time_ms += time_elapsed_ms;
 
-	int expected_update_second_time_ms = (1000 * num_updates_in_second) / max_updates_per_second;
-	int diff = expected_update_second_time_ms - update_second_time_ms;
+	int diff = min_update_time_ms - update_time_ms;
 	if (diff > 0)	// We have spare cpu cycles
 	{
 		System::sleep(diff);
 	}
-	if (num_updates_in_second == max_updates_per_second)	// Here we have reached a second or exceeded the second
-	{
-		num_updates_in_second = 0;
-		update_second_time_ms -= 1000;		// Subtract a second
-		if (update_second_time_ms > (1000 / max_updates_per_second))		// Limit slow updates, to give a change to catch it
-			update_second_time_ms = 1000 / max_updates_per_second;
-	}
+
+	update_time_ms -= min_update_time_ms;		// Subtract by expected time for next iteration
+
+	if (update_time_ms > min_update_time_ms)		// Limit slow updates, to give a chance to catch up
+		update_time_ms = min_update_time_ms;
 }
 
 void GameTime_Impl::calculate_fps()
@@ -174,9 +170,8 @@ void GameTime_Impl::reset()
 	num_updates_in_2_seconds = 0;
 	update_frame_start_time = current_time;
 	current_fps = 0;
-	num_updates_in_second = 0;
 	num_updates_in_2_seconds = 0;
-	update_second_time_ms = 0;
+	update_time_ms = 0;
 
 }
 
