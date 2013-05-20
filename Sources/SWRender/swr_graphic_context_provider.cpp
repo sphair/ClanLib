@@ -259,7 +259,7 @@ void SWRenderGraphicContextProvider::set_depth_stencil_state(DepthStencilStatePr
 	{
 		SWRenderDepthStencilStateProvider *swr_state = static_cast<SWRenderDepthStencilStateProvider*>(state);
 
-		CompareFunction front; int front_ref; int front_mask;
+	/*	CompareFunction front; int front_ref; int front_mask;
 		CompareFunction back; int back_ref; int back_mask;
 		unsigned char front_facing_mask, back_facing_mask;
 		StencilOp fail_front, pass_depth_fail_front, pass_depth_pass_front;
@@ -270,7 +270,7 @@ void SWRenderGraphicContextProvider::set_depth_stencil_state(DepthStencilStatePr
 		swr_state->desc.get_stencil_op_front(fail_front, pass_depth_fail_front, pass_depth_pass_front);
 		swr_state->desc.get_stencil_op_back(fail_back, pass_depth_fail_back, pass_depth_pass_back);
 
-	/*	enable_stencil_test(swr_state->desc.is_stencil_test_enabled());
+		enable_stencil_test(swr_state->desc.is_stencil_test_enabled());
 		set_stencil_compare_front(front, front_ref, front_mask);
 		set_stencil_compare_back(back, back_ref, back_mask);
 		set_stencil_write_mask(front_facing_mask, back_facing_mask);
