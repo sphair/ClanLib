@@ -42,12 +42,6 @@ class DomElement;
 class ResourceManager;
 class Resource_Impl;
 
-class ResourceData
-{
-public:
-	virtual ~ResourceData() { }
-};
-
 /// \brief Resource Manager resource.
 class CL_API_CORE Resource
 {
@@ -76,12 +70,6 @@ public:
 	/// \brief Returns the resource manager owning the resource.
 	ResourceManager get_manager();
 
-	/// \brief Returns the object stored in the given data name.
-	std::shared_ptr<ResourceData> get_data(const std::string &data_name);
-
-	/// \brief Returns the number of ResourceDataSession objects using this resource.
-	int get_data_session_count(const std::string &data_name);
-
 /// \}
 /// \name Operations
 /// \{
@@ -89,18 +77,6 @@ public:
 public:
 	/// \brief Compares this resource to another resource.
 	bool operator ==(const Resource &other) const;
-
-	/// \brief Store object in resource.
-	void set_data(const std::string &data_name, const std::shared_ptr<ResourceData> &ptr);
-
-	/// \brief Remove object stored with the given data name.
-	void clear_data(const std::string &data_name);
-
-	/// \brief Increment the usage session count for the resource.
-	int add_data_session(const std::string &data_name);
-
-	/// \brief Decrement the usage session count for the resource.
-	int remove_data_session(const std::string &data_name);
 
 /// \}
 /// \name Implementation

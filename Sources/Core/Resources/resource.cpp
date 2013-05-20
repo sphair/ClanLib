@@ -41,15 +41,6 @@ namespace clan
 
 class ResourceManager_Impl;
 
-struct ResourceCacheEntry
-{
-	std::string name;
-
-	std::shared_ptr<ResourceData> data;
-
-	int reference_count;
-};
-
 class Resource_Impl
 {
 //! Attributes:
@@ -57,8 +48,6 @@ public:
 	std::weak_ptr<ResourceManager_Impl> resource_manager;
 
 	DomElement element;
-
-	std::vector<ResourceCacheEntry> cache_objects;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -102,99 +91,12 @@ ResourceManager Resource::get_manager()
 	return ResourceManager(impl->resource_manager);
 }
 
-std::shared_ptr<ResourceData> Resource::get_data(const std::string &name)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-		if (impl->cache_objects[i].name == name)
-			return impl->cache_objects[i].data;
-	return std::shared_ptr<ResourceData>();
-}
-
-int Resource::get_data_session_count(const std::string &data_name)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-	{
-		if (impl->cache_objects[i].name == data_name)
-		{
-			return impl->cache_objects[i].reference_count;
-		}
-	}
-	return 0;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Resource Operations:
 
 bool Resource::operator ==(const Resource &other) const
 {
 	return impl == other.impl;
-}
-
-void Resource::set_data(const std::string &name, const std::shared_ptr<ResourceData> &ptr)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-	{
-		if (impl->cache_objects[i].name == name)
-		{
-			impl->cache_objects[i].data = ptr;
-			return;
-		}
-	}
-
-	ResourceCacheEntry data;
-	data.name = name;
-	data.data = ptr;
-	data.reference_count = 0;
-	impl->cache_objects.push_back(data);
-}
-
-void Resource::clear_data(const std::string &data_name)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-	{
-		if (impl->cache_objects[i].name == data_name)
-		{
-			impl->cache_objects.erase(impl->cache_objects.begin() + i);
-			return;
-		}
-	}
-}
-
-int Resource::add_data_session(const std::string &data_name)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-	{
-		if (impl->cache_objects[i].name == data_name)
-		{
-			return ++impl->cache_objects[i].reference_count;
-		}
-	}
-
-	ResourceCacheEntry data;
-	data.name = data_name;
-	data.reference_count = 1;
-	impl->cache_objects.push_back(data);
-	return 1;
-}
-
-int Resource::remove_data_session(const std::string &data_name)
-{
-	std::vector<ResourceCacheEntry>::size_type i;
-	for (i = 0; i < impl->cache_objects.size(); i++)
-	{
-		if (impl->cache_objects[i].name == data_name)
-		{
-			if (impl->cache_objects[i].reference_count == 0)
-				return 0;
-			return --impl->cache_objects[i].reference_count;
-		}
-	}
-	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////

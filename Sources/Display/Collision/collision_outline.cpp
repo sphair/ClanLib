@@ -34,6 +34,8 @@
 #include "Display/precomp.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/XML/dom_element.h"
+#include "API/Core/Text/string_help.h"
 #include "API/Display/Collision/collision_outline.h"
 #include "outline_provider_bitmap.h"
 #include "outline_provider_file.h"
@@ -43,10 +45,8 @@
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/resource_data_session.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/path_help.h"
-#include "resourcedata_collisionoutline.h"
 #include "collision_outline_generic.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/canvas.h"
@@ -121,14 +121,35 @@ CollisionOutline::CollisionOutline(
 	resource = manager->get_resource(resource_id);
 	if (resource.get_type() != "collisionoutline")
 		throw Exception(string_format("Resource '%1' is not of type 'collisionoutline'", resource_id));
-	ResourceDataSession("collisionoutline", resource);
-	std::shared_ptr<ResourceData_CollisionOutline> data = std::dynamic_pointer_cast<ResourceData_CollisionOutline>(resource.get_data("collisionoutline"));
-	if (!data)
+
+	std::string filename = resource.get_element().get_attribute("file");
+	int alpha_limit = StringHelp::text_to_int( (resource.get_element().get_attribute("alpha_value", "128")));
+	std::string accuracy_str = resource.get_element().get_attribute("accuracy", "medium");
+	OutlineAccuracy accuracy;
+
+	if(accuracy_str == "high")
+		accuracy = accuracy_high;
+	else if(accuracy_str == "medium")
+		accuracy = accuracy_medium;
+	else if(accuracy_str == "low")
+		accuracy = accuracy_low;
+	else if(accuracy_str == "poor")
+		accuracy = accuracy_poor;
+    else
+		accuracy = accuracy_raw;
+
+	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
-		data = std::shared_ptr<ResourceData_CollisionOutline>(new ResourceData_CollisionOutline(resource));
-		resource.set_data("collisionoutline", data);
+		IODevice file = resource.get_manager().get_file_system(resource).open_file(PathHelp::combine(resource.get_manager().get_base_path(resource), filename));
+		OutlineProviderFile outline_provider(file);
+		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
-	*this = data->collision_outline;
+	else
+	{
+		PixelBuffer pbuf = ImageProviderFactory::load(PathHelp::combine(resource.get_manager().get_base_path(resource), filename), resource.get_manager().get_file_system(resource), "");
+		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
+		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy);
+	}
 }
 
 CollisionOutline::CollisionOutline(

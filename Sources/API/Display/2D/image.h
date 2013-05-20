@@ -33,7 +33,6 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/Resources/resource_data_session.h"
 #include "../../Core/Math/origin.h"
 #include "color.h"
 #include "../Image/image_import_description.h"

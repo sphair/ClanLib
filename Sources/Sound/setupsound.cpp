@@ -34,7 +34,6 @@
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Signals/slot.h"
-#include "resourcetype_sample.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
 #include "SoundProviders/stb_vorbis.h"
