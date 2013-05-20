@@ -122,9 +122,9 @@ ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_
 	else
 		throw Exception("ShaderObject: Unknown shader type: " + type);
 
-	FileSystem fs = resources->get_file_system(resource);
+	FileSystem fs = resource.get_file_system();
 
-	IODevice file = fs.open_file(PathHelp::combine(resources->get_base_path(resource), filename), File::open_existing, File::access_read, File::share_read);
+	IODevice file = fs.open_file(PathHelp::combine(resource.get_base_path(), filename), File::open_existing, File::access_read, File::share_read);
 	int size = file.get_size();
 	std::string source(size, 0);
 	file.read(&source[0], size);

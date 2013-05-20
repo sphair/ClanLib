@@ -33,6 +33,7 @@
 
 #include "../api_core.h"
 #include "../Resources/resource_manager.h"
+#include "../IOData/file_system.h"
 #include <memory>
 
 namespace clan
@@ -69,6 +70,12 @@ public:
 
 	/// \brief Returns the resource manager owning the resource.
 	ResourceManager get_manager();
+
+	/// \brief Returns the file system to load resource from.
+	FileSystem get_file_system() const;
+
+	/// \brief Returns the base path of the resource.
+	std::string get_base_path() const;
 
 /// \}
 /// \name Operations

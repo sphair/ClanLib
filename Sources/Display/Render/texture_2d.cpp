@@ -135,8 +135,8 @@ Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, Resourc
 		throw Exception(string_format("Resource '%1' is not of type 'texture'", resource_id));
 
 	std::string filename = resource.get_element().get_attribute("file");
-	FileSystem fs = resource.get_manager().get_file_system(resource);
-	*this = Texture2D(gc, PathHelp::combine(resource.get_manager().get_base_path(resource), filename), fs, import_desc);
+	FileSystem fs = resource.get_file_system();
+	*this = Texture2D(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
 }
 
 int Texture2D::get_width() const

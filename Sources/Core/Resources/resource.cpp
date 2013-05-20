@@ -30,6 +30,7 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/XML/dom_element.h"
+#include "resource_manager_impl.h"
 #include <memory>
 #include <vector>
 
@@ -89,6 +90,16 @@ DomElement &Resource::get_element()
 ResourceManager Resource::get_manager()
 {
 	return ResourceManager(impl->resource_manager);
+}
+
+FileSystem Resource::get_file_system() const
+{
+	return impl->resource_manager.lock()->fs;
+}
+
+std::string Resource::get_base_path() const
+{
+	return impl->resource_manager.lock()->base_path;
 }
 
 /////////////////////////////////////////////////////////////////////////////

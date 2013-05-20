@@ -36,29 +36,11 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
+#include "resource_manager_impl.h"
 #include <map>
 
 namespace clan
 {
-
-/////////////////////////////////////////////////////////////////////////////
-// ResourceManager_Impl Class:
-
-class ResourceManager_Impl
-{
-//! Attributes:
-public:
-	FileSystem fs;
-	std::string base_path;
-
-	DomDocument document;
-
-	std::map<std::string, Resource> resources;
-
-	std::vector<ResourceManager> additional_resources;
-
-	std::string ns_resources;
-};
 
 /////////////////////////////////////////////////////////////////////////////
 // ResourceManager Construction:
@@ -232,7 +214,7 @@ std::vector<std::string> ResourceManager::get_resource_names_of_type(
 Resource ResourceManager::get_resource(
 	const std::string &resource_id,
 	bool resolve_alias,
-	int reserved)
+	int reserved) const
 {
  	std::map<std::string, Resource>::const_iterator it;
 	it = impl->resources.find(resource_id);
@@ -253,38 +235,12 @@ Resource ResourceManager::get_resource(
 	}
 
 	throw Exception(string_format("Resource not found: %1", resource_id));
-	return Resource(impl->document.get_document_element(), *this);
-}
-
-FileSystem ResourceManager::get_file_system(const Resource &resource) const
-{
-	Resource resource_const_hack = resource;
-	if (resource_const_hack.get_manager().impl == impl)
-	{
-		return impl->fs;
-	}
-	else
-	{
-		return resource_const_hack.get_manager().get_file_system(resource);
-	}
-}
-
-std::string ResourceManager::get_base_path(const Resource &resource) const
-{
-	Resource resource_const_hack = resource;
-	if (resource_const_hack.get_manager().impl == impl)
-	{
-		return impl->base_path;
-	}
-	else
-	{
-		return resource_const_hack.get_manager().get_base_path(resource);
-	}
+	return Resource(impl->document.get_document_element(), const_cast<ResourceManager&>(*this));
 }
 
 bool ResourceManager::get_boolean_resource(
 	const std::string &resource_id,
-	bool default_value)
+	bool default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;
@@ -295,7 +251,7 @@ bool ResourceManager::get_boolean_resource(
 
 int ResourceManager::get_integer_resource(
 	const std::string &resource_id,
-	int default_value)
+	int default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;
@@ -306,7 +262,7 @@ int ResourceManager::get_integer_resource(
 
 std::string ResourceManager::get_string_resource(
 	const std::string &resource_id,
-	const std::string &default_value)
+	const std::string &default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;

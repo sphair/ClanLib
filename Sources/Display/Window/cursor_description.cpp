@@ -81,7 +81,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 				std::string suffix = "." + PathHelp::get_extension(prefix);
 				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
 
-				FileSystem fs = resources->get_file_system(resource);
+				FileSystem fs = resource.get_file_system();
 
 				for (int i = start_index;; i += skip_index)
 				{
@@ -95,7 +95,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						add_frame(PathHelp::combine(resources->get_base_path(resource), file_name), fs, import_desc);
+						add_frame(PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
 					}
 					catch (const Exception&)
 					{
@@ -112,8 +112,8 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 			else
 			{
 				std::string image_name = cur_element.get_attribute("file");
-				FileSystem fs = resources->get_file_system(resource);
-				PixelBuffer pixelbuffer = ImageProviderFactory::load(PathHelp::combine(resources->get_base_path(resource), image_name), fs);
+				FileSystem fs = resource.get_file_system();
+				PixelBuffer pixelbuffer = ImageProviderFactory::load(PathHelp::combine(resource.get_base_path(), image_name), fs);
 				pixelbuffer = import_desc.process(pixelbuffer);
 
 				DomNode cur_child(cur_element.get_first_child());
