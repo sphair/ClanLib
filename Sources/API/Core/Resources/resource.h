@@ -82,6 +82,18 @@ public:
 /// \{
 
 public:
+	/// \brief Opens a file relative to the resource base path.
+	/** param: mode = File::OpenMode modes
+	    param: access = File::AccessFlags flags
+	    param: share = File::ShareFlags flags
+	    param: flags = File::Flags flags
+	    \return The IODevice*/
+	IODevice open_file(const std::string &filename,
+		File::OpenMode mode = File::open_existing,
+		unsigned int access = File::access_read,
+		unsigned int share = File::share_all,
+		unsigned int flags = 0) const;
+
 	/// \brief Compares this resource to another resource.
 	bool operator ==(const Resource &other) const;
 
