@@ -60,13 +60,13 @@ void PBuffer_GL1_Impl::reset()
 		if (pbuffer_context) window_provider->glx.glXDestroyContext(window_provider->get_display(), pbuffer_context);
 		if (pbuffer)
 		{
-			if (window_provider->glx.glx_1_3)
+			if (window_provider->glx_1_3)
 			{
-				glx->glXDestroyPbuffer(disp, pbuffer);
+				window_provider->glx.glXDestroyPbuffer(window_provider->get_display(), pbuffer);
 			}
 			else
 			{
-				glx->glXDestroyPbufferSGIX(disp, pbuffer);
+				window_provider->glx.glXDestroyPbufferSGIX(window_provider->get_display(), pbuffer);
 			}
 		}
 	}
@@ -74,6 +74,13 @@ void PBuffer_GL1_Impl::reset()
 	window_provider = NULL;
 	pbuffer_context = 0;
 	pbuffer = 0;
+}
+
+static bool cl1_ctxErrorOccurred = false;
+static int cl1_ctxErrorHandler( ::Display *dpy, XErrorEvent *ev )
+{
+    cl1_ctxErrorOccurred = true;
+    return 0;
 }
 
 void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Size &size)
@@ -84,11 +91,10 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 	window_provider = &gl_window_provider;
 	pbuffer_size = size;
 
-
-	disp = gl_window_provider.get_display();
+	::Display *disp = gl_window_provider.get_display();
 	if (disp == NULL)
 	{
-		throw CL_Exception("Cannot obtain GL1 display");
+		throw Exception("Cannot obtain GL1 display");
 	}
 
 	int scrnum;
@@ -119,13 +125,13 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 	if ((gl_window_provider.glx.glXCreateContext == NULL))
 	{
-		throw CL_Exception("internal error, cannot locate glxCreateContext");
+		throw Exception("internal error, cannot locate glxCreateContext");
 	}
 
-	if (gl_window_provider.glx.glx_1_3)
+	if (gl_window_provider.glx_1_3)
 	{
 		if ((gl_window_provider.glx.glXCreatePbuffer == NULL) || (gl_window_provider.glx.glXChooseFBConfig == NULL) || (gl_window_provider.glx.glXGetVisualFromFBConfig == NULL))
-			throw CL_Exception("glXCreatePbuffer is not available, even though you are running glx 1.3 or better.");
+			throw Exception("glXCreatePbuffer is not available, even though you are running glx 1.3 or better.");
 
 		fbconfig = gl_window_provider.glx.glXChooseFBConfig(disp, scrnum, attrib, &nitems);
 
@@ -164,7 +170,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 			};
 
 		cl1_ctxErrorOccurred = false;
-		int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&cl1_ctxErrorHandler);
+		int (*oldHandler)(::Display*, XErrorEvent*) = XSetErrorHandler(&cl1_ctxErrorHandler);
 
 		pbuffer = gl_window_provider.glx.glXCreatePbufferSGIX(disp, fbconfig[0], size.width, size.height, pbufAttrib2);
 
@@ -192,7 +198,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 	}
 
-	GLXContext shared_context = gl_window_provider.get_share_context();
+	GLXContext shared_context = gl_window_provider.opengl_context;
 
 	if (!shared_context)
 	{
@@ -216,7 +222,7 @@ void PBuffer_GL1_Impl::create(OpenGLWindowProvider &gl_window_provider, const Si
 
 void PBuffer_GL1_Impl::make_current() const
 {
-	pbuffer_impl.glx->glXMakeCurrent(display, pbuffer, glx_context);
+	window_provider->glx.glXMakeCurrent(window_provider->get_display(), pbuffer, pbuffer_context);
 }
 
 void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor)
@@ -231,10 +237,10 @@ void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor
 	
 ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name) const
 {
-	if (pbuffer_impl.glx->glXGetProcAddressARB)
-		return pbuffer_impl.glx->glXGetProcAddressARB((GLubyte*)function_name.c_str());
-	if (pbuffer_impl.glx->glXGetProcAddress)
-		return pbuffer_impl.glx->glXGetProcAddress((GLubyte*)function_name.c_str());
+	if (window_provider->glx.glXGetProcAddressARB)
+		return window_provider->glx.glXGetProcAddressARB((GLubyte*)function_name.c_str());
+	if (window_provider->glx.glXGetProcAddress)
+		return window_provider->glx.glXGetProcAddress((GLubyte*)function_name.c_str());
 	return NULL;
 }
 
