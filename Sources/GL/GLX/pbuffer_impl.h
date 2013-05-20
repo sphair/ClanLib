@@ -60,7 +60,9 @@ private:
 	GL1GraphicContextProvider *gc_provider;
 
 	Size pbuffer_size;
-
+	OpenGLWindowProvider *window_provider;
+	GLXPbuffer pbuffer;
+	GLXContext pbuffer_context;
 
 };
 
