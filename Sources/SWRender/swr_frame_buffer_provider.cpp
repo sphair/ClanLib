@@ -83,10 +83,9 @@ FrameBufferBindTarget SWRenderFrameBufferProvider::get_bind_target() const
 /////////////////////////////////////////////////////////////////////////////
 // SWRenderFrameBufferProvider Operations:
 
-/*FIXME
-void SWRenderFrameBufferProvider::attach_color(int color_buffer, const RenderBuffer &render_buffer)
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer)
 {
-	if (color_buffer == 0)
+	if (attachment_index == 0)
 	{
 		colorbuffer0_type = type_render;
 		colorbuffer0_render = render_buffer;
@@ -94,45 +93,18 @@ void SWRenderFrameBufferProvider::attach_color(int color_buffer, const RenderBuf
 		sig_changed_event.invoke();
 	}
 }
-
-void SWRenderFrameBufferProvider::attach_color(int color_buffer, const Texture2D &texture, int level, int zoffset)
-{
-	if (color_buffer == 0)
-	{
-		colorbuffer0_type = type_texture;
-		colorbuffer0_render = RenderBuffer();
-		colorbuffer0_texture = texture;
-		sig_changed_event.invoke();
-	}
-}
-
-void SWRenderFrameBufferProvider::attach_color(int color_buffer, const Texture &texture, TextureSubtype subtype, int level, int zoffset)
-{
-	if (color_buffer == 0)
-	{
-		colorbuffer0_type = type_texture;
-		colorbuffer0_render = RenderBuffer();
-		colorbuffer0_texture = texture;
-		sig_changed_event.invoke();
-	}
-}
-
-void SWRenderFrameBufferProvider::detach_color(int color_buffer, const Texture &texture, int level, int zoffset)
-{
-	if (color_buffer == 0)
-	{
-		colorbuffer0_type = type_none;
-		colorbuffer0_render = RenderBuffer();
-		colorbuffer0_texture = Texture();
-		sig_changed_event.invoke();
-	}
-}
-*/
-
-void SWRenderFrameBufferProvider::attach_color(int attachment_index, const RenderBuffer &render_buffer) {}
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture1D &texture, int level) {}
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture1DArray &texture, int array_index, int level) {}
-void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level) {}
+void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2D &texture, int level)
+{
+	if (attachment_index == 0)
+	{
+		colorbuffer0_type = type_texture;
+		colorbuffer0_render = RenderBuffer();
+		colorbuffer0_texture = texture;
+		sig_changed_event.invoke();
+	}
+}
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture2DArray &texture, int array_index, int level) {}
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const Texture3D &texture, int depth, int level) {}
 void SWRenderFrameBufferProvider::attach_color(int attachment_index, const TextureCube &texture, TextureSubtype subtype, int level) {}
