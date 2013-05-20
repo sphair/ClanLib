@@ -30,6 +30,7 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/XML/dom_element.h"
+#include "API/Core/IOData/path_help.h"
 #include "resource_manager_impl.h"
 #include <memory>
 #include <vector>
@@ -104,6 +105,11 @@ std::string Resource::get_base_path() const
 
 /////////////////////////////////////////////////////////////////////////////
 // Resource Operations:
+
+IODevice Resource::open_file(const std::string &filename, File::OpenMode mode, unsigned int access, unsigned int share, unsigned int flags) const
+{
+	return get_file_system().open_file(PathHelp::combine(get_base_path(), filename), mode, access, share, flags);
+}
 
 bool Resource::operator ==(const Resource &other) const
 {
