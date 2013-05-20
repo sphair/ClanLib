@@ -28,7 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/ImageProviders/provider_type.h"
@@ -36,7 +36,6 @@
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/virtual_directory.h"
 
 namespace clan
 {
@@ -52,13 +51,13 @@ std::map<std::string, ImageProviderType *> ImageProviderFactory::types;
 PixelBuffer ImageProviderFactory::try_load(
 	const std::string &filename,
 	const std::string &type,
-	VirtualDirectory directory,
+	const FileSystem &fs,
 	std::string *out_failure_reason,
 	bool srgb)
 {
 	try
 	{
-		return load(filename, directory, type, srgb);
+		return load(filename, fs, type, srgb);
 	}
 	catch (const Exception& e)
 	{
@@ -70,7 +69,7 @@ PixelBuffer ImageProviderFactory::try_load(
 
 PixelBuffer ImageProviderFactory::load(
 	const std::string &filename,
-	const VirtualDirectory &directory,
+	const FileSystem &fs,
 	const std::string &type,
 	bool srgb)
 {
@@ -79,7 +78,7 @@ PixelBuffer ImageProviderFactory::load(
 		if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 
 		ImageProviderType *factory = types[type];
-		return factory->load(filename, directory, srgb);
+		return factory->load(filename, fs, srgb);
 	}
 
 	// Determine file extension and use it to lookup type.
@@ -88,7 +87,7 @@ PixelBuffer ImageProviderFactory::load(
 	if (types.find(ext) == types.end()) throw Exception(std::string("Unknown image provider type ") + ext);
 
 	ImageProviderType *factory = types[ext];
-	return factory->load(filename, directory, srgb);
+	return factory->load(filename, fs, srgb);
 }
 
 PixelBuffer ImageProviderFactory::load(
@@ -109,14 +108,14 @@ PixelBuffer ImageProviderFactory::load(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return ImageProviderFactory::load(filename, vfs.get_root_directory(), type, srgb);
+	FileSystem vfs(path);
+	return ImageProviderFactory::load(filename, vfs, type, srgb);
 }
 
 void ImageProviderFactory::save(
 	PixelBuffer buffer,
 	const std::string &filename,
-	VirtualDirectory &directory,
+	FileSystem &fs,
 	const std::string &type_)
 {
 	std::string type = type_;
@@ -127,7 +126,7 @@ void ImageProviderFactory::save(
 	if (types.find(type) == types.end()) throw Exception("Unknown image provider type " + type);
 	
 	ImageProviderType *factory = types[type];
-	factory->save(buffer, filename, directory);
+	factory->save(buffer, filename, fs);
 }
 
 void ImageProviderFactory::save(
@@ -137,9 +136,8 @@ void ImageProviderFactory::save(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	return ImageProviderFactory::save(buffer, filename, dir, type);
+	FileSystem vfs(path);
+	return ImageProviderFactory::save(buffer, filename, vfs, type);
 }
 
 void ImageProviderFactory::save(

@@ -29,7 +29,6 @@
 #include "Core/precomp.h"
 #include "API/Core/IOData/file.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/security_descriptor.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #include "iodevice_impl.h"
@@ -108,17 +107,6 @@ File::File(
 : IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags))
 {
 }
-File::File(
-	const std::string &filename,
-	OpenMode mode,
-	const SecurityDescriptor &permissions,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-: IODevice(new IODeviceProvider_File(PathHelp::normalize(filename, PathHelp::path_type_file), mode, permissions, access, share, flags))
-{
-}
-
 File::~File()
 {
 }
@@ -126,11 +114,6 @@ File::~File()
 /////////////////////////////////////////////////////////////////////////////
 // File Attributes:
 
-SecurityDescriptor File::get_permissions() const
-{
-	const IODeviceProvider_File *provider = dynamic_cast<const IODeviceProvider_File*>(impl->provider);
-	return provider->get_permissions();
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // File Operations:
@@ -153,28 +136,10 @@ bool File::open(
 	return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), open_mode, access, share, flags);
 }
 
-bool File::open(
-	const std::string &filename,
-	OpenMode mode,
-	const SecurityDescriptor &permissions,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-{
-	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-	return provider->open(PathHelp::normalize(filename, PathHelp::path_type_file), mode, permissions, access, share, flags);
-}
-	
 void File::close()
 {
 	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
 	provider->close();
-}
-
-bool File::set_permissions(const SecurityDescriptor &permissions)
-{
-	IODeviceProvider_File *provider = dynamic_cast<IODeviceProvider_File*>(impl->provider);
-	return provider->set_permissions(permissions);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -76,7 +76,7 @@ public:
 	Texture2D(
 		GraphicContext &context,
 		const std::string &filename,
-		const VirtualDirectory &directory, const ImageImportDescription &import_desc = ImageImportDescription ());
+		const FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	Texture2D(
 		GraphicContext &context,

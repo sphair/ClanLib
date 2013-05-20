@@ -34,7 +34,6 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/IOData/virtual_directory.h"
 #include "../../Core/Signals/signal_v0.h"
 #include "texture.h"
 #include "../Image/image_import_description.h"

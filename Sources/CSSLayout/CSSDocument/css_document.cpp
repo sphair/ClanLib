@@ -55,10 +55,10 @@ void CSSDocument::add_default_html_sheet()
 	add_sheet(author_sheet_origin, iodevice, "file:");
 }
 
-void CSSDocument::add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir)
+void CSSDocument::add_sheet(CSSSheetOrigin origin, const std::string &filename, const FileSystem &fs)
 {
 	// Load the css document:
-	IODevice file = dir.open_file_read(filename);
+	IODevice file = fs.open_file(filename);
 	DataBuffer file_data(file.get_size());
 	file.read(file_data.get_data(), file_data.get_size());
 	std::string css_text(file_data.get_data(), file_data.get_size());
@@ -70,7 +70,7 @@ void CSSDocument::add_sheet(CSSSheetOrigin origin, const std::string &filename, 
 	std::vector<std::string> import_urls = CSSTokenizer(css_text).read_import_urls();
 	for (size_t i = 0; i < import_urls.size(); i++)
 	{
-		add_sheet(origin, PathHelp::combine(base_uri, import_urls[i]), dir);
+		add_sheet(origin, PathHelp::combine(base_uri, import_urls[i]), fs);
 	}
 
 	// Add the css sheet:

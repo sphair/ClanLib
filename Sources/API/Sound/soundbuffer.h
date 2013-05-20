@@ -45,7 +45,7 @@ class SoundBuffer_Session;
 class SoundFilter;
 class SoundBuffer_Impl;
 class IODevice;
-class VirtualDirectory;
+class FileSystem;
 
 /// \brief Sample interface in ClanLib.
 ///
@@ -90,7 +90,7 @@ public:
 	SoundBuffer(
 		const std::string &filename,
 		bool streamed,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		const std::string &type = "");
 
 	SoundBuffer(

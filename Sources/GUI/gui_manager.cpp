@@ -31,7 +31,7 @@
 #include "GUI/precomp.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_component.h"
@@ -155,11 +155,10 @@ Callback_0<int> &GUIManager::func_exec_handler()
 
 void GUIManager::add_theme(const std::string &path_to_theme)
 {
-	VirtualFileSystem vfs(path_to_theme);
-	VirtualDirectory dir = vfs.get_root_directory();
+	FileSystem vfs(path_to_theme);
 
-	impl->resources.add_resources(ResourceManager("resources.xml", dir));
-	impl->css_document.add_sheet(author_sheet_origin, "theme.css", dir);
+	impl->resources.add_resources(ResourceManager("resources.xml", vfs));
+	impl->css_document.add_sheet(author_sheet_origin, "theme.css", vfs);
 }
 
 void GUIManager::set_css_document(CSSDocument css)
@@ -174,10 +173,10 @@ void GUIManager::set_css_document(const std::string &fullname)
 	set_css_document(css);
 }
 
-void GUIManager::set_css_document(const std::string &filename, const VirtualDirectory &directory)
+void GUIManager::set_css_document(const std::string &filename, const FileSystem &fs)
 {
 	CSSDocument css;
-	css.add_sheet(author_sheet_origin, filename, directory);
+	css.add_sheet(author_sheet_origin, filename, fs);
 	set_css_document(css);
 }
 
@@ -191,9 +190,9 @@ void GUIManager::add_resources(const std::string &filename)
 	impl->resources.add_resources(ResourceManager(filename));
 }
 
-void GUIManager::add_resources(const std::string &filename, const VirtualDirectory &directory)
+void GUIManager::add_resources(const std::string &filename, const FileSystem &fs)
 {
-	impl->resources.add_resources(ResourceManager(filename, directory));
+	impl->resources.add_resources(ResourceManager(filename, fs));
 }
 
 void GUIManager::set_window_manager(GUIWindowManager &window_manager)
@@ -332,13 +331,12 @@ void GUIManager::set_accelerator_table( const AcceleratorTable &table )
 
 void GUIManager::initialize(GUIWindowManager &window_manager, const std::string &path_to_theme)
 {
-	VirtualFileSystem vfs(path_to_theme);
-	VirtualDirectory dir = vfs.get_root_directory();
+	FileSystem vfs(path_to_theme);
 
-	impl->resources = ResourceManager("resources.xml", dir);
+	impl->resources = ResourceManager("resources.xml", vfs);
 
 	set_window_manager(window_manager);
-	set_css_document("theme.css", dir);
+	set_css_document("theme.css", vfs);
 }
 
 }

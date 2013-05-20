@@ -40,7 +40,7 @@ namespace clan
 class SoundProvider;
 class InputSourceProvider;
 class SoundProviderType;
-class VirtualDirectory;
+class FileSystem;
 class IODevice;
 
 /// \brief Sound Provider Factor class.
@@ -67,7 +67,7 @@ public:
 	static SoundProvider *load(
 		const std::string &filename,
 		bool streamed,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		const std::string &type = std::string()
 		);
 

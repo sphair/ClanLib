@@ -43,7 +43,7 @@ namespace clan
 {
 
 class GraphicContext;
-class VirtualDirectory;
+class FileSystem;
 class ResourceManager;
 class Rect;
 class Size;
@@ -96,7 +96,7 @@ public:
 	/// \param filename Filename of image to load
 	/// \param dir = Virtual directory to load filename from
 	/// \param import_desc = Image Import Description
-	Image(GraphicContext &context, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Image
 	///

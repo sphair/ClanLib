@@ -42,7 +42,7 @@
 #include "../Core/Signals/callback_v3.h"
 #include "../Core/Signals/callback_2.h"
 #include "../Core/Signals/signal_v1.h"
-#include "../Core/IOData/virtual_directory.h"
+#include "../Core/IOData/file_system.h"
 #include "../Display/Window/display_window_description.h"
 #include "../Display/Window/display_window.h"
 #include "../Display/Render/graphic_context.h"
@@ -544,7 +544,7 @@ public:
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void create_components(const std::string &filename, const VirtualDirectory &dir);
+	void create_components(const std::string &filename, const FileSystem &fs);
 
 	// Request an asynchronous redraw of the specified area.
 	void request_repaint();

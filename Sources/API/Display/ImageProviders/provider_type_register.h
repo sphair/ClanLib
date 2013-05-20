@@ -33,7 +33,7 @@
 #pragma once
 
 #include "../api_display.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "provider_type.h"
 
 namespace clan
@@ -61,10 +61,10 @@ public:
 	/// \brief Called to load an image with this provider type.
 	virtual PixelBuffer load(
 		const std::string &filename,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		bool srgb)
 	{
-		return ProviderClass::load(filename, directory, srgb);
+		return ProviderClass::load(filename, fs, srgb);
 	}
 
 	virtual PixelBuffer load(
@@ -77,9 +77,9 @@ public:
 	virtual void save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		VirtualDirectory &directory)
+		FileSystem &fs)
 	{
-		ProviderClass::save(buffer, filename, directory);
+		ProviderClass::save(buffer, filename, fs);
 	}
 
 	virtual void save(

@@ -36,8 +36,7 @@
 #include "API/Core/System/cl_platform.h"
 #include "pixel_buffer_impl.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Display/ImageProviders/provider_factory.h"
@@ -72,14 +71,13 @@ PixelBuffer::PixelBuffer(const std::string &fullname, bool srgb)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	*this = PixelBuffer(filename, dir, srgb);
+	FileSystem vfs(path);
+	*this = PixelBuffer(filename, vfs, srgb);
 }
 
-PixelBuffer::PixelBuffer(const std::string &filename, const VirtualDirectory &dir, bool srgb)
+PixelBuffer::PixelBuffer(const std::string &filename, const FileSystem &fs, bool srgb)
 {
-	*this = ImageProviderFactory::load(filename, dir, "", srgb);
+	*this = ImageProviderFactory::load(filename, fs, "", srgb);
 }
 
 PixelBuffer::PixelBuffer(IODevice &file, const std::string &image_type, bool srgb )

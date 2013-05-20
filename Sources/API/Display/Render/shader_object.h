@@ -34,7 +34,7 @@
 #pragma once
 
 #include <memory>
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
 #include "../api_display.h"
 #include <vector>
@@ -123,7 +123,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &filename, const VirtualDirectory &directory);
+	static ShaderObject load(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
 
 	/// \brief Load
 	///
@@ -151,7 +151,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Shader Object
-	static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename, const VirtualDirectory &directory);
+	static ShaderObject load_and_compile(GraphicContext &gc, ShaderType type, const std::string &filename, const FileSystem &fs);
 
 	/// \brief Load and compile
 	///

@@ -40,33 +40,32 @@ namespace clan
 {
 
 class IODevice;
-class VirtualDirectory;
-class VirtualFileSystem_Impl;
-class VirtualFileSource;
-class VirtualDirectoryListing;
+class FileSystem_Impl;
+class FileSystemProvider;
+class DirectoryListing;
 
 /// \brief Virtual File System (VFS).
-class CL_API_CORE VirtualFileSystem
+class CL_API_CORE FileSystem
 {
 /// \name Construction
 /// \{
 
 public:
 	/// \brief Constructs a file system.
-	VirtualFileSystem();
+	FileSystem();
 
-	/// \brief Constructs a VirtualFileSystem
+	/// \brief Constructs a FileSystem
 	///
 	/// \param provider = Virtual File Source
-	VirtualFileSystem(VirtualFileSource *provider);
+	FileSystem(FileSystemProvider *provider);
 
-	/// \brief Constructs a VirtualFileSystem
+	/// \brief Constructs a FileSystem
 	///
 	/// \param path = String
 	/// \param is_zip_file = bool
-	VirtualFileSystem(const std::string &path, bool is_zip_file = false);
+	FileSystem(const std::string &path, bool is_zip_file = false);
 
-	~VirtualFileSystem();
+	~FileSystem();
 
 /// \}
 /// \name Attributes
@@ -76,14 +75,11 @@ public:
 	/// \brief Returns true if the file system is null.
 	bool is_null() const { return !impl; }
 
-	/// \brief Returns the root directory for the file system.
-	VirtualDirectory get_root_directory();
-
 	/// \brief Returns true if a path is a mount point.
 	bool is_mount(const std::string &mount_point);
 
 	/// \brief Return directory listing for path.
-	VirtualDirectoryListing get_directory_listing(const std::string &path_rel);
+	DirectoryListing get_directory_listing(const std::string &path_rel);
 
 	/// \brief Return true if the root of the filesystem contains the specified file.
 	bool has_file(const std::string &filename);
@@ -92,7 +88,7 @@ public:
 	bool has_directory(const std::string &directory);
 
 	/// \brief Returns the file source for this file system.
-	VirtualFileSource *get_provider();
+	FileSystemProvider *get_provider();
 
 	/// \brief Returns a path to the file source for this file system.
 	std::string get_path() const;
@@ -108,9 +104,6 @@ public:
 /// \{
 
 public:
-	/// \brief Opens a virtual directory.
-	VirtualDirectory open_directory(const std::string &path);
-
 	/// \brief Opens a file.
 	/** param: mode = File::OpenMode modes
 	    param: access = File::AccessFlags flags
@@ -119,27 +112,27 @@ public:
 	    \return The IODevice*/
 	IODevice open_file(const std::string &filename,
 		File::OpenMode mode = File::open_existing,
-		unsigned int access = File::access_read | File::access_write,
+		unsigned int access = File::access_read,
 		unsigned int share = File::share_all,
 		unsigned int flags = 0) const;
 
 	/// \brief Mounts a file system at mount point.
-	/** This is only available if VirtualFileSystem was set
+	/** This is only available if FileSystem was set
 	    Filenames starting with "mount_point" at the start will be replaced by the filesystem specified by "fs"
 	    (ie the the base_path is ignored)
 	    For example:
-	     VirtualFileSystem new_vfs(new MyFileSource("Hello"));
+	     FileSystem new_vfs(new MyFileSource("Hello"));
 	     vfs.mount("ABC", new_vfs);
 	    param: mount_point = Mount alias name to use
 	    param: fs = Filesystem to use*/
-	void mount(const std::string &mount_point, VirtualFileSystem fs);
+	void mount(const std::string &mount_point, FileSystem fs);
 
 	/// \brief Mounts a file system at mount point.
 	/** Filenames starting with "mount_point" at the start will be replaced by the path specified by "path"
 	    (ie the the base_path is ignored)
 	    param: mount_point = Mount alias name to use
 	    param: path = Path which "mount_point" should point to
-	    param: is_zip_file = false, create as a VirtualFileSource_File, else create as a VirtualFileSource_Zip*/
+	    param: is_zip_file = false, create as a FileSystemProvider_File, else create as a FileSystemProvider_Zip*/
 	void mount(const std::string &mount_point, const std::string &path, bool is_zip_file);
 
 	/// \brief Unmount a file system.
@@ -153,11 +146,9 @@ public:
 private:
 	/** !hide!*/
 	class NullVFS { };
-	explicit VirtualFileSystem(class NullVFS null_fs);
+	explicit FileSystem(class NullVFS null_fs);
 
-	std::shared_ptr<VirtualFileSystem_Impl> impl;
-
-	friend class VirtualDirectory_Impl;
+	std::shared_ptr<FileSystem_Impl> impl;
 /// \}
 };
 

@@ -24,58 +24,77 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    Harry Storbacka
 */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/security_descriptor.h"
+#include "file_system_provider_file.h"
+#include "API/Core/IOData/file.h"
+#include "API/Core/IOData/path_help.h"
+#include "API/Core/IOData/directory_listing_entry.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// SecurityDescriptor construction:
+// FileSystemProvider_File Construction:
 
-SecurityDescriptor::SecurityDescriptor()
-: owner(SecurityIdentifier::get_thread_user()),
-	primary_group(SecurityIdentifier::get_thread_group()),
-	owner_defaulted(true),
-	group_defaulted(true),
-	dacl_defaulted(true)
-{
-	// todo: setup dacl to u+rw, g+r, o+r rights
-}
-
-SecurityDescriptor::SecurityDescriptor(const SecurityDescriptor &copy)
-: owner(copy.owner), primary_group(copy.primary_group),
-	discretionary_acl(copy.discretionary_acl),
-	owner_defaulted(copy.owner_defaulted),
-	group_defaulted(copy.group_defaulted),
-	dacl_defaulted(copy.dacl_defaulted)
+FileSystemProvider_File::FileSystemProvider_File(const std::string &path)
+: path(PathHelp::add_trailing_slash(path, PathHelp::path_type_file))
 {
 }
 
-SecurityDescriptor::~SecurityDescriptor()
+FileSystemProvider_File::~FileSystemProvider_File()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// SecurityDescriptor attributes:
+// FileSystemProvider_File Attributes:
 
-/////////////////////////////////////////////////////////////////////////////
-// SecurityDescriptor operations:
-
-SecurityDescriptor &SecurityDescriptor::operator =(const SecurityDescriptor &copy)
+std::string FileSystemProvider_File::get_path() const
 {
-	owner = copy.owner;
-	primary_group = copy.primary_group;
-	discretionary_acl = copy.discretionary_acl;
-	owner_defaulted = copy.owner_defaulted;
-	group_defaulted = copy.group_defaulted;
-	dacl_defaulted = copy.dacl_defaulted;
-	return *this;
+	return path;
+}
+
+std::string FileSystemProvider_File::get_identifier() const
+{
+	return path;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// SecurityDescriptor implementation:
+// FileSystemProvider_File Operations:
+
+IODevice FileSystemProvider_File::open_file(const std::string &filename,
+	File::OpenMode mode,
+	unsigned int access,
+	unsigned int share,
+	unsigned int flags)
+{
+	return File(path + filename, mode, access, share, flags);
+}
+
+bool FileSystemProvider_File::initialize_directory_listing(const std::string &additionalpath)
+{
+	return dir_scanner.scan(PathHelp::combine(this->path, additionalpath));
+}
+
+bool FileSystemProvider_File::next_file(DirectoryListingEntry &entry)
+{
+	bool next = dir_scanner.next();
+
+	if( next )
+	{
+		entry.set_directory(dir_scanner.is_directory());
+		entry.set_filename(dir_scanner.get_name());
+		entry.set_hidden(dir_scanner.is_hidden());
+		entry.set_readable(dir_scanner.is_readable());
+		entry.set_writable(dir_scanner.is_writable());
+	}
+
+	return next;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// FileSystemProvider_File Implementation:
 
 }

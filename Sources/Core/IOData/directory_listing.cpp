@@ -27,40 +27,40 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/virtual_directory_listing.h"
-#include "API/Core/IOData/virtual_file_source.h"
-#include "API/Core/IOData/virtual_directory_listing_entry.h"
+#include "API/Core/IOData/directory_listing.h"
+#include "API/Core/IOData/file_system_provider.h"
+#include "API/Core/IOData/directory_listing_entry.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListing_Impl Class:
+// DirectoryListing_Impl Class:
 
-class VirtualDirectoryListing_Impl
+class DirectoryListing_Impl
 {
 /// \name Construction
 /// \{
 public:
-	VirtualDirectoryListing_Impl(VirtualFileSource *provider, const std::string &path) : index(0) 
+	DirectoryListing_Impl(FileSystemProvider *provider, const std::string &path) : index(0) 
 	{
 		bool init_ok = provider->initialize_directory_listing(path);
 		if (!init_ok)
 		{
-			throw Exception("Cannot scan directory to initialize VirtualDirectoryListing");
+			throw Exception("Cannot scan directory to initialize DirectoryListing");
 		}
 
 		bool next;
 		do 
 		{
-			VirtualDirectoryListingEntry vdir_entry;
+			DirectoryListingEntry vdir_entry;
 			next = provider->next_file(vdir_entry);
 			if(next)
 				list_entries.push_back(vdir_entry);
 		} while (next);
 	}
 
-	~VirtualDirectoryListing_Impl()
+	~DirectoryListing_Impl()
 	{
 	}
 
@@ -112,75 +112,75 @@ public:
 /// \name Implementation
 /// \{
 private:
-	VirtualDirectoryListingEntry current_entry;
+	DirectoryListingEntry current_entry;
 
-	std::vector<VirtualDirectoryListingEntry> list_entries;
+	std::vector<DirectoryListingEntry> list_entries;
 
 	unsigned int index;
 /// \}
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListing Construction:
+// DirectoryListing Construction:
 
-VirtualDirectoryListing::VirtualDirectoryListing(VirtualFileSource *provider, const std::string &path)
-: impl(new VirtualDirectoryListing_Impl(provider, path))
+DirectoryListing::DirectoryListing(FileSystemProvider *provider, const std::string &path)
+: impl(new DirectoryListing_Impl(provider, path))
 {
 }
 
-VirtualDirectoryListing::VirtualDirectoryListing()
+DirectoryListing::DirectoryListing()
 {
 	// NULL instance
 }
 
 
-VirtualDirectoryListing::~VirtualDirectoryListing()
+DirectoryListing::~DirectoryListing()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListing Attributes:
+// DirectoryListing Attributes:
 
-void VirtualDirectoryListing::throw_if_null() const
+void DirectoryListing::throw_if_null() const
 {
 	if (!impl)
-		throw Exception("VirtualDirectoryListing is null");
+		throw Exception("DirectoryListing is null");
 }
 
-std::string VirtualDirectoryListing::get_filename()
+std::string DirectoryListing::get_filename()
 {
 	return impl->get_filename();
 }
 
-bool VirtualDirectoryListing::is_directory()
+bool DirectoryListing::is_directory()
 {
 	return impl->is_directory();
 }
 
-bool VirtualDirectoryListing::is_hidden()
+bool DirectoryListing::is_hidden()
 {
 	return impl->is_hidden();
 }
 
-bool VirtualDirectoryListing::is_writable()
+bool DirectoryListing::is_writable()
 {
 	return impl->is_writable();
 }
 
-bool VirtualDirectoryListing::is_readable()
+bool DirectoryListing::is_readable()
 {
 	return impl->is_readable();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListing Operations:
+// DirectoryListing Operations:
 
-bool VirtualDirectoryListing::next()
+bool DirectoryListing::next()
 {
 	return impl->next();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListing Implementation:
+// DirectoryListing Implementation:
 
 }

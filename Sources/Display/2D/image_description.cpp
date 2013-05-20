@@ -28,8 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Text/string_format.h"
@@ -65,8 +64,7 @@ ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resour
 		if (tag_name == "image" || tag_name == "image-file")
 		{
 			std::string image_name = cur_element.get_attribute("file");
-			VirtualDirectory virtual_directory = resources->get_directory(resource);
-			Texture2D texture = Texture2D(gc, image_name, virtual_directory, import_desc );
+			Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), image_name), resources->get_file_system(resource), import_desc);
 
 			DomNode cur_child(cur_element.get_first_child());
 			if(cur_child.is_null()) 
@@ -155,9 +153,9 @@ void ImageDescription::add_frame(const Texture2D &texture)
 	impl->frame = ImageDescriptionFrame(texture, texture.get_size());
 }
 
-void ImageDescription::add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+void ImageDescription::add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	add_frame(Texture2D(gc, filename, dir, import_desc));
+	add_frame(Texture2D(gc, filename, fs, import_desc));
 }
 
 void ImageDescription::add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)

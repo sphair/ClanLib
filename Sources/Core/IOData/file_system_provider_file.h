@@ -23,65 +23,73 @@
 **
 **  File Author(s):
 **
+**    Magnus Norddahl
 **    Harry Storbacka
 */
 
 #pragma once
 
-#include <memory>
+
+#include "API/Core/IOData/file_system_provider.h"
+#include "API/Core/IOData/directory_scanner.h"
+#include "API/Core/IOData/file.h"
 
 namespace clan
 {
 
-class VirtualDirectoryListingEntry_Impl;
+class DirectoryListingEntry;
 
-/// \brief Virtual File System (VFS) directory listing entry class.
-class VirtualDirectoryListingEntry
+class FileSystemProvider_File : public FileSystemProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	VirtualDirectoryListingEntry();
-	virtual ~VirtualDirectoryListingEntry();
+	FileSystemProvider_File(const std::string &path);
+
+	~FileSystemProvider_File();
+
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	/// \brief Returns the file name of the item in the listing.
-	std::string get_filename();
+	std::string get_path() const;
 
-	/// \brief Returns true if item is a directory.
-	bool is_directory();
-
-	/// \brief Returns true if item is hidden.
-	bool is_hidden();
-
-	/// \brief Returns true if item is writable.
-	bool is_writable();
-
-	/// \brief Returns true if item is readable.
-	bool is_readable();
+	std::string get_identifier() const;
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	void set_filename(const std::string &);
-	void set_directory(bool );
-	void set_hidden(bool );
-	void set_writable(bool );
-	void set_readable(bool );
+	/// \brief Open a file
+	/** param: filename = The filename to use
+	    param: mode = File::OpenMode modes
+	    param: access = File::AccessFlags flags
+	    param: share = File::ShareFlags flags
+	    param: flags = File::Flags flags
+	    \return The IODevice*/
+	IODevice open_file(const std::string &filename,
+		File::OpenMode mode = File::open_existing,
+		unsigned int access = File::access_read | File::access_write,
+		unsigned int share = File::share_all,
+		unsigned int flags = 0);
+
+	bool initialize_directory_listing(const std::string &path);
+
+	bool next_file(DirectoryListingEntry &entry);
+
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	std::shared_ptr<VirtualDirectoryListingEntry_Impl> impl;
+	std::string path;
+
+	DirectoryScanner dir_scanner;
 /// \}
 };
 

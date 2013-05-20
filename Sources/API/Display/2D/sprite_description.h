@@ -141,7 +141,7 @@ public:
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frames
 	///

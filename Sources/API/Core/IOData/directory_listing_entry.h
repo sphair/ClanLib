@@ -23,81 +23,65 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Harry Storbacka
 */
 
 #pragma once
 
-#include "API/Core/IOData/virtual_file_source.h"
-#include "API/Core/Zip/zip_archive.h"
-#include "API/Core/IOData/file.h"
+#include <memory>
 
 namespace clan
 {
 
-class VirtualDirectoryListingEntry;
+class DirectoryListingEntry_Impl;
 
-class VirtualFileSource_Zip : public VirtualFileSource
+/// \brief Virtual File System (VFS) directory listing entry class.
+class DirectoryListingEntry
 {
 /// \name Construction
 /// \{
 
 public:
-	VirtualFileSource_Zip(const ZipArchive &zip_archive);
-
-	~VirtualFileSource_Zip();
-
+	DirectoryListingEntry();
+	virtual ~DirectoryListingEntry();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
-	std::string get_path() const;
+	/// \brief Returns the file name of the item in the listing.
+	std::string get_filename();
 
-	std::string get_identifier() const;
+	/// \brief Returns true if item is a directory.
+	bool is_directory();
+
+	/// \brief Returns true if item is hidden.
+	bool is_hidden();
+
+	/// \brief Returns true if item is writable.
+	bool is_writable();
+
+	/// \brief Returns true if item is readable.
+	bool is_readable();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	/// \brief Open a zip file
-	/** param: filename = The filename to use
-	    param: mode = File::OpenMode modes
-	    param: access = File::AccessFlags flags
-	    param: share = File::ShareFlags flags
-	    param: flags = File::Flags flags
-	    \return The IODevice*/
-	IODevice open_file(const std::string &filename,
-		File::OpenMode mode = File::open_existing,
-		unsigned int access = File::access_read | File::access_write,
-		unsigned int share = File::share_all,
-		unsigned int flags = 0);
-
-	bool initialize_directory_listing(const std::string &path);
-
-	bool next_file(VirtualDirectoryListingEntry &entry);
-
+	void set_filename(const std::string &);
+	void set_directory(bool );
+	void set_hidden(bool );
+	void set_writable(bool );
+	void set_readable(bool );
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	std::string path;
-
-	ZipArchive zip_archive;
-
-	std::vector<ZipFileEntry> file_list;
-
-	unsigned int index;
-
-	std::string directory_list_path;
-
-	static int zip_source_unique_id;
-
+	std::shared_ptr<DirectoryListingEntry_Impl> impl;
 /// \}
 };
 

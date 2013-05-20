@@ -28,8 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Text/string_format.h"
@@ -82,7 +81,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 				std::string suffix = "." + PathHelp::get_extension(prefix);
 				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
 
-				VirtualDirectory virtual_directory = resources->get_directory(resource);
+				FileSystem fs = resources->get_file_system(resource);
 
 				for (int i = start_index;; i += skip_index)
 				{
@@ -96,7 +95,7 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						add_frame(file_name, virtual_directory, import_desc);
+						add_frame(PathHelp::combine(resources->get_base_path(resource), file_name), fs, import_desc);
 					}
 					catch (const Exception&)
 					{
@@ -113,8 +112,8 @@ CursorDescription::CursorDescription(GraphicContext &gc, const std::string &reso
 			else
 			{
 				std::string image_name = cur_element.get_attribute("file");
-				VirtualDirectory virtual_directory = resources->get_directory(resource);
-				PixelBuffer pixelbuffer = ImageProviderFactory::load(image_name, virtual_directory);
+				FileSystem fs = resources->get_file_system(resource);
+				PixelBuffer pixelbuffer = ImageProviderFactory::load(PathHelp::combine(resources->get_base_path(resource), image_name), fs);
 				pixelbuffer = import_desc.process(pixelbuffer);
 
 				DomNode cur_child(cur_element.get_first_child());
@@ -270,9 +269,9 @@ void CursorDescription::add_frame(const PixelBuffer &pixelbuffer)
 	impl->frames.push_back(CursorDescriptionFrame(pixelbuffer, Rect(0, 0, pixelbuffer.get_width(), pixelbuffer.get_height())));
 }
 
-void CursorDescription::add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+void CursorDescription::add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	PixelBuffer image = ImageProviderFactory::load(filename, dir, "");
+	PixelBuffer image = ImageProviderFactory::load(filename, fs, "");
 	image = import_desc.process(image);
 	add_frame(image);
 }
@@ -281,9 +280,8 @@ void CursorDescription::add_frame(const std::string &fullname, const ImageImport
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	add_frame(filename, dir, import_desc );
+	FileSystem vfs(path);
+	add_frame(filename, vfs, import_desc );
 }
 
 void CursorDescription::add_frame(IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)

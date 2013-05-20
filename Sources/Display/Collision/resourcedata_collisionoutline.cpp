@@ -31,7 +31,8 @@
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/XML/dom_element.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -66,13 +67,13 @@ ResourceData_CollisionOutline::ResourceData_CollisionOutline(Resource &resource)
 
 	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
-		IODevice file = resource.get_manager().get_directory(resource).open_file_read(filename);
+		IODevice file = resource.get_manager().get_file_system(resource).open_file(PathHelp::combine(resource.get_manager().get_base_path(resource), filename));
 		OutlineProviderFile outline_provider(file);
 		collision_outline = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
 	else
 	{
-		PixelBuffer pbuf = ImageProviderFactory::load(filename, resource.get_manager().get_directory(resource), "");
+		PixelBuffer pbuf = ImageProviderFactory::load(PathHelp::combine(resource.get_manager().get_base_path(resource), filename), resource.get_manager().get_file_system(resource), "");
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
 		collision_outline = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy);
 	}

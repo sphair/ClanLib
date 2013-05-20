@@ -36,8 +36,6 @@
 namespace clan
 {
 
-class SecurityDescriptor;
-
 class IODeviceProvider_File : public IODeviceProvider
 {
 /// \name Construction
@@ -49,14 +47,6 @@ public:
 	IODeviceProvider_File(
 		const std::string &filename,
 		File::OpenMode mode,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags);
-
-	IODeviceProvider_File(
-		const std::string &filename,
-		File::OpenMode mode,
-		const SecurityDescriptor &permissions,
 		unsigned int access,
 		unsigned int share,
 		unsigned int flags);
@@ -73,9 +63,6 @@ public:
 
 	int get_position() const;
 
-	SecurityDescriptor get_permissions() const;
-
-
 /// \}
 /// \name Operations
 /// \{
@@ -88,17 +75,7 @@ public:
 		unsigned int share,
 		unsigned int flags);
 
-	bool open(
-		const std::string &filename,
-		File::OpenMode mode,
-		const SecurityDescriptor &permissions,
-		unsigned int access,
-		unsigned int share,
-		unsigned int flags);
-
 	void close();
-
-	bool set_permissions(const SecurityDescriptor &permissions);
 
 	int read(void *buffer, int size, bool read_all);
 

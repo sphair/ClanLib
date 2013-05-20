@@ -28,8 +28,7 @@
 
 #include "Display/precomp.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -43,10 +42,10 @@ namespace clan
 
 PixelBuffer TargaProvider::load(
 	const std::string &filename,
-	const VirtualDirectory &directory,
+	const FileSystem &fs,
 	bool srgb)
 {
-	IODevice datafile = directory.open_file_read(filename);
+	IODevice datafile = fs.open_file(filename);
 	return TargaLoader::load(datafile, srgb);
 }
 
@@ -68,7 +67,7 @@ PixelBuffer TargaProvider::load(
 void TargaProvider::save(
 	PixelBuffer buffer,
 	const std::string &filename,
-	VirtualDirectory &directory)
+	FileSystem &fs)
 {
 	throw Exception("TargaProvider doesn't support saving");
 }
@@ -86,9 +85,8 @@ void TargaProvider::save(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	TargaProvider::save(buffer, filename, dir);
+	FileSystem vfs(path);
+	TargaProvider::save(buffer, filename, vfs);
 }
 
 }

@@ -30,7 +30,6 @@
 
 #include "API/Sound/soundformat.h"
 #include "API/Core/System/databuffer.h"
-#include "API/Core/IOData/virtual_directory.h"
 #include <string>
 
 namespace clan

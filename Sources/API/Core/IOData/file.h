@@ -38,8 +38,6 @@
 namespace clan
 {
 
-class SecurityDescriptor;
-
 /// \brief File I/O device.
 class CL_API_CORE File : public IODevice
 {
@@ -144,17 +142,6 @@ public:
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 
-	/// \brief Constructs a file object.
-	///
-	/// PathHelp::normalize(filename, PathHelp::path_type_file) is called
-	File(
-		const std::string &filename,
-		OpenMode mode,
-		const SecurityDescriptor &permissions,
-		unsigned int access,
-		unsigned int share = share_all,
-		unsigned int flags = 0);
-
 	~File();
 
 /// \}
@@ -162,8 +149,6 @@ public:
 /// \{
 
 public:
-	/// \brief Returns the file permissions.
-	SecurityDescriptor get_permissions() const;
 
 /// \}
 /// \name Operations
@@ -186,22 +171,8 @@ public:
 		unsigned int share = share_all,
 		unsigned int flags = 0);
 
-	/// \brief Opens a file.
-	///
-	/// PathHelp::normalize(filename, PathHelp::path_type_file) is called
-	bool open(
-		const std::string &filename,
-		OpenMode mode,
-		const SecurityDescriptor &permissions,
-		unsigned int access,
-		unsigned int share = share_all,
-		unsigned int flags = 0);
-
 	/// \brief Close file.
 	void close();
-
-	/// \brief Change file permissions.
-	bool set_permissions(const SecurityDescriptor &permissions);
 
 /// \}
 /// \name Implementation

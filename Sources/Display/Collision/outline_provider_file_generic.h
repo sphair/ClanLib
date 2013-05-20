@@ -32,7 +32,7 @@
 
 #include "API/Display/Collision/contour.h"
 #include "API/Core/Math/circle.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/iodevice.h"
 #include <vector>
 
 namespace clan

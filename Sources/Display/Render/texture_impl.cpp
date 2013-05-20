@@ -33,11 +33,11 @@
 namespace clan
 {
 
-Texture Texture_Impl::get_from_cache(const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc)
+Texture Texture_Impl::get_from_cache(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
 	if (import_desc.is_cached())	// Caching enabled
 	{
-		std::string hash = get_cache_hash(filename, directory, import_desc);
+		std::string hash = get_cache_hash(filename, fs, import_desc);
 		return SharedGCData::get_texture(hash);
 	}
 	else
@@ -46,24 +46,24 @@ Texture Texture_Impl::get_from_cache(const std::string &filename, const VirtualD
 	}
 }
 
-void Texture_Impl::put_in_cache(Texture &texture, const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc)
+void Texture_Impl::put_in_cache(Texture &texture, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
 	if (import_desc.is_cached())	// Caching enabled
 	{
-		std::string hash = get_cache_hash(filename, directory, import_desc);
+		std::string hash = get_cache_hash(filename, fs, import_desc);
 		SharedGCData::add_texture(texture, hash);
 		cache_used = true;
 	}
 
 }
 
-std::string Texture_Impl::get_cache_hash(const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc)
+std::string Texture_Impl::get_cache_hash(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
 	std::string alpha_code = "A";
 	if (import_desc.get_premultiply_alpha())
 		alpha_code = "P";
 
-	std::string hash = directory.get_identifier() + filename + alpha_code;
+	std::string hash = fs.get_identifier() + filename + alpha_code;
 	return hash;
 }
 

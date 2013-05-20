@@ -28,7 +28,7 @@
 */
 
 #include "GUI/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
@@ -1048,10 +1048,10 @@ void GUIComponent::create_components(const DomDocument &gui_xml)
 	}
 }
 
-void GUIComponent::create_components(const std::string &filename, const VirtualDirectory &dir)
+void GUIComponent::create_components(const std::string &filename, const FileSystem &fs)
 {
 	IODevice device;
-	device = dir.open_file_read(filename);
+	device = fs.open_file(filename);
 	create_components(device);
 }
 
@@ -1066,8 +1066,8 @@ void GUIComponent::create_components(const std::string &fullname)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	create_components(filename, vfs.get_root_directory());
+	FileSystem vfs(path);
+	create_components(filename, vfs);
 }
 
 void GUIComponent::request_repaint(Rect request_repaint)

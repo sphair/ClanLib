@@ -29,8 +29,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Text/string_format.h"
@@ -83,7 +82,7 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 				std::string suffix = "." + PathHelp::get_extension(prefix);
 				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
 
-				VirtualDirectory virtual_directory = resources->get_directory(resource);
+				FileSystem fs = resources->get_file_system(resource);
 
 				for (int i = start_index;; i += skip_index)
 				{
@@ -97,7 +96,7 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						Texture2D texture = Texture2D(gc, file_name, virtual_directory, import_desc );
+						Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), file_name), fs, import_desc);
 						add_frame(texture);
 					}
 					catch (const Exception&)
@@ -115,8 +114,8 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 			else
 			{
 				std::string image_name = cur_element.get_attribute("file");
-				VirtualDirectory virtual_directory = resources->get_directory(resource);
-				Texture2D texture = Texture2D(gc, image_name, virtual_directory, import_desc );
+				FileSystem fs = resources->get_file_system(resource);
+				Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), image_name), fs, import_desc);
 
 				DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 
@@ -274,9 +273,9 @@ void SpriteDescription::add_frame(const Texture2D &texture)
 	impl->frames.push_back(SpriteDescriptionFrame(texture, texture.get_size()));
 }
 
-void SpriteDescription::add_frame(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+void SpriteDescription::add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	add_frame(Texture2D(gc, filename, dir, import_desc));
+	add_frame(Texture2D(gc, filename, fs, import_desc));
 }
 
 void SpriteDescription::add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)

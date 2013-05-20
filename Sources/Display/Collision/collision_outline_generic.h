@@ -35,7 +35,7 @@
 #include "API/Display/Collision/contour.h"
 #include "API/Display/Collision/outline_circle.h"
 #include "API/Display/Collision/outline_accuracy.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 
 namespace clan
 {

@@ -29,8 +29,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Resources/resource.h"
 #include "API/Core/XML/dom_element.h"
@@ -61,16 +60,15 @@ Sprite::Sprite(GraphicContext &gc, const std::string &fullname, const ImageImpor
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	*this = Sprite(gc, filename, dir, import_desc);
+	FileSystem vfs(path);
+	*this = Sprite(gc, filename, vfs, import_desc);
 }
 
-Sprite::Sprite(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+Sprite::Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(new Sprite_Impl())
 {
 	SpriteDescription desc;
-	desc.add_frame(gc, filename, dir, import_desc );
+	desc.add_frame(gc, filename, fs, import_desc );
 	impl->create_textures(gc, desc);
 
 	restart();

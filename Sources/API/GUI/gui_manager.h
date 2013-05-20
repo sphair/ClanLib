@@ -56,7 +56,7 @@ class GUIWindowManager;
 class GUIManager_Impl;
 class Font;
 class FontDescription;
-class VirtualDirectory;
+class FileSystem;
 class DisplayWindow;
 class ResourceManager;
 
@@ -166,7 +166,7 @@ public:
 	///
 	/// \param filename = String
 	/// \param directory = Virtual Directory
-	void set_css_document(const std::string &filename, const VirtualDirectory &directory);
+	void set_css_document(const std::string &filename, const FileSystem &fs);
 
 	/// \brief Adds additional resources to the GUI resource manager
 	void add_resources(const ResourceManager &resources);
@@ -175,7 +175,7 @@ public:
 	void add_resources(const std::string &filename);
 
 	/// \brief Adds additional resources to the GUI resource manager
-	void add_resources(const std::string &filename, const VirtualDirectory &directory);
+	void add_resources(const std::string &filename, const FileSystem &fs);
 
 	/// \brief Sets the windows manager.
 	void set_window_manager(GUIWindowManager &window_manager);

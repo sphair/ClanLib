@@ -34,7 +34,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
 #include "API/Display/ImageProviders/provider_factory.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
@@ -88,16 +88,16 @@ Texture2D::Texture2D(GraphicContext &context, const std::string &fullname, const
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	*this = Texture2D(context, filename, vfs.get_root_directory(), import_desc );
+	FileSystem vfs(path);
+	*this = Texture2D(context, filename, vfs, import_desc );
 }
 
-Texture2D::Texture2D( GraphicContext &context, const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc)
+Texture2D::Texture2D( GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	Texture cached_texture = Texture_Impl::get_from_cache(filename, directory, import_desc);
+	Texture cached_texture = Texture_Impl::get_from_cache(filename, fs, import_desc);
 	if (cached_texture.is_null())
 	{
-		PixelBuffer pb = ImageProviderFactory::load(filename, directory, std::string());
+		PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
 		pb = import_desc.process(pb);
 
 		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
@@ -106,7 +106,7 @@ Texture2D::Texture2D( GraphicContext &context, const std::string &filename, cons
 
 		impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 
-		impl->put_in_cache(*this, filename, directory, import_desc);
+		impl->put_in_cache(*this, filename, fs, import_desc);
 	}
 	else
 	{
@@ -134,8 +134,8 @@ Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, Resourc
 		throw Exception(string_format("Resource '%1' is not of type 'texture'", resource_id));
 
 	std::string filename = resource.get_element().get_attribute("file");
-	VirtualDirectory directory = resource.get_manager().get_directory(resource);
-	*this = Texture2D(gc, filename, directory, import_desc);
+	FileSystem fs = resource.get_manager().get_file_system(resource);
+	*this = Texture2D(gc, PathHelp::combine(resource.get_manager().get_base_path(resource), filename), fs, import_desc);
 }
 
 int Texture2D::get_width() const

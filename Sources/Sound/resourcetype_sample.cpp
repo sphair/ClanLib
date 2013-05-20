@@ -37,7 +37,8 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
+#include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Sound/soundbuffer.h"
 #include "API/Sound/SoundProviders/soundprovider.h"
@@ -61,9 +62,9 @@ ResourceData_Sample::ResourceData_Sample(class Resource &resource)
 	bool streamed = (element.get_attribute("stream", "no") == "yes");
 
 	provider = SoundProviderFactory::load(
-		name,
+		PathHelp::combine(resource.get_manager().get_base_path(resource), name),
 		streamed,
-		resource.get_manager().get_directory(resource), sound_format);
+		resource.get_manager().get_file_system(resource), sound_format);
 
 	if (provider)
 	{

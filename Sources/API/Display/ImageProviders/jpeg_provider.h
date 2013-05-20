@@ -34,12 +34,12 @@
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
 
-class VirtualDirectory;
+class FileSystem;
 
 /// \brief Image provider that can load JPEG (.jpg) files.
 class CL_API_DISPLAY JPEGProvider
@@ -54,7 +54,7 @@ public:
 	/// \param directory Directory that file name is relative to.
 	static PixelBuffer load(
 		const std::string &filename,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		bool srgb = false);
 
 	static PixelBuffer load(
@@ -74,7 +74,7 @@ public:
 	static void save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		VirtualDirectory &directory,
+		FileSystem &fs,
 		int quality = 85);
 
 	static void save(

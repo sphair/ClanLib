@@ -33,7 +33,7 @@
 
 #include "../api_core.h"
 #include "../Resources/resource.h"
-#include "../IOData/virtual_directory.h"
+#include "../IOData/file_system.h"
 #include <vector>
 #include <memory>
 
@@ -42,7 +42,7 @@ namespace clan
 
 class IODevice;
 class Resource;
-class VirtualDirectory;
+class FileSystem;
 class ResourceManager_Impl;
 
 /// \brief Resource Manager.
@@ -63,13 +63,13 @@ public:
 	///
 	/// \param filename = String
 	/// \param directory = Virtual Directory
-	ResourceManager(const std::string &filename, VirtualDirectory directory);
+	ResourceManager(const std::string &filename, FileSystem fs);
 
 	/// \brief Constructs a ResourceManager
 	///
 	/// \param file = IODevice
 	/// \param directory = Virtual Directory
-	ResourceManager(IODevice file, VirtualDirectory directory = VirtualDirectory());
+	ResourceManager(IODevice file, const std::string &base_path, FileSystem fs);
 
 	/// \brief Constructs a ResourceManager
 	///
@@ -108,8 +108,11 @@ public:
 		bool resolve_alias = true,
 		int reserved = 0);
 
-	/// \brief Returns the directory to load resource data from.
-	VirtualDirectory get_directory(const Resource &resource) const;
+	/// \brief Returns the file system to load resource from.
+	FileSystem get_file_system(const Resource &resource) const;
+
+	/// \brief Returns the base path of the resource.
+	std::string get_base_path(const Resource &resource) const;
 
 	/// \brief Returns the value of a boolean resource. (using the value attribute)
 	bool get_boolean_resource(
@@ -134,9 +137,6 @@ public:
 
 	bool operator ==(const ResourceManager &manager) const;
 
-	/// \brief Set the resource data directory.
-	void set_directory(const VirtualDirectory &directory);
-
 	/// \brief Add resources from an other resource manager.
 	/** <p>This function only makes the resource manager search other managers, it
 	    does not copy the resources into this manager.</p>*/
@@ -158,7 +158,7 @@ public:
 	///
 	/// \param filename = the filename to save
 	/// \param directory = Virtual Directory
-	void save(const std::string &filename, VirtualDirectory directory);
+	void save(const std::string &filename, const FileSystem &file_system);
 
 	/// \brief Save
 	///
@@ -172,13 +172,13 @@ public:
 	///
 	/// \param filename = the filename to save
 	/// \param directory = Virtual Directory
-	void load(const std::string &filename, VirtualDirectory directory);
+	void load(const std::string &filename, const FileSystem &file_system);
 
 	/// \brief Load
 	///
 	/// \param file = the file to load
 	/// \param directory = Virtual Directory
-	void load(IODevice file, VirtualDirectory directory = VirtualDirectory());
+	void load(IODevice file, const std::string &base_path = std::string(), const FileSystem &file_system = FileSystem());
 
 /// \}
 /// \name Implementation

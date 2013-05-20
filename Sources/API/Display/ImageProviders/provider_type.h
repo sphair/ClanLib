@@ -34,7 +34,7 @@
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
@@ -62,7 +62,7 @@ public:
 	/// \brief Called to load an image with this provider type.
 	virtual PixelBuffer load(
 		const std::string &filename,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		bool srgb)=0;
 
 	virtual PixelBuffer load(
@@ -73,7 +73,7 @@ public:
 	virtual void save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		VirtualDirectory &directory)=0;
+		FileSystem &fs)=0;
 
 	virtual void save(
 		PixelBuffer buffer,

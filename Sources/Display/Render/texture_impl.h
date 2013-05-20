@@ -77,8 +77,8 @@ public:
 		return provider < other.provider;
 	}
 
-	static Texture get_from_cache(const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc);
-	void put_in_cache(Texture &texture, const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc);
+	static Texture get_from_cache(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
+	void put_in_cache(Texture &texture, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
 
 	TextureProvider *provider;
 	int width, height, depth;
@@ -101,7 +101,7 @@ public:
 	bool cache_used;
 
 private:
-	static std::string get_cache_hash(const std::string &filename, const VirtualDirectory &directory, const ImageImportDescription &import_desc);
+	static std::string get_cache_hash(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
 };
 
 }

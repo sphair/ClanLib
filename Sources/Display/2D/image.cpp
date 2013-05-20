@@ -27,7 +27,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
@@ -136,10 +136,10 @@ Image::Image(GraphicContext &gc, Subtexture &sub_texture)
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
-Image::Image(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc)
+Image::Image(GraphicContext &gc, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(new Image_Impl())
 {
-	impl->texture = Texture2D(gc, filename, dir, import_desc);
+	impl->texture = Texture2D(gc, filename, fs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
 }
 
@@ -148,9 +148,9 @@ Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportD
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
+	FileSystem vfs(path);
 
-	impl->texture = Texture2D(gc, filename, vfs.get_root_directory(), import_desc);
+	impl->texture = Texture2D(gc, filename, vfs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
 }
 

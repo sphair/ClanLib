@@ -36,9 +36,9 @@
 #include "API/Sound/SoundProviders/soundprovider_type.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 
 namespace clan
 {
@@ -54,7 +54,7 @@ std::map<std::string, SoundProviderType *> SoundProviderFactory::types;
 SoundProvider *SoundProviderFactory::load(
 	const std::string &filename,
 	bool streamed,
-	const VirtualDirectory &directory,
+	const FileSystem &fs,
 	const std::string &type)
 {
 	if (!type.empty())
@@ -62,7 +62,7 @@ SoundProvider *SoundProviderFactory::load(
 		if (types.find(type) == types.end()) throw Exception("Unknown sound provider type " + type);
 
 		SoundProviderType *factory = types[type];
-		return factory->load(filename, streamed, directory);
+		return factory->load(filename, streamed, fs);
 	}
 
 	// Determine file extension and use it to lookup type.
@@ -72,7 +72,7 @@ SoundProvider *SoundProviderFactory::load(
 	if (types.find(ext) == types.end()) throw Exception("Unknown sound provider type " + ext);
 
 	SoundProviderType *factory = types[ext];
-	return factory->load(filename, streamed, directory);
+	return factory->load(filename, streamed, fs);
 }
 
 SoundProvider *SoundProviderFactory::load(
@@ -82,8 +82,8 @@ SoundProvider *SoundProviderFactory::load(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return SoundProviderFactory::load(filename, streamed, vfs.get_root_directory(), type);
+	FileSystem vfs(path);
+	return SoundProviderFactory::load(filename, streamed, vfs, type);
 }
 
 SoundProvider *SoundProviderFactory::load(
