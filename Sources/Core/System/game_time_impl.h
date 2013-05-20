@@ -34,8 +34,12 @@ namespace clan
 class GameTime_Impl
 {
 public:
-	GameTime_Impl(int ticks_per_second, int max_updates_per_second) : ticks_per_second(ticks_per_second), min_update_time_ms(1000/max_updates_per_second),
-		start_time(0), current_time(0), time_elapsed(0.0f) { }
+	GameTime_Impl(int ticks_per_second, int max_updates_per_second) : ticks_per_second(ticks_per_second), min_update_time_ms(0),
+		start_time(0), current_time(0), time_elapsed(0.0f)
+	{
+		if (max_updates_per_second)
+			min_update_time_ms = (1000/max_updates_per_second);
+	}
 
 	void update();
 	void reset();
