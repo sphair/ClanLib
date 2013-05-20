@@ -106,6 +106,13 @@ public:
 	typedef __GLXextFuncPtr (GLFUNC *ptr_glXGetProcAddress) (const GLubyte *);
 	typedef void (*(GLFUNC *ptr_glXGetProcAddressARB)(const GLubyte *procName))(void);
 
+	typedef GLXPbuffer (*ptr_glXCreatePbufferSGIX)(
+		::Display *dpy,
+		GLXFBConfig config,
+		unsigned int width,
+		unsigned int height,
+		int *attrib_list);
+
 
 public:
 	ptr_glXChooseVisual glXChooseVisual;
@@ -148,6 +155,10 @@ public:
 	ptr_glXSelectEvent glXSelectEvent;
 	ptr_glXGetProcAddress glXGetProcAddress;
 	ptr_glXGetProcAddressARB glXGetProcAddressARB;
+	ptr_glXCreatePbufferSGIX glXCreatePbufferSGIX;
+	ptr_glXDestroyPbuffer glXDestroyPbufferSGIX;
+	ptr_glXChooseFBConfig glXChooseFBConfigSGIX; 
+	ptr_glXGetVisualFromFBConfig glXGetVisualFromFBConfigSGIX;
 
 };
 
@@ -308,7 +319,7 @@ private:
 
 	bool is_glx_extension_supported(const char *ext_name);
 
-	void setup_swap_interval_pointers();
+	void setup_extension_pointers();
 
 	X11Window x11_window;
 
@@ -331,6 +342,8 @@ private:
 	bool glx_1_3;
 	OpenGLWindowDescription opengl_desc;
 	bool using_gl3;
+
+	friend class PBuffer_GL1_Impl;
 
 /// \}
 };

@@ -130,6 +130,11 @@ OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 	glx.glXGetProcAddressARB = (GL_GLXFunctions::ptr_glXGetProcAddressARB) GL_LOAD_GLFUNC(glXGetProcAddressARB);
 	glx.glXGetProcAddress = (GL_GLXFunctions::ptr_glXGetProcAddress) GL_LOAD_GLFUNC(glXGetProcAddress);
 
+	glx.glXCreatePbufferSGIX = NULL;	// Setup later
+	glx.glXDestroyPbufferSGIX = NULL;	// Setup later
+	glx.glXChooseFBConfigSGIX = NULL;	// Setup later
+	glx.glXGetVisualFromFBConfigSGIX = NULL;	// Setup later
+
 	if ( (glx.glXDestroyContext == NULL) ||
 		(glx.glXMakeCurrent == NULL) ||
 		(glx.glXGetCurrentContext == NULL) ||
@@ -306,7 +311,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 		}
 	}
 
-	setup_swap_interval_pointers();
+	setup_extension_pointers();
 	swap_interval = desc.get_swap_interval();
 	if (swap_interval != -1)
 	{
@@ -597,7 +602,7 @@ bool OpenGLWindowProvider::is_glx_extension_supported(const char *ext_name)
 	return false;
 }
 
-void OpenGLWindowProvider::setup_swap_interval_pointers()
+void OpenGLWindowProvider::setup_extension_pointers()
 {
 	glXSwapIntervalSGI = (ptr_glXSwapIntervalSGI) OpenGL::get_proc_address("glXSwapIntervalSGI");
 	glXSwapIntervalMESA = (ptr_glXSwapIntervalMESA) OpenGL::get_proc_address("glXSwapIntervalMESA");
@@ -611,6 +616,21 @@ void OpenGLWindowProvider::setup_swap_interval_pointers()
 	if ( !is_glx_extension_supported("GLX_MESA_swap_control") )
 	{
 		glXSwapIntervalMESA = NULL;
+	}
+
+	glx.glXCreatePbufferSGIX = (GL_GLXFunctions::ptr_glXCreatePbufferSGIX) OpenGL::get_proc_address("glXCreateGLXPbufferSGIX");
+	glx.glXDestroyPbufferSGIX = (GL_GLXFunctions::ptr_glXDestroyPbuffer) OpenGL::get_proc_address("glXDestroyGLXPbufferSGIX");
+	glx.glXChooseFBConfigSGIX = (GL_GLXFunctions::ptr_glXChooseFBConfig) OpenGL::get_proc_address("glXChooseFBConfigSGIX");
+	glx.glXGetVisualFromFBConfigSGIX = (GL_GLXFunctions::ptr_glXGetVisualFromFBConfig) OpenGL::get_proc_address("glXGetVisualFromFBConfigSGIX");
+	if ( !is_glx_extension_supported("GLX_SGIX_pbuffer") )
+	{
+		glx.glXCreatePbufferSGIX = NULL;
+		glx.glXDestroyPbufferSGIX = NULL;
+	}
+	if ( !is_glx_extension_supported("GLX_SGIX_fbconfig") )
+	{
+		glx.glXChooseFBConfigSGIX = NULL;
+		glx.glXGetVisualFromFBConfigSGIX = NULL;
 	}
 }
 
