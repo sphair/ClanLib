@@ -37,9 +37,9 @@
 #include "API/Core/Resources/resource.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
+#include "API/Core/XML/dom_element.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
-#include "resourcetype_sample.h"
 
 namespace clan
 {
@@ -54,19 +54,25 @@ SoundBuffer::SoundBuffer()
 SoundBuffer::SoundBuffer(
 	const std::string &res_id,
 	ResourceManager *manager)
+: impl(new SoundBuffer_Impl)
 {
 	Resource resource = manager->get_resource(res_id);
 
-	ResourceDataSession resource_data_session("sample", resource);
-	std::shared_ptr<ResourceData_Sample> data = std::dynamic_pointer_cast<ResourceData_Sample>(resource.get_data("sample"));
-	if (!data)
-	{
-		data = std::shared_ptr<ResourceData_Sample>(new ResourceData_Sample(resource));
-		resource.set_data("sample", data);
-	}
+	DomElement &element = resource.get_element();
 
-	impl = data->soundbuffer->impl;
-	impl->resource_data_session = resource_data_session;
+	SoundProvider *provider = 0;
+
+	std::string name = resource.get_element().get_attribute("file");
+	std::string sound_format = resource.get_element().get_attribute("format");
+	bool streamed = (element.get_attribute("stream", "no") == "yes");
+
+	impl->provider = SoundProviderFactory::load(
+		PathHelp::combine(resource.get_manager().get_base_path(resource), name),
+		streamed,
+		resource.get_manager().get_file_system(resource), sound_format);
+
+	if (!provider)
+		throw Exception("Unknown sample format");
 }
 
 SoundBuffer::SoundBuffer(

@@ -117,7 +117,6 @@
 #include "Core/Signals/slot_container.h"
 #include "Core/Resources/resource.h"
 #include "Core/Resources/resource_manager.h"
-#include "Core/Resources/resource_data_session.h"
 #include "Core/XML/dom_processing_instruction.h"
 #include "Core/XML/dom_entity_reference.h"
 #include "Core/XML/dom_notation.h"

@@ -35,7 +35,6 @@
 #include "../api_display.h"
 #include <memory>
 #include "../../Core/IOData/file_system.h"
-#include "../../Core/Resources/resource_data_session.h"
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "../Image/texture_format.h"

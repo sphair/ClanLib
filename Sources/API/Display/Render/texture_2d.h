@@ -38,6 +38,8 @@
 namespace clan
 {
 
+class ResourceManager;
+
 /// \brief 2D texture object class.
 class CL_API_DISPLAY Texture2D : public Texture
 {

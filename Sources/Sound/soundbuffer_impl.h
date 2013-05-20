@@ -30,7 +30,6 @@
 
 #include <vector>
 #include "API/Core/System/mutex.h"
-#include "API/Core/Resources/resource_data_session.h"
 
 namespace clan
 {
@@ -63,8 +62,6 @@ public:
 	std::vector<SoundFilter> filters;
 
 	mutable Mutex mutex;
-
-	ResourceDataSession resource_data_session;
 
 
 /// \}

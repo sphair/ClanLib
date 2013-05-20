@@ -38,6 +38,7 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
+#include "API/Core/Resources/resource_manager.h"
 #include "graphic_context_impl.h"
 #include "texture_impl.h"
 
