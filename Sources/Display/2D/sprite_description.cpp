@@ -82,7 +82,7 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 				std::string suffix = "." + PathHelp::get_extension(prefix);
 				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
 
-				FileSystem fs = resources->get_file_system(resource);
+				FileSystem fs = resource.get_file_system();
 
 				for (int i = start_index;; i += skip_index)
 				{
@@ -96,7 +96,7 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 
 					try
 					{
-						Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), file_name), fs, import_desc);
+						Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
 						add_frame(texture);
 					}
 					catch (const Exception&)
@@ -114,8 +114,8 @@ SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &reso
 			else
 			{
 				std::string image_name = cur_element.get_attribute("file");
-				FileSystem fs = resources->get_file_system(resource);
-				Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), image_name), fs, import_desc);
+				FileSystem fs = resource.get_file_system();
+				Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), fs, import_desc);
 
 				DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 

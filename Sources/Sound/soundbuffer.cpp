@@ -67,9 +67,9 @@ SoundBuffer::SoundBuffer(
 	bool streamed = (element.get_attribute("stream", "no") == "yes");
 
 	impl->provider = SoundProviderFactory::load(
-		PathHelp::combine(resource.get_manager().get_base_path(resource), name),
+		PathHelp::combine(resource.get_base_path(), name),
 		streamed,
-		resource.get_manager().get_file_system(resource), sound_format);
+		resource.get_file_system(), sound_format);
 
 	if (!provider)
 		throw Exception("Unknown sample format");

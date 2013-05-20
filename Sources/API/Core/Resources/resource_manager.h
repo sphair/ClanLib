@@ -106,28 +106,22 @@ public:
 	Resource get_resource(
 		const std::string &resource_id,
 		bool resolve_alias = true,
-		int reserved = 0);
-
-	/// \brief Returns the file system to load resource from.
-	FileSystem get_file_system(const Resource &resource) const;
-
-	/// \brief Returns the base path of the resource.
-	std::string get_base_path(const Resource &resource) const;
+		int reserved = 0) const;
 
 	/// \brief Returns the value of a boolean resource. (using the value attribute)
 	bool get_boolean_resource(
 		const std::string &resource_id,
-		bool default_value);
+		bool default_value) const;
 
 	/// \brief Returns the value of an integer resource. (using the value attribute)
 	int get_integer_resource(
 		const std::string &resource_id,
-		int default_value);
+		int default_value) const;
 
 	/// \brief Returns the value of an string resource. (using the value attribute)
 	std::string get_string_resource(
 		const std::string &resource_id,
-		const std::string &default_value);
+		const std::string &default_value) const;
 
 /// \}
 /// \name Operations

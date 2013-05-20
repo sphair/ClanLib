@@ -140,13 +140,13 @@ CollisionOutline::CollisionOutline(
 
 	if (filename.length() >= 3 && filename.substr(filename.length()-3, 3) == "out" )
 	{
-		IODevice file = resource.get_manager().get_file_system(resource).open_file(PathHelp::combine(resource.get_manager().get_base_path(resource), filename));
+		IODevice file = resource.get_file_system().open_file(PathHelp::combine(resource.get_base_path(), filename));
 		OutlineProviderFile outline_provider(file);
 		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy_raw);
 	}
 	else
 	{
-		PixelBuffer pbuf = ImageProviderFactory::load(PathHelp::combine(resource.get_manager().get_base_path(resource), filename), resource.get_manager().get_file_system(resource), "");
+		PixelBuffer pbuf = ImageProviderFactory::load(PathHelp::combine(resource.get_base_path(), filename), resource.get_file_system(), "");
 		OutlineProviderBitmap outline_provider(pbuf, alpha_limit);
 		*this = CollisionOutline(outline_provider.get_contours(), outline_provider.get_size(), accuracy);
 	}

@@ -64,7 +64,7 @@ ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resour
 		if (tag_name == "image" || tag_name == "image-file")
 		{
 			std::string image_name = cur_element.get_attribute("file");
-			Texture2D texture = Texture2D(gc, PathHelp::combine(resources->get_base_path(resource), image_name), resources->get_file_system(resource), import_desc);
+			Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system(), import_desc);
 
 			DomNode cur_child(cur_element.get_first_child());
 			if(cur_child.is_null()) 
