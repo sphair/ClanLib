@@ -35,7 +35,7 @@
 
 #include "../api_display.h"
 #include <map>
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
@@ -67,7 +67,7 @@ public:
 	static PixelBuffer try_load(
 		const std::string &filename,
 		const std::string &type = std::string(),
-		VirtualDirectory directory = VirtualDirectory(),
+		const FileSystem &fs = FileSystem(),
 		std::string *out_failure_reason = 0,
 		bool srgb = false);
 
@@ -78,7 +78,7 @@ public:
 	    <p>The virtual directory will be used as a the source.</p>*/
 	static PixelBuffer load(
 		const std::string &filename,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		const std::string &type = std::string(),
 		bool srgb = false);
 
@@ -98,7 +98,7 @@ public:
 	static void save(
 		PixelBuffer buffer,
 		const std::string &filename,
-		VirtualDirectory &directory,
+		FileSystem &fs,
 		const std::string &type = std::string());
 
 	static void save(

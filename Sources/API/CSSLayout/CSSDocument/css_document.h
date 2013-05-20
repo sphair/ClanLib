@@ -29,7 +29,7 @@
 #pragma once
 
 #include "../api_csslayout.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "css_select_result.h"
 #include <memory>
 
@@ -59,7 +59,7 @@ public:
 	static std::string get_default_html_sheet();
 
 	void add_default_html_sheet();
-	void add_sheet(CSSSheetOrigin origin, const std::string &filename, const VirtualDirectory &dir = VirtualDirectory());
+	void add_sheet(CSSSheetOrigin origin, const std::string &filename, const FileSystem &fs = FileSystem());
 	void add_sheet(CSSSheetOrigin origin, IODevice &iodevice, const std::string &base_uri);
 
 	CSSSelectResult select(const DomElement &node, const std::string &pseudo_element = std::string());

@@ -32,8 +32,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/Collision/collision_outline.h"
 #include "outline_provider_bitmap.h"
@@ -72,16 +71,15 @@ CollisionOutline::CollisionOutline(const std::string &fullname, int alpha_limit,
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	*this = CollisionOutline(filename, dir, alpha_limit, accuracy, get_insides);
+	FileSystem vfs(path);
+	*this = CollisionOutline(filename, vfs, alpha_limit, accuracy, get_insides);
 }
 
-CollisionOutline::CollisionOutline(const std::string &filename, const VirtualDirectory &directory, int alpha_limit, OutlineAccuracy accuracy, bool get_insides)
+CollisionOutline::CollisionOutline(const std::string &filename, const FileSystem &fs, int alpha_limit, OutlineAccuracy accuracy, bool get_insides)
 {
 	std::string file_extension = PathHelp::get_extension(filename);
 
-	IODevice file = directory.open_file_read(filename);
+	IODevice file = fs.open_file(filename);
 	*this = CollisionOutline(file, file_extension, alpha_limit, accuracy, get_insides);
 }
 
@@ -431,14 +429,13 @@ void CollisionOutline::save(const std::string &fullname) const
 
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	save(filename, dir);
+	FileSystem vfs(path);
+	save(filename, vfs);
 }
 
-void CollisionOutline::save(const std::string &filename, VirtualDirectory &directory) const
+void CollisionOutline::save(const std::string &filename, FileSystem &fs) const
 {
-	IODevice file = directory.open_file(filename, File::create_always);
+	IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
 	impl->save(file);
 }
 

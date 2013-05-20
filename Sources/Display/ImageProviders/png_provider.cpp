@@ -29,8 +29,7 @@
 
 #include "Display/precomp.h"
 #include "API/Core/System/exception.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -46,10 +45,10 @@ namespace clan
 
 PixelBuffer PNGProvider::load(
 	const std::string &filename,
-	const VirtualDirectory &directory,
+	const FileSystem &fs,
 	bool srgb)
 {
-	return PNGLoader::load(directory.open_file_read(filename), srgb);
+	return PNGLoader::load(fs.open_file(filename), srgb);
 }
 
 PixelBuffer PNGProvider::load(
@@ -68,9 +67,9 @@ PixelBuffer PNGProvider::load(IODevice &file, bool srgb)
 void PNGProvider::save(
 	PixelBuffer buffer,
 	const std::string &filename,
-	VirtualDirectory &directory)
+	FileSystem &fs)
 {
-	IODevice file = directory.open_file(filename, File::create_always);
+	IODevice file = fs.open_file(filename, File::create_always, File::access_read_write);
 	save(buffer, file);
 }
 
@@ -80,9 +79,8 @@ void PNGProvider::save(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	PNGProvider::save(buffer, filename, dir);
+	FileSystem vfs(path);
+	PNGProvider::save(buffer, filename, vfs);
 
 }
 

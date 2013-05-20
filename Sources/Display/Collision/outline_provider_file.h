@@ -32,7 +32,7 @@
 
 #pragma once
 
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 
 namespace clan
 {

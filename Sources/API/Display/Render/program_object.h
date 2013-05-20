@@ -35,7 +35,7 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "graphic_context.h"
 #include "uniform_vector.h"
 
@@ -126,7 +126,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Program Object
-	static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const VirtualDirectory &directory);
+	static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs);
 
 	/// \brief Load
 	///
@@ -137,7 +137,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Program Object
-	static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const VirtualDirectory &directory);
+	static ProgramObject load(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs);
 
 	/// \brief Load
 	///
@@ -185,7 +185,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Program Object
-	static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const VirtualDirectory &directory);
+	static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &fragment_filename, const FileSystem &fs);
 
 	/// \brief Load and link
 	///
@@ -196,7 +196,7 @@ public:
 	/// \param directory = Virtual Directory
 	///
 	/// \return Program Object
-	static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const VirtualDirectory &directory);
+	static ProgramObject load_and_link(GraphicContext &gc, const std::string &vertex_filename, const std::string &geometry_filename, const std::string &fragment_filename, const FileSystem &fs);
 
 	/// \brief Load and link
 	///

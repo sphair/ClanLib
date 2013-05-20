@@ -29,7 +29,7 @@
 
 #include "Display/precomp.h"
 #include <iostream>
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/jpeg_provider.h"
 #include "API/Core/System/exception.h"
@@ -45,10 +45,10 @@ namespace clan
 
 PixelBuffer JPEGProvider::load(
 	const std::string &filename,
-	const VirtualDirectory &directory,
+	const FileSystem &fs,
 	bool srgb)
 {
-	return JPEGLoader::load(directory.open_file_read(filename), srgb);
+	return JPEGLoader::load(fs.open_file(filename), srgb);
 }
 
 PixelBuffer JPEGProvider::load(
@@ -64,8 +64,8 @@ PixelBuffer JPEGProvider::load(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return JPEGProvider::load(filename, vfs.get_root_directory(), srgb);
+	FileSystem vfs(path);
+	return JPEGProvider::load(filename, vfs, srgb);
 }
 
 void JPEGProvider::save(
@@ -75,9 +75,8 @@ void JPEGProvider::save(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	return JPEGProvider::save(buffer, filename, dir, quality);
+	FileSystem vfs(path);
+	return JPEGProvider::save(buffer, filename, vfs, quality);
 }
 
 void JPEGProvider::save(
@@ -107,10 +106,10 @@ void JPEGProvider::save(
 void JPEGProvider::save(
 	PixelBuffer buffer,
 	const std::string &filename,
-	VirtualDirectory &directory,
+	FileSystem &fs,
 	int quality)
 {
-	IODevice iodev = directory.open_file(filename, File::create_always, File::access_write);
+	IODevice iodev = fs.open_file(filename, File::create_always, File::access_read_write);
 	save(buffer, iodev, quality);
 }
 

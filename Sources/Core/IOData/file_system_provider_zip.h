@@ -29,25 +29,24 @@
 
 #pragma once
 
-
-#include "API/Core/IOData/virtual_file_source.h"
-#include "API/Core/IOData/directory_scanner.h"
+#include "API/Core/IOData/file_system_provider.h"
+#include "API/Core/Zip/zip_archive.h"
 #include "API/Core/IOData/file.h"
 
 namespace clan
 {
 
-class VirtualDirectoryListingEntry;
+class DirectoryListingEntry;
 
-class VirtualFileSource_File : public VirtualFileSource
+class FileSystemProvider_Zip : public FileSystemProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	VirtualFileSource_File(const std::string &path);
+	FileSystemProvider_Zip(const ZipArchive &zip_archive);
 
-	~VirtualFileSource_File();
+	~FileSystemProvider_Zip();
 
 
 /// \}
@@ -64,7 +63,7 @@ public:
 /// \{
 
 public:
-	/// \brief Open a file
+	/// \brief Open a zip file
 	/** param: filename = The filename to use
 	    param: mode = File::OpenMode modes
 	    param: access = File::AccessFlags flags
@@ -79,7 +78,7 @@ public:
 
 	bool initialize_directory_listing(const std::string &path);
 
-	bool next_file(VirtualDirectoryListingEntry &entry);
+	bool next_file(DirectoryListingEntry &entry);
 
 
 /// \}
@@ -89,7 +88,16 @@ public:
 private:
 	std::string path;
 
-	DirectoryScanner dir_scanner;
+	ZipArchive zip_archive;
+
+	std::vector<ZipFileEntry> file_list;
+
+	unsigned int index;
+
+	std::string directory_list_path;
+
+	static int zip_source_unique_id;
+
 /// \}
 };
 

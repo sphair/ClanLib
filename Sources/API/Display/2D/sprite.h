@@ -36,7 +36,7 @@
 #include <memory>
 #include "../../Core/Math/origin.h"
 #include "../../Core/Signals/signal_v0.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "../../Core/Resources/resource_data_session.h"
 #include "../Render/graphic_context.h"
 #include "../Image/image_import_description.h"
@@ -80,7 +80,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	Sprite(GraphicContext &gc, const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///

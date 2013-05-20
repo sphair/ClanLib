@@ -29,11 +29,9 @@
 #include "Core/precomp.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/resource.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
@@ -50,7 +48,8 @@ class ResourceManager_Impl
 {
 //! Attributes:
 public:
-	VirtualDirectory directory;
+	FileSystem fs;
+	std::string base_path;
 
 	DomDocument document;
 
@@ -84,16 +83,16 @@ ResourceManager::ResourceManager(const std::string &filename)
 	load(filename);
 }
 
-ResourceManager::ResourceManager(const std::string &filename, VirtualDirectory directory)
+ResourceManager::ResourceManager(const std::string &filename, FileSystem fs)
 : impl(new ResourceManager_Impl)
 {
-	load(filename, directory);
+	load(filename, fs);
 }
 
-ResourceManager::ResourceManager(IODevice file, VirtualDirectory directory)
+ResourceManager::ResourceManager(IODevice file, const std::string &base_path, FileSystem fs)
 : impl(new ResourceManager_Impl)
 {
-	load(file, directory);
+	load(file, base_path, fs);
 }
 
 ResourceManager::ResourceManager(const ResourceManager &other)
@@ -257,16 +256,29 @@ Resource ResourceManager::get_resource(
 	return Resource(impl->document.get_document_element(), *this);
 }
 
-VirtualDirectory ResourceManager::get_directory(const Resource &resource) const
+FileSystem ResourceManager::get_file_system(const Resource &resource) const
 {
 	Resource resource_const_hack = resource;
 	if (resource_const_hack.get_manager().impl == impl)
 	{
-		return impl->directory;
+		return impl->fs;
 	}
 	else
 	{
-		return resource_const_hack.get_manager().get_directory(resource);
+		return resource_const_hack.get_manager().get_file_system(resource);
+	}
+}
+
+std::string ResourceManager::get_base_path(const Resource &resource) const
+{
+	Resource resource_const_hack = resource;
+	if (resource_const_hack.get_manager().impl == impl)
+	{
+		return impl->base_path;
+	}
+	else
+	{
+		return resource_const_hack.get_manager().get_base_path(resource);
 	}
 }
 
@@ -431,9 +443,9 @@ void ResourceManager::save(const std::string &filename)
 	save(file);
 }
 
-void ResourceManager::save(const std::string &filename, VirtualDirectory directory)
+void ResourceManager::save(const std::string &filename, const FileSystem &fs)
 {
-	save(directory.open_file(filename, File::create_always, File::access_read| File::access_write, File::share_read));
+	save(fs.open_file(filename, File::create_always, File::access_read_write, File::share_read));
 }
 
 void ResourceManager::save(IODevice file)
@@ -445,19 +457,18 @@ void ResourceManager::load(const std::string &fullname)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	load(filename, vfs.get_root_directory());
+	FileSystem vfs(path);
+	load(filename, vfs);
 }
 
-void ResourceManager::load(const std::string &fullname, VirtualDirectory directory)
+void ResourceManager::load(const std::string &fullname, const FileSystem &fs)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_virtual);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_virtual);
-	VirtualDirectory dir = directory.open_directory(path);
-	load(dir.open_file(filename, File::open_existing, File::access_read, File::share_read), dir);
+	load(fs.open_file(fullname, File::open_existing, File::access_read, File::share_read), path, fs);
 }
 
-void ResourceManager::load(IODevice file, VirtualDirectory directory)
+void ResourceManager::load(IODevice file, const std::string &base_path, const FileSystem &fs)
 {
 	DomDocument new_document;
 	new_document.load(file);
@@ -481,7 +492,8 @@ void ResourceManager::load(IODevice file, VirtualDirectory directory)
 	}
 
 	impl->document = new_document;
-	impl->directory = directory;
+	impl->fs = fs;
+	impl->base_path = base_path;
 	impl->resources.clear();
 
 	std::vector<std::string> section_stack;
@@ -519,11 +531,6 @@ void ResourceManager::load(IODevice file, VirtualDirectory directory)
 			nodes_stack.back() = nodes_stack.back().get_next_sibling();
 		}
 	}
-}
-
-void ResourceManager::set_directory(const VirtualDirectory &directory)
-{
-	impl->directory = directory;
 }
 
 /////////////////////////////////////////////////////////////////////////////

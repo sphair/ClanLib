@@ -50,7 +50,7 @@ class Colorf;
 class PixelBuffer;
 class PixelBuffer_Impl;
 class ResourceManager;
-class VirtualDirectory;
+class FileSystem;
 class IODevice;
 class GraphicContext;
 class PixelBufferProvider;
@@ -94,7 +94,7 @@ public:
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	PixelBuffer(const std::string &filename, const VirtualDirectory &dir, bool srgb = false);
+	PixelBuffer(const std::string &filename, const FileSystem &file_system, bool srgb = false);
 
 	/// \brief Constructs a PixelBuffer
 	///

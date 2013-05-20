@@ -41,8 +41,7 @@
 #endif
 
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/iodevice.h"
@@ -170,7 +169,7 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
 
 	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
+	FileSystem vfs(path);
 	IODevice io_dev = vfs.get_root_directory().open_file_read(filename);
 
 	int average_width = desc.get_average_width();

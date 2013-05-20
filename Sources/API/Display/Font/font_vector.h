@@ -40,7 +40,7 @@ namespace clan
 
 class Font_Vector_Impl;
 class FontMetrics;
-class VirtualDirectory;
+class FileSystem;
 class FontProvider_Vector;
 
 /// \brief Vector font drawing class.

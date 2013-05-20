@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "../api_sound.h"
 
 namespace clan
@@ -39,7 +39,7 @@ namespace clan
 
 class SoundProvider;
 class InputSourceProvider;
-class VirtualDirectory;
+class FileSystem;
 
 /// \brief Sound provider type
 class CL_API_SOUND SoundProviderType
@@ -63,7 +63,7 @@ public:
 	virtual SoundProvider *load(
 		const std::string &filename,
 		bool streamed,
-		const VirtualDirectory &directory) = 0;
+		const FileSystem &file_system) = 0;
 
 	virtual SoundProvider *load(
 		IODevice &file, bool streamed)=0;

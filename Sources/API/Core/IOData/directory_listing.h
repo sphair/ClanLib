@@ -23,70 +23,76 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
+**    Harry Storbacka
 */
-
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
 #pragma once
 
-#include "../api_core.h"
-#include "security_identifier.h"
-#include "access_control_list.h"
+#include <memory>
 
 namespace clan
 {
 
-/// \brief Security descriptor.
-class CL_API_CORE SecurityDescriptor
+class DirectoryListingEntry;
+class FileSystemProvider;
+class DirectoryListing_Impl;
+
+/// \brief Virtual File System (VFS) directory listing class.
+class DirectoryListing
 {
 /// \name Construction
 /// \{
 
 public:
-	/// \brief Constructs a security descriptor.
-	SecurityDescriptor();
+	/// \brief Constructs a null instance.
+	DirectoryListing();
 
-	/// \brief Constructs a SecurityDescriptor
-	///
-	/// \param copy = Security Descriptor
-	SecurityDescriptor(const SecurityDescriptor &copy);
+	/// \brief Constructs a virtual directory listening object.
+	DirectoryListing(FileSystemProvider *provider, const std::string &path);
 
-	~SecurityDescriptor();
+	virtual ~DirectoryListing();
 
 /// \}
 /// \name Attributes
 /// \{
 
 public:
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
+
+	/// \brief Throw an exception if this object is invalid.
+	void throw_if_null() const;
+
+	/// \brief Returns the file name of the current item in the listing.
+	std::string get_filename();
+
+	/// \brief Returns true if item is a directory.
+	bool is_directory();
+
+	/// \brief Returns true if item is hidden.
+	bool is_hidden();
+
+	/// \brief Returns true if item is writable.
+	bool is_writable();
+
+	/// \brief Returns true if item is readable.
+	bool is_readable();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
-	SecurityDescriptor &operator =(const SecurityDescriptor &copy);
+	/// \brief Advance to next item in listing.
+	bool next();
 
 /// \}
 /// \name Implementation
 /// \{
 
 private:
-	SecurityIdentifier owner;
-
-	SecurityIdentifier primary_group;
-
-	AccessControlList discretionary_acl;
-
-	bool owner_defaulted;
-
-	bool group_defaulted;
-
-	bool dacl_defaulted;
+	std::shared_ptr<DirectoryListing_Impl> impl;
 /// \}
 };
 
 }
-
-/// \}

@@ -34,7 +34,7 @@
 
 #include "../api_display.h"
 #include <memory>
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 #include "../../Core/Resources/resource_data_session.h"
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"

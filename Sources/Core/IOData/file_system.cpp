@@ -28,82 +28,76 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/IOData/virtual_file_source.h"
+#include "API/Core/IOData/file_system.h"
+#include "API/Core/IOData/file_system_provider.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/IOData/virtual_directory_listing.h"
+#include "API/Core/IOData/directory_listing.h"
 #include "API/Core/Text/string_format.h"
-#include "virtual_file_source_file.h"
-#include "virtual_file_source_zip.h"
+#include "file_system_provider_file.h"
+#include "file_system_provider_zip.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSystem_Impl Class:
+// FileSystem_Impl Class:
 
-class VirtualFileSystem_Impl
+class FileSystem_Impl
 {
 //! Construction:
 public:
-	VirtualFileSystem_Impl() : provider(0)
+	FileSystem_Impl() : provider(0)
 	{
 	}
 
-	~VirtualFileSystem_Impl()
+	~FileSystem_Impl()
 	{
 		delete provider;
 	}
 
 //! Attributes:
 public:
-	VirtualFileSource *provider;
+	FileSystemProvider *provider;
 
-	std::vector< std::pair<std::string, VirtualFileSystem> > mounts;
+	std::vector< std::pair<std::string, FileSystem> > mounts;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSystem Construction:
+// FileSystem Construction:
 
-VirtualFileSystem::VirtualFileSystem()
-: impl(new VirtualFileSystem_Impl)
+FileSystem::FileSystem()
+: impl(new FileSystem_Impl)
 {
 }
 
-VirtualFileSystem::VirtualFileSystem(VirtualFileSystem::NullVFS null_fs)
+FileSystem::FileSystem(FileSystem::NullVFS null_fs)
 {
 }
 
-VirtualFileSystem::VirtualFileSystem(VirtualFileSource *provider)
-: impl(new VirtualFileSystem_Impl)
+FileSystem::FileSystem(FileSystemProvider *provider)
+: impl(new FileSystem_Impl)
 {
 	impl->provider = provider;
 }
 
-VirtualFileSystem::VirtualFileSystem(const std::string &path, bool is_zip_file)
-: impl(new VirtualFileSystem_Impl)
+FileSystem::FileSystem(const std::string &path, bool is_zip_file)
+: impl(new FileSystem_Impl)
 {
 	if (is_zip_file)
-		impl->provider = new VirtualFileSource_Zip(ZipArchive(path));
+		impl->provider = new FileSystemProvider_Zip(ZipArchive(path));
 	else
-		impl->provider = new VirtualFileSource_File(path);
+		impl->provider = new FileSystemProvider_File(path);
 }
 
-VirtualFileSystem::~VirtualFileSystem()
+FileSystem::~FileSystem()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSystem Attributes:
+// FileSystem Attributes:
 
-VirtualDirectory VirtualFileSystem::get_root_directory()
-{
-	return open_directory(std::string());
-}
-
-bool VirtualFileSystem::is_mount(const std::string &mount_point)
+bool FileSystem::is_mount(const std::string &mount_point)
 {
 	std::string mount_point_slash = PathHelp::add_trailing_slash(mount_point, PathHelp::path_type_virtual);
 	int index, size;
@@ -118,7 +112,7 @@ bool VirtualFileSystem::is_mount(const std::string &mount_point)
 	return false;
 }
 
-VirtualDirectoryListing VirtualFileSystem::get_directory_listing(const std::string &path_rel)
+DirectoryListing FileSystem::get_directory_listing(const std::string &path_rel)
 {
 	std::string path = PathHelp::make_absolute(
 		"/",
@@ -139,7 +133,7 @@ VirtualDirectoryListing VirtualFileSystem::get_directory_listing(const std::stri
 	// Try open locally, if we got a file provider attached
 	if (impl->provider)
 	{
-		return VirtualDirectoryListing(
+		return DirectoryListing(
 			impl->provider,
 			PathHelp::make_relative(
 				"/",
@@ -151,19 +145,19 @@ VirtualDirectoryListing VirtualFileSystem::get_directory_listing(const std::stri
 
 }
 
-VirtualFileSource *VirtualFileSystem::get_provider()
+FileSystemProvider *FileSystem::get_provider()
 {
 	return impl->provider;
 }
 
-std::string VirtualFileSystem::get_path() const
+std::string FileSystem::get_path() const
 {
 	if (impl->provider)
 		return impl->provider->get_path();
 	return "";
 }
 
-std::string VirtualFileSystem::get_identifier() const
+std::string FileSystem::get_identifier() const
 {
 	std::string internal_name = "/";
 
@@ -183,19 +177,9 @@ std::string VirtualFileSystem::get_identifier() const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSystem Operations:
+// FileSystem Operations:
 
-VirtualDirectory VirtualFileSystem::open_directory(const std::string &path)
-{
-	return VirtualDirectory(
-		*this,
-		PathHelp::make_absolute(
-			"/",
-			path,
-			PathHelp::path_type_virtual));
-}
-
-IODevice VirtualFileSystem::open_file(const std::string &filename_rel,
+IODevice FileSystem::open_file(const std::string &filename_rel,
 	File::OpenMode mode,
 	unsigned int access,
 	unsigned int share,
@@ -232,7 +216,7 @@ IODevice VirtualFileSystem::open_file(const std::string &filename_rel,
 	}
 }
 
-void VirtualFileSystem::mount(const std::string &mount_point, VirtualFileSystem fs)
+void FileSystem::mount(const std::string &mount_point, FileSystem fs)
 {
 	std::string mount_point_slash = PathHelp::add_trailing_slash(
 		PathHelp::make_absolute(
@@ -240,18 +224,18 @@ void VirtualFileSystem::mount(const std::string &mount_point, VirtualFileSystem 
 			mount_point,
 			PathHelp::path_type_virtual),
 		PathHelp::path_type_virtual);
-	impl->mounts.push_back(std::pair<std::string, VirtualFileSystem>(mount_point_slash, fs));
+	impl->mounts.push_back(std::pair<std::string, FileSystem>(mount_point_slash, fs));
 }
 
-void VirtualFileSystem::mount(const std::string &mount_point, const std::string &path, bool is_zip_file)
+void FileSystem::mount(const std::string &mount_point, const std::string &path, bool is_zip_file)
 {
 	if (is_zip_file)
-		mount(mount_point, VirtualFileSystem(new VirtualFileSource_Zip(ZipArchive(path))));
+		mount(mount_point, FileSystem(new FileSystemProvider_Zip(ZipArchive(path))));
 	else
-		mount(mount_point, VirtualFileSystem(new VirtualFileSource_File(path)));
+		mount(mount_point, FileSystem(new FileSystemProvider_File(path)));
 }
 
-void VirtualFileSystem::unmount(const std::string &mount_point)
+void FileSystem::unmount(const std::string &mount_point)
 {
 	std::string mount_point_slash = PathHelp::add_trailing_slash(
 		PathHelp::make_absolute(
@@ -272,9 +256,9 @@ void VirtualFileSystem::unmount(const std::string &mount_point)
 	}
 }
 
-bool VirtualFileSystem::has_directory(const std::string &directory)
+bool FileSystem::has_directory(const std::string &directory)
 {
-	VirtualDirectoryListing list = get_directory_listing(PathHelp::get_basepath(directory, PathHelp::path_type_virtual));
+	DirectoryListing list = get_directory_listing(PathHelp::get_basepath(directory, PathHelp::path_type_virtual));
 	std::string dir_name = PathHelp::get_filename(PathHelp::remove_trailing_slash(directory));
 	while (list.next())
 	{
@@ -285,9 +269,9 @@ bool VirtualFileSystem::has_directory(const std::string &directory)
 	return false;
 }
 
-bool VirtualFileSystem::has_file(const std::string &filename)
+bool FileSystem::has_file(const std::string &filename)
 {
-	VirtualDirectoryListing list = get_directory_listing(PathHelp::get_basepath(filename, PathHelp::path_type_virtual));
+	DirectoryListing list = get_directory_listing(PathHelp::get_basepath(filename, PathHelp::path_type_virtual));
 	std::string fil_name = PathHelp::get_filename(filename);
 	while (list.next())
 	{
@@ -299,6 +283,6 @@ bool VirtualFileSystem::has_file(const std::string &filename)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSystem Implementation:
+// FileSystem Implementation:
 
 }

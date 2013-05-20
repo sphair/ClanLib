@@ -27,23 +27,23 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/IOData/virtual_directory_listing_entry.h"
+#include "API/Core/IOData/directory_listing_entry.h"
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListingEntry_Impl Class:
+// DirectoryListingEntry_Impl Class:
 
-class VirtualDirectoryListingEntry_Impl
+class DirectoryListingEntry_Impl
 {
 //! Construction:
 public:
-	VirtualDirectoryListingEntry_Impl()
+	DirectoryListingEntry_Impl()
 	{
 	}
 
-	~VirtualDirectoryListingEntry_Impl()
+	~DirectoryListingEntry_Impl()
 	{
 	}
 
@@ -112,75 +112,75 @@ private:
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListingEntry Construction:
+// DirectoryListingEntry Construction:
 
-VirtualDirectoryListingEntry::VirtualDirectoryListingEntry()
-: impl(new VirtualDirectoryListingEntry_Impl)
+DirectoryListingEntry::DirectoryListingEntry()
+: impl(new DirectoryListingEntry_Impl)
 {
 }
 
-VirtualDirectoryListingEntry::~VirtualDirectoryListingEntry()
+DirectoryListingEntry::~DirectoryListingEntry()
 {
 	
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListingEntry Attributes:
+// DirectoryListingEntry Attributes:
 
-std::string VirtualDirectoryListingEntry::get_filename()
+std::string DirectoryListingEntry::get_filename()
 {
 	return impl->get_filename();
 }
 
-bool VirtualDirectoryListingEntry::is_directory()
+bool DirectoryListingEntry::is_directory()
 {
 	return impl->is_directory();
 }
 
-bool VirtualDirectoryListingEntry::is_hidden()
+bool DirectoryListingEntry::is_hidden()
 {
 	return impl->is_hidden();
 }
 
-bool VirtualDirectoryListingEntry::is_writable()
+bool DirectoryListingEntry::is_writable()
 {
 	return impl->is_writable();
 }
 
-bool VirtualDirectoryListingEntry::is_readable()
+bool DirectoryListingEntry::is_readable()
 {
 	return impl->is_readable();
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListingEntry Operations:
+// DirectoryListingEntry Operations:
 
-void VirtualDirectoryListingEntry::set_filename(const std::string &filename)
+void DirectoryListingEntry::set_filename(const std::string &filename)
 {
 	impl->set_filename(filename);
 }
 
-void VirtualDirectoryListingEntry::set_directory(bool value)
+void DirectoryListingEntry::set_directory(bool value)
 {
 	impl->set_directory(value);
 }
 
-void VirtualDirectoryListingEntry::set_hidden(bool value)
+void DirectoryListingEntry::set_hidden(bool value)
 {
 	impl->set_hidden(value);
 }
 
-void VirtualDirectoryListingEntry::set_writable(bool value)
+void DirectoryListingEntry::set_writable(bool value)
 {
 	impl->set_writable(value);
 }
 
-void VirtualDirectoryListingEntry::set_readable(bool value)
+void DirectoryListingEntry::set_readable(bool value)
 {
 	impl->set_readable(value);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualDirectoryListingEntry Implementation:
+// DirectoryListingEntry Implementation:
 
 }

@@ -28,8 +28,7 @@
 
 #include "Sound/precomp.h"
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/iodevice.h"
@@ -47,11 +46,10 @@ namespace clan
 
 SoundProvider_Wave::SoundProvider_Wave(
 	const std::string &filename,
-	const VirtualDirectory &virtual_directory,
+	const FileSystem &fs,
 	bool stream) : impl(new SoundProvider_Wave_Impl)
 {
-	VirtualDirectory new_directory = virtual_directory;
-	IODevice source = new_directory.open_file(filename, File::open_existing, File::access_read, File::share_read);
+	IODevice source = fs.open_file(filename, File::open_existing, File::access_read, File::share_read);
 	impl->load(source);
 }
 
@@ -61,9 +59,8 @@ SoundProvider_Wave::SoundProvider_Wave(
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	VirtualDirectory dir = vfs.get_root_directory();
-	IODevice input = dir.open_file(filename, File::open_existing, File::access_read, File::share_all);
+	FileSystem vfs(path);
+	IODevice input = vfs.open_file(filename, File::open_existing, File::access_read, File::share_all);
 	impl->load(input);
 }
 

@@ -28,38 +28,38 @@
 */
 
 #include "Core/precomp.h"
-#include "virtual_file_source_zip.h"
+#include "file_system_provider_zip.h"
 #include "API/Core/IOData/iodevice.h"
-#include "API/Core/IOData/virtual_directory_listing_entry.h"
+#include "API/Core/IOData/directory_listing_entry.h"
 #include "API/Core/Text/string_format.h"
 
 namespace clan
 {
 
-int VirtualFileSource_Zip::zip_source_unique_id = 0;
+int FileSystemProvider_Zip::zip_source_unique_id = 0;
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSource_Zip Construction:
+// FileSystemProvider_Zip Construction:
 
-VirtualFileSource_Zip::VirtualFileSource_Zip(const ZipArchive &zip_archive)
+FileSystemProvider_Zip::FileSystemProvider_Zip(const ZipArchive &zip_archive)
 : zip_archive(zip_archive), index(0)
 {
 	zip_source_unique_id++;
 }
 
-VirtualFileSource_Zip::~VirtualFileSource_Zip()
+FileSystemProvider_Zip::~FileSystemProvider_Zip()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSource_Zip Attributes:
+// FileSystemProvider_Zip Attributes:
 
-std::string VirtualFileSource_Zip::get_path() const
+std::string FileSystemProvider_Zip::get_path() const
 {
 	return path;
 }
 
-std::string VirtualFileSource_Zip::get_identifier() const
+std::string FileSystemProvider_Zip::get_identifier() const
 {
 	// Ideally we should identify from the archive source (checksum etc)
 	// I'm sure someone will implement it if it is required
@@ -67,9 +67,9 @@ std::string VirtualFileSource_Zip::get_identifier() const
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSource_Zip Operations:
+// FileSystemProvider_Zip Operations:
 
-IODevice VirtualFileSource_Zip::open_file(const std::string &filename,
+IODevice FileSystemProvider_Zip::open_file(const std::string &filename,
 	File::OpenMode mode,
 	unsigned int access,
 	unsigned int share,
@@ -79,7 +79,7 @@ IODevice VirtualFileSource_Zip::open_file(const std::string &filename,
 }
 
 
-bool VirtualFileSource_Zip::initialize_directory_listing(const std::string &path)
+bool FileSystemProvider_Zip::initialize_directory_listing(const std::string &path)
 {
 	file_list = zip_archive.get_file_list(path);
 	directory_list_path = path;
@@ -88,7 +88,7 @@ bool VirtualFileSource_Zip::initialize_directory_listing(const std::string &path
 	return true;	// Empty directories should be valid
 }
 
-bool VirtualFileSource_Zip::next_file(VirtualDirectoryListingEntry &entry)
+bool FileSystemProvider_Zip::next_file(DirectoryListingEntry &entry)
 {
 	if( file_list.empty() ) 
 		return false;
@@ -111,6 +111,6 @@ bool VirtualFileSource_Zip::next_file(VirtualDirectoryListingEntry &entry)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// VirtualFileSource_Zip Implementation:
+// FileSystemProvider_Zip Implementation:
 
 }

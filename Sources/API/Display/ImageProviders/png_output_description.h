@@ -33,12 +33,12 @@
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
 
-class VirtualDirectory;
+class FileSystem;
 class PNGOutputDescription_Impl;
 class DateTime;
 

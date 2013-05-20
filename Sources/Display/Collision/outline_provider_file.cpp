@@ -26,12 +26,10 @@
 **    Harry Storbacka
 **    Magnus Norddahl
 **    Mark Page
-**    (if your name is missing here, please add it)
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "outline_provider_file.h"
 #include "API/Display/Collision/outline_circle.h"

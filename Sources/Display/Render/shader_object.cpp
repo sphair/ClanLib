@@ -28,7 +28,7 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -122,9 +122,9 @@ ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_
 	else
 		throw Exception("ShaderObject: Unknown shader type: " + type);
 
-	VirtualDirectory directory = resources->get_directory(resource);
+	FileSystem fs = resources->get_file_system(resource);
 
-	IODevice file = directory.open_file(filename, File::open_existing, File::access_read, File::share_read);
+	IODevice file = fs.open_file(PathHelp::combine(resources->get_base_path(resource), filename), File::open_existing, File::access_read, File::share_read);
 	int size = file.get_size();
 	std::string source(size, 0);
 	file.read(&source[0], size);
@@ -138,9 +138,9 @@ ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_
 	return shader_object;
 }
 
-ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const VirtualDirectory &directory)
+ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
 {
-	IODevice file = directory.open_file_read(filename);
+	IODevice file = fs.open_file(filename);
 	return ShaderObject::load(gc, shader_type, file);
 }
 
@@ -157,13 +157,13 @@ ShaderObject ShaderObject::load(GraphicContext &gc, ShaderType shader_type, cons
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return ShaderObject::load(gc, shader_type, filename, vfs.get_root_directory());
+	FileSystem vfs(path);
+	return ShaderObject::load(gc, shader_type, filename, vfs);
 }
 
-ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const VirtualDirectory &directory)
+ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shader_type, const std::string &filename, const FileSystem &fs)
 {
-	ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename, directory);
+	ShaderObject shader_object = ShaderObject::load(gc, shader_type, filename, fs);
 
 	if(!shader_object.compile())
 		throw Exception(string_format("Unable to compile shader program %1: %2", filename, shader_object.get_info_log()));
@@ -185,8 +185,8 @@ ShaderObject ShaderObject::load_and_compile(GraphicContext &gc, ShaderType shade
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return ShaderObject::load_and_compile(gc, shader_type, filename, vfs.get_root_directory());
+	FileSystem vfs(path);
+	return ShaderObject::load_and_compile(gc, shader_type, filename, vfs);
 }
 
 ShaderObject::~ShaderObject()

@@ -40,16 +40,16 @@ namespace clan
 {
 
 class IODevice;
-class VirtualDirectoryListingEntry;
+class DirectoryListingEntry;
 
 /// \brief Virtual File System (VFS) file source.
-class CL_API_CORE VirtualFileSource
+class CL_API_CORE FileSystemProvider
 {
 /// \name Construction
 /// \{
 
 public:
-	virtual ~VirtualFileSource() { return; }
+	virtual ~FileSystemProvider() { return; }
 
 /// \}
 /// \name Attributes
@@ -79,7 +79,7 @@ public:
 	virtual bool initialize_directory_listing(const std::string &path) = 0;
 
 	/// \brief Update directory listing item.
-	virtual bool next_file(VirtualDirectoryListingEntry &entry) = 0;
+	virtual bool next_file(DirectoryListingEntry &entry) = 0;
 
 	/// \brief Return the path of this file source.
 	virtual std::string get_path() const = 0;

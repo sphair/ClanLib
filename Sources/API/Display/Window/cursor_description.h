@@ -129,7 +129,7 @@ public:
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(const std::string &filename, VirtualDirectory &dir, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Adds images formed in a grid.
 	/** <p>This function will cut out a grid of frames from one image.</p>

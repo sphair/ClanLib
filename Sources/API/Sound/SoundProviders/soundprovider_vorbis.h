@@ -33,7 +33,7 @@
 
 #include "../api_sound.h"
 #include "soundprovider.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
@@ -55,7 +55,7 @@ public:
 	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	SoundProvider_Vorbis(
 		const std::string &filename,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		bool stream = false);
 
 	SoundProvider_Vorbis(

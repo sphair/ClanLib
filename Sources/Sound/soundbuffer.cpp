@@ -35,8 +35,7 @@
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
 #include "API/Core/Resources/resource_manager.h"
 #include "API/Core/Resources/resource.h"
-#include "API/Core/IOData/virtual_file_system.h"
-#include "API/Core/IOData/virtual_directory.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
@@ -89,11 +88,11 @@ SoundBuffer::SoundBuffer(
 SoundBuffer::SoundBuffer(
 		const std::string &filename,
 		bool streamed,
-		const VirtualDirectory &directory,
+		const FileSystem &fs,
 		const std::string &type)
 : impl(new SoundBuffer_Impl)
 {
-	impl->provider = SoundProviderFactory::load(filename, streamed, directory, type);
+	impl->provider = SoundProviderFactory::load(filename, streamed, fs, type);
 }
 
 SoundBuffer::SoundBuffer(

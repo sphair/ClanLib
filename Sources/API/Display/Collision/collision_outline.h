@@ -43,7 +43,7 @@
 #include "../../Core/Math/cl_math.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
@@ -148,7 +148,7 @@ public:
 	/// \param alpha_limit = value
 	/// \param accuracy = Outline Accuracy
 	/// \param get_insides = bool
-	CollisionOutline(const std::string &filename, const VirtualDirectory &directory, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
+	CollisionOutline(const std::string &filename, const FileSystem &file_system, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium, bool get_insides=true);
 
 	/// \brief Construct a collision outline.
 	///
@@ -320,7 +320,7 @@ public:
 	///
 	/// \param filename = The filename
 	/// \param directory = Virtual Directory
-	void save(const std::string &filename, VirtualDirectory &directory) const;
+	void save(const std::string &filename, FileSystem &file_system) const;
 
 	/// \brief Save
 	///

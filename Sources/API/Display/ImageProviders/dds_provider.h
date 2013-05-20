@@ -33,12 +33,12 @@
 
 #include "../api_display.h"
 #include "../Image/pixel_buffer_set.h"
-#include "../../Core/IOData/virtual_directory.h"
+#include "../../Core/IOData/file_system.h"
 
 namespace clan
 {
 
-class VirtualDirectory;
+class FileSystem;
 
 /// \brief Image provider that can load Direct3D texture (.dds) files.
 class CL_API_DISPLAY DDSProvider
@@ -50,7 +50,7 @@ public:
 	///
 	/// \param filename Name of the file to load.
 	/// \param directory Directory that file name is relative to.
-	static PixelBufferSet load(const std::string &filename, const VirtualDirectory &directory);
+	static PixelBufferSet load(const std::string &filename, const FileSystem &file_system);
 	static PixelBufferSet load(const std::string &fullname);
 	static PixelBufferSet load(IODevice &file);
 /// \}

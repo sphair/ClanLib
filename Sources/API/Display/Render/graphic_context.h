@@ -38,7 +38,6 @@
 #include "../Image/texture_format.h"
 #include <memory>
 #include "../../Core/Math/mat4.h"
-#include "../../Core/IOData/virtual_directory.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Signals/signal_v0.h"
 #include "primitives_array.h"

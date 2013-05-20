@@ -59,9 +59,9 @@ public:
 	virtual SoundProvider *load(
 		const std::string &filename,
 		bool stream,
-		const VirtualDirectory &directory)
+		const FileSystem &fs)
 	{
-		return new SoundProviderClass(filename, directory, stream);
+		return new SoundProviderClass(filename, fs, stream);
 	}
 
 	/// \brief Called to load static with this sound provider type.

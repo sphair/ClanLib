@@ -28,7 +28,7 @@
 
 #include "Display/precomp.h"
 #include <iostream>
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Display/ImageProviders/dds_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
@@ -38,9 +38,9 @@
 namespace clan
 {
 
-PixelBufferSet DDSProvider::load(const std::string &filename, const VirtualDirectory &directory)
+PixelBufferSet DDSProvider::load(const std::string &filename, const FileSystem &fs)
 {
-    IODevice file = directory.open_file_read(filename);
+    IODevice file = fs.open_file(filename);
 	return load(file);
 }
 
@@ -48,8 +48,8 @@ PixelBufferSet DDSProvider::load(const std::string &fullname)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	return load(filename, vfs.get_root_directory());
+	FileSystem vfs(path);
+	return load(filename, vfs);
 }
 
 PixelBufferSet DDSProvider::load(IODevice &file)

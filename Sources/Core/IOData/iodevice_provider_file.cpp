@@ -29,7 +29,6 @@
 
 #include "Core/precomp.h"
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/security_descriptor.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
@@ -70,20 +69,6 @@ IODeviceProvider_File::IODeviceProvider_File(
 	bool result = open(filename, open_mode, access, share, flags);
 	if (result == false)
 		throw Exception(string_format("IODeviceProvider_File::IODeviceProvider_File(): Unable to open file '%1'", filename));
-}
-
-IODeviceProvider_File::IODeviceProvider_File(
-	const std::string &filename,
-	File::OpenMode mode,
-	const SecurityDescriptor &permissions,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-: handle(invalid_handle), peeked_data(0)
-{
-	bool result = open(filename, mode, permissions, access, share, flags);
-	if (result == false)
-		throw Exception("IODeviceProvider_File::IODeviceProvider_File(): Unable to open file");
 }
 
 IODeviceProvider_File::~IODeviceProvider_File()
@@ -143,12 +128,6 @@ int IODeviceProvider_File::get_position() const
 
 	return pos;
 #endif
-}
-
-SecurityDescriptor IODeviceProvider_File::get_permissions() const
-{
-	SecurityDescriptor security_descriptor;
-	return security_descriptor;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -249,17 +228,6 @@ bool IODeviceProvider_File::open(
 #endif
 }
 
-bool IODeviceProvider_File::open(
-	const std::string &filename,
-	File::OpenMode mode,
-	const SecurityDescriptor &permissions,
-	unsigned int access,
-	unsigned int share,
-	unsigned int flags)
-{
-	return open(filename, mode, access, share, flags);
-}
-	
 void IODeviceProvider_File::close()
 {
 #ifdef WIN32
@@ -270,11 +238,6 @@ void IODeviceProvider_File::close()
 		::close(handle);
 #endif
 	handle = invalid_handle;
-}
-
-bool IODeviceProvider_File::set_permissions(const SecurityDescriptor &permissions)
-{
-	return false;
 }
 
 int IODeviceProvider_File::read(void *buffer, int size, bool read_all)
