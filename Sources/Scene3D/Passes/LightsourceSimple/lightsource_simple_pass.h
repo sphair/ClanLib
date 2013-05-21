@@ -29,7 +29,6 @@
 #pragma once
 
 #include "API/Scene3D/scene_light.h"
-#include "API/Scene3D/scene_inout_data.h"
 #include "Scene3D/scene_light_impl.h"
 #include "icosahedron.h"
 
@@ -42,7 +41,7 @@ class Scene_Impl;
 class LightsourceSimplePass : SceneLightVisitor
 {
 public:
-	LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout);
+	LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
 	~LightsourceSimplePass();
 
 	void run(GraphicContext &gc, Scene_Impl *scene);
@@ -59,19 +58,19 @@ private:
 	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<float> field_of_view;
-	SceneInOutData<Mat4f> world_to_eye;
-	SceneInOutData<Texture2D> diffuse_color_gbuffer;
-	SceneInOutData<Texture2D> specular_color_gbuffer;
-	SceneInOutData<Texture2D> specular_level_gbuffer;
-	SceneInOutData<Texture2D> self_illumination_gbuffer;
-	SceneInOutData<Texture2D> normal_z_gbuffer;
-	SceneInOutData<Texture2DArray> shadow_maps;
-	SceneInOutData<Texture2D> zbuffer;
+	Resource<Rect> viewport;
+	Resource<float> field_of_view;
+	Resource<Mat4f> world_to_eye;
+	Resource<Texture2D> diffuse_color_gbuffer;
+	Resource<Texture2D> specular_color_gbuffer;
+	Resource<Texture2D> specular_level_gbuffer;
+	Resource<Texture2D> self_illumination_gbuffer;
+	Resource<Texture2D> normal_z_gbuffer;
+	Resource<Texture2DArray> shadow_maps;
+	Resource<Texture2D> zbuffer;
 
 	// Out:
-	SceneInOutData<Texture2D> final_color;
+	Resource<Texture2D> final_color;
 
 	static const int max_lights = 1023;
 	static const int vectors_per_light = 6;

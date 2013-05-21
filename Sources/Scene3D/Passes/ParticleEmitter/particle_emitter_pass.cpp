@@ -36,7 +36,7 @@
 namespace clan
 {
 
-ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, SceneInOutDataContainer &inout)
+ParticleEmitterPass::ParticleEmitterPass(MaterialCache &texture_cache, const std::string &shader_path, ResourceContainer &inout)
 : shader_path(shader_path), texture_cache(texture_cache)
 {
 	viewport = inout.get<Rect>("Viewport");

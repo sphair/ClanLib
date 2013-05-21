@@ -34,7 +34,6 @@
 #include "api_scene3d.h"
 #include "../Display/Render/graphic_context.h"
 #include "Performance/gpu_timer.h"
-#include "scene_inout_data.h"
 #include <memory>
 
 namespace clan
@@ -59,10 +58,10 @@ public:
 	const SceneCamera &get_camera() const;
 	SceneCamera &get_camera();
 
-	SceneInOutDataContainer &get_inout_container();
+	ResourceContainer &get_inout_container();
 
 	template<typename Type>
-	SceneInOutData<Type> get_inout(const std::string &name)
+	Resource<Type> get_inout(const std::string &name)
 	{
 		return get_inout_container().get<Type>(name);
 	}

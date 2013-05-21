@@ -35,7 +35,7 @@ namespace clan
 {
 
 
-FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
+FinalPass::FinalPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	final_color = inout.get<Texture2D>("FinalColor");

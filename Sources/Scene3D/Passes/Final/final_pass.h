@@ -28,23 +28,21 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_inout_data.h"
-
 namespace clan
 {
 
 class FinalPass
 {
 public:
-	FinalPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout);
+	FinalPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
 	void run(GraphicContext &gc);
 
 private:
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<Texture2D> final_color;
-	SceneInOutData<Texture2D> bloom_blur_texture;
-	SceneInOutData<Texture2D> ambient_occlusion;
+	Resource<Rect> viewport;
+	Resource<Texture2D> final_color;
+	Resource<Texture2D> bloom_blur_texture;
+	Resource<Texture2D> ambient_occlusion;
 
 	ProgramObject present_shader;
 	VertexArrayVector<Vec4f> rect_positions;

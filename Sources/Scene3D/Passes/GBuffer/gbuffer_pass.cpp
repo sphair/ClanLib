@@ -37,7 +37,7 @@ namespace clan
 {
 
 
-GBufferPass::GBufferPass(SceneInOutDataContainer &inout)
+GBufferPass::GBufferPass(ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");

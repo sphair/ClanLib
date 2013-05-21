@@ -34,7 +34,7 @@
 namespace clan
 {
 
-BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
+BloomPass::BloomPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	final_color = inout.get<Texture2D>("FinalColor");

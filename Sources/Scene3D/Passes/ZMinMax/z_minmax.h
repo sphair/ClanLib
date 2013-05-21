@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_inout_data.h"
-
 namespace clan
 {
 
@@ -40,11 +38,11 @@ public:
 	void minmax(GraphicContext &gc);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<Texture2D> normal_z;
+	Resource<Rect> viewport;
+	Resource<Texture2D> normal_z;
 
 	// Out:
-	SceneInOutData<Texture2D> result;
+	Resource<Texture2D> result;
 
 private:
 	void update_buffers(GraphicContext &gc);

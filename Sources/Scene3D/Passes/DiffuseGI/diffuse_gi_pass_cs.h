@@ -29,7 +29,6 @@
 #pragma once
 
 #include "API/Scene3D/scene.h"
-#include "API/Scene3D/scene_inout_data.h"
 
 namespace clan
 {
@@ -38,7 +37,7 @@ class Scene_Impl;
 class DiffuseGIPassCS
 {
 public:
-	DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout);
+	DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout);
 	~DiffuseGIPassCS();
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
@@ -47,13 +46,13 @@ private:
 	ProgramObject compile_and_link(GraphicContext &gc, const std::string &compute_filename);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<Texture2D> diffuse_color_gbuffer;
-	SceneInOutData<Texture2D> normal_z_gbuffer;
-	SceneInOutData<Texture2DArray> shadow_maps;
+	Resource<Rect> viewport;
+	Resource<Texture2D> diffuse_color_gbuffer;
+	Resource<Texture2D> normal_z_gbuffer;
+	Resource<Texture2DArray> shadow_maps;
 
 	// Out:
-	SceneInOutData<Texture2D> final_color;
+	Resource<Texture2D> final_color;
 
 	ProgramObject init_lpv_program;
 	ProgramObject init_gv_program;

@@ -29,7 +29,6 @@
 #pragma once
 
 #include "Scene3D/Model/model_mesh_visitor.h"
-#include "API/Scene3D/scene_inout_data.h"
 
 namespace clan
 {
@@ -39,7 +38,7 @@ class Scene_Impl;
 class TransparencyPass : ModelMeshVisitor
 {
 public:
-	TransparencyPass(SceneInOutDataContainer &inout);
+	TransparencyPass(ResourceContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
 private:
@@ -47,13 +46,13 @@ private:
 	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<float> field_of_view;
-	SceneInOutData<Mat4f> world_to_eye;
-	SceneInOutData<Texture2D> zbuffer;
+	Resource<Rect> viewport;
+	Resource<float> field_of_view;
+	Resource<Mat4f> world_to_eye;
+	Resource<Texture2D> zbuffer;
 
 	// InOut:
-	SceneInOutData<Texture2D> final_color;
+	Resource<Texture2D> final_color;
 
 	FrameBuffer fb_transparency;
 	GraphicContext gc;

@@ -35,7 +35,7 @@ namespace clan
 {
 
 
-DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
+DiffuseGIPassCS::DiffuseGIPassCS(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	diffuse_color_gbuffer = inout.get<Texture2D>("DiffuseColorGBuffer");

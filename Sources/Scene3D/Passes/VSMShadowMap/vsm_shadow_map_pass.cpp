@@ -37,7 +37,7 @@ namespace clan
 {
 
 
-VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, SceneInOutDataContainer &inout)
+VSMShadowMapPass::VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout)
 : maps(gc, inout.get<Texture2DArray>("ShadowMaps"), 512, 64, tf_rg32f), round_robin(0)
 {
 	viewport = inout.get<Rect>("Viewport");

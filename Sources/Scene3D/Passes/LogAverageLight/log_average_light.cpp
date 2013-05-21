@@ -34,7 +34,7 @@ namespace clan
 {
 
 
-LogAverageLight::LogAverageLight(GraphicContext &gc, SceneInOutDataContainer &inout, int iterations)
+LogAverageLight::LogAverageLight(GraphicContext &gc, ResourceContainer &inout, int iterations)
 : iterations(iterations), current_index(0)
 {
 	viewport = inout.get<Rect>("Viewport");
