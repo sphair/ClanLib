@@ -45,13 +45,13 @@ class XMLResourceNode;
 class FileSystem;
 class XMLResourceDocument_Impl;
 
-/// \brief Resource Manager.
+/// \brief XML Resource Document.
 class CL_API_CORE XMLResourceDocument
 {
 /// \name Construction
 /// \{
 public:
-	/// \brief Construct a resource manager.
+	/// \brief Construct a XMLResourceDocument.
 	XMLResourceDocument();
 
 	/// \brief Constructs a XMLResourceDocument
@@ -73,7 +73,7 @@ public:
 
 	/// \brief Constructs a XMLResourceDocument
 	///
-	/// \param other = Resource Manager
+	/// \param other = XMLResourceDocument
 	XMLResourceDocument(const XMLResourceDocument &other);
 
 	~XMLResourceDocument();
@@ -129,14 +129,14 @@ public:
 public:
 	XMLResourceDocument &operator =(const XMLResourceDocument &copy);
 
-	bool operator ==(const XMLResourceDocument &manager) const;
+	bool operator ==(const XMLResourceDocument &that) const;
 
-	/// \brief Add resources from an other resource manager.
-	/** <p>This function only makes the resource manager search other managers, it
-	    does not copy the resources into this manager.</p>*/
+	/// \brief Add resources from an other resource document.
+	/** <p>This function only makes the resource document search other documents, it
+	    does not copy the resources into this document.</p>*/
 	void add_resources(const XMLResourceDocument& additional_resources);
 
-	/// \brief Remove resources from an other resource manager.
+	/// \brief Remove resources from an other resource document.
 	void remove_resources(const XMLResourceDocument& additional_resources);
 
 	/// \brief Construct a new resource object.

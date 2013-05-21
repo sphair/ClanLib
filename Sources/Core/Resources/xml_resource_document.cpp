@@ -280,9 +280,9 @@ XMLResourceDocument &XMLResourceDocument::operator =(const XMLResourceDocument &
 	return *this;
 }
 
-bool XMLResourceDocument::operator ==(const XMLResourceDocument &manager) const
+bool XMLResourceDocument::operator ==(const XMLResourceDocument &that) const
 {
-	return impl == manager.impl;
+	return impl == that.impl;
 }
 
 void XMLResourceDocument::add_resources(const XMLResourceDocument& additional_resources)

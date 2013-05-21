@@ -43,7 +43,7 @@ class DomElement;
 class XMLResourceDocument;
 class XMLResourceNode_Impl;
 
-/// \brief Resource Manager resource.
+/// \brief Resource node for a XMLResourceDocument
 class CL_API_CORE XMLResourceNode
 {
 /// \name Construction
@@ -106,8 +106,8 @@ private:
 	/// \brief Constructs a Resource
 	///
 	/// \param element = Dom Element
-	/// \param resource_manager = Resource Manager
-	XMLResourceNode(DomElement element, XMLResourceDocument &resource_manager);
+	/// \param resource_document = Resource Document
+	XMLResourceNode(DomElement element, XMLResourceDocument &resource_document);
 
 	std::shared_ptr<XMLResourceNode_Impl> impl;
 
