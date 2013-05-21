@@ -55,7 +55,7 @@ public:
 	ResourceManagerProvider *get_provider() const;
 
 	template<typename Type>
-	Type get_resource(const std::string &id)
+	Resource<Type> get_resource(const std::string &id)
 	{
 		return get_resource(id).cast<Type>();
 	}
