@@ -29,7 +29,6 @@
 #pragma once
 
 #include "Scene3D/Model/model_material_cache.h"
-#include "API/Scene3D/cached_texture.h"
 #include <unordered_map>
 
 namespace clan
@@ -41,52 +40,13 @@ class MaterialCache : public ModelMaterialCache
 {
 public:
 	MaterialCache(Scene_Impl *scene);
-	CachedTexture get_texture(GraphicContext &gc, const std::string &material_name, bool linear);
+	Resource<Texture> get_texture(GraphicContext &gc, const std::string &material_name, bool linear);
 
 	void update(GraphicContext &gc, float time_elapsed);
 
 private:
 	Scene_Impl *scene;
-
-/*
-private:
-	static std::string to_key(const std::string &material_name, bool linear);
-	Texture2D get_dummy_texture(GraphicContext &gc);
-
-	Scene_Impl *scene;
-
-	Texture2D dummy_texture;
-	std::unordered_map<std::string, CachedTexture> textures;
-	WorkQueue &work_queue;
-
-//	std::vector<VideoTexture> video_textures;
-
-	friend class MaterialCacheLoadTexture;
-*/
 };
-/*
-class MaterialCacheLoadTexture : public WorkItem
-{
-public:
-	MaterialCacheLoadTexture(MaterialCache *cache, CachedTexture texture, const std::string &material_name, bool linear);
 
-private:
-	void process_work();
-	void work_completed(GraphicContext &gc);
-	void load_ctexture(const std::string &material_name);
-	void load_clanlib_texture(const std::string &material_name);
-	void load_dds_texture(const std::string &material_name);
-	void load_blp_texture(const std::string &material_name);
-	static bool is_power_of_two(int width, int height);
-
-	MaterialCache *cache;
-	CachedTexture texture;
-	std::string material_name;
-	bool linear;
-	std::string video_file;
-
-	PixelBufferSet pixelbuffer_set;
-};
-*/
 }
 

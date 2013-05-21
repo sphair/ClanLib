@@ -29,7 +29,6 @@
 #pragma once
 
 #include "model_mesh_buffers.h"
-#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/scene.h"
 #include "Scene3D/scene_impl.h"
 
@@ -95,18 +94,18 @@ public:
 class ModelRenderCommand_BindTexture : public ModelRenderCommand
 {
 public:
-	ModelRenderCommand_BindTexture(int bind_index, CachedTexture texture, TextureWrapMode wrap_u, TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
+	ModelRenderCommand_BindTexture(int bind_index, Resource<Texture> texture, TextureWrapMode wrap_u, TextureWrapMode wrap_v) : bind_index(bind_index), texture(texture), wrap_u(wrap_u), wrap_v(wrap_v)
 	{
 	}
 
 	void execute(GraphicContext &gc, int num_instances)
 	{
-		texture.get_texture().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
-		gc.set_texture(bind_index, texture.get_texture());
+		texture.get().to_texture_2d().set_wrap_mode(wrap_u, wrap_v);
+		gc.set_texture(bind_index, texture.get());
 	}
 
 	int bind_index;
-	CachedTexture texture;
+	Resource<Texture> texture;
 	TextureWrapMode wrap_u, wrap_v;
 };
 

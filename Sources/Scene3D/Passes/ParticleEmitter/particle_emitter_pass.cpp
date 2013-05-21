@@ -130,8 +130,8 @@ void ParticleEmitterPass::run(GraphicContext &gc, Scene_Impl *scene)
 	for (size_t i = 0; i < active_emitters.size(); i++)
 	{
 		gc.set_uniform_buffer(0, active_emitters[i]->gpu_uniforms);
-		gc.set_texture(2, active_emitters[i]->particle_animation.get_texture());
-		gc.set_texture(3, active_emitters[i]->life_color_gradient.get_texture());
+		gc.set_texture(2, active_emitters[i]->particle_animation.get());
+		gc.set_texture(3, active_emitters[i]->life_color_gradient.get());
 		gc.draw_primitives_array_instanced(type_triangles, 0, 6, active_emitters[i]->cpu_particles.size());
 	}
 

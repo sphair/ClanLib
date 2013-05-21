@@ -103,6 +103,13 @@ public:
 
 	const std::shared_ptr<Resource_Impl<Type> > &handle() const { return object; }
 
+	bool operator<(const Resource &other) const { return object < other.object; }
+	bool operator<=(const Resource &other) const { return object <= other.object; }
+	bool operator>(const Resource &other) const { return object > other.object; }
+	bool operator>=(const Resource &other) const { return object >= other.object; }
+	bool operator==(const Resource &other) const { return object == other.object; }
+	bool operator!=(const Resource &other) const { return object != other.object; }
+
 private:
 	std::shared_ptr<Resource_Impl<Type> > object;
 	int generation;

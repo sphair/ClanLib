@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/scene_particle_emitter.h"
 #include "particle.h"
 #include "particle_uniforms.h"
@@ -51,8 +50,8 @@ public:
 
 	SceneParticleEmitter_Impl *emitter;
 
-	CachedTexture life_color_gradient;
-	CachedTexture particle_animation;
+	Resource<Texture> life_color_gradient;
+	Resource<Texture> particle_animation;
 	UniformVector<ParticleUniforms> gpu_uniforms;
 
 private:

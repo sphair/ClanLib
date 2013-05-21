@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/ModelData/model_data.h"
 #include "model_instance.h"
 
@@ -65,7 +64,7 @@ public:
 private:
 	ModelShaderCache &shader_cache;
 	std::shared_ptr<ModelData> model_data;
-	std::vector<CachedTexture> textures;
+	std::vector<Resource<Texture> > textures;
 
 	std::vector<std::shared_ptr<ModelLOD> > levels;
 

@@ -39,7 +39,6 @@ namespace clan
 {
 
 class ModelData;
-class CachedTexture;
 class GraphicContext;
 
 class SceneCacheProvider
@@ -49,7 +48,7 @@ public:
 
 	virtual std::shared_ptr<ModelData> get_model_data(const std::string &name) = 0;
 
-	virtual CachedTexture get_texture(GraphicContext &gc, const std::string &name, bool linear) = 0;
+	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &name, bool linear) = 0;
 
 	virtual void update_textures(GraphicContext &gc, float time_elapsed) = 0;
 };

@@ -69,6 +69,13 @@ public:
 		}
 	}
 
+	bool operator<(const ResourceObject &other) const { return object < other.object; }
+	bool operator<=(const ResourceObject &other) const { return object <= other.object; }
+	bool operator>(const ResourceObject &other) const { return object > other.object; }
+	bool operator>=(const ResourceObject &other) const { return object >= other.object; }
+	bool operator==(const ResourceObject &other) const { return object == other.object; }
+	bool operator!=(const ResourceObject &other) const { return object != other.object; }
+
 private:
 	std::shared_ptr<Resource_BaseImpl> object;
 };

@@ -28,15 +28,13 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
-
 namespace clan
 {
 
 class ModelMaterialCache
 {
 public:
-	virtual CachedTexture get_texture(GraphicContext &gc, const std::string &material_name, bool linear) = 0;
+	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &material_name, bool linear) = 0;
 };
 
 }
