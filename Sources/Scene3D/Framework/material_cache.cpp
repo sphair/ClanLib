@@ -45,7 +45,7 @@ void MaterialCache::update(GraphicContext &gc, float time_elapsed)
 	scene->get_cache().get_provider()->update_textures(gc, time_elapsed);
 }
 
-CachedTexture MaterialCache::get_texture(GraphicContext &gc, const std::string &material_name, bool linear)
+Resource<Texture> MaterialCache::get_texture(GraphicContext &gc, const std::string &material_name, bool linear)
 {
 	return scene->get_cache().get_provider()->get_texture(gc, material_name, linear);
 }

@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
 #include "API/Scene3D/ModelData/model_data.h"
 
 namespace clan

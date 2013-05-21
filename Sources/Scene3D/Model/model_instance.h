@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/cached_texture.h"
-
 namespace clan
 {
 
@@ -42,7 +40,7 @@ class ModelReplacedMaterial
 {
 public:
 	size_t texture_index;
-	CachedTexture replaced_texture;
+	Resource<Texture> replaced_texture;
 };
 
 class ModelInstance
