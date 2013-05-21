@@ -32,6 +32,7 @@
 #pragma once
 
 #include "../api_core.h"
+#include "../IOData/file_system.h"
 #include "resource_object.h"
 #include <memory>
 #include <map>
@@ -47,6 +48,7 @@ class ResourceManager
 public:
 	ResourceManager();
 	ResourceManager(ResourceManagerProvider *provider);
+	ResourceManager(const std::string &xml_filename, const FileSystem &file_system = FileSystem());
 
 	bool is_null() const;
 
