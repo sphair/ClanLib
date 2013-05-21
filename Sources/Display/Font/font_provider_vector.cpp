@@ -85,7 +85,7 @@ void FontProvider_Vector::load_font(const FontDescription &desc)
 	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 	FileSystem vfs(path);
-	IODevice io_dev = vfs.get_root_directory().open_file_read(filename);
+	IODevice io_dev = vfs.open_file(filename);
 
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();

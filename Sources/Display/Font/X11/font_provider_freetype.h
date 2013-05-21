@@ -76,7 +76,7 @@ public:
 
 	void load_font(const FontDescription &desc);
 	void load_font(const FontDescription &desc, IODevice &file);
-	void load_font(const FontDescription &desc, const VirtualDirectory &directory);
+	void load_font(const FontDescription &desc, const FileSystem &fs);
 	void load_font(const std::string &resource_id, ResourceManager *resources);
 
 /// \}

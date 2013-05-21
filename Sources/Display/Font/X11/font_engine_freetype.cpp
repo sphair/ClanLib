@@ -34,6 +34,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/2D/color.h"
 #include "font_engine_freetype.h"
+#include "API/Core/IOData/iodevice.h"
 
 namespace clan
 {
