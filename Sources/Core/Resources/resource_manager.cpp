@@ -26,27 +26,44 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
-
-#pragma once
-
-#include "../api_core.h"
-#include "resource_object.h"
-#include <memory>
-#include <map>
+#include "Core/precomp.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/resource_manager_provider.h"
 
 namespace clan
 {
 
-class ResourceManagerProvider
+class ResourceManager_Impl
 {
 public:
-	virtual ~ResourceManagerProvider() { }
+	ResourceManager_Impl(ResourceManagerProvider *provider) : provider(provider) { }
+	~ResourceManager_Impl() { delete provider; }
 
-	virtual ResourceObject get_resource(const std::string &id) = 0;
+	ResourceManagerProvider *provider;
 };
 
+ResourceManager::ResourceManager()
+{
 }
 
-/// \}
+ResourceManager::ResourceManager(ResourceManagerProvider *provider)
+: impl(new ResourceManager_Impl(provider))
+{
+}
+
+bool ResourceManager::is_null() const
+{
+	return !impl;
+}
+
+ResourceManagerProvider *ResourceManager::get_provider() const
+{
+	return impl->provider;
+}
+
+ResourceObject ResourceManager::get_resource(const std::string &id)
+{
+	return impl->provider->get_resource(id);
+}
+
+}
