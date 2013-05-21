@@ -51,6 +51,11 @@ ResourceManager::ResourceManager(ResourceManagerProvider *provider)
 {
 }
 
+ResourceManager::ResourceManager(const std::string &xml_filename, const FileSystem &file_system)
+{
+	//*this = ResourceManager(new ResourceManager_XMLDocument(xml_filename, file_system));
+}
+
 bool ResourceManager::is_null() const
 {
 	return !impl;
