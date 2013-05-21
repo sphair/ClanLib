@@ -32,18 +32,33 @@
 #pragma once
 
 #include "../api_core.h"
-#include "resource.h"
+#include "resource_object.h"
 #include <memory>
 #include <map>
 
 namespace clan
 {
 
+class ResourceManagerProvider;
 class ResourceManager_Impl;
 
 class ResourceManager
 {
 public:
+	ResourceManager();
+	ResourceManager(ResourceManagerProvider *provider);
+
+	bool is_null() const;
+
+	ResourceManagerProvider *get_provider() const;
+
+	template<typename Type>
+	Type get_resource(const std::string &id)
+	{
+		return get_resource(id).cast<Type>();
+	}
+
+	ResourceObject get_resource(const std::string &id);
 
 private:
 	std::shared_ptr<ResourceManager_Impl> impl;
