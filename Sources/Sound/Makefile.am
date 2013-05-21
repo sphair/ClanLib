@@ -34,7 +34,6 @@ soundbuffer_session_impl.cpp \
 soundbuffer.cpp \
 soundoutput_description.cpp \
 sound_sse.cpp \
-resourcetype_sample.cpp \
 soundoutput.cpp
 
 if WIN32

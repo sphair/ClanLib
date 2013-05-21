@@ -79,7 +79,6 @@ Image/pixel_buffer_impl.cpp \
 Collision/collision_outline_generic.cpp \
 Collision/outline_provider_bitmap.cpp \
 Collision/collision_outline.cpp \
-Collision/resourcedata_collisionoutline.cpp \
 Collision/outline_provider_file_generic.cpp \
 Collision/outline_provider_file.cpp \
 Collision/contour.cpp \

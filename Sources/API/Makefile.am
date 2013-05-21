@@ -172,7 +172,6 @@ clanCore_includes = \
 	Core/Text/console.h \
 	Core/Text/string_format.h \
 	Core/Text/console_logger.h \
-	Core/Resources/resource_data_session.h \
 	Core/Resources/resource.h \
 	Core/Resources/resource_manager.h \
 	Core/ErrorReporting/detect_hang.h \
@@ -197,26 +196,22 @@ clanCore_includes = \
 	Core/Crypto/aes256_encrypt.h \
 	Core/Crypto/secret.h \
 	Core/Crypto/sha512.h \
-	Core/IOData/security_identifier.h \
 	Core/IOData/file_help.h \
-	Core/IOData/virtual_directory_listing_entry.h \
-	Core/IOData/access_control_list.h \
 	Core/IOData/iodevice.h \
 	Core/IOData/iodevice_memory.h \
-	Core/IOData/security_descriptor.h \
+	Core/IOData/directory_listing_entry.h \
 	Core/IOData/iodevice_provider.h \
 	Core/IOData/pipe_listen.h \
 	Core/IOData/directory.h \
-	Core/IOData/virtual_directory_listing.h \
+	Core/IOData/file_system.h \
 	Core/IOData/directory_scanner.h \
+	Core/IOData/file_system_provider.h \
 	Core/IOData/html_url.h \
 	Core/IOData/path_help.h \
-	Core/IOData/virtual_file_source.h \
 	Core/IOData/file.h \
+	Core/IOData/directory_listing.h \
 	Core/IOData/cl_endian.h \
 	Core/IOData/pipe_connection.h \
-	Core/IOData/virtual_file_system.h \
-	Core/IOData/virtual_directory.h \
 	Core/XML/dom_processing_instruction.h \
 	Core/XML/dom_notation.h \
 	Core/XML/xml_writer.h \
