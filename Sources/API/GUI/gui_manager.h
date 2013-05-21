@@ -58,7 +58,7 @@ class Font;
 class FontDescription;
 class FileSystem;
 class DisplayWindow;
-class ResourceManager;
+class XMLResourceDocument;
 
 /// \brief GUI manager.
 class CL_API_GUI GUIManager
@@ -169,9 +169,9 @@ public:
 	void set_css_document(const std::string &filename, const FileSystem &fs);
 
 	/// \brief Adds additional resources to the GUI resource manager
-	void add_resources(const ResourceManager &resources);
+	void add_resources(const XMLResourceDocument &resources);
 
-	/// \brief Adds additional resources to the GUI resource manager, by creating a ResourceManager from file automatically.
+	/// \brief Adds additional resources to the GUI resource manager, by creating a XMLResourceDocument from file automatically.
 	void add_resources(const std::string &filename);
 
 	/// \brief Adds additional resources to the GUI resource manager

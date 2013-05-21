@@ -27,8 +27,8 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_document.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/IOData/file.h"
@@ -36,17 +36,17 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
-#include "resource_manager_impl.h"
+#include "xml_resource_document_impl.h"
 #include <map>
 
 namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// ResourceManager Construction:
+// XMLResourceDocument Construction:
 
-ResourceManager::ResourceManager()
-: impl(new ResourceManager_Impl)
+XMLResourceDocument::XMLResourceDocument()
+: impl(new XMLResourceDocument_Impl)
 {
 	impl->ns_resources = "http://clanlib.org/xmlns/resources-1.0";
 	DomElement document_element = impl->document.create_element_ns(
@@ -59,44 +59,44 @@ ResourceManager::ResourceManager()
 	impl->document.append_child(document_element);
 }
 
-ResourceManager::ResourceManager(const std::string &filename)
-: impl(new ResourceManager_Impl)
+XMLResourceDocument::XMLResourceDocument(const std::string &filename)
+: impl(new XMLResourceDocument_Impl)
 {
 	load(filename);
 }
 
-ResourceManager::ResourceManager(const std::string &filename, FileSystem fs)
-: impl(new ResourceManager_Impl)
+XMLResourceDocument::XMLResourceDocument(const std::string &filename, FileSystem fs)
+: impl(new XMLResourceDocument_Impl)
 {
 	load(filename, fs);
 }
 
-ResourceManager::ResourceManager(IODevice file, const std::string &base_path, FileSystem fs)
-: impl(new ResourceManager_Impl)
+XMLResourceDocument::XMLResourceDocument(IODevice file, const std::string &base_path, FileSystem fs)
+: impl(new XMLResourceDocument_Impl)
 {
 	load(file, base_path, fs);
 }
 
-ResourceManager::ResourceManager(const ResourceManager &other)
+XMLResourceDocument::XMLResourceDocument(const XMLResourceDocument &other)
 : impl(other.impl)
 {
 }
 
-ResourceManager::~ResourceManager()
+XMLResourceDocument::~XMLResourceDocument()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// ResourceManager Attributes:
+// XMLResourceDocument Attributes:
 
-bool ResourceManager::resource_exists(const std::string &resource_id) const
+bool XMLResourceDocument::resource_exists(const std::string &resource_id) const
 {
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	it = impl->resources.find(resource_id);
 	if (it != impl->resources.end())
 		return true;
 
-	for (std::vector<ResourceManager>::const_iterator it = impl->additional_resources.begin();
+	for (std::vector<XMLResourceDocument>::const_iterator it = impl->additional_resources.begin();
 		it != impl->additional_resources.end();
 		++it)
 		if ((*it).resource_exists(resource_id))
@@ -104,11 +104,11 @@ bool ResourceManager::resource_exists(const std::string &resource_id) const
 	return false;
 }
 
-std::vector<std::string> ResourceManager::get_section_names() const
+std::vector<std::string> XMLResourceDocument::get_section_names() const
 {
 	std::vector<std::string> names;
 	std::string last_section;
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
 		std::string section = PathHelp::get_fullpath(it->first, PathHelp::path_type_virtual);
@@ -119,7 +119,7 @@ std::vector<std::string> ResourceManager::get_section_names() const
 		}
 	}
 
-	std::vector<ResourceManager>::size_type i;
+	std::vector<XMLResourceDocument>::size_type i;
 	for (i = 0; i < impl->additional_resources.size(); i++)
 	{
 		try
@@ -135,11 +135,11 @@ std::vector<std::string> ResourceManager::get_section_names() const
 	return names;
 }
 
-std::vector<std::string> ResourceManager::get_resource_names() const
+std::vector<std::string> XMLResourceDocument::get_resource_names() const
 {
 	std::vector<std::string> names;
 	std::string last_section;
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
 		std::string resource_id = it->first;
@@ -148,10 +148,10 @@ std::vector<std::string> ResourceManager::get_resource_names() const
 	return names;
 }
 
-std::vector<std::string> ResourceManager::get_resource_names(const std::string &section) const
+std::vector<std::string> XMLResourceDocument::get_resource_names(const std::string &section) const
 {
 	std::vector<std::string> names;
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
 		std::string cur_section = PathHelp::get_basepath(it->first, PathHelp::path_type_virtual);
@@ -162,7 +162,7 @@ std::vector<std::string> ResourceManager::get_resource_names(const std::string &
 		}
 	}
 
-	std::vector<ResourceManager>::size_type i;
+	std::vector<XMLResourceDocument>::size_type i;
 	for (i = 0; i < impl->additional_resources.size(); i++)
 	{
 		try
@@ -178,10 +178,10 @@ std::vector<std::string> ResourceManager::get_resource_names(const std::string &
 	return names;
 }
 
-std::vector<std::string> ResourceManager::get_resource_names_of_type(const std::string &type) const
+std::vector<std::string> XMLResourceDocument::get_resource_names_of_type(const std::string &type) const
 {
 	std::vector<std::string> names;
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
 		if (it->second.get_type() == type)
@@ -190,7 +190,7 @@ std::vector<std::string> ResourceManager::get_resource_names_of_type(const std::
 	return names;
 }
 
-std::vector<std::string> ResourceManager::get_resource_names_of_type(
+std::vector<std::string> XMLResourceDocument::get_resource_names_of_type(
 	const std::string &type,
 	const std::string &section) const
 {
@@ -198,7 +198,7 @@ std::vector<std::string> ResourceManager::get_resource_names_of_type(
 	std::string section_trailing_slash = PathHelp::add_trailing_slash(section, PathHelp::path_type_virtual);
 
 	std::vector<std::string> names;
-	std::map<std::string, Resource>::const_iterator it;
+	std::map<std::string, XMLResourceNode>::const_iterator it;
 	for (it = impl->resources.begin(); it != impl->resources.end(); ++it)
 	{
 		std::string cur_section = PathHelp::get_fullpath(it->first, PathHelp::path_type_virtual);
@@ -211,17 +211,17 @@ std::vector<std::string> ResourceManager::get_resource_names_of_type(
 	return names;
 }
 
-Resource ResourceManager::get_resource(
+XMLResourceNode XMLResourceDocument::get_resource(
 	const std::string &resource_id,
 	bool resolve_alias,
 	int reserved) const
 {
- 	std::map<std::string, Resource>::const_iterator it;
+ 	std::map<std::string, XMLResourceNode>::const_iterator it;
 	it = impl->resources.find(resource_id);
 	if (it != impl->resources.end())
 		return it->second;
 
-	std::vector<ResourceManager>::size_type i;
+	std::vector<XMLResourceDocument>::size_type i;
 	for (i = 0; i < impl->additional_resources.size(); i++)
 	{
 		try
@@ -235,64 +235,64 @@ Resource ResourceManager::get_resource(
 	}
 
 	throw Exception(string_format("Resource not found: %1", resource_id));
-	return Resource(impl->document.get_document_element(), const_cast<ResourceManager&>(*this));
+	return XMLResourceNode(impl->document.get_document_element(), const_cast<XMLResourceDocument&>(*this));
 }
 
-bool ResourceManager::get_boolean_resource(
+bool XMLResourceDocument::get_boolean_resource(
 	const std::string &resource_id,
 	bool default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;
 
-	Resource resource = get_resource(resource_id);
+	XMLResourceNode resource = get_resource(resource_id);
 	return StringHelp::text_to_bool(resource.get_element().get_attribute("value"));
 }
 
-int ResourceManager::get_integer_resource(
+int XMLResourceDocument::get_integer_resource(
 	const std::string &resource_id,
 	int default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;
 
-	Resource resource = get_resource(resource_id);
+	XMLResourceNode resource = get_resource(resource_id);
 	return StringHelp::text_to_int(resource.get_element().get_attribute("value"));
 }
 
-std::string ResourceManager::get_string_resource(
+std::string XMLResourceDocument::get_string_resource(
 	const std::string &resource_id,
 	const std::string &default_value) const
 {
 	if (!resource_exists(resource_id))
 		return default_value;
 
-	Resource resource = get_resource(resource_id);
+	XMLResourceNode resource = get_resource(resource_id);
 	return resource.get_element().get_attribute("value");
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// ResourceManager Operations:
+// XMLResourceDocument Operations:
 
-ResourceManager &ResourceManager::operator =(const ResourceManager &copy)
+XMLResourceDocument &XMLResourceDocument::operator =(const XMLResourceDocument &copy)
 {
 	impl = copy.impl;
 	return *this;
 }
 
-bool ResourceManager::operator ==(const ResourceManager &manager) const
+bool XMLResourceDocument::operator ==(const XMLResourceDocument &manager) const
 {
 	return impl == manager.impl;
 }
 
-void ResourceManager::add_resources(const ResourceManager& additional_resources)
+void XMLResourceDocument::add_resources(const XMLResourceDocument& additional_resources)
 {
 	impl->additional_resources.push_back(additional_resources);
 }
 
-void ResourceManager::remove_resources(const ResourceManager& additional_resources)
+void XMLResourceDocument::remove_resources(const XMLResourceDocument& additional_resources)
 {
-	std::vector<ResourceManager>::size_type i;
+	std::vector<XMLResourceDocument>::size_type i;
 	for (i = 0; i < impl->additional_resources.size(); i++)
 	{
 		if (impl->additional_resources[i] == additional_resources)
@@ -303,7 +303,7 @@ void ResourceManager::remove_resources(const ResourceManager& additional_resourc
 	}
 }
 
-Resource ResourceManager::create_resource(const std::string &resource_id, const std::string &type)
+XMLResourceNode XMLResourceDocument::create_resource(const std::string &resource_id, const std::string &type)
 {
 	if (resource_exists(resource_id))
 		throw Exception(string_format("Resource %1 already exists", resource_id));
@@ -370,13 +370,13 @@ Resource ResourceManager::create_resource(const std::string &resource_id, const 
 	parent.append_child(resource_node);
 
 	// Create resource:
-	impl->resources[resource_id] = Resource(resource_node, *this);
+	impl->resources[resource_id] = XMLResourceNode(resource_node, *this);
 	return impl->resources[resource_id];
 }
 
-void ResourceManager::destroy_resource(const std::string &resource_id)
+void XMLResourceDocument::destroy_resource(const std::string &resource_id)
 {
-	std::map<std::string, Resource>::iterator it;
+	std::map<std::string, XMLResourceNode>::iterator it;
 	it = impl->resources.find(resource_id);
 	if (it == impl->resources.end())
 		return;
@@ -393,23 +393,23 @@ void ResourceManager::destroy_resource(const std::string &resource_id)
 	}
 }
 
-void ResourceManager::save(const std::string &filename)
+void XMLResourceDocument::save(const std::string &filename)
 {
 	File file(filename, File::create_always, File::access_read_write);
 	save(file);
 }
 
-void ResourceManager::save(const std::string &filename, const FileSystem &fs)
+void XMLResourceDocument::save(const std::string &filename, const FileSystem &fs)
 {
 	save(fs.open_file(filename, File::create_always, File::access_read_write, File::share_read));
 }
 
-void ResourceManager::save(IODevice file)
+void XMLResourceDocument::save(IODevice file)
 {
 	impl->document.save(file);
 }
 
-void ResourceManager::load(const std::string &fullname)
+void XMLResourceDocument::load(const std::string &fullname)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
@@ -417,14 +417,14 @@ void ResourceManager::load(const std::string &fullname)
 	load(filename, vfs);
 }
 
-void ResourceManager::load(const std::string &fullname, const FileSystem &fs)
+void XMLResourceDocument::load(const std::string &fullname, const FileSystem &fs)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_virtual);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_virtual);
 	load(fs.open_file(fullname, File::open_existing, File::access_read, File::share_read), path, fs);
 }
 
-void ResourceManager::load(IODevice file, const std::string &base_path, const FileSystem &fs)
+void XMLResourceDocument::load(IODevice file, const std::string &base_path, const FileSystem &fs)
 {
 	DomDocument new_document;
 	new_document.load(file);
@@ -472,7 +472,7 @@ void ResourceManager::load(IODevice file, const std::string &base_path, const Fi
 			{
 				std::string resource_name = element.get_attribute_ns(impl->ns_resources, "name");
 				std::string resource_id = section_stack.back() + resource_name;
-				impl->resources[resource_id] = Resource(element, *this);
+				impl->resources[resource_id] = XMLResourceNode(element, *this);
 			}
 		}
 
@@ -490,9 +490,9 @@ void ResourceManager::load(IODevice file, const std::string &base_path, const Fi
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// ResourceManager Implementation:
+// XMLResourceDocument Implementation:
 
-ResourceManager::ResourceManager(std::weak_ptr<ResourceManager_Impl> &impl) : impl(impl.lock())
+XMLResourceDocument::XMLResourceDocument(std::weak_ptr<XMLResourceDocument_Impl> &impl) : impl(impl.lock())
 {
 }
 

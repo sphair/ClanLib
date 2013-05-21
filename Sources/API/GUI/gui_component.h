@@ -63,7 +63,7 @@ class GUIMessage;
 class GUIManager;
 class GUITopLevelWindow;
 class GUITheme;
-class ResourceManager;
+class XMLResourceDocument;
 class GUIConsumedKeys;
 class GUIComponent_Impl;
 class CSSComputedValues;
@@ -179,7 +179,7 @@ public:
 	bool get_blocks_default_action() const;
 
 	/// \brief Returns the resource manager for the GUI resources.
-	ResourceManager get_resources() const;
+	XMLResourceDocument get_resources() const;
 
 	/// \brief Returns the GUI manager owning this component.
 	GUIManager get_gui_manager() const;

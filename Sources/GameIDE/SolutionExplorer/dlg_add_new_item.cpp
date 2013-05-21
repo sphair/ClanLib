@@ -83,7 +83,7 @@ void DlgAddNewItem::populate(FileItemTypeFactory &factory)
 	int icon_index = 1;
 
 	Canvas canvas = get_canvas();
-	ResourceManager resources = get_resources();
+	XMLResourceDocument resources = get_resources();
 
 	const std::vector<FileItemType*> &types = factory.types();
 	for(size_t i = 0; i < types.size(); ++i)

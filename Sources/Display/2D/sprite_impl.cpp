@@ -76,10 +76,10 @@ Sprite_Impl::~Sprite_Impl()
 {
 }
 
-void Sprite_Impl::init(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc)
+void Sprite_Impl::init(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
 {
 //	bool pack_texture = resource.get_element().get_attribute("pack_texture", "yes") == "yes";
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 
 	// Create sprite from sprite description
 	SpriteDescription desc(gc, resource_id, resources, import_desc );

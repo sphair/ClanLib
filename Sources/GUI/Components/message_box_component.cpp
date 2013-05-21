@@ -36,7 +36,7 @@
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_window_manager.h"
 #include "API/GUI/Components/push_button.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Display/2D/sprite.h"
 #include "../gui_css_strings.h"
 #include "message_box_component.h"

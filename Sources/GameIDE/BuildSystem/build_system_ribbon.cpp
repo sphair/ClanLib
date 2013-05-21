@@ -41,7 +41,7 @@ BuildSystemRibbon::BuildSystemRibbon(UIController *controller)
 {
 	build_section = new UIRibbonSection(controller, "Home", "Build");
 
-	ResourceManager resources = build_section->get_resources();
+	XMLResourceDocument resources = build_section->get_resources();
 	Canvas canvas = build_section->get_canvas();
 
 	RibbonGroup *build_group1 = new RibbonGroup(build_section);

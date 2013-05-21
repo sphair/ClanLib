@@ -42,7 +42,7 @@ namespace clan
 {
 
 class SpriteDescription_Impl;
-class ResourceManager;
+class XMLResourceDocument;
 
 /// \brief This class describes a single frame in a sprite description.
 class SpriteDescriptionFrame
@@ -84,7 +84,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	SpriteDescription(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+	SpriteDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a SpriteDescription
 	///

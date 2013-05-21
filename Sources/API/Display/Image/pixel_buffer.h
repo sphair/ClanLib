@@ -49,7 +49,7 @@ class Color;
 class Colorf;
 class PixelBuffer;
 class PixelBuffer_Impl;
-class ResourceManager;
+class XMLResourceDocument;
 class FileSystem;
 class IODevice;
 class GraphicContext;

@@ -45,7 +45,7 @@ Font_Sprite::Font_Sprite()
 {
 }
 
-Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, ResourceManager *resources ) : Font(new FontProvider_Sprite())
+Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, XMLResourceDocument *resources ) : Font(new FontProvider_Sprite())
 {
 	FontDescription desc;
 	desc.set_typeface_name(resource_id);

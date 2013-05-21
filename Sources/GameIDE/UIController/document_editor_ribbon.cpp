@@ -40,7 +40,7 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 {
 	clipboard_section = new UIRibbonSection(controller, "Home", "Clipboard");
 
-	ResourceManager resources = clipboard_section->get_resources();
+	XMLResourceDocument resources = clipboard_section->get_resources();
 	Canvas canvas = clipboard_section->get_canvas();
 
 	RibbonGroup *clipboard_group1 = new RibbonGroup(clipboard_section);

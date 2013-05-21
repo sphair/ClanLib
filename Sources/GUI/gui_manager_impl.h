@@ -32,7 +32,7 @@
 
 #include "API/Core/Signals/callback_1.h"
 #include "API/Core/Signals/callback_v2.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/CSSLayout/CSSDocument/css_property.h"
 #include "API/Core/System/timer.h"
@@ -122,7 +122,7 @@ public:
 	Callback_0<int> func_exec_handler;
 	mutable CSSDocument css_document;
 
-	ResourceManager resources;
+	XMLResourceDocument resources;
 	CSSResourceCache resource_cache;
 
 	GUIComponent *mouse_capture_component;

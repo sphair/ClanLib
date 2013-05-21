@@ -33,7 +33,7 @@
 #include "body_description_impl.h"
 #include "../World/physics_world_impl.h"
 #include "API/Core/XML/dom_element.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 
 
 namespace clan
@@ -64,9 +64,9 @@ Body_Impl::~Body_Impl()
 //																						___________________
 //																						O P E R A T I O N S
 
-void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources)
+void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources)
 {
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 
 	// Create body from body description
 	BodyDescription desc(pc, resource_id, resources);

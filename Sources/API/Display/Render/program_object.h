@@ -46,7 +46,7 @@ class ShaderObject;
 class ProgramObject_Impl;
 class GraphicContext;
 class GraphicContextProvider;
-class ResourceManager;
+class XMLResourceDocument;
 class ProgramObjectProvider;
 
 /// \brief Program Object
@@ -97,7 +97,7 @@ public:
 	/// \param resman = Resource Manager
 	///
 	/// \return Program Object
-	static ProgramObject load(GraphicContext &gc, const std::string &resource_id, ResourceManager *resman);
+	static ProgramObject load(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resman);
 
 	/// \brief Load
 	///

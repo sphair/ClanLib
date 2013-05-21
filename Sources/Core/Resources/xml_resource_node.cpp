@@ -27,11 +27,11 @@
 */
 
 #include "Core/precomp.h"
-#include "API/Core/Resources/resource.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_node.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/IOData/path_help.h"
-#include "resource_manager_impl.h"
+#include "xml_resource_document_impl.h"
 #include <memory>
 #include <vector>
 
@@ -39,79 +39,79 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// Resource_Impl Class:
+// XMLResourceNode_Impl Class:
 
-class ResourceManager_Impl;
+class XMLResourceDocument_Impl;
 
-class Resource_Impl
+class XMLResourceNode_Impl
 {
 //! Attributes:
 public:
-	std::weak_ptr<ResourceManager_Impl> resource_manager;
+	std::weak_ptr<XMLResourceDocument_Impl> resource_document;
 
 	DomElement element;
 };
 
 /////////////////////////////////////////////////////////////////////////////
-// Resource Construction:
+// XMLResourceNode Construction:
 
-Resource::Resource()
+XMLResourceNode::XMLResourceNode()
 {
 }
 
-Resource::Resource(DomElement element, ResourceManager &resource_manager)
-: impl(new Resource_Impl)
+XMLResourceNode::XMLResourceNode(DomElement element, XMLResourceDocument &resource_manager)
+: impl(new XMLResourceNode_Impl)
 {
 	impl->element = element;
-	impl->resource_manager = std::weak_ptr<ResourceManager_Impl>(resource_manager.impl);
+	impl->resource_document = std::weak_ptr<XMLResourceDocument_Impl>(resource_manager.impl);
 }
 
-Resource::~Resource()
+XMLResourceNode::~XMLResourceNode()
 {
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Resource Attributes:
+// XMLResourceNode Attributes:
 
-std::string Resource::get_type() const
+std::string XMLResourceNode::get_type() const
 {
 	return impl->element.get_local_name();
 }
 
-std::string Resource::get_name() const
+std::string XMLResourceNode::get_name() const
 {
 	return impl->element.get_attribute("name");
 }
 
-DomElement &Resource::get_element()
+DomElement &XMLResourceNode::get_element()
 {
 	return impl->element;
 }
 
-ResourceManager Resource::get_manager()
+XMLResourceDocument XMLResourceNode::get_document()
 {
-	return ResourceManager(impl->resource_manager);
+	return XMLResourceDocument(impl->resource_document);
 }
 
-FileSystem Resource::get_file_system() const
+FileSystem XMLResourceNode::get_file_system() const
 {
-	return impl->resource_manager.lock()->fs;
+	return impl->resource_document.lock()->fs;
 }
 
-std::string Resource::get_base_path() const
+std::string XMLResourceNode::get_base_path() const
 {
-	return impl->resource_manager.lock()->base_path;
+	return impl->resource_document.lock()->base_path;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Resource Operations:
+// XMLResourceNode Operations:
 
-IODevice Resource::open_file(const std::string &filename, File::OpenMode mode, unsigned int access, unsigned int share, unsigned int flags) const
+IODevice XMLResourceNode::open_file(const std::string &filename, File::OpenMode mode, unsigned int access, unsigned int share, unsigned int flags) const
 {
 	return get_file_system().open_file(PathHelp::combine(get_base_path(), filename), mode, access, share, flags);
 }
 
-bool Resource::operator ==(const Resource &other) const
+bool XMLResourceNode::operator ==(const XMLResourceNode &other) const
 {
 	return impl == other.impl;
 }

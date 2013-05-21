@@ -32,7 +32,7 @@
 #include "API/Sound/SoundProviders/soundprovider_wave.h"
 #include "API/Sound/SoundProviders/soundprovider_vorbis.h"
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Signals/slot.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
