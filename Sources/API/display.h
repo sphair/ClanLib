@@ -41,6 +41,8 @@
 #include "Display/display_target.h"
 #include "Display/setup_display.h"
 #include "Display/screen_info.h"
+#include "Display/Resources/display_cache.h"
+#include "Display/Resources/display_cache_provider.h"
 #include "Display/2D/canvas.h"
 #include "Display/2D/color.h"
 #include "Display/2D/color_hsv.h"
