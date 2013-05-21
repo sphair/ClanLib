@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_inout_data.h"
-
 namespace clan
 {
 
@@ -38,7 +36,7 @@ class Scene_Impl;
 class SkyboxPass
 {
 public:
-	SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &inout);
+	SkyboxPass(const std::string &shader_path, ResourceContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
 	void show_skybox_stars(bool enable);
@@ -56,17 +54,17 @@ private:
 	static float random(float min_value, float max_value);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<float> field_of_view;
-	SceneInOutData<Mat4f> world_to_eye;
+	Resource<Rect> viewport;
+	Resource<float> field_of_view;
+	Resource<Mat4f> world_to_eye;
 
 	// InOut:
-	SceneInOutData<Texture2D> diffuse_color_gbuffer;
-	SceneInOutData<Texture2D> specular_color_gbuffer;
-	SceneInOutData<Texture2D> specular_level_gbuffer;
-	SceneInOutData<Texture2D> self_illumination_gbuffer;
-	SceneInOutData<Texture2D> normal_z_gbuffer;
-	SceneInOutData<Texture2D> zbuffer;
+	Resource<Texture2D> diffuse_color_gbuffer;
+	Resource<Texture2D> specular_color_gbuffer;
+	Resource<Texture2D> specular_level_gbuffer;
+	Resource<Texture2D> self_illumination_gbuffer;
+	Resource<Texture2D> normal_z_gbuffer;
+	Resource<Texture2D> zbuffer;
 
 	std::string shader_path;
 

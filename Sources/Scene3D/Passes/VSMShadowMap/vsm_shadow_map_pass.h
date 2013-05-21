@@ -27,7 +27,6 @@
 */
 #pragma once
 
-#include "API/Scene3D/scene_inout_data.h"
 #include "Scene3D/Framework/shadow_maps.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
@@ -43,7 +42,7 @@ class VSMShadowMapPassLightData;
 class VSMShadowMapPass : ModelMeshVisitor, SceneLightVisitor
 {
 public:
-	VSMShadowMapPass(GraphicContext &gc, SceneInOutDataContainer &inout);
+	VSMShadowMapPass(GraphicContext &gc, ResourceContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
 private:
@@ -59,9 +58,9 @@ private:
 	void light(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, SceneLight_Impl *light);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<float> field_of_view;
-	SceneInOutData<Mat4f> world_to_eye;
+	Resource<Rect> viewport;
+	Resource<float> field_of_view;
+	Resource<Mat4f> world_to_eye;
 
 	std::vector<SceneLight_Impl *> lights;
 	int round_robin;

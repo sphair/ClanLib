@@ -30,7 +30,6 @@
 
 #include "Scene3D/Passes/GaussianBlur/gaussian_blur.h"
 #include "Scene3D/Model/model_mesh_visitor.h"
-#include "API/Scene3D/scene_inout_data.h"
 
 namespace clan
 {
@@ -40,7 +39,7 @@ class Scene_Impl;
 class GBufferPass : ModelMeshVisitor
 {
 public:
-	GBufferPass(SceneInOutDataContainer &inout);
+	GBufferPass(ResourceContainer &inout);
 	void run(GraphicContext &gc, Scene_Impl *scene);
 
 private:
@@ -48,17 +47,17 @@ private:
 	void render(GraphicContext &gc, ModelLOD *model_lod, int num_instances);
 
 	// In:
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<float> field_of_view;
-	SceneInOutData<Mat4f> world_to_eye;
+	Resource<Rect> viewport;
+	Resource<float> field_of_view;
+	Resource<Mat4f> world_to_eye;
 
 	// Out:
-	SceneInOutData<Texture2D> diffuse_color_gbuffer;
-	SceneInOutData<Texture2D> specular_color_gbuffer;
-	SceneInOutData<Texture2D> specular_level_gbuffer;
-	SceneInOutData<Texture2D> self_illumination_gbuffer;
-	SceneInOutData<Texture2D> normal_z_gbuffer;
-	SceneInOutData<Texture2D> zbuffer;
+	Resource<Texture2D> diffuse_color_gbuffer;
+	Resource<Texture2D> specular_color_gbuffer;
+	Resource<Texture2D> specular_level_gbuffer;
+	Resource<Texture2D> self_illumination_gbuffer;
+	Resource<Texture2D> normal_z_gbuffer;
+	Resource<Texture2D> zbuffer;
 
 	FrameBuffer fb_gbuffer;
 	GraphicContext gc;

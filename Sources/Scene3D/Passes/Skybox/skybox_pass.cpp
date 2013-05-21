@@ -36,7 +36,7 @@
 namespace clan
 {
 
-SkyboxPass::SkyboxPass(const std::string &shader_path, SceneInOutDataContainer &inout)
+SkyboxPass::SkyboxPass(const std::string &shader_path, ResourceContainer &inout)
 	: shader_path(shader_path), show_stars(true)
 {
 	viewport = inout.get<Rect>("Viewport");

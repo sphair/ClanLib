@@ -33,7 +33,7 @@ namespace clan
 {
 
 
-ShadowMaps::ShadowMaps(GraphicContext &gc, const SceneInOutData<Texture2DArray> &init_shadow_maps, int shadow_map_size, int max_active_maps, TextureFormat format)
+ShadowMaps::ShadowMaps(GraphicContext &gc, const Resource<Texture2DArray> &init_shadow_maps, int shadow_map_size, int max_active_maps, TextureFormat format)
 : shadow_maps(init_shadow_maps), used_entries(0), unused_entries(0)
 {
 	framebuffers.reserve(max_active_maps);

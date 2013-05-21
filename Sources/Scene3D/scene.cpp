@@ -66,7 +66,7 @@ SceneCamera &Scene::get_camera()
 	return impl->get_camera();
 }
 
-SceneInOutDataContainer &Scene::get_inout_container()
+ResourceContainer &Scene::get_inout_container()
 {
 	return impl->inout_data;
 }

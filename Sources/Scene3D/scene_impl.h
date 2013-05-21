@@ -57,7 +57,7 @@ class FrustumPlanes;
 class SceneObject_Impl;
 class SceneLight_Impl;
 class SceneLightVisitor;
-class SceneInOutData_BaseImpl;
+class Resource_BaseImpl;
 class SceneParticleEmitter_Impl;
 class SceneParticleEmitterVisitor;
 
@@ -87,7 +87,7 @@ public:
 	SceneCamera &get_camera() { return camera; }
 	void set_camera(const SceneCamera &cam) { camera = cam; }
 
-	SceneInOutDataContainer inout_data;
+	ResourceContainer inout_data;
 	std::vector<ScenePass> passes;
 
 private:
@@ -109,9 +109,9 @@ private:
 
 	SceneCamera camera;
 
-	SceneInOutData<float> camera_field_of_view;
-	SceneInOutData<Rect> viewport;
-	SceneInOutData<Mat4f> out_world_to_eye;
+	Resource<float> camera_field_of_view;
+	Resource<Rect> viewport;
+	Resource<Mat4f> out_world_to_eye;
 
 	std::unique_ptr<VSMShadowMapPass> vsm_shadow_map_pass;
 	std::unique_ptr<GBufferPass> gbuffer_pass;

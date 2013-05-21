@@ -33,7 +33,7 @@
 namespace clan
 {
 
-SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
+SSAOPass::SSAOPass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	normal_z_gbuffer = inout.get<Texture2D>("NormalZGBuffer");
 

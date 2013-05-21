@@ -39,7 +39,7 @@
 namespace clan
 {
 
-LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, SceneInOutDataContainer &inout)
+LightsourceSimplePass::LightsourceSimplePass(GraphicContext &gc, const std::string &shader_path, ResourceContainer &inout)
 {
 	viewport = inout.get<Rect>("Viewport");
 	field_of_view = inout.get<float>("FieldOfView");
