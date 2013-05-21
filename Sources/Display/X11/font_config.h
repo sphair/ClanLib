@@ -33,8 +33,6 @@
 #include "fontconfig/fontconfig.h"
 #endif
 
-#include "API/Core/IOData/virtual_directory.h"
-
 namespace clan
 {
 

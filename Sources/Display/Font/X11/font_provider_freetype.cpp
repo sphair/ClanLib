@@ -30,9 +30,10 @@
 #include "Display/precomp.h"
 #include "font_provider_freetype.h"
 #include "font_engine_freetype.h"
+#include "API/Core/Resources/resource.h"
 #include "API/Core/IOData/file.h"
-#include "API/Core/IOData/virtual_directory.h"
-#include "API/Core/IOData/virtual_file_system.h"
+#include "API/Core/IOData/iodevice.h"
+#include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/color.h"
@@ -107,14 +108,14 @@ void FontProvider_Freetype::load_font(const FontDescription &desc)
 {
 	std::string path = PathHelp::get_fullpath(desc.get_typeface_name(), PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(desc.get_typeface_name(), PathHelp::path_type_file);
-	VirtualFileSystem vfs(path);
-	IODevice file = vfs.get_root_directory().open_file_read(filename);
+	FileSystem vfs(path);
+	IODevice file = vfs.open_file(filename);
 	load_font(desc, file);
 }
 
-void FontProvider_Freetype::load_font(const FontDescription &desc, const VirtualDirectory &directory)
+void FontProvider_Freetype::load_font(const FontDescription &desc, const FileSystem &fs)
 {
-	IODevice file = directory.open_file_read(desc.get_typeface_name());
+	IODevice file = fs.open_file(desc.get_typeface_name());
 	load_font(desc, file);
 }
 
@@ -149,7 +150,7 @@ void FontProvider_Freetype::load_font(const std::string &resource_id, ResourceMa
 	if (freetype_element.has_attribute("subpixel"))
 		desc.set_subpixel(freetype_element.get_attribute_bool("subpixel", true));
 
-	load_font(desc, resources->get_directory(resource));
+	load_font(desc, resource.get_file_system());
 }
 
 void FontProvider_Freetype::load_font(const FontDescription &desc, IODevice &io_dev)
