@@ -39,7 +39,7 @@
 #include "contour.h"
 #include "outline_accuracy.h"
 #include "../Render/graphic_context.h"
-#include "../../Core/Resources/resource.h"
+#include "../../Core/Resources/xml_resource_node.h"
 #include "../../Core/Math/cl_math.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
@@ -49,7 +49,7 @@ namespace clan
 {
 
 class CollisionOutline_Impl;
-class ResourceManager;
+class XMLResourceDocument;
 class OutputSourceProvider;
 class GraphicContext;
 class Color;
@@ -154,7 +154,7 @@ public:
 	///
 	/// \param resource_id = The resource id
 	/// \param manager = The resource manager
-	CollisionOutline(const std::string &resource_id, ResourceManager *manager );
+	CollisionOutline(const std::string &resource_id, XMLResourceDocument *manager );
 
 	/// \brief Construct a collision outline.
 	///
@@ -211,7 +211,7 @@ public:
 	void get_collision_info_state(bool &points, bool &normals, bool &metadata, bool &pendepth) const;
 
 	/// \brief Resource owning this outline, if any.
-	Resource resource;
+	XMLResourceNode resource;
 
 /// \}
 /// \name Operations

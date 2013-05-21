@@ -353,7 +353,7 @@ SolutionExplorer::ListViewItemDataPtr SolutionExplorer::get_item_data(ListViewIt
 
 void SolutionExplorer::create_icon_list()
 {
-	ResourceManager resources = get_resources();
+	XMLResourceDocument resources = get_resources();
 
 	Canvas canvas = get_canvas();
 	ListViewIcon icon;

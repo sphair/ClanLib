@@ -240,7 +240,7 @@ bool GUIComponent::get_blocks_default_action() const
 	return impl->blocks_default_action_when_focused;
 }
 
-ResourceManager GUIComponent::get_resources() const
+XMLResourceDocument GUIComponent::get_resources() const
 {
 	return impl->gui_manager.lock()->resources;
 }

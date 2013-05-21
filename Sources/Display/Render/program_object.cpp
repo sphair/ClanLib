@@ -37,7 +37,7 @@
 #include "API/Display/TargetProviders/program_object_provider.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/XML/dom_element.h"
 
@@ -93,11 +93,11 @@ ProgramObject::ProgramObject(ProgramObjectProvider *provider)
 ProgramObject ProgramObject::load(
 	GraphicContext &gc,
 	const std::string &resource_id,
-	ResourceManager *resources)
+	XMLResourceDocument *resources)
 {
 	ProgramObject program_object(gc);
 
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 
 	DomNode node = resource.get_element().get_first_child();
 

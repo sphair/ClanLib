@@ -41,7 +41,7 @@ namespace clan
 {
 
 class CursorDescription_Impl;
-class ResourceManager;
+class XMLResourceDocument;
 
 /// \brief This class describes a single frame in a cursor description.
 class CursorDescriptionFrame
@@ -84,7 +84,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	CursorDescription(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+	CursorDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a CursorDescription
 	///

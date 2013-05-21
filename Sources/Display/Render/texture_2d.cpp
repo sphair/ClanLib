@@ -38,7 +38,7 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "graphic_context_impl.h"
 #include "texture_impl.h"
 
@@ -126,9 +126,9 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
-Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc)
+Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
 {
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 	std::string type = resource.get_element().get_tag_name();
 	
 	if (type != "texture")

@@ -26,8 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_document.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
@@ -36,7 +36,7 @@
 namespace clan
 {
 
-class ResourceManager_Impl
+class XMLResourceDocument_Impl
 {
 public:
 	FileSystem fs;
@@ -44,9 +44,9 @@ public:
 
 	DomDocument document;
 
-	std::map<std::string, Resource> resources;
+	std::map<std::string, XMLResourceNode> resources;
 
-	std::vector<ResourceManager> additional_resources;
+	std::vector<XMLResourceDocument> additional_resources;
 
 	std::string ns_resources;
 };

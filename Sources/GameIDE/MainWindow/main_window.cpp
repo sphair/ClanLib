@@ -91,7 +91,7 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	component->set_visible(true, true);
 
 	Canvas canvas = component->get_canvas();
-	ResourceManager resources = component->get_resources();
+	XMLResourceDocument resources = component->get_resources();
 
 	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", &resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
 	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", &resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);

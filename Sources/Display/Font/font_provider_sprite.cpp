@@ -39,7 +39,7 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/shape2d.h"
 
@@ -53,10 +53,10 @@ FontProvider_Sprite::FontProvider_Sprite()
 {
 }
 
-void FontProvider_Sprite::load_font(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources )
+void FontProvider_Sprite::load_font(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources )
 {
 
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 	std::string type = resource.get_element().get_tag_name();
 	
 	if (type != "font")

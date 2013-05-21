@@ -32,7 +32,7 @@
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/IOData/iodevice.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/Render/shader_object.h"
@@ -108,9 +108,9 @@ ShaderObject::ShaderObject(GraphicContextProvider *gc_provider, ShaderType type,
 	impl->provider->create(type, sources);
 }
 
-ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources)
+ShaderObject ShaderObject::load(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources)
 {
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 	std::string filename = resource.get_element().get_attribute("file");
 	std::string type = resource.get_element().get_tag_name();
 	

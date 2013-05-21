@@ -32,7 +32,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../Resources/resource.h"
+#include "../Resources/xml_resource_node.h"
 #include "../IOData/file_system.h"
 #include <vector>
 #include <memory>
@@ -41,42 +41,42 @@ namespace clan
 {
 
 class IODevice;
-class Resource;
+class XMLResourceNode;
 class FileSystem;
-class ResourceManager_Impl;
+class XMLResourceDocument_Impl;
 
 /// \brief Resource Manager.
-class CL_API_CORE ResourceManager
+class CL_API_CORE XMLResourceDocument
 {
 /// \name Construction
 /// \{
 public:
 	/// \brief Construct a resource manager.
-	ResourceManager();
+	XMLResourceDocument();
 
-	/// \brief Constructs a ResourceManager
+	/// \brief Constructs a XMLResourceDocument
 	///
 	/// \param filename = String
-	ResourceManager(const std::string &filename);
+	XMLResourceDocument(const std::string &filename);
 
-	/// \brief Constructs a ResourceManager
+	/// \brief Constructs a XMLResourceDocument
 	///
 	/// \param filename = String
 	/// \param directory = Virtual Directory
-	ResourceManager(const std::string &filename, FileSystem fs);
+	XMLResourceDocument(const std::string &filename, FileSystem fs);
 
-	/// \brief Constructs a ResourceManager
+	/// \brief Constructs a XMLResourceDocument
 	///
 	/// \param file = IODevice
 	/// \param directory = Virtual Directory
-	ResourceManager(IODevice file, const std::string &base_path, FileSystem fs);
+	XMLResourceDocument(IODevice file, const std::string &base_path, FileSystem fs);
 
-	/// \brief Constructs a ResourceManager
+	/// \brief Constructs a XMLResourceDocument
 	///
 	/// \param other = Resource Manager
-	ResourceManager(const ResourceManager &other);
+	XMLResourceDocument(const XMLResourceDocument &other);
 
-	~ResourceManager();
+	~XMLResourceDocument();
 
 /// \}
 /// \name Attributes
@@ -103,7 +103,7 @@ public:
 		const std::string &section) const;
 
 	/// \brief Returns Resource representing the given resource.
-	Resource get_resource(
+	XMLResourceNode get_resource(
 		const std::string &resource_id,
 		bool resolve_alias = true,
 		int reserved = 0) const;
@@ -127,20 +127,20 @@ public:
 /// \name Operations
 /// \{
 public:
-	ResourceManager &operator =(const ResourceManager &copy);
+	XMLResourceDocument &operator =(const XMLResourceDocument &copy);
 
-	bool operator ==(const ResourceManager &manager) const;
+	bool operator ==(const XMLResourceDocument &manager) const;
 
 	/// \brief Add resources from an other resource manager.
 	/** <p>This function only makes the resource manager search other managers, it
 	    does not copy the resources into this manager.</p>*/
-	void add_resources(const ResourceManager& additional_resources);
+	void add_resources(const XMLResourceDocument& additional_resources);
 
 	/// \brief Remove resources from an other resource manager.
-	void remove_resources(const ResourceManager& additional_resources);
+	void remove_resources(const XMLResourceDocument& additional_resources);
 
 	/// \brief Construct a new resource object.
-	Resource create_resource(const std::string &resource_id, const std::string &type);
+	XMLResourceNode create_resource(const std::string &resource_id, const std::string &type);
 
 	/// \brief Destroy resource object.
 	void destroy_resource(const std::string &resource_id);
@@ -179,14 +179,14 @@ public:
 /// \{
 private:
 
-	/// \brief Constructs a ResourceManager
+	/// \brief Constructs a XMLResourceDocument
 	///
-	/// \param ResourceManager_Impl = Weak Ptr
-	ResourceManager(std::weak_ptr<ResourceManager_Impl> &impl);
+	/// \param XMLResourceDocument_Impl = Weak Ptr
+	XMLResourceDocument(std::weak_ptr<XMLResourceDocument_Impl> &impl);
 
-	std::shared_ptr<ResourceManager_Impl> impl;
+	std::shared_ptr<XMLResourceDocument_Impl> impl;
 
-	friend class Resource;
+	friend class XMLResourceNode;
 /// \}
 };
 

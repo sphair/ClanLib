@@ -43,7 +43,7 @@ namespace clan
 {
 
 class GraphicContextProvider;
-class ResourceManager;
+class XMLResourceDocument;
 class ShaderObject_Impl;
 class ShaderObjectProvider;
 
@@ -113,7 +113,7 @@ public:
 	/// \param resources = Resource Manager
 	///
 	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources);
+	static ShaderObject load(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources);
 
 	/// \brief Load
 	///

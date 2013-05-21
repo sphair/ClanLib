@@ -42,7 +42,7 @@
 #include "API/Display/Window/input_event.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/IOData/file_help.h"
 #include "gui_manager_impl.h"
 
@@ -157,7 +157,7 @@ void GUIManager::add_theme(const std::string &path_to_theme)
 {
 	FileSystem vfs(path_to_theme);
 
-	impl->resources.add_resources(ResourceManager("resources.xml", vfs));
+	impl->resources.add_resources(XMLResourceDocument("resources.xml", vfs));
 	impl->css_document.add_sheet(author_sheet_origin, "theme.css", vfs);
 }
 
@@ -180,19 +180,19 @@ void GUIManager::set_css_document(const std::string &filename, const FileSystem 
 	set_css_document(css);
 }
 
-void GUIManager::add_resources(const ResourceManager &additional_resources)
+void GUIManager::add_resources(const XMLResourceDocument &additional_resources)
 {
 	impl->resources.add_resources(additional_resources);
 }
 
 void GUIManager::add_resources(const std::string &filename)
 {
-	impl->resources.add_resources(ResourceManager(filename));
+	impl->resources.add_resources(XMLResourceDocument(filename));
 }
 
 void GUIManager::add_resources(const std::string &filename, const FileSystem &fs)
 {
-	impl->resources.add_resources(ResourceManager(filename, fs));
+	impl->resources.add_resources(XMLResourceDocument(filename, fs));
 }
 
 void GUIManager::set_window_manager(GUIWindowManager &window_manager)
@@ -333,7 +333,7 @@ void GUIManager::initialize(GUIWindowManager &window_manager, const std::string 
 {
 	FileSystem vfs(path_to_theme);
 
-	impl->resources = ResourceManager("resources.xml", vfs);
+	impl->resources = XMLResourceDocument("resources.xml", vfs);
 
 	set_window_manager(window_manager);
 	set_css_document("theme.css", vfs);

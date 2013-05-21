@@ -38,7 +38,7 @@
 #include "API/Physics2D/Dynamics/fixture_description.h"
 #include "API/Physics2D/Dynamics/body.h"
 #include "API/Core/Math/angle.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/XML/dom_element.h"
 
@@ -61,12 +61,12 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 	throw Exception("Tried to create a body with a null PhysicsWorld object");
 }
 
-Body::Body(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources)
+Body::Body(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources)
 : impl(new Body_Impl(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
-		Resource resource = resources->get_resource(resource_id);
+		XMLResourceNode resource = resources->get_resource(resource_id);
 		std::string type = resource.get_element().get_tag_name();
 	
 		if (type != "body2d")

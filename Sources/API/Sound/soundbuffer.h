@@ -38,7 +38,7 @@
 namespace clan
 {
 
-class ResourceManager;
+class XMLResourceDocument;
 class SoundOutput;
 class SoundProvider;
 class SoundBuffer_Session;
@@ -77,7 +77,7 @@ public:
 
 	SoundBuffer(
 		const std::string &res_id,
-		ResourceManager *manager);
+		XMLResourceDocument *manager);
 
 	SoundBuffer(
 		SoundProvider *provider);

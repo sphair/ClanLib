@@ -44,7 +44,7 @@
 namespace clan
 {
 
-class ResourceManager;
+class XMLResourceDocument;
 class SpriteDescription;
 class Sprite_Impl;
 class CollisionOutline;
@@ -86,7 +86,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Sprite(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///

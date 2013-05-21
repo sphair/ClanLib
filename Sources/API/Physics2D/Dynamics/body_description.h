@@ -42,7 +42,7 @@ class Pointf;
 class Angle;
 class PhysicsWorld;
 class PhysicsContext;
-class ResourceManager;
+class XMLResourceDocument;
 
 /// \brief Body types.
 	enum BodyType
@@ -78,7 +78,7 @@ public:
 	/// \param pc   = Physics Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	BodyDescription(const PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources);
+	BodyDescription(const PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources);
 
 	/// \brief Constructs a BodyDescription
 	///

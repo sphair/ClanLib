@@ -40,7 +40,7 @@
 namespace clan
 {
 
-class ResourceManager;
+class XMLResourceDocument;
 class PhysicsWorld;
 class BodyDescription;
 class Body_Impl;
@@ -69,7 +69,7 @@ public:
 	/// \param pc = Physics Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Body(PhysicsContext &pc, const std::string &resource_id, ResourceManager *resources);
+	Body(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources);
 
 	~Body();
 

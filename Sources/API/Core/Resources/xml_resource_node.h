@@ -32,7 +32,7 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../Resources/resource_manager.h"
+#include "../Resources/xml_resource_document.h"
 #include "../IOData/file_system.h"
 #include <memory>
 
@@ -40,19 +40,19 @@ namespace clan
 {
 
 class DomElement;
-class ResourceManager;
-class Resource_Impl;
+class XMLResourceDocument;
+class XMLResourceNode_Impl;
 
 /// \brief Resource Manager resource.
-class CL_API_CORE Resource
+class CL_API_CORE XMLResourceNode
 {
 /// \name Construction
 /// \{
 
 public:
-	Resource();
+	XMLResourceNode();
 
-	~Resource();
+	~XMLResourceNode();
 
 /// \}
 /// \name Attributes
@@ -68,8 +68,8 @@ public:
 	/// \brief Returns the DOM element describing the resource.
 	DomElement &get_element();
 
-	/// \brief Returns the resource manager owning the resource.
-	ResourceManager get_manager();
+	/// \brief Returns the resource document owning the resource.
+	XMLResourceDocument get_document();
 
 	/// \brief Returns the file system to load resource from.
 	FileSystem get_file_system() const;
@@ -95,7 +95,7 @@ public:
 		unsigned int flags = 0) const;
 
 	/// \brief Compares this resource to another resource.
-	bool operator ==(const Resource &other) const;
+	bool operator ==(const XMLResourceNode &other) const;
 
 /// \}
 /// \name Implementation
@@ -107,11 +107,11 @@ private:
 	///
 	/// \param element = Dom Element
 	/// \param resource_manager = Resource Manager
-	Resource(DomElement element, ResourceManager &resource_manager);
+	XMLResourceNode(DomElement element, XMLResourceDocument &resource_manager);
 
-	std::shared_ptr<Resource_Impl> impl;
+	std::shared_ptr<XMLResourceNode_Impl> impl;
 
-	friend class ResourceManager;
+	friend class XMLResourceDocument;
 /// \}
 };
 

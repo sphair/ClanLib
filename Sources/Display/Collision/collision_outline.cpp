@@ -44,7 +44,7 @@
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/ImageProviders/provider_factory.h"
 #include "API/Display/Image/pixel_buffer.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/IOData/path_help.h"
 #include "collision_outline_generic.h"
@@ -116,7 +116,7 @@ CollisionOutline::CollisionOutline(
 
 CollisionOutline::CollisionOutline(
 	const std::string &resource_id,
-	ResourceManager *manager)
+	XMLResourceDocument *manager)
 {
 	resource = manager->get_resource(resource_id);
 	if (resource.get_type() != "collisionoutline")

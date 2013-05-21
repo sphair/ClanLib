@@ -33,8 +33,8 @@
 #include "API/Sound/soundoutput.h"
 #include "API/Sound/sound.h"
 #include "API/Sound/SoundProviders/soundprovider_factory.h"
-#include "API/Core/Resources/resource_manager.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_document.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
 #include "API/Core/XML/dom_element.h"
@@ -53,10 +53,10 @@ SoundBuffer::SoundBuffer()
 	
 SoundBuffer::SoundBuffer(
 	const std::string &res_id,
-	ResourceManager *manager)
+	XMLResourceDocument *manager)
 : impl(new SoundBuffer_Impl)
 {
-	Resource resource = manager->get_resource(res_id);
+	XMLResourceNode resource = manager->get_resource(res_id);
 
 	DomElement &element = resource.get_element();
 

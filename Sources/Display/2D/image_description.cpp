@@ -30,7 +30,7 @@
 #include "Display/precomp.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/Core/Resources/resource.h"
+#include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/XML/dom_node.h"
@@ -45,10 +45,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // ImageDescription construction:
 
-ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc)
+ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
 : impl(new ImageDescription_Impl)
 {
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 	if (resource.get_type() != "image" && resource.get_type() != "image_description" && resource.get_type() != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'image' or 'image_description' or 'image'", resource_id));
 

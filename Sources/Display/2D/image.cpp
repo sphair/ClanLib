@@ -38,7 +38,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
-#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 #include "render_batch_triangle.h"
 #include "../Render/graphic_context_impl.h"
 #include "canvas_impl.h"
@@ -155,10 +155,10 @@ Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportD
 	impl->texture_rect = impl->texture.get_size();
 }
 
-Image::Image(GraphicContext &gc, const std::string &resource_id, ResourceManager *resources, const ImageImportDescription &import_desc)
+Image::Image(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
 : impl(new Image_Impl())
 {
-	Resource resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources->get_resource(resource_id);
 	std::string type = resource.get_element().get_tag_name();
 
 	if (type != "image")
