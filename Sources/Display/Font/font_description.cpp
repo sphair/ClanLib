@@ -31,6 +31,7 @@
 #include "API/Display/Font/font_description.h"
 #include "API/Display/Font/font_manager.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 #include "font_description_impl.h"
 
 namespace clan
@@ -138,6 +139,26 @@ bool FontDescription::get_subpixel() const
 FontDescription::Charset FontDescription::get_charset() const
 {
 	return impl->charset;
+}
+
+std::string FontDescription::get_unique_id() const
+{
+	StringFormat format("%1-%2-%3-%4-%5-%6-%7-%8-%9-%10-%11-%12-%13-%14");
+	format.set_arg(1, impl->typeface_name);
+	format.set_arg(2, impl->filename);
+	format.set_arg(3, impl->anti_alias);
+	format.set_arg(4, impl->subpixel);
+	format.set_arg(5, impl->height);
+	format.set_arg(6, impl->average_width);
+	format.set_arg(7, impl->escapement);
+	format.set_arg(8, impl->orientation);
+	format.set_arg(9, impl->weight);
+	format.set_arg(10, impl->italic);
+	format.set_arg(11, impl->underline);
+	format.set_arg(12, impl->strikeout);
+	format.set_arg(13, impl->fixed_pitch);
+	format.set_arg(14, impl->charset);
+	return format.get_result();
 }
 
 bool FontDescription::operator==(const FontDescription &other) const

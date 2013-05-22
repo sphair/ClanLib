@@ -40,10 +40,12 @@ namespace clan
 
 class XMLResourceDocument;
 class GraphicContext;
+class Canvas;
 class Sprite;
 class Image;
 class Texture;
 class Font;
+class FontDescription;
 class DisplayCacheProvider;
 class DisplayCache_Impl;
 
@@ -61,7 +63,7 @@ public:
 	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
 	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> get_font(GraphicContext &gc, const std::string &id);
+	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc);
 
 private:
 	std::shared_ptr<DisplayCache_Impl> impl;

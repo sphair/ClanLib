@@ -73,9 +73,9 @@ Resource<Texture> DisplayCache::get_texture(GraphicContext &gc, const std::strin
 	return get_provider()->get_texture(gc, id);
 }
 
-Resource<Font> DisplayCache::get_font(GraphicContext &gc, const std::string &id)
+Resource<Font> DisplayCache::get_font(Canvas &canvas, const FontDescription &desc)
 {
-	return get_provider()->get_font(gc, id);
+	return get_provider()->get_font(canvas, desc);
 }
 
 }

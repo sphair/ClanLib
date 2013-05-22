@@ -32,6 +32,7 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/image_description.h"
 #include "API/Display/Font/font.h"
+#include "API/Display/Font/font_description.h"
 #include "API/Display/Render/texture.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
@@ -84,13 +85,15 @@ Resource<Texture> XMLDisplayCacheProvider::get_texture(GraphicContext &gc, const
 	return texture;
 }
 
-Resource<Font> XMLDisplayCacheProvider::get_font(GraphicContext &gc, const std::string &id)
+Resource<Font> XMLDisplayCacheProvider::get_font(Canvas &canvas, const FontDescription &desc)
 {
+	std::string id = desc.get_unique_id();
+
 	std::map<std::string, Resource<Font> >::iterator it = fonts.find(id);
 	if (it != fonts.end())
 		return it->second;
 
-	Resource<Font> font = load_font(gc, id);
+	Resource<Font> font = load_font(canvas, desc);
 	fonts[id] = font;
 	return font;
 }
@@ -345,11 +348,9 @@ Resource<Texture> XMLDisplayCacheProvider::load_texture(GraphicContext &gc, cons
 	return Resource<Texture>(texture);
 }
 
-Resource<Font> XMLDisplayCacheProvider::load_font(GraphicContext &gc, const std::string &id)
+Resource<Font> XMLDisplayCacheProvider::load_font(Canvas &canvas, const FontDescription &desc)
 {
-	XMLResourceNode node = doc.get_resource(id);
-
-	Font font;
+	Font font(canvas, desc);
 	return Resource<Font>(font);
 }
 
