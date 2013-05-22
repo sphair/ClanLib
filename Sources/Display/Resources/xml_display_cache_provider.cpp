@@ -30,6 +30,7 @@
 #include "API/Display/2D/sprite.h"
 #include "API/Display/2D/sprite_description.h"
 #include "API/Display/2D/image.h"
+#include "API/Display/2D/image_description.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Render/texture.h"
 #include "API/Core/Text/string_format.h"
@@ -250,9 +251,77 @@ Resource<Sprite> XMLDisplayCacheProvider::load_sprite(GraphicContext &gc, const 
 
 Resource<Image> XMLDisplayCacheProvider::load_image(GraphicContext &gc, const std::string &id)
 {
-	XMLResourceNode node = doc.get_resource(id);
+	ImageImportDescription import_desc; // Why is this not part of ImageDescription?
 
-	Image image;
+	ImageDescription desc(gc, id, &doc, import_desc);
+
+	Image image(gc, desc);
+
+	// More hacks that also belongs to ImageDescription:
+
+	XMLResourceNode resource = doc.get_resource(id);
+
+	DomNode cur_node = resource.get_element().get_first_child();
+	while (!cur_node.is_null())
+	{
+		if (!cur_node.is_element())
+			continue;
+
+		DomElement cur_element = cur_node.to_element();
+
+		std::string tag_name = cur_element.get_tag_name();
+
+		// <color red="float" green="float" blue="float" alpha="float" />
+		if (tag_name == "color")
+		{
+			Colorf color;
+			color.r = (float)StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
+			color.g = (float)StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
+			color.b = (float)StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
+			color.a = (float)StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
+			image.set_color(color);
+		}
+		// <scale x="float" y="float />
+		else if (tag_name == "scale")
+		{
+			float scale_x = StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
+			float scale_y = StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
+			image.set_scale(scale_x, scale_y);
+		}
+		// <translation origin="string" x="integer" y="integer" />
+		else if (tag_name == "translation")
+		{
+			std::string hotspot = cur_element.get_attribute("origin", "top_left");
+			Origin origin;
+
+			if(hotspot == "center")
+				origin = origin_center;
+			else if(hotspot == "top_center")
+				origin = origin_top_center;
+			else if(hotspot == "top_right")
+				origin = origin_top_right;
+			else if(hotspot == "center_left")
+				origin = origin_center_left;
+			else if(hotspot == "center_right")
+				origin = origin_center_right;
+			else if(hotspot == "bottom_left")
+				origin = origin_bottom_left;
+			else if(hotspot == "bottom_center")
+				origin = origin_bottom_center;
+			else if(hotspot == "bottom_right")
+				origin = origin_bottom_right;
+			else
+				origin = origin_top_left;
+
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+			image.set_alignment(origin, xoffset, yoffset);
+		}
+
+		cur_node = cur_node.get_next_sibling();
+	}
+
 	return Resource<Image>(image);
 }
 
