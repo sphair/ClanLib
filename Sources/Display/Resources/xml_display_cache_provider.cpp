@@ -36,6 +36,7 @@
 #include "API/Core/Text/string_format.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/XML/dom_element.h"
+#include "API/Core/IOData/path_help.h"
 #include "xml_display_cache_provider.h"
 
 namespace clan
@@ -327,9 +328,20 @@ Resource<Image> XMLDisplayCacheProvider::load_image(GraphicContext &gc, const st
 
 Resource<Texture> XMLDisplayCacheProvider::load_texture(GraphicContext &gc, const std::string &id)
 {
-	XMLResourceNode node = doc.get_resource(id);
+	XMLResourceNode resource = doc.get_resource(id);
 
-	Texture texture;
+	std::string type = resource.get_type();
+
+	if (type != "texture")
+		throw Exception(string_format("Resource '%1' is not of type 'texture'", id));
+
+	ImageImportDescription import_desc; // The infamous ImageImportDescription strikes again!
+
+	std::string filename = resource.get_element().get_attribute("file");
+	FileSystem fs = resource.get_file_system();
+
+	Texture2D texture(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
+
 	return Resource<Texture>(texture);
 }
 
