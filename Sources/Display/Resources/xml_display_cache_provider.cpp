@@ -28,9 +28,13 @@
 
 #include "Display/precomp.h"
 #include "API/Display/2D/sprite.h"
+#include "API/Display/2D/sprite_description.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Render/texture.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/XML/dom_element.h"
 #include "xml_display_cache_provider.h"
 
 namespace clan
@@ -91,9 +95,156 @@ Resource<Font> XMLDisplayCacheProvider::get_font(GraphicContext &gc, const std::
 
 Resource<Sprite> XMLDisplayCacheProvider::load_sprite(GraphicContext &gc, const std::string &id)
 {
-	XMLResourceNode node = doc.get_resource(id);
+	ImageImportDescription import_desc; // Hack of the day! Why is this not part of SpriteDescription?
 
-	Sprite sprite;
+	SpriteDescription desc(gc, id, &doc, import_desc);
+
+	Sprite sprite(gc, desc);
+
+	// More hacks that also belongs to SpriteDescription:
+
+	XMLResourceNode resource = doc.get_resource(id);
+
+	// Load base angle
+	float work_angle = StringHelp::text_to_float(resource.get_element().get_attribute("base_angle", "0"));
+	sprite.set_base_angle(Angle(work_angle, angle_degrees));
+
+	// Load id
+	sprite.set_id(StringHelp::text_to_int(resource.get_element().get_attribute("id", "0")));
+
+	// Load play options	
+	DomNode cur_node = resource.get_element().get_first_child();
+	while (!cur_node.is_null())
+	{
+		if (!cur_node.is_element())
+			continue;
+
+		DomElement cur_element = cur_node.to_element();
+
+		std::string tag_name = cur_element.get_tag_name();
+
+		// <color red="float" green="float" blue="float" alpha="float" />
+		if (tag_name == "color")
+		{
+			Colorf color;
+			color.r = (float)StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
+			color.g = (float)StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
+			color.b = (float)StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
+			color.a = (float)StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
+			sprite.set_color(color);
+		}
+		// <animation speed="integer" loop="[yes,no]" pingpong="[yes,no]" direction="[backward,forward]" on_finish="[blank,last_frame,first_frame]"/>
+		else if (tag_name == "animation")
+		{
+			int delay_ms = StringHelp::text_to_int(cur_element.get_attribute("speed", "60"));
+
+			int frame_count = sprite.get_frame_count();
+			for(int i=0; i<frame_count; ++i)
+				sprite.set_frame_delay(i, delay_ms);
+
+			sprite.set_play_loop((cur_element.get_attribute("loop", "yes")) == "yes");
+			sprite.set_play_pingpong((cur_element.get_attribute("pingpong", "no")) == "yes");
+			sprite.set_play_backward((cur_element.get_attribute("direction", "forward")) == "backward");
+
+			std::string on_finish = cur_element.get_attribute("on_finish", "blank");
+			if (on_finish == "first_frame")
+				sprite.set_show_on_finish(Sprite::show_first_frame);
+			else if(on_finish == "last_frame")
+				sprite.set_show_on_finish(Sprite::show_last_frame);
+			else
+				sprite.set_show_on_finish(Sprite::show_blank);
+		}
+		// <scale x="float" y="float />
+		else if (tag_name == "scale")
+		{
+			float scale_x = StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
+			float scale_y = StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
+			sprite.set_scale(scale_x, scale_y);
+		}
+		// <translation origin="string" x="integer" y="integer" />
+		else if (tag_name == "translation")
+		{
+			std::string hotspot = cur_element.get_attribute("origin", "top_left");
+			Origin origin;
+
+			if(hotspot == "center")
+				origin = origin_center;
+			else if(hotspot == "top_center")
+				origin = origin_top_center;
+			else if(hotspot == "top_right")
+				origin = origin_top_right;
+			else if(hotspot == "center_left")
+				origin = origin_center_left;
+			else if(hotspot == "center_right")
+				origin = origin_center_right;
+			else if(hotspot == "bottom_left")
+				origin = origin_bottom_left;
+			else if(hotspot == "bottom_center")
+				origin = origin_bottom_center;
+			else if(hotspot == "bottom_right")
+				origin = origin_bottom_right;
+			else
+				origin = origin_top_left;
+
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+			sprite.set_alignment(origin, xoffset, yoffset);
+		}
+		// <rotation origin="string" x="integer" y="integer" />
+		else if (tag_name == "rotation")
+		{
+			std::string hotspot = cur_element.get_attribute("origin", "center");
+			Origin origin;
+
+			if(hotspot == "top_left")
+				origin = origin_top_left;
+			else if(hotspot == "top_center")
+				origin = origin_top_center;
+			else if(hotspot == "top_right")
+				origin = origin_top_right;
+			else if(hotspot == "center_left")
+				origin = origin_center_left;
+			else if(hotspot == "center_right")
+				origin = origin_center_right;
+			else if(hotspot == "bottom_left")
+				origin = origin_bottom_left;
+			else if(hotspot == "bottom_center")
+				origin = origin_bottom_center;
+			else if(hotspot == "bottom_right")
+				origin = origin_bottom_right;
+			else
+				origin = origin_center;
+
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+			sprite.set_rotation_hotspot(origin, xoffset, yoffset);
+		}
+		// <frame nr="integer" speed="integer" x="integer" y="integer" />
+		else if (tag_name == "frame")
+		{
+			int nr = StringHelp::text_to_int(cur_element.get_attribute("nr", "0"));
+
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+
+			if (nr < 0 || nr >= sprite.get_frame_count())
+			{
+				throw Exception("Invalid sprite frame index specified");
+			}
+
+			if (cur_element.has_attribute("speed")) 
+			{
+				sprite.set_frame_delay(nr, StringHelp::text_to_int(cur_element.get_attribute("speed", "60")));
+			}
+
+			sprite.set_frame_offset(nr, Point(xoffset, yoffset));
+		}
+
+		cur_node = cur_node.get_next_sibling();
+	}
+
 	return Resource<Sprite>(sprite);
 }
 
