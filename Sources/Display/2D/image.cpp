@@ -115,6 +115,13 @@ Image::Image()
 {
 }
 
+Image::Image(GraphicContext &gc, const ImageDescription &desc)
+{
+	const ImageDescriptionFrame &frame = desc.get_frame();
+	impl->texture = frame.texture;
+	impl->texture_rect = frame.rect;
+}
+
 Image::Image(GraphicContext &gc, const PixelBuffer &pb, const Rect &rect)
 : impl(new Image_Impl())
 {
