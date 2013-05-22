@@ -29,11 +29,17 @@
 #include "Display/precomp.h"
 #include "API/Display/Resources/display_cache.h"
 #include "display_cache_impl.h"
+#include "xml_display_cache_provider.h"
 
 namespace clan
 {
 
 DisplayCache::DisplayCache()
+{
+}
+
+DisplayCache::DisplayCache(const XMLResourceDocument &doc)
+	: impl(new DisplayCache_Impl(new XMLDisplayCacheProvider(doc)))
 {
 }
 
