@@ -26,37 +26,19 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Resources clanDisplay Resources
-/// \{
-
 #pragma once
 
-#include "../api_display.h"
-#include "../../Core/Resources/resource.h"
-#include <memory>
+#include "API/Display/Resources/display_cache_provider.h"
+#include "API/Core/Resources/xml_resource_document.h"
 
 namespace clan
 {
 
-class XMLResourceDocument;
-class GraphicContext;
-class Sprite;
-class Image;
-class Texture;
-class Font;
-class DisplayCacheProvider;
-class DisplayCache_Impl;
-
-class CL_API_DISPLAY DisplayCache
+class XMLDisplayCacheProvider : public DisplayCacheProvider
 {
 public:
-	DisplayCache();
-	DisplayCache(const XMLResourceDocument &doc);
-	DisplayCache(DisplayCacheProvider *provider);
-
-	bool is_null() const;
-
-	DisplayCacheProvider *get_provider() const;
+	XMLDisplayCacheProvider(const XMLResourceDocument &doc);
+	~XMLDisplayCacheProvider();
 
 	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
 	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
@@ -64,9 +46,17 @@ public:
 	Resource<Font> get_font(GraphicContext &gc, const std::string &id);
 
 private:
-	std::shared_ptr<DisplayCache_Impl> impl;
+	Resource<Sprite> load_sprite(GraphicContext &gc, const std::string &id);
+	Resource<Image> load_image(GraphicContext &gc, const std::string &id);
+	Resource<Texture> load_texture(GraphicContext &gc, const std::string &id);
+	Resource<Font> load_font(GraphicContext &gc, const std::string &id);
+
+	XMLResourceDocument doc;
+
+	std::map<std::string, Resource<Sprite> > sprites;
+	std::map<std::string, Resource<Image> > images;
+	std::map<std::string, Resource<Texture> > textures;
+	std::map<std::string, Resource<Font> > fonts;
 };
 
 }
-
-/// \}

@@ -49,6 +49,7 @@ class Resource_Impl : public Resource_BaseImpl
 {
 public:
 	Resource_Impl() : value(), generation(0) { }
+	Resource_Impl(const Type &initial_value) : value(initial_value), generation(0) { }
 	Type value;
 	int generation;
 };
@@ -65,6 +66,11 @@ public:
 
 	Resource(std::shared_ptr<Resource_Impl<Type> > object)
 	: object(object), generation(-1)
+	{
+	}
+
+	Resource(const Type &initial_value)
+	: object(new Resource_Impl<Type>(initial_value)), generation(-1)
 	{
 	}
 
