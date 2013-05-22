@@ -40,10 +40,12 @@ namespace clan
 {
 
 class GraphicContext;
+class Canvas;
 class Sprite;
 class Image;
 class Texture;
 class Font;
+class FontDescription;
 
 class DisplayCacheProvider
 {
@@ -53,7 +55,7 @@ public:
 	virtual Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id) = 0;
 	virtual Resource<Image> get_image(GraphicContext &gc, const std::string &id) = 0;
 	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Font> get_font(GraphicContext &gc, const std::string &id) = 0;
+	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
 };
 
 }

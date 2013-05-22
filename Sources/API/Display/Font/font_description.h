@@ -156,6 +156,11 @@ public:
 	/// \brief Returns true if this font should be cached
 	bool get_cached() const;
 
+	/// \brief Returns an unique string identifying this font description
+	///
+	/// This is useful for placing font descriptions in a map.
+	std::string get_unique_id() const;
+
 /// \}
 /// \name Operations
 /// \{

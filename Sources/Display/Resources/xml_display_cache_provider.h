@@ -43,13 +43,13 @@ public:
 	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
 	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> get_font(GraphicContext &gc, const std::string &id);
+	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc);
 
 private:
 	Resource<Sprite> load_sprite(GraphicContext &gc, const std::string &id);
 	Resource<Image> load_image(GraphicContext &gc, const std::string &id);
 	Resource<Texture> load_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> load_font(GraphicContext &gc, const std::string &id);
+	Resource<Font> load_font(Canvas &canvas, const FontDescription &desc);
 
 	XMLResourceDocument doc;
 
