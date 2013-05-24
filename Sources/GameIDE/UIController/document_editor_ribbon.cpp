@@ -51,7 +51,7 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_copy = new PushButton(clipboard_group2);
 
 	button_paste->set_text("Paste");
-	button_paste->set_icon(Image(canvas, "IconClipboardPaste24", &resources));
+	button_paste->set_icon(Image(canvas, "IconClipboardPaste24", resources));
 	button_paste->set_icon_position(PushButton::icon_top);
 	button_cut->set_text("Cut");
 	button_copy->set_text("Copy");
@@ -70,13 +70,13 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_save = new PushButton(edit_group2);
 
 	button_undo->set_text("Undo");
-	button_undo->set_icon(Image(canvas, "IconEditUndo", &resources));
+	button_undo->set_icon(Image(canvas, "IconEditUndo", resources));
 	button_undo->set_icon_position(PushButton::icon_left);
 	button_redo->set_text("Redo");
-	button_redo->set_icon(Image(canvas, "IconEditRedo", &resources));
+	button_redo->set_icon(Image(canvas, "IconEditRedo", resources));
 	button_redo->set_icon_position(PushButton::icon_left);
 	button_save->set_text("Save");
-	button_save->set_icon(Image(canvas, "IconSave24", &resources));
+	button_save->set_icon(Image(canvas, "IconSave24", resources));
 	button_save->set_icon_position(PushButton::icon_top);
 
 	button_undo->func_clicked().set(this, &DocumentEditorRibbon::on_button_undo_clicked);

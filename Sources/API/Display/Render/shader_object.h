@@ -113,7 +113,7 @@ public:
 	/// \param resources = Resource Manager
 	///
 	/// \return Shader Object
-	static ShaderObject load(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources);
+	static ShaderObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
 
 	/// \brief Load
 	///

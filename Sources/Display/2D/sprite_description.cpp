@@ -46,10 +46,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // SpriteDescription construction:
 
-SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
+SpriteDescription::SpriteDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 : impl(new SpriteDescription_Impl)
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "sprite" && resource.get_type() != "sprite_description" && resource.get_type() != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'sprite' or 'sprite_description' or 'image'", resource_id));
 

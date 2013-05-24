@@ -102,7 +102,7 @@ Resource<Sprite> XMLDisplayCacheProvider::load_sprite(GraphicContext &gc, const 
 {
 	ImageImportDescription import_desc; // Hack of the day! Why is this not part of SpriteDescription?
 
-	SpriteDescription desc(gc, id, &doc, import_desc);
+	SpriteDescription desc(gc, id, doc, import_desc);
 
 	Sprite sprite(gc, desc);
 
@@ -257,7 +257,7 @@ Resource<Image> XMLDisplayCacheProvider::load_image(GraphicContext &gc, const st
 {
 	ImageImportDescription import_desc; // Why is this not part of ImageDescription?
 
-	ImageDescription desc(gc, id, &doc, import_desc);
+	ImageDescription desc(gc, id, doc, import_desc);
 
 	Image image(gc, desc);
 

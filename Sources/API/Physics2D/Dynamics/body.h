@@ -69,7 +69,7 @@ public:
 	/// \param pc = Physics Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Body(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources);
+	Body(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources);
 
 	~Body();
 

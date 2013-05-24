@@ -116,9 +116,9 @@ CollisionOutline::CollisionOutline(
 
 CollisionOutline::CollisionOutline(
 	const std::string &resource_id,
-	XMLResourceDocument *manager)
+	const XMLResourceDocument &manager)
 {
-	resource = manager->get_resource(resource_id);
+	resource = manager.get_resource(resource_id);
 	if (resource.get_type() != "collisionoutline")
 		throw Exception(string_format("Resource '%1' is not of type 'collisionoutline'", resource_id));
 

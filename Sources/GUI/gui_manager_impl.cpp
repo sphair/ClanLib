@@ -734,7 +734,7 @@ void GUIManager_Impl::dispatch_message_to_component(GUIComponent *target, const 
 
 Image GUIManager_Impl::on_resource_cache_get_image(Canvas &canvas, const std::string &url)
 {
-	return Image(canvas, url, &resources);
+	return Image(canvas, url, resources);
 }
 
 GUIComponent *GUIManager_Impl::get_cancel_component(GUIComponent *comp)

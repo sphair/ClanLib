@@ -357,29 +357,29 @@ void SolutionExplorer::create_icon_list()
 
 	Canvas canvas = get_canvas();
 	ListViewIcon icon;
-	icon.set_sprite(Sprite(canvas, "IconFolderOpen", &resources), listview_mode_details);
+	icon.set_sprite(Sprite(canvas, "IconFolderOpen", resources), listview_mode_details);
 	listview->get_icon_list().set_icon(1, icon);
 
 	ListViewIcon icon2;
-	icon2.set_sprite(Sprite(canvas, "IconFolderClosed", &resources), listview_mode_details);
+	icon2.set_sprite(Sprite(canvas, "IconFolderClosed", resources), listview_mode_details);
 	listview->get_icon_list().set_icon(2, icon2);
 
 	ListViewIcon icon3;
-	icon3.set_sprite(Sprite(canvas, "IconDocument", &resources), listview_mode_details);
+	icon3.set_sprite(Sprite(canvas, "IconDocument", resources), listview_mode_details);
 	listview->get_icon_list().set_icon(3, icon3);
 
 	ListViewIcon icon4;
-	icon4.set_sprite(Sprite(canvas, "IconSolution", &resources), listview_mode_details);
+	icon4.set_sprite(Sprite(canvas, "IconSolution", resources), listview_mode_details);
 	listview->get_icon_list().set_icon(4, icon4);
 
 	ListViewIcon icon5;
-	icon5.set_sprite(Sprite(canvas, "IconProject", &resources), listview_mode_details);
+	icon5.set_sprite(Sprite(canvas, "IconProject", resources), listview_mode_details);
 	listview->get_icon_list().set_icon(5, icon5);
 
 	int current_index = 6;
 	for (size_t i = 0; i < factory.types().size(); i++)
 	{
-		Sprite sprite = factory.types()[i]->get_icon(canvas, &resources);
+		Sprite sprite = factory.types()[i]->get_icon(canvas, resources);
 		if (!sprite.is_null())
 		{
 			extension_to_icon[StringHelp::text_to_lower(factory.types()[i]->get_extension())] = current_index;

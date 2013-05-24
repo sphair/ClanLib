@@ -162,10 +162,10 @@ Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportD
 	impl->texture_rect = impl->texture.get_size();
 }
 
-Image::Image(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
+Image::Image(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 : impl(new Image_Impl())
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	std::string type = resource.get_element().get_tag_name();
 
 	if (type != "image")

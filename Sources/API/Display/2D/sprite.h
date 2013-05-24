@@ -86,7 +86,7 @@ public:
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Sprite(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///

@@ -154,7 +154,7 @@ public:
 	///
 	/// \param resource_id = The resource id
 	/// \param manager = The resource manager
-	CollisionOutline(const std::string &resource_id, XMLResourceDocument *manager );
+	CollisionOutline(const std::string &resource_id, const XMLResourceDocument &manager );
 
 	/// \brief Construct a collision outline.
 	///

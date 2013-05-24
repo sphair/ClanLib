@@ -61,12 +61,12 @@ Body::Body(PhysicsContext &pc, const BodyDescription &description)
 	throw Exception("Tried to create a body with a null PhysicsWorld object");
 }
 
-Body::Body(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources)
+Body::Body(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
 : impl(new Body_Impl(pc.impl->get_owner()))
 {
 	if(impl->owner_world)
 	{
-		XMLResourceNode resource = resources->get_resource(resource_id);
+		XMLResourceNode resource = resources.get_resource(resource_id);
 		std::string type = resource.get_element().get_tag_name();
 	
 		if (type != "body2d")

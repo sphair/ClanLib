@@ -78,7 +78,7 @@ public:
 	/// \param pc   = Physics Context
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	BodyDescription(const PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources);
+	BodyDescription(const PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources);
 
 	/// \brief Constructs a BodyDescription
 	///
