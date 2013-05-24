@@ -77,7 +77,7 @@ public:
 
 	SoundBuffer(
 		const std::string &res_id,
-		XMLResourceDocument *manager);
+		const XMLResourceDocument &manager);
 
 	SoundBuffer(
 		SoundProvider *provider);

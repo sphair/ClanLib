@@ -93,14 +93,14 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	Canvas canvas = component->get_canvas();
 	XMLResourceDocument resources = component->get_resources();
 
-	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", &resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
-	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", &resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSave24", &resources), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSaveAs24", &resources), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
+	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
+	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
+	ribbon->get_menu()->add_item(Image(canvas, "IconSave24", resources), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
+	ribbon->get_menu()->add_item(Image(canvas, "IconSaveAs24", resources), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconAbout24", &resources), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
+	ribbon->get_menu()->add_item(Image(canvas, "IconAbout24", resources), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconExit24", &resources), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
+	ribbon->get_menu()->add_item(Image(canvas, "IconExit24", resources), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
 
 	//ui_controller->register_ribbon_setup("RibbonSetupEditorMainWindow");
 

@@ -110,7 +110,7 @@ public:
 	/// \param resource_id Resource name of the image resource
 	/// \param resources Resource manager used to load resource
 	/// \param import_desc = Image Import Description
-	Image(GraphicContext &context, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Image(GraphicContext &context, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	virtual ~Image();	
 /// \}

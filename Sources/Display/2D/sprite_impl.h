@@ -90,7 +90,7 @@ public:
 	void init(
 		GraphicContext &gc,
 		const std::string &resource_id,
-		XMLResourceDocument *resources, const ImageImportDescription &import_desc);
+		const XMLResourceDocument &resources, const ImageImportDescription &import_desc);
 
 public:
 	class SpriteFrame

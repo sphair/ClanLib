@@ -87,7 +87,7 @@ public:
 	Texture2D(
 		GraphicContext &gc,
 		const std::string &resource_id,
-		XMLResourceDocument *resources,
+		const XMLResourceDocument &resources,
 		const ImageImportDescription &import_desc = ImageImportDescription ());
 /// \}
 

@@ -90,7 +90,7 @@ public:
 /// \{
 
 public:
-	void load_font(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources);
+	void load_font(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
 
 	/// \brief Print text on gc.
 	virtual void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);

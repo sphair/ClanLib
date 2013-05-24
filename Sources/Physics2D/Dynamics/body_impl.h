@@ -55,7 +55,7 @@ public:
 
 //																						___________________
 //																						O P E R A T I O N S
-	void init(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources);
+	void init(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources);
 	void add_fixture(Fixture &fixture);
 	void set_id(int value) { id = value;}
 

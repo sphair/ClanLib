@@ -45,10 +45,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // ImageDescription construction:
 
-ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
+ImageDescription::ImageDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 : impl(new ImageDescription_Impl)
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "image" && resource.get_type() != "image_description" && resource.get_type() != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'image' or 'image_description' or 'image'", resource_id));
 

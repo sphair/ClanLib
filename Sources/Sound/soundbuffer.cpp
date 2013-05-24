@@ -53,10 +53,10 @@ SoundBuffer::SoundBuffer()
 	
 SoundBuffer::SoundBuffer(
 	const std::string &res_id,
-	XMLResourceDocument *manager)
+	const XMLResourceDocument &manager)
 : impl(new SoundBuffer_Impl)
 {
-	XMLResourceNode resource = manager->get_resource(res_id);
+	XMLResourceNode resource = manager.get_resource(res_id);
 
 	DomElement &element = resource.get_element();
 

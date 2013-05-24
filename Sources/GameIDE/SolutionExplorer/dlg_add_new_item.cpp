@@ -89,7 +89,7 @@ void DlgAddNewItem::populate(FileItemTypeFactory &factory)
 	for(size_t i = 0; i < types.size(); ++i)
 	{
 		ListViewIcon icon;
-		Sprite sprite = types[i]->get_icon(canvas, &resources);
+		Sprite sprite = types[i]->get_icon(canvas, resources);
 		icon.set_sprite(sprite, listview_mode_details);
 		list_items->get_icon_list().set_icon(icon_index, icon);
 

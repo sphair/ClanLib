@@ -93,11 +93,11 @@ ProgramObject::ProgramObject(ProgramObjectProvider *provider)
 ProgramObject ProgramObject::load(
 	GraphicContext &gc,
 	const std::string &resource_id,
-	XMLResourceDocument *resources)
+	const XMLResourceDocument &resources)
 {
 	ProgramObject program_object(gc);
 
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 
 	DomNode node = resource.get_element().get_first_child();
 

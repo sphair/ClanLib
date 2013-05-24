@@ -64,9 +64,9 @@ Body_Impl::~Body_Impl()
 //																						___________________
 //																						O P E R A T I O N S
 
-void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources)
+void Body_Impl::init(PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 
 	// Create body from body description
 	BodyDescription desc(pc, resource_id, resources);

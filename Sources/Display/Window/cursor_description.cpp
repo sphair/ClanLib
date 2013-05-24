@@ -45,10 +45,10 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // CursorDescription construction:
 
-CursorDescription::CursorDescription(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
+CursorDescription::CursorDescription(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 : impl(new CursorDescription_Impl)
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "cursor" && resource.get_type() != "cursor_description" && resource.get_type() != "image")
 		throw Exception(string_format("Resource '%1' is not of type 'cursor' or 'cursor_description' or 'image'", resource_id));
 

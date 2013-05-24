@@ -126,9 +126,9 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
-Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, XMLResourceDocument *resources, const ImageImportDescription &import_desc)
+Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
 {
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	std::string type = resource.get_element().get_tag_name();
 	
 	if (type != "texture")

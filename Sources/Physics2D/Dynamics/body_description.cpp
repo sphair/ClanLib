@@ -62,7 +62,7 @@ BodyDescription::BodyDescription(const PhysicsContext &pc)
 
 }
 
-BodyDescription::BodyDescription(const PhysicsContext &pc, const std::string &resource_id, XMLResourceDocument *resources)
+BodyDescription::BodyDescription(const PhysicsContext &pc, const std::string &resource_id, const XMLResourceDocument &resources)
 : impl(new BodyDescription_Impl(pc.impl->get_owner()))
 {
 	/* example resource entry with all parameters:
@@ -76,7 +76,7 @@ BodyDescription::BodyDescription(const PhysicsContext &pc, const std::string &re
     </body2d>
 
 	*/
-	XMLResourceNode resource = resources->get_resource(resource_id);
+	XMLResourceNode resource = resources.get_resource(resource_id);
 	if (resource.get_type() != "body2d" && resource.get_type() != "body2d_description")
 		throw Exception(string_format("Resource '%1' is not of type 'body2d' or 'body2d_description'", resource_id));
 

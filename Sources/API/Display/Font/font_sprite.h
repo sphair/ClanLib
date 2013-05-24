@@ -56,7 +56,7 @@ public:
 	/// \param canvas = Canvas
 	/// \param resource_id = String Ref
 	/// \param resources = Resource Manager
-	Font_Sprite( Canvas &canvas, const std::string &resource_id, XMLResourceDocument *resources );
+	Font_Sprite( Canvas &canvas, const std::string &resource_id, const XMLResourceDocument &resources );
 
 	/// \brief Constructs a Font Sprite from a Font, ensuring the correct type
 	explicit Font_Sprite( const Font &font);
