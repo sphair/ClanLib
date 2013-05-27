@@ -78,7 +78,7 @@ const std::vector<ModelDataLight> &Model::get_lights()
 	return model_data->lights;
 }
 
-bool Model::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world)
+bool Model::add_instance(int instance_frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color)
 {
 	if (instance.animation_index == -1)
 		return false;
@@ -88,10 +88,12 @@ bool Model::add_instance(int instance_frame, const ModelInstance &instance, cons
 		frame = instance_frame;
 		instances.clear();
 		instances_object_to_world.clear();
+		instances_light_probe_color.clear();
 	}
 
 	instances.push_back(&instance);
 	instances_object_to_world.push_back(object_to_world);
+	instances_light_probe_color.push_back(light_probe_color);
 	return instances.size() == 1;
 }
 
@@ -141,6 +143,8 @@ void Model::upload(InstancesBuffer &instances_buffer, const Mat4f &world_to_eye,
 		vectors[12] = Vec4f(eye_to_projection[1], eye_to_projection[5], eye_to_projection[9], eye_to_projection[13]);
 		vectors[13] = Vec4f(eye_to_projection[2], eye_to_projection[6], eye_to_projection[10], eye_to_projection[14]);
 		vectors[14] = Vec4f(eye_to_projection[3], eye_to_projection[7], eye_to_projection[11], eye_to_projection[15]);
+
+		vectors[15] = Vec4f(instances_light_probe_color[j], 0.0f);
 
 		for (size_t i = 0; i < model_data->bones.size(); i++)
 		{

@@ -30,22 +30,21 @@
 #include "GUI/precomp.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Core/IOData/path_help.h"
-#include "API/GUI/gui_component.h"
-#include "API/GUI/gui_manager.h"
-#include "API/GUI/gui_component_description.h"
-#include "API/GUI/gui_layout_corners.h"
-#include "API/GUI/gui_window_manager.h"
-#include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/Core/IOData/iodevice.h"
 #include "API/Core/XML/dom_document.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/XML/dom_text.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/IOData/iodevice.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/Font/font_metrics.h"
+#include "API/GUI/gui_component.h"
+#include "API/GUI/gui_manager.h"
+#include "API/GUI/gui_component_description.h"
+#include "API/GUI/gui_layout_corners.h"
+#include "API/GUI/gui_window_manager.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
@@ -240,9 +239,9 @@ bool GUIComponent::get_blocks_default_action() const
 	return impl->blocks_default_action_when_focused;
 }
 
-XMLResourceDocument GUIComponent::get_resources() const
+DisplayCache GUIComponent::get_display_cache() const
 {
-	return impl->gui_manager.lock()->resources;
+	return impl->gui_manager.lock()->display_cache;
 }
 
 GUIManager GUIComponent::get_gui_manager() const

@@ -43,7 +43,6 @@ namespace clan
 
 class GraphicContext;
 class FileSystem;
-class XMLResourceDocument;
 class Rect;
 class Size;
 class Rectf;
@@ -103,14 +102,6 @@ public:
 	/// \param dir = Virtual directory to load filename from
 	/// \param import_desc = Image Import Description
 	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
-
-	/// \brief Constructs a Image
-	///
-	/// \param context = Graphic Context
-	/// \param resource_id Resource name of the image resource
-	/// \param resources Resource manager used to load resource
-	/// \param import_desc = Image Import Description
-	Image(GraphicContext &context, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	virtual ~Image();	
 /// \}

@@ -66,6 +66,7 @@ public:
 	void insert(OctTreeObject *object, const AxisAlignedBoundingBox &aabb, int iteration = 0);
 	void remove(OctTreeObject *object, const AxisAlignedBoundingBox &aabb, int iteration = 0);
 	void cull(int frame, const FrustumPlanes &frustum, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs);
+	void cull(int frame, const Vec3f &point, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs);
 	void show(int frame, std::vector<SceneItem *> &pvs);
 
 private:

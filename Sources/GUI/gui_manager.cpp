@@ -334,6 +334,7 @@ void GUIManager::initialize(GUIWindowManager &window_manager, const std::string 
 	FileSystem vfs(path_to_theme);
 
 	impl->resources = XMLResourceDocument("resources.xml", vfs);
+	impl->display_cache = DisplayCache(impl->resources);
 
 	set_window_manager(window_manager);
 	set_css_document("theme.css", vfs);

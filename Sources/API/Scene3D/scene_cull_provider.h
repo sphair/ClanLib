@@ -65,6 +65,7 @@ public:
 	virtual AxisAlignedBoundingBox get_aabb(SceneCullProxy *proxy) = 0;
 
 	virtual std::vector<SceneItem *> cull(const FrustumPlanes &frustum) = 0;
+	virtual std::vector<SceneItem *> cull(const Vec3f &point) = 0;
 };
 
 }

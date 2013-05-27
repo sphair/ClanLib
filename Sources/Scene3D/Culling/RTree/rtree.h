@@ -73,6 +73,7 @@ public:
 	AxisAlignedBoundingBox get_aabb(SceneCullProxy *proxy);
 
 	std::vector<SceneItem *> cull(const FrustumPlanes &frustum);
+	std::vector<SceneItem *> cull(const Vec3f &point);
 
 private:
 	RTreeRoot<RTreeObject*, float, 3, float> root;

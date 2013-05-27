@@ -60,6 +60,7 @@ class SceneLightVisitor;
 class Resource_BaseImpl;
 class SceneParticleEmitter_Impl;
 class SceneParticleEmitterVisitor;
+class SceneLightProbe_Impl;
 
 class Scene_Impl
 {
@@ -79,6 +80,9 @@ public:
 	void visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, ModelMeshVisitor *visitor);
 	void visit_lights(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneLightVisitor *visitor);
 	void visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4f &eye_to_projection, FrustumPlanes frustum, SceneParticleEmitterVisitor *visitor);
+
+	SceneLightProbe_Impl *find_nearest_probe(const Vec3f &position);
+
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
 	const SceneCache &get_cache() const { return cache; }
@@ -103,6 +107,7 @@ private:
 
 	std::list<SceneObject_Impl *> objects;
 	std::list<SceneLight_Impl *> lights;
+	std::list<SceneLightProbe_Impl *> light_probes;
 	std::list<SceneParticleEmitter_Impl *> emitters;
 
 	std::unique_ptr<SceneCullProvider> cull_provider;
@@ -130,6 +135,8 @@ private:
 	friend class SceneObject_Impl;
 	friend class SceneLight;
 	friend class SceneLight_Impl;
+	friend class SceneLightProbe;
+	friend class SceneLightProbe_Impl;
 	friend class SceneParticleEmitter;
 	friend class SceneParticleEmitter_Impl;
 	friend class SceneModel;

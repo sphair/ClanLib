@@ -197,8 +197,8 @@ AxisAlignedBoundingBox SceneParticleEmitter_Impl::get_aabb()
 {
 	float attenuation_end = 30.0f;
 	AxisAlignedBoundingBox aabb;
-	aabb.aabb_min = position - attenuation_end * 1.41421356f;
-	aabb.aabb_max = position + attenuation_end * 1.41421356f;
+	aabb.aabb_min = position - attenuation_end * 1.73205081f;
+	aabb.aabb_max = position + attenuation_end * 1.73205081f;
 	return aabb;
 }
 

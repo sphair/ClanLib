@@ -37,6 +37,7 @@
 namespace clan
 {
 
+class XMLResourceDocument;
 class FontProvider;
 class Font_Sprite_Impl;
 class FontProvider_Sprite;

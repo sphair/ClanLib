@@ -130,8 +130,6 @@ void LightsourcePass::upload(GraphicContext &gc)
 	ScopeTimeFunction();
 
 	int num_lights = lights.size();
-	if (num_lights == 0)
-		return;
 
 	std::sort(lights.begin(), lights.end(), LightsourcePass_LightCompare());
 
@@ -209,45 +207,43 @@ void LightsourcePass::render(GraphicContext &gc, GPUTimer &timer)
 	ScopeTimeFunction();
 	zminmax.minmax(gc);
 	update_buffers(gc);
-	if (!lights.empty())
-	{
-		//timer.begin_time(gc, "light(cull)");
 
-		gc.set_uniform_buffer(0, compute_uniforms);
-		gc.set_storage_buffer(0, compute_lights);
-		gc.set_storage_buffer(1, compute_visible_lights);
-		gc.set_texture(0, zminmax.result.get());
-		gc.set_texture(1, normal_z_gbuffer.get());
-		gc.set_texture(2, diffuse_color_gbuffer.get());
-		gc.set_texture(3, specular_color_gbuffer.get());
-		gc.set_texture(4, specular_level_gbuffer.get());
-		gc.set_texture(5, shadow_maps.get());
-		gc.set_texture(6, self_illumination_gbuffer.get());
-		gc.set_image_texture(0, final_color.get());
+	//timer.begin_time(gc, "light(cull)");
 
-		gc.set_program_object(cull_tiles_program);
-		gc.dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
+	gc.set_uniform_buffer(0, compute_uniforms);
+	gc.set_storage_buffer(0, compute_lights);
+	gc.set_storage_buffer(1, compute_visible_lights);
+	gc.set_texture(0, zminmax.result.get());
+	gc.set_texture(1, normal_z_gbuffer.get());
+	gc.set_texture(2, diffuse_color_gbuffer.get());
+	gc.set_texture(3, specular_color_gbuffer.get());
+	gc.set_texture(4, specular_level_gbuffer.get());
+	gc.set_texture(5, shadow_maps.get());
+	gc.set_texture(6, self_illumination_gbuffer.get());
+	gc.set_image_texture(0, final_color.get());
 
-		//timer.end_time(gc);
-		//timer.begin_time(gc, "light(render)");
+	gc.set_program_object(cull_tiles_program);
+	gc.dispatch((num_tiles_x + tile_size - 1) / tile_size, (num_tiles_y + tile_size - 1) / tile_size);
 
-		gc.set_program_object(render_tiles_program);
-		gc.dispatch(num_tiles_x, num_tiles_y);
+	//timer.end_time(gc);
+	//timer.begin_time(gc, "light(render)");
 
-		gc.reset_image_texture(0);
-		gc.reset_texture(6);
-		gc.reset_texture(5);
-		gc.reset_texture(4);
-		gc.reset_texture(3);
-		gc.reset_texture(2);
-		gc.reset_texture(1);
-		gc.reset_texture(0);
-		gc.reset_uniform_buffer(2);
-		gc.reset_uniform_buffer(1);
-		gc.reset_uniform_buffer(0);
+	gc.set_program_object(render_tiles_program);
+	gc.dispatch(num_tiles_x, num_tiles_y);
 
-		//timer.end_time(gc);
-	}
+	gc.reset_image_texture(0);
+	gc.reset_texture(6);
+	gc.reset_texture(5);
+	gc.reset_texture(4);
+	gc.reset_texture(3);
+	gc.reset_texture(2);
+	gc.reset_texture(1);
+	gc.reset_texture(0);
+	gc.reset_uniform_buffer(2);
+	gc.reset_uniform_buffer(1);
+	gc.reset_uniform_buffer(0);
+
+	//timer.end_time(gc);
 }
 
 void LightsourcePass::update_buffers(GraphicContext &gc)

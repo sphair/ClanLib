@@ -99,6 +99,11 @@ void SceneObject::set_scale(const Vec3f &scale)
 	}
 }
 
+void SceneObject::set_light_probe_receiver(bool enable)
+{
+	impl->light_probe_receiver = enable;
+}
+
 void SceneObject::play_animation(const std::string &name)
 {
 	impl->instance.play_animation(name);
@@ -132,7 +137,7 @@ SceneObject &SceneObject::rotate(float dir, float up, float tilt)
 /////////////////////////////////////////////////////////////////////////////
 
 SceneObject_Impl::SceneObject_Impl(Scene_Impl *scene)
-: scene(scene), cull_proxy(0), scale(1.0f)
+: scene(scene), cull_proxy(0), scale(1.0f), light_probe_receiver(false)
 {
 	it = scene->objects.insert(scene->objects.end(), this);
 }

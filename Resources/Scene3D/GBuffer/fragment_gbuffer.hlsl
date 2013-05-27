@@ -38,6 +38,10 @@ struct PixelIn
 #endif
 	float ArrayTextureIndex : ArrayTextureIndex;
 	float4 SelfIllumination : SelfIllumination;
+#if defined(USE_COLORS)
+	float4 VertexColor : VertexColor;
+#endif
+	float4 LightProbeColor : LightProbeColor;
 };
 
 struct PixelOut
@@ -66,7 +70,7 @@ SamplerState SpecularSampler;
 float3 ApplyNormalMap(PixelIn input, bool frontFacing);
 float3 DiffuseColor(PixelIn input);
 float3 SpecularColor(PixelIn input);
-float3 SelfIlluminationColor(PixelIn input);
+float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor);
 
 PixelOut main(PixelIn input, bool frontFacing : SV_IsFrontFace)
 {
@@ -75,7 +79,7 @@ PixelOut main(PixelIn input, bool frontFacing : SV_IsFrontFace)
 	output.FragDiffuseColor = float4(DiffuseColor(input), 1);
 	output.FragSpecularColor = float4(SpecularColor(input), 1);
 	output.FragSpecularLevel = float2(MaterialGlossiness, MaterialSpecularLevel);
-	output.FragSelfIllumination = float4(SelfIlluminationColor(input), 1);
+	output.FragSelfIllumination = float4(output.FragDiffuseColor.rgb * input.LightProbeColor.rgb + SelfIlluminationColor(input, output.FragDiffuseColor), 1);
 	output.FragNormal = float4(normalInEyeNormalized, input.PositionInEye.z);
 	return output;
 }
@@ -154,16 +158,25 @@ float3 SpecularColor(PixelIn input)
 
 #if defined(SI_UV)
 
-float3 SelfIlluminationColor(PixelIn input)
+float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 {
+#if defined(USE_COLORS)
+	float3 siColor = input.SelfIllumination.rgb + input.VertexColor.rgb * diffuseColor.rgb;
+	return lerp(siColor, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w);
+#else
 	return lerp(input.SelfIllumination.rgb, SelfIlluminationTexture.Sample(SelfIlluminationSampler, input.SelfIlluminationUV).rgb, input.SelfIllumination.w);
+#endif
 }
 
 #else
 
-float3 SelfIlluminationColor(PixelIn input)
+float3 SelfIlluminationColor(PixelIn input, float4 diffuseColor)
 {
+#if defined(USE_COLORS)
+	return input.SelfIllumination.rgb + input.VertexColor.rgb * diffuseColor.rgb;
+#else
 	return input.SelfIllumination.rgb;
+#endif
 }
 
 #endif

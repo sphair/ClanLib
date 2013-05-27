@@ -43,15 +43,13 @@ public:
 	{
 	}
 
-	ModelShaderDescription(const ModelDataDrawRange &description, bool use_bones)
-		: color_channel(), diffuse_channel(), specular_channel(), bumpmap_channel(), self_illumination_channel()
+	ModelShaderDescription(const ModelDataDrawRange &description, bool use_bones, bool use_color_channel)
+		: color_channel(use_color_channel), diffuse_channel(), specular_channel(), bumpmap_channel(), self_illumination_channel(), bones(use_bones)
 	{
-		color_channel = false;
 		diffuse_channel = (description.diffuse_map.texture != -1);
 		specular_channel = (description.specular_map.texture != -1);
 		bumpmap_channel = (description.bumpmap_map.texture != -1);
 		self_illumination_channel = (description.self_illumination_map.texture != -1);
-		bones = use_bones;
 	}
 
 	bool operator<(const ModelShaderDescription &other) const

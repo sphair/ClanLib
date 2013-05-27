@@ -91,16 +91,16 @@ void EditorMainWindow_Impl::setup(EditorMainWindow *source_component)
 	component->set_visible(true, true);
 
 	Canvas canvas = component->get_canvas();
-	XMLResourceDocument resources = component->get_resources();
+	DisplayCache display_cache = component->get_display_cache();
 
-	ribbon->get_menu()->add_item(Image(canvas, "IconNew24", resources), "New").set(this, &EditorMainWindow_Impl::on_item_new);
-	ribbon->get_menu()->add_item(Image(canvas, "IconOpen24", resources), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSave24", resources), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
-	ribbon->get_menu()->add_item(Image(canvas, "IconSaveAs24", resources), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconNew24").get(), "New").set(this, &EditorMainWindow_Impl::on_item_new);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconOpen24").get(), "Open").set(this, &EditorMainWindow_Impl::on_item_open);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconSave24").get(), "Save").set(this, &EditorMainWindow_Impl::on_item_save);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconSaveAs24").get(), "Save As..").set(this, &EditorMainWindow_Impl::on_item_save_as);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconAbout24", resources), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconAbout24").get(), "About Game IDE").set(this, &EditorMainWindow_Impl::on_item_about);
 	ribbon->get_menu()->add_separator();
-	ribbon->get_menu()->add_item(Image(canvas, "IconExit24", resources), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
+	ribbon->get_menu()->add_item(display_cache.get_image(canvas, "IconExit24").get(), "Exit").set(this, &EditorMainWindow_Impl::on_item_exit);
 
 	//ui_controller->register_ribbon_setup("RibbonSetupEditorMainWindow");
 

@@ -64,6 +64,8 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
+		bool uses_color_channel = !mesh_buffers[i].colors.is_null();
+
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
 		{
@@ -101,7 +103,7 @@ void ModelShaderCache::create_gbuffer_commands(GraphicContext &gc, Model *model,
 				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 			}
 
-			ModelShaderDescription shader_desc(material_range, uses_bones);
+			ModelShaderDescription shader_desc(material_range, uses_bones, uses_color_channel);
 			if (first_program || !(current_program < shader_desc || shader_desc < current_program))
 			{
 				//first_program = false; // To do: fix bug in clanlib causing resource binds to be incorrect in some situations if we do not bind the program every time
@@ -136,6 +138,8 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 
 	for (size_t i = 0; i < mesh_buffers.size(); i++)
 	{
+		bool uses_color_channel = !mesh_buffers[i].colors.is_null();
+
 		out_list.commands.push_back(new ModelRenderCommand_BindMeshBuffers(&mesh_buffers[i]));
 		for (size_t j = 0; j < model_data->meshes[i].draw_ranges.size(); j++)
 		{
@@ -173,7 +177,7 @@ void ModelShaderCache::create_transparency_commands(GraphicContext &gc, Model *m
 				out_list.commands.push_back(new ModelRenderCommand_SetRasterizerState(is_two_sided ? two_sided_rasterizer_state : rasterizer_state));
 			}
 
-			ModelShaderDescription shader_desc(material_range, uses_bones);
+			ModelShaderDescription shader_desc(material_range, uses_bones, uses_color_channel);
 			if (first_program || !(current_program < shader_desc || shader_desc < current_program))
 			{
 				//first_program = false; // To do: fix bug in clanlib causing resource binds to be incorrect in some situations if we do not bind the program every time
@@ -282,6 +286,8 @@ ProgramObject ModelShaderCache::create_gbuffer_program(GraphicContext &gc, const
 		defines += " SI_UV";
 	if (description.bones)
 		defines += " USE_BONES";
+	if (description.color_channel)
+		defines += " USE_COLORS";
 
 	ProgramObject gbuffer;
 	if (gc.get_shader_language() == shader_glsl)
@@ -345,6 +351,8 @@ ProgramObject ModelShaderCache::create_transparency_program(GraphicContext &gc, 
 		defines += " SI_UV";
 	if (description.bones)
 		defines += " USE_BONES";
+	if (description.color_channel)
+		defines += " USE_COLORS";
 
 	ProgramObject transparency;
 	if (gc.get_shader_language() == shader_glsl)

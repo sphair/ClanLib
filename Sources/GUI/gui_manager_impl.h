@@ -38,6 +38,7 @@
 #include "API/Core/System/timer.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
+#include "API/Display/Resources/display_cache.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/accelerator_table.h"
 #include "API/GUI/gui_window_manager.h"
@@ -123,6 +124,7 @@ public:
 	mutable CSSDocument css_document;
 
 	XMLResourceDocument resources;
+	DisplayCache display_cache;
 	CSSResourceCache resource_cache;
 
 	GUIComponent *mouse_capture_component;

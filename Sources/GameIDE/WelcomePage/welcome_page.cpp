@@ -44,8 +44,7 @@ WelcomePage::WelcomePage()
 
 	//welcome->set_text("Start a new project to get started.");
 
-	XMLResourceDocument resources = get_resources();
-	logo->set_sprite(Sprite(get_canvas(), "GameIdeLogo", resources));
+	logo->set_sprite(get_display_cache().get_sprite(get_canvas(), "GameIdeLogo").get());
 }
 
 void WelcomePage::on_resized()

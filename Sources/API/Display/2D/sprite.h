@@ -44,7 +44,6 @@
 namespace clan
 {
 
-class XMLResourceDocument;
 class SpriteDescription;
 class Sprite_Impl;
 class CollisionOutline;
@@ -80,13 +79,6 @@ public:
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
 	Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
-
-	/// \brief Constructs a Sprite
-	///
-	/// \param gc = Graphic Context
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///

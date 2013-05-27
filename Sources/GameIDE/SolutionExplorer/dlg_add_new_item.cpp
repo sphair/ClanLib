@@ -83,13 +83,13 @@ void DlgAddNewItem::populate(FileItemTypeFactory &factory)
 	int icon_index = 1;
 
 	Canvas canvas = get_canvas();
-	XMLResourceDocument resources = get_resources();
+	DisplayCache display_cache = get_display_cache();
 
 	const std::vector<FileItemType*> &types = factory.types();
 	for(size_t i = 0; i < types.size(); ++i)
 	{
 		ListViewIcon icon;
-		Sprite sprite = types[i]->get_icon(canvas, resources);
+		Sprite sprite = types[i]->get_icon(canvas, display_cache);
 		icon.set_sprite(sprite, listview_mode_details);
 		list_items->get_icon_list().set_icon(icon_index, icon);
 

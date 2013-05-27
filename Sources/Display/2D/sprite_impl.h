@@ -87,11 +87,6 @@ public:
 
 	virtual ~Sprite_Impl();
 
-	void init(
-		GraphicContext &gc,
-		const std::string &resource_id,
-		const XMLResourceDocument &resources, const ImageImportDescription &import_desc);
-
 public:
 	class SpriteFrame
 	{

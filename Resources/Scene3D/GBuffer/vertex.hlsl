@@ -21,7 +21,9 @@ struct VertexIn
 	float4 AttrBoneWeights : AttrBoneWeights;
 	uint4 AttrBoneSelectors : AttrBoneSelectors;
 #endif
-	//float4 AttrColor : AttrColor;
+#if defined(USE_COLORS)
+	float4 AttrColor : AttrColor;
+#endif
 #if defined(DIFFUSE_UV)
 	float2 AttrUVMap0 : AttrUVMapA;
 #endif
@@ -58,6 +60,10 @@ struct VertexOut
 #endif
 	float ArrayTextureIndex : ArrayTextureIndex;
 	float4 SelfIllumination : SelfIllumination;
+#if defined(USE_COLORS)
+	float4 VertexColor : VertexColor;
+#endif
+	float4 LightProbeColor : LightProbeColor;
 };
 
 Texture2D InstanceOffsets;
@@ -113,9 +119,10 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 	float4x4 EyeToProjection = loadMat4(vectorsOffset + 11);
 	float4 SelfIlluminationData = InstanceVectors.Load(GetTexelPosition(vectorsOffset + MaterialOffset));
 	float4 MaterialInstanceData = InstanceVectors.Load(GetTexelPosition(vectorsOffset + MaterialOffset + 1));
+	float4 LightProbeColor = InstanceVectors.Load(GetTexelPosition(vectorsOffset + 15));
 
 	VertexOut output;
-	BonesResult bonesResult = ApplyBones(input, vectorsOffset + 15);
+	BonesResult bonesResult = ApplyBones(input, vectorsOffset + 16);
 	float3x3 TangentObjectToEye = (float3x3)mul(WorldToEye, ObjectToWorld);
 	output.NormalInEye = normalize(mul(ObjectNormalToEye, bonesResult.Normal));
 	output.TangentInEye = normalize(mul(TangentObjectToEye, bonesResult.Tangent));
@@ -142,6 +149,10 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 	output.PositionInProjection = mul(EyeToProjection, output.PositionInEye);
 	output.ArrayTextureIndex = MaterialInstanceData.x;
 	output.SelfIllumination = SelfIlluminationData;
+#if defined(USE_COLORS)
+	output.VertexColor = input.AttrColor;
+#endif
+	output.LightProbeColor = LightProbeColor;
 	return output;
 }
 

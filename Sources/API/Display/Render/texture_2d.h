@@ -38,8 +38,6 @@
 namespace clan
 {
 
-class XMLResourceDocument;
-
 /// \brief 2D texture object class.
 class CL_API_DISPLAY Texture2D : public Texture
 {
@@ -84,11 +82,6 @@ public:
 		GraphicContext &context,
 		IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	Texture2D(
-		GraphicContext &gc,
-		const std::string &resource_id,
-		const XMLResourceDocument &resources,
-		const ImageImportDescription &import_desc = ImageImportDescription ());
 /// \}
 
 /// \name Attributes

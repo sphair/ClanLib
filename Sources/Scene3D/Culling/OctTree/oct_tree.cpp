@@ -83,5 +83,12 @@ std::vector<SceneItem *> OctTree::cull(const FrustumPlanes &frustum)
 	return pvs;
 }
 
+std::vector<SceneItem *> OctTree::cull(const Vec3f &point)
+{
+	std::vector<SceneItem *> pvs;
+	root->cull(frame++, point, aabb, pvs);
+	return pvs;
+}
+
 }
 

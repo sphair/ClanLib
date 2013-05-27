@@ -124,6 +124,34 @@ void OctTreeNode::cull(int frame, const FrustumPlanes &frustum, const AxisAligne
 	}
 }
 
+void OctTreeNode::cull(int frame, const Vec3f &point, const AxisAlignedBoundingBox &aabb, std::vector<SceneItem *> &pvs)
+{
+	bool inside =
+		point.x >= aabb.aabb_min.x && point.x <= aabb.aabb_max.x &&
+		point.y >= aabb.aabb_min.y && point.y <= aabb.aabb_max.y &&
+		point.z >= aabb.aabb_min.z && point.z <= aabb.aabb_max.z;
+
+	if (inside)
+	{
+		for (size_t i = 0; i < objects.size(); i++)
+		{
+			bool obj_inside =
+				point.x >= objects[i]->box.aabb_min.x && point.x <= objects[i]->box.aabb_max.x &&
+				point.y >= objects[i]->box.aabb_min.y && point.y <= objects[i]->box.aabb_max.y &&
+				point.z >= objects[i]->box.aabb_min.z && point.z <= objects[i]->box.aabb_max.z;
+
+			if (obj_inside)
+				objects[i]->add(frame, pvs);
+		}
+
+		for (int i = 0; i < 8; i++)
+		{
+			if (children[i])
+				children[i]->cull(frame, point, child_aabb(i, aabb), pvs);
+		}
+	}
+}
+
 void OctTreeNode::show(int frame, std::vector<SceneItem *> &pvs)
 {
 	for (size_t i = 0; i < objects.size(); i++)
