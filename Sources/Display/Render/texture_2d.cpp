@@ -126,19 +126,6 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
-Texture2D::Texture2D(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
-{
-	XMLResourceNode resource = resources.get_resource(resource_id);
-	std::string type = resource.get_element().get_tag_name();
-	
-	if (type != "texture")
-		throw Exception(string_format("Resource '%1' is not of type 'texture'", resource_id));
-
-	std::string filename = resource.get_element().get_attribute("file");
-	FileSystem fs = resource.get_file_system();
-	*this = Texture2D(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
-}
-
 int Texture2D::get_width() const
 {
 	return impl->width;

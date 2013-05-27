@@ -90,5 +90,11 @@ std::vector<SceneItem *> RTree::cull(const FrustumPlanes &frustum)
 	return pvs;
 }
 
+std::vector<SceneItem *> RTree::cull(const Vec3f &point)
+{
+	std::vector<SceneItem *> pvs;
+	return pvs;
+}
+
 }
 

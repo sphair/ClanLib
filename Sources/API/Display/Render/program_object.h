@@ -94,10 +94,10 @@ public:
 	///
 	/// \param gc = Graphic Context
 	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
+	/// \param resman = Resource Manager
 	///
 	/// \return Program Object
-	static ProgramObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
+	static ProgramObject load(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resman);
 
 	/// \brief Load
 	///

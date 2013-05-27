@@ -58,6 +58,7 @@ class Font;
 class FontDescription;
 class FileSystem;
 class DisplayWindow;
+class DisplayCache;
 class XMLResourceDocument;
 
 /// \brief GUI manager.

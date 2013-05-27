@@ -36,6 +36,7 @@
 #include "Scene3D/Culling/OctTree/oct_tree.h"
 #include "scene_impl.h"
 #include "scene_object_impl.h"
+#include "scene_light_probe_impl.h"
 #include "scene_pass_impl.h"
 
 namespace clan
@@ -137,7 +138,7 @@ void Scene::set_cull_oct_tree(const AxisAlignedBoundingBox &aabb)
 
 void Scene::set_cull_oct_tree(const Vec3f &aabb_min, const Vec3f &aabb_max)
 {
-	if (!impl->objects.empty() || !impl->lights.empty() || !impl->emitters.empty())
+	if (!impl->objects.empty() || !impl->lights.empty() || !impl->emitters.empty() || !impl->light_probes.empty())
 		throw Exception("Cannot change scene culling strategy after objects have been added");
 
 	set_cull_oct_tree(AxisAlignedBoundingBox(aabb_min, aabb_max));
@@ -334,8 +335,16 @@ void Scene_Impl::visit(GraphicContext &gc, const Mat4f &world_to_eye, const Mat4
 		{
 			if (object->instance.get_renderer())
 			{
+				Vec3f light_probe_color;
+				if (object->light_probe_receiver)
+				{
+					SceneLightProbe_Impl *probe = find_nearest_probe(object->position);
+					if (probe)
+						light_probe_color = probe->color;
+				}
+
 				Scene::instances_drawn++;
-				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world());
+				bool first_instance = object->instance.get_renderer()->add_instance(frame, object->instance, object->get_object_to_world(), light_probe_color);
 				if (first_instance)
 				{
 					models.push_back(object->instance.get_renderer().get());
@@ -388,6 +397,30 @@ void Scene_Impl::visit_emitters(GraphicContext &gc, const Mat4f &world_to_eye, c
 			visitor->emitter(gc, world_to_eye, eye_to_projection, emitter);
 		}
 	}
+}
+
+SceneLightProbe_Impl *Scene_Impl::find_nearest_probe(const Vec3f &position)
+{
+	SceneLightProbe_Impl *probe = 0;
+	float sqr_distance = 0.0f;
+
+	std::vector<SceneItem *> visible_objects = cull_provider->cull(position);
+	for (size_t i = 0; i < visible_objects.size(); i++)
+	{
+		SceneLightProbe_Impl *current_probe = dynamic_cast<SceneLightProbe_Impl*>(visible_objects[i]);
+		if (current_probe)
+		{
+			Vec3f delta = current_probe->position - position;
+			float current_sqr_distance = Vec3f::dot(delta, delta);
+			if (probe == 0 || current_sqr_distance < sqr_distance)
+			{
+				probe = current_probe;
+				sqr_distance = current_sqr_distance;
+			}
+		}
+	}
+
+	return probe;
 }
 
 }

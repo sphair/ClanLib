@@ -83,18 +83,6 @@ Sprite::Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type
 	restart();
 }
 
-Sprite::Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc)
-: impl(new Sprite_Impl())
-{
-	XMLResourceNode resource = resources.get_resource(resource_id);
-	std::string type = resource.get_element().get_tag_name();
-	
-	if (type != "sprite")
-		throw Exception(string_format("Resource '%1' is not of type 'sprite'", resource_id));
-
-	impl->init(gc, resource_id, resources, import_desc );
-}
-
 Sprite::Sprite(GraphicContext &gc, const SpriteDescription &description)
 : impl(new Sprite_Impl())
 {

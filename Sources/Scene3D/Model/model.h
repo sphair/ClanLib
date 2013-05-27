@@ -49,7 +49,7 @@ public:
 	const std::vector<ModelDataLight> &get_lights();
 	const std::shared_ptr<ModelData> &get_model_data() const { return model_data; }
 
-	bool add_instance(int frame, const ModelInstance &instance, const Mat4f &object_to_world);
+	bool add_instance(int frame, const ModelInstance &instance, const Mat4f &object_to_world, const Vec3f &light_probe_color);
 
 	int get_instance_vectors_count() const;
 	int get_vectors_per_instance() const;
@@ -58,7 +58,7 @@ public:
 	void visit(GraphicContext &gc, InstancesBuffer &instances_buffer, ModelMeshVisitor *visitor);
 
 	static const int vectors_per_bone = 3;
-	static const int instance_base_vectors = 15;
+	static const int instance_base_vectors = 16;
 	static const int vectors_per_material = 14;
 
 private:
@@ -71,6 +71,7 @@ private:
 	int frame;
 	std::vector<const ModelInstance *> instances;
 	std::vector<Mat4f> instances_object_to_world;
+	std::vector<Vec3f> instances_light_probe_color;
 
 	PixelBuffer instance_bones_transfer;
 	Texture2D instance_bones;

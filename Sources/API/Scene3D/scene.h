@@ -105,6 +105,7 @@ private:
 	friend class SceneObject;
 	friend class SceneCamera;
 	friend class SceneModel;
+	friend class SceneLightProbe;
 	friend class ScenePass;
 };
 

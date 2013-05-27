@@ -221,8 +221,8 @@ SceneLight_Impl::~SceneLight_Impl()
 AxisAlignedBoundingBox SceneLight_Impl::get_aabb()
 {
 	AxisAlignedBoundingBox aabb;
-	aabb.aabb_min = position - attenuation_end * 1.41421356f;
-	aabb.aabb_max = position + attenuation_end * 1.41421356f;
+	aabb.aabb_min = position - attenuation_end * 1.73205081f;
+	aabb.aabb_max = position + attenuation_end * 1.73205081f;
 	return aabb;
 }
 

@@ -62,6 +62,8 @@ public:
 	Quaternionf orientation;
 	Vec3f scale;
 
+	bool light_probe_receiver;
+
 	ModelInstance instance;
 	std::vector<SceneLight> lights;
 };

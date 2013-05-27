@@ -55,6 +55,8 @@ public:
 	void set_orientation(const Quaternionf &orientation);
 	void set_scale(const Vec3f &scale);
 
+	void set_light_probe_receiver(bool enable);
+
 	// \brief Moves object relative to its current orientation
 	SceneObject &move(Vec3f offset);
 
