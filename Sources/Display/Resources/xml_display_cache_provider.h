@@ -51,6 +51,8 @@ private:
 	Resource<Texture> load_texture(GraphicContext &gc, const std::string &id);
 	Resource<Font> load_font(Canvas &canvas, const FontDescription &desc);
 
+	Resource<Font> load_sprite_font(Canvas &canvas, const std::string &id);
+
 	XMLResourceDocument doc;
 
 	std::map<std::string, Resource<Sprite> > sprites;

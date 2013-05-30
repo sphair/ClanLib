@@ -170,11 +170,4 @@ void SharedGCData::remove_disposable(DisposableObject *disposable)
 	}
 }
 
-FontManager SharedGCData::get_font_manager()
-{
-	if (!SharedGCData_Impl::cl_sharedgc)
-		throw Exception("Attempted to use an invalid SharedGCData");
-	return SharedGCData_Impl::cl_sharedgc->impl->font_manager;
-}
-
 }

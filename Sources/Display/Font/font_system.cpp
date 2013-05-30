@@ -64,16 +64,7 @@ Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, const
 
 Font_System::Font_System(Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_System())
 {
-	Font cached_font = canvas.get_font_manager().get_font(desc);
-	if (!cached_font.is_null())
-	{
-		*this = Font_System(cached_font);
-		return;
-	}
-
 	load_font(canvas, desc);
-
-	canvas.get_font_manager().set_font(*this, desc);
 }
 
 Font_System::Font_System( const Font &font) : Font(font)
