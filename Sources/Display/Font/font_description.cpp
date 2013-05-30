@@ -29,7 +29,6 @@
 	
 #include "Display/precomp.h"
 #include "API/Display/Font/font_description.h"
-#include "API/Display/Font/font_manager.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "font_description_impl.h"

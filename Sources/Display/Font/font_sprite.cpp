@@ -35,7 +35,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/sprite.h"
-#include "API/Display/Font/font_manager.h"
 
 namespace clan
 {

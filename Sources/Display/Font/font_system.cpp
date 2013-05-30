@@ -33,7 +33,6 @@
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_system.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Font/font_manager.h"
 
 namespace clan
 {
