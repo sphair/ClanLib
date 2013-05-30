@@ -137,13 +137,6 @@ void Sprite_Impl::draw(Canvas &canvas, float x, float y)
 	params2.destY = y;
 	params2.scale_x = scale_x;
 	params2.scale_y = scale_y;
-	params2.translate_origin = translation_origin;
-	params2.translate_x = translation_hotspot.x + frame.offset.x;
-	params2.translate_y = translation_hotspot.y + frame.offset.y;
-	params2.rotate_angle = angle - base_angle;
-	params2.rotate_origin = rotation_origin;
-	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
-	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
 	draw(canvas, params2);
 }
 
@@ -160,13 +153,6 @@ void Sprite_Impl::draw(Canvas &canvas, const Rectf &src, const Rectf &dest)
 	params2.destY = dest.top;
 	params2.scale_x = dest.get_width() / src.get_width();
 	params2.scale_y = dest.get_height() / src.get_height();
-	params2.translate_origin = translation_origin;
-	params2.translate_x = translation_hotspot.x + frame.offset.x;
-	params2.translate_y = translation_hotspot.y + frame.offset.y;
-	params2.rotate_angle = angle - base_angle;
-	params2.rotate_origin = rotation_origin;
-	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
-	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
 	draw(canvas, params2);
 }
 
@@ -183,43 +169,39 @@ void Sprite_Impl::draw(Canvas &canvas, const Rectf &dest)
 	params2.destY = dest.top;
 	params2.scale_x = dest.get_width()/float(frame.position.get_width());
 	params2.scale_y = dest.get_height()/float(frame.position.get_height());
-	params2.translate_origin = translation_origin;
-	params2.translate_x = translation_hotspot.x + frame.offset.x;
-	params2.translate_y = translation_hotspot.y + frame.offset.y;
-	params2.rotate_angle = angle - base_angle;
-	params2.rotate_origin = rotation_origin;
-	params2.rotate_x = rotation_hotspot.x + frame.offset.x;
-	params2.rotate_y = rotation_hotspot.y + frame.offset.y;
 	draw(canvas, params2);
 }
 
 void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 {
+	SpriteFrame &frame = frames[current_frame];
+
 	// Find size of surface:
 	float size_width  = (float) params2.srcWidth;
 	float size_height = (float) params2.srcHeight;
 
+
 	// Calculate translation hotspot
-	Pointf translation_hotspot = calc_hotspot(
-		params2.translate_origin,
-		(float) params2.translate_x,
-		(float) params2.translate_y,
+	Pointf target_translation_hotspot = calc_hotspot(
+		translation_origin,
+		(float) (translation_hotspot.x + frame.offset.x),
+		(float) (translation_hotspot.y + frame.offset.y),
 		size_width,
 		size_height);
 
 	// Calculate rotation hotspot:
 	Pointf target_rotation_hotspot = calc_hotspot(
-		params2.rotate_origin,
-		(float) params2.rotate_x,
-		(float) params2.rotate_y,
+		rotation_origin,
+		(float) (rotation_hotspot.x + frame.offset.x),
+		(float) (rotation_hotspot.y + frame.offset.y),
 		size_width,
 		size_height);
 
 	// Find top left point of destination rectangle and map rotation hotspot to screen coordinates:
 	float destWidth = params2.srcWidth * params2.scale_x;
 	float destHeight = params2.srcHeight * params2.scale_y;
-	float pixDestX = params2.destX-translation_hotspot.x * params2.scale_x;
-	float pixDestY = params2.destY-translation_hotspot.y * params2.scale_y;
+	float pixDestX = params2.destX-target_translation_hotspot.x * params2.scale_x;
+	float pixDestY = params2.destY-target_translation_hotspot.y * params2.scale_y;
 	target_rotation_hotspot.x = float(pixDestX + target_rotation_hotspot.x * params2.scale_x);
 	target_rotation_hotspot.y = float(pixDestY + target_rotation_hotspot.y * params2.scale_y);
 
@@ -229,9 +211,10 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 	static float vect_rotate_y[2] = { 0.0f, 1.0f };
 	static Angle last_angle(0, angle_radians);
 
-	if (last_angle != params2.rotate_angle)
+	Angle target_rotate_angle = angle - base_angle;
+	if (last_angle != target_rotate_angle)
 	{
-		float angle_degrees = params2.rotate_angle.to_degrees();
+		float angle_degrees = target_rotate_angle.to_degrees();
 		if (angle_degrees == 0.0f)
 		{
 			vect_rotate_x[0] = 1.0;
@@ -262,7 +245,7 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 		}
 		else
 		{
-			float angle_rad = params2.rotate_angle.to_radians();
+			float angle_rad = target_rotate_angle.to_radians();
 			vect_rotate_x[0] = cos(angle_rad);
 			vect_rotate_x[1] = sin(angle_rad);
 			vect_rotate_y[0] = cos(PI/2+angle_rad);
@@ -289,7 +272,7 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 	texture_position[3].y = (((float) params2.srcY+params2.srcHeight) ) / texture_height;
 
 	// Calculate final destination rectangle points for surface rectangle:
-	if (params2.rotate_angle.to_radians() == 0.0f)
+	if (target_rotate_angle.to_radians() == 0.0f)
 	{
 		dest_position[0].x = pixDestX;
 		dest_position[1].x = pixDestX+destWidth;
