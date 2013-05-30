@@ -28,11 +28,13 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Font/font_sprite.h"
+#include "API/Display/Font/font_metrics.h"
 #include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "font_provider_sprite.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Display/2D/sprite.h"
 #include "API/Display/Font/font_manager.h"
 
 namespace clan
@@ -45,21 +47,9 @@ Font_Sprite::Font_Sprite()
 {
 }
 
-Font_Sprite::Font_Sprite( Canvas &canvas, const std::string &resource_id, const XMLResourceDocument &resources ) : Font(new FontProvider_Sprite())
+Font_Sprite::Font_Sprite( Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics) : Font(new FontProvider_Sprite())
 {
-	FontDescription desc;
-	desc.set_typeface_name(resource_id);
-
-	Font cached_font = canvas.get_font_manager().get_font(desc);
-	if (!cached_font.is_null())
-	{
-		*this = Font_Sprite(cached_font);
-		return;
-	}
-
-	get_provider()->load_font(canvas, resource_id, resources);
-
-	canvas.get_font_manager().set_font(*this, desc);
+	get_provider()->load_font(sprite, letters, spacelen, monospace, metrics);
 }
 
 Font_Sprite::Font_Sprite( const Font &font) : Font(font)

@@ -76,13 +76,6 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 Font::Font( Canvas &canvas, const FontDescription &desc)
 : impl(new Font_Impl)
 {
-	Font cached_font = canvas.get_font_manager().get_font(desc);
-	if (!cached_font.is_null())
-	{
-		*this = cached_font;
-		return;
-	}
-
 	Font_System new_font(canvas, desc);
 	*this = new_font;
 }

@@ -37,6 +37,8 @@
 namespace clan
 {
 
+class Sprite;
+class FontMetrics;
 class XMLResourceDocument;
 class FontProvider;
 class Font_Sprite_Impl;
@@ -54,10 +56,12 @@ public:
 
 	/// \brief Constructs a Font Sprite
 	///
-	/// \param canvas = Canvas
-	/// \param resource_id = String Ref
-	/// \param resources = Resource Manager
-	Font_Sprite( Canvas &canvas, const std::string &resource_id, const XMLResourceDocument &resources );
+	/// \param sprite = Sprite with glyphs
+	/// \param letters = Letter to glyph mapping
+	/// \param spacelen = Width of space character
+	/// \param monospace = Force monospaced font
+	/// \param metrics = Font metrics for the sprite font
+	Font_Sprite( Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics);
 
 	/// \brief Constructs a Font Sprite from a Font, ensuring the correct type
 	explicit Font_Sprite( const Font &font);

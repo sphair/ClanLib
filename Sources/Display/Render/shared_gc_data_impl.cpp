@@ -84,12 +84,9 @@ GraphicContextProvider *SharedGCData_Impl::get_provider()
 
 void SharedGCData_Impl::dispose_objects()
 {
-	font_manager.flush_cache();
-
 	std::vector<DisposableObject*>::iterator it;
 	for (it = disposable_objects.begin(); it != disposable_objects.end(); ++it)
 		(*it)->dispose();
-
 }
 
 void SharedGCData_Impl::add_disposable(DisposableObject *disposable)

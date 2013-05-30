@@ -47,7 +47,6 @@ class GraphicContext;
 class DisposableObject;
 class SharedGCData_Impl;
 class MutexSection;
-class FontManager;
 
 /// \brief Shared Graphic Context Data
 class SharedGCData
@@ -121,9 +120,6 @@ public:
 
 	/// \brief Unload all textures
 	static void unload_all_textures();
-
-	/// \brief Get the shared font manager
-	static FontManager get_font_manager();
 
 private:
 	SharedGCData();

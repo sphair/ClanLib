@@ -60,8 +60,6 @@ public:
 	static Mutex cl_sharedgc_mutex;
 	static SharedGCData *cl_sharedgc;
 
-	FontManager font_manager;
-
 private:
 
 	struct SharedTextureMap

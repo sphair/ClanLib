@@ -53,87 +53,10 @@ FontProvider_Sprite::FontProvider_Sprite()
 {
 }
 
-void FontProvider_Sprite::load_font(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources )
+void FontProvider_Sprite::load_font(Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics)
 {
-
-	XMLResourceNode resource = resources.get_resource(resource_id);
-	std::string type = resource.get_element().get_tag_name();
-	
-	if (type != "font")
-		throw Exception(string_format("Resource '%1' is not of type 'font'", resource_id));
-
-	DomElement bitmap_element = resource.get_element().named_item("bitmap").to_element();
-
-	if (!bitmap_element.is_null())
-	{
-		if (!bitmap_element.has_attribute("glyphs")) 
-			throw Exception(string_format("Font resource %1 has no 'glyphs' attribute.", resource.get_name()));
-		
-		if (!bitmap_element.has_attribute("letters")) 
-			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
-
-		throw Exception("FIXME!");
-//		spr_glyphs = Sprite(gc, bitmap_element.get_attribute("glyphs"), resources);
-
-		const std::string &letters = bitmap_element.get_attribute("letters");
-
-		int spacelen = StringHelp::text_to_int(bitmap_element.get_attribute("spacelen", "-1"));
-		bool monospace = StringHelp::text_to_bool(bitmap_element.get_attribute("monospace", "false"));
-
-		setup_glyphs(gc, letters, spacelen, monospace);
-
-		// Modify the default font metrics, if specified
-
-		if (bitmap_element.has_attribute("height")) 
-			font_metrics.set_height(StringHelp::text_to_float(bitmap_element.get_attribute("height", "0")));
-
-		if (bitmap_element.has_attribute("ascent")) 
-			font_metrics.set_ascent(StringHelp::text_to_float(bitmap_element.get_attribute("ascent", "0")));
-
-		if (bitmap_element.has_attribute("descent")) 
-			font_metrics.set_descent(StringHelp::text_to_float(bitmap_element.get_attribute("descent", "0")));
-
-		if (bitmap_element.has_attribute("internal_leading")) 
-			font_metrics.set_internal_leading(StringHelp::text_to_float(bitmap_element.get_attribute("internal_leading", "0")));
-
-		if (bitmap_element.has_attribute("external_leading")) 
-			font_metrics.set_external_leading(StringHelp::text_to_float(bitmap_element.get_attribute("external_leading", "0")));
-
-		if (bitmap_element.has_attribute("average_character_width")) 
-			font_metrics.set_average_character_width(StringHelp::text_to_float(bitmap_element.get_attribute("average_character_width", "0")));
-
-		if (bitmap_element.has_attribute("max_character_width")) 
-			font_metrics.set_max_character_width(StringHelp::text_to_float(bitmap_element.get_attribute("max_character_width", "0")));
-
-		if (bitmap_element.has_attribute("weight")) 
-			font_metrics.set_weight(StringHelp::text_to_float(bitmap_element.get_attribute("weight", "0")));
-
-		if (bitmap_element.has_attribute("overhang")) 
-			font_metrics.set_overhang(StringHelp::text_to_float(bitmap_element.get_attribute("overhang", "0")));
-
-		if (bitmap_element.has_attribute("digitized_aspect_x")) 
-			font_metrics.set_digitized_aspect_x(StringHelp::text_to_float(bitmap_element.get_attribute("digitized_aspect_x", "0")));
-
-		if (bitmap_element.has_attribute("digitized_aspect_y")) 
-			font_metrics.set_digitized_aspect_y(StringHelp::text_to_float(bitmap_element.get_attribute("digitized_aspect_y", "0")));
-
-		if (bitmap_element.has_attribute("italic")) 
-			font_metrics.set_italic(StringHelp::text_to_bool(bitmap_element.get_attribute("italic", "0")));
-
-		if (bitmap_element.has_attribute("underlined")) 
-			font_metrics.set_underlined(StringHelp::text_to_bool(bitmap_element.get_attribute("underlined", "0")));
-
-		if (bitmap_element.has_attribute("struck_out")) 
-			font_metrics.set_struck_out(StringHelp::text_to_bool(bitmap_element.get_attribute("struck_out", "0")));
-
-		if (bitmap_element.has_attribute("fixed_pitch")) 
-			font_metrics.set_fixed_pitch(StringHelp::text_to_bool(bitmap_element.get_attribute("fixed_pitch", "0")));
-
-	}
-	else
-	{
-		throw Exception(string_format("Font resource %1 did not have a <bitmap> child element!", resource.get_name()));
-	}
+	spr_glyphs = sprite;
+	setup_glyphs(letters, spacelen, monospace);
 }
 
 FontProvider_Sprite::~FontProvider_Sprite()
@@ -311,7 +234,7 @@ void FontProvider_Sprite::set_font_metrics(const FontMetrics &metrics)
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Sprite Implementation:
 
-void FontProvider_Sprite::setup_glyphs( GraphicContext &gc, const std::string &letters, int new_spacelen, bool monospace)
+void FontProvider_Sprite::setup_glyphs(const std::string &letters, int new_spacelen, bool monospace)
 {
 	fixed_width = 0;
 	height = 0;

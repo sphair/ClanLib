@@ -57,7 +57,6 @@ class Trianglef;
 class Triangle;
 class DisplayWindow;
 class DisplayWindowDescription;
-class FontManager;
 
 /// \brief Mapping modes.
 enum MapMode
@@ -131,9 +130,6 @@ public:
 
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
-
-	/// \brief Get the font manager
-	FontManager get_font_manager() const;
 
 	/// \brief Get the display window attached to this canvas
 	///
@@ -482,10 +478,6 @@ public:
 
 	/// \brief Draw a gradient filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
-
-	/// \brief Set a new font manager
-	void set_font_manager(FontManager &font_manager);
-
 
 	/// \brief Flip back buffer to front, making changes visible on screen.
 	///

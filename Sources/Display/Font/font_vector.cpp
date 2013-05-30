@@ -68,16 +68,7 @@ Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, cons
 
 Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_Vector())
 {
-	Font cached_font = canvas.get_font_manager().get_font(desc);
-	if (!cached_font.is_null())
-	{
-		*this = Font_Vector(cached_font);
-		return;
-	}
-
 	get_provider()->load_font(desc);
-
-	canvas.get_font_manager().set_font(*this, desc);
 }
 
 Font_Vector::Font_Vector( const Font &font) : Font(font)

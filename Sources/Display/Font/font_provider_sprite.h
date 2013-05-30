@@ -90,7 +90,7 @@ public:
 /// \{
 
 public:
-	void load_font(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources);
+	void load_font(Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics);
 
 	/// \brief Print text on gc.
 	virtual void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
@@ -114,7 +114,7 @@ public:
 
 private:
 
-	void setup_glyphs( GraphicContext &gc, const std::string &letters, int spacelen, bool monospace);
+	void setup_glyphs(const std::string &letters, int spacelen, bool monospace);
 	Font_Sprite_Glyph *get_glyph(unsigned int glyph);
 
 	Sprite spr_glyphs;
