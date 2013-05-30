@@ -30,7 +30,6 @@
 #include "Display/precomp.h"
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
-#include "API/Display/2D/sprite_description.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Core/Math/cl_math.h"
 #include "API/Core/Text/string_help.h"
@@ -41,6 +40,7 @@
 #include <list>
 #include "API/Display/2D/canvas.h"
 #include "canvas_impl.h"
+#include "API/Core/IOData/path_help.h"
 
 namespace clan
 {
@@ -383,22 +383,576 @@ void Sprite_Impl::draw_calcs_step2(
 	params1.color = params2.color;
 }
 
-void Sprite_Impl::create_textures(GraphicContext &gc, const SpriteDescription &description)
+void Sprite_Impl::add_frame(const Texture2D &texture)
 {
-	// Fetch frames
-	const std::vector<SpriteDescriptionFrame> &description_frames = description.get_frames();
-	std::vector<SpriteDescriptionFrame>::const_iterator it_frames;
+	SpriteFrame frame;
+	frame.position = texture.get_size();
+	frame.texture = texture;
+	frame.delay_ms = 60;
+	frame.offset = Point(0, 0);
+	frames.push_back(frame);
+}
 
-	for (it_frames = description_frames.begin(); it_frames != description_frames.end(); ++it_frames)
+void Sprite_Impl::add_frame(const Texture2D &texture, const Rect &rect)
+{
+	SpriteFrame frame;
+	frame.position = rect;
+	frame.texture = texture;
+	frame.delay_ms = 60;
+	frame.offset = Point(0, 0);
+	frames.push_back(frame);
+}
+
+void Sprite_Impl::add_gridclipped_frames(GraphicContext &gc, 
+	const Texture2D &texture, 
+	int xpos, int ypos, 
+	int width, int height, 
+	int xarray, int yarray, 
+	int array_skipframes, 
+	int xspace, int yspace)
+{
+	int ystart = ypos;
+	for(int y = 0; y < yarray; y++)
 	{
-		SpriteDescriptionFrame description_frame = (*it_frames);
+		int xstart = xpos;
+		for(int x = 0; x < xarray; x++)
+		{
+			if (y == yarray -1 && x >= xarray - array_skipframes)
+				break;
 
-		SpriteFrame frame;
-		frame.position = description_frame.rect;
-		frame.texture = description_frame.texture;
-		frame.delay_ms = 60;
-		frame.offset = Point(0, 0);
-		frames.push_back(frame);
+			if(xstart + width > texture.get_width() || ystart + height > texture.get_height())
+				throw Exception("add_gridclipped_frames: Outside texture bounds");
+
+			add_frame(texture, Rect(xstart, ystart, xstart + width, ystart + height));
+			xstart += width + xspace;
+		}
+		ystart += height + yspace;
+	}
+}
+
+void Sprite_Impl::add_alphaclipped_frames(GraphicContext &gc, 
+	const Texture2D &texture, 
+	int xpos, int ypos, 
+	float trans_limit)
+{
+	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+
+	int begin = 0;
+	bool prev_trans = true;
+
+	int alpha_width = alpha_buffer.get_width();
+	int alpha_height = alpha_buffer.get_height();
+	bool found_opaque = false;
+	bool found_trans = false;
+
+	std::vector<int> opaque_row_vector;
+	opaque_row_vector.resize(alpha_width);
+
+	int *opaque_row = &(opaque_row_vector[0]);
+	memset(opaque_row, 0, alpha_width*sizeof(int));
+
+	int cut_top = ypos;
+	int cut_bottom = alpha_height;
+		
+	char *data = (char *) alpha_buffer.get_data();
+		
+	for (int y=ypos; y < alpha_height; y++)
+	{
+		bool opaque_line = false;
+		Vec4ub *line = (Vec4ub *) (data + alpha_buffer.get_pitch()*y);
+		for (int x=0; x < alpha_width; x++)
+		{
+			if (line[x].a > trans_limit*255)
+			{
+				opaque_row[x] = 1;
+				opaque_line = true;
+				found_opaque = true;
+			}
+		}
+			
+		if (opaque_line == false) // cut something of top or bottom
+		{
+			if (found_opaque)
+			{
+				cut_bottom--;
+				found_trans = true;
+			}
+			else
+				cut_top ++;
+		}
+		else if (found_trans)
+		{
+			found_trans = false;
+			cut_bottom = alpha_height;
+		}
+	}
+	
+	if (cut_top >= cut_bottom)
+		throw Exception("add_alphaclipped_frames: Image contained only alpha!");
+
+	for(int x=xpos; x < alpha_width; x++)
+	{
+		if(opaque_row[x] && prev_trans)
+		{
+			begin = x;
+			prev_trans = false;
+		}
+		else if (!opaque_row[x] && !prev_trans)
+		{
+			add_frame(texture, Rect(begin, cut_top, x+1, cut_bottom));
+			prev_trans = true;
+		}
+	}
+		
+	if (!prev_trans)
+	{
+		add_frame(texture, Rect(begin, cut_top, alpha_width, cut_bottom));
+	}
+}
+
+void Sprite_Impl::add_alphaclipped_frames_free(GraphicContext &gc, 
+	const Texture2D &texture, 
+	int xpos, int ypos, 
+	float trans_limit)
+{
+	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+
+	int width = alpha_buffer.get_width();
+	int height = alpha_buffer.get_height();
+
+	std::vector<int> explored_vector;
+	explored_vector.resize(width * height);
+	int *explored = &(explored_vector[0]);
+	memset(explored, 0, width * height * sizeof(int));
+
+	Vec4ub *data = alpha_buffer.get_data<Vec4ub>();
+	int x1, y1, x2, y2;
+	bool more;
+
+	for (int y=ypos; y < height; y++)
+	{
+		for (int x=xpos; x < width; x++)
+		{
+			if (explored[y*width+x] == 1) continue;
+			explored[y*width+x] = 1;
+			if (data[y*width+x].a <= trans_limit*255) 
+				continue;
+
+			// Initialize the bounding box to the current pixel
+			x1 = x2 = x;
+			y1 = y2 = y;
+			more = true;
+			while (more)
+			{
+				// Assume that there are NO opaque pixels around the current bounding box
+				more = false;
+
+				// Scan under the current bounding box and see if there any non-transparent pixels
+				for (int i = x1; i <= x2; i++)
+				{
+					if (y2 + 1 < height)
+					{
+						explored[(y2+1)*width+i] = 1;
+						if (data[(y2+1)*width+i].a > trans_limit*255)
+						{
+							more = true; 
+							y2 = y2 + 1;
+						}
+					}
+				}
+
+				// Now scan the left and right sides of the current bounding box
+				for (int j = y1; j <= y2; j++)
+				{
+					// Scan the right side
+					if (x2 + 1 < width)
+					{
+						explored[j*width + x2+1] = 1;
+						if (data[j*width + x2+1].a > trans_limit*255)
+						{
+							more = true; 
+							x2 = x2 + 1;
+						}
+					}
+					// Scan the left side
+					if (x1 - 1 >= 0)
+					{
+						explored[j*width + x1-1] = 1;
+						if (data[j*width + x1-1].a > trans_limit*255)
+						{
+							more = true; 
+							x1 = x1 - 1;
+						}
+					}
+				}
+			} 
+
+			// Mark all pixels in the bounding box as being explored
+			for (int i = x1; i <= x2; i++)
+			{
+				for (int j = y1; j <= y2; j++)
+				{
+					explored[j*width+i] = 1;
+				}
+			}
+
+			add_frame(texture,  Rect(x1, y1, x2, y2));
+		}
+	}
+}
+
+std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	std::vector<CollisionOutline> outlines;
+	// Fetch frames
+
+	outlines.reserve(frames.size());
+
+	Texture2D last_texture;
+	PixelBuffer texture_pixelbuffer;
+
+	for (unsigned int cnt = 0; cnt < frames.size(); cnt++)
+	{
+		const SpriteFrame &description_frame = frames[cnt];
+
+		if (last_texture != description_frame.texture)
+		{
+				last_texture = description_frame.texture;
+				texture_pixelbuffer = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+		}
+
+		PixelBuffer target(description_frame.position.get_width(), description_frame.position.get_height(), tf_rgba8);
+		target.set_subimage(texture_pixelbuffer, Point(0, 0), description_frame.position);
+
+		CollisionOutline outline(target, alpha_limit, accuracy);
+		outlines.push_back(outline);
+
+	}
+	return outlines;
+
+}
+
+CollisionOutline Sprite_Impl::create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	std::vector<CollisionOutline> outlines = create_collision_outlines(gc, alpha_limit, accuracy);
+	if (outlines.empty())
+		return CollisionOutline();
+	return outlines[0];
+}
+
+void Sprite_Impl::init(GraphicContext &gc, XMLResourceNode &resource, const ImageImportDescription &import_desc)
+{
+	// Load base angle
+	float work_angle = StringHelp::text_to_float(resource.get_element().get_attribute("base_angle", "0"));
+	angle = Angle(work_angle, angle_degrees);
+
+	// Load id
+	id = StringHelp::text_to_int(resource.get_element().get_attribute("id", "0"));
+
+	// Load play options	
+	DomNode cur_node = resource.get_element().get_first_child();
+	while (!cur_node.is_null())
+	{
+		if (!cur_node.is_element())
+			continue;
+
+		DomElement cur_element = cur_node.to_element();
+
+		std::string tag_name = cur_element.get_tag_name();
+
+		if (tag_name == "image" || tag_name == "image-file")
+		{
+			if (cur_element.has_attribute("fileseq"))
+			{
+				int start_index = 0;
+				if (cur_element.has_attribute("start_index"))
+					start_index = StringHelp::text_to_int(cur_element.get_attribute("start_index"));
+
+				int skip_index = 1;
+				if (cur_element.has_attribute("skip_index"))
+					skip_index = StringHelp::text_to_int(cur_element.get_attribute("skip_index"));
+
+				int leading_zeroes = 0;
+				if (cur_element.has_attribute("leading_zeroes"))
+					leading_zeroes =  StringHelp::text_to_int(cur_element.get_attribute("leading_zeroes"));
+
+				std::string prefix = cur_element.get_attribute("fileseq");
+				std::string suffix = "." + PathHelp::get_extension(prefix);
+				prefix.erase(prefix.length() - suffix.length(), prefix.length()); //remove the extension
+
+				FileSystem fs = resource.get_file_system();
+
+				bool found_initial = false;
+				for (int i = start_index;; i = skip_index)
+				{
+					std::string file_name = prefix;
+
+					std::string frame_text = StringHelp::int_to_text(i);
+					for (int zeroes_to_add = (leading_zeroes + 1) - frame_text.length(); zeroes_to_add > 0; zeroes_to_add--)
+						file_name = "0";
+
+					file_name = frame_text + suffix;
+
+					try
+					{
+						Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), file_name), fs, import_desc);
+						add_frame(texture);
+						found_initial = true;
+					}
+					catch (const Exception&)
+					{
+						if (!found_initial)
+						{
+							//must have been an error, pass it down
+							throw;
+						}
+						//can't find anymore pics
+						break;
+					}
+				}
+			}
+			else
+			{
+				std::string image_name = cur_element.get_attribute("file");
+				FileSystem fs = resource.get_file_system();
+				Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), fs, import_desc);
+
+				DomNode cur_child(cur_element.get_first_child());
+				if(cur_child.is_null()) 
+				{
+					add_frame(texture);
+				}
+				else 
+				{
+					do {
+						DomElement cur_child_elemnt = cur_child.to_element();
+						if(cur_child.get_node_name() == "grid")
+						{
+							int xpos = 0;
+							int ypos = 0;
+							int xarray = 1;
+							int yarray = 1;
+							int array_skipframes = 0;
+							int xspacing = 0;
+							int yspacing = 0;
+							int width = 0;
+							int height = 0;
+
+							std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
+							if (image_size.size() > 0)
+								width = StringHelp::text_to_int(image_size[0]);
+							if (image_size.size() > 1)
+								height = StringHelp::text_to_int(image_size[1]);
+
+							if (cur_child_elemnt.has_attribute("pos"))
+							{
+								std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+								if (image_pos.size() > 0)
+									xpos = StringHelp::text_to_int(image_pos[0]);
+								if (image_pos.size() > 1)
+									ypos = StringHelp::text_to_int(image_pos[1]);
+							}
+
+							if (cur_child_elemnt.has_attribute("array"))
+							{
+								std::vector<std::string> image_array = StringHelp::split_text(cur_child_elemnt.get_attribute("array"), ",");
+								if (image_array.size() == 2)
+								{
+									xarray = StringHelp::text_to_int(image_array[0]);
+									yarray = StringHelp::text_to_int(image_array[1]);
+								}
+								else
+								{
+									throw Exception("Resource '" + resource.get_name() + "' has incorrect array attribute, must be \"X,Y\"!"); 
+								}
+							}
+
+							if (cur_child_elemnt.has_attribute("array_skipframes"))
+							{
+								array_skipframes = StringHelp::text_to_int(cur_child_elemnt.get_attribute("array_skipframes"));
+							}
+
+							if (cur_child_elemnt.has_attribute("spacing"))
+							{
+								std::vector<std::string> image_spacing = StringHelp::split_text(cur_child_elemnt.get_attribute("spacing"), ",");
+								xspacing = StringHelp::text_to_int(image_spacing[0]);
+								yspacing = StringHelp::text_to_int(image_spacing[1]);
+							}
+
+							add_gridclipped_frames(gc, 
+								texture,
+								xpos, ypos,
+								width, height,
+								xarray, yarray,
+								array_skipframes,
+								xspacing, yspacing);
+						}
+						else if( cur_child.get_node_name() == "palette")
+						{
+							throw Exception("Resource '" + resource.get_name() + "' uses palette cutter - which is not supported anymore"); 
+						}
+						else if( cur_child.get_node_name() == "alpha")
+						{
+							int xpos = 0;
+							int ypos = 0;
+							float trans_limit = 0.05f;
+
+							if (cur_child_elemnt.has_attribute("pos"))
+							{
+								std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+								xpos = StringHelp::text_to_int(image_pos[0]);
+								ypos = StringHelp::text_to_int(image_pos[1]);
+							}
+
+							if (cur_child_elemnt.has_attribute("trans_limit"))
+							{
+								trans_limit = StringHelp::text_to_float(cur_child_elemnt.get_attribute("trans_limit"));
+							}
+
+							if (cur_child_elemnt.has_attribute("free"))
+							{
+								add_alphaclipped_frames_free(gc, 
+									texture,
+									xpos, ypos,
+									trans_limit);
+							}
+							else
+							{
+								add_alphaclipped_frames(gc, 
+									texture,
+									xpos, ypos,
+									trans_limit);
+							}
+						}
+
+						cur_child = cur_child.get_next_sibling();
+					} while(!cur_child.is_null());
+				}
+			}
+		}
+
+		// <color red="float" green="float" blue="float" alpha="float" />
+		else if (tag_name == "color")
+		{
+			color.r = (float)StringHelp::text_to_float(cur_element.get_attribute("red", "1.0"));
+			color.g = (float)StringHelp::text_to_float(cur_element.get_attribute("green", "1.0"));
+			color.b = (float)StringHelp::text_to_float(cur_element.get_attribute("blue", "1.0"));
+			color.a = (float)StringHelp::text_to_float(cur_element.get_attribute("alpha", "1.0"));
+		}
+		// <animation speed="integer" loop="[yes,no]" pingpong="[yes,no]" direction="[backward,forward]" on_finish="[blank,last_frame,first_frame]"/>
+		else if (tag_name == "animation")
+		{
+			int delay_ms = StringHelp::text_to_int(cur_element.get_attribute("speed", "60"));
+
+			int frame_count = frames.size();
+			for(int i=0; i<frame_count; ++i)
+				get_frame(i)->delay_ms = delay_ms;
+
+			play_loop = ((cur_element.get_attribute("loop", "yes")) == "yes");
+			play_pingpong = ((cur_element.get_attribute("pingpong", "no")) == "yes");
+			play_backward = ((cur_element.get_attribute("direction", "forward")) == "backward");
+
+			std::string on_finish = cur_element.get_attribute("on_finish", "blank");
+			if (on_finish == "first_frame")
+				show_on_finish = Sprite::show_first_frame;
+			else if(on_finish == "last_frame")
+				show_on_finish = Sprite::show_last_frame;
+			else
+				show_on_finish = Sprite::show_blank;
+		}
+		// <scale x="float" y="float />
+		else if (tag_name == "scale")
+		{
+			scale_x = StringHelp::text_to_float(cur_element.get_attribute("x", "1.0"));
+			scale_y = StringHelp::text_to_float(cur_element.get_attribute("y", "1.0"));
+		}
+		// <translation origin="string" x="integer" y="integer" />
+		else if (tag_name == "translation")
+		{
+			std::string hotspot = cur_element.get_attribute("origin", "top_left");
+			Origin origin;
+
+			if(hotspot == "center")
+				origin = origin_center;
+			else if(hotspot == "top_center")
+				origin = origin_top_center;
+			else if(hotspot == "top_right")
+				origin = origin_top_right;
+			else if(hotspot == "center_left")
+				origin = origin_center_left;
+			else if(hotspot == "center_right")
+				origin = origin_center_right;
+			else if(hotspot == "bottom_left")
+				origin = origin_bottom_left;
+			else if(hotspot == "bottom_center")
+				origin = origin_bottom_center;
+			else if(hotspot == "bottom_right")
+				origin = origin_bottom_right;
+			else
+				origin = origin_top_left;
+
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+			translation_origin = origin;
+			translation_hotspot.x = xoffset;
+			translation_hotspot.y = yoffset;
+		}
+		// <rotation origin="string" x="integer" y="integer" />
+		else if (tag_name == "rotation")
+		{
+			std::string hotspot = cur_element.get_attribute("origin", "center");
+			Origin origin;
+
+			if(hotspot == "top_left")
+				origin = origin_top_left;
+			else if(hotspot == "top_center")
+				origin = origin_top_center;
+			else if(hotspot == "top_right")
+				origin = origin_top_right;
+			else if(hotspot == "center_left")
+				origin = origin_center_left;
+			else if(hotspot == "center_right")
+				origin = origin_center_right;
+			else if(hotspot == "bottom_left")
+				origin = origin_bottom_left;
+			else if(hotspot == "bottom_center")
+				origin = origin_bottom_center;
+			else if(hotspot == "bottom_right")
+				origin = origin_bottom_right;
+			else
+				origin = origin_center;
+
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+
+			rotation_origin = origin;
+			rotation_hotspot.x = xoffset;
+			rotation_hotspot.y = yoffset;
+		}
+		// <frame nr="integer" speed="integer" x="integer" y="integer" />
+		else if (tag_name == "frame")
+		{
+			int nr = StringHelp::text_to_int(cur_element.get_attribute("nr", "0"));
+
+			int yoffset = StringHelp::text_to_int(cur_element.get_attribute("y", "0"));
+			int xoffset = StringHelp::text_to_int(cur_element.get_attribute("x", "0"));
+
+			SpriteFrame *sptr = get_frame(nr);
+			if (sptr == NULL)
+			{
+				throw Exception("Invalid sprite frame index specified");
+			}
+
+			if (cur_element.has_attribute("speed")) 
+			{
+				sptr->delay_ms = StringHelp::text_to_int(cur_element.get_attribute("speed", "60"));
+			}
+
+			sptr->offset = Point(xoffset, yoffset);
+		}
+
+		cur_node = cur_node.get_next_sibling();
 	}
 }
 
