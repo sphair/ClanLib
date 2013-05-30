@@ -349,7 +349,6 @@ clanDisplay_includes = \
 	Display/2D/gradient.h \
 	Display/2D/span_layout.h \
 	Display/2D/color.h \
-	Display/2D/image_description.h \
 	Display/2D/canvas.h \
 	Display/2D/path2d.h \
 	Display/2D/sprite.h \

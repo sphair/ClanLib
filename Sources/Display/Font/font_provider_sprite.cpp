@@ -42,7 +42,6 @@
 #include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/shape2d.h"
-#include "API/Display/2D/sprite_description.h"
 
 namespace clan
 {
