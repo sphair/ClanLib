@@ -36,7 +36,6 @@
 #include "Display/2D/render_batch_line_texture.h"
 #include "Display/2D/render_batch_point.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Font/font_manager.h"
 #include "API/Display/Window/display_window.h"
 
 namespace clan
