@@ -43,16 +43,16 @@ RenderBatchTriangle::RenderBatchTriangle(RenderBatchBuffer *batch_buffer)
 {
 }
 
-void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Surface_DrawParams1 *params, const Texture2D &texture)
+void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color)
 {
 	int texindex = set_batcher_active(canvas, texture);
 	lock_transfer_buffer(canvas);
-	to_sprite_vertex(params, 0, vertices[position++], texindex);
-	to_sprite_vertex(params, 1, vertices[position++], texindex);
-	to_sprite_vertex(params, 2, vertices[position++], texindex);
-	to_sprite_vertex(params, 1, vertices[position++], texindex);
-	to_sprite_vertex(params, 3, vertices[position++], texindex);
-	to_sprite_vertex(params, 2, vertices[position++], texindex);
+	to_sprite_vertex(texture_position[0], dest_position[0], vertices[position++], texindex, color);
+	to_sprite_vertex(texture_position[1], dest_position[1], vertices[position++], texindex, color);
+	to_sprite_vertex(texture_position[2], dest_position[2], vertices[position++], texindex, color);
+	to_sprite_vertex(texture_position[1], dest_position[1], vertices[position++], texindex, color);
+	to_sprite_vertex(texture_position[3], dest_position[3], vertices[position++], texindex, color);
+	to_sprite_vertex(texture_position[2], dest_position[2], vertices[position++], texindex, color);
 }
 
 void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
@@ -118,13 +118,11 @@ void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions,
 	}
 }
 
-inline void RenderBatchTriangle::to_sprite_vertex(const Surface_DrawParams1 *params, int index, RenderBatchTriangle::SpriteVertex &v, int texindex) const
+inline void RenderBatchTriangle::to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const
 {
-	v.position = to_position(params->dest_position[index].x, params->dest_position[index].y);
-	v.color = params->color;
-
-	v.texcoord.s = params->texture_position[index].x;
-	v.texcoord.t = params->texture_position[index].y;
+	v.position = to_position(dest_position.x, dest_position.y);
+	v.color = color;
+	v.texcoord = texture_position;
 	v.texindex = texindex;
 }
 

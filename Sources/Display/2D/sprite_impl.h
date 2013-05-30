@@ -56,7 +56,6 @@ struct Surface_DrawParams2
 	int srcHeight;
 	float destX;
 	float destY;
-	Colorf color;
 	float scale_x;
 	float scale_y;
 	Origin translate_origin;
@@ -68,14 +67,6 @@ struct Surface_DrawParams2
 	Origin rotate_origin;
 	int rotate_x;
 	int rotate_y;
-	bool sub_pixel_accuracy;
-};
-
-struct Surface_DrawParams1
-{
-	Pointf texture_position[4];	// Scaled to the range of 0.0f to 1.0f
-	Pointf dest_position[4];
-	Colorf color;
 };
 
 class Sprite_Impl
@@ -157,16 +148,15 @@ public:
 	void draw(Canvas &canvas, const Rectf &src, const Rectf &dest);
 	void draw(Canvas &canvas, const Rectf &dest);
 
-	void draw(Canvas &canvas, const Surface_DrawParams1 &params1);
 	void draw(Canvas &canvas, const Surface_DrawParams2 &params2);
 
 	void draw_calcs_step1(
 		const Surface_DrawParams2 &params2,
 		Surface_TargetDrawParams1 &t_params1);
 	void draw_calcs_step2(
+		Canvas &canvas,
 		const Surface_DrawParams2 &params2,
-		const Surface_TargetDrawParams1 *t_params1,
-		Surface_DrawParams1 &params1);
+		const Surface_TargetDrawParams1 *t_params1);
 
 	// inlined this function for performance reasons.
 	static inline Pointf calc_hotspot(Origin origin, float hotspot_x, float hotspot_y, float size_width, float size_height)

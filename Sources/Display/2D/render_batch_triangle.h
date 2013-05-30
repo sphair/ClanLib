@@ -46,7 +46,7 @@ class RenderBatchTriangle : public RenderBatcher
 {
 public:
 	RenderBatchTriangle(RenderBatchBuffer *batch_buffer);
-	void draw_sprite(Canvas &canvas, const Surface_DrawParams1 *params, const Texture2D &texture);
+	void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color);
 	void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
 	void draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
 	void fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices);
@@ -73,7 +73,7 @@ private:
 	void flush(GraphicContext &gc);
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
 
-	inline void to_sprite_vertex(const Surface_DrawParams1 *params, int index, RenderBatchTriangle::SpriteVertex &v, int texindex) const;
+	inline void to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const;
 	inline Vec4f to_position(float x, float y) const;
 	void lock_transfer_buffer(Canvas &canvas);
 
