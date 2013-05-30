@@ -107,8 +107,8 @@ Angle Sprite::get_base_angle() const
 
 void Sprite::get_scale(float &x, float &y) const
 {
-	x = impl->scale_x;
-	y = impl->scale_y;
+	x = impl->scale.x;
+	y = impl->scale.y;
 }
 
 float Sprite::get_alpha() const
@@ -259,8 +259,7 @@ Sprite Sprite::clone() const
 
 	copy.impl->angle = impl->angle;
 	copy.impl->base_angle = impl->base_angle;
-	copy.impl->scale_x = impl->scale_x;
-	copy.impl->scale_y = impl->scale_y;
+	copy.impl->scale = impl->scale;
 	copy.impl->color = impl->color;
 	copy.impl->linear_filter = impl->linear_filter;
 	copy.impl->translation_hotspot = impl->translation_hotspot;
@@ -393,8 +392,8 @@ void Sprite::set_base_angle(Angle angle)
 
 void Sprite::set_scale(float x, float y)
 {
-	impl->scale_x = x;
-	impl->scale_y = y;
+	impl->scale.x = x;
+	impl->scale.y = y;
 }
 
 void Sprite::set_alpha(float alpha)
