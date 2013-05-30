@@ -39,14 +39,6 @@
 namespace clan
 {
 
-struct Surface_DrawParams2
-{
-	Rect src;
-	float destX;
-	float destY;
-	Pointf scale;
-};
-
 class Sprite_Impl
 {
 
@@ -124,7 +116,7 @@ public:
 	void draw(Canvas &canvas, const Rectf &src, const Rectf &dest);
 	void draw(Canvas &canvas, const Rectf &dest);
 
-	void draw(Canvas &canvas, const Surface_DrawParams2 &params2);
+	void draw(Canvas &canvas, const Rect &p_src, const Pointf &p_dest, const Pointf &p_scale);
 
 	// inlined this function for performance reasons.
 	static inline Pointf calc_hotspot(Origin origin, float hotspot_x, float hotspot_y, float size_width, float size_height)

@@ -125,46 +125,31 @@ Sprite_Impl &Sprite_Impl::operator =(const Sprite_Impl &copy)
 void Sprite_Impl::draw(Canvas &canvas, float x, float y)
 {
 	SpriteFrame &frame = frames[current_frame];
-
-	Surface_DrawParams2 params2;
-	params2.src = frame.position;
-	params2.destX = x;
-	params2.destY = y;
-	params2.scale = scale;
-	draw(canvas, params2);
+	draw(canvas, frame.position, Pointf(x,y), scale);
 }
 
 void Sprite_Impl::draw(Canvas &canvas, const Rectf &src, const Rectf &dest)
 {
 	SpriteFrame &frame = frames[current_frame];
-
-	Surface_DrawParams2 params2;
-	params2.src = Rectf(frame.position.left + src.left, frame.position.top + src.top, src.get_size());
-	params2.destX = dest.left;
-	params2.destY = dest.top;
-	params2.scale = Pointf(dest.get_width() / src.get_width(), dest.get_height() / src.get_height());
-	draw(canvas, params2);
+	draw(canvas, Rectf(frame.position.left + src.left, frame.position.top + src.top, src.get_size()), 
+		 dest.get_top_left(),
+		 Pointf(dest.get_width() / src.get_width(), dest.get_height() / src.get_height())
+		 );
 }
 
 void Sprite_Impl::draw(Canvas &canvas, const Rectf &dest)
 {
 	SpriteFrame &frame = frames[current_frame];
-
-	Surface_DrawParams2 params2;
-	params2.src = frame.position;
-	params2.destX = dest.left;
-	params2.destY = dest.top;
-	params2.scale = Pointf(dest.get_width()/float(frame.position.get_width()), dest.get_height()/float(frame.position.get_height()));
-	draw(canvas, params2);
+	draw(canvas, frame.position, dest.get_top_left(), Pointf(dest.get_width()/float(frame.position.get_width()), dest.get_height()/float(frame.position.get_height())));
 }
 
-void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
+void Sprite_Impl::draw(Canvas &canvas, const Rect &p_src, const Pointf &p_dest, const Pointf &p_scale)
 {
 	SpriteFrame &frame = frames[current_frame];
 
 	// Find size of surface:
-	float src_width  = (float) params2.src.get_width();
-	float src_height = (float) params2.src.get_height();
+	float src_width  = (float) p_src.get_width();
+	float src_height = (float) p_src.get_height();
 
 	// Calculate translation hotspot
 	Pointf target_translation_hotspot = calc_hotspot(
@@ -183,12 +168,12 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 		src_height);
 
 	// Find top left point of destination rectangle and map rotation hotspot to screen coordinates:
-	float destWidth = src_width * params2.scale.x;
-	float destHeight = src_height * params2.scale.y;
-	float pixDestX = params2.destX-target_translation_hotspot.x * params2.scale.x;
-	float pixDestY = params2.destY-target_translation_hotspot.y * params2.scale.y;
-	target_rotation_hotspot.x = float(pixDestX + target_rotation_hotspot.x * params2.scale.x);
-	target_rotation_hotspot.y = float(pixDestY + target_rotation_hotspot.y * params2.scale.y);
+	float destWidth = src_width * p_scale.x;
+	float destHeight = src_height * p_scale.y;
+	float pixDestX = p_dest.x -target_translation_hotspot.x * p_scale.x;
+	float pixDestY = p_dest.y -target_translation_hotspot.y * p_scale.y;
+	target_rotation_hotspot.x = float(pixDestX + target_rotation_hotspot.x * p_scale.x);
+	target_rotation_hotspot.y = float(pixDestY + target_rotation_hotspot.y * p_scale.y);
 
 	// Calculate unit vectors for rotated surface:
 	// (cached for speed reasons)
@@ -246,15 +231,15 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 	Pointf texture_position[4];	// Scaled to the range of 0.0f to 1.0f
 	Pointf dest_position[4];
 
-	texture_position[0].x = (((float) params2.src.left) ) / texture_width;
-	texture_position[1].x = (((float) params2.src.left+src_width) ) / texture_width;
-	texture_position[2].x = (((float) params2.src.left) ) / texture_width;
-	texture_position[3].x = (((float) params2.src.left+src_width) ) / texture_width;
+	texture_position[0].x = (((float) p_src.left) ) / texture_width;
+	texture_position[1].x = (((float) p_src.left+src_width) ) / texture_width;
+	texture_position[2].x = (((float) p_src.left) ) / texture_width;
+	texture_position[3].x = (((float) p_src.left+src_width) ) / texture_width;
 
-	texture_position[0].y = (((float) params2.src.top) ) / texture_height;
-	texture_position[1].y = (((float) params2.src.top) ) / texture_height;
-	texture_position[2].y = (((float) params2.src.top+src_height) ) / texture_height;
-	texture_position[3].y = (((float) params2.src.top+src_height) ) / texture_height;
+	texture_position[0].y = (((float) p_src.top) ) / texture_height;
+	texture_position[1].y = (((float) p_src.top) ) / texture_height;
+	texture_position[2].y = (((float) p_src.top+src_height) ) / texture_height;
+	texture_position[3].y = (((float) p_src.top+src_height) ) / texture_height;
 
 	// Calculate final destination rectangle points for surface rectangle:
 	if (target_rotate_angle.to_radians() == 0.0f)
