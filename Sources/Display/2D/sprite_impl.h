@@ -41,14 +41,10 @@ namespace clan
 
 struct Surface_DrawParams2
 {
-	int srcX;
-	int srcY;
-	int srcWidth;
-	int srcHeight;
+	Rect src;
 	float destX;
 	float destY;
-	float scale_x;
-	float scale_y;
+	Pointf scale;
 };
 
 class Sprite_Impl
@@ -90,8 +86,8 @@ public:
 
 	Angle angle;
 	Angle base_angle;
-	float scale_x, scale_y;
-
+	
+	Pointf scale;
 	Colorf color;
 
 	bool linear_filter;
@@ -103,11 +99,9 @@ public:
 
 	int current_frame;
 	int delta_frame;
-
 	int update_time_ms;
 
 	int id;
-
 	bool finished;
 	bool looping;
 	bool play_loop;

@@ -51,8 +51,7 @@ namespace clan
 Sprite_Impl::Sprite_Impl() :
 	angle(Angle(0.0f, angle_radians)),
 	base_angle(Angle(0.0f, angle_radians)),
-	scale_x(1.0f),
-	scale_y(1.0f),
+	scale(1.0f, 1.0f),
 	color(1.0f, 1.0f, 1.0f, 1.0f),
 	linear_filter(true),
 	translation_hotspot(0,0),
@@ -102,8 +101,7 @@ Sprite_Impl &Sprite_Impl::operator =(const Sprite_Impl &copy)
 {
 	angle = copy.angle;
 	base_angle = copy.base_angle;
-	scale_x = copy.scale_x;
-	scale_y = copy.scale_y;
+	scale = copy.scale;
 	color = copy.color;
 	translation_hotspot = copy.translation_hotspot;
 	rotation_hotspot = copy.rotation_hotspot;
@@ -129,14 +127,10 @@ void Sprite_Impl::draw(Canvas &canvas, float x, float y)
 	SpriteFrame &frame = frames[current_frame];
 
 	Surface_DrawParams2 params2;
-	params2.srcX = frame.position.left;
-	params2.srcY = frame.position.top;
-	params2.srcWidth = frame.position.get_width();
-	params2.srcHeight = frame.position.get_height();
+	params2.src = frame.position;
 	params2.destX = x;
 	params2.destY = y;
-	params2.scale_x = scale_x;
-	params2.scale_y = scale_y;
+	params2.scale = scale;
 	draw(canvas, params2);
 }
 
@@ -145,14 +139,10 @@ void Sprite_Impl::draw(Canvas &canvas, const Rectf &src, const Rectf &dest)
 	SpriteFrame &frame = frames[current_frame];
 
 	Surface_DrawParams2 params2;
-	params2.srcX = frame.position.left + src.left;
-	params2.srcY = frame.position.top + src.top;
-	params2.srcWidth = src.get_width();
-	params2.srcHeight = src.get_height();
+	params2.src = Rectf(frame.position.left + src.left, frame.position.top + src.top, src.get_size());
 	params2.destX = dest.left;
 	params2.destY = dest.top;
-	params2.scale_x = dest.get_width() / src.get_width();
-	params2.scale_y = dest.get_height() / src.get_height();
+	params2.scale = Pointf(dest.get_width() / src.get_width(), dest.get_height() / src.get_height());
 	draw(canvas, params2);
 }
 
@@ -161,14 +151,10 @@ void Sprite_Impl::draw(Canvas &canvas, const Rectf &dest)
 	SpriteFrame &frame = frames[current_frame];
 
 	Surface_DrawParams2 params2;
-	params2.srcX = frame.position.left;
-	params2.srcY = frame.position.top;
-	params2.srcWidth = frame.position.get_width();
-	params2.srcHeight = frame.position.get_height();
+	params2.src = frame.position;
 	params2.destX = dest.left;
 	params2.destY = dest.top;
-	params2.scale_x = dest.get_width()/float(frame.position.get_width());
-	params2.scale_y = dest.get_height()/float(frame.position.get_height());
+	params2.scale = Pointf(dest.get_width()/float(frame.position.get_width()), dest.get_height()/float(frame.position.get_height()));
 	draw(canvas, params2);
 }
 
@@ -177,33 +163,32 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 	SpriteFrame &frame = frames[current_frame];
 
 	// Find size of surface:
-	float size_width  = (float) params2.srcWidth;
-	float size_height = (float) params2.srcHeight;
-
+	float src_width  = (float) params2.src.get_width();
+	float src_height = (float) params2.src.get_height();
 
 	// Calculate translation hotspot
 	Pointf target_translation_hotspot = calc_hotspot(
 		translation_origin,
 		(float) (translation_hotspot.x + frame.offset.x),
 		(float) (translation_hotspot.y + frame.offset.y),
-		size_width,
-		size_height);
+		src_width,
+		src_height);
 
 	// Calculate rotation hotspot:
 	Pointf target_rotation_hotspot = calc_hotspot(
 		rotation_origin,
 		(float) (rotation_hotspot.x + frame.offset.x),
 		(float) (rotation_hotspot.y + frame.offset.y),
-		size_width,
-		size_height);
+		src_width,
+		src_height);
 
 	// Find top left point of destination rectangle and map rotation hotspot to screen coordinates:
-	float destWidth = params2.srcWidth * params2.scale_x;
-	float destHeight = params2.srcHeight * params2.scale_y;
-	float pixDestX = params2.destX-target_translation_hotspot.x * params2.scale_x;
-	float pixDestY = params2.destY-target_translation_hotspot.y * params2.scale_y;
-	target_rotation_hotspot.x = float(pixDestX + target_rotation_hotspot.x * params2.scale_x);
-	target_rotation_hotspot.y = float(pixDestY + target_rotation_hotspot.y * params2.scale_y);
+	float destWidth = src_width * params2.scale.x;
+	float destHeight = src_height * params2.scale.y;
+	float pixDestX = params2.destX-target_translation_hotspot.x * params2.scale.x;
+	float pixDestY = params2.destY-target_translation_hotspot.y * params2.scale.y;
+	target_rotation_hotspot.x = float(pixDestX + target_rotation_hotspot.x * params2.scale.x);
+	target_rotation_hotspot.y = float(pixDestY + target_rotation_hotspot.y * params2.scale.y);
 
 	// Calculate unit vectors for rotated surface:
 	// (cached for speed reasons)
@@ -261,15 +246,15 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 	Pointf texture_position[4];	// Scaled to the range of 0.0f to 1.0f
 	Pointf dest_position[4];
 
-	texture_position[0].x = (((float) params2.srcX) ) / texture_width;
-	texture_position[1].x = (((float) params2.srcX+params2.srcWidth) ) / texture_width;
-	texture_position[2].x = (((float) params2.srcX) ) / texture_width;
-	texture_position[3].x = (((float) params2.srcX+params2.srcWidth) ) / texture_width;
+	texture_position[0].x = (((float) params2.src.left) ) / texture_width;
+	texture_position[1].x = (((float) params2.src.left+src_width) ) / texture_width;
+	texture_position[2].x = (((float) params2.src.left) ) / texture_width;
+	texture_position[3].x = (((float) params2.src.left+src_width) ) / texture_width;
 
-	texture_position[0].y = (((float) params2.srcY) ) / texture_height;
-	texture_position[1].y = (((float) params2.srcY) ) / texture_height;
-	texture_position[2].y = (((float) params2.srcY+params2.srcHeight) ) / texture_height;
-	texture_position[3].y = (((float) params2.srcY+params2.srcHeight) ) / texture_height;
+	texture_position[0].y = (((float) params2.src.top) ) / texture_height;
+	texture_position[1].y = (((float) params2.src.top) ) / texture_height;
+	texture_position[2].y = (((float) params2.src.top+src_height) ) / texture_height;
+	texture_position[3].y = (((float) params2.src.top+src_height) ) / texture_height;
 
 	// Calculate final destination rectangle points for surface rectangle:
 	if (target_rotate_angle.to_radians() == 0.0f)
