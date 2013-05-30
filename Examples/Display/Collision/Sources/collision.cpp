@@ -50,9 +50,7 @@ int Collision::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
 
-	// Get the graphic context
-
-	clan::ResourceManager resources = clan::ResourceManager("Resources/resources.xml");
+	clan::DisplayCache resources(clan::XMLResourceDocument("Resources/resources.xml"));
 	
 	clan::Font font(canvas, "tahoma", 24);
 

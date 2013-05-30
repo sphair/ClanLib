@@ -33,7 +33,7 @@ class Teapot
 {
 public:
 	Teapot();
-	void create(clan::Canvas &canvas, clan::ResourceManager &resources);
+	void create(clan::Canvas &canvas, clan::DisplayCache &resources);
 	void clone(const Teapot &source);
 	void draw_collision_outline(clan::Canvas &canvas);
 	void update(clan::Canvas &canvas, int elapsed_ms, std::vector<Teapot> &teapot_list);

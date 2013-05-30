@@ -41,14 +41,13 @@ Teapot::Teapot()
 	flash = false;
 }
 
-void Teapot::create(clan::Canvas &canvas, clan::ResourceManager &resources)
+void Teapot::create(clan::Canvas &canvas, clan::DisplayCache &resources)
 {
-	clan::SpriteDescription desc(canvas, "teapot", &resources);
-	teapot_sprites = clan::Sprite(canvas, desc);
+	teapot_sprites = resources.get_sprite(canvas, "teapot").get();
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
-	teapot_collisions = desc.get_collision_outlines(canvas, 128, clan::accuracy_high);
+	teapot_collisions = teapot_sprites.create_collision_outlines(canvas, 128, clan::accuracy_high);
 }
 
 void Teapot::draw_collision_outline(clan::Canvas &canvas)
