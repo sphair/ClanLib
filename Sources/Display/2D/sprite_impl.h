@@ -150,14 +150,6 @@ public:
 
 	void draw(Canvas &canvas, const Surface_DrawParams2 &params2);
 
-	void draw_calcs_step1(
-		const Surface_DrawParams2 &params2,
-		Surface_TargetDrawParams1 &t_params1);
-	void draw_calcs_step2(
-		Canvas &canvas,
-		const Surface_DrawParams2 &params2,
-		const Surface_TargetDrawParams1 *t_params1);
-
 	// inlined this function for performance reasons.
 	static inline Pointf calc_hotspot(Origin origin, float hotspot_x, float hotspot_y, float size_width, float size_height)
 	{
