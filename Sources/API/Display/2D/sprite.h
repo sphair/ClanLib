@@ -40,6 +40,7 @@
 #include "../Render/graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "color.h"
+#include "../Collision/collision_outline.h"
 
 namespace clan
 {
@@ -90,8 +91,14 @@ public:
 	/// \brief Constructs a Sprite
 	///
 	/// \param gc = Graphic Context
-	/// \param description = Sprite Description
-	Sprite(GraphicContext &gc, const SpriteDescription &description);
+	/// \param resource_id = Resource id
+	/// \param resources = The resources
+	Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	/// \brief Constructs an empty Sprite
+	///
+	/// \param gc = Graphic Context
+	Sprite(GraphicContext &gc);
 
 	virtual ~Sprite();
 /// \}
@@ -182,6 +189,20 @@ public:
 
 	/// \brief Returns true if animation has looped in the last update cycle
 	bool is_looping() const;
+
+	/// \brief Create the collision outlines from the sprite description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
+
+	/// \brief Create the collision outline from the sprites description
+	///
+	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
+	/// \param accuracy = Amount of optimization of the outline (default medium)
+	/// \return The collision outlines
+	CollisionOutline create_collision_outline(GraphicContext &gc, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium) const;
 
 /// \}
 
@@ -326,6 +347,88 @@ public:
 
 	/// \brief Set what is shown when the animation is finished.
 	void set_show_on_finish(Sprite::ShowOnFinish show_on_finish);
+
+	/// \brief Add frame
+	///
+	/// \param texture = Texture
+	void add_frame(const Texture2D &texture);
+
+	/// \brief Add frame
+	///
+	/// \param fullname = String Ref
+	void add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	/// \brief Add frame
+	///
+	/// \param file = IODevice
+	/// \param image_type = String
+	void add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	/// \brief Add frame
+	///
+	/// \param filename = String Ref
+	/// \param dir = Virtual Directory
+	void add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	/// \brief Add frames
+	///
+	/// \param texture = Texture
+	/// \param frames = Rect
+	/// \param num_frames = value
+	void add_frames(const Texture2D &texture, Rect *frames, int num_frames);
+
+	/// \brief Add frame
+	///
+	/// \param texture = Texture
+	/// \param frame = Rect
+	void add_frame(const Texture2D &texture, const Rect &frame);
+
+	/// \brief Adds images formed in a grid.
+	/** <p>This function will cut out a grid of frames from one image.</p>
+	    \param pixelbuffer Image source.
+	    \param texture Image source.
+	    \param xpos, ypos Position of where image grid starts.
+	    \param width, height Size of a frame in the grid.
+	    \param xarray, yarray Number of columns and rows in grid.
+	    \param array_skipframes Number of frames to skip at last gridline.
+	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
+	void add_gridclipped_frames(GraphicContext &gc, 
+		const Texture2D &texture,
+		int xpos, int ypos,
+		int width, int height,
+		int xarray = 1, int yarray = 1,
+		int array_skipframes = 0,
+		int xspacing = 0, int yspacing = 0);
+
+	/// \brief Adds images separated with pure alpha (within trans_limit).
+	/** <p>The alpha clipper will cut out frames from an image based on
+	    the transparency in the picture. It first determines the height
+	    of a row by searching for the first line that it considers
+	    completely transparent. Then it finds the width of each frame on
+	    this line by looking for columns that are completely transparency.</p>
+	    \param pixelbuffer Image source.
+	    \param texture Image source.
+	    \param xpos, ypos Upper left position where alpha cutting should begin.
+	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
+	void add_alphaclipped_frames(GraphicContext &gc, 
+		const Texture2D &texture,
+		int xpos = 0, int ypos = 0,
+		float trans_limit = 0.05f);
+
+	/// \brief Adds images separated with pure alpha (within trans_limit).
+	/** <p>The alpha clipper will cut out frames from an image based on
+	    the transparency in the picture. It scans the lines horizontally
+	    from top to bottom. As soon as a non-transarent pixel is discovered,
+	    the clipper finds the bounding box for that region and then moves on.</p>
+	    \param pixelbuffer Image source.
+	    \param texture Image source.
+	    \param xpos, ypos Upper left position where alpha cutting should begin.
+	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
+	void add_alphaclipped_frames_free(GraphicContext &gc, 
+		const Texture2D &texture,
+		int xpos = 0, int ypos = 0,
+		float trans_limit = 0.05f);
+
 /// \}
 
 /// \name Signals

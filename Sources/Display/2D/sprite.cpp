@@ -36,7 +36,6 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/sprite.h"
-#include "API/Display/2D/sprite_description.h"
 #include "API/Display/Render/primitives_array.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/ImageProviders/provider_factory.h"
@@ -67,27 +66,30 @@ Sprite::Sprite(GraphicContext &gc, const std::string &fullname, const ImageImpor
 Sprite::Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(new Sprite_Impl())
 {
-	SpriteDescription desc;
-	desc.add_frame(gc, filename, fs, import_desc );
-	impl->create_textures(gc, desc);
-
+	add_frame(gc, filename, fs, import_desc );
 	restart();
 }
 
 Sprite::Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc )
 : impl(new Sprite_Impl())
 {
-	SpriteDescription desc;
-	desc.add_frame(gc, file, image_type, import_desc );
-	impl->create_textures(gc, desc);
+	add_frame(gc, file, image_type, import_desc );
 	restart();
 }
 
-Sprite::Sprite(GraphicContext &gc, const SpriteDescription &description)
+Sprite::Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc): impl(new Sprite_Impl())
+{
+ 	XMLResourceNode resource = resources.get_resource(resource_id);
+	if (resource.get_type() != "sprite")
+		throw Exception(string_format("Resource '%1' is not of type 'sprite'", resource_id));
+	impl->init(gc, resource, import_desc);
+	restart();
+}
+
+
+Sprite::Sprite(GraphicContext &gc)
 : impl(new Sprite_Impl())
 {
-	impl->create_textures(gc, description);
-	restart();
 }
 
 Sprite::~Sprite()
@@ -515,6 +517,68 @@ void Sprite::set_play_backward(bool backward)
 void Sprite::set_show_on_finish(Sprite::ShowOnFinish show_on_finish)
 {
 	impl->show_on_finish = show_on_finish;
+}
+
+void Sprite::add_frame(const Texture2D &texture)
+{
+	impl->add_frame(texture);
+}
+
+void Sprite::add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+{
+	impl->add_frame(Texture2D(gc, filename, fs, import_desc));
+}
+
+void Sprite::add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)
+{
+	impl->add_frame(Texture2D(gc, fullname, import_desc));
+}
+
+void Sprite::add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+{
+	impl->add_frame(Texture2D(gc, file, image_type, import_desc));
+
+}
+
+void Sprite::add_frames(const Texture2D &texture, Rect *frames, int num_frames)
+{
+	for(int i=0; i<num_frames; ++i)
+		impl->add_frame(texture, frames[i]);
+}
+
+void Sprite::add_frame(const Texture2D &texture, const Rect &rect)
+{
+	impl->add_frame(texture, rect);
+}
+
+void Sprite::add_gridclipped_frames(GraphicContext &gc, 
+	const Texture2D &texture, 
+	int xpos, int ypos, 
+	int width, int height, 
+	int xarray, int yarray, 
+	int array_skipframes, 
+	int xspace, int yspace)
+{
+	impl->add_gridclipped_frames(gc, texture, xpos, ypos, width, height, xarray, yarray, array_skipframes, xspace, yspace);
+}
+
+void Sprite::add_alphaclipped_frames(GraphicContext &gc, 
+	const Texture2D &texture, 
+	int xpos, int ypos, 
+	float trans_limit)
+{
+	impl->add_alphaclipped_frames(gc, texture, xpos, ypos, trans_limit);
+}
+
+std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	return impl->create_collision_outlines(gc, alpha_limit, accuracy);
+}
+
+CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+{
+	return impl->create_collision_outline(gc, alpha_limit, accuracy);
+
 }
 
 /////////////////////////////////////////////////////////////////////////////

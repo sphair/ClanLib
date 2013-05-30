@@ -80,8 +80,7 @@ struct Surface_DrawParams1
 
 class Sprite_Impl
 {
-/// \name Construction
-/// \{
+
 public:
 	Sprite_Impl();
 
@@ -104,12 +103,19 @@ public:
 		int delay_ms;
 	};
 
-/// \}
-/// \name Attributes
-/// \{
 public:
 	const SpriteFrame *get_frame(unsigned int index) const;
 	SpriteFrame *get_frame(unsigned int index);
+
+	void init(GraphicContext &gc, XMLResourceNode &resource, const ImageImportDescription &import_desc);
+
+	void add_frame(const Texture2D &texture);
+	void add_frame(const Texture2D &texture, const Rect &rect);
+	void add_gridclipped_frames(GraphicContext &gc, const Texture2D &texture,int xpos, int ypos,int width, int height,int xarray = 1, int yarray = 1,int array_skipframes = 0,int xspacing = 0, int yspacing = 0);
+	void add_alphaclipped_frames(GraphicContext &gc, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
+	void add_alphaclipped_frames_free(GraphicContext &gc, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
+	CollisionOutline create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
+	std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
 
 	Angle angle;
 	Angle base_angle;
@@ -140,9 +146,6 @@ public:
 
 	std::vector<SpriteFrame> frames;
 
-/// \}
-/// \name Operations
-/// \{
 public:
 	/// \brief Copy assignment operator.
 	Sprite_Impl &operator =(const Sprite_Impl &copy);
@@ -151,8 +154,6 @@ public:
 	{
 		return (finished == false || show_on_finish != Sprite::show_blank) && frames.size() > 0;
 	}
-
-	void create_textures(GraphicContext &gc, const SpriteDescription &description);
 
 	void draw(Canvas &canvas, float x, float y);
 	void draw(Canvas &canvas, const Rectf &src, const Rectf &dest);
@@ -211,12 +212,9 @@ public:
 	#define calc_rotate_y(px,py,rotation_hotspot_x,rotation_hotspot_y,rotate_x_y,rotate_y_y) \
 		(rotation_hotspot_y + (px-rotation_hotspot_x) * rotate_x_y + (py-rotation_hotspot_y) * rotate_y_y)
 
-/// \}
-/// \name Signals
-/// \{
 public:
 	Signal_v0 sig_animation_finished;
-/// \}
+
 };
 
 }
