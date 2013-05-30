@@ -107,8 +107,6 @@ public:
 	const SpriteFrame *get_frame(unsigned int index) const;
 	SpriteFrame *get_frame(unsigned int index);
 
-	void init(GraphicContext &gc, XMLResourceNode &resource, const ImageImportDescription &import_desc);
-
 	void add_frame(const Texture2D &texture);
 	void add_frame(const Texture2D &texture, const Rect &rect);
 	void add_gridclipped_frames(GraphicContext &gc, const Texture2D &texture,int xpos, int ypos,int width, int height,int xarray = 1, int yarray = 1,int array_skipframes = 0,int xspacing = 0, int yspacing = 0);
