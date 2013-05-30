@@ -298,25 +298,6 @@ void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 		dest_position[3].y = calc_rotate_y(pixDestX+destWidth, pixDestY+destHeight, target_rotation_hotspot.x, target_rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
 	}
 
-	// Pitch
-	if (params2.rotate_pitch.to_radians() != 0.0f)
-	{
-		float pitch_rad = sin(PI/2 + params2.rotate_pitch.to_radians());
-		dest_position[0].y = (dest_position[0].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
-		dest_position[1].y = (dest_position[1].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
-		dest_position[2].y = (dest_position[2].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
-		dest_position[3].y = (dest_position[3].y - target_rotation_hotspot.y) * pitch_rad + target_rotation_hotspot.y;
-	}
-	// Yaw
-	if (params2.rotate_yaw.to_radians() != 0.0f)
-	{
-		float yaw_rad = cos(params2.rotate_yaw.to_radians());
-		dest_position[0].x = (dest_position[0].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
-		dest_position[1].x = (dest_position[1].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
-		dest_position[2].x = (dest_position[2].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
-		dest_position[3].x = (dest_position[3].x - target_rotation_hotspot.x) * yaw_rad + target_rotation_hotspot.x;
-	}
-
 	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
 	batcher->draw_sprite(canvas, texture_position, dest_position, frames[current_frame].texture, color);
 

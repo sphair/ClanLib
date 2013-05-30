@@ -49,8 +49,6 @@ struct Surface_DrawParams2
 	float destY;
 	float scale_x;
 	float scale_y;
-	Angle rotate_pitch;
-	Angle rotate_yaw;
 };
 
 class Sprite_Impl
