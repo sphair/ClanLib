@@ -39,15 +39,6 @@
 namespace clan
 {
 
-struct Surface_TargetDrawParams1
-{
-	float pixDestX;
-	float pixDestY;
-	float destWidth;
-	float destHeight;
-	Pointf rotation_hotspot;
-};
-
 struct Surface_DrawParams2
 {
 	int srcX;
