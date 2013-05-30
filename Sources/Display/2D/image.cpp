@@ -32,7 +32,6 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/2D/subtexture.h"
-#include "API/Display/2D/image_description.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Core/XML/dom_element.h"
@@ -113,13 +112,6 @@ void Image_Impl::calc_hotspot()
 
 Image::Image()
 {
-}
-
-Image::Image(GraphicContext &gc, const ImageDescription &desc)
-{
-	const ImageDescriptionFrame &frame = desc.get_frame();
-	impl->texture = frame.texture;
-	impl->texture_rect = frame.rect;
 }
 
 Image::Image(GraphicContext &gc, const PixelBuffer &pb, const Rect &rect)

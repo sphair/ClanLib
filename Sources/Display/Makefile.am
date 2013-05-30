@@ -43,7 +43,6 @@ display_target.cpp \
 ShaderEffect/shader_effect.cpp \
 ShaderEffect/shader_effect_description.cpp \
 2D/render_batch_line.cpp \
-2D/image_description.cpp \
 2D/render_batch_line_texture.cpp \
 2D/sprite.cpp \
 2D/render_batch_triangle.cpp \
@@ -52,7 +51,6 @@ ShaderEffect/shader_effect_description.cpp \
 2D/sprite_impl.cpp \
 2D/color.cpp \
 2D/image.cpp \
-2D/sprite_description.cpp \
 2D/shape2d_impl.cpp \
 2D/canvas_impl.cpp \
 2D/texture_group_impl.cpp \

@@ -51,7 +51,6 @@ class Texture2D;
 class Subtexture;
 class PixelBuffer;
 class Canvas;
-class ImageDescription;
 
 /// \brief Image class.
 class CL_API_DISPLAY Image
@@ -61,12 +60,6 @@ class CL_API_DISPLAY Image
 public:
 	/// \brief Constructs a null instance.
 	Image();
-
-	/// \brief Constructs an image from a texture.
-	///
-	/// \param context = Graphic Context
-	/// \param desc = Image description to get image data from
-	Image(GraphicContext &context, const ImageDescription &desc);
 
 	/// \brief Constructs an image from a texture.
 	///

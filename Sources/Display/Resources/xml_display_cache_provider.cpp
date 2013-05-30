@@ -28,9 +28,8 @@
 
 #include "Display/precomp.h"
 #include "API/Display/2D/sprite.h"
-#include "API/Display/2D/sprite_description.h"
 #include "API/Display/2D/image.h"
-#include "API/Display/2D/image_description.h"
+#include "API/Display/Render/texture_2d.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Display/Render/texture.h"
@@ -106,17 +105,72 @@ Resource<Sprite> XMLDisplayCacheProvider::load_sprite(GraphicContext &gc, const 
 
 Resource<Image> XMLDisplayCacheProvider::load_image(GraphicContext &gc, const std::string &id)
 {
-	ImageImportDescription import_desc; // Why is this not part of ImageDescription?
-
-	ImageDescription desc(gc, id, doc, import_desc);
-
-	Image image(gc, desc);
-
-	// More hacks that also belongs to ImageDescription:
+	Image image;
 
 	XMLResourceNode resource = doc.get_resource(id);
 
 	DomNode cur_node = resource.get_element().get_first_child();
+	while(!cur_node.is_null())
+	{
+		if (!cur_node.is_element()) 
+			continue;
+
+		DomElement cur_element = cur_node.to_element();
+		std::string tag_name = cur_element.get_tag_name();
+		if (tag_name == "image" || tag_name == "image-file")
+		{
+			std::string image_name = cur_element.get_attribute("file");
+			Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
+
+			DomNode cur_child(cur_element.get_first_child());
+			if(cur_child.is_null()) 
+			{
+				image = Image(gc, texture, texture.get_size());
+			}
+			else 
+			{
+				do {
+					DomElement cur_child_elemnt = cur_child.to_element();
+					if(cur_child.get_node_name() == "grid")
+					{
+						Point position;
+						Size texture_size = texture.get_size();
+						Size size = texture_size;
+
+						std::vector<std::string> image_size = StringHelp::split_text(cur_child_elemnt.get_attribute("size"), ",");
+						if (image_size.size() > 0)
+							size.width = StringHelp::text_to_int(image_size[0]);
+						if (image_size.size() > 1)
+							size.height = StringHelp::text_to_int(image_size[1]);
+
+						if (cur_child_elemnt.has_attribute("pos"))
+						{
+							std::vector<std::string> image_pos = StringHelp::split_text(cur_child_elemnt.get_attribute("pos"), ",");
+							if (image_pos.size() > 0)
+								position.x = StringHelp::text_to_int(image_pos[0]);
+							if (image_pos.size() > 1)
+								position.y = StringHelp::text_to_int(image_pos[1]);
+						}
+						if ((size.width + position.x) > texture_size.width)
+							size.width = (texture_size.width - position.x);
+						if ((size.height + position.y) > texture_size.height)
+							size.height = (texture_size.height - position.y);
+
+						image = Image(gc, texture, Rect(position, size));
+					}
+
+					cur_child = cur_child.get_next_sibling();
+				} while(!cur_child.is_null());
+			}
+
+			break;
+		}
+		cur_node = cur_node.get_next_sibling();
+	}
+	if (image.is_null())
+		throw Exception("Image resource contained no frames!");
+
+	cur_node = resource.get_element().get_first_child();
 	while (!cur_node.is_null())
 	{
 		if (!cur_node.is_element())

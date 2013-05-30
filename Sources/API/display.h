@@ -52,7 +52,6 @@
 #include "Display/2D/sprite.h"
 #include "Display/2D/path2d.h"
 #include "Display/2D/shape2d.h"
-#include "Display/2D/image_description.h"
 #include "Display/2D/subtexture.h"
 #include "Display/2D/texture_group.h"
 #include "Display/2D/span_layout.h"
