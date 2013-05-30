@@ -196,14 +196,7 @@ void Sprite_Impl::draw(Canvas &canvas, const Rectf &dest)
 void Sprite_Impl::draw(Canvas &canvas, const Surface_DrawParams2 &params2)
 {
 	Surface_TargetDrawParams1 t_params1;
-	draw_calcs_step1(params2, t_params1);
-	draw_calcs_step2(canvas, params2, &t_params1);
-}
 
-void Sprite_Impl::draw_calcs_step1(
-	const Surface_DrawParams2 &params2,
-	Surface_TargetDrawParams1 &t_params1)
-{
 	// Find size of surface:
 	float size_width  = (float) params2.srcWidth;
 	float size_height = (float) params2.srcHeight;
@@ -243,12 +236,7 @@ void Sprite_Impl::draw_calcs_step1(
 		t_params1.rotation_hotspot.x = float(t_params1.pixDestX + t_params1.rotation_hotspot.x * params2.scale_x);
 		t_params1.rotation_hotspot.y = float(t_params1.pixDestY + t_params1.rotation_hotspot.y * params2.scale_y);
 	}
-}
 
-void Sprite_Impl::draw_calcs_step2(Canvas &canvas, 
-	const Surface_DrawParams2 & params2,
-	const Surface_TargetDrawParams1 *t_params1)
-{
 	// Calculate unit vectors for rotated surface:
 	// (cached for speed reasons)
 	static float vect_rotate_x[2] = { 1.0f, 0.0f };
@@ -316,47 +304,47 @@ void Sprite_Impl::draw_calcs_step2(Canvas &canvas,
 	// Calculate final destination rectangle points for surface rectangle:
 	if (params2.rotate_angle.to_radians() == 0.0f)
 	{
-		dest_position[0].x = t_params1->pixDestX;
-		dest_position[1].x = t_params1->pixDestX+t_params1->destWidth;
-		dest_position[2].x = t_params1->pixDestX;
-		dest_position[3].x = t_params1->pixDestX+t_params1->destWidth;
+		dest_position[0].x = t_params1.pixDestX;
+		dest_position[1].x = t_params1.pixDestX+t_params1.destWidth;
+		dest_position[2].x = t_params1.pixDestX;
+		dest_position[3].x = t_params1.pixDestX+t_params1.destWidth;
 
-		dest_position[0].y = t_params1->pixDestY;
-		dest_position[1].y = t_params1->pixDestY;
-		dest_position[2].y = t_params1->pixDestY+t_params1->destHeight;
-		dest_position[3].y = t_params1->pixDestY+t_params1->destHeight;
+		dest_position[0].y = t_params1.pixDestY;
+		dest_position[1].y = t_params1.pixDestY;
+		dest_position[2].y = t_params1.pixDestY+t_params1.destHeight;
+		dest_position[3].y = t_params1.pixDestY+t_params1.destHeight;
 	}
 	else
 	{
 		// Roll
-		dest_position[0].x = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		dest_position[1].x = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		dest_position[2].x = calc_rotate_x(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
-		dest_position[3].x = calc_rotate_x(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		dest_position[0].x = calc_rotate_x(t_params1.pixDestX, t_params1.pixDestY, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		dest_position[1].x = calc_rotate_x(t_params1.pixDestX+t_params1.destWidth, t_params1.pixDestY, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		dest_position[2].x = calc_rotate_x(t_params1.pixDestX, t_params1.pixDestY+t_params1.destHeight, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
+		dest_position[3].x = calc_rotate_x(t_params1.pixDestX+t_params1.destWidth, t_params1.pixDestY+t_params1.destHeight, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[0], vect_rotate_y[0]);
 
-		dest_position[0].y = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		dest_position[1].y = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		dest_position[2].y = calc_rotate_y(t_params1->pixDestX, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
-		dest_position[3].y = calc_rotate_y(t_params1->pixDestX+t_params1->destWidth, t_params1->pixDestY+t_params1->destHeight, t_params1->rotation_hotspot.x, t_params1->rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		dest_position[0].y = calc_rotate_y(t_params1.pixDestX, t_params1.pixDestY, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		dest_position[1].y = calc_rotate_y(t_params1.pixDestX+t_params1.destWidth, t_params1.pixDestY, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		dest_position[2].y = calc_rotate_y(t_params1.pixDestX, t_params1.pixDestY+t_params1.destHeight, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
+		dest_position[3].y = calc_rotate_y(t_params1.pixDestX+t_params1.destWidth, t_params1.pixDestY+t_params1.destHeight, t_params1.rotation_hotspot.x, t_params1.rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
 	}
 
 	// Pitch
 	if (params2.rotate_pitch.to_radians() != 0.0f)
 	{
 		float pitch_rad = sin(PI/2 + params2.rotate_pitch.to_radians());
-		dest_position[0].y = (dest_position[0].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		dest_position[1].y = (dest_position[1].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		dest_position[2].y = (dest_position[2].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
-		dest_position[3].y = (dest_position[3].y - t_params1->rotation_hotspot.y) * pitch_rad + t_params1->rotation_hotspot.y;
+		dest_position[0].y = (dest_position[0].y - t_params1.rotation_hotspot.y) * pitch_rad + t_params1.rotation_hotspot.y;
+		dest_position[1].y = (dest_position[1].y - t_params1.rotation_hotspot.y) * pitch_rad + t_params1.rotation_hotspot.y;
+		dest_position[2].y = (dest_position[2].y - t_params1.rotation_hotspot.y) * pitch_rad + t_params1.rotation_hotspot.y;
+		dest_position[3].y = (dest_position[3].y - t_params1.rotation_hotspot.y) * pitch_rad + t_params1.rotation_hotspot.y;
 	}
 	// Yaw
 	if (params2.rotate_yaw.to_radians() != 0.0f)
 	{
 		float yaw_rad = cos(params2.rotate_yaw.to_radians());
-		dest_position[0].x = (dest_position[0].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		dest_position[1].x = (dest_position[1].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		dest_position[2].x = (dest_position[2].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
-		dest_position[3].x = (dest_position[3].x - t_params1->rotation_hotspot.x) * yaw_rad + t_params1->rotation_hotspot.x;
+		dest_position[0].x = (dest_position[0].x - t_params1.rotation_hotspot.x) * yaw_rad + t_params1.rotation_hotspot.x;
+		dest_position[1].x = (dest_position[1].x - t_params1.rotation_hotspot.x) * yaw_rad + t_params1.rotation_hotspot.x;
+		dest_position[2].x = (dest_position[2].x - t_params1.rotation_hotspot.x) * yaw_rad + t_params1.rotation_hotspot.x;
+		dest_position[3].x = (dest_position[3].x - t_params1.rotation_hotspot.x) * yaw_rad + t_params1.rotation_hotspot.x;
 	}
 
 	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
