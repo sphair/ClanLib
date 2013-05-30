@@ -77,16 +77,6 @@ Sprite::Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type
 	restart();
 }
 
-Sprite::Sprite(GraphicContext &gc, const std::string &resource_id, const XMLResourceDocument &resources, const ImageImportDescription &import_desc): impl(new Sprite_Impl())
-{
- 	XMLResourceNode resource = resources.get_resource(resource_id);
-	if (resource.get_type() != "sprite")
-		throw Exception(string_format("Resource '%1' is not of type 'sprite'", resource_id));
-	impl->init(gc, resource, import_desc);
-	restart();
-}
-
-
 Sprite::Sprite(GraphicContext &gc)
 : impl(new Sprite_Impl())
 {
@@ -570,6 +560,10 @@ void Sprite::add_alphaclipped_frames(GraphicContext &gc,
 	impl->add_alphaclipped_frames(gc, texture, xpos, ypos, trans_limit);
 }
 
+void Sprite::add_alphaclipped_frames_free(GraphicContext &gc, const Texture2D &texture,int xpos, int ypos,	float trans_limit)
+{
+	impl->add_alphaclipped_frames_free(gc, texture, xpos, ypos, trans_limit);
+}
 std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
 {
 	return impl->create_collision_outlines(gc, alpha_limit, accuracy);

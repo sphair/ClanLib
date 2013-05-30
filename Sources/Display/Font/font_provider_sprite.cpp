@@ -72,7 +72,8 @@ void FontProvider_Sprite::load_font(GraphicContext &gc, const std::string &resou
 		if (!bitmap_element.has_attribute("letters")) 
 			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
 
-		spr_glyphs = Sprite(gc, bitmap_element.get_attribute("glyphs"), resources);
+		throw Exception("FIXME!");
+//		spr_glyphs = Sprite(gc, bitmap_element.get_attribute("glyphs"), resources);
 
 		const std::string &letters = bitmap_element.get_attribute("letters");
 
