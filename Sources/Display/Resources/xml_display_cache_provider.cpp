@@ -110,7 +110,7 @@ Resource<Sprite> XMLDisplayCacheProvider::load_sprite(GraphicContext &gc, const 
 
 	// Load base angle
 	float work_angle = StringHelp::text_to_float(resource.get_element().get_attribute("base_angle", "0"));
-	sprite.set_angle(Angle(work_angle, angle_degrees));
+	sprite.set_base_angle(Angle(work_angle, angle_degrees));
 
 	// Load id
 	sprite.set_id(StringHelp::text_to_int(resource.get_element().get_attribute("id", "0")));
