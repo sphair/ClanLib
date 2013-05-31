@@ -26,63 +26,37 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
-
-#pragma once
-
-#include "../api_core.h"
-#include "../System/userdata.h"
-#include <string>
-#include <memory>
+#include "Core/precomp.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
 
 namespace clan
 {
+	namespace
+	{
+		std::vector<Callback_v2<ResourceManager &, const XMLResourceDocument &> > xml_cache_factories;
+	}
 
-class ResourceManager_Impl;
-
-/// \brief Resource manager.
-class CL_API_CORE ResourceManager
+ResourceManager XMLResourceManager::create(const XMLResourceDocument &doc)
 {
-/// \name Construction
-/// \{
-public:
-	/// \brief Construct a ResourceManager.
-	ResourceManager();
-
-	~ResourceManager();
-/// \}
-
-/// \name Attributes
-/// \{
-public:
-	template<typename Type>
-	std::shared_ptr<Type> get_cache(const std::string &name) const
+	ResourceManager manager;
+	manager.set_cache<XMLResourceDocument>("clan.xmldoc", std::shared_ptr<XMLResourceDocument>(new XMLResourceDocument(doc)));
+	for (size_t i = 0; i < xml_cache_factories.size(); i++)
 	{
-		return get_cache_owner(name).get_data<Type>();
+		xml_cache_factories[i].invoke(manager, doc);
 	}
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	template<typename Type>
-	void set_cache(const std::string &name, const std::shared_ptr<Type> &cache)
-	{
-		set_cache_owner(name).set_data<Type>(cache);
-	}
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	UserDataOwner &get_cache_owner(const std::string &name) const;
-	UserDataOwner &set_cache_owner(const std::string &name);
-
-	std::shared_ptr<ResourceManager_Impl> impl;
-/// \}
-};
-
+	return manager;
 }
 
-/// \}
+void XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &> factory_callback)
+{
+	xml_cache_factories.push_back(factory_callback);
+}
+
+XMLResourceDocument &XMLResourceManager::get_doc(const ResourceManager &manager)
+{
+	return *manager.get_cache<XMLResourceDocument>("clan.xmldoc").get();
+}
+
+}
