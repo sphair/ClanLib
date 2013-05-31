@@ -37,7 +37,7 @@
 namespace clan
 {
 
-Canvas_Impl::Canvas_Impl() : active_batcher(0), canvas_map_mode(map_user_projection)
+Canvas_Impl::Canvas_Impl() : canvas_map_mode(map_user_projection)
 {
 }
 
@@ -45,12 +45,14 @@ void Canvas_Impl::init(Canvas_Impl *canvas)
 {
 	GraphicContext new_gc = canvas->get_gc().create();
 	current_window = canvas->current_window;
+	batcher = canvas->batcher;		// Share the batcher resources
 	setup(new_gc);
 }
 
 void Canvas_Impl::init(Canvas_Impl *canvas, FrameBuffer &framebuffer)
 {
 	GraphicContext new_gc = canvas->get_gc().create(framebuffer);
+	batcher = canvas->batcher;		// Share the batcher resources
 	setup(new_gc);
 }
 
@@ -99,60 +101,20 @@ Canvas_Impl::~Canvas_Impl()
 		flush();
 }
 
-RenderBatchTriangle *Canvas_Impl::get_triangle_batcher()
-{
-	if (!render_batcher_triangle)
-		render_batcher_triangle = std::shared_ptr<RenderBatchTriangle>(new RenderBatchTriangle(&render_batcher_buffer));
-	return render_batcher_triangle.get();
-}
-
-RenderBatchLine *Canvas_Impl::get_line_batcher()
-{
-	if (!render_batcher_line)
-		render_batcher_line = std::shared_ptr<RenderBatchLine>(new RenderBatchLine(&render_batcher_buffer));
-	return render_batcher_line.get();
-}
-
-RenderBatchLineTexture *Canvas_Impl::get_line_texture_batcher()
-{
-	if (!render_batcher_line_texture)
-		render_batcher_line_texture = std::shared_ptr<RenderBatchLineTexture>(new RenderBatchLineTexture(&render_batcher_buffer));
-	return render_batcher_line_texture.get();
-}
-
-RenderBatchPoint *Canvas_Impl::get_point_batcher()
-{
-	if (!render_batcher_point)
-		render_batcher_point = std::shared_ptr<RenderBatchPoint>(new RenderBatchPoint(&render_batcher_buffer));
-	return render_batcher_point.get();
-}
-
 void Canvas_Impl::flush()
 {
-	if (active_batcher)
-	{
-		RenderBatcher *batcher = active_batcher;
-		active_batcher = 0;
-		batcher->flush(gc);
-	}
+	batcher.flush();
 }
 
 void Canvas_Impl::update_batcher_matrix()
 {
-	if (active_batcher)
-	{
-		active_batcher->matrix_changed(canvas_modelviews.back(), canvas_projection);
-	}
+	batcher.update_batcher_matrix(gc, canvas_modelviews.back(), canvas_projection);
 }
 
-void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *batcher)
+void Canvas_Impl::set_batcher(Canvas &canvas, RenderBatcher *new_batcher)
 {
-	if (active_batcher != batcher)
-	{
-		flush();
-		active_batcher = batcher;
+	if (batcher.set_batcher(canvas, new_batcher))
 		update_batcher_matrix();
-	}
 }
 
 void Canvas_Impl::calculate_map_mode_matrices()

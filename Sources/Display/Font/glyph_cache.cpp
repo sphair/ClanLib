@@ -278,7 +278,7 @@ void GlyphCache::draw_text(FontEngine *font_engine, Canvas &canvas, float xpos, 
 		return;
 	}
 
-	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	GraphicContext &gc = canvas.get_gc();
 	// Scan the string
 	UTF8_Reader reader(text.data(), text.length());

@@ -230,7 +230,7 @@ void Image::draw(Canvas &canvas, float x, float y) const
 		x + impl->translated_hotspot.x, y + impl->translated_hotspot.y, 
 		Sizef(impl->texture_rect.get_width() * impl->scale_x, impl->texture_rect.get_height() * impl->scale_y));
 
-	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_image(canvas, impl->texture_rect, dest, impl->color, impl->texture);
 }
 
@@ -247,7 +247,7 @@ void Image::draw(Canvas &canvas, const Rectf &src, const Rectf &dest) const
 	Rectf new_dest = dest;
 	new_dest.translate(impl->translated_hotspot);
 
-	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
 }
 
@@ -256,7 +256,7 @@ void Image::draw(Canvas &canvas, const Rectf &dest) const
 	Rectf new_dest = dest;
 	new_dest.translate(impl->translated_hotspot);
 
-	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
 }
 

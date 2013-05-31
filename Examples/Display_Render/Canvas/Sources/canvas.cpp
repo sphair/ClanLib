@@ -89,7 +89,6 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		image_ground_back.draw(canvas_window, sinf(back_pos/100.0f)*100.0f, -20.0f);
 
 		// Draw the ground
-		canvas_framebuffer.flush();
 		image_ground.draw(canvas_window, 0, 0);
 	
 		// Draw mouse cursor

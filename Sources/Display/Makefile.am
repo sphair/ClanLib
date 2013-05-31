@@ -63,6 +63,7 @@ ShaderEffect/shader_effect_description.cpp \
 2D/shape2d.cpp \
 2D/render_batch_buffer.cpp \
 2D/canvas.cpp \
+2D/canvas_batcher.cpp \
 2D/color_hsl.cpp \
 setup_display.cpp \
 Image/icon_set.cpp \
