@@ -107,6 +107,9 @@ public:
 		return object->value;
 	}
 
+	operator Type&() {return object->value;}
+	operator const Type&() const {return object->value;}
+
 	const std::shared_ptr<Resource_Impl<Type> > &handle() const { return object; }
 
 	bool operator<(const Resource &other) const { return object < other.object; }
