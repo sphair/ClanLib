@@ -102,7 +102,7 @@ private:
 	Slot draw_slot;
 	Slot update_slot;
 
-	Sprite *bullet;
+	Sprite bullet;
 	Vec2f pos;
 	Angle angle;
 

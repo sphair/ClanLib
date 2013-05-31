@@ -54,17 +54,16 @@ Player::Player(Game &game_)
 	PhysicsContext pc = game_.get_pc();
 	ResourceManager resources = game_.get_resources();
 
-	vehicle		= new Sprite(gc, "Car1", resources);
+	vehicle	= Sprite::resource(gc, "Car1", resources);
 
-	vehicle->set_linear_filter(false);
-	
+	vehicle.set_linear_filter(false);
 	//________________________________________________________________________
 	//															   T U R R E T	
-	turret		= new Sprite(gc, resources, "Turret1");
-	turretBase	= new Sprite(gc, resources, "Turret1Base");
+	turret		= Sprite::resource(gc, "Turret1", resources);
+	turretBase	= Sprite::resource(gc, "Turret1Base", resources);
 	
-	turret->set_linear_filter(false);
-	turretBase->set_linear_filter(false);
+	turret.set_linear_filter(false);
+	turretBase.set_linear_filter(false);
 	
 	turret_angle = Angle(0,angle_degrees);
 	time_since_last_shoot = 0.0f;
@@ -88,7 +87,7 @@ Player::Player(Game &game_)
 	body_desc.set_angular_damping(100.0f);
 
 	PolygonShape shape(pc);
-	shape.set_as_box(vehicle->get_width()/2.5f, vehicle->get_height()/4.0f, Vec2f(0.0f, 5.0f), Angle(0, angle_degrees));
+	shape.set_as_box(vehicle.get_width()/2.5f, vehicle.get_height()/4.0f, Vec2f(0.0f, 5.0f), Angle(0, angle_degrees));
 
 	FixtureDescription fixture_desc(pc);
 	fixture_desc.set_density(1000.0f);
@@ -138,9 +137,6 @@ Player::Player(Game &game_)
 
 Player::~Player()
 {
-	if(vehicle!=NULL) delete vehicle;
-	if(turret!=NULL) delete turret;
-	if(turretBase!=NULL) delete turretBase;
 }
 
 void Player::update(int time_elapsed_ms)
@@ -163,8 +159,8 @@ void Player::update(int time_elapsed_ms)
 
 		body.set_linear_velocity(Vec2f(x_speed,y_speed));
 
-		turret->set_angle(turret_angle);
-		vehicle->set_angle(body.get_angle());
+		turret.set_angle(turret_angle);
+		vehicle.set_angle(body.get_angle());
 
 		if(doShoot1)
 		{
@@ -225,10 +221,10 @@ void Player::draw(Canvas &canvas)
 	Vec2f pos = body.get_position();
 	float wobble = wobble_timer>125 ? 1 : 0;
 
-	vehicle->draw(canvas,pos.x,pos.y+wobble);
-	turretBase->draw(canvas,turretBasePos.x+4,turretBasePos.y-4+wobble);
-	turret->draw(canvas,turretPos.x,turretPos.y+wobble);
-	turretBase->draw(canvas,turretBasePos.x,turretBasePos.y+wobble);
+	vehicle.draw(canvas,pos.x,pos.y+wobble);
+	turretBase.draw(canvas,turretBasePos.x+4,turretBasePos.y-4+wobble);
+	turret.draw(canvas,turretPos.x,turretPos.y+wobble);
+	turretBase.draw(canvas,turretBasePos.x,turretBasePos.y+wobble);
 }
 
 bool Player::should_collide_with(Body &body)

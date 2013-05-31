@@ -50,9 +50,9 @@ private:
 	Slot update_slot;
 	Slot draw_slot;
 
-	Sprite *title1;
-	Sprite *background1;
-	Sprite *background2;
+	Sprite title1;
+	Sprite background1;
+	Sprite background2;
 
 	Vec2f back1_pos;
 	Vec2f back2_pos;
