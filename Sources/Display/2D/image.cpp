@@ -41,6 +41,7 @@
 #include "render_batch_triangle.h"
 #include "../Render/graphic_context_impl.h"
 #include "canvas_impl.h"
+#include "API/Display/Resources/display_cache.h"
 
 namespace clan
 {
@@ -152,6 +153,12 @@ Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportD
 
 	impl->texture = Texture2D(gc, filename, vfs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
+}
+
+Image::Image(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id)
+{
+	DisplayCache cache(doc);
+	*this = cache.get_image(gc, id);
 }
 
 Image::~Image()

@@ -88,6 +88,13 @@ public:
 	/// \param image_type = String
 	Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
+	/// \brief Constructs a Sprite from a resource
+	///
+	/// \param gc = Graphic Context
+	/// \param doc = xml document
+	/// \param id = id
+	Sprite(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id);
+
 	/// \brief Constructs an empty Sprite
 	///
 	/// \param gc = Graphic Context

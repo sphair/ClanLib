@@ -50,6 +50,7 @@ class Image_Impl;
 class Texture2D;
 class Subtexture;
 class PixelBuffer;
+class XMLResourceDocument;
 class Canvas;
 
 /// \brief Image class.
@@ -95,6 +96,13 @@ public:
 	/// \param dir = Virtual directory to load filename from
 	/// \param import_desc = Image Import Description
 	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	/// \brief Constructs an Image from a resource
+	///
+	/// \param gc = Graphic Context
+	/// \param doc = xml document
+	/// \param id = id
+	Image(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id);
 
 	virtual ~Image();	
 /// \}
