@@ -106,7 +106,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 		y = sin(sin_count+3.14159f)*120.0f;
 		canvas.fill_rect(Rectf( 320.0f + x -30.0f, 300 + y -30.0f, Sizef(60.0f, 60.0f)), Colorf(1.0f, 1.0f, 0.0, 0.5f));
 
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process(0);

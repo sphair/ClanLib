@@ -115,7 +115,7 @@ int Particle::start(const std::vector<std::string> &args)
 		if (reset_title_flag)
 			window.set_title("LinearParticle Example - Main Menu");
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process(0);
 	}

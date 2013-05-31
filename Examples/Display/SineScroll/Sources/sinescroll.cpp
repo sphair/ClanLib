@@ -65,7 +65,7 @@ int SineScroll::start(const std::vector<std::string> &args)
 	
 		draw_demo(canvas, game_time.get_time_elapsed_ms());
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process(0);
 	}

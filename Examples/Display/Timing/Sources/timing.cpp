@@ -64,7 +64,7 @@ int Timing::start(const std::vector<std::string> &args)
 
 		draw_graphics(canvas, game_time.get_time_elapsed());
 
-		canvas.flip();
+		window.flip();
 
 		clan::KeepAlive::process(0);
 	}

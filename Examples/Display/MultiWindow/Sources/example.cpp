@@ -58,9 +58,9 @@ int Example::start(const std::vector<std::string> &args)
 	clan::Slot slot_input_up_window_1 = (window_1.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 1);
 	clan::Slot slot_input_up_window_2 = (window_2.get_ic().get_keyboard()).sig_key_up().connect(this, &Example::on_input_up, 2);
 
-	// Get the graphic context - for both windows
-	clan::Canvas canvas_1(window_1.get_gc());
-	clan::Canvas canvas_2(window_2.get_gc());
+	// Get the canvas - for both windows
+	clan::Canvas canvas_1(window_1);
+	clan::Canvas canvas_2(window_2);
 
 	// Load the example text - Note, any window can create the font
 	clan::Font font(canvas_1, "tahoma", 64);
@@ -130,9 +130,6 @@ int Example::start(const std::vector<std::string> &args)
 		font.draw_text(canvas_2, -font_xoffset + text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 		font.draw_text(canvas_2, -font_xoffset - text_size.width-canvas_1.get_width(), font_yoffset, example_text, clan::Colorf::white);
 		canvas_2.pop_modelview();
-
-		canvas_1.flush();
-		canvas_2.flush();
 
 		// Flip the displays
 		window_1.flip(0);

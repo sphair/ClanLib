@@ -176,10 +176,10 @@ int App::start(const std::vector<std::string> &args)
 	rock.draw(canvas_left, 0.0f, 0.0f);
 
 	// Draw the layered windows
-	canvas_top.flip();
-	canvas_right.flip();
-	canvas_bottom.flip();
-	canvas_left.flip();
+	window_top.flip();
+	window_right.flip();
+	window_bottom.flip();
+	window_left.flip();
 
 	// Setup the demo
 	clan::Rect boundary(120, 120, clan::Size(360, 360));
@@ -217,7 +217,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas_center, 150-2, 150-2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		font.draw_text(canvas_center, 150, 150, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
-		canvas_center.flip(0);
+		window_center.flip(0);
 
 		// This call processes user input and other events
 		clan::KeepAlive::process();

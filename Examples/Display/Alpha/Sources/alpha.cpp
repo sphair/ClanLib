@@ -90,7 +90,7 @@ int Alpha::start(const std::vector<std::string> &args)
 		draw_section(canvas, font, ypos, clan::Colorf(0.5f, 0.5f, 1.0f, 1.0f), clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 0.3f));
 		ypos += ygap;
 
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call processes user input and other events
 		clan::KeepAlive::process(0);

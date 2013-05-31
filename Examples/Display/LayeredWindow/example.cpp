@@ -176,7 +176,7 @@ int App::start(const std::vector<std::string> &args)
 		font_small.draw_text(canvas, 110-2, 110-2, "Drag rock to move window", clan::Colorf(0.1f, 0.1f, 0.1f, 1.0f));
 		font_small.draw_text(canvas, 110, 110, "Drag rock to move window", clan::Colorf::green);
 
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call processes user input and other events
 		clan::KeepAlive::process();
