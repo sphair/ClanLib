@@ -121,6 +121,7 @@
 #include "Core/Resources/resource_manager.h"
 #include "Core/Resources/xml_resource_node.h"
 #include "Core/Resources/xml_resource_document.h"
+#include "Core/Resources/xml_resource_manager.h"
 #include "Core/XML/dom_processing_instruction.h"
 #include "Core/XML/dom_entity_reference.h"
 #include "Core/XML/dom_notation.h"
