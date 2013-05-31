@@ -82,6 +82,12 @@ public:
 		GraphicContext &context,
 		IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
+	/// \brief Constructs a texture from the cache
+	///
+	/// \param gc = Graphic Context
+	/// \param cache = The cache
+	/// \param id = id
+	static Texture2D load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
 /// \}
 
 /// \name Attributes

@@ -41,12 +41,18 @@
 #include "API/Core/Resources/xml_resource_document.h"
 #include "graphic_context_impl.h"
 #include "texture_impl.h"
+#include "API/Display/Resources/display_cache.h"
 
 namespace clan
 {
 
 Texture2D::Texture2D()
 {
+}
+
+Texture2D Texture2D::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
+{
+	return cache.get_texture(gc, id).get().to_texture_2d();
 }
 
 Texture2D::Texture2D(GraphicContext &context, int width, int height, TextureFormat texture_format, int levels)

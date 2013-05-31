@@ -49,6 +49,7 @@ class SpriteDescription;
 class Sprite_Impl;
 class CollisionOutline;
 class Canvas;
+class DisplayCache;
 
 /// \brief Sprite class.
 class CL_API_DISPLAY Sprite
@@ -88,12 +89,12 @@ public:
 	/// \param image_type = String
 	Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Constructs a Sprite from a resource
+	/// \brief Constructs a Sprite from the cache
 	///
 	/// \param gc = Graphic Context
-	/// \param doc = xml document
+	/// \param cache = The cache
 	/// \param id = id
-	Sprite(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id);
+	static Sprite load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
 
 	/// \brief Constructs an empty Sprite
 	///
