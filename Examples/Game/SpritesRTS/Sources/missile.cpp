@@ -37,7 +37,7 @@ Missile::Missile(World *world, GameObject *_owner)
 
 	spriteMissile = new clan::Sprite(canvas, world->resources, "SpaceShootMissile");
 	spriteExplosion = new clan::Sprite(canvas, world->resources, "Explosion");
-	sound = new clan::SoundBuffer("MissileHit");
+	sound = new clan::SoundBuffer(world->resources, "MissileHit");
 
 	collisionMissile = new clan::CollisionOutline("Gfx/spaceshoot_missile.png");
 	collisionMissile->set_alignment(clan::origin_center);
