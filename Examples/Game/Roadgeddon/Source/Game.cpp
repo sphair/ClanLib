@@ -69,7 +69,7 @@ void Game::run()
 	Canvas canvas(window);
 	gc = canvas.get_gc();
 	
-	XMLResourceDocument resources("resources.xml");
+	ResourceManager resources = XMLResourceManager::create(XMLResourceDocument("resources.xml"));
 	resources_=&resources;
 
 	int time_elapsed_ms = 0;
@@ -192,7 +192,7 @@ PhysicsContext &Game::get_pc()
 	return pc;
 }
 
-XMLResourceDocument &Game::get_resources()
+ResourceManager &Game::get_resources()
 {
 	return *resources_;
 }

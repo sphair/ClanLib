@@ -33,7 +33,7 @@ Map::Map(Game &game_)
 {
 	game = &game_;
 	GraphicContext &gc = game_.get_gc(); 
-	XMLResourceDocument &resources = game_.get_resources();
+	ResourceManager &resources = game_.get_resources();
 	title1 = new Sprite(gc,resources, "Map1");
 	background1 = new Sprite(gc, resources, "Background1");
 	background2 = new Sprite(gc, resources, "Background2");
