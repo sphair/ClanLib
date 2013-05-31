@@ -50,11 +50,6 @@ Texture2D::Texture2D()
 {
 }
 
-Texture2D Texture2D::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
-{
-	return cache.get_texture(gc, id).get().to_texture_2d();
-}
-
 Texture2D::Texture2D(GraphicContext &context, int width, int height, TextureFormat texture_format, int levels)
 : Texture(std::shared_ptr<Texture_Impl>(new Texture_Impl))
 {

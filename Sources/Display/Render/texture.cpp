@@ -38,8 +38,14 @@
 #include "API/Display/Render/texture_cube_array.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Image/pixel_buffer_set.h"
-#include "texture_impl.h"
 #include "API/Display/Resources/display_cache.h"
+#include "API/Core/Resources/xml_resource_manager.h"
+#include "API/Core/Resources/xml_resource_node.h"
+#include "API/Core/XML/dom_element.h"
+#include "API/Core/IOData/path_help.h"
+#include "API/Core/Text/string_format.h"
+#include "texture_impl.h"
+
 namespace clan
 {
 
@@ -154,13 +160,35 @@ Texture::Texture(const std::shared_ptr<Texture_Impl> &impl)
 {
 }
 
-Texture Texture::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
-{
-	return cache.get_texture(gc, id);
-}
-
 Texture::~Texture()
 {
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// Sprite Resources:
+
+Resource<Texture> Texture::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
+{
+	return DisplayCache::get(resources).get_texture(gc, id);
+}
+
+Texture Texture::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc)
+{
+	XMLResourceNode resource = doc.get_resource(id);
+
+	std::string type = resource.get_type();
+
+	if (type != "texture")
+		throw Exception(string_format("Resource '%1' is not of type 'texture'", id));
+
+	ImageImportDescription import_desc; // The infamous ImageImportDescription strikes again!
+
+	std::string filename = resource.get_element().get_attribute("file");
+	FileSystem fs = resource.get_file_system();
+
+	Texture2D texture(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
+
+	return Resource<Texture>(texture);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -82,7 +82,7 @@ Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::st
 	if (it != textures.end())
 		return it->second;
 
-	Resource<Texture> texture = load_texture(gc, id);
+	Resource<Texture> texture = Texture::load(gc, id, doc);
 	textures[id] = texture;
 	return texture;
 }
@@ -98,25 +98,6 @@ Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const FontDescription &
 	Resource<Font> font = load_font(canvas, desc);
 	fonts[id] = font;
 	return font;
-}
-
-Resource<Texture> XMLDisplayCache::load_texture(GraphicContext &gc, const std::string &id)
-{
-	XMLResourceNode resource = doc.get_resource(id);
-
-	std::string type = resource.get_type();
-
-	if (type != "texture")
-		throw Exception(string_format("Resource '%1' is not of type 'texture'", id));
-
-	ImageImportDescription import_desc; // The infamous ImageImportDescription strikes again!
-
-	std::string filename = resource.get_element().get_attribute("file");
-	FileSystem fs = resource.get_file_system();
-
-	Texture2D texture(gc, PathHelp::combine(resource.get_base_path(), filename), fs, import_desc);
-
-	return Resource<Texture>(texture);
 }
 
 Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription &desc)
