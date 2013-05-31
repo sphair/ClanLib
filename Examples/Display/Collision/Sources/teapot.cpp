@@ -41,9 +41,9 @@ Teapot::Teapot()
 	flash = false;
 }
 
-void Teapot::create(clan::Canvas &canvas, clan::XMLResourceDocument &resources)
+void Teapot::create(clan::Canvas &canvas, clan::ResourceManager &resources)
 {
-	teapot_sprites = clan::Sprite(canvas, resources, "teapot");
+	teapot_sprites = clan::Sprite::resource(canvas, "teapot", resources);
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****

@@ -51,7 +51,7 @@ int Collision::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &Collision::on_input_up);
 
-	clan::XMLResourceDocument resources("Resources/resources.xml");
+	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 	
 	clan::Font font(canvas, "tahoma", 24);
 
