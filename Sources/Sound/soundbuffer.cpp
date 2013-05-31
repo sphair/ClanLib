@@ -40,6 +40,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
+#include "API/Sound/sound_cache.h"
 
 namespace clan
 {
@@ -49,30 +50,6 @@ namespace clan
 
 SoundBuffer::SoundBuffer()
 {
-}
-	
-SoundBuffer::SoundBuffer(
-	const std::string &res_id,
-	const XMLResourceDocument &manager)
-: impl(new SoundBuffer_Impl)
-{
-	XMLResourceNode resource = manager.get_resource(res_id);
-
-	DomElement &element = resource.get_element();
-
-	SoundProvider *provider = 0;
-
-	std::string name = resource.get_element().get_attribute("file");
-	std::string sound_format = resource.get_element().get_attribute("format");
-	bool streamed = (element.get_attribute("stream", "no") == "yes");
-
-	impl->provider = SoundProviderFactory::load(
-		PathHelp::combine(resource.get_base_path(), name),
-		streamed,
-		resource.get_file_system(), sound_format);
-
-	if (!provider)
-		throw Exception("Unknown sample format");
 }
 
 SoundBuffer::SoundBuffer(
@@ -113,6 +90,36 @@ SoundBuffer::SoundBuffer(
 SoundBuffer::~SoundBuffer()
 {
 }
+
+Resource<SoundBuffer> SoundBuffer::resource(const std::string &id, const ResourceManager &resources)
+{
+	return SoundCache::get(resources).get_sound(id);
+}
+
+SoundBuffer SoundBuffer::load(const std::string &id, const XMLResourceDocument &doc)
+{
+	SoundBuffer sound;
+
+	sound.impl = std::shared_ptr<SoundBuffer_Impl>(new SoundBuffer_Impl);
+
+	XMLResourceNode resource = doc.get_resource(id);
+
+	DomElement &element = resource.get_element();
+
+	std::string name = resource.get_element().get_attribute("file");
+	std::string sound_format = resource.get_element().get_attribute("format");
+	bool streamed = (element.get_attribute("stream", "no") == "yes");
+
+	sound.impl->provider = SoundProviderFactory::load(
+		PathHelp::combine(resource.get_base_path(), name),
+		streamed,
+		resource.get_file_system(), sound_format);
+
+	if (!sound.impl->provider)
+		throw Exception("Unknown sample format");
+	return sound;
+}
+
 
 /////////////////////////////////////////////////////////////////////////////
 // SoundBuffer attributes:
