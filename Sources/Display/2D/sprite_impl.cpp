@@ -268,7 +268,7 @@ void Sprite_Impl::draw(Canvas &canvas, const Rect &p_src, const Pointf &p_dest, 
 		dest_position[3].y = calc_rotate_y(pixDestX+destWidth, pixDestY+destHeight, target_rotation_hotspot.x, target_rotation_hotspot.y, vect_rotate_x[1], vect_rotate_y[1]);
 	}
 
-	RenderBatchTriangle *batcher = canvas.impl->get_triangle_batcher();
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_sprite(canvas, texture_position, dest_position, frames[current_frame].texture, color);
 
 }
