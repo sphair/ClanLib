@@ -47,8 +47,12 @@ class RenderBatchTriangle;
 class Canvas_Impl
 {
 public:
-	Canvas_Impl(GraphicContext &gc);
+	Canvas_Impl();
 	~Canvas_Impl();
+
+	void init(Canvas_Impl *canvas);
+	void init(Canvas_Impl *canvas, FrameBuffer &framebuffer);
+	void init(DisplayWindow &window);
 
 	void clear(const Colorf &color);
 
@@ -84,14 +88,15 @@ public:
 	static void get_texture_coords(const Vec2f *triangles, int num_vertex, const Texture2D &texture, const Rect &texture_rect, std::vector<Vec2f> &out_texture_positions);
 
 	std::vector<Rect> cliprects;
-	DisplayWindow display_window;
 
 private:
+	void setup(GraphicContext &new_gc);
 	void calculate_map_mode_matrices();
 	MapMode get_top_down_map_mode() const;
 	void on_window_resized(const Size &size);
 	void update_batcher_matrix();
 	void write_cliprect(const Rect &rect);
+	void on_window_flip();
 
 	GraphicContext gc;
 
@@ -108,11 +113,14 @@ private:
 	Size canvas_size;
 	Slot slot_window_resized;
 
+	DisplayWindow current_window;
+
 	TextureImageYAxis canvas_y_axis;
 
 	Mat4f user_projection;
 	ClipZRange gc_clip_z_range;
 
+	Slot slot_window_flip;
 };
 
 }

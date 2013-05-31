@@ -86,6 +86,7 @@ public:
 	Signal_v0 sig_window_maximized;
 	Signal_v0 sig_window_restored;
 	Signal_v0 sig_window_moved;
+	Signal_v0 sig_window_flip;
 	Callback_v1<Rect &> func_window_resize;
 	Callback_0<bool> func_minimize_clicked;
 	DisplayWindowSite site;
