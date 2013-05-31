@@ -229,6 +229,11 @@ Signal_v0 &DisplayWindow::sig_window_moved()
 	return impl->sig_window_moved;
 }
 
+Signal_v0 &DisplayWindow::sig_window_flip()
+{
+	return impl->sig_window_flip;
+}
+
 void DisplayWindow::throw_if_null() const
 {
 	if (!impl)
@@ -407,6 +412,7 @@ void DisplayWindow::update(const Rect &rect)
 
 void DisplayWindow::flip(int interval)
 {
+	impl->sig_window_flip.invoke();
 	impl->provider->flip(interval);
 }
 

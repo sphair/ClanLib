@@ -37,9 +37,39 @@
 namespace clan
 {
 
-Canvas_Impl::Canvas_Impl(GraphicContext &gc)
-	: gc(gc), active_batcher(0), canvas_map_mode(map_user_projection)
+Canvas_Impl::Canvas_Impl() : active_batcher(0), canvas_map_mode(map_user_projection)
 {
+}
+
+void Canvas_Impl::init(Canvas_Impl *canvas)
+{
+	GraphicContext new_gc = canvas->get_gc().create();
+	current_window = canvas->current_window;
+	setup(new_gc);
+}
+
+void Canvas_Impl::init(Canvas_Impl *canvas, FrameBuffer &framebuffer)
+{
+	GraphicContext new_gc = canvas->get_gc().create(framebuffer);
+	setup(new_gc);
+}
+
+void Canvas_Impl::init(DisplayWindow &window)
+{
+	GraphicContext new_gc = window.get_gc().create();
+	current_window = window;
+	setup(new_gc);
+}
+
+void Canvas_Impl::setup(GraphicContext &new_gc)
+{
+	gc = new_gc;
+
+	if (!current_window.is_null())
+	{
+		slot_window_flip = current_window.sig_window_flip().connect(this, &Canvas_Impl::on_window_flip);
+	}
+
 	gc_clip_z_range = gc.get_provider()->get_clip_z_range();
 	canvas_modelviews.push_back(Mat4f::identity());
 
@@ -386,5 +416,9 @@ Rectf Canvas_Impl::get_triangles_bounding_box(const Vec2f *triangles, int num_ve
 	return bounding_box;
 }
 
+void Canvas_Impl::on_window_flip()
+{
+	flush();
 }
 
+}

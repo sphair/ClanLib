@@ -51,7 +51,7 @@ namespace clan
 // GUIWindowManagerProvider_Texture Construction:
 
 GUIWindowManagerProvider_Texture::GUIWindowManagerProvider_Texture(DisplayWindow &display_window)
-	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window.get_gc()),
+	: site(0), activated_window(0), capture_mouse_window(NULL), display_window(display_window), canvas_window(display_window),
   frame_buffer_initial_setup(false), frame_buffer_stencil_attached(false), frame_buffer_depth_attached(false)
 {
 	slots.connect(display_window.sig_window_close(), this, &GUIWindowManagerProvider_Texture::on_displaywindow_window_close);
@@ -280,7 +280,7 @@ void GUIWindowManagerProvider_Texture::on_input_mouse_down(const InputEvent &inp
 void GUIWindowManagerProvider_Texture::clear_frame_buffer(GUITopLevelWindowTexture *toplevel_window )
 {
 	setup_frame_buffer(toplevel_window);
-	Canvas canvas = canvas_window.create(frame_buffer);
+	Canvas canvas(canvas_window, frame_buffer);
 	canvas.set_blend_state(opaque_blend);
 	canvas.fill_rect(toplevel_window->subtexture.get_geometry(), Colorf::transparent);
 }
@@ -549,7 +549,7 @@ Canvas GUIWindowManagerProvider_Texture::begin_paint(GUITopLevelWindow *handle, 
 	GUITopLevelWindowTexture *toplevel_window = get_window_texture(handle);
 
 	setup_frame_buffer(toplevel_window);
-	Canvas canvas = canvas_window.create(frame_buffer);
+	Canvas canvas(canvas_window, frame_buffer);
 	Rect subtexture_geometry = toplevel_window->subtexture.get_geometry();
 
 	Rect clip_rect = update_region;

@@ -76,17 +76,11 @@ public:
 	/// \brief Constructs a null instance.
 	Canvas();
 
-	/// \brief Constructs a Canvas (based on a specific GraphicContext)
-	explicit Canvas(GraphicContext &context);
+	/// \brief Constructs a Canvas based on a framebuffer.  (based on the copy of the canvas)
+	Canvas(Canvas &canvas, FrameBuffer &framebuffer);
 
-	/// \brief Constructs a Canvas based on a framebuffer.  (based on the COPY of the GraphicContext)
-	Canvas(GraphicContext &context, FrameBuffer &framebuffer);
-
-	/// \brief Constructs a Canvas (based on a specific GraphicContext held in the DisplayWindow)
+	/// \brief Constructs a Canvas
 	explicit Canvas(DisplayWindow &window);
-
-	/// \brief Constructs a Canvas (based on a DisplayWindow description)
-	explicit Canvas(DisplayWindowDescription &desc);
 
 	~Canvas();
 
@@ -94,6 +88,9 @@ public:
 /// \name Attributes
 /// \{
 public:
+	/// \brief Create a copy of a canvas
+	Canvas create();
+
 	/// \brief Returns true if this object is invalid.
 	bool is_null() const { return !impl; }
 
@@ -131,21 +128,10 @@ public:
 	/// \brief Return the content of the read buffer into a pixel buffer.
 	PixelBuffer get_pixeldata(TextureFormat texture_format = tf_rgba8, bool clamp = true);
 
-	/// \brief Get the display window attached to this canvas
-	///
-	/// Returns an empty object if no display window exists
-	DisplayWindow get_window() const;
-
 /// \}
 /// \name Operations
 /// \{
 public:
-	/// \brief Constructs an independent canvas based on this one
-	Canvas create();
-
-	/// \brief Constructs an independent canvas based on a framebuffer.
-	Canvas create(FrameBuffer &framebuffer);
-
 	/// \brief Set active rasterizer state
 	void set_rasterizer_state(const RasterizerState &state);
 
@@ -478,36 +464,6 @@ public:
 
 	/// \brief Draw a gradient filled ellipse.
 	void fill_ellipse(const Pointf &center, float radius_x, float radius_y, const Gradient &gradient);
-
-	/// \brief Flip back buffer to front, making changes visible on screen.
-	///
-	/// This function calls flush()
-	///
-	/// <p>The parameter interval specifies the minimum number of video frames
-	/// that are displayed before a buffer swap will occur.</p>
-	/// <p>If interval is set to a value of 0, buffer swaps are not synchronized
-	/// to a video frame. </p>
-	/// <p>If interval is set to a value of -1 (the default), then it will use
-	/// the buffer swap used for previous flip. If its the first flip, it will
-	/// use the system default.</p>
-	///
-	/// \param interval = See note
-	void flip(DisplayWindow &window, int interval = -1);
-
-	/// \brief Flip back buffer to front, making changes visible on screen.
-	///
-	/// This function calls flush()
-	///
-	/// <p>The parameter interval specifies the minimum number of video frames
-	/// that are displayed before a buffer swap will occur.</p>
-	/// <p>If interval is set to a value of 0, buffer swaps are not synchronized
-	/// to a video frame. </p>
-	/// <p>If interval is set to a value of -1 (the default), then it will use
-	/// the buffer swap used for previous flip. If its the first flip, it will
-	/// use the system default.</p>
-	///
-	/// \param interval = See note
-	void flip(int interval = -1);
 
 /// \}
 /// \name Events

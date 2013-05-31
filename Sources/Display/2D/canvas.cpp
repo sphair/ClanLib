@@ -52,45 +52,16 @@ Canvas::Canvas()
 {
 }
 
-Canvas::Canvas(GraphicContext &context) : impl(new Canvas_Impl(context))
+Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl)
 {
+	impl->init(window);
 	set_map_mode(map_2d_upper_left);
 }
 
-Canvas::Canvas(DisplayWindow &window) : impl(new Canvas_Impl(window.get_gc()))
+Canvas::Canvas(Canvas &canvas, FrameBuffer &framebuffer) : impl(new Canvas_Impl)
 {
-	impl->display_window = window;
+	impl->init(canvas.impl.get(), framebuffer);
 	set_map_mode(map_2d_upper_left);
-}
-
-Canvas::Canvas(DisplayWindowDescription &desc)
-{
-	DisplayWindow window(desc);
-	*this = Canvas(window);
-}
-
-Canvas::Canvas(GraphicContext &context, FrameBuffer &framebuffer)
-{
-	GraphicContext new_context = context.create(framebuffer);
-	*this = Canvas(new_context);
-}
-
-Canvas Canvas::create(FrameBuffer &framebuffer)
-{
-	flush();
-	GraphicContext new_context = get_gc().create(framebuffer);
-	return Canvas(new_context);
-}
-
-Canvas Canvas::create()
-{
-	flush();
-	GraphicContext new_context = get_gc().create();
-	Canvas new_canvas = Canvas(new_context);
-
-	new_canvas.impl->display_window = impl->display_window;
-
-	return new_canvas;
 }
 
 Canvas::~Canvas()
@@ -99,6 +70,15 @@ Canvas::~Canvas()
 
 /////////////////////////////////////////////////////////////////////////////
 // Canvas Attributes:
+
+Canvas Canvas::create()
+{
+	Canvas copy_canvas;
+	copy_canvas.impl = std::shared_ptr<Canvas_Impl>(new Canvas_Impl);
+	copy_canvas.impl->init(impl.get());
+	copy_canvas.set_map_mode(map_2d_upper_left);
+	return copy_canvas;
+}
 
 void Canvas::throw_if_null() const
 {
@@ -139,11 +119,6 @@ PixelBuffer Canvas::get_pixeldata(TextureFormat texture_format, bool clamp)
 {
 	flush();
 	return get_gc().get_pixeldata(texture_format, clamp);
-}
-
-DisplayWindow Canvas::get_window() const
-{
-	return impl->display_window;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -748,21 +723,6 @@ void Canvas::fill_ellipse(const Pointf &center, float radius_x, float radius_y, 
 	mult_scale(radius_x/max_radius, radius_y/max_radius);
 	fill_circle( Pointf(0,0), max_radius, gradient);
 	pop_modelview();
-}
-
-void Canvas::flip(DisplayWindow &window, int interval)
-{
-	window.throw_if_null();
-	flush();
-	window.flip(interval);
-}
-
-void Canvas::flip(int interval)
-{
-	if (impl->display_window.is_null())
-		throw Exception("The display window is not known to this canvas");
-	flush();
-	impl->display_window.flip(interval);
 }
 
 /////////////////////////////////////////////////////////////////////////////

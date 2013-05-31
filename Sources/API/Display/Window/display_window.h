@@ -173,6 +173,9 @@ public:
 	/// \brief Signal emitted after a window has been moved.
 	Signal_v0 &sig_window_moved();
 
+	/// \brief Signal emitted when window flip() was called
+	Signal_v0 &sig_window_flip();
+
 	/// \brief Callback called when a window is being resized.
 	Callback_v1<Rect &> &func_window_resize();
 
