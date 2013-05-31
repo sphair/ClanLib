@@ -44,6 +44,7 @@
 #include "API/Display/Collision/collision_outline.h"
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
+#include "API/Display/Resources/display_cache.h"
 
 namespace clan
 {
@@ -82,9 +83,16 @@ Sprite::Sprite(GraphicContext &gc)
 {
 }
 
+Sprite::Sprite(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id)
+{
+	DisplayCache cache(doc);
+	*this = cache.get_sprite(gc, id);
+}
+
 Sprite::~Sprite()
 {
 }
+
 
 /////////////////////////////////////////////////////////////////////////////
 // Sprite Attributes:
