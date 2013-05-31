@@ -106,21 +106,21 @@ Missile::Missile(MissileDesc &desc)
 	switch(mType)
 	{
 	case MissileDesc::mt_bullet:
-		bullet = new Sprite(gc, resources, "Bullet1");
+		bullet = Sprite::resource(gc, "Bullet1", resources);
 		damage = 20;
 		break;
 	case MissileDesc::mt_energy:
-		bullet = new Sprite(gc, resources,"Bullet2");
+		bullet = Sprite::resource(gc, "Bullet2", resources);
 		damage = 10;
 		break;
 	case MissileDesc::mt_rocket:
-		bullet = new Sprite(gc, resources,"Rocket");
+		bullet = Sprite::resource(gc, "Rocket", resources);
 		damage = 50;
 		break;
 	}
 
-	bullet->set_linear_filter(false);
-	bullet->set_angle(angle);
+	bullet.set_linear_filter(false);
+	bullet.set_angle(angle);
 
 	//___________________________________________________________________
 	//													    P H Y S I C S
@@ -130,7 +130,7 @@ Missile::Missile(MissileDesc &desc)
 	body_desc.set_type(body_dynamic);
 
 	PolygonShape shape(pc);
-	shape.set_as_box(bullet->get_width()/4, bullet->get_height()/4);
+	shape.set_as_box(bullet.get_width()/4, bullet.get_height()/4);
 
 	FixtureDescription fixture_desc(pc);
 	fixture_desc.set_density(50.0f);
@@ -161,7 +161,7 @@ Missile::Missile(MissileDesc &desc)
 
 Missile::~Missile()
 {
-	if(bullet!=NULL) delete bullet;
+
 }
 
 bool Missile::should_collide_with(Body &body)
@@ -227,5 +227,5 @@ void Missile::update(int time_elapsed_ms)
 void Missile::draw(Canvas &canvas)
 {
 	Vec2f pos = body.get_position();
-	bullet->draw(canvas,pos.x,pos.y);
+	bullet.draw(canvas,pos.x,pos.y);
 }

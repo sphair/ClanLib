@@ -85,7 +85,7 @@ private:
 
 	MissileDesc missile;
 
-	Sprite *enemy;
+	Sprite enemy;
 
 	Slot draw_slot;
 	Slot update_slot;

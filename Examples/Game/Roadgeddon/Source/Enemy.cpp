@@ -79,8 +79,8 @@ Enemy::Enemy(Game &game_)
 
 //________________________________________________________________________
 //															   R E N D E R
-	enemy = new Sprite(gc,resources, "Enemy1");
-	enemy->set_play_loop(true);
+	enemy = Sprite::resource(gc,"Enemy1", resources);
+	enemy.set_play_loop(true);
 	
 	//int x,y;
 	//Origin origin;
@@ -98,7 +98,7 @@ Enemy::Enemy(Game &game_)
 	body_desc.set_angular_damping(100.0f);
 
 	PolygonShape shape(pc);
-	shape.set_as_box(enemy->get_width()/2.5f, enemy->get_height()/2.5f);
+	shape.set_as_box(enemy.get_width()/2.5f, enemy.get_height()/2.5f);
 
 	FixtureDescription fixture_desc(pc);
 	fixture_desc.set_density(1000.0f);
@@ -124,8 +124,6 @@ Enemy::Enemy(Game &game_)
 
 Enemy::~Enemy()
 {
-	if(enemy!=NULL) delete enemy;
-	
 }
 void Enemy::set_pos(float x,float y)
 {
@@ -135,7 +133,7 @@ void Enemy::set_pos(float x,float y)
 }
 void Enemy::update(int time_elapsed_ms)
 {
-	enemy->update(time_elapsed_ms);
+	enemy.update(time_elapsed_ms);
 	float time_elapsed = time_elapsed_ms * 0.001f;
 	time_since_last_shoot+=time_elapsed_ms;
 	pos = body.get_position();
@@ -159,7 +157,7 @@ void Enemy::update(int time_elapsed_ms)
 void Enemy::draw(Canvas &canvas)
 {
 	Vec2f pos = body.get_position();
-	enemy->draw(canvas,pos.x,pos.y);
+	enemy.draw(canvas,pos.x,pos.y);
 }
 
 void Enemy::hurt(float damage)

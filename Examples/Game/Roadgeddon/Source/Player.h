@@ -81,15 +81,15 @@ private:
 private:
 	
 	//Turret
-	Sprite *turret;
+	Sprite turret;
 	Angle turret_angle;
 	Vec2f turretPos;
 	Vec2f turretBasePos;
-	Sprite *turretBase;
+	Sprite turretBase;
 	MissileDesc missile;
 	//
 
-	Sprite *vehicle;
+	Sprite vehicle;
 	Game *game;
 
 	Slot draw_slot;
