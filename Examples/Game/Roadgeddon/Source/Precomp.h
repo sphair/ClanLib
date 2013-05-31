@@ -34,7 +34,7 @@
 #include <ClanLib/display.h>
 #include <ClanLib/sound.h>
 #include <ClanLib/physics2d.h>
-//#include <ClanLib/d3d.h>
+#include <ClanLib/d3d.h>
 #include <ClanLib/swrender.h>
 #include <ClanLib/gl.h>
 
