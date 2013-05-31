@@ -42,7 +42,7 @@ public:
 
 	DisplayWindow *get_window() { return window_ptr; }
 	GUIManager &get_gui() { return gui; }
-	ResourceManager &get_resources() { return resources_internal; }
+	DisplayCache &get_resources() { return resources_internal; }
 
 private:
 	void write_display_image();
@@ -54,8 +54,8 @@ private:
 
 private:
 	GUIManager gui;
-	ResourceManager resources_gui;
-	ResourceManager resources_internal;
+	DisplayCache resources_gui;
+	DisplayCache resources_internal;
 	GUIThemeDefault theme;
 	App *app;
 	DisplayWindow *window_ptr;

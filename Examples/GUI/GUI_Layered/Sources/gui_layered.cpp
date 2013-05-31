@@ -44,7 +44,7 @@ GUI_Layered::GUI_Layered(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_wi
 	//clan::TextureGroup texture_group(clan::Size(1024, 1024));
 	//wm.set_texture_group(texture_group);	// Note: This line is optional
 
-	resources_gui = clan::ResourceManager(gui->get_resources_location());
+	resources_gui = clan::DisplayCache(gui->get_resources_location());
 
 	theme.set_resources(resources_gui);
 	gui_manager->set_theme(theme); 
@@ -103,12 +103,12 @@ bool GUI_Layered::run()
 	return true;
 }
 
-clan::ResourceManager &GUI_Layered::get_resources_internal()
+clan::DisplayCache &GUI_Layered::get_resources_internal()
 {
 	return gui->get_resources_internal();
 }
 
-clan::ResourceManager &GUI_Layered::get_resources_gui()
+clan::DisplayCache &GUI_Layered::get_resources_gui()
 {
 	return resources_gui;
 }

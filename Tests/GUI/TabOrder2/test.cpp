@@ -16,7 +16,7 @@ public:
 		{
 			GUIManager gui;
 
-			ResourceManager resources("../../../Resources/GUIThemeLuna/resources.xml");
+			DisplayCache resources("../../../Resources/GUIThemeLuna/resources.xml");
 
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);

@@ -40,7 +40,7 @@
 #include "Views/ico_creator_view.h"
 #include <algorithm>
 
-MainWindow::MainWindow(GUIManager *gui, ResourceManager *resources)
+MainWindow::MainWindow(GUIManager *gui, DisplayCache *resources)
 : GUIComponent(gui, get_window_description(), "mainwindow"), resources(resources), workspace(0)
 {
 	func_close().set(this, &MainWindow::on_close);

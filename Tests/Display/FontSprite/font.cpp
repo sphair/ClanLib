@@ -68,7 +68,7 @@ int App::start(const std::vector<std::string> &args)
 		GraphicContext gc = canvas.get_gc();
 
 		// Load some fonts from the resource file
-		ResourceManager resources("font.xml");
+		DisplayCache resources("font.xml");
 		Font_Sprite font1(canvas, "Font1", &resources);
 		Font_Sprite font2(canvas, "Font2", &resources);
 

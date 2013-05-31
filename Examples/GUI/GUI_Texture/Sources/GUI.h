@@ -45,7 +45,7 @@ public:
 
 	clan::Canvas &get_canvas(){return canvas;}
 	App *get_app() { return app; }
-	clan::ResourceManager &get_resources_internal() { return resources_internal; }
+	clan::DisplayCache &get_resources_internal() { return resources_internal; }
 
 	Theme::gui_theme get_theme() {return current_theme;}
 
@@ -60,7 +60,7 @@ private:
 private:
 	clan::Canvas canvas;
 
-	clan::ResourceManager resources_internal;
+	clan::DisplayCache resources_internal;
 	App *app;
 	clan::Font fps_font;
 	 std::unique_ptr<GUI_Texture> gui_texture;

@@ -19,7 +19,7 @@ public:
 
 			DisplayWindow displaywindow(displaywindow_desc);
 
-			ResourceManager resources("../../../Resources/GUIThemeAero/resources.xml"); 
+			DisplayCache resources("../../../Resources/GUIThemeAero/resources.xml"); 
 
 			GUIThemeDefault theme;
 			theme.set_resources(resources);

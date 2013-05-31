@@ -44,7 +44,7 @@ int GUI::start(const std::vector<std::string> &args)
 		current_theme = Theme::theme_basic;
 	}
 
-	resources_internal = clan::ResourceManager("../CommonCode/Resources/resources.xml");
+	resources_internal = clan::DisplayCache("../CommonCode/Resources/resources.xml");
 
 	gui_system.reset(new GUI_System(this) );
 

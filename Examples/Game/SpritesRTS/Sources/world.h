@@ -43,7 +43,7 @@ public:
 	
 // Attributes:
 public:
-	clan::ResourceManager resources;
+	clan::DisplayCache resources;
 	
 	clan::Canvas get_canvas() { return canvas; }
 

@@ -34,7 +34,7 @@
 class PushButton : public clan::GUIComponent
 {
 public:
-	PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources);
+	PushButton(clan::GUIManager &manager, clan::DisplayCache &application_resources);
 	~PushButton();
 
 private:

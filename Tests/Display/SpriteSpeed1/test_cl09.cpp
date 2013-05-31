@@ -89,7 +89,7 @@ int App::start(const std::vector<std::string> &args)
 		// Get the graphic context
 		GraphicContext gc = window.get_gc();
 
-		ResourceManager resources("resources.xml");
+		DisplayCache resources("resources.xml");
 
 		explosion1 = Sprite(gc, "Explosion1", &resources);
 		explosion2 = Sprite(gc, "Explosion2", &resources);

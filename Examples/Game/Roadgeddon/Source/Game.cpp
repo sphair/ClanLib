@@ -69,7 +69,7 @@ void Game::run()
 	Canvas canvas(window);
 	gc = canvas.get_gc();
 	
-	ResourceManager resources("resources.xml");
+	DisplayCache resources("resources.xml");
 	resources_=&resources;
 
 	int time_elapsed_ms = 0;
@@ -192,7 +192,7 @@ PhysicsContext &Game::get_pc()
 	return pc;
 }
 
-ResourceManager &Game::get_resources()
+DisplayCache &Game::get_resources()
 {
 	return *resources_;
 }

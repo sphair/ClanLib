@@ -16,8 +16,8 @@ public:
 		{
 			GUIManager gui;
 
-			ResourceManager gui_resources("../../../Resources/GUIThemeAero/resources.xml");
-			ResourceManager app_resources("resources.xml");
+			DisplayCache gui_resources("../../../Resources/GUIThemeAero/resources.xml");
+			DisplayCache app_resources("resources.xml");
 
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);

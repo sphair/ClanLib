@@ -84,12 +84,12 @@ public:
 	Callback_v2<int, int> func_pack_progress;
 
 private:
-	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
+	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources);
+	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources);
+	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources);
 	void process_resource(Canvas &canvas, Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
 
-	ResourceManager resources;
+	DisplayCache resources;
 
 	std::vector<ResourceItem *> resource_items;
 	int last_border_size;

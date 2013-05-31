@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "tilemap.h"
 
-void TileMap::load(Canvas &canvas, const std::string &level, ResourceManager &resources)
+void TileMap::load(Canvas &canvas, const std::string &level, DisplayCache &resources)
 {
 	GraphicContext gc = canvas.get_gc();
 	Resource resource = resources.get_resource(level);

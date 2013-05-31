@@ -23,8 +23,8 @@ public:
 			GUIManager gui;
 			gui.set_window_manager(wm);
 
-			ResourceManager resources("resources.xml");
-			ResourceManager resources2("../../../Resources/GUIThemeLuna/resources.xml");
+			DisplayCache resources("resources.xml");
+			DisplayCache resources2("../../../Resources/GUIThemeLuna/resources.xml");
 			resources.add_resources(resources2);
 
 			GUIThemeDefault theme;

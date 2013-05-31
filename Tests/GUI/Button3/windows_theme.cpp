@@ -57,12 +57,12 @@ std::string WindowsTheme::get_property(const GUIThemePart &part, const std::stri
 	return fallback_theme->get_property(part, name, css_value);
 }
 
-ResourceManager WindowsTheme::get_resources() const
+DisplayCache WindowsTheme::get_resources() const
 {
 	return fallback_theme->get_resources();
 }
 
-void WindowsTheme::set_resources(ResourceManager resources)
+void WindowsTheme::set_resources(DisplayCache resources)
 {
 	fallback_theme->set_resources(resources);
 }

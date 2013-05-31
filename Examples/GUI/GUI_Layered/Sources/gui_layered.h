@@ -55,8 +55,8 @@ public:
 
 	clan::DisplayWindow *get_window() { return window_ptr; }
 	clan::GUIManager &get_gui_manager();
-	clan::ResourceManager &get_resources_internal();
-	clan::ResourceManager &get_resources_gui();
+	clan::DisplayCache &get_resources_internal();
+	clan::DisplayCache &get_resources_gui();
 
 private:
 	void set_projection_matrix();
@@ -68,7 +68,7 @@ private:
 	bool on_close(clan::GUIComponent *win);
 
 private:
-	clan::ResourceManager resources_gui;
+	clan::DisplayCache resources_gui;
 	clan::GUIThemeDefault theme;
 	GUI *gui;
 	clan::DisplayWindow *window_ptr;

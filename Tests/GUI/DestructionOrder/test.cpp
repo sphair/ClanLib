@@ -24,7 +24,7 @@ public:
 
 			Slot slot_window_close = displaywindow.sig_window_close().connect(this, &App::on_window_close);
 
-			ResourceManager resources("../../../Resources/GUIThemeAero/resources.xml");
+			DisplayCache resources("../../../Resources/GUIThemeAero/resources.xml");
 
 			GUIThemeDefault theme;
 			theme.set_resources(resources);

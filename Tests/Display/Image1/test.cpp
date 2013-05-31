@@ -34,7 +34,7 @@ public:
 
 			quit = false;
 
-			ResourceManager resources("resources.xml");
+			DisplayCache resources("resources.xml");
 
 			Texture2D texture(gc, "Images/square.png");
 

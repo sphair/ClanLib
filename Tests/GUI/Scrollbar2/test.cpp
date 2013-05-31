@@ -18,7 +18,7 @@ public:
 
 		try
 		{
-			ResourceManager resources;  
+			DisplayCache resources;  
 			resources.load("../../../Resources/GUIThemeLuna/resources.xml");
 
 			GUIManager gui; 

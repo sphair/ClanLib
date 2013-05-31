@@ -52,7 +52,7 @@ Player::Player(Game &game_)
 	game = &game_;
 	GraphicContext gc = game_.get_gc();
 	PhysicsContext pc = game_.get_pc();
-	ResourceManager &resources = game_.get_resources();
+	DisplayCache &resources = game_.get_resources();
 
 	vehicle		= new Sprite(gc,"Car1",&resources);
 

@@ -41,7 +41,7 @@ GUI::GUI(App *app) : app(app)
 		current_theme =  Theme::theme_basic;
 	}
 
-	resources_internal = clan::ResourceManager("../CommonCode/Resources/resources.xml");
+	resources_internal = clan::DisplayCache("../CommonCode/Resources/resources.xml");
 
 	clan::Canvas canvas = app->get_canvas();
 	fps_font = clan::Font(canvas, "Tahoma", 20);

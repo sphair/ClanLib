@@ -36,7 +36,7 @@ public:
 	{
 		try
 		{
-			ResourceManager local_resources("resources.xml");
+			DisplayCache local_resources("resources.xml");
 
 			std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
 			std::string theme_filename("theme.css");
@@ -46,7 +46,7 @@ public:
 				theme_filename = "theme_basic.css";
 			}
 
-			ResourceManager resources(resource_filename);
+			DisplayCache resources(resource_filename);
 			local_resources.add_resources(resources);
 
 			//GUIThemeDefault theme;

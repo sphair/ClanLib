@@ -21,8 +21,8 @@ public:
 
 			GUIManager gui;
 
-//			ResourceManager resources("../../../Resources/GUIStyleMirage/resources.xml");
-			ResourceManager resources("../../../Resources/GUIThemeLuna/resources.xml");
+//			DisplayCache resources("../../../Resources/GUIStyleMirage/resources.xml");
+			DisplayCache resources("../../../Resources/GUIThemeLuna/resources.xml");
 
 			GUIWindowManagerTexture wm(displaywindow);
 			gui.set_window_manager(wm);

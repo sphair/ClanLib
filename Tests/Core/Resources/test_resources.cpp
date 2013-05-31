@@ -37,7 +37,7 @@ void TestApp::test_resources(void)
 	// Construct resource manager. This will cause sig_resource_added() to be signalled for each
 	// resource object located in the resource file. This means ResourceApp::on_resource_added will
 	// get called for each resource.
-	ResourceManager resources("resources.xml");
+	DisplayCache resources("resources.xml");
 
 	// Lets try to access some of the clanlib objects in the resource file:
 	std::string config_name = resources.get_string_resource("Configuration/name", "");
