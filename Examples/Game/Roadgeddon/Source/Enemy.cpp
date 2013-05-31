@@ -62,7 +62,7 @@ Enemy::Enemy(Game &game_)
 	game = &game_;
 	GraphicContext &gc = game_.get_gc();
 	PhysicsContext pc = game_.get_pc();
-	DisplayCache &resources = game_.get_resources();
+	XMLResourceDocument &resources = game_.get_resources();
 
 //________________________________________________________________________
 //														   G A M E P L A Y
@@ -79,7 +79,7 @@ Enemy::Enemy(Game &game_)
 
 //________________________________________________________________________
 //															   R E N D E R
-	enemy = new Sprite(gc,"Enemy1",&resources);
+	enemy = new Sprite(gc,resources, "Enemy1");
 	enemy->set_play_loop(true);
 	
 	//int x,y;

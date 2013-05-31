@@ -37,7 +37,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // World construction:
 
-World::World(DisplayCache *resources, DisplayWindow &window) :
+World::World(XMLResourceDocument &resources, DisplayWindow &window) :
 	resources(resources), 
 	map(0), 
 	player(0), 
@@ -234,7 +234,7 @@ void World::run(DisplayWindow &window)
 			}
 		}
 
-		canvas.flip(0);
+		window.flip(0);
 
 		if (map->get_eggs_left() == 0) break; // level completed
 

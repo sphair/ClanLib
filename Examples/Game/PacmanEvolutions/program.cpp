@@ -58,7 +58,7 @@ int Program::main(const std::vector<std::string> &args)
 			age_3d.render(canvas, game_time.get_time_elapsed_ms());
 			break;
 		}
-		canvas.flip();
+		window.flip();
 		clan::KeepAlive::process();
 	}
 

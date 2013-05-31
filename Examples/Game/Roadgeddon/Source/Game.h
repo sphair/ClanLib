@@ -51,7 +51,7 @@ public:
 	int get_height() { return screen_y_res; }
 	GraphicContext &get_gc();
 	PhysicsContext &get_pc();
-	DisplayCache &get_resources();
+	XMLResourceDocument &get_resources();
 
 	Signal_v1<Canvas &>  get_draw_sig() { return draw_signal; }
 	Signal_v1<int> get_update_sig() { return update_signal; }
@@ -87,7 +87,7 @@ private:
 
 	PhysicsContext pc;
 	GraphicContext gc;
-	DisplayCache *resources_;
+	XMLResourceDocument *resources_;
 	std::list<Gameobject *> objects_for_deletion; 
 	
 	bool quit;

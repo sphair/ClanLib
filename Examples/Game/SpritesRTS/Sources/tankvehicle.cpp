@@ -42,14 +42,14 @@ TankVehicle::TankVehicle(TankType type, World *world)
 	switch(type)
 	{
 	case SPACE_SHOOT:
-		spriteBodyStill = new clan::Sprite(canvas, "SpaceShootBodyStill", &world->resources);
-		spriteBodyMoving = new clan::Sprite(canvas, "SpaceShootBodyMoving", &world->resources);
-		spriteTurretStill = new clan::Sprite(canvas, "SpaceShootTurretStill", &world->resources);
-		spriteTurretShooting = new clan::Sprite(canvas, "SpaceShootTurretShooting", &world->resources);
-		spriteTurretReloading = new clan::Sprite(canvas, "SpaceShootTurretReloading", &world->resources);
-		spriteTurretGunFlash = new clan::Sprite(canvas, "SpaceShootTurretGunFlash", &world->resources);
-		spriteSelected = new clan::Sprite(canvas, "SpaceShootSelected", &world->resources);
-		spriteRedGlow = new clan::Sprite(canvas, "RedGlow", &world->resources);
+		spriteBodyStill = new clan::Sprite(canvas, world->resources, "SpaceShootBodyStill");
+		spriteBodyMoving = new clan::Sprite(canvas, world->resources, "SpaceShootBodyMoving");
+		spriteTurretStill = new clan::Sprite(canvas, world->resources, "SpaceShootTurretStill");
+		spriteTurretShooting = new clan::Sprite(canvas, world->resources, "SpaceShootTurretShooting");
+		spriteTurretReloading = new clan::Sprite(canvas, world->resources, "SpaceShootTurretReloading");
+		spriteTurretGunFlash = new clan::Sprite(canvas, world->resources, "SpaceShootTurretGunFlash");
+		spriteSelected = new clan::Sprite(canvas, world->resources, "SpaceShootSelected");
+		spriteRedGlow = new clan::Sprite(canvas, world->resources, "RedGlow");
 
 		collisionBody = new clan::CollisionOutline("Gfx/spaceshoot_body_still1.png");
 		collisionBody->set_alignment(clan::origin_center);

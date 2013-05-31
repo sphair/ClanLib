@@ -46,7 +46,7 @@ void Game::run()
 
 	Canvas canvas(window);
 
-	DisplayCache resources("resources.xml");
+	XMLResourceDocument resources("resources.xml");
 
 	TileMap map;
 	map.load(canvas, "tavern", resources);
@@ -70,7 +70,7 @@ void Game::run()
 
 
 		// Flip the display, showing on the screen what we have drawed since last call to flip()
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process(0);

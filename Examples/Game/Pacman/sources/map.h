@@ -51,7 +51,7 @@ public:
 //!Construction:
 public:
 	//:  Constructor. Loads the resources needed to display the map.
-	Map(DisplayCache *resources, GraphicContext &gc);
+	Map(XMLResourceDocument &resources, GraphicContext &gc);
 	
 	//: Destructor.
 	~Map();

@@ -46,9 +46,9 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = clan::BlendState(canvas, blend_desc);
 
 	// Setup resources
-	resources = clan::DisplayCache("resources.xml");
+	resources = clan::XMLResourceDocument("resources.xml");
 
-	background = clan::Image(canvas, "background", &resources);
+	background = clan::Image(canvas, resources, "background");
 	
 	// Receive mouse clicks
 	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
@@ -249,7 +249,7 @@ void World::run()
 		update(game_time.get_time_elapsed_ms());
 		draw();
 
-		canvas.flip(1);
+		window.flip(1);
 		clan::KeepAlive::process();
 	};
 }

@@ -39,7 +39,7 @@ public:
 class TileMap
 {
 public:
-	void load(Canvas &canvas, const std::string &level, DisplayCache &resources);
+	void load(Canvas &canvas, const std::string &level, XMLResourceDocument &resources);
 
 	void draw(Canvas &canvas);
 	void set_scroll(int x, int y);

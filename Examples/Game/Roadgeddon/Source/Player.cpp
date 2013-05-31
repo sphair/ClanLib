@@ -52,16 +52,16 @@ Player::Player(Game &game_)
 	game = &game_;
 	GraphicContext gc = game_.get_gc();
 	PhysicsContext pc = game_.get_pc();
-	DisplayCache &resources = game_.get_resources();
+	XMLResourceDocument resources = game_.get_resources();
 
-	vehicle		= new Sprite(gc,"Car1",&resources);
+	vehicle		= new Sprite(gc,resources, "Car1");
 
 	vehicle->set_linear_filter(false);
 	
 	//________________________________________________________________________
 	//															   T U R R E T	
-	turret		= new Sprite(gc,"Turret1",&resources);
-	turretBase	= new Sprite(gc,"Turret1Base",&resources);
+	turret		= new Sprite(gc, resources, "Turret1");
+	turretBase	= new Sprite(gc, resources, "Turret1Base");
 	
 	turret->set_linear_filter(false);
 	turretBase->set_linear_filter(false);

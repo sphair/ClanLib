@@ -34,9 +34,9 @@
 /////////////////////////////////////////////////////////////////////////////
 // Map construction:
 
-Map::Map(DisplayCache *resources, GraphicContext &gc) : width(0), height(0), tiles(0), eggs_left(0)
+Map::Map(XMLResourceDocument &resources, GraphicContext &gc) : width(0), height(0), tiles(0), eggs_left(0)
 {
-	tile_images = Sprite(gc, "Game/spr_maptiles", resources);
+	tile_images = Sprite(gc, resources, "Game/spr_maptiles");
 }
 	
 Map::~Map()

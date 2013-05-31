@@ -38,7 +38,7 @@ Building::Building(BuildingType buiding_type, World *world)
 	switch(buiding_type)
 	{
 	case HELI_PAD:
-		sprite = new clan::Sprite(canvas, "helipad", &world->resources);
+		sprite = new clan::Sprite(canvas, world->resources, "helipad");
 		collisionBuilding = new clan::CollisionOutline("Gfx/helipad.png");
 		collisionBuilding->set_alignment(clan::origin_center);
 		break;

@@ -98,7 +98,7 @@ Missile::Missile(MissileDesc &desc)
 
 	GraphicContext &gc = game->get_gc();
 	PhysicsContext pc = game->get_pc();
-	DisplayCache &resources = game->get_resources();
+	XMLResourceDocument &resources = game->get_resources();
 
 	//___________________________________________________________________
 	//																G F X
@@ -106,15 +106,15 @@ Missile::Missile(MissileDesc &desc)
 	switch(mType)
 	{
 	case MissileDesc::mt_bullet:
-		bullet = new Sprite(gc,"Bullet1",&resources);
+		bullet = new Sprite(gc, resources, "Bullet1");
 		damage = 20;
 		break;
 	case MissileDesc::mt_energy:
-		bullet = new Sprite(gc,"Bullet2",&resources);
+		bullet = new Sprite(gc, resources,"Bullet2");
 		damage = 10;
 		break;
 	case MissileDesc::mt_rocket:
-		bullet = new Sprite(gc,"Rocket",&resources);
+		bullet = new Sprite(gc, resources,"Rocket");
 		damage = 50;
 		break;
 	}
