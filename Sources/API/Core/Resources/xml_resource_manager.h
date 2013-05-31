@@ -32,55 +32,30 @@
 #pragma once
 
 #include "../api_core.h"
-#include "../System/userdata.h"
+#include "../Signals/callback_v2.h"
 #include <string>
 #include <memory>
 
 namespace clan
 {
 
-class ResourceManager_Impl;
+class ResourceManager;
+class XMLResourceDocument;
 
-/// \brief Resource manager.
-class CL_API_CORE ResourceManager
+/// \brief Resource manager loading from XMLResourceDocument
+class CL_API_CORE XMLResourceManager
 {
-/// \name Construction
-/// \{
 public:
-	/// \brief Construct a ResourceManager.
-	ResourceManager();
+	/// \brief Creates a resource manager
+	static ResourceManager create(const XMLResourceDocument &doc);
 
-	~ResourceManager();
-/// \}
+	/// \brief Adds a cache factory callback
+	///
+	/// Each factory callback is invoked every time a resource manager is created.
+	static void add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &> factory_callback);
 
-/// \name Attributes
-/// \{
-public:
-	template<typename Type>
-	std::shared_ptr<Type> get_cache(const std::string &name) const
-	{
-		return get_cache_owner(name).get_data<Type>();
-	}
-/// \}
-
-/// \name Operations
-/// \{
-public:
-	template<typename Type>
-	void set_cache(const std::string &name, const std::shared_ptr<Type> &cache)
-	{
-		set_cache_owner(name).set_data<Type>(cache);
-	}
-/// \}
-
-/// \name Implementation
-/// \{
-private:
-	UserDataOwner &get_cache_owner(const std::string &name) const;
-	UserDataOwner &set_cache_owner(const std::string &name);
-
-	std::shared_ptr<ResourceManager_Impl> impl;
-/// \}
+	/// \brief Gets the XML resource document used by a resource manager.
+	static XMLResourceDocument &get_doc(const ResourceManager &manager);
 };
 
 }
