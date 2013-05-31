@@ -62,7 +62,7 @@ Enemy::Enemy(Game &game_)
 	game = &game_;
 	GraphicContext &gc = game_.get_gc();
 	PhysicsContext pc = game_.get_pc();
-	XMLResourceDocument &resources = game_.get_resources();
+	ResourceManager &resources = game_.get_resources();
 
 //________________________________________________________________________
 //														   G A M E P L A Y

@@ -52,9 +52,9 @@ Player::Player(Game &game_)
 	game = &game_;
 	GraphicContext gc = game_.get_gc();
 	PhysicsContext pc = game_.get_pc();
-	XMLResourceDocument resources = game_.get_resources();
+	ResourceManager resources = game_.get_resources();
 
-	vehicle		= new Sprite(gc,resources, "Car1");
+	vehicle		= new Sprite(gc, "Car1", resources);
 
 	vehicle->set_linear_filter(false);
 	
