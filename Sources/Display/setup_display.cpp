@@ -32,6 +32,11 @@
 #include "API/Display/ImageProviders/targa_provider.h"
 #include "API/Display/ImageProviders/jpeg_provider.h"
 #include "API/Display/ImageProviders/png_provider.h"
+#include "API/Display/Resources/display_cache.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_manager.h"
+#include "API/Core/Resources/xml_resource_document.h"
+#include "Display/Resources/xml_display_cache.h"
 
 #ifndef WIN32
 #ifndef __APPLE__
@@ -47,6 +52,8 @@ class SetupDisplay_Impl
 public:
 	static void init();
 	static void deinit();
+
+	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
 	static ProviderType_Register<JPEGProvider> *jpeg_provider;
 	static ProviderType_Register<JPEGProvider> *jpg_provider;
@@ -89,6 +96,8 @@ void SetupDisplay_Impl::init()
 	png_provider   = new ProviderType_Register<PNGProvider>("png");
 	targa_provider = new ProviderType_Register<TargaProvider>("targa");
 	tga_provider   = new ProviderType_Register<TargaProvider>("tga");
+
+	XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &>(&SetupDisplay_Impl::add_cache_factory));
 }
 
 void SetupDisplay_Impl::deinit()
@@ -107,6 +116,11 @@ void SetupDisplay_Impl::deinit()
 
 	delete tga_provider;
 	tga_provider = NULL;
+}
+
+void SetupDisplay_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
+{
+	DisplayCache::set(manager, std::shared_ptr<DisplayCache>(new XMLDisplayCache(doc)));
 }
 
 }

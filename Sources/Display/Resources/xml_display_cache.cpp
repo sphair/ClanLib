@@ -40,21 +40,21 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/IOData/path_help.h"
-#include "xml_display_cache_provider.h"
+#include "xml_display_cache.h"
 
 namespace clan
 {
 
-XMLDisplayCacheProvider::XMLDisplayCacheProvider(const XMLResourceDocument &doc)
+XMLDisplayCache::XMLDisplayCache(const XMLResourceDocument &doc)
 	: doc(doc)
 {
 }
 
-XMLDisplayCacheProvider::~XMLDisplayCacheProvider()
+XMLDisplayCache::~XMLDisplayCache()
 {
 }
 
-Resource<Sprite> XMLDisplayCacheProvider::get_sprite(GraphicContext &gc, const std::string &id)
+Resource<Sprite> XMLDisplayCache::get_sprite(GraphicContext &gc, const std::string &id)
 {
 	std::map<std::string, Resource<Sprite> >::iterator it = sprites.find(id);
 	if (it != sprites.end())
@@ -65,7 +65,7 @@ Resource<Sprite> XMLDisplayCacheProvider::get_sprite(GraphicContext &gc, const s
 	return sprite;
 }
 
-Resource<Image> XMLDisplayCacheProvider::get_image(GraphicContext &gc, const std::string &id)
+Resource<Image> XMLDisplayCache::get_image(GraphicContext &gc, const std::string &id)
 {
 	std::map<std::string, Resource<Image> >::iterator it = images.find(id);
 	if (it != images.end())
@@ -76,7 +76,7 @@ Resource<Image> XMLDisplayCacheProvider::get_image(GraphicContext &gc, const std
 	return image;
 }
 
-Resource<Texture> XMLDisplayCacheProvider::get_texture(GraphicContext &gc, const std::string &id)
+Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
 {
 	std::map<std::string, Resource<Texture> >::iterator it = textures.find(id);
 	if (it != textures.end())
@@ -87,7 +87,7 @@ Resource<Texture> XMLDisplayCacheProvider::get_texture(GraphicContext &gc, const
 	return texture;
 }
 
-Resource<Font> XMLDisplayCacheProvider::get_font(Canvas &canvas, const FontDescription &desc)
+Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const FontDescription &desc)
 {
 	std::string id = desc.get_unique_id();
 
@@ -100,7 +100,7 @@ Resource<Font> XMLDisplayCacheProvider::get_font(Canvas &canvas, const FontDescr
 	return font;
 }
 
-Resource<Texture> XMLDisplayCacheProvider::load_texture(GraphicContext &gc, const std::string &id)
+Resource<Texture> XMLDisplayCache::load_texture(GraphicContext &gc, const std::string &id)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 
@@ -119,7 +119,7 @@ Resource<Texture> XMLDisplayCacheProvider::load_texture(GraphicContext &gc, cons
 	return Resource<Texture>(texture);
 }
 
-Resource<Font> XMLDisplayCacheProvider::load_font(Canvas &canvas, const FontDescription &desc)
+Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription &desc)
 {
 	// To do: Fix this retarded way of detecting sprite fonts..
 	bool is_sprite_font = false;
@@ -143,7 +143,7 @@ Resource<Font> XMLDisplayCacheProvider::load_font(Canvas &canvas, const FontDesc
 	}
 }
 
-Resource<Font> XMLDisplayCacheProvider::load_sprite_font(Canvas &canvas, const std::string &id)
+Resource<Font> XMLDisplayCache::load_sprite_font(Canvas &canvas, const std::string &id)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 	std::string type = resource.get_element().get_tag_name();
