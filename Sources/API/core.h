@@ -118,6 +118,7 @@
 #include "Core/Resources/resource.h"
 #include "Core/Resources/resource_container.h"
 #include "Core/Resources/resource_object.h"
+#include "Core/Resources/resource_manager.h"
 #include "Core/Resources/xml_resource_node.h"
 #include "Core/Resources/xml_resource_document.h"
 #include "Core/XML/dom_processing_instruction.h"

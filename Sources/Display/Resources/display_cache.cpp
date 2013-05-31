@@ -28,54 +28,14 @@
 
 #include "Display/precomp.h"
 #include "API/Display/Resources/display_cache.h"
-#include "display_cache_impl.h"
-#include "xml_display_cache_provider.h"
+#include "API/Core/Resources/resource_manager.h"
 
 namespace clan
 {
 
-DisplayCache::DisplayCache()
+DisplayCache &DisplayCache::get(const ResourceManager &resources)
 {
-}
-
-DisplayCache::DisplayCache(const XMLResourceDocument &doc)
-	: impl(new DisplayCache_Impl(new XMLDisplayCacheProvider(doc)))
-{
-}
-
-DisplayCache::DisplayCache(DisplayCacheProvider *provider)
-	: impl(new DisplayCache_Impl(provider))
-{
-}
-
-bool DisplayCache::is_null() const
-{
-	return !impl;
-}
-
-DisplayCacheProvider *DisplayCache::get_provider() const
-{
-	return impl->provider;
-}
-
-Resource<Sprite> DisplayCache::get_sprite(GraphicContext &gc, const std::string &id)
-{
-	return get_provider()->get_sprite(gc, id);
-}
-
-Resource<Image> DisplayCache::get_image(GraphicContext &gc, const std::string &id)
-{
-	return get_provider()->get_image(gc, id);
-}
-
-Resource<Texture> DisplayCache::get_texture(GraphicContext &gc, const std::string &id)
-{
-	return get_provider()->get_texture(gc, id);
-}
-
-Resource<Font> DisplayCache::get_font(Canvas &canvas, const FontDescription &desc)
-{
-	return get_provider()->get_font(canvas, desc);
+	return *resources.get_cache<DisplayCache>("clan.display").get();
 }
 
 }

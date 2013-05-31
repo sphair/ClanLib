@@ -26,36 +26,61 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Resources clanDisplay Resources
+/// \addtogroup clanCore_Resources clanCore Resources
 /// \{
 
 #pragma once
 
-#include "../api_display.h"
-#include "../../Core/Resources/resource.h"
-#include <memory>
+#include "../api_core.h"
+#include "../System/userdata.h"
 #include <string>
+#include <memory>
 
 namespace clan
 {
 
-class GraphicContext;
-class Canvas;
-class Sprite;
-class Image;
-class Texture;
-class Font;
-class FontDescription;
+class ResourceManager_Impl;
 
-class DisplayCacheProvider
+/// \brief XML Resource manager.
+class CL_API_CORE ResourceManager
 {
+/// \name Construction
+/// \{
 public:
-	virtual ~DisplayCacheProvider() { }
+	/// \brief Construct a ResourceManager.
+	ResourceManager();
 
-	virtual Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Image> get_image(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
+	~ResourceManager();
+/// \}
+
+/// \name Attributes
+/// \{
+public:
+	template<typename Type>
+	std::shared_ptr<Type> get_cache(const std::string &name) const
+	{
+		return get_cache_owner(name).get_data<Type>();
+	}
+/// \}
+
+/// \name Operations
+/// \{
+public:
+	template<typename Type>
+	void set_cache(const std::stringbuf &name, const std::shared_ptr<Type> &cache)
+	{
+		set_cache_owner(name).set_data<Type>(cache);
+	}
+/// \}
+
+/// \name Implementation
+/// \{
+private:
+	UserDataOwner &get_cache_owner(const std::string &name) const;
+	UserDataOwner &set_cache_owner(const std::string &name);
+
+	std::shared_ptr<ResourceManager_Impl> impl;
+/// \}
 };
 
 }

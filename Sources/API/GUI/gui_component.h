@@ -63,7 +63,7 @@ class GUIMessage;
 class GUIManager;
 class GUITopLevelWindow;
 class GUITheme;
-class DisplayCache;
+class ResourceManager;
 class GUIConsumedKeys;
 class GUIComponent_Impl;
 class CSSComputedValues;
@@ -178,8 +178,8 @@ public:
 	/// \brief Returns true if this component, when focused, blocks the default action of its parent dialog.
 	bool get_blocks_default_action() const;
 
-	/// \brief Returns the display cache for the GUI resources.
-	DisplayCache get_display_cache() const;
+	/// \brief Returns the resource manager for the GUI resources.
+	ResourceManager get_resources() const;
 
 	/// \brief Returns the GUI manager owning this component.
 	GUIManager get_gui_manager() const;

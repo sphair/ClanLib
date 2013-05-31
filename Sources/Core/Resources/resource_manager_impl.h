@@ -26,37 +26,18 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "API/Display/Resources/display_cache.h"
-#include "API/Core/Resources/xml_resource_document.h"
+#include <map>
+#include <memory>
+#include <string>
+#include "API/Core/System/userdata.h"
 
 namespace clan
 {
 
-class XMLDisplayCacheProvider : public DisplayCache
+class ResourceManager_Impl
 {
 public:
-	XMLDisplayCacheProvider(const XMLResourceDocument &doc);
-	~XMLDisplayCacheProvider();
-
-	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
-	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
-	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc);
-
-private:
-	Resource<Texture> load_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> load_font(Canvas &canvas, const FontDescription &desc);
-
-	Resource<Font> load_sprite_font(Canvas &canvas, const std::string &id);
-
-	XMLResourceDocument doc;
-
-	std::map<std::string, Resource<Sprite> > sprites;
-	std::map<std::string, Resource<Image> > images;
-	std::map<std::string, Resource<Texture> > textures;
-	std::map<std::string, Resource<Font> > fonts;
+	mutable std::map<std::string, std::shared_ptr<UserDataOwner> > caches;
 };
 
 }

@@ -38,7 +38,7 @@
 namespace clan
 {
 
-class XMLResourceDocument;
+class ResourceManager;
 class GraphicContext;
 class Canvas;
 class Sprite;
@@ -46,27 +46,17 @@ class Image;
 class Texture;
 class Font;
 class FontDescription;
-class DisplayCacheProvider;
-class DisplayCache_Impl;
 
 class CL_API_DISPLAY DisplayCache
 {
 public:
-	DisplayCache();
-	DisplayCache(const XMLResourceDocument &doc);
-	DisplayCache(DisplayCacheProvider *provider);
+	virtual ~DisplayCache() { }
+	virtual Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id) = 0;
+	virtual Resource<Image> get_image(GraphicContext &gc, const std::string &id) = 0;
+	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
+	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
 
-	bool is_null() const;
-
-	DisplayCacheProvider *get_provider() const;
-
-	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
-	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
-	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id);
-	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc);
-
-private:
-	std::shared_ptr<DisplayCache_Impl> impl;
+	static DisplayCache &get(const ResourceManager &resources);
 };
 
 }

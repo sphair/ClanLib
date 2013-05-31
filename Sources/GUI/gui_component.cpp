@@ -239,9 +239,9 @@ bool GUIComponent::get_blocks_default_action() const
 	return impl->blocks_default_action_when_focused;
 }
 
-DisplayCache GUIComponent::get_display_cache() const
+ResourceManager GUIComponent::get_resources() const
 {
-	return impl->gui_manager.lock()->display_cache;
+	return impl->gui_manager.lock()->resources;
 }
 
 GUIManager GUIComponent::get_gui_manager() const
