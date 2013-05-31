@@ -35,6 +35,7 @@
 #include "../api_display.h"
 #include <memory>
 #include "../../Core/IOData/file_system.h"
+#include "../../Core/Resources/resource.h"
 #include "graphic_context.h"
 #include "../Image/image_import_description.h"
 #include "../Image/texture_format.h"
@@ -58,7 +59,8 @@ class TextureCube;
 class TextureCubeArray;
 class Texture_Impl;
 class SharedGCData_Impl;
-class DisplayCache;
+class ResourceManager;
+class XMLResourceDocument;
 
 /// \brief Texture coordinate wrapping modes.
 enum TextureWrapMode
@@ -120,14 +122,21 @@ public:
 	/// \param provider = The provider
 	Texture(TextureProvider *provider);
 
-	/// \brief Constructs a texture from the cache
+	virtual ~Texture();
+/// \}
+
+/// \name Resources
+/// \{
+public:
+	/// \brief Retrieves a Texture resource from the resource manager
 	///
 	/// \param gc = Graphic Context
-	/// \param cache = The cache
+	/// \param resources = Resource manager
 	/// \param id = id
-	static Texture load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
+	static Resource<Texture> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
 
-	virtual ~Texture();
+	/// \brief Loads a Texture from a XML resource definition
+	static Texture load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
 /// \}
 
 /// \name Operators
