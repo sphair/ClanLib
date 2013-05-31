@@ -100,7 +100,7 @@ int App::start(const std::vector<std::string> &args)
 
 		Image image(gc,texture_image,texture_image.get_size());
 
-		ResourceManager resources("resources.xml");
+		DisplayCache resources("resources.xml");
 		Sprite sprite(gc, "test", &resources);
 		//sprite.set_linear_filter(true);
 

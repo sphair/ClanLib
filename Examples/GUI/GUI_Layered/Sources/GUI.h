@@ -45,7 +45,7 @@ public:
 	clan::DisplayWindow *get_window();
 	App *get_app() { return app; }
 	clan::GUIManager &get_gui_manager() { return gui_manager; }
-	clan::ResourceManager &get_resources_internal() { return resources_internal; }
+	clan::DisplayCache &get_resources_internal() { return resources_internal; }
 
 	void set_theme(Theme::gui_theme theme);
 	Theme::gui_theme get_theme() {return current_theme;}
@@ -61,7 +61,7 @@ private:
 
 private:
 	clan::GUIManager gui_manager;
-	clan::ResourceManager resources_internal;
+	clan::DisplayCache resources_internal;
 	App *app;
 	clan::Font fps_font;
 	 std::unique_ptr<GUI_Layered> gui_layered;

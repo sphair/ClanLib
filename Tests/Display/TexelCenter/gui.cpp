@@ -50,8 +50,8 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 
 
 
-	resources_gui = ResourceManager(resource_filename);
-	resources_internal = ResourceManager("resources.xml");
+	resources_gui = DisplayCache(resource_filename);
+	resources_internal = DisplayCache("resources.xml");
 
 	theme.set_resources(resources_gui);
 	gui.set_theme(theme); 
@@ -59,7 +59,7 @@ GUI::GUI(App *app) : app(app), window_ptr(app->get_window()), wm(*window_ptr)
 
 	GraphicContext gc = window_ptr->get_gc();
 
-	ResourceManager resources("resources.xml");
+	DisplayCache resources("resources.xml");
 	sprite_grid_normal = Sprite(gc, "sprite_grid_normal", &resources);
 	sprite_grid_outline = Sprite(gc, "sprite_grid_outline", &resources);
 	image_grid_normal = Image(gc, "image_grid_normal", &resources);

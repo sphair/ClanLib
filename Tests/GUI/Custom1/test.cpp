@@ -40,7 +40,7 @@ public:
 
 			Slot slotWindowClose = displaywindow.sig_window_close().connect(this, &App::on_close);
 
-			ResourceManager resources("../../../Resources/GUIThemeAero/resources.xml");
+			DisplayCache resources("../../../Resources/GUIThemeAero/resources.xml");
 
 			GUIWindowManagerTexture wm(displaywindow);
 

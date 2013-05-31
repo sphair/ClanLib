@@ -46,13 +46,13 @@ class World
 
 //!Construction:
 public:
-	World(ResourceManager *resources, DisplayWindow &window);
+	World(DisplayCache *resources, DisplayWindow &window);
 
 	~World();
 
 //!Attributes:
 public:
-	ResourceManager *resources;
+	DisplayCache *resources;
 	
 	Map *map;
 

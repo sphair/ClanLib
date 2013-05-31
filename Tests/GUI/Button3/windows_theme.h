@@ -12,9 +12,9 @@ public:
 	void destroy();
 
 	std::string get_property(const GUIThemePart &part, const std::string &name, const std::string &css_value);
-	ResourceManager get_resources() const;
+	DisplayCache get_resources() const;
 
-	void set_resources(ResourceManager resources);
+	void set_resources(DisplayCache resources);
 	void render_box(GraphicContext &gc, GUIThemePart &part, const Rect &rect, const Rect &clip_rect);
 	Rect render_text(GraphicContext &gc, GUIThemePart &part, Font &font, const std::string &text, const Rect &content_rect, const Rect &clip_rect);
 

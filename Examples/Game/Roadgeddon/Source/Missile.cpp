@@ -98,7 +98,7 @@ Missile::Missile(MissileDesc &desc)
 
 	GraphicContext &gc = game->get_gc();
 	PhysicsContext pc = game->get_pc();
-	ResourceManager &resources = game->get_resources();
+	DisplayCache &resources = game->get_resources();
 
 	//___________________________________________________________________
 	//																G F X

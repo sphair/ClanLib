@@ -14,7 +14,7 @@ public:
 
 		try
 		{
-			ResourceManager resources;
+			DisplayCache resources;
 			resources.load("../../../Resources/GUIThemeAero/resources.xml");
 
 			GUIManager gui;

@@ -43,7 +43,7 @@ int App::start(const std::vector<std::string> &args)
 	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	app_resources = ResourceManager("Resources/resources.xml");
+	app_resources = DisplayCache("Resources/resources.xml");
 
 	std::string theme;
 	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))

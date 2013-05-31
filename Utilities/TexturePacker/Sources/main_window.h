@@ -39,7 +39,7 @@ class ViewWorkspace;
 class MainWindow : public GUIComponent
 {
 public:
-	MainWindow(GUIManager *gui, ResourceManager *resources);
+	MainWindow(GUIManager *gui, DisplayCache *resources);
 	~MainWindow();
 
 // Attributes:
@@ -74,7 +74,7 @@ private:
 	std::vector<View *> views;
 	ViewWorkspace *workspace;
 
-	ResourceManager *resources;
+	DisplayCache *resources;
 
 	MenuBar *menubar;
 };

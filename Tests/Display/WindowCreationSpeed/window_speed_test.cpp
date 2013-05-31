@@ -75,7 +75,7 @@ int App::start(const std::vector<std::string> &args)
 		Canvas canvas(window);
 		GraphicContext &gc = canvas.get_gc();
 
-		ResourceManager resources("resources.xml");
+		DisplayCache resources("resources.xml");
 
 		Font small_font = Font(gc, "Tahoma", 12);
 

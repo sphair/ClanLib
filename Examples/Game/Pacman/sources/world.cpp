@@ -37,7 +37,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // World construction:
 
-World::World(ResourceManager *resources, DisplayWindow &window) :
+World::World(DisplayCache *resources, DisplayWindow &window) :
 	resources(resources), 
 	map(0), 
 	player(0), 

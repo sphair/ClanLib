@@ -41,7 +41,7 @@ class App : public Application
 
 			// SCENARIO 2: GUI
 			
-/*			ResourceManager resources;
+/*			DisplayCache resources;
 			resources.load("resources.xml");
 
 			GUIManager gui;

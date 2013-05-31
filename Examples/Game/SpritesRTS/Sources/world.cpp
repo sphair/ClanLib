@@ -46,7 +46,7 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = clan::BlendState(canvas, blend_desc);
 
 	// Setup resources
-	resources = clan::ResourceManager("resources.xml");
+	resources = clan::DisplayCache("resources.xml");
 
 	background = clan::Image(canvas, "background", &resources);
 	

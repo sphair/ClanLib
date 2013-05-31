@@ -84,7 +84,7 @@ private:
 	Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
-	ResourceManager app_resources;
+	DisplayCache app_resources;
 };
 
 

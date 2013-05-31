@@ -46,7 +46,7 @@ void Game::run()
 
 	Canvas canvas(window);
 
-	ResourceManager resources("resources.xml");
+	DisplayCache resources("resources.xml");
 
 	TileMap map;
 	map.load(canvas, "tavern", resources);

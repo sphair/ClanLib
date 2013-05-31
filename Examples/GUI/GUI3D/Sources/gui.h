@@ -50,7 +50,7 @@ private:
 private:
 	// NOTE: The order of these constructors is important
 	clan::DisplayWindow window;
-	clan::ResourceManager resources_gui;
+	clan::DisplayCache resources_gui;
 	clan::GUIWindowManagerTexture wm;
 	clan::GUIManager gui;
 
