@@ -198,7 +198,7 @@ bool Target::run_demo()
 			}
 		}
 
-		canvas.flip(0);
+		window.flip(0);
 	
 		clan::KeepAlive::process(0);
 	}

@@ -206,7 +206,7 @@ int App::start(const std::vector<std::string> &args)
 			if (crashed_flag)
 				font.draw_text(canvas, 16, 32, "WORKER THREAD CRASHED");
 	
-			canvas.flip(0);
+			window.flip(0);
 
 			clan::KeepAlive::process();
 		}
