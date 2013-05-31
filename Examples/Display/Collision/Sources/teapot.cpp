@@ -43,7 +43,7 @@ Teapot::Teapot()
 
 void Teapot::create(clan::Canvas &canvas, clan::DisplayCache &resources)
 {
-	teapot_sprites = resources.get_sprite(canvas, "teapot").get();
+	teapot_sprites = resources.get_sprite(canvas, "teapot");
 	teapot_sprites.set_frame_delay(0, 100);
 
 	// **** Try using "accuracy_low" or accuracy_medium" ****
