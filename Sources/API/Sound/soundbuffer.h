@@ -34,6 +34,7 @@
 #include "api_sound.h"
 #include <memory>
 #include "soundbuffer_session.h"
+#include "../Core/Resources/resource.h"
 
 namespace clan
 {
@@ -46,6 +47,7 @@ class SoundFilter;
 class SoundBuffer_Impl;
 class IODevice;
 class FileSystem;
+class ResourceManager;
 
 /// \brief Sample interface in ClanLib.
 ///
@@ -76,10 +78,6 @@ public:
 	    deleted when the soundbuffer is deleted.</p>*/
 
 	SoundBuffer(
-		const std::string &res_id,
-		const XMLResourceDocument &manager);
-
-	SoundBuffer(
 		SoundProvider *provider);
 
 	SoundBuffer(
@@ -97,6 +95,16 @@ public:
 		IODevice &file,
 		bool streamed,
 		const std::string &type);
+
+	/// \brief Retrieves a SoundBuffer resource from the resource manager
+	///
+	/// \param gc = Graphic Context
+	/// \param resources = Resource manager
+	/// \param id = id
+	static Resource<SoundBuffer> resource(const std::string &id, const ResourceManager &resources);
+
+	/// \brief Loads a SoundBuffer from a XML resource definition
+	static SoundBuffer load(const std::string &id, const XMLResourceDocument &doc);
 
 	virtual ~SoundBuffer();
 

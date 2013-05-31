@@ -67,6 +67,8 @@
 #include "Sound/AudioWorld/audio_object.h"
 #include "Sound/AudioWorld/audio_world.h"
 
+#include "Sound/sound_cache.h"
+
 #ifdef __cplusplus_cli
 #pragma managed(pop)
 #endif
