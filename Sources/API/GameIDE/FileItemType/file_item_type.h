@@ -36,7 +36,7 @@ class FileItemType
 {
 public:
 	virtual ~FileItemType() { }
-	virtual Sprite get_icon(GraphicContext &gc, DisplayCache &display_cache) { return Sprite(); }
+	virtual Sprite get_icon(GraphicContext &gc, const ResourceManager &resources) { return Sprite(); }
 	virtual std::string get_name() = 0;
 	virtual std::string get_description() = 0;
 	virtual std::string get_extension() = 0;

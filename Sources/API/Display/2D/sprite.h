@@ -32,15 +32,16 @@
 
 #pragma once
 
-#include "../api_display.h"
 #include <memory>
+#include "../api_display.h"
 #include "../../Core/Math/origin.h"
 #include "../../Core/Signals/signal_v0.h"
 #include "../../Core/IOData/file_system.h"
+#include "../../Core/Resources/resource.h"
 #include "../Render/graphic_context.h"
 #include "../Image/image_import_description.h"
-#include "color.h"
 #include "../Collision/collision_outline.h"
+#include "color.h"
 
 namespace clan
 {
@@ -49,7 +50,7 @@ class SpriteDescription;
 class Sprite_Impl;
 class CollisionOutline;
 class Canvas;
-class DisplayCache;
+class ResourceManager;
 
 /// \brief Sprite class.
 class CL_API_DISPLAY Sprite
@@ -89,19 +90,26 @@ public:
 	/// \param image_type = String
 	Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Constructs a Sprite from the cache
-	///
-	/// \param gc = Graphic Context
-	/// \param cache = The cache
-	/// \param id = id
-	static Sprite load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
-
 	/// \brief Constructs an empty Sprite
 	///
 	/// \param gc = Graphic Context
 	Sprite(GraphicContext &gc);
 
 	virtual ~Sprite();
+/// \}
+
+/// \name Resources
+/// \{
+public:
+	/// \brief Retrieves a Sprite resource from the resource manager
+	///
+	/// \param gc = Graphic Context
+	/// \param resources = Resource manager
+	/// \param id = id
+	static Resource<Sprite> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
+
+	/// \brief Loads a Sprite from a XML resource definition
+	static Sprite load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
 /// \}
 
 /// \name Attributes

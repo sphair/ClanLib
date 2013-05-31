@@ -34,6 +34,7 @@
 #include "../api_display.h"
 #include <memory>
 #include "../../Core/Math/origin.h"
+#include "../../Core/Resources/resource.h"
 #include "color.h"
 #include "../Image/image_import_description.h"
 #include "../Render/texture.h"
@@ -50,7 +51,8 @@ class Image_Impl;
 class Texture2D;
 class Subtexture;
 class PixelBuffer;
-class DisplayCache;
+class ResourceManager;
+class XMLResourceDocument;
 class Canvas;
 
 /// \brief Image class.
@@ -97,14 +99,21 @@ public:
 	/// \param import_desc = Image Import Description
 	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Constructs an Image from the cache
+	virtual ~Image();	
+/// \}
+
+/// \name Resources
+/// \{
+public:
+	/// \brief Retrieves a Sprite resource from the resource manager
 	///
 	/// \param gc = Graphic Context
-	/// \param cache = The cache
+	/// \param resources = Resource manager
 	/// \param id = id
-	static Image load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
+	static Resource<Image> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
 
-	virtual ~Image();	
+	/// \brief Loads a Sprite from a XML resource definition
+	static Image load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
 /// \}
 
 /// \name Attributes

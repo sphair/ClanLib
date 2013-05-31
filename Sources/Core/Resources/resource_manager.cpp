@@ -26,22 +26,37 @@
 **    Magnus Norddahl
 */
 
-#pragma once
-
-#include "API/Display/Resources/display_cache_provider.h"
+#include "Core/precomp.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Text/string_format.h"
+#include "resource_manager_impl.h"
 
 namespace clan
 {
 
-class Display_Impl;
-
-class DisplayCache_Impl
+ResourceManager::ResourceManager()
+	: impl(new ResourceManager_Impl())
 {
-public:
-	DisplayCache_Impl(DisplayCacheProvider *provider) : provider(provider) { }
-	~DisplayCache_Impl() { delete provider; }
+}
 
-	DisplayCacheProvider *provider;
-};
+ResourceManager::~ResourceManager()
+{
+}
+
+UserDataOwner &ResourceManager::get_cache_owner(const std::string &name) const
+{
+	std::map<std::string, std::shared_ptr<UserDataOwner> >::iterator it = impl->caches.find(name);
+	if (it == impl->caches.end())
+		throw Exception(string_format("ResourceManager has no cache named %1", name));
+	return *it->second.get();
+}
+
+UserDataOwner &ResourceManager::set_cache_owner(const std::string &name)
+{
+	std::shared_ptr<UserDataOwner> &cache = impl->caches[name];
+	if (!cache)
+		cache = std::shared_ptr<UserDataOwner>(new UserDataOwner());
+	return *cache.get();
+}
 
 }

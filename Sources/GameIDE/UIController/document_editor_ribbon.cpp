@@ -40,7 +40,7 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 {
 	clipboard_section = new UIRibbonSection(controller, "Home", "Clipboard");
 
-	DisplayCache display_cache = clipboard_section->get_display_cache();
+	ResourceManager resources = clipboard_section->get_resources();
 	Canvas canvas = clipboard_section->get_canvas();
 
 	RibbonGroup *clipboard_group1 = new RibbonGroup(clipboard_section);
@@ -51,7 +51,7 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_copy = new PushButton(clipboard_group2);
 
 	button_paste->set_text("Paste");
-	button_paste->set_icon(display_cache.get_image(canvas, "IconClipboardPaste24").get());
+	button_paste->set_icon(Image::resource(canvas, "IconClipboardPaste24", resources));
 	button_paste->set_icon_position(PushButton::icon_top);
 	button_cut->set_text("Cut");
 	button_copy->set_text("Copy");
@@ -70,13 +70,13 @@ DocumentEditorRibbon::DocumentEditorRibbon(UIController *controller)
 	button_save = new PushButton(edit_group2);
 
 	button_undo->set_text("Undo");
-	button_undo->set_icon(display_cache.get_image(canvas, "IconEditUndo").get());
+	button_undo->set_icon(Image::resource(canvas, "IconEditUndo", resources));
 	button_undo->set_icon_position(PushButton::icon_left);
 	button_redo->set_text("Redo");
-	button_redo->set_icon(display_cache.get_image(canvas, "IconEditRedo").get());
+	button_redo->set_icon(Image::resource(canvas, "IconEditRedo", resources));
 	button_redo->set_icon_position(PushButton::icon_left);
 	button_save->set_text("Save");
-	button_save->set_icon(display_cache.get_image(canvas, "IconSave24").get());
+	button_save->set_icon(Image::resource(canvas, "IconSave24", resources));
 	button_save->set_icon_position(PushButton::icon_top);
 
 	button_undo->func_clicked().set(this, &DocumentEditorRibbon::on_button_undo_clicked);
