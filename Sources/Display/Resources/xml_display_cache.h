@@ -34,11 +34,11 @@
 namespace clan
 {
 
-class XMLDisplayCacheProvider : public DisplayCache
+class XMLDisplayCache : public DisplayCache
 {
 public:
-	XMLDisplayCacheProvider(const XMLResourceDocument &doc);
-	~XMLDisplayCacheProvider();
+	XMLDisplayCache(const XMLResourceDocument &doc);
+	~XMLDisplayCache();
 
 	Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id);
 	Resource<Image> get_image(GraphicContext &gc, const std::string &id);

@@ -38,4 +38,9 @@ DisplayCache &DisplayCache::get(const ResourceManager &resources)
 	return *resources.get_cache<DisplayCache>("clan.display").get();
 }
 
+void DisplayCache::set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache)
+{
+	resources.set_cache("clan.display", cache);
+}
+
 }

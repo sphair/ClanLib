@@ -57,6 +57,7 @@ public:
 	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
 
 	static DisplayCache &get(const ResourceManager &resources);
+	static void set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache);
 };
 
 }
