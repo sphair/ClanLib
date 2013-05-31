@@ -155,10 +155,9 @@ Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportD
 	impl->texture_rect = impl->texture.get_size();
 }
 
-Image::Image(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id)
+Image Image::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
 {
-	DisplayCache cache(doc);
-	*this = cache.get_image(gc, id);
+	return cache.get_image(gc, id);
 }
 
 Image::~Image()

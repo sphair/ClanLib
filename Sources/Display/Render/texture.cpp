@@ -39,7 +39,7 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/Image/pixel_buffer_set.h"
 #include "texture_impl.h"
-
+#include "API/Display/Resources/display_cache.h"
 namespace clan
 {
 
@@ -152,6 +152,11 @@ Texture::Texture(TextureProvider *provider)
 Texture::Texture(const std::shared_ptr<Texture_Impl> &impl)
 : impl(impl)
 {
+}
+
+Texture Texture::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
+{
+	return cache.get_texture(gc, id);
 }
 
 Texture::~Texture()

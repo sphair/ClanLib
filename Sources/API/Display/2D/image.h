@@ -50,7 +50,7 @@ class Image_Impl;
 class Texture2D;
 class Subtexture;
 class PixelBuffer;
-class XMLResourceDocument;
+class DisplayCache;
 class Canvas;
 
 /// \brief Image class.
@@ -97,12 +97,12 @@ public:
 	/// \param import_desc = Image Import Description
 	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
-	/// \brief Constructs an Image from a resource
+	/// \brief Constructs an Image from the cache
 	///
 	/// \param gc = Graphic Context
-	/// \param doc = xml document
+	/// \param cache = The cache
 	/// \param id = id
-	Image(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id);
+	static Image load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
 
 	virtual ~Image();	
 /// \}

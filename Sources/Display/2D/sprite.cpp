@@ -83,10 +83,9 @@ Sprite::Sprite(GraphicContext &gc)
 {
 }
 
-Sprite::Sprite(GraphicContext &gc, const XMLResourceDocument &doc, const std::string &id)
+Sprite Sprite::load(GraphicContext &gc, DisplayCache &cache, const std::string &id)
 {
-	DisplayCache cache(doc);
-	*this = cache.get_sprite(gc, id);
+	return cache.get_sprite(gc, id);
 }
 
 Sprite::~Sprite()

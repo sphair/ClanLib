@@ -58,6 +58,7 @@ class TextureCube;
 class TextureCubeArray;
 class Texture_Impl;
 class SharedGCData_Impl;
+class DisplayCache;
 
 /// \brief Texture coordinate wrapping modes.
 enum TextureWrapMode
@@ -118,6 +119,13 @@ public:
 	///
 	/// \param provider = The provider
 	Texture(TextureProvider *provider);
+
+	/// \brief Constructs a texture from the cache
+	///
+	/// \param gc = Graphic Context
+	/// \param cache = The cache
+	/// \param id = id
+	static Texture load(GraphicContext &gc, DisplayCache &cache, const std::string &id);
 
 	virtual ~Texture();
 /// \}
