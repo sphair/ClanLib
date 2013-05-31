@@ -83,7 +83,7 @@ void Game::run()
 
 	total_channels=3;
 	current_channel=1;
-	SoundBuffer music("Music1",&resources);
+	SoundBuffer music = SoundBuffer::resource("Music1",resources);
 	music.set_volume(0.3f);
 
 	sound_session1.play();
@@ -92,12 +92,12 @@ void Game::run()
 
 	total_samples = 6;
 	samples.resize(total_samples);
-	samples[0] = SoundBuffer("Explosion1",&resources);
-	samples[1] = SoundBuffer("Explosion2",&resources);
-	samples[2] = SoundBuffer("Hurt1",&resources);
-	samples[3] = SoundBuffer("Hurt2",&resources);
-	samples[4] = SoundBuffer("Powerup1",&resources);
-	samples[5] = SoundBuffer("Shoot1",&resources);
+	samples[0] = SoundBuffer::resource("Explosion1",resources);
+	samples[1] = SoundBuffer::resource("Explosion2",resources);
+	samples[2] = SoundBuffer::resource("Hurt1",resources);
+	samples[3] = SoundBuffer::resource("Hurt2",resources);
+	samples[4] = SoundBuffer::resource("Powerup1",resources);
+	samples[5] = SoundBuffer::resource("Shoot1",resources);
 	
 	for(int i = 0; i<total_samples; i++)
 	{
