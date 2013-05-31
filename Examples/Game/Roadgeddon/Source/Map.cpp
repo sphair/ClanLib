@@ -33,10 +33,10 @@ Map::Map(Game &game_)
 {
 	game = &game_;
 	GraphicContext &gc = game_.get_gc(); 
-	DisplayCache &resources = game_.get_resources();
-	title1 = new Sprite(gc,"Map1",&resources);
-	background1 = new Sprite(gc,"Background1",&resources);
-	background2 = new Sprite(gc,"Background2",&resources);
+	XMLResourceDocument &resources = game_.get_resources();
+	title1 = new Sprite(gc,resources, "Map1");
+	background1 = new Sprite(gc, resources, "Background1");
+	background2 = new Sprite(gc, resources, "Background2");
 
 	update_slot = game_.get_update_sig().connect(this,&Map::update);
 

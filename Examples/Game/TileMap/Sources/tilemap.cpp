@@ -29,10 +29,10 @@
 #include "precomp.h"
 #include "tilemap.h"
 
-void TileMap::load(Canvas &canvas, const std::string &level, DisplayCache &resources)
+void TileMap::load(Canvas &canvas, const std::string &level, XMLResourceDocument &resources)
 {
 	GraphicContext gc = canvas.get_gc();
-	Resource resource = resources.get_resource(level);
+	XMLResourceNode resource = resources.get_resource(level);
 	
 	if (resource.get_type() != "tilemap")
 		throw Exception(string_format("Resource %1 is not of type tilemap!", level));
@@ -45,7 +45,7 @@ void TileMap::load(Canvas &canvas, const std::string &level, DisplayCache &resou
 	
 	cl_log_event("Debug", "Loading level %1 (%2x%3)", level_name, map_width, map_height);
 
-	sprite_tiles = Sprite(gc, resource_name, &resources);
+	sprite_tiles = Sprite(gc, resources, resource_name);
 
 	tile_width = sprite_tiles.get_width();
 	tile_height = sprite_tiles.get_height();

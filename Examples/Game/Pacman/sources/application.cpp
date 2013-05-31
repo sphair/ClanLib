@@ -40,10 +40,9 @@ int App::main(const std::vector<std::string> &args)
 	//SoundOutput sound_output(44100);
 	DisplayWindow window("The ClanLib Pacman game!", 1024, 900, false, true);
 
-	DisplayCache resources;
-	resources.load("pacman.xml");
+	XMLResourceDocument resources("pacman.xml");
 
-	World world(&resources, window);
+	World world(resources, window);
 
 	// Connect the Window close event
 	Slot slot_quit = window.sig_window_close().connect(&world, &World::on_quit);

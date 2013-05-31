@@ -37,7 +37,7 @@
 GameObject_Pacman::GameObject_Pacman(int x, int y, World *world) :
 	GameObject_Moving(x, y, world)
 {
-	spr_pacman = Sprite(world->gc, "Game/spr_pacman", world->resources);
+	spr_pacman = Sprite(world->gc,  world->resources, "Game/spr_pacman");
 	
 	//sfx_start = SoundBuffer("Game/sfx_start", world->resources);
 	//sfx_namnam = SoundBuffer("Game/sfx_namnam", world->resources);

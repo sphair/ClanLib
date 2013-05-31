@@ -368,46 +368,39 @@ void Age3D::create_billboards(clan::Canvas &canvas)
 {
 	clan::Texture2D pacman_texture(canvas, "pacman.png");
 
-	clan::SpriteDescription left_pacman_desc;
-	left_pacman_desc.add_gridclipped_frames(canvas, pacman_texture, 0, 0, 28, 32, 6, 1);
-	pacman[0] = clan::Sprite(canvas, left_pacman_desc);
+	pacman[0] = clan::Sprite(canvas);
+	pacman[0].add_gridclipped_frames(canvas, pacman_texture, 0, 0, 28, 32, 6, 1);
 	pacman[0].set_alignment(clan::origin_center);
 	pacman[0].set_play_pingpong();
 
-	clan::SpriteDescription right_pacman_desc;
-	right_pacman_desc.add_gridclipped_frames(canvas, pacman_texture, 28*6, 0, 28, 32, 6, 1);
-	pacman[1] = clan::Sprite(canvas, right_pacman_desc);
+	pacman[1] = clan::Sprite(canvas);
+	pacman[1].add_gridclipped_frames(canvas, pacman_texture, 28*6, 0, 28, 32, 6, 1);
 	pacman[1].set_alignment(clan::origin_center);
 	pacman[1].set_play_pingpong();
 
-	clan::SpriteDescription up_pacman_desc;
-	up_pacman_desc.add_gridclipped_frames(canvas, pacman_texture, 0, 32, 28, 32, 6, 1);
-	pacman[2] = clan::Sprite(canvas, up_pacman_desc);
+	pacman[2] = clan::Sprite(canvas);
+	pacman[2].add_gridclipped_frames(canvas, pacman_texture, 0, 32, 28, 32, 6, 1);
 	pacman[2].set_alignment(clan::origin_center);
 	pacman[2].set_play_pingpong();
 
-	clan::SpriteDescription down_pacman_desc;
-	down_pacman_desc.add_gridclipped_frames(canvas, pacman_texture, 28*6, 32, 28, 32, 6, 1);
-	pacman[3] = clan::Sprite(canvas, down_pacman_desc);
+	pacman[3] = clan::Sprite(canvas);
+	pacman[3].add_gridclipped_frames(canvas, pacman_texture, 28*6, 32, 28, 32, 6, 1);
 	pacman[3].set_alignment(clan::origin_center);
 	pacman[3].set_play_pingpong();
 
-	clan::SpriteDescription green_ghost_desc;
-	green_ghost_desc.add_gridclipped_frames(canvas, pacman_texture, 336, 0, 28, 32, 6, 1);
-	ghost[0] = clan::Sprite(canvas, green_ghost_desc);
+	ghost[0] = clan::Sprite(canvas);
+	ghost[0].add_gridclipped_frames(canvas, pacman_texture, 336, 0, 28, 32, 6, 1);
 	ghost[0].set_alignment(clan::origin_center);
 	ghost[0].set_play_pingpong();
 	ghost[0].set_delay(100);
 
-	clan::SpriteDescription red_ghost_desc;
-	red_ghost_desc.add_gridclipped_frames(canvas, pacman_texture, 336, 32, 28, 32, 6, 1);
-	ghost[1] = clan::Sprite(canvas, red_ghost_desc);
+	ghost[1] = clan::Sprite(canvas);
+	ghost[1].add_gridclipped_frames(canvas, pacman_texture, 336, 32, 28, 32, 6, 1);
 	ghost[1].set_alignment(clan::origin_center);
 	ghost[1].set_play_pingpong();
 	ghost[1].set_delay(100);
 
-	clan::SpriteDescription tiles_desc;
-	tiles_desc.add_gridclipped_frames(canvas, pacman_texture, 0, 64, 34, 38, 10, 2);
-	tiles = clan::Sprite(canvas, tiles_desc);
+	tiles = clan::Sprite(canvas);
+	tiles.add_gridclipped_frames(canvas, pacman_texture, 0, 64, 34, 38, 10, 2);
 	tiles.set_alignment(clan::origin_center);
 }
