@@ -26,6 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
+#include "Precomp.h"
 #include "Map.h"
 #include "Game.h"
 
