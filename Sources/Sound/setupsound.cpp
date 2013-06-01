@@ -34,12 +34,17 @@
 #include "API/Sound/SoundProviders/soundprovider_type_register.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "API/Core/Signals/slot.h"
+#include "API/Core/Resources/resource_manager.h"
+#include "API/Core/Resources/xml_resource_manager.h"
+#include "Sound/Resources/xml_sound_cache.h"
 
 #define INCLUDED_FROM_SETUPVORBIS
 #include "SoundProviders/stb_vorbis.h"
 
 namespace clan
 {
+class ResourceManager;
+class XMLResourceDocument;
 
 /////////////////////////////////////////////////////////////////////////////
 // SetupSound operations:
@@ -49,6 +54,8 @@ class SetupSound_Impl
 public:
 	static void init();
 	static void deinit();
+
+	static void add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc);
 
 	static int ref_count;
 	static Slot slot_resource_added;
@@ -79,6 +86,7 @@ void SetupSound_Impl::init()
 		return;
 	providertype_wave = new SoundProviderType_Register<SoundProvider_Wave>("wav");
 	providertype_ogg = new SoundProviderType_Register<SoundProvider_Vorbis>("ogg");
+	XMLResourceManager::add_cache_factory(Callback_v2<ResourceManager &, const XMLResourceDocument &>(&SetupSound_Impl::add_cache_factory));
 }
 
 void SetupSound_Impl::deinit()
@@ -92,6 +100,11 @@ void SetupSound_Impl::deinit()
 
 	delete providertype_ogg;
 	providertype_ogg = 0;
+}
+
+void SetupSound_Impl::add_cache_factory(ResourceManager &manager, const XMLResourceDocument &doc)
+{
+	SoundCache::set(manager, std::shared_ptr<SoundCache>(new XMLSoundCache(doc)));
 }
 
 }

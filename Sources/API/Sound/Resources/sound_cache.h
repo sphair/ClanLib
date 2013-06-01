@@ -27,21 +27,31 @@
 **    Mark Page
 */
 
-#include "Sound/precomp.h"
-#include "API/Sound/sound_cache.h"
-#include "API/Core/Resources/resource_manager.h"
+/// \addtogroup clanSound_Resources clanSound Resources
+/// \{
+
+#pragma once
+
+#include "../api_sound.h"
+#include "../../Core/Resources/resource.h"
+#include <memory>
 
 namespace clan
 {
 
-SoundCache &SoundCache::get(const ResourceManager &resources)
+class ResourceManager;
+class SoundBuffer;
+
+class CL_API_SOUND SoundCache
 {
-	return *resources.get_cache<SoundCache>("clan.sound").get();
+public:
+	virtual ~SoundCache() { }
+	virtual Resource<SoundBuffer> get_sound(const std::string &id) = 0;
+
+	static SoundCache &get(const ResourceManager &resources);
+	static void set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache);
+};
+
 }
 
-void SoundCache::set(ResourceManager &resources, const std::shared_ptr<SoundCache> &cache)
-{
-	resources.set_cache("clan.sound", cache);
-}
-
-}
+/// \}

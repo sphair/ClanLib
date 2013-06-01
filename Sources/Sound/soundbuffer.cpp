@@ -40,7 +40,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "soundbuffer_impl.h"
 #include "soundbuffer_session_impl.h"
-#include "API/Sound/sound_cache.h"
+#include "API/Sound/Resources/sound_cache.h"
 
 namespace clan
 {
