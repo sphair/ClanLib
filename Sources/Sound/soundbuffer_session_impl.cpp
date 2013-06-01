@@ -200,7 +200,7 @@ void SoundBuffer_Session_Impl::run_filters(float **temp_data, int num_samples)
 void SoundBuffer_Session_Impl::get_channel_volume(float *channel_volume)
 {
 	float left_pan = 1-pan;
-	float right_pan = pan;
+	float right_pan = 1+pan;
 	if (left_pan < 0.0f) left_pan = 0.0f;
 	if (left_pan > 1.0f) left_pan = 1.0f;
 	if (right_pan < 0.0f) right_pan = 0.0f;
