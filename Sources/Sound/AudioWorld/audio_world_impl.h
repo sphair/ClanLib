@@ -47,6 +47,7 @@ public:
 	void update_session(AudioObject_Impl *obj);
 
 	std::list<AudioObject_Impl *> objects;
+	std::list<AudioObject> active_objects;
 
 	Vec3f listener_position;
 	Quaternionf listener_orientation;

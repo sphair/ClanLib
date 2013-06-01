@@ -109,6 +109,7 @@ void AudioObject::play()
 		impl->session = impl->sound.prepare(impl->looping);
 		impl->world->update_session(impl.get());
 		impl->session.play();
+		impl->world->active_objects.push_back(*this);
 	}
 }
 
