@@ -70,7 +70,10 @@ void AudioWorld_Impl::update_session(AudioObject_Impl *obj)
 		if (reverse_stereo)
 			pan = -pan;
 
-		obj->session.set_volume(obj->volume * t);
+		// Final volume needs to stay the same no matter the panning direction
+		float volume = (0.5f + std::abs(pan) * 0.5f) * t * obj->volume;
+
+		obj->session.set_volume(volume);
 		obj->session.set_pan(pan);
 	}
 	else
