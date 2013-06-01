@@ -62,7 +62,6 @@
 #include "Sound/SoundFilters/inverse_echofilter.h"
 #include "Sound/SoundFilters/fadefilter.h"
 
-#include "Sound/AudioWorld/audio_cache.h"
 #include "Sound/AudioWorld/audio_definition.h"
 #include "Sound/AudioWorld/audio_object.h"
 #include "Sound/AudioWorld/audio_world.h"

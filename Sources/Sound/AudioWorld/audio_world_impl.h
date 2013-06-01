@@ -29,9 +29,9 @@
 #pragma once
 
 #include <list>
-#include "API/Sound/AudioWorld/audio_cache.h"
 #include "API/Core/Math/vec3.h"
 #include "API/Core/Math/quaternion.h"
+#include "API/Core/Resources/resource_manager.h"
 
 namespace clan
 {
@@ -41,7 +41,7 @@ class AudioObject_Impl;
 class AudioWorld_Impl
 {
 public:
-	AudioWorld_Impl();
+	AudioWorld_Impl(const ResourceManager &resources);
 	~AudioWorld_Impl();
 
 	void update_session(AudioObject_Impl *obj);
@@ -53,7 +53,7 @@ public:
 	bool play_ambience;
 	bool reverse_stereo;
 
-	AudioCache cache;
+	ResourceManager resources;
 };
 
 }

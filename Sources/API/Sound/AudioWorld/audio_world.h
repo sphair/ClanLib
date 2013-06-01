@@ -36,13 +36,14 @@
 namespace clan
 {
 
+class ResourceManager;
 class SoundBuffer;
 class AudioWorld_Impl;
 
 class CL_API_SOUND AudioWorld
 {
 public:
-	AudioWorld();
+	AudioWorld(const ResourceManager &resources);
 
 	void update();
 

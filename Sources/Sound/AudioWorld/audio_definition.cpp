@@ -36,9 +36,9 @@ bool AudioDefinition::is_ambience() const
 	return impl->ambience;
 }
 
-std::string AudioDefinition::get_sound_filename() const
+std::string AudioDefinition::get_sound_id() const
 {
-	return impl->filename;
+	return impl->sound_id;
 }
 
 void AudioDefinition::set_attenuation_begin(float distance)
@@ -56,9 +56,9 @@ void AudioDefinition::set_volume(float volume)
 	impl->volume = volume;
 }
 
-void AudioDefinition::set_filename(const std::string &filename)
+void AudioDefinition::set_sound_id(const std::string &id)
 {
-	impl->filename = filename;
+	impl->sound_id = id;
 }
 
 void AudioDefinition::set_looping(bool loop)

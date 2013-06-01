@@ -10,8 +10,8 @@
 namespace clan
 {
 
-AudioWorld::AudioWorld()
-: impl(new AudioWorld_Impl())
+AudioWorld::AudioWorld(const ResourceManager &resources)
+: impl(new AudioWorld_Impl(resources))
 {
 }
 
@@ -46,8 +46,8 @@ void AudioWorld::update()
 
 /////////////////////////////////////////////////////////////////////////////
 
-AudioWorld_Impl::AudioWorld_Impl()
-: play_ambience(true), reverse_stereo(false)
+AudioWorld_Impl::AudioWorld_Impl(const ResourceManager &resources)
+: play_ambience(true), reverse_stereo(false), resources(resources)
 {
 }
 
