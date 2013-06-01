@@ -39,19 +39,19 @@
 namespace clan
 {
 
+class ResourceManager;
 class Scene_Impl;
 class SceneLight;
 class SceneParticleEmitter;
 class SceneObject;
 class SceneCamera;
-class SceneCache;
 class ScenePass;
 
 class CL_API_SCENE Scene
 {
 public:
 	Scene();
-	Scene(GraphicContext &gc, const SceneCache &cache, const std::string &shader_path);
+	Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path);
 
 	bool is_null() const;
 

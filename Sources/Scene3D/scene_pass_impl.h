@@ -28,8 +28,6 @@
 
 #pragma once
 
-#include "API/Scene3D/scene_cache_provider.h"
-
 namespace clan
 {
 
