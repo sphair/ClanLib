@@ -28,8 +28,8 @@
 
 #pragma once
 
+#include "API/Core/Resources/resource_manager.h"
 #include "API/Scene3D/scene_camera.h"
-#include "API/Scene3D/scene_cache.h"
 #include "API/Scene3D/scene_pass.h"
 #include "API/Scene3D/scene_cull_provider.h"
 #include "API/Scene3D/Performance/gpu_timer.h"
@@ -65,7 +65,7 @@ class SceneLightProbe_Impl;
 class Scene_Impl
 {
 public:
-	Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path);
+	Scene_Impl(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path);
 
 	ScenePass add_pass(const std::string &name, const std::string &insert_before = std::string());
 
@@ -85,7 +85,7 @@ public:
 
 	GPUTimer &get_gpu_timer() { return gpu_timer; }
 
-	const SceneCache &get_cache() const { return cache; }
+	const ResourceManager &get_resources() const { return resources; }
 
 	const SceneCamera &get_camera() const { return camera; }
 	SceneCamera &get_camera() { return camera; }
@@ -95,7 +95,7 @@ public:
 	std::vector<ScenePass> passes;
 
 private:
-	SceneCache cache;
+	ResourceManager resources;
 	std::string shader_path;
 
 	int frame;

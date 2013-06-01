@@ -46,8 +46,8 @@ Scene::Scene()
 {
 }
 
-Scene::Scene(GraphicContext &gc, const SceneCache &cache, const std::string &shader_path)
-: impl(new Scene_Impl(gc, cache, shader_path))
+Scene::Scene(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
+: impl(new Scene_Impl(gc, resources, shader_path))
 {
 	impl->set_camera(SceneCamera(*this));
 }
@@ -199,8 +199,8 @@ std::vector<GPUTimer::Result> Scene::gpu_results;
 
 /////////////////////////////////////////////////////////////////////////////
 
-Scene_Impl::Scene_Impl(GraphicContext &gc, SceneCache cache, const std::string &shader_path)
-: cache(cache), frame(0)
+Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, const std::string &shader_path)
+: resources(resources), frame(0)
 {
 	cull_provider = std::unique_ptr<SceneCullProvider>(new OctTree());
 

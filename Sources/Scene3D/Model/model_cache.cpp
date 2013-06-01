@@ -30,8 +30,7 @@
 #include "model_cache.h"
 #include "Scene3D/Framework/instances_buffer.h"
 #include "Scene3D/scene_impl.h"
-#include "API/Scene3D/scene_cache.h"
-#include "API/Scene3D/scene_cache_provider.h"
+#include "API/Scene3D/Resources/scene_cache.h"
 
 namespace clan
 {
@@ -47,7 +46,7 @@ std::shared_ptr<Model> ModelCache::get_model(GraphicContext &gc, const std::stri
 	std::shared_ptr<Model> renderer = models[model_name];
 	if (!renderer)
 	{
-		renderer = std::shared_ptr<Model>(new Model(gc, texture_cache, shader_cache, scene->get_cache().get_provider()->get_model_data(model_name), instances_buffer.new_offset_index()));
+		renderer = std::shared_ptr<Model>(new Model(gc, texture_cache, shader_cache, SceneCache::get(scene->get_resources()).get_model_data(model_name), instances_buffer.new_offset_index()));
 		models[model_name]= renderer;
 	}
 	return renderer;
