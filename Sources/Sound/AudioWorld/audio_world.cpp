@@ -42,6 +42,18 @@ void AudioWorld::update()
 	{
 		impl->update_session(*it);
 	}
+
+	for (std::list<AudioObject>::iterator it = impl->active_objects.begin(); it != impl->active_objects.end(); )
+	{
+		if (it->impl->session.is_playing())
+		{
+			++it;
+		}
+		else
+		{
+			it = impl->active_objects.erase(it);
+		}
+	}
 }
 
 /////////////////////////////////////////////////////////////////////////////

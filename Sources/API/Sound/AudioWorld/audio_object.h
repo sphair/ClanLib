@@ -75,6 +75,9 @@ public:
 
 private:
 	std::shared_ptr<AudioObject_Impl> impl;
+
+	friend class AudioWorld;
+	friend class AudioWorld_Impl;
 };
 
 }
