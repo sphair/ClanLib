@@ -29,7 +29,7 @@
 
 #pragma once
 
-#include "API/Sound/sound_cache.h"
+#include "API/Sound/Resources/sound_cache.h"
 #include "API/Core/Resources/xml_resource_document.h"
 
 namespace clan
