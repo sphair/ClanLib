@@ -43,7 +43,7 @@ public:
 	float volume;
 	bool looping;
 	bool ambience;
-	std::string filename;
+	std::string sound_id;
 };
 
 }

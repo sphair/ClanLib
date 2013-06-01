@@ -43,7 +43,7 @@ public:
 
 	bool is_null() const { return !impl; }
 
-	std::string get_sound_filename() const;
+	std::string get_sound_id() const;
 
 	float get_attenuation_begin() const;
 	float get_attenuation_end() const;
@@ -52,7 +52,7 @@ public:
 	bool is_looping() const;
 	bool is_ambience() const;
 
-	void set_filename(const std::string &filename);
+	void set_sound_id(const std::string &id);
 
 	void set_attenuation_begin(float distance);
 	void set_attenuation_end(float distance);

@@ -64,7 +64,7 @@ public:
 	void set_attenuation_end(float distance);
 	void set_volume(float volume);
 
-	void set_sound(const std::string &filename);
+	void set_sound(const std::string &id);
 	void set_sound(const SoundBuffer &buffer);
 
 	void set_looping(bool loop);
