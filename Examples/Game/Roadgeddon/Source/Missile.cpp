@@ -26,6 +26,7 @@
 **    Arkadiusz Kalinowski
 */
 
+#include "Precomp.h"
 #include "Missile.h"
 #include "Enemy.h"
 #include "Player.h"
