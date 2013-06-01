@@ -92,7 +92,7 @@ public:
 
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
-	void load_font(const FontDescription &desc);
+	void load_font(const FontDescription &desc, const std::string &filename);
 	Rectf get_bounding_box(const std::string &reference_string);
 
 	void set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect);

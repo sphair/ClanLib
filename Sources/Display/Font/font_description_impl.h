@@ -64,7 +64,6 @@ public:
 
 public:
 	std::string typeface_name;
-	std::string filename;
 	int height;
 	int average_width;
 	float escapement;

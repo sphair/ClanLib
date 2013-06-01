@@ -84,7 +84,7 @@ public:
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
 	/// \brief Load a system font (for use by insert_glyph to load text from a system font)
-	void load_font( GraphicContext &context, const FontDescription &desc);
+	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
 
 	/// \brief Free the system font when it is no longer required
 	void free_font();

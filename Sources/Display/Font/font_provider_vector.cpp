@@ -66,15 +66,15 @@ FontProvider_Vector::FontProvider_Vector() : font_engine(NULL), is_filled(true)
 {
 }
 
-void FontProvider_Vector::load_font(const FontDescription &desc)
+void FontProvider_Vector::load_font(const FontDescription &desc, const std::string &filename)
 {
 #ifdef WIN32
-	font_engine = new FontEngine_Win32(desc);
+	font_engine = new FontEngine_Win32(desc, filename);
 #elif defined(__APPLE__)
-	font_engine = new FontEngine_Cocoa(desc);
+	font_engine = new FontEngine_Cocoa(desc, filename);
 #else
 
-	std::string font_file_path = desc.get_filename();
+	std::string font_file_path = filename;
 	if (font_file_path.empty())
 	{
 	    // Obtain the best matching font file from fontconfig.

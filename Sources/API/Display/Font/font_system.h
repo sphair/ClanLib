@@ -95,21 +95,14 @@ public:
 	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	Font_System( Canvas &canvas, const std::string &typeface_name, int height);
-
-	/// \brief Constructs a Font System
-	///
-	/// \param canvas = Canvas
-	/// \param typeface_name = String Ref
-	/// \param file_name = String Ref
-	/// \param height = value
-	Font_System( Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height);
+	Font_System( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename = std::string());
 
 	/// \brief Constructs a Font System
 	///
 	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	Font_System( Canvas &canvas, const FontDescription &desc);
+	/// \param filename = Font file to use
+	Font_System( Canvas &canvas, const FontDescription &desc, const std::string &filename = std::string());
 
 	/// \brief Constructs a Font System from a Font, ensuring the correct type
 	explicit Font_System( const Font &font);
@@ -138,7 +131,7 @@ public:
 	void set_texture_group(TextureGroup &new_texture_group);
 
 	/// \brief Load a system font (for use by insert_glyph to load text from a system font)
-	void load_font( GraphicContext &context, const FontDescription &desc);
+	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
 
 	/// \brief Free the system font when it is no longer required
 	void free_font();

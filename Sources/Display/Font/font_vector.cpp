@@ -48,26 +48,17 @@ Font_Vector::Font_Vector()
 {
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename) : Font( new FontProvider_Vector())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font_Vector(canvas, desc);
+	*this = Font_Vector(canvas, desc, filename);
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename) : Font( new FontProvider_Vector())
 {
-	FontDescription desc;
-	desc.set_typeface_name(typeface_name);
-	desc.set_filename(file_name);
-	desc.set_height(height);
-	*this = Font_Vector(canvas, desc);
-}
-
-Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_Vector())
-{
-	get_provider()->load_font(desc);
+	get_provider()->load_font(desc, filename);
 }
 
 Font_Vector::Font_Vector( const Font &font) : Font(font)
