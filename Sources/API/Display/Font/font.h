@@ -35,6 +35,8 @@
 #include <memory>
 #include "../Render/graphic_context.h"
 #include "../Image/pixel_buffer.h"
+#include "../2D/sprite.h"
+#include "../../Core/Signals/callback_2.h"
 #include "font_description.h"
 
 namespace clan
@@ -75,9 +77,24 @@ public:
 	virtual ~Font();
 
 /// \}
+
+/// \name Resources
+/// \{
+public:
+	/// \brief Retrieves a Font resource from the resource manager
+	///
+	/// \param gc = Graphic Context
+	/// \param resources = Resource manager
+	/// \param id = id
+	static Resource<Font> resource(Canvas &canvas, const FontDescription &desc, const ResourceManager &resources);
+
+	/// \brief Loads a Font from a XML resource definition
+	static Font load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite);
+/// \}
+
+
 /// \name Attributes
 /// \{
-
 public:
 
 	/// \brief Is Null
