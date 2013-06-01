@@ -41,7 +41,7 @@ class DataBuffer;
 class FontEngine_Win32 : public FontEngine
 {
 public:
-	FontEngine_Win32(const FontDescription &description);
+	FontEngine_Win32(const FontDescription &description, const std::string &filename);
 	~FontEngine_Win32();
 
 	FontMetrics get_metrics();

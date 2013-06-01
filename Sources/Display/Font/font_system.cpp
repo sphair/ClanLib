@@ -44,26 +44,17 @@ Font_System::Font_System()
 {
 }
 
-Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, int height) : Font( new FontProvider_System())
+Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename) : Font( new FontProvider_System())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font_System(canvas, desc);
+	*this = Font_System(canvas, desc, filename);
 }
 
-Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height) : Font( new FontProvider_System())
+Font_System::Font_System(Canvas &canvas, const FontDescription &desc, const std::string &filename) : Font( new FontProvider_System())
 {
-	FontDescription desc;
-	desc.set_typeface_name(typeface_name);
-	desc.set_filename(file_name);
-	desc.set_height(height);
-	*this = Font_System(canvas, desc);
-}
-
-Font_System::Font_System(Canvas &canvas, const FontDescription &desc) : Font( new FontProvider_System())
-{
-	load_font(canvas, desc);
+	load_font(canvas, desc, filename);
 }
 
 Font_System::Font_System( const Font &font) : Font(font)
@@ -100,9 +91,9 @@ void Font_System::set_texture_group(TextureGroup &new_texture_group)
 	get_provider()->set_texture_group(new_texture_group);
 }
 
-void Font_System::load_font( GraphicContext &context, const FontDescription &desc)
+void Font_System::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename)
 {
-	get_provider()->load_font(context, desc);
+	get_provider()->load_font(context, desc, filename);
 }
 
 void Font_System::free_font()

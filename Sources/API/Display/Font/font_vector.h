@@ -58,21 +58,13 @@ public:
 	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height);
-
-	/// \brief Constructs a Font Vector
-	///
-	/// \param canvas = Canvas
-	/// \param typeface_name = String Ref
-	/// \param file_name = String Ref
-	/// \param height = value
-	Font_Vector( Canvas &canvas, const std::string &typeface_name, const std::string &file_name, int height);
+	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	Font_Vector( Canvas &canvas, const FontDescription &desc);
+	Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename);
 
 	/// \brief Constructs a Font Vector from a Font, ensuring the correct type
 	explicit Font_Vector( const Font &font);

@@ -134,7 +134,7 @@ void FontProvider_System::free_font()
 	}
 }
 
-void FontProvider_System::load_font( GraphicContext &context, const FontDescription &desc)
+void FontProvider_System::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename)
 {
 	free_font();
 
@@ -150,16 +150,16 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
 	}
 
 #ifdef WIN32
-	font_engine = new FontEngine_Win32(desc);
+	font_engine = new FontEngine_Win32(desc, filename);
 	glyph_cache.font_metrics = font_engine->get_metrics();
     
 #elif defined(__APPLE__)
     
-    font_engine = new FontEngine_Cocoa(desc);
+    font_engine = new FontEngine_Cocoa(desc, filename);
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
-	std::string font_file_path = desc.get_filename();
+	std::string font_file_path = filename;
 	if (font_file_path.empty())
 	{
 	    // Obtain the best matching font file from fontconfig.

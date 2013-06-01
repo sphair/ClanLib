@@ -39,10 +39,9 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc)
+FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename)
 : handle(0)
 {
-	std::string filename = desc.get_filename();
 	if (!filename.empty())
 	{
 		int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
