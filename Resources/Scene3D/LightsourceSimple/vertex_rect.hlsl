@@ -7,6 +7,7 @@ struct VertexIn
 
 struct VertexOut
 {
+	uint InstanceId : SV_InstanceID;
 	float4 PositionInProjection : SV_Position;
 	nointerpolation float4 PositionInEye : PixelPositionInEye;
 	nointerpolation float4 Color : PixelColor;
@@ -41,6 +42,7 @@ VertexOut main(VertexIn input)
 	output.SpotZ = InstanceTexture.Load(uint2(LightOffset + 5, 0));
 
 	output.PositionInProjection = input.PositionInObject;
+	output.InstanceId = input.InstanceId;
 
 	return output;
 }

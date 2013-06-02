@@ -4,6 +4,7 @@
 
 struct PixelIn
 {
+	uint InstanceId : SV_InstanceID;
 	float4 ScreenPos : SV_Position;
 	nointerpolation float4 PositionInEye : PixelPositionInEye;
 	nointerpolation float4 Color : PixelColor;
@@ -74,8 +75,11 @@ PixelOut main(PixelIn input)
 
 	float3 position_in_eye = unproject(float2(x, y) + 0.5f, z_in_eye);
 
-	// To do: we need to apply material SI in its own pass
-	float3 color = float3(0,0,0); // material_self_illumination * 4;
+	float3 color = float3(0,0,0);
+#if defined(RECT_PASS)
+	if (input.InstanceId == 0)
+		color = material_self_illumination * 4;
+#endif
 
 	float3 fragment_to_light = input.PositionInEye.xyz - position_in_eye;
 
