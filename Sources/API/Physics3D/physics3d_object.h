@@ -79,6 +79,8 @@ private:
 	UserDataOwner *get_userdata_owner();
 
 	std::shared_ptr<Physics3DObject_Impl> impl;
+
+	friend class Physics3DContactTest;
 };
 
 }

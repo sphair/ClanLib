@@ -33,6 +33,7 @@
 #include "API/Core/System/exception.h"
 #include "physics3d_contact_test_impl.h"
 #include "physics3d_world_impl.h"
+#include "physics3d_object_impl.h"
 
 namespace clan
 {
@@ -53,29 +54,40 @@ bool Physics3DContactTest::is_null() const
 
 bool Physics3DContactTest::test(const Physics3DObject &object)
 {
-	throw Exception("Physics3DContactTest::test not implemented");
+	Physics3DContactTest_Impl::AllHitsContactResultCallback callback(impl.get(), object.impl->object.get());
+	impl->world->dynamics_world->contactTest(object.impl->object.get(), callback);
+
+	impl->contacts.clear();
+	for (std::map<Physics3DObject_Impl *, bool>::iterator it = callback.contacts.begin(); it != callback.contacts.end(); ++it)
+	{
+		impl->contacts.push_back(it->first);
+	}
+
+	return !impl->contacts.empty();
 }
 
 int Physics3DContactTest::get_hit_count() const
 {
-	return 0;
+	return impl->contacts.size();
 }
 
 Physics3DObject Physics3DContactTest::get_hit_object(int index) const
 {
-	return Physics3DObject();
+	if (!impl->contacts.empty())
+		return Physics3DObject(impl->contacts[index]->shared_from_this());
+	else
+		return Physics3DObject();
 }
 
 /////////////////////////////////////////////////////////////////////////////
 
 Physics3DContactTest_Impl::Physics3DContactTest_Impl(Physics3DWorld_Impl *world)
-	: world(world), has_hit(false), hit_fraction(1.0f), hit_object(0)
+	: world(world)
 {
 }
 
 Physics3DContactTest_Impl::~Physics3DContactTest_Impl()
 {
 }
-
 
 }

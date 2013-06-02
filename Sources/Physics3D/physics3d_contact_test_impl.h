@@ -30,6 +30,7 @@
 
 #include "Physics3D/Bullet/btBulletDynamicsCommon.h"
 #include "API/Core/Math/vec3.h"
+#include <map>
 
 namespace clan
 {
@@ -45,10 +46,31 @@ public:
 
 	Physics3DWorld_Impl *world;
 
-	Vec3f start, end;
-	bool has_hit;
-	float hit_fraction;
-	Physics3DObject_Impl *hit_object;
+	std::vector<Physics3DObject_Impl *> contacts;
+
+	class AllHitsContactResultCallback : public btCollisionWorld::ContactResultCallback
+	{
+	public:
+		AllHitsContactResultCallback(Physics3DContactTest_Impl *impl, btCollisionObject *test_object) : impl(impl), test_object(test_object)
+		{
+		}
+
+		btScalar addSingleResult(btManifoldPoint &cp, const btCollisionObjectWrapper *colObj0Wrap, int partId0, int index0, const btCollisionObjectWrapper *colObj1Wrap, int partId1, int index1)
+		{
+			if (colObj0Wrap->getCollisionObject() == test_object)
+				contacts[static_cast<Physics3DObject_Impl*>(colObj1Wrap->getCollisionObject()->getUserPointer())] = true;
+			else
+				contacts[static_cast<Physics3DObject_Impl*>(colObj0Wrap->getCollisionObject()->getUserPointer())] = true;
+
+			return btScalar(1.);
+		}
+
+		std::map<Physics3DObject_Impl *, bool> contacts;
+
+	private:
+		Physics3DContactTest_Impl *impl;
+		btCollisionObject *test_object;
+	};
 };
 
 }
