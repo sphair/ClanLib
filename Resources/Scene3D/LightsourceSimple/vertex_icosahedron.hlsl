@@ -7,6 +7,7 @@ struct VertexIn
 
 struct VertexOut
 {
+	uint InstanceId : SV_InstanceID;
 	float4 PositionInProjection : SV_Position;
 	nointerpolation float4 PositionInEye : PixelPositionInEye;
 	nointerpolation float4 Color : PixelColor;
@@ -44,6 +45,7 @@ VertexOut main(VertexIn input)
 	float3 VertexInEye = output.PositionInEye.xyz + input.PositionInObject.xyz * sqrt(output.Range.x);
 
 	output.PositionInProjection = mul(EyeToProjection, float4(VertexInEye, 1));
+	output.InstanceId = input.InstanceId;
 
 	return output;
 }
