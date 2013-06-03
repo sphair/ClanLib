@@ -28,28 +28,30 @@ int Program::main(const std::vector<std::string> &args)
 
 	Scene scene(gc, resources, "../../Resources/Scene3D");
 
+	scene.show_skybox_stars(false);
+	scene.set_skybox_gradient(gc, std::vector<Colorf>(1, Colorf::darkblue));
+
 	SceneLight light1(scene);
 	light1.set_position(Vec3f(100.0f, 100.0f, 100.0f));
 	light1.set_type(SceneLight::type_omni);
 	light1.set_attenuation_start(900.0f);
 	light1.set_attenuation_end(1000.0f);
-	light1.set_color(Vec3f(1.0f));
+	light1.set_color(Vec3f(0.8f));
 
 	SceneLight light2(scene);
 	light2.set_position(Vec3f(-100.0f, -100.0f, -100.0f));
 	light2.set_type(SceneLight::type_omni);
 	light2.set_attenuation_start(900.0f);
 	light2.set_attenuation_end(1000.0f);
-	light2.set_color(Vec3f(0.5f));
+	light2.set_color(Vec3f(0.4f));
 
 	SceneCamera camera(scene);
-	camera.set_position(Vec3f(0.0f, 0.0f, -100.0f));
+	camera.set_position(Vec3f(0.0f, 0.0f, -50.0f));
 
 	SceneModel model(gc, scene, "test.fbx");
 
-	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(0.5f));
+	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(1.0f));
 
-	scene.set_skybox_gradient(gc, std::vector<Colorf>(1, Colorf::whitesmoke));
 	scene.set_camera(camera);
 
 	GameTime gametime;
@@ -59,6 +61,7 @@ int Program::main(const std::vector<std::string> &args)
 		gametime.update();
 		scene.update(gc, gametime.get_time_elapsed());
 
+		scene.set_viewport(gc.get_size());
 		scene.render(gc);
 
 		window.flip(1);
