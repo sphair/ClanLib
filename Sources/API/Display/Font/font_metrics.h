@@ -48,11 +48,8 @@ class CL_API_DISPLAY FontMetrics
 /// \{
 
 public:
-	/// \brief Constructs a null instance.
-	FontMetrics();
-
 	FontMetrics(
-		float height,
+		float height=0.0f,
 		float ascent=0.0f,
 		float descent=0.0f,
 		float internal_leading=0.0f,
@@ -76,12 +73,6 @@ public:
 /// \{
 
 public:
-	/// \brief Returns true if this object is invalid.
-	bool is_null() const { return !impl; }
-
-	/// \brief Throw an exception if this object is invalid.
-	void throw_if_null() const;
-
 	/// \brief Returns the height of the font.
 	float get_height() const;
 

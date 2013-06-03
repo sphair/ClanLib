@@ -38,11 +38,6 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // FontMetrics Construction:
 
-FontMetrics::FontMetrics()
-{
-
-}
-
 FontMetrics::FontMetrics(
 	float height,
 	float ascent,
@@ -75,12 +70,6 @@ FontMetrics::~FontMetrics()
 
 /////////////////////////////////////////////////////////////////////////////
 // FontMetrics Attributes:
-
-void FontMetrics::throw_if_null() const
-{
-	if (!impl)
-		throw Exception("FontMetrics is null");
-}
 
 float FontMetrics::get_height() const
 {
