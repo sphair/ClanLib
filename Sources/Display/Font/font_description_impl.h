@@ -52,7 +52,6 @@ public:
 		anti_alias = true;
 		subpixel = true;
 		charset = FontDescription::charset_default;
-		cached = true;
 	}
 
 	virtual ~FontDescription_Impl() { return; }
@@ -76,10 +75,6 @@ public:
 	bool anti_alias;
 	bool subpixel;
 	FontDescription::Charset charset;
-	bool cached;
-
-	bool is_match(const FontDescription_Impl *other) const;
-
 /// \}
 };
 

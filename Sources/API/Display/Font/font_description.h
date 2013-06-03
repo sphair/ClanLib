@@ -140,22 +140,6 @@ public:
 	/// \brief Returns true if the font is identical
 	bool operator==(const FontDescription &other) const;
 
-	/// \brief Returns true if the font description matches (for the purpose of caching)
-	///
-	/// This is less strict than using the == operator\n
-	/// Returns false when any of these conditions occur\n
-	/// Filenames are set AND are not equal\n
-	/// Typefaces are set AND are not equal\n
-	/// Weights are not 0 AND are not equal\n
-	/// Heights are not 0 AND are not equal\n
-	/// Italics are not equal\n
-	/// Underlines are not equal\n
-	/// Strikeouts are not equal\n
-	bool is_match(const FontDescription &other) const;
-
-	/// \brief Returns true if this font should be cached
-	bool get_cached() const;
-
 	/// \brief Returns an unique string identifying this font description
 	///
 	/// This is useful for placing font descriptions in a map.
@@ -212,9 +196,6 @@ public:
 	///
 	/// \param new_charset = The charset. charset_default = Use operating systems default
 	void set_charset(Charset new_charset);
-
-	/// \brief Sets if this font should be cached (defaults to true)
-	void set_cached(bool setting = true);
 
 /// \}
 /// \name Implementation
