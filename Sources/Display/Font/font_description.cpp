@@ -43,6 +43,11 @@ FontDescription::FontDescription() : impl(new FontDescription_Impl)
 {
 }
 
+FontDescription::FontDescription(const std::string &typeface_name) : impl(new FontDescription_Impl)
+{
+	set_typeface_name(typeface_name);
+}
+
 FontDescription::~FontDescription()
 {
 }
