@@ -76,6 +76,18 @@ Resource<Image> XMLDisplayCache::get_image(GraphicContext &gc, const std::string
 	return image;
 }
 
+Resource<CollisionOutline> XMLDisplayCache::get_collision(const std::string &id)
+{
+	std::map<std::string, Resource<CollisionOutline> >::iterator it = collisions.find(id);
+	if (it != collisions.end())
+		return it->second;
+
+	Resource<CollisionOutline> collision = CollisionOutline::load(id, doc);
+	collisions[id] = collision;
+	return collision;
+}
+
+
 Resource<Texture> XMLDisplayCache::get_texture(GraphicContext &gc, const std::string &id)
 {
 	std::map<std::string, Resource<Texture> >::iterator it = textures.find(id);
