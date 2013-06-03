@@ -96,6 +96,13 @@ public:
 		bool streamed,
 		const std::string &type);
 
+/// \}
+
+/// \name Resources
+/// \{
+public:
+
+
 	/// \brief Retrieves a SoundBuffer resource from the resource manager
 	///
 	/// \param gc = Graphic Context
