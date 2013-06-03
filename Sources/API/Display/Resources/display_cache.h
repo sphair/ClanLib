@@ -46,6 +46,7 @@ class Image;
 class Texture;
 class Font;
 class FontDescription;
+class CollisionOutline;
 
 class CL_API_DISPLAY DisplayCache
 {
@@ -55,6 +56,7 @@ public:
 	virtual Resource<Image> get_image(GraphicContext &gc, const std::string &id) = 0;
 	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
 	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
+	virtual Resource<CollisionOutline> get_collision(const std::string &id) = 0;
 
 	static DisplayCache &get(const ResourceManager &resources);
 	static void set(ResourceManager &resources, const std::shared_ptr<DisplayCache> &cache);

@@ -44,6 +44,7 @@ public:
 	Resource<Image> get_image(GraphicContext &gc, const std::string &id);
 	Resource<Texture> get_texture(GraphicContext &gc, const std::string &id);
 	Resource<Font> get_font(Canvas &canvas, const FontDescription &desc);
+	Resource<CollisionOutline> get_collision(const std::string &id);
 
 private:
 	Resource<Font> load_font(Canvas &canvas, const FontDescription &desc);
@@ -52,6 +53,7 @@ private:
 
 	std::map<std::string, Resource<Sprite> > sprites;
 	std::map<std::string, Resource<Image> > images;
+	std::map<std::string, Resource<CollisionOutline> > collisions;
 	std::map<std::string, Resource<Texture> > textures;
 	std::map<std::string, Resource<Font> > fonts;
 };

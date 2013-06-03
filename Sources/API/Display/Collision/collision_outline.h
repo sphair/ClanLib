@@ -44,6 +44,7 @@
 #include "../../Core/Math/origin.h"
 #include "../../Core/Math/circle.h"
 #include "../../Core/IOData/file_system.h"
+#include "../../Core/Resources/resource.h"
 
 namespace clan
 {
@@ -53,6 +54,7 @@ class XMLResourceDocument;
 class OutputSourceProvider;
 class GraphicContext;
 class Color;
+class ResourceManager;
 class Canvas;
 
 /// \brief Collision point information structure.
@@ -152,18 +154,25 @@ public:
 
 	/// \brief Construct a collision outline.
 	///
-	/// \param resource_id = The resource id
-	/// \param manager = The resource manager
-	CollisionOutline(const std::string &resource_id, const XMLResourceDocument &manager );
-
-	/// \brief Construct a collision outline.
-	///
 	/// \param contours = The contours
 	/// \param size = The size
 	/// \param accuracy = Outline Accuracy
 	CollisionOutline(const std::vector<Contour> &contours, const Size &size, OutlineAccuracy accuracy);
 
 	~CollisionOutline();
+/// \name Resources
+/// \{
+public:
+	/// \brief Retrieves a CollisionOutline from the resource manager
+	///
+	/// \param gc = Graphic Context
+	/// \param resources = Resource manager
+	/// \param id = id
+	static Resource<CollisionOutline> resource(const std::string &id, const ResourceManager &resources);
+
+	/// \brief Loads a CollisionOutline from a XML resource definition
+	static CollisionOutline load(const std::string &id, const XMLResourceDocument &doc);
+/// \}
 
 /// \}
 /// \name Attributes
@@ -209,9 +218,6 @@ public:
 
 	/// \brief Fetch the state of the collision testing variables.
 	void get_collision_info_state(bool &points, bool &normals, bool &metadata, bool &pendepth) const;
-
-	/// \brief Resource owning this outline, if any.
-	XMLResourceNode resource;
 
 /// \}
 /// \name Operations
