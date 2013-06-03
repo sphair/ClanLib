@@ -60,8 +60,8 @@ int TextFade::start(const std::vector<std::string> &args)
 	font_description.set_subpixel(false);	// Fading only works with sub pixel off
 	clan::Font standard_font(canvas, font_description);
 
-	clan::DisplayCache app_resources("../Font/Resources/resources.xml");
-	clan::Font_Sprite sprite_font(canvas, "ClanFont", &app_resources);
+	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
+	clan::Font sprite_font = clan::Font_Sprite::resource(canvas, clan::FontDescription("ClanFont"), resources);
 
 	// Run until someone presses escape
 	while (!quit)
@@ -72,7 +72,7 @@ int TextFade::start(const std::vector<std::string> &args)
 
 		draw_text(canvas, sprite_font, 300, "ABCDEFGHIJKLMNOPQRSTUVWXZ");
 
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call processes user input and other events
 		clan::KeepAlive::process(0);

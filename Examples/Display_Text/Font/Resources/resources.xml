@@ -195,7 +195,7 @@
 	</sprite>
 
 	<font name="ClanFont">
-		<bitmap glyphs="clan_font" ascent="32" descent="9" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!&quot;œ$%^&amp;*()-_+=[]{}:;\@#~\|,&lt;.&gt;/?" />
+		<sprite glyphs="clan_font" ascent="32" descent="9" letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!&quot;œ$%^&amp;*()-_+=[]{}:;\@#~\|,&lt;.&gt;/?" />
 	</font>
 </resources>
 
