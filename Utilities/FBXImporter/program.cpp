@@ -1,7 +1,7 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "fbx_model_loader.h"
+#include "fbx_scene_cache.h"
 #include <ClanLib/application.h>
 
 #pragma comment(lib, "libfbxsdk-mt.lib")
@@ -13,8 +13,61 @@ Application clanapp(&Program::main);
 int Program::main(const std::vector<std::string> &args)
 {
 	SetupCore setup_core;
+	SetupDisplay setup_display;
+	SetupD3D setup_d3d;
 
-	std::shared_ptr<clan::ModelData> model_data = FBXModelLoader::load("test.fbx");
+	ResourceManager resources;
+	SceneCache::set(resources, std::shared_ptr<SceneCache>(new FBXSceneCache()));
+
+	DisplayWindow window("FBX Viewer", 1024, 768, false, true);
+	Canvas canvas(window);
+	GraphicContext gc = canvas.get_gc();
+
+	bool exit = false;
+	Slot slot_window_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
+
+	Scene scene(gc, resources, "../../Resources/Scene3D");
+
+	SceneLight light1(scene);
+	light1.set_position(Vec3f(100.0f, 100.0f, 100.0f));
+	light1.set_type(SceneLight::type_omni);
+	light1.set_attenuation_start(900.0f);
+	light1.set_attenuation_end(1000.0f);
+	light1.set_color(Vec3f(1.0f));
+
+	SceneLight light2(scene);
+	light2.set_position(Vec3f(-100.0f, -100.0f, -100.0f));
+	light2.set_type(SceneLight::type_omni);
+	light2.set_attenuation_start(900.0f);
+	light2.set_attenuation_end(1000.0f);
+	light2.set_color(Vec3f(0.5f));
+
+	SceneCamera camera(scene);
+	camera.set_position(Vec3f(0.0f, 0.0f, -100.0f));
+
+	SceneModel model(gc, scene, "test.fbx");
+
+	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(0.5f));
+
+	scene.set_skybox_gradient(gc, std::vector<Colorf>(1, Colorf::whitesmoke));
+	scene.set_camera(camera);
+
+	GameTime gametime;
+
+	while (!exit)
+	{
+		gametime.update();
+		scene.update(gc, gametime.get_time_elapsed());
+
+		scene.render(gc);
+
+		window.flip(1);
+		KeepAlive::process();
+	}
+
+	return 0;
+}
+
 
 /*
 	// Animation:
@@ -44,8 +97,9 @@ int Program::main(const std::vector<std::string> &args)
 	Colorf scene_ambient((float)globals.GetAmbientColor().mRed, (float)globals.GetAmbientColor().mGreen, (float)globals.GetAmbientColor().mBlue, (float)globals.GetAmbientColor().mAlpha);
 	std::string default_camera = globals.GetDefaultCamera();
 */
-	return 0;
-}
+
+
+
 /*
 void Program::mesh(FbxNode *node)
 {
