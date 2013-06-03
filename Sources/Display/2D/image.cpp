@@ -161,7 +161,7 @@ Image::~Image()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Sprite Resources:
+// Image Resources:
 
 Resource<Image> Image::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
 {
