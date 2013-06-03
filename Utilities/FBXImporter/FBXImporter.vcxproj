@@ -68,6 +68,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="fbx_model_loader.cpp" />
+    <ClCompile Include="fbx_scene_cache.cpp" />
     <ClCompile Include="precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -76,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fbx_model_loader.h" />
+    <ClInclude Include="fbx_scene_cache.h" />
     <ClInclude Include="precomp.h" />
     <ClInclude Include="program.h" />
     <ClInclude Include="skinned_bone.h" />
