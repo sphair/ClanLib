@@ -124,12 +124,6 @@ bool FontDescription::get_anti_alias() const
 	return impl->anti_alias;
 }
 
-bool FontDescription::get_cached() const
-{
-	return impl->cached;
-}
-
-
 bool FontDescription::get_subpixel() const
 {
 	return impl->subpixel;
@@ -176,27 +170,6 @@ bool FontDescription::operator==(const FontDescription &other) const
 			impl->charset == other.impl->charset;
 }
 
-bool FontDescription::is_match(const FontDescription &other) const
-{
-	return impl->is_match(other.impl.get());
-}
-
-bool FontDescription_Impl::is_match(const FontDescription_Impl *other) const
-{
-	// Test for equality when variables are set.
-
-	if (!typeface_name.empty() && !other->typeface_name.empty())
-		if (typeface_name != other->typeface_name) return false;
-	if (height && other->height)
-		if (height != other->height) return false;
-	if (weight && other->weight)
-		if (weight != other->weight) return false;
-
-	return italic == other->italic && 
-			underline == other->underline && 
-			strikeout == other->strikeout;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // FontDescription operations:
 
@@ -222,7 +195,6 @@ FontDescription FontDescription::clone() const
 	copy.impl->anti_alias = impl->anti_alias;
 	copy.impl->subpixel = impl->subpixel;
 	copy.impl->charset = impl->charset;
-	copy.impl->cached = impl->cached;
 	return copy;
 }
 
@@ -290,11 +262,6 @@ void FontDescription::set_subpixel(bool setting)
 void FontDescription::set_charset(Charset new_charset)
 {
 	impl->charset = new_charset;
-}
-
-void FontDescription::set_cached(bool setting)
-{
-	impl->cached = setting;
 }
 
 /////////////////////////////////////////////////////////////////////////////
