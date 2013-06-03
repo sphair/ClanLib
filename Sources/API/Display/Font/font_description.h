@@ -53,6 +53,9 @@ public:
 	/// \brief Constructs a font description with default values.
 	FontDescription();
 
+	/// \brief Constructs a font description with default values.
+	FontDescription(const std::string &typeface_name);
+
 	virtual ~FontDescription();
 
 	/// \brief Create null object
