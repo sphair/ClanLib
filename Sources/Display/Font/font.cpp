@@ -107,7 +107,6 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 	return DisplayCache::get(resources).get_font(canvas, desc);
 }
 
-
 /////////////////////////////////////////////////////////////////////////////
 // Font Attributes:
 
