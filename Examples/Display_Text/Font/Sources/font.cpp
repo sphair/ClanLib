@@ -43,7 +43,7 @@ int App::start(const std::vector<std::string> &args)
 	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	app_resources = DisplayCache("Resources/resources.xml");
+	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("Resources/resources.xml"));
 
 	std::string theme;
 	if (FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
@@ -172,7 +172,8 @@ int App::start(const std::vector<std::string> &args)
 
 	last_fps = 0.0f;
 	selected_fontclass = font_system;
-	font_desc.set_typeface_name("Microsoft Sans Serif");
+	font_typeface = "Microsoft Sans Serif";
+	font_filename = "";
 	font_desc.set_height(32);
 	font_desc.set_weight(400);
 	select_font();
@@ -232,23 +233,32 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 	wm_ptr->process();
 	wm_ptr->draw_windows(canvas);
 
-	canvas.flip(1);
+	window.flip(1);
 
 	KeepAlive::process();
 }
 
 void App::select_font()
 {
+	font_desc.set_typeface_name(font_typeface);
+
 	switch (selected_fontclass)
 	{
 		case font_system:
-			selected_font = Font_System(canvas, font_desc);
+			if (font_filename.empty())
+			{
+				selected_font = Font_System(canvas, font_desc);
+			}
+			else
+			{
+				selected_font = Font_System(canvas, font_desc, font_filename);
+			}
 			break;
 		case font_vector:
-			selected_font = Font_Vector(canvas, font_desc);
+			selected_font = Font_Vector(canvas, font_desc, font_filename);
 			break;
 		case font_sprite:
-			selected_font = Font_Sprite(canvas, "ClanFont", &app_resources);
+			selected_font = Font_Sprite::resource(canvas, font_desc, resources);
 			break;
 	}
 
