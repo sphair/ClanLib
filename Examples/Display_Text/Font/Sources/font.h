@@ -78,13 +78,15 @@ private:
 	PushButton *button_typeface_sans_ptr;
 	std::string font_text;
 	FontMetrics font_metrics;
+	std::string font_typeface;
+	std::string font_filename;
 	FontDescription font_desc;
 	Size font_size;
 	Font small_font;
 	Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
-	DisplayCache app_resources;
+	ResourceManager resources;
 };
 
 
