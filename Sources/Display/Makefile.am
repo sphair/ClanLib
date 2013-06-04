@@ -122,7 +122,7 @@ ImageProviders/provider_factory.cpp \
 ImageProviders/JPEGWriter/jpge.cpp \
 ImageProviders/dds_provider.cpp \
 display_target_impl.cpp \
-display.cpp \
+display.cpp
 
 if WIN32
 libclan30Display_la_SOURCES += \
