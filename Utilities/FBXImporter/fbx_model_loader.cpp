@@ -11,7 +11,7 @@ std::shared_ptr<ModelData> FBXModelLoader::load(const std::string &filename)
 }
 
 FBXModelLoader::FBXModelLoader(const std::string &filename)
-: manager(nullptr), iosettings(nullptr), scene(nullptr), model_data(new ModelData())
+: base_path(PathHelp::get_basepath(filename)), manager(nullptr), iosettings(nullptr), scene(nullptr), model_data(new ModelData())
 {
 	try
 	{
@@ -310,7 +310,7 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 		if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
 		{
 			FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
-			std::string filename = PathHelp::get_filename(texture->GetFileName());
+			std::string filename = PathHelp::combine(base_path, PathHelp::get_filename(texture->GetFileName()));
 			std::string uv_set = texture->UVSet.Get();
 
 			range.diffuse_map.texture = model_data->textures.size();
@@ -558,6 +558,18 @@ Vec3f FBXModelLoader::get_normal(FbxMesh *mesh, int polygon, int point, int cont
 			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
 			{
 				int id = element->GetIndexArray().GetAt(vertex_index);
+				return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
+			}
+		}
+		else if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+			{
+				return Vec3f(to_vec4f(element->GetDirectArray().GetAt(control_index)));
+			}
+			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			{
+				int id = element->GetIndexArray().GetAt(control_index);
 				return Vec3f(to_vec4f(element->GetDirectArray().GetAt(id)));
 			}
 		}

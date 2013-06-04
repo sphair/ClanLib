@@ -40,6 +40,8 @@ private:
 	static clan::Vec4ub to_vec4ub(const FbxColor &c);
 	static clan::Mat4f to_mat4f(const FbxAMatrix &m);
 
+	std::string base_path;
+
 	FbxManager *manager;
 	FbxIOSettings *iosettings;
 	FbxScene *scene;
