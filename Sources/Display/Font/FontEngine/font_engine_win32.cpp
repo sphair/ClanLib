@@ -299,20 +299,17 @@ bool FontEngine_Win32::try_load_glyph_bitmap(int glyph, UINT format, MAT2 &matri
 	HDC dc = GetDC(0);
 	HGDIOBJ old_font = SelectObject(dc, handle);
 
-	wchar_t text[2];
-	text[0] = glyph;
-	text[1] = 0;
+	wchar_t text[2] = { glyph, 0 };
 	WORD indices[2] = {0};
 	GetGlyphIndicesW(dc, text, 1, indices, GGI_MARK_NONEXISTING_GLYPHS);
-	glyph = indices[0];
 	format |= GGO_GLYPH_INDEX;
 
 	bool result = false;
-	DWORD bitmap_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, 0, 0, &matrix);
+	DWORD bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, 0, 0, &matrix);
 	if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 	{
 		DataBuffer buffer(bitmap_size);
-		bitmap_size = GetGlyphOutline(dc, glyph, format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
+		bitmap_size = GetGlyphOutline(dc, indices[0], format, &glyph_metrics, buffer.get_size(), buffer.get_data(), &matrix);
 		if (bitmap_size != 0 && bitmap_size != GDI_ERROR)
 		{
 			glyph_bitmap = buffer;
