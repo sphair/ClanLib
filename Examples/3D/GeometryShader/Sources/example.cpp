@@ -31,7 +31,6 @@
 #include "scene_object.h"
 #include "particle_object.h"
 #include "graphic_store.h"
-#include "framerate_counter.h"
 
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
@@ -85,17 +84,13 @@ int App::start(const std::vector<std::string> &args)
 
 	enable_dual_pass = false;
 
-	FramerateCounter framerate_counter;
+	clan::GameTime game_time;
 
-	ubyte64 time_last = System::get_time();
 	// Run until someone presses escape
 	while (!quit)
 	{
-		framerate_counter.frame_shown();
-
-		ubyte64 time_now = System::get_time();
-		time_delta = time_now - time_last;
-		time_last = time_now;
+		game_time.update();
+		time_delta = game_time.get_time_elapsed_ms();
 
 		control_camera();
 		calculate_matricies(canvas);
@@ -121,7 +116,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_rasterizer_state();
 		canvas.reset_depth_stencil_state();
 
-		std::string fps(string_format("fps = %1", framerate_counter.get_framerate()));
+		std::string fps(string_format("fps = %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
 		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
@@ -131,7 +126,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
 
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		window.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process();
