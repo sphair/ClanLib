@@ -96,15 +96,14 @@ int App::start(const std::vector<std::string> &args)
 	
   	create_scene(canvas);
 
-	ubyte64 last_time = clan::System::get_time();
+	clan::GameTime game_time;
 
 	float angle = 0.0f;
 	// Run until someone presses escape
 	while (!quit)
 	{
-		ubyte64 current_time = clan::System::get_time();
-		int time_delta_ms = current_time - last_time;
-		last_time = current_time;
+		game_time.update();
+		int time_delta_ms = game_time.get_time_elapsed_ms();
 
 		canvas.clear(Colorf::black);
 		canvas.clear_depth(1.0f);
