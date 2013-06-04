@@ -16,13 +16,13 @@ clanApp_includes = \
 
 clanNetwork_includes = \
 	network.h \
-	Network/api_network.h \
 	Network/Web/web_response.h \
 	Network/Web/web_request.h \
 	Network/Web/http_request_handler_provider.h \
 	Network/Web/http_request_handler.h \
 	Network/Web/http_server_connection.h \
 	Network/Web/http_server.h \
+	Network/api_network.h \
 	Network/NetGame/event_value.h \
 	Network/NetGame/client.h \
 	Network/NetGame/event_dispatcher_v2.h \
@@ -125,6 +125,7 @@ clanSound_includes = \
 	Sound/SoundProviders/soundprovider_session.h \
 	Sound/SoundProviders/soundprovider_vorbis.h \
 	Sound/SoundProviders/soundprovider_wave.h \
+	Sound/Resources/sound_cache.h \
 	Sound/soundbuffer_session.h \
 	Sound/api_sound.h \
 	Sound/SoundFilters/inverse_echofilter.h \
@@ -132,7 +133,6 @@ clanSound_includes = \
 	Sound/SoundFilters/echofilter.h \
 	Sound/AudioWorld/audio_world.h \
 	Sound/AudioWorld/audio_object.h \
-	Sound/AudioWorld/audio_cache.h \
 	Sound/AudioWorld/audio_definition.h \
 	Sound/soundoutput_description.h \
 	Sound/soundoutput.h \
@@ -172,8 +172,13 @@ clanCore_includes = \
 	Core/Text/console.h \
 	Core/Text/string_format.h \
 	Core/Text/console_logger.h \
+	Core/Resources/resource_object.h \
 	Core/Resources/resource.h \
+	Core/Resources/xml_resource_document.h \
+	Core/Resources/xml_resource_node.h \
 	Core/Resources/resource_manager.h \
+	Core/Resources/resource_container.h \
+	Core/Resources/xml_resource_manager.h \
 	Core/ErrorReporting/detect_hang.h \
 	Core/ErrorReporting/crash_reporter.h \
 	Core/ErrorReporting/exception_dialog.h \
@@ -307,8 +312,6 @@ clanCore_includes = \
 clanDisplay_includes = \
 	display.h \
 	d3d.h \
-	Display/ShaderEffect/shader_effect.h \
-	Display/ShaderEffect/shader_effect_description.h \
 	Display/Render/vertex_array_buffer.h \
 	Display/Render/texture_cube.h \
 	Display/Render/transfer_vector.h \
@@ -367,6 +370,7 @@ clanDisplay_includes = \
 	Display/Image/perlin_noise.h \
 	Display/Image/icon_set.h \
 	Display/Image/pixel_buffer_set.h \
+	Display/Resources/display_cache.h \
 	Display/Collision/outline_accuracy.h \
 	Display/Collision/contour.h \
 	Display/Collision/outline_circle.h \
@@ -378,8 +382,9 @@ clanDisplay_includes = \
 	Display/Font/font_system.h \
 	Display/Font/font_sprite.h \
 	Display/Font/font_vector.h \
-	Display/Font/font_manager.h \
 	Display/Font/font_description.h \
+	Display/ShaderEffect/shader_effect_description.h \
+	Display/ShaderEffect/shader_effect.h \
 	Display/Window/input_device.h \
 	Display/Window/cursor_description.h \
 	Display/Window/input_event.h \
@@ -572,13 +577,11 @@ clanScene3D_includes = \
 	Scene3D/scene_pass.h \
 	Scene3D/scene.h \
 	Scene3D/scene_light.h \
-	Scene3D/scene_inout_data.h \
-	Scene3D/scene_cache_provider.h \
+	Scene3D/Resources/scene_cache.h \
 	Scene3D/scene_particle_emitter.h \
 	Scene3D/scene_cull_provider.h \
-	Scene3D/scene_cache.h \
-	Scene3D/scene_model.h \
-	Scene3D/cached_texture.h
+	Scene3D/scene_light_probe.h \
+	Scene3D/scene_model.h
 
 clanPhysics3D_includes = \
 	physics3d.h \
