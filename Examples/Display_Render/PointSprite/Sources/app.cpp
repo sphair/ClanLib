@@ -186,8 +186,11 @@ int App::start(const std::vector<std::string> &args)
 
 			canvas.set_blend_state(blend_state);
 
-			gc.set_point_size(options->point_size);
-			gc.set_point_sprite_origin(clan::origin_upper_left);
+			clan::RasterizerStateDescription raster_state_desc;
+			raster_state_desc.set_point_size(options->point_size);
+			raster_state_desc.set_point_sprite_origin(clan::origin_upper_left);
+			clan::RasterizerState raster_state(canvas, raster_state_desc);
+			canvas.set_rasterizer_state(raster_state);
 
 			clan::PrimitivesArray primarray(gc);
 
@@ -213,6 +216,7 @@ int App::start(const std::vector<std::string> &args)
 			gc.reset_texture(0);
 
 			gc.reset_blend_state();
+			gc.reset_rasterizer_state();
 		}
 
 		window.flip(1);

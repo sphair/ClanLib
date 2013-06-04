@@ -263,15 +263,15 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 	buffer.resize(rect_width * rect_height);
 
 
-	clan::glPixelStorei(GL_PACK_ALIGNMENT, 1);
-	clan::glPixelStorei(GL_PACK_ROW_LENGTH, rect_width);
-	clan::glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
-	clan::glPixelStorei(GL_PACK_SKIP_ROWS, 0);
-	clan::glReadBuffer(GL_BACK);
-	if (clan::glClampColor)
-		clan::glClampColor(clan::GL_CLAMP_READ_COLOR, GL_FALSE);
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);
+	glPixelStorei(GL_PACK_ROW_LENGTH, rect_width);
+	glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+	glReadBuffer(GL_BACK);
+	if (glClampColor)
+		glClampColor(clan::GL_CLAMP_READ_COLOR, GL_FALSE);
 
-	clan::glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
+	glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
 	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_rgba8);
 	unsigned int *pdata = (unsigned int *) pbuf.get_data();
 	unsigned char *rdata = &buffer[0];
