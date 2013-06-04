@@ -53,6 +53,6 @@ GraphicStore::~GraphicStore()
 
 void GraphicStore::LoadImages( GraphicContext &gc )
 {
-	tux = Texture2D(gc, "../Clan3D/Resources/tux.png");
+	tux = Texture2D(gc, "Resources/tux.png");
 
 }

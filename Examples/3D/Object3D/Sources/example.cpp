@@ -154,9 +154,9 @@ void App::render(GraphicContext &gc)
 void App::create_scene(GraphicContext &gc)
 {
 
-	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae", false);
-	model_clanlib = Model(gc, scene.gs, "../Clan3D/Resources/clanlib.dae", false);
-	model_tuxball = Model(gc, scene.gs, "../Clan3D/Resources/tux_ball.dae", true);
+	model_teapot = Model(gc, scene.gs, "Resources/teapot.dae", false);
+	model_clanlib = Model(gc, scene.gs, "Resources/clanlib.dae", false);
+	model_tuxball = Model(gc, scene.gs, "Resources/tux_ball.dae", true);
 
 	camera = new SceneObject(scene, scene.base);
 	camera->position = Vec3f(0.0f, 1.0f, 0.0f);

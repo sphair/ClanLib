@@ -47,7 +47,7 @@ int App::start(const std::vector<std::string> &args)
 
 	clan::Canvas canvas(window);
 
-	clan::PixelBuffer tux("../../3D/Clan3D/Resources/tux.png");
+	clan::PixelBuffer tux("../../3D/Object3D/Resources/tux.png");
 
 	clan::PixelBuffer cpu_buffer = tux.copy();
 
