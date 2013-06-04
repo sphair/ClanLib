@@ -178,6 +178,8 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 
 	ModelDataMesh &model_mesh = model_data->meshes[0];
 
+	model_mesh.channels.resize(4);
+
 	for (size_t i = 0; i < vertices.size(); i++)
 	{
 		for (VertexMapping *mapping = vertices[i]; mapping != nullptr; mapping = mapping->next)
@@ -191,6 +193,10 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 			model_mesh.bitangents.push_back(mapping->bitangent);
 			model_mesh.bone_weights.push_back(mapping->bone_weights);
 			model_mesh.bone_selectors.push_back(mapping->bone_selectors);
+			model_mesh.channels[0].push_back(mapping->diffuse_uv);
+			model_mesh.channels[1].push_back(mapping->specular_uv);
+			model_mesh.channels[2].push_back(mapping->normal_uv);
+			model_mesh.channels[3].push_back(mapping->emission_uv);
 		}
 	}
 
@@ -239,6 +245,11 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 	range.start_element = start_element;
 	range.num_elements = num_elements;
 
+	// To do: where can we retrieve these flags from?
+	range.two_sided = true;
+	range.transparent = false;
+	range.alpha_test = false;
+
 	if (material->GetClassId().Is(FbxSurfaceLambert::ClassId) || material->GetClassId().Is(FbxSurfacePhong::ClassId))
 	{
 		FbxSurfaceLambert *lambert = static_cast<FbxSurfaceLambert*>(material);
@@ -271,11 +282,6 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 		range.self_illumination_amount.set_single_value(emissive_factor);
 		range.self_illumination.set_single_value(to_vec3f(emissive));
 
-		// To do: where can we retrieve these flags from?
-		range.two_sided = true;
-		range.transparent = false;
-		range.alpha_test = false;
-
 		if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
 			FbxSurfacePhong *phong = static_cast<FbxSurfacePhong*>(lambert);
@@ -304,8 +310,20 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 		if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
 		{
 			FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
-			std::string filename = texture->GetFileName();
+			std::string filename = PathHelp::get_filename(texture->GetFileName());
 			std::string uv_set = texture->UVSet.Get();
+
+			range.diffuse_map.texture = model_data->textures.size();
+
+			// To do: where to get this from?
+			range.diffuse_map.channel = 0;
+			range.diffuse_map.wrap_x = ModelDataTextureMap::wrap_repeat;
+			range.diffuse_map.wrap_y = ModelDataTextureMap::wrap_repeat;
+			range.diffuse_map.uvw_offset.set_single_value(Vec3f(0.0f));
+			range.diffuse_map.uvw_rotation.set_single_value(Quaternionf());
+			range.diffuse_map.uvw_scale.set_single_value(Vec3f(1.0f));
+
+			model_data->textures.push_back(ModelDataTexture(filename, 2.2f));
 		}
 	}
 	else
@@ -317,8 +335,6 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 		range.specular.set_single_value(Vec3f(1.0f));
 		range.specular_level.set_single_value(0.0f);
 		range.glossiness.set_single_value(0.0f);
-		range.two_sided = true;
-		range.transparent = false;
 		range.self_illumination_amount.set_single_value(0.0f);
 		range.self_illumination.set_single_value(Vec3f(0.0f));
 	}
@@ -350,6 +366,7 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 			Vec3f normal = get_normal(mesh, poly, point, control_index, vertex_index);
 			Vec3f tangent = get_tangent(mesh, poly, point, control_index, vertex_index);
 			Vec3f bitangent = get_bitangent(mesh, poly, point, control_index, vertex_index);
+			Vec2f diffuse_uv = get_uv(mesh, poly, point, control_index, vertex_index, 0);
 
 			if (vertices[control_index] == nullptr)
 			{
@@ -359,13 +376,14 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 				vertices[control_index]->normal = normal;
 				vertices[control_index]->tangent = tangent;
 				vertices[control_index]->bitangent = bitangent;
+				vertices[control_index]->diffuse_uv = diffuse_uv;
 
 				face_vertices.push_back(vertices[control_index]);
 			}
 			else
 			{
 				VertexMapping *mapping = vertices[control_index];
-				while (mapping->position == position && mapping->color == color && mapping->normal == normal && mapping->tangent == tangent && mapping->bitangent == bitangent)
+				while (mapping->position == position && mapping->color == color && mapping->normal == normal && mapping->tangent == tangent && mapping->bitangent == bitangent && mapping->diffuse_uv == diffuse_uv)
 				{
 					if (mapping->next)
 					{
@@ -381,6 +399,7 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 						mapping->normal = normal;
 						mapping->tangent = tangent;
 						mapping->bitangent = bitangent;
+						mapping->diffuse_uv = diffuse_uv;
 						break;
 					}
 				}
@@ -600,6 +619,44 @@ Vec3f FBXModelLoader::get_bitangent(FbxMesh *mesh, int polygon, int point, int c
 	return Vec3f();
 }
 
+Vec2f FBXModelLoader::get_uv(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index, int uv_channel_index)
+{
+	FbxGeometryElementUV *element = mesh->GetElementUV(uv_channel_index);
+	if (element)
+	{
+		if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+			{
+				return to_vec2f(element->GetDirectArray().GetAt(control_index));
+			}
+			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			{
+				int id = element->GetIndexArray().GetAt(control_index);
+				return to_vec2f(element->GetDirectArray().GetAt(id));
+			}
+		}
+		else if (element->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+			{
+				return to_vec2f(element->GetDirectArray().GetAt(vertex_index));
+			}
+			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			{
+				int id = element->GetIndexArray().GetAt(vertex_index);
+				return to_vec2f(element->GetDirectArray().GetAt(id));
+			}
+		}
+		else
+		{
+			throw Exception("Unsupported bitangent type");
+		}
+	}
+
+	return Vec2f();
+}
+
 void FBXModelLoader::convert_camera(FbxNode *node)
 {
 	FbxCamera *camera = static_cast<FbxCamera*>(node->GetNodeAttribute());
@@ -696,6 +753,11 @@ void FBXModelLoader::convert_bones()
 	}
 }
 
+Vec2f FBXModelLoader::to_vec2f(const FbxVector2 &v)
+{
+	return Vec2f((float)v[0], (float)v[1]);
+}
+
 Vec3f FBXModelLoader::to_vec3f(const FbxDouble3 &d)
 {
 	return Vec3f((float)d[0], (float)d[1], (float)d[2]);
@@ -742,39 +804,5 @@ int get_group(FbxMesh *mesh, int polygon)
 		}
 	}
 	return -1;
-}
-
-Vec2f get_uv(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
-{
-	FbxVector2 uv;
-	for (int i = 0; i < mesh->GetElementUVCount(); i++)
-	{
-		FbxGeometryElementUV *element = mesh->GetElementUV(i);
-		if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
-		{
-			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
-			{
-				uv = element->GetDirectArray().GetAt(control_index);
-			}
-			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
-			{
-				int id = element->GetIndexArray().GetAt(control_index);
-				uv = element->GetDirectArray().GetAt(id);
-			}
-		}
-		else if (element->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
-		{
-			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
-			{
-				uv = element->GetDirectArray().GetAt(vertex_index);
-			}
-			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
-			{
-				int id = element->GetIndexArray().GetAt(vertex_index);
-				uv = element->GetDirectArray().GetAt(id);
-			}
-		}
-	}
-	return Vec2f((float)uv[0], (float)uv[1]);
 }
 */

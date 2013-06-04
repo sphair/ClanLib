@@ -32,7 +32,9 @@ private:
 	clan::Vec3f get_normal(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 	clan::Vec3f get_tangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 	clan::Vec3f get_bitangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
+	clan::Vec2f get_uv(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index, int uv_channel_index);
 
+	static clan::Vec2f to_vec2f(const FbxVector2 &v);
 	static clan::Vec3f to_vec3f(const FbxDouble3 &d);
 	static clan::Vec4f to_vec4f(const FbxVector4 &v);
 	static clan::Vec4ub to_vec4ub(const FbxColor &c);
