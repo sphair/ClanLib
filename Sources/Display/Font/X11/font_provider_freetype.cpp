@@ -119,40 +119,6 @@ void FontProvider_Freetype::load_font(const FontDescription &desc, const FileSys
 	load_font(desc, file);
 }
 
-void FontProvider_Freetype::load_font(const std::string &resource_id, ResourceManager *resources)
-{
-	Resource resource = resources->get_resource(resource_id);
-	if (resource.get_type() != "font")
-		throw Exception(string_format("Resource '%1' is not of type 'font'", resource.get_name()));
-
-	DomElement freetype_element = resource.get_element().named_item("freetype").to_element();
-	if (freetype_element.is_null())
-		throw Exception(string_format("Font resource '%1' has no 'freetype' child element", resource.get_name()));
-
-	FontDescription desc;
-
-	if (freetype_element.has_attribute("file"))
-		desc.set_typeface_name(freetype_element.get_attribute("file"));
-	else
-		throw Exception(string_format("Font resource '%1' has no 'file' attribute", resource.get_name()));
-
-	if (freetype_element.has_attribute("height"))
-		desc.set_height(freetype_element.get_attribute_int("height", 0));
-	else
-		throw Exception(string_format("Font resource '%1' has no 'height' attribute", resource.get_name()));
-
-	if (freetype_element.has_attribute("average_width"))
-		desc.set_average_width(freetype_element.get_attribute_int("average_width", 0));
-
-	if (freetype_element.has_attribute("anti_alias"))
-		desc.set_anti_alias(freetype_element.get_attribute_bool("anti_alias", true));
-
-	if (freetype_element.has_attribute("subpixel"))
-		desc.set_subpixel(freetype_element.get_attribute_bool("subpixel", true));
-
-	load_font(desc, resource.get_file_system());
-}
-
 void FontProvider_Freetype::load_font(const FontDescription &desc, IODevice &io_dev)
 {
 	free_font();

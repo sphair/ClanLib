@@ -168,9 +168,9 @@ void FontProvider_System::load_font( GraphicContext &context, const FontDescript
 	}
 
 	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-	std::string filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 	FileSystem vfs(path);
-	IODevice io_dev = vfs.open_file(filename);
+	IODevice io_dev = vfs.open_file(new_filename);
 
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();

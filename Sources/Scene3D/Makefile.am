@@ -21,7 +21,8 @@ Passes/DiffuseGI/diffuse_gi_pass_cs.cpp \
 Passes/GBuffer/gbuffer_pass.cpp \
 scene_pass.cpp \
 scene_camera.cpp \
-scene_cache.cpp \
+Resources/scene_cache.cpp \
+scene_light_probe.cpp \
 precomp.cpp \
 Culling/RTree/rtree.cpp \
 Culling/PortalMap/portal_map.cpp \
