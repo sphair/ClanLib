@@ -128,7 +128,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 10, 64+gap*1, std::string("colorAmplification : " + clan::StringHelp::float_to_text(uniforms.colorAmplification) + " (Press A,S)" ));
 		font.draw_text(canvas, 10, 64+gap*2, std::string("effectCoverage : " + clan::StringHelp::float_to_text(uniforms.effectCoverage) + " (Press Z,X)" ));
 
-		canvas.flip();
+		window.flip();
 
 		clan::System::sleep(10);
 

@@ -69,7 +69,7 @@ int HSV::start(const std::vector<std::string> &args)
 		render_texture(canvas, program, texture, hue_offset);
 
 		font.draw_text(canvas, 32, 700, "Use cursor keys left and right");
-		canvas.flip();
+		window.flip();
 		KeepAlive::process(10);
 	}
 

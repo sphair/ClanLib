@@ -117,7 +117,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, canvas.get_width() - 100, canvas.get_height()-16, fps, clan::Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// Use flip(1) to lock the fps
-		canvas.flip(0);
+		window.flip(0);
 		clan::KeepAlive::process(0);
 
 	}

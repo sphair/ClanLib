@@ -174,7 +174,7 @@ int ExampleText::start(const std::vector<std::string> &args)
 
 		last_fps = game_time.get_updates_per_second();
 		// Flip the display, showing on the screen what we have drawn
-		canvas.flip(1);
+		window.flip(1);
 
 		// This call updates input and performs other "housekeeping" call this each frame
 		clan::KeepAlive::process();

@@ -70,7 +70,7 @@ int App::start(const std::vector<std::string> &args)
 		wm.process();
 		wm.draw_windows(canvas);
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process();
 	}

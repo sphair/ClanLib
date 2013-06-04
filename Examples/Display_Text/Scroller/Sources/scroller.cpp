@@ -81,7 +81,7 @@ int Scroller::start(const std::vector<std::string> &args)
 		rect.expand(1);
 		canvas.draw_box(rect, clan::Colorf::white);
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process(0);
 	}
