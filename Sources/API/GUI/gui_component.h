@@ -90,13 +90,13 @@ public:
 	///
 	/// \param manager = GUIManager
 	/// \param description = GUITop Level Description
-	GUIComponent(GUIManager *manager, GUITopLevelDescription description, const std::string &tag_name = "component");
+	GUIComponent(GUIManager *manager, const GUITopLevelDescription &description, const std::string &tag_name = "component");
 
 	/// \brief Constructs a GUIComponent
 	///
 	/// \param owner = GUIComponent
 	/// \param description = GUITop Level Description
-	GUIComponent(GUIComponent *owner, GUITopLevelDescription description, const std::string &tag_name = "component");
+	GUIComponent(GUIComponent *owner, const GUITopLevelDescription &description, const std::string &tag_name = "component");
 
 	virtual ~GUIComponent();
 

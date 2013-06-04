@@ -144,7 +144,7 @@ public:
 /// \name Operations
 /// \{
 public:
-	void add_component(GUIComponent *component, GUIComponent *owner, GUITopLevelDescription desc);
+	void add_component(GUIComponent *component, GUIComponent *owner, const GUITopLevelDescription &desc);
 	void remove_component(GUIComponent_Impl *component_impl);
 	void gain_focus(GUIComponent *component);
 	void loose_focus(GUIComponent *component);
