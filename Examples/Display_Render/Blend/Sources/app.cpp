@@ -167,8 +167,8 @@ void App::move_balls(float time_diff, int num_balls)
 {
 	for (int cnt=0; cnt<num_balls; cnt++)
 	{
-		float xdisp = (balls[cnt].xspeed * time_diff) * 5.0f;
-		float ydisp = (balls[cnt].xspeed * time_diff) * 5.0f;
+		float xdisp = (balls[cnt].xspeed * time_diff) * 0.5f;
+		float ydisp = (balls[cnt].xspeed * time_diff) * 0.5f;
 
 		if (balls[cnt].xdir)
 		{
