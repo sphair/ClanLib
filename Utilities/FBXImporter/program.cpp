@@ -52,8 +52,8 @@ int Program::main(const std::vector<std::string> &args)
 	light2.set_attenuation_end(1000.0f);
 	light2.set_color(Vec3f(0.4f));
 
-	SceneModel model(gc, scene, "Models/YellowPowerup/yellow_powerup.fbx");
-	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(1.0f));
+	SceneModel model(gc, scene, "Models/HammerTime/hammer_time.fbx");
+	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(10.0f));
 
 	SceneCamera camera(scene);
 	scene.set_camera(camera);
