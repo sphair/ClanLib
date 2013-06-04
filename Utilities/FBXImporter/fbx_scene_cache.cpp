@@ -11,7 +11,7 @@ FBXSceneCache::FBXSceneCache()
 
 std::shared_ptr<ModelData> FBXSceneCache::get_model_data(const std::string &name)
 {
-	return FBXModelLoader::load("test.fbx");
+	return FBXModelLoader::load(name);
 }
 
 Resource<Texture> FBXSceneCache::get_texture(GraphicContext &gc, const std::string &name, bool linear)
