@@ -87,7 +87,7 @@ GUIComponent::GUIComponent(GUIComponent *parent, const std::string &tag_name)
 
 }
 
-GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription description, const std::string &tag_name)
+GUIComponent::GUIComponent(GUIManager *manager, const GUITopLevelDescription &description, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_manager(manager))
 {
 	impl->component = this;
@@ -102,7 +102,7 @@ GUIComponent::GUIComponent(GUIManager *manager, GUITopLevelDescription descripti
 	request_repaint();
 }
 
-GUIComponent::GUIComponent(GUIComponent *owner, GUITopLevelDescription description, const std::string &tag_name)
+GUIComponent::GUIComponent(GUIComponent *owner, const GUITopLevelDescription &description, const std::string &tag_name)
 : impl(GUIComponent_Impl::create_from_owner(owner))
 {
 	impl->component = this;

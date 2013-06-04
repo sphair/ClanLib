@@ -95,7 +95,7 @@ GUIManager_Impl::~GUIManager_Impl()
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager_Impl Operations:
 
-void GUIManager_Impl::add_component(GUIComponent *component, GUIComponent *owner, GUITopLevelDescription desc)
+void GUIManager_Impl::add_component(GUIComponent *component, GUIComponent *owner, const GUITopLevelDescription &desc)
 {
 	GUITopLevelWindow *top_level_window = new GUITopLevelWindow();
 	top_level_window->component = component;
