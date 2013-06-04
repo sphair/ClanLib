@@ -626,10 +626,6 @@ private:
 
 	Canvas dummy_canvas;
 	InputContext dummy_ic;
-
-	friend class GUIManager_Impl;
-
-	friend class GUIComponent_Impl;
 /// \}
 };
 
