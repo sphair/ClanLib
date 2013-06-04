@@ -26,11 +26,14 @@ private:
 	void convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVector &vertices);
 	void convert_bones();
 
+	clan::ModelDataDrawRange create_draw_range(size_t start_element, size_t num_elements, FbxSurfaceMaterial *material);
+
 	clan::Vec4ub get_color(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 	clan::Vec3f get_normal(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 	clan::Vec3f get_tangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 	clan::Vec3f get_bitangent(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index);
 
+	static clan::Vec3f to_vec3f(const FbxDouble3 &d);
 	static clan::Vec4f to_vec4f(const FbxVector4 &v);
 	static clan::Vec4ub to_vec4ub(const FbxColor &c);
 	static clan::Mat4f to_mat4f(const FbxAMatrix &m);

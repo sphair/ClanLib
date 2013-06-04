@@ -194,29 +194,136 @@ void FBXModelLoader::convert_mesh(FbxNode *node)
 		}
 	}
 
-	ModelDataDrawRange range;
-	range.start_element = model_mesh.elements.size();
-	range.num_elements = elements.size();
-	range.ambient.set_single_value(Vec3f(1.0f));
-	range.diffuse.set_single_value(Vec3f(1.0f));
-	range.specular.set_single_value(Vec3f(1.0f));
-	range.specular_level.set_single_value(0.0f);
-	range.glossiness.set_single_value(0.0f);
-	range.two_sided = true;
-	range.transparent = false;
-	range.self_illumination_amount.timelines.resize(1);
-	range.self_illumination_amount.timelines[0].timestamps.push_back(0.0f);
-	range.self_illumination_amount.timelines[0].values.push_back(0.0f);
-	range.self_illumination.timelines.resize(1);
-	range.self_illumination.timelines[0].timestamps.push_back(0.0f);
-	range.self_illumination.timelines[0].values.push_back(Vec3f(0.0f));
+	std::vector<std::vector<VertexMapping *> > material_elements(node->GetMaterialCount());
 
-	for (size_t i = 0; i < elements.size(); i++)
+	for (int element_index = 0; element_index < mesh->GetElementMaterialCount(); element_index++)
 	{
-		model_mesh.elements.push_back(elements[i]->vertex_index);
+		FbxGeometryElementMaterial *element = mesh->GetElementMaterial(element_index);
+		if (element->GetMappingMode() == FbxGeometryElement::eByPolygon)
+		{
+			int index_array_size = element->GetIndexArray().GetCount();
+			for (int index = 0; index < index_array_size; index++)
+			{
+				int material_index = element->GetIndexArray().GetAt(index);
+
+				material_elements[material_index].insert(material_elements[material_index].end(), elements.begin() + index * 3, elements.begin() + index * 3 + 3);
+			}
+		}
+		else if (element->GetMappingMode() == FbxGeometryElement::eAllSame)
+		{
+			int material_index = element->GetIndexArray().GetAt(0);
+			material_elements[material_index].insert(material_elements[material_index].end(), elements.begin(), elements.end());
+		}
 	}
 
-	model_mesh.draw_ranges.push_back(range);
+	for (size_t material_index = 0; material_index < material_elements.size(); material_index++)
+	{
+		size_t start_element = model_mesh.elements.size();
+		size_t num_elements = material_elements[material_index].size();
+
+		if (num_elements == 0)
+			continue;
+
+		for (size_t i = 0; i < num_elements; i++)
+		{
+			model_mesh.elements.push_back(material_elements[material_index][i]->vertex_index);
+		}
+
+		model_mesh.draw_ranges.push_back(create_draw_range(start_element, num_elements, node->GetMaterial(material_index)));
+	}
+}
+
+ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_t num_elements, FbxSurfaceMaterial *material)
+{
+	ModelDataDrawRange range;
+	range.start_element = start_element;
+	range.num_elements = num_elements;
+
+	if (material->GetClassId().Is(FbxSurfaceLambert::ClassId) || material->GetClassId().Is(FbxSurfacePhong::ClassId))
+	{
+		FbxSurfaceLambert *lambert = static_cast<FbxSurfaceLambert*>(material);
+
+		FbxDouble3 emissive = lambert->Emissive.Get();
+		float emissive_factor = (float)lambert->EmissiveFactor.Get();
+
+		FbxDouble3 ambient = lambert->Ambient.Get();
+		float ambient_factor = (float)lambert->AmbientFactor.Get();
+
+		FbxDouble3 diffuse = lambert->Diffuse.Get();
+		float diffuse_factor = (float)lambert->DiffuseFactor.Get();
+
+		FbxDouble3 normal_map = lambert->NormalMap.Get();
+
+		FbxDouble3 bump = lambert->Bump.Get();
+		float bump_factor = (float)lambert->BumpFactor.Get();
+
+		FbxDouble3 transparent_color = lambert->TransparentColor.Get();
+		float transparency_factor = (float)lambert->TransparencyFactor.Get();
+
+		FbxDouble3 displacement_color = lambert->DisplacementColor.Get();
+		float displacement_factor = (float)lambert->DisplacementFactor.Get();
+
+		FbxDouble3 vector_displacement_color = lambert->VectorDisplacementColor.Get();
+		float vector_displacement_factor = (float)lambert->VectorDisplacementFactor.Get();
+
+		range.ambient.set_single_value(to_vec3f(ambient) * ambient_factor);
+		range.diffuse.set_single_value(to_vec3f(diffuse) * diffuse_factor);
+		range.self_illumination_amount.set_single_value(emissive_factor);
+		range.self_illumination.set_single_value(to_vec3f(emissive));
+
+		// To do: where can we retrieve these flags from?
+		range.two_sided = true;
+		range.transparent = false;
+		range.alpha_test = false;
+
+		if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
+		{
+			FbxSurfacePhong *phong = static_cast<FbxSurfacePhong*>(lambert);
+
+			FbxDouble3 specular = phong->Specular.Get();
+			float factor = (float)phong->SpecularFactor.Get();
+			float shininess = (float)phong->Shininess.Get();
+			FbxDouble3 reflection = phong->Reflection.Get();
+			float reflection_factor = (float)phong->ReflectionFactor.Get();
+
+			// To do: find the shader math (haha, good luck!) for Autodesk FBX phong and make sure this is correct:
+
+			range.specular.set_single_value(to_vec3f(specular));
+			range.specular_level.set_single_value(factor);
+			range.glossiness.set_single_value(shininess);
+		}
+		else
+		{
+			range.specular.set_single_value(Vec3f());
+			range.specular_level.set_single_value(0.0f);
+			range.glossiness.set_single_value(0.0f);
+		}
+
+		// Get diffuse texture:
+		const char *property_name = FbxSurfaceMaterial::sDiffuse;
+		if (material->FindProperty(property_name).GetSrcObjectCount<FbxFileTexture>() > 0)
+		{
+			FbxFileTexture *texture = material->FindProperty(property_name).GetSrcObject<FbxFileTexture>(0);
+			std::string filename = texture->GetFileName();
+			std::string uv_set = texture->UVSet.Get();
+		}
+	}
+	else
+	{
+		// Unknown material class id
+
+		range.ambient.set_single_value(Vec3f(1.0f));
+		range.diffuse.set_single_value(Vec3f(1.0f));
+		range.specular.set_single_value(Vec3f(1.0f));
+		range.specular_level.set_single_value(0.0f);
+		range.glossiness.set_single_value(0.0f);
+		range.two_sided = true;
+		range.transparent = false;
+		range.self_illumination_amount.set_single_value(0.0f);
+		range.self_illumination.set_single_value(Vec3f(0.0f));
+	}
+
+	return range;
 }
 
 void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertices, std::vector<VertexMapping *> &face_vertices)
@@ -415,7 +522,7 @@ Vec4ub FBXModelLoader::get_color(FbxMesh *mesh, int polygon, int point, int cont
 			}
 		}
 	}
-	return Vec4ub(255);
+	return Vec4ub();
 }
 
 Vec3f FBXModelLoader::get_normal(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
@@ -589,6 +696,11 @@ void FBXModelLoader::convert_bones()
 	}
 }
 
+Vec3f FBXModelLoader::to_vec3f(const FbxDouble3 &d)
+{
+	return Vec3f((float)d[0], (float)d[1], (float)d[2]);
+}
+
 Vec4f FBXModelLoader::to_vec4f(const FbxVector4 &v)
 {
 	return Vec4f((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
@@ -607,3 +719,62 @@ Mat4f FBXModelLoader::to_mat4f(const FbxAMatrix &m)
 		matrix[i] = (float)src_matrix[i];
 	return matrix;
 }
+
+/*
+	// Global settings:
+
+	const FbxGlobalSettings &globals = scene->GetGlobalSettings();
+
+	Colorf scene_ambient((float)globals.GetAmbientColor().mRed, (float)globals.GetAmbientColor().mGreen, (float)globals.GetAmbientColor().mBlue, (float)globals.GetAmbientColor().mAlpha);
+	std::string default_camera = globals.GetDefaultCamera();
+*/
+
+/*
+int get_group(FbxMesh *mesh, int polygon)
+{
+	int num_groups = mesh->GetElementPolygonGroupCount();
+	for (int group = 0; group < num_groups; group++)
+	{
+		FbxGeometryElementPolygonGroup *poly_group = mesh->GetElementPolygonGroup(group);
+		if (poly_group->GetMappingMode() == FbxGeometryElement::eByPolygon && poly_group->GetReferenceMode() == FbxGeometryElement::eIndex)
+		{
+			return poly_group->GetIndexArray().GetAt(polygon);
+		}
+	}
+	return -1;
+}
+
+Vec2f get_uv(FbxMesh *mesh, int polygon, int point, int control_index, int vertex_index)
+{
+	FbxVector2 uv;
+	for (int i = 0; i < mesh->GetElementUVCount(); i++)
+	{
+		FbxGeometryElementUV *element = mesh->GetElementUV(i);
+		if (element->GetMappingMode() == FbxGeometryElement::eByControlPoint)
+		{
+			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+			{
+				uv = element->GetDirectArray().GetAt(control_index);
+			}
+			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			{
+				int id = element->GetIndexArray().GetAt(control_index);
+				uv = element->GetDirectArray().GetAt(id);
+			}
+		}
+		else if (element->GetMappingMode() == FbxGeometryElement::eByPolygonVertex)
+		{
+			if (element->GetReferenceMode() == FbxGeometryElement::eDirect)
+			{
+				uv = element->GetDirectArray().GetAt(vertex_index);
+			}
+			else if (element->GetReferenceMode() == FbxGeometryElement::eIndexToDirect)
+			{
+				int id = element->GetIndexArray().GetAt(vertex_index);
+				uv = element->GetDirectArray().GetAt(id);
+			}
+		}
+	}
+	return Vec2f((float)uv[0], (float)uv[1]);
+}
+*/
