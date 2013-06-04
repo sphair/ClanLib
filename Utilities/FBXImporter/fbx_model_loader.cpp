@@ -260,7 +260,7 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 	range.num_elements = num_elements;
 
 	// To do: where can we retrieve these flags from?
-	range.two_sided = true;
+	range.two_sided = false;
 	range.transparent = false;
 	range.alpha_test = false;
 
@@ -327,15 +327,28 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 			std::string filename = PathHelp::combine(base_path, PathHelp::get_filename(texture->GetFileName()));
 			std::string uv_set = texture->UVSet.Get();
 
+			Vec3f translate = to_vec3f(texture->Translation.Get());
+
+			FbxDouble3 r = texture->Rotation.Get();
+			Quaternionf rotation((float)r[0], (float)r[1], (float)r[2], angle_degrees, order_XYZ);
+			
+			Vec3f scale = to_vec3f(texture->Scaling.Get());
+
 			range.diffuse_map.texture = model_data->textures.size();
 
-			// To do: where to get this from?
 			range.diffuse_map.channel = 0;
-			range.diffuse_map.wrap_x = ModelDataTextureMap::wrap_repeat;
-			range.diffuse_map.wrap_y = ModelDataTextureMap::wrap_repeat;
-			range.diffuse_map.uvw_offset.set_single_value(Vec3f(0.0f));
-			range.diffuse_map.uvw_rotation.set_single_value(Quaternionf());
-			range.diffuse_map.uvw_scale.set_single_value(Vec3f(1.0f));
+			range.diffuse_map.wrap_x = texture->WrapModeU.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
+			range.diffuse_map.wrap_y = texture->WrapModeV.Get() == FbxTexture::eRepeat ? ModelDataTextureMap::wrap_repeat : ModelDataTextureMap::wrap_clamp_to_edge;
+
+			if (texture->UVSwap.Get())
+			{
+				rotation = rotation * Quaternionf(0.0f, 0.0f, 90.0f, angle_degrees, order_XYZ);
+				scale.y = -scale.y;
+			}
+
+			range.diffuse_map.uvw_offset.set_single_value(translate);
+			range.diffuse_map.uvw_rotation.set_single_value(rotation);
+			range.diffuse_map.uvw_scale.set_single_value(scale);
 
 			model_data->textures.push_back(ModelDataTexture(filename, 2.2f));
 		}
