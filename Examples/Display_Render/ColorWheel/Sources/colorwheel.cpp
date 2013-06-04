@@ -76,9 +76,6 @@ ColorWheel::~ColorWheel()
 
 void ColorWheel::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	clan::Rect rect = get_geometry();
-	canvas.clear(clan::Colorf(0.0f, 0.0f, 0.0f, 0.0f));
-
 	get_options();
 
 	clan::Pointf center( (float) canvas.get_width()/2.0f, (float) canvas.get_height()/2.0f);
