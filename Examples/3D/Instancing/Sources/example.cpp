@@ -33,23 +33,27 @@
 #include "instanced_object.h"
 #include "model.h"
 #include "graphic_store.h"
-#include "framerate_counter.h"
 
 #if defined(_MSC_VER)
 	#if !defined(_DEBUG)
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll.lib")
+			#pragma comment(lib, "zlib-static-mtdll.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt.lib")
+			#pragma comment(lib, "zlib-static-mt.lib")
 		#endif
 	#else
 		#if defined(_DLL)
 			#pragma comment(lib, "assimp-static-mtdll-debug.lib")
+			#pragma comment(lib, "zlib-static-mtdll-debug.lib")
 		#else
 			#pragma comment(lib, "assimp-static-mt-debug.lib")
+			#pragma comment(lib, "zlib-static-mt-debug.lib")
 		#endif
 	#endif
 #endif
+
 
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
@@ -71,57 +75,59 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
-	// Get the graphic context
-	GraphicContext gc = window.get_gc();
+	Canvas canvas(window);
 
 	// Setup graphic store
-	GraphicStore graphic_store(gc);
+	GraphicStore graphic_store(canvas);
 	scene.gs = &graphic_store;
 
 	// Prepare the display
-	gc.set_map_mode(cl_user_projection);
+	RasterizerStateDescription rasterizer_state_desc;
+	rasterizer_state_desc.set_culled(true);
+	rasterizer_state_desc.set_face_cull_mode(cull_back);
+	rasterizer_state_desc.set_front_face(face_clockwise);
+	RasterizerState raster_state(canvas, rasterizer_state_desc);
 
-	gc.set_culled(true);
-	gc.set_face_cull_mode(cl_cull_back);
-	gc.set_front_face(cl_face_side_clockwise);
+	DepthStencilStateDescription depth_state_desc;
+	depth_state_desc.enable_depth_write(true);
+	depth_state_desc.enable_depth_test(true);
+	depth_state_desc.enable_stencil_test(false);
+	depth_state_desc.set_depth_compare_function(compare_lequal);
+	DepthStencilState depth_write_enabled(canvas, depth_state_desc);
 
-	create_scene(gc);
-
-	FrameBuffer framebuffer(gc);
+	create_scene(canvas);
 
 	camera_angle = 0.0f;
 
-	Font font(gc, "tahoma", 24);
+	Font font(canvas, "tahoma", 24);
 
-	FramerateCounter framerate_counter;
-
-	ubyte64 time_last = System::get_time();
+	clan::GameTime game_time;
 	// Run until someone presses escape
 	while (!quit)
 	{
-		framerate_counter.frame_shown();
+		game_time.update();
+		time_delta = game_time.get_time_elapsed_ms();
 
-		ubyte64 time_now = System::get_time();
-		time_delta = time_now - time_last;
-		time_last = time_now;
+		canvas.clear(Colorf::black);
+		canvas.clear_depth(1.0f);
 
 		control_camera();
-		update_light(gc);
-		calculate_matricies(gc);
+		update_light(canvas);
+		calculate_matricies(canvas);
 
-		gc.set_culled(true);
-		render(gc);
+		canvas.set_depth_stencil_state(depth_write_enabled);
+		canvas.set_rasterizer_state(raster_state);
+		render(canvas);
 
-		gc.set_modelview(Mat4f::identity());
-		gc.set_map_mode(map_2d_upper_left);
-		gc.set_culled(false);
+		canvas.reset_rasterizer_state();
+		canvas.reset_depth_stencil_state();
 	
-		std::string fps(string_format("Drawing %1 teapots (containing 2882 triangles). fps = %2", (int) object_teapot->centers.size(), framerate_counter.get_framerate()));
-		font.draw_text(gc, 16-2, gc.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-		font.draw_text(gc, 16, gc.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
+		std::string fps(string_format("Drawing %1 teapots (containing 2882 triangles). fps = %2", (int) object_teapot->centers.size(), clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1)));
+		font.draw_text(canvas, 16-2, canvas.get_height()-16-2, fps, Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+		font.draw_text(canvas, 16, canvas.get_height()-16-2, fps, Colorf(1.0f, 1.0f, 1.0f, 1.0f));
 
 		// Use flip(1) to lock the fps
-		window.flip(0);
+		window.flip(1);
 
 		// This call processes user input and other events
 		KeepAlive::process();
@@ -147,35 +153,28 @@ void App::on_window_close()
 
 void App::render(GraphicContext &gc)
 {
-	gc.set_map_mode(cl_user_projection);
+	gc.clear(Colorf(0.2f, 0.2f, 0.2f, 1.0f));
+
 	Rect viewport_rect(0, 0, Size(gc.get_width(), gc.get_height()));
 	gc.set_viewport(viewport_rect);
 
-	gc.set_projection(scene.gs->camera_projection);
-
-	gc.set_depth_compare_function(cl_comparefunc_lequal);
-	gc.enable_depth_write(true);
-	gc.enable_depth_test(true);
-	gc.enable_stencil_test(false);
-	gc.enable_color_write(true);
-
-	gc.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 	gc.clear_depth(1.0f);
 
 	Mat4f modelview_matrix = scene.gs->camera_modelview;
 	scene.Draw(modelview_matrix, gc);
 	gc.reset_program_object();
+
 }
 
 void App::create_scene(GraphicContext &gc)
 {
-	Model model_landscape(gc, scene.gs, "../Shadow/Resources/land.dae");
+	Model model_landscape(gc, scene.gs, "../Clan3D/Resources/land.dae", true);
 	model_landscape.SetMaterial(64.0f,	// Shiny
 			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
 			Vec4f(0.0f, 0.0f, 0.0f, 1.0f));	// Specular
 
-	Model model_teapot(gc, scene.gs, "../Clan3D/Resources/teapot.dae");
+	Model model_teapot(gc, scene.gs, "../Clan3D/Resources/teapot.dae", false);
 	model_teapot.SetMaterial(64.0f,	// Shiny
 			Vec4f(0.0f, 0.0f, 0.0f, 1.0f),	// Emission
 			Vec4f(1.0f, 1.0f, 1.0f, 1.0f),	// Ambient
@@ -249,27 +248,27 @@ void App::update_light(GraphicContext &gc)
 
 	Vec4f light_specular(0.5f, 0.5f, 0.5f, 1.0f);
 	Vec4f light_diffuse(0.5f, 0.5f, 0.5f, 1.0f);
+	Vec4f light_ambient(0.2f, 0.2f, 0.0f, 1.0f);
 
-	scene.gs->shader_texture.SetLight(light_vector, light_specular, light_diffuse);
-	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse);
+	scene.gs->shader_color.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
+	scene.gs->shader_texture.SetLight(light_vector, light_specular, light_diffuse, light_ambient);
 }
 
 void App::calculate_matricies(GraphicContext &gc)
 {
-	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f);
+	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f);
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
-	scene.gs->camera_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->camera_modelview.inverse();
 
 	scene.gs->light_modelview = Mat4f::identity();
 	light_distant->GetWorldMatrix(scene.gs->light_modelview);
-	scene.gs->light_modelview.scale_self(1.0f, 1.0f, -1.0f);
 	scene.gs->light_modelview.inverse();
+
 }
 
 void App::wm_repaint()

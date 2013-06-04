@@ -30,18 +30,17 @@
 
 class Model_Impl;
 class ShaderDepth;
-class ShaderColor;
+class ShaderBumpMap;
 class GraphicStore;
 
 class Model
 {
 public:
+
 	Model();
-	Model(GraphicContext &gc, GraphicStore *gs, const char *filename);
+	Model(GraphicContext &gc, GraphicStore *gs, const char *filename, bool generate_texture_coords);
 
-	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix);
-	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix, int instance_count);
-
+	void Draw(GraphicContext &gc, GraphicStore *gs, const Mat4f &modelview_matrix, int instance_count = 1);
 	bool is_null();
 	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
 

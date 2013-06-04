@@ -30,93 +30,119 @@
 
 #include "shader_color_instanced.h"
 
-char ShaderColorInstanced::vertex[] =
+const char ShaderColorInstanced::vertex_hlsl[] = "FIXME;\n";
+const char ShaderColorInstanced::fragment_hlsl[] = "FIXME;\n";
+
+const char ShaderColorInstanced::vertex_glsl[] =
 	"\n"
-	"#version 140\n"
+	"#version 150\n"
 	"\n"
-	"in vec3 InPosition;\n"
-	"in vec3 InNormal;\n"
-	"uniform mat4 cl_ModelViewMatrix;"
-	"uniform mat4 cl_ModelViewProjectionMatrix;"
-	"uniform mat3 cl_NormalMatrix;"
-	"uniform vec3 Centers[256];\n"
-	"uniform vec4 MaterialAmbientSpecular[256];\n"
-	"\n"
+	"in vec3 InPosition;"
+	"in vec3 InNormal;"
+	"layout (std140) uniform ProgramUniforms\n"
+	"{\n"
+	"	vec4 MaterialAmbientSpecular[256];\n"
+	"	vec4 Centers[256];\n"
+	"	mat4 cl_ModelViewMatrix;\n"
+	"	mat4 cl_ModelViewProjectionMatrix;\n"
+	"	mat3 cl_NormalMatrix;\n"
+	"	vec4 padding;\n"
+	"	vec4 MaterialEmission;\n"
+	//"	vec4 padding2;\n"
+	//"	vec4 padding3;\n"
+	"	vec4 LightSpecular;\n"
+	"	vec4 LightDiffuse;\n"
+	"	vec4 LightAmbient;\n"
+	"	vec3 LightVector;\n"
+	"	vec3 LightHalfVector;\n"
+	"	float MaterialShininess;\n"
+	"};\n"
 	"out vec3 WorldSpaceNormal; \n"
 	"out vec3 WorldSpacePosition; \n"
 	"out vec4 ObjPos;\n"
-	"out vec4 MaterialAmbient;\n"
 	"flat out vec4 xMaterialAmbientSpecular;\n"
-	"uniform int current_instance;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
-	"	in_position.xyz += Centers[gl_InstanceID];\n"
+	"	in_position.xyz += Centers[gl_InstanceID].xyz;\n"
 	"	gl_Position = cl_ModelViewProjectionMatrix * in_position;\n"
-	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal );\n"
-	"	WorldSpacePosition = in_position.xyz;\n"
+	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
+	"	WorldSpacePosition = InPosition;\n"
 	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
 	"	xMaterialAmbientSpecular = MaterialAmbientSpecular[gl_InstanceID];\n"
 	"}\n"
 	;
 
-char ShaderColorInstanced::fragment[] =
+const char ShaderColorInstanced::fragment_glsl[] =
 	"\n"
-	"#version 140\n"
+	"#version 150\n"
 	"\n"
 	"in vec3 WorldSpaceNormal; \n"
 	"in vec3 WorldSpacePosition; \n"
 	"in vec4 ObjPos;\n"
 	"flat in vec4 xMaterialAmbientSpecular;\n"
-	"\n"
-	"uniform float MaterialShininess;\n"
-	"uniform vec4 MaterialEmission;\n"
-	"\n"
-	"uniform vec4 LightVector;\n"
-	"uniform vec4 LightHalfVector;\n"
-	"uniform vec4 LightSpecular;\n"
-	"uniform vec4 LightDiffuse;\n"
-	"\n"
+	"out vec4 cl_FragColor;\n"
+	"layout (std140) uniform ProgramUniforms\n"
+	"{\n"
+	"	vec4 MaterialAmbientSpecular[256];\n"
+	"	vec4 Centers[256];\n"
+	"	mat4 cl_ModelViewMatrix;\n"
+	"	mat4 cl_ModelViewProjectionMatrix;\n"
+	"	mat3 cl_NormalMatrix;\n"
+	"	vec4 padding;\n"
+	"	vec4 MaterialEmission;\n"
+	//"	vec4 padding2;\n"
+	//"	vec4 padding3;\n"
+	"	vec4 LightSpecular;\n"
+	"	vec4 LightDiffuse;\n"
+	"	vec4 LightAmbient;\n"
+	"	vec3 LightVector;\n"
+	"	vec3 LightHalfVector;\n"
+	"	float MaterialShininess;\n"
+	"};\n"
+ 	"\n"
 	"void main()\n"
 	"{\n"
-	"	const vec4 ambient_light = vec4(0.05, 0.05, 0.05, 1.0);\n"
 	"	vec3 eye = -normalize(ObjPos.xyz); \n"
 	"	vec4 diff = vec4(0); \n"
 	"	vec4 spec = vec4(0); \n"
 	"\n"
 	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector.xyz)); \n"
+	"	float nDotL = max(0.0, dot(world_space_normal, LightVector)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
 	"	{\n"
 	"		pf = 0.0; \n"
 	"	}else\n"
 	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector.xyz));\n"
+	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector));\n"
 	"			pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
-	"\n"
 	"	vec4 final_texture_color = vec4(xMaterialAmbientSpecular.rgb,1.0);\n"
-	"	gl_FragColor = ambient_light * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * xMaterialAmbientSpecular;\n"
-	"	gl_FragColor.a = xMaterialAmbientSpecular.a;\n"
+	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * xMaterialAmbientSpecular;\n"
+	"	cl_FragColor.a = xMaterialAmbientSpecular.a;\n"
 	"}\n"
 	;
 
 ShaderColorInstanced::ShaderColorInstanced(GraphicContext &gc)
 {
-	ShaderObject vertex_shader(gc, shadertype_vertex, vertex);
+	ShaderLanguage shader_language = gc.get_shader_language();
+	
+	ShaderObject vertex_shader(gc, shadertype_vertex, shader_language==shader_glsl ? vertex_glsl : vertex_hlsl);
 	if(!vertex_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
+		std::string log = vertex_shader.get_info_log();
+		throw Exception(string_format("Unable to compile vertex shader object: %1", log));
 	}
 
-	ShaderObject fragment_shader(gc, shadertype_fragment, fragment);
+	ShaderObject fragment_shader(gc, shadertype_fragment, shader_language==shader_glsl ? fragment_glsl : fragment_hlsl);
 	if(!fragment_shader.compile())
 	{
-		throw Exception(string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
+		std::string log = fragment_shader.get_info_log();
+		throw Exception(string_format("Unable to compile fragment shader object: %1", log));
 	}
 
 	program_object = ProgramObject(gc);
@@ -124,87 +150,75 @@ ShaderColorInstanced::ShaderColorInstanced(GraphicContext &gc)
 	program_object.attach(fragment_shader);
 	program_object.bind_attribute_location(0, "InPosition");
 	program_object.bind_attribute_location(1, "InNormal");
+	program_object.bind_frag_data_location(0, "cl_FragColor");
 	if (!program_object.link())
 	{
 		throw Exception(string_format("Unable to link program object: %1", program_object.get_info_log()));
 	}
 
-	material_updated = false;
-	light_updated = false;
+	// Uniforms
+	program_object.set_uniform_buffer_index("ProgramUniforms", 0);
 
-	material_shininess = 64.0f;
-	material_emission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(gc, 1);
 
-	light_vector = Vec4f(0.0f, 0.0f, 1.0f, 0.0f);
-	light_specular = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-	light_diffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-}
+	uniforms.MaterialShininess = 64.0f;
+	uniforms.MaterialEmission = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	uniforms.LightAmbient = Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
+	uniforms.LightVector = Vec3f(0.0f, 0.0f, 1.0f);
+	uniforms.LightSpecular = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
+	uniforms.LightDiffuse = Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 
-void ShaderColorInstanced::Use(GraphicContext &gc)
-{
-	if (!material_updated)
-	{
-		material_updated = true;
-		program_object.set_uniform1f("MaterialShininess", material_shininess);
-		program_object.set_uniform4f("MaterialEmission", material_emission);
-	}
-
-	if (!light_updated)
-	{
-		light_updated = true;
-		program_object.set_uniform4f("LightVector", light_vector);
-		Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
-		light_halfvector += light_vector;
-		light_halfvector.normalize3();
-		program_object.set_uniform4f("LightHalfVector", light_halfvector);
-		program_object.set_uniform4f("LightSpecular", light_specular);
-		program_object.set_uniform4f("LightDiffuse", light_diffuse);
-	}
-
-	gc.set_program_object(program_object);
 }
 
 void ShaderColorInstanced::SetCenters(std::vector<Vec3f> &centers)
 {
-	program_object.set_uniformfv("Centers", 3, centers.size(), &centers[0].x);
+	if (centers.size() > max_instances)
+		throw Exception("Too many instances for this example");
+
+	for (unsigned cnt=0; cnt<centers.size(); cnt++)
+	{
+		uniforms.Centers[cnt] = Vec4f(centers[cnt]);
+	}
 }
 
 void ShaderColorInstanced::SetMaterialAmbientSpecular(std::vector<Vec4f> &colors)
 {
-	program_object.set_uniformfv("MaterialAmbientSpecular", 4, colors.size(), &colors[0].x);
+	if (colors.size() > max_instances)
+		throw Exception("Too many instances for this example");
+
+	memcpy( &uniforms.MaterialAmbientSpecular[0].r, &colors[0].r, colors.size() * sizeof(Vec4f));
+}
+
+void ShaderColorInstanced::Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal)
+{
+	uniforms.cl_ModelViewProjectionMatrix = matrix_modelview_projection;
+	uniforms.cl_ModelViewMatrix = matrix_modelview;
+	uniforms.cl_NormalMatrix = matrix_normal;
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
+	gc.set_program_object(program_object);
 }
 
 void ShaderColorInstanced::SetMaterial(float new_material_shininess, const Vec4f &new_material_emission)
 {
-	if (new_material_shininess != material_shininess)
-	{
-		material_updated = false;
-		material_shininess = new_material_shininess;
-	}
+	uniforms.MaterialShininess = new_material_shininess;
+	uniforms.MaterialEmission = new_material_emission;
 
-	if (new_material_emission != material_emission)
-	{
-		material_updated = false;
-		material_emission = new_material_emission;
-	}
 }
 
-void ShaderColorInstanced::SetLight(Vec4f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse)
+void ShaderColorInstanced::SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient)
 {
-	if (new_light_vector != light_vector)
-	{
-		light_updated = false;
-		light_vector = new_light_vector;
-	}
-	if (new_light_specular != light_specular)
-	{
-		light_updated = false;
-		light_specular = new_light_specular;
-	}
-	if (new_light_diffuse != light_diffuse)
-	{
-		light_updated = false;
-		light_diffuse = new_light_diffuse;
-	}
+
+	uniforms.LightAmbient = new_light_ambient;
+	uniforms.LightVector = new_light_vector;
+	uniforms.LightSpecular =new_light_specular;
+	uniforms.LightDiffuse = new_light_diffuse;
+
+	Vec3f light_halfvector(0.0f, 0.0f, 1.0f);
+	light_halfvector += new_light_vector;
+	light_halfvector.normalize();
+	uniforms.LightHalfVector = light_halfvector;
 }
+
+
 

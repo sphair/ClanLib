@@ -44,9 +44,6 @@
     <ClInclude Include="Sources\example.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\framerate_counter.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\graphic_store.h">
       <Filter>Sources</Filter>
     </ClInclude>

@@ -53,6 +53,6 @@ GraphicStore::~GraphicStore()
 void GraphicStore::LoadImages( GraphicContext &gc )
 {
 	// Load the texture
-	texture_brick = Texture(gc, "../Shadow/Resources/brick.png");
-	texture_brick.set_wrap_mode(wrap_repeat, wrap_repeat, wrap_repeat);
+	texture_brick = Texture2D(gc, "../Clan3D/Resources/brick.png");
+	texture_brick.set_wrap_mode(wrap_repeat, wrap_repeat);
 }

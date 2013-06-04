@@ -48,12 +48,11 @@ SceneObject::~SceneObject()
 
 void SceneObject::UpdateOrientationMatrix()
 {
-	Mat4f rotation_matrix_y = Mat4f::rotate(rotation_y, 0.0f, 1.0f, 0.0f, false);
 	Mat4f rotation_matrix_x = Mat4f::rotate(rotation_x, 1.0f, 0.0f, 0.0f, false);
+	Mat4f rotation_matrix_y = Mat4f::rotate(rotation_y, 0.0f, 1.0f, 0.0f, false);
 	Mat4f rotation_matrix_z = Mat4f::rotate(rotation_z, 0.0f, 0.0f, 1.0f, false);
 
-	orientation_matrix = rotation_matrix_y *  rotation_matrix_x;
-	orientation_matrix = orientation_matrix * rotation_matrix_z;
+	orientation_matrix = rotation_matrix_y * rotation_matrix_x * rotation_matrix_z;
 
 	orientation_matrix.matrix[ (4*0) + 0 ] *= scale.x;
 	orientation_matrix.matrix[ (4*0) + 1 ] *= scale.x;

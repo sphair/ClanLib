@@ -33,27 +33,40 @@ class ShaderColorInstanced
 public:
 	ShaderColorInstanced(GraphicContext &gc);
 
-	void Use(GraphicContext &gc);
-
+	void Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal);
 	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission);
-	void SetLight(Vec4f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse);
-	void SetSpotLight(const Vec3f &new_light_position, const Vec3f &new_light_direction, Vec4f &new_light_specular, Vec4f &new_light_diffuse, float new_spot_exponent, float new_spot_cutoff);
+	void SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient);
 
 	void SetCenters(std::vector<Vec3f> &centers);
 	void SetMaterialAmbientSpecular(std::vector<Vec4f> &colors);
 
 private:
 
-	bool material_updated;
-	float material_shininess;
-	Vec4f material_emission;
+	static const int max_instances = 256;
+	struct ProgramUniforms
+	{
+		Vec4f MaterialAmbientSpecular[max_instances];
+		Vec4f Centers[max_instances];
+		Mat4f cl_ModelViewMatrix;
+		Mat4f cl_ModelViewProjectionMatrix;
+		Mat4f cl_NormalMatrix;
 
-	bool light_updated;
-	Vec4f light_vector;
-	Vec4f light_specular;
-	Vec4f light_diffuse;
+		Vec4f MaterialEmission;
+		Vec4f LightSpecular;
+		Vec4f LightDiffuse;
+		Vec4f LightAmbient;
+		Vec3f LightVector;
+		float padding;
+		Vec3f LightHalfVector;
+		float MaterialShininess;
+	};
 
-	static char vertex[];
-	static char fragment[];
+	clan::UniformVector<ProgramUniforms> gpu_uniforms;
+	ProgramUniforms uniforms;
+
+	static const char vertex_hlsl[];
+	static const char fragment_hlsl[];
+	static const char vertex_glsl[];
+	static const char fragment_glsl[];
 	ProgramObject program_object;
 };
