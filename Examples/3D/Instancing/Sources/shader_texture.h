@@ -33,27 +33,37 @@ class ShaderTexture
 public:
 	ShaderTexture(GraphicContext &gc);
 
-	void Use(GraphicContext &gc);
-
+	void Use(GraphicContext &gc, const Mat4f &matrix_modelview, const Mat4f &matrix_modelview_projection, const Mat4f &matrix_normal);
 	void SetMaterial(float new_material_shininess, const Vec4f &new_material_emission, const Vec4f &new_material_ambient, const Vec4f &new_material_specular);
-	void SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse);
-	void SetSpotLight(const Vec3f &new_light_position, const Vec3f &new_light_direction, Vec4f &new_light_specular, Vec4f &new_light_diffuse, float new_spot_exponent, float new_spot_cutoff);
+	void SetLight(Vec3f &new_light_vector, Vec4f &new_light_specular, Vec4f &new_light_diffuse, Vec4f &new_light_ambient);
 
 private:
 
-	bool material_updated;
-	float material_shininess;
-	Vec4f material_emission;
-	Vec4f material_ambient;
-	Vec4f material_specular;
+	struct ProgramUniforms
+	{
+		Mat4f cl_ModelViewMatrix;
+		Mat4f cl_ModelViewProjectionMatrix;
+		Mat4f cl_NormalMatrix;
 
-	bool light_updated;
-	Vec3f light_vector;
-	Vec4f light_specular;
-	Vec4f light_diffuse;
+		Vec4f MaterialEmission;
+		Vec4f MaterialSpecular;
+		Vec4f MaterialAmbient;
+		Vec4f LightSpecular;
+		Vec4f LightDiffuse;
+		Vec4f LightAmbient;
+		Vec3f LightVector;
+		float padding;
+		Vec3f LightHalfVector;
+		float MaterialShininess;
 
-	static char vertex[];
-	static char fragment[];
+	};
+
+	clan::UniformVector<ProgramUniforms> gpu_uniforms;
+	ProgramUniforms uniforms;
+
+	static const char vertex_hlsl[];
+	static const char fragment_hlsl[];
+	static const char vertex_glsl[];
+	static const char fragment_glsl[];
 	ProgramObject program_object;
-
 };

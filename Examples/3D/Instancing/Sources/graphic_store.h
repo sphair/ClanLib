@@ -45,7 +45,7 @@ public:
 	ShaderColorInstanced shader_color_instanced;
 	ShaderTexture shader_texture;
 
-	Texture texture_brick;
+	Texture2D texture_brick;
 
 	Mat4f camera_projection;
 	Mat4f camera_modelview;
