@@ -614,7 +614,7 @@ public:
 /// \name Implementation
 /// \{
 public:
-	std::shared_ptr<GUIComponent_Impl> impl;
+	std::unique_ptr<GUIComponent_Impl> impl;
 
 private:
 	/// \brief Constructs a GUIComponent
