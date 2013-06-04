@@ -29,7 +29,6 @@
 #include "precomp.h"
 #include "app.h"
 #include "shader.h"
-#include "framerate_counter.h"
 #include <cstdlib>
 
 App::App() : quit(false)
@@ -93,29 +92,25 @@ int App::start(const std::vector<std::string> &args)
 
 	Font fps_font(canvas, "tahoma", 20);
 
-	FramerateCounter frameratecounter;
-	ubyte64 time_last = System::get_time();
+	GameTime game_time;
 
 	float angle = 0.0f;
 
 	while (!quit)
 	{
-		ubyte64 time_now = System::get_time();
-		float time_diff = (float) (time_now - time_last);
-		time_last = time_now;
+		game_time.update();
 
 		canvas.clear(Colorf(0.0f, 0.0f, 0.0f, 1.0f));
 		canvas.clear_depth(1.0f);
 
-		std::string fps = string_format("%1 fps", frameratecounter.get_framerate());
+		std::string fps = string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 		fps_font.draw_text(canvas, canvas.get_width() - 100, 30, fps);
 		std::string info = string_format("%1 vertices", (int) object_positions.size());
 		fps_font.draw_text(canvas, 30, 30, info);
 
 		Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, canvas.get_gc().get_clip_z_range() );
-		//Mat4f perspective_matrix = Mat4f::perspective(45.0f, ((float) canvas.get_width()) / ((float) canvas.get_height()), 0.1f, 10000.0f, handed_left, clip_negative_positive_w );
 
-		angle += time_diff / 20.0f;
+		angle += game_time.get_time_elapsed() * 50.0f;
 		if (angle >= 360.0f)
 			angle -= 360.0f;
 
@@ -146,10 +141,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_rasterizer_state();
 		canvas.reset_depth_stencil_state();
 
-
-		window.flip(0);
-		frameratecounter.frame_shown();
-
+		window.flip(1);
 		KeepAlive::process();
 	}
 
