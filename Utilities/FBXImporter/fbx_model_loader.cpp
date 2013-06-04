@@ -170,13 +170,6 @@ void FBXModelLoader::convert_node(FbxNode *node)
 void FBXModelLoader::convert_mesh(FbxNode *node)
 {
 	FbxMesh *mesh = static_cast<FbxMesh*>(node->GetNodeAttribute());
-/*
-	if (!mesh->IsTriangleMesh())
-	{
-		FbxGeometryConverter converter(manager);
-		mesh = converter.Triangulate();
-	}
-*/
 
 	Mat4f mesh_to_world = to_mat4f(node->EvaluateGlobalTransform() * FbxAMatrix(node->GetGeometricTranslation(FbxNode::eSourcePivot), node->GetGeometricRotation(FbxNode::eSourcePivot), node->GetGeometricScaling(FbxNode::eSourcePivot)));
 	Mat3f normal_mesh_to_world = Mat3f(mesh_to_world).inverse().transpose();
