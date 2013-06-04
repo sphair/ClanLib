@@ -130,9 +130,9 @@ void GUIWindowManagerProvider_Texture::update_paint()
 
 void GUIWindowManagerProvider_Texture::draw_windows(Canvas &canvas)
 {
-	canvas.flush();
-	canvas.get_gc().set_blend_state(premultiplied_alpha_blend);
+	canvas.set_blend_state(premultiplied_alpha_blend);
 	draw_all_windows(canvas, root_window_z_order);
+	canvas.reset_blend_state();
 }
 
 void GUIWindowManagerProvider_Texture::on_displaywindow_window_close()
