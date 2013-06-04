@@ -63,7 +63,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::Texture2D textures[num_textures];
 	for (int cnt=0; cnt < num_textures; cnt++)
 	{
-		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgb8);
+		textures[cnt] = clan::Texture2D(canvas, tux.get_width(), tux.get_height(), clan::tf_rgba8);
 	}
 
 	clan::Font font(canvas, "Tahoma", 24);
