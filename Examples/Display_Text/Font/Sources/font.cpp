@@ -53,10 +53,8 @@ int App::start(const std::vector<std::string> &args)
 	else
 		throw Exception("No themes found");
 
-	GUIWindowManagerTexture wm(window);
-	GUIManager gui(wm, theme);
-
-	wm_ptr = &wm;
+	gui_manager = GUIWindowManagerTexture(window);
+	GUIManager gui(gui_manager, theme);
 
 	canvas = Canvas(window);
 
@@ -64,7 +62,6 @@ int App::start(const std::vector<std::string> &args)
 	gui_desc.set_title("Options");
 	gui_desc.set_position(Rect(10, 10, 250, 400), false);
 	GUIComponent gui_window(&gui, gui_desc, "window");
-	gui_window_ptr = &gui_window;
 
 	int offset_x = 10;
 	int offset_y = 40;
@@ -214,24 +211,14 @@ void App::render(DisplayWindow &window, GameTime &game_time)
 
 	canvas.clear(Colorf(0.0f,0.0f,0.2f, 1.0f));
 
-	std::vector<GUIWindowManagerTextureWindow> windows = wm_ptr->get_windows();
-	std::vector<GUIWindowManagerTextureWindow>::size_type index, size;
-	size = windows.size();
-	for (index = 0; index < size; index++)
-	{
-		GUIWindowManagerTextureWindow window = windows[index];
-		Subtexture subtexture = window.get_texture();
-		Image image(canvas, subtexture);
-		image.draw(canvas, window.get_geometry().left, window.get_geometry().top);
-	}
+	gui_manager.draw_windows(canvas);
 
 	draw_font_example();
 	draw_font_info();
 
 	last_fps = game_time.get_updates_per_second();
 
-	wm_ptr->process();
-	wm_ptr->draw_windows(canvas);
+	gui_manager.process();
 
 	window.flip(1);
 

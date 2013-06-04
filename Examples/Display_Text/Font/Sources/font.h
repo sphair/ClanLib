@@ -71,8 +71,6 @@ private:
 private:
 	bool quit;
 	Canvas canvas;
-	GUIComponent *gui_window_ptr;
-	GUIWindowManagerTexture *wm_ptr;
 	LineEdit *lineedit_text_ptr;
 	PushButton *button_typeface_tahoma_ptr;
 	PushButton *button_typeface_sans_ptr;
@@ -87,6 +85,7 @@ private:
 	FontClass selected_fontclass;
 	float last_fps;
 	ResourceManager resources;
+	GUIWindowManagerTexture gui_manager;
 };
 
 
