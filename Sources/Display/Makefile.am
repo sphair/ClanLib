@@ -40,8 +40,6 @@ Render/occlusion_query.cpp \
 Render/shared_gc_data_impl.cpp \
 screen_info.cpp \
 display_target.cpp \
-ShaderEffect/shader_effect.cpp \
-ShaderEffect/shader_effect_description.cpp \
 2D/render_batch_line.cpp \
 2D/render_batch_line_texture.cpp \
 2D/sprite.cpp \
@@ -51,6 +49,7 @@ ShaderEffect/shader_effect_description.cpp \
 2D/sprite_impl.cpp \
 2D/color.cpp \
 2D/image.cpp \
+2D/canvas_batcher.cpp \
 2D/shape2d_impl.cpp \
 2D/canvas_impl.cpp \
 2D/texture_group_impl.cpp \
@@ -63,7 +62,6 @@ ShaderEffect/shader_effect_description.cpp \
 2D/shape2d.cpp \
 2D/render_batch_buffer.cpp \
 2D/canvas.cpp \
-2D/canvas_batcher.cpp \
 2D/color_hsl.cpp \
 setup_display.cpp \
 Image/icon_set.cpp \
@@ -75,6 +73,8 @@ Image/pixel_buffer_set.cpp \
 Image/pixel_converter.cpp \
 Image/cpu_pixel_buffer_provider.cpp \
 Image/pixel_buffer_impl.cpp \
+Resources/xml_display_cache.cpp \
+Resources/display_cache.cpp \
 Collision/collision_outline_generic.cpp \
 Collision/outline_provider_bitmap.cpp \
 Collision/collision_outline.cpp \
@@ -84,19 +84,19 @@ Collision/contour.cpp \
 Collision/outline_math.cpp \
 Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
-Font/font_manager.cpp \
 Font/font_system.cpp \
 Font/font_provider_sprite.cpp \
 Font/font.cpp \
 Font/font_provider_vector.cpp \
 Font/font_provider_system.cpp \
-Font/font_manager_impl.cpp \
 Font/font_vector.cpp \
 Font/glyph_cache.cpp \
 Font/font_description.cpp \
 Font/font_metrics_impl.cpp \
 Font/font_metrics.cpp \
 Font/font_sprite.cpp \
+ShaderEffect/shader_effect_description.cpp \
+ShaderEffect/shader_effect.cpp \
 Window/input_context_impl.cpp \
 Window/input_event.cpp \
 Window/cursor.cpp \
@@ -122,7 +122,7 @@ ImageProviders/provider_factory.cpp \
 ImageProviders/JPEGWriter/jpge.cpp \
 ImageProviders/dds_provider.cpp \
 display_target_impl.cpp \
-display.cpp
+display.cpp \
 
 if WIN32
 libclan30Display_la_SOURCES += \

@@ -14,6 +14,8 @@ SoundProviders/soundprovider_vorbis_session.cpp \
 SoundProviders/soundprovider_type.cpp \
 SoundProviders/soundprovider_wave_session.cpp \
 SoundProviders/soundprovider_wave.cpp \
+Resources/xml_sound_cache.cpp \
+Resources/sound_cache.cpp \
 setupsound.cpp \
 precomp.cpp \
 soundoutput_impl.cpp \
@@ -26,7 +28,6 @@ SoundFilters/fadefilter.cpp \
 SoundFilters/fadefilter_provider.cpp \
 SoundFilters/echofilter_provider.cpp \
 SoundFilters/inverse_echofilter_provider.cpp \
-AudioWorld/audio_cache.cpp \
 AudioWorld/audio_object.cpp \
 AudioWorld/audio_world.cpp \
 AudioWorld/audio_definition.cpp \
@@ -38,6 +39,8 @@ soundoutput.cpp
 
 if WIN32
 libclan30Sound_la_SOURCES += \
+Win32/soundoutput_directsound.cpp \
+Win32/init_guids.cpp \
 Win32/soundoutput_win32.cpp
 else
 libclan30Sound_la_SOURCES += \

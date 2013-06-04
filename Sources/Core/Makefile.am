@@ -10,8 +10,10 @@ Text/file_logger.cpp \
 Text/logger.cpp \
 Text/console.cpp \
 Text/string_help.cpp \
+Resources/xml_resource_node.cpp \
+Resources/xml_resource_manager.cpp \
+Resources/xml_resource_document.cpp \
 Resources/resource_manager.cpp \
-Resources/resource.cpp \
 ErrorReporting/crash_reporter.cpp \
 ErrorReporting/detect_hang.cpp \
 ErrorReporting/exception_dialog.cpp \
