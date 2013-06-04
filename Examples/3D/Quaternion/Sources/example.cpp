@@ -226,7 +226,7 @@ void App::render(GraphicContext &gc)
 void App::create_scene(GraphicContext &gc)
 {
 
-	model_teapot = Model(gc, scene.gs, "../Clan3D/Resources/teapot.dae");
+	model_teapot = Model(gc, scene.gs, "../Object3D/Resources/teapot.dae");
 	Model model_ring_a(gc, scene.gs, "Resources/ring.dae");
 	Model model_ring_b(gc, scene.gs, "Resources/ring.dae");
 	Model model_ring_c(gc, scene.gs, "Resources/ring.dae");

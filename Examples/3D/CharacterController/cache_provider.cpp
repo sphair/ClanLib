@@ -59,7 +59,7 @@ std::shared_ptr<ModelData> ExampleSceneCache::create_plane()
 
 	model_data->textures.resize(1);
 	model_data->textures[0].gamma = 2.2f;
-	model_data->textures[0].name = "../Clan3D/Resources/tux.png";
+	model_data->textures[0].name = "../Object3D/Resources/tux.png";
 
 	model_data->mesh_lods.resize(1);
 	model_data->mesh_lods[0].meshes.resize(1);
@@ -160,7 +160,7 @@ std::shared_ptr<ModelData> ExampleSceneCache::create_box()
 
 	model_data->textures.resize(1);
 	model_data->textures[0].gamma = 2.2f;
-	model_data->textures[0].name = "../Clan3D/Resources/tux.png";
+	model_data->textures[0].name = "../Object3D/Resources/tux.png";
 
 	model_data->mesh_lods.resize(1);
 	model_data->mesh_lods[0].meshes.resize(1);
