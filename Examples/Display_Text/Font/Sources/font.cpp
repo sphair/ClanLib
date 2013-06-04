@@ -64,7 +64,7 @@ int App::start(const std::vector<std::string> &args)
 	GUIComponent gui_window(&gui, gui_desc, "window");
 
 	int offset_x = 10;
-	int offset_y = 40;
+	int offset_y = 8;
 	int width = 200;
 	int height = 20;
 	const int gap = 26;
@@ -99,6 +99,13 @@ int App::start(const std::vector<std::string> &args)
 	button_typeface_sans.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
 	button_typeface_sans.func_clicked().set(this, &App::on_button_clicked_typeface_sans, &button_typeface_sans);
 	button_typeface_sans.set_text("Typeface: Microsoft Sans Serif");
+	offset_y += gap;
+
+	PushButton button_typeface_bitstream(&gui_window);
+	button_typeface_bitstream_ptr = &button_typeface_bitstream;
+	button_typeface_bitstream.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
+	button_typeface_bitstream.func_clicked().set(this, &App::on_button_clicked_typeface_bitstream, &button_typeface_bitstream);
+	button_typeface_bitstream.set_text("Typeface: Bitstream Vera Sans");
 	offset_y += gap;
 
 	CheckBox checkbox1(&gui_window);

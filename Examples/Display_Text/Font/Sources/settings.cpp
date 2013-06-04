@@ -186,11 +186,10 @@ void App::on_lineedit_changed(InputEvent &e)
 void App::on_button_clicked_class_vector(PushButton *button)
 {
 	selected_fontclass = font_vector;
-	font_typeface = "Bitstream Vera Sans";
-	font_filename = "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf";
-	button_typeface_sans_ptr->set_enabled(false);
-	button_typeface_tahoma_ptr->set_enabled(false);
-	select_font();
+	button_typeface_tahoma_ptr->set_enabled();
+	button_typeface_sans_ptr->set_enabled();
+	button_typeface_bitstream_ptr->set_enabled();
+	on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
 }
 
 void App::on_button_clicked_class_sprite(PushButton *button)
@@ -200,19 +199,16 @@ void App::on_button_clicked_class_sprite(PushButton *button)
 	font_filename = "";
 	button_typeface_sans_ptr->set_enabled(false);
 	button_typeface_tahoma_ptr->set_enabled(false);
+	button_typeface_bitstream_ptr->set_enabled(false);
 	select_font();
 }
 void App::on_button_clicked_class_system(PushButton *button)
 {
-	if (!button_typeface_sans_ptr->is_enabled())
-	{
-		font_typeface = "Tahoma";
-		font_filename = "";
-		button_typeface_sans_ptr->set_enabled();
-		button_typeface_tahoma_ptr->set_enabled();
-	}
 	selected_fontclass = font_system;
-	select_font();
+	button_typeface_tahoma_ptr->set_enabled();
+	button_typeface_sans_ptr->set_enabled();
+	button_typeface_bitstream_ptr->set_enabled();
+	on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
 }
 
 void App::on_button_clicked_typeface_tahoma(PushButton *button)
@@ -226,6 +222,13 @@ void App::on_button_clicked_typeface_sans(PushButton *button)
 {
 	font_typeface = "Microsoft Sans Serif";
 	font_filename = "";
+	select_font();
+}
+
+void App::on_button_clicked_typeface_bitstream(PushButton *button)
+{
+	font_typeface = "Bitstream Vera Sans";
+	font_filename = "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf";
 	select_font();
 }
 

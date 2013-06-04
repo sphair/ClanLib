@@ -47,7 +47,7 @@ private:
 	void on_button_clicked_class_sprite(PushButton *button);
 	void on_button_clicked_typeface_tahoma(PushButton *button);
 	void on_button_clicked_typeface_sans(PushButton *button);
-	void on_button_clicked_typeface_ttf(PushButton *button);
+	void on_button_clicked_typeface_bitstream(PushButton *button);
 	void on_checkbox_state_underline(CheckBox *checkbox);
 	void on_checkbox_state_italic(CheckBox *checkbox);
 	void on_checkbox_state_subpixel(CheckBox *checkbox);
@@ -74,6 +74,7 @@ private:
 	LineEdit *lineedit_text_ptr;
 	PushButton *button_typeface_tahoma_ptr;
 	PushButton *button_typeface_sans_ptr;
+	PushButton *button_typeface_bitstream_ptr;
 	std::string font_text;
 	FontMetrics font_metrics;
 	std::string font_typeface;
