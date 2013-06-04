@@ -62,9 +62,6 @@ NULL
 
 int ExampleText::start(const std::vector<std::string> &args)
 { 
-	// Create a console window for text-output if not available
-	clan::ConsoleWindow console("Console");
-	
 	quit = false;
 
 	// Set a videomode
