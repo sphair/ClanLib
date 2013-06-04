@@ -4,11 +4,11 @@
 
 using namespace clan;
 
-ExampleSceneCacheProvider::ExampleSceneCacheProvider()
+ExampleSceneCache::ExampleSceneCache()
 {
 }
 
-std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::string &name)
+std::shared_ptr<ModelData> ExampleSceneCache::get_model_data(const std::string &name)
 {
 	if (name == "plane")
 		return create_plane();
@@ -18,7 +18,7 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::get_model_data(const std::
 		throw Exception(string_format("Unknown model: %1", name));
 }
 
-CachedTexture ExampleSceneCacheProvider::get_texture(GraphicContext &gc, const std::string &name, bool linear)
+Resource<Texture> ExampleSceneCache::get_texture(GraphicContext &gc, const std::string &name, bool linear)
 {
 	auto it = loaded_textures.find(name);
 	if (it != loaded_textures.end())
@@ -27,7 +27,7 @@ CachedTexture ExampleSceneCacheProvider::get_texture(GraphicContext &gc, const s
 	}
 	else
 	{
-		CachedTexture texture;
+		Resource<Texture> texture;
 
 		ImageImportDescription desc;
 		desc.set_srgb(!linear);
@@ -40,12 +40,12 @@ CachedTexture ExampleSceneCacheProvider::get_texture(GraphicContext &gc, const s
 	}
 }
 
-void ExampleSceneCacheProvider::update_textures(GraphicContext &gc, float time_elapsed)
+void ExampleSceneCache::update_textures(GraphicContext &gc, float time_elapsed)
 {
 	// Update animated textures here.
 }
 
-std::shared_ptr<ModelData> ExampleSceneCacheProvider::create_plane()
+std::shared_ptr<ModelData> ExampleSceneCache::create_plane()
 {
 	std::shared_ptr<ModelData> model_data(new ModelData());
 
@@ -146,7 +146,7 @@ std::shared_ptr<ModelData> ExampleSceneCacheProvider::create_plane()
 	return model_data;
 }
 
-std::shared_ptr<ModelData> ExampleSceneCacheProvider::create_box()
+std::shared_ptr<ModelData> ExampleSceneCache::create_box()
 {
 	std::shared_ptr<ModelData> model_data(new ModelData());
 

@@ -1,14 +1,14 @@
 
 #pragma once
 
-class ExampleSceneCacheProvider : public clan::SceneCacheProvider
+class ExampleSceneCache : public clan::SceneCache
 {
 public:
-	ExampleSceneCacheProvider();
+	ExampleSceneCache();
 
 	std::shared_ptr<clan::ModelData> get_model_data(const std::string &name);
 
-	clan::CachedTexture get_texture(clan::GraphicContext &gc, const std::string &name, bool linear);
+	clan::Resource<clan::Texture> get_texture(clan::GraphicContext &gc, const std::string &name, bool linear);
 
 	void update_textures(clan::GraphicContext &gc, float time_elapsed);
 

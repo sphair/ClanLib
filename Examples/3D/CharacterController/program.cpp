@@ -23,10 +23,12 @@ int Program::main(const std::vector<std::string> &args)
 	bool exit = false;
 	Slot slot_close = window.sig_window_close().connect_functor([&exit]() { exit = true; });
 
-	SceneCache cache(new ExampleSceneCacheProvider());
+	ResourceManager resources;
+	SceneCache::set(resources, std::shared_ptr<SceneCache>(new ExampleSceneCache()));
+
 	std::string shader_path = "../../../Resources/Scene3D";
 
-	Scene scene(gc, cache, shader_path);
+	Scene scene(gc, resources, shader_path);
 
 	SceneCamera camera(scene);
 	scene.set_camera(camera);
