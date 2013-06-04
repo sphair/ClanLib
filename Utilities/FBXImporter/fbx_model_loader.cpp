@@ -294,7 +294,7 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 		range.ambient.set_single_value(to_vec3f(ambient) * ambient_factor);
 		range.diffuse.set_single_value(to_vec3f(diffuse) * diffuse_factor);
 		range.self_illumination_amount.set_single_value(emissive_factor);
-		range.self_illumination.set_single_value(to_vec3f(emissive));
+		range.self_illumination.set_single_value(to_vec3f(emissive) * 0.25f); // To do: fix this properly (3ds max SI only can do 0-1 range, and we need more to allow blooming, grr..)
 
 		if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{

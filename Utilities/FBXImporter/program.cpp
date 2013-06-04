@@ -83,6 +83,7 @@ int Program::main(const std::vector<std::string> &args)
 		camera.set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
 		camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, -50.0f)));
 
+		object.update(gametime.get_time_elapsed());
 		scene.update(gc, gametime.get_time_elapsed());
 
 		scene.set_viewport(gc.get_size());
