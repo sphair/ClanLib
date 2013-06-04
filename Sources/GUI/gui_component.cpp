@@ -401,7 +401,7 @@ Canvas GUIComponent::get_canvas() const
 		if (cur->component == root_component)
 			return impl->gui_manager.lock()->window_manager.get_canvas(cur);
 	}
-	return dummy_canvas;
+	throw Exception("Canvas not found");
 }
 
 InputContext GUIComponent::get_ic()
@@ -416,7 +416,7 @@ InputContext GUIComponent::get_ic()
 		if (cur->component == root_component)
 			return impl->gui_manager.lock()->window_manager.get_ic(cur);
 	}
-	return dummy_ic;
+	throw Exception("Input Context not found");
 }
 
 bool GUIComponent::is_enabled() const

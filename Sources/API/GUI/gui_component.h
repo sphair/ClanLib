@@ -624,8 +624,6 @@ private:
 
 	GUIComponent &operator =(const GUIComponent &other);
 
-	Canvas dummy_canvas;
-	InputContext dummy_ic;
 /// \}
 };
 
