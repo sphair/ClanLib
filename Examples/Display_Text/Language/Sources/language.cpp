@@ -126,7 +126,7 @@ int Language::start(const std::vector<std::string> &args)
 			font_arabic.draw_text(gc, 10, 230, new_text);
 		}
 #endif
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process(0);
 	}

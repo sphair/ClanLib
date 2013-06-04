@@ -139,7 +139,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		canvas.set_modelview(clan::Mat4f::identity());
 		
 		// Flip the display, showing on the screen what we have drawn (no v-sync)
-		canvas.flip(0);
+		window.flip(0);
 
 		// This call updates input and performs other "housekeeping"
 		clan::KeepAlive::process();

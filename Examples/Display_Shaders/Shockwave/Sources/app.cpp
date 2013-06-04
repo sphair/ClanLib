@@ -118,7 +118,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 10, 64 + gap*4, "rate: " + clan::StringHelp::float_to_text(shockwave_rate) + " (Press E,R)");
 		font.draw_text(canvas, 10, 64 + gap*5, "glow: " + clan::StringHelp::float_to_text(uniforms.glow) + " (Press D,F)");
 
-		canvas.flip();
+		window.flip();
 
 		clan::System::sleep(10);
 

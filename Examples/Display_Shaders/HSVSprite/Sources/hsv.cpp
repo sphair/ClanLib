@@ -101,7 +101,7 @@ int HSV::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, canvas.get_width()-10-fps_size.width, 16, fps_text);
 		font.draw_text(canvas, 32, 730, "Use cursor keys left and right");
 
-		canvas.flip(0);
+		window.flip(0);
 		KeepAlive::process();
 	}
 

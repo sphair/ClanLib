@@ -131,7 +131,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, 16, 64, enable_dual_pass ? "Using 2 Render Passes (Press Space to toggle)" : "Using Single Pass (Press Space to toggle)");
 
 		// Use flip(1) to lock the fps
-		canvas.flip(0);
+		window.flip(0);
 
 		// This call processes user input and other events
 		KeepAlive::process();

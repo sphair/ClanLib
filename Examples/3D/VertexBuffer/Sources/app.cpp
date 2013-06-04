@@ -147,7 +147,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.reset_depth_stencil_state();
 
 
-		canvas.flip(0);
+		window.flip(0);
 		frameratecounter.frame_shown();
 
 		KeepAlive::process();

@@ -186,7 +186,7 @@ int App::start(const std::vector<std::string> &args)
 		wm.draw_windows(canvas);
 
 		// Use flip(1) to lock the fps
-		canvas.flip(0);
+		window.flip(0);
 
 		KeepAlive::process();
 	}

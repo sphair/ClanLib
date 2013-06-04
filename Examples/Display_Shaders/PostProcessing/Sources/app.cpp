@@ -118,7 +118,7 @@ int App::start(const std::vector<std::string> &args)
 				uniforms.amount = 1.0f;
 		}
 
-		canvas.flip();
+		window.flip();
 
 		clan::System::sleep(10);
 

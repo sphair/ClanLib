@@ -138,7 +138,7 @@ int App::start(const std::vector<std::string> &args)
 		std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
 		font.draw_text(canvas, 10, 64, text);
 
-		canvas.flip();
+		window.flip();
 
 		clan::System::sleep(10);
 

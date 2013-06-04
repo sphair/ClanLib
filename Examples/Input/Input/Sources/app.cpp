@@ -104,7 +104,7 @@ int App::start(const std::vector<std::string> &args)
 
 		draw_text_shooter(canvas);
 
-		canvas.flip(1);
+		window.flip(1);
 
 		KeepAlive::process();
 	}

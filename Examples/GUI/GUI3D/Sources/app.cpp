@@ -130,7 +130,7 @@ int App::start(const std::vector<std::string> &args)
 
 		gui.draw();
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process();
 	}

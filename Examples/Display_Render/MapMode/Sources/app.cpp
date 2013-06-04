@@ -114,7 +114,7 @@ int App::start(const std::vector<std::string> &args)
 		canvas.set_map_mode(clan::map_2d_upper_left);
 		canvas.get_gc().set_viewport(canvas.get_size());
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process();
 	}

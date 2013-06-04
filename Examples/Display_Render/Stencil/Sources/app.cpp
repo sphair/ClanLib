@@ -161,7 +161,7 @@ int App::start(const std::vector<std::string> &args)
 		// Add a note to avoid confusion
 		font.draw_text(canvas, 10.0f, 500.0, "(This example does not use the stencil depth buffer comparison or the stencil bitmask)", clan::Colorf::black);
 
-		canvas.flip(1);
+		window.flip(1);
 
 		clan::KeepAlive::process();
 	}

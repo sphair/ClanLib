@@ -109,7 +109,7 @@ int App::start(const std::vector<std::string> &args)
 		std::string text( "Press 1 to 9 to control blur amount. Currently it is :" + clan::StringHelp::float_to_text(blur) );
 		font.draw_text(canvas, 10, 64, text);
 
-		canvas.flip();
+		window.flip();
 
 		clan::System::sleep(10);
 
