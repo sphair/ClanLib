@@ -13,8 +13,9 @@ public:
 private:
 	FBXModelLoader(const std::string &filename);
 	~FBXModelLoader();
-	void import_scene(const std::string &filename);
 
+	void import_scene(const std::string &filename);
+	void triangulate_scene();
 	void bake_geometric_transforms(FbxNode *node = nullptr);
 
 	void convert_node(FbxNode *node);

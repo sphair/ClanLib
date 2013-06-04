@@ -16,9 +16,8 @@ FBXModelLoader::FBXModelLoader(const std::string &filename)
 	try
 	{
 		import_scene(filename);
+		triangulate_scene();
 		//bake_geometric_transforms();
-		FbxGeometryConverter converter(manager);
-		converter.Triangulate(scene, true);
 		convert_node(scene->GetRootNode());
 		convert_bones();
 	}
@@ -34,6 +33,12 @@ FBXModelLoader::~FBXModelLoader()
 {
 	if (manager)
 		manager->Destroy();
+}
+
+void FBXModelLoader::triangulate_scene()
+{
+	FbxGeometryConverter converter(manager);
+	converter.Triangulate(scene, true);
 }
 
 void FBXModelLoader::import_scene(const std::string &filename)
