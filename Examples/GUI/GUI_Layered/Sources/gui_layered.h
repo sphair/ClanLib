@@ -86,7 +86,33 @@ private:
 	ListView *listview;
 	Panel3D *panel3d;
 
-	clan::ProgramObject gui_shader;
+	struct UniformBlock
+	{
+		clan::Mat4f world_to_eye;
+		clan::Mat4f eye_to_projection;
+		clan::Vec4f normal_world_to_eye[3]; // actually a mat3, but OpenGL std140 stores it as 3x vec4
+		clan::Vec4f material_emission;
+		clan::Vec4f material_specular;
+		float material_shininess;
+		float material_transparency;
+		float padding0;
+		float padding1;
+		clan::Vec4f light_vector;
+		clan::Vec4f light_half_vector;
+		clan::Vec4f light_specular;
+		clan::Vec4f light_diffuse;
+		clan::Vec4f light_ambient;
+	};
+
+	static const int num_segments_horizontal = 32;
+	static const int num_segments_vertical = 1;
+	static const int num_points = 6 * num_segments_horizontal * num_segments_vertical;
+
+	clan::ShaderEffect gui_shader;
+	clan::VertexArrayVector<clan::Vec3f> attr_position_in_world;
+	clan::VertexArrayVector<clan::Vec3f> attr_normal_in_world;
+	clan::VertexArrayVector<clan::Vec2f> attr_tex_coord;
+	clan::UniformVector<UniformBlock> gpu_uniform_block;
 
 	float lens_zoom;
 	float lens_aspect;

@@ -31,94 +31,103 @@
 #include "GUI.h"
 #include "app.h"
 
-class LightSource
-{
-public:
-	LightSource()
-	{
-	}
-
-	clan::Vec4f m_Ambient;
-	clan::Vec4f m_Diffuse;
-	clan::Vec4f m_Specular;
-	clan::Vec4f m_Vector;
-};
-
 const char GUI_Texture_Shader_Vertex[] =
 	"#version 150\n"
 	"\n"
-	"in vec3 InPosition;"
-	"in vec3 InNormal;"
-	"in vec2 InTexCoord;"
-	"uniform mat4 cl_ModelViewMatrix;"
-	"uniform mat4 cl_ModelViewProjectionMatrix;"
-	"uniform mat3 cl_NormalMatrix;"
+	"layout(std140) uniform UniformBlock \n"
+	"{\n"
+	"	uniform mat4 WorldToEye;\n"
+	"	uniform mat4 EyeToProjection;\n"
+	"	uniform mat3 NormalWorldToEye;\n"
+	""
+	"	uniform vec4 MaterialEmission;\n"
+	"	uniform vec4 MaterialSpecular;\n"
+	"	uniform float MaterialShininess;\n"
+	"	uniform float MaterialTransparency;\n"
 	"\n"
-	"out vec3 WorldSpaceNormal; \n"
-	"out vec3 WorldSpacePosition; \n"
-	"out vec4 ObjPos;\n"
+	"	uniform vec4 LightVector;\n"
+	"	uniform vec4 LightHalfVector;\n"
+	"	uniform vec4 LightSpecular;\n"
+	"	uniform vec4 LightDiffuse;\n"
+	"	uniform vec4 LightAmbient;\n"
+	"};\n"
+	"\n"
+	"in vec3 AttrPositionInWorld;"
+	"in vec3 AttrNormalInWorld;"
+	"in vec2 AttrTexCoord;"
+	"\n"
+	"out vec3 NormalInEye; \n"
+	"out vec3 PositionInWorld; \n"
+	"out vec4 PositionInEye;\n"
 	"out vec2 TexCoord;\n"
 	""
 	"void main()"
 	"{"
-	"	vec4 in_position = vec4(InPosition.xyz, 1.0);\n"
-	"	gl_Position = cl_ModelViewProjectionMatrix * in_position;\n"
-	"	WorldSpaceNormal = normalize( cl_NormalMatrix * InNormal);\n"
-	"	WorldSpacePosition = InPosition;\n"
-	"	ObjPos = cl_ModelViewMatrix * in_position;\n"
-	"	TexCoord = InTexCoord;"
+	"	PositionInEye = WorldToEye * vec4(AttrPositionInWorld.xyz, 1);\n"
+	"	NormalInEye = normalize( NormalWorldToEye * AttrNormalInWorld);\n"
+	"	PositionInWorld = AttrPositionInWorld;\n"
+	"	TexCoord = AttrTexCoord;"
+	"	gl_Position = EyeToProjection * PositionInEye;\n"
 	"}"
 	;
 
 const char GUI_Texture_Shader_Fragment[] =
 	"#version 150\n"
 	"\n"
-	"in vec3 WorldSpaceNormal; \n"
-	"in vec3 WorldSpacePosition; \n"
-	"in vec4 ObjPos;\n"
-	"in vec2 TexCoord;\n"
+	"layout(std140) uniform UniformBlock \n"
+	"{\n"
+	"	uniform mat4 WorldToEye;\n"
+	"	uniform mat4 EyeToProjection;\n"
+	"	uniform mat3 NormalWorldToEye;\n"
+	""
+	"	uniform vec4 MaterialEmission;\n"
+	"	uniform vec4 MaterialSpecular;\n"
+	"	uniform float MaterialShininess;\n"
+	"	uniform float MaterialTransparency;\n"
+	"\n"
+	"	uniform vec4 LightVector;\n"
+	"	uniform vec4 LightHalfVector;\n"
+	"	uniform vec4 LightSpecular;\n"
+	"	uniform vec4 LightDiffuse;\n"
+	"	uniform vec4 LightAmbient;\n"
+	"};\n"
 	"\n"
 	"uniform sampler2D Texture0;\n"
 	"\n"
-	"uniform float MaterialShininess;\n"
-	"uniform vec4 MaterialEmission;\n"
-	"uniform vec4 MaterialSpecular;\n"
-	"uniform float MaterialTransparency;\n"
+	"in vec3 NormalInEye; \n"
+	"in vec3 PositionInWorld; \n"
+	"in vec4 PositionInEye;\n"
+	"in vec2 TexCoord;\n"
 	"\n"
-	"uniform vec4 LightVector;\n"
-	"uniform vec4 LightHalfVector;\n"
-	"uniform vec4 LightSpecular;\n"
-	"uniform vec4 LightDiffuse;\n"
-	"uniform vec4 LightAmbient;\n"
-	"out vec4 cl_FragColor;\n"
+	"out vec4 FragColor;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
 	"	vec4 texture_color = texture2D(Texture0, TexCoord.xy);\n"
 	"	if (texture_color.w < 0.01) discard;\n"
 	"\n"
-	"	vec3 eye = -normalize(ObjPos.xyz); \n"
+	"	vec3 eye = -normalize(PositionInEye.xyz); \n"
 	"	vec4 diff = vec4(0); \n"
 	"	vec4 spec = vec4(0); \n"
 	"\n"
-	"	vec3 world_space_normal = normalize(WorldSpaceNormal);\n"
-	"	float nDotL = max(0.0, dot(world_space_normal, LightVector.xyz)); \n"
+	"	vec3 eye_space_normal = normalize(NormalInEye);\n"
+	"	float nDotL = max(0.0, dot(eye_space_normal, LightVector.xyz)); \n"
 	"	float pf; \n"
 	"	if (nDotL == 0.0)\n"
 	"	{\n"
 	"		pf = 0.0; \n"
 	"	}else\n"
 	"	{\n"
-	"			float nDotHV = max(0.0, dot(world_space_normal, LightHalfVector.xyz));\n"
-	"			pf = pow(nDotHV, MaterialShininess);\n"
+	"		float nDotHV = max(0.0, dot(eye_space_normal, LightHalfVector.xyz));\n"
+	"		pf = pow(nDotHV, MaterialShininess);\n"
 	"	}\n"
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
 	"	vec4 final_texture_color = texture_color;\n"
-	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
-	"	cl_FragColor.a = texture_color.w - MaterialTransparency;\n"
-	"	cl_FragColor.r = 1.0;\n"
-	"	cl_FragColor.a = 1.0;\n"
+	"	FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	FragColor.a = texture_color.w - MaterialTransparency;\n"
+	"	FragColor.r = 1.0;\n"
+	"	FragColor.a = 1.0;\n"
 	"}\n"
 	;
 
@@ -142,42 +151,35 @@ bool GUI_Layered::run3d()
 	modelview_matrix.matrix[2 + (4*2)] = -1.0f;
 	resultant_matrix = projection_matrix * modelview_matrix;
 
-	LightSource lightsource;
-	lightsource.m_Specular = clan::Vec4f(panel3d->get_light_specular(), panel3d->get_light_specular(), panel3d->get_light_specular(), 1.0f);
-	lightsource.m_Diffuse = clan::Vec4f(panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), 1.0f);
-	lightsource.m_Vector = clan::Vec4f( panel3d->get_light_position_x(), panel3d->get_light_position_y(), panel3d->get_light_position_z(), 0.0f);
-	lightsource.m_Ambient = clan::Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
-
-	lightsource.m_Vector.normalize3();
-
 	std::vector<clan::GUIWindowManagerTextureWindow> windows = wm.get_windows();
 	std::vector<clan::GUIWindowManagerTextureWindow>::size_type index, size;
 	size = windows.size();
 
-	gc.set_program_object(gui_shader);
+	UniformBlock uniform_block;
 
-	gui_shader.set_uniform4f("LightVector", lightsource.m_Vector);
+	uniform_block.world_to_eye = modelview_matrix;
+	uniform_block.eye_to_projection = projection_matrix;
 
 	clan::Mat3f normal_matrix = clan::Mat3f(modelview_matrix);
 	normal_matrix.inverse();
 	normal_matrix.transpose();
 
-	gui_shader.set_uniform_matrix("cl_ModelViewMatrix", modelview_matrix);
-	gui_shader.set_uniform_matrix("cl_ModelViewProjectionMatrix", resultant_matrix);
-	gui_shader.set_uniform_matrix("cl_NormalMatrix", normal_matrix);
+	uniform_block.normal_world_to_eye[0] = clan::Vec4f(normal_matrix[0], normal_matrix[1], normal_matrix[2], 0.0f);
+	uniform_block.normal_world_to_eye[1] = clan::Vec4f(normal_matrix[3], normal_matrix[4], normal_matrix[5], 0.0f);
+	uniform_block.normal_world_to_eye[2] = clan::Vec4f(normal_matrix[6], normal_matrix[7], normal_matrix[8], 0.0f);
 
-	clan::Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
-	light_halfvector +=  lightsource.m_Vector;
-	light_halfvector.normalize3();
-	gui_shader.set_uniform4f("LightHalfVector", light_halfvector);
-	gui_shader.set_uniform4f("LightSpecular", lightsource.m_Specular);
-	gui_shader.set_uniform4f("LightDiffuse", lightsource.m_Diffuse);
-	gui_shader.set_uniform4f("LightAmbient", lightsource.m_Ambient);
+	uniform_block.light_vector = clan::Vec4f(panel3d->get_light_position_x(), panel3d->get_light_position_y(), panel3d->get_light_position_z(), 0.0f).normalize3();
+	uniform_block.light_half_vector = (uniform_block.light_vector + clan::Vec4f(0.0f, 0.0f, 1.0f, 0.0f)).normalize3();
+	uniform_block.light_ambient = clan::Vec4f(0.2f, 0.2f, 0.2f, 1.0f);
+	uniform_block.light_diffuse = clan::Vec4f(panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), panel3d->get_light_diffuse(), 1.0f);
+	uniform_block.light_specular = clan::Vec4f(panel3d->get_light_specular(), panel3d->get_light_specular(), panel3d->get_light_specular(), 1.0f);
 
-	gui_shader.set_uniform1f("MaterialShininess", pow(2.0f, (10.0f * panel3d->get_material_shininess()) + 2.0f)); 
-	gui_shader.set_uniform4f("MaterialEmission", clan::Vec4f(panel3d->get_material_emission(), panel3d->get_material_emission(), panel3d->get_material_emission(), 1.0f)); 
-	gui_shader.set_uniform4f("MaterialSpecular", clan::Vec4f(panel3d->get_material_specular(), panel3d->get_material_specular(), panel3d->get_material_specular(), 1.0f)); 
-	gui_shader.set_uniform1f("MaterialTransparency", panel3d->get_material_transparency()); 
+	uniform_block.material_shininess = std::pow(2.0f, (10.0f * panel3d->get_material_shininess()) + 2.0f);
+	uniform_block.material_emission = clan::Vec4f(panel3d->get_material_emission(), panel3d->get_material_emission(), panel3d->get_material_emission(), 1.0f);
+	uniform_block.material_specular = clan::Vec4f(panel3d->get_material_specular(), panel3d->get_material_specular(), panel3d->get_material_specular(), 1.0f);
+	uniform_block.material_transparency = panel3d->get_material_transparency();
+
+	gpu_uniform_block.upload_data(gc, &uniform_block, 1);
 
 	for (index = 0; index < size; index++)
 	{
@@ -215,10 +217,6 @@ bool GUI_Layered::run3d()
 		float src_right = (texture_unit1_coords.right + texel_centre) / texture_width;
 		float src_top = (texture_unit1_coords.top + texel_centre) / texture_height;
 		float src_bottom = (texture_unit1_coords.bottom + texel_centre) / texture_height;
-
-		const int num_segments_horizontal = 32;
-		const int num_segments_vertical = 1;
-		const int num_points = 6 * num_segments_horizontal * num_segments_vertical;
 
 		clan::Vec3f positions[num_points];
 		clan::Vec3f normals[num_points];
@@ -339,20 +337,13 @@ bool GUI_Layered::run3d()
 		//positions[1].x = 10000.0f; positions[1].y = -10000.0f; positions[1].z = 0.0f;
 		//positions[2].x = -10000.0f; positions[2].y = 10000.0f; positions[2].z = 0.0f;
 
-		clan::VertexArrayVector<clan::Vec3f> vbo_positions(gc, positions, num_points);
-		clan::VertexArrayVector<clan::Vec3f> vbo_normals(gc, normals, num_points);
-		clan::VertexArrayVector<clan::Vec2f> vbo_texcoords(gc, tex1_coords, num_points);
+		attr_position_in_world.upload_data(gc, 0, positions, num_points);
+		attr_normal_in_world.upload_data(gc, 0, normals, num_points);
+		attr_tex_coord.upload_data(gc, 0, tex1_coords, num_points);
 
-		clan::PrimitivesArray prim_array(gc);
-		prim_array.set_attributes(0, vbo_positions, 3, clan::type_float, 0);
-		prim_array.set_attributes(1, vbo_normals, 3, clan::type_float, 0);
-		prim_array.set_attributes(2, vbo_texcoords, 3, clan::type_float, 0);
-
-		gc.set_texture(0, texture);
-		gc.draw_primitives(clan::type_triangles, num_points, prim_array);
+		//gui_shader.set_texture(0, texture);
+		gui_shader.draw(gc);
 	}
-	gc.reset_program_object();
-	gc.reset_texture(0);
 
 	return true;
 }
@@ -470,28 +461,22 @@ clan::Vec3f GUI_Layered::transform_point(const clan::Vec3d &src_point, const cla
 
 void GUI_Layered::setup_shader()
 {
-	clan::ShaderObject vertex_shader(canvas, clan::shadertype_vertex, GUI_Texture_Shader_Vertex);
-	if(!vertex_shader.compile())
-	{
-		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
-	}
+	gpu_uniform_block = clan::UniformVector<UniformBlock>(canvas, 1);
 
-	clan::ShaderObject fragment_shader(canvas, clan::shadertype_fragment, GUI_Texture_Shader_Fragment);
-	if(!fragment_shader.compile())
-	{
-		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
-	}
+	attr_position_in_world = clan::VertexArrayVector<clan::Vec3f>(canvas, num_points);
+	attr_normal_in_world = clan::VertexArrayVector<clan::Vec3f>(canvas, num_points);
+	attr_tex_coord = clan::VertexArrayVector<clan::Vec2f>(canvas, num_points);
 
-	gui_shader = clan::ProgramObject(canvas);
-	gui_shader.attach(vertex_shader);
-	gui_shader.attach(fragment_shader);
-	gui_shader.bind_attribute_location(0, "InPosition");
-	gui_shader.bind_attribute_location(1, "InNormal");
-	gui_shader.bind_attribute_location(2, "InTexCoord");
-	gui_shader.bind_frag_data_location(0, "cl_FragColor");
-	if (!gui_shader.link())
-	{
-		throw clan::Exception(clan::string_format("Unable to link program object: %1", gui_shader.get_info_log()));
-	}
+	clan::ShaderEffectDescription desc;
 
+	desc.set_vertex_shader(GUI_Texture_Shader_Vertex);
+	desc.set_fragment_shader(GUI_Texture_Shader_Fragment);
+	desc.set_uniform_block("UniformBlock", gpu_uniform_block);
+	desc.set_attribute("AttrPositionInWorld", attr_position_in_world);
+	desc.set_attribute("AttrPositionInWorld", attr_normal_in_world);
+	desc.set_attribute("AttrTexCoord", attr_tex_coord);
+	desc.set_frag_data_to_back_buffer("FragColor");
+	desc.set_draw_count(num_points);
+
+	gui_shader = clan::ShaderEffect(canvas, desc);
 }
