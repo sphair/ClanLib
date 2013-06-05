@@ -33,7 +33,7 @@
 class MenuBar : public clan::GUIComponent
 {
 public:
-	MenuBar(clan::GUIManager &manager, clan::DisplayCache &application_resources);
+	MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources);
 
 private:
 	void on_item_selected();

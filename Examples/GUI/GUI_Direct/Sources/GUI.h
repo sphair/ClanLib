@@ -45,7 +45,7 @@ public:
 
 	clan::DisplayWindow *get_window();
 	App *get_app() { return app; }
-	clan::DisplayCache &get_resources_internal() { return resources_internal; }
+	clan::ResourceManager &get_resources_internal() { return resources_internal; }
 
 	const char *get_theme_location();
 	
@@ -53,7 +53,7 @@ private:
 
 
 private:
-	clan::DisplayCache resources_internal;
+	clan::ResourceManager resources_internal;
 	App *app;
 	clan::Font fps_font;
 	 std::unique_ptr<GUI_Direct> gui_direct;

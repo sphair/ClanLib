@@ -29,13 +29,13 @@
 #include "precomp.h"
 #include "menubar.h"
 
-MenuBar::MenuBar(clan::GUIManager &manager, clan::DisplayCache &application_resources) :
+MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources) :
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Menu Bar & Status Bar", clan::Rect(512 + 24, 256 + 16, clan::Size(256, 180)), false), "window")
 {
 	tux_image = clan::ImageProviderFactory::load("../CommonCode/Resources/tux.png");
 
 	clan::Canvas canvas = get_canvas();
-	tux_head = clan::Image(canvas, "tux_head", &application_resources);
+	tux_head = clan::Image::resource(canvas, "tux_head", application_resources);
 
 
 

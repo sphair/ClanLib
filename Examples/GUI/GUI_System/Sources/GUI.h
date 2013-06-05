@@ -40,7 +40,7 @@ public:
 
 	int start(const std::vector<std::string> &args);
 
-	clan::DisplayCache &get_resources_internal() { return resources_internal; }
+	clan::ResourceManager &get_resources_internal() { return resources_internal; }
 
 	Theme::gui_theme get_theme() {return current_theme;}
 
@@ -51,7 +51,7 @@ private:
 	void gui_exec();
 
 private:
-	clan::DisplayCache resources_internal;
+	clan::ResourceManager resources_internal;
 	 std::unique_ptr<GUI_System> gui_system;
 
 	Theme::gui_theme current_theme;

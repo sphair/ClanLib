@@ -35,7 +35,7 @@ GUI_Direct::GUI_Direct(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_wind
 {
 	gui_manager = clan::GUIManager(wm, gui->get_theme_location());
 
-	//resources_gui = clan::DisplayCache(gui->get_resources_location());
+	//resources_gui = clan::ResourceManager(gui->get_resources_location());
 	//gui_manager->set_css_document(gui->get_theme_location());
 
 	// Note, clan::GUIManager deletes these automatically, after GUI_Direct has gone out of scope in the clan::GUIManager destructor
