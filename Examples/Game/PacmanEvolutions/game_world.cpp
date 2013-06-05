@@ -16,7 +16,8 @@ GameWorld::GameWorld()
 
 void GameWorld::update(clan::GameTime &game_time)
 {
-	float time_elapsed = timer.update();
+	timer.update();
+	float time_elapsed = timer.get_time_elapsed();
 	total_time_elapsed += time_elapsed;
 	if (player)
 	{

@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "elapsed_timer.h"
-
 class AgeAscii;
 
 class TextExplosionAscii
@@ -22,5 +20,5 @@ private:
 	std::vector<clan::Vec3f> letter_deltas;
 	std::vector<wchar_t> letter_symbols;
 
-	ElapsedTimer timer;
+	clan::GameTime timer;
 };

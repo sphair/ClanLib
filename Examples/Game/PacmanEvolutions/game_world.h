@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "elapsed_timer.h"
 #include "map.h"
 #include "game_object_pacman.h"
 #include "game_object_ghost.h"
@@ -13,7 +12,7 @@ public:
 	void update(clan::GameTime &game_time);
 	void next_age();
 
-	ElapsedTimer timer;
+	clan::GameTime timer;
 
 	std::shared_ptr<GameObject_Pacman> player;
 	std::vector<std::shared_ptr<GameObject_Ghost> > ghosts;

@@ -37,7 +37,8 @@ void TextExplosionAscii::render(AgeAscii *console)
 	if (!letter_positions.empty())
 	{
 		bool still_visible = false;
-		float time_elapsed = timer.update();
+		timer.update();
+		float time_elapsed = timer.get_time_elapsed();
 		for (size_t i = 0; i < letter_positions.size(); i++)
 		{
 			console->set_character((int)letter_positions[i].x, (int)letter_positions[i].y, letter_symbols[i], color);
