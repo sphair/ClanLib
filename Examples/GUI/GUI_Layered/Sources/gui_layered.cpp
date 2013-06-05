@@ -62,34 +62,34 @@ GUI_Layered::GUI_Layered(GUI *gui) : gui(gui), canvas(gui->get_app()->get_canvas
 	lens_aspect = 1.0f;
 
 	// Note, clan::GUIManager deletes these automatically, after GUI_Direct has gone out of scope in the clan::GUIManager destructor
-	//pushbutton = new PushButton(gui->get_gui_manager(), gui->get_resources_internal());
-	//lineedit = new LineEdit(gui->get_gui_manager());
-	//checkbox = new CheckBox(gui->get_gui_manager());
-	//slider = new Slider(gui->get_gui_manager());
-	//radiobutton = new RadioButton(gui->get_gui_manager());
-	//scrollbar = new ScrollBar(gui->get_gui_manager());
-	//progressbar = new ProgressBar(gui->get_gui_manager());
-	//tabpage = new TabPage(gui->get_gui_manager());
-	//menubar = new MenuBar(gui->get_gui_manager(), gui->get_resources_internal());
-	//spin = new Spin(gui->get_gui_manager());
-	//combobox = new ComboBox(gui->get_gui_manager());
+	pushbutton = new PushButton(gui->get_gui_manager(), gui->get_resources_internal());
+	lineedit = new LineEdit(gui->get_gui_manager());
+	checkbox = new CheckBox(gui->get_gui_manager());
+	slider = new Slider(gui->get_gui_manager());
+	radiobutton = new RadioButton(gui->get_gui_manager());
+	scrollbar = new ScrollBar(gui->get_gui_manager());
+	progressbar = new ProgressBar(gui->get_gui_manager());
+	tabpage = new TabPage(gui->get_gui_manager());
+	menubar = new MenuBar(gui->get_gui_manager(), gui->get_resources_internal());
+	spin = new Spin(gui->get_gui_manager());
+	combobox = new ComboBox(gui->get_gui_manager());
 	//listview = new ListView(gui->get_gui_manager());
 
 	panel3d = new Panel3D(gui);
 
-	//pushbutton->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(pushbutton));
-	//lineedit->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(lineedit));
-	//checkbox->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(checkbox));
-	//slider->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(slider));
-	//radiobutton->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(radiobutton));
-	//scrollbar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(scrollbar));
-	//progressbar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(progressbar));
-	//tabpage->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(tabpage));
-	//menubar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(menubar));
-	//spin->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(spin));
-	//combobox->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(combobox));
+	pushbutton->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(pushbutton));
+	lineedit->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(lineedit));
+	checkbox->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(checkbox));
+	slider->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(slider));
+	radiobutton->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(radiobutton));
+	scrollbar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(scrollbar));
+	progressbar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(progressbar));
+	tabpage->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(tabpage));
+	menubar->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(menubar));
+	spin->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(spin));
+	combobox->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(combobox));
 	//listview->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(listview));
-	//panel3d->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(panel3d));
+	panel3d->func_close().set(this, &GUI_Layered::on_close,  dynamic_cast<clan::GUIComponent *>(panel3d));
 }
 
 GUI_Layered::~GUI_Layered()
