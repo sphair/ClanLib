@@ -43,7 +43,7 @@ public:
 	
 // Attributes:
 public:
-	clan::XMLResourceDocument resources;
+	clan::ResourceManager resources;
 	
 	clan::Canvas get_canvas() { return canvas; }
 
@@ -51,7 +51,7 @@ public:
 public:
 	void initLevel();
 	
-	bool hitCheck(clan::CollisionOutline *outline, GameObject *other);
+	bool hitCheck(clan::CollisionOutline &outline, GameObject *other);
 	
 	void addObject(GameObject *object);
 	void addTank(TankVehicle *tank);

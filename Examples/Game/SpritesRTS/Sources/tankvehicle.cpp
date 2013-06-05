@@ -42,21 +42,21 @@ TankVehicle::TankVehicle(TankType type, World *world)
 	switch(type)
 	{
 	case SPACE_SHOOT:
-		spriteBodyStill = new clan::Sprite(canvas, world->resources, "SpaceShootBodyStill");
-		spriteBodyMoving = new clan::Sprite(canvas, world->resources, "SpaceShootBodyMoving");
-		spriteTurretStill = new clan::Sprite(canvas, world->resources, "SpaceShootTurretStill");
-		spriteTurretShooting = new clan::Sprite(canvas, world->resources, "SpaceShootTurretShooting");
-		spriteTurretReloading = new clan::Sprite(canvas, world->resources, "SpaceShootTurretReloading");
-		spriteTurretGunFlash = new clan::Sprite(canvas, world->resources, "SpaceShootTurretGunFlash");
-		spriteSelected = new clan::Sprite(canvas, world->resources, "SpaceShootSelected");
-		spriteRedGlow = new clan::Sprite(canvas, world->resources, "RedGlow");
+		spriteBodyStill = clan::Sprite::resource(canvas, "SpaceShootBodyStill", world->resources);
+		spriteBodyMoving = clan::Sprite::resource(canvas, "SpaceShootBodyMoving", world->resources);
+		spriteTurretStill = clan::Sprite::resource(canvas, "SpaceShootTurretStill", world->resources);
+		spriteTurretShooting = clan::Sprite::resource(canvas, "SpaceShootTurretShooting", world->resources);
+		spriteTurretReloading = clan::Sprite::resource(canvas, "SpaceShootTurretReloading", world->resources);
+		spriteTurretGunFlash = clan::Sprite::resource(canvas, "SpaceShootTurretGunFlash", world->resources);
+		spriteSelected = clan::Sprite::resource(canvas, "SpaceShootSelected", world->resources);
+		spriteRedGlow = clan::Sprite::resource(canvas, "RedGlow", world->resources);
 
-		collisionBody = new clan::CollisionOutline("Gfx/spaceshoot_body_still1.png");
-		collisionBody->set_alignment(clan::origin_center);
+		collisionBody = clan::CollisionOutline("Gfx/spaceshoot_body_still1.png");
+		collisionBody.set_alignment(clan::origin_center);
 
-		soundTurret = new clan::SoundBuffer("SpaceShootTurret", &world->resources);
-		soundTurret->set_volume(0.3f);
-		soundTurret->prepare();
+		soundTurret = clan::SoundBuffer::resource("SpaceShootTurret", world->resources);
+		soundTurret.set_volume(0.3f);
+		soundTurret.prepare();
 		
 		bodyTurnSpeed = 80.0f;
 		turretTurnSpeed = 150.0f;
@@ -95,7 +95,7 @@ void TankVehicle::setPos(int x, int y)
 	posX = destPosX = (float)x;
 	posY = destPosY = (float)y;
 
-	collisionBody->set_translation(posX, posY);
+	collisionBody.set_translation(posX, posY);
 }
 
 void TankVehicle::setTurretTargetPos(int x, int y)
@@ -137,7 +137,7 @@ void TankVehicle::setTargetPos(int x, int y)
 void TankVehicle::setAngle(float angle)
 {
 	bodyAngle = angle;
-	collisionBody->set_angle(clan::Angle(angle, clan::angle_degrees));
+	collisionBody.set_angle(clan::Angle(angle, clan::angle_degrees));
 }
 
 void TankVehicle::setTurretAngle(float angle)
@@ -179,23 +179,23 @@ void TankVehicle::setDestTurretAngle(float destAngle)
 	}
 }
 
-bool TankVehicle::hitCheck(clan::CollisionOutline *outline, GameObject *other)
+bool TankVehicle::hitCheck(clan::CollisionOutline &outline, GameObject *other)
 {
-	return collisionBody->collide(*outline);
+	return collisionBody.collide(outline);
 }
 
 bool TankVehicle::hitCheck(const clan::Rect &rect)
 {
-	int width = spriteBody->get_width();
-	int height = spriteBody->get_height();
+	int width = spriteBody.get_width();
+	int height = spriteBody.get_height();
 	
 	return (rect.left <= posX + width / 2 && rect.top <= posY + height / 2 && rect.right >= posX - width / 2 && rect.bottom >= posY - height / 2);
 }
 
 bool TankVehicle::hitCheck(int x, int y)
 {
-	int width = spriteBody->get_width();
-	int height = spriteBody->get_height();
+	int width = spriteBody.get_width();
+	int height = spriteBody.get_height();
 	
 	return (x >= posX - width / 2 && x <= posX + width / 2 && y >= posY - height / 2 && y <= posY + height / 2);
 }
@@ -205,9 +205,9 @@ void TankVehicle::fire(bool nuke)
 	if(isFiring == false)
 	{
  		spriteTurret = spriteTurretShooting;
-		spriteTurretShooting->restart();
+		spriteTurretShooting.restart();
 	
-		soundTurret->play();
+		soundTurret.play();
 		
 		isFiring = true;
 		
@@ -231,19 +231,19 @@ void TankVehicle::fire(bool nuke)
 
 bool TankVehicle::update(int timeElapsed_ms)
 {
-	spriteBody->update(timeElapsed_ms);
-	spriteTurret->update(timeElapsed_ms);
+	spriteBody.update(timeElapsed_ms);
+	spriteTurret.update(timeElapsed_ms);
 	float timeElapsed = (float) timeElapsed_ms / 1000.0f;
 
-	if(spriteTurretShooting->is_finished() && spriteTurret == spriteTurretShooting)
+	if(spriteTurretShooting.is_finished() && spriteTurret == spriteTurretShooting)
 	{
 		spriteTurret = spriteTurretReloading;
-		spriteTurretReloading->restart();
+		spriteTurretReloading.restart();
 	}
-	else if(spriteTurretReloading->is_finished() && spriteTurret == spriteTurretReloading)
+	else if(spriteTurretReloading.is_finished() && spriteTurret == spriteTurretReloading)
 	{
 		spriteTurret = spriteTurretStill;
-		spriteTurretStill->restart();
+		spriteTurretStill.restart();
 
 		isFiring = false;
 	}
@@ -298,7 +298,7 @@ bool TankVehicle::update(int timeElapsed_ms)
 		{
 			posX += deltaPosX * moveSpeed * timeElapsed;
 			posY += deltaPosY * moveSpeed * timeElapsed;
-			collisionBody->set_translation(posX, posY);
+			collisionBody.set_translation(posX, posY);
 			
 			if((deltaPosX > 0 && posX > destPosX) || (deltaPosX < 0 && posX < destPosX))
 				posX = destPosX;
@@ -313,12 +313,12 @@ bool TankVehicle::update(int timeElapsed_ms)
 		}
 	}
 	
-	spriteBody->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
-	spriteSelected->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
-	spriteTurret->set_angle(clan::Angle(turretAngle, clan::angle_degrees));
-	spriteTurretGunFlash->set_angle(clan::Angle(turretAngle, clan::angle_degrees));
+	spriteBody.set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
+	spriteSelected.set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
+	spriteTurret.set_angle(clan::Angle(turretAngle, clan::angle_degrees));
+	spriteTurretGunFlash.set_angle(clan::Angle(turretAngle, clan::angle_degrees));
 	
-	collisionBody->set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
+	collisionBody.set_angle(clan::Angle(bodyAngle, clan::angle_degrees));
 	
 	if( !reverse )
 	{
@@ -341,34 +341,34 @@ void TankVehicle::draw()
 
 	// Draw selection	
 	if(selected)
-		spriteSelected->draw(canvas, posX, posY);
+		spriteSelected.draw(canvas, posX, posY);
 
 	// Draw tankbody shadow
 	canvas.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
-	spriteBody->set_alpha(0.5f);
-	spriteBody->draw(canvas, posX + 5, posY + 5);
+	spriteBody.set_alpha(0.5f);
+	spriteBody.draw(canvas, posX + 5, posY + 5);
 
 	// Draw tankbody
 	canvas.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
-	spriteBody->set_alpha(1.0f);
-	spriteBody->draw(canvas, posX, posY);
+	spriteBody.set_alpha(1.0f);
+	spriteBody.draw(canvas, posX, posY);
 	
 	// Draw tankturret shadow
 	canvas.set_blend_state(world->blendstate_cl_blend_zero_cl_blend_one_minus_src_alpha);
-	spriteTurret->set_alpha(0.5f);
-	spriteTurret->draw(canvas, posX + 5, posY + 5);
+	spriteTurret.set_alpha(0.5f);
+	spriteTurret.draw(canvas, posX + 5, posY + 5);
 
 	// Draw tankturret
 	canvas.set_blend_state(world->blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha);
-	spriteTurret->set_alpha(1.0f);
-	spriteTurret->draw(canvas, posX, posY);
+	spriteTurret.set_alpha(1.0f);
+	spriteTurret.draw(canvas, posX, posY);
 
 	canvas.set_blend_state(world->blendstate_default);
 
 	// Draw gunflash
 	if(spriteTurret == spriteTurretShooting)
-		spriteTurretGunFlash->draw(canvas, posX, posY);
+		spriteTurretGunFlash.draw(canvas, posX, posY);
 	
 	// Draw glow
-	spriteRedGlow->draw(canvas, posX, posY);
+	spriteRedGlow.draw(canvas, posX, posY);
 }
