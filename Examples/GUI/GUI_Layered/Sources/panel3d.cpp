@@ -33,9 +33,7 @@ Panel3D::Panel3D(GUI *gui) :
 	clan::GUIComponent(&gui->get_gui_manager(), clan::GUITopLevelDescription("3D Controls", clan::Rect(256*2, 256, clan::Size(320, 448)), false)),
 	gui(gui)
 {
-	set_draggable(true);
-
-	clan::Rect client_area = get_client_area();
+	clan::Rect client_area = get_geometry();
 
 	int xoffset = client_area.left + 10;
 	int yoffset = client_area.top + 10;

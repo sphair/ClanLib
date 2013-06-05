@@ -37,6 +37,7 @@ public:
 	int start(const std::vector<std::string> &args);
 
 	clan::DisplayWindow *get_window() { return window_ptr; }
+	clan::Canvas &get_canvas() { return canvas; }
 
 private:
 	void on_input_up(const clan::InputEvent &key);
@@ -49,4 +50,5 @@ private:
 	clan::Slot slot_input_up;
 	clan::DisplayWindow window;
 	clan::DisplayWindow *window_ptr;
+	clan::Canvas canvas;
 };
