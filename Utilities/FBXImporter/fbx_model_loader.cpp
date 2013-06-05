@@ -388,6 +388,8 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 			Vec3f bitangent = get_bitangent(mesh, poly, point, control_index, vertex_index);
 			Vec2f diffuse_uv = get_uv(mesh, poly, point, control_index, vertex_index, 0);
 
+			diffuse_uv = Vec2f(1.0f) - diffuse_uv; // Seems to be needed for Blender
+
 			if (vertices[control_index] == nullptr)
 			{
 				vertices[control_index] = new VertexMapping();
