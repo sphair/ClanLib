@@ -261,33 +261,37 @@ ModelDataDrawRange FBXModelLoader::create_draw_range(size_t start_element, size_
 	{
 		FbxSurfaceLambert *lambert = static_cast<FbxSurfaceLambert*>(material);
 
-		FbxDouble3 emissive = lambert->Emissive.Get();
+		Vec3f emissive = to_vec3f(lambert->Emissive.Get());
 		float emissive_factor = (float)lambert->EmissiveFactor.Get();
 
-		FbxDouble3 ambient = lambert->Ambient.Get();
+		Vec3f ambient = to_vec3f(lambert->Ambient.Get());
 		float ambient_factor = (float)lambert->AmbientFactor.Get();
 
-		FbxDouble3 diffuse = lambert->Diffuse.Get();
+		Vec3f diffuse = to_vec3f(lambert->Diffuse.Get());
 		float diffuse_factor = (float)lambert->DiffuseFactor.Get();
 
-		FbxDouble3 normal_map = lambert->NormalMap.Get();
+		Vec3f normal_map = to_vec3f(lambert->NormalMap.Get());
 
-		FbxDouble3 bump = lambert->Bump.Get();
+		Vec3f bump = to_vec3f(lambert->Bump.Get());
 		float bump_factor = (float)lambert->BumpFactor.Get();
 
-		FbxDouble3 transparent_color = lambert->TransparentColor.Get();
+		Vec3f transparent_color = to_vec3f(lambert->TransparentColor.Get());
 		float transparency_factor = (float)lambert->TransparencyFactor.Get();
 
-		FbxDouble3 displacement_color = lambert->DisplacementColor.Get();
+		Vec3f displacement_color = to_vec3f(lambert->DisplacementColor.Get());
 		float displacement_factor = (float)lambert->DisplacementFactor.Get();
 
-		FbxDouble3 vector_displacement_color = lambert->VectorDisplacementColor.Get();
+		Vec3f vector_displacement_color = to_vec3f(lambert->VectorDisplacementColor.Get());
 		float vector_displacement_factor = (float)lambert->VectorDisplacementFactor.Get();
 
-		range.ambient.set_single_value(to_vec3f(ambient) * ambient_factor);
-		range.diffuse.set_single_value(to_vec3f(diffuse) * diffuse_factor);
+		// Force emissive/self-illumination to zero until they are better understood.
+		emissive_factor = 0.0f;
+		emissive = Vec3f();
+
+		range.ambient.set_single_value(ambient * ambient_factor);
+		range.diffuse.set_single_value(diffuse * diffuse_factor);
 		range.self_illumination_amount.set_single_value(emissive_factor);
-		range.self_illumination.set_single_value(to_vec3f(emissive) * 0.25f); // To do: fix this properly (3ds max SI only can do 0-1 range, and we need more to allow blooming, grr..)
+		range.self_illumination.set_single_value(emissive * 0.25f); // To do: fix this properly (3ds max SI only can do 0-1 range, and we need more to allow blooming, grr..)
 
 		if (material->GetClassId().Is(FbxSurfacePhong::ClassId))
 		{
