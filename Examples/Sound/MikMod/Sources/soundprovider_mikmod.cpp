@@ -5,11 +5,11 @@
 
 SoundProvider_MikMod::SoundProvider_MikMod(
 	const std::string &filename,
-	const clan::VirtualDirectory &directory,
+	const clan::FileSystem &directory,
 	bool stream)
 : impl(new SoundProvider_MikMod_Impl)
 {
-	clan::VirtualDirectory new_directory = directory;
+	clan::FileSystem new_directory = directory;
 	clan::IODevice input = new_directory.open_file(filename, clan::File::open_existing, clan::File::access_read, clan::File::share_all);
 	impl->load(input);
 }
@@ -20,9 +20,8 @@ SoundProvider_MikMod::SoundProvider_MikMod(
 {
 	std::string path = clan::PathHelp::get_fullpath(fullname, clan::PathHelp::path_type_file);
 	std::string filename = clan::PathHelp::get_filename(fullname, clan::PathHelp::path_type_file);
-	clan::VirtualFileSystem vfs(path);
-	clan::VirtualDirectory dir = vfs.get_root_directory();
-	clan::IODevice input = dir.open_file(filename, clan::File::open_existing, clan::File::access_read, clan::File::share_all);
+	clan::FileSystem vfs(path);
+	clan::IODevice input = vfs.open_file(filename, clan::File::open_existing, clan::File::access_read, clan::File::share_all);
 	impl->load(input);
 }
 
