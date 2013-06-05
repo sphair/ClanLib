@@ -186,6 +186,6 @@ void RadialMenu::create_parts()
 	selected_font_height = selected_font.get_font_metrics().get_height();
 
 	std::string pointer_image_name = get_property("pointer-image", "");
-	image_pointer = Sprite(canvas, pointer_image_name, &resources);
+	image_pointer = Sprite::resource(canvas, pointer_image_name, resources);
 	image_pointer.set_alignment(origin_center);
 }
