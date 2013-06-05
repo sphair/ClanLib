@@ -17,7 +17,7 @@ public:
 	/// \param stream If true, will stream from disk. If false, will load it to memory.
 	SoundProvider_MikMod(
 		const std::string &filename,
-		const clan::VirtualDirectory &provider,
+		const clan::FileSystem &provider,
 		bool stream = false);
 
 	SoundProvider_MikMod(
