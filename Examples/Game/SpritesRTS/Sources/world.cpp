@@ -46,9 +46,9 @@ World::World(clan::DisplayWindow &display_window) : window(display_window), quit
 	blendstate_cl_blend_src_alpha_cl_blend_one_minus_src_alpha = clan::BlendState(canvas, blend_desc);
 
 	// Setup resources
-	resources = clan::XMLResourceDocument("resources.xml");
+	resources =   clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
 
-	background = clan::Image(canvas, resources, "background");
+	background = clan::Image::resource(canvas, "background", resources);
 	
 	// Receive mouse clicks
 	slotKeyDown = window.get_ic().get_keyboard().sig_key_down().connect(this, &World::onKeyDown);
@@ -103,7 +103,7 @@ void World::addTank(TankVehicle *tank)
 	tanks.push_back(tank);
 }
 
-bool World::hitCheck(clan::CollisionOutline *outline, GameObject *other)
+bool World::hitCheck(clan::CollisionOutline &outline, GameObject *other)
 {
 	std::list<GameObject *>::iterator it;
 	for(it = objects.begin(); it != objects.end(); ++it)

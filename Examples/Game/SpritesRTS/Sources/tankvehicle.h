@@ -66,7 +66,7 @@ public:
 	
 	void fire(bool nuke);
 	
-	bool hitCheck(clan::CollisionOutline *outline, GameObject *other);
+	bool hitCheck(clan::CollisionOutline &outline, GameObject *other);
 	bool hitCheck(const clan::Rect &rect);
 	bool hitCheck(int x, int y);
 	
@@ -75,21 +75,21 @@ public:
 
 // Implementation:
 private:
-	clan::Sprite *spriteBody;
-	clan::Sprite *spriteTurret;
+	clan::Sprite spriteBody;
+	clan::Sprite spriteTurret;
 	
-	clan::Sprite *spriteBodyStill;
-	clan::Sprite *spriteBodyMoving;
-	clan::Sprite *spriteTurretStill;
-	clan::Sprite *spriteTurretShooting;
-	clan::Sprite *spriteTurretReloading;
-	clan::Sprite *spriteSelected;
-	clan::Sprite *spriteTurretGunFlash;
-	clan::Sprite *spriteRedGlow;
+	clan::Sprite spriteBodyStill;
+	clan::Sprite spriteBodyMoving;
+	clan::Sprite spriteTurretStill;
+	clan::Sprite spriteTurretShooting;
+	clan::Sprite spriteTurretReloading;
+	clan::Sprite spriteSelected;
+	clan::Sprite spriteTurretGunFlash;
+	clan::Sprite spriteRedGlow;
 	
-	clan::SoundBuffer *soundTurret;
+	clan::SoundBuffer soundTurret;
 
-	clan::CollisionOutline *collisionBody;
+	clan::CollisionOutline collisionBody;
 	
 	float bodyAngle;
 	float destBodyAngle, deltaBodyAngle;

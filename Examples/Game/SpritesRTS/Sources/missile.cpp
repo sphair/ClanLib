@@ -35,15 +35,15 @@ Missile::Missile(World *world, GameObject *_owner)
 {
 	clan::Canvas canvas = world->get_canvas();
 
-	spriteMissile = new clan::Sprite(canvas, world->resources, "SpaceShootMissile");
-	spriteExplosion = new clan::Sprite(canvas, world->resources, "Explosion");
-	sound = new clan::SoundBuffer(world->resources, "MissileHit");
+	spriteMissile = clan::Sprite::resource(canvas, "SpaceShootMissile", world->resources);
+	spriteExplosion = clan::Sprite::resource(canvas, "Explosion", world->resources);
+	sound = clan::SoundBuffer::resource("MissileHit", world->resources);
 
-	collisionMissile = new clan::CollisionOutline("Gfx/spaceshoot_missile.png");
-	collisionMissile->set_alignment(clan::origin_center);
+	collisionMissile = clan::CollisionOutline("Gfx/spaceshoot_missile.png");
+	collisionMissile.set_alignment(clan::origin_center);
 	
-	sound->set_volume(1.0f);
-	sound->prepare();
+	sound.set_volume(1.0f);
+	sound.prepare();
 	
 	sprite = spriteMissile;
 	
@@ -55,24 +55,20 @@ Missile::Missile(World *world, GameObject *_owner)
 
 Missile::~Missile()
 {
-	delete spriteMissile;
-	delete spriteExplosion;
-	delete sound;
-	delete collisionMissile;
 }
 
 void Missile::setPos(int x, int y)
 {
 	posX = (float)x;
 	posY = (float)y;
-	collisionMissile->set_translation(posX, posY);
+	collisionMissile.set_translation(posX, posY);
 }
 
 void Missile::setAngle(float newAngle)
 {
 	angle = newAngle;
-	sprite->set_angle(clan::Angle(angle, clan::angle_degrees));
-	collisionMissile->set_angle(clan::Angle(angle, clan::angle_degrees));
+	sprite.set_angle(clan::Angle(angle, clan::angle_degrees));
+	collisionMissile.set_angle(clan::Angle(angle, clan::angle_degrees));
 }
 
 void Missile::setSpeed(float newSpeed)
@@ -85,7 +81,7 @@ void Missile::move(float length)
 	posX += length * float(sin(angle * clan::PI / 180.0f));
 	posY += length * float(-cos(angle * clan::PI / 180.0f));
 
-	collisionMissile->set_translation(posX, posY);
+	collisionMissile.set_translation(posX, posY);
 }
 
 void Missile::draw()
@@ -93,19 +89,19 @@ void Missile::draw()
 	if(!hidden)
 	{
 		clan::Canvas canvas = world->get_canvas();
-		sprite->draw(canvas, posX, posY);
+		sprite.draw(canvas, posX, posY);
 	}
 }
 
 bool Missile::update(int timeElapsed_ms)
 {
-	sprite->update(timeElapsed_ms);
+	sprite.update(timeElapsed_ms);
 
 	float timeElapsed = (float) timeElapsed_ms / 1000.0f;
 
 	if(exploding)
 	{
-		if(sprite->is_finished())
+		if(sprite.is_finished())
 			return false;
 	}
 	else
@@ -114,11 +110,11 @@ bool Missile::update(int timeElapsed_ms)
 
 		if(world->hitCheck(collisionMissile, owner))
 		{
-			sound->play();
+			sound.play();
 
 			sprite = spriteExplosion;
-			sprite->set_angle(clan::Angle(0, clan::angle_degrees));
-			sprite->set_alpha(0.85f);
+			sprite.set_angle(clan::Angle(0, clan::angle_degrees));
+			sprite.set_alpha(0.85f);
 
 			exploding = true;
 		}
