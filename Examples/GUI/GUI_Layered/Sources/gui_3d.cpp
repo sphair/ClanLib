@@ -147,9 +147,8 @@ bool GUI_Layered::run3d()
 
 	set_projection_matrix();
 
-	modelview_matrix = clan::Mat4f::identity();
-	modelview_matrix.matrix[2 + (4*2)] = -1.0f;
-	resultant_matrix = projection_matrix * modelview_matrix;
+	world_to_eye = clan::Mat4f::identity();
+	world_to_projection = eye_to_projection * world_to_eye;
 
 	std::vector<clan::GUIWindowManagerTextureWindow> windows = wm.get_windows();
 	std::vector<clan::GUIWindowManagerTextureWindow>::size_type index, size;
@@ -157,16 +156,16 @@ bool GUI_Layered::run3d()
 
 	UniformBlock uniform_block;
 
-	uniform_block.world_to_eye = modelview_matrix;
-	uniform_block.eye_to_projection = projection_matrix;
+	uniform_block.world_to_eye = world_to_eye;
+	uniform_block.eye_to_projection = eye_to_projection;
 
-	clan::Mat3f normal_matrix = clan::Mat3f(modelview_matrix);
-	normal_matrix.inverse();
-	normal_matrix.transpose();
+	clan::Mat3f normal_world_to_eye = clan::Mat3f(world_to_eye);
+	normal_world_to_eye.inverse();
+	normal_world_to_eye.transpose();
 
-	uniform_block.normal_world_to_eye[0] = clan::Vec4f(normal_matrix[0], normal_matrix[1], normal_matrix[2], 0.0f);
-	uniform_block.normal_world_to_eye[1] = clan::Vec4f(normal_matrix[3], normal_matrix[4], normal_matrix[5], 0.0f);
-	uniform_block.normal_world_to_eye[2] = clan::Vec4f(normal_matrix[6], normal_matrix[7], normal_matrix[8], 0.0f);
+	uniform_block.normal_world_to_eye[0] = clan::Vec4f(normal_world_to_eye[0], normal_world_to_eye[1], normal_world_to_eye[2], 0.0f);
+	uniform_block.normal_world_to_eye[1] = clan::Vec4f(normal_world_to_eye[3], normal_world_to_eye[4], normal_world_to_eye[5], 0.0f);
+	uniform_block.normal_world_to_eye[2] = clan::Vec4f(normal_world_to_eye[6], normal_world_to_eye[7], normal_world_to_eye[8], 0.0f);
 
 	uniform_block.light_vector = clan::Vec4f(panel3d->get_light_position_x(), panel3d->get_light_position_y(), panel3d->get_light_position_z(), 0.0f).normalize3();
 	uniform_block.light_half_vector = (uniform_block.light_vector + clan::Vec4f(0.0f, 0.0f, 1.0f, 0.0f)).normalize3();
@@ -369,7 +368,7 @@ void GUI_Layered::set_projection_matrix()
 		aspect = ( width * lens_aspect) / height;
 
 	fov = (fov * 180.0f) / clan::PI;
-	projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, canvas.get_gc().get_clip_z_range());
+	eye_to_projection = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, canvas.get_gc().get_clip_z_range());
 }
 
 void GUI_Layered::wm_input_intercept(clan::InputEvent &input_event)
@@ -382,8 +381,8 @@ void GUI_Layered::wm_input_intercept(clan::InputEvent &input_event)
 	float mouse_y = ((2.0f * input_event.mouse_pos.y) / gc_height) - 1.0f;
 	mouse_y = -mouse_y;
 
-	clan::Mat4d resultant_matrix_double = clan::Mat4d(resultant_matrix);
-	clan::Mat4d inverse_matrix = resultant_matrix_double.inverse();
+	clan::Mat4d world_to_projection_double = clan::Mat4d(world_to_projection);
+	clan::Mat4d inverse_matrix = world_to_projection_double.inverse();
 	clan::Vec3f point;
 	float mouse_z;
 	float mouse_low_z = 0.5f;
