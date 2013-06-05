@@ -58,10 +58,15 @@ Resource<Sprite> XMLDisplayCache::get_sprite(GraphicContext &gc, const std::stri
 {
 	std::map<std::string, Resource<Sprite> >::iterator it = sprites.find(id);
 	if (it != sprites.end())
-		return it->second;
+	{
+		Resource<Sprite> sprite = it->second;
+		sprite.get() = sprite.get().clone();
+		return sprite;
+	}
 
 	Resource<Sprite> sprite = Sprite::load(gc, id, doc);
 	sprites[id] = sprite;
+	sprite.get() = sprite.get().clone();
 	return sprite;
 }
 
