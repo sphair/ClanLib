@@ -124,22 +124,22 @@ void ShaderEffectDescription::set_stencil_data(Texture texture)
 	impl->stencil_texture = texture;
 }
 
-void ShaderEffectDescription::set_texture(std::string name, Texture texture)
+void ShaderEffectDescription::set_texture(std::string name, Resource<Texture> texture)
 {
 	impl->textures[name] = texture;
 }
 
-void ShaderEffectDescription::set_image(std::string name, Texture texture)
+void ShaderEffectDescription::set_image(std::string name, Resource<Texture> texture)
 {
 	impl->images[name] = texture;
 }
 
-void ShaderEffectDescription::set_storage(std::string name, StorageBuffer values)
+void ShaderEffectDescription::set_storage(std::string name, Resource<StorageBuffer> values)
 {
 	impl->storage_buffers[name] = values;
 }
 
-void ShaderEffectDescription::set_uniform_block(std::string name, UniformBuffer values)
+void ShaderEffectDescription::set_uniform_block(std::string name, Resource<UniformBuffer> values)
 {
 	impl->uniform_buffers[name] = values;
 }
