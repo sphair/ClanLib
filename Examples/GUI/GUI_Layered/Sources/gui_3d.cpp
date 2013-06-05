@@ -341,7 +341,7 @@ bool GUI_Layered::run3d()
 		attr_normal_in_world.upload_data(gc, 0, normals, num_points);
 		attr_tex_coord.upload_data(gc, 0, tex1_coords, num_points);
 
-		//gui_shader.set_texture(0, texture);
+		gui_shader_texture.set(texture);
 		gui_shader.draw(gc);
 	}
 
@@ -473,9 +473,10 @@ void GUI_Layered::setup_shader()
 	desc.set_fragment_shader(GUI_Texture_Shader_Fragment);
 	desc.set_uniform_block("UniformBlock", gpu_uniform_block);
 	desc.set_attribute("AttrPositionInWorld", attr_position_in_world);
-	desc.set_attribute("AttrPositionInWorld", attr_normal_in_world);
+	desc.set_attribute("AttrNormalInWorld", attr_normal_in_world);
 	desc.set_attribute("AttrTexCoord", attr_tex_coord);
 	desc.set_frag_data_to_back_buffer("FragColor");
+	desc.set_texture("Texture0", gui_shader_texture);
 	desc.set_draw_count(num_points);
 
 	gui_shader = clan::ShaderEffect(canvas, desc);

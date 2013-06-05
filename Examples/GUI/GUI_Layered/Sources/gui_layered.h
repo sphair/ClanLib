@@ -113,6 +113,7 @@ private:
 	clan::VertexArrayVector<clan::Vec3f> attr_normal_in_world;
 	clan::VertexArrayVector<clan::Vec2f> attr_tex_coord;
 	clan::UniformVector<UniformBlock> gpu_uniform_block;
+	clan::Resource<clan::Texture> gui_shader_texture;
 
 	float lens_zoom;
 	float lens_aspect;
