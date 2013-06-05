@@ -72,7 +72,7 @@ bool GUI::run(clan::GameTime &game_time)
 	balls.Run(canvas, game_time.get_time_elapsed());
 
 	clan::KeepAlive::process();
-	window.flip(0);
+	app->get_window()->flip(1);
 
 	return true;
 }
