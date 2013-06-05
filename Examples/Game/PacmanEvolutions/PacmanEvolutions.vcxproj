@@ -66,7 +66,6 @@
     <ClCompile Include="age_2d.cpp" />
     <ClCompile Include="age_3d.cpp" />
     <ClCompile Include="age_ascii.cpp" />
-    <ClCompile Include="elapsed_timer.cpp" />
     <ClCompile Include="game_object_ghost.cpp" />
     <ClCompile Include="game_object_moving.cpp" />
     <ClCompile Include="game_object_pacman.cpp" />
@@ -84,7 +83,6 @@
     <ClInclude Include="age_2d.h" />
     <ClInclude Include="age_3d.h" />
     <ClInclude Include="age_ascii.h" />
-    <ClInclude Include="elapsed_timer.h" />
     <ClInclude Include="text_explosion_2d.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="game_object_ghost.h" />

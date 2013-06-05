@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include "elapsed_timer.h"
-
 class TextExplosion2D
 {
 public:
@@ -20,5 +18,5 @@ private:
 	std::vector<clan::Vec3f> letter_positions;
 	std::vector<clan::Vec3f> letter_deltas;
 
-	ElapsedTimer timer;
+	clan::GameTime timer;
 };

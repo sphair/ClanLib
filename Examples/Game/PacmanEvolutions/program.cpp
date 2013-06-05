@@ -33,6 +33,7 @@ int Program::main(const std::vector<std::string> &args)
 	Age3D age_3d(canvas, &game_world);
 
 	//game_world.next_age();
+	//game_world.next_age();
 
 	clan::GameTime game_time;
 
