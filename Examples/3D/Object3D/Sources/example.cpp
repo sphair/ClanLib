@@ -229,7 +229,7 @@ void App::calculate_matricies(GraphicContext &gc)
 	scene.gs->camera_projection = Mat4f::perspective(45.0f, ((float) gc.get_width()) / ((float) gc.get_height()), 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
 
 	float ortho_size = 60.0f / 2.0f;
-	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, gc.get_provider()->get_clip_z_range());
+	scene.gs->light_projection = Mat4f::ortho(-ortho_size, ortho_size, -ortho_size, ortho_size, 0.1f, 1000.0f, handed_left, gc.get_clip_z_range());
 
 	scene.gs->camera_modelview = Mat4f::identity();
 	camera->GetWorldMatrix(scene.gs->camera_modelview);
