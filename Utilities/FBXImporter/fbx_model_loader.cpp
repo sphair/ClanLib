@@ -403,7 +403,7 @@ void FBXModelLoader::convert_polygons(FbxMesh *mesh, VertexMappingVector &vertic
 			else
 			{
 				VertexMapping *mapping = vertices[control_index];
-				while (mapping->position == position && mapping->color == color && mapping->normal == normal && mapping->tangent == tangent && mapping->bitangent == bitangent && mapping->diffuse_uv == diffuse_uv)
+				while (mapping->position != position || mapping->color != color || mapping->normal != normal || mapping->tangent != tangent || mapping->bitangent != bitangent || mapping->diffuse_uv != diffuse_uv)
 				{
 					if (mapping->next)
 					{

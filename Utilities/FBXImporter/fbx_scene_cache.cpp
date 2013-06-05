@@ -23,7 +23,7 @@ Resource<Texture> FBXSceneCache::get_texture(GraphicContext &gc, const std::stri
 	try
 	{
 		ImageImportDescription import_desc;
-		import_desc.set_flip_vertical(false);
+		import_desc.set_flip_vertical(true);
 		import_desc.set_srgb(!linear);
 
 		Resource<Texture> texture = Texture2D(gc, name, import_desc);
