@@ -22,7 +22,7 @@
       </image>
     </sprite>
     <font name="fnt_clansoft">
-      <bitmap
+      <sprite
         glyphs="Game/spr_clansoft" 
         spacelen="6" 
         letters="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789" />

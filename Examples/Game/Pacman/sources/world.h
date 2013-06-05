@@ -46,13 +46,13 @@ class World
 
 //!Construction:
 public:
-	World(XMLResourceDocument &resources, DisplayWindow &window);
+	World(ResourceManager &resources, DisplayWindow &window);
 
 	~World();
 
 //!Attributes:
 public:
-	XMLResourceDocument &resources;
+	ResourceManager &resources;
 	
 	Map *map;
 

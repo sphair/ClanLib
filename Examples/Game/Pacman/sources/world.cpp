@@ -37,7 +37,7 @@
 /////////////////////////////////////////////////////////////////////////////
 // World construction:
 
-World::World(XMLResourceDocument &resources, DisplayWindow &window) :
+World::World(ResourceManager &resources, DisplayWindow &window) :
 	resources(resources), 
 	map(0), 
 	player(0), 
@@ -50,7 +50,7 @@ World::World(XMLResourceDocument &resources, DisplayWindow &window) :
 	// requirement, but prevents game from loading them when object is
 	// first time created.
 
-	fnt_clansoft = Font_Sprite(canvas, "Game/fnt_clansoft", resources);
+	fnt_clansoft = Font_Sprite::resource(canvas, FontDescription("Game/fnt_clansoft"), resources);
 
 	map = new Map(resources, gc);
 }
@@ -104,15 +104,11 @@ void World::run(DisplayWindow &window)
 	bool welcome_shown = false;
 
 	GameTime game_time;
-	ubyte64 start_time = game_time.get_current_time_ms();
-
-	ubyte64 begin_time = game_time.get_current_time_ms();
-	ubyte64 score_time = game_time.get_current_time_ms();
+	ubyte64 score_time = System::get_time();
 	while (!quit)
 	{
 		game_time.update();
-		float time_elapsed = (game_time.get_current_time_ms() - begin_time)/(float) 1000;
-		begin_time = System::get_time();
+		float time_elapsed = game_time.get_time_elapsed();
 
 		if (System::get_time()-score_time > 1000 && player != NULL)
 		{
@@ -195,7 +191,7 @@ void World::run(DisplayWindow &window)
 			fnt_clansoft.draw_text(canvas, gc.get_width()/2 - size2.width/2, gc.get_height()*3/4 - size2.height, text2, Colorf::lightgrey);
 		}
 		
-		if ((System::get_time()-start_time) <= 3000) // 3 sec
+		if (game_time.get_current_time_ms() <= 3000) // 3 sec
 		{
 			std::string text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(gc, text1);
@@ -209,7 +205,7 @@ void World::run(DisplayWindow &window)
 			welcome_shown = true;
 		}
 
-		std::string fps = string_format("%1 fps", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+		std::string fps = string_format("%1 fps", (int) (game_time.get_updates_per_second() + 0.5f));
 		fnt_clansoft.draw_text(canvas, 20, 52, fps);
 
 		std::string text2 = string_format("%1 bonus bananas", score);
@@ -234,7 +230,7 @@ void World::run(DisplayWindow &window)
 			}
 		}
 
-		window.flip(0);
+		window.flip(1);
 
 		if (map->get_eggs_left() == 0) break; // level completed
 

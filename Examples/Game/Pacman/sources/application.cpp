@@ -40,7 +40,7 @@ int App::main(const std::vector<std::string> &args)
 	//SoundOutput sound_output(44100);
 	DisplayWindow window("The ClanLib Pacman game!", 1024, 900, false, true);
 
-	XMLResourceDocument resources("pacman.xml");
+	ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("pacman.xml"));
 
 	World world(resources, window);
 
