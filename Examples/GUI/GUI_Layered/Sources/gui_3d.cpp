@@ -460,11 +460,13 @@ clan::Vec3f GUI_Layered::transform_point(const clan::Vec3d &src_point, const cla
 
 void GUI_Layered::setup_shader()
 {
-	gpu_uniform_block = clan::UniformVector<UniformBlock>(canvas, 1);
+	clan::GraphicContext gc = canvas.get_gc();
 
-	attr_position_in_world = clan::VertexArrayVector<clan::Vec3f>(canvas, num_points);
-	attr_normal_in_world = clan::VertexArrayVector<clan::Vec3f>(canvas, num_points);
-	attr_tex_coord = clan::VertexArrayVector<clan::Vec2f>(canvas, num_points);
+	gpu_uniform_block = clan::UniformVector<UniformBlock>(gc, 1);
+
+	attr_position_in_world = clan::VertexArrayVector<clan::Vec3f>(gc, num_points);
+	attr_normal_in_world = clan::VertexArrayVector<clan::Vec3f>(gc, num_points);
+	attr_tex_coord = clan::VertexArrayVector<clan::Vec2f>(gc, num_points);
 
 	clan::ShaderEffectDescription desc;
 
@@ -478,5 +480,5 @@ void GUI_Layered::setup_shader()
 	desc.set_texture("Texture0", gui_shader_texture);
 	desc.set_draw_count(num_points);
 
-	gui_shader = clan::ShaderEffect(canvas, desc);
+	gui_shader = clan::ShaderEffect(gc, desc);
 }
