@@ -45,19 +45,19 @@ public:
 };
 
 const char GUI_Texture_Shader_Vertex[] =
-	"#version 120\n"
+	"#version 150\n"
 	"\n"
-	"attribute vec3 InPosition;"
-	"attribute vec3 InNormal;"
-	"attribute vec2 InTexCoord;"
+	"in vec3 InPosition;"
+	"in vec3 InNormal;"
+	"in vec2 InTexCoord;"
 	"uniform mat4 cl_ModelViewMatrix;"
 	"uniform mat4 cl_ModelViewProjectionMatrix;"
 	"uniform mat3 cl_NormalMatrix;"
 	"\n"
-	"varying vec3 WorldSpaceNormal; \n"
-	"varying vec3 WorldSpacePosition; \n"
-	"varying vec4 ObjPos;\n"
-	"varying vec2 TexCoord;\n"
+	"out vec3 WorldSpaceNormal; \n"
+	"out vec3 WorldSpacePosition; \n"
+	"out vec4 ObjPos;\n"
+	"out vec2 TexCoord;\n"
 	""
 	"void main()"
 	"{"
@@ -71,12 +71,12 @@ const char GUI_Texture_Shader_Vertex[] =
 	;
 
 const char GUI_Texture_Shader_Fragment[] =
-	"#version 120\n"
+	"#version 150\n"
 	"\n"
-	"varying vec3 WorldSpaceNormal; \n"
-	"varying vec3 WorldSpacePosition; \n"
-	"varying vec4 ObjPos;\n"
-	"varying vec2 TexCoord;\n"
+	"in vec3 WorldSpaceNormal; \n"
+	"in vec3 WorldSpacePosition; \n"
+	"in vec4 ObjPos;\n"
+	"in vec2 TexCoord;\n"
 	"\n"
 	"uniform sampler2D Texture0;\n"
 	"\n"
@@ -90,6 +90,7 @@ const char GUI_Texture_Shader_Fragment[] =
 	"uniform vec4 LightSpecular;\n"
 	"uniform vec4 LightDiffuse;\n"
 	"uniform vec4 LightAmbient;\n"
+	"out vec4 cl_FragColor;\n"
 	"\n"
 	"void main()\n"
 	"{\n"
@@ -114,13 +115,16 @@ const char GUI_Texture_Shader_Fragment[] =
 	"	spec += LightSpecular * pf; \n"
 	"	diff += LightDiffuse * nDotL;\n"
 	"	vec4 final_texture_color = texture_color;\n"
-	"	gl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
-	"	gl_FragColor.a = texture_color.w - MaterialTransparency;\n"
+	"	cl_FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
+	"	cl_FragColor.a = texture_color.w - MaterialTransparency;\n"
+	"	cl_FragColor.r = 1.0;\n"
+	"	cl_FragColor.a = 1.0;\n"
 	"}\n"
 	;
 
 bool GUI_Layered::run3d()
 {
+	canvas.flush();
 
 	clan::GraphicContext gc = canvas.get_gc();
 
@@ -136,8 +140,7 @@ bool GUI_Layered::run3d()
 
 	modelview_matrix = clan::Mat4f::identity();
 	modelview_matrix.matrix[2 + (4*2)] = -1.0f;
-	resultant_matrix = clan::Mat4f::multiply(projection_matrix, modelview_matrix);
-
+	resultant_matrix = projection_matrix * modelview_matrix;
 
 	LightSource lightsource;
 	lightsource.m_Specular = clan::Vec4f(panel3d->get_light_specular(), panel3d->get_light_specular(), panel3d->get_light_specular(), 1.0f);
@@ -332,6 +335,10 @@ bool GUI_Layered::run3d()
 			}
 		}
 
+		//positions[0].x = -10000.0f; positions[0].y = -10000.0f; positions[0].z = 0.0f;
+		//positions[1].x = 10000.0f; positions[1].y = -10000.0f; positions[1].z = 0.0f;
+		//positions[2].x = -10000.0f; positions[2].y = 10000.0f; positions[2].z = 0.0f;
+
 		clan::VertexArrayVector<clan::Vec3f> vbo_positions(gc, positions, num_points);
 		clan::VertexArrayVector<clan::Vec3f> vbo_normals(gc, normals, num_points);
 		clan::VertexArrayVector<clan::Vec2f> vbo_texcoords(gc, tex1_coords, num_points);
@@ -371,7 +378,7 @@ void GUI_Layered::set_projection_matrix()
 		aspect = ( width * lens_aspect) / height;
 
 	fov = (fov * 180.0f) / clan::PI;
-	projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, clan::clip_negative_positive_w);
+	projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, canvas.get_gc().get_clip_z_range());
 }
 
 void GUI_Layered::wm_input_intercept(clan::InputEvent &input_event)
@@ -481,6 +488,7 @@ void GUI_Layered::setup_shader()
 	gui_shader.bind_attribute_location(0, "InPosition");
 	gui_shader.bind_attribute_location(1, "InNormal");
 	gui_shader.bind_attribute_location(2, "InTexCoord");
+	gui_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!gui_shader.link())
 	{
 		throw clan::Exception(clan::string_format("Unable to link program object: %1", gui_shader.get_info_log()));

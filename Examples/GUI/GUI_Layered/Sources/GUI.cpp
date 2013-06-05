@@ -58,9 +58,6 @@ bool GUI::run(clan::GameTime &game_time)
 
 	clan::Canvas canvas = app->get_canvas();
 
-	canvas.set_map_mode(clan::map_2d_upper_left);
-	canvas.set_modelview(clan::Mat4f::identity());
-
 	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
 
 	run_manager();
