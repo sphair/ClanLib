@@ -53,7 +53,6 @@ public:
 
 	bool run();
 
-	clan::DisplayWindow *get_window() { return window_ptr; }
 	clan::GUIManager &get_gui_manager();
 	clan::ResourceManager &get_resources_internal();
 	clan::ResourceManager &get_resources_gui();
@@ -69,9 +68,8 @@ private:
 
 private:
 	clan::ResourceManager resources_gui;
-	clan::GUIThemeDefault theme;
 	GUI *gui;
-	clan::DisplayWindow *window_ptr;
+	clan::Canvas canvas;
 	clan::GUIWindowManagerTexture wm;
 
 	ScrollBar *scrollbar;

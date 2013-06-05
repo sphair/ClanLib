@@ -41,9 +41,9 @@ GUI::GUI(App *app) : app(app)
 		current_theme = new_theme = Theme::theme_basic;
 	}
 
-	resources_internal = clan::ResourceManager("../CommonCode/Resources/resources.xml");
+	resources_internal = clan::XMLResourceManager::create(clan::XMLResourceDocument("../CommonCode/Resources/resources.xml"));
 
-	clan::Canvas canvas = app->get_window()->get_canvas();
+	clan::Canvas canvas = app->get_canvas();
 	fps_font = clan::Font(canvas, "Tahoma", 24);
 
 	reset_manager();
@@ -56,10 +56,9 @@ GUI::~GUI()
 bool GUI::run(clan::GameTime &game_time)
 {
 
-	clan::Canvas canvas = app->get_window()->get_canvas();
+	clan::Canvas canvas = app->get_canvas();
 
-	canvas.set_map_mode(clan::MapMode(map_2d_upper_left));
-	canvas.set_viewport(canvas.get_size());
+	canvas.set_map_mode(clan::map_2d_upper_left);
 	canvas.set_modelview(clan::Mat4f::identity());
 
 	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
@@ -84,11 +83,11 @@ bool GUI::run(clan::GameTime &game_time)
 void GUI::reset_manager()
 {
 	current_theme = new_theme;
-	app->get_window()->set_cursor(cursor_wait);
+	app->get_window()->set_cursor(clan::cursor_wait);
 
 	gui_layered.reset(new GUI_Layered(this) );
 
-	app->get_window()->set_cursor(cursor_arrow);
+	app->get_window()->set_cursor(clan::cursor_arrow);
 
 }
 

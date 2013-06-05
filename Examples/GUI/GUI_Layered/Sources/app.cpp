@@ -74,9 +74,9 @@ void App::create_window()
 	win_desc.set_title("GUI Example Application");
 	win_desc.set_size(clan::Size( 1100, 900 ), false);
 
-	win_desc.set_fullscreen(true);
+	//win_desc.set_fullscreen(true);
 	win_desc.set_allow_resize(false);
-	win_desc.set_layered(true);
+	//win_desc.set_layered(true);
 	win_desc.show_caption(false);
 
 	clan::DisplayWindow new_window = clan::DisplayWindow(win_desc);	// Don't destroy the window first, so the shared canvas data is not lost
@@ -84,4 +84,7 @@ void App::create_window()
 	window_ptr = &window;
 	slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
 	slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+
+	canvas = clan::Canvas(window);
+
 }

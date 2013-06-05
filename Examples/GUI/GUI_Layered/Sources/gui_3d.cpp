@@ -121,6 +121,9 @@ const char GUI_Texture_Shader_Fragment[] =
 
 bool GUI_Layered::run3d()
 {
+
+	clan::GraphicContext gc = canvas.get_gc();
+
 	// Control the sine wave wobble
 	clan::ubyte64 current_time = clan::System::get_time();
 	if (panel3d->is_animated())
@@ -129,18 +132,12 @@ bool GUI_Layered::run3d()
 
 	current_zoffset = panel3d->get_zoffset();
 
-	clan::Canvas canvas = window_ptr->get_canvas();
-
-	canvas.set_map_mode(user_projection);
-	canvas.set_viewport(canvas.get_size());
-
 	set_projection_matrix();
 
 	modelview_matrix = clan::Mat4f::identity();
 	modelview_matrix.matrix[2 + (4*2)] = -1.0f;
-	canvas.set_modelview(modelview_matrix);
-
 	resultant_matrix = clan::Mat4f::multiply(projection_matrix, modelview_matrix);
+
 
 	LightSource lightsource;
 	lightsource.m_Specular = clan::Vec4f(panel3d->get_light_specular(), panel3d->get_light_specular(), panel3d->get_light_specular(), 1.0f);
@@ -154,9 +151,18 @@ bool GUI_Layered::run3d()
 	std::vector<clan::GUIWindowManagerTextureWindow>::size_type index, size;
 	size = windows.size();
 
-	canvas.set_program_object(gui_shader);
+	gc.set_program_object(gui_shader);
 
 	gui_shader.set_uniform4f("LightVector", lightsource.m_Vector);
+
+	clan::Mat3f normal_matrix = clan::Mat3f(modelview_matrix);
+	normal_matrix.inverse();
+	normal_matrix.transpose();
+
+	gui_shader.set_uniform_matrix("cl_ModelViewMatrix", modelview_matrix);
+	gui_shader.set_uniform_matrix("cl_ModelViewProjectionMatrix", resultant_matrix);
+	gui_shader.set_uniform_matrix("cl_NormalMatrix", normal_matrix);
+
 	clan::Vec4f light_halfvector(0.0f, 0.0f, 1.0f, 0.0f);
 	light_halfvector +=  lightsource.m_Vector;
 	light_halfvector.normalize3();
@@ -174,17 +180,17 @@ bool GUI_Layered::run3d()
 	{
 		clan::GUIWindowManagerTextureWindow window = windows[index];
 		clan::Subtexture subtexture = window.get_texture();
-		clan::Texture texture = subtexture.get_texture();
-		texture.set_min_filter(filter_linear);
-		texture.set_mag_filter(filter_linear);
+		clan::Texture2D texture = subtexture.get_texture();
+		texture.set_min_filter(clan::filter_linear);
+		texture.set_mag_filter(clan::filter_linear);
 
 		clan::Rect window_geometry = window.get_geometry();
 		clan::Rect subtexture_geometry = subtexture.get_geometry();
 		clan::Rectf rect((float) window_geometry.left, (float) window_geometry.top, clan::Sizef(subtexture_geometry.get_size()));
 		clan::Rectf texture_unit1_coords(subtexture_geometry);
 
-		float gc_width = (float) canvas.get_width();
-		float gc_height = (float) canvas.get_height();
+		float gc_width = (float) gc.get_width();
+		float gc_height = (float) gc.get_height();
 
 		// Transform 2d geometry to 3d
 		rect.left = ((rect.left * 2.0f) / gc_width) - 1.0f;
@@ -325,20 +331,22 @@ bool GUI_Layered::run3d()
 				*(tex_ptr++) = clan::Vec2f(tex_seg_right, tex_seg_bottom);
 			}
 		}
-		clan::PrimitivesArray prim_array(canvas);
-		prim_array.set_attributes(0, positions);
-		prim_array.set_attributes(1, normals);
-		prim_array.set_attributes(2, tex1_coords);
-		canvas.set_texture(0, texture);
-		canvas.draw_primitives(triangles, num_points, prim_array);
 
+		clan::VertexArrayVector<clan::Vec3f> vbo_positions(gc, positions, num_points);
+		clan::VertexArrayVector<clan::Vec3f> vbo_normals(gc, normals, num_points);
+		clan::VertexArrayVector<clan::Vec2f> vbo_texcoords(gc, tex1_coords, num_points);
+
+		clan::PrimitivesArray prim_array(gc);
+		prim_array.set_attributes(0, vbo_positions, 3, clan::type_float, 0);
+		prim_array.set_attributes(1, vbo_normals, 3, clan::type_float, 0);
+		prim_array.set_attributes(2, vbo_texcoords, 3, clan::type_float, 0);
+
+		gc.set_texture(0, texture);
+		gc.draw_primitives(clan::type_triangles, num_points, prim_array);
 	}
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
+	gc.reset_program_object();
+	gc.reset_texture(0);
 
-	canvas.set_map_mode(clan::MapMode(map_2d_upper_left));
-	canvas.set_viewport(canvas.get_size());
-	canvas.set_modelview(clan::Mat4f::identity());
 	return true;
 }
 
@@ -354,8 +362,6 @@ float GUI_Layered::get_zpos_at_position(float xpos, float ypos)
 
 void GUI_Layered::set_projection_matrix()
 {
-	clan::Canvas canvas = window_ptr->get_canvas();
-
 	float fov = 2.0f * atan2(1.0f, lens_zoom);
 	float aspect = 1.0f;
 	float width = (float) canvas.get_width();
@@ -365,14 +371,11 @@ void GUI_Layered::set_projection_matrix()
 		aspect = ( width * lens_aspect) / height;
 
 	fov = (fov * 180.0f) / clan::PI;
-	projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far);
-
-	canvas.set_projection(projection_matrix);
+	projection_matrix = clan::Mat4f::perspective( fov, aspect, lens_near, lens_far, clan::handed_left, clan::clip_negative_positive_w);
 }
 
 void GUI_Layered::wm_input_intercept(clan::InputEvent &input_event)
 {
-	clan::Canvas canvas = window_ptr->get_canvas();
 	float gc_width = (float) canvas.get_width();
 	float gc_height = (float) canvas.get_height();
 
@@ -460,15 +463,13 @@ clan::Vec3f GUI_Layered::transform_point(const clan::Vec3d &src_point, const cla
 
 void GUI_Layered::setup_shader()
 {
-	clan::Canvas canvas = window_ptr->get_canvas();
-
-	clan::ShaderObject vertex_shader(canvas, shadertype_vertex, GUI_Texture_Shader_Vertex);
+	clan::ShaderObject vertex_shader(canvas, clan::shadertype_vertex, GUI_Texture_Shader_Vertex);
 	if(!vertex_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile vertex shader object: %1", vertex_shader.get_info_log()));
 	}
 
-	clan::ShaderObject fragment_shader(canvas, shadertype_fragment, GUI_Texture_Shader_Fragment);
+	clan::ShaderObject fragment_shader(canvas, clan::shadertype_fragment, GUI_Texture_Shader_Fragment);
 	if(!fragment_shader.compile())
 	{
 		throw clan::Exception(clan::string_format("Unable to compile fragment shader object: %1", fragment_shader.get_info_log()));
