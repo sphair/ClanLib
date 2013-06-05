@@ -127,9 +127,9 @@ private:
 	float saved_z1;
 	float saved_z2;
 
-	clan::Mat4f projection_matrix;
-	clan::Mat4f modelview_matrix;
-	clan::Mat4f resultant_matrix;
+	clan::Mat4f eye_to_projection;
+	clan::Mat4f world_to_eye;
+	clan::Mat4f world_to_projection;
 
 	float wobble_offset;
 	clan::ubyte64 last_time;
