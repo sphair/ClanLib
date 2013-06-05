@@ -31,7 +31,7 @@
 
 #pragma once
 
-#include "../api_display.h"
+#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +40,7 @@ namespace clan
 class GraphicContext;
 
 /// \brief Interface for executing work on a worker thread
-class CL_API_DISPLAY WorkItem
+class CL_API_CORE WorkItem
 {
 public:
 	virtual ~WorkItem() { }
@@ -49,21 +49,18 @@ public:
 	virtual void process_work() = 0;
 
 	/// \brief Called by the WorkQueue thread to complete the work
-	virtual void work_completed(GraphicContext &gc) { }
+	virtual void work_completed() { }
 };
 
 class WorkQueue_Impl;
 
 /// \brief Thread pool for worker threads
-class CL_API_DISPLAY WorkQueue
+class CL_API_CORE WorkQueue
 {
 public:
 	/// \brief Constructs a work queue
 	WorkQueue();
-	WorkQueue(const GraphicContext &gc);
 	~WorkQueue();
-
-	bool is_null() const { return !impl; }
 
 	void queue(WorkItem *item); // transfers ownership
 

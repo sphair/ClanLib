@@ -26,9 +26,8 @@
 **    Magnus Norddahl
 */
 
-#include "Display/precomp.h"
-#include "API/Display/Resources/work_queue.h"
-#include "API/Display/Render/graphic_context.h"
+#include "Core/precomp.h"
+#include "API/Core/System/work_queue.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/Core/System/event.h"
 #include "API/Core/System/mutex.h"
@@ -43,7 +42,7 @@ namespace clan
 class WorkQueue_Impl : public KeepAliveObject
 {
 public:
-	WorkQueue_Impl(const GraphicContext &gc);
+	WorkQueue_Impl();
 	~WorkQueue_Impl();
 
 	void queue(WorkItem *item); // transfers ownership
@@ -57,16 +56,10 @@ private:
 	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
-
-	GraphicContext gc;
 };
 
 WorkQueue::WorkQueue()
-{
-}
-
-WorkQueue::WorkQueue(const GraphicContext &gc)
-	: impl(new WorkQueue_Impl(gc))
+	: impl(new WorkQueue_Impl())
 {
 }
 
@@ -79,16 +72,10 @@ void WorkQueue::queue(WorkItem *item) // transfers ownership
 	impl->queue(item);
 }
 
-WorkQueue_Impl::WorkQueue_Impl(const GraphicContext &gc)
-: gc(gc)
+/////////////////////////////////////////////////////////////////////////////
+
+WorkQueue_Impl::WorkQueue_Impl()
 {
-	int num_cores = std::max(System::get_num_cores() - 1, 1);
-	for (int i = 0; i < num_cores; i++)
-	{
-		Thread thread;
-		thread.start(this, &WorkQueue_Impl::worker_main);
-		threads.push_back(thread);
-	}
 }
 
 WorkQueue_Impl::~WorkQueue_Impl()
@@ -104,6 +91,17 @@ WorkQueue_Impl::~WorkQueue_Impl()
 
 void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 {
+	if (threads.empty())
+	{
+		int num_cores = std::max(System::get_num_cores() - 1, 1);
+		for (int i = 0; i < num_cores; i++)
+		{
+			Thread thread;
+			thread.start(this, &WorkQueue_Impl::worker_main);
+			threads.push_back(thread);
+		}
+	}
+
 	MutexSection mutex_lock(&mutex);
 	queued_items.push_back(item);
 	mutex_lock.unlock();
@@ -120,7 +118,7 @@ void WorkQueue_Impl::process()
 	{
 		try
 		{
-			items[i]->work_completed(gc);
+			items[i]->work_completed();
 		}
 		catch (...)
 		{
