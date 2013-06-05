@@ -178,17 +178,17 @@ void App::control_window()
 	window1->object_matrix = clan::Mat4f::identity();
 
 	float x_trans = ( (float) slider_1_xtranslation->component->get_position() * 1.0f) / (float) slider_1_xrotation->component->get_max();
-	float y_trans = ( (float) slider_1_ytranslation->component->get_position() * 1.0f) / (float) slider_1_xrotation->component->get_max();
-	float z_trans = ( (float) slider_1_ztranslation->component->get_position() * 6.0f) / (float) slider_1_xrotation->component->get_max();
+	float y_trans = ( (float) slider_1_ytranslation->component->get_position() * 1.0f) / (float) slider_1_yrotation->component->get_max();
+	float z_trans = ( (float) slider_1_ztranslation->component->get_position() * 6.0f) / (float) slider_1_zrotation->component->get_max();
 
 	window1->object_matrix.translate_self(x_trans - 0.5f, y_trans - 1.0f, z_trans);
 
 	float value = ( (float) slider_1_xrotation->component->get_position() * 360.0f) / (float) slider_1_xrotation->component->get_max();
 	window1->object_matrix = window1->object_matrix * clan::Mat4f::rotate(clan::Angle( value, clan::angle_degrees), 1.0f, 0.0f, 0.0f);
 
-	value = ( (float) slider_1_yrotation->component->get_position() * 360.0f) / (float) slider_1_xrotation->component->get_max();
+	value = ( (float) slider_1_yrotation->component->get_position() * 360.0f) / (float) slider_1_yrotation->component->get_max();
 	window1->object_matrix = window1->object_matrix * clan::Mat4f::rotate(clan::Angle( value, clan::angle_degrees), 0.0f, 1.0f, 0.0f);
 
-	value = ( (float) slider_1_zrotation->component->get_position() * 360.0f) / (float) slider_1_xrotation->component->get_max();
+	value = ( (float) slider_1_zrotation->component->get_position() * 360.0f) / (float) slider_1_zrotation->component->get_max();
 	window1->object_matrix = window1->object_matrix * clan::Mat4f::rotate(clan::Angle( value, clan::angle_degrees), 0.0f, 0.0f, 1.0f);
 }

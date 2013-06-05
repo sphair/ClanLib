@@ -127,6 +127,7 @@ void GUI::draw()
 		};
 
 		canvas.fill_triangles(positions, tex1_coords, 6, texture, component3d->component_color);
+		canvas.pop_modelview();
 	}
 }
 
