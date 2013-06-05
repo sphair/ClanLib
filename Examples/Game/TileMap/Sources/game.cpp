@@ -46,10 +46,11 @@ void Game::run()
 
 	Canvas canvas(window);
 
-	XMLResourceDocument resources("resources.xml");
+	clan::XMLResourceDocument xml_resource_document("resources.xml");
+	ResourceManager resources = clan::XMLResourceManager::create(xml_resource_document);
 
 	TileMap map;
-	map.load(canvas, "tavern", resources);
+	map.load(canvas, "tavern", resources, xml_resource_document);
 
 	// Run until someone presses escape, or closes the window
 	while (!quit)
