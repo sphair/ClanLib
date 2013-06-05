@@ -29,11 +29,11 @@
 #include "precomp.h"
 #include "pushbutton.h"
 
-PushButton::PushButton(clan::GUIManager &manager, clan::DisplayCache &application_resources) : 
+PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources) : 
 	clan::GUIComponent(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false), "window")
 {
 	clan::Canvas canvas = get_canvas();
-	test_image = clan::Image(canvas, "tux", &application_resources);
+	test_image = clan::Image::resource(canvas, "tux", application_resources);
 
 
 

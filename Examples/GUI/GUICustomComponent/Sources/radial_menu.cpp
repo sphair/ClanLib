@@ -171,7 +171,7 @@ void RadialMenu::on_resized()
 void RadialMenu::create_parts()
 {
 	Canvas canvas = get_canvas();
-	DisplayCache resources = get_resources();
+	ResourceManager resources = get_resources();
 
 	GUIThemePart part_selected_item(this, "selected");
 

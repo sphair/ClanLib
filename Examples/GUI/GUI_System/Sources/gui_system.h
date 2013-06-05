@@ -57,7 +57,7 @@ private:
 	bool on_close(clan::GUIComponent *win);
 
 private:
-	clan::DisplayCache resources_gui;
+	clan::ResourceManager resources_gui;
 	GUI *gui;
 	clan::GUIWindowManagerSystem wm;
 

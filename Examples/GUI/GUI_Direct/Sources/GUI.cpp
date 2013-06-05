@@ -41,7 +41,7 @@ GUI::GUI(App *app) : app(app)
 		current_theme =  Theme::theme_basic;
 	}
 
-	resources_internal = clan::DisplayCache("../CommonCode/Resources/resources.xml");
+	resources_internal = clan::XMLResourceManager::create(clan::XMLResourceDocument("../CommonCode/Resources/resources.xml"));
 
 	clan::Canvas canvas = app->get_canvas();
 	fps_font = clan::Font(canvas, "Tahoma", 20);
@@ -72,7 +72,7 @@ bool GUI::run(clan::GameTime &game_time)
 	balls.Run(canvas, game_time.get_time_elapsed());
 	
 	clan::KeepAlive::process();
-	window.flip(0);
+	app->get_window()->flip(0);
 
 	return true;
 }
