@@ -72,10 +72,10 @@ public:
 	RenderBuffer stencil_buffer;
 	Texture stencil_texture;
 
-	std::map<std::string, UniformBuffer> uniform_buffers;
-	std::map<std::string, Texture> textures;
-	std::map<std::string, Texture> images;
-	std::map<std::string, StorageBuffer> storage_buffers;
+	std::map<std::string, Resource<UniformBuffer >> uniform_buffers;
+	std::map<std::string, Resource<Texture> > textures;
+	std::map<std::string, Resource<Texture> > images;
+	std::map<std::string, Resource<StorageBuffer> > storage_buffers;
 
 	ElementArrayBuffer elements;
 	VertexAttributeDataType elements_type;

@@ -42,6 +42,7 @@
 #include "../Render/uniform_buffer.h"
 #include "../Render/texture.h"
 #include "../Render/render_buffer.h"
+#include "../../Core/Resources/resource.h"
 
 namespace clan
 {
@@ -89,12 +90,12 @@ public:
 	void set_stencil_data(RenderBuffer buffer);
 	void set_stencil_data(Texture texture);
 
-	void set_texture(std::string name, Texture texture);
-	void set_image(std::string name, Texture texture);
+	void set_texture(std::string name, Resource<Texture> texture);
+	void set_image(std::string name, Resource<Texture> texture);
 
-	void set_storage(std::string name, StorageBuffer values);
+	void set_storage(std::string name, Resource<StorageBuffer> values);
 
-	void set_uniform_block(std::string name, UniformBuffer values);
+	void set_uniform_block(std::string name, Resource<UniformBuffer> values);
 
 	void set_attribute(std::string name, VertexArrayBuffer &buffer, int size, VertexAttributeDataType type, size_t offset = 0, int stride = 0, bool normalize = false);
 

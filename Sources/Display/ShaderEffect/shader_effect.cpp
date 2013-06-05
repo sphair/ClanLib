@@ -76,12 +76,12 @@ public:
 	ElementArrayBuffer elements;
 	VertexAttributeDataType elements_type;
 
-	std::map<int, UniformBuffer> uniform_bindings;
+	std::map<int, Resource<UniformBuffer> > uniform_bindings;
 
-	std::map<int, StorageBuffer> storage_bindings;
-	std::map<int, Texture> image_bindings;
+	std::map<int, Resource<StorageBuffer> > storage_bindings;
+	std::map<int, Resource<Texture> > image_bindings;
 
-	std::map<int, Texture> texture_bindings;
+	std::map<int, Resource<Texture> > texture_bindings;
 
 	int num_vertices;
 };
