@@ -68,6 +68,11 @@ App::App() : quit(false)
 {
 }
 
+struct ProgramUniforms
+{
+	clan::Mat4f cl_ModelViewProjectionMatrix;
+};
+
 // The start of the Application
 int App::start(const std::vector<std::string> &args)
 {
@@ -200,10 +205,6 @@ int App::start(const std::vector<std::string> &args)
 			primarray.set_attributes(0, gpu_positions);
 			primarray.set_attributes(1, gpu_colors);
 
-			struct ProgramUniforms
-			{
-				clan::Mat4f cl_ModelViewProjectionMatrix;
-			};
 			ProgramUniforms buffer;
 			buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
 			clan::UniformVector<ProgramUniforms> uniform_vector(gc, &buffer, 1);
