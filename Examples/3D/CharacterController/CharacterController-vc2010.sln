@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharacterController", "CharacterController.vcxproj", "{E90892B0-3EE6-47BD-A3F3-7FF329AF351C}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharacterController", "CharacterController-vc2010.vcxproj", "{E90892B0-3EE6-47BD-A3F3-7FF329AF351C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
