@@ -54,7 +54,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 	desc.set_typeface_name("tahoma");
 	desc.set_height(24);
 	desc.set_subpixel(true);
-	Font font(canvas, desc);
+	clan::Font font(canvas, desc);
 
 	GameTime game_time;
 
