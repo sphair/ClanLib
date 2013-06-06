@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBackgroundSize : public CSSPropertyValue
 {
@@ -78,4 +80,5 @@ public:
 	std::vector<Size> values;
 };
 
+/// \}
 }

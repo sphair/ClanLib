@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderImageRepeat : public CSSPropertyValue
 {
@@ -58,4 +60,5 @@ public:
 	RepeatType repeat_y;
 };
 
+/// \}
 }

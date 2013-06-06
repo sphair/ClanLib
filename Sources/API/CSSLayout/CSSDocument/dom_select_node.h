@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CL_API_CSSLAYOUT DomSelectNode : public CSSSelectNode
 {
@@ -57,4 +59,5 @@ private:
 	std::vector<DomElement> saved_elements;
 };
 
+/// \}
 }

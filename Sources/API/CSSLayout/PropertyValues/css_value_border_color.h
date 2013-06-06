@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderColor : public CSSPropertyValue
 {
@@ -62,4 +64,5 @@ public:
 	Colorf color;
 };
 
+/// \}
 }

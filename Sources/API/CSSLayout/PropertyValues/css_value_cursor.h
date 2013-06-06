@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueCursor : public CSSPropertyValue
 {
@@ -67,4 +69,5 @@ public:
 	std::vector<std::string> urls;
 };
 
+/// \}
 }

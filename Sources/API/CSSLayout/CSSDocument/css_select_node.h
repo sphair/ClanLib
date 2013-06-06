@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CL_API_CSSLAYOUT CSSSelectNode
 {
@@ -51,4 +53,5 @@ public:
 	virtual int child_index() { return 0; }
 };
 
+/// \}
 }

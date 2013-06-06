@@ -30,6 +30,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CSSResourceCache;
 class CSSComputedValues;
@@ -44,4 +46,5 @@ public:
 	virtual void apply(CSSComputedValuesUpdater *updater) = 0;
 };
 
+/// \}
 }

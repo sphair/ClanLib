@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBackgroundAttachment : public CSSPropertyValue
 {
@@ -56,4 +58,5 @@ public:
 	std::vector<Attachment> attachments;
 };
 
+/// \}
 }

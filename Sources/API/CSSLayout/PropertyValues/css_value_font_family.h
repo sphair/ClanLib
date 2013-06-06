@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueFontFamilyName
 {
@@ -69,4 +71,5 @@ public:
 	std::vector<CSSValueFontFamilyName> names;
 };
 
+/// \}
 }

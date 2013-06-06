@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueFontSize : public CSSPropertyValue
 {
@@ -62,4 +64,5 @@ public:
 	float percentage;
 };
 
+/// \}
 }

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CSSPropertyValue;
 class CSSSelectResult_Impl;
@@ -50,4 +52,5 @@ private:
 	std::shared_ptr<CSSSelectResult_Impl> impl;
 };
 
+/// \}
 }

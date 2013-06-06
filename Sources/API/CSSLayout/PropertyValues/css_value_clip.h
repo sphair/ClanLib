@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueClip : public CSSPropertyValue
 {
@@ -53,4 +55,5 @@ public:
 	bool left_auto, top_auto, right_auto, bottom_auto;
 };
 
+/// \}
 }

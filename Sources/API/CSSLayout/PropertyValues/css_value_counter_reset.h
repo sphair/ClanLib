@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueCounterReset : public CSSPropertyValue
 {
@@ -50,4 +52,5 @@ public:
 	Type type;
 };
 
+/// \}
 }

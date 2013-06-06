@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderImageOutset : public CSSPropertyValue
 {
@@ -67,4 +69,5 @@ public:
 	float number_left;
 };
 
+/// \}
 }

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CSSLength
 {
@@ -92,4 +94,5 @@ public:
 	float value;
 };
 
+/// \}
 }

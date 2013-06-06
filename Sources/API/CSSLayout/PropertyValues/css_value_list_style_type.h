@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueListStyleType : public CSSPropertyValue
 {
@@ -63,4 +65,5 @@ public:
 	Type type;
 };
 
+/// \}
 }

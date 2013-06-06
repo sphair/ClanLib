@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueTextTransform : public CSSPropertyValue
 {
@@ -52,4 +54,5 @@ public:
 	Type type;
 };
 
+/// \}
 }

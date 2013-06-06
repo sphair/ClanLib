@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CSSToken;
 class CSSProperty_Impl;
@@ -55,4 +57,5 @@ private:
 	std::shared_ptr<CSSProperty_Impl> impl;
 };
 
+/// \}
 }

@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueHeight : public CSSPropertyValue
 {
@@ -54,4 +56,5 @@ public:
 	float percentage;
 };
 
+/// \}
 }
