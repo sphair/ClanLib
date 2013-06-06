@@ -222,8 +222,8 @@ void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const 
 		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	gpu_positions.upload_data(gc, positions, 6);
-	gpu_tex1_coords.upload_data(gc, tex1_coords, 6);
+	gpu_positions.upload_data(gc, 0, positions, 6);
+	gpu_tex1_coords.upload_data(gc, 0, tex1_coords, 6);
 
 	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
 }
