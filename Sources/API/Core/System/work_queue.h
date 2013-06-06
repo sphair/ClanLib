@@ -26,7 +26,7 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Resources clanDisplay Resources
+/// \addtogroup clanCore_System clanCore System
 /// \{
 
 #pragma once
@@ -36,8 +36,6 @@
 
 namespace clan
 {
-
-class GraphicContext;
 
 /// \brief Interface for executing work on a worker thread
 class CL_API_CORE WorkItem
