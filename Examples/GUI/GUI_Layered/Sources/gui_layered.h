@@ -55,7 +55,6 @@ public:
 
 	clan::GUIManager &get_gui_manager();
 	clan::ResourceManager &get_resources_internal();
-	clan::ResourceManager &get_resources_gui();
 
 private:
 	void set_projection_matrix();
@@ -64,26 +63,21 @@ private:
 	float get_zpos_at_position(float xpos, float ypos);
 	bool run3d();
 	void setup_shader();
-	bool on_close(clan::GUIComponent *win);
 
 private:
-	clan::ResourceManager resources_gui;
+
 	GUI *gui;
 	clan::Canvas canvas;
+	clan::GUIManager gui_manager;
 	clan::GUIWindowManagerTexture wm;
 
 	ScrollBar *scrollbar;
-	PushButton *pushbutton;
 	LineEdit *lineedit;
-	CheckBox *checkbox;
 	Slider *slider;
 	RadioButton *radiobutton;
-	ProgressBar *progressbar;
-	TabPage *tabpage;
 	MenuBar *menubar;
 	Spin *spin;
 	ComboBox *combobox;
-	ListView *listview;
 	Panel3D *panel3d;
 
 	struct UniformBlock

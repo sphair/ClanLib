@@ -126,8 +126,6 @@ const char GUI_Texture_Shader_Fragment[] =
 	"	vec4 final_texture_color = texture_color;\n"
 	"	FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
 	"	FragColor.a = texture_color.w - MaterialTransparency;\n"
-	"	FragColor.r = 1.0;\n"
-	"	FragColor.a = 1.0;\n"
 	"}\n"
 	;
 
@@ -187,6 +185,8 @@ bool GUI_Layered::run3d()
 		clan::Texture2D texture = subtexture.get_texture();
 		texture.set_min_filter(clan::filter_linear);
 		texture.set_mag_filter(clan::filter_linear);
+
+		//clan::PNGProvider::save(texture.get_pixeldata(gc, clan::tf_rgba8), "save.png");
 
 		clan::Rect window_geometry = window.get_geometry();
 		clan::Rect subtexture_geometry = subtexture.get_geometry();
@@ -331,10 +331,6 @@ bool GUI_Layered::run3d()
 				*(tex_ptr++) = clan::Vec2f(tex_seg_right, tex_seg_bottom);
 			}
 		}
-
-		//positions[0].x = -10000.0f; positions[0].y = -10000.0f; positions[0].z = 0.0f;
-		//positions[1].x = 10000.0f; positions[1].y = -10000.0f; positions[1].z = 0.0f;
-		//positions[2].x = -10000.0f; positions[2].y = 10000.0f; positions[2].z = 0.0f;
 
 		attr_position_in_world.upload_data(gc, 0, positions, num_points);
 		attr_normal_in_world.upload_data(gc, 0, normals, num_points);
