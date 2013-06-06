@@ -63,7 +63,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cache_provider.cpp" />
+    <ClCompile Include="example_scene_cache.cpp" />
     <ClCompile Include="character_controller.cpp" />
     <ClCompile Include="precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -72,7 +72,7 @@
     <ClCompile Include="program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cache_provider.h" />
+    <ClInclude Include="example_scene_cache.h" />
     <ClInclude Include="character_controller.h" />
     <ClInclude Include="elapsed_timer.h" />
     <ClInclude Include="precomp.h" />
