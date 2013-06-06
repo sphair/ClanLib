@@ -49,51 +49,6 @@ SharedGCData::~SharedGCData()
 {
 }
 
-void SharedGCData::unload_all_textures()
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (SharedGCData_Impl::cl_sharedgc)
-		SharedGCData_Impl::cl_sharedgc->impl->unload_all_textures();
-}
-
-void SharedGCData::add_texture(Texture &texture, const std::string &hash)
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (!SharedGCData_Impl::cl_sharedgc)
-		throw Exception("Attempted to use an invalid SharedGCData");
-	SharedGCData_Impl::cl_sharedgc->impl->add_texture(texture, hash);
-}
-
-void SharedGCData::remove_texture(Texture &texture)
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (SharedGCData_Impl::cl_sharedgc)
-		SharedGCData_Impl::cl_sharedgc->impl->remove_texture(texture);
-}
-
-void SharedGCData::remove_expired_texture()
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (SharedGCData_Impl::cl_sharedgc)
-		SharedGCData_Impl::cl_sharedgc->impl->remove_expired_texture();
-}
-
-void SharedGCData::remove_texture(const std::string &hash)
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (SharedGCData_Impl::cl_sharedgc)
-		SharedGCData_Impl::cl_sharedgc->impl->remove_texture( hash);
-}
-
-Texture SharedGCData::get_texture(const std::string &hash)
-{
-	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);
-	if (!SharedGCData_Impl::cl_sharedgc)
-		throw Exception("Attempted to use an invalid SharedGCData");
-	return SharedGCData_Impl::cl_sharedgc->impl->get_texture(hash);
-}
-
-
 void SharedGCData::add_ref()
 {
 	MutexSection mutex_lock(&SharedGCData_Impl::cl_sharedgc_mutex);

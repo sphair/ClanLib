@@ -96,24 +96,13 @@ Texture2D::Texture2D(GraphicContext &context, const std::string &fullname, const
 
 Texture2D::Texture2D( GraphicContext &context, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	Texture cached_texture = Texture_Impl::get_from_cache(filename, fs, import_desc);
-	if (cached_texture.is_null())
-	{
-		PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
-		pb = import_desc.process(pb);
+	PixelBuffer pb = ImageProviderFactory::load(filename, fs, std::string());
+	pb = import_desc.process(pb);
 
-		*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
+	*this = Texture2D(context, pb.get_width(), pb.get_height(), import_desc.is_srgb() ? tf_srgb8_alpha8 : tf_rgba8);
 
-		set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
-
-		impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
-
-		impl->put_in_cache(*this, filename, fs, import_desc);
-	}
-	else
-	{
-		*this = cached_texture.to_texture_2d();
-	}
+	set_subimage(context, Point(0, 0), pb, Rect(pb.get_size()), 0);
+	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
 Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
