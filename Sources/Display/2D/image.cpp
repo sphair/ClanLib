@@ -160,6 +160,15 @@ Image::~Image()
 {
 }
 
+
+Image Image::clone() const
+{
+	Image copy;
+	copy.impl = std::shared_ptr<Image_Impl>(new Image_Impl());
+	*(copy.impl) = *impl;
+	return copy;
+}
+
 /////////////////////////////////////////////////////////////////////////////
 // Image Resources:
 

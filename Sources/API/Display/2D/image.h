@@ -181,6 +181,9 @@ public:
 /// \name Operations
 /// \{
 public:
+	/// \brief Copies all information from this image to another, excluding the graphics that remain shared
+	Image clone() const;
+
 	/// \brief Draw image on graphic context.
 	///
 	/// \param x, y Anchor position of where to render image. Actual rendering position depends on the anchor and the alignment mode.

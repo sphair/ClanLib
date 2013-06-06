@@ -247,8 +247,7 @@ public:
 	/** Use this to change the look of your sprite.*/
 	void set_image_data(const Sprite &image_source);
 
-	/// \brief Copies all information from another sprite into this, not sharing animation state.
-	/** This will not share animation state afterwards, like sprite1 = sprite2 would do. */
+	/// \brief Copies all information from this sprite to another, excluding the graphics that remain shared
 	Sprite clone() const;
 
 	/// \brief Draw sprite on graphic context.
