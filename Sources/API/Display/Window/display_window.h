@@ -28,8 +28,6 @@
 **    Kenneth Gangstoe
 */
 
-/// \addtogroup clanDisplay_Window clanDisplay Window
-/// \{
 
 #pragma once
 
@@ -49,6 +47,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Window clanDisplay Window
+/// \{
 
 class Size;
 class Rect;

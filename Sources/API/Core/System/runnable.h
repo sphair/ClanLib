@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 
 #pragma once
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
 /// \brief Thread runnable object.
 class CL_API_CORE Runnable

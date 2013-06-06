@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -40,6 +38,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 /// \brief Math operations related to point sets.
 class CL_API_CORE PointSetMath

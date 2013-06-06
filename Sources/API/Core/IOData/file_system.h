@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
 class IODevice;
 class FileSystem_Impl;
@@ -144,7 +144,6 @@ public:
 /// \{
 
 private:
-	/** !hide!*/
 	class NullVFS { };
 	explicit FileSystem(class NullVFS null_fs);
 

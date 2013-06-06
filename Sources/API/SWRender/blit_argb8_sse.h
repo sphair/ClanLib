@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
 
 #pragma once
 
@@ -43,6 +41,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_Display clanSWRender Display
+/// \{
 
 /// \brief SSE accelerated rendering operations for ARGB8888
 class BlitARGB8SSE

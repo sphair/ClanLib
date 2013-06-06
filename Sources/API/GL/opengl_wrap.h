@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanGL_System clanGL System
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGL_System clanGL System
+/// \{
 
 #ifdef WIN32
 #define GLFUNC WINAPI

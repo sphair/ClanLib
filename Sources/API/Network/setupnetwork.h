@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_System clanNetwork System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_System clanNetwork System
+/// \{
 
 /// \brief Initialization class for clanNetwork.
 class CL_API_NETWORK SetupNetwork

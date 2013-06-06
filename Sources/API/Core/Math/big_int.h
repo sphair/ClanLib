@@ -45,8 +45,6 @@
 // kind, not even the implied warranty of merchantability or fitness for
 // a particular purpose.
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -56,6 +54,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 class BigInt_Impl;
 
 /// \brief Big Integer class

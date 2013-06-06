@@ -28,8 +28,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 #pragma once
 
@@ -45,6 +43,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
 #if defined(WIN32) && (defined(__MINGW32__) == 0)
 typedef __int8             byte8;

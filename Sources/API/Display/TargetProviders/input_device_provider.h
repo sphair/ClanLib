@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
 #pragma once
 
@@ -40,6 +38,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Input clanDisplay Input
+/// \{
 
 /// \brief Interface for implementing a InputDevice source.
 class CL_API_DISPLAY InputDeviceProvider : public DisposableObject

@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 /// \brief Interface for implementing a Cursor target.
 class CL_API_DISPLAY CursorProvider

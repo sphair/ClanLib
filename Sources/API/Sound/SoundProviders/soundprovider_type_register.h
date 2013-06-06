@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
 /// \brief Class template to register a sound provider type.
 ///

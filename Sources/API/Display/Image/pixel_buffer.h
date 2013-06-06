@@ -28,8 +28,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -41,6 +39,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 class Size;
 class Rect;

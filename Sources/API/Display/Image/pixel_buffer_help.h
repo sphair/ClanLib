@@ -26,8 +26,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 /// \brief Pixel data helper class
 class CL_API_DISPLAY PixelBufferHelp

@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanSound_Resources clanSound Resources
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Resources clanSound Resources
+/// \{
 
 class ResourceManager;
 class SoundBuffer;

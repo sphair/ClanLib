@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanNetwork_Socket clanNetwork TLS
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Socket clanNetwork TLS
+/// \{
 
 class X509_Impl;
 class Secret;

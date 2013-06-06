@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
 class XMLResourceDocument;
 class SoundOutput;

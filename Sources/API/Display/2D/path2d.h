@@ -26,8 +26,6 @@
 **    Harry Storbacka
 **    Mark Page
 */
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \{
 
 class BezierCurve;
 class Path2D_Impl;

@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 /// \brief GUI activation change notification message.
 class CL_API_GUI GUIMessage_ActivationChange : public GUIMessage

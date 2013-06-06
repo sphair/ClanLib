@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCompute_Compute clanCompute Compute
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCompute_Compute clanCompute Compute
+/// \{
 
 class ComputeProgram;
 class ComputeBuffer;

@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDatabase_System clanDatabase System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDatabase_System clanDatabase System
+/// \{
 
 class DBValue;
 class DateTime;

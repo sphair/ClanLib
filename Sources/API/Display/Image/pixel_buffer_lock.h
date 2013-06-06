@@ -26,8 +26,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -41,6 +39,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 /// \brief PixelBuffer locking helper.
 ///

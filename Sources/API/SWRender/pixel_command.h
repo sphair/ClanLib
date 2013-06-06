@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_Display clanSWRender Display
+/// \{
 
 class PixelThreadContext;
 class PixelPipeline;

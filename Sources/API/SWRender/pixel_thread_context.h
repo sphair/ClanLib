@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_Display clanSWRender Display
+/// \{
 
 /// \brief Thread specific rendering data for pixel commands
 class API_SWRender PixelThreadContext

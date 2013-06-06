@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanD3D_Display clanD3D Display
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanD3D_Display clanD3D Display
+/// \{
 
 class Texture;
 class PixelBuffer;

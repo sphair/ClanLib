@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+/// \{
 
 template<typename ContextParam1, typename ContextParam2, typename ContextParam3>
 /// \brief NetGameEventDispatcher_v3

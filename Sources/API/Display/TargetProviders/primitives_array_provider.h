@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 /// \brief Interface for implementing a PrimitivesArray target.
 class CL_API_DISPLAY PrimitivesArrayProvider

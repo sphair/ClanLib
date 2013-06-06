@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Input clanDisplay Input
+/// \{
 
 /// \brief Occlusion query provider.
 class CL_API_DISPLAY OcclusionQueryProvider

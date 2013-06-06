@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCompute_System clanCompute System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCompute_System clanCompute System
+/// \{
 
 /// \brief ClanCompute initialization functions.
 class CL_API_COMPUTE SetupCompute

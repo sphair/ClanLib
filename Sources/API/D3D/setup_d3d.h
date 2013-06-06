@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanD3D_System clanD3D System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanD3D_System clanD3D System
+/// \{
 
 /// \brief ClanD3D initialization functions.
 class CL_API_D3D SetupD3D

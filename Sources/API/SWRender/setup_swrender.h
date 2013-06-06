@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSWRender_System clanSWRender System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_System clanSWRender System
+/// \{
 
 /// \brief ClanSWRender initialization functions.
 class API_SWRender SetupSWRender

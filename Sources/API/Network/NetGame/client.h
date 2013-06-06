@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
-/// \{
 
 #pragma once
 
@@ -40,6 +38,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_NetGame clanNetwork NetGame
+/// \{
 
 class NetGameEvent;
 class NetGameConnection;

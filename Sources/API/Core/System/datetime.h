@@ -28,8 +28,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 
 #pragma once
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
 /// \brief Date/Time class.
 class CL_API_CORE DateTime

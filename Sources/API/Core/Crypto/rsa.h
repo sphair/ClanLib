@@ -44,8 +44,6 @@
 // kind, not even the implied warranty of merchantability or fitness for
 // a particular purpose.
 
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
 
 #pragma once
 
@@ -53,6 +51,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 class Random;
 class Secret;

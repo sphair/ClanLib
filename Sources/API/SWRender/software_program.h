@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_Display clanSWRender Display
+/// \{
 
 class PixelPipeline;
 class PixelCommand;

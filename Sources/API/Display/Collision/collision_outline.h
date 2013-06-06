@@ -29,8 +29,6 @@
 **    Emanuel Greisen
 */
 
-/// \addtogroup clanDisplay_Collision clanDisplay Collision
-/// \{
 
 #pragma once
 
@@ -48,6 +46,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
 class CollisionOutline_Impl;
 class XMLResourceDocument;

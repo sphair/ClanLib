@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Signals clanCore Signals
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Signals clanCore Signals
+/// \{
 
 /// \brief Slot
 class CL_API_CORE Slot

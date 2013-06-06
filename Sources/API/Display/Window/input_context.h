@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Input clanDisplay Input
+/// \{
 
 class InputDevice;
 class InputContext_Impl;

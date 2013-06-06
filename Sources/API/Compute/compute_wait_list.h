@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCompute_Compute clanCompute Compute
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCompute_Compute clanCompute Compute
+/// \{
 
 /// \brief List of events that must have completed before a new operation is executed
 class CL_API_COMPUTE ComputeWaitList : public std::vector<ComputeEvent>

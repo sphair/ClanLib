@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
+/// \{
 
 class Exception;
 class ExceptionDialog_Impl;

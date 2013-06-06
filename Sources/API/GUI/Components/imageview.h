@@ -29,8 +29,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanGUI_Components clanGUI Components
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_Components clanGUI Components
+/// \{
 
 class Sprite;
 class PixelBuffer;

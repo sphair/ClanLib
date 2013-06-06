@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Input clanDisplay Input
+/// \{
 
 /// \brief Input event class.
 class CL_API_DISPLAY InputEvent

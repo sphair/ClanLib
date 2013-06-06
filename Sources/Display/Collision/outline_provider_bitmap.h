@@ -27,8 +27,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Collision clanDisplay Collision
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
 class OutlineProviderBitmap_Impl;
 class Contour;

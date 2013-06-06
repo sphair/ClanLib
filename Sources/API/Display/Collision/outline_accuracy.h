@@ -27,8 +27,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Collision clanDisplay Collision
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
 /// \brief Outline optimization accuracy.
 enum OutlineAccuracy

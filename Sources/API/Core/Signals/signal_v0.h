@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Signals clanCore Signals
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Signals clanCore Signals
+/// \{
 
 /// (Internal ClanLib Class)
 class CL_API_CORE SlotCallback_v0 : public SlotCallback

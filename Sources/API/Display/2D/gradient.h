@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \{
 
 /// \brief Colorgradient description class.
 class CL_API_DISPLAY Gradient

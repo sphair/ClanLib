@@ -28,8 +28,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanDisplay_Collision clanDisplay Collision
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Collision clanDisplay Collision
+/// \{
 
 /// \brief Collision detection outline segmentation circle.
 ///

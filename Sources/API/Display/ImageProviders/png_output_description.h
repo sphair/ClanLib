@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+/// \{
 
 class FileSystem;
 class PNGOutputDescription_Impl;

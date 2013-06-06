@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
 
 #pragma once
 
@@ -41,6 +39,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Font clanDisplay Font
+/// \{
 
 class FontProvider;
 class Canvas;

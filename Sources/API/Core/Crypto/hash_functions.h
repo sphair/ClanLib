@@ -27,8 +27,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
 
 #pragma once
 
@@ -45,6 +43,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 /// \brief A Collection of checksum functions.
 class CL_API_CORE HashFunctions

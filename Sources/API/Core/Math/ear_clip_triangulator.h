@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 /// \brief EarClipTriangulator_Triangle
 class EarClipTriangulator_Triangle

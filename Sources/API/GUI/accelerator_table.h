@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 class AcceleratorTable_Impl;
 class AcceleratorKey_Impl;

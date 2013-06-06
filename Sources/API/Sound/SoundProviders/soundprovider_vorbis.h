@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanVorbis_Sound_Providers clanVorbis Sound Providers
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanVorbis_Sound_Providers clanVorbis Sound Providers
+/// \{
 
 class InputSourceProvider;
 class SoundProvider_Vorbis_Impl;

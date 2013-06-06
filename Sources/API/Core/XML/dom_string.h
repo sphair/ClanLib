@@ -26,13 +26,13 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
 
 #pragma once
 
 namespace clan
 {
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
 typedef std::string DomString;
 

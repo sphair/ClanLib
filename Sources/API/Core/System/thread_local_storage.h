@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 
 #pragma once
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
 #if defined(_MSC_VER)
 #define cl_tls_variable _declspec(thread)

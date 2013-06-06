@@ -27,8 +27,6 @@
 **    Kenneth Gangstoe
 */
 
-/// \addtogroup clanDisplay_Display clanDisplay Display
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Display clanDisplay Display
+/// \{
 
 /// \brief Shader Object provider.
 class ShaderObjectProvider

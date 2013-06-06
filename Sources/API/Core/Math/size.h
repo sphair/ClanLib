@@ -27,8 +27,6 @@
 **    Kenneth Gangstoe
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 template<typename Type>
 class Vec2;

@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanApp_System clanApp System
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanApp_System clanApp System
+/// \{
 
 /// \brief Helper class to create cross platform main functions
 ///

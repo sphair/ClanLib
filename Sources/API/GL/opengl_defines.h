@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanGL_Display clanGL Display
-/// \{
 
 #pragma once
 #include "api_gl.h"
@@ -49,6 +47,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGL_Display clanGL Display
+/// \{
 
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;

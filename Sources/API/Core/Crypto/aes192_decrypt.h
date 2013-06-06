@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 class DataBuffer;
 class AES192_Decrypt_Impl;

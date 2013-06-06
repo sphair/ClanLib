@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_Window clanDisplay Window
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Window clanDisplay Window
+/// \{
 
 class DisplayWindow;
 class CursorProvider;

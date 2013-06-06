@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGL_System clanGL System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGL_System clanGL System
+/// \{
 
 /// \brief ClanGL initialization functions.
 class CL_API_GL SetupGL

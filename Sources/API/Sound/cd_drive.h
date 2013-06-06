@@ -26,8 +26,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanSound_CD_Audio clanSound CD Audio
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_CD_Audio clanSound CD Audio
+/// \{
 
 class CDDrive_Impl;
 

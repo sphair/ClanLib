@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Text clanCore Text
+/// \{
 
 /// \brief Console logger.
 class CL_API_CORE ConsoleLogger : public Logger

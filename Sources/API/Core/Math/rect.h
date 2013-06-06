@@ -29,8 +29,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -43,6 +41,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 /// \brief 2D (left,top,right,bottom) rectangle structure.
 ///

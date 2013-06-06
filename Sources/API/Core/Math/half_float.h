@@ -28,13 +28,13 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 class HalfFloat
 {
