@@ -16,5 +16,5 @@ private:
 	std::shared_ptr<clan::ModelData> create_plane();
 	std::shared_ptr<clan::ModelData> create_box();
 
-	std::map<std::string, clan::CachedTexture> loaded_textures;
+	std::map<std::string, clan::Resource<clan::Texture>> loaded_textures;
 };
