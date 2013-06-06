@@ -58,33 +58,46 @@ int App::start(const std::vector<std::string> &args)
 	// Create offscreen framebuffer
 	clan::FrameBuffer framebuffer_offscreen1(canvas);
 	framebuffer_offscreen1.attach_color(0, texture_offscreen1);
+	clan::Canvas canvas_offscreen1(canvas, framebuffer_offscreen1);
 
 	clan::FrameBuffer framebuffer_offscreen2(canvas);
 	framebuffer_offscreen2.attach_color(0, texture_offscreen2);
+	clan::Canvas canvas_offscreen2(canvas, framebuffer_offscreen2);
 
 	clan::FrameBuffer framebuffer_offscreen3(canvas);
 	framebuffer_offscreen3.attach_color(0, texture_offscreen3);
+	clan::Canvas canvas_offscreen3(canvas, framebuffer_offscreen3);
 
 	clan::Image background(canvas, "../PostProcessing/Resources/background.png");
 
 	// Load and link shaders
 	clan::ProgramObject gaussian_blur_shader = clan::ProgramObject::load(canvas, "Resources/gaussian_vs.glsl", "Resources/gaussian_fs.glsl");
 	gaussian_blur_shader.bind_attribute_location(0, "Position");
-	gaussian_blur_shader.bind_attribute_location(2, "TexCoord0");
+	gaussian_blur_shader.bind_attribute_location(1, "TexCoord0");
+	gaussian_blur_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!gaussian_blur_shader.link())
 		throw clan::Exception("Unable to link gaussian shader program: Error:" + gaussian_blur_shader.get_info_log());
 
 	clan::ProgramObject extract_highlights_shader = clan::ProgramObject::load(canvas, "Resources/highlights_vs.glsl", "Resources/highlights_fs.glsl");
 	extract_highlights_shader.bind_attribute_location(0, "Position");
-	extract_highlights_shader.bind_attribute_location(2, "TexCoord0");
+	extract_highlights_shader.bind_attribute_location(1, "TexCoord0");
+	//extract_highlights_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!extract_highlights_shader.link())
 		throw clan::Exception("Unable to link hightlights shader program: Error:" + extract_highlights_shader.get_info_log());
 
 	clan::ProgramObject bloom_combine_shader = clan::ProgramObject::load(canvas, "Resources/bloom_vs.glsl", "Resources/bloom_fs.glsl");
 	bloom_combine_shader.bind_attribute_location(0, "Position");
-	bloom_combine_shader.bind_attribute_location(2, "TexCoord0");
+	bloom_combine_shader.bind_attribute_location(1, "TexCoord0");
+	//bloom_combine_shader.bind_frag_data_location(0, "cl_FragColor");
 	if (!bloom_combine_shader.link())
 		throw clan::Exception("Unable to link bloom shader program: Error:" + bloom_combine_shader.get_info_log());
+
+	gpu_positions = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_tex1_coords = clan::VertexArrayVector<clan::Vec2f>(canvas, 6);
+	gpu_uniforms = clan::UniformVector<ProgramUniforms>(canvas, 1);
+	gpu_primitives_array = clan::PrimitivesArray(canvas);
+	gpu_primitives_array.set_attributes(0, gpu_positions);
+	gpu_primitives_array.set_attributes(1, gpu_tex1_coords);
 
 	quit = false;
 
@@ -110,29 +123,26 @@ int App::start(const std::vector<std::string> &args)
 		timer = (clan::System::get_time() - startTime) / 1000.0f;
 
 		// Render standard image to offscreen buffer
-		canvas.set_frame_buffer(framebuffer_offscreen1);
 		background.set_color(clan::Colorf(0.5f, 0.5f, 0.5f, 1.0f));	// Half brightness
-		background.draw(canvas, 0, 0);
+		background.draw(canvas_offscreen1, 0, 0);
 		float xpos = canvas.get_width() / 2 + 200 * sinf(timer / 2.0f);
 		float ypos = canvas.get_height() / 2 + 200 * cosf(timer / 2.0f);
-		canvas.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
+		canvas_offscreen1.fill_circle(xpos, ypos, 64.0f, clan::Colorf(0.8f, 0.8f, 0.0f, 1.0f));	// Draw Sun
 
-		canvas.reset_frame_buffer();
-
+		canvas_offscreen1.flush();
 		// Render highlights
-		canvas.set_frame_buffer(framebuffer_offscreen2);
-		render_extract_highlights(canvas, texture_offscreen1, extract_highlights_shader);
+		render_extract_highlights(canvas_offscreen2, texture_offscreen1, extract_highlights_shader);
+		canvas_offscreen2.flush();
 
 		// Render horizontal blur
-		canvas.set_frame_buffer(framebuffer_offscreen3);
-		render_gaussian_blur(canvas, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+		render_gaussian_blur(canvas_offscreen3, blur_amount, texture_offscreen2, gaussian_blur_shader, 1.0f / texture_offscreen2.get_width(), 0.0f);
+		canvas_offscreen3.flush();
 
 		// Render vertical blur
-		canvas.set_frame_buffer(framebuffer_offscreen2);
-		render_gaussian_blur(canvas, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
+		render_gaussian_blur(canvas_offscreen2, blur_amount, texture_offscreen3, gaussian_blur_shader, 0.0f, 1.0f / texture_offscreen3.get_height());
+		canvas_offscreen2.flush();
 
 		// Render bloom combine
-		canvas.reset_frame_buffer();
 		render_bloom_combine(canvas, texture_offscreen1, texture_offscreen2, bloom_combine_shader);
 
 		std::string text( "Press 1 to 7 to select bloom. Currently it is :" + select_text );
@@ -159,54 +169,53 @@ float App::compute_gaussian(float n, float theta) // theta = Blur Amount
 	return (float)((1.0f / sqrtf(2 * (float)clan::PI * theta)) * expf(-(n * n) / (2.0f * theta * theta)));
 }
 
-void App::render_gaussian_blur(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy)
+void App::render_gaussian_blur(clan::Canvas &canvas, float blur_amount, clan::Texture2D &source_texture, clan::ProgramObject &program_object, float dx, float dy)
 {
-	int sampleCount = 15;
+	uniforms.sample[0].weight = compute_gaussian(0, blur_amount);
+	uniforms.sample[0].offset_x = 0.0f;
+	uniforms.sample[0].offset_y = 0.0f;
 
-	float *sampleWeights = new float[sampleCount];
-	clan::Vec2f *sampleOffsets = new clan::Vec2f[sampleCount];
-
-	sampleWeights[0] = compute_gaussian(0, blur_amount);
-	sampleOffsets[0] = clan::Vec2f(0.0, 0.0);
-
-	float totalWeights = sampleWeights[0];
+	float totalWeights = uniforms.sample[0].weight;
 
 	for (int i = 0; i < sampleCount / 2; i++)
 	{
 		float weight = compute_gaussian(i + 1.0f, blur_amount);
 
-		sampleWeights[i * 2 + 1] = weight;
-		sampleWeights[i * 2 + 2] = weight;
+		uniforms.sample[i * 2 + 1].weight = weight;
+		uniforms.sample[i * 2 + 2].weight = weight;
 
 		totalWeights += weight * 2;
 
 		float sampleOffset = i * 2 + 1.5f;
 
-		clan::Vec2f delta = clan::Vec2f(dx * sampleOffset, dy * sampleOffset);
+		clan::Vec2f delta(dx * sampleOffset, dy * sampleOffset);
 
-		sampleOffsets[i * 2 + 1] = delta;
-		sampleOffsets[i * 2 + 2] = clan::Vec2f(-delta.x, -delta.y);
+		uniforms.sample[i * 2 + 1].offset_x = delta.x;
+		uniforms.sample[i * 2 + 1].offset_y = delta.y;
+		uniforms.sample[i * 2 + 2].offset_x = -delta.x;
+		uniforms.sample[i * 2 + 2].offset_y = -delta.y;
 	}
 
 	for (int i = 0; i < sampleCount; i++)
 	{
-		sampleWeights[i] /= totalWeights;
+		uniforms.sample[i].weight /= totalWeights;
 	}
 
-	program_object.set_uniform1i("SourceTexture", 0);
-	program_object.set_uniformfv("SampleOffsets", 2, sampleCount, (float *)sampleOffsets);
-	program_object.set_uniformfv("SampleWeights", 1, sampleCount, sampleWeights);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	canvas.set_texture(0, source_texture);
-	canvas.set_program_object(program_object, cl_program_matrix_modelview_projection);
+	gc.set_texture(0, source_texture);
+	gc.set_program_object(program_object);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	uniforms.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
+	gpu_uniforms.upload_data(gc, &uniforms, 1);
+	gc.set_uniform_buffer(0, gpu_uniforms);
 
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
 
-	delete sampleWeights;
-	delete sampleOffsets;
+	gc.reset_program_object();
+	gc.reset_texture(0);
+
 }
 
 void App::on_input_up(const clan::InputEvent &key)
@@ -294,7 +303,7 @@ void App::on_input_up(const clan::InputEvent &key)
 
 }
 
-void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan::Colorf &color, const clan::Rectf &texture_unit1_coords)
+void App::draw_texture(clan::GraphicContext &gc, const clan::Rectf &rect, const clan::Rectf &texture_unit1_coords)
 {
 	clan::Vec2f positions[6] =
 	{
@@ -316,34 +325,44 @@ void App::draw_texture(clan::Canvas &canvas, const clan::Rectf &rect, const clan
 		clan::Vec2f(texture_unit1_coords.right, texture_unit1_coords.bottom)
 	};
 
-	clan::PrimitivesArray prim_array(canvas);
-	prim_array.set_attributes(0, positions);
-	prim_array.set_attribute(1, color);
-	prim_array.set_attributes(2, tex1_coords);
-	canvas.draw_primitives(clan::type_triangles, 6, prim_array);
+	gpu_positions.upload_data(gc, 0, positions, 6);
+	gpu_tex1_coords.upload_data(gc, 0, tex1_coords, 6);
+
+	gc.draw_primitives(clan::type_triangles, 6, gpu_primitives_array);
 }
+
+
 
 void App::render_extract_highlights(clan::Canvas &canvas, clan::Texture2D &source_texture, clan::ProgramObject &program_object)
 {
-	canvas.set_texture(0, source_texture);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	canvas.set_program_object(program_object);
+	gc.set_texture(0, source_texture);
+
+	gc.set_program_object(program_object);
 	program_object.set_uniform1i(("SourceTexture"), 0);
 	program_object.set_uniform1f(("Threshold"), highlight_threshold);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_modelview());
 
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+
+	gc.reset_program_object();
+	gc.reset_texture(0);
+
 }
 
 
 void App::render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, clan::Texture2D &tex_bloom, clan::ProgramObject &program_object)
 {
-	canvas.set_texture(0, tex_base);
-	canvas.set_texture(1, tex_bloom);
+	canvas.flush();
+	clan::GraphicContext gc = canvas.get_gc();
 
-	canvas.set_program_object(program_object);
+	gc.set_texture(0, tex_base);
+	gc.set_texture(1, tex_bloom);
+
+	gc.set_program_object(program_object);
 	program_object.set_uniform1i(("BaseTexture"), 0);
 	program_object.set_uniform1f(("BaseIntensity"), base_intensity);
 	program_object.set_uniform1f(("BaseSaturation"), base_saturation);
@@ -352,10 +371,13 @@ void App::render_bloom_combine(clan::Canvas &canvas, clan::Texture2D &tex_base, 
 	program_object.set_uniform1f(("BloomIntensity"), bloom_intensity);
 	program_object.set_uniform1f(("BloomSaturation"), bloom_saturation);
 
-	draw_texture(canvas, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Colorf::white, clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+	program_object.set_uniform_matrix("cl_ModelViewProjectionMatrix", canvas.get_projection() * canvas.get_modelview());
 
-	canvas.reset_program_object();
-	canvas.reset_texture(0);
-	canvas.reset_texture(1);
+	draw_texture(gc, clan::Rectf(0,0,canvas.get_width(),canvas.get_height()), clan::Rectf(0.0f, 0.0f, 1.0f, 1.0f));
+
+	gc.reset_program_object();
+	gc.reset_texture(0);
+	gc.reset_texture(1);
+
 }
 

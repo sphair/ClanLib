@@ -1,8 +1,14 @@
+#version 150
 attribute vec4 Position;
 attribute vec2 TexCoord0;
-uniform mat4 cl_ModelViewProjectionMatrix;
 
-varying vec2 TexCoord;
+out vec2 TexCoord;
+
+layout (std140) uniform ProgramUniforms
+{
+	mat4 cl_ModelViewProjectionMatrix;
+	vec4 Sample[15];	// x,y = Offset. z = Weight
+};
 
 void main(void) 
 { 
