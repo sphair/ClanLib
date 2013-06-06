@@ -44,7 +44,7 @@ int HSV::start(const std::vector<std::string> &args)
 	Canvas canvas(window);
 	InputContext ic = window.get_ic();
 
-	Font font(canvas, "Tahoma", -11);
+	clan::Font font(canvas, "Tahoma", -11);
 
 	HSVSpriteBatch sprite_batcher(canvas);
 	HSVSprite car1(canvas, &sprite_batcher, "../../Game/SpritesRTS/Gfx/spaceshoot_body_moving1.png");

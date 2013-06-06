@@ -23,7 +23,7 @@ struct Uniforms
 	Vec4f mouse;
 
 	Vec4f positions[particle_count];
-	int particle_count;
+	int xparticle_count;
 };
 
 int Program::main(const std::vector<std::string> &args)
@@ -43,7 +43,7 @@ int Program::main(const std::vector<std::string> &args)
 		Uniforms uniforms;
 		uniforms.time = 0.0f;
 		uniforms.resolution = Vec3f(800, 600, 0);
-		uniforms.particle_count = particle_count;
+		uniforms.xparticle_count = particle_count;
 		for(int i=0; i<particle_count; ++i) 
 		{
 			uniforms.positions[i] = Vec4f((float)(rand() % 300 + 200.0f), (float)(rand() % 300 + 200.0f), (float)(rand() % 15), 1.0f);
@@ -66,7 +66,7 @@ int Program::main(const std::vector<std::string> &args)
 			uniforms.time = time;
 			uniforms.mouse = Vec4f(mouse.get_x() / 800.0f, mouse.get_y() / 600.0f, 0, 0);
 
-			for(int i=0; i< uniforms.particle_count; ++i)
+			for(int i=0; i< uniforms.xparticle_count; ++i)
 			{
 				uniforms.positions[i].x += sinf(time + i * 2.0f) / 40.0f;
 				uniforms.positions[i].y += cosf(time + i * 2.0f) / 40.0f;
