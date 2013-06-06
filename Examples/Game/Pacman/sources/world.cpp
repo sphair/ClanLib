@@ -199,7 +199,7 @@ void World::run(DisplayWindow &window)
 		}
 		else if (welcome_shown == false && blowups.size() < 10)
 		{
-			char *text1 = "Welcome to the Pacman Game";
+			const char *text1 = "Welcome to the Pacman Game";
 			Size size1 = fnt_clansoft.get_text_size(gc, text1);
 			blowups.push_back(new FontBlowUp(canvas, text1, gc.get_width()/2, gc.get_height() - 20 - size1.height, fnt_clansoft, Colorf::lightgoldenrodyellow));
 			welcome_shown = true;

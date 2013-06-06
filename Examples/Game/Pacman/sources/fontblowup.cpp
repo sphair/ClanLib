@@ -32,7 +32,7 @@
 
 #include <stdlib.h>
 
-FontBlowUp::FontBlowUp(Canvas &canvas, const char *_text, int x, int y, Font _font, Colorf _color)
+FontBlowUp::FontBlowUp(Canvas &canvas, const char *_text, int x, int y, clan::Font _font, Colorf _color)
 {
 	text = _text;
 	initial_x = x;

@@ -45,12 +45,19 @@ int MikMod::start(const std::vector<std::string> &args)
 	clan::SoundBuffer_Session session = boss.prepare();
 	session.play();
 
+#ifdef WIN32
 	clan::Console::write_line("Press any key to exit");
+#else
+	clan::Console::write_line("CTRL-C to exit");
+#endif
 
 	while(session.is_playing())
 	{
+#ifdef WIN32
 		if (kbhit())
 			break;
+#endif
+
 		clan::KeepAlive::process(100);
 	}
 

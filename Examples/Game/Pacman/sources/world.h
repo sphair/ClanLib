@@ -84,7 +84,7 @@ private:
 
 	std::list<FontBlowUp *> blowups;
 
-	Font fnt_clansoft;
+	clan::Font fnt_clansoft;
 	
 	DisplayWindow game_display_window;
 

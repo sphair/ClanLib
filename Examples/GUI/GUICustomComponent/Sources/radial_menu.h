@@ -73,12 +73,12 @@ private:
 
 	Sprite image_pointer;
 
-	Font normal_font;
+	clan::Font normal_font;
 	Colorf normal_text_color;
 	float normal_font_height;
 	float normal_text_distance;
 
-	Font selected_font;
+	clan::Font selected_font;
 	Colorf selected_text_color;
 	float selected_font_height;
 	float selected_text_distance;
