@@ -307,6 +307,7 @@ clanCore_includes = \
 	Core/System/console_window.h \
 	Core/System/disposable_object.h \
 	Core/System/event.h \
+	Core/System/work_queue.h \
 	Core/System/system.h
 
 clanDisplay_includes = \

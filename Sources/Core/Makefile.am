@@ -173,6 +173,7 @@ System/thread_local_storage.cpp \
 System/detect_cpu_ext.cpp \
 System/service.cpp \
 System/thread_local_storage_impl.cpp \
+System/work_queue.cpp \
 System/datetime.cpp
 
 if WIN32
