@@ -30,6 +30,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class CSSPropertyValue;
 class CSSStyleProperties_Impl;
@@ -48,4 +50,5 @@ private:
 	std::shared_ptr<CSSStyleProperties_Impl> impl;
 };
 
+/// \}
 }

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueFloat;
 class CSSValuePosition;
@@ -74,4 +76,5 @@ private:
 	void apply_table_9_7();
 };
 
+/// \}
 }

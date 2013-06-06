@@ -46,6 +46,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_ComputedValues clanCSSLayout Computed Values
+/// \{
 
 class CL_API_CSSLAYOUT CSSComputedValuesUpdater
 {
@@ -69,4 +71,5 @@ public:
 	virtual CSSComputedTextInherit &get_text_inherit() = 0;
 };
 
+/// \}
 }

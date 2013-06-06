@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueOrder : public CSSPropertyValue
 {
@@ -50,4 +52,5 @@ public:
 	int value;
 };
 
+/// \}
 }

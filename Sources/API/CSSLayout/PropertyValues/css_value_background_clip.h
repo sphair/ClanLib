@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBackgroundClip : public CSSPropertyValue
 {
@@ -58,4 +60,5 @@ public:
 	std::vector<ClipType> values;
 };
 
+/// \}
 }

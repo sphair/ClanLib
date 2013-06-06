@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueWhiteSpace : public CSSPropertyValue
 {
@@ -53,4 +55,5 @@ public:
 	Type type;
 };
 
+/// \}
 }

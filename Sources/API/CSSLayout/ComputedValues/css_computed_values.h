@@ -46,6 +46,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_ComputedValues clanCSSLayout Computed Values
+/// \{
 
 class CSSSelectResult;
 class CSSStyleProperties;
@@ -123,4 +125,5 @@ private:
 	friend class CSSComputedValues_Impl;
 };
 
+/// \}
 }

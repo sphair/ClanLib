@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \{
 
 class CSSPropertyValue;
 class Rect;
@@ -63,4 +65,5 @@ protected:
 	friend class CSSLayoutNode;
 };
 
+/// \}
 }

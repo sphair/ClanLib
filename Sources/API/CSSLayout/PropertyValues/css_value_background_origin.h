@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBackgroundOrigin : public CSSPropertyValue
 {
@@ -58,4 +60,5 @@ public:
 	std::vector<OriginType> values;
 };
 
+/// \}
 }

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueFontWeight : public CSSPropertyValue
 {
@@ -61,4 +63,5 @@ public:
 	Type type;
 };
 
+/// \}
 }

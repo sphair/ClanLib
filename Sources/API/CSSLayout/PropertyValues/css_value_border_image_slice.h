@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderImageSlice : public CSSPropertyValue
 {
@@ -67,4 +69,5 @@ public:
 	bool fill_center;
 };
 
+/// \}
 }

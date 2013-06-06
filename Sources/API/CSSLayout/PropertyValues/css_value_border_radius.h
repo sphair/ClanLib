@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderRadius : public CSSPropertyValue
 {
@@ -76,4 +78,5 @@ public:
 	float percentage2;
 };
 
+/// \}
 }

@@ -34,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \{
 
 class CL_API_CSSLAYOUT CSSLayoutObject : public CSSLayoutElement
 {
@@ -63,4 +65,5 @@ void CSSLayoutObject::set_component(T *component)
 	set_component_private(new CSSReplacedComponentBinder<T>(component));
 }
 
+/// \}
 }

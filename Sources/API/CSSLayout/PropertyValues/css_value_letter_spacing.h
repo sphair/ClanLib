@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueLetterSpacing : public CSSPropertyValue
 {
@@ -52,4 +54,5 @@ public:
 	CSSLength length;
 };
 
+/// \}
 }

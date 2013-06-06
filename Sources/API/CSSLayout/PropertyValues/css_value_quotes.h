@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueQuotes : public CSSPropertyValue
 {
@@ -51,4 +53,5 @@ public:
 	std::vector<std::string> strings;
 };
 
+/// \}
 }

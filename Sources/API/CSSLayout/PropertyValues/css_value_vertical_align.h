@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueLineHeight;
 
@@ -63,4 +65,5 @@ public:
 	CSSLength length;
 };
 
+/// \}
 }

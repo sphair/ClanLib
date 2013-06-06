@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueTextDecoration : public CSSPropertyValue
 {
@@ -55,4 +57,5 @@ public:
 	bool blink;
 };
 
+/// \}
 }

@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueContent : public CSSPropertyValue
 {
@@ -59,4 +61,5 @@ public:
 	std::string str;
 };
 
+/// \}
 }

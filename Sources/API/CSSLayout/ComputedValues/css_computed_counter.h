@@ -34,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_ComputedValues clanCSSLayout Computed Values
+/// \{
 
 class CSSComputedValues;
 
@@ -46,4 +48,5 @@ public:
 	void compute(const CSSComputedValues &parent, CSSResourceCache *layout, float em_size, float ex_size);
 };
 
+/// \}
 }

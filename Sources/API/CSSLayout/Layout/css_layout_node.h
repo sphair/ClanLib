@@ -34,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \{
 
 class CSSLayoutText;
 class CSSLayoutElement;
@@ -77,4 +79,5 @@ protected:
 	friend class CSSLayout_Impl;
 };
 
+/// \}
 }

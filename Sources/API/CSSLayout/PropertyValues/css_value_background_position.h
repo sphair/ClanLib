@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBackgroundPosition : public CSSPropertyValue
 {
@@ -83,4 +85,5 @@ public:
 	std::vector<Position> positions;
 };
 
+/// \}
 }

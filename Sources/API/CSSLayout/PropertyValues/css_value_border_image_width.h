@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueBorderImageWidth : public CSSPropertyValue
 {
@@ -73,4 +75,5 @@ public:
 	float percentage_left;
 };
 
+/// \}
 }

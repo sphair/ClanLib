@@ -33,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
 
 class CSSValueShadow : public CSSPropertyValue
 {
@@ -64,4 +66,5 @@ public:
 	std::vector<Shadow> shadows;
 };
 
+/// \}
 }

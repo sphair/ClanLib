@@ -33,6 +33,9 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_PropertyValues clanCSSLayout Property Values
+/// \{
+
 class CSSToken;
 
 class CSSValueGeneric : public CSSPropertyValue
@@ -53,4 +56,5 @@ public:
 	std::string property_name;
 };
 
+/// \}
 }

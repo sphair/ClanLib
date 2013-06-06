@@ -32,6 +32,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \{
 
 class CL_API_CSSLAYOUT CSSLayoutUserData
 {
@@ -39,4 +41,5 @@ public:
 	virtual ~CSSLayoutUserData() { }
 };
 
+/// \}
 }

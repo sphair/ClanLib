@@ -31,7 +31,7 @@
 
 namespace clan
 {
-/// \addtogroup clanCore_CSS clanCore CSS
+/// \addtogroup clanCSSLayout_Tokenizer clanCSSLayout Tokenizer
 /// \{
 
 /// \brief CSS token
@@ -86,6 +86,5 @@ public:
 /// \}
 };
 
-}
-
 /// \}
+}

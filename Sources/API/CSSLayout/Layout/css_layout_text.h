@@ -34,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \{
 
 class CL_API_CSSLAYOUT CSSLayoutText : public CSSLayoutNode
 {
@@ -50,4 +52,5 @@ private:
 	friend class CSSLayoutNode;
 };
 
+/// \}
 }
