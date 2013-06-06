@@ -34,7 +34,7 @@
 
 namespace clan
 {
-/// \addtogroup clanGUI_Framework clanGUI System
+/// \addtogroup clanGUI_System clanGUI System
 /// \{
 
 class GUIComponent;
