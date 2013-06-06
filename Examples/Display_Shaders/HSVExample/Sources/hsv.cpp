@@ -46,7 +46,7 @@ int HSV::start(const std::vector<std::string> &args)
 	ProgramObject program = create_shader_program(canvas);
 	Texture texture = create_texture(canvas);
 
-	Font font(canvas, "tahoma", 24);
+	clan::Font font(canvas, "tahoma", 24);
 
 	ubyte64 last_time = System::get_time();
 
@@ -108,6 +108,11 @@ Texture2D HSV::create_texture(Canvas &canvas)
 	return Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
 }
 
+struct ProgramUniforms
+{
+	Mat4f cl_ModelViewProjectionMatrix;
+	float HueOffset0;
+};
 void HSV::render_texture(Canvas &canvas, ProgramObject &program, Texture &texture, float hue_offset)
 {
 	GraphicContext gc = canvas.get_gc();
@@ -143,11 +148,6 @@ void HSV::render_texture(Canvas &canvas, ProgramObject &program, Texture &textur
 	primarray.set_attributes(0, gpu_positions);
 	primarray.set_attributes(1, gpu_tex1_coords);
 
-	struct ProgramUniforms
-	{
-		Mat4f cl_ModelViewProjectionMatrix;
-		float HueOffset0;
-	};
 	ProgramUniforms buffer;
 	buffer.cl_ModelViewProjectionMatrix = canvas.get_projection() * canvas.get_modelview();
 	buffer.HueOffset0 = hue_offset;

@@ -1,9 +1,9 @@
 #version 150
 
-attribute vec4 Position;
-attribute vec2 TexCoord0;
-varying float HueOffset;
-varying vec2 TexCoord;
+in vec4 Position;
+in vec2 TexCoord0;
+out float HueOffset;
+out vec2 TexCoord;
 
 layout (std140) uniform ProgramUniforms
 {

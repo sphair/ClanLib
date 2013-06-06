@@ -1,6 +1,6 @@
 #version 150
-attribute vec4 Position;
-attribute vec2 TexCoord0;
+in vec4 Position;
+in vec2 TexCoord0;
 
 layout (std140) uniform ProgramUniforms
 {
