@@ -35,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCSSLayout_Document clanCSSLayout Document
+/// \{
 
 class IODevice;
 class DomElement;
@@ -69,4 +71,5 @@ private:
 	std::shared_ptr<CSSDocument_Impl> impl;
 };
 
+/// \}
 }
