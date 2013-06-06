@@ -25,8 +25,6 @@
 **
 **    Magnus Norddahl
 */
-/// \addtogroup clanDisplay_Input clanDisplay Input
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Input clanDisplay Input
+/// \{
 
 enum InputCode
 {

@@ -27,8 +27,6 @@
 **    Ingo Ruhnke
 */
 
-/// \addtogroup clanCore_XML clanCore XML
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_XML clanCore XML
+/// \{
 
 class DomNode;
 class DomNodeList_Impl;

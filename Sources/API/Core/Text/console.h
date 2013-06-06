@@ -28,8 +28,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
 
 #pragma once
 
@@ -49,6 +47,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Text clanCore Text
+/// \{
 
 /// \brief Console access helper class.
 class Console

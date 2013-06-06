@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Signals clanCore Signals
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Signals clanCore Signals
+/// \{
 
 /// (Internal ClanLib Class)
 template <typename RetVal, typename P1, typename P2, typename P3, typename P4, typename P5, typename P6>

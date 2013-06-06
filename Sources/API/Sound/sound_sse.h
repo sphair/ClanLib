@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
 /// \brief Sound related functions implemented as SIMD using SSE
 class CL_API_SOUND SoundSSE

@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Audio_Mixing clanSound Audio Mixing
+/// \{
 
 /// \brief Sound Filter Interface
 class CL_API_SOUND SoundFilterProvider

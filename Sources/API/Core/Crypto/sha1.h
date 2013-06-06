@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 class DataBuffer;
 class SHA1_Impl;

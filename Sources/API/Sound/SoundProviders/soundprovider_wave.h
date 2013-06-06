@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_Sound_Providers clanSound Sound Providers
+/// \{
 
 class InputSourceProvider;
 class SoundProvider_Wave_Impl;

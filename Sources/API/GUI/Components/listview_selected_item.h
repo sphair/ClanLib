@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_Components clanGUI Components
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_Components clanGUI Components
+/// \{
 
 class ListViewSelectedItem_Impl;
 class ListViewSelection_Impl;

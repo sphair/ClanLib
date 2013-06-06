@@ -28,14 +28,14 @@
 
 #pragma once
 
-/// \addtogroup clanCore_Text clanCore Text
-/// \{
 
 #include "../api_core.h"
 #include <memory>
 
 namespace clan
 {
+/// \addtogroup clanCore_Text clanCore Text
+/// \{
 
 class UTF8_Reader_Impl;
 

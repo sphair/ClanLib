@@ -27,8 +27,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Image_Providers clanDisplay Image Providers
+/// \{
 
 class PixelBuffer;
 

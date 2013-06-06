@@ -26,8 +26,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanNetwork_Socket clanNetwork TLS
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Socket clanNetwork TLS
+/// \{
 
 class SocketName;
 class Event;

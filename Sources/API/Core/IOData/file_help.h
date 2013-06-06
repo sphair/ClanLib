@@ -27,8 +27,6 @@
 **    Kenneth Gangstoe
 */
 
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
 /// \brief File operation helpers.
 class CL_API_CORE FileHelp

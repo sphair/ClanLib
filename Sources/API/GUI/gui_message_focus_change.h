@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 /// \brief GUI focus change notification message.
 class CL_API_GUI GUIMessage_FocusChange : public GUIMessage

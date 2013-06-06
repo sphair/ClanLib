@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_System clanCore System
-/// \{
 
 
 #pragma once
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_System clanCore System
+/// \{
 
 /// \brief OS level event provider.
 class CL_API_CORE EventProvider

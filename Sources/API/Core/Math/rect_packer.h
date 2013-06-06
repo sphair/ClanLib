@@ -26,8 +26,6 @@
 **    Kenneth Gangstoe
 */
 
-/// \addtogroup clanDisplay_2D clanDisplay 2D
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \{
 
 class Size;
 class RectPacker_Impl;

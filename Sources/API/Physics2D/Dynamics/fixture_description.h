@@ -26,12 +26,12 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
-/// \{
 #pragma once
 
 namespace clan
 {
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
+/// \{
 
 class FixtureDescription_Impl;
 class Shape;

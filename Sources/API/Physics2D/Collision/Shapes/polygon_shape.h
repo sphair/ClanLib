@@ -26,8 +26,6 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Collision clanPhysics Collision
-/// \{
 
 
 #pragma once
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanPhysics_Collision clanPhysics Collision
+/// \{
 
 class PhysicsContext;
 class PhysicsWorld;

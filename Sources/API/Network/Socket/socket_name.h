@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_Socket clanNetwork Socket
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@ struct sockaddr;
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Socket clanNetwork Socket
+/// \{
 
 class SocketName_Impl;
 

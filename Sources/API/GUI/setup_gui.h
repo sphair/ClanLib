@@ -26,8 +26,6 @@
 **   Mark PAge
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 /// \brief ClanGUI initialization functions.
 class CL_API_GUI SetupGUI

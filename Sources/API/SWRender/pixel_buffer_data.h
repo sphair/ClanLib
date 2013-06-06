@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSWRender_Display clanSWRender Display
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSWRender_Display clanSWRender Display
+/// \{
 
 /// \brief Frame buffer or texture data for pixel commands
 class PixelBufferData

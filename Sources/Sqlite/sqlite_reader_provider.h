@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSqlite_System clanSqlite System
-/// \{
 
 
 #pragma once
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSqlite_System clanSqlite System
+/// \{
 
 class SqliteCommandProvider;
 class SqliteConnectionProvider;

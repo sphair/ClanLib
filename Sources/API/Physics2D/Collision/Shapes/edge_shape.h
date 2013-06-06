@@ -26,8 +26,6 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Collision clanPhysics Collision
-/// \{
 #pragma once
 
 #include "../../api_physics2d.h"
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanPhysics_Collision clanPhysics Collision
+/// \{
 
 class PhysicsContext;
 class PhysicsWorld;

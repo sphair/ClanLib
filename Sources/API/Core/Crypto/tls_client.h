@@ -28,8 +28,6 @@
 
 #pragma once
 
-/// \addtogroup clanCore_Crypto clanCore Crypto
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Crypto clanCore Crypto
+/// \{
 
 class DataBuffer;
 class TLSClient_Impl;

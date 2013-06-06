@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_ErrorReporting clanCore ErrorReporting
+/// \{
 
 class DetectHang_Impl;
 

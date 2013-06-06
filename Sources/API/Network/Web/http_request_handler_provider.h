@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_Web clanNetwork Web
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Web clanNetwork Web
+/// \{
 
 class HTTPServerConnection;
 

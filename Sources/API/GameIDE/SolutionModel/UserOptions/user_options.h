@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGameIDE_System clanGameIDE System
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGameIDE_System clanGameIDE System
+/// \{
 
 class UserOptions
 {

@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanDisplay_System clanDisplay System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_System clanDisplay System
+/// \{
 
 /// \brief ClanDisplay initialization functions.
 class CL_API_DISPLAY SetupDisplay

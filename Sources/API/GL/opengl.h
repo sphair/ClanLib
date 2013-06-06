@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGL_System clanGL System
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGL_System clanGL System
+/// \{
 
 class GLFunctions;
 class GraphicContext;

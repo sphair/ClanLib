@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 /// \brief GUI input message.
 class CL_API_GUI GUIMessage_Input : public GUIMessage

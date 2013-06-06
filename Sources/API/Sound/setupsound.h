@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanSound_System clanSound System
-/// \{
 
 #pragma once
 
@@ -35,6 +33,8 @@
 
 namespace clan
 {
+/// \addtogroup clanSound_System clanSound System
+/// \{
 
 /// \brief ClanSound initialization functions.
 class CL_API_SOUND SetupSound

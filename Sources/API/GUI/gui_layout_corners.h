@@ -26,8 +26,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_Framework clanGUI System
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_Framework clanGUI System
+/// \{
 
 class GUIComponent;
 class GUILayoutProvider_Corners;

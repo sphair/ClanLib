@@ -28,8 +28,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanCore_Math clanCore Math
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Math clanCore Math
+/// \{
 
 /// \brief Math operations on 2D lines.
 ///

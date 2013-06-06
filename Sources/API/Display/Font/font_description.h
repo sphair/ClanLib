@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanDisplay_Font clanDisplay Font
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanDisplay_Font clanDisplay Font
+/// \{
 
 class DisplayWindow;
 class FontDescription_Impl;

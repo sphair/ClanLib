@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanNetwork_Socket clanNetwork Socket
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Socket clanNetwork Socket
+/// \{
 
 class DNSResourceRecord;
 class DNSPacket;

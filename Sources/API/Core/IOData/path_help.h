@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
 /// \brief Path helper functions.
 class CL_API_CORE PathHelp

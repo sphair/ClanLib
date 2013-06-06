@@ -201,7 +201,7 @@ group markups are placed at the beginning of the line:
 
 5) Class groups and header file info.
 
-Each header file should contain below the ClanLib SDK license:
+Each header file should contain below the ClanLib "clan" namespace:
 /// \addtogroup {Identifier} {Group} {Section}
 /// \{
 
@@ -213,8 +213,6 @@ Each header file should contain below the ClanLib SDK license:
 
 {Group2} this is the same as {Group} without the "clan" prefix
 {Header} denotes the base header file that includes this class
-
-If the class should not appear in the documentation, use "!hide!"
 
 For Example:
 /// \addtogroup clanDisplay_Display clanDisplay Display

@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanScene_Scene clanScene Scene
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanScene_Scene clanScene Scene
+/// \{
 
 class ResourceManager;
 class Scene_Impl;

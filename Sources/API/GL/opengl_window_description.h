@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanGL_Display clanGL Display
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGL_Display clanGL Display
+/// \{
 
 class OpenGLWindowDescription_Impl;
 

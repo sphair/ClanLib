@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanCore_Resources clanCore Resources
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_Resources clanCore Resources
+/// \{
 
 class DomElement;
 class XMLResourceDocument;

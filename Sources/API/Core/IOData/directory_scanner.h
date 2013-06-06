@@ -27,8 +27,6 @@
 **    (if your name is missing here, please add it)
 */
 
-/// \addtogroup clanCore_I_O_Data clanCore I/O Data
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanCore_I_O_Data clanCore I/O Data
+/// \{
 
 class DirectoryScanner_Impl;
 

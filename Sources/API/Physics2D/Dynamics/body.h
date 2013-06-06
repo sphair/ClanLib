@@ -26,8 +26,6 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
-/// \{
 #pragma once
 
 #include "../api_physics2d.h"
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
+/// \{
 
 class XMLResourceDocument;
 class PhysicsWorld;

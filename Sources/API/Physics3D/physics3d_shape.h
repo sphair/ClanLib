@@ -26,8 +26,6 @@
 **    Magnus Norddahl
 */
 
-/// \addtogroup clanPhysics3D_World clanPhysics3D World
-/// \{
 
 #pragma once
 
@@ -39,6 +37,8 @@
 
 namespace clan
 {
+/// \addtogroup clanPhysics3D_World clanPhysics3D World
+/// \{
 
 class ModelData;
 class TerrainData;

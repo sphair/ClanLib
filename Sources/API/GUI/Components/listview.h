@@ -27,8 +27,6 @@
 **    Harry Storbacka
 */
 
-/// \addtogroup clanGUI_Components clanGUI Components
-/// \{
 
 #pragma once
 
@@ -54,6 +52,8 @@ enum ListViewDisplayMode
 
 namespace clan
 {
+/// \addtogroup clanGUI_Components clanGUI Components
+/// \{
 
 class ListViewHeader;
 class ListView_Impl;

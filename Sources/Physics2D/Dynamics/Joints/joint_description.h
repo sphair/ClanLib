@@ -26,8 +26,6 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanPhysics_Dynamics clanPhysics Dynamics
+/// \{
 
 class JointDescription_Impl;
 /// \brief JointDescription class.

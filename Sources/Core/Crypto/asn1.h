@@ -27,8 +27,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanNetwork_Socket clanNetwork TLS
-/// \{
 
 #pragma once
 
@@ -38,6 +36,8 @@
 
 namespace clan
 {
+/// \addtogroup clanNetwork_Socket clanNetwork TLS
+/// \{
 
 /// \brief ASN1 class.
 class CL_API_CORE ASN1

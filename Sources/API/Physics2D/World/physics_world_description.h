@@ -26,8 +26,6 @@
 **    Arkadiusz Kalinowski
 */
 
-/// \addtogroup clanphysics_world clanPhysics World
-/// \{
 
 #pragma once
 
@@ -37,6 +35,8 @@
 
 namespace clan
 {
+/// \addtogroup clanphysics_world clanPhysics World
+/// \{
 
 class Size;
 class Rect;

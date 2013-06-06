@@ -26,8 +26,6 @@
 **    Mark Page
 */
 
-/// \addtogroup clanGUI_System clanGUI System
-/// \{
 
 #pragma once
 
@@ -36,6 +34,8 @@
 
 namespace clan
 {
+/// \addtogroup clanGUI_System clanGUI System
+/// \{
 
 class GUIWindowManagerProvider_Direct;
 class GUIWindowManagerDirectWindow;
