@@ -182,7 +182,7 @@ int App::start(const std::vector<std::string> &args)
 	font_desc.set_weight(400);
 	select_font();
 
-	small_font = Font(canvas, "Tahoma", 16);
+	small_font = clan::Font(canvas, "Tahoma", 16);
 
 	GameTime game_time;
 	while(!quit)
@@ -190,9 +190,6 @@ int App::start(const std::vector<std::string> &args)
 		game_time.update();
 		render(window, game_time);
 	}
-
-	small_font = Font();
-	selected_font = Font();
 
 	return 0;
 }

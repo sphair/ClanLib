@@ -4,7 +4,7 @@ OBJF = ./Sources/example.o \
 ./Sources/shader.o \
 ./Sources/precomp.o
 
-LIBS=clanApp clanDisplay clanCore clanGL1 clanGL
+LIBS=clanApp clanDisplay clanCore clanGL
 EXTRA_LIBS=-lassimp
 
 CXXFLAGS += -I./ -I Sources

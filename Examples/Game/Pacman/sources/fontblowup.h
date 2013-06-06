@@ -41,7 +41,7 @@ using namespace clan;
 class FontBlowUp
 {
 protected:
-	Font font;
+	clan::Font font;
 	int initial_x;
 	int initial_y;
 	std::string text;
@@ -57,7 +57,7 @@ protected:
 	void create_letters(Canvas &canvas);
 
 public:
-	FontBlowUp(Canvas &canvas, const char *text, int x, int y, Font font, Colorf color);
+	FontBlowUp(Canvas &canvas, const char *text, int x, int y, clan::Font font, Colorf color);
 	virtual ~FontBlowUp();
 
 	bool show(Canvas &canvas, float time_elapsed);

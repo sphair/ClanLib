@@ -90,7 +90,7 @@ int App::start(const std::vector<std::string> &args)
 
 	// ** Note, at this point "object_positions, object_normals and object_material_ambient" can be destroyed.
 
-	Font fps_font(canvas, "tahoma", 20);
+	clan::Font fps_font(canvas, "tahoma", 20);
 
 	GameTime game_time;
 

@@ -81,8 +81,8 @@ private:
 	std::string font_filename;
 	FontDescription font_desc;
 	Size font_size;
-	Font small_font;
-	Font selected_font;
+	clan::Font small_font;
+	clan::Font selected_font;
 	FontClass selected_fontclass;
 	float last_fps;
 	ResourceManager resources;

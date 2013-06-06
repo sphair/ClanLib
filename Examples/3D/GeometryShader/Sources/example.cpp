@@ -80,7 +80,7 @@ int App::start(const std::vector<std::string> &args)
 
 	camera_angle = 0.0f;
 
-	Font font(canvas, "tahoma", 24);
+	clan::Font font(canvas, "tahoma", 24);
 
 	enable_dual_pass = false;
 

@@ -51,5 +51,5 @@ private:
 
 	std::string selected_text;
 
-	Font font;
+	clan::Font font;
 };

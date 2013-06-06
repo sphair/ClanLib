@@ -44,7 +44,7 @@ GameComponent::GameComponent(const Rect &position, GUIManager* gui_manager)
 	radial_menu = new RadialMenu(this);
 	radial_menu->func_selected.set(this, &GameComponent::on_radial_menu_itemselected);
 
-	font = Font(canvas, "Tahoma", -30);
+	font = clan::Font(canvas, "Tahoma", -30);
 }
 
 GameComponent::~GameComponent()
