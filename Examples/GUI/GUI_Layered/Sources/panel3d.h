@@ -35,7 +35,7 @@ class GUI;
 class Panel3D : public clan::GUIComponent
 {
 public:
-	Panel3D(GUI *gui);
+	Panel3D(clan::GUIManager &manager);
 
 	float get_zoffset();
 	bool is_animated();
@@ -103,6 +103,5 @@ private:
 	clan::CheckBox *checkbox_animate;
 
 private:
-	GUI *gui;
 
 };

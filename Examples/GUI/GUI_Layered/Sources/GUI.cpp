@@ -58,7 +58,7 @@ bool GUI::run(clan::GameTime &game_time)
 
 	clan::Canvas canvas = app->get_canvas();
 
-	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f, 0.0f));
 
 	run_manager();
 
@@ -71,9 +71,6 @@ bool GUI::run(clan::GameTime &game_time)
 	clan::KeepAlive::process();
 	app->get_window()->flip(0);
 
-	if (gui_manager.get_exit_flag())
-		return false;
-
 	return true;
 }
 
@@ -82,6 +79,7 @@ void GUI::reset_manager()
 	current_theme = new_theme;
 	app->get_window()->set_cursor(clan::cursor_wait);
 
+	gui_layered.reset();
 	gui_layered.reset(new GUI_Layered(this) );
 
 	app->get_window()->set_cursor(clan::cursor_arrow);
@@ -94,40 +92,21 @@ void GUI::run_manager()
 		gui_layered->run();
 }
 
-void GUI::set_theme(Theme::gui_theme theme)
-{
-	// TODO: It would be nice to be able to change the theme dynamically, without having to rebuild the windows
-	new_theme = theme;
-}
-
 const char *GUI::get_theme_location()
 {
 	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/theme.css";
+		return "../../../Resources/GUIThemeAero";
 
 	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/theme.css";
+		return "../../../Resources/GUIThemeAeroPacked";
 
 	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/theme.css";
+		return "../../../Resources/GUIThemeBasic";
 
-//	if (current_theme == Theme::theme_basic_packed)
-	return "../../../Resources/GUIThemeBasicPacked/theme.css";
-}
+	if (current_theme == Theme::theme_basic_packed)
+		return "../../../Resources/GUIThemeBasicPacked";
 
-const char *GUI::get_resources_location()
-{
-	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero/resources.xml";
-
-	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked/resources.xml";
-
-	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic/resources.xml";
-
-//	if (current_theme == Theme::theme_basic_packed)
-	return "../../../Resources/GUIThemeBasicPacked/resources.xml";
+	return "../../../Resources/GUIThemeAero";
 }
 
 clan::DisplayWindow *GUI::get_window()
