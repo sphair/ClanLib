@@ -89,38 +89,6 @@ public:
 	/// \param disposable = Disposable Object
 	static void remove_disposable(DisposableObject *disposable);
 
-	/// \brief Get texture
-	///
-	/// \param gc = Graphic Context
-	/// \param hash = hash
-	///
-	/// \return Texture ( test with .isnull() )
-	static Texture get_texture(const std::string &hash);
-
-	/// \brief Add texture to the shared texture cache
-	///
-	/// \param texture = Texture
-	/// \param hash = hash
-	static void add_texture(Texture &texture, const std::string &hash);
-
-	/// \brief Remove texture to the shared texture cache
-	///
-		/// \param texture = Texture
-	static void remove_texture(Texture &texture);
-
-	/// \brief Remove and expired textures from the shared texture cache
-	///
-	/// This function should only be used by the Texture_Impl destructor
-	static void remove_expired_texture();
-
-	/// \brief Remove texture to the shared texture cache
-	///
-	/// \param hash = hash
-	static void remove_texture(const std::string &hash);
-
-	/// \brief Unload all textures
-	static void unload_all_textures();
-
 private:
 	SharedGCData();
 	~SharedGCData();

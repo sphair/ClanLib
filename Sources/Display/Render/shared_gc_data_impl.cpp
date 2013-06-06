@@ -45,11 +45,6 @@ SharedGCData_Impl::~SharedGCData_Impl()
 {
 }
 
-void SharedGCData_Impl::unload_all_textures()
-{
-	textures.clear();
-}
-
 std::vector<GraphicContextProvider*> &SharedGCData_Impl::get_gc_providers()
 {
 	return graphic_context_providers;
@@ -99,78 +94,6 @@ void SharedGCData_Impl::remove_disposable(DisposableObject *disposable)
 	it = std::find(disposable_objects.begin(), disposable_objects.end(), disposable);
 	if (it != disposable_objects.end())
 		disposable_objects.erase(it);
-}
-
-void SharedGCData_Impl::add_texture(Texture &texture, const std::string &hash)
-{
-	// Search for an existing hash to replace
-	for (std::vector<SharedTextureMap>::iterator it = textures.begin(); it != textures.end(); ++it)
-	{
-		if (it->hash == hash)
-		{
-			it->texture_impl = texture.get_impl();
-			return;
-		}
-	}
-
-	textures.push_back(SharedTextureMap(hash, texture));
-
-}
-
-void SharedGCData_Impl::remove_texture(Texture &texture)
-{
-	Texture_Impl *texture_impl = texture.get_impl().lock().get();
-	std::vector<SharedTextureMap>::iterator it;
-	for (it=textures.begin(); it<textures.end(); ++it)
-	{
-		if ((*it).texture_impl.expired())
-			throw Exception("Unexpected texture cache expiry");
-		
-		if ((*it).texture_impl.lock().get() == texture_impl)
-		{
-			textures.erase(it);
-			break;
-		}
-	}
-}
-
-void SharedGCData_Impl::remove_expired_texture()
-{
-	std::vector<SharedTextureMap>::iterator it;
-	for (it=textures.begin(); it<textures.end(); ++it)
-	{
-		if ((*it).texture_impl.expired())
-		{
-			textures.erase(it);
-			break;
-		}
-	}
-}
-
-void SharedGCData_Impl::remove_texture(const std::string &hash)
-{
-	std::vector<SharedTextureMap>::iterator it;
-	for (it=textures.begin(); it<textures.end(); ++it)
-	{
-		if ((*it).hash == hash)
-		{
-			textures.erase(it);
-			break;
-		}
-	}
-}
-Texture SharedGCData_Impl::get_texture(const std::string &hash)
-{
-	std::vector<SharedTextureMap>::size_type i;
-	for (i=0; i<textures.size(); i++)
-	{
-		if (textures[i].hash == hash)
-		{
-			std::shared_ptr<Texture_Impl> texture_impl = textures[i].texture_impl.lock();
-			return Texture(texture_impl);
-		}
-	}
-	return Texture();	// Not found
 }
 
 }

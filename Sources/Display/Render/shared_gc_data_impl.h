@@ -48,29 +48,11 @@ public:
 	void add_disposable(DisposableObject *disposable);
 	void remove_disposable(DisposableObject *disposable);
 
-	void unload_all_textures();
-
-	void add_texture(Texture &texture, const std::string &hash);
-	void remove_texture(Texture &texture);
-	void remove_expired_texture();
-	void remove_texture(const std::string &hash);
-	Texture get_texture(const std::string &hash);
-
 	int reference_count;
 	static Mutex cl_sharedgc_mutex;
 	static SharedGCData *cl_sharedgc;
 
 private:
-
-	struct SharedTextureMap
-	{
-		SharedTextureMap(std::string hash, const Texture &texture) : hash(hash), texture_impl(texture.get_impl())
-		{
-		}
-		std::string hash;
-		std::weak_ptr<Texture_Impl> texture_impl;
-	};
-	std::vector<SharedTextureMap> textures;
 
 	Signal_v0 sig_destruction_imminent;
 

@@ -58,16 +58,12 @@ public:
 	max_anisotropy(1.0f),
 	resident(0),
 	compare_mode(comparemode_none),
-	compare_function(compare_lequal),
-	cache_used(false)
+	compare_function(compare_lequal)
 	{
 	}
 
 	~Texture_Impl()
 	{
-		if (cache_used)
-			SharedGCData::remove_expired_texture();
-
 		if (provider)
 			delete provider;
 	}
@@ -76,9 +72,6 @@ public:
 	{
 		return provider < other.provider;
 	}
-
-	static Texture get_from_cache(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
-	void put_in_cache(Texture &texture, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
 
 	TextureProvider *provider;
 	int width, height, depth;
@@ -98,10 +91,8 @@ public:
 	TextureCompareMode compare_mode;
 	CompareFunction compare_function;
 
-	bool cache_used;
-
 private:
-	static std::string get_cache_hash(const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc);
+
 };
 
 }
