@@ -41,7 +41,7 @@ TexturePacker::~TexturePacker()
 
 void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
 {
-	resources = DisplayCache(filename);
+	resources = ResourceManager(filename);
 
 	// TODO: Delete items before clearing
 	resource_items.clear();
@@ -57,7 +57,7 @@ void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
 	}
 }
 
-ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources)
+ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
 	ResourceItem *item = 0;
 
@@ -97,7 +97,7 @@ ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource
 	return item;
 }
 
-ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources)
+ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
 	SpriteDescription desc(canvas, resource_id, &resources);
 
@@ -113,7 +113,7 @@ ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_i
 	return item;
 }
 
-ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, Resource &resource, DisplayCache &resources)
+ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
 {
 	SpriteDescription desc(canvas, resource_id, &resources);
 

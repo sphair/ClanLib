@@ -36,7 +36,7 @@ public:
 	{
 		try
 		{
-			DisplayCache local_resources("resources.xml");
+			clan::XMLResourceDocument local_resources_doc("resources.xml");
 
 			std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
 			std::string theme_filename("theme.css");
@@ -45,9 +45,10 @@ public:
 				resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
 				theme_filename = "theme_basic.css";
 			}
+			clan::XMLResourceDocument resources_doc(resource_filename);
+			local_resources_doc.add_resources(resources_doc);
 
-			DisplayCache resources(resource_filename);
-			local_resources.add_resources(resources);
+			ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
 
 			//GUIThemeDefault theme;
 			//theme.set_resources(local_resources);
@@ -56,7 +57,7 @@ public:
 
 			GUIManager gui;
 			gui.set_window_manager(wm);
-			gui.add_resources(local_resources);
+			gui.add_resources(local_resources_doc);
 			//gui.set_theme(theme);
 			gui.set_css_document(theme_filename);
 
