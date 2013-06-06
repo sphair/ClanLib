@@ -42,6 +42,7 @@ Panel3D::Panel3D(clan::GUIManager &manager) :
 	checkbox_animate = new clan::CheckBox(this);
 	checkbox_animate->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(128, 40)));
 	checkbox_animate->set_text("Animated GUI");
+	checkbox_animate->set_checked(true);
 
 	yoffset += gap;
 	set_control_group(xoffset, yoffset, slider_zoffset, spin_zoffset, label_zoffset, "Z Offset", 1.5f, 4.6f, 0.2f, 3.5f);
@@ -65,7 +66,7 @@ Panel3D::Panel3D(clan::GUIManager &manager) :
 	set_control_group(xoffset, yoffset, slider_material_shininess, spin_material_shininess, label_material_shininess, "Material Shininess", 0.0f, 1.0f, 0.1f, 0.4f);
 
 	yoffset += gap;
-	set_control_group(xoffset, yoffset, slider_material_emission, spin_material_emission, label_material_emission, "Material Emission", 0.0f, 1.0f, 0.1f, 0.5f);
+	set_control_group(xoffset, yoffset, slider_material_emission, spin_material_emission, label_material_emission, "Material Emission", 0.0f, 1.0f, 0.1f, 0.2f);
 
 	yoffset += gap;
 	set_control_group(xoffset, yoffset, slider_material_specular, spin_material_specular, label_material_specular, "Material Specular", 0.0f, 1.0f, 0.1f, 0.0f);
@@ -79,7 +80,7 @@ void Panel3D::set_control_group(int xoffset, int yoffset, clan::Slider *&slider,
 			clan::Spin *&spin, clan::Label *&label, const char *label_name, 
 			float min_value, float max_value, float step_value, float initial_value)
 {
-	clan::Size label_size(50, 15);
+	clan::Size label_size(100, 15);
 
 	slider = new clan::Slider(this);
 	slider->set_geometry(clan::Rect(xoffset, yoffset, clan::Size(100, 17)));

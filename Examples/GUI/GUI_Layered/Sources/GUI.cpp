@@ -58,15 +58,14 @@ bool GUI::run(clan::GameTime &game_time)
 
 	clan::Canvas canvas = app->get_canvas();
 
-	canvas.clear(clan::Colorf(0.0f,0.0f,0.2f, 0.0f));
+	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
 
 	run_manager();
 
-	std::string fps = clan::string_format("FPS: %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
-	fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
-	fps_font.draw_text(canvas, canvas.get_width() - 100, 24, fps, clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
-
-	fps_font.draw_text(canvas, 24, canvas.get_height() - 48, "Rendering GUI onto a clan::Texture, then onto the layered OpenGL window.",  clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
+	//std::string fps = clan::string_format("FPS: %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
+	//fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
+	//fps_font.draw_text(canvas, canvas.get_width() - 100, 24, fps, clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
+	//fps_font.draw_text(canvas, 24, canvas.get_height() - 48, "Press escape when focused on window to exit",  clan::Colorf(4.0f, 4.0f, 1.0f, 1.0f));
 
 	clan::KeepAlive::process();
 	app->get_window()->flip(0);

@@ -41,14 +41,6 @@ GUI_Layered::GUI_Layered(GUI *gui) : gui(gui), canvas(gui->get_app()->get_canvas
 	clan::TextureGroup texture_group(clan::Size(1024, 1024));
 	wm.set_texture_group(texture_group);	// Note: This line is optional
 
-	//resources_gui = clan::ResourceManager(gui->get_resources_location());
-
-	//theme.set_resources(resources_gui);
-	//gui_manager->set_theme(theme); 
-
-	//gui_manager->set_css_document(gui->get_theme_location());
-
-
 	setup_shader();
 
 	wobble_offset = 0.0f;
