@@ -86,6 +86,9 @@ public:
 	ClipZRange get_clip_z_range() const { return clip_zero_positive_w; }
 	TextureImageYAxis get_texture_image_y_axis() const { return y_axis_top_down; }
 	ShaderLanguage get_shader_language() const { return shader_hlsl; }
+	int get_major_version() const;
+	int get_minor_version() const;
+	bool has_compute_shader_support() const;
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 	OcclusionQueryProvider *alloc_occlusion_query();

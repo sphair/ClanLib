@@ -48,6 +48,7 @@
 #include "API/Display/Render/transfer_texture.h"
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/Window/display_window_description.h"
+#include "API/D3D/d3d_target.h"
 
 namespace clan
 {
@@ -701,6 +702,58 @@ void D3DGraphicContextProvider::on_window_resized()
 {
 	Size new_size = window->get_viewport().get_size();
 	window_resized_signal.invoke(new_size);
+}
+
+int D3DGraphicContextProvider::get_major_version() const
+{
+	switch (window->get_feature_level())
+	{
+	case D3D_FEATURE_LEVEL_9_1:
+	case D3D_FEATURE_LEVEL_9_2:
+	case D3D_FEATURE_LEVEL_9_3: return 9;
+	case D3D_FEATURE_LEVEL_10_0:
+	case D3D_FEATURE_LEVEL_10_1: return 10;
+	case D3D_FEATURE_LEVEL_11_0:
+	default:
+	case D3D_FEATURE_LEVEL_11_1: return 11;
+	}
+}
+
+int D3DGraphicContextProvider::get_minor_version() const
+{
+	switch (window->get_feature_level())
+	{
+	case D3D_FEATURE_LEVEL_9_1: return 1;
+	case D3D_FEATURE_LEVEL_9_2: return 2;
+	case D3D_FEATURE_LEVEL_9_3: return 3;
+	case D3D_FEATURE_LEVEL_10_0: return 0;
+	case D3D_FEATURE_LEVEL_10_1: return 1;
+	case D3D_FEATURE_LEVEL_11_0: return 0;
+	default:
+	case D3D_FEATURE_LEVEL_11_1: return 1;
+	}
+}
+
+bool D3DGraphicContextProvider::has_compute_shader_support() const
+{
+	switch(window->get_feature_level())
+	{
+	case D3D_FEATURE_LEVEL_9_1:
+	case D3D_FEATURE_LEVEL_9_2:
+	case D3D_FEATURE_LEVEL_9_3: return false;
+	case D3D_FEATURE_LEVEL_10_0:
+	case D3D_FEATURE_LEVEL_10_1: break;
+	case D3D_FEATURE_LEVEL_11_0:
+	default:
+	case D3D_FEATURE_LEVEL_11_1: return true;
+	}
+	
+	D3D11_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS options = { 0 };
+
+	HRESULT result = window->get_device()->CheckFeatureSupport(D3D11_FEATURE_D3D10_X_HARDWARE_OPTIONS, &options, sizeof(D3D11_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS));
+	D3DTarget::throw_if_failed("D3D11Device.CheckFeatureSupport(D3D11_FEATURE_D3D10_X_HARDWARE_OPTIONS) failed", result);
+
+	return options.ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x != FALSE;
 }
 
 /////////////////////////////////////////////////////////////////////////////
