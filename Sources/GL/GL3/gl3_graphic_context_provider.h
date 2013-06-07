@@ -92,8 +92,8 @@ public:
 
 	const DisplayWindowProvider & get_render_window() const;
 	Size get_display_window_size() const;
-	void get_opengl_version(int &version_major, int &version_minor);
-	void get_opengl_version(int &version_major, int &version_minor, int &version_release) { get_opengl_version(version_major, version_minor); version_release = 0; }
+	void get_opengl_version(int &version_major, int &version_minor) const;
+	void get_opengl_version(int &version_major, int &version_minor, int &version_release) const { get_opengl_version(version_major, version_minor); version_release = 0; }
 	void get_opengl_shading_language_version(int &version_major, int &version_minor) { version_major = shader_version_major; version_minor = shader_version_minor; }
 
 	Signal_v1<const Size &> &sig_window_resized() { return window_resized_signal; }
@@ -107,6 +107,9 @@ public:
 	ClipZRange get_clip_z_range() const { return clip_negative_positive_w; }
 	TextureImageYAxis get_texture_image_y_axis() const { return y_axis_bottom_up; }
 	ShaderLanguage get_shader_language() const { return shader_glsl; }
+	int get_major_version() const { int major = 0, minor = 0; get_opengl_version(major, minor); return major; }
+	int get_minor_version() const { int major = 0, minor = 0; get_opengl_version(major, minor); return minor; }
+	bool has_compute_shader_support() const { return false; }
 	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 	OcclusionQueryProvider *alloc_occlusion_query();
 	ProgramObjectProvider *alloc_program_object();
@@ -190,8 +193,8 @@ private:
 
 	bool framebuffer_bound;
 
-	int opengl_version_major;
-	int opengl_version_minor;
+	mutable int opengl_version_major;
+	mutable int opengl_version_minor;
 
 	int shader_version_major;
 	int shader_version_minor;

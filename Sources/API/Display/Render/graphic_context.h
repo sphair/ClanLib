@@ -289,6 +289,24 @@ public:
 	/// \brief Returns the shader language used
 	ShaderLanguage get_shader_language() const;
 
+	/// \brief Returns the major version / feature level supported by the hardware
+	///
+	/// For the OpenGL target, this returns the major OpenGL version the driver supports.
+	/// For the Direct3D target, this returns the major feature level.
+	int get_major_version() const;
+
+	/// \brief Returns the major version / feature level supported by the hardware
+	///
+	/// For the OpenGL target, this returns the minor OpenGL version the driver supports.
+	/// For the Direct3D target, this returns the minor feature level.
+	int get_minor_version() const;
+
+	/// \brief Returns true if the hardware supports compute shaders
+	///
+	/// This always returns true for OpenGL 4.3 or newer, or Direct3D 11.0 or newer. 
+	/// For Direct3D 10.0 and 10.1 the support for compute shaders is optional.
+	bool has_compute_shader_support() const;
+
 	/// \brief Returns the currently selected texture for the specified index.
 	///
 	/// \param index = 0 to x, the index of the texture

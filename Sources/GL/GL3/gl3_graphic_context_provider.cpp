@@ -169,7 +169,7 @@ void GL3GraphicContextProvider::check_opengl_version()
 		throw Exception(string_format("This application requires OpenGL 3.2 or above. Your hardware only supports OpenGL %1.%2. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor));
 }
 
-void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor)
+void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor) const
 {
 	if (!opengl_version_major)	// Is not cached
 	{

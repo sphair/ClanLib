@@ -164,7 +164,7 @@ void GL1GraphicContextProvider::check_opengl_version()
 		throw Exception(string_format("This application requires OpenGL 1.3. Your hardware only supports OpenGL %1.%2.%3. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor, version_release));
 }
 
-void GL1GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+void GL1GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
 {
 /*	The GL_VERSION string begins with a version number. The version number uses one of these forms: 
 	major_number.minor_number 

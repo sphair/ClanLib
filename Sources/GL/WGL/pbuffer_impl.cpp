@@ -136,12 +136,12 @@ ProcAddress *PBuffer_GL1_Impl::get_proc_address(const std::string& function_name
 	return (void (*)())wglGetProcAddress(function_name.c_str());
 }
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor)
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const
 {
 	gc_provider->get_opengl_version(version_major, version_minor);
 }
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
 {
 	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }

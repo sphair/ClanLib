@@ -127,6 +127,21 @@ ShaderLanguage GraphicContext::get_shader_language() const
 	return get_provider()->get_shader_language();
 }
 
+int GraphicContext::get_major_version() const
+{
+	return get_provider()->get_major_version();
+}
+
+int GraphicContext::get_minor_version() const
+{
+	return get_provider()->get_minor_version();
+}
+
+bool GraphicContext::has_compute_shader_support() const
+{
+	return get_provider()->has_compute_shader_support();
+}
+
 Texture GraphicContext::get_texture(int unit) const
 {
 	if ((unit < 0) || (unit >= impl->textures.size()))

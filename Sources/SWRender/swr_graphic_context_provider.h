@@ -104,7 +104,10 @@ public:
 
 	ClipZRange get_clip_z_range() const { return clip_zero_positive_w; }
 	TextureImageYAxis get_texture_image_y_axis() const { return y_axis_top_down; }
-	ShaderLanguage get_shader_language() const { return shader_hlsl; }
+	ShaderLanguage get_shader_language() const { return shader_fixed_function; }
+	int get_major_version() const { return 1; }
+	int get_minor_version() const { return 0; }
+	bool has_compute_shader_support() const { return false; }
 	PixelBuffer get_pixeldata(const Rect& rect, TextureFormat texture_format, bool clamp) const;
 	TextureProvider *alloc_texture(TextureDimensions texture_dimensions);
 	OcclusionQueryProvider *alloc_occlusion_query();
