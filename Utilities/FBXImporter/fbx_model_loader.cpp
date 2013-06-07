@@ -526,13 +526,26 @@ void FBXModelLoader::convert_skins(FbxNode *node, FbxMesh *mesh, VertexMappingVe
 	{
 		for (VertexMapping *mapping = vertices[i]; mapping != nullptr; mapping = mapping->next)
 		{
+			int weight_sum = 0;
+			unsigned int max_sum = 0;
+			unsigned int max_index = 0;
 			for (unsigned int j = 0; j < 4; j++)
 			{
 				if (mapping->bone_selectors[j] == 255)
 				{
 					mapping->bone_selectors[j] = 0;
 				}
+
+				if (mapping->bone_weights[j] > max_sum)
+				{
+					max_sum = mapping->bone_weights[j];
+					max_index = j;
+				}
+
+				weight_sum += mapping->bone_weights[j];
 			}
+			if (weight_sum != 255)
+				mapping->bone_weights[max_index] = mapping->bone_weights[max_index] + (255 - weight_sum);
 		}
 	}
 }
