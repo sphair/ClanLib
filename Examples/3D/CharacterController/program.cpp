@@ -2,7 +2,7 @@
 #include "precomp.h"
 #include "program.h"
 #include "elapsed_timer.h"
-#include "cache_provider.h"
+#include "example_scene_cache.h"
 #include "character_controller.h"
 #include <ClanLib/application.h>
 
