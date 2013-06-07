@@ -224,24 +224,24 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 	viewport.set(Size(640, 480));
 	camera_field_of_view.set(60.0f);
 
-	bool use_simple_pass = false;
+	bool use_compute_shader_pass = true;
 
 	if (gc.get_shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
 	{
-		use_simple_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 3);
+		use_compute_shader_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 3);
 	}
 	else if (gc.get_shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 10.1
 	{
-		use_simple_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 1 && gc.has_compute_shader_support());
+		use_compute_shader_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 1 && gc.has_compute_shader_support());
 	}
 
-	if (use_simple_pass)
+	if (use_compute_shader_pass)
 	{
-		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
+		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
 	}
 	else
 	{
-		lightsource_pass = std::unique_ptr<LightsourcePass>(new LightsourcePass(gc, shader_path, inout_data));
+		lightsource_simple_pass = std::unique_ptr<LightsourceSimplePass>(new LightsourceSimplePass(gc, shader_path, inout_data));
 	}
 
 	add_pass("gbuffer").func_run().set(gbuffer_pass.get(), &GBufferPass::run, this);
