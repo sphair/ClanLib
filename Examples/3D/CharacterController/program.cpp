@@ -14,7 +14,12 @@ int Program::main(const std::vector<std::string> &args)
 {
 	SetupCore setup_core;
 	SetupDisplay setup_display;
-	SetupD3D setup_d3d;
+	//SetupD3D setup_d3d;
+	SetupGL setup_gl;
+
+	clan::OpenGLWindowDescription opengl_desc;
+	opengl_desc.set_version(3, 2, false);
+	clan::OpenGLTarget::set_description(opengl_desc);
 
 	DisplayWindow window("Scene3D Example", 1600, 900, false, true);
 
