@@ -1,6 +1,6 @@
 
 #include "precomp.h"
-#include "cache_provider.h"
+#include "example_scene_cache.h"
 
 using namespace clan;
 
