@@ -228,11 +228,11 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 
 	if (gc.get_shader_language() == shader_glsl) // Compute shaders introduced in OpenGL 4.3
 	{
-		use_compute_shader_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 3);
+		use_compute_shader_pass = gc.has_compute_shader_support();
 	}
 	else if (gc.get_shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 10.1
 	{
-		use_compute_shader_pass = gc.get_major_version() > 4 || (gc.get_major_version() == 4 && gc.get_minor_version() >= 1 && gc.has_compute_shader_support());
+		use_compute_shader_pass = gc.get_major_version() > 10 || (gc.get_major_version() == 10 && gc.get_minor_version() >= 1 && gc.has_compute_shader_support());
 	}
 
 	if (use_compute_shader_pass)
