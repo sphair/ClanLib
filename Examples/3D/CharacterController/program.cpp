@@ -14,7 +14,7 @@ int Program::main(const std::vector<std::string> &args)
 {
 	SetupCore setup_core;
 	SetupDisplay setup_display;
-	//SetupD3D setup_d3d;
+	SetupD3D setup_d3d;
 	SetupGL setup_gl;
 
 	clan::OpenGLWindowDescription opengl_desc;
