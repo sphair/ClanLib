@@ -225,12 +225,12 @@ void PBuffer_GL1_Impl::make_current() const
 	window_provider->glx.glXMakeCurrent(window_provider->get_display(), pbuffer, pbuffer_context);
 }
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor)
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor) const
 {
 	gc_provider->get_opengl_version(version_major, version_minor);
 }
 
-void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release)
+void PBuffer_GL1_Impl::get_opengl_version(int &version_major, int &version_minor, int &version_release) const
 {
 	gc_provider->get_opengl_version(version_major, version_minor, version_release);
 }
