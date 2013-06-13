@@ -62,7 +62,7 @@ VertexOut main(VertexIn input, uint instanceId : SV_InstanceId)
 	float4x4 EyeToProjection = loadMat4(vectorsOffset + instanceId * VectorsPerInstance + 11);
 
 	VertexOut output;
-	float4 positionInObject = ApplyBones(input, vectorsOffset + instanceId * VectorsPerInstance + 15);
+	float4 positionInObject = ApplyBones(input, vectorsOffset + instanceId * VectorsPerInstance + 16);
 	output.PositionInEye = mul(WorldToEye, mul(ObjectToWorld, positionInObject));
 	output.PositionInProjection = mul(EyeToProjection, output.PositionInEye);
 	return output;
