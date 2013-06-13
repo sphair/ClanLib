@@ -52,10 +52,13 @@ int Program::main(const std::vector<std::string> &args)
 	light2.set_attenuation_end(1000.0f);
 	light2.set_color(Vec3f(0.4f));
 
-	//SceneModel model(gc, scene, "Models/HammerTime/hammer_time.fbx");
-	//SceneModel model(gc, scene, "Models/YellowPowerup/yellow_powerup.fbx");
-	SceneModel model(gc, scene, "Models/TestCube/test_cube.fbx");
-	SceneObject object(scene, model, Vec3f(), Quaternionf(), Vec3f(10.0f));
+	SceneModel model1(gc, scene, "Models/HammerTime/hammer_time.fbx");
+	SceneModel model2(gc, scene, "Models/YellowPowerup/yellow_powerup.fbx");
+	SceneModel model3(gc, scene, "Models/TestCube/test_cube.fbx");
+
+	SceneObject object1(scene, model1, Vec3f(30.0f, 30.0f, 30.0f), Quaternionf(), Vec3f(10.0f));
+	SceneObject object2(scene, model2, Vec3f(), Quaternionf(), Vec3f(10.0f));
+	SceneObject object3(scene, model3, Vec3f(-30.0f, 30.0f, 30.0f), Quaternionf(), Vec3f(10.0f));
 
 	SceneCamera camera(scene);
 	scene.set_camera(camera);
@@ -85,7 +88,9 @@ int Program::main(const std::vector<std::string> &args)
 		camera.set_orientation(Quaternionf(up, dir, 0.0f, angle_degrees, order_YXZ));
 		camera.set_position(camera.get_orientation().rotate_vector(Vec3f(0.0f, 0.0f, -50.0f)));
 
-		object.update(gametime.get_time_elapsed());
+		object1.update(gametime.get_time_elapsed());
+		object2.update(gametime.get_time_elapsed());
+		object3.update(gametime.get_time_elapsed());
 		scene.update(gc, gametime.get_time_elapsed());
 
 		scene.set_viewport(gc.get_size());
