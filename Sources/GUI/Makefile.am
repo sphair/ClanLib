@@ -17,6 +17,7 @@ Components/scrollbar.cpp \
 Components/scrollbar_impl.cpp \
 Components/spin.cpp \
 Components/tab.cpp \
+Components/dragbox.cpp \
 Components/Menus/popupmenu_window.cpp \
 Components/Menus/menubar.cpp \
 Components/Menus/popupmenu.cpp \

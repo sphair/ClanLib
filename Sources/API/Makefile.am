@@ -81,6 +81,7 @@ clanGUI_includes = \
 	GUI/Components/toolbar.h \
 	GUI/Components/toolbar_item.h \
 	GUI/Components/textedit.h \
+	GUI/Components/dragbox.h \
 	GUI/Components/tab_page.h \
 	GUI/Components/openfiledialog.h \
 	GUI/Components/scrollbar.h \
