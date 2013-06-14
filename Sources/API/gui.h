@@ -76,6 +76,7 @@
 #include "GUI/Components/progressbar.h"
 #include "GUI/Components/push_button.h"
 #include "GUI/Components/radiobutton.h"
+#include "GUI/Components/dragbox.h"
 #include "GUI/Components/savefiledialog.h"
 #include "GUI/Components/scrollbar.h"
 #include "GUI/Components/spin.h"

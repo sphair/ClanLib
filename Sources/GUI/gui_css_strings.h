@@ -53,6 +53,10 @@ namespace CssStr
 		const std::string type_name = "groupbox";
 	}
 
+	namespace DragBox
+	{
+		const std::string type_name = "dragbox";
+	}
 	namespace MessageBox
 	{
 		const std::string type_name = "messagebox";
