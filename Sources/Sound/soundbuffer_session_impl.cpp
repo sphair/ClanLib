@@ -97,7 +97,7 @@ void SoundBuffer_Session_Impl::get_data()
 	int num_session_channels = provider_session->get_num_channels();
 	if (num_session_channels != num_buffer_channels)
 	{
-		cl_log_event("mixer", "Number of session channels does not match the number of buffers");
+		log_event("mixer", "Number of session channels does not match the number of buffers");
 		return;
 	}
 

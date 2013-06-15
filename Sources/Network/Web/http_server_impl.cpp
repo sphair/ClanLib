@@ -312,7 +312,7 @@ void HTTPServer_Impl::connection_thread_main(TCPConnection connection)
 	}
 	catch (const Exception& e)
 	{
-		cl_log_event("error", e.message);
+		log_event("error", e.message);
 	}
 }
 

@@ -83,7 +83,7 @@ void DNSResolver_Impl::thread_main()
 			}
 			catch (const Exception& e)
 			{
-				cl_log_event("dns", "Exception during parsing of response dns packet: %1", e.message);
+				log_event("dns", "Exception during parsing of response dns packet: %1", e.message);
 			}
 		}
 		else

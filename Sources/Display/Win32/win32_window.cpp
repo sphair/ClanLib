@@ -568,7 +568,7 @@ LRESULT Win32Window::window_proc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lpara
 					cl_rect.right = rect.right;
 					cl_rect.bottom = rect.bottom;
 
-					// cl_log_event(string_format("Dirty %1", has_drop_shadow ? " Pop" : ""), string_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
+					// log_event(string_format("Dirty %1", has_drop_shadow ? " Pop" : ""), string_format("Rect: l: %1  t: %2  r: %3  b: %4", cl_rect.left, cl_rect.top, cl_rect.right, cl_rect.bottom));
 
 					if (site)
 						site->sig_paint->invoke(cl_rect);
@@ -1656,7 +1656,7 @@ void Win32Window::create_hid_devices()
 					}
 					catch (const Exception& error)
 					{
-						cl_log_event("debug", "Could not setup game controller: %1", error.message);
+						log_event("debug", "Could not setup game controller: %1", error.message);
 					}
 				}
 			}

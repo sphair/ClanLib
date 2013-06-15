@@ -74,7 +74,7 @@ SoundOutput_DirectSound::SoundOutput_DirectSound(int mixing_frequency, int mixin
 	catch (const Exception &e)
 	{
 		release_resources();
-		cl_log_event("mixer", e.message);
+		log_event("mixer", e.message);
 		frag_size = mixing_frequency/2;
 		has_sound = false;
 	}
