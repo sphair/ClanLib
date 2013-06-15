@@ -38,7 +38,6 @@ namespace clan
 {
 
 class GUIMessage;
-class GUITheme;
 class GUIWindowManager;
 class GUIComponent_Impl;
 class InputEvent;
