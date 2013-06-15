@@ -224,7 +224,6 @@ public:
 	inline operator unsigned int() const { return to_uinteger(); }
 	inline operator int() const { return to_integer(); }
 	inline operator unsigned char() const { return to_ucharacter(); }
-	inline operator char() const { return to_character(); }
 	inline operator float() const { return to_number(); }
 	inline operator std::string() const { return to_string(); }
 	inline operator bool() const { return to_boolean(); }
