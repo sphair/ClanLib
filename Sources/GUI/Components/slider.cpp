@@ -75,7 +75,11 @@ public:
 		tick_width(10),
 		page_step(10),
 		last_step_size(0),
-		slider_track_width(0)
+		slider_track_width(0),
+		slider_track_height(0),
+		mouse_drag_start_value(0),
+		mouse_down_mode(),
+		slider(0)
 	{
 	}
 
