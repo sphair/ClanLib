@@ -110,7 +110,7 @@ ComputeContext_Impl::~ComputeContext_Impl()
 
 void ComputeContext_Impl::error_notify(const char *errinfo, const void *private_info, size_t private_length)
 {
-	cl_log_event("OpenCL", errinfo);
+	log_event("OpenCL", errinfo);
 }
 
 void ComputeContext_Impl::static_error_notify(const char *errinfo, const void *private_info, size_t private_length, void *user_data)

@@ -71,18 +71,18 @@ void Logger::disable()
 		instances.erase(il);
 }
 
-void cl_log_event(const std::string &type, const std::string &text)
+void Logger::log(const std::string &type, const std::string &text)
+{
+	throw Exception("Implement me");
+}
+
+void log_event(const std::string &type, const std::string &text)
 {
 	MutexSection mutex_lock(&Logger::mutex);
 	if (Logger::instances.empty())
 		return;
 	for(std::vector<Logger*>::iterator il = Logger::instances.begin(); il != Logger::instances.end(); il++)
 		(*il)->log(type, text);
-}
-
-void Logger::log(const std::string &type, const std::string &text)
-{
-	throw Exception("Implement me");
 }
 
 /////////////////////////////////////////////////////////////////////////////

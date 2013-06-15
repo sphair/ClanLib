@@ -431,7 +431,7 @@ void D3DDisplayWindowProvider::validate_context()
 		HRESULT result = debug->ValidateContext(device_context);
 		if (FAILED(result) || result == S_FALSE)
 		{
-			cl_log_event("d3d", "Direct3D context not valid before draw call!");
+			log_event("d3d", "Direct3D context not valid before draw call!");
 		}
 	}
 }
@@ -510,7 +510,7 @@ void D3DDisplayWindowProvider::log_debug_messages()
 				continue;
 
 			std::string text(message->pDescription, message->DescriptionByteLength);
-			cl_log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
+			log_event("d3d", "%4 (id=%1, category=%2, severity=%3)", message->ID, message->Category, message->Severity, text);
 		}
 		info_queue->ClearStoredMessages();
 	}
