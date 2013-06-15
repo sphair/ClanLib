@@ -51,7 +51,6 @@ class CSSDocument;
 class CSSLayout;
 class GUIComponent;
 class GUIMessage;
-class GUITheme;
 class GUIWindowManager;
 class GUIManager_Impl;
 class Font;
@@ -110,9 +109,6 @@ public:
 	/// \brief Returns true if the parent is the GUI manager.
 	bool is_gui_manager() const { return true; }
 
-	/// \brief Returns the GUI theme being used.
-	GUITheme get_theme() const;
-
 	/// \brief Returns the CSS document being used.
 	CSSDocument get_css_document() const;
 
@@ -153,9 +149,6 @@ public:
 	/// \brief Adds a GUI theme directory.
 	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
 	void add_theme(const std::string &path_to_theme);
-
-	/// \brief Sets the GUI theme.
-	void set_theme(GUITheme &theme);
 
 	/// \brief Sets the CSS document.
 	void set_css_document(CSSDocument css);

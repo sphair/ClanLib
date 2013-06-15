@@ -62,7 +62,6 @@ class Cursor;
 class GUIMessage;
 class GUIManager;
 class GUITopLevelWindow;
-class GUITheme;
 class ResourceManager;
 class GUIConsumedKeys;
 class GUIComponent_Impl;
@@ -183,9 +182,6 @@ public:
 
 	/// \brief Returns the GUI manager owning this component.
 	GUIManager get_gui_manager() const;
-
-	/// \brief Returns the theme used by this component.
-	GUITheme get_theme() const;
 
 	/// \brief Returns the parent component.
 	/** <p>Only child components has a parent.</p>*/
