@@ -25,6 +25,11 @@
 @import "messagebox.css";
 @import "ribbon.css";
 
+dragbox
+{
+	background-color: #a0a0f0;
+}
+
 *
 {
 	display:flex;
