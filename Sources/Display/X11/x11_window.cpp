@@ -1433,7 +1433,7 @@ void X11Window::setup_joysticks()
 			}
 			catch (Exception error)
 			{
-				cl_log_event("debug", "Joystick Error: %1", error.message);
+				log_event("debug", "Joystick Error: %1", error.message);
 			}
 		}
 	}
