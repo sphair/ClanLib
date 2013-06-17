@@ -54,7 +54,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 	rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
 	if (rc < 0)
 	{
-		cl_log_event("warn", "ClanSound: Couldn't open sound device, disabling sound");
+		log_event("warn", "ClanSound: Couldn't open sound device, disabling sound");
 		handle = NULL;
 		return;
 	}
@@ -73,7 +73,7 @@ SoundOutput_alsa::SoundOutput_alsa(int mixing_frequency, int mixing_latency) :
 	rc = snd_pcm_hw_params(handle, hwparams);
 	if (rc < 0)
 	{
-		cl_log_event("warn", "ClanSound: Couldn't initialize sound device, disabling sound");
+		log_event("warn", "ClanSound: Couldn't initialize sound device, disabling sound");
 		snd_pcm_close(handle);
 		handle = NULL;
 		return;
@@ -112,7 +112,7 @@ bool SoundOutput_alsa::is_full()
 	
 	rc = snd_pcm_delay(handle, &delay);
 	if (rc < 0) {
-		cl_log_event("debug", "ClanSound: snd_pcm_delay() failed!?");
+		log_event("debug", "ClanSound: snd_pcm_delay() failed!?");
 		return false;
 	}
 
@@ -145,7 +145,7 @@ void SoundOutput_alsa::write_fragment(float *data)
 
 	rc = snd_pcm_writei(handle, data, frames_in_period);
 	if (rc < 0)
-		cl_log_event("debug", "ClanSound: snd_pcm_writei() failed!");
+		log_event("debug", "ClanSound: snd_pcm_writei() failed!");
 }
 
 void SoundOutput_alsa::wait()

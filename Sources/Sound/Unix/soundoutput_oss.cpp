@@ -75,7 +75,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 
 	if (ioctl(dev_dsp_fd, SNDCTL_DSP_SETFRAGMENT, &frag_settings))
 	{
-		cl_log_event("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
+		log_event("debug", "ClanSound: Failed to set soundcard fragment size. Sound may have a long latency.");
 	}
 
 #endif
@@ -111,7 +111,7 @@ SoundOutput_OSS::SoundOutput_OSS(int mixing_frequency, int mixing_latency) :
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETBLKSIZE, &frag_size);
 	if (err == -1)
 	{
-		cl_log_event("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
+		log_event("debug", "ClanSound: Warning, Couldn't get sound device blocksize. Using 0.25 sec mixing buffer.");
 		frag_size = mixing_frequency/2; // 0.25 sec mixing buffer used.
 	}
 
@@ -145,7 +145,7 @@ bool SoundOutput_OSS::is_full()
 	int err = ioctl(dev_dsp_fd, SNDCTL_DSP_GETOSPACE, &info);
 	if (err == -1)
 	{
-		cl_log_event("debug", "ClanSound: fragments free not supported by device!?");
+		log_event("debug", "ClanSound: fragments free not supported by device!?");
 		return false; // not supported by device!?
 	}
 
