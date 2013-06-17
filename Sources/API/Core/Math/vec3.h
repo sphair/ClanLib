@@ -203,11 +203,6 @@ public:
 /// \{
 
 public:
-	const Type &operator[](unsigned int i) const { return ((Type *) this)[i]; }
-	Type &operator[](unsigned int i) { return ((Type *) this)[i]; }
-	operator Type *() { return (Type *) this; }
-	operator Type * const() const { return (Type * const) this; }
-
 	/// \brief += operator.
 	void operator += (const Vec3<Type>& vector) { x+= vector.x; y+= vector.y; z+= vector.z; }
 

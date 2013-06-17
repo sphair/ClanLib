@@ -437,7 +437,7 @@ public:
 	void set_rasterizer_state(const RasterizerState &state);
 
 	/// \brief Set active blend state
-	void set_blend_state(const BlendState &state, const Vec4f &blend_color = Vec4f(1.0f), unsigned int sample_mask = 0xffffffff);
+	void set_blend_state(const BlendState &state, const Colorf &blend_color = Colorf::white, unsigned int sample_mask = 0xffffffff);
 
 	/// \brief Set active depth stencil state
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref = 0);

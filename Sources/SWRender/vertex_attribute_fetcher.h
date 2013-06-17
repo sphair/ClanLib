@@ -330,8 +330,9 @@ inline Vec4f VertexAttributeFetcherArrayUnsignedByte::fetch(int index, const Vec
 {
 	const unsigned char *v = static_cast<const unsigned char *>(find_vertex_data(index));
 	Vec4f result = default_value;
+
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -340,7 +341,7 @@ inline Vec4f VertexAttributeFetcherArrayUnsignedShort::fetch(int index, const Ve
 	const unsigned short *v = static_cast<const unsigned short *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -349,7 +350,7 @@ inline Vec4f VertexAttributeFetcherArrayUnsignedInt::fetch(int index, const Vec4
 	const unsigned int *v = static_cast<const unsigned int *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -358,7 +359,7 @@ inline Vec4f VertexAttributeFetcherArrayByte::fetch(int index, const Vec4f &defa
 	const char *v = static_cast<const char *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -367,7 +368,7 @@ inline Vec4f VertexAttributeFetcherArrayShort::fetch(int index, const Vec4f &def
 	const short *v = static_cast<const short *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -376,7 +377,7 @@ inline Vec4f VertexAttributeFetcherArrayInt::fetch(int index, const Vec4f &defau
 	const int *v = static_cast<const int *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -385,7 +386,7 @@ inline Vec4f VertexAttributeFetcherArrayFloat::fetch(int index, const Vec4f &def
 	const float *v = static_cast<const float *>(find_vertex_data(index));
 	Vec4f result = default_value;
 	for (unsigned int i=0; i<range; i++)
-		result[i] = v[i];
+		(&result.x)[i] = v[i];
 	return result;
 }
 
@@ -395,9 +396,9 @@ inline void VertexAttributeFetcherArrayFloat::fetch(Vec4f *result, int *indexes,
 	{
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
 		for (unsigned int j=0; j<range; j++)
-			result[i][j] = v[j];
+			(&result[i].x)[j] = v[j];
 		for (unsigned int j=range; j<4; j++)
-			result[i][j] = default_value[j];
+			(&result[i].x)[j] = (&default_value.x)[j];
 	}
 }
 
@@ -408,9 +409,9 @@ inline void VertexAttributeFetcherArrayFloat::fetch(Vec2f *result, int *indexes,
 		const float *v = static_cast<const float *>(find_vertex_data(indexes[i]));
 		int r = min( static_cast<int>(range), 2);
 		for (unsigned int j=0; j<r; j++)
-			result[i][j] = v[j];
+			(&result[i].x)[j] = v[j];
 		for (unsigned int j=r; j<2; j++)
-			result[i][j] = default_value[j];
+			(&result[i].x)[j] = (&default_value.x)[j];
 	}
 }
 

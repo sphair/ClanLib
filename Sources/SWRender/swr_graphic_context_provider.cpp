@@ -229,7 +229,7 @@ void SWRenderGraphicContextProvider::set_rasterizer_state(RasterizerStateProvide
 	}
 }
 
-void SWRenderGraphicContextProvider::set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask)
+void SWRenderGraphicContextProvider::set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask)
 {
 	if (state)
 	{
