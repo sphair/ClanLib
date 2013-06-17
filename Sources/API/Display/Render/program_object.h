@@ -308,9 +308,9 @@ public:
 	void set_uniform2b(int location, Vec2b vec) {set_uniform2i(location, vec.x, vec.y);}
 	void set_uniform3b(int location, Vec3b vec) {set_uniform3i(location, vec.x, vec.y, vec.z);}
 	void set_uniform4b(int location, Vec4b vec) {set_uniform4i(location, vec.x, vec.y, vec.z, vec.w);}
-	void set_uniformiv(int location, int count, Vec2i *data) {set_uniformiv(location, 2, count, *data);}
-	void set_uniformiv(int location, int count, Vec3i *data) {set_uniformiv(location, 3, count, *data);}
-	void set_uniformiv(int location, int count, Vec4i *data) {set_uniformiv(location, 4, count, *data);}
+	void set_uniformiv(int location, int count, Vec2i *data) {set_uniformiv(location, 2, count, &data->x);}
+	void set_uniformiv(int location, int count, Vec3i *data) {set_uniformiv(location, 3, count, &data->x);}
+	void set_uniformiv(int location, int count, Vec4i *data) {set_uniformiv(location, 4, count, &data->x);}
 	void set_uniform1f(int location, float value_a);
 	void set_uniform2f(int location, float value_a, float value_b);
 	void set_uniform3f(int location, float value_a, float value_b, float value_c);
@@ -319,9 +319,9 @@ public:
 	void set_uniform2f(int location, Vec2f vec) {set_uniform2f(location, vec.x, vec.y);}
 	void set_uniform3f(int location, Vec3f vec) {set_uniform3f(location, vec.x, vec.y, vec.z);}
 	void set_uniform4f(int location, Vec4f vec) {set_uniform4f(location, vec.x, vec.y, vec.z, vec.w);}
-	void set_uniformfv(int location, int count, Vec2f *data) {set_uniformfv(location, 2, count, *data);}
-	void set_uniformfv(int location, int count, Vec3f *data) {set_uniformfv(location, 3, count, *data);}
-	void set_uniformfv(int location, int count, Vec4f *data) {set_uniformfv(location, 4, count, *data);}
+	void set_uniformfv(int location, int count, Vec2f *data) {set_uniformfv(location, 2, count, &data->x);}
+	void set_uniformfv(int location, int count, Vec3f *data) {set_uniformfv(location, 3, count, &data->x);}
+	void set_uniformfv(int location, int count, Vec4f *data) {set_uniformfv(location, 4, count, &data->x);}
 	void set_uniform_matrix(int location, int size, int count, bool transpose, float *data);
 	void set_uniform_matrix(int location, Mat2f matrix) {set_uniform_matrix(location, 2, 1, false, matrix.matrix);}
 	void set_uniform_matrix(int location, Mat3f matrix) {set_uniform_matrix(location, 3, 1, false, matrix.matrix);}

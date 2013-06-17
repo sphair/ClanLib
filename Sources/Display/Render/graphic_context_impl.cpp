@@ -59,7 +59,7 @@ GraphicContext_Impl::GraphicContext_Impl(const GraphicContext_Impl *from_gc, boo
 	else
 	{
 		set_rasterizer_state(default_rasterizer_state);
-		set_blend_state(default_blend_state,  Vec4f(1.0f), 0xffffffff);
+		set_blend_state(default_blend_state,  Colorf::white, 0xffffffff);
 		set_depth_stencil_state(default_depth_stencil_state, 0);
 	}
 }
@@ -244,7 +244,7 @@ void GraphicContext_Impl::set_rasterizer_state(const RasterizerState &state)
 	graphic_screen->on_rasterizer_state_changed(this);
 }
 
-void GraphicContext_Impl::set_blend_state(const BlendState &state, const Vec4f &new_blend_color, unsigned int new_sample_mask)
+void GraphicContext_Impl::set_blend_state(const BlendState &state, const Colorf &new_blend_color, unsigned int new_sample_mask)
 {
 	blend_state = state;
 	blend_color = new_blend_color;

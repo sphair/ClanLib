@@ -107,7 +107,7 @@ public:
 	std::shared_ptr<BlendStateProvider> create_blend_state(const BlendStateDescription &desc);
 	std::shared_ptr<DepthStencilStateProvider> create_depth_stencil_state(const DepthStencilStateDescription &desc);
 	void set_rasterizer_state(RasterizerStateProvider *state);
-	void set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask);
+	void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask);
 	void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref);
 	void set_program_object(StandardProgram standard_program);
 	void set_program_object(const ProgramObject &program);

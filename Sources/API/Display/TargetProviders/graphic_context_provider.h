@@ -202,7 +202,7 @@ public:
 	virtual void set_rasterizer_state(RasterizerStateProvider *state) = 0;
 
 	/// \brief Set active blend state
-	virtual void set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask) = 0;
+	virtual void set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask) = 0;
 
 	/// \brief Set active depth stencil state
 	virtual void set_depth_stencil_state(DepthStencilStateProvider *state, int stencil_ref) = 0;

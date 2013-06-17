@@ -374,7 +374,7 @@ void GL1GraphicContextProvider::set_rasterizer_state(RasterizerStateProvider *st
 	}
 }
 
-void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const Vec4f &blend_color, unsigned int sample_mask)
+void GL1GraphicContextProvider::set_blend_state(BlendStateProvider *state, const Colorf &blend_color, unsigned int sample_mask)
 {
 	if (state)
 	{

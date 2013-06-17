@@ -69,7 +69,7 @@ public:
 	void reset_program_object();
 
 	void set_rasterizer_state(const RasterizerState &state);
-	void set_blend_state(const BlendState &state, const Vec4f &blend_color, unsigned int sample_mask);
+	void set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask);
 	void set_depth_stencil_state(const DepthStencilState &state, int stencil_ref);
 
 	void set_draw_buffer(DrawBuffer buffer);

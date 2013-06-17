@@ -291,7 +291,7 @@ void GraphicContext::set_rasterizer_state(const RasterizerState &state)
 	impl->set_rasterizer_state(state);
 }
 
-void GraphicContext::set_blend_state(const BlendState &state, const Vec4f &blend_color, unsigned int sample_mask)
+void GraphicContext::set_blend_state(const BlendState &state, const Colorf &blend_color, unsigned int sample_mask)
 {
 	impl->set_blend_state(state, blend_color, sample_mask);
 }

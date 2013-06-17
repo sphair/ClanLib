@@ -76,20 +76,6 @@ public:
 	Vec2hf(const Vec2i &copy) : x((float)copy.x), y((float)copy.y) { }
 
 public:
-	const HalfFloat &operator[](unsigned int i) const { return ((HalfFloat *) this)[i]; }
-	HalfFloat &operator[](unsigned int i) { return ((HalfFloat *) this)[i]; }
-	operator HalfFloat *() { return (HalfFloat *) this; }
-	operator HalfFloat * const() const { return (HalfFloat * const) this; }
-
-	/// \brief == operator.
-	//bool operator == (const Vec1hf& vector) const {return ((x == vector.x));}
-
-	/// \brief != operator.
-	//bool operator != (const Vec1hf& vector) const {return ((x != vector.x));}
-
-	/// \brief < operator.
-	//bool operator < (const Vec1hf& vector) const { return x < vector.x; }
-
 	operator Vec2f() const { return to_float(); }
 	Vec2f to_float() const { return Vec2f((float)x, (float)y); }
 };
@@ -121,20 +107,6 @@ public:
 	Vec3hf(const Vec3i &copy) : x((float)copy.x), y((float)copy.y), z((float)copy.z) { }
 
 public:
-	const HalfFloat &operator[](unsigned int i) const { return ((HalfFloat *) this)[i]; }
-	HalfFloat &operator[](unsigned int i) { return ((HalfFloat *) this)[i]; }
-	operator HalfFloat *() { return (HalfFloat *) this; }
-	operator HalfFloat * const() const { return (HalfFloat * const) this; }
-
-	/// \brief == operator.
-	//bool operator == (const Vec1hf& vector) const {return ((x == vector.x));}
-
-	/// \brief != operator.
-	//bool operator != (const Vec1hf& vector) const {return ((x != vector.x));}
-
-	/// \brief < operator.
-	//bool operator < (const Vec1hf& vector) const { return x < vector.x; }
-
 	operator Vec3f() const { return to_float(); }
 	Vec3f to_float() const { return Vec3f((float)x, (float)y, (float)z); }
 };
@@ -168,20 +140,6 @@ public:
 	explicit Vec4hf(const float *array_xyzw) : x(array_xyzw[0]), y(array_xyzw[1]), z(array_xyzw[2]), w(array_xyzw[3]) { }
 
 public:
-	const HalfFloat &operator[](unsigned int i) const { return ((HalfFloat *) this)[i]; }
-	HalfFloat &operator[](unsigned int i) { return ((HalfFloat *) this)[i]; }
-	operator HalfFloat *() { return (HalfFloat *) this; }
-	operator HalfFloat * const() const { return (HalfFloat * const) this; }
-
-	/// \brief == operator.
-	//bool operator == (const Vec1hf& vector) const {return ((x == vector.x));}
-
-	/// \brief != operator.
-	//bool operator != (const Vec1hf& vector) const {return ((x != vector.x));}
-
-	/// \brief < operator.
-	//bool operator < (const Vec1hf& vector) const { return x < vector.x; }
-
 	operator Vec4f() const { return to_float(); }
 	Vec4f to_float() const { return Vec4f((float)x, (float)y, (float)z, (float)w); }
 };

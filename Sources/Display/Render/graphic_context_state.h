@@ -66,7 +66,7 @@ public:
 
 	RasterizerState rasterizer_state;
 	BlendState blend_state;
-	Vec4f blend_color;
+	Colorf blend_color;
 	unsigned int sample_mask;
 	DepthStencilState depth_stencil_state;
 	int stencil_ref;
