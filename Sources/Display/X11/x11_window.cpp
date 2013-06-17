@@ -1405,24 +1405,18 @@ void X11Window::setup_joysticks()
 
 #ifdef HAVE_LINUX_JOYSTICK_H
 
-	char pathname[128];
-	char joydev[128];
-
+	std::string joydev;
 	if (access("/dev/input/", R_OK | X_OK) == 0)
-	{
-		strcpy(joydev, "/dev/input/js%d");
-	} 
+		joydev = "/dev/input/js%1";
 	else
-	{
-		strcpy(joydev, "/dev/js%d");
-	}
+		joydev = "/dev/js%1";
 
 	const int max_joysticks = 16;
 	for(int i = 0; i < max_joysticks; ++i)
 	{
-		snprintf(pathname, sizeof(pathname), joydev, i);
-		
-		if (access(pathname, R_OK) == 0)
+		std::string pathname = string_format(joydev, i);
+
+		if (access(pathname.c_str(), R_OK) == 0)
 		{
 			try
 			{
@@ -1436,7 +1430,7 @@ void X11Window::setup_joysticks()
 				joystick_connection.handle = joystick_provider->get_fd();
 				current_window_events.push_back(joystick_connection);
 
-			} 
+			}
 			catch (Exception error)
 			{
 				cl_log_event("debug", "Joystick Error: %1", error.message);
