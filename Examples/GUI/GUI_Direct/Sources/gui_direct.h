@@ -61,15 +61,8 @@ private:
 	ScrollBar *scrollbar;
 	PushButton *pushbutton;
 	LineEdit *lineedit;
-	CheckBox *checkbox;
 	Slider *slider;
-	RadioButton *radiobutton;
-	ProgressBar *progressbar;
-	TabPage *tabpage;
-	MenuBar *menubar;
-	Spin *spin;
 	ComboBox *combobox;
-	ListView *listview;
 
 };
 
