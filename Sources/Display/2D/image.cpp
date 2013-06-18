@@ -124,14 +124,14 @@ Image::Image(GraphicContext &gc, const PixelBuffer &pb, const Rect &rect)
 	impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
 }
 
-Image::Image(GraphicContext &gc, Texture2D texture, const Rect &rect)
+Image::Image(Texture2D texture, const Rect &rect)
 : impl(new Image_Impl())
 {
 	impl->texture = texture;
 	impl->texture_rect = rect;
 }
 
-Image::Image(GraphicContext &gc, Subtexture &sub_texture)
+Image::Image(Subtexture &sub_texture)
 : impl(new Image_Impl())
 {
 	impl->texture = sub_texture.get_texture();
@@ -199,7 +199,7 @@ Image Image::load(GraphicContext &gc, const std::string &id, const XMLResourceDo
 			DomNode cur_child(cur_element.get_first_child());
 			if(cur_child.is_null()) 
 			{
-				image = Image(gc, texture, texture.get_size());
+				image = Image(texture, texture.get_size());
 			}
 			else 
 			{
@@ -230,7 +230,7 @@ Image Image::load(GraphicContext &gc, const std::string &id, const XMLResourceDo
 						if ((size.height + position.y) > texture_size.height)
 							size.height = (texture_size.height - position.y);
 
-						image = Image(gc, texture, Rect(position, size));
+						image = Image(texture, Rect(position, size));
 					}
 
 					cur_child = cur_child.get_next_sibling();

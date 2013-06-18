@@ -838,7 +838,7 @@ void GUIWindowManagerProvider_Texture::draw_all_windows(Canvas &canvas, std::vec
 		GUITopLevelWindowTexture *toplevel_window = z_order[index-1];
 		if (toplevel_window->visible)
 		{
-			Image image(canvas, toplevel_window->subtexture);
+			Image image(toplevel_window->subtexture);
 			image.draw(canvas, toplevel_window->geometry.left,  toplevel_window->geometry.top);
 
 			// Draw all children
