@@ -69,13 +69,13 @@ public:
 	/// \param context = Graphic Context
 	/// \param texture = Texture to get image data from
 	/// \param rect = Position and size in texture to get image data from
-	Image(GraphicContext &context, Texture2D texture, const Rect &rect);
+	Image(Texture2D texture, const Rect &rect);
 
 	/// \brief Constructs an image from a subtexture.
 	///
 	/// \param context = Graphic Context
 	/// \param sub_texture = Subtexture to get image data from
-	Image(GraphicContext &context, Subtexture &sub_texture);
+	Image(Subtexture &sub_texture);
 
 	/// \brief Constructs a Image from a pixelbuffer.
 	///
