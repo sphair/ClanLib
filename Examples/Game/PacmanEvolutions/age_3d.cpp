@@ -96,7 +96,7 @@ void Age3D::render(clan::Canvas &canvas, int elapsed_time_ms)
 
 	clan::OpenGL::check_error();
 
-	clan::Image image(canvas, final_texture, final_texture.get_size());
+	clan::Image image(final_texture, final_texture.get_size());
 	image.draw(canvas, 0, 0);
 
 	// Draw billboards on top:
