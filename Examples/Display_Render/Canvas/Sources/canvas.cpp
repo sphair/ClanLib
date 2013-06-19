@@ -58,7 +58,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 	import_desc.set_cached(false);
 
 	Texture2D ground_texture = Texture2D(canvas_window, "Resources/ground.png", import_desc);
-	image_ground = Image(canvas_window, ground_texture, ground_texture.get_size() );
+	image_ground = Image(ground_texture, ground_texture.get_size() );
 	image_ground_back = Image(canvas_window, "Resources/ground.png", import_desc);
 	image_cutter = Image(canvas_window, "Resources/circle1.png");
 
