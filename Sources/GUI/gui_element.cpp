@@ -317,7 +317,7 @@ SpanLayout GUIElement::create_span_layout( Canvas &canvas, Font &font, const std
 	return span;
 }
 
-Font GUIElement::get_font(Canvas &canvas, ResourceManager &resources)
+Font GUIElement::get_font(Canvas &canvas, const ResourceManager &resources)
 {
 	const CSSComputedFont &font_properties = get_css_values().get_font();
 
@@ -423,7 +423,7 @@ Rect GUIElement::render_text( Canvas &canvas, Font &font, const std::string &tex
 	return Rect(content_box.left + offset_x, content_box.top, text_size);
 }
 
-Rect GUIElement::get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, ResourceManager &resources )
+Rect GUIElement::get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, const ResourceManager &resources )
 {
 	Font font = get_font(canvas, resources);
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();

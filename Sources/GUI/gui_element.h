@@ -93,8 +93,8 @@ public:
 	std::string get_property(const std::string &property, const std::string &default_value) const;
 
 	SpanLayout create_span_layout( Canvas &canvas, Font &font, const std::string &text, const Rect &content_rect );
-	Font get_font(Canvas &canvas, ResourceManager &resources);
-	Rect get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, ResourceManager &resources );
+	Font get_font(Canvas &canvas, const ResourceManager &resources);
+	Rect get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, const ResourceManager &resources );
 
 /// \}
 
