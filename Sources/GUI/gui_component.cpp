@@ -744,7 +744,7 @@ bool GUIComponent::is_double_click_enabled() const
 Font GUIComponent::get_font() const
 {
 	Canvas canvas = get_canvas();
-	return GUIComponent_Impl::get_font(canvas, get_css_values());
+	return GUIComponent_Impl::get_font(canvas, get_css_values(), get_resources());
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -1370,19 +1370,19 @@ void GUIComponent::set_selected_in_component_group(bool selected)
 
 Rect GUIComponent::get_render_text_span_box( Canvas &canvas, const std::string &str, const Rect &content_rect ) const
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values(), get_resources());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, str, content_rect);
 	return span.get_rect();
 }
 
 Rect GUIComponent::get_render_text_box( Canvas &canvas, const std::string &str ) const
 {
-	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box());
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box(), get_resources());
 }
 
 Size GUIComponent::get_render_text_size( Canvas &canvas, const std::string &str ) const
 {
-	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box()).get_size();
+	return GUIComponent_Impl::get_render_text_box(canvas, impl->element, str, get_content_box(), get_resources()).get_size();
 }
 
 VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas)
@@ -1406,7 +1406,7 @@ VerticalTextPosition GUIComponent::get_vertical_text_align(Canvas &canvas)
 
 Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, const Rect &content_rect )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values(), get_resources());
 	SpanLayout span = GUIComponent_Impl::create_span_layout(canvas, impl->element, font, text, content_rect);
 	span.draw_layout(canvas);
 	return span.get_rect();
@@ -1415,7 +1415,7 @@ Rect GUIComponent::render_text_span( Canvas &canvas, const std::string &text, co
 Rect GUIComponent::render_text( Canvas &canvas, const std::string &text )
 {
 	Rect content_box = get_content_box();
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values(), get_resources());
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
 }
@@ -1425,7 +1425,7 @@ Rect GUIComponent::render_text( Canvas &canvas, const std::string &text, int xpo
 	Rect content_box = get_content_box();
 	content_box.left += xpos;
 	content_box.top += baseline;
-	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values());
+	Font font = GUIComponent_Impl::get_font(canvas, impl->element.get_css_values(), get_resources());
 	return GUIComponent_Impl::render_text(canvas, impl->element, font, text, content_box, baseline, false );
 }
 
