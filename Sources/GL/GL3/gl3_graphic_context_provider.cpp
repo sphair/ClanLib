@@ -165,8 +165,8 @@ void GL3GraphicContextProvider::check_opengl_version()
 	int version_minor = 0;
 
 	get_opengl_version(version_major, version_minor);
-	if ((version_major < 3) || ((version_major == 3) && (version_minor < 2)))
-		throw Exception(string_format("This application requires OpenGL 3.2 or above. Your hardware only supports OpenGL %1.%2. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor));
+	if ((version_major < 3) || ((version_major == 3) && (version_minor < 1)))
+		throw Exception(string_format("This application requires OpenGL 3.1 or above. Your hardware only supports OpenGL %1.%2. Try updating your drivers, or upgrade to a newer graphics card.", version_major, version_minor));
 }
 
 void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &version_minor) const
