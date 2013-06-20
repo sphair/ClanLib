@@ -134,12 +134,8 @@ public:
 	void layout_content();
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-
-	static SpanLayout create_span_layout( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_rect );
-	static Font get_font(Canvas &canvas, const CSSComputedValues &properties, ResourceManager &resources);
-	static Rect render_text( Canvas &canvas, GUIElement &element, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only );
-	static Rect get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box, ResourceManager &resources );
 	static CSSToken next_token(size_t &pos, const std::vector<CSSToken> &tokens, bool skip_whitespace = true);
+
 };
 
 }

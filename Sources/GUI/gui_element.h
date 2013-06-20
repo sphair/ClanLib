@@ -42,6 +42,11 @@ class GUIComponent;
 class GUIElement_Impl;
 class CSSDocument;
 class CSSResourceCache;
+class SpanLayout;
+class Canvas;
+class Font;
+class Rect;
+class ResourceManager;
 
 /// \brief A GUI element
 class GUIElement
@@ -86,6 +91,9 @@ public:
 	/// \brief Returns the value of a property.
 	std::string get_property(const std::string &property, const std::string &default_value) const;
 
+	SpanLayout create_span_layout( Canvas &canvas, Font &font, const std::string &text, const Rect &content_rect );
+	Font get_font(Canvas &canvas, ResourceManager &resources);
+	Rect get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, ResourceManager &resources );
 
 /// \}
 
@@ -106,6 +114,8 @@ public:
 
 	/// \brief Makes this element a child of the given element, removing it from the previous parent.
 	void set_parent(GUIElement *new_parent);
+
+	Rect render_text( Canvas &canvas, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only );
 
 /// \}
 /// \name Signals and callbacks

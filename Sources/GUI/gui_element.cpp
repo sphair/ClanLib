@@ -35,6 +35,10 @@
 #include "API/CSSLayout/CSSDocument/css_document.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "gui_component_select_node.h"
+#include "API/Display/2D/span_layout.h"
+#include "API/Display/Font/font.h"
+#include "API/Display/Font/font_metrics.h"
+#include "../CSSLayout/Layout/LayoutTree/css_used_value.h"
 
 namespace clan
 {
@@ -286,6 +290,137 @@ std::string GUIElement::get_property(const std::string &property, const std::str
 		}
 	}
 	return default_value;
+}
+
+SpanLayout GUIElement::create_span_layout( Canvas &canvas, Font &font, const std::string &text, const Rect &content_rect )
+{
+	SpanLayout span;
+
+	const CSSComputedTextInherit &properties = get_css_values().get_text_inherit();
+
+	span.add_text(text, font, properties.color.color);
+
+	switch (properties.text_align.type)
+	{
+		case CSSValueTextAlign::type_left: span.set_align(span_left); break;
+		case CSSValueTextAlign::type_center: span.set_align(span_center); break;
+		case CSSValueTextAlign::type_right: span.set_align(span_right); break;
+		case CSSValueTextAlign::type_justify: span.set_align(span_justify); break;
+		default: break;
+	}
+
+	span.layout(canvas, content_rect.get_width());
+	span.set_position(Point(content_rect.left, content_rect.top));
+
+	return span;
+}
+
+Font GUIElement::get_font(Canvas &canvas, ResourceManager &resources)
+{
+	const CSSComputedFont &font_properties = get_css_values().get_font();
+
+	int font_size = used_to_actual(font_properties.font_size.length.value);
+	std::string font_name;
+	for (size_t i = 0; i < font_properties.font_family.names.size(); i++)
+	{
+		bool matched = false;
+		std::string search_name;
+		switch (font_properties.font_family.names[i].type)
+		{
+		case CSSValueFontFamilyName::type_family_name:
+			search_name = StringHelp::text_to_lower(font_properties.font_family.names[i].name);
+			//FIXME: See CSSResourceCache, creating font_families list
+			//if (font_families.find(search_name) != font_families.end())
+			//{
+				font_name = font_properties.font_family.names[i].name;
+				matched = true;
+			//}
+			break;
+		default:
+		case CSSValueFontFamilyName::type_serif:
+		case CSSValueFontFamilyName::type_cursive:
+		case CSSValueFontFamilyName::type_fantasy:
+			font_name = "Times New Roman"; // Ugliest font on the planet.
+			matched = true;
+			break;
+		case CSSValueFontFamilyName::type_sans_serif:
+			font_name = "Arial";
+			matched = true;
+			break;
+		case CSSValueFontFamilyName::type_monospace:
+			font_name = "Courier New";
+			matched = true;
+			break;
+		}
+		if (matched)
+			break;
+	}
+	if (font_name.empty())
+		font_name = "Times New Roman";
+
+	int font_weight = 400;
+	switch (font_properties.font_weight.type)
+	{
+	case CSSValueFontWeight::type_100: font_weight = 100; break;
+	case CSSValueFontWeight::type_200: font_weight = 200; break;
+	case CSSValueFontWeight::type_300: font_weight = 300; break;
+	case CSSValueFontWeight::type_400: font_weight = 400; break;
+	case CSSValueFontWeight::type_500: font_weight = 500; break;
+	case CSSValueFontWeight::type_600: font_weight = 600; break;
+	case CSSValueFontWeight::type_700: font_weight = 700; break;
+	case CSSValueFontWeight::type_800: font_weight = 800; break;
+	case CSSValueFontWeight::type_900: font_weight = 900; break;
+	case CSSValueFontWeight::type_normal: font_weight = 400; break;
+	case CSSValueFontWeight::type_bold: font_weight = 700; break;
+	case CSSValueFontWeight::type_bolder: font_weight = 900; break;
+	case CSSValueFontWeight::type_lighter: font_weight = 300; break;
+	}
+	bool italic = false;
+	switch (font_properties.font_style.type)
+	{
+	case CSSValueFontStyle::type_normal: italic = false; break;
+	case CSSValueFontStyle::type_italic: italic = true; break;
+	case CSSValueFontStyle::type_oblique: italic = true; break;
+	}
+
+	FontDescription font_desc;
+	font_desc.set_typeface_name(font_name);
+	font_desc.set_height(-font_size);
+	font_desc.set_weight(font_weight);
+	font_desc.set_italic(italic);
+	return Font::resource(canvas, font_desc, resources);
+
+}
+
+Rect GUIElement::render_text( Canvas &canvas, Font &font, const std::string &text, const Rect &content_box, int baseline, bool calculate_text_rect_only )
+{
+	const CSSComputedTextInherit &properties = get_css_values().get_text_inherit();
+
+	Size text_size = font.get_text_size(canvas, text);
+
+	int offset_x = 0;
+	int offset_y = 0;
+
+	switch (properties.text_align.type)
+	{
+		case CSSValueTextAlign::type_left: break;
+		case CSSValueTextAlign::type_center: offset_x = (content_box.get_width() - text_size.width) / 2; break;
+		case CSSValueTextAlign::type_right: offset_x = (content_box.get_width() - text_size.width); break;
+		case CSSValueTextAlign::type_justify: break;		// Single line text is not justified
+		default: break;
+	}
+
+	if (!calculate_text_rect_only)
+		font.draw_text_ellipsis(canvas, content_box.left + offset_x, baseline, content_box, text, properties.color.color);
+
+	return Rect(content_box.left + offset_x, content_box.top, text_size);
+}
+
+Rect GUIElement::get_render_text_box( Canvas &canvas, const std::string &text, const Rect &content_box, ResourceManager &resources )
+{
+	Font font = get_font(canvas, resources);
+	int baseline = content_box.top + font.get_font_metrics().get_ascent();
+	return render_text(canvas, font, text, content_box, baseline, true);
 }
 
 }
