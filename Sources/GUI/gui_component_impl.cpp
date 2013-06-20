@@ -302,7 +302,7 @@ SpanLayout GUIComponent_Impl::create_span_layout( Canvas &canvas, GUIElement &el
 	return span;
 }
 
-Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedValues &properties)
+Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedValues &properties, ResourceManager &resources)
 {
 	const CSSComputedFont &font_properties = properties.get_font();
 
@@ -375,7 +375,7 @@ Font GUIComponent_Impl::get_font(Canvas &canvas, const CSSComputedValues &proper
 	font_desc.set_height(-font_size);
 	font_desc.set_weight(font_weight);
 	font_desc.set_italic(italic);
-	return Font(canvas, font_desc);
+	return Font::resource(canvas, font_desc, resources);
 
 }
 
@@ -403,9 +403,9 @@ Rect GUIComponent_Impl::render_text( Canvas &canvas, GUIElement &element, Font &
 	return Rect(content_box.left + offset_x, content_box.top, text_size);
 }
 
-Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box )
+Rect GUIComponent_Impl::get_render_text_box( Canvas &canvas, GUIElement &element, const std::string &text, const Rect &content_box, ResourceManager &resources )
 {
-	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_values());
+	Font font = GUIComponent_Impl::get_font(canvas, element.get_css_values(), resources);
 	int baseline = content_box.top + font.get_font_metrics().get_ascent();
 	return render_text(canvas, element, font, text, content_box, baseline, true);
 }
