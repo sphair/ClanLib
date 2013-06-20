@@ -166,7 +166,7 @@ void GL1ProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v
 {
 }
 
-void GL1ProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+void GL1ProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
 {
 }
 
@@ -186,11 +186,11 @@ void GL1ProgramObjectProvider::set_uniform4f(int location, float v1, float v2, f
 {
 }
 
-void GL1ProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+void GL1ProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
 {
 }
 
-void GL1ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+void GL1ProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 {
 }
 

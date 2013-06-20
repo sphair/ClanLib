@@ -121,13 +121,13 @@ public:
 	virtual void set_uniform2i(int location, int value_a, int value_b)=0;
 	virtual void set_uniform3i(int location, int value_a, int value_b, int value_c)=0;
 	virtual void set_uniform4i(int location, int value_a, int value_b, int value_c, int value_d)=0;
-	virtual void set_uniformiv(int location, int size, int count, int *data)=0;
+	virtual void set_uniformiv(int location, int size, int count, const int *data)=0;
 	virtual void set_uniform1f(int location, float value_a)=0;
 	virtual void set_uniform2f(int location, float value_a, float value_b)=0;
 	virtual void set_uniform3f(int location, float value_a, float value_b, float value_c)=0;
 	virtual void set_uniform4f(int location, float value_a, float value_b, float value_c, float value_d)=0;
-	virtual void set_uniformfv(int location, int size, int count, float *data)=0;
-	virtual void set_uniform_matrix(int location, int size, int count, bool transpose, float *data)=0;
+	virtual void set_uniformfv(int location, int size, int count, const float *data)=0;
+	virtual void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)=0;
 
 	virtual void set_uniform_buffer_index(int block_index, int bind_index) = 0;
 

@@ -269,7 +269,7 @@ void D3DProgramObjectProvider::set_uniform4i(int location, int v1, int v2, int v
 {
 }
 
-void D3DProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+void D3DProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
 {
 }
 
@@ -289,11 +289,11 @@ void D3DProgramObjectProvider::set_uniform4f(int location, float v1, float v2, f
 {
 }
 
-void D3DProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+void D3DProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
 {
 }
 
-void D3DProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+void D3DProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 {
 }
 
