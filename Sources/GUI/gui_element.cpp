@@ -36,7 +36,6 @@
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "gui_component_select_node.h"
 #include "API/Display/2D/span_layout.h"
-#include "API/Display/Font/font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "../CSSLayout/Layout/LayoutTree/css_used_value.h"
 
@@ -266,6 +265,9 @@ void GUIElement::update_style()
 	GUIComponentSelectNode select_node(this);
 	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node));
 
+	if (!cached_font.is_null())
+		cached_font = Font();
+
 //	if (!func_apply_properties.is_null())
 //		func_apply_properties.invoke(css_properties);
 
@@ -318,6 +320,10 @@ SpanLayout GUIElement::create_span_layout( Canvas &canvas, Font &font, const std
 Font GUIElement::get_font(Canvas &canvas, ResourceManager &resources)
 {
 	const CSSComputedFont &font_properties = get_css_values().get_font();
+
+	// Note: get_css_values() calls update_style() that flushes the cache when required
+	if (!cached_font.is_null())
+		return cached_font;
 
 	int font_size = used_to_actual(font_properties.font_size.length.value);
 	std::string font_name;
@@ -388,7 +394,8 @@ Font GUIElement::get_font(Canvas &canvas, ResourceManager &resources)
 	font_desc.set_height(-font_size);
 	font_desc.set_weight(font_weight);
 	font_desc.set_italic(italic);
-	return Font::resource(canvas, font_desc, resources);
+	cached_font = Font::resource(canvas, font_desc, resources);
+	return cached_font;
 
 }
 

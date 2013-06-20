@@ -34,6 +34,7 @@
 #include "API/CSSLayout/ComputedValues/css_computed_box.h"
 #include "API/Core/Signals/callback_v1.h"
 #include "API/Core/Signals/signal_v0.h"
+#include "API/Display/Font/font.h"
 
 namespace clan
 {
@@ -154,6 +155,9 @@ private:
 	std::vector<std::string> pseudo_classes;
 
 	bool style_needs_update;
+
+	Font cached_font;
+
 /// \}
 };
 
