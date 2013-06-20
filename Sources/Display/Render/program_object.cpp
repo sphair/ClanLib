@@ -431,7 +431,7 @@ void ProgramObject::set_uniform4i(int location, int v1, int v2, int v3, int v4)
 	impl->provider->set_uniform4i(location, v1, v2, v3, v4);
 }
 
-void ProgramObject::set_uniformiv(int location, int size, int count, int *data)
+void ProgramObject::set_uniformiv(int location, int size, int count, const int *data)
 {
 	impl->provider->set_uniformiv(location, size, count, data);
 }
@@ -456,12 +456,12 @@ void ProgramObject::set_uniform4f(int location, float v1, float v2, float v3, fl
 	impl->provider->set_uniform4f(location, v1, v2, v3, v4);
 }
 
-void ProgramObject::set_uniformfv(int location, int size, int count, float *data)
+void ProgramObject::set_uniformfv(int location, int size, int count, const float *data)
 {
 	impl->provider->set_uniformfv(location, size, count, data);
 }
 
-void ProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+void ProgramObject::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 {
 	impl->provider->set_uniform_matrix(location, size, count, transpose, data);
 }

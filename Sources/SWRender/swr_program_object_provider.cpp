@@ -166,7 +166,7 @@ void SWRenderProgramObjectProvider::set_uniform4i(int location, int v1, int v2, 
 	current_program->set_uniform(location, Vec4f(v1, v2, v3, v4));
 }
 
-void SWRenderProgramObjectProvider::set_uniformiv(int location, int size, int count, int *data)
+void SWRenderProgramObjectProvider::set_uniformiv(int location, int size, int count, const int *data)
 {
 }
 
@@ -190,11 +190,11 @@ void SWRenderProgramObjectProvider::set_uniform4f(int location, float v1, float 
 	current_program->set_uniform(location, Vec4f(v1, v2, v3, v4));
 }
 
-void SWRenderProgramObjectProvider::set_uniformfv(int location, int size, int count, float *data)
+void SWRenderProgramObjectProvider::set_uniformfv(int location, int size, int count, const float *data)
 {
 }
 
-void SWRenderProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, float *data)
+void SWRenderProgramObjectProvider::set_uniform_matrix(int location, int size, int count, bool transpose, const float *data)
 {
 	if (!transpose)
 		current_program->set_uniform_matrix(location, Mat4f(data));

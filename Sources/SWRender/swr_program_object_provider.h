@@ -89,13 +89,13 @@ public:
 	void set_uniform2i(int location, int, int);
 	void set_uniform3i(int location, int, int, int);
 	void set_uniform4i(int location, int, int, int, int);
-	void set_uniformiv(int location, int size, int count, int *data);
+	void set_uniformiv(int location, int size, int count, const int *data);
 	void set_uniform1f(int location, float);
 	void set_uniform2f(int location, float, float);
 	void set_uniform3f(int location, float, float, float);
 	void set_uniform4f(int location, float, float, float, float);
-	void set_uniformfv(int location, int size, int count, float *data);
-	void set_uniform_matrix(int location, int size, int count, bool transpose, float *data);
+	void set_uniformfv(int location, int size, int count, const float *data);
+	void set_uniform_matrix(int location, int size, int count, bool transpose, const float *data);
 /// \}
 
 /// \name Implementation
