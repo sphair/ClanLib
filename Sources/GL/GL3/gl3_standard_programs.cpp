@@ -109,8 +109,8 @@ const std::string::value_type *cl_glsl_vertex_sprite =
 	"attribute int TexIndex0; "
 	"varying vec4 Color; "
 	"varying vec2 TexCoord; "
-	"varying float TexIndex; "
-	"void main(void) { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; TexIndex = TexIndex0 + 0.25; }";
+	"flat varying int TexIndex; "
+	"void main(void) { gl_Position = Position; Color = Color0; TexCoord = TexCoord0; TexIndex = TexIndex0; }";
 
 const std::string::value_type *cl_glsl15_fragment_sprite =
 	"#version 150\n"
@@ -133,9 +133,9 @@ const std::string::value_type *cl_glsl_fragment_sprite =
 	"uniform sampler2D Texture3; "
 	"varying vec4 Color; "
 	"varying vec2 TexCoord; "
-	"varying float TexIndex; "
+	"flat varying int TexIndex; "
 	"vec4 sampleTexture(int index, vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
-	"void main(void) { gl_FragColor = Color*sampleTexture(int(TexIndex), TexCoord); } ";
+	"void main(void) { gl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
 
 class GL3StandardPrograms_Impl
 {
