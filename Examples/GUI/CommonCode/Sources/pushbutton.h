@@ -31,7 +31,7 @@
 #include "info.h"
 
 
-class PushButton : public clan::GUIComponent
+class PushButton : public clan::DragBox
 {
 public:
 	PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources);

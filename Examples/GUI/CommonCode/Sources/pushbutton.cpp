@@ -30,26 +30,17 @@
 #include "pushbutton.h"
 
 PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false), "window")
+	clan::DragBox(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false))
 {
 	clan::Canvas canvas = get_canvas();
 	test_image = clan::Image::resource(canvas, "tux", application_resources);
 
-
-
 	clan::Rect client_area = get_content_box();
-
-	clan::DragBox *dragbox = new clan::DragBox(this);
-	dragbox->set_geometry(client_area);
-
 
 	pushbutton1 = new clan::PushButton(this);
 	pushbutton1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 40)));
 	pushbutton1->set_text("Push Button");
 	pushbutton1->func_clicked().set(this, &PushButton::on_clicked, pushbutton1);
-
-
-
 
 	int label_xpos = client_area.left + 31;
 	int yoffset = client_area.top + 80;
