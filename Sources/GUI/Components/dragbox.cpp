@@ -51,6 +51,9 @@ class DragBox_Impl
 {
 public:
 	DragBox_Impl() : drag_start(false) {}
+
+	void init(DragBox *this_component);
+
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	DragBox *component;
 	bool drag_start;
@@ -64,14 +67,26 @@ public:
 DragBox::DragBox(GUIComponent *parent)
 : GUIComponent(parent, CssStr::DragBox::type_name), impl(new DragBox_Impl)
 {
-	set_blocks_default_action(true);
-	set_focus_policy(focus_local);
-	set_double_click_enabled(false);
+	impl->init(this);
+}
 
-	func_process_message().set(impl.get(), &DragBox_Impl::on_process_message);
-	impl->component = this;
+DragBox::DragBox(GUIManager *manager, const GUITopLevelDescription &description)
+	: GUIComponent(manager, description, CssStr::DragBox::type_name), impl(new DragBox_Impl)
+{
+	impl->init(this);
+}
 
-	set_pseudo_class(CssStr::disabled, !is_enabled());
+void DragBox_Impl::init(DragBox *this_component)
+{
+	component = this_component;
+
+	this_component->set_blocks_default_action(true);
+	this_component->set_focus_policy(GUIComponent::focus_local);
+	this_component->set_double_click_enabled(false);
+
+	this_component->func_process_message().set(this, &DragBox_Impl::on_process_message);
+
+	this_component->set_pseudo_class(CssStr::disabled, !this_component->is_enabled());
 }
 
 DragBox::~DragBox()
@@ -138,11 +153,18 @@ void DragBox_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 		}
 		else if (e.type == InputEvent::pointer_moved && drag_start == true)
 		{
-			const GUIComponent *root_component = component->get_top_level_component();
-
-			Rect geometry = component->get_geometry();
-			geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
-			component->set_geometry(geometry);
+			if (component->get_parent_component())
+			{
+				Rect geometry = component->get_geometry();
+				geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
+				component->set_geometry(geometry);
+			}
+			else
+			{
+				Rect geometry = component->get_window_geometry();
+				geometry.translate(e.mouse_pos.x - last_mouse_pos.x, e.mouse_pos.y - last_mouse_pos.y);
+				component->set_window_geometry(geometry);
+			}
 		}
 	}
 

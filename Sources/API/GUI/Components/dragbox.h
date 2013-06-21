@@ -54,6 +54,12 @@ public:
 	/// \param parent = GUIComponent
 	DragBox(GUIComponent *parent);
 
+	/// \brief Constructs a DragBox
+	///
+	/// \param manager = GUIManager
+	/// \param description = GUITop Level Description
+	DragBox(GUIManager *manager, const GUITopLevelDescription &description);
+
 	virtual ~DragBox();
 
 /// \}
