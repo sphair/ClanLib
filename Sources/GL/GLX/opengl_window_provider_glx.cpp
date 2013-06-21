@@ -855,6 +855,7 @@ void OpenGLWindowProvider::flip(int interval)
 	}
 
 	glx.glXSwapBuffers(x11_window.get_display(), x11_window.get_window());
+	OpenGL::check_error();
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
@@ -894,6 +895,7 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 		glMatrixMode(old_matrix_mode);
 
 	}
+	OpenGL::check_error();
 }
 
 void OpenGLWindowProvider::update_helper(const Rect &_rect)

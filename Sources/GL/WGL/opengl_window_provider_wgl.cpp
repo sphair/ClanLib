@@ -589,6 +589,7 @@ void OpenGLWindowProvider::flip(int interval)
 			win32_window.update_layered(pixelbuffer);
 		}
 	}
+	OpenGL::check_error();
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
@@ -631,6 +632,7 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 		glLoadMatrixf(old_matrix_modelview);
 		glMatrixMode(old_matrix_mode);
 	}
+	OpenGL::check_error();
 }
 
 void OpenGLWindowProvider::update_helper(const Rect &_rect)

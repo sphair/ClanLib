@@ -88,13 +88,13 @@ void OpenGL::check_error()
 		switch (last_error)
 		{
 			case GL_INVALID_ENUM:
-				throw Exception("INVALID_ENUM - An unacceptable value is specified for an enumerated argument.");
+				throw Exception("OpenGL INVALID_ENUM - An unacceptable value is specified for an enumerated argument.");
 			case GL_INVALID_VALUE:
-				throw Exception("INVALID_VALUE - A numeric argument is out of range.");
+				throw Exception("OpenGL INVALID_VALUE - A numeric argument is out of range.");
 			case GL_INVALID_OPERATION:
-				throw Exception("INVALID_OPERATION - The specified operation is not allowed in the current state");
+				throw Exception("OpenGL INVALID_OPERATION - The specified operation is not allowed in the current state");
 			case GL_OUT_OF_MEMORY:
-				throw Exception("OUT_OF_MEMORY - There is not enough memory left to execute the command");
+				throw Exception("OpenGL OUT_OF_MEMORY - There is not enough memory left to execute the command");
 			default:
 				throw Exception(string_format("Unknown OpenGL Error - %1", last_error));
 		}
