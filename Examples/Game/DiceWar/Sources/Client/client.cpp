@@ -110,7 +110,7 @@ void Client::on_disconnected()
 
 void Client::on_event_received(const NetGameEvent &e) 
 {
-	cl_log_event("network", "Server sent event: %1", e.to_string());
+	log_event("network", "Server sent event: %1", e.to_string());
 
 	bool handled_event = false;
 
@@ -130,7 +130,7 @@ void Client::on_event_received(const NetGameEvent &e)
 	}
 
 	if(!handled_event)
-		cl_log_event("error", "Uncaught event: %1", e.to_string());
+		log_event("error", "Uncaught event: %1", e.to_string());
 }
 
 void Client::create_game()

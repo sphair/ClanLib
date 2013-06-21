@@ -43,14 +43,14 @@ void TileMap::load(Canvas &canvas, const std::string &level, ResourceManager &re
 	map_width = element.get_attribute_int("width");
 	map_height = element.get_attribute_int("height");
 	
-	cl_log_event("Debug", "Loading level %1 (%2x%3)", level_name, map_width, map_height);
+	log_event("Debug", "Loading level %1 (%2x%3)", level_name, map_width, map_height);
 
 	sprite_tiles = Sprite::resource(gc, resource_name, resources);
 
 	tile_width = sprite_tiles.get_width();
 	tile_height = sprite_tiles.get_height();
 
-	cl_log_event("Debug", "Loaded resource %1 with %2 tiles", resource_name, sprite_tiles.get_frame_count());
+	log_event("Debug", "Loaded resource %1 with %2 tiles", resource_name, sprite_tiles.get_frame_count());
 
 	std::vector<DomNode> layer_nodes = element.select_nodes("layer");
 	for (size_t layer_index = 0; layer_index < layer_nodes.size(); layer_index++)
@@ -68,7 +68,7 @@ void TileMap::load(Canvas &canvas, const std::string &level, ResourceManager &re
 	
 		layers.push_back(layer);
 
-		cl_log_event("Debug", "Loaded layer %1 with %2 tiles", layer_name, layer.map.size());
+		log_event("Debug", "Loaded layer %1 with %2 tiles", layer_name, layer.map.size());
 	}
 
 	current_map_position_x = 0;

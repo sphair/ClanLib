@@ -24,7 +24,7 @@ Client::~Client()
 
 void Client::exec()
 {
-	cl_log_event("system", "CLIENT started");
+	log_event("system", "CLIENT started");
 
 	connect_to_server();
 
@@ -43,14 +43,14 @@ void Client::connect_to_server()
 	}
 	catch(const Exception &e)
 	{
-		cl_log_event("error", e.message);
+		log_event("error", e.message);
 	}
 }
 
 // Successfully connected to server
 void Client::on_connected()
 {
-	cl_log_event("network", "Connected to server");
+	log_event("network", "Connected to server");
 
 	// For demonstration purposes, lets fail a login
 	network_client.send_event(NetGameEvent("Login", "")); // We will receive an error event for this, as we don't send a proper user name
@@ -62,14 +62,14 @@ void Client::on_connected()
 // Disconnected from server
 void Client::on_disconnected()
 {
-	cl_log_event("network", "Disconnected from server");
+	log_event("network", "Disconnected from server");
 	quit = true;
 }
 
 // An event was received from server
 void Client::on_event_received(const NetGameEvent &e) 
 {
-	cl_log_event("events", "Server sent event: %1", e.to_string());
+	log_event("events", "Server sent event: %1", e.to_string());
 
 	bool handled_event = false;
 	
@@ -87,14 +87,14 @@ void Client::on_event_received(const NetGameEvent &e)
 	if(!handled_event)
 	{
 		// We received an event which we didn't hook up
-		cl_log_event("events", "Unhandled event: %1", e.to_string());
+		log_event("events", "Unhandled event: %1", e.to_string());
 	}
 }
 
 // "Login-Success" event was received
 void Client::on_event_login_success(const NetGameEvent &e)
 {
-	cl_log_event("events", "Login success");
+	log_event("events", "Login success");
 
 	logged_in = true;
 
@@ -106,7 +106,7 @@ void Client::on_event_login_fail(const NetGameEvent &e)
 {
 	std::string fail_reason = e.get_argument(0);
 
-	cl_log_event("events", "Login failed: %1", fail_reason);
+	log_event("events", "Login failed: %1", fail_reason);
 }
 
 // "Game-LoadMap" event was received
@@ -116,11 +116,11 @@ void Client::on_event_game_loadmap(const NetGameEvent &e)
 	int max_players = e.get_argument(1);
 	CustomType position = e.get_argument(2);
 
-	cl_log_event("events", "Loading map: %1 with %2 players, Position %3,%4,%5", map_name, max_players, position.get_x(), position.get_y(), position.get_z());
+	log_event("events", "Loading map: %1 with %2 players, Position %3,%4,%5", map_name, max_players, position.get_x(), position.get_y(), position.get_z());
 }
 
 // "Game-Start" event was received
 void Client::on_event_game_startgame(const NetGameEvent &e) 
 {
-	cl_log_event("events", "Starting game!");
+	log_event("events", "Starting game!");
 }

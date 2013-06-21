@@ -26,7 +26,7 @@ void Server::exec()
 {
 	network_server.start("4556");
 
-	cl_log_event("system", "SERVER started");
+	log_event("system", "SERVER started");
 
 	while (true)
 	{
@@ -39,7 +39,7 @@ void Server::exec()
 // A new client is connecting
 void Server::on_client_connected(NetGameConnection *connection)
 {
-	cl_log_event("network", "Client connected");
+	log_event("network", "Client connected");
 
 	// Create user and attach it to connection
 	ServerUser *user = new ServerUser();
@@ -63,7 +63,7 @@ void Server::on_client_disconnected(NetGameConnection *connection)
 // An event was received from a client
 void Server::on_event_received(NetGameConnection *connection, const NetGameEvent &e)
 {
-	cl_log_event("events", "Client sent event: %1", e.to_string());
+	log_event("events", "Client sent event: %1", e.to_string());
 
 	ServerUser *user = ServerUser::get_user(connection);
 	if(user)
@@ -84,7 +84,7 @@ void Server::on_event_received(NetGameConnection *connection, const NetGameEvent
 		if (!handled_event)
 		{
 			// We received an event which we didn't hook up
-			cl_log_event("events", "Unhandled event: %1", e.to_string());
+			log_event("events", "Unhandled event: %1", e.to_string());
 		}
 	}
 }
@@ -92,7 +92,7 @@ void Server::on_event_received(NetGameConnection *connection, const NetGameEvent
 // "Login" event was received
 void Server::on_event_login(const NetGameEvent &e, ServerUser *user)
 {
-	cl_log_event("events", "Client requested login");
+	log_event("events", "Client requested login");
 
 	std::string user_name = e.get_argument(0);
 
@@ -113,7 +113,7 @@ void Server::on_event_login(const NetGameEvent &e, ServerUser *user)
 // "Game-RequestStartGame" event was received
 void Server::on_event_game_requeststart(const NetGameEvent &e, ServerUser *user)
 {
-	cl_log_event("events", "Client requested game start");
+	log_event("events", "Client requested game start");
 
 	if(game_running == false)
 	{
