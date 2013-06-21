@@ -166,7 +166,7 @@ void App::draw_gpu(clan::Canvas &canvas, clan::PixelBuffer &gpu_buffer_to_write_
 
 void App::draw_texture(clan::Canvas &canvas, clan::Texture2D &texture, int xpos, int ypos)
 {
-	clan::Image image(canvas, texture, texture.get_size());
+	clan::Image image(texture, texture.get_size());
 	image.draw(canvas, clan::Rectf( (float) xpos, (float) ypos, clan::Sizef(512.0f, 512.0f)));
 }
 

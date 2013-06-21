@@ -51,7 +51,7 @@ void GameEvents::on_event_player_joined_game(const NetGameEvent &e)
 	if(player)
 		client->get_game_view()->player_joined_game(player);
 	else
-		cl_log_event("error", "Invalid event: %1", e.to_string());
+		log_event("error", "Invalid event: %1", e.to_string());
 }
 
 void GameEvents::on_event_player_left_game(const NetGameEvent &e)
@@ -66,7 +66,7 @@ void GameEvents::on_event_player_left_game(const NetGameEvent &e)
 		client->get_game_model()->get_players()->remove_player(player);
 	}
 	else
-		cl_log_event("error", "Invalid event: %1", e.to_string());
+		log_event("error", "Invalid event: %1", e.to_string());
 }
 
 void GameEvents::on_event_set_maparea_ownership(const NetGameEvent &e)
@@ -83,7 +83,7 @@ void GameEvents::on_event_set_maparea_ownership(const NetGameEvent &e)
 		client->get_game_view()->update_map();
 	}
 	else
-		cl_log_event("error", "Invalid event: %1", e.to_string());
+		log_event("error", "Invalid event: %1", e.to_string());
 }
 
 void GameEvents::on_event_set_maparea_army_strength(const NetGameEvent &e)
@@ -96,7 +96,7 @@ void GameEvents::on_event_set_maparea_army_strength(const NetGameEvent &e)
 	if(map_area != 0 && army_strength >= 1 && army_strength <= 8)
 		map_area->army_strength = army_strength;
 	else
-		cl_log_event("error", "Invalid event: %1", e.to_string());
+		log_event("error", "Invalid event: %1", e.to_string());
 }
 
 void GameEvents::on_event_game_is_starting(const NetGameEvent &e)
@@ -113,7 +113,7 @@ void GameEvents::on_event_game_has_started(const NetGameEvent &e)
 	else
 	{
 		// TODO: Show an error to user
-		cl_log_event("error", "Unable to start game: Map is invalid", e.to_string());
+		log_event("error", "Unable to start game: Map is invalid", e.to_string());
 	}
 }
 

@@ -187,7 +187,7 @@ void ExampleText::draw_text(clan::Canvas &canvas, clan::Texture2D &texture, clan
 	canvas.mult_translate(canvas.get_width()/2.0f, canvas.get_height()/2.0f);
 	canvas.mult_rotate(angle, 0.0f, 0.0f, 1.0f);
 
-	clan::Image image(canvas, texture, texture.get_size());
+	clan::Image image(texture, texture.get_size());
 	image.set_alpha(0.7f);
 	image.draw(canvas, clan::Rectf(-300.0f, -300.0f, 300.0f, 300.0f));
 
