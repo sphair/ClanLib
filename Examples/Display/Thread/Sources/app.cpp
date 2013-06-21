@@ -190,7 +190,7 @@ int App::start(const std::vector<std::string> &args)
 			canvas.mult_translate(canvas.get_width()/2, canvas.get_height()/2);
 			canvas.mult_rotate(clan::Angle(angle, clan::angle_degrees));
 			//canvas.mult_scale(2.0f, 2.0f);
-			clan::Image image(canvas, *texture_completed, clan::Size(texture_size, texture_size));
+			clan::Image image(*texture_completed, clan::Size(texture_size, texture_size));
 			image.draw( canvas, -texture_size/2, -texture_size/2 );
 
 			canvas.pop_modelview();

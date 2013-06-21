@@ -11,9 +11,9 @@ public:
 
 	void service_start(std::vector<std::string> &args)
 	{
-		cl_log_event("system", "Starting service..");
+		log_event("system", "Starting service..");
 		thread.start(this, &DiceWarService::game_thread_main);
-		cl_log_event("system", "Service started.");
+		log_event("system", "Service started.");
 	}
 
 	void service_reload()
@@ -22,10 +22,10 @@ public:
 
 	void service_stop()
 	{
-		cl_log_event("system", "Stopping service..");
+		log_event("system", "Stopping service..");
 		stop_event.set();
 		thread.join();
-		cl_log_event("system", "Service stopped.");
+		log_event("system", "Service stopped.");
 	}
 
 private:

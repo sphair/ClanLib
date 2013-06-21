@@ -26,7 +26,7 @@ ServerGamePlayerAI::ServerGamePlayerAI(Server *server, ServerGame *game, ServerP
 // Instead of sending it physically over a network, we just dispatch it directly to ourself.
 void ServerGamePlayerAI::send_event(const NetGameEvent &game_event)
 {
-	cl_log_event("AI", "AI received event: %1", game_event.to_string());
+	log_event("AI", "AI received event: %1", game_event.to_string());
 
 	game_events.dispatch(game_event);
 }
@@ -46,14 +46,14 @@ void ServerGamePlayerAI::on_event_attacked_area(const NetGameEvent &e)
 {
 	// Notify server we are finished with our game battle 
 	// (we don't have a view so we're instantly finished)
-	cl_log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER).to_string());
+	log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER).to_string());
 	server->handle_event(player, NetGameEvent(CTS_GAME_BATTLE_VIEW_OVER));
 }
 
 void ServerGamePlayerAI::on_event_invalid_attack(const NetGameEvent &e)
 {
 	// Oops, we screwed up something with our planning - lets bail out
-	cl_log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_END_TURN).to_string());
+	log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_END_TURN).to_string());
 	server->handle_event(player, NetGameEvent(CTS_GAME_END_TURN));
 }
 
@@ -102,7 +102,7 @@ void ServerGamePlayerAI::perform_next_attack()
 
 					if(should_attack)
 					{
-						cl_log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_ATTACK_AREA, area->id, target_area->id).to_string());
+						log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_ATTACK_AREA, area->id, target_area->id).to_string());
 						server->handle_event(player, NetGameEvent(CTS_GAME_ATTACK_AREA, area->id, target_area->id));
 						return;
 					}
@@ -111,6 +111,6 @@ void ServerGamePlayerAI::perform_next_attack()
 		}
 	}
 	
-	cl_log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_END_TURN).to_string());
+	log_event("AI", "AI sent event: %1", NetGameEvent(CTS_GAME_END_TURN).to_string());
 	server->handle_event(player, NetGameEvent(CTS_GAME_END_TURN));
 }

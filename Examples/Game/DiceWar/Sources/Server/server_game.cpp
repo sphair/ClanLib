@@ -316,7 +316,7 @@ void ServerGame::place_reinforcements(int reinforcement_count, ServerGamePlayer 
 				{
 					players->send_event(NetGameEvent(STC_GAME_SET_MAPAREA_ARMY_STRENGTH, map_area->id, map_area->army_strength));
 
-					cl_log_event("gameplay", "Reinforcing area %1 for player %2", map_area->id, game_player->player->name);
+					log_event("gameplay", "Reinforcing area %1 for player %2", map_area->id, game_player->player->name);
 				}
 			}
 			else

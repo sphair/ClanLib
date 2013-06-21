@@ -65,7 +65,7 @@ public:
 		canvas.set_blend_state(cutout_blend);
 
 		// Now we draw our texture to the buffer.
-		clan::Image image(canvas, clip, clip.get_size());
+		clan::Image image(clip, clip.get_size());
 		
 		if(USE_SCALE)
 		{

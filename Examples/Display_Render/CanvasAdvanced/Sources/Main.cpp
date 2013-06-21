@@ -131,7 +131,7 @@ int ExampleCanvas::start(const std::vector<std::string> &args)
 		// Draw the lightmask texture
 		// The color of the texture here can influence your output.  I chose to keep it simple
 		// by staying white with 100% alpha.
-		clan::Image light_mask_image(canvas, light_mask, light_mask.get_size());
+		clan::Image light_mask_image(light_mask, light_mask.get_size());
 		if(USE_SCALE)
 			canvas.mult_scale(CANVAS_SCALE_X,CANVAS_SCALE_Y);
 		light_mask_image.draw(canvas, clan::Rect(light_mask.get_size()));

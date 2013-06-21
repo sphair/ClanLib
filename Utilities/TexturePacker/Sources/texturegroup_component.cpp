@@ -70,7 +70,7 @@ void TextureGroupComponent::on_render_texture(Canvas &canvas, const Rect &update
 			int xpos = scroll_horizontal->get_position();
 			int ypos = scroll_vertical->get_position();
 			Size texture_size = texture_group->get_texture_sizes();
-			Image image(canvas, textures[0], textures[0].get_size());
+			Image image(textures[0], textures[0].get_size());
 			image.draw(canvas, Rect(-xpos, -ypos, texture_size));
 		}
 	}

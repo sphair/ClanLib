@@ -49,7 +49,7 @@ void Server::on_client_connected(NetGameConnection *connection)
 // A client disconnected
 void Server::on_client_disconnected(NetGameConnection *connection)
 {
-	cl_log_event("network", "Client disconnected");
+	log_event("network", "Client disconnected");
 
 	ServerUser *user = ServerUser::get_user(connection);
 	if(user)
