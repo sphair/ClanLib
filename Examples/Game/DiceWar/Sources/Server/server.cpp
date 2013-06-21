@@ -49,13 +49,13 @@ void Server::exec(Event &stop_event)
 	}
 	catch (Exception e)
 	{
-		cl_log_event("Exception", e.get_message_and_stack_trace());
+		log_event("Exception", e.get_message_and_stack_trace());
 	}
 }
 
 void Server::on_client_connected(NetGameConnection *connection)
 {
-	cl_log_event("system", "Client connected");
+	log_event("system", "Client connected");
 
 	// create player -> this also attaches it to the network connection
 	ServerPlayer *player = new ServerPlayer(connection);
@@ -63,7 +63,7 @@ void Server::on_client_connected(NetGameConnection *connection)
 
 void Server::on_client_disconnected(NetGameConnection *connection)
 {
-	cl_log_event("system", "Client disconnected");
+	log_event("system", "Client disconnected");
 
 	ServerPlayer *player = ServerPlayer::get_player(connection);
 
@@ -78,7 +78,7 @@ void Server::on_client_disconnected(NetGameConnection *connection)
 
 void Server::login(ServerPlayer *player, std::string player_name)
 {
-	cl_log_event("system", "Client logged in");
+	log_event("system", "Client logged in");
 
 	if (player->id == 0) // player not logged in
 	{
@@ -104,7 +104,7 @@ ServerPlayer *Server::create_ai_player(const std::string &player_name)
 
 void Server::on_event_received(NetGameConnection *connection, const NetGameEvent &e)
 {
-	cl_log_event("system", "Client sent event: %1", e.to_string());
+	log_event("system", "Client sent event: %1", e.to_string());
 
 	ServerPlayer *player = ServerPlayer::get_player(connection);
 
@@ -131,6 +131,6 @@ void Server::handle_event(ServerPlayer *player, const NetGameEvent &e)
 	}
 
 	if (!handled_event)
-		cl_log_event("system", "Unhandled event: %1", e.to_string());
+		log_event("system", "Unhandled event: %1", e.to_string());
 }
 
