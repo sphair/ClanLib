@@ -264,6 +264,8 @@ void OpenGLWindowProvider::flip(int interval)
 	}
 */ 
     [opengl_context presentRenderbuffer:GL_RENDERBUFFER];
+
+	OpenGL::check_error();
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
@@ -320,6 +322,7 @@ void OpenGLWindowProvider::update(const Rect &_rect)
 
 		glFlush();
 	}
+	OpenGL::check_error();
 }
 
 
