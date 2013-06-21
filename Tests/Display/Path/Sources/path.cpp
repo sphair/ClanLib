@@ -41,13 +41,14 @@ int PathApp::start(const std::vector<std::string> &args)
 	desc.set_size(clan::Size(1024, 680), true);
 	desc.set_allow_resize(true);
 
-	clan::Canvas canvas(desc);
+	clan::DisplayWindow window(desc);
+	clan::Canvas canvas(window);
 
 	// Connect the Window close event
-	clan::Slot slot_quit = canvas.get_window().sig_window_close().connect(this, &PathApp::on_window_close);
+	clan::Slot slot_quit = window.sig_window_close().connect(this, &PathApp::on_window_close);
 
 	// Connect a keyboard handler to on_key_up()
-	clan::Slot slot_input_up = canvas.get_window().get_ic().get_keyboard().sig_key_up().connect(this, &PathApp::on_input_up);
+	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &PathApp::on_input_up);
 
 	clan::Shape2D shape;
 
