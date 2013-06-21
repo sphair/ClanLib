@@ -171,7 +171,8 @@ int App::start(const std::vector<std::string> &args)
 		window_4_ptr = &window_4;
 		window_5_ptr = &window_5;
 
-		Font font(window_main.get_gc(), "tahoma", 16);
+		Canvas canvas_window_main(window_main);
+		Font font(canvas_window_main, "tahoma", 16);
 
 		// Run until someone presses escape
 		while (!quit)
@@ -204,10 +205,9 @@ int App::start(const std::vector<std::string> &args)
 			window_5.flip(0);
 
 			//
-			canvas = Canvas(window_main);
-			canvas.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
-			font.draw_text(canvas, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
-			draw_window_info(canvas, font, 16, desc_window_main, window_main);
+			canvas_window_main.clear(Colorf(0.0f,0.0f,0.0f, 0.0f));
+			font.draw_text(canvas_window_main, 8, 16, string_format("Hold down left mouse button inside this window to drag it. | MultipleMoveMove#%1", num_mouse_multiple_move_events));
+			draw_window_info(canvas_window_main, font, 16, desc_window_main, window_main);
 			window_main.flip(1);
 
 			// This call processes user input and other events
@@ -258,9 +258,9 @@ void App::draw_window_info(Canvas &canvas, Font &font, int ypos, DisplayWindowDe
 	font.draw_text(canvas, 8, ypos, string_format("Mouse (Screen Area): x=%1, y=%2", pos.x, pos.y));
 	ypos += ygap;
 
-	canvas.gradient_fill(Rectf(0, ypos, canvas.get_width(), canvas.get_height()), Gradient(Colorf::blue, Colorf::white));
-	canvas.fill(0, ypos, 2, canvas.get_height(), Colorf::green);
-	canvas.fill(canvas.get_width()-2, ypos, canvas.get_width(), canvas.get_height(), Colorf::green);
+	canvas.fill_rect(Rectf(0, ypos, canvas.get_width(), canvas.get_height()), Gradient(Colorf::blue, Colorf::white));
+	canvas.fill_rect(0, ypos, 2, canvas.get_height(), Colorf::green);
+	canvas.fill_rect(canvas.get_width()-2, ypos, canvas.get_width(), canvas.get_height(), Colorf::green);
 }
 
 void App::on_mouse_down(const InputEvent &key)
