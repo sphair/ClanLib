@@ -43,7 +43,9 @@ int Target::start(const std::vector<std::string> &args)
 
 	do
 	{
-		clan::KeepAlive::process(0);	// <-- This is important, to flush the win32 keyboard queue
+		// These 2 lines are to avoid recreating the windows too quickly (that confuses the win32 keyboard queue)
+		clan::System::sleep(250);
+		clan::KeepAlive::process(0);
 
 		switch (render_target)
 		{
