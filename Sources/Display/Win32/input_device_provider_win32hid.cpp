@@ -166,6 +166,14 @@ HANDLE InputDeviceProvider_Win32Hid::open_device()
 	if (result == (UINT)-1)
 		throw Exception("GetRawInputDeviceInfo failed");
 
+	//  Windows XP fix: The raw device path in its native form (\??\...). When you have the form \\?\ that is a crutch MS invented to make long path names available on Win32 when NT arrived despite the limitation of the Win32 subsystem to the \?? object directory
+	if (name_size > 2)
+	{
+		WCHAR *ptr = name_buffer.get();
+		if ( (ptr[0] == '\\') && (ptr[1] == '?' ) )
+			ptr[1] = '\\';
+	}
+
 	HANDLE device_handle = CreateFile(name_buffer.get(), GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_EXISTING, 0, 0);
 	if (device_handle == INVALID_HANDLE_VALUE)
 		throw Exception("Unable to open input device");
