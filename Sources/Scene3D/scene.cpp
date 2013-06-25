@@ -230,9 +230,9 @@ Scene_Impl::Scene_Impl(GraphicContext &gc, const ResourceManager &resources, con
 	{
 		use_compute_shader_pass = gc.has_compute_shader_support();
 	}
-	else if (gc.get_shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 10.1
+	else if (gc.get_shader_language() == shader_hlsl) // We need compute shaders of at least Direct3D feature level 11
 	{
-		use_compute_shader_pass = gc.get_major_version() > 10 || (gc.get_major_version() == 10 && gc.get_minor_version() >= 1 && gc.has_compute_shader_support());
+		use_compute_shader_pass = gc.get_major_version() > 10;
 	}
 
 	if (use_compute_shader_pass)
