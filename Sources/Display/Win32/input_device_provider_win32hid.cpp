@@ -160,7 +160,8 @@ HANDLE InputDeviceProvider_Win32Hid::open_device()
 	if (result == (UINT)-1 || name_size == 0)
 		throw Exception("GetRawInputDeviceInfo failed");
 
-	std::unique_ptr<WCHAR[]> name_buffer(new WCHAR[name_size]);
+	std::unique_ptr<WCHAR[]> name_buffer(new WCHAR[name_size + 1]);
+	name_buffer.get()[name_size] = 0;
 	result = GetRawInputDeviceInfo(rawinput_device, RIDI_DEVICENAME, name_buffer.get(), &name_size);
 	if (result == (UINT)-1)
 		throw Exception("GetRawInputDeviceInfo failed");
