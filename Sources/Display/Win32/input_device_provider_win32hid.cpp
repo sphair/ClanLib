@@ -225,7 +225,23 @@ void InputDeviceProvider_Win32Hid::find_button_names(HANDLE device, void *prepar
 		{
 			for (Hid::USAGE usage = button_caps[collection].Range.UsageMin; usage <= button_caps[collection].Range.UsageMax; usage++)
 			{
-				button_names.push_back(string_format("Button %1", buttons.size() + 1));
+				std::string name;
+
+				if (button_caps[collection].IsStringRange)
+				{
+					const int max_name_length = 1024;
+					WCHAR buffer[max_name_length];
+
+					int offset = usage - button_caps[collection].Range.UsageMin;
+					int string_index = button_caps[collection].Range.StringMin + offset;
+					if (hid.GetIndexedString(device, string_index, buffer, max_name_length * sizeof(WCHAR)))
+						name = StringHelp::ucs2_to_utf8(buffer);
+				}
+
+				if (name.empty())
+					name = string_format("Button %1", buttons.size() + 1);
+
+				button_names.push_back(name);
 				usage_to_button_index[usage] = buttons.size();
 				buttons.push_back(false);
 			}
