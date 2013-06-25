@@ -70,6 +70,9 @@ GL3TextureProvider::GL3TextureProvider(GL3TextureProvider *orig_texture, Texture
 	if (!tf.valid)
 		throw Exception("Texture format not supported by OpenGL");
 
+	if (!glTextureView)
+		throw Exception("glTextureView required OpenGL 4.3");
+
 	glTextureView(handle, texture_type, orig_texture->handle, tf.internal_format, min_level, num_levels, min_layer, num_layers);
 }
 
