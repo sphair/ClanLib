@@ -59,6 +59,8 @@
 
 #ifdef WIN32
 #include "../WGL/opengl_window_provider_wgl.h"
+#elif defined(APPLE)
+// To do: add Cocoa window provider here
 #else
 #include "../GLX/opengl_window_provider_glx.h"
 #endif
