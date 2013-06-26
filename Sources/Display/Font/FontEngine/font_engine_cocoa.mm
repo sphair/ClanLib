@@ -38,7 +38,7 @@
 namespace clan
 {
 
-FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc)
+FontEngine_Cocoa::FontEngine_Cocoa(const FontDescription &desc, const std::string &filename)
 : handle(0)
 {
     CFStringRef name = CFStringCreateWithCString(kCFAllocatorDefault, desc.get_typeface_name().c_str(), kCFStringEncodingUTF8);
@@ -156,7 +156,7 @@ FontPixelBuffer FontEngine_Cocoa::get_empty_font_glyph(int glyph)
 	return font_buffer;
 }
 
-Shape2D FontEngine_Cocoa::load_glyph_outline(int c, int &out_advance_x);
+Shape2D FontEngine_Cocoa::load_glyph_outline(int c, int &out_advance_x)
 {
 	throw Exception("Implement Me");
 }

@@ -419,9 +419,9 @@ void PNGLoader::predictor_paeth(unsigned char *scanline, const unsigned char *pr
 		int b = prev_scanline[i];
 		int c = i >= bytes_per_pixel ? prev_scanline[i - bytes_per_pixel] : 0;
 		int p = a + b - c;
-		int pa = std::abs(p - a);
-		int pb = std::abs(p - b);
-		int pc = std::abs(p - c);
+		int pa = abs((p - a));
+		int pb = abs((p - b));
+		int pc = abs(p - c);
 		int pr;
 		if (pa <= pb && pa <= pc)
 			pr = a;

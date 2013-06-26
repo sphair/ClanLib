@@ -324,7 +324,7 @@ PixelBuffer PixelBuffer::copy(const Rect &rect) const
 {
 	Size size = impl->provider->get_size();
 
-	if (rect.left < 0 || rect.top < 0 || rect.right > size.width, rect.bottom > size.height)
+	if (rect.left < 0 || rect.top < 0 || rect.right > size.width || rect.bottom > size.height)
 		throw Exception("Rectangle passed to PixelBuffer::copy() out of bounds");
 
 	int new_width = rect.get_width();
