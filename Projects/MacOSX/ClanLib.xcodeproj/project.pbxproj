@@ -199,11 +199,8 @@
 		1835BE851636225D0009AA23 /* udp_socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3B51636168C0009AA23 /* udp_socket.cpp */; };
 		1835BE861636225D0009AA23 /* udp_socket_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3B61636168C0009AA23 /* udp_socket_impl.cpp */; };
 		1835BE881636225D0009AA23 /* unix_socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3B81636168C0009AA23 /* unix_socket.cpp */; };
-		1835BE8C1636225D0009AA23 /* asn1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3BD1636168C0009AA23 /* asn1.cpp */; };
 		1835BE8E1636225D0009AA23 /* iodevice_provider_tls_connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3BF1636168C0009AA23 /* iodevice_provider_tls_connection.cpp */; };
 		1835BE901636225D0009AA23 /* tls_connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3C11636168C0009AA23 /* tls_connection.cpp */; };
-		1835BE911636225D0009AA23 /* x509.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3C21636168C0009AA23 /* x509.cpp */; };
-		1835BE931636225D0009AA23 /* x509_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3C41636168C0009AA23 /* x509_impl.cpp */; };
 		1835BE951636225D0009AA23 /* http_request_handler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3C71636168C0009AA23 /* http_request_handler.cpp */; };
 		1835BE961636225D0009AA23 /* http_request_handler_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3C81636168C0009AA23 /* http_request_handler_impl.cpp */; };
 		1835BE981636225D0009AA23 /* http_server.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3CA1636168C0009AA23 /* http_server.cpp */; };
@@ -444,7 +441,6 @@
 		1835C03B163623C00009AA23 /* word_count.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1501636168C0009AA23 /* word_count.cpp */; };
 		1835C045163625900009AA23 /* cd_drive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3D71636168C0009AA23 /* cd_drive.cpp */; };
 		1835C046163625900009AA23 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3E61636168C0009AA23 /* precomp.cpp */; };
-		1835C047163625900009AA23 /* resourcetype_sample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3E81636168C0009AA23 /* resourcetype_sample.cpp */; };
 		1835C048163625900009AA23 /* setupsound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3EA1636168C0009AA23 /* setupsound.cpp */; };
 		1835C049163625900009AA23 /* sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3EB1636168C0009AA23 /* sound.cpp */; };
 		1835C04A163625900009AA23 /* sound_sse.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3EC1636168C0009AA23 /* sound_sse.cpp */; };
@@ -473,9 +469,6 @@
 		1835C075163625900009AA23 /* soundprovider_type.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B40C1636168C0009AA23 /* soundprovider_type.cpp */; };
 		1835C076163625900009AA23 /* soundprovider_wave.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B40D1636168C0009AA23 /* soundprovider_wave.cpp */; };
 		1835C078163625900009AA23 /* soundprovider_wave_session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B40F1636168C0009AA23 /* soundprovider_wave_session.cpp */; };
-		1835C084163626C70009AA23 /* setupvorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B42E1636168C0009AA23 /* setupvorbis.cpp */; };
-		1835C085163626C70009AA23 /* soundprovider_vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B42F1636168C0009AA23 /* soundprovider_vorbis.cpp */; };
-		1835C087163626C70009AA23 /* soundprovider_vorbis_session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B4311636168C0009AA23 /* soundprovider_vorbis_session.cpp */; };
 		1835C092163627360009AA23 /* accelerator_key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3081636168C0009AA23 /* accelerator_key.cpp */; };
 		1835C093163627360009AA23 /* accelerator_table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3091636168C0009AA23 /* accelerator_table.cpp */; };
 		1835C094163627360009AA23 /* gui_component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3561636168C0009AA23 /* gui_component.cpp */; };
@@ -741,13 +734,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1835C0401636256E0009AA23;
 			remoteInfo = clanSound;
-		};
-		1835C22B163635A00009AA23 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 180F64F71636160C00AA5BA1 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1835C07F163626B10009AA23;
-			remoteInfo = clanVorbis;
 		};
 		1835C22D163635A00009AA23 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1813,15 +1799,9 @@
 		1835B3B91636168C0009AA23 /* unix_socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unix_socket.h; sourceTree = "<group>"; };
 		1835B3BA1636168C0009AA23 /* win32_socket.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = win32_socket.cpp; sourceTree = "<group>"; };
 		1835B3BB1636168C0009AA23 /* win32_socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = win32_socket.h; sourceTree = "<group>"; };
-		1835B3BD1636168C0009AA23 /* asn1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = asn1.cpp; sourceTree = "<group>"; };
-		1835B3BE1636168C0009AA23 /* asn1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = asn1.h; sourceTree = "<group>"; };
 		1835B3BF1636168C0009AA23 /* iodevice_provider_tls_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = iodevice_provider_tls_connection.cpp; sourceTree = "<group>"; };
 		1835B3C01636168C0009AA23 /* iodevice_provider_tls_connection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iodevice_provider_tls_connection.h; sourceTree = "<group>"; };
 		1835B3C11636168C0009AA23 /* tls_connection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tls_connection.cpp; sourceTree = "<group>"; };
-		1835B3C21636168C0009AA23 /* x509.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = x509.cpp; sourceTree = "<group>"; };
-		1835B3C31636168C0009AA23 /* x509.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x509.h; sourceTree = "<group>"; };
-		1835B3C41636168C0009AA23 /* x509_impl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = x509_impl.cpp; sourceTree = "<group>"; };
-		1835B3C51636168C0009AA23 /* x509_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x509_impl.h; sourceTree = "<group>"; };
 		1835B3C71636168C0009AA23 /* http_request_handler.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_request_handler.cpp; sourceTree = "<group>"; };
 		1835B3C81636168C0009AA23 /* http_request_handler_impl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = http_request_handler_impl.cpp; sourceTree = "<group>"; };
 		1835B3C91636168C0009AA23 /* http_request_handler_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = http_request_handler_impl.h; sourceTree = "<group>"; };
@@ -1851,8 +1831,6 @@
 		1835B3E51636168C0009AA23 /* speaker_position.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = speaker_position.h; sourceTree = "<group>"; };
 		1835B3E61636168C0009AA23 /* precomp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = precomp.cpp; sourceTree = "<group>"; };
 		1835B3E71636168C0009AA23 /* precomp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = precomp.h; sourceTree = "<group>"; };
-		1835B3E81636168C0009AA23 /* resourcetype_sample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = resourcetype_sample.cpp; sourceTree = "<group>"; };
-		1835B3E91636168C0009AA23 /* resourcetype_sample.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = resourcetype_sample.h; sourceTree = "<group>"; };
 		1835B3EA1636168C0009AA23 /* setupsound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = setupsound.cpp; sourceTree = "<group>"; };
 		1835B3EB1636168C0009AA23 /* sound.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sound.cpp; sourceTree = "<group>"; };
 		1835B3EC1636168C0009AA23 /* sound_sse.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sound_sse.cpp; sourceTree = "<group>"; };
@@ -1901,12 +1879,6 @@
 		1835B4291636168C0009AA23 /* sqlite_reader_provider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sqlite_reader_provider.h; sourceTree = "<group>"; };
 		1835B42A1636168C0009AA23 /* sqlite_transaction_provider.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sqlite_transaction_provider.cpp; sourceTree = "<group>"; };
 		1835B42B1636168C0009AA23 /* sqlite_transaction_provider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sqlite_transaction_provider.h; sourceTree = "<group>"; };
-		1835B42E1636168C0009AA23 /* setupvorbis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = setupvorbis.cpp; sourceTree = "<group>"; };
-		1835B42F1636168C0009AA23 /* soundprovider_vorbis.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = soundprovider_vorbis.cpp; sourceTree = "<group>"; };
-		1835B4301636168C0009AA23 /* soundprovider_vorbis_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis_impl.h; sourceTree = "<group>"; };
-		1835B4311636168C0009AA23 /* soundprovider_vorbis_session.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = soundprovider_vorbis_session.cpp; sourceTree = "<group>"; };
-		1835B4321636168C0009AA23 /* soundprovider_vorbis_session.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis_session.h; sourceTree = "<group>"; };
-		1835B4331636168C0009AA23 /* stb_vorbis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_vorbis.h; sourceTree = "<group>"; };
 		1835B439163618BE0009AA23 /* libClanLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libClanLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835BD5216361C4A0009AA23 /* libclanCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835BE5016361DE60009AA23 /* libclanApp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanApp.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1914,7 +1886,6 @@
 		1835BEA8163623250009AA23 /* libclanDatabase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanDatabase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835BEBB163623A00009AA23 /* libclanCSSLayout.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanCSSLayout.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C0411636256E0009AA23 /* libclanSound.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanSound.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		1835C080163626B10009AA23 /* libclanVorbis.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanVorbis.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C08E1636271B0009AA23 /* libclanGUI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanGUI.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C111163629410009AA23 /* libclanSqlite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanSqlite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C124163629FC0009AA23 /* libclanDisplay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanDisplay.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2392,16 +2363,6 @@
 		528502DE1665726200B19C5D /* opengl_wrap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_wrap.h; sourceTree = "<group>"; };
 		528502DF1665726200B19C5D /* setup_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setup_gl.h; sourceTree = "<group>"; };
 		528502E01665726200B19C5D /* gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl.h; sourceTree = "<group>"; };
-		528502E21665726200B19C5D /* api_gl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_gl1.h; sourceTree = "<group>"; };
-		528502E31665726200B19C5D /* graphic_context_gl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphic_context_gl1.h; sourceTree = "<group>"; };
-		528502E41665726200B19C5D /* light_model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = light_model.h; sourceTree = "<group>"; };
-		528502E51665726200B19C5D /* light_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = light_source.h; sourceTree = "<group>"; };
-		528502E61665726200B19C5D /* material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = material.h; sourceTree = "<group>"; };
-		528502E71665726200B19C5D /* opengl1_target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl1_target.h; sourceTree = "<group>"; };
-		528502E81665726200B19C5D /* opengl1_window_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl1_window_description.h; sourceTree = "<group>"; };
-		528502E91665726200B19C5D /* setup_gl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setup_gl1.h; sourceTree = "<group>"; };
-		528502EA1665726200B19C5D /* texture_unit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture_unit.h; sourceTree = "<group>"; };
-		528502EB1665726200B19C5D /* gl1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl1.h; sourceTree = "<group>"; };
 		528502ED1665726200B19C5D /* accelerator_key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = accelerator_key.h; sourceTree = "<group>"; };
 		528502EE1665726200B19C5D /* accelerator_table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = accelerator_table.h; sourceTree = "<group>"; };
 		528502EF1665726200B19C5D /* api_gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_gui.h; sourceTree = "<group>"; };
@@ -2469,8 +2430,6 @@
 		5285032F1665726200B19C5D /* gui_window_manager_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui_window_manager_provider.h; sourceTree = "<group>"; };
 		528503301665726200B19C5D /* setup_gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setup_gui.h; sourceTree = "<group>"; };
 		528503311665726200B19C5D /* gui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui.h; sourceTree = "<group>"; };
-		528503321665726200B19C5D /* includes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = includes.txt; sourceTree = "<group>"; };
-		528503331665726200B19C5D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		528503341665726200B19C5D /* mysql.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mysql.h; sourceTree = "<group>"; };
 		528503361665726200B19C5D /* api_network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_network.h; sourceTree = "<group>"; };
 		528503381665726200B19C5D /* client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = client.h; sourceTree = "<group>"; };
@@ -2499,20 +2458,6 @@
 		528503521665726200B19C5D /* web_request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = web_request.h; sourceTree = "<group>"; };
 		528503531665726200B19C5D /* web_response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = web_response.h; sourceTree = "<group>"; };
 		528503541665726200B19C5D /* network.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = network.h; sourceTree = "<group>"; };
-		528503561665726200B19C5D /* api_physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_physics.h; sourceTree = "<group>"; };
-		528503591665726200B19C5D /* chain_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chain_shape.h; sourceTree = "<group>"; };
-		5285035A1665726200B19C5D /* circle_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = circle_shape.h; sourceTree = "<group>"; };
-		5285035B1665726200B19C5D /* edge_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = edge_shape.h; sourceTree = "<group>"; };
-		5285035C1665726200B19C5D /* polygon_shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = polygon_shape.h; sourceTree = "<group>"; };
-		5285035D1665726200B19C5D /* shape.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shape.h; sourceTree = "<group>"; };
-		5285035F1665726200B19C5D /* body.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = body.h; sourceTree = "<group>"; };
-		528503601665726200B19C5D /* body_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = body_description.h; sourceTree = "<group>"; };
-		528503611665726200B19C5D /* fixture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixture.h; sourceTree = "<group>"; };
-		528503621665726200B19C5D /* fixture_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fixture_description.h; sourceTree = "<group>"; };
-		528503641665726200B19C5D /* physic_debug_draw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physic_debug_draw.h; sourceTree = "<group>"; };
-		528503651665726200B19C5D /* physic_world.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physic_world.h; sourceTree = "<group>"; };
-		528503661665726200B19C5D /* physic_world_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physic_world_description.h; sourceTree = "<group>"; };
-		528503671665726200B19C5D /* physics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = physics.h; sourceTree = "<group>"; };
 		528503691665726200B19C5D /* api_sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_sound.h; sourceTree = "<group>"; };
 		5285036A1665726200B19C5D /* cd_drive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cd_drive.h; sourceTree = "<group>"; };
 		5285036B1665726200B19C5D /* setupsound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setupsound.h; sourceTree = "<group>"; };
@@ -2540,10 +2485,6 @@
 		528503841665726200B19C5D /* api_sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_sqlite.h; sourceTree = "<group>"; };
 		528503851665726200B19C5D /* sqlite_connection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite_connection.h; sourceTree = "<group>"; };
 		528503861665726200B19C5D /* sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite.h; sourceTree = "<group>"; };
-		528503881665726200B19C5D /* api_vorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = api_vorbis.h; sourceTree = "<group>"; };
-		528503891665726200B19C5D /* setupvorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setupvorbis.h; sourceTree = "<group>"; };
-		5285038A1665726200B19C5D /* soundprovider_vorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis.h; sourceTree = "<group>"; };
-		5285038B1665726200B19C5D /* vorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vorbis.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2583,13 +2524,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1835C03E1636256E0009AA23 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1835C07D163626B10009AA23 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2650,7 +2584,6 @@
 				1835B38D1636168C0009AA23 /* Network */,
 				1835B3D61636168C0009AA23 /* Sound */,
 				1835B41F1636168C0009AA23 /* Sqlite */,
-				1835B42C1636168C0009AA23 /* Vorbis */,
 			);
 			name = Sources;
 			path = ../../Sources;
@@ -4114,15 +4047,9 @@
 		1835B3BC1636168C0009AA23 /* TLS */ = {
 			isa = PBXGroup;
 			children = (
-				1835B3BD1636168C0009AA23 /* asn1.cpp */,
-				1835B3BE1636168C0009AA23 /* asn1.h */,
 				1835B3BF1636168C0009AA23 /* iodevice_provider_tls_connection.cpp */,
 				1835B3C01636168C0009AA23 /* iodevice_provider_tls_connection.h */,
 				1835B3C11636168C0009AA23 /* tls_connection.cpp */,
-				1835B3C21636168C0009AA23 /* x509.cpp */,
-				1835B3C31636168C0009AA23 /* x509.h */,
-				1835B3C41636168C0009AA23 /* x509_impl.cpp */,
-				1835B3C51636168C0009AA23 /* x509_impl.h */,
 			);
 			path = TLS;
 			sourceTree = "<group>";
@@ -4154,7 +4081,6 @@
 			children = (
 				1835B3D71636168C0009AA23 /* cd_drive.cpp */,
 				1835B3E61636168C0009AA23 /* precomp.cpp */,
-				1835B3E81636168C0009AA23 /* resourcetype_sample.cpp */,
 				1835B3EA1636168C0009AA23 /* setupsound.cpp */,
 				1835B3EB1636168C0009AA23 /* sound.cpp */,
 				1835B3EC1636168C0009AA23 /* sound_sse.cpp */,
@@ -4168,7 +4094,6 @@
 				1835B4001636168C0009AA23 /* soundoutput_impl.cpp */,
 				1835B3D81636168C0009AA23 /* cd_drive_impl.h */,
 				1835B3E71636168C0009AA23 /* precomp.h */,
-				1835B3E91636168C0009AA23 /* resourcetype_sample.h */,
 				1835B3EF1636168C0009AA23 /* soundbuffer_impl.h */,
 				1835B3F21636168C0009AA23 /* soundbuffer_session_impl.h */,
 				1835B4011636168C0009AA23 /* soundoutput_impl.h */,
@@ -4259,19 +4184,6 @@
 			path = Sqlite;
 			sourceTree = "<group>";
 		};
-		1835B42C1636168C0009AA23 /* Vorbis */ = {
-			isa = PBXGroup;
-			children = (
-				1835B42E1636168C0009AA23 /* setupvorbis.cpp */,
-				1835B42F1636168C0009AA23 /* soundprovider_vorbis.cpp */,
-				1835B4301636168C0009AA23 /* soundprovider_vorbis_impl.h */,
-				1835B4311636168C0009AA23 /* soundprovider_vorbis_session.cpp */,
-				1835B4321636168C0009AA23 /* soundprovider_vorbis_session.h */,
-				1835B4331636168C0009AA23 /* stb_vorbis.h */,
-			);
-			path = Vorbis;
-			sourceTree = "<group>";
-		};
 		1835B43A163618BE0009AA23 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -4282,7 +4194,6 @@
 				1835BEA8163623250009AA23 /* libclanDatabase.a */,
 				1835BEBB163623A00009AA23 /* libclanCSSLayout.a */,
 				1835C0411636256E0009AA23 /* libclanSound.a */,
-				1835C080163626B10009AA23 /* libclanVorbis.a */,
 				1835C08E1636271B0009AA23 /* libclanGUI.a */,
 				1835C111163629410009AA23 /* libclanSqlite.a */,
 				1835C124163629FC0009AA23 /* libclanDisplay.a */,
@@ -4314,39 +4225,31 @@
 		528501261665726200B19C5D /* API */ = {
 			isa = PBXGroup;
 			children = (
-				528501271665726200B19C5D /* App */,
 				5285012A1665726200B19C5D /* application.h */,
-				5285012B1665726200B19C5D /* Compute */,
 				528501381665726200B19C5D /* compute.h */,
-				528501391665726200B19C5D /* Core */,
 				528501E11665726200B19C5D /* core.h */,
-				528501E21665726200B19C5D /* CSSLayout */,
 				5285024E1665726200B19C5D /* csslayout.h */,
-				5285024F1665726200B19C5D /* D3D */,
 				528502531665726200B19C5D /* d3d.h */,
-				528502541665726200B19C5D /* Database */,
 				5285025F1665726200B19C5D /* database.h */,
-				528502601665726200B19C5D /* Display */,
 				528502D61665726200B19C5D /* display.h */,
-				528502D71665726200B19C5D /* GL */,
 				528502E01665726200B19C5D /* gl.h */,
-				528502E11665726200B19C5D /* GL1 */,
-				528502EB1665726200B19C5D /* gl1.h */,
-				528502EC1665726200B19C5D /* GUI */,
 				528503311665726200B19C5D /* gui.h */,
-				528503321665726200B19C5D /* includes.txt */,
-				528503331665726200B19C5D /* Makefile.am */,
 				528503341665726200B19C5D /* mysql.h */,
-				528503351665726200B19C5D /* Network */,
 				528503541665726200B19C5D /* network.h */,
-				528503551665726200B19C5D /* Physics */,
-				528503671665726200B19C5D /* physics.h */,
-				528503681665726200B19C5D /* Sound */,
 				528503821665726200B19C5D /* sound.h */,
-				528503831665726200B19C5D /* Sqlite */,
 				528503861665726200B19C5D /* sqlite.h */,
-				528503871665726200B19C5D /* Vorbis */,
-				5285038B1665726200B19C5D /* vorbis.h */,
+				528501271665726200B19C5D /* App */,
+				5285012B1665726200B19C5D /* Compute */,
+				528501391665726200B19C5D /* Core */,
+				528501E21665726200B19C5D /* CSSLayout */,
+				5285024F1665726200B19C5D /* D3D */,
+				528502541665726200B19C5D /* Database */,
+				528502601665726200B19C5D /* Display */,
+				528502D71665726200B19C5D /* GL */,
+				528502EC1665726200B19C5D /* GUI */,
+				528503351665726200B19C5D /* Network */,
+				528503681665726200B19C5D /* Sound */,
+				528503831665726200B19C5D /* Sqlite */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -4959,22 +4862,6 @@
 			path = GL;
 			sourceTree = "<group>";
 		};
-		528502E11665726200B19C5D /* GL1 */ = {
-			isa = PBXGroup;
-			children = (
-				528502E21665726200B19C5D /* api_gl1.h */,
-				528502E31665726200B19C5D /* graphic_context_gl1.h */,
-				528502E41665726200B19C5D /* light_model.h */,
-				528502E51665726200B19C5D /* light_source.h */,
-				528502E61665726200B19C5D /* material.h */,
-				528502E71665726200B19C5D /* opengl1_target.h */,
-				528502E81665726200B19C5D /* opengl1_window_description.h */,
-				528502E91665726200B19C5D /* setup_gl1.h */,
-				528502EA1665726200B19C5D /* texture_unit.h */,
-			);
-			path = GL1;
-			sourceTree = "<group>";
-		};
 		528502EC1665726200B19C5D /* GUI */ = {
 			isa = PBXGroup;
 			children = (
@@ -5068,8 +4955,8 @@
 			isa = PBXGroup;
 			children = (
 				528503361665726200B19C5D /* api_network.h */,
-				528503371665726200B19C5D /* NetGame */,
 				528503421665726200B19C5D /* setupnetwork.h */,
+				528503371665726200B19C5D /* NetGame */,
 				528503431665726200B19C5D /* Socket */,
 				5285034B1665726200B19C5D /* TLS */,
 				5285034D1665726200B19C5D /* Web */,
@@ -5129,58 +5016,6 @@
 			path = Web;
 			sourceTree = "<group>";
 		};
-		528503551665726200B19C5D /* Physics */ = {
-			isa = PBXGroup;
-			children = (
-				528503561665726200B19C5D /* api_physics.h */,
-				528503571665726200B19C5D /* Collision */,
-				5285035E1665726200B19C5D /* Dynamics */,
-				528503631665726200B19C5D /* World */,
-			);
-			path = Physics;
-			sourceTree = "<group>";
-		};
-		528503571665726200B19C5D /* Collision */ = {
-			isa = PBXGroup;
-			children = (
-				528503581665726200B19C5D /* Shapes */,
-			);
-			path = Collision;
-			sourceTree = "<group>";
-		};
-		528503581665726200B19C5D /* Shapes */ = {
-			isa = PBXGroup;
-			children = (
-				528503591665726200B19C5D /* chain_shape.h */,
-				5285035A1665726200B19C5D /* circle_shape.h */,
-				5285035B1665726200B19C5D /* edge_shape.h */,
-				5285035C1665726200B19C5D /* polygon_shape.h */,
-				5285035D1665726200B19C5D /* shape.h */,
-			);
-			path = Shapes;
-			sourceTree = "<group>";
-		};
-		5285035E1665726200B19C5D /* Dynamics */ = {
-			isa = PBXGroup;
-			children = (
-				5285035F1665726200B19C5D /* body.h */,
-				528503601665726200B19C5D /* body_description.h */,
-				528503611665726200B19C5D /* fixture.h */,
-				528503621665726200B19C5D /* fixture_description.h */,
-			);
-			path = Dynamics;
-			sourceTree = "<group>";
-		};
-		528503631665726200B19C5D /* World */ = {
-			isa = PBXGroup;
-			children = (
-				528503641665726200B19C5D /* physic_debug_draw.h */,
-				528503651665726200B19C5D /* physic_world.h */,
-				528503661665726200B19C5D /* physic_world_description.h */,
-			);
-			path = World;
-			sourceTree = "<group>";
-		};
 		528503681665726200B19C5D /* Sound */ = {
 			isa = PBXGroup;
 			children = (
@@ -5236,16 +5071,6 @@
 			path = Sqlite;
 			sourceTree = "<group>";
 		};
-		528503871665726200B19C5D /* Vorbis */ = {
-			isa = PBXGroup;
-			children = (
-				528503881665726200B19C5D /* api_vorbis.h */,
-				528503891665726200B19C5D /* setupvorbis.h */,
-				5285038A1665726200B19C5D /* soundprovider_vorbis.h */,
-			);
-			path = Vorbis;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -5285,13 +5110,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1835C03F1636256E0009AA23 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1835C07E163626B10009AA23 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5342,7 +5160,6 @@
 				1835C226163635A00009AA23 /* PBXTargetDependency */,
 				1835C228163635A00009AA23 /* PBXTargetDependency */,
 				1835C22A163635A00009AA23 /* PBXTargetDependency */,
-				1835C22C163635A00009AA23 /* PBXTargetDependency */,
 				1835C22E163635A00009AA23 /* PBXTargetDependency */,
 				1835C230163635A00009AA23 /* PBXTargetDependency */,
 				1835C232163635A00009AA23 /* PBXTargetDependency */,
@@ -5457,23 +5274,6 @@
 			productReference = 1835C0411636256E0009AA23 /* libclanSound.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		1835C07F163626B10009AA23 /* clanVorbis */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1835C081163626B10009AA23 /* Build configuration list for PBXNativeTarget "clanVorbis" */;
-			buildPhases = (
-				1835C07C163626B10009AA23 /* Sources */,
-				1835C07D163626B10009AA23 /* Frameworks */,
-				1835C07E163626B10009AA23 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = clanVorbis;
-			productName = clanVorbis;
-			productReference = 1835C080163626B10009AA23 /* libclanVorbis.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		1835C08D1636271B0009AA23 /* clanGUI */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1835C08F1636271B0009AA23 /* Build configuration list for PBXNativeTarget "clanGUI" */;
@@ -5548,7 +5348,7 @@
 		180F64F71636160C00AA5BA1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 180F64FA1636160C00AA5BA1 /* Build configuration list for PBXProject "ClanLib" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -5569,7 +5369,6 @@
 				1835BEA7163623250009AA23 /* clanDatabase */,
 				1835BEBA163623A00009AA23 /* clanCSSLayout */,
 				1835C0401636256E0009AA23 /* clanSound */,
-				1835C07F163626B10009AA23 /* clanVorbis */,
 				1835C08D1636271B0009AA23 /* clanGUI */,
 				1835C110163629410009AA23 /* clanSqlite */,
 				1835C123163629FC0009AA23 /* clanDisplay */,
@@ -5805,11 +5604,8 @@
 				1835BE851636225D0009AA23 /* udp_socket.cpp in Sources */,
 				1835BE861636225D0009AA23 /* udp_socket_impl.cpp in Sources */,
 				1835BE881636225D0009AA23 /* unix_socket.cpp in Sources */,
-				1835BE8C1636225D0009AA23 /* asn1.cpp in Sources */,
 				1835BE8E1636225D0009AA23 /* iodevice_provider_tls_connection.cpp in Sources */,
 				1835BE901636225D0009AA23 /* tls_connection.cpp in Sources */,
-				1835BE911636225D0009AA23 /* x509.cpp in Sources */,
-				1835BE931636225D0009AA23 /* x509_impl.cpp in Sources */,
 				1835BE951636225D0009AA23 /* http_request_handler.cpp in Sources */,
 				1835BE961636225D0009AA23 /* http_request_handler_impl.cpp in Sources */,
 				1835BE981636225D0009AA23 /* http_server.cpp in Sources */,
@@ -6077,7 +5873,6 @@
 			files = (
 				1835C045163625900009AA23 /* cd_drive.cpp in Sources */,
 				1835C046163625900009AA23 /* precomp.cpp in Sources */,
-				1835C047163625900009AA23 /* resourcetype_sample.cpp in Sources */,
 				1835C048163625900009AA23 /* setupsound.cpp in Sources */,
 				1835C049163625900009AA23 /* sound.cpp in Sources */,
 				1835C04A163625900009AA23 /* sound_sse.cpp in Sources */,
@@ -6106,16 +5901,6 @@
 				1835C075163625900009AA23 /* soundprovider_type.cpp in Sources */,
 				1835C076163625900009AA23 /* soundprovider_wave.cpp in Sources */,
 				1835C078163625900009AA23 /* soundprovider_wave_session.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1835C07C163626B10009AA23 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				1835C084163626C70009AA23 /* setupvorbis.cpp in Sources */,
-				1835C085163626C70009AA23 /* soundprovider_vorbis.cpp in Sources */,
-				1835C087163626C70009AA23 /* soundprovider_vorbis_session.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6395,11 +6180,6 @@
 			target = 1835C0401636256E0009AA23 /* clanSound */;
 			targetProxy = 1835C229163635A00009AA23 /* PBXContainerItemProxy */;
 		};
-		1835C22C163635A00009AA23 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1835C07F163626B10009AA23 /* clanVorbis */;
-			targetProxy = 1835C22B163635A00009AA23 /* PBXContainerItemProxy */;
-		};
 		1835C22E163635A00009AA23 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1835C08D1636271B0009AA23 /* clanGUI */;
@@ -6447,6 +6227,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6480,6 +6261,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6506,6 +6288,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6538,6 +6321,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6563,6 +6347,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6595,6 +6380,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6620,6 +6406,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6652,6 +6439,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6677,6 +6465,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6709,6 +6498,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6734,6 +6524,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6766,6 +6557,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6791,6 +6583,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6823,63 +6616,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
-		1835C082163626B10009AA23 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				EXECUTABLE_PREFIX = lib;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = NO;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
-		1835C083163626B10009AA23 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6905,6 +6642,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6937,6 +6675,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -6962,6 +6701,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -6994,6 +6734,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -7019,6 +6760,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7051,6 +6793,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -7076,6 +6819,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -7108,6 +6852,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				EXECUTABLE_PREFIX = lib;
@@ -7194,15 +6939,6 @@
 			buildConfigurations = (
 				1835C0431636256E0009AA23 /* Debug */,
 				1835C0441636256E0009AA23 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1835C081163626B10009AA23 /* Build configuration list for PBXNativeTarget "clanVorbis" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1835C082163626B10009AA23 /* Debug */,
-				1835C083163626B10009AA23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
