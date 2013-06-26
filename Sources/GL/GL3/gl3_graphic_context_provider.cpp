@@ -277,10 +277,6 @@ Size GL3GraphicContextProvider::get_display_window_size() const
 	return render_window->get_viewport().get_size();
 }
 
-#ifdef __APPLE__
-static CFBundleRef cl_gBundleRefOpenGL = 0;
-#endif
-
 ProgramObject GL3GraphicContextProvider::get_program_object(StandardProgram standard_program) const
 {
 	return standard_programs.get_program_object(standard_program);

@@ -37,8 +37,8 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
-//#include <OpenGL/gl.h>
-//#include <OpenGL/glext.h>
+#include <OpenGL/gl.h>
+#include <OpenGL/glext.h>
 #else
 #include <GL/gl.h>
 #endif
@@ -648,8 +648,10 @@ enum DisplayDefines
 	GL_MINOR_VERSION = 0x821C,
 	GL_NUM_EXTENSIONS = 0x821D,
 	GL_CONTEXT_FLAGS = 0x821E,
+#if !defined(GL_ARB_texture_rg)
 	GL_COMPRESSED_RED = 0x8225,
 	GL_COMPRESSED_RG = 0x8226,
+#endif
 	GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT = 0x0001,
 	GL_RGBA32F = 0x8814,
 	GL_RGB32F = 0x8815,
