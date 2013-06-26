@@ -33,6 +33,7 @@
 #include "gl3_graphic_context_provider.h"
 #include "API/Core/System/exception.h"
 #include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
 #include "API/Display/Render/shared_gc_data.h"
 
 namespace clan
@@ -212,7 +213,7 @@ GLenum GL3ShaderObjectProvider::shadertype_to_opengl(ShaderType type)
 	case shadertype_compute:
 		return GL_COMPUTE_SHADER;
 	default:
-		throw Exception("GL3ShaderObjectProvider: Unknown shader type: " + type);
+		throw Exception(string_format("GL3ShaderObjectProvider: Unknown shader type: %1", (int)type));
 	}
 }
 
