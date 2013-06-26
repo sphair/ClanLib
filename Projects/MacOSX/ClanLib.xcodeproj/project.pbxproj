@@ -417,6 +417,45 @@
 		1835C21E163631AA0009AA23 /* opengl_window_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C31636168C0009AA23 /* opengl_window_description.cpp */; };
 		1835C220163631AA0009AA23 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C51636168C0009AA23 /* precomp.cpp */; };
 		1835C222163631AA0009AA23 /* setup_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C71636168C0009AA23 /* setup_gl.cpp */; };
+		18C75FB9177B7EE5009723F2 /* gl3_buffer_object_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */; };
+		18C75FBA177B7EE5009723F2 /* gl3_buffer_object_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F7E177B7EE5009723F2 /* gl3_buffer_object_provider.h */; };
+		18C75FBB177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */; };
+		18C75FBC177B7EE5009723F2 /* gl3_element_array_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F80177B7EE5009723F2 /* gl3_element_array_buffer_provider.h */; };
+		18C75FBD177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F81177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp */; };
+		18C75FBE177B7EE5009723F2 /* gl3_frame_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F82177B7EE5009723F2 /* gl3_frame_buffer_provider.h */; };
+		18C75FBF177B7EE5009723F2 /* gl3_graphic_context_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F83177B7EE5009723F2 /* gl3_graphic_context_provider.cpp */; };
+		18C75FC0177B7EE5009723F2 /* gl3_graphic_context_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F84177B7EE5009723F2 /* gl3_graphic_context_provider.h */; };
+		18C75FC1177B7EE5009723F2 /* gl3_occlusion_query_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F85177B7EE5009723F2 /* gl3_occlusion_query_provider.cpp */; };
+		18C75FC2177B7EE5009723F2 /* gl3_occlusion_query_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F86177B7EE5009723F2 /* gl3_occlusion_query_provider.h */; };
+		18C75FC3177B7EE5009723F2 /* gl3_pixel_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F87177B7EE5009723F2 /* gl3_pixel_buffer_provider.cpp */; };
+		18C75FC4177B7EE5009723F2 /* gl3_pixel_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F88177B7EE5009723F2 /* gl3_pixel_buffer_provider.h */; };
+		18C75FC5177B7EE5009723F2 /* gl3_primitives_array_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F89177B7EE5009723F2 /* gl3_primitives_array_provider.cpp */; };
+		18C75FC6177B7EE5009723F2 /* gl3_primitives_array_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F8A177B7EE5009723F2 /* gl3_primitives_array_provider.h */; };
+		18C75FC7177B7EE5009723F2 /* gl3_program_object_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F8B177B7EE5009723F2 /* gl3_program_object_provider.cpp */; };
+		18C75FC8177B7EE5009723F2 /* gl3_program_object_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F8C177B7EE5009723F2 /* gl3_program_object_provider.h */; };
+		18C75FC9177B7EE5009723F2 /* gl3_render_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F8D177B7EE5009723F2 /* gl3_render_buffer_provider.cpp */; };
+		18C75FCA177B7EE5009723F2 /* gl3_render_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F8E177B7EE5009723F2 /* gl3_render_buffer_provider.h */; };
+		18C75FCB177B7EE5009723F2 /* gl3_shader_object_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F8F177B7EE5009723F2 /* gl3_shader_object_provider.cpp */; };
+		18C75FCC177B7EE5009723F2 /* gl3_shader_object_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F90177B7EE5009723F2 /* gl3_shader_object_provider.h */; };
+		18C75FCD177B7EE5009723F2 /* gl3_standard_programs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F91177B7EE5009723F2 /* gl3_standard_programs.cpp */; };
+		18C75FCE177B7EE5009723F2 /* gl3_standard_programs.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F92177B7EE5009723F2 /* gl3_standard_programs.h */; };
+		18C75FCF177B7EE5009723F2 /* gl3_storage_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F93177B7EE5009723F2 /* gl3_storage_buffer_provider.cpp */; };
+		18C75FD0177B7EE5009723F2 /* gl3_storage_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F94177B7EE5009723F2 /* gl3_storage_buffer_provider.h */; };
+		18C75FD1177B7EE5009723F2 /* gl3_texture_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F95177B7EE5009723F2 /* gl3_texture_provider.cpp */; };
+		18C75FD2177B7EE5009723F2 /* gl3_texture_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F96177B7EE5009723F2 /* gl3_texture_provider.h */; };
+		18C75FD3177B7EE5009723F2 /* gl3_transfer_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F97177B7EE5009723F2 /* gl3_transfer_buffer_provider.cpp */; };
+		18C75FD4177B7EE5009723F2 /* gl3_transfer_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F98177B7EE5009723F2 /* gl3_transfer_buffer_provider.h */; };
+		18C75FD5177B7EE5009723F2 /* gl3_uniform_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F99177B7EE5009723F2 /* gl3_uniform_buffer_provider.cpp */; };
+		18C75FD6177B7EE5009723F2 /* gl3_uniform_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F9A177B7EE5009723F2 /* gl3_uniform_buffer_provider.h */; };
+		18C75FD7177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F9B177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.cpp */; };
+		18C75FD8177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F9C177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.h */; };
+		18C75FD9177B7EE5009723F2 /* setup_gl_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75F9D177B7EE5009723F2 /* setup_gl_impl.h */; };
+		18C75FDA177B7EE5009723F2 /* opengl_blend_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F9F177B7EE5009723F2 /* opengl_blend_state.cpp */; };
+		18C75FDB177B7EE5009723F2 /* opengl_blend_state.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75FA0177B7EE5009723F2 /* opengl_blend_state.h */; };
+		18C75FDC177B7EE5009723F2 /* opengl_depth_stencil_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75FA1177B7EE5009723F2 /* opengl_depth_stencil_state.cpp */; };
+		18C75FDD177B7EE5009723F2 /* opengl_depth_stencil_state.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75FA2177B7EE5009723F2 /* opengl_depth_stencil_state.h */; };
+		18C75FDE177B7EE5009723F2 /* opengl_rasterizer_state.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75FA3177B7EE5009723F2 /* opengl_rasterizer_state.cpp */; };
+		18C75FDF177B7EE5009723F2 /* opengl_rasterizer_state.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C75FA4177B7EE5009723F2 /* opengl_rasterizer_state.h */; };
 		5234008B16653835001A194E /* css_document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340072166537CF001A194E /* css_document.cpp */; };
 		5234008C16653835001A194E /* css_document_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340073166537CF001A194E /* css_document_impl.cpp */; };
 		5234008D16653835001A194E /* css_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340075166537CF001A194E /* css_property.cpp */; };
@@ -1188,6 +1227,45 @@
 		1835C111163629410009AA23 /* libclanSqlite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanSqlite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C124163629FC0009AA23 /* libclanDisplay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanDisplay.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C1ED163631850009AA23 /* libclanGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_buffer_object_provider.cpp; sourceTree = "<group>"; };
+		18C75F7E177B7EE5009723F2 /* gl3_buffer_object_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_buffer_object_provider.h; sourceTree = "<group>"; };
+		18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_element_array_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F80177B7EE5009723F2 /* gl3_element_array_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_element_array_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F81177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_frame_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F82177B7EE5009723F2 /* gl3_frame_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_frame_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F83177B7EE5009723F2 /* gl3_graphic_context_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_graphic_context_provider.cpp; sourceTree = "<group>"; };
+		18C75F84177B7EE5009723F2 /* gl3_graphic_context_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_graphic_context_provider.h; sourceTree = "<group>"; };
+		18C75F85177B7EE5009723F2 /* gl3_occlusion_query_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_occlusion_query_provider.cpp; sourceTree = "<group>"; };
+		18C75F86177B7EE5009723F2 /* gl3_occlusion_query_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_occlusion_query_provider.h; sourceTree = "<group>"; };
+		18C75F87177B7EE5009723F2 /* gl3_pixel_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_pixel_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F88177B7EE5009723F2 /* gl3_pixel_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_pixel_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F89177B7EE5009723F2 /* gl3_primitives_array_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_primitives_array_provider.cpp; sourceTree = "<group>"; };
+		18C75F8A177B7EE5009723F2 /* gl3_primitives_array_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_primitives_array_provider.h; sourceTree = "<group>"; };
+		18C75F8B177B7EE5009723F2 /* gl3_program_object_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_program_object_provider.cpp; sourceTree = "<group>"; };
+		18C75F8C177B7EE5009723F2 /* gl3_program_object_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_program_object_provider.h; sourceTree = "<group>"; };
+		18C75F8D177B7EE5009723F2 /* gl3_render_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_render_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F8E177B7EE5009723F2 /* gl3_render_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_render_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F8F177B7EE5009723F2 /* gl3_shader_object_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_shader_object_provider.cpp; sourceTree = "<group>"; };
+		18C75F90177B7EE5009723F2 /* gl3_shader_object_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_shader_object_provider.h; sourceTree = "<group>"; };
+		18C75F91177B7EE5009723F2 /* gl3_standard_programs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_standard_programs.cpp; sourceTree = "<group>"; };
+		18C75F92177B7EE5009723F2 /* gl3_standard_programs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_standard_programs.h; sourceTree = "<group>"; };
+		18C75F93177B7EE5009723F2 /* gl3_storage_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_storage_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F94177B7EE5009723F2 /* gl3_storage_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_storage_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F95177B7EE5009723F2 /* gl3_texture_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_texture_provider.cpp; sourceTree = "<group>"; };
+		18C75F96177B7EE5009723F2 /* gl3_texture_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_texture_provider.h; sourceTree = "<group>"; };
+		18C75F97177B7EE5009723F2 /* gl3_transfer_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_transfer_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F98177B7EE5009723F2 /* gl3_transfer_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_transfer_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F99177B7EE5009723F2 /* gl3_uniform_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_uniform_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F9A177B7EE5009723F2 /* gl3_uniform_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_uniform_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F9B177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_vertex_array_buffer_provider.cpp; sourceTree = "<group>"; };
+		18C75F9C177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_vertex_array_buffer_provider.h; sourceTree = "<group>"; };
+		18C75F9D177B7EE5009723F2 /* setup_gl_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = setup_gl_impl.h; sourceTree = "<group>"; };
+		18C75F9F177B7EE5009723F2 /* opengl_blend_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opengl_blend_state.cpp; sourceTree = "<group>"; };
+		18C75FA0177B7EE5009723F2 /* opengl_blend_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_blend_state.h; sourceTree = "<group>"; };
+		18C75FA1177B7EE5009723F2 /* opengl_depth_stencil_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opengl_depth_stencil_state.cpp; sourceTree = "<group>"; };
+		18C75FA2177B7EE5009723F2 /* opengl_depth_stencil_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_depth_stencil_state.h; sourceTree = "<group>"; };
+		18C75FA3177B7EE5009723F2 /* opengl_rasterizer_state.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opengl_rasterizer_state.cpp; sourceTree = "<group>"; };
+		18C75FA4177B7EE5009723F2 /* opengl_rasterizer_state.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_rasterizer_state.h; sourceTree = "<group>"; };
 		52340071166537CF001A194E /* css_attribute_selector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_attribute_selector.h; sourceTree = "<group>"; };
 		52340072166537CF001A194E /* css_document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document.cpp; sourceTree = "<group>"; };
 		52340073166537CF001A194E /* css_document_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document_impl.cpp; sourceTree = "<group>"; };
@@ -2392,18 +2470,21 @@
 		1835B2901636168C0009AA23 /* GL */ = {
 			isa = PBXGroup;
 			children = (
-				1835B2911636168C0009AA23 /* AGL */,
 				1835B2A01636168C0009AA23 /* opengl.cpp */,
 				1835B2A71636168C0009AA23 /* opengl_graphic_context.cpp */,
-				1835B2A91636168C0009AA23 /* opengl_graphic_context_provider.h */,
 				1835B2B81636168C0009AA23 /* opengl_target.cpp */,
 				1835B2B91636168C0009AA23 /* opengl_target_provider.cpp */,
-				1835B2BA1636168C0009AA23 /* opengl_target_provider.h */,
 				1835B2C31636168C0009AA23 /* opengl_window_description.cpp */,
-				1835B2C41636168C0009AA23 /* opengl_window_description_impl.h */,
 				1835B2C51636168C0009AA23 /* precomp.cpp */,
-				1835B2C61636168C0009AA23 /* precomp.h */,
 				1835B2C71636168C0009AA23 /* setup_gl.cpp */,
+				1835B2A91636168C0009AA23 /* opengl_graphic_context_provider.h */,
+				1835B2BA1636168C0009AA23 /* opengl_target_provider.h */,
+				1835B2C41636168C0009AA23 /* opengl_window_description_impl.h */,
+				1835B2C61636168C0009AA23 /* precomp.h */,
+				18C75F9D177B7EE5009723F2 /* setup_gl_impl.h */,
+				1835B2911636168C0009AA23 /* AGL */,
+				18C75F7C177B7EE5009723F2 /* GL3 */,
+				18C75F9E177B7EE5009723F2 /* State */,
 			);
 			path = GL;
 			sourceTree = "<group>";
@@ -2805,6 +2886,58 @@
 				1835C1ED163631850009AA23 /* libclanGL.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		18C75F7C177B7EE5009723F2 /* GL3 */ = {
+			isa = PBXGroup;
+			children = (
+				18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */,
+				18C75F7E177B7EE5009723F2 /* gl3_buffer_object_provider.h */,
+				18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */,
+				18C75F80177B7EE5009723F2 /* gl3_element_array_buffer_provider.h */,
+				18C75F81177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp */,
+				18C75F82177B7EE5009723F2 /* gl3_frame_buffer_provider.h */,
+				18C75F83177B7EE5009723F2 /* gl3_graphic_context_provider.cpp */,
+				18C75F84177B7EE5009723F2 /* gl3_graphic_context_provider.h */,
+				18C75F85177B7EE5009723F2 /* gl3_occlusion_query_provider.cpp */,
+				18C75F86177B7EE5009723F2 /* gl3_occlusion_query_provider.h */,
+				18C75F87177B7EE5009723F2 /* gl3_pixel_buffer_provider.cpp */,
+				18C75F88177B7EE5009723F2 /* gl3_pixel_buffer_provider.h */,
+				18C75F89177B7EE5009723F2 /* gl3_primitives_array_provider.cpp */,
+				18C75F8A177B7EE5009723F2 /* gl3_primitives_array_provider.h */,
+				18C75F8B177B7EE5009723F2 /* gl3_program_object_provider.cpp */,
+				18C75F8C177B7EE5009723F2 /* gl3_program_object_provider.h */,
+				18C75F8D177B7EE5009723F2 /* gl3_render_buffer_provider.cpp */,
+				18C75F8E177B7EE5009723F2 /* gl3_render_buffer_provider.h */,
+				18C75F8F177B7EE5009723F2 /* gl3_shader_object_provider.cpp */,
+				18C75F90177B7EE5009723F2 /* gl3_shader_object_provider.h */,
+				18C75F91177B7EE5009723F2 /* gl3_standard_programs.cpp */,
+				18C75F92177B7EE5009723F2 /* gl3_standard_programs.h */,
+				18C75F93177B7EE5009723F2 /* gl3_storage_buffer_provider.cpp */,
+				18C75F94177B7EE5009723F2 /* gl3_storage_buffer_provider.h */,
+				18C75F95177B7EE5009723F2 /* gl3_texture_provider.cpp */,
+				18C75F96177B7EE5009723F2 /* gl3_texture_provider.h */,
+				18C75F97177B7EE5009723F2 /* gl3_transfer_buffer_provider.cpp */,
+				18C75F98177B7EE5009723F2 /* gl3_transfer_buffer_provider.h */,
+				18C75F99177B7EE5009723F2 /* gl3_uniform_buffer_provider.cpp */,
+				18C75F9A177B7EE5009723F2 /* gl3_uniform_buffer_provider.h */,
+				18C75F9B177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.cpp */,
+				18C75F9C177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.h */,
+			);
+			path = GL3;
+			sourceTree = "<group>";
+		};
+		18C75F9E177B7EE5009723F2 /* State */ = {
+			isa = PBXGroup;
+			children = (
+				18C75F9F177B7EE5009723F2 /* opengl_blend_state.cpp */,
+				18C75FA0177B7EE5009723F2 /* opengl_blend_state.h */,
+				18C75FA1177B7EE5009723F2 /* opengl_depth_stencil_state.cpp */,
+				18C75FA2177B7EE5009723F2 /* opengl_depth_stencil_state.h */,
+				18C75FA3177B7EE5009723F2 /* opengl_rasterizer_state.cpp */,
+				18C75FA4177B7EE5009723F2 /* opengl_rasterizer_state.h */,
+			);
+			path = State;
 			sourceTree = "<group>";
 		};
 		52340070166537CF001A194E /* CSSDocument */ = {
@@ -3608,6 +3741,26 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C75FBA177B7EE5009723F2 /* gl3_buffer_object_provider.h in Headers */,
+				18C75FBC177B7EE5009723F2 /* gl3_element_array_buffer_provider.h in Headers */,
+				18C75FBE177B7EE5009723F2 /* gl3_frame_buffer_provider.h in Headers */,
+				18C75FC0177B7EE5009723F2 /* gl3_graphic_context_provider.h in Headers */,
+				18C75FC2177B7EE5009723F2 /* gl3_occlusion_query_provider.h in Headers */,
+				18C75FC4177B7EE5009723F2 /* gl3_pixel_buffer_provider.h in Headers */,
+				18C75FC6177B7EE5009723F2 /* gl3_primitives_array_provider.h in Headers */,
+				18C75FC8177B7EE5009723F2 /* gl3_program_object_provider.h in Headers */,
+				18C75FCA177B7EE5009723F2 /* gl3_render_buffer_provider.h in Headers */,
+				18C75FCC177B7EE5009723F2 /* gl3_shader_object_provider.h in Headers */,
+				18C75FCE177B7EE5009723F2 /* gl3_standard_programs.h in Headers */,
+				18C75FD0177B7EE5009723F2 /* gl3_storage_buffer_provider.h in Headers */,
+				18C75FD2177B7EE5009723F2 /* gl3_texture_provider.h in Headers */,
+				18C75FD4177B7EE5009723F2 /* gl3_transfer_buffer_provider.h in Headers */,
+				18C75FD6177B7EE5009723F2 /* gl3_uniform_buffer_provider.h in Headers */,
+				18C75FD8177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.h in Headers */,
+				18C75FD9177B7EE5009723F2 /* setup_gl_impl.h in Headers */,
+				18C75FDB177B7EE5009723F2 /* opengl_blend_state.h in Headers */,
+				18C75FDD177B7EE5009723F2 /* opengl_depth_stencil_state.h in Headers */,
+				18C75FDF177B7EE5009723F2 /* opengl_rasterizer_state.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4344,6 +4497,25 @@
 				1835C21E163631AA0009AA23 /* opengl_window_description.cpp in Sources */,
 				1835C220163631AA0009AA23 /* precomp.cpp in Sources */,
 				1835C222163631AA0009AA23 /* setup_gl.cpp in Sources */,
+				18C75FB9177B7EE5009723F2 /* gl3_buffer_object_provider.cpp in Sources */,
+				18C75FBB177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp in Sources */,
+				18C75FBD177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp in Sources */,
+				18C75FBF177B7EE5009723F2 /* gl3_graphic_context_provider.cpp in Sources */,
+				18C75FC1177B7EE5009723F2 /* gl3_occlusion_query_provider.cpp in Sources */,
+				18C75FC3177B7EE5009723F2 /* gl3_pixel_buffer_provider.cpp in Sources */,
+				18C75FC5177B7EE5009723F2 /* gl3_primitives_array_provider.cpp in Sources */,
+				18C75FC7177B7EE5009723F2 /* gl3_program_object_provider.cpp in Sources */,
+				18C75FC9177B7EE5009723F2 /* gl3_render_buffer_provider.cpp in Sources */,
+				18C75FCB177B7EE5009723F2 /* gl3_shader_object_provider.cpp in Sources */,
+				18C75FCD177B7EE5009723F2 /* gl3_standard_programs.cpp in Sources */,
+				18C75FCF177B7EE5009723F2 /* gl3_storage_buffer_provider.cpp in Sources */,
+				18C75FD1177B7EE5009723F2 /* gl3_texture_provider.cpp in Sources */,
+				18C75FD3177B7EE5009723F2 /* gl3_transfer_buffer_provider.cpp in Sources */,
+				18C75FD5177B7EE5009723F2 /* gl3_uniform_buffer_provider.cpp in Sources */,
+				18C75FD7177B7EE5009723F2 /* gl3_vertex_array_buffer_provider.cpp in Sources */,
+				18C75FDA177B7EE5009723F2 /* opengl_blend_state.cpp in Sources */,
+				18C75FDC177B7EE5009723F2 /* opengl_depth_stencil_state.cpp in Sources */,
+				18C75FDE177B7EE5009723F2 /* opengl_rasterizer_state.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

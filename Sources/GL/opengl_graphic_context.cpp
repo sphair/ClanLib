@@ -30,6 +30,7 @@
 #include "GL/precomp.h"
 #include "API/GL/opengl_graphic_context.h"
 #include "API/GL/opengl.h"
+#include "API/GL/opengl_wrap.h"
 #include "opengl_graphic_context_provider.h"
 #include "GL3/gl3_graphic_context_provider.h"
 
