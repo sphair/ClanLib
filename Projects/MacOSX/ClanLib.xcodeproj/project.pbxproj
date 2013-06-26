@@ -1366,6 +1366,162 @@
 		18C76058177B81AE009723F2 /* swr_program_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swr_program_object.h; sourceTree = "<group>"; };
 		18C76059177B81AE009723F2 /* swr_target.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swr_target.h; sourceTree = "<group>"; };
 		18C7605A177B81AE009723F2 /* swrender.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = swrender.h; sourceTree = "<group>"; };
+		18C7605B177B8230009723F2 /* tls_client.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tls_client.h; sourceTree = "<group>"; };
+		18C7605C177B8249009723F2 /* directory_listing_entry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = directory_listing_entry.h; sourceTree = "<group>"; };
+		18C7605D177B8249009723F2 /* directory_listing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = directory_listing.h; sourceTree = "<group>"; };
+		18C7605E177B8249009723F2 /* file_system_provider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = file_system_provider.h; sourceTree = "<group>"; };
+		18C7605F177B8249009723F2 /* file_system.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = file_system.h; sourceTree = "<group>"; };
+		18C76061177B8259009723F2 /* crash_reporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = crash_reporter.h; sourceTree = "<group>"; };
+		18C76062177B8259009723F2 /* detect_hang.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = detect_hang.h; sourceTree = "<group>"; };
+		18C76063177B8259009723F2 /* exception_dialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = exception_dialog.h; sourceTree = "<group>"; };
+		18C76064177B8278009723F2 /* aabb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = aabb.h; sourceTree = "<group>"; };
+		18C76065177B8278009723F2 /* big_int.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = big_int.h; sourceTree = "<group>"; };
+		18C76066177B8278009723F2 /* frustum_planes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = frustum_planes.h; sourceTree = "<group>"; };
+		18C76067177B8278009723F2 /* intersection_test.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = intersection_test.h; sourceTree = "<group>"; };
+		18C76068177B8278009723F2 /* obb.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = obb.h; sourceTree = "<group>"; };
+		18C76069177B828C009723F2 /* resource_container.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = resource_container.h; sourceTree = "<group>"; };
+		18C7606A177B828C009723F2 /* resource_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = resource_object.h; sourceTree = "<group>"; };
+		18C7606B177B828C009723F2 /* xml_resource_document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xml_resource_document.h; sourceTree = "<group>"; };
+		18C7606C177B828C009723F2 /* xml_resource_manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xml_resource_manager.h; sourceTree = "<group>"; };
+		18C7606D177B828C009723F2 /* xml_resource_node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xml_resource_node.h; sourceTree = "<group>"; };
+		18C7606E177B82AD009723F2 /* game_time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game_time.h; sourceTree = "<group>"; };
+		18C7606F177B82AD009723F2 /* userdata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = userdata.h; sourceTree = "<group>"; };
+		18C76070177B82AD009723F2 /* work_queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = work_queue.h; sourceTree = "<group>"; };
+		18C76072177B82E5009723F2 /* css_computed_background.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_background.h; sourceTree = "<group>"; };
+		18C76073177B82E5009723F2 /* css_computed_border.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_border.h; sourceTree = "<group>"; };
+		18C76074177B82E5009723F2 /* css_computed_box.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_box.h; sourceTree = "<group>"; };
+		18C76075177B82E5009723F2 /* css_computed_counter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_counter.h; sourceTree = "<group>"; };
+		18C76076177B82E5009723F2 /* css_computed_flex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_flex.h; sourceTree = "<group>"; };
+		18C76077177B82E5009723F2 /* css_computed_font.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_font.h; sourceTree = "<group>"; };
+		18C76078177B82E5009723F2 /* css_computed_generic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_generic.h; sourceTree = "<group>"; };
+		18C76079177B82E5009723F2 /* css_computed_list_style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_list_style.h; sourceTree = "<group>"; };
+		18C7607A177B82E5009723F2 /* css_computed_margin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_margin.h; sourceTree = "<group>"; };
+		18C7607B177B82E5009723F2 /* css_computed_misc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_misc.h; sourceTree = "<group>"; };
+		18C7607C177B82E5009723F2 /* css_computed_outline.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_outline.h; sourceTree = "<group>"; };
+		18C7607D177B82E5009723F2 /* css_computed_padding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_padding.h; sourceTree = "<group>"; };
+		18C7607E177B82E5009723F2 /* css_computed_table.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_table.h; sourceTree = "<group>"; };
+		18C7607F177B82E5009723F2 /* css_computed_text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_text.h; sourceTree = "<group>"; };
+		18C76080177B82E5009723F2 /* css_computed_values.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_values.h; sourceTree = "<group>"; };
+		18C76081177B82E5009723F2 /* css_computed_values_updater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_computed_values_updater.h; sourceTree = "<group>"; };
+		18C76083177B82E5009723F2 /* css_document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_document.h; sourceTree = "<group>"; };
+		18C76084177B82E5009723F2 /* css_length.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_length.h; sourceTree = "<group>"; };
+		18C76085177B82E5009723F2 /* css_property.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_property.h; sourceTree = "<group>"; };
+		18C76086177B82E5009723F2 /* css_property_value.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_property_value.h; sourceTree = "<group>"; };
+		18C76087177B82E5009723F2 /* css_select_node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_select_node.h; sourceTree = "<group>"; };
+		18C76088177B82E5009723F2 /* css_select_result.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_select_result.h; sourceTree = "<group>"; };
+		18C76089177B82E5009723F2 /* css_style_properties.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_style_properties.h; sourceTree = "<group>"; };
+		18C7608A177B82E5009723F2 /* dom_select_node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dom_select_node.h; sourceTree = "<group>"; };
+		18C7608C177B82E5009723F2 /* css_token.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_token.h; sourceTree = "<group>"; };
+		18C7608D177B82E5009723F2 /* css_tokenizer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_tokenizer.h; sourceTree = "<group>"; };
+		18C7608F177B82E5009723F2 /* css_hit_test_result.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_hit_test_result.h; sourceTree = "<group>"; };
+		18C76090177B82E5009723F2 /* css_layout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout.h; sourceTree = "<group>"; };
+		18C76091177B82E5009723F2 /* css_layout_element.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout_element.h; sourceTree = "<group>"; };
+		18C76092177B82E5009723F2 /* css_layout_node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout_node.h; sourceTree = "<group>"; };
+		18C76093177B82E5009723F2 /* css_layout_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout_object.h; sourceTree = "<group>"; };
+		18C76094177B82E5009723F2 /* css_layout_text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout_text.h; sourceTree = "<group>"; };
+		18C76095177B82E5009723F2 /* css_layout_user_data.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_layout_user_data.h; sourceTree = "<group>"; };
+		18C76096177B82E5009723F2 /* css_replaced_component.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_replaced_component.h; sourceTree = "<group>"; };
+		18C76098177B82E5009723F2 /* css_value_align_content.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_align_content.h; sourceTree = "<group>"; };
+		18C76099177B82E5009723F2 /* css_value_align_items.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_align_items.h; sourceTree = "<group>"; };
+		18C7609A177B82E5009723F2 /* css_value_align_self.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_align_self.h; sourceTree = "<group>"; };
+		18C7609B177B82E5009723F2 /* css_value_background_attachment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_attachment.h; sourceTree = "<group>"; };
+		18C7609C177B82E5009723F2 /* css_value_background_clip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_clip.h; sourceTree = "<group>"; };
+		18C7609D177B82E6009723F2 /* css_value_background_color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_color.h; sourceTree = "<group>"; };
+		18C7609E177B82E6009723F2 /* css_value_background_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_image.h; sourceTree = "<group>"; };
+		18C7609F177B82E6009723F2 /* css_value_background_origin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_origin.h; sourceTree = "<group>"; };
+		18C760A0177B82E6009723F2 /* css_value_background_position.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_position.h; sourceTree = "<group>"; };
+		18C760A1177B82E6009723F2 /* css_value_background_repeat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_repeat.h; sourceTree = "<group>"; };
+		18C760A2177B82E6009723F2 /* css_value_background_size.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_background_size.h; sourceTree = "<group>"; };
+		18C760A3177B82E6009723F2 /* css_value_border_collapse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_collapse.h; sourceTree = "<group>"; };
+		18C760A4177B82E6009723F2 /* css_value_border_color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_color.h; sourceTree = "<group>"; };
+		18C760A5177B82E6009723F2 /* css_value_border_image_outset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_image_outset.h; sourceTree = "<group>"; };
+		18C760A6177B82E6009723F2 /* css_value_border_image_repeat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_image_repeat.h; sourceTree = "<group>"; };
+		18C760A7177B82E6009723F2 /* css_value_border_image_slice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_image_slice.h; sourceTree = "<group>"; };
+		18C760A8177B82E6009723F2 /* css_value_border_image_source.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_image_source.h; sourceTree = "<group>"; };
+		18C760A9177B82E6009723F2 /* css_value_border_image_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_image_width.h; sourceTree = "<group>"; };
+		18C760AA177B82E6009723F2 /* css_value_border_radius.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_radius.h; sourceTree = "<group>"; };
+		18C760AB177B82E6009723F2 /* css_value_border_spacing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_spacing.h; sourceTree = "<group>"; };
+		18C760AC177B82E6009723F2 /* css_value_border_style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_style.h; sourceTree = "<group>"; };
+		18C760AD177B82E6009723F2 /* css_value_border_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_border_width.h; sourceTree = "<group>"; };
+		18C760AE177B82E6009723F2 /* css_value_bottom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_bottom.h; sourceTree = "<group>"; };
+		18C760AF177B82E6009723F2 /* css_value_caption_side.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_caption_side.h; sourceTree = "<group>"; };
+		18C760B0177B82E6009723F2 /* css_value_clear.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_clear.h; sourceTree = "<group>"; };
+		18C760B1177B82E6009723F2 /* css_value_clip.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_clip.h; sourceTree = "<group>"; };
+		18C760B2177B82E6009723F2 /* css_value_color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_color.h; sourceTree = "<group>"; };
+		18C760B3177B82E6009723F2 /* css_value_content.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_content.h; sourceTree = "<group>"; };
+		18C760B4177B82E6009723F2 /* css_value_counter_increment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_counter_increment.h; sourceTree = "<group>"; };
+		18C760B5177B82E6009723F2 /* css_value_counter_reset.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_counter_reset.h; sourceTree = "<group>"; };
+		18C760B6177B82E6009723F2 /* css_value_cursor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_cursor.h; sourceTree = "<group>"; };
+		18C760B7177B82E6009723F2 /* css_value_decoration_break.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_decoration_break.h; sourceTree = "<group>"; };
+		18C760B8177B82E6009723F2 /* css_value_direction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_direction.h; sourceTree = "<group>"; };
+		18C760B9177B82E6009723F2 /* css_value_display.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_display.h; sourceTree = "<group>"; };
+		18C760BA177B82E6009723F2 /* css_value_empty_cells.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_empty_cells.h; sourceTree = "<group>"; };
+		18C760BB177B82E6009723F2 /* css_value_flex_basis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_flex_basis.h; sourceTree = "<group>"; };
+		18C760BC177B82E6009723F2 /* css_value_flex_direction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_flex_direction.h; sourceTree = "<group>"; };
+		18C760BD177B82E6009723F2 /* css_value_flex_grow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_flex_grow.h; sourceTree = "<group>"; };
+		18C760BE177B82E6009723F2 /* css_value_flex_shrink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_flex_shrink.h; sourceTree = "<group>"; };
+		18C760BF177B82E6009723F2 /* css_value_flex_wrap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_flex_wrap.h; sourceTree = "<group>"; };
+		18C760C0177B82E6009723F2 /* css_value_float.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_float.h; sourceTree = "<group>"; };
+		18C760C1177B82E6009723F2 /* css_value_font_family.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_font_family.h; sourceTree = "<group>"; };
+		18C760C2177B82E6009723F2 /* css_value_font_size.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_font_size.h; sourceTree = "<group>"; };
+		18C760C3177B82E6009723F2 /* css_value_font_style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_font_style.h; sourceTree = "<group>"; };
+		18C760C4177B82E6009723F2 /* css_value_font_variant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_font_variant.h; sourceTree = "<group>"; };
+		18C760C5177B82E6009723F2 /* css_value_font_weight.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_font_weight.h; sourceTree = "<group>"; };
+		18C760C6177B82E6009723F2 /* css_value_generic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_generic.h; sourceTree = "<group>"; };
+		18C760C7177B82E6009723F2 /* css_value_height.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_height.h; sourceTree = "<group>"; };
+		18C760C8177B82E6009723F2 /* css_value_justify_content.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_justify_content.h; sourceTree = "<group>"; };
+		18C760C9177B82E6009723F2 /* css_value_left.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_left.h; sourceTree = "<group>"; };
+		18C760CA177B82E6009723F2 /* css_value_letter_spacing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_letter_spacing.h; sourceTree = "<group>"; };
+		18C760CB177B82E6009723F2 /* css_value_line_height.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_line_height.h; sourceTree = "<group>"; };
+		18C760CC177B82E6009723F2 /* css_value_list_style_image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_list_style_image.h; sourceTree = "<group>"; };
+		18C760CD177B82E6009723F2 /* css_value_list_style_position.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_list_style_position.h; sourceTree = "<group>"; };
+		18C760CE177B82E6009723F2 /* css_value_list_style_type.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_list_style_type.h; sourceTree = "<group>"; };
+		18C760CF177B82E6009723F2 /* css_value_margin_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_margin_width.h; sourceTree = "<group>"; };
+		18C760D0177B82E6009723F2 /* css_value_max_height.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_max_height.h; sourceTree = "<group>"; };
+		18C760D1177B82E6009723F2 /* css_value_max_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_max_width.h; sourceTree = "<group>"; };
+		18C760D2177B82E6009723F2 /* css_value_min_height.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_min_height.h; sourceTree = "<group>"; };
+		18C760D3177B82E6009723F2 /* css_value_min_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_min_width.h; sourceTree = "<group>"; };
+		18C760D4177B82E6009723F2 /* css_value_order.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_order.h; sourceTree = "<group>"; };
+		18C760D5177B82E6009723F2 /* css_value_orphans.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_orphans.h; sourceTree = "<group>"; };
+		18C760D6177B82E6009723F2 /* css_value_outline_color.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_outline_color.h; sourceTree = "<group>"; };
+		18C760D7177B82E6009723F2 /* css_value_outline_style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_outline_style.h; sourceTree = "<group>"; };
+		18C760D8177B82E6009723F2 /* css_value_outline_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_outline_width.h; sourceTree = "<group>"; };
+		18C760D9177B82E6009723F2 /* css_value_overflow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_overflow.h; sourceTree = "<group>"; };
+		18C760DA177B82E6009723F2 /* css_value_padding_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_padding_width.h; sourceTree = "<group>"; };
+		18C760DB177B82E6009723F2 /* css_value_page_break_after.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_page_break_after.h; sourceTree = "<group>"; };
+		18C760DC177B82E6009723F2 /* css_value_page_break_before.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_page_break_before.h; sourceTree = "<group>"; };
+		18C760DD177B82E6009723F2 /* css_value_page_break_inside.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_page_break_inside.h; sourceTree = "<group>"; };
+		18C760DE177B82E6009723F2 /* css_value_position.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_position.h; sourceTree = "<group>"; };
+		18C760DF177B82E6009723F2 /* css_value_quotes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_quotes.h; sourceTree = "<group>"; };
+		18C760E0177B82E6009723F2 /* css_value_right.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_right.h; sourceTree = "<group>"; };
+		18C760E1177B82E6009723F2 /* css_value_shadow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_shadow.h; sourceTree = "<group>"; };
+		18C760E2177B82E6009723F2 /* css_value_table_layout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_table_layout.h; sourceTree = "<group>"; };
+		18C760E3177B82E6009723F2 /* css_value_text_align.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_text_align.h; sourceTree = "<group>"; };
+		18C760E4177B82E6009723F2 /* css_value_text_decoration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_text_decoration.h; sourceTree = "<group>"; };
+		18C760E5177B82E6009723F2 /* css_value_text_indent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_text_indent.h; sourceTree = "<group>"; };
+		18C760E6177B82E6009723F2 /* css_value_text_transform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_text_transform.h; sourceTree = "<group>"; };
+		18C760E7177B82E6009723F2 /* css_value_top.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_top.h; sourceTree = "<group>"; };
+		18C760E8177B82E6009723F2 /* css_value_unicode_bidi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_unicode_bidi.h; sourceTree = "<group>"; };
+		18C760E9177B82E6009723F2 /* css_value_vertical_align.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_vertical_align.h; sourceTree = "<group>"; };
+		18C760EA177B82E6009723F2 /* css_value_visibility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_visibility.h; sourceTree = "<group>"; };
+		18C760EB177B82E6009723F2 /* css_value_white_space.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_white_space.h; sourceTree = "<group>"; };
+		18C760EC177B82E6009723F2 /* css_value_widows.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_widows.h; sourceTree = "<group>"; };
+		18C760ED177B82E6009723F2 /* css_value_width.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_width.h; sourceTree = "<group>"; };
+		18C760EE177B82E6009723F2 /* css_value_word_spacing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_word_spacing.h; sourceTree = "<group>"; };
+		18C760EF177B82E6009723F2 /* css_value_z_index.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = css_value_z_index.h; sourceTree = "<group>"; };
+		18C760F0177B8315009723F2 /* path2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = path2d.h; sourceTree = "<group>"; };
+		18C760F1177B8315009723F2 /* shape2d.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shape2d.h; sourceTree = "<group>"; };
+		18C760F3177B8335009723F2 /* display_cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = display_cache.h; sourceTree = "<group>"; };
+		18C760F4177B835A009723F2 /* cursor_description.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cursor_description.h; sourceTree = "<group>"; };
+		18C760F6177B8369009723F2 /* shader_effect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_effect.h; sourceTree = "<group>"; };
+		18C760F7177B8369009723F2 /* shader_effect_description.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = shader_effect_description.h; sourceTree = "<group>"; };
+		18C760F8177B83B6009723F2 /* gui_theme_part.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gui_theme_part.h; sourceTree = "<group>"; };
+		18C760F9177B83C6009723F2 /* dragbox.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dragbox.h; sourceTree = "<group>"; };
+		18C760FA177B8402009723F2 /* soundprovider_vorbis.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis.h; sourceTree = "<group>"; };
+		18C760FC177B8414009723F2 /* audio_definition.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audio_definition.h; sourceTree = "<group>"; };
+		18C760FD177B8414009723F2 /* audio_object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audio_object.h; sourceTree = "<group>"; };
+		18C760FE177B8414009723F2 /* audio_world.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = audio_world.h; sourceTree = "<group>"; };
+		18C76100177B8414009723F2 /* sound_cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sound_cache.h; sourceTree = "<group>"; };
 		52340071166537CF001A194E /* css_attribute_selector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_attribute_selector.h; sourceTree = "<group>"; };
 		52340072166537CF001A194E /* css_document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document.cpp; sourceTree = "<group>"; };
 		52340073166537CF001A194E /* css_document_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document_impl.cpp; sourceTree = "<group>"; };
@@ -3314,6 +3470,208 @@
 			path = SWRender;
 			sourceTree = "<group>";
 		};
+		18C76060177B8259009723F2 /* ErrorReporting */ = {
+			isa = PBXGroup;
+			children = (
+				18C76061177B8259009723F2 /* crash_reporter.h */,
+				18C76062177B8259009723F2 /* detect_hang.h */,
+				18C76063177B8259009723F2 /* exception_dialog.h */,
+			);
+			path = ErrorReporting;
+			sourceTree = "<group>";
+		};
+		18C76071177B82E5009723F2 /* ComputedValues */ = {
+			isa = PBXGroup;
+			children = (
+				18C76072177B82E5009723F2 /* css_computed_background.h */,
+				18C76073177B82E5009723F2 /* css_computed_border.h */,
+				18C76074177B82E5009723F2 /* css_computed_box.h */,
+				18C76075177B82E5009723F2 /* css_computed_counter.h */,
+				18C76076177B82E5009723F2 /* css_computed_flex.h */,
+				18C76077177B82E5009723F2 /* css_computed_font.h */,
+				18C76078177B82E5009723F2 /* css_computed_generic.h */,
+				18C76079177B82E5009723F2 /* css_computed_list_style.h */,
+				18C7607A177B82E5009723F2 /* css_computed_margin.h */,
+				18C7607B177B82E5009723F2 /* css_computed_misc.h */,
+				18C7607C177B82E5009723F2 /* css_computed_outline.h */,
+				18C7607D177B82E5009723F2 /* css_computed_padding.h */,
+				18C7607E177B82E5009723F2 /* css_computed_table.h */,
+				18C7607F177B82E5009723F2 /* css_computed_text.h */,
+				18C76080177B82E5009723F2 /* css_computed_values.h */,
+				18C76081177B82E5009723F2 /* css_computed_values_updater.h */,
+			);
+			path = ComputedValues;
+			sourceTree = "<group>";
+		};
+		18C76082177B82E5009723F2 /* CSSDocument */ = {
+			isa = PBXGroup;
+			children = (
+				18C76083177B82E5009723F2 /* css_document.h */,
+				18C76084177B82E5009723F2 /* css_length.h */,
+				18C76085177B82E5009723F2 /* css_property.h */,
+				18C76086177B82E5009723F2 /* css_property_value.h */,
+				18C76087177B82E5009723F2 /* css_select_node.h */,
+				18C76088177B82E5009723F2 /* css_select_result.h */,
+				18C76089177B82E5009723F2 /* css_style_properties.h */,
+				18C7608A177B82E5009723F2 /* dom_select_node.h */,
+			);
+			path = CSSDocument;
+			sourceTree = "<group>";
+		};
+		18C7608B177B82E5009723F2 /* CSSTokenizer */ = {
+			isa = PBXGroup;
+			children = (
+				18C7608C177B82E5009723F2 /* css_token.h */,
+				18C7608D177B82E5009723F2 /* css_tokenizer.h */,
+			);
+			path = CSSTokenizer;
+			sourceTree = "<group>";
+		};
+		18C7608E177B82E5009723F2 /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				18C7608F177B82E5009723F2 /* css_hit_test_result.h */,
+				18C76090177B82E5009723F2 /* css_layout.h */,
+				18C76091177B82E5009723F2 /* css_layout_element.h */,
+				18C76092177B82E5009723F2 /* css_layout_node.h */,
+				18C76093177B82E5009723F2 /* css_layout_object.h */,
+				18C76094177B82E5009723F2 /* css_layout_text.h */,
+				18C76095177B82E5009723F2 /* css_layout_user_data.h */,
+				18C76096177B82E5009723F2 /* css_replaced_component.h */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		18C76097177B82E5009723F2 /* PropertyValues */ = {
+			isa = PBXGroup;
+			children = (
+				18C76098177B82E5009723F2 /* css_value_align_content.h */,
+				18C76099177B82E5009723F2 /* css_value_align_items.h */,
+				18C7609A177B82E5009723F2 /* css_value_align_self.h */,
+				18C7609B177B82E5009723F2 /* css_value_background_attachment.h */,
+				18C7609C177B82E5009723F2 /* css_value_background_clip.h */,
+				18C7609D177B82E6009723F2 /* css_value_background_color.h */,
+				18C7609E177B82E6009723F2 /* css_value_background_image.h */,
+				18C7609F177B82E6009723F2 /* css_value_background_origin.h */,
+				18C760A0177B82E6009723F2 /* css_value_background_position.h */,
+				18C760A1177B82E6009723F2 /* css_value_background_repeat.h */,
+				18C760A2177B82E6009723F2 /* css_value_background_size.h */,
+				18C760A3177B82E6009723F2 /* css_value_border_collapse.h */,
+				18C760A4177B82E6009723F2 /* css_value_border_color.h */,
+				18C760A5177B82E6009723F2 /* css_value_border_image_outset.h */,
+				18C760A6177B82E6009723F2 /* css_value_border_image_repeat.h */,
+				18C760A7177B82E6009723F2 /* css_value_border_image_slice.h */,
+				18C760A8177B82E6009723F2 /* css_value_border_image_source.h */,
+				18C760A9177B82E6009723F2 /* css_value_border_image_width.h */,
+				18C760AA177B82E6009723F2 /* css_value_border_radius.h */,
+				18C760AB177B82E6009723F2 /* css_value_border_spacing.h */,
+				18C760AC177B82E6009723F2 /* css_value_border_style.h */,
+				18C760AD177B82E6009723F2 /* css_value_border_width.h */,
+				18C760AE177B82E6009723F2 /* css_value_bottom.h */,
+				18C760AF177B82E6009723F2 /* css_value_caption_side.h */,
+				18C760B0177B82E6009723F2 /* css_value_clear.h */,
+				18C760B1177B82E6009723F2 /* css_value_clip.h */,
+				18C760B2177B82E6009723F2 /* css_value_color.h */,
+				18C760B3177B82E6009723F2 /* css_value_content.h */,
+				18C760B4177B82E6009723F2 /* css_value_counter_increment.h */,
+				18C760B5177B82E6009723F2 /* css_value_counter_reset.h */,
+				18C760B6177B82E6009723F2 /* css_value_cursor.h */,
+				18C760B7177B82E6009723F2 /* css_value_decoration_break.h */,
+				18C760B8177B82E6009723F2 /* css_value_direction.h */,
+				18C760B9177B82E6009723F2 /* css_value_display.h */,
+				18C760BA177B82E6009723F2 /* css_value_empty_cells.h */,
+				18C760BB177B82E6009723F2 /* css_value_flex_basis.h */,
+				18C760BC177B82E6009723F2 /* css_value_flex_direction.h */,
+				18C760BD177B82E6009723F2 /* css_value_flex_grow.h */,
+				18C760BE177B82E6009723F2 /* css_value_flex_shrink.h */,
+				18C760BF177B82E6009723F2 /* css_value_flex_wrap.h */,
+				18C760C0177B82E6009723F2 /* css_value_float.h */,
+				18C760C1177B82E6009723F2 /* css_value_font_family.h */,
+				18C760C2177B82E6009723F2 /* css_value_font_size.h */,
+				18C760C3177B82E6009723F2 /* css_value_font_style.h */,
+				18C760C4177B82E6009723F2 /* css_value_font_variant.h */,
+				18C760C5177B82E6009723F2 /* css_value_font_weight.h */,
+				18C760C6177B82E6009723F2 /* css_value_generic.h */,
+				18C760C7177B82E6009723F2 /* css_value_height.h */,
+				18C760C8177B82E6009723F2 /* css_value_justify_content.h */,
+				18C760C9177B82E6009723F2 /* css_value_left.h */,
+				18C760CA177B82E6009723F2 /* css_value_letter_spacing.h */,
+				18C760CB177B82E6009723F2 /* css_value_line_height.h */,
+				18C760CC177B82E6009723F2 /* css_value_list_style_image.h */,
+				18C760CD177B82E6009723F2 /* css_value_list_style_position.h */,
+				18C760CE177B82E6009723F2 /* css_value_list_style_type.h */,
+				18C760CF177B82E6009723F2 /* css_value_margin_width.h */,
+				18C760D0177B82E6009723F2 /* css_value_max_height.h */,
+				18C760D1177B82E6009723F2 /* css_value_max_width.h */,
+				18C760D2177B82E6009723F2 /* css_value_min_height.h */,
+				18C760D3177B82E6009723F2 /* css_value_min_width.h */,
+				18C760D4177B82E6009723F2 /* css_value_order.h */,
+				18C760D5177B82E6009723F2 /* css_value_orphans.h */,
+				18C760D6177B82E6009723F2 /* css_value_outline_color.h */,
+				18C760D7177B82E6009723F2 /* css_value_outline_style.h */,
+				18C760D8177B82E6009723F2 /* css_value_outline_width.h */,
+				18C760D9177B82E6009723F2 /* css_value_overflow.h */,
+				18C760DA177B82E6009723F2 /* css_value_padding_width.h */,
+				18C760DB177B82E6009723F2 /* css_value_page_break_after.h */,
+				18C760DC177B82E6009723F2 /* css_value_page_break_before.h */,
+				18C760DD177B82E6009723F2 /* css_value_page_break_inside.h */,
+				18C760DE177B82E6009723F2 /* css_value_position.h */,
+				18C760DF177B82E6009723F2 /* css_value_quotes.h */,
+				18C760E0177B82E6009723F2 /* css_value_right.h */,
+				18C760E1177B82E6009723F2 /* css_value_shadow.h */,
+				18C760E2177B82E6009723F2 /* css_value_table_layout.h */,
+				18C760E3177B82E6009723F2 /* css_value_text_align.h */,
+				18C760E4177B82E6009723F2 /* css_value_text_decoration.h */,
+				18C760E5177B82E6009723F2 /* css_value_text_indent.h */,
+				18C760E6177B82E6009723F2 /* css_value_text_transform.h */,
+				18C760E7177B82E6009723F2 /* css_value_top.h */,
+				18C760E8177B82E6009723F2 /* css_value_unicode_bidi.h */,
+				18C760E9177B82E6009723F2 /* css_value_vertical_align.h */,
+				18C760EA177B82E6009723F2 /* css_value_visibility.h */,
+				18C760EB177B82E6009723F2 /* css_value_white_space.h */,
+				18C760EC177B82E6009723F2 /* css_value_widows.h */,
+				18C760ED177B82E6009723F2 /* css_value_width.h */,
+				18C760EE177B82E6009723F2 /* css_value_word_spacing.h */,
+				18C760EF177B82E6009723F2 /* css_value_z_index.h */,
+			);
+			path = PropertyValues;
+			sourceTree = "<group>";
+		};
+		18C760F2177B8335009723F2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				18C760F3177B8335009723F2 /* display_cache.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		18C760F5177B8369009723F2 /* ShaderEffect */ = {
+			isa = PBXGroup;
+			children = (
+				18C760F6177B8369009723F2 /* shader_effect.h */,
+				18C760F7177B8369009723F2 /* shader_effect_description.h */,
+			);
+			path = ShaderEffect;
+			sourceTree = "<group>";
+		};
+		18C760FB177B8414009723F2 /* AudioWorld */ = {
+			isa = PBXGroup;
+			children = (
+				18C760FC177B8414009723F2 /* audio_definition.h */,
+				18C760FD177B8414009723F2 /* audio_object.h */,
+				18C760FE177B8414009723F2 /* audio_world.h */,
+			);
+			path = AudioWorld;
+			sourceTree = "<group>";
+		};
+		18C760FF177B8414009723F2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				18C76100177B8414009723F2 /* sound_cache.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		52340070166537CF001A194E /* CSSDocument */ = {
 			isa = PBXGroup;
 			children = (
@@ -3406,6 +3764,7 @@
 				5285013A1665726200B19C5D /* api_core.h */,
 				5285013B1665726200B19C5D /* core_iostream.h */,
 				5285013C1665726200B19C5D /* Crypto */,
+				18C76060177B8259009723F2 /* ErrorReporting */,
 				5285014F1665726200B19C5D /* IOData */,
 				528501641665726200B19C5D /* Math */,
 				528501851665726200B19C5D /* Resources */,
@@ -3421,6 +3780,7 @@
 		5285013C1665726200B19C5D /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				18C7605B177B8230009723F2 /* tls_client.h */,
 				5285013D1665726200B19C5D /* aes128_decrypt.h */,
 				5285013E1665726200B19C5D /* aes128_encrypt.h */,
 				5285013F1665726200B19C5D /* aes192_decrypt.h */,
@@ -3446,6 +3806,10 @@
 		5285014F1665726200B19C5D /* IOData */ = {
 			isa = PBXGroup;
 			children = (
+				18C7605C177B8249009723F2 /* directory_listing_entry.h */,
+				18C7605D177B8249009723F2 /* directory_listing.h */,
+				18C7605E177B8249009723F2 /* file_system_provider.h */,
+				18C7605F177B8249009723F2 /* file_system.h */,
 				528501511665726200B19C5D /* cl_endian.h */,
 				528501521665726200B19C5D /* directory.h */,
 				528501531665726200B19C5D /* directory_scanner.h */,
@@ -3465,6 +3829,11 @@
 		528501641665726200B19C5D /* Math */ = {
 			isa = PBXGroup;
 			children = (
+				18C76064177B8278009723F2 /* aabb.h */,
+				18C76065177B8278009723F2 /* big_int.h */,
+				18C76066177B8278009723F2 /* frustum_planes.h */,
+				18C76067177B8278009723F2 /* intersection_test.h */,
+				18C76068177B8278009723F2 /* obb.h */,
 				528501651665726200B19C5D /* angle.h */,
 				528501661665726200B19C5D /* base64_decoder.h */,
 				528501671665726200B19C5D /* base64_encoder.h */,
@@ -3503,6 +3872,11 @@
 		528501851665726200B19C5D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				18C76069177B828C009723F2 /* resource_container.h */,
+				18C7606A177B828C009723F2 /* resource_object.h */,
+				18C7606B177B828C009723F2 /* xml_resource_document.h */,
+				18C7606C177B828C009723F2 /* xml_resource_manager.h */,
+				18C7606D177B828C009723F2 /* xml_resource_node.h */,
 				528501861665726200B19C5D /* resource.h */,
 				528501881665726200B19C5D /* resource_manager.h */,
 			);
@@ -3543,6 +3917,9 @@
 		528501A21665726200B19C5D /* System */ = {
 			isa = PBXGroup;
 			children = (
+				18C7606E177B82AD009723F2 /* game_time.h */,
+				18C7606F177B82AD009723F2 /* userdata.h */,
+				18C76070177B82AD009723F2 /* work_queue.h */,
 				528501A31665726200B19C5D /* block_allocator.h */,
 				528501A41665726200B19C5D /* cl_platform.h */,
 				528501A61665726200B19C5D /* comptr.h */,
@@ -3630,6 +4007,11 @@
 			isa = PBXGroup;
 			children = (
 				528501E31665726200B19C5D /* api_csslayout.h */,
+				18C76071177B82E5009723F2 /* ComputedValues */,
+				18C76082177B82E5009723F2 /* CSSDocument */,
+				18C7608B177B82E5009723F2 /* CSSTokenizer */,
+				18C7608E177B82E5009723F2 /* Layout */,
+				18C76097177B82E5009723F2 /* PropertyValues */,
 			);
 			path = CSSLayout;
 			sourceTree = "<group>";
@@ -3675,6 +4057,8 @@
 				5285027F1665726200B19C5D /* Image */,
 				5285028A1665726200B19C5D /* ImageProviders */,
 				528502931665726200B19C5D /* Render */,
+				18C760F2177B8335009723F2 /* Resources */,
+				18C760F5177B8369009723F2 /* ShaderEffect */,
 				528502BA1665726200B19C5D /* TargetProviders */,
 				528502CE1665726200B19C5D /* Window */,
 			);
@@ -3684,6 +4068,8 @@
 		528502611665726200B19C5D /* 2D */ = {
 			isa = PBXGroup;
 			children = (
+				18C760F0177B8315009723F2 /* path2d.h */,
+				18C760F1177B8315009723F2 /* shape2d.h */,
 				528502621665726200B19C5D /* canvas.h */,
 				528502631665726200B19C5D /* color.h */,
 				528502641665726200B19C5D /* color_hsl.h */,
@@ -3825,6 +4211,7 @@
 		528502CE1665726200B19C5D /* Window */ = {
 			isa = PBXGroup;
 			children = (
+				18C760F4177B835A009723F2 /* cursor_description.h */,
 				528502CF1665726200B19C5D /* cursor.h */,
 				528502D01665726200B19C5D /* display_window.h */,
 				528502D11665726200B19C5D /* display_window_description.h */,
@@ -3854,6 +4241,7 @@
 		528502EC1665726200B19C5D /* GUI */ = {
 			isa = PBXGroup;
 			children = (
+				18C760F8177B83B6009723F2 /* gui_theme_part.h */,
 				528502ED1665726200B19C5D /* accelerator_key.h */,
 				528502EE1665726200B19C5D /* accelerator_table.h */,
 				528502EF1665726200B19C5D /* api_gui.h */,
@@ -3884,6 +4272,7 @@
 		528502F01665726200B19C5D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				18C760F9177B83C6009723F2 /* dragbox.h */,
 				528502F11665726200B19C5D /* checkbox.h */,
 				528502F21665726200B19C5D /* combobox.h */,
 				528502F31665726200B19C5D /* folderbrowsedialog.h */,
@@ -4015,6 +4404,8 @@
 				528503751665726200B19C5D /* soundformat.h */,
 				528503761665726200B19C5D /* soundoutput.h */,
 				528503771665726200B19C5D /* soundoutput_description.h */,
+				18C760FB177B8414009723F2 /* AudioWorld */,
+				18C760FF177B8414009723F2 /* Resources */,
 				528503711665726200B19C5D /* SoundFilters */,
 				528503781665726200B19C5D /* SoundProviders */,
 			);
@@ -4034,6 +4425,7 @@
 		528503781665726200B19C5D /* SoundProviders */ = {
 			isa = PBXGroup;
 			children = (
+				18C760FA177B8402009723F2 /* soundprovider_vorbis.h */,
 				528503791665726200B19C5D /* soundfilter_provider.h */,
 				5285037A1665726200B19C5D /* soundprovider.h */,
 				5285037B1665726200B19C5D /* soundprovider_factory.h */,
