@@ -76,6 +76,8 @@ private:
 	void truecolor_to_4us(int count);
 	void grayscale_alpha_to_4us(int count);
 	void truecolor_alpha_to_4us(int count);
+	
+	static int abs(int a) { return a >= 0 ? a : -a; }
 
 	inline unsigned int from_network_order(unsigned int v)
 	{

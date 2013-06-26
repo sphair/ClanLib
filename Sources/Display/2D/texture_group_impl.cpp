@@ -73,7 +73,7 @@ int TextureGroup_Impl::get_subtexture_count(unsigned int texture_index) const
 {
 	int count = 0;
 
-	if(texture_index >= 0 && texture_index < root_nodes.size())
+	if(texture_index < root_nodes.size())
 		count = root_nodes[texture_index]->node.get_subtexture_count();
 
 	return count;

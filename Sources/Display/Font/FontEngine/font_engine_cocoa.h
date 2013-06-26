@@ -44,7 +44,7 @@ class DataBuffer;
 class FontEngine_Cocoa : public FontEngine
 {
 public:
-	FontEngine_Cocoa(const FontDescription &description);
+	FontEngine_Cocoa(const FontDescription &description, const std::string &filename);
 	~FontEngine_Cocoa();
 
 	FontMetrics get_metrics();
