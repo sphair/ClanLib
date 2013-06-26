@@ -977,6 +977,23 @@
 		18C76582177B8813009723F2 /* gui_layout_normal_flow.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C76571177B8813009723F2 /* gui_layout_normal_flow.h */; };
 		18C76583177B8813009723F2 /* gui_set_initial_used_values.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76572177B8813009723F2 /* gui_set_initial_used_values.cpp */; };
 		18C76584177B8813009723F2 /* gui_set_initial_used_values.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C76573177B8813009723F2 /* gui_set_initial_used_values.h */; };
+		18C76590177B8896009723F2 /* audio_definition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76586177B8896009723F2 /* audio_definition.cpp */; };
+		18C76591177B8896009723F2 /* audio_definition_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C76587177B8896009723F2 /* audio_definition_impl.h */; };
+		18C76592177B8896009723F2 /* audio_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76588177B8896009723F2 /* audio_object.cpp */; };
+		18C76593177B8896009723F2 /* audio_object_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C76589177B8896009723F2 /* audio_object_impl.h */; };
+		18C76594177B8896009723F2 /* audio_world.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7658A177B8896009723F2 /* audio_world.cpp */; };
+		18C76595177B8896009723F2 /* audio_world_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C7658B177B8896009723F2 /* audio_world_impl.h */; };
+		18C76596177B8896009723F2 /* sound_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7658D177B8896009723F2 /* sound_cache.cpp */; };
+		18C76597177B8896009723F2 /* xml_sound_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7658E177B8896009723F2 /* xml_sound_cache.cpp */; };
+		18C76598177B8896009723F2 /* xml_sound_cache.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C7658F177B8896009723F2 /* xml_sound_cache.h */; };
+		18C7659E177B88BC009723F2 /* soundprovider_vorbis_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C76599177B88BC009723F2 /* soundprovider_vorbis_impl.h */; };
+		18C7659F177B88BC009723F2 /* soundprovider_vorbis_session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659A177B88BC009723F2 /* soundprovider_vorbis_session.cpp */; };
+		18C765A0177B88BC009723F2 /* soundprovider_vorbis_session.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C7659B177B88BC009723F2 /* soundprovider_vorbis_session.h */; };
+		18C765A1177B88BC009723F2 /* soundprovider_vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659C177B88BC009723F2 /* soundprovider_vorbis.cpp */; };
+		18C765A2177B88BC009723F2 /* stb_vorbis.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C7659D177B88BC009723F2 /* stb_vorbis.h */; };
+		18C765A7177B88DC009723F2 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C765A4177B88DC009723F2 /* sqlite3.c */; };
+		18C765A8177B88DC009723F2 /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C765A5177B88DC009723F2 /* sqlite3.h */; };
+		18C765A9177B88DC009723F2 /* sqlite3ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 18C765A6177B88DC009723F2 /* sqlite3ext.h */; };
 		5234008B16653835001A194E /* css_document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340072166537CF001A194E /* css_document.cpp */; };
 		5234008C16653835001A194E /* css_document_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340073166537CF001A194E /* css_document_impl.cpp */; };
 		5234008D16653835001A194E /* css_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340075166537CF001A194E /* css_property.cpp */; };
@@ -2564,6 +2581,23 @@
 		18C76571177B8813009723F2 /* gui_layout_normal_flow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui_layout_normal_flow.h; sourceTree = "<group>"; };
 		18C76572177B8813009723F2 /* gui_set_initial_used_values.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gui_set_initial_used_values.cpp; sourceTree = "<group>"; };
 		18C76573177B8813009723F2 /* gui_set_initial_used_values.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gui_set_initial_used_values.h; sourceTree = "<group>"; };
+		18C76586177B8896009723F2 /* audio_definition.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = audio_definition.cpp; sourceTree = "<group>"; };
+		18C76587177B8896009723F2 /* audio_definition_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_definition_impl.h; sourceTree = "<group>"; };
+		18C76588177B8896009723F2 /* audio_object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = audio_object.cpp; sourceTree = "<group>"; };
+		18C76589177B8896009723F2 /* audio_object_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_object_impl.h; sourceTree = "<group>"; };
+		18C7658A177B8896009723F2 /* audio_world.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = audio_world.cpp; sourceTree = "<group>"; };
+		18C7658B177B8896009723F2 /* audio_world_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_world_impl.h; sourceTree = "<group>"; };
+		18C7658D177B8896009723F2 /* sound_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sound_cache.cpp; sourceTree = "<group>"; };
+		18C7658E177B8896009723F2 /* xml_sound_cache.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xml_sound_cache.cpp; sourceTree = "<group>"; };
+		18C7658F177B8896009723F2 /* xml_sound_cache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xml_sound_cache.h; sourceTree = "<group>"; };
+		18C76599177B88BC009723F2 /* soundprovider_vorbis_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis_impl.h; sourceTree = "<group>"; };
+		18C7659A177B88BC009723F2 /* soundprovider_vorbis_session.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundprovider_vorbis_session.cpp; sourceTree = "<group>"; };
+		18C7659B177B88BC009723F2 /* soundprovider_vorbis_session.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = soundprovider_vorbis_session.h; sourceTree = "<group>"; };
+		18C7659C177B88BC009723F2 /* soundprovider_vorbis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = soundprovider_vorbis.cpp; sourceTree = "<group>"; };
+		18C7659D177B88BC009723F2 /* stb_vorbis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_vorbis.h; sourceTree = "<group>"; };
+		18C765A4177B88DC009723F2 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		18C765A5177B88DC009723F2 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		18C765A6177B88DC009723F2 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
 		52340071166537CF001A194E /* css_attribute_selector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_attribute_selector.h; sourceTree = "<group>"; };
 		52340072166537CF001A194E /* css_document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document.cpp; sourceTree = "<group>"; };
 		52340073166537CF001A194E /* css_document_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document_impl.cpp; sourceTree = "<group>"; };
@@ -4171,8 +4205,10 @@
 				1835B3EF1636168C0009AA23 /* soundbuffer_impl.h */,
 				1835B3F21636168C0009AA23 /* soundbuffer_session_impl.h */,
 				1835B4011636168C0009AA23 /* soundoutput_impl.h */,
+				18C76585177B8896009723F2 /* AudioWorld */,
 				1835B3D91636168C0009AA23 /* MacOSX */,
 				1835B3DD1636168C0009AA23 /* Mixer */,
+				18C7658C177B8896009723F2 /* Resources */,
 				1835B3F41636168C0009AA23 /* SoundFilters */,
 				1835B4021636168C0009AA23 /* SoundProviders */,
 			);
@@ -4222,6 +4258,11 @@
 		1835B4021636168C0009AA23 /* SoundProviders */ = {
 			isa = PBXGroup;
 			children = (
+				18C76599177B88BC009723F2 /* soundprovider_vorbis_impl.h */,
+				18C7659A177B88BC009723F2 /* soundprovider_vorbis_session.cpp */,
+				18C7659B177B88BC009723F2 /* soundprovider_vorbis_session.h */,
+				18C7659C177B88BC009723F2 /* soundprovider_vorbis.cpp */,
+				18C7659D177B88BC009723F2 /* stb_vorbis.h */,
 				1835B4031636168C0009AA23 /* soundprovider.cpp */,
 				1835B4041636168C0009AA23 /* soundprovider_factory.cpp */,
 				1835B4051636168C0009AA23 /* soundprovider_raw.cpp */,
@@ -4241,6 +4282,7 @@
 		1835B41F1636168C0009AA23 /* Sqlite */ = {
 			isa = PBXGroup;
 			children = (
+				18C765A3177B88DC009723F2 /* Amalgamation */,
 				1835B4211636168C0009AA23 /* precomp.cpp */,
 				1835B4221636168C0009AA23 /* precomp.h */,
 				1835B4231636168C0009AA23 /* sqlite_command_provider.cpp */,
@@ -6140,6 +6182,39 @@
 			path = ShaderEffect;
 			sourceTree = "<group>";
 		};
+		18C76585177B8896009723F2 /* AudioWorld */ = {
+			isa = PBXGroup;
+			children = (
+				18C76586177B8896009723F2 /* audio_definition.cpp */,
+				18C76587177B8896009723F2 /* audio_definition_impl.h */,
+				18C76588177B8896009723F2 /* audio_object.cpp */,
+				18C76589177B8896009723F2 /* audio_object_impl.h */,
+				18C7658A177B8896009723F2 /* audio_world.cpp */,
+				18C7658B177B8896009723F2 /* audio_world_impl.h */,
+			);
+			path = AudioWorld;
+			sourceTree = "<group>";
+		};
+		18C7658C177B8896009723F2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				18C7658D177B8896009723F2 /* sound_cache.cpp */,
+				18C7658E177B8896009723F2 /* xml_sound_cache.cpp */,
+				18C7658F177B8896009723F2 /* xml_sound_cache.h */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		18C765A3177B88DC009723F2 /* Amalgamation */ = {
+			isa = PBXGroup;
+			children = (
+				18C765A4177B88DC009723F2 /* sqlite3.c */,
+				18C765A5177B88DC009723F2 /* sqlite3.h */,
+				18C765A6177B88DC009723F2 /* sqlite3ext.h */,
+			);
+			path = Amalgamation;
+			sourceTree = "<group>";
+		};
 		52340070166537CF001A194E /* CSSDocument */ = {
 			isa = PBXGroup;
 			children = (
@@ -7142,6 +7217,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C76591177B8896009723F2 /* audio_definition_impl.h in Headers */,
+				18C76593177B8896009723F2 /* audio_object_impl.h in Headers */,
+				18C76595177B8896009723F2 /* audio_world_impl.h in Headers */,
+				18C76598177B8896009723F2 /* xml_sound_cache.h in Headers */,
+				18C7659E177B88BC009723F2 /* soundprovider_vorbis_impl.h in Headers */,
+				18C765A0177B88BC009723F2 /* soundprovider_vorbis_session.h in Headers */,
+				18C765A2177B88BC009723F2 /* stb_vorbis.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7172,6 +7254,8 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C765A8177B88DC009723F2 /* sqlite3.h in Headers */,
+				18C765A9177B88DC009723F2 /* sqlite3ext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8025,6 +8109,13 @@
 				1835C075163625900009AA23 /* soundprovider_type.cpp in Sources */,
 				1835C076163625900009AA23 /* soundprovider_wave.cpp in Sources */,
 				1835C078163625900009AA23 /* soundprovider_wave_session.cpp in Sources */,
+				18C76590177B8896009723F2 /* audio_definition.cpp in Sources */,
+				18C76592177B8896009723F2 /* audio_object.cpp in Sources */,
+				18C76594177B8896009723F2 /* audio_world.cpp in Sources */,
+				18C76596177B8896009723F2 /* sound_cache.cpp in Sources */,
+				18C76597177B8896009723F2 /* xml_sound_cache.cpp in Sources */,
+				18C7659F177B88BC009723F2 /* soundprovider_vorbis_session.cpp in Sources */,
+				18C765A1177B88BC009723F2 /* soundprovider_vorbis.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8130,6 +8221,7 @@
 				1835C11A163629580009AA23 /* sqlite_connection_provider.cpp in Sources */,
 				1835C11C163629580009AA23 /* sqlite_reader_provider.cpp in Sources */,
 				1835C11E163629580009AA23 /* sqlite_transaction_provider.cpp in Sources */,
+				18C765A7177B88DC009723F2 /* sqlite3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
