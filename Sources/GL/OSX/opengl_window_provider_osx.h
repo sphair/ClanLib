@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include <CoreFoundation/CoreFoundation.h>
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
@@ -40,6 +39,7 @@ namespace clan
 {
 
 class OpenGLWindowDescription;
+class OpenGLWindowProvider_Impl;
 
 class OpenGLWindowProvider : public DisplayWindowProvider
 {
@@ -63,8 +63,8 @@ public:
 	std::string get_title() const;
 	Size get_minimum_size(bool client_area) const;
 	Size get_maximum_size(bool client_area) const;
-	GraphicContext& get_gc() { return gc; }
-	InputContext get_ic() { return ic; }
+	GraphicContext& get_gc();
+	InputContext get_ic();
 	bool is_clipboard_text_available() const;
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
@@ -114,12 +114,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	GraphicContext gc;
-	InputContext ic;
-	DisplayWindowSite *site;
-	OpenGLWindowDescription opengl_desc;
-
-	std::string window_title;
+	std::unique_ptr<OpenGLWindowProvider_Impl> impl;
 /// \}
 };
 

@@ -37,29 +37,46 @@
 #include "API/Display/Render/shared_gc_data.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/GL/opengl.h"
-#include "API/GL/opengl_wrap.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/Core/Text/logger.h"
 #include "../opengl_window_description_impl.h"
 #include "../GL3/gl3_graphic_context_provider.h"
+#include <CoreFoundation/CoreFoundation.h>
+#import <AppKit/AppKit.h>
 
 namespace clan
 {
 
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider Construction:
+// static CFBundleRef cl_gBundleRefOpenGL = 0;
+	
+class OpenGLWindowProvider_Impl
+{
+public:
+	OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
+		: self(self), site(0), opengl_desc(opengl_desc)
+	{
+	}
+	
+	OpenGLWindowProvider *self;
+	GraphicContext gc;
+	InputContext ic;
+	DisplayWindowSite *site;
+	OpenGLWindowDescription opengl_desc;
+	
+	NSWindow *window;
+	NSOpenGLContext *opengl_context;
+	
+	std::string window_title;
+};
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
-: site(0), opengl_desc(opengl_desc)
 {
+	impl.reset(new OpenGLWindowProvider_Impl(this, opengl_desc));
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
 {
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider Attributes:
 
 ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
 {
@@ -111,9 +128,19 @@ Size OpenGLWindowProvider::get_maximum_size(bool client_area) const
 	return Size(32768, 32768);
 }
 
+GraphicContext& OpenGLWindowProvider::get_gc()
+{
+	return impl->gc;
+}
+	
+InputContext OpenGLWindowProvider::get_ic()
+{
+	return impl->ic;
+}
+	
 std::string OpenGLWindowProvider::get_title() const
 {
-	return window_title;
+	return impl->window_title;
 }
 
 bool OpenGLWindowProvider::is_clipboard_text_available() const
@@ -126,11 +153,9 @@ bool OpenGLWindowProvider::is_clipboard_image_available() const
 	return false;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider Operations:
-
 void OpenGLWindowProvider::make_current() const
 {
+	[impl->opengl_context makeCurrentContext];
 }
 
 Point OpenGLWindowProvider::client_to_screen(const Point &client)
@@ -145,8 +170,20 @@ Point OpenGLWindowProvider::screen_to_client(const Point &screen)
 
 void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
 {
-	site = new_site;
+	impl->site = new_site;
 
+	NSRect frame = NSMakeRect(0, 0, 200, 200);
+	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
+	impl->window = [[NSWindow alloc] initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
+	
+	NSOpenGLPixelFormatAttribute *attributes = 0; // To do: make an actual list.
+	
+	NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+	
+	impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:nil];
+	[impl->opengl_context setView:impl->window.contentView];
+	
+	[impl->window makeKeyAndOrderFront:NSApp];
 }
 
 void OpenGLWindowProvider::show_system_cursor()
@@ -172,7 +209,7 @@ void OpenGLWindowProvider::hide_system_cursor()
 
 void OpenGLWindowProvider::set_title(const std::string &new_title)
 {
-	window_title = new_title;
+	impl->window_title = new_title;
 }
 
 void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
@@ -217,22 +254,23 @@ void OpenGLWindowProvider::hide()
 
 void OpenGLWindowProvider::bring_to_front()
 {
+	[impl->window makeKeyAndOrderFront:NSApp];
 }
 
 void OpenGLWindowProvider::flip(int interval)
 {
 	OpenGL::set_active(get_gc());
-	
-	// To do: swap buffers
-	
 	OpenGL::check_error();
+	
+	[impl->opengl_context flushBuffer];
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
 {
-	OpenGL::set_active(gc);
+	OpenGL::set_active(get_gc());
 	
 	// To do: copy rect from back to front buffer
+	glFlush();
 	
 	OpenGL::check_error();
 }
@@ -278,8 +316,5 @@ PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 {
 	return PixelBuffer();
 }
-
-/////////////////////////////////////////////////////////////////////////////
-// OpenGLWindowProvider Implementation:
 
 }
