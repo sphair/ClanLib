@@ -65,8 +65,7 @@
 #include "API/Display/2D/image.h"
 #include "API/GL/opengl_window_description.h"
 #ifdef __APPLE__
-#include <CoreFoundation/CoreFoundation.h>
-#include "../AGL/opengl_window_provider_agl.h"
+#include "../OSX/opengl_window_provider_osx.h"
 #elif !defined(WIN32)
 #include "../GLX/opengl_window_provider_glx.h"
 #endif
@@ -580,13 +579,10 @@ void GL3GraphicContextProvider::reset_frame_buffer()
 {
 	OpenGL::set_active(this);
 
-#ifdef __APPLE__
-    cl_set_default_frame_buffer((DisplayWindowProvider*)render_window);
-        
-#else
+	// To do: move this to OpenGLWindowProvider abstraction (some targets doesn't have a default frame buffer)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-#endif
+
 	glDrawBuffer(GL_BACK);	// OpenGL default
 	glReadBuffer(GL_BACK);	// OpenGL default
 
