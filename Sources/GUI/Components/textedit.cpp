@@ -586,7 +586,7 @@ void TextEdit_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 						selection_start = cursor_pos;
 					msg->consumed = true;
 				}
-				else if (!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32) && (!e.alt && !e.ctrl) || (e.ctrl && e.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
+				else if ((!e.str.empty() && !(e.str[0] >= 0 && e.str[0] < 32) && (!e.alt && !e.ctrl)) || (e.ctrl && e.alt)) // Alt Gr translates to Ctrl+Alt sometimes!
 				{
 					textedit->delete_selected_text();
 					textedit->clear_selection();
