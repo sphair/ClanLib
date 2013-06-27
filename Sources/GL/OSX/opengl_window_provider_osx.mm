@@ -85,8 +85,6 @@ public:
 	
 	NSWindow *window;
 	NSOpenGLContext *opengl_context;
-	
-	std::string window_title;
 };
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
@@ -162,7 +160,7 @@ InputContext OpenGLWindowProvider::get_ic()
 	
 std::string OpenGLWindowProvider::get_title() const
 {
-	return impl->window_title;
+	return [impl->window.title UTF8String];
 }
 
 bool OpenGLWindowProvider::is_clipboard_text_available() const
@@ -199,6 +197,8 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	impl->window = [[NSWindow alloc] initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
 	if (impl->window == nil)
 		throw Exception("Could not create window");
+	
+	[impl->window setTitle:[NSString stringWithUTF8String:desc.get_title().c_str()]];
 	
 	std::vector<NSOpenGLPixelFormatAttribute> attributes;
 	
@@ -260,7 +260,7 @@ void OpenGLWindowProvider::hide_system_cursor()
 
 void OpenGLWindowProvider::set_title(const std::string &new_title)
 {
-	impl->window_title = new_title;
+	[impl->window setTitle:[NSString stringWithUTF8String:new_title.c_str()]];
 }
 
 void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
