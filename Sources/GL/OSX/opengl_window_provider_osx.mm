@@ -105,12 +105,14 @@ ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_
 
 Rect OpenGLWindowProvider::get_geometry() const
 {
-	return Rect();
+	NSRect frame = impl->window.frame;
+	return Rect(frame.origin.x, frame.origin.y, frame.origin.x + frame.size.width, frame.origin.y + frame.size.height);
 }
 
 Rect OpenGLWindowProvider::get_viewport() const
 {
-	return Rect();
+	NSRect bounds = [impl->window.contentView bounds];
+	return Rect(bounds.origin.x, bounds.origin.y, bounds.origin.x + bounds.size.width, bounds.origin.y + bounds.size.height);
 }
 
 bool OpenGLWindowProvider::is_fullscreen() const
@@ -120,22 +122,22 @@ bool OpenGLWindowProvider::is_fullscreen() const
 
 bool OpenGLWindowProvider::has_focus() const
 {
-	return true;
+	return impl->window.isKeyWindow == YES;
 }
 
 bool OpenGLWindowProvider::is_minimized() const
 {
-	return false;
+	return impl->window.isMiniaturized == YES;
 }
 
 bool OpenGLWindowProvider::is_maximized() const
 {
-	return false;
+	return impl->window.isZoomed == YES;
 }
 
 bool OpenGLWindowProvider::is_visible() const
 {
-	return true;
+	return impl->window.isVisible == YES;
 }
 
 Size OpenGLWindowProvider::get_minimum_size(bool client_area) const
@@ -263,18 +265,47 @@ void OpenGLWindowProvider::set_title(const std::string &new_title)
 
 void OpenGLWindowProvider::set_position(const Rect &pos, bool client_area)
 {
+	NSRect frame = NSMakeRect(pos.left, pos.top, pos.get_width(), pos.get_height());
+	
+	if (client_area)
+		frame = [impl->window frameRectForContentRect:frame];
+	
+	[impl->window setFrame:frame display:NO animate:NO];
 }
 
 void OpenGLWindowProvider::set_size(int width, int height, bool client_area)
 {
+	NSRect old_frame = impl->window.frame;
+	NSRect frame = NSMakeRect(old_frame.origin.x, old_frame.origin.y, width, height);
+	
+	if (client_area)
+		frame = [impl->window frameRectForContentRect:frame];
+
+	[impl->window setFrame:frame display:NO animate:NO];
 }
 
 void OpenGLWindowProvider::set_minimum_size( int width, int height, bool client_area )
 {
+	if (client_area)
+	{
+		[impl->window setContentMinSize:NSMakeSize(width, height)];
+	}
+	else
+	{
+		[impl->window setMinSize:NSMakeSize(width, height)];
+	}
 }
 
 void OpenGLWindowProvider::set_maximum_size( int width, int height, bool client_area )
 {
+	if (client_area)
+	{
+		[impl->window setContentMaxSize:NSMakeSize(width, height)];
+	}
+	else
+	{
+		[impl->window setMaxSize:NSMakeSize(width, height)];
+	}
 }
 
 void OpenGLWindowProvider::set_enabled(bool enable)
@@ -283,6 +314,7 @@ void OpenGLWindowProvider::set_enabled(bool enable)
 
 void OpenGLWindowProvider::minimize()
 {
+	[impl->window miniaturize:nil];
 }
 
 void OpenGLWindowProvider::restore()
@@ -291,6 +323,7 @@ void OpenGLWindowProvider::restore()
 
 void OpenGLWindowProvider::maximize()
 {
+	[impl->window performZoom:nil];
 }
 
 void OpenGLWindowProvider::show(bool activate)
@@ -339,6 +372,7 @@ std::string OpenGLWindowProvider::get_clipboard_text() const
 
 void OpenGLWindowProvider::request_repaint(const Rect &rect)
 {
+	[impl->window.contentView setNeedsDisplayInRect:NSMakeRect(rect.left, rect.top, rect.get_width(), rect.get_height())];
 }
 
 void OpenGLWindowProvider::set_large_icon(const PixelBuffer &image)
