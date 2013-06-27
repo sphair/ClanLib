@@ -368,6 +368,13 @@ void SWRenderGraphicContextProvider::draw_primitives_array(PrimitivesType type, 
 		for (int i = offset; i+1 < end_vertices; i+=2)
 			draw_line(i+0, i+1);
 	}
+    else if (type == type_line_strip)
+    {
+		int end_vertices = offset+num_vertices;
+
+		for (int i = offset; i < end_vertices-1; i++)
+			draw_line(i, i+1);
+    }
 	else if (type == type_line_loop)
 	{
 		int end_vertices = offset+num_vertices;
