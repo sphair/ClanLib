@@ -57,6 +57,26 @@ public:
 	{
 	}
 	
+	NSOpenGLContext *get_share_context()
+	{
+		NSOpenGLContext *share_context = nil;
+		
+		std::unique_ptr<MutexSection> mutex_section;
+		GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
+		if (gc_providers)
+		{
+			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+			if (gl3_provider)
+			{
+				const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(&gl3_provider->get_render_window());
+				if (render_window_wgl)
+					share_context = render_window_wgl->impl->opengl_context;
+			}
+		}
+		
+		return share_context;
+	}
+	
 	OpenGLWindowProvider *self;
 	GraphicContext gc;
 	InputContext ic;
@@ -175,12 +195,41 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	NSRect frame = NSMakeRect(0, 0, 200, 200);
 	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
 	impl->window = [[NSWindow alloc] initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
+	if (impl->window == nil)
+		throw Exception("Could not create window");
 	
-	NSOpenGLPixelFormatAttribute *attributes = 0; // To do: make an actual list.
+	std::vector<NSOpenGLPixelFormatAttribute> attributes;
 	
-	NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+	attributes.push_back(NSOpenGLPFADoubleBuffer);
+	attributes.push_back(NSOpenGLPFAColorSize);
+	attributes.push_back(24);
+	attributes.push_back(NSOpenGLPFAAlphaSize);
+	attributes.push_back(8);
+	attributes.push_back(NSOpenGLPFADepthSize);
+	attributes.push_back(desc.get_depth_size());
+	attributes.push_back(NSOpenGLPFAStencilSize);
+	attributes.push_back(desc.get_stencil_size());
+	attributes.push_back(NSOpenGLPFAMinimumPolicy); // Color and depth must minimum match what we specified
+	if (desc.is_fullscreen())
+		attributes.push_back(NSOpenGLPFAFullScreen);
+	if (desc.get_multisampling() > 0)
+	{
+		attributes.push_back(NSOpenGLPFAMultisample);
+		attributes.push_back(NSOpenGLPFASampleBuffers);
+		attributes.push_back(1);
+		attributes.push_back(NSOpenGLPFASamples);
+		attributes.push_back(desc.get_multisampling());
+	}
+	attributes.push_back(0);
 	
-	impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:nil];
+	NSOpenGLPixelFormat *pixel_format = [[NSOpenGLPixelFormat alloc] initWithAttributes:&attributes[0]];
+	if (pixel_format == nil)
+		throw Exception("Could not create the requested OpenGL pixel format");
+	
+	impl->opengl_context = [[NSOpenGLContext alloc] initWithFormat:pixel_format shareContext:impl->get_share_context()];
+	if (impl->opengl_context == nil)
+		throw Exception("Could not create OpenGL context");
+	
 	[impl->opengl_context setView:impl->window.contentView];
 	
 	[impl->window makeKeyAndOrderFront:NSApp];
