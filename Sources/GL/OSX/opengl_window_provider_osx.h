@@ -115,6 +115,8 @@ public:
 /// \{
 private:
 	std::unique_ptr<OpenGLWindowProvider_Impl> impl;
+	
+	friend class OpenGLWindowProvider_Impl;
 /// \}
 };
 
