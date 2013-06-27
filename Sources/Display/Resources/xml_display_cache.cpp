@@ -132,15 +132,18 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 	bool is_sprite_font = false;
 	try
 	{
-		DomElement font_element = doc.get_resource(desc.get_typeface_name()).get_element();
-		std::string type = font_element.get_tag_name();
-		if (type == "font")
+		if (doc.resource_exists(desc.get_typeface_name()))
 		{
-			DomElement sprite_element = font_element.named_item("sprite").to_element();
-			if (!sprite_element.is_null())
-				is_sprite_font = true;
+			DomElement font_element = doc.get_resource(desc.get_typeface_name()).get_element();
+			std::string type = font_element.get_tag_name();
+			if (type == "font")
+			{
+				DomElement sprite_element = font_element.named_item("sprite").to_element();
+				if (!sprite_element.is_null())
+					is_sprite_font = true;
 
-			// Else it's a system font. We could test for vector fonts as well (hint: need to retrieve the filename from the resource)
+				// Else it's a system font. We could test for vector fonts as well (hint: need to retrieve the filename from the resource)
+			}
 		}
 	}
 	catch (Exception &)
