@@ -180,12 +180,14 @@ void OpenGLWindowProvider::make_current() const
 
 Point OpenGLWindowProvider::client_to_screen(const Point &client)
 {
-	return client;
+	NSRect screen = [impl->window convertRectFromScreen:NSMakeRect(client.x, client.y, 1, 1)];
+	return Point(screen.origin.x, screen.origin.y);
 }
 
 Point OpenGLWindowProvider::screen_to_client(const Point &screen)
 {
-	return screen;
+	NSRect client = [impl->window convertRectToScreen:NSMakeRect(screen.x, screen.y, 1, 1)];
+	return Point(client.origin.x, client.origin.y);
 }
 
 void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWindowDescription &desc)
