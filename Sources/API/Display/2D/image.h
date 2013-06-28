@@ -225,7 +225,7 @@ public:
 	///
 	/// \param gc Graphic context on which to render upon.
 	/// \param src Source rectangle to draw. Use this is draw only part of the image.
-	/// \param dest Rectangle to draw image in.
+	/// \param dest Quad to draw image in.
 	void draw(
 		Canvas &canvas,
 		const Rectf &src,
@@ -234,7 +234,7 @@ public:
 	/// \brief Draw image on graphic context.
 	///
 	/// \param gc Graphic context on which to render upon.
-	/// \param dest Rectangle to draw image in.
+	/// \param dest Quad to draw image in.
 	void draw(
 		Canvas &canvas,
 		const Quadf &dest) const;
