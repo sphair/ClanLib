@@ -81,6 +81,10 @@ public:
 	Texture2D(
 		GraphicContext &context,
 		IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+
+	Texture2D(GraphicContext &context, const PixelBuffer &image, bool is_srgb = false);
+	Texture2D(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb = false);
+
 /// \}
 
 /// \name Attributes
