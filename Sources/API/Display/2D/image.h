@@ -54,6 +54,7 @@ class PixelBuffer;
 class ResourceManager;
 class XMLResourceDocument;
 class Canvas;
+class Quadf;
 
 /// \brief Image class.
 class CL_API_DISPLAY Image
@@ -219,6 +220,24 @@ public:
 	void draw(
 		Canvas &canvas,
 		const Rectf &dest) const;
+
+	/// \brief Draw image on graphic context.
+	///
+	/// \param gc Graphic context on which to render upon.
+	/// \param src Source rectangle to draw. Use this is draw only part of the image.
+	/// \param dest Rectangle to draw image in.
+	void draw(
+		Canvas &canvas,
+		const Rectf &src,
+		const Quadf &dest) const;
+
+	/// \brief Draw image on graphic context.
+	///
+	/// \param gc Graphic context on which to render upon.
+	/// \param dest Rectangle to draw image in.
+	void draw(
+		Canvas &canvas,
+		const Quadf &dest) const;
 
 	/// \brief Set scale for x and y directions individually.
 	/** <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>*/
