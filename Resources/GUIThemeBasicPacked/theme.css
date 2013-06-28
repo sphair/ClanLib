@@ -522,10 +522,10 @@ listview icon_selection:normal
 	border-image-width:3px 4px 4px 3px;
 	border-image-repeat:stretch; 
 
-	border-top:-3;
-	border-left:-3;
-	border-right:-3;
-	border-bottom:-3;
+	border-top:0px;
+	border-left:0px;
+	border-right:0px;
+	border-bottom:0px;
 }
 
 
