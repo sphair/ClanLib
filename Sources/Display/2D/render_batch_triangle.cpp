@@ -32,6 +32,7 @@
 #include "sprite_impl.h"
 #include "API/Display/Render/blend_state_description.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Core/Math/quad.h"
 
 namespace clan
 {
@@ -136,6 +137,34 @@ void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rec
 	vertices[position+3].position = to_position(dest.right, dest.top);
 	vertices[position+4].position = to_position(dest.right, dest.bottom);
 	vertices[position+5].position = to_position(dest.left, dest.bottom);
+	float src_left = (src.left)/tex_sizes[texindex].width;
+	float src_top = (src.top) / tex_sizes[texindex].height;
+	float src_right = (src.right)/tex_sizes[texindex].width;
+	float src_bottom = (src.bottom) / tex_sizes[texindex].height;
+	vertices[position+0].texcoord = Vec2f(src_left, src_top);
+	vertices[position+1].texcoord = Vec2f(src_right, src_top);
+	vertices[position+2].texcoord = Vec2f(src_left, src_bottom);
+	vertices[position+3].texcoord = Vec2f(src_right, src_top);
+	vertices[position+4].texcoord = Vec2f(src_right, src_bottom);
+	vertices[position+5].texcoord = Vec2f(src_left, src_bottom);
+	for (int i=0; i<6; i++)
+	{
+		vertices[position+i].color = Vec4f(color.r, color.g, color.b, color.a);
+		vertices[position+i].texindex = texindex;
+	}
+	position += 6;
+}
+
+void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2D &texture)
+{
+	int texindex = set_batcher_active(canvas, texture);
+	lock_transfer_buffer(canvas);
+	vertices[position+0].position = to_position(dest.p.x, dest.p.y);
+	vertices[position+1].position = to_position(dest.q.x, dest.q.y);
+	vertices[position+2].position = to_position(dest.s.x, dest.s.y);
+	vertices[position+3].position = to_position(dest.q.x, dest.q.y);
+	vertices[position+4].position = to_position(dest.r.x, dest.r.y);
+	vertices[position+5].position = to_position(dest.s.x, dest.s.y);
 	float src_left = (src.left)/tex_sizes[texindex].width;
 	float src_top = (src.top) / tex_sizes[texindex].height;
 	float src_right = (src.right)/tex_sizes[texindex].width;

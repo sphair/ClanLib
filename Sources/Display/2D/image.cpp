@@ -37,7 +37,7 @@
 #include "API/Display/Resources/display_cache.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/Text/string_help.h"
-#include "API/Core/Text/string_format.h"
+#include "API/Core/Math/quad.h"
 #include "API/Core/Resources/xml_resource_document.h"
 #include "render_batch_triangle.h"
 #include "../Render/graphic_context_impl.h"
@@ -405,6 +405,33 @@ void Image::draw(Canvas &canvas, const Rectf &dest) const
 {
 	Rectf new_dest = dest;
 	new_dest.translate(impl->translated_hotspot);
+
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+	batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
+}
+
+void Image::draw(Canvas &canvas, const Rectf &src, const Quadf &dest) const
+{
+	Rectf new_src = src;
+	new_src.translate( impl->texture_rect.left, impl->texture_rect.top );
+
+	Quadf new_dest = dest;
+	new_dest.p+=impl->translated_hotspot;
+	new_dest.q+=impl->translated_hotspot;
+	new_dest.r+=impl->translated_hotspot;
+	new_dest.s+=impl->translated_hotspot;
+
+	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
+	batcher->draw_image(canvas, new_src, new_dest, impl->color, impl->texture);
+}
+
+void Image::draw(Canvas &canvas, const Quadf &dest) const
+{
+	Quadf new_dest = dest;
+	new_dest.p+=impl->translated_hotspot;
+	new_dest.q+=impl->translated_hotspot;
+	new_dest.r+=impl->translated_hotspot;
+	new_dest.s+=impl->translated_hotspot;
 
 	RenderBatchTriangle *batcher = canvas.impl->batcher.get_triangle_batcher();
 	batcher->draw_image(canvas, impl->texture_rect, new_dest, impl->color, impl->texture);
