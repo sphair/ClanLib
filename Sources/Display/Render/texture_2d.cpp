@@ -116,6 +116,19 @@ Texture2D::Texture2D(GraphicContext &context, IODevice &file, const std::string 
 	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
 }
 
+Texture2D::Texture2D(GraphicContext &context, const PixelBuffer &image, bool is_srgb)
+{
+	*this = Texture2D(context, image, image.get_size(), is_srgb);
+}
+
+Texture2D::Texture2D(GraphicContext &context, const PixelBuffer &image, const Rect &src_rect, bool is_srgb)
+{
+	*this = Texture2D(context, src_rect.get_width(), src_rect.get_height(), is_srgb ? tf_srgb8_alpha8 : tf_rgba8);
+
+	set_subimage(context, Point(0, 0), image, src_rect, 0);
+	impl->provider->set_wrap_mode(impl->wrap_mode_s, impl->wrap_mode_t);
+}
+
 int Texture2D::get_width() const
 {
 	return impl->width;
