@@ -36,24 +36,6 @@ namespace clan
 {
 
 template<typename Type>
-Type Vec4<Type>::length3() const {return (Type) floor(sqrt(float(x*x+y*y+z*z))+0.5f);}
-
-template<>
-double Vec4<double>::length3() const {return sqrt(x*x+y*y+z*z);}
-
-template<>
-float Vec4<float>::length3() const {return sqrt(x*x+y*y+z*z);}
-
-template<typename Type>
-Type Vec4<Type>::length4() const {return (Type) floor(sqrt(float(x*x+y*y+z*z+w*w))+0.5f);}
-
-template<>
-double Vec4<double>::length4() const {return sqrt(x*x+y*y+z*z+w*w);}
-
-template<>
-float Vec4<float>::length4() const {return sqrt(x*x+y*y+z*z+w*w);}
-
-template<typename Type>
 Vec4<Type> &Vec4<Type>::normalize3()
 {
 	Type f = length3();

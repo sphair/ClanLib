@@ -36,36 +36,6 @@ namespace clan
 {
 
 template<typename Type>
-Type Vec3<Type>::length() const {return (Type) floor(sqrt(float(x*x+y*y+z*z))+0.5f);}
-
-template<>
-double Vec3<double>::length() const {return sqrt(x*x+y*y+z*z);}
-
-template<>
-float Vec3<float>::length() const {return sqrt(x*x+y*y+z*z);}
-
-template<typename Type>
-Vec3<Type> &Vec3<Type>::normalize()
-{
-	Type f = length();
-	if (f!=0)
-	{
-		x /= f;
-		y /= f;
-		z /= f;
-	}
-	return *this;
-}
-
-template<typename Type>
-Vec3<Type> Vec3<Type>::normalize(const Vec3<Type>& vector)
-{
-	Vec3<Type> dest(vector);
-	dest.normalize();
-	return dest;
-}
-
-template<typename Type>
 Angle Vec3<Type>::angle(const Vec3<Type>& v) const
 {
 	return Angle(acosf(float(dot(v)/(length()*v.length()))), angle_radians);
