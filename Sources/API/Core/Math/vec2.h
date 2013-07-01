@@ -88,9 +88,6 @@ public:
 	explicit Vec2(const Vec4<Type> &copy) { x = copy.x; y = copy.y;}
 	explicit Vec2(const Type &p1, const Type &p2) : x(p1), y(p2) { }
 	explicit Vec2(const Type *array_xy) : x(array_xy[0]), y(array_xy[1]) { }
-	explicit Vec2(const Pointx<int> &point);
-	explicit Vec2(const Pointx<float> &point);
-	explicit Vec2(const Pointx<double> &point);
 
 	Vec2(const Vec2<double> &copy);
 	Vec2(const Vec2<float> &copy);
