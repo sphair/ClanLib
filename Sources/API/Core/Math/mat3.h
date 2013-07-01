@@ -275,7 +275,7 @@ public:
 	Mat3<Type> operator -(const Mat3<Type> &sub_matrix) const;
 
 	/// \brief Equality operator.
-	bool operator==(const Mat3<Type> &other)
+	bool operator==(const Mat3<Type> &other) const
 	{
 		for (int i=0; i<9; i++)
 			if (matrix[i] != other.matrix[i]) return false;
