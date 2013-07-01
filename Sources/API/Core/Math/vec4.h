@@ -356,6 +356,24 @@ Vec4<Type> operator * (const Mat4<Type>& matrix, const Vec4<Type>& v)
 		matrix[0*4+3]*v.x + matrix[1*4+3]*v.y + matrix[2*4+3]*v.z + matrix[3*4+3]*v.w);
 }
 
+template<typename Type>
+inline Type Vec4<Type>::length3() const {return (Type) floor(sqrt(float(x*x+y*y+z*z))+0.5f);}
+
+template<>
+inline double Vec4<double>::length3() const {return sqrt(x*x+y*y+z*z);}
+
+template<>
+inline float Vec4<float>::length3() const {return sqrt(x*x+y*y+z*z);}
+
+template<typename Type>
+inline Type Vec4<Type>::length4() const {return (Type) floor(sqrt(float(x*x+y*y+z*z+w*w))+0.5f);}
+
+template<>
+inline double Vec4<double>::length4() const {return sqrt(x*x+y*y+z*z+w*w);}
+
+template<>
+inline float Vec4<float>::length4() const {return sqrt(x*x+y*y+z*z+w*w);}
+
 typedef Vec4<unsigned char> Vec4ub;
 typedef Vec4<char> Vec4b;
 typedef Vec4<unsigned short> Vec4us;

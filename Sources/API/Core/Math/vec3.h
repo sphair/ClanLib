@@ -386,6 +386,21 @@ inline Vec3<double>::Vec3(const Vec3<double> &copy) { x = (double) copy.x; y = (
 template<>
 inline Vec3<double>::Vec3(const Vec3<int> &copy) { x = (double) copy.x; y = (double) copy.y; z = (double) copy.z; }
 
+template<typename Type>
+inline Type Vec3<Type>::length() const {return (Type) floor(sqrt(float(x*x+y*y+z*z))+0.5f);}
+
+template<>
+inline double Vec3<double>::length() const {return sqrt(x*x+y*y+z*z);}
+
+template<>
+inline float Vec3<float>::length() const {return sqrt(x*x+y*y+z*z);}
+
+template<typename Type>
+inline Vec3<Type> &Vec3<Type>::normalize() { Type f = length(); if (f!=0) { x /= f; y /= f; z /= f; } return *this; }
+
+template<typename Type>
+inline Vec3<Type> Vec3<Type>::normalize(const Vec3<Type>& vector) { Vec3<Type> dest(vector); dest.normalize(); return dest; }
+
 typedef Vec3<unsigned char> Vec3ub;
 typedef Vec3<char> Vec3b;
 typedef Vec3<unsigned short> Vec3us;
