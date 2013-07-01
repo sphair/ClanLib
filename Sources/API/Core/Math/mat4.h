@@ -450,7 +450,7 @@ public:
 	Mat4<Type> operator -(const Mat4<Type> &sub_matrix) const;
 
 	/// \brief Equality operator.
-	bool operator==(const Mat4<Type> &other)
+	bool operator==(const Mat4<Type> &other) const
 	{
 		for (int i=0; i<16; i++)
 			if (matrix[i] != other.matrix[i]) return false;

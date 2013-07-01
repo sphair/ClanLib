@@ -215,7 +215,7 @@ public:
 	Mat2<Type> operator -(const Mat2<Type> &subtract_matrix) const;
 
 	/// \brief Equality operator.
-	bool operator==(const Mat2<Type> &other)
+	bool operator==(const Mat2<Type> &other) const
 	{
 		for (int i=0; i<4; i++)
 			if (matrix[i] != other.matrix[i]) return false;
@@ -223,7 +223,7 @@ public:
 	}
 
 	/// \brief Not-equal operator.
-	bool operator!=(const Mat2<Type> &other) { return !((*this) == other); }
+	bool operator!=(const Mat2<Type> &other) const { return !((*this) == other); }
 
 /// \}
 /// \name Implementation
