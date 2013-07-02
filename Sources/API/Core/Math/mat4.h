@@ -329,6 +329,21 @@ public:
 	/// \return The transposed matrix
 	static Mat4<Type> transpose(const Mat4<Type> &matrix);
 
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param first = Value A
+	/// \param second = Value B
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	static bool is_equal(const Mat4<Type> &first, const Mat4<Type> &second, Type epsilon)
+	{
+		for (int i=0; i<16; i++)
+		{
+			Type diff = second.matrix[i] - first.matrix[i];
+			if (diff < -epsilon || diff > epsilon) return false;
+		}
+		return true;
+	}
+
 /// \}
 /// \name Attributes
 /// \{
@@ -407,6 +422,12 @@ public:
 
 	/// \brief Decompose matrix into position, orientation/rotation and scale
 	void decompose(Vec3<Type> &out_position, Quaternionx<Type> &out_orientation, Vec3<Type> &out_scale) const;
+
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param other = Other value
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	bool is_equal(const Mat4<Type> &other, Type epsilon) const { return Mat4<Type>::is_equal(*this, other, epsilon); }
 
 /// \}
 /// \name Operators
