@@ -160,6 +160,21 @@ public:
 	/// \return The matrix
 	static Mat2<Type> subtract(const Mat2<Type> &matrix_1, const Mat2<Type> &matrix_2);
 
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param first = Value A
+	/// \param second = Value B
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	static bool is_equal(const Mat2<Type> &first, const Mat2<Type> &second, Type epsilon)
+	{
+		for (int i=0; i<4; i++)
+		{
+			Type diff = second.matrix[i] - first.matrix[i];
+			if (diff < -epsilon || diff > epsilon) return false;
+		}
+		return true;
+	}
+
 /// \}
 /// \name Attributes
 /// \{
@@ -172,6 +187,11 @@ public:
 /// \{
 
 public:
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param other = Other value
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	bool is_equal(const Mat2<Type> &other, Type epsilon) const { return Mat2<Type>::is_equal(*this, other, epsilon); }
 
 /// \}
 /// \name Operators
