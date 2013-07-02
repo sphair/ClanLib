@@ -309,6 +309,7 @@ clanCore_includes = \
 	Core/System/disposable_object.h \
 	Core/System/event.h \
 	Core/System/work_queue.h \
+	Core/JSON/json_value.h \
 	Core/System/system.h
 
 clanDisplay_includes = \

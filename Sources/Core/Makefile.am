@@ -190,6 +190,7 @@ IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/init_linux.cpp \
 System/Unix/service_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
+Core/JSON/json_value.cpp \
 System/Unix/thread_unix.cpp
 
 endif
