@@ -468,6 +468,30 @@ private:
 /// \}
 };
 
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::null() { Mat4<Type> m; memset(m.matrix, 0, sizeof(m.matrix));	return m; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::identity() { Mat4<Type> m = null(); m.matrix[0] = 1; m.matrix[5] = 1; m.matrix[10] = 1; m.matrix[15] = 1; return m; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::multiply(const Mat4<Type> &matrix_1, const Mat4<Type> &matrix_2) { return matrix_1 * matrix_2; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::add(const Mat4<Type> &matrix_1, const Mat4<Type> &matrix_2) { return matrix_1 + matrix_2; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::subtract(const Mat4<Type> &matrix_1, const Mat4<Type> &matrix_2) { return matrix_1 - matrix_2; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::adjoint(const Mat4<Type> &matrix) { Mat4<Type> dest(matrix); dest.adjoint(); return dest; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::inverse(const Mat4<Type> &matrix) { Mat4<Type> dest(matrix); dest.inverse(); return dest; }
+
+template<typename Type>
+inline Mat4<Type> Mat4<Type>::transpose(const Mat4<Type> &matrix) { Mat4<Type> dest(matrix); dest.transpose(); return dest; }
+
 typedef Mat4<int> Mat4i;
 typedef Mat4<float> Mat4f;
 typedef Mat4<double> Mat4d;

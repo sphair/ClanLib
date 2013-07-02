@@ -67,24 +67,6 @@ Mat3<Type>::Mat3(const Mat2<Type> &copy)
 }
 
 template<typename Type>
-Mat3<Type> Mat3<Type>::null()
-{
-	Mat3<Type> m;
-	memset(m.matrix, 0, sizeof(m.matrix));
-	return m;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::identity()
-{
-	Mat3<Type> m = null();
-	m.matrix[0] = 1;
-	m.matrix[4] = 1;
-	m.matrix[8] = 1;
-	return m;
-}
-
-template<typename Type>
 Mat3<Type> Mat3<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool normalize)
 {
 	if (normalize)
@@ -163,48 +145,6 @@ Mat3<int> Mat3<int>::rotate(const Angle &angle, int x, int y, int z, bool normal
 	return rotate_matrix;
 }
 
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::multiply(const Mat3<Type> &matrix_1, const Mat3<Type> &matrix_2)
-{
-	return matrix_1 * matrix_2;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::add(const Mat3<Type> &matrix_1, const Mat3<Type> &matrix_2)
-{
-	return matrix_1 + matrix_2;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::subtract(const Mat3<Type> &matrix_1, const Mat3<Type> &matrix_2)
-{
-	return matrix_1 - matrix_2;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::adjoint(const Mat3<Type> &matrix)
-{
-	Mat3<Type> dest(matrix);
-	dest.adjoint();
-	return dest;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::inverse(const Mat3<Type> &matrix)
-{
-	Mat3<Type> dest(matrix);
-	dest.inverse();
-	return dest;
-}
-
-template<typename Type>
-Mat3<Type> Mat3<Type>::transpose(const Mat3<Type> &matrix)
-{
-	Mat3<Type> dest(matrix);
-	dest.transpose();
-	return dest;
-}
 
 /////////////////////////////////////////////////////////////////////////////
 // Mat3 attributes:
