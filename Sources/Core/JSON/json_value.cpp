@@ -1,0 +1,330 @@
+
+#include "Core/precomp.h"
+#include "API/Core/JSON/json_value.h"
+
+namespace clan
+{
+
+std::string JsonValue::to_json() const
+{
+	std::string result;
+	to_json(result);
+	return result;
+}
+
+void JsonValue::to_json(std::string &result) const
+{
+	result.clear();
+	write(result);
+}
+
+void JsonValue::write(std::string &json) const
+{
+	switch (type)
+	{
+	case type_null:
+		json += "null";
+		break;
+	case type_object:
+		write_object(json);
+		break;
+	case type_array:
+		write_array(json);
+		break;
+	case type_string:
+		write_string(value_string, json);
+		break;
+	case type_number:
+		write_number(json);
+		break;
+	case type_boolean:
+		json += value_boolean ? "true" : "false";
+		break;
+	}
+}
+
+void JsonValue::write_array(std::string &json) const
+{
+	json += "[";
+	for (size_t i = 0; i < items.size(); i++)
+	{
+		if (i > 0)
+			json += ",";
+		items[i].write(json);
+	}
+	json += "]";
+}
+
+void JsonValue::write_object(std::string &json) const
+{
+	json += "{";
+	std::map<std::string, JsonValue>::const_iterator it;
+	for (it = members.begin(); it != members.end(); ++it)
+	{
+		if (it != members.begin())
+			json += ",";
+		write_string(it->first, json);
+		json += ":";
+		it->second.write(json);
+	}
+	json += "}";
+}
+
+void JsonValue::write_string(const std::string &str, std::string &json)
+{
+	json += "\"";
+	json += str; // To do: escape this
+	json += "\"";
+}
+
+void JsonValue::write_number(std::string &json) const
+{
+	char buf[64];
+	buf[0] = 0;
+	if (static_cast<double>(static_cast<int>(value_number)) == value_number)
+	{
+#ifdef WIN32
+		_snprintf(buf, 63, "%d", (int)value_number);
+#else
+		snprintf(buf, 63, "%d", (int)value_number);
+#endif
+	}
+	else
+	{
+#ifdef WIN32
+		_snprintf(buf, 63, "%f", value_number);
+#else
+		snprintf(buf, 63, "%f", value_number);
+#endif
+	}
+	buf[63] = 0;
+	json += buf;
+}
+
+JsonValue JsonValue::from_json(const std::string &json)
+{
+	size_t pos = 0;
+	return read(json, pos);
+}
+
+JsonValue JsonValue::read(const std::string &json, size_t &pos)
+{
+	read_whitespace(json, pos);
+
+	if (pos == json.length())
+		throw JsonException("Unexpected end of JSON data");
+
+	switch (json[pos])
+	{
+	case '{':
+		return read_object(json, pos);
+	case '[':
+		return read_array(json, pos);
+	case '"':
+		return read_string(json, pos);
+	case '-':
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
+		return read_number(json, pos);
+	default:
+		throw JsonException("Unexpected character in JSON data");
+	}
+}
+
+JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
+{
+	JsonValue result(type_object);
+
+	pos++;
+	if (pos == json.length())
+		throw JsonException("Unexpected end of JSON data");
+
+	while (pos != json.length() && json[pos] != '}')
+	{
+		std::string key = read_string(json, pos);
+
+		read_whitespace(json, pos);
+
+		if (pos == json.length())
+			throw JsonException("Unexpected end of JSON data");
+		else if (json[pos] != ':')
+			throw JsonException("Unexpected character in JSON data");
+		pos++;
+
+		result.members[key] = read(json, pos);
+
+		read_whitespace(json, pos);
+
+		if (pos == json.length())
+		{
+			throw JsonException("Unexpected end of JSON data");
+		}
+		else if (json[pos] == '}')
+		{
+			pos++;
+			break;
+		}
+		else if (json[pos] == ',')
+		{
+			pos++;
+		}
+		else
+		{
+			throw JsonException("Unexpected character in JSON data");
+		}
+	}
+
+	return result;
+}
+
+JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
+{
+	JsonValue result(type_array);
+
+	pos++;
+	if (pos == json.length())
+		throw JsonException("Unexpected end of JSON data");
+
+	while (true)
+	{
+		read_whitespace(json, pos);
+		result.items.push_back(read(json, pos));
+		read_whitespace(json, pos);
+
+		if (pos == json.length())
+		{
+			throw JsonException("Unexpected end of JSON data");
+		}
+		else if (json[pos] == ']')
+		{
+			pos++;
+			break;
+		}
+		else if (json[pos] == ',')
+		{
+			pos++;
+		}
+		else
+		{
+			throw JsonException("Unexpected character in JSON data");
+		}
+	}
+
+	return result;
+}
+
+std::string JsonValue::read_string(const std::string &json, size_t &pos)
+{
+	pos++;
+	if (pos == json.length())
+		throw JsonException("Unexpected end of JSON data");
+
+	std::string result;
+	while (true)
+	{
+		if (pos == json.length())
+		{
+			throw JsonException("Unexpected end of JSON data");
+		}
+		else if (json[pos] == '"')
+		{
+			break;
+		}
+		else if (json[pos] == '\\')
+		{
+			pos++;
+			if (pos == json.length())
+				throw JsonException("Unexpected end of JSON data");
+			switch (json[pos])
+			{
+			case '"':
+				result.push_back('"');
+				break;
+			case '\\':
+				result.push_back('\\');
+				break;
+			case '/':
+				result.push_back('/');
+				break;
+			case 'b':
+				result.push_back('\b');
+				break;
+			case 'f':
+				result.push_back('\f');
+				break;
+			case 'n':
+				result.push_back('\n');
+				break;
+			case 'r':
+				result.push_back('\r');
+				break;
+			case 't':
+				result.push_back('\t');
+				break;
+			case 'u':
+				if (pos + 5 > json.length())
+					throw JsonException("Unexpected end of JSON data");
+				// To do: parse unicode
+				throw JsonException("Unicode escapes not supported yet in JSON data");
+				pos += 3;
+				break;
+			}
+			pos++;
+		}
+		else
+		{
+			result.push_back(json[pos]);
+			pos++;
+		}
+	}
+
+	pos++;
+
+	return result;
+}
+
+JsonValue JsonValue::read_number(const std::string &json, size_t &pos)
+{
+	int start_pos = pos;
+	if (json[pos] == '-')
+		pos++;
+	while (pos < json.length() && json[pos] >= '0' && json[pos] <= '9')
+		pos++;
+	if (pos != json.length() && json[pos] == '.')
+		pos++;
+	while (pos < json.length() && json[pos] >= '0' && json[pos] <= '9')
+		pos++;
+	if (pos != json.length() && (json[pos] == 'e' || json[pos] == 'E'))
+	{
+		pos++;
+		if (pos != json.length() && (json[pos] == '+' || json[pos] == '-'))
+			pos++;
+		while (pos < json.length() && json[pos] >= '0' && json[pos] <= '9')
+			pos++;
+	}
+	int end_pos = pos;
+
+	std::string number_string = json.substr(start_pos, end_pos - start_pos);
+	if (number_string.empty())
+		throw JsonException("Unexpected character in JSON data");
+
+	double result = 0.0;
+	sscanf(number_string.c_str(), "%lf", &result);
+	return result;
+}
+
+void JsonValue::read_whitespace(const std::string &json, size_t &pos)
+{
+	while (pos != json.length() && (json[pos] == ' ' || json[pos] == '\r' ||json[pos] == '\n' || json[pos] == '\t' || json[pos] == '\f'))
+		pos++;
+}
+
+}
