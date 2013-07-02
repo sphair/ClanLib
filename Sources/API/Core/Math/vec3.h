@@ -133,6 +133,17 @@ public:
 	/// Normal vector should be normalized
 	static Vec3<Type> reflect(const Vec3<Type>& incident, const Vec3<Type>& normal);
 
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param first = Value A
+	/// \param second = Value B
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	static bool is_equal(const Vec3<Type> &first, const Vec3<Type> &second, Type epsilon)
+	{
+		Type diff_x = second.x - first.x; Type diff_y = second.y - first.y; Type diff_z = second.z - first.z;
+		return (diff_x >= -epsilon && diff_x <= epsilon && diff_y >= -epsilon && diff_y <= epsilon && diff_z >= -epsilon && diff_z <= epsilon );
+	}
+
 /// \name Attributes
 /// \{
 
@@ -197,6 +208,12 @@ public:
 	//// Uses Asymmetric Arithmetic Rounding
 	/// \return reference to this object
 	Vec3<Type> &round();
+
+	/// \brief Returns true if equal within the bounds of an epsilon
+	///
+	/// \param other = Other value
+	/// \param epsilon = The epsilon (eg FLT_EPSILON/2, DBL_EPSILON/2)
+	bool is_equal(const Vec3<Type> &other, Type epsilon) const { return Vec3<Type>::is_equal(*this, other, epsilon);	}
 
 /// \}
 /// \name Operators
