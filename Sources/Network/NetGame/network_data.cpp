@@ -262,7 +262,7 @@ unsigned int NetGameNetworkData::encode_value(unsigned char *d, const NetGameEve
 	case NetGameEventValue::binary:
 		{
 			DataBuffer s = value.to_binary();
-			*d = 7;
+			*d = 11;
 			*reinterpret_cast<unsigned short*>(d + 1) = s.get_size();
 			memcpy(d + 3, s.get_data(), s.get_size());
 			return 3 + s.get_size();
