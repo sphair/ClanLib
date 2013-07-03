@@ -174,6 +174,7 @@ System/detect_cpu_ext.cpp \
 System/service.cpp \
 System/thread_local_storage_impl.cpp \
 System/work_queue.cpp \
+JSON/json_value.cpp \
 System/datetime.cpp
 
 if WIN32
@@ -190,7 +191,6 @@ IOData/Unix/directory_scanner_unix.cpp \
 System/Unix/init_linux.cpp \
 System/Unix/service_unix.cpp \
 System/Unix/event_provider_socketpair.cpp \
-Core/JSON/json_value.cpp \
 System/Unix/thread_unix.cpp
 
 endif
