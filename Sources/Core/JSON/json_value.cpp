@@ -161,6 +161,9 @@ JsonValue JsonValue::read(const std::string &json, size_t &pos)
 	case '8':
 	case '9':
 		return read_number(json, pos);
+	case 'f':
+	case 't':
+		return read_boolean(json, pos);
 	default:
 		throw JsonException("Unexpected character in JSON data");
 	}
@@ -346,6 +349,24 @@ JsonValue JsonValue::read_number(const std::string &json, size_t &pos)
 	double result = 0.0;
 	sscanf(number_string.c_str(), "%lf", &result);
 	return result;
+}
+
+JsonValue JsonValue::read_boolean(const std::string &json, size_t &pos)
+{
+	if (json[pos] == 't')
+	{
+		if (pos + 4 > json.length() || memcmp(&json[pos], "true", 4) != 0)
+			throw JsonException("Unexpected character in JSON data");
+		pos += 4;
+		return JsonValue::boolean(true);
+	}
+	else
+	{
+		if (pos + 5 > json.length() || memcmp(&json[pos], "false", 5) != 0)
+			throw JsonException("Unexpected character in JSON data");
+		pos += 5;
+		return JsonValue::boolean(false);
+	}
 }
 
 void JsonValue::read_whitespace(const std::string &json, size_t &pos)

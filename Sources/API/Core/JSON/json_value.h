@@ -220,6 +220,7 @@ private:
 	static JsonValue read_array(const std::string &json, size_t &pos);
 	static std::string read_string(const std::string &json, size_t &pos);
 	static JsonValue read_number(const std::string &json, size_t &pos);
+	static JsonValue read_boolean(const std::string &json, size_t &pos);
 	static void read_whitespace(const std::string &json, size_t &pos);
 
 	Type type;
