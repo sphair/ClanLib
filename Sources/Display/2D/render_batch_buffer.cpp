@@ -36,24 +36,8 @@
 namespace clan
 {
 
-RenderBatchBuffer::RenderBatchBuffer() : current_gpu_buffer(0)
+RenderBatchBuffer::RenderBatchBuffer()
 {
-}
-
-TransferBuffer RenderBatchBuffer::get_transfer_buffer(GraphicContext &gc)
-{
-	if (transfer_buffers[current_gpu_buffer].is_null())
-	{
-		transfer_buffers[current_gpu_buffer] = TransferBuffer(gc, buffer_size, usage_stream_draw);
-	}
-	return transfer_buffers[current_gpu_buffer];
-}
-
-void RenderBatchBuffer::next_buffer()
-{
-	current_gpu_buffer++;
-	if (current_gpu_buffer == num_gpu_buffers)
-		current_gpu_buffer = 0;
 }
 
 }

@@ -43,16 +43,12 @@ class RenderBatchBuffer
 public:
 	RenderBatchBuffer();
 
-	enum { buffer_size = 1024*1024, num_gpu_buffers = 4 };
+	enum { buffer_size = 1024*1024 };
 
-	TransferBuffer get_transfer_buffer(GraphicContext &gc);
-
-	void next_buffer();
+	char buffer[buffer_size];
 
 private:
 
-	TransferBuffer transfer_buffers[num_gpu_buffers];
-	int current_gpu_buffer;
 
 };
 

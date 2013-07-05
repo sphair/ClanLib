@@ -152,9 +152,10 @@ void D3DTransferBufferProvider::upload_data(GraphicContext &gc, int offset, cons
 	if (input_size < 0 || offset + input_size > desc.ByteWidth)
 		throw Exception("Out of bounds!");
 
-	lock(gc, access_write_only);
+	lock(gc, access_write_only);	// Should this be access_write_discard - And force offset ==0 and input_size = desc.ByteWidth
 	memcpy(static_cast<char*>(get_data()) + offset, input, input_size);
 	unlock();
+
 }
 
 /////////////////////////////////////////////////////////////////////////////
