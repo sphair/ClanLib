@@ -77,7 +77,6 @@ private:
 
 	inline void to_sprite_vertex(const Pointf &texture_position, const Pointf &dest_position, RenderBatchTriangle::SpriteVertex &v, int texindex, const Colorf &color) const;
 	inline Vec4f to_position(float x, float y) const;
-	void lock_transfer_buffer(Canvas &canvas);
 
 	Mat4f modelview_projection_matrix;
 	int position;
@@ -86,9 +85,11 @@ private:
 
 	RenderBatchBuffer *batch_buffer;
 
-	TransferVector<SpriteVertex> transfer_buffers;
-	VertexArrayVector<SpriteVertex> gpu_vertices;
-	PrimitivesArray prim_array;
+	static const int num_gpu_buffers = 2;
+	VertexArrayVector<SpriteVertex> gpu_vertices[num_gpu_buffers];
+	PrimitivesArray prim_array[num_gpu_buffers];
+	int current_gpu_buffer;
+
 	Texture2D current_textures[4];
 	int num_current_textures;
 	Sizef tex_sizes[4];

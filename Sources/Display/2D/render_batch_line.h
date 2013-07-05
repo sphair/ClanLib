@@ -56,14 +56,14 @@ private:
 	void set_batcher_active(Canvas &canvas, int num_vertices);
 	void flush(GraphicContext &gc);
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
-	void lock_transfer_buffer(Canvas &canvas);
 
 	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(LineVertex) };
 	LineVertex *vertices;
 	RenderBatchBuffer *batch_buffer;
-	TransferVector<LineVertex> transfer_buffers;
-	VertexArrayVector<LineVertex> gpu_vertices;
-	PrimitivesArray prim_array;
+	static const int num_gpu_buffers = 2;
+	VertexArrayVector<LineVertex> gpu_vertices[num_gpu_buffers];
+	PrimitivesArray prim_array[num_gpu_buffers];
+	int current_gpu_buffer;
 	int position;
 	Mat4f modelview_projection_matrix;
 

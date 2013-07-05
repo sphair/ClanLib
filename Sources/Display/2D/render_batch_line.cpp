@@ -36,8 +36,9 @@ namespace clan
 {
 
 RenderBatchLine::RenderBatchLine(RenderBatchBuffer *batch_buffer)
-: position(0), vertices(0), batch_buffer(batch_buffer)
+: position(0), batch_buffer(batch_buffer), current_gpu_buffer(0)
 {
+	vertices = (LineVertex *) batch_buffer->buffer;
 }
 
 inline Vec4f RenderBatchLine::to_position(float x, float y) const
@@ -58,7 +59,7 @@ void RenderBatchLine::draw_lines(Canvas &canvas, const Vec2f *line_positions, co
 
 	// We convert a line strip to a line
 	set_batcher_active(canvas, num_vertices);
-	lock_transfer_buffer(canvas);
+
 
 	for (; num_vertices > 0; num_vertices--)
 	{
@@ -79,7 +80,7 @@ void RenderBatchLine::draw_line_strip(Canvas &canvas, const Vec2f *line_position
 	// We convert a line strip to a line
 	num_vertices -=1;
 	set_batcher_active(canvas, num_vertices * 2);
-	lock_transfer_buffer(canvas);
+
 
 	Vec4f next_start_position = to_position(line_positions->x, line_positions->y);
 
@@ -108,47 +109,31 @@ void RenderBatchLine::set_batcher_active(Canvas &canvas, int num_vertices)
 	canvas.set_batcher(this);
 }
 
-void RenderBatchLine::lock_transfer_buffer(Canvas &canvas)
-{
-	if (vertices == 0)
-	{
-		GraphicContext &gc = canvas.get_gc();
-		TransferBuffer transfer_buffer = batch_buffer->get_transfer_buffer(gc);
-		transfer_buffers = TransferVector<LineVertex>(transfer_buffer);
-		transfer_buffers.lock(gc, access_write_discard);
-		vertices = transfer_buffers.get_data();
-	}
-}
-
 void RenderBatchLine::flush(GraphicContext &gc)
 {
 	if (position > 0)
 	{
 		gc.set_program_object(program_color_only);
 
-		if (gpu_vertices.is_null())
+		if (gpu_vertices[current_gpu_buffer].is_null())
 		{
-			gpu_vertices = VertexArrayVector<LineVertex>(gc, max_vertices);
-			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(LineVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(LineVertex, color));
+			gpu_vertices[current_gpu_buffer] = VertexArrayVector<LineVertex>(gc, max_vertices);
+			prim_array[current_gpu_buffer] = PrimitivesArray(gc);
+			prim_array[current_gpu_buffer].set_attributes(0, gpu_vertices[current_gpu_buffer], cl_offsetof(LineVertex, position));
+			prim_array[current_gpu_buffer].set_attributes(1, gpu_vertices[current_gpu_buffer], cl_offsetof(LineVertex, color));
 		}
 
-		if (vertices)
-		{
-			vertices = 0;
-			transfer_buffers.unlock();
-		}
+		gpu_vertices[current_gpu_buffer].upload_data(gc, 0, vertices, position);
 
-		gpu_vertices.copy_from(gc, transfer_buffers, 0, 0, position);
-
-		gc.draw_primitives(type_lines, position, prim_array);
+		gc.draw_primitives(type_lines, position, prim_array[current_gpu_buffer]);
 
 		gc.reset_program_object();
 
 		position = 0;
 
-		batch_buffer->next_buffer();
+		current_gpu_buffer++;
+		if (current_gpu_buffer >= num_gpu_buffers)
+			current_gpu_buffer = 0;
 	}
 }
 

@@ -40,14 +40,15 @@ namespace clan
 int RenderBatchTriangle::max_textures = 4;	// For use by the GL1 target, so it can reduce the number of textures
 
 RenderBatchTriangle::RenderBatchTriangle(RenderBatchBuffer *batch_buffer)
-: position(0), vertices(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer)
+: position(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer), current_gpu_buffer(0)
 {
+	vertices = (SpriteVertex *) batch_buffer->buffer;
 }
 
 void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color)
 {
 	int texindex = set_batcher_active(canvas, texture);
-	lock_transfer_buffer(canvas);
+
 	to_sprite_vertex(texture_position[0], dest_position[0], vertices[position++], texindex, color);
 	to_sprite_vertex(texture_position[1], dest_position[1], vertices[position++], texindex, color);
 	to_sprite_vertex(texture_position[2], dest_position[2], vertices[position++], texindex, color);
@@ -59,7 +60,7 @@ void RenderBatchTriangle::draw_sprite(Canvas &canvas, const Pointf texture_posit
 void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Vec4f *triangle_colors, int num_vertices)
 {
 	int texindex = set_batcher_active(canvas, num_vertices);
-	lock_transfer_buffer(canvas);
+
 
 	for (; num_vertices > 0; num_vertices--)
 	{
@@ -75,7 +76,7 @@ void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_po
 void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_positions, const Colorf &color, int num_vertices)
 {
 	int texindex = set_batcher_active(canvas, num_vertices);
-	lock_transfer_buffer(canvas);
+
 
 	for (; num_vertices > 0; num_vertices--)
 	{
@@ -91,7 +92,7 @@ void RenderBatchTriangle::fill_triangle(Canvas &canvas, const Vec2f *triangle_po
 void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf &color)
 {
 	int texindex = set_batcher_active(canvas, texture);
-	lock_transfer_buffer(canvas);
+
 	for (; num_vertices > 0; num_vertices--)
 	{
 		vertices[position].color = color;
@@ -107,7 +108,7 @@ void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions,
 void RenderBatchTriangle::fill_triangles(Canvas &canvas, const Vec2f *positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Colorf *colors)
 {
 	int texindex = set_batcher_active(canvas, texture);
-	lock_transfer_buffer(canvas);
+
 	for (; num_vertices > 0; num_vertices--)
 	{
 		vertices[position].color = *(colors++);
@@ -130,7 +131,7 @@ inline void RenderBatchTriangle::to_sprite_vertex(const Pointf &texture_position
 void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture)
 {
 	int texindex = set_batcher_active(canvas, texture);
-	lock_transfer_buffer(canvas);
+
 	vertices[position+0].position = to_position(dest.left, dest.top);
 	vertices[position+1].position = to_position(dest.right, dest.top);
 	vertices[position+2].position = to_position(dest.left, dest.bottom);
@@ -158,7 +159,7 @@ void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Rec
 void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2D &texture)
 {
 	int texindex = set_batcher_active(canvas, texture);
-	lock_transfer_buffer(canvas);
+
 	vertices[position+0].position = to_position(dest.p.x, dest.p.y);
 	vertices[position+1].position = to_position(dest.q.x, dest.q.y);
 	vertices[position+2].position = to_position(dest.s.x, dest.s.y);
@@ -186,7 +187,7 @@ void RenderBatchTriangle::draw_image(Canvas &canvas, const Rectf &src, const Qua
 void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture)
 {
 	int texindex = set_batcher_active(canvas, texture, true, color);
-	lock_transfer_buffer(canvas);
+
 	vertices[position+0].position = to_position(dest.left, dest.top);
 	vertices[position+1].position = to_position(dest.right, dest.top);
 	vertices[position+2].position = to_position(dest.left, dest.bottom);
@@ -214,7 +215,7 @@ void RenderBatchTriangle::draw_glyph_subpixel(Canvas &canvas, const Rectf &src, 
 void RenderBatchTriangle::fill(Canvas &canvas, float x1, float y1, float x2, float y2, const Colorf &color)
 {
 	int texindex = set_batcher_active(canvas);
-	lock_transfer_buffer(canvas);
+
 	vertices[position+0].position = to_position(x1, y1);
 	vertices[position+1].position = to_position(x2, y1);
 	vertices[position+2].position = to_position(x1, y2);
@@ -309,45 +310,27 @@ int RenderBatchTriangle::set_batcher_active(Canvas &canvas, int num_vertices)
 	return 4;
 }
 
-void RenderBatchTriangle::lock_transfer_buffer(Canvas &canvas)
-{
-	if (vertices == 0)
-	{
-		GraphicContext &gc = canvas.get_gc();
-		TransferBuffer transfer_buffer = batch_buffer->get_transfer_buffer(gc);
-		transfer_buffers = TransferVector<SpriteVertex>(transfer_buffer);
-		transfer_buffers.lock(gc, access_write_discard);
-		vertices = transfer_buffers.get_data();
-	}
-}
-
 void RenderBatchTriangle::flush(GraphicContext &gc)
 {
 	if (position > 0)
 	{
 		gc.set_program_object(program_sprite);
 
-		if (gpu_vertices.is_null())
+		if (gpu_vertices[current_gpu_buffer].is_null())
 		{
-			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
-			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(SpriteVertex, color));
-			prim_array.set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, texcoord));
-			prim_array.set_attributes(3, gpu_vertices, cl_offsetof(SpriteVertex, texindex));
+			gpu_vertices[current_gpu_buffer] = VertexArrayVector<SpriteVertex>(gc, max_vertices);
+			prim_array[current_gpu_buffer] = PrimitivesArray(gc);
+			prim_array[current_gpu_buffer].set_attributes(0, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, position));
+			prim_array[current_gpu_buffer].set_attributes(1, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, color));
+			prim_array[current_gpu_buffer].set_attributes(2, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, texcoord));
+			prim_array[current_gpu_buffer].set_attributes(3, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, texindex));
 
 			BlendStateDescription blend_desc;
 			blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);
 			glyph_blend = BlendState(gc, blend_desc);
 		}
 
-		if (vertices)
-		{
-			vertices = 0;
-			transfer_buffers.unlock();
-		}
-
-		gpu_vertices.copy_from(gc, transfer_buffers, 0, 0, position);
+		gpu_vertices[current_gpu_buffer].upload_data(gc, 0, vertices, position);
 
 		for (int i = 0; i < num_current_textures; i++)
 			gc.set_texture(i, current_textures[i]);
@@ -355,12 +338,12 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		if (use_glyph_program)
 		{
 			gc.set_blend_state(glyph_blend, constant_color);
-			gc.draw_primitives(type_triangles, position, prim_array);
+			gc.draw_primitives(type_triangles, position, prim_array[current_gpu_buffer]);
 			gc.reset_blend_state();
 		}
 		else
 		{
-			gc.draw_primitives(type_triangles, position, prim_array);
+			gc.draw_primitives(type_triangles, position, prim_array[current_gpu_buffer]);
 		}
 
 		for (int i = 0; i < num_current_textures; i++)
@@ -373,7 +356,9 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 			current_textures[i] = Texture2D();
 		num_current_textures = 0;
 
-		batch_buffer->next_buffer();
+		current_gpu_buffer++;
+		if (current_gpu_buffer >= num_gpu_buffers)
+			current_gpu_buffer = 0;
 	}
 }
 
