@@ -216,7 +216,7 @@ void PNGLoader::decode_colorkey()
 
 void PNGLoader::decode_image()
 {
-	DataBuffer image_data = ZLibCompression::decompress(idat, 15, false);
+	DataBuffer image_data = ZLibCompression::decompress(idat, false);
 
 	create_image();
 	create_scanline_buffers();

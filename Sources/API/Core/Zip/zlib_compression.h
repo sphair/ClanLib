@@ -42,18 +42,26 @@ class ZLibCompression
 /// \name Operations
 /// \{
 public:
+	enum CompressionMode
+	{
+		default_strategy,
+		filtered,
+		huffman_only,
+		rle,
+		fixed
+	};
+
 	// \brief Compress data
 	// \param data Data to compress
-	// \param window_bits Sliding window size
 	// \param raw Skips header if true
 	// \param compression_level Compression level in range 0-9. 0 = no compression, 1 = best speed, 6 = default, 9 = best compression.
-	static DataBuffer compress(const DataBuffer &data, int window_bits = 15, bool raw = true, int compression_level = 6);
+	// \param mode Compression strategy
+	static DataBuffer compress(const DataBuffer &data, bool raw = true, int compression_level = 6, CompressionMode mode = default_strategy);
 
 	// \brief Decompress data
 	// \param data Data to compress
-	// \param window_bits Sliding window size
 	// \param raw Skips header if true
-	static DataBuffer decompress(const DataBuffer &data, int window_bits = 15, bool raw = true);
+	static DataBuffer decompress(const DataBuffer &data, bool raw = true);
 /// \}
 };
 

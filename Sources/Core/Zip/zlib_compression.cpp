@@ -37,13 +37,25 @@
 namespace clan
 {
 
-DataBuffer ZLibCompression::compress(const DataBuffer &data, int window_bits, bool raw, int compression_level)
+DataBuffer ZLibCompression::compress(const DataBuffer &data, bool raw, int compression_level, CompressionMode mode)
 {
+	const int window_bits = 15;
+
 	DataBuffer zbuffer(1024*1024);
 	IODevice_Memory output;
 
+	int strategy = MZ_DEFAULT_STRATEGY;
+	switch (mode)
+	{
+	case default_strategy: strategy = MZ_DEFAULT_STRATEGY; break;
+	case filtered: strategy = MZ_FILTERED; break;
+	case huffman_only: strategy = MZ_HUFFMAN_ONLY; break;
+	case rle: strategy = MZ_RLE; break;
+	case fixed: strategy = MZ_FIXED; break;
+	}
+
 	mz_stream zs = { 0 };
-	int result = mz_deflateInit2(&zs, compression_level, MZ_DEFLATED, raw ? -window_bits : window_bits, 8, MZ_DEFAULT_STRATEGY); // Undocumented: if wbits is negative, zlib skips header check
+	int result = mz_deflateInit2(&zs, compression_level, MZ_DEFLATED, raw ? -window_bits : window_bits, 8, strategy); // Undocumented: if wbits is negative, zlib skips header check
 	if (result != MZ_OK)
 		throw Exception("Zlib deflateInit failed");
 
@@ -81,8 +93,10 @@ DataBuffer ZLibCompression::compress(const DataBuffer &data, int window_bits, bo
 	return output.get_data();
 }
 
-DataBuffer ZLibCompression::decompress(const DataBuffer &data, int window_bits, bool raw)
+DataBuffer ZLibCompression::decompress(const DataBuffer &data, bool raw)
 {
+	const int window_bits = 15;
+
 	DataBuffer zbuffer(1024*1024);
 	IODevice_Memory output;
 
