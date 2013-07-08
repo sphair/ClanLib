@@ -50,6 +50,11 @@ public:
 	{
 	}
 
+	/// \brief Constructs a VertexArrayBuffer using an existing VertexArrayBuffer
+	explicit VertexArrayVector(const VertexArrayBuffer &buffer) : VertexArrayBuffer(buffer)
+	{
+	}
+
 	/// \brief Constructs a VertexArrayBuffer
 	///
 	/// \param gc = Graphic Context

@@ -56,13 +56,10 @@ private:
 	void flush(GraphicContext &gc);
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
 	
-	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(PointVertex) };
+	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(PointVertex) };
 	PointVertex *vertices;
 	RenderBatchBuffer *batch_buffer;
-	static const int num_gpu_buffers = 2;
-	VertexArrayVector<PointVertex> gpu_vertices[num_gpu_buffers];
-	PrimitivesArray prim_array[num_gpu_buffers];
-	int current_gpu_buffer;
+	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 	int position;
 	Mat4f modelview_projection_matrix;
 };

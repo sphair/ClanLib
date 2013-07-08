@@ -40,7 +40,7 @@ namespace clan
 int RenderBatchTriangle::max_textures = 4;	// For use by the GL1 target, so it can reduce the number of textures
 
 RenderBatchTriangle::RenderBatchTriangle(RenderBatchBuffer *batch_buffer)
-: position(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer), current_gpu_buffer(0)
+: position(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer)
 {
 	vertices = (SpriteVertex *) batch_buffer->buffer;
 }
@@ -316,21 +316,26 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 	{
 		gc.set_program_object(program_sprite);
 
-		if (gpu_vertices[current_gpu_buffer].is_null())
-		{
-			gpu_vertices[current_gpu_buffer] = VertexArrayVector<SpriteVertex>(gc, max_vertices);
-			prim_array[current_gpu_buffer] = PrimitivesArray(gc);
-			prim_array[current_gpu_buffer].set_attributes(0, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, position));
-			prim_array[current_gpu_buffer].set_attributes(1, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, color));
-			prim_array[current_gpu_buffer].set_attributes(2, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, texcoord));
-			prim_array[current_gpu_buffer].set_attributes(3, gpu_vertices[current_gpu_buffer], cl_offsetof(SpriteVertex, texindex));
+		int gpu_index;
+		VertexArrayVector<SpriteVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
 
-			BlendStateDescription blend_desc;
-			blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);
-			glyph_blend = BlendState(gc, blend_desc);
+		if (prim_array[gpu_index].is_null())
+		{
+			prim_array[gpu_index] = PrimitivesArray(gc);
+			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(SpriteVertex, position));
+			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(SpriteVertex, color));
+			prim_array[gpu_index].set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, texcoord));
+			prim_array[gpu_index].set_attributes(3, gpu_vertices, cl_offsetof(SpriteVertex, texindex));
+
+			if (glyph_blend.is_null())
+			{
+				BlendStateDescription blend_desc;
+				blend_desc.set_blend_function(blend_constant_color, blend_one_minus_src_color, blend_zero, blend_one);
+				glyph_blend = BlendState(gc, blend_desc);
+			}
 		}
 
-		gpu_vertices[current_gpu_buffer].upload_data(gc, 0, vertices, position);
+		gpu_vertices.upload_data(gc, 0, vertices, position);
 
 		for (int i = 0; i < num_current_textures; i++)
 			gc.set_texture(i, current_textures[i]);
@@ -338,12 +343,12 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 		if (use_glyph_program)
 		{
 			gc.set_blend_state(glyph_blend, constant_color);
-			gc.draw_primitives(type_triangles, position, prim_array[current_gpu_buffer]);
+			gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
 			gc.reset_blend_state();
 		}
 		else
 		{
-			gc.draw_primitives(type_triangles, position, prim_array[current_gpu_buffer]);
+			gc.draw_primitives(type_triangles, position, prim_array[gpu_index]);
 		}
 
 		for (int i = 0; i < num_current_textures; i++)
@@ -356,9 +361,6 @@ void RenderBatchTriangle::flush(GraphicContext &gc)
 			current_textures[i] = Texture2D();
 		num_current_textures = 0;
 
-		current_gpu_buffer++;
-		if (current_gpu_buffer >= num_gpu_buffers)
-			current_gpu_buffer = 0;
 	}
 }
 

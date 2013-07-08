@@ -80,15 +80,12 @@ private:
 
 	Mat4f modelview_projection_matrix;
 	int position;
-	enum { max_vertices = RenderBatchBuffer::buffer_size / sizeof(SpriteVertex) };
+	enum { max_vertices = RenderBatchBuffer::vertex_buffer_size / sizeof(SpriteVertex) };
 	SpriteVertex *vertices;
 
 	RenderBatchBuffer *batch_buffer;
 
-	static const int num_gpu_buffers = 2;
-	VertexArrayVector<SpriteVertex> gpu_vertices[num_gpu_buffers];
-	PrimitivesArray prim_array[num_gpu_buffers];
-	int current_gpu_buffer;
+	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 
 	Texture2D current_textures[4];
 	int num_current_textures;
