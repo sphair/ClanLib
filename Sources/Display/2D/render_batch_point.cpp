@@ -36,7 +36,7 @@ namespace clan
 {
 
 RenderBatchPoint::RenderBatchPoint(RenderBatchBuffer *batch_buffer)
-: position(0), batch_buffer(batch_buffer), current_gpu_buffer(0)
+: position(0), batch_buffer(batch_buffer)
 {
 	vertices = (PointVertex *) batch_buffer->buffer;
 }
@@ -82,25 +82,23 @@ void RenderBatchPoint::flush(GraphicContext &gc)
 	{
 		gc.set_program_object(program_color_only);
 
-		if (gpu_vertices[current_gpu_buffer].is_null())
+		int gpu_index;
+		VertexArrayVector<PointVertex> gpu_vertices(batch_buffer->get_vertex_buffer(gc, gpu_index));
+
+		if (prim_array[gpu_index].is_null())
 		{
-			gpu_vertices[current_gpu_buffer] = VertexArrayVector<PointVertex>(gc, max_vertices);
-			prim_array[current_gpu_buffer] = PrimitivesArray(gc);
-			prim_array[current_gpu_buffer].set_attributes(0, gpu_vertices[current_gpu_buffer], cl_offsetof(PointVertex, position));
-			prim_array[current_gpu_buffer].set_attributes(1, gpu_vertices[current_gpu_buffer], cl_offsetof(PointVertex, color));
+			prim_array[gpu_index] = PrimitivesArray(gc);
+			prim_array[gpu_index].set_attributes(0, gpu_vertices, cl_offsetof(PointVertex, position));
+			prim_array[gpu_index].set_attributes(1, gpu_vertices, cl_offsetof(PointVertex, color));
 		}
 
-		gpu_vertices[current_gpu_buffer].upload_data(gc, 0, vertices, position);
+		gpu_vertices.upload_data(gc, 0, vertices, position);
 
-		gc.draw_primitives(type_points, position, prim_array[current_gpu_buffer]);
+		gc.draw_primitives(type_points, position, prim_array[gpu_index]);
 
 		gc.reset_program_object();
 
 		position = 0;
-
-		current_gpu_buffer++;
-		if (current_gpu_buffer >= num_gpu_buffers)
-			current_gpu_buffer = 0;
 	}
 }
 
