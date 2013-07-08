@@ -46,7 +46,7 @@ class Quadf;
 class RenderBatchTriangle : public RenderBatcher
 {
 public:
-	RenderBatchTriangle(RenderBatchBuffer *batch_buffer);
+	RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 	void draw_sprite(Canvas &canvas, const Pointf texture_position[4], const Pointf dest_position[4], const Texture2D &texture, const Colorf &color);
 	void draw_image(Canvas &canvas, const Rectf &src, const Rectf &dest, const Colorf &color, const Texture2D &texture);
 	void draw_image(Canvas &canvas, const Rectf &src, const Quadf &dest, const Colorf &color, const Texture2D &texture);

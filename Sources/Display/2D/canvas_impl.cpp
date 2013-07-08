@@ -93,6 +93,12 @@ void Canvas_Impl::setup(GraphicContext &new_gc)
 	}
 
 	update_viewport_size();
+
+	if (batcher.is_null())
+	{
+		batcher = CanvasBatcher(gc);
+	}
+
 }
 
 Canvas_Impl::~Canvas_Impl()

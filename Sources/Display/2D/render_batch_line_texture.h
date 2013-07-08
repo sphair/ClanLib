@@ -41,7 +41,7 @@ class RenderBatchBuffer;
 class RenderBatchLineTexture : public RenderBatcher
 {
 public:
-	RenderBatchLineTexture(RenderBatchBuffer *batch_buffer);
+	RenderBatchLineTexture(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 	void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec2f *texture_positions, int num_vertices, const Texture2D &texture, const Vec4f &line_color);
 
 private:

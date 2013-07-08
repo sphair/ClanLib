@@ -39,7 +39,7 @@ namespace clan
 class CanvasBatcher_Impl
 {
 public:
-	CanvasBatcher_Impl();
+	CanvasBatcher_Impl(GraphicContext &gc);
 	~CanvasBatcher_Impl();
 
 	void flush();
@@ -48,29 +48,34 @@ public:
 
 	GraphicContext current_gc;
 
-	RenderBatchTriangle *get_triangle_batcher();
-	RenderBatchLine *get_line_batcher();
-	RenderBatchLineTexture *get_line_texture_batcher();
-	RenderBatchPoint *get_point_batcher();
-
 	RenderBatcher *active_batcher;
 	RenderBatchBuffer render_batcher_buffer;
-	std::shared_ptr<RenderBatchTriangle> render_batcher_triangle;
-	std::shared_ptr<RenderBatchLine> render_batcher_line;
-	std::shared_ptr<RenderBatchLineTexture> render_batcher_line_texture;
-	std::shared_ptr<RenderBatchPoint> render_batcher_point;
 
+	RenderBatchTriangle render_batcher_triangle;
+	RenderBatchLine render_batcher_line;
+	RenderBatchLineTexture render_batcher_line_texture;
+	RenderBatchPoint render_batcher_point;
 };
 
-CanvasBatcher_Impl::CanvasBatcher_Impl() : active_batcher(0)
+CanvasBatcher_Impl::CanvasBatcher_Impl(GraphicContext &gc) : active_batcher(0),
+	render_batcher_buffer(gc),
+	render_batcher_triangle(gc, &render_batcher_buffer),
+	render_batcher_line(gc, &render_batcher_buffer),
+	render_batcher_line_texture(gc, &render_batcher_buffer),
+	render_batcher_point(gc, &render_batcher_buffer)
 {
+
 }
 
 CanvasBatcher_Impl::~CanvasBatcher_Impl()
 {
 }
 
-CanvasBatcher::CanvasBatcher() : impl(new CanvasBatcher_Impl)
+CanvasBatcher::CanvasBatcher()
+{
+}
+
+CanvasBatcher::CanvasBatcher(GraphicContext &gc) : impl(new CanvasBatcher_Impl(gc))
 {
 }
 
@@ -78,56 +83,25 @@ CanvasBatcher::~CanvasBatcher()
 {
 }
 
-
-RenderBatchTriangle *CanvasBatcher_Impl::get_triangle_batcher()
-{
-	if (!render_batcher_triangle)
-		render_batcher_triangle = std::shared_ptr<RenderBatchTriangle>(new RenderBatchTriangle(&render_batcher_buffer));
-	return render_batcher_triangle.get();
-}
-
-RenderBatchLine *CanvasBatcher_Impl::get_line_batcher()
-{
-	if (!render_batcher_line)
-		render_batcher_line = std::shared_ptr<RenderBatchLine>(new RenderBatchLine(&render_batcher_buffer));
-	return render_batcher_line.get();
-}
-
-RenderBatchLineTexture *CanvasBatcher_Impl::get_line_texture_batcher()
-{
-	if (!render_batcher_line_texture)
-		render_batcher_line_texture = std::shared_ptr<RenderBatchLineTexture>(new RenderBatchLineTexture(&render_batcher_buffer));
-	return render_batcher_line_texture.get();
-}
-
-RenderBatchPoint *CanvasBatcher_Impl::get_point_batcher()
-{
-	if (!render_batcher_point)
-		render_batcher_point = std::shared_ptr<RenderBatchPoint>(new RenderBatchPoint(&render_batcher_buffer));
-	return render_batcher_point.get();
-}
-
-
 RenderBatchTriangle *CanvasBatcher::get_triangle_batcher()
 {
-	return impl->get_triangle_batcher();
+	return &impl->render_batcher_triangle;
 }
 
 RenderBatchLine *CanvasBatcher::get_line_batcher()
 {
-	return impl->get_line_batcher();
+	return &impl->render_batcher_line;
 }
 
 RenderBatchLineTexture *CanvasBatcher::get_line_texture_batcher()
 {
-	return impl->get_line_texture_batcher();
+	return &impl->render_batcher_line_texture;
 }
 
 RenderBatchPoint *CanvasBatcher::get_point_batcher()
 {
-	return impl->get_point_batcher();
+	return &impl->render_batcher_point;
 }
-
 
 void CanvasBatcher_Impl::flush()
 {

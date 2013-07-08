@@ -41,7 +41,7 @@ class RenderBatchBuffer;
 class RenderBatchPoint : public RenderBatcher
 {
 public:
-	RenderBatchPoint(RenderBatchBuffer *batch_buffer);
+	RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 	void draw_point(Canvas &canvas, Vec2f *line_positions, const Vec4f &point_color, int num_vertices);
 
 private:
