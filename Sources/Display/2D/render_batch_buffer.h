@@ -41,7 +41,7 @@ namespace clan
 class RenderBatchBuffer
 {
 public:
-	RenderBatchBuffer();
+	RenderBatchBuffer(GraphicContext &gc);
 
 	VertexArrayBuffer get_vertex_buffer(GraphicContext &gc, int &out_index);
 

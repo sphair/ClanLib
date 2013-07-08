@@ -35,7 +35,7 @@
 namespace clan
 {
 
-RenderBatchPoint::RenderBatchPoint(RenderBatchBuffer *batch_buffer)
+RenderBatchPoint::RenderBatchPoint(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
 : position(0), batch_buffer(batch_buffer)
 {
 	vertices = (PointVertex *) batch_buffer->buffer;

@@ -35,7 +35,7 @@
 namespace clan
 {
 
-RenderBatchLine::RenderBatchLine(RenderBatchBuffer *batch_buffer)
+RenderBatchLine::RenderBatchLine(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
 : position(0), batch_buffer(batch_buffer)
 {
 	vertices = (LineVertex *) batch_buffer->buffer;

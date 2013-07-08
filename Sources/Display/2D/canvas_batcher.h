@@ -47,7 +47,11 @@ class CanvasBatcher
 {
 public:
 	CanvasBatcher();
+	CanvasBatcher(GraphicContext &gc);
 	~CanvasBatcher();
+
+	/// \brief Returns true if this object is invalid.
+	bool is_null() const { return !impl; }
 
 	void flush();
 	bool set_batcher(GraphicContext &gc, RenderBatcher *batcher);

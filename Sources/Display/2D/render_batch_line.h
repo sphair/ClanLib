@@ -41,7 +41,7 @@ class RenderBatchBuffer;
 class RenderBatchLine : public RenderBatcher
 {
 public:
-	RenderBatchLine(RenderBatchBuffer *batch_buffer);
+	RenderBatchLine(GraphicContext &gc, RenderBatchBuffer *batch_buffer);
 	void draw_line_strip(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
 	void draw_lines(Canvas &canvas, const Vec2f *line_positions, const Vec4f &line_color, int num_vertices);
 

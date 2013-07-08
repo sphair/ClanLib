@@ -36,24 +36,23 @@
 namespace clan
 {
 
-RenderBatchBuffer::RenderBatchBuffer() : current_vertex_buffer(0)
+RenderBatchBuffer::RenderBatchBuffer(GraphicContext &gc) : current_vertex_buffer(0)
 {
+	for (int index=0; index < num_vertex_buffers; index++)
+	{
+		vertex_buffers[index] = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
+	}
 }
 
 VertexArrayBuffer RenderBatchBuffer::get_vertex_buffer(GraphicContext &gc, int &out_index)
 {
-	int index = current_vertex_buffer;
-	out_index = index;
-	if (vertex_buffers[index].is_null())
-	{
-		vertex_buffers[index] = VertexArrayBuffer(gc, vertex_buffer_size, usage_stream_draw);
-	}
+	out_index = current_vertex_buffer;
 
 	current_vertex_buffer++;
 	if (current_vertex_buffer == num_vertex_buffers)
 		current_vertex_buffer = 0;
 
-	return vertex_buffers[index];
+	return vertex_buffers[out_index];
 }
 
 }
