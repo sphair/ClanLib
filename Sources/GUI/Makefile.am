@@ -64,6 +64,7 @@ Components/ListView/listview_icon_list.cpp \
 Components/ListView/listview_column_header.cpp \
 Components/ListView/listview_header.cpp \
 Components/lineedit.cpp \
+Components/window.cpp \
 Components/statusbar.cpp \
 Components/progressbar.cpp \
 Components/groupbox.cpp \

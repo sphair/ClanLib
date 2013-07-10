@@ -57,6 +57,15 @@ namespace CssStr
 	{
 		const std::string type_name = "dragbox";
 	}
+	namespace Window
+	{
+		const std::string type_name = "window";
+		const std::string part_caption = "caption";
+		const std::string part_frameleft = "frameleft";
+		const std::string part_frameright = "frameright";
+		const std::string part_framebottom = "framebottom";
+		const std::string part_buttonclose = "buttonclose";
+	}
 	namespace MessageBox
 	{
 		const std::string type_name = "messagebox";
