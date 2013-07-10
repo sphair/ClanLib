@@ -191,7 +191,7 @@ public:
 	template<typename Type>
 	std::vector<Type> to_vector() const
 	{
-		if (type != type_object)
+		if (type != type_array)
 			throw JsonException("JSON Value is not an array");
 
 		std::vector<Type> list;
