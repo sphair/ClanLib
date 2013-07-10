@@ -35,7 +35,7 @@
 
 namespace clan
 {
-/// \addtogroup clanDisplay_2D clanDisplay 2D
+/// \addtogroup clanCore_Math clanCore Math
 /// \{
 
 class Size;
