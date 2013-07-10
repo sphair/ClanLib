@@ -72,9 +72,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\app.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\GUI.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -130,6 +127,9 @@
       <Filter>CommonCode</Filter>
     </ClInclude>
     <ClInclude Include="..\CommonCode\Sources\balls.h">
+      <Filter>CommonCode</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\app.h">
       <Filter>CommonCode</Filter>
     </ClInclude>
   </ItemGroup>

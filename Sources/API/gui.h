@@ -85,6 +85,7 @@
 #include "GUI/Components/tab_page.h"
 #include "GUI/Components/textedit.h"
 #include "GUI/Components/toolbar.h"
+#include "GUI/Components/window.h"
 #include "GUI/Components/toolbar_item.h"
 #include "GUI/Components/tooltip.h"
 #include "GUI/Components/slider.h"

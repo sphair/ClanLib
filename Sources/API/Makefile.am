@@ -104,6 +104,7 @@ clanGUI_includes = \
 	GUI/Components/listview_item.h \
 	GUI/Components/popupmenu.h \
 	GUI/Components/label.h \
+	GUI/Components/window.h \
 	GUI/Components/listview_icon_list.h \
 	GUI/gui_layout_corners.h \
 	GUI/Providers/gui_window_manager_provider.h \
