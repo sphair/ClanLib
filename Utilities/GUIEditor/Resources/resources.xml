@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<resources>
+  <image name="MainMenuBg">
+    <image file="Graphics/editor_bg.png" />
+  </image>
+  <image name="ViewBorder">
+    <image file="Graphics/viewborder.png" />
+  </image>
+  <image name="PropertyComponent">
+    <image file="Graphics/propertycomponent.png" />
+  </image>
+  <image name="ToolbarHorz">
+    <image file="Graphics/toolbar_horz.png" />
+  </image>
+  <image name="ToolbarHorzItemHot">
+    <image file="Graphics/toolbar_horz_item_hot.png" />
+  </image>
+  <image name="ToolbarVertItemHot">
+    <image file="Graphics/toolbar_vert_item_hot.png" />
+  </image>
+  <image name="ToolbarVertItemSelected">
+    <image file="Graphics/toolbar_vert_item_selected.png" />
+  </image>
+  <image name="StatusbarComponent">
+    <image file="Graphics/statusbarcomponent.png" />
+  </image>
+  <image name="WindowFrame">
+    <image file="Graphics/windowframe.png" />
+  </image>
+  <sprite name="Pointer">
+    <image file="Graphics/pointer.png" />
+  </sprite>
+  <sprite name="ToolbarNew">
+    <image file="Graphics/new_16x16.png" />
+  </sprite>
+  <sprite name="ToolbarOpen">
+    <image file="Graphics/open_16x16.png" />
+  </sprite>
+  <sprite name="ToolbarSaveAs">
+    <image file="Graphics/save_16x16.png" />
+  </sprite>
+  <sprite name="ToolbarSave">
+    <image file="Graphics/save_16x16.png" />
+  </sprite>
+  <sprite name="ComponentIconCustom">
+    <image file="Graphics/custom.png" />
+  </sprite>
+  <sprite name="ComponentIconCheckBox">
+    <image file="Graphics/check.png" />
+  </sprite>
+  <sprite name="ComponentIconRadioButton">
+    <image file="Graphics/radio.png" />
+  </sprite>
+  <sprite name="ComponentIconLabel">
+    <image file="Graphics/label.png" />
+  </sprite>
+  <sprite name="ComponentIconLineEdit">
+    <image file="Graphics/lineedit.png" />
+  </sprite>
+  <sprite name="ComponentIconComboBox">
+    <image file="Graphics/combobox.png" />
+  </sprite>
+  <sprite name="ComponentIconListView">
+    <image file="Graphics/listview.png" />
+  </sprite>
+  <sprite name="ComponentIconMenuBar">
+    <image file="Graphics/menu.png" />
+  </sprite>
+  <sprite name="ComponentIconPushButton">
+    <image file="Graphics/pushbutton.png" />
+  </sprite>
+  <sprite name="ComponentIconSlider">
+    <image file="Graphics/slider.png" />
+  </sprite>
+  <sprite name="ComponentIconSpin">
+    <image file="Graphics/spin.png" />
+  </sprite>
+  <sprite name="ComponentIconImageView">
+    <image file="Graphics/image.png" />
+  </sprite>
+  <sprite name="ComponentIconHScrollBar">
+    <image file="Graphics/scroll_horizontal.png" />
+  </sprite>
+  <sprite name="ComponentIconVScrollBar">
+    <image file="Graphics/scroll_vertical.png" />
+  </sprite>
+  <sprite name="ComponentIconTab">
+    <image file="Graphics/tab.png" />
+  </sprite>
+  <sprite name="ComponentIconFrame">
+    <image file="Graphics/frame.png" />
+  </sprite>
+  <sprite name="ComponentIconStatusBar">
+    <image file="Graphics/statusbar.png" />
+  </sprite>
+  <sprite name="ComponentIconToolBar">
+    <image file="Graphics/toolbar.png" />
+  </sprite>
+  <sprite name="ImageViewDefaultImage">
+    <image file="Graphics/image_large.png"/>
+  </sprite>
+</resources>
