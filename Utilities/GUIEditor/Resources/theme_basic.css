@@ -1,197 +1,189 @@
 grid window-frame
 {
-	bg-image:WindowFrame; 
-	bg-image-sizing-left:9;
-	bg-image-sizing-right:9;
-	bg-image-sizing-top:30;
-	bg-image-sizing-bottom:9;
-	bg-image-sizing:stretch; 
-	border-left:9;
-	border-right:9;
-	border-top:30;
-	border-bottom:9;
+	border-image-source:url('res:WindowFrame'); 
+	border-image-slice:30 9 9 9 fill;
+	border-image-width:30px 9px 9px 9px;
+	border-image-repeat:stretch; 
+
+	border-left:9px;
+	border-right:9px;
+	border-top:30px;
+	border-bottom:9px;
 }
 
 window#editor
 {
-	bg-image:MainMenuBg;
+	border-image-source:url('res:MainMenuBg'); 
 }
 
 viewborder
 {
-	bg-image-sizing-left:1;
-	bg-image-sizing-right:1;
-	bg-image-sizing-top:1;
-	bg-image-sizing-bottom:1;
-	bg-image-sizing:stretch; 
-	border-left:1;
-	border-right:0;
-	border-top:0;
-	border-bottom:0;
-	bg-image:ViewBorder; 
+	border-image-slice:1 1 1 1 fill;
+	border-image-width:1px 1px 1px 1px;
+	border-image-repeat:stretch; 
+
+	border-left:1px;
+	border-right:0px;
+	border-top:0px;
+	border-bottom:0px;
+	border-image-source:url('res:ViewBorder'); 
 }
 
 statusbar
 {
-    bg-image:StatusbarComponent;
-	bg-image-sizing-left:0;
-	bg-image-sizing-right:0;
-	bg-image-sizing-top:6;
-	bg-image-sizing-bottom:0;
-	bg-image-sizing:stretch; 
-	border-left:7;
-	border-right:7;
-	border-top:7;
-	border-bottom:1;
+    border-image-source:url('res:StatusbarComponent'); 
+	border-image-slice:6 0 0 0 fill;
+	border-image-width:6px 0px 0px 0px;
+	border-image-repeat:stretch; 
+
+	border-left:7px;
+	border-right:7px;
+	border-top:7px;
+	border-bottom:1px;
 }
 
 label.properties_header
 {
-	text-color:white;
-	bg-color:#316ac5;
-	preferred-height:16;
-	padding-left:4;
+	color:white;
+	background-color:#316ac5;
+	height:16px;
+	padding-left:4px;
 }
 
 label.properties_info
 {
-	text-color:gray;
-	bg-color:#eeee53;
-	preferred-height:16;
-	padding-left:4;
-	padding-top:5;
-	padding-bottom:5;
-	padding-right:5;
+	color:gray;
+	background-color:#eeee53;
+	height:16px;
+	padding-left:4px;
+	padding-top:5px;
+	padding-bottom:5px;
+	padding-right:5px;
 }
 
 label.properties
 {
-	bg-color:white;
-	preferred-width:80;
-	preferred-height:22;
+	background-color:white;
+	width:80px;
+	height:22px;
 	padding-left:4;
-	text-color:blue;
+	color:blue;
 
 	border-color:gray;
-	border-bottom:1;
-	border-left:1;
-	border-top:1;
+	border-bottom:1px;
+	border-left:1px;
+	border-top:1px;
 }
 
 lineedit.properties
 {
-	bg-image:;
-	bg-color:white;
-	preferred-height:22;
+	border-image-source:;
+	background-color:white;
+	height:22px;
 
-	padding-left:4;
-	padding-right:16;
+	padding-left:4px;
+	padding-right:16px;
 	
 	border-color:gray;
-	border-left:1;
-	border-bottom:1;
-	border-right:1;
-	border-top:1;
+	border-left:1px;
+	border-bottom:1px;
+	border-right:1px;
+	border-top:1px;
 }
 
 lineedit.properties:disabled
 {
-    text-color:gray;
-    bg-color:#f4f4f4;
+    color:gray;
+    background-color:#f4f4f4;
 }
 
 
 checkbox.properties
 {
-	bg-image:;
-	bg-color:white;
-	preferred-height:22;
+	border-image-source:;
+	background-color:white;
+	height:22px;
 
-	padding-top:3;
-	padding-left:4;
-	padding-right:16;
+	padding-top:3px;
+	padding-left:4px;
+	padding-right:16px;
 	
 	border-color:gray;
-	border-left:1;
-	border-bottom:1;
-	border-right:1;
-	border-top:1;
+	border-left:1px;
+	border-bottom:1px;
+	border-right:1px;
+	border-top:1px;
 }
 
 toolbar.horizontal
 {
-    bg-image:ToolbarHorz;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:0;
-	bg-image-sizing-bottom:4;
-	bg-image-sizing:stretch; 
-	preferred-height:31;
-	border-left:1;
-	border-right:1;
-	border-top:3;
-	border-bottom:3;
-	padding-left:1;
+    border-image-source:url('res:ToolbarHorz');
+	border-image-slice:0 4 4 4 fill;
+	border-image-width:0px 4px 4px 4px;
+	border-image-repeat:stretch; 
+	height:31px;
+	border-left:1px;
+	border-right:1px;
+	border-top:3px;
+	border-bottom:3px;
+	padding-left:1px;
 }
 
 toolbar.horizontal item
 {
-	border-left:1;
-	border-right:1;
-	border-top:2;
-	border-bottom:2;
-	preferred-height:24;
-	padding-right:5;
-	padding-left:5;
-	padding-top:1;
-	padding-bottom:1;
-	text-gap:3;
-	icon-width:16;
-	icon-height:16;
+	border-left:1px;
+	border-right:1px;
+	border-top:2px;
+	border-bottom:2px;
+	height:24px;
+	padding-right:5px;
+	padding-left:5px;
+	padding-top:1px;
+	padding-bottom:1px;
+	text-gap:3px;
+	icon-width:16px;
+	icon-height:16px;
 }
 
 toolbar.horizontal item:hot
 {
-    bg-image:ToolbarHorzItemHot;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+    border-image-source:url('res:ToolbarHorzItemHot'); 
+	border-image-slice:2 4 2 4 fill;
+	border-image-width:2px 4px 2px 4px;
+	border-image-repeat:stretch; 
 }
 
 toolbar.vertical
 {
-    bg-image:;
-    bg-color:white;
-	border-left:0;
-	border-right:0;
-	border-top:0;
-	border-bottom:0;
-	padding-top:0;
+    border-image-source:
+    background-color:white;
+	border-left:0px;
+	border-right:0px;
+	border-top:0px;
+	border-bottom:0px;
+	padding-top:0px;
 }
 
 toolbar.vertical item
 {
-	border-left:7;
-	border-right:7;
+	border-left:7px;
+	border-right:7px;
 }
 
 toolbar.vertical item:hot
 {
-    bg-image:ToolbarVertItemHot;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+    border-image-source:url('res:ToolbarVertItemHot'); 
+	border-image-slice:2 4 2 4 fill;
+	border-image-width:2px 4px 2px 4px;
+	border-image-repeat:stretch; 
 }
 
 toolbar.vertical item:pressed
 {
-    bg-image:ToolbarVertItemSelected;
-	bg-image-sizing-left:4;
-	bg-image-sizing-right:4;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
+    border-image-source:url('res:ToolbarVertItemSelected'); 
+	border-image-slice:2 4 2 4 fill;
+	border-image-width:2px 4px 2px 4px;
+	border-image-repeat:stretch; 
 }
 
 toolbar.vertical#tools
@@ -201,109 +193,102 @@ toolbar.vertical#tools
 
 toolbar.vertical#tools item
 {
-/*	padding-top:1;
-	padding-bottom:0;
-	padding-left:3;*/
-	text-gap:4;
-	icon-width:24;
-	icon-height:24;
-	preferred-height:26;
+	text-gap:4px;
+	icon-width:24px;
+	icon-height:24px;
+	height:26px;
 }
 
 property-component 
 {
-	bg-image:PropertyComponent; 
+	border-image-source:url('res:PropertyComponent'); 
 
-	bg-image-sizing-left:3;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:3;
-	bg-image-sizing-bottom:3;
-	bg-image-sizing:stretch; 
+	border-image-slice:3 3 3 3 fill;
+	border-image-width:3px 3px 3px 3px;
+	border-image-repeat:stretch; 
 	
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
 }
 
 property-component header
 {
-	#bg-image:ListViewHeader;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:2;
-	bg-image-sizing-top:2;
-	bg-image-sizing-bottom:2;
-	bg-image-sizing:stretch;
-	
-	preferred-height: 20;
+	border-image-slice:2 2 2 2 fill;
+	border-image-width:2px 2px 2px 2px;
+	border-image-repeat:stretch; 	
+	height: 20px;
 }
 
 property-component header name
 {
-	bg-image:ListViewColumnHeaderNormal;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:14;
+	border-image-source:url('res:ListViewColumnHeaderNormal'); 
+	border-image-slice:9 3 14 2 fill;
+	border-image-width:9px 3px 14px 2px;
+	border-image-repeat:stretch; 	
+
+	bg-image-sizing-left:2px;
+	bg-image-sizing-right:3px;
+	bg-image-sizing-top:9px;
+	bg-image-sizing-bottom:14px;
 	bg-image-sizing:stretch;
 	
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 property-component header value
 {
-	bg-image:ListViewColumnHeaderNormal;
-	bg-image-sizing-left:2;
-	bg-image-sizing-right:3;
-	bg-image-sizing-top:9;
-	bg-image-sizing-bottom:14;
-	bg-image-sizing:stretch;
+	border-image-source:url('res:ListViewColumnHeaderNormal'); 
+	border-image-slice:9 3 14 2 fill;
+	border-image-width:9px 3px 14px 2px;
+	border-image-repeat:stretch; 	
 	
-	border-top:3;
-	border-left:7;
-	border-right:3;
-	border-bottom:3;
+	border-top:3px;
+	border-left:7px;
+	border-right:3px;
+	border-bottom:3px;
 }
 
 property-component row
 {
-	bg-color:#ffffff;
-	border-top:0;
-	border-bottom:0;
+	background-color:#ffffff;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 property-component row:alternate
 {
-	bg-color:#eeeeee;
-	border-top:0;
-	border-bottom:0;
+	background-color:#eeeeee;
+	border-top:0px;
+	border-bottom:0px;
 }
 
 property-component item name
 {
-	text-color:black;
+	color:black;
     
-	preferred-width:100;
-	preferred-height:17;
+	width:100px;
+	height:17px;
 
-	padding-top:2;
-	padding-left:4;
-	padding-right:0;
-	padding-bottom:0;
+	padding-top:2px;
+	padding-left:4px;
+	padding-right:0px;
+	padding-bottom:0px;
 }
 
 property-component item value
 {
-	text-color:black;
+	color:black;
     
-	preferred-width:100;
-	preferred-height:17;
+	width:100px;
+	height:17px;
 
-	padding-top:2;
-	padding-left:4;
-	padding-right:0;
-	padding-bottom:0;
+	padding-top:2px;
+	padding-left:4px;
+	padding-right:0px;
+	padding-bottom:0px;
 }
