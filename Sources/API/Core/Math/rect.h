@@ -352,6 +352,11 @@ public:
 		result.right  = min(right, rect.right);
 		result.top    = max(top, rect.top);
 		result.bottom = min(bottom, rect.bottom);
+		if (result.right < result.left)
+			result.left = result.right;
+		if (result.bottom < result.top)
+			result.top = result.bottom;
+
 		*this = result;
 		return *this;
 	}
