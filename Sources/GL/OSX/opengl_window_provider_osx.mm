@@ -47,8 +47,6 @@
 namespace clan
 {
 
-// static CFBundleRef cl_gBundleRefOpenGL = 0;
-	
 class OpenGLWindowProvider_Impl
 {
 public:
@@ -98,7 +96,15 @@ OpenGLWindowProvider::~OpenGLWindowProvider()
 
 ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
 {
-	return (void (*)())0;
+	static CFBundleRef bundle = 0;
+	if (bundle == 0)
+	{
+		bundle = CFBundleGetBundleWithIdentifier(CFSTR("com.apple.opengl"));
+		if (bundle == 0)
+			throw Exception("Unable to find com.apple.opengl bundle");
+	}
+	
+	return (ProcAddress *)CFBundleGetFunctionPointerForName(bundle, CFStringCreateWithCStringNoCopy(0, function_name.c_str(), CFStringGetSystemEncoding(), 0));
 }
 
 Rect OpenGLWindowProvider::get_geometry() const
