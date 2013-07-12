@@ -7,14 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4DC8E1581790824800B1CC9A /* libclanApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC8E1541790824800B1CC9A /* libclanApp.a */; };
+		4DC8E1591790824800B1CC9A /* libclanCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC8E1551790824800B1CC9A /* libclanCore.a */; };
+		4DC8E15A1790824800B1CC9A /* libclanDisplay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC8E1561790824800B1CC9A /* libclanDisplay.a */; };
+		4DC8E15B1790824800B1CC9A /* libclanGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC8E1571790824800B1CC9A /* libclanGL.a */; };
+		4DC9FE9817908F8100CA5004 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4DC9FE9717908F8100CA5004 /* OpenGL.framework */; };
 		52B293C516658E1C00ABD272 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B293C416658E1C00ABD272 /* Cocoa.framework */; };
 		52B293CF16658E1C00ABD272 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 52B293CD16658E1C00ABD272 /* InfoPlist.strings */; };
-		52B293D116658E1C00ABD272 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B293D016658E1C00ABD272 /* main.m */; };
-		52B293D816658E1C00ABD272 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 52B293D716658E1C00ABD272 /* AppDelegate.m */; };
-		52B293E516658E6E00ABD272 /* libclanApp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B293E116658E6E00ABD272 /* libclanApp.a */; };
-		52B293E616658E6E00ABD272 /* libclanCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B293E216658E6E00ABD272 /* libclanCore.a */; };
-		52B293E716658E6E00ABD272 /* libclanDisplay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B293E316658E6E00ABD272 /* libclanDisplay.a */; };
-		52B293E816658E6E00ABD272 /* libclanGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52B293E416658E6E00ABD272 /* libclanGL.a */; };
 		52B293F216658EBF00ABD272 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 52B293EA16658EBF00ABD272 /* logo.png */; };
 		52B293F316658EBF00ABD272 /* basic2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52B293EC16658EBF00ABD272 /* basic2d.cpp */; };
 		52B293F416658EC000ABD272 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52B293EE16658EBF00ABD272 /* precomp.cpp */; };
@@ -22,6 +21,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4DC8E1541790824800B1CC9A /* libclanApp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanApp.a; path = ../../../Build/OSX/lib/libclanApp.a; sourceTree = "<group>"; };
+		4DC8E1551790824800B1CC9A /* libclanCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanCore.a; path = ../../../Build/OSX/lib/libclanCore.a; sourceTree = "<group>"; };
+		4DC8E1561790824800B1CC9A /* libclanDisplay.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanDisplay.a; path = ../../../Build/OSX/lib/libclanDisplay.a; sourceTree = "<group>"; };
+		4DC8E1571790824800B1CC9A /* libclanGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanGL.a; path = ../../../Build/OSX/lib/libclanGL.a; sourceTree = "<group>"; };
+		4DC9FE9717908F8100CA5004 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		52B293C016658E1C00ABD272 /* Basic2D.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Basic2D.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		52B293C416658E1C00ABD272 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		52B293C716658E1C00ABD272 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -29,14 +33,11 @@
 		52B293C916658E1C00ABD272 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		52B293CC16658E1C00ABD272 /* Basic2D-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Basic2D-Info.plist"; sourceTree = "<group>"; };
 		52B293CE16658E1C00ABD272 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		52B293D016658E1C00ABD272 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		52B293D216658E1C00ABD272 /* Basic2D-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Basic2D-Prefix.pch"; sourceTree = "<group>"; };
-		52B293D616658E1C00ABD272 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		52B293D716658E1C00ABD272 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		52B293E116658E6E00ABD272 /* libclanApp.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libclanApp.a; path = ../build/Release/libclanApp.a; sourceTree = "<group>"; };
-		52B293E216658E6E00ABD272 /* libclanCore.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libclanCore.a; path = ../build/Release/libclanCore.a; sourceTree = "<group>"; };
-		52B293E316658E6E00ABD272 /* libclanDisplay.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libclanDisplay.a; path = ../build/Release/libclanDisplay.a; sourceTree = "<group>"; };
-		52B293E416658E6E00ABD272 /* libclanGL.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libclanGL.a; path = ../build/Release/libclanGL.a; sourceTree = "<group>"; };
+		52B293E116658E6E00ABD272 /* libclanApp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanApp.a; path = ../build/Release/libclanApp.a; sourceTree = "<group>"; };
+		52B293E216658E6E00ABD272 /* libclanCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanCore.a; path = ../build/Release/libclanCore.a; sourceTree = "<group>"; };
+		52B293E316658E6E00ABD272 /* libclanDisplay.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanDisplay.a; path = ../build/Release/libclanDisplay.a; sourceTree = "<group>"; };
+		52B293E416658E6E00ABD272 /* libclanGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanGL.a; path = ../build/Release/libclanGL.a; sourceTree = "<group>"; };
 		52B293EA16658EBF00ABD272 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		52B293EC16658EBF00ABD272 /* basic2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic2d.cpp; sourceTree = "<group>"; };
 		52B293ED16658EBF00ABD272 /* basic2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basic2d.h; sourceTree = "<group>"; };
@@ -51,11 +52,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52B293E516658E6E00ABD272 /* libclanApp.a in Frameworks */,
-				52B293E616658E6E00ABD272 /* libclanCore.a in Frameworks */,
-				52B293E716658E6E00ABD272 /* libclanDisplay.a in Frameworks */,
-				52B293E816658E6E00ABD272 /* libclanGL.a in Frameworks */,
+				4DC9FE9817908F8100CA5004 /* OpenGL.framework in Frameworks */,
 				52B293C516658E1C00ABD272 /* Cocoa.framework in Frameworks */,
+				4DC8E1581790824800B1CC9A /* libclanApp.a in Frameworks */,
+				4DC8E1591790824800B1CC9A /* libclanCore.a in Frameworks */,
+				4DC8E15A1790824800B1CC9A /* libclanDisplay.a in Frameworks */,
+				4DC8E15B1790824800B1CC9A /* libclanGL.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +67,11 @@
 		52B293B516658E1C00ABD272 = {
 			isa = PBXGroup;
 			children = (
+				4DC9FE9717908F8100CA5004 /* OpenGL.framework */,
+				4DC8E1541790824800B1CC9A /* libclanApp.a */,
+				4DC8E1551790824800B1CC9A /* libclanCore.a */,
+				4DC8E1561790824800B1CC9A /* libclanDisplay.a */,
+				4DC8E1571790824800B1CC9A /* libclanGL.a */,
 				52B293CA16658E1C00ABD272 /* Basic2D */,
 				52B293C316658E1C00ABD272 /* Frameworks */,
 				52B293C116658E1C00ABD272 /* Products */,
@@ -105,8 +112,6 @@
 		52B293CA16658E1C00ABD272 /* Basic2D */ = {
 			isa = PBXGroup;
 			children = (
-				52B293D616658E1C00ABD272 /* AppDelegate.h */,
-				52B293D716658E1C00ABD272 /* AppDelegate.m */,
 				52B293E916658EBF00ABD272 /* Resources */,
 				52B293EB16658EBF00ABD272 /* Sources */,
 				52B293CB16658E1C00ABD272 /* Supporting Files */,
@@ -119,7 +124,6 @@
 			children = (
 				52B293CC16658E1C00ABD272 /* Basic2D-Info.plist */,
 				52B293CD16658E1C00ABD272 /* InfoPlist.strings */,
-				52B293D016658E1C00ABD272 /* main.m */,
 				52B293D216658E1C00ABD272 /* Basic2D-Prefix.pch */,
 			);
 			name = "Supporting Files";
@@ -211,8 +215,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52B293D116658E1C00ABD272 /* main.m in Sources */,
-				52B293D816658E1C00ABD272 /* AppDelegate.m in Sources */,
 				52B293F316658EBF00ABD272 /* basic2d.cpp in Sources */,
 				52B293F416658EC000ABD272 /* precomp.cpp in Sources */,
 				52B293F516658EC000ABD272 /* program.cpp in Sources */,
@@ -293,8 +295,15 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Basic2D/Basic2D-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)";
+				HEADER_SEARCH_PATHS = (
+					"$(TARGET_BUILD_DIR)",
+					"/Users/sphair/Source/ClanLib-3.0/Build/OSX/include",
+				);
 				INFOPLIST_FILE = "Basic2D/Basic2D-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Build/OSX/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -309,6 +318,10 @@
 				GCC_PREFIX_HEADER = "Basic2D/Basic2D-Prefix.pch";
 				HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)";
 				INFOPLIST_FILE = "Basic2D/Basic2D-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Build/OSX/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -333,6 +346,7 @@
 				52B293E016658E1C00ABD272 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
