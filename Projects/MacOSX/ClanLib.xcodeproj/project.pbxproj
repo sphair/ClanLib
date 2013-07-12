@@ -161,7 +161,6 @@
 		1835BE4816361C930009AA23 /* zip_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835AFCB1636168C0009AA23 /* zip_reader.cpp */; };
 		1835BE4A16361C930009AA23 /* zip_writer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835AFCD1636168C0009AA23 /* zip_writer.cpp */; };
 		1835BE4B16361C930009AA23 /* zlib_compression.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835AFCE1636168C0009AA23 /* zlib_compression.cpp */; };
-		1835BE5416361E880009AA23 /* clanapp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1835AE911636168C0009AA23 /* clanapp.mm */; };
 		1835BE611636225D0009AA23 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B39C1636168C0009AA23 /* precomp.cpp */; };
 		1835BE621636225D0009AA23 /* setupnetwork_unix.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B39E1636168C0009AA23 /* setupnetwork_unix.cpp */; };
 		1835BE651636225D0009AA23 /* client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3901636168C0009AA23 /* client.cpp */; };
@@ -418,6 +417,7 @@
 		1835C220163631AA0009AA23 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C51636168C0009AA23 /* precomp.cpp */; };
 		1835C222163631AA0009AA23 /* setup_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C71636168C0009AA23 /* setup_gl.cpp */; };
 		18C248B5177B98F6008F7155 /* opengl_window_provider_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */; };
+		18C5CF0317908804000A8D2F /* clanapp_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C5CF0217908804000A8D2F /* clanapp_osx.mm */; };
 		18C75FB9177B7EE5009723F2 /* gl3_buffer_object_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */; };
 		18C75FBB177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */; };
 		18C75FBD177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F81177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp */; };
@@ -842,7 +842,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1835AE911636168C0009AA23 /* clanapp.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = clanapp.mm; sourceTree = "<group>"; };
 		1835AE991636168C0009AA23 /* cl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cl.h; sourceTree = "<group>"; };
 		1835AE9A1636168C0009AA23 /* cl_d3d10.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cl_d3d10.h; sourceTree = "<group>"; };
 		1835AE9B1636168C0009AA23 /* cl_d3d11.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cl_d3d11.h; sourceTree = "<group>"; };
@@ -1523,6 +1522,7 @@
 		1835C1ED163631850009AA23 /* libclanGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = opengl_window_provider_osx.mm; sourceTree = "<group>"; };
 		18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_window_provider_osx.h; sourceTree = "<group>"; };
+		18C5CF0217908804000A8D2F /* clanapp_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = clanapp_osx.mm; sourceTree = "<group>"; };
 		18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_buffer_object_provider.cpp; sourceTree = "<group>"; };
 		18C75F7E177B7EE5009723F2 /* gl3_buffer_object_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_buffer_object_provider.h; sourceTree = "<group>"; };
 		18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_element_array_buffer_provider.cpp; sourceTree = "<group>"; };
@@ -2896,7 +2896,7 @@
 		1835AE901636168C0009AA23 /* MacOS */ = {
 			isa = PBXGroup;
 			children = (
-				1835AE911636168C0009AA23 /* clanapp.mm */,
+				18C5CF0217908804000A8D2F /* clanapp_osx.mm */,
 			);
 			path = MacOS;
 			sourceTree = "<group>";
@@ -7175,7 +7175,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1835BE5416361E880009AA23 /* clanapp.mm in Sources */,
+				18C5CF0317908804000A8D2F /* clanapp_osx.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
