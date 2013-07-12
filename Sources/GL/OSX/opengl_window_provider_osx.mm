@@ -210,6 +210,9 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	
 	std::vector<NSOpenGLPixelFormatAttribute> attributes;
 	
+	attributes.push_back(NSOpenGLPFAOpenGLProfile);
+	attributes.push_back(NSOpenGLProfileVersion3_2Core);
+	
 	attributes.push_back(NSOpenGLPFADoubleBuffer);
 	attributes.push_back(NSOpenGLPFAColorSize);
 	attributes.push_back(24);
