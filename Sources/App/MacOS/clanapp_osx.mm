@@ -36,14 +36,50 @@
 #include "API/Core/Text/console.h"
 
 #import <CoreFoundation/CoreFoundation.h>
+#import <Cocoa/Cocoa.h>
 
 namespace clan
 {
-
-void *cl_app_on_thread_id();
-void cl_app_on_awake_thread(void *thread_id);
-
+	
+	void *cl_app_on_thread_id();
+	void cl_app_on_awake_thread(void *thread_id);
+	std::vector<std::string> main_args;
 }
+
+@interface AppDelegate : NSObject <NSApplicationDelegate>
+@end
+ 
+@implementation AppDelegate
+ 
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	using namespace clan;
+	
+	if (Application::enable_catch_exceptions)
+	{
+		try
+		{
+			Application::main(main_args);
+		}
+		catch(Exception &exception)
+		{
+			// Create a console window for text-output if not available
+			std::string console_name("Console");
+			if (!main_args.empty())
+				console_name = main_args[0];
+			
+			ConsoleWindow console(console_name, 80, 160);
+			Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
+			console.display_close_message();
+		}
+	}
+	else
+	{
+		Application::main(main_args);
+	}
+}
+ 
+@end
 
 int main(int argc, char **argv)
 {
@@ -55,36 +91,13 @@ int main(int argc, char **argv)
 		return 255;
 	}
 
-	std::vector<std::string> main_args;
 	for (int i = 0; i < argc; i++)
 		main_args.push_back(argv[i]);
     
     KeepAlive::func_thread_id().set(&cl_app_on_thread_id);
     KeepAlive::func_awake_thread().set(&cl_app_on_awake_thread);
 
-	if (clan::Application::enable_catch_exceptions)
-	{
-		try
-		{
-			return clan::Application::main(main_args);
-		}
-		catch(clan::Exception &exception)
-		{
-			// Create a console window for text-output if not available
-			std::string console_name("Console");
-			if (!main_args.empty())
-				console_name = main_args[0];
-			
-			clan::ConsoleWindow console(console_name, 80, 160);
-			clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			console.display_close_message();
-		}
-		return 255;
-	}
-	else
-	{
-		return clan::Application::main(main_args);
-	}
+	return NSApplicationMain(argc, (const char **)argv);
 }
 
 namespace clan
