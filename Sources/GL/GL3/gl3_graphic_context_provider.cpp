@@ -182,7 +182,7 @@ void GL3GraphicContextProvider::get_opengl_version(int &version_major, int &vers
 	*/
 		OpenGL::set_active(this);
 
-		#if defined(__APPLE__)
+		#if defined(__IOS__)
 			opengl_version_major = 0;
 			opengl_version_minor = 0;
 			glGetIntegerv(GL_MAJOR_VERSION, &opengl_version_major);
