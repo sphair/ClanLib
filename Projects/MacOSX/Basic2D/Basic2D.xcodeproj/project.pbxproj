@@ -34,10 +34,6 @@
 		52B293CC16658E1C00ABD272 /* Basic2D-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Basic2D-Info.plist"; sourceTree = "<group>"; };
 		52B293CE16658E1C00ABD272 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		52B293D216658E1C00ABD272 /* Basic2D-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Basic2D-Prefix.pch"; sourceTree = "<group>"; };
-		52B293E116658E6E00ABD272 /* libclanApp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanApp.a; path = ../build/Release/libclanApp.a; sourceTree = "<group>"; };
-		52B293E216658E6E00ABD272 /* libclanCore.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanCore.a; path = ../build/Release/libclanCore.a; sourceTree = "<group>"; };
-		52B293E316658E6E00ABD272 /* libclanDisplay.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanDisplay.a; path = ../build/Release/libclanDisplay.a; sourceTree = "<group>"; };
-		52B293E416658E6E00ABD272 /* libclanGL.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libclanGL.a; path = ../build/Release/libclanGL.a; sourceTree = "<group>"; };
 		52B293EA16658EBF00ABD272 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		52B293EC16658EBF00ABD272 /* basic2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = basic2d.cpp; sourceTree = "<group>"; };
 		52B293ED16658EBF00ABD272 /* basic2d.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basic2d.h; sourceTree = "<group>"; };
@@ -68,10 +64,6 @@
 			isa = PBXGroup;
 			children = (
 				4DC9FE9717908F8100CA5004 /* OpenGL.framework */,
-				4DC8E1541790824800B1CC9A /* libclanApp.a */,
-				4DC8E1551790824800B1CC9A /* libclanCore.a */,
-				4DC8E1561790824800B1CC9A /* libclanDisplay.a */,
-				4DC8E1571790824800B1CC9A /* libclanGL.a */,
 				52B293CA16658E1C00ABD272 /* Basic2D */,
 				52B293C316658E1C00ABD272 /* Frameworks */,
 				52B293C116658E1C00ABD272 /* Products */,
@@ -89,10 +81,10 @@
 		52B293C316658E1C00ABD272 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				52B293E116658E6E00ABD272 /* libclanApp.a */,
-				52B293E216658E6E00ABD272 /* libclanCore.a */,
-				52B293E316658E6E00ABD272 /* libclanDisplay.a */,
-				52B293E416658E6E00ABD272 /* libclanGL.a */,
+				4DC8E1541790824800B1CC9A /* libclanApp.a */,
+				4DC8E1551790824800B1CC9A /* libclanCore.a */,
+				4DC8E1561790824800B1CC9A /* libclanDisplay.a */,
+				4DC8E1571790824800B1CC9A /* libclanGL.a */,
 				52B293C416658E1C00ABD272 /* Cocoa.framework */,
 				52B293C616658E1C00ABD272 /* Other Frameworks */,
 			);
@@ -296,8 +288,8 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Basic2D/Basic2D-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
-					"$(TARGET_BUILD_DIR)",
-					"/Users/sphair/Source/ClanLib-3.0/Build/OSX/include",
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Build/OSX/include\"",
 				);
 				INFOPLIST_FILE = "Basic2D/Basic2D-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -316,7 +308,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Basic2D/Basic2D-Prefix.pch";
-				HEADER_SEARCH_PATHS = "$(TARGET_BUILD_DIR)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../Build/OSX/include\"",
+				);
 				INFOPLIST_FILE = "Basic2D/Basic2D-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

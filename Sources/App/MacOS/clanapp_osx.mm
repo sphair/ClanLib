@@ -97,7 +97,11 @@ int main(int argc, char **argv)
     KeepAlive::func_thread_id().set(&cl_app_on_thread_id);
     KeepAlive::func_awake_thread().set(&cl_app_on_awake_thread);
 
-	return NSApplicationMain(argc, (const char **)argv);
+	AppDelegate *appDelegate = [[AppDelegate alloc] init];
+	[NSApplication sharedApplication];
+	[NSApp setDelegate: appDelegate];
+	[NSApp run];
+	return 0;
 }
 
 namespace clan
