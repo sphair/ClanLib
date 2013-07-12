@@ -48,7 +48,7 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 #elif defined(__APPLE__)
-#include "AGL/opengl_window_provider_agl.h"
+#include "OSX/opengl_window_provider_osx.h"
 #else
 #include <GL/gl.h>
 #endif
@@ -116,10 +116,9 @@ TextureFormat_GL OpenGL::get_textureformat(TextureFormat format)
 
 	switch (format)
 	{
-#ifdef __APPLE__
+#ifdef __IOS__
 		case tf_rgb8: tf.internal_format = GL_RGB8; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 		case tf_rgb8ui: tf.internal_format = GL_RGB8UI; tf.pixel_format = GL_RGB; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
-		case cl_rgba: tf.internal_format = GL_RGBA; tf.pixel_format = GL_RGBA; tf.pixel_datatype = fixme; break;
 		case tf_rgba8i: tf.internal_format = GL_RGBA8I; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_BYTE; break;
 		case tf_rgba8ui: tf.internal_format = GL_RGBA8UI; tf.pixel_format = GL_RGBA; tf.pixel_datatype = GL_UNSIGNED_BYTE; break;
 
@@ -307,8 +306,10 @@ void OpenGL::set_active(const OpenGLGraphicContextProvider * const gc_provider)
 		{
 #		if defined(WIN32)
 			wglMakeCurrent(NULL, NULL);
+#		elif defined(__IOS__)
+			[EAGLContext setCurrentContext:nil];
 #		elif defined(__APPLE__)
-            cl_agl_make_none_current();
+            
 #		else
 			//Note: glX may not even be available. Also glXGetCurrentDisplay() may fail
 			// Hopefully this will not matter!
