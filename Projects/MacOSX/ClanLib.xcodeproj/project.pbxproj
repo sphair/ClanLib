@@ -6982,7 +6982,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -d \"../../Build/OSX/include\" ]; then rm -rf ../../Build/OSX/include/; fi\nmkdir ../../Build/OSX/include\ncp -r \"${PROJECT_DIR}/../../Sources/API\" \"../../Build/OSX/include/ClanLib\"";
+			shellScript = "if [ -d \"../../Build/OSX/include\" ]; then rm -rf ../../Build/OSX/include/; fi\nmkdir ../../Build/OSX/include\ncp -r \"${PROJECT_DIR}/../../Sources/API\" \"../../Build/OSX/include/ClanLib\"\nfind \"../../Build/OSX/include/ClanLib\" -name '.svn' | xargs rm -rf";
 		};
 /* End PBXShellScriptBuildPhase section */
 
