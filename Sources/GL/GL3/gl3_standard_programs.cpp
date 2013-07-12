@@ -83,14 +83,14 @@ const std::string::value_type *cl_glsl15_fragment_single_texture =
 	"in vec4 Color; "
 	"in vec2 TexCoord; "
 	"out vec4 cl_FragColor;"
-	"void main(void) { cl_FragColor = Color*texture2D(Texture0, TexCoord); }";
+	"void main(void) { cl_FragColor = Color*texture(Texture0, TexCoord); }";
 
 const std::string::value_type *cl_glsl_fragment_single_texture =
 	"#version 130\n"
 	"uniform sampler2D Texture0; "
 	"in vec4 Color; "
 	"in vec2 TexCoord; "
-	"void main(void) { gl_FragColor = Color*texture2D(Texture0, TexCoord); }";
+	"void main(void) { gl_FragColor = Color*texture(Texture0, TexCoord); }";
 
 const std::string::value_type *cl_glsl15_vertex_sprite =
 	"#version 150\n"
@@ -122,7 +122,7 @@ const std::string::value_type *cl_glsl15_fragment_sprite =
 	"in vec2 TexCoord; "
 	"flat in int TexIndex; "
 	"out vec4 cl_FragColor;"
-	"highp vec4 sampleTexture(int index, highp vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
+	"highp vec4 sampleTexture(int index, highp vec2 pos) { if (index == 0) return texture(Texture0, TexCoord); else if (index == 1) return texture(Texture1, TexCoord); else if (index == 2) return texture(Texture2, TexCoord); else if (index == 3) return texture(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
 	"void main(void) { cl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
 
 const std::string::value_type *cl_glsl_fragment_sprite =
@@ -134,7 +134,7 @@ const std::string::value_type *cl_glsl_fragment_sprite =
 	"in vec4 Color; "
 	"in vec2 TexCoord; "
 	"flat in int TexIndex; "
-	"vec4 sampleTexture(int index, vec2 pos) { if (index == 0) return texture2D(Texture0, TexCoord); else if (index == 1) return texture2D(Texture1, TexCoord); else if (index == 2) return texture2D(Texture2, TexCoord); else if (index == 3) return texture2D(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
+	"vec4 sampleTexture(int index, vec2 pos) { if (index == 0) return texture(Texture0, TexCoord); else if (index == 1) return texture(Texture1, TexCoord); else if (index == 2) return texture(Texture2, TexCoord); else if (index == 3) return texture(Texture3, TexCoord); else return vec4(1.0,1.0,1.0,1.0); }"
 	"void main(void) { gl_FragColor = Color*sampleTexture(TexIndex, TexCoord); } ";
 
 class GL3StandardPrograms_Impl
