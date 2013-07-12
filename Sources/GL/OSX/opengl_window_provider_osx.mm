@@ -200,7 +200,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 {
 	impl->site = new_site;
 
-	NSRect frame = NSMakeRect(0, 0, 200, 200);
+	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
 	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
 	impl->window = [[NSWindow alloc] initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
 	if (impl->window == nil)
