@@ -419,6 +419,7 @@
 		18C248B5177B98F6008F7155 /* opengl_window_provider_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */; };
 		18C5CF0317908804000A8D2F /* clanapp_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C5CF0217908804000A8D2F /* clanapp_osx.mm */; };
 		18C5CF0417908CBA000A8D2F /* opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2A01636168C0009AA23 /* opengl.cpp */; };
+		18C5CF0617908EA4000A8D2F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C5CF0517908EA4000A8D2F /* OpenGL.framework */; };
 		18C75FB9177B7EE5009723F2 /* gl3_buffer_object_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */; };
 		18C75FBB177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */; };
 		18C75FBD177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C75F81177B7EE5009723F2 /* gl3_frame_buffer_provider.cpp */; };
@@ -1524,6 +1525,7 @@
 		18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = opengl_window_provider_osx.mm; sourceTree = "<group>"; };
 		18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_window_provider_osx.h; sourceTree = "<group>"; };
 		18C5CF0217908804000A8D2F /* clanapp_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = clanapp_osx.mm; sourceTree = "<group>"; };
+		18C5CF0517908EA4000A8D2F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		18C75F7D177B7EE5009723F2 /* gl3_buffer_object_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_buffer_object_provider.cpp; sourceTree = "<group>"; };
 		18C75F7E177B7EE5009723F2 /* gl3_buffer_object_provider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl3_buffer_object_provider.h; sourceTree = "<group>"; };
 		18C75F7F177B7EE5009723F2 /* gl3_element_array_buffer_provider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gl3_element_array_buffer_provider.cpp; sourceTree = "<group>"; };
@@ -2852,6 +2854,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C5CF0617908EA4000A8D2F /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2862,6 +2865,7 @@
 			isa = PBXGroup;
 			children = (
 				1835AC2B1636168B0009AA23 /* Sources */,
+				18C5CF0717908EAF000A8D2F /* Frameworks */,
 				1835B43A163618BE0009AA23 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -4065,6 +4069,14 @@
 				18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */,
 			);
 			path = OSX;
+			sourceTree = "<group>";
+		};
+		18C5CF0717908EAF000A8D2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				18C5CF0517908EA4000A8D2F /* OpenGL.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		18C75F7C177B7EE5009723F2 /* GL3 */ = {
