@@ -31,7 +31,7 @@
 #include "GL/precomp.h"
 #include "opengl_target_provider.h"
 #if defined(__APPLE__)
-#include "AGL/opengl_window_provider_agl.h"
+#include "OSX/opengl_window_provider_osx.h"
 #elif defined(WIN32)
 #include "WGL/opengl_window_provider_wgl.h"
 #else
@@ -61,12 +61,7 @@ OpenGLTargetProvider::~OpenGLTargetProvider()
 
 DisplayWindowProvider *OpenGLTargetProvider::alloc_display_window()
 {
-#if defined(__APPLE__)
-	// description not supported on AGL at the moment
-	return cl_alloc_display_window_agl();//new OpenGLWindowProvider;
-#else
 	return new OpenGLWindowProvider(description);
-#endif
 }
 
 /////////////////////////////////////////////////////////////////////////////
