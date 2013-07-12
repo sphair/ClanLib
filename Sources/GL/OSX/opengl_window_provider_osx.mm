@@ -236,6 +236,8 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	
 	[impl->opengl_context setView:impl->window.contentView];
 	
+	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
+	
 	[impl->window makeKeyAndOrderFront:NSApp];
 }
 
