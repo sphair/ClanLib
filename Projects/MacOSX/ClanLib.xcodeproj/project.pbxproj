@@ -416,6 +416,7 @@
 		1835C21E163631AA0009AA23 /* opengl_window_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C31636168C0009AA23 /* opengl_window_description.cpp */; };
 		1835C220163631AA0009AA23 /* precomp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C51636168C0009AA23 /* precomp.cpp */; };
 		1835C222163631AA0009AA23 /* setup_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2C71636168C0009AA23 /* setup_gl.cpp */; };
+		18A921BB1790EB1000DDC81C /* cocoa_window.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18A921BA1790EB1000DDC81C /* cocoa_window.mm */; };
 		18C248B5177B98F6008F7155 /* opengl_window_provider_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */; };
 		18C5CF0317908804000A8D2F /* clanapp_osx.mm in Sources */ = {isa = PBXBuildFile; fileRef = 18C5CF0217908804000A8D2F /* clanapp_osx.mm */; };
 		18C5CF0417908CBA000A8D2F /* opengl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B2A01636168C0009AA23 /* opengl.cpp */; };
@@ -1522,6 +1523,9 @@
 		1835C111163629410009AA23 /* libclanSqlite.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanSqlite.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C124163629FC0009AA23 /* libclanDisplay.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanDisplay.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		1835C1ED163631850009AA23 /* libclanGL.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libclanGL.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		18A921B91790EB1000DDC81C /* cocoa_window.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cocoa_window.h; sourceTree = "<group>"; };
+		18A921BA1790EB1000DDC81C /* cocoa_window.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = cocoa_window.mm; sourceTree = "<group>"; };
+		18A921BC1790FB8400DDC81C /* opengl_window_provider_osx_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opengl_window_provider_osx_impl.h; sourceTree = "<group>"; };
 		18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = opengl_window_provider_osx.mm; sourceTree = "<group>"; };
 		18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opengl_window_provider_osx.h; sourceTree = "<group>"; };
 		18C5CF0217908804000A8D2F /* clanapp_osx.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = clanapp_osx.mm; sourceTree = "<group>"; };
@@ -4067,6 +4071,9 @@
 			children = (
 				18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */,
 				18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */,
+				18A921B91790EB1000DDC81C /* cocoa_window.h */,
+				18A921BA1790EB1000DDC81C /* cocoa_window.mm */,
+				18A921BC1790FB8400DDC81C /* opengl_window_provider_osx_impl.h */,
 			);
 			path = OSX;
 			sourceTree = "<group>";
@@ -7827,6 +7834,7 @@
 				18C75FDE177B7EE5009723F2 /* opengl_rasterizer_state.cpp in Sources */,
 				18C248B5177B98F6008F7155 /* opengl_window_provider_osx.mm in Sources */,
 				18C5CF0417908CBA000A8D2F /* opengl.cpp in Sources */,
+				18A921BB1790EB1000DDC81C /* cocoa_window.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
