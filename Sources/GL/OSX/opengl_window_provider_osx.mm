@@ -28,62 +28,12 @@
 
 #include "GL/precomp.h"
 #include "opengl_window_provider_osx.h"
-#include "API/Core/Math/rect.h"
-#include "API/Display/Window/display_window_description.h"
-#include "API/Display/display.h"
-#include "API/Display/display_target.h"
-#include "API/Display/TargetProviders/display_window_provider.h"
-#include "API/Display/Window/display_window.h"
-#include "API/Display/Render/shared_gc_data.h"
-#include "API/Display/Image/pixel_buffer.h"
-#include "API/GL/opengl.h"
-#include "API/GL/opengl_window_description.h"
-#include "API/Core/Text/logger.h"
-#include "../opengl_window_description_impl.h"
-#include "../GL3/gl3_graphic_context_provider.h"
-#include <CoreFoundation/CoreFoundation.h>
-#import <AppKit/AppKit.h>
+#include "opengl_window_provider_osx_impl.h"
+#import "cocoa_window.h"
 
 namespace clan
 {
 
-class OpenGLWindowProvider_Impl
-{
-public:
-	OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
-		: self(self), site(0), opengl_desc(opengl_desc)
-	{
-	}
-	
-	NSOpenGLContext *get_share_context()
-	{
-		NSOpenGLContext *share_context = nil;
-		
-		std::unique_ptr<MutexSection> mutex_section;
-		GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
-		if (gc_providers)
-		{
-			GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
-			if (gl3_provider)
-			{
-				const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(&gl3_provider->get_render_window());
-				if (render_window_wgl)
-					share_context = render_window_wgl->impl->opengl_context;
-			}
-		}
-		
-		return share_context;
-	}
-	
-	OpenGLWindowProvider *self;
-	GraphicContext gc;
-	InputContext ic;
-	DisplayWindowSite *site;
-	OpenGLWindowDescription opengl_desc;
-	
-	NSWindow *window;
-	NSOpenGLContext *opengl_context;
-};
 
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 {
@@ -200,9 +150,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 {
 	impl->site = new_site;
 
-	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
-	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
-	impl->window = [[NSWindow alloc] initWithContentRect:frame styleMask:styles backing:NSBackingStoreBuffered defer:NO];
+	impl->window = [[CocoaWindow alloc] initWithDescription:desc provider:impl.get()];
 	if (impl->window == nil)
 		throw Exception("Could not create window");
 	
@@ -246,6 +194,10 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	[impl->opengl_context setView:impl->window.contentView];
 	
 	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
+	
+	impl->ic.clear();
+	//impl->ic.add_keyboard(keyboard);
+	//impl->ic.add_mouse(mouse);
 	
 	[impl->window makeKeyAndOrderFront:NSApp];
 }
@@ -413,4 +365,58 @@ PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 	return PixelBuffer();
 }
 
+/////////////////////////////////////////////////////////////////////
+	
+OpenGLWindowProvider_Impl::OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
+: self(self), site(0), opengl_desc(opengl_desc)
+{
+}
+
+NSOpenGLContext *OpenGLWindowProvider_Impl::get_share_context()
+{
+	NSOpenGLContext *share_context = nil;
+
+	std::unique_ptr<MutexSection> mutex_section;
+	GraphicContextProvider* gc_providers = SharedGCData::get_provider(mutex_section);
+	if (gc_providers)
+	{
+		GL3GraphicContextProvider *gl3_provider = dynamic_cast<GL3GraphicContextProvider*>(gc_providers);
+		if (gl3_provider)
+		{
+			const OpenGLWindowProvider *render_window_wgl = dynamic_cast<const OpenGLWindowProvider*>(&gl3_provider->get_render_window());
+			if (render_window_wgl)
+				share_context = render_window_wgl->impl->opengl_context;
+		}
+	}
+
+	return share_context;
+}
+	
+void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
+{
+	NSEventType type = [theEvent type];
+	switch (type)
+	{
+		// Keyboard events:
+		case NSKeyDown:
+		case NSKeyUp:
+		case NSFlagsChanged:
+			break;
+			
+		// Mouse events:
+		case NSMouseEntered: // see: NSTrackingArea
+		case NSLeftMouseDown:
+		case NSLeftMouseUp:
+		case NSRightMouseDown:
+		case NSRightMouseUp:
+		case NSOtherMouseDown:
+		case NSOtherMouseUp:
+		case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
+		case NSScrollWheel:
+			break;
+			
+	}
+}
+
+	
 }
