@@ -68,15 +68,15 @@ void CrashReporter::generate_report()
 
 #pragma warning(disable: 4535) // warning C4535: calling _set_se_translator() requires /EHa
 
-std::string CrashReporter_Impl::reports_directory;
-std::string CrashReporter_Impl::uploader_exe;
+std::wstring CrashReporter_Impl::reports_directory;
+std::wstring CrashReporter_Impl::uploader_exe;
 CrashReporter_Impl::MiniDumpWriteDumpPointer CrashReporter_Impl::func_MiniDumpWriteDump = 0;
 Mutex CrashReporter_Impl::mutex;
 
 CrashReporter_Impl::CrashReporter_Impl(const std::string &new_reports_directory, const std::string &new_uploader_executable)
 {
-	reports_directory = new_reports_directory;
-	uploader_exe = new_uploader_executable;
+	reports_directory = StringHelp::utf8_to_ucs2(new_reports_directory);
+	uploader_exe = StringHelp::utf8_to_ucs2(new_uploader_executable);
 	load_dbg_help();
 	hook_thread();
 	enforce_filter(true);
@@ -137,7 +137,7 @@ void CrashReporter_Impl::create_dump(DumpParams *dump_params, bool launch_upload
 		memset(&startup_info, 0, sizeof(STARTUPINFO));
 		memset(&process_info, 0, sizeof(PROCESS_INFORMATION));
 		startup_info.cb = sizeof(STARTUPINFO);
-		if (CreateProcess(StringHelp::utf8_to_ucs2(uploader_exe).c_str(), minidump_filename, 0, 0, FALSE, 0, 0, 0, &startup_info, &process_info))
+		if (CreateProcess(uploader_exe.c_str(), minidump_filename, 0, 0, FALSE, 0, 0, 0, &startup_info, &process_info))
 		{
 			CloseHandle(process_info.hThread);
 			CloseHandle(process_info.hProcess);
