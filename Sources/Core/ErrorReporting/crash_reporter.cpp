@@ -39,6 +39,10 @@ CrashReporter::CrashReporter(const std::string &reports_directory, const std::st
 {
 }
 
+CrashReporter::~CrashReporter()
+{
+}
+
 void CrashReporter::hook_thread()
 {
 	CrashReporter_Impl::hook_thread();
