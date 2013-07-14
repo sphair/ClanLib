@@ -62,8 +62,8 @@ private:
 
 	void load_dbg_help();
 	static void create_dump(DumpParams *params, bool launch_uploader);
-	static std::string reports_directory;
-	static std::string uploader_exe;
+	static std::wstring reports_directory;
+	static std::wstring uploader_exe;
 
 	static Mutex mutex;
 
