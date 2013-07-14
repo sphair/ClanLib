@@ -61,10 +61,6 @@ void CrashReporter::generate_report()
 /////////////////////////////////////////////////////////////////////////////
 
 #ifdef _MSC_VER
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#include <tchar.h>
 
 #pragma warning(disable: 4535) // warning C4535: calling _set_se_translator() requires /EHa
 
@@ -114,7 +110,7 @@ void CrashReporter_Impl::create_dump(DumpParams *dump_params, bool launch_upload
 	TCHAR minidump_filename[MAX_PATH];
 	for (int counter = 1; counter < 1000 && file == INVALID_HANDLE_VALUE; counter++)
 	{
-		_stprintf_s(minidump_filename, TEXT("%s%04d-%02d-%02d %02d.%02d.%02d (%d).dmp"), reports_directory.c_str(), systime.wYear, systime.wMonth, systime.wDay, systime.wHour, systime.wMinute, systime.wSecond, counter);
+		swprintf_s(minidump_filename, L"%s%04d-%02d-%02d %02d.%02d.%02d (%d).dmp", reports_directory.c_str(), systime.wYear, systime.wMonth, systime.wDay, systime.wHour, systime.wMinute, systime.wSecond, counter);
 		file = CreateFile(minidump_filename, GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_NEW, FILE_ATTRIBUTE_NORMAL, 0);
 	}
 
@@ -159,7 +155,7 @@ int CrashReporter_Impl::generate_report_filter(unsigned int code, struct _EXCEPT
 
 void CrashReporter_Impl::load_dbg_help()
 {
-	module_dbghlp = LoadLibrary(TEXT("dbghelp.dll"));
+	module_dbghlp = LoadLibrary(L"dbghelp.dll");
 	func_MiniDumpWriteDump = reinterpret_cast<MiniDumpWriteDumpPointer>(GetProcAddress(module_dbghlp, "MiniDumpWriteDump"));
 }
 
@@ -237,11 +233,10 @@ bool CrashReporter_Impl::enforce_filter( bool bEnforce )
 	
 	// Obtain the address of SetUnhandledExceptionFilter 
 
-	HMODULE hLib = GetModuleHandle( _T("kernel32.dll") );
+	HMODULE hLib = GetModuleHandle(L"kernel32.dll");
 	if( hLib == NULL )
 	{
 		ErrCode = GetLastError();
-		_ASSERTE( !_T("GetModuleHandle(kernel32.dll) failed.") );
 		return false;
 	}
 
@@ -249,13 +244,11 @@ bool CrashReporter_Impl::enforce_filter( bool bEnforce )
 	if( pTarget == 0 )
 	{
 		ErrCode = GetLastError();
-		_ASSERTE( !_T("GetProcAddress(SetUnhandledExceptionFilter) failed.") );
 		return false;
 	}
 
 	if( IsBadReadPtr( pTarget, sizeof(original_bytes) ) )
 	{
-		_ASSERTE( !_T("Target is unreadable.") );
 		return false;
 	}
 
@@ -288,25 +281,21 @@ bool CrashReporter_Impl::write_memory( BYTE* pTarget, const BYTE* pSource, DWORD
 
 	if( pTarget == 0 )
 	{
-		_ASSERTE( !_T("Target address is null.") );
 		return false;
 	}
 
 	if( pSource == 0 )
 	{
-		_ASSERTE( !_T("Source address is null.") );
 		return false;
 	}
 
 	if( Size == 0 )
 	{
-		_ASSERTE( !_T("Source size is null.") );
 		return false;
 	}
 
 	if( IsBadReadPtr( pSource, Size ) )
 	{
-		_ASSERTE( !_T("Source is unreadable.") );
 		return false;
 	}
 
@@ -317,7 +306,6 @@ bool CrashReporter_Impl::write_memory( BYTE* pTarget, const BYTE* pSource, DWORD
 	if( !VirtualProtect( pTarget, Size, PAGE_EXECUTE_READWRITE, &OldProtect ) )
 	{
 		ErrCode = GetLastError();
-		_ASSERTE( !_T("VirtualProtect() failed.") );
 		return false;
 	}
 
@@ -332,7 +320,6 @@ bool CrashReporter_Impl::write_memory( BYTE* pTarget, const BYTE* pSource, DWORD
 	if( !VirtualProtect( pTarget, Size, OldProtect, &Temp ) )
 	{
 		ErrCode = GetLastError();
-		_ASSERTE( !_T("VirtualProtect() failed.") );
 		return false;
 	}
 
