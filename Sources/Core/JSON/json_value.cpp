@@ -223,7 +223,7 @@ JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 	if (pos == json.length())
 		throw JsonException("Unexpected end of JSON data");
 
-	while (true)
+	while (json[pos] != ']')
 	{
 		read_whitespace(json, pos);
 		result.items.push_back(read(json, pos));
@@ -235,7 +235,6 @@ JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 		}
 		else if (json[pos] == ']')
 		{
-			pos++;
 			break;
 		}
 		else if (json[pos] == ',')
@@ -247,6 +246,7 @@ JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 			throw JsonException("Unexpected character in JSON data");
 		}
 	}
+	pos++;
 
 	return result;
 }
