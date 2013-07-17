@@ -29,7 +29,8 @@
 #include "GameIDE/precomp.h"
 #include "API/GameIDE/Rollout/rollout_header.h"
 
-using namespace clan;
+namespace clan
+{
 
 RolloutHeader::RolloutHeader(GUIComponent *parent)
 : GUIComponent(parent)
@@ -46,4 +47,6 @@ RolloutHeader::~RolloutHeader()
 void RolloutHeader::set_title(const std::string &title)
 {
 	label_title->set_text(title);
+}
+
 }
