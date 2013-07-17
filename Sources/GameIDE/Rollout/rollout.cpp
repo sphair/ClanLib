@@ -31,7 +31,8 @@
 #include "API/GameIDE/Rollout/rollout_header.h"
 #include "API/GameIDE/Rollout/rollout_list.h"
 
-using namespace clan;
+namespace clan
+{
 
 Rollout::Rollout(RolloutList *list, RolloutHeader *header, GUIComponent *parent)
 	: GUIComponent(parent), header(header)
@@ -72,4 +73,6 @@ LineEdit *Rollout::create_line_edit_button(const std::string &label_text, PushBu
 	*button = new PushButton(row);
 
 	return line_edit;
+}
+
 }
