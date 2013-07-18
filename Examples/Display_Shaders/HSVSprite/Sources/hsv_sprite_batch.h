@@ -31,7 +31,7 @@
 class HSVSpriteBatch : public RenderBatcher
 {
 public:
-	HSVSpriteBatch(Canvas &canvas);
+	HSVSpriteBatch(GraphicContext &gc);
 
 	Subtexture alloc_sprite(Canvas &canvas, const Size &size);
 	void draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &src, const Texture &texture, float hue_offset);
@@ -40,9 +40,8 @@ public:
 	void matrix_changed(const Mat4f &modelview, const Mat4f &projection);
 
 private:
-	static ProgramObject create_shader_program(Canvas &canvas);
+	static ProgramObject create_shader_program(GraphicContext &gc);
 	inline Vec4f to_position(float x, float y) const;
-	void lock_transfer_buffer(Canvas &canvas);
 
 	struct SpriteVertex
 	{
@@ -53,15 +52,17 @@ private:
 
 	enum { max_vertices = 6*256 };
 
-	TransferVector<SpriteVertex> transfer_buffers;
-	VertexArrayVector<SpriteVertex> gpu_vertices;
-	SpriteVertex *vertices;
+	static const int num_vertex_buffers = 4;
+	VertexArrayVector<SpriteVertex> gpu_vertices[num_vertex_buffers];
+	PrimitivesArray prim_array[num_vertex_buffers];
+	SpriteVertex vertices[max_vertices];
+	int current_vertex_buffer;
 
 	int fill_position;
 	Texture current_texture;
 	Mat4f modelview_projection_matrix;
-	PrimitivesArray prim_array;
 
 	TextureGroup texture_group;
 	ProgramObject program;
+
 };
