@@ -29,9 +29,17 @@
 #include "precomp.h"
 #include "hsv_sprite_batch.h"
 
-HSVSpriteBatch::HSVSpriteBatch(Canvas &canvas)
-: fill_position(0), texture_group(Size(256, 256)), program(create_shader_program(canvas)), vertices(0)
+HSVSpriteBatch::HSVSpriteBatch(GraphicContext &gc)
+: fill_position(0), texture_group(Size(256, 256)), program(create_shader_program(gc)), current_vertex_buffer(0)
 {
+	for (int index=0; index < num_vertex_buffers; index++)
+	{
+		gpu_vertices[index] = VertexArrayVector<SpriteVertex>(gc, max_vertices, usage_stream_draw);
+		prim_array[index] = PrimitivesArray(gc);
+		prim_array[index].set_attributes(0, gpu_vertices[index], cl_offsetof(SpriteVertex, position));
+		prim_array[index].set_attributes(1, gpu_vertices[index], cl_offsetof(SpriteVertex, hue_offset));
+		prim_array[index].set_attributes(2, gpu_vertices[index], cl_offsetof(SpriteVertex, tex1_coord));
+	}
 }
 
 Subtexture HSVSpriteBatch::alloc_sprite(Canvas &canvas, const Size &size)
@@ -56,7 +64,6 @@ void HSVSpriteBatch::draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &
 		flush(canvas);
 		current_texture = texture;
 	}
-	lock_transfer_buffer(canvas);
 
 	vertices[fill_position+0].position = to_position(dest.left, dest.top);
 	vertices[fill_position+1].position = to_position(dest.right, dest.top);
@@ -81,46 +88,22 @@ void HSVSpriteBatch::draw_sprite(Canvas &canvas, const Rectf &dest, const Rect &
 		flush(canvas);
 }
 
-void HSVSpriteBatch::lock_transfer_buffer(Canvas &canvas)
-{
-	if (vertices == 0)
-	{
-		GraphicContext &gc = canvas.get_gc();
-		if(transfer_buffers.is_null())
-		{
-			transfer_buffers = TransferVector<SpriteVertex>(gc, max_vertices);
-		}
-		transfer_buffers.lock(gc, access_write_discard);
-		vertices = transfer_buffers.get_data();
-	}
-}
-
 void HSVSpriteBatch::flush(GraphicContext &gc)
 {
 	if (fill_position > 0)
 	{
 		gc.set_program_object(program);
 
-		if (gpu_vertices.is_null())
-		{
-			gpu_vertices = VertexArrayVector<SpriteVertex>(gc, max_vertices);
-			prim_array = PrimitivesArray(gc);
-			prim_array.set_attributes(0, gpu_vertices, cl_offsetof(SpriteVertex, position));
-			prim_array.set_attributes(1, gpu_vertices, cl_offsetof(SpriteVertex, hue_offset));
-			prim_array.set_attributes(2, gpu_vertices, cl_offsetof(SpriteVertex, tex1_coord));
-		}
-
-		if (vertices)
-		{
-			vertices = 0;
-			transfer_buffers.unlock();
-		}
-		gpu_vertices.copy_from(gc, transfer_buffers, 0, 0, fill_position);
+		gpu_vertices[current_vertex_buffer].upload_data(gc, 0, vertices, fill_position);
 
 		gc.set_texture(0, current_texture);
-		gc.draw_primitives(type_triangles, fill_position, prim_array);
+		gc.draw_primitives(type_triangles, fill_position, prim_array[current_vertex_buffer]);
 		gc.reset_program_object();
 		gc.reset_texture(0);
+
+		current_vertex_buffer++;
+		if (current_vertex_buffer >= num_vertex_buffers)
+			current_vertex_buffer = 0;
 
 		fill_position = 0;
 		current_texture = Texture();
@@ -132,9 +115,9 @@ void HSVSpriteBatch::matrix_changed(const Mat4f &new_modelview, const Mat4f &new
 	modelview_projection_matrix = new_projection * new_modelview;
 }
 
-ProgramObject HSVSpriteBatch::create_shader_program(Canvas &canvas)
+ProgramObject HSVSpriteBatch::create_shader_program(GraphicContext &gc)
 {
-	ProgramObject program = ProgramObject::load(canvas, "Resources/vertex.glsl", "Resources/fragment.glsl");
+	ProgramObject program = ProgramObject::load(gc, "Resources/vertex.glsl", "Resources/fragment.glsl");
 	program.bind_attribute_location(0, "Position");
 	program.bind_attribute_location(1, "HueOffset0");
 	program.bind_attribute_location(2, "TexCoord0");
