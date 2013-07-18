@@ -192,6 +192,8 @@ JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
 			throw JsonException("Unexpected character in JSON data");
 		pos++;
 
+		read_whitespace(json, pos);
+
 		result.members[key] = read(json, pos);
 
 		read_whitespace(json, pos);
