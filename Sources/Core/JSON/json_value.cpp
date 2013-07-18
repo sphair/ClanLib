@@ -210,6 +210,7 @@ JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
 		else if (json[pos] == ',')
 		{
 			pos++;
+			read_whitespace(json, pos);
 		}
 		else
 		{
@@ -248,6 +249,7 @@ JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 		else if (json[pos] == ',')
 		{
 			pos++;
+			read_whitespace(json, pos);
 		}
 		else
 		{
