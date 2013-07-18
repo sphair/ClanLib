@@ -174,6 +174,9 @@ JsonValue JsonValue::read_object(const std::string &json, size_t &pos)
 	JsonValue result(type_object);
 
 	pos++;
+
+	read_whitespace(json, pos);
+
 	if (pos == json.length())
 		throw JsonException("Unexpected end of JSON data");
 
@@ -220,6 +223,9 @@ JsonValue JsonValue::read_array(const std::string &json, size_t &pos)
 	JsonValue result(type_array);
 
 	pos++;
+
+	read_whitespace(json, pos);
+
 	if (pos == json.length())
 		throw JsonException("Unexpected end of JSON data");
 
