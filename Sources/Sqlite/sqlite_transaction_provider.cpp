@@ -46,6 +46,7 @@ SqliteTransactionProvider::SqliteTransactionProvider(SqliteConnectionProvider *c
 	std::string text;
 	switch (type)
 	{
+	case DBTransaction::default_transaction:
 	case DBTransaction::deferred:
 		text = "BEGIN DEFERRED TRANSACTION";
 		break;
