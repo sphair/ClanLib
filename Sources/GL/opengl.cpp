@@ -983,6 +983,16 @@ GLFunctions *cl_setup_binds()
 	functions->vertexArrayVertexAttribBindingEXT = (GLFunctions::ptr_glVertexArrayVertexAttribBindingEXT) cl_get_proc_address_extension("glVertexArrayVertexAttribBindingEXT");
 	functions->vertexArrayVertexBindingDivisorEXT = (GLFunctions::ptr_glVertexArrayVertexBindingDivisorEXT) cl_get_proc_address_extension("glVertexArrayVertexBindingDivisorEXT");
 
+// OpenGL 4.4
+	functions->BufferStorage = (GLFunctions::ptr_glBufferStorage) cl_get_proc_address_extension("glBufferStorage");
+	functions->ClearTexImage = (GLFunctions::ptr_glClearTexImage) cl_get_proc_address_extension("glClearTexImage");
+	functions->ClearTexSubImage = (GLFunctions::ptr_glClearTexSubImage) cl_get_proc_address_extension("glClearTexSubImage");
+	functions->BindBuffersBase = (GLFunctions::ptr_glBindBuffersBase) cl_get_proc_address_extension("glBindBuffersBase");
+	functions->BindBuffersRange = (GLFunctions::ptr_glBindBuffersRange) cl_get_proc_address_extension("glBindBuffersRange");
+	functions->BindTextures = (GLFunctions::ptr_glBindTextures) cl_get_proc_address_extension("glBindTextures");
+	functions->BindSamplers = (GLFunctions::ptr_glBindSamplers) cl_get_proc_address_extension("glBindSamplers");
+	functions->BindImageTextures = (GLFunctions::ptr_glBindImageTextures) cl_get_proc_address_extension("glBindImageTextures");
+	functions->BindVertexBuffers = (GLFunctions::ptr_glBindVertexBuffers) cl_get_proc_address_extension("glBindVertexBuffers");
 
 #ifdef WIN32	// Only win32 static links opengl
 
