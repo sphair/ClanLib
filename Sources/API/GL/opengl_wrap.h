@@ -672,6 +672,17 @@ public:
 	typedef void (GLFUNC *ptr_glVertexArrayVertexAttribBindingEXT)(GLuint vaobj, GLuint attribindex, GLuint bindingindex);
 	typedef void (GLFUNC *ptr_glVertexArrayVertexBindingDivisorEXT)(GLuint vaobj, GLuint bindingindex, GLuint divisor);
 
+	// OpenGL 4.4
+	typedef void (GLFUNC *ptr_glBufferStorage)(GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
+	typedef void (GLFUNC *ptr_glClearTexImage)(GLuint texture, GLint level, GLenum format, GLenum type, const void *data);
+	typedef void (GLFUNC *ptr_glClearTexSubImage)(GLuint texture, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const void *data);
+	typedef void (GLFUNC *ptr_glBindBuffersBase)(GLenum target, GLuint first, GLsizei count, const GLuint *buffers);
+	typedef void (GLFUNC *ptr_glBindBuffersRange)(GLenum target, GLuint first, GLsizei count, const GLuint *buffers, const GLintptr *offsets, const GLsizeiptr *sizes);
+	typedef void (GLFUNC *ptr_glBindTextures)(GLuint first, GLsizei count, const GLuint *textures);
+	typedef void (GLFUNC *ptr_glBindSamplers)(GLuint first, GLsizei count, const GLuint *samplers);
+	typedef void (GLFUNC *ptr_glBindImageTextures)(GLuint first, GLsizei count, const GLuint *textures);
+	typedef void (GLFUNC *ptr_glBindVertexBuffers)(GLuint first, GLsizei count, const GLuint *buffers, const GLintptr *offsets, const GLsizei *strides);
+
 	// For Legacy OpenGL (For GL1 target)
 	typedef GLvoid (GLFUNC *ptr_glClientActiveTextureARB)(GLenum);
 #ifdef WIN32
@@ -1307,6 +1318,17 @@ public:
 	ptr_glVertexArrayVertexAttribBindingEXT vertexArrayVertexAttribBindingEXT;
 	ptr_glVertexArrayVertexBindingDivisorEXT vertexArrayVertexBindingDivisorEXT;
 
+	// OpenGL 4.4
+	ptr_glBufferStorage BufferStorage;
+	ptr_glClearTexImage ClearTexImage;
+	ptr_glClearTexSubImage ClearTexSubImage;
+	ptr_glBindBuffersBase BindBuffersBase;
+	ptr_glBindBuffersRange BindBuffersRange;
+	ptr_glBindTextures BindTextures;
+	ptr_glBindSamplers BindSamplers;
+	ptr_glBindImageTextures BindImageTextures;
+	ptr_glBindVertexBuffers BindVertexBuffers;
+
 	// For Legacy OpenGL (For GL1 target)
 	ptr_glClientActiveTextureARB clientActiveTexture;
 #ifdef WIN32
@@ -1937,6 +1959,17 @@ public:
 #define glVertexArrayVertexAttribLFormatEXT clan::OpenGL::functions->vertexArrayVertexAttribLFormatEXT
 #define glVertexArrayVertexAttribBindingEXT clan::OpenGL::functions->vertexArrayVertexAttribBindingEXT
 #define glVertexArrayVertexBindingDivisorEXT clan::OpenGL::functions->vertexArrayVertexBindingDivisorEXT
+
+// OpenGL 4.4
+#define glBufferStorage clan::OpenGL::functions->BufferStorage;
+#define glClearTexImage clan::OpenGL::functions->ClearTexImage;
+#define glClearTexSubImage clan::OpenGL::functions->ClearTexSubImage;
+#define glBindBuffersBase clan::OpenGL::functions->BindBuffersBase;
+#define glBindBuffersRange clan::OpenGL::functions->BindBuffersRange;
+#define glBindTextures clan::OpenGL::functions->BindTextures;
+#define glBindSamplers clan::OpenGL::functions->BindSamplers;
+#define glBindImageTextures clan::OpenGL::functions->BindImageTextures;
+#define glBindVertexBuffers clan::OpenGL::functions->BindVertexBuffers;
 
 // For Legacy OpenGL (For GL1 target)
 #define glClientActiveTexture clan::OpenGL::functions->clientActiveTexture

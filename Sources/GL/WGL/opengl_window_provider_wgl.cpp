@@ -261,6 +261,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 			static const char opengl_version_list[] = 
 			{
 				// Clanlib supported version pairs
+				4,4,
 				4,3,
 				4,2,
 				4,1,
