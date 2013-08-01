@@ -73,10 +73,10 @@ public:
 	virtual bool supports_keyid_mapping() const { return false; }
 
 	/// \brief Returns a generic string name for the specified key code.
-	virtual std::string keyid_to_string(int keycode) const { return std::string(); }
+	virtual std::string keyid_to_string(int /* keycode */) const { return std::string(); }
 
 	/// \brief Returns the key code for the specified generic string key name.
-	virtual int string_to_keyid(const std::string &str) const { return 0; }
+	virtual int string_to_keyid(const std::string &/* str */) const { return 0; }
 
 	/// \brief Returns true if the passed key code is down for this device.
 	/** <p>See keys.h for list of key codes.</p>*/
@@ -98,7 +98,7 @@ public:
 
 	/// \brief Returns the current position of a joystick hat.
 	/// \return Hat direction in degrees (0-360), or -1 if the hat is centered.
-	virtual int get_hat(int index) const { return -1; }
+	virtual int get_hat(int /* index */) const { return -1; }
 
 	/// \brief Returns the number of buttons available on this device.
 	/** <p>If used on a keyboard, this function returns -1.</p>*/
