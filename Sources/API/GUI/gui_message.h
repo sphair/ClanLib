@@ -47,7 +47,7 @@ class CL_API_GUI GUIMessage
 /// \{
 public:
 	/// \brief Constructs a GUI message.
-	GUIMessage() : consumed(false), target(0) { }
+GUIMessage() : target(0), consumed(false) { }
 	virtual ~GUIMessage() { }
 /// \}
 
