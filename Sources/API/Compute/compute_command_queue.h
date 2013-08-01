@@ -97,7 +97,7 @@ public:
 		const ComputeKernel &kernel,
 		size_t global_work_size,
 		size_t local_work_size,
-		int offset,
+		size_t offset,
 		const ComputeWaitList &wait_list = ComputeWaitList());
 
 	ComputeEvent run_2d(
@@ -126,8 +126,8 @@ public:
 		size_t global_work_size_y,
 		size_t local_work_size_x,
 		size_t local_work_size_y,
-		int offset_x,
-		int offset_y,
+		size_t offset_x,
+		size_t offset_y,
 		const ComputeWaitList &wait_list = ComputeWaitList());
 
 	ComputeEvent run_3d(
@@ -161,9 +161,9 @@ public:
 		size_t local_work_size_x,
 		size_t local_work_size_y,
 		size_t local_work_size_z,
-		int offset_x,
-		int offset_y,
-		int offset_z,
+		size_t offset_x,
+		size_t offset_y,
+		size_t offset_z,
 		const ComputeWaitList &wait_list = ComputeWaitList());
 
 	ComputeEvent add_barrier(const ComputeWaitList &wait_list = ComputeWaitList());
