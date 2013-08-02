@@ -79,7 +79,7 @@ public:
 	/// \brief Enable/disable session looping.
 	/** <p>If this function returns false (default), the clanSound mixer will manually
 	    try to simulate looping by setting the position to 0 when eof is encountered.</p>*/
-	virtual bool set_looping(bool loop) { return false; }
+	virtual bool set_looping(bool /* loop */) { return false; }
 
 	/// \brief Returns true if no more input data is available.
 	/** \return True if end of input data. False otherwise.*/
