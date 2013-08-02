@@ -94,7 +94,7 @@ ComputeEvent ComputeCommandQueue::run_1d(
 	const ComputeKernel &kernel,
 	size_t global_work_size,
 	size_t local_work_size,
-	int offset,
+	size_t offset,
 	const ComputeWaitList &wait_list)
 {
 	size_t global_offset[1] = { offset };
@@ -124,8 +124,8 @@ ComputeEvent ComputeCommandQueue::run_2d(
 	size_t global_work_size_y,
 	size_t local_work_size_x,
 	size_t local_work_size_y,
-	int offset_x,
-	int offset_y,
+	size_t offset_x,
+	size_t offset_y,
 	const ComputeWaitList &wait_list)
 {
 	size_t global_offset[2] = { offset_x, offset_y };
@@ -157,9 +157,9 @@ ComputeEvent ComputeCommandQueue::run_3d(
 	size_t local_work_size_x,
 	size_t local_work_size_y,
 	size_t local_work_size_z,
-	int offset_x,
-	int offset_y,
-	int offset_z,
+	size_t offset_x,
+	size_t offset_y,
+	size_t offset_z,
 	const ComputeWaitList &wait_list)
 {
 	size_t global_offset[3] = { offset_x, offset_y, offset_z };
