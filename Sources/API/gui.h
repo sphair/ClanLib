@@ -41,7 +41,6 @@
 #include "GUI/accelerator_table.h"
 #include "GUI/accelerator_key.h"
 #include "GUI/gui_component.h"
-#include "GUI/gui_component_description.h"
 #include "GUI/gui_theme_part.h"
 #include "GUI/gui_layout.h"
 #include "GUI/gui_layout_corners.h"

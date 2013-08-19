@@ -31,7 +31,6 @@
 #include "popupmenu_window.h"
 #include "API/GUI/gui_manager.h"
 #include "API/GUI/gui_message.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/gui_message_close.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"

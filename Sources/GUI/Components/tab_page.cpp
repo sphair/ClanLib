@@ -31,7 +31,6 @@
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_theme_part.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/tab_page.h"
 #include "API/Core/XML/dom_element.h"
 #include "tab_page_impl.h"
