@@ -37,88 +37,77 @@ class TestApp
 public:
 	virtual int main(const std::vector<std::string> &args)
 	{
-		ConsoleWindow console("Console");
 
-		try
+		DisplayWindowDescription desc;
+		desc.set_size(Size(800,600), true);
+		desc.set_title("Span Layout Test");
+		DisplayWindow window(desc);
+
+		Canvas canvas(window);
+		GraphicContext gc = window.get_gc();
+
+		FontDescription font_desc1;
+		font_desc1.set_typeface_name("Verdana");
+		font_desc1.set_height(-13);
+		Font font1(canvas, font_desc1);
+
+		Image smiley(canvas, "smiley.png");
+
+		SpanLayout span;
+		span.add_text(" This is a ", font1, Colorf::white, 1);
+		span.add_text("red", font1, Colorf::red, 2);
+		span.add_text(" text! ", font1, Colorf::white, 3);
+		span.add_text("And this   complete   text   is   green with non-blocking space..", font1, Colorf::green, 4);
+		span.add_image(smiley, 10, 5);
+		span.add_text("This is a really long descriptive and interesting text. ", font1, Colorf::yellow, 6);
+		span.add_text("[", font1, Colorf::black, 7);
+		span.add_text("15:35", font1, Colorf::white, 8);
+		span.add_text("]", font1, Colorf::black, 9);
+		span.add_image(smiley, 0, 10);
+		span.add_image(smiley, 2, 11);
+		span.add_text("kthxbye!", font1, Colorf::blue, 12);
+
+		span.layout(gc, 200);
+		span.set_position(Point(10, 10));
+
+		while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
 		{
-			DisplayWindowDescription desc;
-			desc.set_size(Size(800,600), true);
-			desc.set_title("Span Layout Test");
-			DisplayWindow window(desc);
-			
-			GraphicContext &gc = window.get_gc();
+			gc.clear(Colorf::gray70);
 
-			FontDescription font_desc1;
-			font_desc1.set_typeface_name("Verdana");
-			font_desc1.set_height(-13);
-			Font font1(gc, font_desc1);
+			span.draw_layout(canvas);
 
-			Image smiley(gc, "smiley.png");
+			Point mouse_pos = window.get_ic().get_mouse().get_position();
+			SpanLayout::HitTestResult result = span.hit_test(gc, mouse_pos);
 
-			SpanLayout span;
-			span.add_text(" This is a ", font1, Colorf::white, 1);
-			span.add_text("red", font1, Colorf::red, 2);
-			span.add_text(" text! ", font1, Colorf::white, 3);
-			span.add_text("And this   complete   text   is   green with non-blocking space..", font1, Colorf::green, 4);
-			span.add_image(smiley, 10, 5);
-			span.add_text("This is a really long descriptive and interesting text. ", font1, Colorf::yellow, 6);
-			span.add_text("[", font1, Colorf::black, 7);
-			span.add_text("15:35", font1, Colorf::white, 8);
-			span.add_text("]", font1, Colorf::black, 9);
-			span.add_image(smiley, 0, 10);
-			span.add_image(smiley, 2, 11);
-			span.add_text("kthxbye!", font1, Colorf::blue, 12);
-
-			span.layout(gc, 200);
-			span.set_position(Point(10, 10));
-
-			while (!window.get_ic().get_keyboard().get_keycode(KEY_ESCAPE))
+			std::string type;
+			switch(result.type)
 			{
-				gc.clear(Colorf::gray70);
-
-				span.draw_layout(gc);
-
-				Point mouse_pos = window.get_ic().get_mouse().get_position();
-				SpanLayout::HitTestResult result = span.hit_test(gc, mouse_pos);
-
-				std::string type;
-				switch(result.type)
-				{
-					case SpanLayout::HitTestResult::no_objects_available:
-						type = "no_objects_available";
-						break;
-					case SpanLayout::HitTestResult::outside_top:
-						type = "outside_top";
-						break;
-					case SpanLayout::HitTestResult::outside_left:
-						type = "outside_left";
-						break;
-					case SpanLayout::HitTestResult::outside_right:
-						type = "outside_right";
-						break;
-					case SpanLayout::HitTestResult::outside_bottom:
-						type = "outside_bottom";
-						break;
-					case SpanLayout::HitTestResult::inside:
-						type = "inside";
-						break;
-				}
-				std::string result_text = string_format("HitTestResult: Type:%1 ID:%2 Offset:%3", type, result.object_id, result.offset);
-
-				font1.draw_text(gc, 10, 300, result_text);
-
-				window.flip();
-				KeepAlive::process();
-				System::sleep(50);
+				case SpanLayout::HitTestResult::no_objects_available:
+					type = "no_objects_available";
+					break;
+				case SpanLayout::HitTestResult::outside_top:
+					type = "outside_top";
+					break;
+				case SpanLayout::HitTestResult::outside_left:
+					type = "outside_left";
+					break;
+				case SpanLayout::HitTestResult::outside_right:
+					type = "outside_right";
+					break;
+				case SpanLayout::HitTestResult::outside_bottom:
+					type = "outside_bottom";
+					break;
+				case SpanLayout::HitTestResult::inside:
+					type = "inside";
+					break;
 			}
-		}
-		catch(Exception error)
-		{
-			Console::write_line("Exception caught:");
-			Console::write_line(error.message);
+			std::string result_text = string_format("HitTestResult: Type:%1 ID:%2 Offset:%3", type, result.object_id, result.offset);
 
-			console.display_close_message();
-			return -1;
+			font1.draw_text(canvas, 10, 300, result_text);
+
+			window.flip();
+			KeepAlive::process();
+			System::sleep(50);
 		}
 
 		return 0;
