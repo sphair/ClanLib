@@ -48,73 +48,41 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	// Create a console window for text-output if not available
-	ConsoleWindow console("Console");
+	DisplayWindow window("ClanLib Font Sprite Test", 1024, 480);
 
-	try
+	// Connect the Window close event
+	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+
+	// Connect a keyboard handler to on_key_up()
+	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+
+	// Create the canvas
+	Canvas canvas(window);
+
+	// Load some fonts from the resource file
+	ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("font.xml"));
+	Font font1 = Font_Sprite::resource(canvas, FontDescription("Font1"), resources);
+	Font font2 = Font_Sprite::resource(canvas, FontDescription("Font2"), resources);
+
+	// Run until someone presses escape
+	while (!quit)
 	{
-		DisplayWindow window("ClanLib Font Sprite Test", 1024, 480);
+		canvas.clear(Colorf::red);
 
-		// Connect the Window close event
-		Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-
-		// Connect a keyboard handler to on_key_up()
-		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
-
-		// Create the canvas
-		Canvas canvas(window);
-
-		// Get the graphic context
-		GraphicContext gc = canvas.get_gc();
-
-		// Load some fonts from the resource file
-		DisplayCache resources("font.xml");
-		Font_Sprite font1(canvas, "Font1", &resources);
-		Font_Sprite font2(canvas, "Font2", &resources);
-
-		// Run until someone presses escape
-		while (!quit)
-		{
-			canvas.set_map_mode(MapMode(map_2d_upper_left));
-			canvas.clear(Colorf::red);
-
-			font1.draw_text(canvas, 25, 25, "ClanLib: Phear the Power!");
+		font1.draw_text(canvas, 25, 25, "ClanLib: Phear the Power!");
 			
-			font2.draw_text(canvas, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
+		font2.draw_text(canvas, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
 
-			font2.draw_text(canvas, 10.0f, 200.0f, 2.0f, 2.0f, "Hello World\nMy Message");
+		font2.draw_text(canvas, 10.0f, 200.0f, "Hello World\nMy Message");
 
+		// Flip the display, showing on the screen what we have drawed
+		// since last call to flip()
+		window.flip(1);
 
-			canvas.flush();
-			// Flip the display, showing on the screen what we have drawed
-			// since last call to flip()
-			window.flip(1);
-
-			// This call processes user input and other events
-			KeepAlive::process();
-		}
+		// This call processes user input and other events
+		KeepAlive::process();
 	}
-	catch(Exception& exception)
-	{
-		Console::write_line("Exception caught:");
-		Console::write_line(exception.message);
 
-		// Display the stack trace (if available)
-		std::vector<std::string> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				Console::write_line(stacktrace[cnt]);
-			}
-		}
-
-		console.display_close_message();
-
-		return -1;
-	}
 	return 0;
 }
 

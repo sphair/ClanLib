@@ -10,10 +10,10 @@
 	</sprite>
 
 	<font name="Font1">
-		<bitmap glyphs="font_glyph1" letters="!~#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}" />
+		<sprite glyphs="font_glyph1" letters="!~#$%&amp;'()*+,-./0123456789:;&lt;=&gt;?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^`abcdefghijklmnopqrstuvwxyz{|}" />
 	</font>
-	
+
 	<font name="Font2">
-		<bitmap glyphs="font_glyph2" spacelen="4" letters="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÆæØøÅå0123456789[]()!#$&amp;%/\=-+~'`&quot;.,:;*?" />
+		<sprite glyphs="font_glyph2" spacelen="4" letters="AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZzÆæØøÅå0123456789[]()!#$&amp;%/\=-+~'`&quot;.,:;*?" />
 	</font>
 </resources>
