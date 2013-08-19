@@ -34,6 +34,7 @@
 #include "API/Core/Text/string_help.h"
 #include "x11_window.h"
 #include <cstdio>
+#include <X11/XKBlib.h>
 
 namespace clan
 {
@@ -143,11 +144,11 @@ void InputDeviceProvider_X11Keyboard::received_keyboard_input(XKeyEvent &event)
 		key.type = InputEvent::released;
 	key.mouse_pos = window->get_mouse_position();
 
-	KeySym key_symbol = XKeycodeToKeysym(window->get_display(), key_code, 0);
+	KeySym key_symbol = XkbKeycodeToKeysym(window->get_display(), key_code, 0, 0);
 
 	bool keypressed = get_keycode(key_symbol);
 
-        // Add to repeat count                                                                                               
+        // Add to repeat count
         if(keydown && keypressed)
 	  {
 	    if( repeat_count.find(key_symbol) == repeat_count.end() )
