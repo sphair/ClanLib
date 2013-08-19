@@ -71,7 +71,7 @@ int App::start(const std::vector<std::string> &args)
 
 		font1.draw_text(canvas, 25, 25, "ClanLib: Phear the Power!");
 			
-		font2.draw_text(canvas, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz∆Êÿ¯≈Â0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
+		font2.draw_text(canvas, 3, 155, "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz√Ü√¶√ò√∏√Ö√•0123456789[]()!#$&%/\\=-+~'`\".,:;*?");
 
 		font2.draw_text(canvas, 10.0f, 200.0f, "Hello World\nMy Message");
 
