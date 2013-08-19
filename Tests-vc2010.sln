@@ -67,8 +67,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TCPConnection", "Tests\Netw
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Scrollbar2", "Tests\GUI\Scrollbar2\Scrollbar2-vc2010.vcxproj", "{415F53A0-F608-4D14-85C5-EEA69A6F488B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Framebuffer1", "Tests\Display\FrameBuffer1\framebuffer1_vc2010.vcxproj", "{903374C5-87EA-4010-BD44-95D54D9A3834}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texelcenter1", "Tests\Display\TexelCenter\texelcenter-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D8124BC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Image1", "Tests\Display\Image1\Image1-vc2010.vcxproj", "{5DA9D14B-F5D4-4CA0-94D3-44564BD426FA}"
@@ -85,8 +83,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WindowSizing", "Tests\Displ
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Timer1", "Tests\Core\Timer\Timer-vc2010.vcxproj", "{BAB9F701-4F2D-4D08-A3ED-02F84BD44433}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FullScreen", "Tests\Display\FullScreen\Fullscreen-vc2010.vcxproj", "{71383011-9EE6-409A-AB82-FC44836CF36D}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "XML", "Tests\Core\XML\XML-vc2010.vcxproj", "{21706F40-5BB2-4BCA-BB88-59ACD7251007}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ScreenInfo", "Tests\Display\ScreenInfo\ScreenInfo-vc2010.vcxproj", "{24ADFDB0-7DAC-4F10-8C0B-6118B843B7B1}"
@@ -94,8 +90,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RectPacker", "Tests\Core\RectPacker\RectPacker-vc2010.vcxproj", "{381E480C-447E-44A5-B89F-6C147CC91AB9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Color", "Tests\Display\Color\Color-vc2010.vcxproj", "{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HDR", "Tests\Display\HDR\hdr-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2D111A1A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Texture3D", "Tests\Display\Texture3D\Texture3D-vc2010.vcxproj", "{BAB64109-DBA5-439B-A821-5AFF2A4427AE}"
 EndProject
@@ -267,10 +261,6 @@ Global
 		{415F53A0-F608-4D14-85C5-EEA69A6F488B}.Debug|Win32.Build.0 = Debug|Win32
 		{415F53A0-F608-4D14-85C5-EEA69A6F488B}.Release|Win32.ActiveCfg = Release|Win32
 		{415F53A0-F608-4D14-85C5-EEA69A6F488B}.Release|Win32.Build.0 = Release|Win32
-		{903374C5-87EA-4010-BD44-95D54D9A3834}.Debug|Win32.ActiveCfg = Debug|Win32
-		{903374C5-87EA-4010-BD44-95D54D9A3834}.Debug|Win32.Build.0 = Debug|Win32
-		{903374C5-87EA-4010-BD44-95D54D9A3834}.Release|Win32.ActiveCfg = Release|Win32
-		{903374C5-87EA-4010-BD44-95D54D9A3834}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8124BC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8124BC}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2D8124BC}.Release|Win32.ActiveCfg = Release|Win32
@@ -303,10 +293,6 @@ Global
 		{BAB9F701-4F2D-4D08-A3ED-02F84BD44433}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB9F701-4F2D-4D08-A3ED-02F84BD44433}.Release|Win32.ActiveCfg = Release|Win32
 		{BAB9F701-4F2D-4D08-A3ED-02F84BD44433}.Release|Win32.Build.0 = Release|Win32
-		{71383011-9EE6-409A-AB82-FC44836CF36D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{71383011-9EE6-409A-AB82-FC44836CF36D}.Debug|Win32.Build.0 = Debug|Win32
-		{71383011-9EE6-409A-AB82-FC44836CF36D}.Release|Win32.ActiveCfg = Release|Win32
-		{71383011-9EE6-409A-AB82-FC44836CF36D}.Release|Win32.Build.0 = Release|Win32
 		{21706F40-5BB2-4BCA-BB88-59ACD7251007}.Debug|Win32.ActiveCfg = Debug|Win32
 		{21706F40-5BB2-4BCA-BB88-59ACD7251007}.Debug|Win32.Build.0 = Debug|Win32
 		{21706F40-5BB2-4BCA-BB88-59ACD7251007}.Release|Win32.ActiveCfg = Release|Win32
@@ -323,10 +309,6 @@ Global
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Debug|Win32.Build.0 = Debug|Win32
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Release|Win32.ActiveCfg = Release|Win32
 		{DD0EC1F8-78BC-4FAE-9870-BC48245C9999}.Release|Win32.Build.0 = Release|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Debug|Win32.Build.0 = Debug|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Release|Win32.ActiveCfg = Release|Win32
-		{BAB64109-DBA5-439B-A821-5AFF2D111A1A}.Release|Win32.Build.0 = Release|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Debug|Win32.Build.0 = Debug|Win32
 		{BAB64109-DBA5-439B-A821-5AFF2A4427AE}.Release|Win32.ActiveCfg = Release|Win32
