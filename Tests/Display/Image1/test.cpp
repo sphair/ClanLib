@@ -26,7 +26,7 @@ public:
 			DisplayWindow window("Image test", 1024, 768);
 
 			Canvas canvas(window);
-			GraphicContext &gc = canvas.get_gc();
+			GraphicContext gc = canvas.get_gc();
 
 			// Connect the Window close event
 			Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -34,19 +34,19 @@ public:
 
 			quit = false;
 
-			DisplayCache resources("resources.xml");
+			ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
 
 			Texture2D texture(gc, "Images/square.png");
 
-			Image image_texture(gc, texture, Rect(0, 0, texture.get_size()));
+			Image image_texture(texture, Rect(0, 0, texture.get_size()));
 			Image image_loaded(gc, "Images/square.png");
-			Image image_resources(gc, "entire_image", &resources);
+			Image image_resources = Image::resource(gc, "entire_image", resources);
 			Image image_copy(image_texture);
-			Image image_top_right(gc, "image_top_right", &resources);
-			Image image_bottom_right(gc, "image_bottom_right", &resources);
-			Image image_black(gc, "image_black", &resources);
+			Image image_top_right = Image::resource(gc, "image_top_right", resources);
+			Image image_bottom_right = Image::resource(gc, "image_bottom_right", resources);
+			Image image_black = Image::resource(gc, "image_black", resources);
 
-			Font small_font = Font(gc, "Tahoma", 12);
+			Font small_font = Font(canvas, "Tahoma", 12);
 
 			//Console::write_line("Color: %1,%2,%3,%4", image_resources.get_color().r, image_resources.get_color().g, image_resources.get_color().b, image_resources.get_color().a);
 			//Console::write_line("Scale: %1,%2", image_resources.get_scale_x(), image_resources.get_scale_y());
@@ -110,7 +110,7 @@ public:
 				image_texture.set_alignment(origin_bottom_right, -8, -8);
 				image_texture.draw(canvas, 450+offset, 500+offset);
 
-				canvas.circle(450+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
+				canvas.fill_circle(450+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
 				small_font.draw_text(canvas, 700, 460, "Image - Center Alignment (4 images with 8 pixel offset)");
 				small_font.draw_text(canvas, 700, 475, "(top center, right center, bottom center, left center)");
@@ -126,7 +126,7 @@ public:
 				image_texture.set_alignment(origin_center_right, -8, 0);
 				image_texture.draw(canvas, 700+offset, 500+offset);
 
-				canvas.circle(700+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
+				canvas.fill_circle(700+offset, 500+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
 				small_font.draw_text(canvas, 700, 160, "Image - Center Align (4 images with 64 pixel offset)");
 				small_font.draw_text(canvas, 700, 175, "Also Includes a centered image (Without offset)");
@@ -147,7 +147,7 @@ public:
 				image_texture.set_alignment(origin_center, -center_image_offset, 0);
 				image_texture.draw(canvas, 700+offset, 200+offset);
 
-				canvas.circle(700+offset, 200+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
+				canvas.fill_circle(700+offset, 200+offset, 4, Colorf(1.0f, 1.0f, 1.0f, 0.9f));
 
 				// Restore alignment
 				image_texture.set_alignment(origin_top_left, 0, 0);
