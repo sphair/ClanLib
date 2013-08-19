@@ -30,7 +30,7 @@
 #pragma once
 
 // This is the Application class (That is instantiated by the Program Class)
-class PathApp
+class ShapeApp
 {
 public:
 	int start(const std::vector<std::string> &args);

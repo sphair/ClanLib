@@ -29,61 +29,26 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "path.h"
-
-// Choose the target renderer
-//#define USE_D3D
-#define USE_OPENGL_2
-//#define USE_OPENGL_1
-
-#ifdef USE_D3D
-#include <ClanLib/d3d.h>
-#endif
-
-#ifdef USE_OPENGL_1
-#include <ClanLib/gl1.h>
-#endif
-
-#ifdef USE_OPENGL_2
-#include <ClanLib/gl.h>
-#endif
+#include "shape.h"
 
 int Program::main(const std::vector<std::string> &args)
 {
-	try
-	{
-		// Initialize ClanLib base components
-		clan::SetupCore setup_core;
 
-		// Initialize the ClanLib display component
-		clan::SetupDisplay setup_display;
+	// Initialize ClanLib base components
+	clan::SetupCore setup_core;
 
-		#ifdef USE_D3D
-			clan::SetupD3D setup_d3d;
-		#endif
+	// Initialize the ClanLib display component
+	clan::SetupDisplay setup_display;
 
-		#ifdef USE_OPENGL_1
-			clan::SetupGL1 setup_gl1;
-		#endif
+	// We support all display targets, in order listed here
+	clan::SetupD3D setup_d3d;
+	clan::SetupGL setup_gl;
+	clan::SetupSWRender setup_swrender;
 
-		#ifdef USE_OPENGL_2
-			clan::SetupGL setup_gl;
-		#endif
-
-		// Start the Application
-		PathApp app;
-		int retval = app.start(args);
-		return retval;
-	}
-	catch(clan::Exception &exception)
-	{
-		// Create a console window for text-output if not available
-		clan::ConsoleWindow console("Console", 80, 160);
-		clan::Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-		console.display_close_message();
-
-		return -1;
-	}
+	// Start the Application
+	ShapeApp app;
+	int retval = app.start(args);
+	return retval;
 }
 
 // Instantiate Application, informing it where the Program is located
