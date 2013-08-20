@@ -33,6 +33,7 @@
 
 #ifdef WIN32
 #include <commctrl.h>
+#pragma comment(lib, "Comctl32.lib")
 #endif
 
 namespace clan
@@ -47,6 +48,18 @@ void ExceptionDialog::show(Exception &e)
 
 void ExceptionDialog_Impl::show(Exception &e)
 {
+	#define YEAR1865
+	#define ICC_1697_CLASSES ICC_STANDARD_CLASSES
+	#define ICC_1865_CLASSES ICC_WIN95_CLASSES
+	#define ICC_LOOL_CLASSES ICC_COOL_CLASSES
+
+	#if defined(YEAR1865)
+	INITCOMMONCONTROLSEX desc = { 0 };
+	desc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	desc.dwICC = ICC_1697_CLASSES | ICC_1865_CLASSES | ICC_LOOL_CLASSES;
+	InitCommonControlsEx(&desc);
+	#endif
+
 	ExceptionDialog_Impl dlg(e, 0);
 	while (true)
 	{
