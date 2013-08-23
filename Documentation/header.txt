@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="$title">
+        <title>$title - ClanLib SDK</title>
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+        <script type="text/javascript" src="$relpath^dynsections.js"></script>
+        $treeview
+        $search
+        $mathjax
+        <link href="$relpath^$stylesheet" rel="stylesheet" type="text/css" />
+        $extrastylesheet
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <div id="page-header-logo"></div>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="/">Home</a>
+                        <a class="page-header-menu-item" href="/download.html">Download</a>
+                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="/examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="/donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="/contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <div id="doxygen">
+
+                        <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+
+<!-- end header part -->

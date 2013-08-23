@@ -1,0 +1,145 @@
+﻿@charset "utf-8";
+
+#page-header-wrapper
+{
+    background: #f0f0f0; /* for CSS 2.1 browsers */
+    background-image: -webkit-linear-gradient(top, #e8e8e8, white); /* for old mobile devices */
+    background: linear-gradient(to bottom, #e8e8e8, white);
+
+    /* To keep header margins within the header box */
+    padding: 1px;
+    marign: -1px;
+}
+
+#page-header
+{
+    height: 142px;
+    margin: 0 auto;
+    position: relative; /* for #page-header-menu absolute */
+    width: 100%;
+    min-width: 960px;
+    max-width: 1200px;
+}
+
+#page-header-logo
+{
+    width: 323px;
+    height: 86px;
+    margin: 15px auto;
+    background: url("../img/clanlib.png") no-repeat transparent;
+}
+
+#page-header-menu
+{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    margin: 15px 0 0 0;
+    font: 15px 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    border: solid #e8e8e8;
+    border-width: 0 0 1px 0;
+}
+
+#page-header-menu a
+{
+    text-decoration: none;
+    padding: 5px 15px 0 15px;
+}
+
+#page-header-menu a:focus
+{
+    outline: none;
+}
+
+#page-header-menu a,
+#page-header-menu a:visited
+{
+    color: #808080;
+}
+
+#page-header-menu a.active
+{
+    background: white;
+}
+
+#page-header-menu a.active,
+#page-header-menu a.active:visited
+{
+    color: black;
+}
+
+#page-header-menu a:hover
+{
+    color: cornflowerblue;
+}
+
+#page-header .page-header-menu-item
+{
+    margin-bottom: -1px;
+    border: 1px solid transparent;
+}
+
+#page-header .page-header-menu-item.active
+{
+    border: 1px solid #e8e8e8;
+    border-bottom-color: white;
+}
+
+@media screen and (max-width: 1000px)
+{
+    #page-header
+    {
+        min-width: 560px;
+        max-width: 800px;
+    }
+
+    #page-header-menu
+    {
+        font-size: 12px;
+    }
+
+    #page-header-menu a
+    {
+        padding: 3px 5px 0 5px;
+    }
+}
+
+@media screen and (max-width: 600px)
+{
+    #page-header
+    {
+        min-width: 260px;
+        max-width: 500px;
+        height: auto;
+    }
+
+    #page-header-menu
+    {
+        font-size: 9px;
+        border: none;
+    }
+
+    #page-header-menu
+    {
+        position: static;
+    }
+
+    #page-header .page-header-menu-item
+    {
+        display: block;
+        padding: 1px 3px 0 3px;
+        width: 150px;
+        margin: 0 auto;
+    }
+}
+
+@media print
+{
+    #page-header
+    {
+        display: none;
+    }
+}

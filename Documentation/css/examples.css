@@ -1,0 +1,40 @@
+﻿@charset "utf-8";
+
+#examples
+{
+}
+
+#example-filters
+{
+    display: none;
+}
+
+.example-filter
+{
+}
+
+#example-list
+{
+}
+
+#example-list-end
+{
+    clear: both;
+}
+
+.example-image
+{
+    display: inline-block;
+}
+
+.example-image > img
+{
+    width: 200px;
+    margin: 5px;
+    vertical-align: top;
+}
+
+.example-mask
+{
+    display: none;
+}

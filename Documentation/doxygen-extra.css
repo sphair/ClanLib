@@ -1,0 +1,171 @@
+@charset "utf-8";
+@import "../../css/main.css";
+
+/****************************************************************/
+/* Misc garbage required to reset the font choices in doxygen.. */
+
+#doxygen, #doxygen table, #doxygen div, #doxygen p, #doxygen dl {
+
+	font: 13px 'Segoe UI', 'Monda', sans-serif;
+	line-height: 1.5em;
+	/*font: 400 14px/22px Roboto,sans-serif;*/
+}
+
+#doxygen .title {
+	font-family: 'PT Sans', sans-serif;
+	font-weight: normal;
+	font-size: 35px;
+	/*font: 400 14px/28px Roboto,sans-serif;*/
+}
+
+#projectname
+{
+	font-family: 'PT Sans', sans-serif;
+	font-weight: normal;
+	font-size: 35px;
+	margin: 25px 0 13px 0;
+
+	/*font: 300% Tahoma, Arial,sans-serif;*/
+}
+
+#projectbrief
+{
+	font-family: 'PT Sans', sans-serif;
+	font-weight: normal;
+	font-size: 1.6em;
+
+	/*font: 120% Tahoma, Arial,sans-serif;*/
+	margin: 0px;
+	padding: 0px;
+}
+
+#projectnumber
+{
+	font: 50% 'Segoe UI', 'Monda', sans-serif;
+	/*font: 50% Tahoma, Arial,sans-serif;*/
+	margin: 0px;
+	padding: 0px;
+}
+
+#doxygen div.toc li
+{
+	font: 13px 'Segoe UI', 'Monda', sans-serif;
+	line-height: 1.5em;
+        /*font: 10px/1.2 Verdana,DejaVu Sans,Geneva,sans-serif;*/
+}
+
+#doxygen div.toc h3
+{
+	font-family: 'PT Sans', sans-serif;
+	font-weight: normal;
+	font-size: 1.3em;
+
+        /*font: bold 12px/1.2 Arial,FreeSans,sans-serif;*/
+}
+
+#doxygen pre.fragment
+{
+	font-family: "Consolas","Source Code Pro","Courier New",monospace;
+        /*font-family: monospace, fixed;*/
+}
+
+#doxygen div.line
+{
+	font-family: "Consolas","Source Code Pro","Courier New",monospace;
+	/*font-family: monospace, fixed;*/
+}
+
+#doxygen .params .paramdir
+{
+	font-family: "Consolas","Source Code Pro","Courier New",monospace;
+        /*font-family: "courier new",courier,monospace;*/
+}
+
+#doxygen .navpath li.navelem a
+{
+	font-family: 'PT Sans', sans-serif;
+	/*font-family: 'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;*/
+}
+
+/****************************************************************/
+/* Layout */
+
+#top
+{
+	padding: 15px 0;
+}
+
+#top ul
+{
+	padding: 0;
+	text-align: center;
+}
+
+#top li
+{
+	display: inline;
+	margin: 1.5em 20px;
+}
+
+#nav-path
+{
+	display: none;
+}
+
+#doxygen div.header
+{
+	position: relative;
+	clear: both;
+	background: none;
+	border: none;
+}
+
+#doxygen div.header div.summary
+{
+	width: 80%;
+	position: absolute;
+	top: 48px;
+	right: 10px;
+	font-size: 13px;
+	margin: 0;
+}
+
+#doxygen div.ingroups
+{
+	font-size: 13px;
+	margin: 0.5em 0;
+}
+
+#doxygen div.memitem
+{
+	border: none;
+	background: #F9FAFC;
+	box-shadow: none;
+}
+
+#doxygen div.memproto
+{
+	border: none;
+	background: none;
+	box-shadow: none;
+}
+
+#doxygen div.memdoc
+{
+	border: none;
+	background: none;
+	box-shadow: none;
+}
+
+#doxygen div.memtemplate
+{
+	font-size: 100%;
+}
+
+#doxygen span.mlabel
+{
+	background: none;
+	border: none;
+	color: #555;
+	font-size: 11px;
+}

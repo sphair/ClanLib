@@ -1,0 +1,19 @@
+﻿@charset "utf-8";
+
+/*
+    Google Fonts 'Source Code Pro', 'Monda' and 'PT Sans'
+
+    font-family: 'Source Code Pro', sans-serif;
+    font-family: 'Monda', sans-serif;
+    font-family: 'Oswald', sans-serif;
+    font-family: 'PT Sans', sans-serif;
+*/
+@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro|Monda:400,700|Oswald:400,300|PT+Sans);
+
+/*
+@font-face
+{
+    font-family: "Inconsolata";
+    src: url('../fonts/Inconsolata.otf') format('opentype');
+}
+*/
