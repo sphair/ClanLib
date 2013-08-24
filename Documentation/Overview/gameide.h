@@ -44,7 +44,7 @@
     <ul>
         <li>clan::BuildSystem - Main class for the build system</li>
 		<li>clan::BuildTool - Interface implemented by tools participating in the build</li>
-        <li>clan::BuildOperation - BuildTool interfaces with this class to report build status/li>
+        <li>clan::BuildOperation - BuildTool interfaces with this class to report build status</li>
     </ul>
 
 */

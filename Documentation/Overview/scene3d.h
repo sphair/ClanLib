@@ -47,8 +47,8 @@
 
 	<h2>Resources</h2>
 
-    <ul>
-        <li>clan::SceneCache - Resource cache interface for clanScene3D resources</li>
-    </ul>
+	<ul>
+		<li>clan::SceneCache - Resource cache interface for clanScene3D resources</li>
+	</ul>
 
 */
