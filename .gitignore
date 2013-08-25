@@ -1,6 +1,7 @@
 /ClanLib.sln
 /ClanLib.opensdf
 /ClanLib.sdf
+ipch
 Debug
 Release
 *.suo
