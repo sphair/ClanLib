@@ -76,86 +76,59 @@ int App::start(const std::vector<std::string> &args)
 {
 	quit = false;
 
-	try
+	DisplayWindowDescription desc;
+
+	desc.set_title("ClanLib AnimCursor Test");
+	desc.set_size(Size(800, 600), true);
+	DisplayWindow window(desc);
+
+	// Connect the Window close event
+	Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
+
+	// Connect a keyboard handler to on_key_up()
+	Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
+
+	// Create the canvas and get the graphic context
+	Canvas canvas(window);
+	GraphicContext gc = canvas.get_gc();
+
+	Font font = Font(canvas, "Tahoma", 20);
+
+	PixelBuffer pacman = ImageProviderFactory::load("pacman.png");
+
+	CursorDescription description;
+	Size size(22, 22);
+
+	for (int frame_cnt=0; frame_cnt < 6; frame_cnt++)
 	{
+		PixelBuffer frame(size.width, size.height, tf_rgba8);
 
-		OpenGLWindowDescription desc;
+		frame.set_subimage(pacman,Point(0,0),Rect((frame_cnt * 28) + 4, 4, size));
 
-		desc.set_title("ClanLib AnimCursor Test");
-		desc.set_size(Size(800, 600), true);
-		DisplayWindow window(desc);
-
-		// Connect the Window close event
-		Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
-
-		// Connect a keyboard handler to on_key_up()
-		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
-
-		// Create the canvas and get the graphic context
-		Canvas canvas(window);
-		GraphicContext &gc = canvas.get_gc();
-
-		Font font = Font(gc, "Tahoma", 20);
-
-		PixelBuffer pacman = ImageProviderFactory::load("pacman.png");
-
-		SpriteDescription description;
-		Size size(22, 22);
-
-		for (int frame_cnt=0; frame_cnt < 6; frame_cnt++)
-		{
-			PixelBuffer frame(size.width, size.height, tf_rgba8);
-
-			frame.set_subimage(pacman,Point(0,0),Rect((frame_cnt * 28) + 4, 4, size));
-
-			description.add_frame(frame);
-			description.set_frame_delay(frame_cnt, 0.1);
-		}
-
-		Point hotspot(0,0);
-		Cursor cursor(window, description, hotspot);
-		window.set_cursor(cursor);
-
-		// Run until someone presses escape
-		while (!quit)
-		{
-			canvas.clear(Colorf(0.0f,0.0f,0.5f));
-
-			font.draw_text(canvas, 32, 32, "Observe the animated cursor");
-
-			canvas.flush();
-			// Flip the display, showing on the screen what we have drawed
-			// since last call to flip()
-			window.flip(1);
-
-			// This call processes user input and other events
-			KeepAlive::process();
-		}
+		description.add_frame(frame);
+		description.set_frame_delay(frame_cnt, 0.1);
 	}
-	catch(Exception& exception)
+
+	Point hotspot(0,0);
+	Cursor cursor(window, description, hotspot);
+	window.set_cursor(cursor);
+
+	// Run until someone presses escape
+	while (!quit)
 	{
-		// Create a console window for text-output if not available
-		ConsoleWindow console("Console", 80, 200);
+		canvas.clear(Colorf(0.0f,0.0f,0.5f));
 
-		Console::write_line("Exception caught:");
-		Console::write_line(exception.message);
+		font.draw_text(canvas, 32, 32, "Observe the animated cursor");
 
-		// Display the stack trace (if available)
-		std::vector<std::string> stacktrace = exception.get_stack_trace();
-		int size = stacktrace.size();
-		if (size > 0)
-		{
-			Console::write_line("Stack Trace:");
-			for (int cnt=0; cnt < size; cnt++)
-			{
-				Console::write_line(stacktrace[cnt]);
-			}
-		}
+		canvas.flush();
+		// Flip the display, showing on the screen what we have drawed
+		// since last call to flip()
+		window.flip(1);
 
-		console.display_close_message();
-
-		return -1;
+		// This call processes user input and other events
+		KeepAlive::process();
 	}
+
 	return 0;
 }
 

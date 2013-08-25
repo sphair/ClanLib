@@ -64,11 +64,8 @@ int TestApp::main(const std::vector<std::string> &args)
 	try
 	{
 
-#ifdef USE_D3D
 		DisplayWindowDescription desc;
-#else
-		OpenGLWindowDescription desc;
-#endif
+
 		desc.set_title("Image clipboard test");
 		desc.set_size(Size(800,600), true);
 		DisplayWindow window(desc);
@@ -125,7 +122,7 @@ int TestApp::main(const std::vector<std::string> &args)
 			texture_image.set_min_filter(filter_linear);
 			texture_image.set_mag_filter(filter_linear);
 
-			Image image(gc,texture_image,texture_image.get_size());
+			Image image(texture_image,texture_image.get_size());
 
 			while (!quit)
 			{
@@ -134,8 +131,6 @@ int TestApp::main(const std::vector<std::string> &args)
 				canvas.set_map_mode(MapMode(map_2d_upper_left));
 
 				image.draw(canvas,0,0);
-
-				canvas.flush(); //Is this intended to be needed?
 
 				// Flip the display, showing on the screen what we have drawed
 				// since last call to flip()

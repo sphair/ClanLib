@@ -58,7 +58,6 @@ clanGUI_includes = \
 	GUI/gui_message_input.h \
 	GUI/gui_layout.h \
 	GUI/api_gui.h \
-	GUI/gui_component_description.h \
 	GUI/gui_window_manager_direct.h \
 	GUI/gui_message_focus_change.h \
 	GUI/gui_message.h \

@@ -11,17 +11,17 @@ public:
 	int start(const std::vector<std::string> &args);
 
 private:
-	void on_input_up(const InputEvent &key, const InputState &state);
+	void on_input_up(const InputEvent &key);
 	void on_window_close();
 	int dump_fps();
 	int calc_fps(int frame_time);
 
-	void draw_equal_tex_equal_sprites(GraphicContext &gc, int sprite_count, float time_elapsed);
-	void draw_equal_tex_diff_sprites(GraphicContext &gc, int sprite_count, float time_elapsed);
-	void draw_equal_tex_diff_sprites_batch(GraphicContext &gc, int sprite_count, float time_elapsed);
+	void draw_equal_tex_equal_sprites(Canvas &canvas, int sprite_count, float time_elapsed);
+	void draw_equal_tex_diff_sprites(Canvas &canvas, int sprite_count, float time_elapsed);
+	void draw_equal_tex_diff_sprites_batch(Canvas &canvas, int sprite_count, float time_elapsed);
 
-	void draw_diff_tex_diff_sprites(GraphicContext &gc, int sprite_count, float time_elapsed);
-	void draw_diff_tex_diff_sprites_batch(GraphicContext &gc, int sprite_count, float time_elapsed);
+	void draw_diff_tex_diff_sprites(Canvas &canvas, int sprite_count, float time_elapsed);
+	void draw_diff_tex_diff_sprites_batch(Canvas &canvas, int sprite_count, float time_elapsed);
 
 private:
 	bool quit;
@@ -87,12 +87,13 @@ int App::start(const std::vector<std::string> &args)
 		Slot slot_input_up = (window.get_ic().get_keyboard()).sig_key_up().connect(this, &App::on_input_up);
 
 		// Get the graphic context
-		GraphicContext gc = window.get_gc();
+		Canvas canvas(window);
+		GraphicContext gc = canvas.get_gc();
 
-		DisplayCache resources("resources.xml");
+		ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
 
-		explosion1 = Sprite(gc, "Explosion1", &resources);
-		explosion2 = Sprite(gc, "Explosion2", &resources);
+		explosion1 = Sprite::resource(canvas, "Explosion1", resources);
+		explosion2 = Sprite::resource(canvas, "Explosion2", resources);
 
 		explosions_same_tex.reserve(10000);
 		for(int i=0; i<10000; i++)
@@ -108,25 +109,25 @@ int App::start(const std::vector<std::string> &args)
 		// Run until someone presses escape
 		while (!quit)
 		{
-			float delta_time = dump_fps() / 1000.0f;
+			float delta_time = dump_fps();
 
 			gc.clear(Colorf(0.0f,0.0f,0.2f));
 
 			if(running_test == 0)
 				System::sleep(100);
 			if(running_test == 1)
-				draw_equal_tex_equal_sprites(gc, 10000, delta_time);
+				draw_equal_tex_equal_sprites(canvas, 10000, delta_time);
 			if(running_test == 2)
-				draw_equal_tex_diff_sprites(gc, 10000, delta_time);
+				draw_equal_tex_diff_sprites(canvas, 10000, delta_time);
 			if(running_test == 3)
-				draw_equal_tex_diff_sprites_batch(gc, 10000, delta_time);
+				draw_equal_tex_diff_sprites_batch(canvas, 10000, delta_time);
 			if(running_test == 4)
-				draw_diff_tex_diff_sprites(gc, 10000, delta_time);
+				draw_diff_tex_diff_sprites(canvas, 10000, delta_time);
 			if(running_test == 5)
-				draw_diff_tex_diff_sprites_batch(gc, 10000, delta_time);
+				draw_diff_tex_diff_sprites_batch(canvas, 10000, delta_time);
 
 			// Flip the display, showing on the screen what we have drawed since last call to flip()
-			window.flip();
+			window.flip(0);
 
 			// This call processes user input and other events
 			KeepAlive::process();
@@ -162,32 +163,32 @@ int App::start(const std::vector<std::string> &args)
 }
 
 // A key was pressed
-void App::on_input_up(const InputEvent &key, const InputState &state)
+void App::on_input_up(const InputEvent &key)
 {
-	if(key.id == KEY_ESCAPE)
+	if(key.id == keycode_escape)
 		quit = true;
 
-	if(key.id == KEY_1 && running_test != 1)
+	if(key.id == keycode_1 && running_test != 1)
 	{
 		running_test = 1;
 		Console::write_line("Running test 1: draw_equal_tex_equal_sprites");
 	}
-	if(key.id == KEY_2 && running_test != 2)
+	if(key.id == keycode_2 && running_test != 2)
 	{
 		running_test = 2;
 		Console::write_line("Running test 2: draw_equal_tex_diff_sprites");
 	}
-	if(key.id == KEY_3 && running_test != 3)
+	if(key.id == keycode_3 && running_test != 3)
 	{
 		running_test = 3;
 		Console::write_line("Running test 3: draw_equal_tex_diff_sprites_batch");
 	}
-	if(key.id == KEY_4 && running_test != 4)
+	if(key.id == keycode_4 && running_test != 4)
 	{
 		running_test = 4;
 		Console::write_line("Running test 4: draw_diff_tex_diff_sprites");
 	}
-	if(key.id == KEY_5 && running_test != 5)
+	if(key.id == keycode_5 && running_test != 5)
 	{
 		running_test = 5;
 		Console::write_line("Running test 5: draw_diff_tex_diff_sprites_batch");
@@ -203,7 +204,7 @@ void App::on_window_close()
 int App::dump_fps()
 {
 	// Calculate time since last update
-	clan::ubyte64 start_time = System::get_time();
+	static clan::ubyte64 start_time = System::get_time();
 	static int fps_dump_time = 0;
 
 	clan::ubyte64 cur_time = System::get_time();
@@ -239,14 +240,14 @@ int App::calc_fps(int frame_time)
 	return fps_result;
 }
 
-void App::draw_equal_tex_equal_sprites(GraphicContext &gc, int sprite_count, float time_elapsed)
+void App::draw_equal_tex_equal_sprites(Canvas &canvas, int sprite_count, float time_elapsed)
 {
 	int count = 0;
 	for(int x=0; x<100; ++x)
 	{
 		for(int y=0; y<100; ++y)
 		{
-			explosion1.draw(gc, x * 10.0f, y * 10.0f);
+			explosion1.draw(canvas, x * 10.0f, y * 10.0f);
 			explosion1.update(time_elapsed);
 
 			count++;
@@ -256,14 +257,14 @@ void App::draw_equal_tex_equal_sprites(GraphicContext &gc, int sprite_count, flo
 	}
 }
 
-void App::draw_equal_tex_diff_sprites(GraphicContext &gc, int sprite_count, float time_elapsed)
+void App::draw_equal_tex_diff_sprites(Canvas &canvas, int sprite_count, float time_elapsed)
 {
 	int count = 0;
 	for(int x=0; x<100; ++x)
 	{
 		for(int y=0; y<100; ++y)
 		{
-			explosions_same_tex[count].draw(gc, x * 10.0f, y * 10.0f);
+			explosions_same_tex[count].draw(canvas, x * 10.0f, y * 10.0f);
 			explosions_same_tex[count].update(time_elapsed);
 
 			count++;
@@ -273,20 +274,20 @@ void App::draw_equal_tex_diff_sprites(GraphicContext &gc, int sprite_count, floa
 	}
 }
 
-void App::draw_equal_tex_diff_sprites_batch(GraphicContext &gc, int sprite_count, float time_elapsed)
+void App::draw_equal_tex_diff_sprites_batch(Canvas &canvas, int sprite_count, float time_elapsed)
 {
 	// Batching is builtin in 2.0..
-	draw_equal_tex_diff_sprites(gc, sprite_count, time_elapsed);
+	draw_equal_tex_diff_sprites(canvas, sprite_count, time_elapsed);
 }
 
-void App::draw_diff_tex_diff_sprites(GraphicContext &gc, int sprite_count, float time_elapsed)
+void App::draw_diff_tex_diff_sprites(Canvas &canvas, int sprite_count, float time_elapsed)
 {
 	int count = 0;
 	for(int x=0; x<100; ++x)
 	{
 		for(int y=0; y<100; ++y)
 		{
-			explosions_diff_tex[count].draw(gc, x * 10.0f, y * 10.0f);
+			explosions_diff_tex[count].draw(canvas, x * 10.0f, y * 10.0f);
 			explosions_diff_tex[count].update(time_elapsed);
 
 			count++;
@@ -296,8 +297,8 @@ void App::draw_diff_tex_diff_sprites(GraphicContext &gc, int sprite_count, float
 	}
 }
 
-void App::draw_diff_tex_diff_sprites_batch(GraphicContext &gc, int sprite_count, float time_elapsed)
+void App::draw_diff_tex_diff_sprites_batch(Canvas &canvas, int sprite_count, float time_elapsed)
 {
 	// Batching is builtin in 2.0..
-	draw_diff_tex_diff_sprites(gc, sprite_count, time_elapsed);
+	draw_diff_tex_diff_sprites(canvas, sprite_count, time_elapsed);
 }

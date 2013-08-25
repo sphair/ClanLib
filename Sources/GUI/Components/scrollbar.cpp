@@ -32,7 +32,6 @@
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_manager.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/scrollbar.h"
 #include "API/Core/Math/cl_math.h"
 #include "API/Core/Math/rect.h"

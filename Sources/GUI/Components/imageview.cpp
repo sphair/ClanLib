@@ -33,7 +33,6 @@
 #include "API/Core/Text/string_format.h"
 #include "API/GUI/gui_component.h"
 #include "API/GUI/gui_message.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/imageview.h"
 #include "API/Display/2D/sprite.h"
 #include "API/Display/2D/image.h"

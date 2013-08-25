@@ -33,7 +33,6 @@
 #include "API/GUI/gui_message.h"
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/label.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Display/Window/input_event.h"

@@ -60,3 +60,5 @@ Release
 /Projects/install_clanSound.bat
 /Projects/install_clanSqlite.bat
 /Projects/Sheets/ExternalDirectories.props
+ipch
+doxyoutput

@@ -1,0 +1,14 @@
+﻿@charset "utf-8";
+
+body
+{
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: #f0f0f0;
+}
+
+#page-wrapper
+{
+    background: white;
+}

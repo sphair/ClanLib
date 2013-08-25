@@ -42,6 +42,7 @@
 #include "API/Core/Resources/xml_resource_node.h"
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/shape2d.h"
+#include "API/Core/Text/utf8_reader.h"
 
 namespace clan
 {
@@ -80,9 +81,13 @@ Size FontProvider_Sprite::get_text_size(GraphicContext &gc, const std::string &t
 {
 	int width = 0;
 
-	for (std::string::size_type p = 0; p < text.length(); p++)
+	UTF8_Reader reader(text.data(), text.length());
+	while(!reader.is_end())
 	{
-		Font_Sprite_Glyph *gptr = get_glyph(text[p]);
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		Font_Sprite_Glyph *gptr = get_glyph(glyph);
 
 		int glyph_width;
 		if (gptr)
@@ -177,13 +182,15 @@ int FontProvider_Sprite::get_character_index(GraphicContext &gc, const std::stri
 
 void FontProvider_Sprite::draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color) 
 {
-	std::string::size_type string_length = text.length();
 	float ascent = font_metrics.get_ascent();
 
-	// Scan the string
-	for (std::string::size_type p = 0; p < string_length; p++)
+	UTF8_Reader reader(text.data(), text.length());
+	while(!reader.is_end())
 	{
-		Font_Sprite_Glyph *gptr = get_glyph(text[p]);
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		Font_Sprite_Glyph *gptr = get_glyph(glyph);
 		if (gptr)
 		{
 			spr_glyphs.set_frame(gptr->sprite_index);
@@ -200,15 +207,17 @@ void FontProvider_Sprite::draw_text(Canvas &canvas, float xpos, float ypos, cons
 
 void FontProvider_Sprite::draw_text(Canvas &canvas, float xpos, float ypos, float scale_x, float scale_y, const std::string &text, const Colorf &color)
 {
-	std::string::size_type string_length = text.length();
-
 	float f_spacelen = spacelen;
 	float ascent = font_metrics.get_ascent() * scale_x;
 
 	// Scan the string
-	for (std::string::size_type p = 0; p < string_length; p++)
+	UTF8_Reader reader(text.data(), text.length());
+	while(!reader.is_end())
 	{
-		Font_Sprite_Glyph *gptr = get_glyph(text[p]);
+		unsigned int glyph = reader.get_char();
+		reader.next();
+
+		Font_Sprite_Glyph *gptr = get_glyph(glyph);
 		if (gptr)
 		{
 			spr_glyphs.set_frame(gptr->sprite_index);
@@ -234,12 +243,12 @@ void FontProvider_Sprite::set_font_metrics(const FontMetrics &metrics)
 /////////////////////////////////////////////////////////////////////////////
 // FontProvider_Sprite Implementation:
 
-void FontProvider_Sprite::setup_glyphs(const std::string &letters, int new_spacelen, bool monospace)
+void FontProvider_Sprite::setup_glyphs(const std::string &letters_utf8, int new_spacelen, bool monospace)
 {
 	fixed_width = 0;
 	height = 0;
 
-	const int length = letters.size();
+	const int length = StringHelp::utf8_length(letters_utf8);
 
 	if ((length > spr_glyphs.get_frame_count()) || (length == 0))
 	{
@@ -267,7 +276,7 @@ void FontProvider_Sprite::setup_glyphs(const std::string &letters, int new_space
 	//If not monospace, and space width not specified, then use average width as space width
 	else if (new_spacelen < 0)
 	{
-		std::string::size_type space_pos = letters.find(' ');
+		std::string::size_type space_pos = letters_utf8.find(' ');
 		
 		if (space_pos != std::string::npos)
 		{
@@ -313,12 +322,18 @@ void FontProvider_Sprite::setup_glyphs(const std::string &letters, int new_space
 
 	// Setup char to glyph map:
 
-	std::string::size_type string_length = letters.length();
-	for (std::string::size_type p = 0; p < string_length; p++)
+
+	UTF8_Reader reader(letters_utf8.data(), letters_utf8.length());
+	int sprite_index = 0;
+	while(!reader.is_end())
 	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
+		
 		Font_Sprite_Glyph font_glyph;
-		font_glyph.glyph = letters[p];
-		font_glyph.sprite_index = p;
+		font_glyph.glyph = glyph;
+		font_glyph.sprite_index = sprite_index;
+		sprite_index++;
 		glyph_list.push_back(font_glyph);
 	}
 

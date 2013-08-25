@@ -33,6 +33,8 @@
 
 #ifdef WIN32
 #include <commctrl.h>
+#pragma comment(lib, "Comctl32.lib")
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
 
 namespace clan
@@ -47,6 +49,18 @@ void ExceptionDialog::show(Exception &e)
 
 void ExceptionDialog_Impl::show(Exception &e)
 {
+	#define YEAR1865
+	#define ICC_1697_CLASSES ICC_STANDARD_CLASSES
+	#define ICC_1865_CLASSES ICC_WIN95_CLASSES
+	#define ICC_LOOL_CLASSES ICC_COOL_CLASSES
+
+	#if defined(YEAR1865)
+	INITCOMMONCONTROLSEX desc = { 0 };
+	desc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	desc.dwICC = ICC_1697_CLASSES | ICC_1865_CLASSES | ICC_LOOL_CLASSES;
+	InitCommonControlsEx(&desc);
+	#endif
+
 	ExceptionDialog_Impl dlg(e, 0);
 	while (true)
 	{
@@ -97,7 +111,7 @@ ExceptionDialog_Impl::ExceptionDialog_Impl(Exception &e, HWND owner)
 	std::wstring text = StringHelp::utf8_to_ucs2(e.get_message_and_stack_trace());
 
 	frame = CreateWindowEx(0, L"STATIC", L"", WS_VISIBLE|WS_CHILD|SS_LEFT|SS_EDITCONTROL|SS_NOPREFIX, 0, 0, 100, 50, window_handle, 0, instance, 0);
-	text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE|WS_CHILD|SS_LEFT|SS_EDITCONTROL|SS_NOPREFIX, 0, 0, 100, 50, window_handle, 0, instance, 0);
+	text_label = CreateWindowEx(0, L"STATIC", text.c_str(), WS_VISIBLE|WS_CHILD|SS_LEFT|SS_EDITCONTROL|SS_NOPREFIX|SS_NOTIFY, 0, 0, 100, 50, window_handle, 0, instance, 0);
 	ok_button = CreateWindowEx(0, L"BUTTON", L"OK", WS_TABSTOP|WS_VISIBLE|WS_CHILD|BS_DEFPUSHBUTTON, 0, 0, 50, 10, window_handle, 0, instance, 0);
 
 	int point_size = 9;
@@ -147,7 +161,8 @@ LRESULT ExceptionDialog_Impl::window_proc(HWND window_handle, UINT message_id, W
 {
 	if ((message_id == WM_COMMAND && HIWORD(wparam) == BN_CLICKED) || message_id == WM_CLOSE)
 	{
-		PostMessage(window_handle, WM_USER, 0, 0);
+		if (lparam != (LPARAM)text_label)	// Allow double clicks to copy text to clipboard
+			PostMessage(window_handle, WM_USER, 0, 0);
 		return 0;
 	}
 	else if (message_id == WM_CTLCOLORSTATIC && lparam == (LPARAM)frame)

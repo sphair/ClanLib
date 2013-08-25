@@ -5,7 +5,6 @@ accelerator_table.cpp \
 gui_xml_loader_version_1_0.cpp \
 precomp.cpp \
 gui_manager_impl.cpp \
-gui_component_description.cpp \
 gui_component.cpp \
 accelerator_key.cpp \
 gui_component_impl.cpp \

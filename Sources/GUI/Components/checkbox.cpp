@@ -35,7 +35,6 @@
 #include "API/GUI/gui_message_input.h"
 #include "API/GUI/gui_message_pointer.h"
 #include "API/GUI/gui_message_focus_change.h"
-#include "API/GUI/gui_component_description.h"
 #include "API/GUI/Components/checkbox.h"
 #include "API/GUI/Components/label.h"
 #include "API/GUI/Components/imageview.h"
