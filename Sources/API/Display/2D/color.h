@@ -108,6 +108,9 @@ public:
 	/// \brief Returns the color in ARGB8888 format.
 	unsigned int get_argb8() const { return (((unsigned int)a) << 24) | (((unsigned int)r) << 16) | (((unsigned int)g) << 8) | (unsigned int)b; }
 
+	/// \brief Returns the color in ABGR8888 format.
+	unsigned int get_abgr8() const { return (((unsigned int)a) << 24) | (((unsigned int)b) << 16) | (((unsigned int)g) << 8) | (unsigned int)r; }
+
 	/// \brief Returns the color in RGBA8888 format.
 	unsigned int get_rgba8() const { return (((unsigned int)r) << 24) | (((unsigned int)g) << 16) | (((unsigned int)b) << 8) | (unsigned int)a; }
 
