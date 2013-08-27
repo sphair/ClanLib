@@ -6,7 +6,7 @@
 using namespace clan;
 
 CSSBrowser::CSSBrowser(GUIManager *gui)
-: Window(gui, get_window_description()), label(0), combobox(0), view(0)
+: GUIComponent/*Window*/(gui, get_window_description()), label(0), combobox(0), view(0)
 {
 	view = new CSSView(this);
 	func_close().set(this, &CSSBrowser::on_close);
@@ -16,8 +16,8 @@ CSSBrowser::CSSBrowser(GUIManager *gui)
 	combobox->func_item_selected().set(this, &CSSBrowser::on_combobox_item_selected);
 	combobox->func_enter_pressed().set(this, &CSSBrowser::on_combobox_enter_pressed);
 	PopupMenu popup;
-	popup.insert_item("http://clanlib.org/wiki/Main_Page");
-	popup.insert_item("http://clanlib.org/wiki/MainDocs:Index");
+	popup.insert_item("http://clanlib.org/");
+	popup.insert_item("http://clanlib.org/documentation.html");
 	popup.insert_item("http://www.rtsoft.com/forums/forumdisplay.php?13-Official-ClanLib-Game-SDK-Forums");
 	popup.insert_item("http://www.csszengarden.com/");
 	//for (int i = 130; i < 214; i++)
@@ -80,11 +80,9 @@ bool CSSBrowser::on_close()
 
 void CSSBrowser::on_resized()
 {
-/*
-	label->set_geometry(get_css_layout().find_element("label").get_content_box());
-	combobox->set_geometry(get_css_layout().find_element("combobox").get_content_box());
-	view->set_geometry(get_css_layout().find_element("view").get_content_box());
-*/
+	label->set_geometry(Rect(11, 11, 200, 31));
+	combobox->set_geometry(Rect(200, 11, 1200, 31));
+	view->set_geometry(Rect(0, 38, 1200, 800));
 }
 
 void CSSBrowser::on_combobox_item_selected(int index)

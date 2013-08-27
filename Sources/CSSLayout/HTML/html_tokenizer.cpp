@@ -1,16 +1,67 @@
+/*
+**  ClanLib SDK
+**  Copyright (c) 1997-2013 The ClanLib Team
+**
+**  This software is provided 'as-is', without any express or implied
+**  warranty.  In no event will the authors be held liable for any damages
+**  arising from the use of this software.
+**
+**  Permission is granted to anyone to use this software for any purpose,
+**  including commercial applications, and to alter it and redistribute it
+**  freely, subject to the following restrictions:
+**
+**  1. The origin of this software must not be misrepresented; you must not
+**     claim that you wrote the original software. If you use this software
+**     in a product, an acknowledgment in the product documentation would be
+**     appreciated but is not required.
+**  2. Altered source versions must be plainly marked as such, and must not be
+**     misrepresented as being the original software.
+**  3. This notice may not be removed or altered from any source distribution.
+**
+**  Note: Some of the libraries ClanLib may link to may have additional
+**  requirements or restrictions.
+**
+**  File Author(s):
+**
+**    Magnus Norddahl
+*/
 
-#include "precomp.h"
-#include "html_tokenizer.h"
-#include "html_token.h"
+#include "CSSLayout/precomp.h"
+#include "API/CSSLayout/HTML/html_tokenizer.h"
+#include "API/CSSLayout/HTML/html_token.h"
+#include "html_tokenizer_impl.h"
 
-using namespace clan;
+namespace clan
+{
 
 HTMLTokenizer::HTMLTokenizer()
+	: impl(new HTMLTokenizer_Impl())
+{
+}
+
+void HTMLTokenizer::append(const std::string &data)
+{
+	impl->append(data);
+}
+
+void HTMLTokenizer::tokenize(HTMLToken &out_token)
+{
+	impl->tokenize(out_token);
+}
+
+bool HTMLTokenizer::compare(const std::string &a, const std::string &b)
+{
+	return HTMLTokenizer_Impl::compare(a, b);
+}
+
+/////////////////////////////////////////////////////////////////////////////
+
+HTMLTokenizer_Impl::HTMLTokenizer_Impl()
 : pos(0), before_first_tag(true)
 {
 }
 
-void HTMLTokenizer::append(const std::string &new_data)
+void HTMLTokenizer_Impl::append(const std::string &new_data)
 {
 	if (pos == data.size())
 	{
@@ -20,7 +71,7 @@ void HTMLTokenizer::append(const std::string &new_data)
 	data += new_data;
 }
 
-void HTMLTokenizer::tokenize(HTMLToken &out_token)
+void HTMLTokenizer_Impl::tokenize(HTMLToken &out_token)
 {
 	out_token.type = HTMLToken::type_null;
 	out_token.name.clear();
@@ -43,87 +94,87 @@ void HTMLTokenizer::tokenize(HTMLToken &out_token)
 	pos = new_pos;
 }
 
-bool HTMLTokenizer::is_tag_begin(size_t p)
+bool HTMLTokenizer_Impl::is_tag_begin(size_t p)
 {
 	return p < data.size() && data[p] == '<';
 }
 
-bool HTMLTokenizer::is_tag_end(size_t p)
+bool HTMLTokenizer_Impl::is_tag_end(size_t p)
 {
 	return p < data.size() && data[p] == '>';
 }
 
-bool HTMLTokenizer::is_tag_single_end(size_t p)
+bool HTMLTokenizer_Impl::is_tag_single_end(size_t p)
 {
 	return p+1 < data.size() && data[p] == '/' && data[p+1] == '>';
 }
 
-bool HTMLTokenizer::is_end_tag_begin(size_t p)
+bool HTMLTokenizer_Impl::is_end_tag_begin(size_t p)
 {
 	return p+1 < data.size() && data[p] == '<' && data[p+1] == '/';
 }
 
-bool HTMLTokenizer::is_tag_name(size_t p)
+bool HTMLTokenizer_Impl::is_tag_name(size_t p)
 {
 	return p < data.size() && ((data[p] >= 'a' && data[p] <= 'z') || (data[p] >= 'A' && data[p] <= 'Z'));
 }
 
-bool HTMLTokenizer::is_tag_name_continued(size_t p)
+bool HTMLTokenizer_Impl::is_tag_name_continued(size_t p)
 {
 	return p < data.size() && ((data[p] >= 'a' && data[p] <= 'z') || (data[p] >= 'A' && data[p] <= 'Z') || (data[p] >= '0' && data[p] <= '9') || data[p] == ':' || data[p] == '-');
 }
 
-bool HTMLTokenizer::is_comment_begin(size_t p)
+bool HTMLTokenizer_Impl::is_comment_begin(size_t p)
 {
 	return p+3 < data.size() && data[p] == '<' && data[p+1] == '!' && data[p+2] == '-' && data[p+3] == '-';
 }
 
-bool HTMLTokenizer::is_comment_end(size_t p)
+bool HTMLTokenizer_Impl::is_comment_end(size_t p)
 {
 	return p+2 < data.size() && data[p] == '-' && data[p+1] == '-' && data[p+2] == '>';
 }
 
-bool HTMLTokenizer::is_dtd(size_t p)
+bool HTMLTokenizer_Impl::is_dtd(size_t p)
 {
 	return false;
 }
 
-bool HTMLTokenizer::is_whitespace(size_t p)
+bool HTMLTokenizer_Impl::is_whitespace(size_t p)
 {
 	return p < data.size() && (data[p] == ' ' || data[p] == '\r' || data[p] == '\n' || data[p] == '\t');
 }
 
-bool HTMLTokenizer::is_operator_equal(size_t p)
+bool HTMLTokenizer_Impl::is_operator_equal(size_t p)
 {
 	return p < data.size() && data[p] == '=';
 }
 
-bool HTMLTokenizer::is_string(size_t p)
+bool HTMLTokenizer_Impl::is_string(size_t p)
 {
 	return is_double_quote(p) || is_single_quote(p) || is_unquoted_string(p);
 }
 
-bool HTMLTokenizer::is_single_quote(size_t p)
+bool HTMLTokenizer_Impl::is_single_quote(size_t p)
 {
 	return p < data.size() && data[p] == '\'';
 }
 
-bool HTMLTokenizer::is_double_quote(size_t p)
+bool HTMLTokenizer_Impl::is_double_quote(size_t p)
 {
 	return p < data.size() && data[p] == '"';
 }
 
-bool HTMLTokenizer::is_unquoted_string(size_t p)
+bool HTMLTokenizer_Impl::is_unquoted_string(size_t p)
 {
 	return p < data.size() && ((data[p] >= 'a' && data[p] <= 'z') || (data[p] >= 'A' && data[p] <= 'Z') || (data[p] >= '0' && data[p] <= '9'));
 }
 
-bool HTMLTokenizer::is_string_escape(size_t p)
+bool HTMLTokenizer_Impl::is_string_escape(size_t p)
 {
 	return p+1 < data.size() && data[p] == '\\' && (data[p+1] == '\'' || data[p+1] == '"');
 }
 
-size_t HTMLTokenizer::read_name(size_t p, std::string &out_string)
+size_t HTMLTokenizer_Impl::read_name(size_t p, std::string &out_string)
 {
 	if (is_tag_name(p))
 	{
@@ -142,13 +193,13 @@ size_t HTMLTokenizer::read_name(size_t p, std::string &out_string)
 	}
 }
 
-size_t HTMLTokenizer::read_whitespace(size_t p)
+size_t HTMLTokenizer_Impl::read_whitespace(size_t p)
 {
 	while (is_whitespace(p)) p++;
 	return p;
 }
 
-size_t HTMLTokenizer::read_string(size_t p, std::string &out_string)
+size_t HTMLTokenizer_Impl::read_string(size_t p, std::string &out_string)
 {
 	out_string.clear();
 	if (is_single_quote(p))
@@ -200,7 +251,7 @@ size_t HTMLTokenizer::read_string(size_t p, std::string &out_string)
 	return p;
 }
 
-size_t HTMLTokenizer::read_tag(size_t p, HTMLToken &out_token)
+size_t HTMLTokenizer_Impl::read_tag(size_t p, HTMLToken &out_token)
 {
 	if (is_tag_begin(p) && is_tag_name(p+1))
 	{
@@ -261,7 +312,7 @@ size_t HTMLTokenizer::read_tag(size_t p, HTMLToken &out_token)
 	return p;
 }
 
-size_t HTMLTokenizer::read_script_value(size_t p, size_t pvalue, HTMLToken &token)
+size_t HTMLTokenizer_Impl::read_script_value(size_t p, size_t pvalue, HTMLToken &token)
 {
 	for (size_t i = pvalue; i < data.size(); i++)
 	{
@@ -283,7 +334,7 @@ size_t HTMLTokenizer::read_script_value(size_t p, size_t pvalue, HTMLToken &toke
 	return p;
 }
 
-size_t HTMLTokenizer::read_style_value(size_t p, size_t pvalue, HTMLToken &token)
+size_t HTMLTokenizer_Impl::read_style_value(size_t p, size_t pvalue, HTMLToken &token)
 {
 	for (size_t i = pvalue; i < data.size(); i++)
 	{
@@ -305,12 +356,12 @@ size_t HTMLTokenizer::read_style_value(size_t p, size_t pvalue, HTMLToken &token
 	return p;
 }
 
-bool HTMLTokenizer::compare(const std::string &a, const std::string &b)
+bool HTMLTokenizer_Impl::compare(const std::string &a, const std::string &b)
 {
 	return StringHelp::compare(a, b, true) == 0;
 }
 
-size_t HTMLTokenizer::read_comment(size_t p, HTMLToken &out_token)
+size_t HTMLTokenizer_Impl::read_comment(size_t p, HTMLToken &out_token)
 {
 	if (is_comment_begin(p))
 	{
@@ -329,7 +380,7 @@ size_t HTMLTokenizer::read_comment(size_t p, HTMLToken &out_token)
 	return p;
 }
 
-size_t HTMLTokenizer::read_text(size_t p, HTMLToken &out_token)
+size_t HTMLTokenizer_Impl::read_text(size_t p, HTMLToken &out_token)
 {
 	size_t p2;
 	for (p2 = p; p2 < data.size(); p2++)
@@ -352,13 +403,13 @@ size_t HTMLTokenizer::read_text(size_t p, HTMLToken &out_token)
 	}
 }
 
-size_t HTMLTokenizer::read_dtd(size_t p, HTMLToken &out_token)
+size_t HTMLTokenizer_Impl::read_dtd(size_t p, HTMLToken &out_token)
 {
 	out_token.type = HTMLToken::type_null;
 	return p;
 }
 
-HTMLTokenizer::HTMLEscape HTMLTokenizer::escapes[] =
+HTMLTokenizer_Impl::HTMLEscape HTMLTokenizer_Impl::escapes[] =
 {
 	// HTML 4.01: 24.2 Character entity references for ISO 8859-1 characters
 	"&nbsp;", 160,
@@ -623,7 +674,7 @@ HTMLTokenizer::HTMLEscape HTMLTokenizer::escapes[] =
 	0, 0
 };
 
-void HTMLTokenizer::unescape(std::string &text)
+void HTMLTokenizer_Impl::unescape(std::string &text)
 {
 	for (size_t i = 0; i < text.length(); i++)
 	{
@@ -653,4 +704,6 @@ void HTMLTokenizer::unescape(std::string &text)
 			}
 		}
 	}
+}
+
 }

@@ -60,7 +60,7 @@ private:
 		int get_intrinsic_width() const { return num_chars * 5; }
 		int get_intrinsic_height() const { return 18; }
 		void set_geometry(const clan::Rect &new_geometry) { geometry = new_geometry; }
-		void render(clan::Canvas &canvas) { canvas.box(geometry, clan::Colorf::greenyellow); }
+		void render(clan::Canvas &canvas) { canvas.fill_rect(geometry, clan::Colorf::greenyellow); }
 
 		int num_chars;
 		clan::Rect geometry;
@@ -73,7 +73,7 @@ private:
 		int get_intrinsic_width() const { return 16; }
 		int get_intrinsic_height() const { return 16; }
 		void set_geometry(const clan::Rect &new_geometry) { geometry = new_geometry; }
-		void render(clan::Canvas &canvas) { canvas.box(geometry, clan::Colorf::greenyellow); }
+		void render(clan::Canvas &canvas) { canvas.fill_rect(geometry, clan::Colorf::greenyellow); }
 
 		clan::Rect geometry;
 	};
@@ -85,7 +85,7 @@ private:
 		int get_intrinsic_width() const { return 16; }
 		int get_intrinsic_height() const { return 16; }
 		void set_geometry(const clan::Rect &new_geometry) { geometry = new_geometry; }
-		void render(clan::Canvas &canvas) { canvas.box(geometry, clan::Colorf::greenyellow); }
+		void render(clan::Canvas &canvas) { canvas.fill_rect(geometry, clan::Colorf::greenyellow); }
 
 		clan::Rect geometry;
 	};
@@ -97,7 +97,7 @@ private:
 		int get_intrinsic_width() const { return text.length() * 5; }
 		int get_intrinsic_height() const { return 24; }
 		void set_geometry(const clan::Rect &new_geometry) { geometry = new_geometry; }
-		void render(clan::Canvas &canvas) { canvas.box(geometry, clan::Colorf::greenyellow); }
+		void render(clan::Canvas &canvas) { canvas.fill_rect(geometry, clan::Colorf::greenyellow); }
 
 		std::string text;
 		clan::Rect geometry;

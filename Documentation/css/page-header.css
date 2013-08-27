@@ -16,13 +16,12 @@
     height: 142px;
     margin: 0 auto;
     position: relative; /* for #page-header-menu absolute */
-    width: 100%;
-    min-width: 960px;
-    max-width: 1200px;
+    width: 960px;
 }
 
 #page-header-logo
 {
+    display: block;
     width: 323px;
     height: 86px;
     margin: 15px auto;
@@ -37,16 +36,14 @@
     margin: 15px 0 0 0;
     font: 15px 'Oswald', sans-serif;
     text-transform: uppercase;
-    letter-spacing: 2px;
     text-align: center;
-    border: solid #e8e8e8;
-    border-width: 0 0 1px 0;
+    padding: 2px 0;
 }
 
 #page-header-menu a
 {
     text-decoration: none;
-    padding: 5px 15px 0 15px;
+    padding: 5px 15px;
 }
 
 #page-header-menu a:focus
@@ -62,44 +59,32 @@
 
 #page-header-menu a.active
 {
-    background: white;
 }
 
 #page-header-menu a.active,
 #page-header-menu a.active:visited
 {
     color: black;
+    text-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
 
 #page-header-menu a:hover
 {
     color: cornflowerblue;
-}
-
-#page-header .page-header-menu-item
-{
-    margin-bottom: -1px;
-    border: 1px solid transparent;
-}
-
-#page-header .page-header-menu-item.active
-{
-    border: 1px solid #e8e8e8;
-    border-bottom-color: white;
+    text-shadow: 0px 0px 3px rgba(0,0,0,0.2);
 }
 
 @media screen and (max-width: 1000px)
 {
     #page-header
     {
-        min-width: 560px;
-        max-width: 800px;
+        width: 100%;
     }
 
     #page-header-menu
     {
         font-size: 12px;
-    }
+    } 
 
     #page-header-menu a
     {
@@ -111,14 +96,13 @@
 {
     #page-header
     {
-        min-width: 260px;
-        max-width: 500px;
+        width: 100%;
         height: auto;
     }
 
     #page-header-menu
     {
-        font-size: 9px;
+        font-size: 12px;
         border: none;
     }
 

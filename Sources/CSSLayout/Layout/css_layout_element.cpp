@@ -32,6 +32,7 @@
 #include "API/CSSLayout/Layout/css_layout_object.h"
 #include "API/CSSLayout/Layout/css_layout.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
+#include "API/Core/Text/string_help.h"
 #include "css_layout_node_impl.h"
 #include "BoxTree/css_box_element.h"
 #include "BoxTree/css_box_text.h"
@@ -56,6 +57,33 @@ void CSSLayoutElement::set_name(const std::string &name)
 {
 	if (!is_null())
 		static_cast<CSSBoxElement*>(impl->box_node)->name = name;
+}
+
+void CSSLayoutElement::set_attribute(const std::string &name, const std::string &value)
+{
+	if (!is_null())
+	{
+		CSSBoxElement *element = static_cast<CSSBoxElement*>(impl->box_node);
+
+		if (StringHelp::compare("name", "colspan"))
+		{
+			set_col_span(StringHelp::text_to_int(value));
+		}
+		else if (StringHelp::compare("name", "rowspan"))
+		{
+			set_row_span(StringHelp::text_to_int(value));
+		}
+
+		for (size_t i = 0; i < element->attributes.size(); i++)
+		{
+			if (StringHelp::compare(element->attributes[i].name, name, true) == 0)
+			{
+				element->attributes[i].value = value;
+				return;
+			}
+		}
+		element->attributes.push_back(CSSBoxElementAttribute(name, value));
+	}
 }
 
 void CSSLayoutElement::set_col_span(int span)

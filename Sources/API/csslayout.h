@@ -50,6 +50,8 @@
 #include "CSSLayout/Layout/css_layout_object.h"
 #include "CSSLayout/Layout/css_layout_user_data.h"
 #include "CSSLayout/Layout/css_hit_test_result.h"
+#include "CSSLayout/HTML/html_tokenizer.h"
+#include "CSSLayout/HTML/html_token.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

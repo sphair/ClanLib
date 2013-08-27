@@ -1,8 +1,6 @@
 
 #include "precomp.h"
 #include "css_view.h"
-#include "html_tokenizer.h"
-#include "html_token.h"
 
 using namespace clan;
 
@@ -118,7 +116,130 @@ void CSSView::load_html()
 		IODevice_Memory device;
 		device.write(page.css_files[i].css.data(), page.css_files[i].css.length());
 		device.seek(0);
-		css_document.add_sheet(device, page.css_files[i].base_uri);
+		css_document.add_sheet(author_sheet_origin, device, page.css_files[i].base_uri);
+	}
+
+	File file(html_filename, File::open_existing, File::access_read, File::share_read);
+	std::string data;
+	data.resize(file.get_size());
+	if (!data.empty())
+		file.read(&data[0], data.length());
+	file.close();
+
+	HTMLTokenizer tokenizer;
+	tokenizer.append(StringHelp::utf8_to_text(data));
+
+	int level = 0;
+	std::vector<std::string> tags;
+	std::vector<CSSLayoutElement> css_elements;
+	
+	HTMLToken token;
+	while (true)
+	{
+		tokenizer.tokenize(token);
+		if (token.type == HTMLToken::type_null)
+			break;
+
+		if (token.type == HTMLToken::type_tag_begin || token.type == HTMLToken::type_tag_single)
+		{
+			if (token.name == "p" || token.name == "table") // Close <p>
+			{
+				for (size_t i = tags.size(); i > 0; i--)
+				{
+					if (tags.back() == "p")
+					{
+						tags.erase(tags.begin()+(i-1), tags.end());
+						css_elements.erase(css_elements.begin()+(i-1), css_elements.end());
+						level = tags.size();
+						break;
+					}
+				}
+			}
+
+			CSSLayoutElement element = layout.create_element(token.name);
+
+			for (size_t i = 0; i < token.attributes.size(); i++)
+				element.set_attribute(token.attributes[i].name, token.attributes[i].value);
+
+			if (token.name == "body")
+			{
+				if (layout.get_html_body_element().is_null())
+					layout.set_html_body_element(element);
+			}
+
+			if (!css_elements.empty())
+			{
+				css_elements.back().append_child(element);
+			}
+
+			if (!is_end_tag_forbidden(token.name))
+			{
+				level++;
+				tags.push_back(token.name);
+				css_elements.push_back(element);
+			}
+		}
+		else if (token.type == HTMLToken::type_tag_end)
+		{
+			for (size_t i = tags.size(); i > 0; i--)
+			{
+				if (tags[i-1] == token.name)
+				{
+					if (tags.size() > 1)
+					{
+						tags.erase(tags.begin()+(i-1), tags.end());
+						css_elements.erase(css_elements.begin()+(i-1), css_elements.end());
+						level = tags.size();
+					}
+					break;
+				}
+			}
+		}
+		else if (token.type == HTMLToken::type_text)
+		{
+			if (!css_elements.empty())
+			{
+				CSSLayoutText text = layout.create_text(token.value);
+				css_elements.back().append_child(text);
+			}
+		}
+	}
+
+	if (!css_elements.empty())
+		layout.set_root_element(css_elements.front());
+}
+
+bool CSSView::is_end_tag_forbidden(const std::string &name)
+{
+	return name == "meta" ||
+		name == "br" ||
+		name == "col" ||
+		name == "link" ||
+		name == "base" ||
+		name == "img" ||
+		name == "param" ||
+		name == "area" ||
+		name == "basefont" ||
+		name == "hr" ||
+		name == "input" ||
+		name == "isindex";
+}
+
+#if defined(OLD_HTML_LOAD)
+void CSSView::load_html()
+{
+	reset();
+
+	std::string html_filename = "htmlpage.html";
+	HTMLUrl document_url = page.pageurl;
+
+	css_document.add_default_html_sheet();
+	for (size_t i = 0; i < page.css_files.size(); i++)
+	{
+		IODevice_Memory device;
+		device.write(page.css_files[i].css.data(), page.css_files[i].css.length());
+		device.seek(0);
+		css_document.add_sheet(author_sheet_origin, device, page.css_files[i].base_uri);
 	}
 
 	File file(html_filename, File::open_existing, File::access_read, File::share_read);
@@ -371,19 +492,4 @@ void CSSView::load_html()
 	if (!css_elements.empty())
 		layout.set_root_element(css_elements.front());
 }
-
-bool CSSView::is_end_tag_forbidden(const std::string &name)
-{
-	return name == "meta" ||
-		name == "br" ||
-		name == "col" ||
-		name == "link" ||
-		name == "base" ||
-		name == "img" ||
-		name == "param" ||
-		name == "area" ||
-		name == "basefont" ||
-		name == "hr" ||
-		name == "input" ||
-		name == "isindex";
-}
+#endif

@@ -16,14 +16,14 @@
         <div id="page-wrapper">
             <div id="page-header-wrapper">
                 <div id="page-header">
-                    <div id="page-header-logo"></div>
+                    <a id="page-header-logo" href="/"></a>
                     <div id="page-header-menu">
-                        <a class="page-header-menu-item" href="/">Home</a>
-                        <a class="page-header-menu-item" href="/download.html">Download</a>
-                        <a class="page-header-menu-item active" href="/documentation.html">Documentation</a>
-                        <a class="page-header-menu-item" href="/examples.html">Examples</a>
-                        <a class="page-header-menu-item" href="/donations.html">Donations</a>
-                        <a class="page-header-menu-item" href="/contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
                         <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
                     </div>
                 </div>

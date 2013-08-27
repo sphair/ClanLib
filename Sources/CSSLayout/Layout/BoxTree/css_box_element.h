@@ -35,15 +35,27 @@
 namespace clan
 {
 
+class CSSBoxElementAttribute
+{
+public:
+	CSSBoxElementAttribute() { }
+	CSSBoxElementAttribute(const std::string &name, const std::string &value) : name(name), value(value) { }
+
+	std::string name;
+	std::string value;
+};
+
 class CSSBoxElement : public CSSBoxNode
 {
 public:
 	CSSBoxElement();
 
 	std::string name;
-	CSSComputedValues computed_values;
+	std::vector<CSSBoxElementAttribute> attributes;
 	int col_span;
 	int row_span;
+
+	CSSComputedValues computed_values;
 
 	bool has_block_level_children() const;
 	bool is_block_level() const;

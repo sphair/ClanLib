@@ -1,8 +1,6 @@
 
 #include "precomp.h"
 #include "html_page.h"
-#include "html_tokenizer.h"
-#include "html_token.h"
 #include "gif_provider.h"
 
 using namespace clan;

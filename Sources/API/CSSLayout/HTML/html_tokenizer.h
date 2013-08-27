@@ -29,42 +29,29 @@
 #pragma once
 
 #include "../api_csslayout.h"
-#include "css_layout_node.h"
+#include <string>
+#include <memory>
 
 namespace clan
 {
-/// \addtogroup clanCSSLayout_Layout clanCSSLayout Layout
+/// \addtogroup clanCSSLayout_HTML clanCSSLayout HTML
 /// \{
 
-class CSSPropertyValue;
-class Rect;
+class HTMLToken;
+class HTMLTokenizer_Impl;
 
-class CL_API_CSSLAYOUT CSSLayoutElement : public CSSLayoutNode
+class HTMLTokenizer
 {
 public:
-	CSSLayoutElement();
+	HTMLTokenizer();
 
-	std::string get_name() const;
-	void set_name(const std::string &name);
+	void append(const std::string &data);
+	void tokenize(HTMLToken &out_token);
 
-	void set_attribute(const std::string &name, const std::string &value);
+	static bool compare(const std::string &a, const std::string &b);
 
-	void set_col_span(int span);
-	void set_row_span(int span);
-
-	void insert_before(CSSLayoutNode &new_child, CSSLayoutNode &ref_child);
-	void append_child(CSSLayoutNode &new_child);
-	void remove_child(CSSLayoutNode &old_child);
-
-	Rect get_content_box();
-
-	CSSLayoutObject create_object();
-	CSSLayoutElement create_element(const std::string &name = std::string());
-	CSSLayoutText create_text(const std::string &text);
-
-protected:
-	CSSLayoutElement(const std::shared_ptr<CSSLayoutNode_Impl> &impl);
-	friend class CSSLayoutNode;
+private:
+	std::shared_ptr<HTMLTokenizer_Impl> impl;
 };
 
 /// \}

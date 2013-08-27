@@ -61,3 +61,8 @@ Release
 /Projects/Sheets/ExternalDirectories.props
 ipch
 doxyoutput
+
+/Tests/CSSLayout/WebBrowser/file_cache.db
+/Tests/CSSLayout/WebBrowser/htmlpage.css
+
+/Tests/CSSLayout/WebBrowser/htmlpage.html

@@ -23,7 +23,6 @@
 {
     font: 13px 'Segoe UI', 'Monda', sans-serif;
     color: #777777;
-    letter-spacing: 2px;
     padding: 15px 0;
     text-align: center;
 }
@@ -32,7 +31,7 @@
 {
     #page-footer
     {
-        width: 560px;
+        width: 90%;
     }
 }
 
@@ -40,7 +39,7 @@
 {
     #page-footer
     {
-        width: 260px;
+        width: 85%;
     }
 }
 

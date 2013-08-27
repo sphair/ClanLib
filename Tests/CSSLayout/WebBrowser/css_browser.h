@@ -3,7 +3,7 @@
 
 class CSSView;
 
-class CSSBrowser : public clan::Window
+class CSSBrowser : public clan::GUIComponent /* clan::Window */
 {
 public:
 	CSSBrowser(clan::GUIManager *gui);
