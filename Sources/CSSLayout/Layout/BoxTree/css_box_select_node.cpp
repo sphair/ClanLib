@@ -84,7 +84,7 @@ std::string CSSBoxSelectNode::lang()
 {
 	for (size_t i = 0; i < pos->attributes.size(); i++)
 	{
-		if (StringHelp::compare(pos->attributes[i].name, "lang", true))
+		if (StringHelp::compare(pos->attributes[i].name, "lang", true) == 0)
 			return pos->attributes[i].value;
 	}
 	return "en-US";
@@ -94,7 +94,7 @@ std::string CSSBoxSelectNode::id()
 {
 	for (size_t i = 0; i < pos->attributes.size(); i++)
 	{
-		if (StringHelp::compare(pos->attributes[i].name, "id", true))
+		if (StringHelp::compare(pos->attributes[i].name, "id", true) == 0)
 			return pos->attributes[i].value;
 	}
 	return std::string();
@@ -104,7 +104,7 @@ std::vector<std::string> CSSBoxSelectNode::element_classes()
 {
 	for (size_t i = 0; i < pos->attributes.size(); i++)
 	{
-		if (StringHelp::compare(pos->attributes[i].name, "class", true))
+		if (StringHelp::compare(pos->attributes[i].name, "class", true) == 0)
 			return StringHelp::split_text(pos->attributes[i].value, " ", true);
 	}
 

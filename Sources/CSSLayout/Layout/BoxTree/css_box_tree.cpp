@@ -96,7 +96,8 @@ void CSSBoxTree::compute(CSSResourceCache *cache, CSSBoxNode *node)
 			element->computed_values.set_parent(static_cast<CSSBoxElement*>(element->get_parent())->computed_values);
 
 		CSSBoxSelectNode select_node(element);
-		element->computed_values.set_specified_values(css.select(&select_node));
+		CSSSelectResult select_result = css.select(&select_node);
+		element->computed_values.set_specified_values(select_result);
 	}
 
 	CSSBoxNode *child = node->get_first_child();

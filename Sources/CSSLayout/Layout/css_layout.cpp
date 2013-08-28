@@ -60,6 +60,11 @@ void CSSLayout::set_dpi(float new_dpi)
 	impl->resource_cache.set_dpi(new_dpi);
 }
 
+void CSSLayout::set_css_document(const CSSDocument &doc)
+{
+	impl->box_tree.css = doc;
+}
+
 void CSSLayout::layout(Canvas &canvas, const Rect &viewport)
 {
 	impl->throw_if_disposed();

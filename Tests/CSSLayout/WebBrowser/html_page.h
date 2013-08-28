@@ -21,7 +21,7 @@ public:
 	std::vector<CSSFile> css_files;
 
 private:
-	std::string load_css(const std::string &csstext, const std::string &base_url);
+	std::string load_css(std::string csstext, const std::string &base_url);
 	std::string download_url(const std::string &page_url, const std::string &refererer_url);
 
 	FileCache file_cache;

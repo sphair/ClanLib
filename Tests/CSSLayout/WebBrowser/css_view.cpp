@@ -119,6 +119,8 @@ void CSSView::load_html()
 		css_document.add_sheet(author_sheet_origin, device, page.css_files[i].base_uri);
 	}
 
+	layout.set_css_document(css_document);
+
 	File file(html_filename, File::open_existing, File::access_read, File::share_read);
 	std::string data;
 	data.resize(file.get_size());

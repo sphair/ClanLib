@@ -38,13 +38,14 @@ namespace clan
 /// \{
 
 class CSSBoxElement;
-class GraphicContext;
 class CSSLayoutObject;
 class CSSLayoutElement;
 class CSSLayoutText;
 class CSSLayoutNode;
 class CSSHitTestResult;
+class CSSDocument;
 class CSSLayout_Impl;
+class GraphicContext;
 class Size;
 class Point;
 class Image;
@@ -59,6 +60,8 @@ public:
 	bool is_null() const;
 
 	void set_dpi(float new_dpi);
+
+	void set_css_document(const CSSDocument &doc);
 
 	void load_xml(const std::string &filename, const std::string &style_sheet);
 	void layout(Canvas &canvas, const Rect &viewport);

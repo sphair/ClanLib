@@ -65,8 +65,11 @@ void HTMLPage::load(const std::string &page_url, const std::string &refererer_ur
 	fcss.close();
 }
 
-std::string HTMLPage::load_css(const std::string &csstext, const std::string &base_url)
+std::string HTMLPage::load_css(std::string csstext, const std::string &base_url)
 {
+	if (csstext.substr(0, 3) == "\xef\xbb\xbf") // utf-8 bom
+		csstext = csstext.substr(3);
+
 	CSSFile cssfile;
 	cssfile.css = csstext;
 	cssfile.base_uri = base_url;
@@ -78,21 +81,37 @@ std::string HTMLPage::load_css(const std::string &csstext, const std::string &ba
 	while (true)
 	{
 		css_tokenizer.read(css_token, true);
-		if (css_token.type != CSSToken::type_atkeyword || css_token.value != "import")
+		if (css_token.type == CSSToken::type_atkeyword && css_token.value == "import")
+		{
+			css_tokenizer.read(css_token, true);
+			if (css_token.type != CSSToken::type_string)
+				break;
+
+			std::string import_url = css_token.value;
+
+			css_tokenizer.read(css_token, true);
+			if (css_token.type != CSSToken::type_semi_colon)
+				break;
+
+			std::string css = download_url(import_url, base_url);
+			pagecss += load_css(css, HTMLUrl(import_url, base_url).to_string());
+		}
+		else if (css_token.type == CSSToken::type_atkeyword && css_token.value == "charset")
+		{
+			css_tokenizer.read(css_token, true);
+			if (css_token.type != CSSToken::type_string)
+				break;
+
+			std::string charset = css_token.value;
+
+			css_tokenizer.read(css_token, true);
+			if (css_token.type != CSSToken::type_semi_colon)
+				break;
+		}
+		else
+		{
 			break;
-
-		css_tokenizer.read(css_token, true);
-		if (css_token.type != CSSToken::type_string)
-			break;
-
-		std::string import_url = css_token.value;
-
-		css_tokenizer.read(css_token, true);
-		if (css_token.type != CSSToken::type_semi_colon)
-			break;
-
-		std::string css = download_url(import_url, base_url);
-		pagecss += load_css(css, HTMLUrl(import_url, base_url).to_string());
+		}
 	}
 	pagecss += string_format("@-clan-base-uri \"%1\";\r\n", base_url);
 	pagecss += csstext;
