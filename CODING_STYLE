@@ -1,4 +1,3 @@
-
 ClanLib coding style and conventions:
 --------------------------------------
 
@@ -9,7 +8,7 @@ ClanLib coding style and conventions:
 the Microsoft style!! Please do NOT use K&R style and not GNU style either.
 Braces should look like this:
 
-int CL_MyClass::my_func(int arg1, int arg2)
+int clan::MyClass::my_func(int arg1, int arg2)
 {
 	if (...)
 	{
