@@ -32,6 +32,7 @@
 #include "css_box_text.h"
 #include "css_box_node_walker.h"
 #include "css_whitespace_eraser.h"
+#include "css_box_select_node.h"
 #include "API/CSSLayout/CSSDocument/css_property.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
 
@@ -74,10 +75,36 @@ void CSSBoxTree::create(const DomNode &node)
 void CSSBoxTree::prepare(CSSResourceCache *resource_cache)
 {
 	clean();
+	compute(resource_cache);
 	propagate_html_body();
 	convert_run_in_blocks(root_element);
 	CSSWhitespaceEraser::remove_whitespace(root_element);
 	filter_table(resource_cache);
+}
+
+void CSSBoxTree::compute(CSSResourceCache *cache, CSSBoxNode *node)
+{
+	if (node == 0)
+		node = root_element;
+
+	CSSBoxElement *element = dynamic_cast<CSSBoxElement *>(node);
+	if (element)
+	{
+		element->computed_values = CSSComputedValues(cache);
+
+		if (element->get_parent())
+			element->computed_values.set_parent(static_cast<CSSBoxElement*>(element->get_parent())->computed_values);
+
+		CSSBoxSelectNode select_node(element);
+		element->computed_values.set_specified_values(css.select(&select_node));
+	}
+
+	CSSBoxNode *child = node->get_first_child();
+	while (child)
+	{
+		compute(cache, child);
+		child = child->get_next_sibling();
+	}
 }
 
 void CSSBoxTree::clean(CSSBoxNode *node)

@@ -67,3 +67,5 @@ doxyoutput
 /Tests/CSSLayout/WebBrowser/htmlpage.css
 
 /Tests/CSSLayout/WebBrowser/htmlpage.html
+
+/Tests/CSSLayout/WebBrowser/*.opensdf
