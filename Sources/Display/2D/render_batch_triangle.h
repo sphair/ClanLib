@@ -87,7 +87,7 @@ private:
 
 	PrimitivesArray prim_array[RenderBatchBuffer::num_vertex_buffers];
 
-	Texture2D current_textures[4];
+	Texture2D current_textures[64];
 	int num_current_textures;
 	Sizef tex_sizes[4];
 	bool use_glyph_program;
