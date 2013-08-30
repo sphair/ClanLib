@@ -533,8 +533,8 @@ void CSSInlineLayout::layout_line(CSSInlineGeneratedBox *line, Rect &line_box, C
 
 void CSSInlineLayout::align_line(CSSInlineGeneratedBox *line, CSSLayoutGraphics *graphics, CSSResourceCache *resources, bool last_line)
 {
-	CSSInlineLayoutAlignLine visitor(this, line, graphics, resources, last_line);
-	line->descendants(&visitor);
+	//CSSInlineLayoutAlignLine visitor(this, line, graphics, resources, last_line);
+	//line->descendants(&visitor);
 }
 
 void CSSInlineLayout::layout_block_line(CSSInlineGeneratedBox *line, CSSLayoutGraphics *graphics, CSSLayoutCursor &cursor, LayoutStrategy strategy)

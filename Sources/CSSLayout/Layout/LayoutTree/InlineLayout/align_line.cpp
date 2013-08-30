@@ -97,9 +97,16 @@ bool CSSInlineLayoutAlignLine::node(CSSInlineGeneratedBox *cur)
 						if (cur->parent)
 							expand_box(cur->parent, word_offset_x);
 						offset_x += word_offset_x;
+
+						prev_space = false;
+						start_of_line = false;
+						break;
 					}
-					prev_space = false;
-					start_of_line = false;
+					else
+					{
+						prev_space = false;
+						start_of_line = false;
+					}
 				}
 			}
 		}

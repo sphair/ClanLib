@@ -62,7 +62,6 @@ private:
 	void clean(CSSBoxNode *node = 0);
 	CSSBoxNode *create_node(const DomNode &node, CSSBoxNode *parent = 0);
 	void create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element);
-	void propagate_html_body();
 	void create_anonymous_blocks(CSSBoxElement *element, CSSResourceCache *resource_cache);
 	void filter_table(CSSResourceCache *resource_cache);
 	void convert_run_in_blocks(CSSBoxElement *element);

@@ -40,6 +40,8 @@ public:
 	bool node(CSSInlineGeneratedBox *cur);
 
 private:
+	const CSSComputedBackground *get_computed_background(CSSBoxElement *element);
+
 	CSSLayoutGraphics *graphics;
 	CSSResourceCache *resources;
 	CSSLayoutTreeNode *tree_node;

@@ -72,7 +72,7 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 				cur->closing ? used_to_actual(element->computed_values.get_border().border_width_right.length.value) : 0,
 				used_to_actual(element->computed_values.get_border().border_width_bottom.length.value));
 
-			CSSBackgroundRenderer background(graphics, resources, element->computed_values.get_background());
+			CSSBackgroundRenderer background(graphics, resources, *get_computed_background(element));
 			background.set_initial_containing_box(Rect(0, 0, used_to_actual(tree_node->containing_width.value), used_to_actual(tree_node->containing_height.value))); // Bug: this is wrong
 			background.set_content_box(content);
 			background.set_padding_box(padding_box);
@@ -91,6 +91,59 @@ bool CSSInlineLayoutRenderLayerBackground::node(CSSInlineGeneratedBox *cur)
 	}
 
 	return true;
+}
+
+const CSSComputedBackground *CSSInlineLayoutRenderLayerBackground::get_computed_background(CSSBoxElement *element)
+{
+	// Propagate HTML body background to root background:
+
+	const CSSComputedBackground *computed_background = 0;
+
+	if (element->get_parent() == 0) // root element
+	{
+		computed_background = &element->computed_values.get_background();
+
+		// Fetch the values from the body tag if the root tag has none
+		if (computed_background->background_image.images[0].type == CSSValueBackgroundImage::image_type_none && computed_background->background_color.color.a == 0.0f)
+		{
+			// Find body
+			CSSBoxNode *cur = element->get_first_child();
+			while (cur)
+			{
+				CSSBoxElement *child_element = dynamic_cast<CSSBoxElement*>(cur);
+				if (child_element->name == "body")
+					break;
+				cur = cur->get_next_sibling();
+			}
+
+			if (cur)
+			{
+				computed_background = &static_cast<CSSBoxElement*>(cur)->computed_values.get_background();
+			}
+		}
+	}
+	else if (element->get_parent()->get_parent() == 0 && element->name == "body") // body element
+	{
+		static CSSComputedBackground default_background;
+
+		const CSSComputedBackground &root_background = static_cast<CSSBoxElement*>(element->get_parent())->computed_values.get_background();
+
+		// Use default values if the root tag used the body tag values
+		if (root_background.background_image.images[0].type == CSSValueBackgroundImage::image_type_none && root_background.background_color.color.a == 0.0f)
+		{
+			computed_background = &default_background;
+		}
+		else
+		{
+			computed_background = &element->computed_values.get_background();
+		}
+	}
+	else
+	{
+		computed_background = &element->computed_values.get_background();
+	}
+
+	return computed_background;
 }
 
 }

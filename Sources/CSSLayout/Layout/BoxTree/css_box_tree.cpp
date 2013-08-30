@@ -76,7 +76,6 @@ void CSSBoxTree::prepare(CSSResourceCache *resource_cache)
 {
 	clean();
 	compute(resource_cache);
-	propagate_html_body();
 	convert_run_in_blocks(root_element);
 	CSSWhitespaceEraser::remove_whitespace(root_element);
 	filter_table(resource_cache);
@@ -213,29 +212,6 @@ void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resou
 	}
 }
 */
-
-void CSSBoxTree::propagate_html_body()
-{
-#ifdef NEEDS_PORTING
-	if (html_body_element && root_element != html_body_element)
-	{
-		if (root_element->computed_values.get_box().background_image.images[0].type == CSSValueBackgroundImage::image_type_none &&
-			root_element->computed_values.get_box().background_color.color.a == 0.0f)
-		{
-			root_element->computed_values.get_box().background_color = html_body_element->computed_values.get_box().background_color;
-			root_element->computed_values.get_box().background_image = html_body_element->computed_values.get_box().background_image;
-			root_element->computed_values.get_box().background_repeat = html_body_element->computed_values.get_box().background_repeat;
-			root_element->computed_values.get_box().background_attachment = html_body_element->computed_values.get_box().background_attachment;
-			root_element->computed_values.get_box().background_position = html_body_element->computed_values.get_box().background_position;
-			root_element->computed_values.get_box().background_origin = html_body_element->computed_values.get_box().background_origin;
-			root_element->computed_values.get_box().background_clip = html_body_element->computed_values.get_box().background_clip;
-			root_element->computed_values.get_box().background_size = html_body_element->computed_values.get_box().background_size;
-			html_body_element->computed_values.get_box().background_color = CSSValueBackgroundColor();
-			html_body_element->computed_values.get_box().background_image = CSSValueBackgroundImage();
-		}
-	}
-#endif
-}
 
 void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
 {
