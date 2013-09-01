@@ -45,11 +45,9 @@ public:
 	CSSBoxTree();
 	~CSSBoxTree();
 	void clear();
-	void create(const DomNode &node);
 	void set_root_element(CSSBoxElement *new_root_element);
 	void set_html_body_element(CSSBoxElement *new_html_body_element);
 	void prepare(CSSResourceCache *resource_cache);
-	void set_selection(CSSBoxNode *start, size_t start_text_offset, CSSBoxNode *end, size_t end_text_offset);
 
 	CSSDocument css;
 	CSSBoxElement *get_root_element() { return root_element; }
@@ -58,22 +56,18 @@ public:
 	const CSSBoxElement *get_html_body_element() const { return html_body_element; }
 
 private:
-	void compute(CSSResourceCache *cache, CSSBoxNode *node = 0);
-	void clean(CSSBoxNode *node = 0);
-	CSSBoxNode *create_node(const DomNode &node, CSSBoxNode *parent = 0);
-	void create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element);
-	void create_anonymous_blocks(CSSBoxElement *element, CSSResourceCache *resource_cache);
-	void filter_table(CSSResourceCache *resource_cache);
-	void convert_run_in_blocks(CSSBoxElement *element);
-	void apply_selection(CSSBoxNode *start, size_t start_offset, CSSBoxNode *end, size_t end_offset, bool clear);
+	void compute(CSSResourceCache *cache);
+	void compute(CSSResourceCache *cache, CSSBoxNode *node, bool &collapse_space);
+
+	std::string normalize_newlines(const std::string &text);
+	std::string remove_whitespace_around_linefeed(const std::string &text);
+	std::string convert_linefeed_to_space(const std::string &text);
+	std::string convert_tab_to_space(const std::string &text);
+	std::string collapse_spaces(const std::string &text, bool &collapsing);
 
 	CSSBoxElement *root_element;
 	CSSBoxElement *html_body_element;
 	CSSPropertyParsers property_parsers;
-	CSSBoxNode *selection_start;
-	CSSBoxNode *selection_end;
-	size_t selection_start_text_offset;
-	size_t selection_end_text_offset;
 };
 
 }

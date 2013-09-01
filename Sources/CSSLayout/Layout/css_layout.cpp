@@ -84,25 +84,6 @@ void CSSLayout::render_impl(Canvas &canvas, std::unique_ptr<ClipWrapper> wrapper
 	impl->layout_tree.render(&graphics, &impl->resource_cache);
 }
 
-void CSSLayout::clear_selection()
-{
-	impl->throw_if_disposed();
-	impl->box_tree.set_selection(0, 0, 0, 0);
-}
-
-void CSSLayout::set_selection(CSSLayoutNode start, size_t start_text_offset, CSSLayoutNode end, size_t end_text_offset)
-{
-	impl->throw_if_disposed();
-	if (start.is_null() || end.is_null())
-	{
-		clear_selection();
-	}
-	else
-	{
-		impl->box_tree.set_selection(start.impl->box_node, start_text_offset, end.impl->box_node, end_text_offset);
-	}
-}
-
 CSSHitTestResult CSSLayout::hit_test(Canvas &canvas, const Point &pos)
 {
 	impl->throw_if_disposed();
@@ -141,17 +122,6 @@ CSSHitTestResult CSSLayout::hit_test(Canvas &canvas, const Point &pos)
 	{
 		return CSSHitTestResult();
 	}
-}
-
-void CSSLayout::load_xml(const std::string &filename, const std::string &style_sheet)
-{
-	impl->throw_if_disposed();
-	impl->clear();
-	File file(filename, File::open_existing, File::access_read);
-	DomDocument doc(file, false);
-	impl->box_tree.css.add_sheet(author_sheet_origin, "default.css");
-	impl->box_tree.css.add_sheet(author_sheet_origin, style_sheet);
-	impl->box_tree.create(doc.get_document_element());
 }
 
 void CSSLayout::clear()

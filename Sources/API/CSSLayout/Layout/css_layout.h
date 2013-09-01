@@ -63,7 +63,6 @@ public:
 
 	void set_css_document(const CSSDocument &doc);
 
-	void load_xml(const std::string &filename, const std::string &style_sheet);
 	void layout(Canvas &canvas, const Rect &viewport);
 	void render(Canvas &canvas) { render_impl(canvas); }
 
@@ -74,8 +73,6 @@ public:
 	}
 
 	CSSHitTestResult hit_test(Canvas &canvas, const Point &pos);
-	void clear_selection();
-	void set_selection(CSSLayoutNode start, size_t start_text_offset, CSSLayoutNode end, size_t end_text_offset);
 
 	void clear();
 	void set_root_element(CSSLayoutElement element);

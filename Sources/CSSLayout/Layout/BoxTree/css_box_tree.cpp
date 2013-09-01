@@ -40,7 +40,7 @@ namespace clan
 {
 
 CSSBoxTree::CSSBoxTree()
-: root_element(0), html_body_element(0), selection_start(0), selection_end(0), selection_start_text_offset(0), selection_end_text_offset(0)
+: root_element(0), html_body_element(0)
 {
 }
 
@@ -60,28 +60,18 @@ void CSSBoxTree::set_html_body_element(CSSBoxElement *new_html_body_element)
 	html_body_element = new_html_body_element;
 }
 
-void CSSBoxTree::create(const DomNode &node)
-{
-	clear();
-	CSSBoxNode *root_node = create_node(node, 0);
-	root_element = dynamic_cast<CSSBoxElement*>(root_node);
-	if (!root_element)
-	{
-		delete root_node;
-		throw Exception("XML contained no document element!");
-	}
-}
-
 void CSSBoxTree::prepare(CSSResourceCache *resource_cache)
 {
-	clean();
 	compute(resource_cache);
-	convert_run_in_blocks(root_element);
-	CSSWhitespaceEraser::remove_whitespace(root_element);
-	filter_table(resource_cache);
 }
 
-void CSSBoxTree::compute(CSSResourceCache *cache, CSSBoxNode *node)
+void CSSBoxTree::compute(CSSResourceCache *cache)
+{
+	bool collapse_space = false;
+	compute(cache, 0, collapse_space);
+}
+
+void CSSBoxTree::compute(CSSResourceCache *cache, CSSBoxNode *node, bool &collapse_space)
 {
 	if (node == 0)
 		node = root_element;
@@ -99,29 +89,167 @@ void CSSBoxTree::compute(CSSResourceCache *cache, CSSBoxNode *node)
 		element->computed_values.set_specified_values(select_result);
 	}
 
+	CSSBoxText *text = dynamic_cast<CSSBoxText*>(node);
+	if (text)
+	{
+		const CSSComputedTextInherit &text_properties = text->get_properties().get_text_inherit();
+
+		bool normal = text_properties.white_space.type == CSSValueWhiteSpace::type_normal;
+		bool pre_line = text_properties.white_space.type == CSSValueWhiteSpace::type_pre_line;
+		bool nowrap = text_properties.white_space.type == CSSValueWhiteSpace::type_nowrap;
+		//bool pre = text_properties.white_space.type == CSSValueWhiteSpace::type_pre;
+		//bool pre_wrap = text_properties.white_space.type == CSSValueWhiteSpace::type_pre_wrap;
+
+		text->processed_text = normalize_newlines(text->text);
+
+		if (normal || nowrap || pre_line)
+			text->processed_text = remove_whitespace_around_linefeed(text->processed_text); // step #1
+
+		//if (pre || prewrap)
+		//	treat_spaces_as_nbsp(text->processed_text); // step #2
+		//if (prewrap)
+		//	add_linebreak_opportunity(text.length());
+
+		if (normal || nowrap)
+			text->processed_text =convert_linefeed_to_space(text->processed_text); // step #3
+
+		if (normal || nowrap || pre_line)
+		{
+			bool prev_ended_with_space = false;
+			bool prev_normal = false;
+			bool prev_nowrap = false;
+			bool prev_preline = false;
+
+			text->processed_text = convert_tab_to_space(text->processed_text); // step #4.1
+			text->processed_text = collapse_spaces(text->processed_text, collapse_space);
+
+			text->processed_text_collapse_next = collapse_space;
+		}
+		else
+		{
+			text->processed_text_collapse_next = false;
+		}
+	}
+
 	CSSBoxNode *child = node->get_first_child();
 	while (child)
 	{
-		compute(cache, child);
+		compute(cache, child, collapse_space);
 		child = child->get_next_sibling();
 	}
 }
 
-void CSSBoxTree::clean(CSSBoxNode *node)
+std::string CSSBoxTree::normalize_newlines(const std::string &text)
 {
-	if (node == 0)
-		node = root_element;
+	// "The CSS 'white-space' processing model assumes all newlines have been normalized to line feeds."
 
-	CSSBoxText *text = dynamic_cast<CSSBoxText*>(node);
-	if (text)
-		text->processed_text = text->text;
-	
-	CSSBoxNode *child = node->get_first_child();
-	while (child)
+	std::string result;
+	result.reserve(text.length());
+
+	size_t length = text.length();
+	for (size_t i = 0; i < length; i++)
 	{
-		clean(child);
-		child = child->get_next_sibling();
+		switch (text[i])
+		{
+		case '\r':
+			if (i + 1 != length && text[i + 1] == '\n')
+				i++;
+			result.push_back('\n');
+			break;
+		default:
+			result.push_back(text[i]);
+			break;
+		}
 	}
+
+	return result;
+}
+
+std::string CSSBoxTree::remove_whitespace_around_linefeed(const std::string &text)
+{
+	// "Each tab (U+0009), carriage return (U+000D), or space (U+0020) character surrounding a linefeed (U+000A) character is removed"
+
+	std::string result;
+	result.reserve(text.length());
+
+	bool removing = false;
+	size_t length = text.length();
+	for (size_t i = 0; i < length; i++)
+	{
+		if (!removing)
+		{
+			switch (text[i])
+			{
+			case '\n':
+				while (!result.empty() && (result.back() == ' ' || result.back() == '\t'))
+					result.pop_back();
+				result.push_back('\n');
+				removing = true;
+				break;
+
+			default:
+				result.push_back(text[i]);
+			}
+		}
+		else
+		{
+			switch (text[i])
+			{
+			case ' ':
+			case '\t':
+				break;
+			case '\n':
+				result.push_back('\n');
+				break;
+			default:
+				result.push_back(text[i]);
+				removing = false;
+			}
+		}
+	}
+
+	return result;
+}
+
+std::string CSSBoxTree::convert_linefeed_to_space(const std::string &text)
+{
+	// "linefeed characters are transformed for rendering purpose into one of the following characters:
+	// a space character, a zero width space character (U+200B), or no character (i.e., not rendered),
+	// according to UA-specific algorithms based on the content script"
+
+	// our UA-specific algorithm is to always convert it to a space character. :)
+
+	std::string result = text;
+	for (size_t i = 0; i < result.length(); i++)
+		if (result[i] == '\n')
+			result[i] = ' ';
+	return result;
+}
+
+std::string CSSBoxTree::convert_tab_to_space(const std::string &text)
+{
+	std::string result = text;
+	for (size_t i = 0; i < result.length(); i++)
+		if (result[i] == '\t')
+			result[i] = ' ';
+	return result;
+}
+
+std::string CSSBoxTree::collapse_spaces(const std::string &text, bool &collapsing)
+{
+	std::string result;
+	result.reserve(text.length());
+
+	size_t length = text.length();
+	for (size_t i = 0; i < length; i++)
+	{
+		bool is_space = text[i] == ' ';
+		if (!is_space || !collapsing)
+			result.push_back(text[i]);
+		collapsing = is_space;
+	}
+
+	return result;
 }
 
 void CSSBoxTree::clear()
@@ -130,165 +258,10 @@ void CSSBoxTree::clear()
 	root_element = 0;
 }
 
-CSSBoxNode *CSSBoxTree::create_node(const DomNode &node, CSSBoxNode *parent)
-{
-	if (node.is_element())
-	{
-		CSSBoxElement *box_element = new CSSBoxElement();
-		box_element->name = node.get_node_name();
-
-		box_element->computed_values = CSSComputedValues(CSSComputedValues());
-		box_element->computed_values.set_specified_values(css.select(node.to_element()), node.to_element().get_attribute("style"));
-
-		create_pseudo_element(box_element, node.to_element(), "before");
-
-		DomNode cur = node.get_first_child();
-		while (!cur.is_null())
-		{
-			create_node(cur, parent);
-			cur = cur.get_next_sibling();
-		}
-
-		create_pseudo_element(box_element, node.to_element(), "after");
-
-		if (parent)
-			parent->push_back(box_element);
-		return box_element;
-	}
-	else if (node.is_text())
-	{
-		CSSBoxText *box_text = new CSSBoxText();
-		box_text->set_text(node.get_node_value());
-		if (parent)
-			parent->push_back(box_text);
-		return box_text;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-void CSSBoxTree::create_pseudo_element(CSSBoxElement *box_element, const DomElement &dom_element, const std::string &pseudo_element)
-{
-	CSSSelectResult selection = css.select(dom_element, pseudo_element);
-	if (!selection.get_values().empty())
-	{
-		CSSComputedValues computed_values(box_element->computed_values);
-		computed_values.set_specified_values(selection);
-		if (computed_values.get_misc_reset().content.type != CSSValueContent::type_none && computed_values.get_misc_reset().content.type != CSSValueContent::type_normal)
-		{
-			CSSBoxElement *before_element = new CSSBoxElement();
-			before_element->name = string_format("%1:%2", dom_element.get_node_name(), pseudo_element);
-			before_element->computed_values = computed_values;
-
-			CSSBoxText *box_text = new CSSBoxText();
-			box_text->set_text(computed_values.get_misc_reset().content.str);
-
-			before_element->push_back(box_text);
-			box_element->push_back(before_element);
-		}
-	}
-}
-
-/*
-void CSSBoxTree::compute_element(CSSBoxElement *element, CSSResourceCache *resource_cache)
-{
-	CSSComputedBox *parent_properties = 0;
-	CSSBoxNode *parent_node = element->get_parent();
-	if (parent_node)
-		parent_properties = &dynamic_cast<CSSBoxElement*>(parent_node)->computed_properties;
-
-	element->computed_properties = element->properties;
-	element->computed_values.get_box().compute(parent_properties, resource_cache);
-
-	CSSBoxNode *cur = element->get_first_child();
-	while (cur)
-	{
-		CSSBoxElement *cur_element = dynamic_cast<CSSBoxElement*>(cur);
-		if (cur_element)
-			compute_element(cur_element, resource_cache);
-		cur = cur->get_next_sibling();
-	}
-}
-*/
-
-void CSSBoxTree::convert_run_in_blocks(CSSBoxElement *element)
-{
-	// This code is pretty broken.  But then again, who cares?  There's not
-	// a single browser out there yet that managed to implement run-in boxes properly,
-	// so I doubt they are being used much..
-/*
-	if (element->computed_values.get_box().display.type == CSSValueDisplay::type_run_in)
-	{
-		if (element->has_block_level_children())
-		{
-			element->properties.display.type = CSSValueDisplay::type_block;
-			element->computed_values.get_box().display.type = CSSValueDisplay::type_block;
-		}
-		else
-		{
-			element->properties.display.type = CSSValueDisplay::type_block;
-			element->computed_values.get_box().display.type = CSSValueDisplay::type_block;
-
-			CSSBoxNode *next = element->get_next_sibling();
-			while (next)
-			{
-				CSSBoxText *next_text = dynamic_cast<CSSBoxText*>(next);
-				CSSBoxElement *next_element = dynamic_cast<CSSBoxElement*>(next);
-				if (next_text)
-				{
-					if (next_text->processed_text.find_first_not_of(" \t\r\n") != std::string::npos)
-						break;
-				}
-				else if (next_element)
-				{
-					if (next_element->computed_values.get_box().float_box.type != CSSValueFloat::type_none ||
-						next_element->computed_values.get_box().position.type == CSSValuePosition::type_absolute ||
-						next_element->computed_values.get_box().position.type == CSSValuePosition::type_fixed)
-					{
-						// Skip floating and absolute positioned boxes
-					}
-					else if (next_element->computed_values.get_box().display.type == CSSValueDisplay::type_block)
-					{
-						element->properties.display.type = CSSValueDisplay::type_inline;
-						element->computed_values.get_box().display.type = CSSValueDisplay::type_inline;
-						element->remove();
-						next_element->push_front(element);
-						break;
-					}
-					else
-					{
-						break;
-					}
-				}
-				else
-				{
-					break;
-				}
-
-				next = next->get_next_sibling();
-			}
-		}
-	}
-	else
-	{
-		CSSBoxNode *cur = element->get_first_child();
-		while (cur)
-		{
-			CSSBoxElement *cur_element = dynamic_cast<CSSBoxElement*>(cur);
-			if (cur_element)
-				convert_run_in_blocks(cur_element);
-			cur = cur->get_next_sibling();
-		}
-	}
-*/
-}
+#ifdef NEEDS_PORTING
 
 void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 {
-#ifdef NEEDS_PORTING
-
 /*
 	// Remove irrelevant boxes:
 	if (parent.display.type == CSSValueDisplay::type_table_column)
@@ -528,62 +501,8 @@ void CSSBoxTree::filter_table(CSSResourceCache *resource_cache)
 		}
 		walker.next(true);
 	}
+}
+
 #endif
-}
-
-void CSSBoxTree::set_selection(CSSBoxNode *start, size_t start_text_offset, CSSBoxNode *end, size_t end_text_offset)
-{
-	apply_selection(selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, true);
-
-	selection_start = start;
-	selection_start_text_offset = start_text_offset;
-	selection_end = end;
-	selection_end_text_offset = end_text_offset;
-
-	apply_selection(selection_start, selection_start_text_offset, selection_end, selection_end_text_offset, false);
-}
-
-void CSSBoxTree::apply_selection(CSSBoxNode *start, size_t start_offset, CSSBoxNode *end, size_t end_offset, bool clear)
-{
-	if (start && end)
-	{
-		CSSBoxNodeWalker walker(start, true);
-		do
-		{
-			if (walker.is_text())
-			{
-				CSSBoxText *text = walker.get_text();
-				if (clear)
-				{
-					text->selection_start = 0;
-					text->processed_selection_start = 0;
-					text->selection_end = 0;
-					text->processed_selection_end = 0;
-				}
-				else
-				{
-					text->selection_start = 0;
-					text->processed_selection_start = 0;
-					text->selection_end = text->text.length();
-					text->processed_selection_end = text->processed_text.length();
-
-					if (text == start)
-					{
-						text->selection_start = start_offset;
-						text->processed_selection_start = start_offset;
-					}
-					if (text == end)
-					{
-						text->selection_end = end_offset;
-						text->processed_selection_end = end_offset;
-					}
-				}
-			}
-
-			if (walker.get() == end)
-				break;
-		} while (walker.next());
-	}
-}
 
 }

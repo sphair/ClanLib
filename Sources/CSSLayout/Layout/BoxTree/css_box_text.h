@@ -39,7 +39,7 @@ class CSSComputedValues;
 class CSSBoxText : public CSSBoxNode
 {
 public:
-	CSSBoxText() : selection_start(0), selection_end(0), processed_selection_start(0), processed_selection_end(0) { }
+	CSSBoxText() : selection_start(0), selection_end(0), processed_text_collapse_next(false), processed_selection_start(0), processed_selection_end(0) { }
 
 	const std::string &get_text() const { return text; }
 	void set_text(const std::string &text);
@@ -47,6 +47,7 @@ public:
 	std::string text;
 	std::string::size_type selection_start, selection_end;
 	std::string processed_text;
+	bool processed_text_collapse_next;
 	std::string::size_type processed_selection_start, processed_selection_end;
 
 	const CSSBoxElement *get_parent_element() const;
