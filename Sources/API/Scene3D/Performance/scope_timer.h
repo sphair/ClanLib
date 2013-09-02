@@ -104,19 +104,42 @@ private:
 class ScopeTimer
 {
 public:
-	ScopeTimer(const char *name)
-	: name(name), start(rdtsc())
+	ScopeTimer() : _name(), _start()
 	{
+	}
+
+	ScopeTimer(const char *name) : _name(), _start()
+	{
+		start(name);
 	}
 
 	~ScopeTimer()
 	{
-		ScopeTimerResults::add_result(ScopeTimerResult(name, rdtsc() - start));
+		end();
+	}
+
+	void start(const char *name)
+	{
+		end();
+		_name = name;
+		_start = rdtsc();
+	}
+
+	void end()
+	{
+		if (_name)
+		{
+			ScopeTimerResults::add_result(ScopeTimerResult(_name, rdtsc() - _start));
+			_name = 0;
+		}
 	}
 
 private:
-	const char *name;
-	unsigned long long start;
+	ScopeTimer(const ScopeTimer &that);
+	ScopeTimer &operator =(const ScopeTimer &that);
+
+	const char *_name;
+	unsigned long long _start;
 };
 
 #define ScopeTimeFunction() ScopeTimer scope_timer(__FUNCTION__);
