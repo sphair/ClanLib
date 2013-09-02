@@ -240,12 +240,20 @@ PixelBuffer GL3TextureProvider::get_pixeldata(GraphicContext &gc, TextureFormat 
 	if (tf.valid)
 	{
 		PixelBuffer buffer(width, height, texture_format);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glGetTexImage(texture_type, level, tf.pixel_format, tf.pixel_datatype, buffer.get_data());
 		return buffer;
 	}
 	else
 	{
 		PixelBuffer buffer(width, height, tf_bgra8);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ROW_LENGTH, buffer.get_pitch() / buffer.get_bytes_per_pixel());
+		glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+		glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 		glGetTexImage(texture_type, level, GL_RGBA, GL_UNSIGNED_BYTE, buffer.get_data());
 		return buffer.to_format(texture_format);
 	}
