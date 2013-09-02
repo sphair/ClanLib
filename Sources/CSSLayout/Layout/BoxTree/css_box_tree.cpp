@@ -31,7 +31,6 @@
 #include "css_box_element.h"
 #include "css_box_text.h"
 #include "css_box_node_walker.h"
-#include "css_whitespace_eraser.h"
 #include "css_box_select_node.h"
 #include "API/CSSLayout/CSSDocument/css_property.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
