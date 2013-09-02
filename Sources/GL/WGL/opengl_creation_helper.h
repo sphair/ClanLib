@@ -90,7 +90,7 @@ private:
 #define WGL_SUPPORT_OPENGL                   0x2010
 #define WGL_DOUBLE_BUFFER                    0x2011
 #define WGL_STEREO                           0x2012
-#define WGL_CL_PIXEL_TYPE                       0x2013
+#define WGL_PIXEL_TYPE                       0x2013
 #define WGL_COLOR_BITS                       0x2014
 #define WGL_RED_BITS                         0x2015
 #define WGL_RED_SHIFT                        0x2016

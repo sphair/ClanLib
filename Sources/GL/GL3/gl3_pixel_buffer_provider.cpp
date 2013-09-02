@@ -54,13 +54,13 @@ void GL3PixelBufferProvider::create(const void *data, const Size &new_size, Pixe
 	size = new_size;
 	if (direction == data_from_gpu)
 	{
-		selected_binding = GL_CL_PIXEL_PACK_BUFFER_BINDING;
-		selected_target = GL_CL_PIXEL_PACK_BUFFER;
+		selected_binding = GL_PIXEL_PACK_BUFFER_BINDING;
+		selected_target = GL_PIXEL_PACK_BUFFER;
 	}
 	else
 	{
-		selected_binding = GL_CL_PIXEL_UNPACK_BUFFER_BINDING;
-		selected_target = GL_CL_PIXEL_UNPACK_BUFFER;
+		selected_binding = GL_PIXEL_UNPACK_BUFFER_BINDING;
+		selected_target = GL_PIXEL_UNPACK_BUFFER;
 	}
 
 	int total_size = PixelBuffer::get_bytes_per_pixel(new_format);

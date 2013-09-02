@@ -281,8 +281,8 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	if (buffer_provider)
 	{
 
-		glGetIntegerv(GL_CL_PIXEL_UNPACK_BUFFER, &last_buffer);
-		glBindBuffer(GL_CL_PIXEL_UNPACK_BUFFER, buffer_provider->get_handle());
+		glGetIntegerv(GL_PIXEL_UNPACK_BUFFER, &last_buffer);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_provider->get_handle());
 	}
 	else
 	{
@@ -361,7 +361,7 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	}
 
 	if (buffer_provider)
-		glBindBuffer(GL_CL_PIXEL_UNPACK_BUFFER, last_buffer);
+		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, last_buffer);
 }
 
 void GL3TextureProvider::copy_image_from(
