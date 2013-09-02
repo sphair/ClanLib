@@ -281,7 +281,7 @@ void GL3TextureProvider::copy_from(GraphicContext &gc, int x, int y, int slice, 
 	if (buffer_provider)
 	{
 
-		glGetIntegerv(GL_PIXEL_UNPACK_BUFFER, &last_buffer);
+		glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &last_buffer);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_provider->get_handle());
 	}
 	else
