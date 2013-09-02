@@ -74,12 +74,8 @@ public:
 
 	CSSHitTestResult hit_test(Canvas &canvas, const Point &pos);
 
-	void clear();
-	void set_root_element(CSSLayoutElement element);
-	CSSLayoutElement get_root_element();
-
-	void set_html_body_element(CSSLayoutElement element);
-	CSSLayoutElement get_html_body_element();
+	void set_document_element(CSSLayoutElement element);
+	CSSLayoutElement get_document_element();
 
 	CSSLayoutObject create_object();
 	CSSLayoutElement create_element(const std::string &name = std::string());

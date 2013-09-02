@@ -124,21 +124,17 @@ CSSHitTestResult CSSLayout::hit_test(Canvas &canvas, const Point &pos)
 	}
 }
 
-void CSSLayout::clear()
-{
-	impl->throw_if_disposed();
-	impl->clear();
-}
-
-void CSSLayout::set_root_element(CSSLayoutElement element)
+void CSSLayout::set_document_element(CSSLayoutElement element)
 {
 	impl->throw_if_disposed();
 	impl->clear();
 	if (!element.is_null() && element.get_parent().is_null())
 		impl->box_tree.set_root_element(static_cast<CSSBoxElement*>(element.impl->box_node));
+	else
+		impl->box_tree.set_root_element(0);
 }
 
-CSSLayoutElement CSSLayout::get_root_element()
+CSSLayoutElement CSSLayout::get_document_element()
 {
 	impl->throw_if_disposed();
 	CSSBoxElement *root = impl->box_tree.get_root_element();
@@ -146,30 +142,6 @@ CSSLayoutElement CSSLayout::get_root_element()
 	{
 		std::shared_ptr<CSSLayoutNode_Impl> node_impl = impl->alloc_node_impl();
 		node_impl->box_node = root;
-		return CSSLayoutNode(node_impl).to_element();
-	}
-	else
-	{
-		return CSSLayoutElement();
-	}
-}
-
-void CSSLayout::set_html_body_element(CSSLayoutElement element)
-{
-	impl->throw_if_disposed();
-	impl->clear();
-	if (!element.is_null() && element.get_parent().is_null())
-		impl->box_tree.set_html_body_element(static_cast<CSSBoxElement*>(element.impl->box_node));
-}
-
-CSSLayoutElement CSSLayout::get_html_body_element()
-{
-	impl->throw_if_disposed();
-	CSSBoxElement *html_body = impl->box_tree.get_html_body_element();
-	if (html_body)
-	{
-		std::shared_ptr<CSSLayoutNode_Impl> node_impl = impl->alloc_node_impl();
-		node_impl->box_node = html_body;
 		return CSSLayoutNode(node_impl).to_element();
 	}
 	else
@@ -208,10 +180,10 @@ CSSLayoutText CSSLayout::create_text(const std::string &text)
 
 CSSLayoutElement CSSLayout::find_element(const std::string &name)
 {
-	if (!get_root_element().is_null())
+	if (!get_document_element().is_null())
 	{
 		std::vector<CSSLayoutNode> stack;
-		stack.push_back(get_root_element());
+		stack.push_back(get_document_element());
 		while (!stack.empty())
 		{
 			if (stack.back().is_element() && stack.back().to_element().get_name() == name)

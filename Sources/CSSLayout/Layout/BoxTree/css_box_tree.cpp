@@ -39,7 +39,7 @@ namespace clan
 {
 
 CSSBoxTree::CSSBoxTree()
-: root_element(0), html_body_element(0)
+: root_element(0)
 {
 }
 
@@ -52,11 +52,6 @@ void CSSBoxTree::set_root_element(CSSBoxElement *new_root_element)
 {
 	clear();
 	root_element = new_root_element;
-}
-
-void CSSBoxTree::set_html_body_element(CSSBoxElement *new_html_body_element)
-{
-	html_body_element = new_html_body_element;
 }
 
 void CSSBoxTree::prepare(CSSResourceCache *resource_cache)

@@ -163,12 +163,6 @@ void CSSView::load_html()
 			for (size_t i = 0; i < token.attributes.size(); i++)
 				element.set_attribute(token.attributes[i].name, token.attributes[i].value);
 
-			if (token.name == "body")
-			{
-				if (layout.get_html_body_element().is_null())
-					layout.set_html_body_element(element);
-			}
-
 			if (!css_elements.empty())
 			{
 				css_elements.back().append_child(element);
@@ -208,7 +202,7 @@ void CSSView::load_html()
 	}
 
 	if (!css_elements.empty())
-		layout.set_root_element(css_elements.front());
+		layout.set_document_element(css_elements.front());
 }
 
 bool CSSView::is_end_tag_forbidden(const std::string &name)

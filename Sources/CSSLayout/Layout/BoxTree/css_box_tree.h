@@ -46,14 +46,11 @@ public:
 	~CSSBoxTree();
 	void clear();
 	void set_root_element(CSSBoxElement *new_root_element);
-	void set_html_body_element(CSSBoxElement *new_html_body_element);
 	void prepare(CSSResourceCache *resource_cache);
 
 	CSSDocument css;
 	CSSBoxElement *get_root_element() { return root_element; }
 	const CSSBoxElement *get_root_element() const { return root_element; }
-	CSSBoxElement *get_html_body_element() { return html_body_element; }
-	const CSSBoxElement *get_html_body_element() const { return html_body_element; }
 
 private:
 	void compute(CSSResourceCache *cache);
@@ -66,7 +63,6 @@ private:
 	std::string collapse_spaces(const std::string &text, bool &collapsing);
 
 	CSSBoxElement *root_element;
-	CSSBoxElement *html_body_element;
 	CSSPropertyParsers property_parsers;
 };
 
