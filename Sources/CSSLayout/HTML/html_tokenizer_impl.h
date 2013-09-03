@@ -76,7 +76,7 @@ private:
 
 	struct HTMLEscape
 	{
-		char *name;
+		const char *name;
 		wchar_t cdata;
 	};
 	static HTMLEscape escapes[];
