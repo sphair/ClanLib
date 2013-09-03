@@ -758,7 +758,7 @@ if test "$enable_docs" != "no"; then
 	AC_SUBST(ClanLib_docs,"Documentation")
 	AC_SUBST(ClanLib_add_docs,"Reference Overview")
 	enable_docs=yes
-	AC_CONFIG_FILES([Documentation/Makefile Documentation/Overview/Makefile Documentation/Reference/Makefile])
+	AC_CONFIG_FILES([Documentation/Makefile Documentation/Reference/Makefile])
 fi
 
 echo ""
