@@ -50,8 +50,8 @@ public:
 
 public:
 	char *data;
-	int size;
-	int allocated_size;
+	unsigned int size;
+	unsigned int allocated_size;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -62,26 +62,24 @@ DataBuffer::DataBuffer()
 {
 }
 
-DataBuffer::DataBuffer(int new_size)
+DataBuffer::DataBuffer(unsigned int new_size)
 : impl(new DataBuffer_Impl())
 {
 	set_size(new_size);
 }
 
-DataBuffer::DataBuffer(const void *new_data, int new_size)
+DataBuffer::DataBuffer(const void *new_data, unsigned int new_size)
 : impl(new DataBuffer_Impl())
 {
 	set_size(new_size);
 	memcpy(impl->data, new_data, new_size);
 }
 
-DataBuffer::DataBuffer(const DataBuffer &new_data, int pos, int size)
+DataBuffer::DataBuffer(const DataBuffer &new_data, unsigned int pos, unsigned int size)
 : impl(new DataBuffer_Impl())
 {
-	if (size == -1)
-		size = new_data.get_size();
 	set_size(size);
-	memcpy(impl->data, new_data.get_data(), size);
+	memcpy(impl->data, new_data.get_data() + pos, size);
 }
 
 DataBuffer::~DataBuffer()
@@ -101,12 +99,12 @@ const char *DataBuffer::get_data() const
 	return impl->data;
 }
 
-int DataBuffer::get_size() const
+unsigned int DataBuffer::get_size() const
 {
 	return impl->size;
 }
 
-int DataBuffer::get_capacity() const
+unsigned int DataBuffer::get_capacity() const
 {
 	return impl->allocated_size;
 }
@@ -140,7 +138,7 @@ DataBuffer &DataBuffer::operator =(const DataBuffer &copy)
 	return *this;
 }
 
-void DataBuffer::set_size(int new_size)
+void DataBuffer::set_size(unsigned int new_size)
 {
 	if (new_size > impl->allocated_size)
 	{
@@ -152,13 +150,13 @@ void DataBuffer::set_size(int new_size)
 		impl->size = new_size;
 		impl->allocated_size = new_size;
 	}
-	else if (new_size <= impl->allocated_size)
+	else
 	{
 		impl->size = new_size;
 	}
 }
 
-void DataBuffer::set_capacity(int new_capacity)
+void DataBuffer::set_capacity(unsigned int new_capacity)
 {
 	if (new_capacity > impl->allocated_size)
 	{

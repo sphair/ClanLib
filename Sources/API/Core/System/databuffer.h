@@ -47,9 +47,9 @@ class CL_API_CORE DataBuffer
 public:
 	/// \brief Constructs a data buffer of 0 size.
 	DataBuffer();
-	DataBuffer(int size);
-	DataBuffer(const void *data, int size);
-	DataBuffer(const DataBuffer &data, int pos, int size = -1);
+	DataBuffer(unsigned int size);
+	DataBuffer(const void *data, unsigned int size);
+	DataBuffer(const DataBuffer &data, unsigned int pos, unsigned int size);
 	~DataBuffer();
 /// \}
 
@@ -68,10 +68,10 @@ public:
 	const Type *get_data() const { return reinterpret_cast<const Type*>(get_data()); }
 
 	/// \brief Returns the size of the data.
-	int get_size() const;
+	unsigned int get_size() const;
 
 	/// \brief Returns the capacity of the data buffer object.
-	int get_capacity() const;
+	unsigned int get_capacity() const;
 
 	/// \brief Returns a char in the buffer.
 	char &operator[](int i);
@@ -89,10 +89,10 @@ public:
 	DataBuffer &operator =(const DataBuffer &copy);
 
 	/// \brief Resize the buffer.
-	void set_size(int size);
+	void set_size(unsigned int size);
 
 	/// \brief Preallocate enough memory.
-	void set_capacity(int capacity);
+	void set_capacity(unsigned int capacity);
 /// \}
 
 /// \name Implementation
