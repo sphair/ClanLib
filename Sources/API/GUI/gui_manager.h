@@ -106,9 +106,6 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the parent is the GUI manager.
-	bool is_gui_manager() const { return true; }
-
 	/// \brief Returns the CSS document being used.
 	CSSDocument get_css_document() const;
 
