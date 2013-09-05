@@ -19,7 +19,7 @@ public:
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);
 			gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
-			gui.add_theme("../../../Resources/GUIThemeAero");
+			gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
 			DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
 			win_desc.set_title("Button WM System Test Application");
