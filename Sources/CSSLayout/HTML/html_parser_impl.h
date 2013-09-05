@@ -94,6 +94,55 @@ private:
 	void reconstruct_active_formatting_elements();
 	void pop_active_formatting_until_scope_marker();
 
+	void parse_insertion_mode(const HTMLToken &token);
+	void parse_foreign_content(const HTMLToken &token);
+
+	CSSLayoutElement get_adjusted_current_node();
+
+	static bool is_html_element(const CSSLayoutElement &element);
+	static bool is_mathml_text_integration_point(const CSSLayoutElement &element);
+	static bool is_html_integration_point(const CSSLayoutElement &element);
+
+	CSSLayoutElement get_adjusted_insertion_location(CSSLayoutElement override_target, bool foster_parenting);
+	CSSLayoutElement create_element_for_token(const HTMLToken &token, CSSLayoutElement intended_parent);
+	CSSLayoutElement insert_foreign_element(const HTMLToken &token, CSSLayoutElement adjusted_insertion_location);
+	CSSLayoutElement insert_html_element(const HTMLToken &token, CSSLayoutElement adjusted_insertion_location);
+
+	void adjust_mathml_attributes(HTMLToken &token);
+	void adjust_svg_attributes(HTMLToken &token);
+	void adjust_foreign_attributes(HTMLToken &token);
+
+	void insert_character(const std::string &data, CSSLayoutElement adjusted_insertion_location);
+
+	void raw_text_element_parsing(CSSLayoutElement adjusted_insertion_location);
+	void rcdata_element_parsing(CSSLayoutElement adjusted_insertion_location);
+	void generate_implied_end_tags(const std::vector<std::string> &exclude_list = std::vector<std::string>());
+
+	void initial_insertion_mode(const HTMLToken &token);
+	void before_html_insertion_mode(const HTMLToken &token);
+	void before_head_insertion_mode(const HTMLToken &token);
+	void in_head_insertion_mode(const HTMLToken &token);
+	void in_head_noscript_insertion_mode(const HTMLToken &token);
+	void after_head_insertion_mode(const HTMLToken &token);
+	void in_body_insertion_mode(const HTMLToken &token);
+	void text_insertion_mode(const HTMLToken &token);
+	void in_table_insertion_mode(const HTMLToken &token);
+	void in_table_text_insertion_mode(const HTMLToken &token);
+	void in_caption_insertion_mode(const HTMLToken &token);
+	void in_column_group_insertion_mode(const HTMLToken &token);
+	void in_table_body_insertion_mode(const HTMLToken &token);
+	void in_row_insertion_mode(const HTMLToken &token);
+	void in_cell_insertion_mode(const HTMLToken &token);
+	void in_select_insertion_mode(const HTMLToken &token);
+	void in_select_in_table_insertion_mode(const HTMLToken &token);
+	void in_template_insertion_mode(const HTMLToken &token);
+	void after_body_insertion_mode(const HTMLToken &token);
+	void in_frameset_insertion_mode(const HTMLToken &token);
+	void after_frameset_insertion_mode(const HTMLToken &token);
+	void after_after_frameset_insertion_mode(const HTMLToken &token);
+
+	void stopped_parsing();
+
 	InsertionMode insertion_mode;
 	InsertionMode original_insertion_mode;
 	std::vector<InsertionMode> template_insertion_modes;

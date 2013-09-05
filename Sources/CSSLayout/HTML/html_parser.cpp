@@ -63,7 +63,256 @@ void HTMLParser_Impl::append(const HTMLToken &token)
 	// The scope markers are inserted when entering applet elements, buttons, object elements, marquees, table cells, and table
 	// captions, and are used to prevent formatting from "leaking" into applet elements, buttons, object elements, marquees, and tables.
 
-	// To do: §8.2.5 Tree construction
+	// §8.2.5 Tree construction:
+
+	CSSLayoutElement adjusted_current_node = get_adjusted_current_node();
+	if (adjusted_current_node.is_null())
+	{
+		parse_insertion_mode(token);
+	}
+	else if (is_html_element(adjusted_current_node))
+	{
+		parse_insertion_mode(token);
+	}
+	else if (is_mathml_text_integration_point(adjusted_current_node))
+	{
+		if (token.type == HTMLToken::type_tag_begin)
+		{
+			if ((token.value == "mglyph" || token.value == "malignmark"))
+				parse_foreign_content(token);
+			else
+				parse_insertion_mode(token);
+		}
+		else if (token.type == HTMLToken::type_text)
+		{
+			parse_insertion_mode(token);
+		}
+		else
+		{
+			parse_foreign_content(token);
+		}
+	}
+	else if (adjusted_current_node.get_name() == "annotation-xml" && token.type == HTMLToken::type_tag_begin && token.value == "svg")
+	{
+		parse_insertion_mode(token);
+	}
+	else if (is_html_integration_point(adjusted_current_node))
+	{
+		if (token.type == HTMLToken::type_tag_begin || token.type == HTMLToken::type_text)
+		{
+			parse_insertion_mode(token);
+		}
+		else
+		{
+			parse_foreign_content(token);
+		}
+	}
+	else
+	{
+		parse_foreign_content(token);
+	}
+}
+
+bool HTMLParser_Impl::is_html_element(const CSSLayoutElement &element)
+{
+	// To do: check if element is any of the known HTML elements
+	return true;
+}
+
+bool HTMLParser_Impl::is_mathml_text_integration_point(const CSSLayoutElement &element)
+{
+	std::string name = element.get_name();
+	return name == "mi" || name == "mo" || name == "mn" || name == "ms" || name == "mtext";
+}
+
+bool HTMLParser_Impl::is_html_integration_point(const CSSLayoutElement &element)
+{
+	// To do:
+	// An annotation-xml element in the MathML namespace whose start tag token had an attribute with the name "encoding" whose value was an ASCII case-insensitive match for the string "text/html"
+	// An annotation-xml element in the MathML namespace whose start tag token had an attribute with the name "encoding" whose value was an ASCII case-insensitive match for the string "application/xhtml+xml"
+	// A foreignObject element in the SVG namespace
+	// A desc element in the SVG namespace
+	// A title element in the SVG namespace
+	return false;
+}
+
+CSSLayoutElement HTMLParser_Impl::get_adjusted_current_node()
+{
+	if (open_elements.size() == 1 && !context.is_null())
+		return context;
+	else if (!open_elements.empty())
+		return open_elements.back();
+	else
+		return CSSLayoutElement();
+}
+
+void HTMLParser_Impl::parse_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::parse_foreign_content(const HTMLToken &token)
+{
+	// §8.2.5.5 The rules for parsing tokens in foreign content
+}
+
+CSSLayoutElement HTMLParser_Impl::get_adjusted_insertion_location(CSSLayoutElement override_target, bool foster_parenting)
+{
+	// §8.2.5.1 Creating and inserting nodes:
+/*
+	CSSLayoutElement target = override_target;
+	if (target.is_null() && !open_elements.empty())
+		target = open_elements.back();
+
+	if (foster_parenting && (target.get_name() == "table" || target.get_name() == "tbody" || target.get_name() == "tfoot" || target.get_name() == "thead" || target.get_name() == "tr"))
+	{
+		CSSLayoutElement last_template = get_last_template();
+		CSSLayoutElement last_table = get_last_table();
+	}
+*/
+	return CSSLayoutElement();
+}
+
+CSSLayoutElement HTMLParser_Impl::create_element_for_token(const HTMLToken &token, CSSLayoutElement intended_parent)
+{
+	return CSSLayoutElement();
+}
+
+CSSLayoutElement HTMLParser_Impl::insert_foreign_element(const HTMLToken &token, CSSLayoutElement adjusted_insertion_location)
+{
+	return CSSLayoutElement();
+}
+
+CSSLayoutElement HTMLParser_Impl::insert_html_element(const HTMLToken &token, CSSLayoutElement adjusted_insertion_location)
+{
+	return CSSLayoutElement();
+}
+
+void HTMLParser_Impl::adjust_mathml_attributes(HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::adjust_svg_attributes(HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::adjust_foreign_attributes(HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::insert_character(const std::string &data, CSSLayoutElement adjusted_insertion_location)
+{
+}
+
+void HTMLParser_Impl::raw_text_element_parsing(CSSLayoutElement adjusted_insertion_location)
+{
+	// §8.2.5.2 Parsing elements that contain only text
+
+	// "These algorithms are always invoked in response to a start tag token."
+}
+
+void HTMLParser_Impl::rcdata_element_parsing(CSSLayoutElement adjusted_insertion_location)
+{
+	// §8.2.5.2 Parsing elements that contain only text
+
+	// "These algorithms are always invoked in response to a start tag token."
+}
+
+void HTMLParser_Impl::generate_implied_end_tags(const std::vector<std::string> &exclude_list)
+{
+	// §8.2.5.3 Closing elements that have implied end tags
+}
+
+void HTMLParser_Impl::initial_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::before_html_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::before_head_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_head_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_head_noscript_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::after_head_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_body_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::text_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_table_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_table_text_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_caption_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_column_group_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_table_body_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_row_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_cell_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_select_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_select_in_table_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_template_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::after_body_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::in_frameset_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::after_frameset_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::after_after_frameset_insertion_mode(const HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::stopped_parsing()
+{
+	// §8.2.6 The end
 }
 
 void HTMLParser_Impl::reset_insertion_mode()
