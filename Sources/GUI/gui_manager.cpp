@@ -99,6 +99,11 @@ GUIManager::~GUIManager()
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Attributes:
 
+ResourceManager GUIManager::get_resource_manager() const
+{
+	return impl->resources;
+}
+
 CSSDocument GUIManager::get_css_document() const
 {
 	return impl->css_document;
@@ -185,6 +190,11 @@ void GUIManager::set_css_document(const std::string &filename, const FileSystem 
 	CSSDocument css;
 	css.add_sheet(author_sheet_origin, filename, fs);
 	set_css_document(css);
+}
+
+void GUIManager::set_resource_manager(ResourceManager &resource_manager)
+{
+	impl->resources = resource_manager;
 }
 
 void GUIManager::add_resources(const XMLResourceDocument &additional_resources)

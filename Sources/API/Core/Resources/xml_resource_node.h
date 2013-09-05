@@ -59,6 +59,8 @@ public:
 /// \{
 
 public:
+	bool is_null() const;
+
 	/// \brief Returns the resource type.
 	std::string get_type() const;
 

@@ -106,8 +106,8 @@ public:
 /// \name Attributes
 /// \{
 public:
-	/// \brief Returns true if the parent is the GUI manager.
-	bool is_gui_manager() const { return true; }
+	/// \brief Returns the resource manager
+	ResourceManager get_resource_manager() const;
 
 	/// \brief Returns the CSS document being used.
 	CSSDocument get_css_document() const;
@@ -146,12 +146,15 @@ public:
 /// \name Operations
 /// \{
 public:
-	/// \brief Adds a GUI theme directory.
+	/// \brief Set the resource manager (other than the default one)
+	void set_resource_manager(ResourceManager &resource_manager);
+
+	/// \brief Adds a GUI theme
 	///
 	/// \param fullname = Filename of the theme.
 	void add_theme(const std::string &fullname);
 
-	/// \brief Adds a GUI theme directory.
+	/// \brief Adds a GUI theme
 	///
 	/// \param fullname = Filename of the theme.
 	void add_theme(const std::string &fullname, const FileSystem &fs);

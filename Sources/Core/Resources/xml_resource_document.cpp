@@ -212,30 +212,30 @@ std::vector<std::string> XMLResourceDocument::get_resource_names_of_type(
 }
 
 XMLResourceNode XMLResourceDocument::get_resource(
-	const std::string &resource_id,
-	bool resolve_alias,
-	int reserved) const
+	const std::string &resource_id) const
+{
+	XMLResourceNode node = impl->get_resource(resource_id);
+	if (node.is_null())
+		throw Exception(string_format("Resource not found: %1", resource_id));
+	return node;
+}
+
+XMLResourceNode XMLResourceDocument_Impl::get_resource(const std::string &resource_id) const
 {
  	std::map<std::string, XMLResourceNode>::const_iterator it;
-	it = impl->resources.find(resource_id);
-	if (it != impl->resources.end())
+	it = resources.find(resource_id);
+	if (it != resources.end())
 		return it->second;
 
 	std::vector<XMLResourceDocument>::size_type i;
-	for (i = 0; i < impl->additional_resources.size(); i++)
+	for (i = 0; i < additional_resources.size(); i++)
 	{
-		try
-		{
-			return impl->additional_resources[i].get_resource(
-				resource_id, resolve_alias, reserved);
-		}
-		catch (const Exception&)
-		{
-		}
+		XMLResourceNode node = additional_resources[i].impl->get_resource(resource_id);
+		if (!node.is_null())
+			return node;
 	}
 
-	throw Exception(string_format("Resource not found: %1", resource_id));
-	return XMLResourceNode(impl->document.get_document_element(), const_cast<XMLResourceDocument&>(*this));
+	return XMLResourceNode();
 }
 
 bool XMLResourceDocument::get_boolean_resource(

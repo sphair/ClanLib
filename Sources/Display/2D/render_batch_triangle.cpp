@@ -289,7 +289,7 @@ int RenderBatchTriangle::set_batcher_active(Canvas &canvas)
 	if (position == 0 || position+6 > max_vertices)
 		canvas.flush();
 	canvas.set_batcher(this);
-	return 4;
+	return RenderBatchTriangle::max_textures;
 }
 
 int RenderBatchTriangle::set_batcher_active(Canvas &canvas, int num_vertices)
@@ -307,7 +307,7 @@ int RenderBatchTriangle::set_batcher_active(Canvas &canvas, int num_vertices)
 		throw Exception("Too many vertices for RenderBatchTriangle");
 
 	canvas.set_batcher(this);
-	return 4;
+	return RenderBatchTriangle::max_textures;
 }
 
 void RenderBatchTriangle::flush(GraphicContext &gc)
