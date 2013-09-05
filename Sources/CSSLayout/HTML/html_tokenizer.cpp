@@ -31,6 +31,12 @@
 #include "API/CSSLayout/HTML/html_token.h"
 #include "html_tokenizer_impl.h"
 
+// To do: implement §8.2.4 Tokenization
+//
+// When a start tag token is emitted with its self-closing flag set, if the flag is not acknowledged when it is processed by the tree construction stage, that is a parse error.
+// When an end tag token is emitted with attributes, that is a parse error.
+// When an end tag token is emitted with its self-closing flag set, that is a parse error.
+
 namespace clan
 {
 
