@@ -1,26 +1,22 @@
- 
-@import "../../../Resources/GUIThemeAero/theme.css";
-
 
 button.redtext
 {
-	font-family: ClanLib Font;
+	font-family:"ClanFont";
 	text-color: #FF4444;
 }
 
-
 lineedit.greentext
 {
-	font-family: ClanLib Font;
+	font-family:"ClanFont";
 	text-color: #AAFFAA;
 }
 
 lineedit.greentext selection
 {
-	font-family: ClanLib Font;
+	font-family:"ClanFont";
 }
 
 lineedit.redtext selection
 {
-	font-family: ClanLib Font;
+	font-family:"ClanFont";
 }

@@ -16,16 +16,15 @@ public:
 		{
 			GUIManager gui;
 
-			DisplayCache gui_resources("../../../Resources/GUIThemeAero/resources.xml");
-			DisplayCache app_resources("resources.xml");
+			clan::ResourceManager app_resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
 
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);
 
-			GUIThemeDefault theme;
-			theme.set_resources(gui_resources);
-			gui.set_theme(theme); 
-			gui.set_css_document("theme.css");
+			gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
+
+			gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
+			gui.add_theme("../../../Tests/GUI/GUIFont/theme.css");
 
 			DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
@@ -34,14 +33,10 @@ public:
 			Window window(&gui, win_desc);
 			window.func_close().set(this, &App::on_close, &window);
 
-			GraphicContext gc = window.get_gc();
+			Canvas canvas = window.get_canvas();
 
-			Font_Sprite font_sprite(gc, "ClanFont", &app_resources);
-
-			// Set the gui named font
-			FontDescription clanlib_font_desc;
-			clanlib_font_desc.set_typeface_name("ClanLib Font");
-			gui.register_font(font_sprite, clanlib_font_desc);
+			clan::FontDescription font_desc("ClanFont");
+			Font_Sprite font_sprite(Font_Sprite::resource(canvas, font_desc, app_resources));
 
 			Label label(&window);
 			label.set_geometry(Rect(10, 160, 330, 180));
@@ -51,12 +46,12 @@ public:
 			PushButton button(&window);
 			button.set_geometry(Rect(10, 10, 400, 100));
 			button.func_clicked().set(this, &App::on_button_clicked, &button);
-			button.set_class_name("redtext");
+			button.set_class("redtext", true);
 			button.set_text("Button Normal");
 
 			LineEdit lineedit1(&window);
 			lineedit1.set_geometry(Rect(20, 300, 700, 380));
-			lineedit1.set_class_name("greentext");
+			lineedit1.set_class("greentext", true);
 			lineedit1.set_text("Select, Click and Edit me :)"); 
 
 			gui.exec();
