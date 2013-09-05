@@ -16,15 +16,14 @@ public:
 		{
 			GUIManager gui;
 
-			clan::ResourceManager app_resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("resources.xml"));
-
 			GUIWindowManagerSystem wm;
 			gui.set_window_manager(wm);
 
 			gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
+			gui.add_resources(clan::XMLResourceDocument("resources.xml"));
 
 			gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
-			gui.add_theme("../../../Tests/GUI/GUIFont/theme.css");
+			gui.add_theme("theme.css");
 
 			DisplayWindowDescription win_desc;
 			win_desc.set_allow_resize(true);
@@ -36,7 +35,11 @@ public:
 			Canvas canvas = window.get_canvas();
 
 			clan::FontDescription font_desc("ClanFont");
-			Font_Sprite font_sprite(Font_Sprite::resource(canvas, font_desc, app_resources));
+			font_desc.set_height(32);
+			font_desc.set_weight(400);
+
+			Resource<Font> font_sprite(Font_Sprite::resource(canvas, font_desc, gui.get_resource_manager()));
+			//Font_Sprite font_sprite(Font_Sprite::resource(canvas, font_desc, app_resources));
 
 			Label label(&window);
 			label.set_geometry(Rect(10, 160, 330, 180));

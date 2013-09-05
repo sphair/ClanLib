@@ -2,21 +2,33 @@
 button.redtext
 {
 	font-family:"ClanFont";
-	text-color: #FF4444;
+	font-weight:normal;
+	font-style:normal;
+	font-size:32px;
+	color: #FF4444;
 }
 
 lineedit.greentext
 {
 	font-family:"ClanFont";
-	text-color: #AAFFAA;
+	font-weight:normal;
+	font-style:normal;
+	font-size:32px;
+	color: #AAFFAA;
 }
 
 lineedit.greentext selection
 {
 	font-family:"ClanFont";
+	font-weight:normal;
+	font-style:normal;
+	font-size:32px;
 }
 
 lineedit.redtext selection
 {
 	font-family:"ClanFont";
+	font-weight:normal;
+	font-style:normal;
+	font-size:32px;
 }
