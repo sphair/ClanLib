@@ -39,6 +39,8 @@ namespace clan
 class XMLResourceDocument_Impl
 {
 public:
+	XMLResourceNode get_resource(const std::string &resource_id) const;
+
 	FileSystem fs;
 	std::string base_path;
 

@@ -185,6 +185,7 @@ private:
 	std::shared_ptr<XMLResourceDocument_Impl> impl;
 
 	friend class XMLResourceNode;
+	friend class XMLResourceDocument_Impl;
 /// \}
 };
 

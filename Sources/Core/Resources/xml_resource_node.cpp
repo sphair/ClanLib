@@ -73,6 +73,11 @@ XMLResourceNode::~XMLResourceNode()
 /////////////////////////////////////////////////////////////////////////////
 // XMLResourceNode Attributes:
 
+bool XMLResourceNode::is_null() const
+{
+	return !impl;
+}
+
 std::string XMLResourceNode::get_type() const
 {
 	return impl->element.get_local_name();
