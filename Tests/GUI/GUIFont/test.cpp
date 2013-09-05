@@ -34,13 +34,6 @@ public:
 
 			Canvas canvas = window.get_canvas();
 
-			clan::FontDescription font_desc("ClanFont");
-			font_desc.set_height(32);
-			font_desc.set_weight(400);
-
-			Resource<Font> font_sprite(Font_Sprite::resource(canvas, font_desc, gui.get_resource_manager()));
-			//Font_Sprite font_sprite(Font_Sprite::resource(canvas, font_desc, app_resources));
-
 			Label label(&window);
 			label.set_geometry(Rect(10, 160, 330, 180));
 			label.set_text("Click the button");
