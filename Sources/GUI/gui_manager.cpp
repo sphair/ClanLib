@@ -156,7 +156,11 @@ Callback_0<int> &GUIManager::func_exec_handler()
 
 void GUIManager::add_theme(const std::string &fullname)
 {
-	impl->css_document.add_sheet(author_sheet_origin, fullname);
+	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
+	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
+	FileSystem vfs(path);
+
+	impl->css_document.add_sheet(author_sheet_origin, filename, vfs);
 }
 
 void GUIManager::add_theme(const std::string &fullname, const FileSystem &fs)
