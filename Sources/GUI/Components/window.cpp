@@ -58,14 +58,13 @@ namespace clan
 class Window_Impl
 {
 public:
-	Window_Impl() : drag_start(false), draggable(true) {}
+	Window_Impl() : drag_start(false), draggable(true), has_frame(true) {}
 
 	void init(Window *this_component);
 	void check_move_window(std::shared_ptr<GUIMessage> &msg);
 
 	void on_process_message(std::shared_ptr<GUIMessage> &msg);
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_resized();
 
 	Rect get_part_buttonclose_rect() const;
 
@@ -81,6 +80,8 @@ public:
 	Point last_mouse_pos;
 
 	bool draggable;
+
+	bool has_frame;	// Only set by the constructor, or bad things will happen
 
 	GUIThemePart part_caption;
 	GUIThemePart part_frameleft;
@@ -108,6 +109,9 @@ Window::Window(GUIComponent *parent)
 Window::Window(GUIManager *manager, const GUITopLevelDescription &description)
 : GUIComponent(manager, description, CssStr::Window::type_name), impl(new Window_Impl)
 {
+	if (manager->get_window_manager().get_window_manager_type() == GUIWindowManager::cl_wm_type_system)
+		impl->has_frame = false;
+
 	impl->init(this);
 	impl->title = description.get_title();
 }
@@ -118,8 +122,7 @@ void Window_Impl::init(Window *this_component)
 
 	this_component->func_process_message().set(this, &Window_Impl::on_process_message);
 	this_component->func_render().set(this, &Window_Impl::on_render);
-	this_component->func_resized().set(this, &Window_Impl::on_resized);
-
+	
 	create_parts();
 }
 
@@ -209,24 +212,24 @@ void Window::bring_to_front()
 
 void Window_Impl::create_parts()
 {
-	part_caption = GUIThemePart(window, CssStr::Window::part_caption);
-	part_frameleft = GUIThemePart(window, CssStr::Window::part_frameleft);
-	part_frameright = GUIThemePart(window, CssStr::Window::part_frameright);
-	part_framebottom = GUIThemePart(window, CssStr::Window::part_framebottom);
-	part_buttonclose = GUIThemePart(window, CssStr::Window::part_buttonclose);
+	if (has_frame)
+	{
+		part_caption = GUIThemePart(window, CssStr::Window::part_caption);
+		part_frameleft = GUIThemePart(window, CssStr::Window::part_frameleft);
+		part_frameright = GUIThemePart(window, CssStr::Window::part_frameright);
+		part_framebottom = GUIThemePart(window, CssStr::Window::part_framebottom);
+		part_buttonclose = GUIThemePart(window, CssStr::Window::part_buttonclose);
 
-	part_buttonclose.set_pseudo_class(CssStr::normal, true);
+		part_buttonclose.set_pseudo_class(CssStr::normal, true);
+	}
 
-}
-
-void Window_Impl::on_resized()
-{
-	create_parts();
 }
 
 void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 {
 	if (!window->is_enabled())
+		return;
+	if (!has_frame)		// Performed by the OS on system wm
 		return;
 
 	check_move_window(msg);
@@ -269,6 +272,8 @@ void Window_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
 Rect Window_Impl::get_client_area() const
 {
 	Rect rect = window->get_size();
+	if (!has_frame)
+		return rect;
 
 	int caption_height = part_caption.get_css_height();
 	int frameleft_width = part_frameleft.get_css_width();
@@ -292,6 +297,9 @@ Rect Window_Impl::get_part_buttonclose_rect() const
 
 void Window_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
+	if (!has_frame)
+		return;
+
 	Rect rect = window->get_size();
 
 	int caption_height = part_caption.get_css_height();
