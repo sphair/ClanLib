@@ -52,6 +52,7 @@
 #include "CSSLayout/Layout/css_hit_test_result.h"
 #include "CSSLayout/HTML/html_tokenizer.h"
 #include "CSSLayout/HTML/html_token.h"
+#include "CSSLayout/HTML/html_parser.h"
 
 #ifdef __cplusplus_cli
 #pragma managed(pop)

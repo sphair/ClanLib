@@ -134,7 +134,9 @@ void CSSView::load_html()
 	int level = 0;
 	std::vector<std::string> tags;
 	std::vector<CSSLayoutElement> css_elements;
-	
+
+	Canvas canvas = get_canvas();
+
 	HTMLToken token;
 	while (true)
 	{
@@ -158,7 +160,28 @@ void CSSView::load_html()
 				}
 			}
 
-			CSSLayoutElement element = layout.create_element(token.name);
+			CSSLayoutElement element;
+
+			if (token.name == "img")
+			{
+				std::string src = token.get_attribute("src");
+				Img *image = new Img(on_layout_get_image(canvas, HTMLUrl(src, document_url).to_string()));
+				CSSLayoutObject obj = layout.create_object();
+				obj.set_component(image);
+				if (!image->image.is_null())
+				{
+					obj.set_intrinsic_width(image->get_intrinsic_width());
+					obj.set_intrinsic_height(image->get_intrinsic_height());
+					if (image->has_intrinsic_ratio())
+						obj.set_intrinsic_ratio(image->get_intrinsic_ratio());
+				}
+				replaced_objects.push_back(image);
+				element = obj;
+			}
+			else
+			{
+				 element = layout.create_element(token.name);
+			}
 
 			for (size_t i = 0; i < token.attributes.size(); i++)
 				element.set_attribute(token.attributes[i].name, token.attributes[i].value);
