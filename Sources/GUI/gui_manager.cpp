@@ -154,12 +154,14 @@ Callback_0<int> &GUIManager::func_exec_handler()
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Operations:
 
-void GUIManager::add_theme(const std::string &path_to_theme)
+void GUIManager::add_theme(const std::string &fullname)
 {
-	FileSystem vfs(path_to_theme);
+	impl->css_document.add_sheet(author_sheet_origin, fullname);
+}
 
-	XMLResourceManager::get_doc(impl->resources).add_resources(XMLResourceDocument("resources.xml", vfs));
-	impl->css_document.add_sheet(author_sheet_origin, "theme.css", vfs);
+void GUIManager::add_theme(const std::string &fullname, const FileSystem &fs)
+{
+	impl->css_document.add_sheet(author_sheet_origin, fullname, fs);
 }
 
 void GUIManager::set_css_document(CSSDocument css)

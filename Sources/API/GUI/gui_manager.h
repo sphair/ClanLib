@@ -147,8 +147,14 @@ public:
 /// \{
 public:
 	/// \brief Adds a GUI theme directory.
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	void add_theme(const std::string &path_to_theme);
+	///
+	/// \param fullname = Filename of the theme.
+	void add_theme(const std::string &fullname);
+
+	/// \brief Adds a GUI theme directory.
+	///
+	/// \param fullname = Filename of the theme.
+	void add_theme(const std::string &fullname, const FileSystem &fs);
 
 	/// \brief Sets the CSS document.
 	void set_css_document(CSSDocument css);
@@ -162,7 +168,7 @@ public:
 	/// \param directory = Virtual Directory
 	void set_css_document(const std::string &filename, const FileSystem &fs);
 
-	/// \brief Adds additional resources to the GUI resource manager
+	/// \brief Adds resources to the GUI resource manager
 	void add_resources(const XMLResourceDocument &resources);
 
 	/// \brief Adds additional resources to the GUI resource manager, by creating a XMLResourceDocument from file automatically.
