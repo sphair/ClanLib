@@ -212,9 +212,7 @@ std::vector<std::string> XMLResourceDocument::get_resource_names_of_type(
 }
 
 XMLResourceNode XMLResourceDocument::get_resource(
-	const std::string &resource_id,
-	bool resolve_alias,
-	int reserved) const
+	const std::string &resource_id) const
 {
  	std::map<std::string, XMLResourceNode>::const_iterator it;
 	it = impl->resources.find(resource_id);
@@ -226,8 +224,7 @@ XMLResourceNode XMLResourceDocument::get_resource(
 	{
 		try
 		{
-			return impl->additional_resources[i].get_resource(
-				resource_id, resolve_alias, reserved);
+			return impl->additional_resources[i].get_resource(resource_id);
 		}
 		catch (const Exception&)
 		{

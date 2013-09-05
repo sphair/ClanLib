@@ -104,9 +104,7 @@ public:
 
 	/// \brief Returns Resource representing the given resource.
 	XMLResourceNode get_resource(
-		const std::string &resource_id,
-		bool resolve_alias = true,
-		int reserved = 0) const;
+		const std::string &resource_id) const;
 
 	/// \brief Returns the value of a boolean resource. (using the value attribute)
 	bool get_boolean_resource(
