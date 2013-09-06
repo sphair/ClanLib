@@ -45,7 +45,7 @@ public:
 	std::unique_ptr<NetGameConnection> connection;
 	Signal_v1<const NetGameEvent &> sig_game_event_received;
 	Signal_v0 sig_game_connected;
-	Signal_v0 sig_game_disconnected;
+	Signal_v1<const std::string &> sig_game_disconnected;
 };
 
 }

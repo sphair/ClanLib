@@ -82,7 +82,7 @@ Signal_v0 &NetGameClient::sig_connected()
 	return impl->sig_game_connected;
 }
 
-Signal_v0 &NetGameClient::sig_disconnected()
+Signal_v1<const std::string &> &NetGameClient::sig_disconnected()
 {
 	return impl->sig_game_disconnected;
 }
@@ -111,8 +111,13 @@ void NetGameClient_Impl::process()
 			sig_game_event_received.invoke(new_events[i].game_event);
 			break;
 		case NetGameNetworkEvent::client_disconnected:
-			sig_game_disconnected.invoke();
-			connection.reset();
+			{
+				std::string reason;
+				if(new_events[i].game_event.get_argument_count())
+					reason = new_events[i].game_event.get_argument(0);
+				sig_game_disconnected.invoke(reason);
+				connection.reset();
+			}
 			break;
 		default:
 			throw Exception("Unknown server event type");
