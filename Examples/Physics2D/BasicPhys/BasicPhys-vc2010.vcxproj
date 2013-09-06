@@ -21,7 +21,7 @@
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>2D</ProjectName>
+    <ProjectName>BasicPhys2</ProjectName>
     <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236ACD2}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

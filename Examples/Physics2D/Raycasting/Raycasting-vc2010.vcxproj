@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\joints.cpp" />
     <ClCompile Include="Sources\precomp.cpp" />
     <ClCompile Include="Sources\program.cpp" />
+    <ClCompile Include="Sources\raycasting.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\joints.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
+    <ClInclude Include="Sources\raycasting.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Joints</ProjectName>
-    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236ACD2}</ProjectGuid>
+    <ProjectName>Raycasting</ProjectName>
+    <ProjectGuid>{F31FBCBF-444C-448B-9A43-6B341B54E917}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

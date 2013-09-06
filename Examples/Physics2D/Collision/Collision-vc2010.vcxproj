@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\stresstest.cpp" />
+    <ClCompile Include="Sources\collision.cpp" />
     <ClCompile Include="Sources\precomp.cpp" />
     <ClCompile Include="Sources\program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\stresstest.h" />
+    <ClInclude Include="Sources\collision.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>StressTest</ProjectName>
+    <ProjectName>Collision2</ProjectName>
     <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236ACD2}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

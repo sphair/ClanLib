@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\collision.cpp" />
+    <ClCompile Include="Sources\joints.cpp" />
     <ClCompile Include="Sources\precomp.cpp" />
     <ClCompile Include="Sources\program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\collision.h" />
+    <ClInclude Include="Sources\joints.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Collision</ProjectName>
-    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236ACD2}</ProjectGuid>
+    <ProjectName>Joints</ProjectName>
+    <ProjectGuid>{0696856E-350D-4D2C-B930-3C67547FA200}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
