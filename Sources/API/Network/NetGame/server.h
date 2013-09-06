@@ -75,7 +75,7 @@ public:
 	void send_event(const NetGameEvent &game_event);
 
 	Signal_v1<NetGameConnection *> &sig_client_connected();
-	Signal_v1<NetGameConnection *> &sig_client_disconnected();
+	Signal_v2<NetGameConnection *, const std::string &> &sig_client_disconnected();
 	Signal_v2<NetGameConnection *, const NetGameEvent &> &sig_event_received();
 
 private:

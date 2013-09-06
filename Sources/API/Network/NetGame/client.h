@@ -77,8 +77,8 @@ public:
 
 	/// \brief Sig disconnected
 	///
-	/// \return Signal_v1
-	Signal_v1<const std::string &> &sig_disconnected();
+	/// \return Signal_v0
+	Signal_v0 &sig_disconnected();
 
 private:
 

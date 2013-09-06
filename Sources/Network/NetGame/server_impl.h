@@ -49,7 +49,7 @@ public:
 	std::vector<NetGameNetworkEvent> events;
 
 	Signal_v1<NetGameConnection *> sig_game_client_connected;
-	Signal_v1<NetGameConnection *> sig_game_client_disconnected;
+	Signal_v2<NetGameConnection *, const std::string &> sig_game_client_disconnected;
 	Signal_v2<NetGameConnection *, const NetGameEvent &> sig_game_event_received;
 };
 
