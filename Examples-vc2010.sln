@@ -133,13 +133,15 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CharacterController-vc2010"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shape", "Examples\Display\Shape2D\Shape2D-vc2010.vcxproj", "{A3771A16-2845-4292-A5FB-C39625C386C8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2D", "Examples\Physics2D\BasicPhys\BasicPhys-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA236ACD2}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BasicPhys2", "Examples\Physics2D\BasicPhys\BasicPhys-vc2010.vcxproj", "{4E27E943-27C7-4F00-A431-B6ACA236ACD2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Joints", "Examples\Physics2D\Joints\Joints-vc2010.vcxproj", "{0696856E-350D-4D2C-B930-3C67547FA200}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Raycasting", "Examples\Physics2D\Raycasting\Raycasting-vc2010.vcxproj", "{F31FBCBF-444C-448B-9A43-6B341B54E917}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StressTest", "Examples\Physics2D\StressTest\StressTest-vc2010.vcxproj", "{9FFFADF6-7E99-4296-B363-2E06CF46330E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollisionPhysics2", "Examples\Physics2D\Collision\CollisionPhysics-vc2010.vcxproj", "{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -561,6 +563,12 @@ Global
 		{9FFFADF6-7E99-4296-B363-2E06CF46330E}.Release|Win32.ActiveCfg = Release|Win32
 		{9FFFADF6-7E99-4296-B363-2E06CF46330E}.Release|Win32.Build.0 = Release|Win32
 		{9FFFADF6-7E99-4296-B363-2E06CF46330E}.Release|x64.ActiveCfg = Release|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Debug|Win32.Build.0 = Debug|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Debug|x64.ActiveCfg = Debug|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|Win32.ActiveCfg = Release|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|Win32.Build.0 = Release|Win32
+		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -21,8 +21,8 @@
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>Collision2</ProjectName>
-    <ProjectGuid>{4E27E943-27C7-4F00-A431-B6ACA236ACD2}</ProjectGuid>
+    <ProjectName>CollisionPhysics2</ProjectName>
+    <ProjectGuid>{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
