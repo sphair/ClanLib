@@ -9,77 +9,63 @@
 class App
 {
 public:
-	CL_Label *label;
+	clan::Label *label;
 
-	int main(const std::vector<CL_String> &args)
+	int main(const std::vector<std::string> &args)
 	{
-		try
-		{
-			CL_GUIManager gui;
+		clan::GUIManager gui;
 
-			CL_ResourceManager resources("resources.xml");
-			CL_ResourceManager resources2("../../../Resources/GUIThemeLuna/resources.xml");
-			resources.add_resources(resources2);
+		clan::GUIWindowManagerSystem wm;
+		gui.set_window_manager(wm);
 
-			CL_GUIWindowManagerSystem wm;
-			gui.set_window_manager(wm);
+		gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
+		gui.add_resources(clan::XMLResourceDocument("resources.xml"));
 
-			CL_GUIThemeDefault theme;
-			theme.set_resources(resources);
-			gui.set_theme(theme); 
-			gui.set_css_document("theme.css");
+		gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
+		gui.add_theme("theme.css");
 
-			CL_DisplayWindowDescription win_desc;
-			win_desc.set_allow_resize(true);
-			win_desc.set_title("Button WM System Test Application");
-			win_desc.set_position(CL_Rect(200, 200, 800, 840), false);
-			CL_Window window(&gui, win_desc);
-			window.func_close().set(this, &App::on_close, &window);
+		clan::DisplayWindowDescription win_desc;
+		win_desc.set_allow_resize(true);
+		win_desc.set_title("Calandar Test Application");
+		win_desc.set_position(clan::Rect(200, 200, 800, 840), false);
+		clan::Window window(&gui, win_desc);
+		window.func_close().set(this, &App::on_close, &window);
 
-			label = new CL_Label(&window);
-			label->set_geometry(CL_RectPS(11, 11, 150, 23));
-			label->set_text("Date: none selected.");
+		label = new clan::Label(&window);
+		label->set_geometry(clan::RectPS(11, 11, 150, 23));
+		label->set_text("Date: none selected.");
 
-			CL_CalendarComponent calendar(&window);
-			calendar.func_selection_changed().set(this, &App::on_date_selection_changed, &calendar);
-			calendar.set_geometry(CL_Rect(
-				CL_Point(11, 70),
-				calendar.get_preferred_size()));
+		CalendarComponent calendar(&window);
+		calendar.func_selection_changed().set(this, &App::on_date_selection_changed, &calendar);
+		calendar.set_geometry(clan::Rect(clan::Point(11, 70), calendar.get_css_size()));
 
-			gui.exec();
-		}
-		catch (CL_Exception e)
-		{
-			CL_ConsoleWindow console("Console");
-			CL_Console::write_line(e.message);
-			console.display_close_message();
-		}
+		gui.exec();
 
 		return 0;
 	}
 
-	void on_date_selection_changed(CL_CalendarComponent *cal)
+	void on_date_selection_changed(CalendarComponent *cal)
 	{
-		CL_DateTime date = cal->get_selected_date();
-		label->set_text(cl_format("Date: %1.%2.%3", date.get_day(), date.get_month(), date.get_year()));
+		clan::DateTime date = cal->get_selected_date();
+		label->set_text(clan::string_format("Date: %1.%2.%3", date.get_day(), date.get_month(), date.get_year()));
 	}
 
-	bool on_close(CL_Window *win)
+	bool on_close(clan::Window *win)
 	{
 		win->exit_with_code(0);
 		return true;
 	}
 };
 
-// This is the Program class that is called by CL_ClanApplication
+// This is the Program class that is called by clan::ClanApplication
 class Program
 {
 public:
-	static int main(const std::vector<CL_String> &args)
+	static int main(const std::vector<std::string> &args)
 	{
-		CL_SetupCore setup_core;
-		CL_SetupDisplay setup_display;
-		CL_SetupGL setup_gl;
+		clan::SetupCore setup_core;
+		clan::SetupDisplay setup_display;
+		clan::SetupGL setup_gl;
 
 		// Start the Application
 		App app;
@@ -88,5 +74,5 @@ public:
 	}
 };
 
-// Instantiate CL_ClanApplication, informing it where the Program is located
-CL_ClanApplication app(&Program::main);
+// Instantiate clan::Application, informing it where the Program is located
+clan::Application app(&Program::main);
