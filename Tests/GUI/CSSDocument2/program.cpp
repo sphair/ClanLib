@@ -15,8 +15,9 @@ int Program::main(const std::vector<std::string> &args)
 	SetupGL setup_gl;
 	SetupGUI setup_gui;
 
-	GUIManager gui(".");
-	gui.add_theme("../../../Resources/GUIThemeAero");
+	GUIManager gui;
+	gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
+	gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
 
 	GUITopLevelDescription window_desc;
 	window_desc.set_title("GUI Test");
@@ -24,7 +25,7 @@ int Program::main(const std::vector<std::string> &args)
 	window_desc.set_allow_resize(true);
 
 	GUIComponent *root = new GUIComponent(&gui, window_desc, "component");
-	root->set_class("root");
+	root->set_class("root", true);
 	root->func_close().set(&Program::on_close, root);
 	root->func_resized().set(&Program::on_resized, root);
 
@@ -56,7 +57,7 @@ int Program::main(const std::vector<std::string> &args)
 	button3->set_text("View Something");
 
 	GUIComponent *row = new GUIComponent(root);
-	row->set_class("row");
+	row->set_class("row", true);
 
 	TextEdit *textedit = new TextEdit(row);
 	textedit->set_text("This is a TextEdit control.");
@@ -93,7 +94,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	if (xml_element.get_tag_name() == "label")
 	{
 		Label *component = new Label(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -103,7 +104,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "imageview")
 	{
 		ImageView *component = new ImageView(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -114,7 +115,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "pushbutton")
 	{
 		PushButton *component = new PushButton(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -141,7 +142,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "radiobutton")
 	{
 		RadioButton *component = new RadioButton(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -167,7 +168,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "checkbox")
 	{
 		CheckBox *component = new CheckBox(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -176,7 +177,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "lineedit")
 	{
 		LineEdit *component = new LineEdit(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -186,7 +187,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "scrollbar")
 	{
 		ScrollBar *component = new ScrollBar(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -196,7 +197,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "custom")
 	{
 		Custom *component = new Custom(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -204,7 +205,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else if (xml_element.get_tag_name() == "slider")
 	{
 		Slider *component = new Slider(parent);
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -215,7 +216,7 @@ void Program::create_component(DomElement xml_element, GUIComponent *parent)
 	else
 	{
 		GUIComponent *component = new GUIComponent(parent, xml_element.get_tag_name());
-		component->set_class(xml_element.get_attribute("class"));
+		component->set_class(xml_element.get_attribute("class"), true);
 		std::vector<std::string> pseudo_classes = StringHelp::split_text(xml_element.get_attribute("pseudo-class"), " ");
 		for (size_t i = 0; i < pseudo_classes.size(); i++)
 			component->set_pseudo_class(pseudo_classes[i], true);
@@ -232,11 +233,11 @@ void Program::create_imageview_test(GUIComponent *root)
 	Image image(root->get_canvas(), "../../../Examples/GUI/CommonCode/Resources/tux.png");
 
 	GUIComponent *imagecontainer = new GUIComponent(root, "component");
-	imagecontainer->set_class("imagecontainer");
+	imagecontainer->set_class("imagecontainer", true);
 
 	Label *label1 = new Label(imagecontainer);
 	label1->set_text("Labels should probably use ellipsis text clipping");
-	label1->set_class("imagelabel");
+	label1->set_class("imagelabel", true);
 
 	ImageView *image_view = new ImageView(imagecontainer);
 	image_view->set_image(image);
@@ -244,17 +245,17 @@ void Program::create_imageview_test(GUIComponent *root)
 
 	ImageView *image_view_fixedwidth = new ImageView(imagecontainer);
 	image_view_fixedwidth->set_image(image);
-	image_view_fixedwidth->set_class("fixedwidth odd");
+	image_view_fixedwidth->set_class("fixedwidth odd", true);
 	image_view_fixedwidth->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedheight = new ImageView(imagecontainer);
 	image_view_fixedheight->set_image(image);
-	image_view_fixedheight->set_class("fixedheight");
+	image_view_fixedheight->set_class("fixedheight", true);
 	image_view_fixedheight->set_scale_to_fit(false);
 
 	ImageView *image_view_fixedwidth_fixedheight = new ImageView(imagecontainer);
 	image_view_fixedwidth_fixedheight->set_image(image);
-	image_view_fixedwidth_fixedheight->set_class("fixedwidth fixedheight odd");
+	image_view_fixedwidth_fixedheight->set_class("fixedwidth fixedheight odd", true);
 	image_view_fixedwidth_fixedheight->set_scale_to_fit(false);
 
 	ImageView *image_view_double = new ImageView(imagecontainer);
@@ -264,17 +265,17 @@ void Program::create_imageview_test(GUIComponent *root)
 	ImageView *image_view_scaletofit = new ImageView(imagecontainer);
 	image_view_scaletofit->set_image(image);
 	image_view_scaletofit->set_scale_to_fit(true);
-	image_view_scaletofit->set_class("odd");
+	image_view_scaletofit->set_class("odd", true);
 
 	ImageView *image_view_fixedwidth_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_scaletofit->set_image(image);
 	image_view_fixedwidth_scaletofit->set_scale_to_fit(true);
-	image_view_fixedwidth_scaletofit->set_class("fixedwidth");
+	image_view_fixedwidth_scaletofit->set_class("fixedwidth", true);
 
 	ImageView *image_view_fixedwidth_fixedheight_scaletofit = new ImageView(imagecontainer);
 	image_view_fixedwidth_fixedheight_scaletofit->set_image(image);
 	image_view_fixedwidth_fixedheight_scaletofit->set_scale_to_fit(true);
-	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight odd");
+	image_view_fixedwidth_fixedheight_scaletofit->set_class("fixedwidth fixedheight odd", true);
 }
 
 bool Program::on_close(GUIComponent *component)
