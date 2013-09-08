@@ -23,11 +23,14 @@
 **
 **  File Author(s):
 **
+**    James Lammlein
 **    Magnus Norddahl
 */
 
+#include <assert.h>
 #include <cstdlib>
 #include <iostream>
+#include <pthread.h>
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/App/clanapp.h"
@@ -46,9 +49,33 @@ namespace clan
 	std::vector<std::string> main_args;
 }
 
+static void* main_thread_wrapper(void*)
+{
+    clan::Application::main(clan::main_args);
+    return nullptr;
+}
+
+static void create_main_thread()
+{
+    pthread_attr_t  attr;
+    pthread_t       posixThreadID;
+    int             returnVal;
+    
+    returnVal = pthread_attr_init(&attr);
+    assert(!returnVal);
+    returnVal = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    assert(!returnVal);
+    
+    int threadError = pthread_create(&posixThreadID, &attr, &main_thread_wrapper, nullptr);
+    assert(!threadError);
+    
+    returnVal = pthread_attr_destroy(&attr);
+    assert(!returnVal);
+}
+
 @interface AppDelegate : NSObject <NSApplicationDelegate>
 @end
- 
+
 @implementation AppDelegate
  
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -59,7 +86,7 @@ namespace clan
 	{
 		try
 		{
-			Application::main(main_args);
+            create_main_thread();
 		}
 		catch(Exception &exception)
 		{
@@ -75,10 +102,10 @@ namespace clan
 	}
 	else
 	{
-		Application::main(main_args);
+        create_main_thread();
 	}
 }
- 
+
 @end
 
 int main(int argc, char **argv)

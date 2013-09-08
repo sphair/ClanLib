@@ -31,13 +31,17 @@
 #include "API/Display/TargetProviders/display_window_provider.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Window/input_context.h"
+#include "API/Display/Window/input_device.h"
 #include "API/GL/opengl_window_description.h"
 #include "API/GL/opengl_wrap.h"
+
 #include <memory>
 
 namespace clan
 {
 
+class InputDeviceProvider_OSXKeyboard;
+class InputDeviceProvider_OSXMouse;
 class OpenGLWindowDescription;
 class OpenGLWindowProvider_Impl;
 
@@ -114,8 +118,12 @@ public:
 /// \name Implementation
 /// \{
 private:
+    InputDevice keyboard, mouse;
+    
+    InputDeviceProvider_OSXKeyboard *get_keyboard();
+    InputDeviceProvider_OSXMouse *get_mouse();
+    
 	std::unique_ptr<OpenGLWindowProvider_Impl> impl;
-	
 	friend class OpenGLWindowProvider_Impl;
 /// \}
 };

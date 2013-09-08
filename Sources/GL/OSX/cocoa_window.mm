@@ -61,6 +61,8 @@
 		case NSKeyDown:
 		case NSKeyUp:
 		case NSFlagsChanged:
+            window_provider->on_input_event(theEvent);
+            break;
 			
 		// Mouse events:
 		case NSMouseEntered: // see: NSTrackingArea
@@ -73,10 +75,12 @@
 		case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 		case NSScrollWheel:
 			window_provider->on_input_event(theEvent);
+            [super sendEvent:theEvent];
 			break;
 			
 		default:
-			[super sendEvent:theEvent];
+            [super sendEvent:theEvent];
+            break;
 	}
 }
 

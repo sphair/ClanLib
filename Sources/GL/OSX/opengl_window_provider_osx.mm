@@ -23,12 +23,18 @@
 **
 **  File Author(s):
 **
+**    James Lammlein
 **    Magnus Norddahl
 */
 
 #include "GL/precomp.h"
+#include "API/Display/Window/input_event.h"
+
 #include "opengl_window_provider_osx.h"
 #include "opengl_window_provider_osx_impl.h"
+#include "input_device_provider_osxkeyboard.h"
+#include "input_device_provider_osxmouse.h"
+
 #import "cocoa_window.h"
 
 namespace clan
@@ -38,10 +44,16 @@ namespace clan
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 {
 	impl.reset(new OpenGLWindowProvider_Impl(this, opengl_desc));
+    
+    keyboard = InputDevice(new InputDeviceProvider_OSXKeyboard(this));
+    mouse = InputDevice(new InputDeviceProvider_OSXMouse(this));
 }
 
 OpenGLWindowProvider::~OpenGLWindowProvider()
 {
+    impl->ic.dispose();
+    get_keyboard()->dispose();
+    get_mouse()->dispose();
 }
 
 ProcAddress *OpenGLWindowProvider::get_proc_address(const std::string& function_name) const
@@ -196,8 +208,8 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
 	
 	impl->ic.clear();
-	//impl->ic.add_keyboard(keyboard);
-	//impl->ic.add_mouse(mouse);
+	impl->ic.add_keyboard(keyboard);
+	impl->ic.add_mouse(mouse);
 	
 	[impl->window makeKeyAndOrderFront:NSApp];
 }
@@ -365,6 +377,16 @@ PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 	return PixelBuffer();
 }
 
+InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard()
+{
+    return static_cast<InputDeviceProvider_OSXKeyboard*>(keyboard.get_provider());
+}
+    
+InputDeviceProvider_OSXMouse *OpenGLWindowProvider::get_mouse()
+{
+    return static_cast<InputDeviceProvider_OSXMouse*>(mouse.get_provider());
+}
+    
 /////////////////////////////////////////////////////////////////////
 	
 OpenGLWindowProvider_Impl::OpenGLWindowProvider_Impl(OpenGLWindowProvider *self, OpenGLWindowDescription &opengl_desc)
@@ -401,6 +423,7 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 		case NSKeyDown:
 		case NSKeyUp:
 		case NSFlagsChanged:
+            on_keyboard_event(theEvent);
 			break;
 			
 		// Mouse events:
@@ -413,10 +436,122 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
 		case NSOtherMouseUp:
 		case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 		case NSScrollWheel:
+            on_mouse_event(theEvent);
 			break;
 			
 	}
+    
+    // TODO: Seems like a hack.
+    ic.process_messages();
 }
 
-	
+void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
+{
+    NSEventType type = [theEvent type];
+    
+    // Is the message a down or up event?
+	bool keydown = false;
+    if (type == NSKeyDown)
+    {
+        keydown = true;
+    }
+
+	// Prepare event to be emitted:
+	InputEvent key;
+	if (keydown)
+    {
+		key.type = InputEvent::pressed;
+    }
+	else
+    {
+		key.type = InputEvent::released;
+    }
+
+    // TODO: This might be incorrect.
+    NSPoint mouse_location = [theEvent locationInWindow];
+    clan::Point mouse_pos(mouse_location.x, mouse_location.y);
+    
+    key.mouse_pos = mouse_pos;
+	key.id = static_cast<clan::InputCode>([theEvent keyCode]);  // TODO: This might be incorrect.
+	key.repeat_count = 0;  // TODO: Implement.
+
+    NSString* text = [theEvent characters];
+    key.str = [text UTF8String];
+
+	// Emit message:
+	self->get_keyboard()->sig_provider_event->invoke(key);
+}
+    
+void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
+{
+    NSEventType type = [theEvent type];
+    
+	InputCode id;
+	bool up = false;
+	bool down = false;
+    
+	bool dblclk = false;
+    int click_count = [theEvent clickCount];
+    if (click_count >= 2)
+    {
+        dblclk = true;
+    }
+    
+	switch (type)
+	{
+        case NSLeftMouseDown: id = mouse_left; down = true; break;
+        case NSLeftMouseUp: id = mouse_left; up = true; break;
+        case NSRightMouseDown: id = mouse_right; down = true; break;
+        case NSRightMouseUp: id = mouse_right; up = true; break;
+        case NSOtherMouseDown: id = mouse_middle; down = true; break;
+        case NSOtherMouseUp: id = mouse_middle; up = true; break;
+        case NSScrollWheel: id = ([theEvent deltaY] > 0) ? mouse_wheel_up : mouse_wheel_down; up = true; down = true; break;
+        default:
+            return;
+	}
+    
+    // TODO: This is probably incorrect.
+    NSPoint mouse_location = [theEvent locationInWindow];
+    clan::Point mouse_pos(mouse_location.x, mouse_location.y);
+    
+	// Prepare event to be emitted:
+	InputEvent key;
+	key.mouse_pos = mouse_pos;
+    key.id = id;
+    
+	if (dblclk)
+	{
+		key.type = InputEvent::doubleclick;
+        
+		// Emit message:
+		if (id >= 0 && id < 32)
+			self->get_mouse()->key_states[id] = true;
+        
+		self->get_mouse()->sig_provider_event->invoke(key);
+	}
+    
+	if (down)
+	{
+		key.type = InputEvent::pressed;
+        
+		// Emit message:
+		if (id >= 0 && id < 32)
+			self->get_mouse()->key_states[id] = true;
+        
+		self->get_mouse()->sig_provider_event->invoke(key);
+	}
+    
+	// It is possible for 2 events to be called when the wheelmouse is used.
+	if (up)
+	{
+		key.type = InputEvent::released;
+        
+		// Emit message:
+		if (id >= 0 && id < 32)
+			self->get_mouse()->key_states[id] = false;
+        
+		self->get_mouse()->sig_provider_event->invoke(key);
+	}
+}
+    
 }
