@@ -12,43 +12,26 @@ public:
 
 	int main(const std::vector<std::string> &args)
 	{
-		ConsoleWindow console("Console");
+		GUIWindowManagerSystem wm;
 
-		try
-		{
-			GUIWindowManagerSystem wm;
+		GUIManager gui;
+		gui.set_window_manager(wm);
 
-			GUIManager gui;
-			gui.set_window_manager(wm);
+		gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
+		gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
 
-			DisplayCache resources("resources.xml");
-			DisplayCache resources2("../../../Resources/GUIThemeLuna/resources.xml");
-			resources.add_resources(resources2);
+		GUITopLevelDescription window_desc;
+		window_desc.set_allow_resize(true);
+		window_desc.set_size(Size(500, 600), false);
+		Window window(&gui, window_desc);
+		window.func_close().set(this, &App::on_close, &window);
 
-			GUIThemeDefault theme;
-			theme.set_resources(resources);
-			gui.set_theme(theme);
-			gui.set_css_document("theme.css");
+		GUILayoutCorners layout;
+		window.set_layout(layout);
 
-			GUITopLevelDescription window_desc;
-			window_desc.set_allow_resize(true);
-			window_desc.set_position(RectPS(500, 600, 270, 140), false);
-			Window window(&gui, window_desc);
-//			window.set_id_name("mainmenu");
-			window.func_close().set(this, &App::on_close, &window);
+		window.create_components("dialog.xml");
 
-			GUILayoutCorners layout;
-			window.set_layout(layout);
-
-			window.create_components("dialog.xml");
-
-			gui.exec();
-		}
-		catch (Exception e)
-		{
-			Console::write_line(e.message);
-			console.display_close_message();
-		}
+		gui.exec();
 
 		return 0;
 	}

@@ -10,86 +10,72 @@ class App
 public:
 	int main(const std::vector<std::string> &args)
 	{
-		try
-		{
-			DisplayCache resources("../../../Resources/GUIThemeLuna/resources.xml"); 
+		GUIManager gui;
 
-			GUIManager gui;
+		GUIWindowManagerSystem wm;
+		gui.set_window_manager(wm); 
+		gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
+		gui.add_resources(clan::XMLResourceDocument("../../../Resources/GUIThemeAero/resources.xml"));
  
-			GUIWindowManagerSystem wm;
-			gui.set_window_manager(wm); 
+		DisplayWindowDescription win_desc;
+		win_desc.set_allow_resize(true);
+		win_desc.set_title("Popup Menu test app.");
+		win_desc.set_drop_shadow(false);
+		win_desc.set_size(Size(600,600), false);
+		Window root(&gui, win_desc);			
+		root.func_close().set(this, &App::on_close, &root); 
 
-			GUIThemeDefault theme;
-			theme.set_resources(resources);
-			gui.set_theme(theme);
-			gui.set_css_document("../../../Resources/GUIThemeLuna/theme.css");
+		MenuBar menubar(&root);
+		menubar.set_geometry(Rect(0,0,400,24));
 
-			DisplayWindowDescription win_desc;
-			win_desc.set_allow_resize(true);
-			win_desc.set_title("Popup Menu test app.");
-			win_desc.set_drop_shadow(false);
-			win_desc.set_position(Rect(200,200,600,600), false);
-			Window root(&gui, win_desc);			
-			root.func_close().set(this, &App::on_close, &root); 
+		PopupMenu menu_file;
+		menu_file.insert_item("New");
+		menu_file.insert_item("Open");
+		menu_file.insert_item("Save");
+		menu_file.insert_item("Exit");
+		menubar.add_menu("File", menu_file);
 
-			MenuBar menubar(&root);
-			menubar.set_geometry(Rect(0,0,400,24));
+		PopupMenu menu_edit;
+		menu_edit.insert_item("Undo");
+		menu_edit.insert_item("Redo");
+		menu_edit.insert_separator();
+		menu_edit.insert_item("Cut");
+		menu_edit.insert_item("Copy");
+		menu_edit.insert_separator();
+		PopupMenuItem item_submenu = menu_edit.insert_item("Submenu");
+		menu_edit.insert_separator();
+		menu_edit.insert_item("Paste");
+		menu_edit.insert_item("Delete");
+		menu_edit.insert_separator();
+		menu_edit.insert_item("Select All");
 
-			PopupMenu menu_file;
-			menu_file.insert_item("New");
-			menu_file.insert_item("Open");
-			menu_file.insert_item("Save");
-			menu_file.insert_item("Exit");
-			menubar.add_menu("File", menu_file);
+		PopupMenu menu_submenu;
+		menu_submenu.insert_item("foo");
+		menu_submenu.insert_item("bar");
+		menu_submenu.insert_item("foobar");
+		item_submenu.set_submenu(menu_submenu);
 
-			PopupMenu menu_edit;
-			menu_edit.insert_item("Undo");
-			menu_edit.insert_item("Redo");
-			menu_edit.insert_separator();
-			menu_edit.insert_item("Cut");
-			menu_edit.insert_item("Copy");
-			menu_edit.insert_separator();
-			PopupMenuItem item_submenu = menu_edit.insert_item("Submenu");
-			menu_edit.insert_separator();
-			menu_edit.insert_item("Paste");
-			menu_edit.insert_item("Delete");
-			menu_edit.insert_separator();
-			menu_edit.insert_item("Select All");
+ 		menubar.add_menu("Edit", menu_edit);
 
-			PopupMenu menu_submenu;
-			menu_submenu.insert_item("foo");
-			menu_submenu.insert_item("bar");
-			menu_submenu.insert_item("foobar");
-			item_submenu.set_submenu(menu_submenu);
+		PushButton button1(&root);
+		button1.set_geometry(Rect(20, 100, 200, 125));
+		button1.set_text("Click for pop-up menu");
 
- 			menubar.add_menu("Edit", menu_edit);
+		button1.func_clicked().set(this, &App::on_button1_clicked, &button1);
 
-			PushButton button1(&root);
-			button1.set_geometry(Rect(20, 100, 200, 125));
-			button1.set_text("Click for pop-up menu");
+		ComboBox combobox1(&root);
+		combobox1.set_geometry(Rect(20, 140, 200, 162));
+		combobox1.set_popup_menu(menu_edit);
+		combobox1.set_editable(false);
 
-			button1.func_clicked().set(this, &App::on_button1_clicked, &button1);
-
-			ComboBox combobox1(&root);
-			combobox1.set_geometry(Rect(20, 140, 200, 162));
-			combobox1.set_popup_menu(menu_edit);
-			combobox1.set_editable(false);
-
-			gui.exec();
-		}
-		catch (Exception e)
-		{
-			ConsoleWindow console("Console");
- 			Console::write_line(e.message);
-			console.display_close_message();
-		}
+		gui.exec();
 
 		return 0;
 	}
 
 	bool on_close(Window *win)
 	{
-		cl_log_event("TestApp", "Shutdown");
+		//cl_log_event("TestApp", "Shutdown");
 		win->exit_with_code(0);
 		return true;
 	}
@@ -124,7 +110,7 @@ public:
 		SetupDisplay setup_display;
 		SetupGL setup_gl;
 
-		FileLogger logger("log.txt");
+		//FileLogger logger("log.txt");
 
 		// Start the Application
 		App app;
