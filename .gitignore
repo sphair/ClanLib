@@ -7,6 +7,9 @@ Release
 *.suo
 *.sdf
 *.user
+*.xcworkspace
+*.xcuserdatad
+*.DS_Store
 /Build
 /Projects/clanCore.vcxproj.filters
 /Projects/clanApp.vcxproj
@@ -65,7 +68,6 @@ doxyoutput
 
 /Tests/CSSLayout/WebBrowser/file_cache.db
 /Tests/CSSLayout/WebBrowser/htmlpage.css
-
 /Tests/CSSLayout/WebBrowser/htmlpage.html
-
 /Tests/CSSLayout/WebBrowser/*.opensdf
+
