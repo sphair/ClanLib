@@ -554,37 +554,37 @@ clanCSSLayout_includes = \
 	
 clanScene3D_includes = \
 	scene3d.h \
-	Scene3D/Performance/gpu_timer.h \
-	Scene3D/Performance/scope_timer.h \
+	Scene3D/scene_pass.h \
 	Scene3D/scene_camera.h \
-	Scene3D/LevelData/level_data_light.h \
-	Scene3D/LevelData/level_data_portal.h \
-	Scene3D/LevelData/level_data_sector.h \
-	Scene3D/LevelData/level_data.h \
-	Scene3D/LevelData/level_data_object.h \
+	Scene3D/scene_cull_provider.h \
+	Scene3D/scene_light_probe.h \
+	Scene3D/scene_model.h \
+	Scene3D/scene.h \
+	Scene3D/scene_light.h \
+	Scene3D/scene_object.h \
+	Scene3D/scene_particle_emitter.h \
 	Scene3D/ModelData/model_data_animation_data.h \
-	Scene3D/ModelData/model_data_texture.h \
-	Scene3D/ModelData/model_data_attachment_point.h \
-	Scene3D/ModelData/model_data_particle_emitter.h \
 	Scene3D/ModelData/model_data_camera.h \
 	Scene3D/ModelData/model_data_light.h \
+	Scene3D/ModelData/model_data_animation_timeline.h \
 	Scene3D/ModelData/model_data_texture_map.h \
 	Scene3D/ModelData/model_data.h \
 	Scene3D/ModelData/model_data_mesh.h \
 	Scene3D/ModelData/model_data_animation.h \
+	Scene3D/ModelData/model_data_particle_emitter.h \
+	Scene3D/ModelData/model_data_attachment_point.h \
 	Scene3D/ModelData/model_data_draw_range.h \
-	Scene3D/ModelData/model_data_animation_timeline.h \
+	Scene3D/ModelData/model_data_texture.h \
 	Scene3D/ModelData/model_data_bone.h \
-	Scene3D/scene_object.h \
 	Scene3D/api_scene3d.h \
-	Scene3D/scene_pass.h \
-	Scene3D/scene.h \
-	Scene3D/scene_light.h \
 	Scene3D/Resources/scene_cache.h \
-	Scene3D/scene_particle_emitter.h \
-	Scene3D/scene_cull_provider.h \
-	Scene3D/scene_light_probe.h \
-	Scene3D/scene_model.h
+	Scene3D/LevelData/level_data_object.h \
+	Scene3D/LevelData/level_data.h \
+	Scene3D/LevelData/level_data_portal.h \
+	Scene3D/LevelData/level_data_sector.h \
+	Scene3D/LevelData/level_data_light.h \
+	Scene3D/Performance/scope_timer.h \
+	Scene3D/Performance/gpu_timer.h
 
 clanPhysics3D_includes = \
 	physics3d.h \
