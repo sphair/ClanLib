@@ -60,7 +60,7 @@ public:
 /// \{
 
 public:
-
+	bool is_double_buffered() const { return double_buffered; }
 	Rect get_geometry() const;
 	Rect get_viewport() const;
 	bool is_fullscreen() const;
@@ -168,6 +168,7 @@ private:
 	OpenGLWindowDescription opengl_desc;
 
 	bool using_gl3;
+	bool double_buffered;
 
 /// \}
 };

@@ -59,7 +59,7 @@ namespace clan
 OpenGLWindowProvider::OpenGLWindowProvider(OpenGLWindowDescription &opengl_desc)
 : win32_window(),
   opengl_context(0), device_context(0), hwnd(0), shadow_window(false), dwm_layered(false), site(0), fullscreen(false),
-  wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true)
+  wglSwapIntervalEXT(0), swap_interval(-1), opengl_desc(opengl_desc), using_gl3(true), double_buffered(true)
 {
 	win32_window.func_on_resized().set(this, &OpenGLWindowProvider::on_window_resized);
 }
@@ -241,6 +241,9 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 			if (desc.is_layered())
 				dwm_layered = true;
 		}
+
+		desc.is_layered() ? double_buffered = false : double_buffered = true;	// Only can use Layered windows that are single buffered with OpenGL (via shadow window) ( PFD_DOUBLEBUFFER_DONTCARE set in OpenGLCreationHelper::set_multisampling_pixel_format)
+
 		device_context = GetDC(hwnd);
 
 		HGLRC share_context = get_share_context();
@@ -493,9 +496,11 @@ void OpenGLWindowProvider::flip(int interval)
 
 		if (using_gl3)
 		{
-			//glReadBuffer(GL_BACK);
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_FRONT);
+			if (double_buffered)
+			{
+				glDrawBuffer(GL_BACK);
+				glReadBuffer(GL_FRONT);
+			}
 
 			PixelBuffer pixelbuffer(width, height, tf_rgba8);
 			glPixelStorei(GL_PACK_ALIGNMENT, 1);
@@ -529,7 +534,10 @@ void OpenGLWindowProvider::flip(int interval)
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 
-			glReadBuffer(GL_BACK);
+			if (double_buffered)
+			{
+				glReadBuffer(GL_BACK);
+			}
 			glRasterPos2i(0, 0);
 			glPixelZoom(1.0f, 1.0f);
 
@@ -655,9 +663,11 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 
 	if (shadow_window)
 	{
-		//glReadBuffer(GL_BACK);
-		glDrawBuffer(GL_BACK);
-		glReadBuffer(GL_FRONT);
+		if (double_buffered)
+		{
+			glDrawBuffer(GL_BACK);
+			glReadBuffer(GL_FRONT);
+		}
 
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = Rect(0,0, width, height);
@@ -692,8 +702,11 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 		    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-			glReadBuffer(GL_BACK);
-			glDrawBuffer(GL_FRONT);
+			if (double_buffered)
+			{
+				glReadBuffer(GL_BACK);
+				glDrawBuffer(GL_FRONT);
+			}
 
 			glBlitFramebuffer( 
 				rect.left, height - rect.bottom,
@@ -702,8 +715,11 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 				rect.right, height - rect.top,
 				GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_FRONT);
+			if (double_buffered)
+			{
+				glDrawBuffer(GL_BACK);
+				glReadBuffer(GL_FRONT);
+			}
 
 			if (read_last_bound)
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, read_last_bound);
@@ -717,8 +733,11 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 
 		if (dwm_layered)
 		{
-			glDrawBuffer(GL_BACK);
-			glReadBuffer(GL_FRONT);
+			if (double_buffered)
+			{
+				glDrawBuffer(GL_BACK);
+				glReadBuffer(GL_FRONT);
+			}
 
 			// ** Currently update layered windows only supports full screen rect update **
 			rect = Rect(0,0, width, height);

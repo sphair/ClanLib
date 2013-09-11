@@ -447,7 +447,9 @@ PixelBuffer GL3GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 	PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
 	OpenGL::set_active(this);
 	if (!framebuffer_bound)
-		glReadBuffer(GL_BACK);
+	{
+		render_window->is_double_buffered() ? glReadBuffer(GL_BACK) : glReadBuffer(GL_FRONT);
+	}
 	if (glClampColor)
 		glClampColor(GL_CLAMP_READ_COLOR, clamp ? GL_TRUE : GL_FALSE);
 
@@ -579,8 +581,16 @@ void GL3GraphicContextProvider::reset_frame_buffer()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-	glDrawBuffer(GL_BACK);	// OpenGL default
-	glReadBuffer(GL_BACK);	// OpenGL default
+	if (render_window->is_double_buffered())
+	{
+		glDrawBuffer(GL_BACK);
+		glReadBuffer(GL_BACK);
+	}
+	else
+	{
+		glDrawBuffer(GL_FRONT);
+		glReadBuffer(GL_FRONT);
+	}
 
 	framebuffer_bound = false;
 
@@ -807,6 +817,13 @@ void GL3GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 void GL3GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	OpenGL::set_active(this);
+
+	if (!render_window->is_double_buffered())	// Silently fix incorrect render buffers
+	{
+		if (buffer == buffer_back)
+			buffer = buffer_front;
+	}
+
     if (glDrawBuffer)
         glDrawBuffer( OpenGL::to_enum(buffer) );
 

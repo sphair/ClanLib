@@ -415,7 +415,7 @@ PixelBuffer GL1GraphicContextProvider::get_pixeldata(const Rect& rect, TextureFo
 	PixelBuffer pbuf(rect.get_width(), rect.get_height(), texture_format);
 	set_active();
 	if (!framebuffer_bound)
-		glReadBuffer(GL_BACK);
+		render_window->is_double_buffered() ? glReadBuffer(GL_BACK) : glReadBuffer(GL_FRONT);
 
 	Size display_size = get_display_window_size();
 
@@ -879,6 +879,13 @@ void GL1GraphicContextProvider::set_depth_range(int viewport, float n, float f)
 void GL1GraphicContextProvider::set_draw_buffer(DrawBuffer buffer)
 {
 	set_active();
+
+	if (!render_window->is_double_buffered())	// Silently fix incorrect render buffers
+	{
+		if (buffer == buffer_back)
+			buffer = buffer_front;
+	}
+
 	glDrawBuffer( OpenGL::to_enum(buffer) );
 
 }

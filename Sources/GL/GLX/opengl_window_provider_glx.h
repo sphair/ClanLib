@@ -178,6 +178,7 @@ public:
 /// \{
 
 public:
+	bool is_double_buffered() const { return true; }
 	Rect get_geometry() const {return x11_window.get_geometry();}
 
 	Rect get_viewport() const {return x11_window.get_viewport();}
