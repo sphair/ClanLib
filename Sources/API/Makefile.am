@@ -599,32 +599,32 @@ clanPhysics3D_includes = \
 
 clanPhysics2D_includes = \
 	physics2d.h \
+	Physics2D/api_physics2d.h \
+	Physics2D/Dynamics/body_description.h \
+	Physics2D/Dynamics/fixture.h \
+	Physics2D/Dynamics/fixture_description.h \
+	Physics2D/Dynamics/body.h \
+	Physics2D/Dynamics/Joints/revolute_joint_description.h \
+	Physics2D/Dynamics/Joints/joint.h \
+	Physics2D/Dynamics/Joints/distance_joint.h \
+	Physics2D/Dynamics/Joints/revolute_joint.h \
+	Physics2D/Dynamics/Joints/prismatic_joint.h \
+	Physics2D/Dynamics/Joints/prismatic_joint_description.h \
+	Physics2D/Dynamics/Joints/mouse_joint.h \
+	Physics2D/Dynamics/Joints/mouse_joint_description.h \
+	Physics2D/Dynamics/Joints/distance_joint_description.h \
+	Physics2D/World/physics_query_assistant.h \
+	Physics2D/World/query_result.h \
+	Physics2D/World/physics_context.h \
+	Physics2D/World/physics_world.h \
+	Physics2D/World/physics_debug_draw.h \
+	Physics2D/World/physics_world_description.h \
+	Physics2D/Collision/Shapes/circle_shape.h \
+	Physics2D/Collision/Shapes/chain_shape.h \
+	Physics2D/Collision/Shapes/shape.h \
 	Physics2D/Collision/Shapes/edge_shape.h \
 	Physics2D/Collision/Shapes/polygon_shape.h \
-	Physics2D/Collision/Shapes/chain_shape.h \
-	Physics2D/Collision/Shapes/circle_shape.h \
-	Physics2D/Collision/Shapes/shape.h \
-	Physics2D/Collision/physics_object.h \
-	Physics2D/api_physics2d.h \
-	Physics2D/World/physics_query_assistant.h \
-	Physics2D/World/physics_debug_draw.h \
-	Physics2D/World/physics_world.h \
-	Physics2D/World/physics_context.h \
-	Physics2D/World/physics_world_description.h \
-	Physics2D/World/query_result.h \
-	Physics2D/Dynamics/Joints/revolute_joint.h \
-	Physics2D/Dynamics/Joints/joint.h \
-	Physics2D/Dynamics/Joints/mouse_joint_description.h \
-	Physics2D/Dynamics/Joints/prismatic_joint.h \
-	Physics2D/Dynamics/Joints/mouse_joint.h \
-	Physics2D/Dynamics/Joints/revolute_joint_description.h \
-	Physics2D/Dynamics/Joints/distance_joint_description.h \
-	Physics2D/Dynamics/Joints/prismatic_joint_description.h \
-	Physics2D/Dynamics/Joints/distance_joint.h \
-	Physics2D/Dynamics/fixture.h \
-	Physics2D/Dynamics/body_description.h \
-	Physics2D/Dynamics/body.h \
-	Physics2D/Dynamics/fixture_description.h
+	Physics2D/Collision/physics_object.h
 
 clanGameIDE_includes = \
 	gameide.h \
