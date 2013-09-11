@@ -112,7 +112,7 @@ private:
 
 	Signal_v1<const InputEvent &> *sig_provider_event;
 
-	OpenGLWindowProvider *window;
+    OpenGLWindowProvider *window;
     friend class OpenGLWindowProvider_Impl;
 /// \}
 };

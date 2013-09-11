@@ -32,14 +32,22 @@
 
 #import <CoreFoundation/CoreFoundation.h>
 #import <AppKit/AppKit.h>
+
 #import "cocoa_window.h"
+#import "opengl_window_provider_osx.h"
 
 @implementation CocoaWindow
 {
 	clan::OpenGLWindowProvider_Impl *window_provider;
 }
 
-- (id)initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl
+- (BOOL) acceptsFirstResponder
+{
+    NSLog(@"-acceptsFirstResponder:");
+    return YES;
+}
+
+- (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl
 {
 	NSRect frame = NSMakeRect(0, 0, desc.get_size().width, desc.get_size().height);
 	NSUInteger styles = NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask;
@@ -52,7 +60,7 @@
 	return self;
 }
 
-- (void)sendEvent:(NSEvent *)theEvent
+- (void) sendEvent:(NSEvent *)theEvent
 {
 	NSEventType type = [theEvent type];
 	switch (type)
@@ -82,6 +90,36 @@
             [super sendEvent:theEvent];
             break;
 	}
+}
+
+- (void) windowDidMiniaturize:(NSNotification *)notification
+{
+    NSLog(@"-windowDidMiniaturize:");
+    // TODO:
+}
+
+- (void) windowDidDeminiaturize:(NSNotification *)notification
+{
+    NSLog(@"-windowDidDeminiaturize:");
+    // TODO:
+}
+
+- (void) windowDidResize:(NSNotification *)notification
+{
+    NSLog(@"-windowDidResize:");
+    
+    NSRect rect = [window_provider->window.contentView bounds];
+    
+    // TODO: Can't actually call this because of the threading issue.  However, this seems pretty close
+    //       to where you would actually call something like this.  I am trying to resize the openGL rendering
+    //       area when the user manually resizes the window.
+    // glViewport(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+}
+
+- (void) windowWillClose:(NSNotification *)notification
+{
+    NSLog(@"-windowWillClose:");
+    // TOOD:
 }
 
 @end

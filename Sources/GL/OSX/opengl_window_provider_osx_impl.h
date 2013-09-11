@@ -67,7 +67,7 @@ public:
 	OpenGLWindowDescription opengl_desc;
 	
 	CocoaWindow *window;
-	NSOpenGLContext *opengl_context;
+    NSOpenGLContext *opengl_context;
     
 private:
     void on_keyboard_event(NSEvent *theEvent);

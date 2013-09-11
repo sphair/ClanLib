@@ -164,8 +164,8 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 
 	impl->window = [[CocoaWindow alloc] initWithDescription:desc provider:impl.get()];
 	if (impl->window == nil)
-		throw Exception("Could not create window");
-	
+		throw Exception("Could not create the window.");
+
 	[impl->window setTitle:[NSString stringWithUTF8String:desc.get_title().c_str()]];
 	
 	std::vector<NSOpenGLPixelFormatAttribute> attributes;
@@ -203,7 +203,7 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	if (impl->opengl_context == nil)
 		throw Exception("Could not create OpenGL context");
 	
-	[impl->opengl_context setView:impl->window.contentView];
+    [impl->opengl_context setView:impl->window.contentView];
 	
 	impl->gc = GraphicContext(new GL3GraphicContextProvider(this));
 	
@@ -211,7 +211,9 @@ void OpenGLWindowProvider::create(DisplayWindowSite *new_site, const DisplayWind
 	impl->ic.add_keyboard(keyboard);
 	impl->ic.add_mouse(mouse);
 	
+    [impl->window setDelegate:impl->window];
 	[impl->window makeKeyAndOrderFront:NSApp];
+    [impl->window makeMainWindow];
 }
 
 void OpenGLWindowProvider::show_system_cursor()
@@ -321,7 +323,7 @@ void OpenGLWindowProvider::flip(int interval)
 	OpenGL::set_active(get_gc());
 	OpenGL::check_error();
 	
-	[impl->opengl_context flushBuffer];
+    [impl->opengl_context flushBuffer];
 }
 
 void OpenGLWindowProvider::update(const Rect &_rect)
