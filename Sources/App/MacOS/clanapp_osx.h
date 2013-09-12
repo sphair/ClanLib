@@ -23,17 +23,29 @@
 **
 **  File Author(s):
 **
+**    James Lammlein
 **    Magnus Norddahl
 */
 
-#include "API/Display/Window/display_window_description.h"
+#pragma once
 
+#include <string>
+#include <vector>
+
+#import <CoreFoundation/CoreFoundation.h>
 #import <Cocoa/Cocoa.h>
 
-namespace clan { class OpenGLWindowProvider_Impl; }
-
-@interface CocoaWindow : NSWindow <NSWindowDelegate>
-
-- (id) initWithDescription:(const clan::DisplayWindowDescription &)desc provider:(clan::OpenGLWindowProvider_Impl*)provider_impl;
-
+@interface AppDelegate : NSObject <NSApplicationDelegate>
 @end
+
+namespace clan
+{
+	void* cl_app_on_thread_id();
+	void cl_app_on_awake_thread(void* thread_id);
+	std::vector<std::string> main_args;
+    
+    // TODO: Remove these once the official main function
+    //       OSX update is rolled out.
+    void* main_thread_wrapper(void*);
+    void create_main_thread();
+}
