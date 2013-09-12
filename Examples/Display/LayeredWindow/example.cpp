@@ -68,7 +68,7 @@ int App::main(const std::vector<std::string> &args)
 	clan::SetupDisplay setup_display;
 
 	// We support all display targets, in order listed here
-	clan::SetupD3D setup_d3d;
+	//clan::SetupD3D setup_d3d;
 	clan::SetupGL setup_gl;
 	clan::SetupSWRender setup_swrender;
 
@@ -139,7 +139,7 @@ int App::start(const std::vector<std::string> &args)
 		rock.draw(canvas, 0.0f, 0.0f);
 
 		// Rotate tux
-		rotation += game_time.get_time_elapsed() / 10.0f;
+		rotation += game_time.get_time_elapsed() * 100.0f;
 		clan::Angle angle;
 		angle.set_degrees(rotation);
 		tux.set_angle(angle);
