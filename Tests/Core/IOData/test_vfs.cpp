@@ -32,28 +32,18 @@
 void TestApp::test_vfs()
 {
 	Console::write_line(" Header: virtual_file_system.h");
-	Console::write_line("  Class: VirtualFileSystem");
+	Console::write_line("  Class: FileSystem");
 
-	test_vfs_internal("  File based #1", 1, VirtualFileSystem("../../", false));
-	test_vfs_internal("  File based #2", 2, VirtualFileSystem("../../", false));
-	test_vfs_internal("  Zip based #1", 1, VirtualFileSystem("../IOData/test.zip", true));
-	test_vfs_internal("  Zip based #2", 2, VirtualFileSystem("test.zip", true));
+	test_vfs_internal("  File based #1", FileSystem("../../", false));
+	test_vfs_internal("  Zip based #1", FileSystem("../IOData/test.zip", true));
 }
 
-void TestApp::test_vfs_internal(const char *message, int test_method, VirtualFileSystem vfs)
+void TestApp::test_vfs_internal(const char *message, FileSystem vfs)
 {
 	Console::write_line(message);
 
-	VirtualDirectoryListing dir;
-	if (test_method==1)
-	{
-		dir = vfs.get_directory_listing("Core");
-	}
-	else
-	{
-		VirtualDirectory vdir = vfs.open_directory("Core");
-		dir = vdir.get_directory_listing();
-	}
+	DirectoryListing dir;
+	dir = vfs.get_directory_listing("Core");
 
 	if (!dir.next())
 		fail();
@@ -68,15 +58,7 @@ void TestApp::test_vfs_internal(const char *message, int test_method, VirtualFil
 	if (!dir.is_directory())
 		fail();
 
-	if (test_method==1)
-	{
-		dir = vfs.get_directory_listing("Core/IOData");
-	}
-	else
-	{
-		VirtualDirectory vdir = vfs.open_directory("Core/IOData");
-		dir = vdir.get_directory_listing();
-	}
+	dir = vfs.get_directory_listing("Core/IOData");
 
 	while(true)
 	{

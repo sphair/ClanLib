@@ -61,18 +61,17 @@ class TestApp
 public:
 	virtual int main(const std::vector<std::string> &args);
 private:
-	void test_cl_endian(void);
+	void test_endian(void);
 	void test_path_help(void);
 	void test_file_help(void);
 	void test_datatypes(void);
 	void test_directory_scanner(void);
 	void test_iodevice_memory(void);
 	void test_iodevice(void);
-	void test_virtual_directory_part1(void);
 	void test_virtual_directory_part2(void);
 	void fail(void);
 	void test_vfs();
-	void test_vfs_internal(const char *message, int test_method, VirtualFileSystem vfs);
+	void test_vfs_internal(const char *message, FileSystem vfs);
 #ifdef WIN32
 	TCHAR working_dir[MAX_PATH];
 	char location_dir[4];

@@ -139,114 +139,114 @@ void TestApp::test_iodevice(void)
 	if (mem.is_little_endian() == true) fail();
 
 //*** testing void write_int64();
-	Console::write_line("   Function: void write_int64(cl_byte64 data);");
-	cl_byte64 *vptr_int64 = (cl_byte64 *) test_data;
+	Console::write_line("   Function: void write_int64(byte64 data);");
+	byte64 *vptr_int64 = (byte64 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_int64(*vptr_int64);
 	mem.set_little_endian_mode();
 	mem.write_int64(*vptr_int64);
 	if (mem.get_position() != 16) fail();
-	vptr_int64 = (cl_byte64 *) data.get_data();
+	vptr_int64 = (byte64 *) data.get_data();
 	if (vptr_int64[0] != 0x0001020304050607) fail();
 	if (vptr_int64[1] != 0x0706050403020100) fail();
 	mem.seek(0);
 
 //*** testing void write_uint64();
-	Console::write_line("   Function: void write_uint64(cl_ulong data);");
-	cl_ulong *vptr_uint64 = (cl_ulong *) test_data;
+	Console::write_line("   Function: void write_uint64(ubyte64 data);");
+	ubyte64 *vptr_uint64 = (ubyte64 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_uint64(*vptr_uint64);
 	mem.set_little_endian_mode();
 	mem.write_uint64(*vptr_uint64);
 	if (mem.get_position() != 16) fail();
-	vptr_uint64 = (cl_ulong *) data.get_data();
+	vptr_uint64 = (ubyte64 *) data.get_data();
 	if (vptr_uint64[0] != 0x0001020304050607) fail();
 	if (vptr_uint64[1] != 0x0706050403020100) fail();
 	mem.seek(0);
 
 //*** testing void write_int32();
-	Console::write_line("   Function: void write_int32(cl_byte32 data);");
-	cl_byte32 *vptr_int32 = (cl_byte32 *) test_data;
+	Console::write_line("   Function: void write_int32(byte32 data);");
+	byte32 *vptr_int32 = (byte32 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_int32(*vptr_int32);
 	mem.set_little_endian_mode();
 	mem.write_int32(*vptr_int32);
 	if (mem.get_position() != 8) fail();
-	vptr_int32 = (cl_byte32 *) data.get_data();
+	vptr_int32 = (byte32 *) data.get_data();
 	if (vptr_int32[0] != 0x00010203) fail();
 	if (vptr_int32[1] != 0x03020100) fail();
 	mem.seek(0);
 
 //*** testing void write_uint32();
-	Console::write_line("   Function: void write_uint32(cl_uint data);");
-	cl_uint *vptr_uint32 = (cl_uint *) test_data;
+	Console::write_line("   Function: void write_uint32(ubyte32 data);");
+	ubyte32 *vptr_uint32 = (ubyte32 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_uint32(*vptr_uint32);
 	mem.set_little_endian_mode();
 	mem.write_uint32(*vptr_uint32);
 	if (mem.get_position() != 8) fail();
-	vptr_uint32 = (cl_uint *) data.get_data();
+	vptr_uint32 = (ubyte32 *) data.get_data();
 	if (vptr_uint32[0] != 0x00010203) fail();
 	if (vptr_uint32[1] != 0x03020100) fail();
 	mem.seek(0);
 
 //*** testing void write_int16();
-	Console::write_line("   Function: void write_int16(cl_byte16 data);");
-	cl_byte16 *vptr_int16 = (cl_byte16 *) test_data;
+	Console::write_line("   Function: void write_int16(byte16 data);");
+	byte16 *vptr_int16 = (byte16 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_int16(*vptr_int16);
 	mem.set_little_endian_mode();
 	mem.write_int16(*vptr_int16);
 	if (mem.get_position() != 4) fail();
-	vptr_int16 = (cl_byte16 *) data.get_data();
+	vptr_int16 = (byte16 *) data.get_data();
 	if (vptr_int16[0] != 0x0001) fail();
 	if (vptr_int16[1] != 0x0100) fail();
 	mem.seek(0);
 
 //*** testing void write_uint16();
-	Console::write_line("   Function: void write_uint16(cl_ushort data);");
-	cl_ushort *vptr_uint16 = (cl_ushort *) test_data;
+	Console::write_line("   Function: void write_uint16(ubyte16 data);");
+	ubyte16 *vptr_uint16 = (ubyte16 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_uint16(*vptr_uint16);
 	mem.set_little_endian_mode();
 	mem.write_uint16(*vptr_uint16);
 	if (mem.get_position() != 4) fail();
-	vptr_uint16 = (cl_ushort *) data.get_data();
+	vptr_uint16 = (ubyte16 *) data.get_data();
 	if (vptr_uint16[0] != 0x0001) fail();
 	if (vptr_uint16[1] != 0x0100) fail();
 	mem.seek(0);
 
 //*** testing void write_int8();
-	Console::write_line("   Function: void write_int8(cl_byte8 data);");
-	cl_byte8 *vptr_int8 = (cl_byte8 *) test_data;
+	Console::write_line("   Function: void write_int8(byte8 data);");
+	byte8 *vptr_int8 = (byte8 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_int8(*vptr_int8);
 	mem.set_little_endian_mode();
 	mem.write_int8(*vptr_int8);
 	if (mem.get_position() != 2) fail();
-	vptr_int8 = (cl_byte8 *) data.get_data();
+	vptr_int8 = (byte8 *) data.get_data();
 	if (vptr_int8[0] != 0x00) fail();
 	if (vptr_int8[1] != 0x00) fail();
 	mem.seek(0);
 
 //*** testing void write_uint8();
-	Console::write_line("   Function: void write_uint8(cl_uchar data);");
-	cl_uchar *vptr_uint8 = (cl_uchar *) test_data;
+	Console::write_line("   Function: void write_uint8(ubyte8 data);");
+	ubyte8 *vptr_uint8 = (ubyte8 *) test_data;
 	mem.set_big_endian_mode();
 	mem.write_uint8(*vptr_uint8);
 	mem.set_little_endian_mode();
 	mem.write_uint8(*vptr_uint8);
 	if (mem.get_position() != 2) fail();
-	vptr_uint8 = (cl_uchar *) data.get_data();
+	vptr_uint8 = (ubyte8 *) data.get_data();
 	if (vptr_uint8[0] != 0x00) fail();
 	if (vptr_uint8[1] != 0x00) fail();
 	mem.seek(0);
 
-//*** testing cl_byte64 read_int64()
-	Console::write_line("   Function: cl_byte64 read_int64()");
+//*** testing byte64 read_int64()
+	Console::write_line("   Function: byte64 read_int64()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_int64 = (cl_byte64 *) data.get_data();
+	vptr_int64 = (byte64 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_int64() != 0x0001020304050607) fail();
 	mem.set_little_endian_mode();
@@ -254,11 +254,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 16) fail();
 	mem.seek(0);
 
-//*** testing cl_ulong read_uint64()
-	Console::write_line("   Function: cl_ulong read_uint64()");
+//*** testing ubyte64 read_uint64()
+	Console::write_line("   Function: ubyte64 read_uint64()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_uint64 = (cl_ulong *) data.get_data();
+	vptr_uint64 = (ubyte64 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_uint64() != 0x0001020304050607) fail();
 	mem.set_little_endian_mode();
@@ -266,11 +266,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 16) fail();
 	mem.seek(0);
 
-//*** testing cl_byte32 read_int32()
-	Console::write_line("   Function: cl_byte32 read_int32()");
+//*** testing byte32 read_int32()
+	Console::write_line("   Function: byte32 read_int32()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_int32 = (cl_byte32 *) data.get_data();
+	vptr_int32 = (byte32 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_int32() != 0x00010203) fail();
 	mem.set_little_endian_mode();
@@ -278,11 +278,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 8) fail();
 	mem.seek(0);
 
-//*** testing cl_uint read_uint32()
-	Console::write_line("   Function: cl_uint read_uint32()");
+//*** testing ubyte32 read_uint32()
+	Console::write_line("   Function: ubyte32 read_uint32()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_uint32 = (cl_uint *) data.get_data();
+	vptr_uint32 = (ubyte32 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_uint32() != 0x00010203) fail();
 	mem.set_little_endian_mode();
@@ -290,11 +290,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 8) fail();
 	mem.seek(0);
 
-//*** testing cl_byte16 read_int16()
-	Console::write_line("   Function: cl_byte16 read_int16()");
+//*** testing byte16 read_int16()
+	Console::write_line("   Function: byte16 read_int16()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_int16 = (cl_byte16 *) data.get_data();
+	vptr_int16 = (byte16 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_int16() != 0x0001) fail();
 	mem.set_little_endian_mode();
@@ -302,11 +302,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 4) fail();
 	mem.seek(0);
 
-//*** testing cl_ushort read_uint16()
-	Console::write_line("   Function: cl_ushort read_uint16()");
+//*** testing ubyte16 read_uint16()
+	Console::write_line("   Function: ubyte16 read_uint16()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_uint16 = (cl_ushort *) data.get_data();
+	vptr_uint16 = (ubyte16 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_uint16() != 0x0001) fail();
 	mem.set_little_endian_mode();
@@ -314,11 +314,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 4) fail();
 	mem.seek(0);
 
-//*** testing cl_byte8 read_int8()
-	Console::write_line("   Function: cl_byte8 read_int8()");
+//*** testing byte8 read_int8()
+	Console::write_line("   Function: byte8 read_int8()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_int8 = (cl_byte8 *) data.get_data();
+	vptr_int8 = (byte8 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_int8() != 0x00) fail();
 	mem.set_little_endian_mode();
@@ -326,11 +326,11 @@ void TestApp::test_iodevice(void)
 	if (mem.get_position() != 2) fail();
 	mem.seek(0);
 
-//*** testing cl_uchar read_uint8()
-	Console::write_line("   Function: cl_uchar read_uint8()");
+//*** testing ubyte8 read_uint8()
+	Console::write_line("   Function: ubyte8 read_uint8()");
 	if (mem.send(test_data, 64, true) != 64) fail();
 	mem.seek(0);
-	vptr_uint8 = (cl_uchar *) data.get_data();
+	vptr_uint8 = (ubyte8 *) data.get_data();
 	mem.set_big_endian_mode();
 	if (mem.read_uint8() != 0x00) fail();
 	mem.set_little_endian_mode();
@@ -342,7 +342,7 @@ void TestApp::test_iodevice(void)
 	Console::write_line("   Function: write_float(float)");
 	// Tests contains in read_float()
 
-//*** testing cl_float read_float()
+//*** testing float read_float()
 	Console::write_line("   Function: float read_float()");
 	mem.seek(0);
 	mem.set_big_endian_mode();

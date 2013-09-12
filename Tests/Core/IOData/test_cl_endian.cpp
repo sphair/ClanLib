@@ -29,9 +29,9 @@
 
 #include "test.h"
 
-void TestApp::test_cl_endian(void)
+void TestApp::test_endian(void)
 {
-	Console::write_line(" Header: cl_endian.h");
+	Console::write_line(" Header: endian.h");
 	Console::write_line("  Class: Endian");
 
 	const int testdata_size = 16;

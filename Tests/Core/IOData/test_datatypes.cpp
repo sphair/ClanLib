@@ -34,20 +34,20 @@ void TestApp::test_datatypes(void)
 	Console::write_line(" Header: datatypes.h");
 	Console::write_line("  Ensuring that the datatypes are the correct size");
 
-	if (sizeof(cl_byte8) != 1) fail();
-	if (sizeof(cl_byte16) != 2) fail();
-	if (sizeof(cl_byte32) != 4) fail();
-	if (sizeof(cl_byte64) != 8) fail();
+	if (sizeof(byte8) != 1) fail();
+	if (sizeof(byte16) != 2) fail();
+	if (sizeof(byte32) != 4) fail();
+	if (sizeof(byte64) != 8) fail();
 
 	Console::write_line("  Ensuring that the datatypes have the correct sign");
-	cl_byte8 dts8 = 2;
-	cl_byte16 dts16 = 2;
-	cl_byte32 dts32 = 2;
-	cl_byte64 dts64 = 2;
-	cl_uchar dtu8 = 2;
-	cl_ushort dtu16 = 2;
-	cl_uint dtu32 = 2;
-	cl_ulong dtu64 = 2;
+	byte8 dts8 = 2;
+	byte16 dts16 = 2;
+	byte32 dts32 = 2;
+	byte64 dts64 = 2;
+	ubyte8 dtu8 = 2;
+	ubyte16 dtu16 = 2;
+	ubyte32 dtu32 = 2;
+	ubyte64 dtu64 = 2;
 
 	if (dts8 < 2) fail();
 	if (dts16 < 2) fail();

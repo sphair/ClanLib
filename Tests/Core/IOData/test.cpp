@@ -87,14 +87,13 @@ int TestApp::main(const std::vector<std::string> &args)
 #endif
 
 		test_vfs();
-		test_cl_endian();
+		test_endian();
 		test_path_help();
 		test_file_help();
 		test_datatypes();
 		test_directory_scanner();
 		test_iodevice();
 		test_iodevice_memory();
-		test_virtual_directory_part1();
 		test_virtual_directory_part2();
 		
 		Console::write_line("All Tests Complete");
