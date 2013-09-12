@@ -23,11 +23,12 @@
 **
 **  File Author(s):
 **
+**    James Lammlein
 **    Magnus Norddahl
 */
 
-#include <cstdlib>
-#include <iostream>
+#include "clanapp_osx.h"
+
 #include "API/Core/System/setup_core.h"
 #include "API/Core/System/keep_alive.h"
 #include "API/App/clanapp.h"
@@ -35,31 +36,27 @@
 #include "API/Core/System/console_window.h"
 #include "API/Core/Text/console.h"
 
+#include <assert.h>
+#include <cstdlib>
+#include <iostream>
+#include <pthread.h>
+
 #import <CoreFoundation/CoreFoundation.h>
 #import <Cocoa/Cocoa.h>
 
-namespace clan
-{
-	
-	void *cl_app_on_thread_id();
-	void cl_app_on_awake_thread(void *thread_id);
-	std::vector<std::string> main_args;
-}
-
-@interface AppDelegate : NSObject <NSApplicationDelegate>
-@end
- 
 @implementation AppDelegate
- 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+
+- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
+    NSLog(@"-applicationDidFinishLaunching:");
+
 	using namespace clan;
 	
 	if (Application::enable_catch_exceptions)
 	{
 		try
 		{
-			Application::main(main_args);
+            create_main_thread();
 		}
 		catch(Exception &exception)
 		{
@@ -75,34 +72,16 @@ namespace clan
 	}
 	else
 	{
-		Application::main(main_args);
+        create_main_thread();
 	}
 }
- 
-@end
 
-int main(int argc, char **argv)
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
 {
-	using namespace clan;
-	
-	if (Application::main == 0)
-	{
-		std::cout << "ClanLib: No global Application instance!" << std::endl;
-		return 255;
-	}
-
-	for (int i = 0; i < argc; i++)
-		main_args.push_back(argv[i]);
-    
-    KeepAlive::func_thread_id().set(&cl_app_on_thread_id);
-    KeepAlive::func_awake_thread().set(&cl_app_on_awake_thread);
-
-	AppDelegate *appDelegate = [[AppDelegate alloc] init];
-	[NSApplication sharedApplication];
-	[NSApp setDelegate: appDelegate];
-	[NSApp run];
-	return 0;
+    return YES;
 }
+
+@end
 
 namespace clan
 {
@@ -119,7 +98,63 @@ void cl_app_on_awake_thread(void *thread_id)
     CFRunLoopWakeUp(runloop);
 }
 
+// TODO: Remove these once the official main function
+//       OSX update is rolled out.
+void* main_thread_wrapper(void*)
+{
+    try
+    {
+        clan::Application::main(clan::main_args);
+    }
+    catch(...) {}
+    
+    return nullptr;
+}
+
+// TODO: Remove these once the official main function
+//       OSX update is rolled out.
+void create_main_thread()
+{
+    pthread_attr_t  attr;
+    pthread_t       posixThreadID;
+    int             returnVal;
+        
+    returnVal = pthread_attr_init(&attr);
+    assert(!returnVal);
+    returnVal = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    assert(!returnVal);
+        
+    int threadError = pthread_create(&posixThreadID, &attr, &main_thread_wrapper, nullptr);
+    assert(!threadError);
+        
+    returnVal = pthread_attr_destroy(&attr);
+    assert(!returnVal);
+}
+    
 Application::MainFunction *Application::main = 0;
 bool Application::enable_catch_exceptions = true;
 
+}
+
+int main(int argc, char **argv)
+{
+	using namespace clan;
+	
+	if (Application::main == 0)
+	{
+		std::cout << "ClanLib: No global Application instance!" << std::endl;
+		return 255;
+	}
+    
+	for (int i = 0; i < argc; i++)
+		main_args.push_back(argv[i]);
+    
+    KeepAlive::func_thread_id().set(&cl_app_on_thread_id);
+    KeepAlive::func_awake_thread().set(&cl_app_on_awake_thread);
+    
+	AppDelegate *appDelegate = [[AppDelegate alloc] init];
+	[NSApplication sharedApplication];
+	[NSApp setDelegate: appDelegate];
+	[NSApp run];
+	return 0;
 }

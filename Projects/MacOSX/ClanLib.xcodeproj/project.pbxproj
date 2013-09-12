@@ -234,7 +234,6 @@
 		1835C092163627360009AA23 /* accelerator_key.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3081636168C0009AA23 /* accelerator_key.cpp */; };
 		1835C093163627360009AA23 /* accelerator_table.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3091636168C0009AA23 /* accelerator_table.cpp */; };
 		1835C094163627360009AA23 /* gui_component.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3561636168C0009AA23 /* gui_component.cpp */; };
-		1835C095163627360009AA23 /* gui_component_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3571636168C0009AA23 /* gui_component_description.cpp */; };
 		1835C096163627360009AA23 /* gui_component_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B3591636168C0009AA23 /* gui_component_impl.cpp */; };
 		1835C098163627360009AA23 /* gui_manager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B35E1636168C0009AA23 /* gui_manager.cpp */; };
 		1835C099163627360009AA23 /* gui_manager_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B35F1636168C0009AA23 /* gui_manager_impl.cpp */; };
@@ -486,7 +485,6 @@
 		18C76378177B85B6009723F2 /* css_box_object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76167177B85B5009723F2 /* css_box_object.cpp */; };
 		18C7637A177B85B6009723F2 /* css_box_text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76169177B85B5009723F2 /* css_box_text.cpp */; };
 		18C7637C177B85B6009723F2 /* css_box_tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7616B177B85B5009723F2 /* css_box_tree.cpp */; };
-		18C7637E177B85B6009723F2 /* css_whitespace_eraser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7616D177B85B5009723F2 /* css_whitespace_eraser.cpp */; };
 		18C76380177B85B6009723F2 /* css_layout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7616F177B85B5009723F2 /* css_layout.cpp */; };
 		18C76381177B85B6009723F2 /* css_layout_element.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76170177B85B5009723F2 /* css_layout_element.cpp */; };
 		18C76383177B85B6009723F2 /* css_layout_node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C76172177B85B5009723F2 /* css_layout_node.cpp */; };
@@ -763,6 +761,8 @@
 		18C7659F177B88BC009723F2 /* soundprovider_vorbis_session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659A177B88BC009723F2 /* soundprovider_vorbis_session.cpp */; };
 		18C765A1177B88BC009723F2 /* soundprovider_vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659C177B88BC009723F2 /* soundprovider_vorbis.cpp */; };
 		18C765A7177B88DC009723F2 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C765A4177B88DC009723F2 /* sqlite3.c */; };
+		38B42B9117DD3D3300800A95 /* input_device_provider_osxkeyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */; };
+		38B42B9217DD3D3300800A95 /* input_device_provider_osxmouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */; };
 		5234008B16653835001A194E /* css_document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340072166537CF001A194E /* css_document.cpp */; };
 		5234008C16653835001A194E /* css_document_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340073166537CF001A194E /* css_document_impl.cpp */; };
 		5234008D16653835001A194E /* css_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340075166537CF001A194E /* css_property.cpp */; };
@@ -1363,8 +1363,6 @@
 		1835B3531636168C0009AA23 /* toolbar_item_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = toolbar_item_impl.h; sourceTree = "<group>"; };
 		1835B3541636168C0009AA23 /* tooltip.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tooltip.cpp; sourceTree = "<group>"; };
 		1835B3561636168C0009AA23 /* gui_component.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gui_component.cpp; sourceTree = "<group>"; };
-		1835B3571636168C0009AA23 /* gui_component_description.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gui_component_description.cpp; sourceTree = "<group>"; };
-		1835B3581636168C0009AA23 /* gui_component_description_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gui_component_description_impl.h; sourceTree = "<group>"; };
 		1835B3591636168C0009AA23 /* gui_component_impl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = gui_component_impl.cpp; sourceTree = "<group>"; };
 		1835B35A1636168C0009AA23 /* gui_component_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gui_component_impl.h; sourceTree = "<group>"; };
 		1835B35B1636168C0009AA23 /* gui_css_strings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gui_css_strings.h; sourceTree = "<group>"; };
@@ -1892,8 +1890,6 @@
 		18C7616A177B85B5009723F2 /* css_box_text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_box_text.h; sourceTree = "<group>"; };
 		18C7616B177B85B5009723F2 /* css_box_tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_box_tree.cpp; sourceTree = "<group>"; };
 		18C7616C177B85B5009723F2 /* css_box_tree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_box_tree.h; sourceTree = "<group>"; };
-		18C7616D177B85B5009723F2 /* css_whitespace_eraser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_whitespace_eraser.cpp; sourceTree = "<group>"; };
-		18C7616E177B85B5009723F2 /* css_whitespace_eraser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_whitespace_eraser.h; sourceTree = "<group>"; };
 		18C7616F177B85B5009723F2 /* css_layout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_layout.cpp; sourceTree = "<group>"; };
 		18C76170177B85B5009723F2 /* css_layout_element.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_layout_element.cpp; sourceTree = "<group>"; };
 		18C76171177B85B5009723F2 /* css_layout_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_layout_impl.h; sourceTree = "<group>"; };
@@ -2363,6 +2359,11 @@
 		18C765A4177B88DC009723F2 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		18C765A5177B88DC009723F2 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		18C765A6177B88DC009723F2 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
+		38B42B8D17DD3D3300800A95 /* input_device_provider_osxkeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_device_provider_osxkeyboard.h; sourceTree = "<group>"; };
+		38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = input_device_provider_osxkeyboard.mm; sourceTree = "<group>"; };
+		38B42B8F17DD3D3300800A95 /* input_device_provider_osxmouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_device_provider_osxmouse.h; sourceTree = "<group>"; };
+		38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = input_device_provider_osxmouse.mm; sourceTree = "<group>"; };
+		38BDAE4A17DFE99A00B7AA4C /* clanapp_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clanapp_osx.h; sourceTree = "<group>"; };
 		52340071166537CF001A194E /* css_attribute_selector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_attribute_selector.h; sourceTree = "<group>"; };
 		52340072166537CF001A194E /* css_document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document.cpp; sourceTree = "<group>"; };
 		52340073166537CF001A194E /* css_document_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document_impl.cpp; sourceTree = "<group>"; };
@@ -2905,6 +2906,7 @@
 		1835AE901636168C0009AA23 /* MacOS */ = {
 			isa = PBXGroup;
 			children = (
+				38BDAE4A17DFE99A00B7AA4C /* clanapp_osx.h */,
 				18C5CF0217908804000A8D2F /* clanapp_osx.mm */,
 			);
 			path = MacOS;
@@ -3658,14 +3660,12 @@
 				1835B3081636168C0009AA23 /* accelerator_key.cpp */,
 				1835B3091636168C0009AA23 /* accelerator_table.cpp */,
 				1835B3561636168C0009AA23 /* gui_component.cpp */,
-				1835B3571636168C0009AA23 /* gui_component_description.cpp */,
 				1835B3591636168C0009AA23 /* gui_component_impl.cpp */,
 				1835B35E1636168C0009AA23 /* gui_manager.cpp */,
 				1835B35F1636168C0009AA23 /* gui_manager_impl.cpp */,
 				1835B3611636168C0009AA23 /* gui_xml_loader_version_1_0.cpp */,
 				1835B3711636168C0009AA23 /* precomp.cpp */,
 				1835B3731636168C0009AA23 /* setup_gui.cpp */,
-				1835B3581636168C0009AA23 /* gui_component_description_impl.h */,
 				1835B35A1636168C0009AA23 /* gui_component_impl.h */,
 				1835B35B1636168C0009AA23 /* gui_css_strings.h */,
 				1835B3601636168C0009AA23 /* gui_manager_impl.h */,
@@ -4069,6 +4069,10 @@
 		18C248B2177B98F6008F7155 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				38B42B8D17DD3D3300800A95 /* input_device_provider_osxkeyboard.h */,
+				38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */,
+				38B42B8F17DD3D3300800A95 /* input_device_provider_osxmouse.h */,
+				38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */,
 				18C248B3177B98F6008F7155 /* opengl_window_provider_osx.mm */,
 				18C248B4177B98F6008F7155 /* opengl_window_provider_osx.h */,
 				18A921B91790EB1000DDC81C /* cocoa_window.h */,
@@ -4691,8 +4695,6 @@
 				18C7616A177B85B5009723F2 /* css_box_text.h */,
 				18C7616B177B85B5009723F2 /* css_box_tree.cpp */,
 				18C7616C177B85B5009723F2 /* css_box_tree.h */,
-				18C7616D177B85B5009723F2 /* css_whitespace_eraser.cpp */,
-				18C7616E177B85B5009723F2 /* css_whitespace_eraser.h */,
 			);
 			path = BoxTree;
 			sourceTree = "<group>";
@@ -7284,7 +7286,6 @@
 				18C76378177B85B6009723F2 /* css_box_object.cpp in Sources */,
 				18C7637A177B85B6009723F2 /* css_box_text.cpp in Sources */,
 				18C7637C177B85B6009723F2 /* css_box_tree.cpp in Sources */,
-				18C7637E177B85B6009723F2 /* css_whitespace_eraser.cpp in Sources */,
 				18C76380177B85B6009723F2 /* css_layout.cpp in Sources */,
 				18C76381177B85B6009723F2 /* css_layout_element.cpp in Sources */,
 				18C76383177B85B6009723F2 /* css_layout_node.cpp in Sources */,
@@ -7579,7 +7580,6 @@
 				1835C092163627360009AA23 /* accelerator_key.cpp in Sources */,
 				1835C093163627360009AA23 /* accelerator_table.cpp in Sources */,
 				1835C094163627360009AA23 /* gui_component.cpp in Sources */,
-				1835C095163627360009AA23 /* gui_component_description.cpp in Sources */,
 				1835C096163627360009AA23 /* gui_component_impl.cpp in Sources */,
 				1835C098163627360009AA23 /* gui_manager.cpp in Sources */,
 				1835C099163627360009AA23 /* gui_manager_impl.cpp in Sources */,
@@ -7835,6 +7835,8 @@
 				18C248B5177B98F6008F7155 /* opengl_window_provider_osx.mm in Sources */,
 				18C5CF0417908CBA000A8D2F /* opengl.cpp in Sources */,
 				18A921BB1790EB1000DDC81C /* cocoa_window.mm in Sources */,
+				38B42B9117DD3D3300800A95 /* input_device_provider_osxkeyboard.mm in Sources */,
+				38B42B9217DD3D3300800A95 /* input_device_provider_osxmouse.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

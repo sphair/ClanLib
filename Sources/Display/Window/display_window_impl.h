@@ -69,8 +69,13 @@ public:
 
 	~DisplayWindow_Impl()
 	{
-		if (provider)
-			delete provider;
+        // TODO:
+        // DON'T PULL THIS INTO THE MAIN CODE BASE!
+        // This is an OSX hack to get the NSApplication to fully shutdown.
+        // I am going to guess this issue is caused by the temporary OSX threading hack.
+        // So, hopefully this problem goes away once that is resolved.
+		//if (provider)
+		// 	delete provider;
 		provider = 0;
 		SharedGCData::release_ref();
 	}
