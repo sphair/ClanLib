@@ -46,7 +46,7 @@
 
 @implementation AppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+- (void) applicationDidFinishLaunching:(NSNotification *)aNotification
 {
     NSLog(@"-applicationDidFinishLaunching:");
 
@@ -74,6 +74,11 @@
 	{
         create_main_thread();
 	}
+}
+
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender
+{
+    return YES;
 }
 
 @end
