@@ -4,7 +4,7 @@ using namespace clan;
 
 void evaluate(const std::string &xpath, const DomDocument &document)
 {
-	Console::write_line(L"Evaluating XPath '%1'", xpath);
+	Console::write_line("Evaluating XPath '%1'", xpath);
 
 	XPathEvaluator evaluator;
 	XPathObject result = evaluator.evaluate(xpath, document);
