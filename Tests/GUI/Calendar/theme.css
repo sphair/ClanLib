@@ -1,86 +1,81 @@
 
 window
 {
-	bg-color:white;
+	background-color:white;
 }
 
 calendar:
 {
-	bg-color:transparent;
+	background-color:transparent;
 	border-color:transparent;
-	text-color:black;
-	margin-top:0;
-	margin-left:0;
-	margin-right:0;
-	margin-bottom:0;
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
-	padding-left:0;
-	padding-right:0;
-	padding-top:0;
-	padding-bottom:0;
+	color:black;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
+	padding-top:0px;
+	padding-left:0px;
+	padding-right:0px;
+	padding-bottom:0px;
+
 }
 
 calendar day_name
 {
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
-	padding-left:3;
-	padding-right:0;
-	padding-top:1;
-	padding-bottom:1;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
+	padding-top:1px;
+	padding-left:3px;
+	padding-right:0px;
+	padding-bottom:1px;
 	
-	preferred-width:24;
-	preferred-height:16;
-	align:left;
+	width:24px;
+	height:16px;
 }
 
 calendar day
 {
-	bg-color:#ffffff;
+	background-color:#ffffff;
 	border-color:transparent;
-	border-top:1;
-	border-left:1;
-	border-right:1;
-	border-bottom:1;
-	padding-right:3;
-	preferred-width:24;
-	preferred-height:15;
-	align:right;
+	border-top:1px;
+	border-left:1px;
+	border-right:1px;
+	border-bottom:1px;
+	padding-right:3px;
+	width:24px;
+	height:15px;
 }
 
 calendar day:hot
 {
-	bg-color:#ffffff;
+	background-color:#ffffff;
 	border-color:#ccddee;
 }
 
 calendar day:today
 {
-	bg-color:#e0f0ff;
+	background-color:#e0f0ff;
 	border-color:transparent;
 }
 
 calendar day:today:hot
 {
-	bg-color:#ffffff;
+	background-color:#ffffff;
 	border-color:#ccddee;
 }
 
 
 calendar day:hot:pressed
 {
-	bg-color:#ffffff;
+	background-color:#ffffff;
 	border-color:#ccddee;
 }
 
 calendar day:filler
 {
-	text-color:#777777;
+	color:#777777;
 }
 
 calendar day:filler:hot
@@ -95,50 +90,46 @@ calendar day:selected
 
 calendar day:selected:hot
 {
-//	border-color:#006fff;
 }
 
 calendar prev_month
 {
-	bg-color:transparent;
-	preferred-width:20;
-	margin-left:5;
-	preferred-height:23;
-	bg-image:CalendarPrevMonth;
+	background-color:transparent;
+	width:20px;
+	/*margin-left:5;*/
+	height:23px;
+	background-image:url('res:CalendarPrevMonth');
 	bg-image-sizing:left; 
-	align:center;
 }
 
 calendar prev_month:hot
 {
-	bg-image:CalendarPrevMonthHot;
+	background-image:url('res:CalendarPrevMonthHot');
 }
 
 calendar next_month
 {
-	bg-color:transparent;
-	preferred-width:20;
-	preferred-height:23;
-	bg-image:CalendarNextMonth;
-	margin-right:4;
+	background-color:transparent;
+	width:20px;
+	height:23px;
+	background-image:url('res:CalendarNextMonth');
+	/*margin-right:4;*/
 	bg-image-sizing:right; 
-	align:center;
 }
 
 calendar next_month:hot
 {
-	bg-image:CalendarNextMonthHot;
+	background-image:url('res:CalendarNextMonthHot');
 }
 
 calendar month_year
 {
-	bg-color:transparent;
-	text-color:black;
+	background-color:transparent;
+	color:black;
 	border-color:#555555;
-	align:center;
 }
 
 calendar month_year:hot
 {
-	text-color:#006fff;
+	color:#006fff;
 }
