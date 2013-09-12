@@ -8,7 +8,7 @@
 #include "server_lobby_net_events.h"
 #include <algorithm>
 
-ServerLobbyGameCollection::ServerLobbyGameCollection(CL_NetGameServer *server)
+ServerLobbyGameCollection::ServerLobbyGameCollection(clan::NetGameServer *server)
 : server(server), next_lobby_game_id(1)
 {
 }
@@ -21,7 +21,7 @@ void ServerLobbyGameCollection::remove_empty_games()
 		ServerLobbyGame *lobby_game = (*it);
 		if(lobby_game->has_players() == false)
 		{
-			server->send_event(CL_NetGameEvent(STC_LOBBY_GAME_REMOVED, lobby_game->get_id()));
+			server->send_event(clan::NetGameEvent(STC_LOBBY_GAME_REMOVED, lobby_game->get_id()));
 
 			it = lobby_games.erase(it);
 
@@ -34,7 +34,7 @@ void ServerLobbyGameCollection::remove_empty_games()
 	}
 }
 
-ServerLobbyGame *ServerLobbyGameCollection::create_lobby_game(ServerLobbyPlayer *owner, CL_Callback_1<ServerLobbyGameInformation *, CL_NetGameConnection *> &func_create_lobby_game)
+ServerLobbyGame *ServerLobbyGameCollection::create_lobby_game(ServerLobbyPlayer *owner, clan::Callback_1<ServerLobbyGameInformation *, clan::NetGameConnection *> &func_create_lobby_game)
 {
 	ServerLobbyGameInformation *lobby_game_extra_information = 0;
 	if(func_create_lobby_game.is_null())
@@ -63,7 +63,7 @@ void ServerLobbyGameCollection::send_available_lobby_games(ServerLobbyPlayer *de
 	}
 	else
 	{
-		destination_player->send_event(CL_NetGameEvent(STC_LOBBY_NO_GAMES_AVAILABLE));
+		destination_player->send_event(clan::NetGameEvent(STC_LOBBY_NO_GAMES_AVAILABLE));
 	}
 }
 

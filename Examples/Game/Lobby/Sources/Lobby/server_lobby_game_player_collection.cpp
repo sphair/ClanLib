@@ -6,7 +6,7 @@
 #include "server_lobby_net_events.h"
 #include <algorithm>
 
-ServerLobbyGamePlayerCollection::ServerLobbyGamePlayerCollection(CL_NetGameServer *server, ServerLobbyGame *game, ServerLobbyPlayer *owner)
+ServerLobbyGamePlayerCollection::ServerLobbyGamePlayerCollection(clan::NetGameServer *server, ServerLobbyGame *game, ServerLobbyPlayer *owner)
 : server(server), game(game), owner(owner)
 {
 }
@@ -26,7 +26,7 @@ void ServerLobbyGamePlayerCollection::add_player(ServerLobbyPlayer *lobby_player
 	players.push_back(lobby_player);
 	lobby_player->set_current_game(game);
 
-	server->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_JOINED_GAME, lobby_player->get_id(), game->get_id()));
+	server->send_event(clan::NetGameEvent(STC_LOBBY_PLAYER_JOINED_GAME, lobby_player->get_id(), game->get_id()));
 }
 
 void ServerLobbyGamePlayerCollection::remove_player(ServerLobbyPlayer *lobby_player)
@@ -38,7 +38,7 @@ void ServerLobbyGamePlayerCollection::remove_player(ServerLobbyPlayer *lobby_pla
 	it = find(players.begin(), players.end(), lobby_player); 
 	if (it != players.end())
 	{
-		server->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_LEFT_GAME, lobby_player->get_id(), lobby_player->get_current_game()->get_id()));
+		server->send_event(clan::NetGameEvent(STC_LOBBY_PLAYER_LEFT_GAME, lobby_player->get_id(), lobby_player->get_current_game()->get_id()));
 
 		players.erase(it);
 		
@@ -66,6 +66,6 @@ void ServerLobbyGamePlayerCollection::send_available_players(ServerLobbyPlayer *
 	{
 		ServerLobbyPlayer *lobby_player = (*it);
 
-		destination_player->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_JOINED_GAME, lobby_player->get_id(), game->get_id()));
+		destination_player->send_event(clan::NetGameEvent(STC_LOBBY_PLAYER_JOINED_GAME, lobby_player->get_id(), game->get_id()));
 	}
 }

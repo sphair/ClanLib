@@ -11,16 +11,16 @@ class ServerLobbyPlayerInformation;
 class ServerLobby
 {
 public:
-	ServerLobby(CL_NetGameServer *server);
+	ServerLobby(clan::NetGameServer *server);
 	~ServerLobby() {};
 
-	bool dispatch_event(const CL_NetGameEvent &e, int player_id);
+	bool dispatch_event(const clan::NetGameEvent &e, int player_id);
 
-	void add_player(int player_id, CL_NetGameConnection *connection);
+	void add_player(int player_id, clan::NetGameConnection *connection);
 	void remove_player(int player_id);
 
-	CL_Callback_1<ServerLobbyGameInformation *, CL_NetGameConnection *> func_create_lobby_game;
-	CL_Callback_1<ServerLobbyPlayerInformation *, CL_NetGameConnection *> func_create_lobby_player;
+	clan::Callback_1<ServerLobbyGameInformation *, clan::NetGameConnection *> func_create_lobby_game;
+	clan::Callback_1<ServerLobbyPlayerInformation *, clan::NetGameConnection *> func_create_lobby_player;
 
 private:
 	std::auto_ptr<ServerLobbyEvents> lobby_events;
@@ -28,6 +28,6 @@ private:
 	ServerLobbyPlayerCollection players;
 	ServerLobbyGameCollection games;
 
-	CL_NetGameServer *server;
-	CL_SlotContainer slots;
+	clan::NetGameServer *server;
+	clan::SlotContainer slots;
 };

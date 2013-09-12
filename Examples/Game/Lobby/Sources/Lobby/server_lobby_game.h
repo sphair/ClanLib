@@ -16,7 +16,7 @@ public:
 	};
 
 public:
-	ServerLobbyGame(CL_NetGameServer *server, ServerLobbyPlayer *owner_player, int game_id, ServerLobbyGameInformation *extra_information = 0);
+	ServerLobbyGame(clan::NetGameServer *server, ServerLobbyPlayer *owner_player, int game_id, ServerLobbyGameInformation *extra_information = 0);
 	virtual ~ServerLobbyGame() {};
 
 	void add_player(ServerLobbyPlayer *lobby_player);
@@ -24,7 +24,7 @@ public:
 	void send_available_players(ServerLobbyPlayer *destination_player);
 	bool has_players() const;
 
-	void modify(const std::vector<CL_NetGameEventValue> &extra_arguments);
+	void modify(const std::vector<clan::NetGameEventValue> &extra_arguments);
 
 	ServerLobbyPlayer *get_owner() const;
 
@@ -37,7 +37,7 @@ public:
 	void send_game_info(ServerLobbyPlayer *destination_player);
 
 private:
-	CL_NetGameServer *server;
+	clan::NetGameServer *server;
 
 	ServerLobbyGameInformation *extra_information;
 

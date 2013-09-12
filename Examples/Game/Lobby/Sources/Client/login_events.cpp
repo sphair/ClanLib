@@ -16,7 +16,7 @@ LoginEvents::~LoginEvents()
 {
 }
 
-void LoginEvents::on_event_login_successful(const CL_NetGameEvent &e)
+void LoginEvents::on_event_login_successful(const clan::NetGameEvent &e)
 {
 	int player_id = e.get_argument(0);
 
@@ -24,13 +24,13 @@ void LoginEvents::on_event_login_successful(const CL_NetGameEvent &e)
 	client->set_player_id(player_id);
 
 	// TODO; move this to lobby code
-	client->get_network_client()->send_event(CL_NetGameEvent(CTS_LOBBY_GET_AVAILABLE_GAMES));
+	client->get_network_client()->send_event(clan::NetGameEvent(CTS_LOBBY_GET_AVAILABLE_GAMES));
 }
 
-void LoginEvents::on_event_login_failed(const CL_NetGameEvent &e)
+void LoginEvents::on_event_login_failed(const clan::NetGameEvent &e)
 {
-	CL_String fail_reason = e.get_argument(0);
+	std::string fail_reason = e.get_argument(0);
 
 	// TODO: Handle failed login more gracefully
-	throw CL_Exception("Login failed: " + fail_reason);
+	throw clan::Exception("Login failed: " + fail_reason);
 }

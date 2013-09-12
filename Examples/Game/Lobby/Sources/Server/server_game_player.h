@@ -9,7 +9,7 @@ class ServerGamePlayer
 public:
 	ServerGamePlayer(ServerPlayer *player);
 
-	virtual void send_event(const CL_NetGameEvent &game_event);
+	virtual void send_event(const clan::NetGameEvent &game_event);
 
 public:
 	ServerGame *current_game;

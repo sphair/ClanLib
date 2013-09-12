@@ -15,7 +15,7 @@ public:
 	void add_player(ServerPlayer *player);
 	void remove_player(ServerGamePlayer *player);
 
-	void set_map_name(CL_String map_name) { this->map_name = map_name; }
+	void set_map_name(std::string map_name) { this->map_name = map_name; }
 
 	bool start();
 
@@ -30,7 +30,7 @@ private:
 
 	std::vector<ServerPlayer *> players_ai;
 
-	CL_String map_name;
+	std::string map_name;
 
 	int id;
 

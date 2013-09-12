@@ -20,42 +20,44 @@ Client::~Client()
 
 void Client::initialize_display()
 {
-	CL_OpenGLWindowDescription desc;
+	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib - Lobby Client");
-	desc.set_size(CL_Size(1024, 768), true);
-	display_window = CL_DisplayWindow(desc);
+	desc.set_size(clan::Size(1024, 768), true);
+	display_window = clan::DisplayWindow(desc);
 
 	slots.connect(display_window.sig_window_close(), this, &Client::on_window_close);
 
-	image_desktop = CL_Image(display_window.get_gc(), "Resources/GUITheme/Aquaburst 1024x768.jpg");
+	image_desktop = clan::Image(display_window.get_gc(), "Resources/GUITheme/Aquaburst 1024x768.jpg");
 }
 
 void Client::initialize_gui()
 {
-	CL_String theme;
-	if (CL_FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
+	std::string theme;
+	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
 		theme = "../../../Resources/GUIThemeAero";
-	else if (CL_FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
 		theme = "../../../Resources/GUIThemeBasic";
 	else
-		throw CL_Exception("Not default themes found");
+		throw clan::Exception("Not default themes found");
 
-	gui = CL_GUIManager(display_window);
-	CL_GUIWindowManagerTexture &manager = (CL_GUIWindowManagerTexture)gui.get_window_manager();
+	gui = clan::GUIManager(display_window);
+	clan::GUIWindowManagerTexture &manager = (clan::GUIWindowManagerTexture)gui.get_window_manager();
 	manager.func_repaint().set(this, &Client::on_gui_paint);
 
-	gui.add_theme(theme);
-	gui.add_theme("Resources/GUITheme");
+	gui.add_theme(theme + "/theme.css");
+	gui.add_resources(theme + "/resources.xml");
+	gui.add_theme("Resources/GUITheme/theme.css");
+	gui.add_resources("Resources/GUITheme/resources.xml");
 }
 
 void Client::on_gui_paint()
 {
-	CL_GUIWindowManagerTexture &manager = (CL_GUIWindowManagerTexture)gui.get_window_manager();
+	clan::GUIWindowManagerTexture &manager = (clan::GUIWindowManagerTexture)gui.get_window_manager();
 
-	CL_GraphicContext &gc = display_window.get_gc();
-	image_desktop.draw(gc, CL_Rect(0,0,gc.get_size()));
+	clan::Canvas canvas(display_window);
+	image_desktop.draw(canvas, canvas.get_size());
 
-	manager.draw_windows(gc);
+	manager.draw_windows(canvas);
 
 	display_window.flip();
 }
@@ -88,9 +90,9 @@ void Client::exec()
 			player_nick = dlg_connect->get_player_nick();
 			break;
 		}
-		catch (CL_Exception e)
+		catch (clan::Exception e)
 		{
-			CL_Console::write_line("Unable to connect to %1(%2): %3", dlg_connect->get_server(), dlg_connect->get_port(), e.message);
+			clan::Console::write_line("Unable to connect to %1(%2): %3", dlg_connect->get_server(), dlg_connect->get_port(), e.message);
 			dlg_connect->show();
 		}
 	}
@@ -101,18 +103,18 @@ void Client::exec()
 
 void Client::on_connected()
 {
-	network_client.send_event(CL_NetGameEvent(CTS_LOGIN, player_nick));
+	network_client.send_event(clan::NetGameEvent(CTS_LOGIN, player_nick));
 }
 
 void Client::on_disconnected()
 {
 	// TODO: Handle disconnection more gracefully
-	throw CL_Exception("Disconnected from server");
+	throw clan::Exception("Disconnected from server");
 }
 
-void Client::on_event_received(const CL_NetGameEvent &e) 
+void Client::on_event_received(const clan::NetGameEvent &e) 
 {
-	cl_log_event("network", "Server sent event: %1", e.to_string());
+	clan::log_event("network", "Server sent event: %1", e.to_string());
 
 	bool handled_event = false;
 
@@ -130,5 +132,5 @@ void Client::on_event_received(const CL_NetGameEvent &e)
 */	}
 
 	if(!handled_event)
-		cl_log_event("error", "Uncaught event: %1", e.to_string());
+		clan::log_event("error", "Uncaught event: %1", e.to_string());
 }

@@ -8,7 +8,7 @@
 #include "server_lobby_game_player_collection.h"
 #include "server_lobby_net_events.h"
 
-ServerLobbyEvents::ServerLobbyEvents(CL_NetGameServer *server, ServerLobby *lobby, ServerLobbyGameCollection *games)
+ServerLobbyEvents::ServerLobbyEvents(clan::NetGameServer *server, ServerLobby *lobby, ServerLobbyGameCollection *games)
 : server(server), lobby(lobby), games(games)
 {
 	lobby_events.func_event(CTS_LOBBY_CREATE_GAME).set(this, &ServerLobbyEvents::on_event_create_game);
@@ -20,26 +20,26 @@ ServerLobbyEvents::ServerLobbyEvents(CL_NetGameServer *server, ServerLobby *lobb
 	lobby_events.func_event(CTS_LOBBY_ADD_MESSAGE).set(this, &ServerLobbyEvents::on_event_add_lobby_message);
 }
 
-void ServerLobbyEvents::on_event_create_game(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_create_game(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	if (player->get_current_game())
 	{
-		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Cannot create game when already joined a game"));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Cannot create game when already joined a game"));
 	}
 	else
 	{
 		ServerLobbyGame *lobby_game = games->create_lobby_game(player, lobby->func_create_lobby_game);
 
-		player->send_event(CL_NetGameEvent(STC_LOBBY_GAME_CREATED, lobby_game->get_id()));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_GAME_CREATED, lobby_game->get_id()));
 	}
 }
 
-void ServerLobbyEvents::on_event_change_game_settings(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_change_game_settings(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	ServerLobbyGame *game = player->get_current_game();
 	if(game)
 	{
-		std::vector<CL_NetGameEventValue> extra_arguments;
+		std::vector<clan::NetGameEventValue> extra_arguments;
 		for(size_t i = 0; i < e.get_argument_count(); ++i)
 			extra_arguments.push_back(e.get_argument(i));
 
@@ -47,23 +47,23 @@ void ServerLobbyEvents::on_event_change_game_settings(const CL_NetGameEvent &e, 
 		{
 			game->modify(extra_arguments);
 		}
-		catch (CL_Exception &e)
+		catch (clan::Exception &e)
 		{
-			player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Can't change game settings: " + e.message));
+			player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Can't change game settings: " + e.message));
 		}
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "You do not own that game"));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "You do not own that game"));
 	}
 }
 
-void ServerLobbyEvents::on_event_get_available_games(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_get_available_games(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	games->send_available_lobby_games(player);
 }
 
-void ServerLobbyEvents::on_event_join_game(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_join_game(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	int lobby_game_id = e.get_argument(0);
 	ServerLobbyGame *lobby_game = games->get_lobby_game(lobby_game_id);
@@ -73,11 +73,11 @@ void ServerLobbyEvents::on_event_join_game(const CL_NetGameEvent &e, ServerLobby
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Game not found"));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Game not found"));
 	}
 }
 
-void ServerLobbyEvents::on_event_leave_game(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_leave_game(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	if(player->get_current_game())
 	{
@@ -86,11 +86,11 @@ void ServerLobbyEvents::on_event_leave_game(const CL_NetGameEvent &e, ServerLobb
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
 	}
 }
 
-void ServerLobbyEvents::on_event_start_game(const CL_NetGameEvent &e, ServerLobbyPlayer *player)
+void ServerLobbyEvents::on_event_start_game(const clan::NetGameEvent &e, ServerLobbyPlayer *player)
 {
 	if(player->get_current_game())
 	{
@@ -103,20 +103,20 @@ void ServerLobbyEvents::on_event_start_game(const CL_NetGameEvent &e, ServerLobb
 		}
 		else
 		{
-			player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Can not start a game without owning it"));
+			player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Can not start a game without owning it"));
 		}
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
+		player->send_event(clan::NetGameEvent(STC_LOBBY_ERROR_MESSAGE, "Not joined any game"));
 	}
 }
 
-void ServerLobbyEvents::on_event_add_lobby_message(const CL_NetGameEvent &e, ServerLobbyPlayer *lobby_player)
+void ServerLobbyEvents::on_event_add_lobby_message(const clan::NetGameEvent &e, ServerLobbyPlayer *lobby_player)
 {
-	CL_String message = e.get_argument(0);
+	std::string message = e.get_argument(0);
 	if(message.length() > 0)
 	{
-		server->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_MESSAGE, lobby_player->get_id(), message));
+		server->send_event(clan::NetGameEvent(STC_LOBBY_PLAYER_MESSAGE, lobby_player->get_id(), message));
 	}
 }

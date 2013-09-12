@@ -7,11 +7,11 @@ class ServerLobbyPlayerInformation;
 class ServerLobbyPlayer
 {
 public:
-	ServerLobbyPlayer(CL_NetGameServer *server, CL_NetGameConnection *connection, int player_id, ServerLobbyPlayerInformation *extra_information);
+	ServerLobbyPlayer(clan::NetGameServer *server, clan::NetGameConnection *connection, int player_id, ServerLobbyPlayerInformation *extra_information);
 
-	CL_NetGameConnection *get_connection() const { return connection; }
+	clan::NetGameConnection *get_connection() const { return connection; }
 
-	void send_event(const CL_NetGameEvent &game_event);
+	void send_event(const clan::NetGameEvent &game_event);
 
 	int get_id() const { return id; }
 
@@ -28,6 +28,6 @@ private:
 	ServerLobbyGame *current_game;
 	ServerLobbyPlayerInformation *extra_information;
 
-	CL_NetGameConnection *connection;
-	CL_NetGameServer *server;
+	clan::NetGameConnection *connection;
+	clan::NetGameServer *server;
 };

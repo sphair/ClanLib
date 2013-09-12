@@ -22,7 +22,7 @@ public:
 
 	void transfer_players();
 
-	void send_event(const CL_NetGameEvent &game_event);
+	void send_event(const clan::NetGameEvent &game_event);
 
 private:
 	Server *server;

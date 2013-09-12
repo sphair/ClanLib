@@ -1,15 +1,13 @@
-component.desktop
+component desktop
 {
-	bg-image: Background;
-	bg-image-sizing: stretch;
+	background-image:url('res:Backgroundl'); 
+	border-image-repeat:stretch;
 }
 
-component.login
+component login
 {
-	bg-image: LoginBackground;
-	bg-image-sizing: stretch;
-	bg-image-sizing-left:10;
-	bg-image-sizing-right:10;
-	bg-image-sizing-top:10;
-	bg-image-sizing-bottom:10;
+	background-image:url('res:LoginBackgroundl'); 
+	border-image-repeat:stretch;
+	border-image-slice:10 10 10 10 fill;
+	border-image-width:10px 10px 10px 10px;
 }

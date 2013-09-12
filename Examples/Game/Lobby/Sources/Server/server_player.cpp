@@ -2,14 +2,14 @@
 #include "precomp.h"
 #include "server_player.h"
 
-ServerPlayer::ServerPlayer(CL_NetGameConnection *connection)
+ServerPlayer::ServerPlayer(clan::NetGameConnection *connection)
 : connection(connection), id(0)
 {
 	if(connection)
 		connection->set_data("serverplayer", this);
 }
 
-ServerPlayer *ServerPlayer::get_player(CL_NetGameConnection *connection)
+ServerPlayer *ServerPlayer::get_player(clan::NetGameConnection *connection)
 {
 	if(connection)
 		return reinterpret_cast<ServerPlayer *>(connection->get_data("serverplayer"));
@@ -17,13 +17,13 @@ ServerPlayer *ServerPlayer::get_player(CL_NetGameConnection *connection)
 		return 0;
 }
 
-void ServerPlayer::send_event(const CL_NetGameEvent &game_event)
+void ServerPlayer::send_event(const clan::NetGameEvent &game_event)
 {
 	if(connection)
 		connection->send_event(game_event);
 }
 
-bool ServerPlayer::login(int player_id, const CL_String &player_name)
+bool ServerPlayer::login(int player_id, const std::string &player_name)
 {
 	if(id != 0)
 		return false;

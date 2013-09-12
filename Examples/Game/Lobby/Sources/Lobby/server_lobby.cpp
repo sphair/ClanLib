@@ -6,13 +6,13 @@
 #include "server_lobby_game.h"
 #include "server_lobby_net_events.h"
 
-ServerLobby::ServerLobby(CL_NetGameServer *server)
+ServerLobby::ServerLobby(clan::NetGameServer *server)
 : players(server), games(server), server(server)
 {
 	lobby_events.reset(new ServerLobbyEvents(server, this, &games));
 }
 
-bool ServerLobby::dispatch_event(const CL_NetGameEvent &e, int player_id)
+bool ServerLobby::dispatch_event(const clan::NetGameEvent &e, int player_id)
 {
 	bool handled_event = false;
 
@@ -23,14 +23,14 @@ bool ServerLobby::dispatch_event(const CL_NetGameEvent &e, int player_id)
 	return handled_event;
 }
 
-void ServerLobby::add_player(int player_id, CL_NetGameConnection *connection)
+void ServerLobby::add_player(int player_id, clan::NetGameConnection *connection)
 {
 	players.create_player(player_id, connection, func_create_lobby_player);
 }
 
 void ServerLobby::remove_player(int player_id)
 {
-	cl_log_event("system", "Client disconnected");
+	clan::log_event("system", "Client disconnected");
 
 	ServerLobbyPlayer *lobby_player = players.get_player(player_id);
 

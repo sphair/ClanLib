@@ -6,7 +6,7 @@
 #include "server_lobby_net_events.h"
 #include <algorithm>
 
-ServerLobbyPlayerCollection::ServerLobbyPlayerCollection(CL_NetGameServer *server)
+ServerLobbyPlayerCollection::ServerLobbyPlayerCollection(clan::NetGameServer *server)
 : server(server)
 {
 }
@@ -21,7 +21,7 @@ ServerLobbyPlayer *ServerLobbyPlayerCollection::get_player(int player_id)
 	return 0;
 }
 
-ServerLobbyPlayer *ServerLobbyPlayerCollection::create_player(int player_id, CL_NetGameConnection *connection, CL_Callback_1<ServerLobbyPlayerInformation *, CL_NetGameConnection *> &func_create_lobby_player)
+ServerLobbyPlayer *ServerLobbyPlayerCollection::create_player(int player_id, clan::NetGameConnection *connection, clan::Callback_1<ServerLobbyPlayerInformation *, clan::NetGameConnection *> &func_create_lobby_player)
 {
 	ServerLobbyPlayerInformation *lobby_player_extra_information = 0;
 	if(func_create_lobby_player.is_null())
@@ -62,13 +62,13 @@ void ServerLobbyPlayerCollection::remove_player(ServerLobbyPlayer *lobby_player)
 		if (it != players.end())
 			players.erase(it);
 
-		server->send_event(CL_NetGameEvent(STC_LOBBY_PLAYER_LOGGED_OUT, lobby_player->get_id()));
+		server->send_event(clan::NetGameEvent(STC_LOBBY_PLAYER_LOGGED_OUT, lobby_player->get_id()));
 
 		delete lobby_player;
 	}
 }
 
-void ServerLobbyPlayerCollection::send_event(const CL_NetGameEvent &game_event)
+void ServerLobbyPlayerCollection::send_event(const clan::NetGameEvent &game_event)
 {
 	std::vector<ServerLobbyPlayer *>::iterator it;
 	for (it = players.begin(); it != players.end(); ++it)

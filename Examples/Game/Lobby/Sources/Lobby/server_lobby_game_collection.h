@@ -8,10 +8,10 @@ class ServerLobbyGameInformation;
 class ServerLobbyGameCollection
 {
 public:
-	ServerLobbyGameCollection(CL_NetGameServer *server);
+	ServerLobbyGameCollection(clan::NetGameServer *server);
 	~ServerLobbyGameCollection() {};
 
-	ServerLobbyGame *create_lobby_game(ServerLobbyPlayer *owner, CL_Callback_1<ServerLobbyGameInformation *, CL_NetGameConnection *> &func_create_lobby_game);
+	ServerLobbyGame *create_lobby_game(ServerLobbyPlayer *owner, clan::Callback_1<ServerLobbyGameInformation *, clan::NetGameConnection *> &func_create_lobby_game);
 
 	ServerLobbyGame *get_lobby_game(int lobby_game_id);
 
@@ -22,7 +22,7 @@ public:
 	int get_lobby_games_count() { return lobby_games.size(); }
 
 private:
-	CL_NetGameServer *server;
+	clan::NetGameServer *server;
 
 	std::vector<ServerLobbyGame *> lobby_games;
 

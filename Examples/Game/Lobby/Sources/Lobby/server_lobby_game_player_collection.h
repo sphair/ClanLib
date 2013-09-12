@@ -7,7 +7,7 @@ class ServerLobbyPlayer;
 class ServerLobbyGamePlayerCollection
 {
 public:
-	ServerLobbyGamePlayerCollection(CL_NetGameServer *server, ServerLobbyGame *game, ServerLobbyPlayer *owner);
+	ServerLobbyGamePlayerCollection(clan::NetGameServer *server, ServerLobbyGame *game, ServerLobbyPlayer *owner);
 	~ServerLobbyGamePlayerCollection();
 
 	void add_player(ServerLobbyPlayer *player);
@@ -22,10 +22,10 @@ public:
 
 	void send_available_players(ServerLobbyPlayer *destination_player);
 
-	void send_event(const CL_NetGameEvent &game_event);
+	void send_event(const clan::NetGameEvent &game_event);
 
 private:
-	CL_NetGameServer *server;
+	clan::NetGameServer *server;
 	ServerLobbyGame *game;
 	ServerLobbyPlayer *owner;
 	std::vector<ServerLobbyPlayer *> players;

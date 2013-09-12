@@ -41,7 +41,7 @@ void ServerGamePlayerCollection::remove_player(ServerGamePlayer *game_player)
 	it = find(players.begin(), players.end(), game_player); 
 	if (it != players.end())
 	{
-		server->get_network_server()->send_event(CL_NetGameEvent(STC_GAME_PLAYER_LEFT_GAME, game_player->player->get_id()));
+		server->get_network_server()->send_event(clan::NetGameEvent(STC_GAME_PLAYER_LEFT_GAME, game_player->player->get_id()));
 
 		players.erase(it);
 		
@@ -62,10 +62,10 @@ ServerGamePlayer *ServerGamePlayerCollection::get_player(int player_id)
 		if((*it)->player->get_id() == player_id)
 			return (*it);
 	}
-	throw CL_Exception(cl_format("Unable to find player id %1 in game player collection", player_id));
+	throw clan::Exception(clan::string_format("Unable to find player id %1 in game player collection", player_id));
 }
 
-void ServerGamePlayerCollection::send_event(const CL_NetGameEvent &game_event)
+void ServerGamePlayerCollection::send_event(const clan::NetGameEvent &game_event)
 {
 	std::vector<ServerGamePlayer *>::iterator it;
 	for (it = players.begin(); it != players.end(); ++it)
@@ -82,6 +82,6 @@ void ServerGamePlayerCollection::transfer_players()
 	for (it = players.begin(); it != players.end(); ++it)
 	{
 		ServerGamePlayer *game_player = (*it);
-		send_event(CL_NetGameEvent(STC_GAME_PLAYER_JOINED_GAME, game_player->player->get_id(), game_player->player->get_name(), game_player->visual_id));
+		send_event(clan::NetGameEvent(STC_GAME_PLAYER_JOINED_GAME, game_player->player->get_id(), game_player->player->get_name(), game_player->visual_id));
 	}
 }

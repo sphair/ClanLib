@@ -2,34 +2,26 @@
 #include "precomp.h"
 #include "client.h"
 
-#ifdef WIN32
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-#else
-int main(int, char**)
-#endif
+class MainClient
 {
-	try
-	{
-		CL_SetupCore setup_core;
-		CL_SetupDisplay setup_display;
-		CL_SetupGL setup_gl;
-		CL_SetupNetwork setup_network;
+public:
+	static int main(const std::vector<std::string> &args);
+};
 
-		CL_ConsoleWindow console("Console", 160, 1000);
-		CL_ConsoleLogger logger;
+int MainClient::main(const std::vector<std::string> &args)
+{
+	clan::SetupCore setup_core;
+	clan::SetupDisplay setup_display;
+	clan::SetupGL setup_gl;
+	clan::SetupNetwork setup_network;
 
-		Client client;
-		client.exec();
+	clan::ConsoleWindow console("Console", 160, 1000);
+	clan::ConsoleLogger logger;
 
-		return 0;
-	}
-	catch (CL_Exception e)
-	{
-#ifdef WIN32
-		MessageBoxA(0, e.get_message_and_stack_trace().c_str(), "Unhandled Exception", MB_OK);	
-#else
-		CL_Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
-#endif
-		return 1;
-	}
+	Client client;
+	client.exec();
+
+	return 0;
 }
+
+clan::Application app(&MainClient::main);

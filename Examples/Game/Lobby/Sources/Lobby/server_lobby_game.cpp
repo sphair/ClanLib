@@ -6,7 +6,7 @@
 #include "server_lobby_net_events.h"
 #include "server_lobby_game_information.h"
 
-ServerLobbyGame::ServerLobbyGame(CL_NetGameServer *server, ServerLobbyPlayer *owner, int id, ServerLobbyGameInformation *extra_information)
+ServerLobbyGame::ServerLobbyGame(clan::NetGameServer *server, ServerLobbyPlayer *owner, int id, ServerLobbyGameInformation *extra_information)
 : server(server), id(id), state(lobby), extra_information(extra_information)
 {
 	player_collection.reset(new ServerLobbyGamePlayerCollection(server, this, owner));
@@ -18,13 +18,13 @@ void ServerLobbyGame::set_state(State state)
 
 	if(state == playing)
 	{
-		server->send_event(CL_NetGameEvent(STC_LOBBY_GAME_STARTED, id));
+		server->send_event(clan::NetGameEvent(STC_LOBBY_GAME_STARTED, id));
 	}
 }
 
 void ServerLobbyGame::send_game_info_to_all()
 {
-	CL_NetGameEvent event(STC_LOBBY_GAME_INFO, get_id(), get_state());
+	clan::NetGameEvent event(STC_LOBBY_GAME_INFO, get_id(), get_state());
 
 	if(extra_information)
 		extra_information->append_network_game_info(event);
@@ -34,7 +34,7 @@ void ServerLobbyGame::send_game_info_to_all()
 
 void ServerLobbyGame::send_game_info(ServerLobbyPlayer *destination_player)
 {
-	CL_NetGameEvent event(STC_LOBBY_GAME_INFO, get_id(), get_state());
+	clan::NetGameEvent event(STC_LOBBY_GAME_INFO, get_id(), get_state());
 
 	if(extra_information)
 		extra_information->append_network_game_info(event);
@@ -67,7 +67,7 @@ ServerLobbyPlayer *ServerLobbyGame::get_owner() const
 	return player_collection->get_owner();
 }
 
-void ServerLobbyGame::modify(const std::vector<CL_NetGameEventValue> &extra_arguments)
+void ServerLobbyGame::modify(const std::vector<clan::NetGameEventValue> &extra_arguments)
 {
 	if(extra_information)
 		extra_information->apply_network_game_info(extra_arguments);

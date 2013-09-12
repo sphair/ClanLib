@@ -9,7 +9,7 @@ ServerGamePlayer::ServerGamePlayer(ServerPlayer *player)
 	in_battle_mode = false;
 }
 
-void ServerGamePlayer::send_event(const CL_NetGameEvent &game_event)
+void ServerGamePlayer::send_event(const clan::NetGameEvent &game_event)
 {
 	player->send_event(game_event);
 }

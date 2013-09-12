@@ -25,7 +25,7 @@ Server::~Server()
 {
 }
 
-void Server::exec(CL_Event &stop_event)
+void Server::exec(clan::Event &stop_event)
 {
 	try
 	{
@@ -33,7 +33,7 @@ void Server::exec(CL_Event &stop_event)
 
 		while (true)
 		{
-			CL_KeepAlive::process(10);
+			clan::KeepAlive::process(10);
 
 			if (stop_event.wait(0)) 
 				break;
@@ -41,23 +41,23 @@ void Server::exec(CL_Event &stop_event)
 
 		network_server.stop();
 	}
-	catch (CL_Exception e)
+	catch (clan::Exception e)
 	{
-		cl_log_event("Exception", e.get_message_and_stack_trace());
+		clan::log_event("Exception", e.get_message_and_stack_trace());
 	}
 }
 
-void Server::on_client_connected(CL_NetGameConnection *connection)
+void Server::on_client_connected(clan::NetGameConnection *connection)
 {
-	cl_log_event("system", "Client connected");
+	clan::log_event("system", "Client connected");
 
 	// create player -> this also stored it on the network connection object
 	ServerPlayer *player = new ServerPlayer(connection);
 }
 
-void Server::on_client_disconnected(CL_NetGameConnection *connection)
+void Server::on_client_disconnected(clan::NetGameConnection *connection, const std::string &)
 {
-	cl_log_event("system", "Client disconnected");
+	clan::log_event("system", "Client disconnected");
 
 	ServerPlayer *player = ServerPlayer::get_player(connection);
 
@@ -68,26 +68,26 @@ void Server::on_client_disconnected(CL_NetGameConnection *connection)
 	}
 }
 
-void Server::login(ServerPlayer *player, CL_String player_name)
+void Server::login(ServerPlayer *player, std::string player_name)
 {
-	cl_log_event("system", "Client logged in");
+	clan::log_event("system", "Client logged in");
 
 	if (player->is_logged_in() == false)
 	{
 		player->login(next_player_id++, player_name);
-		player->send_event(CL_NetGameEvent(STC_LOGIN_SUCCESSFUL, player->get_id()));
+		player->send_event(clan::NetGameEvent(STC_LOGIN_SUCCESSFUL, player->get_id()));
 
 		lobby.add_player(player->get_id(), player->get_connection());
 	}
 	else
 	{
-		player->send_event(CL_NetGameEvent(STC_LOGIN_FAILED, "Already logged in"));
+		player->send_event(clan::NetGameEvent(STC_LOGIN_FAILED, "Already logged in"));
 	}
 }
 
-void Server::on_event_received(CL_NetGameConnection *connection, const CL_NetGameEvent &e)
+void Server::on_event_received(clan::NetGameConnection *connection, const clan::NetGameEvent &e)
 {
-	cl_log_event("system", "Client sent event: %1", e.to_string());
+	clan::log_event("system", "Client sent event: %1", e.to_string());
 
 	ServerPlayer *player = ServerPlayer::get_player(connection);
 
@@ -102,25 +102,25 @@ void Server::on_event_received(CL_NetGameConnection *connection, const CL_NetGam
 	}
 
 	if (!handled_event)
-		cl_log_event("system", "Unhandled event: %1", e.to_string());
+		clan::log_event("system", "Unhandled event: %1", e.to_string());
 }
 
-void Server::on_event_login(const CL_NetGameEvent &e, ServerPlayer *player)
+void Server::on_event_login(const clan::NetGameEvent &e, ServerPlayer *player)
 {
-	CL_String player_name = e.get_argument(0);
+	std::string player_name = e.get_argument(0);
 
 	login(player, player_name);
 }
 
-ServerLobbyGameInformation *Server::on_create_lobby_game(CL_NetGameConnection *owner_player_connection)
+ServerLobbyGameInformation *Server::on_create_lobby_game(clan::NetGameConnection *owner_player_connection)
 {
 	ServerPlayer *player = ServerPlayer::get_player(owner_player_connection);
 	MyServerLobbyGameInformation *lobby_game = new MyServerLobbyGameInformation();
-	lobby_game->set_name(cl_format("%1s game", player->get_name()));
+	lobby_game->set_name(clan::string_format("%1s game", player->get_name()));
 	return lobby_game;
 }
 
-ServerLobbyPlayerInformation *Server::on_create_lobby_player(CL_NetGameConnection *player_connection)
+ServerLobbyPlayerInformation *Server::on_create_lobby_player(clan::NetGameConnection *player_connection)
 {
 	ServerPlayer *player = ServerPlayer::get_player(player_connection);
 	MyServerLobbyPlayerInformation *lobby_player = new MyServerLobbyPlayerInformation();
@@ -128,7 +128,7 @@ ServerLobbyPlayerInformation *Server::on_create_lobby_player(CL_NetGameConnectio
 	return lobby_player;
 }
 /*
-bool Server::create_game(const std:vector<CL_NetGameConnection *> &players, ServerLobbyGameInformation *lobby_game_information)
+bool Server::create_game(const std:vector<clan::NetGameConnection *> &players, ServerLobbyGameInformation *lobby_game_information)
 {
 	MyServerLobbyGameInformation *game_information = (MyServerLobbyGameInformation *)lobby_game_information;
 
@@ -141,7 +141,7 @@ bool Server::create_game(const std:vector<CL_NetGameConnection *> &players, Serv
 
 	game->set_map_name(game_information->get_map_name());
 
-	std:vector<CL_NetGameConnection *>::const_iterator it;
+	std:vector<clan::NetGameConnection *>::const_iterator it;
 	for(it = players.begin(); it != players.end(); ++it)
 		game->add_player(ServerPlayer::get_player(*it));
 
