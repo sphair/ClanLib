@@ -97,7 +97,12 @@ void cl_app_on_awake_thread(void *thread_id)
 //       OSX update is rolled out.
 void* main_thread_wrapper(void*)
 {
-    clan::Application::main(clan::main_args);
+    try
+    {
+        clan::Application::main(clan::main_args);
+    }
+    catch(...) {}
+    
     return nullptr;
 }
 
