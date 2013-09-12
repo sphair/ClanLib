@@ -265,10 +265,10 @@ void App::render_mandelbrot(float mandelbrot_scale, unsigned char *dest)
 					break;
 			}
 
-			*(pptr++) = 0xFF;
 			*(pptr++) = iteration;
 			*(pptr++) = iteration/2;
 			*(pptr++) = iteration/2;
+			*(pptr++) = 0xFF;
 		}
 	}
 
