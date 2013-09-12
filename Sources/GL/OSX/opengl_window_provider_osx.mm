@@ -469,13 +469,13 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
 		key.type = InputEvent::released;
     }
 
-    // TODO: This might be incorrect.
-    NSPoint mouse_location = [theEvent locationInWindow];
-    clan::Point mouse_pos(mouse_location.x, mouse_location.y);
+    NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
+    NSRect bounds = [window.contentView bounds];
+    clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     
     key.mouse_pos = mouse_pos;
-	key.id = static_cast<clan::InputCode>([theEvent keyCode]);  // TODO: This might be incorrect.
-	key.repeat_count = 0;  // TODO: Implement.
+    key.id = static_cast<clan::InputCode>([theEvent keyCode]);
+    key.repeat_count = 0;  // TODO: Implement.
 
     NSString* text = [theEvent characters];
     key.str = [text UTF8String];
@@ -512,9 +512,9 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
             return;
 	}
     
-    // TODO: This is probably incorrect.
-    NSPoint mouse_location = [theEvent locationInWindow];
-    clan::Point mouse_pos(mouse_location.x, mouse_location.y);
+    NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
+    NSRect bounds = [window.contentView bounds];
+    clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     
 	// Prepare event to be emitted:
 	InputEvent key;
