@@ -104,9 +104,9 @@ void TestApp::test_datetime()
 
 	Console::write_line("   Function: to_ticks()");
 	datetime = DateTime(2009, 2, 4, 17,45, 33, 123456789);
-	cl_long ticks_b = datetime.to_ticks();
+	byte64 ticks_b = datetime.to_ticks();
 
-	cl_long ticks;
+	byte64 ticks;
 	
 	ticks = datetime.get_year() - 1601;
 	ticks *= 365;	// Days in a year
