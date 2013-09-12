@@ -143,7 +143,6 @@ private:
 	void update_layered_worker_thread();
 	void update_layered_worker_thread_process();
 	void update_layered_worker_thread_process_dwm();
-	void update_layered_process_alpha(int y_start, int y_stop);
 
 	static LRESULT WINAPI static_window_proc(
 		HWND hWnd,

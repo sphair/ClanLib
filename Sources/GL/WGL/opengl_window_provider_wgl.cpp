@@ -502,7 +502,7 @@ void OpenGLWindowProvider::flip(int interval)
 				glReadBuffer(GL_FRONT);
 			}
 
-			PixelBuffer pixelbuffer(width, height, tf_rgba8);
+			PixelBuffer pixelbuffer(width, height, tf_bgra8);
 			glPixelStorei(GL_PACK_ALIGNMENT, 1);
 			glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
 			glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
@@ -510,7 +510,7 @@ void OpenGLWindowProvider::flip(int interval)
 			glReadPixels(
 				0, 0,
 				width, height,
-				GL_RGBA,
+				GL_BGRA,
 				GL_UNSIGNED_BYTE,
 				pixelbuffer.get_data());
 
@@ -672,7 +672,7 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 		// ** Currently update layered windows only supports full screen rect update **
 		rect = Rect(0,0, width, height);
 
-		PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_rgba8);
+		PixelBuffer pixelbuffer(rect.get_width(), rect.get_height(), tf_bgra8);
 		glPixelStorei(GL_PACK_ALIGNMENT, 1);
 		glPixelStorei(GL_PACK_ROW_LENGTH, pixelbuffer.get_pitch() / pixelbuffer.get_bytes_per_pixel());
 		glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
@@ -680,7 +680,7 @@ void OpenGLWindowProvider::update_helper(const Rect &_rect)
 		glReadPixels(
 			rect.left, height - rect.bottom,
 			rect.right - rect.left, rect.bottom - rect.top,
-			GL_RGBA,
+			GL_BGRA,
 			GL_UNSIGNED_BYTE,
 			pixelbuffer.get_data());
 

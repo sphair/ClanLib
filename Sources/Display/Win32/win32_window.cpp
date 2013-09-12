@@ -1783,111 +1783,6 @@ void Win32Window::update_layered(PixelBuffer &image)
 	update_window_event_start.set();
 }
 
-void Win32Window::update_layered_process_alpha(int y_start, int y_stop)
-{
-	int w = update_window_image.get_width();
-
-#ifndef DISABLE_SSE2
-	int sse_size = (w/8)*8;
-#endif
-
-	ubyte32 *p = (ubyte32 *) update_window_image.get_data();
-	for (int y = y_start; y < y_stop; y++)
-	{
-		int index = y * w;
-		ubyte32 *line = p + index;
-
-		int size = w;
-#ifndef DISABLE_SSE2
-
-		int not_aligned = (line - p) & 0x3;	// 4 lots of 32bit integers
-		// Draw any that is not 128bit aligned
-		for (int x = 0; x < not_aligned; x++)
-		{
-			// Reading RGBA
-			unsigned int cval = *line;
-			ubyte32 r = (cval >> 24) & 0xff;
-			ubyte32 g = (cval >> 16) & 0xff;
-			ubyte32 b = (cval >> 8) & 0xff;
-			ubyte32 a = cval & 0xff;
-
-			r = r * a / 255;
-			g = g * a / 255;
-			b = b * a / 255;
-
-			// Writing ARGB
-			*(line++) = (a << 24) + (r << 16) + (g << 8) + b;
-		}
-		size -= not_aligned;
-
-		int sse_size = (size/4)*4;
-
-		const __m128i alpha_mask = _mm_set1_epi32(0xFF);
-		const __m128i lomask = _mm_set1_epi32(0x00FF00FF);
-		const __m128i round = _mm_set1_epi16(128);
-
-		for (int x = 0; x < sse_size; x+=4)
-		{
-			__m128i source = _mm_load_si128((__m128i*)(line+x));
-		// now source = RRGGBBAA
-
-			__m128i alpha = _mm_and_si128(alpha_mask, source);
-			alpha = _mm_or_si128(alpha, _mm_slli_epi32(alpha, 16));
-		// now alpha = 00AA00AA
-
-			__m128i red_blue = _mm_and_si128(lomask, _mm_srli_epi32(source, 8));
-		// now red_blue = 00RR00BB
-
-			red_blue =_mm_mullo_epi16(red_blue, alpha);
-			red_blue = _mm_add_epi16(red_blue, round);
-			__m128i t = _mm_srli_epi16(red_blue, 8);
-			t = _mm_add_epi16(t, red_blue);
-			red_blue = _mm_srli_epi16(t, 8);
-		// now red_blue = 00rr00bb  (rr = RR * AA/255) (bb = BB * AA/255)
-
-			__m128i green_alpha = _mm_and_si128(lomask, source);
-		// now green_alpha = 00GG00AA
-
-			green_alpha =_mm_mullo_epi16(green_alpha, alpha);
-			green_alpha = _mm_add_epi16(green_alpha, round);
-			t = _mm_srli_epi16(green_alpha, 8);
-			t = _mm_add_epi16(t, green_alpha);
-			green_alpha = _mm_srli_epi16(t, 8);
-		// now green_alpha = 00gg00aa  (gg = GG * AA/255) (aa = AA * AA/255)
-
-			t = _mm_or_si128(red_blue, _mm_slli_epi32(green_alpha, 24));
-		// now t = aarr00bb
-
-			t = _mm_or_si128(t, _mm_srli_epi32(green_alpha, 8));
-		// now t = aarrggbb
-
-			_mm_store_si128((__m128i*)(line+x), t);
-		}
-
-		// Do remaining pixels
-		size-=sse_size;
-		line+=sse_size;
-
-#endif
-		for (int x = 0; x < size; x++)
-		{
-			// Reading RGBA
-			unsigned int cval = *line;
-			ubyte32 r = (cval >> 24) & 0xff;
-			ubyte32 g = (cval >> 16) & 0xff;
-			ubyte32 b = (cval >> 8) & 0xff;
-			ubyte32 a = cval & 0xff;
-
-			r = r * a / 255;
-			g = g * a / 255;
-			b = b * a / 255;
-
-			// Writing ARGB
-			*(line++) = (a << 24) + (r << 16) + (g << 8) + b;
-		}
-	}
-}
-
 void Win32Window::update_layered_worker_thread()
 {
 	while (true)
@@ -2015,7 +1910,7 @@ void Win32Window::update_layered_worker_thread_process()
 	// the red, green and blue channels must be multiplied by x and divided by
 	// 0xff prior to the call.
 
-	update_layered_process_alpha(0, update_window_image.get_height());
+	// ClanLib now uses pre-multiplied alpha
 
 	BITMAPV5HEADER bmp_header;
 	memset(&bmp_header, 0, sizeof(BITMAPV5HEADER));
