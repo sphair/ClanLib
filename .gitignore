@@ -9,6 +9,8 @@ Release
 *.user
 *.xcworkspace
 *.xcuserdatad
+*.pbxuser
+*.mode1v3
 *.DS_Store
 /Build
 /Projects/clanCore.vcxproj.filters
@@ -62,6 +64,7 @@ Release
 /Projects/install_clanScene3D.bat
 /Projects/install_clanSound.bat
 /Projects/install_clanSqlite.bat
+/Projects/MacOSX/build/
 /Projects/Sheets/ExternalDirectories.props
 ipch
 doxyoutput
