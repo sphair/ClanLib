@@ -27,7 +27,7 @@
 */
 
 #include "precomp.h"
-#include "Joints.h"
+#include "joints.h"
 
 int window_x_size = 640;
 int window_y_size = 480;

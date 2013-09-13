@@ -28,7 +28,7 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "Raycasting.h"
+#include "raycasting.h"
 
 // Choose the target renderer
 //#define USE_D3D

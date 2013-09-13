@@ -28,7 +28,7 @@
 
 #include "precomp.h"
 #include "program.h"
-#include "Joints.h"
+#include "joints.h"
 
 // Choose the target renderer
 //#define USE_D3D

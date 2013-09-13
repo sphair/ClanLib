@@ -117,7 +117,7 @@ int Raycasting::start(const std::vector<std::string> &args)
 	GraphicContext gc = canvas.get_gc();
 	PhysicsQueryAssistant qa = phys_world.get_qa();
 
-	Font font(canvas, "Tahoma", 12);
+	clan::Font font(canvas, "Tahoma", 12);
 
 	// Set raycast points
 	Pointf p1(300,500);
