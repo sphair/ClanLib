@@ -1,14 +1,14 @@
 Getting started
 ---------------
 There is an installation and getting started guide online at
-http://clanlib.org/wiki/MainDocs:Index
+http://clanlib.org/documentation.html
 
 If you are upgrading from an earlier version of ClanLib, read the breaking changes document at 
-http://clanlib.org/wiki/BreakingChanges
+http://clanlib.org/breaking-changes.html
 
 Documentation
 -------------
-Please read documentation online at http://clanlib.org/wiki/Documentation
+Please read documentation online at http://clanlib.org/documentation.html
 
 In the Examples folder you find a selection of examples showing various
 features of ClanLib.
@@ -27,8 +27,7 @@ look at the PATCHES file for more detailed information.
 
 A developer's reference is available. This contains all the internal classes 
 for ClanLib which are useful for ClanLib developers.  To enable the reference, 
-go in to the Documentation/Reference directory and run 'make dev_ref'. Note that you
-need the same tools as described in the section Documentation to make this.
+go in to the Documentation/Reference directory and run 'make dev_ref'.
 
 ClanLib Website
 ---------------
