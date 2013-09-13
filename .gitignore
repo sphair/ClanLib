@@ -7,11 +7,6 @@ Release
 *.suo
 *.sdf
 *.user
-*.xcworkspace
-*.xcuserdatad
-*.pbxuser
-*.mode1v3
-*.DS_Store
 /Build
 /Projects/clanCore.vcxproj.filters
 /Projects/clanApp.vcxproj
@@ -74,3 +69,13 @@ doxyoutput
 /Tests/CSSLayout/WebBrowser/htmlpage.html
 /Tests/CSSLayout/WebBrowser/*.opensdf
 
+# OS X / Xcode
+.DS_Store
+*.swp
+*~.nib
+*.pbxuser
+*.perspective
+*.perspectivev3
+*.mode1v3
+*.mode2v3
+xcuserdata
