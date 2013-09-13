@@ -378,6 +378,13 @@ PixelBuffer OpenGLWindowProvider::get_clipboard_image() const
 {
 	return PixelBuffer();
 }
+    
+bool OpenGLWindowProvider::is_double_buffered() const
+{
+    // The OpenGL attributes are hard coded for double buffering at the moment.
+    // So, we always return true here.
+    return true;
+}
 
 InputDeviceProvider_OSXKeyboard *OpenGLWindowProvider::get_keyboard()
 {
@@ -428,19 +435,25 @@ void OpenGLWindowProvider_Impl::on_input_event(NSEvent *theEvent)
             on_keyboard_event(theEvent);
 			break;
 			
-		// Mouse events:
+		// Mouse movement events:
 		case NSMouseEntered: // see: NSTrackingArea
+        case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
+            // TODO:
+            break;
+        
+        // Mouse events:
 		case NSLeftMouseDown:
 		case NSLeftMouseUp:
 		case NSRightMouseDown:
 		case NSRightMouseUp:
 		case NSOtherMouseDown:
 		case NSOtherMouseUp:
-		case NSMouseMoved: // requires setAcceptsMouseMovedEvents: to be called first
 		case NSScrollWheel:
             on_mouse_event(theEvent);
 			break;
-			
+            
+        default:
+            break;
 	}
     
     // TODO: Seems like a hack.
@@ -452,36 +465,94 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
     NSEventType type = [theEvent type];
     
     // Is the message a down or up event?
-	bool keydown = false;
+    bool keydown = false;
     if (type == NSKeyDown)
     {
         keydown = true;
     }
 
-	// Prepare event to be emitted:
-	InputEvent key;
-	if (keydown)
+    // Prepare event to be emitted:
+    clan::InputEvent key;
+    if (keydown)
     {
-		key.type = InputEvent::pressed;
+        key.type = clan::InputEvent::pressed;
     }
-	else
+    else
     {
-		key.type = InputEvent::released;
+        key.type = clan::InputEvent::released;
     }
 
     NSPoint mouse_location = [window convertScreenToBase:[NSEvent mouseLocation]];
     NSRect bounds = [window.contentView bounds];
     clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
-    
     key.mouse_pos = mouse_pos;
-    key.id = static_cast<clan::InputCode>([theEvent keyCode]);
+    
+    // TODO: Fully test these values.  Add the rest of the supported values. :D
+    // Map the Cocoa key code to the appropriate ClanLib key code.
+    switch ([theEvent keyCode])
+    {
+        // Miscellaneous keys.
+        case 0x35: key.id = keycode_escape; break;
+
+        // Arrow keys.
+        case 0x7B: key.id = keycode_left; break;
+        case 0x7C: key.id = keycode_right; break;
+        case 0x7D: key.id = keycode_down; break;
+        case 0x7E: key.id = keycode_up; break;
+
+        // Number keys.
+        case 0x1D: key.id = keycode_0; break;
+        case 0x12: key.id = keycode_1; break;
+        case 0x13: key.id = keycode_2; break;
+        case 0x14: key.id = keycode_3; break;
+        case 0x15: key.id = keycode_4; break;
+        case 0x17: key.id = keycode_5; break;
+        case 0x16: key.id = keycode_6; break;
+        case 0x1A: key.id = keycode_7; break;
+        case 0x1C: key.id = keycode_8; break;
+        case 0x19: key.id = keycode_9; break;
+            
+        // Character keys.
+        case 0x00: key.id = keycode_a; break;
+        case 0x0B: key.id = keycode_b; break;
+        case 0x08: key.id = keycode_c; break;
+        case 0x02: key.id = keycode_d; break;
+        case 0x0E: key.id = keycode_e; break;
+        case 0x03: key.id = keycode_f; break;
+        case 0x05: key.id = keycode_g; break;
+        case 0x04: key.id = keycode_h; break;
+        case 0x22: key.id = keycode_i; break;
+        case 0x26: key.id = keycode_j; break;
+        case 0x28: key.id = keycode_k; break;
+        case 0x25: key.id = keycode_l; break;
+        case 0x2E: key.id = keycode_m; break;
+        case 0x2D: key.id = keycode_n; break;
+        case 0x1F: key.id = keycode_o; break;
+        case 0x23: key.id = keycode_p; break;
+        case 0x0C: key.id = keycode_q; break;
+        case 0x0F: key.id = keycode_r; break;
+        case 0x01: key.id = keycode_s; break;
+        case 0x11: key.id = keycode_t; break;
+        case 0x20: key.id = keycode_u; break;
+        case 0x09: key.id = keycode_v; break;
+        case 0x0D: key.id = keycode_w; break;
+        case 0x07: key.id = keycode_x; break;
+        case 0x10: key.id = keycode_y; break;
+        case 0x06: key.id = keycode_z; break;
+            
+        default: key.id = keycode_unknown; break;
+    }
+
     key.repeat_count = 0;  // TODO: Implement.
 
     NSString* text = [theEvent characters];
     key.str = [text UTF8String];
 
-	// Emit message:
-	self->get_keyboard()->sig_provider_event->invoke(key);
+    // Update our internal keyboard state
+    self->get_keyboard()->on_key_event(key.id, key.type);
+
+    // Emit message:
+    self->get_keyboard()->sig_provider_event->invoke(key);
 }
     
 void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
@@ -521,39 +592,39 @@ void OpenGLWindowProvider_Impl::on_mouse_event(NSEvent *theEvent)
 	key.mouse_pos = mouse_pos;
     key.id = id;
     
-	if (dblclk)
-	{
-		key.type = InputEvent::doubleclick;
+    if (dblclk)
+    {
+        key.type = InputEvent::doubleclick;
         
-		// Emit message:
-		if (id >= 0 && id < 32)
-			self->get_mouse()->key_states[id] = true;
+        // Update our internal mouse state
+        self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
         
-		self->get_mouse()->sig_provider_event->invoke(key);
-	}
+        // Emit message.
+        self->get_mouse()->sig_provider_event->invoke(key);
+    }
     
-	if (down)
-	{
-		key.type = InputEvent::pressed;
+    if (down)
+    {
+        key.type = InputEvent::pressed;
         
-		// Emit message:
-		if (id >= 0 && id < 32)
-			self->get_mouse()->key_states[id] = true;
+		// Update our internal mouse state
+        self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
         
-		self->get_mouse()->sig_provider_event->invoke(key);
-	}
+        // Emit message.
+        self->get_mouse()->sig_provider_event->invoke(key);
+    }
     
 	// It is possible for 2 events to be called when the wheelmouse is used.
-	if (up)
-	{
-		key.type = InputEvent::released;
+    if (up)
+    {
+        key.type = InputEvent::released;
         
-		// Emit message:
-		if (id >= 0 && id < 32)
-			self->get_mouse()->key_states[id] = false;
+		// Update our internal mouse state
+        self->get_mouse()->on_mouse_event(key.id, key.type, key.mouse_pos);
         
-		self->get_mouse()->sig_provider_event->invoke(key);
-	}
+        // Emit message.
+        self->get_mouse()->sig_provider_event->invoke(key);
+    }
 }
     
 }

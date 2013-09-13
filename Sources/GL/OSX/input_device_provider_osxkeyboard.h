@@ -29,8 +29,10 @@
 
 #pragma once
 
-#include "API/Display/Window/input_device.h"
 #include "API/Display/TargetProviders/input_device_provider.h"
+#include "API/Display/Window/input_device.h"
+#include "API/Display/Window/input_event.h"
+#include "API/Display/Window/keys.h"
 
 namespace clan
 {
@@ -108,9 +110,13 @@ public:
 /// \{
 
 private:
-	void on_dispose();
-
-	Signal_v1<const InputEvent &> *sig_provider_event;
+    // Virtual Keyboard State.
+    // A work around the for the inability to directly query the keyboard state through Cocoa.
+    bool key_down_map[clan::keycode_count];
+    Signal_v1<const InputEvent &> *sig_provider_event;
+    
+    void on_dispose();
+    void on_key_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type);
 
     OpenGLWindowProvider *window;
     friend class OpenGLWindowProvider_Impl;
