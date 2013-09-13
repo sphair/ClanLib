@@ -32,6 +32,10 @@
 namespace clan
 {
 
+JointDescription_Impl::JointDescription_Impl()
+{
+}
+
 JointDescription::JointDescription()
 : impl(new JointDescription_Impl)
 {
