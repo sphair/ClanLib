@@ -28,10 +28,15 @@
 */
 
 #include "Display/precomp.h"
-#include "API/Display/Window/input_event.h"
+#include "input_device_provider_osxmouse.h"
+
+#include "API/Core/Math/point.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/Window/display_window.h"
-#include "input_device_provider_osxmouse.h"
+#include "API/Display/Window/input_event.h"
+#include "API/Display/Window/keys.h"
+
+#include <assert.h>
 
 namespace clan
 {
@@ -40,9 +45,13 @@ namespace clan
 // InputDeviceProvider_OSXMouse construction:
 
 InputDeviceProvider_OSXMouse::InputDeviceProvider_OSXMouse(OpenGLWindowProvider *window)
-: sig_provider_event(0), window(window)
+    : mouse_position(0.0f, 0.0f), sig_provider_event(nullptr), window(window)
 {
-	for (int i=0; i<32; i++) key_states[i] = false;
+    // Initialize the mouse state.
+    for (int i = 0; i < clan::mouse_count; ++i)
+    {
+        mouse_down_map[i] = false;
+    }
 }
 
 InputDeviceProvider_OSXMouse::~InputDeviceProvider_OSXMouse()
@@ -56,29 +65,35 @@ InputDeviceProvider_OSXMouse::~InputDeviceProvider_OSXMouse()
 int InputDeviceProvider_OSXMouse::get_x() const
 {
 	throw_if_disposed();
-    // TODO: Reimplement.
-	return 0;
+	return mouse_position.x;
 }
 
 int InputDeviceProvider_OSXMouse::get_y() const
 {
 	throw_if_disposed();
-    // TODO: Reimplement.
-	return 0;
+	return mouse_position.y;
 }
 
 bool InputDeviceProvider_OSXMouse::get_keycode(int keycode) const
 {
-	throw_if_disposed();
-    // TODO: Are these valid for OSX?
-	if (keycode < 0 || keycode >= 32) return false;
-	return key_states[keycode];
+    throw_if_disposed();
+    
+    bool result = false;
+    
+    // Sanity.
+    assert(keycode < clan::mouse_count);
+    if (keycode < clan::mouse_count)
+    {
+        result = mouse_down_map[keycode];
+    }
+    
+    return result;
 }
 
 std::string InputDeviceProvider_OSXMouse::get_key_name(int id) const
 {
 	throw_if_disposed();
-    // TODO: Are these valid for OSX?
+
 	switch (id)
 	{
 	case 0: return "Mouse left";
@@ -126,8 +141,11 @@ int InputDeviceProvider_OSXMouse::get_button_count() const
 
 void InputDeviceProvider_OSXMouse::set_position(int x, int y)
 {
-	throw_if_disposed();
-	// TODO: Reimplement.
+    //
+    // TODO: Reimplement.
+    //
+    
+    throw_if_disposed();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -135,6 +153,26 @@ void InputDeviceProvider_OSXMouse::set_position(int x, int y)
 
 void InputDeviceProvider_OSXMouse::on_dispose()
 {
+}
+    
+void InputDeviceProvider_OSXMouse::on_mouse_event(const clan::InputCode& keycode, const clan::InputEvent::Type& type,
+                                                  const clan::Point& position)
+{
+    // Sanity.
+    assert(keycode < clan::mouse_count);
+    if (keycode < clan::mouse_count)
+    {
+        assert(type == InputEvent::doubleclick || type == clan::InputEvent::pressed ||
+               type == clan::InputEvent::released);
+        if (type == InputEvent::doubleclick || type == clan::InputEvent::pressed)
+        {
+            mouse_down_map[keycode] = true;
+        }
+        else if (type == clan::InputEvent::released)
+        {
+            mouse_down_map[keycode] = false;
+        }
+    }
 }
 
 }
