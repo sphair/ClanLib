@@ -17,6 +17,7 @@ int Program::main(const std::vector<std::string> &args)
 
 	GUIManager gui;
 	gui.add_theme("../../../Resources/GUIThemeAero/theme.css");
+	gui.add_theme("theme.css");
 	gui.add_resources("../../../Resources/GUIThemeAero/resources.xml");
 
 	GUITopLevelDescription window_desc;
