@@ -73,6 +73,7 @@ public:
 	bool is_clipboard_image_available() const;
 	std::string get_clipboard_text() const;
 	PixelBuffer get_clipboard_image() const;
+    bool is_double_buffered() const;
 /// \}
 	
 /// \name Operations
