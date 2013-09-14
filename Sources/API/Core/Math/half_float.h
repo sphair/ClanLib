@@ -82,25 +82,25 @@ public:
 	static float half_to_float_simple(unsigned short hf)
 	{
 		unsigned int float_value = ((hf & 0x8000) << 16) | (((hf & 0x7c00) + 0x1C000) << 13) | ((hf & 0x03FF) << 13);
-		return *reinterpret_cast<float*>(&float_value);
+		return *static_cast<float*>(static_cast<void*>(&float_value));
 	}
 
 	/// Only works for 'normal' half-float values
 	static unsigned short float_to_half_simple(float float_value)
 	{
-		unsigned int f = *reinterpret_cast<unsigned int*>(&float_value);
+		unsigned int f = *static_cast<unsigned int*>(static_cast<void*>(&float_value));
 		return ((f >> 16) & 0x8000) | ((((f & 0x7f800000) - 0x38000000) >> 13) & 0x7c00) | ((f >> 13) & 0x03ff);
 	}
 
 	static float half_to_float(unsigned short hf)
 	{
 		unsigned int float_value = mantissa_table[offset_table[hf >> 10] + (hf & 0x3ff)] + exponent_table[hf >> 10];
-		return *reinterpret_cast<float*>(&float_value);
+		return *static_cast<float*>(static_cast<void*>(&float_value));
 	}
 
 	static unsigned short float_to_half(float float_value)
 	{
-		unsigned int f = *reinterpret_cast<unsigned int*>(&float_value);
+		unsigned int f = *static_cast<unsigned int*>(static_cast<void*>(&float_value));
 		return base_table[(f >> 23) & 0x1ff] + ((f & 0x007fffff) >> shift_table[(f >> 23) & 0x1ff]);
 	}
 
