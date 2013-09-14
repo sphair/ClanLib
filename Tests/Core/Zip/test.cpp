@@ -77,7 +77,7 @@ void TestApp::run_test()
 	zip_writer.write_file_data("12345678\r\n", 10);
 	zip_writer.write_file_data("12345678\r\n", 10);
 	zip_writer.end_file();
-	std::string s = L"file2";
+	std::string s = "file2";
 	s.append(1, 0xc6); // silly danish char
 	zip_writer.begin_file(s, false);
 	zip_writer.write_file_data("ClanLib Zipping!", 16);

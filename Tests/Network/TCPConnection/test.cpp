@@ -17,7 +17,6 @@ int main(int, char**)
 	try
 	{
 		test1();
-		test2();
 	}
 	catch (Exception e)
 	{
@@ -48,37 +47,6 @@ void test1()
 
 	Console::write_line("");
 	Console::write_line("--- End of test1 ---");
-	Console::write_line("");
-}
-
-void test2()
-{
-	Console::write_line("");
-	Console::write_line("--- Begin of test2 ---");
-	Console::write_line("");
-
-	SocketName socket_name("www.clanlib.org", "80");
-	HTTPClientConnection connection(socket_name);
-	clan::ubyte64 start_time = System::get_time();
-	Console::write_line("Time start: %1", start_time);
-
-	for (int i = 0; i < 10; i++)
-	{
-		std::string headers = "Host: www.clanlib.org";
-		connection.send_get("/index.html", headers);
-
-		std::string status_text, response_headers;
-		DataBuffer response_data;
-		int status_code = connection.receive_response(status_text, response_headers, response_data);
-		Console::write_line(status_text);
-	}
-
-	clan::ubyte64 end_time = System::get_time();
-	Console::write_line("Time end: %1", end_time);
-	Console::write_line("Delta time: %1", (end_time - start_time));
-
-	Console::write_line("");
-	Console::write_line("--- End of test2 ---");
 	Console::write_line("");
 }
 
