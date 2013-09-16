@@ -56,6 +56,17 @@
 
 namespace clan
 {
+
+class FontEngine_Sprite : public FontEngine
+{
+public:
+	~FontEngine_Sprite() { }
+	FontMetrics get_metrics() {return FontMetrics(); }
+	FontPixelBuffer get_font_glyph_standard(int glyph, bool anti_alias) { return FontPixelBuffer(); }
+	FontPixelBuffer get_font_glyph_subpixel(int glyph) { return FontPixelBuffer(); }
+	Shape2D load_glyph_outline(int glyph_index, int &out_advance_x) { return Shape2D(); }
+};
+
 Font_Impl::Font_Impl() : font_engine(NULL)
 {
 }
@@ -149,6 +160,9 @@ int Font_Impl::get_character_index(GraphicContext &gc, const std::string &text, 
 
 void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics)
 {
+	free_font();
+	font_engine = new FontEngine_Sprite();
+
 	glyph_cache.anti_alias = true;
 	glyph_cache.enable_subpixel = false;
 	glyph_cache.font_metrics = metrics;
