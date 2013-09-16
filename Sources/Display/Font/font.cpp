@@ -188,10 +188,39 @@ Font Font::load(Canvas &canvas, const std::string &id, const XMLResourceDocument
 
 		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 	}
-	else
+
+	DomElement freetype_element = resource.get_element().named_item("ttf").to_element();
+	if (freetype_element.is_null())
+		freetype_element = resource.get_element().named_item("freetype").to_element();
+
+	if (!freetype_element.is_null())
 	{
-		throw Exception(string_format("Font resource %1 did not have a <sprite> child element! ... TTF loading current not supported", resource.get_name()));
+		FontDescription desc;
+
+		if (freetype_element.has_attribute("file"))
+			desc.set_typeface_name(freetype_element.get_attribute("file"));
+		else
+			throw Exception(string_format("Font resource '%1' has no 'file' attribute", resource.get_name()));
+
+		if (freetype_element.has_attribute("height"))
+			desc.set_height(freetype_element.get_attribute_int("height", 0));
+		else
+			throw Exception(string_format("Font resource '%1' has no 'height' attribute", resource.get_name()));
+
+		if (freetype_element.has_attribute("average_width"))
+			desc.set_average_width(freetype_element.get_attribute_int("average_width", 0));
+
+		if (freetype_element.has_attribute("anti_alias"))
+			desc.set_anti_alias(freetype_element.get_attribute_bool("anti_alias", true));
+
+		if (freetype_element.has_attribute("subpixel"))
+			desc.set_subpixel(freetype_element.get_attribute_bool("subpixel", true));
+
+		return Font(canvas, desc);
 	}
+
+	throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));
+
 }
 
 
