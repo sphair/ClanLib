@@ -158,7 +158,7 @@ int Font_Impl::get_character_index(GraphicContext &gc, const std::string &text, 
 	return glyph_cache.get_character_index(font_engine, gc, text, point);
 }
 
-void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics)
+void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &glyph_list, int spacelen, bool monospace, const FontMetrics &metrics)
 {
 	free_font();
 	font_engine = new FontEngine_Sprite();
@@ -167,7 +167,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 	glyph_cache.enable_subpixel = false;
 	glyph_cache.font_metrics = metrics;
 
-	const int length = StringHelp::utf8_length(letters);
+	const int length = StringHelp::utf8_length(glyph_list);
 
 	if ((length > sprite.get_frame_count()) || (length == 0))
 	{
@@ -196,7 +196,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 	//If not monospace, and space width not specified, then use average width as space width
 	else if (spacelen <= 0)
 	{
-		std::string::size_type space_pos = letters.find(' ');
+		std::string::size_type space_pos = glyph_list.find(' ');
 		
 		if (space_pos != std::string::npos)
 		{
@@ -227,7 +227,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 	
 	// Setup char to glyph map:
 
-	UTF8_Reader reader(letters.data(), letters.length());
+	UTF8_Reader reader(glyph_list.data(), glyph_list.length());
 	int sprite_index = 0;
 	while(!reader.is_end())
 	{
@@ -256,7 +256,7 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 	}
 
 	// Did the glyphs not contain a space?
-	std::string::size_type space_pos = letters.find(' ');
+	std::string::size_type space_pos = glyph_list.find(' ');
 	if (space_pos == std::string::npos)
 	{
 		FontPixelBuffer pb;
