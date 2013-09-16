@@ -255,9 +255,9 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 		sprite_index++;
 	}
 
-	// Did the letter not contain spaces?
+	// Did the glyphs not contain a space?
 	std::string::size_type space_pos = letters.find(' ');
-	if (space_pos != std::string::npos)
+	if (space_pos == std::string::npos)
 	{
 		FontPixelBuffer pb;
 		pb.empty_buffer = true;
