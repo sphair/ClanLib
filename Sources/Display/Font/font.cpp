@@ -81,7 +81,7 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 }
 
 
-Font Font_Impl::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite)
+Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 	std::string type = resource.get_element().get_tag_name();
@@ -168,7 +168,7 @@ Font Font_Impl::load(Canvas &canvas, const std::string &id, const XMLResourceDoc
 
 	if (!ttf_element.is_null())
 	{
-		FontDescription desc;
+		FontDescription desc = reference_desc.clone();
 
 		std::string filename;
 
@@ -182,8 +182,6 @@ Font Font_Impl::load(Canvas &canvas, const std::string &id, const XMLResourceDoc
 
 		if (ttf_element.has_attribute("height"))
 			desc.set_height(ttf_element.get_attribute_int("height", 0));
-		else
-			throw Exception(string_format("Font resource '%1' has no 'height' attribute", resource.get_name()));
 
 		if (ttf_element.has_attribute("average_width"))
 			desc.set_average_width(ttf_element.get_attribute_int("average_width", 0));

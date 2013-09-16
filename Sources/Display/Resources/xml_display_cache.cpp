@@ -143,7 +143,7 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 	if (is_resource_font)
 	{
 		Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
-		return Resource<Font>(Font_Impl::load(canvas, desc.get_typeface_name(), doc, cb));
+		return Resource<Font>(Font_Impl::load(canvas, desc, desc.get_typeface_name(), doc, cb));
 	}
 	else
 	{
