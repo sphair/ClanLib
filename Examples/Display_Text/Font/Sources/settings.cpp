@@ -39,14 +39,11 @@ void App::draw_font_info()
 	offset_y += gap;
 	switch (selected_fontclass)
 	{
-		case font_system:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("System (Texture based)", font_desc.get_typeface_name()),  Colorf::white);
-			break;
-		case font_vector:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("Vector (Triangle based)", font_desc.get_typeface_name()),  Colorf::white);
+		case font_ttf:
+			small_font.draw_text(canvas, offset_x, offset_y, string_format("TTF", font_desc.get_typeface_name()),  Colorf::white);
 			break;
 		case font_sprite:
-			small_font.draw_text(canvas, offset_x, offset_y, string_format("Sprite (Sprite based)", font_desc.get_typeface_name()),  Colorf::white);
+			small_font.draw_text(canvas, offset_x, offset_y, string_format("Sprite", font_desc.get_typeface_name()),  Colorf::white);
 			break;
 	}
 	offset_y += gap;
@@ -183,15 +180,6 @@ void App::on_lineedit_changed(InputEvent &e)
 	font_size = selected_font.get_text_size(canvas, font_text);
 }
 
-void App::on_button_clicked_class_vector(PushButton *button)
-{
-	selected_fontclass = font_vector;
-	button_typeface_tahoma_ptr->set_enabled();
-	button_typeface_sans_ptr->set_enabled();
-	button_typeface_bitstream_ptr->set_enabled();
-	on_button_clicked_typeface_tahoma(button_typeface_tahoma_ptr);
-}
-
 void App::on_button_clicked_class_sprite(PushButton *button)
 {
 	selected_fontclass = font_sprite;
@@ -204,7 +192,7 @@ void App::on_button_clicked_class_sprite(PushButton *button)
 }
 void App::on_button_clicked_class_system(PushButton *button)
 {
-	selected_fontclass = font_system;
+	selected_fontclass = font_ttf;
 	button_typeface_tahoma_ptr->set_enabled();
 	button_typeface_sans_ptr->set_enabled();
 	button_typeface_bitstream_ptr->set_enabled();

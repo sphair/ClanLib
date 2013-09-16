@@ -75,12 +75,6 @@ int App::start(const std::vector<std::string> &args)
 	button_class_system.set_text("Class: System");
 	offset_y += gap;
 
-	PushButton button_class_vector(&gui_window);
-	button_class_vector.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
-	button_class_vector.func_clicked().set(this, &App::on_button_clicked_class_vector, &button_class_vector);
-	button_class_vector.set_text("Class: Vector");
-	offset_y += gap;
-
 	PushButton button_class_sprite(&gui_window);
 	button_class_sprite.set_geometry(Rect(offset_x, offset_y, offset_x + width, offset_y + height));
 	button_class_sprite.func_clicked().set(this, &App::on_button_clicked_class_sprite, &button_class_sprite);
@@ -175,7 +169,7 @@ int App::start(const std::vector<std::string> &args)
 	lineedit1.func_after_edit_changed().set(this, &App::on_lineedit_changed);
 
 	last_fps = 0.0f;
-	selected_fontclass = font_system;
+	selected_fontclass = font_ttf;
 	font_typeface = "Microsoft Sans Serif";
 	font_filename = "";
 	font_desc.set_height(32);
@@ -235,21 +229,18 @@ void App::select_font()
 
 	switch (selected_fontclass)
 	{
-		case font_system:
+		case font_ttf:
 			if (font_filename.empty())
 			{
-				selected_font = Font_System(canvas, font_desc);
+				selected_font = Font(canvas, font_desc);
 			}
 			else
 			{
-				selected_font = Font_System(canvas, font_desc, font_filename);
+				selected_font = Font(canvas, font_desc, font_filename);
 			}
 			break;
-		case font_vector:
-			selected_font = Font_Vector(canvas, font_desc, font_filename);
-			break;
 		case font_sprite:
-			selected_font = Font_Sprite::resource(canvas, font_desc, resources);
+			selected_font = Font::resource(canvas, font_desc, resources);
 			break;
 	}
 

@@ -30,8 +30,7 @@
 
 enum FontClass
 {
-	font_system,
-	font_vector,
+	font_ttf,
 	font_sprite
 };
 
@@ -43,7 +42,6 @@ public:
 
 private:
 	void on_button_clicked_class_system(PushButton *button);
-	void on_button_clicked_class_vector(PushButton *button);
 	void on_button_clicked_class_sprite(PushButton *button);
 	void on_button_clicked_typeface_tahoma(PushButton *button);
 	void on_button_clicked_typeface_sans(PushButton *button);
