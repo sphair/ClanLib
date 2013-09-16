@@ -40,6 +40,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Core/IOData/path_help.h"
 #include "xml_display_cache.h"
+#include "../Font/font_impl.h"
 
 namespace clan
 {
@@ -142,7 +143,7 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 	if (is_resource_font)
 	{
 		Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
-		return Resource<Font>(Font::load(canvas, desc.get_typeface_name(), doc, cb));
+		return Resource<Font>(Font_Impl::load(canvas, desc.get_typeface_name(), doc, cb));
 	}
 	else
 	{
