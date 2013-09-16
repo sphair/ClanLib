@@ -29,7 +29,7 @@
 */
 
 #include "Display/precomp.h"
-#include "font_vector_impl.h"
+#include "vector_font_impl.h"
 
 #ifdef __APPLE__
 #include "FontEngine/font_engine_cocoa.h"
@@ -51,7 +51,7 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/font_vector.h"
+#include "API/Display/Font/vector_font.h"
 #include "API/Display/2D/shape2d.h"
 #include "../2D/render_batch_triangle.h"
 #include "../2D/canvas_impl.h"
@@ -60,13 +60,13 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector_Impl Construction:
+// VectorFont_Impl Construction:
 
-Font_Vector_Impl::Font_Vector_Impl() : font_engine(NULL), is_filled(true)
+VectorFont_Impl::VectorFont_Impl() : font_engine(NULL), is_filled(true)
 {
 }
 
-void Font_Vector_Impl::load_font(const FontDescription &desc, const std::string &filename)
+void VectorFont_Impl::load_font(const FontDescription &desc, const std::string &filename)
 {
 #ifdef WIN32
 	font_engine = new FontEngine_Win32(desc, filename);
@@ -100,7 +100,7 @@ void Font_Vector_Impl::load_font(const FontDescription &desc, const std::string 
 	metrics = font_engine->get_metrics();
 }
 
-Font_Vector_Impl::~Font_Vector_Impl()
+VectorFont_Impl::~VectorFont_Impl()
 {
 	if (font_engine)
 	{
@@ -110,18 +110,18 @@ Font_Vector_Impl::~Font_Vector_Impl()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector_Impl Attributes:
+// VectorFont_Impl Attributes:
 
 
-FontMetrics Font_Vector_Impl::get_font_metrics()
+FontMetrics VectorFont_Impl::get_font_metrics()
 {
 	return metrics;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector_Impl Operations:
+// VectorFont_Impl Operations:
 
-void Font_Vector_Impl::draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color)
+void VectorFont_Impl::draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color)
 {
 	if (text.length() == 0)
 		return;
@@ -138,7 +138,7 @@ void Font_Vector_Impl::draw_text(Canvas &canvas, float x, float y, const std::st
 
 }
 
-Size Font_Vector_Impl::get_text_size(GraphicContext &gc, const std::string &text)
+Size VectorFont_Impl::get_text_size(GraphicContext &gc, const std::string &text)
 {
 	if (text.length() == 0)
 		return Size(0, 0);
@@ -172,7 +172,7 @@ Size Font_Vector_Impl::get_text_size(GraphicContext &gc, const std::string &text
 	return Size(max_x, offset_y);
 }
 
-void Font_Vector_Impl::get_glyphs(
+void VectorFont_Impl::get_glyphs(
 	const std::string &text,
 	int *out_glyphs,
 	float *out_interspacing_x,
@@ -187,7 +187,7 @@ void Font_Vector_Impl::get_glyphs(
 	}
 }
 
-void Font_Vector_Impl::store_in_char_cache(unsigned int glyph)
+void VectorFont_Impl::store_in_char_cache(unsigned int glyph)
 {
 	if( char_cache.find(glyph) == char_cache.end() )
 	{
@@ -200,7 +200,7 @@ void Font_Vector_Impl::store_in_char_cache(unsigned int glyph)
 	}
 }
 
-void Font_Vector_Impl::draw_glyphs(
+void VectorFont_Impl::draw_glyphs(
 	Canvas &canvas,
 	float x,
 	float y,
@@ -245,12 +245,12 @@ void Font_Vector_Impl::draw_glyphs(
 	}
 }
 
-void Font_Vector_Impl::set_filled(bool enable)
+void VectorFont_Impl::set_filled(bool enable)
 {
 	is_filled = enable;
 }
 
-Rectf Font_Vector_Impl::get_bounding_box(const std::string &reference_string)
+Rectf VectorFont_Impl::get_bounding_box(const std::string &reference_string)
 {
 	Rectf bounding_rect(100000.0f, 100000.0f, -100000.0f, -100000.0f);
 	for( unsigned int i=0; i<reference_string.length(); i++ )
@@ -276,7 +276,7 @@ Rectf Font_Vector_Impl::get_bounding_box(const std::string &reference_string)
 }
 
 
-void Font_Vector_Impl::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
+void VectorFont_Impl::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
 {
 	current_texture = src_texture;
 	current_bounding_rect = bounding_rect;
@@ -284,22 +284,22 @@ void Font_Vector_Impl::set_texture(const Texture2D &src_texture, const Rectf &bo
 
 }
 
-const std::vector<Vec2f> &Font_Vector_Impl::get_glyph_filled(unsigned int glyph)
+const std::vector<Vec2f> &VectorFont_Impl::get_glyph_filled(unsigned int glyph)
 {
 	store_in_char_cache(glyph);
 	return char_cache[glyph].primitives_array;
 }
 
-const std::vector< std::vector<Vec2f> > &Font_Vector_Impl::get_glyph_outline(unsigned int glyph)
+const std::vector< std::vector<Vec2f> > &VectorFont_Impl::get_glyph_outline(unsigned int glyph)
 {
 	store_in_char_cache(glyph);
 	return char_cache[glyph].primitives_array_outline;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector_Impl Implementation:
+// VectorFont_Impl Implementation:
 
-void Font_Vector_Impl::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color)
+void VectorFont_Impl::draw_prim_array(Canvas &canvas, vector_glyph &vg, const Colorf &color)
 {
 	if (vg.primitives_array.empty())
 		return;

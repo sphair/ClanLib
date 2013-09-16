@@ -38,38 +38,38 @@ namespace clan
 /// \addtogroup clanDisplay_Font clanDisplay Font
 /// \{
 
-class Font_Vector_Impl;
+class VectorFont_Impl;
 class FontMetrics;
 class FileSystem;
-class Font_Vector_Impl;
+class VectorFont_Impl;
 
 /// \brief Vector font drawing class.
-class CL_API_DISPLAY Font_Vector
+class CL_API_DISPLAY VectorFont
 {
 /// \name Construction
 /// \{
 
 public:
 /// \brief Constructs vector font.
-	Font_Vector();
+	VectorFont();
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param canvas = Canvas
 	/// \param typeface_name = String Ref
 	/// \param height = value
-	Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
+	VectorFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename);
 
 	/// \brief Constructs a Font Vector
 	///
 	/// \param canvas = Canvas
 	/// \param desc = Font Description
-	Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename);
+	VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename);
 
 	/// \brief Constructs a Font Vector from a Font, ensuring the correct type
-	explicit Font_Vector( const Font &font);
+	explicit VectorFont( const Font &font);
 
-	~Font_Vector();
+	~VectorFont();
 
 /// \}
 /// \name Attributes
@@ -198,7 +198,7 @@ public:
 /// \}
 /// \name Implementation
 /// \{
-	std::shared_ptr<Font_Vector_Impl> impl;
+	std::shared_ptr<VectorFont_Impl> impl;
 
 /// \}
 };

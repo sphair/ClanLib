@@ -31,7 +31,7 @@
 #include "shape2d_impl.h"
 #include "API/Core/Math/ear_clip_result.h"
 #include "API/Display/2D/canvas.h"
-#include "API/Display/Font/font_vector.h"
+#include "API/Display/Font/vector_font.h"
 #include <vector>
 #include "API/Core/Math/bezier_curve.h"
 

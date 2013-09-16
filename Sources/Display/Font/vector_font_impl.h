@@ -43,14 +43,14 @@ namespace clan
 class FreetypeFont;
 class FontEngine;
 
-class Font_Vector_Impl
+class VectorFont_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	Font_Vector_Impl();
-	virtual ~Font_Vector_Impl();
+	VectorFont_Impl();
+	virtual ~VectorFont_Impl();
 
 /// \}
 /// \name Attributes

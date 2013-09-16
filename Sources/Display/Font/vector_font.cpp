@@ -30,11 +30,11 @@
 
 #include "Display/precomp.h"
 
-#include "API/Display/Font/font_vector.h"
+#include "API/Display/Font/vector_font.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Display/2D/shape2d.h"
-#include "font_vector_impl.h"
+#include "vector_font_impl.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
@@ -44,44 +44,44 @@ namespace clan
 {
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector Construction:
+// VectorFont Construction:
 
-Font_Vector::Font_Vector()
+VectorFont::VectorFont()
 {
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
+VectorFont::VectorFont( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
 	desc.set_height(height);
-	*this = Font_Vector(canvas, desc, filename);
+	*this = VectorFont(canvas, desc, filename);
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(new Font_Vector_Impl)
+VectorFont::VectorFont( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(new VectorFont_Impl)
 {
 	impl->load_font(desc, filename);
 }
 
-Font_Vector::~Font_Vector()
+VectorFont::~VectorFont()
 {
 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector Attributes:
+// VectorFont Attributes:
 
-bool Font_Vector::is_null() const
+bool VectorFont::is_null() const
 {
 	return !impl;
 }
 
-Rectf Font_Vector::get_bounding_box(const std::string &reference_string) const
+Rectf VectorFont::get_bounding_box(const std::string &reference_string) const
 {
 	return impl->get_bounding_box(reference_string);
 }
 
-Size Font_Vector::get_text_size(GraphicContext &gc, const std::string &text)
+Size VectorFont::get_text_size(GraphicContext &gc, const std::string &text)
 {
 	Size total_size;
 
@@ -110,7 +110,7 @@ Size Font_Vector::get_text_size(GraphicContext &gc, const std::string &text)
 	return total_size;
 }
 
-Size Font_Vector::get_glyph_size(GraphicContext &gc, unsigned int glyph)
+Size VectorFont::get_glyph_size(GraphicContext &gc, unsigned int glyph)
 {
 	std::string text = StringHelp::unicode_to_utf8(glyph);
 
@@ -121,7 +121,7 @@ Size Font_Vector::get_glyph_size(GraphicContext &gc, unsigned int glyph)
 	return Size();
 }
 
-FontMetrics Font_Vector::get_font_metrics()
+FontMetrics VectorFont::get_font_metrics()
 {
 	if (impl)
 		return impl->get_font_metrics();
@@ -129,19 +129,19 @@ FontMetrics Font_Vector::get_font_metrics()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector Operations:
+// VectorFont Operations:
 
-void Font_Vector::set_filled(bool enable)
+void VectorFont::set_filled(bool enable)
 {
 	impl->set_filled(enable);
 }
 
-void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
+void VectorFont::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
 {
 	impl->set_texture(src_texture, bounding_rect, texture_rect);
 }
 
-void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rect &texture_rect)
+void VectorFont::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rect &texture_rect)
 {
 	Sizef texture_size = src_texture.get_size();
 	Rectf texture_rect_scaled( texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
@@ -150,22 +150,22 @@ void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &boundin
 }
 
 
-void Font_Vector::reset_texture()
+void VectorFont::reset_texture()
 {
 	impl->set_texture(Texture2D(), Rectf(), Rectf());
 }
 
-const std::vector<Vec2f> &Font_Vector::get_glyph_filled(unsigned int glyph)
+const std::vector<Vec2f> &VectorFont::get_glyph_filled(unsigned int glyph)
 {
 	return impl->get_glyph_filled(glyph);
 }
-const std::vector< std::vector<Vec2f> > &Font_Vector::get_glyph_outline(unsigned int glyph)
+const std::vector< std::vector<Vec2f> > &VectorFont::get_glyph_outline(unsigned int glyph)
 {
 	return impl->get_glyph_outline(glyph);
 
 }
 
-void Font_Vector::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::string &text, const Colorf &color)
+void VectorFont::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::string &text, const Colorf &color)
 {
 	if (impl)
 	{
@@ -180,17 +180,17 @@ void Font_Vector::draw_text(Canvas &canvas, float dest_x, float dest_y, const st
 	}
 }
 
-void Font_Vector::draw_text(Canvas &canvas, int dest_x, int dest_y, const std::string &text, const Colorf &color)
+void VectorFont::draw_text(Canvas &canvas, int dest_x, int dest_y, const std::string &text, const Colorf &color)
 {
 	draw_text(canvas, (float) dest_x, (float) dest_y, text, color);
 }
 
-void Font_Vector::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+void VectorFont::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
 {
 	draw_text(canvas, position.x, position.y, text, color);
 }
 
-void Font_Vector::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf content_box, const std::string &text, const Colorf &color)
+void VectorFont::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf content_box, const std::string &text, const Colorf &color)
 {
 	if (impl)
 	{
@@ -249,17 +249,17 @@ void Font_Vector::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y,
 	}
 }
 
-void Font_Vector::draw_text_ellipsis(Canvas &canvas, int dest_x, int dest_y, Rect content_box, const std::string &text, const Colorf &color)
+void VectorFont::draw_text_ellipsis(Canvas &canvas, int dest_x, int dest_y, Rect content_box, const std::string &text, const Colorf &color)
 {
 	draw_text_ellipsis(canvas, (float) dest_x, (float) dest_y, Rectf(content_box.left, content_box.top, content_box.right, content_box.bottom), text, color);
 }
 
-void Font_Vector::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color)
+void VectorFont::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color)
 {
 	draw_text_ellipsis(canvas, position.x, position.y, content_box, text, color);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-// Font_Vector Implementation:
+// VectorFont Implementation:
 
 }
