@@ -44,7 +44,7 @@ class FileSystem;
 class FontProvider_Vector;
 
 /// \brief Vector font drawing class.
-class CL_API_DISPLAY Font_Vector : public Font
+class CL_API_DISPLAY Font_Vector
 {
 /// \name Construction
 /// \{

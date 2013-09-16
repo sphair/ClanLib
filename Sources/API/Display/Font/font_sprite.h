@@ -45,7 +45,7 @@ class Font_Sprite_Impl;
 class FontProvider_Sprite;
 
 /// \brief Sprite Font class.
-class CL_API_DISPLAY Font_Sprite : public Font
+class CL_API_DISPLAY Font_Sprite
 {
 /// \name Construction
 /// \{
@@ -87,6 +87,9 @@ public:
 	/// \brief Retrieves the font provider.
 	FontProvider_Sprite *get_provider() const;
 
+	/// \brief Retrieves font metrics description for the selected font.
+	FontMetrics get_font_metrics();
+
 /// \}
 /// \name Operations
 /// \{
@@ -95,8 +98,6 @@ public:
 
 	/// \brief Set the font metrics for the font.
 	void set_font_metrics(const FontMetrics &metrics);
-
-	using Font::draw_text;
 
 	/// \brief Draw scaled text
 	///

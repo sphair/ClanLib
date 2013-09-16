@@ -41,6 +41,18 @@
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Resources/display_cache.h"
 
+#ifdef WIN32
+#include "FontEngine/font_engine_win32.h"
+#elif defined(__APPLE__)
+#include "FontEngine/font_engine_cocoa.h"
+#else
+#include "X11/font_engine_freetype.h"
+#include "X11/font_provider_freetype.h"
+#include "../Display/X11/font_config.h"
+#endif
+
+#include "glyph_cache.h"
+
 namespace clan
 {
 
@@ -50,15 +62,19 @@ namespace clan
 class Font_Impl
 {
 public:
-	Font_Impl() : provider(0) { }
+	Font_Impl();
+	~Font_Impl();
+	
+	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
+	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
+	Size get_text_size(GraphicContext &gc, const std::string &text);
+	FontMetrics get_font_metrics();
+	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
+private:
+	void free_font();
 
-	~Font_Impl()
-	{
-		if (provider)
-			delete provider;
-	}
-
-	FontProvider *provider;
+	FontEngine *font_engine;
+	GlyphCache glyph_cache;
 };
 
 /////////////////////////////////////////////////////////////////////////////
@@ -69,7 +85,6 @@ Font::Font()
 }
 
 Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
-: impl(new Font_Impl)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -77,26 +92,9 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 	*this = Font(canvas, desc);
 }
 
-Font::Font( Canvas &canvas, const FontDescription &desc)
-: impl(new Font_Impl)
+Font::Font( Canvas &canvas, const FontDescription &desc) : impl(new Font_Impl)
 {
-	Font_System new_font(canvas, desc);
-	*this = new_font;
-}
-
-Font::Font(FontProvider *provider)
-: impl(new Font_Impl)
-{
-	impl->provider = provider;
-}
-
-Font::Font(const Font &copy)
-{
-	impl = copy.impl;
-}
-
-Font::~Font()
-{
+	impl->load_font( canvas, desc, "");
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -115,13 +113,6 @@ bool Font::is_null() const
 	return !impl;
 }
 
-FontProvider *Font::get_provider() const
-{
-	if (!impl)
-		return 0;
-	return impl->provider;
-}
-
 /////////////////////////////////////////////////////////////////////////////
 // Font Operations:
 
@@ -134,7 +125,7 @@ void Font::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::stri
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
-			get_provider()->draw_text(canvas, dest_x, dest_y, lines[i], color);
+			impl->draw_text(canvas, dest_x, dest_y, lines[i], color);
 			dest_y += line_spacing;
 		}
 	}
@@ -230,7 +221,7 @@ Size Font::get_text_size(GraphicContext &gc, const std::string &text)
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
-			Size line_size = get_provider()->get_text_size(gc, lines[i]);
+			Size line_size = impl->get_text_size(gc, lines[i]);
 
 			if ((line_size.width == 0) && (line_size.height == 0) && (lines.size() > 1)) // blank line
 				line_size.height = fm.get_descent() + fm.get_ascent(); 
@@ -254,7 +245,7 @@ Size Font::get_glyph_size(GraphicContext &gc, unsigned int glyph)
 
 	if (impl)
 	{
-		return get_provider()->get_text_size(gc, text);
+		return impl->get_text_size(gc, text);
 	}
 	return Size();
 }
@@ -262,18 +253,109 @@ Size Font::get_glyph_size(GraphicContext &gc, unsigned int glyph)
 FontMetrics Font::get_font_metrics()
 {
 	if (impl)
-		return get_provider()->get_font_metrics();
+		return impl->get_font_metrics();
 	return FontMetrics();
 }
 
 int Font::get_character_index(GraphicContext &gc, const std::string &text, const Point &point)
 {
 	if (impl)
-		return get_provider()->get_character_index(gc, text, point);
+		return impl->get_character_index(gc, text, point);
 	return 0;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 // Font Implementation:
+
+Font_Impl::Font_Impl() : font_engine(NULL)
+{
+}
+
+Font_Impl::~Font_Impl()
+{
+	free_font();
+}
+	
+
+void Font_Impl::free_font()
+{
+	if (font_engine)
+	{
+		delete(font_engine);
+		font_engine = NULL;
+	}
+}
+
+void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename)
+{
+	free_font();
+
+	if (desc.get_subpixel())
+	{
+		glyph_cache.enable_subpixel = true;
+		glyph_cache.anti_alias = true;	// Implies anti_alias is set
+	}
+	else
+	{
+		glyph_cache.enable_subpixel = false;
+		glyph_cache.anti_alias = desc.get_anti_alias();
+	}
+
+#ifdef WIN32
+	font_engine = new FontEngine_Win32(desc, filename);
+	glyph_cache.font_metrics = font_engine->get_metrics();
+    
+#elif defined(__APPLE__)
+    
+    font_engine = new FontEngine_Cocoa(desc, filename);
+    glyph_cache.font_metrics = font_engine->get_metrics();
+
+#else
+	std::string font_file_path = filename;
+	if (font_file_path.empty())
+	{
+	    // Obtain the best matching font file from fontconfig.
+		FontConfig &fc = FontConfig::instance();
+		font_file_path = fc.match_font(desc);
+	}
+
+	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+	FileSystem vfs(path);
+	IODevice io_dev = vfs.open_file(new_filename);
+
+	int average_width = desc.get_average_width();
+	int height = desc.get_height();
+
+	// Ensure width and height are positive
+	if (average_width < 0) average_width =-average_width;
+	if (height < 0) height =-height;
+
+	font_engine = new FontEngine_Freetype(io_dev, average_width, height);
+
+	glyph_cache.font_metrics = font_engine->get_metrics();
+
+#endif
+}
+
+void Font_Impl::draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color)
+{
+	glyph_cache.draw_text(font_engine, canvas, xpos, ypos, text, color);
+}
+
+Size Font_Impl::get_text_size(GraphicContext &gc, const std::string &text)
+{
+	return glyph_cache.get_text_size(font_engine, gc, text);
+}
+
+FontMetrics Font_Impl::get_font_metrics()
+{
+	return glyph_cache.get_font_metrics();
+}
+
+int Font_Impl::get_character_index(GraphicContext &gc, const std::string &text, const Point &point)
+{
+	return glyph_cache.get_character_index(font_engine, gc, text, point);
+}
 
 }

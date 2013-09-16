@@ -64,18 +64,6 @@ public:
 	// \brief Constructs standard font - Currently this defaults to Font_System
 	Font( Canvas &canvas, const FontDescription &desc);
 
-	/// \brief Constructs a Font
-	///
-	/// \param provider = Font Provider
-	Font(FontProvider *provider);
-
-	/// \brief Constructs a Font
-	///
-	/// \param copy = Font
-	Font(const Font &copy);
-
-	virtual ~Font();
-
 /// \}
 
 /// \name Resources
@@ -99,9 +87,6 @@ public:
 	///
 	/// \return true = null
 	bool is_null() const;
-
-	/// \brief Retrieves the font provider.
-	FontProvider *get_provider() const;
 
 /// \}
 /// \name Operations

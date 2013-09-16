@@ -150,15 +150,15 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 	{
 	}
 
-	if (is_sprite_font)
-	{
-		Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
-		return Resource<Font>(Font_Sprite::load(canvas, desc.get_typeface_name(), doc, cb));
-	}
-	else
-	{
+	//if (is_sprite_font)
+	//{
+	//	Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
+	//	return Resource<Font>(Font_Sprite::load(canvas, desc.get_typeface_name(), doc, cb));
+	//}
+	//else
+	//{
 		return Resource<Font>(Font(canvas, desc));
-	}
+	//}
 }
 
 }

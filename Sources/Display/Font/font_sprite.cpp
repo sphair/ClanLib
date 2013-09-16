@@ -49,17 +49,9 @@ Font_Sprite::Font_Sprite()
 {
 }
 
-Font_Sprite::Font_Sprite( Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics) : Font(new FontProvider_Sprite())
+Font_Sprite::Font_Sprite( Sprite sprite, const std::string &letters, int spacelen, bool monospace, FontMetrics metrics)	// : Font(new FontProvider_Sprite())
 {
 	get_provider()->load_font(sprite, letters, spacelen, monospace, metrics);
-}
-
-Font_Sprite::Font_Sprite( const Font &font) : Font(font)
-{
-	if (!get_provider())
-	{
-		throw Exception("Font is not of type Font_Sprite");
-	}
 }
 
 Font_Sprite::~Font_Sprite()
@@ -157,7 +149,7 @@ Font_Sprite Font_Sprite::load(Canvas &canvas, const std::string &id, const XMLRe
 
 FontProvider_Sprite *Font_Sprite::get_provider() const
 {
-	return static_cast <FontProvider_Sprite *> (Font::get_provider());
+	return NULL;	//static_cast <FontProvider_Sprite *> (Font::get_provider());
 }
 
 /////////////////////////////////////////////////////////////////////////////

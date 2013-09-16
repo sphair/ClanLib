@@ -43,7 +43,7 @@ namespace clan
 Font_System::Font_System()
 {
 }
-
+/*
 Font_System::Font_System(Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename) : Font( new FontProvider_System())
 {
 	FontDescription desc;
@@ -64,7 +64,7 @@ Font_System::Font_System( const Font &font) : Font(font)
 		throw Exception("Font is not of type Font_System");
 	}
 }
-
+*/
 Font_System::~Font_System()
 {
 
@@ -75,7 +75,7 @@ Font_System::~Font_System()
 
 FontProvider_System *Font_System::get_provider() const
 {
-	return static_cast <FontProvider_System *> (Font::get_provider());
+	return NULL;//static_cast <FontProvider_System *> (Font::get_provider());
 }
 
 Font_TextureGlyph *Font_System::get_glyph(GraphicContext &gc, int glyph)

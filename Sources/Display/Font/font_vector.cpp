@@ -48,7 +48,7 @@ Font_Vector::Font_Vector()
 {
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)// : Font( new FontProvider_Vector())
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -56,19 +56,10 @@ Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int 
 	*this = Font_Vector(canvas, desc, filename);
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename) : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename)// : Font( new FontProvider_Vector())
 {
 	get_provider()->load_font(desc, filename);
 }
-
-Font_Vector::Font_Vector( const Font &font) : Font(font)
-{
-	if (!get_provider())
-	{
-		throw Exception("Font is not of type Font_Vector");
-	}
-}
-
 
 Font_Vector::~Font_Vector()
 {
@@ -80,7 +71,7 @@ Font_Vector::~Font_Vector()
 
 FontProvider_Vector *Font_Vector::get_provider() const
 {
-	return static_cast <FontProvider_Vector *> (Font::get_provider());
+	return NULL;
 }
 
 Rectf Font_Vector::get_bounding_box(const std::string &reference_string) const
