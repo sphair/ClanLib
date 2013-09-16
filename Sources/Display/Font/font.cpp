@@ -113,6 +113,91 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 	return DisplayCache::get(resources).get_font(canvas, desc);
 }
 
+
+Font Font::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite)
+{
+	XMLResourceNode resource = doc.get_resource(id);
+	std::string type = resource.get_element().get_tag_name();
+	
+	if (type != "font")
+		throw Exception(string_format("Resource '%1' is not of type 'font'", id));
+
+	DomElement sprite_element = resource.get_element().named_item("sprite").to_element();
+
+	FontMetrics font_metrics;
+
+	if (!sprite_element.is_null())
+	{
+		if (!sprite_element.has_attribute("glyphs")) 
+			throw Exception(string_format("Font resource %1 has no 'glyphs' attribute.", resource.get_name()));
+		
+		if (!sprite_element.has_attribute("letters")) 
+			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
+
+		GraphicContext gc = canvas;
+		Resource<Sprite> spr_glyphs = cb_get_sprite.invoke(gc, sprite_element.get_attribute("glyphs"));
+
+		const std::string &letters = sprite_element.get_attribute("letters");
+
+		int spacelen = StringHelp::text_to_int(sprite_element.get_attribute("spacelen", "-1"));
+		bool monospace = StringHelp::text_to_bool(sprite_element.get_attribute("monospace", "false"));
+
+		// Modify the default font metrics, if specified
+
+		if (sprite_element.has_attribute("height")) 
+			font_metrics.set_height(StringHelp::text_to_float(sprite_element.get_attribute("height", "0")));
+
+		if (sprite_element.has_attribute("ascent")) 
+			font_metrics.set_ascent(StringHelp::text_to_float(sprite_element.get_attribute("ascent", "0")));
+
+		if (sprite_element.has_attribute("descent")) 
+			font_metrics.set_descent(StringHelp::text_to_float(sprite_element.get_attribute("descent", "0")));
+
+		if (sprite_element.has_attribute("internal_leading")) 
+			font_metrics.set_internal_leading(StringHelp::text_to_float(sprite_element.get_attribute("internal_leading", "0")));
+
+		if (sprite_element.has_attribute("external_leading")) 
+			font_metrics.set_external_leading(StringHelp::text_to_float(sprite_element.get_attribute("external_leading", "0")));
+
+		if (sprite_element.has_attribute("average_character_width")) 
+			font_metrics.set_average_character_width(StringHelp::text_to_float(sprite_element.get_attribute("average_character_width", "0")));
+
+		if (sprite_element.has_attribute("max_character_width")) 
+			font_metrics.set_max_character_width(StringHelp::text_to_float(sprite_element.get_attribute("max_character_width", "0")));
+
+		if (sprite_element.has_attribute("weight")) 
+			font_metrics.set_weight(StringHelp::text_to_float(sprite_element.get_attribute("weight", "0")));
+
+		if (sprite_element.has_attribute("overhang")) 
+			font_metrics.set_overhang(StringHelp::text_to_float(sprite_element.get_attribute("overhang", "0")));
+
+		if (sprite_element.has_attribute("digitized_aspect_x")) 
+			font_metrics.set_digitized_aspect_x(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_x", "0")));
+
+		if (sprite_element.has_attribute("digitized_aspect_y")) 
+			font_metrics.set_digitized_aspect_y(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_y", "0")));
+
+		if (sprite_element.has_attribute("italic")) 
+			font_metrics.set_italic(StringHelp::text_to_bool(sprite_element.get_attribute("italic", "0")));
+
+		if (sprite_element.has_attribute("underlined")) 
+			font_metrics.set_underlined(StringHelp::text_to_bool(sprite_element.get_attribute("underlined", "0")));
+
+		if (sprite_element.has_attribute("struck_out")) 
+			font_metrics.set_struck_out(StringHelp::text_to_bool(sprite_element.get_attribute("struck_out", "0")));
+
+		if (sprite_element.has_attribute("fixed_pitch")) 
+			font_metrics.set_fixed_pitch(StringHelp::text_to_bool(sprite_element.get_attribute("fixed_pitch", "0")));
+
+		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
+	}
+	else
+	{
+		throw Exception(string_format("Font resource %1 did not have a <sprite> child element! ... TTF loading current not supported", resource.get_name()));
+	}
+}
+
+
 /////////////////////////////////////////////////////////////////////////////
 // Font Attributes:
 
