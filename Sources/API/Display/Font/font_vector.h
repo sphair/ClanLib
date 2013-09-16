@@ -41,7 +41,7 @@ namespace clan
 class Font_Vector_Impl;
 class FontMetrics;
 class FileSystem;
-class FontProvider_Vector;
+class Font_Vector_Impl;
 
 /// \brief Vector font drawing class.
 class CL_API_DISPLAY Font_Vector
@@ -77,8 +77,10 @@ public:
 
 public:
 
-	/// \brief Retrieves the font provider.
-	FontProvider_Vector *get_provider() const;
+	/// \brief Is Null
+	///
+	/// \return true = null
+	bool is_null() const;
 
 	/// \brief Get the largest bounding box for each glyph for this font in a given reference string
 	Rectf get_bounding_box(const std::string &reference_string) const;
@@ -86,12 +88,99 @@ public:
 	const std::vector<Vec2f> &get_glyph_filled(unsigned int glyph);
 	const std::vector< std::vector<Vec2f> > &get_glyph_outline(unsigned int glyph);
 
+	/// \brief Calculate size of text string.
+	///
+	/// Multiline text (seperated by /n) is supported\n
+	/// \n
+	/// Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.\n
+	/// The width is the pixel width\n
+	/// \n
+	/// The size is the increment value to the next glyph
+	Size get_text_size(GraphicContext &gc, const std::string &text);
+
+	/// \brief Gets the size of a specified glyph
+	///
+	/// The size is the increment value to the next glyph
+	///
+	/// \param glyph = The glyph to get
+	/// \return The size
+	Size get_glyph_size(GraphicContext &gc, unsigned int glyph);
+
+	/// \brief Retrieves font metrics description for the selected font.
+	FontMetrics get_font_metrics();
 
 /// \}
 /// \name Operations
 /// \{
 
 public:
+	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(Canvas &canvas, int x, int y, const std::string &text, const Colorf &color = Colorf::white);
+
+	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(Canvas &canvas, float x, float y, const std::string &text, const Colorf &color = Colorf::white);
+
+	/// \brief Print text on gc.
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param position = Dest position
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color = Colorf::white);
+
+	/// \brief Print text on gc adding ellipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(Canvas &canvas, int x, int y, Rect content_box, const std::string &text, const Colorf &color = Colorf::white);
+
+	/// \brief Print text on gc adding ellipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param x = X position
+	/// \param y = Y position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(Canvas &canvas, float x, float y, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white);
+
+	/// \brief Print text on gc adding ellipses if it does not fit
+	///
+	/// Multiline text (seperated by /n) is supported
+	///
+	/// \param gc = Graphic Context
+	/// \param position = Dest position
+	/// \param content_box = Rectangle the text is allowed within
+	/// \param text = The text to draw
+	/// \param color = The text color
+	void draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color = Colorf::white);
+
 	/// \brief Set to draw filled (default)
 	void set_filled(bool enable = true);
 
@@ -109,6 +198,7 @@ public:
 /// \}
 /// \name Implementation
 /// \{
+	std::shared_ptr<Font_Vector_Impl> impl;
 
 /// \}
 };

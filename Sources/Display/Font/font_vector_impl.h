@@ -43,21 +43,21 @@ namespace clan
 class FreetypeFont;
 class FontEngine;
 
-class FontProvider_Vector
+class Font_Vector_Impl
 {
 /// \name Construction
 /// \{
 
 public:
-	FontProvider_Vector();
-	virtual ~FontProvider_Vector();
+	Font_Vector_Impl();
+	virtual ~Font_Vector_Impl();
 
 /// \}
 /// \name Attributes
 /// \{
 public:
 	/// \brief Returns information about the current font.
-	virtual FontMetrics get_font_metrics();
+	FontMetrics get_font_metrics();
 
 /// \}
 /// \name Operations
@@ -88,8 +88,6 @@ public:
 		float *interspacing_x,
 		float *interspacing_y,
 		const Colorf &color = Colorf::white);
-
-	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
 	void load_font(const FontDescription &desc, const std::string &filename);
 	Rectf get_bounding_box(const std::string &reference_string);

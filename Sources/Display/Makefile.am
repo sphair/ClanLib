@@ -85,7 +85,7 @@ Collision/outline_math.cpp \
 Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
 Font/font.cpp \
-Font/font_provider_vector.cpp \
+Font/font_vector_impl.cpp \
 Font/font_vector.cpp \
 Font/glyph_cache.cpp \
 Font/font_description.cpp \

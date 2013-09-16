@@ -34,8 +34,11 @@
 #include "API/Display/Font/font_metrics.h"
 #include "API/Core/IOData/file_system.h"
 #include "API/Display/2D/shape2d.h"
-#include "font_provider_vector.h"
+#include "font_vector_impl.h"
 #include "API/Display/2D/canvas.h"
+#include "API/Core/Text/string_help.h"
+#include "API/Core/Text/string_format.h"
+#include "API/Core/Text/utf8_reader.h"
 
 namespace clan
 {
@@ -47,7 +50,7 @@ Font_Vector::Font_Vector()
 {
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)// : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int height, const std::string &filename)
 {
 	FontDescription desc;
 	desc.set_typeface_name(typeface_name);
@@ -55,9 +58,9 @@ Font_Vector::Font_Vector( Canvas &canvas, const std::string &typeface_name, int 
 	*this = Font_Vector(canvas, desc, filename);
 }
 
-Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename)// : Font( new FontProvider_Vector())
+Font_Vector::Font_Vector( Canvas &canvas, const FontDescription &desc, const std::string &filename) : impl(new Font_Vector_Impl)
 {
-	get_provider()->load_font(desc, filename);
+	impl->load_font(desc, filename);
 }
 
 Font_Vector::~Font_Vector()
@@ -68,28 +71,74 @@ Font_Vector::~Font_Vector()
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Attributes:
 
-FontProvider_Vector *Font_Vector::get_provider() const
+bool Font_Vector::is_null() const
 {
-	return NULL;
+	return !impl;
 }
 
 Rectf Font_Vector::get_bounding_box(const std::string &reference_string) const
 {
-	return get_provider()->get_bounding_box(reference_string);
+	return impl->get_bounding_box(reference_string);
 }
 
+Size Font_Vector::get_text_size(GraphicContext &gc, const std::string &text)
+{
+	Size total_size;
+
+	if (impl)
+	{
+		FontMetrics fm = get_font_metrics();
+		int line_spacing = fm.get_external_leading();
+		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
+		{
+			Size line_size = impl->get_text_size(gc, lines[i]);
+
+			if ((line_size.width == 0) && (line_size.height == 0) && (lines.size() > 1)) // blank line
+				line_size.height = fm.get_descent() + fm.get_ascent(); 
+
+			if ((i+1) != lines.size())	// Do not add the line spacing on the last line
+				line_size.height += line_spacing;
+
+			if (total_size.width < line_size.width)	// Find the widest line
+				total_size.width = line_size.width;
+
+			total_size.height += line_size.height;
+		}
+	}
+	
+	return total_size;
+}
+
+Size Font_Vector::get_glyph_size(GraphicContext &gc, unsigned int glyph)
+{
+	std::string text = StringHelp::unicode_to_utf8(glyph);
+
+	if (impl)
+	{
+		return impl->get_text_size(gc, text);
+	}
+	return Size();
+}
+
+FontMetrics Font_Vector::get_font_metrics()
+{
+	if (impl)
+		return impl->get_font_metrics();
+	return FontMetrics();
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Operations:
 
 void Font_Vector::set_filled(bool enable)
 {
-	get_provider()->set_filled(enable);
+	impl->set_filled(enable);
 }
 
 void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rectf &texture_rect)
 {
-	get_provider()->set_texture(src_texture, bounding_rect, texture_rect);
+	impl->set_texture(src_texture, bounding_rect, texture_rect);
 }
 
 void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &bounding_rect, const Rect &texture_rect)
@@ -97,26 +146,118 @@ void Font_Vector::set_texture(const Texture2D &src_texture, const Rectf &boundin
 	Sizef texture_size = src_texture.get_size();
 	Rectf texture_rect_scaled( texture_rect.left / texture_size.width, texture_rect.top / texture_size.height, texture_rect.right / texture_size.width, texture_rect.bottom / texture_size.height);
 
-	get_provider()->set_texture(src_texture, bounding_rect, texture_rect_scaled);
+	impl->set_texture(src_texture, bounding_rect, texture_rect_scaled);
 }
 
 
 void Font_Vector::reset_texture()
 {
-	get_provider()->set_texture(Texture2D(), Rectf(), Rectf());
+	impl->set_texture(Texture2D(), Rectf(), Rectf());
 }
 
 const std::vector<Vec2f> &Font_Vector::get_glyph_filled(unsigned int glyph)
 {
-	return get_provider()->get_glyph_filled(glyph);
+	return impl->get_glyph_filled(glyph);
 }
 const std::vector< std::vector<Vec2f> > &Font_Vector::get_glyph_outline(unsigned int glyph)
 {
-	return get_provider()->get_glyph_outline(glyph);
+	return impl->get_glyph_outline(glyph);
 
 }
 
+void Font_Vector::draw_text(Canvas &canvas, float dest_x, float dest_y, const std::string &text, const Colorf &color)
+{
+	if (impl)
+	{
+		FontMetrics fm = get_font_metrics();
+		int line_spacing = fm.get_height() + fm.get_external_leading();
+		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
+		{
+			impl->draw_text(canvas, dest_x, dest_y, lines[i], color);
+			dest_y += line_spacing;
+		}
+	}
+}
 
+void Font_Vector::draw_text(Canvas &canvas, int dest_x, int dest_y, const std::string &text, const Colorf &color)
+{
+	draw_text(canvas, (float) dest_x, (float) dest_y, text, color);
+}
+
+void Font_Vector::draw_text(Canvas &canvas, const Pointf &position, const std::string &text, const Colorf &color)
+{
+	draw_text(canvas, position.x, position.y, text, color);
+}
+
+void Font_Vector::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf content_box, const std::string &text, const Colorf &color)
+{
+	if (impl)
+	{
+		GraphicContext &gc = canvas.get_gc();
+		FontMetrics fm = get_font_metrics();
+		int ascent = fm.get_ascent();
+		int descent = fm.get_descent();
+		int line_spacing = fm.get_height() + fm.get_external_leading();
+		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
+		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
+		{
+			if (i == 0 || (dest_y - ascent >= content_box.top && dest_y + descent < content_box.bottom))
+			{
+				Size size = get_text_size(gc, lines[i]);
+				if (dest_x + size.width <= content_box.right)
+				{
+					draw_text(canvas, dest_x, dest_y, lines[i], color);
+				}
+				else
+				{
+					Size ellipsis = get_text_size(gc, "...");
+
+					int seek_start = 0;
+					int seek_end = lines[i].size();
+					int seek_center = (seek_start + seek_end) / 2;
+
+					UTF8_Reader utf8_reader(lines[i].data(), lines[i].length());
+					while (true)
+					{
+						utf8_reader.set_position(seek_center);
+						utf8_reader.move_to_leadbyte();
+						if (seek_center != utf8_reader.get_position())
+							utf8_reader.next();
+						seek_center = utf8_reader.get_position();
+
+						utf8_reader.set_position(seek_start);
+						utf8_reader.next();
+						if (utf8_reader.get_position() == seek_end)
+							break;
+
+						Size text_size = get_text_size(gc, lines[i].substr(0, seek_center));
+
+						if (dest_x + text_size.width + ellipsis.width >= content_box.right)
+							seek_end = seek_center;
+						else
+							seek_start = seek_center;
+						seek_center = (seek_start+seek_end)/2;
+					}
+
+					draw_text(canvas, dest_x, dest_y, lines[i].substr(0, seek_center) + "...", color);
+				}
+
+				dest_y += line_spacing;
+			}
+		}
+	}
+}
+
+void Font_Vector::draw_text_ellipsis(Canvas &canvas, int dest_x, int dest_y, Rect content_box, const std::string &text, const Colorf &color)
+{
+	draw_text_ellipsis(canvas, (float) dest_x, (float) dest_y, Rectf(content_box.left, content_box.top, content_box.right, content_box.bottom), text, color);
+}
+
+void Font_Vector::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf content_box, const std::string &text, const Colorf &color)
+{
+	draw_text_ellipsis(canvas, position.x, position.y, content_box, text, color);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 // Font_Vector Implementation:
