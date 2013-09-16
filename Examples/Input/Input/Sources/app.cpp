@@ -60,7 +60,7 @@ int App::start(const std::vector<std::string> &args)
 	canvas = Canvas(window);
 
 	font = clan::Font(canvas, "tahoma", 16);
-	vector_font = Font_Vector(canvas, "Bitstream Vera Sans", 256, "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf");
+	vector_font = VectorFont(canvas, "Bitstream Vera Sans", 256, "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf");
 
 	calculate_matrix(canvas);
 

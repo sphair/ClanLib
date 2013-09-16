@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "text_shooter.h"
 
-TextShooter::TextShooter(Font_Vector &new_vector_font, const std::string &new_text) : vector_font(new_vector_font), text(new_text)
+TextShooter::TextShooter(VectorFont &new_vector_font, const std::string &new_text) : vector_font(new_vector_font), text(new_text)
 {
 	duration = 2 * 1000;
 	start_time = 0;

@@ -59,7 +59,7 @@ private:
 
 	DisplayWindow window;
 
-	Font_Vector vector_font;
+	VectorFont vector_font;
 	clan::Font font;
 
 	Mat4f projection_matrix;
