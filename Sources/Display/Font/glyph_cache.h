@@ -29,11 +29,11 @@
 #pragma once
 
 #include "API/Display/Font/font.h"
-#include "API/Display/Font/font_system.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/2D/texture_group.h"
 #include "API/Display/2D/subtexture.h"
+#include "API/Display/Render/texture_2d.h"
 #include <list>
 #include <map>
 
@@ -46,6 +46,36 @@ class FontEngine;
 class Font_TextureGlyph;
 class Subtexture;
 class FontPixelBuffer;
+
+/// \brief Font texture format (holds a pixel buffer containing a glyph)
+class Font_TextureGlyph
+{
+public:
+	Font_TextureGlyph() : glyph(0) { };
+
+	/// \brief Glyph this pixel buffer refers to.
+	unsigned int glyph;
+
+	/// \brief The pixel buffer containing the glyph.
+	///
+	/// This maybe a null texture
+	Texture2D texture;
+
+	/// \brief Geometry of the glyph inside the subtexture (excluding the border)
+	Rect geometry;
+
+	/// \brief Offset to draw the font to buffer
+	/** For example:
+	    x = pos_x + pixelbuffer.offset.x
+	    y = pos_y + pixelbuffer.offset.y*/
+	Point offset;
+
+	/// \brief Increment to draw the next glyph
+	/** For example:
+	    pos_x += pixelbuffer.increment.x;
+	    pos_y += pixelbuffer.increment.y;*/
+	Point increment;
+};
 
 class GlyphCache
 {

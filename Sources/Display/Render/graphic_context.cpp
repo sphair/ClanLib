@@ -38,7 +38,6 @@
 #include "API/Display/Window/display_window.h"
 #include "API/Display/Render/element_array_buffer.h"
 #include "API/Display/Render/primitives_array.h"
-#include "API/Display/TargetProviders/font_provider.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Math/angle.h"
 #include "primitives_array_impl.h"

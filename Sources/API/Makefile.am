@@ -419,7 +419,6 @@ clanDisplay_includes = \
 	Display/TargetProviders/transfer_buffer_provider.h \
 	Display/TargetProviders/display_target_provider.h \
 	Display/TargetProviders/display_window_provider.h \
-	Display/TargetProviders/font_provider.h \
 	Display/TargetProviders/vertex_array_buffer_provider.h \
 	Display/TargetProviders/storage_buffer_provider.h \
 	Display/TargetProviders/cursor_provider.h \

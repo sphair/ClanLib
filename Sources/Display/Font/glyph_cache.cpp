@@ -40,7 +40,6 @@
 #include "API/Display/2D/subtexture.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Font/font_metrics.h"
-#include "API/Display/Font/font_system.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/utf8_reader.h"

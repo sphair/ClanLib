@@ -84,17 +84,13 @@ Collision/contour.cpp \
 Collision/outline_math.cpp \
 Collision/outline_provider_bitmap_generic.cpp \
 precomp.cpp \
-Font/font_system.cpp \
-Font/font_provider_sprite.cpp \
 Font/font.cpp \
 Font/font_provider_vector.cpp \
-Font/font_provider_system.cpp \
 Font/font_vector.cpp \
 Font/glyph_cache.cpp \
 Font/font_description.cpp \
 Font/font_metrics_impl.cpp \
 Font/font_metrics.cpp \
-Font/font_sprite.cpp \
 ShaderEffect/shader_effect_description.cpp \
 ShaderEffect/shader_effect.cpp \
 Window/input_context_impl.cpp \

@@ -30,7 +30,6 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/shape2d.h"
@@ -44,7 +43,7 @@ namespace clan
 class FreetypeFont;
 class FontEngine;
 
-class FontProvider_Vector : public FontProvider
+class FontProvider_Vector
 {
 /// \name Construction
 /// \{

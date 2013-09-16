@@ -32,7 +32,6 @@
 #include "API/Display/2D/image.h"
 #include "API/Display/Render/texture_2d.h"
 #include "API/Display/Font/font.h"
-#include "API/Display/Font/font_sprite.h"
 #include "API/Display/Font/font_description.h"
 #include "API/Display/Font/font_metrics.h"
 #include "API/Display/Render/texture.h"
