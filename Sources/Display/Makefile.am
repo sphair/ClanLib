@@ -91,6 +91,7 @@ Font/glyph_cache.cpp \
 Font/font_description.cpp \
 Font/font_metrics_impl.cpp \
 Font/font_metrics.cpp \
+Font/font_impl.cpp \
 ShaderEffect/shader_effect_description.cpp \
 ShaderEffect/shader_effect.cpp \
 Window/input_context_impl.cpp \
