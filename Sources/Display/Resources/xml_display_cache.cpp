@@ -127,29 +127,21 @@ Resource<Font> XMLDisplayCache::get_font(Canvas &canvas, const FontDescription &
 
 Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription &desc)
 {
-	// To do: Fix this retarded way of detecting fonts..
-	bool is_sprite_font = false;
-	try
-	{
-		if (doc.resource_exists(desc.get_typeface_name()))
-		{
-			DomElement font_element = doc.get_resource(desc.get_typeface_name()).get_element();
-			std::string type = font_element.get_tag_name();
-			if (type == "font")
-			{
-				DomElement sprite_element = font_element.named_item("sprite").to_element();
-				if (!sprite_element.is_null())
-					is_sprite_font = true;
+	bool is_resource_font = false;
 
-				// Else it's a system font. We could test for vector fonts as well (hint: need to retrieve the filename from the resource)
-			}
+	if (doc.resource_exists(desc.get_typeface_name()))
+	{
+		DomElement font_element = doc.get_resource(desc.get_typeface_name()).get_element();
+		std::string type = font_element.get_tag_name();
+		if (type == "font")
+		{
+			DomElement sprite_element = font_element.named_item("sprite").to_element();
+			if (!sprite_element.is_null())
+				is_resource_font = true;
 		}
 	}
-	catch (Exception &)
-	{
-	}
 
-	if (is_sprite_font)
+	if (is_resource_font)
 	{
 		Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
 		return Resource<Font>(Font::load(canvas, desc.get_typeface_name(), doc, cb));
