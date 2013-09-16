@@ -166,7 +166,6 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 	glyph_cache.anti_alias = true;
 	glyph_cache.enable_subpixel = false;
 	glyph_cache.font_metrics = metrics;
-	FontMetrics font_metrics;
 
 	const int length = StringHelp::utf8_length(letters);
 
@@ -248,8 +247,10 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 		{
 			increment.x = sprite_frame.position.get_width();
 		}
+		Point offset(sprite_frame.offset);
+		offset.y -= glyph_cache.font_metrics.get_ascent();
 
-		glyph_cache.insert_glyph(canvas, glyph, sub_texture, sprite_frame.offset, increment);
+		glyph_cache.insert_glyph(canvas, glyph, sub_texture, offset, increment);
 
 		sprite_index++;
 	}
@@ -266,6 +267,39 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 
 	}
 
+	float average_character_width=0.0f;
+	float max_character_width=0.0f;
+
+	if (monospace)
+	{
+		average_character_width = fixed_width;
+		max_character_width = fixed_width;
+	}
+	else
+	{
+		for (int i=0; i < length; ++i)
+		{
+			int glyph_width = sprite.get_frame_size(i).width;
+			average_character_width += glyph_width;
+			if (glyph_width > max_character_width)
+				max_character_width = glyph_width;
+		}
+		if (length)
+			average_character_width /= length;
+
+	}
+	if (glyph_cache.font_metrics.get_max_character_width() == 0.0f)
+	{
+		glyph_cache.font_metrics.set_max_character_width(max_character_width);
+	}
+	if (glyph_cache.font_metrics.get_average_character_width() == 0.0f)
+	{
+		glyph_cache.font_metrics.set_average_character_width(average_character_width);
+	}
+	if (glyph_cache.font_metrics.get_height() == 0)
+	{
+		glyph_cache.font_metrics.set_height(height);
+	}
 }
 
 }

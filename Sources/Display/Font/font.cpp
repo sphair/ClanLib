@@ -132,15 +132,18 @@ Font Font::load(Canvas &canvas, const std::string &id, const XMLResourceDocument
 		if (sprite_element.has_attribute("max_character_width")) 
 			font_metrics.set_max_character_width(StringHelp::text_to_float(sprite_element.get_attribute("max_character_width", "0")));
 
+		font_metrics.set_weight(400.0f);
 		if (sprite_element.has_attribute("weight")) 
 			font_metrics.set_weight(StringHelp::text_to_float(sprite_element.get_attribute("weight", "0")));
 
 		if (sprite_element.has_attribute("overhang")) 
 			font_metrics.set_overhang(StringHelp::text_to_float(sprite_element.get_attribute("overhang", "0")));
 
+		font_metrics.set_digitized_aspect_x(96.0f);
 		if (sprite_element.has_attribute("digitized_aspect_x")) 
 			font_metrics.set_digitized_aspect_x(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_x", "0")));
 
+		font_metrics.set_digitized_aspect_y(96.0f);
 		if (sprite_element.has_attribute("digitized_aspect_y")) 
 			font_metrics.set_digitized_aspect_y(StringHelp::text_to_float(sprite_element.get_attribute("digitized_aspect_y", "0")));
 
