@@ -92,9 +92,14 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 	*this = Font(canvas, desc);
 }
 
-Font::Font( Canvas &canvas, const FontDescription &desc) : impl(new Font_Impl)
+Font::Font( Canvas &canvas, const FontDescription &desc)
 {
-	impl->load_font( canvas, desc, "");
+	*this = Font(canvas, desc, "");
+}
+
+Font::Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename) : impl(new Font_Impl)
+{
+	impl->load_font( canvas, desc, ttf_filename);
 }
 
 Font::Font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics) : impl(new Font_Impl)
@@ -189,34 +194,39 @@ Font Font::load(Canvas &canvas, const std::string &id, const XMLResourceDocument
 		return Font(canvas, spr_glyphs.get(), letters, spacelen, monospace, font_metrics);
 	}
 
-	DomElement freetype_element = resource.get_element().named_item("ttf").to_element();
-	if (freetype_element.is_null())
-		freetype_element = resource.get_element().named_item("freetype").to_element();
+	DomElement ttf_element = resource.get_element().named_item("ttf").to_element();
+	if (ttf_element.is_null())
+		ttf_element = resource.get_element().named_item("freetype").to_element();
 
-	if (!freetype_element.is_null())
+	if (!ttf_element.is_null())
 	{
 		FontDescription desc;
 
-		if (freetype_element.has_attribute("file"))
-			desc.set_typeface_name(freetype_element.get_attribute("file"));
-		else
-			throw Exception(string_format("Font resource '%1' has no 'file' attribute", resource.get_name()));
+		std::string filename;
 
-		if (freetype_element.has_attribute("height"))
-			desc.set_height(freetype_element.get_attribute_int("height", 0));
+		if (ttf_element.has_attribute("file"))
+			filename = ttf_element.get_attribute("file"); desc.set_typeface_name(ttf_element.get_attribute("file"));
+
+		if (ttf_element.has_attribute("typeface"))
+			desc.set_typeface_name(ttf_element.get_attribute("typeface"));
+		else
+			throw Exception(string_format("Font resource '%1' has no 'typeface' attribute", resource.get_name()));
+
+		if (ttf_element.has_attribute("height"))
+			desc.set_height(ttf_element.get_attribute_int("height", 0));
 		else
 			throw Exception(string_format("Font resource '%1' has no 'height' attribute", resource.get_name()));
 
-		if (freetype_element.has_attribute("average_width"))
-			desc.set_average_width(freetype_element.get_attribute_int("average_width", 0));
+		if (ttf_element.has_attribute("average_width"))
+			desc.set_average_width(ttf_element.get_attribute_int("average_width", 0));
 
-		if (freetype_element.has_attribute("anti_alias"))
-			desc.set_anti_alias(freetype_element.get_attribute_bool("anti_alias", true));
+		if (ttf_element.has_attribute("anti_alias"))
+			desc.set_anti_alias(ttf_element.get_attribute_bool("anti_alias", true));
 
-		if (freetype_element.has_attribute("subpixel"))
-			desc.set_subpixel(freetype_element.get_attribute_bool("subpixel", true));
+		if (ttf_element.has_attribute("subpixel"))
+			desc.set_subpixel(ttf_element.get_attribute_bool("subpixel", true));
 
-		return Font(canvas, desc);
+		return Font(canvas, desc, filename);
 	}
 
 	throw Exception(string_format("Font resource %1 did not have a <sprite> or <ttf> child element", resource.get_name()));

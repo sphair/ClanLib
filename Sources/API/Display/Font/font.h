@@ -64,6 +64,9 @@ public:
 	// \brief Constructs standard font
 	Font( Canvas &canvas, const FontDescription &desc);
 
+	// \brief Constructs standard font
+	Font( Canvas &canvas, const FontDescription &desc, const std::string &ttf_filename);
+
 	/// \brief Constructs a Font based on a sprite
 	///
 	/// \param sprite = Sprite with glyphs
