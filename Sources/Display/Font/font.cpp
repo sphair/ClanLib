@@ -459,6 +459,18 @@ void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &le
 		sprite_index++;
 	}
 
+	// Did the letter not contain spaces?
+	std::string::size_type space_pos = letters.find(' ');
+	if (space_pos != std::string::npos)
+	{
+		FontPixelBuffer pb;
+		pb.empty_buffer = true;
+		pb.increment.x = spacelen;
+		pb.glyph = ' ';
+		glyph_cache.insert_glyph(canvas, pb);
+
+	}
+
 }
 
 }
