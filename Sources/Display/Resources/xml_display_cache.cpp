@@ -135,9 +135,7 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 		std::string type = font_element.get_tag_name();
 		if (type == "font")
 		{
-			DomElement sprite_element = font_element.named_item("sprite").to_element();
-			if (!sprite_element.is_null())
-				is_resource_font = true;
+			is_resource_font = true;
 		}
 	}
 
