@@ -51,6 +51,7 @@ class Sprite_Impl;
 class CollisionOutline;
 class Canvas;
 class ResourceManager;
+class Font_Impl;
 
 /// \brief Sprite class.
 class CL_API_DISPLAY Sprite
@@ -452,6 +453,9 @@ public:
 /// \{
 private:
 	std::shared_ptr<Sprite_Impl> impl;
+
+	friend class Font_Impl;
+
 /// \}
 };
 

@@ -56,13 +56,22 @@ public:
 	/// \brief Constructs a font.
 	Font();
 
-	/// \brief Constructs standard font - Currently this defaults to Font_System
+	/// \brief Constructs standard font
 	///
 	/// \param canvas = Canvas
 	Font( Canvas &canvas, const std::string &typeface_name, int height);
 
-	// \brief Constructs standard font - Currently this defaults to Font_System
+	// \brief Constructs standard font
 	Font( Canvas &canvas, const FontDescription &desc);
+
+	/// \brief Constructs a Font based on a sprite
+	///
+	/// \param sprite = Sprite with glyphs
+	/// \param letters = Letter to glyph mapping
+	/// \param spacelen = Width of space character
+	/// \param monospace = Force monospaced font (using widest sprite character)
+	/// \param metrics = Font metrics for the sprite font
+	Font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics);
 
 /// \}
 

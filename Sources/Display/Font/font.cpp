@@ -52,6 +52,7 @@
 #endif
 
 #include "glyph_cache.h"
+#include "../2D/sprite_impl.h"
 
 namespace clan
 {
@@ -66,10 +67,12 @@ public:
 	~Font_Impl();
 	
 	void load_font( GraphicContext &context, const FontDescription &desc, const std::string &filename);
+	void load_font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics);
 	void draw_text(Canvas &canvas, float xpos, float ypos, const std::string &text, const Colorf &color);
 	Size get_text_size(GraphicContext &gc, const std::string &text);
 	FontMetrics get_font_metrics();
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
+
 private:
 	void free_font();
 
@@ -95,6 +98,11 @@ Font::Font(Canvas &canvas, const std::string &typeface_name, int height)
 Font::Font( Canvas &canvas, const FontDescription &desc) : impl(new Font_Impl)
 {
 	impl->load_font( canvas, desc, "");
+}
+
+Font::Font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics) : impl(new Font_Impl)
+{
+	impl->load_font(canvas, sprite, letters, spacelen, monospace, metrics);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -356,6 +364,101 @@ FontMetrics Font_Impl::get_font_metrics()
 int Font_Impl::get_character_index(GraphicContext &gc, const std::string &text, const Point &point)
 {
 	return glyph_cache.get_character_index(font_engine, gc, text, point);
+}
+
+void Font_Impl::load_font( Canvas &canvas, Sprite &sprite, const std::string &letters, int spacelen, bool monospace, const FontMetrics &metrics)
+{
+	glyph_cache.anti_alias = true;
+	glyph_cache.enable_subpixel = false;
+	glyph_cache.font_metrics = metrics;
+	FontMetrics font_metrics;
+
+	const int length = StringHelp::utf8_length(letters);
+
+	if ((length > sprite.get_frame_count()) || (length == 0))
+	{
+		throw Exception(string_format("Font error: Letter characters: %1, Available font glyphs: %2", 
+				length,
+				sprite.get_frame_count()));
+	}
+
+	//If monospace font requested, find the width of the widest glyph
+	//Then set the fixed_width var to that width
+	//Also set space to that width, if unset
+	int fixed_width = 0;
+	if (monospace)
+	{
+		for (int i=0; i < length; ++i)
+		{
+			int glyph_width = sprite.get_frame_size(i).width;
+			if (glyph_width > fixed_width)
+				fixed_width = glyph_width;
+		}
+		
+		if (spacelen)
+			spacelen = fixed_width;
+	}
+
+	//If not monospace, and space width not specified, then use average width as space width
+	else if (spacelen <= 0)
+	{
+		std::string::size_type space_pos = letters.find(' ');
+		
+		if (space_pos != std::string::npos)
+		{
+			//If there is a character for space, then use it
+			spacelen = sprite.get_frame_size((int)space_pos).width;
+		}
+		else
+		{
+			//Make the space size the average of all character sizes
+			spacelen = 0;
+			
+			for (int pos = 0; pos < length; ++pos)
+			{
+				spacelen += sprite.get_frame_size((int)(pos)).width;
+			}
+			
+			spacelen /= length;
+		}
+	}
+	
+	int height = 0;
+	for (int i=0; i < length; ++i)
+	{
+		int glyph_height = sprite.get_frame_size(i).height;
+		if (glyph_height > height)
+			height = glyph_height;
+	}
+	
+	// Setup char to glyph map:
+
+	UTF8_Reader reader(letters.data(), letters.length());
+	int sprite_index = 0;
+	while(!reader.is_end())
+	{
+		unsigned int glyph = reader.get_char();
+		reader.next();
+		
+		const Sprite_Impl::SpriteFrame &sprite_frame = sprite.impl->frames[sprite_index];
+
+		Subtexture sub_texture(sprite_frame.texture, sprite_frame.position);
+
+		Point increment;
+		if (fixed_width)
+		{
+			increment.x = fixed_width;
+		}
+		else
+		{
+			increment.x = sprite_frame.position.get_width();
+		}
+
+		glyph_cache.insert_glyph(canvas, glyph, sub_texture, sprite_frame.offset, increment);
+
+		sprite_index++;
+	}
+
 }
 
 }
