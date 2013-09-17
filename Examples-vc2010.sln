@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TexturePacker", "Utilities\TexturePacker\TexturePacker-vc2010.vcxproj", "{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SQL", "Examples\Database\SQL\SQL-vc2010.vcxproj", "{0E7C035C-9855-466F-9468-9FF06750C64D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HSVSprite", "Examples\Display_Shaders\HSVSprite\HSVSprite-vc2010.vcxproj", "{77173D24-4CBD-4925-9307-D75442CAD4AD}"
@@ -12,18 +10,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostProcessing", "Examples\Display_Shaders\PostProcessing\PostProcessing-vc2010.vcxproj", "{C40C2488-5052-4581-A9A5-392CC19418D8}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pacman", "Examples\Game\Pacman\Pacman-vc2010.vcxproj", "{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Lib", "Examples\Game\DiceWar\DiceWar-Lib-vc2010.vcxproj", "{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Client", "Examples\Game\DiceWar\DiceWar-Client-vc2010.vcxproj", "{E40CA023-9C41-441B-8354-7803E63AB758}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF} = {9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DiceWar-Server", "Examples\Game\DiceWar\DiceWar-Server-vc2010.vcxproj", "{4528B1BE-1B77-4D43-9E56-47946D542FFC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF} = {9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpritesRTS", "Examples\Game\SpritesRTS\SpritesRTS-vc2010.vcxproj", "{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}"
 EndProject
@@ -151,12 +137,6 @@ Global
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Debug|Win32.Build.0 = Debug|Win32
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Debug|x64.ActiveCfg = Debug|Win32
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Release|Win32.ActiveCfg = Release|Win32
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Release|Win32.Build.0 = Release|Win32
-		{2EAAC185-8D7F-4570-9AC6-B07D5AB4FDAC}.Release|x64.ActiveCfg = Release|Win32
 		{0E7C035C-9855-466F-9468-9FF06750C64D}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0E7C035C-9855-466F-9468-9FF06750C64D}.Debug|Win32.Build.0 = Debug|Win32
 		{0E7C035C-9855-466F-9468-9FF06750C64D}.Debug|x64.ActiveCfg = Debug|Win32
@@ -189,24 +169,6 @@ Global
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|Win32.Build.0 = Release|Win32
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|x64.ActiveCfg = Release|x64
 		{BEDE1F93-9C8C-4EB2-9033-05AB652FCE0F}.Release|x64.Build.0 = Release|x64
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Debug|Win32.Build.0 = Debug|Win32
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Debug|x64.ActiveCfg = Debug|Win32
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Release|Win32.ActiveCfg = Release|Win32
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Release|Win32.Build.0 = Release|Win32
-		{9BBBD143-5043-4C8D-B6FC-7F3D02739FFF}.Release|x64.ActiveCfg = Release|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Debug|Win32.Build.0 = Debug|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Debug|x64.ActiveCfg = Debug|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Release|Win32.ActiveCfg = Release|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Release|Win32.Build.0 = Release|Win32
-		{E40CA023-9C41-441B-8354-7803E63AB758}.Release|x64.ActiveCfg = Release|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Debug|Win32.Build.0 = Debug|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Debug|x64.ActiveCfg = Debug|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Release|Win32.ActiveCfg = Release|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Release|Win32.Build.0 = Release|Win32
-		{4528B1BE-1B77-4D43-9E56-47946D542FFC}.Release|x64.ActiveCfg = Release|Win32
 		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|Win32.Build.0 = Debug|Win32
 		{D9CE0CB9-BDC8-4306-A1C8-7C9D0C1E61EB}.Debug|x64.ActiveCfg = Debug|Win32

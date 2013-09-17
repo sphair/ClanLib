@@ -53,14 +53,14 @@ int App::main(const std::vector<std::string> &args)
 	Rect toolbar_rect = Rect((viewport.right - 448) / 2, viewport.bottom - 56, (viewport.right - 448) / 2 + 448, viewport.bottom);
 	Toolbar toolbar(toolbar_rect, &game_component);	// GameComponent is the "desktop" that the toolbar sits on, as an owner
 
-	GraphicContext gc = display_window.get_gc();
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell1.png"), Sprite(gc, "Resources/Images/spell1_selected.png"), Sprite(gc, "Resources/Images/spell1_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell2.png"), Sprite(gc, "Resources/Images/spell2_selected.png"), Sprite(gc, "Resources/Images/spell2_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell3.png"), Sprite(gc, "Resources/Images/spell3_selected.png"), Sprite(gc, "Resources/Images/spell3_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell4.png"), Sprite(gc, "Resources/Images/spell4_selected.png"), Sprite(gc, "Resources/Images/spell4_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell5.png"), Sprite(gc, "Resources/Images/spell5_selected.png"), Sprite(gc, "Resources/Images/spell5_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell6.png"), Sprite(gc, "Resources/Images/spell6_selected.png"), Sprite(gc, "Resources/Images/spell6_clicked.png"));
-	toolbar.add_item(Sprite(gc, "Resources/Images/spell7.png"), Sprite(gc, "Resources/Images/spell7_selected.png"), Sprite(gc, "Resources/Images/spell7_clicked.png"));
+	Canvas canvas = game_component.get_canvas();
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell1.png"), Sprite(canvas, "Resources/Images/spell1_selected.png"), Sprite(canvas, "Resources/Images/spell1_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell2.png"), Sprite(canvas, "Resources/Images/spell2_selected.png"), Sprite(canvas, "Resources/Images/spell2_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell3.png"), Sprite(canvas, "Resources/Images/spell3_selected.png"), Sprite(canvas, "Resources/Images/spell3_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell4.png"), Sprite(canvas, "Resources/Images/spell4_selected.png"), Sprite(canvas, "Resources/Images/spell4_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell5.png"), Sprite(canvas, "Resources/Images/spell5_selected.png"), Sprite(canvas, "Resources/Images/spell5_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell6.png"), Sprite(canvas, "Resources/Images/spell6_selected.png"), Sprite(canvas, "Resources/Images/spell6_clicked.png"));
+	toolbar.add_item(Sprite(canvas, "Resources/Images/spell7.png"), Sprite(canvas, "Resources/Images/spell7_selected.png"), Sprite(canvas, "Resources/Images/spell7_clicked.png"));
 
 	gui.exec();
 

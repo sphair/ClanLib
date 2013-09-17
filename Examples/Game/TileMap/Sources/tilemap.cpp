@@ -45,7 +45,7 @@ void TileMap::load(Canvas &canvas, const std::string &level, ResourceManager &re
 	
 	log_event("Debug", "Loading level %1 (%2x%3)", level_name, map_width, map_height);
 
-	sprite_tiles = Sprite::resource(gc, resource_name, resources);
+	sprite_tiles = Sprite::resource(canvas, resource_name, resources);
 
 	tile_width = sprite_tiles.get_width();
 	tile_height = sprite_tiles.get_height();

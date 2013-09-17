@@ -47,7 +47,7 @@ void Server::on_client_connected(NetGameConnection *connection)
 }
 
 // A client disconnected
-void Server::on_client_disconnected(NetGameConnection *connection)
+void Server::on_client_disconnected(NetGameConnection *connection, const std::string &message)
 {
 	log_event("network", "Client disconnected");
 

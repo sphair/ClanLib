@@ -97,7 +97,7 @@ Missile::Missile(MissileDesc &desc)
 	does_hurt_player = desc.does_hurt_player_;
 	does_hurt_enemy = desc.does_hurt_enemy_;
 
-	GraphicContext &gc = game->get_gc();
+	Canvas canvas = game->get_canvas();
 	PhysicsContext pc = game->get_pc();
 	ResourceManager &resources = game->get_resources();
 
@@ -107,15 +107,15 @@ Missile::Missile(MissileDesc &desc)
 	switch(mType)
 	{
 	case MissileDesc::mt_bullet:
-		bullet = Sprite::resource(gc, "Bullet1", resources);
+		bullet = Sprite::resource(canvas, "Bullet1", resources);
 		damage = 20;
 		break;
 	case MissileDesc::mt_energy:
-		bullet = Sprite::resource(gc, "Bullet2", resources);
+		bullet = Sprite::resource(canvas, "Bullet2", resources);
 		damage = 10;
 		break;
 	case MissileDesc::mt_rocket:
-		bullet = Sprite::resource(gc, "Rocket", resources);
+		bullet = Sprite::resource(canvas, "Rocket", resources);
 		damage = 50;
 		break;
 	}

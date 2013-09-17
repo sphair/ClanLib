@@ -7,7 +7,7 @@ TextExplosion2D::TextExplosion2D()
 {
 }
 
-void TextExplosion2D::explode(clan::GraphicContext &gc, const std::string &new_text, int new_x, int new_y, clan::Font new_font, clan::Colorf new_color)
+void TextExplosion2D::explode(clan::Canvas &canvas, const std::string &new_text, int new_x, int new_y, clan::Font new_font, clan::Colorf new_color)
 {
 	letter_positions.clear();
 	letter_deltas.clear();
@@ -17,7 +17,7 @@ void TextExplosion2D::explode(clan::GraphicContext &gc, const std::string &new_t
 	initial_x = new_x;
 	initial_y = new_y;
 
-	int total_length = font.get_text_size(gc, text).width;
+	int total_length = font.get_text_size(canvas, text).width;
 	int x = initial_x - total_length/2;
 	letter_positions.resize(text.length());
 	letter_deltas.resize(text.length());
@@ -25,7 +25,7 @@ void TextExplosion2D::explode(clan::GraphicContext &gc, const std::string &new_t
 	{
 		letter_positions[i] = clan::Vec3f((float)x, (float)initial_y, 1.0f);
 		letter_deltas[i] = clan::Vec3f((rand()%2000-1000)/(float) 20, -(rand()%2000)/(float) 20, (rand()%2000-1000)/(float) 2000);
-		x += font.get_text_size(gc, text.substr(i, 1)).width;
+		x += font.get_text_size(canvas, text.substr(i, 1)).width;
 	}
 	timer.reset();
 }

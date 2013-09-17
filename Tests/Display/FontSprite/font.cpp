@@ -61,8 +61,8 @@ int App::start(const std::vector<std::string> &args)
 
 	// Load some fonts from the resource file
 	ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("font.xml"));
-	Font font1 = Font_Sprite::resource(canvas, FontDescription("Font1"), resources);
-	Font font2 = Font_Sprite::resource(canvas, FontDescription("Font2"), resources);
+	Font font1 = Font::resource(canvas, FontDescription("Font1"), resources);
+	Font font2 = Font::resource(canvas, FontDescription("Font2"), resources);
 
 	// Run until someone presses escape
 	while (!quit)

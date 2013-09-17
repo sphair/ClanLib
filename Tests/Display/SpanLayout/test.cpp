@@ -67,7 +67,7 @@ public:
 		span.add_image(smiley, 2, 11);
 		span.add_text("kthxbye!", font1, Colorf::blue, 12);
 
-		span.layout(gc, 200);
+		span.layout(canvas, 200);
 		span.set_position(Point(10, 10));
 
 		while (!window.get_ic().get_keyboard().get_keycode(keycode_escape))
@@ -77,7 +77,7 @@ public:
 			span.draw_layout(canvas);
 
 			Point mouse_pos = window.get_ic().get_mouse().get_position();
-			SpanLayout::HitTestResult result = span.hit_test(gc, mouse_pos);
+			SpanLayout::HitTestResult result = span.hit_test(canvas, mouse_pos);
 
 			std::string type;
 			switch(result.type)

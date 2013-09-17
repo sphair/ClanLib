@@ -144,7 +144,7 @@ void RadialMenu::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			int x = (int)((-cosf(rads)) * selected_text_distance);
 			int y = (int)((-sinf(rads)) * selected_text_distance);
-			int font_center_x = selected_font.get_text_size(gc, items[i].text).width / 2;
+			int font_center_x = selected_font.get_text_size(canvas, items[i].text).width / 2;
 			int font_center_y = (int)selected_font_height / 2;
 			selected_font.draw_text(canvas, center_x + x - font_center_x, center_y + y + font_center_y, items[i].text, selected_text_color);
 		}
@@ -152,7 +152,7 @@ void RadialMenu::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			int x = (int)((-cosf(rads)) * normal_text_distance);
 			int y = (int)((-sinf(rads)) * normal_text_distance);
-			int fontx = normal_font.get_text_size(gc, items[i].text).width / 2;
+			int fontx = normal_font.get_text_size(canvas, items[i].text).width / 2;
 			int fonty = (int)normal_font_height / 2;
 			normal_font.draw_text(canvas, center_x + x - fontx, center_y + y + fonty, items[i].text, normal_text_color);
 		}

@@ -33,11 +33,11 @@
 Map::Map(Game &game_)
 {
 	game = &game_;
-	GraphicContext &gc = game_.get_gc(); 
+	Canvas &canvas = game_.get_canvas(); 
 	ResourceManager &resources = game_.get_resources();
-	title1 = Sprite::resource(gc,"Map1", resources);
-	background1 = Sprite::resource(gc, "Background1", resources);
-	background2 = Sprite::resource(gc, "Background2", resources);
+	title1 = Sprite::resource(canvas,"Map1", resources);
+	background1 = Sprite::resource(canvas, "Background1", resources);
+	background2 = Sprite::resource(canvas, "Background2", resources);
 
 	update_slot = game_.get_update_sig().connect(this,&Map::update);
 

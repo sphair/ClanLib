@@ -61,7 +61,7 @@ Enemy::Enemy(Game &game_)
 	add_enemy(this);
 
 	game = &game_;
-	GraphicContext &gc = game_.get_gc();
+	Canvas &canvas = game_.get_canvas();
 	PhysicsContext pc = game_.get_pc();
 	ResourceManager &resources = game_.get_resources();
 
@@ -80,7 +80,7 @@ Enemy::Enemy(Game &game_)
 
 //________________________________________________________________________
 //															   R E N D E R
-	enemy = Sprite::resource(gc,"Enemy1", resources);
+	enemy = Sprite::resource(canvas,"Enemy1", resources);
 	enemy.set_play_loop(true);
 	
 	//int x,y;

@@ -66,8 +66,7 @@ void Game::run()
 	Slot slot_mouse_down			= (window.get_ic().get_mouse()).sig_key_down()		.connect(this,&Game::on_pointer_down);
 	Slot slot_mouse_up			= (window.get_ic().get_mouse()).sig_key_up()		.connect(this,&Game::on_pointer_up);
 	
-	Canvas canvas(window);
-	gc = canvas.get_gc();
+	canvas = Canvas(window);
 	
 	ResourceManager resources = XMLResourceManager::create(XMLResourceDocument("resources.xml"));
 	resources_=&resources;
@@ -182,9 +181,9 @@ void Game::on_quit()
 {
 	quit = true;
 }
-GraphicContext &Game::get_gc()
+Canvas &Game::get_canvas()
 {
-	return gc;
+	return canvas;
 }
 
 PhysicsContext &Game::get_pc()

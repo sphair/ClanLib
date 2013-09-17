@@ -39,12 +39,12 @@ public:
 			Texture2D texture(gc, "Images/square.png");
 
 			Image image_texture(texture, Rect(0, 0, texture.get_size()));
-			Image image_loaded(gc, "Images/square.png");
-			Image image_resources = Image::resource(gc, "entire_image", resources);
+			Image image_loaded(canvas, "Images/square.png");
+			Image image_resources = Image::resource(canvas, "entire_image", resources);
 			Image image_copy(image_texture);
-			Image image_top_right = Image::resource(gc, "image_top_right", resources);
-			Image image_bottom_right = Image::resource(gc, "image_bottom_right", resources);
-			Image image_black = Image::resource(gc, "image_black", resources);
+			Image image_top_right = Image::resource(canvas, "image_top_right", resources);
+			Image image_bottom_right = Image::resource(canvas, "image_bottom_right", resources);
+			Image image_black = Image::resource(canvas, "image_black", resources);
 
 			Font small_font = Font(canvas, "Tahoma", 12);
 

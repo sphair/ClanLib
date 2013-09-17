@@ -45,7 +45,7 @@ int App::start(const std::vector<std::string> &args)
 	win_desc.set_title("GUILayout Test Application");
 	win_desc.set_position(clan::Rect(200, 200, 540, 440), false);
 	win_desc.set_visible(false);
-	clan::GUIComponent window(&gui, win_desc, "Window");
+	clan::Window window(&gui, win_desc);
 	window.func_close().set(this, &App::on_close, &window);
 
 	clan::GUILayoutCorners layout;

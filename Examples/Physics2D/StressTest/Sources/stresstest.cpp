@@ -151,7 +151,7 @@ int StressTest::start(const std::vector<std::string> &args)
 		time_array[i] = 1;
 	}
 
-	clan::Font font = Font_System(canvas, "Tahoma", 12);
+	clan::Font font(canvas, "Tahoma", 12);
 
 	// Run until someone presses escape
 	while (!quit)

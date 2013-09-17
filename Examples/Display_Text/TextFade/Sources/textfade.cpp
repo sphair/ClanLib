@@ -61,7 +61,7 @@ int TextFade::start(const std::vector<std::string> &args)
 	clan::Font standard_font(canvas, font_description);
 
 	clan::ResourceManager resources = clan::XMLResourceManager::create(clan::XMLResourceDocument("../Font/Resources/resources.xml"));
-	clan::Font sprite_font = clan::Font_Sprite::resource(canvas, clan::FontDescription("ClanFont"), resources);
+	clan::Font sprite_font = clan::Font::resource(canvas, clan::FontDescription("ClanFont"), resources);
 
 	// Run until someone presses escape
 	while (!quit)

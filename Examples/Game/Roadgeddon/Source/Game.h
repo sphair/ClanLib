@@ -49,7 +49,7 @@ public:
 	void get_screen_resolution(int &xRes, int &yRes);
 	int get_width() { return screen_x_res; }
 	int get_height() { return screen_y_res; }
-	GraphicContext &get_gc();
+	Canvas &get_canvas();
 	PhysicsContext &get_pc();
 	ResourceManager &get_resources();
 
@@ -86,7 +86,7 @@ private:
 	Signal_v1<int> update_signal;
 
 	PhysicsContext pc;
-	GraphicContext gc;
+	Canvas canvas;
 	ResourceManager *resources_;
 	std::list<Gameobject *> objects_for_deletion; 
 	

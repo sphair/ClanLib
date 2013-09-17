@@ -5,7 +5,7 @@ class TextExplosion2D
 {
 public:
 	TextExplosion2D();
-	void explode(clan::GraphicContext &gc, const std::string &text, int x, int y, clan::Font font, clan::Colorf color);
+	void explode(clan::Canvas &canvas, const std::string &text, int x, int y, clan::Font font, clan::Colorf color);
 	void render(clan::Canvas &canvas);
 
 private:

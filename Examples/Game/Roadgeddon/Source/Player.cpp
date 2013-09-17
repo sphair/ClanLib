@@ -51,17 +51,17 @@ Player::Player(Game &game_)
 
 	//
 	game = &game_;
-	GraphicContext gc = game_.get_gc();
+	Canvas canvas = game_.get_canvas();
 	PhysicsContext pc = game_.get_pc();
 	ResourceManager resources = game_.get_resources();
 
-	vehicle	= Sprite::resource(gc, "Car1", resources);
+	vehicle	= Sprite::resource(canvas, "Car1", resources);
 
 	vehicle.set_linear_filter(false);
 	//________________________________________________________________________
 	//															   T U R R E T	
-	turret		= Sprite::resource(gc, "Turret1", resources);
-	turretBase	= Sprite::resource(gc, "Turret1Base", resources);
+	turret		= Sprite::resource(canvas, "Turret1", resources);
+	turretBase	= Sprite::resource(canvas, "Turret1Base", resources);
 	
 	turret.set_linear_filter(false);
 	turretBase.set_linear_filter(false);

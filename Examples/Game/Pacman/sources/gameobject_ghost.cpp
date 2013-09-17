@@ -38,7 +38,7 @@
 GameObject_Ghost::GameObject_Ghost(int x, int y, World *world) :
 	GameObject_Moving(x, y, world)
 {
-	spr_ghost = Sprite::resource(world->gc, "Game/spr_ghost", world->resources);
+	spr_ghost = Sprite::resource(world->canvas, "Game/spr_ghost", world->resources);
 	//sfx_ghost = SoundBuffer("Game/sfx_ghost", world->resources);
 	//sfx_ghost_dead = SoundBuffer("Game/sfx_ghost_dead", world->resources);
 

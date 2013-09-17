@@ -16,7 +16,7 @@ public:
 
 private:
 	void on_client_connected(NetGameConnection *connection);
-	void on_client_disconnected(NetGameConnection *connection);
+	void on_client_disconnected(NetGameConnection *connection, const std::string &message);
 
 	void on_event_received(NetGameConnection *connection, const NetGameEvent &e);
 

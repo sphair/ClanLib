@@ -34,9 +34,9 @@
 /////////////////////////////////////////////////////////////////////////////
 // Map construction:
 
-Map::Map(ResourceManager &resources, GraphicContext &gc) : width(0), height(0), tiles(0), eggs_left(0)
+Map::Map(ResourceManager &resources, Canvas &canvas) : width(0), height(0), tiles(0), eggs_left(0)
 {
-	tile_images = Sprite::resource(gc, "Game/spr_maptiles", resources);
+	tile_images = Sprite::resource(canvas, "Game/spr_maptiles", resources);
 }
 	
 Map::~Map()

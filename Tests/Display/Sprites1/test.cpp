@@ -25,10 +25,10 @@ public:
 
 			canvas.set_map_mode(map_2d_upper_left);
 
-			Sprite background(gc, "Images/background.png");
-			Sprite test1_facit(gc, "Images/test1_facit.png");
+			Sprite background(canvas, "Images/background.png");
+			Sprite test1_facit(canvas, "Images/test1_facit.png");
 
-			Sprite testsprite1(gc, "Images/testsprite1.png");
+			Sprite testsprite1(canvas, "Images/testsprite1.png");
 
 //			PixelBuffer buffer = ImageProviderFactory::load("Images/pacman.pcx");
 //			int texture_width = buffer.get_width();
