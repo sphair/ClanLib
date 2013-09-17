@@ -37,12 +37,10 @@
     <h2>Fonts</h2>
 
     <ul>
-        <li>clan::Font - Main font class</li>
+        <li>clan::Font - Font class for System / TrueType / OpenType fonts and fonts using sprite image frames as glyphs</li>
         <li>clan::FontDescription - Allows you to setup a more advanced description when creating a font</li>
         <li>clan::FontMetrics - The metrics of a font</li>
-        <li>clan::Font_System - System / TrueType / OpenType fonts</li>
-        <li>clan::Font_Sprite - Font using sprite image frames as glyphs</li>
-        <li>clan::Font_Vector - Vector font drawing</li>
+        <li>clan::VectorFont - Vector font drawing</li>
     </ul>
 
     <h2>Image Pixels</h2>
