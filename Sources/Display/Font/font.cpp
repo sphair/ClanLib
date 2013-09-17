@@ -176,8 +176,6 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 
 		if (ttf_element.has_attribute("typeface"))
 			desc.set_typeface_name(ttf_element.get_attribute("typeface"));
-		else
-			throw Exception(string_format("Font resource '%1' has no 'typeface' attribute", resource.get_name()));
 
 		if (ttf_element.has_attribute("height"))
 			desc.set_height(ttf_element.get_attribute_int("height", 0));
