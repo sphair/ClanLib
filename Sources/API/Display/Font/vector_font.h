@@ -96,7 +96,7 @@ public:
 	/// The width is the pixel width\n
 	/// \n
 	/// The size is the increment value to the next glyph
-	Size get_text_size(GraphicContext &gc, const std::string &text);
+	Size get_text_size(Canvas &canvas, const std::string &text);
 
 	/// \brief Gets the size of a specified glyph
 	///
@@ -104,7 +104,7 @@ public:
 	///
 	/// \param glyph = The glyph to get
 	/// \return The size
-	Size get_glyph_size(GraphicContext &gc, unsigned int glyph);
+	Size get_glyph_size(Canvas &canvas, unsigned int glyph);
 
 	/// \brief Retrieves font metrics description for the selected font.
 	FontMetrics get_font_metrics();
@@ -118,7 +118,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param x = X position
 	/// \param y = Y position
 	/// \param text = The text to draw
@@ -129,7 +129,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param x = X position
 	/// \param y = Y position
 	/// \param text = The text to draw
@@ -140,7 +140,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param position = Dest position
 	/// \param text = The text to draw
 	/// \param color = The text color
@@ -150,7 +150,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param x = X position
 	/// \param y = Y position
 	/// \param content_box = Rectangle the text is allowed within
@@ -162,7 +162,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param x = X position
 	/// \param y = Y position
 	/// \param content_box = Rectangle the text is allowed within
@@ -174,7 +174,7 @@ public:
 	///
 	/// Multiline text (seperated by /n) is supported
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param position = Dest position
 	/// \param content_box = Rectangle the text is allowed within
 	/// \param text = The text to draw

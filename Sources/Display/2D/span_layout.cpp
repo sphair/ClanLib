@@ -68,14 +68,14 @@ void SpanLayout::add_component_helper(SpanComponent *component, int baseline_off
 	impl->add_component(component, baseline_offset, id);
 }
 
-void SpanLayout::layout(GraphicContext &gc, int max_width)
+void SpanLayout::layout(Canvas &canvas, int max_width)
 {
-	impl->layout(gc, max_width);
+	impl->layout(canvas, max_width);
 }
 
-SpanLayout::HitTestResult SpanLayout::hit_test(GraphicContext &gc, const Point &pos)
+SpanLayout::HitTestResult SpanLayout::hit_test(Canvas &canvas, const Point &pos)
 {
-	return impl->hit_test(gc, pos);
+	return impl->hit_test(canvas, pos);
 }
 
 void SpanLayout::draw_layout(Canvas &canvas)
@@ -113,9 +113,9 @@ void SpanLayout::set_align(SpanAlign align)
 	impl->set_align(align);
 }
 
-Size SpanLayout::find_preferred_size(GraphicContext &gc)
+Size SpanLayout::find_preferred_size(Canvas &canvas)
 {
-	return impl->find_preferred_size(gc);
+	return impl->find_preferred_size(canvas);
 }
 
 void SpanLayout::set_selection_range(std::string::size_type start, std::string::size_type end)

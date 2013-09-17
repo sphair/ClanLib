@@ -70,11 +70,11 @@ public:
 
 	void add_frame(const Texture2D &texture);
 	void add_frame(const Texture2D &texture, const Rect &rect);
-	void add_gridclipped_frames(GraphicContext &gc, const Texture2D &texture,int xpos, int ypos,int width, int height,int xarray = 1, int yarray = 1,int array_skipframes = 0,int xspacing = 0, int yspacing = 0);
-	void add_alphaclipped_frames(GraphicContext &gc, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
-	void add_alphaclipped_frames_free(GraphicContext &gc, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
-	CollisionOutline create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
-	std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
+	void add_gridclipped_frames(Canvas &canvas, const Texture2D &texture,int xpos, int ypos,int width, int height,int xarray = 1, int yarray = 1,int array_skipframes = 0,int xspacing = 0, int yspacing = 0);
+	void add_alphaclipped_frames(Canvas &canvas, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
+	void add_alphaclipped_frames_free(Canvas &canvas, const Texture2D &texture,int xpos = 0, int ypos = 0,float trans_limit = 0.05f);
+	CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
+	std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
 
 	Angle angle;
 	Angle base_angle;

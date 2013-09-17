@@ -81,7 +81,7 @@ Resource<Font> Font::resource(Canvas &canvas, const FontDescription &desc, const
 }
 
 
-Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite)
+Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, Canvas &, const std::string &> cb_get_sprite)
 {
 	XMLResourceNode resource = doc.get_resource(id);
 	std::string type = resource.get_element().get_tag_name();
@@ -101,8 +101,7 @@ Font Font_Impl::load(Canvas &canvas, const FontDescription &reference_desc, cons
 		if (!sprite_element.has_attribute("letters")) 
 			throw Exception(string_format("Font resource %1 has no 'letters' attribute.", resource.get_name()));
 
-		GraphicContext gc = canvas;
-		Resource<Sprite> spr_glyphs = cb_get_sprite.invoke(gc, sprite_element.get_attribute("glyphs"));
+		Resource<Sprite> spr_glyphs = cb_get_sprite.invoke(canvas, sprite_element.get_attribute("glyphs"));
 
 		const std::string &letters = sprite_element.get_attribute("letters");
 
@@ -240,7 +239,6 @@ void Font::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf 
 {
 	if (impl)
 	{
-		GraphicContext &gc = canvas.get_gc();
 		FontMetrics fm = get_font_metrics();
 		int ascent = fm.get_ascent();
 		int descent = fm.get_descent();
@@ -250,14 +248,14 @@ void Font::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf 
 		{
 			if (i == 0 || (dest_y - ascent >= content_box.top && dest_y + descent < content_box.bottom))
 			{
-				Size size = get_text_size(gc, lines[i]);
+				Size size = get_text_size(canvas, lines[i]);
 				if (dest_x + size.width <= content_box.right)
 				{
 					draw_text(canvas, dest_x, dest_y, lines[i], color);
 				}
 				else
 				{
-					Size ellipsis = get_text_size(gc, "...");
+					Size ellipsis = get_text_size(canvas, "...");
 
 					int seek_start = 0;
 					int seek_end = lines[i].size();
@@ -277,7 +275,7 @@ void Font::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, Rectf 
 						if (utf8_reader.get_position() == seek_end)
 							break;
 
-						Size text_size = get_text_size(gc, lines[i].substr(0, seek_center));
+						Size text_size = get_text_size(canvas, lines[i].substr(0, seek_center));
 
 						if (dest_x + text_size.width + ellipsis.width >= content_box.right)
 							seek_end = seek_center;
@@ -305,7 +303,7 @@ void Font::draw_text_ellipsis(Canvas &canvas, const Pointf &position, Rectf cont
 	draw_text_ellipsis(canvas, position.x, position.y, content_box, text, color);
 }
 
-Size Font::get_text_size(GraphicContext &gc, const std::string &text)
+Size Font::get_text_size(Canvas &canvas, const std::string &text)
 {
 	Size total_size;
 
@@ -316,7 +314,7 @@ Size Font::get_text_size(GraphicContext &gc, const std::string &text)
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
-			Size line_size = impl->get_text_size(gc, lines[i]);
+			Size line_size = impl->get_text_size(canvas, lines[i]);
 
 			if ((line_size.width == 0) && (line_size.height == 0) && (lines.size() > 1)) // blank line
 				line_size.height = fm.get_descent() + fm.get_ascent(); 
@@ -334,13 +332,13 @@ Size Font::get_text_size(GraphicContext &gc, const std::string &text)
 	return total_size;
 }
 
-Size Font::get_glyph_size(GraphicContext &gc, unsigned int glyph)
+Size Font::get_glyph_size(Canvas &canvas, unsigned int glyph)
 {
 	std::string text = StringHelp::unicode_to_utf8(glyph);
 
 	if (impl)
 	{
-		return impl->get_text_size(gc, text);
+		return impl->get_text_size(canvas, text);
 	}
 	return Size();
 }
@@ -352,10 +350,10 @@ FontMetrics Font::get_font_metrics()
 	return FontMetrics();
 }
 
-int Font::get_character_index(GraphicContext &gc, const std::string &text, const Point &point)
+int Font::get_character_index(Canvas &canvas, const std::string &text, const Point &point)
 {
 	if (impl)
-		return impl->get_character_index(gc, text, point);
+		return impl->get_character_index(canvas, text, point);
 	return 0;
 }
 

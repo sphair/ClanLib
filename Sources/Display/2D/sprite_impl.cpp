@@ -293,7 +293,7 @@ void Sprite_Impl::add_frame(const Texture2D &texture, const Rect &rect)
 	frames.push_back(frame);
 }
 
-void Sprite_Impl::add_gridclipped_frames(GraphicContext &gc, 
+void Sprite_Impl::add_gridclipped_frames(Canvas &canvas, 
 	const Texture2D &texture, 
 	int xpos, int ypos, 
 	int width, int height, 
@@ -320,12 +320,12 @@ void Sprite_Impl::add_gridclipped_frames(GraphicContext &gc,
 	}
 }
 
-void Sprite_Impl::add_alphaclipped_frames(GraphicContext &gc, 
+void Sprite_Impl::add_alphaclipped_frames(Canvas &canvas, 
 	const Texture2D &texture, 
 	int xpos, int ypos, 
 	float trans_limit)
 {
-	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+	PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
 
 	int begin = 0;
 	bool prev_trans = true;
@@ -400,12 +400,12 @@ void Sprite_Impl::add_alphaclipped_frames(GraphicContext &gc,
 	}
 }
 
-void Sprite_Impl::add_alphaclipped_frames_free(GraphicContext &gc, 
+void Sprite_Impl::add_alphaclipped_frames_free(Canvas &canvas, 
 	const Texture2D &texture, 
 	int xpos, int ypos, 
 	float trans_limit)
 {
-	PixelBuffer alpha_buffer = texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+	PixelBuffer alpha_buffer = texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
 
 	int width = alpha_buffer.get_width();
 	int height = alpha_buffer.get_height();
@@ -491,7 +491,7 @@ void Sprite_Impl::add_alphaclipped_frames_free(GraphicContext &gc,
 	}
 }
 
-std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
 {
 	std::vector<CollisionOutline> outlines;
 	// Fetch frames
@@ -508,7 +508,7 @@ std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(GraphicCont
 		if (last_texture != description_frame.texture)
 		{
 				last_texture = description_frame.texture;
-				texture_pixelbuffer = description_frame.texture.get_pixeldata(gc, tf_rgba8).to_cpu(gc);
+				texture_pixelbuffer = description_frame.texture.get_pixeldata(canvas, tf_rgba8).to_cpu(canvas);
 		}
 
 		PixelBuffer target(description_frame.position.get_width(), description_frame.position.get_height(), tf_rgba8);
@@ -522,9 +522,9 @@ std::vector<CollisionOutline> Sprite_Impl::create_collision_outlines(GraphicCont
 
 }
 
-CollisionOutline Sprite_Impl::create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+CollisionOutline Sprite_Impl::create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
 {
-	std::vector<CollisionOutline> outlines = create_collision_outlines(gc, alpha_limit, accuracy);
+	std::vector<CollisionOutline> outlines = create_collision_outlines(canvas, alpha_limit, accuracy);
 	if (outlines.empty())
 		return CollisionOutline();
 	return outlines[0];

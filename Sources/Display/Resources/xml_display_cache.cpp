@@ -54,7 +54,7 @@ XMLDisplayCache::~XMLDisplayCache()
 {
 }
 
-Resource<Sprite> XMLDisplayCache::get_sprite(GraphicContext &gc, const std::string &id)
+Resource<Sprite> XMLDisplayCache::get_sprite(Canvas &canvas, const std::string &id)
 {
 	std::map<std::string, Resource<Sprite> >::iterator it = sprites.find(id);
 	if (it != sprites.end())
@@ -64,13 +64,13 @@ Resource<Sprite> XMLDisplayCache::get_sprite(GraphicContext &gc, const std::stri
 		return sprite;
 	}
 
-	Resource<Sprite> sprite = Sprite::load(gc, id, doc);
+	Resource<Sprite> sprite = Sprite::load(canvas, id, doc);
 	sprites[id] = sprite;
 	sprite.get() = sprite.get().clone();
 	return sprite;
 }
 
-Resource<Image> XMLDisplayCache::get_image(GraphicContext &gc, const std::string &id)
+Resource<Image> XMLDisplayCache::get_image(Canvas &canvas, const std::string &id)
 {
 	std::map<std::string, Resource<Image> >::iterator it = images.find(id);
 	if (it != images.end())
@@ -80,7 +80,7 @@ Resource<Image> XMLDisplayCache::get_image(GraphicContext &gc, const std::string
 		return image;
 	}
 	
-	Resource<Image> image = Image::load(gc, id, doc);
+	Resource<Image> image = Image::load(canvas, id, doc);
 	images[id] = image;
 	image.get() = image.get().clone();
 	return image;
@@ -142,7 +142,7 @@ Resource<Font> XMLDisplayCache::load_font(Canvas &canvas, const FontDescription 
 
 	if (is_resource_font)
 	{
-		Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
+		Callback_2<Resource<Sprite>, Canvas &, const std::string &> cb(this, &XMLDisplayCache::get_sprite);
 		return Resource<Font>(Font_Impl::load(canvas, desc, desc.get_typeface_name(), doc, cb));
 	}
 	else

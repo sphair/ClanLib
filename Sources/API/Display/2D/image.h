@@ -67,38 +67,36 @@ public:
 
 	/// \brief Constructs an image from a texture.
 	///
-	/// \param context = Graphic Context
 	/// \param texture = Texture to get image data from
 	/// \param rect = Position and size in texture to get image data from
 	Image(Texture2D texture, const Rect &rect);
 
 	/// \brief Constructs an image from a subtexture.
 	///
-	/// \param context = Graphic Context
 	/// \param sub_texture = Subtexture to get image data from
 	Image(Subtexture &sub_texture);
 
 	/// \brief Constructs a Image from a pixelbuffer.
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param pixelbuffer = Pixelbuffer to get image data from
 	/// \param rect = pixelbuffer rect
-	Image(GraphicContext &gc, const PixelBuffer &pixelbuffer, const Rect &rect);
+	Image(Canvas &canvas, const PixelBuffer &pixelbuffer, const Rect &rect);
 
 	/// \brief Constructs a Image
 	///
-	/// \param context = Graphic Context
+	/// \param canvas = Canvas
 	/// \param filename Filename of image to load
 	/// \param import_desc = Image Import Description
-	Image(GraphicContext &context, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Image(Canvas &canvas, const std::string &filename, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Image
 	///
-	/// \param context = Graphic Context
+	/// \param canvas = Canvas
 	/// \param filename Filename of image to load
 	/// \param dir = Virtual directory to load filename from
 	/// \param import_desc = Image Import Description
-	Image(GraphicContext &context, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Image(Canvas &canvas, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	virtual ~Image();	
 /// \}
@@ -108,13 +106,13 @@ public:
 public:
 	/// \brief Retrieves a Sprite resource from the resource manager
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param resources = Resource manager
 	/// \param id = id
-	static Resource<Image> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
+	static Resource<Image> resource(Canvas &canvas, const std::string &id, const ResourceManager &resources);
 
 	/// \brief Loads a Sprite from a XML resource definition
-	static Image load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
+	static Image load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
 /// \}
 
 /// \name Attributes
@@ -271,7 +269,7 @@ public:
 	/// \param image Image to upload.
 	/// \param level Mipmap level-of-detail number.
 	void set_subimage(
-		GraphicContext &gc,
+		Canvas &canvas,
 		int x,
 		int y,
 		const PixelBuffer &image,

@@ -106,7 +106,6 @@ void SpanLayout_Impl::draw_layout(Canvas &canvas)
 
 		}
 
-		GraphicContext &gc = canvas.get_gc();
 		if (line_index + 1 == lines.size() && !line.segments.empty())
 		{
 			LineSegment &segment = line.segments.back();
@@ -116,7 +115,7 @@ void SpanLayout_Impl::draw_layout(Canvas &canvas)
 				{
 				case object_text:
 					{
-						int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, segment.end - segment.start)).width;
+						int cursor_x = x + segment.x_position + segment.font.get_text_size(canvas, text.substr(segment.start, segment.end - segment.start)).width;
 						int cursor_width = 1;
 						canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 					}
@@ -152,8 +151,6 @@ void SpanLayout_Impl::draw_layout_image(Canvas &canvas, Line &line, LineSegment 
 
 void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &segment, int x, int y)
 {
-	GraphicContext &gc = canvas.get_gc();
-
 	std::string segment_text = text.substr(segment.start, segment.end - segment.start);
 
 	int length = (int)segment_text.length();
@@ -163,16 +160,16 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 	if (s1 != s2)
 	{
 		int xx = x + segment.x_position;
-		int xx0 = xx + segment.font.get_text_size(gc, segment_text.substr(0, s1)).width;
-		int xx1 = xx0 + segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
-		int sel_width = segment.font.get_text_size(gc, segment_text.substr(s1, s2 - s1)).width;
+		int xx0 = xx + segment.font.get_text_size(canvas, segment_text.substr(0, s1)).width;
+		int xx1 = xx0 + segment.font.get_text_size(canvas, segment_text.substr(s1, s2 - s1)).width;
+		int sel_width = segment.font.get_text_size(canvas, segment_text.substr(s1, s2 - s1)).width;
 
 		canvas.fill_rect(xx0, y + line.ascender-segment.ascender, xx1, y+line.ascender+segment.descender, sel_background);
 
 		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 		{
-			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
-			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
+			int cursor_x = x + segment.x_position + segment.font.get_text_size(canvas, text.substr(segment.start, cursor_pos - segment.start)).width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(canvas, text.substr(cursor_pos, 1)).width : 1;
 			canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
@@ -200,8 +197,8 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 	{
 		if (cursor_visible && cursor_pos >= segment.start && cursor_pos < segment.end)
 		{
-			int cursor_x = x + segment.x_position + segment.font.get_text_size(gc, text.substr(segment.start, cursor_pos - segment.start)).width;
-			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(gc, text.substr(cursor_pos, 1)).width : 1;
+			int cursor_x = x + segment.x_position + segment.font.get_text_size(canvas, text.substr(segment.start, cursor_pos - segment.start)).width;
+			int cursor_width = cursor_overwrite_mode ? segment.font.get_text_size(canvas, text.substr(cursor_pos, 1)).width : 1;
 			canvas.fill_rect(cursor_x, y + line.ascender-segment.ascender, cursor_x + cursor_width, y+line.ascender+segment.descender, cursor_color);
 		}
 
@@ -212,7 +209,7 @@ void SpanLayout_Impl::draw_layout_text(Canvas &canvas, Line &line, LineSegment &
 	}
 }
 
-SpanLayout::HitTestResult SpanLayout_Impl::hit_test(GraphicContext &gc, const Point &pos)
+SpanLayout::HitTestResult SpanLayout_Impl::hit_test(Canvas &canvas, const Point &pos)
 {
 	SpanLayout::HitTestResult result;
 
@@ -259,7 +256,7 @@ SpanLayout::HitTestResult SpanLayout_Impl::hit_test(GraphicContext &gc, const Po
 				{
 					std::string segment_text = text.substr(segment.start, segment.end-segment.start);
 					Point hit_point(pos.x - x - segment.x_position, 0);
-					int offset = segment.start + segment.font.get_character_index(gc, segment_text, hit_point);
+					int offset = segment.start + segment.font.get_character_index(canvas, segment_text, hit_point);
 
 					result.type = SpanLayout::HitTestResult::inside;
 					result.object_id = segment.id;
@@ -362,9 +359,9 @@ void SpanLayout_Impl::add_component(SpanComponent *component, int baseline_offse
 	text += "*";
 }
 
-void SpanLayout_Impl::layout(GraphicContext &gc, int max_width)
+void SpanLayout_Impl::layout(Canvas &canvas, int max_width)
 {
-	layout_lines(gc, max_width);
+	layout_lines(canvas, max_width);
 
 	switch (alignment)
 	{
@@ -376,7 +373,7 @@ void SpanLayout_Impl::layout(GraphicContext &gc, int max_width)
 	}
 }
 
-SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(GraphicContext &gc, const TextBlock &block, unsigned int object_index)
+SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(Canvas &canvas, const TextBlock &block, unsigned int object_index)
 {
 	Font font = objects[object_index].font;
 	if (layout_cache.object_index != object_index)
@@ -394,7 +391,7 @@ SpanLayout_Impl::TextSizeResult SpanLayout_Impl::find_text_size(GraphicContext &
 		int end = min(objects[object_index].end, block.end);
 		std::string subtext = text.substr(pos, end-pos);
 
-		Size text_size = font.get_text_size(gc, subtext);
+		Size text_size = font.get_text_size(canvas, subtext);
 
 		result.width += text_size.width;
 		result.height = max(result.height, (int)(layout_cache.metrics.get_height()+layout_cache.metrics.get_external_leading())/*text_size.height*/);
@@ -508,7 +505,7 @@ void SpanLayout_Impl::set_align(SpanAlign align)
 	alignment = align;
 }
 
-void SpanLayout_Impl::layout_lines(GraphicContext & gc, int max_width)
+void SpanLayout_Impl::layout_lines(Canvas &canvas, int max_width)
 {
 	lines.clear();
 	if (objects.empty())
@@ -522,7 +519,7 @@ void SpanLayout_Impl::layout_lines(GraphicContext & gc, int max_width)
 	for (std::vector<TextBlock>::size_type block_index = 0; block_index < blocks.size(); block_index++)
 	{
 		if (objects[current_line.object_index].type == object_text)
-			layout_text(gc, blocks, block_index, current_line, max_width);
+			layout_text(canvas, blocks, block_index, current_line, max_width);
 		else
 			layout_block(current_line, max_width, blocks, block_index);
 	}
@@ -651,9 +648,9 @@ bool SpanLayout_Impl::box_fits_on_line(const FloatBox &box, int max_width)
 	return true;
 }
 
-void SpanLayout_Impl::layout_text(GraphicContext & gc, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width)
+void SpanLayout_Impl::layout_text(Canvas &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width)
 {
-	TextSizeResult text_size_result = find_text_size(gc, blocks[block_index], current_line.object_index);
+	TextSizeResult text_size_result = find_text_size(canvas, blocks[block_index], current_line.object_index);
 	current_line.object_index += text_size_result.objects_traversed;
 
 	current_line.cur_line.width = current_line.x_position;
@@ -814,9 +811,9 @@ void SpanLayout_Impl::align_justify(int max_width)
 	}
 }
 
-Size SpanLayout_Impl::find_preferred_size(GraphicContext &gc)
+Size SpanLayout_Impl::find_preferred_size(Canvas &canvas)
 {
-	layout_lines(gc, 0x70000000); // Feed it with a very long length so it ends up on one line
+	layout_lines(canvas, 0x70000000); // Feed it with a very long length so it ends up on one line
 	return get_rect().get_size();
 }
 

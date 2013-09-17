@@ -117,9 +117,9 @@ public:
 
 	/// \brief Layout
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param max_width = value
-	void layout(GraphicContext &gc, int max_width);
+	void layout(Canvas &canvas, int max_width);
 
 	/// \brief Set position
 	///
@@ -144,20 +144,20 @@ public:
 
 	/// \brief Hit test
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param pos = Point
 	///
 	/// \return Hit Test Result
-	HitTestResult hit_test(GraphicContext &gc, const Point &pos);
+	HitTestResult hit_test(Canvas &canvas, const Point &pos);
 
 	/// \brief Draw layout
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	void draw_layout(Canvas &canvas);
 
 	/// \brief Draw layout generating ellipsis for clipped text
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param content_rect = Clipping rectangle
 	void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
 
@@ -166,10 +166,10 @@ public:
 
 	/// \brief Find preferred size
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	///
 	/// \return Size
-	Size find_preferred_size(GraphicContext &gc);
+	Size find_preferred_size(Canvas &canvas);
 
 	/// \brief Set selection range
 	///

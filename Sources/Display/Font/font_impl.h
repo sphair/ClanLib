@@ -57,7 +57,7 @@ public:
 	int get_character_index(GraphicContext &gc, const std::string &text, const Point &point);
 
 	/// \brief Loads a font from a XML resource definition
-	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, GraphicContext &, const std::string &> cb_get_sprite);
+	static Font load(Canvas &canvas, const FontDescription &reference_desc, const std::string &id, const XMLResourceDocument &doc, Callback_2<Resource<Sprite>, Canvas &, const std::string &> cb_get_sprite);
 
 private:
 	void free_font();

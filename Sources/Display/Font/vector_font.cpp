@@ -81,7 +81,7 @@ Rectf VectorFont::get_bounding_box(const std::string &reference_string) const
 	return impl->get_bounding_box(reference_string);
 }
 
-Size VectorFont::get_text_size(GraphicContext &gc, const std::string &text)
+Size VectorFont::get_text_size(Canvas &canvas, const std::string &text)
 {
 	Size total_size;
 
@@ -92,7 +92,7 @@ Size VectorFont::get_text_size(GraphicContext &gc, const std::string &text)
 		std::vector<std::string> lines = StringHelp::split_text(text, "\n", false);
 		for (std::vector<std::string>::size_type i=0; i<lines.size(); i++)
 		{
-			Size line_size = impl->get_text_size(gc, lines[i]);
+			Size line_size = impl->get_text_size(canvas, lines[i]);
 
 			if ((line_size.width == 0) && (line_size.height == 0) && (lines.size() > 1)) // blank line
 				line_size.height = fm.get_descent() + fm.get_ascent(); 
@@ -110,13 +110,13 @@ Size VectorFont::get_text_size(GraphicContext &gc, const std::string &text)
 	return total_size;
 }
 
-Size VectorFont::get_glyph_size(GraphicContext &gc, unsigned int glyph)
+Size VectorFont::get_glyph_size(Canvas &canvas, unsigned int glyph)
 {
 	std::string text = StringHelp::unicode_to_utf8(glyph);
 
 	if (impl)
 	{
-		return impl->get_text_size(gc, text);
+		return impl->get_text_size(canvas, text);
 	}
 	return Size();
 }
@@ -204,14 +204,14 @@ void VectorFont::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, 
 		{
 			if (i == 0 || (dest_y - ascent >= content_box.top && dest_y + descent < content_box.bottom))
 			{
-				Size size = get_text_size(gc, lines[i]);
+				Size size = get_text_size(canvas, lines[i]);
 				if (dest_x + size.width <= content_box.right)
 				{
 					draw_text(canvas, dest_x, dest_y, lines[i], color);
 				}
 				else
 				{
-					Size ellipsis = get_text_size(gc, "...");
+					Size ellipsis = get_text_size(canvas, "...");
 
 					int seek_start = 0;
 					int seek_end = lines[i].size();
@@ -231,7 +231,7 @@ void VectorFont::draw_text_ellipsis(Canvas &canvas, float dest_x, float dest_y, 
 						if (utf8_reader.get_position() == seek_end)
 							break;
 
-						Size text_size = get_text_size(gc, lines[i].substr(0, seek_center));
+						Size text_size = get_text_size(canvas, lines[i].substr(0, seek_center));
 
 						if (dest_x + text_size.width + ellipsis.width >= content_box.right)
 							seek_end = seek_center;

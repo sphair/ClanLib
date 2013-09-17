@@ -52,8 +52,8 @@ class CL_API_DISPLAY DisplayCache
 {
 public:
 	virtual ~DisplayCache() { }
-	virtual Resource<Sprite> get_sprite(GraphicContext &gc, const std::string &id) = 0;
-	virtual Resource<Image> get_image(GraphicContext &gc, const std::string &id) = 0;
+	virtual Resource<Sprite> get_sprite(Canvas &canvas, const std::string &id) = 0;
+	virtual Resource<Image> get_image(Canvas &canvas, const std::string &id) = 0;
 	virtual Resource<Texture> get_texture(GraphicContext &gc, const std::string &id) = 0;
 	virtual Resource<Font> get_font(Canvas &canvas, const FontDescription &desc) = 0;
 	virtual Resource<CollisionOutline> get_collision(const std::string &id) = 0;

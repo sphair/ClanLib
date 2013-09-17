@@ -104,8 +104,8 @@ public:
 	void add_image(const Image &image, int baseline_offset, int id = -1);
 	void add_component(SpanComponent *component, int baseline_offset = 0, int id = -1);
 
-	void layout(GraphicContext &gc, int max_width);
-	SpanLayout::HitTestResult hit_test(GraphicContext &gc, const Point &pos);
+	void layout(Canvas &canvasc, int max_width);
+	SpanLayout::HitTestResult hit_test(Canvas &canvas, const Point &pos);
 	void draw_layout(Canvas &canvas);
 	void draw_layout_ellipsis(Canvas &canvas, const Rect &content_rect);
 	void set_position(const Point &pos) { position = pos; }
@@ -113,7 +113,7 @@ public:
 	std::vector<Rect> get_rect_by_id(int id) const;
 	void set_align(SpanAlign align);
 
-	Size find_preferred_size(GraphicContext &gc);
+	Size find_preferred_size(Canvas &canvas);
 
 	void set_selection_range(std::string::size_type start, std::string::size_type end);
 	void set_selection_colors(const Colorf &foreground, const Colorf &background);
@@ -234,10 +234,10 @@ private:
 		int id;
 	};
 
-	TextSizeResult find_text_size(GraphicContext &gc, const TextBlock &block, unsigned int object_index);
+	TextSizeResult find_text_size(Canvas &canvas, const TextBlock &block, unsigned int object_index);
 	std::vector<TextBlock> find_text_blocks();
-	void layout_lines(GraphicContext & gc, int max_width);
-	void layout_text(GraphicContext & gc, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
+	void layout_lines(Canvas &canvas, int max_width);
+	void layout_text(Canvas &canvas, std::vector<TextBlock> blocks, std::vector<TextBlock>::size_type block_index, CurrentLine &current_line, int max_width);
 	void layout_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);
 	void layout_float_block(CurrentLine &current_line, int max_width);
 	void layout_inline_block(CurrentLine &current_line, int max_width, std::vector<TextBlock> &blocks, std::vector<TextBlock>::size_type block_index);

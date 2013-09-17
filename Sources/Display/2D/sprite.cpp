@@ -36,6 +36,7 @@
 #include "API/Core/Text/string_help.h"
 #include "API/Core/Text/string_format.h"
 #include "API/Display/2D/sprite.h"
+#include "API/Display/2D/canvas.h"
 #include "API/Display/Render/primitives_array.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/ImageProviders/provider_factory.h"
@@ -56,29 +57,29 @@ Sprite::Sprite()
 {
 }
 
-Sprite::Sprite(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)
+Sprite::Sprite(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 	FileSystem vfs(path);
-	*this = Sprite(gc, filename, vfs, import_desc);
+	*this = Sprite(canvas, filename, vfs, import_desc);
 }
 
-Sprite::Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+Sprite::Sprite(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(new Sprite_Impl())
 {
-	add_frame(gc, filename, fs, import_desc );
+	add_frame(canvas, filename, fs, import_desc );
 	restart();
 }
 
-Sprite::Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc )
+Sprite::Sprite(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc )
 : impl(new Sprite_Impl())
 {
-	add_frame(gc, file, image_type, import_desc );
+	add_frame(canvas, file, image_type, import_desc );
 	restart();
 }
 
-Sprite::Sprite(GraphicContext &gc)
+Sprite::Sprite(Canvas &canvas)
 : impl(new Sprite_Impl())
 {
 }
@@ -90,14 +91,14 @@ Sprite::~Sprite()
 /////////////////////////////////////////////////////////////////////////////
 // Sprite Resources:
 
-Resource<Sprite> Sprite::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
+Resource<Sprite> Sprite::resource(Canvas &canvas, const std::string &id, const ResourceManager &resources)
 {
-	return DisplayCache::get(resources).get_sprite(gc, id);
+	return DisplayCache::get(resources).get_sprite(canvas, id);
 }
 
-Sprite Sprite::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc)
+Sprite Sprite::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc)
 {
-	Sprite sprite(gc);
+	Sprite sprite(canvas);
 
  	XMLResourceNode resource = doc.get_resource(id);
 	if (resource.get_type() != "sprite")
@@ -156,7 +157,7 @@ Sprite Sprite::load(GraphicContext &gc, const std::string &id, const XMLResource
 
 					try
 					{
-						Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), file_name), fs);
+						Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), file_name), fs);
 						sprite.add_frame(texture);
 						found_initial = true;
 					}
@@ -176,7 +177,7 @@ Sprite Sprite::load(GraphicContext &gc, const std::string &id, const XMLResource
 			{
 				std::string image_name = cur_element.get_attribute("file");
 				FileSystem fs = resource.get_file_system();
-				Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), fs);
+				Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), image_name), fs);
 
 				DomNode cur_child(cur_element.get_first_child());
 				if(cur_child.is_null()) 
@@ -240,7 +241,7 @@ Sprite Sprite::load(GraphicContext &gc, const std::string &id, const XMLResource
 								yspacing = StringHelp::text_to_int(image_spacing[1]);
 							}
 
-							sprite.add_gridclipped_frames(gc, 
+							sprite.add_gridclipped_frames(canvas, 
 								texture,
 								xpos, ypos,
 								width, height,
@@ -272,14 +273,14 @@ Sprite Sprite::load(GraphicContext &gc, const std::string &id, const XMLResource
 
 							if (cur_child_elemnt.has_attribute("free"))
 							{
-								sprite.add_alphaclipped_frames_free(gc, 
+								sprite.add_alphaclipped_frames_free(canvas, 
 									texture,
 									xpos, ypos,
 									trans_limit);
 							}
 							else
 							{
-								sprite.add_alphaclipped_frames(gc, 
+								sprite.add_alphaclipped_frames(canvas, 
 									texture,
 									xpos, ypos,
 									trans_limit);
@@ -858,19 +859,19 @@ void Sprite::add_frame(const Texture2D &texture)
 	impl->add_frame(texture);
 }
 
-void Sprite::add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
+void Sprite::add_frame(Canvas &canvas, const std::string &filename, const FileSystem &fs, const ImageImportDescription &import_desc)
 {
-	impl->add_frame(Texture2D(gc, filename, fs, import_desc));
+	impl->add_frame(Texture2D(canvas, filename, fs, import_desc));
 }
 
-void Sprite::add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)
+void Sprite::add_frame(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
 {
-	impl->add_frame(Texture2D(gc, fullname, import_desc));
+	impl->add_frame(Texture2D(canvas, fullname, import_desc));
 }
 
-void Sprite::add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
+void Sprite::add_frame(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc)
 {
-	impl->add_frame(Texture2D(gc, file, image_type, import_desc));
+	impl->add_frame(Texture2D(canvas, file, image_type, import_desc));
 
 }
 
@@ -885,7 +886,7 @@ void Sprite::add_frame(const Texture2D &texture, const Rect &rect)
 	impl->add_frame(texture, rect);
 }
 
-void Sprite::add_gridclipped_frames(GraphicContext &gc, 
+void Sprite::add_gridclipped_frames(Canvas &canvas, 
 	const Texture2D &texture, 
 	int xpos, int ypos, 
 	int width, int height, 
@@ -893,29 +894,29 @@ void Sprite::add_gridclipped_frames(GraphicContext &gc,
 	int array_skipframes, 
 	int xspace, int yspace)
 {
-	impl->add_gridclipped_frames(gc, texture, xpos, ypos, width, height, xarray, yarray, array_skipframes, xspace, yspace);
+	impl->add_gridclipped_frames(canvas, texture, xpos, ypos, width, height, xarray, yarray, array_skipframes, xspace, yspace);
 }
 
-void Sprite::add_alphaclipped_frames(GraphicContext &gc, 
+void Sprite::add_alphaclipped_frames(Canvas &canvas, 
 	const Texture2D &texture, 
 	int xpos, int ypos, 
 	float trans_limit)
 {
-	impl->add_alphaclipped_frames(gc, texture, xpos, ypos, trans_limit);
+	impl->add_alphaclipped_frames(canvas, texture, xpos, ypos, trans_limit);
 }
 
-void Sprite::add_alphaclipped_frames_free(GraphicContext &gc, const Texture2D &texture,int xpos, int ypos,	float trans_limit)
+void Sprite::add_alphaclipped_frames_free(Canvas &canvas, const Texture2D &texture,int xpos, int ypos,	float trans_limit)
 {
-	impl->add_alphaclipped_frames_free(gc, texture, xpos, ypos, trans_limit);
+	impl->add_alphaclipped_frames_free(canvas, texture, xpos, ypos, trans_limit);
 }
-std::vector<CollisionOutline> Sprite::create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+std::vector<CollisionOutline> Sprite::create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
 {
-	return impl->create_collision_outlines(gc, alpha_limit, accuracy);
+	return impl->create_collision_outlines(canvas, alpha_limit, accuracy);
 }
 
-CollisionOutline Sprite::create_collision_outline(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const
+CollisionOutline Sprite::create_collision_outline(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const
 {
-	return impl->create_collision_outline(gc, alpha_limit, accuracy);
+	return impl->create_collision_outline(canvas, alpha_limit, accuracy);
 
 }
 

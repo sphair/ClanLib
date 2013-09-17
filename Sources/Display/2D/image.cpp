@@ -116,11 +116,11 @@ Image::Image()
 {
 }
 
-Image::Image(GraphicContext &gc, const PixelBuffer &pb, const Rect &rect)
+Image::Image(Canvas &canvas, const PixelBuffer &pb, const Rect &rect)
 : impl(new Image_Impl())
 {
-	impl->texture = Texture2D(gc, pb.get_width(), pb.get_height(), pb.get_format());
-	impl->texture.set_subimage(gc, 0, 0, pb, rect);
+	impl->texture = Texture2D(canvas, pb.get_width(), pb.get_height(), pb.get_format());
+	impl->texture.set_subimage(canvas, 0, 0, pb, rect);
 	impl->texture_rect = Rect(0, 0, pb.get_width(), pb.get_height());
 }
 
@@ -138,21 +138,21 @@ Image::Image(Subtexture &sub_texture)
 	impl->texture_rect = sub_texture.get_geometry();
 }
 
-Image::Image(GraphicContext &gc, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
+Image::Image(Canvas &canvas, const std::string &filename, FileSystem &fs, const ImageImportDescription &import_desc)
 : impl(new Image_Impl())
 {
-	impl->texture = Texture2D(gc, filename, fs, import_desc);
+	impl->texture = Texture2D(canvas, filename, fs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
 }
 
-Image::Image(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc)
+Image::Image(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc)
 : impl(new Image_Impl())
 {
 	std::string path = PathHelp::get_fullpath(fullname, PathHelp::path_type_file);
 	std::string filename = PathHelp::get_filename(fullname, PathHelp::path_type_file);
 	FileSystem vfs(path);
 
-	impl->texture = Texture2D(gc, filename, vfs, import_desc);
+	impl->texture = Texture2D(canvas, filename, vfs, import_desc);
 	impl->texture_rect = impl->texture.get_size();
 }
 
@@ -172,12 +172,12 @@ Image Image::clone() const
 /////////////////////////////////////////////////////////////////////////////
 // Image Resources:
 
-Resource<Image> Image::resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources)
+Resource<Image> Image::resource(Canvas &canvas, const std::string &id, const ResourceManager &resources)
 {
-	return DisplayCache::get(resources).get_image(gc, id);
+	return DisplayCache::get(resources).get_image(canvas, id);
 }
 
-Image Image::load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc)
+Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc)
 {
 	Image image;
 
@@ -194,7 +194,7 @@ Image Image::load(GraphicContext &gc, const std::string &id, const XMLResourceDo
 		if (tag_name == "image" || tag_name == "image-file")
 		{
 			std::string image_name = cur_element.get_attribute("file");
-			Texture2D texture = Texture2D(gc, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
+			Texture2D texture = Texture2D(canvas, PathHelp::combine(resource.get_base_path(), image_name), resource.get_file_system());
 
 			DomNode cur_child(cur_element.get_first_child());
 			if(cur_child.is_null()) 
@@ -363,7 +363,7 @@ Size Image::get_size() const
 // Image Operations:
 
 void Image::set_subimage(
-	GraphicContext &gc,
+	Canvas &canvas,
 	int x,
 	int y,
 	const PixelBuffer &image,
@@ -371,7 +371,7 @@ void Image::set_subimage(
 
 	int level)
 {
-	impl->texture.set_subimage(gc, x, y, image, src_rect, level);
+	impl->texture.set_subimage(canvas, x, y, image, src_rect, level);
 }
 
 void Image::draw(Canvas &canvas, float x, float y) const

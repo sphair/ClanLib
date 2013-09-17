@@ -73,28 +73,28 @@ public:
 
 	/// \brief Constructs a Sprite
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param fullname = String Ref
-	Sprite(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	Sprite(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(Canvas &canvas, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs a Sprite
 	///
-	/// \param gc = Graphic Context
+	/// \param canvas = Canvas
 	/// \param file = IODevice
 	/// \param image_type = String
-	Sprite(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+	Sprite(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Constructs an empty Sprite
 	///
 	/// \param gc = Graphic Context
-	Sprite(GraphicContext &gc);
+	Sprite(Canvas &canvas);
 
 	virtual ~Sprite();
 /// \}
@@ -104,13 +104,13 @@ public:
 public:
 	/// \brief Retrieves a Sprite resource from the resource manager
 	///
-	/// \param gc = Graphic Context
+	/// \param gc = canvas = Canvas
 	/// \param resources = Resource manager
 	/// \param id = id
-	static Resource<Sprite> resource(GraphicContext &gc, const std::string &id, const ResourceManager &resources);
+	static Resource<Sprite> resource(Canvas &canvas, const std::string &id, const ResourceManager &resources);
 
 	/// \brief Loads a Sprite from a XML resource definition
-	static Sprite load(GraphicContext &gc, const std::string &id, const XMLResourceDocument &doc);
+	static Sprite load(Canvas &canvas, const std::string &id, const XMLResourceDocument &doc);
 /// \}
 
 /// \name Attributes
@@ -205,14 +205,14 @@ public:
 	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
 	/// \param accuracy = Amount of optimization of the outline (default medium)
 	/// \return The collision outlines
-	std::vector<CollisionOutline> create_collision_outlines(GraphicContext &gc, int alpha_limit, OutlineAccuracy accuracy) const;
+	std::vector<CollisionOutline> create_collision_outlines(Canvas &canvas, int alpha_limit, OutlineAccuracy accuracy) const;
 
 	/// \brief Create the collision outline from the sprites description
 	///
 	/// \param alpha_limit = Alpha limit for pixels considered solid (collidable)
 	/// \param accuracy = Amount of optimization of the outline (default medium)
 	/// \return The collision outlines
-	CollisionOutline create_collision_outline(GraphicContext &gc, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium) const;
+	CollisionOutline create_collision_outline(Canvas &canvas, int alpha_limit=128, OutlineAccuracy accuracy=accuracy_medium) const;
 
 /// \}
 
@@ -365,19 +365,19 @@ public:
 	/// \brief Add frame
 	///
 	/// \param fullname = String Ref
-	void add_frame(GraphicContext &gc, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(Canvas &canvas, const std::string &fullname, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param file = IODevice
 	/// \param image_type = String
-	void add_frame(GraphicContext &gc, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(Canvas &canvas, IODevice &file, const std::string &image_type, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frame
 	///
 	/// \param filename = String Ref
 	/// \param dir = Virtual Directory
-	void add_frame(GraphicContext &gc, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
+	void add_frame(Canvas &canvas, const std::string &filename, const FileSystem &file_system, const ImageImportDescription &import_desc = ImageImportDescription ());
 
 	/// \brief Add frames
 	///
@@ -401,7 +401,7 @@ public:
 	    \param xarray, yarray Number of columns and rows in grid.
 	    \param array_skipframes Number of frames to skip at last gridline.
 	    \param xspacing, yspacing Pixel interspacing between grid frames.*/
-	void add_gridclipped_frames(GraphicContext &gc, 
+	void add_gridclipped_frames(Canvas &canvas, 
 		const Texture2D &texture,
 		int xpos, int ypos,
 		int width, int height,
@@ -419,7 +419,7 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames(GraphicContext &gc, 
+	void add_alphaclipped_frames(Canvas &canvas, 
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
@@ -433,7 +433,7 @@ public:
 	    \param texture Image source.
 	    \param xpos, ypos Upper left position where alpha cutting should begin.
 	    \param trans_limit Amount of non-transparent alpha allowed before a pixel is not considered transparent.*/
-	void add_alphaclipped_frames_free(GraphicContext &gc, 
+	void add_alphaclipped_frames_free(Canvas &canvas, 
 		const Texture2D &texture,
 		int xpos = 0, int ypos = 0,
 		float trans_limit = 0.05f);
