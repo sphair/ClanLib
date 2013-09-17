@@ -95,8 +95,6 @@ dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_STDBOOL
 
-AC_PROG_GCC_TRADITIONAL
-
 dnl Find absolute name to pkg-config
 AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
 
@@ -756,7 +754,7 @@ fi
 AC_MSG_CHECKING([if documentation should be generated]); AC_MSG_RESULT([$enable_docs])
 if test "$enable_docs" != "no"; then
 	AC_SUBST(ClanLib_docs,"Documentation")
-	AC_SUBST(ClanLib_add_docs,"Reference Overview")
+	AC_SUBST(ClanLib_add_docs,"Reference")
 	enable_docs=yes
 	AC_CONFIG_FILES([Documentation/Makefile Documentation/Reference/Makefile])
 fi
