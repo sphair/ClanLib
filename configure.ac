@@ -754,9 +754,8 @@ fi
 AC_MSG_CHECKING([if documentation should be generated]); AC_MSG_RESULT([$enable_docs])
 if test "$enable_docs" != "no"; then
 	AC_SUBST(ClanLib_docs,"Documentation")
-	AC_SUBST(ClanLib_add_docs,"Reference")
 	enable_docs=yes
-	AC_CONFIG_FILES([Documentation/Makefile Documentation/Reference/Makefile])
+	AC_CONFIG_FILES([Documentation/Makefile])
 fi
 
 echo ""
