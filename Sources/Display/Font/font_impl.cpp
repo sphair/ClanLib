@@ -40,6 +40,7 @@
 #include "API/Core/XML/dom_element.h"
 #include "API/Display/2D/canvas.h"
 #include "API/Display/Resources/display_cache.h"
+#include "API/Core/IOData/path_help.h"
 
 #ifdef WIN32
 #include "FontEngine/font_engine_win32.h"

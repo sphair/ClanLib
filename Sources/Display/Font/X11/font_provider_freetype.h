@@ -28,7 +28,6 @@
 
 #pragma once
 
-#include "API/Display/TargetProviders/font_provider.h"
 #include "API/Display/2D/texture_group.h"
 #include "../glyph_cache.h"
 
@@ -39,7 +38,7 @@ class Colorf;
 
 class FontEngine_Freetype;
 
-class FontProvider_Freetype : public FontProvider
+class FontProvider_Freetype
 {
 /// \name Construction
 /// \{

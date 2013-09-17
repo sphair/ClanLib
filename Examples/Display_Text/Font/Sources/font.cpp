@@ -232,15 +232,15 @@ void App::select_font()
 		case font_ttf:
 			if (font_filename.empty())
 			{
-				selected_font = Font(canvas, font_desc);
+				selected_font = clan::Font(canvas, font_desc);
 			}
 			else
 			{
-				selected_font = Font(canvas, font_desc, font_filename);
+				selected_font = clan::Font(canvas, font_desc, font_filename);
 			}
 			break;
 		case font_sprite:
-			selected_font = Font::resource(canvas, font_desc, resources);
+			selected_font = clan::Font::resource(canvas, font_desc, resources);
 			break;
 	}
 
