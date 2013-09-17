@@ -129,7 +129,8 @@ void ImageView::set_image(const PixelBuffer &image)
 		return;
 	}
 
-	impl->image = Image(get_canvas(), image, image.get_size());
+	Canvas canvas = get_canvas();
+	impl->image = Image(canvas, image, image.get_size());
 	request_repaint();
 }
 
