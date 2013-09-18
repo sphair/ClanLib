@@ -486,12 +486,16 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
     NSRect bounds = [window.contentView bounds];
     clan::Point mouse_pos(mouse_location.x, bounds.size.height - mouse_location.y);
     key.mouse_pos = mouse_pos;
-    
-    // TODO: Fully test these values.  Add the rest of the supported values. :D
+
+    // TODO: Finish implementing.
     // Map the Cocoa key code to the appropriate ClanLib key code.
     switch ([theEvent keyCode])
     {
         // Miscellaneous keys.
+        case 0x24: key.id = keycode_return; break;
+        case 0x30: key.id = keycode_tab; break;
+        case 0x31: key.id = keycode_space; break;
+        case 0x33: key.id = keycode_delete; break;
         case 0x35: key.id = keycode_escape; break;
 
         // Arrow keys.
@@ -511,6 +515,18 @@ void OpenGLWindowProvider_Impl::on_keyboard_event(NSEvent *theEvent)
         case 0x1A: key.id = keycode_7; break;
         case 0x1C: key.id = keycode_8; break;
         case 0x19: key.id = keycode_9; break;
+            
+        // Function keys.
+        case 0x7A: key.id = keycode_f1; break;
+        case 0x78: key.id = keycode_f2; break;
+        case 0x63: key.id = keycode_f3; break;
+        case 0x76: key.id = keycode_f4; break;
+        case 0x60: key.id = keycode_f5; break;
+        case 0x61: key.id = keycode_f6; break;
+        case 0x62: key.id = keycode_f7; break;
+        case 0x64: key.id = keycode_f8; break;
+        case 0x65: key.id = keycode_f9; break;
+        case 0x6D: key.id = keycode_f10; break;
             
         // Character keys.
         case 0x00: key.id = keycode_a; break;
