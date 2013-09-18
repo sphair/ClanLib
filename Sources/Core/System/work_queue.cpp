@@ -42,7 +42,7 @@ namespace clan
 class WorkQueue_Impl : public KeepAliveObject
 {
 public:
-	WorkQueue_Impl();
+	WorkQueue_Impl(bool serial_queue);
 	~WorkQueue_Impl();
 
 	void queue(WorkItem *item); // transfers ownership
@@ -51,6 +51,7 @@ private:
 	void process();
 	void worker_main();
 
+	bool serial_queue;
 	std::vector<Thread> threads;
 	Mutex mutex;
 	Event stop_event, work_available_event;
@@ -58,8 +59,8 @@ private:
 	std::vector<WorkItem *> finished_items;
 };
 
-WorkQueue::WorkQueue()
-	: impl(new WorkQueue_Impl())
+WorkQueue::WorkQueue(bool serial_queue)
+	: impl(new WorkQueue_Impl(serial_queue))
 {
 }
 
@@ -74,7 +75,8 @@ void WorkQueue::queue(WorkItem *item) // transfers ownership
 
 /////////////////////////////////////////////////////////////////////////////
 
-WorkQueue_Impl::WorkQueue_Impl()
+WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
+	: serial_queue(serial_queue)
 {
 }
 
@@ -93,7 +95,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 {
 	if (threads.empty())
 	{
-		int num_cores = std::max(System::get_num_cores() - 1, 1);
+		int num_cores = serial_queue ? 1 : std::max(System::get_num_cores() - 1, 1);
 		for (int i = 0; i < num_cores; i++)
 		{
 			Thread thread;
