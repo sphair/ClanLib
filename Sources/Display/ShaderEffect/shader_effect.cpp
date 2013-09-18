@@ -303,6 +303,9 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 		program.bind_frag_data_location(index++, it->first);
 	}
 
+	if (!program.link())
+		throw Exception(string_format("Link failed: %1", program.get_info_log()));
+
 	index = 0;
 	for(auto it = description->uniform_buffers.begin(); it != description->uniform_buffers.end(); ++it, index++)
 	{
@@ -331,8 +334,6 @@ void ShaderEffect_Impl::create_shaders(GraphicContext &gc, const ShaderEffectDes
 		storage_bindings[index] = it->second;
 	}
 
-	if (!program.link())
-		throw Exception(string_format("Link failed: %1", program.get_info_log()));
 }
 
 void ShaderEffect_Impl::create_primitives_array(GraphicContext &gc, const ShaderEffectDescription_Impl *description)
