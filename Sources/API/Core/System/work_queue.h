@@ -50,6 +50,20 @@ public:
 	virtual void work_completed() { }
 };
 
+template<typename ProcessWork, typename WorkCompleted>
+class WorkItemFunctor : public WorkItem
+{
+public:
+	WorkItemFunctor(const ProcessWork &work, const WorkCompleted &completed) : work(work), completed(completed) { }
+
+	void process_work() { work(); }
+	void work_completed() { completed(); }
+
+private:
+	ProcessWork work;
+	WorkCompleted completed;
+};
+
 class WorkQueue_Impl;
 
 /// \brief Thread pool for worker threads
@@ -60,7 +74,20 @@ public:
 	WorkQueue();
 	~WorkQueue();
 
-	void queue(WorkItem *item); // transfers ownership
+	/// \brief Queue some work to be executed on a worker thread
+	///
+	/// Transfers ownership of the item queued. WorkQueue will delete the item.
+	void queue(WorkItem *item);
+
+	/// \brief Queue some work to be executed on a worker thread
+	///
+	/// This template version takes two lamba functor objects. The first is executed on the worker thread,
+	/// and the second is executed on the main thread when the work is done.
+	template<typename ProcessWork, typename WorkCompleted>
+	void queue(const ProcessWork &work, const WorkCompleted &completed)
+	{
+		queue(new WorkItemFunctor<ProcessWork, WorkCompleted>(work, completed));
+	}
 
 private:
 	std::shared_ptr<WorkQueue_Impl> impl;
