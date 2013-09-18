@@ -81,7 +81,7 @@ public:
 	/// \brief Queue some work to be executed on a worker thread
 	///
 	/// This template version takes a lamba functor object to be executed on the worker thread.
-	template<typename ProcessWork, typename WorkCompleted>
+	template<typename ProcessWork>
 	void queue(const ProcessWork &work)
 	{
 		queue(new WorkItemFunctor<ProcessWork>(work));
