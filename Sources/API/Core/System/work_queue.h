@@ -31,6 +31,7 @@
 
 #include "../api_core.h"
 #include <memory>
+#include <functional>
 
 namespace clan
 {
@@ -50,18 +51,6 @@ public:
 	virtual void work_completed() { }
 };
 
-template<typename ProcessWork>
-class WorkItemFunctor : public WorkItem
-{
-public:
-	WorkItemFunctor(const ProcessWork &work) : work(work) { }
-
-	void process_work() { work(); }
-
-private:
-	ProcessWork work;
-};
-
 class WorkQueue_Impl;
 
 /// \brief Thread pool for worker threads
@@ -79,23 +68,12 @@ public:
 	void queue(WorkItem *item);
 
 	/// \brief Queue some work to be executed on a worker thread
-	///
-	/// This template version takes a lamba functor object to be executed on the worker thread.
-	template<typename ProcessWork>
-	void queue(const ProcessWork &work)
-	{
-		queue(new WorkItemFunctor<ProcessWork>(work));
-	}
+	void queue(const std::function<void()> &func);
 
 	/// \brief Queue some work to be executed on the main WorkQueue thread
-	template<typename WorkCompleted>
-	void work_completed(const WorkCompleted &completed)
-	{
-		work_completed_helper(new WorkItemFunctor<WorkCompleted>(completed));
-	}
+	void work_completed(const std::function<void()> &func);
 
 private:
-	void work_completed_helper(WorkItem *item);
 
 	std::shared_ptr<WorkQueue_Impl> impl;
 };

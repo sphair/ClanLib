@@ -39,6 +39,17 @@
 namespace clan
 {
 
+class WorkItemFunctor : public WorkItem
+{
+public:
+	WorkItemFunctor(const std::function<void()> &func) : func(func) { }
+
+	void process_work() { func(); }
+
+private:
+	std::function<void()> func;
+};
+
 class WorkQueue_Impl : public KeepAliveObject
 {
 public:
@@ -74,9 +85,14 @@ void WorkQueue::queue(WorkItem *item) // transfers ownership
 	impl->queue(item);
 }
 
-void WorkQueue::work_completed_helper(WorkItem *item) // transfers ownership
+void WorkQueue::queue(const std::function<void()> &func)
 {
-	impl->work_completed(item);
+	impl->queue(new WorkItemFunctor(func));
+}
+
+void WorkQueue::work_completed(const std::function<void()> &func)
+{
+	impl->work_completed(new WorkItemFunctor(func));
 }
 
 /////////////////////////////////////////////////////////////////////////////
