@@ -335,12 +335,18 @@ std::string ProgramObject::get_info_log() const
 
 int ProgramObject::get_attribute_location(const std::string &name) const
 {
-	return impl->provider->get_attribute_location(name);
+	int value = impl->provider->get_attribute_location(name);
+	if (value <0)
+		throw Exception(string_format("Attribute %1 not found", name));
+	return value;
 }
 
 int ProgramObject::get_uniform_location(const std::string &name) const
 {
-	return impl->provider->get_uniform_location(name);
+	int value = impl->provider->get_uniform_location(name);
+	if (value <0)
+		throw Exception(string_format("Uniform %1 not found", name));
+	return value;
 }
 
 int ProgramObject::get_uniform_buffer_size(const std::string &block_name) const
