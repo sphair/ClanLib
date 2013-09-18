@@ -46,6 +46,7 @@ public:
 	~WorkQueue_Impl();
 
 	void queue(WorkItem *item); // transfers ownership
+	void work_completed(WorkItem *item); // transfers ownership
 
 private:
 	void process();
@@ -71,6 +72,11 @@ WorkQueue::~WorkQueue()
 void WorkQueue::queue(WorkItem *item) // transfers ownership
 {
 	impl->queue(item);
+}
+
+void WorkQueue::work_completed_helper(WorkItem *item) // transfers ownership
+{
+	impl->work_completed(item);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -108,6 +114,14 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 	queued_items.push_back(item);
 	mutex_lock.unlock();
 	work_available_event.set();
+}
+
+void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
+{
+	MutexSection mutex_lock(&mutex);
+	finished_items.push_back(item);
+	mutex_lock.unlock();
+	set_wakeup_event();
 }
 
 void WorkQueue_Impl::process()
