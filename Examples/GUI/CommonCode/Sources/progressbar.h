@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class ProgressBar : public clan::GUIComponent
+class ProgressBar : public clan::Window
 {
 public:
 	ProgressBar(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_checked_marquee_mode(clan::CheckBox *checkbox);
 	void on_unchecked_marquee_mode(clan::CheckBox *checkbox);
 

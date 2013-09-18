@@ -30,11 +30,12 @@
 #include "listview.h"
 
 ListView::ListView(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("List View & Toolbar", clan::Rect(8, 256*1 + 180*1 + 24, clan::Size(256*2, 180*2)), false))
 {
 
+	func_close().set(this, &ListView::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	clan::Canvas canvas = get_canvas();
 	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeLuna/Images/icon_mycomputer.png"))
@@ -210,4 +211,10 @@ void ListView::on_mouse_right_up(clan::Point point, clan::ListView *listview)
 	std::string string = clan::string_format(" (%1,%2)", point.x, point.y);
 	info_mouse_right_up->set_comment( string );
 	info_mouse_right_up->activate();
+}
+
+bool ListView::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

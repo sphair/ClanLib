@@ -30,9 +30,10 @@
 #include "GUI.h"
 
 Panel3D::Panel3D(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("3D Controls", clan::Rect(128, 300, clan::Size(320, 448)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("3D Controls", clan::Rect(128, 300, clan::Size(320, 448)), false))
 {
-	clan::Rect client_area = get_geometry();
+	func_close().set(this, &Panel3D::on_close);
+	clan::Rect client_area = get_client_area();
 
 	int xoffset = client_area.left + 10;
 	int yoffset = client_area.top + 10;
@@ -266,3 +267,10 @@ float Panel3D::get_material_transparency()
 {
 	return spin_material_transparency->get_value_float();
 }
+
+bool Panel3D::on_close()
+{
+	exit_with_code(0);
+	return true;
+}
+

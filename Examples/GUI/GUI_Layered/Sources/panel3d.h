@@ -32,7 +32,7 @@
 
 class GUI;
 
-class Panel3D : public clan::GUIComponent
+class Panel3D : public clan::Window
 {
 public:
 	Panel3D(clan::GUIManager &manager);
@@ -51,6 +51,7 @@ public:
 	float get_material_transparency();
 
 private:
+	bool on_close();
 	void on_slider_changed(clan::Slider *slider);
 	void set_slider_to_spin(clan::Slider *slider, clan::Spin *spin);
 	void on_spin_changed(clan::Spin *spin);

@@ -30,11 +30,11 @@
 #include "scrollbar.h"
 
 ScrollBar::ScrollBar(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Scrollbar", clan::Rect(8, 8, clan::Size(256, 256)), false))
 {
+	func_close().set(this, &ScrollBar::on_close);
 
-
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	scrollbar_vertical = new clan::ScrollBar(this);
 	scrollbar_vertical->set_geometry(clan::Rect(client_area.left + 1, client_area.top + 10, clan::Size(17, 200)));
@@ -320,4 +320,10 @@ void ScrollBar::on_apply_clicked(clan::PushButton *pushbutton)
 	value = clan::StringHelp::text_to_int(lineedit_min->get_text());
 	scrollbar_vertical->set_min(value);
 	scrollbar_horizontal->set_min(value);
+}
+
+bool ScrollBar::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

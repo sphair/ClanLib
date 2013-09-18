@@ -30,11 +30,12 @@
 #include "combobox.h"
 
 ComboBox::ComboBox(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("ComboBox", clan::Rect(256*3 + 32, 8, clan::Size(256, 256)), false))
 {
+	func_close().set(this, &ComboBox::on_close);
 
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	menu.insert_item("Item A");
 	menu.insert_item("Item B");
@@ -153,4 +154,10 @@ void ComboBox::on_checked_editable(clan::CheckBox *checkbox)
 void ComboBox::on_unchecked_editable(clan::CheckBox *checkbox)
 {
 	combobox1->set_editable(false);
+}
+
+bool ComboBox::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

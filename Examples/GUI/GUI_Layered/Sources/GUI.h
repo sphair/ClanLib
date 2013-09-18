@@ -53,7 +53,7 @@ public:
 private:
 	void gui_repaint();
 	void gui_exec();
-	void run_manager();
+	bool run_manager();
 	void reset_manager();
 
 private:

@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class ListView : public clan::GUIComponent
+class ListView : public clan::Window
 {
 public:
 	ListView(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_selection_changed(clan::ListViewSelection selection, clan::ListView *listview);
 	bool on_item_edited(clan::ListViewItem item, std::string &string, clan::ListView *listview);
 	void on_key_pressed(clan::InputEvent &input_event, clan::ListView *listview);

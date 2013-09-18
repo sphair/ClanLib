@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class Slider : public clan::GUIComponent
+class Slider : public clan::Window
 {
 public:
 	Slider(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_value_changed(clan::Slider *slider);
 	void on_value_decremented(clan::Slider *slider);
 	void on_value_incremented(clan::Slider *slider);

@@ -60,7 +60,8 @@ bool GUI::run(clan::GameTime &game_time)
 
 	canvas.clear(clan::Colorf(0.0f,0.0f,0.0f, 0.0f));
 
-	run_manager();
+	if (!run_manager())
+		return false;
 
 	//std::string fps = clan::string_format("FPS: %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 	//fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -85,10 +86,11 @@ void GUI::reset_manager()
 
 }
 
-void GUI::run_manager()
+bool GUI::run_manager()
 {
 	if (gui_layered.get())
-		gui_layered->run();
+		return gui_layered->run();
+	return false;
 }
 
 const char *GUI::get_theme_location()

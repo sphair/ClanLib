@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class TabPage : public clan::GUIComponent
+class TabPage : public clan::Window
 {
 public:
 	TabPage(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	clan::Tab *tab;
 
 	clan::Label *label_p1;

@@ -30,11 +30,12 @@
 #include "lineedit.h"
 
 LineEdit::LineEdit(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Line Edit", clan::Rect(512 + 24, 8, clan::Size(256, 256)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Line Edit", clan::Rect(512 + 24, 8, clan::Size(256, 256)), false))
 {
+	func_close().set(this, &LineEdit::on_close);
 
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	lineedit1 = new clan::LineEdit(this);
 	lineedit1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 21)));
@@ -316,4 +317,10 @@ void LineEdit::on_unchecked_mask_hex(clan::CheckBox *checkbox)
 void LineEdit::on_resize_clicked(clan::PushButton *pushbutton)
 {
 	lineedit1->resize_to_fit(200);
+}
+
+bool LineEdit::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

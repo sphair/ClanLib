@@ -30,9 +30,10 @@
 #include "checkbox.h"
 
 CheckBox::CheckBox(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("CheckBox", clan::Rect(8, 256 + 16, clan::Size(256, 180)), false))
 {
-	clan::Rect client_area = get_content_box();
+	func_close().set(this, &CheckBox::on_close);
+	clan::Rect client_area = get_client_area();
 
 	checkbox1 = new clan::CheckBox(this);
 	checkbox1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(100, 15)));
@@ -117,4 +118,9 @@ void CheckBox::on_checked_3state(clan::CheckBox *checkbox)
 void CheckBox::on_unchecked_3state(clan::CheckBox *checkbox)
 {
 	checkbox1->set_3state(false);
+}
+bool CheckBox::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

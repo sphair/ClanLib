@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class RadioButton : public clan::GUIComponent
+class RadioButton : public clan::Window
 {
 public:
 	RadioButton(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_selected(clan::RadioButton *radiobutton);
 	void on_unselected(clan::RadioButton *radiobutton);
 	void on_group_selection_changed(clan::RadioButton *radiobutton_group, clan::RadioButton *radiobutton);

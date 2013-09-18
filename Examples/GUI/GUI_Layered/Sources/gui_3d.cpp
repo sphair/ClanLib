@@ -103,7 +103,7 @@ const char GUI_Texture_Shader_Fragment[] =
 	"\n"
 	"void main()\n"
 	"{\n"
-	"	vec4 texture_color = texture2D(Texture0, TexCoord.xy);\n"
+	"	vec4 texture_color = texture(Texture0, TexCoord.xy);\n"
 	"	if (texture_color.w < 0.01) discard;\n"
 	"\n"
 	"	vec3 eye = -normalize(PositionInEye.xyz); \n"
@@ -126,7 +126,7 @@ const char GUI_Texture_Shader_Fragment[] =
 	"	vec4 final_texture_color = texture_color;\n"
 	"	FragColor = LightAmbient * final_texture_color + (diff + MaterialEmission) * final_texture_color +spec * MaterialSpecular;\n"
 	"	FragColor.a = texture_color.w - MaterialTransparency;\n"
-	"	FragColor.b = FragColor.b + 0.2;"	// Add a blue hue
+//	"	FragColor.b = FragColor.b + 0.2;"	// Add a blue hue
 	"}\n"
 	;
 

@@ -71,7 +71,7 @@ bool GUI_Layered::run()
 {
 	wm.process();
 	run3d();
-	return true;
+	return !gui_manager.get_exit_flag();
 }
 
 clan::ResourceManager &GUI_Layered::get_resources_internal()

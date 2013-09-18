@@ -30,11 +30,12 @@
 #include "theme.h"
 
 Theme::Theme(clan::GUIManager &manager, gui_theme default_theme) : current_theme(default_theme),
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Window Theme", clan::Rect(256*3 + 32, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
 
+	func_close().set(this, &Theme::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	groupbox = new clan::GroupBox(this);
 	groupbox->set_geometry(clan::Rect(client_area.left + 5, client_area.top + 5, client_area.right - 5, client_area.bottom - 5));
@@ -103,4 +104,10 @@ void Theme::on_theme_selected(clan::RadioButton *radiobutton)
 
 	if (radiobutton == radiobutton_basic_packed)
 		current_theme = theme_basic_packed;
+}
+
+bool Theme::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

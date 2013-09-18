@@ -61,7 +61,8 @@ bool GUI::run(clan::GameTime &game_time)
 
 	canvas.fill_rect(app->get_window()->get_viewport(), clan::Gradient(clan::Colorf(0.4f, 0.4f, 0.4f, 1.0f), clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f)));
 
-	run_manager(canvas);
+	if (!run_manager(canvas))
+		return false;
 
 	std::string fps = clan::string_format("FPS: %1", clan::StringHelp::float_to_text(game_time.get_updates_per_second(), 1));
 	fps_font.draw_text(canvas, canvas.get_width() - 100 - 2, 24 - 2, fps, clan::Colorf(0.0f, 0.0f, 0.0f, 1.0f));
@@ -90,7 +91,7 @@ void GUI::reset_manager()
 
 }
 
-void GUI::run_manager(clan::Canvas &canvas)
+bool GUI::run_manager(clan::Canvas &canvas)
 {
 	if (gui_texture.get())
 	{
@@ -101,8 +102,9 @@ void GUI::run_manager(clan::Canvas &canvas)
 
 	if (gui_texture.get())
 	{
-		gui_texture->run(canvas);
+		return gui_texture->run(canvas);
 	}
+	return false;
 
 }
 

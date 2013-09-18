@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class MenuBar : public clan::GUIComponent
+class MenuBar : public clan::Window
 {
 public:
 	MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources);
 
 private:
+	bool on_close();
 	void on_item_selected();
 
 	void on_clicked(clan::PushButton *pushbutton);

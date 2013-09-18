@@ -30,11 +30,12 @@
 #include "radiobutton.h"
 
 RadioButton::RadioButton(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Radio Button", clan::Rect(256 + 256 + 24, 256 + 180 + 24, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Radio Button", clan::Rect(256 + 256 + 24, 256 + 180 + 24, clan::Size(256, 180)), false))
 {
 
+	func_close().set(this, &RadioButton::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	radiobutton_g1b1 = new clan::RadioButton(this);
 	radiobutton_g1b1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 0 , clan::Size(64, 32)));
@@ -148,4 +149,10 @@ void RadioButton::on_checked_disable(clan::CheckBox *checkbox)
 void RadioButton::on_unchecked_disable(clan::CheckBox *checkbox)
 {
 	radiobutton_g1b2->set_enabled(true);
+}
+
+bool RadioButton::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

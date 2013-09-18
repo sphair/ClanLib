@@ -30,11 +30,12 @@
 #include "tabpage.h"
 
 TabPage::TabPage(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Tab Page", clan::Rect(32 + 256*3, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 
+	func_close().set(this, &TabPage::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	tab = new clan::Tab(this);
 	tab->set_geometry(clan::Rect(client_area.left + 16, client_area.top + 10, clan::Size(220, 110)));
@@ -63,4 +64,9 @@ TabPage::TabPage(clan::GUIManager &manager) :
 
 	// tab 3
 	clan::TabPage *tab_page_3 = tab->add_page("p3");
+}
+bool TabPage::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

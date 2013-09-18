@@ -38,6 +38,7 @@ public:
 	~PushButton();
 
 private:
+	bool on_close();
 	void on_clicked(clan::PushButton *pushbutton);
 	void on_checked_disable(clan::CheckBox *checkbox);
 	void on_unchecked_disable(clan::CheckBox *checkbox);

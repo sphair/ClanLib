@@ -32,6 +32,7 @@
 PushButton::PushButton(clan::GUIManager &manager, clan::ResourceManager &application_resources) : 
 	clan::Window(&manager, clan::GUITopLevelDescription("PushButton", clan::Rect(256 + 16, 256 + 16, clan::Size(256, 180)), false))
 {
+	func_close().set(this, &PushButton::on_close);
 	clan::Canvas canvas = get_canvas();
 	test_image = clan::Image::resource(canvas, "tux", application_resources);
 
@@ -114,4 +115,9 @@ void PushButton::on_unchecked_toggle(clan::CheckBox *checkbox)
 	pushbutton1->set_toggle(false);
 }
 
+bool PushButton::on_close()
+{
+	exit_with_code(0);
+	return true;
+}
 

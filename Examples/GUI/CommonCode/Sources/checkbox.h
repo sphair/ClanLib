@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class CheckBox : public clan::GUIComponent
+class CheckBox : public clan::Window
 {
 public:
 	CheckBox(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_checked(clan::CheckBox *checkbox);
 	void on_unchecked(clan::CheckBox *checkbox);
 	void on_indeterminated(clan::CheckBox *checkbox);

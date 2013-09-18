@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class Spin : public clan::GUIComponent
+class Spin : public clan::Window
 {
 public:
 	Spin(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_value_changed(clan::Spin *spin);
 	void on_checked_disable(clan::CheckBox *checkbox);
 	void on_unchecked_disable(clan::CheckBox *checkbox);

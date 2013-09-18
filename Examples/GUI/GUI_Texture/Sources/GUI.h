@@ -54,7 +54,7 @@ public:
 private:
 	void gui_repaint();
 	void gui_exec();
-	void run_manager(clan::Canvas &canvas);
+	bool run_manager(clan::Canvas &canvas);
 	void reset_manager();
 
 private:

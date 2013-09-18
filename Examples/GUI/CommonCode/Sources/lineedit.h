@@ -31,12 +31,13 @@
 #include "info.h"
 
 
-class LineEdit : public clan::GUIComponent
+class LineEdit : public clan::Window
 {
 public:
 	LineEdit(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_before_edit_changed(clan::InputEvent &input_event, clan::LineEdit *lineedit);
 	void on_after_edit_changed(clan::InputEvent &input_event, clan::LineEdit *lineedit);
 	void on_selection_changed(clan::LineEdit *lineedit);

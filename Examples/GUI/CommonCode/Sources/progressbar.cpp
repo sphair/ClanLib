@@ -30,11 +30,12 @@
 #include "progressbar.h"
 
 ProgressBar::ProgressBar(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Progress Bar", clan::Rect(24 + 256*2, 256*1 + 180*2 + 32, clan::Size(256, 180)), false))
 {
 
+	func_close().set(this, &ProgressBar::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	progressbar1 = new clan::ProgressBar(this);
 	progressbar1->set_geometry(clan::Rect(client_area.left + 5, client_area.top + 5, clan::Size(128, 32)));
@@ -200,4 +201,10 @@ void ProgressBar::on_apply_clicked(clan::PushButton *pushbutton)
 void ProgressBar::on_step_position_clicked(clan::PushButton *pushbutton)
 {
 	progressbar1->step_position();
+}
+
+bool ProgressBar::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

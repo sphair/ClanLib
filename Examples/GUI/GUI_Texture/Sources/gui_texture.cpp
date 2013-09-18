@@ -72,6 +72,6 @@ bool GUI_Texture::run(clan::Canvas &canvas)
 	wm.process();
 	wm.draw_windows(canvas);
 
-	return true;
+	return !gui_manager.get_exit_flag();
 }
 

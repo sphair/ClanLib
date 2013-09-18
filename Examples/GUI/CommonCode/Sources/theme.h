@@ -28,7 +28,7 @@
 
 #pragma once
 
-class Theme : public clan::GUIComponent
+class Theme : public clan::Window
 {
 public:
 	enum gui_theme
@@ -46,6 +46,7 @@ public:
 	gui_theme get_theme() const {return current_theme; }
 
 private:
+	bool on_close();
 	void on_theme_selected(clan::RadioButton *radiobutton);
 
 private:

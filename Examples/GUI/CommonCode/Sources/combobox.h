@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class ComboBox : public clan::GUIComponent
+class ComboBox : public clan::Window
 {
 public:
 	ComboBox(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_dropdown_opened(clan::ComboBox *combobox);
 	void on_dropdown_closed(clan::ComboBox *combobox);
 	void on_before_edit_changed(clan::ComboBox *combobox);

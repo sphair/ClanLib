@@ -30,12 +30,13 @@
 
 #include "info.h"
 
-class ScrollBar : public clan::GUIComponent
+class ScrollBar : public clan::Window
 {
 public:
 	ScrollBar(clan::GUIManager &manager);
 
 private:
+	bool on_close();
 	void on_scroll(clan::ScrollBar *scrollbar);
 	void on_scroll_min(clan::ScrollBar *scrollbar);
 	void on_scroll_max(clan::ScrollBar *scrollbar);

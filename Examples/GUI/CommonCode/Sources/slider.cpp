@@ -30,11 +30,12 @@
 #include "slider.h"
 
 Slider::Slider(clan::GUIManager &manager) : 
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Slider", clan::Rect(256 + 16, 8, clan::Size(256, 256)), false))
 {
 
+	func_close().set(this, &Slider::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	slider_vertical = new clan::Slider(this);
 	slider_vertical->set_geometry(clan::Rect(client_area.left + 1, client_area.top + 10, clan::Size(17, 200)));
@@ -297,4 +298,10 @@ void Slider::on_apply_clicked(clan::PushButton *pushbutton)
 	value = clan::StringHelp::text_to_int(lineedit_min->get_text());
 	slider_vertical->set_min(value);
 	slider_horizontal->set_min(value);
+}
+
+bool Slider::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

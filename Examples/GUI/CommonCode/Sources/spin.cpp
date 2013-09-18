@@ -30,11 +30,12 @@
 #include "spin.h"
 
 Spin::Spin(clan::GUIManager &manager) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Spin", clan::Rect(256*3 + 32, 256 + 16, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Spin", clan::Rect(256*3 + 32, 256 + 16, clan::Size(256, 180)), false))
 {
 
+	func_close().set(this, &Spin::on_close);
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	spin1 = new clan::Spin(this);
 	spin1->set_geometry(clan::Rect(client_area.left + 11, client_area.top + 10, clan::Size(128, 21)));
@@ -249,4 +250,10 @@ void Spin::on_apply_clicked(clan::PushButton *pushbutton)
 	on_max_enter_pressed(lineedit_max);
 	on_step_enter_pressed(lineedit_step);
 	on_decimal_places_enter_pressed(lineedit_decimal_places);
+}
+
+bool Spin::on_close()
+{
+	exit_with_code(0);
+	return true;
 }

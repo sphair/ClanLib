@@ -30,8 +30,9 @@
 #include "menubar.h"
 
 MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_resources) :
-	clan::GUIComponent(&manager, clan::GUITopLevelDescription("Menu Bar & Status Bar", clan::Rect(512 + 24, 256 + 16, clan::Size(256, 180)), false), "window")
+	clan::Window(&manager, clan::GUITopLevelDescription("Menu Bar & Status Bar", clan::Rect(512 + 24, 256 + 16, clan::Size(256, 180)), false))
 {
+	func_close().set(this, &MenuBar::on_close);
 	tux_image = clan::ImageProviderFactory::load("../CommonCode/Resources/tux.png");
 
 	clan::Canvas canvas = get_canvas();
@@ -39,7 +40,7 @@ MenuBar::MenuBar(clan::GUIManager &manager, clan::ResourceManager &application_r
 
 
 
-	clan::Rect client_area = get_content_box();
+	clan::Rect client_area = get_client_area();
 
 	menubar1 = new clan::MenuBar(this);
 	menubar1->set_geometry(clan::Rect(client_area.left, client_area.top, client_area.right, client_area.top + 25));
@@ -254,3 +255,9 @@ void MenuBar::on_part_double_clicked_2( clan::StatusBar *statusbar)
 	info_part_clicked->activate();
 }
 
+
+bool MenuBar::on_close()
+{
+	exit_with_code(0);
+	return true;
+}
