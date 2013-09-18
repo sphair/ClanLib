@@ -337,11 +337,6 @@
 		1835C15C16362A150009AA23 /* font_description.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1CB1636168C0009AA23 /* font_description.cpp */; };
 		1835C15E16362A150009AA23 /* font_metrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1CE1636168C0009AA23 /* font_metrics.cpp */; };
 		1835C15F16362A150009AA23 /* font_metrics_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1CF1636168C0009AA23 /* font_metrics_impl.cpp */; };
-		1835C16116362A150009AA23 /* font_provider_sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1D31636168C0009AA23 /* font_provider_sprite.cpp */; };
-		1835C16216362A150009AA23 /* font_provider_system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1D51636168C0009AA23 /* font_provider_system.cpp */; };
-		1835C16416362A150009AA23 /* font_sprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1D91636168C0009AA23 /* font_sprite.cpp */; };
-		1835C16516362A150009AA23 /* font_system.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1DA1636168C0009AA23 /* font_system.cpp */; };
-		1835C16616362A150009AA23 /* font_vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1DB1636168C0009AA23 /* font_vector.cpp */; };
 		1835C16716362A150009AA23 /* glyph_cache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1E41636168C0009AA23 /* glyph_cache.cpp */; };
 		1835C17516362A150009AA23 /* font_engine_cocoa.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1DF1636168C0009AA23 /* font_engine_cocoa.mm */; };
 		1835C17A16362A150009AA23 /* cpu_pixel_buffer_provider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1EB1636168C0009AA23 /* cpu_pixel_buffer_provider.cpp */; };
@@ -761,6 +756,9 @@
 		18C7659F177B88BC009723F2 /* soundprovider_vorbis_session.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659A177B88BC009723F2 /* soundprovider_vorbis_session.cpp */; };
 		18C765A1177B88BC009723F2 /* soundprovider_vorbis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 18C7659C177B88BC009723F2 /* soundprovider_vorbis.cpp */; };
 		18C765A7177B88DC009723F2 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 18C765A4177B88DC009723F2 /* sqlite3.c */; };
+		3891B7E117E9591F002CB87D /* font_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3891B7DF17E9591F002CB87D /* font_impl.cpp */; };
+		3891B7E517E95943002CB87D /* vector_font_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3891B7E217E95943002CB87D /* vector_font_impl.cpp */; };
+		3891B7E617E95943002CB87D /* vector_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3891B7E417E95943002CB87D /* vector_font.cpp */; };
 		38B42B9117DD3D3300800A95 /* input_device_provider_osxkeyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */; };
 		38B42B9217DD3D3300800A95 /* input_device_provider_osxmouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */; };
 		5234008B16653835001A194E /* css_document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340072166537CF001A194E /* css_document.cpp */; };
@@ -768,7 +766,6 @@
 		5234008D16653835001A194E /* css_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340075166537CF001A194E /* css_property.cpp */; };
 		5234009B16653B7E001A194E /* gui_component_select_node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5234009416653B35001A194E /* gui_component_select_node.cpp */; };
 		523400A016653C28001A194E /* render_batch_triangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5234009C16653BF9001A194E /* render_batch_triangle.cpp */; };
-		523400A816653C6F001A194E /* font_provider_vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1835B1D71636168C0009AA23 /* font_provider_vector.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1153,15 +1150,6 @@
 		1835B1CE1636168C0009AA23 /* font_metrics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_metrics.cpp; sourceTree = "<group>"; };
 		1835B1CF1636168C0009AA23 /* font_metrics_impl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_metrics_impl.cpp; sourceTree = "<group>"; };
 		1835B1D01636168C0009AA23 /* font_metrics_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_metrics_impl.h; sourceTree = "<group>"; };
-		1835B1D31636168C0009AA23 /* font_provider_sprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_provider_sprite.cpp; sourceTree = "<group>"; };
-		1835B1D41636168C0009AA23 /* font_provider_sprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_provider_sprite.h; sourceTree = "<group>"; };
-		1835B1D51636168C0009AA23 /* font_provider_system.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_provider_system.cpp; sourceTree = "<group>"; };
-		1835B1D61636168C0009AA23 /* font_provider_system.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_provider_system.h; sourceTree = "<group>"; };
-		1835B1D71636168C0009AA23 /* font_provider_vector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_provider_vector.cpp; sourceTree = "<group>"; };
-		1835B1D81636168C0009AA23 /* font_provider_vector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_provider_vector.h; sourceTree = "<group>"; };
-		1835B1D91636168C0009AA23 /* font_sprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_sprite.cpp; sourceTree = "<group>"; };
-		1835B1DA1636168C0009AA23 /* font_system.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_system.cpp; sourceTree = "<group>"; };
-		1835B1DB1636168C0009AA23 /* font_vector.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = font_vector.cpp; sourceTree = "<group>"; };
 		1835B1DD1636168C0009AA23 /* font_engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_engine.h; sourceTree = "<group>"; };
 		1835B1DE1636168C0009AA23 /* font_engine_cocoa.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = font_engine_cocoa.h; sourceTree = "<group>"; };
 		1835B1DF1636168C0009AA23 /* font_engine_cocoa.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = font_engine_cocoa.mm; sourceTree = "<group>"; };
@@ -2359,6 +2347,11 @@
 		18C765A4177B88DC009723F2 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		18C765A5177B88DC009723F2 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		18C765A6177B88DC009723F2 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
+		3891B7DF17E9591F002CB87D /* font_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = font_impl.cpp; sourceTree = "<group>"; };
+		3891B7E017E9591F002CB87D /* font_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = font_impl.h; sourceTree = "<group>"; };
+		3891B7E217E95943002CB87D /* vector_font_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector_font_impl.cpp; sourceTree = "<group>"; };
+		3891B7E317E95943002CB87D /* vector_font_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vector_font_impl.h; sourceTree = "<group>"; };
+		3891B7E417E95943002CB87D /* vector_font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vector_font.cpp; sourceTree = "<group>"; };
 		38B42B8D17DD3D3300800A95 /* input_device_provider_osxkeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_device_provider_osxkeyboard.h; sourceTree = "<group>"; };
 		38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = input_device_provider_osxkeyboard.mm; sourceTree = "<group>"; };
 		38B42B8F17DD3D3300800A95 /* input_device_provider_osxmouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_device_provider_osxmouse.h; sourceTree = "<group>"; };
@@ -3427,19 +3420,15 @@
 				1835B1CA1636168C0009AA23 /* font.cpp */,
 				1835B1CB1636168C0009AA23 /* font_description.cpp */,
 				1835B1CE1636168C0009AA23 /* font_metrics.cpp */,
+				3891B7E217E95943002CB87D /* vector_font_impl.cpp */,
+				3891B7E317E95943002CB87D /* vector_font_impl.h */,
+				3891B7E417E95943002CB87D /* vector_font.cpp */,
+				3891B7DF17E9591F002CB87D /* font_impl.cpp */,
+				3891B7E017E9591F002CB87D /* font_impl.h */,
 				1835B1CF1636168C0009AA23 /* font_metrics_impl.cpp */,
-				1835B1D31636168C0009AA23 /* font_provider_sprite.cpp */,
-				1835B1D51636168C0009AA23 /* font_provider_system.cpp */,
-				1835B1D71636168C0009AA23 /* font_provider_vector.cpp */,
-				1835B1D91636168C0009AA23 /* font_sprite.cpp */,
-				1835B1DA1636168C0009AA23 /* font_system.cpp */,
-				1835B1DB1636168C0009AA23 /* font_vector.cpp */,
 				1835B1E41636168C0009AA23 /* glyph_cache.cpp */,
 				1835B1CC1636168C0009AA23 /* font_description_impl.h */,
 				1835B1D01636168C0009AA23 /* font_metrics_impl.h */,
-				1835B1D41636168C0009AA23 /* font_provider_sprite.h */,
-				1835B1D61636168C0009AA23 /* font_provider_system.h */,
-				1835B1D81636168C0009AA23 /* font_provider_vector.h */,
 				1835B1E51636168C0009AA23 /* glyph_cache.h */,
 				1835B1DC1636168C0009AA23 /* FontEngine */,
 			);
@@ -7681,7 +7670,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				523400A816653C6F001A194E /* font_provider_vector.cpp in Sources */,
 				523400A016653C28001A194E /* render_batch_triangle.cpp in Sources */,
 				1835C12816362A150009AA23 /* display.cpp in Sources */,
 				1835C12916362A150009AA23 /* display_target.cpp in Sources */,
@@ -7714,11 +7702,6 @@
 				1835C15C16362A150009AA23 /* font_description.cpp in Sources */,
 				1835C15E16362A150009AA23 /* font_metrics.cpp in Sources */,
 				1835C15F16362A150009AA23 /* font_metrics_impl.cpp in Sources */,
-				1835C16116362A150009AA23 /* font_provider_sprite.cpp in Sources */,
-				1835C16216362A150009AA23 /* font_provider_system.cpp in Sources */,
-				1835C16416362A150009AA23 /* font_sprite.cpp in Sources */,
-				1835C16516362A150009AA23 /* font_system.cpp in Sources */,
-				1835C16616362A150009AA23 /* font_vector.cpp in Sources */,
 				1835C16716362A150009AA23 /* glyph_cache.cpp in Sources */,
 				1835C17516362A150009AA23 /* font_engine_cocoa.mm in Sources */,
 				1835C17A16362A150009AA23 /* cpu_pixel_buffer_provider.cpp in Sources */,
@@ -7800,6 +7783,9 @@
 				18C76542177B8763009723F2 /* shader_effect.cpp in Sources */,
 				18C76543177B8763009723F2 /* shader_effect_description.cpp in Sources */,
 				18C76548177B8793009723F2 /* cursor_description.cpp in Sources */,
+				3891B7E117E9591F002CB87D /* font_impl.cpp in Sources */,
+				3891B7E517E95943002CB87D /* vector_font_impl.cpp in Sources */,
+				3891B7E617E95943002CB87D /* vector_font.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
