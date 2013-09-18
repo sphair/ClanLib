@@ -69,7 +69,7 @@ class CL_API_CORE WorkQueue
 {
 public:
 	/// \brief Constructs a work queue
-	/// \param serial_queue If true, executes items in the order they are queue, one at a time
+	/// \param serial_queue If true, executes items in the order they are queued, one at a time
 	WorkQueue(bool serial_queue = false);
 	~WorkQueue();
 
