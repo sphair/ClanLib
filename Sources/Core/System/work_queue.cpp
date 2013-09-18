@@ -39,12 +39,24 @@
 namespace clan
 {
 
-class WorkItemFunctor : public WorkItem
+class WorkItemProcess : public WorkItem
 {
 public:
-	WorkItemFunctor(const std::function<void()> &func) : func(func) { }
+	WorkItemProcess(const std::function<void()> &func) : func(func) { }
 
 	void process_work() { func(); }
+
+private:
+	std::function<void()> func;
+};
+
+class WorkItemWorkCompleted : public WorkItem
+{
+public:
+	WorkItemWorkCompleted(const std::function<void()> &func) : func(func) { }
+
+	void process_work() { }
+	void work_completed() { func(); }
 
 private:
 	std::function<void()> func;
@@ -87,12 +99,12 @@ void WorkQueue::queue(WorkItem *item) // transfers ownership
 
 void WorkQueue::queue(const std::function<void()> &func)
 {
-	impl->queue(new WorkItemFunctor(func));
+	impl->queue(new WorkItemProcess(func));
 }
 
 void WorkQueue::work_completed(const std::function<void()> &func)
 {
-	impl->work_completed(new WorkItemFunctor(func));
+	impl->work_completed(new WorkItemWorkCompleted(func));
 }
 
 /////////////////////////////////////////////////////////////////////////////
