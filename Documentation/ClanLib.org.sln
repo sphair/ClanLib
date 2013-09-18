@@ -1,0 +1,64 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{67526D1E-B801-4460-A8D3-F5C604037478}"
+	ProjectSection(SolutionItems) = preProject
+		assimp-linux.html = assimp-linux.html
+		breaking-changes.html = breaking-changes.html
+		build-environment-linux-gcc.html = build-environment-linux-gcc.html
+		build-environment-windows-msvc.html = build-environment-windows-msvc.html
+		compile-clanlib.html = compile-clanlib.html
+		contributions.html = contributions.html
+		debugging-msvc.html = debugging-msvc.html
+		development.html = development.html
+		documentation.html = documentation.html
+		donations.html = donations.html
+		download.html = download.html
+		example-console.html = example-console.html
+		example-display.html = example-display.html
+		examples.html = examples.html
+		external-libraries.html = external-libraries.html
+		global-includes-vs2010.html = global-includes-vs2010.html
+		index.html = index.html
+		license.html = license.html
+		object-types.html = object-types.html
+		release-notes-2.3.7.html = release-notes-2.3.7.html
+		release-notes-3.0.0.html = release-notes-3.0.0.html
+		visual-studio-binaries.html = visual-studio-binaries.html
+		wiki-retired.html = wiki-retired.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "js", "js", "{54F34B62-9AD4-453D-8703-F476EEA8111A}"
+	ProjectSection(SolutionItems) = preProject
+		js\examples.js = js\examples.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{B32A6748-7237-401B-A49F-F9A1C1FF443D}"
+	ProjectSection(SolutionItems) = preProject
+		css\examples.css = css\examples.css
+		css\fonts.css = css\fonts.css
+		css\main.css = css\main.css
+		css\page-body.css = css\page-body.css
+		css\page-footer.css = css\page-footer.css
+		css\page-header.css = css\page-header.css
+		css\page.css = css\page.css
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{C2FF3027-9401-4894-BAD8-61FA884E6AEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{5CE3824F-EE9C-4CCB-A258-6F11127573A0}"
+	ProjectSection(SolutionItems) = preProject
+		js\external\jquery-1.10.2.min.js = js\external\jquery-1.10.2.min.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54F34B62-9AD4-453D-8703-F476EEA8111A} = {67526D1E-B801-4460-A8D3-F5C604037478}
+		{B32A6748-7237-401B-A49F-F9A1C1FF443D} = {67526D1E-B801-4460-A8D3-F5C604037478}
+		{5CE3824F-EE9C-4CCB-A258-6F11127573A0} = {54F34B62-9AD4-453D-8703-F476EEA8111A}
+		{C2FF3027-9401-4894-BAD8-61FA884E6AEC} = {B32A6748-7237-401B-A49F-F9A1C1FF443D}
+	EndGlobalSection
+EndGlobal

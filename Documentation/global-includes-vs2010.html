@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Adding Global Include Paths - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>Adding Global Include Paths</h1>
+		
+                    <p>Unfortunately, it became alot more complex to add global includes to Visual Studio 2010/2012
+                        compared to 2008 (<a href="http://blogs.msdn.com/b/vsproject/archive/2009/07/07/vc-directories.aspx">read more</a>). One
+                        option is to just add the include directories directly to your project, but a more permanent solution is to add it to
+                        the global property sheets.</p>
+
+                    <p>First you have to create a new C++ solution, or open an existing one. Find the window called Property Manager and open
+                        it. In Visual Studio 2010/2012 and Visual Studio Express 2012 this is located at View-&gt;Other Windows-&gt;Property Manager. 
+                        Under Express 2010 edition, this is located directly under the View menu (but you need to enable Expert Settings under 
+                        Tools-&gt;Settings-&gt;Expert Settings first, then View-&gt;Property Manager). </p>
+
+                    <p><img src="img/content/visualstudio2010-global-includes-propertymanager.png" /></p>
+
+                    <p>Once the Property Manager is open, expand the Debug|Win32 section, and doubleclick the Microsoft.Cpp.Win32.user section.
+                        In the dialog box that opens up, edit the Include Directories to include the <span class="console">&lt;yourpath&gt;\include</span> path. 
+
+                    <p>
+                        <img src="img/content/visualstudio2010-global-includes-includedirectories.png" />
+                    </p>
+                    
+                    Do the same for Library Directories <span class="console">&lt;yourpath&gt;\lib\win32</span>.</p>
+                    <p>
+                        <img src="img/content/visualstudio2010-global-includes-librarydirectories.png" />
+                    </p>
+
+                    <p>If you are using 64 bit versions of ClanLib, you need to change the Platform combobox to x64 and modify the Include and Libs directories there as well.</p>
+    
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

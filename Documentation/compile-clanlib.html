@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Compilation Guide - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+    
+                    <h1>Compilation Guide</h1>
+
+                    <h2>Preparing installation</h2>
+
+                    <p>The first step is to download ClanLib and all its dependency libraries. Get the <a href="download.html">latest source version</a> of ClanLib.</p>
+
+                    <p>You will need to setup a sane build environment. This involves two things:</p>
+
+                    <ol>
+                        <li>ClanLib must be able to locate the libraries it uses.</li>
+                        <li>ClanLib must know where to install itself.</li>
+                    </ol>
+
+                    <p>My personal build environment is setup as follows using <span class="console">c:\Development\Environment</span> as base path:</p>
+
+                    <ul>
+                        <li><span class="console">c:\Development\Environment\lib\win32</span> contains all .lib files that didn't come along with msvc++ and that are needed by ClanLib.</li>
+                        <li><span class="console">c:\Development\Environment\include</span> contains all include files needed by the libs.</li>
+                    </ul>
+
+                    <p>Note: You don't need to follow the same scheme, put your libraries where it fits you.</p>
+
+                    <p>Here is how it looks like after I've installed Zlib (from the precompiled binaries download or if you built zlib from source): </p>
+
+                    <ul>
+                        <li><span class="console">c:\Development\Environment\include\zlib.h</span></li>
+                        <li><span class="console">c:\Development\Environment\include\zconf.h</span></li>
+                        <li><span class="console">c:\Development\Environment\lib\win32\zlib-static-mt.lib</span></li>
+                        <li><span class="console">c:\Development\Environment\lib\win32\zlib-static-mt.pdb</span></li>
+                        <li><span class="console">c:\Development\Environment\lib\win32\zlib-static-mt-debug.lib</span></li>
+                        <li><span class="console">c:\Development\Environment\lib\win32\zlib-static-mt-debug.pdb</span></li>
+                    </ul>
+
+                    <p>To add the paths to Visual Studio:</p>
+
+                    <ul>
+                        <li>Go through the Tools menu and select Options...</li>
+                        <li>Open the Projects and Solutions node and pick VC++ Directories</li>
+                        <li>Select Include Files in the 'Show directories for' combo box. Fill in the include directory (<span class="console">c:\Development\Environment\Include</span>).</li>
+                        <li>Select Library Files in the combo box. Fill in the libraries directory (<span class="console">c:\Development\Environment\Lib\win32</span>).</li>
+                    </ul>
+
+                    <h2>Configuring ClanLib</h2>
+
+                    <p>When you initially download a ClanLib source package, it will not contain the ClanLib project files, but rather a Configuration Wizard called configure.exe.</p>
+
+                    <p>You have to run this wizard and answer its questions carefully. Incorrect information will give you problems during the compilation.</p>
+
+                    <p>When the configure wizard asks me where to install the header and library files, I specify those paths from section 2:
+                        <span class="console">C:\Development\Environment\include</span> and <span class="console">C:\Development\Environment\lib</span>.</p>
+
+                    <p>When this is done, open the ClanLib.sln solution file.</p>
+
+                    <h2>Compiling ClanLib</h2>
+
+                    <p>After loading the ClanLib solution, the project view will show many different projects; clanApp, clanCore, clanDisplay, etc.</p>
+
+                    <p>Start with making clanCore the active project, if its not active already. You do this by right-clicking it, and select 'Set as Active Project'. Select Debug or Release in the toolbar. If you can't find this option anywhere, right click on the toolbar, and make sure Build is selected, and deselect the Build Minibar. Press F7 to compile the active project.</p>
+
+                    <p>You need to compile at least these projects:</p>
+
+                    <ul>
+                        <li>clanApp</li>
+                        <li>clanCore</li>
+                        <li>clanDisplay</li>
+                        <li>clanGL</li>
+                    </ul>
+
+                    <p>Optionally, you can compile the others if you need them. Menu item Build-&gt;Batch Build is handy here.</p>
+
+                    <p>Each library in ClanLib can be built in multiple different versions, x86 or x64, debug or release, static or as a DLL and so on. The version is reflected in the library name:</p>
+
+                    <ul>
+                        <li>clanCore-static-mt.lib: static library, multithreaded runtime, release build</li>
+                        <li>clanCore-static-mt-debug.lib: static library, multithreaded runtime, debug build</li>
+                    </ul>
+
+                    <p>The ClanLib headers automatically detect which version is to be used. This is done by looking at defines set by Visual Studio. For example,
+                        the define <span class="code">_DEBUG</span> is set by the compiler when you build debug versions of your application, which causes the <span class="code">ClanLib/core.h</span> header to issue
+                        a <span class="code">#pragma comment(lib, "clanCore-static-mt-debug.lib")</span> statement, which makes the linker automatically link with that specific version of
+                        the library.</p>
+
+                    <p>After a successful compilation of ClanLib, it will automatically run a batch file that will install all headers and lib files in the path you
+                        specified in the wizard. In my case, that is <span class="console">c:\Development\Environment\lib</span> and
+                        <span class="console">c:\Development\Environment\include</span>. So the following files will be added:</p>
+
+                    <div class="console">c:\Development\Environment\lib\win32\clanCore-static-mt.lib
+c:\Development\Environment\lib\win32\clanCore-static-mt-debug.lib
+c:\Development\Environment\lib\win32\clanGL-static-mt.lib
+c:\Development\Environment\lib\win32\clanGL-static-mt-debug.lib
+...
+c:\Development\Environment\include\ClanLib\core.h
+c:\Development\Environment\include\ClanLib\gl.h
+...</div>
+
+                    <h2>Next step</h2>
+
+                    <p>To create a Visual Studio solution file for your project, read the <a href="build-environment-windows-msvc.html">Visual C++ on Windows</a> guide.</p>
+		
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>GNU C++ on Linux - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>GNU C++ on Linux</h1>
+		
+                    <p>ClanLib does not provide Linux binaries, and if your
+                    distribution does, they may well be out of date (e.g. Ubuntu
+                    11.10's libclanlib-dev is ClanLib 1.0). The recommended way
+                    to install ClanLib on Linux is hence to compile it from
+                    source, as follows.</p>
+		
+                    <h2>Installing Prerequisites</h2>
+		
+                    <p>ClanLib requires a C++ compiler and a number of other
+                    libraries; how to install these depends on which Linux
+                    distribution you are using. The following command downloads
+                    and installs everything required to allow use of all parts
+                    of ClanLib. If you have a slow internet connection and only
+                    intend to use some ClanLib modules, you may want to look at
+                    the <a href="#module-by-module">Module-by-module dependency
+                    list</a> instead.</p>
+		
+		            <h3>Debian &amp; Ubuntu</h3>
+		
+		            <div class="console">sudo apt-get install make automake autoconf autotools-dev m4 libtool libc6-dev linux-libc-dev g++ \
+zlib1g zlib1g-dev libpng12-0 libpng12-dev libjpeg62-dev libfreetype6 libfreetype6-dev \
+x11proto-xf86vidmode-dev libxxf86vm-dev libfontconfig1-dev libxi-dev libgl1-mesa-dev \
+libice-dev libsm-dev libx11-dev libxau-dev libxdmcp-dev libxext-dev libxt-dev mesa-common-dev \
+x11proto-core-dev x11proto-input-dev x11proto-kb-dev x11proto-xext-dev xtrans-dev libasound2-dev \
+libmikmod2 libmikmod2-dev libvorbis0a libvorbis-dev libogg-dev libpcre3 libpcre3-dev libsqlite3-dev libxrender-dev doxygen</div>
+
+		            <h3>Fedora</h3>
+		
+		            <div class="console">sudo yum install make automake autoconf autotools-dev m4 libtool libc6-dev linux-libc-dev g++ \
+zlib1g zlib1g-dev libpng12-0 libpng12-dev libjpeg62-dev libfreetype6 libfreetype6-dev \
+x11proto-xf86vidmode-dev libxxf86vm-dev libfontconfig1-dev libxi-dev libgl1-mesa-dev \
+libice-dev libsm-dev libx11-dev libxau-dev libxdmcp-dev libxext-dev libxt-dev mesa-common-dev \
+x11proto-core-dev x11proto-input-dev x11proto-kb-dev x11proto-xext-dev xtrans-dev libasound2-dev \
+libmikmod2 libmikmod2-dev libvorbis0a libvorbis-dev libogg-dev libpcre3 libpcre3-dev libsqlite3-dev libxrender-dev doxygen pcre-devel libmikmod-devel</div>
+
+		            <h3>CentOS 5/6</h3>
+		
+		            <div class="console">sudo yum install make automake autoconf m4 gcc-c++ zlib zlib-devel mesa-libGL* doxygen \
+libvorbis libvorbis-devel libogg-devel sqlite*</div>
+
+		            <p>Some 3D examples require assimp. See the <a href="assimp-linux.html">AssimpLinux</a> page.</p>
+		
+		
+            		<h2>Downloading and configuring ClanLib</h2>
+		
+		            <p>Download the latest ClanLib release source archive.</p>
+		
+		            <p>Open a terminal prompt and change to the directory you downloaded ClanLib to.</p>
+		
+		            <p>Extract:</p>
+		
+		            <div class="console">tar -xvzf ClanLib-2.3.5.tgz</div>
+		
+		            <p>(Amend the version number as necessary)</p>
+		
+		            <p>Configure (this gives the standard one, see below for other options):</p>
+		
+		            <div class="console">./configure --prefix=/usr</div>
+
+		
+		            <h3>Development version</h3>
+		
+		            <p>Alternatively, if you want the very latest features and are willing to live with a higher risk of bugs, download the current development source code from the subversion repository. (Not recommended at the moment on linux)</p>
+		
+		            <p>This version requires autogen before configure:</p>
+
+		            <div class="console">./autogen.sh
+./configure --prefix=/usr</div>
+
+		            <p>(If you get: "configure.ac:178: error: possibly undefined macro: AC_MSG_CHECKING", you will need to install the pkg-config package")</p>
+		
+
+		            <h3>Alternative configurations</h3>
+
+		            <p>To get a list of available options, run "./configure --help"</p>
+
+		            <p>Developers may prefer to add --enable-debug to create debug libraries.</p>
+
+		            <p>You can force enabling of implementations, or disable some - eg.:</p>
+
+		            <div class="console">./configure --disable-clanMikMod --enable-clanGL</div>
+ 
+		            <p>By default both shared (.so) and static (.a) libraries are built. Unless you want to make a static release, you will probably only want the shared libraries, so can disable the static ones with:</p>
+ 
+		            <div class="console">./configure --disable-static</div>
+  
+		            <p>Doing so will reduce the compile size by a half.</p>
+
+
+		            <h2>Compiling and installing</h2>
+
+		            <p>Compile (this will take some long time):</p>
+
+		            <div class="console">make</div>
+
+		            <p>Install:</p>
+
+		            <div class="console">sudo make install</div>
+
+		            <p>ClanLib should now be ready for use.</p>
+
+		            <p>Note: On CentOS, you must run this command to be able to compile with ClanLib:</p>
+
+		            <div class="console">export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+sudo ldconfig</div>
+
+
+		            <h3>Documentation and examples</h3>
+		
+		            <p>ClanLib includes API reference documentation within its source files, which can be extracted to HTML using:</p>
+
+		            <div class="console">./configure --prefix=/usr --enable-docs
+make html</div>
+
+		            <p>It will then be found at file:///your ClanLib directory/Documentation/Reference/doxyoutput/html/modules.html</p>
+
+		            <p>ClanLib also includes a number of examples, which are compiled and run as follows (replace Display/Basic2D with the example category and name):</p>
+
+		            <div class="console">cd Examples/Display/Basic2D
+make
+./basic2d</div>
+
+		            <p>On Fedora linux and CentOS, if you get "Package clanApp-2.3 was not found in the pkg-config search path", this command helps fix the problem</p>
+
+		            <div class="console">export PKG_CONFIG_PATH=/usr/lib/pkgconfig</div>
+
+
+		            <h3>Using ClanLib</h3>
+		
+		            <p>These examples compile and link a source file named mygame.cpp with the ClanLib 2.3.x modules required for graphics (2D or 3D, using OpenGL 2+) and input. If you use other parts of ClanLib such as networking (clanNetwork), sound (clanSound, and clanVorbis or clanMikmod if you use those formats) or GUI (clanGUI), a different graphics target (clanGL1 or clanSWRender) or a different ClanLib version, amend them accordingly.</p>
+
+		            <p><b>Command line</h></p>
+
+		            <div class="console">g++ -o mygame mygame.cpp `pkg-config --cflags --libs clanCore-2.3 clanDisplay-2.3 clanGL-2.3 clanGL1-2.3 clanApp-2.3` -lpthread</div>
+		
+		            <p><b>Makefile</b></p>
+		
+		            <div class="console">PACKAGES = clanCore-2.3 clanDisplay-2.3 clanApp-2.3 clanGL-2.3
+LIBS = `pkg-config --cflags --libs $(PACKAGES)`
+OBJS = mygame.o
+
+all: $(OBJS)
+	g++ -o mygame -pthread $(OBJS) $(LIBS)
+
+clean:
+	-rm -rf *.o
+	-rm mygame</div>
+
+		            <h2><a id="module-by-module"></a>Module-by-module dependency list (Debian/Ubuntu)</h2>
+
+		            <h3>Core</h3>
+		
+		            <div class="console">automake
+autoconf
+autotools-dev
+m4
+libtool
+libc6-dev
+linux-libc-dev
+g++ (g++-4.1 or later and libstdc++6-4.1-dev or later)
+zlib1g
+zlib1g-dev</div>
+
+            		<h3>Display</h3>
+		
+		            <div class="console">libpng12-0
+libpng12-dev
+libjpeg62-dev
+libfreetype6  (unless compiled manually)
+libfreetype6-dev (unless compiled manually)
+x11proto-xf86vidmode-dev (to enable XF86 VidMode)
+libxxf86vm-dev (to enable XF86 VidMode)
+libfontconfig1-dev
+libxi-dev
+libgl1-mesa-dev
+libice-dev
+libsm-dev
+libx11-dev
+libxau-dev
+libxdmcp-dev
+libxext-dev
+libxt-dev
+mesa-common-dev
+x11proto-core-dev
+x11proto-input-dev
+x11proto-kb-dev
+x11proto-xext-dev
+xtrans-dev</div>
+
+		            <h3>Sound</h3>
+		
+		            <div class="console">libasound2-dev (for alsa)</div>
+		
+		            <h3>Documentation</h3>
+		
+		            <div class="console">doxygen</div>
+    
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

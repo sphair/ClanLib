@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Assimp on Linux - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>Assimp on Linux</h1>
+		
+                    <p>Assimp is required on numerious ClanLib 3D examples.</p>
+
+                    <p>Information to build assimp on linux. This page is valid until the assimp
+                    developers release v2.3.0.</p>
+
+                    <p>The ClanLib examples require at least SVN #1185.</p>
+		
+                    <div class="console">$ svn co https://assimp.svn.sourceforge.net/svnroot/assimp/trunk assimp
+$ # For debian
+$ sudo apt-get install libboost-dev
+$ # For Fedora
+$ sudo yum install boost-devel
+$ cd assimp
+$ cmake -G 'Unix Makefiles'
+  -- Boost version: 1.42.0
+  -- Found ZLIB: /usr/include (found version "1.2.3.4")
+  -- checking for module 'minizip'
+  --   package 'minizip' not found
+  -- Configuring done
+  -- Generating done
+  -- Build files have been written to: /home/.../src/assimp
+$ make
+   Scanning dependencies of target assimp
+  ...
+  [100%] Built target assimp_cmd
+ 
+$ sudo make install
+$ sudo ldconfig</div>
+
+                    <p>Note, if "cmake" fails with glut not found, try this (on Ubuntu)</p>
+		
+                    <div class="console">sudo apt-get install freeglut3-dev freeglut3 libxmu-dev libxi-dev</div>
+		
+                    <p>Assimp precompiled libraries for Visual Studio can be found in <a href="external-libraries.html">Dependency Libraries</a>.</p>
+    
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

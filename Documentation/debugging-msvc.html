@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Debugging with MSVC - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>Debugging with MSVC</h1>
+
+                    <h2>Watch and Variable Information</h2>
+
+                    <p>When debugging with Microsoft Visual C++ the auto expand keywords will provide better Watch and Variable information for common ClanLib types.</p>
+
+                    <p>Add the following to autoexp.dat (located in C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\Packages\Debugger on my computer):</p>
+
+                    <h3>ClanLib 3.0</h3>
+
+                    <div class="code">[AutoExpand]
+; from ClanLib
+clan::Rect =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+clan::Rectf =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+clan::Point =x=&lt;x&gt; y=&lt;y&gt;
+clan::Pointf =x=&lt;x&gt; y=&lt;y&gt;
+clan::Size =width=&lt;width&gt; height=&lt;height&gt;
+clan::Sizef =width=&lt;width&gt; height=&lt;height&gt;
+clan::Vec4&lt;float&gt; =x=&lt;x&gt; y=&lt;y&gt; z=&lt;z&gt; w=&lt;w&gt;
+clan::Vec3&lt;float&gt; =x=&lt;x&gt; y=&lt;y&gt; z=&lt;z&gt;
+clan::Vec2&lt;float&gt; =x=&lt;x&gt; y=&lt;y&gt;</div>
+
+                    <h3>ClanLib 2.3</h3>
+
+                    <div class="code">[AutoExpand]
+; from ClanLib
+CL_SharedPtr&lt;*&gt; =&lt;ptr&gt;
+CL_WeakPtr&lt;*&gt; =&lt;ptr&gt;
+CL_UnknownPtr =&lt;ptr&gt;
+CL_BasicString&lt;char,CL_String8Traits,std::basic_string&lt;char,std::char_traits&lt;char&gt;,std::allocator&lt;char&gt; &gt; &gt; =&lt;data_ptr,s&gt; length=&lt;data_length&gt;
+CL_BasicString&lt;unsigned short,CL_String16Traits,std::basic_string&lt;unsigned short,std::char_traits&lt;unsigned short&gt;,std::allocator&lt;unsigned short&gt; &gt; &gt; =&lt;data_ptr,su&gt; length=&lt;data_length&gt;
+CL_BasicString&lt;wchar_t,CL_String16Traits,std::basic_string&lt;wchar_t,std::char_traits&lt;wchar_t&gt;,std::allocator&lt;wchar_t&gt; &gt; &gt; =&lt;data_ptr,su&gt; length=&lt;data_length&gt;
+CL_Rect =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+CL_Rectf =top=&lt;top&gt; bottom=&lt;bottom&gt; left=&lt;left&gt; right=&lt;right&gt;
+CL_Point =x=&lt;x&gt; y=&lt;y&gt;
+CL_Pointf =x=&lt;x&gt; y=&lt;y&gt;
+CL_Size =width=&lt;width&gt; height=&lt;height&gt;
+CL_Sizef =width=&lt;width&gt; height=&lt;height&gt;
+CL_Vector =x=&lt;x&gt; y=&lt;y&gt; z=&lt;z&gt; w=&lt;w&gt;
+CL_Vector2 =x=&lt;x&gt; y=&lt;y&gt;
+CL_Color =&lt;color,x&gt;</div>
+		
+                    <h2>Disable stepping into ClanLib classes</h2>
+
+                    <p>It is also possible to disable that it steps into certain commonly used classes.</p>
+
+                    <p>Locate the nodes in registry under</p>
+
+                    <div class="code">[HKEY_LOCAL_MACHINE\Software\Microsoft\VisualStudio\10.0\NativeDE\StepOver]</div>
+
+                    <p>If you are on a 64bit Windows, you find the nodes under the Wow6432Node:</p>
+
+                    <div class="code">[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\VisualStudio\10.0\NativeDE\StepOver]</div>
+
+                    <p>Depending on your Visual Studio version, you might have different version than 10.</p>
+
+                    <p>Change the registry as follows:</p>
+
+                    <h3>ClanLib 2.3</h3>
+
+                    <div class="code">"ClanLib BasicString"=".*CL_BasicString.*=NoStepInto"
+"ClanLib String"=".*CL_String.*=NoStepInto"
+"ClanLib SharedPtr"=".*CL_SharedPtr.*=NoStepInto"
+"ClanLib WeakPtr"=".*CL_WeakPtr.*=NoStepInto"
+"ClanLib UnknownPtr"=".*CL_UnknownPtr.*=NoStepInto"</div>
+    
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Visual C++ on Windows - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>Visual C++ on Windows</h1>
+		
+                    <h2>Getting Started</h2>
+		
+                    <p>First step is to make sure your Visual Studio system is up to date. As of this writing, we
+                    support the following versions:</p>
+		
+                    <ul>
+	                    <li>Visual Studio 2012</li>
+	                    <li>Visual Studio 2010</li>
+	                    <li>Visual Studio 2010 Express - <a href="http://www.microsoft.com/express/Downloads/#2010-Visual-CPP">download it for free</a></li>
+                    </ul>
+		
+                    <p>You also need to install the <a href="http://msdn.microsoft.com/en-us/windows/desktop/hh852363.aspx">Windows 8 SDK</a>. Note that
+                    this already comes with Visual Studio 2012.</p>
+		
+                    <h2>Compiling ClanLib</h2>
+		
+                    <p>If you need the very latest ClanLib directly from our source control repository, read
+                    the <a href="compile-clanlib.html">compilation guide</a>.</p>
+		
+                    <p>Otherwise and much easier, you can just use the precompiled versions we provide, these
+                    are always up-to-date on the latest release. Read on for a guide on using the precompiled libraries.</p>
+		
+                    <h2>Precompiled Libraries</h2>
+		
+                    <p>The precompiled versions can be found here: <a href="visual-studio-binaries.html">Visual Studio Binaries</a>.
+		
+                    <p>After you downloaded the binaries, exctract these files into a directory. Remember which one, because you need
+                    to enter that information in the next section. It will create a structure looking like this:</p>
+
+                    <ul>
+	                    <li>&lt;yourpath&gt;\include\ClanLib\...</li>
+	                    <li>&lt;yourpath&gt;\include\zlib.h</li>
+	                    <li>&lt;yourpath&gt;\include\zconf.h</li>
+	                    <li>&lt;yourpath&gt;\include\...</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\clanApp-static-mt.lib</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\clanApp-static-mt.pdb</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\clanApp-static-mt-debug.lib</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\clanApp-static-mt-debug.pdb</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\zlib-static-mt.lib</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\zlib-static-mt.pdb</li>
+	                    <li>&lt;yourpath&gt;\lib\win32\...</li>
+	                    <li>&lt;yourpath&gt;\lib\x64\zlib-x64-static-mt.lib</li>
+	                    <li>&lt;yourpath&gt;\lib\x64\zlib-x64-static-mt.pdb</li>
+	                    <li>&lt;yourpath&gt;\lib\x64\...</li>
+                    </ul>
+		
+                    <h2>Configure Visual Studio</h2>
+		
+                    <p>You will need to configure Visual Studio to look for the downloaded libraries.</p>
+		
+                    <ul>
+	                    <li><a href="global-includes-vs2010.html">Adding global includes to Visual Studio 2010/2012</a></li>
+                    </ul>
+		
+                    <h2>Creating a Solution For Your Application</h2>
+		
+                    <p>Follow these steps to create a Visual Studio solution for a ClanLib application:</p>
+		
+                    <ol>
+	                    <li>
+		                    <p>Select <b>File->New Project</b>.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Find Visual C++ group in the Project Types, and select <b>Win32 Project</b>, and specify the <b>location</b>, and click OK.</p>
+		                    <p><img src="img/content/visualstudio-new-project.png"></p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Under <b>Application Settings</b>, select <b>Empty project</b>, and press Finish.</p>
+		                    <p><img src="img/content/visualstudio-new-project-settings.png"></p>
+	                    </li>
+		
+	                    <li>
+		                    <p>Add a <b>new C++ file</b> to your project. This can be done by right clicking your project
+		                    in Solution Explorer, and selecting Add->New Item->C++ File.</p>
+				
+		                    <p>If you do not do this first, you will not see the C++ / Code Generation settings
+		                    required for step 7.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Right click your Project (not the solution) and select <b>Properties</b>.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Select the <b>Configuration Properties</b> section.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Select the <b>C/C++</b> tab, and then category <b>Code Generation</b>.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Change the <b>Use run-time library</b> to <b>Debug Multithreaded</b>.</p>
+		                    <p><img src="img/content/visualstudio-runtime-library-debug.png"></p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Change the configuration dropdown at the top of the dialog to <b>Release</b>.</p>
+	                    </li>
+			
+	                    <li>
+		                    <p>Change the <b>Use run-time library</b> to <b>Multithreaded</b>.</p>
+		                    <p><img src="img/content/visualstudio-runtime-library-release.png"></p>
+	                    </li>
+                    </ol>
+
+                    <p>That should be it. If you've done everything correct, you can start coding your ClanLib application!</p>
+		
+                    <h2>Examples</h2>
+		
+                    <p>You could also check out the examples that comes with the distribution; they are a great resource to learn
+                    from. Since the precompiled packages does not include the examples, you will need to download the ClanLib
+                    source package. Download the <a href="download.html">ClanLib source package</a>, extract it anywhere, and open the Examples.sln Visual
+                    Studio solution file.</p>
+		
+                    <h2>Troubleshooting</h2>
+		
+                    <p>The most common problems encountered with building ClanLib applications:</p>
+		
+                    <ul class="faq-list">
+	                    <li class="faq-item">
+		                    <div class="faq-question">You get a lot of linker errors complaining about multiple definitions of functions like _exit or "cannot open file '*-static-mtdll-debug.lib' "</div>
+		                    <div class="faq-answer">This is almost always caused by mixing runtime versions. Your project is most likely set to Multithreaded Debug DLL, while ClanLib expects it to be Multithreaded Debug. Fixed by going to the project settings of your project and set it to what ClanLib expects.</div>
+	                    </li>
+		
+	                    <li class="faq-item">
+		                    <div class="faq-question">You get a lot of linker errors complaining about xran and similar.</div>
+		                    <div class="faq-answer">This is probably caused by using libraries compiled with Visual Studio 2008 in a Visual Studio 2010 environment. Download the correct precompiled versions.</div>
+	                    </li>
+		
+	                    <li class="faq-item">
+		                    <div class="faq-question">LINK : fatal error LNK1104: cannot open file 'zlib-static-mt-debug.lib'</div>
+		                    <div class="faq-answer">Visual Studio cannot locate the ClanLib dependency libraries. Make sure you have setup the include and libs directories correctly as explained in the guide. If you only have files like zlib-x64-static-mt-debug.lib, make sure you compile your application in 64 bit and not 32 bit.</div>
+	                    </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

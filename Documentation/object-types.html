@@ -1,0 +1,105 @@
+﻿<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
+	    <title>Object Types - ClanLib SDK</title>
+        <link rel="stylesheet" type="text/css" href="css/main.css" />
+        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
+    </head>
+    <body>
+        <div id="page-wrapper">
+            <div id="page-header-wrapper">
+                <div id="page-header">
+                    <a id="page-header-logo" href="/"></a>
+                    <div id="page-header-menu">
+                        <a class="page-header-menu-item" href="download.html">Download</a>
+                        <a class="page-header-menu-item active" href="documentation.html">Documentation</a>
+                        <a class="page-header-menu-item" href="development.html">Development</a>
+                        <a class="page-header-menu-item" href="examples.html">Examples</a>
+                        <a class="page-header-menu-item" href="donations.html">Donations</a>
+                        <a class="page-header-menu-item" href="contributions.html">Contributions</a>
+                        <a class="page-header-menu-item" href="http://www.rtsoft.com/clanlib">Forum</a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-body-wrapper">
+                <div id="page-body">
+
+                    <h1>Object Types</h1>
+
+                    <p>There are 3 types of ClanLib objects:</p>
+
+                    <ul>
+                        <li>Handle Objects</li>
+                        <li>Value Objects</li>
+                        <li>GUI Components</li>
+                    </ul>
+
+                    <h2>Handle Objects</h2>
+
+                    <p>These classes contain a single std::shared_ptr that contains the object implementation. Copying such an object variable therefore doesn't
+                        create a copy of the actual object. Avoid using use the "new" keyword to create them.</p>
+
+                    <p>Here are some examples on how to manipulate handle objects:</p>
+
+                    <div class="code">Sprite sprite;	                  // API says this constructs a null instance of Sprite (no resources allocated)
+if ( sprite.is_null() ) { ... }	  // The is_null() function shows that it is a null instance
+Sprite sprite2(gc, "image.png");  // Construct the Sprite object
+sprite = sprite2;                 // Copy the handle. sprite and sprite2 refer to the same object
+sprite2 = Sprite();               // Assign sprite2 to a new object, in this case, a null instance.
+sprite.draw(gc, 100, 100);        // Draw the sprite.</div>
+
+                    <p>Some classes allow to clone the object state. Here sprite and sprite2 have different settings: (Note internally, the two Sprite objects still share the same image)</p>
+
+                    <div class="code">sprite = sprite2.clone();
+sprite.set_scale(2.0f, 2.0f);
+sprite2.set_scale(4.0f, 4.0f);</div>
+
+                    <p>Handle objects generally have a default constructor that creates a null instance (the std::shared_ptr points at null). There are a few exceptions
+                        to this rule, however.</p>
+
+                    <h2>Value Objects</h2>
+
+                    <p>These classes do not have a private implementation. They are copied by value as normal C++ objects:</p>
+
+                    <div class="code">Colorf color1(1.0f, 1.0f, 1.0f, 1.0f); // Set RGBA = 1.0f (white)
+Colorf color2 = color1;                // Copy the object including the data
+color1.b = 0.0f;                       // Clear blue component</div>
+
+                    <p>Color1 becomes yellow and color2 remains white.</p>
+
+                    <h2>GUI Components</h2>
+
+                    <p>The clanGUI GUIComponent class has a std::shared_ptr implemention, but cannot be copied. The copy constructor has been intentially disabled. Use the "new" keyword to create new GUI components.</p>
+
+                    <p>They will be destroyed automatically by clanGUI when a parent component is destroyed, or when the clanGUI display window is destroyed.</p>
+
+                    <p>They can be destroyed manually by using the "delete" keyword. </p>
+
+                    <h2>Object destruction order</h2>
+
+                    <p>ClanLib has been designed so that the destruction order of objects does not matter. This is internally implemented by using DisposableObject. For example:</p>
+
+                    <div class="code">Texture texture;
+DisplayWindow window("Hello World");
+GraphicContext gc = window.get_gc();
+texture = Texture(gc, "image.png");</div>
+
+                    <p>The "window" object is destroyed before the "texture" object. Internally, the DisplayWindow destructor calls dispose on the texture object, to deallocate it's resources. When
+                        the Texture destructor is called the resource has already been disposed and does nothing.</p>
+
+                    <p>Note: ClanLib 3.0 does this more cleanly than ClanLib 2.3. It should work in ClanLib 2.3, but avoid creating display objects in different threads.</p>
+
+                </div>
+            </div>
+
+            <div id="page-footer-wrapper">
+                <div id="page-footer">
+                    <div id="page-footer-copyright">&copy; ClanLib.org</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
