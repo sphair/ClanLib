@@ -15,4 +15,20 @@ $(document).ready(function () {
 
     });
 
+
+    $(".image-fullscreen-link").on('click', function () {
+
+        var imageSrc = $(this).children('img').attr('src');
+
+        $("#image-fullscreen").attr('src', imageSrc);
+        $("#image-popup").fadeIn();
+
+    });
+
+    $("#image-popup").on('click', function () {
+
+        $("#image-popup").fadeOut();
+
+    });
+
 });
