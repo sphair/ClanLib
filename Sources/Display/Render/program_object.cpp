@@ -336,24 +336,24 @@ std::string ProgramObject::get_info_log() const
 int ProgramObject::get_attribute_location(const std::string &name) const
 {
 	int value = impl->provider->get_attribute_location(name);
-	if (value <0)
-		throw Exception(string_format("Attribute %1 not found", name));
+	//if (value <0)
+	//	throw Exception(string_format("Attribute %1 not found", name));
 	return value;
 }
 
 int ProgramObject::get_uniform_location(const std::string &name) const
 {
 	int value = impl->provider->get_uniform_location(name);
-	if (value <0)
-		throw Exception(string_format("Uniform %1 not found", name));
+	//if (value <0)
+	//	throw Exception(string_format("Uniform %1 not found", name));
 	return value;
 }
 
 int ProgramObject::get_uniform_buffer_size(const std::string &block_name) const
 {
 	int block_index = impl->provider->get_uniform_buffer_index(block_name);
-	if (block_index == -1)
-		throw Exception("uniform block not found");
+	//if (block_index == -1)
+	//	throw Exception(string_format("Uniform block %1 not found", block_name));
 	return impl->provider->get_uniform_buffer_size(block_index);
 }
 
