@@ -1,167 +1,116 @@
 
-/*! \page SpriteResource Sprite Resource
+/*! \page SpriteResource Sprite Resources
 
-Resource options
 
-The sprite resource options is a plethora of possibilities to tweak a sprites looks and behaviours, but all of them have default values. In most cases you will only need to use the basic options.
+The \ref clan::Sprite resource options are a plethora of possibilities to tweak a sprites looks and behaviours, but all of them have default values. In most cases you will only need to use the basic options.
 
-Each sprite can have the following properties:
+Only the name attribute of \<sprite\> and at least one \<image\> element is required to construct a sprite. The remaining elements and attributes are optional.
 
+<h2>Using the \<sprite\> element</h2>
+
+<ul><li>Attribute: <b>name</b><br/>
+Resource identifier to use as base for this sprite<br/>
+Default value: None, MUST BE PRESENT. 
+</li></ul>
+
+<ul><li>Attribute: <b>base_angle</b><br/>
+Defines what direction the sprite is in. All other angles are relative to this one.<br/>
+Default value: "0" 
+</li></ul>
+
+<ul><li>Attribute: <b>id</b><br/>
+Sets the sprite identify retrievable via \ref clan::Sprite::get_id().<br/>
+Default value: "0" 
+</li></ul>
+
+<ul><li>Element: <b>\<image\> </b><br/>
+Description of the sprite frames.<br/>
+You can specify any number of \<image\> elements
+</li></ul>
+
+<ul><li>Element: <b>\<color\>  </b><br/>
+Description of the sprite color.<br/>
+You can specify any number of \<color\> elements
+</li></ul>
+
+<ul><li>Element: <b>\<frame\> </b><br/>
+Description of the sprite frames.<br/>
+You can specify any number of \<frame\> elements
+</li></ul>
+
+
+<ul><li>Element: <b>\<animation\>  </b><br/>
+Description of the sprite animation.<br/>
+You can specify any number of \<animation\> elements
+</li></ul>
+
+
+<ul><li>Element: <b>\<scale\>  </b><br/>
+Description of the sprite scale.<br/>
+You can specify any number of \<scale\> elements
+</li></ul>
+
+
+<ul><li>Element: <b>\<translation\> </b><br/>
+Description of the sprite translation.<br/>
+You can specify any number of \<translation\> elements
+</li></ul>
+
+
+<ul><li>Element: <b>\<rotation\>  </b><br/>
+Description of the sprite rotation.<br/>
+You can specify any number of \<rotation\> elements
+</li></ul>
+
+
+<h2>Using the \<image\> element</h2>
+
+The first step in setting up a sprite is telling the resource loader where it should get the images for all the frames. This is done specifying one or more \<image\> elements. Each \<image\> element specify an image from where one or several frames should be extracted:
+
+<ul><li>If there is no child element in \<image\>, it will simply take the entire image and add it as one large frame. </li></ul>
+<ul><li>If the child element is \<grid\> it will use the grid cutter to extract a set of frames placed in a grid in the image file. </li></ul>
+<ul><li>If the child is \<alpha\> the alpha cutter will be used instead. The alpha cutter uses the alpha channel to find frames separated with pure alpha (within trans_limit). </li></ul>
+
+<ul><li>Attribute: <b>file</b> (Optional) <br/>
+Image filename.<br/>
+</li></ul>
  
-<sprite
-	name="my_sprite"
-	description="resource_containing_shared_description_data"
-	pack_texture="[yes,no]"
-	base_angle="angle"
-	id="id">
- 
-	<!-- Frame image loading: -->
- 
-	<image 
-		fileseq="filename.extension"  
-		start_index="start_index" 
-		skip_index="skip_index" 
-		leading_zeroes="leading_zeroes" />
- 
-	<image file="filename" />
- 
-	<image file="filename">
-		<grid
-			pos="x,y"
-			size="width,height"
-			array="tiles_x,tiles_y"
-			array_skipframes="skip_count"
-			spacing="width,height" />
-	</image>
- 
-	<image file="filename">
-		<palette
-			pos="x,y" />
-	</image>
- 
-	<image file="image4.png">
-		<alpha
-			pos="x,y"
- 			free="true"
-			trans_limit="limit" />
-	</image>
- 
-	<!-- Sprite render and animation states: -->
- 
-	<color
-		red="red_component"
-		green="green_component"
-		blue="blue_component"
-		alpha="alpha_component" />
- 
-	<animation
-		speed="speed"
-		loop="[yes,no]"
-		pingpong="[yes,no]"
-		direction="[backward,forward]"
-		on_finish="[blank,last_frame,first_frame]" />
- 
-	<scale x="scale_x" y="scale_y" />
- 
-	<translation
-		origin="[top_left, top_center, top_right,
-		         center_left, center, center_right,
-		         bottom_left, bottom_center, bottom_right]"
-		x="offset_x"
-		y="offset_y" />
- 
-	<rotation
-		origin="[top_left, top_center, top_right,
-		         center_left, center, center_right,
-		         bottom_left, bottom_center, bottom_right]"
-		x="offset_x"
-		y="offset_y" />
- 
-	<frame
-		nr="frame_number"
-		speed="frame_delay"
-		x="offset_x"
-		y="offset_y" />
- 
-</sprite>
+<ul><li>Element: <b>\<grid\> </b> (Optional - Only when file attribute is set)<br/>
+Use the grid cutter to extract a set of frames placed in a grid in the image file<br/>
+You can specify any number of \<grid\> elements
+</li></ul>
 
-Only the name attribute of <sprite> and at least one <image> element is required to construct a sprite. The remaining elements and attributes are optional.
-Using the <image> element
+<ul><li>Element: <b>\<alpha\> </b> (Optional - Only when file attribute is set)<br/>
+The alpha cutter uses the alpha channel to find frames separated with pure alpha<br/>
+You can specify any number of \<alpha\> elements
+</li></ul>
 
-The first step in setting up a sprite is telling the resource loader where it should get the images for all the frames. This is done specifying one or more <image> elements. Each <image> element specify an image from where one or several frames should be extracted:
+<ul><li>Attribute: <b>fileseq</b> (Optional) <br/>
+A sequence of images<br/>
+Valid values: "filename.ext" where ext is any of the supported ClanLib image types (for example png, jpg) so that it will be translated into "filename0001.ext"<br/>
+Default value: None. For non-sequenced images, use the file attribute.<br/>
+</li></ul>
 
-        If there is no child element in <image>, it will simply take the entire image and add it as one large frame. 
+<ul><li>Attribute: <b>start_index</b>  (Optional - Used when fileseq attribute is set) <br/>
+The start index.<br/>
+Valid values: "integer" - greater or equal to 0<br/>
+Default value: "0" 
+</li></ul>
 
-        If the child element is <grid> it will use the grid cutter in CL_SpriteDescription to extract a set of frames placed in a grid in the image file. 
+<ul><li>Attribute: <b>skip_index</b>  (Optional - Used when fileseq attribute is set) <br/>
+How many images to skip per iteration. (fileseq) <br/>
+Valid values: "integer" - greater or equal to 1<br/>
+Default value: "1"<br/>
+</li></ul>
 
-        If the child is <alpha> the alpha cutter will be used instead. The alpha cutter uses the alpha channel to find frames separated with pure alpha (within trans_limit). 
+<ul><li>Attribute: <b>leading_zeroes </b>  (Optional - Used when fileseq attribute is set) <br/>
+Number of zeroes before the extension. <br/>
+Valid values: "integer" - greater or equal to 0<br/>
+Default value: "0" <br/>
+</li></ul>
 
-        Then there is the <palette> child element. This method adds frames separated with palette-colours defining the boundaries. 
+<h2>Using the \<grid\> element</h2>
 
-If you have many sprites that are using the same frames for its animation, you can use the description attribute on the <sprite> element to use the frames from an other sprite resource.
-Setting up render and animation
-
-The remaining elements <color>, <animation>, <scale>, <translation> and <rotation> alter the default values of the CL_Sprite render and animation properties.
-
-<frame> sets up properties for a specific frame.
-Sprite resource options reference
-<sprite>
-
-        Attribute name: Name of resource. 
-
-        Valid values:
-        Default value: None, MUST BE PRESENT. 
-
-        Attribute description: Resource identifier of other resource to use as base for this sprite. 
-
-        Valid values: "string" - Resource ID of other sprite resource
-        Default value: Don't use any other sprite resource as base. 
-
-        Attribute pack_texture: When pack_texture is enabled CL_Sprite will pack as many frames as it can into the same texture object. 
-
-        Valid values: "yes, no" - Enable or disable texture packing
-        Default value: yes 
-
-        Attribute base_angle: Defines what direction the sprite is in. All other angles are relative to this one. 
-
-        Valid values:
-        Default value: "0" 
-
-        Attribute id: Sets the sprite identify retrievable via CL_Sprite::get_id(). 
-
-        Valid values:
-        Default value: "0" 
-
-
-<image>
-
-        Attribute file: Image filename. 
-
-        Valid values:
-        Default value: None, MUST BE PRESENT. 
-
-        Attribute fileseq: A sequence of images (Optional). 
-
-        Valid values: "filename.ext" where ext is any of the supported ClanLib image types (for example png, jpg, tga, pcx)
-        Default value: None. For non-sequenced images, use the file attribute. 
-
-        Attribute start_index: The start index. (fileseq) 
-
-        Valid values: "integer" - greater or equal to 0
-        Default value: "0" 
-
-        Attribute skip_index: How many images to skip per iteration. (fileseq) 
-
-        Valid values: "integer" - greater or equal to 1
-        Default value: "1" 
-
-        Attribute leading_zeroes: Number of zeroes after the underscore. (fileseq) 
-
-        Valid values: "integer" - greater or equal to 0
-        Default value: "0" 
-
-
-<grid>
 
         Attribute pos: Position in image to start grid-cutting. 
 
@@ -188,16 +137,8 @@ Sprite resource options reference
         Valid values: "integer, integer" - x-spacing, y-spacing
         Default value: "0, 0" 
 
+<h2>Using the \<alpha\> element</h2>
 
-<palette>
-
-        Attribute pos: Position in image to start palette-cutting. 
-
-        Valid values:
-        Default value: "0, 0" 
-
-
-<alpha>
 
         Attribute pos: Position in image to start alpha-cutting. 
 
@@ -220,7 +161,7 @@ Sprite resource options reference
         Default value: "0.05" 
 
 
-<color>
+<h2>Using the \<color\> element</h2>
 
         Attributes red, green, blue, alpha: Color. 
 
@@ -229,7 +170,7 @@ Sprite resource options reference
         Default values: 1.0, 1.0, 1.0, 1.0 
 
 
-<animation>
+<h2>Using the \<animation\> element</h2>
 
         Attribute speed: Default frame delay. 
 
@@ -268,7 +209,8 @@ Sprite resource options reference
         Default value: blank 
 
 
-<scale>
+<h2>Using the \<scale\> element</h2>
+
 
         Attributes x and y: Scale. 
 
@@ -278,7 +220,7 @@ Sprite resource options reference
         Default value: (1.0, 1.0) 
 
 
-<translation>
+<h2>Using the \<translation\> element</h2>
 
         Attribute origin: Hotspot/alignment for translation operations. 
 
@@ -298,8 +240,7 @@ Sprite resource options reference
         Valid values: integer
         Default value: 0 
 
-
-<rotation>
+<h2>Using the \<rotation\> element</h2>
 
         Attribute origin: Hotspot/alignment for rotation operations. 
 
@@ -315,8 +256,8 @@ Sprite resource options reference
         Valid values: integer
         Default value: 0 
 
+<h2>Using the \<frame\> element</h2>
 
-<frame>
 
         Attribute speed: Override default speed for this specific frame. 
 
