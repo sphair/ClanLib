@@ -136,445 +136,445 @@ public:
 /// \{
 
 public:
-	/// \brief <img src="../images/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
+	/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
 	static Color aliceblue;
 
-	/// \brief <img src="../images/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
+	/// \brief <img src="../../img/colors/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
 	static Color antiquewhite;
 
-	/// \brief <img src="../images/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
+	/// \brief <img src="../../img/colors/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
 	static Color aqua;
 
-	/// \brief <img src="../images/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
+	/// \brief <img src="../../img/colors/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
 	static Color aquamarine;
 
-	/// \brief <img src="../images/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
+	/// \brief <img src="../../img/colors/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
 	static Color azure;
 
-	/// \brief <img src="../images/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
+	/// \brief <img src="../../img/colors/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
 	static Color beige;
 
-	/// \brief <img src="../images/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
+	/// \brief <img src="../../img/colors/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
 	static Color bisque;
 
-	/// \brief <img src="../images/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
+	/// \brief <img src="../../img/colors/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
 	static Color black;
 
-	/// \brief <img src="../images/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
+	/// \brief <img src="../../img/colors/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
 	static Color blanchedalmond;
 
-	/// \brief <img src="../images/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
+	/// \brief <img src="../../img/colors/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
 	static Color blue;
 
-	/// \brief <img src="../images/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
+	/// \brief <img src="../../img/colors/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
 	static Color blueviolet;
 
-	/// \brief <img src="../images/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
+	/// \brief <img src="../../img/colors/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
 	static Color brown;
 
-	/// \brief <img src="../images/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
+	/// \brief <img src="../../img/colors/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
 	static Color burlywood;
 
-	/// \brief <img src="../images/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
+	/// \brief <img src="../../img/colors/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
 	static Color cadetblue;
 
-	/// \brief <img src="../images/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
+	/// \brief <img src="../../img/colors/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
 	static Color chartreuse;
 
-	/// \brief <img src="../images/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
+	/// \brief <img src="../../img/colors/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
 	static Color chocolate;
 
-	/// \brief <img src="../images/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
+	/// \brief <img src="../../img/colors/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
 	static Color coral;
 
-	/// \brief <img src="../images/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
+	/// \brief <img src="../../img/colors/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
 	static Color cornflowerblue;
 
-	/// \brief <img src="../images/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
+	/// \brief <img src="../../img/colors/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
 	static Color cornsilk;
 
-	/// \brief <img src="../images/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
+	/// \brief <img src="../../img/colors/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
 	static Color crimson;
 
-	/// \brief <img src="../images/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
+	/// \brief <img src="../../img/colors/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
 	static Color cyan;
 
-	/// \brief <img src="../images/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
+	/// \brief <img src="../../img/colors/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
 	static Color darkblue;
 
-	/// \brief <img src="../images/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
+	/// \brief <img src="../../img/colors/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
 	static Color darkcyan;
 
-	/// \brief <img src="../images/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
+	/// \brief <img src="../../img/colors/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
 	static Color darkgoldenrod;
 
-	/// \brief <img src="../images/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
+	/// \brief <img src="../../img/colors/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
 	static Color darkgray;
 
-	/// \brief <img src="../images/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
+	/// \brief <img src="../../img/colors/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
 	static Color darkgreen;
 
-	/// \brief <img src="../images/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
+	/// \brief <img src="../../img/colors/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
 	static Color darkgrey;
 
-	/// \brief <img src="../images/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
+	/// \brief <img src="../../img/colors/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
 	static Color darkkhaki;
 
-	/// \brief <img src="../images/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
+	/// \brief <img src="../../img/colors/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
 	static Color darkmagenta;
 
-	/// \brief <img src="../images/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
+	/// \brief <img src="../../img/colors/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
 	static Color darkolivegreen;
 
-	/// \brief <img src="../images/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
+	/// \brief <img src="../../img/colors/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
 	static Color darkorange;
 
-	/// \brief <img src="../images/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
+	/// \brief <img src="../../img/colors/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
 	static Color darkorchid;
 
-	/// \brief <img src="../images/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
+	/// \brief <img src="../../img/colors/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
 	static Color darkred;
 
-	/// \brief <img src="../images/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
+	/// \brief <img src="../../img/colors/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
 	static Color darksalmon;
 
-	/// \brief <img src="../images/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
+	/// \brief <img src="../../img/colors/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
 	static Color darkseagreen;
 
-	/// \brief <img src="../images/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
+	/// \brief <img src="../../img/colors/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
 	static Color darkslateblue;
 
-	/// \brief <img src="../images/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
+	/// \brief <img src="../../img/colors/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
 	static Color darkslategray;
 
-	/// \brief <img src="../images/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
+	/// \brief <img src="../../img/colors/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
 	static Color darkslategrey;
 
-	/// \brief <img src="../images/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
+	/// \brief <img src="../../img/colors/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
 	static Color darkturquoise;
 
-	/// \brief <img src="../images/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
+	/// \brief <img src="../../img/colors/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
 	static Color darkviolet;
 
-	/// \brief <img src="../images/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
+	/// \brief <img src="../../img/colors/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
 	static Color deeppink;
 
-	/// \brief <img src="../images/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
+	/// \brief <img src="../../img/colors/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
 	static Color deepskyblue;
 
-	/// \brief <img src="../images/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
+	/// \brief <img src="../../img/colors/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
 	static Color dimgray;
 
-	/// \brief <img src="../images/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
+	/// \brief <img src="../../img/colors/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
 	static Color dimgrey;
 
-	/// \brief <img src="../images/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
+	/// \brief <img src="../../img/colors/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
 	static Color dodgerblue;
 
-	/// \brief <img src="../images/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
+	/// \brief <img src="../../img/colors/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
 	static Color firebrick;
 
-	/// \brief <img src="../images/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
+	/// \brief <img src="../../img/colors/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
 	static Color floralwhite;
 
-	/// \brief <img src="../images/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
+	/// \brief <img src="../../img/colors/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
 	static Color forestgreen;
 
-	/// \brief <img src="../images/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
+	/// \brief <img src="../../img/colors/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
 	static Color fuchsia;
 
-	/// \brief <img src="../images/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
+	/// \brief <img src="../../img/colors/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
 	static Color gainsboro;
 
-	/// \brief <img src="../images/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
+	/// \brief <img src="../../img/colors/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
 	static Color ghostwhite;
 
-	/// \brief <img src="../images/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
+	/// \brief <img src="../../img/colors/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
 	static Color gold;
 
-	/// \brief <img src="../images/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
+	/// \brief <img src="../../img/colors/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
 	static Color goldenrod;
 
-	/// \brief <img src="../images/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
+	/// \brief <img src="../../img/colors/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
 	static Color gray;
 
-	/// \brief <img src="../images/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
+	/// \brief <img src="../../img/colors/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
 	static Color grey;
 
-	/// \brief <img src="../images/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
+	/// \brief <img src="../../img/colors/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
 	static Color green;
 
-	/// \brief <img src="../images/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
+	/// \brief <img src="../../img/colors/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
 	static Color greenyellow;
 
-	/// \brief <img src="../images/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
+	/// \brief <img src="../../img/colors/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
 	static Color honeydew;
 
-	/// \brief <img src="../images/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
+	/// \brief <img src="../../img/colors/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
 	static Color hotpink;
 
-	/// \brief <img src="../images/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
+	/// \brief <img src="../../img/colors/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
 	static Color indianred;
 
-	/// \brief <img src="../images/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
+	/// \brief <img src="../../img/colors/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
 	static Color indigo;
 
-	/// \brief <img src="../images/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
+	/// \brief <img src="../../img/colors/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
 	static Color ivory;
 
-	/// \brief <img src="../images/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
+	/// \brief <img src="../../img/colors/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
 	static Color khaki;
 
-	/// \brief <img src="../images/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
+	/// \brief <img src="../../img/colors/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
 	static Color lavender;
 
-	/// \brief <img src="../images/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
+	/// \brief <img src="../../img/colors/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
 	static Color lavenderblush;
 
-	/// \brief <img src="../images/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
+	/// \brief <img src="../../img/colors/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
 	static Color lawngreen;
 
-	/// \brief <img src="../images/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
+	/// \brief <img src="../../img/colors/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
 	static Color lemonchiffon;
 
-	/// \brief <img src="../images/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
+	/// \brief <img src="../../img/colors/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
 	static Color lightblue;
 
-	/// \brief <img src="../images/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
+	/// \brief <img src="../../img/colors/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
 	static Color lightcoral;
 
-	/// \brief <img src="../images/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
+	/// \brief <img src="../../img/colors/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
 	static Color lightcyan;
 
-	/// \brief <img src="../images/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
+	/// \brief <img src="../../img/colors/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
 	static Color lightgoldenrodyellow;
 
-	/// \brief <img src="../images/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
+	/// \brief <img src="../../img/colors/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
 	static Color lightgray;
 
-	/// \brief <img src="../images/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
+	/// \brief <img src="../../img/colors/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
 	static Color lightgreen;
 
-	/// \brief <img src="../images/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
+	/// \brief <img src="../../img/colors/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
 	static Color lightgrey;
 
-	/// \brief <img src="../images/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
+	/// \brief <img src="../../img/colors/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
 	static Color lightpink;
 
-	/// \brief <img src="../images/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
+	/// \brief <img src="../../img/colors/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
 	static Color lightsalmon;
 
-	/// \brief <img src="../images/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
+	/// \brief <img src="../../img/colors/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
 	static Color lightseagreen;
 
-	/// \brief <img src="../images/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
+	/// \brief <img src="../../img/colors/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
 	static Color lightskyblue;
 
-	/// \brief <img src="../images/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
+	/// \brief <img src="../../img/colors/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
 	static Color lightslategray;
 
-	/// \brief <img src="../images/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
+	/// \brief <img src="../../img/colors/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
 	static Color lightslategrey;
 
-	/// \brief <img src="../images/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
+	/// \brief <img src="../../img/colors/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
 	static Color lightsteelblue;
 
-	/// \brief <img src="../images/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
+	/// \brief <img src="../../img/colors/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
 	static Color lightyellow;
 
-	/// \brief <img src="../images/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
+	/// \brief <img src="../../img/colors/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
 	static Color lime;
 
-	/// \brief <img src="../images/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
+	/// \brief <img src="../../img/colors/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
 	static Color limegreen;
 
-	/// \brief <img src="../images/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
+	/// \brief <img src="../../img/colors/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
 	static Color linen;
 
-	/// \brief <img src="../images/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
+	/// \brief <img src="../../img/colors/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
 	static Color magenta;
 
-	/// \brief <img src="../images/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
+	/// \brief <img src="../../img/colors/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
 	static Color maroon;
 
-	/// \brief <img src="../images/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
+	/// \brief <img src="../../img/colors/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
 	static Color mediumaquamarine;
 
-	/// \brief <img src="../images/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
+	/// \brief <img src="../../img/colors/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
 	static Color mediumblue;
 
-	/// \brief <img src="../images/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
+	/// \brief <img src="../../img/colors/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
 	static Color mediumorchid;
 
-	/// \brief <img src="../images/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
+	/// \brief <img src="../../img/colors/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
 	static Color mediumpurple;
 
-	/// \brief <img src="../images/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
+	/// \brief <img src="../../img/colors/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
 	static Color mediumseagreen;
 
-	/// \brief <img src="../images/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
+	/// \brief <img src="../../img/colors/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
 	static Color mediumslateblue;
 
-	/// \brief <img src="../images/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
+	/// \brief <img src="../../img/colors/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
 	static Color mediumspringgreen;
 
-	/// \brief <img src="../images/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
+	/// \brief <img src="../../img/colors/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
 	static Color mediumturquoise;
 
-	/// \brief <img src="../images/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
+	/// \brief <img src="../../img/colors/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
 	static Color mediumvioletred;
 
-	/// \brief <img src="../images/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
+	/// \brief <img src="../../img/colors/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
 	static Color midnightblue;
 
-	/// \brief <img src="../images/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
+	/// \brief <img src="../../img/colors/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
 	static Color mintcream;
 
-	/// \brief <img src="../images/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
+	/// \brief <img src="../../img/colors/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
 	static Color mistyrose;
 
-	/// \brief <img src="../images/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
+	/// \brief <img src="../../img/colors/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
 	static Color moccasin;
 
-	/// \brief <img src="../images/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
+	/// \brief <img src="../../img/colors/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
 	static Color navajowhite;
 
-	/// \brief <img src="../images/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
+	/// \brief <img src="../../img/colors/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
 	static Color navy;
 
-	/// \brief <img src="../images/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
+	/// \brief <img src="../../img/colors/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
 	static Color oldlace;
 
-	/// \brief <img src="../images/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
+	/// \brief <img src="../../img/colors/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
 	static Color olive;
 
-	/// \brief <img src="../images/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
+	/// \brief <img src="../../img/colors/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
 	static Color olivedrab;
 
-	/// \brief <img src="../images/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
+	/// \brief <img src="../../img/colors/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
 	static Color orange;
 
-	/// \brief <img src="../images/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
+	/// \brief <img src="../../img/colors/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
 	static Color orangered;
 
-	/// \brief <img src="../images/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
+	/// \brief <img src="../../img/colors/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
 	static Color orchid;
 
-	/// \brief <img src="../images/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
+	/// \brief <img src="../../img/colors/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
 	static Color palegoldenrod;
 
-	/// \brief <img src="../images/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
+	/// \brief <img src="../../img/colors/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
 	static Color palegreen;
 
-	/// \brief <img src="../images/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
+	/// \brief <img src="../../img/colors/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
 	static Color paleturquoise;
 
-	/// \brief <img src="../images/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
+	/// \brief <img src="../../img/colors/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
 	static Color palevioletred;
 
-	/// \brief <img src="../images/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
+	/// \brief <img src="../../img/colors/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
 	static Color papayawhip;
 
-	/// \brief <img src="../images/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
+	/// \brief <img src="../../img/colors/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
 	static Color peachpuff;
 
-	/// \brief <img src="../images/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
+	/// \brief <img src="../../img/colors/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
 	static Color peru;
 
-	/// \brief <img src="../images/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
+	/// \brief <img src="../../img/colors/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
 	static Color pink;
 
-	/// \brief <img src="../images/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
+	/// \brief <img src="../../img/colors/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
 	static Color plum;
 
-	/// \brief <img src="../images/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
+	/// \brief <img src="../../img/colors/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
 	static Color powderblue;
 
-	/// \brief <img src="../images/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
+	/// \brief <img src="../../img/colors/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
 	static Color purple;
 
-	/// \brief <img src="../images/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
+	/// \brief <img src="../../img/colors/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
 	static Color red;
 
-	/// \brief <img src="../images/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
+	/// \brief <img src="../../img/colors/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
 	static Color rosybrown;
 
-	/// \brief <img src="../images/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
+	/// \brief <img src="../../img/colors/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
 	static Color royalblue;
 
-	/// \brief <img src="../images/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
+	/// \brief <img src="../../img/colors/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
 	static Color saddlebrown;
 
-	/// \brief <img src="../images/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
+	/// \brief <img src="../../img/colors/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
 	static Color salmon;
 
-	/// \brief <img src="../images/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
+	/// \brief <img src="../../img/colors/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
 	static Color sandybrown;
 
-	/// \brief <img src="../images/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
+	/// \brief <img src="../../img/colors/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
 	static Color seagreen;
 
-	/// \brief <img src="../images/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
+	/// \brief <img src="../../img/colors/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
 	static Color seashell;
 
-	/// \brief <img src="../images/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
+	/// \brief <img src="../../img/colors/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
 	static Color sienna;
 
-	/// \brief <img src="../images/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
+	/// \brief <img src="../../img/colors/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
 	static Color silver;
 
-	/// \brief <img src="../images/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
+	/// \brief <img src="../../img/colors/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
 	static Color skyblue;
 
-	/// \brief <img src="../images/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
+	/// \brief <img src="../../img/colors/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
 	static Color slateblue;
 
-	/// \brief <img src="../images/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
+	/// \brief <img src="../../img/colors/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
 	static Color slategray;
 
-	/// \brief <img src="../images/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
+	/// \brief <img src="../../img/colors/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
 	static Color slategrey;
 
-	/// \brief <img src="../images/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
+	/// \brief <img src="../../img/colors/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
 	static Color snow;
 
-	/// \brief <img src="../images/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
+	/// \brief <img src="../../img/colors/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
 	static Color springgreen;
 
-	/// \brief <img src="../images/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
+	/// \brief <img src="../../img/colors/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
 	static Color steelblue;
 
-	/// \brief <img src="../images/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
+	/// \brief <img src="../../img/colors/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
 	static Color tan;
 
-	/// \brief <img src="../images/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
+	/// \brief <img src="../../img/colors/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
 	static Color teal;
 
-	/// \brief <img src="../images/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
+	/// \brief <img src="../../img/colors/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
 	static Color thistle;
 
-	/// \brief <img src="../images/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
+	/// \brief <img src="../../img/colors/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
 	static Color tomato;
 
-	/// \brief <img src="../images/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
+	/// \brief <img src="../../img/colors/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
 	static Color turquoise;
 
-	/// \brief <img src="../images/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
+	/// \brief <img src="../../img/colors/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
 	static Color violet;
 
-	/// \brief <img src="../images/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
+	/// \brief <img src="../../img/colors/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
 	static Color wheat;
 
-	/// \brief <img src="../images/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
+	/// \brief <img src="../../img/colors/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
 	static Color white;
 
-	/// \brief <img src="../images/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
+	/// \brief <img src="../../img/colors/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
 	static Color whitesmoke;
 
-	/// \brief <img src="../images/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
+	/// \brief <img src="../../img/colors/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
 	static Color yellow;
 
-	/// \brief <img src="../images/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
+	/// \brief <img src="../../img/colors/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
 	static Color yellowgreen;
 
 	/// \brief rgba(0, 0, 0, 0).
@@ -812,445 +812,445 @@ public:
 /// \{
 
 public:
-	/// \brief <img src="../images/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
+	/// \brief <img src="../../img/colors/aliceblue-chip.png" width=16 height=16 > rgb(240, 248, 255).
 	static Colorf aliceblue;
 
-	/// \brief <img src="../images/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
+	/// \brief <img src="../../img/colors/antiquewhite-chip.png" width=16 height=16 > rgb(250, 235, 215).
 	static Colorf antiquewhite;
 
-	/// \brief <img src="../images/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
+	/// \brief <img src="../../img/colors/aqua-chip.png" width=16 height=16 > rgb( 0, 255, 255).
 	static Colorf aqua;
 
-	/// \brief <img src="../images/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
+	/// \brief <img src="../../img/colors/aquamarine-chip.png" width=16 height=16 > rgb(127, 255, 212).
 	static Colorf aquamarine;
 
-	/// \brief <img src="../images/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
+	/// \brief <img src="../../img/colors/azure-chip.png" width=16 height=16 > rgb(240, 255, 255).
 	static Colorf azure;
 
-	/// \brief <img src="../images/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
+	/// \brief <img src="../../img/colors/beige-chip.png" width=16 height=16 > rgb(245, 245, 220).
 	static Colorf beige;
 
-	/// \brief <img src="../images/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
+	/// \brief <img src="../../img/colors/bisque-chip.png" width=16 height=16 > rgb(255, 228, 196).
 	static Colorf bisque;
 
-	/// \brief <img src="../images/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
+	/// \brief <img src="../../img/colors/black-chip.png" width=16 height=16 > rgb( 0, 0, 0).
 	static Colorf black;
 
-	/// \brief <img src="../images/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
+	/// \brief <img src="../../img/colors/blanchedalmond-chip.png" width=16 height=16 > rgb(255, 235, 205).
 	static Colorf blanchedalmond;
 
-	/// \brief <img src="../images/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
+	/// \brief <img src="../../img/colors/blue-chip.png" width=16 height=16 > rgb( 0, 0, 255).
 	static Colorf blue;
 
-	/// \brief <img src="../images/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
+	/// \brief <img src="../../img/colors/blueviolet-chip.png" width=16 height=16 > rgb(138, 43, 226).
 	static Colorf blueviolet;
 
-	/// \brief <img src="../images/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
+	/// \brief <img src="../../img/colors/brown-chip.png" width=16 height=16 > rgb(165, 42, 42).
 	static Colorf brown;
 
-	/// \brief <img src="../images/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
+	/// \brief <img src="../../img/colors/burlywood-chip.png" width=16 height=16 > rgb(222, 184, 135).
 	static Colorf burlywood;
 
-	/// \brief <img src="../images/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
+	/// \brief <img src="../../img/colors/cadetblue-chip.png" width=16 height=16 > rgb( 95, 158, 160).
 	static Colorf cadetblue;
 
-	/// \brief <img src="../images/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
+	/// \brief <img src="../../img/colors/chartreuse-chip.png" width=16 height=16 > rgb(127, 255, 0).
 	static Colorf chartreuse;
 
-	/// \brief <img src="../images/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
+	/// \brief <img src="../../img/colors/chocolate-chip.png" width=16 height=16 > rgb(210, 105, 30).
 	static Colorf chocolate;
 
-	/// \brief <img src="../images/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
+	/// \brief <img src="../../img/colors/coral-chip.png" width=16 height=16 > rgb(255, 127, 80).
 	static Colorf coral;
 
-	/// \brief <img src="../images/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
+	/// \brief <img src="../../img/colors/cornflowerblue-chip.png" width=16 height=16 > rgb(100, 149, 237).
 	static Colorf cornflowerblue;
 
-	/// \brief <img src="../images/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
+	/// \brief <img src="../../img/colors/cornsilk-chip.png" width=16 height=16 > rgb(255, 248, 220).
 	static Colorf cornsilk;
 
-	/// \brief <img src="../images/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
+	/// \brief <img src="../../img/colors/crimson-chip.png" width=16 height=16 > rgb(220, 20, 60).
 	static Colorf crimson;
 
-	/// \brief <img src="../images/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
+	/// \brief <img src="../../img/colors/cyan-chip.png" width=16 height=16 > rgb( 0, 255, 255).
 	static Colorf cyan;
 
-	/// \brief <img src="../images/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
+	/// \brief <img src="../../img/colors/darkblue-chip.png" width=16 height=16 > rgb( 0, 0, 139).
 	static Colorf darkblue;
 
-	/// \brief <img src="../images/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
+	/// \brief <img src="../../img/colors/darkcyan-chip.png" width=16 height=16 > rgb( 0, 139, 139).
 	static Colorf darkcyan;
 
-	/// \brief <img src="../images/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
+	/// \brief <img src="../../img/colors/darkgoldenrod-chip.png" width=16 height=16 > rgb(184, 134, 11).
 	static Colorf darkgoldenrod;
 
-	/// \brief <img src="../images/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
+	/// \brief <img src="../../img/colors/darkgray-chip.png" width=16 height=16 > rgb(169, 169, 169).
 	static Colorf darkgray;
 
-	/// \brief <img src="../images/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
+	/// \brief <img src="../../img/colors/darkgreen-chip.png" width=16 height=16 > rgb( 0, 100, 0).
 	static Colorf darkgreen;
 
-	/// \brief <img src="../images/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
+	/// \brief <img src="../../img/colors/darkgrey-chip.png" width=16 height=16 > rgb(169, 169, 169).
 	static Colorf darkgrey;
 
-	/// \brief <img src="../images/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
+	/// \brief <img src="../../img/colors/darkkhaki-chip.png" width=16 height=16 > rgb(189, 183, 107).
 	static Colorf darkkhaki;
 
-	/// \brief <img src="../images/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
+	/// \brief <img src="../../img/colors/darkmagenta-chip.png" width=16 height=16 > rgb(139, 0, 139).
 	static Colorf darkmagenta;
 
-	/// \brief <img src="../images/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
+	/// \brief <img src="../../img/colors/darkolivegreen-chip.png" width=16 height=16 > rgb( 85, 107, 47).
 	static Colorf darkolivegreen;
 
-	/// \brief <img src="../images/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
+	/// \brief <img src="../../img/colors/darkorange-chip.png" width=16 height=16 > rgb(255, 140, 0).
 	static Colorf darkorange;
 
-	/// \brief <img src="../images/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
+	/// \brief <img src="../../img/colors/darkorchid-chip.png" width=16 height=16 > rgb(153, 50, 204).
 	static Colorf darkorchid;
 
-	/// \brief <img src="../images/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
+	/// \brief <img src="../../img/colors/darkred-chip.png" width=16 height=16 > rgb(139, 0, 0).
 	static Colorf darkred;
 
-	/// \brief <img src="../images/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
+	/// \brief <img src="../../img/colors/darksalmon-chip.png" width=16 height=16 > rgb(233, 150, 122).
 	static Colorf darksalmon;
 
-	/// \brief <img src="../images/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
+	/// \brief <img src="../../img/colors/darkseagreen-chip.png" width=16 height=16 > rgb(143, 188, 143).
 	static Colorf darkseagreen;
 
-	/// \brief <img src="../images/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
+	/// \brief <img src="../../img/colors/darkslateblue-chip.png" width=16 height=16 > rgb( 72, 61, 139).
 	static Colorf darkslateblue;
 
-	/// \brief <img src="../images/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
+	/// \brief <img src="../../img/colors/darkslategray-chip.png" width=16 height=16 > rgb( 47, 79, 79).
 	static Colorf darkslategray;
 
-	/// \brief <img src="../images/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
+	/// \brief <img src="../../img/colors/darkslategrey-chip.png" width=16 height=16 > rgb( 47, 79, 79).
 	static Colorf darkslategrey;
 
-	/// \brief <img src="../images/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
+	/// \brief <img src="../../img/colors/darkturquoise-chip.png" width=16 height=16 > rgb( 0, 206, 209).
 	static Colorf darkturquoise;
 
-	/// \brief <img src="../images/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
+	/// \brief <img src="../../img/colors/darkviolet-chip.png" width=16 height=16 > rgb(148, 0, 211).
 	static Colorf darkviolet;
 
-	/// \brief <img src="../images/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
+	/// \brief <img src="../../img/colors/deeppink-chip.png" width=16 height=16 > rgb(255, 20, 147).
 	static Colorf deeppink;
 
-	/// \brief <img src="../images/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
+	/// \brief <img src="../../img/colors/deepskyblue-chip.png" width=16 height=16 > rgb( 0, 191, 255).
 	static Colorf deepskyblue;
 
-	/// \brief <img src="../images/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
+	/// \brief <img src="../../img/colors/dimgray-chip.png" width=16 height=16 > rgb(105, 105, 105).
 	static Colorf dimgray;
 
-	/// \brief <img src="../images/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
+	/// \brief <img src="../../img/colors/dimgrey-chip.png" width=16 height=16 > rgb(105, 105, 105).
 	static Colorf dimgrey;
 
-	/// \brief <img src="../images/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
+	/// \brief <img src="../../img/colors/dodgerblue-chip.png" width=16 height=16 > rgb( 30, 144, 255).
 	static Colorf dodgerblue;
 
-	/// \brief <img src="../images/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
+	/// \brief <img src="../../img/colors/firebrick-chip.png" width=16 height=16 > rgb(178, 34, 34).
 	static Colorf firebrick;
 
-	/// \brief <img src="../images/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
+	/// \brief <img src="../../img/colors/floralwhite-chip.png" width=16 height=16 > rgb(255, 250, 240).
 	static Colorf floralwhite;
 
-	/// \brief <img src="../images/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
+	/// \brief <img src="../../img/colors/forestgreen-chip.png" width=16 height=16 > rgb( 34, 139, 34).
 	static Colorf forestgreen;
 
-	/// \brief <img src="../images/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
+	/// \brief <img src="../../img/colors/fuchsia-chip.png" width=16 height=16 > rgb(255, 0, 255).
 	static Colorf fuchsia;
 
-	/// \brief <img src="../images/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
+	/// \brief <img src="../../img/colors/gainsboro-chip.png" width=16 height=16 > rgb(220, 220, 220).
 	static Colorf gainsboro;
 
-	/// \brief <img src="../images/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
+	/// \brief <img src="../../img/colors/ghostwhite-chip.png" width=16 height=16 > rgb(248, 248, 255).
 	static Colorf ghostwhite;
 
-	/// \brief <img src="../images/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
+	/// \brief <img src="../../img/colors/gold-chip.png" width=16 height=16 > rgb(255, 215, 0).
 	static Colorf gold;
 
-	/// \brief <img src="../images/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
+	/// \brief <img src="../../img/colors/goldenrod-chip.png" width=16 height=16 > rgb(218, 165, 32).
 	static Colorf goldenrod;
 
-	/// \brief <img src="../images/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
+	/// \brief <img src="../../img/colors/gray-chip.png" width=16 height=16 > rgb(128, 128, 128).
 	static Colorf gray;
 
-	/// \brief <img src="../images/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
+	/// \brief <img src="../../img/colors/grey-chip.png" width=16 height=16 > rgb(128, 128, 128).
 	static Colorf grey;
 
-	/// \brief <img src="../images/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
+	/// \brief <img src="../../img/colors/green-chip.png" width=16 height=16 > rgb( 0, 128, 0).
 	static Colorf green;
 
-	/// \brief <img src="../images/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
+	/// \brief <img src="../../img/colors/greenyellow-chip.png" width=16 height=16 > rgb(173, 255, 47).
 	static Colorf greenyellow;
 
-	/// \brief <img src="../images/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
+	/// \brief <img src="../../img/colors/honeydew-chip.png" width=16 height=16 > rgb(240, 255, 240).
 	static Colorf honeydew;
 
-	/// \brief <img src="../images/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
+	/// \brief <img src="../../img/colors/hotpink-chip.png" width=16 height=16 > rgb(255, 105, 180).
 	static Colorf hotpink;
 
-	/// \brief <img src="../images/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
+	/// \brief <img src="../../img/colors/indianred-chip.png" width=16 height=16 > rgb(205, 92, 92).
 	static Colorf indianred;
 
-	/// \brief <img src="../images/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
+	/// \brief <img src="../../img/colors/indigo-chip.png" width=16 height=16 > rgb( 75, 0, 130).
 	static Colorf indigo;
 
-	/// \brief <img src="../images/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
+	/// \brief <img src="../../img/colors/ivory-chip.png" width=16 height=16 > rgb(255, 255, 240).
 	static Colorf ivory;
 
-	/// \brief <img src="../images/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
+	/// \brief <img src="../../img/colors/khaki-chip.png" width=16 height=16 > rgb(240, 230, 140).
 	static Colorf khaki;
 
-	/// \brief <img src="../images/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
+	/// \brief <img src="../../img/colors/lavender-chip.png" width=16 height=16 > rgb(230, 230, 250).
 	static Colorf lavender;
 
-	/// \brief <img src="../images/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
+	/// \brief <img src="../../img/colors/lavenderblush-chip.png" width=16 height=16 > rgb(255, 240, 245).
 	static Colorf lavenderblush;
 
-	/// \brief <img src="../images/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
+	/// \brief <img src="../../img/colors/lawngreen-chip.png" width=16 height=16 > rgb(124, 252, 0).
 	static Colorf lawngreen;
 
-	/// \brief <img src="../images/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
+	/// \brief <img src="../../img/colors/lemonchiffon-chip.png" width=16 height=16 > rgb(255, 250, 205).
 	static Colorf lemonchiffon;
 
-	/// \brief <img src="../images/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
+	/// \brief <img src="../../img/colors/lightblue-chip.png" width=16 height=16 > rgb(173, 216, 230).
 	static Colorf lightblue;
 
-	/// \brief <img src="../images/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
+	/// \brief <img src="../../img/colors/lightcoral-chip.png" width=16 height=16 > rgb(240, 128, 128).
 	static Colorf lightcoral;
 
-	/// \brief <img src="../images/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
+	/// \brief <img src="../../img/colors/lightcyan-chip.png" width=16 height=16 > rgb(224, 255, 255).
 	static Colorf lightcyan;
 
-	/// \brief <img src="../images/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
+	/// \brief <img src="../../img/colors/lightgoldenrodyellow-chip.png" width=16 height=16 > rgb(250, 250, 210).
 	static Colorf lightgoldenrodyellow;
 
-	/// \brief <img src="../images/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
+	/// \brief <img src="../../img/colors/lightgray-chip.png" width=16 height=16 > rgb(211, 211, 211).
 	static Colorf lightgray;
 
-	/// \brief <img src="../images/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
+	/// \brief <img src="../../img/colors/lightgreen-chip.png" width=16 height=16 > rgb(144, 238, 144).
 	static Colorf lightgreen;
 
-	/// \brief <img src="../images/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
+	/// \brief <img src="../../img/colors/lightgrey-chip.png" width=16 height=16 > rgb(211, 211, 211).
 	static Colorf lightgrey;
 
-	/// \brief <img src="../images/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
+	/// \brief <img src="../../img/colors/lightpink-chip.png" width=16 height=16 > rgb(255, 182, 193).
 	static Colorf lightpink;
 
-	/// \brief <img src="../images/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
+	/// \brief <img src="../../img/colors/lightsalmon-chip.png" width=16 height=16 > rgb(255, 160, 122).
 	static Colorf lightsalmon;
 
-	/// \brief <img src="../images/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
+	/// \brief <img src="../../img/colors/lightseagreen-chip.png" width=16 height=16 > rgb( 32, 178, 170).
 	static Colorf lightseagreen;
 
-	/// \brief <img src="../images/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
+	/// \brief <img src="../../img/colors/lightskyblue-chip.png" width=16 height=16 > rgb(135, 206, 250).
 	static Colorf lightskyblue;
 
-	/// \brief <img src="../images/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
+	/// \brief <img src="../../img/colors/lightslategray-chip.png" width=16 height=16 > rgb(119, 136, 153).
 	static Colorf lightslategray;
 
-	/// \brief <img src="../images/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
+	/// \brief <img src="../../img/colors/lightslategrey-chip.png" width=16 height=16 > rgb(119, 136, 153).
 	static Colorf lightslategrey;
 
-	/// \brief <img src="../images/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
+	/// \brief <img src="../../img/colors/lightsteelblue-chip.png" width=16 height=16 > rgb(176, 196, 222).
 	static Colorf lightsteelblue;
 
-	/// \brief <img src="../images/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
+	/// \brief <img src="../../img/colors/lightyellow-chip.png" width=16 height=16 > rgb(255, 255, 224).
 	static Colorf lightyellow;
 
-	/// \brief <img src="../images/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
+	/// \brief <img src="../../img/colors/lime-chip.png" width=16 height=16 > rgb( 0, 255, 0).
 	static Colorf lime;
 
-	/// \brief <img src="../images/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
+	/// \brief <img src="../../img/colors/limegreen-chip.png" width=16 height=16 > rgb( 50, 205, 50).
 	static Colorf limegreen;
 
-	/// \brief <img src="../images/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
+	/// \brief <img src="../../img/colors/linen-chip.png" width=16 height=16 > rgb(250, 240, 230).
 	static Colorf linen;
 
-	/// \brief <img src="../images/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
+	/// \brief <img src="../../img/colors/magenta-chip.png" width=16 height=16 > rgb(255, 0, 255).
 	static Colorf magenta;
 
-	/// \brief <img src="../images/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
+	/// \brief <img src="../../img/colors/maroon-chip.png" width=16 height=16 > rgb(128, 0, 0).
 	static Colorf maroon;
 
-	/// \brief <img src="../images/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
+	/// \brief <img src="../../img/colors/mediumaquamarine-chip.png" width=16 height=16 > rgb(102, 205, 170).
 	static Colorf mediumaquamarine;
 
-	/// \brief <img src="../images/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
+	/// \brief <img src="../../img/colors/mediumblue-chip.png" width=16 height=16 > rgb( 0, 0, 205).
 	static Colorf mediumblue;
 
-	/// \brief <img src="../images/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
+	/// \brief <img src="../../img/colors/mediumorchid-chip.png" width=16 height=16 > rgb(186, 85, 211).
 	static Colorf mediumorchid;
 
-	/// \brief <img src="../images/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
+	/// \brief <img src="../../img/colors/mediumpurple-chip.png" width=16 height=16 > rgb(147, 112, 219).
 	static Colorf mediumpurple;
 
-	/// \brief <img src="../images/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
+	/// \brief <img src="../../img/colors/mediumseagreen-chip.png" width=16 height=16 > rgb( 60, 179, 113).
 	static Colorf mediumseagreen;
 
-	/// \brief <img src="../images/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
+	/// \brief <img src="../../img/colors/mediumslateblue-chip.png" width=16 height=16 > rgb(123, 104, 238).
 	static Colorf mediumslateblue;
 
-	/// \brief <img src="../images/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
+	/// \brief <img src="../../img/colors/mediumspringgreen-chip.png" width=16 height=16 > rgb( 0, 250, 154).
 	static Colorf mediumspringgreen;
 
-	/// \brief <img src="../images/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
+	/// \brief <img src="../../img/colors/mediumturquoise-chip.png" width=16 height=16 > rgb( 72, 209, 204).
 	static Colorf mediumturquoise;
 
-	/// \brief <img src="../images/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
+	/// \brief <img src="../../img/colors/mediumvioletred-chip.png" width=16 height=16 > rgb(199, 21, 133).
 	static Colorf mediumvioletred;
 
-	/// \brief <img src="../images/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
+	/// \brief <img src="../../img/colors/midnightblue-chip.png" width=16 height=16 > rgb( 25, 25, 112).
 	static Colorf midnightblue;
 
-	/// \brief <img src="../images/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
+	/// \brief <img src="../../img/colors/mintcream-chip.png" width=16 height=16 > rgb(245, 255, 250).
 	static Colorf mintcream;
 
-	/// \brief <img src="../images/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
+	/// \brief <img src="../../img/colors/mistyrose-chip.png" width=16 height=16 > rgb(255, 228, 225).
 	static Colorf mistyrose;
 
-	/// \brief <img src="../images/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
+	/// \brief <img src="../../img/colors/moccasin-chip.png" width=16 height=16 > rgb(255, 228, 181).
 	static Colorf moccasin;
 
-	/// \brief <img src="../images/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
+	/// \brief <img src="../../img/colors/navajowhite-chip.png" width=16 height=16 > rgb(255, 222, 173).
 	static Colorf navajowhite;
 
-	/// \brief <img src="../images/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
+	/// \brief <img src="../../img/colors/navy-chip.png" width=16 height=16 > rgb( 0, 0, 128).
 	static Colorf navy;
 
-	/// \brief <img src="../images/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
+	/// \brief <img src="../../img/colors/oldlace-chip.png" width=16 height=16 > rgb(253, 245, 230).
 	static Colorf oldlace;
 
-	/// \brief <img src="../images/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
+	/// \brief <img src="../../img/colors/olive-chip.png" width=16 height=16 > rgb(128, 128, 0).
 	static Colorf olive;
 
-	/// \brief <img src="../images/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
+	/// \brief <img src="../../img/colors/olivedrab-chip.png" width=16 height=16 > rgb(107, 142, 35).
 	static Colorf olivedrab;
 
-	/// \brief <img src="../images/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
+	/// \brief <img src="../../img/colors/orange-chip.png" width=16 height=16 > rgb(255, 165, 0).
 	static Colorf orange;
 
-	/// \brief <img src="../images/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
+	/// \brief <img src="../../img/colors/orangered-chip.png" width=16 height=16 > rgb(255, 69, 0).
 	static Colorf orangered;
 
-	/// \brief <img src="../images/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
+	/// \brief <img src="../../img/colors/orchid-chip.png" width=16 height=16 > rgb(218, 112, 214).
 	static Colorf orchid;
 
-	/// \brief <img src="../images/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
+	/// \brief <img src="../../img/colors/palegoldenrod-chip.png" width=16 height=16 > rgb(238, 232, 170).
 	static Colorf palegoldenrod;
 
-	/// \brief <img src="../images/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
+	/// \brief <img src="../../img/colors/palegreen-chip.png" width=16 height=16 > rgb(152, 251, 152).
 	static Colorf palegreen;
 
-	/// \brief <img src="../images/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
+	/// \brief <img src="../../img/colors/paleturquoise-chip.png" width=16 height=16 > rgb(175, 238, 238).
 	static Colorf paleturquoise;
 
-	/// \brief <img src="../images/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
+	/// \brief <img src="../../img/colors/palevioletred-chip.png" width=16 height=16 > rgb(219, 112, 147).
 	static Colorf palevioletred;
 
-	/// \brief <img src="../images/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
+	/// \brief <img src="../../img/colors/papayawhip-chip.png" width=16 height=16 > rgb(255, 239, 213).
 	static Colorf papayawhip;
 
-	/// \brief <img src="../images/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
+	/// \brief <img src="../../img/colors/peachpuff-chip.png" width=16 height=16 > rgb(255, 218, 185).
 	static Colorf peachpuff;
 
-	/// \brief <img src="../images/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
+	/// \brief <img src="../../img/colors/peru-chip.png" width=16 height=16 > rgb(205, 133, 63).
 	static Colorf peru;
 
-	/// \brief <img src="../images/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
+	/// \brief <img src="../../img/colors/pink-chip.png" width=16 height=16 > rgb(255, 192, 203).
 	static Colorf pink;
 
-	/// \brief <img src="../images/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
+	/// \brief <img src="../../img/colors/plum-chip.png" width=16 height=16 > rgb(221, 160, 221).
 	static Colorf plum;
 
-	/// \brief <img src="../images/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
+	/// \brief <img src="../../img/colors/powderblue-chip.png" width=16 height=16 > rgb(176, 224, 230).
 	static Colorf powderblue;
 
-	/// \brief <img src="../images/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
+	/// \brief <img src="../../img/colors/purple-chip.png" width=16 height=16 > rgb(128, 0, 128).
 	static Colorf purple;
 
-	/// \brief <img src="../images/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
+	/// \brief <img src="../../img/colors/red-chip.png" width=16 height=16 > rgb(255, 0, 0).
 	static Colorf red;
 
-	/// \brief <img src="../images/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
+	/// \brief <img src="../../img/colors/rosybrown-chip.png" width=16 height=16 > rgb(188, 143, 143).
 	static Colorf rosybrown;
 
-	/// \brief <img src="../images/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
+	/// \brief <img src="../../img/colors/royalblue-chip.png" width=16 height=16 > rgb( 65, 105, 225).
 	static Colorf royalblue;
 
-	/// \brief <img src="../images/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
+	/// \brief <img src="../../img/colors/saddlebrown-chip.png" width=16 height=16 > rgb(139, 69, 19).
 	static Colorf saddlebrown;
 
-	/// \brief <img src="../images/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
+	/// \brief <img src="../../img/colors/salmon-chip.png" width=16 height=16 > rgb(250, 128, 114).
 	static Colorf salmon;
 
-	/// \brief <img src="../images/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
+	/// \brief <img src="../../img/colors/sandybrown-chip.png" width=16 height=16 > rgb(244, 164, 96).
 	static Colorf sandybrown;
 
-	/// \brief <img src="../images/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
+	/// \brief <img src="../../img/colors/seagreen-chip.png" width=16 height=16 > rgb( 46, 139, 87).
 	static Colorf seagreen;
 
-	/// \brief <img src="../images/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
+	/// \brief <img src="../../img/colors/seashell-chip.png" width=16 height=16 > rgb(255, 245, 238).
 	static Colorf seashell;
 
-	/// \brief <img src="../images/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
+	/// \brief <img src="../../img/colors/sienna-chip.png" width=16 height=16 > rgb(160, 82, 45).
 	static Colorf sienna;
 
-	/// \brief <img src="../images/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
+	/// \brief <img src="../../img/colors/silver-chip.png" width=16 height=16 > rgb(192, 192, 192).
 	static Colorf silver;
 
-	/// \brief <img src="../images/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
+	/// \brief <img src="../../img/colors/skyblue-chip.png" width=16 height=16 > rgb(135, 206, 235).
 	static Colorf skyblue;
 
-	/// \brief <img src="../images/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
+	/// \brief <img src="../../img/colors/slateblue-chip.png" width=16 height=16 > rgb(106, 90, 205).
 	static Colorf slateblue;
 
-	/// \brief <img src="../images/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
+	/// \brief <img src="../../img/colors/slategray-chip.png" width=16 height=16 > rgb(112, 128, 144).
 	static Colorf slategray;
 
-	/// \brief <img src="../images/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
+	/// \brief <img src="../../img/colors/slategrey-chip.png" width=16 height=16 > rgb(112, 128, 144).
 	static Colorf slategrey;
 
-	/// \brief <img src="../images/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
+	/// \brief <img src="../../img/colors/snow-chip.png" width=16 height=16 > rgb(255, 250, 250).
 	static Colorf snow;
 
-	/// \brief <img src="../images/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
+	/// \brief <img src="../../img/colors/springgreen-chip.png" width=16 height=16 > rgb( 0, 255, 127).
 	static Colorf springgreen;
 
-	/// \brief <img src="../images/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
+	/// \brief <img src="../../img/colors/steelblue-chip.png" width=16 height=16 > rgb( 70, 130, 180).
 	static Colorf steelblue;
 
-	/// \brief <img src="../images/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
+	/// \brief <img src="../../img/colors/tan-chip.png" width=16 height=16 > rgb(210, 180, 140).
 	static Colorf tan;
 
-	/// \brief <img src="../images/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
+	/// \brief <img src="../../img/colors/teal-chip.png" width=16 height=16 > rgb( 0, 128, 128).
 	static Colorf teal;
 
-	/// \brief <img src="../images/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
+	/// \brief <img src="../../img/colors/thistle-chip.png" width=16 height=16 > rgb(216, 191, 216).
 	static Colorf thistle;
 
-	/// \brief <img src="../images/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
+	/// \brief <img src="../../img/colors/tomato-chip.png" width=16 height=16 > rgb(255, 99, 71).
 	static Colorf tomato;
 
-	/// \brief <img src="../images/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
+	/// \brief <img src="../../img/colors/turquoise-chip.png" width=16 height=16 > rgb( 64, 224, 208).
 	static Colorf turquoise;
 
-	/// \brief <img src="../images/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
+	/// \brief <img src="../../img/colors/violet-chip.png" width=16 height=16 > rgb(238, 130, 238).
 	static Colorf violet;
 
-	/// \brief <img src="../images/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
+	/// \brief <img src="../../img/colors/wheat-chip.png" width=16 height=16 > rgb(245, 222, 179).
 	static Colorf wheat;
 
-	/// \brief <img src="../images/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
+	/// \brief <img src="../../img/colors/white-chip.png" width=16 height=16 > rgb(255, 255, 255).
 	static Colorf white;
 
-	/// \brief <img src="../images/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
+	/// \brief <img src="../../img/colors/whitesmoke-chip.png" width=16 height=16 > rgb(245, 245, 245).
 	static Colorf whitesmoke;
 
-	/// \brief <img src="../images/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
+	/// \brief <img src="../../img/colors/yellow-chip.png" width=16 height=16 > rgb(255, 255, 0).
 	static Colorf yellow;
 
-	/// \brief <img src="../images/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
+	/// \brief <img src="../../img/colors/yellowgreen-chip.png" width=16 height=16 > rgb(154, 205, 50).
 	static Colorf yellowgreen;
 
 	/// \brief rgba(0, 0, 0, 0).
