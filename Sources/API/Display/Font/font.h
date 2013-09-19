@@ -46,7 +46,9 @@ class FontProvider;
 class Canvas;
 class Font_Impl;
 
-/// \brief Font class.
+/// \brief Font class
+///
+/// A Font is a collection of images that can be used to represent text on a screen.
 class CL_API_DISPLAY Font
 {
 /// \name Construction
