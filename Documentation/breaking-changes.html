@@ -68,6 +68,8 @@
                                 <li>GraphicContext standard shader support moved into a new Canvas class. Fonts, Images and Sprites now use the Canvas class</li>
                                 <li>Fonts are now always character height as opposed to cell height. Previously you could switch between the formats by using the sign of the height value.
                                     This caused confusion and was not portable. Multiply the font height by 64/72 roughly converts it (26--&gt;23, 34--&gt;29)</li>
+                                <li>The Font_Sprite and Font_System have been merged into Font.</li>
+				<li>Font_Vector renamed to VectorFont, and does not inherit Font.</li>
                             </ul>
                         </li>
                         <li>

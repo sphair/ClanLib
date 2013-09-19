@@ -80,7 +80,7 @@ libvorbis libvorbis-devel libogg-devel sqlite*</div>
 		
 		            <p>Extract:</p>
 		
-		            <div class="console">tar -xvzf ClanLib-2.3.5.tgz</div>
+		            <div class="console">tar -xvzf ClanLib-3.0.0.tgz</div>
 		
 		            <p>(Amend the version number as necessary)</p>
 		
@@ -90,8 +90,6 @@ libvorbis libvorbis-devel libogg-devel sqlite*</div>
 
 		
 		            <h3>Development version</h3>
-		
-		            <p>Alternatively, if you want the very latest features and are willing to live with a higher risk of bugs, download the current development source code from the subversion repository. (Not recommended at the moment on linux)</p>
 		
 		            <p>This version requires autogen before configure:</p>
 
@@ -151,22 +149,22 @@ make html</div>
 make
 ./basic2d</div>
 
-		            <p>On Fedora linux and CentOS, if you get "Package clanApp-2.3 was not found in the pkg-config search path", this command helps fix the problem</p>
+		            <p>On Fedora linux and CentOS, if you get "Package clanApp-3.0 was not found in the pkg-config search path", this command helps fix the problem</p>
 
 		            <div class="console">export PKG_CONFIG_PATH=/usr/lib/pkgconfig</div>
 
 
 		            <h3>Using ClanLib</h3>
 		
-		            <p>These examples compile and link a source file named mygame.cpp with the ClanLib 2.3.x modules required for graphics (2D or 3D, using OpenGL 2+) and input. If you use other parts of ClanLib such as networking (clanNetwork), sound (clanSound, and clanVorbis or clanMikmod if you use those formats) or GUI (clanGUI), a different graphics target (clanGL1 or clanSWRender) or a different ClanLib version, amend them accordingly.</p>
+		            <p>These examples compile and link a source file named mygame.cpp with the ClanLib 3.0.x modules required for graphics (2D or 3D, using OpenGL 2+) and input. If you use other parts of ClanLib such as networking (clanNetwork), sound (clanSound, and clanVorbis or clanMikmod if you use those formats) or GUI (clanGUI), a different graphics target (clanGL1 or clanSWRender) or a different ClanLib version, amend them accordingly.</p>
 
 		            <p><b>Command line</h></p>
 
-		            <div class="console">g++ -o mygame mygame.cpp `pkg-config --cflags --libs clanCore-2.3 clanDisplay-2.3 clanGL-2.3 clanGL1-2.3 clanApp-2.3` -lpthread</div>
+		            <div class="console">g++ -o mygame mygame.cpp `pkg-config --cflags --libs clanCore-3.0 clanDisplay-3.0 clanGL-3.0 clanSWRender-3.0 clanApp-3.0` -lpthread</div>
 		
 		            <p><b>Makefile</b></p>
 		
-		            <div class="console">PACKAGES = clanCore-2.3 clanDisplay-2.3 clanApp-2.3 clanGL-2.3
+		            <div class="console">PACKAGES = clanCore-3.0 clanDisplay-3.0 clanApp-3.0 clanGL-3.0
 LIBS = `pkg-config --cflags --libs $(PACKAGES)`
 OBJS = mygame.o
 
@@ -189,14 +187,14 @@ libtool
 libc6-dev
 linux-libc-dev
 g++ (g++-4.1 or later and libstdc++6-4.1-dev or later)
-zlib1g
-zlib1g-dev</div>
+zlib1g (Not Required ClanLib 3.0)
+zlib1g-dev (Not Required ClanLib 3.0)</div>
 
             		<h3>Display</h3>
 		
 		            <div class="console">libpng12-0
-libpng12-dev
-libjpeg62-dev
+libpng12-dev (Not Required ClanLib 3.0)
+libjpeg62-dev (Not Required ClanLib 3.0)
 libfreetype6  (unless compiled manually)
 libfreetype6-dev (unless compiled manually)
 x11proto-xf86vidmode-dev (to enable XF86 VidMode)

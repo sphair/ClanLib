@@ -31,16 +31,21 @@
 		
                     <p>Assimp is required on numerious ClanLib 3D examples.</p>
 
-                    <p>Information to build assimp on linux. This page is valid until the assimp
-                    developers release v2.3.0.</p>
+                    <p>ClanLib requires at least Assimp V3.0. If your Linux packages does not contain assimp, you can compile it yourself.</p>
 
-                    <p>The ClanLib examples require at least SVN #1185.</p>
 		
-                    <div class="console">$ svn co https://assimp.svn.sourceforge.net/svnroot/assimp/trunk assimp
+                    <div class="console">$ git clone git://github.com/assimp/assimp.git assimp
 $ # For debian
 $ sudo apt-get install libboost-dev
+$ sudo apt-get install zlib1g-dev
 $ # For Fedora
 $ sudo yum install boost-devel
+$ sudo yum install zlib1g-dev
+$ # For SUSE
+$ sudo zypper install boost-devel
+$ sudo zypper install zlib-devel
+$ sudo zypper install cmake
+$
 $ cd assimp
 $ cmake -G 'Unix Makefiles'
   -- Boost version: 1.42.0
@@ -61,9 +66,7 @@ $ sudo ldconfig</div>
                     <p>Note, if "cmake" fails with glut not found, try this (on Ubuntu)</p>
 		
                     <div class="console">sudo apt-get install freeglut3-dev freeglut3 libxmu-dev libxi-dev</div>
-		
-                    <p>Assimp precompiled libraries for Visual Studio can be found in <a href="external-libraries.html">Dependency Libraries</a>.</p>
-    
+ 
                 </div>
             </div>
 

@@ -47,45 +47,30 @@ public:
 		SetupDisplay setup_display;
 		SetupGL setup_gl;
  
-		try
+		DisplayWindow window("Hello World", 640, 480);
+ 
+		Canvas canvas(window.get_gc());
+		InputDevice keyboard = window.get_ic().get_keyboard();
+		clan::Font font(canvas, "Tahoma", 30);	// The clan prefix is required on linux due to a namespace conflict
+ 
+		while (!keyboard.get_keycode(keycode_escape))
 		{
-			DisplayWindow window("Hello World", 640, 480);
+			// Draw with the canvas:
+			canvas.clear(Colorf::cadetblue);
  
-			Canvas canvas(window.get_gc());
-			InputDevice keyboard = window.get_ic().get_keyboard();
-			Font font(canvas, "Tahoma", 30);
+			Draw::line(canvas, 0, 110, 640, 110, Colorf::yellow);
+			font.draw_text(canvas, 100, 100, "Hello World!", Colorf::lightseagreen);
  
-			while (!keyboard.get_keycode(keycode_escape))
-			{
-				// Draw with the canvas:
-				canvas.clear(Colorf::cadetblue);
- 
-				Draw::line(canvas, 0, 110, 640, 110, Colorf::yellow);
-				font.draw_text(canvas, 100, 100, "Hello World!", Colorf::lightseagreen);
- 
-				// Draw any remaining queued-up drawing commands on canvas:
-				canvas.flush();
+			// Draw any remaining queued-up drawing commands on canvas:
+			canvas.flush();
 				
-				// Present the frame buffer content to the user:
-				window.flip();
+			// Present the frame buffer content to the user:
+			window.flip();
  
-				// Read messages from the windowing system message queue, if any are available:
-				KeepAlive::process();
- 
-				// Avoid using 100% CPU in the loop:
-				System::sleep(10);
-			}
+			// Read messages from the windowing system message queue, if any are available:
+			KeepAlive::process();
 		}
-		catch(Exception &amp;exception)
-		{
-			// Create a console window for text-output if not available
-			ConsoleWindow console("Console", 80, 160);
-			Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			console.display_close_message();
- 
-			return -1;
-		}
- 
+
 		return 0;
 	}
 };
