@@ -4,6 +4,8 @@
     <p>The clanCore library is the base library used by all other ClanLib libraries. It provides a basic framework with
     common functionality needed by almost all types of applications.</p>
 		
+   <p>Core Overview Pages: \ref ResourceManagement , \ref Threading , \ref TemplateCallbacks </p>
+ 		
     <h2>Platform abstraction</h2>
 		
     <p>Perhaps the most important features of clanCore are its platform abstraction classes. While the C++ Standard Library

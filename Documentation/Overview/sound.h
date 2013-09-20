@@ -3,6 +3,9 @@
 
     <h2>Basic Sound</h2>
 
+  <p>Sound Overview Pages: \ref SoundOverview </p>
+     
+    
     <ul>
         <li>clan::SoundOutput - Connects to a sound output device</li>
         <li>clan::SoundOutput_Description - Allows you to setup a more advanced description when creating a sound output</li>

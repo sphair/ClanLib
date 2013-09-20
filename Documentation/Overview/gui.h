@@ -3,6 +3,8 @@
 
     <h2>Base Framework</h2>
 
+  <p>GUI Overview Pages: \ref GUIFramework </p>
+ 
     <ul>
         <li>clan::GUIManager - Main class running the user interface</li>
         <li>clan::GUIComponent - View covering an area of the user interface</li>
