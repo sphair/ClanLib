@@ -1,31 +1,24 @@
 
 /*! \page SoundOverview Sound Overview
 
-*** THIS PAGE REQUIRES UPDATING FOR CLANLIB 3.0 ***
-<br/>
+*** THIS PAGE REQUIRES UPDATING FOR CLANLIB 3.0
 
 ClanSound provides you with easy-to-use and powerful sound functionality. 
-
 
 <h2>Sound overview</h2>
 
 To play sound in ClanLib, you have to initialize \ref clan::SetupSound and also create a \ref clan::SoundOutput. \ref clan::SoundOutput is the interface to a sound output device, which is used to control the main mixer volume and other global settings. It is used as a singleton. 
 
-
 \code 
 	#include <ClanLib/sound.h> 
- 
-	...
  
 	clan::SetupSound setup_sound;
 	clan::SoundOutput output(44100);
 \endcode
-	...
 
-<hr>Playing wav samples</h2>
+<h2>Playing wav samples</h2>
 
 A \ref clan::SoundBuffer contains a sample or music stream. To load and play a WAV file, you do the following: 
-
 
 \code 
 	// Load a sample from a wave file:
@@ -36,7 +29,6 @@ A \ref clan::SoundBuffer contains a sample or music stream. To load and play a W
 \endcode
 
 You can set the volume and panning of soundbuffers. This will change the default attributes of the soundbuffer, and will be effective on all subsequent calls to play(). 
-
 
 \code 
 	// Turn down volume on this soundbuffer.
@@ -66,7 +58,6 @@ There isn't much difference between playing wav samples and music stream. ClanSo
 
 Then to play music, you use the same approach as with wav samples: 
 
-
 \code 
 	// Load ogg file into a soundbuffer
 	clan::SoundBuffer vorbis("cheer1.ogg");
@@ -82,10 +73,6 @@ Then to play music, you use the same approach as with wav samples:
 	// Play mod
 	mod.play();
 \endcode
-
-<h2>Resources</h2>
-
-TODO: Write about loading samples from resources. 
 
 <h2>Sessions</h2>
 
@@ -127,9 +114,7 @@ When you have a session object, you can modify the attributes of the playing sou
 
 <h2>Filters</h2>
 
-If you want to modify sounds in special, dynamic ways, you can apply a \ref clan::SoundFilter to it. 
-
-ClanLib has three builtin filters: \ref clan::EchoFilter, \ref clan::FadeFilter and \ref clan::InverseEchoFilter. The usefulness of an \ref clan::InverseEchoFilter can be discussed :) 
+If you want to modify sounds in special, dynamic ways, you can apply a \ref clan::SoundFilter to it. There are three builtin filters: \ref clan::EchoFilter, \ref clan::FadeFilter and \ref clan::InverseEchoFilter.
 
 Example of the fade filter: 
 
@@ -151,7 +136,6 @@ Example of the fade filter:
 
 Example of the echo filter: 
 
-
 \code 
 	// Load ogg file into a soundbuffer
 	clan::SoundBuffer vorbis("cheer1.ogg");
@@ -163,13 +147,12 @@ Example of the echo filter:
 	playback.play();
 \endcode
 
-You can ofcourse also code your own filters. Check the SoundFilters example how do to that - it creates a \ref clan::DistortFilter. 
+You can also code your own filters. Check the SoundFilters example how do to that.
 
-It is also possible to add filters on mixer level too. Ie fade all sound out alltogether. Use \ref clan::SoundOutput::add_filter() just like with \ref clan::SoundBuffer_Session. 
+It is also possible to add filters on mixer level too. I.e. fade all sound out alltogether. Use \ref clan::SoundOutput::add_filter() just like with \ref clan::SoundBuffer_Session. 
 
 <h2>Sound providers</h2>
 
 It is also possible to create sound on-the-fly, or adding extra sound providers. See the StreamSoundProvider example for code how to do this. 
-
 
 */

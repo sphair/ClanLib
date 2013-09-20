@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		documentation.html = documentation.html
 		donations.html = donations.html
 		download.html = download.html
+		doxygen-extra.css = doxygen-extra.css
+		doxygen.css = doxygen.css
 		example-console.html = example-console.html
 		example-display.html = example-display.html
 		examples.html = examples.html
@@ -51,6 +53,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "external", "external", "{5C
 		js\external\jquery-1.10.2.min.js = js\external\jquery-1.10.2.min.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Overview", "Overview", "{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8}"
+	ProjectSection(SolutionItems) = preProject
+		Overview\collision_detection.h = Overview\collision_detection.h
+		Overview\compute.h = Overview\compute.h
+		Overview\core.h = Overview\core.h
+		Overview\csslayout.h = Overview\csslayout.h
+		Overview\database.h = Overview\database.h
+		Overview\database_services.h = Overview\database_services.h
+		Overview\display.h = Overview\display.h
+		Overview\font_resource.h = Overview\font_resource.h
+		Overview\gameide.h = Overview\gameide.h
+		Overview\gui.h = Overview\gui.h
+		Overview\gui_framework.h = Overview\gui_framework.h
+		Overview\main-page.h = Overview\main-page.h
+		Overview\netgame_engine.h = Overview\netgame_engine.h
+		Overview\network.h = Overview\network.h
+		Overview\physics2d.h = Overview\physics2d.h
+		Overview\physics3d.h = Overview\physics3d.h
+		Overview\resource_management.h = Overview\resource_management.h
+		Overview\scene3d.h = Overview\scene3d.h
+		Overview\sockets.h = Overview\sockets.h
+		Overview\sound.h = Overview\sound.h
+		Overview\sound_overview.h = Overview\sound_overview.h
+		Overview\sprite_resource.h = Overview\sprite_resource.h
+		Overview\template_callbacks.h = Overview\template_callbacks.h
+		Overview\texture_resource.h = Overview\texture_resource.h
+		Overview\threading.h = Overview\threading.h
+		Overview\timing.h = Overview\timing.h
+		Overview\user_input.h = Overview\user_input.h
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,6 +91,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{54F34B62-9AD4-453D-8703-F476EEA8111A} = {67526D1E-B801-4460-A8D3-F5C604037478}
 		{B32A6748-7237-401B-A49F-F9A1C1FF443D} = {67526D1E-B801-4460-A8D3-F5C604037478}
+		{0F8BA8C7-6826-4E88-9FF2-DAF310464CD8} = {67526D1E-B801-4460-A8D3-F5C604037478}
 		{5CE3824F-EE9C-4CCB-A258-6F11127573A0} = {54F34B62-9AD4-453D-8703-F476EEA8111A}
 		{C2FF3027-9401-4894-BAD8-61FA884E6AEC} = {B32A6748-7237-401B-A49F-F9A1C1FF443D}
 	EndGlobalSection

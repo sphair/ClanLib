@@ -4,39 +4,50 @@
 The network library in ClanLib sports a simple event based networking engine usually referred to as the NetGame engine. In all its simplicity the engine assist in routing simple messages from a client to a server and back. 
 
 The API consists of the following classes: 
-<ul><li>\ref clan::NetGameServer </li></ul>
-<ul><li>\ref clan::NetGameClient </li></ul>
-<ul><li>\ref clan::NetGameConnection </li></ul>
-<ul><li>\ref clan::NetGameEvent </li></ul>
-<ul><li>\ref clan::NetGameEventDispatcher </li></ul>
 
+<ul>
+<li>\ref clan::NetGameServer </li>
+<li>\ref clan::NetGameClient </li>
+<li>\ref clan::NetGameConnection </li>
+<li>\ref clan::NetGameEvent </li>
+<li>\ref clan::NetGameEventDispatcher </li>
+</ul>
 
 <h2>Client and Server Connections</h2>
+
 On the server side, the game must construct an instance of \ref clan::NetGameServer. Then for each port that the server should listen on, it must call \ref clan::NetGameServer::start(port). 
-<br/>
 
 The class also features three important signals: 
-<ul><li>Client connected </li></ul>
-<ul><li>Client disconnected </li></ul>
-<ul><li>Event received </li></ul>
 
-\ref clan::NetGameServer is a \ref clan::KeepAlive based class, which means that during calls to \ref clan::KeepAlive::process() the class will emit those three signals for each client that has connected/disconnected since last call, and for each game event that arrived since last. 
-<br/>
+<ul>
+<li>Client connected </li>
+<li>Client disconnected </li>
+<li>Event received </li>
+</ul>
 
-It is also possible to call process_events() on the \ref clan::NetGameServer or \ref clan::NetGameClient objects directly to cause the signals to be emitted. Generally, in client applications the signals are processed automatically because the main render loop already calls the clan::KeepAlive::process() function, but for servers that to not use clanDisplay the process_events() function can be called directly. 
-<br/>
+\ref clan::NetGameServer is a \ref clan::KeepAlive based class, which means that during calls to \ref clan::KeepAlive::process() the
+class will emit those three signals for each client that has connected/disconnected since last call, and for each game event that arrived since last. 
 
-The \ref clan::NetGameClient class is similar in design, except that there is only one connection (to the server), and therefore the connect/disconnect signals do not include any \ref clan::NetGameConnection objects. 
-<br/>
+It is also possible to call process_events() on the \ref clan::NetGameServer or \ref clan::NetGameClient objects directly to cause the
+signals to be emitted. Generally, in client applications the signals are processed automatically because the main render loop already
+calls the clan::KeepAlive::process() function, but for servers that to not use clanDisplay the process_events() function can be called directly. 
+
+The \ref clan::NetGameClient class is similar in design, except that there is only one connection (to the server), and therefore the
+connect/disconnect signals do not include any \ref clan::NetGameConnection objects. 
 
 <h2>NetGame Events</h2>
 
-The class clan::NetGameEvent represents a game event message that is either sent or received. Each event consists of two things: an event name and list of event parameters. The name is what identifies what the event is about, while each of the parameters can one of the following types: 
-<ul><li>null </li></ul>
-<ul><li>int </li></ul>
-<ul><li>string </li></ul>
-<ul><li>bool </li></ul>
-<ul><li>float </li></ul>
+The class clan::NetGameEvent represents a game event message that is either sent or received. Each event consists of
+two things: an event name and list of event parameters. The name is what identifies what the event is about, while
+each of the parameters can one of the following types: 
+
+<ul>
+<li>null</li>
+<li>int</li>
+<li>string</li>
+<li>bool</li>
+<li>float</li>
+</ul>
 
 Lets say that the client wants to send a log on message to the server. We want to pass a username and a password as the arguments, so we do like this: 
 
@@ -48,7 +59,10 @@ clan::NetGameEvent event("logon", "Mr. Jones", "the secret of all secrets");
 client.send_event(event);
 \endcode
 
-The constructor for \ref clan::NetGameEvent exist in 6 versions, allowing you to pass anything from 0 to 5 parameters in a single line. The types of the parameters are automatically deducted from the C++ type you pass for each parameter. If you need to pass more parameters than this, then you need to use the add_argument(const \ref clan::NetGameEventValue &value) function on \ref clan::NetGameEvent. 
+The constructor for \ref clan::NetGameEvent exist in 6 versions, allowing you to pass anything from 0 to 5 parameters
+in a single line. The types of the parameters are automatically deducted from the C++ type you pass for each parameter.
+If you need to pass more parameters than this, then you need to use the add_argument(const \ref clan::NetGameEventValue &value)
+function on \ref clan::NetGameEvent. 
 
 On the server, this game event will be emitted via the sig_event_received, and might be handled like this: 
 
@@ -82,8 +96,7 @@ An example of a NetGame based server can be found in the ClanLib examples.
 
 To illustrate how a game can be built using this system, the following listing shows what events are used in the DiceWar example while the game itself is running: 
 
-DiceWar Game Server to Client
-<br/>
+<h3>DiceWar Game Server to Client</h3>
 
 <ul><li>game-is-starting()  The game is starting, client does initialization  </li></ul>
 <ul><li>game-has-started()  The game has started -> ready to play!</li></ul>  
@@ -101,10 +114,7 @@ DiceWar Game Server to Client
 <ul><li>game-player-message(int player_id, string message)  A player sent a game message  </li></ul>
 <ul><li>game-system-message(string message)  The system sent an system message</li></ul>  
 
-<br/>
-
-DiceWar Game Client to Server
-<br/>
+<h3>DiceWar Game Client to Server</h3>
 
 <ul><li>game-attack-area(int map_area_from_id, int map_area_to_id)  Attack an area  --> game-attacked-area </li></ul>
 <ul><li>game-attack-dice-result game-defense-dice-result game-set-maparea-ownership game-set-maparea-army-strength game-attack-done --> game-invalid-attack </li></ul>
@@ -112,30 +122,13 @@ DiceWar Game Client to Server
 <ul><li>game-battle-view-over()  Notify battle view is done  --> None</li></ul>  
 <ul><li>game-add-message(string message)  Send a chat message to game chat --> game-player-message  </li></ul>
 
-
-<br/>
-
-
-World of Warcraft Events
-<br/>
-
-Although World of Warcraft do not use ClanLib or the NetGame system, it does base it communication on sending events. So to illustrate that even very large scale games can be run almost entirely using such events, here's the list of events reverse engineered out of World of Warcraft: 
-http://www.wowwiki.com/Events_From_Disassembly 
-
-<br/>
-
-
-
 <h2>Dispatching Game Events to C++ Functions</h2>
 
 When a \ref clan::NetGameEvent is received, we can attach a callback function to the event, or event group, that will handle the event. That's where the \ref clan::NetGameEventDispatcher classes are handy. There are 4 constructors for the \ref clan::NetGameEventDispatcher class, in order to dispatch from 0 to 3 extra arguments. 
-<br/>
 
 Let's say that on the server side, we want to dissociate account operations events (sent by the client to register a new account), from the login events. 
-<br/>
 
-Account operations handlers
-<br/>
+<h3>Account operations handlers</h3>
 
 Here we want to be able to handle 3 types of events : 
 <ul><li>Account-Creation events </li></ul>  
@@ -152,17 +145,19 @@ account_events.func_event("Account-Modification").set(this, &Server::on_event_ac
 account_events.func_event("Account-Deletion").set(this, &Server::on_event_account_delete);
 \endcode
 
-<h2>Login handlers</h2>
+<h3>Login handlers</h3>
 
-Here we want to handle 2 types of events : 
-<ul><li>Login events </li></ul>  
-<ul><li>Logout events </li></ul>  
+Here we want to handle 2 types of events:
 
-The difference here is that we will want to be able to pass the \ref clan::NetGameConnection attached to the client on the server, to the dispatcher as an extra argument. That is why we will use \ref clan::NetGameEventDispatcher_v1< ContextParam > class. 
-<br/>
+<ul>
+<li>Login events</li>
+<li>Logout events</li>
+</ul>  
 
-Same as before, we set the handlers : 
-<br/>
+The difference here is that we will want to be able to pass the \ref clan::NetGameConnection attached to the client on the server, to the dispatcher
+as an extra argument. That is why we will use \ref clan::NetGameEventDispatcher_v1< ContextParam > class. 
+
+Same as before, we set the handlers: 
 
 \code
 clan::NetGameEventDispatcher_v1< clan::NetGameConnection* > login_events;

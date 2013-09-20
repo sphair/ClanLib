@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 @import "../../css/main.css";
 
 /****************************************************************/
@@ -168,4 +168,15 @@
 	border: none;
 	color: #555;
 	font-size: 11px;
+}
+
+#doxygen .fragment
+{
+    background: none repeat scroll 0 0 #F9F9F9;
+    border: 1px dashed #2F6FAB;
+    line-height: 1.1;
+    margin: 1em 0;
+    padding: 1em;
+    white-space: pre-wrap;
+    color: #4a4a4a;
 }

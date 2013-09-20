@@ -1,7 +1,7 @@
 
 /*! \page CollisionDetection Collision Detection
 
-As of release 0.7.8 ClanLib comes with collision detection support. The collision system works by checking for intersections between line segments in line-loops surrounding the objects to collide. The advantage of this method over traditional methods, such as pixel based collision detection, is that the amount of data that needs to be worked with when checking for collisions and when doing transformations is very low. This enables besides fast collision testing also fast rotation and scaling of outline geometries. 
+The collision system works by checking for intersections between line segments in line-loops surrounding the objects to collide. The advantage of this method over traditional methods, such as pixel based collision detection, is that the amount of data that needs to be worked with when checking for collisions and when doing transformations is very low. This enables besides fast collision testing also fast rotation and scaling of outline geometries. 
 
 <h2>Collision Outlines</h2>
 

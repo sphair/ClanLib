@@ -3,7 +3,7 @@
 
     <h2>Generic Database</h2>
 	
-	    <p>Database Overview Pages: \ref DatabaseServices </p>
+	<p>Database Overview Pages: \ref DatabaseServices </p>
  
     <ul>
         <li>clan::DBConnection - A connection to a database</li>

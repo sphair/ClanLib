@@ -1,7 +1,7 @@
 
 /*! \page ResourceManagement Resource Management
 
-*** THIS PAGE REQUIRES UPDATING FOR CLANLIB 3.0 ***
+*** THIS PAGE REQUIRES UPDATING FOR CLANLIB 3.0
 
 <h2>Resource Manager</h2>
 

@@ -1,19 +1,29 @@
 
 /*! \page Sockets Sockets
 
-The clanNetwork library provides four simple classes for basic TCP and UDP communication over the Internet: 
-<ul><li>\ref clan::TCPListen </li></ul>
-<ul><li>\ref clan::TCPConnection</li></ul> 
-<ul><li>\ref clan::UDPSocket</li></ul> 
-<ul><li>\ref clan::SocketName </li></ul>
+The clanNetwork library provides four simple classes for basic TCP and UDP communication over the Internet:
+
+<ul>
+<li>\ref clan::TCPListen </li>
+<li>\ref clan::TCPConnection</li>
+<li>\ref clan::UDPSocket</li>
+<li>\ref clan::SocketName </li>
+</ul>
 
 <h2>Internet Protocol Basics</h2>
-<br/>
-Although you can find much better information elsewhere on how the Internet works and how IP packet routing operates, we will give a small summary here of its operation from the point of an application. 
-<br/>
-Typically applications communicate over the Internet or on a Local Area Network (LAN) using either the Transmission Control Protocol (TCP) or the User Datagram Protocol (UDP). The TCP protocol is used for connection based communication between two parties (like a phone call), while the UDP protocol is used to send individual messages without an actual connection (like sending a SMS). With both protocols you connect or send messages to a specific IP address. But because there may be many different programs running on a machine, the destination is also identified by a port. The combination of both is called a socket name and is represented by the class clan::SocketName in clanNetwork. For example, the Google search engine web server runs on the server www.google.com, port 80 (the HTTP protocol port). 
-<br/>
-The \ref clan::SocketName class in clanNetwork is designed so it can either hold a machine DNS name or an IP address of the server. This is because finding the DNS name for an IP address (or vice versa) may take time and therefore is only done when absolutely neccessary. However, it is easy enough to convert from one type to the other: 
+
+Although you can find much better information elsewhere on how the Internet works and how IP packet routing operates, we will give a small summary here of
+its operation from the viewpoint of an application. 
+
+Typically applications communicate over the Internet or on a Local Area Network (LAN) using either the Transmission Control Protocol (TCP) or the User Datagram
+Protocol (UDP). The TCP protocol is used for connection based communication between two parties (like a phone call), while the UDP protocol is used to send
+individual messages without an actual connection (like sending a SMS). With both protocols you connect or send messages to a specific IP address. But because
+there may be many different programs running on a machine, the destination is also identified by a port. The combination of both is called a socket name and
+is represented by the class clan::SocketName in clanNetwork. For example, the Google search engine web server runs on the server www.google.com, port 80 (the HTTP protocol port). 
+
+The \ref clan::SocketName class in clanNetwork is designed so it can either hold a machine DNS name or an IP address of the server. This is because finding
+the DNS name for an IP address (or vice versa) may take time and therefore is only done when absolutely neccessary. However, it is easy enough to convert
+from one type to the other: 
 
 \code
 
@@ -98,7 +108,7 @@ udp.send(message.data(), message.length(), destination);
 \endcode
 
 If the UDP socket is not bound to a port, a random available port will be chosen when the first message is sent. The bind() command is therefore only needed for servers. 
-<br/>
+
 Because UDP communication is connectionless, anyone can send messages to our socket and we retrieve the messages like this: 
 
 \code
@@ -109,10 +119,13 @@ if (data_available)
 	bool got_event = connection.get_read_event().wait(15000);
 	if (!got_event)
 		throw clan::Exception("timed out");
+
 	char buffer[16*1024];
 	clan::SocketName sender_name;
 	int received = udp.receive(buffer, 16*1024, sender_name);
+
 	clan::Console::write_line("%1 sent us %2 bytes of data!", sender_name.get_address(), received);
+}
 
 \endcode
 
