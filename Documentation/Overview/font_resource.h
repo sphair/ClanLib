@@ -1,28 +1,96 @@
 
 /*! \page FontResource Font Resource
 
-Resource options
+\ref clan::Font can be constructed from a resource file.
 
-These are constructed from a resource file, using <font name="ClanFont">. Inside the <font> tag you need a <bitmap> tag that contains the following attributes: 
-• <glyphs> - The sprite description containing the glyphs. See  Sprites Resources 
-• <letters> - The glyphs contained in <glyphs> 
-• <monospace> - If "true", then all letters have equal width 
-• <spacelen> - The width of unknown glyphs. If unset, this defaults to the average of the font glyphs. If monospace is used, then this always equals the widest glyph 
-• The font metrics can be set using: (value = floating point value, bool = true or false) 
-• <height="value"> 
-• <ascent="value"> 
-• <descent="value"> 
-• <internal_leading="value"> 
-• <external_leading="value"> 
-• <average_character_width="value"> 
-• <max_character_width="value"> 
-• <weight="value"> 
-• <overhang="value"> 
-• <digitized_aspect_x="value"> 
-• <digitized_aspect_y="value"> 
-• <italic="bool"> 
-• <underlined="bool"> 
-• <struck_out="bool"> 
-• <fixed_pitch="bool"> 
+<h2>Using the \<font\> element</h2>
+
+The font element must contain either the \<sprite\>  or \<ttf\> element
+
+<ul><li>Attribute: <b>name</b><br/>
+Resource identifier to use as base for this font. This is specified in the typeface name of \ref clan::FontDescription <br/>
+Default value: None, MUST BE PRESENT. 
+</li></ul>
+
+
+<ul><li>Element: <b>\<sprite\> </b><br/>
+Describes a sprite font<br/>
+</li></ul>
+
+<ul><li>Element: <b>\<ttf\>  </b><br/>
+Describes a system font<br/>
+</li></ul>
+
+<h2>Using the \<sprite\> element</h2>
+
+<ul><li>Attribute: <b>glyphs</b><br/>
+The sprite description containing the glyphs. See \ref SpriteResource <br/>
+Default value: None, MUST BE PRESENT. 
+</li></ul>
+
+<ul><li>Attribute: <b>letters</b><br/>
+The glyphs contained in /<glyphs\>  <br/>
+Default value: None, MUST BE PRESENT. 
+</li></ul>
+
+<ul><li>Attribute: <b>monospace</b> (Optional) <br/>
+If "true", then all letters have equal width 
+</li></ul>
+<ul><li>Attribute: <b>spacelen</b> (Optional) <br/>
+The width of unknown glyphs. If unset, this defaults to the average of the font glyphs. If monospace is used, then this always equals the widest glyph 
+</li></ul>
+<ul><li>Attribute: <b>height</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>ascent</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>descent</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>internal_leading</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>external_leading</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>average_character_width</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>max_character_width</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>weight</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>overhang</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>digitized_aspect_x</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>digitized_aspect_y</b> (Optional) <br/>floating point value 
+</li></ul>
+<ul><li>Attribute: <b>italic</b> (Optional) <br/>true or false 
+</li></ul>
+<ul><li>Attribute: <b>underlined</b> (Optional) <br/>true or false 
+</li></ul>
+<ul><li>Attribute: <b>struck_out</b> (Optional) <br/>true or false 
+</li></ul>
+<ul><li>Attribute: <b>fixed_pitch</b> (Optional) <br/>true or false 
+</li></ul>
+
+<h2>Using the \<ttf\> element</h2>
+
+<ul><li>Attribute: <b>file</b> (Optional) <br/>
+Use this filename that contains the font.<br/>
+</li></ul>
+
+<ul><li>Attribute: <b>typeface</b> (Optional) <br/>
+Use this to change the typeface name of the font. i.e. The typeface name inside the font file.<br/>
+</li></ul>
+
+<ul><li>Attribute: <b>height</b> (Optional) <br/>floating point value
+</li></ul>
+
+<ul><li>Attribute: <b>average_width</b> (Optional) <br/>floating point value
+</li></ul>
+
+<ul><li>Attribute: <b>anti_alias</b><br/>true or false 
+</li></ul>
+
+<ul><li>Attribute: <b>subpixel</b><br/>true or false 
+</li></ul>
+
 
 */
