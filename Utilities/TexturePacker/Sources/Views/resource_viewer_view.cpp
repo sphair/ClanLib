@@ -33,7 +33,7 @@
 #include "../Dialogs/create_collision_data_dialog.h"
 
 ResourceViewerView::ResourceViewerView(GUIComponent *parent, MainWindow *mainwindow)
-: View(parent, mainwindow, "XMLResourceDocument viewer")
+: View(parent, mainwindow, "XMLResourceDocument viewer"), sprite_component(NULL), resource_list(NULL)
 {
 	func_resized().set(this, &ResourceViewerView::on_resized);
 
@@ -87,8 +87,10 @@ void ResourceViewerView::on_resized()
 	label_selected_resource_file->set_geometry(Rect(10, 13, 80, 30));
 	lineedit_selected_resource_file->set_geometry(Rect(80, 10, size.width - 20 - 20, 30));
 	button_browse_resource_file->set_geometry(Rect(10 + size.width - 20 - 30, 10, size.width - 10, 30));
-	resource_list->set_geometry(Rect(10, 40, size.width - 10, 200));
-	sprite_component->set_geometry(Rect(10, 205, size.width - 10, size.height - 35));
+	if (resource_list)
+		resource_list->set_geometry(Rect(10, 40, size.width - 10, 200));
+	if (sprite_component)
+		sprite_component->set_geometry(Rect(10, 205, size.width - 10, size.height - 35));
 	button_edit_resource->set_geometry(Rect(10, size.height - 30, 130, size.height - 10));
 	button_create_collision_data->set_geometry(Rect(140, size.height - 30, 260, size.height - 10));
 }
