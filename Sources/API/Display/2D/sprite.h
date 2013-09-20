@@ -46,7 +46,6 @@ namespace clan
 /// \addtogroup clanDisplay_2D clanDisplay 2D
 /// \{
 
-class SpriteDescription;
 class Sprite_Impl;
 class CollisionOutline;
 class Canvas;
