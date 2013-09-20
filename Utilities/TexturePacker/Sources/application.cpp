@@ -43,7 +43,6 @@ public:
 		{
 			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
 			std::string theme_filename("../../Resources/GUIThemeBasic/theme.css");
-			local_theme_filename = "theme_basic.css";
 		}
 		clan::XMLResourceDocument resources_doc(resource_filename);
 		local_resources_doc.add_resources(resources_doc);
