@@ -33,12 +33,12 @@
 #include "../Dialogs/create_collision_data_dialog.h"
 
 ResourceViewerView::ResourceViewerView(GUIComponent *parent, MainWindow *mainwindow)
-: View(parent, mainwindow, "Resource viewer")
+: View(parent, mainwindow, "XMLResourceDocument viewer")
 {
 	func_resized().set(this, &ResourceViewerView::on_resized);
 
 	label_selected_resource_file = new Label(this);
-	label_selected_resource_file->set_text("Resource file:");
+	label_selected_resource_file->set_text("XMLResourceDocument file:");
 
 	lineedit_selected_resource_file = new LineEdit(this);
 
@@ -57,7 +57,7 @@ ResourceViewerView::ResourceViewerView(GUIComponent *parent, MainWindow *mainwin
 	button_create_collision_data->set_enabled(false);
 
 	resource_list = new ListView(this);
-	ListViewColumnHeader col_resource = resource_list->get_header()->append(resource_list->get_header()->create_column("Resource", "Resource"));
+	ListViewColumnHeader col_resource = resource_list->get_header()->append(resource_list->get_header()->create_column("XMLResourceDocument", "XMLResourceDocument"));
 	col_resource.set_width(350);
 	ListViewColumnHeader col_message = resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
 
@@ -96,7 +96,7 @@ void ResourceViewerView::on_resized()
 void ResourceViewerView::on_button_browse_resource_file()
 {
 	OpenFileDialog dlg(this);
-	dlg.add_filter("Resource files", "*.xml", true);
+	dlg.add_filter("XMLResourceDocument files", "*.xml", true);
 	dlg.add_filter("All files", "*.*");
 
 	dlg.set_initial_directory(System::get_exe_path());
@@ -163,7 +163,7 @@ void ResourceViewerView::show_resource(ResourceItem *resource_item)
 	}
 	else if(image_item)
 	{
-		sprite_component->set_sprite_description(&image_item->sprite_description);
+		//sprite_component->set_sprite_description(&image_item->sprite_description);
 		//button_edit_resource->set_enabled(true);
 		button_create_collision_data->set_enabled(false);
 	}
@@ -187,7 +187,7 @@ void ResourceViewerView::load_resource_file(const std::string &file)
 		ResourceItem *resource_item = items[i];
 
 		ListViewItem item = resource_list->create_item();
-		item.set_column_text("Resource", string_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
+		item.set_column_text("XMLResourceDocument", string_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
 
 		item.set_id(i);
 

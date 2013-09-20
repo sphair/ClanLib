@@ -34,43 +34,33 @@ class TextureApplication
 public:
 	int main(const std::vector<std::string> &args)
 	{
-		try
+		clan::XMLResourceDocument local_resources_doc("resources.xml");
+
+		std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
+		std::string theme_filename("../../Resources/GUIThemeAero/theme.css");
+		std::string local_theme_filename("theme.css");
+		if (!FileHelp::file_exists(resource_filename))
 		{
-			clan::XMLResourceDocument local_resources_doc("resources.xml");
-
-			std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
-			std::string theme_filename("theme.css");
-			if (!FileHelp::file_exists(resource_filename))
-			{
-				resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
-				theme_filename = "theme_basic.css";
-			}
-			clan::XMLResourceDocument resources_doc(resource_filename);
-			local_resources_doc.add_resources(resources_doc);
-
-			ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
-
-			//GUIThemeDefault theme;
-			//theme.set_resources(local_resources);
-
-			GUIWindowManagerSystem wm;
-
-			GUIManager gui;
-			gui.set_window_manager(wm);
-			gui.add_resources(local_resources_doc);
-			//gui.set_theme(theme);
-			gui.set_css_document(theme_filename);
-
-			MainWindow mainwindow(&gui, &resources);
-			gui.exec();
+			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+			std::string theme_filename("../../Resources/GUIThemeBasic/theme.css");
+			local_theme_filename = "theme_basic.css";
 		}
-		catch (Exception &exception)
-		{
-			ConsoleWindow console("Console", 160, 1000);
-			Console::write_line("Exception caught: " + exception.get_message_and_stack_trace());
-			console.display_close_message();
-		}
+		clan::XMLResourceDocument resources_doc(resource_filename);
+		local_resources_doc.add_resources(resources_doc);
 
+		ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
+
+		GUIWindowManagerSystem wm;
+
+		GUIManager gui;
+		gui.set_window_manager(wm);
+		gui.add_resources(resources_doc);
+		gui.add_resources(resource_filename);
+		gui.add_theme(theme_filename);
+		gui.add_theme(local_theme_filename);
+
+		MainWindow mainwindow(&gui, &resources);
+		gui.exec();
 		return 0;
 	}
 };

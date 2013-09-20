@@ -31,7 +31,6 @@
 
 SpriteComponent::SpriteComponent(GUIComponent *parent)
 : GUIComponent(parent, "spritecomponent"),
-  sprite_description(0),
   sprite(0)
 {
 	button_startstop = new PushButton(this);
@@ -60,7 +59,7 @@ void SpriteComponent::on_render(Canvas &canvas, const Rect &update_rect)
 	if(sprite)
 	{
 		if(is_playing)
-			sprite->update();
+			sprite->update(0);
 
 		sprite->draw(canvas, 0, 0);
 
@@ -68,20 +67,6 @@ void SpriteComponent::on_render(Canvas &canvas, const Rect &update_rect)
 		{
 			label_frame->set_text(string_format("Frame %1 / %2", sprite->get_current_frame() + 1, sprite->get_frame_count()));
 			sprite_current_frame = sprite->get_current_frame();
-		}
-	}
-
-	if(sprite_description)
-	{
-		const std::vector<SpriteDescriptionFrame> &frames = sprite_description->get_frames();
-		std::vector<SpriteDescriptionFrame>::const_iterator it;
-		for(it = frames.begin(); it != frames.end(); ++it)
-		{
-			SpriteDescriptionFrame frame = (*it);
-
-			Image image(canvas, frame.texture,  frame.rect);
-			image.draw(canvas, frame.texture.get_size());
-			break;
 		}
 	}
 
@@ -118,7 +103,6 @@ void SpriteComponent::on_button_nextframe_clicked()
 void SpriteComponent::clear_sprite()
 {
 	sprite = 0;
-	sprite_description = 0;
 
 	this->set_constant_repaint(false);
 
@@ -126,18 +110,6 @@ void SpriteComponent::clear_sprite()
 	sprite_current_frame = -1;
 
 	update_buttons_enabled_state();
-}
-
-void SpriteComponent::set_sprite_description(SpriteDescription *sprite_description)
-{
-	this->sprite_description = sprite_description;
-
-	is_playing = true;
-	sprite_current_frame = -1;
-
-	update_buttons_enabled_state();
-
-	request_repaint();
 }
 
 void SpriteComponent::set_sprite(Sprite *sprite)

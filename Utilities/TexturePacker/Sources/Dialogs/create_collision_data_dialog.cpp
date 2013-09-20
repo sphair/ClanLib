@@ -115,6 +115,8 @@ void CreateCollisionDataDialog::on_close()
 
 void CreateCollisionDataDialog::generate_collision(const std::string &filename, const std::string &directory, OutlineAccuracy accuracy)
 {
+throw Exception("FIXME");
+/*
 	const std::vector<SpriteDescriptionFrame> &frames = sprite_item->sprite_description.get_frames();
 
 	for(size_t i = 0; i < frames.size(); ++i)
@@ -151,11 +153,12 @@ void CreateCollisionDataDialog::generate_collision(const std::string &filename, 
 
 	std::string msg = string_format("%1 collision outlines generated", (int) frames.size());
 	message_box(this, "Collision outlines generated", msg, mb_buttons_ok, mb_icon_info);
+*/
 }
 
 void CreateCollisionDataDialog::update_expected_filenames()
 {
-	if(sprite_item->sprite_description.get_frames().size() > 1)
+	if(sprite_item->sprite.get_frame_count() > 1)
 	{
 		label_expected_filenames->set_text(
 			string_format("Expected output: %1\\%2_xxx.out", edit_directory->get_text(), edit_filename->get_text()));

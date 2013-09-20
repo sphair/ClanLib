@@ -42,7 +42,6 @@ public:
 	void clear_sprite();
 
 	void set_sprite(Sprite *sprite);
-	void set_sprite_description(SpriteDescription *sprite_description);
 
 // Implementation:
 private:
@@ -61,7 +60,6 @@ private:
 	Label *label_frame;
 
 	Sprite *sprite;
-	SpriteDescription *sprite_description;
 
 	bool is_playing;
 

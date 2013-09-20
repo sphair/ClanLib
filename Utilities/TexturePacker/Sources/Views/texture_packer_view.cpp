@@ -37,7 +37,7 @@ TexturePackerView::TexturePackerView(GUIComponent *parent, MainWindow *mainwindo
 	func_resized().set(this, &TexturePackerView::on_resized);
 
 	label_selected_resource_file = new Label(this);
-	label_selected_resource_file->set_text("Resource file:");
+	label_selected_resource_file->set_text("XMLResourceDocument file:");
 
 	lineedit_selected_resource_file = new LineEdit(this);
 
@@ -138,7 +138,7 @@ void TexturePackerView::on_resized()
 void TexturePackerView::on_button_browse_resource_file()
 {
 	OpenFileDialog dlg(this);
-	dlg.add_filter("Resource files", "*.xml", true);
+	dlg.add_filter("XMLResourceDocument files", "*.xml", true);
 	dlg.add_filter("All files", "*.*");
 
 	dlg.set_initial_directory(System::get_exe_path());
@@ -170,7 +170,7 @@ void TexturePackerView::on_button_save_resources()
 	{
 		SaveFileDialog dlg(this);
 
-		dlg.add_filter("Resource files", "*.xml", true);
+		dlg.add_filter("XMLResourceDocument files", "*.xml", true);
 		dlg.add_filter("All files", "*.*");
 
 		dlg.set_initial_directory(System::get_exe_path());

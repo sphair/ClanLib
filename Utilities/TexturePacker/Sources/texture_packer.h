@@ -31,10 +31,10 @@
 class ResourceItem
 {
 public:
-	ResourceItem(Resource resource) : resource(resource) {};
+	ResourceItem(XMLResourceNode resource) : resource(resource) {};
 	virtual ~ResourceItem() {};
 
-	Resource resource;
+	XMLResourceNode resource;
 
 	std::string resource_path;
 };
@@ -42,7 +42,7 @@ public:
 class NotSupportedResourceItem : public ResourceItem
 {
 public:
-	NotSupportedResourceItem(Resource resource, const std::string &error) : ResourceItem(resource), error(error) {};
+	NotSupportedResourceItem(XMLResourceNode resource, const std::string &error) : ResourceItem(resource), error(error) {};
 
 	std::string error;
 };
@@ -50,9 +50,8 @@ public:
 class SpriteResourceItem : public ResourceItem
 {
 public:
-	SpriteResourceItem(Resource resource) : ResourceItem(resource) {};
+	SpriteResourceItem(XMLResourceNode resource) : ResourceItem(resource) {};
 
-	SpriteDescription sprite_description;
 	Sprite sprite;
 
 	std::vector<Subtexture> packed_sub_textures;
@@ -61,9 +60,8 @@ public:
 class ImageResourceItem : public ResourceItem
 {
 public:
-	ImageResourceItem(Resource resource) : ResourceItem(resource) {};
+	ImageResourceItem(XMLResourceNode resource) : ResourceItem(resource) {};
 
-	SpriteDescription sprite_description;
 	Image image;
 
 	std::vector<Subtexture> packed_sub_textures;
@@ -84,12 +82,13 @@ public:
 	Callback_v2<int, int> func_pack_progress;
 
 private:
-	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources);
-	void process_resource(Canvas &canvas, Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
+	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
+	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
+	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
+	void process_resource(Canvas &canvas, XMLResourceNode &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
 
 	ResourceManager resources;
+	XMLResourceDocument resources_doc;
 
 	std::vector<ResourceItem *> resource_items;
 	int last_border_size;

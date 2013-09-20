@@ -41,23 +41,24 @@ TexturePacker::~TexturePacker()
 
 void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
 {
-	resources = ResourceManager(filename);
+	resources_doc = clan::XMLResourceDocument(filename);
+	resources = clan::XMLResourceManager::create(resources_doc);
 
 	// TODO: Delete items before clearing
 	resource_items.clear();
 
-	std::vector<std::string> resource_names = resources.get_resource_names();
+	std::vector<std::string> resource_names = resources_doc.get_resource_names();
 	std::vector<std::string>::iterator resource_it;
 	for(resource_it = resource_names.begin(); resource_it != resource_names.end(); ++resource_it)
 	{
 		std::string resource_id = (*resource_it);
-		Resource resource = resources.get_resource(resource_id);
+		XMLResourceNode resource = resources_doc.get_resource(resource_id);
 
 		resource_items.push_back(load_resource(canvas, resource_id, resource, resources));
 	}
 }
 
-ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
 {
 	ResourceItem *item = 0;
 
@@ -97,31 +98,26 @@ ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource
 	return item;
 }
 
-ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
 {
-	SpriteDescription desc(canvas, resource_id, &resources);
 
-	Sprite sprite(canvas, resource_id, &resources);
+	Sprite sprite = Sprite::load(canvas, resource_id, resource.get_document());
 	sprite.set_play_loop(true);
 	sprite.set_alignment(origin_top_left);
 	sprite.set_angle(Angle::from_degrees(360) - sprite.get_base_angle());
 
 	SpriteResourceItem *item = new SpriteResourceItem(resource);
-	item->sprite_description = desc;
 	item->sprite = sprite;
 
 	return item;
 }
 
-ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, Resource &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
 {
-	SpriteDescription desc(canvas, resource_id, &resources);
-
-	Image image(canvas, resource_id, &resources);
+	Image image = Image::load(canvas, resource_id, resource.get_document());
 	image.set_alignment(origin_top_left);
 
 	ImageResourceItem *item = new ImageResourceItem(resource);
-	item->sprite_description = desc;
 	item->image = image;
 
 	return item;
@@ -135,11 +131,11 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 	SpriteResourceItem *sprite_item1 = dynamic_cast<SpriteResourceItem *>(d1);
 	if(sprite_item1)
 	{
-		const std::vector<SpriteDescriptionFrame> &frames = sprite_item1->sprite_description.get_frames();
-		std::vector<SpriteDescriptionFrame>::size_type index;
-		for(index = 0; index < frames.size(); ++index)
+		unsigned int frame_size = sprite_item1->sprite.get_frame_count();
+
+		for(unsigned int index = 0; index < frame_size; ++index)
 		{
-			Rect frame_rect = frames[index].rect;
+			Rect frame_rect = sprite_item1->sprite.get_size();
 			if(frame_rect.get_width() > max_width_d1)
 				max_width_d1 = frame_rect.get_width();
 		}
@@ -147,23 +143,17 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 	ImageResourceItem *image_item1 = dynamic_cast<ImageResourceItem *>(d1);
 	if(image_item1)
 	{
-		const std::vector<SpriteDescriptionFrame> &frames = image_item1->sprite_description.get_frames();
-		std::vector<SpriteDescriptionFrame>::size_type index;
-		for(index = 0; index < frames.size(); ++index)
-		{
-			Rect frame_rect = frames[index].rect;
-			if(frame_rect.get_width() > max_width_d1)
-				max_width_d1 = frame_rect.get_width();
-		}
+		Rect frame_rect = image_item1->image.get_size();
+		if(frame_rect.get_width() > max_width_d1)
+			max_width_d1 = frame_rect.get_width();
 	}
 	SpriteResourceItem *sprite_item2 = dynamic_cast<SpriteResourceItem *>(d2);
 	if(sprite_item2)
 	{
-		const std::vector<SpriteDescriptionFrame> &frames = sprite_item2->sprite_description.get_frames();
-		std::vector<SpriteDescriptionFrame>::size_type index;
-		for(index = 0; index < frames.size(); ++index)
+		unsigned int frame_size = sprite_item1->sprite.get_frame_count();
+		for(unsigned int index = 0; index < frame_size; ++index)
 		{
-			Rect frame_rect = frames[index].rect;
+			Rect frame_rect = sprite_item2->sprite.get_frame_size(index);
 			if(frame_rect.get_width() > max_width_d2)
 				max_width_d2 = frame_rect.get_width();
 		}
@@ -171,14 +161,9 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 	ImageResourceItem *image_item2 = dynamic_cast<ImageResourceItem *>(d2);
 	if(image_item2)
 	{
-		const std::vector<SpriteDescriptionFrame> &frames = image_item2->sprite_description.get_frames();
-		std::vector<SpriteDescriptionFrame>::size_type index;
-		for(index = 0; index < frames.size(); ++index)
-		{
-			Rect frame_rect = frames[index].rect;
-			if(frame_rect.get_width() > max_width_d2)
-				max_width_d2 = frame_rect.get_width();
-		}
+		Rect frame_rect = image_item2->image.get_size();
+		if(frame_rect.get_width() > max_width_d2)
+			max_width_d2 = frame_rect.get_width();
 	}
 
 	return max_width_d1 > max_width_d2;
@@ -202,18 +187,17 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 		{
 			sprite_item->packed_sub_textures.clear();
 
-			const std::vector<SpriteDescriptionFrame> &frames = sprite_item->sprite_description.get_frames();
-			std::vector<SpriteDescriptionFrame>::size_type index, size;
-			size = frames.size();
-			for(index = 0; index < size; ++index)
+			unsigned int size = sprite_item->sprite.get_frame_count();
+			for(unsigned int index = 0; index < size; ++index)
 			{
-				Rect frame_rect = frames[index].rect;
+				Rect frame_rect = sprite_item->sprite.get_frame_size(index);
 
 				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
 				sprite_item->packed_sub_textures.push_back(sub_texture);
 
-				Texture2D texture = frames[index].texture;
-				const PixelBuffer &pb = texture.get_pixeldata(canvas);
+				//FIXME Texture2D texture = frames[index].texture;
+				//FIXME const PixelBuffer pb = texture.get_pixeldata(canvas);
+				PixelBuffer pb(64,64, tf_rgba8);
 				last_border_size = border_size;
 				if (last_border_size < 0) last_border_size= 0;
 				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
@@ -226,24 +210,20 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 		{
 			image_item->packed_sub_textures.clear();
 
-			const std::vector<SpriteDescriptionFrame> &frames = image_item->sprite_description.get_frames();
-			std::vector<SpriteDescriptionFrame>::size_type index, size;
-			size = frames.size();
-			for(index = 0; index < size; ++index)
-			{
-				Rect frame_rect = frames[index].rect;
+			Rect frame_rect = image_item->image.get_size();
 
-				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
-				image_item->packed_sub_textures.push_back(sub_texture);
+			Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
+			image_item->packed_sub_textures.push_back(sub_texture);
 
-				Texture2D texture = frames[index].texture;
-				const PixelBuffer &pb = texture.get_pixeldata(canvas);
-				last_border_size = border_size;
-				if (last_border_size < 0) last_border_size = 0;
-				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
-				sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
-			}
-		}
+			//FIXME Texture2D texture = frames[index].texture;
+			//FIXME const PixelBuffer pb = texture.get_pixeldata(canvas);
+			PixelBuffer pb(64,64, tf_rgba8);
+
+			last_border_size = border_size;
+			if (last_border_size < 0) last_border_size = 0;
+			PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
+			sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
+	}
 
 		if(!func_pack_progress.is_null())
 			func_pack_progress.invoke((int)item_index + 1, (int)item_size);
@@ -276,16 +256,16 @@ void TexturePacker::save_resources(Canvas &canvas, const std::string &filename)
 	}
 
 	// Save the entire resource DOM
-	resources.save(filename);
+	resources_doc.save(filename);
 }
 
-void TexturePacker::process_resource(Canvas &canvas, Resource &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
+void TexturePacker::process_resource(Canvas &canvas, XMLResourceNode &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
 {
 	// Found a sprite resource, lets modify its content!
-	Resource resource = item_resource;
+	XMLResourceDocument resource = item_resource.get_document();
 
 	// Iterate through all nodes, and remove all previous image tags
-	DomElement &element = resource.get_element();
+	DomElement &element = item_resource.get_element();
 	DomNode cur = element.get_first_child();
 	while (!cur.is_null())
 	{
