@@ -311,6 +311,11 @@ Image Image::load(Canvas &canvas, const std::string &id, const XMLResourceDocume
 /////////////////////////////////////////////////////////////////////////////
 // Image Attributes:
 
+Subtexture Image::get_texture() const
+{
+	return Subtexture(impl->texture, impl->texture_rect);
+}
+
 void Image::throw_if_null() const
 {
 	if (!impl)

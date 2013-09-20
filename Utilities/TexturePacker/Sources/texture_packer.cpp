@@ -195,9 +195,9 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
 				sprite_item->packed_sub_textures.push_back(sub_texture);
 
-				//FIXME Texture2D texture = frames[index].texture;
-				//FIXME const PixelBuffer pb = texture.get_pixeldata(canvas);
-				PixelBuffer pb(64,64, tf_rgba8);
+				Subtexture subtexture = sprite_item->sprite.get_frame_texture(index);
+				PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
+				pb = pb.copy(subtexture.get_geometry());
 				last_border_size = border_size;
 				if (last_border_size < 0) last_border_size= 0;
 				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
@@ -215,9 +215,9 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 			Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
 			image_item->packed_sub_textures.push_back(sub_texture);
 
-			//FIXME Texture2D texture = frames[index].texture;
-			//FIXME const PixelBuffer pb = texture.get_pixeldata(canvas);
-			PixelBuffer pb(64,64, tf_rgba8);
+			Subtexture subtexture = image_item->image.get_texture();
+			PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
+			pb = pb.copy(subtexture.get_geometry());
 
 			last_border_size = border_size;
 			if (last_border_size < 0) last_border_size = 0;

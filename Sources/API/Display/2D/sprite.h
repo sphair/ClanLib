@@ -51,6 +51,7 @@ class CollisionOutline;
 class Canvas;
 class ResourceManager;
 class Font_Impl;
+class Subtexture;
 
 /// \brief Sprite class.
 class CL_API_DISPLAY Sprite
@@ -165,6 +166,9 @@ public:
 
 	/// \brief Returns the size of a frame. 0 is first frame.
 	Size get_frame_size(int frame) const;
+
+	/// \brief Return the texture of a frame. 0 is first frame
+	Subtexture get_frame_texture(int frame) const;
 
 	/// \brief Return the width of the current frame, shortcut for 'get_frame_size(get_current_frame()).width'
 	int get_width() const;

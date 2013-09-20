@@ -46,6 +46,7 @@
 #include "sprite_impl.h"
 #include "render_batch_triangle.h"
 #include "API/Display/Resources/display_cache.h"
+#include "API/Display/2D/subtexture.h"
 
 namespace clan
 {
@@ -538,6 +539,15 @@ Size Sprite::get_size() const
 {
 	return impl->get_frame(impl->current_frame)->position.get_size();
 }
+
+Subtexture Sprite::get_frame_texture(int frameno) const
+{
+	const Sprite_Impl::SpriteFrame *frame = impl->get_frame(frameno);
+	if(frame)
+		return Subtexture(frame->texture, frame->position);
+	throw Exception("Invalid frame number");
+}
+
 
 int Sprite::get_id() const
 {

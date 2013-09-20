@@ -143,6 +143,9 @@ public:
 	/// \brief Returns translation hot-spot.
 	void get_alignment(Origin &origin, int &x, int &y) const;
 
+	/// \brief Return the texture of the image
+	Subtexture get_texture() const;
+
 	/// \brief Get Size
 	///
 	/// \return size
