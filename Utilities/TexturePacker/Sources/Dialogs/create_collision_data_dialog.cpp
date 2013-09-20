@@ -115,24 +115,19 @@ void CreateCollisionDataDialog::on_close()
 
 void CreateCollisionDataDialog::generate_collision(const std::string &filename, const std::string &directory, OutlineAccuracy accuracy)
 {
-throw Exception("FIXME");
-/*
-	const std::vector<SpriteDescriptionFrame> &frames = sprite_item->sprite_description.get_frames();
-
-	for(size_t i = 0; i < frames.size(); ++i)
+	Canvas canvas = get_canvas();
+	unsigned int frame_size = sprite_item->sprite.get_frame_count();
+	for(unsigned int i = 0; i < frame_size; ++i)
 	{
-		PixelBuffer pb;
+		Subtexture subtexture = sprite_item->sprite.get_frame_texture(i);
+		PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
+		pb = pb.copy(subtexture.get_geometry());
 
-		pb = frames[i].texture.get_pixeldata(get_canvas());
-
-		if(frames[i].rect != pb.get_size())
-			pb = pb.copy(frames[i].rect);
-		
 		CollisionOutline generated(pb, 128, accuracy);
 
 		std::string output_filename;
 
-		if(frames.size() > 1)
+		if(frame_size > 1)
 		{
 			StringFormat f("%1\\%2_%3.out"); 
 			f.set_arg(1, directory); 
@@ -151,9 +146,9 @@ throw Exception("FIXME");
 		generated.save(output_filename);
 	}
 
-	std::string msg = string_format("%1 collision outlines generated", (int) frames.size());
+	std::string msg = string_format("%1 collision outlines generated", (int)frame_size);
 	message_box(this, "Collision outlines generated", msg, mb_buttons_ok, mb_icon_info);
-*/
+
 }
 
 void CreateCollisionDataDialog::update_expected_filenames()
