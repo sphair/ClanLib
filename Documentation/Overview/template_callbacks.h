@@ -4,9 +4,12 @@
 ClanLib includes a complete signalling library -- a signal library is a C++ template library that allow you to use type-safe C++ templates to setup function callbacks. 
 
 The library currently supports three different types of callback templates: 
-<ul><li>Signals and slots </li></ul>
-<ul><li>Virtual functions </li></ul>
-<ul><li>Callbacks </li></ul>
+
+<ul>
+<li>Signals and slots </li>
+<li>Virtual functions </li>
+<li>Callbacks </li>
+</ul>
 
 <h2>Signals and Slots</h2>
 

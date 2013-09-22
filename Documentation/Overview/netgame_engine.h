@@ -98,29 +98,33 @@ To illustrate how a game can be built using this system, the following listing s
 
 <h3>DiceWar Game Server to Client</h3>
 
-<ul><li>game-is-starting()  The game is starting, client does initialization  </li></ul>
-<ul><li>game-has-started()  The game has started -> ready to play!</li></ul>  
-<ul><li>game-player-joined-game(int player_id, string player_name, int visual_id)  A new player has joined the active game  </li></ul>
-<ul><li>game-player-left-game(int player_id)  A player has left the active game</li></ul>  
-<ul><li>game-set-maparea-ownership(int map_area_id, int player_id)  A map area has a new player ownership  </li></ul>
-<ul><li>game-set-maparea-army-strength(int map_area_id, int army_strength)  A map area has a new army strength</li></ul>  
-<ul><li>game-invalid-attack()  An attack was invalid</li></ul>  
-<ul><li>game-attacked-area(int map_area_from_id, int map_area_to_id)  A map area was attacked (marks start of an attack)  </li></ul>
-<ul><li>game-attack-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)  The result of an attack  </li></ul>
-<ul><li>game-defense-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)  The result of an attack also marks the end of an attack  </li></ul>
-<ul><li>game-attack-done()  An attack was completed (on all clients)</li></ul>  
-<ul><li>game-player-turn-started(int player_id)  A player started his turn</li></ul>  
-<ul><li>game-over(string title, string message)  The game is over</li></ul>  
-<ul><li>game-player-message(int player_id, string message)  A player sent a game message  </li></ul>
-<ul><li>game-system-message(string message)  The system sent an system message</li></ul>  
+<ul>
+<li>game-is-starting()  The game is starting, client does initialization  </li>
+<li>game-has-started()  The game has started -> ready to play!</li>
+<li>game-player-joined-game(int player_id, string player_name, int visual_id)  A new player has joined the active game  </li>
+<li>game-player-left-game(int player_id)  A player has left the active game</li>
+<li>game-set-maparea-ownership(int map_area_id, int player_id)  A map area has a new player ownership  </li>
+<li>game-set-maparea-army-strength(int map_area_id, int army_strength)  A map area has a new army strength</li>
+<li>game-invalid-attack()  An attack was invalid</li>
+<li>game-attacked-area(int map_area_from_id, int map_area_to_id)  A map area was attacked (marks start of an attack)  </li>
+<li>game-attack-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)  The result of an attack  </li>
+<li>game-defense-dice-result(int dice_result1, dice_result2, dice_result3, dice_result4, dice_result5, dice_result6, dice_result7, dice_result8)  The result of an attack also marks the end of an attack  </li>
+<li>game-attack-done()  An attack was completed (on all clients)</li>
+<li>game-player-turn-started(int player_id)  A player started his turn</li>
+<li>game-over(string title, string message)  The game is over</li>
+<li>game-player-message(int player_id, string message)  A player sent a game message  </li>
+<li>game-system-message(string message)  The system sent an system message</li>
+</ul>
 
 <h3>DiceWar Game Client to Server</h3>
 
-<ul><li>game-attack-area(int map_area_from_id, int map_area_to_id)  Attack an area  --> game-attacked-area </li></ul>
-<ul><li>game-attack-dice-result game-defense-dice-result game-set-maparea-ownership game-set-maparea-army-strength game-attack-done --> game-invalid-attack </li></ul>
-<ul><li>game-end-turn()  End player turn --? game-player-turn-started</li></ul>  
-<ul><li>game-battle-view-over()  Notify battle view is done  --> None</li></ul>  
-<ul><li>game-add-message(string message)  Send a chat message to game chat --> game-player-message  </li></ul>
+<ul>
+<li>game-attack-area(int map_area_from_id, int map_area_to_id)  Attack an area  --> game-attacked-area </li>
+<li>game-attack-dice-result game-defense-dice-result game-set-maparea-ownership game-set-maparea-army-strength game-attack-done --> game-invalid-attack </li>
+<li>game-end-turn()  End player turn --? game-player-turn-started</li>
+<li>game-battle-view-over()  Notify battle view is done  --> None</li>
+<li>game-add-message(string message)  Send a chat message to game chat --> game-player-message  </li>
+</ul>
 
 <h2>Dispatching Game Events to C++ Functions</h2>
 
@@ -130,13 +134,15 @@ Let's say that on the server side, we want to dissociate account operations even
 
 <h3>Account operations handlers</h3>
 
-Here we want to be able to handle 3 types of events : 
-<ul><li>Account-Creation events </li></ul>  
-<ul><li>Account-Modification events </li></ul>  
-<ul><li>Account-Deletion events </li></ul>  
-<br/>
+Here we want to be able to handle 3 types of events:
 
-We will then set each functions to handle each events : 
+<ul>
+<li>Account-Creation events </li>
+<li>Account-Modification events </li>
+<li>Account-Deletion events </li>
+</ul>
+
+We will then set each functions to handle each events:
 
 \code
 clan::NetGameEventDispatcher_v0 account_events;

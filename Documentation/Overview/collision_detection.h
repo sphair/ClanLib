@@ -23,11 +23,13 @@ Initially the contour following algorithm adds every pixel along the edge to the
 \ref clan::CollisionOutline generated("image.png", accuracy_high);
 The values for \ref clan::CollisionAccuracy are:
 
-<ul><li>accuracy_raw</li></ul>
-<ul><li>accuracy_high</li></ul> 
-<ul><li>accuracy_medium</li></ul> 
-<ul><li>accuracy_low</li></ul> 
-<ul><li>accuracy_poor</li></ul> 
+<ul>
+<li>accuracy_raw</li>
+<li>accuracy_high</li>
+<li>accuracy_medium</li>
+<li>accuracy_low</li>
+<li>accuracy_poor</li>
+</ul> 
 
 and their affects on generated outlines: 
 
@@ -166,7 +168,6 @@ The following piece of code shows how to access the metadata.
 <h2>Resources</h2>
 
 Collision information can be provided in resources as follows: 
-<br/>
 
 \<collisionoutline file="mysprite.col"/\>  <br/>
 \<collisionoutline file="mysprite.png" accuracy="medium" alpha_limit="128"/\>
