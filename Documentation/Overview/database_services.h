@@ -4,10 +4,13 @@
 <h2>General use</h2>
 
 Database access in ClanLib is basically handled through 4 classes: 
-\ref clan::DBConnection 
-\ref clan::DBCommand 
-\ref clan::DBReader 
-\ref clan::DBTransaction 
+
+<ul>
+<li>\ref clan::DBConnection </li>
+<li>\ref clan::DBCommand </li>
+<li>\ref clan::DBReader </li>
+<li>\ref clan::DBTransaction </li>
+</ul>
 
 To use ClanLib Database API with the ClanSqlite provider, you need to include these in your application: 
 

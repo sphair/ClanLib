@@ -1,13 +1,11 @@
 
 /*! \page UserInput User Input
 
-Input in ClanLib is accessed via a \ref clan::InputContext object, which is usually acquired from a \ref clan::DisplayWindow object. The input context interface is a container holding one or more \ref clan::InputDevice objects, each acting as either a keyboard, mouse, joystick or tablet source. The input device interface provides access to various polling functions or signal callbacks, which are invoked when ClanLib receives these input messages. 
-<br/>
+Input in ClanLib is accessed via a \ref clan::InputContext object, which is usually acquired from a \ref clan::DisplayWindow object. The input context interface is a container holding one or more \ref clan::InputDevice objects, each acting as either a keyboard, mouse, joystick or tablet source. The input device interface provides access to various polling functions or signal callbacks, which are invoked when ClanLib receives these input messages.
 
 The following example shows how to get the input devices for the first keyboard, mouse and joystick: 
-<br/>
+
 \code
- 
 clan::DisplayWindow window(640, 480, "Hello Input");
 clan::InputContext ic = window.get_ic();
 clan::InputDevice keyboard = ic.get_keyboard();
@@ -18,7 +16,6 @@ clan::InputDevice joystick = ic.get_joystick();
 Polling a device is fairly simple and straight forward (just call the appropriate functions), but the actual state of an input device does not always update immediately - in some cases they are updated based on input messages received from the underlying windowing system, which means that they will not update until you have made a call to \ref clan::KeepAlive::process(). The following code correctly polls for hitting escape to quit the loop: 
 
 \code
- 
 clan::DisplayWindow window(640, 480, "Hello Input");
 clan::InputContext ic = window.get_ic();
 clan::InputDevice keyboard = ic.get_keyboard();
@@ -39,7 +36,6 @@ while (true)
 An alternative to polling input devices is to set up callback functions that get invoked whenever an input event occurs. To do this, simply connect a slot function to the signal you want to listen in on: 
 
 \code
- 
 bool quit = false;
 void my_callback(const clan::InputEvent &event, const clan::InputState &state)
 {
@@ -81,6 +77,5 @@ int main(int, char**)
 	return 0;
 }
 \endcode
-
 
 */

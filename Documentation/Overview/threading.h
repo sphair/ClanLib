@@ -2,14 +2,18 @@
 /*! \page Threading Threading
 
 The following classes in ClanLib are related to threads: 
-\ref clan::Thread, \ref clan::Runnable 
-\ref clan::Mutex, \ref clan::MutexSection 
-\ref clan::ThreadLocalStorage 
+
+<ul>
+<li>\ref clan::Thread </li>
+<li>\ref clan::Runnable </li>
+<li>\ref clan::Mutex </li>
+<li>\ref clan::MutexSection </li>
+</ul>
 
 <h2>The Thread Class</h2>
 
 \ref clan::Thread is the class representing a handle to a thread. It exports functions to start threads, wait on threads and so on. To start a thread, call the \ref clan::Thread::start function. The start function exist in several different versions, which allow you to specify how to execute the thread main function in a way most convenient for your appliation. 
-<br/>
+
 One way is to use a method very common in other languages or libraries, such as Java. The application derives from the class \ref clan::Runnable and implements the \ref clan::Runnable::run function. A pointer to this class is then given to \ref clan::Thread::start: 
 
 \code
@@ -63,7 +67,8 @@ To wait on a thread to complete its execution, call \ref clan::Thread::join. If 
 
 <h2>Synchronization</h2>
 
-Classes in ClanLib are re-entrant (aka. apartment model), unless otherwise specified. This means that a class instance can only be safely accessed from one thread at a time. To ensure only one thread accesses data or functions simultanously, ClanLib provides the \ref clan::Mutex class. A mutex is an object that can be locked by only one thread at the same time. If any other thread tries to lock the mutex, it will block until the first thread releases its lock. 
+Classes in ClanLib are re-entrant (also known as the apartment model), unless otherwise specified. This means that a single class instance can only be safely accessed from one thread at a time (but multiple threads can
+access different class instances at the same time). To ensure only one thread accesses data or functions simultanously, ClanLib provides the \ref clan::Mutex class. A mutex is an object that can be locked by only one thread at the same time. If any other thread tries to lock the mutex, it will block until the first thread releases its lock. 
 
 \code
 class MyClass
@@ -113,50 +118,5 @@ void thread_main1()
 	}
 }
 \endcode
-
-<h2>Thread Local Storage</h2>
-
-Thread local storage, or TLS for short, is the mechanism by which each thread in a given multithreaded process allocates storage for thread-specific data. This can usually be done using compiler specific keywords, i.e. __declspec(thread) int tls_i = 1; for Visual C++. However, these usually imply some limitations that make it unsuitable for storing class variables in the TLS. 
-
-\ref clan::ThreadLocalStorage provides a way to store std::shared_ptr memory managed objects in the TLS. The function \ref clan::ThreadLocalStorage::get_variable returns a different variable for every thread. 
-
-A simple example: 
-
-\code
-class MyClass
-{
-public:
-	clan::String str;
-	int i;
-};
- 
-void thread_main()
-{
-	// Retrieve TLS variable:
-	std::shared_ptr tls_var(
-		clan::ThreadLocalStorage::get_variable("my_var"));
- 
-	if (tls_var.is_null())
-	{
-		// First time this thread tries to get this object.
-		// Create object and store it.
-		tls_var = clan::SharedPtr(new MyClass);
-		clan::ThreadLocalStorage::set_variable("my_var", tls_var);
-	}
- 
-	tls_var->str = "Hello";
-	tls_var->i = 42;
-}
- 
-clan::Thread thread1, thread2;
-thread1.start(&thread_main);
-thread2.start(&thread_main);
-thread1.join();
-thread2.join();
-\endcode
-
-If the thread has not been created by \ref clan::Thread, the application must create a \ref clan::ThreadLocalStorage instance in the thread before using the TLS functions. The TLS variables will be destroyed when the \ref clan::ThreadLocalStorage object is destroyed. For \ref clan::Thread objects, this happens when the thread main function finishes. 
-
-
 
 */

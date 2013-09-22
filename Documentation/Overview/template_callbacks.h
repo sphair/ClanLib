@@ -3,11 +3,10 @@
 
 ClanLib includes a complete signalling library -- a signal library is a C++ template library that allow you to use type-safe C++ templates to setup function callbacks. 
 
-The library currently supports three different types of callback templates: 
+The library currently supports two different types of callback templates: 
 
 <ul>
 <li>Signals and slots </li>
-<li>Virtual functions </li>
 <li>Callbacks </li>
 </ul>
 
@@ -70,39 +69,9 @@ signal.invoke(21, 42);
 
 \endcode
 
-<h2>Virtual Functions</h2>
-
-The clan::VirtualFunction_X template classes offers a different type of signal object, where each function connected replaces the previous object: 
-
-\code
-int slot_function1(int p1, int p2, clan::Super_2<int, int, int> &super)
-{
-	return p1 + p2;
-}
- 
-int slot_function2(int p1, int p2, clan::Super_2<int, int, int> &super)
-{
-	if (super.is_invokable())
-		return -super.invoke(p1, p2);
-	else
-		return 0;
-}
- 
-// Create signal and hook up slots:
-clan::VirtualFunction_2<int, int, int> signal;
-clan::Slot slot1 = signal.connect(&slot_function1);
-clan::Slot slot2 = signal.connect(&slot_function2);
- 
-// Emit signal:
-int result = signal.invoke(21, 42);
-// result becomes -(p1 + p2)
-\endcode
-
-In this example the \ref clan::VirtualFunction::invoke function calls slot_function2, which then calls slot_function1 - just like a virtual function in a derived class could do. 
-
 <h2>Callbacks</h2>
 
-The last type of callback template classes available is clan::Callback_X. It simply calls one callback function when invoked, just like a standard C style function pointer would do. 
+The second type of callback template classes available is clan::Callback_X. It simply calls one callback function when invoked, just like a standard C style function pointer would do. 
 
 \code
 
