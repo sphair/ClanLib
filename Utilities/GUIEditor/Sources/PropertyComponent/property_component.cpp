@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -50,18 +50,19 @@
 #include "ComponentTypes/PropertyItems/property_item_enabled.h"
 
 PropertyComponent::PropertyComponent(GuiEditorWindow *main_window)
-: GUIComponent(main_window), main_window(main_window), name_column_width(75), active_item(0), active_component(0), scrollbar(0)
+: clan::GUIComponent(main_window), main_window(main_window), name_column_width(75), active_item(0), active_component(0), scrollbar(0)
 {
 	set_tag_name("property-component");
 	set_clip_children(true);
-	part_header = GUIThemePart(this, "header");
-	part_header_name = GUIThemePart(this, "header name");
-	part_header_value = GUIThemePart(this, "header value");
-	part_row[0] = GUIThemePart(this, "row");
-	part_row[1] = GUIThemePart(this, "row");
+	
+	part_header = clan::GUIThemePart(this, "header");
+	part_header_name = clan::GUIThemePart(this, "header name");
+	part_header_value = clan::GUIThemePart(this, "header value");
+	part_row[0] = clan::GUIThemePart(this, "row");
+	part_row[1] = clan::GUIThemePart(this, "row");
 	part_row[1].set_pseudo_class("alternate", true);
-	part_item_name = GUIThemePart(this, "item name");
-	part_item_value = GUIThemePart(this, "item value");
+	part_item_name = clan::GUIThemePart(this, "item name");
+	part_item_value = clan::GUIThemePart(this, "item value");
 
 	func_input_pressed().set(this, &PropertyComponent::on_input_pressed);
 	func_input_released().set(this, &PropertyComponent::on_input_released);
@@ -69,7 +70,7 @@ PropertyComponent::PropertyComponent(GuiEditorWindow *main_window)
 	func_input_pointer_moved().set(this, &PropertyComponent::on_input_pointer_moved);
 	func_render().set(this, &PropertyComponent::on_render);
 
-	scrollbar = new ScrollBar(this);
+	scrollbar = new clan::ScrollBar(this);
 	scrollbar->set_vertical();
 	scrollbar->set_visible(false);
 
@@ -107,7 +108,7 @@ void PropertyComponent::on_selection_changed()
 	if (!selection.empty())
 	{
 		GridObject *item = selection[0];
-		GUIComponent *comp = item->get_component();
+		clan::GUIComponent *comp = item->get_component();
 
 		// add_property(new PropertyItemHeader("Properties"));
 
@@ -115,7 +116,7 @@ void PropertyComponent::on_selection_changed()
 
 		if (type != "grid")
 		{
-			Size comp_size = comp->get_geometry().get_size();
+			clan::Size comp_size = comp->get_geometry().get_size();
 			bool enable_width = true;
 			bool enable_height = true;
 
@@ -131,12 +132,12 @@ void PropertyComponent::on_selection_changed()
 				std::string equ_y = object->get_position_equation_y();
 
 				if (equ_x.empty())
-					add_property(new PropertyItemPosition("x1", StringHelp::int_to_text(object->get_geometry().left)));
+					add_property(new PropertyItemPosition("x1", clan::StringHelp::int_to_text(object->get_geometry().left)));
 				else
 					add_property(new PropertyItemPosition("x1", equ_x));
 
 				if (equ_y.empty())
-					add_property(new PropertyItemPosition("y1", StringHelp::int_to_text(object->get_geometry().top)));
+					add_property(new PropertyItemPosition("y1", clan::StringHelp::int_to_text(object->get_geometry().top)));
 				else
 					add_property(new PropertyItemPosition("y1", equ_y));
 
@@ -156,8 +157,8 @@ void PropertyComponent::on_selection_changed()
 
 			add_property(new PropertyItemPosition(PropertyItemPosition::type_width));
 			add_property(new PropertyItemPosition(PropertyItemPosition::type_height));
-			//add_property(new PropertyItemLineEdit("Width", StringHelp::int_to_text(comp_size.width)));
-			//add_property(new PropertyItemLineEdit("Height", StringHelp::int_to_text(comp_size.height)));
+			//add_property(new PropertyItemLineEdit("Width", clan::StringHelp::int_to_text(comp_size.width)));
+			//add_property(new PropertyItemLineEdit("Height", clan::StringHelp::int_to_text(comp_size.height)));
 			// le_w->set_enabled(enable_width);
 			// le_h->set_enabled(enable_height);
 		}
@@ -166,63 +167,63 @@ void PropertyComponent::on_selection_changed()
 
 		if (type == "button")
 		{
-			PushButton *co = dynamic_cast<PushButton*>(comp);
+			clan::PushButton *co = dynamic_cast<clan::PushButton*>(comp);
 			//add_property(new PropertyItemLineEdit("Text", co->get_text()));
 		}
 		else if (type == "lineedit")
 		{
-			LineEdit *co = dynamic_cast<LineEdit*>(comp);
+			clan::LineEdit *co = dynamic_cast<clan::LineEdit*>(comp);
 			//add_property(new PropertyItemLineEdit("Text",co->get_text()));
 		}
 		else if (type == "textedit")
 		{
-			TextEdit *co = dynamic_cast<TextEdit*>(comp);
+			clan::TextEdit *co = dynamic_cast<clan::TextEdit*>(comp);
 			//add_property(new PropertyItemLineEdit("Text",co->get_text()));
 		}
 		else if (type == "checkbox")
 		{
-			CheckBox *co = dynamic_cast<CheckBox*>(comp);
+			clan::CheckBox *co = dynamic_cast<clan::CheckBox*>(comp);
 			//add_property(new PropertyItemLineEdit("Text", co->get_text()));
 		}
 		else if (type == "radiobutton")
 		{
-			RadioButton *co = dynamic_cast<RadioButton*>(comp);
+			clan::RadioButton *co = dynamic_cast<clan::RadioButton*>(comp);
 			//add_property(new PropertyItemLineEdit("Text", co->get_text()));
 			//add_property(new PropertyItemLineEdit("Group Name", co->get_group_name()));
 			add_property(new PropertyItemGroupName());
 		}
 		else if (type == "label")
 		{
-			Label *co = dynamic_cast<Label*>(comp);
+			clan::Label *co = dynamic_cast<clan::Label*>(comp);
 			//add_property(new PropertyItemLineEdit("Text", co->get_text()));
 		}
 		else if (type == "statusbar")
 		{
-			StatusBar *co = dynamic_cast<StatusBar*>(comp);
+			clan::StatusBar *co = dynamic_cast<clan::StatusBar*>(comp);
 		}
 		else if (type == "frame")
 		{
-			Frame *co = dynamic_cast<Frame*>(comp);
+			clan::Frame *co = dynamic_cast<clan::Frame*>(comp);
 			//add_property(new PropertyItemLineEdit("Text", co->get_header_text()));
 		}
 		else if (type == "slider")
 		{
-			Slider *co = dynamic_cast<Slider*>(comp);
+			clan::Slider *co = dynamic_cast<clan::Slider*>(comp);
 			add_property(new PropertyItemMin());
 			add_property(new PropertyItemMax());
 			add_property(new PropertyItemTickCount());
 			add_property(new PropertyItemStepSize());
-			//add_property(new PropertyItemLineEdit("Min", StringHelp::int_to_text(co->get_min())));
-			//add_property(new PropertyItemLineEdit("Max", StringHelp::int_to_text(co->get_max())));
-			//add_property(new PropertyItemLineEdit("Tick Count", StringHelp::int_to_text(co->get_tick_count())));
-			//add_property(new PropertyItemLineEdit("Step Size", StringHelp::int_to_text(co->get_page_step())));
+			//add_property(new PropertyItemLineEdit("Min", clan::StringHelp::int_to_text(co->get_min())));
+			//add_property(new PropertyItemLineEdit("Max", clan::StringHelp::int_to_text(co->get_max())));
+			//add_property(new PropertyItemLineEdit("Tick Count", clan::StringHelp::int_to_text(co->get_tick_count())));
+			//add_property(new PropertyItemLineEdit("Step Size", clan::StringHelp::int_to_text(co->get_page_step())));
 		}
 		else if (type == "grid")
 		{
 			GridComponent *co = dynamic_cast<GridComponent*>(comp);
-			Size s = co->get_dialog_size();
-			//add_property(new PropertyItemLineEdit("Width", StringHelp::int_to_text(s.width)));
-			//add_property(new PropertyItemLineEdit("Height", StringHelp::int_to_text(s.height)));
+			clan::Size s = co->get_dialog_size();
+			//add_property(new PropertyItemLineEdit("Width", clan::StringHelp::int_to_text(s.width)));
+			//add_property(new PropertyItemLineEdit("Height", clan::StringHelp::int_to_text(s.height)));
 		}
 		else if (type == "menubar")
 		{
@@ -244,9 +245,9 @@ void PropertyComponent::on_selection_changed()
 		}
 		else if (type == "tab")
 		{
-			Tab *tab = dynamic_cast<Tab*>(comp);
+			clan::Tab *tab = dynamic_cast<clan::Tab*>(comp);
 			int current_page = tab->get_current_page_index();
-			TabPage *tab_page = tab->get_page(current_page);
+			clan::TabPage *tab_page = tab->get_page(current_page);
 			add_property(new PropertyItemPageLabel());
 			//add_property(new PropertyItemLineEdit("Page label", tab_page->get_label()));
 		}
@@ -273,17 +274,17 @@ void PropertyComponent::on_selection_changed()
 		// Other non-lineedit controls go here...
 		if (type == "tab")
 		{
-			Rect child_rect = get_child_rect(container);
+			clan::Rect child_rect = get_child_rect(container);
 
-			PushButton *add_tab = new PushButton(container);
-			add_tab->set_geometry(RectPS(child_rect.left, child_rect.bottom+10, 80,24));
+			clan::PushButton *add_tab = new clan::PushButton(container);
+			add_tab->set_geometry(clan::RectPS(child_rect.left, child_rect.bottom+10, 80,24));
 			add_tab->set_text("Add tab");
 
-			PushButton *del_tab = new PushButton(container);
-			del_tab->set_geometry(RectPS(child_rect.left, child_rect.bottom+10+32, 80,24));
+			clan::PushButton *del_tab = new clan::PushButton(container);
+			del_tab->set_geometry(clan::RectPS(child_rect.left, child_rect.bottom+10+32, 80,24));
 			del_tab->set_text("Delete tab");
 
-			Tab *tab = dynamic_cast<Tab*>(comp);
+			clan::Tab *tab = dynamic_cast<clan::Tab*>(comp);
 			add_tab->func_clicked().set(this, &PropertyComponent::on_add_tab, tab);
 			del_tab->func_clicked().set(this, &PropertyComponent::on_delete_tab, tab);
 		}
@@ -313,27 +314,27 @@ void PropertyComponent::on_selection_changed()
 	}
 }
 
-bool PropertyComponent::on_input_pressed(const InputEvent &input_event)
+bool PropertyComponent::on_input_pressed(const clan::InputEvent &input_event)
 {
 	return edit_state.on_input_pressed(input_event);
 }
 
-bool PropertyComponent::on_input_released(const InputEvent &input_event)
+bool PropertyComponent::on_input_released(const clan::InputEvent &input_event)
 {
 	return edit_state.on_input_released(input_event);
 }
 
-bool PropertyComponent::on_input_doubleclick(const InputEvent &input_event)
+bool PropertyComponent::on_input_doubleclick(const clan::InputEvent &input_event)
 {
 	return edit_state.on_input_doubleclick(input_event);
 }
 
-bool PropertyComponent::on_input_pointer_moved(const InputEvent &input_event)
+bool PropertyComponent::on_input_pointer_moved(const clan::InputEvent &input_event)
 {
 	return edit_state.on_input_pointer_moved(input_event);
 }
 
-void PropertyComponent::on_render(Canvas &canvas, const Rect &update_rect)
+void PropertyComponent::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	update_layout();
 	update_scrollbar_size(canvas);
@@ -352,10 +353,10 @@ void PropertyComponent::on_render(Canvas &canvas, const Rect &update_rect)
 		int row_height = items[i]->get_inactive_height(canvas, part_item_value, row_width-name_column_width);
 		if (row_height < part_item_name.get_css_height())
 			row_height = part_item_name.get_css_height();
-		Rect row(body.left, y, body.right, y+row_height);
-		Rect row_content = part_row[i%2].get_content_box(row);
-		Rect name_box(row_content.left, row_content.top, row_content.left+name_column_width, row_content.bottom);
-		Rect value_box(row_content.left+name_column_width, row_content.top, row_content.right, row_content.bottom);
+		clan::Rect row(body.left, y, body.right, y+row_height);
+		clan::Rect row_content = part_row[i%2].get_content_box(row);
+		clan::Rect name_box(row_content.left, row_content.top, row_content.left+name_column_width, row_content.bottom);
+		clan::Rect value_box(row_content.left+name_column_width, row_content.top, row_content.right, row_content.bottom);
 		part_row[i%2].render_box(canvas, row);
 		part_item_name.render_box(canvas, name_box);
 		part_item_name.render_text(canvas, items[i]->name, part_item_name.get_content_box(name_box));
@@ -363,7 +364,7 @@ void PropertyComponent::on_render(Canvas &canvas, const Rect &update_rect)
 		value_boxes.push_back(value_box);
 
 		if (items[i] != active_item || active_component == 0)
-			items[i]->render_inactive(canvas, part_item_value, value_box);
+			items[i]->render_inactive(canvas, part_item_value, value_box, update_rect);
 		//else
 		//	active_component->set_geometry(value_box);
 		y = row.bottom;
@@ -385,7 +386,7 @@ void PropertyComponent::deactivate()
 				for (size_t i = 0; i < items.size(); i++)
 					items[i]->selection_changed(selection);
 			}
-			catch (Exception &)
+			catch (clan::Exception &)
 			{
 				// to do: display a message box here perhaps?
 			}
@@ -398,7 +399,7 @@ void PropertyComponent::deactivate()
 	}
 }
 
-int PropertyComponent::hit_test(const Point &pos) const
+int PropertyComponent::hit_test(const clan::Point &pos) const
 {
 	for (size_t i = 0; i < value_boxes.size(); i++)
 	{
@@ -417,8 +418,8 @@ void PropertyComponent::activate_item(int index)
 		active_component = items[index]->activate();
 		if (active_component)
 		{
-			Point pos = component_to_screen_coords(value_boxes[index].get_top_left());
-			active_component->set_geometry(Rect(pos, value_boxes[index].get_size()));
+			clan::Point pos = component_to_screen_coords(value_boxes[index].get_top_left());
+			active_component->set_geometry(clan::Rect(pos, value_boxes[index].get_size()));
 			active_component->set_visible(true);
 			active_component->set_focus();
 		}
@@ -426,11 +427,11 @@ void PropertyComponent::activate_item(int index)
 	}
 }
 
-void PropertyComponent::on_filter_message(std::shared_ptr<GUIMessage> &message)
+void PropertyComponent::on_filter_message(std::shared_ptr<clan::GUIMessage> &message)
 {
 	if (active_component)
 	{
-		std::shared_ptr<GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<GUIMessage_Pointer>(message);
+		std::shared_ptr<clan::GUIMessage_Pointer> pointer = std::dynamic_pointer_cast<clan::GUIMessage_Pointer>(message);
 		if (pointer)
 		{
 			if (active_component != message->target && !active_component->is_ancestor_of(message->target))
@@ -441,16 +442,15 @@ void PropertyComponent::on_filter_message(std::shared_ptr<GUIMessage> &message)
 
 void PropertyComponent::update_layout()
 {
-	Rect geometry = get_size();
-	content = get_content_box();
-	header = Rect(content.left, content.top, content.right, content.top+part_header.get_css_height());
-	body = Rect(content.left, header.bottom, content.right, content.bottom);
+	clan::Rect geometry = get_size();
+	header = clan::Rect(content.left, content.top, content.right, content.top+part_header.get_css_height());
+	body = clan::Rect(content.left, header.bottom, content.right, content.bottom);
 	header_content = part_header.get_content_box(header);
-	header_name = Rect(header_content.left, header_content.top, header_content.left+name_column_width, header_content.bottom);
-	header_value = Rect(header_name.right, header_content.top, header_content.right, header_content.bottom);
+	header_name = clan::Rect(header_content.left, header_content.top, header_content.left+name_column_width, header_content.bottom);
+	header_value = clan::Rect(header_name.right, header_content.top, header_content.right, header_content.bottom);
 }
 
-void PropertyComponent::update_scrollbar_size(Canvas &canvas)
+void PropertyComponent::update_scrollbar_size(clan::Canvas &canvas)
 {
 	int row_width = content.get_width(); // to do: account for shrink box
 	int y = content.bottom;
@@ -471,7 +471,7 @@ void PropertyComponent::update_scrollbar_size(Canvas &canvas)
 	}
 }
 
-Rect PropertyComponent::get_header_resize_grabber() const
+clan::Rect PropertyComponent::get_header_resize_grabber() const
 {
-	return Rect(header_name.right-3, header.top, header_name.right+2, header.bottom);
+	return clan::Rect(header_name.right-3, header.top, header_name.right+2, header.bottom);
 }

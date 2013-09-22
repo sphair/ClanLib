@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -70,14 +70,14 @@ bool SnapLine::should_snap(SnapLine line1, SnapLine line2)
 	return true;
 }
 
-Vec2i SnapLine::snap(
-	const Rect &source_rect, 
+clan::Vec2i SnapLine::snap(
+	const clan::Rect &source_rect, 
 	const std::vector<SnapLine> &source_snaplines, 
 	const std::vector<SnapLineTarget> &targets)
 {
 	const int snap_distance = 5;
 
-	Vec2i delta;
+	clan::Vec2i delta;
 
 	for (size_t source_snapline_index = 0; source_snapline_index < source_snaplines.size(); source_snapline_index++)
 	{
@@ -114,7 +114,7 @@ int SnapLine::find_closest_snapdistance(const SnapLine &source_snapline, int sou
 
 			if(SnapLine::should_snap(target_snapline, source_snapline))
 			{
-				Rect target_rect = targets[t].rect;
+				clan::Rect target_rect = targets[t].rect;
 
 				int target_position = target_snapline.get_offset();
 				if(source_snapline.is_horizontal())

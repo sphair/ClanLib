@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,15 +38,15 @@ class GridEditStateObjectMoving : public GridEditStateHandler
 public:
 	GridEditStateObjectMoving();
 
-	bool on_input_pressed(const InputEvent &input_event);
-	bool on_input_released(const InputEvent &input_event);
-	bool on_input_doubleclick(const InputEvent &input_event);
-	bool on_input_pointer_moved(const InputEvent &input_event);
+	bool on_input_pressed(const clan::InputEvent &input_event);
+	bool on_input_released(const clan::InputEvent &input_event);
+	bool on_input_doubleclick(const clan::InputEvent &input_event);
+	bool on_input_pointer_moved(const clan::InputEvent &input_event);
 
 private:
-	void move_to(const Point &mouse_pos, bool perform_snap);
+	void move_to(const clan::Point &mouse_pos, bool perform_snap);
 
 	GridObject *object;
-	Point start;
-	Rect start_geometry;
+	clan::Point start;
+	clan::Rect start_geometry;
 };

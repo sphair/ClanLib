@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,17 +34,17 @@
 class PropertyItemAnchor : public PropertyItem
 {
 public:
-	PropertyItemAnchor() : cap_tl(cl_anchor_top_left), cap_br(cl_anchor_top_left)
+	PropertyItemAnchor() : cap_tl(clan::anchor_top_left), cap_br(clan::anchor_top_left)
 	{
 		name = "Anchor";
 	}
 
-	GUIComponent *activate()
+	clan::GUIComponent *activate()
 	{
 		return new AnchorPopup(cap_tl, cap_br, property_component);
 	}
 
-	void deactivate(GUIComponent *component)
+	void deactivate(clan::GUIComponent *component)
 	{
 		cap_tl = static_cast<AnchorPopup*>(component)->get_anchor_tl();
 		cap_br = static_cast<AnchorPopup*>(component)->get_anchor_br();
@@ -53,34 +53,34 @@ public:
 
 	std::string get_value()
 	{
-		return string_format("TL: %1 BR: %2", to_string(cap_tl), to_string(cap_br));
+		return clan::string_format("TL: %1 BR: %2", to_string(cap_tl), to_string(cap_br));
 	}
 
-	std::string to_string(ComponentAnchorPoint cap)
+	std::string to_string(clan::ComponentAnchorPoint cap)
 	{
 		switch (cap)
 		{
-		case cl_anchor_top_left:
+		case clan::anchor_top_left:
 			return "top left";
-		case cl_anchor_top_right:
+		case clan::anchor_top_right:
 			return "top right";
-		case cl_anchor_bottom_left:
+		case clan::anchor_bottom_left:
 			return "bottom left";
-		case cl_anchor_bottom_right:
+		case clan::anchor_bottom_right:
 			return "bottom right";
-		case cl_anchor_relative:
+		case clan::anchor_relative:
 			return "relative";
 		default:
 			return "unknown";
 		}
 	}
 
-	int get_inactive_height(Canvas &canvas, GUIThemePart &part, int width)
+	int get_inactive_height(clan::Canvas &canvas, clan::GUIThemePart &part, int width)
 	{
 		return part.get_font().get_text_size(canvas, get_value()).height;
 	}
 
-	void render_inactive(Canvas &canvas, GUIThemePart &part, const Rect &rect)
+	void render_inactive(clan::Canvas &canvas, clan::GUIThemePart &part, const clan::Rect &rect, const clan::Rect &clip_rect)
 	{
 		part.render_text(canvas, get_value(), rect);
 	}
@@ -102,6 +102,6 @@ public:
 	}
 
 private:
-	ComponentAnchorPoint cap_tl;
-	ComponentAnchorPoint cap_br;
+	clan::ComponentAnchorPoint cap_tl;
+	clan::ComponentAnchorPoint cap_br;
 };

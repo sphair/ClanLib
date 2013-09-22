@@ -105,24 +105,24 @@ void GUILayoutProvider_Corners::set_preferred_size(const Size &size)
 
 Point GUILayoutProvider_Corners::get_point(const Rect &rect, ComponentAnchorPoint ap, int dist_x, int dist_y)
 {
-	if (ap == cl_anchor_top_left)
+	if (ap == anchor_top_left)
 	{
 		return Point(dist_x, dist_y);
 	}
-	else if (ap == cl_anchor_top_right)
+	else if (ap == anchor_top_right)
 	{
 		return Point(rect.get_width()-dist_x, dist_y);
 	}
-	else if (ap == cl_anchor_bottom_left)
+	else if (ap == anchor_bottom_left)
 	{
 		return Point(dist_x, rect.get_height()-dist_y);
 	}
-	else if (ap == cl_anchor_bottom_right)
+	else if (ap == anchor_bottom_right)
 	{
 		return Point(rect.get_width()-dist_x, rect.get_height()-dist_y);
 	}
 
-	// ap == cl_anchor_relative
+	// ap == anchor_relative
 	return Point(rect.get_width()*dist_x, rect.get_height()*dist_y);
 }
 

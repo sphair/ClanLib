@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,10 +40,10 @@ public:
 	{
 	}
 
-	GUIComponent *create_component(GUIComponent *parent) const
+	clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		GUIComponent *component = new Type(parent);
-		component->set_geometry(Rect(0, 0, 75, 23));
+		clan::GUIComponent *component = new Type(parent);
+		component->set_geometry(clan::Rect(0, 0, 75, 23));
 		return component;
 	}
 };

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,12 +36,12 @@ public:
 	ImageViewComponentType(const std::string &xmlname, const std::string &name, int id, const std::string &icon)	
 	: ComponentType(xmlname, name, id, icon) {}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		ImageView *component = new ImageView(parent);
-		component->set_geometry(Rect(0, 0, 128, 128));
+		clan::ImageView *component = new clan::ImageView(parent);
+		component->set_geometry(clan::Rect(0, 0, 128, 128));
 
-		Image image = Image::resource(parent->get_canvas(), "ImageViewDefaultImage", (parent->get_resources()));
+		clan::Image image = clan::Image::resource(parent->get_canvas(), "ImageViewDefaultImage", (parent->get_resources()));
 		component->set_image(image);
 		component->set_scale_to_fit(true);
 		return component;

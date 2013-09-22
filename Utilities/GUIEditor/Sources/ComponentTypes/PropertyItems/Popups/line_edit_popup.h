@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,14 +33,14 @@
 class LineEditPopup : public PropertyItemPopup
 {
 public:
-	LineEditPopup(GUIComponent *parent);
+	LineEditPopup(clan::GUIComponent *parent);
 	~LineEditPopup();
 
-	LineEdit *get_lineedit() { return lineedit; }
+	clan::LineEdit *get_lineedit() { return lineedit; }
 
 private:
 	void on_resized();
 	bool on_focus_gained();
 
-	LineEdit *lineedit;
+	clan::LineEdit *lineedit;
 };

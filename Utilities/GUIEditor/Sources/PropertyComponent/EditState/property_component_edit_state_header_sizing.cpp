@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,9 +35,9 @@ PropertyComponentEditStateHeaderSizing::PropertyComponentEditStateHeaderSizing()
 {
 }
 
-bool PropertyComponentEditStateHeaderSizing::on_input_pressed(const InputEvent &e)
+bool PropertyComponentEditStateHeaderSizing::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		start = e.mouse_pos;
 		start_column_width = property_component->name_column_width;
@@ -57,9 +57,9 @@ bool PropertyComponentEditStateHeaderSizing::on_input_pressed(const InputEvent &
 	}
 }
 
-bool PropertyComponentEditStateHeaderSizing::on_input_released(const InputEvent &e)
+bool PropertyComponentEditStateHeaderSizing::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		property_component->capture_mouse(false);
 		property_component->edit_state.set_pseudo_class(PropertyComponentEditState::state_none);
@@ -71,12 +71,12 @@ bool PropertyComponentEditStateHeaderSizing::on_input_released(const InputEvent 
 	}
 }
 
-bool PropertyComponentEditStateHeaderSizing::on_input_doubleclick(const InputEvent &e)
+bool PropertyComponentEditStateHeaderSizing::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateHeaderSizing::on_input_pointer_moved(const InputEvent &e)
+bool PropertyComponentEditStateHeaderSizing::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	int delta = e.mouse_pos.x - start.x;
 

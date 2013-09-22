@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,12 +28,11 @@
 
 #pragma once
 
-class ViewBorder : public GUIComponent
+class ViewBorder : public clan::GUIComponent
 {
 public:
-	ViewBorder(GUIComponent *parent);
+	ViewBorder(clan::GUIComponent *parent);
 
 	void on_resized();
-	void on_render(Canvas &canvas, const Rect &update_rect);
-
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 };

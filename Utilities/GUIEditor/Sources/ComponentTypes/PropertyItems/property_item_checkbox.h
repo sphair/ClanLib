@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,23 +34,23 @@ public:
 	PropertyItemCheckbox(const std::string &name) { this->name = name; }
 	PropertyItemCheckbox(const std::string &name, bool value) { this->name = name; this->value = value; }
 
-	GUIComponent *activate()
+	clan::GUIComponent *activate()
 	{
 		value = !value;
 		property_component->deactivate();
 		return 0;
 	}
 
-	void deactivate(GUIComponent *component)
+	void deactivate(clan::GUIComponent *component)
 	{
 	}
 
-	int get_inactive_height(Canvas &canvas, GUIThemePart &part, int width)
+	int get_inactive_height(clan::Canvas &canvas, clan::GUIThemePart &part, int width)
 	{
 		return 0;
 	}
 
-	void render_inactive(Canvas &canvas, GUIThemePart &part, const Rect &rect)
+	void render_inactive(clan::Canvas &canvas, clan::GUIThemePart &part, const clan::Rect &rect, const clan::Rect &clip_rect)
 	{
 		std::string text;
 		if(value == true)

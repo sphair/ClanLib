@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -43,8 +43,8 @@ public:
 	{
 		if (!selection.empty())
 		{
-			GUIComponent *comp = selection[0]->get_component();
-			TabPage *tab_page = dynamic_cast<TabPage*>(comp);
+			clan::GUIComponent *comp = selection[0]->get_component();
+			clan::TabPage *tab_page = dynamic_cast<clan::TabPage*>(comp);
 			if (tab_page)
 				value = tab_page->get_label();
 		}
@@ -52,13 +52,13 @@ public:
 
 	void apply_changes(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
+		clan::GUIComponent *comp = object->get_component();
 
-		Tab *tab = dynamic_cast<Tab*>(comp);
+		clan::Tab *tab = dynamic_cast<clan::Tab*>(comp);
 		if (tab)
 		{
 			int current_page = tab->get_current_page_index();
-			TabPage *tab_page = tab->get_page(current_page);
+			clan::TabPage *tab_page = tab->get_page(current_page);
 			//tab_page->set_label(value);
 		}
 	}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -78,7 +78,7 @@ void Selection::remove_object(GridObject *object)
 	}
 }
 
-Signal_v0 & Selection::sig_selection_changed()
+clan::Signal_v0 & Selection::sig_selection_changed()
 {
 	return signal_selection_changed;
 }

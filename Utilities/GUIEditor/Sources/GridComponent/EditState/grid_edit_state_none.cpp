@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,9 +37,9 @@ GridEditStateNone::GridEditStateNone()
 {
 }
 
-bool GridEditStateNone::on_input_pressed(const InputEvent &e)
+bool GridEditStateNone::on_input_pressed(const clan::InputEvent &e)
 {
-	if(e.id == keycode_delete)
+	if(e.id == clan::keycode_delete)
 	{
 		std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 		for (size_t i = 0; i < selection.size(); i++)
@@ -55,19 +55,19 @@ bool GridEditStateNone::on_input_pressed(const InputEvent &e)
 	return false;
 }
 
-bool GridEditStateNone::on_input_released(const InputEvent &e)
+bool GridEditStateNone::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_right)
+	if (e.id == clan::mouse_right)
 	{
 		GridObject *object = grid->find_object_at(e.mouse_pos);
 		if (object)
 		{
-			grid->set_cursor(cursor_arrow);
-			Point pos = e.mouse_pos;
+			grid->set_cursor(clan::cursor_arrow);
+			clan::Point pos = e.mouse_pos;
 			pos.x += grid->component_container->get_geometry().left;
 			pos.y += grid->component_container->get_geometry().top;
 
-			PopupMenu menu;
+			clan::PopupMenu menu;
 			object->get_component_type()->on_show_context_menu(menu, object);
 			if(menu.get_item_count() > 0)
 			{
@@ -80,47 +80,47 @@ bool GridEditStateNone::on_input_released(const InputEvent &e)
 	return false;
 }
 
-bool GridEditStateNone::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateNone::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateNone::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateNone::on_input_pointer_moved(const clan::InputEvent &e)
 {
-	StandardCursor cursor = cursor_arrow;
+	clan::StandardCursor cursor = clan::cursor_arrow;
 	if (grid->get_boundary_grabber_se().contains(e.mouse_pos))
-		cursor = cursor_size_nwse;
+		cursor = clan::cursor_size_nwse;
 	else if (grid->get_boundary_grabber_s().contains(e.mouse_pos))
-		cursor = cursor_size_ns;
+		cursor = clan::cursor_size_ns;
 	else if (grid->get_boundary_grabber_e().contains(e.mouse_pos))
-		cursor = cursor_size_we;
+		cursor = clan::cursor_size_we;
 
 	GridObject *object = grid->find_object_at(e.mouse_pos);
 	if (object)
-		cursor = cursor_size_all;
+		cursor = clan::cursor_size_all;
 
 	std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 	for (size_t i = 0; i < selection.size(); i++)
 	{
 		GridObject *h = selection[i];
-		Point h_mouse_pos = grid->grid_to_object_coords(h, e.mouse_pos);
+		clan::Point h_mouse_pos = grid->grid_to_object_coords(h, e.mouse_pos);
 
 		if (h->get_grabber_e().contains(h_mouse_pos))
-			cursor = cursor_size_we;
+			cursor = clan::cursor_size_we;
 		else if (h->get_grabber_se().contains(h_mouse_pos))
-			cursor = cursor_size_nwse;
+			cursor = clan::cursor_size_nwse;
 		else if (h->get_grabber_s().contains(h_mouse_pos))
-			cursor = cursor_size_ns;
+			cursor = clan::cursor_size_ns;
 		else if (h->get_grabber_sw().contains(h_mouse_pos))
-			cursor = cursor_size_nesw;
+			cursor = clan::cursor_size_nesw;
 		else if (h->get_grabber_w().contains(h_mouse_pos))
-			cursor = cursor_size_we;
+			cursor = clan::cursor_size_we;
 		else if (h->get_grabber_nw().contains(h_mouse_pos))
-			cursor = cursor_size_nwse;
+			cursor = clan::cursor_size_nwse;
 		else if (h->get_grabber_n().contains(h_mouse_pos))
-			cursor = cursor_size_ns;
+			cursor = clan::cursor_size_ns;
 		else if (h->get_grabber_ne().contains(h_mouse_pos))
-			cursor = cursor_size_nesw;
+			cursor = clan::cursor_size_nesw;
 	}
 
 	grid->set_cursor(cursor);

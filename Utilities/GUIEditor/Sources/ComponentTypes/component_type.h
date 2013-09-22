@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -39,8 +39,8 @@ public:
 	{
 	}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const = 0;
-	virtual void on_show_context_menu(PopupMenu &menu, GridObject *grid_object) { }
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const = 0;
+	virtual void on_show_context_menu(clan::PopupMenu &menu, GridObject *grid_object) { }
 
 	std::string xmlname;
 	std::string name;

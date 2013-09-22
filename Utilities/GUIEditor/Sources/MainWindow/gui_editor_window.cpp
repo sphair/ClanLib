@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,8 +37,8 @@
 
 enum MainToolbarID { main_toolbar_new, main_toolbar_open, main_toolbar_saveas, main_toolbar_save };
 
-GuiEditorWindow::GuiEditorWindow(GUIManager *gui_manager)
-: GUIComponent(gui_manager, get_startup_description()),
+GuiEditorWindow::GuiEditorWindow(clan::GUIManager *gui_manager)
+: clan::Window(gui_manager, get_startup_description()),
  grid_component(0), property_component(0), selected_tool(1337)
 {
 	ComponentTypes::initialize();
@@ -50,7 +50,7 @@ GuiEditorWindow::GuiEditorWindow(GUIManager *gui_manager)
 
 	create_components();
 //	populate_menubar();
-	ResourceManager resources = get_resources();
+	clan::ResourceManager resources = get_resources();
 	populate_main_toolbar(resources);
 	populate_tools_toolbar(resources);
 
@@ -62,25 +62,25 @@ GuiEditorWindow::~GuiEditorWindow()
 {
 	ComponentTypes::deinitialize();
 
-	// We do not have to free the GUI components here because the GUIComponent
+	// We do not have to free the GUI components here because the clan::GUIComponent
 	// destructor deletes all child components.
 }
 
-GUITopLevelDescription GuiEditorWindow::get_startup_description()
+clan::GUITopLevelDescription GuiEditorWindow::get_startup_description()
 {
-	GUITopLevelDescription desc;
+	clan::GUITopLevelDescription desc;
 	desc.set_title("ClanLib GUI Editor");
 	desc.set_allow_resize(true);
-	desc.set_size(Size(1100, 768), false);
+	desc.set_size(clan::Size(1100, 768), false);
 	return desc;
 }
 
 void GuiEditorWindow::create_components()
 {
-//	menubar = new MenuBar(this);
-	toolbar_main = new ToolBar(this);
-	toolbar_tools = new ToolBar(this);
-	statusbar = new StatusBar(this);
+//	menubar = new clan::MenuBar(this);
+	toolbar_main = new clan::ToolBar(this);
+	toolbar_tools = new clan::ToolBar(this);
+	statusbar = new clan::StatusBar(this);
 	statusbar->set_status_text("Ready");
 	view_border = new ViewBorder(this);
 	property_component = new PropertyComponent(this);
@@ -91,14 +91,14 @@ void GuiEditorWindow::create_components()
 
 void GuiEditorWindow::populate_menubar()
 {
-	PopupMenu menu_file;
+	clan::PopupMenu menu_file;
 	menu_file.insert_item("New").set_enabled(false);
 	menu_file.insert_item("Open").set_enabled(false);
 	menu_file.insert_item("Save").set_enabled(false);
 	menu_file.insert_item("Exit").set_enabled(false);
 	menubar->add_menu("File", menu_file);
 
-	PopupMenu menu_edit;
+	clan::PopupMenu menu_edit;
 	menu_edit.insert_item("Undo").set_enabled(false);
 	menu_edit.insert_item("Redo").set_enabled(false);
 	menu_edit.insert_item("Cut").set_enabled(false);
@@ -108,45 +108,45 @@ void GuiEditorWindow::populate_menubar()
 	menu_edit.insert_item("Select All").set_enabled(false);
 	menubar->add_menu("Edit", menu_edit);
 /*
-	PopupMenu menu_view;
+	clan::PopupMenu menu_view;
 	menubar->add_menu("View", menu_view);
 */
-/*	PopupMenu menu_tools;
+/*	clan::PopupMenu menu_tools;
 	menu_tools.insert_item("Options");
-	PopupMenuItem pmi_source_generator = menu_tools.insert_item("Source Generator...");
+	clan::PopupMenuItem pmi_source_generator = menu_tools.insert_item("Source Generator...");
 	pmi_source_generator.func_clicked().set(this, &GuiEditorWindow::on_menu_source_generator);
 	menubar->add_menu("Tools", menu_tools);*/
 
-	PopupMenu menu_help;
+	clan::PopupMenu menu_help;
 	menu_help.insert_item("About GUI Editor").set_enabled(false);
 	menubar->add_menu("Help", menu_help);
 }
 
-void GuiEditorWindow::populate_tools_toolbar(ResourceManager &resources)
+void GuiEditorWindow::populate_tools_toolbar(clan::ResourceManager resources)
 {
 	toolbar_tools->func_item_selected().set(this, &GuiEditorWindow::on_tool_selected);
 
-	Sprite sprite = Sprite::resource(get_canvas(), "Pointer", resources);
-	ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, "Select", 1337);
+	clan::Sprite sprite = clan::Sprite::resource(get_canvas(), "Pointer", resources);
+	clan::ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, "Select", 1337);
 	tbi.set_toggling(true);
 
 	const std::vector<ComponentType *> &types = ComponentTypes::get_types();
 	for (std::vector<ComponentType *>::size_type index = 0; index < types.size(); index++)
 	{
-		Sprite sprite = Sprite::resource(get_canvas(), types[index]->resource_icon, resources);
-		ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
+		clan::Sprite sprite = clan::Sprite::resource(get_canvas(), types[index]->resource_icon, resources);
+		clan::ToolBarItem tbi = toolbar_tools->insert_item(sprite, 0, types[index]->name, types[index]->id);
 		tbi.set_toggling(true);
 	}
 }
 
-void GuiEditorWindow::populate_main_toolbar(ResourceManager &resources)
+void GuiEditorWindow::populate_main_toolbar(clan::ResourceManager resources)
 {
 	toolbar_main->func_item_clicked().set(this, &GuiEditorWindow::on_main_toolbar_clicked);
 
-	toolbar_main->insert_item(Sprite::resource(get_canvas(), "ToolbarNew", resources), 0, "New", main_toolbar_new);
-	toolbar_main->insert_item(Sprite::resource(get_canvas(), "ToolbarOpen", resources), 0, "Open", main_toolbar_open);
-	toolbar_main->insert_item(Sprite::resource(get_canvas(), "ToolbarSaveAs", resources), 0, "Save As", main_toolbar_saveas);
-	toolbar_main->insert_item(Sprite::resource(get_canvas(), "ToolbarSave", resources), 0, "Save", main_toolbar_save);
+	toolbar_main->insert_item(clan::Sprite::resource(get_canvas(), "ToolbarNew", resources), 0, "New", main_toolbar_new);
+	toolbar_main->insert_item(clan::Sprite::resource(get_canvas(), "ToolbarOpen", resources), 0, "Open", main_toolbar_open);
+	toolbar_main->insert_item(clan::Sprite::resource(get_canvas(), "ToolbarSaveAs", resources), 0, "Save As", main_toolbar_saveas);
+	toolbar_main->insert_item(clan::Sprite::resource(get_canvas(), "ToolbarSave", resources), 0, "Save", main_toolbar_save);
 }
 
 bool GuiEditorWindow::on_close()
@@ -160,22 +160,22 @@ void GuiEditorWindow::on_resized()
 	update_child_positions();
 }
 
-void GuiEditorWindow::on_tool_selected(ToolBarItem item)
+void GuiEditorWindow::on_tool_selected(clan::ToolBarItem item)
 {
 	selected_tool = item.get_id();
 }
 
 void GuiEditorWindow::update_child_positions()
 {
-	Rect client_area = get_content_box();
-	Size size = client_area.get_size();
+	clan::Rect client_area = get_client_area();
+	clan::Size size = client_area.get_size();
 
-//	menubar->set_geometry(Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
-	toolbar_main->set_geometry(Rect(client_area.left, client_area.top /*+ 22*/, client_area.right, client_area.top/*+22*/+31));
-	toolbar_tools->set_geometry(Rect(client_area.left, client_area.top/*+22*/+31, client_area.left+24*5, client_area.bottom-24));
-	statusbar->set_geometry(Rect(client_area.left, client_area.bottom-24, client_area.right, client_area.bottom));
-	property_component->set_geometry(Rect(client_area.right-200, client_area.top/*+22*/+31, client_area.right, client_area.bottom-24));
-	view_border->set_geometry(Rect(client_area.left+24*5, client_area.top/*+22*/+31, client_area.right-200, client_area.bottom-24));
+//	menubar->set_geometry(clan::Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
+	toolbar_main->set_geometry(clan::Rect(client_area.left, client_area.top /*+ 22*/, client_area.right, client_area.top/*+22*/+31));
+	toolbar_tools->set_geometry(clan::Rect(client_area.left, client_area.top/*+22*/+31, client_area.left+24*5, client_area.bottom-24));
+	statusbar->set_geometry(clan::Rect(client_area.left, client_area.bottom-24, client_area.right, client_area.bottom));
+	property_component->set_geometry(clan::Rect(client_area.right-200, client_area.top/*+22*/+31, client_area.right, client_area.bottom-24));
+	view_border->set_geometry(clan::Rect(client_area.left+24*5, client_area.top/*+22*/+31, client_area.right-200, client_area.bottom-24));
 	view_border->on_resized();
 }
 
@@ -188,11 +188,11 @@ void GuiEditorWindow::create_new_document()
 	grid_component = new GridComponent(view_border, this);
 
 	grid_component->func_boundary_resized.set(this, &GuiEditorWindow::on_grid_resized);
-	grid_component->set_boundary_size(Size(320,200));
-	property_component->set_dialog_size(Size(320,200));
+	grid_component->set_boundary_size(clan::Size(320,200));
+	property_component->set_dialog_size(clan::Size(320,200));
 }
 
-void GuiEditorWindow::on_main_toolbar_clicked(ToolBarItem item)
+void GuiEditorWindow::on_main_toolbar_clicked(clan::ToolBarItem item)
 {
 	switch(item.get_id())
 	{
@@ -240,10 +240,10 @@ void GuiEditorWindow::on_main_toolbar_clicked(ToolBarItem item)
 
 std::string GuiEditorWindow::show_open_file_dialog()
 {
-	OpenFileDialog dlg(this);
+	clan::OpenFileDialog dlg(this);
 	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
 	dlg.add_filter("All files", "*.*");
-	dlg.set_initial_directory(System::get_exe_path());
+	dlg.set_initial_directory(clan::System::get_exe_path());
 	if(dlg.show())
 		return dlg.get_filename();
 	else
@@ -252,10 +252,10 @@ std::string GuiEditorWindow::show_open_file_dialog()
 
 std::string GuiEditorWindow::show_save_file_dialog()
 {
-	SaveFileDialog dlg(this);
+	clan::SaveFileDialog dlg(this);
 	dlg.add_filter("XML and GUI files", "*.xml;*.gui", true);
 	dlg.add_filter("All files", "*.*");
-	dlg.set_initial_directory(System::get_exe_path());
+	dlg.set_initial_directory(clan::System::get_exe_path());
 	if(dlg.show())
 		return dlg.get_filename();
 	else
@@ -280,17 +280,16 @@ void GuiEditorWindow::on_grid_resized()
 	property_component->set_dialog_size(grid_component->get_dialog_size());
 }
 
-void GuiEditorWindow::on_process_messages(std::shared_ptr<GUIMessage> &msg)
+void GuiEditorWindow::on_process_messages(std::shared_ptr<clan::GUIMessage> &msg)
 {
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	std::shared_ptr<clan::GUIMessage_Input> input_msg = std::dynamic_pointer_cast<clan::GUIMessage_Input>(msg);
 	if (input_msg)
 	{
-		
-		const InputEvent &e = input_msg->input_event;
+		const clan::InputEvent &e = input_msg->input_event;
 
-		if (e.type == InputEvent::pressed)
+		if (e.type == clan::InputEvent::pressed)
 		{
-			if (e.id == keycode_prior)
+			if (e.id == clan::keycode_prior)
 			{
 				if (selection.empty() && grid_component->get_first_child())
 				{
@@ -313,7 +312,7 @@ void GuiEditorWindow::on_process_messages(std::shared_ptr<GUIMessage> &msg)
 				}
 				grid_component->request_repaint();
 			}
-			else if (e.id == keycode_next)
+			else if (e.id == clan::keycode_next)
 			{
 				if (selection.empty() && grid_component->get_first_child())
 				{
@@ -336,13 +335,13 @@ void GuiEditorWindow::on_process_messages(std::shared_ptr<GUIMessage> &msg)
 				}
 				grid_component->request_repaint();
 			}
-			else if (e.id == keycode_f1)
+			else if (e.id == clan::keycode_f1)
 			{
 				toolbar_tools->get_item_by_id(1337).set_pressed(true);
 			}
 		}
 	}
-	std::shared_ptr<GUIMessage_Close> close_msg = std::dynamic_pointer_cast<GUIMessage_Close>(msg);
+	std::shared_ptr<clan::GUIMessage_Close> close_msg = std::dynamic_pointer_cast<clan::GUIMessage_Close>(msg);
 	if (close_msg)
 	{
 		exit_with_code(0);

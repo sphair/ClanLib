@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,15 +29,15 @@
 #include "precomp.h"
 #include "property_item_popup.h"
 
-PropertyItemPopup::PropertyItemPopup(GUIComponent *parent)
-: GUIComponent(parent, get_toplevel_description())
+PropertyItemPopup::PropertyItemPopup(clan::GUIComponent *parent)
+: clan::GUIComponent(parent, get_toplevel_description())
 {
 	set_tag_name("tooltip"); // why?
 }
 
-GUITopLevelDescription PropertyItemPopup::get_toplevel_description()
+clan::GUITopLevelDescription PropertyItemPopup::get_toplevel_description()
 {
-	GUITopLevelDescription desc;
+	clan::GUITopLevelDescription desc;
 	desc.set_visible(false);
 	desc.set_topmost(true);
 	desc.set_drop_shadow(false);

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,18 +36,18 @@ class GridEditStateObjectSizing : public GridEditStateHandler
 public:
 	GridEditStateObjectSizing();
 
-	bool on_input_pressed(const InputEvent &input_event);
-	bool on_input_released(const InputEvent &input_event);
-	bool on_input_doubleclick(const InputEvent &input_event);
-	bool on_input_pointer_moved(const InputEvent &input_event);
+	bool on_input_pressed(const clan::InputEvent &input_event);
+	bool on_input_released(const clan::InputEvent &input_event);
+	bool on_input_doubleclick(const clan::InputEvent &input_event);
+	bool on_input_pointer_moved(const clan::InputEvent &input_event);
 
 private:
-	void resize_to(const Point &mouse_pos, bool perform_snap);
-	Rect resize_rect(Rect geometry, Vec2i delta) const;
+	void resize_to(const clan::Point &mouse_pos, bool perform_snap);
+	clan::Rect resize_rect(clan::Rect geometry, clan::Vec2i delta) const;
 	std::vector<SnapLine> get_filtered_snaplines(const std::vector<SnapLine> &original_snaplines);
 
 	size_t primary_object_index;
-	Point start;
-	std::vector<Rect> start_geometry;
-	Vec2i dir;
+	clan::Point start;
+	std::vector<clan::Rect> start_geometry;
+	clan::Vec2i dir;
 };

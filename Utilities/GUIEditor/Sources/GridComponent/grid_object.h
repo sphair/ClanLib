@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,67 +34,67 @@
 class GridComponent;
 class ComponentType;
 
-class GridObject : public GUIComponent
+class GridObject : public clan::GUIComponent
 {
 public:
-	GridObject(GridComponent *grid_component, GUIComponent *parent, int id, const Vec2i &pos);
+	GridObject(GridComponent *grid_component, clan::GUIComponent *parent, int id, const clan::Vec2i &pos);
 
-	ComponentAnchorPoint get_anchor_tl();
-	ComponentAnchorPoint get_anchor_br();
+	clan::ComponentAnchorPoint get_anchor_tl();
+	clan::ComponentAnchorPoint get_anchor_br();
 	std::string get_position_equation_x() const;
 	std::string get_position_equation_y() const;
 	std::string get_position_equation_x2() const;
 	std::string get_position_equation_y2() const;
 
-	GUIComponent *get_container();
-	GUIComponent *get_component() { return get_first_child(); }
+	clan::GUIComponent *get_container();
+	clan::GUIComponent *get_component() { return get_first_child(); }
 	ComponentType *get_component_type() { return component_type; }
 
 	GridComponent *get_grid_component() { return grid_component; }
 
-	GridObject *get_next_sibling() { return dynamic_cast<GridObject*>(GUIComponent::get_next_sibling()); }
-	GridObject *get_previous_sibling() { return dynamic_cast<GridObject*>(GUIComponent::get_previous_sibling()); }
+	GridObject *get_next_sibling() { return dynamic_cast<GridObject*>(clan::GUIComponent::get_next_sibling()); }
+	GridObject *get_previous_sibling() { return dynamic_cast<GridObject*>(clan::GUIComponent::get_previous_sibling()); }
 
-	Rect get_grabber_w() const;
-	Rect get_grabber_nw() const;
-	Rect get_grabber_n() const;
-	Rect get_grabber_ne() const;
-	Rect get_grabber_e() const;
-	Rect get_grabber_se() const;
-	Rect get_grabber_s() const;
-	Rect get_grabber_sw() const;
+	clan::Rect get_grabber_w() const;
+	clan::Rect get_grabber_nw() const;
+	clan::Rect get_grabber_n() const;
+	clan::Rect get_grabber_ne() const;
+	clan::Rect get_grabber_e() const;
+	clan::Rect get_grabber_se() const;
+	clan::Rect get_grabber_s() const;
+	clan::Rect get_grabber_sw() const;
 
 	std::vector<SnapLine> get_snaplines() const;
 
 	void set_selected(bool value);
-	DomElement to_element(DomDocument &doc);
-	void set_anchor_tl(ComponentAnchorPoint);
-	void set_anchor_br(ComponentAnchorPoint);
+	clan::DomElement to_element(clan::DomDocument &doc);
+	void set_anchor_tl(clan::ComponentAnchorPoint);
+	void set_anchor_br(clan::ComponentAnchorPoint);
 	void set_position_equations(const std::string &str_x, const std::string &str_y);
 	void set_position_equations2(const std::string &str_x, const std::string &str_y);
 
-	static GridObject *find_object_at(GUIComponent *container, const Point &pos);
+	static GridObject *find_object_at(clan::GUIComponent *container, const clan::Point &pos);
 
 private:
-	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 	void on_resized();
 
-	void save_geometry(DomElement &e, GUIComponent *comp);
-	void save_anchors(DomElement &e, GUIComponent *comp);
-	void save_listview(DomElement &e, ListView *lv);
+	void save_geometry(clan::DomElement &e, clan::GUIComponent *comp);
+	void save_anchors(clan::DomElement &e, clan::GUIComponent *comp);
+	void save_listview(clan::DomElement &e, clan::ListView *lv);
 
-	Point get_dist(ComponentAnchorPoint ap, Point p, Rect boundary);
-	Rect convert_coordinates(GUIComponent *from, GUIComponent *to);
-	GUIComponent *get_toplevel_component();
-	GUIComponent *get_tab_or_frame_parent(GUIComponent *comp);
+	clan::Point get_dist(clan::ComponentAnchorPoint ap, clan::Point p, clan::Rect boundary);
+	clan::Rect convert_coordinates(clan::GUIComponent *from, clan::GUIComponent *to);
+	clan::GUIComponent *get_toplevel_component();
+	clan::GUIComponent *get_tab_or_frame_parent(clan::GUIComponent *comp);
 
 	std::string pos_equation_x;
 	std::string pos_equation_y;
 	std::string pos_equation_x2;
 	std::string pos_equation_y2;
 
-	ComponentAnchorPoint anchor_tl;
-	ComponentAnchorPoint anchor_br;
+	clan::ComponentAnchorPoint anchor_tl;
+	clan::ComponentAnchorPoint anchor_br;
 
 	GridComponent *grid_component;
 	ComponentType *component_type;

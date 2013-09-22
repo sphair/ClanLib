@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,44 +28,27 @@
 
 #include "precomp.h"
 #include "application.h"
-#include <ClanLib/d3d.h>
 
-#if _MSC_VER >= 1300
-#pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
-#endif
-
-// This is the Program class that is called by Application
+// This is the Program class that is called by clan::Application
 class Program
 {
 public:
 	static int main(const std::vector<std::string> &args)
 	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-		SetupD3D setup_d3d;
+		clan::SetupCore setup_core;
+		clan::SetupDisplay setup_display;
+		clan::SetupGL setup_gl;
+		clan::SetupSWRender setup_swrender;
 
-		try
-		{
-			XApplication app;
+		Application app;
 
-			if(args.size() > 1)
-				app.run(args[1]);
-			else
-				app.run();
-		}
-		catch (Exception e)
-		{
-#ifdef WIN32
-			MessageBoxA(0, e.get_message_and_stack_trace().c_str(), "Unhandled Exception", MB_OK|MB_ICONERROR);
-#else
-			Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
-#endif
-			return 0;
-		}
-
-		return 1;
+		if(args.size() > 1)
+			app.run(args[1]);
+		else
+			app.run();
+		return 0;
 	}
 };
 
-// Instantiate Application, informing it where the Program is located
-Application app(&Program::main);
+// Instantiate clan::ClanApplication, informing it where the Program is located
+clan::Application app(&Program::main);

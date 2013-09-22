@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,8 +29,8 @@
 #include "precomp.h"
 #include "view_border.h"
 
-ViewBorder::ViewBorder(GUIComponent *parent)
-: GUIComponent(parent)
+ViewBorder::ViewBorder(clan::GUIComponent *parent)
+: clan::GUIComponent(parent)
 {
 	set_tag_name("viewborder");
 	func_resized().set(this, &ViewBorder::on_resized);
@@ -39,8 +39,8 @@ ViewBorder::ViewBorder(GUIComponent *parent)
 
 void ViewBorder::on_resized()
 {
-	Rect content_area = get_content_box();
-	GUIComponent *child = get_first_child();
+	clan::Rect content_area = get_content_box();
+	clan::GUIComponent *child = get_first_child();
 	while (child)
 	{
 		child->set_geometry(content_area);
@@ -48,6 +48,7 @@ void ViewBorder::on_resized()
 	}
 }
 
-void ViewBorder::on_render(Canvas &canvas, const Rect &update_rect)
+void ViewBorder::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 }
+

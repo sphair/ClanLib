@@ -75,7 +75,7 @@ public:
 	/// \brief Get Id
 	///
 	/// \return id
-	int get_id() const;
+	int get_radio_id() const;
 
 	/// \brief Is Selected
 	///
@@ -110,7 +110,7 @@ public:
 	/// \brief Set id
 	///
 	/// \param id = value
-	void set_id(int id);
+	void set_radio_id(int id);
 
 	/// \brief Set selected
 	///

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,8 +37,8 @@
 #include "MainWindow/gui_editor_window.h"
 #include "Selection/selection.h"
 
-GridComponent::GridComponent(GUIComponent *parent, GuiEditorWindow *main_window)
-: GUIComponent(parent), main_window(main_window), component_container(0),
+GridComponent::GridComponent(clan::GUIComponent *parent, GuiEditorWindow *main_window)
+: clan::GUIComponent(parent), main_window(main_window), component_container(0),
   component_overlay(0), boundary(320,200)
 {
 	set_tag_name("grid");
@@ -48,16 +48,16 @@ GridComponent::GridComponent(GUIComponent *parent, GuiEditorWindow *main_window)
 	func_input_pointer_moved().set(this, &GridComponent::on_input_pointer_moved);
 	func_render().set(this, &GridComponent::on_render);
 	func_resized().set(this, &GridComponent::on_resized);
-	part_windowframe = GUIThemePart(this, "window-frame");
+	part_windowframe = clan::GUIThemePart(this, "window-frame");
 
 	edit_state.set_grid_component(this);
 
-	component_container = new GUIComponent(this);
-	component_overlay = new GUIComponent(this);
+	component_container = new clan::GUIComponent(this);
+	component_overlay = new clan::GUIComponent(this);
 	component_overlay->func_render().set(this, &GridComponent::on_render_overlay);
 }
 
-Size GridComponent::get_dialog_size()
+clan::Size GridComponent::get_dialog_size()
 {
 	return boundary;
 }
@@ -67,7 +67,7 @@ const std::vector<GridObject*> &GridComponent::get_objects() const
 	return objects;
 }
 
-GridObject *GridComponent::on_add_component(int id, const Vec2i &pos)
+GridObject *GridComponent::on_add_component(int id, const clan::Vec2i &pos)
 {
 	GridObject *object = new GridObject(this, component_container, id, pos);
 	ComponentTypes::set_id(object->get_component(), id);
@@ -95,28 +95,28 @@ void GridComponent::remove_object(GridObject *object)
 
 void GridComponent::load(const std::string &fullname)
 {
-	DomDocument doc;
-	File file = File(fullname, File::open_existing, File::access_read);
+	clan::DomDocument doc;
+	clan::File file = clan::File(fullname, clan::File::open_existing, clan::File::access_read);
 	doc.load(file);
 
-	DomElement element_components = doc.get_document_element();
+	clan::DomElement element_components = doc.get_document_element();
 
 	load(element_components, component_container);
 
 	request_repaint();
 }
 
-void GridComponent::load(DomElement &element, GUIComponent *parent)
+void GridComponent::load(clan::DomElement &element, clan::GUIComponent *parent)
 {
-	DomElement e = element.get_first_child().to_element();
+	clan::DomElement e = element.get_first_child().to_element();
 
 	while (e.is_element())
 	{
 		std::string tag = e.get_tag_name();
 		if (tag == "dialog")
 		{
-			int w = StringHelp::text_to_int(e.get_attribute("width"));
-			int h = StringHelp::text_to_int(e.get_attribute("height"));
+			int w = clan::StringHelp::text_to_int(e.get_attribute("width"));
+			int h = clan::StringHelp::text_to_int(e.get_attribute("height"));
 			boundary.width = w;
 			boundary.height = h;
 		}
@@ -125,91 +125,91 @@ void GridComponent::load(DomElement &element, GUIComponent *parent)
 			ComponentType *component_type = ComponentTypes::find_from_xml(tag);
 			if(component_type)
 			{
-				Rect object_g = load_geometry(e);
+				clan::Rect object_g = load_geometry(e);
 
 				GridObject *object = new GridObject(this, parent, component_type->id, object_g.get_top_left());
 				object->set_geometry(object_g);
 
-				GUIComponent *new_comp = object->get_component();
+				clan::GUIComponent *new_comp = object->get_component();
 
 				if (tag == "button")
 				{
-					PushButton *co = dynamic_cast<PushButton*>(new_comp);
+					clan::PushButton *co = dynamic_cast<clan::PushButton*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
 				else if (tag == "checkbox")
 				{
-					CheckBox *co = dynamic_cast<CheckBox*>(new_comp);
+					clan::CheckBox *co = dynamic_cast<clan::CheckBox*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
 				else if (tag == "radiobutton")
 				{
-					RadioButton *co = dynamic_cast<RadioButton*>(new_comp);
+					clan::RadioButton *co = dynamic_cast<clan::RadioButton*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 					co->set_group_name(e.get_attribute("group"));
 				}
 				else if (tag == "label")
 				{
-					Label *co = dynamic_cast<Label*>(new_comp);
+					clan::Label *co = dynamic_cast<clan::Label*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
 				else if (tag == "statusbar")
 				{
-					StatusBar *co = dynamic_cast<StatusBar*>(new_comp);
+					clan::StatusBar *co = dynamic_cast<clan::StatusBar*>(new_comp);
 				}
 				else if (tag == "lineedit")
 				{
-					LineEdit *co = dynamic_cast<LineEdit*>(new_comp);
+					clan::LineEdit *co = dynamic_cast<clan::LineEdit*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
 				else if (tag == "textedit")
 				{
-					TextEdit *co = dynamic_cast<TextEdit*>(new_comp);
+					clan::TextEdit *co = dynamic_cast<clan::TextEdit*>(new_comp);
 					co->set_text(e.get_attribute("text"));
 				}
 				else if (tag == "imageview")
 				{
-					ImageView *co = dynamic_cast<ImageView*>(new_comp);
+					clan::ImageView *co = dynamic_cast<clan::ImageView*>(new_comp);
 				}
 				else if (tag == "slider")
 				{
-					Slider *co = dynamic_cast<Slider*>(new_comp);
-					co->set_min(StringHelp::text_to_int(e.get_attribute("min")));
-					co->set_max(StringHelp::text_to_int(e.get_attribute("max")));
-					co->set_tick_count(StringHelp::text_to_int(e.get_attribute("ticks")));
-					co->set_page_step(StringHelp::text_to_int(e.get_attribute("page_step")));
+					clan::Slider *co = dynamic_cast<clan::Slider*>(new_comp);
+					co->set_min(clan::StringHelp::text_to_int(e.get_attribute("min")));
+					co->set_max(clan::StringHelp::text_to_int(e.get_attribute("max")));
+					co->set_tick_count(clan::StringHelp::text_to_int(e.get_attribute("ticks")));
+					co->set_page_step(clan::StringHelp::text_to_int(e.get_attribute("page_step")));
 				}
 				else if (tag == "listview")
 				{
-					ListView *co = dynamic_cast<ListView*>(new_comp);
+					clan::ListView *co = dynamic_cast<clan::ListView*>(new_comp);
 
-					ListViewHeader *header = co->get_header();
+					clan::ListViewHeader *header = co->get_header();
 
-					std::vector<DomNode> columns_nodes = e.select_nodes("listview_header/listview_column");
+					std::vector<clan::DomNode> columns_nodes = e.select_nodes("listview_header/listview_column");
 					for(size_t i = 0; i < columns_nodes.size(); ++i)
 					{
-						DomElement column_element = columns_nodes[i].to_element();
+						clan::DomElement column_element = columns_nodes[i].to_element();
 						std::string id = column_element.get_attribute("col_id");
 						std::string caption = column_element.get_attribute("caption");
 						int width = column_element.get_attribute_int("width");
 
-						ListViewColumnHeader column = header->create_column(id, caption);
+						clan::ListViewColumnHeader column = header->create_column(id, caption);
 						column.set_width(width);
 						header->append(column);
 					}
 				}
 				else if (tag == "tab")
 				{
-					Tab *co = dynamic_cast<Tab*>(new_comp);
+					clan::Tab *co = dynamic_cast<clan::Tab*>(new_comp);
 
-					DomElement tab_child = e.get_first_child().to_element();
+					clan::DomElement tab_child = e.get_first_child().to_element();
 					while (tab_child.is_element())
 					{
 						if (tab_child.get_tag_name() == "tabpage")
 						{
 							std::string label = tab_child.get_attribute("label", "Error: NO LABEL!");
-							int id = StringHelp::text_to_int(tab_child.get_attribute("id", "0"));
-							TabPage *tab_page = co->add_page(label, id);
+							int id = clan::StringHelp::text_to_int(tab_child.get_attribute("id", "0"));
+							clan::TabPage *tab_page = co->add_page(label, id);
 							load(tab_child, tab_page);
 						}
 
@@ -218,23 +218,23 @@ void GridComponent::load(DomElement &element, GUIComponent *parent)
 				}
 				else if (tag == "frame")
 				{
-					Frame *co = dynamic_cast<Frame*>(new_comp);
+					clan::Frame *co = dynamic_cast<clan::Frame*>(new_comp);
 					co->set_header_text(e.get_attribute("text"));
 
-					DomElement frame_child = e.get_first_child().to_element();
+					clan::DomElement frame_child = e.get_first_child().to_element();
 					load(e, co);
 				}
 				else if (tag == "combobox")
 				{
-					ComboBox *co = dynamic_cast<ComboBox*>(new_comp);
+					clan::ComboBox *co = dynamic_cast<clan::ComboBox*>(new_comp);
 				}
 				else if (tag == "spin")
 				{
-					Spin *co = dynamic_cast<Spin*>(new_comp);
+					clan::Spin *co = dynamic_cast<clan::Spin*>(new_comp);
 				}
 				else if (tag == "toolbar")
 				{
-					ToolBar *co = dynamic_cast<ToolBar*>(new_comp);
+					clan::ToolBar *co = dynamic_cast<clan::ToolBar*>(new_comp);
 				}
 				else
 				{
@@ -242,18 +242,18 @@ void GridComponent::load(DomElement &element, GUIComponent *parent)
 					co->set_tag_name(tag);
 				}
 			
-				int dist_tl_x = StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
-				int dist_tl_y = StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
-				int dist_rb_x = StringHelp::text_to_int(e.get_attribute("dist_br_x"));
-				int dist_rb_y = StringHelp::text_to_int(e.get_attribute("dist_br_y"));
+				int dist_tl_x = clan::StringHelp::text_to_int(e.get_attribute("dist_tl_x"));
+				int dist_tl_y = clan::StringHelp::text_to_int(e.get_attribute("dist_tl_y"));
+				int dist_rb_x = clan::StringHelp::text_to_int(e.get_attribute("dist_br_x"));
+				int dist_rb_y = clan::StringHelp::text_to_int(e.get_attribute("dist_br_y"));
 				std::string pos_equation_x = e.get_attribute("eq-x", "");
 				std::string pos_equation_y = e.get_attribute("eq-y", "");
 				std::string pos_equation_x2 = e.get_attribute("eq-x2", "");
 				std::string pos_equation_y2 = e.get_attribute("eq-y2", "");
 				object->set_position_equations(pos_equation_x, pos_equation_y);
 				object->set_position_equations2(pos_equation_x2, pos_equation_y2);
-				ComponentAnchorPoint ap_tl = (ComponentAnchorPoint)StringHelp::text_to_int(e.get_attribute("anchor_tl"));
-				ComponentAnchorPoint ap_br = (ComponentAnchorPoint)StringHelp::text_to_int(e.get_attribute("anchor_br"));
+				clan::ComponentAnchorPoint ap_tl = (clan::ComponentAnchorPoint)clan::StringHelp::text_to_int(e.get_attribute("anchor_tl"));
+				clan::ComponentAnchorPoint ap_br = (clan::ComponentAnchorPoint)clan::StringHelp::text_to_int(e.get_attribute("anchor_br"));
 
 				object->set_anchor_tl(ap_tl);
 				object->set_anchor_br(ap_br);
@@ -272,14 +272,14 @@ void GridComponent::load(DomElement &element, GUIComponent *parent)
 
 void GridComponent::save(const std::string &fullname)
 {
-	DomDocument doc;
+	clan::DomDocument doc;
 
-	DomElement element_gui = doc.create_element("gui"); 
+	clan::DomElement element_gui = doc.create_element("gui"); 
 	element_gui.set_attribute("xmlns", "http://clanlib.org/xmlns/gui-1.0");
 	
 	doc.append_child(element_gui);
 
-	GUIComponent *comp = component_container->get_first_child();
+	clan::GUIComponent *comp = component_container->get_first_child();
 	while (comp != 0)
 	{
 		if (comp->get_tag_name() == "object")
@@ -287,7 +287,7 @@ void GridComponent::save(const std::string &fullname)
 			GridObject *object = dynamic_cast<GridObject*>(comp);
 			if (object)
 			{
-				DomElement element = object->to_element(doc);
+				clan::DomElement element = object->to_element(doc);
 				element_gui.append_child(element);
 			}
 		}
@@ -295,15 +295,15 @@ void GridComponent::save(const std::string &fullname)
 		comp = comp->get_next_sibling();
 	}
 
-	DomElement element = to_element(doc); // save grid (window) settings
+	clan::DomElement element = to_element(doc); // save grid (window) settings
 	element_gui.append_child(element);
 
-	File file;
-	file.open(fullname, File::create_always, File::access_write);
+	clan::File file;
+	file.open(fullname, clan::File::create_always, clan::File::access_write);
 	doc.save(file);
 }
 
-void GridComponent::set_boundary_size(const Size &size)
+void GridComponent::set_boundary_size(const clan::Size &size)
 {
 	boundary.width = size.width;
 	boundary.height = size.height;
@@ -311,43 +311,42 @@ void GridComponent::set_boundary_size(const Size &size)
 	request_repaint();
 }
 
-DomElement GridComponent::to_element(DomDocument &doc)
+clan::DomElement GridComponent::to_element(clan::DomDocument &doc)
 {
-	DomElement de = doc.create_element("dialog");
-	de.set_attribute("width", StringHelp::int_to_text(boundary.width));
-	de.set_attribute("height", StringHelp::int_to_text(boundary.height));
+	clan::DomElement de = doc.create_element("dialog");
+	de.set_attribute("width", clan::StringHelp::int_to_text(boundary.width));
+	de.set_attribute("height", clan::StringHelp::int_to_text(boundary.height));
 	return de;
 }
 
-Rect GridComponent::get_boundary_grabber_se() const
+clan::Rect GridComponent::get_boundary_grabber_se() const
 {
-	return Rect(Point(boundary.width, boundary.height), Size(8, 8));
+	return clan::Rect(clan::Point(boundary.width, boundary.height), clan::Size(8, 8));
 }
 
-Rect GridComponent::get_boundary_grabber_s() const
+clan::Rect GridComponent::get_boundary_grabber_s() const
 {
-	return Rect(Point(0, boundary.height), Size(get_boundary_grabber_se().left, 8));
+	return clan::Rect(clan::Point(0, boundary.height), clan::Size(get_boundary_grabber_se().left, 8));
 }
 
-Rect GridComponent::get_boundary_grabber_e() const
+clan::Rect GridComponent::get_boundary_grabber_e() const
 {
-	return Rect(Point(boundary.width, 0), Size(8, get_boundary_grabber_se().top));
+	return clan::Rect(clan::Point(boundary.width, 0), clan::Size(8, get_boundary_grabber_se().top));
 }
 
-GridObject *GridComponent::find_object_at(const Point &pos)
+GridObject *GridComponent::find_object_at(const clan::Point &pos)
 {
 	return GridObject::find_object_at(component_container, pos);
 }
 
-bool GridComponent::deliver_input_to_tab(const InputEvent &e)
+bool GridComponent::deliver_input_to_tab(const clan::InputEvent &e)
 {
-	GUIComponent *child = component_container->get_component_at(e.mouse_pos);
+	clan::GUIComponent *child = component_container->get_component_at(e.mouse_pos);
 	if (child && child->get_tag_name() == "tabheader")
 	{
-		InputEvent e_child = e;
+		clan::InputEvent e_child = e;
 		e_child.mouse_pos = child->window_to_component_coords(component_to_window_coords(e.mouse_pos));
-
-		std::shared_ptr<GUIMessage> message(new GUIMessage_Input(e_child));
+		std::shared_ptr<clan::GUIMessage> message(new clan::GUIMessage_Input(e_child));
 		message->target = child;
 		get_gui_manager().dispatch_message(message);
 		return true;
@@ -358,80 +357,80 @@ bool GridComponent::deliver_input_to_tab(const InputEvent &e)
 	}
 }
 
-bool GridComponent::on_input_pressed(const InputEvent &e)
+bool GridComponent::on_input_pressed(const clan::InputEvent &e)
 {
 	set_focus();
 
-	if (e.id == mouse_left && deliver_input_to_tab(e))
+	if (e.id == clan::mouse_left && deliver_input_to_tab(e))
 		return true;
 	return edit_state.on_input_pressed(offset_event(e));
 }
 
-bool GridComponent::on_input_released(const InputEvent &e)
+bool GridComponent::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left && deliver_input_to_tab(e))
+	if (e.id == clan::mouse_left && deliver_input_to_tab(e))
 		return true;
 	return edit_state.on_input_released(offset_event(e));
 }
 
-bool GridComponent::on_input_doubleclick(const InputEvent &e)
+bool GridComponent::on_input_doubleclick(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left && deliver_input_to_tab(e))
+	if (e.id == clan::mouse_left && deliver_input_to_tab(e))
 		return true;
 	return edit_state.on_input_doubleclick(offset_event(e));
 }
 
-bool GridComponent::on_input_pointer_moved(const InputEvent &e)
+bool GridComponent::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	return edit_state.on_input_pointer_moved(offset_event(e));
 }
 
-InputEvent GridComponent::offset_event(InputEvent e)
+clan::InputEvent GridComponent::offset_event(clan::InputEvent e)
 {
 	e.mouse_pos.x -= component_container->get_geometry().left;
 	e.mouse_pos.y -= component_container->get_geometry().top;
 	return e;
 }
 
-void GridComponent::on_render(Canvas &canvas, const Rect &update_rect)
+void GridComponent::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	set_cliprect(canvas, get_size());
-	Rect g = get_geometry().get_size();
+	clan::Rect g = get_geometry().get_size();
 
 	bool tab_parent = (get_parent_component()->get_tag_name() == "tabpage");
 
 	if (tab_parent)
 	{
-		canvas.fill_rect(g, Colorf::whitesmoke);
+		canvas.fill_rect( g, clan::Colorf::whitesmoke);
 	}
 	else
 	{
-		//canvas.fill_rect(g, Colorf::darkgray);
-		canvas.fill_rect(g, Colorf(199/255.0f, 209/255.0f, 224/255.0f));
-		canvas.fill_rect(boundary, Colorf::lightgrey/*Colorf("E0DFE3")*/);
+		//canvas.fill_rect( g, clan::Colorf::darkgray);
+		canvas.fill_rect( g, clan::Colorf(199/255.0f, 209/255.0f, 224/255.0f));
+		canvas.fill_rect( boundary, clan::Colorf::lightgrey/*clan::Colorf("E0DFE3")*/);
 	}
 /*
 	if (!tab_parent)
 	{
-		Draw::line(canvas, (float)boundary.left, (float)boundary.bottom, (float)boundary.right, (float)boundary.bottom, Colorf::black);
-		Draw::line(canvas, (float)boundary.right, (float)boundary.top, (float)boundary.right, (float)boundary.bottom, Colorf::black);
-		// canvas.fill_rect(get_boundary_grabber_se(), Colorf::darkslategray);
+		clan::Draw::line(canvas, (float)boundary.left, (float)boundary.bottom, (float)boundary.right, (float)boundary.bottom, clan::Colorf::black);
+		clan::Draw::line(canvas, (float)boundary.right, (float)boundary.top, (float)boundary.right, (float)boundary.bottom, clan::Colorf::black);
+		// canvas.fill_rect( get_boundary_grabber_se(), clan::Colorf::darkslategray);
 	}
 */
-	Rect framebox = part_windowframe.get_content_box(boundary);
+	clan::Rect framebox = part_windowframe.get_content_box(boundary);
 	framebox.translate(-framebox.left, -framebox.top);
 	part_windowframe.render_box(canvas, framebox);
 
 	reset_cliprect(canvas);
 }
 
-void GridComponent::on_render_overlay(Canvas &canvas, const Rect &update_rect)
+void GridComponent::on_render_overlay(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	set_cliprect(canvas, get_size());
 	std::vector<GridObject *> selection = main_window->get_selection()->get_selection();
 	for (size_t i = 0; i < selection.size(); i++)
 	{
-		Rect grabbers[8] =
+		clan::Rect grabbers[8] =
 		{
 			selection[i]->get_grabber_e(),
 			selection[i]->get_grabber_se(),
@@ -446,26 +445,26 @@ void GridComponent::on_render_overlay(Canvas &canvas, const Rect &update_rect)
 		for (int j=0; j<8; j++)
 			grabbers[j] = window_to_component_coords(selection[i]->component_to_window_coords(grabbers[j]));
 
-		Rect pos = window_to_component_coords(selection[i]->component_to_window_coords(selection[i]->get_size()));
+		clan::Rect pos = window_to_component_coords(selection[i]->component_to_window_coords(selection[i]->get_size()));
 		pos.expand(4,4,3,3);
-		canvas.draw_box(pos, Colorf(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f, 0.25f));
+		canvas.draw_box( pos, clan::Colorf(100.0f/255.0f, 100.0f/255.0f, 100.0f/255.0f, 0.25f));
 
 		for (int j=0; j<8; j++)
 		{
-			canvas.fill_rect(grabbers[j], Colorf::white);
-			canvas.draw_box(grabbers[j], Colorf::black);
+			canvas.fill_rect( grabbers[j], clan::Colorf::white);
+			canvas.draw_box( grabbers[j], clan::Colorf::black);
 		}
 	}
 
-	if (netselect_box.get_size() != Size(0,0))
+	if (netselect_box.get_size() != clan::Size(0,0))
 	{
-		Rect box = netselect_box;
+		clan::Rect box = netselect_box;
 		box.translate(component_container->get_geometry().left, component_container->get_geometry().top);
 
-		Colorf c = Colorf::blue;
+		clan::Colorf c = clan::Colorf::blue;
 		c.set_alpha(0.1f);
-		canvas.fill_rect(box, c);
-		canvas.draw_box(box, Colorf::blue);
+		canvas.fill_rect( box, c);
+		canvas.draw_box( box, clan::Colorf::blue);
 	}
 
 	reset_cliprect(canvas);
@@ -473,42 +472,42 @@ void GridComponent::on_render_overlay(Canvas &canvas, const Rect &update_rect)
 
 void GridComponent::on_resized()
 {
-	Rect framebox = part_windowframe.get_content_box(boundary);
+	clan::Rect framebox = part_windowframe.get_content_box(boundary);
 	framebox.translate(-framebox.left, -framebox.top);
 	component_container->set_geometry(part_windowframe.get_content_box(framebox));
 	component_overlay->set_geometry(get_size());
 }
 
-Rect GridComponent::load_geometry(DomElement &e)
+clan::Rect GridComponent::load_geometry(clan::DomElement &e)
 {
 	std::string str = e.get_attribute("geom");
-	std::vector<std::string> split = StringHelp::split_text(str, ",");
+	std::vector<std::string> split = clan::StringHelp::split_text(str, ",");
 
-	Rect r;
-	r.left = StringHelp::text_to_int(split[0]);
-	r.top = StringHelp::text_to_int(split[1]);
-	r.right = StringHelp::text_to_int(split[2]);
-	r.bottom = StringHelp::text_to_int(split[3]);
+	clan::Rect r;
+	r.left = clan::StringHelp::text_to_int(split[0]);
+	r.top = clan::StringHelp::text_to_int(split[1]);
+	r.right = clan::StringHelp::text_to_int(split[2]);
+	r.bottom = clan::StringHelp::text_to_int(split[3]);
 
 	return r;
 }
 
-Rect GridComponent::object_to_grid_coords(GridObject *object, const Rect &rect)
+clan::Rect GridComponent::object_to_grid_coords(GridObject *object, const clan::Rect &rect)
 {
 	return component_container->window_to_component_coords(object->component_to_window_coords(rect));
 }
 
-Point GridComponent::object_to_grid_coords(GridObject *object, const Point &point)
+clan::Point GridComponent::object_to_grid_coords(GridObject *object, const clan::Point &point)
 {
 	return component_container->window_to_component_coords(object->component_to_window_coords(point));
 }
 
-Rect GridComponent::grid_to_object_coords(GridObject *object, const Rect &rect)
+clan::Rect GridComponent::grid_to_object_coords(GridObject *object, const clan::Rect &rect)
 {
 	return component_container->component_to_window_coords(object->window_to_component_coords(rect));
 }
 
-Point GridComponent::grid_to_object_coords(GridObject *object, const Point &point)
+clan::Point GridComponent::grid_to_object_coords(GridObject *object, const clan::Point &point)
 {
 	return component_container->component_to_window_coords(object->window_to_component_coords(point));
 }
@@ -533,7 +532,7 @@ std::vector<SnapLine> GridComponent::get_snaplines() const
 	return snaplines;
 }
 
-Vec2i GridComponent::snap(GridObject *object, const std::vector<SnapLine> &source_snaplines, const Rect &source_rect)
+clan::Vec2i GridComponent::snap(GridObject *object, const std::vector<SnapLine> &source_snaplines, const clan::Rect &source_rect)
 {
 	std::vector<SnapLine::SnapLineTarget> targets;
 
@@ -553,7 +552,7 @@ Vec2i GridComponent::snap(GridObject *object, const std::vector<SnapLine> &sourc
 	return SnapLine::snap(source_rect, source_snaplines, targets);
 }
 
-void GridComponent::set_netselect_box(Rect new_netselect_box)
+void GridComponent::set_netselect_box(clan::Rect new_netselect_box)
 {
 	if (netselect_box != new_netselect_box)
 	{
@@ -562,11 +561,11 @@ void GridComponent::set_netselect_box(Rect new_netselect_box)
 	}
 }
 
-void GridComponent::select_objects(const Rect &box)
+void GridComponent::select_objects(const clan::Rect &box)
 {
 	for (size_t i = 0; i < objects.size(); i++)
 	{
-		Rect object_box = objects[i]->get_geometry();
+		clan::Rect object_box = objects[i]->get_geometry();
 		object_box.overlap(box);
 		if (object_box.right > object_box.left && object_box.bottom > object_box.top)
 		{

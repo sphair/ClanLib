@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,23 +37,23 @@ GridEditStateObjectSizing::GridEditStateObjectSizing()
 {
 }
 
-bool GridEditStateObjectSizing::on_input_pressed(const InputEvent &e)
+bool GridEditStateObjectSizing::on_input_pressed(const clan::InputEvent &e)
 {
-	if(e.shift && (e.id == keycode_left || e.id == keycode_right || e.id == keycode_up || e.id == keycode_down))
+	if(e.shift && (e.id == clan::keycode_left || e.id == clan::keycode_right || e.id == clan::keycode_up || e.id == clan::keycode_down))
 	{
-		if(e.id == keycode_left)
-			dir = Vec2i(1, 0);
-		else if(e.id == keycode_right)
-			dir = Vec2i(-1, 0);
-		else if(e.id == keycode_up)
-			dir = Vec2i(0, 1);
-		else if(e.id == keycode_down)
-			dir = Vec2i(0, -1);
+		if(e.id == clan::keycode_left)
+			dir = clan::Vec2i(1, 0);
+		else if(e.id == clan::keycode_right)
+			dir = clan::Vec2i(-1, 0);
+		else if(e.id == clan::keycode_up)
+			dir = clan::Vec2i(0, 1);
+		else if(e.id == clan::keycode_down)
+			dir = clan::Vec2i(0, -1);
 
 		std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 		if(selection.size())
 		{
-			start = Point();
+			start = clan::Point();
 			primary_object_index = 0;
 			start_geometry.clear();
 			for (size_t j = 0; j < selection.size(); j++)
@@ -66,33 +66,33 @@ bool GridEditStateObjectSizing::on_input_pressed(const InputEvent &e)
 
 		return false;
 	}
-	else if (e.id == mouse_left)
+	else if (e.id == clan::mouse_left)
 	{
-		dir = Vec2i(0,0);
+		dir = clan::Vec2i(0,0);
 		std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 		for (size_t i = 0; i < selection.size(); i++)
 		{
 			GridObject *h = selection[i];
-			Point h_mouse_pos = grid->grid_to_object_coords(h, e.mouse_pos);
+			clan::Point h_mouse_pos = grid->grid_to_object_coords(h, e.mouse_pos);
 
 			if (h->get_grabber_e().contains(h_mouse_pos))
-				dir = Vec2i(1,0);
+				dir = clan::Vec2i(1,0);
 			else if (h->get_grabber_se().contains(h_mouse_pos))
-				dir = Vec2i(1,1);
+				dir = clan::Vec2i(1,1);
 			else if (h->get_grabber_s().contains(h_mouse_pos))
-				dir = Vec2i(0,1);
+				dir = clan::Vec2i(0,1);
 			else if (h->get_grabber_sw().contains(h_mouse_pos))
-				dir = Vec2i(-1,1);
+				dir = clan::Vec2i(-1,1);
 			else if (h->get_grabber_w().contains(h_mouse_pos))
-				dir = Vec2i(-1,0);
+				dir = clan::Vec2i(-1,0);
 			else if (h->get_grabber_nw().contains(h_mouse_pos))
-				dir = Vec2i(-1,-1);
+				dir = clan::Vec2i(-1,-1);
 			else if (h->get_grabber_n().contains(h_mouse_pos))
-				dir = Vec2i(0,-1);
+				dir = clan::Vec2i(0,-1);
 			else if (h->get_grabber_ne().contains(h_mouse_pos))
-				dir = Vec2i(1,-1);
+				dir = clan::Vec2i(1,-1);
 
-			if (dir != Vec2i(0,0))
+			if (dir != clan::Vec2i(0,0))
 			{
 				start = e.mouse_pos;
 				primary_object_index = i;
@@ -112,9 +112,9 @@ bool GridEditStateObjectSizing::on_input_pressed(const InputEvent &e)
 	}
 }
 
-bool GridEditStateObjectSizing::on_input_released(const InputEvent &e)
+bool GridEditStateObjectSizing::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		bool perform_snap = e.alt == false;
 		resize_to(e.mouse_pos, perform_snap);
@@ -129,26 +129,26 @@ bool GridEditStateObjectSizing::on_input_released(const InputEvent &e)
 	}
 }
 
-bool GridEditStateObjectSizing::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateObjectSizing::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateObjectSizing::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateObjectSizing::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	bool perform_snap = e.alt == false;
 	resize_to(e.mouse_pos, perform_snap);
 	return true;
 }
 
-void GridEditStateObjectSizing::resize_to(const Point &mouse_pos, bool perform_snap)
+void GridEditStateObjectSizing::resize_to(const clan::Point &mouse_pos, bool perform_snap)
 {
-	Vec2i delta = mouse_pos - start;
+	clan::Vec2i delta = mouse_pos - start;
 
 	std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 	GridObject *object = selection[primary_object_index];
 
-	Rect source_rect = resize_rect(start_geometry[primary_object_index], delta);
+	clan::Rect source_rect = resize_rect(start_geometry[primary_object_index], delta);
 
 	if(perform_snap)
 	{
@@ -162,7 +162,7 @@ void GridEditStateObjectSizing::resize_to(const Point &mouse_pos, bool perform_s
 	{
 		for (size_t i = 0; i < selection.size(); i++)
 		{
-			Rect geometry = resize_rect(start_geometry[i], delta);
+			clan::Rect geometry = resize_rect(start_geometry[i], delta);
 			selection[i]->set_geometry(geometry);
 		}
 	}
@@ -170,7 +170,7 @@ void GridEditStateObjectSizing::resize_to(const Point &mouse_pos, bool perform_s
 	grid->request_repaint();
 }
 
-Rect GridEditStateObjectSizing::resize_rect(Rect geometry, Vec2i delta) const
+clan::Rect GridEditStateObjectSizing::resize_rect(clan::Rect geometry, clan::Vec2i delta) const
 {
 	if (dir.x < 0)
 		geometry.left += delta.x;

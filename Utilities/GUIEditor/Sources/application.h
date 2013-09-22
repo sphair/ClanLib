@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,17 +28,17 @@
 
 #pragma once
 
-class XApplication
+class Application
 {
 public:
-	XApplication();
-	~XApplication();
+	Application();
+	~Application();
 
 	void run(const std::string &filename = std::string());
 
-	GUIManager *get_gui() { return &gui; }
+	clan::GUIManager *get_gui() { return &gui; }
 
 private:
-	GUIWindowManagerSystem window_manager;
-	GUIManager gui;
+	clan::GUIWindowManagerSystem window_manager;
+	clan::GUIManager gui;
 };

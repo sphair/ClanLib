@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,15 +36,15 @@ public:
 	{
 	}
 
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_process_message(std::shared_ptr<clan::GUIMessage> &msg);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 	void on_resized();
 
 	CustomComponent *component;
 };
 
-CustomComponent::CustomComponent(GUIComponent *parent)
-: GUIComponent(parent), impl(new CustomComponent_Impl())
+CustomComponent::CustomComponent(clan::GUIComponent *parent)
+: clan::GUIComponent(parent), impl(new CustomComponent_Impl())
 {
 	set_tag_name("customcomponent");
 	func_process_message().set(impl.get(), &CustomComponent_Impl::on_process_message);
@@ -54,34 +54,34 @@ CustomComponent::CustomComponent(GUIComponent *parent)
 	impl->component = this;
 }
 
-void CustomComponent_Impl::on_process_message(std::shared_ptr<GUIMessage> &msg)
+void CustomComponent_Impl::on_process_message(std::shared_ptr<clan::GUIMessage> &msg)
 {
-/*	if (msg.is_type(GUIMessage_Input::get_tag_name()))
+/*	std::shared_ptr<clan::GUIMessage_Input> input_msg = std::dynamic_pointer_cast<clan::GUIMessage_Input>(msg);X	if (input_msg)
 	{
-		GUIMessage_Input input_msg = msg;
-		InputEvent e = input_msg.get_event();
+		clan::GUIMessage_Input input_msg = msg;
+		const clan::InputEvent &e = input_msg->input_event;
 
-		if (e.type == InputEvent::pressed && e.id == mouse_left)
+		if (e.type == clan::InputEvent::pressed && e.id == clan::mouse_left)
 		{
 		}
-		else if (e.type == InputEvent::released && e.id == mouse_left)
+		else if (e.type == clan::InputEvent::released && e.id == clan::mouse_left)
 		{
 		}
-		else if (e.type == InputEvent::pointer_moved)
+		else if (e.type == clan::InputEvent::pointer_moved)
 		{
 		}
 	}
 */
 }
 
-void CustomComponent_Impl::on_render(Canvas &canvas, const Rect &update_rect)
+void CustomComponent_Impl::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	Rect g = component->get_geometry().get_size();
+	clan::Rect g = component->get_geometry().get_size();
 
-	canvas.fill_rect(g, Gradient(Colorf::lightgray, Colorf::floralwhite));
-	canvas.draw_box(g, Colorf::gray);
+	canvas.fill_rect( g, clan::Gradient(clan::Colorf::lightgray, clan::Colorf::floralwhite));
+	canvas.draw_box( g, clan::Colorf::gray);
 	g.shrink(2,2,2,2);
-	canvas.draw_box(g, Colorf::lightskyblue);
+	canvas.draw_box( g, clan::Colorf::lightskyblue);
 }
 
 void CustomComponent_Impl::on_resized()

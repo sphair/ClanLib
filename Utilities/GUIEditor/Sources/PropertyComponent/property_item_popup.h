@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,11 +28,11 @@
 
 #pragma once
 
-class PropertyItemPopup : public GUIComponent
+class PropertyItemPopup : public clan::GUIComponent
 {
 public:
-	PropertyItemPopup(GUIComponent *parent);
+	PropertyItemPopup(clan::GUIComponent *parent);
 
 private:
-	static GUITopLevelDescription get_toplevel_description();
+	static clan::GUITopLevelDescription get_toplevel_description();
 };

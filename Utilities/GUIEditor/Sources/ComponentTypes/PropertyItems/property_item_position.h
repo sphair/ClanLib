@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -57,22 +57,22 @@ public:
 			switch (type)
 			{
 			case type_x1:
-				value = StringHelp::int_to_text(object->get_geometry().left);
+				value = clan::StringHelp::int_to_text(object->get_geometry().left);
 				break;
 			case type_y1:
-				value = StringHelp::int_to_text(object->get_geometry().top);
+				value = clan::StringHelp::int_to_text(object->get_geometry().top);
 				break;
 			case type_x2:
-				value = StringHelp::int_to_text(object->get_geometry().right);
+				value = clan::StringHelp::int_to_text(object->get_geometry().right);
 				break;
 			case type_y2:
-				value = StringHelp::int_to_text(object->get_geometry().bottom);
+				value = clan::StringHelp::int_to_text(object->get_geometry().bottom);
 				break;
 			case type_width:
-				value = StringHelp::int_to_text(object->get_width());
+				value = clan::StringHelp::int_to_text(object->get_width());
 				break;
 			case type_height:
-				value = StringHelp::int_to_text(object->get_height());
+				value = clan::StringHelp::int_to_text(object->get_height());
 				break;
 			}
 		}
@@ -80,9 +80,9 @@ public:
 
 	void apply_changes(GridObject *object)
 	{
-		int new_value = StringHelp::text_to_int(value);
+		int new_value = clan::StringHelp::text_to_int(value);
 
-		Rect geometry = object->get_geometry();
+		clan::Rect geometry = object->get_geometry();
 		int width = geometry.get_width();
 		int height = geometry.get_height();
 

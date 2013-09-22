@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,70 +35,70 @@ class PropertyComponent;
 class GridObject;
 class SnapLine;
 
-class GridComponent : public GUIComponent
+class GridComponent : public clan::GUIComponent
 {
 public:
-	GridComponent(GUIComponent *parent, GuiEditorWindow *main_window);
+	GridComponent(clan::GUIComponent *parent, GuiEditorWindow *main_window);
 	virtual ~GridComponent() { }
 
 	GuiEditorWindow *get_main_window() { return main_window; }
 
-	Size get_dialog_size();
+	clan::Size get_dialog_size();
 
 	const std::vector<GridObject*> &get_objects() const;
 	std::vector<SnapLine> get_snaplines() const;
 
-	Vec2i snap(GridObject *object, const std::vector<SnapLine> &source_snaplines, const Rect &source_rect);
+	clan::Vec2i snap(GridObject *object, const std::vector<SnapLine> &source_snaplines, const clan::Rect &source_rect);
 
-	GridObject *on_add_component(int id, const Vec2i &pos);
+	GridObject *on_add_component(int id, const clan::Vec2i &pos);
 	void remove_object(GridObject *object);
 
 	void load(const std::string &str);
 	void save(const std::string &str);
-	void set_boundary_size(const Size &size);
+	void set_boundary_size(const clan::Size &size);
 
-	void set_netselect_box(Rect netselect_box);
-	void select_objects(const Rect &box);
+	void set_netselect_box(clan::Rect netselect_box);
+	void select_objects(const clan::Rect &box);
 
-	Callback_v0 func_boundary_resized;
+	clan::Callback_v0 func_boundary_resized;
 
 private:
-	bool on_input_pressed(const InputEvent &input_event);
-	bool on_input_released(const InputEvent &input_event);
-	bool on_input_doubleclick(const InputEvent &input_event);
-	bool on_input_pointer_moved(const InputEvent &input_event);
-	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_render_overlay(Canvas &canvas, const Rect &update_rect);
+	bool on_input_pressed(const clan::InputEvent &input_event);
+	bool on_input_released(const clan::InputEvent &input_event);
+	bool on_input_doubleclick(const clan::InputEvent &input_event);
+	bool on_input_pointer_moved(const clan::InputEvent &input_event);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	void on_render_overlay(clan::Canvas &canvas, const clan::Rect &update_rect);
 	void on_resized();
 
-	InputEvent offset_event(InputEvent e);
-	Rect object_to_grid_coords(GridObject *object, const Rect &rect);
-	Point object_to_grid_coords(GridObject *object, const Point &point);
-	Rect grid_to_object_coords(GridObject *object, const Rect &rect);
-	Point grid_to_object_coords(GridObject *object, const Point &point);
+	clan::InputEvent offset_event(clan::InputEvent e);
+	clan::Rect object_to_grid_coords(GridObject *object, const clan::Rect &rect);
+	clan::Point object_to_grid_coords(GridObject *object, const clan::Point &point);
+	clan::Rect grid_to_object_coords(GridObject *object, const clan::Rect &rect);
+	clan::Point grid_to_object_coords(GridObject *object, const clan::Point &point);
 
-	Rect get_boundary_grabber_se() const;
-	Rect get_boundary_grabber_s() const;
-	Rect get_boundary_grabber_e() const;
+	clan::Rect get_boundary_grabber_se() const;
+	clan::Rect get_boundary_grabber_s() const;
+	clan::Rect get_boundary_grabber_e() const;
 
-	Rect load_geometry(DomElement &e);
+	clan::Rect load_geometry(clan::DomElement &e);
 
-	DomElement to_element(DomDocument &doc);
-	GridObject *find_object_at(const Point &pos);
-	bool deliver_input_to_tab(const InputEvent &e);
+	clan::DomElement to_element(clan::DomDocument &doc);
+	GridObject *find_object_at(const clan::Point &pos);
+	bool deliver_input_to_tab(const clan::InputEvent &e);
 
-	void load(DomElement &element, GUIComponent *parent);
+	void load(clan::DomElement &element, clan::GUIComponent *parent);
 
 	GuiEditorWindow *main_window;
-	GUIComponent *component_container;
-	GUIComponent *component_overlay;
+	clan::GUIComponent *component_container;
+	clan::GUIComponent *component_overlay;
 	std::vector<GridObject*> objects;
 
-	Size boundary;
+	clan::Size boundary;
 	GridEditState edit_state;
-	GUIThemePart part_windowframe;
+	clan::GUIThemePart part_windowframe;
 
-	Rect netselect_box;
+	clan::Rect netselect_box;
 
 	friend class GridEditStateNone;
 	friend class GridEditStateBoundarySizing;

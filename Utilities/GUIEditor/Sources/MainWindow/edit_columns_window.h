@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -28,7 +28,7 @@
 
 #pragma once
 
-class EditColumnsWindow : public GUIComponent
+class EditColumnsWindow : public clan::Window
 {
 public:
 	struct Column
@@ -41,7 +41,7 @@ public:
 	};
 
 public:
-	EditColumnsWindow(GUIComponent *owner);
+	EditColumnsWindow(clan::GUIComponent *owner);
 	~EditColumnsWindow();
 
 // Attributes:
@@ -54,11 +54,11 @@ public:
 
 // Implementation:
 private:
-	GUITopLevelDescription get_startup_description();
+	clan::GUITopLevelDescription get_startup_description();
 
 	void load_components();
-	ListViewItem add_column(Column column);
-	void show_item(ListViewItem &item);
+	clan::ListViewItem add_column(Column column);
+	void show_item(clan::ListViewItem &item);
 
 	void on_button_ok_clicked();
 	void on_button_cancel_clicked();
@@ -66,20 +66,20 @@ private:
 	void on_button_move_column_down_clicked();
 	void on_button_add_column_clicked();
 	void on_button_remove_column_clicked();
-	void on_listview_selection_changed(ListViewSelection selection);
+	void on_listview_selection_changed(clan::ListViewSelection selection);
 	bool on_close();
-	void on_lineedit_text_changed(InputEvent &event);
-	void on_lineedit_id_changed(InputEvent &event);
-	void on_lineedit_width_changed(InputEvent &event);
+	void on_lineedit_text_changed(clan::InputEvent &event);
+	void on_lineedit_id_changed(clan::InputEvent &event);
+	void on_lineedit_width_changed(clan::InputEvent &event);
 
-	PushButton *button_ok;
-	PushButton *button_cancel;
-	PushButton *button_move_column_up;
-	PushButton *button_move_column_down;
-	PushButton *button_add_column;
-	PushButton *button_remove_column;
-	ListView *listview_columns;
-	LineEdit *lineedit_text;
-	LineEdit *lineedit_id;
-	LineEdit *lineedit_width;
+	clan::PushButton *button_ok;
+	clan::PushButton *button_cancel;
+	clan::PushButton *button_move_column_up;
+	clan::PushButton *button_move_column_down;
+	clan::PushButton *button_add_column;
+	clan::PushButton *button_remove_column;
+	clan::ListView *listview_columns;
+	clan::LineEdit *lineedit_text;
+	clan::LineEdit *lineedit_id;
+	clan::LineEdit *lineedit_width;
 };

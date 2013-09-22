@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,7 +38,7 @@ public:
 	static void deinitialize();
 	static ComponentType *find_component(int id);
 	static ComponentType *find_from_xml(const std::string &tag);
-	static void set_id(GUIComponent *new_component, int id);
+	static void set_id(clan::GUIComponent *new_component, int id);
 	static const std::vector<ComponentType *> &get_types();
 
 private:

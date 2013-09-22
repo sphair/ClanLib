@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,7 +36,7 @@ public:
 	PropertyItemLineEdit(const std::string &name) { this->name = name; }
 	PropertyItemLineEdit(const std::string &name, const std::string &value) { this->name = name; this->value = value; }
 
-	GUIComponent *activate()
+	clan::GUIComponent *activate()
 	{
 		LineEditPopup *c = new LineEditPopup(property_component);
 		c->get_lineedit()->func_enter_pressed().set(this, &PropertyItemLineEdit::on_enter_pressed);
@@ -44,18 +44,18 @@ public:
 		return c;
 	}
 
-	void deactivate(GUIComponent *component)
+	void deactivate(clan::GUIComponent *component)
 	{
 		value = static_cast<LineEditPopup *>(component)->get_lineedit()->get_text();
 		delete component;
 	}
 
-	int get_inactive_height(Canvas &canvas, GUIThemePart &part, int width)
+	int get_inactive_height(clan::Canvas &canvas, clan::GUIThemePart &part, int width)
 	{
 		return part.get_font().get_text_size(canvas, value).height;
 	}
 
-	void render_inactive(Canvas &canvas, GUIThemePart &part, const Rect &rect)
+	void render_inactive(clan::Canvas &canvas, clan::GUIThemePart &part, const clan::Rect &rect, const clan::Rect &clip_rect)
 	{
 		part.render_text(canvas, value, rect);
 	}

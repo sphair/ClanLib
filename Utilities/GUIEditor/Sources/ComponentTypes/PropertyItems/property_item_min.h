@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -43,18 +43,18 @@ public:
 	{
 		if (!selection.empty())
 		{
-			GUIComponent *comp = selection[0]->get_component();
-			Slider *slider = dynamic_cast<Slider*>(comp);
+			clan::GUIComponent *comp = selection[0]->get_component();
+			clan::Slider *slider = dynamic_cast<clan::Slider*>(comp);
 			if (slider)
-				value = StringHelp::int_to_text(slider->get_max());
+				value = clan::StringHelp::int_to_text(slider->get_max());
 		}
 	}
 
 	void apply_changes(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
-		Slider *slider = dynamic_cast<Slider*>(comp);
+		clan::GUIComponent *comp = object->get_component();
+		clan::Slider *slider = dynamic_cast<clan::Slider*>(comp);
 		if (slider)
-			slider->set_min(StringHelp::text_to_int(value));
+			slider->set_min(clan::StringHelp::text_to_int(value));
 	}
 };

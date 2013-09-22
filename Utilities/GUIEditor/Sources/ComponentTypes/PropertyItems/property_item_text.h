@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -46,15 +46,15 @@ public:
 
 	void apply_changes(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
+		clan::GUIComponent *comp = object->get_component();
 
-		PushButton *button = dynamic_cast<PushButton*>(comp);
-		LineEdit *lineedit = dynamic_cast<LineEdit*>(comp);
-		TextEdit *textedit = dynamic_cast<TextEdit*>(comp);
-		CheckBox *checkbox = dynamic_cast<CheckBox*>(comp);
-		RadioButton *radiobutton = dynamic_cast<RadioButton*>(comp);
-		Label *label = dynamic_cast<Label*>(comp);
-		Frame *frame = dynamic_cast<Frame*>(comp);
+		clan::PushButton *button = dynamic_cast<clan::PushButton*>(comp);
+		clan::LineEdit *lineedit = dynamic_cast<clan::LineEdit*>(comp);
+		clan::TextEdit *textedit = dynamic_cast<clan::TextEdit*>(comp);
+		clan::CheckBox *checkbox = dynamic_cast<clan::CheckBox*>(comp);
+		clan::RadioButton *radiobutton = dynamic_cast<clan::RadioButton*>(comp);
+		clan::Label *label = dynamic_cast<clan::Label*>(comp);
+		clan::Frame *frame = dynamic_cast<clan::Frame*>(comp);
 
 		if (button)
 			button->set_text(value);
@@ -74,15 +74,15 @@ public:
 
 	std::string get_item_value(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
+		clan::GUIComponent *comp = object->get_component();
 
-		PushButton *button = dynamic_cast<PushButton*>(comp);
-		LineEdit *lineedit = dynamic_cast<LineEdit*>(comp);
-		TextEdit *textedit = dynamic_cast<TextEdit*>(comp);
-		CheckBox *checkbox = dynamic_cast<CheckBox*>(comp);
-		RadioButton *radiobutton = dynamic_cast<RadioButton*>(comp);
-		Label *label = dynamic_cast<Label*>(comp);
-		Frame *frame = dynamic_cast<Frame*>(comp);
+		clan::PushButton *button = dynamic_cast<clan::PushButton*>(comp);
+		clan::LineEdit *lineedit = dynamic_cast<clan::LineEdit*>(comp);
+		clan::TextEdit *textedit = dynamic_cast<clan::TextEdit*>(comp);
+		clan::CheckBox *checkbox = dynamic_cast<clan::CheckBox*>(comp);
+		clan::RadioButton *radiobutton = dynamic_cast<clan::RadioButton*>(comp);
+		clan::Label *label = dynamic_cast<clan::Label*>(comp);
+		clan::Frame *frame = dynamic_cast<clan::Frame*>(comp);
 
 		if (button)
 			return button->get_text();

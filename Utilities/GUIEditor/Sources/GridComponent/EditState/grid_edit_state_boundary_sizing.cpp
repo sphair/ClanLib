@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,20 +35,20 @@ GridEditStateBoundarySizing::GridEditStateBoundarySizing()
 {
 }
 
-bool GridEditStateBoundarySizing::on_input_pressed(const InputEvent &e)
+bool GridEditStateBoundarySizing::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		start = e.mouse_pos;
-		dir = Vec2i(0,0);
+		dir = clan::Vec2i(0,0);
 		if (grid->get_boundary_grabber_se().contains(e.mouse_pos))
-			dir = Vec2i(1,1);
+			dir = clan::Vec2i(1,1);
 		else if (grid->get_boundary_grabber_e().contains(e.mouse_pos))
-			dir = Vec2i(1,0);
+			dir = clan::Vec2i(1,0);
 		else if (grid->get_boundary_grabber_s().contains(e.mouse_pos))
-			dir = Vec2i(0,1);
+			dir = clan::Vec2i(0,1);
 
-		if (dir != Vec2i(0,0))
+		if (dir != clan::Vec2i(0,0))
 		{
 			grid->capture_mouse(true);
 			return true;
@@ -64,9 +64,9 @@ bool GridEditStateBoundarySizing::on_input_pressed(const InputEvent &e)
 	}
 }
 
-bool GridEditStateBoundarySizing::on_input_released(const InputEvent &e)
+bool GridEditStateBoundarySizing::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		grid->capture_mouse(false);
 		grid->edit_state.set_pseudo_class(GridEditState::state_none);
@@ -78,14 +78,14 @@ bool GridEditStateBoundarySizing::on_input_released(const InputEvent &e)
 	}
 }
 
-bool GridEditStateBoundarySizing::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateBoundarySizing::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateBoundarySizing::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateBoundarySizing::on_input_pointer_moved(const clan::InputEvent &e)
 {
-	Size boundary_size = grid->boundary;
+	clan::Size boundary_size = grid->boundary;
 
 	if (dir.x > 0)
 		boundary_size.width = clan::max(e.mouse_pos.x, 10);

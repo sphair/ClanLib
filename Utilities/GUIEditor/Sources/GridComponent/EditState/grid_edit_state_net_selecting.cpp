@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,9 +36,9 @@ GridEditStateNetSelecting::GridEditStateNetSelecting()
 {
 }
 
-bool GridEditStateNetSelecting::on_input_pressed(const InputEvent &e)
+bool GridEditStateNetSelecting::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		grid->main_window->get_selection()->clear();
 		grid->capture_mouse(true);
@@ -52,13 +52,13 @@ bool GridEditStateNetSelecting::on_input_pressed(const InputEvent &e)
 	}
 }
 
-bool GridEditStateNetSelecting::on_input_released(const InputEvent &e)
+bool GridEditStateNetSelecting::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		grid->capture_mouse(false);
 		grid->edit_state.set_pseudo_class(GridEditState::state_none);
-		grid->set_netselect_box(Rect());
+		grid->set_netselect_box(clan::Rect());
 		grid->select_objects(get_rect(e.mouse_pos));
 		return true;
 	}
@@ -68,26 +68,26 @@ bool GridEditStateNetSelecting::on_input_released(const InputEvent &e)
 	}
 }
 
-bool GridEditStateNetSelecting::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateNetSelecting::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateNetSelecting::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateNetSelecting::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	grid->set_netselect_box(get_rect(e.mouse_pos));
 	return true;
 }
 
-Rect GridEditStateNetSelecting::get_rect(const Point &end) const
+clan::Rect GridEditStateNetSelecting::get_rect(const clan::Point &end) const
 {
-	Point p1 = start;
-	Point p2 = end;
+	clan::Point p1 = start;
+	clan::Point p2 = end;
 	if (p1.x > p2.x)
 		swap(p1.x, p2.x);
 	if (p1.y > p2.y)
 		swap(p1.y, p2.y);
-	return Rect(p1.x, p1.y, p2.x, p2.y);
+	return clan::Rect(p1.x, p1.y, p2.x, p2.y);
 }
 
 void GridEditStateNetSelecting::swap(int &v1, int &v2)
