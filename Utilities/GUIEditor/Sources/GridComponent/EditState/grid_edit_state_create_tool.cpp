@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -35,9 +35,9 @@ GridEditStateCreateTool::GridEditStateCreateTool()
 {
 }
 
-bool GridEditStateCreateTool::on_input_pressed(const InputEvent &e)
+bool GridEditStateCreateTool::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		int selected_tool = grid->main_window->get_selected_tool();
 		if (selected_tool != 1337) // OK, maybe pick a less silly value for select tool?
@@ -61,9 +61,9 @@ bool GridEditStateCreateTool::on_input_pressed(const InputEvent &e)
 	}
 }
 
-bool GridEditStateCreateTool::on_input_released(const InputEvent &e)
+bool GridEditStateCreateTool::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		grid->capture_mouse(false);
 		grid->edit_state.set_pseudo_class(GridEditState::state_none);
@@ -75,12 +75,12 @@ bool GridEditStateCreateTool::on_input_released(const InputEvent &e)
 	}
 }
 
-bool GridEditStateCreateTool::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateCreateTool::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateCreateTool::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateCreateTool::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	return true;
 }

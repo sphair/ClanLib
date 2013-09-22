@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -53,21 +53,21 @@ void ComponentTypes::initialize()
 	types.push_back(new CheckBoxComponentType("checkbox", "CheckBox", next_id++, "ComponentIconCheckBox"));
 	types.push_back(new RadioButtonComponentType("radiobutton", "RadioButton", next_id++, "ComponentIconRadioButton"));
 	types.push_back(new LabelComponentType("label", "Label", next_id++, "ComponentIconLabel"));
-	types.push_back(new ComponentTypeTemplate<LineEdit>("lineedit", "LineEdit", next_id++, "ComponentIconLineEdit"));
-	types.push_back(new ComponentTypeTemplate<TextEdit>("textedit", "TextEdit", next_id++, "ComponentIconLineEdit"));
-	types.push_back(new ComponentTypeTemplate<ComboBox>("combobox", "ComboBox", next_id++, "ComponentIconComboBox"));
+	types.push_back(new ComponentTypeTemplate<clan::LineEdit>("lineedit", "LineEdit", next_id++, "ComponentIconLineEdit"));
+	types.push_back(new ComponentTypeTemplate<clan::TextEdit>("textedit", "TextEdit", next_id++, "ComponentIconLineEdit"));
+	types.push_back(new ComponentTypeTemplate<clan::ComboBox>("combobox", "ComboBox", next_id++, "ComponentIconComboBox"));
 	types.push_back(new ListViewComponentType("listview", "ListView", next_id++, "ComponentIconListView"));
-	types.push_back(new ComponentTypeTemplate<MenuBar>("menubar", "MenuBar", next_id++, "ComponentIconMenuBar"));
+	types.push_back(new ComponentTypeTemplate<clan::MenuBar>("menubar", "MenuBar", next_id++, "ComponentIconMenuBar"));
 	types.push_back(new ButtonComponentType("button", "PushButton", next_id++, "ComponentIconPushButton"));
 	types.push_back(new SliderComponentType("slider", "Slider", next_id++, "ComponentIconSlider"));
-	types.push_back(new ComponentTypeTemplate<Spin>("spin", "Spin", next_id++, "ComponentIconSpin"));
+	types.push_back(new ComponentTypeTemplate<clan::Spin>("spin", "Spin", next_id++, "ComponentIconSpin"));
 	types.push_back(new ImageViewComponentType("imageview", "ImageView", next_id++, "ComponentIconImageView"));
 	types.push_back(new ScrollBarHorizontalComponentType("hscrollbar", "H Scroll Bar", next_id++, "ComponentIconHScrollBar"));
 	types.push_back(new ScrollBarVerticalComponentType("vscrollbar", "V Scroll Bar", next_id++, "ComponentIconVScrollBar"));
 	types.push_back(new TabComponentType("tab", "Tab", next_id++, "ComponentIconTab"));
 	types.push_back(new FrameComponentType("frame", "Frame", next_id++, "ComponentIconFrame"));
-	types.push_back(new ComponentTypeTemplate<StatusBar>("statusbar", "StatusBar", next_id++, "ComponentIconStatusBar"));
-	types.push_back(new ComponentTypeTemplate<ToolBar>("toolbar", "ToolBar", next_id++, "ComponentIconToolBar"));
+	types.push_back(new ComponentTypeTemplate<clan::StatusBar>("statusbar", "StatusBar", next_id++, "ComponentIconStatusBar"));
+	types.push_back(new ComponentTypeTemplate<clan::ToolBar>("toolbar", "ToolBar", next_id++, "ComponentIconToolBar"));
 	types.push_back(custom_component);
 }
 
@@ -80,7 +80,7 @@ void ComponentTypes::deinitialize()
 
 ComponentType *ComponentTypes::find_component(int id)
 {
-	std::vector<std::shared_ptr<ComponentType> >::size_type index, size;
+	std::vector< std::shared_ptr<ComponentType> >::size_type index, size;
 	size = types.size();
 	for (index = 0; index < size; index++)
 	{
@@ -89,12 +89,12 @@ ComponentType *ComponentTypes::find_component(int id)
 			return types[index];
 		}
 	}
-	throw Exception(string_format("Unable to find component type, unknown id: %1", id));
+	throw clan::Exception(clan::string_format("Unable to find component type, unknown id: %1", id));
 }
 
 ComponentType *ComponentTypes::find_from_xml(const std::string &tag)
 {
-	std::vector<std::shared_ptr<ComponentType> >::size_type index, size;
+	std::vector< std::shared_ptr<ComponentType> >::size_type index, size;
 	size = types.size();
 	for (index = 0; index < size; index++)
 	{
@@ -108,12 +108,12 @@ ComponentType *ComponentTypes::find_from_xml(const std::string &tag)
 	return custom_component;
 }
 
-void ComponentTypes::set_id(GUIComponent *new_component, int id)
+void ComponentTypes::set_id(clan::GUIComponent *new_component, int id)
 {
 	if (component_count.find(id) == component_count.end())
 		component_count[id] = 1;
 
-	new_component->set_id(string_format("%1%2", new_component->get_tag_name(), component_count[id]++));
+	new_component->set_id(clan::string_format("%1%2", new_component->get_tag_name(), component_count[id]++));
 }
 
 const std::vector<ComponentType *> &ComponentTypes::get_types()

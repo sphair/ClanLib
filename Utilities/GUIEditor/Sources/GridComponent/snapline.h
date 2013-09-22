@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -55,9 +55,9 @@ public:
 
 	struct SnapLineTarget
 	{
-		SnapLineTarget(Rect rect, std::vector<SnapLine> snaplines) : rect(rect), snaplines(snaplines) {};
+		SnapLineTarget(clan::Rect rect, std::vector<SnapLine> snaplines) : rect(rect), snaplines(snaplines) {};
 
-		Rect rect;
+		clan::Rect rect;
 		std::vector<SnapLine> snaplines;
 	};
 
@@ -88,8 +88,8 @@ public:
 // Operations:
 public:
 	// Potentially snap a source position to a collection of target positions using snaplines.
-	static Vec2i snap(
-		const Rect &source_rect,
+	static clan::Vec2i snap(
+		const clan::Rect &source_rect,
 		const std::vector<SnapLine> &source_snaplines, 
 		const std::vector<SnapLineTarget> &targets);
 

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -40,24 +40,24 @@ public:
 	ListViewComponentType(const std::string &xmlname, const std::string &name, int id, const std::string &icon)	
 	: ComponentType(xmlname, name, id, icon) {}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		ListView *component = new ListView(parent);
-		component->set_geometry(Rect(0, 0, 200, 100));
+		clan::ListView *component = new clan::ListView(parent);
+		component->set_geometry(clan::Rect(0, 0, 200, 100));
 		return component;
 	}
 
-	virtual void on_show_context_menu(PopupMenu &menu, GridObject *grid_object)
+	virtual void on_show_context_menu(clan::PopupMenu &menu, GridObject *grid_object)
 	{ 
-		PopupMenuItem item = menu.insert_item("Edit columns...");
+		clan::PopupMenuItem item = menu.insert_item("Edit columns...");
 		item.func_clicked().set(this, &ListViewComponentType::on_edit_columns_clicked, grid_object);
 	}
 
 	void on_edit_columns_clicked(GridObject *grid_object)
 	{
-		ListView *list_view = dynamic_cast<ListView*>(grid_object->get_component());
+		clan::ListView *list_view = dynamic_cast<clan::ListView*>(grid_object->get_component());
 		if(list_view == 0)
-			throw Exception("Can't get listview object");
+			throw clan::Exception("Can't get listview object");
 
 		GridComponent *grid_component = grid_object->get_grid_component();
 		GuiEditorWindow *main_window = grid_component->get_main_window();
@@ -72,12 +72,12 @@ public:
 		}
 	}
 
-	std::vector<EditColumnsWindow::Column> get_columns(ListView *list_view) 
+	std::vector<EditColumnsWindow::Column> get_columns(clan::ListView *list_view) 
 	{
 		std::vector<EditColumnsWindow::Column> columns;
 
-		ListViewHeader *header = list_view->get_header();
-		ListViewColumnHeader column = header->get_first_column();
+		clan::ListViewHeader *header = list_view->get_header();
+		clan::ListViewColumnHeader column = header->get_first_column();
 		while (!column.is_null())
 		{
 			int width = column.get_width();
@@ -92,11 +92,11 @@ public:
 		return columns;
 	}
 
-	void remove_columns(ListView *list_view) 
+	void remove_columns(clan::ListView *list_view) 
 	{
-		ListViewHeader *header = list_view->get_header();
+		clan::ListViewHeader *header = list_view->get_header();
 
-		ListViewColumnHeader column = header->get_first_column();
+		clan::ListViewColumnHeader column = header->get_first_column();
 		while(!column.is_null())
 		{
 			header->remove(column.get_column_id());
@@ -104,13 +104,13 @@ public:
 		}
 	}
 
-	void create_columns(ListView *list_view, std::vector<EditColumnsWindow::Column> &columns) 
+	void create_columns(clan::ListView *list_view, std::vector<EditColumnsWindow::Column> &columns) 
 	{
-		ListViewHeader *header = list_view->get_header();
+		clan::ListViewHeader *header = list_view->get_header();
 
 		for(size_t i = 0; i < columns.size(); ++i)
 		{
-			ListViewColumnHeader column = header->create_column(columns[i].id, columns[i].text);
+			clan::ListViewColumnHeader column = header->create_column(columns[i].id, columns[i].text);
 			column.set_width(columns[i].width);
 			header->append(column);
 		}

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -30,31 +30,35 @@
 #include "application.h"
 #include "MainWindow/gui_editor_window.h"
 
-XApplication::XApplication()
+Application::Application()
 {
-	std::string base_path = System::get_exe_path();
-	if(FileHelp::file_exists(base_path + "Resources\\resources.xml") == false)
+	std::string base_path = clan::System::get_exe_path();
+	if(clan::FileHelp::file_exists(base_path + "Resources\\resources.xml") == false)
 		base_path += "..\\";
-	Directory::set_current(base_path);
+	clan::Directory::set_current(base_path);
 
-	std::string global_resource_filename("../../Resources/GUIThemeAero");
+	std::string global_resource_filename("../../Resources/GUIThemeAero/resources.xml");
+	std::string global_theme_filename("../../Resources/GUIThemeAero/theme.css");
 	std::string local_theme_filename("Resources\\theme.css");
-	if (!FileHelp::file_exists("../../Resources/GUIThemeAero/resources.xml"))
+	if (!clan::FileHelp::file_exists(global_resource_filename))
 	{
-		global_resource_filename = "../../Resources/GUIThemeBasic";
+		global_resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
+		global_theme_filename = "../../Resources/GUIThemeBasic/theme.css";
 		local_theme_filename = "Resources\\theme_basic.css";
 	}
 
-	gui = clan::GUIManager(window_manager, global_resource_filename);
-	gui.add_resources(clan::XMLResourceDocument("Resources\\resources.xml"));
+	gui.set_window_manager(window_manager);
+	gui.add_theme(global_theme_filename);
 	gui.add_theme(local_theme_filename);
+	gui.add_resources(global_resource_filename);
+	gui.add_resources("Resources\\resources.xml");
 }
 
-XApplication::~XApplication()
+Application::~Application()
 {
 }
 
-void XApplication::run(const std::string &filename)
+void Application::run(const std::string &filename)
 {
 	GuiEditorWindow main_window(get_gui());
 

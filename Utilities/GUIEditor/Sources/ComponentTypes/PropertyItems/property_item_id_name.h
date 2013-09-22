@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -43,14 +43,14 @@ public:
 	{
 		if (!selection.empty())
 		{
-			GUIComponent *comp = selection[0]->get_component();
+			clan::GUIComponent *comp = selection[0]->get_component();
 			value = comp->get_id();
 		}
 	}
 
 	void apply_changes(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
+		clan::GUIComponent *comp = object->get_component();
 		comp->set_id(value);
 	}
 };

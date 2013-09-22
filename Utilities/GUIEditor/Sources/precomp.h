@@ -5,7 +5,8 @@
 #include <ClanLib/gui.h>
 #include <ClanLib/application.h>
 #include <ClanLib/display.h>
-using namespace clan;
+#include <ClanLib/gl.h>
+#include <ClanLib/swrender.h>
 
 #ifdef use_visual_leak_detector
 	#include <vld.h>

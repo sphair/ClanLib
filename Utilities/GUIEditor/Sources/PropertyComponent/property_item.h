@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -41,10 +41,10 @@ public:
 
 	virtual void selection_changed(const std::vector<GridObject *> &selection) { }
 
-	virtual GUIComponent *activate() = 0;
-	virtual void deactivate(GUIComponent *component) = 0;
+	virtual clan::GUIComponent *activate() = 0;
+	virtual void deactivate(clan::GUIComponent *component) = 0;
 	virtual void apply_changes(GridObject *component) = 0;
 
-	virtual int get_inactive_height(Canvas &canvas, GUIThemePart &part, int width) = 0;
-	virtual void render_inactive(Canvas &canvas, GUIThemePart &part, const Rect &rect) = 0;
+	virtual int get_inactive_height(clan::Canvas &canvas, clan::GUIThemePart &part, int width) = 0;
+	virtual void render_inactive(clan::Canvas &canvas, clan::GUIThemePart &part, const clan::Rect &rect, const clan::Rect &clip_rect) = 0;
 };

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -29,12 +29,12 @@
 #include "precomp.h"
 #include "line_edit_popup.h"
 
-LineEditPopup::LineEditPopup(GUIComponent *parent)
+LineEditPopup::LineEditPopup(clan::GUIComponent *parent)
 : PropertyItemPopup(parent), lineedit(0)
 {
 	func_resized().set(this, &LineEditPopup::on_resized);
 	func_focus_gained().set(this, &LineEditPopup::on_focus_gained);
-	lineedit = new LineEdit(this);
+	lineedit = new clan::LineEdit(this);
 }
 
 LineEditPopup::~LineEditPopup()

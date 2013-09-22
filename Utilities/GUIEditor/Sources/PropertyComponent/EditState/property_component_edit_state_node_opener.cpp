@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,22 +33,22 @@ PropertyComponentEditStateNodeOpener::PropertyComponentEditStateNodeOpener()
 {
 }
 
-bool PropertyComponentEditStateNodeOpener::on_input_pressed(const InputEvent &input_event)
+bool PropertyComponentEditStateNodeOpener::on_input_pressed(const clan::InputEvent &input_event)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateNodeOpener::on_input_released(const InputEvent &input_event)
+bool PropertyComponentEditStateNodeOpener::on_input_released(const clan::InputEvent &input_event)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateNodeOpener::on_input_doubleclick(const InputEvent &input_event)
+bool PropertyComponentEditStateNodeOpener::on_input_doubleclick(const clan::InputEvent &input_event)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateNodeOpener::on_input_pointer_moved(const InputEvent &input_event)
+bool PropertyComponentEditStateNodeOpener::on_input_pointer_moved(const clan::InputEvent &input_event)
 {
 	return false;
 }

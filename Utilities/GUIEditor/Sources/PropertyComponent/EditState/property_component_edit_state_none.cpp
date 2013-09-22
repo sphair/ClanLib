@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -34,9 +34,9 @@ PropertyComponentEditStateNone::PropertyComponentEditStateNone()
 {
 }
 
-bool PropertyComponentEditStateNone::on_input_pressed(const InputEvent &e)
+bool PropertyComponentEditStateNone::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.type == InputEvent::pressed && e.id == mouse_left)
+	if (e.type == clan::InputEvent::pressed && e.id == clan::mouse_left)
 	{
 		int item = property_component->hit_test(e.mouse_pos);
 		if (item != -1)
@@ -46,21 +46,21 @@ bool PropertyComponentEditStateNone::on_input_pressed(const InputEvent &e)
 	return false;
 }
 
-bool PropertyComponentEditStateNone::on_input_released(const InputEvent &e)
+bool PropertyComponentEditStateNone::on_input_released(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateNone::on_input_doubleclick(const InputEvent &e)
+bool PropertyComponentEditStateNone::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool PropertyComponentEditStateNone::on_input_pointer_moved(const InputEvent &e)
+bool PropertyComponentEditStateNone::on_input_pointer_moved(const clan::InputEvent &e)
 {
-	StandardCursor cursor = cursor_arrow;
+	clan::StandardCursor cursor = clan::cursor_arrow;
 	if (property_component->get_header_resize_grabber().contains(e.mouse_pos))
-		cursor = cursor_size_we;
+		cursor = clan::cursor_size_we;
 
 	property_component->set_cursor(cursor);
 	return true;

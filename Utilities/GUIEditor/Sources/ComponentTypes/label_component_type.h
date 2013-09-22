@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,10 +37,10 @@ public:
 	LabelComponentType(const std::string &xmlname, const std::string &name, int id, const std::string &icon)	
 	: ComponentType(xmlname, name, id, icon) {}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		Label *component = new Label(parent);
-		component->set_geometry(Rect(0, 0, 75, 13));
+		clan::Label *component = new clan::Label(parent);
+		component->set_geometry(clan::Rect(0, 0, 75, 13));
 		component->set_text("Label");
 		return component;
 	}

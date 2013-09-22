@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -43,8 +43,8 @@ public:
 	{
 		if (!selection.empty())
 		{
-			GUIComponent *comp = selection[0]->get_component();
-			RadioButton *radiobutton = dynamic_cast<RadioButton*>(comp);
+			clan::GUIComponent *comp = selection[0]->get_component();
+			clan::RadioButton *radiobutton = dynamic_cast<clan::RadioButton*>(comp);
 			if (radiobutton)
 				value = radiobutton->get_group_name();
 		}
@@ -52,9 +52,9 @@ public:
 
 	void apply_changes(GridObject *object)
 	{
-		GUIComponent *comp = object->get_component();
+		clan::GUIComponent *comp = object->get_component();
 
-		RadioButton *radiobutton = dynamic_cast<RadioButton*>(comp);
+		clan::RadioButton *radiobutton = dynamic_cast<clan::RadioButton*>(comp);
 
 		if (radiobutton)
 			radiobutton->set_group_name(value);

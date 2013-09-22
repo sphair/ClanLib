@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -38,9 +38,9 @@ GridEditStateObjectMoving::GridEditStateObjectMoving()
 {
 }
 
-bool GridEditStateObjectMoving::on_input_pressed(const InputEvent &e)
+bool GridEditStateObjectMoving::on_input_pressed(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left)
+	if (e.id == clan::mouse_left)
 	{
 		object = grid->find_object_at(e.mouse_pos);
 		if (object)
@@ -61,23 +61,23 @@ bool GridEditStateObjectMoving::on_input_pressed(const InputEvent &e)
 			return false;
 		}
 	}
-	else if(e.id == keycode_left || e.id == keycode_right || e.id == keycode_up || e.id == keycode_down)
+	else if(e.id == clan::keycode_left || e.id == clan::keycode_right || e.id == clan::keycode_up || e.id == clan::keycode_down)
 	{
-		Point delta;
+		clan::Point delta;
 
-		if(e.id == keycode_left)
+		if(e.id == clan::keycode_left)
 			delta.x = -1;
-		else if(e.id == keycode_right)
+		else if(e.id == clan::keycode_right)
 			delta.x = 1;
-		else if(e.id == keycode_up)
+		else if(e.id == clan::keycode_up)
 			delta.y = -1;
-		else if(e.id == keycode_down)
+		else if(e.id == clan::keycode_down)
 			delta.y = 1;
 
 		std::vector<GridObject*> selection = grid->main_window->get_selection()->get_selection();
 		for (size_t i = 0; i < selection.size(); i++)
 		{
-			Rect geometry = selection[i]->get_geometry().translate(delta);
+			clan::Rect geometry = selection[i]->get_geometry().translate(delta);
 			selection[i]->set_geometry(geometry);
 		}
 
@@ -91,9 +91,9 @@ bool GridEditStateObjectMoving::on_input_pressed(const InputEvent &e)
 	}
 }
 
-bool GridEditStateObjectMoving::on_input_released(const InputEvent &e)
+bool GridEditStateObjectMoving::on_input_released(const clan::InputEvent &e)
 {
-	if (e.id == mouse_left && object)
+	if (e.id == clan::mouse_left && object)
 	{
 		object = 0;
 		grid->capture_mouse(false);
@@ -101,7 +101,7 @@ bool GridEditStateObjectMoving::on_input_released(const InputEvent &e)
 		grid->main_window->get_selection()->sig_selection_changed().invoke();
 		return true;
 	}
-	else if(e.id == keycode_left || e.id == keycode_right || e.id == keycode_up || e.id == keycode_down)
+	else if(e.id == clan::keycode_left || e.id == clan::keycode_right || e.id == clan::keycode_up || e.id == clan::keycode_down)
 	{
 		grid->edit_state.set_pseudo_class(GridEditState::state_none);
 		grid->main_window->get_selection()->sig_selection_changed().invoke();
@@ -114,12 +114,12 @@ bool GridEditStateObjectMoving::on_input_released(const InputEvent &e)
 	}
 }
 
-bool GridEditStateObjectMoving::on_input_doubleclick(const InputEvent &e)
+bool GridEditStateObjectMoving::on_input_doubleclick(const clan::InputEvent &e)
 {
 	return false;
 }
 
-bool GridEditStateObjectMoving::on_input_pointer_moved(const InputEvent &e)
+bool GridEditStateObjectMoving::on_input_pointer_moved(const clan::InputEvent &e)
 {
 	if(object)
 	{
@@ -133,11 +133,11 @@ bool GridEditStateObjectMoving::on_input_pointer_moved(const InputEvent &e)
 	}
 }
 
-void GridEditStateObjectMoving::move_to(const Point &mouse_pos, bool perform_snap)
+void GridEditStateObjectMoving::move_to(const clan::Point &mouse_pos, bool perform_snap)
 {
-	Vec2i delta = mouse_pos - start;
+	clan::Vec2i delta = mouse_pos - start;
 
-	Rect source_rect = start_geometry;
+	clan::Rect source_rect = start_geometry;
 	source_rect.translate(delta);
 
 	if(perform_snap)
@@ -149,7 +149,7 @@ void GridEditStateObjectMoving::move_to(const Point &mouse_pos, bool perform_sna
 	std::vector<GridObject *> selection = grid->main_window->get_selection()->get_selection();
 	for (size_t i = 0; i < selection.size(); i++)
 	{
-		Rect geometry = selection[i]->get_geometry();
+		clan::Rect geometry = selection[i]->get_geometry();
 		geometry.translate(delta.x, delta.y);
 		selection[i]->set_geometry(geometry);
 	}

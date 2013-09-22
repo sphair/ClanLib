@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,11 +37,11 @@ public:
 	CheckBoxComponentType(const std::string &xmlname, const std::string &name, int id, const std::string &resource_icon)	
 	: ComponentType(xmlname, name, id, resource_icon) {}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		CheckBox *component = new CheckBox(parent);
+		clan::CheckBox *component = new clan::CheckBox(parent);
 		component->set_text("CheckBox");
-		component->set_geometry(Rect(0, 0, 75, 17));
+		component->set_geometry(clan::Rect(0, 0, 75, 17));
 		return component;
 	}
 };

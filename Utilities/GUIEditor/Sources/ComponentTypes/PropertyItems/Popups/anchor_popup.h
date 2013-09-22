@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,27 +33,27 @@
 class AnchorPopup : public PropertyItemPopup
 {
 public:
-	AnchorPopup(ComponentAnchorPoint tl, ComponentAnchorPoint br, GUIComponent *parent);
+	AnchorPopup(clan::ComponentAnchorPoint tl, clan::ComponentAnchorPoint br, clan::GUIComponent *parent);
 	~AnchorPopup();
 
-	ComponentAnchorPoint get_anchor_tl() const { return cap_tl; }
-	ComponentAnchorPoint get_anchor_br() const { return cap_br; }
+	clan::ComponentAnchorPoint get_anchor_tl() const { return cap_tl; }
+	clan::ComponentAnchorPoint get_anchor_br() const { return cap_br; }
 
 private:
 	void on_resized();
-	void on_anchoring_changed(RadioButton *rb);
+	void on_anchoring_changed(clan::RadioButton *rb);
 
-	ComponentAnchorPoint cap_tl, cap_br;
-	Label *label_tl;
-	Label *label_br;
-	RadioButton *tl;
-	RadioButton *tr;
-	RadioButton *bl;
-	RadioButton *br;
-	RadioButton *scale;
-	RadioButton *br_tl;
-	RadioButton *br_tr;
-	RadioButton *br_bl;
-	RadioButton *br_br;
-	RadioButton *br_scale;
+	clan::ComponentAnchorPoint cap_tl, cap_br;
+	clan::Label *label_tl;
+	clan::Label *label_br;
+	clan::RadioButton *tl;
+	clan::RadioButton *tr;
+	clan::RadioButton *bl;
+	clan::RadioButton *br;
+	clan::RadioButton *scale;
+	clan::RadioButton *br_tl;
+	clan::RadioButton *br_tr;
+	clan::RadioButton *br_bl;
+	clan::RadioButton *br_br;
+	clan::RadioButton *br_scale;
 };

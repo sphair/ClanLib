@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -33,9 +33,9 @@ class PropertyItemHeader : public PropertyItem
 public:
 	PropertyItemHeader(const std::string &name) { this->name = name; }
 
-	GUIComponent *activate() { return 0; }
-	void deactivate(GUIComponent *component) { }
+	clan::GUIComponent *activate() { return 0; }
+	void deactivate(clan::GUIComponent *component) { }
 
-	int get_inactive_height(Canvas &canvas, GUIThemePart &part, int width) { return 0; }
-	void render_inactive(Canvas &canvas, GUIThemePart &part, const Rect &rect) { }
+	int get_inactive_height(clan::Canvas &canvas, clan::GUIThemePart &part, int width) { return 0; }
+	void render_inactive(clan::Canvas &canvas, clan::GUIThemePart &part, const clan::Rect &rect, const clan::Rect &clip_rect) { }
 };

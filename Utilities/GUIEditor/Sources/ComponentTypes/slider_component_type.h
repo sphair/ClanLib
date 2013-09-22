@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -37,11 +37,11 @@ public:
 	SliderComponentType(const std::string &xmlname, const std::string &name, int id, const std::string &icon)	
 	: ComponentType(xmlname, name, id, icon) {}
 
-	virtual GUIComponent *create_component(GUIComponent *parent) const
+	virtual clan::GUIComponent *create_component(clan::GUIComponent *parent) const
 	{
-		Slider *component = new Slider(parent);
+		clan::Slider *component = new clan::Slider(parent);
 		component->set_ranges(0, 100, 10, 10);
-		component->set_geometry(Rect(0, 0, 75, 24));
+		component->set_geometry(clan::Rect(0, 0, 75, 24));
 		return component;
 	}
 };

@@ -1,6 +1,6 @@
 /*
 **  ClanLib SDK
-**  Copyright (c) 1997-2012 The ClanLib Team
+**  Copyright (c) 1997-2013 The ClanLib Team
 **
 **  This software is provided 'as-is', without any express or implied
 **  warranty.  In no event will the authors be held liable for any damages
@@ -36,10 +36,10 @@ class GridComponent;
 class PropertyComponent;
 class TextureListWindow;
 
-class GuiEditorWindow : public GUIComponent
+class GuiEditorWindow : public clan::Window
 {
 public:
-	GuiEditorWindow(GUIManager *gui_manager);
+	GuiEditorWindow(clan::GUIManager *gui_manager);
 	~GuiEditorWindow();
 
 // Attributes:
@@ -57,29 +57,29 @@ public:
 
 // Implementation:
 private:
-	static GUITopLevelDescription get_startup_description();
+	static clan::GUITopLevelDescription get_startup_description();
 	void create_components();
 	void create_new_document();
 	void populate_menubar();
-	void populate_main_toolbar(ResourceManager &resources);
-	void populate_tools_toolbar(ResourceManager &resources);
+	void populate_main_toolbar(clan::ResourceManager resources);
+	void populate_tools_toolbar(clan::ResourceManager resources);
 	void update_child_positions();
 	bool on_close();
 	void on_resized();
-	void on_tool_selected(ToolBarItem item);
-	void on_main_toolbar_clicked(ToolBarItem item);
+	void on_tool_selected(clan::ToolBarItem item);
+	void on_main_toolbar_clicked(clan::ToolBarItem item);
 	void on_menu_source_generator();
 	void on_grid_resized();
-	void on_process_messages(std::shared_ptr<GUIMessage> &msg);
+	void on_process_messages(std::shared_ptr<clan::GUIMessage> &msg);
 
 	std::string show_open_file_dialog();
 	std::string show_save_file_dialog();
 
 	Selection selection;
-	MenuBar *menubar;
-	ToolBar *toolbar_main;
-	ToolBar *toolbar_tools;
-	StatusBar *statusbar;
+	clan::MenuBar *menubar;
+	clan::ToolBar *toolbar_main;
+	clan::ToolBar *toolbar_tools;
+	clan::StatusBar *statusbar;
 	ViewBorder *view_border;
 	GridComponent *grid_component;
 	PropertyComponent *property_component;
