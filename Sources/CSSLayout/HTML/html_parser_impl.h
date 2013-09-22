@@ -118,28 +118,30 @@ private:
 	void rcdata_element_parsing(CSSLayoutElement adjusted_insertion_location);
 	void generate_implied_end_tags(const std::vector<std::string> &exclude_list = std::vector<std::string>());
 
-	void initial_insertion_mode(const HTMLToken &token);
-	void before_html_insertion_mode(const HTMLToken &token);
-	void before_head_insertion_mode(const HTMLToken &token);
-	void in_head_insertion_mode(const HTMLToken &token);
-	void in_head_noscript_insertion_mode(const HTMLToken &token);
-	void after_head_insertion_mode(const HTMLToken &token);
-	void in_body_insertion_mode(const HTMLToken &token);
-	void text_insertion_mode(const HTMLToken &token);
-	void in_table_insertion_mode(const HTMLToken &token);
-	void in_table_text_insertion_mode(const HTMLToken &token);
-	void in_caption_insertion_mode(const HTMLToken &token);
-	void in_column_group_insertion_mode(const HTMLToken &token);
-	void in_table_body_insertion_mode(const HTMLToken &token);
-	void in_row_insertion_mode(const HTMLToken &token);
-	void in_cell_insertion_mode(const HTMLToken &token);
-	void in_select_insertion_mode(const HTMLToken &token);
-	void in_select_in_table_insertion_mode(const HTMLToken &token);
-	void in_template_insertion_mode(const HTMLToken &token);
-	void after_body_insertion_mode(const HTMLToken &token);
-	void in_frameset_insertion_mode(const HTMLToken &token);
-	void after_frameset_insertion_mode(const HTMLToken &token);
-	void after_after_frameset_insertion_mode(const HTMLToken &token);
+	void dispatch(HTMLToken &token);
+
+	void initial_insertion_mode(HTMLToken &token);
+	void before_html_insertion_mode(HTMLToken &token);
+	void before_head_insertion_mode(HTMLToken &token);
+	void in_head_insertion_mode(HTMLToken &token);
+	void in_head_noscript_insertion_mode(HTMLToken &token);
+	void after_head_insertion_mode(HTMLToken &token);
+	void in_body_insertion_mode(HTMLToken &token);
+	void text_insertion_mode(HTMLToken &token);
+	void in_table_insertion_mode(HTMLToken &token);
+	void in_table_text_insertion_mode(HTMLToken &token);
+	void in_caption_insertion_mode(HTMLToken &token);
+	void in_column_group_insertion_mode(HTMLToken &token);
+	void in_table_body_insertion_mode(HTMLToken &token);
+	void in_row_insertion_mode(HTMLToken &token);
+	void in_cell_insertion_mode(HTMLToken &token);
+	void in_select_insertion_mode(HTMLToken &token);
+	void in_select_in_table_insertion_mode(HTMLToken &token);
+	void in_template_insertion_mode(HTMLToken &token);
+	void after_body_insertion_mode(HTMLToken &token);
+	void in_frameset_insertion_mode(HTMLToken &token);
+	void after_frameset_insertion_mode(HTMLToken &token);
+	void after_after_frameset_insertion_mode(HTMLToken &token);
 
 	void stopped_parsing();
 

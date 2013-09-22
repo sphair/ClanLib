@@ -222,91 +222,451 @@ void HTMLParser_Impl::generate_implied_end_tags(const std::vector<std::string> &
 	// §8.2.5.3 Closing elements that have implied end tags
 }
 
-void HTMLParser_Impl::initial_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::dispatch(HTMLToken &token)
+{
+	// §8.2.5 Tree construction
+	// tree construction dispatcher
+}
+
+void HTMLParser_Impl::initial_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+			token.value = token.value.substr(pos);
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_comment)
+	{
+		// bool foster_parenting = false;
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		// layout.append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		//std::string name, public_id, system_id;
+		//layout.append_child(layout.create_document_type(name, public_id, system_id);
+
+		insertion_mode = mode_before_html;
+	}
+	else
+	{
+		// To do: "If the document is not an iframe srcdoc document, then this is a parse error; set the Document to quirks mode."
+		insertion_mode = mode_before_html;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::before_html_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+			token.value = token.value.substr(pos);
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_comment)
+	{
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		// layout.append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		CSSLayoutElement html = layout.create_element(token.value/*, html_namespace*/);
+		//layout.append_child(html);
+		layout.set_document_element(html);
+		open_elements.push_back(html);
+
+		// To do: handle 'manifest' attribute
+
+		insertion_mode = mode_before_head;
+	}
+	else if (token.type == HTMLToken::type_tag_end && (token.value != "head" && token.value != "body" && token.value != "html" && token.value != "br"))
+	{
+		// Parse error. Ignore token.
+	}
+	else
+	{
+		CSSLayoutElement html = layout.create_element("html"/*, html_namespace*/);
+		//layout.append_child(html);
+		layout.set_document_element(html);
+		open_elements.push_back(html);
+
+		insertion_mode = mode_before_head;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::before_head_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+			token.value = token.value.substr(pos);
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_comment)
+	{
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		//get_adjusted_insertion_location(CSSLayoutElement(), false).append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		in_body_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "head")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		head_element = insert_html_element(token, insert_location.get_parent().to_element());
+
+		insertion_mode = mode_in_head;
+	}
+	else if (token.type == HTMLToken::type_tag_end && (token.value != "head" && token.value != "body" && token.value != "html" && token.value != "br"))
+	{
+		// Parse error. Ignore token.
+	}
+	else
+	{
+		HTMLToken head_token;
+		head_token.type = HTMLToken::type_tag_begin;
+		head_token.value = "head";
+
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		head_element = insert_html_element(head_token, insert_location.get_parent().to_element());
+
+		insertion_mode = mode_in_head;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::in_head_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+		{
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_character(token.value.substr(0, pos), insert_location);
+			token.value = token.value.substr(pos);
+		}
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_comment)
+	{
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		//get_adjusted_insertion_location(CSSLayoutElement(), false).append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		in_body_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_begin && (token.value == "base" || token.value == "basefont" || token.value == "bgsound" || token.value == "link"))
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+		open_elements.pop_back();
+
+		// To do: "Acknowledge the token's self-closing flag, if it is set."
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "meta")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+		open_elements.pop_back();
+
+		// To do: "Acknowledge the token's self-closing flag, if it is set."
+
+		// To do: Deal with the charset attribute
+		// To do: Deal with http-equiv="Content-Type"
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "title")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+
+		// To do: Follow the generic RCDATA element parsing algorithm.
+	}
+	else if ((token.type == HTMLToken::type_tag_begin && token.value == "noscript" && scripting_flag) ||
+		(token.type == HTMLToken::type_tag_begin && token.value == "noframes") ||
+		(token.type == HTMLToken::type_tag_begin && token.value == "style"))
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+
+		// To do: Follow the generic raw text element parsing algorithm.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "noscript" && !scripting_flag)
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+
+		insertion_mode = mode_in_head_noscript;
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "script")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		CSSLayoutElement element = create_element_for_token(token, insert_location.get_parent().to_element());
+
+		// To do: Mark the element as being "parser-inserted" and unset the element's "force-async" flag
+		// To do: If the parser was originally created for the HTML fragment parsing algorithm, then mark the script element as "already started". (fragment case)
+		// To do: Insert the newly created element at the adjusted insertion location
+		open_elements.push_back(element);
+		// To do: Switch the tokenizer to the script data state.
+		original_insertion_mode = insertion_mode;
+		insertion_mode = mode_text;
+	}
+	else if (token.type == HTMLToken::type_tag_end && token.value == "head")
+	{
+		open_elements.pop_back();
+		insertion_mode = mode_after_head;
+	}
+	else if ((token.type == HTMLToken::type_tag_begin && token.value == "head") ||
+		(token.type == HTMLToken::type_tag_end && (token.value != "body" && token.value != "html" && token.value != "br")))
+	{
+		// Parse error. Ignore token.
+	}
+	else
+	{
+		open_elements.pop_back();
+		insertion_mode = mode_after_head;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::in_head_noscript_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+		{
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_character(token.value.substr(0, pos), insert_location);
+			token.value = token.value.substr(pos);
+		}
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		in_body_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_end && token.value == "noscript")
+	{
+		open_elements.pop_back();
+		insertion_mode = mode_in_head;
+	}
+	else if (token.type == HTMLToken::type_comment)
+	{
+		in_head_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_begin && (token.value == "basefont" || token.value == "bgsound" || token.value == "link" || token.value == "meta" || token.value == "noframes" || token.value == "style"))
+	{
+		in_head_insertion_mode(token);
+	}
+	else if ((token.type == HTMLToken::type_tag_begin && (token.value == "head" || token.value == "noscript")) ||
+		(token.type == HTMLToken::type_tag_end && token.value != "br"))
+	{
+		// Parse error. Ignore token.
+	}
+	else
+	{
+		// Parse error.
+
+		open_elements.pop_back();
+		insertion_mode = mode_in_head;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::after_head_insertion_mode(HTMLToken &token)
+{
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore: character token that is one of U+0009 CHARACTER TABULATION, "LF" (U+000A), "FF" (U+000C), "CR" (U+000D), or U+0020 SPACE
+		std::size_t pos = token.value.find_first_not_of("\t\r\n\f ");
+		if (pos != 0 && pos != std::string::npos)
+		{
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_character(token.value.substr(0, pos), insert_location);
+			token.value = token.value.substr(pos);
+		}
+		if (token.value.empty())
+			return;
+	}
+
+	if (token.type == HTMLToken::type_comment)
+	{
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		//get_adjusted_insertion_location(CSSLayoutElement(), false).append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		in_body_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "body")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+
+		frameset_ok_flag = false;
+
+		insertion_mode = mode_in_body;
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "frameset")
+	{
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location.get_parent().to_element());
+
+		insertion_mode = mode_in_frameset;
+	}
+	else if (token.type == HTMLToken::type_tag_begin && (token.value == "base" || token.value == "basefont" || token.value == "bgsound" ||
+		token.value == "link" || token.value == "meta" || token.value == "noframes" || token.value == "script" || token.value == "style" ||
+		token.value == "title"))
+	{
+		// Parse error.
+
+		open_elements.push_back(head_element);
+
+		in_head_insertion_mode(token);
+
+		for (size_t i = open_elements.size(); i != 0; i--)
+		{
+			if (open_elements[i -1] == head_element)
+			{
+				open_elements.erase(open_elements.begin() + (i - 1));
+				break;
+			}
+		}
+	}
+	else if ((token.type == HTMLToken::type_tag_begin && token.value == "head") ||
+		(token.type == HTMLToken::type_tag_end && (token.value != "body" && token.value != "html" && token.value != "br")))
+	{
+		// Parse error. Ignore token.
+	}
+	else
+	{
+		HTMLToken html_token;
+		html_token.type = HTMLToken::type_tag_begin;
+		html_token.value = "body";
+
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(html_token, insert_location.get_parent().to_element());
+
+		insertion_mode = mode_in_body;
+		dispatch(token);
+	}
+}
+
+void HTMLParser_Impl::in_body_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::before_html_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::text_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::before_head_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_table_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_head_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_table_text_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_head_noscript_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_caption_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::after_head_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_column_group_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_body_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_table_body_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::text_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_row_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_table_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_cell_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_table_text_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_select_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_caption_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_select_in_table_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_column_group_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_template_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_table_body_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::after_body_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_row_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::in_frameset_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_cell_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::after_frameset_insertion_mode(HTMLToken &token)
 {
 }
 
-void HTMLParser_Impl::in_select_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::in_select_in_table_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::in_template_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::after_body_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::in_frameset_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::after_frameset_insertion_mode(const HTMLToken &token)
-{
-}
-
-void HTMLParser_Impl::after_after_frameset_insertion_mode(const HTMLToken &token)
+void HTMLParser_Impl::after_after_frameset_insertion_mode(HTMLToken &token)
 {
 }
 
