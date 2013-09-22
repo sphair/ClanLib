@@ -117,7 +117,7 @@ std::string RadioButton::get_text() const
 	return impl->text;
 }
 
-int RadioButton::get_id() const
+int RadioButton::get_radio_id() const
 {
 	return impl->id;
 }
@@ -150,7 +150,7 @@ void RadioButton::set_text(const std::string &text)
 	impl->text = text;
 }
 
-void RadioButton::set_id(int id)
+void RadioButton::set_radio_id(int id)
 {
 	impl->id = id;
 }
