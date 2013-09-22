@@ -47,8 +47,7 @@ XApplication::XApplication()
 
 	gui = clan::GUIManager(window_manager, global_resource_filename);
 	gui.add_resources(clan::XMLResourceDocument("Resources\\resources.xml"));
-	//gui.add_theme(local_theme_filename);
-	gui.add_theme("Resources");//FIXME
+	gui.add_theme(local_theme_filename);
 }
 
 XApplication::~XApplication()

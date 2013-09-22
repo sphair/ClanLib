@@ -28,7 +28,7 @@
 
 #include "precomp.h"
 #include "application.h"
-#include <ClanLib/d3d.h>
+#include <ClanLib/gl.h>
 
 #if _MSC_VER >= 1300
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -42,26 +42,14 @@ public:
 	{
 		SetupCore setup_core;
 		SetupDisplay setup_display;
-		SetupD3D setup_d3d;
+		SetupGL setup_gl;
 
-		try
-		{
-			XApplication app;
+		XApplication app;
 
-			if(args.size() > 1)
-				app.run(args[1]);
-			else
-				app.run();
-		}
-		catch (Exception e)
-		{
-#ifdef WIN32
-			MessageBoxA(0, e.get_message_and_stack_trace().c_str(), "Unhandled Exception", MB_OK|MB_ICONERROR);
-#else
-			Console::write_line("Unhandled exception: %1", e.get_message_and_stack_trace());
-#endif
-			return 0;
-		}
+		if(args.size() > 1)
+			app.run(args[1]);
+		else
+			app.run();
 
 		return 1;
 	}
