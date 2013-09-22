@@ -43,11 +43,11 @@ class GUILayoutProvider_Corners;
 /// \brief Component Anchor Point
 enum ComponentAnchorPoint
 {
-	cl_anchor_top_left,
-	cl_anchor_top_right,
-	cl_anchor_bottom_left,
-	cl_anchor_bottom_right,
-	cl_anchor_relative
+	anchor_top_left,
+	anchor_top_right,
+	anchor_bottom_left,
+	anchor_bottom_right,
+	anchor_relative
 };
 
 /// \brief GUI base component class.
