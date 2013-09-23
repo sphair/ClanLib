@@ -379,11 +379,11 @@ void ToolBar_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 			item.impl->icon.draw(canvas, icon_pos);
 		}
 
-		toolbar->push_cliprect(canvas, item_content);
-
-		toolbar->render_text(canvas, item.impl->text, item_content.left + item.impl->text_pos.x + pressed_offset.x, item_content.top + item.impl->text_pos.y + pressed_offset.y + toolbar->get_vertical_text_align(canvas).baseline);
-
-		toolbar->pop_cliprect(canvas);
+		//FIXME: toolbar->push_cliprect(canvas, item_content);
+		//canvas.fill_rect(item_content, Colorf::gray);
+		// FIXME: Added 256 as a hack .. until someone fixes this class
+		part_item_normal.render_text(canvas, item.impl->text, Rect(item_content.left + item.impl->text_pos.x + pressed_offset.x, item_content.top + item.impl->text_pos.y + pressed_offset.y, item_content.right+256, item_content.bottom+256));
+		//toolbar->pop_cliprect(canvas);
 	}
 }
 

@@ -603,8 +603,11 @@ public:
 	Rect render_text(Canvas &canvas, const std::string &text);
 	Rect render_text(Canvas &canvas, const std::string &text, int xpos, int baseline);
 
-	/// \brief Calculates the vertical text position for the current font
+	/// \brief Calculates the vertical text position for the current font using the component content box
 	VerticalTextPosition get_vertical_text_align(Canvas &canvas);
+
+	/// \brief Calculates the vertical text position for the current font
+	VerticalTextPosition get_vertical_text_align(Canvas &canvas, const Rect &rect);
 
 /// \}
 /// \name Implementation
