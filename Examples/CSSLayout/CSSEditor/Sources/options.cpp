@@ -39,15 +39,25 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	int gap = 20;
 
 	value_margin.setup(this, "margin", base_xpos, base_ypos); base_ypos += gap;
-	value_margin_top.setup(this, "margin-top", base_xpos, base_ypos); base_ypos += gap;
-	value_margin_right.setup(this, "margin-right", base_xpos, base_ypos); base_ypos += gap;
-	value_margin_bottom.setup(this, "margin-bottom", base_xpos, base_ypos); base_ypos += gap;
-	value_margin_left.setup(this, "margin-left", base_xpos, base_ypos); base_ypos += gap;
-	value_border.setup(this, "border", base_xpos, base_ypos); base_ypos += gap;
-	value_border_top.setup(this, "border-top", base_xpos, base_ypos); base_ypos += gap;
-	value_border_right.setup(this, "border-right", base_xpos, base_ypos); base_ypos += gap;
-	value_border_bottom.setup(this, "border-bottom", base_xpos, base_ypos); base_ypos += gap;
-	value_border_left.setup(this, "border-left", base_xpos, base_ypos); base_ypos += gap;
+	base_ypos += 8;
+	std::vector<std::string> border_style_options;
+	border_style_options.push_back("none");
+	border_style_options.push_back("solid");
+	border_style_options.push_back("thin");
+	border_style_options.push_back("medium");
+	border_style_options.push_back("thick");
+	border_style_options.push_back("hidden");
+	border_style_options.push_back("dotted");
+	border_style_options.push_back("dashed");
+	border_style_options.push_back("double");
+	border_style_options.push_back("groove");
+	border_style_options.push_back("ridge");
+	border_style_options.push_back("inset");
+	border_style_options.push_back("outset");
+
+	list_border_style.setup(this, "border-style", base_xpos, base_ypos, border_style_options); base_ypos += gap;
+	value_border_width.setup(this, "border-width", base_xpos, base_ypos); base_ypos += gap;
+	base_ypos += 8;
 	value_width.setup(this, "width", base_xpos, base_ypos); base_ypos += gap;
 	value_height.setup(this, "height", base_xpos, base_ypos); base_ypos += gap;
 
@@ -55,14 +65,25 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 
 	rgb_background.setup(this, "background", base_xpos, base_ypos); base_ypos += gap;
 	rgb_border_color.setup(this, "border-color", base_xpos, base_ypos); base_ypos += gap;
-	func_render().set(this, &Options::on_render);
+	rgb_color.setup(this, "color", base_xpos, base_ypos); base_ypos += gap;
 
 	base_ypos += 8;
+	std::vector<std::string> background_image_options;
+	background_image_options.push_back("../../GUI/CommonCode/Resources/tux.png");
+	background_image_options.push_back("../../Display/LayeredWindow/rock.png");
+	background_image_options.push_back("../../Display/LayeredWindow/round_tux.png");
+	background_image_options.push_back("../../Display/Basic2D/Resources/logo.png");
+	background_image_options.push_back("../../Game/DiceWar/Resources/Maps/Island/texture.png");
+	list_background_image.setup(this, "background-image", base_xpos, base_ypos, background_image_options); base_ypos += gap;
 
+	base_ypos += 8;
 	pushbutton_export = new clan::PushButton(this);
 	pushbutton_export->set_geometry(clan::Rect(base_xpos, base_ypos, clan::Size(128, 20)));
 	pushbutton_export->set_text("Launch in Browser");
 	pushbutton_export->func_clicked().set(this, &Options::export_clicked);
+
+
+	func_render().set(this, &Options::on_render);
 
 }
 

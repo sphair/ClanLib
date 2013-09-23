@@ -28,36 +28,24 @@
 
 #pragma once
 
-#include "option_value.h"
-#include "option_rgb.h"
-#include "option_list.h"
-
-class Options : public clan::GUIComponent
+class OptionList
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
-	virtual ~Options();
+	OptionList();
+	~OptionList();
 
-	OptionValue value_margin;
-	OptionValue value_border_width;
-	OptionValue value_width;
-	OptionValue value_height;
+	void setup(clan::GUIComponent *base_component, const std::string &name, int xpos, int ypos, const std::vector<std::string> &list);
 
-	OptionList list_border_style;
-
-	OptionRGB rgb_background;
-	OptionRGB rgb_border_color;
-	OptionRGB rgb_color;
-
-	OptionList list_background_image;
-
-	bool export_selected;
+	std::string css_item;
+	bool css_enabled;
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	void export_clicked();
-
+	void combobox_changed(int index);
+	void checkbox_changed();
 private:
-	clan::PushButton *pushbutton_export;
+	clan::CheckBox *checkbox;
+	clan::ComboBox *combobox;
+	clan::PopupMenu popupmenu;
+
 };
 

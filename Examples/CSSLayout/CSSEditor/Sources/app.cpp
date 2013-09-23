@@ -88,24 +88,10 @@ int App::start(const std::vector<std::string> &args)
 
 		if (options->value_margin.css_enabled)
 			created_css+= clan::string_format("margin: %1%2;\n", options->value_margin.css_value, options->value_margin.css_type_length);
-		if (options->value_margin_top.css_enabled)
-			created_css+= clan::string_format("margin-top: %1%2;\n", options->value_margin_top.css_value, options->value_margin_top.css_type_length);
-		if (options->value_margin_right.css_enabled)
-			created_css+= clan::string_format("margin-right: %1%2;\n", options->value_margin_right.css_value, options->value_margin_right.css_type_length);
-		if (options->value_margin_bottom.css_enabled)
-			created_css+= clan::string_format("margin-bottom: %1%2;\n", options->value_margin_bottom.css_value, options->value_margin_bottom.css_type_length);
-		if (options->value_margin_left.css_enabled)
-			created_css+= clan::string_format("margin-left: %1%2;\n", options->value_margin_left.css_value, options->value_margin_left.css_type_length);
-		if (options->value_border.css_enabled)
-			created_css+= clan::string_format("border: %1%2;\n", options->value_border.css_value, options->value_border.css_type_length);
-		if (options->value_border_top.css_enabled)
-			created_css+= clan::string_format("border-top: %1%2;\n", options->value_border_top.css_value, options->value_border_top.css_type_length);
-		if (options->value_border_right.css_enabled)
-			created_css+= clan::string_format("border-right: %1%2;\n", options->value_border_right.css_value, options->value_border_right.css_type_length);
-		if (options->value_border_bottom.css_enabled)
-			created_css+= clan::string_format("border-bottom: %1%2;\n", options->value_border_bottom.css_value, options->value_border_bottom.css_type_length);
-		if (options->value_border_left.css_enabled)
-			created_css+= clan::string_format("border-left: %1%2;\n", options->value_border_left.css_value, options->value_border_left.css_type_length);
+		if (options->list_border_style.css_enabled)
+			created_css+= clan::string_format("border-style: %1;\n", options->list_border_style.css_item);
+		if (options->value_border_width.css_enabled)
+			created_css+= clan::string_format("border-width: %1%2;\n", options->value_border_width.css_value, options->value_border_width.css_type_length);
 		if (options->value_width.css_enabled)
 			created_css+= clan::string_format("width: %1%2;\n", options->value_width.css_value, options->value_width.css_type_length);
 		if (options->value_height.css_enabled)
@@ -114,7 +100,10 @@ int App::start(const std::vector<std::string> &args)
 			created_css+= clan::string_format("background:rgb(%1,%2,%3);\n", options->rgb_background.css_red, options->rgb_background.css_green, options->rgb_background.css_blue);
 		if (options->rgb_border_color.css_enabled)
 			created_css+= clan::string_format("border-color:rgb(%1,%2,%3);\n", options->rgb_border_color.css_red, options->rgb_border_color.css_green, options->rgb_border_color.css_blue);
-
+		if (options->rgb_color.css_enabled)
+			created_css+= clan::string_format("color:rgb(%1,%2,%3);\n", options->rgb_color.css_red, options->rgb_color.css_green, options->rgb_color.css_blue);
+		if (options->list_background_image.css_enabled)
+			created_css+= clan::string_format("background-image:url('%1');\n", options->list_background_image.css_item);
 		created_css+= 
 			"font: 13px \"Segoe UI\"; "
 			"}\n"
@@ -126,7 +115,7 @@ int App::start(const std::vector<std::string> &args)
 		css.add_sheet(clan::author_sheet_origin, iodevice_memory, "");
 
 		clan::CSSLayout layout;
-
+		layout.func_get_image().set(this, &App::get_image);
 		clan::CSSLayoutElement element_html = layout.create_element("html");
 		clan::CSSLayoutElement element_body = element_html.create_element("body");
 		clan::CSSLayoutElement element_div = element_body.create_element("div");
@@ -174,3 +163,7 @@ void App::on_window_close()
 	quit = true;
 }
 
+clan::Image App::get_image(clan::Canvas &canvas, const std::string &url)
+{
+	return clan::Image(canvas, url);
+}
