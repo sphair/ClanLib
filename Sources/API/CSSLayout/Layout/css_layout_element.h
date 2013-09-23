@@ -47,6 +47,7 @@ public:
 	std::string get_name() const;
 	void set_name(const std::string &name);
 
+	bool has_attribute(const std::string &name) const;
 	void set_attribute(const std::string &name, const std::string &value);
 
 	void set_col_span(int span);
