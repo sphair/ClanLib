@@ -40,6 +40,8 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 
 	value_margin.setup(this, "margin", base_xpos, base_ypos); base_ypos += gap;
 	base_ypos += 8;
+	value_padding.setup(this, "padding", base_xpos, base_ypos); base_ypos += gap;
+	base_ypos += 8;
 	std::vector<std::string> border_style_options;
 	border_style_options.push_back("none");
 	border_style_options.push_back("solid");

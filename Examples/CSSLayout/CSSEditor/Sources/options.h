@@ -39,6 +39,7 @@ public:
 	virtual ~Options();
 
 	OptionValue value_margin;
+	OptionValue value_padding;
 	OptionValue value_border_width;
 	OptionValue value_width;
 	OptionValue value_height;

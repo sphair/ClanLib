@@ -88,6 +88,8 @@ int App::start(const std::vector<std::string> &args)
 
 		if (options->value_margin.css_enabled)
 			created_css+= clan::string_format("margin: %1%2;\n", options->value_margin.css_value, options->value_margin.css_type_length);
+		if (options->value_padding.css_enabled)
+			created_css+= clan::string_format("padding: %1%2;\n", options->value_padding.css_value, options->value_padding.css_type_length);
 		if (options->list_border_style.css_enabled)
 			created_css+= clan::string_format("border-style: %1;\n", options->list_border_style.css_item);
 		if (options->value_border_width.css_enabled)
@@ -104,8 +106,9 @@ int App::start(const std::vector<std::string> &args)
 			created_css+= clan::string_format("color:rgb(%1,%2,%3);\n", options->rgb_color.css_red, options->rgb_color.css_green, options->rgb_color.css_blue);
 		if (options->list_background_image.css_enabled)
 			created_css+= clan::string_format("background-image:url('%1');\n", options->list_background_image.css_item);
+
 		created_css+= 
-			"font: 13px \"Segoe UI\"; "
+		 "font: 13px \"Segoe UI\"; "
 			"}\n"
 			;
 		clan::DataBuffer created_css_buffer(created_css.c_str(), created_css.size());
