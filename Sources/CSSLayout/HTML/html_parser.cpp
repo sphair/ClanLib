@@ -47,7 +47,7 @@ void HTMLParser::append(const HTMLToken &token)
 /////////////////////////////////////////////////////////////////////////////
 
 HTMLParser_Impl::HTMLParser_Impl()
-	: insertion_mode(mode_initial), original_insertion_mode(mode_initial), scripting_flag(false), frameset_ok_flag(false)
+	: insertion_mode(mode_initial), original_insertion_mode(mode_initial), scripting_flag(false), frameset_ok_flag(true), ignore_token_if_newline(false)
 {
 }
 
@@ -217,13 +217,56 @@ void HTMLParser_Impl::rcdata_element_parsing(CSSLayoutElement adjusted_insertion
 	// "These algorithms are always invoked in response to a start tag token."
 }
 
-void HTMLParser_Impl::generate_implied_end_tags(const std::vector<std::string> &exclude_list)
+void HTMLParser_Impl::generate_implied_end_tags(const std::string &except_name)
 {
-	// §8.2.5.3 Closing elements that have implied end tags
+	while (!open_elements.empty())
+	{
+		std::string name = open_elements.back().get_name();
+		if (name != except_name && (name == "dd" || name == "dt" || name == "li" || name == "option" || name == "optgroup" || name == "p" || name == "rp" || name == "rt"))
+			open_elements.pop_back();
+		else
+			return;
+	}
+}
+
+bool HTMLParser_Impl::is_special_category(const std::string &name)
+{
+	return
+		name == "address" || name == "applet" || name == "area" || name == "article" || name == "aside" ||
+		name == "base" || name == "basefont" || name == "bgsound" || name == "blockquote" || name == "body" || name == "br" || name == "button" ||
+		name == "caption" || name == "center" || name == "col" || name == "colgroup" ||
+		name == "dd" || name == "details" || name == "dir" || name == "div" || name == "dl" || name == "dt" ||
+		name == "embed" ||
+		name == "fieldset" || name == "figcaption" || name == "figure" || name == "footer" || name == "form" || name == "frame" || name == "frameset" ||
+		name == "h1" || name == "h2" || name == "h3" || name == "h4" || name == "h5" || name == "h6" || name == "head" || name == "header" || name == "hgroup" || name == "hr" || name == "html" ||
+		name == "iframe" || name == "img" || name == "input" || name == "isindex" ||
+		name == "li" || name == "link" || name == "listing" ||
+		name == "main" || name == "marquee" || name == "menu" || name == "menuitem" || name == "meta" ||
+		name == "nav" || name == "noembed" || name == "noframes" || name == "noscript" ||
+		name == "object" || name == "ol" ||
+		name == "p" || name == "param" || name == "plaintext" || name == "pre" ||
+		name == "script" || name == "section" || name == "select" || name == "source" || name == "style" || name == "summary" ||
+		name == "table" || name == "tbody" || name == "td" || name == "template" || name == "textarea" || name == "tfoot" || name == "th" || name == "thead" || name == "title" || name == "tr" || name == "track" ||
+		name == "ul" ||
+		name == "wbr" ||
+		name == "xmp" ||
+		name == "mi" || name == "mo" || name == "mn" || name == "ms" || name == "mtext" || name == "annotation-xml" ||
+		name == "foreignObject" || name == "desc" || name == "title";
 }
 
 void HTMLParser_Impl::dispatch(HTMLToken &token)
 {
+	if (ignore_token_if_newline) // Newlines at the start of pre blocks are ignored as an authoring convenience.
+	{
+		ignore_token_if_newline = false;
+		if (token.type == HTMLToken::type_text && token.value.front() == 0x0a)
+		{
+			token.value.erase(token.value.begin());
+			if (token.value.empty())
+				return;
+		}
+	}
+
 	// §8.2.5 Tree construction
 	// tree construction dispatcher
 }
@@ -456,6 +499,14 @@ void HTMLParser_Impl::in_head_insertion_mode(HTMLToken &token)
 		open_elements.pop_back();
 		insertion_mode = mode_after_head;
 	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "template")
+	{
+		// To do: implement this
+	}
+	else if (token.type == HTMLToken::type_tag_end && token.value == "template")
+	{
+		// To do: implement this
+	}
 	else if ((token.type == HTMLToken::type_tag_begin && token.value == "head") ||
 		(token.type == HTMLToken::type_tag_end && (token.value != "body" && token.value != "html" && token.value != "br")))
 	{
@@ -608,6 +659,447 @@ void HTMLParser_Impl::after_head_insertion_mode(HTMLToken &token)
 
 void HTMLParser_Impl::in_body_insertion_mode(HTMLToken &token)
 {
+	if (token.type == HTMLToken::type_text)
+	{
+		// Ignore null characters:
+		std::string text;
+		for (size_t i = 0; i < token.value.length(); i++)
+			if (token.value[i] != 0)
+				text.push_back(token.value[i]);
+		if (text.empty())
+			return;
+
+		reconstruct_active_formatting_elements();
+
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_character(text, insert_location);
+
+		if (text[0] != '\t' && text[0] != '\r' && text[0] != '\n' && text[0] != '\f' && text[0] != ' ')
+		{
+			frameset_ok_flag = false;
+		}
+	}
+	else if (token.type == HTMLToken::type_comment)
+	{
+		// CSSLayoutComment comment = layout.create_comment(token.value);
+		//get_adjusted_insertion_location(CSSLayoutElement(), false).append_child(comment);
+
+		// "mutation observers do fire, as required by the DOM specification."
+	}
+	else if (token.type == HTMLToken::type_dtd)
+	{
+		// Parse error. Ignore token.
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "html")
+	{
+		// Parse error.
+
+		for (size_t i = 0; i < token.attributes.size(); i++)
+		{
+			if (!open_elements.back().has_attribute(token.attributes[i].name))
+				open_elements.back().set_attribute(token.attributes[i].name, token.attributes[i].value);
+		}
+	}
+	else if (token.type == HTMLToken::type_tag_begin && (token.value == "base" || token.value == "basefont" || token.value == "bgsound" ||
+		token.value == "link" || token.value == "meta" || token.value == "noframes" || token.value == "script" || token.value == "style" ||
+		token.value == "title"))
+	{
+		in_head_insertion_mode(token);
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "body")
+	{
+		// Parse error.
+
+		if (open_elements.size() < 2 || open_elements[1].get_name() != "body")
+			return;
+
+		frameset_ok_flag = false;
+
+		for (size_t i = 0; i < token.attributes.size(); i++)
+		{
+			if (!open_elements[1].has_attribute(token.attributes[i].name))
+				open_elements[1].set_attribute(token.attributes[i].name, token.attributes[i].value);
+		}
+	}
+	else if (token.type == HTMLToken::type_tag_begin && token.value == "frameset")
+	{
+		// Parse error.
+
+		if (open_elements.size() < 2 || open_elements[1].get_name() != "body")
+			return;
+
+		if (!frameset_ok_flag)
+			return;
+
+		CSSLayoutNode parent = open_elements[1].get_parent();
+		if (!parent.is_null())
+			parent.to_element().remove_child(open_elements[1]);
+
+		open_elements.resize(1);
+
+		CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+		insert_html_element(token, insert_location);
+
+		insertion_mode = mode_in_frameset;
+	}
+	else if (token.type == HTMLToken::type_null) // End-of-file token
+	{
+		for (size_t i = open_elements.size(); i > 0; i++)
+		{
+			const CSSLayoutElement &node = open_elements[i - 1];
+			std::string name = node.get_name();
+
+			if (name != "dd" && name != "dt" && name != "li" && name != "p" && name != "tbody" && name != "td" && name != "tfoot" && name != "th" && name != "thead" && name != "tr" && name != "body")
+			{
+				// Parse error.
+				return;
+			}
+		}
+
+		stopped_parsing();
+	}
+	else if (token.type == HTMLToken::type_tag_begin)
+	{
+		if (token.value == "address" || token.value == "article" || token.value == "aside" || token.value == "blockquote" || token.value == "center" || token.value == "details" ||
+			token.value == "dialog" || token.value == "dir" || token.value == "div" || token.value == "dl" || token.value == "fieldset" || token.value == "figcaption" ||
+			token.value == "figure" || token.value == "footer" || token.value == "header" || token.value == "hgroup" || token.value == "main" || token.value == "nav" ||
+			token.value == "ol" || token.value == "p" || token.value == "section" || token.value == "summary" || token.value == "ul")
+		{
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+		}
+		else if (token.value == "h1" || token.value == "h2" || token.value == "h3" || token.value == "h4" || token.value == "h5" || token.value == "h6")
+		{
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			std::string current_name = open_elements.back().get_name();
+			if (current_name == "h1" || current_name == "h2" || current_name == "h3" || current_name == "h4" || current_name == "h5" || current_name == "h6")
+			{
+				// Parse error.
+				open_elements.pop_back();
+			}
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+		}
+		else if (token.value == "pre" || token.value == "listing")
+		{
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+
+			ignore_token_if_newline = true;
+			frameset_ok_flag = false;
+		}
+		else if (token.value == "form")
+		{
+			if (!form_element.is_null())
+			{
+				// Parse error. Ignore token.
+				return;
+			}
+
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			form_element = insert_html_element(token, insert_location);
+		}
+		else if (token.value == "li")
+		{
+			frameset_ok_flag = false;
+
+			size_t i = open_elements.size();
+			while (i > 0)
+			{
+				std::string node_name = open_elements[i - 1].get_name();
+				if (node_name == "li")
+				{
+					generate_implied_end_tags("li");
+
+					//if (open_elements.back().get_name() != "li")
+					//	parse_error();
+
+					while (open_elements.back().get_name() != "li")
+						open_elements.pop_back();
+
+					break;
+				}
+				else if (is_special_category(node_name) && node_name != "address" && node_name != "div" && node_name != "p")
+				{
+					break;
+				}
+
+				i--;
+			}
+
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+		}
+		else if (token.value == "dd" || token.value == "dt")
+		{
+			frameset_ok_flag = false;
+
+			size_t i = open_elements.size();
+			while (i > 0)
+			{
+				std::string node_name = open_elements[i - 1].get_name();
+				if (node_name == "dd")
+				{
+					generate_implied_end_tags("dd");
+
+					//if (open_elements.back().get_name() != "dd")
+					//	parse_error();
+
+					while (open_elements.back().get_name() != "dd")
+						open_elements.pop_back();
+
+					break;
+				}
+				else if (node_name == "dt")
+				{
+					generate_implied_end_tags("dt");
+
+					//if (open_elements.back().get_name() != "dt")
+					//	parse_error();
+
+					while (open_elements.back().get_name() != "dt")
+						open_elements.pop_back();
+
+					break;
+				}
+				else if (is_special_category(node_name) && node_name != "address" && node_name != "div" && node_name != "p")
+				{
+					break;
+				}
+
+				i--;
+			}
+
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+		}
+		else if (token.value == "plaintext")
+		{
+			if (is_element_in_button_scope("p"))
+				close_p_element();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+
+			// To do: Switch the tokenizer to the PLAINTEXT state.
+		}
+		else if (token.value == "button")
+		{
+			if (is_element_in_scope("button"))
+			{
+				// Parse error.
+
+				generate_implied_end_tags();
+				while (open_elements.back().get_name() != "button")
+					open_elements.pop_back();
+			}
+
+			reconstruct_active_formatting_elements();
+
+			CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+			insert_html_element(token, insert_location);
+
+			frameset_ok_flag = false;
+		}
+		else if (token.value == "a")
+		{
+		}
+		else if (token.value == "b" || token.value == "big" || token.value == "code" || token.value == "em" || token.value == "font" || token.value == "i" || token.value == "s" ||
+			token.value == "small" || token.value == "strike" || token.value == "strong" || token.value == "tt" || token.value == "u")
+		{
+		}
+		else if (token.value == "nobr")
+		{
+		}
+		else if (token.value == "applet" || token.value == "marquee" || token.value == "object")
+		{
+		}
+		else if (token.value == "table")
+		{
+		}
+		else if (token.value == "area" || token.value == "br" || token.value == "embed" || token.value == "img" || token.value == "keygen" || token.value == "wbr")
+		{
+		}
+		else if (token.value == "input")
+		{
+		}
+		else if (token.value == "menuitem" || token.value == "param" || token.value == "source" || token.value == "track")
+		{
+		}
+		else if (token.value == "hr")
+		{
+		}
+		else if (token.value == "image")
+		{
+		}
+		else if (token.value == "isindex")
+		{
+		}
+		else if (token.value == "textarea")
+		{
+		}
+		else if (token.value == "xmp")
+		{
+		}
+		else if (token.value == "iframe")
+		{
+		}
+		else if (token.value == "noembed" || (token.value == "noscript" && scripting_flag))
+		{
+		}
+		else if (token.value == "select")
+		{
+		}
+		else if (token.value == "optgroup" || token.value == "option")
+		{
+		}
+		else if (token.value == "rp" || token.value == "rt")
+		{
+		}
+		else if (token.value == "math")
+		{
+		}
+		else if (token.value == "svg")
+		{
+		}
+		else if (token.value == "caption" || token.value == "col" || token.value == "colgroup" || token.value == "frame" || token.value == "head" || token.value == "tbody" || token.value == "td" || token.value == "tfoot" || token.value == "th" || token.value == "thead" || token.value == "tr")
+		{
+		}
+		else
+		{
+		}
+	}
+	else if (token.type == HTMLToken::type_tag_end)
+	{
+		if (token.value == "body")
+		{
+			if (!is_element_in_scope("body"))
+			{
+				// Parse error. Ignore token.
+				return;
+			}
+
+			insertion_mode = mode_after_body;
+		}
+		else if (token.value == "html")
+		{
+			if (!is_element_in_scope("body"))
+			{
+				// Parse error. Ignore token.
+				return;
+			}
+
+			insertion_mode = mode_after_body;
+			dispatch(token);
+		}
+		else if (token.value == "address" || token.value == "article" || token.value == "aside" || token.value == "blockquote" || token.value == "button" || token.value == "center" || token.value == "details" || 
+			token.value == "dialog" || token.value == "dir" || token.value == "div" || token.value == "dl" || token.value == "fieldset" || token.value == "figcaption" || token.value == "figure" ||
+			token.value == "footer" || token.value == "header" || token.value == "hgroup" || token.value == "listing" || token.value == "main" || token.value == "menu" || token.value == "nav" ||
+			token.value == "ol" || token.value == "pre" || token.value == "section" || token.value == "summary" || token.value == "ul")
+		{
+			// To do: If the stack of open elements does not have an element in scope that is an HTML element and with the same tag name as that of the token, then this is a parse error; ignore the token.
+
+			generate_implied_end_tags();
+
+			//if (open_elements.back().get_name() != token.value)
+			//	parse_error();
+
+			while (!open_elements.empty() && open_elements.back().get_name() != token.value)
+				open_elements.pop_back();
+		}
+		else if (token.value == "form")
+		{
+			CSSLayoutElement node = form_element;
+			form_element = CSSLayoutElement();
+
+			if (node.is_null() || !is_element_in_scope("form"))
+			{
+				// Parse error. Ignore token.
+				return;
+			}
+
+			generate_implied_end_tags();
+
+			// if (open_elements.back() != node)
+			//	parse_error();
+
+			for (size_t i = 0; i < open_elements.size(); i++)
+			{
+				if (open_elements[i] == node)
+				{
+					open_elements.erase(open_elements.begin() + i);
+					break;
+				}
+			}
+		}
+		else if (token.value == "p")
+		{
+			if (!is_element_in_button_scope("p"))
+			{
+				// Parse error.
+
+				HTMLToken p_token(HTMLToken::type_tag_begin, "p");
+
+				CSSLayoutElement insert_location = get_adjusted_insertion_location(CSSLayoutElement(), false);
+				insert_html_element(p_token, insert_location);
+			}
+
+			close_p_element();
+		}
+		else if (token.value == "li")
+		{
+			if (!is_element_in_list_item_scope("li"))
+			{
+				// Parse error.
+				return;
+			}
+
+			generate_implied_end_tags("li");
+
+			//if (open_elements.back().get_name() != "li")
+			//	parse_error();
+
+			while (!open_elements.empty() && open_elements.back().get_name() != token.value)
+				open_elements.pop_back();
+		}
+		else if (token.value == "dd" || token.value == "dt")
+		{
+		}
+		else if (token.value == "h1" || token.value == "h2" || token.value == "h3" || token.value == "h4" || token.value == "h5" || token.value == "h6")
+		{
+		}
+		else if (token.value == "b" || token.value == "big" || token.value == "code" || token.value == "em" || token.value == "font" || token.value == "i" || token.value == "s" ||
+			token.value == "small" || token.value == "strike" || token.value == "strong" || token.value == "tt" || token.value == "u")
+		{
+		}
+		else if (token.value == "applet" || token.value == "marquee" || token.value == "object")
+		{
+		}
+		else if (token.value == "br")
+		{
+		}
+		else
+		{
+		}
+	}
 }
 
 void HTMLParser_Impl::text_insertion_mode(HTMLToken &token)
@@ -667,6 +1159,10 @@ void HTMLParser_Impl::after_frameset_insertion_mode(HTMLToken &token)
 }
 
 void HTMLParser_Impl::after_after_frameset_insertion_mode(HTMLToken &token)
+{
+}
+
+void HTMLParser_Impl::close_p_element()
 {
 }
 
@@ -779,7 +1275,7 @@ void HTMLParser_Impl::reset_insertion_mode()
 	}
 }
 
-bool HTMLParser_Impl::is_element_in_scope(const std::vector<std::string> &list)
+bool HTMLParser_Impl::is_element_in_scope(const std::string &scope_element)
 {
 	for (size_t i = open_elements.size(); i > 0; i++)
 	{
@@ -793,14 +1289,13 @@ bool HTMLParser_Impl::is_element_in_scope(const std::vector<std::string> &list)
 			return true;
 		}
 
-		for (size_t j = 0; j < list.size(); j++)
-			if (name == list[j])
-				return false;
+		if (name == scope_element)
+			return false;
 	}
 	return true;
 }
 
-bool HTMLParser_Impl::is_element_in_list_item_scope(const std::vector<std::string> &list)
+bool HTMLParser_Impl::is_element_in_list_item_scope(const std::string &scope_element)
 {
 	for (size_t i = open_elements.size(); i > 0; i++)
 	{
@@ -815,14 +1310,13 @@ bool HTMLParser_Impl::is_element_in_list_item_scope(const std::vector<std::strin
 			return true;
 		}
 
-		for (size_t j = 0; j < list.size(); j++)
-			if (name == list[j])
-				return false;
+		if (name == scope_element)
+			return false;
 	}
 	return true;
 }
 
-bool HTMLParser_Impl::is_element_in_button_scope(const std::vector<std::string> &list)
+bool HTMLParser_Impl::is_element_in_button_scope(const std::string &scope_element)
 {
 	for (size_t i = open_elements.size(); i > 0; i++)
 	{
@@ -837,14 +1331,13 @@ bool HTMLParser_Impl::is_element_in_button_scope(const std::vector<std::string> 
 			return true;
 		}
 
-		for (size_t j = 0; j < list.size(); j++)
-			if (name == list[j])
-				return false;
+		if (name == scope_element)
+			return false;
 	}
 	return true;
 }
 
-bool HTMLParser_Impl::is_element_in_table_scope(const std::vector<std::string> &list)
+bool HTMLParser_Impl::is_element_in_table_scope(const std::string &scope_element)
 {
 	for (size_t i = open_elements.size(); i > 0; i++)
 	{
@@ -856,14 +1349,13 @@ bool HTMLParser_Impl::is_element_in_table_scope(const std::vector<std::string> &
 			return true;
 		}
 
-		for (size_t j = 0; j < list.size(); j++)
-			if (name == list[j])
-				return false;
+		if (name == scope_element)
+			return false;
 	}
 	return true;
 }
 
-bool HTMLParser_Impl::is_element_in_select_scope(const std::vector<std::string> &list)
+bool HTMLParser_Impl::is_element_in_select_scope(const std::string &scope_element)
 {
 	for (size_t i = open_elements.size(); i > 0; i++)
 	{
@@ -875,9 +1367,8 @@ bool HTMLParser_Impl::is_element_in_select_scope(const std::vector<std::string> 
 			return true;
 		}
 
-		for (size_t j = 0; j < list.size(); j++)
-			if (name == list[j])
-				return false;
+		if (name == scope_element)
+			return false;
 	}
 	return true;
 }

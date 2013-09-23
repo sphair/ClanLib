@@ -83,11 +83,11 @@ private:
 
 	void reset_insertion_mode();
 
-	bool is_element_in_scope(const std::vector<std::string> &list);
-	bool is_element_in_list_item_scope(const std::vector<std::string> &list);
-	bool is_element_in_button_scope(const std::vector<std::string> &list);
-	bool is_element_in_table_scope(const std::vector<std::string> &list);
-	bool is_element_in_select_scope(const std::vector<std::string> &list);
+	bool is_element_in_scope(const std::string &scope_element);
+	bool is_element_in_list_item_scope(const std::string &scope_element);
+	bool is_element_in_button_scope(const std::string &scope_element);
+	bool is_element_in_table_scope(const std::string &scope_element);
+	bool is_element_in_select_scope(const std::string &scope_element);
 
 	void push_active_formatting_element(const HTMLToken &token);
 	void push_active_formatting_scope_marker();
@@ -116,7 +116,9 @@ private:
 
 	void raw_text_element_parsing(CSSLayoutElement adjusted_insertion_location);
 	void rcdata_element_parsing(CSSLayoutElement adjusted_insertion_location);
-	void generate_implied_end_tags(const std::vector<std::string> &exclude_list = std::vector<std::string>());
+
+	void generate_implied_end_tags(const std::string &except_name = std::string());
+	static bool is_special_category(const std::string &name);
 
 	void dispatch(HTMLToken &token);
 
@@ -143,6 +145,8 @@ private:
 	void after_frameset_insertion_mode(HTMLToken &token);
 	void after_after_frameset_insertion_mode(HTMLToken &token);
 
+	void close_p_element();
+
 	void stopped_parsing();
 
 	InsertionMode insertion_mode;
@@ -161,6 +165,8 @@ private:
 
 	bool scripting_flag;
 	bool frameset_ok_flag;
+
+	bool ignore_token_if_newline;
 
 	friend class HTMLParser;
 };

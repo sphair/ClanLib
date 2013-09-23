@@ -59,17 +59,37 @@ void CSSLayoutElement::set_name(const std::string &name)
 		static_cast<CSSBoxElement*>(impl->box_node)->name = name;
 }
 
+bool CSSLayoutElement::has_attribute(const std::string &name) const
+{
+	if (!is_null())
+	{
+		CSSBoxElement *element = static_cast<CSSBoxElement*>(impl->box_node);
+		for (size_t i = 0; i < element->attributes.size(); i++)
+		{
+			if (StringHelp::compare(element->attributes[i].name, name, true) == 0)
+			{
+				return true;
+			}
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void CSSLayoutElement::set_attribute(const std::string &name, const std::string &value)
 {
 	if (!is_null())
 	{
 		CSSBoxElement *element = static_cast<CSSBoxElement*>(impl->box_node);
 
-		if (StringHelp::compare("name", "colspan"))
+		if (StringHelp::compare("name", "colspan") == 0)
 		{
 			set_col_span(StringHelp::text_to_int(value));
 		}
-		else if (StringHelp::compare("name", "rowspan"))
+		else if (StringHelp::compare("name", "rowspan") == 0)
 		{
 			set_row_span(StringHelp::text_to_int(value));
 		}
