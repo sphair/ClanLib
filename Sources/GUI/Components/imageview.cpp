@@ -112,13 +112,15 @@ Sprite ImageView::get_sprite() const
 void ImageView::set_sprite(const Sprite &image)
 {
 	impl->sprite = image;
-	request_repaint();
+	update_layout();	// The component size may have changed
+
 }
 
 void ImageView::set_image(const Image &image)
 {
 	impl->image = image;
-	request_repaint();
+	update_layout();	// The component size may have changed
+
 }
 
 void ImageView::set_image(const PixelBuffer &image)
@@ -126,18 +128,20 @@ void ImageView::set_image(const PixelBuffer &image)
 	if (image.is_null())
 	{
 		impl->image = Image();
+		update_layout();	// The component size may have changed
+
 		return;
 	}
 
 	Canvas canvas = get_canvas();
 	impl->image = Image(canvas, image, image.get_size());
-	request_repaint();
+	update_layout();	// The component size may have changed
 }
 
 void ImageView::set_scale_to_fit(bool enable)
 {
 	impl->scale_to_fit = enable;
-	request_repaint();
+	update_layout();	// The component size may have changed
 }
 
 void ImageView::set_scale(float x, float y)
@@ -145,7 +149,7 @@ void ImageView::set_scale(float x, float y)
 	impl->scale_x = x;
 	impl->scale_y = y;
 	impl->scale_to_fit = false;
-	request_repaint();
+	update_layout();	// The component size may have changed
 }
 
 float ImageView::get_preferred_content_width()
