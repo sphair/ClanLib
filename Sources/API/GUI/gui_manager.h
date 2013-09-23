@@ -80,20 +80,20 @@ public:
 
 	/// \brief Fully constructs a gui manager with a system window manager, a css theme and resources.
 	///
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	GUIManager(const std::string &path_to_theme);
+	/// \param path_to_css_and_resources = Path to directory. It has to contain resources.xml and theme.css.
+	GUIManager(const std::string &path_to_css_and_resources);
 
 	/// \brief Fully constructs a gui manager with a texture window manager, a css theme and resources.
 	///
 	/// \param display_window = display window to attach gui to.
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	GUIManager(const DisplayWindow &display_window, const std::string &path_to_theme);
+	/// \param path_to_css_and_resources = Path to directory. It has to contain resources.xml and theme.css.
+	GUIManager(const DisplayWindow &display_window, const std::string &path_to_css_and_resources);
 
 	/// \brief Fully constructs a gui manager with a custom window manager, a css theme and resources.
 	///
 	/// \param window_manager = Window manager
-	/// \param path_to_theme = Path to theme directory. It has to contain resources.xml and theme.css.
-	GUIManager(GUIWindowManager &window_manager, const std::string &path_to_theme);
+	/// \param path_to_css_and_resources = Path to directory. It has to contain resources.xml and theme.css.
+	GUIManager(GUIWindowManager &window_manager, const std::string &path_to_css_and_resources);
 
 	/// \brief Constructs a GUIManager
 	///
@@ -159,17 +159,17 @@ public:
 	/// \param fullname = Filename of the theme.
 	void add_theme(const std::string &fullname, const FileSystem &fs);
 
-	/// \brief Sets the CSS document.
-	void set_css_document(CSSDocument css);
+	/// \brief Sets the GUI theme
+	void set_theme(CSSDocument css);
 
-	/// \brief Sets the CSS document, by creating a CSSDocument from file automatically.
-	void set_css_document(const std::string &fullname);
+	/// \brief Sets the GUI theme
+	void set_theme(const std::string &fullname);
 
-	/// \brief Set css document
+	/// \brief Set the GUI theme
 	///
 	/// \param filename = String
 	/// \param directory = Virtual Directory
-	void set_css_document(const std::string &filename, const FileSystem &fs);
+	void set_theme(const std::string &filename, const FileSystem &fs);
 
 	/// \brief Adds resources to the GUI resource manager
 	void add_resources(const XMLResourceDocument &resources);
@@ -222,7 +222,7 @@ public:
 /// \name Implementation
 /// \{
 private:
-	void initialize(GUIWindowManager &window_manager, const std::string & path_to_theme);
+	void initialize(GUIWindowManager &window_manager, const std::string & path_to_css_and_resources);
 
 	std::shared_ptr<GUIManager_Impl> impl;
 

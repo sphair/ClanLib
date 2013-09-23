@@ -67,24 +67,24 @@ GUIManager::GUIManager(const DisplayWindow &display_window)
 	set_window_manager(window_manager);
 }
 
-GUIManager::GUIManager(const std::string &path_to_theme)
+GUIManager::GUIManager(const std::string &path_to_css_and_resources)
 	: impl(new GUIManager_Impl)
 {
 	GUIWindowManagerSystem window_manager;
-	initialize(window_manager, path_to_theme);
+	initialize(window_manager, path_to_css_and_resources);
 }
 
-GUIManager::GUIManager(const DisplayWindow &display_window, const std::string &path_to_theme)
+GUIManager::GUIManager(const DisplayWindow &display_window, const std::string &path_to_css_and_resources)
 : impl(new GUIManager_Impl)
 {
 	GUIWindowManagerTexture window_manager(display_window);
-	initialize(window_manager, path_to_theme);
+	initialize(window_manager, path_to_css_and_resources);
 }
 
-GUIManager::GUIManager(GUIWindowManager &window_manager, const std::string &path_to_theme)
+GUIManager::GUIManager(GUIWindowManager &window_manager, const std::string &path_to_css_and_resources)
 : impl(new GUIManager_Impl)
 {
-	initialize(window_manager, path_to_theme);
+	initialize(window_manager, path_to_css_and_resources);
 }
 
 GUIManager::GUIManager(std::shared_ptr<GUIManager_Impl> impl)
@@ -173,23 +173,23 @@ void GUIManager::add_theme(const std::string &fullname, const FileSystem &fs)
 	impl->css_document.add_sheet(author_sheet_origin, fullname, fs);
 }
 
-void GUIManager::set_css_document(CSSDocument css)
+void GUIManager::set_theme(CSSDocument css)
 {
 	impl->css_document = css;
 }
 
-void GUIManager::set_css_document(const std::string &fullname)
+void GUIManager::set_theme(const std::string &fullname)
 {
 	CSSDocument css;
 	css.add_sheet(author_sheet_origin, fullname);
-	set_css_document(css);
+	set_theme(css);
 }
 
-void GUIManager::set_css_document(const std::string &filename, const FileSystem &fs)
+void GUIManager::set_theme(const std::string &filename, const FileSystem &fs)
 {
 	CSSDocument css;
 	css.add_sheet(author_sheet_origin, filename, fs);
-	set_css_document(css);
+	set_theme(css);
 }
 
 void GUIManager::set_resource_manager(ResourceManager &resource_manager)
@@ -346,14 +346,14 @@ void GUIManager::set_accelerator_table( const AcceleratorTable &table )
 /////////////////////////////////////////////////////////////////////////////
 // GUIManager Implementation:
 
-void GUIManager::initialize(GUIWindowManager &window_manager, const std::string &path_to_theme)
+void GUIManager::initialize(GUIWindowManager &window_manager, const std::string &path_to_css_and_resources)
 {
-	FileSystem vfs(path_to_theme);
+	FileSystem vfs(path_to_css_and_resources);
 
 	impl->resources = XMLResourceManager::create(XMLResourceDocument("resources.xml", vfs));
 
 	set_window_manager(window_manager);
-	set_css_document("theme.css", vfs);
+	set_theme("theme.css", vfs);
 }
 
 }
