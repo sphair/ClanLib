@@ -75,7 +75,7 @@ Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComp
 	background_image_options.push_back("../../Display/LayeredWindow/rock.png");
 	background_image_options.push_back("../../Display/LayeredWindow/round_tux.png");
 	background_image_options.push_back("../../Display/Basic2D/Resources/logo.png");
-	background_image_options.push_back("../../Game/DiceWar/Resources/Maps/Island/texture.png");
+	background_image_options.push_back("../../Display/Shape2D/Resources/lobby_background2.png");
 	list_background_image.setup(this, "background-image", base_xpos, base_ypos, background_image_options); base_ypos += gap;
 
 	base_ypos += 8;

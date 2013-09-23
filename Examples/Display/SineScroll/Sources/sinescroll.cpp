@@ -52,7 +52,7 @@ int SineScroll::start(const std::vector<std::string> &args)
 
 	clan::Canvas canvas(window);
 
-	texture = clan::Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
+	texture = clan::Texture2D(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
 
 	clan::GameTime game_time;
 

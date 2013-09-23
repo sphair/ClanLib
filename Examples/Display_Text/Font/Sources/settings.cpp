@@ -216,7 +216,7 @@ void App::on_button_clicked_typeface_sans(PushButton *button)
 void App::on_button_clicked_typeface_bitstream(PushButton *button)
 {
 	font_typeface = "Bitstream Vera Sans";
-	font_filename = "../../Game/DiceWar/Resources/bitstream_vera_sans/VeraBd.ttf";
+	font_filename = "../../Display_Text/Font/Resources/bitstream_vera_sans/VeraBd.ttf";
 	select_font();
 }
 

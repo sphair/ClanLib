@@ -52,7 +52,7 @@ int TextFade::start(const std::vector<std::string> &args)
 	// Get the graphic context
 	clan::Canvas canvas(window);
 
-	clan::Image background(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
+	clan::Image background(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
 
 	clan::FontDescription font_description;
 	font_description.set_typeface_name("arial");

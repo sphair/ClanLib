@@ -46,7 +46,7 @@ int FullScreen::start(const std::vector<std::string> &args)
 	const float virtual_screen_height = 600.0f;
 
 	Sprite spr_logo(canvas, "../Basic2D/Resources/logo.png");
-	Sprite spr_background(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
+	Sprite spr_background(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
 
 	float sin_count = 0.0f;
 

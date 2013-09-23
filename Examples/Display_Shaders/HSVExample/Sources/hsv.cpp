@@ -105,7 +105,7 @@ ProgramObject HSV::create_shader_program(GraphicContext &gc)
 
 Texture2D HSV::create_texture(Canvas &canvas)
 {
-	return Texture2D(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
+	return Texture2D(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
 }
 
 struct ProgramUniforms

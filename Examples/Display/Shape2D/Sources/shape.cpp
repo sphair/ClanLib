@@ -65,7 +65,7 @@ int ShapeApp::start(const std::vector<std::string> &args)
 	std::vector<clan::Vec2f> complex_triangles;
 	complex_shape.get_triangles(complex_triangles);
 
-	clan::Texture2D texture(canvas, "../../Game/DiceWar/Resources/lobby_background2.png");
+	clan::Texture2D texture(canvas, "../../Display/Shape2D/Resources/lobby_background2.png");
 
 	// Run until someone presses escape
 	while (!quit)
