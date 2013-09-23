@@ -56,7 +56,6 @@ public:
 	}
 
 	void on_render(Canvas &canvas, const Rect &update_rect);
-	//void on_apply_properties(CSSComputedBox &properties);
 
 	Label *label;
 	std::string text;
@@ -75,7 +74,6 @@ Label::Label(GUIComponent *parent)
 {
 	impl->label = this;
 	func_render().set(impl.get(), &Label_Impl::on_render);
-	//func_apply_properties().set(impl.get(), &Label_Impl::on_apply_properties);
 }
 
 Label::~Label()
@@ -120,14 +118,13 @@ float Label::get_preferred_content_height(float width)
 void Label::set_text(const std::string &text)
 {
 	impl->text = text;
-	request_repaint();
+	update_layout();	// The component size may have changed
 }
 
 void Label::set_text_color(const Colorf color)
 {
 	impl->user_color = color;
 	impl->is_user_color = true;
-	//impl->on_apply_properties(get_css_properties()); // FIXME: this is a hack that only works for simple non-inherited values
 	request_repaint();
 }
 
@@ -151,14 +148,5 @@ void Label_Impl::on_render(Canvas &canvas, const Rect &update_rect)
 {
 	label->render_text(canvas, text, 0, label->get_vertical_text_align(canvas).baseline);
 }
-/*
-void Label_Impl::on_apply_properties(CSSComputedBox &properties)
-{
-	if (is_user_color)
-	{
-		properties.color.color = user_color;
-		properties.color.type = CSSValueColor::type_color;
-	}
-}	
-*/
+
 }
