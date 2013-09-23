@@ -28,38 +28,39 @@
 
 #pragma once
 
-#include "option_value.h"
-#include "option_rgb.h"
-
-class Options : public clan::GUIComponent
+class OptionRGB
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
-	virtual ~Options();
+	OptionRGB();
+	~OptionRGB();
 
-	OptionValue value_margin;
-	OptionValue value_margin_top;
-	OptionValue value_margin_right;
-	OptionValue value_margin_bottom;
-	OptionValue value_margin_left;
-	OptionValue value_border;
-	OptionValue value_border_top;
-	OptionValue value_border_right;
-	OptionValue value_border_bottom;
-	OptionValue value_border_left;
-	OptionValue value_width;
-	OptionValue value_height;
+	void setup(clan::GUIComponent *base_component, const std::string &name, int xpos, int ypos);
 
-	OptionRGB rgb_background;
-	OptionRGB rgb_border_color;
-
-	bool export_selected;
+	bool css_enabled;
+	int css_red;
+	int css_green;
+	int css_blue;
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	void export_clicked();
-
+	clan::Slider *create_slider(clan::GUIComponent *base_component, const clan::Rect &rect);
+	float get_slider_value(clan::Slider *slider, float max_value);
+	void set_slider_value(clan::Slider *slider, float value, float max_value);
+	void slider_red_changed();
+	void spin_red_changed();
+	void slider_green_changed();
+	void spin_green_changed();
+	void slider_blue_changed();
+	void spin_blue_changed();
+	void checkbox_changed();
 private:
-	clan::PushButton *pushbutton_export;
+	clan::CheckBox *checkbox;
+
+	clan::Slider *slider_red;
+	clan::Spin *spin_red;
+	clan::Slider *slider_green;
+	clan::Spin *spin_green;
+	clan::Slider *slider_blue;
+	clan::Spin *spin_blue;
+
 };
 

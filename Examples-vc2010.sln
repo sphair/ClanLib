@@ -129,6 +129,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StressTest", "Examples\Phys
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CollisionPhysics2", "Examples\Physics2D\Collision\CollisionPhysics-vc2010.vcxproj", "{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CSSEditor", "Examples\CSSLayout\CSSEditor\css_editor-vc2010.vcxproj", "{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -531,6 +533,12 @@ Global
 		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|Win32.ActiveCfg = Release|Win32
 		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|Win32.Build.0 = Release|Win32
 		{5738BD40-1A54-4C7E-B9A2-E2DA93DF60A9}.Release|x64.ActiveCfg = Release|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Debug|Win32.Build.0 = Debug|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Debug|x64.ActiveCfg = Debug|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Release|Win32.ActiveCfg = Release|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Release|Win32.Build.0 = Release|Win32
+		{6A09A0DB-5453-456B-AB2D-A96DF39BC7FF}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,38 +28,32 @@
 
 #pragma once
 
-#include "option_value.h"
-#include "option_rgb.h"
-
-class Options : public clan::GUIComponent
+class OptionValue
 {
 public:
-	Options(clan::GUIManager &gui, clan::Rect gui_position);
-	virtual ~Options();
+	OptionValue();
+	~OptionValue();
 
-	OptionValue value_margin;
-	OptionValue value_margin_top;
-	OptionValue value_margin_right;
-	OptionValue value_margin_bottom;
-	OptionValue value_margin_left;
-	OptionValue value_border;
-	OptionValue value_border_top;
-	OptionValue value_border_right;
-	OptionValue value_border_bottom;
-	OptionValue value_border_left;
-	OptionValue value_width;
-	OptionValue value_height;
+	void setup(clan::GUIComponent *base_component, const std::string &name, int xpos, int ypos);
 
-	OptionRGB rgb_background;
-	OptionRGB rgb_border_color;
-
-	bool export_selected;
+	std::string css_type_length;
+	float css_value;
+	bool css_enabled;
 
 private:
-	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
-	void export_clicked();
-
+	void update_spin();
+	float get_slider_value(float max_value);
+	void set_slider_value(float value, float max_value);
+	void slider_changed();
+	void combobox_changed(int index);
+	void spin_changed();
+	void checkbox_changed();
 private:
-	clan::PushButton *pushbutton_export;
+	clan::Slider *slider;
+	clan::CheckBox *checkbox;
+	clan::ComboBox *combobox;
+	clan::PopupMenu popupmenu;
+	clan::Spin *spin;
+
 };
 

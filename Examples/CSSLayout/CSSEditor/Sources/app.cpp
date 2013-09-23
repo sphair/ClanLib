@@ -41,7 +41,7 @@ int App::start(const std::vector<std::string> &args)
 	clan::DisplayWindowDescription win_desc;
 	win_desc.set_allow_resize(true);
 	win_desc.set_title("CSS Editor");
-	win_desc.set_size(clan::Size( 800, 520 ), false);
+	win_desc.set_size(clan::Size( 1000, 800 ), false);
 
 	clan::DisplayWindow window(win_desc);
 	clan::Slot slot_quit = window.sig_window_close().connect(this, &App::on_window_close);
@@ -61,9 +61,8 @@ int App::start(const std::vector<std::string> &args)
 	clan::GUIManager gui(wm, theme);
 
 	const int css_window_border_size = 10;
-	clan::Rect css_window_rect(400, css_window_border_size, clan::Size(0,0));
+	clan::Rect css_window_rect(460, css_window_border_size, clan::Size(0,0));
 
-	// Deleted automatically by the GUI
 	Options *options = new Options(gui, clan::Rect( css_window_border_size, css_window_border_size, clan::Size(css_window_rect.left - css_window_border_size*2, 400)));
 
 	clan::Image image_grid(canvas, "../../Display_Render/Blend/Resources/grid.png");
@@ -85,20 +84,40 @@ int App::start(const std::vector<std::string> &args)
 
 		std::string created_css =
 			".custom\n"
-			"{\n"
-			"	background: #ff0000;\n"
-			"margin: 1em 0; font: 13px \"Segoe UI\"; "
-			"}\n"
-			"body { background: white; }"
+			"{\n";
 
-			//"custom\n"
-			//"{\n"
-			//"	border-color: #ffffff;\n"
-			//"   	width: 300px;\n"
-			//"	height: 100px;\n"
-			//"	background-color: #ff0000;\n"
-			//"	text-align: center;\n"
-			//"}\n"
+		if (options->value_margin.css_enabled)
+			created_css+= clan::string_format("margin: %1%2;\n", options->value_margin.css_value, options->value_margin.css_type_length);
+		if (options->value_margin_top.css_enabled)
+			created_css+= clan::string_format("margin-top: %1%2;\n", options->value_margin_top.css_value, options->value_margin_top.css_type_length);
+		if (options->value_margin_right.css_enabled)
+			created_css+= clan::string_format("margin-right: %1%2;\n", options->value_margin_right.css_value, options->value_margin_right.css_type_length);
+		if (options->value_margin_bottom.css_enabled)
+			created_css+= clan::string_format("margin-bottom: %1%2;\n", options->value_margin_bottom.css_value, options->value_margin_bottom.css_type_length);
+		if (options->value_margin_left.css_enabled)
+			created_css+= clan::string_format("margin-left: %1%2;\n", options->value_margin_left.css_value, options->value_margin_left.css_type_length);
+		if (options->value_border.css_enabled)
+			created_css+= clan::string_format("border: %1%2;\n", options->value_border.css_value, options->value_border.css_type_length);
+		if (options->value_border_top.css_enabled)
+			created_css+= clan::string_format("border-top: %1%2;\n", options->value_border_top.css_value, options->value_border_top.css_type_length);
+		if (options->value_border_right.css_enabled)
+			created_css+= clan::string_format("border-right: %1%2;\n", options->value_border_right.css_value, options->value_border_right.css_type_length);
+		if (options->value_border_bottom.css_enabled)
+			created_css+= clan::string_format("border-bottom: %1%2;\n", options->value_border_bottom.css_value, options->value_border_bottom.css_type_length);
+		if (options->value_border_left.css_enabled)
+			created_css+= clan::string_format("border-left: %1%2;\n", options->value_border_left.css_value, options->value_border_left.css_type_length);
+		if (options->value_width.css_enabled)
+			created_css+= clan::string_format("width: %1%2;\n", options->value_width.css_value, options->value_width.css_type_length);
+		if (options->value_height.css_enabled)
+			created_css+= clan::string_format("height: %1%2;\n", options->value_height.css_value, options->value_height.css_type_length);
+		if (options->rgb_background.css_enabled)
+			created_css+= clan::string_format("background:rgb(%1,%2,%3);\n", options->rgb_background.css_red, options->rgb_background.css_green, options->rgb_background.css_blue);
+		if (options->rgb_border_color.css_enabled)
+			created_css+= clan::string_format("border-color:rgb(%1,%2,%3);\n", options->rgb_border_color.css_red, options->rgb_border_color.css_green, options->rgb_border_color.css_blue);
+
+		created_css+= 
+			"font: 13px \"Segoe UI\"; "
+			"}\n"
 			;
 		clan::DataBuffer created_css_buffer(created_css.c_str(), created_css.size());
 		clan::IODevice_Memory iodevice_memory(created_css_buffer);
@@ -119,6 +138,18 @@ int App::start(const std::vector<std::string> &args)
 		image_grid.draw(canvas, css_window_rect);
 		layout.render(canvas);
 
+		if (options->export_selected)
+		{
+			options->export_selected = false;
+			clan::File file("test.html", clan::File::create_always, clan::File::access_write);
+			file.write_string_text("<!DOCTYPE html>\n<html>\n<head>\n<style>\n");
+			file.write_string_text(created_css);
+			file.write_string_text("</style>\n</head>\n<body>\n<div class=\"custom\">Hello World</div>\n</body>\n</html>\n");
+			file.close();
+#ifdef WIN32
+			ShellExecute(window.get_hwnd(), "open", "test.html", NULL, NULL, SW_SHOWNORMAL);
+#endif
+		}
 
 		window.flip(1);
 

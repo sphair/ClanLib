@@ -32,23 +32,38 @@
 
 Options::Options(clan::GUIManager &gui, clan::Rect gui_position) : clan::GUIComponent(&gui, clan::GUITopLevelDescription("Options", gui_position, false))
 {
-	width = 256;
+	export_selected = false;
 
-	int base_xpos = 20;
-	int base_ypos = 20;
+	int base_xpos = 4;
+	int base_ypos = 10;
+	int gap = 20;
 
-	int slider_gap = 20;
+	value_margin.setup(this, "margin", base_xpos, base_ypos); base_ypos += gap;
+	value_margin_top.setup(this, "margin-top", base_xpos, base_ypos); base_ypos += gap;
+	value_margin_right.setup(this, "margin-right", base_xpos, base_ypos); base_ypos += gap;
+	value_margin_bottom.setup(this, "margin-bottom", base_xpos, base_ypos); base_ypos += gap;
+	value_margin_left.setup(this, "margin-left", base_xpos, base_ypos); base_ypos += gap;
+	value_border.setup(this, "border", base_xpos, base_ypos); base_ypos += gap;
+	value_border_top.setup(this, "border-top", base_xpos, base_ypos); base_ypos += gap;
+	value_border_right.setup(this, "border-right", base_xpos, base_ypos); base_ypos += gap;
+	value_border_bottom.setup(this, "border-bottom", base_xpos, base_ypos); base_ypos += gap;
+	value_border_left.setup(this, "border-left", base_xpos, base_ypos); base_ypos += gap;
+	value_width.setup(this, "width", base_xpos, base_ypos); base_ypos += gap;
+	value_height.setup(this, "height", base_xpos, base_ypos); base_ypos += gap;
 
-	slider_width = create_slider(base_xpos, base_ypos); base_ypos += slider_gap;
-	slider_width->set_min(32);
-	slider_width->set_max(382);
-	slider_width->set_position(width);
-	slider_width->func_value_changed().set(this, &Options::slider_width_changed);
-	label_width = create_slider_label(slider_width);
+	base_ypos += 8;
 
-	update_all_slider_text();
-
+	rgb_background.setup(this, "background", base_xpos, base_ypos); base_ypos += gap;
+	rgb_border_color.setup(this, "border-color", base_xpos, base_ypos); base_ypos += gap;
 	func_render().set(this, &Options::on_render);
+
+	base_ypos += 8;
+
+	pushbutton_export = new clan::PushButton(this);
+	pushbutton_export->set_geometry(clan::Rect(base_xpos, base_ypos, clan::Size(128, 20)));
+	pushbutton_export->set_text("Launch in Browser");
+	pushbutton_export->func_clicked().set(this, &Options::export_clicked);
+
 }
 
 Options::~Options()
@@ -62,55 +77,7 @@ void Options::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 	canvas.fill_rect(rect, clan::Colorf(0.6f, 0.6f, 0.2f, 1.0f));
 }
 
-float Options::get_value(clan::Slider *slider, float max_value)
+void Options::export_clicked()
 {
-	float value = (float) slider->get_position();
-	value /= (float) slider->get_max();
-	return value * max_value;
+	export_selected = true;
 }
-
-void Options::set_value(clan::Slider *slider, float value, float max_value)
-{
-	value /= max_value;
-	value *= (float) slider->get_max();
-	slider->set_position((int) (value+0.5f));
-}
-
-clan::Slider *Options::create_slider(int xpos, int ypos)
-{
-	clan::Slider *component = new clan::Slider(this);
-	component->set_geometry(clan::Rect(xpos, ypos, clan::Size(192, 17)));
-	component->set_vertical(false);
-	component->set_horizontal(true);
-	component->set_min(0);
-	component->set_max(1000);
-	component->set_tick_count(100);
-	component->set_page_step(100);
-	component->set_lock_to_ticks(false);
-	component->set_position(component->get_max());
-
-	return component;
-
-}
-
-clan::Label *Options::create_slider_label(clan::Slider *slider)
-{
-	clan::Label *component = new clan::Label(this);
-	clan::Rect slider_geometry = slider->get_geometry();
-	component->set_geometry(clan::Rect(slider_geometry.right + 4, slider_geometry.top - 2, clan::Size(256, 17)));
-	component->set_text("##################");
-	return component;
-}
-
-void Options::slider_width_changed()
-{
-	width = slider_width->get_position();
-	std::string text(clan::string_format("Width : %1", width));
-	label_width->set_text(text);
-}
-
-void Options::update_all_slider_text()
-{
-	slider_width_changed();
-}
-
