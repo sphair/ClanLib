@@ -28,7 +28,7 @@
 
 #pragma once
 
-class TextureApplication;
+class Application;
 class SpriteComponent;
 class ResourceItem;
 class TexturePacker;
@@ -36,10 +36,10 @@ class TextureGroupComponent;
 class View;
 class ViewWorkspace;
 
-class MainWindow : public GUIComponent
+class MainWindow : public clan::GUIComponent
 {
 public:
-	MainWindow(GUIManager *gui, ResourceManager *resources);
+	MainWindow(clan::GUIManager *gui, clan::ResourceManager *resources);
 	~MainWindow();
 
 // Attributes:
@@ -52,7 +52,7 @@ public:
 
 // Implementation:
 private:
-	GUITopLevelDescription get_window_description();
+	clan::GUITopLevelDescription get_window_description();
 
 	void create_components();
 
@@ -69,12 +69,12 @@ private:
 	void on_resized();
 	void on_view_close(View *view);
 
-	TextureApplication *application;
+	Application *application;
 
 	std::vector<View *> views;
 	ViewWorkspace *workspace;
 
-	ResourceManager *resources;
+	clan::ResourceManager *resources;
 
-	MenuBar *menubar;
+	clan::MenuBar *menubar;
 };

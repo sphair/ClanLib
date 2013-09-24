@@ -33,7 +33,7 @@
 class WelcomeView : public View
 {
 public:
-	WelcomeView(GUIComponent *parent, MainWindow *mainwindow);
+	WelcomeView(clan::GUIComponent *parent, MainWindow *mainwindow);
 	~WelcomeView();
 
 private:

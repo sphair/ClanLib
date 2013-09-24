@@ -33,7 +33,7 @@
 class IcoCreatorView : public View
 {
 public:
-	IcoCreatorView(GUIComponent *parent, MainWindow *mainwindow);
+	IcoCreatorView(clan::GUIComponent *parent, MainWindow *mainwindow);
 	~IcoCreatorView();
 
 private:
@@ -41,11 +41,11 @@ private:
 	void on_button_browse(int index);
 	void on_button_save();
 
-	Label *label_selected_file[11];
-	LineEdit *lineedit_selected_file[11];
-	PushButton *button_browse_file[11];
+	clan::Label *label_selected_file[11];
+	clan::LineEdit *lineedit_selected_file[11];
+	clan::PushButton *button_browse_file[11];
 
-	Label *label_result;
+	clan::Label *label_result;
 
-	PushButton *button_save;
+	clan::PushButton *button_save;
 };

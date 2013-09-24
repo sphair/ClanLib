@@ -39,18 +39,18 @@ CssPacker::~CssPacker()
 
 int CssPacker::load(const std::string &filename)
 {
-	throw Exception("doc.get_imports not implemented");
+	throw clan::Exception("doc.get_imports not implemented");
 /*	doc.load(filename);
-	std::vector<CSSImport> &imports = doc.get_imports();
+	std::vector<clan::CSSImport> &imports = doc.get_imports();
 	return imports.size();
 */
 }
 
 void CssPacker::save(const std::string &filename)
 {
-	throw Exception("doc.save not implemented");
+	throw clan::Exception("doc.save not implemented");
 	/*
-	File output_file(filename, File::create_always, File::access_write);
+	clan::File output_file(filename, clan::File::create_always, clan::File::access_write);
 	doc.save(output_file);
 	*/
 }

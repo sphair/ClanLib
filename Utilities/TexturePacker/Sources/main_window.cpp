@@ -40,9 +40,10 @@
 #include "Views/ico_creator_view.h"
 #include <algorithm>
 
-MainWindow::MainWindow(GUIManager *gui, ResourceManager *resources)
-: GUIComponent(gui, get_window_description(), "mainwindow"), resources(resources), workspace(0)
+MainWindow::MainWindow(clan::GUIManager *gui, clan::ResourceManager *resources)
+: clan::GUIComponent(gui, get_window_description(), "mainwindow"), resources(resources), workspace(0)
 {
+
 	func_close().set(this, &MainWindow::on_close);
 	func_resized().set(this, &MainWindow::on_resized);
 
@@ -64,12 +65,12 @@ MainWindow::~MainWindow()
 {
 }
 
-GUITopLevelDescription MainWindow::get_window_description()
+clan::GUITopLevelDescription MainWindow::get_window_description()
 {
-	GUITopLevelDescription desc;
+	clan::GUITopLevelDescription desc;
 	desc.set_title("ClanLib Texture Packer");
 	desc.set_allow_resize(true);
-	desc.set_position(Rect(200, 200, 1024, 768), false);
+	desc.set_position(clan::Rect(200, 200, 1024, 768), false);
 	return desc;
 }
 
@@ -98,7 +99,7 @@ int MainWindow::find_view_index(View *view)
 			return i;
 		}
 	}
-	throw Exception("View not found in collection");
+	throw clan::Exception("View not found in collection");
 }
 
 void MainWindow::on_view_close(View *view)
@@ -135,20 +136,20 @@ void MainWindow::create_ico_creator_view()
 
 void MainWindow::create_components()
 {
-	menubar = new MenuBar(this);
+	menubar = new clan::MenuBar(this);
 
-	PopupMenu menu_file;
+	clan::PopupMenu menu_file;
 
-	PopupMenuItem item_new_resource_viewer = menu_file.insert_item("New resource viewer");
+	clan::PopupMenuItem item_new_resource_viewer = menu_file.insert_item("New resource viewer");
 	item_new_resource_viewer.func_clicked().set(this, &MainWindow::create_resource_viewer_view);
 
-	PopupMenuItem item_new_texture_packer = menu_file.insert_item("New texture packer");
+	clan::PopupMenuItem item_new_texture_packer = menu_file.insert_item("New texture packer");
 	item_new_texture_packer.func_clicked().set(this, &MainWindow::create_texture_packer_view);
 	
-	PopupMenuItem item_new_css_packer = menu_file.insert_item("New CSS packer");
+	clan::PopupMenuItem item_new_css_packer = menu_file.insert_item("New CSS packer");
 	item_new_css_packer.func_clicked().set(this, &MainWindow::create_css_packer_view);
 	
-	PopupMenuItem item_exit = menu_file.insert_item("Exit");
+	clan::PopupMenuItem item_exit = menu_file.insert_item("Exit");
 	item_exit.func_clicked().set(this, &MainWindow::on_close2);
 
 	menubar->add_menu("File", menu_file);
@@ -166,8 +167,8 @@ void MainWindow::on_close2()
 }
 void MainWindow::on_resized()
 {
-	Rect client_area = get_content_box();
+	clan::Rect client_area = get_content_box();
 
-	menubar->set_geometry(Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
-	workspace->set_geometry(Rect(client_area.left, client_area.top + 22, client_area.right, client_area.bottom));
+	menubar->set_geometry(clan::Rect(client_area.left, client_area.top, client_area.right, client_area.top + 22));
+	workspace->set_geometry(clan::Rect(client_area.left, client_area.top + 22, client_area.right, client_area.bottom));
 }

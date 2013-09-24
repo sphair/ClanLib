@@ -36,7 +36,7 @@ class TextureGroupComponent;
 class TexturePackerView : public View
 {
 public:
-	TexturePackerView(GUIComponent *parent, MainWindow *mainwindow);
+	TexturePackerView(clan::GUIComponent *parent, MainWindow *mainwindow);
 	~TexturePackerView();
 
 private:
@@ -50,27 +50,27 @@ private:
 
 	TexturePacker packer;
 
-	Label *label_selected_resource_file;
-	LineEdit *lineedit_selected_resource_file;
-	PushButton *button_browse_resource_file;
+	clan::Label *label_selected_resource_file;
+	clan::LineEdit *lineedit_selected_resource_file;
+	clan::PushButton *button_browse_resource_file;
 
-	PushButton *button_pack;
-	PushButton *button_save;
-	Spin *spin_border;
-	Label *label_border;
+	clan::PushButton *button_pack;
+	clan::PushButton *button_save;
+	clan::Spin *spin_border;
+	clan::Label *label_border;
 
-	CheckBox *check_sort;
+	clan::CheckBox *check_sort;
 
-	RadioButton *radio_texture32;
-	RadioButton *radio_texture64;
-	RadioButton *radio_texture128;
-	RadioButton *radio_texture256;
-	RadioButton *radio_texture512;
-	RadioButton *radio_texture1024x256;
-	RadioButton *radio_texture1024;
-	RadioButton *radio_texture2048;
+	clan::RadioButton *radio_texture32;
+	clan::RadioButton *radio_texture64;
+	clan::RadioButton *radio_texture128;
+	clan::RadioButton *radio_texture256;
+	clan::RadioButton *radio_texture512;
+	clan::RadioButton *radio_texture1024x256;
+	clan::RadioButton *radio_texture1024;
+	clan::RadioButton *radio_texture2048;
 
-	Label *generation_result;
+	clan::Label *generation_result;
 
 	TextureGroupComponent *texturegroup_component;
 };

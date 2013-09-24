@@ -30,10 +30,10 @@
 
 class MainWindow;
 
-class View : public GUIComponent
+class View : public clan::GUIComponent
 {
 public:
-	View(GUIComponent *parent, MainWindow *mainwindow, const std::string &title);
+	View(clan::GUIComponent *parent, MainWindow *mainwindow, const std::string &title);
 	virtual ~View();
 
 	MainWindow *get_mainwindow() const { return mainwindow; }

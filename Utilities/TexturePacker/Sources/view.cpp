@@ -33,8 +33,8 @@
 /////////////////////////////////////////////////////////////////////////////
 // Construction:
 
-View::View(GUIComponent *parent, MainWindow *mainwindow, const std::string &title)
-: GUIComponent(parent), mainwindow(mainwindow), title(title), closable(true)
+View::View(clan::GUIComponent *parent, MainWindow *mainwindow, const std::string &title)
+: clan::GUIComponent(parent), mainwindow(mainwindow), title(title), closable(true)
 {
 }
 

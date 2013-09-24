@@ -38,5 +38,5 @@ public:
 	void save(const std::string &filename);
 
 private:
-	CSSDocument doc;
+	clan::CSSDocument doc;
 };

@@ -28,10 +28,10 @@
 
 #pragma once
 
-class TextureGroupComponent : public GUIComponent
+class TextureGroupComponent : public clan::GUIComponent
 {
 public:
-	TextureGroupComponent(GUIComponent *parent);
+	TextureGroupComponent(clan::GUIComponent *parent);
 	~TextureGroupComponent() {};
 
 // Attributes:
@@ -39,18 +39,18 @@ public:
 
 // Operations:
 public:
-	void set_texturegroup(TextureGroup *group);
+	void set_texturegroup(clan::TextureGroup *group);
 
 // Implementation:
 private:
-	void on_render(Canvas &canvas, const Rect &update_rect);
-	void on_render_texture(Canvas &canvas, const Rect &update_rect);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
+	void on_render_texture(clan::Canvas &canvas, const clan::Rect &update_rect);
 	void on_resized();
 	void on_scroll();
 
-	TextureGroup *texture_group;
+	clan::TextureGroup *texture_group;
 
-	ScrollBar *scroll_horizontal;
-	ScrollBar *scroll_vertical;
-	GUIComponent *component_texture;
+	clan::ScrollBar *scroll_horizontal;
+	clan::ScrollBar *scroll_vertical;
+	clan::GUIComponent *component_texture;
 };

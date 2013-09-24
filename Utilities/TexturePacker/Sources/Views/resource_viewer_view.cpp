@@ -32,40 +32,40 @@
 #include "../texture_packer.h"
 #include "../Dialogs/create_collision_data_dialog.h"
 
-ResourceViewerView::ResourceViewerView(GUIComponent *parent, MainWindow *mainwindow)
-: View(parent, mainwindow, "XMLResourceDocument viewer"), sprite_component(NULL), resource_list(NULL)
+ResourceViewerView::ResourceViewerView(clan::GUIComponent *parent, MainWindow *mainwindow)
+: View(parent, mainwindow, "Resource viewer"), sprite_component(NULL), resource_list(NULL)
 {
 	func_resized().set(this, &ResourceViewerView::on_resized);
 
-	label_selected_resource_file = new Label(this);
-	label_selected_resource_file->set_text("XMLResourceDocument file:");
+	label_selected_resource_file = new clan::Label(this);
+	label_selected_resource_file->set_text("Resource file:");
 
-	lineedit_selected_resource_file = new LineEdit(this);
+	lineedit_selected_resource_file = new clan::LineEdit(this);
 
-	button_browse_resource_file = new PushButton(this);
+	button_browse_resource_file = new clan::PushButton(this);
 	button_browse_resource_file->set_text("...");
 	button_browse_resource_file->func_clicked().set(this, &ResourceViewerView::on_button_browse_resource_file);
 
-	button_edit_resource = new PushButton(this);
+	button_edit_resource = new clan::PushButton(this);
 	button_edit_resource->set_text("Edit resource");
 	button_edit_resource->func_clicked().set(this, &ResourceViewerView::on_button_edit_resource);
 	button_edit_resource->set_enabled(false);
 
-	button_create_collision_data = new PushButton(this);
+	button_create_collision_data = new clan::PushButton(this);
 	button_create_collision_data->set_text("Create collision data");
 	button_create_collision_data->func_clicked().set(this, &ResourceViewerView::on_button_create_collision_data);
 	button_create_collision_data->set_enabled(false);
 
-	resource_list = new ListView(this);
-	ListViewColumnHeader col_resource = resource_list->get_header()->append(resource_list->get_header()->create_column("XMLResourceDocument", "XMLResourceDocument"));
+	resource_list = new clan::ListView(this);
+	clan::ListViewColumnHeader col_resource = resource_list->get_header()->append(resource_list->get_header()->create_column("Resource", "Resource"));
 	col_resource.set_width(350);
-	ListViewColumnHeader col_message = resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
+	clan::ListViewColumnHeader col_message = resource_list->get_header()->append(resource_list->get_header()->create_column("Message", "Message"));
 
-	ListViewIconList icon_list = resource_list->get_icon_list();
-	ListViewIcon icon_disabled;
-	icon_disabled.set_sprite(Sprite(get_canvas(), "Resources/sweetie-16-em-cross.png"), listview_mode_details);
-	ListViewIcon icon_enabled;
-	icon_enabled.set_sprite(Sprite(get_canvas(), "Resources/sweetie-16-em-check.png"), listview_mode_details);
+	clan::ListViewIconList icon_list = resource_list->get_icon_list();
+	clan::ListViewIcon icon_disabled;
+	icon_disabled.set_sprite(clan::Sprite(get_canvas(), "Resources/sweetie-16-em-cross.png"), clan::listview_mode_details);
+	clan::ListViewIcon icon_enabled;
+	icon_enabled.set_sprite(clan::Sprite(get_canvas(), "Resources/sweetie-16-em-check.png"), clan::listview_mode_details);
 	icon_list.set_icon(1, icon_disabled);
 	icon_list.set_icon(2, icon_enabled);
 
@@ -82,26 +82,26 @@ ResourceViewerView::~ResourceViewerView()
 
 void ResourceViewerView::on_resized()
 {
-	Size size = get_size();
+	clan::Size size = get_size();
 
-	label_selected_resource_file->set_geometry(Rect(10, 13, 80, 30));
-	lineedit_selected_resource_file->set_geometry(Rect(80, 10, size.width - 20 - 20, 30));
-	button_browse_resource_file->set_geometry(Rect(10 + size.width - 20 - 30, 10, size.width - 10, 30));
+	label_selected_resource_file->set_geometry(clan::Rect(10, 13, 80, 30));
+	lineedit_selected_resource_file->set_geometry(clan::Rect(80, 10, size.width - 20 - 20, 30));
+	button_browse_resource_file->set_geometry(clan::Rect(10 + size.width - 20 - 30, 10, size.width - 10, 30));
 	if (resource_list)
-		resource_list->set_geometry(Rect(10, 40, size.width - 10, 200));
+		resource_list->set_geometry(clan::Rect(10, 40, size.width - 10, 200));
 	if (sprite_component)
-		sprite_component->set_geometry(Rect(10, 205, size.width - 10, size.height - 35));
-	button_edit_resource->set_geometry(Rect(10, size.height - 30, 130, size.height - 10));
-	button_create_collision_data->set_geometry(Rect(140, size.height - 30, 260, size.height - 10));
+		sprite_component->set_geometry(clan::Rect(10, 205, size.width - 10, size.height - 35));
+	button_edit_resource->set_geometry(clan::Rect(10, size.height - 30, 130, size.height - 10));
+	button_create_collision_data->set_geometry(clan::Rect(140, size.height - 30, 260, size.height - 10));
 }
 
 void ResourceViewerView::on_button_browse_resource_file()
 {
-	OpenFileDialog dlg(this);
-	dlg.add_filter("XMLResourceDocument files", "*.xml", true);
+	clan::OpenFileDialog dlg(this);
+	dlg.add_filter("Resource files", "*.xml", true);
 	dlg.add_filter("All files", "*.*");
 
-	dlg.set_initial_directory(System::get_exe_path());
+	dlg.set_initial_directory(clan::System::get_exe_path());
 
 	if(dlg.show())
 	{
@@ -112,9 +112,9 @@ void ResourceViewerView::on_button_browse_resource_file()
 			load_resource_file(filename);
 			lineedit_selected_resource_file->set_text(filename);
 		}
-		catch(Exception error)
+		catch(clan::Exception error)
 		{
-//			generation_result->set_text(string_format("Error: %1", error.message));
+//			generation_result->set_text(clan::string_format("Error: %1", error.message));
 		}
 	}
 }
@@ -146,7 +146,7 @@ void ResourceViewerView::on_button_create_collision_data()
 	}
 }
 
-void ResourceViewerView::on_selection_changed(ListViewSelection selection)
+void ResourceViewerView::on_selection_changed(clan::ListViewSelection selection)
 {
 	ResourceItem *resource_item = get_selected_resource_item();
 	if(resource_item)
@@ -165,7 +165,7 @@ void ResourceViewerView::show_resource(ResourceItem *resource_item)
 	}
 	else if(image_item)
 	{
-		//sprite_component->set_sprite_description(&image_item->sprite_description);
+		sprite_component->set_image(&image_item->image);
 		//button_edit_resource->set_enabled(true);
 		button_create_collision_data->set_enabled(false);
 	}
@@ -188,8 +188,8 @@ void ResourceViewerView::load_resource_file(const std::string &file)
 	{
 		ResourceItem *resource_item = items[i];
 
-		ListViewItem item = resource_list->create_item();
-		item.set_column_text("XMLResourceDocument", string_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
+		clan::ListViewItem item = resource_list->create_item();
+		item.set_column_text("Resource", clan::string_format("%1%2", resource_item->resource_path, resource_item->resource.get_name()));
 
 		item.set_id(i);
 

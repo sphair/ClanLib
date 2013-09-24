@@ -39,7 +39,7 @@ TexturePacker::~TexturePacker()
 {
 }
 
-void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
+void TexturePacker::load_resources(clan::Canvas &canvas, const std::string &filename)
 {
 	resources_doc = clan::XMLResourceDocument(filename);
 	resources = clan::XMLResourceManager::create(resources_doc);
@@ -52,13 +52,13 @@ void TexturePacker::load_resources(Canvas &canvas, const std::string &filename)
 	for(resource_it = resource_names.begin(); resource_it != resource_names.end(); ++resource_it)
 	{
 		std::string resource_id = (*resource_it);
-		XMLResourceNode resource = resources_doc.get_resource(resource_id);
+		clan::XMLResourceNode resource = resources_doc.get_resource(resource_id);
 
 		resource_items.push_back(load_resource(canvas, resource_id, resource, resources));
 	}
 }
 
-ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_resource(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources)
 {
 	ResourceItem *item = 0;
 
@@ -75,36 +75,35 @@ ResourceItem *TexturePacker::load_resource(Canvas &canvas, std::string &resource
 		}
 		else
 		{
-			throw Exception(string_format("Resourcetype %1 is not supported", type));
+			throw clan::Exception(clan::string_format("Resourcetype %1 is not supported", type));
 		}
 	}
-	catch(Exception ex)
+	catch(clan::Exception ex)
 	{
 		item = new NotSupportedResourceItem(resource, ex.message);
 	}
 
 	// Find resource path by traversing parents
-	DomElement &dom_element = resource.get_element();
-	DomNode parent = dom_element.get_parent_node();
+	clan::DomElement &dom_element = resource.get_element();
+	clan::DomNode parent = dom_element.get_parent_node();
 	while (!parent.is_null())
 	{
-		DomElement parent_element = parent.to_element();
+		clan::DomElement parent_element = parent.to_element();
 		std::string parent_name = parent_element.get_attribute("name");
 		if(parent_name.length() > 0)
-			item->resource_path = string_format("%1/%2", parent_name, item->resource_path);
+			item->resource_path = clan::string_format("%1/%2", parent_name, item->resource_path);
 		parent = parent.get_parent_node();
 	}
 
 	return item;
 }
 
-ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_sprite(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources)
 {
-
-	Sprite sprite = Sprite::load(canvas, resource_id, resource.get_document());
+	clan::Sprite sprite = clan::Sprite::load(canvas, resource_id, resource.get_document());
 	sprite.set_play_loop(true);
-	sprite.set_alignment(origin_top_left);
-	sprite.set_angle(Angle::from_degrees(360) - sprite.get_base_angle());
+	sprite.set_alignment(clan::origin_top_left);
+	sprite.set_angle(clan::Angle::from_degrees(360) - sprite.get_base_angle());
 
 	SpriteResourceItem *item = new SpriteResourceItem(resource);
 	item->sprite = sprite;
@@ -112,10 +111,10 @@ ResourceItem *TexturePacker::load_sprite(Canvas &canvas, std::string &resource_i
 	return item;
 }
 
-ResourceItem *TexturePacker::load_image(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources)
+ResourceItem *TexturePacker::load_image(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources)
 {
-	Image image = Image::load(canvas, resource_id, resource.get_document());
-	image.set_alignment(origin_top_left);
+	clan::Image image = clan::Image::load(canvas, resource_id, resource.get_document());
+	image.set_alignment(clan::origin_top_left);
 
 	ImageResourceItem *item = new ImageResourceItem(resource);
 	item->image = image;
@@ -135,33 +134,33 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 
 		for(unsigned int index = 0; index < frame_size; ++index)
 		{
-			Rect frame_rect = sprite_item1->sprite.get_size();
-			if(frame_rect.get_width() > max_width_d1)
-				max_width_d1 = frame_rect.get_width();
+			clan::Size frame_size = sprite_item1->sprite.get_size();
+			if(frame_size.width > max_width_d1)
+				max_width_d1 = frame_size.width;
 		}
 	}
 	ImageResourceItem *image_item1 = dynamic_cast<ImageResourceItem *>(d1);
 	if(image_item1)
 	{
-		Rect frame_rect = image_item1->image.get_size();
-		if(frame_rect.get_width() > max_width_d1)
-			max_width_d1 = frame_rect.get_width();
+		clan::Size frame_size = image_item1->image.get_size();
+		if(frame_size.width > max_width_d1)
+			max_width_d1 = frame_size.width;
 	}
 	SpriteResourceItem *sprite_item2 = dynamic_cast<SpriteResourceItem *>(d2);
 	if(sprite_item2)
 	{
-		unsigned int frame_size = sprite_item1->sprite.get_frame_count();
+		unsigned int frame_size = sprite_item2->sprite.get_frame_count();
 		for(unsigned int index = 0; index < frame_size; ++index)
 		{
-			Rect frame_rect = sprite_item2->sprite.get_frame_size(index);
-			if(frame_rect.get_width() > max_width_d2)
-				max_width_d2 = frame_rect.get_width();
+			clan::Size frame_size = sprite_item2->sprite.get_frame_size(index);
+			if(frame_size.width > max_width_d2)
+				max_width_d2 = frame_size.width;
 		}
 	}
 	ImageResourceItem *image_item2 = dynamic_cast<ImageResourceItem *>(d2);
 	if(image_item2)
 	{
-		Rect frame_rect = image_item2->image.get_size();
+		clan::Rect frame_rect = image_item2->image.get_size();
 		if(frame_rect.get_width() > max_width_d2)
 			max_width_d2 = frame_rect.get_width();
 	}
@@ -169,9 +168,9 @@ bool ImageWidthSortPredicate(ResourceItem *d1, ResourceItem *d2)
 	return max_width_d1 > max_width_d2;
 }
 
-TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int border_size, bool sort_on_width)
+clan::TextureGroup *TexturePacker::pack(clan::Canvas &canvas, const clan::Size &texture_size, int border_size, bool sort_on_width)
 {
-	TextureGroup *group = new TextureGroup(texture_size);
+	clan::TextureGroup *group = new clan::TextureGroup(texture_size);
 
 	std::vector<ResourceItem *> items = get_resource_items();
 
@@ -190,17 +189,17 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 			unsigned int size = sprite_item->sprite.get_frame_count();
 			for(unsigned int index = 0; index < size; ++index)
 			{
-				Rect frame_rect = sprite_item->sprite.get_frame_size(index);
+				clan::Size frame_size = sprite_item->sprite.get_frame_size(index);
 
-				Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
+				clan::Subtexture sub_texture = group->add(canvas, clan::Size(frame_size.width + border_size*2, frame_size.height + border_size*2));
 				sprite_item->packed_sub_textures.push_back(sub_texture);
 
-				Subtexture subtexture = sprite_item->sprite.get_frame_texture(index);
-				PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
+				clan::Subtexture subtexture = sprite_item->sprite.get_frame_texture(index);
+				clan::PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, clan::tf_rgba8);
 				pb = pb.copy(subtexture.get_geometry());
 				last_border_size = border_size;
 				if (last_border_size < 0) last_border_size= 0;
-				PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
+				clan::PixelBuffer new_pb = clan::PixelBufferHelp::add_border(pb, border_size, pb.get_size());
 				sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
 			}
 		}
@@ -210,20 +209,19 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 		{
 			image_item->packed_sub_textures.clear();
 
-			Rect frame_rect = image_item->image.get_size();
+			clan::Size frame_size = image_item->image.get_size();
 
-			Subtexture sub_texture = group->add(canvas, Size(frame_rect.get_width() + border_size*2, frame_rect.get_height() + border_size*2));
+			clan::Subtexture sub_texture = group->add(canvas, clan::Size(frame_size.width + border_size*2, frame_size.height + border_size*2));
 			image_item->packed_sub_textures.push_back(sub_texture);
 
-			Subtexture subtexture = image_item->image.get_texture();
-			PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
+			clan::Subtexture subtexture = image_item->image.get_texture();
+			clan::PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, clan::tf_rgba8);
 			pb = pb.copy(subtexture.get_geometry());
-
 			last_border_size = border_size;
 			if (last_border_size < 0) last_border_size = 0;
-			PixelBuffer new_pb = PixelBufferHelp::add_border(pb, border_size, pb.get_size());
+			clan::PixelBuffer new_pb = clan::PixelBufferHelp::add_border(pb, border_size, pb.get_size());
 			sub_texture.get_texture().set_subimage(canvas, sub_texture.get_geometry().get_top_left(), new_pb, new_pb.get_size());
-	}
+		}
 
 		if(!func_pack_progress.is_null())
 			func_pack_progress.invoke((int)item_index + 1, (int)item_size);
@@ -232,13 +230,13 @@ TextureGroup *TexturePacker::pack(Canvas &canvas, const Size &texture_size, int 
 	return group;
 }
 
-void TexturePacker::save_resources(Canvas &canvas, const std::string &filename)
+void TexturePacker::save_resources(clan::Canvas &canvas, const std::string &filename)
 {
-	// Map containing generated texture filenames for packed Textures
-	std::map<Texture, std::string> generated_texture_filenames;
+	// Map containing generated texture filenames for packed clan::Textures
+	std::map<clan::Texture2D, std::string> generated_texture_filenames;
 	int generated_texture_index = 0;
 
-	std::string images_pathname = PathHelp::get_fullpath(filename);
+	std::string images_pathname = clan::PathHelp::get_fullpath(filename);
 
 	// Loop through all resource items
 	std::vector<ResourceItem *> &items = get_resource_items();
@@ -259,18 +257,18 @@ void TexturePacker::save_resources(Canvas &canvas, const std::string &filename)
 	resources_doc.save(filename);
 }
 
-void TexturePacker::process_resource(Canvas &canvas, XMLResourceNode &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
+void TexturePacker::process_resource(clan::Canvas &canvas, clan::XMLResourceNode &item_resource, std::vector<clan::Subtexture> &packed_sub_textures, std::map<clan::Texture2D, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname )
 {
 	// Found a sprite resource, lets modify its content!
-	XMLResourceDocument resource = item_resource.get_document();
+	clan::XMLResourceDocument resource = item_resource.get_document();
 
 	// Iterate through all nodes, and remove all previous image tags
-	DomElement &element = item_resource.get_element();
-	DomNode cur = element.get_first_child();
+	clan::DomElement &element = item_resource.get_element();
+	clan::DomNode cur = element.get_first_child();
 	while (!cur.is_null())
 	{
-		DomNode next = cur.get_next_sibling();
-		DomNode::NodeType nodeType = (DomNode::NodeType)cur.get_node_type();
+		clan::DomNode next = cur.get_next_sibling();
+		clan::DomNode::NodeType nodeType = (clan::DomNode::NodeType)cur.get_node_type();
 
 		// Only remove the <image> tag, as we want to keep the other sprite attributes
 		if (cur.get_node_name() == "image")
@@ -280,22 +278,22 @@ void TexturePacker::process_resource(Canvas &canvas, XMLResourceNode &item_resou
 	}
 
 	// Add new image tag to resource DOM
-	std::vector<Subtexture>::size_type index, size;
+	std::vector<clan::Subtexture>::size_type index, size;
 	size = packed_sub_textures.size();
 	for(index = 0; index < size; ++index)
 	{
-		Subtexture subtexture = packed_sub_textures[index];
+		clan::Subtexture subtexture = packed_sub_textures[index];
 
 		// Try to find out if we already have created a texture-on-disk for this subtexture
 		std::string texture_filename;
-		Texture2D texture = subtexture.get_texture();
-		std::map<Texture, std::string>::iterator it;
+		clan::Texture2D texture = subtexture.get_texture();
+		std::map<clan::Texture2D, std::string>::iterator it;
 		it = generated_texture_filenames.find(texture);
 		if(it == generated_texture_filenames.end())
 		{
 			// Texture not found, generate a filename and dump texture to disk
-			texture_filename = string_format("texture%1.png", ++generated_texture_index);
-			PNGProvider::save(texture.get_pixeldata(canvas), image_pathname + texture_filename);
+			texture_filename = clan::string_format("texture%1.png", ++generated_texture_index);
+			clan::PNGProvider::save(texture.get_pixeldata(canvas), image_pathname + texture_filename);
 			generated_texture_filenames[texture] = texture_filename;
 		}
 		else
@@ -305,12 +303,12 @@ void TexturePacker::process_resource(Canvas &canvas, XMLResourceNode &item_resou
 		}
 
 		// Add <grid> DOM element
-		DomElement new_grid_element = element.get_owner_document().create_element("grid");
-		new_grid_element.set_attribute("pos", string_format("%1,%2", subtexture.get_geometry().left + last_border_size, subtexture.get_geometry().top + last_border_size));
-		new_grid_element.set_attribute("size", string_format("%1,%2", subtexture.get_geometry().get_width()- last_border_size*2, subtexture.get_geometry().get_height()- last_border_size*2));
+		clan::DomElement new_grid_element = element.get_owner_document().create_element("grid");
+		new_grid_element.set_attribute("pos", clan::string_format("%1,%2", subtexture.get_geometry().left + last_border_size, subtexture.get_geometry().top + last_border_size));
+		new_grid_element.set_attribute("size", clan::string_format("%1,%2", subtexture.get_geometry().get_width()- last_border_size*2, subtexture.get_geometry().get_height()- last_border_size*2));
 
 		// Add <image> DOM element
-		DomElement new_image_element = element.get_owner_document().create_element("image");
+		clan::DomElement new_image_element = element.get_owner_document().create_element("image");
 		new_image_element.set_attribute("file", texture_filename);
 		new_image_element.append_child(new_grid_element);
 

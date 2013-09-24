@@ -29,7 +29,7 @@
 #include "precomp.h"
 #include "main_window.h"
 
-class TextureApplication
+class Application
 {
 public:
 	int main(const std::vector<std::string> &args)
@@ -39,7 +39,7 @@ public:
 		std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
 		std::string theme_filename("../../Resources/GUIThemeAero/theme.css");
 		std::string local_theme_filename("theme.css");
-		if (!FileHelp::file_exists(resource_filename))
+		if (!clan::FileHelp::file_exists(resource_filename))
 		{
 			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
 			std::string theme_filename("../../Resources/GUIThemeBasic/theme.css");
@@ -47,11 +47,11 @@ public:
 		clan::XMLResourceDocument resources_doc(resource_filename);
 		local_resources_doc.add_resources(resources_doc);
 
-		ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
+		clan::ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
 
-		GUIWindowManagerSystem wm;
+		clan::GUIWindowManagerSystem wm;
 
-		GUIManager gui;
+		clan::GUIManager gui;
 		gui.set_window_manager(wm);
 		gui.add_resources(resources_doc);
 		gui.add_resources(resource_filename);
@@ -69,15 +69,15 @@ class Program
 public:
 	static int main(const std::vector<std::string> &args)
 	{
-		SetupCore setup_core;
-		SetupDisplay setup_display;
-//		SetupD3D setup_d3d;
-		SetupGL setup_gl;
+		clan::SetupCore setup_core;
+		clan::SetupDisplay setup_display;
+		clan::SetupGL setup_gl;
+		clan::SetupSWRender setup_swrender;
 
-		TextureApplication app;
+		Application app;
 		return app.main(args);
 	}
 };
 
-Application app(&Program::main);
+clan::Application app(&Program::main);
 

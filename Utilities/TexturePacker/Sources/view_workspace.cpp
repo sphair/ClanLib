@@ -30,19 +30,20 @@
 #include "view_workspace.h"
 #include "view.h"
 
-ViewWorkspace::ViewWorkspace(GUIComponent *parent)
-: GUIComponent(parent, "workspace"), hot(false), current_page_index(0)
+ViewWorkspace::ViewWorkspace(clan::GUIComponent *parent)
+: clan::GUIComponent(parent, "workspace"), hot(false), current_page_index(0)
 {
 	func_render().set(this, &ViewWorkspace::on_render);
 	func_resized().set(this, &ViewWorkspace::on_resized);
 	func_process_message().set(this, &ViewWorkspace::on_process_message);
 
-	Canvas canvas = get_canvas();
-	part_tab = GUIThemePart(this, "workspacetab");
-	font_tab = Font(canvas, "Tahoma", -11);//part_background.get_font();
-	image_cross = Image(canvas, "Resources/cross-small.png");
-	image_cross_hot = Image(canvas, "Resources/cross-small-hot.png");
-	image_cross_empty = Image(canvas, "Resources/cross-small-empty.png");
+	clan::Canvas canvas = get_canvas();
+	
+	part_tab = clan::GUIThemePart(this, "workspacetab");
+	font_tab = clan::Font(canvas, "Tahoma", -11);//part_background.get_font();
+	image_cross = clan::Image(canvas, "Resources/cross-small.png");
+	image_cross_hot = clan::Image(canvas, "Resources/cross-small-hot.png");
+	image_cross_empty = clan::Image(canvas, "Resources/cross-small-empty.png");
 	on_resized();
 }
 
@@ -65,7 +66,7 @@ unsigned int ViewWorkspace::find_view_index(View *view) const
 		if (pages[i].view == view)
 			return (int)i;
 
-	throw Exception("View is not a member of the workspace");
+	throw clan::Exception("View is not a member of the workspace");
 }
 
 void ViewWorkspace::remove_view(View *view)
@@ -89,7 +90,7 @@ void ViewWorkspace::show_view(unsigned int index)
 	{
 		for (size_t i = 0; i < pages.size(); i++)
 			pages[i].view->set_visible(i == index);
-		pages[index].color = Colorf::black;
+		pages[index].color = clan::Colorf::black;
 	}
 	request_repaint();
 }
@@ -125,7 +126,7 @@ void ViewWorkspace::previous_view()
 	}
 }
 
-void ViewWorkspace::set_view_color(View *view, Colorf &color)
+void ViewWorkspace::set_view_color(View *view, clan::Colorf &color)
 {
 	int page_index = find_view_index(view);
 	if (page_index != current_page_index)
@@ -140,22 +141,23 @@ unsigned int ViewWorkspace::get_current_view_index() const
 	return current_page_index;
 }
 
-void ViewWorkspace::on_render(Canvas &canvas, const Rect &clip_rect)
+void ViewWorkspace::on_render(clan::Canvas &canvas, const clan::Rect &clip_rect)
 {
+	clan::Size client_size = get_size();
 	paint_tabs(canvas, clip_rect);
 }
 
 void ViewWorkspace::on_resized()
 {
-	Rect workspace_area = get_workspace_area();
+	clan::Rect workspace_area = get_workspace_area();
 	for (std::vector<ViewPage>::iterator it = pages.begin(); it != pages.end(); ++it)
 		(*it).view->set_geometry(workspace_area);
 	request_repaint();
 }
 
-Rect ViewWorkspace::get_workspace_area()
+clan::Rect ViewWorkspace::get_workspace_area()
 {
-	Rect client_area = get_size();
+	clan::Rect client_area = get_size();
 	client_area.top += part_tab.get_css_height()+7;
 	client_area.left += 7;
 	client_area.right -= 7;
@@ -163,12 +165,12 @@ Rect ViewWorkspace::get_workspace_area()
 	return client_area;
 }
 
-void ViewWorkspace::paint_tabs(Canvas &canvas, const Rect &clip_rect)
+void ViewWorkspace::paint_tabs(clan::Canvas &canvas, const clan::Rect &clip_rect)
 {
 	int tab_x = 15;
 	for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 	{
-		SpanLayout span;
+		clan::SpanLayout span;
 		span.add_text(pages[page_index].text, font_tab, pages[page_index].color);
 	
 		if(pages[page_index].view->is_closable())
@@ -190,10 +192,10 @@ void ViewWorkspace::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 
 		span.layout(canvas, 1000);
 		int tab_width = clan::max(40, span.get_size().width);
-		Rect current_tab(Point(tab_x, 0), Size(tab_width+20, part_tab.get_css_height()));
+		clan::Rect current_tab(clan::Point(tab_x, 0), clan::Size(tab_width+20, part_tab.get_css_height()));
 		if (page_index == current_page_index)
 			part_tab.render_box(canvas, current_tab);
-		span.set_position(Point(tab_x+10, current_tab.bottom-18));
+		span.set_position(clan::Point(tab_x+10, current_tab.bottom-18));
 		span.draw_layout(canvas);
 
 		pages[page_index].span = span;
@@ -202,26 +204,26 @@ void ViewWorkspace::paint_tabs(Canvas &canvas, const Rect &clip_rect)
 	}
 }
 
-void ViewWorkspace::on_process_message(std::shared_ptr<GUIMessage> &msg)
+void ViewWorkspace::on_process_message(std::shared_ptr<clan::GUIMessage> &msg)
 {
-	std::shared_ptr<GUIMessage_Input> input_msg = std::dynamic_pointer_cast<GUIMessage_Input>(msg);
+	std::shared_ptr<clan::GUIMessage_Input> input_msg = std::dynamic_pointer_cast<clan::GUIMessage_Input>(msg);
 	if (input_msg)
 		on_input_message(*input_msg);
 }
 
-void ViewWorkspace::on_input_message(GUIMessage_Input msg)
+void ViewWorkspace::on_input_message(clan::GUIMessage_Input msg)
 {
-	Canvas canvas = get_canvas();
-	InputEvent input_event = msg.input_event;
-	if (input_event.type == InputEvent::pressed && input_event.id == mouse_left)
+	clan::Canvas canvas = get_canvas();
+	clan::InputEvent input_event = msg.input_event;
+	if (input_event.type == clan::InputEvent::pressed && input_event.id == clan::mouse_left)
 	{
-		Point mouse_pos = input_event.mouse_pos;
+		clan::Point mouse_pos = input_event.mouse_pos;
 		for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 		{
 			if (pages[page_index].position.contains(mouse_pos))
 			{
-				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
-				if (page_index == current_page_index && result.type == SpanLayout::HitTestResult::inside && result.object_id == 0)
+				clan::SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
+				if (page_index == current_page_index && result.type == clan::SpanLayout::HitTestResult::inside && result.object_id == 0)
 				{
 					if (!cb_view_close.is_null())
 						cb_view_close.invoke(pages[page_index].view);
@@ -235,22 +237,22 @@ void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 		}
 		msg.consumed = true;
 	}
-	else if (input_event.type == InputEvent::released && input_event.id == mouse_left)
+	else if (input_event.type == clan::InputEvent::released && input_event.id == clan::mouse_left)
 	{
 		msg.consumed = true;
 	}
-	else if (input_event.type == InputEvent::pointer_moved)
+	else if (input_event.type == clan::InputEvent::pointer_moved)
 	{
 		bool new_hot_state = false;
-		Point mouse_pos = input_event.mouse_pos;
+		clan::Point mouse_pos = input_event.mouse_pos;
 		bool no_match = true;
 		for (std::vector<ViewPage>::size_type page_index = 0; page_index < pages.size(); page_index++)
 		{
 			if (pages[page_index].position.contains(mouse_pos))
 			{
 				no_match = false;
-				SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
-				if (page_index == current_page_index && result.type == SpanLayout::HitTestResult::inside && result.object_id == 0)
+				clan::SpanLayout::HitTestResult result = pages[page_index].span.hit_test(canvas, mouse_pos);
+				if (page_index == current_page_index && result.type == clan::SpanLayout::HitTestResult::inside && result.object_id == 0)
 				{
 					new_hot_state = true;
 				}
@@ -264,11 +266,11 @@ void ViewWorkspace::on_input_message(GUIMessage_Input msg)
 		}
 		msg.consumed = true;
 	}
-	else if (input_event.type == InputEvent::pressed && input_event.ctrl)
+	else if (input_event.type == clan::InputEvent::pressed && input_event.ctrl)
 	{
 		switch (input_event.id)
 		{
-		case keycode_tab:
+		case clan::keycode_tab:
 			if (input_event.shift)
 				previous_view();
 			else

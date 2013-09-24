@@ -34,7 +34,7 @@
 class CssPackerView : public View
 {
 public:
-	CssPackerView(GUIComponent *parent, MainWindow *mainwindow);
+	CssPackerView(clan::GUIComponent *parent, MainWindow *mainwindow);
 	~CssPackerView();
 
 private:
@@ -45,13 +45,13 @@ private:
 	int load_css_file(const std::string &file);
 	void save_css_file(const std::string &file);
 
-	Label *label_selected_file;
-	LineEdit *lineedit_selected_file;
-	PushButton *button_browse_file;
+	clan::Label *label_selected_file;
+	clan::LineEdit *lineedit_selected_file;
+	clan::PushButton *button_browse_file;
 
-	Label *label_result;
+	clan::Label *label_result;
 
-	PushButton *button_save;
+	clan::PushButton *button_save;
 
 	CssPacker packer;
 };

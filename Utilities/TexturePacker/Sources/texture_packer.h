@@ -31,10 +31,10 @@
 class ResourceItem
 {
 public:
-	ResourceItem(XMLResourceNode resource) : resource(resource) {};
+	ResourceItem(clan::XMLResourceNode resource) : resource(resource) {};
 	virtual ~ResourceItem() {};
 
-	XMLResourceNode resource;
+	clan::XMLResourceNode resource;
 
 	std::string resource_path;
 };
@@ -42,7 +42,7 @@ public:
 class NotSupportedResourceItem : public ResourceItem
 {
 public:
-	NotSupportedResourceItem(XMLResourceNode resource, const std::string &error) : ResourceItem(resource), error(error) {};
+	NotSupportedResourceItem(clan::XMLResourceNode resource, const std::string &error) : ResourceItem(resource), error(error) {};
 
 	std::string error;
 };
@@ -50,21 +50,21 @@ public:
 class SpriteResourceItem : public ResourceItem
 {
 public:
-	SpriteResourceItem(XMLResourceNode resource) : ResourceItem(resource) {};
+	SpriteResourceItem(clan::XMLResourceNode resource) : ResourceItem(resource) {};
 
-	Sprite sprite;
+	clan::Sprite sprite;
 
-	std::vector<Subtexture> packed_sub_textures;
+	std::vector<clan::Subtexture> packed_sub_textures;
 };
 
 class ImageResourceItem : public ResourceItem
 {
 public:
-	ImageResourceItem(XMLResourceNode resource) : ResourceItem(resource) {};
+	ImageResourceItem(clan::XMLResourceNode resource) : ResourceItem(resource) {};
 
-	Image image;
+	clan::Image image;
 
-	std::vector<Subtexture> packed_sub_textures;
+	std::vector<clan::Subtexture> packed_sub_textures;
 };
 
 class TexturePacker
@@ -73,22 +73,22 @@ public:
 	TexturePacker();
 	~TexturePacker();
 
-	void load_resources(Canvas &canvas, const std::string &filename);
-	void save_resources(Canvas &canvas, const std::string &filename);
+	void load_resources(clan::Canvas &canvas, const std::string &filename);
+	void save_resources(clan::Canvas &canvas, const std::string &filename);
 
 	std::vector<ResourceItem *> &get_resource_items() { return resource_items; }
 
-	TextureGroup *pack(Canvas &canvas, const Size &texture_size, int border_size, bool sort_on_width);
-	Callback_v2<int, int> func_pack_progress;
+	clan::TextureGroup *pack(clan::Canvas &canvas, const clan::Size &texture_size, int border_size, bool sort_on_width);
+	clan::Callback_v2<int, int> func_pack_progress;
 
 private:
-	ResourceItem *load_resource(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
-	ResourceItem *load_image(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
-	ResourceItem *load_sprite(Canvas &canvas, std::string &resource_id, XMLResourceNode &resource, ResourceManager &resources);
-	void process_resource(Canvas &canvas, XMLResourceNode &item_resource, std::vector<Subtexture> &packed_sub_textures, std::map<Texture, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
+	ResourceItem *load_resource(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources);
+	ResourceItem *load_image(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources);
+	ResourceItem *load_sprite(clan::Canvas &canvas, std::string &resource_id, clan::XMLResourceNode &resource, clan::ResourceManager &resources);
+	void process_resource(clan::Canvas &canvas, clan::XMLResourceNode &item_resource, std::vector<clan::Subtexture> &packed_sub_textures, std::map<clan::Texture2D, std::string> &generated_texture_filenames, int &generated_texture_index, const std::string &image_pathname);
 
-	ResourceManager resources;
-	XMLResourceDocument resources_doc;
+	clan::ResourceManager resources;
+	clan::XMLResourceDocument resources_doc;
 
 	std::vector<ResourceItem *> resource_items;
 	int last_border_size;

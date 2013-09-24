@@ -29,20 +29,20 @@
 #include "precomp.h"
 #include "sprite_component.h"
 
-SpriteComponent::SpriteComponent(GUIComponent *parent)
-: GUIComponent(parent, "spritecomponent"),
-  sprite(0)
+SpriteComponent::SpriteComponent(clan::GUIComponent *parent)
+: clan::GUIComponent(parent, "spritecomponent"),
+  sprite(0), image(0)
 {
-	button_startstop = new PushButton(this);
+	button_startstop = new clan::PushButton(this);
 	button_startstop->set_text("Start");
 	button_startstop->func_clicked().set(this, &SpriteComponent::on_button_startstop_clicked);
-	button_prevframe = new PushButton(this);
+	button_prevframe = new clan::PushButton(this);
 	button_prevframe->set_text("<");
 	button_prevframe->func_clicked().set(this, &SpriteComponent::on_button_prevframe_clicked);
-	button_nextframe = new PushButton(this);
+	button_nextframe = new clan::PushButton(this);
 	button_nextframe->set_text(">");
 	button_nextframe->func_clicked().set(this, &SpriteComponent::on_button_nextframe_clicked);
-	label_frame = new Label(this);
+	label_frame = new clan::Label(this);
 
 	update_buttons_enabled_state();
 
@@ -50,26 +50,33 @@ SpriteComponent::SpriteComponent(GUIComponent *parent)
 	func_resized().set(this, &SpriteComponent::on_resized);
 }
 
-void SpriteComponent::on_render(Canvas &canvas, const Rect &update_rect)
+void SpriteComponent::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	push_cliprect(canvas, get_size());
 
-	canvas.fill_rect(get_size(), Colorf::cadetblue);
+	canvas.fill_rect( get_size(), clan::Colorf::cadetblue);
 
 	if(sprite)
 	{
 		if(is_playing)
-			sprite->update(0);
+		{
+			game_time.update();
+			sprite->update(game_time.get_time_elapsed_ms());
+		}
 
 		sprite->draw(canvas, 0, 0);
 
 		if(sprite->get_current_frame() != sprite_current_frame)
 		{
-			label_frame->set_text(string_format("Frame %1 / %2", sprite->get_current_frame() + 1, sprite->get_frame_count()));
+			label_frame->set_text(clan::string_format("Frame %1 / %2", sprite->get_current_frame() + 1, sprite->get_frame_count()));
 			sprite_current_frame = sprite->get_current_frame();
 		}
 	}
 
+	if(image)
+	{
+		image->draw(canvas, 0, 0);
+	}
 	pop_cliprect(canvas);
 }
 
@@ -77,10 +84,10 @@ void SpriteComponent::on_resized()
 {
 	int width = get_width();
 
-	button_startstop->set_geometry(Rect(Point(width - 200,0), Size(50,20)));
-	button_prevframe->set_geometry(Rect(Point(width - 140,0), Size(20,20)));
-	button_nextframe->set_geometry(Rect(Point(width - 120,0), Size(20,20)));
-	label_frame->set_geometry(Rect(Point(width - 80,0), Size(80,20)));
+	button_startstop->set_geometry(clan::Rect(clan::Point(width - 200,0), clan::Size(50,20)));
+	button_prevframe->set_geometry(clan::Rect(clan::Point(width - 140,0), clan::Size(20,20)));
+	button_nextframe->set_geometry(clan::Rect(clan::Point(width - 120,0), clan::Size(20,20)));
+	label_frame->set_geometry(clan::Rect(clan::Point(width - 80,0), clan::Size(80,20)));
 }
 
 void SpriteComponent::on_button_startstop_clicked()
@@ -103,6 +110,7 @@ void SpriteComponent::on_button_nextframe_clicked()
 void SpriteComponent::clear_sprite()
 {
 	sprite = 0;
+	image = 0;
 
 	this->set_constant_repaint(false);
 
@@ -112,7 +120,19 @@ void SpriteComponent::clear_sprite()
 	update_buttons_enabled_state();
 }
 
-void SpriteComponent::set_sprite(Sprite *sprite)
+void SpriteComponent::set_image(clan::Image *image)
+{
+	this->image = image;
+
+	is_playing = true;
+	sprite_current_frame = -1;
+
+	update_buttons_enabled_state();
+
+	request_repaint();
+}
+
+void SpriteComponent::set_sprite(clan::Sprite *sprite)
 {
 	this->sprite = sprite;
 	this->set_constant_repaint(true);

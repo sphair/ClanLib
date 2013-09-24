@@ -37,13 +37,13 @@ class ResourceItem;
 class ResourceViewerView : public View
 {
 public:
-	ResourceViewerView(GUIComponent *parent, MainWindow *mainwindow);
+	ResourceViewerView(clan::GUIComponent *parent, MainWindow *mainwindow);
 	~ResourceViewerView();
 
 private:
 	void on_resized();
 	void on_button_browse_resource_file();
-	void on_selection_changed(ListViewSelection selection);
+	void on_selection_changed(clan::ListViewSelection selection);
 	void on_button_edit_resource();
 	void on_button_create_collision_data();
 
@@ -55,14 +55,14 @@ private:
 
 	TexturePacker packer;
 
-	Label *label_selected_resource_file;
-	LineEdit *lineedit_selected_resource_file;
-	PushButton *button_browse_resource_file;
+	clan::Label *label_selected_resource_file;
+	clan::LineEdit *lineedit_selected_resource_file;
+	clan::PushButton *button_browse_resource_file;
 
-	PushButton *button_edit_resource;
-	PushButton *button_create_collision_data;
+	clan::PushButton *button_edit_resource;
+	clan::PushButton *button_create_collision_data;
 
-	ListView *resource_list;
+	clan::ListView *resource_list;
 
 	SpriteComponent *sprite_component;
 };

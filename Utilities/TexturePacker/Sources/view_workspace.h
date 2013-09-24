@@ -30,10 +30,10 @@
 
 class View;
 
-class ViewWorkspace : public GUIComponent
+class ViewWorkspace : public clan::GUIComponent
 {
 public:
-	ViewWorkspace(GUIComponent *parent);
+	ViewWorkspace(clan::GUIComponent *parent);
 	~ViewWorkspace();
 
 	void add_view(View *view);
@@ -42,39 +42,40 @@ public:
 	void show_view(unsigned int index);
 	unsigned int find_view_index(View *view) const;
 	unsigned int get_current_view_index() const;
-	void set_view_color(View *view, Colorf &color);
+	void set_view_color(View *view, clan::Colorf &color);
 
 	void try_show_view(unsigned int index);
 	void next_view();
 	void previous_view();
 
-	Callback_v1<View *> cb_view_close;
+	clan::Callback_v1<View *> cb_view_close;
 
 private:
-	void on_render(Canvas &canvas, const Rect &clip_rect);
+	void on_render(clan::Canvas &canvas, const clan::Rect &clip_rect);
 	void on_resized();
-	void on_process_message(std::shared_ptr<GUIMessage> &msg);
-	void on_input_message(GUIMessage_Input msg);
+	void on_process_message(std::shared_ptr<clan::GUIMessage> &msg);
+	void on_input_message(clan::GUIMessage_Input msg);
 
-	void paint_tabs(Canvas &canvas, const Rect &clip_rect);
-	Rect get_workspace_area();
+	void paint_tabs(clan::Canvas &canvas, const clan::Rect &clip_rect);
+	clan::Rect get_workspace_area();
 
 	struct ViewPage
 	{
-		ViewPage(const std::string &text, View *view) : text(text), color(Colorf::black), view(view) { }
+		ViewPage(const std::string &text, View *view) : text(text), color(clan::Colorf::black), view(view) { }
 		bool operator ==(const ViewPage &other) const { return view == other.view; }
 
 		std::string text;
-		Colorf color;
-		SpanLayout span;
-		Rect position;
+		clan::Colorf color;
+		clan::SpanLayout span;
+		clan::Rect position;
 		View *view;
 	};
 
 	bool hot;
-	Font font_tab;
-	Image image_cross, image_cross_hot, image_cross_empty;
-	GUIThemePart part_tab;
+	clan::Font font_tab;
+	clan::Image image_cross, image_cross_hot, image_cross_empty;
+	
+	clan::GUIThemePart part_tab;
 	std::vector<ViewPage> pages;
 	unsigned int current_page_index;
 };

@@ -29,15 +29,16 @@
 #include "precomp.h"
 #include "texturegroup_component.h"
 
-TextureGroupComponent::TextureGroupComponent(GUIComponent *parent)
-: GUIComponent(parent, "texturegroupcomponent"),
+TextureGroupComponent::TextureGroupComponent(clan::GUIComponent *parent)
+: clan::GUIComponent(parent, "texturegroupcomponent"),
   texture_group(0)
 {
-	component_texture = new GUIComponent(this);
 
-	scroll_horizontal = new ScrollBar(this);
+	component_texture = new clan::GUIComponent(this);
+
+	scroll_horizontal = new clan::ScrollBar(this);
 	scroll_horizontal->set_horizontal();
-	scroll_vertical = new ScrollBar(this);
+	scroll_vertical = new clan::ScrollBar(this);
 	scroll_vertical->set_vertical();
 
 	func_render().set(this, &TextureGroupComponent::on_render);
@@ -51,27 +52,27 @@ TextureGroupComponent::TextureGroupComponent(GUIComponent *parent)
 	on_resized();
 }
 
-void TextureGroupComponent::on_render(Canvas &canvas, const Rect &update_rect)
+void TextureGroupComponent::on_render(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
-	canvas.fill_rect(Rect(0, 0, get_size()), Colorf::lightgray);
+	canvas.fill_rect( clan::Rect(0, 0, get_size()), clan::Colorf::lightgray);
 	set_clip_children(true);	// Note, this was moved out of the constructor because at that stage, the geometry is not set
 }
 
-void TextureGroupComponent::on_render_texture(Canvas &canvas, const Rect &update_rect)
+void TextureGroupComponent::on_render_texture(clan::Canvas &canvas, const clan::Rect &update_rect)
 {
 	if(texture_group)
 	{
-		std::vector<Texture2D> textures = texture_group->get_textures();
+		std::vector<clan::Texture2D> textures = texture_group->get_textures();
 
 		if(textures.size() > 0)
 		{
-			canvas.fill_rect(Rect(0, 0, component_texture->get_size()), Colorf::black);
+			canvas.fill_rect( clan::Rect(0, 0, component_texture->get_size()), clan::Colorf::black);
 
 			int xpos = scroll_horizontal->get_position();
 			int ypos = scroll_vertical->get_position();
-			Size texture_size = texture_group->get_texture_sizes();
-			Image image(textures[0], textures[0].get_size());
-			image.draw(canvas, Rect(-xpos, -ypos, texture_size));
+			clan::Size texture_size = texture_group->get_texture_sizes();
+			clan::Image image(textures[0], textures[0].get_size());
+			image.draw(canvas, clan::Rect(-xpos, -ypos, texture_size));
 		}
 	}
 }
@@ -85,16 +86,16 @@ void TextureGroupComponent::on_resized()
 {
 	int scrollbar_size = scroll_horizontal->get_preferred_content_width();
 
-	Rect geometry = get_geometry();
+	clan::Rect geometry = get_geometry();
 
-	scroll_horizontal->set_geometry(Rect(0, get_height() - scrollbar_size, get_width() - scrollbar_size, get_height()));
-	scroll_vertical->set_geometry(Rect(get_width() - scrollbar_size, 0, get_width(), get_height() - scrollbar_size));
+	scroll_horizontal->set_geometry(clan::Rect(0, get_height() - scrollbar_size, get_width() - scrollbar_size, get_height()));
+	scroll_vertical->set_geometry(clan::Rect(get_width() - scrollbar_size, 0, get_width(), get_height() - scrollbar_size));
 
 	if(texture_group)
 	{
-		Size texture_size = texture_group->get_texture_sizes();
+		clan::Size texture_size = texture_group->get_texture_sizes();
 
-		Rect texture_area = Rect(0, 0, geometry.get_width() - scrollbar_size, geometry.get_height() - scrollbar_size);
+		clan::Rect texture_area = clan::Rect(0, 0, geometry.get_width() - scrollbar_size, geometry.get_height() - scrollbar_size);
 		if(texture_area.get_width() > texture_size.width)
 			texture_area.set_width(texture_size.width);
 		if(texture_area.get_height() > texture_size.height)
@@ -127,7 +128,7 @@ void TextureGroupComponent::on_resized()
 	}
 	else
 	{
-		Rect texture_area = Rect(0, 0, geometry.get_width() - scrollbar_size, geometry.get_height() - scrollbar_size);
+		clan::Rect texture_area = clan::Rect(0, 0, geometry.get_width() - scrollbar_size, geometry.get_height() - scrollbar_size);
 		component_texture->set_geometry(texture_area);
 
 		scroll_horizontal->set_enabled(false);
@@ -137,7 +138,7 @@ void TextureGroupComponent::on_resized()
 	}
 }
 
-void TextureGroupComponent::set_texturegroup(TextureGroup *group)
+void TextureGroupComponent::set_texturegroup(clan::TextureGroup *group)
 {	
 	texture_group = group;
 

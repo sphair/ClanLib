@@ -3,24 +3,24 @@
 #include "create_collision_data_dialog.h"
 #include "../texture_packer.h"
 
-CreateCollisionDataDialog::CreateCollisionDataDialog(GUIComponent *owner, SpriteResourceItem *sprite_item)
-: GUIComponent(owner, get_description()), sprite_item(sprite_item)
+CreateCollisionDataDialog::CreateCollisionDataDialog(clan::GUIComponent *owner, SpriteResourceItem *sprite_item)
+: clan::Window(owner, get_description()), sprite_item(sprite_item)
 {
 	set_layout(layout);
 
 	create_components("Resources/create_collision_data.gui");
 
-	edit_directory = LineEdit::get_named_item(this, "editDirectory");
-	edit_filename = LineEdit::get_named_item(this, "editFilename");
-	button_browse = PushButton::get_named_item(this, "buttonBrowse");
-	button_generate =  PushButton::get_named_item(this, "buttonGenerate");
-	button_close =  PushButton::get_named_item(this, "buttonClose");
-	radio_high = RadioButton::get_named_item(this, "radiobuttonHigh");
-	radio_medium = RadioButton::get_named_item(this, "radiobuttonMedium");
-	radio_low = RadioButton::get_named_item(this, "radiobuttonLow");
-	radio_poor = RadioButton::get_named_item(this, "radiobuttonPoor");
-	radio_raw = RadioButton::get_named_item(this, "radiobuttonRaw");
-	label_expected_filenames = Label::get_named_item(this, "labelExpectedFilenames");
+	edit_directory = clan::LineEdit::get_named_item(this, "editDirectory");
+	edit_filename = clan::LineEdit::get_named_item(this, "editFilename");
+	button_browse = clan::PushButton::get_named_item(this, "buttonBrowse");
+	button_generate =  clan::PushButton::get_named_item(this, "buttonGenerate");
+	button_close =  clan::PushButton::get_named_item(this, "buttonClose");
+	radio_high = clan::RadioButton::get_named_item(this, "radiobuttonHigh");
+	radio_medium = clan::RadioButton::get_named_item(this, "radiobuttonMedium");
+	radio_low = clan::RadioButton::get_named_item(this, "radiobuttonLow");
+	radio_poor = clan::RadioButton::get_named_item(this, "radiobuttonPoor");
+	radio_raw = clan::RadioButton::get_named_item(this, "radiobuttonRaw");
+	label_expected_filenames = clan::Label::get_named_item(this, "labelExpectedFilenames");
 
 	edit_directory->set_focus();
 	edit_filename->set_text(sprite_item->resource.get_name());
@@ -41,9 +41,9 @@ CreateCollisionDataDialog::CreateCollisionDataDialog(GUIComponent *owner, Sprite
 	set_visible(true, true);
 }
 
-GUITopLevelDescription CreateCollisionDataDialog::get_description()
+clan::GUITopLevelDescription CreateCollisionDataDialog::get_description()
 {
-	GUITopLevelDescription desc;
+	clan::GUITopLevelDescription desc;
 	desc.set_title("Create Collision Data");
 	desc.set_allow_resize(false);
 	desc.set_visible(false);
@@ -53,7 +53,7 @@ GUITopLevelDescription CreateCollisionDataDialog::get_description()
 	return desc;
 }
 
-void CreateCollisionDataDialog::on_file_edit(InputEvent &event)
+void CreateCollisionDataDialog::on_file_edit(clan::InputEvent &event)
 {
 	update_expected_filenames();
 }
@@ -66,7 +66,7 @@ bool CreateCollisionDataDialog::on_window_close()
 
 void CreateCollisionDataDialog::on_browse()
 {
-	BrowseFolderDialog dlg(this);
+	clan::BrowseFolderDialog dlg(this);
 
 	if(dlg.show())
 	{
@@ -77,31 +77,31 @@ void CreateCollisionDataDialog::on_browse()
 
 void CreateCollisionDataDialog::on_generate()
 {
-	std::string directory = StringHelp::trim(edit_directory->get_text());
+	std::string directory = clan::StringHelp::trim(edit_directory->get_text());
 	if(directory.length() == 0)
 	{
-		message_box(this, "Missing output directory", "You need to specify an output directory.", mb_buttons_ok, mb_icon_error);
+		clan::message_box(this, "Missing output directory", "You need to specify an output directory.", clan::mb_buttons_ok, clan::mb_icon_error);
 		return;
 	}
 
-	std::string filename = StringHelp::trim(edit_filename->get_text());
+	std::string filename = clan::StringHelp::trim(edit_filename->get_text());
 	if(filename.length() == 0)
 	{
-		message_box(this, "Missing output filename", "You need to specify an output filename.", mb_buttons_ok, mb_icon_error);
+		clan::message_box(this, "Missing output filename", "You need to specify an output filename.", clan::mb_buttons_ok, clan::mb_icon_error);
 		return;
 	}
 
-	OutlineAccuracy accuracy;
+	clan::OutlineAccuracy accuracy;
 	if(radio_high->is_selected())
-		accuracy = accuracy_high;
+		accuracy = clan::accuracy_high;
 	else if(radio_low->is_selected())
-		accuracy = accuracy_low;
+		accuracy = clan::accuracy_low;
 	else if(radio_medium->is_selected())
-		accuracy = accuracy_medium;
+		accuracy = clan::accuracy_medium;
 	else if(radio_poor->is_selected())
-		accuracy = accuracy_poor;
+		accuracy = clan::accuracy_poor;
 	else if(radio_raw->is_selected())
-		accuracy = accuracy_raw;
+		accuracy = clan::accuracy_raw;
 
 	generate_collision(filename, directory, accuracy);
 
@@ -113,42 +113,37 @@ void CreateCollisionDataDialog::on_close()
 	exit_with_code(0);
 }
 
-void CreateCollisionDataDialog::generate_collision(const std::string &filename, const std::string &directory, OutlineAccuracy accuracy)
+void CreateCollisionDataDialog::generate_collision(const std::string &filename, const std::string &directory, clan::OutlineAccuracy accuracy)
 {
-	Canvas canvas = get_canvas();
-	unsigned int frame_size = sprite_item->sprite.get_frame_count();
-	for(unsigned int i = 0; i < frame_size; ++i)
-	{
-		Subtexture subtexture = sprite_item->sprite.get_frame_texture(i);
-		PixelBuffer pb = subtexture.get_texture().get_pixeldata(canvas, tf_rgba8);
-		pb = pb.copy(subtexture.get_geometry());
+	clan::Canvas canvas = get_canvas();
+	std::vector<clan::CollisionOutline> collision_outlines = sprite_item->sprite.create_collision_outlines(canvas, 128, accuracy);
 
-		CollisionOutline generated(pb, 128, accuracy);
+	for(unsigned int i = 0; i < collision_outlines.size(); ++i)
+	{
 
 		std::string output_filename;
 
-		if(frame_size > 1)
+		if(collision_outlines.size() > 1)
 		{
-			StringFormat f("%1\\%2_%3.out"); 
+			clan::StringFormat f("%1\\%2_%3.out"); 
 			f.set_arg(1, directory); 
 			f.set_arg(2, filename);
-			f.set_arg(3, (int) i, 3);
+			f.set_arg(3, i, 3);
 			output_filename = f.get_result();
 		}
 		else
 		{
-			StringFormat f("%1\\%2.out"); 
+			clan::StringFormat f("%1\\%2.out"); 
 			f.set_arg(1, directory); 
 			f.set_arg(2, filename);
 			output_filename = f.get_result();
 		}
 
-		generated.save(output_filename);
+		collision_outlines[i].save(output_filename);
 	}
 
-	std::string msg = string_format("%1 collision outlines generated", (int)frame_size);
-	message_box(this, "Collision outlines generated", msg, mb_buttons_ok, mb_icon_info);
-
+	std::string msg = clan::string_format("%1 collision outlines generated", collision_outlines.size());
+	clan::message_box(this, "Collision outlines generated", msg, clan::mb_buttons_ok, clan::mb_icon_info);
 }
 
 void CreateCollisionDataDialog::update_expected_filenames()
@@ -156,11 +151,11 @@ void CreateCollisionDataDialog::update_expected_filenames()
 	if(sprite_item->sprite.get_frame_count() > 1)
 	{
 		label_expected_filenames->set_text(
-			string_format("Expected output: %1\\%2_xxx.out", edit_directory->get_text(), edit_filename->get_text()));
+			clan::string_format("Expected output: %1\\%2_xxx.out", edit_directory->get_text(), edit_filename->get_text()));
 	}
 	else
 	{
 		label_expected_filenames->set_text(
-			string_format("Expected output: %1\\%2.out", edit_directory->get_text(), edit_filename->get_text()));
+			clan::string_format("Expected output: %1\\%2.out", edit_directory->get_text(), edit_filename->get_text()));
 	}
 }

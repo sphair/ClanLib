@@ -28,10 +28,10 @@
 
 #pragma once
 
-class SpriteComponent : public GUIComponent
+class SpriteComponent : public clan::GUIComponent
 {
 public:
-	SpriteComponent(GUIComponent *parent);
+	SpriteComponent(clan::GUIComponent *parent);
 	~SpriteComponent() {};
 
 // Attributes:
@@ -41,11 +41,12 @@ public:
 public:
 	void clear_sprite();
 
-	void set_sprite(Sprite *sprite);
+	void set_sprite(clan::Sprite *sprite);
+	void set_image(clan::Image *image);
 
 // Implementation:
 private:
-	void on_render(Canvas &canvas, const Rect &update_rect);
+	void on_render(clan::Canvas &canvas, const clan::Rect &update_rect);
 	void on_resized();
 	void on_button_startstop_clicked();
 
@@ -54,14 +55,16 @@ private:
 	void on_button_prevframe_clicked();
 	void on_button_nextframe_clicked();
 
-	PushButton *button_startstop;
-	PushButton *button_nextframe;
-	PushButton *button_prevframe;
-	Label *label_frame;
+	clan::PushButton *button_startstop;
+	clan::PushButton *button_nextframe;
+	clan::PushButton *button_prevframe;
+	clan::Label *label_frame;
 
-	Sprite *sprite;
+	clan::Sprite *sprite;
+	clan::Image *image;
 
 	bool is_playing;
 
 	int sprite_current_frame;
+	clan::GameTime game_time;
 };
