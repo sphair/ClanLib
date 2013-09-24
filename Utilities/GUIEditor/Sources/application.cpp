@@ -33,25 +33,25 @@
 Application::Application()
 {
 	std::string base_path = clan::System::get_exe_path();
-	if(clan::FileHelp::file_exists(base_path + "Resources\\resources.xml") == false)
-		base_path += "..\\";
+	if(clan::FileHelp::file_exists(base_path + "Resources/resources.xml") == false)
+		base_path += "../";
 	clan::Directory::set_current(base_path);
 
 	std::string global_resource_filename("../../Resources/GUIThemeAero/resources.xml");
 	std::string global_theme_filename("../../Resources/GUIThemeAero/theme.css");
-	std::string local_theme_filename("Resources\\theme.css");
+	std::string local_theme_filename("Resources/theme.css");
 	if (!clan::FileHelp::file_exists(global_resource_filename))
 	{
 		global_resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
 		global_theme_filename = "../../Resources/GUIThemeBasic/theme.css";
-		local_theme_filename = "Resources\\theme_basic.css";
+		local_theme_filename = "Resources/theme_basic.css";
 	}
 
 	gui.set_window_manager(window_manager);
 	gui.add_theme(global_theme_filename);
 	gui.add_theme(local_theme_filename);
 	gui.add_resources(global_resource_filename);
-	gui.add_resources("Resources\\resources.xml");
+	gui.add_resources("Resources/resources.xml");
 }
 
 Application::~Application()

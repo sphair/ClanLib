@@ -442,7 +442,7 @@ void PropertyComponent::on_filter_message(std::shared_ptr<clan::GUIMessage> &mes
 
 void PropertyComponent::update_layout()
 {
-	clan::Rect geometry = get_size();
+	content = get_content_box();
 	header = clan::Rect(content.left, content.top, content.right, content.top+part_header.get_css_height());
 	body = clan::Rect(content.left, header.bottom, content.right, content.bottom);
 	header_content = part_header.get_content_box(header);
