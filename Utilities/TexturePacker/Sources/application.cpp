@@ -34,8 +34,6 @@ class Application
 public:
 	int main(const std::vector<std::string> &args)
 	{
-		clan::XMLResourceDocument local_resources_doc("resources.xml");
-
 		std::string resource_filename("../../Resources/GUIThemeAero/resources.xml");
 		std::string theme_filename("../../Resources/GUIThemeAero/theme.css");
 		std::string local_theme_filename("theme.css");
@@ -44,21 +42,17 @@ public:
 			resource_filename = "../../Resources/GUIThemeBasic/resources.xml";
 			std::string theme_filename("../../Resources/GUIThemeBasic/theme.css");
 		}
-		clan::XMLResourceDocument resources_doc(resource_filename);
-		local_resources_doc.add_resources(resources_doc);
-
-		clan::ResourceManager resources(clan::XMLResourceManager::create(local_resources_doc));
 
 		clan::GUIWindowManagerSystem wm;
 
 		clan::GUIManager gui;
 		gui.set_window_manager(wm);
-		gui.add_resources(resources_doc);
+		gui.add_resources("resources.xml");
 		gui.add_resources(resource_filename);
 		gui.add_theme(theme_filename);
 		gui.add_theme(local_theme_filename);
 
-		MainWindow mainwindow(&gui, &resources);
+		MainWindow mainwindow(&gui);
 		gui.exec();
 		return 0;
 	}

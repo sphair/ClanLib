@@ -40,8 +40,8 @@
 #include "Views/ico_creator_view.h"
 #include <algorithm>
 
-MainWindow::MainWindow(clan::GUIManager *gui, clan::ResourceManager *resources)
-: clan::GUIComponent(gui, get_window_description(), "mainwindow"), resources(resources), workspace(0)
+MainWindow::MainWindow(clan::GUIManager *gui)
+: clan::GUIComponent(gui, get_window_description(), "mainwindow"), workspace(0)
 {
 
 	func_close().set(this, &MainWindow::on_close);

@@ -39,7 +39,7 @@ class ViewWorkspace;
 class MainWindow : public clan::GUIComponent
 {
 public:
-	MainWindow(clan::GUIManager *gui, clan::ResourceManager *resources);
+	MainWindow(clan::GUIManager *gui);
 	~MainWindow();
 
 // Attributes:
@@ -73,8 +73,6 @@ private:
 
 	std::vector<View *> views;
 	ViewWorkspace *workspace;
-
-	clan::ResourceManager *resources;
 
 	clan::MenuBar *menubar;
 };
