@@ -33,7 +33,19 @@
 
                     <p>See <a href="breaking-changes.html">breaking changes</a>.</p>
 
-                    <p>Page under construction.</p>
+                    <p>
+                      To port from ClanLib 2.3.7 to ClanLib 3.0.0, use these steps (in order).
+                      <ul>
+                        <li>Rename CL_String and CL_StringRef to std::string</li>
+                        <li>Rename CL_SharedPtr to std::shared_ptr</li>
+                        <li>Rename cl_format to clan::string_format</li>
+                        <li>Rename CL_* prefix to clan:: prefix</li>
+                        <li>Rename cl_ prefix to clan:: prefix</li>
+                        <li>If you are using 2D (without using shaders) - Rename all clan::GraphicContext to clan::Canvas, and all "gc" to "canvas"</li>
+                      </ul>
+                      
+                      A guide to port clanGUI applications hasn't yet been written.
+                    </p>
 
                 </div>
             </div>
