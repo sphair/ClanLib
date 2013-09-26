@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="description" content="$title">
         <title>$title - ClanLib SDK</title>
-        <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
-        <script type="text/javascript" src="js/analytics.js"></script> 
+        <script type="text/javascript" src="/js/external/jquery-1.10.2.min.js"></script>	
+        <script type="text/javascript" src="/js/analytics.js"></script> 
         <script type="text/javascript" src="$relpath^dynsections.js"></script>
         $treeview
         $search
