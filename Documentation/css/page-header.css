@@ -7,8 +7,8 @@
     background: linear-gradient(to bottom, #e8e8e8, white);
 
     /* To keep header margins within the header box */
-    padding: 1px;
-    margin: -1px;
+    padding: 1px 0;
+    margin: -1px 0;
 }
 
 #page-header
