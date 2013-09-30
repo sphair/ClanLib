@@ -26,23 +26,40 @@
 **    Mark Page
 */
 
-#include "precomp.h"
-#include "gui_direct.h"
-#include "GUI.h"
-#include "app.h"
+#pragma once
 
-GUI_Direct::GUI_Direct(GUI *gui) : gui(gui), window_ptr(gui->get_app()->get_window()), wm(*window_ptr, gui->get_app()->get_canvas())
+#include "balls.h"
+
+typedef struct _BallPosition
 {
-	gui_manager = clan::GUIManager(wm, gui->get_theme_location());
+	float xpos;
+	float ypos;
+	float xspeed;
+	float yspeed;
+	bool xdir;
+	bool ydir;
+} BallPosition;
 
-	// Note, clan::GUIManager deletes these automatically, after GUI_Direct has gone out of scope in the clan::GUIManager destructor
-	pushbutton = new PushButton(gui_manager, gui->get_resources_internal());
-	lineedit = new LineEdit(gui_manager);
-	slider = new Slider(gui_manager);
-	scrollbar = new ScrollBar(gui_manager);
-	combobox = new ComboBox(gui_manager);
-}
-
-GUI_Direct::~GUI_Direct()
+class Balls
 {
-}
+public:
+
+
+	Balls();
+
+	void Init(clan::Canvas &canvas);
+
+	void Run(clan::Canvas &canvas, float time_elapsed);
+
+private:
+	void setup_balls();
+	void move_balls(float time_diff, int num_balls);
+
+private:
+	clan::Image image_ball;
+
+	float grid_space;
+
+	static const int max_balls = 5;
+	BallPosition balls[max_balls];
+};

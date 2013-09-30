@@ -36,17 +36,15 @@ public:
 
 	int start(const std::vector<std::string> &args);
 
-	clan::DisplayWindow *get_window() { return &window; }
-	clan::Canvas &get_canvas() { return canvas; }
 
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
-	void create_window();
+	void on_button_clicked(clan::PushButton *button);
+
 private:
 	bool quit;
 	clan::Slot slot_quit;
 	clan::Slot slot_input_up;
-	clan::DisplayWindow window;
-	clan::Canvas canvas;
+	clan::Label *label;
 };

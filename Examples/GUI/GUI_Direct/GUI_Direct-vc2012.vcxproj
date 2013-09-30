@@ -167,24 +167,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\CommonCode\Sources\balls.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\checkbox.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\combobox.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\info.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\lineedit.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\listview.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\menubar.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\progressbar.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\pushbutton.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\radiobutton.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\scrollbar.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\slider.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\spin.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\tabpage.cpp" />
-    <ClCompile Include="..\CommonCode\Sources\theme.cpp" />
     <ClCompile Include="Sources\app.cpp" />
-    <ClCompile Include="Sources\GUI.cpp" />
-    <ClCompile Include="Sources\gui_direct.cpp" />
+    <ClCompile Include="Sources\balls.cpp" />
     <ClCompile Include="Sources\precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -192,24 +176,8 @@
     <ClCompile Include="Sources\program.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CommonCode\Sources\balls.h" />
-    <ClInclude Include="..\CommonCode\Sources\checkbox.h" />
-    <ClInclude Include="..\CommonCode\Sources\combobox.h" />
-    <ClInclude Include="..\CommonCode\Sources\info.h" />
-    <ClInclude Include="..\CommonCode\Sources\lineedit.h" />
-    <ClInclude Include="..\CommonCode\Sources\listview.h" />
-    <ClInclude Include="..\CommonCode\Sources\menubar.h" />
-    <ClInclude Include="..\CommonCode\Sources\progressbar.h" />
-    <ClInclude Include="..\CommonCode\Sources\pushbutton.h" />
-    <ClInclude Include="..\CommonCode\Sources\radiobutton.h" />
-    <ClInclude Include="..\CommonCode\Sources\scrollbar.h" />
-    <ClInclude Include="..\CommonCode\Sources\slider.h" />
-    <ClInclude Include="..\CommonCode\Sources\spin.h" />
-    <ClInclude Include="..\CommonCode\Sources\tabpage.h" />
-    <ClInclude Include="..\CommonCode\Sources\theme.h" />
     <ClInclude Include="Sources\app.h" />
-    <ClInclude Include="Sources\GUI.h" />
-    <ClInclude Include="Sources\gui_direct.h" />
+    <ClInclude Include="Sources\balls.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
   </ItemGroup>
