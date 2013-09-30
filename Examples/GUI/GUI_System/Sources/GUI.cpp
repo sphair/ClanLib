@@ -25,50 +25,71 @@
 **
 **    Mark Page
 */
-
 #include "precomp.h"
-#include "GUI.h"
+#include "gui.h"
 
-GUI::GUI()
+App::App()
 {
 }
 
-int GUI::start(const std::vector<std::string> &args)
+App::~App()
 {
+}
+
+int App::start(const std::vector<std::string> &args)
+{
+	std::string theme;
 	if (clan::FileHelp::file_exists("../../../Resources/GUIThemeAero/theme.css"))
-	{
-		current_theme = Theme::theme_aero;
-	}
+		theme = "../../../Resources/GUIThemeAero";
+	else if (clan::FileHelp::file_exists("../../../Resources/GUIThemeBasic/theme.css"))
+		theme = "../../../Resources/GUIThemeBasic";
 	else
-	{
-		current_theme = Theme::theme_basic;
-	}
+		throw clan::Exception("Not themes found");
 
-	resources_internal = clan::XMLResourceManager::create(clan::XMLResourceDocument("../CommonCode/Resources/resources.xml"));
+	clan::GUIManager gui(theme);
 
-	gui_system.reset(new GUI_System(this) );
+	// Window 1
+	clan::DisplayWindowDescription win_desc;
+	win_desc.set_allow_resize(true);
+	win_desc.set_title("PushButton #1");
+	win_desc.set_position(clan::Rect(200, 200, clan::Size(340, 240)), false);
+	clan::GUIComponent *window = new clan::GUIComponent(&gui, win_desc, "Window");
+	window->func_close().set(this, &App::on_close, window);
 
-	gui_system->gui_manager.exec();
+	clan::PushButton *button = new clan::PushButton(window);
+	button->set_geometry(clan::Rect(10, 10, clan::Size(160, 40)));
+	button->func_clicked().set(this, &App::on_button_clicked, button);
+	button->set_text("Button #1");
+
+	label = new clan::Label(window);
+	label->set_geometry(clan::Rect(10, 160, clan::Size(330, 20)));
+	label->set_text("Click a button on either window");
+
+
+	// Window 2
+	win_desc.set_title("PushButton #2");
+	win_desc.set_position(clan::Rect(600, 200, clan::Size(340, 240)), false);
+	clan::GUIComponent *window2 = new clan::GUIComponent(&gui, win_desc, "Window");
+	window2->func_close().set(this, &App::on_close, window2);
+
+	clan::PushButton *button2 = new clan::PushButton(window2);
+	button2->set_geometry(clan::Rect(10, 10, clan::Size(160, 40)));
+	button2->func_clicked().set(this, &App::on_button_clicked, button2);
+	button2->set_text("Button #2");
+
+	gui.exec();
 
 	return 0;
 }
 
-GUI::~GUI()
+void App::on_button_clicked(clan::PushButton *button)
 {
+	label->set_text("You clicked " + button->get_text());
 }
 
-const char *GUI::get_theme_location()
+bool App::on_close(clan::GUIComponent *win)
 {
-	if (current_theme == Theme::theme_aero)
-		return "../../../Resources/GUIThemeAero";
-
-	if (current_theme == Theme::theme_aero_packed)
-		return "../../../Resources/GUIThemeAeroPacked";
-
-	if (current_theme == Theme::theme_basic)
-		return "../../../Resources/GUIThemeBasic";
-
-	return "../../../Resources/GUIThemeAero";
-
+	win->exit_with_code(0);
+	return true;
 }
 

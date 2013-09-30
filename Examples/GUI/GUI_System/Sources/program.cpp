@@ -47,7 +47,7 @@ int Program::main(const std::vector<std::string> &args)
 	clan::SetupGUI setup_gui;
 
 	// Start the Application
-	GUI app;
+	App app;
 	int retval = app.start(args);
 	return retval;
 }

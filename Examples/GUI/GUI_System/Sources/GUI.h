@@ -28,33 +28,19 @@
 
 #pragma once
 
-#include "gui_system.h"
-
-#include "../../CommonCode/Sources/theme.h"
-
-class GUI
+class App
 {
 public:
-	GUI();
-	~GUI();
+	App();
+	~App();
 
 	int start(const std::vector<std::string> &args);
 
-	clan::ResourceManager &get_resources_internal() { return resources_internal; }
-
-	Theme::gui_theme get_theme() {return current_theme;}
-
-	const char *get_theme_location();
-
 private:
-	void gui_repaint();
-	void gui_exec();
+	void on_button_clicked(clan::PushButton *button);
+	bool on_close(clan::GUIComponent *win);
 
-private:
-	clan::ResourceManager resources_internal;
-	 std::unique_ptr<GUI_System> gui_system;
-
-	Theme::gui_theme current_theme;
+	clan::Label *label;
 };
 
 
