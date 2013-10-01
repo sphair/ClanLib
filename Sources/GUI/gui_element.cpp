@@ -283,9 +283,6 @@ void GUIElement::update_style()
 	if (!cached_font.is_null())
 		cached_font = Font();
 
-//	if (!func_apply_properties.is_null())
-//		func_apply_properties.invoke(css_properties);
-
 	style_needs_update = false;
 }
 

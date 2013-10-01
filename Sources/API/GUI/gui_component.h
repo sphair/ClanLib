@@ -396,10 +396,7 @@ public:
 
 	/// \brief Lets a component filter the messages intended for another component. Consumed messages will not reach the original target component.
 	Callback_v1<std::shared_ptr<GUIMessage> &> &func_filter_message();
-/*
-	/// \brief Allows a component to override CSS properties
-	Callback_v1<CSSComputedBox &> &func_apply_properties();
-*/
+
 	/// \brief bool func_input(const InputEvent &input_event)
 	Callback_1<bool, const InputEvent &> &func_input();
 
