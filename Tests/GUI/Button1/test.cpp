@@ -49,6 +49,7 @@ public:
 	void on_button_clicked(PushButton *button)
 	{
 		label->set_text("You clicked " + button->get_text());
+		label->set_text_color(Colorf::red);
 	}
 
 	bool on_close(Window *win)

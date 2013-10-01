@@ -51,7 +51,7 @@ namespace clan
 class Label_Impl
 {
 public:
-	Label_Impl() : alignment(Label::align_left), is_user_color(false)
+	Label_Impl() : alignment(Label::align_left)
 	{
 	}
 
@@ -61,8 +61,6 @@ public:
 	std::string text;
 	Label::Alignment alignment;
 
-	Colorf user_color;
-	bool is_user_color;
 
 };
 
@@ -123,9 +121,9 @@ void Label::set_text(const std::string &text)
 
 void Label::set_text_color(const Colorf color)
 {
-	impl->user_color = color;
-	impl->is_user_color = true;
-	request_repaint();
+	Color rgba(color);
+	set_style(string_format("color:rgba(%1,%2,%3,%4);", rgba.r, rgba.g, rgba.b, rgba.a));
+
 }
 
 Label::Alignment Label::get_alignment() const
