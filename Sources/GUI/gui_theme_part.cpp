@@ -84,6 +84,11 @@ std::string GUIThemePart::get_id() const
 	return impl->element.get_id();
 }
 
+std::string GUIThemePart::get_style() const
+{
+	return impl->element.get_style();
+}
+
 bool GUIThemePart::get_class(const std::string &name) const
 {
 	return impl->element.get_class(name);
@@ -112,6 +117,11 @@ void GUIThemePart::set_tag_name(const std::string &name)
 void GUIThemePart::set_id(const std::string &name)
 {
 	impl->element.set_id(name);
+}
+
+void GUIThemePart::set_style(const std::string &name)
+{
+	impl->element.set_style(name);
 }
 
 bool GUIThemePart::set_class(const std::string &name, bool enable)
