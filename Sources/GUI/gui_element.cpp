@@ -33,6 +33,7 @@
 #include "API/GUI/gui_manager.h"
 #include "API/CSSLayout/CSSDocument/css_property_value.h"
 #include "API/CSSLayout/CSSDocument/css_document.h"
+#include "API/CSSLayout/CSSDocument/css_style_properties.h"
 #include "API/CSSLayout/CSSTokenizer/css_token.h"
 #include "gui_component_select_node.h"
 #include "API/Display/2D/span_layout.h"
@@ -121,6 +122,20 @@ void GUIElement::set_id(const std::string &name)
 		id = name;
 		set_style_needs_update();
 	}
+}
+
+void GUIElement::set_style(const std::string &new_style)
+{
+	if (style != new_style)
+	{
+		style = new_style;
+		set_style_needs_update();
+	}
+}
+
+std::string GUIElement::get_style() const
+{
+	return style;
 }
 
 void GUIElement::set_parent(GUIElement *new_parent)
@@ -263,7 +278,7 @@ void GUIElement::set_style_needs_update()
 void GUIElement::update_style()
 {
 	GUIComponentSelectNode select_node(this);
-	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node));
+	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node), CSSStyleProperties(style));
 
 	if (!cached_font.is_null())
 		cached_font = Font();
