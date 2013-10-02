@@ -673,12 +673,7 @@ Callback_0<bool> &GUIComponent::func_pointer_exit()
 {
 	return impl->func_pointer_exit;
 }
-/*
-Callback_v1<CSSComputedBox &> &GUIComponent::func_apply_properties()
-{
-	return impl->element.func_apply_properties;
-}
-*/
+
 Callback_1<bool, const InputEvent &> &GUIComponent::func_input()
 {
 	return impl->func_input;
