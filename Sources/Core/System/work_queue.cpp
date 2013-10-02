@@ -71,6 +71,8 @@ public:
 	void queue(WorkItem *item); // transfers ownership
 	void work_completed(WorkItem *item); // transfers ownership
 
+	int get_items_queued() const { return items_queued; }
+
 private:
 	void process();
 	void worker_main();
@@ -81,6 +83,7 @@ private:
 	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
+	int items_queued;
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
@@ -107,10 +110,15 @@ void WorkQueue::work_completed(const std::function<void()> &func)
 	impl->work_completed(new WorkItemWorkCompleted(func));
 }
 
+int WorkQueue::get_items_queued() const
+{
+	return impl->get_items_queued();
+}
+
 /////////////////////////////////////////////////////////////////////////////
 
 WorkQueue_Impl::WorkQueue_Impl(bool serial_queue)
-	: serial_queue(serial_queue)
+	: serial_queue(serial_queue), items_queued(0)
 {
 }
 
@@ -142,6 +150,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 	queued_items.push_back(item);
 	mutex_lock.unlock();
 	work_available_event.set();
+	items_queued++;
 }
 
 void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
@@ -171,6 +180,7 @@ void WorkQueue_Impl::process()
 			throw;
 		}
 		delete items[i];
+		items_queued--;
 	}
 }
 

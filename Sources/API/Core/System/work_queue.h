@@ -73,6 +73,9 @@ public:
 	/// \brief Queue some work to be executed on the main WorkQueue thread
 	void work_completed(const std::function<void()> &func);
 
+	/// \brief Returns the number of items currently queued
+	int get_items_queued() const;
+
 private:
 
 	std::shared_ptr<WorkQueue_Impl> impl;
