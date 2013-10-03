@@ -33,6 +33,7 @@
 #include "API/Core/System/mutex.h"
 #include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
+#include "API/Core/System/interlocked_variable.h"
 
 #undef max
 
@@ -71,6 +72,8 @@ public:
 	void queue(WorkItem *item); // transfers ownership
 	void work_completed(WorkItem *item); // transfers ownership
 
+	int get_items_queued() const { return items_queued.get(); }
+
 private:
 	void process();
 	void worker_main();
@@ -81,6 +84,7 @@ private:
 	Event stop_event, work_available_event;
 	std::vector<WorkItem *> queued_items;
 	std::vector<WorkItem *> finished_items;
+	InterlockedVariable items_queued;
 };
 
 WorkQueue::WorkQueue(bool serial_queue)
@@ -105,6 +109,11 @@ void WorkQueue::queue(const std::function<void()> &func)
 void WorkQueue::work_completed(const std::function<void()> &func)
 {
 	impl->work_completed(new WorkItemWorkCompleted(func));
+}
+
+int WorkQueue::get_items_queued() const
+{
+	return impl->get_items_queued();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -140,6 +149,7 @@ void WorkQueue_Impl::queue(WorkItem *item) // transfers ownership
 
 	MutexSection mutex_lock(&mutex);
 	queued_items.push_back(item);
+	items_queued.increment();
 	mutex_lock.unlock();
 	work_available_event.set();
 }
@@ -148,6 +158,7 @@ void WorkQueue_Impl::work_completed(WorkItem *item) // transfers ownership
 {
 	MutexSection mutex_lock(&mutex);
 	finished_items.push_back(item);
+	items_queued.increment();
 	mutex_lock.unlock();
 	set_wakeup_event();
 }
@@ -171,6 +182,7 @@ void WorkQueue_Impl::process()
 			throw;
 		}
 		delete items[i];
+		items_queued.decrement();
 	}
 }
 
