@@ -38,6 +38,16 @@ CSSValueFlexGrow::CSSValueFlexGrow()
 {
 }
 
+std::string CSSValueFlexGrow::get_name() const
+{
+	return "flex-grow";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFlexGrow::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFlexGrow (*this));
+}
+
+
 void CSSValueFlexGrow::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().flex_grow = *this;

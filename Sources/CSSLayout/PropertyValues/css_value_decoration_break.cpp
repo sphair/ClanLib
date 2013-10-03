@@ -38,6 +38,16 @@ CSSValueDecorationBreak::CSSValueDecorationBreak()
 {
 }
 
+std::string CSSValueDecorationBreak::get_name() const
+{
+	return "box-decoration-break";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueDecorationBreak::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueDecorationBreak (*this));
+}
+
+
 void CSSValueDecorationBreak::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().decoration_break = *this;

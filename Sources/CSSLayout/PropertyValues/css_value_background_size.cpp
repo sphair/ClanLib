@@ -39,6 +39,16 @@ CSSValueBackgroundSize::CSSValueBackgroundSize()
 	values.push_back(Size());
 }
 
+std::string CSSValueBackgroundSize::get_name() const
+{
+	return "background-size";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundSize::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundSize (*this));
+}
+
+
 void CSSValueBackgroundSize::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_size = *this;

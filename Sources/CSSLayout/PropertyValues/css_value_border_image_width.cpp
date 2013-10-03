@@ -42,6 +42,16 @@ CSSValueBorderImageWidth::CSSValueBorderImageWidth()
 {
 }
 
+std::string CSSValueBorderImageWidth::get_name() const
+{
+	return "border-image-width";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderImageWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderImageWidth (*this));
+}
+
+
 void CSSValueBorderImageWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_border().border_image_width = *this;

@@ -39,6 +39,16 @@ CSSValueQuotes::CSSValueQuotes()
 {
 }
 
+std::string CSSValueQuotes::get_name() const
+{
+	return "quotes";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueQuotes::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueQuotes (*this));
+}
+
+
 void CSSValueQuotes::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().quotes = *this;

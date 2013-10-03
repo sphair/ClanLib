@@ -39,7 +39,7 @@
 #include "API/Display/Window/keys.h"
 #include "API/Display/2D/span_layout.h"
 #include "API/Display/2D/canvas.h"
-#include "API/CSSLayout/ComputedValues/css_computed_box.h"
+#include "API/CSSLayout/PropertyValues/css_value_color.h"
 #include "../gui_css_strings.h"
 
 namespace clan
@@ -121,9 +121,10 @@ void Label::set_text(const std::string &text)
 
 void Label::set_text_color(const Colorf color)
 {
-	Color rgba(color);
-	set_style(string_format("color:rgba(%1,%2,%3,%4);", rgba.r, rgba.g, rgba.b, rgba.a));
-
+	CSSValueColor value;
+	value.color = color;
+	value.type = value.type_color;
+	set_style(value, true);
 }
 
 Label::Alignment Label::get_alignment() const

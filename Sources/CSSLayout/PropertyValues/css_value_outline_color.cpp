@@ -38,6 +38,16 @@ CSSValueOutlineColor::CSSValueOutlineColor()
 {
 }
 
+std::string CSSValueOutlineColor::get_name() const
+{
+	return "outline-color";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueOutlineColor::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueOutlineColor (*this));
+}
+
+
 void CSSValueOutlineColor::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_outline().outline_color = *this;

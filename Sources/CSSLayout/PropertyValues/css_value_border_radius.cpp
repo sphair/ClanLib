@@ -44,6 +44,16 @@ CSSValueBorderRadius::CSSValueBorderRadius(ValueType value_type, const CSSValueB
 {
 }
 
+std::string CSSValueBorderRadius::get_name() const
+{
+	return "border-radius";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderRadius::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderRadius (*this));
+}
+
+
 void CSSValueBorderRadius::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

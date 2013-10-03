@@ -39,6 +39,16 @@ CSSValueMinHeight::CSSValueMinHeight()
 {
 }
 
+std::string CSSValueMinHeight::get_name() const
+{
+	return "min-height";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueMinHeight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueMinHeight (*this));
+}
+
+
 void CSSValueMinHeight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().min_height = *this;

@@ -38,6 +38,16 @@ CSSValueDirection::CSSValueDirection()
 {
 }
 
+std::string CSSValueDirection::get_name() const
+{
+	return "direction";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueDirection::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueDirection (*this));
+}
+
+
 void CSSValueDirection::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().direction = *this;

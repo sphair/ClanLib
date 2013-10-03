@@ -39,6 +39,16 @@ CSSValueWidth::CSSValueWidth()
 {
 }
 
+std::string CSSValueWidth::get_name() const
+{
+	return "width";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueWidth (*this));
+}
+
+
 void CSSValueWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().width = *this;

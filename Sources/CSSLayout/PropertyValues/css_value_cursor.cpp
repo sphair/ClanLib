@@ -38,6 +38,16 @@ CSSValueCursor::CSSValueCursor()
 {
 }
 
+std::string CSSValueCursor::get_name() const
+{
+	return "cursor";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueCursor::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueCursor (*this));
+}
+
+
 void CSSValueCursor::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().cursor = *this;

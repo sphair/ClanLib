@@ -38,6 +38,16 @@ CSSValuePosition::CSSValuePosition()
 {
 }
 
+std::string CSSValuePosition::get_name() const
+{
+	return "position";
+}
+std::unique_ptr<CSSPropertyValue> CSSValuePosition::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValuePosition (*this));
+}
+
+
 void CSSValuePosition::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().position = *this;

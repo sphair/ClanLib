@@ -39,6 +39,16 @@ CSSValueLetterSpacing::CSSValueLetterSpacing()
 {
 }
 
+std::string CSSValueLetterSpacing::get_name() const
+{
+	return "letter-spacing";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueLetterSpacing::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueLetterSpacing (*this));
+}
+
+
 void CSSValueLetterSpacing::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().letter_spacing = *this;

@@ -38,6 +38,16 @@ CSSValueWidows::CSSValueWidows()
 {
 }
 
+std::string CSSValueWidows::get_name() const
+{
+	return "widows";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueWidows::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueWidows (*this));
+}
+
+
 void CSSValueWidows::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().widows = *this;

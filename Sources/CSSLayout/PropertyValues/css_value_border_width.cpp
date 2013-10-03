@@ -45,6 +45,23 @@ CSSValueBorderWidth::CSSValueBorderWidth(ValueType value_type, const CSSValueBor
 {
 }
 
+std::string CSSValueBorderWidth::get_name() const
+{
+	switch (value_type)
+	{
+		case left_value: return "border-left-width";
+		case top_value: return "border-top-width";
+		case right_value: return "border-right-width";
+		case bottom_value: return "border-bottom-width";
+	}
+	return "";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderWidth (*this));
+}
+
+
 void CSSValueBorderWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

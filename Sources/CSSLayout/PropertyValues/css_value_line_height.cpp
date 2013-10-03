@@ -39,6 +39,16 @@ CSSValueLineHeight::CSSValueLineHeight()
 {
 }
 
+std::string CSSValueLineHeight::get_name() const
+{
+	return "line-height";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueLineHeight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueLineHeight (*this));
+}
+
+
 void CSSValueLineHeight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_font().line_height = *this;

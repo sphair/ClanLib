@@ -38,6 +38,16 @@ CSSValueFontVariant::CSSValueFontVariant()
 {
 }
 
+std::string CSSValueFontVariant::get_name() const
+{
+	return "font-variant";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFontVariant::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFontVariant (*this));
+}
+
+
 void CSSValueFontVariant::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_font().font_variant = *this;

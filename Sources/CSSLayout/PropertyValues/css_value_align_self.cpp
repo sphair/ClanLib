@@ -39,6 +39,16 @@ CSSValueAlignSelf::CSSValueAlignSelf()
 {
 }
 
+std::string CSSValueAlignSelf::get_name() const
+{
+	return "align-self";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueAlignSelf::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueAlignSelf (*this));
+}
+
+
 void CSSValueAlignSelf::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().align_self = *this;

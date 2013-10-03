@@ -39,6 +39,16 @@ CSSValueClip::CSSValueClip()
 {
 }
 
+std::string CSSValueClip::get_name() const
+{
+	return "clip";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueClip::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueClip (*this));
+}
+
+
 void CSSValueClip::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().clip = *this;

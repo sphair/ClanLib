@@ -39,6 +39,16 @@ CSSValueTextIndent::CSSValueTextIndent()
 {
 }
 
+std::string CSSValueTextIndent::get_name() const
+{
+	return "text-indent";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTextIndent::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTextIndent (*this));
+}
+
+
 void CSSValueTextIndent::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().text_indent = *this;

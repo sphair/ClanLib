@@ -126,17 +126,16 @@ void GUIElement::set_id(const std::string &name)
 
 void GUIElement::set_style(const std::string &new_style)
 {
-	if (style != new_style)
-	{
-		style = new_style;
-		set_style_needs_update();
-	}
+	style = CSSStyleProperties(new_style);
+	set_style_needs_update();
 }
 
-std::string GUIElement::get_style() const
+void GUIElement::set_style(const CSSPropertyValue &value, bool enable)
 {
-	return style;
+	style.set_value(value, enable);
+	set_style_needs_update();
 }
+
 
 void GUIElement::set_parent(GUIElement *new_parent)
 {
@@ -278,7 +277,7 @@ void GUIElement::set_style_needs_update()
 void GUIElement::update_style()
 {
 	GUIComponentSelectNode select_node(this);
-	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node), CSSStyleProperties(style));
+	computed_values.set_specified_values(component->get_gui_manager().get_css_document().select(&select_node), style);
 
 	if (!cached_font.is_null())
 		cached_font = Font();

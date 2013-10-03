@@ -38,6 +38,16 @@ CSSValueListStyleImage::CSSValueListStyleImage()
 {
 }
 
+std::string CSSValueListStyleImage::get_name() const
+{
+	return "list-style-image";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueListStyleImage::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueListStyleImage (*this));
+}
+
+
 void CSSValueListStyleImage::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_list_style().list_style_image = *this;

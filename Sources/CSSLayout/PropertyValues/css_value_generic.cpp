@@ -40,6 +40,16 @@ CSSValueGeneric::CSSValueGeneric(const std::string &property_name)
 {
 }
 
+std::string CSSValueGeneric::get_name() const
+{
+	return property_name;
+}
+
+std::unique_ptr<CSSPropertyValue> CSSValueGeneric::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueGeneric (*this));
+}
+
 void CSSValueGeneric::apply(CSSComputedValuesUpdater *updater)
 {
 	CSSComputedGeneric &generic_values = updater->get_generic();

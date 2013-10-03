@@ -44,6 +44,9 @@ public:
 
 	bool is_null() const;
 
+	/// \brief Sets CSS style properties that should be applied
+	void set_value(const CSSPropertyValue &value, bool enable);
+
 	const std::vector<std::unique_ptr<CSSPropertyValue> > &get_values() const;
 
 private:

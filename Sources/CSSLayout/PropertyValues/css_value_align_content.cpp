@@ -38,6 +38,16 @@ CSSValueAlignContent::CSSValueAlignContent()
 {
 }
 
+std::string CSSValueAlignContent::get_name() const
+{
+	return "align-content";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueAlignContent::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueAlignContent (*this));
+}
+
+
 void CSSValueAlignContent::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().align_content = *this;

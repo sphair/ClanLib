@@ -39,6 +39,16 @@ CSSValueBackgroundAttachment::CSSValueBackgroundAttachment()
 	attachments.push_back(attachment_scroll);
 }
 
+std::string CSSValueBackgroundAttachment::get_name() const
+{
+	return "background-attachment";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundAttachment::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundAttachment (*this));
+}
+
+
 void CSSValueBackgroundAttachment::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_attachment = *this;

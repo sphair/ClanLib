@@ -47,6 +47,8 @@ public:
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
 	static void compute(CSSValueLeft &left, CSSValueRight &right, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position, bool is_containing_block_ltr);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	enum Type
 	{

@@ -43,6 +43,23 @@ CSSValueBorderColor::CSSValueBorderColor(ValueType value_type, const CSSValueBor
 {
 }
 
+std::string CSSValueBorderColor::get_name() const
+{
+	switch (value_type)
+	{
+		case left_value: return "border-left-color";
+		case top_value: return "border-top-color";
+		case right_value: return "border-right-color";
+		case bottom_value: return "border-bottom-color";
+	}
+	return "";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderColor::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderColor (*this));
+}
+
+
 void CSSValueBorderColor::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

@@ -39,6 +39,16 @@ CSSValueAlignItems::CSSValueAlignItems()
 }
 
 
+std::string CSSValueAlignItems::get_name() const
+{
+	return "align-items";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueAlignItems::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueAlignItems (*this));
+}
+
+
 void CSSValueAlignItems::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().align_items = *this;

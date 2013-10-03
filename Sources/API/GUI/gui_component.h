@@ -66,6 +66,7 @@ class ResourceManager;
 class GUIConsumedKeys;
 class GUIComponent_Impl;
 class CSSComputedValues;
+class CSSPropertyValue;
 
 typedef DisplayWindowDescription GUITopLevelDescription;
 
@@ -131,9 +132,6 @@ public:
 
 	/// \brief Returns the CSS id attribute
 	std::string get_id() const;
-
-	/// \brief Returns the extra CSS style properties applied
-	std::string get_style() const;
 
 	/// \brief Returns whether a CSS class is present or not.
 	bool get_class(const std::string &name) const;
@@ -478,8 +476,13 @@ public:
 	/// \brief Sets the CSS id
 	void set_id(const std::string &name);
 
-	// \brief Sets additional CSS style properties that should be applied to this element
+	/// \brief Sets additional CSS style properties that should be applied to this element
+	///
+	/// This replaces all existing styles. Use "" to clear styles.
 	void set_style(const std::string &name);
+
+	/// \brief Sets additional CSS style properties that should be applied to this element
+	void set_style(const CSSPropertyValue &value, bool enable);
 
 	/// \brief Controls the presence of a CSS pseudo class
 	///

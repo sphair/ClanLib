@@ -187,11 +187,6 @@ std::string GUIComponent::get_id() const
 	return impl->element.get_id();
 }
 
-std::string GUIComponent::get_style() const
-{
-	return impl->element.get_style();
-}
-
 bool GUIComponent::get_class(const std::string &name) const
 {
 	return impl->element.get_class(name);
@@ -917,6 +912,11 @@ void GUIComponent::set_id(const std::string &name)
 void GUIComponent::set_style(const std::string &name)
 {
 	impl->element.set_style(name);
+}
+
+void GUIComponent::set_style(const CSSPropertyValue &value, bool enable)
+{
+	impl->element.set_style(value, enable);
 }
 
 bool GUIComponent::set_pseudo_class(const std::string &name, bool enable)

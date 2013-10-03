@@ -35,6 +35,7 @@
 #include "API/Core/Signals/callback_v1.h"
 #include "API/Core/Signals/signal_v0.h"
 #include "API/Display/Font/font.h"
+#include "API/CSSLayout/CSSDocument/css_style_properties.h"
 
 namespace clan
 {
@@ -86,9 +87,6 @@ public:
 	/// \brief Returns whether a CSS pseudo class is present or not.
 	bool get_pseudo_class(const std::string &name) const;
 
-	/// \brief Returns the extra CSS style properties applied
-	std::string get_style() const;
-
 	/// \brief Returns all pseudo classes currently present
 	std::vector<std::string> get_pseudo_classes() const { return pseudo_classes; }
 
@@ -116,8 +114,13 @@ public:
 	/// \brief Sets the CSS selector identifier for this element
 	void set_id(const std::string &name);
 
-	// \brief Sets additional CSS style properties that should be applied to this element
+	/// \brief Sets additional CSS style properties that should be applied to this element
+	///
+	/// This replaces all existing styles. Use "" to clear styles.
 	void set_style(const std::string &name);
+
+	/// \brief Sets additional CSS style properties that should be applied to this element
+	void set_style(const CSSPropertyValue &value, bool enable);
 
 	/// \brief Controls the presence of a CSS pseudo class
 	///
@@ -163,7 +166,7 @@ private:
 	std::string id;
 	std::vector<std::string> classes;
 	std::vector<std::string> pseudo_classes;
-	std::string style;
+	CSSStyleProperties style;
 
 	bool style_needs_update;
 

@@ -38,6 +38,16 @@ CSSValueTextAlign::CSSValueTextAlign()
 {
 }
 
+std::string CSSValueTextAlign::get_name() const
+{
+	return "text-align";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTextAlign::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTextAlign (*this));
+}
+
+
 void CSSValueTextAlign::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().text_align = *this;

@@ -39,6 +39,16 @@ CSSValueBackgroundImage::CSSValueBackgroundImage()
 	images.push_back(Image(image_type_none));
 }
 
+std::string CSSValueBackgroundImage::get_name() const
+{
+	return "background-image";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundImage::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundImage (*this));
+}
+
+
 void CSSValueBackgroundImage::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_image = *this;

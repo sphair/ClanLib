@@ -39,6 +39,16 @@ CSSValueOrder::CSSValueOrder()
 {
 }
 
+std::string CSSValueOrder::get_name() const
+{
+	return "order";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueOrder::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueOrder (*this));
+}
+
+
 void CSSValueOrder::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().order = *this;

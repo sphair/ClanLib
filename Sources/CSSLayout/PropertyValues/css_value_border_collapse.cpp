@@ -38,6 +38,16 @@ CSSValueBorderCollapse::CSSValueBorderCollapse()
 {
 }
 
+std::string CSSValueBorderCollapse::get_name() const
+{
+	return "border-collapse";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderCollapse::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderCollapse (*this));
+}
+
+
 void CSSValueBorderCollapse::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_table_inherit().border_collapse = *this;

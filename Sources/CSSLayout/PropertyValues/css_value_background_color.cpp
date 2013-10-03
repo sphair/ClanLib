@@ -39,6 +39,16 @@ CSSValueBackgroundColor::CSSValueBackgroundColor()
 	color = Colorf::transparent;
 }
 
+std::string CSSValueBackgroundColor::get_name() const
+{
+	return "background-color";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundColor::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundColor (*this));
+}
+
+
 void CSSValueBackgroundColor::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_color = *this;

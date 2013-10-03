@@ -38,6 +38,16 @@ CSSValueTextTransform::CSSValueTextTransform()
 {
 }
 
+std::string CSSValueTextTransform::get_name() const
+{
+	return "text-transform";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTextTransform::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTextTransform (*this));
+}
+
+
 void CSSValueTextTransform::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().text_transform = *this;

@@ -40,6 +40,16 @@ CSSValueRight::CSSValueRight()
 {
 }
 
+std::string CSSValueRight::get_name() const
+{
+	return "right";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueRight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueRight (*this));
+}
+
+
 void CSSValueRight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().right = *this;

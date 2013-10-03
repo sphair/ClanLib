@@ -44,6 +44,23 @@ CSSValuePaddingWidth::CSSValuePaddingWidth(ValueType value_type, const CSSValueP
 {
 }
 
+std::string CSSValuePaddingWidth::get_name() const
+{
+	switch (value_type)
+	{
+		case left_value: return "padding-left";
+		case top_value: return "padding-top";
+		case right_value: return "padding-right";
+		case bottom_value: return "padding-bottom";
+	}
+	return "";
+}
+std::unique_ptr<CSSPropertyValue> CSSValuePaddingWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValuePaddingWidth (*this));
+}
+
+
 void CSSValuePaddingWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

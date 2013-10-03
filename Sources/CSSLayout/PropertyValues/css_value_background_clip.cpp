@@ -39,6 +39,16 @@ CSSValueBackgroundClip::CSSValueBackgroundClip()
 	values.push_back(clip_border_box);
 }
 
+std::string CSSValueBackgroundClip::get_name() const
+{
+	return "background-clip";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundClip::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundClip (*this));
+}
+
+
 void CSSValueBackgroundClip::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_clip = *this;

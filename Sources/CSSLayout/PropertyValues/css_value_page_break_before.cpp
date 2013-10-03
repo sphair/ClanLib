@@ -38,6 +38,16 @@ CSSValuePageBreakBefore::CSSValuePageBreakBefore()
 {
 }
 
+std::string CSSValuePageBreakBefore::get_name() const
+{
+	return "page-break-before";
+}
+std::unique_ptr<CSSPropertyValue> CSSValuePageBreakBefore::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValuePageBreakBefore (*this));
+}
+
+
 void CSSValuePageBreakBefore::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().page_break_before = *this;

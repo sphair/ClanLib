@@ -38,6 +38,16 @@ CSSValueTextDecoration::CSSValueTextDecoration()
 {
 }
 
+std::string CSSValueTextDecoration::get_name() const
+{
+	return "text-decoration";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTextDecoration::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTextDecoration (*this));
+}
+
+
 void CSSValueTextDecoration::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_reset().text_decoration = *this;

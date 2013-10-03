@@ -41,6 +41,16 @@ CSSValueBorderImageOutset::CSSValueBorderImageOutset()
 {
 }
 
+std::string CSSValueBorderImageOutset::get_name() const
+{
+	return "border-image-outset";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderImageOutset::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderImageOutset (*this));
+}
+
+
 void CSSValueBorderImageOutset::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_border().border_image_outset = *this;

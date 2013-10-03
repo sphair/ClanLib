@@ -38,6 +38,16 @@ CSSValueCaptionSide::CSSValueCaptionSide()
 {
 }
 
+std::string CSSValueCaptionSide::get_name() const
+{
+	return "caption-side";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueCaptionSide::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueCaptionSide (*this));
+}
+
+
 void CSSValueCaptionSide::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_table_inherit().caption_side = *this;

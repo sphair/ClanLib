@@ -39,6 +39,16 @@ CSSValueMaxWidth::CSSValueMaxWidth()
 {
 }
 
+std::string CSSValueMaxWidth::get_name() const
+{
+	return "max-width";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueMaxWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueMaxWidth (*this));
+}
+
+
 void CSSValueMaxWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().max_width = *this;

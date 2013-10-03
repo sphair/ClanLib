@@ -40,6 +40,16 @@ CSSValueVerticalAlign::CSSValueVerticalAlign()
 {
 }
 
+std::string CSSValueVerticalAlign::get_name() const
+{
+	return "vertical-align";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueVerticalAlign::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueVerticalAlign (*this));
+}
+
+
 void CSSValueVerticalAlign::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_reset().vertical_align = *this;

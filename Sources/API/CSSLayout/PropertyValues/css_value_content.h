@@ -42,6 +42,8 @@ public:
 	void compute(const CSSValueContent *parent, CSSResourceCache *layout, float em_size, float ex_size, bool before_or_after_pseudo_element);
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	enum Type
 	{

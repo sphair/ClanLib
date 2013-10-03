@@ -38,6 +38,16 @@ CSSValueFontFamily::CSSValueFontFamily()
 : type(type_inherit)
 {
 }
+std::string CSSValueFontFamily::get_name() const
+{
+	return "font-family";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFontFamily::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFontFamily (*this));
+}
+
+
 void CSSValueFontFamily::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_font().font_family = *this;

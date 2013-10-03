@@ -39,6 +39,16 @@ CSSValueBorderSpacing::CSSValueBorderSpacing()
 {
 }
 
+std::string CSSValueBorderSpacing::get_name() const
+{
+	return "border-spacing";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderSpacing::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderSpacing (*this));
+}
+
+
 void CSSValueBorderSpacing::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_table_inherit().border_spacing = *this;

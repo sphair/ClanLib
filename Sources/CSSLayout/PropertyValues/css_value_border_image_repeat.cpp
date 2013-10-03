@@ -38,6 +38,16 @@ CSSValueBorderImageRepeat::CSSValueBorderImageRepeat()
 {
 }
 
+std::string CSSValueBorderImageRepeat::get_name() const
+{
+	return "border-image-repeat";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderImageRepeat::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderImageRepeat (*this));
+}
+
+
 void CSSValueBorderImageRepeat::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_border().border_image_repeat = *this;

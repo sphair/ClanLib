@@ -42,6 +42,16 @@ CSSValueBorderImageSlice::CSSValueBorderImageSlice()
 {
 }
 
+std::string CSSValueBorderImageSlice::get_name() const
+{
+	return "border-image-slice";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderImageSlice::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderImageSlice (*this));
+}
+
+
 void CSSValueBorderImageSlice::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_border().border_image_slice = *this;

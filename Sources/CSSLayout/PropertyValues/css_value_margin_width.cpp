@@ -44,6 +44,23 @@ CSSValueMarginWidth::CSSValueMarginWidth(ValueType value_type, const CSSValueMar
 {
 }
 
+std::string CSSValueMarginWidth::get_name() const
+{
+	switch (value_type)
+	{
+		case left_value: return "margin-left";
+		case top_value: return "margin-top";
+		case right_value: return "margin-right";
+		case bottom_value: return "margin-bottom";
+	}
+	return "";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueMarginWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueMarginWidth (*this));
+}
+
+
 void CSSValueMarginWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

@@ -34,7 +34,7 @@
 namespace clan
 {
 
-CSSStyleProperties::CSSStyleProperties()
+CSSStyleProperties::CSSStyleProperties() : impl(new CSSStyleProperties_Impl())
 {
 }
 
@@ -82,12 +82,37 @@ CSSStyleProperties::CSSStyleProperties(const std::string &style_string, const st
 
 bool CSSStyleProperties::is_null() const
 {
-	return !impl;
+	//return !impl;
+	return impl->values.empty();
 }
 
 const std::vector<std::unique_ptr<CSSPropertyValue> > &CSSStyleProperties::get_values() const
 {
 	return impl->values;
+}
+
+void CSSStyleProperties::set_value(const CSSPropertyValue &value, bool enable)
+{
+	impl->set_value(value, enable);
+}
+
+void CSSStyleProperties_Impl::set_value(const CSSPropertyValue &value, bool enable)
+{
+	std::string value_name = value.get_name();
+
+	// Remove existing
+	std::vector<std::unique_ptr<CSSPropertyValue> >::iterator it;
+	for (it = values.begin(); it != values.end(); ++it)
+	{
+		if ((*it)->get_name() == value_name)
+		{
+			it = values.erase(it);
+			break;
+		}
+	}
+
+	if (enable)
+		values.push_back( value.clone() );
 }
 
 }

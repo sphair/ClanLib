@@ -38,6 +38,16 @@ CSSValueFontWeight::CSSValueFontWeight()
 {
 }
 
+std::string CSSValueFontWeight::get_name() const
+{
+	return "font-weight";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFontWeight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFontWeight (*this));
+}
+
+
 void CSSValueFontWeight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_font().font_weight = *this;

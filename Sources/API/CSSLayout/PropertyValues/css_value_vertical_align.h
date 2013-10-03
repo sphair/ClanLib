@@ -45,6 +45,8 @@ public:
 	void compute(const CSSValueVerticalAlign *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValueLineHeight &line_height);
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	enum Type
 	{

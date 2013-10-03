@@ -39,6 +39,16 @@ CSSValueFlexBasis::CSSValueFlexBasis()
 {
 }
 
+std::string CSSValueFlexBasis::get_name() const
+{
+	return "flex-basis";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFlexBasis::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFlexBasis (*this));
+}
+
+
 void CSSValueFlexBasis::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().flex_basis = *this;

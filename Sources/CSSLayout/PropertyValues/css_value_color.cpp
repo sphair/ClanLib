@@ -39,6 +39,16 @@ CSSValueColor::CSSValueColor()
 {
 }
 
+std::string CSSValueColor::get_name() const
+{
+	return "color";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueColor::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueColor (*this));
+}
+
+
 void CSSValueColor::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().color = *this;

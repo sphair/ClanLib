@@ -38,6 +38,16 @@ CSSValueOrphans::CSSValueOrphans()
 {
 }
 
+std::string CSSValueOrphans::get_name() const
+{
+	return "orphans";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueOrphans::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueOrphans (*this));
+}
+
+
 void CSSValueOrphans::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().orphans = *this;

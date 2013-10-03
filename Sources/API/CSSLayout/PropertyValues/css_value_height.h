@@ -43,6 +43,8 @@ public:
 	void compute(const CSSValueHeight *parent, CSSResourceCache *layout, float em_size, float ex_size, bool is_containing_block_height_auto);
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	enum Type
 	{

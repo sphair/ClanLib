@@ -38,6 +38,16 @@ CSSValueFlexDirection::CSSValueFlexDirection()
 {
 }
 
+std::string CSSValueFlexDirection::get_name() const
+{
+	return "flex-direction";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFlexDirection::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFlexDirection (*this));
+}
+
+
 void CSSValueFlexDirection::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().flex_direction = *this;

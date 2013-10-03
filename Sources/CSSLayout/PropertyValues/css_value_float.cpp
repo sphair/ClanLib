@@ -38,6 +38,16 @@ CSSValueFloat::CSSValueFloat()
 {
 }
 
+std::string CSSValueFloat::get_name() const
+{
+	return "float";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFloat::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFloat (*this));
+}
+
+
 void CSSValueFloat::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().float_box = *this;

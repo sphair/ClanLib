@@ -42,6 +42,8 @@ public:
 	CSSValueTop();
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	enum Type
 	{

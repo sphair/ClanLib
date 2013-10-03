@@ -45,6 +45,8 @@ public:
 	CSSValueBottom();
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	static void compute(CSSValueTop &top, CSSValueBottom &bottom, const CSSComputedBox *parent, CSSResourceCache *layout, float em_size, float ex_size, const CSSValuePosition &position);
 

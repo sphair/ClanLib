@@ -38,6 +38,16 @@ CSSValueTop::CSSValueTop()
 {
 }
 
+std::string CSSValueTop::get_name() const
+{
+	return "top";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTop::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTop (*this));
+}
+
+
 void CSSValueTop::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().top = *this;

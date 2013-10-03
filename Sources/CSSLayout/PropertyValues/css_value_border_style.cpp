@@ -43,6 +43,23 @@ CSSValueBorderStyle::CSSValueBorderStyle(ValueType value_type, const CSSValueBor
 {
 }
 
+std::string CSSValueBorderStyle::get_name() const
+{
+	switch (value_type)
+	{
+		case left_value: return "border-left-style";
+		case top_value: return "border-top-style";
+		case right_value: return "border-right-style";
+		case bottom_value: return "border-bottom-style";
+	}
+	return "";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderStyle::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderStyle (*this));
+}
+
+
 void CSSValueBorderStyle::apply(CSSComputedValuesUpdater *updater)
 {
 	switch (value_type)

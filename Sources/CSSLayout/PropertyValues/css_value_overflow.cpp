@@ -38,6 +38,16 @@ CSSValueOverflow::CSSValueOverflow()
 {
 }
 
+std::string CSSValueOverflow::get_name() const
+{
+	return "overflow";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueOverflow::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueOverflow (*this));
+}
+
+
 void CSSValueOverflow::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().overflow = *this;

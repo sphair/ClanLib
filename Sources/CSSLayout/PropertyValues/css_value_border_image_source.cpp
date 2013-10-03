@@ -38,6 +38,16 @@ CSSValueBorderImageSource::CSSValueBorderImageSource()
 {
 }
 
+std::string CSSValueBorderImageSource::get_name() const
+{
+	return "border-image-source";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBorderImageSource::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBorderImageSource (*this));
+}
+
+
 void CSSValueBorderImageSource::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_border().border_image_source = *this;

@@ -40,6 +40,16 @@ CSSValueDisplay::CSSValueDisplay()
 {
 }
 
+std::string CSSValueDisplay::get_name() const
+{
+	return "display";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueDisplay::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueDisplay (*this));
+}
+
+
 void CSSValueDisplay::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().display = *this;

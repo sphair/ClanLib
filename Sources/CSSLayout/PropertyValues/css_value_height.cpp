@@ -39,6 +39,16 @@ CSSValueHeight::CSSValueHeight()
 {
 }
 
+std::string CSSValueHeight::get_name() const
+{
+	return "height";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueHeight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueHeight (*this));
+}
+
+
 void CSSValueHeight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().height = *this;

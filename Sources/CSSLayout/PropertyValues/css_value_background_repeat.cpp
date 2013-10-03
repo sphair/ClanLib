@@ -40,6 +40,16 @@ CSSValueBackgroundRepeat::CSSValueBackgroundRepeat()
 	repeat_y.push_back(style_repeat);
 }
 
+std::string CSSValueBackgroundRepeat::get_name() const
+{
+	return "background-repeat";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundRepeat::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundRepeat (*this));
+}
+
+
 void CSSValueBackgroundRepeat::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_repeat = *this;

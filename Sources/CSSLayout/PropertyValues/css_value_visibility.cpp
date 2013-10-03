@@ -38,6 +38,16 @@ CSSValueVisibility::CSSValueVisibility()
 {
 }
 
+std::string CSSValueVisibility::get_name() const
+{
+	return "visibility";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueVisibility::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueVisibility (*this));
+}
+
+
 void CSSValueVisibility::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_inherit().visibility = *this;

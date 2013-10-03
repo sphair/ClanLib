@@ -38,6 +38,16 @@ CSSValuePageBreakInside::CSSValuePageBreakInside()
 {
 }
 
+std::string CSSValuePageBreakInside::get_name() const
+{
+	return "page-break-inside";
+}
+std::unique_ptr<CSSPropertyValue> CSSValuePageBreakInside::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValuePageBreakInside (*this));
+}
+
+
 void CSSValuePageBreakInside::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().page_break_inside = *this;

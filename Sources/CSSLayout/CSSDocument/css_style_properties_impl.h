@@ -36,6 +36,8 @@ class CSSPropertyValue;
 class CSSStyleProperties_Impl
 {
 public:
+	void set_value(const CSSPropertyValue &value, bool enable);
+
 	std::vector<std::unique_ptr<CSSPropertyValue> > values;
 };
 

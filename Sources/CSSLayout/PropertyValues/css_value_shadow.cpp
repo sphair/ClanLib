@@ -39,6 +39,16 @@ CSSValueShadow::CSSValueShadow()
 {
 }
 
+std::string CSSValueShadow::get_name() const
+{
+	return "box-shadow";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueShadow::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueShadow (*this));
+}
+
+
 void CSSValueShadow::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().shadow = *this;

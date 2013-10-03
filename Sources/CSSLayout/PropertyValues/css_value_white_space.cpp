@@ -38,6 +38,16 @@ CSSValueWhiteSpace::CSSValueWhiteSpace()
 {
 }
 
+std::string CSSValueWhiteSpace::get_name() const
+{
+	return "white-space";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueWhiteSpace::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueWhiteSpace (*this));
+}
+
+
 void CSSValueWhiteSpace::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().white_space = *this;

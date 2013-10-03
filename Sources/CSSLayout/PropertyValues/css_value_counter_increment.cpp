@@ -38,6 +38,16 @@ CSSValueCounterIncrement::CSSValueCounterIncrement()
 {
 }
 
+std::string CSSValueCounterIncrement::get_name() const
+{
+	return "counter-increment";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueCounterIncrement::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueCounterIncrement (*this));
+}
+
+
 void CSSValueCounterIncrement::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_counter().counter_increment = *this;

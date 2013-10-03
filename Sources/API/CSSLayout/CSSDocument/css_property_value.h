@@ -42,8 +42,10 @@ class CSSPropertyValue
 {
 public:
 	virtual ~CSSPropertyValue() { }
+	virtual std::string get_name() const = 0;
 	virtual std::string to_string() const = 0;
 	virtual void apply(CSSComputedValuesUpdater *updater) = 0;
+	virtual std::unique_ptr<CSSPropertyValue> clone() const = 0;
 };
 
 /// \}

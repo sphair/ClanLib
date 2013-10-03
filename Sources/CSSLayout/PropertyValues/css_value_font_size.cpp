@@ -39,6 +39,16 @@ CSSValueFontSize::CSSValueFontSize()
 {
 }
 
+std::string CSSValueFontSize::get_name() const
+{
+	return "font-size";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFontSize::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFontSize (*this));
+}
+
+
 void CSSValueFontSize::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_font().font_size = *this;

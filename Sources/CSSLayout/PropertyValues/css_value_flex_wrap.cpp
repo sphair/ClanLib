@@ -38,6 +38,16 @@ CSSValueFlexWrap::CSSValueFlexWrap()
 {
 }
 
+std::string CSSValueFlexWrap::get_name() const
+{
+	return "flex-wrap";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFlexWrap::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFlexWrap (*this));
+}
+
+
 void CSSValueFlexWrap::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().flex_wrap = *this;

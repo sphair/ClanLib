@@ -40,6 +40,16 @@ CSSValueOutlineWidth::CSSValueOutlineWidth()
 {
 }
 
+std::string CSSValueOutlineWidth::get_name() const
+{
+	return "outline-width";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueOutlineWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueOutlineWidth (*this));
+}
+
+
 void CSSValueOutlineWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_outline().outline_width = *this;

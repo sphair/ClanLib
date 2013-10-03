@@ -39,6 +39,16 @@ CSSValueMinWidth::CSSValueMinWidth()
 {
 }
 
+std::string CSSValueMinWidth::get_name() const
+{
+	return "min-width";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueMinWidth::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueMinWidth (*this));
+}
+
+
 void CSSValueMinWidth::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().min_width = *this;

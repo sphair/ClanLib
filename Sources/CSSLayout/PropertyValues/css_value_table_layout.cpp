@@ -38,6 +38,16 @@ CSSValueTableLayout::CSSValueTableLayout()
 {
 }
 
+std::string CSSValueTableLayout::get_name() const
+{
+	return "table-layout";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueTableLayout::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueTableLayout (*this));
+}
+
+
 void CSSValueTableLayout::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_table_reset().table_layout = *this;

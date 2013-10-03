@@ -38,6 +38,16 @@ CSSValueEmptyCells::CSSValueEmptyCells()
 {
 }
 
+std::string CSSValueEmptyCells::get_name() const
+{
+	return "empty-cells";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueEmptyCells::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueEmptyCells (*this));
+}
+
+
 void CSSValueEmptyCells::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_table_inherit().empty_cells = *this;

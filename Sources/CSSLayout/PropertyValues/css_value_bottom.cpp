@@ -39,6 +39,16 @@ CSSValueBottom::CSSValueBottom()
 {
 }
 
+std::string CSSValueBottom::get_name() const
+{
+	return "bottom";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBottom::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBottom (*this));
+}
+
+
 void CSSValueBottom::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().bottom = *this;

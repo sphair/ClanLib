@@ -39,6 +39,16 @@ CSSValueBackgroundOrigin::CSSValueBackgroundOrigin()
 	values.push_back(origin_padding_box);
 }
 
+std::string CSSValueBackgroundOrigin::get_name() const
+{
+	return "background-origin";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundOrigin::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundOrigin (*this));
+}
+
+
 void CSSValueBackgroundOrigin::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_origin = *this;

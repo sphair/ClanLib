@@ -38,6 +38,16 @@ CSSValueListStyleType::CSSValueListStyleType()
 {
 }
 
+std::string CSSValueListStyleType::get_name() const
+{
+	return "list-style-type";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueListStyleType::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueListStyleType (*this));
+}
+
+
 void CSSValueListStyleType::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_list_style().list_style_type = *this;

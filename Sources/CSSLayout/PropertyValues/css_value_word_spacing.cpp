@@ -39,6 +39,16 @@ CSSValueWordSpacing::CSSValueWordSpacing()
 {
 }
 
+std::string CSSValueWordSpacing::get_name() const
+{
+	return "word-spacing";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueWordSpacing::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueWordSpacing (*this));
+}
+
+
 void CSSValueWordSpacing::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_inherit().word_spacing = *this;

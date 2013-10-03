@@ -38,6 +38,16 @@ CSSValueLeft::CSSValueLeft()
 {
 }
 
+std::string CSSValueLeft::get_name() const
+{
+	return "left";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueLeft::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueLeft (*this));
+}
+
+
 void CSSValueLeft::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().left = *this;

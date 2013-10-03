@@ -38,6 +38,16 @@ CSSValueJustifyContent::CSSValueJustifyContent()
 {
 }
 
+std::string CSSValueJustifyContent::get_name() const
+{
+	return "justify-content";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueJustifyContent::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueJustifyContent (*this));
+}
+
+
 void CSSValueJustifyContent::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().justify_content = *this;

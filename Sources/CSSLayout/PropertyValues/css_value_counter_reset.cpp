@@ -38,6 +38,16 @@ CSSValueCounterReset::CSSValueCounterReset()
 {
 }
 
+std::string CSSValueCounterReset::get_name() const
+{
+	return "counter-reset";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueCounterReset::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueCounterReset (*this));
+}
+
+
 void CSSValueCounterReset::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_counter().counter_reset = *this;

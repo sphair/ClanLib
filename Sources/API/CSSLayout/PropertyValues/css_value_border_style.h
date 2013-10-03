@@ -51,6 +51,8 @@ public:
 	void compute(const CSSValueBorderStyle *parent, CSSResourceCache *layout, float em_size, float ex_size);
 	std::string to_string() const;
 	void apply(CSSComputedValuesUpdater *updater);
+	std::string get_name() const;
+	std::unique_ptr<CSSPropertyValue> clone() const;
 
 	ValueType value_type;
 

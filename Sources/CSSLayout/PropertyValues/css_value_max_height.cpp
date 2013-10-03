@@ -39,6 +39,16 @@ CSSValueMaxHeight::CSSValueMaxHeight()
 {
 }
 
+std::string CSSValueMaxHeight::get_name() const
+{
+	return "max-height";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueMaxHeight::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueMaxHeight (*this));
+}
+
+
 void CSSValueMaxHeight::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().max_height = *this;

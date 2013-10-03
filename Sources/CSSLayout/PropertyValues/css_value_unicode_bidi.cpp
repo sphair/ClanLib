@@ -38,6 +38,16 @@ CSSValueUnicodeBidi::CSSValueUnicodeBidi()
 {
 }
 
+std::string CSSValueUnicodeBidi::get_name() const
+{
+	return "unicode-bidi";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueUnicodeBidi::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueUnicodeBidi (*this));
+}
+
+
 void CSSValueUnicodeBidi::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_text_reset().unicode_bidi = *this;

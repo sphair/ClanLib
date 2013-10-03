@@ -38,6 +38,16 @@ CSSValueClear::CSSValueClear()
 {
 }
 
+std::string CSSValueClear::get_name() const
+{
+	return "clear";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueClear::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueClear (*this));
+}
+
+
 void CSSValueClear::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_box().clear = *this;

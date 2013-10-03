@@ -38,6 +38,16 @@ CSSValueZIndex::CSSValueZIndex()
 {
 }
 
+std::string CSSValueZIndex::get_name() const
+{
+	return "z-index";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueZIndex::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueZIndex (*this));
+}
+
+
 void CSSValueZIndex::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().z_index = *this;

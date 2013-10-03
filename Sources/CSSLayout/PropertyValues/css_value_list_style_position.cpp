@@ -38,6 +38,16 @@ CSSValueListStylePosition::CSSValueListStylePosition()
 {
 }
 
+std::string CSSValueListStylePosition::get_name() const
+{
+	return "list-style-position";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueListStylePosition::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueListStylePosition (*this));
+}
+
+
 void CSSValueListStylePosition::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_list_style().list_style_position = *this;

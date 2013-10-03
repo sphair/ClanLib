@@ -38,6 +38,16 @@ CSSValueFlexShrink::CSSValueFlexShrink()
 {
 }
 
+std::string CSSValueFlexShrink::get_name() const
+{
+	return "flex-shrink";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueFlexShrink::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueFlexShrink (*this));
+}
+
+
 void CSSValueFlexShrink::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_flex().flex_shrink = *this;

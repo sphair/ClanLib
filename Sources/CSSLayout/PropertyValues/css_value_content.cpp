@@ -38,6 +38,16 @@ CSSValueContent::CSSValueContent()
 {
 }
 
+std::string CSSValueContent::get_name() const
+{
+	return "content";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueContent::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueContent (*this));
+}
+
+
 void CSSValueContent::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().content = *this;

@@ -40,6 +40,16 @@ CSSValueBackgroundPosition::CSSValueBackgroundPosition()
 	positions.push_back(Position());
 }
 
+std::string CSSValueBackgroundPosition::get_name() const
+{
+	return "background-position";
+}
+std::unique_ptr<CSSPropertyValue> CSSValueBackgroundPosition::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValueBackgroundPosition (*this));
+}
+
+
 void CSSValueBackgroundPosition::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_background().background_position = *this;

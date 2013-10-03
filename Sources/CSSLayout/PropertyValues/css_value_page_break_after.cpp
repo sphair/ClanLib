@@ -38,6 +38,16 @@ CSSValuePageBreakAfter::CSSValuePageBreakAfter()
 {
 }
 
+std::string CSSValuePageBreakAfter::get_name() const
+{
+	return "page-break-after";
+}
+std::unique_ptr<CSSPropertyValue> CSSValuePageBreakAfter::clone() const
+{
+	return std::unique_ptr<CSSPropertyValue>(new CSSValuePageBreakAfter (*this));
+}
+
+
 void CSSValuePageBreakAfter::apply(CSSComputedValuesUpdater *updater)
 {
 	updater->get_misc_reset().page_break_after = *this;
