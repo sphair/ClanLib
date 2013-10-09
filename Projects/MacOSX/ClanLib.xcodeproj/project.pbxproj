@@ -761,6 +761,7 @@
 		3891B7E617E95943002CB87D /* vector_font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3891B7E417E95943002CB87D /* vector_font.cpp */; };
 		38B42B9117DD3D3300800A95 /* input_device_provider_osxkeyboard.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B8E17DD3D3300800A95 /* input_device_provider_osxkeyboard.mm */; };
 		38B42B9217DD3D3300800A95 /* input_device_provider_osxmouse.mm in Sources */ = {isa = PBXBuildFile; fileRef = 38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */; };
+		4D68E2D718055C4700821E07 /* json_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4D68E2D618055B3D00821E07 /* json_value.cpp */; };
 		5234008B16653835001A194E /* css_document.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340072166537CF001A194E /* css_document.cpp */; };
 		5234008C16653835001A194E /* css_document_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340073166537CF001A194E /* css_document_impl.cpp */; };
 		5234008D16653835001A194E /* css_property.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 52340075166537CF001A194E /* css_property.cpp */; };
@@ -2357,6 +2358,8 @@
 		38B42B8F17DD3D3300800A95 /* input_device_provider_osxmouse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = input_device_provider_osxmouse.h; sourceTree = "<group>"; };
 		38B42B9017DD3D3300800A95 /* input_device_provider_osxmouse.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = input_device_provider_osxmouse.mm; sourceTree = "<group>"; };
 		38BDAE4A17DFE99A00B7AA4C /* clanapp_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clanapp_osx.h; sourceTree = "<group>"; };
+		4D68E2D418055B2300821E07 /* json_value.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = json_value.h; path = JSON/json_value.h; sourceTree = "<group>"; };
+		4D68E2D618055B3D00821E07 /* json_value.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = json_value.cpp; path = JSON/json_value.cpp; sourceTree = "<group>"; };
 		52340071166537CF001A194E /* css_attribute_selector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = css_attribute_selector.h; sourceTree = "<group>"; };
 		52340072166537CF001A194E /* css_document.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document.cpp; sourceTree = "<group>"; };
 		52340073166537CF001A194E /* css_document_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = css_document_impl.cpp; sourceTree = "<group>"; };
@@ -2962,6 +2965,7 @@
 		1835AEC01636168C0009AA23 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				4D68E2D518055B2F00821E07 /* JSON */,
 				1835AEC11636168C0009AA23 /* core_global.cpp */,
 				1835AEC31636168C0009AA23 /* core_iostream.cpp */,
 				1835AF511636168C0009AA23 /* precomp.cpp */,
@@ -5976,6 +5980,22 @@
 			path = Amalgamation;
 			sourceTree = "<group>";
 		};
+		4D68E2D318055B1500821E07 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				4D68E2D418055B2300821E07 /* json_value.h */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+		4D68E2D518055B2F00821E07 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				4D68E2D618055B3D00821E07 /* json_value.cpp */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
 		52340070166537CF001A194E /* CSSDocument */ = {
 			isa = PBXGroup;
 			children = (
@@ -6072,6 +6092,7 @@
 		528501391665726200B19C5D /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				4D68E2D318055B1500821E07 /* JSON */,
 				5285013A1665726200B19C5D /* api_core.h */,
 				5285013B1665726200B19C5D /* core_iostream.h */,
 				5285013C1665726200B19C5D /* Crypto */,
@@ -7157,6 +7178,7 @@
 				1835BE4A16361C930009AA23 /* zip_writer.cpp in Sources */,
 				1835BE4B16361C930009AA23 /* zlib_compression.cpp in Sources */,
 				18C7610A177B84A8009723F2 /* asn1.cpp in Sources */,
+				4D68E2D718055C4700821E07 /* json_value.cpp in Sources */,
 				18C7610C177B84A8009723F2 /* tls_client_impl.cpp in Sources */,
 				18C7610E177B84A8009723F2 /* tls_client.cpp in Sources */,
 				18C7610F177B84A8009723F2 /* x509_impl.cpp in Sources */,
