@@ -171,7 +171,7 @@ public:
 	JsonValue &operator =(const std::string &value) { *this = JsonValue(value); return *this; }
 	JsonValue &operator =(int value) { *this = JsonValue(value); return *this; }
 	JsonValue &operator =(double value) { *this = JsonValue(value); return *this; }
-	JsonValue &operator =(bool &value) { *this = JsonValue(value); return *this; }
+	JsonValue &operator =(bool value) { *this = JsonValue(value); return *this; }
 
 	/// \brief Convert value object to a std::map with the template specified value type
 	template<typename Type>
