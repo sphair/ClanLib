@@ -168,6 +168,7 @@ public:
 /// \{
 public:
 	/// \brief Assign a new value
+	JsonValue &operator =(const char *value) { *this = JsonValue(std::string(value)); return *this; }
 	JsonValue &operator =(const std::string &value) { *this = JsonValue(value); return *this; }
 	JsonValue &operator =(int value) { *this = JsonValue(value); return *this; }
 	JsonValue &operator =(double value) { *this = JsonValue(value); return *this; }
