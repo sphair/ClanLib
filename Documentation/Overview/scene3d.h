@@ -1,5 +1,5 @@
 
-/*! \page Scene3D Scene3D Module Overview
+/*! \page Scene3D Scene3D Module Reference
 
 	<h2>3D Scene Manager</h2>
 

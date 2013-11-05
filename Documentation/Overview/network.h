@@ -1,5 +1,5 @@
 
-/*! \page Network Network Module Overview
+/*! \page Network Network Module Reference
 
 	<h2>Sockets</h2>
 
@@ -10,8 +10,6 @@
 		<li>clan::UDPSocket - A UDP socket</li>
 		<li>clan::DNSResolver, clan::DNSPacket - Low-level DNS resolver</li>
 	</ul>
-
-	<p>More information: \ref Sockets </p>
 
 	<h2>Web</h2>
 
@@ -30,8 +28,6 @@
 		<li>clan::NetGameEvent, clan::NetGameEventValue - Class for sending or receiving a NetGame network event</li>
 		<li>clan::NetGameEventDispatcher_vX - Helper template classes for calling functions based on an event name</li>
 	</ul>
-
-	<p>More information: \ref NetGameEngine </p>
 
 	<h2>TLS</h2>
 

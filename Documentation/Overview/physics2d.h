@@ -1,5 +1,5 @@
 
-/*! \page Physics2D Physics2D Module Overview
+/*! \page Physics2D Physics2D Module Reference
 
 	<h2>2D Physics World</h2>
 

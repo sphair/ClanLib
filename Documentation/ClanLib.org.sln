@@ -66,6 +66,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Overview", "Overview", "{0F
 		Overview\gameide.h = Overview\gameide.h
 		Overview\gui.h = Overview\gui.h
 		Overview\gui_framework.h = Overview\gui_framework.h
+		Overview\intro.h = Overview\intro.h
 		Overview\main-page.h = Overview\main-page.h
 		Overview\netgame_engine.h = Overview\netgame_engine.h
 		Overview\network.h = Overview\network.h

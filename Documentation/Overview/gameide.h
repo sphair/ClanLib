@@ -1,5 +1,5 @@
 
-/*! \page GameIDE Game IDE Module Overview
+/*! \page GameIDE Game IDE Module Reference
 
     <h2>Base Framework</h2>
 

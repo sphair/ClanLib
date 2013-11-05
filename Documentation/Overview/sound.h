@@ -1,7 +1,5 @@
 
-/*! \page Sound Sound Module Overview
-
-	<p>Introduction to the sound module: \ref SoundOverview </p>
+/*! \page Sound Sound Module Reference
 
 	<h2>Basic Sound</h2>
 

@@ -1,7 +1,5 @@
 
-/*! \page GUI User Interface Framework Overview
-
-	<p>Introduction to the GUI module: \ref GUIFramework </p>
+/*! \page GUI User Interface Framework Reference
 
 	<h2>Base Framework</h2>
 

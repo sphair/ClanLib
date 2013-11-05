@@ -1,5 +1,5 @@
 
-/*! \page Compute GPU Compute Module Overview
+/*! \page Compute GPU Compute Module Reference
 
     <h2>OpenCL Compute Classes</h2>
 

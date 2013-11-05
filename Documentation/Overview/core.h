@@ -1,15 +1,11 @@
 
-/*! \page Core Core Module Overview
+/*! \page Core Core Module Reference
 
 	<p>The clanCore library is the base library used by all other ClanLib libraries. It provides a basic framework with
 	common functionality needed by almost all types of applications.</p>
 		
 	<h2>Platform abstraction</h2>
-		
-	<p>Perhaps the most important features of clanCore are its platform abstraction classes. While the C++ Standard Library
-	also includes a limited platform abstraction, the clanCore classes extend, complement, or completely replace
-	them in some cases.</p>
-		
+
 	<ul>
 		<li>clan::System - General system helper functions</li>
 		<li>clan::Thread, clan::Runnable - Threading support</li>
@@ -20,12 +16,7 @@
 		<li>clan::ComPtr - Smart pointer template for Component Object Model (COM) objects</li>
 	</ul>
 
-	<p>More information: \ref Threading </p>
-
 	<h2>General utility classes</h2>
-		
-	<p>In addition to the above classes there are also a few general purpose classes providing infrastructure for other
-	parts of the library.</p>
 		
 	<ul>
 		<li>clan::Exception - Base class for all exceptions thrown by ClanLib</li>
@@ -37,12 +28,6 @@
 		
 	<h2>Thread run-loop</h2>
 		
-	<p>Most operating systems uses a model where a thread receives messages from the host system by participating in a
-	message run loop.</p>
-		
-	<p>In ClanLib, the run-loop is known as the keep-alive application loop and the following classes provides this
-	infrastructure:</p>
-		
 	<ul>
 		<li>clan::KeepAlive - Application loop helper</li>
 		<li>clan::KeepAliveObject - Interface for objects participating in the thread keep-alive processing loop</li>
@@ -50,23 +35,15 @@
 	</ul>
 		
 	<h2>Signals and callbacks</h2>
-		
-	<p>Templates for creating type-safe callbacks are provided by clanCore. They come in two flavors: signals and callbacks.</p>
-		
-	<p>Signals are one-to-many callback templates. When the invoke function is called on a signal, all
-	connected callback functions are called. clan::Slot is the representation of a connected callback
-	function and if the slot is destroyed the connection to the signal is broken. clan::SlotContainer is
-	provided for keeping multiple slots connected.</p>
-		
-	<p>Callback templates are just pointing at a single callback function.  The clan::invoke can only be
-	called safely if a function has been set.  The main advantage callbacks have over signals is that the callback
-	can return a value to the invoking function.  A signal would have to pass such a return value by reference.</p>
 
-	<p>More information: \ref TemplateCallbacks </p>
+	<ul>
+		<li>clan::Signal_v0, clan::Signal_v1, clan::Signal_v2, clan::Signal_v3, clan::Signal_v4, clan::Signal_v5, clan::Signal_v6</li>
+		<li>clan::Slot, clan::SlotContainer</li>
+		<li>clan::Callback_v0, clan::Callback_v1, clan::Callback_v2, clan::Callback_v3, clan::Callback_v4, clan::Callback_v5, clan::Callback_v6</li>
+		<li>clan::Callback_0, clan::Callback_1, clan::Callback_2, clan::Callback_3, clan::Callback_4, clan::Callback_5, clan::Callback_6</li>
+	</ul>
 
 	<h2>Math</h2>
-		
-	<p>ClanCore sports a lot of classes for doing basic graphics related math. The most important classes are:</p>
 		
 	<ul>
 		<li>clan::VecXx (clan::Vec4i, clan::Vec3f, clan::Vec2ub, etc) - Vector templates for 2D, 3D and 4D</li>
@@ -90,10 +67,7 @@
 	</ul>
 		
 	<h2>XML</h2>
-		
-	<p>Working with XML can be done by using either the XML tokenizer classes, the Document Object Model (DOM) classes, or the XPath
-	evaluator.</p>
-		
+
 	<ul>
 		<li>clan::XMLTokenizer - Breaks a XML file into tokens</li>
 		<li>clan::XMLWriter - Writes a XML file based on tokens</li>
@@ -108,10 +82,6 @@
 		
 	<h2>I/O devices</h2>
 		
-	<p>The clan::IODevice class implements the classic input/output stream. It is derived by clan::File
-	and others to support various different devices. The full set of classes working with I/O devices are as follows:
-	</p>
-
 	<ul>
 		<li>clan::IODevice - Input/Output stream abstraction</li>
 		<li>clan::File - Class for opening files</li>
@@ -121,11 +91,6 @@
 	</ul>
 		
 	<h2>File systems</h2>
-
-	<p>There are several ways to deal with file systems. The clan::File class mentioned above can be used or files can
-	be opened via clan::FileSystem. The file system class supports virtual file systems, such as opening files in a
-	zip file. In addition to this, there are several classes for working with files and paths:
-	</p>
 
 	<ul>
 		<li>clan::FileSystem - Virtual file system support</li>
@@ -138,10 +103,6 @@
 
 	<h2>Zip files</h2>
 
-	<p>Zip files can be managed using either the clan::FileSystem class mentioned in the file systems section, or
-	they can be read or written using the following lower level classes:
-	</p>
-
 	<ul>
 		<li>clan::ZipArchive - Create, open or modify a zip file</li>
 		<li>clan::ZipReader - Low level class for reading zip files sequentially</li>
@@ -151,34 +112,6 @@
 		
 	<h2>Resource management</h2>
 		
-	<p>The resource management system in ClanLib is based on the principle that for each resource type there is a resource cache object responsible
-	for fetching resources of that type.</p>
-                    
-	<p>Since resources can be virtually anything (images, textures, 3D meshes, shared GPU objects, etc), the
-	system relies on casting the generic clan::ResourceObject class to a specific clan::Resource&lt;Type&gt;
-	object. The clan::Resource&lt;Type&gt; template can return a reference the actual shared resource object, as well as track if the
-	resource has been modified.
-	</p>
-
-	<p>Just like resources can be virtually anything, the method for fetching a clan::ResourceObject also varies from type to
-	type. To get a resource, the resource cache object managing it must first be retrieved. clan::ResourceManager has a
-	clan::get_cache&lt;Type&gt;(name) function with returns a specific cache. For clanDisplay based resources, the cache
-	interface is the clan::DisplayCache class, and it is stored in the clan::ResourceManager with the
-	name "clan.display".
-	</p>
-
-	<p>clan::ResourceManager is in other words just a map of cache objects for different resource types. It is possible to create
-	custom resource handling by constructing clan::ResourceManager manually, then attach your own implementation of
-	clan::DisplayCache and so on.</p>
-                        
-	<p>Most applications rely on the default implementation which is provided by constructing clan::XMLResourceManager instead. It
-	loads resources described in an XML file. For the standard objects offered by ClanLib, such as the clan::Sprite
-	class, the above manual fetching of resource is also not needed. The convenience function clan::Sprite::resource(gc, id, resources)
-	takes care of the common case.
-	</p>
-
-	<p>Resource infrastructure classes:</p>
-
 	<ul>
 		<li>clan::ResourceManager - Class holding all resource caches, which in turn holds all resources</li>
 		<li>clan::ResourceObject - Class that can hold resources of any type, with casting support to specific types</li>
@@ -189,11 +122,7 @@
 		<li>clan::XMLResourceNode - Resource node in a ClanLib XML resource file</li>
 	</ul>
 
-	<p>More information: \ref ResourceManagement </p>
-
 	<h2>Crypto</h2>
-
-	<p>Cryptographic classes for dealing with SHA hashing, AES encryption and TLS are provided:</p>
 
 	<ul>
 		<li>clan::SHA1, clan::SHA224, clan::SHA256, clan::SHA384, clan::SHA512, clan::SHA512_224, clan::SHA512_256 - SHA Hashing functions</li>
@@ -208,8 +137,6 @@
 	</ul>
 
 	<h2>Error reporting</h2>
-
-	<p>To deal with errors, clanCore offers the following functionality:</p>
 
 	<ul>
 		<li>clan::CrashReporter - Generates crash reports when the application crashes, or when requested</li>

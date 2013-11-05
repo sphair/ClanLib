@@ -1,7 +1,5 @@
 
-/*! \page Database Database Module Overview
-
-	<p>Introduction to the database module: \ref DatabaseServices </p>
+/*! \page Database Database Module Reference
 
 	<h2>Generic Database</h2>
  

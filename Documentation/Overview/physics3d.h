@@ -1,5 +1,5 @@
 
-/*! \page Physics3D Physics3D Module Overview
+/*! \page Physics3D Physics3D Module Reference
 
 	<h2>3D Physics</h2>
 

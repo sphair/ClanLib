@@ -1,11 +1,7 @@
 
-/*! \page Display Display Module Overview
+/*! \page Display Display Module Reference
 
     <h2>Window and Input</h2>
-
-    <p>The clan::DisplayWindow is the main class which creates a window on the screen. It is also the access point
-        for receiving input and drawing onto the screen. Working with the window and handling input events are done with the following classes:
-    </p>
 
     <ul>
         <li>clan::DisplayWindow - Top-level window class</li>
@@ -17,8 +13,6 @@
         <li>clan::InputEvent - Describes an input event, such as key down, key up, mouse movement, etc</li>
         <li>clan::InputCode - This enumeration contains all the input IDs for well-known buttons</li>
     </ul>
-
-    <p>More information: \ref Timing, \ref UserInput </p>
 
     <h2>2D Graphics</h2>
 
@@ -36,8 +30,6 @@
         <li>clan::TextureGroup, clan::Subtexture - Calibrates which images end up in which atlas textures</li>
     </ul>
 
-    <p>More information: \ref SpriteResource, \ref CollisionDetection </p>
-
     <h2>Fonts</h2>
 
     <ul>
@@ -46,8 +38,6 @@
         <li>clan::FontMetrics - The metrics of a font</li>
         <li>clan::VectorFont - Vector font drawing</li>
     </ul>
-
-    <p>More information: \ref FontResource </p>
 
     <h2>Image Pixels</h2>
 
@@ -83,8 +73,6 @@
         <li>clan::OcclusionQuery - Occlusion queries</li>
         <li>clan::RenderBatcher - Interface for participating in render batching</li>
     </ul>
-
-    <p>More information: \ref TextureResource </p>
 
     <h2>Shader Effects</h2>
 
