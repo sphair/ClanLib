@@ -44,7 +44,7 @@ namespace clan
 /// \{
 
 // __sync_val_compare_and_swap was not introduced until gcc 4.1
-#if defined(WIN32) || __GNUC__ > 4 ||  (__GNUC__ == 4 & __GNUC_MINOR__ >= 1)
+#if defined(WIN32) || defined(DOXYGEN) || __GNUC__ > 4 ||  (__GNUC__ == 4 & __GNUC_MINOR__ >= 1)
 
 /// \brief Interlocked variable class
 class InterlockedVariable

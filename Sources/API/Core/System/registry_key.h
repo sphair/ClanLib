@@ -29,7 +29,7 @@
 
 #pragma once
 
-#ifdef WIN32
+#if defined(WIN32) || defined(DOXYGEN)
 
 #include "../api_core.h"
 #include "databuffer.h"
