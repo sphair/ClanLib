@@ -171,7 +171,7 @@ void App::test_1()
 			cb_test.invoke();
 		}
 		clan::ubyte64 current_time = clan::System::get_microseconds();
-		result_empty = (current_time / base_line);
+		result_empty = (current_time - start_time) / base_line;
 
 		cb_main.set(this, &App::initialise_1);
 }
