@@ -30,18 +30,6 @@
 
 #include "tests.h"
 
-class TestInfo
-{
-public:
-	TestInfo(const std::string &name, void (Tests::*func)()) : name(name), func(func), result(unset_value){}
-
-	std::string name;
-	void (Tests::*func)();
-	int result;
-	static const int unset_value = -1232311;
-
-};
-
 // This is the Application class (That is instantiated by the Program Class)
 class App
 {

@@ -29,10 +29,27 @@
 
 #pragma once
 
+class Tests;
+
+class TestInfo
+{
+public:
+	TestInfo(const std::string &name, void (Tests::*func)()) : name(name), func(func), result(unset_value){}
+
+	std::string name;
+	void (Tests::*func)();
+	int result;
+	static const int unset_value = -1232311;
+
+};
+
 class Tests
 {
 public:
 	Tests();
+
+	static void Init(std::vector<TestInfo> &testlist);
+
 	void test_empty();
 	void test_i_plus_plus();
 	void test_create_string();
@@ -45,7 +62,6 @@ public:
 	void test_double_to_int();
 
 
-private:
 	std::string string;
 	std::string string2;
 	union

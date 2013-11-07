@@ -54,15 +54,7 @@ int App::start(const std::vector<std::string> &args)
 	num_iterations = 0;
 	base_line = 0;
 
-	testlist.push_back(TestInfo("", &Tests::test_empty));
-	testlist.push_back(TestInfo("i++;", &Tests::test_i_plus_plus));
-	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
-	testlist.push_back(TestInfo("let = string[0]", &Tests::test_string_index));
-	testlist.push_back(TestInfo("let = char_array[0];", &Tests::test_char_array_index));
-	testlist.push_back(TestInfo("float_value = (float) int_value;", &Tests::test_int_to_float));
-	testlist.push_back(TestInfo("int_value = (int) float_value;", &Tests::test_float_to_int));
-	testlist.push_back(TestInfo("double_value = (double) int_value;", &Tests::test_int_to_double));
-	testlist.push_back(TestInfo("int_value = (int) double_value;", &Tests::test_double_to_int));
+	Tests::Init(testlist);
 
 	cb_main.set(this, &App::initialise_1);
 	game_time.reset();
