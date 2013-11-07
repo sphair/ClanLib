@@ -36,8 +36,16 @@ public:
 	void test_empty();
 	void test_i_plus_plus();
 	void test_create_string();
+	void test_string_index();
+	void test_char_array_index();
 
 private:
-	int i;
 	std::string string;
+	std::string string2;
+	union
+	{
+		char char_array[2];
+		char let;
+		int i;
+	};
 };

@@ -44,6 +44,8 @@ private:
 	void test_1();
 	void test_2();
 	void test_3();
+	void test_4();
+	void test_5();
 	void draw_info(const std::string &text);
 	int run_test();
 
@@ -61,4 +63,6 @@ private:
 	int result_empty;
 	int result_i_plus_plus;
 	int result_create_string;
+	int result_string_index;
+	int result_char_array_index;
 };

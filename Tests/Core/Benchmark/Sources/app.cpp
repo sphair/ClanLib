@@ -57,6 +57,8 @@ int App::start(const std::vector<std::string> &args)
 	result_i_plus_plus = unset_value;
 	result_empty = unset_value;
 	result_create_string = unset_value;
+	result_string_index = unset_value;
+	result_char_array_index = unset_value;
 
 	cb_main.set(this, &App::initialise_1);
 	game_time.reset();
@@ -96,6 +98,16 @@ int App::start(const std::vector<std::string> &args)
 		if (result_create_string != unset_value)
 		{
 			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {string=std::string();}", result_create_string));
+			ypos += ygap;
+		}
+		if (result_string_index != unset_value)
+		{
+			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {let=string[0];}", result_string_index));
+			ypos += ygap;
+		}
+		if (result_char_array_index != unset_value)
+		{
+			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {let=char_array[0];}", result_char_array_index));
 			ypos += ygap;
 		}
 		cb_main.invoke();
@@ -140,10 +152,10 @@ void App::initialise_1()
 	{
 		clan::ubyte64 current_time = clan::System::get_microseconds();
 
-		if ((current_time - start_time) >= (1000000) * 1)		// Run basic test for max 1 second
+		if ((current_time - start_time) >= 200000)
 			break;
 	
-		for (int cnt=0; cnt < 0xFFFFFF; cnt++)
+		for (int cnt=0; cnt < 0xFFF; cnt++)
 		{
 			num_iterations++;
 			cb_test.invoke();
@@ -199,6 +211,25 @@ void App::test_3()
 
 	cb_test.set(&tests, &Tests::test_create_string);
 	result_create_string = run_test();
+	cb_main.set(this, &App::test_4);
+}
+
+void App::test_4()
+{
+	draw_info("* Testing - {let = string[0];} *");
+
+	cb_test.set(&tests, &Tests::test_string_index);
+	result_string_index = run_test();
+	cb_main.set(this, &App::test_5);
+}
+
+
+void App::test_5()
+{
+	draw_info("* Testing - {let = char_array[0]} *");
+
+	cb_test.set(&tests, &Tests::test_char_array_index);
+	result_char_array_index = run_test();
 	cb_main.set(this, &App::initialise_1);
 }
 

@@ -33,6 +33,7 @@
 Tests::Tests()
 {
 	i = 0;
+	string2.push_back('X');
 }
 
 void Tests::test_empty()
@@ -47,4 +48,14 @@ void Tests::test_i_plus_plus()
 void Tests::test_create_string()
 {
 	string = std::string();
+}
+
+void Tests::test_string_index()
+{
+	let = string2[0];
+}
+
+void Tests::test_char_array_index()
+{
+	let = char_array[0];
 }
