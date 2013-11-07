@@ -30,6 +30,18 @@
 
 #include "tests.h"
 
+class TestInfo
+{
+public:
+	TestInfo(const std::string &name, void (Tests::*func)()) : name(name), func(func), result(unset_value){}
+
+	std::string name;
+	void (Tests::*func)();
+	int result;
+	static const int unset_value = -1232311;
+
+};
+
 // This is the Application class (That is instantiated by the Program Class)
 class App
 {
@@ -41,11 +53,8 @@ private:
 	void on_window_close();
 	void initialise_1();
 	void initialise_2();
-	void test_1();
-	void test_2();
-	void test_3();
-	void test_4();
-	void test_5();
+	void write_result();
+	void test();
 	void draw_info(const std::string &text);
 	int run_test();
 
@@ -60,9 +69,6 @@ private:
 	Tests tests;
 	clan::ubyte64 num_iterations;
 	clan::ubyte64 base_line;
-	int result_empty;
-	int result_i_plus_plus;
-	int result_create_string;
-	int result_string_index;
-	int result_char_array_index;
+	int testlist_offset;
+	std::vector<TestInfo> testlist;
 };

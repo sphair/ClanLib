@@ -51,14 +51,18 @@ int App::start(const std::vector<std::string> &args)
 
 	font = clan::Font(canvas, "tahoma", 20);
 
-	const int unset_value = -1232311;
 	num_iterations = 0;
 	base_line = 0;
-	result_i_plus_plus = unset_value;
-	result_empty = unset_value;
-	result_create_string = unset_value;
-	result_string_index = unset_value;
-	result_char_array_index = unset_value;
+
+	testlist.push_back(TestInfo("", &Tests::test_empty));
+	testlist.push_back(TestInfo("i++;", &Tests::test_i_plus_plus));
+	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
+	testlist.push_back(TestInfo("let = string[0]", &Tests::test_string_index));
+	testlist.push_back(TestInfo("let = char_array[0];", &Tests::test_char_array_index));
+	testlist.push_back(TestInfo("float_value = (float) int_value;", &Tests::test_int_to_float));
+	testlist.push_back(TestInfo("int_value = (int) float_value;", &Tests::test_float_to_int));
+	testlist.push_back(TestInfo("double_value = (double) int_value;", &Tests::test_int_to_double));
+	testlist.push_back(TestInfo("int_value = (int) double_value;", &Tests::test_double_to_int));
 
 	cb_main.set(this, &App::initialise_1);
 	game_time.reset();
@@ -81,35 +85,19 @@ int App::start(const std::vector<std::string> &args)
 		const int ygap = 20;
 		if (num_iterations)
 		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = Iterations", num_iterations));
+			font.draw_text(canvas, 10, ypos, clan::string_format("%1 Iterations", num_iterations));
 			ypos += ygap;
 		}
 
-		if (result_empty != unset_value)
+		for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = Base Line Test (ideally, should equal 0)", result_empty));
-			ypos += ygap;
+			if (testlist[cnt].result != TestInfo::unset_value)
+			{
+				font.draw_text(canvas, 10, ypos, clan::string_format("%1 : {%2}", testlist[cnt].result, testlist[cnt].name));
+				ypos += ygap;
+			}
 		}
-		if (result_i_plus_plus != unset_value)
-		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {i++;}", result_i_plus_plus));
-			ypos += ygap;
-		}
-		if (result_create_string != unset_value)
-		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {string=std::string();}", result_create_string));
-			ypos += ygap;
-		}
-		if (result_string_index != unset_value)
-		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {let=string[0];}", result_string_index));
-			ypos += ygap;
-		}
-		if (result_char_array_index != unset_value)
-		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 = {let=char_array[0];}", result_char_array_index));
-			ypos += ygap;
-		}
+
 		cb_main.invoke();
 
 		// This call processes user input and other events
@@ -172,7 +160,7 @@ int App::run_test()
 		cb_test.invoke();
 	}
 	clan::ubyte64 current_time = clan::System::get_microseconds();
-	return (current_time - start_time) / base_line;
+	return (current_time - start_time + base_line/2) / base_line;
 
 }
 
@@ -184,52 +172,38 @@ void App::initialise_2()
 	base_line = 1;
 	base_line = run_test();
 
-	cb_main.set(this, &App::test_1);
+	testlist_offset = 0;
+	cb_main.set(this, &App::test);
 }
 
-void App::test_1()
+void App::test()
 {
-	draw_info("* Testing - Empty Function *");
+	
+	draw_info(clan::string_format("* Running - {%1} *", testlist[testlist_offset].name));
 
-	cb_test.set(&tests, &Tests::test_empty);
-	result_empty = run_test();
-	cb_main.set(this, &App::test_2);
-}
-
-void App::test_2()
-{
-	draw_info("* Testing - {i++} *");
-
-	cb_test.set(&tests, &Tests::test_i_plus_plus);
-	result_i_plus_plus = run_test();
-	cb_main.set(this, &App::test_3);
-}
-
-void App::test_3()
-{
-	draw_info("* Testing - {string = std::string()} *");
-
-	cb_test.set(&tests, &Tests::test_create_string);
-	result_create_string = run_test();
-	cb_main.set(this, &App::test_4);
-}
-
-void App::test_4()
-{
-	draw_info("* Testing - {let = string[0];} *");
-
-	cb_test.set(&tests, &Tests::test_string_index);
-	result_string_index = run_test();
-	cb_main.set(this, &App::test_5);
+	cb_test.set(&tests, testlist[testlist_offset].func);
+	testlist[testlist_offset].result = run_test();
+	testlist_offset++;
+	if (testlist_offset >= testlist.size())
+		cb_main.set(this, &App::write_result);
 }
 
 
-void App::test_5()
+void App::write_result()
 {
-	draw_info("* Testing - {let = char_array[0]} *");
+	draw_info("* Writing Results To File *");
 
-	cb_test.set(&tests, &Tests::test_char_array_index);
-	result_char_array_index = run_test();
+	std::string output;
+	for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
+	{
+		if (testlist[cnt].result != TestInfo::unset_value)
+		{
+			output += clan::string_format("%1 : {%2}\r\n", testlist[cnt].result, testlist[cnt].name);
+		}
+	}
+
+	clan::File::write_text("results.txt", output);
+
 	cb_main.set(this, &App::initialise_1);
 }
 

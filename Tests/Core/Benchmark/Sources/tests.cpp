@@ -32,7 +32,6 @@
 
 Tests::Tests()
 {
-	i = 0;
 	string2.push_back('X');
 }
 
@@ -42,7 +41,7 @@ void Tests::test_empty()
 
 void Tests::test_i_plus_plus()
 {
-	i++;
+	int_value++;
 }
 
 void Tests::test_create_string()
@@ -52,10 +51,31 @@ void Tests::test_create_string()
 
 void Tests::test_string_index()
 {
-	let = string2[0];
+	char_value = string2[0];
 }
 
 void Tests::test_char_array_index()
 {
-	let = char_array[0];
+	char_value = char_array[0];
 }
+
+void Tests::test_int_to_float()
+{
+	float_value = (float) int_value;
+}
+
+void Tests::test_float_to_int()
+{
+	int_value = (int) float_value;
+}
+
+void Tests::test_int_to_double()
+{
+	double_value = (double) int_value;
+}
+
+void Tests::test_double_to_int()
+{
+	int_value = (int) double_value;
+}
+
