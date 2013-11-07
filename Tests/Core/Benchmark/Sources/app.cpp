@@ -74,7 +74,7 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, ( ( canvas_size.width - text_size.width) / 2), 32, text, clan::Colorf::white);
 
 		int ypos = 96;
-		const int ygap = 20;
+		const int ygap = 22;
 		if (num_iterations)
 		{
 			font.draw_text(canvas, 10, ypos, clan::string_format("%1 Iterations", num_iterations));
@@ -85,7 +85,12 @@ int App::start(const std::vector<std::string> &args)
 		{
 			if (testlist[cnt].result != TestInfo::unset_value)
 			{
-				font.draw_text(canvas, 10, ypos, clan::string_format("%1 : {%2}", testlist[cnt].result, testlist[cnt].name));
+				clan::Colorf colour = clan::Colorf::white;
+				if (testlist_offset == cnt)
+					colour = clan::Colorf::green;
+
+				font.draw_text(canvas, 10, ypos, clan::string_format("%1", testlist[cnt].result), colour);
+				font.draw_text(canvas, 50, ypos, clan::string_format(":  {%1}", testlist[cnt].name), colour);
 				ypos += ygap;
 			}
 		}
@@ -190,7 +195,7 @@ void App::write_result()
 	{
 		if (testlist[cnt].result != TestInfo::unset_value)
 		{
-			output += clan::string_format("%1 : {%2}\r\n", testlist[cnt].result, testlist[cnt].name);
+			output += clan::string_format("%1) %2 : {%3}\r\n", cnt+1, testlist[cnt].result, testlist[cnt].name);
 		}
 	}
 

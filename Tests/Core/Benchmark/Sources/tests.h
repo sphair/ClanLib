@@ -55,18 +55,20 @@ public:
 	void test_create_string();
 	void test_string_index();
 	void test_char_array_index();
+	void test_string_multi_index();
+	void test_char_array_multi_index();
 
 	void test_int_to_float();
 	void test_float_to_int();
 	void test_int_to_double();
 	void test_double_to_int();
 
-
 	std::string string;
 	std::string string2;
+	int sixteen;
 	union
 	{
-		char char_array[2];
+		char char_array[16];
 		char char_value;
 		int int_value;
 		float float_value;

@@ -37,6 +37,8 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
 	testlist.push_back(TestInfo("let = string[0]", &Tests::test_string_index));
 	testlist.push_back(TestInfo("let = char_array[0];", &Tests::test_char_array_index));
+	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];", &Tests::test_string_multi_index));
+	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];", &Tests::test_char_array_multi_index));
 	testlist.push_back(TestInfo("float_value = (float) int_value;", &Tests::test_int_to_float));
 	testlist.push_back(TestInfo("int_value = (int) float_value;", &Tests::test_float_to_int));
 	testlist.push_back(TestInfo("double_value = (double) int_value;", &Tests::test_int_to_double));
@@ -46,7 +48,9 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 
 Tests::Tests()
 {
-	string2.push_back('X');
+	for (int cnt=0; cnt<16; cnt++)
+		string2.push_back('X');
+	sixteen = 16;
 }
 
 void Tests::test_empty()
@@ -68,9 +72,19 @@ void Tests::test_string_index()
 	char_value = string2[0];
 }
 
+void Tests::test_string_multi_index()
+{
+	for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];
+}
+
 void Tests::test_char_array_index()
 {
 	char_value = char_array[0];
+}
+
+void Tests::test_char_array_multi_index()
+{
+	for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];
 }
 
 void Tests::test_int_to_float()
