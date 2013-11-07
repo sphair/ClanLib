@@ -35,8 +35,8 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("", &Tests::test_empty));
 	testlist.push_back(TestInfo("i++;", &Tests::test_i_plus_plus));
 	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
-	testlist.push_back(TestInfo("let = string[0]", &Tests::test_string_index));
-	testlist.push_back(TestInfo("let = char_array[0];", &Tests::test_char_array_index));
+	testlist.push_back(TestInfo("char_value = string[0]", &Tests::test_string_index));
+	testlist.push_back(TestInfo("char_value = char_array[0];", &Tests::test_char_array_index));
 	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];", &Tests::test_string_multi_index));
 	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];", &Tests::test_char_array_multi_index));
 	testlist.push_back(TestInfo("float_value = (float) int_value;", &Tests::test_int_to_float));
