@@ -32,7 +32,12 @@
 class Tests
 {
 public:
+	Tests();
 	void test_empty();
+	void test_i_plus_plus();
+	void test_create_string();
 
-
+private:
+	int i;
+	std::string string;
 };

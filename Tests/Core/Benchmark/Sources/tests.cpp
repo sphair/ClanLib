@@ -30,6 +30,21 @@
 #include "precomp.h"
 #include "tests.h"
 
+Tests::Tests()
+{
+	i = 0;
+}
+
 void Tests::test_empty()
 {
+}
+
+void Tests::test_i_plus_plus()
+{
+	i++;
+}
+
+void Tests::test_create_string()
+{
+	string = std::string();
 }

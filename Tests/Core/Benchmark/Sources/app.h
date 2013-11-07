@@ -23,7 +23,6 @@
 **
 **  File Author(s):
 **
-**    Magnus Norddahl
 **    Mark Page
 */
 
@@ -43,7 +42,10 @@ private:
 	void initialise_1();
 	void initialise_2();
 	void test_1();
+	void test_2();
+	void test_3();
 	void draw_info(const std::string &text);
+	int run_test();
 
 private:
 	bool quit;
@@ -57,4 +59,6 @@ private:
 	clan::ubyte64 num_iterations;
 	clan::ubyte64 base_line;
 	int result_empty;
+	int result_i_plus_plus;
+	int result_create_string;
 };
