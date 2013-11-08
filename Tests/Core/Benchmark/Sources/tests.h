@@ -62,10 +62,31 @@ public:
 	void test_float_to_int();
 	void test_int_to_double();
 	void test_double_to_int();
+	void test_int_add();
+	void test_int_multiply();
+	void test_int_divide();
+	void test_float_add();
+	void test_float_multiply();
+	void test_float_divide();
+	void test_double_add();
+	void test_double_multiply();
+	void test_double_divide();
+
+	void test_create_string_from_15chars();
+	void test_create_new_string_from_15chars();
+	void test_assign_string_from_15chars();
+	void test_create_string_from_39chars();
+	void test_create_new_string_from_39chars();
+	void test_assign_string_from_39chars();
 
 	std::string string;
 	std::string string2;
-	int sixteen;
+	int int_sixteen;
+	int int_seven;
+	float float_sixteen;
+	float float_seven;
+	double double_sixteen;
+	double double_seven;
 	union
 	{
 		char char_array[16];
