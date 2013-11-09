@@ -49,6 +49,7 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("double_value += double_sixteen / double_seven;", &Tests::test_double_divide));
 	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
 	testlist.push_back(TestInfo("char_value = string[0]", &Tests::test_string_index));
+	testlist.push_back(TestInfo("char_value = string.cstr()[0]", &Tests::test_string_cstr_index));
 	testlist.push_back(TestInfo("char_value = char_array[0];", &Tests::test_char_array_index));
 	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];", &Tests::test_string_multi_index));
 	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];", &Tests::test_char_array_multi_index));
@@ -62,6 +63,12 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 
 	testlist.push_back(TestInfo("int_value += *int_ptr;", &Tests::test_pointer_index));
 	testlist.push_back(TestInfo("int_value += *int_shared_ptr;", &Tests::test_shared_index));
+
+	testlist.push_back(TestInfo("for (size_t cnt=0; cnt<std_vector_int_size16.size(); cnt++) { int_value +=  std_vector_int_size16[cnt]; }", &Tests::test_size1_vector));
+	testlist.push_back(TestInfo("for (size_t cnt=0, max = std_vector_int_size16.size(); cnt<max; cnt++) { int_value +=  std_vector_int_size16[cnt]; }", &Tests::test_size2_vector));
+
+	testlist.push_back(TestInfo("for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); ++it) { int_value += *it; }", &Tests::test_size3_vector));
+	testlist.push_back(TestInfo("for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }", &Tests::test_size4_vector));
 }
 
 Tests::Tests()
@@ -77,6 +84,8 @@ Tests::Tests()
 	int_ptr = &int_value;
 	int_shared_ptr = std::shared_ptr<int>(new int);
 	*int_shared_ptr = 123;
+
+	std_vector_int_size16.resize(16, 0);
 }
 
 void Tests::test_empty()
@@ -126,6 +135,11 @@ void Tests::test_assign_string_from_39chars()
 void Tests::test_string_index()
 {
 	char_value = string2[0];
+}
+
+void Tests::test_string_cstr_index()
+{
+	char_value = string2.c_str()[0];
 }
 
 void Tests::test_string_multi_index()
@@ -218,4 +232,22 @@ void Tests::test_shared_index()
 	int_value += *int_shared_ptr;
 }
 
+void Tests::test_size1_vector()
+{
+	for (size_t cnt=0; cnt<std_vector_int_size16.size(); cnt++) { int_value +=  std_vector_int_size16[cnt]; }
+}
 
+void Tests::test_size2_vector()
+{
+	for (size_t cnt=0, max = std_vector_int_size16.size(); cnt<max; cnt++) { int_value +=  std_vector_int_size16[cnt]; }
+}
+
+void Tests::test_size3_vector()
+{
+	for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); ++it) { int_value += *it; }
+}
+
+void Tests::test_size4_vector()
+{
+	for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }
+}

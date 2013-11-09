@@ -54,6 +54,7 @@ public:
 	void test_create_string();
 	void test_string_index();
 	void test_char_array_index();
+	void test_string_cstr_index();
 	void test_string_multi_index();
 	void test_char_array_multi_index();
 
@@ -80,6 +81,10 @@ public:
 	void test_create_string_from_39chars();
 	void test_create_new_string_from_39chars();
 	void test_assign_string_from_39chars();
+	void test_size1_vector();
+	void test_size2_vector();
+	void test_size3_vector();
+	void test_size4_vector();
 
 	std::string string;
 	std::string string2;
@@ -96,4 +101,5 @@ public:
 	double double_value;
 	int *int_ptr;
 	std::shared_ptr<int> int_shared_ptr;
+	std::vector<int> std_vector_int_size16;
 };
