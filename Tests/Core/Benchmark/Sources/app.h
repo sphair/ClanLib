@@ -44,7 +44,7 @@ private:
 	void write_result();
 	void test();
 	void draw_info(const std::string &text);
-	int run_test();
+	float run_test();
 
 private:
 	bool quit;

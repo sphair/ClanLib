@@ -34,12 +34,11 @@ class Tests;
 class TestInfo
 {
 public:
-	TestInfo(const std::string &name, void (Tests::*func)()) : name(name), func(func), result(unset_value){}
+	TestInfo(const std::string &name, void (Tests::*func)()) : name(name), func(func), result(0.0f){}
 
 	std::string name;
 	void (Tests::*func)();
-	int result;
-	static const int unset_value = -1232311;
+	float result;
 
 };
 
@@ -72,6 +71,9 @@ public:
 	void test_double_multiply();
 	void test_double_divide();
 
+	void Tests::test_pointer_index();
+	void Tests::test_shared_index();
+
 	void test_create_string_from_15chars();
 	void test_create_new_string_from_15chars();
 	void test_assign_string_from_15chars();
@@ -95,4 +97,6 @@ public:
 		float float_value;
 		double double_value;
 	};
+	int *int_ptr;
+	std::shared_ptr<int> int_shared_ptr;
 };

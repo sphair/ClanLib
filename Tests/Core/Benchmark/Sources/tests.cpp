@@ -59,6 +59,9 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("string = \"123456789012345678901234567890123456789\";", &Tests::test_create_string_from_39chars));
 	testlist.push_back(TestInfo("string = std::string(\"123456789012345678901234567890123456789\");", &Tests::test_create_new_string_from_39chars));
 	testlist.push_back(TestInfo("string.assign(\"123456789012345678901234567890123456789\");", &Tests::test_assign_string_from_39chars));
+
+	testlist.push_back(TestInfo("int_value += *int_ptr;", &Tests::test_pointer_index));
+	testlist.push_back(TestInfo("int_value += *int_shared_ptr;", &Tests::test_shared_index));
 }
 
 Tests::Tests()
@@ -71,7 +74,9 @@ Tests::Tests()
 	float_seven = 7.0f;
 	double_sixteen = 16.0;
 	double_seven = 7.0;
-
+	int_ptr = &int_value;
+	int_shared_ptr = std::shared_ptr<int>(new int);
+	*int_shared_ptr = 123;
 }
 
 void Tests::test_empty()
@@ -202,4 +207,15 @@ void Tests::test_double_divide()
 {
 	double_value += double_sixteen / double_seven;
 }
+
+void Tests::test_pointer_index()
+{
+	int_value += *int_ptr;
+}
+
+void Tests::test_shared_index()
+{
+	int_value += *int_shared_ptr;
+}
+
 

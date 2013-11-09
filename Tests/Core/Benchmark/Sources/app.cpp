@@ -77,19 +77,19 @@ int App::start(const std::vector<std::string> &args)
 		const int ygap = 22;
 		if (num_iterations)
 		{
-			font.draw_text(canvas, 10, ypos, clan::string_format("%1 Iterations", num_iterations));
+			font.draw_text(canvas, 10, ypos, clan::string_format("Using %1 Iterations", num_iterations));
 			ypos += ygap;
 		}
 
 		for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 		{
-			if (testlist[cnt].result != TestInfo::unset_value)
+			if (testlist[cnt].result != 0.0f)
 			{
 				clan::Colorf colour = clan::Colorf::white;
 				if (testlist_offset == cnt)
 					colour = clan::Colorf::green;
 
-				font.draw_text(canvas, 10, ypos, clan::string_format("%1", testlist[cnt].result), colour);
+				font.draw_text(canvas, 10, ypos, clan::StringHelp::float_to_text(testlist[cnt].result, 1), colour);
 				font.draw_text(canvas, 50, ypos, clan::string_format(":  {%1}", testlist[cnt].name), colour);
 				ypos += ygap;
 			}
@@ -149,7 +149,7 @@ void App::initialise_1()
 	cb_main.set(this, &App::initialise_2);
 }
 
-int App::run_test()
+float App::run_test()
 {
 	clan::ubyte64 start_time = clan::System::get_microseconds();
 	for (clan::ubyte64 cnt=0; cnt < num_iterations; cnt++)
@@ -157,7 +157,8 @@ int App::run_test()
 		cb_test.invoke();
 	}
 	clan::ubyte64 current_time = clan::System::get_microseconds();
-	return (current_time - start_time + base_line/2) / base_line;
+	int result = (10 * (current_time - start_time)+5) / base_line;
+	return (float) result / 10.0f;
 
 }
 
@@ -193,9 +194,9 @@ void App::write_result()
 	std::string output;
 	for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 	{
-		if (testlist[cnt].result != TestInfo::unset_value)
+		if (testlist[cnt].result != 0.0f)
 		{
-			output += clan::string_format("%1) %2 : {%3}\r\n", cnt+1, testlist[cnt].result, testlist[cnt].name);
+			output += clan::string_format("%1) %2 : {%3}\r\n", cnt+1, clan::StringHelp::float_to_text(testlist[cnt].result, 1), testlist[cnt].name);
 		}
 	}
 
