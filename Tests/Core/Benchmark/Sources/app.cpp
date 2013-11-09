@@ -56,7 +56,7 @@ int App::start(const std::vector<std::string> &args)
 
 	Tests::Init(testlist);
 
-	cb_main.set(this, &App::initialise_1);
+	cb_main.set(this, &App::initial_pause);
 	game_time.reset();
 
 	// Run until someone presses escape
@@ -126,6 +126,17 @@ void App::draw_info(const std::string &text)
 	window.flip(1);
 }
 
+void App::initial_pause()
+{
+	draw_info("* Starting in 1 second *");
+
+	cb_test.set(&tests, &Tests::test_empty);
+	cb_test.invoke();
+	
+	if (game_time.get_current_time() >= 1.0f)
+		cb_main.set(this, &App::initialise_1);
+}
+
 void App::initialise_1()
 {
 	draw_info("* Calculating Required Iterations *");
@@ -137,7 +148,7 @@ void App::initialise_1()
 	{
 		clan::ubyte64 current_time = clan::System::get_microseconds();
 
-		if ((current_time - start_time) >= 200000)
+		if ((current_time - start_time) >= 200000)	// 0.2 Seconds
 			break;
 	
 		for (int cnt=0; cnt < 0xFFF; cnt++)

@@ -39,6 +39,7 @@ public:
 private:
 	void on_input_up(const clan::InputEvent &key);
 	void on_window_close();
+	void initial_pause();
 	void initialise_1();
 	void initialise_2();
 	void write_result();
