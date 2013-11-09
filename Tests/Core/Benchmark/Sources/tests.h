@@ -89,14 +89,11 @@ public:
 	float float_seven;
 	double double_sixteen;
 	double double_seven;
-	union
-	{
-		char char_array[16];
-		char char_value;
-		int int_value;
-		float float_value;
-		double double_value;
-	};
+	char char_array[16];
+	char char_value;
+	int int_value;
+	float float_value;
+	double double_value;
 	int *int_ptr;
 	std::shared_ptr<int> int_shared_ptr;
 };
