@@ -37,7 +37,7 @@ int App::start(const std::vector<std::string> &args)
 	// Set the window
 	clan::DisplayWindowDescription desc;
 	desc.set_title("ClanLib App Example");
-	desc.set_size(clan::Size(1024, 700), true);
+	desc.set_size(clan::Size(1000, 700), true);
 	desc.set_allow_resize(true);
 
 	window = clan::DisplayWindow(desc);
@@ -49,8 +49,11 @@ int App::start(const std::vector<std::string> &args)
 	// Connect a keyboard handler to on_key_up()
 	clan::Slot slot_input_up = window.get_ic().get_keyboard().sig_key_up().connect(this, &App::on_input_up);
 
-	font = clan::Font(canvas, "tahoma", 20);
+	font = clan::Font(canvas, "tahoma", 16);
 
+	target_test_run_length_seconds = 0.2f;
+
+	tests_run_length_microseconds = 0;
 	num_iterations = 0;
 	base_line = 0;
 
@@ -74,13 +77,23 @@ int App::start(const std::vector<std::string> &args)
 		font.draw_text(canvas, ( ( canvas_size.width - text_size.width) / 2), 32, text, clan::Colorf::white);
 
 		int ypos = 96;
-		const int ygap = 22;
+		const int ygap = 18;
+
+		if (tests_run_length_microseconds)
+		{
+			double seconds = (double)tests_run_length_microseconds / 1000000.0;
+			font.draw_text(canvas, 10, ypos, clan::string_format("Empty Test Run Length = %1 seconds", clan::StringHelp::float_to_text(seconds, 2)));
+			ypos += ygap;
+		}
+
 		if (num_iterations)
 		{
 			font.draw_text(canvas, 10, ypos, clan::string_format("Using %1 Iterations", num_iterations));
 			ypos += ygap;
 		}
-
+		font.draw_text(canvas, 10, ypos, "Seconds");
+		font.draw_text(canvas, 80, ypos, ":  Function");
+		ypos += ygap;
 		for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 		{
 			if (testlist[cnt].result != 0.0f)
@@ -90,7 +103,7 @@ int App::start(const std::vector<std::string> &args)
 					colour = clan::Colorf::green;
 
 				font.draw_text(canvas, 10, ypos, clan::StringHelp::float_to_text(testlist[cnt].result, 1), colour);
-				font.draw_text(canvas, 50, ypos, clan::string_format(":  {%1}", testlist[cnt].name), colour);
+				font.draw_text(canvas, 80, ypos, clan::string_format(":  {%1}", testlist[cnt].name), colour);
 				ypos += ygap;
 			}
 		}
@@ -137,52 +150,64 @@ void App::initial_pause()
 		cb_main.set(this, &App::initialise_1);
 }
 
+clan::ubyte64 App::get_start_time() const
+{
+	// Ensure that the time starts at the start of a new tick
+	clan::ubyte64 start_time = clan::System::get_microseconds();
+	while(true)
+	{
+		clan::ubyte64 time_now = clan::System::get_microseconds();
+		if (time_now != start_time)
+			return time_now;
+	}
+}
+
 void App::initialise_1()
 {
-	draw_info("* Calculating Required Iterations *");
+	draw_info("* Calculating Test Run Length *");
 
 	cb_test.set(&tests, &Tests::test_empty);
 
-	clan::ubyte64 start_time = clan::System::get_microseconds();
+	tests_run_length_microseconds = (clan::ubyte64) (((double) target_test_run_length_seconds) * 1000000.0);
+
+	const int num_block_iteration = 1000;
+
+	clan::ubyte64 start_time = get_start_time();
 	for (num_iterations = 0; ; num_iterations++)
 	{
 		clan::ubyte64 current_time = clan::System::get_microseconds();
 
-		if ((current_time - start_time) >= 200000)	// 0.2 Seconds
+		if ((current_time - start_time) >= tests_run_length_microseconds)
 			break;
 	
-		for (int cnt=0; cnt < 0xFFF; cnt++)
+		for (int cnt=0; cnt < num_block_iteration; cnt++)
 		{
-			num_iterations++;
 			cb_test.invoke();
 		}
+		num_iterations+=num_block_iteration;
 	}
 	cb_main.set(this, &App::initialise_2);
 }
 
-float App::run_test()
+void App::initialise_2()
 {
-	clan::ubyte64 start_time = clan::System::get_microseconds();
+	draw_info("* Adjusting Run Timer *");
+
+	cb_test.set(&tests, &Tests::test_empty);
+	tests_run_length_microseconds = run_test();
+	testlist_offset = 0;
+	cb_main.set(this, &App::test);
+}
+
+clan::byte64 App::run_test()
+{
+	clan::ubyte64 start_time = get_start_time();
 	for (clan::ubyte64 cnt=0; cnt < num_iterations; cnt++)
 	{
 		cb_test.invoke();
 	}
-	clan::ubyte64 current_time = clan::System::get_microseconds();
-	int result = (10 * (current_time - start_time)+5) / base_line;
-	return (float) result / 10.0f;
+	return (clan::System::get_microseconds() - start_time);
 
-}
-
-void App::initialise_2()
-{
-	draw_info("* Calculating Base Line *");
-
-	cb_test.set(&tests, &Tests::test_empty);
-	base_line = 1;
-	base_line = run_test();
-
-	testlist_offset = 0;
-	cb_main.set(this, &App::test);
 }
 
 void App::test()
@@ -191,12 +216,13 @@ void App::test()
 	draw_info(clan::string_format("* Running - {%1} *", testlist[testlist_offset].name));
 
 	cb_test.set(&tests, testlist[testlist_offset].func);
-	testlist[testlist_offset].result = run_test();
+	clan::byte64 microseconds = run_test();
+	double result = ((double) microseconds / (double)tests_run_length_microseconds) ;
+	testlist[testlist_offset].result = result + 0.005;	// Round up
 	testlist_offset++;
 	if (testlist_offset >= testlist.size())
 		cb_main.set(this, &App::write_result);
 }
-
 
 void App::write_result()
 {

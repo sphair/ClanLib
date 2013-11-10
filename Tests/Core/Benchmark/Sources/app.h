@@ -45,8 +45,8 @@ private:
 	void write_result();
 	void test();
 	void draw_info(const std::string &text);
-	float run_test();
-
+	clan::byte64 run_test();
+	clan::ubyte64 get_start_time() const;
 private:
 	bool quit;
 	clan::Callback_v0 cb_main;
@@ -60,4 +60,7 @@ private:
 	clan::ubyte64 base_line;
 	int testlist_offset;
 	std::vector<TestInfo> testlist;
+	clan::ubyte64 tests_run_length_microseconds;
+	float target_test_run_length_seconds;
+
 };
