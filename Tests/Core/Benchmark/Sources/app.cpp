@@ -124,7 +124,7 @@ int App::start(const std::vector<std::string> &args)
 			font.draw_text(canvas, 10, ypos, clan::string_format("Using %1 Iterations", num_iterations));
 			ypos += ygap;
 		}
-		font.draw_text(canvas, 10, ypos, "Seconds");
+		font.draw_text(canvas, 10, ypos, "Time");
 		font.draw_text(canvas, 80, ypos, ":  Function");
 		ypos += ygap;
 		for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
@@ -278,13 +278,13 @@ void App::write_result()
 
 	output+= newline;
 
-	output += "Test Number) Seconds : Function" + newline;
+	output += "Test Number) Time : Function" + newline;
 
 	for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 	{
 		if (testlist[cnt].result != 0.0f)
 		{
-			output += clan::string_format("%1) %2 : %3", cnt+1, clan::StringHelp::float_to_text(testlist[cnt].result, 2), testlist[cnt].name) + newline;
+			output += clan::string_format("%1) %2 : %3", cnt+1, clan::StringHelp::float_to_text(testlist[cnt].result, 1), testlist[cnt].name) + newline;
 		}
 	}
 
