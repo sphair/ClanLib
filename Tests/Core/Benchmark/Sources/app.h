@@ -62,5 +62,6 @@ private:
 	std::vector<TestInfo> testlist;
 	clan::ubyte64 tests_run_length_microseconds;
 	float target_test_run_length_seconds;
+	std::string priority_class;
 
 };

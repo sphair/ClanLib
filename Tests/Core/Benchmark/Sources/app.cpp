@@ -59,7 +59,6 @@ int App::start(const std::vector<std::string> &args)
 
 	Tests::Init(testlist);
 
-	std::string priority_class;
 #ifdef WIN32
 	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 	DWORD dwPriClass = GetPriorityClass(GetCurrentProcess());
@@ -137,7 +136,7 @@ int App::start(const std::vector<std::string> &args)
 					colour = clan::Colorf::green;
 
 				font.draw_text(canvas, 10, ypos, clan::StringHelp::float_to_text(testlist[cnt].result, 1), colour);
-				font.draw_text(canvas, 80, ypos, clan::string_format(":  {%1}", testlist[cnt].name), colour);
+				font.draw_text(canvas, 80, ypos, clan::string_format(":  %1", testlist[cnt].name), colour);
 				ypos += ygap;
 			}
 		}
@@ -247,7 +246,7 @@ clan::byte64 App::run_test()
 void App::test()
 {
 	
-	draw_info(clan::string_format("* Running - {%1} *", testlist[testlist_offset].name));
+	draw_info(clan::string_format("* Running - %1 *", testlist[testlist_offset].name));
 
 	cb_test.set(&tests, testlist[testlist_offset].func);
 	clan::byte64 microseconds = run_test();
@@ -263,11 +262,29 @@ void App::write_result()
 	draw_info("* Writing Results To File *");
 
 	std::string output;
+#ifdef WIN32
+	std::string newline = "\r\n";
+#else
+	std::string newline = "\r\n";
+#endif
+
+	output += "ClanLib Benchmark Utility Results" + newline + newline;
+
+	if (!priority_class.empty())
+		output += priority_class + newline;
+
+	output += clan::string_format("Simulation Test Run Length = %1 seconds", clan::StringHelp::float_to_text((double)tests_run_length_microseconds / 1000000.0, 2)) + newline;
+	output += clan::string_format("Using %1 Iterations", num_iterations) + newline;
+
+	output+= newline;
+
+	output += "Test Number) Seconds : Function" + newline;
+
 	for (unsigned int cnt=0; cnt<testlist.size(); cnt++)
 	{
 		if (testlist[cnt].result != 0.0f)
 		{
-			output += clan::string_format("%1) %2 : {%3}\r\n", cnt+1, clan::StringHelp::float_to_text(testlist[cnt].result, 1), testlist[cnt].name);
+			output += clan::string_format("%1) %2 : %3", cnt+1, clan::StringHelp::float_to_text(testlist[cnt].result, 2), testlist[cnt].name) + newline;
 		}
 	}
 

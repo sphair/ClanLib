@@ -32,43 +32,44 @@
 
 void Tests::Init(std::vector<TestInfo> &testlist)
 {
-	testlist.push_back(TestInfo("", &Tests::test_empty));
-	testlist.push_back(TestInfo("i++;", &Tests::test_i_plus_plus));
-	testlist.push_back(TestInfo("float_value = (float) int_value;", &Tests::test_int_to_float));
-	testlist.push_back(TestInfo("int_value = (int) float_value;", &Tests::test_float_to_int));
-	testlist.push_back(TestInfo("double_value = (double) int_value;", &Tests::test_int_to_double));
-	testlist.push_back(TestInfo("int_value = (int) double_value;", &Tests::test_double_to_int));
-	testlist.push_back(TestInfo("int_value += int_sixteen + int_seven;", &Tests::test_int_add));
-	testlist.push_back(TestInfo("int_value += int_sixteen * int_seven;", &Tests::test_int_multiply));
-	testlist.push_back(TestInfo("int_value += int_sixteen / int_seven;", &Tests::test_int_divide));
-	testlist.push_back(TestInfo("float_value += float_sixteen + float_seven;", &Tests::test_float_add));
-	testlist.push_back(TestInfo("float_value += float_sixteen * float_seven;", &Tests::test_float_multiply));
-	testlist.push_back(TestInfo("float_value += float_sixteen / float_seven;", &Tests::test_float_divide));
-	testlist.push_back(TestInfo("double_value += double_sixteen + double_seven;", &Tests::test_double_add));
-	testlist.push_back(TestInfo("double_value += double_sixteen * double_seven;", &Tests::test_double_multiply));
-	testlist.push_back(TestInfo("double_value += double_sixteen / double_seven;", &Tests::test_double_divide));
-	testlist.push_back(TestInfo("string = std::string();", &Tests::test_create_string));
-	testlist.push_back(TestInfo("char_value = string[0]", &Tests::test_string_index));
-	testlist.push_back(TestInfo("char_value = string.cstr()[0]", &Tests::test_string_cstr_index));
-	testlist.push_back(TestInfo("char_value = char_array[0];", &Tests::test_char_array_index));
-	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];", &Tests::test_string_multi_index));
-	testlist.push_back(TestInfo("for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];", &Tests::test_char_array_multi_index));
+	testlist.push_back(TestInfo("{}", &Tests::test_empty));
+	testlist.push_back(TestInfo("{i++;}", &Tests::test_i_plus_plus));
+	testlist.push_back(TestInfo("{float_value = (float) int_value;}", &Tests::test_int_to_float));
+	testlist.push_back(TestInfo("{int_value = (int) float_value;}", &Tests::test_float_to_int));
+	testlist.push_back(TestInfo("{double_value = (double) int_value;}", &Tests::test_int_to_double));
+	testlist.push_back(TestInfo("{int_value = (int) double_value;}", &Tests::test_double_to_int));
+	testlist.push_back(TestInfo("{int_value += int_sixteen + int_seven;}", &Tests::test_int_add));
+	testlist.push_back(TestInfo("{int_value += int_sixteen * int_seven;}", &Tests::test_int_multiply));
+	testlist.push_back(TestInfo("{int_value += int_sixteen / int_seven;}", &Tests::test_int_divide));
+	testlist.push_back(TestInfo("{float_value += float_sixteen + float_seven;}", &Tests::test_float_add));
+	testlist.push_back(TestInfo("{float_value += float_sixteen * float_seven;}", &Tests::test_float_multiply));
+	testlist.push_back(TestInfo("{float_value += float_sixteen / float_seven;}", &Tests::test_float_divide));
+	testlist.push_back(TestInfo("{double_value += double_sixteen + double_seven;}", &Tests::test_double_add));
+	testlist.push_back(TestInfo("{double_value += double_sixteen * double_seven;}", &Tests::test_double_multiply));
+	testlist.push_back(TestInfo("{double_value += double_sixteen / double_seven;}", &Tests::test_double_divide));
+	testlist.push_back(TestInfo("{string = std::string();}", &Tests::test_create_string));
+	testlist.push_back(TestInfo("{char_value = string[0]}", &Tests::test_string_index));
+	testlist.push_back(TestInfo("{char_value = string.cstr()[0]}", &Tests::test_string_cstr_index));
+	testlist.push_back(TestInfo("{char_value = char_array[0];}", &Tests::test_char_array_index));
+	testlist.push_back(TestInfo("{for (int cnt=0; cnt<sixteen; cnt++) char_value += string2[cnt];}", &Tests::test_string_multi_index));
+	testlist.push_back(TestInfo("{for (int cnt=0; cnt<sixteen; cnt++) char_value += char_array[cnt];}", &Tests::test_char_array_multi_index));
 
-	testlist.push_back(TestInfo("string = \"123456789012345\";", &Tests::test_create_string_from_15chars));
-	testlist.push_back(TestInfo("string = std::string(\"123456789012345\");", &Tests::test_create_new_string_from_15chars));
-	testlist.push_back(TestInfo("string.assign(\"123456789012345\");", &Tests::test_assign_string_from_15chars));
-	testlist.push_back(TestInfo("string = \"123456789012345678901234567890123456789\";", &Tests::test_create_string_from_39chars));
-	testlist.push_back(TestInfo("string = std::string(\"123456789012345678901234567890123456789\");", &Tests::test_create_new_string_from_39chars));
-	testlist.push_back(TestInfo("string.assign(\"123456789012345678901234567890123456789\");", &Tests::test_assign_string_from_39chars));
+	testlist.push_back(TestInfo("{string = \"123456789012345\";}", &Tests::test_create_string_from_15chars));
+	testlist.push_back(TestInfo("{string = std::string(\"123456789012345\");}", &Tests::test_create_new_string_from_15chars));
+	testlist.push_back(TestInfo("{string.assign(\"123456789012345\");}", &Tests::test_assign_string_from_15chars));
+	testlist.push_back(TestInfo("{string = \"123456789012345678901234567890123456789\";}", &Tests::test_create_string_from_39chars));
+	testlist.push_back(TestInfo("{string = std::string(\"123456789012345678901234567890123456789\");}", &Tests::test_create_new_string_from_39chars));
+	testlist.push_back(TestInfo("{string.assign(\"123456789012345678901234567890123456789\");}", &Tests::test_assign_string_from_39chars));
 
-	testlist.push_back(TestInfo("int_value += *int_ptr;", &Tests::test_pointer_index));
-	testlist.push_back(TestInfo("int_value += *int_shared_ptr;", &Tests::test_shared_index));
+	testlist.push_back(TestInfo("{int_value += *int_ptr;}", &Tests::test_pointer_index));
+	testlist.push_back(TestInfo("{int_value += *int_shared_ptr;}", &Tests::test_shared_index));
 
-	testlist.push_back(TestInfo("for (size_t cnt=0; cnt<std_vector_int_size16.size(); cnt++) { int_value +=  std_vector_int_size16[cnt]; }", &Tests::test_size1_vector));
-	testlist.push_back(TestInfo("for (size_t cnt=0, max = std_vector_int_size16.size(); cnt<max; cnt++) { int_value +=  std_vector_int_size16[cnt]; }", &Tests::test_size2_vector));
+	testlist.push_back(TestInfo("{for (size_t cnt=0; cnt<std_vector_int_size16.size(); cnt++) { int_value +=  std_vector_int_size16[cnt]; }}", &Tests::test_size1_vector));
+	testlist.push_back(TestInfo("{for (size_t cnt=0, max = std_vector_int_size16.size(); cnt<max; cnt++) { int_value +=  std_vector_int_size16[cnt]; }}", &Tests::test_size2_vector));
 
-	testlist.push_back(TestInfo("for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); ++it) { int_value += *it; }", &Tests::test_size3_vector));
-	testlist.push_back(TestInfo("for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }", &Tests::test_size4_vector));
+	testlist.push_back(TestInfo("{for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); ++it) { int_value += *it; }}", &Tests::test_size3_vector));
+	testlist.push_back(TestInfo("{for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }}", &Tests::test_size4_vector));
+
 }
 
 Tests::Tests()
