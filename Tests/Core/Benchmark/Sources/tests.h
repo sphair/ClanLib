@@ -31,6 +31,8 @@
 
 class Tests;
 
+#include "utils.h"
+
 class TestInfo
 {
 public:
@@ -85,7 +87,13 @@ public:
 	void test_size2_vector();
 	void test_size3_vector();
 	void test_size4_vector();
+	void test_calling_empty();
+	void test_return_int();
+	void test_return_string_v1();
+	void test_return_string_v2();
+	void test_get_string();
 
+	Utils utils;
 	std::string string;
 	std::string string2;
 	int int_sixteen;

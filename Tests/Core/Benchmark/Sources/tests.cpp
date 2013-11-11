@@ -70,6 +70,12 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("{for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); ++it) { int_value += *it; }}", &Tests::test_size3_vector));
 	testlist.push_back(TestInfo("{for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }}", &Tests::test_size4_vector));
 
+	testlist.push_back(TestInfo("{utils.function();}    : void function() {}", &Tests::test_calling_empty));
+	testlist.push_back(TestInfo("{int_value = utils.function();}    : int function() {return five;}", &Tests::test_return_int));
+	testlist.push_back(TestInfo("{string = utils.function();}    : std::string function() {return string_hello_world;}", &Tests::test_return_string_v1));
+	testlist.push_back(TestInfo("{string = utils.function();}    : std::string &function() {return string_hello_world;}", &Tests::test_return_string_v2));
+	testlist.push_back(TestInfo("{utils.function(string);}    : void function(std::string &out_string) {out_string = string_hello_world;}", &Tests::test_get_string));
+
 }
 
 Tests::Tests()
@@ -251,4 +257,30 @@ void Tests::test_size3_vector()
 void Tests::test_size4_vector()
 {
 	for (auto it = std_vector_int_size16.begin(); it != std_vector_int_size16.end(); it++) { int_value += *it; }
+}
+
+
+void Tests::test_calling_empty()
+{
+	utils.test_empty();
+}
+
+void Tests::test_return_int()
+{
+	int_value = utils.test_return_int();
+}
+
+void Tests::test_return_string_v1()
+{
+	string = utils.test_return_string();
+}
+
+void Tests::test_return_string_v2()
+{
+	string = utils.test_return_string2();
+}
+
+void Tests::test_get_string()
+{
+	utils.test_get_string(string);
 }

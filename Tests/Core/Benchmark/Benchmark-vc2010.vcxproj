@@ -146,12 +146,14 @@
     </ClCompile>
     <ClCompile Include="Sources\program.cpp" />
     <ClCompile Include="Sources\tests.cpp" />
+    <ClCompile Include="Sources\utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\app.h" />
     <ClInclude Include="Sources\precomp.h" />
     <ClInclude Include="Sources\program.h" />
     <ClInclude Include="Sources\tests.h" />
+    <ClInclude Include="Sources\utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
