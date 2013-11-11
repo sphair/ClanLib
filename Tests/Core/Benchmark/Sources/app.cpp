@@ -51,13 +51,41 @@ int App::start(const std::vector<std::string> &args)
 
 	font = clan::Font(canvas, "tahoma", 16);
 
-	target_test_run_length_seconds = 0.2f;
+	target_test_run_length_seconds = 0.5f;
 
 	tests_run_length_microseconds = 0;
 	num_iterations = 0;
 	base_line = 0;
 
 	Tests::Init(testlist);
+
+	std::string priority_class;
+#ifdef WIN32
+	SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+	DWORD dwPriClass = GetPriorityClass(GetCurrentProcess());
+	switch (dwPriClass)
+	{
+		case NORMAL_PRIORITY_CLASS:
+			priority_class = "Process Priority: NORMAL";
+			break;
+		case IDLE_PRIORITY_CLASS:
+			priority_class = "Process Priority: IDLE";
+			break;
+		case HIGH_PRIORITY_CLASS:
+			priority_class = "Process Priority: HIGH";
+			break;
+		case REALTIME_PRIORITY_CLASS:
+			priority_class = "Process Priority: REALTIME";
+			break;
+		case BELOW_NORMAL_PRIORITY_CLASS:
+			priority_class = "Process Priority: BELOW NORMAL";
+			break;
+		case ABOVE_NORMAL_PRIORITY_CLASS:
+			priority_class = "Process Priority: ABOVE NORMAL";
+			break;
+	}
+	
+#endif
 
 	cb_main.set(this, &App::initial_pause);
 	game_time.reset();
@@ -79,10 +107,16 @@ int App::start(const std::vector<std::string> &args)
 		int ypos = 96;
 		const int ygap = 18;
 
+		if (!priority_class.empty())
+		{
+			font.draw_text(canvas, 10, ypos, priority_class);
+			ypos += ygap;
+		}
+
 		if (tests_run_length_microseconds)
 		{
 			double seconds = (double)tests_run_length_microseconds / 1000000.0;
-			font.draw_text(canvas, 10, ypos, clan::string_format("Empty Test Run Length = %1 seconds", clan::StringHelp::float_to_text(seconds, 2)));
+			font.draw_text(canvas, 10, ypos, clan::string_format("Simulation Test Run Length = %1 seconds", clan::StringHelp::float_to_text(seconds, 2)));
 			ypos += ygap;
 		}
 
@@ -170,7 +204,7 @@ void App::initialise_1()
 
 	tests_run_length_microseconds = (clan::ubyte64) (((double) target_test_run_length_seconds) * 1000000.0);
 
-	const int num_block_iteration = 1000;
+	const clan::ubyte64 num_block_iteration = 10000;
 
 	clan::ubyte64 start_time = get_start_time();
 	for (num_iterations = 0; ; num_iterations++)
@@ -180,7 +214,7 @@ void App::initialise_1()
 		if ((current_time - start_time) >= tests_run_length_microseconds)
 			break;
 	
-		for (int cnt=0; cnt < num_block_iteration; cnt++)
+		for (clan::ubyte64 cnt=0; cnt < num_block_iteration; cnt++)
 		{
 			cb_test.invoke();
 		}
@@ -218,7 +252,7 @@ void App::test()
 	cb_test.set(&tests, testlist[testlist_offset].func);
 	clan::byte64 microseconds = run_test();
 	double result = ((double) microseconds / (double)tests_run_length_microseconds) ;
-	testlist[testlist_offset].result = result + 0.005;	// Round up
+	testlist[testlist_offset].result = result + 0.05;	// Round up
 	testlist_offset++;
 	if (testlist_offset >= testlist.size())
 		cb_main.set(this, &App::write_result);
