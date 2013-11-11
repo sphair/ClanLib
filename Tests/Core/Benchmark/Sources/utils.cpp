@@ -56,6 +56,10 @@ std::string &Utils::test_return_string2()
 	return string_hello_world;
 }
 
+std::string Utils::test_return_string3()
+{
+	return "Hello World";
+}
 void Utils::test_get_string(std::string &out_string)
 {
 	out_string = string_hello_world;

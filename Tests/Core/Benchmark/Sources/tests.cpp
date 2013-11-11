@@ -74,6 +74,7 @@ void Tests::Init(std::vector<TestInfo> &testlist)
 	testlist.push_back(TestInfo("{int_value = utils.function();}    : int function() {return five;}", &Tests::test_return_int));
 	testlist.push_back(TestInfo("{string = utils.function();}    : std::string function() {return string_hello_world;}", &Tests::test_return_string_v1));
 	testlist.push_back(TestInfo("{string = utils.function();}    : std::string &function() {return string_hello_world;}", &Tests::test_return_string_v2));
+	testlist.push_back(TestInfo("{string = utils.function();}    : std::string function() {return \"hello world\";}", &Tests::test_return_string_v3));
 	testlist.push_back(TestInfo("{utils.function(string);}    : void function(std::string &out_string) {out_string = string_hello_world;}", &Tests::test_get_string));
 
 }
@@ -278,6 +279,11 @@ void Tests::test_return_string_v1()
 void Tests::test_return_string_v2()
 {
 	string = utils.test_return_string2();
+}
+
+void Tests::test_return_string_v3()
+{
+	string = utils.test_return_string3();
 }
 
 void Tests::test_get_string()

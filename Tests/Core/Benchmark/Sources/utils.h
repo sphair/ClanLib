@@ -38,6 +38,7 @@ public:
 	int test_return_int();
 	std::string test_return_string();
 	std::string &test_return_string2();
+	std::string test_return_string3();
 	void test_get_string(std::string &out_string);
 
 	std::string string_hello_world;

@@ -91,6 +91,7 @@ public:
 	void test_return_int();
 	void test_return_string_v1();
 	void test_return_string_v2();
+	void test_return_string_v3();
 	void test_get_string();
 
 	Utils utils;
