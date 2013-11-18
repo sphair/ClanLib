@@ -103,8 +103,8 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 	}
 
 #ifdef WIN32
-	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
+	std::string path = PathHelp::get_fullpath(filename, PathHelp::path_type_file);
+	std::string new_filename = PathHelp::get_filename(filename, PathHelp::path_type_file);
 	FileSystem vfs(path);
 	font_engine = new FontEngine_Win32(desc, new_filename, vfs);
 	glyph_cache.font_metrics = font_engine->get_metrics();
