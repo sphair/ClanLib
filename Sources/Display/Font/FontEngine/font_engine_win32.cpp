@@ -39,13 +39,65 @@
 namespace clan
 {
 
-FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename)
+  FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename)
 : handle(0)
 {
 	if (!filename.empty())
 	{
-		int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+	    int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
 		if(fonts_added == 0)
+			throw Exception("Unable to register font " + filename);
+	}
+
+	// ClanLib now only supports negative font sizes. (To avoid confusion)
+	int height = desc.get_height();
+	if (height >0)
+		height =-height;
+
+	handle = CreateFont(
+		height, desc.get_average_width(),
+		(int) (desc.get_escapement() * 10 + 0.5),
+		(int) (desc.get_orientation() * 10 + 0.5),
+		desc.get_weight(),
+		desc.get_italic() ? TRUE : FALSE,
+		FALSE,
+		FALSE,
+		decode_charset(desc.get_charset()),
+		OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		DEFAULT_QUALITY,
+		(desc.get_fixed_pitch() ? FIXED_PITCH : DEFAULT_PITCH) | FF_DONTCARE,
+		StringHelp::utf8_to_ucs2(desc.get_typeface_name()).c_str());
+	if (handle == 0)
+		throw Exception("CreateFont failed");
+
+	HDC dc = GetDC(0);
+	int old_mode = SetMapMode(dc, MM_TEXT);
+	HGDIOBJ old_font = SelectObject(dc, handle);
+	BOOL result = GetTextMetrics(dc, &metrics);
+	SelectObject(dc, old_font);
+	SetMapMode(dc, old_mode);
+	ReleaseDC(0, dc);
+	if (result == FALSE)
+	{
+		DeleteObject(handle);
+		handle = 0;
+		throw Exception("GetTextMetrics failed");
+	}
+}
+
+  FontEngine_Win32::FontEngine_Win32(const FontDescription &desc, const std::string &filename, FileSystem& fs)
+: handle(0)
+{
+	if (!filename.empty())
+	{
+	  IODevice file = fs.open_file(filename);
+	  DataBuffer data(file.get_size());
+	  file.read(data.get_data(), data.get_size());
+	  DWORD out_number_of_fonts = 0;
+	  HANDLE font_handle = AddFontMemResourceEx(data.get_data(), data.get_size(), 0, &out_number_of_fonts);
+	  //int fonts_added = AddFontResourceEx(StringHelp::utf8_to_ucs2(filename).c_str(), FR_PRIVATE|FR_NOT_ENUM, 0);
+		if(out_number_of_fonts == 0)
 			throw Exception("Unable to register font " + filename);
 	}
 
