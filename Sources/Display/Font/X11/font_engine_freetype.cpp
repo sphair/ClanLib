@@ -103,9 +103,16 @@ FontEngine_Freetype::FontEngine_Freetype(IODevice &io_dev, int average_width, in
 	}
 
 	if (height >= 0.0f)
-		height = height*face->units_per_EM/face->height;
+	{
+		if ( (face->height != 0) && (face->units_per_EM !=0) )	// Is scalable font
+		{
+			height = height*face->units_per_EM/face->height;
+		}
+	}
 	else
+	{
 		height = -height;
+	}
 
 	// if the device is 72 DCL_PI then 1 point becomes 1 pixel
 	FT_Set_Char_Size( face, (int)(average_width*64.0f), (int)(height*64.0f), 72, 72 );
