@@ -37,7 +37,9 @@
 namespace clan
 {
 
-int RenderBatchTriangle::max_textures = 4;	// For use by the GL1 target, so it can reduce the number of textures. Now also used by the GL3 target to increase the number. Global vars should be banned!
+// For use by the GL1 target, so it can reduce the number of textures. Now also used by the GL3 target to increase the number. Global vars should be banned!
+// Warning: Ensure this number does not exceed RenderBatchTriangle::max_number_of_texture_coords
+int RenderBatchTriangle::max_textures = 4;
 
 RenderBatchTriangle::RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer)
 : position(0), num_current_textures(0), use_glyph_program(false), batch_buffer(batch_buffer)
