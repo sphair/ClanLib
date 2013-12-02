@@ -125,7 +125,7 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
 	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
 	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
 	FileSystem vfs(path);
-	IODevice io_dev = vfs.open_file(filename);
+	IODevice io_dev = vfs.open_file(new_filename);
 
 	int average_width = desc.get_average_width();
 	int height = desc.get_height();
@@ -168,17 +168,6 @@ void Font_Impl::load_font( GraphicContext &context, const FontDescription &desc,
     glyph_cache.font_metrics = font_engine->get_metrics();
 
 #else
-	std::string font_file_path = filename;
-	if (font_file_path.empty())
-	{
-	    // Obtain the best matching font file from fontconfig.
-		FontConfig &fc = FontConfig::instance();
-		font_file_path = fc.match_font(desc);
-	}
-
-	std::string path = PathHelp::get_fullpath(font_file_path, PathHelp::path_type_file);
-	std::string new_filename = PathHelp::get_filename(font_file_path, PathHelp::path_type_file);
-	//FileSystem vfs(path);
 	IODevice io_dev = fs.open_file(filename);
 
 	int average_width = desc.get_average_width();
