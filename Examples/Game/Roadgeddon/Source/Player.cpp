@@ -88,7 +88,9 @@ Player::Player(Game &game_)
 	body_desc.set_angular_damping(100.0f);
 
 	PolygonShape shape(pc);
-	shape.set_as_box(vehicle.get_width()/2.5f, vehicle.get_height()/4.0f, Vec2f(0.0f, 5.0f), Angle(0, angle_degrees));
+	const Vec2f center(0.0f, 5.0f);
+	Angle angle(0, angle_degrees);
+	shape.set_as_box(vehicle.get_width()/2.5f, vehicle.get_height()/4.0f, center, angle);
 
 	FixtureDescription fixture_desc(pc);
 	fixture_desc.set_density(1000.0f);

@@ -8,19 +8,19 @@
     
    
      <sprite name="Map1" base_angle="0">
-		<image file="Gfx/Map1.png" />
+		<image file="Gfx/map1.png" />
 		<translation origin="bottom_left"/>
 		<rotation origin="bottom_left"/>
 	</sprite>
     
     <sprite name="Background1" base_angle="0">
-		<image file="Gfx/Background1.png" />
+		<image file="Gfx/background1.png" />
 		<translation origin="bottom_left"/>
 		<rotation origin="bottom_left"/>
 	</sprite>
     
     <sprite name="Background2" base_angle="0">
-		<image file="Gfx/Background2.png" />
+		<image file="Gfx/background2.png" />
 		<translation origin="bottom_left"/>
 		<rotation origin="bottom_left"/>
 	</sprite>
