@@ -26,7 +26,7 @@
 **    Mark Page
 */
 #include "precomp.h"
-#include "gui.h"
+#include "GUI.h"
 
 App::App()
 {
