@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="description" content="ClanLib is a cross platform C++ toolkit library with focus on games">
-	    <title>Download - ClanLib SDK</title>
+	    <title>Release Notes - ClanLib SDK</title>
         <link rel="stylesheet" type="text/css" href="css/main.css" />
         <script type="text/javascript" src="js/external/jquery-1.10.2.min.js"></script>	
         <script type="text/javascript" src="js/analytics.js"></script> 
@@ -28,40 +28,34 @@
             <div id="page-body-wrapper">
                 <div id="page-body">
 
-                    <h1>Download</h1>
+                    <h1>ClanLib 3.0.1 Release Notes</h1>
 
-                    <h2>Source Packages</h2>
+                    <p>Release Date: 9 December 2013.</p>
 
-                    <h3>ClanLib 3.0.1 was released 9 December 2013</h3>
+                    <p>See <a href="breaking-changes.html">breaking changes</a>.</p>
 
-                    <ul>
-                        <li><a href="release-notes-3.0.1.html">Release Notes</a></li>
-                        <li><a href="breaking-changes.html">Breaking Changes</a></li>
-                        <li><a href="download/releases-3.0/ClanLib-3.0.1.zip">ClanLib-3.0.1.zip (Windows)</a></li>
-                        <li><a href="download/releases-3.0/ClanLib-3.0.1.tgz">ClanLib-3.0.1.tgz (Linux)</a></li>
-                    </ul>
-
-                    <h3>ClanLib 2.3.7 was released 14 June 2013</h3>
+                  <h3>clanCore</h3>
 
                     <ul>
-                        <li><a href="release-notes-2.3.7.html">Release Notes</a></li>
-                        <li><a href="breaking-changes.html">Breaking Changes</a></li>
-                        <li><a href="download/releases-2.0/ClanLib-2.3.7.zip">ClanLib-2.3.7.zip (Windows)</a></li>
-                        <li><a href="download/releases-2.0/ClanLib-2.3.7.tgz">ClanLib-2.3.7.tgz (Linux)</a></li>
-                    </ul>
+                        <li>Fixed JsonValue bug with boolean assignment</li>
+                        <li>Added WorkQueue::get_items_queued()</li>
+                      </ul>
 
-                    <h3>ClanLib 1.0.0 was released 22 April 2009</h3>
+                  <h3>clanDisplay</h3>
 
                     <ul>
-                        <li><a href="download/releases-1.0/ClanLib-1.0.0.zip">ClanLib-1.0.0.zip (Windows)</a></li>
-                        <li><a href="download/releases-1.0/ClanLib-1.0.0.tgz">ClanLib-1.0.0.tgz (Linux)</a></li>
-                    </ul>
+                        <li>Fixed bug with the ClanLib batchers, that caused a memory overflow error when more than 4 textures are batched.</li>
+                        <li>Fix freetype font loader using bitmap fonts (thanks to ElGrotto)</li>
+                        <li>Apply Nightwind0 patch for Loading TTF fonts from resources in 3.0</li>
+                      </ul>
 
-                    <h2>Precompiled Binaries</h2>
+                  <h3>clanGUI</h3>
 
                     <ul>
-                        <li><a href="visual-studio-binaries.html">Win32, Microsoft Visual C++</a></li>
-                    </ul>
+                        <li>Added GUIComponent.set_style</li>
+                        <li>Implement the Label::set_text_color, using set_style()</li>
+                        <li>Allow any GUI Component or GUI ThemePart to add additional CSS styles via the PropertyValue classes</li>
+                        </ul>
 
                 </div>
             </div>
