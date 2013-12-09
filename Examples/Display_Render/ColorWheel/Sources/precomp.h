@@ -7,3 +7,4 @@
 #include <ClanLib/swrender.h>
 #include <ClanLib/gl.h>
 #include <ClanLib/gui.h>
+#include <ClanLib/csslayout.h>
