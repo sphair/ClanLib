@@ -269,7 +269,7 @@ clan::Image App::get_stencil(clan::Canvas &canvas, clan::Rect rect)
 	glPixelStorei(GL_PACK_SKIP_ROWS, 0);
 	glReadBuffer(GL_BACK);
 	if (glClampColor)
-		glClampColor(clan::GL_CLAMP_READ_COLOR, GL_FALSE);
+		glClampColor(GL_CLAMP_READ_COLOR, GL_FALSE);
 
 	glReadPixels(rect.left, canvas.get_height()- rect.bottom, rect_width, rect_height, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE, &buffer[0]);
 	clan::PixelBuffer pbuf(rect_width, rect_height, clan::tf_rgba8);
