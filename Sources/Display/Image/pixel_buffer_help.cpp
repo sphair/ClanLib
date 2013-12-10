@@ -63,7 +63,7 @@ PixelBuffer PixelBufferHelp::add_border(const PixelBuffer &pb, int border_size, 
 	int new_pitch = new_pb.get_pitch();
 
 	byte32 *actual_src_data = (byte32 *) work_pb.get_data();
-	actual_src_data += (rect.top * new_pitch) / 4;
+	actual_src_data += (rect.top * old_pitch) / 4;
 	actual_src_data += rect.left;
 
 	byte32 *actual_dest_data = (byte32 *) new_pb.get_data();
