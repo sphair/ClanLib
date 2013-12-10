@@ -127,7 +127,7 @@ void TestApp::do_test()
 		in_8_buffer2[cnt] = ( unsigned char) (random_number >> 7);
 		in_16_buffer1[cnt] = ( short) (random_number >> 5);
 		in_16_buffer2[cnt] = ( short) (random_number >> 3);
-		float dummy;
+		double dummy;
 		in_float_buffer1[cnt] = modf(( float (random_number)) / 13.223f, &dummy);
 		in_float_buffer2[cnt] = modf(( float (random_number)) / 53.321f, &dummy);
 	}
