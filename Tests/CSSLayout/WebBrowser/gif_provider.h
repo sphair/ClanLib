@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "giflib/gif_lib.h"
+#include "gif_lib.h"
 
 class GIFProvider
 {
