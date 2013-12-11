@@ -1,7 +1,11 @@
 
 #include "precomp.h"
 #include "gif_provider.h"
+#ifdef WIN32
+#include "giflib/gif_lib.h"
+#else
 #include "gif_lib.h"
+#endif
 
 using namespace clan;
 
