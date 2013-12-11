@@ -128,8 +128,8 @@ void TestApp::do_test()
 		in_16_buffer1[cnt] = ( short) (random_number >> 5);
 		in_16_buffer2[cnt] = ( short) (random_number >> 3);
 		float dummy;
-		in_float_buffer1[cnt] = modff(( float (random_number)) / 13.223f, &dummy);
-		in_float_buffer2[cnt] = modff(( float (random_number)) / 53.321f, &dummy);
+		in_float_buffer1[cnt] = std::modf(( float (random_number)) / 13.223f, &dummy);
+		in_float_buffer2[cnt] = std::modf(( float (random_number)) / 53.321f, &dummy);
 	}
 
 	memcpy(out_float_buffer1, in_float_buffer1, sizeof(out_float_buffer1));
