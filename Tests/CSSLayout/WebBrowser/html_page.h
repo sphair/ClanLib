@@ -7,7 +7,7 @@ class HTMLPage
 {
 public:
 	void load(const std::string &page_url, const std::string &refererer_url = std::string());
-	clan::Image load_image(clan::GraphicContext &gc, const std::string &image_url);
+	clan::Image load_image(clan::Canvas &canvas, const std::string &image_url);
 
 	clan::HTMLUrl pageurl;
 	std::string webpage;

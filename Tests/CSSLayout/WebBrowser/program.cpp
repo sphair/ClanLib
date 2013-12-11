@@ -14,7 +14,11 @@ int Program::main(const std::vector<std::string> &args)
 	SetupCore setup_core;
 	SetupNetwork setup_network;
 	SetupDisplay setup_display;
+#ifdef WIN32
 	SetupD3D setup_d3d;
+#else
+	SetupGL setup_gl;
+#endif
 	SetupGUI setup_gui;
 	
 	GUIManager gui("../../../Resources/GUIThemeAero");
