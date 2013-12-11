@@ -1,7 +1,11 @@
 
 #pragma once
 
+#ifdef WIN32
+#include "giflib/gif_lib.h"
+#else
 #include "gif_lib.h"
+#endif
 
 class GIFProvider
 {
