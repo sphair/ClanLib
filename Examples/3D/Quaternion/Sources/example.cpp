@@ -114,7 +114,7 @@ int App::start(const std::vector<std::string> &args)
 
 	create_scene(canvas);
 
-	Font font(canvas, "tahoma", 24);
+	clan::Font font(canvas, "tahoma", 24);
 
 	FramerateCounter framerate_counter;
 

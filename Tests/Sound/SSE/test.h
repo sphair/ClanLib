@@ -32,6 +32,7 @@
 #include <ClanLib/sound.h>
 using namespace clan;
 
+#include <cmath>
 
 class TestApp
 {
