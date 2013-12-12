@@ -1,7 +1,9 @@
 EXAMPLE_BIN=mikmod
-OBJF = Sources/mikmod.o Sources/module_reader.o Sources/soundprovider_mikmod.o Sources/soundprovider_mikmod_session.o Sources/precomp.o Sources/program.o
+SOURCES= $(wildcard ./Sources/*.cpp)
+OBJF=$(patsubst %.cpp,%.o,$(SOURCES))
 
 LIBS=clanApp clanSound
+EXTRA_LIBS=-lmikmod
 
 include ../../Makefile.conf
 
