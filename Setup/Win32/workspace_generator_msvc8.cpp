@@ -115,10 +115,15 @@ void WorkspaceGenerator_MSVC8::write_solution(const Workspace &workspace)
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
 		writer.write_line(0, "# Visual C++ Express 2010");
 	}
-	else
+	else if (target_version == 1100)
 	{
 		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 11.00");
 		writer.write_line(0, "# Visual C++ Express 2012");
+	}
+	else
+	{
+		writer.write_line(0, "Microsoft Visual Studio Solution File, Format Version 12.00");
+		writer.write_line(0, "# Visual C++ Express 2013");
 	}
 
 	for (it = workspace.projects.begin(); it != workspace.projects.end(); ++it)
@@ -1160,8 +1165,10 @@ void MSVC8_Project::write(OutputWriter &output, int indent) const
 		output.write_line(indent, "    <CharacterSet>Unicode</CharacterSet>");
 		if(target_version == 1000)
 			output.write_line(indent, "    <PlatformToolset>v100</PlatformToolset>");
-		else
+		else if (target_version == 1100)
 			output.write_line(indent, "    <PlatformToolset>v110</PlatformToolset>");
+		else
+			output.write_line(indent, "    <PlatformToolset>v120</PlatformToolset>");
 		output.write_line(indent, "  </PropertyGroup>");
 	}
 

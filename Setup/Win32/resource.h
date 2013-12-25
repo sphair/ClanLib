@@ -54,6 +54,8 @@
 #define IDC_CHECK_DEBUG_OPTIMIZE        1031
 #define IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE 1032
 #define IDC_RADIO_VC110                 1033
+#define IDC_RADIO_VC12                  1034
+#define IDC_RADIO_VC120                 1034
 
 // Next default values for new objects
 // 

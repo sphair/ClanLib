@@ -32,6 +32,7 @@
 #include "API/Core/System/event.h"
 #include "API/Core/System/databuffer.h"
 #include "API/Core/IOData/file.h"
+#include <algorithm>
 
 #ifdef min
 #undef min

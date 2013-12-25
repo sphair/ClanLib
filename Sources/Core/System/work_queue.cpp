@@ -34,6 +34,7 @@
 #include "API/Core/System/thread.h"
 #include "API/Core/System/system.h"
 #include "API/Core/System/interlocked_variable.h"
+#include <algorithm>
 
 #undef max
 

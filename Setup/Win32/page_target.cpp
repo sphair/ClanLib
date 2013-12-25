@@ -143,10 +143,18 @@ INT_PTR CALLBACK PageTarget::dialog_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 			PageTarget *self = (PageTarget *) propsheetpage->lParam;
 			SetWindowLongPtr(hWnd, GWL_USERDATA, (LONG_PTR) self);
 
-			if (self->target_version == 1100)
-				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC110, IDC_RADIO_VC110);
-			else
-				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC110, IDC_RADIO_VC100);
+			switch (self->target_version)
+			{
+			case 1200:
+				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC120);
+				break;
+			case 1100:
+				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC110);
+				break;
+			default:
+				CheckRadioButton(hWnd, IDC_RADIO_VC100, IDC_RADIO_VC120, IDC_RADIO_VC100);
+				break;
+			}
 
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_NONUNICODE), BM_SETCHECK, BST_CHECKED, 0);
 			SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_SETCHECK, self->include_unicode ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -198,6 +206,8 @@ INT_PTR PageTarget::on_notify(HWND hWnd, NMHDR *header)
 			target_version = 1000;
 		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC110) == BST_CHECKED)
 			target_version = 1100;
+		else if (IsDlgButtonChecked(hWnd, IDC_RADIO_VC120) == BST_CHECKED)
+			target_version = 1200;
 		include_unicode = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_UNICODE), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_x64 = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_X64), BM_GETCHECK, 0, 0) == BST_CHECKED);
 		include_mtdll = (SendMessage(GetDlgItem(hWnd, IDC_CHECK_INCLUDE_MTDLL), BM_GETCHECK, 0, 0) == BST_CHECKED);

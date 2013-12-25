@@ -142,17 +142,18 @@ BEGIN
     CONTROL         "Visual C++ .NET 20&10 (10.0)",IDC_RADIO_VC100,"Button",BS_AUTORADIOBUTTON,16,31,105,10
     CONTROL         "Visual C++ .NET 20&12 (11.0)",IDC_RADIO_VC110,"Button",BS_AUTORADIOBUTTON,16,45,105,10
     CONTROL         "Include 64-bit configurations",IDC_CHECK_INCLUDE_X64,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,76,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,96,173,10
     CONTROL         "Include static libraries using DLL runtime configurations (MTDLL)",IDC_CHECK_INCLUDE_MTDLL,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,63,225,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,83,225,10
     CONTROL         "Compile using SSE2 Minimum CPU Architecture",IDC_CHECK_INCLUDE_SSE2,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,89,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,109,173,10
     CONTROL         "Compile using SSE2 Intrinsics",IDC_CHECK_INCLUDE_INTRINSICS,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,102,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,122,173,10
     CONTROL         "Compile Debug with optimizations",IDC_CHECK_DEBUG_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,115,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,135,173,10
     CONTROL         "Compile Release using Whole Program Optimizations",IDC_CHECK_WHOLE_PROGRAM_OPTIMIZE,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,128,173,10
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,148,173,10
+    CONTROL         "Visual C++ .NET 20&13 (12.0)",IDC_RADIO_VC120,"Button",BS_AUTORADIOBUTTON,16,59,105,10
 END
 
 

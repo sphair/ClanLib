@@ -33,6 +33,7 @@
 #include "API/Core/System/databuffer.h"
 #include "API/Core/Math/cl_math.h"
 #include "input_device_provider_win32hid.h"
+#include <algorithm>
 
 #undef min
 #undef max
